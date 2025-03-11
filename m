@@ -1,160 +1,482 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334E3260A4E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 16:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4705025B68E;
+	Tue, 11 Mar 2025 16:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741709324; cv=none; b=kcnGhlF6Hl9BvJTO43wClXJ463dLnHDc+zm5uKieiWoa0r3nv3thCKw1v5kgqGvomQhvT46Syn/dOCo86A8wEWu861QiP/iq4h9nQtvP93CwGAYMvF/MjqpZ/bm/JkYUcjGC3sSGfXNUf+xRjCLMBW7FyaahBxUFMjio3Hgc1cQ=
+	t=1741709443; cv=none; b=ctbgVkbONC8JW1w/qfzpXh5Kdzu3wCUFkBdgkSEBiOhErZBkip5iJDNR8z0lFZ3/Ux4dnhDL6r5NCcPohblG4OOIqnwoRGropxh/g3aTP7uqo8wQN4z7aH3Ty2e9pUi0sFenf9pHk9/YKedCa8gdB/7ywTa9aj4Ag2UdukavC7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741709324; c=relaxed/simple;
-	bh=98ezhbvXsCMkQvSTYXlUUuB1Lv0Nldel879BVM3lwyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QXcK2i1w0Nysgs2neeuOHu3+F1k1zRCfwxurQvcKmZVn4fiQscu16wSMmPYJHc+JmYnTpeccX5ULCF6WXmhGl6fpJ5o1dRg1oJd3UzC6WxALERp2xYVzLnoM9a7l417HQlk9gnO3eZOR1TIK8H/Qy10Afaq1vzU2VktpyvlLJ68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SQ22nfPK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rQgv6RMh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SQ22nfPK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rQgv6RMh; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1741709443; c=relaxed/simple;
+	bh=zgNmjhMoZPBMDiyBETdCfcW6FwZyRy/nV0ICAQVAZm8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HbYUI8yt0I/kyu8fwHwVuvpOW9viaNZhEVrfgyk03cfseWZSmIq2b6Twb5OuYN8SiR6vbxsvUQoW6O7lRBlZuENAjJqV6Cwas/quM8p7ffBZh8i6LhUz4AX85smN74bQXkR8E4nGJfknFBFImThMjF7ewTW4ZMx7yiJkXG7DIaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4rgSdt1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SQ22nfPK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rQgv6RMh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SQ22nfPK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rQgv6RMh"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 152D41F770;
-	Tue, 11 Mar 2025 16:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741709321;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a9NwsRWR200DwDP0p9x+ZIvlCC9eo++z7Ix8uy1hsIM=;
-	b=SQ22nfPKdPwlVzKHE8naV67hkSAayI/yw3hkh2/9/1tnvU7TXTXR5YJySD527bAaaqH6Hd
-	8/3tOjdYeMyFFFbo8WTSrybuavsme2LjuiAS3Mx3f+HqT9do8wbQHta0k7badDWyGQjPSd
-	dBUtZKbII+nGteOLGFF8kg8rfwlhnk4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741709321;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a9NwsRWR200DwDP0p9x+ZIvlCC9eo++z7Ix8uy1hsIM=;
-	b=rQgv6RMh/nnPbFZFZemOXmfpCX1Y3Ti5OM9edOC9U3BK4Wa/MnU7R7LFt9Jx7rATx72mVd
-	08yK8saX6fzNg5Dw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=SQ22nfPK;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=rQgv6RMh
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741709321;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a9NwsRWR200DwDP0p9x+ZIvlCC9eo++z7Ix8uy1hsIM=;
-	b=SQ22nfPKdPwlVzKHE8naV67hkSAayI/yw3hkh2/9/1tnvU7TXTXR5YJySD527bAaaqH6Hd
-	8/3tOjdYeMyFFFbo8WTSrybuavsme2LjuiAS3Mx3f+HqT9do8wbQHta0k7badDWyGQjPSd
-	dBUtZKbII+nGteOLGFF8kg8rfwlhnk4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741709321;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a9NwsRWR200DwDP0p9x+ZIvlCC9eo++z7Ix8uy1hsIM=;
-	b=rQgv6RMh/nnPbFZFZemOXmfpCX1Y3Ti5OM9edOC9U3BK4Wa/MnU7R7LFt9Jx7rATx72mVd
-	08yK8saX6fzNg5Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 01FD3134A0;
-	Tue, 11 Mar 2025 16:08:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id dDs/AAlg0GfveQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 11 Mar 2025 16:08:41 +0000
-Date: Tue, 11 Mar 2025 17:08:39 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: "Artem S. Tashkinov" <aros@gmx.com>, linux-ext4@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: A syscall for changing birth time
-Message-ID: <20250311160839.GG32661@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <bda3fa3f-dd12-40de-841a-e4c216ab533f@gmx.com>
- <20250310135828.GB8837@mit.edu>
- <69d8b100-f65d-470f-a957-2819795e82a4@gmx.com>
- <20250310153744.GD8837@mit.edu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4rgSdt1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7BD24C4CEF3;
+	Tue, 11 Mar 2025 16:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741709442;
+	bh=zgNmjhMoZPBMDiyBETdCfcW6FwZyRy/nV0ICAQVAZm8=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=K4rgSdt1jALdxy4ZEx1QYVZwgD0PFlR1On6f8pAslLWTTSp6cx7wm7LqSp14Zd8Oi
+	 K77vbhWLsmu7xQLtdGBi5slR/fk84QpQQusPCvmVCXVzCB5oDLMSb8mmCPplApmnj5
+	 9YjJpf/gPB8YBotJSfAg046RHWh1XhF4kmMEFQ2uCOpApmtsSjHhl+1TVTie/e2Q5i
+	 QbM1KDi9y0dc0/DkHNvaShRW+bV9oApHRzcSewk4dz/aOwmcXDpoC+bPYWOGXFZNxO
+	 AuJ3+dJ318QR/vdet3OpqHF9HoK7yOOibHcn4OCyqu4baMvDzMWV/Ohp1+l9XoGGow
+	 b91C3DNUexWhw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404C2C282EC;
+	Tue, 11 Mar 2025 16:10:42 +0000 (UTC)
+From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Date: Tue, 11 Mar 2025 17:10:02 +0100
+Subject: [PATCH v4] ARM: dts: nexus4: Initial dts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310153744.GD8837@mit.edu>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: 152D41F770
-X-Spam-Score: -4.21
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmx.com];
-	FREEMAIL_CC(0.00)[gmx.com,vger.kernel.org];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250311-lg-nexus4-mako-v4-1-3916c8ec7edb@ixit.cz>
+X-B4-Tracking: v=1; b=H4sIAFlg0GcC/3XMQQ6CMBCF4auQWTumtICFlfcwLCodYKJS0yKpE
+ u5uZe/yf8n7VgjkmQI02QqeFg7sphTFIYNuNNNAyDY1SCFLoUSN9wEniq9Q4MPcHFojtFJal1d
+ ZQTo9PfUcd/DSph45zM6/d39Rv/UvtSjMMbed1OJke1lXZ448H7sPtNu2fQFkqxLEqgAAAA==
+X-Change-ID: 20250309-lg-nexus4-mako-da0833885b26
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Ivan Belokobylskiy <belokobylskij@gmail.com>, 
+ David Heidelberg <david@ixit.cz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9574; i=david@ixit.cz;
+ h=from:subject:message-id;
+ bh=ej/fcyNobEhGu/DGU98SkH5ibaeHLK+oGaImrCZQGVA=;
+ b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn0GB8zy0C8e3ZvENnVBihwn53dFwRSkkTq3jft
+ 2A4dKa7tYmJAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ9BgfAAKCRBgAj/E00kg
+ cqfQD/44hUKUo9cVwDBhie+HzrDf3AHjG0oITt5/Z7RJyLN24fKH//LeNRQ+4TXvtkOatEE/FAc
+ 3zZ0wJxirG7qC7SgFE4+MlC8/GYwCBxpIptg+JaruMkIjQxBoirSDJ2MHj/ScdjXYznh6818OTL
+ DlTSDPv71gHicU9n3z+rMpBXkDuNtcEMkIo0j1zlIUs8EO3/SenOojkRD2uRv5ser+my64v7JRF
+ Q99cZkPNh0+zFQvKEefTYWE7j6gI52gOrUu4ETcrTw3sukuNgXSNmgWf6Tr35uUHgaKIT0EAPOB
+ nkt80X0Te8x+xqp2DemmIGkmBCOdJm3cbrKFqe+Ty2EzSFPYe/ZxiqqoIL1XfaY9zjqlCBnhPhQ
+ +aj1byPigyXFGQSQkzUsJe9twZw47y0ul6KlH1PO9+JeK6tM5Q0S9H65s5jgpmxxzkl2fAtkEYa
+ ZrHrZ3eDQn50wAtI9B+C6wy8iuIbk1cV4jcGnHf9j8YDLV/rKxuw9tzx9sn7PgyaIe+Vucltp+t
+ Dz1faaV/BsPi85MqSbvblEmMCXep2SE4U921r3x+57zOVwAjVXEmuoobPmSVZDlS1Zh769WDCZt
+ uIHxrR43mXuVUAJZgevfMV6M7lEfog5rcFG1sexgXpRV50roYLkGe1wgfJWFe1dXj6gmhVydYvl
+ 8AdL8Na11FM2RBw==
+X-Developer-Key: i=david@ixit.cz; a=openpgp;
+ fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
+X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
+X-Original-From: David Heidelberg <david@ixit.cz>
+Reply-To: david@ixit.cz
 
-On Mon, Mar 10, 2025 at 11:37:44AM -0400, Theodore Ts'o wrote:
-> On Mon, Mar 10, 2025 at 02:11:13PM +0000, Artem S. Tashkinov wrote:
-> > 
-> > I'm not going to argue with your reasoning but being able to set btime
-> > could be beneficial for backup and restore purposes/utilities.
+From: Ivan Belokobylskiy <belokobylskij@gmail.com>
 
-From my experience and use case: for archiving purposes the creation
-time has a meaning and it gets lost when the files get moved to bigger
-storage. Sometimes the creation is stored in the file metadata (like jpeg
-or video files), but ultimately the creation time is stored in the file
-inode metadata itself regardless of the format.
+Add initial support for LG Nexus 4 (mako).
 
-Another use case is for send/receive that transfers snapshots from one
-btrfs filesystem to another. In protocol v2 we added the creation time
-(otime) to the stream so the receiving side can read it, but cannot
-write it yet.
+Features currently working: regulators, eMMC, and volume keys.
 
-Question about ability to change otime/btime can be found around
-internet, there was attempt to make it a utimensat() operation
-(https://lore.kernel.org/linux-btrfs/cover.1550136164.git.osandov@fb.com).
+Signed-off-by: Ivan Belokobylskiy <belokobylskij@gmail.com>
+Co-developed-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+Changes in v4:
+- Sorted regulators and added regulators compatible.
+- Corrected pmic include and references.
+- Moved &rpm outside of / node.
+- Moved and simplify pm8921 keypad.
+- Added chasis-type.
+- Dropped incomplete WiFi node, will be provided in future
+  contributions.
+- Link to v3: https://lore.kernel.org/r/20250309-lg-nexus4-mako-v3-1-1dc2807df296@ixit.cz
 
-In that thread there's a disagreement with providing that and I
-disagreed as well back then, but over the time I changed my mind also
-because I found a use case for myself.  So I have a WIP to add it as
-ioctl to btrfs. I understand it's a niche use case and won't attempt to
-implement it on the VFS level. At least for btrfs and the send/receive
-use case it's slightly more justified than in other filesystems.
+Changes in v3:
+- rebased against next-20250307
+- dropped backlight until driver gets converted to DT
+
+Changes in v2:
+- lge vendor doesn't exist anymore, rename to lg
+- sdcc@ to mmc@ to comply with dt-schema
+---
+ arch/arm/boot/dts/qcom/Makefile                    |   1 +
+ .../boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts  | 344 +++++++++++++++++++++
+ 2 files changed, 345 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makefile
+index f06c6d425e91dd73c2b453d15543d95bd32383b9..0c1d116f6e84f76994aa8c8286350bdcd1657a42 100644
+--- a/arch/arm/boot/dts/qcom/Makefile
++++ b/arch/arm/boot/dts/qcom/Makefile
+@@ -12,6 +12,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-apq8064-ifc6410.dtb \
+ 	qcom-apq8064-sony-xperia-lagan-yuga.dtb \
+ 	qcom-apq8064-asus-nexus7-flo.dtb \
++	qcom-apq8064-lg-nexus4-mako.dtb \
+ 	qcom-apq8074-dragonboard.dtb \
+ 	qcom-apq8084-ifc6540.dtb \
+ 	qcom-apq8084-mtp.dtb \
+diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..51edd661e4bd903a32445d15955585a194574f30
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts
+@@ -0,0 +1,344 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/mfd/qcom-rpm.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++
++#include "qcom-apq8064-v2.0.dtsi"
++#include "pm8821.dtsi"
++#include "pm8921.dtsi"
++
++/ {
++	model = "LG Nexus 4 (mako)";
++	compatible = "lg,nexus4-mako", "qcom,apq8064";
++	chassis-type = "handset";
++
++	aliases {
++		serial0 = &gsbi7_serial;
++		serial1 = &gsbi6_serial;
++		serial2 = &gsbi4_serial;
++	};
++
++	chosen {
++		stdout-path = "serial2:115200n8";
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		ramoops@88d00000{
++			compatible = "ramoops";
++			reg = <0x88d00000 0x100000>;
++			record-size = <0x20000>;
++			console-size = <0x20000>;
++			ftrace-size = <0x20000>;
++		};
++	};
++
++	battery_cell: battery-cell {
++		compatible = "simple-battery";
++		constant-charge-current-max-microamp = <900000>;
++		operating-range-celsius = <0 45>;
++	};
++};
++
++&rpm {
++	regulators {
++		compatible = "qcom,rpm-pm8921-regulators";
++
++		vin_lvs1_3_6-supply = <&pm8921_s4>;
++		vin_lvs2-supply = <&pm8921_s1>;
++		vin_lvs4_5_7-supply = <&pm8921_s4>;
++
++		vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
++		vdd_l24-supply = <&pm8921_s1>;
++		vdd_l25-supply = <&pm8921_s1>;
++
++		vdd_l26-supply = <&pm8921_s7>;
++		vdd_l27-supply = <&pm8921_s7>;
++		vdd_l28-supply = <&pm8921_s7>;
++
++		/* Buck SMPS */
++		pm8921_s1: s1 {
++			regulator-always-on;
++			regulator-min-microvolt = <1225000>;
++			regulator-max-microvolt = <1225000>;
++			qcom,switch-mode-frequency = <3200000>;
++			bias-pull-down;
++		};
++
++		pm8921_s2: s2 {
++			regulator-min-microvolt = <1300000>;
++			regulator-max-microvolt = <1300000>;
++			qcom,switch-mode-frequency = <1600000>;
++			bias-pull-down;
++		};
++
++		/* msm otg HSUSB_VDDCX */
++		pm8921_s3: s3 {
++			regulator-min-microvolt = <500000>;
++			regulator-max-microvolt = <1150000>;
++			qcom,switch-mode-frequency = <4800000>;
++			bias-pull-down;
++		};
++
++		/*
++		 * msm_sdcc.1-sdc-vdd_io
++		 * tabla2x-slim-CDC_VDDA_RX
++		 * tabla2x-slim-CDC_VDDA_TX
++		 * tabla2x-slim-CDC_VDD_CP
++		 * tabla2x-slim-VDDIO_CDC
++		 */
++		pm8921_s4: s4 {
++			regulator-always-on;
++			regulator-min-microvolt	= <1800000>;
++			regulator-max-microvolt	= <1800000>;
++			qcom,switch-mode-frequency = <1600000>;
++			bias-pull-down;
++			qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
++		};
++
++		/*
++		 * supply vdd_l26, vdd_l27, vdd_l28
++		 */
++		pm8921_s7: s7 {
++			regulator-min-microvolt = <1300000>;
++			regulator-max-microvolt = <1300000>;
++			qcom,switch-mode-frequency = <3200000>;
++		};
++
++		pm8921_s8: s8 {
++			regulator-min-microvolt = <2200000>;
++			regulator-max-microvolt = <2200000>;
++			qcom,switch-mode-frequency = <1600000>;
++		};
++
++		pm8921_l1: l1 {
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++			regulator-always-on;
++			bias-pull-down;
++		};
++
++		/* mipi_dsi.1-dsi1_pll_vdda */
++		pm8921_l2: l2 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			bias-pull-down;
++		};
++
++		/* msm_otg-HSUSB_3p3 */
++		pm8921_l3: l3 {
++			regulator-min-microvolt = <3075000>;
++			regulator-max-microvolt = <3500000>;
++			bias-pull-down;
++		};
++
++		/* msm_otg-HSUSB_1p8 */
++		pm8921_l4: l4 {
++			regulator-always-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		/* msm_sdcc.1-sdc_vdd */
++		pm8921_l5: l5 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++			bias-pull-down;
++		};
++
++		/* earjack_debug */
++		pm8921_l6: l6 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++			bias-pull-down;
++		};
++
++		/* mipi_dsi.1-dsi_vci */
++		pm8921_l8: l8 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <3000000>;
++			bias-pull-down;
++		};
++
++		/* wcnss_wlan.0-iris_vddpa */
++		pm8921_l10: l10 {
++			regulator-min-microvolt = <2900000>;
++			regulator-max-microvolt = <2900000>;
++			bias-pull-down;
++		};
++
++		/* mipi_dsi.1-dsi1_avdd */
++		pm8921_l11: l11 {
++			regulator-min-microvolt = <2850000>;
++			regulator-max-microvolt = <2850000>;
++			bias-pull-down;
++		};
++
++		/* touch_vdd */
++		pm8921_l15: l15 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2950000>;
++			bias-pull-down;
++		};
++
++		/* slimport_dvdd */
++		pm8921_l18: l18 {
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++			bias-pull-down;
++		};
++
++		/* touch_io */
++		pm8921_l22: l22 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			bias-pull-down;
++		};
++
++		/*
++		 * mipi_dsi.1-dsi_vddio
++		 * pil_qdsp6v4.1-pll_vdd
++		 * pil_qdsp6v4.2-pll_vdd
++		 * msm_ehci_host.0-HSUSB_1p8
++		 * msm_ehci_host.1-HSUSB_1p8
++		 */
++		pm8921_l23: l23 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			bias-pull-down;
++		};
++
++		/*
++		 * tabla2x-slim-CDC_VDDA_A_1P2V
++		 * tabla2x-slim-VDDD_CDC_D
++		 */
++		pm8921_l24: l24 {
++			regulator-min-microvolt = <750000>;
++			regulator-max-microvolt = <1150000>;
++			bias-pull-down;
++		};
++
++		pm8921_l25: l25 {
++			regulator-min-microvolt = <1250000>;
++			regulator-max-microvolt = <1250000>;
++			regulator-always-on;
++			bias-pull-down;
++		};
++
++		pm8921_l26: l26 {
++			regulator-min-microvolt = <375000>;
++			regulator-max-microvolt = <1050000>;
++			regulator-always-on;
++			bias-pull-down;
++		};
++
++		pm8921_l27: l27 {
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++		};
++
++		pm8921_l28: l28 {
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1050000>;
++			bias-pull-down;
++		};
++
++		/* wcnss_wlan.0-iris_vddio */
++		pm8921_lvs1: lvs1 {
++			bias-pull-down;
++		};
++
++		/* wcnss_wlan.0-iris_vdddig */
++		pm8921_lvs2: lvs2 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs3: lvs3 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs4: lvs4 {
++			bias-pull-down;
++		};
++
++		pm8921_lvs5: lvs5 {
++			bias-pull-down;
++		};
++
++		/* mipi_dsi.1-dsi_iovcc */
++		pm8921_lvs6: lvs6 {
++			bias-pull-down;
++		};
++
++		/*
++		 * pil_riva-pll_vdd
++		 * lvds.0-lvds_vdda
++		 * mipi_dsi.1-dsi1_vddio
++		 * hdmi_msm.0-hdmi_vdda
++		 */
++		pm8921_lvs7: lvs7 {
++			bias-pull-down;
++		};
++
++		pm8921_ncp: ncp {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			qcom,switch-mode-frequency = <1600000>;
++		};
++	};
++};
++
++&gsbi1 {
++	qcom,mode = <GSBI_PROT_I2C>;
++
++	status = "okay";
++};
++
++&gsbi1_i2c {
++	clock-frequency = <200000>;
++
++	status = "okay";
++};
++
++&gsbi4 {
++	qcom,mode = <GSBI_PROT_I2C_UART>;
++
++	status = "okay";
++};
++
++&gsbi4_serial {
++	status = "okay";
++};
++
++&pm8821 {
++	interrupts-extended = <&tlmm_pinmux 76 IRQ_TYPE_LEVEL_LOW>;
++};
++
++&pm8921 {
++	interrupts-extended = <&tlmm_pinmux 74 IRQ_TYPE_LEVEL_LOW>;
++};
++
++&pm8921_keypad {
++	linux,keymap = <
++		MATRIX_KEY(0, 0, KEY_VOLUMEDOWN)
++		MATRIX_KEY(0, 1, KEY_VOLUMEUP)
++	>;
++
++	keypad,num-rows = <1>;
++	keypad,num-columns = <5>;
++
++	status = "okay";
++};
++
++
++/* eMMC */
++&sdcc1 {
++	vmmc-supply = <&pm8921_l5>;
++	vqmmc-supply = <&pm8921_s4>;
++
++	status = "okay";
++};
+
+---
+base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
+change-id: 20250309-lg-nexus4-mako-da0833885b26
+
+Best regards,
+-- 
+David Heidelberg <david@ixit.cz>
+
+
