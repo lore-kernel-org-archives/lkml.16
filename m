@@ -1,142 +1,341 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE391199FBA;
-	Tue, 11 Mar 2025 22:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF202264F93
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 22:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741730784; cv=none; b=YHCBTqvoymG0w3fwSHvUnPaeVnbt1zkNElUXgvLHIOSSNwtCiYpheK+SF/FFH5kKna95M6EsPJCi7xz2nf2h/PgLWVeLUoWuDa5mDhw8W6DiWCONg0koMGnpSwl0dr/CWddhFKBaZgAwqQ27cRqlDWDAqpap+WMjbJurOhuwQ8c=
+	t=1741730868; cv=none; b=BsJnvxzLcINvMohcE5FFWF1Tpb1NvwRz55kGCRS4+XOZnr31Ai8QwM28Yf2SNuOZMfMl6CGgRr+keNGZkWbQD8SfaqovIYkYmLEyMkuvMqyKYxKpJI+z7Ta+nJLUDVcpn4M2EZYkWClcgpoiwuEGJfzN/5BJH0psflpnbLJ3zDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741730784; c=relaxed/simple;
-	bh=1FsEAoBQCwul9SXkYZakBAby+nof+BFT5YLa9ZLbmWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jE5bBFsU4YQI5slNlwSO4amX1ivljkuFZHYXDhy4K2frMb6sbqTYqeyyExw/IhYSZi7Dvo4UFJyk3lZJHGqEN9ZpbhBogVuvoTzcTmYqB9thFvFWzM2Se1e7cCf8GWeLqogCXL/azMkhWpuEMSun2TuuByr5FTr9aithxY12Wq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=JMh6fI6C; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1741730868; c=relaxed/simple;
+	bh=N2asw5/u4nVdN9JU4c6aooeuTfD7hiNIfe/WTlcVebs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=X39n7oRz+Dor1t99FBNDz1sSP8Hpzr+6lL9/v3nL8xkp2gGfUd5QyH7oXEMWv/zIkqwV7CkYuHQsnYx6CFiFkPlNO5gNzE7vTp1F1/KZxV/mzRXtLewutL1dmvRA2s+ufPTwghfhNpVSLfOz4TMXk8UnqKgCSPtLxVJOAxUV+Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=glX6+CvL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+f9VWN3y; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JMh6fI6C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VEtYjw1bJy2FyEgqNltD6h1CKY3ei2RKfjZVJcAYac8=; b=JMh6fI6ClsD77q6QFlO594QFyv
-	sKF4LPcJaQcTQzRqy28KBHvEvNbva/Q4T4karOQKqy3zGz5C6FZf26kql8lG10rd/yWDclC8ace2t
-	E8nv+RSCOd4MSUMTE37Jd6pwCjUlHw6IB88o86uJeQeu1vXLQvCcelUpTMH5zI9UW1Ln/0xzTIYnc
-	+ZxX47CDZdxAPYKw9IFXZpxwHKBPV2C5StuOVk/ouA+IPkzqmTobJn+hz8OlhffXTedE2VG2aUA6F
-	6ipRngplcXCrRC298lr1CqzLj89tc6A4tBT19pldI+iCk9Vc5UcPgIif4YSb1J3UDshYyiuaHWSri
-	JsTs7FhA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38464)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1ts7j7-0004gC-0h;
-	Tue, 11 Mar 2025 22:05:29 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1ts7j4-0003rB-0F;
-	Tue, 11 Mar 2025 22:05:26 +0000
-Date: Tue, 11 Mar 2025 22:05:25 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Mark Brown <broonie@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Stafford Horne <shorne@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH 10/13] arch, mm: set high_memory in free_area_init()
-Message-ID: <Z9CzpTlA2e0jR7UJ@shell.armlinux.org.uk>
-References: <20250306185124.3147510-1-rppt@kernel.org>
- <20250306185124.3147510-11-rppt@kernel.org>
- <cee346ec-5fa5-4d0b-987b-413ee585dbaa@sirena.org.uk>
- <Z9Cl8JKkRGhaRrgM@kernel.org>
- <5e40219b-f149-4e0f-aa10-c09fa183945e@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="glX6+CvL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+f9VWN3y"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741730865;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7f4EfmVh3ltuLFTPlppwnAyB2EbHx8ZasIG8ILjGMXc=;
+	b=glX6+CvLa/V+CRv/IDbUAgP6Z6FcjGfGf8MNZqwGe1iwybdSQiAgot+i9F8uRMA/KlFA17
+	w/oraSiaKS0k4LiwoWKNBzXU+rUrZ/59ciWkoTOkq3XQ67p9DjINuOFLyHXF7vlo/GHDv5
+	cnUruWQWjHfZV9P5005mSbZE9ZvbHp6t1xwpL4JI9emFigIOJf5ZeYDKGECCNtBcrlqRxk
+	W4JWxY9dFcIoyp8S3d3ibM4HkjeNQ3BVelCTzKRjX3EKqZ3hPcISI66xn2ub0Sutmf6X9I
+	HK/7W9PXS4QFndBdN0fBrfypS1Xrt3yu8ehHt7wWrM4RQnDo/MVdCIetsaGruw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741730865;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7f4EfmVh3ltuLFTPlppwnAyB2EbHx8ZasIG8ILjGMXc=;
+	b=+f9VWN3y4bq2x/rdpDHlLzT90LcGcc8PWvfgT4QMyOboNNsX8onXrSKTfleSmp39VIwyk8
+	uB5Rar87mLpPwRBA==
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Benjamin Segall <bsegall@google.com>, Eric
+ Dumazet <edumazet@google.com>, Andrey Vagin <avagin@openvz.org>, Pavel
+ Tikhomirov <ptikhomirov@virtuozzo.com>, Peter Zijlstra
+ <peterz@infradead.org>, Cyrill Gorcunov <gorcunov@gmail.com>
+Subject: [patch V3a 17/18] posix-timers: Provide a mechanism to allocate a
+ given timer ID
+In-Reply-To: <87msdrz0i9.ffs@tglx>
+References: <20250308155501.391430556@linutronix.de>
+ <20250308155624.526740902@linutronix.de> <Z9CsstMf-EVZpsiH@pavilion.home>
+ <87msdrz0i9.ffs@tglx>
+Date: Tue, 11 Mar 2025 23:07:44 +0100
+Message-ID: <87jz8vz0en.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e40219b-f149-4e0f-aa10-c09fa183945e@sirena.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain
 
-On Tue, Mar 11, 2025 at 09:33:29PM +0000, Mark Brown wrote:
-> [    0.000000] Booting Linux on physical CPU 0x0
-> [    0.000000] Linux version 6.14.0-rc6-next-20250311 (tuxmake@tuxmake) (arm-linux-gnueabihf-gcc (Debian 13.3.0-5) 13.3.0, GNU ld (GNU Binutils for Debian) 2.43.1) #1 SMP @1741691801
-> [    0.000000] CPU: ARMv7 Processor [414fc0f0] revision 0 (ARMv7), cr=10c5387d
-> [    0.000000] CPU: div instructions available: patching division code
-> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
-> [    0.000000] OF: fdt: Machine model: linux,dummy-virt
-> [    0.000000] random: crng init done
-> [    0.000000] earlycon: pl11 at MMIO 0x09000000 (options '')
-> [    0.000000] printk: legacy bootconsole [pl11] enabled
-> [    0.000000] Memory policy: Data cache writealloc
-> [    0.000000] efi: UEFI not found.
-> [    0.000000] cma: Reserved 64 MiB at 0x00000000
+Checkpoint/Restore in Userspace (CRIU) requires to reconstruct posix timers
+with the same timer ID on restore. It uses sys_timer_create() and relies on
+the monotonic increasing timer ID provided by this syscall. It creates and
+deletes timers until the desired ID is reached. This is can loop for a long
+time, when the checkpointed process had a very sparse timer ID range.
 
-If that CMA address is correct, then it's wrong. virt machines start
-DRAM at 0x40000000. This is a small memory VM:
+It has been debated to implement a new syscall to allow the creation of
+timers with a given timer ID, but that's tideous due to the 32/64bit compat
+issues of sigevent_t and of dubious value.
 
-[    0.000000] Zone ranges:
-[    0.000000]   Normal   [mem 0x0000000040000000-0x0000000045ffffff]
-[    0.000000]   HighMem  empty
+The restore mechanism of CRIU creates the timers in a state where all
+threads of the restored process are held on a barrier and cannot issue
+syscalls. That means the restorer task has exclusive control.
 
-and this is a larger memory VM:
+This allows to address this issue with a prctl() so that the restorer
+thread can do:
 
-[    0.000000] Zone ranges:
-[    0.000000]   Normal   [mem 0x0000000040000000-0x000000006fffffff]
-[    0.000000]   HighMem  [mem 0x0000000070000000-0x000000007fffffff]
+   if (prctl(PR_TIMER_CREATE_RESTORE_IDS, PR_TIMER_CREATE_RESTORE_IDS_ON))
+      goto linear_mode;
+   create_timers_with_explicit_ids();
+   prctl(PR_TIMER_CREATE_RESTORE_IDS, PR_TIMER_CREATE_RESTORE_IDS_OFF);
+   
+This is backwards compatible because the prctl() fails on older kernels and
+CRIU can fall back to the linear timer ID mechanism. CRIU versions which do
+not know about the prctl() just work as before.
 
-Neither have CMA enabled (it's not necessary for a VM).
+Implement the prctl() and modify timer_create() so that it copies the
+requested timer ID from userspace by utilizing the existing timer_t
+pointer, which is used to copy out the allocated timer ID on success.
 
-On a real platform where CMA and highmem is enabled, then:
+If the prctl() is disabled, which it is by default, timer_create() works as
+before and does not try to read from the userspace pointer.
 
-[    0.000000] cma: Reserved 16 MiB at 0x4f000000 on node -1
-[    0.000000] Zone ranges:
-[    0.000000]   Normal   [mem 0x0000000010000000-0x000000003fffffff]
-[    0.000000]   HighMem  [mem 0x0000000040000000-0x000000004fffffff]
+There is no problem when a broken or rogue user space application enables
+the prctl(). If the user space pointer does not contain a valid ID, then
+timer_create() fails. If the data is not initialized, but constains a
+random valid ID, timer_create() will create that random timer ID or fail if
+the ID is already given out. 
+ 
+As CRIU must use the raw syscall to avoid manipulating the internal state
+of the restored process, this has no library dependencies and can be
+adopted by CRIU right away.
 
-So that "cma:" line you are seeing is indicating that something is very
-very wrong - it should definitely not be zero.
+Recreating two timers with IDs 1000000 and 2000000 takes 1.5 seconds with
+the create/delete method. With the prctl() it takes 3 microseconds.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+V3a: Remove the locking in the prctl() and clear restore mode on exec()
+     - Frederic
+V2: Move the ID counter ahead to avoid collisions after switching back to
+    normal mode.
+---
+ include/linux/posix-timers.h |    2 
+ include/linux/sched/signal.h |    1 
+ include/uapi/linux/prctl.h   |   10 ++++
+ kernel/sys.c                 |    5 ++
+ kernel/time/posix-timers.c   |   99 +++++++++++++++++++++++++++++++------------
+ 5 files changed, 91 insertions(+), 26 deletions(-)
+
+--- a/include/linux/posix-timers.h
++++ b/include/linux/posix-timers.h
+@@ -114,6 +114,7 @@ bool posixtimer_init_sigqueue(struct sig
+ void posixtimer_send_sigqueue(struct k_itimer *tmr);
+ bool posixtimer_deliver_signal(struct kernel_siginfo *info, struct sigqueue *timer_sigq);
+ void posixtimer_free_timer(struct k_itimer *timer);
++long posixtimer_create_prctl(unsigned long ctrl);
+ 
+ /* Init task static initializer */
+ #define INIT_CPU_TIMERBASE(b) {						\
+@@ -140,6 +141,7 @@ static inline void posixtimer_rearm_itim
+ static inline bool posixtimer_deliver_signal(struct kernel_siginfo *info,
+ 					     struct sigqueue *timer_sigq) { return false; }
+ static inline void posixtimer_free_timer(struct k_itimer *timer) { }
++static inline long posixtimer_create_prctl(unsigned long ctrl) { return -EINVAL; }
+ #endif
+ 
+ #ifdef CONFIG_POSIX_CPU_TIMERS_TASK_WORK
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -136,6 +136,7 @@ struct signal_struct {
+ #ifdef CONFIG_POSIX_TIMERS
+ 
+ 	/* POSIX.1b Interval Timers */
++	unsigned int		timer_create_restore_ids:1;
+ 	atomic_t		next_posix_timer_id;
+ 	struct hlist_head	posix_timers;
+ 	struct hlist_head	ignored_posix_timers;
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -353,4 +353,14 @@ struct prctl_mm_map {
+  */
+ #define PR_LOCK_SHADOW_STACK_STATUS      76
+ 
++/*
++ * Controls the mode of timer_create() for CRIU restore operations.
++ * Enabling this allows CRIU to restore timers with explicit IDs.
++ *
++ * Don't use for normal operations as the result might be undefined.
++ */
++#define PR_TIMER_CREATE_RESTORE_IDS		77
++# define PR_TIMER_CREATE_RESTORE_IDS_OFF	0
++# define PR_TIMER_CREATE_RESTORE_IDS_ON		1
++
+ #endif /* _LINUX_PRCTL_H */
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2811,6 +2811,11 @@ SYSCALL_DEFINE5(prctl, int, option, unsi
+ 			return -EINVAL;
+ 		error = arch_lock_shadow_stack_status(me, arg2);
+ 		break;
++	case PR_TIMER_CREATE_RESTORE_IDS:
++		if (arg3 || arg4 || arg5)
++			return -EINVAL;
++		error = posixtimer_create_prctl(arg2);
++		break;
+ 	default:
+ 		trace_task_prctl_unknown(option, arg2, arg3, arg4, arg5);
+ 		error = -EINVAL;
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -19,6 +19,7 @@
+ #include <linux/nospec.h>
+ #include <linux/posix-clock.h>
+ #include <linux/posix-timers.h>
++#include <linux/prctl.h>
+ #include <linux/sched/task.h>
+ #include <linux/slab.h>
+ #include <linux/syscalls.h>
+@@ -57,6 +58,8 @@ static const struct k_clock * const posi
+ static const struct k_clock *clockid_to_kclock(const clockid_t id);
+ static const struct k_clock clock_realtime, clock_monotonic;
+ 
++#define TIMER_ANY_ID		INT_MIN
++
+ /* SIGEV_THREAD_ID cannot share a bit with the other SIGEV values. */
+ #if SIGEV_THREAD_ID != (SIGEV_THREAD_ID & \
+ 			~(SIGEV_SIGNAL | SIGEV_NONE | SIGEV_THREAD))
+@@ -128,38 +131,60 @@ static bool posix_timer_hashed(struct ti
+ 	return false;
+ }
+ 
+-static int posix_timer_add(struct k_itimer *timer)
++static bool posix_timer_add_at(struct k_itimer *timer, struct signal_struct *sig, unsigned int id)
++{
++	struct timer_hash_bucket *bucket = hash_bucket(sig, id);
++
++	scoped_guard (spinlock, &bucket->lock) {
++		/*
++		 * Validate under the lock as this could have raced against
++		 * another thread ending up with the same ID, which is
++		 * highly unlikely, but possible.
++		 */
++		if (!posix_timer_hashed(bucket, sig, id)) {
++			/*
++			 * Set the timer ID and the signal pointer to make
++			 * it identifiable in the hash table. The signal
++			 * pointer has bit 0 set to indicate that it is not
++			 * yet fully initialized. posix_timer_hashed()
++			 * masks this bit out, but the syscall lookup fails
++			 * to match due to it being set. This guarantees
++			 * that there can't be duplicate timer IDs handed
++			 * out.
++			 */
++			timer->it_id = (timer_t)id;
++			timer->it_signal = (struct signal_struct *)((unsigned long)sig | 1UL);
++			hlist_add_head_rcu(&timer->t_hash, &bucket->head);
++			return true;
++		}
++	}
++	return false;
++}
++
++static int posix_timer_add(struct k_itimer *timer, int req_id)
+ {
+ 	struct signal_struct *sig = current->signal;
+ 
++	if (unlikely(req_id != TIMER_ANY_ID)) {
++		if (!posix_timer_add_at(timer, sig, req_id))
++			return -EBUSY;
++
++		/*
++		 * Move the ID counter past the requested ID, so that after
++		 * switching back to normal mode the IDs are outside of the
++		 * exact allocated region. That avoids ID collisions on the
++		 * next regular timer_create() invocations.
++		 */
++		atomic_set(&sig->next_posix_timer_id, req_id + 1);
++		return req_id;
++	}
++
+ 	for (unsigned int cnt = 0; cnt <= INT_MAX; cnt++) {
+ 		/* Get the next timer ID and clamp it to positive space */
+ 		unsigned int id = atomic_fetch_inc(&sig->next_posix_timer_id) & INT_MAX;
+-		struct timer_hash_bucket *bucket = hash_bucket(sig, id);
+ 
+-		scoped_guard (spinlock, &bucket->lock) {
+-			/*
+-			 * Validate under the lock as this could have raced
+-			 * against another thread ending up with the same
+-			 * ID, which is highly unlikely, but possible.
+-			 */
+-			if (!posix_timer_hashed(bucket, sig, id)) {
+-				/*
+-				 * Set the timer ID and the signal pointer to make
+-				 * it identifiable in the hash table. The signal
+-				 * pointer has bit 0 set to indicate that it is not
+-				 * yet fully initialized. posix_timer_hashed()
+-				 * masks this bit out, but the syscall lookup fails
+-				 * to match due to it being set. This guarantees
+-				 * that there can't be duplicate timer IDs handed
+-				 * out.
+-				 */
+-				timer->it_id = (timer_t)id;
+-				timer->it_signal = (struct signal_struct *)((unsigned long)sig | 1UL);
+-				hlist_add_head_rcu(&timer->t_hash, &bucket->head);
+-				return id;
+-			}
+-		}
++		if (posix_timer_add_at(timer, sig, id))
++			return id;
+ 		cond_resched();
+ 	}
+ 	/* POSIX return code when no timer ID could be allocated */
+@@ -364,6 +389,15 @@ static enum hrtimer_restart posix_timer_
+ 	return HRTIMER_NORESTART;
+ }
+ 
++long posixtimer_create_prctl(unsigned long ctrl)
++{
++	if (ctrl > PR_TIMER_CREATE_RESTORE_IDS_ON)
++		return -EINVAL;
++
++	current->signal->timer_create_restore_ids = ctrl == PR_TIMER_CREATE_RESTORE_IDS_ON;
++	return 0;
++}
++
+ static struct pid *good_sigevent(sigevent_t * event)
+ {
+ 	struct pid *pid = task_tgid(current);
+@@ -435,6 +469,7 @@ static int do_timer_create(clockid_t whi
+ 			   timer_t __user *created_timer_id)
+ {
+ 	const struct k_clock *kc = clockid_to_kclock(which_clock);
++	timer_t req_id = TIMER_ANY_ID;
+ 	struct k_itimer *new_timer;
+ 	int error, new_timer_id;
+ 
+@@ -449,11 +484,20 @@ static int do_timer_create(clockid_t whi
+ 
+ 	spin_lock_init(&new_timer->it_lock);
+ 
++	/* Special case for CRIU to restore timers with a given timer ID. */
++	if (unlikely(current->signal->timer_create_restore_ids)) {
++		if (copy_from_user(&req_id, created_timer_id, sizeof(req_id)))
++			return -EFAULT;
++		/* Valid IDs are 0..INT_MAX */
++		if ((unsigned int)req_id > INT_MAX)
++			return -EINVAL;
++	}
++
+ 	/*
+ 	 * Add the timer to the hash table. The timer is not yet valid
+ 	 * after insertion, but has a unique ID allocated.
+ 	 */
+-	new_timer_id = posix_timer_add(new_timer);
++	new_timer_id = posix_timer_add(new_timer, req_id);
+ 	if (new_timer_id < 0) {
+ 		posixtimer_free_timer(new_timer);
+ 		return new_timer_id;
+@@ -1041,6 +1085,9 @@ void exit_itimers(struct task_struct *ts
+ 	struct hlist_node *next;
+ 	struct k_itimer *timer;
+ 
++	/* Clear restore mode for exec() */
++	tsk->signal->timer_create_restore_ids = 0;
++
+ 	if (hlist_empty(&tsk->signal->posix_timers))
+ 		return;
+ 
