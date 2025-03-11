@@ -1,291 +1,103 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05olkn2037.outbound.protection.outlook.com [40.92.90.37])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB632222D8;
-	Tue, 11 Mar 2025 07:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.90.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741678954; cv=fail; b=RJmwWNxSXNgUdZiHztnXGew6aLEhVv+1thCZ6lIEp5rDl8mEvFfYod5Pon6Y76BisLmMkOIbVcIPv92beROqr900kA+mxCf0nhmk5dt6KDCUwYDdzeLu8n24lmkwWGPDNCUTAgm8t3zYwzFg+lmhhSy0xC7viwLOuKfOED/DiwY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741678954; c=relaxed/simple;
-	bh=sUcGgWYRUDYDScIeVnJ8ahO4FFpHI9dHtFCXY86H3dQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MMmn5ykeFtU4cqST0fljAAvHyKolOXJ/MJCY8GD703Nz0/4nr6oVodxlfQmS7L/9EI8DDLBdJmwpDYzvygyoYBSqQAYSRgocs6F4A5vVXkcspJJsG1PiDx1RNJAMU2qMcwotxBg9shg78SYEfBUfLNnGHhT9t9xlwxYrLtk355I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=q8lshqv1; arc=fail smtp.client-ip=40.92.90.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A94422257B;
+	Tue, 11 Mar 2025 07:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741678967; cv=none; b=mk1oasbkoJut2v9S2N24WCGyij60HygToT05Xudy8lKan0Z6tXHq6+9IzJXz8P+vhtV2WnbLF05M/DJ3ukuLfuNNBhUC/RpZnGhAub05IAyXAa1Kfi8PBtDxRHVPmzwnJnMcHtiVMi/qCh5ydUwZn6FB3v+HaLwsQMOAfmLXuus=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741678967; c=relaxed/simple;
+	bh=SEVKryVmw9EdI0nGbBI78wK4YjhFT5TtzcIWAsyinnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=badzu5RfW+Q/KHeUeCybdES2wxVqnkRSidoTNVpYrfF7YuvGlpTKQ0S+sWa4ah4+2THnQ2nu+d17i/mDuKWQgFNq6gruTNPrIf/M6qkYWfV7wpAoxD8Y/pfnD13paMgfzo755WhjrzqhVloc8uMvmwWv6kUyiD2C7O5u6WaXA4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sy+AHpPv; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="q8lshqv1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UEa9Dteh148lIolgqhJj7nv9E6kJ7BssFkXXJ9fAywpSPeNOe6ZbuFsjJuM24IPEwabp3cl999MZp2Et30x3EkmL+lbOnFC9VO/PsxSDbiieurHvQvGmt2UlOnmLA4nKFLeykrQ1s3rV6jIL7qQ0eEH6QqCIZaFtCSBPCv3jF6jB0nsoOsvAUTt4ZCHjIPlfxUXybIidhm3gr++F2EJ+bp5mVpLeb8S8n95GGG4G0oySrJaq4yuK0bIbh+mWPBmFFs6xF0VLiqyUevkALCUJIfXfHxXOaByE9uBeah34VypZpUzOFvAhNj3Q5/Zptn2XyTjSJ+94Jl2iyoWTuEcymg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d/VTuLG5501xlGlfhgtQO71+duhp2qMNAuKMog7UaOY=;
- b=X+/7WvKwAI0DqgjzAmvEBQOJUwYOkcnOBrnV3GJ7O9g3POqJqzxMLc2A7jab5UocmweoNyAVacxbr1ZuArOsWO6x2CkSy3NiF/7nEwS6n+vvuBP/F9Zko/AVgowV35pZYBGoyiIrRNlT2AKhCY2mggEGaSWaxk25zaLpuESkT9Sc/TaW08lb6T/5dnKNuyG7B8YREZfLMICK9TkT8cqEFZjS5waCv8r/V5pez/JVvTuQZFdfyffTvfh57OfFiM+mwbgAuZZT5D0uVp28ur2HttO2idja7yscbLA7h/CMwoOgffDPQooKpjUbekOeOI2rY2ZYi0MN9VY+7I+yHs2TWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d/VTuLG5501xlGlfhgtQO71+duhp2qMNAuKMog7UaOY=;
- b=q8lshqv1SrvcQlk6Rr3qk2zzfJ42BJoaK6zNeSoDplbyqwGJ5UGWb6Ka4qsuRxKzoUSjYAAkwKKgubx6tJTUmvKubVxnKlGPGi+Q2BHkCMwgM32XT9YbxPhKp6nGTL12owt8+1K6N4i5qJZGiL3i20tL++3bkXBvxyTAvmJwVz96fBKXptetfGJWQdxa+l3D1pxvn+hbNA0zWC8ZjDgK7lupQ1xKe/Pwi0WDWh5JIKZKpkBqbTxSgrxYlsTM9gLS0t7jbiJIjQvQ6rWziiiORPWCZi86tEWUy9qmXu0mDMYgbGx8jrpuvLdQQ9VO7U5hjliNome5iQ0PsO+ViDHAAg==
-Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:175::17)
- by GV2P189MB2455.EURP189.PROD.OUTLOOK.COM (2603:10a6:150:de::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
- 2025 07:42:28 +0000
-Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- ([fe80::e9f1:a878:e797:ee1a]) by AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- ([fe80::e9f1:a878:e797:ee1a%2]) with mapi id 15.20.8511.026; Tue, 11 Mar 2025
- 07:42:28 +0000
-Message-ID:
- <AM7P189MB10092D0348FC9E0A70C911E2E3D12@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-Date: Tue, 11 Mar 2025 08:42:27 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/9] drm/verisilicon : support DC8200 and inno hdmi
-To: keith zhao <keith.zhao@starfivetech.com>, devicetree@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com,
- william.qiu@starfivetech.com, xingyu.wu@starfivetech.com, kernel@esmil.dk,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- p.zabel@pengutronix.de, changhuang.liang@starfivetech.com,
- jack.zhu@starfivetech.com, linux-kernel@vger.kernel.org
-References: <20241120061848.196754-1-keith.zhao@starfivetech.com>
-Content-Language: en-US
-From: Maud Spierings <maud_spierings@hotmail.com>
-In-Reply-To: <20241120061848.196754-1-keith.zhao@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS9PR06CA0283.eurprd06.prod.outlook.com
- (2603:10a6:20b:45a::14) To AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:20b:175::17)
-X-Microsoft-Original-Message-ID:
- <7201ddb7-3e75-4ffd-bf98-cba9cd8eaca5@hotmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sy+AHpPv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741678965; x=1773214965;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SEVKryVmw9EdI0nGbBI78wK4YjhFT5TtzcIWAsyinnE=;
+  b=Sy+AHpPv7XKq0XLGUEld20vsLm+LMAA+FmBuqzZzSwkYAQA3EUIK4Ajm
+   OJd0blVwzEOwHxVw9acs3qDLPZHfg62OBiCvnMZKFYP7O0rxLZaWcir9s
+   C067h8XT8eUCmYNWcahPXTEL4QKNp3MQ50IkeQwICiLI3l4be6tshRw4q
+   PJhEpe24n2lSvEkYDxU+b1iBgcPvaOAZY6I6qO3lyY4/eVzzi8SNGRily
+   OrkM2EHQ52nZVxSvnxvLKpkRThjjAcYHgF4cZIDnshIdiAj069SIxWsXG
+   J10dSveUNtNQf0e5Ibe7qRfGCGoWdCI9e4I0P++1EnGHNH5isO0Ayf11n
+   Q==;
+X-CSE-ConnectionGUID: hiiznS35Qbm5U+PSnRjItQ==
+X-CSE-MsgGUID: sV9BoiNBSqyMOPIz9shSYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42554464"
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="42554464"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:42:44 -0700
+X-CSE-ConnectionGUID: 8Xd3d6ptR5aeRVwVhOuHAQ==
+X-CSE-MsgGUID: BI1CVhApRNCY8ANLDLsc9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="124839811"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:42:41 -0700
+Date: Tue, 11 Mar 2025 08:38:50 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Gal Pressman <gal@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>, Moshe Shemesh <moshe@nvidia.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shay Drory <shayd@nvidia.com>
+Subject: Re: [PATCH net 3/6] net/mlx5: Fix incorrect IRQ pool usage when
+ releasing IRQs
+Message-ID: <Z8/oigZe964EbsHh@mev-dev.igk.intel.com>
+References: <1741644104-97767-1-git-send-email-tariqt@nvidia.com>
+ <1741644104-97767-4-git-send-email-tariqt@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7P189MB1009:EE_|GV2P189MB2455:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5769d042-d075-47ec-0ee1-08dd6070459b
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799006|19110799003|5072599009|6090799003|8060799006|461199028|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NUNrT1J6MGVVYzRDeWZvOFc0MnF2QzMvS0ZCNGJZZlN4MUFQOUJFVkpXMUpy?=
- =?utf-8?B?RzRSTzlib05iaWxIQm1VQVhsRXVxKy9pRzh4QWl2S0s0N1NaQm1zTk8yMnMr?=
- =?utf-8?B?T0hxYldHK2lpS1phN05CRGlWaGgzWG43YmQ5SUJxeEQwZkxUd2VsQng4WUF0?=
- =?utf-8?B?ckhmSWl2akdtTUhKVkljeXQzak82TFNSZSt0eGZBSFhHTm5lbkhteGxxaXR6?=
- =?utf-8?B?MEV3M3IxajAvNTBDajB0VEwvMEtsK041TUozNkVuOE1YbldqbE9BZ0hGVjVh?=
- =?utf-8?B?MnVTUk9FbjlyWHhBRG5yTDhFYUNnRk5UZit0T09pWUk2VjV2VU9iejFKMjFx?=
- =?utf-8?B?d1FPelNDKzRlTTNTd3RFVk43V3N5N0Rza1ZEMUVseG5RajZpV2tpVWhUR3BU?=
- =?utf-8?B?VUZ0WExOWVNRZ1FDOTA3RldxQkVwQ1VDeUJGdGN0ZnZOc3JuMWxZbnBPRzVs?=
- =?utf-8?B?Q1NGdXBIZlkzd3lnZEk3ZTlXa1I2RndBdHdSaytKNDdBWExhdkluT3FpMC9t?=
- =?utf-8?B?aFZUMTBPRGNXaG5mMG9HWGpESS8rTTA0NWVEOHpOVU5DeGdpSEMydEJidDFm?=
- =?utf-8?B?bXFuUjlncE8zVFB1YVlFb3FvS2tBY0VIeVk3OXBXVnp5czNjd1NQdVA4azVu?=
- =?utf-8?B?YmRGMXVzMVBNQXBWckFYbEdBbUp0TlBQQ2YxSVRmTUpsMGZxY3RiaXV5dFR0?=
- =?utf-8?B?ZHVYcXRJS3JyV1BTRzJ1d0NMc09MV0phanphN3ZTc0RBZFNnWVZEMEk2RHkr?=
- =?utf-8?B?SlB6czJ0ellHeTJ5UXZ0UGMrcnI0TG9iaUh5SndoV3RYSmZMeW5sRDA4UWhv?=
- =?utf-8?B?UGxGRGlSTE5jVDNTc3RxT1Z5V2tFcXBuTUxXUEtPOERuejdXSWhyK2wzVW5s?=
- =?utf-8?B?OHdaK0RRQWxWd1pNU0pPQi8zeWxMUHl5V3JRZ21TaW44ODExWFUycVF6ZDRF?=
- =?utf-8?B?ZUs4WnE5MjVsc093cjRvY2YrMVZKRWVxRmpVZ2RsUTBiSWxCQVRHYXByV1Fu?=
- =?utf-8?B?QWNOZEVKbENCNHJpUU5taG9xc3N0M0ZQL2RxY09rWnRuOUU4ZDlTcGhYU2pa?=
- =?utf-8?B?d1k3bGY1V2lWTTdNdVR1Um8rdDJqMWh4R2twanVUbVFRYW1YQ3ZaOHY3VTZY?=
- =?utf-8?B?S1R1RXowcjBkcVpxMzF2M3U1TlVQYVYxTjl3QldWYWs5S2RCZVlmVldiTjlU?=
- =?utf-8?B?cXFhVERzL0xBOEhjY2d2RTAza0FNaDlUWHoybEhWSzdaVW1UNVptMFVXYkJ5?=
- =?utf-8?B?dEdEbTVWMkJ1RDNnS0FEZG9uVG0wK2lsWkJqRGVnbXdDZ25rRTQ3cEErdXY2?=
- =?utf-8?B?a1hHajEzbUhaVU1XQmIyc3ZjeVRTb3V5WnpXbnJ5RCtYYjlneWs2aWU4ZDlF?=
- =?utf-8?B?M1RPY2RWWE5YZ3JVL3MraGRveXVSY2E2YVNqZ1RseTFjNU9aN1l1S2RLWjB0?=
- =?utf-8?B?UG1SOGVjZHoyUG1wYWtxZ3RHMGZkL3VrSUlWKzhnPT0=?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bXpSRkRwNFI2dWorTkJGWUdaWkVYNkNmd0xUaFd1YTUza05OVjhaVVFseVd2?=
- =?utf-8?B?V1FuNXJ2cjhwRlJzZmY1b3RzcVlSN2RHemZlNU1jUzQ5MUsvWUlRTUswN1U2?=
- =?utf-8?B?eWFEbVpBYllWWHQwaVhPSmNoYXF4MTdPRXczbEVaTTdrRTJFUGp4cHQwSXVr?=
- =?utf-8?B?T204c0tTdnhreVZYWFhnQzFhU3E4cjJURUxJZ2dUcW5CbXZNTy9TK2lycmZp?=
- =?utf-8?B?OFljckNseEgxZXBJQjRpUFlzSVBrZGMrKzRKWUdYdkUvV2VGczJMV0Rvb01R?=
- =?utf-8?B?dXloQzIyTzduOVZqZmNEdnB4VHlRTFZSMm9zTk5FOHJBSjU4V3FSQ0NHdUhw?=
- =?utf-8?B?NVkrWUczWTMvSVhjZjlpWDNSUFdQZmdERUNWdTROR1BvRUh6RmF6SjlLNW9w?=
- =?utf-8?B?cS9IaHc2cTk4VUFOQUM0b25OTjdyWDUweXFHSk9vSjUyTjdSUHpYOVNnaXRv?=
- =?utf-8?B?QkllamNlYUFOcFBLWDJmTDJOKzFJUFZaaDE4Y0REdGZiK3NhK0g5UWU4Vmg1?=
- =?utf-8?B?WUtNbytXUjMrMHozZVVwTnNvWHJEeHRBdTlkQThueHdDdXhiOHYzWW4xd3Nt?=
- =?utf-8?B?Nkd3dWpYcEVTZ2UyUkRrVXBJOWp6ZHkwMXd4ZVRlQVNuQjVzYkpZRmp5Vith?=
- =?utf-8?B?SGxOUlNEdFR4a2FXMC9mb0tJdmVQOVpJRmVVYnJHYVZ3R3p1QVdQbE9GeitD?=
- =?utf-8?B?czFlUFJSYWI4OHZiYmc3Z3Q5RUNzNmlMOEUyZjN6MHlWYUl6NEloVnZuMTNs?=
- =?utf-8?B?ajZUTFdlOVdmR05KWXhsMjUvbUZQVFRjV003ZjlSLzYrelR3TG1ocHJiLzRi?=
- =?utf-8?B?dnpnQVR5anduYzd2TXMyc2lRR0JtMlpvNDhIRzMxYTY1azZYRmZjV3YvdlFo?=
- =?utf-8?B?QUdsczc4Tm0vUWk3Tzk2SXMxdTNJMWJpb3Njb0lGVU5wamhOblRBdU41YytH?=
- =?utf-8?B?UDZkQlBmV1FObldycXVLT3AyUkw1a0xQeUF5VEVjMjhwcDVIYXZBNCsxODVN?=
- =?utf-8?B?ZjdEc0k0QnBWY0FpNGtBa2plZzluZ1FubDBySERHSTBleGlkazdTK2ZBRVlJ?=
- =?utf-8?B?VEJzQmkwcm1BRXltUnBPRmpVTEE1N0s2am1zdXk0VlNXaEh2OHhiVXV5OTVr?=
- =?utf-8?B?akgwdk80YytPLzR0Rmo4a1FGM01nSE1CWi92QSs5NGh6MEl5b1dIM20rZkNQ?=
- =?utf-8?B?OTA2OUZ4V1lOS2JsSkNNazlGUThxZjhRZktTL0l5OUZSS3pEUzZESlprZjBr?=
- =?utf-8?B?c1FXTkJpNVdpdmRyamsrVjBzNU90dW5jMjM1YytkYjB0Q0htQTNhbStNcVlW?=
- =?utf-8?B?R0dJUWd6MXhZLzN3ZGYvRU9PdzdKNVpZT0VLVFdTbHNXSFZuNDliSEwyMTlJ?=
- =?utf-8?B?SjRFTHFZMmxSZG5yZUlaOUE0Sis0bWNsMk02Ykx1VkZROE0xNFhyVFpmZSsv?=
- =?utf-8?B?UmRxUkpxbEJxc3pCZFpwMGJFZ2xJWStmQ3dNOENUNDF5bUNDQXB2dy83ZDNJ?=
- =?utf-8?B?ZFJLRnRleTZqVXpEUi9jRFdtM080OTREQnprYzI2cEJZVTVEZTdTSFBZOFU5?=
- =?utf-8?B?TDZCM2JTcElKNFUwTHZybE1EUCtWcEVIMlF2ZmsxTWhEWGxCTEMvWXRrUnIy?=
- =?utf-8?B?Y293UVVnYmRBZUJlSHNVdmRUNi8xT3NnYUNOZ3h0UHhubXU0RHdvMjVPRUh2?=
- =?utf-8?B?SUExdVl1cDBmWTJPUU10SFlhRm1DeG4yUzBoc2dOZWd3SjdoRnVHOFdVT085?=
- =?utf-8?Q?QguLQpntKhU1zyikO2Yq1DeooY8DpXpUbO7GKKx?=
-X-OriginatorOrg: sct-15-20-7719-19-msonline-outlook-3b3e0.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5769d042-d075-47ec-0ee1-08dd6070459b
-X-MS-Exchange-CrossTenant-AuthSource: AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 07:42:28.0281
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2P189MB2455
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1741644104-97767-4-git-send-email-tariqt@nvidia.com>
 
-On 11/20/24 07:18, keith zhao wrote:
-> Verisilicon/DC8200 display controller IP has 2 display pipes and each
-> pipe support a primary plane and a cursor plane .
-> In addition, there are 4 overlay planes as 2 display pipes common resources.
+On Tue, Mar 11, 2025 at 12:01:41AM +0200, Tariq Toukan wrote:
+> From: Shay Drory <shayd@nvidia.com>
 > 
-> The first display pipe is bound to the inno HDMI encoder.
-> The second display pipe is bound to Internal custom encoder,
-> which is used to find dsi bridge by dts node.
+> mlx5_irq_pool_get() is a getter for completion IRQ pool only.
+> However, after the cited commit, mlx5_irq_pool_get() is called during
+> ctrl IRQ release flow to retrieve the pool, resulting in the use of an
+> incorrect IRQ pool.
 > 
-> This patchset should be applied on next branch.
+> Hence, use the newly introduced mlx5_irq_get_pool() getter to retrieve
+> the correct IRQ pool based on the IRQ itself. While at it, rename
+> mlx5_irq_pool_get() to mlx5_irq_table_get_comp_irq_pool() which
+> accurately reflects its purpose and improves code readability.
 > 
-> V1:
-> Changes since v1:
-> - Further standardize the yaml file.
-> - Dts naming convention improved.
-> - Fix the problem of compiling and loading ko files.
-> - Use drm new api to automatically manage resources.
-> - Drop vs_crtc_funcs&vs_plane_funcs, subdivide the plane's help interface.
-> - Reduce the modifiers unused.
-> - Optimize the hdmi driver code
+> Fixes: 0477d5168bbb ("net/mlx5: Expose SFs IRQs")
+> Signed-off-by: Shay Drory <shayd@nvidia.com>
+> Reviewed-by: Maher Sanalla <msanalla@nvidia.com>
+> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/eq.c        |  2 +-
+>  .../net/ethernet/mellanox/mlx5/core/irq_affinity.c  |  2 +-
+>  drivers/net/ethernet/mellanox/mlx5/core/mlx5_irq.h  |  4 +++-
+>  drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c   | 13 ++++++++++---
+>  drivers/net/ethernet/mellanox/mlx5/core/pci_irq.h   |  2 +-
+>  5 files changed, 16 insertions(+), 7 deletions(-)
 > 
-> V2:
-> Changes since v2:
-> - fix the error about checking the yaml file.
-> - match drm driver GEM DMA API.
-> - Delete the custom crtc property .
-> - hdmi use drmm_ new api to automatically manage resources.
-> - update the modifiers comments.
-> - enabling KASAN, fix the error during removing module
-> 
-> V3:
-> Changes since v3:
-> - Delete the custom plane property.
-> - Delete the custom fourcc modifiers.
-> - Adjust the calculation mode of hdmi pixclock.
-> - Add match data for dc8200 driver.
-> - Adjust some magic values.
-> - Add a simple encoder for dsi output.
-> 
-> V4:
-> Changes since v4:
-> - Delete the display subsystem module as all crtcs and planes are a driver.
-> - Delete the custom struct, directly use the drm struct data.
-> - Tidy up the inno hdmi public interface.
-> - Add a simple encoder for dsi output.
-> 
-> V5:
-> Changes since v5:
-> - Refine the Innosilicon HDMI by quoting bridge abstracting.
-> - Delete the encoder driver, which is created directly by internal functions.
-> - Adapt to the changes in kernel upgrade APIs, such as drm_client_setup.
-> 
-> keith zhao (9):
->    dt-bindings: display: bindings for starfive,JH7110 display pipeline
->    riscv: dts: Add display property
->    drm: bridge: inno-hdmi: add inno bridge driver.
->    drm/vs: Add Hardware Functions for VS DC8200
->    drm/vs: Add Base API for VS Mode Configuration
->    drm/vs: Add CRTC Functions
->    drm/vs: Add VS Plane API
->    drm/vs: Add Innosilicon HDMI Support
->    drm/vs: Add VS DRM Master Driver for JH7110 SoC
-> 
->   .../display/bridge/innosilicon,inno-hdmi.yaml |   45 +
->   .../display/rockchip/rockchip,inno-hdmi.yaml  |   27 +-
->   .../starfive/starfive,jh7110-dc8200.yaml      |  176 +++
->   .../starfive/starfive,jh7110-inno-hdmi.yaml   |   91 ++
->   .../soc/starfive/starfive,jh7110-syscon.yaml  |    1 +
->   MAINTAINERS                                   |   11 +
->   .../boot/dts/starfive/jh7110-common.dtsi      |  125 ++
->   arch/riscv/boot/dts/starfive/jh7110.dtsi      |   41 +
->   drivers/gpu/drm/Kconfig                       |    2 +
->   drivers/gpu/drm/Makefile                      |    1 +
->   drivers/gpu/drm/bridge/Kconfig                |    2 +
->   drivers/gpu/drm/bridge/Makefile               |    1 +
->   drivers/gpu/drm/bridge/innosilicon/Kconfig    |    6 +
->   drivers/gpu/drm/bridge/innosilicon/Makefile   |    2 +
->   .../gpu/drm/bridge/innosilicon/inno-hdmi.c    |  376 ++++++
->   .../gpu/drm/bridge/innosilicon/inno-hdmi.h    |   34 +
->   drivers/gpu/drm/rockchip/Kconfig              |    1 +
->   drivers/gpu/drm/rockchip/Makefile             |    2 +-
->   drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c |  690 +++++++++++
->   .../{inno_hdmi.h => inno_hdmi-rockchip.h}     |    0
->   drivers/gpu/drm/rockchip/inno_hdmi.c          | 1025 ---------------
->   drivers/gpu/drm/verisilicon/Kconfig           |   32 +
->   drivers/gpu/drm/verisilicon/Makefile          |   10 +
->   .../gpu/drm/verisilicon/inno_hdmi-starfive.c  |  553 +++++++++
->   .../gpu/drm/verisilicon/inno_hdmi-starfive.h  |  194 +++
->   drivers/gpu/drm/verisilicon/vs_crtc.c         |  241 ++++
->   drivers/gpu/drm/verisilicon/vs_crtc.h         |   42 +
->   drivers/gpu/drm/verisilicon/vs_dc_hw.c        | 1104 +++++++++++++++++
->   drivers/gpu/drm/verisilicon/vs_dc_hw.h        |  492 ++++++++
->   drivers/gpu/drm/verisilicon/vs_drv.c          |  777 ++++++++++++
->   drivers/gpu/drm/verisilicon/vs_drv.h          |   41 +
->   drivers/gpu/drm/verisilicon/vs_modeset.c      |   31 +
->   drivers/gpu/drm/verisilicon/vs_modeset.h      |   10 +
->   drivers/gpu/drm/verisilicon/vs_plane.c        |  358 ++++++
->   drivers/gpu/drm/verisilicon/vs_plane.h        |   27 +
->   drivers/gpu/drm/verisilicon/vs_type.h         |   54 +
->   include/drm/bridge/inno_hdmi.h                |   56 +
->   37 files changed, 5630 insertions(+), 1051 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/display/bridge/innosilicon,inno-hdmi.yaml
->   create mode 100644 Documentation/devicetree/bindings/display/starfive/starfive,jh7110-dc8200.yaml
->   create mode 100644 Documentation/devicetree/bindings/display/starfive/starfive,jh7110-inno-hdmi.yaml
->   create mode 100644 drivers/gpu/drm/bridge/innosilicon/Kconfig
->   create mode 100644 drivers/gpu/drm/bridge/innosilicon/Makefile
->   create mode 100644 drivers/gpu/drm/bridge/innosilicon/inno-hdmi.c
->   create mode 100644 drivers/gpu/drm/bridge/innosilicon/inno-hdmi.h
->   create mode 100644 drivers/gpu/drm/rockchip/inno_hdmi-rockchip.c
->   rename drivers/gpu/drm/rockchip/{inno_hdmi.h => inno_hdmi-rockchip.h} (100%)
->   delete mode 100644 drivers/gpu/drm/rockchip/inno_hdmi.c
->   create mode 100644 drivers/gpu/drm/verisilicon/Kconfig
->   create mode 100644 drivers/gpu/drm/verisilicon/Makefile
->   create mode 100644 drivers/gpu/drm/verisilicon/inno_hdmi-starfive.c
->   create mode 100644 drivers/gpu/drm/verisilicon/inno_hdmi-starfive.h
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_crtc.c
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_crtc.h
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_dc_hw.c
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_dc_hw.h
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_drv.c
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_drv.h
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_modeset.c
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_modeset.h
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_plane.c
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_plane.h
->   create mode 100644 drivers/gpu/drm/verisilicon/vs_type.h
->   create mode 100644 include/drm/bridge/inno_hdmi.h
-> 
+[...]
 
-Is this patch series still being worked on? If not I would like to give 
-it a try to fix it up and get it merged.
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-Would like to get it working on my deepcomputing fml13v01 board, there 
-is also a gpu driver for the thead th1520 being worked on by Michal 
-Wilczynski that depends on this. Would be nice if that could get merged 
-when it is ready.
-
-Kind regards,
-Maud
-
+> -- 
+> 2.31.1
