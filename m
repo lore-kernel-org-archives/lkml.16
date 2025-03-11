@@ -1,96 +1,83 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BD11D47AD
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 13:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C3E1D5CFD;
+	Tue, 11 Mar 2025 13:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741699111; cv=none; b=Uc3e3aPV5hIquyfyY5szLhz5+mSf1wuTtqOQBnJYWGhSeHK363RD/OEmKpgiRLo1MqjRrx/9imS5dcfthNApYpFhTVK8A5sE3sgg9XA+Hswz6ulxt+AFzo06iqCEsARDqpxDfgcvraHd+kO2l5fWfJU34QjSSjeLK6kAxkkxl6I=
+	t=1741699112; cv=none; b=MlcZp6VzwpujmEs9oEj+8TYU5fvo1mV/AvfYJE/q7IQL95Dwpn5etA3QaL1LwuPEqjSvN8ZdsPmNEQ+fiZflHf2HLH8+lT0dJU2BObtXfC5+/5x0V+dAzGt5Xwdl3gh+5i7vNxTL62Acy/1V/xCobRpTFkaZhyWxokaCjAzrmR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741699111; c=relaxed/simple;
-	bh=ZAXSMCvr+IvZnGOVJS0yA66QSG3JhZXcjwBrekeGfBs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HaMIoQBNnBEn+N/LnDn1eefrT6IGInb/qa9iqparaKEIUWVq2ZAdvoAwJlYaAbdfpBDfeUbc8XmWSl/jOamt6gNP/bge4ENfGlYhENeYFmjya287pHJIF7tfXdg2D6wTGK0JjYJxiDzlKlROD0emtsfE0GXNZw22yFHi+FYMqeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nGHkQ7zB; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1741699112; c=relaxed/simple;
+	bh=/I5RlmW0EfJvb1N8dfY3ZHu7xvDo7vLBrpYj+mGASwg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ZhZSPL9n1yPgfmAnYTIlxW/IB8TmL3BboXngcprrzc2qIF8S54wlP8/geilqW5U8sxjd9GLxwgoEL/L2DFZi7HMzT6nmK7Cp4N1Omp19cAEjlfzk7J09SZoFFglLbfQfVLg/Zv2X+Ya4QpsWt6LJLEfdnfd4q67y72ht27h6juE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBrVPGa/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGHkQ7zB"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ceed237efso20691295e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 06:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741699108; x=1742303908; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LGBb/Y6S3RxkI/6vwf1UwhFj4ViFPcNM6Jmgh/1tpM4=;
-        b=nGHkQ7zBfBAh0E2oqdVC8DoeXRBzDb5o6fd/qxgNVftEh5BfS8V8XMefPQupXWT6Cw
-         OoQww4SZpH+2vtD0gKBju3YWOhP/JOvNWxnjtmAX5s+LhY3ahfCfVTWaSFD+yjeyK9lF
-         ADOR8NupGkadboMHeDH0b4p0zjHiLs06Z4MNs4l9kHO0Ko6F01ojAkRgm4xdYJWq1M6K
-         6ORviiK+WXuyCoAXtM06rvSCk66nKR7C++Xlk5Ct5ruvb8JE8RGCaP1ehJ6fteyireFt
-         gqsgKZcmBi23+CC4RMepurGCXka1zQ3mGBvEO2HUgqiN53E/O4MNM6yn3WgURyFj0DzD
-         V4Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741699108; x=1742303908;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LGBb/Y6S3RxkI/6vwf1UwhFj4ViFPcNM6Jmgh/1tpM4=;
-        b=fh/Pq/CET2w41xUVUve8E4mTRb+MmVaDZ3qWYCgAHAjX6FZiITEJNnuYOAwLC+jgZC
-         UYNUrhzs4CzUrbJZHPT/hRCtALJGRxG0Jd/e1Nw+sw2fu3Nz8Fl0Au9xwuP9phU0J7JP
-         zAjkB7ZPLcxw60az9zRYoXbO/TKzGGXOoYcoiTbttmSy77iHL3nOnicYPuXsTBkd9xFj
-         1SEypgTdEVgDFJi3Lbr/jAj4nmG78U1AQ90iOgRBJk1WR8llZn/+PtZmw8O4YHLilOY4
-         A4fW+JriRrsyrxxHSb8b4peI3ixV0pPGDHG1tJIf9/cERfB6at6RPc+p8ky9JqEIO8n1
-         JjvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIik+28nmWACHK05hXLH/NWl9Ghn2FXocuzjDC45WP4kx0L3lsuWGReWa6bH9fmYiJ0Td3TaetH6t1aYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+IwA9gNdEymRBfNRw2oRlmA5qEqtx4mVSn4epcSLe7wRYaJyv
-	RMWRx0EpIUHSieuaovifc0Pw1NHqc9xDREyUrO0TbdAmvoBZv8fOCUAzt+WVt7rMUWvghe6snWR
-	Oiuk9j2F7Qg==
-X-Google-Smtp-Source: AGHT+IEB4Ugao+9oG4PoYlVLqRx0MnCh6L1DYai8LwtyRUN8s3dqA+kO7+QszcVXjAFc8ZgqGgWa+WHaCnWckQ==
-X-Received: from wmbhc25.prod.google.com ([2002:a05:600c:8719:b0:43c:fce2:1db2])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4e8f:b0:43c:f184:2e16 with SMTP id 5b1f17b1804b1-43d01bd2167mr54372315e9.5.1741699108122;
- Tue, 11 Mar 2025 06:18:28 -0700 (PDT)
-Date: Tue, 11 Mar 2025 13:18:16 +0000
-In-Reply-To: <20250311-mm-selftests-v4-0-dec210a658f5@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBrVPGa/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 182C2C4CEF1;
+	Tue, 11 Mar 2025 13:18:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741699111;
+	bh=/I5RlmW0EfJvb1N8dfY3ZHu7xvDo7vLBrpYj+mGASwg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=rBrVPGa/Yb5PSryC74SywhBVn8jQc7gzpAWDILPu6+BrxjReUDD9EbJimxZxBpBB2
+	 A77R+Daj5+iWBunvmx/wTzEoZxZAbzhY8u7YgSuLKSwpGOM6GX0BJtmXB3rQqcN5wL
+	 porq8HPv9xgoaSs2sr88CLI+BBQYSBZszUSP4uAbTxNRiDaE9eMXBeMKdyx/fVW1fj
+	 opjUsNHYNKUaIACgSceADMg572Kbk+Kn5wciblkBNjhl6A8EyX9WgTsZwhoIr+FQVN
+	 wCKA8Rj7XWguo//ohy5kEJ8xa9AS9URlRRn/xb4MIVbaGYFum6wQNRIE5CCImnB36U
+	 7Pt41MZxAVDbw==
+From: Mark Brown <broonie@kernel.org>
+To: srinivas.kandagatla@linaro.org, lgirdwood@gmail.com, 
+ Alexey Klimov <alexey.klimov@linaro.org>
+Cc: perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250228161430.373961-1-alexey.klimov@linaro.org>
+References: <20250228161430.373961-1-alexey.klimov@linaro.org>
+Subject: Re: [PATCH] ASoC: qcom: sm8250: explicitly set format in
+ sm8250_be_hw_params_fixup()
+Message-Id: <174169910979.27942.7298008879440433248.b4-ty@kernel.org>
+Date: Tue, 11 Mar 2025 13:18:29 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250311-mm-selftests-v4-0-dec210a658f5@google.com>
-X-Mailer: b4 0.14.2
-Message-ID: <20250311-mm-selftests-v4-5-dec210a658f5@google.com>
-Subject: [PATCH v4 05/12] selftests/mm: Print some details when uffd-stress
- gets bad params
-From: Brendan Jackman <jackmanb@google.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>
-Cc: Dev Jain <dev.jain@arm.com>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Brendan Jackman <jackmanb@google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-So this can be debugged more easily.
+On Fri, 28 Feb 2025 16:14:30 +0000, Alexey Klimov wrote:
+> Setting format to s16le is required for compressed playback on compatible
+> soundcards.
+> 
+> 
 
-Signed-off-by: Brendan Jackman <jackmanb@google.com>
----
- tools/testing/selftests/mm/uffd-stress.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Applied to
 
-diff --git a/tools/testing/selftests/mm/uffd-stress.c b/tools/testing/selftests/mm/uffd-stress.c
-index d6b57e5a2e1d7611aa1588ee41601ce16117a574..4ba5bf13a0108435ce8b53340b9e17ccd47e859e 100644
---- a/tools/testing/selftests/mm/uffd-stress.c
-+++ b/tools/testing/selftests/mm/uffd-stress.c
-@@ -457,7 +457,8 @@ int main(int argc, char **argv)
- 
- 	nr_pages_per_cpu = bytes / page_size / nr_parallel;
- 	if (!nr_pages_per_cpu) {
--		_err("invalid MiB");
-+		_err("pages_per_cpu = 0, cannot test (%lu / %lu / %lu)",
-+			bytes, page_size, nr_parallel);
- 		usage();
- 	}
- 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
--- 
-2.49.0.rc0.332.g42c0ae87b1-goog
+Thanks!
+
+[1/1] ASoC: qcom: sm8250: explicitly set format in sm8250_be_hw_params_fixup()
+      commit: 89be3c15a58b2ccf31e969223c8ac93ca8932d81
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
