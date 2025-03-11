@@ -1,104 +1,91 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7B51D86FF
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 13:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09761C1F22;
+	Tue, 11 Mar 2025 13:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741699115; cv=none; b=G1dX6M11lxkhkX/8U9fZVmKpTsdP7jlyIVUKkd5wiECUEyAsXoei88QU83gMYb4ffSFtBXCTDyGGxfvGv8LEBcZjvxBUXR3aiK60d9BrtuOnFBvKLyh3Z8Q1MNYeQT+pgJVoc2qgKm32H9ZpIfGSlsNk4nkBDIfE9fwXBpmSKEc=
+	t=1741699116; cv=none; b=bn2O6HoH4f6hkaizkG01MQItilXdht/v4f5EUXzY+PrsLrGpB7CP2aL/tAcO/UjPtZgb7C+e1VUdw+Gp9RpR1kcw4HvOhmB9pm2y8pwGdSIcLoy5i4SDJbFgH8J8mk8XVw3NcIPERjhmhPJvcwZj6Bga4QkrCQgIEKlXGI14LKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741699115; c=relaxed/simple;
-	bh=oSXuPp+IUOl5G2aP9gTCdmTe3j7rVMOxHg2aJoo6Efg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=a2YC6HhZxZ3FXYSmYb/pkDLvhPcsfhAh7PY1vJ2FpCBQqZPS+GPHo5CT5nUayxzs+YbABsymZAHst9R9NYNGytBaQ5CGcUZuyf3O79rA46CbMjqvKWhPE9jFEabvpTG50GxaS9T6DaIQt9Oc2I49PWrU2976gpsYDXOdthFvrLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k2yLkTxQ; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1741699116; c=relaxed/simple;
+	bh=rtzEfGwsVr5IEohTqKChStg4Lk/Zbrodm9Xa6UeL49w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=QdCUFWQzT8wHe6VvWX4oiO1g15IX1vgBfS9dSUe1i2dMmtCnuc+Fv4kUNJjGBYUhlgb64NhuGzV7PIK8To8Hq9QBZC2QjZRNch0m5oeZJshCzXBxpYQTyfOv4G2lgG/3xCQ6HOIbmxs47ndw49y5hHxnefo0QVGFAFFU5+l5TCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nxkKueGg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k2yLkTxQ"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43bd8fd03a2so26654925e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 06:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741699112; x=1742303912; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vce7eh8mPMitMWqdtTQW3Xgxbt0OG8W7iuQCUiRo4Hc=;
-        b=k2yLkTxQ2K7t2n59+V3hFbYpdZD6A/EB8ugtx/QgGx4dtG91o0lsNwbTBFftlyrDcG
-         ePsgnqUCvkeAkHYrhj6BwgbSa1fWnDN+qRvKnxU9L6jlBvk3otMVj1HvPhoXhtWyXQ2i
-         VnNoWZWUXpyDWrhcPhsM7OZgIqBeGCdoRw6VENCQQ+HI2VtPi8iGMoaeHQQxj1iSlLDS
-         DlyBQHd70iZw9jkzdb4vocACpbwwOi1JEoZl5ogskJJeLzl5L4ANuY7D/R5CreBMEvnl
-         GeuBxaep58xgXsyCeYvf+UsrFyfl8qKBcDJDNLNEn9iJQQw6u45ttvXHX9FzaUvz7aOB
-         lXRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741699112; x=1742303912;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vce7eh8mPMitMWqdtTQW3Xgxbt0OG8W7iuQCUiRo4Hc=;
-        b=eN+lZN5MgyVDHGgzugUSbHwNrtm3jUJKq55qZNzFgIvyBl2G+7hmAAAWVsQQlf/4fH
-         IPukOm2XhvloOE5kQyU18gMdp3/JCcZmC0i74/fX47HosEKLO62xFrfCvpf2b/eYZ//t
-         lAFqZzphyaKNZhbUVUxJ6AjIrdWIbgntkw2Np2ZKxTcwo5cwCgaAZu3gfDvSuHAcYlMi
-         nantEpW8IDkNuyfcYUJcnnM1ALey6C2wxvpSQq46XVI3sqwmhTAa/FMJeOiwqSALdDZ7
-         qvnDCVK6Eyt6BGfRHV+Q0piJlsW9yY0VlRYS0RB9Qu3f9xRRgwImNdrRBoqsksdq6qt5
-         rIcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjDxyZ7Y+XzIkrIpttHqLRy+4+QcrGwHFuN05wrQi6Imj5mOuBv/SiyORyYgnF88i2RDcknQ33X0BJZtw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd8ZET/sJL9NP0VlTMGzCQOube/YF+dPqJkZ/hAX7sTdsK6ZKY
-	IwHGylsXeuKzGlKw0vFQ1cS4jtLREn+RKrnkwqbpBKOPP5L+DyXpqWBkw6Igw6fH9Yysv+AMuKI
-	Bsw+VFMfS4Q==
-X-Google-Smtp-Source: AGHT+IH0f6ArUDAT+Z1aqU0gEtWgWP4WVJVxUFx2+ko5jUv3CK2PIBB6GlZGbkJUJj1SHrJwdvtnC7ZX3WPGDQ==
-X-Received: from wmbbi10.prod.google.com ([2002:a05:600c:3d8a:b0:43d:7e5:30f0])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:45c6:b0:43c:e7ae:4bcf with SMTP id 5b1f17b1804b1-43ce7ae4f6cmr119062035e9.0.1741699112009;
- Tue, 11 Mar 2025 06:18:32 -0700 (PDT)
-Date: Tue, 11 Mar 2025 13:18:18 +0000
-In-Reply-To: <20250311-mm-selftests-v4-0-dec210a658f5@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nxkKueGg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0C72C4CEED;
+	Tue, 11 Mar 2025 13:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741699116;
+	bh=rtzEfGwsVr5IEohTqKChStg4Lk/Zbrodm9Xa6UeL49w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=nxkKueGgdEC+tFwEi7A4jdAYp8O/FfqC2sfL4AD49QgZgSpS51GXE74JBsIQNM8wg
+	 t2LqtqXLKS82KDyng2Oo7sAHBkUaNbOVH8aS1XwZeMu6mmAWEVluDY8U6pPVSGUg7v
+	 wIElqKAJoTzgln5crrX4zSDO8sAc2juQpofNCITm9kuC+B+TP/HkOfHfY+Zb1esLjX
+	 J7L239wMMEvPNXL3NlBUNQX7mANFVk3HdF65sM/5ojQ4DxtuBgGr8VIJyO6Cjrp10s
+	 0hvRzI2aMHn/LF9u03kYr1Z8LbvymPRxI06IJ2lQow4suEa8vTH3iSuMZP/WLryWPs
+	 KazUmN4Y7FAQg==
+From: Mark Brown <broonie@kernel.org>
+To: David Rhodes <david.rhodes@cirrus.com>, 
+ Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Lucas Tanure <tanureal@opensource.cirrus.com>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, linux-sound@vger.kernel.org, 
+ patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
+ lvc-project@linuxtesting.org
+In-Reply-To: <20250304115643.2748-1-v.shevtsov@mt-integration.ru>
+References: <20250304115643.2748-1-v.shevtsov@mt-integration.ru>
+Subject: Re: [PATCH] ASoC: cs35l41: check the return value from spi_setup()
+Message-Id: <174169911354.27942.6320813345687980941.b4-ty@kernel.org>
+Date: Tue, 11 Mar 2025 13:18:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250311-mm-selftests-v4-0-dec210a658f5@google.com>
-X-Mailer: b4 0.14.2
-Message-ID: <20250311-mm-selftests-v4-7-dec210a658f5@google.com>
-Subject: [PATCH v4 07/12] selftests/mm: Skip map_populate on weird filesystems
-From: Brendan Jackman <jackmanb@google.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>
-Cc: Dev Jain <dev.jain@arm.com>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Brendan Jackman <jackmanb@google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-It seems that 9pfs does not allow truncating unlinked files, Mark Brown
-has noted that NFS may also behave this way.
+On Tue, 04 Mar 2025 16:56:37 +0500, Vitaliy Shevtsov wrote:
+> Currently the return value from spi_setup() is not checked for a failure.
+> It is unlikely it will ever fail in this particular case but it is still
+> better to add this check for the sake of completeness and correctness. This
+> is cheap since it is performed once when the device is being probed.
+> 
+> Handle spi_setup() return value.
+> 
+> [...]
 
-It doesn't seem quite right to call this a "bug" but it's probably a
-special enough case that it makes sense for the test to just SKIP if it
-happens.
+Applied to
 
-Signed-off-by: Brendan Jackman <jackmanb@google.com>
----
- tools/testing/selftests/mm/map_populate.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-diff --git a/tools/testing/selftests/mm/map_populate.c b/tools/testing/selftests/mm/map_populate.c
-index 5c8a53869b1bd287b09a250edf628a66c25c2439..433e54fb634f793f2eb4c53ba6b791045c9f4986 100644
---- a/tools/testing/selftests/mm/map_populate.c
-+++ b/tools/testing/selftests/mm/map_populate.c
-@@ -87,6 +87,13 @@ int main(int argc, char **argv)
- 	BUG_ON(!ftmp, "tmpfile()");
- 
- 	ret = ftruncate(fileno(ftmp), MMAP_SZ);
-+	if (ret < 0 && errno == ENOENT) {
-+		/*
-+		 * This probably means tmpfile() made a file on a filesystem
-+		 * that doesn't handle temporary files the way we want.
-+		 */
-+		ksft_exit_skip("ftruncate(fileno(tmpfile())) gave ENOENT, weird filesystem?\n");
-+	}
- 	BUG_ON(ret, "ftruncate()");
- 
- 	smap = mmap(0, MMAP_SZ, PROT_READ | PROT_WRITE,
+Thanks!
 
--- 
-2.49.0.rc0.332.g42c0ae87b1-goog
+[1/1] ASoC: cs35l41: check the return value from spi_setup()
+      commit: ad5a0970f86d82e39ebd06d45a1f7aa48a1316f8
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
