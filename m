@@ -1,230 +1,142 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D058C264A6E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 19:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2884264A95;
+	Tue, 11 Mar 2025 19:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741719742; cv=none; b=QxitYXZ8uz+J5Gl9fdISaqvlnOZpb/UQi9GiLXGISqknOTtmIHTYa+iwdgfvDqHlOxRa7kszuYF07hrIencV7pR8i/9sTpAVxM3y8Tsez399FF3gwHxvQxnHLcnD6JEXtX78cvcvNiZ9xXbQwe77hjpAuGzEDNDpVO8aSHOEtJA=
+	t=1741719746; cv=none; b=KZSD+xqYvEFyxAqYBIDaydycMOmGv+cghhaJ5xzfqYu98pHU/g441TNy/1/bnLa9JtYIRAV6KZcrhA99qXlz9DRHEZ5XLfP+SZbqi+fre2jAAgZw83t1jIbfXxcZ+4lZQFLVxc+wrcQyAbHbNkMpMNSbUemKsgqs923OrhXlsI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741719742; c=relaxed/simple;
-	bh=jc3n0i1vXKx1+JIl89FqEB6tXU+MLI2NmDag34yasGQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=THRUtI7LLHNXuhOSsgBTE37EY+fKMUrkt3uFlraPNlLEo9w2CCTnEm3uUpWI0HgPHGYCXWH9zWHzGEsIqGxthok0tMtUZjtC3PoOgfEY+mD1U/211/q8gjdeAUy4xTXXH07llumYQu9YQ2bWO4sw0CRwwBq0FZPSKNvSTvI+aWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YNSUyQ2O; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741719746; c=relaxed/simple;
+	bh=GJXko0cS8yP4tyL+QO87NkVReVjTG45bw3praeGh9lA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DSB5sHmRZnLZlSOjbAYAiwdkaLKKZAclj0ynNgTIxCcu+TkHnDERxeKm7BFGw6EavMLyQGeVntsF4JaW7ewcMXIx5LIn4ObwDjHyuPpbAzGX4ofY0Lci5NNYK7VThkcExM/LsWXD3la+6CB/ZJXVNXYoEO1d/AkPQ0rAG8vsIP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fj/KVkgc; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YNSUyQ2O"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-391295490c8so351675f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:02:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fj/KVkgc"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5fcd61e9bcdso2579813eaf.0;
+        Tue, 11 Mar 2025 12:02:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741719739; x=1742324539; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DSC0gS+NrwfsmC47kkGNX38UoKPMT1JGdxUOUzGrzgM=;
-        b=YNSUyQ2O7B8Xb9We460KBMZPq4s2UMRGMc0I0CEpvbEzrpqeBn6vfIKWnGF0bmLF9G
-         fDxd1RtQSHeOPb/Mom/Jmihq1WQeVyHON5RfkeOYcE2F9BFZgoI0OVuRvU7utWSFOUdZ
-         Wa+HMpHDgu62hCakcSWoB1tXM9zQeVjrNtIS4JB4WZK0PbeyYUtM8aE076r+Z+YXNnNS
-         n5nwLP+rJ1DNY1TZPjKoF9reP0ts2wODSztb1/5CdnYEROCr6q0FXCejnHgIeiFVjBFA
-         px4K1e4jnw3AovLWLcAyKgpVNQ3cxe5rpDhSL9mhjgJrdE9iQQK70gbefbu12KU41f36
-         oOig==
+        d=gmail.com; s=20230601; t=1741719744; x=1742324544; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=0nTZ3/CXEq3pQeXVLu/DkAtfYCx6dQ3g1oqxdaL8dYk=;
+        b=Fj/KVkgcdkxnEl9s+cRIMr3+oO9yabKnvgtEd2CoZ0qE8RUcpRoB2OJj1QkUDw59F6
+         ioCW8ZWJuPJ1fmqEZ8bJLRgvUGkxl8SR4+vmrhuR0paebItYRB+15iGYjGS33nFbCNor
+         tVhQHMMVsqLh9ev6GWDeSwkfxUj7Xc02S2Yp9NfPhdcKQxM9B/hF1BT1b1e/VjeH978r
+         fpCCTgXbRrL2wojGlcXVh8Y9l16TX0qPp+8Ks4el2CW3pMI+rc6NT+Cms9TTaBZfSP4U
+         uTPOz0mfMDrFsuudf5fbu9ufFBcmNorv7tEUFMeUncNvfhWpWbf13hylBo1E53tYKoGy
+         2VKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741719739; x=1742324539;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DSC0gS+NrwfsmC47kkGNX38UoKPMT1JGdxUOUzGrzgM=;
-        b=IP3RpfDuDwNJN7JaoQTSmrtUyjas/h6hwmqyadNuuV9xHElLHj+Y0BjdPiUtLg3Bk0
-         mlvUUS3eDog3+OqPsE0ENH/4KpXfjUV12V5k/6FrytUDrAqOIqTleRcWYJ1a1DkBm22k
-         l9TDGrRFqOJi6zJZVmm7w2Zv1vhf7vAkmVHVX0CAh8PvExOfzZ1wV0jL0Z4fOLMRe/U9
-         ks6b60NIAuGzYgIWe+rAV3k6TmWTkKLkgkEroXwnoArreUXhxkMGNSE654Ya1HMEbtdz
-         J6wIYsonrgZTDCTneezvz7+ekzowEhiqSRDbwlUEQh3e8w+8/MAS7pDhYvHy3j+/fvsU
-         ZAxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvOk1eERB62TrOuAiekCeHA+YvUHwSRRSgtJcONc0JN8INXaqrC3V0Xl766yjMvzVc00hgLVKSfgNSK50=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOndRLxaFOB/wdu84c0pxJyw8YqyE4Qa+xxJfYD5YvRFXjRC9M
-	CNekwS71owyQFL+INGR4Yv/e9WEjumxJMyfvJ5ZsHI6gaWRln4hqXerffe/DOsE=
-X-Gm-Gg: ASbGnctQpCAB5/ecAwfk7J14bx+9zWu/P4gcON4Drlrw9fuIjgojA+ntcbzQBXKVAXJ
-	6rh/wQtZwZqhER11CS1CRUuAQhEF/46rFTDsBPE0Y46QngMxwricyk+0MlmwFlBbmmPtVxdtiZB
-	G5hYGOrrBPRtxRB0Ebv/T1LHlBYGLhIiOSTrXn9m/xxV5BtzEgvOPRqWTTu9mTzq4GMA3W8Od0R
-	5wunViG51AlAck/maZ5bX7yn9tMXrWEZuydkP+ZhnzqnX23CiBBefgET0mzxFxmbExKxNuQNxgu
-	3Hd0r35fxfSexfeYRPxHEI3b39GXKFpnwIK4wIuLmByWvNmxJY+F6TbK/L0=
-X-Google-Smtp-Source: AGHT+IFYrUoqvLPzbgL0a6R1c4IH1BBJw/9NVQaDwgWi3ogRXxdqNgEPTM53uC76gYTIHTu9smfshQ==
-X-Received: by 2002:a05:6000:1f84:b0:391:cd7:82f2 with SMTP id ffacd0b85a97d-392640c53fcmr1919995f8f.6.1741719737569;
-        Tue, 11 Mar 2025 12:02:17 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ce70d13b4sm127681155e9.38.2025.03.11.12.02.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 12:02:16 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 00/19] drm/msm: Add support for SM8750
-Date: Tue, 11 Mar 2025 20:01:50 +0100
-Message-Id: <20250311-b4-sm8750-display-v4-0-da6b3e959c76@linaro.org>
+        d=1e100.net; s=20230601; t=1741719744; x=1742324544;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0nTZ3/CXEq3pQeXVLu/DkAtfYCx6dQ3g1oqxdaL8dYk=;
+        b=LX1Ilmvk8E+sbk7it/0iAfSHCilmyqReeHKQWian/9PiOTE7xWewvTm2J2OiC5cEVe
+         g9Q4D2wpR3iu+uSZOWCqWPr+NRaESAXSG2+a6QKSqhJdMEcOYrXFWeGGIxbxlI9JwoIb
+         TZdo9vJpDvr3ZxXWeu4wSHSUybt+6ilw6oDd1Xmmq629zzwDB1TQwNnGD3RXiJwJm21v
+         a6bOWDlrcgI/RHjQrVTIkpihooIEEi85GHksY9JNVzBhtQjERglUeJnbdbz3hExUekdA
+         HjzbFE/ojDmyc5/4ZRORXvl630OKQI9ZBayp76cbQXz4TgpJUW+wdXGM1rKCuElJCSFg
+         kDWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjvUGdgqkBmjhf5w58nUwq4f7CPo9AoGqry6jPJISG0CK8n2DmpZVqGrH87j6EO9D7IMod/E17@vger.kernel.org, AJvYcCWpHlnQW3M8p+iCfIhhVq+q9w0jZrAFcsAEFKjA7yIBodzqqh2alm2aRH3JoS7icbYZVkc3z4SrfI9Ik20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwJ7CNR1R65m/dJpoxAyVr+3EOF3h9CRirGeEUCeuheXpPmYmi
+	5hma25ndkkGUvWMGOLzjsjwXLW4S0i5cOmr6+sZb6N2qRrtUtKgX
+X-Gm-Gg: ASbGncvbjIxuNVCIp3imYHgoROmjRv5X/FcO3iaQX5TacfjiNye9PEdXjizqRY3YxwW
+	5o2xnvMfzhmU3fQWxI7dqmvXKNIWm+4PRs4hlq+AuKiyi+XfEs/RrnNFIwlrbTpWmZFZNy8llbX
+	KsO61ZB2W2WhOuVIqcVqm3vcYoX7m6yEw/epeuq7uMdBXq8jN9zRbIlEod90vSilcMeNnqLQboc
+	HmKr/qOtPbd/pJSbyZkA7r4JIgrSIhMqyNMR9476S+HLSHJdTOu1hx6LqbyMGj2Lgamx/I0aV1v
+	LMYTE4McmHIwNWjKVN73rsZCT/yUZhGz/5aU5ojkNOoUqSTjvTFlZBy+r7Eyoa+R0r76JOTt
+X-Google-Smtp-Source: AGHT+IH9+/+x/0N7zgxNkLoBm0aiQ1xO8zzkxVdxqi8AATpnlRHXNKDgWmXMG8qWxyxKS5+3We4rmg==
+X-Received: by 2002:a05:6870:bb11:b0:29e:559b:d694 with SMTP id 586e51a60fabf-2c2614abfe5mr10124317fac.32.1741719743781;
+        Tue, 11 Mar 2025 12:02:23 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c248d5acfesm2710658fac.33.2025.03.11.12.02.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 12:02:23 -0700 (PDT)
+Message-ID: <8f0876ad-79f3-49a7-9d3f-ff6edc2dcdda@gmail.com>
+Date: Tue, 11 Mar 2025 12:02:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 000/616] 5.15.179-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250311135758.248271750@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250311135758.248271750@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJ6I0GcC/33NTQ6CMBCG4auQrq3p9IeKK+9hXAy0hSYIpDVEQ
- ri7hY0aicv3S+aZmUQbvI3knM0k2NFH33cp5CEjVYNdbak3qQlnXDFgBS0ljfeTVowaH4cWJ5p
- bVEJrJdEBSXdDsM4/N/N6S934+OjDtL0YYV3/aSNQRkvhQDl0sir0pfUdhv7Yh5qs3MjfBAe9R
- /BEGM7AVMZgjvKHEB8Ehz1CJEJYLFQJuWAWv4hlWV6EDF30OQEAAA==
-X-Change-ID: 20250109-b4-sm8750-display-6ea537754af1
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krishna Manikandan <quic_mkrishn@quicinc.com>, 
- Jonathan Marek <jonathan@marek.ca>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
- Rob Clark <robdclark@chromium.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5247;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=jc3n0i1vXKx1+JIl89FqEB6tXU+MLI2NmDag34yasGQ=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn0IihJ+Fd9HD9/CtRJx7OUsuxzbjJWY8wnZT3C
- Txn2woLQqmJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ9CIoQAKCRDBN2bmhouD
- 1zI2D/4g3QYZC1eqCZy7oFPz1QdFmOkhAkhE51YG+xXsiZ4NCrCQABPqCsvqoY5Z/yUkEkuGrhg
- lPKHkl2jFu+YiHtBd+m1Nj90x1O091Rd8arqUHuQtDVoi3lkewimyY5jqZdy0v2GVxLHhZXf9RE
- vqeqVda70U/Pb5GdJWykcUMSJv93tUYap+m3vWz9r3yyYwIflUhUcVReHFc76FtThmAGZkP+npN
- V1YGg2SUbVFoZ17dzt/7QnOTOpMUMiM0fd6XUGTo3OrEBunMVS0AtGJM8A5xrqM/PAmc9wMjGtI
- txRAGgepu+yZYKGZrqrfQW+nPn1xRWX/4Dk4+NSJfQJEYvzFhw6dcgLAhqatsvQ/KDcDDl5slgr
- za7IUu0BmcXEM7JrLfxTGsmCo5t+4XoyrXxsuhJgdm77yZm4L6NXWGd1zTLZZ8GAZ813UDZOJfw
- zdjLyiCSqne/I9RXBAZ9xKFDevqUkcdpR6MGl6ZY+D0BUjLmiaVl/vEmC1EvfRH2ThAVbAFCQGd
- 9kQkoPCVPd8aL+v179jiCX72CB/flxhnzhbdgjYICyekGbJ9R6shAl+WAc/eIhO1+vlgSp+7Ps8
- YnIGG3WBERQL9Mu100e/d69cxwqlyxFJjVDrnZKyuxBPlge1q8nf9h73CDD7Zkrvi9CbnQsHFFn
- HF+ti8LqLCrgVFg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Hi,
+On 3/11/25 07:02, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.179 release.
+> There are 616 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 13 Mar 2025 13:56:14 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.179-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Dependency / Rabased on top of
-==============================
-https://lore.kernel.org/all/20241214-dpu-drop-features-v1-0-988f0662cb7e@linaro.org/
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Merging
-=======
-DSI pieces here might not be ready - I got modetest writeback working,
-but DSI panel on MTP8750 still shows darkness.  Therefore we discussed
-that DPU/catalog things could be applied first.
-
-Changes in v4
-=============
-- Add ack/rb tags
-- Implement Dmitry's feedback (lower-case hex, indentation, pass
-  mdss_ver instead of ctl), patches:
-  drm/msm/dpu: Implement 10-bit color alpha for v12.0 DPU
-  drm/msm/dpu: Implement CTL_PIPE_ACTIVE for v12.0 DPU
-
-- Rebase on latest next
-- Drop applied two first patches
-- Link to v3: https://lore.kernel.org/r/20250221-b4-sm8750-display-v3-0-3ea95b1630ea@linaro.org
-
-Changes in v3
-=============
-- Add ack/rb tags
-- #5: dt-bindings: display/msm: dp-controller: Add SM8750:
-  Extend commit msg
-
-- #7: dt-bindings: display/msm: qcom,sm8750-mdss: Add SM8750:
-  - Properly described interconnects
-  - Use only one compatible and contains for the sub-blocks (Rob)
-
-- #12: drm/msm/dsi: Add support for SM8750:
-  Drop 'struct msm_dsi_config sm8750_dsi_cfg' and use sm8650 one.
-- drm/msm/dpu: Implement new v12.0 DPU differences
-  Split into several patches
-- Link to v2: https://lore.kernel.org/r/20250217-b4-sm8750-display-v2-0-d201dcdda6a4@linaro.org
-
-Changes in v2
-=============
-- Implement LM crossbar, 10-bit alpha and active layer changes:
-  New patch: drm/msm/dpu: Implement new v12.0 DPU differences
-- New patch: drm/msm/dpu: Add missing "fetch" name to set_active_pipes()
-- Add CDM
-- Split some DPU patch pieces into separate patches:
-  drm/msm/dpu: Drop useless comments
-  drm/msm/dpu: Add LM_7, DSC_[67], PP_[67] and MERGE_3D_5
-  drm/msm/dpu: Add handling of LM_6 and LM_7 bits in pending flush mask
-- Split DSI and DSI PHY patches
-- Mention CLK_OPS_PARENT_ENABLE in DSI commit
-- Mention DSI PHY PLL work:
-  https://patchwork.freedesktop.org/patch/542000/?series=119177&rev=1
-- DPU: Drop SSPP_VIG4 comments
-- DPU: Add CDM
-- Link to v1: https://lore.kernel.org/r/20250109-b4-sm8750-display-v1-0-b3f15faf4c97@linaro.org
-
-Best regards,
-Krzysztof
-
----
-Krzysztof Kozlowski (19):
-      dt-bindings: display/msm: dsi-phy-7nm: Add SM8750
-      dt-bindings: display/msm: dsi-controller-main: Add SM8750
-      dt-bindings: display/msm: dp-controller: Add SM8750
-      dt-bindings: display/msm: qcom,sm8650-dpu: Add SM8750
-      dt-bindings: display/msm: qcom,sm8750-mdss: Add SM8750
-      drm/msm/dpu: Add missing "fetch" name to set_active_pipes()
-      drm/msm/dpu: Clear CTL_FETCH_PIPE_ACTIVE on mixer reset
-      drm/msm/dpu: Clear CTL_FETCH_PIPE_ACTIVE on ctl_path reset
-      drm/msm/dpu: Clear CTL_FETCH_PIPE_ACTIVE before blend setup
-      drm/msm/dpu: Drop useless comments
-      drm/msm/dpu: Add LM_7, DSC_[67], PP_[67] and MERGE_3D_5
-      drm/msm/dpu: Add handling of LM_6 and LM_7 bits in pending flush mask
-      drm/msm/dsi/phy: Add support for SM8750
-      drm/msm/dsi: Add support for SM8750
-      drm/msm/dpu: Add support for SM8750
-      drm/msm/dpu: Implement 10-bit color alpha for v12.0 DPU
-      drm/msm/dpu: Implement CTL_PIPE_ACTIVE for v12.0 DPU
-      drm/msm/dpu: Implement LM crossbar for v12.0 DPU
-      drm/msm/mdss: Add support for SM8750
-
- .../bindings/display/msm/dp-controller.yaml        |   4 +
- .../bindings/display/msm/dsi-controller-main.yaml  |  54 ++-
- .../bindings/display/msm/dsi-phy-7nm.yaml          |   1 +
- .../bindings/display/msm/qcom,sm8650-dpu.yaml      |   1 +
- .../bindings/display/msm/qcom,sm8750-mdss.yaml     | 470 +++++++++++++++++++
- .../drm/msm/disp/dpu1/catalog/dpu_12_0_sm8750.h    | 496 +++++++++++++++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c           |  58 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  12 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  35 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     |   1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         |  71 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |  19 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c          | 210 ++++++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h          |  18 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h        |   6 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   1 +
- drivers/gpu/drm/msm/dsi/dsi.h                      |   2 +
- drivers/gpu/drm/msm/dsi/dsi_cfg.c                  |  14 +
- drivers/gpu/drm/msm/dsi/dsi_cfg.h                  |   1 +
- drivers/gpu/drm/msm/dsi/dsi_host.c                 |  80 ++++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c              |   2 +
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.h              |   1 +
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c          |  79 +++-
- drivers/gpu/drm/msm/msm_mdss.c                     |  33 ++
- drivers/gpu/drm/msm/msm_mdss.h                     |   1 +
- .../gpu/drm/msm/registers/display/dsi_phy_7nm.xml  |  14 +
- 26 files changed, 1643 insertions(+), 41 deletions(-)
----
-base-commit: 3772cd6a20f716117ce666721c9f083c4e6ebbd4
-change-id: 20250109-b4-sm8750-display-6ea537754af1
-
-Best regards,
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+Florian
