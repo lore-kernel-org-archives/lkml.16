@@ -1,386 +1,193 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5FF1EB9E8
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E602224226;
+	Tue, 11 Mar 2025 08:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741680357; cv=none; b=h2ciVZlW7a2m03BaMucwoMc4G0/4S/lj/Er7jWkWREoeBiZPa5w6RFLlny8b3vicAUEXZqwhw6EkoVPPSom/N1uh39vHXTjw70Bj+F2lzy1i3Qey9s1gB2rZcUiVlk9fKdW69R9w0UKRG/xZFhBdieyf8WiOS8gTIcH6u4ylI5M=
+	t=1741680361; cv=none; b=gZCrTzSUffu+ETx/iXK4hbe4D/2WSNfmOlTIIzLpzC5FGgCqwtaOq9+iRLoIEjet2ZmCckYsPRDEqJ8gjAEKDPyczL9oHJ3XCMcjso2rR6oE8ybbqCkpe8DDTfAuxzGTNA4Vq8NvuCQReRxTuQ30MHu7y/yHBVq6SLXtDdC0ZRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741680357; c=relaxed/simple;
-	bh=iICklwo3wPiDgAanlTEiuQP54zlT8s9UHiMdSWjKFLw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=svsTY8NiK0oaR5OTgGIy9/AZjXXXXv/MEzGuUhGW+u2ggMDsu0VtG/e+SlZIznUr44iBWCmmkBczIBvNuP5OHpQ6aQEFFBk6jZxOZP0rq9kP5I7T+IRuBLH/PIb4kXm0Ws+ZKSwC6wMBUB406v8RpbCe5oqhqP40Fr5qiaRPv2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aCYOCUFh; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1741680361; c=relaxed/simple;
+	bh=2/bfJ7AZhukFebD+t2CeRrmnDJGD9FS+5VQaBnSpmLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K3Mr/7UUmlXxodYpf8Dm36/9INW3F/D8+vhD8O30sDEgas0kd2CoD5Em1lRtaEYkMSYa4/g2zCOE6biSRTvrX7QbAnPtoh/dGZxAYUPFrT1Ywn+YyiyEGxtmJHDiXaUSCvKcGldyTZi1AHt6N2FXNHf9mEKsgtNqY4d+4R3liqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eHZyNFsH; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aCYOCUFh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741680353;
-	bh=iICklwo3wPiDgAanlTEiuQP54zlT8s9UHiMdSWjKFLw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aCYOCUFhrZpqxb2zlHECvjEKY8WrLHHHcuNOcbGuOdMWLahQBo1g/C+p+gW8PFBpv
-	 /OS6Gsb98smbVUjTIMa/T81++aNLJ5AbySz6bqJt3cHZrYCG3VaKVW2a+0d1q+Rnib
-	 SHLWHVeUu5hcJN7oVmMRX3FyZ4zlqXQZbvF/EJylFIp54OEPSSHbVFWwxK14Aiv5zt
-	 SdySo9VcBqeRow6ra1s3o1fn+erTf/VcZwlNv7NT4RhmOfvZDyr9ZxlpaxjU+rqI/s
-	 0P2kFbU+rOVI8vp+JBkyAg4L+FqJs47koRaNxQLcEeoNN8iGnhRaTKX/rqOEZeTTOg
-	 NapYbQoTMUpvg==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0E67117E0237;
-	Tue, 11 Mar 2025 09:05:53 +0100 (CET)
-Date: Tue, 11 Mar 2025 09:05:45 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- robh@kernel.org, steven.price@arm.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
- simona@ffwll.ch, kernel@collabora.com, linux-mediatek@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, sjoerd@collabora.com
-Subject: Re: [PATCH v1 4/6] drm/panfrost: Add support for AARCH64_4K page
- table format
-Message-ID: <20250311090545.3b941567@collabora.com>
-In-Reply-To: <20250310195921.157511-5-ariel.dalessandro@collabora.com>
-References: <20250310195921.157511-1-ariel.dalessandro@collabora.com>
-	<20250310195921.157511-5-ariel.dalessandro@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eHZyNFsH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741680360; x=1773216360;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2/bfJ7AZhukFebD+t2CeRrmnDJGD9FS+5VQaBnSpmLE=;
+  b=eHZyNFsH1bYQLT9dLEaRccFSAvg1jdyFF8CbgzjlB6M2wTr6gpIr3gDk
+   r8hKK6r95R8Aa1KbqxdEEGQ9q5IfUi2FRmZZHFGmHmy3Lfoq/Cs7LR089
+   2XY62woKyhWzFt3nKaax+KjujLFv193xHRERmGJz4gev1rN+rhZJt1Fuv
+   5Cj169YvJNUUIuQk6Rs2XzvGCXBobwZ+uGywe3HRpRvxK9+ceroGBrMgX
+   nRf1MGdAA7FyuwD2yZuAoS4aTDglbphyTqZ3vGvL8KgMlcvx9bXqa38F+
+   qsOlb9KdgxpFolVdpIRAMQSirZCier1aP9VMHcMzR6oio6PIV2NwesxLd
+   w==;
+X-CSE-ConnectionGUID: t+DTi0NnSN6PPS6dHaQ95g==
+X-CSE-MsgGUID: r6/HjLAxTnGWTnse7ykGwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="30278454"
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="30278454"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:05:59 -0700
+X-CSE-ConnectionGUID: fh+bWTq9S0yZQt8ATFqYAg==
+X-CSE-MsgGUID: Uhy6Bgb7TH6PsaMv9VvGPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="120473826"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:05:55 -0700
+Date: Tue, 11 Mar 2025 09:02:04 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Gal Pressman <gal@nvidia.com>,
+	Mark Bloch <mbloch@nvidia.com>, Moshe Shemesh <moshe@nvidia.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jianbo Liu <jianbol@nvidia.com>
+Subject: Re: [PATCH net 5/6] net/mlx5: Bridge, fix the crash caused by LAG
+ state check
+Message-ID: <Z8/t/LYlMWEwa+RL@mev-dev.igk.intel.com>
+References: <1741644104-97767-1-git-send-email-tariqt@nvidia.com>
+ <1741644104-97767-6-git-send-email-tariqt@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1741644104-97767-6-git-send-email-tariqt@nvidia.com>
 
-On Mon, 10 Mar 2025 16:59:19 -0300
-Ariel D'Alessandro <ariel.dalessandro@collabora.com> wrote:
-
-> Currently, Panfrost only supports MMU configuration in "LEGACY" (as
-> Bifrost calls it) mode, a (modified) version of LPAE "Large Physical
-> Address Extension", which in Linux we've called "mali_lpae".
+On Tue, Mar 11, 2025 at 12:01:43AM +0200, Tariq Toukan wrote:
+> From: Jianbo Liu <jianbol@nvidia.com>
 > 
-> This commit adds support for conditionally enabling AARCH64_4K page
-> table format. To achieve that, a "GPU optional configurations" field was
-> added to `struct panfrost_features` with the related flag.
+> When removing LAG device from bridge, NETDEV_CHANGEUPPER event is
+> triggered. Driver finds the lower devices (PFs) to flush all the
+> offloaded entries. And mlx5_lag_is_shared_fdb is checked, it returns
+> false if one of PF is unloaded. In such case,
+> mlx5_esw_bridge_lag_rep_get() and its caller return NULL, instead of
+> the alive PF, and the flush is skipped.
 > 
-> Note that, in order to enable AARCH64_4K mode, the GPU variant must have
-> the HW_FEATURE_AARCH64_MMU feature flag present.
+> Besides, the bridge fdb entry's lastuse is updated in mlx5 bridge
+> event handler. But this SWITCHDEV_FDB_ADD_TO_BRIDGE event can be
+> ignored in this case because the upper interface for bond is deleted,
+> and the entry will never be aged because lastuse is never updated.
 > 
-> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+> To make things worse, as the entry is alive, mlx5 bridge workqueue
+> keeps sending that event, which is then handled by kernel bridge
+> notifier. It causes the following crash when accessing the passed bond
+> netdev which is already destroyed.
+> 
+> To fix this issue, remove such checks. LAG state is already checked in
+> commit 15f8f168952f ("net/mlx5: Bridge, verify LAG state when adding
+> bond to bridge"), driver still need to skip offload if LAG becomes
+> invalid state after initialization.
+> 
+>  Oops: stack segment: 0000 [#1] SMP
+>  CPU: 3 UID: 0 PID: 23695 Comm: kworker/u40:3 Tainted: G           OE      6.11.0_mlnx #1
+>  Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+>  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+>  Workqueue: mlx5_bridge_wq mlx5_esw_bridge_update_work [mlx5_core]
+>  RIP: 0010:br_switchdev_event+0x2c/0x110 [bridge]
+>  Code: 44 00 00 48 8b 02 48 f7 00 00 02 00 00 74 69 41 54 55 53 48 83 ec 08 48 8b a8 08 01 00 00 48 85 ed 74 4a 48 83 fe 02 48 89 d3 <4c> 8b 65 00 74 23 76 49 48 83 fe 05 74 7e 48 83 fe 06 75 2f 0f b7
+>  RSP: 0018:ffffc900092cfda0 EFLAGS: 00010297
+>  RAX: ffff888123bfe000 RBX: ffffc900092cfe08 RCX: 00000000ffffffff
+>  RDX: ffffc900092cfe08 RSI: 0000000000000001 RDI: ffffffffa0c585f0
+>  RBP: 6669746f6e690a30 R08: 0000000000000000 R09: ffff888123ae92c8
+>  R10: 0000000000000000 R11: fefefefefefefeff R12: ffff888123ae9c60
+>  R13: 0000000000000001 R14: ffffc900092cfe08 R15: 0000000000000000
+>  FS:  0000000000000000(0000) GS:ffff88852c980000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 00007f15914c8734 CR3: 0000000002830005 CR4: 0000000000770ef0
+>  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>  PKRU: 55555554
+>  Call Trace:
+>   <TASK>
+>   ? __die_body+0x1a/0x60
+>   ? die+0x38/0x60
+>   ? do_trap+0x10b/0x120
+>   ? do_error_trap+0x64/0xa0
+>   ? exc_stack_segment+0x33/0x50
+>   ? asm_exc_stack_segment+0x22/0x30
+>   ? br_switchdev_event+0x2c/0x110 [bridge]
+>   ? sched_balance_newidle.isra.149+0x248/0x390
+>   notifier_call_chain+0x4b/0xa0
+>   atomic_notifier_call_chain+0x16/0x20
+>   mlx5_esw_bridge_update+0xec/0x170 [mlx5_core]
+>   mlx5_esw_bridge_update_work+0x19/0x40 [mlx5_core]
+>   process_scheduled_works+0x81/0x390
+>   worker_thread+0x106/0x250
+>   ? bh_worker+0x110/0x110
+>   kthread+0xb7/0xe0
+>   ? kthread_park+0x80/0x80
+>   ret_from_fork+0x2d/0x50
+>   ? kthread_park+0x80/0x80
+>   ret_from_fork_asm+0x11/0x20
+>   </TASK>
+> 
+> Fixes: ff9b7521468b ("net/mlx5: Bridge, support LAG")
+> Signed-off-by: Jianbo Liu <jianbol@nvidia.com>
+> Reviewed-by: Vlad Buslov <vladbu@nvidia.com>
+> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
 > ---
->  drivers/gpu/drm/panfrost/panfrost_device.h |  16 +++
->  drivers/gpu/drm/panfrost/panfrost_mmu.c    | 132 +++++++++++++++++++--
->  drivers/gpu/drm/panfrost/panfrost_regs.h   |  34 ++++++
->  3 files changed, 169 insertions(+), 13 deletions(-)
+>  .../net/ethernet/mellanox/mlx5/core/en/rep/bridge.c  | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index cffcb0ac7c111..0385702aa43c7 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -42,6 +42,14 @@ enum panfrost_gpu_pm {
->  	GPU_PM_VREG_OFF,
->  };
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/rep/bridge.c b/drivers/net/ethernet/mellanox/mlx5/core/en/rep/bridge.c
+> index 5d128c5b4529..0f5d7ea8956f 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en/rep/bridge.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/rep/bridge.c
+> @@ -48,15 +48,10 @@ mlx5_esw_bridge_lag_rep_get(struct net_device *dev, struct mlx5_eswitch *esw)
+>  	struct list_head *iter;
 >  
-> +/**
-> + * enum panfrost_gpu_config - GPU optional configurations
-> + * @GPU_CONFIG_AARCH64_4K: Use AARCH64_4K page table format
-> + */
-> +enum panfrost_gpu_config {
-> +	GPU_CONFIG_AARCH64_4K,
-> +};
-> +
->  struct panfrost_features {
->  	u16 id;
->  	u16 revision;
-> @@ -95,6 +103,9 @@ struct panfrost_compatible {
->  
->  	/* Allowed PM features */
->  	u8 pm_features;
-> +
-> +	/* GPU features */
-> +	u8 gpu_configs;
-
-I would probably name this gpu_quirks, with the GPU_CONFIG_AARCH64_4K
-flag renamed GPU_QUIRK_FORCE_AARCH64_PAGE_TABLE.
-
->  };
->  
->  struct panfrost_device {
-> @@ -162,6 +173,11 @@ struct panfrost_mmu {
->  	int as;
->  	atomic_t as_count;
->  	struct list_head list;
-> +	struct {
-> +		u64 transtab;
-> +		u64 memattr;
-> +		u64 transcfg;
-> +	} cfg;
->  };
->  
->  struct panfrost_engine_usage {
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> index 31df3a96f89bd..4a9b8de2ff987 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> @@ -26,6 +26,48 @@
->  #define mmu_write(dev, reg, data) writel(data, dev->iomem + reg)
->  #define mmu_read(dev, reg) readl(dev->iomem + reg)
->  
-> +static u64 mair_to_memattr(u64 mair, bool coherent)
-> +{
-> +	u64 memattr = 0;
-> +	u32 i;
-> +
-> +	for (i = 0; i < 8; i++) {
-> +		u8 in_attr = mair >> (8 * i), out_attr;
-> +		u8 outer = in_attr >> 4, inner = in_attr & 0xf;
-> +
-> +		/* For caching to be enabled, inner and outer caching policy
-> +		 * have to be both write-back, if one of them is write-through
-> +		 * or non-cacheable, we just choose non-cacheable. Device
-> +		 * memory is also translated to non-cacheable.
-> +		 */
-> +		if (!(outer & 3) || !(outer & 4) || !(inner & 4)) {
-> +			out_attr = AS_MEMATTR_AARCH64_INNER_OUTER_NC |
-> +				   AS_MEMATTR_AARCH64_SH_MIDGARD_INNER |
-> +				   AS_MEMATTR_AARCH64_INNER_ALLOC_EXPL(false, false);
-> +		} else {
-> +			out_attr = AS_MEMATTR_AARCH64_INNER_OUTER_WB |
-> +				   AS_MEMATTR_AARCH64_INNER_ALLOC_EXPL(inner & 1, inner & 2);
-> +			/* Use SH_MIDGARD_INNER mode when device isn't coherent,
-> +			 * so SH_IS, which is used when IOMMU_CACHE is set, maps
-> +			 * to Mali's internal-shareable mode. As per the Mali
-> +			 * Spec, inner and outer-shareable modes aren't allowed
-> +			 * for WB memory when coherency is disabled.
-> +			 * Use SH_CPU_INNER mode when coherency is enabled, so
-> +			 * that SH_IS actually maps to the standard definition of
-> +			 * inner-shareable.
-> +			 */
-> +			if (!coherent)
-> +				out_attr |= AS_MEMATTR_AARCH64_SH_MIDGARD_INNER;
-> +			else
-> +				out_attr |= AS_MEMATTR_AARCH64_SH_CPU_INNER;
-> +		}
-> +
-> +		memattr |= (u64)out_attr << (8 * i);
-> +	}
-> +
-> +	return memattr;
-> +}
-> +
->  static int wait_ready(struct panfrost_device *pfdev, u32 as_nr)
->  {
->  	int ret;
-> @@ -121,9 +163,57 @@ static int mmu_hw_do_operation(struct panfrost_device *pfdev,
->  	return ret;
->  }
->  
-> +static void mmu_cfg_init_mali_lpae(struct panfrost_mmu *mmu)
-> +{
-> +	struct io_pgtable_cfg *pgtbl_cfg = &mmu->pgtbl_cfg;
-> +
-> +	/* TODO: The following fields are duplicated between the MMU and Page
-> +	 * Table config structs. Ideally, should be kept in one place.
-> +	 */
-> +	mmu->cfg.transtab = pgtbl_cfg->arm_mali_lpae_cfg.transtab;
-> +	mmu->cfg.memattr = pgtbl_cfg->arm_mali_lpae_cfg.memattr;
-> +	mmu->cfg.transcfg = AS_TRANSCFG_ADRMODE_LEGACY;
-> +}
-> +
-> +static void mmu_cfg_init_aarch64_4k(struct panfrost_mmu *mmu)
-> +{
-> +	struct io_pgtable_cfg *pgtbl_cfg = &mmu->pgtbl_cfg;
-> +
-> +	mmu->cfg.transtab = pgtbl_cfg->arm_lpae_s1_cfg.ttbr &
-> +				AS_TRANSTAB_AARCH64_4K_ADDR_MASK;
-
-Silently masking the low 4bits is not the solution, it's just papering
-over a real issue. If pgtbl_cfg->arm_lpae_s1_cfg.ttbr is not aligned on
-16 bytes (PAGE_SIZE even) we have a problem, so I would drm_WARN_ON()
-here, and return an error so we can fail the probe.
-
-> +
-> +	mmu->cfg.memattr = mair_to_memattr(pgtbl_cfg->arm_lpae_s1_cfg.mair,
-> +					   pgtbl_cfg->coherent_walk);
-> +
-> +	mmu->cfg.transcfg = AS_TRANSCFG_PTW_MEMATTR_WB |
-> +			    AS_TRANSCFG_PTW_RA |
-> +			    AS_TRANSCFG_ADRMODE_AARCH64_4K |
-> +			    AS_TRANSCFG_INA_BITS(55 - pgtbl_cfg->ias);
-> +	if (pgtbl_cfg->coherent_walk)
-> +		mmu->cfg.transcfg |= AS_TRANSCFG_PTW_SH_OS;
-> +}
-> +
-> +static void panfrost_mmu_cfg_init(struct panfrost_mmu *mmu,
-> +				  enum io_pgtable_fmt fmt)
-> +{
-> +	struct panfrost_device *pfdev = mmu->pfdev;
-> +
-> +	switch (fmt) {
-> +	case ARM_64_LPAE_S1:
-> +		mmu_cfg_init_aarch64_4k(mmu);
-> +		break;
-> +	case ARM_MALI_LPAE:
-> +		mmu_cfg_init_mali_lpae(mmu);
-> +		break;
-> +	default:
-> +		dev_WARN_ONCE(pfdev->dev, 1, "Unhandled page table format\n");
-> +		break;
-> +	}
-> +}
-> +
->  static void
->  _panfrost_mmu_as_control_write(struct panfrost_device *pfdev, u32 as_nr,
-> -			       u64 transtab, u64 memattr)
-> +			       u64 transtab, u64 memattr, u64 transcfg)
->  {
->  	mmu_hw_do_operation_locked(pfdev, as_nr, 0, ~0ULL, AS_COMMAND_FLUSH_MEM);
->  
-> @@ -133,25 +223,28 @@ _panfrost_mmu_as_control_write(struct panfrost_device *pfdev, u32 as_nr,
->  	mmu_write(pfdev, AS_MEMATTR_LO(as_nr), lower_32_bits(memattr));
->  	mmu_write(pfdev, AS_MEMATTR_HI(as_nr), upper_32_bits(memattr));
->  
-> +	mmu_write(pfdev, AS_TRANSCFG_LO(as_nr), lower_32_bits(transcfg));
-> +	mmu_write(pfdev, AS_TRANSCFG_HI(as_nr), upper_32_bits(transcfg));
-> +
->  	write_cmd(pfdev, as_nr, AS_COMMAND_UPDATE);
-> +
-> +	dev_dbg(pfdev->dev, "mmu_as_control: as=%d, transtab=0x%016llx, memattr=0x%016llx, transcfg=0x%016llx",
-> +		as_nr, transtab, memattr, transcfg);
->  }
->  
->  static void panfrost_mmu_enable(struct panfrost_device *pfdev, struct panfrost_mmu *mmu)
->  {
-> -	int as_nr = mmu->as;
-> -	struct io_pgtable_cfg *cfg = &mmu->pgtbl_cfg;
-> -	u64 transtab = cfg->arm_mali_lpae_cfg.transtab;
-> -	u64 memattr = cfg->arm_mali_lpae_cfg.memattr;
+>  	netdev_for_each_lower_dev(dev, lower, iter) {
+> -		struct mlx5_core_dev *mdev;
+> -		struct mlx5e_priv *priv;
 > -
->  	/* Need to revisit mem attrs.
->  	 * NC is the default, Mali driver is inner WT.
->  	 */
-> -	_panfrost_mmu_as_control_write(pfdev, as_nr, transtab, memattr);
-> +	_panfrost_mmu_as_control_write(pfdev, mmu->as, mmu->cfg.transtab,
-> +				       mmu->cfg.memattr, mmu->cfg.transcfg);
->  }
+>  		if (!mlx5e_eswitch_rep(lower))
+>  			continue;
 >  
->  static void panfrost_mmu_disable(struct panfrost_device *pfdev, u32 as_nr)
->  {
-> -	_panfrost_mmu_as_control_write(pfdev, as_nr, 0, 0);
-> +	_panfrost_mmu_as_control_write(pfdev, as_nr, 0, 0,
-> +				       AS_TRANSCFG_ADRMODE_UNMAPPED);
->  }
->  
->  u32 panfrost_mmu_as_get(struct panfrost_device *pfdev, struct panfrost_mmu *mmu)
-> @@ -616,6 +709,7 @@ struct panfrost_mmu *panfrost_mmu_ctx_create(struct panfrost_device *pfdev)
->  {
->  	u32 va_bits = GPU_MMU_FEATURES_VA_BITS(pfdev->features.mmu_features);
->  	u32 pa_bits = GPU_MMU_FEATURES_PA_BITS(pfdev->features.mmu_features);
-> +	enum io_pgtable_fmt fmt = ARM_MALI_LPAE;
->  	struct panfrost_mmu *mmu;
->  
->  	mmu = kzalloc(sizeof(*mmu), GFP_KERNEL);
-> @@ -641,16 +735,28 @@ struct panfrost_mmu *panfrost_mmu_ctx_create(struct panfrost_device *pfdev)
->  		.iommu_dev	= pfdev->dev,
->  	};
->  
-> -	mmu->pgtbl_ops = alloc_io_pgtable_ops(ARM_MALI_LPAE, &mmu->pgtbl_cfg,
-> -					      mmu);
-> -	if (!mmu->pgtbl_ops) {
-> -		kfree(mmu);
-> -		return ERR_PTR(-EINVAL);
-> +	if (pfdev->comp->gpu_configs & BIT(GPU_CONFIG_AARCH64_4K)) {
-> +		if (!panfrost_has_hw_feature(pfdev, HW_FEATURE_AARCH64_MMU)) {
-> +			dev_err_once(pfdev->dev,
-> +				     "AARCH64_4K page table not supported\n");
-> +			goto err_free_mmu;
-> +		}
-> +		fmt = ARM_64_LPAE_S1;
+> -		priv = netdev_priv(lower);
+> -		mdev = priv->mdev;
+> -		if (mlx5_lag_is_shared_fdb(mdev) && mlx5_esw_bridge_dev_same_esw(lower, esw))
+> +		if (mlx5_esw_bridge_dev_same_esw(lower, esw))
+>  			return lower;
 >  	}
-
-How about moving this check before allocating the mmu object, so you
-don't have to free it if it fails?
-
 >  
-> +	mmu->pgtbl_ops = alloc_io_pgtable_ops(fmt, &mmu->pgtbl_cfg, mmu);
-> +	if (!mmu->pgtbl_ops)
-> +		goto err_free_mmu;
-> +
-> +	panfrost_mmu_cfg_init(mmu, fmt);
-> +
->  	kref_init(&mmu->refcount);
->  
->  	return mmu;
-> +
-> +err_free_mmu:
-> +	kfree(mmu);
-> +	return ERR_PTR(-EINVAL);
+> @@ -125,7 +120,7 @@ static bool mlx5_esw_bridge_is_local(struct net_device *dev, struct net_device *
+>  	priv = netdev_priv(rep);
+>  	mdev = priv->mdev;
+>  	if (netif_is_lag_master(dev))
+> -		return mlx5_lag_is_shared_fdb(mdev) && mlx5_lag_is_master(mdev);
+> +		return mlx5_lag_is_master(mdev);
+>  	return true;
 >  }
 >  
->  static const char *access_type_name(struct panfrost_device *pfdev,
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_regs.h b/drivers/gpu/drm/panfrost/panfrost_regs.h
-> index b5f279a19a084..2b8f1617b8369 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_regs.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_regs.h
-> @@ -301,6 +301,17 @@
->  #define AS_TRANSTAB_HI(as)		(MMU_AS(as) + 0x04) /* (RW) Translation Table Base Address for address space n, high word */
->  #define AS_MEMATTR_LO(as)		(MMU_AS(as) + 0x08) /* (RW) Memory attributes for address space n, low word. */
->  #define AS_MEMATTR_HI(as)		(MMU_AS(as) + 0x0C) /* (RW) Memory attributes for address space n, high word. */
-> +#define   AS_MEMATTR_AARCH64_INNER_ALLOC_IMPL		(2 << 2)
-> +#define   AS_MEMATTR_AARCH64_INNER_ALLOC_EXPL(w, r)	((3 << 2) | \
-> +							 ((w) ? BIT(0) : 0) | \
-> +							 ((r) ? BIT(1) : 0))
-> +#define   AS_MEMATTR_AARCH64_SH_MIDGARD_INNER		(0 << 4)
-> +#define   AS_MEMATTR_AARCH64_SH_CPU_INNER		(1 << 4)
-> +#define   AS_MEMATTR_AARCH64_SH_CPU_INNER_SHADER_COH	(2 << 4)
-> +#define   AS_MEMATTR_AARCH64_SHARED			(0 << 6)
-> +#define   AS_MEMATTR_AARCH64_INNER_OUTER_NC		(1 << 6)
-> +#define   AS_MEMATTR_AARCH64_INNER_OUTER_WB		(2 << 6)
-> +#define   AS_MEMATTR_AARCH64_FAULT			(3 << 6)
->  #define AS_LOCKADDR_LO(as)		(MMU_AS(as) + 0x10) /* (RW) Lock region address for address space n, low word */
->  #define AS_LOCKADDR_HI(as)		(MMU_AS(as) + 0x14) /* (RW) Lock region address for address space n, high word */
->  #define AS_COMMAND(as)			(MMU_AS(as) + 0x18) /* (WO) MMU command register for address space n */
-> @@ -311,6 +322,24 @@
->  /* Additional Bifrost AS registers */
->  #define AS_TRANSCFG_LO(as)		(MMU_AS(as) + 0x30) /* (RW) Translation table configuration for address space n, low word */
->  #define AS_TRANSCFG_HI(as)		(MMU_AS(as) + 0x34) /* (RW) Translation table configuration for address space n, high word */
-> +#define   AS_TRANSCFG_ADRMODE_LEGACY			(0 << 0)
-> +#define   AS_TRANSCFG_ADRMODE_UNMAPPED			(1 << 0)
-> +#define   AS_TRANSCFG_ADRMODE_IDENTITY			(2 << 0)
-> +#define   AS_TRANSCFG_ADRMODE_AARCH64_4K		(6 << 0)
-> +#define   AS_TRANSCFG_ADRMODE_AARCH64_64K		(8 << 0)
-> +#define   AS_TRANSCFG_INA_BITS(x)			((x) << 6)
-> +#define   AS_TRANSCFG_OUTA_BITS(x)			((x) << 14)
-> +#define   AS_TRANSCFG_SL_CONCAT				BIT(22)
-> +#define   AS_TRANSCFG_PTW_MEMATTR_NC			(1 << 24)
-> +#define   AS_TRANSCFG_PTW_MEMATTR_WB			(2 << 24)
-> +#define   AS_TRANSCFG_PTW_SH_NS				(0 << 28)
-> +#define   AS_TRANSCFG_PTW_SH_OS				(2 << 28)
-> +#define   AS_TRANSCFG_PTW_SH_IS				(3 << 28)
-> +#define   AS_TRANSCFG_PTW_RA				BIT(30)
-> +#define   AS_TRANSCFG_DISABLE_HIER_AP			BIT(33)
-> +#define   AS_TRANSCFG_DISABLE_AF_FAULT			BIT(34)
-> +#define   AS_TRANSCFG_WXN				BIT(35)
-> +#define   AS_TRANSCFG_XREADABLE				BIT(36)
->  #define AS_FAULTEXTRA_LO(as)		(MMU_AS(as) + 0x38) /* (RO) Secondary fault address for address space n, low word */
->  #define AS_FAULTEXTRA_HI(as)		(MMU_AS(as) + 0x3C) /* (RO) Secondary fault address for address space n, high word */
+> @@ -455,6 +450,9 @@ static int mlx5_esw_bridge_switchdev_event(struct notifier_block *nb,
+>  	if (!rep)
+>  		return NOTIFY_DONE;
 >  
-> @@ -326,6 +355,11 @@
->  #define AS_TRANSTAB_LPAE_READ_INNER		BIT(2)
->  #define AS_TRANSTAB_LPAE_SHARE_OUTER		BIT(4)
->  
-> +/*
-> + * Begin AARCH64_4K MMU TRANSTAB register values
-> + */
-> +#define AS_TRANSTAB_AARCH64_4K_ADDR_MASK	0xfffffffffffffff0
+> +	if (netif_is_lag_master(dev) && !mlx5_lag_is_shared_fdb(esw->dev))
+> +		return NOTIFY_DONE;
 > +
->  #define AS_STATUS_AS_ACTIVE			0x01
->  
->  #define AS_FAULTSTATUS_ACCESS_TYPE_MASK		(0x3 << 8)
+>  	switch (event) {
+>  	case SWITCHDEV_FDB_ADD_TO_BRIDGE:
+>  		fdb_info = container_of(info,
 
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+
+> -- 
+> 2.31.1
