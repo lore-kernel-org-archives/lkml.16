@@ -1,132 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870F525EFB3;
-	Tue, 11 Mar 2025 15:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE4725F7A4
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 15:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741706371; cv=none; b=UAdAzMWLcCJlAzF2iwKHxTvrsA5kDQPJbO+CQ877ib7iDVAPwdJtiYem72ZLIwKCryOdjtY77PDJHrDe3256p36vZ1M+WYe9/NFpVgIYq0rEfgQbPhZT577fiTYAfgWR5uUbDD0DKURf9S9ZGue0J5WD8Zdv+iQSjGxsbibClFo=
+	t=1741706374; cv=none; b=GvXsVEM2MRak4GzyA8BNntl2Od2bVyR3Pliu/yIcy50alQEHBH9frvtzz3Hsi+D3Xon68WRO2j4lj7bFftxjzGWi6RzWEBCYNG8mZrpAIZDa8cy+CfdpPSwuPWrB6/BvrMJrkXROwF629Nqz2vCKguc5eHkZ4hUmwjBInNJmL9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741706371; c=relaxed/simple;
-	bh=kEz7CxS008YfwVhh4yUlV3vqB8axwYnYnPqCS7q2/Hc=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=S2xSYzahwIQzLvPZ1K4E/w+qHepH5PN/1o+AYKHGAhv5nVz4X1caOazg+3DSmVQg42MCvrmJmt8IGavRo4emDCArJIWf6PQsK9jsESXCVLPyk96/4RIbtoOskO7I/gv/YAuwD7QL1XpenNFTxtunawGCjT+GoW5/zfYbUl01FKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qfqmSQj6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qfqmSQj6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26528C4CEED;
-	Tue, 11 Mar 2025 15:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741706371;
-	bh=kEz7CxS008YfwVhh4yUlV3vqB8axwYnYnPqCS7q2/Hc=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=qfqmSQj6eyHYXgCkKovEaUCj5JIrjOFNzn2Pvvx8/22cmvpo7DRyJ7Dr50gV6fJ6Y
-	 J4/Rm8N4Xa2hSFPI1MBEfAFRDZtZXaBKjXTfhh9u1ntBl7dSa8umeu5JgGG+zjsWaU
-	 pV6NDoSa2vWwtVJUI6Ew7W2wjKsXIL2p77SGoFaDIblxqUcHGtk62jWN2qC5lUkiuG
-	 pBhsPDVFOcWabgvfeX6z98AkEuaGN/R0Q9ZULlKehy8lsr+rpSS6GOReCWv2sceXQI
-	 MXMQ4ZcuUJkHZJKGmWLS/02XRso4UGyOQKR8ol9EEo2AfPUOc40TULIc6OeG7duKr6
-	 kATP3MtjEWyiw==
-Date: Tue, 11 Mar 2025 10:19:30 -0500
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1741706374; c=relaxed/simple;
+	bh=gJWQfmISO6ERM+tVeKhihrJylxXq8bhx0BWJ8FnYsqg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q97qGhFHkL0N180c8Ax4xwtiEFgHagS5JsbiLRrfQjryZCbYfSFoQy55Bh2UyUs07rrSgx2QIRyNTyQeuy51szwAHPPtf34D0Kuqt9SJRdnWI4nKDcnoSkcHqCbUJgnmdbcCsVQPYWXU5pW/8uw8dnlAtD1iKOeGbYnzXab+atA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D4CE152B;
+	Tue, 11 Mar 2025 08:19:43 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 49C043F694;
+	Tue, 11 Mar 2025 08:19:31 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: joro@8bytes.org,
+	will@kernel.org
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH] iommu: Avoid introducing more races
+Date: Tue, 11 Mar 2025 15:19:25 +0000
+Message-Id: <09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Frank Li <Frank.Li@nxp.com>, devicetree@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org, 
- linux-arm-kernel@axis.com, linux-kernel@vger.kernel.org, 
- Lars Persson <lars.persson@axis.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Jesper Nilsson <jesper.nilsson@axis.com>
-In-Reply-To: <Z8huvkENIBxyPKJv@axis.com>
-References: <20250304-axis-v1-0-ed475ab3a3ed@nxp.com>
- <Z8huvkENIBxyPKJv@axis.com>
-Message-Id: <174170613961.3566466.13045709851799071104.robh@kernel.org>
-Subject: Re: [PATCH RFC NOT TESTED 0/2] PCI: artpec6: Try to clean up
- artpec6_pcie_cpu_addr_fixup()
+Content-Transfer-Encoding: 8bit
 
+Although the lock-juggling is only a temporary workaround, we don't want
+it to make things avoidably worse. Jason was right to be nervous, since
+bus_iommu_probe() doesn't care *which* IOMMU instance it's probing for,
+so it probably is possible for one walk to finish a probe which a
+different walk started, thus we do want to check for that.
 
-On Wed, 05 Mar 2025 16:33:18 +0100, Jesper Nilsson wrote:
-> Hi Frank,
-> 
-> I'm the current maintainer of this driver. As Niklas Cassel wrote in
-> another email, artpec-7 was supposed to be upstreamed, as it is in most
-> parts identical to the artpec-6, but reality got in the way. I don't
-> think there is very much left to support it at the same level as artpec-6,
-> but give me some time to see if the best thing is to drop the artpec-7
-> support as Niklas suggested.
-> 
-> Unfortunately, I'm travelling right now and don't have access to any
-> of my boards. I'll perform some testing next week when I'm back and
-> help to clean this up.
-> 
-> Best regards,
-> 
-> /Jesper
-> 
-> 
-> On Tue, Mar 04, 2025 at 12:49:34PM -0500, Frank Li wrote:
-> > This patches basic on
-> > https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
-> >
-> > I have not hardware to test and there are not axis,artpec7-pcie in kernel
-> > tree.
-> >
-> > Look for driver owner, who help test this and start move forward to remove
-> > cpu_addr_fixup() work.
-> >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > Frank Li (2):
-> >       ARM: dts: artpec6: Move PCIe nodes under bus@c0000000
-> >       PCI: artpec6: Use use_parent_dt_ranges and clean up artpec6_pcie_cpu_addr_fixup()
-> >
-> >  arch/arm/boot/dts/axis/artpec6.dtsi       | 92 +++++++++++++++++--------------
-> >  drivers/pci/controller/dwc/pcie-artpec6.c | 20 +------
-> >  2 files changed, 52 insertions(+), 60 deletions(-)
-> > ---
-> > base-commit: 1552be4855dacca5ea39b15b1ef0b96c91dbea0d
-> > change-id: 20250304-axis-6d12970976b4
-> >
-> > Best regards,
-> > ---
-> > Frank Li <Frank.Li@nxp.com>
-> 
-> /^JN - Jesper Nilsson
-> --
->                Jesper Nilsson -- jesper.nilsson@axis.com
-> 
-> 
+Also there's no need to drop the lock just to have of_iommu_configure()
+do nothing when a fwspec already exists; check that directly and avoid
+opening a window at all in that (still somewhat likely) case.
 
+Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+I was rather expecting to send a v3 of "iommu: Get DT/ACPI parsing into
+the proper probe path", so I'm grateful that v2 was picked up, thanks!
+This is the difference as a fix/squash commit instead.
+---
+ drivers/iommu/iommu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/axis/' for Z8huvkENIBxyPKJv@axis.com:
-
-arch/arm/boot/dts/axis/artpec6-devboard.dtb: /bus@c0000000/pcie@f8050000: failed to match any schema with compatible: ['axis,artpec6-pcie', 'snps,dw-pcie']
-arch/arm/boot/dts/axis/artpec6-devboard.dtb: /bus@c0000000/pcie_ep@f8050000: failed to match any schema with compatible: ['axis,artpec6-pcie-ep', 'snps,dw-pcie']
-
-
-
-
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index d824fa5166e3..c6d40abe577e 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -415,13 +415,15 @@ static int iommu_init_device(struct device *dev)
+ 	 * is buried in the bus dma_configure path. Properly unpicking that is
+ 	 * still a big job, so for now just invoke the whole thing. The device
+ 	 * already having a driver bound means dma_configure has already run and
+-	 * either found no IOMMU to wait for, or we're in its replay call right
+-	 * now, so either way there's no point calling it again.
++	 * found no IOMMU to wait for, so there's no point calling it again.
+ 	 */
+-	if (!dev->driver && dev->bus->dma_configure) {
++	if (!dev->iommu->fwspec && !dev->driver && dev->bus->dma_configure) {
+ 		mutex_unlock(&iommu_probe_device_lock);
+ 		dev->bus->dma_configure(dev);
+ 		mutex_lock(&iommu_probe_device_lock);
++		/* If another instance finished the job for us, skip it */
++		if (!dev->iommu || dev->iommu_group)
++			return -ENODEV;
+ 	}
+ 	/*
+ 	 * At this point, relevant devices either now have a fwspec which will
+-- 
+2.39.2.101.g768bb238c484.dirty
 
