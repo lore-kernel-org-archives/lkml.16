@@ -1,105 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6672641C0;
-	Tue, 11 Mar 2025 19:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0613E262D37;
+	Tue, 11 Mar 2025 19:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741719713; cv=none; b=KcKrQM+JnvU4B/wug9oFsB/LZC4FG/Ze9AITkYBiCWdzmmPB5EcNviWMsmeltZObWdV1SD+xKADERSQaEYvzHp55ryB0avdkQKqpGDcYpZI7hpm6GBFMW5latcYpCqYVdg+H34y7T9Fuu+7jrCIBXT2IYFWxpPMOry34P9ycIp0=
+	t=1741719727; cv=none; b=HLVWzsI3v9k8jzi6jrqpi13c4FMFIxppTwihX7OrvVVZzof731KLT0iTTkz7aGnoHSFRpLnxzB6nQSexre35nb53etNOsS3VJcon6eWPpSuatYG9TaFqjCKMqII7trRgHP4cWgwzDUXx3iF5PAacmlg2DQOT0UGFaiC4HVH2ghA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741719713; c=relaxed/simple;
-	bh=0Nfwq+o/IjqVRo3eRbr8bUtiQdKmbKP077wEPUEz2zo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c7EpUb/pwgbKr3ybg5kVQaKrRikCEaa0XUUS0ml+8q6R/cDizOiRJ6vsS4Iw+A/GWk7TgRK1XvGB01Pg56dVGH6FpM5q+LfRdT/HbbyHC3U1gey+0qgVXPcCdoidZlI0O+eNxg8RCkYFOtqRco+XJbBn9qmok9Dd7ZQXCsX5ds0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZY6YGXK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741719727; c=relaxed/simple;
+	bh=ZyKzSu+s1wOfR3oHKYaz0cQlG4dgr/gjkEwJavyClh0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dFKV/D/HtDD7SmdTStmHYl/n3NNydLi9K2yMzNWm73XoQhM9ZOWSTwIyBZQ4AdeRUdrErkCPf93yqAvWm5vj9UEbHWH4TGwjuln5yjOXj/WJH4AVb4bGUj153MKagaGAQy3NMwRM3447854LX2TUrtW94RlCvMXopI4FWFrgw4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcIYL7Pd; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZY6YGXK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE8B1C4CEEB;
-	Tue, 11 Mar 2025 19:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741719713;
-	bh=0Nfwq+o/IjqVRo3eRbr8bUtiQdKmbKP077wEPUEz2zo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gZY6YGXKCb1uTU7OezaPlgZioViMjGooBUqKf89gxYxAHZcGmfZ3cE1abOY6DVPhV
-	 GNo8mCd1Ny9tVwPTMbMYlqS6HshemvYMjzUz6krcVB1H6mxaU1jTnF5w6G0BqFD4Oc
-	 /Uf1a707YkpBeD23JMUTjRLncrk44MjwbvxLNrcaumDCnD7QPPUShatjz+ocwFNgDU
-	 Ypo9/reXpehajLhy9M6h5A02ymO+0FOK+4lXJZ02ql7ZYIkDI0pxFPDL3d0Xuy20Lm
-	 qzSoEV233vG9OBiu+i5Q9QHjdxfZdZWC3gRFuwr7e1w6qn+KFJnCmZmU48bEAiQ0oV
-	 e0GzyMG7ssSkQ==
-Date: Tue, 11 Mar 2025 14:01:51 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Ross Burton <ross.burton@arm.com>,
-	Julien Massot <julien.massot@collabora.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
-	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Eric Biggers <ebiggers@google.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>,
-	linux-media@vger.kernel.org, Will Deacon <will@kernel.org>,
-	Javier Carrasco <javier.carrasco@wolfvision.net>,
-	linux-staging@lists.linux.dev,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Taniya Das <quic_tdas@quicinc.com>, Mark Brown <broonie@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Zhi Mao <zhi.mao@mediatek.com>,
-	Ihor Matushchak <ihor.matushchak@foobox.net>,
-	Dongcheng Yan <dongcheng.yan@intel.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [RFC PATCH v2 09/16] dt-bindings: media: i2c: max96712: add
- support for I2C MUX
-Message-ID: <174171971116.3980957.12739233832407896359.robh@kernel.org>
-References: <20250309084814.3114794-1-demonsingur@gmail.com>
- <20250309084814.3114794-10-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcIYL7Pd"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so14350285e9.2;
+        Tue, 11 Mar 2025 12:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741719719; x=1742324519; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZM/C0Y6KtCo6GXxz4sTkdCklkA06E/YKrVilZFUzRyI=;
+        b=NcIYL7Pda1XBjInNUJICIMj7kAsZqWoRQXgY04wjFQ5m44DueBKzx85gPe2cubln/O
+         rt7o+9mA3ChGCPHbr4ymf/xI7Sv35GyLzbKejLJiEI4xEPCyPEvHuQJuPRPiKNFwLjz4
+         EuJMjl76er6Zhgw6k6OSq+94x2JlOA7A2SVFhSR4wKJuw8ajnHAFioB/+JRFJxFF4dcp
+         olI7vGu0Wu6VtUpWTpKx1prMbJAADTH9tlqMtuRSR01o5FRViM+TZmCrQYpi7Vmq0gvO
+         BXC6ndPsdCWoJYptrE5CiiwlNzfJZ7XK6UHW1QOj7M21Mai+sC05/fQ0EHuQF6E9kHCq
+         3EMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741719719; x=1742324519;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZM/C0Y6KtCo6GXxz4sTkdCklkA06E/YKrVilZFUzRyI=;
+        b=J71HXE3ToejnpKNijdzuFPX35ptOJRzAWmKEois8GsoE9ZfoF8n1KK8EfQfLrIiZ+f
+         /O3BFIZ8Yqx39Ivy4YaafFMGtGBhrHO1X31Y/2PlvgHs2Y+vmQocqJzPr4DNwXgCrJNI
+         1d9cH8Hk9mNW3EIA8g3j/p1YHckys2NlEw6vfaMOrdU0p3ryll/O4kV6oJe8Si3w6e0/
+         RicEoHDV8g0RPsJk4Spwq7E6AjK+J6tLECsE4ai4qeMcvbEccUro3iOa0oqYyobunC7z
+         LfFCrh8aW19GpCLyTdtx/RnUrFppBfDPIQ25lFvIMCmejfmoa2u7DAg3Uui9LZP4fHRt
+         zRdw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5036/7UGGl2yvhEOYNpaImj4QJQggymaL7y/WC7cN77+Q5g3LAb2ExRniutwWknmN+WQOuxIevi1sct0=@vger.kernel.org, AJvYcCWwJf/3tvbqBDfitKkqhpPj3a6s7CONgSCQe4zKL1GzWvMf0hAy4PkU+XQDNiK9s8G75900Z3U2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmHGITXqfXD+B26v994t+5vHO4JjWXKk39Ik4LD6mHtt35HFGe
+	3b9bQcbk0jdCIXsN5/zvYIZP27bKPrq5Jy/8xiKbD3ckBJ1GPpOY
+X-Gm-Gg: ASbGncsLU+0P6R4RuA/hAdRStklHLNLLfaoUOmomtLS4XVEMtcol3Ou+RLE7SSBABgg
+	g9LABeiVmuQ6icxf9v9DCr7AraQ2J8zoyL5IWDGAAKsy+9idNmtmvnelQWtFsqaJkRw+sYDlWRX
+	jOILxtfOFzm14O5YAlqYOFmq7N5bkofDCKkvfzJtGiBzqB3tPcMYf+EawIbzE3CrthwTff4i8ea
+	RpGP857tT7xcMr+T0Awnky1Q7Ahw0cmQVUSQl8/Qbt0DPSmI8uavgUMgKKzJDRJSPKfMfOegtzo
+	5GfwEZh+foYq+U+XIHT1Y/i8dEXOS0pmfkxIOHzaft3CGQ==
+X-Google-Smtp-Source: AGHT+IF8L17vBaDo66fasMWl6iiHkxzIXdBOdv+IvwdgmD89ZI0aTDkON53jTbr9t1d4zfPaflVzqA==
+X-Received: by 2002:a05:600c:4ecb:b0:43c:eeee:b70f with SMTP id 5b1f17b1804b1-43ceeeeba17mr82834005e9.24.1741719718920;
+        Tue, 11 Mar 2025 12:01:58 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:e969:4b33:5aa2:11e7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cfcbdd0a7sm64617655e9.11.2025.03.11.12.01.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 12:01:58 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: christian.koenig@amd.com,
+	ray.huang@amd.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	thomas.hellstrom@linux.intel.com,
+	Arunpravin.PaneerSelvam@amd.com,
+	karolina.stolarek@intel.com,
+	jeff.johnson@oss.qualcomm.com,
+	bigeasy@linutronix.de
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/ttm/tests: fix potential null pointer dereference in ttm_bo_unreserve_bulk()
+Date: Tue, 11 Mar 2025 19:01:38 +0000
+Message-Id: <20250311190138.17276-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250309084814.3114794-10-demonsingur@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+In the ttm_bo_unreserve_bulk() test function, resv is allocated 
+using kunit_kzalloc(), but the subsequent assertion mistakenly 
+verifies the ttm_dev pointer instead of checking the resv pointer. 
+This mistake means that if allocation for resv fails, the error will 
+go undetected, resv will be NULL and a call to dma_resv_init(resv) 
+will dereference a NULL pointer. 
 
-On Sun, 09 Mar 2025 10:48:01 +0200, Cosmin Tanislav wrote:
-> MAX96712 and MAX96724 have more than one GMSL2 link, and each link is
-> capable of connecting to a separate serializer. If these serializers
-> have the same CFG pins configuration, they will also have the same I2C
-> address, causing conflicts unless the deserializer muxes the I2C
-> channels. Moreover, the serializers can have the same hardware attached
-> to their respective I2C bus.
-> 
-> The MAX96712 and MAX96724 suppot I2C channel muxing via the GMSL2 link
-> to facilitate communication to each of the connected serializers.
-> 
-> Document this capability.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
->  .../bindings/media/i2c/maxim,max96712.yaml          | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
+Fix the assertion to properly verify the resv pointer.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Fixes: 588c4c8d58c4 ("drm/ttm/tests: Fix a warning in ttm_bo_unreserve_bulk")
+Cc: stable@vger.kernel.org
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+ drivers/gpu/drm/ttm/tests/ttm_bo_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/ttm/tests/ttm_bo_test.c b/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
+index f8f20d2f6174..e08e5a138420 100644
+--- a/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
++++ b/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
+@@ -340,7 +340,7 @@ static void ttm_bo_unreserve_bulk(struct kunit *test)
+ 	KUNIT_ASSERT_NOT_NULL(test, ttm_dev);
+ 
+ 	resv = kunit_kzalloc(test, sizeof(*resv), GFP_KERNEL);
+-	KUNIT_ASSERT_NOT_NULL(test, ttm_dev);
++	KUNIT_ASSERT_NOT_NULL(test, resv);
+ 
+ 	err = ttm_device_kunit_init(priv, ttm_dev, false, false);
+ 	KUNIT_ASSERT_EQ(test, err, 0);
+-- 
+2.39.5
 
