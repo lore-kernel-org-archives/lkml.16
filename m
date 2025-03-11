@@ -1,133 +1,173 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp28.bhosted.nl (smtp28.bhosted.nl [94.124.121.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65F12505AC;
-	Tue, 11 Mar 2025 11:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FE0241681
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741690992; cv=none; b=XPRnXFGoNpYFnW5+tx9/ZBVSek/HAdBO3sYdRP5+UhY7FJTeFmKRC3eIC7J3zOqjX3SfxtziqB/ZMv1Ayz3fkWBNV21wVBNidXfNStUzXaMkAnHxyr7oqkAAorxYfibhu6xUH1o5HrHWskW5gU8WeIQj/oiTYTx2onxMxcpYOdM=
+	t=1741691038; cv=none; b=EZWwlFn8gFM7eBrzyQY7M5e/6oeRKVORE5Umlxo2IPvlT86dcg8g4sBQAXURS+6tUfY6tiumc496NLomq+3JfjH0KMw63jtMhf3edBt+lhAOuUU2vsXdUI8PZ64K6jXuqNfxcFnj8kBDaDcgR2v+ANlnNgDckoNX5KW6VVUL/rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741690992; c=relaxed/simple;
-	bh=qAoAEAm5amauGeRnu7bSr3vPpdizHeYfV+q57O0m6pI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nwYL/8R7q+7/LmKzu/R+KVxFDH/k9BuX8EPSOz9zngw4H+DPSI9QisLbyD/voKIvzvKdugX/AXpS4QBpdHLDzZfEq7+8cszjgppcc10eU2xDqq5CP5LXMDVeI/ED6JhSZnbbPxKnbLEmuhlMXwJwLkIOAIaOfVCJa3tNnbT5BoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ct8X7uw8; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741691038; c=relaxed/simple;
+	bh=c6gsWuE9KbTB/AbCzr5g1BWhPggo9fdPNPaTriurqeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P80pZpfET95KXsq2JBjlRrBUEGGzggPkXYnRJ2jnOH75n1ek6M9DSArUBO8O2r8FVbyB9AFnT9wauMnA4I1zop9GkDmlkvIUtPatfBd25w66ge+Cr1TFaFCT4EwI52J+5doXQxkKMUvUeZ2eGE2dTnTpszz6ykLYqpc9td7KyZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=o4ZTKhG3; arc=none smtp.client-ip=94.124.121.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ct8X7uw8"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B93ZVX004497;
-	Tue, 11 Mar 2025 11:02:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=xIPaMqGrsjATDI3COz82wtEWPVXld8
-	ipZrTVOIdtc+s=; b=Ct8X7uw8PWloUFD0MWoLtbch0x8v7ZBHf4sghnsOPUgWIL
-	4laCm8tkNral1P/z9pa2nZgA47oQRfKv0WakeNyyB8R9+Vh6Guw5jpCe+lYkjc9E
-	bj1tlXHKycXEbwA92MaXqkgcxxxOUUrD+0SLU9/Js2h7D+seIhAt3DVxnnK2+m+M
-	SnyXc8vAJyFHNNDHeTCQD7oaSV4hC/oLJUqp7OlFlDHv5ZRbtLJD4z9Jc5AwgRoc
-	/tM4WLkcBDQSA5Xdjf0/2qKWFBR96zHjriFf3YMAmrtmTXRoQMHGolmkB2ovcko5
-	8nhdu6grKgQd2Owr1x8xMpERkdmzu36UAYVwDP6Q==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45a78qudaa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 11:02:54 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52B9qE2P027631;
-	Tue, 11 Mar 2025 11:02:53 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4591qkkqct-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 11:02:53 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52BB2nWY50266594
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Mar 2025 11:02:49 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CABD520040;
-	Tue, 11 Mar 2025 11:02:49 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B658C20043;
-	Tue, 11 Mar 2025 11:02:48 +0000 (GMT)
-Received: from localhost (unknown [9.171.9.82])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 11 Mar 2025 11:02:48 +0000 (GMT)
-Date: Tue, 11 Mar 2025 12:02:47 +0100
-From: Vasily Gorbik <gor@linux.ibm.com>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Kees Cook <kees@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] s390: mv s390 sysctls into their own file under
- arch/s390 dir
-Message-ID: <your-ad-here.call-01741690967-ext-1293@work.hours>
-References: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
- <20250306-jag-mv_ctltables-v2-6-71b243c8d3f8@kernel.org>
- <20250307152620.9880F75-hca@linux.ibm.com>
- <r73ph4ht5ejeeuj65nxocmqp7pury2mekz2lz3r6fs264s24c4@ransymcrzk2h>
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="o4ZTKhG3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
+	 message-id:subject:cc:to:from:date:from;
+	bh=ZZMF97YcPvm5C1er0iirc7cTdLB5XykMCEDCq40QqHU=;
+	b=o4ZTKhG3T4SWH3ep4AOVowkxR/jOzYE9if7g5cLPT7GnO0qTy1ytEpzr4vMC/uVxtH2nS2zGyKb0R
+	 ovF2R9y+aaerrmvRLOVg/0py8SLCsTUzTgX0Ysty4RJc7Z8m094rko4kNilteyeILCuiV4tfsKHYMC
+	 LyjM3O+2QDrP2uvqkRWedrdtz5Qg4pm59+aeULQHZHbyyEH06wO6QcnSHHBug03o3j68NeeuoMlKg4
+	 O7ZC5jam1NkSXiyIEYLvf0Zbl6wW91BrgDfVMRFRHNVeYixzA4hnu5OWCnkEyMC5Z09GLtRwlsUMs7
+	 uUocogmya6Oepvj5LRiHRLaPqFIUTkg==
+X-MSG-ID: 8165c850-fe68-11ef-b5cf-0050568164d1
+Date: Tue, 11 Mar 2025 12:03:46 +0100
+From: David Jander <david@protonic.nl>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Kent Gibson
+ <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: regression: gpiolib: switch the line state notifier to atomic
+ unexpected impact on performance
+Message-ID: <20250311120346.21ba086d@erd003.prtnl>
+In-Reply-To: <CAMRc=MeWp=m1Bi_t_FCrxFOtiv3s8fSjiBjDk4pOB+_RuN=KGg@mail.gmail.com>
+References: <20250311110034.53959031@erd003.prtnl>
+	<CAMRc=MeWp=m1Bi_t_FCrxFOtiv3s8fSjiBjDk4pOB+_RuN=KGg@mail.gmail.com>
+Organization: Protonic Holland
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <r73ph4ht5ejeeuj65nxocmqp7pury2mekz2lz3r6fs264s24c4@ransymcrzk2h>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: h9Mg2owPiLRPVj7MJrH8lEXpq9BsvLC-
-X-Proofpoint-ORIG-GUID: h9Mg2owPiLRPVj7MJrH8lEXpq9BsvLC-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_01,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- spamscore=0 adultscore=0 mlxlogscore=856 phishscore=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503110072
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 10, 2025 at 02:41:59PM +0100, Joel Granados wrote:
-> On Fri, Mar 07, 2025 at 04:26:20PM +0100, Heiko Carstens wrote:
-> > On Thu, Mar 06, 2025 at 12:29:46PM +0100, joel granados wrote:
-> > > Move s390 sysctls (spin_retry and userprocess_debug) into their own
-> > > files under arch/s390. We create two new sysctl tables
-> > > (2390_{fault,spin}_sysctl_table) which will be initialized with
-> > > arch_initcall placing them after their original place in proc_root_init.
-> > > 
-> > > This is part of a greater effort to move ctl tables into their
-> > > respective subsystems which will reduce the merge conflicts in
-> > > kernel/sysctl.c.
-> > > 
-> > > Signed-off-by: joel granados <joel.granados@kernel.org>
-> > > ---
-> > >  arch/s390/lib/spinlock.c | 18 ++++++++++++++++++
-> > >  arch/s390/mm/fault.c     | 17 +++++++++++++++++
-> > >  kernel/sysctl.c          | 18 ------------------
-> > >  3 files changed, 35 insertions(+), 18 deletions(-)
-> > 
-> > Acked-by: Heiko Carstens <hca@linux.ibm.com>
-> > 
-> > How should this go upstream? Will you take care of this, or should
-> > this go via the s390 tree?
-> 
-> thx for the review
-> 
-> It would be great if you can push it through the s390 tree. However, if
-> it is not possible to do so, please let me know and I'll add it to the
-> sysctl-next changes.
 
-I've slightly changed the commit message
-s390: Move s390 sysctls into their own file under arch/s390
+Dear Bartosz,
 
-And applied, thank you!
+On Tue, 11 Mar 2025 11:21:10 +0100
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> On Tue, Mar 11, 2025 at 11:01=E2=80=AFAM David Jander <david@protonic.nl>=
+ wrote:
+> >
+> >
+> > Dear Bartosz,
+> >
+> > I noticed this because after updating the kernel from 6.11 to 6.14 a
+> > user-space application that uses GPIOs heavily started getting extremel=
+y slow,
+> > to the point that I will need to heavily modify this application in ord=
+er to
+> > be usable again.
+> > I traced the problem down to the following patch that went into 6.13:
+> >
+> > fcc8b637c542 gpiolib: switch the line state notifier to atomic
+> >
+> > What happens here, is that gpio_chrdev_release() now calls
+> > atomic_notifier_chain_unregister(), which uses RCU, and as such must ca=
+ll
+> > synchronize_rcu(). synchronize_rcu() waits for the RCU grace time to ex=
+pire
+> > before returning and according to the documentation can cause a delay o=
+f up to
+> > several milliseconds. In fact it seems to take between 8-10ms on my sys=
+tem (an
+> > STM32MP153C single-core Cortex-A7).
+> >
+> > This has the effect that the time it takes to call close() on a /dev/gp=
+iochipX
+> > takes now ~10ms each time. If I git-revert this commit, close() will ta=
+ke less
+> > than 1ms.
+> > =20
+>=20
+> Thanks for the detailed report!
+
+Thanks to you for making this patch in such a way that it is easy to revert
+without breaking stuff! That was a read time-saver while diagnosing.
+
+> > 10ms doesn't sound like much, but it is more ~10x the time it tool befo=
+re,
+> > and unfortunately libgpiod code calls this function very often in some =
+places,
+> > especially in find_line() if your board has many gpiochips (mine has 16
+> > chardevs). =20
+>=20
+> Yeah, I imagine it can affect the speed of execution of gpiofind,
+> gpiodetect and any other program that iterates over all character
+> devices.
+
+Indeed, it does. My application is written in python and uses the python gp=
+iod
+module. Even in such an environment the impact is killing.
+
+> > The effect can easily be reproduced with the gpiofind tool:
+> >
+> > Running on kernel 6.12:
+> >
+> > $ time gpiofind LPOUT0
+> > gpiochip7 9
+> > real    0m 0.02s
+> > user    0m 0.00s
+> > sys     0m 0.01s
+> >
+> > Running on kernel 6.13:
+> >
+> > $ time gpiofind LPOUT0
+> > gpiochip7 9
+> > real    0m 0.19s
+> > user    0m 0.00s
+> > sys     0m 0.01s
+> >
+> > That is almost a 10x increase in execution time of the whole program!!
+> >
+> > On kernel 6.13, after git revert -n fcc8b637c542 time is back to what i=
+t was
+> > on 6.12.
+> >
+> > Unfortunately I can't come up with an easy solution to this problem, th=
+at's
+> > why I don't have a patch to propose. Sorry for that.
+> >
+> > I still think it is a bit alarming this change has such a huge impact. =
+IMHO it
+> > really shouldn't. What can be done about this? Is it maybe possible to =
+defer
+> > unregistering and freeing to a kthread and return from the release func=
+tion
+> > earlier?
+> > =20
+>=20
+> This was my first idea too. Alternatively we can switch to using a raw
+> notifier and provide a spinlock ourselves.
+
+That would probably be a good alternative, although gpiod_line_state_notify=
+()
+wouldn't benefit from the zero-lock RCU implementation and incur a spin_lock
+penalty. Arguably, this is probably a lot more performance-critical than
+closing the chardev, so maybe the atomic notifier isn't a bad idea... we ju=
+st
+need to deal with the writing side so that user-space doesn't have to wait =
+for
+the RCU grace period?
+
+Certainly, I suppose switching to the raw notifier is the easier fix.
+
+OTOH, I know from my own experience that the penalty of a spin-lock does
+matter sometimes and not having it in the performance critical path is
+probably nice to have.
+
+Best regards,
+
+--=20
+David Jander
+
