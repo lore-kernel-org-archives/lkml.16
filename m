@@ -1,44 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715061D514E;
-	Tue, 11 Mar 2025 14:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C2C2253EE
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 14:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741703879; cv=none; b=q2OuXdF9xOSfd1cIwz5B0JHYJCxCRDvD2FhbPAWeWSA6QuRdSwuznEyqsvl1tU+n0JIjN+7IJHwcG6jNJTUlQtoYgmIwGG3/IMmq64XqL06JbLLCkGGECBE+A7lZWwhQSeWOgWcrxD3OSdvzyuyF8iorbKhj4nq2aSMBRzrJF+s=
+	t=1741703913; cv=none; b=TZ87W38RTXn9NnLE3pndX9BDHHUzzlHI66L4/vQMMj447gqiVoI8FjRgXcZJ4r1S4nfAS4vOMQJLZc8pwz2SbcCzL722VAArba+a5H+o9fUI2LccHgH2WiW1D0ho7ZAPg6pkBUsffF8yWw1w8oYhrNoosyFx+kIkM+ugjofhab8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741703879; c=relaxed/simple;
-	bh=4lpvvfvh6hEmkzgKd/iYgOgCrNqFGWnI/yWgvDil+Uc=;
+	s=arc-20240116; t=1741703913; c=relaxed/simple;
+	bh=m/eEMxP8Xj8yG2a7Hu4kR+mrcgF0OixHM7fnWN4XHvM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bnM0exFzYulc6awivLeIFkM2Yds8/NGV80LBSRnd4khSpwYMCJI+EvF9Fb9fXVYF8WY9s3uJJluq7SzdJ6LpaiuGnpwCPmO96zfvurCQNmtMTlohokfeUlWd62QTPi4/DUjyy1Iqv5HL7IqiA0zNmdbq376SvmCK7dsyTXqyEDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JYE/+KNn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=c4HnO7tcHxTcAAmpGkEB2qB5rRMi76Q3GKkct2H40+rJnjCsovSeSDO/713Oi8/sBSLoBMVj/yxntENi7oa/j+sVqhu/hb7UmiwAAC5te1kJN+Uxxss2ZuZCUw8ji1lcfK/uYmokT8a1cNYtEgbP+cvtaR27OVKqWVLvHYJngew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dnYJEFzL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JYE/+KNn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BF93C4CEE9;
-	Tue, 11 Mar 2025 14:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741703878;
-	bh=4lpvvfvh6hEmkzgKd/iYgOgCrNqFGWnI/yWgvDil+Uc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JYE/+KNnj9EkOy7KYNpOYWIm9SIZH1BkNsniZ/azOQzux6kQ62foeAViEtBPIoSAb
-	 54FQB7XJvPcdJzoDu3E65M+qagT1KEdm8taOKKI0YQTPWWm5oVW+yNqyvsN4AysMul
-	 Bpi6CCFoxQ+Vl0eJt38dXinaVHmi5uTrCAO1BSMo=
-Date: Tue, 11 Mar 2025 15:37:56 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Matthew Maurer <mmaurer@google.com>, Lee Jones <lee@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 0/5] Rust support for `struct iov_iter`
-Message-ID: <2025031140-saffron-kilobyte-bd2e@gregkh>
-References: <20250311-iov-iter-v1-0-f6c9134ea824@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dnYJEFzL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741703911;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cpTpvcWE2P9qSD301paokWQsARnj6IAdwHTa1z+B9WQ=;
+	b=dnYJEFzLXL+PomIkbo6VPAzhTFd81njTuigVmFtWaKf8RvE8FHGEv22EeIrojPdiH5Zp5f
+	Nfahj1b95QhmviHPfWVAIwxgli5UOFFcX27KEu4OdyQdzbsctUijAx9MljROePNN24FYe2
+	CtaPUAjoEqg3Zx9JCnvpLHN2Rrh4XGg=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-423-H1IGM8NeOoSottojaFFw6w-1; Tue,
+ 11 Mar 2025 10:38:28 -0400
+X-MC-Unique: H1IGM8NeOoSottojaFFw6w-1
+X-Mimecast-MFC-AGG-ID: H1IGM8NeOoSottojaFFw6w_1741703897
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27853180025B;
+	Tue, 11 Mar 2025 14:38:03 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.22.90.58])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6848C18009AE;
+	Tue, 11 Mar 2025 14:37:57 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 11 Mar 2025 15:37:31 +0100 (CET)
+Date: Tue, 11 Mar 2025 15:37:25 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ingo Molnar <mingo@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>, stable@vger.kernel.org,
+	Fangrui Song <i@maskray.me>, Nathan Chancellor <nathan@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH] x86/stackprotector: fix build failure with
+ CONFIG_STACKPROTECTOR=n
+Message-ID: <20250311143724.GE3493@redhat.com>
+References: <20241206142152.GB31748@redhat.com>
+ <CAMj1kXGo5yv56VvNMvYBohxgyoyDtZhr4d4kjRdGTDQchHW0Gw@mail.gmail.com>
+ <CAMzpN2iUi_q_CfDa53H8MEV_zkb8NRtXtQPvOwDrEks58=3uAg@mail.gmail.com>
+ <CAMj1kXF8PZq4660mzNYcT=QmWywB1gOOfZGzZhi1sQxQacUX=g@mail.gmail.com>
+ <20250310214402.GBZ89dIo_NLF4zOSKh@fat_crate.local>
+ <CAMj1kXEK0Kgx-C8sOvWJ9rkmC0ioWDEb+tpM9BTeWVwOWyGNog@mail.gmail.com>
+ <20250311102326.GAZ9APHqe5aSQ1m5ND@fat_crate.local>
+ <CAMj1kXHTLz4onmR5iyowptRE38RCK4jNT3BoURBkq2FoDOMTxQ@mail.gmail.com>
+ <20250311112112.GEZ9AcqM2ceIQVUA0N@fat_crate.local>
+ <20250311131356.GGZ9A3FNOxp32eGAgV@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,30 +74,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250311-iov-iter-v1-0-f6c9134ea824@google.com>
+In-Reply-To: <20250311131356.GGZ9A3FNOxp32eGAgV@fat_crate.local>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue, Mar 11, 2025 at 02:25:11PM +0000, Alice Ryhl wrote:
-> This series adds support for the `struct iov_iter` type. This type
-> represents an IO buffer for reading or writing, and can be configured
-> for either direction of communication.
-> 
-> In Rust, we define separate types for reading and writing. This will
-> ensure that you cannot mix them up and e.g. call copy_from_iter in a
-> read_iter syscall.
-> 
-> To use the new abstractions, miscdevices are given new methods read_iter
-> and write_iter that can be used to implement the read/write syscalls on
-> a miscdevice. The miscdevice sample is updated to provide read/write
-> operations.
+On 03/11, Borislav Petkov wrote:
+>
+> On Tue, Mar 11, 2025 at 12:21:12PM +0100, Borislav Petkov wrote:
+> > Yap, that fixes the build:
+>
+> Lemme run randbuilds with that one, see what else breaks with it.
 
-Nice, this is good to have, but what's the odds of tieing in the
-"untrusted buffer" logic here so that all misc drivers HAVE to properly
-validate the data sent to them before they can touch it:
-	https://lore.kernel.org/r/20240925205244.873020-1-benno.lossin@proton.me
+sorry for the off-topic noise, but what about the
 
-I'd like to force drivers to do this, otherwise it's just going to force
-us to audit all paths from userspace->kernel that happen.
+	[PATCH] x86/stackprotector: fix build failure with CONFIG_STACKPROTECTOR=n
+	https://lore.kernel.org/all/20241206123207.GA2091@redhat.com/
 
-thanks,
+fix for the older binutils? It was acked by Ard.
 
-greg k-h
+Should I resend it?
+
+Oleg.
+
