@@ -1,65 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB701DE894;
-	Tue, 11 Mar 2025 08:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1C41DE894;
+	Tue, 11 Mar 2025 08:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741680722; cv=none; b=LiY8XZKKiHVj+5TSCHEbYoT8gCm2rEd/5mSg9WFo9Fl7ItWof5YbYB/Ez0pEoPWHcGNSfgqpxHh9gACuLOBjuXMw2WRJlZ9qeibFcSfFHbI4RHWChq1gOo6phxbyxZwXwsLn1VsMRqrzLQGZr/vZUXGZeVSP/3b66jOD4ox3cro=
+	t=1741680758; cv=none; b=O5DJ0RN2eveDhOhegisiR+XRkgF2gPf8PdnDvaiMlG8zzgJJDdAQmpujcww/QcA0GRZPlhD5OhHritJwrxcLlisZiV2W2dppA8ze+Dc/ZHTu/IU8b6Fxq14ru6u6sg43GEhYNzZEy/K9427aFqSJtSWL4YFgiCpNJ1CkmRlvc7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741680722; c=relaxed/simple;
-	bh=vA06Rl2ek5wsWLgUNf9K2XAhCsBQfUsYoPC1Dx7H0os=;
+	s=arc-20240116; t=1741680758; c=relaxed/simple;
+	bh=zSb95WPbrPnw9lIVPKI1mGrHrwXfgKMta+gE6HnBjFk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nI662eA1qRbXRSoK8ZWwCHRU+k2EPourxgQyftpWCe9AKLHmV05YBGtADFzo5zz6+673bhl7cqnYPqFsMvMhJK3NxViFVoJiQ/R0WSnZMvuoggWiG6u4MBP0ucBF4tH1vob25wSaxHieYafwRtXRG3k4mlOZHXm+2sytloRbCZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XOdhGi4S; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9b/z96V0C7olIlNTkByAlHmS6mDQ0L55w2bKP09QGksHFkqQ4ubya1ljB19QwfPkLOOSkhZL8KTsswB55DUQpJ2YMvdu15C6dhBwhyXBNaG58xbAPdG4bK5ECGocS1qB6aX4gCOKNEfUiJEKnfkUJGxuRf84Yo046mDOhIpnuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2/x3Srp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XOdhGi4S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741680720; x=1773216720;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vA06Rl2ek5wsWLgUNf9K2XAhCsBQfUsYoPC1Dx7H0os=;
-  b=XOdhGi4SzWDlbCN4Zzr4Ag2BdzRTMuKpxUqJBv6Pqd4zVTQAvAjTQk2e
-   KwEIqCGq3R5mg+XWkSVPe6pTFbjJV/jW0LHI4YqbLn4q4KnFOGOi4UFjo
-   Tg0dtZ+5EYfOY3qRpzhvA3UYWOq88LIPrpJQg7d1a313Iw6v2BNWLS+yW
-   /B3pj2ZCEz7ybCI2DBB0OzUE11uOHQMUhrnWY7LjSDwj9cHN24CX0UMDJ
-   O3uPPPB+TeCxVtHJIRw0230NHx7NMD3JDsDYwVcERKa17SZTCDi+ZfCs8
-   cr1q6scGv34aqA3f2+Dedk3c9YjGngDz9FWfaDEf12onh1Ci44GgnUNk5
-   g==;
-X-CSE-ConnectionGUID: E+Z0r5nvSaC5/6eJ5D39Yw==
-X-CSE-MsgGUID: QrJ0vETuQlWFxv35VwMj4Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="45491357"
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="45491357"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:12:00 -0700
-X-CSE-ConnectionGUID: M6GakZ3hRaaph7ZMRwMV/w==
-X-CSE-MsgGUID: bSPH9ntvQPOnyoB8aL8geA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="157464742"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:11:56 -0700
-Date: Tue, 11 Mar 2025 09:08:03 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Gal Pressman <gal@nvidia.com>,
-	Mark Bloch <mbloch@nvidia.com>, Moshe Shemesh <moshe@nvidia.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Carolina Jubran <cjubran@nvidia.com>
-Subject: Re: [PATCH net 6/6] net/mlx5e: Prevent bridge link show failure for
- non-eswitch-allowed devices
-Message-ID: <Z8/vY+fEb/CeDwtw@mev-dev.igk.intel.com>
-References: <1741644104-97767-1-git-send-email-tariqt@nvidia.com>
- <1741644104-97767-7-git-send-email-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2/x3Srp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 079D3C4CEE9;
+	Tue, 11 Mar 2025 08:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741680758;
+	bh=zSb95WPbrPnw9lIVPKI1mGrHrwXfgKMta+gE6HnBjFk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D2/x3SrpbcR/fKO+XbKMcevqY3MB3HbCVkHenncnj6Lv2H1NaAptAWniZHDURh3ra
+	 toVmeiF0DpLGKrz3GazLkoEwxeilvPv6Ao4s98WtG0P76XGnMudXu3DyY7NN9AX6d7
+	 dnQd6mlYpL1cSXUHKPzrWqeLBn62FjouoflPzrWLBweaOwgWNGXUyEeIFPzAZrE+Rw
+	 6NuCptaALSBhTbWqsXX6ygO4IP5GOEAQMQmCL88D1C3X5lxsA5yfQW6T0WIjFonx9F
+	 pBpWpxyUM2qTf/V3sWH4N7UMqrq1H1gRcVVoo9E7xvLlGxUg2ydEJ9TCDAW0JLZcK+
+	 m63eptsXx9KbA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1truj2-0000000048n-2YC5;
+	Tue, 11 Mar 2025 09:12:33 +0100
+Date: Tue, 11 Mar 2025 09:12:32 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 0/3] USB-Serial serdev support
+Message-ID: <Z8_wcASfJ8SeAQ8l@hovoldconsulting.com>
+References: <20240807-v6-10-topic-usb-serial-serdev-v1-0-ed2cc5da591f@pengutronix.de>
+ <Zt7kCxawoszunWq3@hovoldconsulting.com>
+ <20240917044948.i2eog4ondf7vna7q@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,49 +50,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1741644104-97767-7-git-send-email-tariqt@nvidia.com>
+In-Reply-To: <20240917044948.i2eog4ondf7vna7q@pengutronix.de>
 
-On Tue, Mar 11, 2025 at 12:01:44AM +0200, Tariq Toukan wrote:
-> From: Carolina Jubran <cjubran@nvidia.com>
-> 
-> mlx5_eswitch_get_vepa returns -EPERM if the device lacks
-> eswitch_manager capability, blocking mlx5e_bridge_getlink from
-> retrieving VEPA mode. Since mlx5e_bridge_getlink implements
-> ndo_bridge_getlink, returning -EPERM causes bridge link show to fail
-> instead of skipping devices without this capability.
-> 
-> To avoid this, return -EOPNOTSUPP from mlx5e_bridge_getlink when
-> mlx5_eswitch_get_vepa fails, ensuring the command continues processing
-> other devices while ignoring those without the necessary capability.
-> 
-> Fixes: 4b89251de024 ("net/mlx5: Support ndo bridge_setlink and getlink")
-> Signed-off-by: Carolina Jubran <cjubran@nvidia.com>
-> Reviewed-by: Jianbo Liu <jianbol@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> index a814b63ed97e..8fcaee381b0e 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -5132,11 +5132,9 @@ static int mlx5e_bridge_getlink(struct sk_buff *skb, u32 pid, u32 seq,
->  	struct mlx5e_priv *priv = netdev_priv(dev);
->  	struct mlx5_core_dev *mdev = priv->mdev;
->  	u8 mode, setting;
-> -	int err;
->  
-> -	err = mlx5_eswitch_get_vepa(mdev->priv.eswitch, &setting);
-> -	if (err)
-> -		return err;
-> +	if (mlx5_eswitch_get_vepa(mdev->priv.eswitch, &setting))
-> +		return -EOPNOTSUPP;
->  	mode = setting ? BRIDGE_MODE_VEPA : BRIDGE_MODE_VEB;
->  	return ndo_dflt_bridge_getlink(skb, pid, seq, dev,
->  				       mode,
+On Tue, Sep 17, 2024 at 06:49:48AM +0200, Marco Felsch wrote:
+> On 24-09-09, Johan Hovold wrote:
+> > On Wed, Aug 07, 2024 at 04:08:47PM +0200, Marco Felsch wrote:
+> > > this patchset is based on Johan's patches [1] but dropped the need of
+> > > the special 'serial' of-node [2].
+> > 
+> > That's great that you found and referenced my proof-of-concept patches,
+> > but it doesn't seem like you tried to understand why this hasn't been
+> > merged yet.
 
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+> > First, as the commit message you refer to below explain, we need some
+> > way to describe multiport controllers. Just dropping the 'serial' node
+> > does not make that issue go away.
+> 
+> Sorry for asking but isn't the current OF abstraction [1] enough? As far
+> as I understood we can describe the whole USB tree within OF. I used [1]
+> and the this patchset to describe the following hierarchy:
+> 
+>  usb-root -> usb-hub port-1 -> usb-serial interface-0 -> serial
+>                                                          bt-module
+> 
+> [1] Documentation/devicetree/bindings/usb/usb-device.yaml
 
-> -- 
-> 2.31.1
+Again, you still need to consider devices with multiple serial ports
+(and they do not always map neatly to one port per interface either).
+
+> > Second, and more importantly, you do not address the main obstacle for
+> > enabling serdev for USB serial which is that the serdev cannot handle
+> > hotplugging.
+> 
+> Hotplugging is a good point but out-of-scope IMHO (at least for now)
+> since the current serdev implementation rely on additional firmware
+> information e.g OF node to be present. E.g. if the above mentioned setup
+> would connect the "serial bt-module" directly to the UART port you still
+> need an OF node to bind the serdev driver. If the node isn't present
+> user-space would need to do the hci handling.
+
+There's nothing preventing you from adding a devicetree node for a USB
+device that can be unplugged.
+
+> So from my POV the serdev abstraction is for manufacturers which make
+> use of "onboard" usb-devices which are always present at the same USB
+> tree location. Serdev is not made for general purpose USB ports (yet)
+> where a user can plug-in all types of USB devices.
+
+Right, but someone need to make sure that serdev can handle devices
+going away first as nothing is currently preventing that from happening.
+
+> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git/log/?h=usb-serial-of
+> > > [2] https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git/commit/?h=usb-serial-of&id=b19239022c92567a6a9ed40e8522e84972b0997f
+
+Johan
