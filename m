@@ -1,329 +1,271 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F8625FA2F
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 19:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B661EBFE1
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 19:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741722968; cv=none; b=ZtYxMRvCnGsmg8BBcvEy58EKcls7pmIENR1LxS/kocHs7jgk5ntNWagvN5RXx8vhLnIe7ZCP6WZkxx3Ym5r2JQy3xqvyYHq+/LB2My98SQOQZUNJZi6zg5UOI0DwSOyJ7GaeOjQ6VfhmdL3X2kRp0rOWMWD7livw5GyXbxC7Hq4=
+	t=1741723168; cv=none; b=sE1n5+GiJ0dHJ1yjIZoia2RvzvI82Kz8bz+AAWXxgwon9yXt3BnfRIzfOJ5fvExcm+/DXUpU2XfcKdwYRC1GTYl03wFZl3EIxP7BuKsKfsS8BHSy4QVMrB3NaRc52OfINUkPgktM/XNWkvmv7omcYxWx8zD+scb0WInJVM9zHcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741722968; c=relaxed/simple;
-	bh=NSP51JkzDr1wqNpJgHnxtGrvxwbE+LKdl2O1eR1bKMc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WODFY7BFmJeBEjrAFdUyj6Cwbz9k+hbW5742u6iMHEvyPOoCJ95W7PNNUdNwl1TH1i/JfuEN8noUvCujutnqCzETFoNZfRijCrG3wVu+jGM5EtF/me04wuD+qQpkmFcmbe6lVy41xkWKXgZfQLhznnA+JD01uxNVe1pZzfD1bnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mek/6VyV; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mek/6VyV"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-474f836eb4cso45070131cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741722965; x=1742327765; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=31VOcLmm9fDn4onPCz8nw3m5WfGa6pmjNlwRDXAKVBw=;
-        b=mek/6VyVqrp2q9z7kd1KonLsYD9VVrx5NZpSoUUkF6xlnq8J9yWKJ7jASkJISpL/Bg
-         fJsNmS/BiQAcYbQ/E/F/DQhbOl0CxTnDEzU+nEiiOciy9A0SuQ1uREqFj5/3JyUBTUb6
-         yUd8Ma7CnMgGTJYNgpVAfXWYEnOmvlKymU6DvsJlrEQecevxObt1IPxFRg6jNiMsd65P
-         7g4wz5hiXFup2pqxnJbo2xzsL/+rEMbY/K6IA5+SDDTWC+wj4LjN+XJCbriNBNyPyAX8
-         /x09+3Hvc5TduO1DfgIjSi0WzIwtMN7VUnZQYMVp8EZ1XnZM0PMLr99zpQzvtGNOPDEU
-         ziTg==
+	s=arc-20240116; t=1741723168; c=relaxed/simple;
+	bh=CyN0gEmRzzVHtEBOvfDm0RQTjbpTm2YM6UJbzDJurrs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HTfv78J7CKYDORrMVAdwPmduKOUbgDz2M1TSL4o5dsTECzge6Xjo41Rld9Bytv7o2l96bDyIWMxSbciuypx2AAR44do6u3aWL6e3yGhH1kdXQDpIkxJFbDxulbbKo1U00meOg0uOe3+DwKTGBGiuAUzZQqO9rN1IQAvVGP1fe9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d43621bb7eso2131115ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:59:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741722965; x=1742327765;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=31VOcLmm9fDn4onPCz8nw3m5WfGa6pmjNlwRDXAKVBw=;
-        b=E/eImfPSYpOQG2MAuO9ONRwwc8lNHLkCisqS+hdJF/UhtF3fZYESNAnvXH21iEQSX2
-         8CoFHNHXEXfIhVEhdHKqEYyO6S976Q9RpUC+h2ZU4kuo1AlV698x1E4E75eQEv57pntL
-         IIBt46+YNuxWbTIhmeo3U9CK+7gGp2kHuJXtWf17ynDifr4KeB4PBSxpKJVal3CCaSkz
-         yvrwk4jPTeHmT+oFX818iz95eVRWDpIMVUCGm9Erv5AL8eD5QLYHtBxgq1zjw2fENULd
-         FuLL9x3N8ODOSi1M+Ad26fss0EE3s37kGFQjs/TH2rkb1qB3v9IGl5fdaWBbID8+aK2Y
-         DqEw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6qFt1oRATh6sPA+kmCd79wgyiNrrKWMHba1lxy48D8pRxt/Mxi9KT4J99SOyoVs7jWntKAsrFRguVVy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgQntktYr7m2jhyE8kngMPkyBj22GaM3GAokaBpaDHQ9pwhlhk
-	ea7JhsXBlkGNOflcK5qivIAQvSKB3SqArmvO/9uTwOTqpvtW3uji6BN61BlGY4nn1wQHVTrjws2
-	uqkrRRJMyQ2Ozk1lvVDQtc4bozLolfAvTqD7Q
-X-Gm-Gg: ASbGnctNlkXBUPQVTk0a2uVDMHOvobfCbJm6Iesz52N1ofqz9V1wAhgeKj8++FHbGDa
-	LDBkrWqP7sGJ+nt7SZNylMio+k0jLkcz9dsJjmLmZmy7qOZOg1pYGh04taRPZtfM5cX0d8SDfKx
-	Tnkly2KDxP0uEVY1i24eTbsXFuZnOUaC7MUvhT2s429pDpt2BADWTOIv4=
-X-Google-Smtp-Source: AGHT+IH9gTxRRVZurcx3e26Hp+fZKO67d6CNS5S/S3DuF2W4E5YBfDGSPgWN7xZQJzrS2FfR4qUjQdM040JpDDFDCJE=
-X-Received: by 2002:a05:6214:268b:b0:6d8:b115:76a6 with SMTP id
- 6a1803df08f44-6e9004fa164mr313351926d6.0.1741722965136; Tue, 11 Mar 2025
- 12:56:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741723166; x=1742327966;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yk/UH2k2afq+h/x8kBeOme/IW+Mpk3G7Ew2UpkwpFCU=;
+        b=fnVBLmKnt1fIrqcGIF1KOtNVnh6qZMe+4PX1XXDXS6p9/Ww9H8ZqI1Fklif7lRM8Lp
+         sdp5wUCs6GAU5uri7GCNf95R7KbJsm84bwGGgsU4N41uFgqntu1UiWgsPHLHDJgWF1RG
+         AG4fqBAFD85eGjzRytkuYUKfES0cuIqGRvX6gYs+Vj3/bCrv2kjg9IqGPHBkEdBMgxJW
+         6XT2bcgZu8Ba8ho5kyE1AcFwjlZck5SPHthTasR5LHupTj2UrLU0vpwr9pcYC3lNbOcS
+         drQh3waNIHReBjhvMrdmCucz7xeBEu+2cVo3n0Qd+7BxkA8ID+9r2hDYOTByDNNpz9Cj
+         x3Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCUC3JsUsKKF3aFvC74b5xAqjL0sgfgTzfx5ar9cWcCIxVZTKCbgCFpB/ncYwOPHFEj7GJVKbE0vv/yEXsg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+pky3sl60iJZZMKD6lWOTiuR2R8O24wUtrtEB/u7a5vY6my5w
+	kMoyn6jH0FGIFtobU5jmiA3TlzHXu8At3NCF1SZqWmqI/3/FqRCGxV1D2UQEQZB5UN0Bvk4HIDw
+	kKN+n8ZA1b+ZE/bg5a2Wh3M4/wOu/uy5MwfXvlFt1i7hfeCoinBuSiWg=
+X-Google-Smtp-Source: AGHT+IGc+2+zNiurl64ycEqCSPHhQcu2nJJjs+oRkZMUax7kkyHoqxRAhcZ6FNS/RQYG42RUyVJViODRKc2USmXK+sQm1Ezw11wz
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304000458.1826450-1-royluo@google.com> <20250308010409.n55ivdubj7ylkr7j@synopsys.com>
- <CA+zupgzB2aKRn_KDcqSLctqmvnEW1923XQPDwDzfDVZxU70ORg@mail.gmail.com>
-In-Reply-To: <CA+zupgzB2aKRn_KDcqSLctqmvnEW1923XQPDwDzfDVZxU70ORg@mail.gmail.com>
-From: Roy Luo <royluo@google.com>
-Date: Tue, 11 Mar 2025 12:55:29 -0700
-X-Gm-Features: AQ5f1JpDaJKKRTioXXjj44HVtzY57c-FJzL5oQeDpxM-yGm2Us0vUxsM44D1878
-Message-ID: <CA+zupgzw0Fr-PHzj0PPRQGuvxB+py0EMseiToq5iPKe=iRNtgg@mail.gmail.com>
-Subject: Re: [PATCH v1] usb: dwc3: core: Avoid redundant system suspend/resume callbacks
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6e02:b4a:b0:3d1:9bca:cf28 with SMTP id
+ e9e14a558f8ab-3d469215c50mr48636235ab.8.1741723166055; Tue, 11 Mar 2025
+ 12:59:26 -0700 (PDT)
+Date: Tue, 11 Mar 2025 12:59:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67d0961e.050a0220.14e108.001a.GAE@google.com>
+Subject: [syzbot] [net?] possible deadlock in dev_set_mac_address
+From: syzbot <syzbot+2d6285cc150f4ee51ef9@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Apologies, I noticed the formatting in my previous email was incorrect.
-Please find the same content below, reformatted for improved readability.
+Hello,
 
-On Fri, Mar 7, 2025 at 5:04=E2=80=AFPM Thinh Nguyen <Thinh.Nguyen@synopsys.=
-com> wrote:
->
-> On Tue, Mar 04, 2025, Roy Luo wrote:
-> > dwc3 device suspend/resume callbacks were being triggered during system
-> > suspend and resume even if the device was already runtime-suspended.
-> > This is redundant for device mode because the suspend and resume routin=
-es
-> > are essentially identical for system PM and runtime PM. The minor
-> > difference in pinctrl state changes has been moved to the common sectio=
-n
-> > in this patch.
-> > To prevent these unnecessary callbacks, indicate to the PM core that it
-> > can safely leave the device in runtime suspend if it's already
-> > runtime-suspended in device mode by returning a positive value in
-> > prepare() callback.
-> >
-> > Signed-off-by: Roy Luo <royluo@google.com>
-> > ---
-> >  drivers/usb/dwc3/core.c | 27 ++++++++++++++++++++++-----
-> >  1 file changed, 22 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> > index dfa1b5fe48dc..b83f094ff1c5 100644
-> > --- a/drivers/usb/dwc3/core.c
-> > +++ b/drivers/usb/dwc3/core.c
-> > @@ -2398,10 +2398,12 @@ static int dwc3_suspend_common(struct dwc3 *dwc=
-, pm_message_t msg)
-> >               dwc3_gadget_suspend(dwc);
-> >               synchronize_irq(dwc->irq_gadget);
-> >               dwc3_core_exit(dwc);
-> > +             pinctrl_pm_select_sleep_state(dwc->dev);
-> >               break;
-> >       case DWC3_GCTL_PRTCAP_HOST:
-> >               if (!PMSG_IS_AUTO(msg) && !device_may_wakeup(dwc->dev)) {
-> >                       dwc3_core_exit(dwc);
-> > +                     pinctrl_pm_select_sleep_state(dwc->dev);
-> >                       break;
-> >               }
-> >
-> > @@ -2436,6 +2438,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
-pm_message_t msg)
-> >
-> >               dwc3_otg_exit(dwc);
-> >               dwc3_core_exit(dwc);
-> > +             pinctrl_pm_select_sleep_state(dwc->dev);
-> >               break;
-> >       default:
-> >               /* do nothing */
-> > @@ -2453,6 +2456,7 @@ static int dwc3_resume_common(struct dwc3 *dwc, p=
-m_message_t msg)
-> >
-> >       switch (dwc->current_dr_role) {
-> >       case DWC3_GCTL_PRTCAP_DEVICE:
-> > +             pinctrl_pm_select_default_state(dwc->dev);
-> >               ret =3D dwc3_core_init_for_resume(dwc);
-> >               if (ret)
-> >                       return ret;
-> > @@ -2462,6 +2466,7 @@ static int dwc3_resume_common(struct dwc3 *dwc, p=
-m_message_t msg)
-> >               break;
-> >       case DWC3_GCTL_PRTCAP_HOST:
-> >               if (!PMSG_IS_AUTO(msg) && !device_may_wakeup(dwc->dev)) {
-> > +                     pinctrl_pm_select_default_state(dwc->dev);
-> >                       ret =3D dwc3_core_init_for_resume(dwc);
-> >                       if (ret)
-> >                               return ret;
-> > @@ -2490,6 +2495,7 @@ static int dwc3_resume_common(struct dwc3 *dwc, p=
-m_message_t msg)
-> >               if (PMSG_IS_AUTO(msg))
-> >                       break;
-> >
-> > +             pinctrl_pm_select_default_state(dwc->dev);
-> >               ret =3D dwc3_core_init_for_resume(dwc);
-> >               if (ret)
-> >                       return ret;
-> > @@ -2608,8 +2614,6 @@ static int dwc3_suspend(struct device *dev)
-> >       if (ret)
-> >               return ret;
-> >
-> > -     pinctrl_pm_select_sleep_state(dev);
-> > -
-> >       return 0;
-> >  }
-> >
-> > @@ -2618,8 +2622,6 @@ static int dwc3_resume(struct device *dev)
-> >       struct dwc3     *dwc =3D dev_get_drvdata(dev);
-> >       int             ret =3D 0;
-> >
-> > -     pinctrl_pm_select_default_state(dev);
-> > -
-> >       pm_runtime_disable(dev);
-> >       ret =3D pm_runtime_set_active(dev);
-> >       if (ret)
-> > @@ -2647,14 +2649,29 @@ static void dwc3_complete(struct device *dev)
-> >               dwc3_writel(dwc->regs, DWC3_GUCTL3, reg);
-> >       }
-> >  }
-> > +
-> > +static int dwc3_prepare(struct device *dev)
-> > +{
-> > +     struct dwc3     *dwc =3D dev_get_drvdata(dev);
-> > +
-> > +     /*
-> > +      * Indicate to the PM core that it may safely leave the device in
-> > +      * runtime suspend if runtime-suspended already in device mode.
-> > +      */
-> > +     if (dwc->current_dr_role =3D=3D DWC3_GCTL_PRTCAP_DEVICE)
-> > +             return 1;
->
-> Why are you skipping suspend for all cases when in device mode? Don't we
-> need to check for current runtime suspend status?
-> (ie. check pm_runtime_status_suspended()).
->
+syzbot found the following issue on:
 
-I was looking at drivers/base/power/main.c device_suspend() to see how
-direct complete works, and there are a bunch of checks in the function to
-determine direct complete eligibility, including pm_runtime_status_suspende=
-d().
-That's why I thought it's already taken care of by the PM framework.
-However, looking at the documentation
-https://docs.kernel.org/power/runtime_pm.html
-again "Namely, if a system suspend .prepare() callback returns a positive
-number for a device, that indicates to the PM core that the device appears =
-to
-be runtime-suspended and its state is fine.". You're right, we should also
-do the check inside our .prepare callback. Will fix it in the next patch.
+HEAD commit:    40587f749df2 Merge branch 'enic-enable-32-64-byte-cqes-and..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1420d478580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ca99d9d1f4a8ecfa
+dashboard link: https://syzkaller.appspot.com/bug?extid=2d6285cc150f4ee51ef9
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-> I'm also a bit concernt about moving pinctrl_pm_select* to the
-> suspend/resume_common function. Is your device using pinctrl? If not,
-> how did you validate this?
->
-> Thanks,
-> Thinh
->
+Unfortunately, I don't have any reproducer for this issue yet.
 
-I couldn't find any device node that's actually utilizing the pinctrl "slee=
-p"
-state in upstream. I digged into the patch that introduced pinctrl to dwc3,=
- i.e.
-https://lore.kernel.org/all/9dd70870cfee40154a37186d4cf3ae0e9a452cbd.144102=
-9572.git.nsekhar@ti.com/
-The intention was to control DRVVBUS pins using the pinctrl API so
-that VBUS can be turned off to conserve power when device is suspended
-(which also implies this is only relevant in host mode, at least in the ini=
-tial
-patch). Since there was no runtime PM support in dwc3 at that time, the
-code was only added in the system suspend/resume path. Yet I don't see
-why this cannot be extended to the runtime suspend/resume path,
-ultimately it should be safe to turn off VBUS once the controller is
-completely torn down with dwc3_core_exit() regardless of which suspend
-path it's taking.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/6d02993a9211/disk-40587f74.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2c8b300bf362/vmlinux-40587f74.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2d5be21882cf/bzImage-40587f74.xz
 
-Besides looking at how pinctrl in dwc3 is intended to be used, I did
-an inventory on how it actually is used. There are 3 major players:
-ti, qcom and socionext that has pinctrl property set in their dwc3 device n=
-ode.
-1. ti/omap
-The pinctrl property is only set when dr_mode is host or otg.
-Only the "default" state is defined, none of boards has "sleep" state
-defined, not even the first user
-arch/arm/boot/dts/omap/am437x-gp-evm.dts
-that introduced the API to dwc3.
-(https://lore.kernel.org/all/4a8a072030c2a82867c6548627739146681b35a5.14410=
-29572.git.nsekhar@ti.com/)
-Setting pinctrl "default" state seems to be pretty common in ti/omap,
-and the usage is aligned with the original intention: control DRVVBUS.
-It's unclear why "sleep" state is no longer used though.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2d6285cc150f4ee51ef9@syzkaller.appspotmail.com
 
-2. qcom
-The following 2 boards have pinctrl property defined, dr_mode are all
-host and also only the "default" state is defined.
-- sa8155p-adp.dts  &usb_1_dwc3 {
-                               dr_mode =3D "host";
-                               pinctrl-names =3D "default";
-                               pinctrl-0 =3D <&usb2phy_ac_en1_default>;
-                               };
-                               &usb_2_dwc3 {
-                               dr_mode =3D "host";
-                               pinctrl-names =3D "default";
-                               pinctrl-0 =3D <&usb2phy_ac_en2_default>;
-                               };
-- sm8350-hdk.dts  &usb_2_dwc3 {
-                              dr_mode =3D "host";
-                              pinctrl-names =3D "default";
-                              pinctrl-0 =3D <&usb_hub_enabled_state>;
-                              };
-It seems the pinctrl is used to control phy and perhaps downstream usb hub.
-Nothing is turned off explicitly during sleep as "sleep" state isn't define=
-d.
-It's more like setting the required pins for host mode to work.
+======================================================
+WARNING: possible circular locking dependency detected
+6.14.0-rc5-syzkaller-01183-g40587f749df2 #0 Not tainted
+------------------------------------------------------
+syz.3.4651/21867 is trying to acquire lock:
+ffff88805e634d28 (&dev_instance_lock_key#12){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2731 [inline]
+ffff88805e634d28 (&dev_instance_lock_key#12){+.+.}-{4:4}, at: dev_set_mac_address+0x2a/0x50 net/core/dev_api.c:302
 
-3. socionext
-The pinctrl property is set on controllers with dr_mode peripheral or host.
-Still, only the "default" state is defined.
-The pin is assigned according to its dr_mode, controllers with dr_mode
-host will be assigned with pinctrl_usb* pin, while controllers with dr_mode
-peripheral will get pinctrl_usb*_device pin.
-        pinctrl_usb0: usb0 {
-                groups =3D "usb0";
-                function =3D "usb0";
-        };
-        pinctrl_usb0_device: usb0-device {
-                groups =3D "usb0_device";
-                function =3D "usb0";
-        };
-Again, these pins are not related to power management, it's tied to dr_mode=
-.
+but task is already holding lock:
+ffff88807de0cd28 (&dev_instance_lock_key#2){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2731 [inline]
+ffff88807de0cd28 (&dev_instance_lock_key#2){+.+.}-{4:4}, at: do_setlink+0xa94/0x40f0 net/core/rtnetlink.c:3094
 
-To summarize the current pinctrl usage in dwc3:
-1. No user of "sleep" state, meaning it's unlikely to cause any impact
-on suspend flow.
-2. Typically, the default pin state reflects the controller's dr_mode,
-acting as a pre-configuration step to set the operational mode.
+which lock already depends on the new lock.
 
-Based on the above observation, the code change on the pinctrl is
-unlikely to introduce a regression as it aligns with the original intention
-of the pinctrl property, and the pinctrl_pm_select_sleep_state() is
-essentially an NOP in upstream as of now. Besides,
-pinctrl_pm_select_default_state() is called whenever we try to
-re-initialize the controller.
-I hope this addresses your concern.
 
-Best,
-Roy
+the existing dependency chain (in reverse order) is:
 
-> > +
-> > +     return 0;
-> > +}
-> >  #else
-> >  #define dwc3_complete NULL
-> > +#define dwc3_prepare NULL
-> >  #endif /* CONFIG_PM_SLEEP */
-> >
-> >  static const struct dev_pm_ops dwc3_dev_pm_ops =3D {
-> >       SET_SYSTEM_SLEEP_PM_OPS(dwc3_suspend, dwc3_resume)
-> >       .complete =3D dwc3_complete,
-> > -
-> > +     .prepare =3D dwc3_prepare,
-> >       /*
-> >        * Runtime suspend halts the controller on disconnection. It reli=
-es on
-> >        * platforms with custom connection notification to start the con=
-troller
-> >
-> > base-commit: 99fa936e8e4f117d62f229003c9799686f74cebc
-> > --
-> > 2.48.1.711.g2feabab25a-goog
-> >
-> >
+-> #2 (&dev_instance_lock_key#2){+.+.}-{4:4}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       netdev_lock include/linux/netdevice.h:2731 [inline]
+       netif_set_up net/core/dev.h:143 [inline]
+       __dev_open+0x5cb/0x8a0 net/core/dev.c:1651
+       netif_open+0xae/0x1b0 net/core/dev.c:1667
+       dev_open+0x13e/0x260 net/core/dev_api.c:191
+       team_port_add drivers/net/team/team_core.c:1230 [inline]
+       team_add_slave+0xabe/0x28a0 drivers/net/team/team_core.c:1989
+       do_set_master+0x579/0x730 net/core/rtnetlink.c:2943
+       do_setlink+0xfee/0x40f0 net/core/rtnetlink.c:3149
+       rtnl_changelink net/core/rtnetlink.c:3759 [inline]
+       __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
+       rtnl_newlink+0x15a6/0x1d90 net/core/rtnetlink.c:4055
+       rtnetlink_rcv_msg+0x791/0xcf0 net/core/rtnetlink.c:6945
+       netlink_rcv_skb+0x206/0x480 net/netlink/af_netlink.c:2534
+       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+       netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+       netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+       sock_sendmsg_nosec net/socket.c:709 [inline]
+       __sock_sendmsg+0x221/0x270 net/socket.c:724
+       ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+       ___sys_sendmsg net/socket.c:2618 [inline]
+       __sys_sendmsg+0x269/0x350 net/socket.c:2650
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #1 (team->team_lock_key#2){+.+.}-{4:4}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       team_set_mac_address+0x122/0x280 drivers/net/team/team_core.c:1817
+       netif_set_mac_address+0x327/0x510 net/core/dev.c:9605
+       do_setlink+0xaa6/0x40f0 net/core/rtnetlink.c:3095
+       rtnl_changelink net/core/rtnetlink.c:3759 [inline]
+       __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
+       rtnl_newlink+0x15a6/0x1d90 net/core/rtnetlink.c:4055
+       rtnetlink_rcv_msg+0x791/0xcf0 net/core/rtnetlink.c:6945
+       netlink_rcv_skb+0x206/0x480 net/netlink/af_netlink.c:2534
+       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+       netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+       netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+       sock_sendmsg_nosec net/socket.c:709 [inline]
+       __sock_sendmsg+0x221/0x270 net/socket.c:724
+       __sys_sendto+0x363/0x4c0 net/socket.c:2178
+       __do_sys_sendto net/socket.c:2185 [inline]
+       __se_sys_sendto net/socket.c:2181 [inline]
+       __x64_sys_sendto+0xde/0x100 net/socket.c:2181
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (&dev_instance_lock_key#12){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3163 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       netdev_lock include/linux/netdevice.h:2731 [inline]
+       dev_set_mac_address+0x2a/0x50 net/core/dev_api.c:302
+       bond_set_mac_address+0x28e/0x830 drivers/net/bonding/bond_main.c:4903
+       netif_set_mac_address+0x327/0x510 net/core/dev.c:9605
+       do_setlink+0xaa6/0x40f0 net/core/rtnetlink.c:3095
+       rtnl_changelink net/core/rtnetlink.c:3759 [inline]
+       __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
+       rtnl_newlink+0x15a6/0x1d90 net/core/rtnetlink.c:4055
+       rtnetlink_rcv_msg+0x791/0xcf0 net/core/rtnetlink.c:6945
+       netlink_rcv_skb+0x206/0x480 net/netlink/af_netlink.c:2534
+       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+       netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+       netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+       sock_sendmsg_nosec net/socket.c:709 [inline]
+       __sock_sendmsg+0x221/0x270 net/socket.c:724
+       ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+       ___sys_sendmsg net/socket.c:2618 [inline]
+       __sys_sendmsg+0x269/0x350 net/socket.c:2650
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &dev_instance_lock_key#12 --> team->team_lock_key#2 --> &dev_instance_lock_key#2
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&dev_instance_lock_key#2);
+                               lock(team->team_lock_key#2);
+                               lock(&dev_instance_lock_key#2);
+  lock(&dev_instance_lock_key#12);
+
+ *** DEADLOCK ***
+
+2 locks held by syz.3.4651/21867:
+ #0: ffffffff8fed6908 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
+ #0: ffffffff8fed6908 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:341 [inline]
+ #0: ffffffff8fed6908 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0xc4c/0x1d90 net/core/rtnetlink.c:4054
+ #1: ffff88807de0cd28 (&dev_instance_lock_key#2){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2731 [inline]
+ #1: ffff88807de0cd28 (&dev_instance_lock_key#2){+.+.}-{4:4}, at: do_setlink+0xa94/0x40f0 net/core/rtnetlink.c:3094
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 21867 Comm: syz.3.4651 Not tainted 6.14.0-rc5-syzkaller-01183-g40587f749df2 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
+ check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
+ check_prev_add kernel/locking/lockdep.c:3163 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+ validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+ __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+ __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+ netdev_lock include/linux/netdevice.h:2731 [inline]
+ dev_set_mac_address+0x2a/0x50 net/core/dev_api.c:302
+ bond_set_mac_address+0x28e/0x830 drivers/net/bonding/bond_main.c:4903
+ netif_set_mac_address+0x327/0x510 net/core/dev.c:9605
+ do_setlink+0xaa6/0x40f0 net/core/rtnetlink.c:3095
+ rtnl_changelink net/core/rtnetlink.c:3759 [inline]
+ __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
+ rtnl_newlink+0x15a6/0x1d90 net/core/rtnetlink.c:4055
+ rtnetlink_rcv_msg+0x791/0xcf0 net/core/rtnetlink.c:6945
+ netlink_rcv_skb+0x206/0x480 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:709 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:724
+ ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+ ___sys_sendmsg net/socket.c:2618 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2650
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb6b198d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb6af7d5038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fb6b1ba6080 RCX: 00007fb6b198d169
+RDX: 0000000000040880 RSI: 0000400000000000 RDI: 0000000000000009
+RBP: 00007fb6b1a0e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fb6b1ba6080 R15: 00007fff137bf0e8
+ </TASK>
+bond0: entered promiscuous mode
+team0: entered promiscuous mode
+bond0: left allmulticast mode
+team0: left allmulticast mode
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
