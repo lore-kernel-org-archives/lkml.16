@@ -1,165 +1,99 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2346266B60
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 19:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E6A266B7B;
+	Tue, 11 Mar 2025 19:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741719766; cv=none; b=K7SJ5sHzJ+A0nepAHkd2Me0qql8qWz8kX60YedTkT6Qv28TYOZRxaB9k5Oz/0hxvx6GpazKqepM+HHlLHvFAlpkf//A61Rmcwp7gVyrXo5U+itwsVPB+4BORgfxoFQDcV98unvdq2Fr86ySFe7soTGnu+Os5jUDRbY+mUGXPBXw=
+	t=1741719769; cv=none; b=KhqFqY62wXtpcvHlYp7XDVP+T0dHmput9Zp53wly8206R3JtQ5DTtHHPB275qcy4kW4vAgBt9GSOJe4QZ6qXUf6Tnn9x3tdIH7pyAANIgxgY3Sskzc0fT6hCR/uu70rNEuJoGn4lRn3B3zaA6xI9RpFaLCgbUi0B4MUa6P1izbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741719766; c=relaxed/simple;
-	bh=3xk0pyKS4szEe/9MhLY0udi1S0AkDYWMQ5qVNXd7KNA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gNL4pf9NXH85KGuub+k6d21TYKTkmio9l0v+Fh7HC2Iij8OvXAm6gwvpb8BOyvOLeEuJFRZmyGcfVfKT/l49uhSHOzBJP7SXiYE4ZsL0Cp0sC9yt/ld4dwqaPy4hhKzPJXpN7u852J8It3Ghwkt69H7QTSH3UiIKI//M+JZS080=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o0FPoqb8; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741719769; c=relaxed/simple;
+	bh=903w085l1k6ydor21DnGi+IQsYPV/L4oQPMCNZIraXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MOTZ66ftR/JCQmangQ7JBpvom9E66mYRfLZQNk5vR/We27z+Qi5HpSRA8YpZOyj348sGNrcs14yFVWQuLhrtvL3zs/qaIjxpq9o+Vi7beBx6tXvs4eooAca/ryl4S4nPBdp46SCdETH9qYJDLEOdCoLddYhwpzxCdZe+tAhbzIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkaUpWFC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o0FPoqb8"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-391295490c8so351752f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741719762; x=1742324562; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FoHt8+Qv2KBvycEBRbSOT+7Q4Tanwbir/+be358nDD8=;
-        b=o0FPoqb8CGFAPN/T3m50tuCyT81T6oSpLPhVBdG3Z1wwjTtiBbgCgs7t9Bb5qHr1I6
-         r+K+u97mRlXv78ZMIZTu6cXeCAJZovcZDt20liOSRwsqBvHgMbQ6Y8U4cN10ZfkfwRLl
-         OLSut5hmJBeZXEM9bc05J2iEfvNz8ItAC7jUa22/c8vzMwibhGfo96oklNctKjMP6qiN
-         cR6lql6vQeBAndOTAApeAg4f0/4g6h4a5w0WyDp/H/iOtc+RAec9Ka03zrIUsEHAK5g7
-         /+KkWQAmYwXeSn+ugxJjVLR1GvgcxnjSLWVV4s6S4Xs0eu+u4Qh0ADxSUF7Zs+GlJFXY
-         sVlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741719762; x=1742324562;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FoHt8+Qv2KBvycEBRbSOT+7Q4Tanwbir/+be358nDD8=;
-        b=Gak+W3UzPB0Q2Pre+8eo0siTYn3ug+3xUKyqo2GBp/fB8QYlNphRwQZuURUdN1hcLZ
-         eiB5L4C9xN4uwohQaTui8luNP2kUatEUG/YeiRk+Y/AjTtAR79zFCAAcmgXPO9+Pqv+/
-         1YbJ+uQw0jI+2XmHrRNhO2p5XeOJEsfuH5Todd4vn7xuNkY5mfo1yS9FYAFB1YkP0aHg
-         JNwV9q96czmMf1k58Jzxinu1aHKZrv8tAv4r20i32ZMLdxOqXDZigRQq5oIr9K7wbId+
-         iqx3T6mytv4A91tsuPhpHcnzU6+iY1X+BeKlI6Kxgw1R9IE1rQ/ww7K8AKkx2YR6r7Oi
-         Znog==
-X-Forwarded-Encrypted: i=1; AJvYcCURYEKvXwTSIaZ3jHeQuBosk3l5v7m2+Xxr04uQiI4uT+dEkpo8/lPdT8mYZ+lR75m+odZj1Hy6DIcZZ3o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yybn8NlE8UdGQcDNuu6j4NM5JCovgtwHpvHOAe+fsFh3yzZ9g+E
-	iwiDssAj17qRH9wZatZq0KHGLpRlhpTwTMOIJgM/Zd7gNz2crr/jP0GsKKKZpGQ=
-X-Gm-Gg: ASbGncvoFZh2lYqDA8ZUVE9k2COZ1GFdUoPgrIKinVXGV+XOI2FdJiMBUbTU4Jma58W
-	ejhoeDRiXsPCAhx9GrHlFzeDcJKsMi7XaP6yIie5YUnd+ULacCHOLG8Pd0c5h5Glos3diCxltzz
-	BKjrUGVqeVM0INA0xTCQUrUxVgPNt4TXcIkQp4Bsfxsuj3FpMATFGfUa0W8oSMLl2Pc4hOqQSHb
-	y2vkD6z3VBhH+DvchnAStf1T8TEgMDxlAhjLgyJF4QyxHDgrwACxnioIlOF44x1BEkBkVxvbNgr
-	Hhd1lNIjWRXU/5ZkMGGEj8/PqES30HSBjngebYMyBJII6Z/6OsVhfvbeeqE=
-X-Google-Smtp-Source: AGHT+IGtubQYzLqe6qMHPh2YhYmcldjpGkwHVseYKBCi8jZBCwCNslEBMj62gHB7lTtanzJPhgFk1w==
-X-Received: by 2002:a05:600c:3113:b0:43b:d547:6336 with SMTP id 5b1f17b1804b1-43d01c3105dmr22168095e9.8.1741719762312;
-        Tue, 11 Mar 2025 12:02:42 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ce70d13b4sm127681155e9.38.2025.03.11.12.02.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 12:02:40 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Tue, 11 Mar 2025 20:02:00 +0100
-Subject: [PATCH v4 10/19] drm/msm/dpu: Drop useless comments
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkaUpWFC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA1BC4CEE9;
+	Tue, 11 Mar 2025 19:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741719769;
+	bh=903w085l1k6ydor21DnGi+IQsYPV/L4oQPMCNZIraXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DkaUpWFC6tonuAozpZLRP44Mvhbl9mjvUdNpmQEM9MEl9LVsmHnVfX5Ye3l4xANs5
+	 3F+7S348veq0VbbP6e6uKnv7WBZ7XsoYLHnfDUetMq2y9OaDgJQbDZiwsQiigRpjkK
+	 xS94S5HNcVEV3bxzkr05+ELKkcq4I9otxTszR+kBPh94Vosbwg7JE4BsWj0rGe5CY5
+	 1Q0PdJl0mb8O2c+azuvNtTFn4MQeMY65V31g+MT/wEheoi9B1OApnfc8oF1JT6+j70
+	 GLLAr/04IkYZ+rVPnCPTN+6UmOiGOFuE8B8F6pUt47BESyKCN0zsC7IxFfVKqGLf2J
+	 U9eYovL+GD5rg==
+Date: Tue, 11 Mar 2025 14:02:47 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: =?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	linux-media@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Ihor Matushchak <ihor.matushchak@foobox.net>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	Will Deacon <will@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-staging@lists.linux.dev,
+	linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	Dongcheng Yan <dongcheng.yan@intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Ross Burton <ross.burton@arm.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Julien Massot <julien.massot@collabora.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>, Zhi Mao <zhi.mao@mediatek.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Javier Carrasco <javier.carrasco@wolfvision.net>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [RFC PATCH v2 10/16] dt-bindings: media: i2c: max96712: add
+ support for POC supplies
+Message-ID: <174171976682.3984722.17562171213323916839.robh@kernel.org>
+References: <20250309084814.3114794-1-demonsingur@gmail.com>
+ <20250309084814.3114794-11-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250311-b4-sm8750-display-v4-10-da6b3e959c76@linaro.org>
-References: <20250311-b4-sm8750-display-v4-0-da6b3e959c76@linaro.org>
-In-Reply-To: <20250311-b4-sm8750-display-v4-0-da6b3e959c76@linaro.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krishna Manikandan <quic_mkrishn@quicinc.com>, 
- Jonathan Marek <jonathan@marek.ca>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
- Rob Clark <robdclark@chromium.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1894;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=3xk0pyKS4szEe/9MhLY0udi1S0AkDYWMQ5qVNXd7KNA=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn0IitXyBOAqRPMp/KeWk+fUVdkX6Z9R8/hGg9S
- IEiI9aoyTiJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ9CIrQAKCRDBN2bmhouD
- 1/VkD/41O3QOWYZQCz/a0hGAcXFdCxiwdt52Ij6fy7kFN9HC8l+eoOd3C+t73FbxyP7vOOpTEB6
- ldE1DezPsO3nMYCBNS6xWz2nfXKkZCPsD0yQFauOBzlr9DlY7vSj+be9QELlrCtQ9LCvGLL3ofC
- 9m4IenWnpfH0nCkPEPeB7A+BizuF9GFMTqLIIauaHYiGtkieTPZ0c5eSV7Cb9WeEbirH4+WqM6H
- huEJo6H6WJinBZ2KDBNyO9fGP+XgEpkZSHSvY3VLdsXiPO5pkxfKyM5C9c+iYuGUeJzmKjRB1vb
- qDcGUrLd4xCX7CaBXqX/92oeIGIcXOoAIY/KO4ScEcoIMoyvvAFYCZm/L43vJpST6F3Rq2hEKdP
- sTGrMWlRwfWPAbCx6ROKVSUDrSyCf/n+b1KWfU82+G8X5NSYC/YAiW/9s4gNXsU45AIC4ZHtCPz
- K2VH3kaOFUulwd+OVtqnvv29bFVuliq4DP8BGw/FnlYPpVokRPc5DjCbNYvxWzdXmS7Vf2wzW9d
- w++w+S9/b86Ls8p4vmJ+mwbXWy5ZYZJtld+2KOgAZ7ITmlyMVghTehYUGfC/hBz24V5L1F85fkn
- IjLcdFIxoIE+lfmrr86j0xbqzyPewR1QmPz7twsAfiQi+WdIINP/+wsn7V/JY5uy6Z+5fUzqY9O
- AOHbyo42s2JjvQQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250309084814.3114794-11-demonsingur@gmail.com>
 
-Drop comments about SoC before each 'struct dpu_lm_sub_blks' for given
-SoC because it's duplicating the actual name of structure.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 8 --------
- 1 file changed, 8 deletions(-)
+On Sun, 09 Mar 2025 10:48:02 +0200, Cosmin Tanislav wrote:
+> The GMSL links can carry power to the serializer when using coaxial
+> cables.
+> 
+> Document this capability.
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> ---
+>  .../devicetree/bindings/media/i2c/maxim,max96712.yaml         | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index 2db27c55787791309962acf796d5c49aaf018fc1..a310a5234e99ea4886e82ac2100c4099e6a1841e 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -331,8 +331,6 @@ static const struct dpu_sspp_sub_blks dpu_dma_sblk = _DMA_SBLK();
-  * MIXER sub blocks config
-  *************************************************************/
- 
--/* MSM8998 */
--
- static const struct dpu_lm_sub_blks msm8998_lm_sblk = {
- 	.maxwidth = DEFAULT_DPU_OUTPUT_LINE_WIDTH,
- 	.maxblendstages = 7, /* excluding base layer */
-@@ -342,8 +340,6 @@ static const struct dpu_lm_sub_blks msm8998_lm_sblk = {
- 	},
- };
- 
--/* SDM845 */
--
- static const struct dpu_lm_sub_blks sdm845_lm_sblk = {
- 	.maxwidth = DEFAULT_DPU_OUTPUT_LINE_WIDTH,
- 	.maxblendstages = 11, /* excluding base layer */
-@@ -353,8 +349,6 @@ static const struct dpu_lm_sub_blks sdm845_lm_sblk = {
- 	},
- };
- 
--/* SC7180 */
--
- static const struct dpu_lm_sub_blks sc7180_lm_sblk = {
- 	.maxwidth = DEFAULT_DPU_OUTPUT_LINE_WIDTH,
- 	.maxblendstages = 7, /* excluding base layer */
-@@ -363,8 +357,6 @@ static const struct dpu_lm_sub_blks sc7180_lm_sblk = {
- 	},
- };
- 
--/* QCM2290 */
--
- static const struct dpu_lm_sub_blks qcm2290_lm_sblk = {
- 	.maxwidth = DEFAULT_DPU_LINE_WIDTH,
- 	.maxblendstages = 4, /* excluding base layer */
-
--- 
-2.43.0
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
