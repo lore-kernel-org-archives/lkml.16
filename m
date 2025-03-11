@@ -1,217 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.62.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCDB221DA5
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D93146593
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.62.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741684033; cv=none; b=fQzKBZwq8PUmxLwk6aor/0r3iZJ54jJpzER1cABM+GIIT17bF9OwP3M/4kRHOmTDoIZnbxpLL6MQpx7iytrpZY/WuxDjiR9Ldy9YOSR2+27DPs5TWFfbW9Dx/82k+XTgGWnUjjyx0urkaMYHB6s6rCuXoir5NiJkh/cdtbOpRaI=
+	t=1741684082; cv=none; b=mV6fvScaKOZbeqeArCPFxzh1ur5f1AJJ1DMtWiXgfsNWXJIDkJhIQlEdt2qV8QsEFiGS9sGiUt8Bgf4r7xz2JdKOgIghW8rFOgUfqm7hrvR2gc7Pk8ZFPpd2hIz96IRrBnwo3ROCucz+T6EeDYKUGmZav34FpP0s3lqyAdkoe+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741684033; c=relaxed/simple;
-	bh=gyLmpe5k5GUP6qSCYiKlgMs9tCKYV+g7Wv+hQz6ySR4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=hNetTjo9OMtvIVF3yyagpMbTScbN7jG7+M1pHyn8lDNqFy8cFi4FP1pQaZMYMHuqV524U1kNLXZG6G52lJC7O4WFbOMl4m+C17bkj9P/JpfotcB+LNeGuYwMRhBjRp73AGNhagGZzXu/OG+48Mlkp31dQQJ3gKxoGRIuf2sC+80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bZQf60fI; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741684082; c=relaxed/simple;
+	bh=2dOCfF3SE4JtdwJGgzc7tTDXSXveTGf7JBWlac24dI8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tJve7QQtaJM1MD56e5JUAosRaLybMRMeSFBbtWLkVkakRZ66ekduUdCe1sntfqmUmBfjW1IZt5ZKh8iUqnRzG+e/BDY+jPinNl7/Y0m2xMCwVMv7j1UAODb09VGJAnu5cEdQrkVGxYvBWA4GRNg+YChEmQg2LV7XMjn7UBfmelU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=KCMITyiw; arc=none smtp.client-ip=114.132.62.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bZQf60fI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741684032; x=1773220032;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=gyLmpe5k5GUP6qSCYiKlgMs9tCKYV+g7Wv+hQz6ySR4=;
-  b=bZQf60fI5a/fmRgxOAtOyyaeyOoZrmEXeghj3DaOre9EzkTpoVqfRWzs
-   fpL+OaYyrrIIZzZImT9iYxg3tINO+N7//OiLJlDHXfX4XISTgC/Z6iwLj
-   BW+Lb6gfyeIayX8gqUrWpbX1CY4YfOOIwgI5Iqlnr2Xkl0YZpxTjqaevA
-   poL8Fc1arHEiIp3h78VhBkeNEZzWB4IQzYh2mUT7o2KQFHxejvPFIYaRc
-   3x32DA8BMTaUuof3q1hvFXpA4tDVF9o04lVzNz9ZRjDG9S0/GmKRqLlce
-   MQhZypySwY+8ufLJA2EG9SR4SWGfSd6ErjkeS8lcV0ZYrOB9qtLI1orns
-   w==;
-X-CSE-ConnectionGUID: E+T+c2soR7aK73pT7S2Njw==
-X-CSE-MsgGUID: HBFvIh6FTiSugwiI9HkPBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="60114955"
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="60114955"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 02:07:11 -0700
-X-CSE-ConnectionGUID: 3pCOxySZTf+5W9BoPrRR+Q==
-X-CSE-MsgGUID: ewyMrph8SqCWACu5rUrjdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="125293210"
-Received: from ipu5-build.bj.intel.com (HELO [10.238.232.136]) ([10.238.232.136])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 02:07:10 -0700
-Subject: Re: udmabuf vmap failed (Revert "udmabuf: fix vmap_udmabuf error page
- set" can help)
-To: Huan Yang <link@vivo.com>, vivek.kasireddy@intel.com,
- ryan.roberts@arm.com, hch@lst.de
-Cc: linux-kernel@vger.kernel.org, christian.koenig@amd.com,
- dri-devel@lists.freedesktop.org
-References: <9172a601-c360-0d5b-ba1b-33deba430455@linux.intel.com>
- <d7a54599-350e-4e58-81b6-119ffa2ab03e@vivo.com>
- <ab468ce7-c8ac-48eb-a6c0-386ea7aa9a0c@linux.intel.com>
- <78cd737d-5e85-4d3c-8bb5-0b925d81719b@vivo.com>
-From: Bingbu Cao <bingbu.cao@linux.intel.com>
-Message-ID: <29445257-b8df-72bd-0650-44c8deb1506c@linux.intel.com>
-Date: Tue, 11 Mar 2025 17:02:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="KCMITyiw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1741684055;
+	bh=ZiPqY/RKHISV8T1AisgYMO+/5+gEQu6ZX6Kam1AOsDc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=KCMITyiw2jf33hRsA5XZI+pABR/NQeKOrjimuH/Fvu/O8XH+beaithnWBYsBbSumM
+	 NxMf5A/nD8GVB60KxWu05RNw4sBomQ9KIR7B68feH4UHb1VU69uIGyB+Yb43Httwcd
+	 JJoiQC7BPXPnNTUS8rtAHtHjWjlK3rzMNycy7E0k=
+X-QQ-mid: bizesmtpip4t1741684045tzy6fhy
+X-QQ-Originating-IP: vufqVQTjWyeothMrDcmUwU25hNfeKgzbYJXcByj5JzM=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 11 Mar 2025 17:07:22 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 1440186853844928154
+From: WangYuli <wangyuli@uniontech.com>
+To: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@unintech.com,
+	guanwentao@uniontech.com,
+	chenlinxuan@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] sched/core: u_clamp: Fix "-Wunused-function" warnings
+Date: Tue, 11 Mar 2025 17:07:14 +0800
+Message-ID: <6C18D4916C41C8D7+20250311090714.902321-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <78cd737d-5e85-4d3c-8bb5-0b925d81719b@vivo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MW2WLBvYEeCv/l2Wr/ujvAUi8rsh02+maNw3jXFnBUAicw8OeAyKZIKG
+	KN6oA6R3/RoW2Wqi7OO0UiT7FY7YZVGgOK5pAiVZWU3S48Dk90hol+sVOvw8GYsE0bWSzGZ
+	t7bCb5BvIZtoiw45vkQ1+McNyGlkuFUnJt8b6cMoeci18XHJ9RQpGuViF+/+qJLL+fYOgOp
+	o+q5pxbN7BPDYuE18SXf7Sm/vF0hCRhoi29IOaYyzYzM9IWL2elQ1TovSwIUf02awE63K7P
+	Y9W7MBW7A0Cx2cTMQQtHIRVZMpMTZbpiYZl89TxbWgUoKSekAbYEP1aD7Z9xC0jHQjNC0c2
+	yE7FDGfu4XqWyB1/qq5+sqlvMP4066pFlNkSLCAZ6JM1Me03V4xXxFVUxn7hLI6aFlqeOvZ
+	8h7CHb4+CJJsVUFh5Xr/pp1/n6CvAGx2uVS++007HqoMTix3fOI9dsENTvcbIOFQFMT1Xcj
+	Oc6hK/Vmh1UkWhn0byMX1AuUsuZsuYTF5AOdfQdctlXvJzAX6Oe3MbPI55PgOvg5gOxDOmk
+	A0pu+7MpZsGNz5ME9pblAAgdZF8xeWK7C+SzG4JJCTZI6UMiV4F1p9IZgzrXJrEFcXXPENS
+	K3yvUztoZ6rKrZ8RSjn9SFw9iUIKOb3Gxx0tB5eFDxgYkYt2Z26/qo5gJYd8Ddct5ch4AqB
+	rqRVwykL+ZohS+AJcu9h163fyzhapkVbwhaw2EOMboEK9Ge2e/Fk6Y184sgWgB5mSN4ZdbD
+	OJ1y/PLI33Yc0vQKCN3Z0k31Miaj3pAdgO0YfeZ19S4jA8dR0azawh/4KgUFedUd/TxQZRq
+	s3V7B3Kduh0HMg3yuPbqFYF4RCNUHgzueTc9dh9IuOnhMcOJfJcbZirJyUpZ+Sxyvb+QaGE
+	7gAZ5jCuMRK5isaNQgsh7l6OZT0KaMzQb+oF9QkZd3Ni/nd24DqNfXmA201uKibq0bURNpp
+	dwBFLjvbJ2zml3/k22CyMcsJWAtf9NFuuGWBy3s3r6Gv4QPDfddDzqPyB536vqXYw3MYjC/
+	rG0vM3JA==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
+Given that uclamp_update_active() is exclusively called by
+uclamp_update_active_tasks(), and considering that
+uclamp_update_active_tasks() is utilized solely when
+CONFIG_UCLAMP_TASK_GROUP is enabled, it follows that
+uclamp_update_active() will emit a compilation warning if
+CONFIG_UCLAMP_TASK_GROUP is not enabled.
 
-Christoph and Ryan,
+Similar reason of uclamp_rq_reinc_id().
 
-Could you help check this? Thanks.
+Fix follow errors with clang-19 when W=1e:
 
-On 3/11/25 4:54 PM, Huan Yang wrote:
-> 
-> 在 2025/3/11 16:42, Bingbu Cao 写道:
->> [You don't often get email from bingbu.cao@linux.intel.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->>
->> Huan,
->>
->> Thanks for your response.
->>
->> On 3/11/25 3:12 PM, Huan Yang wrote:
->>> 在 2025/3/11 14:40, Bingbu Cao 写道:
->>>> [You don't often get email from bingbu.cao@linux.intel.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->>>>
->>>> Huan Yang and Vivek,
->>>>
->>>> I am trying to use udmabuf for my test, and I cannot vmap the udmabuf
->>>> buffers now. vmap_pfn_apply() will report a warning to complain that
->>>> the pfns are invalid.
->>>> I dump the pfn numbers as below:
->>>> [ 3365.399641] pg[0] pfn 1148695
->>>> [ 3365.399642] pg[1] pfn 1145057
->>>> [ 3365.399642] pg[2] pfn 1134070
->>>> [ 3365.399643] pg[3] pfn 1148700
->>>> [ 3365.399643] pg[4] pfn 1144871
->>>> [ 3365.399643] pg[5] pfn 1408686
->>>> [ 3365.399643] pg[6] pfn 1408683
->>>> ...
->>>> [ 3365.399660] WARNING: CPU: 3 PID: 2772 at mm/vmalloc.c:3489 vmap_pfn_apply+0xb7/0xd0
->>>> [ 3365.399667] Modules linked in:...
->>>> [ 3365.399750] CPU: 3 UID: 0 PID: 2772 Comm: drm-test Not tainted 6.13.0-rc2-rvp #845
->>>> [ 3365.399752] Hardware name: Intel Corporation Client Platform/xxxx, BIOS xxxFWI1.R00.3221.D83.2408120121 08/12/2024
->>>> [ 3365.399753] RIP: 0010:vmap_pfn_apply+0xb7/0xd0
->>>> [ 3365.399755] Code: 5b 41 5c 41 5d 5d c3 cc cc cc cc 48 21 c3 eb d1 48 21 c3 48 23 3d 31 c0 26 02 eb c5 48 c7 c7 c4 3c 20 a8 e8 5b c0 d8 ff eb 8a <0f> 0b b8 ea ff ff ff 5b 41 5c 41 5d 5d c3 cc cc cc cc 0f 1f 80 00
->>>> [ 3365.399756] RSP: 0018:ffffb9b50c32fad0 EFLAGS: 00010202
->>>> [ 3365.399757] RAX: 0000000000000001 RBX: 0000000000118717 RCX: 0000000000000000
->>>> [ 3365.399758] RDX: 0000000080000000 RSI: ffffb9b50c358000 RDI: 00000000ffffffff
->>>> [ 3365.399758] RBP: ffffb9b50c32fae8 R08: ffffb9b50c32fbd0 R09: 0000000000000001
->>>> [ 3365.399759] R10: ffff941602479288 R11: 0000000000000000 R12: ffffb9b50c32fbd0
->>>> [ 3365.399759] R13: ffff941618665ac0 R14: ffffb9b50c358000 R15: ffff941618665ac8
->>>> [ 3365.399760] FS:  00007ff9e9ddd740(0000) GS:ffff94196f780000(0000) knlGS:0000000000000000
->>>> [ 3365.399760] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>> [ 3365.399761] CR2: 000055fda5dc69d9 CR3: 00000001544de003 CR4: 0000000000f72ef0
->>>> [ 3365.399762] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>>> [ 3365.399762] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
->>>> [ 3365.399763] PKRU: 55555554
->>>> [ 3365.399763] Call Trace:
->>>> [ 3365.399765]  <TASK>
->>>> [ 3365.399769]  ? show_regs+0x6d/0x80
->>>> [ 3365.399773]  ? __warn+0x97/0x160
->>>> [ 3365.399777]  ? vmap_pfn_apply+0xb7/0xd0
->>>> [ 3365.399777]  ? report_bug+0x1ec/0x240
->>>> [ 3365.399782]  ? handle_bug+0x63/0xa0
->>>> [ 3365.399784]  ? exc_invalid_op+0x1d/0x80
->>>> [ 3365.399785]  ? asm_exc_invalid_op+0x1f/0x30
->>>> [ 3365.399790]  ? vmap_pfn_apply+0xb7/0xd0
->>>> [ 3365.399791]  __apply_to_page_range+0x522/0x8a0
->>>> [ 3365.399794]  ? __pfx_vmap_pfn_apply+0x10/0x10
->>>> [ 3365.399795]  apply_to_page_range+0x18/0x20
->>>> [ 3365.399796]  vmap_pfn+0x77/0xd0
->>>> [ 3365.399797]  vmap_udmabuf+0xc5/0x110
->>>> [ 3365.399802]  dma_buf_vmap+0x96/0x130
->>>>
->>>> I did an experiment to revert 18d7de823b7150344d242c3677e65d68c5271b04,
->>>> then I can vmap the pages. Could you help what's wrong with that?
->>> Sorry for that, as I reviewed pfn_valid, that's someting wired:
->>>
->>> /**
->>>   * pfn_valid - check if there is a valid memory map entry for a PFN
->>>   * @pfn: the page frame number to check
->>>   *
->>>   * Check if there is a valid memory map entry aka struct page for the @pfn.
->>>   * Note, that availability of the memory map entry does not imply that
->>>   * there is actual usable memory at that @pfn. The struct page may
->>>   * represent a hole or an unusable page frame.
->>>   *
->>>   * Return: 1 for PFNs that have memory map entries and 0 otherwise
->>>   */
->>>
->>> So, if pfn valid, it's return 1, else 0. So mean, only 1 is a valid pfn. But vmap_pfn_apply in there:
->>>
->>> static int vmap_pfn_apply(pte_t *pte, unsigned long addr, void *private)
->>> {
->>>      struct vmap_pfn_data *data = private;
->>>      unsigned long pfn = data->pfns[data->idx];
->>>      pte_t ptent;
->>>
->>>      if (WARN_ON_ONCE(pfn_valid(pfn)))
->>>          return -EINVAL;
->>>
->>>      ptent = pte_mkspecial(pfn_pte(pfn, data->prot));
->>>      set_pte_at(&init_mm, addr, pte, ptent);
->>>
->>>      data->idx++;
->>>      return 0;
->>> }
->>>
->>> Do it give a wrong check? maybe should fix by:
->> I guess not, it looks more like warning when you trying to vmap a
->> pfn which already took a valid entry in pte.
-> 
-> No, I think here check need pfn is valid, then can set it. If a pfn is invalid, why we set it in PTE?
-> 
-> Also, I can't make sure.
-> 
-> BTW, can you fix it then retest?
-> 
-> Thank you.
-> 
->>
->> However, the MM code is so complex for me, just my guess. :)
->>
->>> static int vmap_pfn_apply(pte_t *pte, unsigned long addr, void *private)
->>> {
->>>      struct vmap_pfn_data *data = private;
->>>      unsigned long pfn = data->pfns[data->idx];
->>>      pte_t ptent;
->>>
->>> -    if (WARN_ON_ONCE(pfn_valid(pfn)))
->>> +    if (WARN_ON_ONCE(!pfn_valid(pfn)))
->>>          return -EINVAL;
->>>
->>>      ptent = pte_mkspecial(pfn_pte(pfn, data->prot));
->>>      set_pte_at(&init_mm, addr, pte, ptent);
->>>
->>>      data->idx++;
->>>      return 0;
->>> }
->>>
->>> Please help me check it, also, you can apply this and then check it.:)
->>>
->>>>
->>>> -- 
->>>> Best regards,
->>>> Bingbu Cao
->> -- 
->> Best regards,
->> Bingbu Cao
+  kernel/sched/core.c:1818:1: error: unused function 'uclamp_update_active' [-Werror,-Wunused-function]
+   1818 | uclamp_update_active(struct task_struct *p)
+        | ^~~~~~~~~~~~~~~~~~~~
 
+  kernel/sched/core.c:1800:20: error: unused function 'uclamp_rq_reinc_id' [-Werror,-Wunused-function]
+   1800 | static inline void uclamp_rq_reinc_id(struct rq *rq, struct task_struct *p,
+        |                    ^~~~~~~~~~~~~~~~~~
+
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 67189907214d..49549e030f4c 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1797,6 +1797,7 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ 		uclamp_rq_dec_id(rq, p, clamp_id);
+ }
+ 
++#ifdef CONFIG_UCLAMP_TASK_GROUP
+ static inline void uclamp_rq_reinc_id(struct rq *rq, struct task_struct *p,
+ 				      enum uclamp_id clamp_id)
+ {
+@@ -1843,7 +1844,6 @@ uclamp_update_active(struct task_struct *p)
+ 	task_rq_unlock(rq, p, &rf);
+ }
+ 
+-#ifdef CONFIG_UCLAMP_TASK_GROUP
+ static inline void
+ uclamp_update_active_tasks(struct cgroup_subsys_state *css)
+ {
 -- 
-Best regards,
-Bingbu Cao
+2.47.2
+
