@@ -1,160 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7F5222589
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F963597C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741694389; cv=none; b=H0tUuB+hJnOT6/pu4wZA4jXmNAc61FBuE6IaEhgzSbPVQHotmvd9nJ9RceLAd1f8lUQtThQbL9SycL8jlJYKFtrmB8BTHXf/c4rsMQRtuP64MWzDbfWUDeNK4sNZjYHy9E/UkC8PkLGuR4jQf55qvIskuGjyFe/BDynA46T+IN4=
+	t=1741694431; cv=none; b=ABG4HwK12W4dajhellfHtU/ugF0hkFLSlGq/CYzgCXAIzsLCl2LFkAc+EGQWEpiG24HAU+xBLP0Bp3rzuOtXMTBJOujo8PxoKTrixylxbV3hWhyQ1PHX2Gq8+RCC/XapqdGTaG/toKa5rN367s9UQ8hdCdBrwjd9FxPiKvqeA3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741694389; c=relaxed/simple;
-	bh=6ik8CDdyssom/lcu/O8RGgc/PpkhidUmPdJmCaGldO8=;
+	s=arc-20240116; t=1741694431; c=relaxed/simple;
+	bh=JzkrOFhGkENMK4Rg1p53WvrgcmmdMId0Tsg3pBQf8Ck=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sZtNBwSHHg24pRmxLh11lDXql8Wpvj0YR3LxDlDScR7A0qd7Yz5qnqc4MOHQRUCEgsdrT/gnGHwB3iPJ+UVx3PyZlRF5woo/mzh4moVRqE4kYH5QyAe5JznTb0Iv9eel44q+QWxLPzxWu4Szfq7Xi2i1R0eGrmNBJrUnYCad4t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aqTwGj9C; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oNaOOu/pGWfcT8DUSYOJ/fvBpuhllueaAJOnj+rMI/iTdio3I7WHgcvWvPeA/iqO20LJ9RKBVyxJjxM23LUtJpnluzSVHNiqhrsIgc4wpwWW5T5nuwc+BEay0mW/Yj6WupRn5JUAKeH/258s8OwSt9jzfyjBz4w6tlfT4WSII9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vBIeQqR9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kuoDrVEn; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vBIeQqR9; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kuoDrVEn; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aqTwGj9C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741694386;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vBIeQqR9";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kuoDrVEn";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vBIeQqR9";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kuoDrVEn"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 1060D2117D;
+	Tue, 11 Mar 2025 12:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741694428; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QDKIujl/GD2HW4RyQYl/pH+0c9rxOzqbtce1pc+BO6M=;
-	b=aqTwGj9CHkVFVn3DEBlCkxhlU06W8g0emzKte2tBn2ihXl5YSI8FcpHEs5OrrYf7pwYmPw
-	i+af9rTlUQd+klYkOLgWXQdiuMUZbwxkNzPLF8rQjBmkwmiZbUZspIq5lmyWWFN9LLcNDT
-	mJcwqwhLdI1y7HzRkX+heto3qjrWdDg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-216-bZtOmGD0NHeGpt81KJ-pZw-1; Tue, 11 Mar 2025 07:59:45 -0400
-X-MC-Unique: bZtOmGD0NHeGpt81KJ-pZw-1
-X-Mimecast-MFC-AGG-ID: bZtOmGD0NHeGpt81KJ-pZw_1741694384
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-438da39bb69so38012845e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 04:59:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741694384; x=1742299184;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QDKIujl/GD2HW4RyQYl/pH+0c9rxOzqbtce1pc+BO6M=;
-        b=mzS4iGMuNguKca8HeWFwQRIl5k5/qHxQAV6yOvBtaNDLOugn3/cduhr4LL5WfQ3g3L
-         2h/vlI7nHi8OmGahAGuIe8QduQbeL0c/7Jxj2VqErU7A5O2m56ITIay0S5/vnufyJ4tl
-         Xd3XmgJhjBgjyZhCjVN22n8R+fklhX+Nmi2BhaclHo5cZg7NtljtLfgFT486bU9rNqid
-         JzVS6vGtkDofNLJMDxoUhksIRkfeB8bwqBJv7og0pcP4gurr67u3rZAmtu2Rfz8I8Dno
-         8s9Y343kBr6w6E962LFmXlZCY1AXNuQEJ0AlFeRe9tuOXrHx3RXTdtgFM08xAFtVzhdp
-         4feA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvfqaN/RgJQZhKoiCr0FO2zhgkERzr5i3pDwGn1U5uCtVIc/0l1YaeBbcP/oRG3SIkM2smQ5rpqt6FAgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXFMDG2YCyOXZLDLnJYozhX5G9rNZ/WVYxkOFJt74AcOUzfjEO
-	BpBvIG9fq4ZczdQLkTZnk3zIJJu0NRHvy4G3WxZS9snNY3cnYBBKTDHcDvKyR9ca8MpiQSBu7fY
-	bhcjPmXFlILKNEwUKK7vAQtGl8lzRX8gmiIe+V5O5Fh1719mZp4C9N4pMKnSJug==
-X-Gm-Gg: ASbGnct1MTI0OBZbmspRE2Ak2ne7mVkDtVfFU493Rsp7tUyyGfjGNfTCKhhMQsHlthL
-	IogNAW68nlypy8yDt+jitGVk8K2mJ+OdHt+h5CCpLoIg/B0ZMQdax27A89TgRjFIzb9ltgpXVzJ
-	vsBw7iCNy6aiWFNjJf2TccagR5SyOhbu/eaP41u3JjlQjSHLcUP+Y4IG1tKNV0s19jgcUJ7Jpxs
-	xDkxOJU6uaoP0XGluRLqeCa3WnCTLjWnhbdn19U5ZlMtYR4iI9ZBhKYasK4Bdx3TqSjZRfNbICQ
-	fRcvihot129iF4QjOm8aMXc1owH8J+78d/CqW/M5LIY=
-X-Received: by 2002:a05:600c:4f0c:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-43ceeeeb9e3mr86667185e9.20.1741694384265;
-        Tue, 11 Mar 2025 04:59:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGO9dgeAbIUcM48A8qtpiJ49dyz1L2I4mkXKwM7z476ZguqAw6Rk7o/AfXg3QYfwBdjPJvv1w==
-X-Received: by 2002:a05:600c:4f0c:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-43ceeeeb9e3mr86666545e9.20.1741694383075;
-        Tue, 11 Mar 2025 04:59:43 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.49.7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd4352e29sm206132935e9.32.2025.03.11.04.59.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 04:59:42 -0700 (PDT)
-Date: Tue, 11 Mar 2025 12:59:39 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Waiman Long <llong@redhat.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Qais Yousef <qyousef@layalina.io>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Phil Auld <pauld@redhat.com>, luca.abeni@santannapisa.it,
-	tommaso.cucinotta@santannapisa.it,
-	Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 4/8] sched/deadline: Rebuild root domain accounting
- after every update
-Message-ID: <Z9Alq55RpuFqWT--@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250310091935.22923-1-juri.lelli@redhat.com>
- <Z86yxn12saDHLSy3@jlelli-thinkpadt14gen4.remote.csb>
- <797146a4-97d6-442e-b2d3-f7c4f438d209@arm.com>
- <398c710f-2e4e-4b35-a8a3-4c8d64f2fe68@redhat.com>
- <fd4d6143-9bd2-4a7c-80dc-1e19e4d1b2d1@redhat.com>
+	bh=x8WkA39bFX3GqqFALG3OsmUN05f4JXXHMUC4Yp+Z/J4=;
+	b=vBIeQqR9gJGCprOzJvE8U38YdIcTjjSKjKx09YIiqEc/VFCj9oVYGWtFbhuR4MYobQeV0S
+	vKZr050O4csrIn3QPrZq7p1YmnnRN4jKmUMSH/G7c2vPNlK5dg+GTYwkmf7tFvrYKO9I+u
+	reom673AlFCk5A5fEmKBatc4hkPySj8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741694428;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x8WkA39bFX3GqqFALG3OsmUN05f4JXXHMUC4Yp+Z/J4=;
+	b=kuoDrVEno3+Qe8velVwmuLL+SaoaDe8p6or5q+nTiq/09nKhZYx0xK2CpQ9Mtz1Iza+NhR
+	XsfLA47NwE4U3xBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741694428; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x8WkA39bFX3GqqFALG3OsmUN05f4JXXHMUC4Yp+Z/J4=;
+	b=vBIeQqR9gJGCprOzJvE8U38YdIcTjjSKjKx09YIiqEc/VFCj9oVYGWtFbhuR4MYobQeV0S
+	vKZr050O4csrIn3QPrZq7p1YmnnRN4jKmUMSH/G7c2vPNlK5dg+GTYwkmf7tFvrYKO9I+u
+	reom673AlFCk5A5fEmKBatc4hkPySj8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741694428;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x8WkA39bFX3GqqFALG3OsmUN05f4JXXHMUC4Yp+Z/J4=;
+	b=kuoDrVEno3+Qe8velVwmuLL+SaoaDe8p6or5q+nTiq/09nKhZYx0xK2CpQ9Mtz1Iza+NhR
+	XsfLA47NwE4U3xBA==
+Date: Tue, 11 Mar 2025 13:00:28 +0100
+From: Jiri Bohac <jbohac@suse.cz>
+To: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
+	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: Re: [PATCH v2 4/5] kdump: wait for DMA to finish when using CMA
+Message-ID: <Z9Al3DI_PsWPN83k@dwarf.suse.cz>
+References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+ <Z7demEmgm-D_fqi2@dwarf.suse.cz>
+ <Z8UNvvEF2Ow/qigk@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fd4d6143-9bd2-4a7c-80dc-1e19e4d1b2d1@redhat.com>
+In-Reply-To: <Z8UNvvEF2Ow/qigk@MiWiFi-R3L-srv>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ZERO(0.00)[0];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On 10/03/25 20:16, Waiman Long wrote:
-> On 3/10/25 3:18 PM, Waiman Long wrote:
-> > 
-> > On 3/10/25 2:54 PM, Dietmar Eggemann wrote:
-> > > On 10/03/2025 10:37, Juri Lelli wrote:
-> > > > Rebuilding of root domains accounting information (total_bw) is
-> > > > currently broken on some cases, e.g. suspend/resume on aarch64. Problem
-> > > Nit: Couldn't spot any arch dependency here. I guess it was just tested
-> > > on Arm64 platforms so far.
-> > > 
-> > > [...]
-> > > 
-> > > > diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> > > > index 44093339761c..363ad268a25b 100644
-> > > > --- a/kernel/sched/topology.c
-> > > > +++ b/kernel/sched/topology.c
-> > > > @@ -2791,6 +2791,7 @@ void partition_sched_domains_locked(int
-> > > > ndoms_new, cpumask_var_t doms_new[],
-> > > >       ndoms_cur = ndoms_new;
-> > > >         update_sched_domain_debugfs();
-> > > > +    dl_rebuild_rd_accounting();
-> > > Won't dl_rebuild_rd_accounting()'s lockdep_assert_held(&cpuset_mutex)
-> > > barf when called via cpuhp's:
-> > > 
-> > > sched_cpu_deactivate()
-> > > 
-> > >    cpuset_cpu_inactive()
-> > > 
-> > >      partition_sched_domains()
-> > > 
-> > >        partition_sched_domains_locked()
-> > > 
-> > >          dl_rebuild_rd_accounting()
-> > > 
-> > > ?
-
-Good catch. Guess I didn't notice while testing with LOCKDEP as I was
-never able to hit this call path on my systems.
-
-> > Right. If cpuhp_tasks_frozen is true, partition_sched_domains() will be
-> > called without holding cpuset mutex.
-> > 
-> > Well, I think we will need an additional wrapper in cpuset.c that
-> > acquires the cpuset_mutex first before calling partition_sched_domains()
-> > and use the new wrapper in these cases.
+On Mon, Mar 03, 2025 at 10:02:38AM +0800, Baoquan He wrote:
+> On 02/20/25 at 05:55pm, Jiri Bohac wrote:
+> > +static void crash_cma_clear_pending_dma(void)
+> > +{
+> > +	if (!crashk_cma_cnt)
+> > +		return;
+> > +
+> > +	mdelay(CMA_DMA_TIMEOUT_MSEC);
+> > +}
+> > +
+> >  /*
+> >   * No panic_cpu check version of crash_kexec().  This function is called
+> >   * only when panic_cpu holds the current CPU number; this is the only CPU
+> > @@ -116,6 +125,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
+> >  		if (kexec_crash_image) {
+> >  			struct pt_regs fixed_regs;
+> >  
+> > +			crash_cma_clear_pending_dma();
 > 
-> Actually, partition_sched_domains() is called with the special arguments (1,
-> NULL, NULL) to reset the domain to a single one. So perhaps something like
-> the following will be enough to avoid this problem.
+> This could be too ideal, I am not sure if it's a good way. When crash
+> triggered, we need do the urgent and necessary thing as soon as
+> possible, then shutdown all CPU to avoid further damage. This one second
+> of waiting could give the strayed system too much time. My personal
+> opinion.
 
-I think this would work, as we will still rebuild the accounting after
-last CPU comes back from suspend. The thing I am still not sure about is
-what we want to do in case we have DEADLINE tasks around, since with
-this I belive we would be ignoring them and let suspend proceed.
+Good point! I think it makes sense to move the call to crash_cma_clear_pending_dma()
+past the call of machine_crash_shutdown where all the shutdown
+happens, like this:
+
+> >  			crash_setup_regs(&fixed_regs, regs);
+> >  			crash_save_vmcoreinfo();
+> >  			machine_crash_shutdown(&fixed_regs);
+
++			crash_cma_clear_pending_dma();
+
+I'll post a v3 with this change included.
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
