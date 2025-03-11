@@ -1,67 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19431F03F2;
-	Tue, 11 Mar 2025 19:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6672641C0;
+	Tue, 11 Mar 2025 19:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741719712; cv=none; b=g3HTH60XBGQOpsAa+TormN5NguLZ5GKRRll83uVl2ubUvhNuNN0sIlPjiTciWKMvGu/rgeWG6OgG4Voqx2g7xPQ5BsGBKQaTg5yB0A/jxTzQfWMjjwjeHU6zVmB9snikUh+m5Oc5X4Uk4QxbXlpq91zQVnhDkxALifvqQWoSLsU=
+	t=1741719713; cv=none; b=KcKrQM+JnvU4B/wug9oFsB/LZC4FG/Ze9AITkYBiCWdzmmPB5EcNviWMsmeltZObWdV1SD+xKADERSQaEYvzHp55ryB0avdkQKqpGDcYpZI7hpm6GBFMW5latcYpCqYVdg+H34y7T9Fuu+7jrCIBXT2IYFWxpPMOry34P9ycIp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741719712; c=relaxed/simple;
-	bh=21KNfjHCQwgSBouMQ+GkmY7Vp+GDPvf52Urbqbhmd+c=;
+	s=arc-20240116; t=1741719713; c=relaxed/simple;
+	bh=0Nfwq+o/IjqVRo3eRbr8bUtiQdKmbKP077wEPUEz2zo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDl8RnLZL9LrGQ9gnuGnYoKaBaSlasrKcD6ZWpa2VjOQvUNLXOc06f7cb3UWOERUoaXhMo60xnkvhjGDJ57ZLlJQU5M/hLniRSAHJ2X0kd+0Z5+S0WRnUFcDYP5AZDDM1dGWeT9Q9wvI7xNLE6UCiHTVUSIYAn07WoYx1ULJG1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jWYRxfXz; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=c7EpUb/pwgbKr3ybg5kVQaKrRikCEaa0XUUS0ml+8q6R/cDizOiRJ6vsS4Iw+A/GWk7TgRK1XvGB01Pg56dVGH6FpM5q+LfRdT/HbbyHC3U1gey+0qgVXPcCdoidZlI0O+eNxg8RCkYFOtqRco+XJbBn9qmok9Dd7ZQXCsX5ds0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZY6YGXK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jWYRxfXz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741719710; x=1773255710;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=21KNfjHCQwgSBouMQ+GkmY7Vp+GDPvf52Urbqbhmd+c=;
-  b=jWYRxfXzHdD0z9BKzq4iIvKTmhlzL43xyQz7TkZvKgxtiRCQHBOOsbBB
-   Xrt3eaIh8LTkOLbetpz+rppxZd58YxyZF6JiP/20AiZsRJTA3yj+iMbVc
-   2sPfv8zCcnKnMRuHdC4++2wdsITry1/MhcIkI3lnX98H3N+ldRjvx4rVq
-   5RFZfAEx7c76fbtEaJPMom8E+ky1ZWLo4JsL+FOQi4qP4qovZy5kL8ejK
-   KBHh4IEzOtBTWEmXDXM4Cv7HzcUSKNCvkL+ieAn56OrNjEq4KtCVy5KOH
-   2ORFgFCPi/VMW4kAK4CG+re4dwFATni1+UxJ0g+4Wy3kj9pJmpzDa6YTL
-   w==;
-X-CSE-ConnectionGUID: R9KkS2V/TvCl2Nc8oj0iLg==
-X-CSE-MsgGUID: DZ+OFnSSTNqJa0CzJtuGiQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="68138573"
-X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
-   d="scan'208";a="68138573"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 12:01:49 -0700
-X-CSE-ConnectionGUID: +4iAEKThRaKTjqbBUkUEiQ==
-X-CSE-MsgGUID: bfx8fdpSQE+hvnHAKLhHiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
-   d="scan'208";a="120907899"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 11 Mar 2025 12:01:47 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ts4rI-0007kO-0e;
-	Tue, 11 Mar 2025 19:01:44 +0000
-Date: Wed, 12 Mar 2025 03:01:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>,
-	Neal Cardwell <ncardwell@google.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] net: ipv6: fix TCP GSO segmentation with NAT
-Message-ID: <202503120224.LbO66Ztw-lkp@intel.com>
-References: <20250310112121.73654-1-nbd@nbd.name>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZY6YGXK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE8B1C4CEEB;
+	Tue, 11 Mar 2025 19:01:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741719713;
+	bh=0Nfwq+o/IjqVRo3eRbr8bUtiQdKmbKP077wEPUEz2zo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gZY6YGXKCb1uTU7OezaPlgZioViMjGooBUqKf89gxYxAHZcGmfZ3cE1abOY6DVPhV
+	 GNo8mCd1Ny9tVwPTMbMYlqS6HshemvYMjzUz6krcVB1H6mxaU1jTnF5w6G0BqFD4Oc
+	 /Uf1a707YkpBeD23JMUTjRLncrk44MjwbvxLNrcaumDCnD7QPPUShatjz+ocwFNgDU
+	 Ypo9/reXpehajLhy9M6h5A02ymO+0FOK+4lXJZ02ql7ZYIkDI0pxFPDL3d0Xuy20Lm
+	 qzSoEV233vG9OBiu+i5Q9QHjdxfZdZWC3gRFuwr7e1w6qn+KFJnCmZmU48bEAiQ0oV
+	 e0GzyMG7ssSkQ==
+Date: Tue, 11 Mar 2025 14:01:51 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Ross Burton <ross.burton@arm.com>,
+	Julien Massot <julien.massot@collabora.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Eric Biggers <ebiggers@google.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>,
+	linux-media@vger.kernel.org, Will Deacon <will@kernel.org>,
+	Javier Carrasco <javier.carrasco@wolfvision.net>,
+	linux-staging@lists.linux.dev,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Taniya Das <quic_tdas@quicinc.com>, Mark Brown <broonie@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Zhi Mao <zhi.mao@mediatek.com>,
+	Ihor Matushchak <ihor.matushchak@foobox.net>,
+	Dongcheng Yan <dongcheng.yan@intel.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [RFC PATCH v2 09/16] dt-bindings: media: i2c: max96712: add
+ support for I2C MUX
+Message-ID: <174171971116.3980957.12739233832407896359.robh@kernel.org>
+References: <20250309084814.3114794-1-demonsingur@gmail.com>
+ <20250309084814.3114794-10-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,66 +79,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250310112121.73654-1-nbd@nbd.name>
-
-Hi Felix,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on net/main]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Felix-Fietkau/net-ipv6-fix-TCP-GSO-segmentation-with-NAT/20250310-192256
-base:   net/main
-patch link:    https://lore.kernel.org/r/20250310112121.73654-1-nbd%40nbd.name
-patch subject: [PATCH net v2] net: ipv6: fix TCP GSO segmentation with NAT
-config: s390-randconfig-001-20250312 (https://download.01.org/0day-ci/archive/20250312/202503120224.LbO66Ztw-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250312/202503120224.LbO66Ztw-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503120224.LbO66Ztw-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> net/ipv6/tcpv6_offload.c:104:30: warning: variable 'th' is uninitialized when used here [-Wuninitialized]
-                   inet_proto_csum_replace16(&th->check, seg,
-                                              ^~
-   net/ipv6/tcpv6_offload.c:101:19: note: initialize the variable 'th' to silence this warning
-           struct tcphdr *th;
-                            ^
-                             = NULL
-   1 warning generated.
+In-Reply-To: <20250309084814.3114794-10-demonsingur@gmail.com>
 
 
-vim +/th +104 net/ipv6/tcpv6_offload.c
+On Sun, 09 Mar 2025 10:48:01 +0200, Cosmin Tanislav wrote:
+> MAX96712 and MAX96724 have more than one GMSL2 link, and each link is
+> capable of connecting to a separate serializer. If these serializers
+> have the same CFG pins configuration, they will also have the same I2C
+> address, causing conflicts unless the deserializer muxes the I2C
+> channels. Moreover, the serializers can have the same hardware attached
+> to their respective I2C bus.
+> 
+> The MAX96712 and MAX96724 suppot I2C channel muxing via the GMSL2 link
+> to facilitate communication to each of the connected serializers.
+> 
+> Document this capability.
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> ---
+>  .../bindings/media/i2c/maxim,max96712.yaml          | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
 
-    95	
-    96	static void __tcpv6_gso_segment_csum(struct sk_buff *seg,
-    97					     struct in6_addr *oldip,
-    98					     const struct in6_addr *newip,
-    99					     __be16 *oldport, __be16 newport)
-   100	{
-   101		struct tcphdr *th;
-   102	
-   103		if (!ipv6_addr_equal(oldip, newip)) {
- > 104			inet_proto_csum_replace16(&th->check, seg,
-   105						  oldip->s6_addr32,
-   106						  newip->s6_addr32,
-   107						  true);
-   108			*oldip = *newip;
-   109		}
-   110	
-   111		if (*oldport == newport)
-   112			return;
-   113	
-   114		th = tcp_hdr(seg);
-   115		inet_proto_csum_replace2(&th->check, seg, *oldport, newport, false);
-   116		*oldport = newport;
-   117	}
-   118	
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
