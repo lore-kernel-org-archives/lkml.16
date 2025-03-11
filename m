@@ -1,148 +1,129 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from naesa05.arrow.com (naesa05.arrow.com [216.150.161.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AA3223300;
-	Tue, 11 Mar 2025 07:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7898F2248B4;
+	Tue, 11 Mar 2025 07:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.150.161.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741678533; cv=none; b=SkgpWcNOfSbP/K9iz9Gm2WGfkqp3R1IiJjkaZ2qgtS+QR2qBymItL7kV+OpchIGdzHnZGriVUWI4ErbW/lEvneBx1S5NLHu7odMmOCDWU7Nb3yLaV1kNPO/7w+h+Ojp4SNfZiCnTVkKVOkYMhgc60EgI+RVqJhio5X7JLj12tD0=
+	t=1741678545; cv=none; b=XFXs03UXzvK7ZNKV32TowYYZCHKdVTFBPSUIhlq8Nr5BAlrhXWYhlNG1oz0V9ErNZWB30uKppLC2o34kQQm0NUISOwRqucWmDxmyHgMZpsIqdZdKQMNZVEBZhNv3aAORuSRjyM0QcEJ2f11563ADs6RTMP8IWP2zw6Lr6a+LcNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741678533; c=relaxed/simple;
-	bh=POjYP11ijGhrMQ/irsFz8LQK3UogA6nQt9n5S4M0ExI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DbBjIAJNVtoCXL0Ialb+NJ8hKLK9V0lv6o1XtUeOg8MOsV180j+C6oiprC3QgfeK9gZQCaE1Z0nLSz7tVSW0/rj09UPRoKUUwSxgqaWDD1xEcIDNYeJzPY6CPfg4SLHV0KPBkk81NQOuXhG2mizQnP3WckIZgUxSJ6rjR6CLBi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=R48GsdkS; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1741678545; c=relaxed/simple;
+	bh=j+xRRvEsQ5Zde71RH9nSywG6D5xyLD8tE9QtSC9gGFo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EH5fllw1WIZKie6S9JtbzlQPV+1QxwFWme8SFuJusEjcOmp34Cm4NQFFJ6nfIUvbY2TXU1pc8YNVT6pqlBw9B+rwx791LJihBBd9Dcytx9r0nsNOAi/sPMN7p2Yi6tY4jm3u2RoiiVs0A742dkOhcrquVx0KbZohj6BQ5CeVB1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=sLpiH8Kr; arc=none smtp.client-ip=216.150.161.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R48GsdkS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1741678527;
-	bh=+di+w3XDN0XK7wrSBYa8FBFLbOobo94ufMhlAR2ajB4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=R48GsdkSaKsBUSen7yRgRbAsbomrVay2i55ADnrXg4oPTiip9u3WNsJPAT5cP9SAA
-	 6wdl5DeduraEHDzpv70bx0EVLCkAMKrYPfuJ21UIpCiIB/78myPJSbD6zD2HaDxztj
-	 VCPj68NRbK0VMEqKPSZ66pEQenHkiOQEYnwlbOhL65U60Deocfewp0yZMgDf/HtaQG
-	 o8Z4ImbwVjYBTASsXJ5SFVeyOLVpi0r31p4OgvxcJJulPCmtGxIxRVtscu68FcoRwV
-	 YPUu95U0LaaXAcouzYVzPMLleJiuueuXTO4i4ovb5M4L2wIKBqdo9TTCMLoJPjg7ZL
-	 V6USCma8wtvIw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZBlsn4cW4z4xD9;
-	Tue, 11 Mar 2025 18:35:25 +1100 (AEDT)
-Date: Tue, 11 Mar 2025 18:35:24 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>, Heiko Stuebner
- <heiko@sntech.de>
-Cc: Detlev Casanova <detlev.casanova@collabora.com>, Linux Kernel Mailing
- List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, "Martin K. Petersen"
- <martin.petersen@oracle.com>, Shawn Lin <shawn.lin@rock-chips.com>
-Subject: linux-next: manual merge of the scsi tree with the rockchip tree
-Message-ID: <20250311183524.38989e83@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="sLpiH8Kr"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=einfochips.com; i=@einfochips.com; l=2107; q=dns/txt;
+  s=NAESA-Selector1; t=1741678543; x=1773214543;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=j+xRRvEsQ5Zde71RH9nSywG6D5xyLD8tE9QtSC9gGFo=;
+  b=sLpiH8Kr9lrIb9Dx9Wan3llnSglOl0u846B63nNgxp9C1ey1v8Lj5BUH
+   vRFbnu5W36Wr48yDQj+2Vy8TPTtntvU9L/SNBNy7U+0Xf7+i1kAhoB0+Y
+   fGBp0msRnp0nZ+GfcrVWb/vHnHNVsxaz8ZBr7+C470IYMRPar3+rOk6bZ
+   syMLVjFB7MBNCw8a2wmTa2Kiv0GLmQiioE5xEbTScV+wmce9fpj1r4+hD
+   8UqYC9AAf5k5+UhaB4WelsOxQXBZZVEp/P1g6r4knE4CkV0xG4Vc21ro4
+   g5SgtcJbE54xfGVjEQgCAlFhrcNi1PMzfpPLVcuySAk8rFOYUec+G1BF5
+   g==;
+X-CSE-ConnectionGUID: svRjCT2eRmet1julyqo/jQ==
+X-CSE-MsgGUID: Lih6TCWvQOeN8+Bc4zndew==
+X-IronPort-AV: E=Sophos;i="6.14,238,1736838000"; 
+   d="scan'208";a="20386356"
+Received: from unknown (HELO eicahmirelay01.einfochips.com) ([10.100.49.50])
+  by naesa05out.arrow.com with ESMTP; 11 Mar 2025 01:34:33 -0600
+Received: from AHMCPU1888.ap.corp.arrow.com ([172.25.5.100]) by eicahmirelay01.einfochips.com with Microsoft SMTPSVC(10.0.14393.4169);
+	 Tue, 11 Mar 2025 13:04:32 +0530
+From: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
+To: Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Min Lin <linmin@eswincomputing.com>,
+	Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
+	Pritesh Patel <pritesh.patel@einfochips.com>,
+	Yangyu Chen <cyy@cyyself.name>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Yu Chien Peter Lin <peterlin@andestech.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Kanak Shilledar <kanakshilledar@gmail.com>,
+	Darshan Prajapati <darshan.prajapati@einfochips.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	rafal@milecki.pl,
+	Anup Patel <anup@brainfault.org>,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 00/10] Basic device tree support for ESWIN EIC7700 RISC-V SoC
+Date: Tue, 11 Mar 2025 13:04:22 +0530
+Message-Id: <20250311073432.4068512-1-pinkesh.vaghela@einfochips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aRgCxtyZ6Cad2=.Ts_IQDNO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 11 Mar 2025 07:34:32.0718 (UTC) FILETIME=[080982E0:01DB9258]
 
---Sig_/aRgCxtyZ6Cad2=.Ts_IQDNO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add support for ESWIN EIC7700 SoC consisting of SiFive Quad-Core
+P550 CPU cluster and the first development board that uses it, the
+SiFive HiFive Premier P550.
 
-Hi all,
+This patch series adds initial device tree and also adds ESWIN
+architecture support.
 
-Today's linux-next merge of the scsi tree got a conflict in:
+Boot-tested using intiramfs with Linux 6.14.0-rc2 on HiFive Premier
+P550 board using U-Boot 2024.01 and OpenSBI 1.4.
 
-  arch/arm64/boot/dts/rockchip/rk3576.dtsi
+Darshan Prajapati (3):
+  dt-bindings: riscv: Add SiFive P550 CPU compatible
+  dt-bindings: interrupt-controller: Add ESWIN EIC7700 PLIC
+  dt-bindings: timer: Add ESWIN EIC7700 CLINT
 
-between commit:
+Min Lin (2):
+  riscv: dts: add initial support for EIC7700 SoC
+  riscv: dts: eswin: add HiFive Premier P550 board device tree
 
-  36299757129c ("arm64: dts: rockchip: Add SFC nodes for rk3576")
+Pinkesh Vaghela (2):
+  riscv: Add Kconfig option for ESWIN platforms
+  cache: sifive_ccache: Add ESWIN EIC7700 support
 
-from the rockchip tree and commit:
+Pritesh Patel (3):
+  dt-bindings: vendor-prefixes: add eswin
+  dt-bindings: riscv: Add SiFive HiFive Premier P550 board
+  dt-bindings: cache: sifive,ccache0: Add ESWIN EIC7700 SoC
+    compatibility
 
-  c75e5e010fef ("scsi: arm64: dts: rockchip: Add UFS support for RK3576 SoC=
-")
+ .../bindings/cache/sifive,ccache0.yaml        |  28 +-
+ .../sifive,plic-1.0.0.yaml                    |   1 +
+ .../devicetree/bindings/riscv/cpus.yaml       |   1 +
+ .../devicetree/bindings/riscv/eswin.yaml      |  29 ++
+ .../bindings/timer/sifive,clint.yaml          |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   7 +
+ arch/riscv/Kconfig.socs                       |   6 +
+ arch/riscv/boot/dts/Makefile                  |   1 +
+ arch/riscv/boot/dts/eswin/Makefile            |   2 +
+ .../dts/eswin/eic7700-hifive-premier-p550.dts |  29 ++
+ arch/riscv/boot/dts/eswin/eic7700.dtsi        | 344 ++++++++++++++++++
+ drivers/cache/sifive_ccache.c                 |   2 +
+ 13 files changed, 450 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/riscv/eswin.yaml
+ create mode 100644 arch/riscv/boot/dts/eswin/Makefile
+ create mode 100644 arch/riscv/boot/dts/eswin/eic7700-hifive-premier-p550.dts
+ create mode 100644 arch/riscv/boot/dts/eswin/eic7700.dtsi
 
-from the scsi tree.
+-- 
+2.25.1
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/boot/dts/rockchip/rk3576.dtsi
-index edfa0326f299,bd55bd8a67cb..000000000000
---- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-@@@ -1334,17 -1221,30 +1334,41 @@@
-  			};
-  		};
- =20
- +		sfc1: spi@2a300000 {
- +			compatible =3D "rockchip,sfc";
- +			reg =3D <0x0 0x2a300000 0x0 0x4000>;
- +			interrupts =3D <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>;
- +			clocks =3D <&cru SCLK_FSPI1_X2>, <&cru HCLK_FSPI1>;
- +			clock-names =3D "clk_sfc", "hclk_sfc";
- +			#address-cells =3D <1>;
- +			#size-cells =3D <0>;
- +			status =3D "disabled";
- +		};
- +
-+ 		ufshc: ufshc@2a2d0000 {
-+ 			compatible =3D "rockchip,rk3576-ufshc";
-+ 			reg =3D <0x0 0x2a2d0000 0x0 0x10000>,
-+ 			      <0x0 0x2b040000 0x0 0x10000>,
-+ 			      <0x0 0x2601f000 0x0 0x1000>,
-+ 			      <0x0 0x2603c000 0x0 0x1000>,
-+ 			      <0x0 0x2a2e0000 0x0 0x10000>;
-+ 			reg-names =3D "hci", "mphy", "hci_grf", "mphy_grf", "hci_apb";
-+ 			clocks =3D <&cru ACLK_UFS_SYS>, <&cru PCLK_USB_ROOT>, <&cru PCLK_MPHY>,
-+ 				 <&cru CLK_REF_UFS_CLKOUT>;
-+ 			clock-names =3D "core", "pclk", "pclk_mphy", "ref_out";
-+ 			assigned-clocks =3D <&cru CLK_REF_OSC_MPHY>;
-+ 			assigned-clock-parents =3D <&cru CLK_REF_MPHY_26M>;
-+ 			interrupts =3D <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>;
-+ 			power-domains =3D <&power RK3576_PD_USB>;
-+ 			pinctrl-0 =3D <&ufs_refclk>;
-+ 			pinctrl-names =3D "default";
-+ 			resets =3D <&cru SRST_A_UFS_BIU>, <&cru SRST_A_UFS_SYS>,
-+ 				 <&cru SRST_A_UFS>, <&cru SRST_P_UFS_GRF>;
-+ 			reset-names =3D "biu", "sys", "ufs", "grf";
-+ 			reset-gpios =3D <&gpio4 RK_PD0 GPIO_ACTIVE_LOW>;
-+ 			status =3D "disabled";
-+ 		};
-+=20
-  		sdmmc: mmc@2a310000 {
-  			compatible =3D "rockchip,rk3576-dw-mshc";
-  			reg =3D <0x0 0x2a310000 0x0 0x4000>;
-
---Sig_/aRgCxtyZ6Cad2=.Ts_IQDNO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfP57wACgkQAVBC80lX
-0GzxFwf/ZQHt+LZ57HYlfjCOG9PcocowM3cypC8pAZTlZM4H+uzN+hwk4EO2GQFl
-qZgQAMqCW5CAEOCOqVWJQKBMMPGh57ybcf/Pu2qvv+crEEW/jvWdZcu3/pueVNNa
-nteVTeYlQUkojBjkxMwBsS/MVCRic1X4hHB2wWxXy/frnWPKBC4ZsZ4kI+Aew5n0
-fFabnvPBxW6s82tRFZ5VkFkO5ckbXRmdFnuBbpqlymZej7fH5WYeZEVx3J5GCYvm
-1S2McWGYDajhd+P1X0vQmmSfLdF9/+EcRVIGJTSY17bXhGCwPjSLHakrmqNMDLEf
-BftrG7Wo0cClTwu6E2UhnKAwkMinng==
-=wlQu
------END PGP SIGNATURE-----
-
---Sig_/aRgCxtyZ6Cad2=.Ts_IQDNO--
