@@ -1,143 +1,134 @@
-Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AE425D20B;
-	Tue, 11 Mar 2025 14:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B3F25D551
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 14:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741704078; cv=none; b=oAuuCZohuArNTzmaK4QWP2jGW7jLioCtq+IOn7Ko6/aHp5UXath7K70jxitW/SMp+tsJSjOonKegQBkdbNnCEJ7wMTaZErUAkbvmM0AetDNjBaDKS8LvkaOsslda3LkkVWL0FkVm0VNVrPF+Pu68k5SbyGg3Zr/IqAUi9FmD0K8=
+	t=1741704086; cv=none; b=ZDoeGf02HV5l1SoCsOndoyJ6ruBv8sZMxj/aUvWphHQgbSx9jXxpVzzyTqczckVNaZBGqEqErlvfXY4cDIj+lsXTvmxy/mbfr+r7ti7Vw0AJtCAgHmAmYAS1q5vJ2OqAxkC5l+uwsdp0LmmqAEmySURTdvrOKKFFFe4ZvvC1Md4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741704078; c=relaxed/simple;
-	bh=tzR4oTMWZrrlzTf+DNT98alVDMZid85WIeYI2G+dsl0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pRtyCIrYOBY9vWPUlvddc57oMJewuJ9C2zDArab77WBzTpesvF/uwghitvCpNLG0n9AoV60kB6Z2V8XODpE8raMKB1XmCCGoeBgZyiQ7dl59Koo8MHLFWHnFAyEcgQIoinI8brePs9pORFQ1Ry2oo9v68KlibtmsEPK/TlYh1xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i3ILEWZE; arc=none smtp.client-ip=209.85.208.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741704086; c=relaxed/simple;
+	bh=e17YIKewOJw7kg96MYs2+UoD1X4UIFS2MZO7LIlijb0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QwfzV3Crx3H+pPxwJnagBHnJI2o/w1iXA3HHo2RDd49TWPIAgfuYf0aM/d48G2tjLRxaQ9N93LvwAARt7lBdX3NGuTfJQ3JTIcHvoy6Kip3dAFQ1SW061qI9D9F+GLyo/zFadmuORDD0wv3Q5V/DG/9gmPV1skqFsv/GzUV2ijE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ebsx0eSt; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3ILEWZE"
-Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso4802000a12.3;
-        Tue, 11 Mar 2025 07:41:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ebsx0eSt"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39143200ddaso1600004f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 07:41:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741704074; x=1742308874; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tzR4oTMWZrrlzTf+DNT98alVDMZid85WIeYI2G+dsl0=;
-        b=i3ILEWZEOmXfZA3dXYncuoRN9utsQWuUpWoZ/aWDgFon86Dk5MQJR2Znfa+UTMkA0v
-         IdwSn62UqwFf5Li0BlcHWWy/wkqj4QD4DxY9fOIhLtjdGNe/1L/9Plfq8blD4ccB6qmt
-         GrgXOLkRNZeH0GublH0PFBvPCcvaEq+7hjUuGG+kCIYEfjvE5IBndqB9GQrSgUh79+rs
-         ZHF4eXaelA9yy05UfmgZnjN1WDHbyD6F9y1POdRPOVhaYTo2dU+lYinWMkGomljLrIp7
-         5mkqiVGCFtBLvhnkFOjh4xtieyGUYircDo3o02Lm7Ei4dMdNc3JbfBs7+A2W34uab6Dl
-         RSYg==
+        d=suse.com; s=google; t=1741704082; x=1742308882; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e17YIKewOJw7kg96MYs2+UoD1X4UIFS2MZO7LIlijb0=;
+        b=ebsx0eStJiZ5pRpBn1LGcNEhc9/ufzisag743zx7HByV9d6QSHMUqiwjqKgjpXT7oL
+         2vU8+xXY9ImNkzAqhc+EvhfqYqXs/uWL2Taa6GmFvD3NYqbxPKKX1EoOzb1udEsEZeIV
+         YJMzBGzfn2T/V8bTe6+UFGBu37NvTG5FEH+jse8qcaaAHoyMpnUgjuYM2e4fIXJ49Tif
+         Ri8NcB5Eh5UfFSrSmJvTQbmlPNGjjZKPN9/+jzoXRz+g6N4StRy0oD6tgbLofE5XvswW
+         GqO8Q6qMMwJur3txS14MNAJbQbBRMFnv8s11YyW0GvnX0T4BWus+07cA2MnUkpj/u27U
+         sK6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741704074; x=1742308874;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tzR4oTMWZrrlzTf+DNT98alVDMZid85WIeYI2G+dsl0=;
-        b=VhpzsJPDcMkevOTfmULEhckCI5zfwC8qfREDtjgmUOiePcVjtsBhA+OAPhya1nlxK0
-         enoI8HcQltGLv9WOzsljPVT5VnFqh5FWimdtMouj6UEXhX7AqpDwx6IPMJaREC/kYeQb
-         w13l14AhsFXX8RzmpOO6Msds5YOVoKpjXeRG3Ygd3T9MT+D8PJFnLgm27hgpzSpq9Rd9
-         XztBhuGJYWkH3yWXO5J9dUyZ87gvy6h0uVp6jUu86qbgpiPvnGUj72zzwZiBfF4Mw0r9
-         2cgnjbrogmna1LZL8zgS+Rsy9TOcufyXSiesLmoicHCwnbBDT4T8kD0yS0rd/rb9Gity
-         9iUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXUX2tTVFYc7b19smisheJnEJ/pN5crCMwpPwP/Y2M6d2pWWSVv79pP9+l55ohzJzCFSyALtCrMGJ7K3nxi@vger.kernel.org, AJvYcCXdyZdkE+w+XgQKszJ0IbzXYRwVbrnWIWBEG6KVnt9IMLnvCnMdpRIenTR7QQI2ijJduBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjI/PjS+DUrCwdsnN23oMjhi83/KyMicuCseGw0y88kRb2FIGm
-	6Q7fehMUiNLWMGvAvdSOEMpIGjfdIjBHwmhTTvEXTbNAposau1/LBbEv4FSQAnRUDGLDxdK3nsn
-	Vwhb7pZ2Td6FDwYiDLObiHicAokusbD+w
-X-Gm-Gg: ASbGncviHQaZ1kYI9vt3lVJiLiAUepMI1+Sxl6RbAPWsWl1gouNwlvYiAzDTfgGuG59
-	mglK4CzINGqa5Ae5yaxL6HiaE1izMO8+IrxSsKZQZ0zg+4lkRfTsnlKkIfYQ8PD73XAc/SSqQwd
-	8L2UoY7VyU+WSAy1rp/N8PXIGF2p8EIpc3CMP3p2DJOD5yG2c=
-X-Google-Smtp-Source: AGHT+IGmRfRAQ1YO4ZEbrrHK0DuI10D+z3ukWil2ra1XlKwIHvFVHsrOQ7PvCHOwXV5WaHJgEnqvJVQHdb0VjeYW2v0=
-X-Received: by 2002:a05:6402:3547:b0:5e4:c026:2d7a with SMTP id
- 4fb4d7f45d1cf-5e5e22d8c92mr20442935a12.16.1741704073551; Tue, 11 Mar 2025
- 07:41:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741704082; x=1742308882;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e17YIKewOJw7kg96MYs2+UoD1X4UIFS2MZO7LIlijb0=;
+        b=f2Mv+O2BamEkNmpE9bXHTIMQFQUx6c/zZ+YVhPaqZ1Sb8pRJfzGwTF/zgmUx2QYeA6
+         wqIPqWuX7WVX6HwCcn2O2e8lHSnXLLRpoPtvsnJVrfcOqPhwA3EHdtxYgZO0rBZ4QpjF
+         Ocd6pUZbPgNHPcA9NghSb1PaVO46QtsPDym3j/ZrQrG77bp5xcmg5j6Wc2FefZzrQmM/
+         iZbwBr6s5hAKUjWa0kOASCKkbxpjr9jepk1SFa9w/Sgxq9fHf3FwKT/Mb7Pz2aw18kp2
+         yvMVdZqiogF6kQmKtFu6G7ik2i0RCdOoqkDbUSNj5lMi73J6jBWgOImBbhXiMqyebySz
+         lL3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV+9l82JpISdALzKecMuaNUcH2Rk8U3Vf5WGZAMxRhZk9u0mi7NMsJ4JhsaHStF4PhZs/WSLrF1iUb3xug=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdPndQMffbf42U3K0uoewpKZGsUMa/0a5kD/XtB/tp8lyyaGAT
+	bJS5+Jd+vWp1d4KbNUTASy57I3y/SRFkkadjh5pTdqSFx7PC22/5HA4iiWQeI0w=
+X-Gm-Gg: ASbGnctxPdbgOyyLCMGNdIG1E7tbeXiDjxmUrXVx235LG/T5G34TvXMRAjsC9J2mJm8
+	rZeRRu5cOMuEqGnVp3GOqtmdihhpbqSPu2hTrwxNzBaTHTwzOlwuOlBBxGEEed3+ZC0XIt1oVXu
+	M7Wixne0niukzLCMrN6l+NC526wcUQeUzFYXdf33lFUy1aQsUHnekg9V1s+jZ9t5ADRX6DLtYEj
+	McvS5WMfmQmQAchkKXCB9SPg3DJ7g2YaOrLUVU8RpYk1g0WQtRiQJ9unML6iJf7ithpclGlL2Cj
+	O45xuEGO4QLQjoHg8tngTJ+t4fqUskqwpjNQZeJCDNYFbYe8Qwhi6NasfdKIU3xMozO2G01ZSVY
+	=
+X-Google-Smtp-Source: AGHT+IHedVj4RUj6sW41ewt21ZWFTQVrQn0/iCeA7D/35qQUSXCzs/EtRBqy+mOCc1u29u+Bx4/luQ==
+X-Received: by 2002:a5d:584b:0:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3926c78f6b5mr4736641f8f.54.1741704082203;
+        Tue, 11 Mar 2025 07:41:22 -0700 (PDT)
+Received: from [192.168.3.33] (110.39.160.45.gramnet.com.br. [45.160.39.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0195casm18675615f8f.53.2025.03.11.07.41.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 07:41:21 -0700 (PDT)
+Message-ID: <9a8b7634b123e82c3eaf278a5944feafd91279cc.camel@suse.com>
+Subject: Re: [PATCH 0/5] printk: renaming some suspend/resume functions and
+ one fix for unblanking
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Eric Biederman	
+ <ebiederm@xmission.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+	 <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Steven Rostedt	
+ <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>, Todd E Brandt
+ <todd.e.brandt@linux.intel.com>, Jiri Slaby	 <jirislaby@kernel.org>,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-pm@vger.kernel.org, linux-serial@vger.kernel.org
+Date: Tue, 11 Mar 2025 11:41:14 -0300
+In-Reply-To: <Z9AvKmM4Li57-E2E@pathway.suse.cz>
+References: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
+	 <Z9AShs1dEO0jrgjL@pathway.suse.cz> <Z9AvKmM4Li57-E2E@pathway.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <7bc80a3b-d708-4735-aa3b-6a8c21720f9d@linux.ibm.com>
- <CAADnVQLUxTjYuvwyO0CMS5=e0YqmP525+EDfJX-=dH55g8XTXg@mail.gmail.com> <7e47814f-37de-417d-a84b-de21147e372f@linux.ibm.com>
-In-Reply-To: <7e47814f-37de-417d-a84b-de21147e372f@linux.ibm.com>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Tue, 11 Mar 2025 15:40:37 +0100
-X-Gm-Features: AQ5f1Jo_nH7jDVykqLyjOuNRKVLoDczT9LjIFIPBK23DaWK_m_7HcYQ549hJvHM
-Message-ID: <CAP01T77sC4czYEC6XX-qUs3a7aNy=GNjRR+t6Q8srTFrRSCpqQ@mail.gmail.com>
-Subject: Re: [bpf-next] selftests/bpf fails to compile
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Hari Bathini <hbathini@linux.ibm.com>, 
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, 11 Mar 2025 at 15:12, Venkat Rao Bagalkote
-<venkat88@linux.ibm.com> wrote:
->
->
-> On 10/03/25 2:15 pm, Alexei Starovoitov wrote:
-> > On Mon, Mar 10, 2025 at 8:32=E2=80=AFAM Venkat Rao Bagalkote
-> > <venkat88@linux.ibm.com> wrote:
-> >> Greetings!!!
-> >>
-> >> selftests/bpf fails to compile with below error on bpf-next repo with
-> >> commit head: f28214603dc6c09b3b5e67b1ebd5ca83ad943ce3
-> >>
-> >> Repo link:
-> >> https://web.git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/
-> >>
-> >> Reverting below commit resolves the issue.
-> >>
-> >> Commit ID: 48b3be8d7f82bea6affe6b9f11ee67380b55ede8
-> > ...
-> >
-> >> If you happen to fix the issue, please add below tag.
-> >>
-> >> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> > Not quite. The issue is likely that your llvm is too old.
-> > Please upgrade.
->
->
-> Thanks for the feedback.
->
-> I did try the compilation on fedora41, with linux-mainline kernel and
-> /sefltests/bpf compiled successfully. But on the same set-up
-> /selftests/bpf failed to compile on bpf-next kernel.
->
->
-> OS: Fedora Linux 41 (Server Edition)
-> LLVM: llvm-19.1.7-3.fc41.ppc64le
+On Tue, 2025-03-11 at 13:40 +0100, Petr Mladek wrote:
+> On Tue 2025-03-11 11:38:00, Petr Mladek wrote:
+> > On Wed 2025-02-26 16:59:00, Marcos Paulo de Souza wrote:
+> > > Hello, I've being working on some patches that help to clarify
+> > > the suspend/resume
+> > > of printk machinery. The last patch on this patchset address one
+> > > issue regarding
+> > > suspended consoles and blanking.
+> > >=20
+> > > This is a part one patchset that I would like to see merged
+> > > before I send more patches
+> > > that will rework the suspend flag (a global suspend flag istead
+> > > of per console) and
+> > > the removal of CON_ENABLED flag later on (I've created a function
+> > > that will forcibly)
+> > > register the console instead of using this flag.
+> > >=20
+> > > Please review!
+> > >=20
+> > > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> >=20
+> > Looks good to me. I could fix the typos when pushing.
+> >=20
+> > Well, there is one more thing. It seems that the simple graphic
+> > logger
+> > was merged for 6.14-rc1. And the console_stop()/console_start() API
+> > is used also in drivers/gpu/drm/clients/drm_log.c.
+> >=20
+> > It is actually the code which motivated this rename, as already
+> > pointed out by John, see
+> > https://lore.kernel.org/lkml/ZyoNZfLT6tlVAWjO@pathway.suse.cz/
+> >=20
+> > Well, I am going to update these two locations when pushing this
+> > as well. Let's just get this change done.
+>=20
+> And I did as mentioned above.
+>=20
+> JFYI, the patcheset has been committed into printk/linux.git,
+> branch for-6.15-console-suspend-api-cleanup.
 
-After staring at the error log in disbelief, I guess I have the answer.
-https://elixir.bootlin.com/linux/v6.13.6/source/arch/powerpc/include/asm/qs=
-pinlock_types.h#L8
+Thanks to all reviewers and to you Petr for taking the patches and
+adjusting the typos!
 
-PowerPC overrides the type such that lock->val is no longer atomic_t.
-All of the bpf_atomic.h helpers assume it's atomic_t, hence they try
-to do lock->val.counter which obviously fails with val is u32 instead
-of a struct.
+>=20
+> Best Regards,
+> Petr
 
-The "fix" would probably be to replace the usage of struct qspinlock
-with our own definition copying the asm-generic qspinlock type.
-
-I can send a patch later today in the evening, unless you beat me to it.
-
-Thanks
-
-
->
-> gcc version 14.2.1 20250110 (Red Hat 14.2.1-7) (GCC)
->
-> Passing repo:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> Failing repo:
-> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/
->
-> Regards,
->
-> Venkat.
->
-> >
