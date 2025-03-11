@@ -1,106 +1,118 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDA7253B6D;
-	Tue, 11 Mar 2025 11:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C0F1D514E;
+	Tue, 11 Mar 2025 11:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741693428; cv=none; b=eG7YbVsEmXQQQEdpQpaA5/9eku03UHcWP7NNMuBXFChn5LahlmE51z9Kue8j80fBUBAUcAmTo2DmEGWTvgW7paByTUSI63jFdke1Jy3GyjgYggTLGMRf37HZ1i4MjEw0IT/UpfkdN/+/qFIy2CKacT49PQr3mAQPdPf0dU3ufDA=
+	t=1741693527; cv=none; b=cqkV4Cvvz3hJsIqsnabD86hS7fcW3U1hXOGqUkrREMihUSiZCgr7roUBkigV7s8dGjSRjSyynCBeQGGr/dff7xswhp/mpPJVGKeFddKQGHBLeqd3EQWUkirMeAFhXaVbzR3wymje2bfdiQyy4V64kBWzDPeUj2F3MYqcNygLzKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741693428; c=relaxed/simple;
-	bh=tiiSNXH8astLCEcpQWRF/X3PWSabiebyjhRPE4VxtdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VcHROo5g+EoFXEZk5D38aUYqlqHDZ2r1kPIzXx07zG9A7q0+qww2ViPBicrEPMdCc54etPdfkRYGmhEHIRbmbc2hZtqjnSi/nH6KogvHLeiPqToWpD81wcepDfpiyMpYNigm+VDc5pnoY1fPLW3eaoDpTI8Xez2s55a94uudLQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Cj2SWWp2; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Cj2SWWp2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1741693421;
-	bh=WsyUb2XK4Cw3dOV4qMVQvr7j/+Y+1YuVL5aK/Xh2QY4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Cj2SWWp2xy5H0JtaqeMl+vDqMhL9wl+QW+MNMTLWQ/WpHJPLwG7NiDM3qYMo5zw3z
-	 4QL54mE8eMX0oA8KIwEuOsQtCumeAg+UWEWjy2M2Vye7vjCadHNtUsZeUQyFGfqFSE
-	 EAoRjn3qLGNpcBvLOBiuGNUtJgp2iJGbY8g6WRIvvjHJDbWRCmMXFTEPIcz3rEX8xc
-	 WM5dfgX+C9ex7YqJVtpv6DQgOmV7/V9OtDLfTaQFLXQVn3g7C+t4REFMHQ9ADnd7vQ
-	 8bA8JZkucwF7HP/u4UoO61o2f0dM4yIlsOyLg8dmKNEeNTMk5jvA5SgpUJYTktqRH1
-	 Q1YHP2fQKHafg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZBsND3zGTz4x3p;
-	Tue, 11 Mar 2025 22:43:40 +1100 (AEDT)
-Date: Tue, 11 Mar 2025 22:43:38 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the tip tree
-Message-ID: <20250311224338.4baf583c@canb.auug.org.au>
-In-Reply-To: <20250311020240.3b8c34b155f76fff5cccee01@linux-foundation.org>
-References: <20250311150847.5a63db36@canb.auug.org.au>
-	<20250311020240.3b8c34b155f76fff5cccee01@linux-foundation.org>
+	s=arc-20240116; t=1741693527; c=relaxed/simple;
+	bh=iBNg5mEvsajHG4sU2bcGfllId35XtLdM5A9w2n+8DnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=peYPW5KHZo84xHZ4cofB/s+E9iW0+zY0F0ju4dXyPd2ny5EH0kIqgSANWu/Dv0Z5sGO/zPp7jz7iADI4CXTiuagXiQaDdItuPCVM/+i0ZZeMgetodBopqixMh4MmxkrS4+wtIv+xlTOi9YUDSTBKGTd6ayhMqQ1Kgg182THq0gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 249CBC4CEE9;
+	Tue, 11 Mar 2025 11:45:23 +0000 (UTC)
+Date: Tue, 11 Mar 2025 11:45:21 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Kees Cook <kees@kernel.org>, Peter Collingbourne <pcc@google.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+Subject: Re: [PATCH] string: Disable read_word_at_a_time() optimizations if
+ kernel MTE is enabled
+Message-ID: <Z9AiUQdC4o0g8sxu@arm.com>
+References: <20250308023314.3981455-1-pcc@google.com>
+ <202503071927.1A795821A@keescook>
+ <Z88jbhobIz2yWBbJ@arm.com>
+ <Z88r5qFLOSo0itaq@J2N7QTR9R3.cambridge.arm.com>
+ <Z88yC7Oaj9DGaswc@arm.com>
+ <Z88_fFgr23_EtHMf@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/o/14pxANLDyZHU/__F4tjui";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z88_fFgr23_EtHMf@J2N7QTR9R3>
 
---Sig_/o/14pxANLDyZHU/__F4tjui
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Mar 10, 2025 at 07:37:32PM +0000, Mark Rutland wrote:
+> On Mon, Mar 10, 2025 at 06:40:11PM +0000, Catalin Marinas wrote:
+> > On Mon, Mar 10, 2025 at 06:13:58PM +0000, Mark Rutland wrote:
+> > > On Mon, Mar 10, 2025 at 05:37:50PM +0000, Catalin Marinas wrote:
+> > > > On Fri, Mar 07, 2025 at 07:36:31PM -0800, Kees Cook wrote:
+> > > > > On Fri, Mar 07, 2025 at 06:33:13PM -0800, Peter Collingbourne wrote:
+> > > > > > The optimized strscpy() and dentry_string_cmp() routines will read 8
+> > > > > > unaligned bytes at a time via the function read_word_at_a_time(), but
+> > > > > > this is incompatible with MTE which will fault on a partially invalid
+> > > > > > read. The attributes on read_word_at_a_time() that disable KASAN are
+> > > > > > invisible to the CPU so they have no effect on MTE. Let's fix the
+> > > > > > bug for now by disabling the optimizations if the kernel is built
+> > > > > > with HW tag-based KASAN and consider improvements for followup changes.
+> > > > > 
+> > > > > Why is faulting on a partially invalid read a problem? It's still
+> > > > > invalid, so ... it should fault, yes? What am I missing?
+> > > > 
+> > > > read_word_at_a_time() is used to read 8 bytes, potentially unaligned and
+> > > > beyond the end of string. The has_zero() function is then used to check
+> > > > where the string ends. For this uses, I think we can go with
+> > > > load_unaligned_zeropad() which handles a potential fault and pads the
+> > > > rest with zeroes.
+> > > 
+> > > If we only care about synchronous and asymmetric modes, that should be
+> > > possible, but that won't work in asynchronous mode. In asynchronous mode
+> > > the fault will accumulate into TFSR and will be detected later
+> > > asynchronously where it cannot be related to its source and fixed up.
+> > > 
+> > > That means that both read_word_at_a_time() and load_unaligned_zeropad()
+> > > are dodgy in async mode.
+> > 
+> > load_unaligned_zeropad() has a __mte_enable_tco_async() call to set
+> > PSTATE.TCO if in async mode, so that's covered. read_word_at_a_time() is
+> > indeed busted and I've had Vincezo's patches for a couple of years
+> > already, they just never made it to the list.
+> 
+> Sorry, I missed the __mte_{enable,disable}_tco_async() calls. So long as
+> we're happy to omit the check in that case, that's fine.
 
-Hi Andrew,
+That was the easiest. Alternatively we can try to sync the TFSR before
+and after the load but with the ISBs, that's too expensive. We could
+also do a dummy one byte load before setting TCO. read_word_at_a_time()
+does have an explicit kasan_check_read() but last time I checked it has
+no effect on MTE.
 
-On Tue, 11 Mar 2025 02:02:40 -0700 Andrew Morton <akpm@linux-foundation.org=
-> wrote:
->
-> Yup, thanks.  I trust it's not too much effort to simply skip the
-> mm.git copies?
+> I was worried that ex_handler_load_unaligned_zeropad() might not do the
+> right thing in response to a tag check fault (e.g. access the wrong 8
+> bytes), but it looks as though that's ok due to the way it generates the
+> offset and the aligned pointer.
+> 
+> If load_unaligned_zeropad() is handed a string that starts with an
+> unexpected tag (and even if that starts off aligned),
+> ex_handler_load_unaligned_zeropad() will access that and cause another
+> tag check fault, which will be reported.
 
-Not now that I have done it once ("git rerere" remembers my previous
-merge resolutions).  Unless, of course, more changes are made to the
-files involved ...
+Yes, it will report an async tag check fault on the
+exit_to_kernel_mode() path _if_ load_unaligned_zeropad() triggered the
+fault for other reasons (end of page). It's slightly inconsistent, we
+could set TCO for the async case in ex_handler_load_unaligned_zeropad()
+as well.
 
-> There's presumably a better way of doing this, but it's really the
-> first time it has happened in N years so it isn't obviously worth
-> investing in setting something up.
+For sync checks, we'd get the first fault ending up in
+ex_handler_load_unaligned_zeropad() and a second tag check fault while
+processing the first. This ends up in do_tag_recovery and we disable tag
+checking after the report. Not ideal but not that bad. We could adjust
+ex_handler_load_unaligned_zeropad() to return false if the pointer is
+already aligned but we need to check the semantics of
+load_unaligned_zeropad(), is it allowed to fault on the first byte?
 
-This is why we have shared stable branches.  If the tip guys have all
-those commits in a branch that they guarantee will not rebase (or be
-rewritten), then you could fetch that branch and merge it into your
-tree somewhere.  In this case, since we are beyond -rc6 and I presume
-you are starting to think about your stable branches, you could start
-mm-stable and merge it in there.  I assume that mm-unstable is always
-based on top of mm-stable, right?  So the patches that depend on (or
-clash with) the common commits will be rebased on top of the common
-branch.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/o/14pxANLDyZHU/__F4tjui
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfQIeoACgkQAVBC80lX
-0GxSiQgAi1DEBGs/ulq3u5iUAbfqunrH94ztIiCULBACe1SMtGUsg4+DNDWvOWG0
-xmdfLajz17RG+z9N7ITm7H10ekezzKob2E9yVOcVzadACzBboePmYVPgM5kR4ndf
-gKxEbNabPJlSh1IMeslUQrsB+evdOATpRv4nZHIlnszh3NYVWxiux6ERDP2xzs4+
-bkd6Jusp/UbeqnRezs5u/JSeAq0o1Y4yZb3KD7F5Mx+CPopW6DLJbII4IY+rnvaL
-h9RcoFtZqE7NPclzhY9/0YbI/sjBl+1Spu+JRnjUjskWpDEZssRnmJkuXz8CExtW
-sgy17BQoJalzfWqojDeIjqs6LPTxuQ==
-=l9do
------END PGP SIGNATURE-----
-
---Sig_/o/14pxANLDyZHU/__F4tjui--
+-- 
+Catalin
