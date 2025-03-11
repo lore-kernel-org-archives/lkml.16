@@ -1,180 +1,93 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97532263C6B;
-	Tue, 11 Mar 2025 18:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7C2260362
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 18:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741717629; cv=none; b=ax8s7aH00fWpztW4MpWSa9aqkSaw2nruPOTrEx+KGLWNKQEN/B+w/D8bBFXDuJMKIA+r1VwWy1plNGwKVM7ICeWxRb1yrIbxSYivAOwsMfIq3xM4qdpQj6QEF9Qv1yvPoimXWy7nBvv1rGM0mojpym5Od6AkILA4XhOU+iaOKck=
+	t=1741717757; cv=none; b=UkPnIvILcizltMResExwsAS9yYl7vbdN2Voy/oj62ra4E2i+HrcdxK40fopeOyNksLYZrgBO7UWpIBYSk+IYcxiul27CrsG/YCB7V03uN8p5MB9A09adSG3nHr1oFSXJsAepDqpZA7gmvQt0WYpNwNixXaSYVpgB0//p6SPq6Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741717629; c=relaxed/simple;
-	bh=gRS9jKtKUzfHkoSdI6Gem96zAZ50zZcSJT5d8SgUYWI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tEj+c3K4NhKyQeI6Pqnz+TmsGPnoF+qAiKRCt0SsT3KOus7t6CdTJTZD+GR44RDgV0GzCAwHQRYTg3TNke0RbmL1NJkCwMjReifglW2Ki1OvDdlvCQ6A1ZEU8L2K3F91b8K9UL6uCK7pt7kkRXyp4P0Olv8dKfaK22gWluSWGks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Jofegoxr; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1741717757; c=relaxed/simple;
+	bh=9X15yVtPK8bVmWqLZRTi+cR507jNF7k6sPV9emhz/Mw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UyDpaRQWp95zxaegMQrzQ+VgPASwaam0mpvyF1OmG+Ro1geyxEHgwXUJPigjkY15v5aHvDT8hjhWaEwFsAWq7dHbYiwHGPEKYsgA7kdjegG7djaaH1Bh9mKliatsd09uEMBUW67HFyyJqnozAv1FGqpSwkZK511zGw2KvOAyP7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=kH94Yn7I; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Jofegoxr"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BB5mva008060;
-	Tue, 11 Mar 2025 11:26:54 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=l
-	ZliaUORo2mS+3tGSox9M93MAPhOgwb28gKvGOyD+WI=; b=JofegoxrbcyEfkTyT
-	gTVLh0uWIM7BytI0wwr/H3DK+U8ApG5uSUJ6sExAlqDjeeDrxc4S9wwJBFNj5NMM
-	imleVpvIF/AKgHV+d7OLyPMXiNf+f4i+p98G6W6GgavuWbQftnf27bkEmOe2FxlD
-	m4ZWPZCuyzlL44O9gUm7KnOILhoJ6s6j8qbsf7V/FfKJyZACoV6J/Ty8+TU5YtBo
-	Llon+sTmuWLHV0ICJHjtr5WuGkKLRHusW4e5h0awtcY6lp06SdhQ2M2yWSKIqWFS
-	4tcFWBJ9jNGOctR5/Af+rsM1lsjwQ0BwlgjFLC5Us7Svc18gp9DLH9E4iEjhDAHp
-	dJeZQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 45akyv10g6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Mar 2025 11:26:54 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 11 Mar 2025 11:26:53 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 11 Mar 2025 11:26:53 -0700
-Received: from hyd1425.marvell.com (unknown [10.29.37.152])
-	by maili.marvell.com (Postfix) with ESMTP id 86A9E3F705D;
-	Tue, 11 Mar 2025 11:26:47 -0700 (PDT)
-From: Sai Krishna <saikrishnag@marvell.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sgoutham@marvell.com>,
-        <gakula@marvell.com>, <lcherian@marvell.com>, <jerinj@marvell.com>,
-        <hkelam@marvell.com>, <sbhatta@marvell.com>, <andrew+netdev@lunn.ch>,
-        <bbhushan2@marvell.com>, <nathan@kernel.org>,
-        <ndesaulniers@google.com>, <morbo@google.com>,
-        <justinstitt@google.com>, <llvm@lists.linux.dev>, <horms@kernel.org>
-CC: Sai Krishna <saikrishnag@marvell.com>
-Subject: [net-next PATCH v3 2/2] octeontx2-af: fix compiler warnings flagged by Sparse
-Date: Tue, 11 Mar 2025 23:56:31 +0530
-Message-ID: <20250311182631.3224812-3-saikrishnag@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250311182631.3224812-1-saikrishnag@marvell.com>
-References: <20250311182631.3224812-1-saikrishnag@marvell.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="kH94Yn7I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=9X15
+	yVtPK8bVmWqLZRTi+cR507jNF7k6sPV9emhz/Mw=; b=kH94Yn7INUhujzxXZa9F
+	qYhMJG5Un5/PmKtvCmse3UcQP46yY8Ozquk4nAG70xUfxj7cuEKT13pYfxivBfIn
+	lUd9fMaLpDqkBu16Uf5ywNnaC8zriImupa8iHn2yC7buduS+eopUsA7MBQ+pXXil
+	s9h3XywWIdNuYKhmGKb+DhwkiN94cLhoY+JNd31gXlZ42K04hrUUdXHDG11xCwp1
+	1s88NdR2LTlFCesRVTzBFdN80/HjrNR8ti8B7aRyUPNf+9wkQ2H6iaJMLyg27Nz5
+	NKij/fy5uhUi4EK5XqFLfVl4R42YMvcdVNc09h0qo4hNYYtq1H2BTLyG9GaXMZQb
+	lA==
+Received: (qmail 969077 invoked from network); 11 Mar 2025 19:29:08 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Mar 2025 19:29:08 +0100
+X-UD-Smtp-Session: l3s3148p1@k1amQxUwesS57tsa
+Date: Tue, 11 Mar 2025 19:29:04 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: vigneshr@ti.com, aaro.koskinen@iki.fi, khilman@baylibre.com,
+	rogerq@kernel.org, tony@atomide.com, jmkrzyszt@gmail.com,
+	andi.shyti@kernel.org, reidt@ti.com, wsa@kernel.org,
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@kernel.org
+Subject: Re: [PATCH v2] i2c: omap: fix IRQ storms
+Message-ID: <Z9CA8H2GAArdTRqI@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andreas Kemnade <andreas@kemnade.info>, vigneshr@ti.com,
+	aaro.koskinen@iki.fi, khilman@baylibre.com, rogerq@kernel.org,
+	tony@atomide.com, jmkrzyszt@gmail.com, andi.shyti@kernel.org,
+	reidt@ti.com, wsa@kernel.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@kernel.org
+References: <20250228140420.379498-1-andreas@kemnade.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: Y1HYLJbtlNAy1R1iF17vu3t8d7Nq5JKs
-X-Proofpoint-ORIG-GUID: Y1HYLJbtlNAy1R1iF17vu3t8d7Nq5JKs
-X-Authority-Analysis: v=2.4 cv=Rsc/LDmK c=1 sm=1 tr=0 ts=67d0806e cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=Vs1iUdzkB0EA:10 a=M5GUcnROAAAA:8 a=R40iJ15ohJ1Iz6L5NAgA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_05,2025-03-11_02,2024-11-22_01
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pbb9IRLzipP7HCI7"
+Content-Disposition: inline
+In-Reply-To: <20250228140420.379498-1-andreas@kemnade.info>
 
-Sparse flagged a number of warnings while typecasting iomem
-type to required data type.
 
-For example, fwdata is just a shared memory data structure used
-between firmware and kernel, thus remapping and typecasting
-to required data type may not cause issue.
+--pbb9IRLzipP7HCI7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
----
- drivers/net/ethernet/marvell/octeontx2/af/rvu.c      | 12 +++++++-----
- .../net/ethernet/marvell/octeontx2/nic/otx2_common.c | 10 +++++-----
- 2 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-index cd0d7b7774f1..c3a346cff05e 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
-@@ -819,13 +819,14 @@ static int rvu_fwdata_init(struct rvu *rvu)
- 		goto fail;
- 
- 	BUILD_BUG_ON(offsetof(struct rvu_fwdata, cgx_fw_data) > FWDATA_CGX_LMAC_OFFSET);
--	rvu->fwdata = ioremap_wc(fwdbase, sizeof(struct rvu_fwdata));
-+	rvu->fwdata = (__force struct rvu_fwdata *)
-+		ioremap_wc(fwdbase, sizeof(struct rvu_fwdata));
- 	if (!rvu->fwdata)
- 		goto fail;
- 	if (!is_rvu_fwdata_valid(rvu)) {
- 		dev_err(rvu->dev,
- 			"Mismatch in 'fwdata' struct btw kernel and firmware\n");
--		iounmap(rvu->fwdata);
-+		iounmap((void __iomem *)rvu->fwdata);
- 		rvu->fwdata = NULL;
- 		return -EINVAL;
- 	}
-@@ -838,7 +839,7 @@ static int rvu_fwdata_init(struct rvu *rvu)
- static void rvu_fwdata_exit(struct rvu *rvu)
- {
- 	if (rvu->fwdata)
--		iounmap(rvu->fwdata);
-+		iounmap((void __iomem *)rvu->fwdata);
- }
- 
- static int rvu_setup_nix_hw_resource(struct rvu *rvu, int blkaddr)
-@@ -2384,7 +2385,8 @@ static int rvu_get_mbox_regions(struct rvu *rvu, void **mbox_addr,
- 				bar4 = rvupf_read64(rvu, RVU_PF_VF_BAR4_ADDR);
- 				bar4 += region * MBOX_SIZE;
- 			}
--			mbox_addr[region] = (void *)ioremap_wc(bar4, MBOX_SIZE);
-+			mbox_addr[region] = (__force void *)
-+				ioremap_wc(bar4, MBOX_SIZE);
- 			if (!mbox_addr[region])
- 				goto error;
- 		}
-@@ -2407,7 +2409,7 @@ static int rvu_get_mbox_regions(struct rvu *rvu, void **mbox_addr,
- 					  RVU_AF_PF_BAR4_ADDR);
- 			bar4 += region * MBOX_SIZE;
- 		}
--		mbox_addr[region] = (void *)ioremap_wc(bar4, MBOX_SIZE);
-+		mbox_addr[region] = (__force void *)ioremap_wc(bar4, MBOX_SIZE);
- 		if (!mbox_addr[region])
- 			goto error;
- 	}
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-index 2b49bfec7869..e0e592fd02f7 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
-@@ -29,10 +29,10 @@ static void otx2_nix_rq_op_stats(struct queue_stats *stats,
- 	u64 incr = (u64)qidx << 32;
- 	u64 *ptr;
- 
--	ptr = (u64 *)otx2_get_regaddr(pfvf, NIX_LF_RQ_OP_OCTS);
-+	ptr = (__force u64 *)otx2_get_regaddr(pfvf, NIX_LF_RQ_OP_OCTS);
- 	stats->bytes = otx2_atomic64_add(incr, ptr);
- 
--	ptr = (u64 *)otx2_get_regaddr(pfvf, NIX_LF_RQ_OP_PKTS);
-+	ptr = (__force u64 *)otx2_get_regaddr(pfvf, NIX_LF_RQ_OP_PKTS);
- 	stats->pkts = otx2_atomic64_add(incr, ptr);
- }
- 
-@@ -42,10 +42,10 @@ static void otx2_nix_sq_op_stats(struct queue_stats *stats,
- 	u64 incr = (u64)qidx << 32;
- 	u64 *ptr;
- 
--	ptr = (u64 *)otx2_get_regaddr(pfvf, NIX_LF_SQ_OP_OCTS);
-+	ptr = (__force u64 *)otx2_get_regaddr(pfvf, NIX_LF_SQ_OP_OCTS);
- 	stats->bytes = otx2_atomic64_add(incr, ptr);
- 
--	ptr = (u64 *)otx2_get_regaddr(pfvf, NIX_LF_SQ_OP_PKTS);
-+	ptr = (__force u64 *)otx2_get_regaddr(pfvf, NIX_LF_SQ_OP_PKTS);
- 	stats->pkts = otx2_atomic64_add(incr, ptr);
- }
- 
-@@ -853,7 +853,7 @@ void otx2_sqb_flush(struct otx2_nic *pfvf)
- 	struct otx2_snd_queue *sq;
- 	u64 incr, *ptr, val;
- 
--	ptr = (u64 *)otx2_get_regaddr(pfvf, NIX_LF_SQ_OP_STATUS);
-+	ptr = (__force u64 *)otx2_get_regaddr(pfvf, NIX_LF_SQ_OP_STATUS);
- 	for (qidx = 0; qidx < otx2_get_total_tx_queues(pfvf); qidx++) {
- 		sq = &pfvf->qset.sq[qidx];
- 		if (!sq->sqb_ptrs)
--- 
-2.25.1
+> This needs at least to be tested on systems where false acks were
+> detected.
 
+Which do you mean? You did test this on GTA04A5, or?
+
+
+--pbb9IRLzipP7HCI7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfQgO0ACgkQFA3kzBSg
+KbYNng//dJNXHPtSyagIA2NIcawXbeW9DuepAmJECAsvWUxEclN9RCaVX9nm7mZo
+AsGMdedDFbZS8zsNRkmnu9B0EegEubjWjXUhcg0JqWl5vgiO8BiT6GFMbiQleITa
+7ADVB9c4du32CBEnb1jirBeBidciUoXSHxHE/e7jZoE+IPfypi61bpc1yS7fsTzH
+9V9vWKALDg4/SMs0OFl77leLLiB+/mdNNRhzQZkba+72PUfxdRDr1mqTDAu+CrTe
+YG/ACH1BOYJcNmawFwvy6IAGZWkmGZ6tlXx0duXUxkfAFQCqoBb+sZKTAFpjcS1N
+hz99qG20hzQXOxtMj2Oq15FjXE2c5cNjDijTVlxCQPkWc8srm5/fh/JhF7uy9y1o
+Ot+bWrypWRBKaMMwwTf0OalE9wgV/2FvwTKrgAw5N1yfRUun+7HifDUUQJvC249H
+gQDnM2oMnkBZ2S5TZ1cfBd3zpVQ/X1s6byrCCoUOzgAzuBKEEmvmSAq0orrKuQrg
+drBVElD3LXlGclBNJeC4IkThfo0E7n8bN9RAEdR+TTnWj/CL4WQTSE1F8E/uHjKr
+9VwLbBoR7wGqjaFPSmqYgKnk4KpNJuxsWpJEPBAhrZZb5We5KuiACmEJovO+mSbx
+/47B6kqCeGP4TOjlEOSIzqkKJqvFg0l+cPIY0+vERL1FKdpIwqA=
+=eCGB
+-----END PGP SIGNATURE-----
+
+--pbb9IRLzipP7HCI7--
