@@ -1,149 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD93264A6D;
-	Tue, 11 Mar 2025 19:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6960A25EF8E;
+	Tue, 11 Mar 2025 19:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741720109; cv=none; b=rc9bKWYhondIHTfk2amWt6AIswtUtaVtDUZ359AI71GG8Jb8A/dVcBsgdxJxgHb9BFwV235uOE9edxokO0Ico2LUwQOFORRZ6zT3L3344BJSuHrLNKhUs/5tYYBr68BeR1Qj68plI+cQGXBnmQHTnjdEFyrcBg0G4svOLzc9oMw=
+	t=1741720148; cv=none; b=hS535lED0TFYd6Beq4cReG+b0gi/m0VygtRzdL5zqNctwFtl8KrlBA55KAzy6asVlfQpxujAAPzHJ1LFVKmppNoR5Ttf09ju3sTsf9/mqu9Ke81xC0aTdbC9+2lptpz7RsGVqk+7BH42retDmOvuBDwhQWUqtf2FmIY+CyRUXXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741720109; c=relaxed/simple;
-	bh=Wzm78fHs/oHz31mlA1RVoZx2KHkqekACSBY76mK36dU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BkluqAmJM97XiMxp6AHWC3qF1eTwDLA07wae19HvDkyog7S1r+6jFlftl1kyhpFnsmUbikHhRBZasYGoFHWseWbTmBESKCd0Ub820as/3E9Iwl3yIUrBcgyJXxaC32D3mB6dMHyn42f6smQIvRNe4A2RwnkOJxDdqDfuoxTK0Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gy47a3LP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741720148; c=relaxed/simple;
+	bh=ALgeYULD97jCKLsl3qy0loXJ7HEmXrOCIreJopYWrd0=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oqc71rPC9M4VvCrrjvqV1y+6XKmDeqwrjS2j6qV3GXZo/PHs6EU7GD9RwOQ5MyvIrtNOYiBEOeS/oxJoTKgMQqqV0C4B+D36DkrNdrNGXrUX3c7WytaCgGsOYY9AcDBTU0vkeA7qcu7XrNmaUkrOYDRsDb+AyV6X2GZYvZVitvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bdb9Gojx; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gy47a3LP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8A34C4CEF0;
-	Tue, 11 Mar 2025 19:08:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741720108;
-	bh=Wzm78fHs/oHz31mlA1RVoZx2KHkqekACSBY76mK36dU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Gy47a3LPPUjWj3GqzZWCoihtUpg2LQ3z1gnMkeLFkbGdMwWMUncISZ6jX84Bkc8I7
-	 aQfjzXG90i7Aci+SeLh7N8iY63H0fYN7LvcCc7NcJaVvb4noM80OfJtuZEs8NhHtXV
-	 bFlcglP2A5Qky37Z/hOdjzpBR/9TdZ/SSMf0Y9Ue4/9UMPcTo8fBvydIw9Pinl3RK0
-	 g8nty+szWZSruNj2iT+48WbFC71DSlBQGmi4KV5IU2tLPOFAefak4+482ln5T580MC
-	 /1qsMYtO63dcLIOn4zEDp8meVBNBTAnYjkJFWzxHTBnsbfB21aO969qP+Uhw7ZT4Tr
-	 IlBlCpHkMYQvg==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3061513d353so66313011fa.2;
-        Tue, 11 Mar 2025 12:08:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXSbVcZCXp+w0joge3X/9clToJAiHhvXnr3dgixqGX/7+9slMcLPaoZiUpnf+bOpD9r0onFw+Mwuc7iV3O@vger.kernel.org, AJvYcCVc4fvp2k5nRjTMlto0hX1Xnoxtv/WRcabPD54QPJy5Q3DnDAszfOxeRreuQ5nwtjhFYL+pSsK/55ifR9s=@vger.kernel.org, AJvYcCXkQEjMDqyTJhcfoljiYSH8uD5VxWusK2UcBcH6WjQEdQb1/7s8Seo9Pun1ckQVdnHhRnWfWSZGBdG5SOUIE2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl9H6dpIHK/538gr/ve2umoLo8FWBhnMDGES8OsmRLNXNojM1/
-	eCTyI3BhJkwdPaJaKpB6K5RfhDij+rs7xNtkl+IbSSIbcc6zpYwDvs2vc9SgJ+anx6hJ7xEJFsw
-	42hKhU/9jgr++yOfQOT3ygmoRr88=
-X-Google-Smtp-Source: AGHT+IFDNc7jWrpB/rZF0Bt1TcLbbByT/Sv9KdtGAG1l8kq+hfvXQUXCPiEP8qbm3fiB+Oyw+/aWIQnFXZeSHnvGQIU=
-X-Received: by 2002:a2e:be84:0:b0:30b:fd7a:22e9 with SMTP id
- 38308e7fff4ca-30bfd7a2457mr46514801fa.13.1741720107439; Tue, 11 Mar 2025
- 12:08:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bdb9Gojx"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso64989455e9.1;
+        Tue, 11 Mar 2025 12:09:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741720144; x=1742324944; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=QBYt0BHsxul+nTaYflhpms2js1nZoTfEFczz9ZKES00=;
+        b=Bdb9GojxgdD60vEMRrrtiwfHwxC19pjYgxqZwImc5G5a/vqAzrE+bJ7ecly9Hb8uFA
+         3ojZyy0N3iBcp2RIfTY6tuzWEY8Q7653C4qM8W9UfJ6LKcOGNXfy4qwZYs2w/1qPViqG
+         1S5+BZGDMMfPZf6kLLCdusbFZU/Fr5uN5N/ZA3MgypUzIz+Wnd9v8hWiKBBVlYvQAPlC
+         wRwN+VJc39VuhHTQm9kPZOWpce7/X9IViJdGKWSZMwnrB4ks7IYYw1cvBG1mbpdFashF
+         PwKZOHa5a+3RF1pM4dwOpX+U8iWWwhhj+XYPEs4jGSksxV0HulFz9gfyuCfdL4NSaMxf
+         YTQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741720144; x=1742324944;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QBYt0BHsxul+nTaYflhpms2js1nZoTfEFczz9ZKES00=;
+        b=ah6kPeVsFfVX9agZOAVsgiMrYHT49GqgzL5O3+cPTcV55fW2mnDEIJVcp03c+BT51Q
+         EBsQDmhN7+Bj+d9ESuAFnzvU9OuS8FxXs2WMECHAiWNh4u9aHpIlP3aKM52kN3nv+lah
+         JDzUBi3UG2PEG79mcFVxztlQr1W7Mt/ZCfu20JoC39+NAknaLEpx+u0vUxA+nfCz+yhA
+         6SdXkNnrVBA98oqChvNUMX8M5XJoN1Y+LOcQAaVfGpordX4hWrEbP3eQu9jJOyM69qMP
+         kbl8VpOEr+NOqZx8VxOtsbH8CTSvtGqbJTQ/PPgAcPRNceSikvb5xW2FhYDUxC9j1874
+         xRlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxYndxkIvm7H52a3qSE3zG1ZlIfxpv2jVM2BgY5+WJHHSTwLtzLfgZu4g+eSFJYXrNzZOiDiiaIKaYNaO7@vger.kernel.org, AJvYcCVQxtuQ6+9QucF+0mz95tBTzX95TmyxuKQZnhF3B3jzakcGLcCPZuibsitenK/Uyw66H1P1kHG7lWgx@vger.kernel.org, AJvYcCX+yEikgLk+V7jQG/w7xvfZt5MB/D/yV4ccVylpOR7NoEleURQ8lAHmH3pNDZ8IAqlVHfHn7rVLT+SL@vger.kernel.org, AJvYcCXPCFziVBOqeZgYHigfXaELkOcGR1n6+gB0/SkT93eBAAxz8wRHD0hxlDGcXDe9qUmn8arm+QceAr5g@vger.kernel.org
+X-Gm-Message-State: AOJu0YynmZsfBxd3vtFNj2FnLOM2PXfjGYvbZw5cXTvQh2QiSpURq5gH
+	QQgmFYr/jxRIMfOi4uJNRBlG1FIbhUtBr8QJ9Go4EPu31EsvWU8C
+X-Gm-Gg: ASbGnctLpXKShySXuoVvElfJFf2M3yxFwOWZ3NHRVI6LL76UhhMheXjgsfMsKAEoQ8Y
+	8Ct9BpQIFU7/yWHZF/19juUEF9GaqFj4vdZU/nXQViGmBNpzGJz7Z5M3y+0ztIPEClimeYNYb9h
+	N5lNWdrXLa4dFeL4Lhx3yHopI89MRV7tz6EosLWt9O/ynfoWTJe/0IoQ3NaOdepUbyo51qBqs5C
+	OuvZkzA8BNXxIuDvporxJP76KaDNSwydlhfDOBYpvfQMxWteNOzX2v4Y0DxBQkT63Lza98NCQIk
+	tzJabLlgSis08jJNf7XoOcOxkiIjjM0vZOz5UmstYmEwfv8Mgc+ZBznofgAdNQNYhuRPNub0tZl
+	gfqxNV5MJE9/H
+X-Google-Smtp-Source: AGHT+IEVvLB1J5PdZXBMZwLdi5Sfx5U8w2F5CDI5YD3a5o/Tqdo42jSaYp7CF55JMp1UKEuKA0N/8w==
+X-Received: by 2002:a05:600c:5618:b0:439:9a40:aa0b with SMTP id 5b1f17b1804b1-43cdfb7e4b1mr144023345e9.25.1741720144407;
+        Tue, 11 Mar 2025 12:09:04 -0700 (PDT)
+Received: from Ansuel-XPS. (58.43.196.178.dynamic.cust.swisscom.net. [178.196.43.58])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43cf7c8249bsm81906155e9.7.2025.03.11.12.09.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 12:09:03 -0700 (PDT)
+Message-ID: <67d08a4f.7b0a0220.8fe9e.44fd@mx.google.com>
+X-Google-Original-Message-ID: <Z9CKTrERYllmbczJ@Ansuel-XPS.>
+Date: Tue, 11 Mar 2025 20:09:02 +0100
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Daniel Danzberger <dd@embedd.com>, Arnd Bergmann <arnd@arndb.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Nikita Shubin <nikita.shubin@maquefel.me>,
+	Guo Ren <guoren@kernel.org>, Yangyu Chen <cyy@cyyself.name>,
+	Ben Hutchings <ben@decadent.org.uk>, Felix Fietkau <nbd@nbd.name>,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-phy@lists.infradead.org, linux-mediatek@lists.infradead.org,
+	linux-usb@vger.kernel.org, upstream@airoha.com
+Subject: Re: [PATCH 05/13] dt-bindings: mfd: add Documentation for Airoha
+ EN7581 SCU
+References: <20250309132959.19045-1-ansuelsmth@gmail.com>
+ <20250309132959.19045-6-ansuelsmth@gmail.com>
+ <c1227083-a4ea-4dac-a9db-d6a5386c0437@kernel.org>
+ <67cec328.170a0220.27ecbc.9c6e@mx.google.com>
+ <026296c8-a460-43ca-a423-0fa38269fbc2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-rust-path-remap-v1-1-021c48188df1@weissschuh.net>
- <CANiq72mcpVL1YXyDFi-PrbQ2Uh0WUA_VNqLZaOeqQnpY5HnX8Q@mail.gmail.com>
- <CAK7LNATKK4bZCY7izDdEzNcUu60wjH57TK8ESM50QhUG2a4bRw@mail.gmail.com> <c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk>
-In-Reply-To: <c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 12 Mar 2025 04:07:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARdPcnsaP-z7tZUQLqAgBXD90XsEWAtTy8aTwDpTqMo9A@mail.gmail.com>
-X-Gm-Features: AQ5f1JpKC9S0zb4CrC9K4lEBV4D9vZKCUco_QGJwNs8yocKoR1JVbWCsZbHaodY
-Message-ID: <CAK7LNARdPcnsaP-z7tZUQLqAgBXD90XsEWAtTy8aTwDpTqMo9A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild, rust: use -fremap-path-prefix to make paths relative
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Urgau <urgau@numericable.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <026296c8-a460-43ca-a423-0fa38269fbc2@kernel.org>
 
-On Wed, Mar 12, 2025 at 2:36=E2=80=AFAM Ben Hutchings <ben@decadent.org.uk>=
- wrote:
+On Mon, Mar 10, 2025 at 12:41:06PM +0100, Krzysztof Kozlowski wrote:
+> On 10/03/2025 11:47, Christian Marangi wrote:
+> > On Mon, Mar 10, 2025 at 10:21:45AM +0100, Krzysztof Kozlowski wrote:
+> >> On 09/03/2025 14:29, Christian Marangi wrote:
+> >>> Add Documentation for Airoha EN7581 SCU.
+> >>>
+> >>> Airoha EN7581 SoC expose registers to control miscellaneous pheriperals
+> >>> via the SCU (System Controller Unit).
+> >>>
+> >>> Example of these pheriperals are reset-controller, clock-controller,
+> >>> PCIe line speed controller and bits to configure different Serdes ports
+> >>> for USB or Ethernet usage.
+> >>>
+> >>> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> >>> ---
+> >>>  .../mfd/airoha,en7581-scu-sysctl.yaml         | 68 +++++++++++++++++++
+> >>>  1 file changed, 68 insertions(+)
+> >>>  create mode 100644 Documentation/devicetree/bindings/mfd/airoha,en7581-scu-sysctl.yaml
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/mfd/airoha,en7581-scu-sysctl.yaml b/Documentation/devicetree/bindings/mfd/airoha,en7581-scu-sysctl.yaml
+> >>> new file mode 100644
+> >>> index 000000000000..d7dc66f912c1
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/mfd/airoha,en7581-scu-sysctl.yaml
+> >>> @@ -0,0 +1,68 @@
+> >>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >>> +%YAML 1.2
+> >>> +---
+> >>> +$id: http://devicetree.org/schemas/mfd/airoha,en7581-scu-sysctl.yaml#
+> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>> +
+> >>> +title: Airoha EN7581 SCU (System Controller Unit)
+> >>> +
+> >>> +maintainers:
+> >>> +  - Christian Marangi <ansuelsmth@gmail.com>
+> >>> +
+> >>> +description:
+> >>> +  Airoha EN7581 SoC expose registers to control miscellaneous
+> >>> +  pheriperals via the SCU (System Controller Unit).
+> >>> +
+> >> One more comment - there is no such thing as "sysctl" in your hardware.
+> >> Look at the SCU binding which clearly says that it is the hardware you
+> >> are duplicating here, so the "System Control Unit".
+> >>
+> >> So you have existing "This node defines the System Control Unit of the
+> >> EN7523 SoC" and you add one more node which defines the "System Control
+> >> Unit", so you have two "System Control Unit" device nodes?
+> >>
+> >> Look also what Stephen asked for:
+> >>
+> >> https://lore.kernel.org/all/20220106013100.842FCC36AEB@smtp.kernel.org/
+> >>
+> >> so how system-controller can now became clock-controller? Now, it was
+> >> the system controller since the beginning.
+> >>
+> > 
+> > The main problem here (and we had a similar problem with GPIO and PWM)
+> > is that the Vendor (Airoha) wasn't so bright in placing the different
+> > registers for the SoC so we have case where everything is mixed and not
+> > one after another... 
+> > 
+> > Example we have 
+> > - CLK register part 1
+> > - Some bits that configure PCIe
+> > - CLK register part 2
+> > - GPIO
+> > - CLK register part 3
+> > - ...
+> 
+> This does not explain that binding said "This node defines the System
+> Control Unit".
+> 
+> So what are you adding here if not SCU?
 >
-> On Tue, 2025-03-11 at 20:03 +0900, Masahiro Yamada wrote:
-> > On Mon, Feb 17, 2025 at 10:23=E2=80=AFPM Miguel Ojeda
-> > <miguel.ojeda.sandonis@gmail.com> wrote:
-> > >
-> > > On Mon, Feb 10, 2025 at 6:11=E2=80=AFPM Thomas Wei=C3=9Fschuh <linux@=
-weissschuh.net> wrote:
-> > > >
-> > > > Remap source path prefixes in all output, including compiler
-> > > > diagnostics, debug information, macro expansions, etc.
-> > >
-> > > Hmm... We don't do all the cases in the C side -- the docs ask to use
-> > > `KCFLAGS` when one wants to remove them in the debug info:
-> > >
-> > >     https://docs.kernel.org/kbuild/reproducible-builds.html#absolute-=
-filenames
-> > >
-> > > I am not sure if there is a reason not to cover all cases in C (Cc'in=
-g Ben).
->
-> I think we should use the prefix-map options by default, for both C and
-> Rust code.
 
-A patch is appreciated.
-(top-level Makefile change with updates
-in Documentation/kbuild/reproducible-builds.rst)
+With "This node defines the System Control Unit" I mean, the entire
+register space of the IP block is defined and each child specifically
+define each part of the IP block.
 
->
-> The default of using absolute filenames only works when the build and
-> debug systems have their sources in the same absolute directory.  For
-> some developers this will always be true because they're the same
-> system.  In the general case, and particularly in production, it's
-> unlikely to be true.  See below.
->
-> > GCC manual mentions the below about the -fdebug-prefix-map=3Dold=3Dnew
-> >
-> >
-> > "It can also be used to change an absolute path to
-> > a relative path by using . for new.
-> > This can give more reproducible builds, which are location
-> > independent, but may require an extra command to tell GDB
-> > where to find the source files."
-> >
-> >
-> > I guess "the extra command" might be a bit annoying.
->
-> The command in question is "dir <source-root-directory>".  It's not
-> particulary annoying.  It also isn't needed when invoking gdb with the
-> kernel source root as its current directory.
->
-> Running that command adds the directory to gdb's source search path,
-> causing it to look for sources referenced in debug info by:
->
-> 1. Appending the full filename to that directory
-> 2. Appending the base filename to that directory
->
-> (This is slightly simplified from the docuemntation at:
-> <https://sourceware.org/gdb/current/onlinedocs/gdb.html/Source-Path.html#=
-Source-Path>.)
->
-> When the debug info has relative filenames, case 1 should always work.
->
-> When the debug info has absolute filenames, case 2 can work if all
-> sources are in the same directory.  But the kernel has source files
-> spread across many directories, so there's no general way to make gdb
-> find them all.
->
-> Ben.
->
-> --
-> Ben Hutchings
-> A free society is one where it is safe to be unpopular.
->                                                       - Adlai Stevenson
+> > 
+> > The driver solution for this is syscon and the simple-mfd node
+> > structure.
+> 
+> Let's keep driver entirely separate, we don't talk about them and mixing
+> arguments won't make it easier.
+> 
 
+Ok.
 
+> > 
+> > Now the main problem is how to modle this in DT. There are lots of case
+> > where the simple-mfd model is used (like the one proposed) but probably
+> > this is not accepted anymore. But again this should be clearly stated or
+> > we have a chicken-egg problem when other devs implement similar thing and
+> > have to implement simple MFD driver to handle this. (and driver
+> > maintainers say "Use the simple-mfd model like it was already done)
+> 
+> simple-mfd has nothing to do here. Describe the hardware - what is the SCU?
+> 
+> 
 
---=20
-Best Regards
-Masahiro Yamada
+As I said below, SCU is just the name used in Airoha Documentation for
+this IP block. In this register space there are multiple things so it's
+not strictly a clock-controller (as it's currently defined)
+
+It was proposed as clock-controller previously as we weren't aware this
+IP block was used also for other usage that a strict clock controller.
+
+> > 
+> > For this specific case (and to give an answer to the clock patch after
+> > this) the problem is that this register space was originally used only
+> > to control the clock and I wasn't aware that it was also used to control
+> > USB. Now that I'm implementing support for it, the disaster happened.
+> > 
+> > So In short SCU is lots of thing, both a system-controller, a
+> > clock-controller and even a reset-controller.
+> 
+> And you have bindings for that already. Done.
+> 
+
+It's currently defined in DTS as clock-controller, should we change it
+to system-controller to make it more clear?
+
+> > 
+> > To make it short, 2 different solution:
+> > 1. We can keep the current node structure of the node-controller and add a
+> > child node for the SSR part (with a dedicated compatible).
+> 
+> No, you do not add child nodes just because you want some drivers.
+> 
+> What is SSR? How is it a device?
+
+SSR is the name used in Documentation for the register used to configure
+the Serdes and PCIe port.
+
+> 
+> > 2. Those property need to be be defined in the clock-controller node?
+> 
+> In the SCU node. Do you have only one SCU or more?
+
+Strictly speaking it's one register space. One clock-controller, one
+reset-controller and one set of SSR registers, and from what I can
+understand it's ALWAYS "One device/compatible for Register space"
+
+The simple-mfd pattern can't really work for case like this where in one
+register space there are multiple stuff.
+
+Is everything clear now?
+
+To summarize:
+- no child nodes
+- add additional property for SSR in the SCU .yaml
+
+> 
+> > 
+> > The ideal solution is 1. Does it work for you?
+> > 
+> > Sorry for the long post and hope you understand why this mess of
+> > reworking the binding.
+> > 
+> 
+> 
+> Best regards,
+> Krzysztof
+
+-- 
+	Ansuel
