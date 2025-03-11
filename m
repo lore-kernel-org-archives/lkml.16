@@ -1,145 +1,108 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8831925FA26
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 15:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F152325F96B;
+	Tue, 11 Mar 2025 15:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741708649; cv=none; b=B5G3FC/lvWUltZAzE62V2Zi/jgpPwfL0fE4ls6sGBszqRaF2dI4E9IFZKKR0t0YLftAVHwbLVd4eI4iZv67xI4q3ozNfG2aZBJZjcKKOjTH0OEy1G/4z7mf/Tu8dMt1odR8yXBQh6qTMH6s5HzIzS9u0sWqXMz/akTcCyFzr410=
+	t=1741708689; cv=none; b=aBgJT+q+nmcbCyhVIFLopfT22hnhTRUi8y+ZIOenae3OHtwwXze7FWln/HXlVtBFY6uFgHxWVxGTK40cgAftkagfykgLLmAtySAKe36pQ6GehsRVWChtPYYN6U5Z4KseOwmnm+QfW68KFoms+w7dpfLJiADhbgvdHKJNne8vZRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741708649; c=relaxed/simple;
-	bh=hAJYtbMjNLrldTe/Ke+tjWgQR2+x33wOZmSvOMQ3hoY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qubejWIGuY+tS+TL5ku7AzePc0zBPFqVeyXQYspP9FRU6+3iOYpPKVQeyPyQkR4NrExMk5hw8NiYF4ReDdrXrX1byEG38aKaroCj76m5dhT6ZxnqO5YO+bwfrv6S5ZhEtAma4YuLnPUkOPVN+OePpzprtjLxchFDLInNRGo9r50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PexjdJN+; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741708689; c=relaxed/simple;
+	bh=3+3TUVaFm9GEfB3rySJJ0OyIZLVSm0fUt+m+Qs961/M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LZmn0BzvHB49s7KBnlscAfkKI9zp1cQgkOmrU5IYWN3Dcad+ewoCTACkt2PH6Zlg4hAXc5+ETazjujI5rWq5L9AhPY8tr7KpM1tBgk8H/k7lOgfrKI7H6kVL3E08hwPwLhL4E9Oc6y68OAGCsvsrG3JR7+CrOnh3fUxuzWgW4SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wP6guSR/; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PexjdJN+"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so4589032a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:57:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741708645; x=1742313445; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5aSw78de2mCMGc1nBdrYo0b6FIM8P0VsjFuePWhw/p0=;
-        b=PexjdJN+LKyWyp1Gn45Hgrc4/j7CuFnnE1GvOrLczUBYm+6nKSPxrWw/grvRZKaU08
-         dsqK3VJq20pithKVbKVukWERldIJ2+aYZ2bxB2VkTFTN3u2hV5ec6mGLvE22Tp8yF9v/
-         x6Arj+CsTADhuZWjIuXMY43RG+3+jcZsVxzJE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741708645; x=1742313445;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5aSw78de2mCMGc1nBdrYo0b6FIM8P0VsjFuePWhw/p0=;
-        b=tMxctgFN1vRbljAdJoEEgjcG1SjQ40AE/vqzojCCS8DTqWxTmfa7jgn9tr8b2qssk0
-         p+wxtHQZiL2BX3s/liDJULqy5oY8kORDAafLx+FgJwLTsVFQU27UTiX8j9LPBQHVzVCz
-         iSHZYOZ9gyhxpG3qUmIfU6+SNUtgYFlA+u5KcuI7iZYlj1hh1uW85SQM5bBSyr1PeAjS
-         hqWCx1PjKGGHKF7jQwAF+5JLf1jSgTCmFCnlj970XAE/AENp4xn/ysdEgH+zhD1DNgvb
-         1ucb04aDqZv16nonrPneqM+qnCEmREUyUswPQRaDbm9xf1/LE3akKUcCvjVylgYUh4Gl
-         Nx3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVA++e6aquIcSbPYIDShQtLN+I4g15lPTxQRWW7GT6KLZLwdwdfh9yrAmyETegIRys0/9fEXH6jcY212BY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOm6iDZCh09VFsLnGbMIBd6hz0uJqnADpaDzCmAhe8qHuKlxc/
-	Ou7cm84KU1whpC5+Z2CMDNhnLGKhwTTdkdVBP1jcflZyUC0kVEuaMI/h4bzIYkibNos4qBY0Sjc
-	kvHG/
-X-Gm-Gg: ASbGncv6bFwQqyZV7I9FigzNBEc9463Vni7pK59iDrBY+PQvcCyBaWM+e1jcVBwNywO
-	qrEB/uT7vk81SGG30Y+C0lyEu1Hy4vLX4iXOY4/hnqjLRRKnz33HTmWQcm+t0Lo+5n9ta2aLQdB
-	FmljXzYJXAkgFfZmPBYXicsO8V5veM05la+JOkiPsIa44lZmTwlcX0hwnND0twGxpX26J/ndfxz
-	gk/NU+E39zCgv3/TndaAJLYPDm9y271JjykLOd/pFSEocGB1IlxzsiuLdtSVMjkuavBsGHyWMNV
-	WurxYLp8r5KkX1OI9ml2QRoK/oWnDALjI2UVM4UuLt4SH2DvclE+UaVORsYagZZqlxkkvaNZ14W
-	fa0aiVlGN
-X-Google-Smtp-Source: AGHT+IFv3mm8BosDVuUoYD6ZuSyCzqWu39XVhD2hLRoRfB63/AW2Ggul+KaGrJVT8GCGojLDKiksMg==
-X-Received: by 2002:a05:6402:40ca:b0:5e6:e842:f9d2 with SMTP id 4fb4d7f45d1cf-5e6e8430a5cmr10997270a12.29.1741708644714;
-        Tue, 11 Mar 2025 08:57:24 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c768f98asm8429744a12.68.2025.03.11.08.57.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Mar 2025 08:57:23 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2b10bea16so282357366b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:57:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX5lF7DBfqvrsS3oBgxFepS1kkgPgfUZUno+XbLTxRQXCVZWwspL27UhAJEfj4PPtxGvcyi5aMqznvpehI=@vger.kernel.org
-X-Received: by 2002:a05:6512:39c7:b0:542:28b4:23ad with SMTP id
- 2adb3069b0e04-54990e5da4dmr7908205e87.16.1741708321042; Tue, 11 Mar 2025
- 08:52:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wP6guSR/"
+Date: Tue, 11 Mar 2025 08:57:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741708683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cdi2NahSTQHVLLkiZwH5MHDxGkaNYRgi4IHLpPvMnQA=;
+	b=wP6guSR/EbtSQ0x/8Lw8512ytFiiLJPbotNAEXGZcmfcR9f+56DDzKK3bLO1NJxjsw0V29
+	aXQip9EAzwEydHE22SRhlTlNAgK46mh4OsIL9vMWQW6jKmJWMxjdTO58K7QFjH6Oz3t9se
+	1AJozzYmj3Bj0SV84Kw6CWkxagNZbjU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] memcg: drain obj stock on cpu hotplug teardown
+Message-ID: <orewawh6kpgrbl4jlvpeancg4s6cyrldlpbqbd7wyjn3xtqy5y@2edkh5ffbnas>
+References: <20250310230934.2913113-1-shakeel.butt@linux.dev>
+ <20250311153032.GB1211411@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310-mipi-synaptic-1-v2-1-20ee4397c670@redhat.com>
-In-Reply-To: <20250310-mipi-synaptic-1-v2-1-20ee4397c670@redhat.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 11 Mar 2025 08:51:49 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WW1ak-_MEBVks==Yr1tUdfFZ3K16_gcdJQ9rwE4ZduNg@mail.gmail.com>
-X-Gm-Features: AQ5f1JqjhYIh-K-V6kVV6ysPirVcNFNTBtRezYB438xMMjh4zAHshLydS3Jw1pI
-Message-ID: <CAD=FV=WW1ak-_MEBVks==Yr1tUdfFZ3K16_gcdJQ9rwE4ZduNg@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/panel/synaptics-r63353: Use _multi variants
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Tejas Vipin <tejasvipin76@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250311153032.GB1211411@cmpxchg.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+On Tue, Mar 11, 2025 at 11:30:32AM -0400, Johannes Weiner wrote:
+> On Mon, Mar 10, 2025 at 04:09:34PM -0700, Shakeel Butt wrote:
+> > Currently on cpu hotplug teardown, only memcg stock is drained but we
+> > need to drain the obj stock as well otherwise we will miss the stats
+> > accumulated on the target cpu as well as the nr_bytes cached. The stats
+> > include MEMCG_KMEM, NR_SLAB_RECLAIMABLE_B & NR_SLAB_UNRECLAIMABLE_B. In
+> > addition we are leaking reference to struct obj_cgroup object.
+> > 
+> > Fixes: bf4f059954dc ("mm: memcg/slab: obj_cgroup API")
+> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > Cc: <stable@vger.kernel.org>
+> 
+> Wow, that's old. Good catch.
+> 
+> > ---
+> >  mm/memcontrol.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 4de6acb9b8ec..59dcaf6a3519 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -1921,9 +1921,18 @@ void drain_all_stock(struct mem_cgroup *root_memcg)
+> >  static int memcg_hotplug_cpu_dead(unsigned int cpu)
+> >  {
+> >  	struct memcg_stock_pcp *stock;
+> > +	struct obj_cgroup *old;
+> > +	unsigned long flags;
+> >  
+> >  	stock = &per_cpu(memcg_stock, cpu);
+> > +
+> > +	/* drain_obj_stock requires stock_lock */
+> > +	local_lock_irqsave(&memcg_stock.stock_lock, flags);
+> > +	old = drain_obj_stock(stock);
+> > +	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+> > +
+> >  	drain_stock(stock);
+> > +	obj_cgroup_put(old);
+> 
+> It might be better to call drain_local_stock() directly instead. That
+> would prevent a bug of this type to reoccur in the future.
 
-On Mon, Mar 10, 2025 at 1:58=E2=80=AFPM Anusha Srivatsa <asrivats@redhat.co=
-m> wrote:
->
-> @@ -70,6 +70,7 @@ static int r63353_panel_power_on(struct r63353_panel *r=
-panel)
->  {
->         struct mipi_dsi_device *dsi =3D rpanel->dsi;
->         struct device *dev =3D &dsi->dev;
-> +       struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi };
->         int ret;
->
->         ret =3D regulator_enable(rpanel->avdd);
-> @@ -78,7 +79,7 @@ static int r63353_panel_power_on(struct r63353_panel *r=
-panel)
->                 return ret;
->         }
->
-> -       usleep_range(15000, 25000);
-> +       mipi_dsi_usleep_range(&dsi_ctx, 15000, 25000);
+The issue is drain_local_stock() works on the local cpu stock while here
+we are working on a remote cpu cpu which is dead (memcg_hotplug_cpu_dead
+is in PREPARE section of hotplug teardown which runs after the cpu is
+dead).
 
-No. None of the conversions in this function are correct.
-mipi_dsi_usleep_range() is only for use when you're in the middle of a
-bunch of other "multi" calls and want the sleep to be conditional upon
-there being no error. Here there is no chance of an error because no
-_multi() are used. Go back to the normal usleep_range().
+We can safely call drain_stock() on remote cpu stock here but
+drain_obj_stock() is a bit tricky as it can __refill_stock() to local cpu
+stock and can call __mod_objcg_mlstate to flush stats. Both of these
+requires irq disable for NON-RT kernels and thus I added the local_lock
+here.
 
-> @@ -106,53 +107,46 @@ static int r63353_panel_power_off(struct r63353_pan=
-el *rpanel)
->  static int r63353_panel_activate(struct r63353_panel *rpanel)
->  {
->         struct mipi_dsi_device *dsi =3D rpanel->dsi;
-> -       struct device *dev =3D &dsi->dev;
-> -       int i, ret;
-> +       struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi };
-> +       int i;
->
-> -       ret =3D mipi_dsi_dcs_soft_reset(dsi);
-> -       if (ret < 0) {
-> -               dev_err(dev, "Failed to do Software Reset (%d)\n", ret);
-> +       mipi_dsi_dcs_soft_reset_multi(&dsi_ctx);
-> +       if (dsi_ctx.accum_err)
->                 goto fail;
-> -       }
+Anyways I wanted a simple fix for the backports and in parallel I am
+working on cleaning up all the stock functions as I plan to add multi
+memcg support.
 
-This isn't how the _multi() functions are intended to be used. The
-whole idea is _not_ to have scattered "if" statements everywhere and
-to just deal with errors at the appropriate places. You just trust
-that the _multi() functions are no-ops if an error is set and so it
-doesn't hurt to keep calling them. In this case you'd just have a pile
-of _multi() functions with no "if" checks and then at the very end of
-the function you check for the error. If the error is set then you set
-the reset GPIO and return the error.
-
--Doug
+Thanks for taking a look.
