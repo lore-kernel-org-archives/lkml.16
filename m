@@ -1,180 +1,112 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDE11DE2A4;
-	Tue, 11 Mar 2025 08:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F4722156C;
+	Tue, 11 Mar 2025 08:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741681826; cv=none; b=dP4IYr/pVhTXv3vnVzQA9SHdIH9LVMx2C7zKw5/uzzhLzWp72ejK1arQypm/8ZbYIPTodDVIL4pzSL5Fz5+M010dkAmDKVNNKp2swlC+EoVcEdcv0st38lkoP7hLfUPeNaW6cuq6S01rV8RvYFt1Y5834sV1n2WhqAgqtOsiIDU=
+	t=1741681841; cv=none; b=BSiTHKVkeKJyYHKAS555n3ymCRQ512hXXiSXSPZr8pNns6FxGYZ4kGq1XON9sgKZnyVFndyEA/zsUaHzYS2nwj/WVD1fhFiFTxs41WoxPpXoFKm1l/t8KmHRiUtEPG8Vst0pRVCeI1b6WJRfSV33h2+YHDUN57LZY5Obhkw9Z3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741681826; c=relaxed/simple;
-	bh=SlVTnK3vDqccU6cZFFpsWdMPhd31kMhyhL/i7QCcsvQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jEHCH+YpnQ7nUjU5AtFak9N11XzZXG+w4O70c7FU/oEXV/YplzS5RzQLBhd2jq3OjF56Xuv4VM+drRKdzYY3aDWsNPEsNV15lD87xpogrlMY1ZcqaogVjWz69Vltzi4wG7EVEcRKGspql/WDqHRjycXEWeFBEiOtXXKlopfIvag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CjAJA3HS; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741681841; c=relaxed/simple;
+	bh=TUAJigk2aodKdqcDX3lW0N6rz+6bc8s1kwMGBy8TwIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HDJ0dxW++dYyP2cVxxQTDXjWPtIzZDKkzhTcaBU3/G4Tm0DT5L20sYiSN7YrOI/YTgoEqMHap6C5cZ4sYuCVINw6ODN/p10p08s8m+oSs6Gxs/6Qaq2u4d/X+LT66+11oGJMpzeEWjwtXYcnVziG7KRhDUXFHPX5nrH21+q1984=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kIvSIzH4; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjAJA3HS"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so339925766b.0;
-        Tue, 11 Mar 2025 01:30:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741681823; x=1742286623; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/wBUIzbfRjL8cYbjpKbIUr1nM3k/ZT4ERi+YMbxa2AA=;
-        b=CjAJA3HSlme6BdE9gcZK81tfe2Ez+al+pm9zrdtyxhJ8Q0Qowr+iAH62vT7M/Y1Fhl
-         UfsSpneGbPSXhgkg1IkXuUxpgRLbaRjDTMwIBvnLd3b8VYYCdNIyTZEUbZrVIzn+Db/Z
-         wHxt2YP1nkErqsBtgaAMVky2/XEt8/cxswXJTgrp6IzVV+R+BcpYG7FcXjCS3bA9Anqz
-         Ebn7ruFZDFxSdBgRbZs++0rtizSLapCKQL7tlW2sDEwPqfiYok8cbTUB1rEXdIwhyk/+
-         LFJv001hiuTiNeF8iFoK6qIvFOE4wSAr2w0ZD5PHGiUMae1zvmS9r7SPR5Nd+7JZF8Y+
-         U7Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741681823; x=1742286623;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/wBUIzbfRjL8cYbjpKbIUr1nM3k/ZT4ERi+YMbxa2AA=;
-        b=edCbec+MzXqXFO38QB8d6XPOCTakR94zGsgD2sSU+UrDPHTI9PMmseVDMKxIzqkfAs
-         iiVo4TnW/uF7H648kehKGEtEMNfv9ZxCIv+4ofh5zdisvU3JsF59ACUl8n1WioInZiFb
-         ir9oWwaApz7Rjes7aGby2V4xHJzVjCl/SK1vHUuar+qRy2nCQmZTxnXLynNN8PFvNT1f
-         1NOGS6u+3JpoAa5FqFSV++AfiJInWPuNoNoZi3JK+kfvCiQReZ/3G8lKyLcDrBDQ+rB6
-         yNecj2knQin9J0mtwGEAOlhKcxnDnrNh+YmOjsQyW3CX0NHGvmJv7nxsLCV3N9uM8gPf
-         nQXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUa9NXCdQaen9h7VETqErOs+wYrLdpBoA7/JDH7GsqBGtPro2JD7MYsAi+Fot+C6berbSCVDwPS3YVzuz4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwuQLTcwT76KGxttP/Um6fvCy92PfNWSAQ48lSZUohF3deMI9U
-	PoM0KnPy6mJqtuEsF4o69fv3Bn36wXpzQkxL6DjhpqbUe7QYeiJ/
-X-Gm-Gg: ASbGncsA9kztCH5/Z6/HCOxFoN9a2TF8FFwWsX2brp+p4u544Nh1ZwpcdOuzCiwl7r+
-	/s9HLGSpTzvvB/jMlxEZNWmG4LrLLtuVQ2b4O569J/bjwJpdm1wKeiY/TisVUOeFNFrJXvXYulB
-	XqD1OXMfYXmez7emkRxueF561lWJ4erTeuFQ8FXR1ANxAE9I4Yyub7byhVGCLtQ2DUWRbp/mGV4
-	VGVWn+URDW70nf7pnByKWDF6Ym+IOaHjyMjcb4Pxr8CjZoFROvTfTlGbUow7uOvIloBY6EONNuH
-	8WUBNftT0NnY3ClIyEpe+AJm7yzAkPo1DojDzFsVcP81/VU/TjAmEw==
-X-Google-Smtp-Source: AGHT+IED4/BdBzDJtL90V4GvyA5vlzRx5/AdyTSCLrwu2fkiBvJHxCgGCstqtAFDn9HSo6VY65AMJw==
-X-Received: by 2002:a17:907:6d08:b0:abf:742e:1fd7 with SMTP id a640c23a62f3a-ac253096a6amr2126965266b.57.1741681822638;
-        Tue, 11 Mar 2025 01:30:22 -0700 (PDT)
-Received: from [192.168.1.130] ([188.193.103.108])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2394825efsm877216566b.45.2025.03.11.01.30.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Mar 2025 01:30:22 -0700 (PDT)
-Message-ID: <23c708ef-c52d-40c1-a9e8-b05555b21667@gmail.com>
-Date: Tue, 11 Mar 2025 09:30:20 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kIvSIzH4"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E359D442D7;
+	Tue, 11 Mar 2025 08:30:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741681836;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s1apLwXpfvTkWHh+6/5h2TiHju9pcs5d/PyiuJeHcyg=;
+	b=kIvSIzH4kJatWgUgEJ/ehWNJgd5eY/pHjJ8Eo+UBMSKZ7o/Tu1XnxNisVpdGgkl4N2SZH3
+	Y5p07kTQhnaD7ig2BQG6R8hVVqEVK0emh2Rfm3CoN/ZMKgHcvceKkY/0NFjRkgdqhzhMq0
+	Bj7L70Lt/SR289hrtzbhqbTHuazZzueaurhmFPpYD/P+7j0VJn/9VhK/81LJ5x60IIe6Q9
+	CiSUTVOXh6wh9oN2OP5qYp4eOGxHHYujfg9Wj9xKmOA5WLJh95DnfRdngPP0iglYgExbG/
+	B6mD58s9tWiDnas9fiDHZs10Xlu1gcCcLbzzg2UmOBS9WWCJxC7ZoFAcbfyprQ==
+Date: Tue, 11 Mar 2025 09:30:27 +0100
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+ netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v1 1/1] stmmac: intel: Fix warning message for
+ return value in intel_tsn_lane_is_available()
+Message-ID: <20250311093027.4546e766@kmaincent-XPS-13-7390>
+In-Reply-To: <3bc2cc11-3a87-479e-a0e0-c593e3214540@linux.intel.com>
+References: <20250310050835.808870-1-yong.liang.choong@linux.intel.com>
+	<20250310152014.1d593255@kmaincent-XPS-13-7390>
+	<3bc2cc11-3a87-479e-a0e0-c593e3214540@linux.intel.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] ARM: dts: stm32: add initial support for
- stm32mp157-ultra-fly-sbc board
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, =?UTF-8?B?R29yYW4gUmHEkWVub3ZpxIc=?=
- <gradenovic@ultratronik.de>, =?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?=
- <bstruempfel@ultratronik.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250310154804.326943-1-goran.radni@gmail.com>
- <20250310154804.326943-5-goran.radni@gmail.com>
- <6af3a9fe-0c0b-497d-b143-77edc12f0c1e@kernel.org>
-Content-Language: en-US
-From: Goran Radenovic <goran.radni@gmail.com>
-In-Reply-To: <6af3a9fe-0c0b-497d-b143-77edc12f0c1e@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvddujeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeegiedrudekkedrvdefledruddtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepgeeirddukeekrddvfeelrddutddphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohephihonhhgrdhlihgrnhhgrdgthhhoohhngheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoo
+ hhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhgtohhquhgvlhhinhdrshhtmhefvdesghhmrghilhdrtghomhdprhgtphhtthhopegrlhgvgigrnhgurhgvrdhtohhrghhuvgesfhhoshhsrdhsthdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Thank You for the feedback. I will fix this. I have to solve the problem 
-with my e-mails in MAINTAINERS first, because I cannot use them to send 
-e-mails "inline".
+On Tue, 11 Mar 2025 13:33:42 +0800
+Choong Yong Liang <yong.liang.choong@linux.intel.com> wrote:
 
-Best regards
-Goran
+> On 10/3/2025 10:20 pm, Kory Maincent wrote:
+> > On Mon, 10 Mar 2025 13:08:35 +0800
+> > Choong Yong Liang <yong.liang.choong@linux.intel.com> wrote:
+> >  =20
+> >> Fix the warning "warn: missing error code? 'ret'" in the
+> >> intel_tsn_lane_is_available() function.
+> >>
+> >> The function now returns 0 to indicate that a TSN lane was found and
+> >> returns -EINVAL when it is not found.
+> >>
+> >> Fixes: a42f6b3f1cc1 ("net: stmmac: configure SerDes according to the
+> >> interface mode")
+> >> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com> =
+=20
+> >=20
+> > This patch is a fix it should go net instead net-next.
+> > Could you resend the patch with net prefix?
+> >=20
+> > Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
+> >=20
+> > Thank you! =20
+>=20
+> Hi Kory,
+>=20
+> Thank you for your feedback. I understand that the patch is a fix. Howeve=
+r,=20
+> since the code is not yet in the 'net' tree, we are unable to apply the f=
+ix=20
+> there.
+>=20
+> I'm not sure if there is another way to handle this fix other than sendin=
+g=20
+> it to the 'net-next' tree. I would appreciate any guidance you might have=
+=20
+> on this matter.
 
+Oh, my bad! In that case you are right to send it to net-next. Sorry for the
+noise.
 
-On 10.03.25 17:08, Krzysztof Kozlowski wrote:
-> On 10/03/2025 16:48, Goran Rađenović wrote:
->> +&gpioj {
->> +	gpio-line-names =
->> +	"", "", "", "", "", "", "", "",
->> +	"", "", "", "", "", "", "", "";
->> +};
->> +
->> +&gpiok {
->> +	gpio-line-names =
->> +	"", "", "", "", "", "", "", "",
->> +	"", "", "", "", "", "", "", "";
->> +};
->> +
->> +&gpioz {
->> +	gpio-line-names =
->> +	"", "", "", "#SPI_CS2", "", "", "", "",
->> +	"", "", "", "", "", "", "", "";
->> +};
->> +
->> +&gpu {
->> +	status = "okay";
->> +};
->> +
->> +&i2c1 {
->> +	pinctrl-names = "default", "sleep";
->> +	pinctrl-0 = <&i2c1_ux_pins_a>;
->> +	pinctrl-1 = <&i2c1_ux_pins_sleep_a>;
->> +	i2c-scl-rising-time-ns = <100>;
->> +	i2c-scl-falling-time-ns = <7>;
->> +	status = "okay";
->> +	/delete-property/dmas;
->> +	/delete-property/dma-names;
->> +
->> +	rtc@32 {
->> +		compatible = "epson,rx8900";
->> +		reg = <0x32>;
->> +		epson,vdet-disable;
->> +		trickle-diode-disable;
->> +	};
->> +};
->> +
->> +&i2c4 {
->> +	pinctrl-names = "default", "sleep";
->> +	pinctrl-0 = <&i2c4_ux_pins_a>;
->> +	pinctrl-1 = <&i2c4_ux_pins_sleep_a>;
->> +	i2c-scl-rising-time-ns = <185>;
->> +	i2c-scl-falling-time-ns = <20>;
->> +	status = "okay";
->> +	/delete-property/dmas;
->> +	/delete-property/dma-names;
->> +
->> +	pmic: stpmic@33 {
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
->
-> pmic?
->
->> +		compatible = "st,stpmic1";
->> +		reg = <0x33>;
->> +		interrupts-extended = <&exti 0 IRQ_TYPE_EDGE_FALLING>;
->> +		interrupt-controller;
->> +		#interrupt-cells = <2>;
->> +		status = "okay";
-> Does not look disabled
->
->
-> ...
->
->
->> +	dac_ux_ch2_pins_a: dac_ux-ch2-0 {
-> No underscores in node names.
->
->> +		pins {
->> +			pinmux = <STM32_PINMUX('A', 5, ANALOG)>;
->> +		};
->> +	};
->> +
->
->
->
-> Best regards,
-> Krzysztof
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
