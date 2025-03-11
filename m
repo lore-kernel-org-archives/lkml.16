@@ -1,94 +1,111 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAD32620DD
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 20:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D85322F169;
+	Tue, 11 Mar 2025 20:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741723610; cv=none; b=GnsGY0BKeQVy+BlCWbjshsbg6ovRCougr8HxVEKriaEYBoKFNTCCUz8hW5HEXmBKIci2cd0g63RnVx7lEWFh+wB01e9Xrvn7FBC5qDEqDi4ccYFINh6k7rhoacTWovjTM0icL4lTE7/StKxtqmcuTe25nuYBgsvWVZPDHk+jKv4=
+	t=1741723624; cv=none; b=EmnLz/YYS/0eJETueAD9GALrM4EhjPwT+w3N4i3mfPv2pV95KNWVhLqf4opgnuzccuRy1AnmuJ5Ct7+EtieS7ea3q1OpkXYBPhSL1i9aspH85/6/iSqasbeOYhmF28WgxWAXdJ3dihrHlOFzhplz3dwiEoL270Se/KoeYdWqnBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741723610; c=relaxed/simple;
-	bh=bQbYwDJCi4XfA8SvA2wX26olRhEGgMXvp7T5YMum8Vk=;
+	s=arc-20240116; t=1741723624; c=relaxed/simple;
+	bh=vmaAEzFBzlwDTRy5wbpxrPDsyq9A9SymsOA8U2CimH0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DhCQQiz/zWAY7idCvikyaaLYE3vCmS1T7RRTy9KawRKKxlpA4jY1IabNEt4OFM1tCznsFR2z7G9bgiVLE0n8eJiELH/AowmgWIpNT7e5zAQ4gmVVdSwfLKgfU84B3b9Ymu1BIRORygqU+DJTKk5DxfP8Fd0R6GiSspPTSd5gxZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=TtSKNgWT; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=IHYlcdvDJ2uQaD9Y3TCQT8N98B6Hpclz/ffT8FWFe14P5YUiV98XZ2Ymd7F2pfu6du8bpC0xO7ILo7X7tRJbWVZQKBL7SEvhmGnGCgd+iq49E+rZrSzplaQpp43ywk8jhkSP7RMnvtH/5yvMrFEJmh7s9wmV9zL/4WTJQ3Fy2JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPGRFmy0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="TtSKNgWT"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CEF1540E020E;
-	Tue, 11 Mar 2025 20:06:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id x7eXLGRS2_jy; Tue, 11 Mar 2025 20:06:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741723595; bh=KrBk3abp9uHjNMQdxfz1gauQ7wGylV3yre/BW6WYd0U=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPGRFmy0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42233C4CEE9;
+	Tue, 11 Mar 2025 20:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741723623;
+	bh=vmaAEzFBzlwDTRy5wbpxrPDsyq9A9SymsOA8U2CimH0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TtSKNgWTd/4jy1NRUBrO0qbKv9J9xfSBxcfwED0sWuKNh890QRoz/mhZzPn2ZY9W8
-	 l7xLL1NutrQy8wtPnx42ekRDeGU19U6bMPYBQpC8gVB0gOVwVbxbWPHBEsvEA8/37q
-	 +aeVNyDwARXdA9y3+GSAk5w/eEXvSrLV7hsyrPqT2/cs1A4IvR/FqRgyd55Bqn9/HP
-	 9DyG9b26BWFe8TAFWADpzt+0Kv0BmNIlXThhubOvFnxmGHMs5rt9lBPD59DXVml+S9
-	 ubh/O4RqvWxZaarISY/dDtZNqwrQZVLloE8Kg4vee0OyYNay8D3jIh5dtCH34zAgrB
-	 sLv2F3VuavO6fF0Oy33KWbpZFX53ZbHijllGLFPgo4QUUt4h4NT1PnH7PCyiMY7Fm7
-	 UYG6FY7FUyuHuxbSsk9BovtCWpO8FwXwzu7DZn9X5KV6q0bfvle/l4kYFOp8qbIwoC
-	 eokGLcFK5A17/uJyuDD5cfoLoYZ1jgdmriw7aEQz5fDYpN8ojVJjN/n9JilYhuQxPJ
-	 DzRv+5Ik590yxCkmlgUUHXYc3tDU/g+zetAPWhv0DUdp0ppUcq6A4FXWJYnUiS8UKe
-	 5tfiu3PRTeQV3LdczWox3Wfc5w7Gr0ewTawqOx7OJUB/SNvFBhZfD4vYPtPqWwZ3rd
-	 3EVNewNOmzgl876nXpPLZrlQ=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C3AC240E01A5;
-	Tue, 11 Mar 2025 20:06:08 +0000 (UTC)
-Date: Tue, 11 Mar 2025 21:06:03 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: James Morse <james.morse@arm.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-	Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>,
-	Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com
-Subject: Re: [PATCH v7 00/49] x86/resctrl: Move the resctrl filesystem code
- to /fs/resctrl
-Message-ID: <20250311200603.GKZ9CXq9B_lqLUqSH5@fat_crate.local>
-References: <20250228195913.24895-1-james.morse@arm.com>
- <20250310190915.GAZ8842wfIn043W56k@fat_crate.local>
- <09b9d760-0c9f-46f5-9784-5229e9023583@arm.com>
+	b=CPGRFmy0YVDPHDZ7+K5ZTo4vlxXOfDmTaKHtwHWjkPwPsuD0S+rT853k4/cIXkN/Z
+	 SY3BYWAPve5Ok17t8mhicA4mhb7c0uBGGXA0ToN9E4WMR9cNXfgFElMzI3qWXI0XNp
+	 rhRJryEkB/c5tLMqPviYw8mea5GMaLjULNp9s6D4XEC9FHQdt6QI5eiEuHloahwB2j
+	 XA7lfhFwWnvSE9f2mkLHjSJaBm4klpwloKDLGhgKR60XEBmPwkTn4fDVl9P/Rhirda
+	 zN3OFgHa2bw1t+CFKFm2GKMnIeoNQjx2dZ+dBRMDHuPTSSYSj9gObLOB08K8iIVkvQ
+	 1/zGT3HdwoxNg==
+Date: Tue, 11 Mar 2025 15:07:02 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Friday Yang <friday.yang@mediatek.com>
+Cc: linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+	Yong Wu <yong.wu@mediatek.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: memory: mediatek: Add SMI reset and
+ clamp for MT8188
+Message-ID: <174172361378.44650.15345202042780383326.robh@kernel.org>
+References: <20250311122327.20685-1-friday.yang@mediatek.com>
+ <20250311122327.20685-2-friday.yang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <09b9d760-0c9f-46f5-9784-5229e9023583@arm.com>
+In-Reply-To: <20250311122327.20685-2-friday.yang@mediatek.com>
 
-On Tue, Mar 11, 2025 at 06:38:44PM +0000, James Morse wrote:
-> Thanks - look out for a 'v8:for_boris'.
 
-Got it, working through it slowly.
+On Tue, 11 Mar 2025 20:23:21 +0800, Friday Yang wrote:
+> From: "Friday Yang" <friday.yang@mediatek.com>
+> 
+> On the MediaTek platform, some SMI LARBs are directly connected to
+> the SMI Common, while others are connected to the SMI Sub-Common,
+> which in turn is connected to the SMI Common. The hardware block
+> diagram can be described as follows.
+> 
+>              SMI-Common(Smart Multimedia Interface Common)
+>                  |
+>          +----------------+------------------+
+>          |                |                  |
+>          |                |                  |
+>          |                |                  |
+>          |                |                  |
+>          |                |                  |
+>        larb0       SMI-Sub-Common0     SMI-Sub-Common1
+>                    |      |     |      |             |
+>                   larb1  larb2 larb3  larb7       larb9
+> 
+> For previous discussion on the direction of the code modifications,
+> please refer to:
+> https://lore.kernel.org/all/CAFGrd9qZhObQXvm2_abqaX83xMLqxjQETB2=wXpobDWU1CnvkA@mail.gmail.com/
+> https://lore.kernel.org/all/CAPDyKFpokXV2gJDgowbixTvOH_5VL3B5H8eyhP+KJ5Fasm2rFg@mail.gmail.com/
+> 
+> On the MediaTek MT8188 SoC platform, we encountered power-off failures
+> and SMI bus hang issues during camera stress tests. The issue arises
+> because bus glitches are sometimes produced when MTCMOS powers on or
+> off. While this is fairly normal, the software must handle these
+> glitches to avoid mistaking them for transaction signals. What's
+> more, this issue emerged only after the initial upstreaming of this
+> binding. Without these patches, the SMI becomes unstable during camera
+> stress tests.
+> 
+> The software solutions can be summarized as follows:
+> 
+> 1. Use CLAMP to disable the SMI sub-common port after turning off the
+>    LARB CG and before turning off the LARB MTCMOS.
+> 2. Use CLAMP to disable/enable the SMI sub-common port.
+> 3. Implement an AXI reset for SMI LARBs.
+> 
+> This patch primarily add two changes:
+> 1. Add compatible for SMI sub-common on MT8188 SoC.
+> 2. Add 'resets' and 'reset-names' properties for SMI LARBs to
+>    support SMI reset operations.
+> 
+> Signed-off-by: Friday Yang <friday.yang@mediatek.com>
+> ---
+>  .../mediatek,smi-common.yaml                  |  2 ++
+>  .../memory-controllers/mediatek,smi-larb.yaml | 19 +++++++++++++++++++
+>  2 files changed, 21 insertions(+)
+> 
 
-Thx!
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
