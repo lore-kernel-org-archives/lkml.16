@@ -1,213 +1,223 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6C1238D39
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741691630; cv=fail; b=XD8InCfd6bv/vwcQtPegVvDVYMCEZP8VIZ/WYsBz58u1AJ1N2Gjogukj2si/ffJScX3Mi1Ao5f66+l+Hpv9cpkZORIrN2P40pW56iUrqLYgYsE1uyxOnXDiKY5C51jIABX5zuhX89m5sKacR5if19m+VD9bCc36aMEtzyJnVBLc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741691630; c=relaxed/simple;
-	bh=bDNLxfmxvt2eyfet6JtByeHsE4fEI1CISbg6KbpU51c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GZzu+VvH/JJpUesmKq0JDpUA/il/GXD+43PEiGCNoA32+68rHCsbV9X+HbgqMhulUwVePjWeCR5WQ11wgzNadKnmK+4bcM2y2a+xg0FfDYj/qq4u1bEypwczXedcUWrHukzkhipwmGx5t+65CdAnne3RUk7d48PtEr/8DZ44vYk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=PmF/w/6i; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=aCpZvnSq; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PmF/w/6i";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="aCpZvnSq"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B1fwYe021471;
-	Tue, 11 Mar 2025 11:13:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=e3+95zkgFlBsHCTYsc
-	6bYkN8GpNM4vSFwbDyOiEMIOY=; b=PmF/w/6iP2+bLpUMdM2Ek/OSSPkQg7KVYH
-	uylVodIZ90YPIsCeI4KBIp8V72tLYtu7h2kSRH4jPZ7NyvrTD1S0YoR63n/q8jI+
-	7bC8qarzJ3GxQpkqw9uIbbwuAN+zwvYkTincK2ydAI9t6cVvJ8t9siSUjaxiAxTQ
-	WabgkJFHk7P/zd7ywMoz3uFBlCtTrBDhXFxGcBk9heIl52lg/MACpBkmw0sp17D8
-	+L7zzTH6nAKD91UCDUuLtP6lEQ7Yy0/2kWUcklfG61uUmIJvGBWEHMsyv5w/O655
-	Lefbn5LUiWNsI2yfu2jWGkbcVaHuIu8o4HfdeBSL/ddq3dXEKrBg==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 458eeu4jmd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Mar 2025 11:13:23 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52B9kQrp030661;
-	Tue, 11 Mar 2025 11:13:22 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 458gcn7uu8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Mar 2025 11:13:22 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=t87LeseJapshMo7badHKJ4OYfPNFsoWXvu+nSDBBjTglO25kjzy3znnayyjpLVcl5l1voJgZof8WO98hVJCrfbaIvZ1LcUtsI6z4Ld009NUNZDQnB6HP/v5FEY+4H6sIHcwBKwlFLiWafWrV1mPYV5P6A/fYO6iOgx9g2PSg5UbDapVPTxxnEqXFcVnQuRFU3mXRfnHLLFjVYr3vo5ddVLFqljsrwOD7JDj3ww0m7zd2L7H41ozmwWSQP7gAPzcCEzEDgT6L4T7vLP/c0SG6JD4rZQHziwarG0E4GjNfyurC6A7ycrY0higZU9L3pw4cXqYwiYYS3SCH8ylC6ryh3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e3+95zkgFlBsHCTYsc6bYkN8GpNM4vSFwbDyOiEMIOY=;
- b=W+uX+YnSDWRygoztizX+0/m9kcaNcEmyl3JSw4YH10eL9XQjG0uQjiziEjZATHHiFD5Qham2brK9xftI9w3vEIBQYqLrbQKhodhwduExvekPeYgjSpXJX45r/ZPr3fS7Mf4orCo6SAMZbA3i9fLGOXa/POZlDZkHo7D+uzY2dCRS03AQ2JlpnUITs5Mjhv/QSw0W6+N/HzVownVA1txe1R4EZ9WNl7DIY4MuNbph/hFkiA+B5LQWp5te+ig5c1YAYs6p3z1PUy9xDWAZ/eimzYkUgzIceBAd6dbtvCg9+mzZ+T52JLrB/7JVzOtFn3i+aMgLYL9yP3XfGazhndLCHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e3+95zkgFlBsHCTYsc6bYkN8GpNM4vSFwbDyOiEMIOY=;
- b=aCpZvnSqnOTPfuLUwrVIdEccLsLt3Ew65+0fMpQmXBk+PzPrMGuUUNeFU3pP91fhv3U8X4z/0Le6IcDPvAR4gntJBKPhOURPE3EXK6DtSHUJSH4yoC3FuIMaJ4tCManpfeZcRZJXJ3jwCjNxoR8gU3e4kLs3oeggWRU3ifgT6Zw=
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com (2603:10b6:208:11e::33)
- by DS0PR10MB6847.namprd10.prod.outlook.com (2603:10b6:8:11e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
- 2025 11:13:20 +0000
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c]) by MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c%7]) with mapi id 15.20.8489.025; Tue, 11 Mar 2025
- 11:13:20 +0000
-Date: Tue, 11 Mar 2025 11:13:13 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <brauner@kernel.org>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fork: Remove unnecessary size argument when calling
- strscpy()
-Message-ID: <05250cea-4738-4bfa-a669-a81a64d3e82e@lucifer.local>
-References: <20250311110542.495630-1-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311110542.495630-1-thorsten.blum@linux.dev>
-X-ClientProxiedBy: LO4P265CA0323.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:390::11) To MN2PR10MB4112.namprd10.prod.outlook.com
- (2603:10b6:208:11e::33)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1F0E1DEFFC
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 11:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741691673; cv=none; b=Rrgt9A9joElYbsn3Z7o11bxVwc1PPxHwBn7Ke8yptQButrwucRLyVN7KazIzxPRzEA3SNnCn66/2x4+Xv7mJuXxQ8S/NyP250frfRMSFVhWEgW/1C2pZv95YD/bQjGQf+ZVBuEZvwvIaQyEFygTnsuvgu6GQqnI07UEow8/FmzE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741691673; c=relaxed/simple;
+	bh=rCuEaZHc0H8Bc4pSNIgY+AJrSgfVj+Hx2zsnlhBU32E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BPc+aI8iFDB6KTKvHwmmbezTFBGFVSbSvaCfSZMOKFJJcrokLoqFcVeTQYgGLNcILNqU5jV0+WiKM0xNLaywlDbyEUqfFlSMrpHMC46sReNsUiwPXt/zRe7aWIrsySMpdtROyhWw+CdnoihPbAaUjZMo4LaYqYxDWKFkuwUET70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F7C7152B;
+	Tue, 11 Mar 2025 04:14:42 -0700 (PDT)
+Received: from [10.1.30.125] (XHFQ2J9959.cambridge.arm.com [10.1.30.125])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF9523F673;
+	Tue, 11 Mar 2025 04:14:29 -0700 (PDT)
+Message-ID: <32814695-359e-4c4b-90a4-c7c34421a1d5@arm.com>
+Date: Tue, 11 Mar 2025 11:14:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4112:EE_|DS0PR10MB6847:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d2736cf-27b1-423e-7d70-08dd608dbad3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?TN1yTHS7u+bntiz2H+xDQF4AYqI/GOSLJda9bIA8XrDbue+v0cCzZpNyioa7?=
- =?us-ascii?Q?J81WEVg44ffbk9NNeJQolSXaUP8Rwhcp4+RkSIaZsRnTpg5nnfEF5VND7K2u?=
- =?us-ascii?Q?1t+RJ1+CzYhh7rswDTj/HKWdG65a57SrqcnS1+IFyCoJ4aSa4E7YqzbuA5Cq?=
- =?us-ascii?Q?mPdlHQfGRiE54qXG4VnnuVJZ81KIZ31h0Z8HHvqykBNn4lGf1U1bp2eqE5SR?=
- =?us-ascii?Q?qiQ9i4y3kYrgwNK7DfzWQbErWmu+4pT/if0o5FfivSx4Z0jV9kC/9DNjy7mS?=
- =?us-ascii?Q?MYmL8+MrKNYIsWbIQYLV2DeO4aF/dmmifd2cRn4A0/vv3hv/PYOOVsi/SmPz?=
- =?us-ascii?Q?VZY8OSMJidYwY0VuS47XDcU9SpF0zMzjxHIbKvSwi0bK++MwvK7n0ZVuX1V8?=
- =?us-ascii?Q?U+rS5/buDgo48NL5YMYR89cQWiN8lAW7YZv+xEfIYciEVnPdOdHGiDz3Otve?=
- =?us-ascii?Q?8nxs07C2jwT31084WLhBWFTvmpFduZXD0qr9a7oWMjt+wTOJrcG2yn5lqiiO?=
- =?us-ascii?Q?bFo+fWtqVv/nszZKR84smu/kh0//IjaUb6Eb5HizmSsggJQmOdse5gVVWf2p?=
- =?us-ascii?Q?Fb1AJwIp1rxAXZsS1sL/cjROgTjM1m+TtJE+RYgR16aXeQE3dJv6/4ne1RFp?=
- =?us-ascii?Q?Kml4pJ2FDEaM4Y1jN5/aLc8E8SsMdSSVX33i3pNE2LMZpJrzIoFhT5ZqVeit?=
- =?us-ascii?Q?CK36StSvZcWtVA3rxzAvX52ix7/MjCRNB/DvzQB08g6QBpb4jWxru+MTnpWd?=
- =?us-ascii?Q?JuyFOl1hICvi1HAHo69LktCAe+xJZMqbWtHxh0GUP4hUmtsiKtnkAuLmxg3l?=
- =?us-ascii?Q?9dVMRy/7UMydhPnIhiuh72ls+N9x/JSLTjxEvVnaSMV4ZCcz2jkeXxDF3MYW?=
- =?us-ascii?Q?F0BwjNrcQ9zBc9jGDjECUUOg8w+y8OsYkuXHSux90DHhVbWh6kuvQ3MWWbom?=
- =?us-ascii?Q?LvZLE5+qKekUCgp4CZAzxMWWKQZBOSSM6dd0lv1dG7gAcbSSxXxTccg7edYm?=
- =?us-ascii?Q?6nbI4WaKMSBc+fRQdjYgBmOU33Ordj7IqD/wbhMHISwBLq7PxwHjuDMzLLZB?=
- =?us-ascii?Q?mMXeVQwMN2UMWjpHU/zESg+CDpwBlWJQCyVx6AjTzEnrVNW5bLv11J1LFjE7?=
- =?us-ascii?Q?k6jpDk0PhTWBpLSS4pdZumQtnU5YavnFMOuL2qDBoS/vpKmGhKmM6VoQ2yie?=
- =?us-ascii?Q?ZrScdS00VBVbHhUDlC+NJkp9Uhp/VUwbPyVHHM1G0cygIO461js7vVD/DQ9o?=
- =?us-ascii?Q?hNCXCqjNYxXvVMDILoJUHnJR9mrRLxqb5kGeOFcDhnLwlzl7jDFyDZM4Tk5L?=
- =?us-ascii?Q?8mKAQtODvia0YBBC6qW436soyDwgPYLuzcUkhhrvmaJuZTOsvFKAelq53qHa?=
- =?us-ascii?Q?wR6km1APL+NjCznONcxAOGGQ5+7L?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4112.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+OmrzZg1GJkXfbe8TMrGDRY3BEIm88iPnpuDB7UTtAn8XrdTHv+VyjB/n6L7?=
- =?us-ascii?Q?losTpkgpQi4WNm69gHDQTglj0v6hWMqns0MsbhGQ/wiiEE13MmzCvhFaf/br?=
- =?us-ascii?Q?aIAxtCe0H8YgrvroG6jNQW5xpBnSsGSNKwoRbG4SSMoBvhTIjXD1PKChhrL1?=
- =?us-ascii?Q?qrrg198vq08bnBReT180Dmp9ZgUZsSaK2wK1Yies3gYiUzco+Fv+5FkNiXFF?=
- =?us-ascii?Q?fcCNil26u8PortdpFi9tZgmR4JXZT/S7uNXnr+5tUGom3fFCgDrOUVIcQXDv?=
- =?us-ascii?Q?PNYDD9ipaFFFUY7usUbWyEqFjAHlY60HJsC14ei5IL+9v5CGCS4W53ZRt7by?=
- =?us-ascii?Q?77kSM9sL7CAsBDT+bOR1GZJ1A8TdvOADWWnvFfibfj7regu3f0rH7vw+P2cs?=
- =?us-ascii?Q?E4eOFxs+lO3Ye6jtNVrTiPT9MkHNS4K7KPfTYIvTutIvfmQ3Nr2RhMhKpNci?=
- =?us-ascii?Q?fPAPiGgviB6jmheGVM4scRdKObkIn8nK9NqesArixMls1vbXy3oiaXnOb6cA?=
- =?us-ascii?Q?UkO8JvSZpVQgHMwQ4bc56vI0reVis4OPm9RranxfzAzMJNFaYT2J2T0LbUF0?=
- =?us-ascii?Q?pCa1cKD+EDh1vr/BkxPy3glXO1Myo4QY6lDKNRh7DudkD9XxazV26tWBMXoz?=
- =?us-ascii?Q?UVCmOBj84TqLOp/gPB/26l0U7/uBUqHDy69bjKiRQAqxl0I4nZneExHC8LO8?=
- =?us-ascii?Q?s/40hgtXak0SHdbFEmuNbtWozDMJq2BTU7mkf6pu/3BlwFd6Ipe18V79BV1M?=
- =?us-ascii?Q?pkYQLTEHvgAY0plk/CMS1lP920oNfHkvyUYMGUFrI4yetkKyRQBuLCjUsaxk?=
- =?us-ascii?Q?HlcY79T0sywmJstAt+I+Ll+pcuAlfstefMYEiweLFNZ6DPwcims4VXuuFAlz?=
- =?us-ascii?Q?6wxqm5j+ntUVaJvJYom64v0HdFtRkjRs20uwyjGKvqUCPK7tx9DvKjRBVNdU?=
- =?us-ascii?Q?68ACDiCj5T3znz1FqEw6XvVhfXAce1HkJ6KAxrRF1HfRHG7nWbagjIj+by8a?=
- =?us-ascii?Q?LCs3u2cDWL7GyMervl69+TbXniQxX3r6pT+ZeZwo5kSmjUeF5/z01bSKBCkN?=
- =?us-ascii?Q?QbwBR8EGJodBuOy07Vl0bUeC0E2eBM+bUO9e84bDmO1+gwHC87GLLLmtD5aJ?=
- =?us-ascii?Q?OfxIcWln9NYWLrmBwfRqq7vaCdb0d2oPYOQhhVfspLWSC3P7hlN0rCBiIi8E?=
- =?us-ascii?Q?y+P3e5JakdMoMhqnXwJinfEWLDz5dLH1XTAzkmLsjr6o3qMDhOJk8BRNs4mc?=
- =?us-ascii?Q?esr2xWqPdo8hAmmneTmgBPt+EoajqbJe7GGh3eDV7tURNBCxMLkuVjr2IxD1?=
- =?us-ascii?Q?Tlsfp2QhtaFLl9Gi32pwsN31S2YgWn0s2pcQMOk9ZCzF1mlEJs7+fDW1eBMW?=
- =?us-ascii?Q?dWkSw+36dohXz3quRYCL+xtSFknR5UcbY2aLvLBHuemvKwFxm439aPdBDOHF?=
- =?us-ascii?Q?N19Q+AtGgjXiAV1mAzQlflHlCCbF2Dfwqr6v8HY+gy6I2gyFxX4YM9rVCzos?=
- =?us-ascii?Q?IY2mGjIBTfrMHBEP/6yQWBlRkVgEqb20UDmGpPMqcDpdUKvoLZjDb82bL31s?=
- =?us-ascii?Q?1+WATz7e6GFyleHmxpd0G1QLSolfvkLSDReewr2/16CrofOEsaORuY2POoU/?=
- =?us-ascii?Q?oQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	rBvUoIUVC2Sw5jk5gRjDSwqzFFfxB/9NqARKY2lHQY2aPLabqFJGE/VmCZJSUrG4fcx5W2aqRP6y2rw1srwPqcFprv/IqtIRyYvqtp6NEnZyGWAMO3Pd5KBHNRxawltv+O4YcIPAmfR+H3rlF0KG1IJTixx6mpIpGQo2goUDcFwRMGu2v+21UqtMRbvYX1qhcwf2I8Sufg2161KYnKJXyzAFGqCfeWRpS+OWASjkOxIbp2Xq4VM6/FZ7TgtAhovI/QRQ1l8TDkDQFxxFXJO6owHxui0F+1TmcwH1iK1LMSmLmpe8q1MfLVSDVUOOGYiXHWbanO0awtzFhXKE/ME+rGCzVSYYH2D+NAY88LIDPqsRUf1v2lmnimIxGKdb2QjZAac8fWlP6lJBWtLqjXmbEZw7fAf23kdthpfRI7EViObsG931X6eNq/gF4kDTaj/aX46JjfXAtXjNHMqf6T8lxTLvhQsv3sQc2MHsbDgo1PMyGD4fsh71CbUu4hCK5ncncgTtSQPPEcVPvyWlRK3YvnY4l5sD1ZH1w6Chws2lBLSsywnrSzbUKZ24pE1iwiZazKTSmn/el2/gJBBw9sVEW92Iuq0f0u2WDuCJ8H2kuV0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d2736cf-27b1-423e-7d70-08dd608dbad3
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4112.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 11:13:20.0804
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6oweOtMEzUdbeGLhQPsib8cglN9D97hfDio7j8Db8p3wyKTFhGXPsDxQv+BGAEjRf3mgGMAN2PWOKuw2b1KhN155mxVePTn+Kn/WW+u4M4A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6847
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_01,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 phishscore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2503110074
-X-Proofpoint-ORIG-GUID: 4IuAVgdQg_RaRbPzgFLcQfHdar80wS0g
-X-Proofpoint-GUID: 4IuAVgdQg_RaRbPzgFLcQfHdar80wS0g
+User-Agent: Mozilla Thunderbird
+Subject: Re: udmabuf vmap failed (Revert "udmabuf: fix vmap_udmabuf error page
+ set" can help)
+Content-Language: en-GB
+To: Huan Yang <link@vivo.com>, Bingbu Cao <bingbu.cao@linux.intel.com>,
+ vivek.kasireddy@intel.com, hch@lst.de
+Cc: linux-kernel@vger.kernel.org, christian.koenig@amd.com,
+ dri-devel@lists.freedesktop.org
+References: <9172a601-c360-0d5b-ba1b-33deba430455@linux.intel.com>
+ <d7a54599-350e-4e58-81b6-119ffa2ab03e@vivo.com>
+ <ab468ce7-c8ac-48eb-a6c0-386ea7aa9a0c@linux.intel.com>
+ <78cd737d-5e85-4d3c-8bb5-0b925d81719b@vivo.com>
+ <29445257-b8df-72bd-0650-44c8deb1506c@linux.intel.com>
+ <5da7bd8a-c6db-4995-b947-444e2c78aa7c@vivo.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <5da7bd8a-c6db-4995-b947-444e2c78aa7c@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 11, 2025 at 12:05:39PM +0100, Thorsten Blum wrote:
-> The size parameter is optional and strscpy() automatically determines
-> the length of the destination buffer using sizeof() if the argument is
-> omitted. This makes the explicit sizeof() unnecessary. Remove it to
-> simplify the code.
->
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Hi,
 
-Hm not sure about this one, it's not really simplifying anything all too
-much and seems like somewhat useless churn?
+On 11/03/2025 09:34, Huan Yang wrote:
+> Hi Christoph and Ryan,
+> 
+> Can you help us check vmap_pfn's pfn check is right? Did here mischecked pfn_valid?
 
-It's pretty clear what's going on here already.
+I'm no expert on this piece of code, but I believe pfn_valid() is checking to
+see if a pfn is valid *memory*. i.e. does it have a corresponding struct page?
 
-> ---
->  kernel/fork.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 735405a9c5f3..81eef131e23c 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2248,7 +2248,7 @@ __latent_entropy struct task_struct *copy_process(
->  		p->flags |= PF_IO_WORKER;
->
->  	if (args->name)
-> -		strscpy_pad(p->comm, args->name, sizeof(p->comm));
-> +		strscpy_pad(p->comm, args->name);
->
->  	p->set_child_tid = (clone_flags & CLONE_CHILD_SETTID) ? args->child_tid : NULL;
->  	/*
-> --
-> 2.48.1
->
+I'm guessing that vmap_pfn() is only intended to be used for non-memory pfns,
+e.g. mmio regions. You probably want either vmap() or vm_map_ram()?
+
+Thanks,
+Ryan
+
+> 
+> Thank you.
+> 
+> 在 2025/3/11 17:02, Bingbu Cao 写道:
+>> Christoph and Ryan,
+>>
+>> Could you help check this? Thanks.
+>>
+>> On 3/11/25 4:54 PM, Huan Yang wrote:
+>>> 在 2025/3/11 16:42, Bingbu Cao 写道:
+>>>> [You don't often get email from bingbu.cao@linux.intel.com. Learn why this
+>>>> is important at https://aka.ms/LearnAboutSenderIdentification ]
+>>>>
+>>>> Huan,
+>>>>
+>>>> Thanks for your response.
+>>>>
+>>>> On 3/11/25 3:12 PM, Huan Yang wrote:
+>>>>> 在 2025/3/11 14:40, Bingbu Cao 写道:
+>>>>>> [You don't often get email from bingbu.cao@linux.intel.com. Learn why this
+>>>>>> is important at https://aka.ms/LearnAboutSenderIdentification ]
+>>>>>>
+>>>>>> Huan Yang and Vivek,
+>>>>>>
+>>>>>> I am trying to use udmabuf for my test, and I cannot vmap the udmabuf
+>>>>>> buffers now. vmap_pfn_apply() will report a warning to complain that
+>>>>>> the pfns are invalid.
+>>>>>> I dump the pfn numbers as below:
+>>>>>> [ 3365.399641] pg[0] pfn 1148695
+>>>>>> [ 3365.399642] pg[1] pfn 1145057
+>>>>>> [ 3365.399642] pg[2] pfn 1134070
+>>>>>> [ 3365.399643] pg[3] pfn 1148700
+>>>>>> [ 3365.399643] pg[4] pfn 1144871
+>>>>>> [ 3365.399643] pg[5] pfn 1408686
+>>>>>> [ 3365.399643] pg[6] pfn 1408683
+>>>>>> ...
+>>>>>> [ 3365.399660] WARNING: CPU: 3 PID: 2772 at mm/vmalloc.c:3489
+>>>>>> vmap_pfn_apply+0xb7/0xd0
+>>>>>> [ 3365.399667] Modules linked in:...
+>>>>>> [ 3365.399750] CPU: 3 UID: 0 PID: 2772 Comm: drm-test Not tainted 6.13.0-
+>>>>>> rc2-rvp #845
+>>>>>> [ 3365.399752] Hardware name: Intel Corporation Client Platform/xxxx, BIOS
+>>>>>> xxxFWI1.R00.3221.D83.2408120121 08/12/2024
+>>>>>> [ 3365.399753] RIP: 0010:vmap_pfn_apply+0xb7/0xd0
+>>>>>> [ 3365.399755] Code: 5b 41 5c 41 5d 5d c3 cc cc cc cc 48 21 c3 eb d1 48 21
+>>>>>> c3 48 23 3d 31 c0 26 02 eb c5 48 c7 c7 c4 3c 20 a8 e8 5b c0 d8 ff eb 8a
+>>>>>> <0f> 0b b8 ea ff ff ff 5b 41 5c 41 5d 5d c3 cc cc cc cc 0f 1f 80 00
+>>>>>> [ 3365.399756] RSP: 0018:ffffb9b50c32fad0 EFLAGS: 00010202
+>>>>>> [ 3365.399757] RAX: 0000000000000001 RBX: 0000000000118717 RCX:
+>>>>>> 0000000000000000
+>>>>>> [ 3365.399758] RDX: 0000000080000000 RSI: ffffb9b50c358000 RDI:
+>>>>>> 00000000ffffffff
+>>>>>> [ 3365.399758] RBP: ffffb9b50c32fae8 R08: ffffb9b50c32fbd0 R09:
+>>>>>> 0000000000000001
+>>>>>> [ 3365.399759] R10: ffff941602479288 R11: 0000000000000000 R12:
+>>>>>> ffffb9b50c32fbd0
+>>>>>> [ 3365.399759] R13: ffff941618665ac0 R14: ffffb9b50c358000 R15:
+>>>>>> ffff941618665ac8
+>>>>>> [ 3365.399760] FS:  00007ff9e9ddd740(0000) GS:ffff94196f780000(0000)
+>>>>>> knlGS:0000000000000000
+>>>>>> [ 3365.399760] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>>> [ 3365.399761] CR2: 000055fda5dc69d9 CR3: 00000001544de003 CR4:
+>>>>>> 0000000000f72ef0
+>>>>>> [ 3365.399762] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+>>>>>> 0000000000000000
+>>>>>> [ 3365.399762] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7:
+>>>>>> 0000000000000400
+>>>>>> [ 3365.399763] PKRU: 55555554
+>>>>>> [ 3365.399763] Call Trace:
+>>>>>> [ 3365.399765]  <TASK>
+>>>>>> [ 3365.399769]  ? show_regs+0x6d/0x80
+>>>>>> [ 3365.399773]  ? __warn+0x97/0x160
+>>>>>> [ 3365.399777]  ? vmap_pfn_apply+0xb7/0xd0
+>>>>>> [ 3365.399777]  ? report_bug+0x1ec/0x240
+>>>>>> [ 3365.399782]  ? handle_bug+0x63/0xa0
+>>>>>> [ 3365.399784]  ? exc_invalid_op+0x1d/0x80
+>>>>>> [ 3365.399785]  ? asm_exc_invalid_op+0x1f/0x30
+>>>>>> [ 3365.399790]  ? vmap_pfn_apply+0xb7/0xd0
+>>>>>> [ 3365.399791]  __apply_to_page_range+0x522/0x8a0
+>>>>>> [ 3365.399794]  ? __pfx_vmap_pfn_apply+0x10/0x10
+>>>>>> [ 3365.399795]  apply_to_page_range+0x18/0x20
+>>>>>> [ 3365.399796]  vmap_pfn+0x77/0xd0
+>>>>>> [ 3365.399797]  vmap_udmabuf+0xc5/0x110
+>>>>>> [ 3365.399802]  dma_buf_vmap+0x96/0x130
+>>>>>>
+>>>>>> I did an experiment to revert 18d7de823b7150344d242c3677e65d68c5271b04,
+>>>>>> then I can vmap the pages. Could you help what's wrong with that?
+>>>>> Sorry for that, as I reviewed pfn_valid, that's someting wired:
+>>>>>
+>>>>> /**
+>>>>>    * pfn_valid - check if there is a valid memory map entry for a PFN
+>>>>>    * @pfn: the page frame number to check
+>>>>>    *
+>>>>>    * Check if there is a valid memory map entry aka struct page for the @pfn.
+>>>>>    * Note, that availability of the memory map entry does not imply that
+>>>>>    * there is actual usable memory at that @pfn. The struct page may
+>>>>>    * represent a hole or an unusable page frame.
+>>>>>    *
+>>>>>    * Return: 1 for PFNs that have memory map entries and 0 otherwise
+>>>>>    */
+>>>>>
+>>>>> So, if pfn valid, it's return 1, else 0. So mean, only 1 is a valid pfn.
+>>>>> But vmap_pfn_apply in there:
+>>>>>
+>>>>> static int vmap_pfn_apply(pte_t *pte, unsigned long addr, void *private)
+>>>>> {
+>>>>>       struct vmap_pfn_data *data = private;
+>>>>>       unsigned long pfn = data->pfns[data->idx];
+>>>>>       pte_t ptent;
+>>>>>
+>>>>>       if (WARN_ON_ONCE(pfn_valid(pfn)))
+>>>>>           return -EINVAL;
+>>>>>
+>>>>>       ptent = pte_mkspecial(pfn_pte(pfn, data->prot));
+>>>>>       set_pte_at(&init_mm, addr, pte, ptent);
+>>>>>
+>>>>>       data->idx++;
+>>>>>       return 0;
+>>>>> }
+>>>>>
+>>>>> Do it give a wrong check? maybe should fix by:
+>>>> I guess not, it looks more like warning when you trying to vmap a
+>>>> pfn which already took a valid entry in pte.
+>>> No, I think here check need pfn is valid, then can set it. If a pfn is
+>>> invalid, why we set it in PTE?
+>>>
+>>> Also, I can't make sure.
+>>>
+>>> BTW, can you fix it then retest?
+>>>
+>>> Thank you.
+>>>
+>>>> However, the MM code is so complex for me, just my guess. :)
+>>>>
+>>>>> static int vmap_pfn_apply(pte_t *pte, unsigned long addr, void *private)
+>>>>> {
+>>>>>       struct vmap_pfn_data *data = private;
+>>>>>       unsigned long pfn = data->pfns[data->idx];
+>>>>>       pte_t ptent;
+>>>>>
+>>>>> -    if (WARN_ON_ONCE(pfn_valid(pfn)))
+>>>>> +    if (WARN_ON_ONCE(!pfn_valid(pfn)))
+>>>>>           return -EINVAL;
+>>>>>
+>>>>>       ptent = pte_mkspecial(pfn_pte(pfn, data->prot));
+>>>>>       set_pte_at(&init_mm, addr, pte, ptent);
+>>>>>
+>>>>>       data->idx++;
+>>>>>       return 0;
+>>>>> }
+>>>>>
+>>>>> Please help me check it, also, you can apply this and then check it.:)
+>>>>>
+>>>>>> -- 
+>>>>>> Best regards,
+>>>>>> Bingbu Cao
+>>>> -- 
+>>>> Best regards,
+>>>> Bingbu Cao
+
