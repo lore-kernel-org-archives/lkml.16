@@ -1,1056 +1,479 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2047.outbound.protection.outlook.com [40.107.223.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B64125A2A0
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741694605; cv=none; b=iG+RQZIhAuk7Z3u0Fro7NuUnpw8asrUenwjawmUEez2eGhs3YebZrgHvlDR9S8J2IBCUyoibIGIdox0XRxdoKRZqK1CbbebjlY1nY+EIcP28ZsdIHSPckaOXvI6Z/mt371DHmIn7v5DcgIzafbVM2eL6vmybw4sxDFASAvroDe8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741694605; c=relaxed/simple;
-	bh=+0Lpy1HA2CXCFjidG7l956cT4RDP9YW3z8Brznsib4o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bHn67/kVxWsuSTmGVLzrzJ8T2oeGavCkQ6rv1yE4RX+gU4uv/q4J4YvloD5NwU3aqcWRJz1g1RB381IqosCf2sV2oc82OdgGU+ksR2NhAOn3sXlfwXP6xa36aORu+csJ25CLJEhVNPcJSurGWFKZOlgXa5MANna5HAainUN9sF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=TG1ORcrC; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3487025A333;
+	Tue, 11 Mar 2025 12:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741694606; cv=fail; b=IhXD3byM1H6jPzrmmU3WXyiI7M6ZdwuZwjFMcdEEgW20nwl6fNXS7aoibgoGHVxA3GsSH09WNZfVEfrdT8fd3ArkNEpGnNrnd6/mfIgq91a0ScRXUeG5IoV2y7dSOzBc4IGmXNl4jvJpzSd+Xvs/pM56FdFveAMc7r1OmdbGPCA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741694606; c=relaxed/simple;
+	bh=jcUlfCa3zK8yVN3BPLApmme9GRJOfcumAhd1BhTmUDk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z6hw6Xawl516oPac5H+lrphGSVRBHzTCq9yjFJ9F2e3M1zSDqXlx4sbSiH3rDY7Kq/L9OQ7kqxDPYHIa3xCgL9A8HrRLRwER38v5JXbi9XgDvOC0aciIPXCxz1yiyW8VprwfrptPk/tV7H843TCL3fyglTDFx+2jvXqEqGMqXdA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VQrflpMX; arc=fail smtp.client-ip=40.107.223.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="TG1ORcrC"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39140bd6317so1941054f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 05:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openvpn.net; s=google; t=1741694597; x=1742299397; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XqH+PW2Am/OFHlScwl6b4nX6zbAU4r/87RUNyfO9FOM=;
-        b=TG1ORcrCOgJYM0F/eSQzK7Uhi8T6qgpmECGUUZtXnERotPxfw7kYrBuJ/skVSjpknF
-         DQgH1gB2wplvNBpKUJeSk6dHsXp6hq9Q6ZvNEDxzbfp6FBC72pK7ifWMrsTH7WGJDnuP
-         c6Z9P+Zd6qe/d45+D8iqR8gjIHqgSEz9Q7lGeErLv53360jlXfBDsQmPGanIhehh2b0f
-         4AYgKAz1qEHimgVe0bGD/6bMAv2hza9opIDvh6e7mYwe8MvDg3kkgKaqSDOTblg8IdAK
-         75Cs+9WD1sGI+lBUFnlixAaaNG1WWezy6iVBma/K9kH7Mg6ItU5yg0q8I60JQfFsLN38
-         DTsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741694597; x=1742299397;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XqH+PW2Am/OFHlScwl6b4nX6zbAU4r/87RUNyfO9FOM=;
-        b=QnOkixo+C+JicF7ydz10jSxM7rknOHcFzfgrcnW4igJb5lrBG0XNf1hDCwlkCXJDLz
-         jbUqV1a6Hl8oYOmT4cg8WMH2QBdIidetMlTYqquGQCTi3p66y3h3amf7NLeqh1nd0i7y
-         e+PNRiqtJRPtO/sYlcOOCkLYyGBko9JON4Gs2lPay0YejYPHqZvsQZ8af3TrkStpGkYV
-         3TizKq2Rs3TZfn5+baN/lnJzp7S/jxr+q8IW/38WmEPAgbTG+vMMn3LsJQCHXdG8cBsc
-         81R3qzNIh705W/47V8GwlKU12QQ+vgBIKrMHyZ4s8n+K+epw+cNYSbLggPiX4BO7PnAP
-         s29A==
-X-Forwarded-Encrypted: i=1; AJvYcCWuySNFH60DuP+dkC3fh8ViGyJrvEvbbynW+Ax/yS1O0wRUXbjahj1HlKY1611FN+F9dz46jCI2GxeZPI8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpLSppRPWEXbaLrh4Ou2fLZ3PHh73OM9eDtYftR7HeOzu8OT6l
-	BVsuEfLgdVeMG6psSrZWHxRJAcLARMLLah6bu8z2DrmL8eAa1xo1ckHpPZHNv2we0Jr+1pYJr6T
-	y
-X-Gm-Gg: ASbGncsCol3epyze/G5/YuTsVlvZ2xG0qdHltAyF6XQIuB/BOeYTZ4kU8EqhWn6WAi9
-	n2Gg80KragKaxGV7jWiP9WzuAZVAcBbRDz9zEhKEm+MbKUfOgfFDAOqwibR+fDD8es6corMhgJF
-	Y7WeFx7dcquuuI7EyT4O9wM2iENdY7hzQqi61bbbvxPH/zb1cVOqaVZdzLz8HbkYbZtUtLn0HQs
-	J9512clYoaatrpv4U2ZeDpHAtIeeA85TOng/4qWl3kCM0D8yam1RAkdW8Hay6qLBgtzk3nysnHG
-	kiY03AcZsCdpKNXtCN3ML2wUU3PKnClLZXChcib4BOgYrWLNmoZ1
-X-Google-Smtp-Source: AGHT+IGRuIJxFb2Nen7x9yzDDaO0LqH959c6TkUdqFAyU3y1qp2LD31YqEpkUFN2C7ZFHa8aXe+OYg==
-X-Received: by 2002:a05:6000:144e:b0:391:4bfd:6de with SMTP id ffacd0b85a97d-3914bfd0841mr7349501f8f.46.1741694597264;
-        Tue, 11 Mar 2025 05:03:17 -0700 (PDT)
-Received: from [127.0.0.1] ([2001:67c:2fbc:1:52de:66e8:f2da:9714])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ceafc09d5sm110537605e9.31.2025.03.11.05.03.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 05:03:16 -0700 (PDT)
-From: Antonio Quartulli <antonio@openvpn.net>
-Date: Tue, 11 Mar 2025 13:02:12 +0100
-Subject: [PATCH net-next v22 11/23] ovpn: implement TCP transport
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VQrflpMX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aySWTZQfu1QHd68GmAqrfJD4aZyVsFQluejLaCFzfeCRftvW7tQ/2fFHtDocWPSiP5TA/RXB47mNjG6Z2P+efHENbossrTyM2qSGgCcW3M+wbfNzkQCPDQwNJLtMLRkg/nN0FHqWDfAIhS+5lBQEsjtX+s9jzePX6dJ6c7nZ76zjZQM07wNrGNeDaTlqzcCEVvTxOozoV8xCTDrVE1CkFcYuWhciATTBBtKnTTtQ28qqlowjQZVtxh4zvELrAUL2gwrrMfrDjakpXe+STCYoRzTdCXxc5lULlgdYGYmRa8IXe+GWcb/3kWL8y3k1C2UO0782dwN2n2qE46sl0lvUdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=au8gNb3DWm4yuQcGGc7sxQxYRkIPzhgXVoOrVlEOcwg=;
+ b=I5ywUfYpBUROtT2mlqpAV3bc2RYaZH19F2L/zZeEKPSIrwWygjfpFKLPn3Nf6eAwh86JQ/E7DjWmwQT1qGaaXbg9m11yIyLIWCVJOE9Bf60FTR0zToPMevnG3jOQGuhlbk7/BhA4MssEhVShG+5ljH0D7w4smzFBanOGMLyMnquKEDuBNgAFkNq+ZaNgOEMQ/OIb9UZj563PkuD/Aabn4yctNXc/7DpXogC2ruCN8svCn8sy8T6ugJxhTdY1yrrBzzTjbUVzgLaQJ2tiL8zWm8jHaR+++tCuW3mGtwN2O8HMzY/fYSX+WSoxHOup5YGP5FES8Ndj84V+IgN7FQ+ztw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=au8gNb3DWm4yuQcGGc7sxQxYRkIPzhgXVoOrVlEOcwg=;
+ b=VQrflpMXcFU8BpiRGF1pG124VUjHy5QyRW/gojEIIbUw/KhHLw/p5URNavIaBylWvw3fK+vnTqTYjRl9Si/ULlCNpY/2dtwQYX9BQdiGWShCCUe+iiYzCY88D32D5mqWt6ORTFzObW0wmlf6friw8PPnQYxV6c0BEhXPOv+yzhs=
+Received: from MW4P221CA0027.NAMP221.PROD.OUTLOOK.COM (2603:10b6:303:8b::32)
+ by CH2PR12MB9517.namprd12.prod.outlook.com (2603:10b6:610:27f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
+ 2025 12:03:16 +0000
+Received: from CO1PEPF000075EE.namprd03.prod.outlook.com
+ (2603:10b6:303:8b:cafe::39) by MW4P221CA0027.outlook.office365.com
+ (2603:10b6:303:8b::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.27 via Frontend Transport; Tue,
+ 11 Mar 2025 12:03:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000075EE.mail.protection.outlook.com (10.167.249.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Tue, 11 Mar 2025 12:03:16 +0000
+Received: from tapi.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Mar
+ 2025 07:03:08 -0500
+From: Swapnil Sapkal <swapnil.sapkal@amd.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <irogers@google.com>, <james.clark@arm.com>
+CC: <ravi.bangoria@amd.com>, <swapnil.sapkal@amd.com>, <yu.c.chen@intel.com>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
+	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
+	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
+	<sshegde@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
+	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
+Subject: [PATCH v3 0/8] perf sched: Introduce stats tool
+Date: Tue, 11 Mar 2025 12:02:22 +0000
+Message-ID: <20250311120230.61774-1-swapnil.sapkal@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250311-b4-ovpn-v22-11-2b7b02155412@openvpn.net>
-References: <20250311-b4-ovpn-v22-0-2b7b02155412@openvpn.net>
-In-Reply-To: <20250311-b4-ovpn-v22-0-2b7b02155412@openvpn.net>
-To: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Donald Hunter <donald.hunter@gmail.com>, 
- Antonio Quartulli <antonio@openvpn.net>, Shuah Khan <shuah@kernel.org>, 
- sd@queasysnail.net, ryazanov.s.a@gmail.com, 
- Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>, 
- David Ahern <dsahern@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=28787; i=antonio@openvpn.net;
- h=from:subject:message-id; bh=+0Lpy1HA2CXCFjidG7l956cT4RDP9YW3z8Brznsib4o=;
- b=owEBbQGS/pANAwAIAQtw5TqgONWHAcsmYgBn0CZwMA4lKrWW+EczkbfPYfi8ME8X5D5y6W7M9
- VDWZvTb9QOJATMEAAEIAB0WIQSZq9xs+NQS5N5fwPwLcOU6oDjVhwUCZ9AmcAAKCRALcOU6oDjV
- h3d9B/0cFVFJJDBgHodGH2RFgSUhJWtq83vtjHur3/MYU2vjB4ePdzy6zgvg9V6EV8Ro5abYywm
- enhcMe1JO2pTsJVJq9xwgnvnuBH0NdcrubG8i3i8KcXm9IG7RUcg8wwudGqljLxyZQ5r1Cqvpl6
- Pj190QN9jGgrtiqnqaItT2amdfwlQMPbpsGA5/aSbwJ8UQeZtUs0WQlEsM41acSC5OWPVOXGgdw
- LbmvuJp26m0s5Od2lNxujoBykpmbhV7cYLuR47vV8Tar8lWIuOy3/O06y/edfp+8AOPb9zC7FoO
- +xaPo2mq7n49obrcN9qi/81t9V54yVveUZh7+tWkQlQuoz1y
-X-Developer-Key: i=antonio@openvpn.net; a=openpgp;
- fpr=CABDA1282017C267219885C748F0CCB68F59D14C
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075EE:EE_|CH2PR12MB9517:EE_
+X-MS-Office365-Filtering-Correlation-Id: 24bd8f8d-3c89-4afb-1a12-08dd6094b509
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|7416014|36860700013|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ht/VtCvITtx+S2rp0vGYVNaa+WcS86tvKZYHYVxZ7ebVyFClp6Dh+jmUN3RI?=
+ =?us-ascii?Q?XccaKQpgHBfW63x/b2tOreXLyqxucYncs0sAHRiLmw1Jx6Km4XBzPmC68thR?=
+ =?us-ascii?Q?d6QxENacLXm8lroXkMNLiee3w/+ABSDljVc/UHNhVNubSDCChVlhAUAFpOQq?=
+ =?us-ascii?Q?yl4hPtDyD7OO43Ne4FNqieK6hOCv3umL6yjfps206km9htGbRr0u1Q+MKJ4G?=
+ =?us-ascii?Q?qAYDHeeEXAStggckaMjL7Gwxr40S/LrzY7WZO5ctNpRaXKMAPykr573VKigi?=
+ =?us-ascii?Q?5GQVPNoBmfVxmId2ruv2kobY6F/9VpPHRZOEzjeOZWpg/jgRChu1tkT4pfH/?=
+ =?us-ascii?Q?YiYzuO4ERRwuKPAk55p83zu+6/Ty6Xfxy+vRI8iGLa4Goklk1TrlVcNnBvY9?=
+ =?us-ascii?Q?zH0OmFr1GO5yY08h21lg5UN6AUqf9E/e5bj5T1eLc/iqDvFMsfs/AQhEiVam?=
+ =?us-ascii?Q?U+UDvbr+ZsEACaJhrXKg97ybaY2NG+uvup1/9cHTkjfQIa4kCdCz1wjw6I4w?=
+ =?us-ascii?Q?t+5tm2QEBMHwHbPLUvzteWVUHKyrvOlTDIBfC1FQhuPe6eNinWTGYLEqIwsW?=
+ =?us-ascii?Q?2AkJEomSwfgoOnRWQySR5+8dqQgiWx7tWad69PbEqpvIidBbTOe3W3Ml+Rcl?=
+ =?us-ascii?Q?PzPlWa1WvL0F60i+vOmkJjEGukutAbvyfVWCJaihIiHtJfpScTA/FvaOwByF?=
+ =?us-ascii?Q?5sQTB1aSh9FnaulGKfYIkqKN0AmviPjFTIOVSfLYqLO0Djqf+B9xphxDwy7K?=
+ =?us-ascii?Q?yHLliQyvhU30sUci8qH0+1rOjtINx4TAsR/o0N38ZVT3KDmYp1b9gLoyCBkq?=
+ =?us-ascii?Q?J66EthXC4W2/fYAciYEGt8yAW4PBGUVC+PaxOvmNfMiqbUMLxajGuv9Ro+Z9?=
+ =?us-ascii?Q?wWPogWENQTFj3rxKWdaYyu+1Q/QSm2hbyPcmfRB70250ABxpIXudM8L/GETk?=
+ =?us-ascii?Q?40d5zcxXWRKATV343oEbcj/xNwWDO+z0peOcoI7uwOjL8SH20zawiZYSUREU?=
+ =?us-ascii?Q?si++SgT3yOx60tQk/erhoBdKU6PK9tS52A4KtmoD/i6ATMIxtV+HSaa9Yl7K?=
+ =?us-ascii?Q?Fbtq7LdXl1dVGGHJgYeKlKdLfZbdI0OU1Y0W5GmMeV3RpjWlIVH/s8mwue2Y?=
+ =?us-ascii?Q?uSgEiUZ/wX+KOR5l36uSHolzOxf5zKIju/sJwtHhLek1WTcrAOAtBm/O7iWF?=
+ =?us-ascii?Q?nZGhbIpJSOSLUcI2O4DrRs23npFPRekQbgGXfHVfQOL6wjMRZf+UgpmtnKzN?=
+ =?us-ascii?Q?tEyvDzmrpHm2gdXdYP22wAeT8ZbEvJXy8Y6QZNaAOKRfO5sqglktJAfQLDmX?=
+ =?us-ascii?Q?KsFhf0gPshpcyEXiHs2NbBvkE0Sgnm7UWs02Gy+OssSMpPQa397/+glzY6UI?=
+ =?us-ascii?Q?Qq63PbrUgR8epgyVvTAYxEIgRZoIEFrRKnzQ28T6w9U+qEHhM+TffXPWfA6o?=
+ =?us-ascii?Q?yCRE5xVQ4ZWIORNuPDgEdxkQoF0k8GKf?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 12:03:16.3614
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24bd8f8d-3c89-4afb-1a12-08dd6094b509
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000075EE.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB9517
 
-With this change ovpn is allowed to communicate to peers also via TCP.
-Parsing of incoming messages is implemented through the strparser API.
+MOTIVATION
+----------
 
-Note that ovpn redefines sk_prot and sk_socket->ops for the TCP socket
-used to communicate with the peer.
-For this reason it needs to access inet6_stream_ops, which is declared
-as extern in the IPv6 module, but it is not fully exported.
+Existing `perf sched` is quite exhaustive and provides lot of insights
+into scheduler behavior but it quickly becomes impractical to use for
+long running or scheduler intensive workload. For ex, `perf sched record`
+has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
+on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
+generates huge 56G perf.data for which perf takes ~137 mins to prepare
+and write it to disk [1].
 
-Therefore this patch is also adding EXPORT_SYMBOL_GPL(inet6_stream_ops)
-to net/ipv6/af_inet6.c.
+Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
+and generates samples on a tracepoint hit, `perf sched stats record` takes
+snapshot of the /proc/schedstat file before and after the workload, i.e.
+there is almost zero interference on workload run. Also, it takes very
+minimal time to parse /proc/schedstat, convert it into perf samples and
+save those samples into perf.data file. Result perf.data file is much
+smaller. So, overall `perf sched stats record` is much more light weight
+compare to `perf sched record`.
 
-Moreover export tcp_release_cb by means of EXPORT_SYMBOL instead of
-EXPORT_IPV6_MOD, so that other modules can use it, even if IPV6 is
-not compiled in.
+We, internally at AMD, have been using this (a variant of this, known as
+"sched-scoreboard"[2]) and found it to be very useful to analyse impact
+of any scheduler code changes[3][4]. Prateek used v2[5] of this patch
+series to report the analysis[6][7].
 
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>
-Signed-off-by: Antonio Quartulli <antonio@openvpn.net>
----
- drivers/net/Kconfig         |   1 +
- drivers/net/ovpn/Makefile   |   1 +
- drivers/net/ovpn/io.c       |   4 +
- drivers/net/ovpn/main.c     |   3 +
- drivers/net/ovpn/ovpnpriv.h |   1 +
- drivers/net/ovpn/peer.h     |  35 +++
- drivers/net/ovpn/socket.c   |  44 +++-
- drivers/net/ovpn/socket.h   |   8 +-
- drivers/net/ovpn/tcp.c      | 588 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/net/ovpn/tcp.h      |  36 +++
- net/ipv6/af_inet6.c         |   1 +
- 11 files changed, 711 insertions(+), 11 deletions(-)
+Please note that, this is not a replacement of perf sched record/report.
+The intended users of the new tool are scheduler developers, not regular
+users.
 
-diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-index 51d77f3c0848c3c9425b586c6a90cff99a744390..754476cf6dc4774310205dd34f1124795fd2c4f7 100644
---- a/drivers/net/Kconfig
-+++ b/drivers/net/Kconfig
-@@ -125,6 +125,7 @@ config OVPN
- 	select CRYPTO_AES
- 	select CRYPTO_GCM
- 	select CRYPTO_CHACHA20POLY1305
-+	select STREAM_PARSER
- 	help
- 	  This module enhances the performance of the OpenVPN userspace software
- 	  by offloading the data channel processing to kernelspace.
-diff --git a/drivers/net/ovpn/Makefile b/drivers/net/ovpn/Makefile
-index 04c3345807c5d759daf65cc80a290f784dbf5588..229be66167e1fe8e5e4c8f475343b544d7ee694e 100644
---- a/drivers/net/ovpn/Makefile
-+++ b/drivers/net/ovpn/Makefile
-@@ -18,4 +18,5 @@ ovpn-y += peer.o
- ovpn-y += pktid.o
- ovpn-y += socket.o
- ovpn-y += stats.o
-+ovpn-y += tcp.o
- ovpn-y += udp.o
-diff --git a/drivers/net/ovpn/io.c b/drivers/net/ovpn/io.c
-index 50dc2e4c03f01b02bdf616473b755b6e1e6b57f7..729f49ff6ce8001c2bbe804db0a617a2cc8965a8 100644
---- a/drivers/net/ovpn/io.c
-+++ b/drivers/net/ovpn/io.c
-@@ -22,6 +22,7 @@
- #include "crypto_aead.h"
- #include "netlink.h"
- #include "proto.h"
-+#include "tcp.h"
- #include "udp.h"
- #include "skb.h"
- #include "socket.h"
-@@ -223,6 +224,9 @@ void ovpn_encrypt_post(void *data, int ret)
- 	case IPPROTO_UDP:
- 		ovpn_udp_send_skb(peer, sock->sock, skb);
- 		break;
-+	case IPPROTO_TCP:
-+		ovpn_tcp_send_skb(peer, sock->sock, skb);
-+		break;
- 	default:
- 		/* no transport configured yet */
- 		goto err_unlock;
-diff --git a/drivers/net/ovpn/main.c b/drivers/net/ovpn/main.c
-index 82f675f7a49ab9c35ff9686136b949a870b61c06..89b03f45dbc79c5de1f3c62ac9ef229acdc98d3e 100644
---- a/drivers/net/ovpn/main.c
-+++ b/drivers/net/ovpn/main.c
-@@ -22,6 +22,7 @@
- #include "io.h"
- #include "peer.h"
- #include "proto.h"
-+#include "tcp.h"
- #include "udp.h"
- 
- static int ovpn_net_init(struct net_device *dev)
-@@ -238,6 +239,8 @@ static int __init ovpn_init(void)
- 		goto unreg_rtnl;
- 	}
- 
-+	ovpn_tcp_init();
-+
- 	return 0;
- 
- unreg_rtnl:
-diff --git a/drivers/net/ovpn/ovpnpriv.h b/drivers/net/ovpn/ovpnpriv.h
-index 9d0640e9c71e7fd494e3d9df155732bd5d82463e..2e3f4baf305f0b37b474d7b7d94751aa4af8a2ea 100644
---- a/drivers/net/ovpn/ovpnpriv.h
-+++ b/drivers/net/ovpn/ovpnpriv.h
-@@ -10,6 +10,7 @@
- #ifndef _NET_OVPN_OVPNSTRUCT_H_
- #define _NET_OVPN_OVPNSTRUCT_H_
- 
-+#include <linux/workqueue.h>
- #include <net/gro_cells.h>
- #include <uapi/linux/if_link.h>
- #include <uapi/linux/ovpn.h>
-diff --git a/drivers/net/ovpn/peer.h b/drivers/net/ovpn/peer.h
-index 2453d39ce327c6d174cfb35fe5430865b32c2efe..5ef00ba6523d7bf6608adb86fa7c7029f559ce2a 100644
---- a/drivers/net/ovpn/peer.h
-+++ b/drivers/net/ovpn/peer.h
-@@ -11,6 +11,7 @@
- #define _NET_OVPN_OVPNPEER_H_
- 
- #include <net/dst_cache.h>
-+#include <net/strparser.h>
- 
- #include "crypto.h"
- #include "socket.h"
-@@ -25,6 +26,18 @@
-  * @vpn_addrs.ipv4: IPv4 assigned to peer on the tunnel
-  * @vpn_addrs.ipv6: IPv6 assigned to peer on the tunnel
-  * @sock: the socket being used to talk to this peer
-+ * @tcp: keeps track of TCP specific state
-+ * @tcp.strp: stream parser context (TCP only)
-+ * @tcp.user_queue: received packets that have to go to userspace (TCP only)
-+ * @tcp.out_queue: packets on hold while socket is taken by user (TCP only)
-+ * @tcp.tx_in_progress: true if TX is already ongoing (TCP only)
-+ * @tcp.out_msg.skb: packet scheduled for sending (TCP only)
-+ * @tcp.out_msg.offset: offset where next send should start (TCP only)
-+ * @tcp.out_msg.len: remaining data to send within packet (TCP only)
-+ * @tcp.sk_cb.sk_data_ready: pointer to original cb (TCP only)
-+ * @tcp.sk_cb.sk_write_space: pointer to original cb (TCP only)
-+ * @tcp.sk_cb.prot: pointer to original prot object (TCP only)
-+ * @tcp.sk_cb.ops: pointer to the original prot_ops object (TCP only)
-  * @crypto: the crypto configuration (ciphers, keys, etc..)
-  * @dst_cache: cache for dst_entry used to send to peer
-  * @bind: remote peer binding
-@@ -45,6 +58,28 @@ struct ovpn_peer {
- 		struct in6_addr ipv6;
- 	} vpn_addrs;
- 	struct ovpn_socket __rcu *sock;
-+
-+	struct {
-+		struct strparser strp;
-+		struct sk_buff_head user_queue;
-+		struct sk_buff_head out_queue;
-+		bool tx_in_progress;
-+
-+		struct {
-+			struct sk_buff *skb;
-+			int offset;
-+			int len;
-+		} out_msg;
-+
-+		struct {
-+			void (*sk_data_ready)(struct sock *sk);
-+			void (*sk_write_space)(struct sock *sk);
-+			struct proto *prot;
-+			const struct proto_ops *ops;
-+		} sk_cb;
-+
-+		struct work_struct defer_del_work;
-+	} tcp;
- 	struct ovpn_crypto_state crypto;
- 	struct dst_cache dst_cache;
- 	struct ovpn_bind __rcu *bind;
-diff --git a/drivers/net/ovpn/socket.c b/drivers/net/ovpn/socket.c
-index 6de1e8c85a3d35a5d4f179d595d2409aa34cdc01..be20c500f373fb894d0df5e02ce1996cf386d195 100644
---- a/drivers/net/ovpn/socket.c
-+++ b/drivers/net/ovpn/socket.c
-@@ -16,6 +16,7 @@
- #include "io.h"
- #include "peer.h"
- #include "socket.h"
-+#include "tcp.h"
- #include "udp.h"
- 
- static void ovpn_socket_release_kref(struct kref *kref)
-@@ -23,12 +24,10 @@ static void ovpn_socket_release_kref(struct kref *kref)
- 	struct ovpn_socket *sock = container_of(kref, struct ovpn_socket,
- 						refcount);
- 
--	if (sock->sock->sk->sk_protocol == IPPROTO_UDP) {
-+	if (sock->sock->sk->sk_protocol == IPPROTO_UDP)
- 		ovpn_udp_socket_detach(sock);
--		netdev_put(sock->ovpn->dev, &sock->dev_tracker);
--	}
--
--	kfree_rcu(sock, rcu);
-+	else if (sock->sock->sk->sk_protocol == IPPROTO_TCP)
-+		ovpn_tcp_socket_detach(sock);
- }
- 
- /**
-@@ -38,10 +37,12 @@ static void ovpn_socket_release_kref(struct kref *kref)
-  *
-  * This function is only used internally. Users willing to release
-  * references to the ovpn_socket should use ovpn_socket_release()
-+ *
-+ * Return: true if the socket was released, false otherwise
-  */
--static void ovpn_socket_put(struct ovpn_peer *peer, struct ovpn_socket *sock)
-+static bool ovpn_socket_put(struct ovpn_peer *peer, struct ovpn_socket *sock)
- {
--	kref_put(&sock->refcount, ovpn_socket_release_kref);
-+	return kref_put(&sock->refcount, ovpn_socket_release_kref);
- }
- 
- /**
-@@ -65,6 +66,7 @@ static void ovpn_socket_put(struct ovpn_peer *peer, struct ovpn_socket *sock)
- void ovpn_socket_release(struct ovpn_peer *peer)
- {
- 	struct ovpn_socket *sock;
-+	bool released;
- 
- 	might_sleep();
- 
-@@ -94,11 +96,26 @@ void ovpn_socket_release(struct ovpn_peer *peer)
- 	 * detached before it can be picked by a concurrent reader.
- 	 */
- 	lock_sock(sock->sock->sk);
--	ovpn_socket_put(peer, sock);
-+	released = ovpn_socket_put(peer, sock);
- 	release_sock(sock->sock->sk);
- 
- 	/* align all readers with sk_user_data being NULL */
- 	synchronize_rcu();
-+
-+	/* following cleanup should happen with lock released */
-+	if (released) {
-+		if (sock->sock->sk->sk_protocol == IPPROTO_UDP) {
-+			netdev_put(sock->ovpn->dev, &sock->dev_tracker);
-+		} else if (sock->sock->sk->sk_protocol == IPPROTO_TCP) {
-+			/* wait for TCP jobs to terminate */
-+			ovpn_tcp_socket_wait_finish(sock);
-+			ovpn_peer_put(sock->peer);
-+		}
-+		/* we can call plain kfree() because we already waited one RCU
-+		 * period due to synchronize_rcu()
-+		 */
-+		kfree(sock);
-+	}
- }
- 
- static bool ovpn_socket_hold(struct ovpn_socket *sock)
-@@ -110,6 +127,8 @@ static int ovpn_socket_attach(struct ovpn_socket *sock, struct ovpn_peer *peer)
- {
- 	if (sock->sock->sk->sk_protocol == IPPROTO_UDP)
- 		return ovpn_udp_socket_attach(sock, peer->ovpn);
-+	else if (sock->sock->sk->sk_protocol == IPPROTO_TCP)
-+		return ovpn_tcp_socket_attach(sock, peer);
- 
- 	return -EOPNOTSUPP;
- }
-@@ -202,7 +221,14 @@ struct ovpn_socket *ovpn_socket_new(struct socket *sock, struct ovpn_peer *peer)
- 		goto sock_release;
- 	}
- 
--	if (sock->sk->sk_protocol == IPPROTO_UDP) {
-+	/* TCP sockets are per-peer, therefore they are linked to their unique
-+	 * peer
-+	 */
-+	if (sock->sk->sk_protocol == IPPROTO_TCP) {
-+		INIT_WORK(&ovpn_sock->tcp_tx_work, ovpn_tcp_tx_work);
-+		ovpn_sock->peer = peer;
-+		ovpn_peer_hold(peer);
-+	} else if (sock->sk->sk_protocol == IPPROTO_UDP) {
- 		/* in UDP we only link the ovpn instance since the socket is
- 		 * shared among multiple peers
- 		 */
-diff --git a/drivers/net/ovpn/socket.h b/drivers/net/ovpn/socket.h
-index c1697f4616d470f143cba77bb1db34de0398a37a..00d856b1a5d884ffeca7cde7f693cad599746c10 100644
---- a/drivers/net/ovpn/socket.h
-+++ b/drivers/net/ovpn/socket.h
-@@ -21,9 +21,11 @@ struct ovpn_peer;
-  * struct ovpn_socket - a kernel socket referenced in the ovpn code
-  * @ovpn: ovpn instance owning this socket (UDP only)
-  * @dev_tracker: reference tracker for associated dev (UDP only)
-+ * @peer: unique peer transmitting over this socket (TCP only)
-  * @sock: the low level sock object
-  * @refcount: amount of contexts currently referencing this object
-- * @rcu: member used to schedule RCU destructor callback
-+ * @work: member used to schedule release routine (it may block)
-+ * @tcp_tx_work: work for deferring outgoing packet processing (TCP only)
-  */
- struct ovpn_socket {
- 	union {
-@@ -31,11 +33,13 @@ struct ovpn_socket {
- 			struct ovpn_priv *ovpn;
- 			netdevice_tracker dev_tracker;
- 		};
-+		struct ovpn_peer *peer;
- 	};
- 
- 	struct socket *sock;
- 	struct kref refcount;
--	struct rcu_head rcu;
-+	struct work_struct work;
-+	struct work_struct tcp_tx_work;
- };
- 
- struct ovpn_socket *ovpn_socket_new(struct socket *sock,
-diff --git a/drivers/net/ovpn/tcp.c b/drivers/net/ovpn/tcp.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..a5bfd06bc9499b6886b42e039095bb8ce93994fb
---- /dev/null
-+++ b/drivers/net/ovpn/tcp.c
-@@ -0,0 +1,588 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*  OpenVPN data channel offload
-+ *
-+ *  Copyright (C) 2019-2025 OpenVPN, Inc.
-+ *
-+ *  Author:	Antonio Quartulli <antonio@openvpn.net>
-+ */
-+
-+#include <linux/skbuff.h>
-+#include <net/hotdata.h>
-+#include <net/inet_common.h>
-+#include <net/ipv6.h>
-+#include <net/tcp.h>
-+#include <net/transp_v6.h>
-+#include <net/route.h>
-+#include <trace/events/sock.h>
-+
-+#include "ovpnpriv.h"
-+#include "main.h"
-+#include "io.h"
-+#include "peer.h"
-+#include "proto.h"
-+#include "skb.h"
-+#include "tcp.h"
-+
-+#define OVPN_TCP_DEPTH_NESTING	2
-+#if OVPN_TCP_DEPTH_NESTING == SINGLE_DEPTH_NESTING
-+#error "OVPN TCP requires its own lockdep subclass"
-+#endif
-+
-+static struct proto ovpn_tcp_prot __ro_after_init;
-+static struct proto_ops ovpn_tcp_ops __ro_after_init;
-+static struct proto ovpn_tcp6_prot __ro_after_init;
-+static struct proto_ops ovpn_tcp6_ops __ro_after_init;
-+
-+static int ovpn_tcp_parse(struct strparser *strp, struct sk_buff *skb)
-+{
-+	struct strp_msg *rxm = strp_msg(skb);
-+	__be16 blen;
-+	u16 len;
-+	int err;
-+
-+	/* when packets are written to the TCP stream, they are prepended with
-+	 * two bytes indicating the actual packet size.
-+	 * Parse accordingly and return the actual size (including the size
-+	 * header)
-+	 */
-+
-+	if (skb->len < rxm->offset + 2)
-+		return 0;
-+
-+	err = skb_copy_bits(skb, rxm->offset, &blen, sizeof(blen));
-+	if (err < 0)
-+		return err;
-+
-+	len = be16_to_cpu(blen);
-+	if (len < 2)
-+		return -EINVAL;
-+
-+	return len + 2;
-+}
-+
-+/* queue skb for sending to userspace via recvmsg on the socket */
-+static void ovpn_tcp_to_userspace(struct ovpn_peer *peer, struct sock *sk,
-+				  struct sk_buff *skb)
-+{
-+	skb_set_owner_r(skb, sk);
-+	memset(skb->cb, 0, sizeof(skb->cb));
-+	skb_queue_tail(&peer->tcp.user_queue, skb);
-+	peer->tcp.sk_cb.sk_data_ready(sk);
-+}
-+
-+static void ovpn_tcp_rcv(struct strparser *strp, struct sk_buff *skb)
-+{
-+	struct ovpn_peer *peer = container_of(strp, struct ovpn_peer, tcp.strp);
-+	struct strp_msg *msg = strp_msg(skb);
-+	size_t pkt_len = msg->full_len - 2;
-+	size_t off = msg->offset + 2;
-+	u8 opcode;
-+
-+	/* ensure skb->data points to the beginning of the openvpn packet */
-+	if (!pskb_pull(skb, off)) {
-+		net_warn_ratelimited("%s: packet too small for peer %u\n",
-+				     netdev_name(peer->ovpn->dev), peer->id);
-+		goto err;
-+	}
-+
-+	/* strparser does not trim the skb for us, therefore we do it now */
-+	if (pskb_trim(skb, pkt_len) != 0) {
-+		net_warn_ratelimited("%s: trimming skb failed for peer %u\n",
-+				     netdev_name(peer->ovpn->dev), peer->id);
-+		goto err;
-+	}
-+
-+	/* we need the first byte of data to be accessible
-+	 * to extract the opcode and the key ID later on
-+	 */
-+	if (!pskb_may_pull(skb, OVPN_OPCODE_SIZE)) {
-+		net_warn_ratelimited("%s: packet too small to fetch opcode for peer %u\n",
-+				     netdev_name(peer->ovpn->dev), peer->id);
-+		goto err;
-+	}
-+
-+	/* DATA_V2 packets are handled in kernel, the rest goes to user space */
-+	opcode = ovpn_opcode_from_skb(skb, 0);
-+	if (unlikely(opcode != OVPN_DATA_V2)) {
-+		if (opcode == OVPN_DATA_V1) {
-+			net_warn_ratelimited("%s: DATA_V1 detected on the TCP stream\n",
-+					     netdev_name(peer->ovpn->dev));
-+			goto err;
-+		}
-+
-+		/* The packet size header must be there when sending the packet
-+		 * to userspace, therefore we put it back
-+		 */
-+		skb_push(skb, 2);
-+		ovpn_tcp_to_userspace(peer, strp->sk, skb);
-+		return;
-+	}
-+
-+	/* hold reference to peer as required by ovpn_recv().
-+	 *
-+	 * NOTE: in this context we should already be holding a reference to
-+	 * this peer, therefore ovpn_peer_hold() is not expected to fail
-+	 */
-+	if (WARN_ON(!ovpn_peer_hold(peer)))
-+		goto err;
-+
-+	ovpn_recv(peer, skb);
-+	return;
-+err:
-+	dev_core_stats_rx_dropped_inc(peer->ovpn->dev);
-+	kfree_skb(skb);
-+	ovpn_peer_del(peer, OVPN_DEL_PEER_REASON_TRANSPORT_ERROR);
-+}
-+
-+static int ovpn_tcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
-+			    int flags, int *addr_len)
-+{
-+	int err = 0, off, copied = 0, ret;
-+	struct ovpn_socket *sock;
-+	struct ovpn_peer *peer;
-+	struct sk_buff *skb;
-+
-+	rcu_read_lock();
-+	sock = rcu_dereference_sk_user_data(sk);
-+	if (unlikely(!sock || !sock->peer || !ovpn_peer_hold(sock->peer))) {
-+		rcu_read_unlock();
-+		return -EBADF;
-+	}
-+	peer = sock->peer;
-+	rcu_read_unlock();
-+
-+	skb = __skb_recv_datagram(sk, &peer->tcp.user_queue, flags, &off, &err);
-+	if (!skb) {
-+		if (err == -EAGAIN && sk->sk_shutdown & RCV_SHUTDOWN) {
-+			ret = 0;
-+			goto out;
-+		}
-+		ret = err;
-+		goto out;
-+	}
-+
-+	copied = len;
-+	if (copied > skb->len)
-+		copied = skb->len;
-+	else if (copied < skb->len)
-+		msg->msg_flags |= MSG_TRUNC;
-+
-+	err = skb_copy_datagram_msg(skb, 0, msg, copied);
-+	if (unlikely(err)) {
-+		kfree_skb(skb);
-+		ret = err;
-+		goto out;
-+	}
-+
-+	if (flags & MSG_TRUNC)
-+		copied = skb->len;
-+	kfree_skb(skb);
-+	ret = copied;
-+out:
-+	ovpn_peer_put(peer);
-+	return ret;
-+}
-+
-+void ovpn_tcp_socket_detach(struct ovpn_socket *ovpn_sock)
-+{
-+	struct ovpn_peer *peer = ovpn_sock->peer;
-+	struct socket *sock = ovpn_sock->sock;
-+
-+	strp_stop(&peer->tcp.strp);
-+	skb_queue_purge(&peer->tcp.user_queue);
-+
-+	/* restore CBs that were saved in ovpn_sock_set_tcp_cb() */
-+	sock->sk->sk_data_ready = peer->tcp.sk_cb.sk_data_ready;
-+	sock->sk->sk_write_space = peer->tcp.sk_cb.sk_write_space;
-+	sock->sk->sk_prot = peer->tcp.sk_cb.prot;
-+	sock->sk->sk_socket->ops = peer->tcp.sk_cb.ops;
-+
-+	rcu_assign_sk_user_data(sock->sk, NULL);
-+}
-+
-+void ovpn_tcp_socket_wait_finish(struct ovpn_socket *sock)
-+{
-+	struct ovpn_peer *peer = sock->peer;
-+
-+	/* NOTE: we don't wait for peer->tcp.defer_del_work to finish:
-+	 * either the worker is not running or this function
-+	 * was invoked by that worker.
-+	 */
-+
-+	cancel_work_sync(&sock->tcp_tx_work);
-+	strp_done(&peer->tcp.strp);
-+
-+	skb_queue_purge(&peer->tcp.out_queue);
-+	kfree_skb(peer->tcp.out_msg.skb);
-+	peer->tcp.out_msg.skb = NULL;
-+}
-+
-+static void ovpn_tcp_send_sock(struct ovpn_peer *peer, struct sock *sk)
-+{
-+	struct sk_buff *skb = peer->tcp.out_msg.skb;
-+
-+	if (!skb)
-+		return;
-+
-+	if (peer->tcp.tx_in_progress)
-+		return;
-+
-+	peer->tcp.tx_in_progress = true;
-+
-+	do {
-+		int ret = skb_send_sock_locked(sk, skb,
-+					       peer->tcp.out_msg.offset,
-+					       peer->tcp.out_msg.len);
-+		if (unlikely(ret < 0)) {
-+			if (ret == -EAGAIN)
-+				goto out;
-+
-+			net_warn_ratelimited("%s: TCP error to peer %u: %d\n",
-+					     netdev_name(peer->ovpn->dev),
-+					     peer->id, ret);
-+
-+			/* in case of TCP error we can't recover the VPN
-+			 * stream therefore we abort the connection
-+			 */
-+			ovpn_peer_hold(peer);
-+			schedule_work(&peer->tcp.defer_del_work);
-+
-+			/* we bail out immediately and keep tx_in_progress set
-+			 * to true. This way we prevent more TX attempts
-+			 * which would lead to more invocations of
-+			 * schedule_work()
-+			 */
-+			return;
-+		}
-+
-+		peer->tcp.out_msg.len -= ret;
-+		peer->tcp.out_msg.offset += ret;
-+	} while (peer->tcp.out_msg.len > 0);
-+
-+	if (!peer->tcp.out_msg.len) {
-+		preempt_disable();
-+		dev_sw_netstats_tx_add(peer->ovpn->dev, 1, skb->len);
-+		preempt_enable();
-+	}
-+
-+	kfree_skb(peer->tcp.out_msg.skb);
-+	peer->tcp.out_msg.skb = NULL;
-+	peer->tcp.out_msg.len = 0;
-+	peer->tcp.out_msg.offset = 0;
-+
-+out:
-+	peer->tcp.tx_in_progress = false;
-+}
-+
-+void ovpn_tcp_tx_work(struct work_struct *work)
-+{
-+	struct ovpn_socket *sock;
-+
-+	sock = container_of(work, struct ovpn_socket, tcp_tx_work);
-+
-+	lock_sock(sock->sock->sk);
-+	if (sock->peer)
-+		ovpn_tcp_send_sock(sock->peer, sock->sock->sk);
-+	release_sock(sock->sock->sk);
-+}
-+
-+static void ovpn_tcp_send_sock_skb(struct ovpn_peer *peer, struct sock *sk,
-+				   struct sk_buff *skb)
-+{
-+	if (peer->tcp.out_msg.skb)
-+		ovpn_tcp_send_sock(peer, sk);
-+
-+	if (peer->tcp.out_msg.skb) {
-+		dev_core_stats_tx_dropped_inc(peer->ovpn->dev);
-+		kfree_skb(skb);
-+		return;
-+	}
-+
-+	peer->tcp.out_msg.skb = skb;
-+	peer->tcp.out_msg.len = skb->len;
-+	peer->tcp.out_msg.offset = 0;
-+	ovpn_tcp_send_sock(peer, sk);
-+}
-+
-+void ovpn_tcp_send_skb(struct ovpn_peer *peer, struct socket *sock,
-+		       struct sk_buff *skb)
-+{
-+	u16 len = skb->len;
-+
-+	*(__be16 *)__skb_push(skb, sizeof(u16)) = htons(len);
-+
-+	spin_lock_nested(&sock->sk->sk_lock.slock, OVPN_TCP_DEPTH_NESTING);
-+	if (sock_owned_by_user(sock->sk)) {
-+		if (skb_queue_len(&peer->tcp.out_queue) >=
-+		    READ_ONCE(net_hotdata.max_backlog)) {
-+			dev_core_stats_tx_dropped_inc(peer->ovpn->dev);
-+			kfree_skb(skb);
-+			goto unlock;
-+		}
-+		__skb_queue_tail(&peer->tcp.out_queue, skb);
-+	} else {
-+		ovpn_tcp_send_sock_skb(peer, sock->sk, skb);
-+	}
-+unlock:
-+	spin_unlock(&sock->sk->sk_lock.slock);
-+}
-+
-+static void ovpn_tcp_release(struct sock *sk)
-+{
-+	struct sk_buff_head queue;
-+	struct ovpn_socket *sock;
-+	struct ovpn_peer *peer;
-+	struct sk_buff *skb;
-+
-+	rcu_read_lock();
-+	sock = rcu_dereference_sk_user_data(sk);
-+	if (!sock) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+
-+	peer = sock->peer;
-+
-+	/* during initialization this function is called before
-+	 * assigning sock->peer
-+	 */
-+	if (unlikely(!peer || !ovpn_peer_hold(peer))) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+	rcu_read_unlock();
-+
-+	__skb_queue_head_init(&queue);
-+	skb_queue_splice_init(&peer->tcp.out_queue, &queue);
-+
-+	while ((skb = __skb_dequeue(&queue)))
-+		ovpn_tcp_send_sock_skb(peer, sk, skb);
-+
-+	peer->tcp.sk_cb.prot->release_cb(sk);
-+	ovpn_peer_put(peer);
-+}
-+
-+static int ovpn_tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
-+{
-+	struct ovpn_socket *sock;
-+	int ret, linear = PAGE_SIZE;
-+	struct ovpn_peer *peer;
-+	struct sk_buff *skb;
-+
-+	lock_sock(sk);
-+	rcu_read_lock();
-+	sock = rcu_dereference_sk_user_data(sk);
-+	if (unlikely(!sock || !sock->peer || !ovpn_peer_hold(sock->peer))) {
-+		rcu_read_unlock();
-+		release_sock(sk);
-+		return -EIO;
-+	}
-+	rcu_read_unlock();
-+	peer = sock->peer;
-+
-+	if (msg->msg_flags & ~MSG_DONTWAIT) {
-+		ret = -EOPNOTSUPP;
-+		goto peer_free;
-+	}
-+
-+	if (peer->tcp.out_msg.skb) {
-+		ret = -EAGAIN;
-+		goto peer_free;
-+	}
-+
-+	if (size < linear)
-+		linear = size;
-+
-+	skb = sock_alloc_send_pskb(sk, linear, size - linear,
-+				   msg->msg_flags & MSG_DONTWAIT, &ret, 0);
-+	if (!skb) {
-+		net_err_ratelimited("%s: skb alloc failed: %d\n",
-+				    netdev_name(peer->ovpn->dev), ret);
-+		goto peer_free;
-+	}
-+
-+	skb_put(skb, linear);
-+	skb->len = size;
-+	skb->data_len = size - linear;
-+
-+	ret = skb_copy_datagram_from_iter(skb, 0, &msg->msg_iter, size);
-+	if (ret) {
-+		kfree_skb(skb);
-+		net_err_ratelimited("%s: skb copy from iter failed: %d\n",
-+				    netdev_name(peer->ovpn->dev), ret);
-+		goto peer_free;
-+	}
-+
-+	ovpn_tcp_send_sock_skb(peer, sk, skb);
-+	ret = size;
-+peer_free:
-+	release_sock(sk);
-+	ovpn_peer_put(peer);
-+	return ret;
-+}
-+
-+static void ovpn_tcp_data_ready(struct sock *sk)
-+{
-+	struct ovpn_socket *sock;
-+
-+	trace_sk_data_ready(sk);
-+
-+	rcu_read_lock();
-+	sock = rcu_dereference_sk_user_data(sk);
-+	if (likely(sock && sock->peer))
-+		strp_data_ready(&sock->peer->tcp.strp);
-+	rcu_read_unlock();
-+}
-+
-+static void ovpn_tcp_write_space(struct sock *sk)
-+{
-+	struct ovpn_socket *sock;
-+
-+	rcu_read_lock();
-+	sock = rcu_dereference_sk_user_data(sk);
-+	if (likely(sock && sock->peer)) {
-+		schedule_work(&sock->tcp_tx_work);
-+		sock->peer->tcp.sk_cb.sk_write_space(sk);
-+	}
-+	rcu_read_unlock();
-+}
-+
-+static void ovpn_tcp_build_protos(struct proto *new_prot,
-+				  struct proto_ops *new_ops,
-+				  const struct proto *orig_prot,
-+				  const struct proto_ops *orig_ops);
-+
-+static void ovpn_tcp_peer_del_work(struct work_struct *work)
-+{
-+	struct ovpn_peer *peer = container_of(work, struct ovpn_peer,
-+					      tcp.defer_del_work);
-+
-+	ovpn_peer_del(peer, OVPN_DEL_PEER_REASON_TRANSPORT_ERROR);
-+	ovpn_peer_put(peer);
-+}
-+
-+/* Set TCP encapsulation callbacks */
-+int ovpn_tcp_socket_attach(struct ovpn_socket *ovpn_sock,
-+			   struct ovpn_peer *peer)
-+{
-+	struct socket *sock = ovpn_sock->sock;
-+	struct strp_callbacks cb = {
-+		.rcv_msg = ovpn_tcp_rcv,
-+		.parse_msg = ovpn_tcp_parse,
-+	};
-+	int ret;
-+
-+	/* make sure no pre-existing encapsulation handler exists */
-+	if (sock->sk->sk_user_data)
-+		return -EBUSY;
-+
-+	/* only a fully connected socket is expected. Connection should be
-+	 * handled in userspace
-+	 */
-+	if (sock->sk->sk_state != TCP_ESTABLISHED) {
-+		net_err_ratelimited("%s: provided TCP socket is not in ESTABLISHED state: %d\n",
-+				    netdev_name(peer->ovpn->dev),
-+				    sock->sk->sk_state);
-+		return -EINVAL;
-+	}
-+
-+	ret = strp_init(&peer->tcp.strp, sock->sk, &cb);
-+	if (ret < 0) {
-+		DEBUG_NET_WARN_ON_ONCE(1);
-+		return ret;
-+	}
-+
-+	INIT_WORK(&peer->tcp.defer_del_work, ovpn_tcp_peer_del_work);
-+
-+	__sk_dst_reset(sock->sk);
-+	skb_queue_head_init(&peer->tcp.user_queue);
-+	skb_queue_head_init(&peer->tcp.out_queue);
-+
-+	/* save current CBs so that they can be restored upon socket release */
-+	peer->tcp.sk_cb.sk_data_ready = sock->sk->sk_data_ready;
-+	peer->tcp.sk_cb.sk_write_space = sock->sk->sk_write_space;
-+	peer->tcp.sk_cb.prot = sock->sk->sk_prot;
-+	peer->tcp.sk_cb.ops = sock->sk->sk_socket->ops;
-+
-+	/* assign our static CBs and prot/ops */
-+	sock->sk->sk_data_ready = ovpn_tcp_data_ready;
-+	sock->sk->sk_write_space = ovpn_tcp_write_space;
-+
-+	if (sock->sk->sk_family == AF_INET) {
-+		sock->sk->sk_prot = &ovpn_tcp_prot;
-+		sock->sk->sk_socket->ops = &ovpn_tcp_ops;
-+	} else {
-+		sock->sk->sk_prot = &ovpn_tcp6_prot;
-+		sock->sk->sk_socket->ops = &ovpn_tcp6_ops;
-+	}
-+
-+	/* avoid using task_frag */
-+	sock->sk->sk_allocation = GFP_ATOMIC;
-+	sock->sk->sk_use_task_frag = false;
-+
-+	/* enqueue the RX worker */
-+	strp_check_rcv(&peer->tcp.strp);
-+
-+	return 0;
-+}
-+
-+static void ovpn_tcp_close(struct sock *sk, long timeout)
-+{
-+	struct ovpn_socket *sock;
-+	struct ovpn_peer *peer;
-+
-+	rcu_read_lock();
-+	sock = rcu_dereference_sk_user_data(sk);
-+	if (!sock || !sock->peer || !ovpn_peer_hold(sock->peer)) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+	peer = sock->peer;
-+	rcu_read_unlock();
-+
-+	ovpn_peer_del(sock->peer, OVPN_DEL_PEER_REASON_TRANSPORT_DISCONNECT);
-+	peer->tcp.sk_cb.prot->close(sk, timeout);
-+	ovpn_peer_put(peer);
-+}
-+
-+static __poll_t ovpn_tcp_poll(struct file *file, struct socket *sock,
-+			      poll_table *wait)
-+{
-+	__poll_t mask = datagram_poll(file, sock, wait);
-+	struct ovpn_socket *ovpn_sock;
-+
-+	rcu_read_lock();
-+	ovpn_sock = rcu_dereference_sk_user_data(sock->sk);
-+	if (ovpn_sock && ovpn_sock->peer &&
-+	    !skb_queue_empty(&ovpn_sock->peer->tcp.user_queue))
-+		mask |= EPOLLIN | EPOLLRDNORM;
-+	rcu_read_unlock();
-+
-+	return mask;
-+}
-+
-+static void ovpn_tcp_build_protos(struct proto *new_prot,
-+				  struct proto_ops *new_ops,
-+				  const struct proto *orig_prot,
-+				  const struct proto_ops *orig_ops)
-+{
-+	memcpy(new_prot, orig_prot, sizeof(*new_prot));
-+	memcpy(new_ops, orig_ops, sizeof(*new_ops));
-+	new_prot->recvmsg = ovpn_tcp_recvmsg;
-+	new_prot->sendmsg = ovpn_tcp_sendmsg;
-+	new_prot->close = ovpn_tcp_close;
-+	new_prot->release_cb = ovpn_tcp_release;
-+	new_ops->poll = ovpn_tcp_poll;
-+}
-+
-+/* Initialize TCP static objects */
-+void __init ovpn_tcp_init(void)
-+{
-+	ovpn_tcp_build_protos(&ovpn_tcp_prot, &ovpn_tcp_ops, &tcp_prot,
-+			      &inet_stream_ops);
-+
-+#if IS_ENABLED(CONFIG_IPV6)
-+	ovpn_tcp_build_protos(&ovpn_tcp6_prot, &ovpn_tcp6_ops, &tcpv6_prot,
-+			      &inet6_stream_ops);
-+#endif
-+}
-diff --git a/drivers/net/ovpn/tcp.h b/drivers/net/ovpn/tcp.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..10aefa834cf358f39f4fc250063d6ef13e0353b0
---- /dev/null
-+++ b/drivers/net/ovpn/tcp.h
-@@ -0,0 +1,36 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*  OpenVPN data channel offload
-+ *
-+ *  Copyright (C) 2019-2025 OpenVPN, Inc.
-+ *
-+ *  Author:	Antonio Quartulli <antonio@openvpn.net>
-+ */
-+
-+#ifndef _NET_OVPN_TCP_H_
-+#define _NET_OVPN_TCP_H_
-+
-+#include <linux/net.h>
-+#include <linux/skbuff.h>
-+#include <linux/types.h>
-+
-+#include "peer.h"
-+#include "skb.h"
-+#include "socket.h"
-+
-+void __init ovpn_tcp_init(void);
-+
-+int ovpn_tcp_socket_attach(struct ovpn_socket *ovpn_sock,
-+			   struct ovpn_peer *peer);
-+void ovpn_tcp_socket_detach(struct ovpn_socket *ovpn_sock);
-+void ovpn_tcp_socket_wait_finish(struct ovpn_socket *sock);
-+
-+/* Prepare skb and enqueue it for sending to peer.
-+ *
-+ * Preparation consist in prepending the skb payload with its size.
-+ * Required by the OpenVPN protocol in order to extract packets from
-+ * the TCP stream on the receiver side.
-+ */
-+void ovpn_tcp_send_skb(struct ovpn_peer *peer, struct socket *sock, struct sk_buff *skb);
-+void ovpn_tcp_tx_work(struct work_struct *work);
-+
-+#endif /* _NET_OVPN_TCP_H_ */
-diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
-index f60ec8b0f8ea40b2d635d802a3bc4f9b9d844417..3e812187e125cec7deac88413b85a35dd5b22a2d 100644
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -715,6 +715,7 @@ const struct proto_ops inet6_stream_ops = {
- #endif
- 	.set_rcvlowat	   = tcp_set_rcvlowat,
- };
-+EXPORT_SYMBOL_GPL(inet6_stream_ops);
- 
- const struct proto_ops inet6_dgram_ops = {
- 	.family		   = PF_INET6,
+USAGE
+-----
+
+  # perf sched stats record
+  # perf sched stats report
+  # perf sched stats diff
+
+Note: Although `perf sched stats` tool supports workload profiling syntax
+(i.e. -- <workload> ), the recorded profile is still systemwide since the
+/proc/schedstat is a systemwide file.
+
+HOW TO INTERPRET THE REPORT
+---------------------------
+
+The `perf sched stats report` starts with description of the columns
+present in the report. These column names are gievn before cpu and
+domain stats to improve the readability of the report.
+
+  ----------------------------------------------------------------------------------------------------
+  DESC                    -> Description of the field
+  COUNT                   -> Value of the field
+  PCT_CHANGE              -> Percent change with corresponding base value
+  AVG_JIFFIES             -> Avg time in jiffies between two consecutive occurrence of event
+  ----------------------------------------------------------------------------------------------------
+
+Next is the total profiling time in terms of jiffies:
+
+  ----------------------------------------------------------------------------------------------------
+  Time elapsed (in jiffies)                                   :       24537
+  ----------------------------------------------------------------------------------------------------
+
+Next is CPU scheduling statistics. These are simple diffs of
+/proc/schedstat CPU lines along with description. The report also
+prints % relative to base stat.
+
+In the example below, schedule() left the CPU0 idle 98.19% of the time.
+16.54% of total try_to_wake_up() was to wakeup local CPU. And, the total
+waittime by tasks on CPU0 is 0.49% of the total runtime by tasks on the
+same CPU.
+
+  ----------------------------------------------------------------------------------------------------
+  CPU 0
+  ----------------------------------------------------------------------------------------------------
+  DESC                                                                COUNT  PCT_CHANGE
+  ----------------------------------------------------------------------------------------------------
+  sched_yield() count                                         :           0
+  Legacy counter can be ignored                               :           0
+  schedule() called                                           :       17138
+  schedule() left the processor idle                          :       16827  (  98.19% )
+  try_to_wake_up() was called                                 :         508
+  try_to_wake_up() was called to wake up the local cpu        :          84  (  16.54% )
+  total runtime by tasks on this processor (in jiffies)       :  2408959243
+  total waittime by tasks on this processor (in jiffies)      :    11731825  (  0.49% )
+  total timeslices run on this cpu                            :         311
+  ----------------------------------------------------------------------------------------------------
+
+Next is load balancing statistics. For each of the sched domains
+(eg: `SMT`, `MC`, `DIE`...), the scheduler computes statistics under
+the following three categories:
+
+  1) Idle Load Balance: Load balancing performed on behalf of a long
+                        idling CPU by some other CPU.
+  2) Busy Load Balance: Load balancing performed when the CPU was busy.
+  3) New Idle Balance : Load balancing performed when a CPU just became
+                        idle.
+
+Under each of these three categories, sched stats report provides
+different load balancing statistics. Along with direct stats, the
+report also contains derived metrics prefixed with *. Example:
+
+  ----------------------------------------------------------------------------------------------------
+  CPU 0 DOMAIN SMT CPUS <0, 64>
+  ----------------------------------------------------------------------------------------------------
+  DESC                                                                     COUNT     AVG_JIFFIES
+  ----------------------------------------- <Category idle> ------------------------------------------
+  load_balance() count on cpu idle                                 :          50   $      490.74 $
+  load_balance() found balanced on cpu idle                        :          42   $      584.21 $
+  load_balance() move task failed on cpu idle                      :           8   $     3067.12 $
+  imbalance sum on cpu idle                                        :           8
+  pull_task() count on cpu idle                                    :           0
+  pull_task() when target task was cache-hot on cpu idle           :           0
+  load_balance() failed to find busier queue on cpu idle           :           0   $        0.00 $
+  load_balance() failed to find busier group on cpu idle           :          42   $      584.21 $
+  *load_balance() success count on cpu idle                        :           0
+  *avg task pulled per successful lb attempt (cpu idle)            :        0.00
+  ----------------------------------------- <Category busy> ------------------------------------------
+  load_balance() count on cpu busy                                 :           2   $    12268.50 $
+  load_balance() found balanced on cpu busy                        :           2   $    12268.50 $
+  load_balance() move task failed on cpu busy                      :           0   $        0.00 $
+  imbalance sum on cpu busy                                        :           0
+  pull_task() count on cpu busy                                    :           0
+  pull_task() when target task was cache-hot on cpu busy           :           0
+  load_balance() failed to find busier queue on cpu busy           :           0   $        0.00 $
+  load_balance() failed to find busier group on cpu busy           :           1   $    24537.00 $
+  *load_balance() success count on cpu busy                        :           0
+  *avg task pulled per successful lb attempt (cpu busy)            :        0.00
+  ---------------------------------------- <Category newidle> ----------------------------------------
+  load_balance() count on cpu newly idle                           :         427   $       57.46 $
+  load_balance() found balanced on cpu newly idle                  :         382   $       64.23 $
+  load_balance() move task failed on cpu newly idle                :          45   $      545.27 $
+  imbalance sum on cpu newly idle                                  :          48
+  pull_task() count on cpu newly idle                              :           0
+  pull_task() when target task was cache-hot on cpu newly idle     :           0
+  load_balance() failed to find busier queue on cpu newly idle     :           0   $        0.00 $
+  load_balance() failed to find busier group on cpu newly idle     :         382   $       64.23 $
+  *load_balance() success count on cpu newly idle                  :           0
+  *avg task pulled per successful lb attempt (cpu newly idle)      :        0.00
+  ----------------------------------------------------------------------------------------------------
+
+Consider following line:
+
+  load_balance() found balanced on cpu newly idle                  :         382    $      64.23 $
+
+While profiling was active, the load-balancer found 382 times the load
+needs to be balanced on a newly idle CPU 0. Following value encapsulated
+inside $ is average jiffies between two events (24537 / 382 = 64.23).
+
+Next are active_load_balance() stats. alb did not trigger while the
+profiling was active, hence it's all 0s.
+
+  --------------------------------- <Category active_load_balance()> ---------------------------------
+  active_load_balance() count                                      :           0
+  active_load_balance() move task failed                           :           0
+  active_load_balance() successfully moved a task                  :           0
+  ----------------------------------------------------------------------------------------------------
+
+Next are sched_balance_exec() and sched_balance_fork() stats. They are
+not used but we kept it in RFC just for legacy purpose. Unless opposed,
+we plan to remove them in next revision.
+
+Next are wakeup statistics. For every domain, the report also shows
+task-wakeup statistics. Example:
+
+  ------------------------------------------- <Wakeup Info> ------------------------------------------
+  try_to_wake_up() awoke a task that last ran on a diff cpu       :       12070
+  try_to_wake_up() moved task because cache-cold on own cpu       :        3324
+  try_to_wake_up() started passive balancing                      :           0
+  ----------------------------------------------------------------------------------------------------
+
+Same set of stats are reported for each CPU and each domain level.
+
+HOW TO INTERPRET THE DIFF
+-------------------------
+
+The `perf sched stats diff` will also start with explaining the columns
+present in the diff. Then it will show the diff in time in terms of
+jiffies. The order of the values depends on the order of input data
+files. Example:
+
+  ----------------------------------------------------------------------------------------------------
+  Time elapsed (in jiffies)                                        :        2009,       2001
+  ----------------------------------------------------------------------------------------------------
+
+Below is the sample representing the difference in cpu and domain stats of
+two runs. Here third column or the values enclosed in `|...|` shows the
+percent change between the two. Second and fourth columns shows the
+side-by-side representions of the corresponding fields from `perf sched
+stats report`.
+
+  ----------------------------------------------------------------------------------------------------
+  CPU <ALL CPUS SUMMARY>
+  ----------------------------------------------------------------------------------------------------
+  DESC                                                                    COUNT1      COUNT2  PCT_CHANGE  PCT_CHANGE1 PCT_CHANGE2
+  ----------------------------------------------------------------------------------------------------
+  sched_yield() count                                              :           0,          0  |    0.00% |
+  Legacy counter can be ignored                                    :           0,          0  |    0.00% |
+  schedule() called                                                :      442939,     447305  |    0.99% |
+  schedule() left the processor idle                               :      154012,     174657  |   13.40% |  (   34.77,      39.05 )
+  try_to_wake_up() was called                                      :      306810,     258076  |  -15.88% |
+  try_to_wake_up() was called to wake up the local cpu             :       21313,      14130  |  -33.70% |  (    6.95,       5.48 )
+  total runtime by tasks on this processor (in jiffies)            :  6235330010, 5463133934  |  -12.38% |
+  total waittime by tasks on this processor (in jiffies)           :  8349785693, 5755097654  |  -31.07% |  (  133.91,     105.34 )
+  total timeslices run on this cpu                                 :      288869,     272599  |   -5.63% |
+  ----------------------------------------------------------------------------------------------------
+
+Below is the sample of domain stats diff:
+
+  ----------------------------------------------------------------------------------------------------
+  CPU <ALL CPUS SUMMARY>, DOMAIN SMT CPUS <0, 64>
+  ----------------------------------------------------------------------------------------------------
+  DESC                                                                    COUNT1      COUNT2  PCT_CHANGE     AVG_JIFFIES1  AVG_JIFFIES2
+  ----------------------------------------- <Category busy> ------------------------------------------
+  load_balance() count on cpu busy                                 :         154,         80  |  -48.05% |  $       13.05,       25.01 $
+  load_balance() found balanced on cpu busy                        :         120,         66  |  -45.00% |  $       16.74,       30.32 $
+  load_balance() move task failed on cpu busy                      :           0,          4  |    0.00% |  $        0.00,      500.25 $
+  imbalance sum on cpu busy                                        :        1640,        299  |  -81.77% |
+  pull_task() count on cpu busy                                    :          55,         18  |  -67.27% |
+  pull_task() when target task was cache-hot on cpu busy           :           0,          0  |    0.00% |
+  load_balance() failed to find busier queue on cpu busy           :           0,          0  |    0.00% |  $        0.00,        0.00 $
+  load_balance() failed to find busier group on cpu busy           :         120,         66  |  -45.00% |  $       16.74,       30.32 $
+  *load_balance() success count on cpu busy                        :          34,         10  |  -70.59% |
+  *avg task pulled per successful lb attempt (cpu busy)            :        1.62,       1.80  |   11.27% |
+  ----------------------------------------- <Category idle> ------------------------------------------
+  load_balance() count on cpu idle                                 :         299,        481  |   60.87% |  $        6.72,        4.16 $
+  load_balance() found balanced on cpu idle                        :         197,        331  |   68.02% |  $       10.20,        6.05 $
+  load_balance() move task failed on cpu idle                      :           1,          2  |  100.00% |  $     2009.00,     1000.50 $
+  imbalance sum on cpu idle                                        :         145,        222  |   53.10% |
+  pull_task() count on cpu idle                                    :         133,        199  |   49.62% |
+  pull_task() when target task was cache-hot on cpu idle           :           0,          0  |    0.00% |
+  load_balance() failed to find busier queue on cpu idle           :           0,          0  |    0.00% |  $        0.00,        0.00 $
+  load_balance() failed to find busier group on cpu idle           :         197,        331  |   68.02% |  $       10.20,        6.05 $
+  *load_balance() success count on cpu idle                        :         101,        148  |   46.53% |
+  *avg task pulled per successful lb attempt (cpu idle)            :        1.32,       1.34  |    2.11% |
+  ---------------------------------------- <Category newidle> ----------------------------------------
+  load_balance() count on cpu newly idle                           :       21791,      15976  |  -26.69% |  $        0.09,        0.13 $
+  load_balance() found balanced on cpu newly idle                  :       16226,      12125  |  -25.27% |  $        0.12,        0.17 $
+  load_balance() move task failed on cpu newly idle                :         236,         88  |  -62.71% |  $        8.51,       22.74 $
+  imbalance sum on cpu newly idle                                  :        6655,       4628  |  -30.46% |
+  pull_task() count on cpu newly idle                              :        5329,       3763  |  -29.39% |
+  pull_task() when target task was cache-hot on cpu newly idle     :           0,          0  |    0.00% |
+  load_balance() failed to find busier queue on cpu newly idle     :           0,          0  |    0.00% |  $        0.00,        0.00 $
+  load_balance() failed to find busier group on cpu newly idle     :       12649,       9914  |  -21.62% |  $        0.16,        0.20 $
+  *load_balance() success count on cpu newly idle                  :        5329,       3763  |  -29.39% |
+  *avg task pulled per successful lb attempt (cpu newly idle)      :        1.00,       1.00  |    0.00% |
+  --------------------------------- <Category active_load_balance()> ---------------------------------
+  active_load_balance() count                                      :           0,          0  |    0.00% |
+  active_load_balance() move task failed                           :           0,          0  |    0.00% |
+  active_load_balance() successfully moved a task                  :           0,          0  |    0.00% |
+  --------------------------------- <Category sched_balance_exec()> ----------------------------------
+  sbe_count is not used                                            :           0,          0  |    0.00% |
+  sbe_balanced is not used                                         :           0,          0  |    0.00% |
+  sbe_pushed is not used                                           :           0,          0  |    0.00% |
+  --------------------------------- <Category sched_balance_fork()> ----------------------------------
+  sbf_count is not used                                            :           0,          0  |    0.00% |
+  sbf_balanced is not used                                         :           0,          0  |    0.00% |
+  sbf_pushed is not used                                           :           0,          0  |    0.00% |
+  ------------------------------------------ <Wakeup Info> -------------------------------------------
+  try_to_wake_up() awoke a task that last ran on a diff cpu        :       16606,      10214  |  -38.49% |
+  try_to_wake_up() moved task because cache-cold on own cpu        :        3184,       2534  |  -20.41% |
+  try_to_wake_up() started passive balancing                       :           0,          0  |    0.00% |
+  ----------------------------------------------------------------------------------------------------
+
+v2: https://lore.kernel.org/all/20241122084452.1064968-1-swapnil.sapkal@amd.com/
+v2->v3:
+ - Add perf unit test for basic sched stats functionalities
+ - Describe new tool, it's usage and interpretation of report data in the
+   perf-sched man page.
+ - Add /proc/schedstat version 17 support.
+
+v1: https://lore.kernel.org/lkml/20240916164722.1838-1-ravi.bangoria@amd.com
+v1->v2
+ - Add the support for `perf sched stats diff`
+ - Add column header in report for better readability. Use
+   procfs__mountpoint for consistency. Add hint for enabling
+   CONFIG_SCHEDSTAT if disabled. [James Clark]
+ - Use a single header file for both cpu and domain fileds. Change
+   the layout of structs to minimise the padding. I tried changing
+   `v15` to `15` in the header files but it was not giving any
+   benefits so drop the idea. [Namhyung Kim]
+ - Add tested-by.
+
+RFC: https://lore.kernel.org/r/20240508060427.417-1-ravi.bangoria@amd.com
+RFC->v1:
+ - [Kernel] Print domain name along with domain number in /proc/schedstat
+   file.
+ - s/schedstat/stats/ for the subcommand.
+ - Record domain name and cpumask details, also show them in report.
+ - Add CPU filtering capability at record and report time.
+ - Add /proc/schedstat v16 support.
+ - Live mode support. Similar to perf stat command, live mode prints the
+   sched stats on the stdout.
+ - Add pager support in `perf sched stats report` for better scrolling.
+ - Some minor cosmetic changes in report output to improve readability.
+ - Rebase to latest perf-tools-next/perf-tools-next (1de5b5dcb835).
+
+TODO:
+ - perf sched stats records /proc/schedstat which is a CPU and domain
+   level scheduler statistic. We are planning to add taskstat tool which
+   reads task stats from procfs and generate scheduler statistic report
+   at task granularity. this will probably a standalone tool, something
+   like `perf sched taskstat record/report`.
+ - Except pre-processor related checkpatch warnings, we have addressed
+   most of the other possible warnings.
+
+Patches are prepared on v6.14-rc6 (80e54e84911a).
+
+[1] https://youtu.be/lg-9aG2ajA0?t=283
+[2] https://github.com/AMDESE/sched-scoreboard
+[3] https://lore.kernel.org/lkml/c50bdbfe-02ce-c1bc-c761-c95f8e216ca0@amd.com/
+[4] https://lore.kernel.org/lkml/3e32bec6-5e59-c66a-7676-7d15df2c961c@amd.com/
+[5] https://lore.kernel.org/all/20241122084452.1064968-1-swapnil.sapkal@amd.com/
+[6] https://lore.kernel.org/lkml/3170d16e-eb67-4db8-a327-eb8188397fdb@amd.com/
+[7] https://lore.kernel.org/lkml/feb31b6e-6457-454c-a4f3-ce8ad96bf8de@amd.com/
+
+Swapnil Sapkal (8):
+  perf sched stats: Add record and rawdump support
+  perf sched stats: Add schedstat v16 support
+  perf sched stats: Add schedstat v17 support
+  perf sched stats: Add support for report subcommand
+  perf sched stats: Add support for live mode
+  perf sched stats: Add support for diff subcommand
+  perf sched stats: Add basic perf sched stats test
+  perf sched stats: Add details in man page
+
+ tools/lib/perf/Documentation/libperf.txt    |   2 +
+ tools/lib/perf/Makefile                     |   2 +-
+ tools/lib/perf/include/perf/event.h         |  70 ++
+ tools/lib/perf/include/perf/schedstat-v15.h | 142 +++
+ tools/lib/perf/include/perf/schedstat-v16.h | 142 +++
+ tools/lib/perf/include/perf/schedstat-v17.h | 160 ++++
+ tools/perf/Documentation/perf-sched.txt     | 243 ++++-
+ tools/perf/builtin-inject.c                 |   2 +
+ tools/perf/builtin-sched.c                  | 978 +++++++++++++++++++-
+ tools/perf/tests/shell/perf_sched_stats.sh  |  64 ++
+ tools/perf/util/event.c                     | 110 +++
+ tools/perf/util/event.h                     |   2 +
+ tools/perf/util/session.c                   |  20 +
+ tools/perf/util/synthetic-events.c          | 260 ++++++
+ tools/perf/util/synthetic-events.h          |   3 +
+ tools/perf/util/tool.c                      |  20 +
+ tools/perf/util/tool.h                      |   4 +-
+ 17 files changed, 2220 insertions(+), 4 deletions(-)
+ create mode 100644 tools/lib/perf/include/perf/schedstat-v15.h
+ create mode 100644 tools/lib/perf/include/perf/schedstat-v16.h
+ create mode 100644 tools/lib/perf/include/perf/schedstat-v17.h
+ create mode 100755 tools/perf/tests/shell/perf_sched_stats.sh
 
 -- 
-2.48.1
+2.43.0
 
