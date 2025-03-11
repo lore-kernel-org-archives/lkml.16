@@ -1,101 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A9F22FF22;
-	Tue, 11 Mar 2025 09:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E87C22E415;
+	Tue, 11 Mar 2025 10:00:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741687193; cv=none; b=QhI5odKsuc9Ezt4KDBBgYM0PQ1DuzThyKRGG9F6Cn+s20dtlFYQxqibnaAcgixwdoJdQ42s+LFH90PK4p6SmF1/Ax4ogkX5f1Jivic35lUM5px3JPxINyfBl8yX9PA0r5iDSiwrgEN2d/dfE12DzrFyqhr0FiuC80yzVoDoUDoE=
+	t=1741687201; cv=none; b=vCUgDklwsjVOgb/LJTWbqYcJ1+7rPi6xkkPhEDqsvEnGufgOaYahDYH5afKLeSV69QnS+49iVgoeB3Qzaz6AS0s9oOqMMf535VVDpAas+3WP1dBiF3aS6G70BLpp1zW06L7DxcnTtxea/G18F903vHn6xWTBbwhlVXt81nAt1mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741687193; c=relaxed/simple;
-	bh=zsOBPexXIma9FbHuX3ibpi1OjULOqW0uLKONM/kuVVU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nPbrx35R88dEMn2ka12NXXUYi2YdQCnVr6eBFs3QpKAm3f4gw5uSd+sawdyzRNaO3V4cIYuIa+b7yPeT6hCXdr7dzy9EIiNJx/vM29u3b63W61Q2VgxDtV/A3ietGcuJx7JZRucA1dXfyeORmcQPeYGz2olohwvZUtrQnMfWFBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VG+tVE2G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741687201; c=relaxed/simple;
+	bh=mNkiJQyHI9PkhhTXrV2YZZ3/e7ilPqw+IG6VppDiAwY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=C5HlkWXEJEDes3e79qSbSl3QVLr5WABXTlApQNrpi6MJq024DNK5ruoEOrDkr0lI+PBpF11yZQGJ5tUvamOXpLrZq7FjRqAF5Y3wviZw4j+ZTsrFvl1qFiQ8D4Zr9KFKVsdpSZ6Z80GF14ffhvtc0T7J5Y4XkfEoH2CzCwOrQ+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCwCyOdU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VG+tVE2G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BDADC4CEE9;
-	Tue, 11 Mar 2025 09:59:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCwCyOdU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C13A1C4CEE9;
+	Tue, 11 Mar 2025 10:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741687193;
-	bh=zsOBPexXIma9FbHuX3ibpi1OjULOqW0uLKONM/kuVVU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VG+tVE2GzVsRb2JLul75HRtiRbXVhMMo4dxouYOHV1ATfkBNftFJxqRlhNgGrt4Bg
-	 8vXYNEQkZEHXksDzgCVF/Yyx8hIt91AxQNxWIk89I5AqHIGU4eJhD3Pq53mR/y341v
-	 UYHr2jy1GiMEAPviiRXQLPCUWgZRLBHH9GFNhH+S0hl1qMwW2pQ75WmAq2zxa7BoRc
-	 HRdcHfn4o6MLMcknCGBnQ8umntBPefnWVLRwMF2suzzgDNx4UCGvuSZ1XOzPE2s4sN
-	 KDke/58ap/xklW+Bl71/yrmJriKNh4CjEL0i4lfQ6viZOLUgeFrHfGY01Gmg8LN0o9
-	 MAaKmoA2pBEMA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1trwOt-00CTwt-2K;
-	Tue, 11 Mar 2025 09:59:51 +0000
-Date: Tue, 11 Mar 2025 09:59:50 +0000
-Message-ID: <86tt7zopk9.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Zhenyu Ye <yezhenyu2@huawei.com>
-Cc: <yuzenghui@huawei.com>,
-	<will@kernel.org>,
-	<oliver.upton@linux.dev>,
-	<catalin.marinas@arm.com>,
-	<joey.gouly@arm.com>,
-	<linux-kernel@vger.kernel.org>,
-	<xiexiangyou@huawei.com>,
-	<zhengchuan@huawei.com>,
-	<wangzhou1@hisilicon.com>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<kvm@vger.kernel.org>,
-	<kvmarm@lists.linux.dev>
-Subject: Re: [PATCH v1 3/5] arm64/kvm: using ioctl to enable/disable the HDBSS feature
-In-Reply-To: <20250311040321.1460-4-yezhenyu2@huawei.com>
-References: <20250311040321.1460-1-yezhenyu2@huawei.com>
-	<20250311040321.1460-4-yezhenyu2@huawei.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1741687200;
+	bh=mNkiJQyHI9PkhhTXrV2YZZ3/e7ilPqw+IG6VppDiAwY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=YCwCyOdURnYhgggvGC6WjfEbMzA7kTZ8mIhLrLlDclZnx4Lld/03tEfexM6NEdMrQ
+	 5CGkAjBkVu5hughtn9OHZHwJo5kwjRhmcj9BdoT+AIc1l69JZWj8xr5VOtwXcfK5Os
+	 OgkYSq4BJAWJsWidc2qGNeTqDlkXo5UgSioz9e3lb+4JE90vG5g6E1XyuZ8mjaTbbz
+	 bChoRSMXB1XngPn1PalEi0avBDemgD4NqASC9mJSJYqvzAjaB00+zgGsm18naxSfI2
+	 4b48AaVyEdK85caa+6XgRVWW45XYSDHyI7M+HIVx4wewk7TlVw4+FEryzTMHjyBGwt
+	 zgXKudbCA9J3g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 348C7380AAD1;
+	Tue, 11 Mar 2025 10:00:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, yuzenghui@huawei.com, will@kernel.org, oliver.upton@linux.dev, catalin.marinas@arm.com, joey.gouly@arm.com, linux-kernel@vger.kernel.org, xiexiangyou@huawei.com, zhengchuan@huawei.com, wangzhou1@hisilicon.com, linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2 0/8] enic:enable 32, 64 byte cqes and get max
+ rx/tx ring size from hw
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174168723504.3879094.16367848143121507790.git-patchwork-notify@kernel.org>
+Date: Tue, 11 Mar 2025 10:00:35 +0000
+References: <20250304-enic_cleanup_and_ext_cq-v2-0-85804263dad8@cisco.com>
+In-Reply-To: <20250304-enic_cleanup_and_ext_cq-v2-0-85804263dad8@cisco.com>
+To: Satish Kharat via B4 Relay <devnull+satishkh.cisco.com@kernel.org>
+Cc: benve@cisco.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, satishkh@cisco.com,
+ neescoba@cisco.com, johndale@cisco.com
 
-+1 on everything Oliver said. Additionally:
+Hello:
 
-On Tue, 11 Mar 2025 04:03:19 +0000,
-Zhenyu Ye <yezhenyu2@huawei.com> wrote:
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Tue, 04 Mar 2025 19:56:36 -0500 you wrote:
+> This series enables using the max rx and tx ring sizes read from hw.
+> For newer hw that can be up to 16k entries. This requires bigger
+> completion entries for rx queues. This series enables the use of the
+> 32 and 64 byte completion queues entries for enic rx queues on
+> supported hw versions. This is in addition to the exiting (default)
+> 16 byte rx cqes.
 > 
-> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> index 1f55b0c7b11d..9c11e2292b1e 100644
-> --- a/arch/arm64/kvm/mmu.c
-> +++ b/arch/arm64/kvm/mmu.c
-> @@ -1703,6 +1703,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  	if (writable)
->  		prot |= KVM_PGTABLE_PROT_W;
->  
-> +	if (kvm->enable_hdbss && logging_active)
-> +		prot |= KVM_PGTABLE_PROT_DBM;
-> +
+> [...]
 
-This looks totally wrong. If the page is defined as R/O
-(KVM_PGTABLE_PROT_W not being set), setting the DBM flag makes it
-writable anyway (the W bit is the Dirty bit). Hello, memory
-corruption?
+Here is the summary with links:
+  - [net-next,v2,1/8] enic: Move function from header file to c file
+    https://git.kernel.org/netdev/net-next/c/025cf9318083
+  - [net-next,v2,2/8] enic: enic rq code reorg
+    https://git.kernel.org/netdev/net-next/c/eaa23db8686f
+  - [net-next,v2,3/8] enic: enic rq extended cq defines
+    https://git.kernel.org/netdev/net-next/c/2be2eb764343
+  - [net-next,v2,4/8] enic: enable rq extended cq support
+    https://git.kernel.org/netdev/net-next/c/bcb725c79cfa
+  - [net-next,v2,5/8] enic : remove unused function cq_enet_wq_desc_dec
+    https://git.kernel.org/netdev/net-next/c/6dca618c9467
+  - [net-next,v2,6/8] enic : added enic_wq.c and enic_wq.h
+    https://git.kernel.org/netdev/net-next/c/e5f1bcd93d96
+  - [net-next,v2,7/8] enic : cleanup of enic wq request completion path
+    https://git.kernel.org/netdev/net-next/c/26b2c5f6ff47
+  - [net-next,v2,8/8] enic : get max rq & wq entries supported by hw, 16K queues
+    https://git.kernel.org/netdev/net-next/c/df9fd2a3ce01
 
-overall, this patch is a total mess, and needs to be split to have the
-runtime logic on one side, and the userspace API on the other. Don't
-mix the two.
-
-Thanks,
-
-	M.
-
+You are awesome, thank you!
 -- 
-Without deviation from the norm, progress is not possible.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
