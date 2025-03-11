@@ -1,197 +1,332 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBE1119E975
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 16:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C9F25B691
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 16:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741711723; cv=none; b=DeGpOgQzYTFxi5fnLP8tZnsmdLoMHBjE2Tc6XVvLTFa3CJGqFPeF5qrL+jE84QrdXNZU6dQTn6XiApaNMTrw1svp7aO1GxVEzBGBg9ukv8K4Oy6FM59VwQva6IFxHxqNTPWcjGwXmbwp6JpEOaBP9zKsxLv4f4XaOaB/OoqBYfo=
+	t=1741711762; cv=none; b=HrVcQ02xtuCZ9nu4SjWtY9ESZJCb0+Dx4vKlH9veHdziPmbZZYqp1VwgTHRTSs7j0n3BMrIMhc2pmhGURBYG8CQw9Ul42Rcn78O2cXYGP1kAiES3qFExRPAx8sUEZhS/a2dv1OcxrwPVXumfSPDShXU47QyTT4gCrSR0rUM9lyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741711723; c=relaxed/simple;
-	bh=lrsYFyN5cyDzQN9b2siw60UJaH8NKK/eMwzXKsXix6g=;
+	s=arc-20240116; t=1741711762; c=relaxed/simple;
+	bh=u+F//cZ1UgpTvl9mhVb92LvKNIukphzxazwTjPnXvv8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q7ElAN15J1gC8ykKPVfdjSFmrZ9fa+Ul/nqKgyAiSPNTi7Jf22NtD+QsnaCcrBO8l9D+UQyidFZ2yOthLc4OlJ2DLkFhcXRm9lM6T0ZPAvP5aWnc2VWsYEhJMQ8fBgLfqV/d9ZQPmoDXn05y9vzZjuoPJS77XSAMbBuqqlnpRuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 564BB152B;
-	Tue, 11 Mar 2025 09:48:51 -0700 (PDT)
-Received: from [10.57.40.127] (unknown [10.57.40.127])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 02C043F673;
-	Tue, 11 Mar 2025 09:48:38 -0700 (PDT)
-Message-ID: <3f6dcb62-f9ba-4bed-9863-2d4569bafcf1@arm.com>
-Date: Tue, 11 Mar 2025 16:48:37 +0000
+	 In-Reply-To:Content-Type; b=oMWQ+2k+9k4/h8kZBG/w+faIlZNvBnIHNEE1Dyo7d/CAZ2pEwJx03YJnzD8LdHLSBL4GYtY2jBfA9w84T/50KVM1k4213XcjYnJyc9MUpEikgJ9jJuACUd0Hzas5RIrRYFM4hzHxU2benjlUJQyJ+sMroiKJO0ZXDW3N9V6CyqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=QVssYB2S; arc=none smtp.client-ip=185.136.64.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="QVssYB2S"
+Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 202503111649158f41bc75547d721482
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 11 Mar 2025 17:49:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=diogo.ivo@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=LO4Oi66aFoDRbKkoCWm/iGhfrvYWXFfo0k1ZnUAyzgQ=;
+ b=QVssYB2Sx1SAXJ8tyYd4ASblVv+4gfHWNnqfZyOp5W6G8ggM/1h7zbYy8iMXKkB0YMyIn4
+ Tt8wKFS5iVFfjVDuyGggIs+VuHNi4q+y5Hz6RUskNcB/+JannMR1wpJBMQqN5hHd2S2hbMIm
+ Vuxs+WrkQ8/i/iNt+lf3dXB9qd/y2fAuRYbTR3kuu9sChWRcLgWkZ6jOu6rcljE/3F1LEFgC
+ tLPDcPsvLwng1n1rWsBpfmSK5CsilVEucadGz3xa708JOnOiYeKppHqonpS4Yv8ekYwpfQRi
+ L3bOinjYshe9/Lnn8PjaFehV45CRt5zx0xBxnN9IZzDnA4MSi/uGR6Yg==;
+Message-ID: <f6aa7dd8-6ca7-4c79-b915-65ff7869d28c@siemens.com>
+Date: Tue, 11 Mar 2025 16:49:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] coresight: Add a KUnit test for
- coresight_find_default_sink()
-Content-Language: en-GB
-To: James Clark <james.clark@linaro.org>
-Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, Mike Leach <mike.leach@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Leo Yan <leo.yan@arm.com>
-References: <20250305-james-cs-kunit-test-v2-1-83ba682b976c@linaro.org>
- <c31de6cb-f8f5-432c-b99e-68b10a24bc5e@arm.com>
- <16fd2023-1ffa-4e87-ad89-a7ccdd8ba458@linaro.org>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <16fd2023-1ffa-4e87-ad89-a7ccdd8ba458@linaro.org>
+Subject: Re: [PATCH] watchdog: Add driver for Intel OC WDT
+To: Guenter Roeck <linux@roeck-us.net>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, jan.kiszka@siemens.com,
+ benedikt.niedermayr@siemens.com
+References: <20250311-ivo-intel_oc_wdt-v1-1-fd470460d9f5@siemens.com>
+ <fea41656-ca80-491f-b84b-d118b35b5f72@roeck-us.net>
+ <bc354400-52bf-46ee-8619-479c3fe9b28e@siemens.com>
+ <8bdf9a4d-5d25-4b53-947b-0644c00cc999@roeck-us.net>
+Content-Language: en-US
+From: Diogo Ivo <diogo.ivo@siemens.com>
+In-Reply-To: <8bdf9a4d-5d25-4b53-947b-0644c00cc999@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1328357:519-21489:flowmailer
 
-On 11/03/2025 16:06, James Clark wrote:
-> 
-> 
-> On 11/03/2025 3:00 pm, Suzuki K Poulose wrote:
->> On 05/03/2025 15:07, James Clark wrote:
->>> Add a test to confirm that default sink selection skips over an ETF
->>> and returns an ETR even if it's further away.
+On 3/11/25 4:06 PM, Guenter Roeck wrote:
+> On 3/11/25 07:59, Diogo Ivo wrote:
+>> On 3/11/25 2:10 PM, Guenter Roeck wrote:
+>>> On 3/11/25 06:18, Diogo Ivo wrote:
+>>>> Add a driver for the Intel Over-Clocking Watchdog found in Intel
+>>>> Platform Controller (PCH) chipsets. This watchdog is controlled
+>>>> via a simple single-register interface and would otherwise be
+>>>> standard except for the presence of a LOCK bit that can only be
+>>>> set once per power cycle, needing extra handling around it.
+>>>>
+>>>> Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
+>>>> ---
+>>>>   drivers/acpi/acpi_pnp.c         |   2 +
+>>>>   drivers/watchdog/Kconfig        |  11 ++
+>>>>   drivers/watchdog/Makefile       |   1 +
+>>>>   drivers/watchdog/intel_oc_wdt.c | 235 ++++++++++++++++++++++++++++ 
+>>>> ++ ++++++++++
+>>>>   4 files changed, 249 insertions(+)
+>>>>
+>>>> diff --git a/drivers/acpi/acpi_pnp.c b/drivers/acpi/acpi_pnp.c
+>>>> index 
+>>>> 01abf26764b00c86f938dea2ed138424f041f880..3f5a1840f573303c71f5d579e32963a5b29d2587 100644
+>>>> --- a/drivers/acpi/acpi_pnp.c
+>>>> +++ b/drivers/acpi/acpi_pnp.c
+>>>> @@ -355,8 +355,10 @@ static bool acpi_pnp_match(const char *idstr, 
+>>>> const struct acpi_device_id **matc
+>>>>    * device represented by it.
+>>>>    */
+>>>>   static const struct acpi_device_id acpi_nonpnp_device_ids[] = {
+>>>> +    {"INT3F0D"},
+>>>>       {"INTC1080"},
+>>>>       {"INTC1081"},
+>>>> +    {"INTC1099"},
+>>>>       {""},
+>>>>   };
 >>>
->>> This also makes it easier to add new unit tests in the future.
+>>> This needs to be a separate patch.
+>>
+>> I will split it for v2.
+>>
+>>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>>> index 
+>>>> f81705f8539aa0b12d156a86aae521aa40b4527d..16e6df441bb344c0f91b40bd76b6322ad3016e72 100644
+>>>> --- a/drivers/watchdog/Kconfig
+>>>> +++ b/drivers/watchdog/Kconfig
+>>>> @@ -1350,6 +1350,17 @@ config INTEL_MID_WATCHDOG
+>>>>         To compile this driver as a module, choose M here.
+>>>> +config INTEL_OC_WATCHDOG
+>>>> +    tristate "Intel OC Watchdog"
+>>>> +    depends on X86 && ACPI
+>>>> +    select WATCHDOG_CORE
+>>>> +    help
+>>>> +      Hardware driver for Intel Over-Clocking watchdog present in
+>>>> +      Platform Controller Hub (PCH) chipsets.
+>>>> +
+>>>> +      To compile this driver as a module, choose M here: the
+>>>> +      module will be called intel_oc_wdt.
+>>>> +
+>>>>   config ITCO_WDT
+>>>>       tristate "Intel TCO Timer/Watchdog"
+>>>>       depends on X86 && PCI
+>>>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+>>>> index 
+>>>> 8411626fa162268e8ccd06349f7193b15a9d281a..3a13f3e80a0f460b99b4f1592fcf17cc6428876b 100644
+>>>> --- a/drivers/watchdog/Makefile
+>>>> +++ b/drivers/watchdog/Makefile
+>>>> @@ -149,6 +149,7 @@ obj-$(CONFIG_W83977F_WDT) += w83977f_wdt.o
+>>>>   obj-$(CONFIG_MACHZ_WDT) += machzwd.o
+>>>>   obj-$(CONFIG_SBC_EPX_C3_WATCHDOG) += sbc_epx_c3.o
+>>>>   obj-$(CONFIG_INTEL_MID_WATCHDOG) += intel-mid_wdt.o
+>>>> +obj-$(CONFIG_INTEL_OC_WATCHDOG) += intel_oc_wdt.o
+>>>>   obj-$(CONFIG_INTEL_MEI_WDT) += mei_wdt.o
+>>>>   obj-$(CONFIG_NI903X_WDT) += ni903x_wdt.o
+>>>>   obj-$(CONFIG_NIC7018_WDT) += nic7018_wdt.o
+>>>> diff --git a/drivers/watchdog/intel_oc_wdt.c b/drivers/watchdog/ 
+>>>> intel_oc_wdt.c
+>>>> new file mode 100644
+>>>> index 
+>>>> 0000000000000000000000000000000000000000..0a2df3440024090f7e342fe7da895a7930ac09b2
+>>>> --- /dev/null
+>>>> +++ b/drivers/watchdog/intel_oc_wdt.c
+>>>> @@ -0,0 +1,235 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Intel OC Watchdog driver
+>>>> + *
+>>>> + * Copyright (C) 2025, Siemens SA
+>>>> + * Author: Diogo Ivo <diogo.ivo@siemens.com>
+>>>> + */
+>>>> +
+>>>> +#define DRV_NAME    "intel_oc_wdt"
+>>>> +
+>>>> +#include <linux/acpi.h>
+>>>> +#include <linux/bits.h>
+>>>> +#include <linux/io.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/moduleparam.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/watchdog.h>
+>>>> +
+>>>> +#define INTEL_OC_WDT_TOV        GENMASK(9, 0)
+>>>> +#define INTEL_OC_WDT_MIN_TOV        1
+>>>> +#define INTEL_OC_WDT_MAX_TOV        1024
+>>>> +
+>>>> +/*
+>>>> + * One-time writable lock bit. If set forbids
+>>>> + * modification of itself, _TOV and _EN until
+>>>> + * next reboot.
+>>>> + */
+>>>> +#define INTEL_OC_WDT_CTL_LCK        BIT(12)
+>>>> +
+>>>> +#define INTEL_OC_WDT_EN            BIT(14)
+>>>> +#define INTEL_OC_WDT_NO_ICCSURV_STS    BIT(24)
+>>>> +#define INTEL_OC_WDT_ICCSURV_STS    BIT(25)
+>>>> +#define INTEL_OC_WDT_RLD        BIT(31)
+>>>> +
+>>>> +#define INTEL_OC_WDT_STS_BITS (INTEL_OC_WDT_NO_ICCSURV_STS | \
+>>>> +                   INTEL_OC_WDT_ICCSURV_STS)
+>>>> +
+>>>> +#define INTEL_OC_WDT_CTRL_REG(wdt)    ((wdt)->ctrl_res->start)
+>>>> +
+>>>> +struct intel_oc_wdt {
+>>>> +    struct watchdog_device wdd;
+>>>> +    struct resource *ctrl_res;
+>>>> +    bool locked;
+>>>> +};
+>>>> +
+>>>> +#define WDT_HEARTBEAT            60
+>>>> +static int heartbeat = WDT_HEARTBEAT;
 >>>
->>> Signed-off-by: James Clark <james.clark@linaro.org>
->>> ---
->>> Changes in v2:
->>> - Let devm free everything rather than doing individual kfrees:
->>>    "Like with managed drivers, KUnit-managed fake devices are
->>>    automatically cleaned up when the test finishes, but can be manually
->>>    cleaned up early with kunit_device_unregister()."
->>> - Link to v1: https://lore.kernel.org/r/20250225164639.522741-1- 
->>> james.clark@linaro.org
->>> ---
->>>   drivers/hwtracing/coresight/Kconfig                |  9 +++
->>>   drivers/hwtracing/coresight/Makefile               |  3 +-
->>>   drivers/hwtracing/coresight/coresight-core.c       |  1 +
->>>   .../hwtracing/coresight/coresight-kunit-tests.c    | 77 +++++++++++ 
->>> + ++++++++++
->>>   4 files changed, 88 insertions(+), 2 deletions(-)
+>>> Normally this is set to 0 and the default timeout is initialized 
+>>> together
+>>> with min_timeout and max_timeout. This lets the watchdog core 
+>>> override it
+>>> with devicetree data (if that is available).
+>>
+>> Ok, thank you for the insight. I will address this for v2.
+>> It is unlikely that this driver will have devicetree data but it's
+>> better to follow best practice.
+>>
+> 
+> I just submitted a patch to have the watchdog core also look into 
+> firmware data,
+> which would include data provided by ACPI.
+
+Great to know, and all the more reason to apply your suggested change.
+
+>>>> +module_param(heartbeat, uint, 0);
+>>>> +MODULE_PARM_DESC(heartbeat, "Watchdog heartbeats in seconds. 
+>>>> (default="
+>>>> +         __MODULE_STRING(WDT_HEARTBEAT) ")");
+>>>> +
+>>>> +static bool nowayout = WATCHDOG_NOWAYOUT;
+>>>> +module_param(nowayout, bool, 0);
+>>>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started 
+>>>> (default="
+>>>> +         __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>>>> +
+>>>> +static int intel_oc_wdt_start(struct watchdog_device *wdd)
+>>>> +{
+>>>> +    struct intel_oc_wdt *oc_wdt = watchdog_get_drvdata(wdd);
+>>>> +
+>>>> +    if (oc_wdt->locked)
+>>>> +        return 0;
+>>>> +
+>>>> +    outl(inl(INTEL_OC_WDT_CTRL_REG(oc_wdt)) | INTEL_OC_WDT_EN,
+>>>> +         INTEL_OC_WDT_CTRL_REG(oc_wdt));
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int intel_oc_wdt_stop(struct watchdog_device *wdd)
+>>>> +{
+>>>> +    struct intel_oc_wdt *oc_wdt = watchdog_get_drvdata(wdd);
+>>>> +
+>>>> +    outl(inl(INTEL_OC_WDT_CTRL_REG(oc_wdt)) & ~INTEL_OC_WDT_EN,
+>>>> +         INTEL_OC_WDT_CTRL_REG(oc_wdt));
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int intel_oc_wdt_ping(struct watchdog_device *wdd)
+>>>> +{
+>>>> +    struct intel_oc_wdt *oc_wdt = watchdog_get_drvdata(wdd);
+>>>> +
+>>>> +    outl(inl(INTEL_OC_WDT_CTRL_REG(oc_wdt)) | INTEL_OC_WDT_RLD,
+>>>> +         INTEL_OC_WDT_CTRL_REG(oc_wdt));
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int intel_oc_wdt_set_timeout(struct watchdog_device *wdd,
+>>>> +                    unsigned int t)
+>>>> +{
+>>>> +    struct intel_oc_wdt *oc_wdt = watchdog_get_drvdata(wdd);
+>>>> +
+>>>> +    outl((inl(INTEL_OC_WDT_CTRL_REG(oc_wdt)) & ~INTEL_OC_WDT_TOV) | 
+>>>> (t - 1),
+>>>> +         INTEL_OC_WDT_CTRL_REG(oc_wdt));
+>>>> +
+>>>> +    wdd->timeout = t;
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static const struct watchdog_info intel_oc_wdt_info = {
+>>>> +    .options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | 
+>>>> WDIOF_KEEPALIVEPING,
+>>>> +    .identity = DRV_NAME,
+>>>> +};
+>>>> +
+>>>> +static const struct watchdog_ops intel_oc_wdt_ops = {
+>>>> +    .owner = THIS_MODULE,
+>>>> +    .start = intel_oc_wdt_start,
+>>>> +    .stop = intel_oc_wdt_stop,
+>>>> +    .ping = intel_oc_wdt_ping,
+>>>> +    .set_timeout = intel_oc_wdt_set_timeout,
+>>>> +};
+>>>> +
+>>>> +static int intel_oc_wdt_setup(struct intel_oc_wdt *oc_wdt)
+>>>> +{
+>>>> +    struct watchdog_info *info;
+>>>> +    unsigned long val;
+>>>> +
+>>>> +    val = inl(INTEL_OC_WDT_CTRL_REG(oc_wdt));
+>>>> +
+>>>> +    if (val & INTEL_OC_WDT_STS_BITS)
+>>>> +        oc_wdt->wdd.bootstatus |= WDIOF_CARDRESET;
+>>>> +
+>>>> +    oc_wdt->locked = !!(val & INTEL_OC_WDT_CTL_LCK);
+>>>> +
+>>>> +    if (val & INTEL_OC_WDT_EN) {
+>>>> +        /*
+>>>> +         * No need to issue a ping here to "commit" the new timeout
+>>>> +         * value to hardware as the watchdog core schedules one
+>>>> +         * immediately when registering the watchdog.
+>>>> +         */
+>>>> +        set_bit(WDOG_HW_RUNNING, &oc_wdt->wdd.status);
+>>>> +
+>>>> +        if (oc_wdt->locked) {
+>>>> +            info = (struct watchdog_info *)&intel_oc_wdt_info;
+>>>> +            /*
+>>>> +             * Set nowayout unconditionally as we cannot stop
+>>>> +             * the watchdog and read the current timeout.
+>>>> +             */
 >>>
->>> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/ 
->>> coresight/Kconfig
->>> index ecd7086a5b83..f064e3d172b3 100644
->>> --- a/drivers/hwtracing/coresight/Kconfig
->>> +++ b/drivers/hwtracing/coresight/Kconfig
->>> @@ -259,4 +259,13 @@ config CORESIGHT_DUMMY
->>>         To compile this driver as a module, choose M here: the module 
->>> will be
->>>         called coresight-dummy.
->>> +
->>> +config CORESIGHT_KUNIT_TESTS
->>> +      tristate "Enable Coresight unit tests"
->>> +      depends on KUNIT
->>> +      default KUNIT_ALL_TESTS
->>> +      help
->>> +        Enable Coresight unit tests. Only useful for development and 
->>> not
->>> +        intended for production.
->>> +
->>>   endif
->>> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/ 
->>> hwtracing/ coresight/Makefile
->>> index 8e62c3150aeb..96f0dfedb1bf 100644
->>> --- a/drivers/hwtracing/coresight/Makefile
->>> +++ b/drivers/hwtracing/coresight/Makefile
->>> @@ -51,5 +51,4 @@ coresight-cti-y := coresight-cti-core.o coresight- 
->>> cti-platform.o \
->>>              coresight-cti-sysfs.o
->>>   obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
->>>   obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
->>> -obj-$(CONFIG_CORESIGHT_CTCU) += coresight-ctcu.o
->>> -coresight-ctcu-y := coresight-ctcu-core.o
->>> +obj-$(CONFIG_CORESIGHT_KUNIT_TESTS) += coresight-kunit-tests.o
->>> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/ 
->>> hwtracing/coresight/coresight-core.c
->>> index bd0a7edd38c9..b101aa133ceb 100644
->>> --- a/drivers/hwtracing/coresight/coresight-core.c
->>> +++ b/drivers/hwtracing/coresight/coresight-core.c
->>> @@ -959,6 +959,7 @@ coresight_find_default_sink(struct 
->>> coresight_device *csdev)
->>>       }
->>>       return csdev->def_sink;
->>>   }
->>> +EXPORT_SYMBOL_GPL(coresight_find_default_sink);
->>>   static int coresight_remove_sink_ref(struct device *dev, void *data)
->>>   {
->>> diff --git a/drivers/hwtracing/coresight/coresight-kunit-tests.c b/ 
->>> drivers/hwtracing/coresight/coresight-kunit-tests.c
->>> new file mode 100644
->>> index 000000000000..a136af05eaf4
->>> --- /dev/null
->>> +++ b/drivers/hwtracing/coresight/coresight-kunit-tests.c
->>> @@ -0,0 +1,77 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +
->>> +#include <kunit/test.h>
->>> +#include <kunit/device.h>
->>> +#include <linux/coresight.h>
->>> +
->>> +#include "coresight-priv.h"
->>> +
->>> +static struct coresight_device *coresight_test_device(struct device 
->>> *dev)
->>> +{
->>> +    struct coresight_device *csdev = devm_kcalloc(dev, 1,
->>> +                             sizeof(struct coresight_device),
->>> +                             GFP_KERNEL);
->>> +    csdev->pdata = devm_kcalloc(dev, 1,
->>> +                   sizeof(struct coresight_platform_data),
->>> +                   GFP_KERNEL);
->>> +    return csdev;
->>> +}
->>> +
->>> +static int coresight_test_cpuid(struct coresight_device *csdev)
->>> +{
->>> +    return 0;
->>> +}
->>> +
->>> +static void test_default_sink(struct kunit *test)
->>> +{
->>> +    /*
->>> +     * ETM -> ETF -> ETR -> CATU
->>> +     *                ^
->>> +     *                | default
->>> +     */
->>> +    struct device *dev = kunit_device_register(test, 
->>> "coresight_kunit");
->>> +    struct coresight_device *etm = coresight_test_device(dev),
->>> +                *etf = coresight_test_device(dev),
->>> +                *etr = coresight_test_device(dev),
->>> +                *catu = coresight_test_device(dev);
->>> +    struct coresight_connection conn = {};
->>> +    struct coresight_ops_source src_ops = {.cpu_id = 
->>> coresight_test_cpuid };
+>>> But the timeout is read below ? Do you mean "change the current 
+>>> timeout" ?
 >>
->> Do we need the trace_id() ? Why is this required ?
+>> In this case where the BIOS both enabled the watchdog and set the LOCK
+>> bit we cannot change the timeout anymore, meaning that we have to read
+>> the value currently in the register and pass it to the watchdog core,
+>> which is what is done below.
 >>
->> Suzuki
->>
+> Yes, but the comment says " we cannot stop the watchdog and _read_ the
+> current timeout" (emphasis added), suggesting that the current timeout
+> can not be _read_ if locked is true.
 > 
-> Because it tests with per-cpu sources so it checks if any of the TRBE 
-> sinks have been assigned first:
+>>>> +            nowayout = true;
+>>>> +
+>>>> +            oc_wdt->wdd.timeout = (val & INTEL_OC_WDT_TOV) + 1;
 > 
->   /* look for a default sink if we have not found for this device */
->     if (!csdev->def_sink) {
->        if (coresight_is_percpu_source(csdev))
->       csdev->def_sink = per_cpu(csdev_sink,
->                                     source_ops(csdev)->cpu_id(csdev));
-> 
-> I think this test would probably fail if run somewhere TRBE was already 
-> probed. I can make the source subtype to be 
-> CORESIGHT_DEV_SUBTYPE_SOURCE_BUS for the test to work around it. Any 
-> value other than CORESIGHT_DEV_SUBTYPE_SOURCE_PROC will work. And then I 
-> can drop the fake cpu_id() callback.
+> However, this code does read the timeout even if locked is set. That
+> suggests that it is not possible to _change_ the timeout if locked is set,
+> but that it is possible to read the current timeout.
 
-If the purpose is to detect the ETR, then I guess we could make this a 
-non-ETM source
+Sorry for the confusing wording. Yes, according to the documentation [1]
+this is exactly the case, we cannot change the timeout but it is possible
+to read it. I will word this better in v2 to avoid confusion.
 
-TBH, I don't see any value in the test as such. But it is a good 
-starting point for adding further cases. So, lets keep this in.
+Best regards,
+Diogo
 
-Suzuki
-
-> 
-
+[1]: 
+https://edc.intel.com/content/www/us/en/design/publications/14th-generation-core-processors-ioe-p-registers/over-clocking-wdt-control-oc-wdt-ctl-offset-54/
