@@ -1,101 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1807264A6E;
-	Tue, 11 Mar 2025 19:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0F4263F39
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 19:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741722240; cv=none; b=nUy+B7MG9GLA0LhL9JaZpNJmXbYrAjoRAo47PJ2NxUZbETxMMdBDylnlg9I/rx3X+dVXOHhFKBtDC23iNCYDQg3xj1rL3y61qx294yS8xv308udOjpz+MDi1bFyrWnxFNz3pxv02KWCs9pLbPoI6AKl/86GSZYT+8QUaV8n7Shk=
+	t=1741722311; cv=none; b=lvD3rxfsvlwvIp8/16ApqZDZAOgZ/3oteZSxUL00JvUoqepCQ/9a/qUdyeTxjzGx1BNiIRfoxWgZHYgmQKaRhFt3zHVf0koLoCfLSdxa6kLmvOIqUG1TtRE4ZklZByrQTn6KE1pJP/vrZX8m61V0YuySP8GHYZ1Ly5SMPdR1AL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741722240; c=relaxed/simple;
-	bh=cNLHeDWhNyuM27QisQzqNRVewktto9osrReTHyq97VA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z4lwlu0luxlymjVUzTGWdlexHyGJzZNt0FTlqXDX/WUyJCgyHKSJlBH6f3dnZJCLaxyW0YJtUvsYIwNk3RtZbqqKxDxFRPutqiYwX6HArmAwKImR8rd8a8JykN5f2gm9xUklxPAeYqEgk5Sfx5GEik6X67ZKVblSdAT9xVS+QM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUfCh8LF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741722311; c=relaxed/simple;
+	bh=2QZ5+1hf2x2oRIQkI4em1zNoU9lY+dMrOoGs/Ctv6KA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PcVeLef6Dmxo6r5lXoJa1/kv+HfnH4VEh7u9NVk/Xc5GXYpUnpIOiSx4k8mk4TBoHceqL07u4H/3hi96X7ADrF7USPNgnHLv8MdHtj81vHpjq8jQaj2EbzXjns2yk0h5XcsXdr7FNjQfikBvrI6CqQwxOw2A2vx6FmdRyGvDHac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IYROV393; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUfCh8LF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78599C4CEEB;
-	Tue, 11 Mar 2025 19:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741722240;
-	bh=cNLHeDWhNyuM27QisQzqNRVewktto9osrReTHyq97VA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RUfCh8LFZAR1jrtj67BqPaR1pjNlhFuBgUAd33xLzramO4/RhD8AEmQEBIdvMvjSo
-	 xGD+pwSHL++SvRzjowVlHKaIoCJ0FUbTd0+euSY7qtAqYLeFIyqisGI4wrz+ejdRyZ
-	 wQsjQIpzEoli4pCT/loUhei80hGmkepKSNxEGM09vV2acQPRz1wObKDYxhg4nu7AUP
-	 rHzlNdp4blgcv6t5LfJkAVH+zIySMMQ49U7RSnPvjBP0v+mnqqBGG7UOvfEefwnA8n
-	 2h3h37Cu6OpQ3vEuQpXJpufgYwUt+KgA8IjvrsYcdMLBOrhy0tM2h9qvF40YdXEuqy
-	 Ho50mpnsy8Hng==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Tue, 11 Mar 2025 20:43:43 +0100
-Subject: [PATCH 2/2] ARM: add KEEP() keyword to ARM_VECTORS
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IYROV393"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741722307;
+	bh=2QZ5+1hf2x2oRIQkI4em1zNoU9lY+dMrOoGs/Ctv6KA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IYROV39306iQpZ4v7jOCgFeyCc1GFXFQBy2yLxFlWEoez5cAFOULJHrEJOqbF8HA6
+	 ALAt8IwHH+o484vtVn9kZHKGKT4KTARY1Z6dboZQZq96T6uq8CYG7NN9WriNMC1Qvn
+	 7+dGXWWxSWhKGdYWo2TjKez8ESCpXdIg17CgPb218DJ/cdOGYMSKHIjN+ATD+kbzae
+	 mPXhpaQDycGyvmrraSBljBoX5HfmVmlHqNwTyBtCoaY6Pmqa/8xBWC72+dd57eHVdB
+	 ohi0C3fp9QKn+41M/S1ICKIYBygzEAQSA3v8RkhptaHkQwQ+e5Si7nce8unz9A2kkp
+	 S6nUGrf/paXsA==
+Received: from notapiano (unknown [70.107.117.78])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id A80C817E1540;
+	Tue, 11 Mar 2025 20:45:05 +0100 (CET)
+Date: Tue, 11 Mar 2025 16:45:03 -0300
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Vignesh Raman <vignesh.raman@collabora.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-mediatek@lists.infradead.org, chunkuang.hu@kernel.org,
+	p.zabel@pengutronix.de, angelogioacchino.delregno@collabora.com,
+	daniels@collabora.com, airlied@gmail.com, simona.vetter@ffwll.ch,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: defconfig: mediatek: enable PHY drivers
+Message-ID: <717b84da-f307-41e9-9dc3-67ea653cac5f@notapiano>
+References: <20250311061703.16850-1-vignesh.raman@collabora.com>
+ <dc659e19-c1ae-42d8-84c9-0d2aafa81fe2@kernel.org>
+ <daa0733c-14e3-44df-8374-33aba6662813@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250311-arm-fix-vectors-with-linker-dce-v1-2-ec4c382e3bfd@kernel.org>
-References: <20250311-arm-fix-vectors-with-linker-dce-v1-0-ec4c382e3bfd@kernel.org>
-In-Reply-To: <20250311-arm-fix-vectors-with-linker-dce-v1-0-ec4c382e3bfd@kernel.org>
-To: Russell King <linux@armlinux.org.uk>
-Cc: Christian Eggers <ceggers@arri.de>, Arnd Bergmann <arnd@arndb.de>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Yuntao Liu <liuyuntao12@huawei.com>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1474; i=nathan@kernel.org;
- h=from:subject:message-id; bh=k6KErdk8UAE5TaS8j5kgByd6cy02OSxvuL6oLJYcWN8=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDOkXJlWmLj/rWPU569kZZ8NOjq9mmuvOy6dP1zrzJzfJ2
- GJuhSpTRykLgxgXg6yYIkv1Y9XjhoZzzjLeODUJZg4rE8gQBi5OAZjIvMsM/wuTIu94La9+fE1B
- Zfob1eNpEQ5JKtozw4PKGxaVqZz5oM3IcKfYh0GqM1Kv4M7Fyr9fdVL9so0+LdlTYiT8eEv99Hp
- FNgA=
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <daa0733c-14e3-44df-8374-33aba6662813@collabora.com>
 
-From: Christian Eggers <ceggers@arri.de>
+On Tue, Mar 11, 2025 at 05:26:37PM +0530, Vignesh Raman wrote:
+> Hi Krzysztof,
+> 
+> On 11/03/25 12:54, Krzysztof Kozlowski wrote:
+> > On 11/03/2025 07:16, Vignesh Raman wrote:
+> > > The mediatek display driver fails to probe on mt8173 and mt8183 in
+> > > v6.14-rc4, with the following errors:
+> > 
+> > Which boards?
+> 
+> These are the boards,
+> https://lava.pages.collabora.com/docs/boards/chromebooks/boards/hana/
+> https://lava.pages.collabora.com/docs/boards/chromebooks/boards/jacuzzi/
 
-Without this, the vectors are removed if LD_DEAD_CODE_DATA_ELIMINATION
-is enabled.  At startup, the CPU (silently) hangs in the undefined
-instruction exception as soon as the first timer interrupt arrives.
+You can use the Devicetree name to identify them in a way that's meaningful for
+the kernel:
 
-On my setup, the system also boots fine without the 2nd and 3rd KEEP()
-statements, so I cannot tell whether these are actually required.
+mt8173-elm-hana
+mt8183-kukui-jacuzzi-juniper-sku16
 
-Cc: stable@vger.kernel.org
-Fixes: ed0f94102251 ("ARM: 9404/1: arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION")
-Signed-off-by: Christian Eggers <ceggers@arri.de>
-[nathan: Use OVERLAY_KEEP() to avoid breaking old ld.lld versions]
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- arch/arm/include/asm/vmlinux.lds.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
-index 0f8ef1ed725e..14811b4f48ec 100644
---- a/arch/arm/include/asm/vmlinux.lds.h
-+++ b/arch/arm/include/asm/vmlinux.lds.h
-@@ -131,13 +131,13 @@
- 	__vectors_lma = .;						\
- 	OVERLAY 0xffff0000 : NOCROSSREFS AT(__vectors_lma) {		\
- 		.vectors {						\
--			*(.vectors)					\
-+			OVERLAY_KEEP(*(.vectors))			\
- 		}							\
- 		.vectors.bhb.loop8 {					\
--			*(.vectors.bhb.loop8)				\
-+			OVERLAY_KEEP(*(.vectors.bhb.loop8))		\
- 		}							\
- 		.vectors.bhb.bpiall {					\
--			*(.vectors.bhb.bpiall)				\
-+			OVERLAY_KEEP(*(.vectors.bhb.bpiall))		\
- 		}							\
- 	}								\
- 	ARM_LMA(__vectors, .vectors);					\
-
--- 
-2.48.1
-
+Thanks,
+Nícolas
