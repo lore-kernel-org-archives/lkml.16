@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CCA224224;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8C022CBCC;
 	Tue, 11 Mar 2025 09:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741684279; cv=none; b=Vv+vxnm8/gF+j+KXt7+F+MWrZf6N/hnASkNfk5pwaehxmenQqVRxc8EBJaVHeVIXzWMCRRJ9kNWaFB/ZGUea919kFV4jSSAvun+Ya74J/MY8ZBNn3MIuMo7gtUMzibuMtp4VLhEfUNN6/r1I6Kuvd6HKkvlFwEsxr3OL8Itw89Q=
+	t=1741684280; cv=none; b=pcA6LitO+54cqrIaKdCcaFKGgH3qSphIAF1Oc3KCdIhTtj1FwYmU4PtjmGEPjFpFehnlmqHIZgsPrzg3smEUejGVBpH7nClDc9kDMj6zAArqiXRByTMpTqU38CMcGiHRji9qxVUOF/jnXrXQrBZsESZVTCMUU+e4nJ4jL/HUOms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741684279; c=relaxed/simple;
-	bh=TGCk/u5GXxqhGnJfSURoNyyDy5WpQIDw50X/wKb6urY=;
+	s=arc-20240116; t=1741684280; c=relaxed/simple;
+	bh=9LjiNrZLb05J5UMw/laAfvrntYiSTOJ1WuQ/mJPCw48=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TbP7N7qffKbBN9LRYZyKepAbqhvSQyF2j0wf9CijdfUYiNnEHDisl1UzUjnP8mCZrBgC3yTvv2ZopBeVYc8DNrbA5x/9vdfTx9J9KRMZZmbGR3xJEByRBS8VMyjsHxJCd9En5PE4sQWD47QmjmqY5e/H6mewgMKeEd603Xnpx0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nsj3E7sH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=DQ7KjpmL8fMeEWMh4lVyV45RnCd+SXRnDDOO61eEV44ru4Dpoo1Pqfu349xzo2+X//o3ydynzcfWe2JYRA2JB0HzWsTJlA2B8cnZjOvN95fQuQYXjgmzE67qBkbx23pfymUdQa6bRyDLOWkwkqJC2p0vfgyzQ4bb7qhylXu2zZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3LI+F03; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nsj3E7sH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0926EC4AF09;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3LI+F03"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5EA3FC4CEFE;
 	Tue, 11 Mar 2025 09:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741684279;
-	bh=TGCk/u5GXxqhGnJfSURoNyyDy5WpQIDw50X/wKb6urY=;
+	bh=9LjiNrZLb05J5UMw/laAfvrntYiSTOJ1WuQ/mJPCw48=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Nsj3E7sHbdeY/PBiKKRaDWNhNYqWMrLQjHK2cS4RggG/Yt+NlqWLp52P5ZfaLDcih
-	 pv0NJ6eL49b+5VL8fVCHZIpPRA+W+qITL3foPTfV82Z9UDW4KsuPlwEAIFgBkhx92U
-	 +ywgA0uniW4rcCVNk3+C15OtfFPNpgEaPIA1re1Lctrk9EDcSu2UChiEgbnyV+7DT2
-	 aV28szaGFnpNQyMxvVNU/v4zggtr04HCIq5BdUUeAZ6IS3HHEdZu3vSL4SQkgfxy0/
-	 vHTsVqYXL+0WwwDgts/PPs7xVJEObfxLmO6keJ9Z4gRIvRaNqfbfSHy9wtwgQPq7+c
-	 euSQ9y6iPMsJA==
+	b=j3LI+F031nsHBh5D/PgZlWdjvOytzHOTE5YeCUp0Y4/mF0d1mfMv3z32nUeWA3qhC
+	 Zw2eFo06uboHDGnOXTNvM8oNAMEUJExKeeseuBvWPV1TgxF0A92Phu2/XeDIFgTbda
+	 zYXX4AocH+PdtHU1E5eP9ZFuHwTe6tOMKVebKk0OkA1JOOiy//X1yJg19i7R+aPj1N
+	 QiQuqGVG1SbJL2YsjohlJh6r+lU+BlCGjJHw86c9I+i4y3oqQYmMj5xnRzdytobAkW
+	 j/PM89MaTdSocvGu6Ncb4N9Cup5yrjAZTr+6vYrA4WqkBQVBqrEJf2/MDgiAADPkc9
+	 qA9w4YjIQNs2Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AB6C35FF1;
-	Tue, 11 Mar 2025 09:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5525AC28B30;
+	Tue, 11 Mar 2025 09:11:19 +0000 (UTC)
 From: Keke Li via B4 Relay <devnull+keke.li.amlogic.com@kernel.org>
-Date: Tue, 11 Mar 2025 17:11:12 +0800
-Subject: [PATCH v7 02/10] media: platform: Add C3 MIPI CSI-2 driver
+Date: Tue, 11 Mar 2025 17:11:17 +0800
+Subject: [PATCH v7 07/10] media: uapi: Add stats info and parameters buffer
+ for C3 ISP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250311-c3isp-v7-2-c3551bed9005@amlogic.com>
+Message-Id: <20250311-c3isp-v7-7-c3551bed9005@amlogic.com>
 References: <20250311-c3isp-v7-0-c3551bed9005@amlogic.com>
 In-Reply-To: <20250311-c3isp-v7-0-c3551bed9005@amlogic.com>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -51,11 +52,11 @@ Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
  laurent.pinchart@ideasonboard.com, dan.scally@ideasonboard.com, 
  jacopo.mondi@ideasonboard.com, Keke Li <keke.li@amlogic.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741684276; l=30658;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741684276; l=22782;
  i=keke.li@amlogic.com; s=20240902; h=from:subject:message-id;
- bh=JCS4MTebKsip4tyKlPBjZzgaU9QW+jl2H+B0MVdP5NM=;
- b=cozXEqMCYptCfxF45ogAgzV37BW8QiDYIqiGnwg3PFxlLpxt83T+OOKotXbCLOpfNA7wC1mHD
- G3KsxzxKiyqChw4LOXC9SdKBO4S7Iv1TzVM6Py8FMsRSsAoPcau8t+r
+ bh=N2n3RK5mO58B6tlcoOf8qN2uZbISYrzLRW6640muKOM=;
+ b=rpJTT5CxkirIHNYIT2DwfoVED7UmjQvc/pmxYqNcQN5wUzXpXNJHpxrWIIZLsRpiRxjwye8ty
+ sopGQdatqeeB4ZPO6vhIuceB+FPa3vKNbOTLDAC8ORKCe0VYyBxvJ/c
 X-Developer-Key: i=keke.li@amlogic.com; a=ed25519;
  pk=XxNPTsQ0YqMJLLekV456eoKV5gbSlxnViB1k1DhfRmU=
 X-Endpoint-Received: by B4 Relay for keke.li@amlogic.com/20240902 with
@@ -65,940 +66,598 @@ Reply-To: keke.li@amlogic.com
 
 From: Keke Li <keke.li@amlogic.com>
 
-Add a driver for the CSI-2 receiver uinit found on the Amlogic C3 SoC.
+Add a header that describes the 3A statistics buffer and the
+parameters buffer for C3 ISP
 
-Create a drivers/media/platform/amlogic/c3/ directory to host the driver
-and the forthcoming support for the Amlogic C3 MIPI adapter and C3 ISP.
-
-This driver is used to receive the MIPI data from image sensor.
-
-Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
 Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 Signed-off-by: Keke Li <keke.li@amlogic.com>
 ---
- MAINTAINERS                                        |   1 +
- drivers/media/platform/amlogic/Kconfig             |   1 +
- drivers/media/platform/amlogic/Makefile            |   2 +
- drivers/media/platform/amlogic/c3/Kconfig          |   3 +
- drivers/media/platform/amlogic/c3/Makefile         |   3 +
- .../media/platform/amlogic/c3/mipi-csi2/Kconfig    |  16 +
- .../media/platform/amlogic/c3/mipi-csi2/Makefile   |   3 +
- .../platform/amlogic/c3/mipi-csi2/c3-mipi-csi2.c   | 827 +++++++++++++++++++++
- 8 files changed, 856 insertions(+)
+ MAINTAINERS                                      |   1 +
+ include/uapi/linux/media/amlogic/c3-isp-config.h | 564 +++++++++++++++++++++++
+ 2 files changed, 565 insertions(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e8ffa5a72b2e..a87b4a942fe0 100644
+index 92054b31228c..2d60a14e7da1 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -1257,6 +1257,7 @@ M:	Keke Li <keke.li@amlogic.com>
  L:	linux-media@vger.kernel.org
  S:	Maintained
- F:	Documentation/devicetree/bindings/media/amlogic,c3-mipi-csi2.yaml
-+F:	drivers/media/platform/amlogic/c3/mipi-csi2/
+ F:	Documentation/devicetree/bindings/media/amlogic,c3-isp.yaml
++F:	include/uapi/linux/media/amlogic/
  
- AMLOGIC PINCTRL DRIVER
- M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
-diff --git a/drivers/media/platform/amlogic/Kconfig b/drivers/media/platform/amlogic/Kconfig
-index 5014957404e9..458acf3d5fa8 100644
---- a/drivers/media/platform/amlogic/Kconfig
-+++ b/drivers/media/platform/amlogic/Kconfig
-@@ -2,4 +2,5 @@
- 
- comment "Amlogic media platform drivers"
- 
-+source "drivers/media/platform/amlogic/c3/Kconfig"
- source "drivers/media/platform/amlogic/meson-ge2d/Kconfig"
-diff --git a/drivers/media/platform/amlogic/Makefile b/drivers/media/platform/amlogic/Makefile
-index d3cdb8fa4ddb..c744afcd1b9e 100644
---- a/drivers/media/platform/amlogic/Makefile
-+++ b/drivers/media/platform/amlogic/Makefile
-@@ -1,2 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-y += c3/
- obj-y += meson-ge2d/
-diff --git a/drivers/media/platform/amlogic/c3/Kconfig b/drivers/media/platform/amlogic/c3/Kconfig
+ AMLOGIC MIPI ADAPTER DRIVER
+ M:	Keke Li <keke.li@amlogic.com>
+diff --git a/include/uapi/linux/media/amlogic/c3-isp-config.h b/include/uapi/linux/media/amlogic/c3-isp-config.h
 new file mode 100644
-index 000000000000..098d458747b8
+index 000000000000..ed085ea62a57
 --- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/Kconfig
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+source "drivers/media/platform/amlogic/c3/mipi-csi2/Kconfig"
-diff --git a/drivers/media/platform/amlogic/c3/Makefile b/drivers/media/platform/amlogic/c3/Makefile
-new file mode 100644
-index 000000000000..a468fb782f94
---- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-y += mipi-csi2/
-diff --git a/drivers/media/platform/amlogic/c3/mipi-csi2/Kconfig b/drivers/media/platform/amlogic/c3/mipi-csi2/Kconfig
-new file mode 100644
-index 000000000000..0d7b2e203273
---- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/mipi-csi2/Kconfig
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+config VIDEO_C3_MIPI_CSI2
-+	tristate "Amlogic C3 MIPI CSI-2 receiver"
-+	depends on ARCH_MESON || COMPILE_TEST
-+	depends on VIDEO_DEV
-+	depends on OF
-+	select MEDIA_CONTROLLER
-+	select V4L2_FWNODE
-+	select VIDEO_V4L2_SUBDEV_API
-+	help
-+	  Video4Linux2 driver for Amlogic C3 MIPI CSI-2 receiver.
-+	  C3 MIPI CSI-2 receiver is used to receive MIPI data from
-+	  image sensor.
-+
-+	  To compile this driver as a module choose m here.
-diff --git a/drivers/media/platform/amlogic/c3/mipi-csi2/Makefile b/drivers/media/platform/amlogic/c3/mipi-csi2/Makefile
-new file mode 100644
-index 000000000000..cc08fc722bfd
---- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/mipi-csi2/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-$(CONFIG_VIDEO_C3_MIPI_CSI2) += c3-mipi-csi2.o
-diff --git a/drivers/media/platform/amlogic/c3/mipi-csi2/c3-mipi-csi2.c b/drivers/media/platform/amlogic/c3/mipi-csi2/c3-mipi-csi2.c
-new file mode 100644
-index 000000000000..f92815ffa4ae
---- /dev/null
-+++ b/drivers/media/platform/amlogic/c3/mipi-csi2/c3-mipi-csi2.c
-@@ -0,0 +1,827 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
++++ b/include/uapi/linux/media/amlogic/c3-isp-config.h
+@@ -0,0 +1,564 @@
++/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
 +/*
 + * Copyright (C) 2024 Amlogic, Inc. All rights reserved
 + */
 +
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
++#ifndef _UAPI_C3_ISP_CONFIG_H_
++#define _UAPI_C3_ISP_CONFIG_H_
 +
-+#include <media/v4l2-async.h>
-+#include <media/v4l2-common.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-fwnode.h>
-+#include <media/v4l2-mc.h>
-+#include <media/v4l2-subdev.h>
-+
-+/* C3 CSI-2 submodule definition */
-+enum {
-+	SUBMD_APHY,
-+	SUBMD_DPHY,
-+	SUBMD_HOST,
-+};
-+
-+#define CSI2_SUBMD_MASK		GENMASK(17, 16)
-+#define CSI2_SUBMD_SHIFT	16
-+#define CSI2_SUBMD(x)	(((x) & (CSI2_SUBMD_MASK)) >> (CSI2_SUBMD_SHIFT))
-+#define CSI2_REG_ADDR_MASK	GENMASK(15, 0)
-+#define CSI2_REG_ADDR(x)	((x) & (CSI2_REG_ADDR_MASK))
-+#define CSI2_REG_A(x)		((SUBMD_APHY << CSI2_SUBMD_SHIFT) | (x))
-+#define CSI2_REG_D(x)		((SUBMD_DPHY << CSI2_SUBMD_SHIFT) | (x))
-+#define CSI2_REG_H(x)		((SUBMD_HOST << CSI2_SUBMD_SHIFT) | (x))
-+
-+#define MIPI_CSI2_CLOCK_NUM_MAX			3
-+#define MIPI_CSI2_SUBDEV_NAME			"c3-mipi-csi2"
-+
-+/* C3 CSI-2 APHY register */
-+#define CSI_PHY_CNTL0				CSI2_REG_A(0x44)
-+#define CSI_PHY_CNTL0_HS_LP_BIAS_EN		BIT(10)
-+#define CSI_PHY_CNTL0_HS_RX_TRIM_11		(11 << 11)
-+#define CSI_PHY_CNTL0_LP_LOW_VTH_2		(2 << 16)
-+#define CSI_PHY_CNTL0_LP_HIGH_VTH_4		(4 << 20)
-+#define CSI_PHY_CNTL0_DATA_LANE0_HS_DIG_EN	BIT(24)
-+#define CSI_PHY_CNTL0_DATA_LANE1_HS_DIG_EN	BIT(25)
-+#define CSI_PHY_CNTL0_CLK0_LANE_HS_DIG_EN	BIT(26)
-+#define CSI_PHY_CNTL0_DATA_LANE2_HS_DIG_EN	BIT(27)
-+#define CSI_PHY_CNTL0_DATA_LANE3_HS_DIG_EN	BIT(28)
-+
-+#define CSI_PHY_CNTL1				CSI2_REG_A(0x48)
-+#define CSI_PHY_CNTL1_HS_EQ_CAP_SMALL		(2 << 16)
-+#define CSI_PHY_CNTL1_HS_EQ_CAP_BIG		(3 << 16)
-+#define CSI_PHY_CNTL1_HS_EQ_RES_MIN		(3 << 18)
-+#define CSI_PHY_CNTL1_HS_EQ_RES_MED		(2 << 18)
-+#define CSI_PHY_CNTL1_HS_EQ_RES_MAX		BIT(18)
-+#define CSI_PHY_CNTL1_CLK_CHN_EQ_MAX_GAIN	BIT(20)
-+#define CSI_PHY_CNTL1_DATA_CHN_EQ_MAX_GAIN	BIT(21)
-+#define CSI_PHY_CNTL1_COM_BG_EN			BIT(24)
-+#define CSI_PHY_CNTL1_HS_SYNC_EN		BIT(25)
-+
-+/* C3 CSI-2 DPHY register */
-+#define MIPI_PHY_CTRL				CSI2_REG_D(0x00)
-+#define MIPI_PHY_CTRL_DATA_LANE0_EN		(0 << 0)
-+#define MIPI_PHY_CTRL_DATA_LANE0_DIS		BIT(0)
-+#define MIPI_PHY_CTRL_DATA_LANE1_EN		(0 << 1)
-+#define MIPI_PHY_CTRL_DATA_LANE1_DIS		BIT(1)
-+#define MIPI_PHY_CTRL_DATA_LANE2_EN		(0 << 2)
-+#define MIPI_PHY_CTRL_DATA_LANE2_DIS		BIT(2)
-+#define MIPI_PHY_CTRL_DATA_LANE3_EN		(0 << 3)
-+#define MIPI_PHY_CTRL_DATA_LANE3_DIS		BIT(3)
-+#define MIPI_PHY_CTRL_CLOCK_LANE_EN		(0 << 4)
-+#define MIPI_PHY_CTRL_CLOCK_LANE_DIS		BIT(4)
-+
-+#define MIPI_PHY_CLK_LANE_CTRL			CSI2_REG_D(0x04)
-+#define MIPI_PHY_CLK_LANE_CTRL_FORCE_ULPS_ENTER	BIT(0)
-+#define MIPI_PHY_CLK_LANE_CTRL_FORCE_ULPS_EXIT	BIT(1)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS	(0 << 3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_2	BIT(3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_4	(2 << 3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_8	(3 << 3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_16	(4 << 3)
-+#define MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_EN	BIT(6)
-+#define MIPI_PHY_CLK_LANE_CTRL_LPEN_DIS		BIT(7)
-+#define MIPI_PHY_CLK_LANE_CTRL_END_EN		BIT(8)
-+#define MIPI_PHY_CLK_LANE_CTRL_HS_RX_EN		BIT(9)
-+
-+#define MIPI_PHY_DATA_LANE_CTRL1		CSI2_REG_D(0x0c)
-+#define MIPI_PHY_DATA_LANE_CTRL1_INSERT_ERRESC	BIT(0)
-+#define MIPI_PHY_DATA_LANE_CTRL1_HS_SYNC_CHK_EN	BIT(1)
-+#define MIPI_PHY_DATA_LANE_CTRL1_PIPE_MASK	GENMASK(6, 2)
-+#define MIPI_PHY_DATA_LANE_CTRL1_PIPE_ALL_EN	(0x1f << 2)
-+#define MIPI_PHY_DATA_LANE_CTRL1_PIPE_DELAY_MASK	GENMASK(9, 7)
-+#define MIPI_PHY_DATA_LANE_CTRL1_PIPE_DELAY_3	(3 << 7)
-+
-+#define MIPI_PHY_TCLK_MISS			CSI2_REG_D(0x10)
-+#define MIPI_PHY_TCLK_MISS_CYCLES_MASK		GENMASK(7, 0)
-+#define MIPI_PHY_TCLK_MISS_CYCLES_9		(9 << 0)
-+
-+#define MIPI_PHY_TCLK_SETTLE			CSI2_REG_D(0x14)
-+#define MIPI_PHY_TCLK_SETTLE_CYCLES_MASK	GENMASK(7, 0)
-+#define MIPI_PHY_TCLK_SETTLE_CYCLES_31		(31 << 0)
-+
-+#define MIPI_PHY_THS_EXIT			CSI2_REG_D(0x18)
-+#define MIPI_PHY_THS_EXIT_CYCLES_MASK		GENMASK(7, 0)
-+#define MIPI_PHY_THS_EXIT_CYCLES_8		(8 << 0)
-+
-+#define MIPI_PHY_THS_SKIP			CSI2_REG_D(0x1c)
-+#define MIPI_PHY_THS_SKIP_CYCLES_MASK		GENMASK(7, 0)
-+#define MIPI_PHY_THS_SKIP_CYCLES_10		(10 << 0)
-+
-+#define MIPI_PHY_THS_SETTLE			CSI2_REG_D(0x20)
-+#define MIPI_PHY_THS_SETTLE_CYCLES_MASK		GENMASK(7, 0)
-+
-+#define MIPI_PHY_TINIT				CSI2_REG_D(0x24)
-+#define MIPI_PHY_TINIT_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TINIT_CYCLES_20000		(20000 << 0)
-+
-+#define MIPI_PHY_TULPS_C			CSI2_REG_D(0x28)
-+#define MIPI_PHY_TULPS_C_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TULPS_C_CYCLES_4096		(4096 << 0)
-+
-+#define MIPI_PHY_TULPS_S			CSI2_REG_D(0x2c)
-+#define MIPI_PHY_TULPS_S_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TULPS_S_CYCLES_256		(256 << 0)
-+
-+#define MIPI_PHY_TMBIAS				CSI2_REG_D(0x30)
-+#define MIPI_PHY_TMBIAS_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TMBIAS_CYCLES_256		(256 << 0)
-+
-+#define MIPI_PHY_TLP_EN_W			CSI2_REG_D(0x34)
-+#define MIPI_PHY_TLP_EN_W_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TLP_EN_W_CYCLES_12		(12 << 0)
-+
-+#define MIPI_PHY_TLPOK				CSI2_REG_D(0x38)
-+#define MIPI_PHY_TLPOK_CYCLES_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TLPOK_CYCLES_256		(256 << 0)
-+
-+#define MIPI_PHY_TWD_INIT			CSI2_REG_D(0x3c)
-+#define MIPI_PHY_TWD_INIT_DOG_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TWD_INIT_DOG_0X400000		(0x400000 << 0)
-+
-+#define MIPI_PHY_TWD_HS				CSI2_REG_D(0x40)
-+#define MIPI_PHY_TWD_HS_DOG_MASK		GENMASK(31, 0)
-+#define MIPI_PHY_TWD_HS_DOG_0X400000		(0x400000 << 0)
-+
-+#define MIPI_PHY_MUX_CTRL0			CSI2_REG_D(0x284)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_MASK	GENMASK(3, 0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE0	(0 << 0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE1	BIT(0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE2	(2 << 0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE3	(3 << 0)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_MASK	GENMASK(7, 4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE0	(0 << 4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE1	BIT(4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE2	(2 << 4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE3	(3 << 4)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_MASK	GENMASK(11, 8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE0	(0 << 8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE1	BIT(8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE2	(2 << 8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE3	(3 << 8)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_MASK	GENMASK(14, 12)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE0	(0 << 12)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE1	BIT(12)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE2	(2 << 12)
-+#define MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE3	(3 << 12)
-+
-+#define MIPI_PHY_MUX_CTRL1			CSI2_REG_D(0x288)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_MASK	GENMASK(3, 0)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN0	(0 << 0)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN1	BIT(0)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN2	(2 << 0)
-+#define MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN3	(3 << 0)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_MASK	GENMASK(7, 4)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN0	(0 << 4)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN1	BIT(4)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN2	(2 << 4)
-+#define MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN3	(3 << 4)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_MASK	GENMASK(11, 8)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN0	(0 << 8)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN1	BIT(8)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN2	(2 << 8)
-+#define MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN3	(3 << 8)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_MASK	GENMASK(14, 12)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN0	(0 << 12)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN1	BIT(12)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN2	(2 << 12)
-+#define MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN3	(3 << 12)
-+
-+/* C3 CSI-2 HOST register */
-+#define CSI2_HOST_N_LANES			CSI2_REG_H(0x04)
-+#define CSI2_HOST_N_LANES_MASK			GENMASK(1, 0)
-+#define CSI2_HOST_N_LANES_1			(0 << 0)
-+#define CSI2_HOST_N_LANES_2			BIT(0)
-+#define CSI2_HOST_N_LANES_3			(2 << 0)
-+#define CSI2_HOST_N_LANES_4			(3 << 0)
-+
-+#define CSI2_HOST_CSI2_RESETN			CSI2_REG_H(0x10)
-+#define CSI2_HOST_CSI2_RESETN_MASK		BIT(0)
-+#define CSI2_HOST_CSI2_RESETN_ACTIVE		(0 << 0)
-+#define CSI2_HOST_CSI2_RESETN_EXIT		BIT(0)
-+
-+#define C3_MIPI_CSI2_MAX_WIDTH			2888
-+#define C3_MIPI_CSI2_MIN_WIDTH			160
-+#define C3_MIPI_CSI2_MAX_HEIGHT			2240
-+#define C3_MIPI_CSI2_MIN_HEIGHT			120
-+#define C3_MIPI_CSI2_DEFAULT_WIDTH		1920
-+#define C3_MIPI_CSI2_DEFAULT_HEIGHT		1080
-+#define C3_MIPI_CSI2_DEFAULT_FMT		MEDIA_BUS_FMT_SRGGB10_1X10
-+
-+/* C3 CSI-2 pad list */
-+enum {
-+	C3_MIPI_CSI2_PAD_SINK,
-+	C3_MIPI_CSI2_PAD_SRC,
-+	C3_MIPI_CSI2_PAD_MAX
-+};
++#include <linux/types.h>
 +
 +/*
-+ * struct c3_csi_info - MIPI CSI2 information
-+ *
-+ * @clocks: array of MIPI CSI2 clock names
-+ * @clock_num: actual clock number
++ * Frames are split into zones of almost equal width and height - a zone is a
++ * rectangular tile of a frame. The metering blocks within the ISP collect
++ * aggregated statistics per zone.
 + */
-+struct c3_csi_info {
-+	char *clocks[MIPI_CSI2_CLOCK_NUM_MAX];
-+	u32 clock_num;
-+};
++#define C3_ISP_AE_MAX_ZONES (17 * 15)
++#define C3_ISP_AF_MAX_ZONES (17 * 15)
++#define C3_ISP_AWB_MAX_ZONES (32 * 24)
 +
-+/*
-+ * struct c3_csi_device - MIPI CSI2 platform device
++/* The maximum number of point on the diagonal of the frame for statistics */
++#define C3_ISP_AE_MAX_PT_NUM 18
++#define C3_ISP_AF_MAX_PT_NUM 18
++#define C3_ISP_AWB_MAX_PT_NUM 33
++
++/**
++ * struct c3_isp_awb_zone_stats - AWB statistics of a zone
 + *
-+ * @dev: pointer to the struct device
-+ * @aphy: MIPI CSI2 aphy register address
-+ * @dphy: MIPI CSI2 dphy register address
-+ * @host: MIPI CSI2 host register address
-+ * @clks: array of MIPI CSI2 clocks
-+ * @sd: MIPI CSI2 sub-device
-+ * @pads: MIPI CSI2 sub-device pads
-+ * @notifier: notifier to register on the v4l2-async API
-+ * @src_pad: source sub-device pad
-+ * @bus: MIPI CSI2 bus information
-+ * @info: version-specific MIPI CSI2 information
++ * AWB zone stats is aligned with 8 bytes
++ *
++ * @rg: the ratio of R / G in a zone
++ * @bg: the ratio of B / G in a zone
++ * @pixel_sum: the total number of pixels used in a zone
 + */
-+struct c3_csi_device {
-+	struct device *dev;
-+	void __iomem *aphy;
-+	void __iomem *dphy;
-+	void __iomem *host;
-+	struct clk_bulk_data clks[MIPI_CSI2_CLOCK_NUM_MAX];
-+
-+	struct v4l2_subdev sd;
-+	struct media_pad pads[C3_MIPI_CSI2_PAD_MAX];
-+	struct v4l2_async_notifier notifier;
-+	struct media_pad *src_pad;
-+	struct v4l2_mbus_config_mipi_csi2 bus;
-+
-+	const struct c3_csi_info *info;
++struct c3_isp_awb_zone_stats {
++	__u16 rg;
++	__u16 bg;
++	__u32 pixel_sum;
 +};
 +
-+static const u32 c3_mipi_csi_formats[] = {
-+	MEDIA_BUS_FMT_SBGGR10_1X10,
-+	MEDIA_BUS_FMT_SGBRG10_1X10,
-+	MEDIA_BUS_FMT_SGRBG10_1X10,
-+	MEDIA_BUS_FMT_SRGGB10_1X10,
-+	MEDIA_BUS_FMT_SBGGR12_1X12,
-+	MEDIA_BUS_FMT_SGBRG12_1X12,
-+	MEDIA_BUS_FMT_SGRBG12_1X12,
-+	MEDIA_BUS_FMT_SRGGB12_1X12,
++/**
++ * struct c3_isp_awb_stats - Auto white balance statistics information.
++ *
++ * AWB statistical information of all zones.
++ *
++ * @stats: array of auto white balance statistics
++ */
++struct c3_isp_awb_stats {
++	struct c3_isp_awb_zone_stats stats[C3_ISP_AWB_MAX_ZONES];
++} __attribute__((aligned(16)));
++
++/**
++ * struct c3_isp_ae_zone_stats - AE statistics of a zone
++ *
++ * AE zone stats is aligned with 8 bytes.
++ * This is a 5-bin histogram and the total sum is normalized to 0xffff.
++ * So hist2 = 0xffff - (hist0 + hist1 + hist3 + hist4)
++ *
++ * @hist0: the global normalized pixel count for bin 0
++ * @hist1: the global normalized pixel count for bin 1
++ * @hist3: the global normalized pixel count for bin 3
++ * @hist4: the global normalized pixel count for bin 4
++ */
++struct c3_isp_ae_zone_stats {
++	__u16 hist0;
++	__u16 hist1;
++	__u16 hist3;
++	__u16 hist4;
 +};
 +
-+/* Hardware configuration */
++/**
++ * struct c3_isp_ae_stats - Exposure statistics information
++ *
++ * AE statistical information consists of all blocks information and a 1024-bin
++ * histogram.
++ *
++ * @stats: array of auto exposure block statistics
++ * @reserved: undefined buffer space
++ * @hist: a 1024-bin histogram for the entire image
++ */
++struct c3_isp_ae_stats {
++	struct c3_isp_ae_zone_stats stats[C3_ISP_AE_MAX_ZONES];
++	__u32 reserved[2];
++	__u32 hist[1024];
++} __attribute__((aligned(16)));
 +
-+static void c3_mipi_csi_write(struct c3_csi_device *csi, u32 reg, u32 val)
-+{
-+	void __iomem *addr;
-+
-+	switch (CSI2_SUBMD(reg)) {
-+	case SUBMD_APHY:
-+		addr = csi->aphy + CSI2_REG_ADDR(reg);
-+		break;
-+	case SUBMD_DPHY:
-+		addr = csi->dphy + CSI2_REG_ADDR(reg);
-+		break;
-+	case SUBMD_HOST:
-+		addr = csi->host + CSI2_REG_ADDR(reg);
-+		break;
-+	default:
-+		dev_err(csi->dev, "Invalid sub-module: %lu\n", CSI2_SUBMD(reg));
-+		return;
-+	}
-+
-+	writel(val, addr);
-+}
-+
-+static void c3_mipi_csi_cfg_aphy(struct c3_csi_device *csi)
-+{
-+	c3_mipi_csi_write(csi, CSI_PHY_CNTL0,
-+			  CSI_PHY_CNTL0_HS_LP_BIAS_EN |
-+			  CSI_PHY_CNTL0_HS_RX_TRIM_11 |
-+			  CSI_PHY_CNTL0_LP_LOW_VTH_2 |
-+			  CSI_PHY_CNTL0_LP_HIGH_VTH_4 |
-+			  CSI_PHY_CNTL0_DATA_LANE0_HS_DIG_EN |
-+			  CSI_PHY_CNTL0_DATA_LANE1_HS_DIG_EN |
-+			  CSI_PHY_CNTL0_CLK0_LANE_HS_DIG_EN |
-+			  CSI_PHY_CNTL0_DATA_LANE2_HS_DIG_EN |
-+			  CSI_PHY_CNTL0_DATA_LANE3_HS_DIG_EN);
-+
-+	c3_mipi_csi_write(csi, CSI_PHY_CNTL1,
-+			  CSI_PHY_CNTL1_HS_EQ_CAP_SMALL |
-+			  CSI_PHY_CNTL1_HS_EQ_RES_MED |
-+			  CSI_PHY_CNTL1_CLK_CHN_EQ_MAX_GAIN |
-+			  CSI_PHY_CNTL1_DATA_CHN_EQ_MAX_GAIN |
-+			  CSI_PHY_CNTL1_COM_BG_EN |
-+			  CSI_PHY_CNTL1_HS_SYNC_EN);
-+}
-+
-+static void c3_mipi_csi_cfg_dphy(struct c3_csi_device *csi, s64 rate)
-+{
-+	u32 val;
-+	u32 settle;
-+
-+	/* Calculate the high speed settle */
-+	val = DIV_ROUND_UP(1000000000, rate);
-+	settle = (16 * val + 230) / 10;
-+
-+	c3_mipi_csi_write(csi, MIPI_PHY_CLK_LANE_CTRL,
-+			  MIPI_PHY_CLK_LANE_CTRL_HS_RX_EN |
-+			  MIPI_PHY_CLK_LANE_CTRL_END_EN |
-+			  MIPI_PHY_CLK_LANE_CTRL_LPEN_DIS |
-+			  MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_EN |
-+			  MIPI_PHY_CLK_LANE_CTRL_TCLK_ZERO_HS_8);
-+
-+	c3_mipi_csi_write(csi, MIPI_PHY_TCLK_MISS, MIPI_PHY_TCLK_MISS_CYCLES_9);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TCLK_SETTLE,
-+			  MIPI_PHY_TCLK_SETTLE_CYCLES_31);
-+	c3_mipi_csi_write(csi, MIPI_PHY_THS_EXIT, MIPI_PHY_THS_EXIT_CYCLES_8);
-+	c3_mipi_csi_write(csi, MIPI_PHY_THS_SKIP, MIPI_PHY_THS_SKIP_CYCLES_10);
-+	c3_mipi_csi_write(csi, MIPI_PHY_THS_SETTLE, settle);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TINIT, MIPI_PHY_TINIT_CYCLES_20000);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TMBIAS, MIPI_PHY_TMBIAS_CYCLES_256);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TULPS_C, MIPI_PHY_TULPS_C_CYCLES_4096);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TULPS_S, MIPI_PHY_TULPS_S_CYCLES_256);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TLP_EN_W, MIPI_PHY_TLP_EN_W_CYCLES_12);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TLPOK, MIPI_PHY_TLPOK_CYCLES_256);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TWD_INIT,
-+			  MIPI_PHY_TWD_INIT_DOG_0X400000);
-+	c3_mipi_csi_write(csi, MIPI_PHY_TWD_HS, MIPI_PHY_TWD_HS_DOG_0X400000);
-+
-+	c3_mipi_csi_write(csi, MIPI_PHY_DATA_LANE_CTRL1,
-+			  MIPI_PHY_DATA_LANE_CTRL1_INSERT_ERRESC |
-+			  MIPI_PHY_DATA_LANE_CTRL1_HS_SYNC_CHK_EN |
-+			  MIPI_PHY_DATA_LANE_CTRL1_PIPE_ALL_EN |
-+			  MIPI_PHY_DATA_LANE_CTRL1_PIPE_DELAY_3);
-+
-+	/* Set the order of lanes */
-+	c3_mipi_csi_write(csi, MIPI_PHY_MUX_CTRL0,
-+			  MIPI_PHY_MUX_CTRL0_SFEN3_SRC_LANE3 |
-+			  MIPI_PHY_MUX_CTRL0_SFEN2_SRC_LANE2 |
-+			  MIPI_PHY_MUX_CTRL0_SFEN1_SRC_LANE1 |
-+			  MIPI_PHY_MUX_CTRL0_SFEN0_SRC_LANE0);
-+
-+	c3_mipi_csi_write(csi, MIPI_PHY_MUX_CTRL1,
-+			  MIPI_PHY_MUX_CTRL1_LANE3_SRC_SFEN3 |
-+			  MIPI_PHY_MUX_CTRL1_LANE2_SRC_SFEN2 |
-+			  MIPI_PHY_MUX_CTRL1_LANE1_SRC_SFEN1 |
-+			  MIPI_PHY_MUX_CTRL1_LANE0_SRC_SFEN0);
-+
-+	/* Enable digital data and clock lanes */
-+	c3_mipi_csi_write(csi, MIPI_PHY_CTRL,
-+			  MIPI_PHY_CTRL_DATA_LANE0_EN |
-+			  MIPI_PHY_CTRL_DATA_LANE1_EN |
-+			  MIPI_PHY_CTRL_DATA_LANE2_EN |
-+			  MIPI_PHY_CTRL_DATA_LANE3_EN |
-+			  MIPI_PHY_CTRL_CLOCK_LANE_EN);
-+}
-+
-+static void c3_mipi_csi_cfg_host(struct c3_csi_device *csi)
-+{
-+	/* Reset CSI-2 controller output */
-+	c3_mipi_csi_write(csi, CSI2_HOST_CSI2_RESETN,
-+			  CSI2_HOST_CSI2_RESETN_ACTIVE);
-+	c3_mipi_csi_write(csi, CSI2_HOST_CSI2_RESETN,
-+			  CSI2_HOST_CSI2_RESETN_EXIT);
-+
-+	/* Set data lane number */
-+	c3_mipi_csi_write(csi, CSI2_HOST_N_LANES, csi->bus.num_data_lanes - 1);
-+}
-+
-+static int c3_mipi_csi_start_stream(struct c3_csi_device *csi,
-+				    struct v4l2_subdev *src_sd)
-+{
-+	s64 link_freq;
-+	s64 lane_rate;
-+
-+	link_freq = v4l2_get_link_freq(src_sd->ctrl_handler, 0, 0);
-+	if (link_freq < 0) {
-+		dev_err(csi->dev,
-+			"Unable to obtain link frequency: %lld\n", link_freq);
-+		return link_freq;
-+	}
-+
-+	lane_rate = link_freq * 2;
-+	if (lane_rate > 1500000000) {
-+		dev_err(csi->dev, "Invalid lane rate: %lld\n", lane_rate);
-+		return -EINVAL;
-+	}
-+
-+	c3_mipi_csi_cfg_aphy(csi);
-+	c3_mipi_csi_cfg_dphy(csi, lane_rate);
-+	c3_mipi_csi_cfg_host(csi);
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_enable_streams(struct v4l2_subdev *sd,
-+				      struct v4l2_subdev_state *state,
-+				      u32 pad, u64 streams_mask)
-+{
-+	struct c3_csi_device *csi = v4l2_get_subdevdata(sd);
-+	struct media_pad *sink_pad;
-+	struct v4l2_subdev *src_sd;
-+	int ret;
-+
-+	sink_pad = &csi->pads[C3_MIPI_CSI2_PAD_SINK];
-+	csi->src_pad = media_pad_remote_pad_unique(sink_pad);
-+	if (IS_ERR(csi->src_pad)) {
-+		dev_dbg(csi->dev, "Failed to get source pad for MIPI CSI-2\n");
-+		return -EPIPE;
-+	}
-+
-+	src_sd = media_entity_to_v4l2_subdev(csi->src_pad->entity);
-+
-+	pm_runtime_resume_and_get(csi->dev);
-+
-+	c3_mipi_csi_start_stream(csi, src_sd);
-+
-+	ret = v4l2_subdev_enable_streams(src_sd, csi->src_pad->index, BIT(0));
-+	if (ret) {
-+		pm_runtime_put(csi->dev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_disable_streams(struct v4l2_subdev *sd,
-+				       struct v4l2_subdev_state *state,
-+				       u32 pad, u64 streams_mask)
-+{
-+	struct c3_csi_device *csi = v4l2_get_subdevdata(sd);
-+	struct v4l2_subdev *src_sd;
-+
-+	if (csi->src_pad) {
-+		src_sd = media_entity_to_v4l2_subdev(csi->src_pad->entity);
-+		v4l2_subdev_disable_streams(src_sd, csi->src_pad->index,
-+					    BIT(0));
-+	}
-+	csi->src_pad = NULL;
-+
-+	pm_runtime_put(csi->dev);
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_enum_mbus_code(struct v4l2_subdev *sd,
-+				      struct v4l2_subdev_state *state,
-+				      struct v4l2_subdev_mbus_code_enum *code)
-+{
-+	struct v4l2_mbus_framefmt *fmt;
-+
-+	switch (code->pad) {
-+	case C3_MIPI_CSI2_PAD_SINK:
-+		if (code->index >= ARRAY_SIZE(c3_mipi_csi_formats))
-+			return -EINVAL;
-+
-+		code->code = c3_mipi_csi_formats[code->index];
-+		break;
-+	case C3_MIPI_CSI2_PAD_SRC:
-+		if (code->index)
-+			return -EINVAL;
-+
-+		fmt = v4l2_subdev_state_get_format(state, code->pad);
-+		code->code = fmt->code;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_set_fmt(struct v4l2_subdev *sd,
-+			       struct v4l2_subdev_state *state,
-+			       struct v4l2_subdev_format *format)
-+{
-+	struct v4l2_mbus_framefmt *fmt;
-+	unsigned int i;
-+
-+	if (format->pad != C3_MIPI_CSI2_PAD_SINK)
-+		return v4l2_subdev_get_fmt(sd, state, format);
-+
-+	fmt = v4l2_subdev_state_get_format(state, format->pad);
-+
-+	for (i = 0; i < ARRAY_SIZE(c3_mipi_csi_formats); i++) {
-+		if (format->format.code == c3_mipi_csi_formats[i]) {
-+			fmt->code = c3_mipi_csi_formats[i];
-+			break;
-+		}
-+	}
-+
-+	if (i == ARRAY_SIZE(c3_mipi_csi_formats))
-+		fmt->code = c3_mipi_csi_formats[0];
-+
-+	fmt->width = clamp_t(u32, format->format.width,
-+			     C3_MIPI_CSI2_MIN_WIDTH, C3_MIPI_CSI2_MAX_WIDTH);
-+	fmt->height = clamp_t(u32, format->format.height,
-+			      C3_MIPI_CSI2_MIN_HEIGHT, C3_MIPI_CSI2_MAX_HEIGHT);
-+	fmt->colorspace = V4L2_COLORSPACE_RAW;
-+	fmt->xfer_func = V4L2_XFER_FUNC_NONE;
-+	fmt->ycbcr_enc = V4L2_YCBCR_ENC_601;
-+	fmt->quantization = V4L2_QUANTIZATION_FULL_RANGE;
-+
-+	format->format = *fmt;
-+
-+	/* Synchronize the format to source pad */
-+	fmt = v4l2_subdev_state_get_format(state, C3_MIPI_CSI2_PAD_SRC);
-+	*fmt = format->format;
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_init_state(struct v4l2_subdev *sd,
-+				  struct v4l2_subdev_state *state)
-+{
-+	struct v4l2_mbus_framefmt *sink_fmt;
-+	struct v4l2_mbus_framefmt *src_fmt;
-+
-+	sink_fmt = v4l2_subdev_state_get_format(state, C3_MIPI_CSI2_PAD_SINK);
-+	src_fmt = v4l2_subdev_state_get_format(state, C3_MIPI_CSI2_PAD_SRC);
-+
-+	sink_fmt->width = C3_MIPI_CSI2_DEFAULT_WIDTH;
-+	sink_fmt->height = C3_MIPI_CSI2_DEFAULT_HEIGHT;
-+	sink_fmt->field = V4L2_FIELD_NONE;
-+	sink_fmt->code = C3_MIPI_CSI2_DEFAULT_FMT;
-+	sink_fmt->colorspace = V4L2_COLORSPACE_RAW;
-+	sink_fmt->xfer_func = V4L2_XFER_FUNC_NONE;
-+	sink_fmt->ycbcr_enc = V4L2_YCBCR_ENC_601;
-+	sink_fmt->quantization = V4L2_QUANTIZATION_FULL_RANGE;
-+
-+	*src_fmt = *sink_fmt;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_pad_ops c3_mipi_csi_pad_ops = {
-+	.enum_mbus_code = c3_mipi_csi_enum_mbus_code,
-+	.get_fmt = v4l2_subdev_get_fmt,
-+	.set_fmt = c3_mipi_csi_set_fmt,
-+	.enable_streams = c3_mipi_csi_enable_streams,
-+	.disable_streams = c3_mipi_csi_disable_streams,
++/**
++ * struct c3_isp_af_zone_stats - AF statistics of a zone
++ *
++ * AF zone stats is aligned with 8 bytes.
++ * The zonal accumulated contrast metrics are stored in floating point format
++ * with 16 bits mantissa and 5 or 6 bits exponent. Apart from contrast metrics
++ * we accumulate squared image and quartic image data over the zone.
++ *
++ * @i2_mat: the mantissa of zonal squared image pixel sum
++ * @i4_mat: the mantissa of zonal quartic image pixel sum
++ * @e4_mat: the mantissa of zonal multi-directional quartic edge sum
++ * @e4_exp: the exponent of zonal multi-directional quartic edge sum
++ * @i2_exp: the exponent of zonal squared image pixel sum
++ * @i4_exp: the exponent of zonal quartic image pixel sum
++ */
++struct c3_isp_af_zone_stats {
++	__u16 i2_mat;
++	__u16 i4_mat;
++	__u16 e4_mat;
++	__u16 e4_exp : 5;
++	__u16 i2_exp : 5;
++	__u16 i4_exp : 6;
 +};
 +
-+static const struct v4l2_subdev_ops c3_mipi_csi_subdev_ops = {
-+	.pad = &c3_mipi_csi_pad_ops,
++/**
++ * struct c3_isp_af_stats - Auto Focus statistics information
++ *
++ * AF statistical information of each zone
++ *
++ * @stats: array of auto focus block statistics
++ * @reserved: undefined buffer space
++ */
++struct c3_isp_af_stats {
++	struct c3_isp_af_zone_stats stats[C3_ISP_AF_MAX_ZONES];
++	__u32 reserved[2];
++} __attribute__((aligned(16)));
++
++/**
++ * struct c3_isp_stats_info - V4L2_META_FMT_C3ISP_STATS
++ *
++ * Contains ISP statistics
++ *
++ * @awb: auto white balance stats
++ * @ae: auto exposure stats
++ * @af: auto focus stats
++ */
++struct c3_isp_stats_info {
++	struct c3_isp_awb_stats awb;
++	struct c3_isp_ae_stats ae;
++	struct c3_isp_af_stats af;
 +};
 +
-+static const struct v4l2_subdev_internal_ops c3_mipi_csi_internal_ops = {
-+	.init_state = c3_mipi_csi_init_state,
++/**
++ * enum c3_isp_params_buffer_version -  C3 ISP parameters block versioning
++ *
++ * @C3_ISP_PARAMS_BUFFER_V0: First version of C3 ISP parameters block
++ */
++enum c3_isp_params_buffer_version {
++	C3_ISP_PARAMS_BUFFER_V0,
 +};
 +
-+/* Media entity operations */
-+static const struct media_entity_operations c3_mipi_csi_entity_ops = {
-+	.link_validate = v4l2_subdev_link_validate,
++/**
++ * enum c3_isp_params_block_type - Enumeration of C3 ISP parameter blocks
++ *
++ * Each block configures a specific processing block of the C3 ISP.
++ * The block type allows the driver to correctly interpret the parameters block
++ * data.
++ *
++ * @C3_ISP_PARAMS_BLOCK_AWB_GAINS: White balance gains
++ * @C3_ISP_PARAMS_BLOCK_AWB_CONFIG: AWB statistic format configuration for all
++ *                                  blocks that control how stats are generated
++ * @C3_ISP_PARAMS_BLOCK_AE_CONFIG: AE statistic format configuration for all
++ *                                 blocks that control how stats are generated
++ * @C3_ISP_PARAMS_BLOCK_AF_CONFIG: AF statistic format configuration for all
++ *                                 blocks that control how stats are generated
++ * @C3_ISP_PARAMS_BLOCK_PST_GAMMA: post gamma parameters
++ * @C3_ISP_PARAMS_BLOCK_CCM: Color correction matrix parameters
++ * @C3_ISP_PARAMS_BLOCK_CSC: Color space conversion parameters
++ * @C3_ISP_PARAMS_BLOCK_BLC: Black level correction parameters
++ * @C3_ISP_PARAMS_BLOCK_SENTINEL: First non-valid block index
++ */
++enum c3_isp_params_block_type {
++	C3_ISP_PARAMS_BLOCK_AWB_GAINS,
++	C3_ISP_PARAMS_BLOCK_AWB_CONFIG,
++	C3_ISP_PARAMS_BLOCK_AE_CONFIG,
++	C3_ISP_PARAMS_BLOCK_AF_CONFIG,
++	C3_ISP_PARAMS_BLOCK_PST_GAMMA,
++	C3_ISP_PARAMS_BLOCK_CCM,
++	C3_ISP_PARAMS_BLOCK_CSC,
++	C3_ISP_PARAMS_BLOCK_BLC,
++	C3_ISP_PARAMS_BLOCK_SENTINEL
 +};
 +
-+/* PM runtime */
++#define C3_ISP_PARAMS_BLOCK_FL_DISABLE (1U << 0)
++#define C3_ISP_PARAMS_BLOCK_FL_ENABLE (1U << 1)
 +
-+static int c3_mipi_csi_runtime_suspend(struct device *dev)
-+{
-+	struct c3_csi_device *csi = dev_get_drvdata(dev);
-+
-+	clk_bulk_disable_unprepare(csi->info->clock_num, csi->clks);
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_runtime_resume(struct device *dev)
-+{
-+	struct c3_csi_device *csi = dev_get_drvdata(dev);
-+
-+	return clk_bulk_prepare_enable(csi->info->clock_num, csi->clks);
-+}
-+
-+static const struct dev_pm_ops c3_mipi_csi_pm_ops = {
-+	SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+			    pm_runtime_force_resume)
-+	RUNTIME_PM_OPS(c3_mipi_csi_runtime_suspend,
-+		       c3_mipi_csi_runtime_resume, NULL)
++/**
++ * struct c3_isp_params_block_header - C3 ISP parameter block header
++ *
++ * This structure represents the common part of all the ISP configuration
++ * blocks. Each parameters block shall embed an instance of this structure type
++ * as its first member, followed by the block-specific configuration data. The
++ * driver inspects this common header to discern the block type and its size and
++ * properly handle the block content by casting it to the correct block-specific
++ * type.
++ *
++ * The @type field is one of the values enumerated by
++ * :c:type:`c3_isp_params_block_type` and specifies how the data should be
++ * interpreted by the driver. The @size field specifies the size of the
++ * parameters block and is used by the driver for validation purposes. The
++ * @flags field is a bitmask of per-block flags C3_ISP_PARAMS_FL*.
++ *
++ * When userspace wants to disable an ISP block the
++ * C3_ISP_PARAMS_BLOCK_FL_DISABLED bit should be set in the @flags field. In
++ * this case userspace may optionally omit the remainder of the configuration
++ * block, which will be ignored by the driver.
++ *
++ * When a new configuration of an ISP block needs to be applied userspace
++ * shall fully populate the ISP block and omit setting the
++ * C3_ISP_PARAMS_BLOCK_FL_DISABLED bit in the @flags field.
++ *
++ * Userspace is responsible for correctly populating the parameters block header
++ * fields (@type, @flags and @size) and the block-specific parameters.
++ *
++ * For example:
++ *
++ * .. code-block:: c
++ *
++ *	void populate_pst_gamma(struct c3_isp_params_block_header *block) {
++ *		struct c3_isp_params_pst_gamma *gamma =
++ *			(struct c3_isp_params_pst_gamma *)block;
++ *
++ *		gamma->header.type = C3_ISP_PARAMS_BLOCK_PST_GAMMA;
++ *		gamma->header.flags = C3_ISP_PARAMS_BLOCK_FL_ENABLE;
++ *		gamma->header.size = sizeof(*gamma);
++ *
++ *		for (unsigned int i = 0; i < 129; i++)
++ *			gamma->pst_gamma_lut[i] = i;
++ *	}
++ *
++ * @type: The parameters block type from :c:type:`c3_isp_params_block_type`
++ * @flags: A bitmask of block flags
++ * @size: Size (in bytes) of the parameters block, including this header
++ */
++struct c3_isp_params_block_header {
++	__u16 type;
++	__u16 flags;
++	__u32 size;
 +};
 +
-+/* Probe/remove & platform driver */
++/**
++ * struct c3_isp_params_awb_gains - Gains for auto-white balance
++ *
++ * This struct allows users to configure the gains for white balance.
++ * There are four gain settings corresponding to each colour channel in
++ * the bayer domain. All of the gains are stored in Q4.8 format.
++ *
++ * header.type should be set to C3_ISP_PARAMS_BLOCK_AWB_GAINS
++ * from :c:type:`c3_isp_params_block_type`
++ *
++ * @header: The C3 ISP parameters block header
++ * @gr_gain: Multiplier for Gr channel (Q4.8 format)
++ * @r_gain: Multiplier for R channel (Q4.8 format)
++ * @b_gain: Multiplier for B channel (Q4.8 format)
++ * @gb_gain: Multiplier for Gb channel (Q4.8 format)
++ */
++struct c3_isp_params_awb_gains {
++	struct c3_isp_params_block_header header;
++	__u16 gr_gain;
++	__u16 r_gain;
++	__u16 b_gain;
++	__u16 gb_gain;
++} __attribute__((aligned(8)));
 +
-+static int c3_mipi_csi_subdev_init(struct c3_csi_device *csi)
-+{
-+	struct v4l2_subdev *sd = &csi->sd;
-+	int ret;
-+
-+	v4l2_subdev_init(sd, &c3_mipi_csi_subdev_ops);
-+	sd->owner = THIS_MODULE;
-+	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	sd->internal_ops = &c3_mipi_csi_internal_ops;
-+	snprintf(sd->name, sizeof(sd->name), "%s", MIPI_CSI2_SUBDEV_NAME);
-+
-+	sd->entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
-+	sd->entity.ops = &c3_mipi_csi_entity_ops;
-+
-+	sd->dev = csi->dev;
-+	v4l2_set_subdevdata(sd, csi);
-+
-+	csi->pads[C3_MIPI_CSI2_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
-+	csi->pads[C3_MIPI_CSI2_PAD_SRC].flags = MEDIA_PAD_FL_SOURCE;
-+	ret = media_entity_pads_init(&sd->entity, C3_MIPI_CSI2_PAD_MAX,
-+				     csi->pads);
-+	if (ret)
-+		return ret;
-+
-+	ret = v4l2_subdev_init_finalize(sd);
-+	if (ret) {
-+		media_entity_cleanup(&sd->entity);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void c3_mipi_csi_subdev_deinit(struct c3_csi_device *csi)
-+{
-+	v4l2_subdev_cleanup(&csi->sd);
-+	media_entity_cleanup(&csi->sd.entity);
-+}
-+
-+/* Subdev notifier register */
-+static int c3_mipi_csi_notify_bound(struct v4l2_async_notifier *notifier,
-+				    struct v4l2_subdev *sd,
-+				    struct v4l2_async_connection *asc)
-+{
-+	struct c3_csi_device *csi = v4l2_get_subdevdata(notifier->sd);
-+	struct media_pad *sink = &csi->sd.entity.pads[C3_MIPI_CSI2_PAD_SINK];
-+
-+	return v4l2_create_fwnode_links_to_pad(sd, sink, MEDIA_LNK_FL_ENABLED |
-+					       MEDIA_LNK_FL_IMMUTABLE);
-+}
-+
-+static const struct v4l2_async_notifier_operations c3_mipi_csi_notify_ops = {
-+	.bound = c3_mipi_csi_notify_bound,
++/**
++ * enum c3_isp_params_awb_tap_points - Tap points for the AWB statistics
++ * @C3_ISP_AWB_STATS_TAP_OFE: immediately after the optical frontend block
++ * @C3_ISP_AWB_STATS_TAP_GE: immediately after the green equal block
++ * @C3_ISP_AWB_STATS_TAP_BEFORE_WB: immediately before the white balance block
++ * @C3_ISP_AWB_STATS_TAP_AFTER_WB: immediately after the white balance block
++ */
++enum c3_isp_params_awb_tap_points {
++	C3_ISP_AWB_STATS_TAP_OFE = 0,
++	C3_ISP_AWB_STATS_TAP_GE,
++	C3_ISP_AWB_STATS_TAP_BEFORE_WB,
++	C3_ISP_AWB_STATS_TAP_AFTER_WB,
 +};
 +
-+static int c3_mipi_csi_async_register(struct c3_csi_device *csi)
-+{
-+	struct v4l2_fwnode_endpoint vep = {
-+		.bus_type = V4L2_MBUS_CSI2_DPHY,
-+	};
-+	struct v4l2_async_connection *asc;
-+	struct fwnode_handle *ep;
-+	int ret;
++/**
++ * struct c3_isp_params_awb_config - Stats settings for auto-white balance
++ *
++ * This struct allows the configuration of the statistics generated for auto
++ * white balance.
++ *
++ * header.type should be set to C3_ISP_PARAMS_BLOCK_AWB_CONFIG
++ * from :c:type:`c3_isp_params_block_type`
++ *
++ * @header: the C3 ISP parameters block header
++ * @tap_point: the tap point from enum c3_isp_params_awb_tap_point
++ * @satur_vald: AWB statistic over saturation control
++ *		value: 0: disable, 1: enable
++ * @horiz_zones_num: active number of hotizontal zones [0..32]
++ * @vert_zones_num: active number of vertical zones [0..24]
++ * @rg_min: minimum R/G ratio (Q4.8 format)
++ * @rg_max: maximum R/G ratio (Q4.8 format)
++ * @bg_min: minimum B/G ratio (Q4.8 format)
++ * @bg_max: maximum B/G ratio (Q4.8 format)
++ * @rg_low: R/G ratio trim low (Q4.8 format)
++ * @rg_high: R/G ratio trim hight (Q4.8 format)
++ * @bg_low: B/G ratio trim low (Q4.8 format)
++ * @bg_high: B/G ratio trim high (Q4.8 format)
++ * @zone_weight: array of weights for AWB statistics zones [0..15]
++ * @horiz_coord: the horizontal coordinate of points on the diagonal [0..2888]
++ * @vert_coord: the vertical coordinate of points on the diagonal [0..2240]
++ */
++struct c3_isp_params_awb_config {
++	struct c3_isp_params_block_header header;
++	__u8 tap_point;
++	__u8 satur_vald;
++	__u8 horiz_zones_num;
++	__u8 vert_zones_num;
++	__u16 rg_min;
++	__u16 rg_max;
++	__u16 bg_min;
++	__u16 bg_max;
++	__u16 rg_low;
++	__u16 rg_high;
++	__u16 bg_low;
++	__u16 bg_high;
++	__u8 zone_weight[C3_ISP_AWB_MAX_ZONES];
++	__u16 horiz_coord[C3_ISP_AWB_MAX_PT_NUM];
++	__u16 vert_coord[C3_ISP_AWB_MAX_PT_NUM];
++} __attribute__((aligned(8)));
 +
-+	v4l2_async_subdev_nf_init(&csi->notifier, &csi->sd);
-+
-+	ep = fwnode_graph_get_endpoint_by_id(dev_fwnode(csi->dev), 0, 0,
-+					     FWNODE_GRAPH_ENDPOINT_NEXT);
-+	if (!ep)
-+		return -ENOTCONN;
-+
-+	ret = v4l2_fwnode_endpoint_parse(ep, &vep);
-+	if (ret)
-+		goto err_put_handle;
-+
-+	csi->bus = vep.bus.mipi_csi2;
-+
-+	asc = v4l2_async_nf_add_fwnode_remote(&csi->notifier, ep,
-+					      struct v4l2_async_connection);
-+	if (IS_ERR(asc)) {
-+		ret = PTR_ERR(asc);
-+		goto err_put_handle;
-+	}
-+
-+	csi->notifier.ops = &c3_mipi_csi_notify_ops;
-+	ret = v4l2_async_nf_register(&csi->notifier);
-+	if (ret)
-+		goto err_cleanup_nf;
-+
-+	ret = v4l2_async_register_subdev(&csi->sd);
-+	if (ret)
-+		goto err_unregister_nf;
-+
-+	fwnode_handle_put(ep);
-+
-+	return 0;
-+
-+err_unregister_nf:
-+	v4l2_async_nf_unregister(&csi->notifier);
-+err_cleanup_nf:
-+	v4l2_async_nf_cleanup(&csi->notifier);
-+err_put_handle:
-+	fwnode_handle_put(ep);
-+	return ret;
-+}
-+
-+static void c3_mipi_csi_async_unregister(struct c3_csi_device *csi)
-+{
-+	v4l2_async_unregister_subdev(&csi->sd);
-+	v4l2_async_nf_unregister(&csi->notifier);
-+	v4l2_async_nf_cleanup(&csi->notifier);
-+}
-+
-+static int c3_mipi_csi_ioremap_resource(struct c3_csi_device *csi)
-+{
-+	struct device *dev = csi->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+
-+	csi->aphy = devm_platform_ioremap_resource_byname(pdev, "aphy");
-+	if (IS_ERR(csi->aphy))
-+		return PTR_ERR(csi->aphy);
-+
-+	csi->dphy = devm_platform_ioremap_resource_byname(pdev, "dphy");
-+	if (IS_ERR(csi->dphy))
-+		return PTR_ERR(csi->dphy);
-+
-+	csi->host = devm_platform_ioremap_resource_byname(pdev, "host");
-+	if (IS_ERR(csi->host))
-+		return PTR_ERR(csi->host);
-+
-+	return 0;
-+}
-+
-+static int c3_mipi_csi_get_clocks(struct c3_csi_device *csi)
-+{
-+	const struct c3_csi_info *info = csi->info;
-+
-+	for (unsigned int i = 0; i < info->clock_num; i++)
-+		csi->clks[i].id = info->clocks[i];
-+
-+	return devm_clk_bulk_get(csi->dev, info->clock_num, csi->clks);
-+}
-+
-+static int c3_mipi_csi_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct c3_csi_device *csi;
-+	int ret;
-+
-+	csi = devm_kzalloc(dev, sizeof(*csi), GFP_KERNEL);
-+	if (!csi)
-+		return -ENOMEM;
-+
-+	csi->info = of_device_get_match_data(dev);
-+	csi->dev = dev;
-+
-+	ret = c3_mipi_csi_ioremap_resource(csi);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to ioremap resource\n");
-+
-+	ret = c3_mipi_csi_get_clocks(csi);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get clocks\n");
-+
-+	platform_set_drvdata(pdev, csi);
-+
-+	pm_runtime_enable(dev);
-+
-+	ret = c3_mipi_csi_subdev_init(csi);
-+	if (ret)
-+		goto err_disable_runtime_pm;
-+
-+	ret = c3_mipi_csi_async_register(csi);
-+	if (ret)
-+		goto err_deinit_subdev;
-+
-+	return 0;
-+
-+err_deinit_subdev:
-+	c3_mipi_csi_subdev_deinit(csi);
-+err_disable_runtime_pm:
-+	pm_runtime_disable(dev);
-+	return ret;
++/**
++ * enum c3_isp_params_ae_tap_points - Tap points for the AE statistics
++ * @C3_ISP_AE_STATS_TAP_GE: immediately after the green equal block
++ * @C3_ISP_AE_STATS_TAP_MLS: immediately after the mesh lens shading block
++ */
++enum c3_isp_params_ae_tap_points {
++	C3_ISP_AE_STATS_TAP_GE = 0,
++	C3_ISP_AE_STATS_TAP_MLS,
 +};
 +
-+static void c3_mipi_csi_remove(struct platform_device *pdev)
-+{
-+	struct c3_csi_device *csi = platform_get_drvdata(pdev);
++/**
++ * struct c3_isp_params_ae_config - Stats settings for auto-exposure
++ *
++ * This struct allows the configuration of the statistics generated for
++ * auto exposure.
++ *
++ * header.type should be set to C3_ISP_PARAMS_BLOCK_AE_CONFIG
++ * from :c:type:`c3_isp_params_block_type`
++ *
++ * @header: the C3 ISP parameters block header
++ * @horiz_zones_num: active number of horizontal zones [0..17]
++ * @vert_zones_num: active number of vertical zones [0..15]
++ * @tap_point: the tap point from enum c3_isp_params_ae_tap_point
++ * @zone_weight: array of weights for AE statistics zones [0..15]
++ * @horiz_coord: the horizontal coordinate of points on the diagonal [0..2888]
++ * @vert_coord: the vertical coordinate of points on the diagonal [0..2240]
++ * @reserved: applications must zero this array
++ */
++struct c3_isp_params_ae_config {
++	struct c3_isp_params_block_header header;
++	__u8 tap_point;
++	__u8 horiz_zones_num;
++	__u8 vert_zones_num;
++	__u8 zone_weight[C3_ISP_AE_MAX_ZONES];
++	__u16 horiz_coord[C3_ISP_AE_MAX_PT_NUM];
++	__u16 vert_coord[C3_ISP_AE_MAX_PT_NUM];
++	__u16 reserved[3];
++} __attribute__((aligned(8)));
 +
-+	c3_mipi_csi_async_unregister(csi);
-+	c3_mipi_csi_subdev_deinit(csi);
-+
-+	pm_runtime_disable(&pdev->dev);
++/**
++ * enum c3_isp_params_af_tap_points - Tap points for the AF statistics
++ * @C3_ISP_AF_STATS_TAP_SNR: immediately after the spatial noise reduce block
++ * @C3_ISP_AF_STATS_TAP_DMS: immediately after the demosaic block
++ */
++enum c3_isp_params_af_tap_points {
++	C3_ISP_AF_STATS_TAP_SNR = 0,
++	C3_ISP_AF_STATS_TAP_DMS,
 +};
 +
-+static const struct c3_csi_info c3_mipi_csi_info = {
-+	.clocks = {"vapb", "phy0"},
-+	.clock_num = 2
++/**
++ * struct c3_isp_params_af_config - Stats settings for auto-focus
++ *
++ * This struct allows the configuration of the statistics generated for
++ * auto focus.
++ *
++ * header.type should be set to C3_ISP_PARAMS_BLOCK_AF_CONFIG
++ * from :c:type:`c3_isp_params_block_type`
++ *
++ * @header: the C3 ISP parameters block header
++ * @tap_point: the tap point from enum c3_isp_params_af_tap_point
++ * @horiz_zones_num: active number of hotizontal zones [0..17]
++ * @vert_zones_num: active number of vertical zones [0..15]
++ * @reserved: applications must zero this array
++ * @horiz_coord: the horizontal coordinate of points on the diagonal [0..2888]
++ * @vert_coord: the vertical coordinate of points on the diagonal [0..2240]
++ */
++struct c3_isp_params_af_config {
++	struct c3_isp_params_block_header header;
++	__u8 tap_point;
++	__u8 horiz_zones_num;
++	__u8 vert_zones_num;
++	__u8 reserved[5];
++	__u16 horiz_coord[C3_ISP_AF_MAX_PT_NUM];
++	__u16 vert_coord[C3_ISP_AF_MAX_PT_NUM];
++} __attribute__((aligned(8)));
++
++/**
++ * struct c3_isp_params_pst_gamma - Post gamma configuration
++ *
++ * This struct allows the configuration of the look up table for
++ * post gamma. The gamma curve consists of 129 points, so need to
++ * set lut[129].
++ *
++ * header.type should be set to C3_ISP_PARAMS_BLOCK_PST_GAMMA
++ * from :c:type:`c3_isp_params_block_type`
++ *
++ * @header: the C3 ISP parameters block header
++ * @lut: lookup table for P-Stitch gamma [0..1023]
++ * @reserved: applications must zero this array
++ */
++struct c3_isp_params_pst_gamma {
++	struct c3_isp_params_block_header header;
++	__u16 lut[129];
++	__u16 reserved[3];
++} __attribute__((aligned(8)));
++
++/**
++ * struct c3_isp_params_ccm - ISP CCM configuration
++ *
++ * This struct allows the configuration of the matrix for
++ * color correction. The matrix consists of 3 x 3 points,
++ * so need to set matrix[3][3].
++ *
++ * header.type should be set to C3_ISP_PARAMS_BLOCK_CCM
++ * from :c:type:`c3_isp_params_block_type`
++ *
++ * @header: the C3 ISP parameters block header
++ * @matrix: a 3 x 3 matrix used for color correction,
++ *          the value of matrix[x][y] is orig_value x 256. [-4096..4095]
++ * @reserved: applications must zero this array
++ */
++struct c3_isp_params_ccm {
++	struct c3_isp_params_block_header header;
++	__s16 matrix[3][3];
++	__u16 reserved[3];
++} __attribute__((aligned(8)));
++
++/**
++ * struct c3_isp_params_csc - ISP Color Space Conversion configuration
++ *
++ * This struct allows the configuration of the matrix for color space
++ * conversion. The matrix consists of 3 x 3 points, so need to set matrix[3][3].
++ *
++ * header.type should be set to C3_ISP_PARAMS_BLOCK_CSC
++ * from :c:type:`c3_isp_params_block_type`
++ *
++ * @header: the C3 ISP parameters block header
++ * @matrix: a 3x3 matrix used for the color space conversion,
++ *          the value of matrix[x][y] is orig_value x 256. [-4096..4095]
++ * @reserved: applications must zero this array
++ */
++struct c3_isp_params_csc {
++	struct c3_isp_params_block_header header;
++	__s16 matrix[3][3];
++	__u16 reserved[3];
++} __attribute__((aligned(8)));
++
++/**
++ * struct c3_isp_params_blc - ISP Black Level Correction configuration
++ *
++ * This struct allows the configuration of the block level offset for each
++ * color channel.
++ *
++ * header.type should be set to C3_ISP_PARAMS_BLOCK_BLC
++ * from :c:type:`c3_isp_params_block_type`
++ *
++ * @header: the C3 ISP parameters block header
++ * @gr_ofst: Gr blc offset (Q4.12 format)
++ * @r_ofst: R blc offset (Q4.12 format)
++ * @b_ofst: B blc offset (Q4.12 format)
++ * @gb_ofst: Gb blc offset(Q4.12 format)
++ */
++struct c3_isp_params_blc {
++	struct c3_isp_params_block_header header;
++	__u16 gr_ofst;
++	__u16 r_ofst;
++	__u16 b_ofst;
++	__u16 gb_ofst;
 +};
 +
-+static const struct of_device_id c3_mipi_csi_of_match[] = {
-+	{
-+		.compatible = "amlogic,c3-mipi-csi2",
-+		.data = &c3_mipi_csi_info,
-+	},
-+	{ },
++/**
++ * define C3_ISP_PARAMS_MAX_SIZE - Maximum size of all C3 ISP Parameters
++ *
++ * Though the parameters for the C3 ISP are passed as optional blocks, the
++ * driver still needs to know the absolute maximum size so that it can allocate
++ * a buffer sized appropriately to accommodate userspace attempting to set all
++ * possible parameters in a single frame.
++ */
++#define C3_ISP_PARAMS_MAX_SIZE                     \
++	(sizeof(struct c3_isp_params_awb_gains) +  \
++	 sizeof(struct c3_isp_params_awb_config) + \
++	 sizeof(struct c3_isp_params_ae_config) +  \
++	 sizeof(struct c3_isp_params_af_config) +  \
++	 sizeof(struct c3_isp_params_pst_gamma) +  \
++	 sizeof(struct c3_isp_params_ccm) +        \
++	 sizeof(struct c3_isp_params_csc) +        \
++	 sizeof(struct c3_isp_params_blc))
++
++/**
++ * struct c3_isp_params_cfg - C3 ISP configuration parameters
++ *
++ * This struct contains the configuration parameters of the C3 ISP
++ * algorithms, serialized by userspace into an opaque data buffer. Each
++ * configuration parameter block is represented by a block-specific structure
++ * which contains a :c:type:`c3_isp_param_block_header` entry as first
++ * member. Userspace populates the @data buffer with configuration parameters
++ * for the blocks that it intends to configure. As a consequence, the data
++ * buffer effective size changes according to the number of ISP blocks that
++ * userspace intends to configure.
++ *
++ * The parameters buffer is versioned by the @version field to allow modifying
++ * and extending its definition. Userspace should populate the @version field to
++ * inform the driver about the version it intends to use. The driver will parse
++ * and handle the @data buffer according to the data layout specific to the
++ * indicated revision and return an error if the desired revision is not
++ * supported.
++ *
++ * For each ISP block that userspace wants to configure, a block-specific
++ * structure is appended to the @data buffer, one after the other without gaps
++ * in between nor overlaps. Userspace shall populate the @total_size field with
++ * the effective size, in bytes, of the @data buffer.
++ *
++ * The expected memory layout of the parameters buffer is::
++ *
++ *	+-------------------- struct c3_isp_params_cfg ---- ------------------+
++ *	| version = C3_ISP_PARAM_BUFFER_V0;                                   |
++ *	| data_size = sizeof(struct c3_isp_params_awb_gains) +                |
++ *	|              sizeof(struct c3_isp_params_awb_config);       |
++ *	| +------------------------- data  ---------------------------------+ |
++ *	| | +------------ struct c3_isp_params_awb_gains) ------------------+ |
++ *	| | | +---------  struct c3_isp_params_block_header header -----+ | | |
++ *	| | | | type = C3_ISP_PARAMS_BLOCK_AWB_GAINS;                   | | | |
++ *	| | | | flags = C3_ISP_PARAMS_BLOCK_FL_NONE;                    | | | |
++ *	| | | | size = sizeof(struct c3_isp_params_awb_gains);          | | | |
++ *	| | | +---------------------------------------------------------+ | | |
++ *	| | | gr_gain = ...;                                              | | |
++ *	| | | r_gain = ...;                                               | | |
++ *	| | | b_gain = ...;                                               | | |
++ *	| | | gb_gain = ...;                                              | | |
++ *	| | +------------------ struct c3_isp_params_awb_config ----------+ | |
++ *	| | | +---------- struct c3_isp_param_block_header header ------+ | | |
++ *	| | | | type = C3_ISP_PARAMS_BLOCK_AWB_CONFIG;                  | | | |
++ *	| | | | flags = C3_ISP_PARAMS_BLOCK_FL_NONE;                    | | | |
++ *	| | | | size = sizeof(struct c3_isp_params_awb_config)          | | | |
++ *	| | | +---------------------------------------------------------+ | | |
++ *	| | | tap_point = ...;                                            | | |
++ *	| | | satur_vald = ...;                                           | | |
++ *	| | | horiz_zones_num = ...;                                      | | |
++ *	| | | vert_zones_num = ...;                                       | | |
++ *	| | +-------------------------------------------------------------+ | |
++ *	| +-----------------------------------------------------------------+ |
++ *	+---------------------------------------------------------------------+
++ *
++ * @version: The C3 ISP parameters buffer version
++ * @data_size: The C3 ISP configuration data effective size, excluding this
++ *             header
++ * @data: The C3 ISP configuration blocks data
++ */
++struct c3_isp_params_cfg {
++	__u32 version;
++	__u32 data_size;
++	__u8 data[C3_ISP_PARAMS_MAX_SIZE];
 +};
-+MODULE_DEVICE_TABLE(of, c3_mipi_csi_of_match);
 +
-+static struct platform_driver c3_mipi_csi_driver = {
-+	.probe = c3_mipi_csi_probe,
-+	.remove = c3_mipi_csi_remove,
-+	.driver = {
-+		.name = "c3-mipi-csi2",
-+		.of_match_table = c3_mipi_csi_of_match,
-+		.pm = pm_ptr(&c3_mipi_csi_pm_ops),
-+	},
-+};
-+
-+module_platform_driver(c3_mipi_csi_driver);
-+
-+MODULE_AUTHOR("Keke Li <keke.li@amlogic.com>");
-+MODULE_DESCRIPTION("Amlogic C3 MIPI CSI-2 receiver");
-+MODULE_LICENSE("GPL");
++#endif
 
 -- 
 2.48.1
