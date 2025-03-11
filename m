@@ -1,36 +1,44 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD6671CDA0B;
-	Tue, 11 Mar 2025 12:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD96198E8C;
+	Tue, 11 Mar 2025 12:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741694543; cv=none; b=OqmA2BQIqHXVh6KNwky8N/til2U6PpOXGPiopKCngzj4l1KTSvYVGL2/lPz0z5R98zWct4/tXKrdi0iAO18axpnuOjMQUz7FMwCTjABREOoDh9tH9RhNgEvMRG7UEUtGIDPOLr0qLoy302st2ju5fM7fTrmNu0hH070wY/AwqEA=
+	t=1741694550; cv=none; b=D7theizJAmWb2MbFwQQCh3IbJDvNhAMgCwPdWPhGm4E6T7KJbl8tWYBL/x+AOlW8vqgGOhS7PETt+dcX1cIaWteHzA3L/2DxMO2Nsxc9gSY+lrZXq3XE95zO+2Kbl+c54NeqYZmGA+n9lASDKOVI2Nq55X8AfZKYjPpNgUxiHPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741694543; c=relaxed/simple;
-	bh=Bmb2tzliIGNBiIX24m2PDco4gc9/BfA6OUhbq+dpSK8=;
+	s=arc-20240116; t=1741694550; c=relaxed/simple;
+	bh=lF2Al/HhVZMMOdAFVKzZwkJyoEOGmdDcbfJux9rsQCk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTAma+qrh6XZl4MzEQj889iEiVTzp60svKnmgthXq4mKKN1K4ICGHURW1QD+qffQbvJWL2Iss4v1q2sSjcSztHqXoDfshgNO3kHipxlW7nBz+N3DxGlqqNkeqFt7lgDW/BsQSSAkqRFx/15YwhBzoLS5b8mCodCkwbRw8KJEMEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05937152B;
-	Tue, 11 Mar 2025 05:02:32 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B40943F673;
-	Tue, 11 Mar 2025 05:02:19 -0700 (PDT)
-Date: Tue, 11 Mar 2025 12:02:16 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: "lihuisong (C)" <lihuisong@huawei.com>
-Cc: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Adam Young <admiyo@os.amperecomputing.com>,
-	Robbie King <robbiek@xsightlabs.com>
-Subject: Re: [PATCH v2 01/13] mailbox: pcc: Fix the possible race in updation
- of chan_in_use flag
-Message-ID: <Z9AmSEBL_UcZ2Hoo@bogus>
-References: <20250305-pcc_fixes_updates-v2-0-1b1822bc8746@arm.com>
- <20250305-pcc_fixes_updates-v2-1-1b1822bc8746@arm.com>
- <4ecf3a7a-7a68-fd56-ed93-fbae82e2b0e3@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=tUvN8gVHzb6i6aI9F2p1zgMrxwiW6pEjKlVQtOBOZRKYd+pMvnbEjQ8yEPnU70RBnOmgnNCyAJ1GejNRmmXQhNXEC5XmD0lZ8Tdy1T7oEhBAEh5hsoJe50ywaXFDUdilGy7YKBJlBjRQoq2VoU3QmCR8ywv8g8Vk30I88TGL/Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Crb7G0MX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Crb7G0MX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52811C4CEED;
+	Tue, 11 Mar 2025 12:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741694549;
+	bh=lF2Al/HhVZMMOdAFVKzZwkJyoEOGmdDcbfJux9rsQCk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Crb7G0MXmKUm//SXigG4v9fCtT7UyDKxx5eKXCz3+PUP9fP2lwdmGuflFRKbsTIgF
+	 gBJO6gBsheMFMOWqeJUwjStb4uZDdEGWSl/Seei005VQKnTotz540s/FgU3v7F69sk
+	 JEU563B+mExRiiN9bPueOsp3Lckphu9YVg0ss0+0Yh/Tq5eX/gwYOpmHRchwG6R8Ac
+	 /D+b8Q7QOJVSBON2vxhl5/mdo+5Umu41MM/pMsmYz/mqE3XocSAdynNloNBFQkNmkS
+	 PMgCLBO+TZnT0UIZNK/4etC6q4UX9ajCLZHz83Gi3MZq3f728ZMBkH15IAh7PigPaG
+	 0IeBK8156kAMQ==
+Date: Tue, 11 Mar 2025 13:02:23 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: aleksandr.mikhalitsyn@canonical.com, arnd@arndb.de, bluca@debian.org, 
+	cgroups@vger.kernel.org, davem@davemloft.net, edumazet@google.com, hannes@cmpxchg.org, 
+	kuba@kernel.org, leon@kernel.org, linux-kernel@vger.kernel.org, mkoutny@suse.com, 
+	mzxreary@0pointer.de, netdev@vger.kernel.org, pabeni@redhat.com, shuah@kernel.org, 
+	tj@kernel.org, willemb@google.com
+Subject: Re: [PATCH net-next 0/4] Add getsockopt(SO_PEERCGROUPID) and fdinfo
+ API to retreive socket's peer cgroup id
+Message-ID: <20250311-umkreisen-versorgen-6388fdf4024e@brauner>
+References: <20250309132821.103046-1-aleksandr.mikhalitsyn@canonical.com>
+ <20250311073411.4565-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,98 +47,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4ecf3a7a-7a68-fd56-ed93-fbae82e2b0e3@huawei.com>
+In-Reply-To: <20250311073411.4565-1-kuniyu@amazon.com>
 
-On Tue, Mar 11, 2025 at 07:40:53PM +0800, lihuisong (C) wrote:
+On Tue, Mar 11, 2025 at 12:33:48AM -0700, Kuniyuki Iwashima wrote:
+> From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+> Date: Sun,  9 Mar 2025 14:28:11 +0100
+> > 1. Add socket cgroup id and socket's peer cgroup id in socket's fdinfo
 > 
-> 在 2025/3/6 0:38, Sudeep Holla 写道:
-> > From: Huisong Li <lihuisong@huawei.com>
+> Why do you want to add yet another racy interface ?
+> 
+> 
+> > 2. Add SO_PEERCGROUPID which allows to retrieve socket's peer cgroup id
+> > 3. Add SO_PEERCGROUPID kselftest
 > > 
-> > The function mbox_chan_received_data() calls the Rx callback of the
-> > mailbox client driver. The callback might set chan_in_use flag from
-> > pcc_send_data(). This flag's status determines whether the PCC channel
-> > is in use.
-> > 
-> > However, there is a potential race condition where chan_in_use is
-> > updated incorrectly due to concurrency between the interrupt handler
-> > (pcc_mbox_irq()) and the command sender(pcc_send_data()).
-> > 
-> > The 'chan_in_use' flag of a channel is set to true after sending a
-> > command. And the flag of the new command may be cleared erroneous by
-> > the interrupt handler afer mbox_chan_received_data() returns,
-> > 
-> > As a result, the interrupt being level triggered can't be cleared in
-> > pcc_mbox_irq() and it will be disabled after the number of handled times
-> > exceeds the specified value. The error log is as follows:
-> > 
-> >    |  kunpeng_hccs HISI04B2:00: PCC command executed timeout!
-> >    |  kunpeng_hccs HISI04B2:00: get port link status info failed, ret = -110
-> >    |  irq 13: nobody cared (try booting with the "irqpoll" option)
-> >    |  Call trace:
-> >    |   dump_backtrace+0x0/0x210
-> >    |   show_stack+0x1c/0x2c
-> >    |   dump_stack+0xec/0x130
-> >    |   __report_bad_irq+0x50/0x190
-> >    |   note_interrupt+0x1e4/0x260
-> >    |   handle_irq_event+0x144/0x17c
-> >    |   handle_fasteoi_irq+0xd0/0x240
-> >    |   __handle_domain_irq+0x80/0xf0
-> >    |   gic_handle_irq+0x74/0x2d0
-> >    |   el1_irq+0xbc/0x140
-> >    |   mnt_clone_write+0x0/0x70
-> >    |   file_update_time+0xcc/0x160
-> >    |   fault_dirty_shared_page+0xe8/0x150
-> >    |   do_shared_fault+0x80/0x1d0
-> >    |   do_fault+0x118/0x1a4
-> >    |   handle_pte_fault+0x154/0x230
-> >    |   __handle_mm_fault+0x1ac/0x390
-> >    |   handle_mm_fault+0xf0/0x250
-> >    |   do_page_fault+0x184/0x454
-> >    |   do_translation_fault+0xac/0xd4
-> >    |   do_mem_abort+0x44/0xb4
-> >    |   el0_da+0x40/0x74
-> >    |   el0_sync_handler+0x60/0xb4
-> >    |   el0_sync+0x168/0x180
-> >    |  handlers:
-> >    |   pcc_mbox_irq
-> >    |  Disabling IRQ #13
-> > 
-> > To solve this issue, pcc_mbox_irq() must clear 'chan_in_use' flag before
-> > the call to mbox_chan_received_data().
-> > 
-> > Signed-off-by: Huisong Li <lihuisong@huawei.com>
-> > (sudeep.holla: Minor updates to the subject and commit message)
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >   drivers/mailbox/pcc.c | 7 ++++++-
-> >   1 file changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
-> > index 82102a4c5d68839170238540a6fed61afa5185a0..f2e4087281c70eeb5b9b33371596613a371dff4f 100644
-> > --- a/drivers/mailbox/pcc.c
-> > +++ b/drivers/mailbox/pcc.c
-> > @@ -333,10 +333,15 @@ static irqreturn_t pcc_mbox_irq(int irq, void *p)
-> >   	if (pcc_chan_reg_read_modify_write(&pchan->plat_irq_ack))
-> >   		return IRQ_NONE;
-> > +	/*
-> > +	 * Clear this flag immediately after updating interrupt ack register
-> > +	 * to avoid possible race in updatation of the flag from
-> > +	 * pcc_send_data() that could execute from mbox_chan_received_data()
-> This comment may be inappropriate becuase of the moving of clearing
-> interrupt ack register in patch 2/13.
-> I suggested that fix it in this patch or patch 2/13.
+> > Generally speaking, this API allows race-free resolution of socket's peer cgroup id.
+> > Currently, to do that SCM_CREDENTIALS/SCM_PIDFD -> pid -> /proc/<pid>/cgroup sequence
+> > is used which is racy.
+> 
+> Few more words about the race (recycling pid ?) would be appreciated.
+> 
+> I somewhat assumed pid is not recycled until all of its pidfd are
+> close()d, but sounds like no ?
 
-Right, I did think of updating or did update and missed to commit.
-I wanted to update something like:
-"
-Clear this flag after updating interrupt ack register and just before
-mbox_chan_received_data() which might call pcc_send_data() where the
-flag is set again to start new transfer
-"
+No, that would allow starving the kernel of pid numbers.
+pidfds don't pin struct task_struct for a multitude of reasons similar
+to how cred->peer or scm->pid don't stash a task_struct but a struct pid.
 
-Hope that is more apt to the current situation.
-
--- 
-Regards,
-Sudeep
+> 
+> 
+> > 
+> > As we don't add any new state to the socket itself there is no potential locking issues
+> > or performance problems. We use already existing sk->sk_cgrp_data.
+> > 
+> > We already have analogical interfaces to retrieve this
+> > information:
+> > - inet_diag: INET_DIAG_CGROUP_ID
+> > - eBPF: bpf_sk_cgroup_id
+> > 
+> > Having getsockopt() interface makes sense for many applications, because using eBPF is
+> > not always an option, while inet_diag has obvious complexety and performance drawbacks
+> > if we only want to get this specific info for one specific socket.
+> 
+> If it's limited to the connect()ed peer, I'd add UNIX_DIAG_CGROUP_ID
+> and UNIX_DIAG_PEER_CGROUP_ID instead.  Then also ss can use that easily.
