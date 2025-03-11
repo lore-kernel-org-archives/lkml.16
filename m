@@ -1,90 +1,126 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D323FD1;
-	Tue, 11 Mar 2025 02:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFF11DED47;
+	Tue, 11 Mar 2025 02:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741658826; cv=none; b=QpamHjAlJBEWxCUvi6tFWLOmIux8yoOxdNQ72/HT9bfsKyF6zqysudnB7H258CvX4ATTgF/Ykf6WczRIeQlZD+dFEXIxW/dcW3OaLcmGmOAD9fBLKXitPC4hz1LKjZ7DNz+GiaTCgkFhEpXWoMQOl2PW0BMIVLjHOHNHPMM+S8c=
+	t=1741658887; cv=none; b=jM0DOXn1GqnLLpb1evWbpUIhFU+j66daX0D7uuiaDKwJBlGoXIl89RbPHAtmsXWZVJOvfLWPeXMEyBHK8LqeqDJMW59ytROmD0eisc9judOyJsnkwaRRHwv7khqH0dzGQ/9qcSQF7kFKQI4uLQjTPOPQRUqzDeaNW/X7EamW4Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741658826; c=relaxed/simple;
-	bh=z6jVo03j7ZbrcOq9bBY8qnIpoBkz5o6+15aKdHE31EI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SghBUYtJZEjE9w3T0LVupL0S1ALgolZAGvRu7c1petUwEvIQ8TXiy31RMvQCRjNAovTCxI3cSqEhJ7A6YviiBlDGkcBWsA9pttpUZH+suX3QKNXgya7kw3kxRrgtOhbaCGbA1jxd5jEiWRHyYqKYUZXPxaIKzQtr0DP2jpKKBl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Zhc8taC7; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1741658887; c=relaxed/simple;
+	bh=EO2y2EASnimfmC0To8IgjADGLB03IrpBXSrBRgvMOXc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=MyAQ9PpvHk0UfRBxXL881HgKnFSOb8nyIUas40a6jqHjVvi88sZnO9rGyiWWH98xIYSlpX3AeMEUJZLdoeeJY/ZkK0ArYkRF0JCoad6fLoqYfyGughvYk5tVouV6sR2H6LHKtMbrHUUFzKyJuJkaZyOL4oYjF7osh98JVTajZqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=wQfQZG6I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Zhc8taC7"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1741658819; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=BzglBtV+XA2a3PeBuIhCqkESUNYrOmlDABzPylPcK5w=;
-	b=Zhc8taC7P9/Vc4IPGJCdNWp7AvNo3j5UUAusoCH7u5pFUXHvrYF2uZNVIjtbBa+R8JYeGHT4dUVRi110e7pZ4j8iydYjHt0GrsoZLht4UgWBNsnN/ZxC/qS0Kr/Vn6o1eo8EjNXgv9obFmQxMfT7C/GC3+sjqBGlytYh4azfxLs=
-Received: from 30.221.130.118(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WR7LvPK_1741658816 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Mar 2025 10:06:57 +0800
-Message-ID: <47785d3f-3560-4832-b88a-031a80d1fd28@linux.alibaba.com>
-Date: Tue, 11 Mar 2025 10:06:56 +0800
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="wQfQZG6I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 872A9C4CEE5;
+	Tue, 11 Mar 2025 02:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1741658886;
+	bh=EO2y2EASnimfmC0To8IgjADGLB03IrpBXSrBRgvMOXc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=wQfQZG6IKVV4Tew+S+0o+lnw12y0URQfWSPems1i8x5dKQTaPMYHdQMJDIg/0LCcq
+	 9ysqdCzIccJgUTy5+1XImjyPHewrVrCASW3U/ThAkRtkSNX1mJCMOLQBPQJNwR3UZE
+	 sXCoysWhDTs3Eikr7+eLtWHhOyIiad0yrUckBntM=
+Date: Mon, 10 Mar 2025 19:08:03 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay
+ <ogabbay@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix
+ <nicolas.palix@imag.fr>, James Smart <james.smart@broadcom.com>, Dick
+ Kennedy <dick.kennedy@broadcom.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Chris Mason <clm@fb.com>, Josef Bacik
+ <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Ilya Dryomov
+ <idryomov@gmail.com>, Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens
+ Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Carlos Maiolino
+ <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel
+ <sre@kernel.org>, Keith Busch <kbusch@kernel.org>, Christoph Hellwig
+ <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Frank Li
+ <Frank.Li@nxp.com>, Mark Brown <broonie@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede
+ <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Henrique de Moraes Holschuh
+ <hmh@hmh.eng.br>, Selvin Xavier <selvin.xavier@broadcom.com>, Kalesh AP
+ <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, Leon
+ Romanovsky <leon@kernel.org>, Easwar Hariharan
+ <eahariha@linux.microsoft.com>, cocci@inria.fr,
+ linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-sound@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-spi@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+ linux-rdma@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Carlos Maiolino
+ <cmaiolino@redhat.com>
+Subject: Re: (subset) [PATCH v3 00/16] Converge on using secs_to_jiffies()
+ part two
+Message-Id: <20250310190803.aaf868760781c9ae3fbe6df1@linux-foundation.org>
+In-Reply-To: <174165504986.528513.3575505677065987375.b4-ty@oracle.com>
+References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
+	<174165504986.528513.3575505677065987375.b4-ty@oracle.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
- <20250113155503.71467082@gandalf.local.home>
- <deb6f0c4-77b8-431e-9b81-555a8344c750@linux.alibaba.com>
- <20250310105044.129dc354@gandalf.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250310105044.129dc354@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 10 Mar 2025 21:19:03 -0400 "Martin K. Petersen" <martin.petersen@oracle.com> wrote:
 
-
-在 2025/3/10 22:50, Steven Rostedt 写道:
-> On Mon, 10 Mar 2025 11:59:55 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> On Tue, 25 Feb 2025 20:17:14 +0000, Easwar Hariharan wrote:
 > 
->> Hi, Steve,
->>
->> If I move PCI_HOTPLUG_EVENT into one place, `include/upai/linux/pci.h`,
->> I need to include:
->>
->>       #include <linux/tracepoint.h>
->>
->> Then, kernel build fails with CONFIG_UAPI_HEADER_TEST=y:
+> > This is the second series (part 1*) that converts users of msecs_to_jiffies() that
+> > either use the multiply pattern of either of:
+> > - msecs_to_jiffies(N*1000) or
+> > - msecs_to_jiffies(N*MSEC_PER_SEC)
+> > 
+> > where N is a constant or an expression, to avoid the multiplication.
+> > 
+> > [...]
 > 
-> Just move the enum definitions, not the entire event file.
+> Applied to 6.15/scsi-queue, thanks!
 > 
-> That is, have one place has the PCI_HOTPLUG_EVENT macro, and have both the
-> uapi header as well as the tracepoint header include that header.
-> 
-> I guess I need to see the entire change.
-> 
+> [02/16] scsi: lpfc: convert timeouts to secs_to_jiffies()
+>         https://git.kernel.org/mkp/scsi/c/a131f20804d6
 
-Hi, Steven,
+Really, an acked-by would have been much easier all around, but whatever.
 
-IMHO, the problem is that the PCI_HOTPLUG_EVENT macro needs to include
-"linux/tracepoint.h" but it is not allowed in userspace.
+Did you get my fix?
 
-The entire change in v6 build fails with CONFIG_UAPI_HEADER_TEST=y:
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: scsi-lpfc-convert-timeouts-to-secs_to_jiffies-fix
+Date: Tue Feb 25 07:32:03 PM PST 2025
 
-   https://lore.kernel.org/lkml/202501190108.tRReJA1Z-lkp@intel.com/T/#mae507b91b8b80c386dfa9e63fbbdd45826c2e003
+fix build
 
-(sorry, I did not see the problem because my local .config do not set
-CONFIG_UAPI_HEADER_TEST)
+Cc: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: James Bottomley <james.bottomley@HansenPartnership.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
 
-Thanks
-Shuai
+ drivers/scsi/lpfc/lpfc_sli.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/scsi/lpfc/lpfc_sli.c~scsi-lpfc-convert-timeouts-to-secs_to_jiffies-fix
++++ a/drivers/scsi/lpfc/lpfc_sli.c
+@@ -3954,7 +3954,7 @@ void lpfc_poll_eratt(struct timer_list *
+ 	else
+ 		/* Restart the timer for next eratt poll */
+ 		mod_timer(&phba->eratt_poll,
+-			  jiffies + secs_to_jiffies(phba->eratt_poll_interval);
++			  jiffies + secs_to_jiffies(phba->eratt_poll_interval));
+ 	return;
+ }
+ 
+_
+
