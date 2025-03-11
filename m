@@ -1,107 +1,180 @@
-Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B71225A2D;
-	Tue, 11 Mar 2025 08:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF201EB184;
+	Tue, 11 Mar 2025 08:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741682970; cv=none; b=UJx6I83Vw4DRoYoBkU3D/QLk7LEskDH8Vp8/PteAh+GZG3OJBoUUewU3em3cmX97LNU1+ssvwyO3EKkgiRpVbU0bXqemEjKuLb48XioX3jl0fkG3h/eT06gEH7dK/LY4xiB3AtlJFSOWogdN6IllL8HRC+scRTed/w9vmoHVBZY=
+	t=1741683063; cv=none; b=lHVHMvH5rXaWlGyeiXlKsLHCDLtmHh+hn+J8AI2Kbf3WUck2wBP6+0vNdnhZ8W9oOWIfkA8lywG63SYDJeJDZQufZTULLiIaUHWAK9XAeVgPwJtXuFCT9mlpTDLm+v3KZxaH3dClv71eFoh0iHMDwA432+zNKi/orKLnA7fBmUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741682970; c=relaxed/simple;
-	bh=LmfmlNfv8EBghYIYwUUYQrDDOcBM3L2YR/qg/xhcj88=;
+	s=arc-20240116; t=1741683063; c=relaxed/simple;
+	bh=HB3Zy1gU28m4kK/S0bB95ApFHZ/cYoMFfJxnYvIe3NY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UtVXVnhyloXFWSfEPSnVglj02xp8JcKuNX4oyMbE+aZmPl78vy9jje+aImrflT42c9O3SZ5ugshF8lNh3+MplJ5zS3Wml2Ubab8XpU7CNnXZ/kuVzzl/6dCnFylwa/xFM+5hV1hqyLLIrT8wtCncNxbWJyRCZWZfIgEZt3AugCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPihtWYX; arc=none smtp.client-ip=209.85.208.68
+	 To:Cc:Content-Type; b=UtUuXa/5VbJOLNgy/kzMHqZAesLF7lgG2t0oQI3U/GWvyjDIx/r29wkKecE3K3KzZ9dGgOsAfanH1f3dJLNEYchz4tYmtGtlnHMQDR3NlStr0yOpp9Hp3DdH8kqnPb4A1tedZa3Tg9D9E7idVK3o/c/T9Q2JN0ia18n/JnLBOlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XHGK8/Ee; arc=none smtp.client-ip=209.85.221.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPihtWYX"
-Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-5e5e7fd051bso5032118a12.0;
-        Tue, 11 Mar 2025 01:49:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHGK8/Ee"
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-523f670ca99so1193538e0c.1;
+        Tue, 11 Mar 2025 01:51:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741682967; x=1742287767; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=++ArMbZp2/d1UeSQje2LNI+0PmtQnJ5AtRnBL5XuDLQ=;
-        b=CPihtWYXI5DU2QH+99Os+I9dosjymVPOgHG51csak8BWeXLkennP+LJKr+iw+U20bp
-         D80O8u1eX8xPzBBb9V6VQQyLoqYtfaUhAcEHO9+XMTVO2CUUPg83w/peWUI0xqOPvDwI
-         n3oCeNLyWF0ATVCDc80Dshrmrc8GqmvXL8BDdzGs0YhgyXElWMTmE3CA73JpoDEsd+BA
-         cf/CCoV7La2oGV9zxRkNuEh+dIcFWA/F9avuPie+ENzlHeNU0RiCX18KwAXcoqhrHUUs
-         MGPuwlRaAmduO/8CqfgogT2so1xPcrqxZQ8UJEIDR/kanVUtrMOUC7V3eotbMpLZIzMk
-         KqbQ==
+        d=gmail.com; s=20230601; t=1741683061; x=1742287861; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YwlKUmCIxRBb8ELz2q2Z4eNbzAimAiIA1z1E81e3a6E=;
+        b=XHGK8/EeIvETJAIb6KP/+65N83+IAaSakmKL4AeeKLZGYA1sLmwL2cqOFNb8DwZFAP
+         tazwIE3Xybn02xCH+Abvzb/LU45seiH3v4SxOkTW0PU5y8rT7VFx4S3p1HG/B1Ydnm5k
+         WGktHu9fzWBeVED7mIdOUcoEJXX3roZZBM1PP4crZuJeVPW+qrGbPsC5L0BtYbGo1ypZ
+         cosjSXUhNjvxMfpaNWjie6qdaw+eLKjTkMuqccZHx+Cuv2mAvGMErry1hCyJJTcc9mEg
+         FRXu77KoUJ6QKKGuQPisclvF+tldvXqWcuzVmo5+phVbWZILGfpw8y9hnVb0FOCaxlpo
+         Wx+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741682967; x=1742287767;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=++ArMbZp2/d1UeSQje2LNI+0PmtQnJ5AtRnBL5XuDLQ=;
-        b=WuZMd5RVvMkQb3FSMiIuIjhsSWpVCvku2Nb24tyFemdLrTDlHUM9Ovovyg+gIced7l
-         7UzC7UYjbzUrBYaT8Xa2hryrh3hUDPHYuBm0Ail2SLMeKITj7K9HjB3r0Ujdg7VoK9W5
-         MUwF8o4R3jvohfwYZzIaXX3UyzmEb4Lc1prepdX1T8OXecoNuOJkxQQFcKIhF5Csv/N8
-         dyP1JAMcZCK4S6SOyXs3YWzhQVG46JSDHC+gndeCXrPPnhR9tzyekPA00ffQtVHHnd8s
-         o69aC6CcNjL2R/tlnzE2+5kSdyHQIub0qnsPbxz6appBZGd0JK8NS/v4RHVwXD796MtH
-         mq7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUl7doI8qg2dQutowecy3oSjhqJ5RWkFTZwT+jsQr/DyTIal5+aj/n4L4/aizNwgg7WhKOvZo8XlD/O@vger.kernel.org, AJvYcCVYq5yYD8PWzyMN15YndTGjcHcf9h75YLvyO3KcsQ7OTCky96uD0qbufK4lVJGB55hZ+j1cb9UWpRrI/P7t@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSazElftGKoalwqLPk/F1likiWsERqSi4Sl3eXVHrWeaCuBBQv
-	iYq1/cHVrPAGvLMnLzqgniyqsi/KEMJo7sZsw47k23J/UtR/89xlWPLGFMpa138qVynfqUrM+J4
-	Y/yB9XpI4L+WYd0uD9DltAhe5Sjs=
-X-Gm-Gg: ASbGncshZn9gsfmFQwxPIXTJNdajpcps2XTro48O9fzyyuZ/NU3dgrPb9NfBdwFa3HQ
-	HfFlSZEEBa0ZYWO3ubB1ae1W0o4arm2pwDT6kb+gc+jfqjO7SVhYogu9N/4zs08gL8u6ZYakN9G
-	7HQpA9mmM1dWxyrjed4k0RzydS7jXpafuEExEXHlHsDkCZH9g=
-X-Google-Smtp-Source: AGHT+IGep4cbVrjWQJvr0mN3/apVTOGtpDu9f6P3w5E+xknHRprszHROkevCtShu3x+t9pcnSMI5YywqEB76R9BU62w=
-X-Received: by 2002:a05:6402:3595:b0:5d9:a54:f8b4 with SMTP id
- 4fb4d7f45d1cf-5e75df5b635mr3626584a12.11.1741682967313; Tue, 11 Mar 2025
- 01:49:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741683061; x=1742287861;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YwlKUmCIxRBb8ELz2q2Z4eNbzAimAiIA1z1E81e3a6E=;
+        b=sF+El0iuCbWW+oULypla+UVfkRrHYaRGKBqHRcjT+gsbYnCfLbD+I2zVOZwpwUzDgQ
+         MoZSXEv7Z5yG0eSgoQ5ckBu3Eqp1B1RTtQ3+LpjkdcoMyBWcBazXv8j8avwG6+7+W1UO
+         zT5ZYEjzyM0JXYtwbNLdFWQV09WZn8emTtI8IARy3gu1wWjYyPXaXvWjO/AogiBKJPA7
+         gJhqNoySqNUiaBvYpTfW3FV0/d95y1hwMHmu9gmI2Y8JA6Qlv4LrVQ5BbIdZ5Lsz5MrU
+         gRxU640Zu/oilPw409ySCZql32seeRILcMj+35llrLCOMf2bWU7+/RwRdO3HYjxaGWZ9
+         /gxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVB6libishqZbcCXLjT2U/ZBg9lLFRKBXCgK+EPDgVq7yYWGUYb/NluYPC97ikTqISYTrAeEaZE@vger.kernel.org, AJvYcCVmY4ZiuAkrB4DrG7V7y47ACHDawoP9JplwbnJDn1Ek5n4y7t5xVZLM6UFFffiOT4foBI+gUqW/J5EyLM0D@vger.kernel.org, AJvYcCWDmF/vcQRTiPGhxatiRPDKxsLa/s8nyHSyONDLllFfh9btmgfcjRVLxkvIPTVz+2XAeJ1zzQV4Z++e@vger.kernel.org, AJvYcCX2etKFNJQsPfrweNC24mx26y9Ekg+PM5olexlDHC29r12ipGGWHNtIB2b43znuyJlE+jtWSFmyJbyR6f0fCYO8V5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQVQb/V6ZQNaWKvIMUvwu0NqRJ7N0TxtsJDAYLs3onRPvxaMYv
+	oQw7TSkISb5sQnndqYyUsrSvfeicKTvyZoJ/ZFdId+AVWbdnl8IHeN1mVRE3VTSkqSg8+/umfSB
+	QuH9M+ovQLiNGHltmdaqR+//HWU0=
+X-Gm-Gg: ASbGncuU5uouqjNf1/j1jV0KcAInyv/ViQI9DGnCFbAikkRjVdY6aEEwv8JjxXx9rs1
+	04el+B3FnuxCYfONJJYS1hf7BIIh8JIPAwykxEEFx0LbLKWgPLMgLV/vnbgvNkwgXFvy6tYAvd0
+	GW55IOCFgToqzvho4KIXT3GH2N/XRQ5b8QMHTf
+X-Google-Smtp-Source: AGHT+IFGrKexk2feh/g4AfZm+74DwDdS0TYifRv6+ZHmhZYsDPNrr70+NaB9JFJj6JVsuEewgbKE9y58HXVcfK0UqmU=
+X-Received: by 2002:a05:6122:319b:b0:520:9b05:4cb6 with SMTP id
+ 71dfb90a1353d-524195c60cbmr1473579e0c.0.1741683060635; Tue, 11 Mar 2025
+ 01:51:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203214911.898276-1-ankur.a.arora@oracle.com>
- <20250203214911.898276-2-ankur.a.arora@oracle.com> <Z8dRalfxYcJIcLGj@arm.com> <87pliusihc.fsf@oracle.com>
-In-Reply-To: <87pliusihc.fsf@oracle.com>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Tue, 11 Mar 2025 09:48:51 +0100
-X-Gm-Features: AQ5f1Jot1V-VvnJHopJ0Pc5_tyFD4QArR33_q-1sHlVuL6D8A0tNs3txvQgyXFI
-Message-ID: <CAP01T76TWAPz4fXh6EoqHLCAxtgbzyvZib72QeFoTSx-0WKPtQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] asm-generic: barrier: Add smp_cond_load_relaxed_timewait()
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	arnd@arndb.de, will@kernel.org, peterz@infradead.org, mark.rutland@arm.com, 
-	harisokn@amazon.com, cl@gentwo.org, zhenglifeng1@huawei.com, 
-	joao.m.martins@oracle.com, boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, 
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>
+References: <20250308200921.1089980-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250308200921.1089980-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250310213056.GA904881-robh@kernel.org> <CA+V-a8uinTxr8FheR5-Pbv37j9wFR1cfrFDX6gExA5dW8WWPSA@mail.gmail.com>
+In-Reply-To: <CA+V-a8uinTxr8FheR5-Pbv37j9wFR1cfrFDX6gExA5dW8WWPSA@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 11 Mar 2025 08:50:34 +0000
+X-Gm-Features: AQ5f1JqlUV-XTA6x64ZwVgrVHcqYL_lO68H10alDV6JE3jPjNjWM6p7bkmkYfY0
+Message-ID: <CA+V-a8v=q1aN_+4jQz3=StAXYP1-==OX5xZDrGXe8WWR4XbCKQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 1/3] dt-bindings: net: dwmac: Increase
+ 'maxItems' for 'interrupts' and 'interrupt-names'
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>, Jose Abreu <joabreu@synopsys.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 6 Mar 2025 at 08:53, Ankur Arora <ankur.a.arora@oracle.com> wrote:
+Hi Russell,
+
+On Tue, Mar 11, 2025 at 7:16=E2=80=AFAM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
 >
+> Hi Rob,
 >
-> Catalin Marinas <catalin.marinas@arm.com> writes:
+> Thank you for the review.
 >
-> > On Mon, Feb 03, 2025 at 01:49:08PM -0800, Ankur Arora wrote:
-> >> Add smp_cond_load_relaxed_timewait(), a timed variant of
-> >> smp_cond_load_relaxed(). This is useful for cases where we want to
-> >> wait on a conditional variable but don't want to wait indefinitely.
+> On Mon, Mar 10, 2025 at 9:30=E2=80=AFPM Rob Herring <robh@kernel.org> wro=
+te:
 > >
-> > Bikeshedding: why not "timeout" rather than "timewait"?
+> > On Sat, Mar 08, 2025 at 08:09:19PM +0000, Prabhakar wrote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Increase the `maxItems` value for the `interrupts` and `interrupt-nam=
+es`
+> > > properties to accommodate the Renesas RZ/V2H(P) SoC, which features t=
+he
+> > > `snps,dwmac-5.20` IP with 11 interrupts.
+> > >
+> > > Also add `additionalItems: true` to allow specifying extra interrupts
+> > > beyond the predefined ones. Update the `interrupt-names` property to
+> > > allow specifying extra `interrupt-names`.
+> > >
+> > > Also refactor the optional `interrupt-names` property by consolidatin=
+g
+> > > repeated enums into a single enum list.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
 >
-> Well my reasons, such as they are, also involved a fair amount of bikeshedding:
+> > > ---
+> > > Note, for this change I will be sending a sperate patch for vendor
+> > > bindings to add constraints.
+> > >
+> > > v1->v2
+> > > - No change
+> > > ---
+> > >  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/=
+Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> > > index 3f0aa46d798e..fad0d611a75c 100644
+> > > --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> > > +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> > > @@ -114,6 +114,8 @@ properties:
+> > >
+> > >    interrupts:
+> > >      minItems: 1
+> > > +    maxItems: 11
+> > > +    additionalItems: true
+> > >      items:
+> > >        - description: Combined signal for various interrupt events
+> > >        - description: The interrupt to manage the remote wake-up pack=
+et detection
+> > > @@ -122,11 +124,11 @@ properties:
+> > >
+> > >    interrupt-names:
+> > >      minItems: 1
+> > > +    maxItems: 11
+> > > +    additionalItems: true
+> > >      items:
+> > >        - const: macirq
+> > >        - enum: [eth_wake_irq, eth_lpi, sfty]
+> > > -      - enum: [eth_wake_irq, eth_lpi, sfty]
+> > > -      - enum: [eth_wake_irq, eth_lpi, sfty]
+> >
+> > I think this should be structured similar to the DWC PCIe binding where
+> > we define all possible names, but not the order:
+> >
+> > minItems: 1
+> > maxItems: 11
+> > items:
+> >   oneOf:
+> >     - const: macirq
+> >       description: ...
+> >     - const: eth_wake_irq
+> >       description: ...
+> >     - pattern: '^rx-queue-[0-3]$'
+> >       description: ...
+> >     - pattern: '^tx-queue-[0-3]$'
+> >       description: ...
+> >
+> > And so on. Move the descriptions from 'interrupts' and drop 'items' and
+> > 'additionalItems' from it.
+> >
+> Thanks for the pointer, I'll do as suggested above.
 >
->  - timewait and spinwait have same length names which just minimized all
->    the indentation issues.
->  - timeout seems to suggest a timing mechanism of some kind.
+> @Russel, are you OK from me to add rx-queue/tx-queue in this binding
+Apologies for the typo in your name.
 
-I would also be in favor of timewait naming, since this is not a
-generic timeout primitive, the alternative naming is useful to
-distinguish it.
-The wait can be off by 100us or so for arm64 when we need to break out
-but that's tolerable for some cases.
-I've also taken a copy of the thing in [0] so it can begin using the
-in-tree implementation once it's merged.
-
-  [0]: https://lore.kernel.org/bpf/20250303152305.3195648-9-memxor@gmail.com
-
->
-> [...]
+Cheers,
+Prabhakar
