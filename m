@@ -1,256 +1,480 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616FF184F;
-	Tue, 11 Mar 2025 16:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741712340; cv=fail; b=JNlcx5p0Cu+HgIvyYIkDZ53ui7rPHipX5YBP9S7cm5IJOlbk8vmp2hGDDDkJB64HhAaY5Jjc8tUkFGYySA7SoRk4eXbcQS95tBAdWykoon4K5Vg+HF9isyGn/VVMIF0vQOg6zX6haojjGaNKuoqs7PqCziSIm0VdfrKSl9Ns990=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741712340; c=relaxed/simple;
-	bh=emXXwb0fYHJ6R9nSZHxmSIxxs1Ph3mHeS7tQEq8nnjc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=l/fzuzBv5wA8ulK3FXpFvUulNBLuAVRusf6kZIbLMIxmb0Xgskl8yyBn4oEhc1IdyUl1KrIfXRcZj4fuSc7YkYk9WeSmYNYuqdgXtUkTHbsotamNeNMbEqhMhzZthaFfWRfFo6OUI7iJ0xywcK+FQ2kerGSIWoFGBhFlrK2ZdcI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=nXfytj9d; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=CSWCKROa; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D05026157C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 16:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741712358; cv=none; b=A7mxGVD5yTGXeEYgnMpNIlhbH7gm8UHrV6FHTMkTVc9hqy6ho1jxCD7+KQTd4hx71yzLkTDnqUNNbVyMF4L73Pr/jrcljVokNrsc01vl2cba2Y6u0Q3r61XksQPSPouCMWXBVPL1kaH2X+j0hB2UZlTaAqkAObX8wrA8lNnrbvw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741712358; c=relaxed/simple;
+	bh=Kxrawuzb4BFgf9aq26SAU4jjKNmS3pqCwyCxaidubj0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=b8yqqYqGTNNaP/kgemnXbfaFr1ucEkp5dSn9uvzv3kr3jaAUxaHDv2HLcc/vU4ztNhtYBjQQEhI9b9EizvmGloSt5t3hWlCXom71KQUNK84riP/F2xyIBusatyj2zMb+Y+Ag1SpjOCjlvpkXZYOUozB9S8pWEaz+gFmh6iF6KgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dhBQMdF9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nXfytj9d";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="CSWCKROa"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BGQlcb012974;
-	Tue, 11 Mar 2025 16:58:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=4ggL9zdT32hZPM33GhBntu0muthxXF90xSQja0voprU=; b=
-	nXfytj9doze2xB3FsjkwQ/3sASABo/N25E27n03cGP06hOLSjRWUeZkqSCzaNw+l
-	ZpFs3jHI8D3s5XAIHlQU2uaRIdglkDPacD7g5WBNlwi3JK8/NmMCncE9fU/9T1BP
-	MLGzsK47Wh5rqpQqrDL/+FcbqkvZlMNmzQT3mxSdME164pG+2xyyZKCFMc1rOFjh
-	dan7RnqPVMmqdP0I5fKYaDbMinU0knN2QexaxKMvebcWA6t3rDmX9sASPwRSHkrf
-	ddrbUXGkxRZVGNb5hx5CpQ4h17FYnfeCc9rSYupUg5tYerLZwaOXM0UEQlCjJiLQ
-	PFg2yb+AxJQ178KeRXmWIQ==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 458cp35cea-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Mar 2025 16:58:37 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52BGCcG4017585;
-	Tue, 11 Mar 2025 16:58:36 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 458cb9aaya-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Mar 2025 16:58:36 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xCCcb8YAGNOff+IxtcseAYV8ax0s6eG6EmQR9ZJxiHNuKsjVyNJ+XYq7z9XpwL+j/ugtkAufqnoBAxcNEWTuK6evaqyrHR3eyfe0OqU/SMaEQHV+w3ONa8/ePCSmhtJk7dJhiCO9V4+d6lulQcikiD/3bpgLFnqAaKBcrzO4c62p9lhdYtqKaFiLZ+EyHWH14B/oCXsKJ0EUU0L0HnUsgh2aaWJZvHI+IG5pn5QXCvHEQoueIhPIJ9WwpawrsQuHaG3q6VOiLArtW8nPwFC1TQlNT04VjlPwqRpQe+Ak6Bsq0adv1jS5o+GNO3XY75cEtA4XbiFS83VKSNONEnTikQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4ggL9zdT32hZPM33GhBntu0muthxXF90xSQja0voprU=;
- b=sz8LbOv6/DXi6b/bdoUyDbO3jhkmESMykeRnfgPCne3biaSt3WcnpwUfY/ZZwEu7G2dHN/GjDiJom3l9P8RzU8U2RUXWz4mhffQFz0ZPyftahL3WPAS7bnB8UcDKhwyPdA6GjV5UvVKp6E4xfHy53sgNbfVxDJq1lWXx7YR8RYKYhg2gaGXkEmA+eZ4W4vlZy1JFM8b5wGX4AGxbCEP15moeWgu+6QyFasCt4tgaO8avrW4k8wdltwPPDTsFic8thMnwL+CwK9cWBgb2/eO7XiJUTYxJX7QvgCrWzAJhXOhFTOU4r+BpoWTP+gIETwHsDzJ4Uv1FHVeXOic3Y7yP8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4ggL9zdT32hZPM33GhBntu0muthxXF90xSQja0voprU=;
- b=CSWCKROapK7S9zJRO9FS2tNe+3/lNNcvidsLiFCILfd2gsQ8GcSd/QWqirhNUQHCTqCT6bVb72N/5jArr6UbfPDCHacXbbkr3uXfBSozHNzDGKn7NTkYTO9prjQGMtJEvGP/CkkEFE1hWoLnZX4RhGIUxAm7QovW1KG5EXDkoOQ=
-Received: from MW5PR10MB5738.namprd10.prod.outlook.com (2603:10b6:303:19b::14)
- by PH0PR10MB5596.namprd10.prod.outlook.com (2603:10b6:510:f8::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
- 2025 16:58:32 +0000
-Received: from MW5PR10MB5738.namprd10.prod.outlook.com
- ([fe80::187b:b241:398b:50eb]) by MW5PR10MB5738.namprd10.prod.outlook.com
- ([fe80::187b:b241:398b:50eb%5]) with mapi id 15.20.8511.026; Tue, 11 Mar 2025
- 16:58:32 +0000
-Message-ID: <d121240d-f755-4b1c-b1cb-b62db21ce7d7@oracle.com>
-Date: Tue, 11 Mar 2025 11:58:30 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] jfs: add index corruption check to DT_GETPAGE()
-To: Roman Smirnov <r.smirnov@omp.ru>
-Cc: Ghanshyam Agrawal <ghanshyam1898@gmail.com>,
-        Edward Adam Davis <eadavis@qq.com>,
-        jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        lvc-project@linuxtesting.org,
-        syzbot <syzbot+9120834fc227768625ba@syzkaller.appspotmail.com>,
-        stable@vger.kernel.org
-References: <20250226082523.112081-1-r.smirnov@omp.ru>
-Content-Language: en-US
-From: Dave Kleikamp <dave.kleikamp@oracle.com>
-In-Reply-To: <20250226082523.112081-1-r.smirnov@omp.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH5PR04CA0004.namprd04.prod.outlook.com
- (2603:10b6:610:1f4::10) To MW5PR10MB5738.namprd10.prod.outlook.com
- (2603:10b6:303:19b::14)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dhBQMdF9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741712353;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0BPrX/3i7B8WQ59BDJo83O4/lZ+88fFfKiRl6URWuaA=;
+	b=dhBQMdF9QNcOnCtXgIHQO7/8d+SvOBpJF7i7d85YnO9V/xlaXXYwhqhLR5Vwa6DrVAjTW8
+	HhxO2qH/sFRzvrRImZT9jxSF7XetfAq0YyZqOMfDR1LnJW/aP7rc/Bk/DlAmxRWagaYoJj
+	ZbxkoqS9ByKafS+60bXj+m/qPupXrLw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-44-f4pu3KGrMOu_oNkqg7CTgg-1; Tue, 11 Mar 2025 12:59:12 -0400
+X-MC-Unique: f4pu3KGrMOu_oNkqg7CTgg-1
+X-Mimecast-MFC-AGG-ID: f4pu3KGrMOu_oNkqg7CTgg_1741712351
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3933ab5b1d5so564134f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:59:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741712351; x=1742317151;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0BPrX/3i7B8WQ59BDJo83O4/lZ+88fFfKiRl6URWuaA=;
+        b=sG836BBKdxkbXSc6Pv5SWHzCABeTZJdI5HUIjSldZ1mBz98bQRt9qSmWiS+z2YxU/+
+         hyba+C7PGvfz3iCix8SvTZywJswGA0cM6XLDjjg7djQKWFJ76TDMawsKtrisVglCdnGB
+         oIOQ3GH8bI2T/6UaoRiK7n7GflDZ5uTdNIwe0n8erVYA8YZBh1GQVCVUe9QDGOmHyG/8
+         6+1PuoN1LDpcx9h3Z2UH4tnUp6sjX+4R6EHOur1ikwOBa+uIr1IONOxaAnAIHEh7pZRi
+         rbzGUz6swsm0d+3q+g+0w//7M4VarYr/Yf89gHoJyduUVdLkZaOQZRI1s3l8w5R1hYPl
+         nBeA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6S1n2IUx42AMycixfDpiuVfETG9wdsWMdKH8HdQrCIG6jRasB/XxH6u2+ONwkDbwqA3y+vqd/gsYeVuM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeueShvYoEk8DpK/RQsEJ+NWw/saukUhSTaW0tV67EKJdSPT68
+	Sl3s2yh140AhuQAmv6aL9XuwB6s7+zbWSj0kVb+wo8mQ9V7vlCgyYClMEjA2ajoi38fgvCMMhxR
+	mzS9Ldm7GyU50DM88pr8hq+d/dv+5XnpN65Rnx7Cw5Vo+ZYNqkftRb5rRGKu/Bg==
+X-Gm-Gg: ASbGncsWa4esf8dfZTeSIfYg/i80YTqAIyPShBbkYuRB2X/0UNLWtgyY2xahuwl205w
+	tsh4CfSi5siGpry0ftopiyp5sGZZNXOqzMuZVL9sLEGJPZmUMtAyF3Q3vzqPq/3SEqNLYZj1xd1
+	Fc6dBbHn6g+qmCLvSoXeclaA9No8MNpVczBC1pwxfzRcKw42fF6rht5DwuU1TlRSh59fvD50pjp
+	lvmgD7cMWgAbt5v6wBi0Kx7dds6Q5XyA/JE3/SVcKLoZYYH54ncrQus+tTZLyGO+D4KgJimzGFA
+	CzT/3Vt9ZLU=
+X-Received: by 2002:a5d:64c3:0:b0:391:2932:e67b with SMTP id ffacd0b85a97d-39132dacfdbmr18967111f8f.35.1741712350841;
+        Tue, 11 Mar 2025 09:59:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFthIkbIza4asy8rbMgye5BDrJXoQTmIsJn6D/IMOoIcmgMxFtoxcwjFBwF1vhjSSm/3R/XiQ==
+X-Received: by 2002:a5d:64c3:0:b0:391:2932:e67b with SMTP id ffacd0b85a97d-39132dacfdbmr18967090f8f.35.1741712350383;
+        Tue, 11 Mar 2025 09:59:10 -0700 (PDT)
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c101febsm18182505f8f.81.2025.03.11.09.59.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 09:59:09 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, "H. Peter Anvin"
+ <hpa@zytor.com>, Gerd Hoffmann <kraxel@redhat.com>, Juergen Gross
+ <jgross@suse.com>, Jan Beulich <jbeulich@suse.com>, Paul Durrant
+ <paul@xen.org>, David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [RFC PATCH resend] x86/boot: Drop CRC-32 checksum and the build
+ tool that generates it
+In-Reply-To: <20250307164801.885261-2-ardb+git@google.com>
+References: <20250307164801.885261-2-ardb+git@google.com>
+Date: Tue, 11 Mar 2025 17:59:08 +0100
+Message-ID: <87bju7o65f.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW5PR10MB5738:EE_|PH0PR10MB5596:EE_
-X-MS-Office365-Filtering-Correlation-Id: 645c4ecb-1eea-4b96-4da9-08dd60bdf490
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N0xDMDR5QzJjd01pLzMySnpKcklkQUovdDhuS0xBRWFxRWx6dHp3WnVNeTQ4?=
- =?utf-8?B?RnNtZFFEcklyVFU4RmRmekJjYVpEQXRhdnEzWG51cUx5OEk3bVJYbE1acENt?=
- =?utf-8?B?T0JkRk1XL3IyVy9KejlRT292Tm04dnZqWXdIUHF1RXJuOFhxbVUvc0w1czNO?=
- =?utf-8?B?NUZnRWFTSElrS0tFNzBmN1l1NHdlcS9tcmJDdGhaeks0T0J2UWErT3Q4Z0wr?=
- =?utf-8?B?VDMxa24xU1FlWXpNVGlwbmM3cHhJTG12QmxuNVlNRlM5eng2NkVFUlZtV0VH?=
- =?utf-8?B?TTRwTFNUWnV1N2dGWHVZSkwxdVRrYmZsRGlHR0tkUjF6NmU5eEpJZFlON21v?=
- =?utf-8?B?Z3h2ZytZQVRSVWFyRzZ4OTA5QlhDQWFhMUt0QkF3OFplMExOSWsrWGF3aGh0?=
- =?utf-8?B?ekV3Sk9XaVlNZmxYU2NqeG9Pb25CWkpYNFdlWFhNQTcwMG90UjdyMzUyWDRN?=
- =?utf-8?B?UmFIbjZvOWEyZDVkdktoWEt4SVBUK21zSGcxT1JJdzJ2YWpORjBxc1hFV2xP?=
- =?utf-8?B?a3ZPd0NCUUdZYVYrOURRUmkzQXptd1hMUzdrNUQwTmc1WHBhc1R4THdMTEJT?=
- =?utf-8?B?YzZpanFFRjJqTGxkdUVja0M3U01wTTJvRmF3Wm10Z1dtaVM1a2JHbDZJTEpz?=
- =?utf-8?B?VlJITDN6elIwR1hRVVhDU3BYYUhBUklkMmZpM3RrUGFDNFo4dFlDNVh1cTlW?=
- =?utf-8?B?ZHhxTjJvKzRzUFMwMzI1NzJvZ0dxYld0YnNQRHgranNmWHpnMjkxRXBUcHVC?=
- =?utf-8?B?Tkl5anQ4ZzBmTVZtczR5Yk1rWVdCSld6MnhCTjYvMjBraVJyVzloU3gzS2Fq?=
- =?utf-8?B?WldrZ0MyTUhaNzJ4UE5YYVg5aEd4OXJua01DUTk2NDdZQlNrS25uUjNDK044?=
- =?utf-8?B?UU5iTmZKb0s4WENHd240VHhFZU5XeDdNdHBPeXFDcm80eWxzeit6YjdTUjVi?=
- =?utf-8?B?c0x0bXh6aTBuYW9ld0dPWENSa1l1cU55WUw2QVhGSmV5MUllclZRbmViZFVz?=
- =?utf-8?B?WkFLc0Z1bVBzekNXUXEvSmU2WWtHc1J4ZnQwYzVqTmZNa1JRT0l3NTcrNHhU?=
- =?utf-8?B?RytJZzhWT0xnM0xhVlNnVFZmbFNKTzhFRGVYRmxwUDduYkhBblhYeXNXT1c5?=
- =?utf-8?B?SER3WVp4NFhGdThybUQrN2J0Y20zcnJYSUEzVUNZUWxLOEJQaDhYamhBZjJC?=
- =?utf-8?B?S29LRC9UWWpXUFNpeHJjaW1JYXlKTFVGKzBxcVVZR3BzQ1dhTlUwY0wyQ3Fm?=
- =?utf-8?B?enJ1ZXNUditFbjVuL0lvQUpWWDRMbUt0bUJNbWdVZ3JPWjREa0drc0dyZEYw?=
- =?utf-8?B?UEVWZXdvMEc1OEUrMjBUZ1NtWklTQzh6N2lTR3NqWjBVRkE5bjdHcGhUcG40?=
- =?utf-8?B?VW9qVk0vdUJZODFIVjZQSjRXb2xVRk0yZUhNa05KV2VlbHhrR1JhVG13L3Fp?=
- =?utf-8?B?RGQ2dnJxQ3F1a0ZIb1U1ZHFmUUcxTVc2YXd0cU5LQkJWZDdHRHBpYXBQZzdr?=
- =?utf-8?B?elBMK2FPZ1hYMWZrRWFVME1OdVVRSVVqWmZaeldFVERtWGtYT01pcHdiTWxF?=
- =?utf-8?B?VXFJRzBVZnUva1N6VW8rdGZwdUlxR3dtVFVkNURwL0piR0tIekQyWHRXeW8z?=
- =?utf-8?B?TVdiUWNyVmlDMkZGMFBEdWlkcDUrenJmcmNEbWhrYzNSMHFxWkJ3QkQwZHBu?=
- =?utf-8?B?a2EwR01pUVhpUFJ5WExxbjRrY1MwSFViaXNjNzlvL0hZamVXTEJ4VE04RlJD?=
- =?utf-8?B?ZDZkblFJUS9aR2tiNm14KzJLZWJLZ1dadTdUQm9lMEp4NGxIWjVQQ1lHaHdu?=
- =?utf-8?B?Nncyd3RSQXRJMTV0Wm1JZz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR10MB5738.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QkVsVkE3b1MyTyt3c3JXd29SUlZ0U1AwWGxxYVdnakh4ZlpvTG1mWVZPTWRo?=
- =?utf-8?B?MWxOUW4rUGpIb3RSeWVnaXU1RGo3VTR1UkROQlpXQjlhN0pNUUt2WjExS0xF?=
- =?utf-8?B?Q1JOZTB1aE82OGc2OTlCU043a0xFaGZRTGVhbWl0R2NBQVNRbkk1WExtRDJq?=
- =?utf-8?B?SkdPN1VRd1RnVnk4S1E0UlphZGdTUDQrWGt2MkpreDBsVlJrWmhGVHdod3lV?=
- =?utf-8?B?ZjdhMDRIRXIxWmo5WFFTRGMyVmxrZ25MTkxYeVZZampnOUZIUGE1M2F5a0c4?=
- =?utf-8?B?NFl2cnpDQlFLcFZyS1VzbU53OTdLaE1ReUd2cWhzRzZRSW9QR2J5cWhWejJi?=
- =?utf-8?B?S1dKVTBSczBjUVFtcWpvV25CcnpBc2tab0F5dXJ5M0JSOVN1RjhqVVQ3Y0tU?=
- =?utf-8?B?eVhuaGQ5NHhnUWZWaGRhK1k3blFTMFZ4cmI2aFkxMDlQUFBQakxpV2RiU0Ja?=
- =?utf-8?B?ckJhUzVybDNFV3l3YXlCRi9CRVYyRGJ3cVdQSlBzNSs0dGJiMGpnMko2citX?=
- =?utf-8?B?WnlCSlo2TEpEcHB0VDJuN01KN1Zsc28yUDV2UzMwb2FnVXl3ODlhYmZqUGNH?=
- =?utf-8?B?bDIrNEZJRVBtN29iZG9ZM1ZwN0VNQ3hqUWlVN0dDbllHdDFITHJDTDRwWWI3?=
- =?utf-8?B?WkR4UW9uVGtlSEk1WWZiOTVyT3lzdGZSNlF2eGlJUnE4MGlTUEwxS1N6aitC?=
- =?utf-8?B?R0ZzYVE3QzkvUTI5N3ZNVlc4aUNIek4xWGMyYURlOXFXRVVac0xvb0pFcWgx?=
- =?utf-8?B?UXMyc0JGSE9lSHRoMmFEaENBeVE4NGdPT3A0bGtVV3crMWFlTFFsbWNyMTZy?=
- =?utf-8?B?QkU3eHdlTUl2SjIrNElyc1NDbGhwWWp1a0JMUzhNWVlUMk1YbjU5dDFmakRO?=
- =?utf-8?B?Y2F5bkdCV1c0d1NVc1BDUFoyNzJ2WjJNbkYxajRvdjljSnQvK3BuSS81MVp5?=
- =?utf-8?B?UmVJUi9hZGIwY1FpbDBmRUlLam9jd1hDbDEvclhrQURDYXFMSFI1K203NDU3?=
- =?utf-8?B?b3MwMXB2ajVuSm82NENlYm9Rbm1TNHc5dGltWHFERVU3bSs4WE5qQXpuR0Ez?=
- =?utf-8?B?UDdPYjlVbnZMQ2JNdHBMc1FZUXZ2R1NwZWpYWDdpUk5LWGN4Skg0VHRUcDR2?=
- =?utf-8?B?TVBSbEx3SU1pVXBoMEZJL0QwNHB1RkhZUmJhem1JQk5qSjNmYmpTZ2pHeTZM?=
- =?utf-8?B?aGNnaFNXTWRqcnY5cms5NGpzTnJDM0dzYkRvTFQ3R2ZkQWxNM2FEd1BHc0dY?=
- =?utf-8?B?cnNZb1p6bThpYWM5QzNQTHkzQm5MSCs4bDRTRGZoSmJjelJVdHJTWno2NlVk?=
- =?utf-8?B?MVRKYjhBMFZlUEhDSTdGSDNkSVdyQytZRzBGTHR2OW1rUklDK01PUlo0VTFa?=
- =?utf-8?B?eXBSUk51OW9ISlpWbEZENGxTUDhDQW50RnExOW5OT3hBSWkrQ0l2VTFkWVJk?=
- =?utf-8?B?cVNLb2tLNjNlSFNXUlFkVG5GaFoxOE9tdGphZG9scTRkOHIwbFM1NHZySGZF?=
- =?utf-8?B?enVYbWYxc2YrRGlNVXUwZGlpRDVyd05MaVlvbFBUWlhBR280VjVObzF2UDVG?=
- =?utf-8?B?OEx4N3pjc0JLQWN4NGMwVGFEOTE4bUxJLzRHanV4b3BQRlpSamJJWEVad1c1?=
- =?utf-8?B?N3F3VUl3M3hhbW1EU0VUSTNzZ2c5citOeEhmcU91c2xtZHIzVjBWTVY5UHZN?=
- =?utf-8?B?eTBuaWlJQTVVck5ScHZMa1QvY2tER1FIQ3djU0hERmE4aVZqM0dZSis1ZjFD?=
- =?utf-8?B?cmtSM29uMWx1TEVaNnRucFpuWmlmYU01Y09kV1VYcURPdE03cnBFSFNHSGxj?=
- =?utf-8?B?bGVCd2lHVzBob0FITFEyaDRxN1NVbks4eDNwZkEvejBBdUNmNlRXM0RlRFVN?=
- =?utf-8?B?Mmg4YW8vY240MkhzVzlKVnFRVUZrRUdIenYrcXdYOU5NYXNQM3ovRG9FMStW?=
- =?utf-8?B?MjRUbjU4bDNqOVNMZ2pKdXhtTVY5eTNZRnlVWXl1UG9KRFVoZ3hxS0d2OHBI?=
- =?utf-8?B?VWNDRVI0QSswREtzTlBsL0p3VUVCTG1jQ2tqak9LUXR6bkhBQjkzQ2dydng4?=
- =?utf-8?B?UU1zdU0wZzFZQW51TVptY29vL2lrMFkzcFc2LzVOeTN1Z3VoM1hYU2RmazRZ?=
- =?utf-8?B?dmt2dWZLeks5UlJkRFg3Rjl1aHJMS0ducTk1MjhlcUh0cW5TQjdPSE1wMDVH?=
- =?utf-8?B?ZkE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	vmhHKhvOgHWG4Q+8Mo7AdxjqV/QRf0g7ktMtKZz0AR6NuWJYd3WF75tugSH7+RPmymqYuOXCUkDJqhYejVhELLFsYTFq6QGwOKZf6++tkO7nFyR026KhXAz1Y54knLtYOV2UocRBCrXhQSG4+bwl2+9ioeTWP6+xwh9WhUZnXmQB7zeLT49hfIjW5IUGpKJiP0IQ/GufzCHH17+fGY44eiitZRhX2tk9heT+rfr3lcPQdWjj4ZbAQlCksBl7qFIbYZL6xRU6Ro9rUReE3wiAw+8BGAHYVXIRct5JAemxnoH2DgUaDgqMdvEt4KqUfTDOuVBcqHJ+qtm3GuY5c6x2y+jMCrEmeT272lkS1QKegx/7QQGXWKb5sNzwt+O8RZYoAXAqGXL5rYn5J+sKgVsIHMz3szpcFLrxFnVHIl7UIzR/e8YDrv6B9GjstaVK3YJbO0R993e1qOYmI0yfrWQW0BrDrXRlU8ODSlsL8AgUhd/ZdQ3EiYKd8zFZdJVoqgUu6qLwhT+w15Emcpnnv8goRUaGtbvwsdyFaELE82PAEqnkD0vsjOLBBEiI+3wW+85lyluKklUQwDyvZZpyO+o9yYK2gDMIKXwRWkhOb5Kra7I=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 645c4ecb-1eea-4b96-4da9-08dd60bdf490
-X-MS-Exchange-CrossTenant-AuthSource: MW5PR10MB5738.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 16:58:32.6394
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1+Y6uB/xfEGEjK0i3pg4FPJMpaQ0v0TgDQHGmuZ5nK6P1U+TPoTFSkGzYV0JQ849vlhHkY4fCriAd50/c4zMM3IfCPYbXd/LoTiVJlvdafs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5596
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-11_04,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=729
- suspectscore=0 phishscore=0 adultscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502100000 definitions=main-2503110108
-X-Proofpoint-GUID: AIHMTWwf8gB0A1GKueJPWOZVHRy--1oq
-X-Proofpoint-ORIG-GUID: AIHMTWwf8gB0A1GKueJPWOZVHRy--1oq
+Content-Type: text/plain
 
-On 2/26/25 2:25AM, Roman Smirnov wrote:
-> If the file system is corrupted, the header.stblindex variable
-> may become greater than 127. Because of this, an array access out
-> of bounds may occur:
-> 
-> ------------[ cut here ]------------
-> UBSAN: array-index-out-of-bounds in fs/jfs/jfs_dtree.c:3096:10
-> index 237 is out of range for type 'struct dtslot[128]'
-> CPU: 0 UID: 0 PID: 5822 Comm: syz-executor740 Not tainted 6.13.0-rc4-syzkaller-00110-g4099a71718b0 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-> Call Trace:
->   <TASK>
->   __dump_stack lib/dump_stack.c:94 [inline]
->   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
->   ubsan_epilogue lib/ubsan.c:231 [inline]
->   __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
->   dtReadFirst+0x622/0xc50 fs/jfs/jfs_dtree.c:3096
->   dtReadNext fs/jfs/jfs_dtree.c:3147 [inline]
->   jfs_readdir+0x9aa/0x3c50 fs/jfs/jfs_dtree.c:2862
->   wrap_directory_iterator+0x91/0xd0 fs/readdir.c:65
->   iterate_dir+0x571/0x800 fs/readdir.c:108
->   __do_sys_getdents64 fs/readdir.c:403 [inline]
->   __se_sys_getdents64+0x1e2/0x4b0 fs/readdir.c:389
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x77/0x7f
->   </TASK>
-> ---[ end trace ]---
-> 
-> Add a stblindex check for corruption.
+Ard Biesheuvel <ardb+git@google.com> writes:
 
-Looks reasonable. I'll pick this up.
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> Apart from some sanity checks on the size of setup.bin, the only
+> remaining task carried out by the arch/x86/boot/tools/build.c build tool
+> is generating the CRC-32 checksum of the bzImage. This feature was added
+> in commit
+>
+>   7d6e737c8d2698b6 ("x86: add a crc32 checksum to the kernel image.")
+>
+> without any motivation (or any commit log text, for that matter).
 
-Shaggy
+Doing some history digging, it seems this was done for Xen:
+https://lore.kernel.org/lkml/1202936100-30859-1-git-send-email-ijc@hellion.org.uk/T/#m263fdcf0ff3f31ca8e5cd619aa81c7735fa8be91
 
-> 
-> Reported-by: syzbot <syzbot+9120834fc227768625ba@syzkaller.appspotmail.com>
-> Closes: https://syzkaller.appspot.com/bug?extid=9120834fc227768625ba
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+Let me Cc: a few Xen folks for visibility.
+
+>  This
+> checksum is not verified by any known bootloader, and given that
+>
+> a) the checksum of the entire bzImage is reported by most tools (zlib,
+>    rhash) as 0xffffffff and not 0x0 as documented,
+> b) the checksum is corrupted when the image is signed for secure boot,
+>    which means that no distro ships x86 images with valid CRCs,
+
+Note that at least Fedora/RHEL/... distros ship keyless HMAC hash
+alongside vmlinuz binary, e.g. on my Fedora40:
+
+$ cat /boot/.vmlinuz-6.12.6-100.fc40.x86_64.hmac
+19aec080fbd05c5de42db486653a5d9e9d69b59ac8d216ea89850ccf1f538c08ff4ada450989ddf1be81e23fd3c99253939d0a2153d3fd270cc1ed561c04294e  vmlinuz-6.12.6-100.fc40.x86_64
+
+and this is created _after_ SB signing. AFAIU, the need for this is
+coming from FIPS requirements; this makes me wornder if the CRC-32 is an
+early implementation of the same thing.
+
+>
+> it seems quite unlikely that this checksum is being used, so let's just
+> drop it, along with the tool that generates it.
+>
+> Instead, use simple file concatenation and truncation to combine the two
+> pieces into bzImage, and replace the checks on the size of the setup
+> block with a couple of ASSERT()s in the linker script.
+>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Gerd Hoffmann <kraxel@redhat.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 > ---
->   fs/jfs/jfs_dtree.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
-> index 8f85177f284b..93db6eec4465 100644
-> --- a/fs/jfs/jfs_dtree.c
-> +++ b/fs/jfs/jfs_dtree.c
-> @@ -117,7 +117,8 @@ do {									\
->   	if (!(RC)) {							\
->   		if (((P)->header.nextindex >				\
->   		     (((BN) == 0) ? DTROOTMAXSLOT : (P)->header.maxslot)) || \
-> -		    ((BN) && ((P)->header.maxslot > DTPAGEMAXSLOT))) {	\
-> +		    ((BN) && (((P)->header.maxslot > DTPAGEMAXSLOT) ||	\
-> +		    ((P)->header.stblindex >= DTPAGEMAXSLOT)))) {	\
->   			BT_PUTPAGE(MP);					\
->   			jfs_error((IP)->i_sb,				\
->   				  "DT_GETPAGE: dtree page corrupt\n");	\
+>  Documentation/arch/x86/boot.rst        |  10 -
+>  arch/x86/boot/Makefile                 |   7 +-
+>  arch/x86/boot/compressed/vmlinux.lds.S |   3 +-
+>  arch/x86/boot/setup.ld                 |   2 +
+>  arch/x86/boot/tools/.gitignore         |   2 -
+>  arch/x86/boot/tools/build.c            | 247 --------------------
+>  6 files changed, 5 insertions(+), 266 deletions(-)
+>
+> diff --git a/Documentation/arch/x86/boot.rst b/Documentation/arch/x86/boot.rst
+> index 76f53d3450e7..77e6163288db 100644
+> --- a/Documentation/arch/x86/boot.rst
+> +++ b/Documentation/arch/x86/boot.rst
+> @@ -1038,16 +1038,6 @@ Offset/size:	0x000c/4
+>    This field contains maximal allowed type for setup_data and setup_indirect structs.
+>  
+>  
+> -The Image Checksum
+> -==================
+> -
+> -From boot protocol version 2.08 onwards the CRC-32 is calculated over
+> -the entire file using the characteristic polynomial 0x04C11DB7 and an
+> -initial remainder of 0xffffffff.  The checksum is appended to the
+> -file; therefore the CRC of the file up to the limit specified in the
+> -syssize field of the header is always 0.
+> -
+> -
+>  The Kernel Command Line
+>  =======================
+>  
+> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+> index 9cc0ff6e9067..8589471b65a1 100644
+> --- a/arch/x86/boot/Makefile
+> +++ b/arch/x86/boot/Makefile
+> @@ -35,7 +35,6 @@ setup-y		+= video-vesa.o
+>  setup-y		+= video-bios.o
+>  
+>  targets		+= $(setup-y)
+> -hostprogs	:= tools/build
+>  hostprogs	+= mkcpustr
+>  
+>  HOST_EXTRACFLAGS += -I$(srctree)/tools/include \
+> @@ -61,11 +60,9 @@ KBUILD_CFLAGS	+= $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
+>  $(obj)/bzImage: asflags-y  := $(SVGA_MODE)
+>  
+>  quiet_cmd_image = BUILD   $@
+> -silent_redirect_image = >/dev/null
+> -cmd_image = $(obj)/tools/build $(obj)/setup.bin $(obj)/vmlinux.bin \
+> -			       $(obj)/zoffset.h $@ $($(quiet)redirect_image)
+> +      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
+>  
+> -$(obj)/bzImage: $(obj)/setup.bin $(obj)/vmlinux.bin $(obj)/tools/build FORCE
+> +$(obj)/bzImage: $(obj)/setup.bin $(obj)/vmlinux.bin FORCE
+>  	$(call if_changed,image)
+>  	@$(kecho) 'Kernel: $@ is ready' ' (#'$(or $(KBUILD_BUILD_VERSION),`cat .version`)')'
+>  
+> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> index 083ec6d7722a..48d0b5184557 100644
+> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> @@ -48,8 +48,7 @@ SECTIONS
+>  		*(.data)
+>  		*(.data.*)
+>  
+> -		/* Add 4 bytes of extra space for a CRC-32 checksum */
+> -		. = ALIGN(. + 4, 0x200);
+> +		. = ALIGN(0x200);
+>  		_edata = . ;
+>  	}
+>  	. = ALIGN(L1_CACHE_BYTES);
+> diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
+> index 3a2d1360abb0..e1d594a60204 100644
+> --- a/arch/x86/boot/setup.ld
+> +++ b/arch/x86/boot/setup.ld
+> @@ -45,6 +45,8 @@ SECTIONS
+>  
+>  		setup_size = ALIGN(ABSOLUTE(.), 4096);
+>  		setup_sects = ABSOLUTE(setup_size / 512);
+> +		ASSERT(setup_sects >= 5, "The setup must be at least 5 sectors in size");
+> +		ASSERT(setup_sects <= 64, "The setup must be at most 64 sectors in size");
+>  	}
+>  
+>  	. = ALIGN(16);
+> diff --git a/arch/x86/boot/tools/.gitignore b/arch/x86/boot/tools/.gitignore
+> deleted file mode 100644
+> index ae91f4d0d78b..000000000000
+> --- a/arch/x86/boot/tools/.gitignore
+> +++ /dev/null
+> @@ -1,2 +0,0 @@
+> -# SPDX-License-Identifier: GPL-2.0-only
+> -build
+> diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
+> deleted file mode 100644
+> index 10311d77c67f..000000000000
+> --- a/arch/x86/boot/tools/build.c
+> +++ /dev/null
+> @@ -1,247 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -/*
+> - *  Copyright (C) 1991, 1992  Linus Torvalds
+> - *  Copyright (C) 1997 Martin Mares
+> - *  Copyright (C) 2007 H. Peter Anvin
+> - */
+> -
+> -/*
+> - * This file builds a disk-image from three different files:
+> - *
+> - * - setup: 8086 machine code, sets up system parm
+> - * - system: 80386 code for actual system
+> - * - zoffset.h: header with ZO_* defines
+> - *
+> - * It does some checking that all files are of the correct type, and writes
+> - * the result to the specified destination, removing headers and padding to
+> - * the right amount. It also writes some system data to stdout.
+> - */
+> -
+> -/*
+> - * Changes by tytso to allow root device specification
+> - * High loaded stuff by Hans Lermen & Werner Almesberger, Feb. 1996
+> - * Cross compiling fixes by Gertjan van Wingerde, July 1996
+> - * Rewritten by Martin Mares, April 1997
+> - * Substantially overhauled by H. Peter Anvin, April 2007
+> - */
+> -
+> -#include <stdio.h>
+> -#include <string.h>
+> -#include <stdlib.h>
+> -#include <stdarg.h>
+> -#include <sys/types.h>
+> -#include <sys/stat.h>
+> -#include <unistd.h>
+> -#include <fcntl.h>
+> -#include <sys/mman.h>
+> -#include <tools/le_byteshift.h>
+> -
+> -typedef unsigned char  u8;
+> -typedef unsigned short u16;
+> -typedef unsigned int   u32;
+> -
+> -/* Minimal number of setup sectors */
+> -#define SETUP_SECT_MIN 5
+> -#define SETUP_SECT_MAX 64
+> -
+> -/* This must be large enough to hold the entire setup */
+> -u8 buf[SETUP_SECT_MAX*512];
+> -
+> -static unsigned long _edata;
+> -
+> -/*----------------------------------------------------------------------*/
+> -
+> -static const u32 crctab32[] = {
+> -	0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419,
+> -	0x706af48f, 0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4,
+> -	0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07,
+> -	0x90bf1d91, 0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de,
+> -	0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7, 0x136c9856,
+> -	0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9,
+> -	0xfa0f3d63, 0x8d080df5, 0x3b6e20c8, 0x4c69105e, 0xd56041e4,
+> -	0xa2677172, 0x3c03e4d1, 0x4b04d447, 0xd20d85fd, 0xa50ab56b,
+> -	0x35b5a8fa, 0x42b2986c, 0xdbbbc9d6, 0xacbcf940, 0x32d86ce3,
+> -	0x45df5c75, 0xdcd60dcf, 0xabd13d59, 0x26d930ac, 0x51de003a,
+> -	0xc8d75180, 0xbfd06116, 0x21b4f4b5, 0x56b3c423, 0xcfba9599,
+> -	0xb8bda50f, 0x2802b89e, 0x5f058808, 0xc60cd9b2, 0xb10be924,
+> -	0x2f6f7c87, 0x58684c11, 0xc1611dab, 0xb6662d3d, 0x76dc4190,
+> -	0x01db7106, 0x98d220bc, 0xefd5102a, 0x71b18589, 0x06b6b51f,
+> -	0x9fbfe4a5, 0xe8b8d433, 0x7807c9a2, 0x0f00f934, 0x9609a88e,
+> -	0xe10e9818, 0x7f6a0dbb, 0x086d3d2d, 0x91646c97, 0xe6635c01,
+> -	0x6b6b51f4, 0x1c6c6162, 0x856530d8, 0xf262004e, 0x6c0695ed,
+> -	0x1b01a57b, 0x8208f4c1, 0xf50fc457, 0x65b0d9c6, 0x12b7e950,
+> -	0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3,
+> -	0xfbd44c65, 0x4db26158, 0x3ab551ce, 0xa3bc0074, 0xd4bb30e2,
+> -	0x4adfa541, 0x3dd895d7, 0xa4d1c46d, 0xd3d6f4fb, 0x4369e96a,
+> -	0x346ed9fc, 0xad678846, 0xda60b8d0, 0x44042d73, 0x33031de5,
+> -	0xaa0a4c5f, 0xdd0d7cc9, 0x5005713c, 0x270241aa, 0xbe0b1010,
+> -	0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f,
+> -	0x5edef90e, 0x29d9c998, 0xb0d09822, 0xc7d7a8b4, 0x59b33d17,
+> -	0x2eb40d81, 0xb7bd5c3b, 0xc0ba6cad, 0xedb88320, 0x9abfb3b6,
+> -	0x03b6e20c, 0x74b1d29a, 0xead54739, 0x9dd277af, 0x04db2615,
+> -	0x73dc1683, 0xe3630b12, 0x94643b84, 0x0d6d6a3e, 0x7a6a5aa8,
+> -	0xe40ecf0b, 0x9309ff9d, 0x0a00ae27, 0x7d079eb1, 0xf00f9344,
+> -	0x8708a3d2, 0x1e01f268, 0x6906c2fe, 0xf762575d, 0x806567cb,
+> -	0x196c3671, 0x6e6b06e7, 0xfed41b76, 0x89d32be0, 0x10da7a5a,
+> -	0x67dd4acc, 0xf9b9df6f, 0x8ebeeff9, 0x17b7be43, 0x60b08ed5,
+> -	0xd6d6a3e8, 0xa1d1937e, 0x38d8c2c4, 0x4fdff252, 0xd1bb67f1,
+> -	0xa6bc5767, 0x3fb506dd, 0x48b2364b, 0xd80d2bda, 0xaf0a1b4c,
+> -	0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867df55, 0x316e8eef,
+> -	0x4669be79, 0xcb61b38c, 0xbc66831a, 0x256fd2a0, 0x5268e236,
+> -	0xcc0c7795, 0xbb0b4703, 0x220216b9, 0x5505262f, 0xc5ba3bbe,
+> -	0xb2bd0b28, 0x2bb45a92, 0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31,
+> -	0x2cd99e8b, 0x5bdeae1d, 0x9b64c2b0, 0xec63f226, 0x756aa39c,
+> -	0x026d930a, 0x9c0906a9, 0xeb0e363f, 0x72076785, 0x05005713,
+> -	0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0x0cb61b38, 0x92d28e9b,
+> -	0xe5d5be0d, 0x7cdcefb7, 0x0bdbdf21, 0x86d3d2d4, 0xf1d4e242,
+> -	0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b, 0x6fb077e1,
+> -	0x18b74777, 0x88085ae6, 0xff0f6a70, 0x66063bca, 0x11010b5c,
+> -	0x8f659eff, 0xf862ae69, 0x616bffd3, 0x166ccf45, 0xa00ae278,
+> -	0xd70dd2ee, 0x4e048354, 0x3903b3c2, 0xa7672661, 0xd06016f7,
+> -	0x4969474d, 0x3e6e77db, 0xaed16a4a, 0xd9d65adc, 0x40df0b66,
+> -	0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9,
+> -	0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605,
+> -	0xcdd70693, 0x54de5729, 0x23d967bf, 0xb3667a2e, 0xc4614ab8,
+> -	0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b,
+> -	0x2d02ef8d
+> -};
+> -
+> -static u32 partial_crc32_one(u8 c, u32 crc)
+> -{
+> -	return crctab32[(crc ^ c) & 0xff] ^ (crc >> 8);
+> -}
+> -
+> -static u32 partial_crc32(const u8 *s, int len, u32 crc)
+> -{
+> -	while (len--)
+> -		crc = partial_crc32_one(*s++, crc);
+> -	return crc;
+> -}
+> -
+> -static void die(const char * str, ...)
+> -{
+> -	va_list args;
+> -	va_start(args, str);
+> -	vfprintf(stderr, str, args);
+> -	va_end(args);
+> -	fputc('\n', stderr);
+> -	exit(1);
+> -}
+> -
+> -static void usage(void)
+> -{
+> -	die("Usage: build setup system zoffset.h image");
+> -}
+> -
+> -/*
+> - * Parse zoffset.h and find the entry points. We could just #include zoffset.h
+> - * but that would mean tools/build would have to be rebuilt every time. It's
+> - * not as if parsing it is hard...
+> - */
+> -#define PARSE_ZOFS(p, sym) do { \
+> -	if (!strncmp(p, "#define ZO_" #sym " ", 11+sizeof(#sym)))	\
+> -		sym = strtoul(p + 11 + sizeof(#sym), NULL, 16);		\
+> -} while (0)
+> -
+> -static void parse_zoffset(char *fname)
+> -{
+> -	FILE *file;
+> -	char *p;
+> -	int c;
+> -
+> -	file = fopen(fname, "r");
+> -	if (!file)
+> -		die("Unable to open `%s': %m", fname);
+> -	c = fread(buf, 1, sizeof(buf) - 1, file);
+> -	if (ferror(file))
+> -		die("read-error on `zoffset.h'");
+> -	fclose(file);
+> -	buf[c] = 0;
+> -
+> -	p = (char *)buf;
+> -
+> -	while (p && *p) {
+> -		PARSE_ZOFS(p, _edata);
+> -
+> -		p = strchr(p, '\n');
+> -		while (p && (*p == '\r' || *p == '\n'))
+> -			p++;
+> -	}
+> -}
+> -
+> -int main(int argc, char ** argv)
+> -{
+> -	unsigned int i, sz, setup_sectors;
+> -	int c;
+> -	struct stat sb;
+> -	FILE *file, *dest;
+> -	int fd;
+> -	void *kernel;
+> -	u32 crc = 0xffffffffUL;
+> -
+> -	if (argc != 5)
+> -		usage();
+> -	parse_zoffset(argv[3]);
+> -
+> -	dest = fopen(argv[4], "w");
+> -	if (!dest)
+> -		die("Unable to write `%s': %m", argv[4]);
+> -
+> -	/* Copy the setup code */
+> -	file = fopen(argv[1], "r");
+> -	if (!file)
+> -		die("Unable to open `%s': %m", argv[1]);
+> -	c = fread(buf, 1, sizeof(buf), file);
+> -	if (ferror(file))
+> -		die("read-error on `setup'");
+> -	if (c < 1024)
+> -		die("The setup must be at least 1024 bytes");
+> -	if (get_unaligned_le16(&buf[510]) != 0xAA55)
+> -		die("Boot block hasn't got boot flag (0xAA55)");
+> -	fclose(file);
+> -
+> -	/* Pad unused space with zeros */
+> -	setup_sectors = (c + 4095) / 4096;
+> -	setup_sectors *= 8;
+> -	if (setup_sectors < SETUP_SECT_MIN)
+> -		setup_sectors = SETUP_SECT_MIN;
+> -	i = setup_sectors*512;
+> -	memset(buf+c, 0, i-c);
+> -
+> -	/* Open and stat the kernel file */
+> -	fd = open(argv[2], O_RDONLY);
+> -	if (fd < 0)
+> -		die("Unable to open `%s': %m", argv[2]);
+> -	if (fstat(fd, &sb))
+> -		die("Unable to stat `%s': %m", argv[2]);
+> -	if (_edata != sb.st_size)
+> -		die("Unexpected file size `%s': %u != %u", argv[2], _edata,
+> -		    sb.st_size);
+> -	sz = _edata - 4;
+> -	kernel = mmap(NULL, sz, PROT_READ, MAP_SHARED, fd, 0);
+> -	if (kernel == MAP_FAILED)
+> -		die("Unable to mmap '%s': %m", argv[2]);
+> -
+> -	crc = partial_crc32(buf, i, crc);
+> -	if (fwrite(buf, 1, i, dest) != i)
+> -		die("Writing setup failed");
+> -
+> -	/* Copy the kernel code */
+> -	crc = partial_crc32(kernel, sz, crc);
+> -	if (fwrite(kernel, 1, sz, dest) != sz)
+> -		die("Writing kernel failed");
+> -
+> -	/* Write the CRC */
+> -	put_unaligned_le32(crc, buf);
+> -	if (fwrite(buf, 1, 4, dest) != 4)
+> -		die("Writing CRC failed");
+> -
+> -	/* Catch any delayed write failures */
+> -	if (fclose(dest))
+> -		die("Writing image failed");
+> -
+> -	close(fd);
+> -
+> -	/* Everything is OK */
+> -	return 0;
+> -}
+
+-- 
+Vitaly
 
