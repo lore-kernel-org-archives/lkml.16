@@ -1,161 +1,307 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CB725E825;
-	Tue, 11 Mar 2025 16:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7B225EF90
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 16:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741709203; cv=none; b=tRdkfYfyaQc/o+yxb35ug0m9eLRM+SU951sw/YXT33o7aWYuhB/pdhfJ5ORsj4g36LVx8HiRqn1xDR/7m62+SOaG/4YOfGF2dXNZiMa4ER+Emu3RHFmaVgakUwx11E5oZdlWD8l6oLf4Tsf8MAY/kdVQl8vhZyKLytYUntTzz1o=
+	t=1741709220; cv=none; b=OsWDHyhUNIY0vCfKHK2ly0cTMHyvcFHlkOTNNFXcK/ZHYIKH+kb0/i56gjsIfWVP1O9VjXmZoWnGZNh0HwFB7psO9cAIn0vYoYY5Fb7gjkwKVDEXhAts3slERfk4nkIWgtosbk6xUeOZQTk3LGIzZKuoX7AiuowPMgzTJu23sc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741709203; c=relaxed/simple;
-	bh=PycIzShDrvW+MYh47pwMsDglZXLkEXX+gYjlWlgOuo4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bsn5KUjuDOxmTdP8C4M8dOOClDCzTxPpem2oHaVTwVsWFSA8GzYeCbTTjdvO+QeEtnAE4Uqh8Ebst+6da2Zp1whs3+LegtS0IZ6nyDf09UFpwDVK7oUKdHy0uRuLHr4M/O8+XRO/2hdU5y71ZhClRxyNruWXhzx4cfNKgKxBCmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hN6FhU9e; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741709220; c=relaxed/simple;
+	bh=9xfrqn5PaUD3Cww4DF0JnKtGG8IfmxoEKQSBl/5uVoU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JpI9X71QNpAJ3u+5H9/Ibk0XCj5q4LjgvU4xgBYXa4mbA2buln8fFi6YA3E90VNazoWDNwPVxdZrOmoMzujFhAelnNWOtHy9ShK9zhgRAcnUGnCEwyDSUiOuIfMCISaVVd70VndIXXsZ+2DiizBjOznHyGtj7QT4QnS1CsMtgDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=S2hiYyN/; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hN6FhU9e"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22580c9ee0aso34986595ad.2;
-        Tue, 11 Mar 2025 09:06:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S2hiYyN/"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ff187f027fso9675694a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:06:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741709200; x=1742314000; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r1TiB2cIwExQKHJgSUFiCJuhIYPtkSlVWWhMfWxdcps=;
-        b=hN6FhU9eKBkI1WjtDhXOVPk9RuaBa5U8aEHvGQdwg66zGT6uONfrZPHLhojG8P+eaw
-         SOmmh9ciSMhcb2aiGwZHOSK2weWEdhtKFewwvuELGAvzq2wNfOeq0kNnWb9JewkzcTvX
-         HXxisF2bOjw0yqfTBE2hLEsMDQLDy5IEbY3gUBcscj9cBFU1DSowA0fvj5KKZ05610TR
-         9bDroGWf0qQcWMdeDjv9OjPJ1PB8IjrQq/QIcKGWxAb1Q2nC37RQWCKwwz4HtNKfWuB2
-         12wbgpKOOCKCsZuhgnL1ckiwLPJZEDghPPzlA6w/g7md7VefyudjOhlbkJOZ3XqRhEqB
-         OvtQ==
+        d=broadcom.com; s=google; t=1741709218; x=1742314018; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hM4rbW6LjxVDNSNvYjso9fRHbCk2dFhxwSUcK0gnU+A=;
+        b=S2hiYyN/EAheqYsBK+EUVUdJquOtswQ/yRfMp+Z/+/UmqBbWSCfC6aiEh9SnWlwhZh
+         eNx/cjP7tl7zBYmJSna5YFGfbxf/PafzST1bWTF4hZPtJCDFKdcYGQink9BMoyJ0qSWD
+         yq31f2JPFCLymnl+yV+3MQ1CzouexBztpl+Vw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741709200; x=1742314000;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1741709218; x=1742314018;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=r1TiB2cIwExQKHJgSUFiCJuhIYPtkSlVWWhMfWxdcps=;
-        b=Ld1+r5ebQOLV67vR/tB+04Rx58YMcW0x9llHOQml9jVVAyjW9Ts67+lSHfjmtq2QOH
-         6sc+UZYKzhUWhz0v+ZPhcTB0pIq2zPtYVithPZUFKAYFCxYnWy6vvjXk+3mThUCj+5Pm
-         V/gbajOduHeC2Fd65kMpSsOg3UMgn3l0Tc5NCRCDGlQGMaw/Y715NEGBQdLz7MqRnhmb
-         XQBZuLstJhTjwONFjvTf+P68OZysb+cGQdFvV7RVKIffhLuGQBKetTp80PtB8LFcntND
-         vmNP4b+5gSGgNcUuwEQc9SU/vFwJjlR6DV8CqEtNftyOwC/htSvqelFC9yVeWBg7HF/r
-         q+fw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/4u4yKf3XzYI5HG54yr8/Z0ml3xhgTuzP+7Gz8M88sLAVv5sIvVqwv6M5A37PiucYl8p95BAJ@vger.kernel.org, AJvYcCVYsDwJ4q4U+JFETwCWSGnKYCfGdcEOGajJRbq/Yw8ViD39iglv06OLNdkZaVFbUW9vmjAO4RuEuG4AFQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRlYjn4UZezSlPsuglMILc5s+ZbiH2n+Ib+CJOAEK3iK2eMfH+
-	ayTNNG9AMzrBei4D9VdsPTjwUCcRFusN5Dx+6hH4AhAlbVS52OCa
-X-Gm-Gg: ASbGncsIzuth9FrBGT1AQUYPZE619ha7XRLFAIIOm9fKkPZeIeMd/NxKHt5Z8q4GCn8
-	0eKibDv7UERE/Mwe5VdWAbRnNtydE+wbSplIqjUo+UQk0k7lHGFuLqGck6h2TmUXXW0ntpCv4fO
-	bx0TcxS0vB1cA5I1gPa4kVmmnHnxfMnxjoaQh6rgQYuFkBvSKk6jcie28/XjOBwHNVM+wewNq07
-	JgwRSxndFxtpvLhB3S/O+m5GAk2jhw9qd4NZZozSHqZotRuRwNRPUTdRcVzyb/SRDJbg0iUbj8P
-	vMm0F/WFksFZ4htTTTtQkB7bvYzqo+R9ta6jTdewdq1td79SLb9j9xlI8DGaFaM0q2JMje6sZAh
-	zhgV+ZRGnsAlYjltT66VflkFy5eiNb8xLmuxXD6Txk/BDXkS/
-X-Google-Smtp-Source: AGHT+IE7eWEl/nFpwgH7cC9oR0R3GFfUz4SxYZLPLO2vfKj7RKiBeOmYW6JKFORYzfuBteGpfPQKbA==
-X-Received: by 2002:a17:902:d488:b0:215:b9a6:5cb9 with SMTP id d9443c01a7336-2242887eb5cmr292364525ad.5.1741709200356;
-        Tue, 11 Mar 2025 09:06:40 -0700 (PDT)
-Received: from test-suraj.qjz2hk5f2gku1a3adsvczrat5c.xx.internal.cloudapp.net ([20.9.134.79])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73698243ef6sm10936197b3a.61.2025.03.11.09.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 09:06:40 -0700 (PDT)
-From: Suraj Patil <surajpatil522@gmail.com>
-To: isdn@linux-pingi.de
-Cc: kuba@kernel.org,
-	quic_jjohnson@quicinc.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Suraj Patil <surajpatil522@gmail.com>
-Subject: [PATCH 2/2] isdn: mISDN: Fix typo 'intervall' to 'interval' in hfcsusb.c
-Date: Tue, 11 Mar 2025 16:06:37 +0000
-Message-ID: <20250311160637.467759-1-surajpatil522@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        bh=hM4rbW6LjxVDNSNvYjso9fRHbCk2dFhxwSUcK0gnU+A=;
+        b=mhTvIy8Nwr1ryQi1M6AOPEaBgwV3HOMvYEKaI8XSe6PQkw2Xcvfv8lDrpbOxlT1fnA
+         uOmvW3Zbt7hhbNKStgg1tEYQlHMv8CsFMToIkAI7KVjFGu3EHqPszpiqWjPyHUjwkdT5
+         tZoPtTLvxs91LGIpEVIF6miSR3bBrQomLy8yvDGZX0O37OZf1BdJg84YQiJcjmRAFCz9
+         IpLA9xgRATkcPsF8idz/l/yrp0YiOmeWve2IAflB0/XGf+NFbLSkQqP8ETM+eFpy1Gjb
+         khqr8sHEAV+gCnQgzeURhyLF76m8bfn5kmf3iLOL7T6G+KKrnxf3Clq9qWldoodaLMOD
+         jutw==
+X-Forwarded-Encrypted: i=1; AJvYcCXccaYPQgqL7Zm2HZ7XuCJ4WO1mRIazbXdyypRnMWtds1AT1q3QHxGvWGxGgG34IOqo1JrL/QuKkvFCzrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5vzp34dWKpNfkUFfAiRkYq1a0NqsMZkhnRecOMjbxDWLcwO46
+	tic4wjSMt2fo5qpmtWlISL/D6PeKFzQvJWJltp+vNep8r5QdA7E0MJJZmjlMIJyL79enHYvv9+v
+	WX6Z3i+54oytCTKkvQdUtL/fEuJDr1H88O8EY
+X-Gm-Gg: ASbGncvSUtXaMmo9IVJreZjWDjQVrb0bazzd1JePda8DyfZtFdNYkE70SbtkWI7Eqrq
+	BincHJryla5pJicsz5DsGGaXXp1uyncjHgr/fykl96ISTn4s/Py3nTRNFhb+YiCUBRG85j8fo93
+	XzLkUWpmeDSgecJBAsYrwklq5quQw=
+X-Google-Smtp-Source: AGHT+IE36fk6W16fZ24D9Um05YI34qYQeMpFD/Fu13W3g0zHxL6+gSNZuwbSkxqQdxCB8t1MRNP32lKWlS+bzVOdJuM=
+X-Received: by 2002:a17:90b:53c3:b0:2fa:6793:e860 with SMTP id
+ 98e67ed59e1d1-301002eadf6mr5953818a91.0.1741709217074; Tue, 11 Mar 2025
+ 09:06:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250311150136.46938-1-kamal.dasu@broadcom.com> <aa4284fa-1f68-4c7e-8d58-1c5129adda27@broadcom.com>
+In-Reply-To: <aa4284fa-1f68-4c7e-8d58-1c5129adda27@broadcom.com>
+From: Kamal Dasu <kamal.dasu@broadcom.com>
+Date: Tue, 11 Mar 2025 12:06:19 -0400
+X-Gm-Features: AQ5f1JpSi62VLJlBuC0dak2KFHVpwzvRvnj9P8OVAxmHNa-s7uCtBu4nwXoQ5HI
+Message-ID: <CAKekbevwB9Nd36WNkuh6Xh45puf3dPmfHDKgQBgUEVApbTm2rw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-brcmstb: add cqhci suspend/resume to PM ops
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Al Cooper <alcooperx@gmail.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000042cdf60630134729"
 
-Signed-off-by: Suraj Patil <surajpatil522@gmail.com>
----
- drivers/isdn/hardware/mISDN/hfcsusb.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+--00000000000042cdf60630134729
+Content-Type: multipart/alternative; boundary="0000000000002fc6fc06301347ad"
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index e54419a4e731..ebe57c190476 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1063,7 +1063,7 @@ rx_iso_complete(struct urb *urb)
- 
- 		fill_isoc_urb(urb, fifo->hw->dev, fifo->pipe,
- 			      context_iso_urb->buffer, num_isoc_packets,
--			      fifo->usb_packet_maxlen, fifo->intervall,
-+			      fifo->usb_packet_maxlen, fifo->interval,
- 			      (usb_complete_t)rx_iso_complete, urb->context);
- 		errcode = usb_submit_urb(urb, GFP_ATOMIC);
- 		if (errcode < 0) {
-@@ -1225,7 +1225,7 @@ tx_iso_complete(struct urb *urb)
- 			sink = (threshbit) ? SINK_MIN : SINK_MAX;
- 		fill_isoc_urb(urb, fifo->hw->dev, fifo->pipe,
- 			      context_iso_urb->buffer, num_isoc_packets,
--			      fifo->usb_packet_maxlen, fifo->intervall,
-+			      fifo->usb_packet_maxlen, fifo->interval,
- 			      (usb_complete_t)tx_iso_complete, urb->context);
- 		memset(context_iso_urb->buffer, 0,
- 		       sizeof(context_iso_urb->buffer));
-@@ -1355,7 +1355,7 @@ tx_iso_complete(struct urb *urb)
- 		/*
- 		 * abuse DChannel tx iso completion to trigger NT mode state
- 		 * changes tx_iso_complete is assumed to be called every
--		 * fifo->intervall (ms)
-+		 * fifo->interval (ms)
- 		 */
- 		if ((fifon == HFCUSB_D_TX) && (hw->protocol == ISDN_P_NT_S0)
- 		    && (hw->timers & NT_ACTIVATION_TIMER)) {
-@@ -1411,7 +1411,7 @@ start_isoc_chain(struct usb_fifo *fifo, int num_packets_per_urb,
- 					      fifo->iso[i].buffer,
- 					      num_packets_per_urb,
- 					      fifo->usb_packet_maxlen,
--					      fifo->intervall, complete,
-+					      fifo->interval, complete,
- 					      &fifo->iso[i]);
- 				memset(fifo->iso[i].buffer, 0,
- 				       sizeof(fifo->iso[i].buffer));
-@@ -1510,7 +1510,7 @@ start_int_fifo(struct usb_fifo *fifo)
- 	}
- 	usb_fill_int_urb(fifo->urb, fifo->hw->dev, fifo->pipe,
- 			 fifo->buffer, fifo->usb_packet_maxlen,
--			 (usb_complete_t)rx_int_complete, fifo, fifo->intervall);
-+			 (usb_complete_t)rx_int_complete, fifo, fifo->interval);
- 	fifo->active = 1;
- 	fifo->stop_gracefull = 0;
- 	errcode = usb_submit_urb(fifo->urb, GFP_KERNEL);
-@@ -1596,7 +1596,7 @@ reset_hfcsusb(struct hfcsusb *hw)
- 	handle_led(hw, LED_POWER_ON);
- }
- 
--/* start USB data pipes dependand on device's endpoint configuration */
-+/* start USB data pipes dependent on device's endpoint configuration */
- static void
- hfcsusb_start_endpoint(struct hfcsusb *hw, int channel)
- {
-@@ -1664,7 +1664,7 @@ hfcsusb_start_endpoint(struct hfcsusb *hw, int channel)
- 	}
- }
- 
--/* stop USB data pipes dependand on device's endpoint configuration */
-+/* stop USB data pipes dependent on device's endpoint configuration */
- static void
- hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
- {
-@@ -2077,7 +2077,7 @@ hfcsusb_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 			f->hw = hw;
- 			f->usb_packet_maxlen =
- 				le16_to_cpu(ep->desc.wMaxPacketSize);
--			f->intervall = ep->desc.bInterval;
-+			f->interval = ep->desc.bInterval;
- 		}
- 		ep++;
- 	}
--- 
-2.43.0
+--0000000000002fc6fc06301347ad
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 11, 2025 at 11:46=E2=80=AFAM Florian Fainelli <
+florian.fainelli@broadcom.com> wrote:
+
+> On 3/11/25 08:01, Kamal Dasu wrote:
+> > cqhci timeouts observed on brcmstb platforms during suspend:
+> >    ...
+> >    [  164.832853] mmc0: cqhci: timeout for tag 18
+> >    ...
+> >
+> > Adding cqhci_suspend()/resume() calls to disable cqe
+> > in sdhci_brcmstb_suspend()/resume() respectively to fix
+> > CQE timeouts seen on PM suspend.
+> >
+> > Fixes: d46ba2d17f90 ("mmc: sdhci-brcmstb: Add support for Command
+> Queuing (CQE)")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Kamal Dasu <kamal.dasu@broadcom.com>
+> > ---
+> >   drivers/mmc/host/sdhci-brcmstb.c | 9 +++++++++
+> >   1 file changed, 9 insertions(+)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-brcmstb.c
+> b/drivers/mmc/host/sdhci-brcmstb.c
+> > index 0ef4d578ade8..bf55a9185eb6 100644
+> > --- a/drivers/mmc/host/sdhci-brcmstb.c
+> > +++ b/drivers/mmc/host/sdhci-brcmstb.c
+> > @@ -505,6 +505,12 @@ static int sdhci_brcmstb_suspend(struct device *de=
+v)
+> >       struct sdhci_brcmstb_priv *priv =3D sdhci_pltfm_priv(pltfm_host);
+>
+> Missing an int ret declaration here, otherwise that won't build.
+>
+> oops will fix it and send v2.
+
+
+> >
+> >       clk_disable_unprepare(priv->base_clk);
+> > +     if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> > +             ret =3D cqhci_suspend(host->mmc);
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+> > +
+> >       return sdhci_pltfm_suspend(dev);
+> >   }
+> >
+> > @@ -529,6 +535,9 @@ static int sdhci_brcmstb_resume(struct device *dev)
+> >                       ret =3D clk_set_rate(priv->base_clk,
+> priv->base_freq_hz);
+> >       }
+> >
+> > +     if (host->mmc->caps2 & MMC_CAP2_CQE)
+> > +             ret =3D cqhci_resume(host->mmc);
+> > +
+> >       return ret;
+> >   }
+> >   #endif
+>
+>
+> --
+> Florian
+>
+
+--0000000000002fc6fc06301347ad
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=
+=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, Mar 11, 2025=
+ at 11:46=E2=80=AFAM Florian Fainelli &lt;<a href=3D"mailto:florian.fainell=
+i@broadcom.com" target=3D"_blank">florian.fainelli@broadcom.com</a>&gt; wro=
+te:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px =
+0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On 3/11/25 0=
+8:01, Kamal Dasu wrote:<br>
+&gt; cqhci timeouts observed on brcmstb platforms during suspend:<br>
+&gt;=C2=A0 =C2=A0 ...<br>
+&gt;=C2=A0 =C2=A0 [=C2=A0 164.832853] mmc0: cqhci: timeout for tag 18<br>
+&gt;=C2=A0 =C2=A0 ...<br>
+&gt; <br>
+&gt; Adding cqhci_suspend()/resume() calls to disable cqe<br>
+&gt; in sdhci_brcmstb_suspend()/resume() respectively to fix<br>
+&gt; CQE timeouts seen on PM suspend.<br>
+&gt; <br>
+&gt; Fixes: d46ba2d17f90 (&quot;mmc: sdhci-brcmstb: Add support for Command=
+ Queuing (CQE)&quot;)<br>
+&gt; Cc: <a href=3D"mailto:stable@vger.kernel.org" target=3D"_blank">stable=
+@vger.kernel.org</a><br>
+&gt; Signed-off-by: Kamal Dasu &lt;<a href=3D"mailto:kamal.dasu@broadcom.co=
+m" target=3D"_blank">kamal.dasu@broadcom.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 =C2=A0drivers/mmc/host/sdhci-brcmstb.c | 9 +++++++++<br>
+&gt;=C2=A0 =C2=A01 file changed, 9 insertions(+)<br>
+&gt; <br>
+&gt; diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci=
+-brcmstb.c<br>
+&gt; index 0ef4d578ade8..bf55a9185eb6 100644<br>
+&gt; --- a/drivers/mmc/host/sdhci-brcmstb.c<br>
+&gt; +++ b/drivers/mmc/host/sdhci-brcmstb.c<br>
+&gt; @@ -505,6 +505,12 @@ static int sdhci_brcmstb_suspend(struct device *d=
+ev)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0struct sdhci_brcmstb_priv *priv =3D sdhci_pl=
+tfm_priv(pltfm_host);<br>
+<br>
+Missing an int ret declaration here, otherwise that won&#39;t build.<br>
+<br></blockquote><div>oops will fix it and send v2.</div><div>=C2=A0</div><=
+blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-l=
+eft:1px solid rgb(204,204,204);padding-left:1ex">
+&gt;=C2=A0 =C2=A0<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0clk_disable_unprepare(priv-&gt;base_clk);<br=
+>
+&gt; +=C2=A0 =C2=A0 =C2=A0if (host-&gt;mmc-&gt;caps2 &amp; MMC_CAP2_CQE) {<=
+br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D cqhci_suspend=
+(host-&gt;mmc);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0return ret;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt; +<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0return sdhci_pltfm_suspend(dev);<br>
+&gt;=C2=A0 =C2=A0}<br>
+&gt;=C2=A0 =C2=A0<br>
+&gt; @@ -529,6 +535,9 @@ static int sdhci_brcmstb_resume(struct device *dev=
+)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0ret =3D clk_set_rate(priv-&gt;base_clk, priv-&gt;base_freq_hz)=
+;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt;=C2=A0 =C2=A0<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0if (host-&gt;mmc-&gt;caps2 &amp; MMC_CAP2_CQE)<br=
+>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D cqhci_resume(=
+host-&gt;mmc);<br>
+&gt; +<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
+&gt;=C2=A0 =C2=A0}<br>
+&gt;=C2=A0 =C2=A0#endif<br>
+<br>
+<br>
+-- <br>
+Florian<br>
+</blockquote></div></div>
+</div>
+
+--0000000000002fc6fc06301347ad--
+
+--00000000000042cdf60630134729
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+DxuNuBlySpn/GYqPcDcRZd8EENWqnZrjtjHMk0j7ZfrPGXq8sQkbG3OX+DOwSaefPRq1pLGWBZaZ
+YuUo5O7CNHo7h7Hc9GgjiW+6X9BjKAzSaDy8jwIDAQABo4IB2DCCAdQwDgYDVR0PAQH/BAQDAgWg
+MIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
+LmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEGCCsGAQUFBzABhjVo
+dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMDBNBgNV
+HSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2ln
+bi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6hjhodHRwOi8vY3Js
+Lmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNybDAiBgNVHREEGzAZ
+gRdrYW1hbC5kYXN1QGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAW
+gBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUcRYSWvAVyA3hgTrQ2c4AFquBsG0wDQYJ
+KoZIhvcNAQELBQADggEBAIKB2IOweF2sIYGBZTDm+Hwmhga+sjekM167Sk/KwxxvQFwZYP6i0SnR
+7aR59vbfVQVaAiZH/a+35EYxP/sXaIM4+E3bFykBuXwcGEnYyEn6MceiOCkjkWQq1Co2JyOdNvkP
+nAxyPoWlsJtr+N/MF1EYKGpYMdPM7S2T/gujjO9N56BCGu9yJElszWcXHmBl5IsaQqMS36vhsV0b
+NxffjNkeAdgfN/SS9S9Rj4WXD7pF1M0Xq8gPLCLyXrx1i2KkYOYJsj0PWlC6VRg6E1xXkYDte0VL
+fAAG4QsETU27E1HBNQyp5zF1PoPCPvq3EnWQnbLgYk+Jz2iwIUwiqwr/bDgxggJgMIICXAIBATBr
+MFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9i
+YWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgw89WX2Pp7ue922QVkwDQYJYIZI
+AWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIFI8CS7ruiokp1AAnPPloQL5mWMLRhBc5BZqZzDA
+EMlUMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMxMTE2MDY1
+OFowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQB
+AjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIB
+ABglf3sIsmAe5TJQX4ezh8yohJ7UJU/zdGG2edFl0TexHW/cNxDmAqJAjDTSTf0jV4P+BggtWBk3
+0Zy3MKcKaHYkynhnHIkUb57ruuGZt1HDnroORnqeqMNFBEhX7EaID29iL2XnMEviLk1YyyHykwX0
+vjkQ6OFtO5Vjz8OLuWb05KP0oqqc/4FVJJ3tSl6B/BlaYDk3XefIvjy67KOwfv8Xkgh+x0YRhrvx
+7P3q8qzKes9eK1ownmvvQfR0LxIn8/7Iumc2a97szTpY3GHKPBsasjUc4ZURytGD11CgZPqZTsBm
+MIaeI8fvbOzA7jZRiF/QWyjzQznL/V6RBWSb7rU=
+--00000000000042cdf60630134729--
