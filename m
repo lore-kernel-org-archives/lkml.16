@@ -1,77 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6932641CA
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 19:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1344217719
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 19:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741722605; cv=none; b=QQ1QssqbyfmdCtb4UeqqHL7I9wOeNWOydb9q0vdtXADOj+O/pBLBT7HHfZ7mWybc8TwJNIs1FakjMJ4qvoDP0/gfgh9uCjyejc3qdRH1h4cZ0n2DR24pVuNvDVFzJaYGpPyPz4r8ZoxM9aoVh7ga4Tui6KouuH800saNTOQUG5c=
+	t=1741722636; cv=none; b=pKrBptBmcH2Hy2eukjULH5TMR+a3YCqZUmjO2xicLVCDS5Ccto8kufgU4jav442FgS0pQHksf+DxSMcCeeBtV0ZKvzDV+ZgH0w3k47lvcZSrYLPTFeBZR1qfHUnCIT3kD5XKbN35PoQzQjgqe/8mkuz24xN+1BgZlbvbwSlW7OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741722605; c=relaxed/simple;
-	bh=Cwz3YGGG06uS5rTz987s1NY7XkDbZR/rxmyhnN3CR7s=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ZaqSTgR0eoFdPMYJGL0Ef7TyjHr2OZB6TLk8KBlEVB1zugaekpGOgUD01qaKEH5aXdx3YQn1/Dd/miyRMOPst9XicqzK+pDrpJuS5zaHCfm8Pt5kXbguyssMqAKQ0/DGPbaiTyaRUkvTPb1WaL81l8n91CLVylZkhgnjlCnzTcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gb2Vb8hs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741722636; c=relaxed/simple;
+	bh=HBKTIcJdBDO7yrFqGw1sqxIWrbOaXehqkaEPlSp2hVY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J0JGDJWfhqQruLiYLeV94nqCIdjvzl/yI/V6/XkafuJDckFc+dMsxFm3t2zeGMrOJZFUuSySg9ocizGQVdkvOWbcupaUmtZPrn22gotGRr2Zh6ritAdZNxZEGCet0cHdXR4QHDp610pU/J62nRTf9MhbJOtB6gUqdTk55DMvTMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KZ7s4Db3; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gb2Vb8hs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9EBDC4CEE9;
-	Tue, 11 Mar 2025 19:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741722605;
-	bh=Cwz3YGGG06uS5rTz987s1NY7XkDbZR/rxmyhnN3CR7s=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gb2Vb8hssPd5IwW6EJ8PaDZyyTxazXrxg31Wpdch7somRPY9HjRLGKqzMwDXoCao3
-	 m9yox02TZoyU2U/mxPB7e1tCbjV5EoUg8mZLhV0dCjAZVNbnYPAhpdGyX4ckZdeBc/
-	 0M2ZNoYGXBhCP1PylLV9MORJGhEIEntwwoEiWJ0zhdGPzR+KSHgKX9JXW9Vjk81s0e
-	 hvTQqR3GbhavBSj92O/t8Oc3eG8IkPxd+EjsnwN0Rv+AHJBHsy7Tc5QDTthLq/DxQm
-	 uURoWJLkauwY4k4itM8NJBcBNsDZTTCMK3SQeQEgYhMdrlCNv81ZSNWKCTywuQz8dG
-	 h4l5dCVVBDFxQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33AE5380AC1C;
-	Tue, 11 Mar 2025 19:50:41 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KZ7s4Db3"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5499c5d9691so3445894e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:50:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741722633; x=1742327433; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iq/JcpFJHDUT1Ef+/IWGp9CZQdsUBpGs0X2x21xxyGQ=;
+        b=KZ7s4Db3uOrggZZcVh3LgOEchZsQEBdmVx+gw89X7PPW0Q7akXTMGU7QV5oC3wDog5
+         g18bC2bQfG/YLuPYQVmNA2S5wuwkneqjjP0xiI/bKb+wASaFfnxXFVxmyd2dgeaza/OZ
+         qh/SEiHC+tYjE8KEvZMyE6JB7cXFQcd4jugXNI/mijxXLPJQHHNd73D9j2lKo0+wsnkd
+         91EJvteARRa7O2UK60mVQ3RUKwUkgHSFmbDpBmk2IcRxVfYcD8HwLufMuHGbjDHgg4x2
+         pXqAy1xSg1PJglvhWB7cWXapbm3Ipjr8P04X0EC30LLSGuZTLZ0/lZjZi7pXQ3o9Bgxo
+         ZXXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741722633; x=1742327433;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iq/JcpFJHDUT1Ef+/IWGp9CZQdsUBpGs0X2x21xxyGQ=;
+        b=XXsWMq1pfnsYs80LkNY9tE06CD75wXQYqfym8LbYmnmtl/Zteg00+lLxibXXGb93Y0
+         QZf5QrNufADidqyxT52g06KVwNfnHxZMeFp1v6Y+4GrNt8mX9r2R6myuUBaRqP06L+HR
+         ugprUXbdJVjFM7ZhPiFxlpK6vCGxlO1/ixLwS9hF8kzuWSTLzNU3ZlEQZooH3dQFoMTt
+         KwuR2AqhQHOZ9V/9o8M42cap1axIgAXYY9uh9ao+n6OqNvRMaAUbpQnMLLebUlNng6au
+         yTRdD1fhrxXDB5UVU+E/vHDweoI9ssBsahr3FpalR2UYC+0+zvQWiwKoodWu17hEi/Dz
+         vKVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmWTHOFKkrX43Jy3DzpMhN1iPv2+GIpfkdDR5M7+7ILsCP2eEUjzz+0wD1PWgDMqpERi45sdC5W3Oj1n0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDUYCcMVtV5XfedZCsPbIvxQ88De5Wnz6Lo0t1ophCTk3mwcM2
+	YvLbai4wQZA2c4tuwx3rRQWJJEPf64Etg7wMFygoqm8OvYWK6bVBF0Qjdz8aNkHh4RLqrZLVAeL
+	ne5p3zIP9yYsEqVucMzTbK3WL2k1YWbexhpRW4NL6bO7VM+PwC0g=
+X-Gm-Gg: ASbGncvkJvPX0aQGHPnmoItAEYEhNSnFteTi17ST/l76JDkicvg7PxPmY5cJpseCLVG
+	9i86yOvutVZ/Z/puBS0hnDXLvoGK3rSE+y83ZTZGNdiFQJ6wNa/BXqcexaSiFMQCi+63zVgnEJX
+	5CW5FnIYS37NfaZxwixAsSI4qTf5cvLn6a73cKHYjTbVM7hAWqNfEFm0fBcfByBZ94BBs=
+X-Google-Smtp-Source: AGHT+IHl6j5j5SomjINRchvsfly9h9XFFnxscFB20My2s2QskmtbkaNSy5APBp3ZYvQD2cCDToM/l5u5NAuBTBHOcaM=
+X-Received: by 2002:a05:6512:12c3:b0:549:4df0:76 with SMTP id
+ 2adb3069b0e04-54990e2bfa4mr6513966e87.4.1741722632539; Tue, 11 Mar 2025
+ 12:50:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] Revert "f2fs: rebuild nat_bits during umount"
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <174172263998.214029.16633125667702978351.git-patchwork-notify@kernel.org>
-Date: Tue, 11 Mar 2025 19:50:39 +0000
-References: <20250305110712.2114200-1-chao@kernel.org>
-In-Reply-To: <20250305110712.2114200-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+References: <579283e5c832d77aeed531e8680961c815557613.camel@sapience.com>
+ <1d8bf01be50646bb7b36abfc1ecb25eb997598dd.camel@sapience.com>
+ <CAMRc=Mc6Tn9CZJA6EN_a0i=hiiz6jTr9oYLHdJ8iyrtsw+LmZw@mail.gmail.com> <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
+In-Reply-To: <962ff60ebdb9207354560f938de8f23e4d02f30a.camel@sapience.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 11 Mar 2025 20:50:21 +0100
+X-Gm-Features: AQ5f1Jo19ld-vhsqDYYCbpt69VQo96FJpDSZ9T2vPMH-p0ylVgk4jG9zzAiuio8
+Message-ID: <CAMRc=McPdfMM85GMgMChUzZSJzrpELNZZFMiOrBkM_Hy0ovHFg@mail.gmail.com>
+Subject: Re: rc4 and later log message: gpiochip_add_data_with_key:
+ get_direction failed
+To: Genes Lists <lists@sapience.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Tue, Mar 11, 2025 at 8:30=E2=80=AFPM Genes Lists <lists@sapience.com> wr=
+ote:
+>
+> On Tue, 2025-03-11 at 10:40 -0700, Bartosz Golaszewski wrote:
+> > On Tue, 11 Mar 2025 15:03:59 +0100, Genes Lists <lists@sapience.com>
+> > said:
+> > > On Sat, 2025-03-08 at 15:45 -0500, Genes Lists wrote:
+> > > >
+> > > >  gpio gpiochip0: gpiochip_add_data_with_key: get_direction
+> > > > failed: -
+> > > > 22
+> >
+> > Hi Gene!
+> >
+> > There are two problems here. The issue you're seeing is fixed in next
+> > but
+> > not in mainline due to my omission. I will send a patch for that.
+> >
+> > On the other hand, the pinctrl driver in question should be fixed
+> > too.
+> > Can you try the following change:
+> > ...
+>
+> > Bart
+>
+>
+> Thank you Bart.
+>
+> I tested your pinctl patch on mainline (on commit
+> 0b46b049d6eccd947c361018439fcb596e741d7a) and the same messages are
+> logged.  Presumably I also need the other patch from next as well.
+>
 
-This patch was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
+No, they are independent. The other one should fix your issue. Could
+you please test it[1] and leave your Tested-by under it on the list?
 
-On Wed,  5 Mar 2025 19:07:12 +0800 you wrote:
-> It reports that there is potential corruption in node footer,
-> the most suspious feature is nat_bits, let's revert recovery
-> related code.
-> 
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->  fs/f2fs/checkpoint.c |  21 +++------
->  fs/f2fs/f2fs.h       |  32 +++++++++++++-
->  fs/f2fs/node.c       | 101 ++++++++++---------------------------------
->  3 files changed, 59 insertions(+), 95 deletions(-)
+Bartosz
 
-Here is the summary with links:
-  - [f2fs-dev] Revert "f2fs: rebuild nat_bits during umount"
-    https://git.kernel.org/jaegeuk/f2fs/c/19426c4988aa
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+[1] https://lore.kernel.org/all/20250311175631.83779-1-brgl@bgdev.pl/
