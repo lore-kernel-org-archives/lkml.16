@@ -1,163 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D9F225776;
-	Tue, 11 Mar 2025 09:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C119D2222D3
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741686771; cv=none; b=GWfRvwOh9/ZayJ6OdNBmB+jSq1V3cDSm2mbvcRbERXs0jpfDGPp+MFk9T9g9Xc49iFT1/sp7F1WykA/0VOXIQLQqNE/5ix2QAS9rD7hvWJHp3wnyDVQpM6P1U5Lz7rAw+7ZbyNzZt84/jeGCwws8Ac7MK9zMydCa1+9M1ZBh3TQ=
+	t=1741686771; cv=none; b=mWrj1dshPrAs7SlxJb+lbehOWMtRBYKYrDiXHg6JbIqvenFFKzcNbzd6zH/wnmROkUXDkTSChev/75KltE5B6T1rL7Ii1JYoqfw1T9h7IpYQXIK23zubIQONXlTDgD4NbnhsHSZDBJZbnN/JDFEhaELF5Alr3vtMqasAx3HkAVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741686771; c=relaxed/simple;
-	bh=mPq4JlVzua4yzFh1NNNJl4UlOm9bg8+UIsXT4ZUQekE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W8auBKRM2Jh8UcRAAnWP3OuqpIBVHg3GAoFT1Hi7rjB93sOi9rweg+jlnphjIvOWCeorEGylBSeCvZgEnpeTNAp+Zr7/3m1pKGuJc58lmSJxzmN1Lbmua7whQmykzNjiYExmpYA8UQ+7ATcpLfuxWe/kUYGJvfFEepG9v4Tmh8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePytkQLl; arc=none smtp.client-ip=10.30.226.201
+	bh=nLsNY9YPDYR69dHRTG9iGxlGFHroQoosjvtirmfC+Uw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sIpXjjZC9d7bBuTlgJXJz3FlHDVapR2CnA7vCiPl79JE+tbMRCUPLgpE4krkhDRB61gRXUxD55Kre6FY84LhBS8xhdfAcD8mI2rNLI3h/LVCBo6R7RaVmbttMDI3Zh26UzT+wbmxdQ3RB/iuzHTvVibOK4N/3wToQuzRvLJ3O/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z4Opequm; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePytkQLl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26C1FC4CEF2;
-	Tue, 11 Mar 2025 09:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741686771;
-	bh=mPq4JlVzua4yzFh1NNNJl4UlOm9bg8+UIsXT4ZUQekE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ePytkQLljKktEzSq4WuTDN2YIKnwA+YstBgG1uJT+DVepSJasylnikQIeQGOgTpH/
-	 r1wDf9DHzV6XOAkYHGoml4HagPuWmqaAqclqnZOXaKHI/Ts7yPBMuq/3sjlGdvrpGO
-	 ncJjq/+S8slzpP+JfTDoCN05gp3kMoedLMQxrSYwj065axTId4mdQZu0zfPU9MkpaR
-	 +7auCu0kK7b166L4OZZo+SjB4i+pNakqx+VgpjVOfXOg3OPJipSEXtb/IA3whzaaud
-	 ss9X7dHOPnLIbN34rvHkRRRNcHZ7GZqxT5NmBGXgQzHOZtRoiUQsAWbeNylk2+Bx1j
-	 wZPtpQ3CORPcA==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5499c5d9691so2859216e87.2;
-        Tue, 11 Mar 2025 02:52:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUHo1RUOfE+lYFtAMcpQ1nKx8Uji25+2r04rRZZgVXnQf0jVlIdXXc2o/9bnD1q8CUN0ZrlttkQWdJeR6wz@vger.kernel.org, AJvYcCVhIuRRcBCM2kviUnG5PyANTldohwS/pa8MuvnCRZsfuGfRps/NJ9fTWmCMLswbpyLK7Ro460eBwl5Vdck=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzES+EydBC6G6wEpTqdBscffo6W93+vkMSA4qJHvO++hE1hu3vF
-	/ajyF3LmlG4gVedOgUoCN6BHWL80IWDh8za+ciS1MnZUYQIKKAlCWYtkgD/aKXD/M1+P2+5Euec
-	7MvUChhDAc5r77Hy4orUDqXKVTBE=
-X-Google-Smtp-Source: AGHT+IHk3DfD0lxEQrLyX0Kd/NSo7lFeZ6SZ37YrOVzBPx2qN0PZlB1QgKAq84rh7lAlAYiJ0x3MJ2uVYENGYFub430=
-X-Received: by 2002:a05:6512:3e1e:b0:549:8b24:9891 with SMTP id
- 2adb3069b0e04-54990e2bfe3mr5761727e87.6.1741686769669; Tue, 11 Mar 2025
- 02:52:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z4Opequm"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so1537252a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 02:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741686768; x=1742291568; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZF/tv/hhztcLup0wsXkNgr0yQmTV2Wsbid/49FYr/I=;
+        b=z4OpequmYJIxTQH4QROctkwc/BCEgE039z20L0FIZr1A7WRRwTUFuV35fzckz55+TM
+         aszYvgHJwDg7YlNb211Xhk4XiSGZ1yqle5deojhz/e8sSwbL1JvyRA+vGv49lVgHSrzc
+         ElrkD5SkfKGFNS3W92i0TvhT1xH5suUK3SBjDfPZvbLaGqcFBbkvBRXVkcfCcDJMlwaI
+         LFk6MTeZlKq1DJAICdYdAKQZqutyUBWCTvlfZrzp+OFTgF44b4X1murhOBuDBpMQqPNQ
+         Zv+U3GYGcJp7TKV0iHRsQr9XS7e1VRUiJR2RiQfyFrFY4ZtakoUzEzzKYXh+LEz0rh7x
+         7eyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741686768; x=1742291568;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZF/tv/hhztcLup0wsXkNgr0yQmTV2Wsbid/49FYr/I=;
+        b=Gd5SMALTsIFpaBd1/7C2vZaQNK5hsr8gs4qynHgRE67QvNH8ZzMF8JnqxGU2XCY8d7
+         n7gl8xmEHk3bjDsWzQSGiGoPXLPpHTpMhpdrRaGSwh2s9M5GtfRaE8Ri/ZLCtmO7fhfi
+         pGFUM3nSb+sVYDkMqIBFkJmmjBiRmPojK/j+AO6uthHsPxWguq3c/5xkIeZuduqVqnGY
+         0BHutFyMLQO2qJGo1S6SAFyybytlC74Lf9tCQedH3cUBvsyHPleqtNdTLVQu4t5Nk6oP
+         Mg5IPyhk3OYUzaUPGfMM7p91PKHV3QgVKguZI4TUpuKgGk8h/cVXMJR8ithAUmmXp8c9
+         JJkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW31QtmHnHRQwD0p7n0Y02jua5J2QAuVWN9aPNsWONcY2fK4cC36nLcgP0byHl7p4kPBQpzrhu5AXcI9lw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMwd3jbet618Ux0zmcibceFBNuFJAIWGwEOObJj/8hfIg3b5Yp
+	byx1FnVB4KEwOmnk0l4Jeb2AEYZsxSyw05azNViELAejI2HWG95UD1dWcV7Y5CQ=
+X-Gm-Gg: ASbGnctKC5ou10dIqWTr5kmp3LVuc2wUboYi/0nhYrQ97M5SxmxAn5erUX7OQd3FXi6
+	8+/SjSXvYLkRxh/obD7X8SM8nlHNglmC0yn83l01D4c26c/vfaEIj+/pOz7nf4vLV7ZKHCaK5GK
+	+sLzwYd16K1K9U2Yf8oi80rwPUpeRTWg2YIg8ojGDuYL4DQZeUuYbkAZoNvz8HLE37arvH6ierS
+	8SniLlGGaINH2oWmwzFnFBYjB+wTwh2E5l+WY8niw+9h9beSOYIwjS45Tl+WMtaY+ImK16urufv
+	pgwOSLTd2K5HabByqkY2wlVWIebH5ZhOLI1WuvxhAlKD9a9rwUVCVKmiwdxn8Vh1IGs0GgPYnml
+	9lwW6Vqc4Fw==
+X-Google-Smtp-Source: AGHT+IG6wdrtlqlUK8ocfVYESFcp2EZz+04YizUsNmVH6H7aW+YxVtNC5WSrYqNq8D4ssmWWnCf6Kg==
+X-Received: by 2002:a05:6402:4313:b0:5e0:6332:9af0 with SMTP id 4fb4d7f45d1cf-5e7631ef0c0mr3354166a12.14.1741686767933;
+        Tue, 11 Mar 2025 02:52:47 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c74a7176sm7953213a12.35.2025.03.11.02.52.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 02:52:47 -0700 (PDT)
+Message-ID: <5a45fd25-74ed-46e3-b0e3-5adf92b5e9f7@linaro.org>
+Date: Tue, 11 Mar 2025 09:52:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224132132.1765115-6-ardb+git@google.com> <CAMj1kXHamiZ8u4YO9FnrWhpcotUkAusDF_db_5H2qaVD85qmVA@mail.gmail.com>
- <CAK7LNATLf2iXNGi-UKRg=+PRRqgmxry5QQnQ4GUNsuVmDBAnmw@mail.gmail.com>
- <CAMj1kXGVe-R7VF1nHmRx+UB4FuhSjiwMU=n_uWCLC99rTTa5ZQ@mail.gmail.com>
- <CAK7LNATkaTvAwPmNM3kSOCkCptW-bo9Ko6asWyFVcGYgu5rHtw@mail.gmail.com>
- <CAMj1kXHCia-gQy7fkVC5SgMyFqz6rRgpVbz6_W7e9jk7ENaQxA@mail.gmail.com>
- <Z81j8EguDyz_uesu@gmail.com> <CAK7LNATb40pkqXXH+o_CXW6Vf3zavAj8oSeWnpGfXq6SCto4kw@mail.gmail.com>
- <CAMj1kXEAw7qqRSPCnKj+sO5QEtWsFQ2P7gkxuNQhssWd3E6S=Q@mail.gmail.com>
-In-Reply-To: <CAMj1kXEAw7qqRSPCnKj+sO5QEtWsFQ2P7gkxuNQhssWd3E6S=Q@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 11 Mar 2025 18:52:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASE7jn3t23MbB375ma-yJj6FhzqB_Zr+-+8NbeoYxCdmw@mail.gmail.com>
-X-Gm-Features: AQ5f1Jro8cIcIaRSbPbpJsCE7AA_bbfqQxJc2emdJtf4t_5qR7I4umYai8FaMeI
-Message-ID: <CAK7LNASE7jn3t23MbB375ma-yJj6FhzqB_Zr+-+8NbeoYxCdmw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] x86/build: Get rid of vmlinux postlink step
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-kbuild@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/8] clk: qcom: Add support to attach multiple power
+ domains in cc probe
+To: Jagadeesh Kona <quic_jkona@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <CMTYKKilQJYeHUYYKvlqnwv4Q2P-58Ic1v1ndS9HQ8Yhq2xpHuNThibFDjXDEQ1PyNbx__f9BVBr0peoTUdvPg==@protonmail.internalid>
+ <20250306-videocc-pll-multi-pd-voting-v2-0-0cd00612bc0e@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250306-videocc-pll-multi-pd-voting-v2-0-0cd00612bc0e@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 11, 2025 at 3:40=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> wr=
-ote:
->
-> On Tue, 11 Mar 2025 at 03:39, Masahiro Yamada <masahiroy@kernel.org> wrot=
-e:
-> >
-> > On Sun, Mar 9, 2025 at 6:48=E2=80=AFPM Ingo Molnar <mingo@kernel.org> w=
-rote:
-> > >
-> > >
-> > > * Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > > On Sat, 8 Mar 2025 at 17:17, Masahiro Yamada <masahiroy@kernel.org>=
- wrote:
-> > > > >
-> > > > ...
-> > > > > I do not think it is broken.
-> > > > > As I mentioned above, I regard vmlinux.relocs as a byproduct
-> > > > > of the atomic build rule of vmlinux. This works.
-> > >
-> > > Except when it doesn't work, such as when an intermediate linking ste=
-p
-> > > fails, and intermediate build products are lost and cannot be recreat=
-ed
-> > > easily (or at all without modifying the source)?
-> > >
-> > > And the thing is, there should be no such thing as an 'atomic build
-> > > rule of vmlinux' if it means lost information when the build is broke=
-n
-> > > at an intermediate step. What purpose does it have?
-> > >
-> > > > There is no make rule for vmlinux.relocs, and so
-> > > >
-> > > > - if it gets deleted, it cannot be rebuilt and even though the buil=
-d
-> > > > does not break, the relocation data is missing from the compressed
-> > > > image, and this could potentially break the kaslr startup code,
-> > > > - it vmlinux.relocs is older than vmlinux for some reason, make wil=
-l
-> > > > not notice and silently reuse the outdated version,
-> > > > - when creating vmlinux.relocs from vmlinux and an error occurs,
-> > > > vmlinux is deleted, making it difficult to diagnose the problem.
-> > > >
-> > > > I think this is badly broken, but if you think this is all working =
-as
-> > > > it should, I am not going to debate this further, and you can consi=
-der
-> > > > the patch series withdrawn.
-> > >
-> > > That's very sad, as both the simplification is substantial:
-> > >
-> > >   19 files changed, 52 insertions(+), 87 deletions(-)
-> > >
-> > > and the increase in debuggability is substantial as well.
-> > >
-> > > Thanks,
-> > >
-> > >         Ingo
-> >
-> > When a byproduct is accidentally lost
-> > (for example, manually deleted), it is not automatically restored.
-> > Running 'rm vmlinux' or 'make clean' is needed.
-> >
->
-> Exactly. Make cannot detect this situation, and so the build breaks in so=
-me way.
->
-> > vmlinux.relocs is one such byproduct.
-> > Another is the map file when CONFIG_VMLINUX_MAP=3Dy is enabled.
-> >
->
-> The linker map is not depended upon by other build targets, and is
-> typically for human debug consumption, so while not ideal, it is not
-> as broken as for the unstripped vmlinux.
->
->
-> > I am a bit concerned about having more and more
-> > intermediate vmlinux.* files, but maybe only me.
-> > I hope vmlinux.unstripped is the only/last one.
-> >
->
-> Maybe we should not strip vmlinux at all, but only remove any static
-> relocations when packaging? E.g., tar-pkg, etc
-> >
-> > OK, let's do this.
-> >
-> > Ard, please send v2 with .gitignore and 'clean' target updates.
-> >
->
-> Thanks, I'll prepare a v2, but in the meantime, can we think about not
-> removing the relocations in the first place?
+On 06/03/2025 08:55, Jagadeesh Kona wrote:
+> In some of the recent chipsets, PLLs require more than one power domain
+> to be kept ON to configure the PLL. But the current code doesn't enable
+> all the required power domains while configuring the PLLs, this leads
+> to functional issues due to suboptimal settings of PLLs.
+> 
+> To address this, add support for handling runtime power management,
+> configuring plls and enabling critical clocks from qcom_cc_really_probe.
+> The clock controller can specify PLLs, critical clocks, and runtime PM
+> requirements in the descriptor data. The code in qcom_cc_really_probe()
+> ensures all necessary power domains are enabled before configuring PLLs
+> or critical clocks.
+> 
+> This series updates SM8450 & SM8550 videocc drivers to handle rpm,
+> configure PLLs and enable critical clocks from within qcom_cc_really_probe()
+> using above support, so video PLLs are configured properly.
+> 
+> This series fixes the below warning reported in SM8550 venus testing due
+> to video_cc_pll0 not properly getting configured during videocc probe
+> 
+> [   46.535132] Lucid PLL latch failed. Output may be unstable!
+> 
+> The patch adding support to configure the PLLs from common code is
+> picked from below series and updated it.
+> https://lore.kernel.org/all/20250113-support-pll-reconfigure-v1-0-1fae6bc1062d@quicinc.com/
+> 
+> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+> ---
+> Changes in v2:
+>   - Added support to handle rpm, PLL configuration and enable critical
+>     clocks from qcom_cc_really_probe() in common code as per v1 commments
+>     from Bryan, Konrad and Dmitry
+>   - Added patches to configure PLLs from common code
+>   - Updated the SM8450, SM8550 videocc patches to use the newly
+>     added support to handle rpm, configure PLLs from common code
+>   - Split the DT change for each target separately as per
+>     Dmitry comments
+>   - Added R-By and A-By tags received on v1
+> - Link to v1: https://lore.kernel.org/r/20250218-videocc-pll-multi-pd-voting-v1-0-cfe6289ea29b@quicinc.com
+> 
+> ---
+> Jagadeesh Kona (7):
+>        dt-bindings: clock: qcom,sm8450-videocc: Add MXC power domain
+>        clk: qcom: common: Manage rpm, configure PLLs & AON clks in really probe
+>        clk: qcom: videocc-sm8450: Move PLL & clk configuration to really probe
+>        clk: qcom: videocc-sm8550: Move PLL & clk configuration to really probe
+>        arm64: dts: qcom: Add MXC power domain to videocc node on SM8450
+>        arm64: dts: qcom: Add MXC power domain to videocc node on SM8550
+>        arm64: dts: qcom: Add MXC power domain to videocc node on SM8650
+> 
+This list looks sparse.
 
-OK, let's try this approach.
+- camcc is missing
+- x1e is missing
+- sm8650 and sm8750 and both also missing
 
+If we are going in with the knife, lets cut once and make a 
+comprehensive change.
 
---
-Best Regards
-Masahiro Yamada
+Could you please add those platforms and clock controllers to your V3 to 
+save other people having to do the extra work.
+
+---
+bod
