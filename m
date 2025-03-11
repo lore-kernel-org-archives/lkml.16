@@ -1,180 +1,212 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FA2226865;
-	Tue, 11 Mar 2025 08:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23675229B17
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 08:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741683096; cv=none; b=ghg4T8Q+5JxBxH9R4Zd4ezO5T8XMz3OIasy1LBumqOc8w7m8ZiWiY2wDCasRzTtukmkIcAeXRBrHnexz8OuQmNBCjUWHOklFtNOQaWYw9b+7CzSfGYQMUgOTOPnKKg6qr5g6QR+pezVCDGPKnzrVXQGzC7Pvmlws4WL8j7sV8QA=
+	t=1741683109; cv=none; b=IlwvykmTBCdqtrTcays/SJNrCk/wJOkHBrHE+dixVBoLJ+EcIPiRtMKLrI6R0RyCzUdyPx7N9OgnXgC/fSYvDHID+NhaCKsXXalY5atS8vGN+EG9+QdzdGbliveZ1gr1WwbYutbFCVwikcqs9DJ1D3doyEItEYGjT55/mFbOUTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741683096; c=relaxed/simple;
-	bh=YXP2RJ5SkqHF9QZZ7hHh/BRLjgxVNLw2DUDbJCVXiu8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qyxfLc92fYfI9nP0yzKyrV8ZNww1L4UuoDvKngLsH/0oRxitKdC2vSExqqGiP5bmO49Wa2EkPB/bipTOMwsi8CgmNpfUbxsFUEisuVtq9QIekhiFsyWOgyg30Vo8VAKsotqtK/CjH3hszCEzxg3XMdl1z/tFUy7r0/P3++aYXsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=P+gpc8Bz; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1741683109; c=relaxed/simple;
+	bh=HPNdhAS6q4hJlEkYVU8ify7rPXAu5A0kWRiO/Tjhf0Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d0Y3NQH7OA7Cf7M/nsSd95c7R+5YUbK5sjSMMWSXMv7Qc9KRoyoeUZy3hQ+FVbh4DGHmLHPpDRZJOWEGil46gFtemHPu1pDdHik/yKA0GbLEi2Oir+pwJC3hY8Ou/BREft7AqCBsbfPHOABr2UIjl3Tv+Y8cLIbpNiu4TXRgeck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nj37VOb1; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P+gpc8Bz"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52B8pBYU1141179
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Mar 2025 03:51:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741683071;
-	bh=iwZ54kNHfdvvEjAMZoUWlnIMHfpRhgOK0x0eAv0wDF4=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=P+gpc8Bz7K5gbQRu1Pxwy5gYtqq4zjK1NDWvr6fF4Sa0MNI5Ua/tB+AHdxPQRfOq7
-	 iZebJU0EC5ColbKOZrBUAymAVhVm9xwMyD225HSNsVQXVXoD16cl5qwYXNTU7dD9V9
-	 1nBRIrlnczfUAxbWF99TuV0srKdrNT8/n+w6bFF0=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52B8pBwd023379
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 11 Mar 2025 03:51:11 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 11
- Mar 2025 03:51:10 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 11 Mar 2025 03:51:10 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52B8p9dr037656;
-	Tue, 11 Mar 2025 03:51:10 -0500
-Date: Tue, 11 Mar 2025 14:21:09 +0530
-From: "s-vadapalli@ti.com" <s-vadapalli@ti.com>
-To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
-CC: "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-        "s-vadapalli@ti.com"
-	<s-vadapalli@ti.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
-        "jpanis@baylibre.com"
-	<jpanis@baylibre.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "horms@kernel.org" <horms@kernel.org>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "rogerq@kernel.org" <rogerq@kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "srk@ti.com"
-	<srk@ti.com>
-Subject: Re: [PATCH net] net: ethernet: ti: am65-cpsw: Fix NAPI registration
- sequence
-Message-ID: <20250311085109.q3g32v3ycoskhsko@uda0492258>
-References: <20250311061214.4111634-1-s-vadapalli@ti.com>
- <421a4c67865215927897e16866814bd6eb68a89d.camel@siemens.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nj37VOb1"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-51eb1823a8eso2387230e0c.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 01:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741683107; x=1742287907; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pHVvdfi9fw3XBMolrd6Lm9XR3k0CHaCADu/v/LPpSJ8=;
+        b=Nj37VOb1JQ/JXrdxTWMHVBulK4JLtUUrmrcf099SkRvKxo8pS6ZrDuKvlRGg/k5vIl
+         npvP7U5wUnwfP5h+6FjC5Yw2LIms1zJ+b4eqgo/U5m+Y3VXmpj/URMDxF4zl3CKm4cUn
+         yvRHwcKG2Mv1s6oc2SYVUxXaTBlICr+nxI3q3pZSQMt1OpHo5IcriwY6nXdDaN1tPDRs
+         p/78525k4qA5ZBUOfk+3guK6vQ3bV5oJSxKlzxiMzlocXExICTQNIpdmiBiMXg9LMX3U
+         zFrVvGY6iYBeyQ3y7dz4kYvjo4em25zrE701fyHIlNUsFqK/5Angi7hdZJErDrGaQUQ9
+         L9iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741683107; x=1742287907;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pHVvdfi9fw3XBMolrd6Lm9XR3k0CHaCADu/v/LPpSJ8=;
+        b=p1FMKNZrWpTqlmgoUH+kTM+MKRMz0NxEI1OkhCi4bXxk93tSbQ3gSs35TAx4YPYsQW
+         hC7LJdI6Hz4GwUmofWKFLsBVRpEvklLRqzrYdSS8s5H5ycFgfWAP29nSNUeKbG28WYcT
+         X5D76oK+bN9jQpUZffsRH7LZg8N2F06iSlvDYLCjmT2owsRaexDEXqJA/dCPhgj2zBUV
+         uLKFm7aFj17+N3muNoblk6XH5JWZb76WhYeykLF4zngqGkMLEG+BD2xd6usHU/gNbJ3T
+         UZ+U/8bjZCKXsasAAqeR1uihTsFtgzaECVd/xN/qy1HY9Ryp+WlmECUjPSQqp6+MEvMS
+         m+Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQjCc4ErXtBxz8BGwUphndsEv6hhPTsJvUzGDSk9Ftk61S3Ka9dfZ9RjKJ2FunGXohCI36+Wg5Yki81uQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykxqV680T4CrO0x89WPxK5qF4o3j0pXGLxBsPe+iABf2+hMHyJ
+	LGyUoxy3bhzPOBQpISNwv2XQeifl7q3qTfluRNwPGqo0NMB4Rivcjg03RAvMlm1l9O8cPbimYTy
+	Q/m+YrJn70+VGFkE/zsCZ7slqdsp5vKdEM2JkMg==
+X-Gm-Gg: ASbGnctMK+g4/x/MmdqS243Fgs7a+ZC5gsMn8XbjBxQMdsH566fo+z4szxHmF21JYGe
+	b3awZxn8JgljPByVGq5bgT7HjWF5xELJ6j4vnaqoh6FZCk2ZwB/Mgr1n5KDVGVxp4hR0n6ekoTp
+	8/bNjqAKZlB7YN5vx9OyK5uKA67xTH8Vy4Mulih542Hnis4Rk2KeySnJOY3IwIokOJhnzJ
+X-Google-Smtp-Source: AGHT+IFG87WJBUN07axEnNFBQO8GIGA3RY6dJYpFsIX3Fmx/B5ZuwEQC7eC7oUZsVpFKrBt8H5TzNtQSV0BzU0oig0M=
+X-Received: by 2002:a05:6102:3c91:b0:4c3:221:8f47 with SMTP id
+ ada2fe7eead31-4c30a5ec42dmr9492887137.13.1741683107027; Tue, 11 Mar 2025
+ 01:51:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <421a4c67865215927897e16866814bd6eb68a89d.camel@siemens.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250310170545.553361750@linuxfoundation.org>
+In-Reply-To: <20250310170545.553361750@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 11 Mar 2025 14:21:35 +0530
+X-Gm-Features: AQ5f1JooV3MLbYovESnxXnmOYc1t9lEZkMPZWgF3fIOZCs9YHjSOSnUmd-UVZ5Y
+Message-ID: <CA+G9fYsm6xnNuPsCSt7zB+-z6xhKrdLkwnHLkFT9XBCPCBf76Q@mail.gmail.com>
+Subject: Re: [PATCH 5.15 000/620] 5.15.179-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 11, 2025 at 07:09:56AM +0000, Sverdlin, Alexander wrote:
-> Hi Siddharth!
+On Mon, 10 Mar 2025 at 23:13, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.15.179 release.
+> There are 620 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 12 Mar 2025 17:04:00 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.15.179-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Hello Alexander,
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> 
-> On Tue, 2025-03-11 at 11:42 +0530, Siddharth Vadapalli wrote:
-> > From: Vignesh Raghavendra <vigneshr@ti.com>
-> > 
-> > Registering the interrupts for TX or RX DMA Channels prior to registering
-> > their respective NAPI callbacks can result in a NULL pointer dereference.
-> > This is seen in practice as a random occurrence since it depends on the
-> > randomness associated with the generation of traffic by Linux and the
-> > reception of traffic from the wire.
-> > 
-> > Fixes: 681eb2beb3ef ("net: ethernet: ti: am65-cpsw: ensure proper channel cleanup in error path")
-> 
-> The patch Vignesh mentions here...
-> 
-> > Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> > Co-developed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > ---
-> > 
-> > Hello,
-> > 
-> > This patch is based on commit
-> > 4d872d51bc9d Merge tag 'x86-urgent-2025-03-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> > of Mainline Linux.
-> > 
-> > Regards,
-> > Siddharth.
-> > 
-> >  drivers/net/ethernet/ti/am65-cpsw-nuss.c | 12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> > index 2806238629f8..d5291281c781 100644
-> > --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> > +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> > @@ -2314,6 +2314,9 @@ static int am65_cpsw_nuss_ndev_add_tx_napi(struct am65_cpsw_common *common)
-> >  		hrtimer_init(&tx_chn->tx_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_PINNED);
-> >  		tx_chn->tx_hrtimer.function = &am65_cpsw_nuss_tx_timer_callback;
-> >  
-> > +		netif_napi_add_tx(common->dma_ndev, &tx_chn->napi_tx,
-> > +				  am65_cpsw_nuss_tx_poll);
-> > +
-> >  		ret = devm_request_irq(dev, tx_chn->irq,
-> >  				       am65_cpsw_nuss_tx_irq,
-> >  				       IRQF_TRIGGER_HIGH,
-> > @@ -2323,9 +2326,6 @@ static int am65_cpsw_nuss_ndev_add_tx_napi(struct am65_cpsw_common *common)
-> >  				tx_chn->id, tx_chn->irq, ret);
-> >  			goto err;
-> >  		}
-> > -
-> > -		netif_napi_add_tx(common->dma_ndev, &tx_chn->napi_tx,
-> > -				  am65_cpsw_nuss_tx_poll);
-> 
-> ... has accounted for the fact ..._napi_add_... happens after [possibly unsuccessful] request_irq,
-> please grep for "for (--i ;". Is it necessary to adjust both loops, in the below case too?
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Yes! The order within the cleanup path has to be reversed too i.e.
-release IRQ first followed by deleting the NAPI callback. I assume that
-you are referring to the same. Please let me know otherwise. The diff
-corresponding to it is:
----------------------------------------------------------------------------------------------------
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index d5291281c781..32c844816501 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2334,8 +2334,8 @@ static int am65_cpsw_nuss_ndev_add_tx_napi(struct am65_cpsw_common *common)
-        for (--i ; i >= 0 ; i--) {
-                struct am65_cpsw_tx_chn *tx_chn = &common->tx_chns[i];
+## Build
+* kernel: 5.15.179-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: cfe01cd80d853c272b062feed8abd34216550de8
+* git describe: v5.15.178-621-gcfe01cd80d85
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15=
+.178-621-gcfe01cd80d85
 
--               netif_napi_del(&tx_chn->napi_tx);
-                devm_free_irq(dev, tx_chn->irq, tx_chn);
-+               netif_napi_del(&tx_chn->napi_tx);
-        }
+## Test Regressions (compared to v5.15.177-25-gcd260dae49a3)
 
-        return ret;
-@@ -2592,8 +2592,8 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
- err_flow:
-        for (--i; i >= 0 ; i--) {
-                flow = &rx_chn->flows[i];
--               netif_napi_del(&flow->napi_rx);
-                devm_free_irq(dev, flow->irq, flow);
-+               netif_napi_del(&flow->napi_rx);
-        }
+## Metric Regressions (compared to v5.15.177-25-gcd260dae49a3)
 
- err:
----------------------------------------------------------------------------------------------------
-Based on your confirmation, I will implement the above and post the v2
-patch. Thank you for reviewing this patch and providing feedback.
+## Test Fixes (compared to v5.15.177-25-gcd260dae49a3)
 
-Regards,
-Siddharth.
+## Metric Fixes (compared to v5.15.177-25-gcd260dae49a3)
+
+## Test result summary
+total: 43796, pass: 30152, fail: 2641, skip: 10731, xfail: 272
+
+## Build Summary
+* arc: 6 total, 5 passed, 1 failed
+* arm: 105 total, 105 passed, 0 failed
+* arm64: 32 total, 32 passed, 0 failed
+* i386: 25 total, 22 passed, 3 failed
+* mips: 25 total, 22 passed, 3 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 25 total, 24 passed, 1 failed
+* riscv: 10 total, 10 passed, 0 failed
+* s390: 12 total, 11 passed, 1 failed
+* sh: 12 total, 10 passed, 2 failed
+* sparc: 8 total, 7 passed, 1 failed
+* x86_64: 28 total, 28 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-crypto
+* ltp-cve
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
