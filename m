@@ -1,101 +1,207 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F3E1E9B1A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 03:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BF3F9D6;
+	Tue, 11 Mar 2025 03:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741664255; cv=none; b=hbwsqHtymK1T/sQfElrZgkIuuLOm27IYEyOTkfAwKoTd2FmHHSvwKNpS4CBY438/JPYsGPjAifKZOnJAv/KpcT02ILvXkFrhhd6rj/Urj1XDcyszLiqOuofbnkLUyi9MyBVSDCmDOl8I2jYkINXlKZ7hFRetdOBdCpig5oB17xI=
+	t=1741664394; cv=none; b=SyLzg5oZNvgfNxgVK0oaZ9chEL62BywdCMFjgBgDjkQlsCIszZ8rigDc6G//jKmXLRqpUPJY7cEFAzQ5sXTT8mFRku1c7YNxwwrhGjSMokVmyAKWPoSOrV445SwDlL5+f19vggQzULZpdS75modNqdhmanZpq/x3VTAUEiRyyLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741664255; c=relaxed/simple;
-	bh=WJDiIpzPVyWLH5Cn8j/8u3aIFFtw49GPgJTMCyuAZFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G/6hDgHdkRJP30MErHUm9uqC9y+oOiqp8s6Br5q+rH1G8FBl2+s7jAcWu0pg5jxkqMBmosmxW5NKExK84+sEgdyhvUypdYqOGr64c03VETCt40eXHJMxDdq49nVx2iAS3PcDr+GRLseH40oromTa5KOd67ThEgLuXujM9DvVECc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R7r49EIs; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741664394; c=relaxed/simple;
+	bh=bf1un8YCcaJ+MJ/mJNgUmyskR8wA8Z/Ct3ZtI+OuKCA=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=jA3ODu6mic2zEgqGcGtQ3Vr1OXsyC3iCb9TWYe/wYz9cPfecr/33WErl5mE6ByqLoMBevjuMpyDzN0nujYrWcctIISv0mNfd1EzPqWoK8nTtG3V3TAnEzpm6mEEsbtPF0v+SGjG3u2ZBi6M6oFuSHmhL0Zhs7u3uWnh2GFi0Keo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=lJYW3HAB; arc=none smtp.client-ip=203.205.221.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R7r49EIs"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2240aad70f2so68675ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Mar 2025 20:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741664253; x=1742269053; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GKKMXhARfXEwg2PwHrZN99nBi8+39p+oYTJh2YeoKoU=;
-        b=R7r49EIsnN7h/+o3taKGdxwyS6LTzYjaMxZ6eza16XBSC7e6lyvhyA8SxT9yNJwZCL
-         ftWf4Sl5oO02NYlDMk432YfL2hSTBPQg9mxtJIpy+La2kW2lWlCL8Et5hX9ZTbY5FbWn
-         5Sq8E00Vxm/oi7Y1O2qGbbrOGWyJZ5WwnRcMrUPw4+qXnYmB5if25PpKz1Z+qDBRIX9Z
-         N84QCsK+9ej17pCRz0y0IsncIfkw6T+yfgQBa+kwHPcSoWpYhtPOuItg38bzg4M0X/uW
-         wN4SS73PPN1CbO+P86QekKiH32mdArq9zwiGjDt7sZoeLk97je+nUkNajlz2qVx/DqUG
-         As8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741664253; x=1742269053;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GKKMXhARfXEwg2PwHrZN99nBi8+39p+oYTJh2YeoKoU=;
-        b=sv6cndXa51Gfa95qHjKfqYp5mYPUTEyrM6ptqupC6eEj10rELuWB+xiVtF80PUACG2
-         it+uN9dTf2FEvQ7iZSb8RQzL0Q9NEoYnPHETzBbfmUk6BqaHsQcKQsN5pQ0EUS/gN0qW
-         041m0r/gPmlp2OwZyhuUBosJ7db6exkak00emSt7VnLQaTPk1Pva5ZCcPz7kV4t9YS7+
-         Z3EhAYBqS1539QBR66ZEjY9RTmVMhwCdcV2SZBvmBjFS6CZ9zPPk9+DnoyI7tkqFP4nF
-         46LUWEvU6QFkUOO2+r6CVZNEud5vATra/pftC/2zFjKKFvRt2n8xjRd2okqtq3/V51lp
-         dkNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWrLQoAI38qKMicklHsQ3hoE996dHbacV81vlMG2jfn1vVOokpVc+d2f9aacxZqkvONmccTVNOS8wPYLQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2Cm0ZuU02Op/YWFf85LhDZMx6UNrTf5j65CrB6eXVANZZV+yB
-	jtTJWtM/J4G+4L3hyVcA4vJuPqVY/UaBvR4bupz1U1XgcCAC0N51oLxOqHq7gw==
-X-Gm-Gg: ASbGnctRwxKF8ri27encEPS4a+yozMmMdaoXC+bp5qPjEfo2RoIhXOOTVaIaOFt3Vas
-	lEeoTbOGGA6W+XkKbH5IqSyr6nS8ip1odFPPXP7M+N0vDywkLvFZ1XbdKFAO8snOnzJgsSND9jQ
-	03AB3lX6zLkAj7OiTMDhDnhwJ2r0Uogy2eMCr87JOs+Yz25agDulhILnzVmeaQMsvyeRZOnekoh
-	7oRcCoo1YoyglQVC11HIS+7s2O0boBnk6iXL9S7JMWC9tutnrG6gNaBZ4fb/pX2yClT18zNCeeN
-	8Gy7sm9V1Hk5gADDntCzow9h8mMUjNYZGA0QgOlzldT84CDfxsqiJSxk2II0NejtBO+oJKgRFdJ
-	vD/UyIbM=
-X-Google-Smtp-Source: AGHT+IEK91Z6kXFaIWJCVbtXPxgiAIU5QooJrJa6uX0FbecTFo4b+EzP9+Bxt6J46OcmUjrvYOGJvg==
-X-Received: by 2002:a17:902:ecc4:b0:224:a93:704d with SMTP id d9443c01a7336-22540e584dbmr6561245ad.2.1741664252755;
-        Mon, 10 Mar 2025 20:37:32 -0700 (PDT)
-Received: from google.com (57.145.233.35.bc.googleusercontent.com. [35.233.145.57])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e789340sm10752115a91.26.2025.03.10.20.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 20:37:32 -0700 (PDT)
-Date: Tue, 11 Mar 2025 03:37:27 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: Li Li <dualli@chromium.org>
-Cc: dualli@google.com, corbet@lwn.net, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	donald.hunter@gmail.com, gregkh@linuxfoundation.org,
-	arve@android.com, tkjos@android.com, maco@android.com,
-	joel@joelfernandes.org, brauner@kernel.org, surenb@google.com,
-	omosnace@redhat.com, shuah@kernel.org, arnd@arndb.de,
-	masahiroy@kernel.org, bagasdotme@gmail.com, horms@kernel.org,
-	tweek@google.com, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-	selinux@vger.kernel.org, hridya@google.com, smoreland@google.com,
-	ynaffit@google.com, kernel-team@android.com
-Subject: Re: [PATCH v16 3/3] binder: generic netlink binder_features flag
-Message-ID: <Z8-v92gIPgrxWq1w@google.com>
-References: <20250303200212.3294679-1-dualli@chromium.org>
- <20250303200212.3294679-4-dualli@chromium.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="lJYW3HAB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1741664085; bh=hVM2M5MvJmnwT5u9Fw0gKWjpnaMyGGlte8kaz+9l+E8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=lJYW3HABg0KkGqx0BuQ+ZJwkitSVGra1DvPB1u6APPPC4OwGNMS+tOjc0chh+O/k0
+	 zcBOA1Zs6WBOmod5R7R6GdzPsYUrWf4/MOwDFq3PXlxUTanUxbsllLzTsYLuVBq16h
+	 ed0TgZOJtdxBUWbjvAQZ5461TU5TNmQmgqsIIkhA=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 8AB00AA2; Tue, 11 Mar 2025 11:34:43 +0800
+X-QQ-mid: xmsmtpt1741664083tgwzxw6b5
+Message-ID: <tencent_196E3769E6DD9364436B296683A58453B705@qq.com>
+X-QQ-XMAILINFO: NafziRg7Bx69XVsf7yO71/Z8fK6qdrGHMfY/sI5DumRhQFvCEHobWnI4bUzQ+E
+	 d5mYxEAqHHHp4XzDFtKG9hec19iQ6uxcRH2TMbG/+9Dm1a67Uv8WbOn0cJk3HOVfSp7YdzWnvbWb
+	 d6vtypamVAM2uB8PTq6uktv+kRXr6uyifiRjuO6876sozGDzCdj4mXo39Z2m69q/DVXZvwj0ahLu
+	 pRoMVppc0+VuuZqcYPiPMrWLCMluY0XcpsmFdn5r9IyIiAg3E5F7yl55p9Q28pT1Fm1Jw6AiBJQD
+	 GGncGfchemGfW4wHz6I+kTfga/T6wuvp4PFPPWexmYT2QpjH90ySrm1Po6CeVqqmt4p1mr4h8b19
+	 nCoOVcOXOTlEVUvCfb3AVoUmd5wEuJySiyRM6JyEqwie18xu1XuvLfLTEKrK18nqWlv+/R4Z3D8f
+	 d/53pZWVNxd4LrA1T0xbYIUm4ED+JTBfR68MnV78oKirCEIgLanu0VwehxpedMOJaKaRCl8DWZcs
+	 daWnO6Pe0U8GvEAcV5edM1Ulu2s+5JcpgoEg7mB5HPNMMUwHwVfIrcJRympg1OuiZ8wK+I+ORLdU
+	 /LovCLBG5mHbniwncYataf+X2fP7B+AoEewWnfxE5ioe570CuAJuxEMjBgA+E2oGCLf2HjVPXKn2
+	 7LGOTCansFusMdBGqrKlr4BTsDIEF10W5i7ydq6QSbeni3mRL5iVc8le8EiFrs8sRryhCGso3S7d
+	 pjJ2lBQfcruVF1erukqAc5+P+QKAEW9fLcrr/AflDdHaaktqD68poROto18sWDnQbXEAk6V3oBdL
+	 fvgG8IywUkFZHa2GItbuC0FdXB7fx568P49ROXpERKh5y8FShSUqT5EUh7atywXUCxQqdluZhTLS
+	 vlb2sjTL7zKv82rzYdqi3oV55yuYey3bEyAclwkp94oJETyjbDjMA=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+0d33ab192bd50b6c91e6@syzkaller.appspotmail.com
+Cc: dwlsalmeida@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	mchehab@kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH V2] media: vidtv: Terminating the subsequent process of initialization failure
+Date: Tue, 11 Mar 2025 11:34:43 +0800
+X-OQ-MSGID: <20250311033443.3635370-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <67cee9e2.050a0220.1939a6.0004.GAE@google.com>
+References: <67cee9e2.050a0220.1939a6.0004.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303200212.3294679-4-dualli@chromium.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 03, 2025 at 12:02:12PM -0800, Li Li wrote:
-> From: Li Li <dualli@google.com>
-> 
-> Add a flag to binder_features to indicate that the generic netlink
-> feature is available.
-> 
-> Signed-off-by: Li Li <dualli@google.com>
-> ---
+syzbot reported a slab-use-after-free Read in vidtv_mux_init. [1]
 
-The implementation looks correct. However, the feature you are adding is
-not "generic_netlink", maybe "transaction_report" or something similar?
-Future features might use this same interface so lets avoid confusion.
+After PSI initialization fails, the si member is accessed again, resulting
+in this uaf.
 
-Thanks,
+After si initialization fails, the subsequent process needs to be exited.
+
+[1]
+BUG: KASAN: slab-use-after-free in vidtv_mux_pid_ctx_init drivers/media/test-drivers/vidtv/vidtv_mux.c:78 [inline]
+BUG: KASAN: slab-use-after-free in vidtv_mux_init+0xac2/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:524
+Read of size 8 at addr ffff88802fa42acc by task syz.2.37/6059
+
+CPU: 0 UID: 0 PID: 6059 Comm: syz.2.37 Not tainted 6.14.0-rc5-syzkaller #0
+Hardware name: Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xd9/0x110 mm/kasan/report.c:634
+ vidtv_mux_pid_ctx_init drivers/media/test-drivers/vidtv/vidtv_mux.c:78 [inline]
+ vidtv_mux_init+0xac2/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:524
+ vidtv_start_streaming drivers/media/test-drivers/vidtv/vidtv_bridge.c:194 [inline]
+ vidtv_start_feed+0x334/0x4c0 drivers/media/test-drivers/vidtv/vidtv_bridge.c:239
+ dmx_section_feed_start_filtering+0x3a5/0x660 drivers/media/dvb-core/dvb_demux.c:973
+ dvb_dmxdev_feed_start drivers/media/dvb-core/dmxdev.c:508 [inline]
+ dvb_dmxdev_feed_restart.isra.0+0x457/0x530 drivers/media/dvb-core/dmxdev.c:537
+ dvb_dmxdev_filter_stop+0x2b4/0x3a0 drivers/media/dvb-core/dmxdev.c:564
+ dvb_dmxdev_filter_free drivers/media/dvb-core/dmxdev.c:840 [inline]
+ dvb_demux_release+0x92/0x550 drivers/media/dvb-core/dmxdev.c:1246
+ __fput+0x3ff/0xb70 fs/file_table.c:464
+ task_work_run+0x14e/0x250 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xad8/0x2d70 kernel/exit.c:938
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ __do_sys_exit_group kernel/exit.c:1098 [inline]
+ __se_sys_exit_group kernel/exit.c:1096 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
+ x64_sys_call+0x151f/0x1720 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f871d58d169
+Code: Unable to access opcode bytes at 0x7f871d58d13f.
+RSP: 002b:00007fff4b19a788 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f871d58d169
+RDX: 0000000000000064 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007fff4b19a7ec R08: 0000000b4b19a87f R09: 00000000000927c0
+R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000003
+R13: 00000000000927c0 R14: 000000000001d553 R15: 00007fff4b19a840
+ </TASK>
+
+Allocated by task 6059:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ vidtv_psi_pat_table_init+0x46/0x2c0 drivers/media/test-drivers/vidtv/vidtv_psi.c:970
+ vidtv_channel_si_init+0x67/0x1a90 drivers/media/test-drivers/vidtv/vidtv_channel.c:423
+ vidtv_mux_init+0x526/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:519
+ vidtv_start_streaming drivers/media/test-drivers/vidtv/vidtv_bridge.c:194 [inline]
+ vidtv_start_feed+0x334/0x4c0 drivers/media/test-drivers/vidtv/vidtv_bridge.c:239
+ dmx_section_feed_start_filtering+0x3a5/0x660 drivers/media/dvb-core/dvb_demux.c:973
+ dvb_dmxdev_feed_start drivers/media/dvb-core/dmxdev.c:508 [inline]
+ dvb_dmxdev_feed_restart.isra.0+0x457/0x530 drivers/media/dvb-core/dmxdev.c:537
+ dvb_dmxdev_filter_stop+0x2b4/0x3a0 drivers/media/dvb-core/dmxdev.c:564
+ dvb_dmxdev_filter_free drivers/media/dvb-core/dmxdev.c:840 [inline]
+ dvb_demux_release+0x92/0x550 drivers/media/dvb-core/dmxdev.c:1246
+ __fput+0x3ff/0xb70 fs/file_table.c:464
+ task_work_run+0x14e/0x250 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xad8/0x2d70 kernel/exit.c:938
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ __do_sys_exit_group kernel/exit.c:1098 [inline]
+ __se_sys_exit_group kernel/exit.c:1096 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
+ x64_sys_call+0x151f/0x1720 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 6059:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kfree+0x2c4/0x4d0 mm/slub.c:4757
+ vidtv_channel_si_init+0x34a/0x1a90 drivers/media/test-drivers/vidtv/vidtv_channel.c:499
+ vidtv_mux_init+0x526/0xbe0 drivers/media/test-drivers/vidtv/vidtv_mux.c:519
+ vidtv_start_streaming drivers/media/test-drivers/vidtv/vidtv_bridge.c:194 [inline]
+ vidtv_start_feed+0x334/0x4c0 drivers/media/test-drivers/vidtv/vidtv_bridge.c:239
+ dmx_section_feed_start_filtering+0x3a5/0x660 drivers/media/dvb-core/dvb_demux.c:973
+ dvb_dmxdev_feed_start drivers/media/dvb-core/dmxdev.c:508 [inline]
+ dvb_dmxdev_feed_restart.isra.0+0x457/0x530 drivers/media/dvb-core/dmxdev.c:537
+ dvb_dmxdev_filter_stop+0x2b4/0x3a0 drivers/media/dvb-core/dmxdev.c:564
+ dvb_dmxdev_filter_free drivers/media/dvb-core/dmxdev.c:840 [inline]
+ dvb_demux_release+0x92/0x550 drivers/media/dvb-core/dmxdev.c:1246
+ __fput+0x3ff/0xb70 fs/file_table.c:464
+ task_work_run+0x14e/0x250 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xad8/0x2d70 kernel/exit.c:938
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ __do_sys_exit_group kernel/exit.c:1098 [inline]
+ __se_sys_exit_group kernel/exit.c:1096 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1096
+ x64_sys_call+0x151f/0x1720 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Fixes: 3be8037960bc ("media: vidtv: add error checks")
+Reported-by: syzbot+0d33ab192bd50b6c91e6@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=0d33ab192bd50b6c91e6
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+V1 -> V2: replace with media: in subject
+
+ drivers/media/test-drivers/vidtv/vidtv_channel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/test-drivers/vidtv/vidtv_channel.c b/drivers/media/test-drivers/vidtv/vidtv_channel.c
+index 7838e6272712..f3023e91b3eb 100644
+--- a/drivers/media/test-drivers/vidtv/vidtv_channel.c
++++ b/drivers/media/test-drivers/vidtv/vidtv_channel.c
+@@ -497,7 +497,7 @@ int vidtv_channel_si_init(struct vidtv_mux *m)
+ 	vidtv_psi_sdt_table_destroy(m->si.sdt);
+ free_pat:
+ 	vidtv_psi_pat_table_destroy(m->si.pat);
+-	return 0;
++	return -EINVAL;
+ }
+ 
+ void vidtv_channel_si_destroy(struct vidtv_mux *m)
+-- 
+2.43.0
+
