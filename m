@@ -1,108 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543461DE894;
-	Tue, 11 Mar 2025 08:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB1A1EB182;
+	Tue, 11 Mar 2025 08:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741681343; cv=none; b=V+L1OCUoK6DJijFmMYE5VIOFBmcQF+EuC9sYbGdRx7CkNFCV95HHy+vrq8aWR2CB3vd0nA9xumzWsbF5Y163hd8P/3M9QMHntXvni833JT7RuEKiY1/FOfmInPLRk4nDQEoH4nPhMpqDWNw1Q3VJhP1bZgLSyvKWbKnYssOaAuc=
+	t=1741681361; cv=none; b=M7wI8d2hE6rwBXR2MzcFJ7TrC9jdo/lREwEhdEZBrfYJkpLAuFgcBflE0rhfWrqbLXry2dab8dvJFbUuDKj4vd4F8V1si7BT2bHOujFN1E+/4EolfimeClDyCNw2jTe02NJGTzKO7ST7oO3q3KtU1TCg070b35C8xfJSY1KvcRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741681343; c=relaxed/simple;
-	bh=oDgMFfKoOYNvurMdYjsKlHk+6v4ec6TZPOD47GjfsLU=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=XtbOlbUp5eejAMaEJ5HNXgRA5K5mhkuD5AwlHAGWgOpIKthINwI3KQZD67HbEsiN86WaB+aS/t8jB2pto6Nv2nopoiadbqwTXgS9WE0VYb+UrbDqRvkp0bt+ew1U0x590lLLFH62vc9V+XVItVUj559zRq/WUHchcp7+QkaFL54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mpPO/8x2; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741681361; c=relaxed/simple;
+	bh=UFNNBRGR/6gDpDCHdvz/G/BUoK1siPWwMWJCgE09xoA=;
+	h=Message-ID:Date:MIME-Version:Subject:Cc:References:From:To:
+	 In-Reply-To:Content-Type; b=EKcB2N8oOmOeCHtpMThcfXpxzBNxWwlgbBEE+RG+GSuQxi7Wav7u0TfQLOoPjXMiCKDmuvwLr6p+tWYEG8PRdQLYchM01crCltLQ4aful1Do76zXNsOiGdVwZM534b21YWLqT2hbC7/vt03bL9uH2VbQGuYrZ7vFAV3yW+nhv2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k4eUPaWD; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mpPO/8x2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741681341; x=1773217341;
-  h=from:to:cc:subject:date:message-id;
-  bh=oDgMFfKoOYNvurMdYjsKlHk+6v4ec6TZPOD47GjfsLU=;
-  b=mpPO/8x2coacSu2P6qOwudWw3oJw5YOmR3EwMrkwbvyv+t0Om0tnR/1y
-   TMtderfvUGd4lLzVHmSOEdY66A0LedP100aP/BA/aTTCBSmY0/avxGHK6
-   gsNL+V7hzuNTdEYuL90+c8DZEg0ybzoWchx04xktKPXwaiJXifTUMZ/33
-   mkslmY+Hghzh8OdWWQpWyqWYXLa/9nUTfiUqTTwbmcs9PGF33uQ6VWXof
-   SbbKThVb1h8PnmaWd9iJigCIOA9c5V4NzXNKO92AttoAiqPbzOsDcoAR4
-   FpWeDtgIN5lw4oW4O8EmwwTq5um6mnJ79mtJYeD7AsEUlGGmUN+dRe6eZ
-   Q==;
-X-CSE-ConnectionGUID: zmLL13wlRQ2QxC+ML4WhHA==
-X-CSE-MsgGUID: KDIhl/GdQ92p7mjDBIuO7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="68067096"
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="68067096"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:22:21 -0700
-X-CSE-ConnectionGUID: wBS/iF1eQN+yUTCZnNwSiA==
-X-CSE-MsgGUID: aj6FqxiVRdSzGBOjGhIA0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
-   d="scan'208";a="120202946"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 01:22:19 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	qiuxu.zhuo@intel.com,
-	yi1.lai@intel.com
-Subject: [PATCH 1/1] selftests/mincore: Allow read-ahead pages to reach the end of the file
-Date: Tue, 11 Mar 2025 16:09:40 +0800
-Message-Id: <20250311080940.21413-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k4eUPaWD"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so6303663a12.3;
+        Tue, 11 Mar 2025 01:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741681358; x=1742286158; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:to:content-language:from
+         :references:cc:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UFNNBRGR/6gDpDCHdvz/G/BUoK1siPWwMWJCgE09xoA=;
+        b=k4eUPaWDRKJBzVskNX5h82cXsdLBnSenekb1UNAW/A8CvxQps2GlZv98gAcXFtxs5g
+         dmeoSaBum1KDmpi4uL2pzxi8qcA0GA6RSwquXeOj8YPtUwsPqxl+JpjWakY/+STpNEPN
+         Tmt2sGeMZFfN6mRO5taeNsupyuqU2FO0bSQ7NVQX1pKhzOGvgT/rGc+imxGpbXMgiFlC
+         geG8V05mvE6dpwOkiHxM+AldAXGivkETSZpwf2/fDCCPVTuQScoB/4yRwEN+BHHVEFe8
+         tP9jqH8HTrFLUegg4lHM5iGKAQwoZPl1huRl78fp/4CHn/PONZtFtEx7bUSNsKUBtWhi
+         PIUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741681358; x=1742286158;
+        h=content-transfer-encoding:in-reply-to:to:content-language:from
+         :references:cc:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UFNNBRGR/6gDpDCHdvz/G/BUoK1siPWwMWJCgE09xoA=;
+        b=hkHso5/esosbIwSRE3eaUHPiybudIRJOnT2BVRQt9gFQ7wSYgxDQf16mXbHslpENMw
+         S0i9VeheYEPHBESm9AS+AUVKYru3afIAWDeD1JjQEzvcV2yq9ZgTWolW8ZY/KzQr3L3O
+         FMacQ8a7u8fRah42D0EzGPnN8S8yxoK6iURNjm70qy7N3gYtmFNCYy38EGQRxmJhcrCP
+         jD9ghbZpLAewIfqvlGy4KCWji8j/fxF0RV9SI3MwbZFMevsLw8xeN6PjjFyr+pBGeDi5
+         SuoGx/2eCY5UMenGbqqQZ6CELlTSkjOq71uhKBhl/zdZX1fkgVNYaEVMEyzS0I9bp8y2
+         y0/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUK+HHfeqwlRx1+8Dciib1FayTsZQb5x8hL+HRDB73GR7+vyDRLSttSib4jGWYoxdj1TaGf6CXdG1yFWLzILe3v@vger.kernel.org, AJvYcCUtoLQ+Rq+SYTdMXVnOA9lLKrUReCThYup/L3nECppvF0Yso/WCXLgHgQ9Y98I7ldHwHEn2PsADOP1RpyIE@vger.kernel.org, AJvYcCV66mtRXXgegyI1LtxqXrlYzgam7vOOmXABCbzlGMQQX+APl1rX/rdA8RVW9YvIg5CJQIoQNffVr8p+N691Mlc=@vger.kernel.org, AJvYcCXcRLYYTvbLGekhXNUyg86zJZ6wggoZOxGbmDfKu0LDUAWQF+rmZGpZaKLqaqF/dRTiqK4DvWI3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyheTMxVW27y29nMWdJKWxHP+DYwqm+bftxXGVjgVvO3aDdSXaj
+	eUZsbWfFeZsMFmRtoiDzQLubZMYwyXovUw4ILzniQpOpOnca4IBB
+X-Gm-Gg: ASbGncvVwMMjs1DriPqYuLdQh5HSnOG0mnVEVTzPhwWM65AiCR3zd1xIlCOgFG4kiLI
+	cEWpLK+GLGZbjbiXadzY1AIZ1MGtUUAgVfbNEzArUEeefPyt0mWZg/4FoVi7RQmvsCiqhKdnGZI
+	Kt0Y31lPtBKoMc3PpNLn5Rg86TZocjOtKMb718mJfx0KPf0wXD4Dxv7s2GTMpmocq28iaiqCDWS
+	mPpzjo+5QWiGhP8upiTqEGdADiqqb+f9n14AOYwA+1MvDrtR/9DgnDu2jJRIszf02TBnFQ7vxhb
+	h5qGeKefcqnzxB7iPt2vpv53cuSLPvK/sH7CDDgZv5qvNv5c8aUEMnfuio6zA+3gUGP3pHGZE5r
+	RMgtJxPppxUs9wjXV/aSC/aCrcW9slcgHDrkJKKNAPrMya9KGe5Z0A5f0z4PMqPl0GJGG4wIEGz
+	EyV01wEGUk8wjA2BVXr6c=
+X-Google-Smtp-Source: AGHT+IHVZMV/MbyEPPexb7J3WeNZYZ5CxjZ+VTFaUFe+rZPsUq+igvni96NJQxPQP+jJ8ClbAvXlfA==
+X-Received: by 2002:a05:6402:4302:b0:5e7:7262:3bb6 with SMTP id 4fb4d7f45d1cf-5e772625471mr1960367a12.29.1741681357815;
+        Tue, 11 Mar 2025 01:22:37 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:20d:1300:1b1c:4449:176a:89ea? (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c76913bbsm7880931a12.78.2025.03.11.01.22.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 01:22:37 -0700 (PDT)
+Message-ID: <897ade0e-a4d0-47d0-8bf7-e5888ef45a61@gmail.com>
+Date: Tue, 11 Mar 2025 09:22:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 nf 00/15] bridge-fastpath and related improvements
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Nikolay Aleksandrov <razor@blackwall.org>, Roopa Prabhu <roopa@nvidia.com>,
+ Ivan Vecera <ivecera@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Simon Horman <horms@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, bridge@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Ahmed Zaki <ahmed.zaki@intel.com>, Vladimir Oltean <olteanv@gmail.com>,
+ Frank Wunderlich <frank-w@public-files.de>,
+ Daniel Golle <daniel@makrotopia.org>
+References: <20250305102949.16370-1-ericwouds@gmail.com>
+From: Eric Woudstra <ericwouds@gmail.com>
+Content-Language: en-US
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+In-Reply-To: <20250305102949.16370-1-ericwouds@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When running the mincore_selftest on a system with an XFS file system, it
-failed the "check_file_mmap" test case due to the read-ahead pages reaching
-the end of the file. The failure log is as below:
 
-   RUN           global.check_file_mmap ...
-  mincore_selftest.c:264:check_file_mmap:Expected i (1024) < vec_size (1024)
-  mincore_selftest.c:265:check_file_mmap:Read-ahead pages reached the end of the file
-  check_file_mmap: Test failed
-           FAIL  global.check_file_mmap
 
-This is because the read-ahead window size of the XFS file system on this
-machine is 4 MB, which is larger than the size from the #PF address to the
-end of the file. As a result, all the pages for this file are populated.
+On 3/5/25 11:29 AM, Eric Woudstra wrote:
+> This patchset makes it possible to set up a software fastpath between
+> bridged interfaces. One patch adds the flow rule for the hardware
+> fastpath. This creates the possibility to have a hardware offloaded
+> fastpath between bridged interfaces. More patches are added to solve
+> issues found with the existing code.
 
-  blockdev --getra /dev/nvme0n1p5
-    8192
-  blockdev --getbsz /dev/nvme0n1p5
-    512
 
-This issue can be fixed by extending the current FILE_SIZE 4MB to a larger
-number, but it will still fail if the read-ahead window size of the file
-system is larger enough. Additionally, in the real world, read-ahead pages
-reaching the end of the file can happen and is an expected behavior.
-Therefore, allowing read-ahead pages to reach the end of the file is a
-better choice for the "check_file_mmap" test case.
+> Changes in v9:
+> - No changes, resend to netfilter
 
-Reported-by: Yi Lai <yi1.lai@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
- tools/testing/selftests/mincore/mincore_selftest.c | 3 ---
- 1 file changed, 3 deletions(-)
+Hi Pablo,
 
-diff --git a/tools/testing/selftests/mincore/mincore_selftest.c b/tools/testing/selftests/mincore/mincore_selftest.c
-index e949a43a6145..efabfcbe0b49 100644
---- a/tools/testing/selftests/mincore/mincore_selftest.c
-+++ b/tools/testing/selftests/mincore/mincore_selftest.c
-@@ -261,9 +261,6 @@ TEST(check_file_mmap)
- 		TH_LOG("No read-ahead pages found in memory");
- 	}
- 
--	EXPECT_LT(i, vec_size) {
--		TH_LOG("Read-ahead pages reached the end of the file");
--	}
- 	/*
- 	 * End of the readahead window. The rest of the pages shouldn't
- 	 * be in memory.
--- 
-2.17.1
+I've changed tag [net-next] to [nf], hopefully you can have a look at
+this patch-set. But, after some days, I was in doubt if this way I have
+brought it to your attention. Perhaps I need to do something different
+to ask the netfilter maintainer have a look at it?
+
+Best regards,
+
+Eric
 
