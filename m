@@ -1,290 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C78F260A54;
-	Tue, 11 Mar 2025 17:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741713782; cv=fail; b=cNbe5dGIlNT9aPKXozp5bLKAMSFebeKz0pG5X7cAUG3DSXdLEhSMJHWCEXwtzZXxfFRmNe/xkon9qRctUoSI769/5LEgpGKzOsbH9gmzPlBMexzDQH4RGFTTf1Z2KiP2051Y/mQzutjAj4SG+Y+4uYsGcR8crHuZO+N4LD5xrQQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741713782; c=relaxed/simple;
-	bh=YgUeJwkOz4AVv3SMcxEF5Ee4jRX0XjlyyPEggQPeE44=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FO6ryoS/e1AE+3MTeTMieR+EFx6PgW7v0pf0CQlcJTkXtv/Xt5RDp25EJeaYTqD54eEMz2LSpT5NyEUWFkLYGxVq32rbgqolu85TmzeW5Lhve32sSAVDS6b06A3NSF5bNG48CM8A2VENDTH5PmLLlvDT1mCnN33QfJBlNwKgPlc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZRSl61Os; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D410255E20;
+	Tue, 11 Mar 2025 17:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741713831; cv=none; b=iD1kPxWh4CKP7ac11GCosEZIIEyuGLRv7/hs2uGTKEamKJwMzx3WcWZEEFBmtKaDm0gy8bjWTGWNFfKb2fFwHQ7ICL0qajkm+5FmJHJshK75aQFXlSFXDHiKba8A78isM7K354wJlvHTPztf6x4s7lJz3/YyDfhCz503IqquUa4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741713831; c=relaxed/simple;
+	bh=CXHCCNEXOprghwu7t9O9nASmfIr6TtyDm1pbOw1Cqxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCcML3WbVYmydp6aRoXz7qDzUFqH419SGfyZgSHZ6RO1uqDQf/WOTlruFwTDU0a38Nuo4bX9EqmDM62HjmSaSms2JcgGjBMKY7wPoAMf8+goS5e288vlze1umPQcC0eKUw5X0G6EPxfOVCeIrOYIO1VqPg1Lk+JJaKsfbYXtqGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OkywOVyy; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZRSl61Os"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741713781; x=1773249781;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=YgUeJwkOz4AVv3SMcxEF5Ee4jRX0XjlyyPEggQPeE44=;
-  b=ZRSl61OsJ4n9C5icOERpEjFfGJIUGMUWbNVor/xXqRYg7N2hHuUUhAsw
-   r4M/A96XNqXxrL/zCP59qdYpXvOraQX/IkPFzXw76oWm78jQ2xEKiN5c/
-   BA7VAfI58VRnWiUj36BcqBfF7EEuwIi44jLzciRHGHLf1vcmKQU4ASlBO
-   hEK17chzTQhBBhMpSLuXX3XOILcSRzyz7SzOIlPexsIMYGF9lKu3jQOmr
-   jxyZtCwbb2aurWeg1imMN9SdRiZy6CaGqmJkFjcJ03GZonGoWQge6U9Cy
-   6kOHbQZzE9vgxVAt9DmBhUQZWRiZiQCXh8fzp+sarH0I+swZPju3z86dU
-   w==;
-X-CSE-ConnectionGUID: e+JcKUnhR7qT8uL61RU28g==
-X-CSE-MsgGUID: 9pgi5DmxQBWyuX5FEQwyvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="45549449"
-X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
-   d="scan'208";a="45549449"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 10:22:52 -0700
-X-CSE-ConnectionGUID: xeyqVvluTq2b7BQsczpBEQ==
-X-CSE-MsgGUID: WZFMO3OtR02cuIFTmRpq9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
-   d="scan'208";a="120895126"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Mar 2025 10:22:20 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 11 Mar 2025 10:22:17 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 11 Mar 2025 10:22:16 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.40) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 11 Mar 2025 10:22:16 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qbr0ou7pvkA4eldwS0LPNxUwRgYXFl25JFnHn/JWitvuav/XWrqd9Ye5ThRlSAkwFDgP1Ux555bFRxiwrWSuNDEEazgJbvuxUQFK3WLWAesQG9AJTbjIosubqy89mX0M3zWGMXsyh5c4VC5TGnzqTTtTFVWPGS3WBcp4/VGB/FZB7YDuWs7bBHK8p9T6h4Fn4Odfs5nmYLooLTenYB65G6bhfte3IXHvGRrymRkZJW3w64J7A5E0z5YesI4xSh5whJrYskvZ3XmquuXg//KKRfb90SaxT4J6Gzn7oeAEQbEepkOclC9yYdqRfdwExxyD5Flh29kdHK+a0Ib6ICzbJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RiVmKomMr7l7R84PFso7qE0j6Z0a2xkgglIhgwczGd4=;
- b=qVNNmo38loQr2UW1hibhCevvse0BPcCe7HQV0GG8d0ow8pAq5MnegnM9U/hduW1W5zojcyfyoQDCqIYJ8rknzpEIzwJKBDKaAfW5o2b/1AfGIhD51rK8gwpIbqVWfqSvDAoh32gELv2dyrAwdLJAEKSCz7YJEGFs0MiyKrYBGsClu2MwTDADVKgCdL1ExJ+lrLMNt8TwZ7xEWWjn63rKfL8kwicpYTXBuI5gJLheNGC6011lMK+Kguy/b91//8gkCgmZVDFfFr63JaMWLhjH8IZESbEarNq4S48E1p9V9Wdif/RrADy8U5B5VM7GfpEdVjuKMYL1kN0KzqEapDsqsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by PH7PR11MB7432.namprd11.prod.outlook.com (2603:10b6:510:272::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
- 2025 17:22:13 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808%5]) with mapi id 15.20.8511.026; Tue, 11 Mar 2025
- 17:22:13 +0000
-Message-ID: <049ed5bc-5ee8-4fb3-944f-bd2a2116ba21@intel.com>
-Date: Tue, 11 Mar 2025 18:22:06 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 01/16] libeth: convert to netmem
-To: Mina Almasry <almasrymina@google.com>
-CC: <intel-wired-lan@lists.osuosl.org>, Michal Kubiak
-	<michal.kubiak@intel.com>, Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel
-	<przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Alexei
- Starovoitov" <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	"Jesper Dangaard Brouer" <hawk@kernel.org>, John Fastabend
-	<john.fastabend@gmail.com>, Simon Horman <horms@kernel.org>,
-	<bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250305162132.1106080-1-aleksander.lobakin@intel.com>
- <20250305162132.1106080-2-aleksander.lobakin@intel.com>
- <CAHS8izNnNJZsEXwZ07zhpn8AjxhGGcm9vyt8uFos1rVvn66qsQ@mail.gmail.com>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Content-Language: en-US
-In-Reply-To: <CAHS8izNnNJZsEXwZ07zhpn8AjxhGGcm9vyt8uFos1rVvn66qsQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MI0P293CA0002.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:44::7) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OkywOVyy"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BE3Kts010108;
+	Tue, 11 Mar 2025 17:23:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=5u56dtQHGskTSf5+IQ68wqGEp6+oc9
+	PmagGYB1VKuuw=; b=OkywOVyyDjTwd5Ra9hJluBKTT6lDermeS4faJeFKbjAdGi
+	ySwoiQfoszXo5lsHNJCxz0MlMC606nNQjBZDcJ8krVS80zWrEkwY7o9ixwJuGWH+
+	t0/ishJP9tjw0SJqGSaPW/DB9lf3Ze7aXiGgTqgAwEZ55iI5kXWxUlXLOkqakzPW
+	K9bNUOD4Vc/dAUrvFz7MS1mkhNDgtRA9U1eWv7alAyIA5LNJAf4rrwn2R0gVEYyZ
+	DVafxvT9msrp9mhTSKC+dyMDth6qvTz1d1u7wtfB4BB/+qhTTBexc1qNhzsV5+GR
+	GNPKFk5ezUNNy26kRP08/o+slV+SbazlBiga2kFg==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45apkrh56a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 17:23:45 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52BGeIjw022196;
+	Tue, 11 Mar 2025 17:23:43 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45917nddcr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 17:23:43 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52BHNd8o46137780
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Mar 2025 17:23:39 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D040820049;
+	Tue, 11 Mar 2025 17:23:39 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 25A3C20040;
+	Tue, 11 Mar 2025 17:23:39 +0000 (GMT)
+Received: from localhost (unknown [9.171.9.82])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 11 Mar 2025 17:23:39 +0000 (GMT)
+Date: Tue, 11 Mar 2025 18:23:37 +0100
+From: Vasily Gorbik <gor@linux.ibm.com>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: hca@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhanjun@uniontech.com,
+        niecheng1@uniontech.com, guanwentao@uniontech.com,
+        chenlinxuan@uniontech.com
+Subject: Re: [PATCH] s390/boot: Ignore vmlinux.map
+Message-ID: <your-ad-here.call-01741713817-ext-6705@work.hours>
+References: <F884C733016D6715+20250311030824.675683-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|PH7PR11MB7432:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc0fdde7-2c63-4eee-1d3a-08dd60c14358
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?RkRHWThiYmsraDhEK1FsTEdmN29TaC80dml5WEdBb1NibEZ2c2J0b3JQc09D?=
- =?utf-8?B?bWdqMlBydWc0cnlWMG5UbThTK0UvQzB5ekpxaENxWjJOeDlFRlMzelNreU9x?=
- =?utf-8?B?eGRBd2I0RUtoT2ZIc3c1WFV6czFpaCt6RVRNQWRlS0dhdjRSRGxmU2YrZHpL?=
- =?utf-8?B?SXZDTWJYUmx4dU1PUnZGSmdJbnAvUko5NUpubE01Um9BSkp6MEN5QnRXWFlJ?=
- =?utf-8?B?S0tPaVpUVStycXRJRnA1cS8zKzMvaGJMWFRmVGhEV1VBYTc5R3U5KzdieVMr?=
- =?utf-8?B?MnJkUU9wQ2xyMzVMQy9wWDhRdmdrTVI2bHMwT2VqOElNM21STlZPNWU5eldP?=
- =?utf-8?B?cjBUTWdrZVQrRWtmTVFtWGFkR0oxK21qTjI2UGxHNzF1RW95VTdsR1IzRWs1?=
- =?utf-8?B?RWNsRXZXR0Q1b0xLR09ENHNFRkRPTWliWlYvT2srOHl3Y1BLRTZZT2kyVjFO?=
- =?utf-8?B?U2hmU1NqaXczWTlBSlFEZVBaejhORkxBanBQTVNkRkErZGcyMW5RTFNScVVo?=
- =?utf-8?B?eTBwSmhMYXFtYzRrbWFodXl5aDJnc3c3ODZDYVRjeWlkTmFPa1l1dlcwaUtK?=
- =?utf-8?B?QlcvVUFyTVRWcEYrdk83U01wdUdRVVR5QldrdFRBTWt6SUd1WWZpcWhiWTVS?=
- =?utf-8?B?Z2V2WTZsK3BuY3BjRENPZjg2dndtdjJiNDNGaHc0aTRUV3JubDIveEd3QVAv?=
- =?utf-8?B?cnlza25qNVg0aER2QWNZbWhLMkc2WElCRUZVQVZaQ04xZnV5Q05SYVJuSlpL?=
- =?utf-8?B?ZGNTUXpIb016SDVWUVh2b0o0eU8zbXBDM200Z0gvWmxQWFUxanFSWGQ4cVRU?=
- =?utf-8?B?dTl1YWtrSUdKREZXdTVELzFFWWwzYjZyc2hlQ2hIbitISjZBY3BYV04wZnZi?=
- =?utf-8?B?UUZSSmJYenM2TEJNNXROelY4YnpNcnNVckRjckFRY3FHdDMxUC9FSlV2ZS9i?=
- =?utf-8?B?cjJCRXVvbVg5cGVkRE1uWkIrYU1RbGFXZVQyTm4xL0QrVnVyTjdLMUY4aGlq?=
- =?utf-8?B?SGlNU0F6R2llTm9PT2NaUCtWYm41TGZhcXg0VWdMVWk1UlRKUnFWRWo5TEZ4?=
- =?utf-8?B?WXJQM1B5djdpTnBQVnZpbkJ3VUhjQXVuZkI0THIvQmJuNTNXOVBHUFNGeVVp?=
- =?utf-8?B?dENtdnYyTS9UZDIxMW1UTDlsSmIzZTg2WWVzT1JudkNyVm56WnJOUDQweFh0?=
- =?utf-8?B?cmdSV3ZKZ2twZmFDbzk5RGlzWlVnaHJhQmRBWTR2ckRWYnVES0FrSjRBY1R0?=
- =?utf-8?B?OFk3a09RS2xuNkZIL0QvYldyVTNOblBnQkdJL3ZtY3B2QUUwNUlIUVJHd0Vn?=
- =?utf-8?B?bG1KZ0dxWThsZFJ2MDJVclJTeUJUdTlhTDduS0wvejRFQVNJUXBJOEEydTcz?=
- =?utf-8?B?RTQ5ektTK2d0NUtRS1VIc1BhdEFBSmlHdGw3Z01RdHpRWUVXelYvSVovSHln?=
- =?utf-8?B?bzNJdVFpbjc4ZkQxNUZSMVJtc0c2REM3YVdiN0xmSVNvZEIzYUJUQVdJNGRt?=
- =?utf-8?B?THdqVVlZYXE2a1NUZlFLS3Z6ZHhwY0V1WGtnMGZFSUpnczM3bUJ0ZzdlR3pW?=
- =?utf-8?B?VjlkL0VLVjBQcWpkNStIMmRkaGxBVEZBRFU4b1Y3VTNNbVVlN0cydEFGa3dP?=
- =?utf-8?B?MmtFdkVPY2YzVGp3a01TTkQ1M1RidXZuYUtuUmNVSW9kRlgwYkczUERoR1o5?=
- =?utf-8?B?M3lqTlhtTFM4MWc1b09kTnpwcnd6ZjdHZWhBOStqclR4ZlZiZ1Q2QjlwbUNU?=
- =?utf-8?B?TUZzQnVFdWdQbjJkTjJqVXkrT0c0dkNCbHhjMUpjTllJaWZnWWZWVFI1Z3lh?=
- =?utf-8?B?RlZKRXZBRzFlRVhHY20yVjFyTS9GTDhsQkY5UmJQejJ1SlR0NGtMbC9lSlB4?=
- =?utf-8?Q?fA0LCGVmMksWH?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d2hrMXBVa2VqaWIrRm9xZXdsdVp3aGtqd1k4aGJORTZqOExhOS9jajhDYXNn?=
- =?utf-8?B?cGIxaXdsR3FXYTNna3V6Sk5QZXlqZ1ZwQjluSXplT1BMeEhTcWRBaXM1TmFJ?=
- =?utf-8?B?dE8wYTRyeHBmTXlCeUhDV2lmRUl0UVp3bnF1VldmaDhkR1lFQ3FLaWNpNFI3?=
- =?utf-8?B?NjEvanVtQ0VlUTh0eHVsM1hlRC9xVkJ3dHRES2V0OERkUzhoMGxFUEZIWHFX?=
- =?utf-8?B?RTZrSkU1V3d2UEZ6eUUyNFBxKzg2dW9FUnRIN3BJdlY1S2pkOXlyZWZHd3Q3?=
- =?utf-8?B?ZHZ1UFFIbFU1aVl3VTlFSWZ4NXVnOEs5a2JEa3BPSy85YzlzZG9oV056bUkz?=
- =?utf-8?B?eW00djNlWHpPeDFLRU4rSDEzK0ZUN3UxVFdBS0V4WC9xUmh6V1RMS1E0NDRo?=
- =?utf-8?B?TjFFUVBINVlqQUplZXIvYnZzcXIwT0U5L0FZQXRWaEhmTjI5ZExYbTRsMTNS?=
- =?utf-8?B?VDRDK1FhL05MLzRQNXBYQ1o0d1dQU041dytTQWJ4ODA5K2NLZy96dTl0aTgx?=
- =?utf-8?B?U3liQmh5Y2NmTjVIU2p4OVZEZVdsVFVZY0RPMnFhN3FOb3k5R3hmcm1TbGZi?=
- =?utf-8?B?cnJibTVkazBxSkREczJtbS9vZThObjYxaThSRy9VZWJPQnJYd2I4aVErSlVq?=
- =?utf-8?B?RHp6YjY3Nm14cllqMG1qN24ySzcvTzl4bE9Qc29nb0puQng0SUlMOEdiMGJt?=
- =?utf-8?B?VnJlWFJpRkluMTFHTCtZZC9Mc0VQUXNHWkdRVDNobkpVVnJ3ayswQU9ESG16?=
- =?utf-8?B?ejNGMndRMDNqeTRrZG9pMzNHVk5kRWhDMzE5Nk1SRTZ4bUwyTXdUL1RTRlBC?=
- =?utf-8?B?Q2dTYS9Qem55U1ZkVHBEcEYyQWVuQ2NLR3JKM0lMSkdycDFUdWJ0RG1JdVBw?=
- =?utf-8?B?ZGsvUkZwMUY3eU05R0NDTG1CQWd0WHJDaUpvRVArUkJSbUNyay95U3NCb2VQ?=
- =?utf-8?B?aDhOSzlLaENDaGZOeG8zYkh4VklMdmNQNnVMaXpNMTQ2N1NBV3o3d2JDUFNx?=
- =?utf-8?B?dE9IalJlT3pvRE9xOXdhQkJBOGNFSlNTY2Y2cjJOK21jbjQydmpBY1lLM1NF?=
- =?utf-8?B?ajJjSlUvdTNicmtwZXljaXBkSUZRQjBUdmJxMTdsN01KZjljSHJUbDkrbWRX?=
- =?utf-8?B?SzFwOVBrQm8rNGN4UU1WTnJZQ0FzUUJ1TVpnOHdFbGxGd3o1QXRhVmkrcVky?=
- =?utf-8?B?b1pqbXQ4L3p0aGhHMUVkR3p6bGNPM204dDhVc1dxV04wV0VtNXZpZ2psa2hy?=
- =?utf-8?B?UmJjbTVja0ppa1B3KzAvU0src1Q3djFWeHVjbXlFU1BxcTBjTTVJYWFwdktM?=
- =?utf-8?B?YTBuV3JiTXNoMHc3S3Zqc3BjWWJJRFVyOGVNcEM5S3p5NjlLcHBoMnhTYzcx?=
- =?utf-8?B?bTIwLzRBS051NDVuQTBGb1pDN0tFOGMvWitYNFlXMWhlRldJZFBmMWFkS0F2?=
- =?utf-8?B?MVpFakRjMnJJV1cwT3NEbE1YQVF5U1gyMUlqK0twcEF1UXpzWmM2TlR0QmR5?=
- =?utf-8?B?TWF0UnByZVZNSTl0NFAzS2lRRGhBbzgzTjc2U2phZEp4M21qWWR0bm9ZTWh5?=
- =?utf-8?B?bHhDNGx3RThETjFTNjNIbW8xQ2VnZ3ZVdDlQdHVaOHhldVREUGo2QS9QNlVy?=
- =?utf-8?B?RmJrK1oxdUl6RE1Db0hUdFlPdGlkQXVVUGRvdDRGNU5UVDhhMVpzN2hyQlNk?=
- =?utf-8?B?ZDI0MlVGd1FRMUdiT1J5OFFJamk3QUxwUWlqMUR1UUlNenkzVFVFMHhMWWNH?=
- =?utf-8?B?UzRuYTJUWFo1WkpVUkZ2b3lqR3BxZnhVZnhLUVp1NW01WDNDM3ZhZmY0M01j?=
- =?utf-8?B?K21QVHRVQUpDWG00WG9xcWYxcXhQL3lZNk5OaFozNDBPNmZhaG90azFjK2JX?=
- =?utf-8?B?R20rNzZNWllybVQwM3hvbTluWnRkeDhBZUN5QWcwZGs3S3lJbTdCa05PRis3?=
- =?utf-8?B?Tyt5QnpLd2FZSnRmUmFzc0U2UVkyT2ZkckZlNEwyWG5ISFlwZXVzTTZCUytI?=
- =?utf-8?B?c2UyeVUrVitTbllrNGFxT0RYdVlBZy9zYWxqQVlrb3RkVm03M295dDlRb1Av?=
- =?utf-8?B?K1hNcXdFK3R4ZG51QXZ4ODhsYS90SFZnZTAvdkZLT0liUHF3ZTVrazZweHRN?=
- =?utf-8?B?S0tXbmtvYkJqT0duaU9XRjNET0tDYkdIdUdIUHZENGFLblpxZHpzdkdwdFU3?=
- =?utf-8?B?U2c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc0fdde7-2c63-4eee-1d3a-08dd60c14358
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 17:22:13.4334
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yCtGbBTR/oRDQODjVRl4B9/Acix8E6adlzcjGLR5OAL57NgBddzZ2to4uYDXhz3yBMzCIUfwhq+PXVzEVkmaYIf/co6VPxs/dd3eW/YZPIk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7432
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <F884C733016D6715+20250311030824.675683-1-wangyuli@uniontech.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: zgtopoqPN968ponBEZ9i61AE32kkFDc9
+X-Proofpoint-GUID: zgtopoqPN968ponBEZ9i61AE32kkFDc9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-11_04,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ adultscore=0 clxscore=1011 priorityscore=1501 mlxlogscore=571
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 malwarescore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503110107
 
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 5 Mar 2025 16:13:32 -0800
-
-> On Wed, Mar 5, 2025 at 8:23 AM Alexander Lobakin
-> <aleksander.lobakin@intel.com> wrote:
->>
->> Back when the libeth Rx core was initially written, devmem was a draft
->> and netmem_ref didn't exist in the mainline. Now that it's here, make
->> libeth MP-agnostic before introducing any new code or any new library
->> users.
-
-[...]
-
->>         /* Very rare, but possible case. The most common reason:
->>          * the last fragment contained FCS only, which was then
->>          * stripped by the HW.
->>          */
->>         if (unlikely(!len)) {
->> -               libeth_rx_recycle_slow(page);
->> +               libeth_rx_recycle_slow(netmem);
+On Tue, Mar 11, 2025 at 11:08:24AM +0800, WangYuli wrote:
+> Upon compiling an s390 kernel, a vmlinux.map file might be generated
+> in the current directory.
 > 
-> I think before this patch this would have expanded to:
+> Append it to the .gitignore file so that Git does not track it.
 > 
-> page_pool_put_full_page(pool, page, true);
-> 
-> But now I think it expands to:
-> 
-> page_pool_put_full_netmem(netmem_get_pp(netmem), netmem, false);
-> 
-> Is the switch from true to false intentional? Is this a slow path so
-> it doesn't matter?
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>  arch/s390/boot/.gitignore | 1 +
+>  1 file changed, 1 insertion(+)
 
-Intentional. unlikely() means it's slowpath already. libeth_rx_recycle()
-is inline, while _slow() is not. I don't want slowpath to be inlined.
-While I was originally writing the code changed here, I didn't pay much
-attention to that, but since then I altered my approach and now try to
-put anything slow out of line to not waste object code.
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
 
-Also, some time ago I changed PP's approach to decide whether it can
-recycle buffers directly or not. Previously, if that `allow_direct` was
-false, it was always falling back to ptr_ring, but now if `allow_direct`
-is false, it still checks whether it can be recycled directly.
+Changed the message to
+"""
+When building with CONFIG_VMLINUX_MAP=y, a decompressor vmlinux.map file
+is generated in the boot directory.
 
-[...]
-
->> @@ -3122,16 +3122,20 @@ static u32 idpf_rx_hsplit_wa(const struct libeth_fqe *hdr,
->>                              struct libeth_fqe *buf, u32 data_len)
->>  {
->>         u32 copy = data_len <= L1_CACHE_BYTES ? data_len : ETH_HLEN;
->> +       struct page *hdr_page, *buf_page;
->>         const void *src;
->>         void *dst;
->>
->> -       if (!libeth_rx_sync_for_cpu(buf, copy))
->> +       if (unlikely(netmem_is_net_iov(buf->netmem)) ||
->> +           !libeth_rx_sync_for_cpu(buf, copy))
->>                 return 0;
->>
-> 
-> I could not immediately understand why you need a netmem_is_net_iov
-> check here. libeth_rx_sync_for_cpu will delegate to
-> page_pool_dma_sync_netmem_for_cpu which should do the right thing
-> regardless of whether the netmem is a page or net_iov, right? Is this
-> to save some cycles?
-
-If the payload buffer is net_iov, the kernel doesn't have access to it.
-This means, this W/A can't be performed (see memcpy() below the check).
-That's why I exit early explicitly.
-libeth_rx_sync_for_cpu() returns false only if the size is zero.
-
-netmem_is_net_iov() is under unlikely() here, because when using devmem,
-you explicitly configure flow steering, so that only TCP/UDP/whatever
-frames will land on this queue. Such frames are split correctly by
-idpf's HW.
-I need this WA because let's say unfortunately this HW places the whole
-frame to the payload buffer when it's not TCP/UDP/... (see the comment
-above this function).
-For example, it even does so for ICMP, although HW is fully aware of the
-ICMP format. If I was a HW designer of this NIC, I'd instead try putting
-the whole frame to the header buffer, not the payload one. And in
-general, do header split for all known packet types, not just TCP/UDP/..
-But meh... A different story.
-
-> 
-> --
-> Thanks,
-> Mina
-
-Thanks!
-Olek
+Add this file to .gitignore to ensure Git does not track it.
+"""
+And applied, thank you!
