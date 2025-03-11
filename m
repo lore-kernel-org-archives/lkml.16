@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03BC22D4FD;
-	Tue, 11 Mar 2025 11:14:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE9F1DEFFC;
+	Tue, 11 Mar 2025 11:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741691687; cv=none; b=l7BBH7oVCMR1pniGnIUFUr2MgV1ERgcC3VHyAD1ftfCzHIWqs8mdfJJ6NNG2jmh1qL9V3QBXGpNKZvNhu7Y1xAn+oBO491nMlb2TmgTBUGN0fWqUWSf+sb9iOLpqjStFhKmOZFZoFhyE+XydpIbe/2BWdVDEd9Mc/eZlwTqcrrU=
+	t=1741691736; cv=none; b=ip2BVF2bjCmEbHf/hITGvHaBMOUxXaVZhpEGw/FqNoFXnz5mmC37tyI+tCqWfE0oOYwxwTd6keqbC+V9/1LWXNm6a4/GRN69NnZZrtRGvY99zfPBpRpRbccF9cB0rIWEukPivuiFOIuGpaFC49z7zbrUttwv/hYHfdD+rHUl++o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741691687; c=relaxed/simple;
-	bh=NsbwoYuOc8TjNu/BedDdrpYil/xgrNL/Le/UmwKzotw=;
+	s=arc-20240116; t=1741691736; c=relaxed/simple;
+	bh=va1by/3p8+ybPKxwukKtBv1gAiHFNUyh60yOFGE+flY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e3mHTv98avQJZJEwT2i88rCtuUT/GeMPzcql+43b7e4dZffeznu+o7+HyDLXmdh63d8JRqMj/2otNTiJmsBdEsn6GVYqP+w3g8HaHxbecKe0shtv9xaqx3IXh53hKZ0aRDI/ghap0hKLylQ62I2/fMPPT8xJlsuRAY4eulflgMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ef+fzoWO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aJsavit5Q9a4G8M/kyU2DdP3WhOl+hubtAwzxzQQk4GeQmYb4u1c8QcUuMtamDMy8AHb3AkHPM+kKuVD560ibkKnGx22nuJYBRuaJbPywKtAByezOhrXbdna7i/2SVZXaHSWtmpKmimBpIw0upYybHqbVTgAC/0AYdDJnlawuO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8lSvO2r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ef+fzoWO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F4EC4CEED;
-	Tue, 11 Mar 2025 11:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741691686;
-	bh=NsbwoYuOc8TjNu/BedDdrpYil/xgrNL/Le/UmwKzotw=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8lSvO2r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CCD4C4CEE9;
+	Tue, 11 Mar 2025 11:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741691735;
+	bh=va1by/3p8+ybPKxwukKtBv1gAiHFNUyh60yOFGE+flY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ef+fzoWOncZwpPmM3cZy2wEnuwm0HwpMRV2bvPqkhV2C0hDzghYYk4F+0LH/Hluty
-	 Ql8y/F5regP7c2S803DdzE7ojlTt4D7YC+qOgnb6U31DVLEto+WTlxhTcL3WmlrdbJ
-	 0WKAD24nWNEYQmjStm/oosm1OXWmonCkf6VcilWU=
-Date: Tue, 11 Mar 2025 12:14:43 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Chen Linxuan <chenlinxuan@deepin.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-	Sasha Levin <sashal@kernel.org>, Jann Horn <jannh@google.com>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>, stable@vger.kernel.org,
-	Eduard Zingerman <eddyz87@gmail.com>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH stable 6.6] lib/buildid: Handle memfd_secret() files in
- build_id_parse()
-Message-ID: <2025031100-impromptu-pastrami-925c@gregkh>
-References: <05D0A9F7DE394601+20250311100555.310788-2-chenlinxuan@deepin.org>
+	b=g8lSvO2rGMe+Nzq6zhEaimTDOAUiBeWNsBX5H3YkPa2UfUr4fHtvfqyLnELvotVFi
+	 icnIRV1M31GceJQYoovc5tF0e1vkawKd89jNj6L3tfLx5imnYQOeVP9UiSQUAgCTo6
+	 qELVS4uuxKK+pH9v2xZLvGtT66hJlaYSXkL2eoYNBUlgfIoHtDyGkxkhJSjRRaiyJp
+	 1WWDiz/tlD6N2CvTZSHg9QYoN0IfFY3TrALefCTT9TQVABfhGXG5AHpRFKO174lhlB
+	 +72+giQyK4eZFUP4JzajufVfqTuJIOBot9Ut1HqeF5BymKsrxqL4AagHSADv4WmXTB
+	 V5gABTBzrrZvw==
+Date: Tue, 11 Mar 2025 12:15:29 +0100
+From: Simon Horman <horms@kernel.org>
+To: Yu-Chun Lin <eleanor15x@gmail.com>
+Cc: shshaikh@marvell.com, manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	visitorckw@gmail.com
+Subject: Re: [PATCH net-next] qlcnic: Optimize performance by replacing
+ rw_lock with spinlock
+Message-ID: <20250311111529.GM4159220@kernel.org>
+References: <20250306163124.127473-1-eleanor15x@gmail.com>
+ <20250307132929.GI3666230@kernel.org>
+ <Z8xx0aN4vA7d-73i@eleanor-wkdl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,34 +48,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <05D0A9F7DE394601+20250311100555.310788-2-chenlinxuan@deepin.org>
+In-Reply-To: <Z8xx0aN4vA7d-73i@eleanor-wkdl>
 
-On Tue, Mar 11, 2025 at 06:05:55PM +0800, Chen Linxuan wrote:
-> Backport of a similar change from commit 5ac9b4e935df ("lib/buildid:
-> Handle memfd_secret() files in build_id_parse()") to address an issue
-> where accessing secret memfd contents through build_id_parse() would
-> trigger faults.
+On Sun, Mar 09, 2025 at 12:35:29AM +0800, Yu-Chun Lin wrote:
+> On Fri, Mar 07, 2025 at 01:29:29PM +0000, Simon Horman wrote:
+> > On Fri, Mar 07, 2025 at 12:31:24AM +0800, Yu-Chun Lin wrote:
+> > > The 'crb_lock', an rwlock, is only used by writers, making it functionally
+> > > equivalent to a spinlock.
+> > > 
+> > > According to Documentation/locking/spinlocks.rst:
+> > > 
+> > > "Reader-writer locks require more atomic memory operations than simple
+> > > spinlocks. Unless the reader critical section is long, you are better
+> > > off just using spinlocks."
+> > > 
+> > > Since read_lock() is never called, switching to a spinlock reduces
+> > > overhead and improves efficiency.
+> > > 
+> > > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> > 
+> > Hi Yu-Chun Lin,
+> > 
+> > Thanks for your patch.
+> > 
+> > My main question is if you have hardware to test this?
+> > And if so, was a benefit observed?
+> > 
+> > If not, my feeling is that although your change looks
+> > correct, we'd be better off taking the lower risk option
+> > of leaving things be.
 > 
-> Original report and repro can be found in [0].
+> Hi Simon
 > 
->   [0] https://lore.kernel.org/bpf/ZwyG8Uro%2FSyTXAni@ly-workstation/
-> 
-> This repro will cause BUG: unable to handle kernel paging request in
-> build_id_parse in 5.15/6.1/6.6.
-> 
-> Some other discussions can be found in [1].
-> 
->   [1] https://lore.kernel.org/bpf/20241104175256.2327164-1-jolsa@kernel.org/T/#u
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 88a16a130933 ("perf: Add build id data in mmap2 event")
-> Signed-off-by: Chen Linxuan <chenlinxuan@deepin.org>
+> I perform a compile test to ensure correctness. But I don't have the
+> hardware to run a full test.
 
-You dropped all the original signed-off-by and changelog text.  Just
-provide a backport with all of the original information, and then if you
-had to do something "different", put that in the signed-off-by area.
-THere are loads of examples on the list for how that was done.
+Thanks Yu-Chun Lin,
 
-thanks,
-
-greg k-h
+Unfortunately I think we need hardware testing to accept this
+kind of change.
