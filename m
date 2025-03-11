@@ -1,140 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7D11F874E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 07:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA231EB195;
+	Tue, 11 Mar 2025 07:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741678259; cv=none; b=XUiIGpralCI7Yx/W8zvZol6Ak7r+Zxjxd6xKqmDEd53c5CC1qIGQof5quxgDXDfNjwUCy0md42AzGUMIRJz1qA01LE4dDNyQ6/1IcqSIPD7Bw3uxPnhbczEGhap99MxD/rgBT2EUMCFvp/EbGnK+vrAM0wFtLzT0NEn4bF+IIiY=
+	t=1741678301; cv=none; b=ECUhzEl1RxotJYT1tMQrqAPibaPNtFA/1cXI4iUn/HRAbTMa8SRxBc31JojU4HL6MqeAHmqk97Xsdfqf0Of1Ox0bs9i7QQ5DAyLJoTp3WXZldsctdiXxQ57B2C/j9PzsojTHpRbEFoTlqN+SWybqedBNPI60WpgJ5eNDJaWP2MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741678259; c=relaxed/simple;
-	bh=6ptZt8W9PzGYxBsoNW9hgth6W4PsnPj1HOAvttTz8uw=;
+	s=arc-20240116; t=1741678301; c=relaxed/simple;
+	bh=Hq9oj7wLpWMy8mr3CBZv+PzeXcEG672QxLovOqz+Mco=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZCOTSzu4BgVoryDZ6K0HUHbnw5Vt5HTUvvkP8uUYig6tSBQ1NYgNwgYXDZtoAj43eGJ3vWduq8tLIIikCzWis2j5rINor/guMpVng2ycFIewhk6wnvtkSwzHICOJMd2vIA+lGbJVTw7W+3Ztrad9hEvIte6JaFldatyowppUto8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hm9JOtjc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z6t3iwyPgrJSRe6Q005I3nuRdEHPx2wbjH5MCTSBKns3dIpNmHCdnpY4IibQC2sDWXy9dTqgvNN0OXbg+rAhDQik+vKyriCluBzjTUSeeKNi2JMFjJAe2cXRY1rYjMww3S1zXhp43QLooNHX+DNWyz/YOIo4sjZUnEPknfV9c2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eARvd6Ww; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hm9JOtjc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF120C4CEE9;
-	Tue, 11 Mar 2025 07:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741678259;
-	bh=6ptZt8W9PzGYxBsoNW9hgth6W4PsnPj1HOAvttTz8uw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hm9JOtjcqc1SNJz4wc5g8742zi6JTP1ZsA53aqShmsFgc/9mO5aPMDhxqpEI9ZYN4
-	 7/W5iMWLwSEbqzmC0fjowOo2zu3JC3mlslxTCFRflQV3VV1X+QAtcaegD9kftiZaSL
-	 fM4atI9YqgbPAkiLOm7kVAp+Ax/JnsZaB+fYNVw6vL7koJkEzFB8yRLm+fVXNROOdD
-	 j9b2VFGqt3C7xVjj07QRIXrSZN/WdH7rkJbige+2IldRf5KwxkE7GhjjHx4XSsKa9N
-	 mOypXMkv90n66EbgpXGMj2txElg1PnkxDQSaJqyjC76Y78PUWSbvGfAJdOP+r7A5UY
-	 e/YV7JXHBdxrQ==
-Date: Tue, 11 Mar 2025 08:30:56 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Tejas Vipin <tejasvipin76@gmail.com>, Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] drm/panel/synaptics-r63353: Use _multi variants
-Message-ID: <20250311-warm-icy-rottweiler-cefcdd@houat>
-References: <20250310-mipi-synaptic-1-v2-1-20ee4397c670@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eARvd6Ww"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741678300; x=1773214300;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Hq9oj7wLpWMy8mr3CBZv+PzeXcEG672QxLovOqz+Mco=;
+  b=eARvd6WwoBHVoDyX97WM0ZB1H6QPqhqOnIoWBJyUIjvOgIvByXZH/rUF
+   fmmBcol8C+lLnzX2kZXJ5OcgLFpgdz/7umy81TZStjWd1RIUXXbwE+enK
+   /dztaOLso6XgxKQMtSLwOmMaSfd/co5k2HY+k2wkowgy2DGMd7M+wXAZz
+   /FgIPBBdjuqcxfDq/lYCef2CQoB6sPSHzPDBsIOUWoSt+DVNd9FE1bDMH
+   0EuFh1Hl7O28lacpnQHb9fpF6+KJw+/yf6U0aAi04yXup+qS6RG665A5G
+   A2mhF0YwPyRDParhy3dzXVfu/1OHx7XNi/TcSOFFlwIAKKFxD15s2+EE0
+   Q==;
+X-CSE-ConnectionGUID: 6ss0DhYZTMeXfqIIaaiouQ==
+X-CSE-MsgGUID: FiDQXVD7QoaM/VBP+XhlbA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="46350713"
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="46350713"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:31:40 -0700
+X-CSE-ConnectionGUID: NTagemLOSlibh4jwNKS8ng==
+X-CSE-MsgGUID: u9trQ7IgS0q9Htl59JSXvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,238,1736841600"; 
+   d="scan'208";a="125283253"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 00:31:37 -0700
+Date: Tue, 11 Mar 2025 08:27:45 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: macb: Truncate TX1519CNT for trailing NUL
+Message-ID: <Z8/l8eM5u7QeUROt@mev-dev.igk.intel.com>
+References: <20250310222415.work.815-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3msoj54ufxrpizvm"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250310-mipi-synaptic-1-v2-1-20ee4397c670@redhat.com>
+In-Reply-To: <20250310222415.work.815-kees@kernel.org>
 
+On Mon, Mar 10, 2025 at 03:24:16PM -0700, Kees Cook wrote:
+> GCC 15's -Wunterminated-string-initialization saw that this string was
+> being truncated. Adjust the initializer so that the needed final NUL
+> character will be present.
+> 
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  drivers/net/ethernet/cadence/macb.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+> index 2847278d9cd4..9a6acb97c82d 100644
+> --- a/drivers/net/ethernet/cadence/macb.h
+> +++ b/drivers/net/ethernet/cadence/macb.h
+> @@ -1067,7 +1067,8 @@ static const struct gem_statistic gem_statistics[] = {
+>  	GEM_STAT_TITLE(TX256CNT, "tx_256_511_byte_frames"),
+>  	GEM_STAT_TITLE(TX512CNT, "tx_512_1023_byte_frames"),
+>  	GEM_STAT_TITLE(TX1024CNT, "tx_1024_1518_byte_frames"),
+> -	GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frames"),
+> +	GEM_STAT_TITLE(TX1519CNT, "tx_greater_than_1518_byte_frame"),
+> +
+>  	GEM_STAT_TITLE_BITS(TXURUNCNT, "tx_underrun",
+>  			    GEM_BIT(NDS_TXERR)|GEM_BIT(NDS_TXFIFOERR)),
+>  	GEM_STAT_TITLE_BITS(SNGLCOLLCNT, "tx_single_collision_frames",
 
---3msoj54ufxrpizvm
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] drm/panel/synaptics-r63353: Use _multi variants
-MIME-Version: 1.0
+"rx_greater_than_1518_byte_frames" is also 32, probably you should fix
+that too.
 
-On Mon, Mar 10, 2025 at 04:58:22PM -0400, Anusha Srivatsa wrote:
-> Move away from using deprecated API and use _multi
-> variants if available. Use mipi_dsi_msleep()
-> and mipi_dsi_usleep_range() instead of msleep()
-> and usleep_range() respectively.
->=20
-> Used Coccinelle to find the multiple occurences.
-> SmPl patch:
-> @rule@
-> identifier dsi_var;
-> identifier r;
-> identifier func;
-> type t;
-> position p;
-> expression dsi_device;
-> expression list es;
-> @@
-> t func(...) {
-> ...
-> struct mipi_dsi_device *dsi_var =3D dsi_device;
-> +struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi_var };
-> <+...
-> (
-> -mipi_dsi_dcs_write_seq(dsi_var,es)@p;
-> +mipi_dsi_dcs_write_seq_multi(&dsi_ctx,es);
-> |
-> -mipi_dsi_generic_write_seq(dsi_var,es)@p;
-> +mipi_dsi_generic_write_seq_multi(&dsi_ctx,es);
-> |
-> -mipi_dsi_generic_write(dsi_var,es)@p;
-> +mipi_dsi_generic_write_multi(&dsi_ctx,es);
-> |
-> -r =3D mipi_dsi_dcs_nop(dsi_var)@p;
-> +mipi_dsi_dcs_nop_multi(&dsi_ctx);
-> |
-> ....rest of API
-> ..
-> )
-> -if(r < 0) {
-> -...
-> -}
-> ...+>
+Thanks
 
-Again, you need to provide the full coccinelle script here otherwise
-it's useless. And I have serious doubts that it's actually the script
-you used, because ...
-
-> @@ -106,53 +107,46 @@ static int r63353_panel_power_off(struct r63353_pan=
-el *rpanel)
->  static int r63353_panel_activate(struct r63353_panel *rpanel)
->  {
->  	struct mipi_dsi_device *dsi =3D rpanel->dsi;
-> -	struct device *dev =3D &dsi->dev;
-> -	int i, ret;
-> +	struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D dsi };
-> +	int i;
-> =20
-> -	ret =3D mipi_dsi_dcs_soft_reset(dsi);
-> -	if (ret < 0) {
-> -		dev_err(dev, "Failed to do Software Reset (%d)\n", ret);
-> +	mipi_dsi_dcs_soft_reset_multi(&dsi_ctx);
-> +	if (dsi_ctx.accum_err)
->  		goto fail;
-> -	}
-
-This changes was definitely not what the script is doing.
-
-Maxime
-
---3msoj54ufxrpizvm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ8/mrwAKCRDj7w1vZxhR
-xaVXAP98kanq9Agy3UxY4yV8gi6eRHDpADPZ362A29nVqTaqDQD/bSjaKpH9TL2w
-y3HcrZBloZtnBL7lnxKDIKDEJT3cjws=
-=aG2R
------END PGP SIGNATURE-----
-
---3msoj54ufxrpizvm--
+> -- 
+> 2.34.1
+> 
