@@ -1,479 +1,380 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2047.outbound.protection.outlook.com [40.107.223.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3487025A333;
-	Tue, 11 Mar 2025 12:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741694606; cv=fail; b=IhXD3byM1H6jPzrmmU3WXyiI7M6ZdwuZwjFMcdEEgW20nwl6fNXS7aoibgoGHVxA3GsSH09WNZfVEfrdT8fd3ArkNEpGnNrnd6/mfIgq91a0ScRXUeG5IoV2y7dSOzBc4IGmXNl4jvJpzSd+Xvs/pM56FdFveAMc7r1OmdbGPCA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741694606; c=relaxed/simple;
-	bh=jcUlfCa3zK8yVN3BPLApmme9GRJOfcumAhd1BhTmUDk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z6hw6Xawl516oPac5H+lrphGSVRBHzTCq9yjFJ9F2e3M1zSDqXlx4sbSiH3rDY7Kq/L9OQ7kqxDPYHIa3xCgL9A8HrRLRwER38v5JXbi9XgDvOC0aciIPXCxz1yiyW8VprwfrptPk/tV7H843TCL3fyglTDFx+2jvXqEqGMqXdA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VQrflpMX; arc=fail smtp.client-ip=40.107.223.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A57D25CC70
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 12:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741694612; cv=none; b=Kn47PeEcPwHv2iWxlC3jFDFaVbx6qJ7OfJ61XMyKT0WlhCdPn9IaxwNUA1BVG8mkVqc6KZCxhfdne/ZGA6jJXVXgUwGjhay2NaUUryONxe4rXvNYYHR/ZpzY8uTrS88WPxhlGveBU4lRPYMpXTdlSxQs78UOAPHd3AfbAQICkk0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741694612; c=relaxed/simple;
+	bh=hWDVMOTtTG8kzSL7EXcquGSgf8JSTQqIzV4s/5vY758=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DiA4A6mcQj2Syo4fURNJuEcAOa0fmAMIKO7GUwAka0Sz1o8spsWkjSHpuAlSA1uKtj1BCR4H0n5f5nHYLXOnbTwe0sht7LtTo82wKL3aEp6qm+NXZvFFPfswwekS8ogL27Xa0Pco1G4mv7cP18O1M6JPbkKajxrO0763jZzNIWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=GTkhj3x7; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VQrflpMX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aySWTZQfu1QHd68GmAqrfJD4aZyVsFQluejLaCFzfeCRftvW7tQ/2fFHtDocWPSiP5TA/RXB47mNjG6Z2P+efHENbossrTyM2qSGgCcW3M+wbfNzkQCPDQwNJLtMLRkg/nN0FHqWDfAIhS+5lBQEsjtX+s9jzePX6dJ6c7nZ76zjZQM07wNrGNeDaTlqzcCEVvTxOozoV8xCTDrVE1CkFcYuWhciATTBBtKnTTtQ28qqlowjQZVtxh4zvELrAUL2gwrrMfrDjakpXe+STCYoRzTdCXxc5lULlgdYGYmRa8IXe+GWcb/3kWL8y3k1C2UO0782dwN2n2qE46sl0lvUdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=au8gNb3DWm4yuQcGGc7sxQxYRkIPzhgXVoOrVlEOcwg=;
- b=I5ywUfYpBUROtT2mlqpAV3bc2RYaZH19F2L/zZeEKPSIrwWygjfpFKLPn3Nf6eAwh86JQ/E7DjWmwQT1qGaaXbg9m11yIyLIWCVJOE9Bf60FTR0zToPMevnG3jOQGuhlbk7/BhA4MssEhVShG+5ljH0D7w4smzFBanOGMLyMnquKEDuBNgAFkNq+ZaNgOEMQ/OIb9UZj563PkuD/Aabn4yctNXc/7DpXogC2ruCN8svCn8sy8T6ugJxhTdY1yrrBzzTjbUVzgLaQJ2tiL8zWm8jHaR+++tCuW3mGtwN2O8HMzY/fYSX+WSoxHOup5YGP5FES8Ndj84V+IgN7FQ+ztw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=au8gNb3DWm4yuQcGGc7sxQxYRkIPzhgXVoOrVlEOcwg=;
- b=VQrflpMXcFU8BpiRGF1pG124VUjHy5QyRW/gojEIIbUw/KhHLw/p5URNavIaBylWvw3fK+vnTqTYjRl9Si/ULlCNpY/2dtwQYX9BQdiGWShCCUe+iiYzCY88D32D5mqWt6ORTFzObW0wmlf6friw8PPnQYxV6c0BEhXPOv+yzhs=
-Received: from MW4P221CA0027.NAMP221.PROD.OUTLOOK.COM (2603:10b6:303:8b::32)
- by CH2PR12MB9517.namprd12.prod.outlook.com (2603:10b6:610:27f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
- 2025 12:03:16 +0000
-Received: from CO1PEPF000075EE.namprd03.prod.outlook.com
- (2603:10b6:303:8b:cafe::39) by MW4P221CA0027.outlook.office365.com
- (2603:10b6:303:8b::32) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.27 via Frontend Transport; Tue,
- 11 Mar 2025 12:03:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000075EE.mail.protection.outlook.com (10.167.249.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Tue, 11 Mar 2025 12:03:16 +0000
-Received: from tapi.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Mar
- 2025 07:03:08 -0500
-From: Swapnil Sapkal <swapnil.sapkal@amd.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <irogers@google.com>, <james.clark@arm.com>
-CC: <ravi.bangoria@amd.com>, <swapnil.sapkal@amd.com>, <yu.c.chen@intel.com>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
-	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
-	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
-	<sshegde@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
-	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
-Subject: [PATCH v3 0/8] perf sched: Introduce stats tool
-Date: Tue, 11 Mar 2025 12:02:22 +0000
-Message-ID: <20250311120230.61774-1-swapnil.sapkal@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="GTkhj3x7"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cef0f03cfso16352585e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 05:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openvpn.net; s=google; t=1741694607; x=1742299407; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/SdaijiYImbVHQ86OLZGBo8ZqPFKIkT8IkG7Vksf3us=;
+        b=GTkhj3x763KWbv+Y0hUQEDGwT5XAhlNkAljDPv2hS0LW0e62BfRYoELbH5dddfhMV9
+         EzG/NEtgiw7q/3cvPhSJ4IICcBE/H8d+tAnO968ZwrcUdmmBKE+OuvhpuIl2wPB6H3g1
+         jMmQvDRV43lpGGh2YOeP6ekEjPf0SdQEm0IHkFtVF5RaOF5SLBYgfhXNm+JFyrpqj8Vu
+         qWi/YzBPK+WRd8ecjSGyqajqkONLnqieXxRW8YjE2LcKGDBBSTLPQ0Gb6liBkb+lHl31
+         /OZO1EMvgT7qS9ttPg2plyY+67zCtQ3cd8KyLVZjtkrwjBI+OSZnIq19RCLABrCM0Lwe
+         uBtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741694607; x=1742299407;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/SdaijiYImbVHQ86OLZGBo8ZqPFKIkT8IkG7Vksf3us=;
+        b=lHTSWL9L7572Abft+AmFhkfmz6gkkCB0+oiWTRc7wMD3SwY3zuHT++kAxrdIixOQwJ
+         pyN+CjDcDKtyE4oBgdIBYs6GLnNEbi9n9GYkhAeN/wHx2T1iM6nhxARSRQW77MQsKOtc
+         olJ44GyHkOBORQMVhxRzqRe20U2rqOTyQNR4TtJFwu5oBTi4gBCJ35270RFxR+NJnjON
+         BAuUGey0RMghwUO9QbeN3agLvGc303yi36SM57VduJsmid5WlmIgR4hnP48XF7M0ERBU
+         nji4rw+xL0xVPI7u//QHDA7E1vv9hDjrqo7z2hfhgYAD7pEO3cWxb9BcUzduuO9ZDoZE
+         IZyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWV2fOrnpyqSrWw3FI2ADzmh+Y5D7O8rd3P2ObTiQiVjYrY1oo88zoSW4yYt0FTF1/Bk6ZsJ22aUdTcy2k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkV61w1L0HpKC8axrvuvq4yFFCWz3pYzwrUQOL1UwdFXV7a+MC
+	ipjdAt4ZxUhUMF4L8iP/J84Gv65LIPZ8JF1h85EtzfBaX/g3rU2eLa8rHpQBfBPKeQ+0LIxte8d
+	A
+X-Gm-Gg: ASbGnct7pGj3hmA/rNAPVSHbRyTBmGSQilyHNOzBTZGJszOu69mEAt4vek1K32qccb9
+	Y/+1P35NrE8MmB+A/mNdWu9hRRJzOOgzDWfSfFVe1BL085cwQTPL7MnCPss3AY/sKhu7IcxRW1h
+	33nl5rLZWn5iYr6HZMthBhFL2IHjSWD8cPh++CYfNJKvDJ6AaX+qHtTo93cvdoaPaR7Omfu05kq
+	b9zbHQcR4V/YkMDLNthEs1Iqpu+FApekXIYd2AI8ZjW2CE9VTn42fjAaDZaeLyhXOxLMBLLYptu
+	TfplfLaxyOu75NQw3URRc1TJSs/dC3nf9LPSUqZ40w==
+X-Google-Smtp-Source: AGHT+IE+0O16KQuHrtXAFGlI6hGTyiHshsFfye/oYWhaMACrf1M38aNCQfqMi3vKfE9IiZghXS40hA==
+X-Received: by 2002:a05:600c:3b04:b0:43c:f44c:72b7 with SMTP id 5b1f17b1804b1-43cf44c7703mr94680005e9.14.1741694607268;
+        Tue, 11 Mar 2025 05:03:27 -0700 (PDT)
+Received: from [127.0.0.1] ([2001:67c:2fbc:1:52de:66e8:f2da:9714])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ceafc09d5sm110537605e9.31.2025.03.11.05.03.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 05:03:26 -0700 (PDT)
+From: Antonio Quartulli <antonio@openvpn.net>
+Date: Tue, 11 Mar 2025 13:02:18 +0100
+Subject: [PATCH net-next v22 17/23] ovpn: add support for updating local or
+ remote UDP endpoint
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000075EE:EE_|CH2PR12MB9517:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24bd8f8d-3c89-4afb-1a12-08dd6094b509
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|7416014|36860700013|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ht/VtCvITtx+S2rp0vGYVNaa+WcS86tvKZYHYVxZ7ebVyFClp6Dh+jmUN3RI?=
- =?us-ascii?Q?XccaKQpgHBfW63x/b2tOreXLyqxucYncs0sAHRiLmw1Jx6Km4XBzPmC68thR?=
- =?us-ascii?Q?d6QxENacLXm8lroXkMNLiee3w/+ABSDljVc/UHNhVNubSDCChVlhAUAFpOQq?=
- =?us-ascii?Q?yl4hPtDyD7OO43Ne4FNqieK6hOCv3umL6yjfps206km9htGbRr0u1Q+MKJ4G?=
- =?us-ascii?Q?qAYDHeeEXAStggckaMjL7Gwxr40S/LrzY7WZO5ctNpRaXKMAPykr573VKigi?=
- =?us-ascii?Q?5GQVPNoBmfVxmId2ruv2kobY6F/9VpPHRZOEzjeOZWpg/jgRChu1tkT4pfH/?=
- =?us-ascii?Q?YiYzuO4ERRwuKPAk55p83zu+6/Ty6Xfxy+vRI8iGLa4Goklk1TrlVcNnBvY9?=
- =?us-ascii?Q?zH0OmFr1GO5yY08h21lg5UN6AUqf9E/e5bj5T1eLc/iqDvFMsfs/AQhEiVam?=
- =?us-ascii?Q?U+UDvbr+ZsEACaJhrXKg97ybaY2NG+uvup1/9cHTkjfQIa4kCdCz1wjw6I4w?=
- =?us-ascii?Q?t+5tm2QEBMHwHbPLUvzteWVUHKyrvOlTDIBfC1FQhuPe6eNinWTGYLEqIwsW?=
- =?us-ascii?Q?2AkJEomSwfgoOnRWQySR5+8dqQgiWx7tWad69PbEqpvIidBbTOe3W3Ml+Rcl?=
- =?us-ascii?Q?PzPlWa1WvL0F60i+vOmkJjEGukutAbvyfVWCJaihIiHtJfpScTA/FvaOwByF?=
- =?us-ascii?Q?5sQTB1aSh9FnaulGKfYIkqKN0AmviPjFTIOVSfLYqLO0Djqf+B9xphxDwy7K?=
- =?us-ascii?Q?yHLliQyvhU30sUci8qH0+1rOjtINx4TAsR/o0N38ZVT3KDmYp1b9gLoyCBkq?=
- =?us-ascii?Q?J66EthXC4W2/fYAciYEGt8yAW4PBGUVC+PaxOvmNfMiqbUMLxajGuv9Ro+Z9?=
- =?us-ascii?Q?wWPogWENQTFj3rxKWdaYyu+1Q/QSm2hbyPcmfRB70250ABxpIXudM8L/GETk?=
- =?us-ascii?Q?40d5zcxXWRKATV343oEbcj/xNwWDO+z0peOcoI7uwOjL8SH20zawiZYSUREU?=
- =?us-ascii?Q?si++SgT3yOx60tQk/erhoBdKU6PK9tS52A4KtmoD/i6ATMIxtV+HSaa9Yl7K?=
- =?us-ascii?Q?Fbtq7LdXl1dVGGHJgYeKlKdLfZbdI0OU1Y0W5GmMeV3RpjWlIVH/s8mwue2Y?=
- =?us-ascii?Q?uSgEiUZ/wX+KOR5l36uSHolzOxf5zKIju/sJwtHhLek1WTcrAOAtBm/O7iWF?=
- =?us-ascii?Q?nZGhbIpJSOSLUcI2O4DrRs23npFPRekQbgGXfHVfQOL6wjMRZf+UgpmtnKzN?=
- =?us-ascii?Q?tEyvDzmrpHm2gdXdYP22wAeT8ZbEvJXy8Y6QZNaAOKRfO5sqglktJAfQLDmX?=
- =?us-ascii?Q?KsFhf0gPshpcyEXiHs2NbBvkE0Sgnm7UWs02Gy+OssSMpPQa397/+glzY6UI?=
- =?us-ascii?Q?Qq63PbrUgR8epgyVvTAYxEIgRZoIEFrRKnzQ28T6w9U+qEHhM+TffXPWfA6o?=
- =?us-ascii?Q?yCRE5xVQ4ZWIORNuPDgEdxkQoF0k8GKf?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 12:03:16.3614
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24bd8f8d-3c89-4afb-1a12-08dd6094b509
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000075EE.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB9517
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250311-b4-ovpn-v22-17-2b7b02155412@openvpn.net>
+References: <20250311-b4-ovpn-v22-0-2b7b02155412@openvpn.net>
+In-Reply-To: <20250311-b4-ovpn-v22-0-2b7b02155412@openvpn.net>
+To: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Donald Hunter <donald.hunter@gmail.com>, 
+ Antonio Quartulli <antonio@openvpn.net>, Shuah Khan <shuah@kernel.org>, 
+ sd@queasysnail.net, ryazanov.s.a@gmail.com, 
+ Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9204; i=antonio@openvpn.net;
+ h=from:subject:message-id; bh=hWDVMOTtTG8kzSL7EXcquGSgf8JSTQqIzV4s/5vY758=;
+ b=owEBbQGS/pANAwAIAQtw5TqgONWHAcsmYgBn0CZxiWtJsKn8YaoM3h/YYT9VjsdFW8EnjUM2L
+ 7gFwfX3Dr2JATMEAAEIAB0WIQSZq9xs+NQS5N5fwPwLcOU6oDjVhwUCZ9AmcQAKCRALcOU6oDjV
+ h8GjCAC2rcBNx3KvSQ1jFPIqbGn1jLSNSpi5amluhTt7dzc5L7pB5PWZSkYc6b+VP+UAHa0CHZz
+ q/2pLWJ8uQ2qDfKR22K0pIJTqRVu0FXKO3ny66K6zl+4EUrPf1ztWE52voVAGs4DcwsAQI1zibi
+ hIoNSc/KddphsZMX1YWVaaVb5KvLX9zUjgjV0By+Fijg0TStO1bH1r3qVPqUFJaWvQeXFY6W+Yw
+ RZUg8g/czdhooa+t5fjf1KNC0p8MmRKrsSqMbGxLPY/05g3q98NyxGnkPTya5SXQxW/wrh8TkHs
+ 2INQ2x6sGIgd4yIpbF8Q5kv4VZ3ox2IS6WzjDAslbvaojmBV
+X-Developer-Key: i=antonio@openvpn.net; a=openpgp;
+ fpr=CABDA1282017C267219885C748F0CCB68F59D14C
 
-MOTIVATION
-----------
+In case of UDP links, the local or remote endpoint used to communicate
+with a given peer may change without a connection restart.
 
-Existing `perf sched` is quite exhaustive and provides lot of insights
-into scheduler behavior but it quickly becomes impractical to use for
-long running or scheduler intensive workload. For ex, `perf sched record`
-has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
-on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
-generates huge 56G perf.data for which perf takes ~137 mins to prepare
-and write it to disk [1].
+Add support for learning the new address in case of change.
 
-Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
-and generates samples on a tracepoint hit, `perf sched stats record` takes
-snapshot of the /proc/schedstat file before and after the workload, i.e.
-there is almost zero interference on workload run. Also, it takes very
-minimal time to parse /proc/schedstat, convert it into perf samples and
-save those samples into perf.data file. Result perf.data file is much
-smaller. So, overall `perf sched stats record` is much more light weight
-compare to `perf sched record`.
+Signed-off-by: Antonio Quartulli <antonio@openvpn.net>
+---
+ drivers/net/ovpn/io.c   |   8 ++
+ drivers/net/ovpn/peer.c | 213 +++++++++++++++++++++++++++++++++++++++++++++---
+ drivers/net/ovpn/peer.h |   2 +
+ 3 files changed, 210 insertions(+), 13 deletions(-)
 
-We, internally at AMD, have been using this (a variant of this, known as
-"sched-scoreboard"[2]) and found it to be very useful to analyse impact
-of any scheduler code changes[3][4]. Prateek used v2[5] of this patch
-series to report the analysis[6][7].
-
-Please note that, this is not a replacement of perf sched record/report.
-The intended users of the new tool are scheduler developers, not regular
-users.
-
-USAGE
------
-
-  # perf sched stats record
-  # perf sched stats report
-  # perf sched stats diff
-
-Note: Although `perf sched stats` tool supports workload profiling syntax
-(i.e. -- <workload> ), the recorded profile is still systemwide since the
-/proc/schedstat is a systemwide file.
-
-HOW TO INTERPRET THE REPORT
----------------------------
-
-The `perf sched stats report` starts with description of the columns
-present in the report. These column names are gievn before cpu and
-domain stats to improve the readability of the report.
-
-  ----------------------------------------------------------------------------------------------------
-  DESC                    -> Description of the field
-  COUNT                   -> Value of the field
-  PCT_CHANGE              -> Percent change with corresponding base value
-  AVG_JIFFIES             -> Avg time in jiffies between two consecutive occurrence of event
-  ----------------------------------------------------------------------------------------------------
-
-Next is the total profiling time in terms of jiffies:
-
-  ----------------------------------------------------------------------------------------------------
-  Time elapsed (in jiffies)                                   :       24537
-  ----------------------------------------------------------------------------------------------------
-
-Next is CPU scheduling statistics. These are simple diffs of
-/proc/schedstat CPU lines along with description. The report also
-prints % relative to base stat.
-
-In the example below, schedule() left the CPU0 idle 98.19% of the time.
-16.54% of total try_to_wake_up() was to wakeup local CPU. And, the total
-waittime by tasks on CPU0 is 0.49% of the total runtime by tasks on the
-same CPU.
-
-  ----------------------------------------------------------------------------------------------------
-  CPU 0
-  ----------------------------------------------------------------------------------------------------
-  DESC                                                                COUNT  PCT_CHANGE
-  ----------------------------------------------------------------------------------------------------
-  sched_yield() count                                         :           0
-  Legacy counter can be ignored                               :           0
-  schedule() called                                           :       17138
-  schedule() left the processor idle                          :       16827  (  98.19% )
-  try_to_wake_up() was called                                 :         508
-  try_to_wake_up() was called to wake up the local cpu        :          84  (  16.54% )
-  total runtime by tasks on this processor (in jiffies)       :  2408959243
-  total waittime by tasks on this processor (in jiffies)      :    11731825  (  0.49% )
-  total timeslices run on this cpu                            :         311
-  ----------------------------------------------------------------------------------------------------
-
-Next is load balancing statistics. For each of the sched domains
-(eg: `SMT`, `MC`, `DIE`...), the scheduler computes statistics under
-the following three categories:
-
-  1) Idle Load Balance: Load balancing performed on behalf of a long
-                        idling CPU by some other CPU.
-  2) Busy Load Balance: Load balancing performed when the CPU was busy.
-  3) New Idle Balance : Load balancing performed when a CPU just became
-                        idle.
-
-Under each of these three categories, sched stats report provides
-different load balancing statistics. Along with direct stats, the
-report also contains derived metrics prefixed with *. Example:
-
-  ----------------------------------------------------------------------------------------------------
-  CPU 0 DOMAIN SMT CPUS <0, 64>
-  ----------------------------------------------------------------------------------------------------
-  DESC                                                                     COUNT     AVG_JIFFIES
-  ----------------------------------------- <Category idle> ------------------------------------------
-  load_balance() count on cpu idle                                 :          50   $      490.74 $
-  load_balance() found balanced on cpu idle                        :          42   $      584.21 $
-  load_balance() move task failed on cpu idle                      :           8   $     3067.12 $
-  imbalance sum on cpu idle                                        :           8
-  pull_task() count on cpu idle                                    :           0
-  pull_task() when target task was cache-hot on cpu idle           :           0
-  load_balance() failed to find busier queue on cpu idle           :           0   $        0.00 $
-  load_balance() failed to find busier group on cpu idle           :          42   $      584.21 $
-  *load_balance() success count on cpu idle                        :           0
-  *avg task pulled per successful lb attempt (cpu idle)            :        0.00
-  ----------------------------------------- <Category busy> ------------------------------------------
-  load_balance() count on cpu busy                                 :           2   $    12268.50 $
-  load_balance() found balanced on cpu busy                        :           2   $    12268.50 $
-  load_balance() move task failed on cpu busy                      :           0   $        0.00 $
-  imbalance sum on cpu busy                                        :           0
-  pull_task() count on cpu busy                                    :           0
-  pull_task() when target task was cache-hot on cpu busy           :           0
-  load_balance() failed to find busier queue on cpu busy           :           0   $        0.00 $
-  load_balance() failed to find busier group on cpu busy           :           1   $    24537.00 $
-  *load_balance() success count on cpu busy                        :           0
-  *avg task pulled per successful lb attempt (cpu busy)            :        0.00
-  ---------------------------------------- <Category newidle> ----------------------------------------
-  load_balance() count on cpu newly idle                           :         427   $       57.46 $
-  load_balance() found balanced on cpu newly idle                  :         382   $       64.23 $
-  load_balance() move task failed on cpu newly idle                :          45   $      545.27 $
-  imbalance sum on cpu newly idle                                  :          48
-  pull_task() count on cpu newly idle                              :           0
-  pull_task() when target task was cache-hot on cpu newly idle     :           0
-  load_balance() failed to find busier queue on cpu newly idle     :           0   $        0.00 $
-  load_balance() failed to find busier group on cpu newly idle     :         382   $       64.23 $
-  *load_balance() success count on cpu newly idle                  :           0
-  *avg task pulled per successful lb attempt (cpu newly idle)      :        0.00
-  ----------------------------------------------------------------------------------------------------
-
-Consider following line:
-
-  load_balance() found balanced on cpu newly idle                  :         382    $      64.23 $
-
-While profiling was active, the load-balancer found 382 times the load
-needs to be balanced on a newly idle CPU 0. Following value encapsulated
-inside $ is average jiffies between two events (24537 / 382 = 64.23).
-
-Next are active_load_balance() stats. alb did not trigger while the
-profiling was active, hence it's all 0s.
-
-  --------------------------------- <Category active_load_balance()> ---------------------------------
-  active_load_balance() count                                      :           0
-  active_load_balance() move task failed                           :           0
-  active_load_balance() successfully moved a task                  :           0
-  ----------------------------------------------------------------------------------------------------
-
-Next are sched_balance_exec() and sched_balance_fork() stats. They are
-not used but we kept it in RFC just for legacy purpose. Unless opposed,
-we plan to remove them in next revision.
-
-Next are wakeup statistics. For every domain, the report also shows
-task-wakeup statistics. Example:
-
-  ------------------------------------------- <Wakeup Info> ------------------------------------------
-  try_to_wake_up() awoke a task that last ran on a diff cpu       :       12070
-  try_to_wake_up() moved task because cache-cold on own cpu       :        3324
-  try_to_wake_up() started passive balancing                      :           0
-  ----------------------------------------------------------------------------------------------------
-
-Same set of stats are reported for each CPU and each domain level.
-
-HOW TO INTERPRET THE DIFF
--------------------------
-
-The `perf sched stats diff` will also start with explaining the columns
-present in the diff. Then it will show the diff in time in terms of
-jiffies. The order of the values depends on the order of input data
-files. Example:
-
-  ----------------------------------------------------------------------------------------------------
-  Time elapsed (in jiffies)                                        :        2009,       2001
-  ----------------------------------------------------------------------------------------------------
-
-Below is the sample representing the difference in cpu and domain stats of
-two runs. Here third column or the values enclosed in `|...|` shows the
-percent change between the two. Second and fourth columns shows the
-side-by-side representions of the corresponding fields from `perf sched
-stats report`.
-
-  ----------------------------------------------------------------------------------------------------
-  CPU <ALL CPUS SUMMARY>
-  ----------------------------------------------------------------------------------------------------
-  DESC                                                                    COUNT1      COUNT2  PCT_CHANGE  PCT_CHANGE1 PCT_CHANGE2
-  ----------------------------------------------------------------------------------------------------
-  sched_yield() count                                              :           0,          0  |    0.00% |
-  Legacy counter can be ignored                                    :           0,          0  |    0.00% |
-  schedule() called                                                :      442939,     447305  |    0.99% |
-  schedule() left the processor idle                               :      154012,     174657  |   13.40% |  (   34.77,      39.05 )
-  try_to_wake_up() was called                                      :      306810,     258076  |  -15.88% |
-  try_to_wake_up() was called to wake up the local cpu             :       21313,      14130  |  -33.70% |  (    6.95,       5.48 )
-  total runtime by tasks on this processor (in jiffies)            :  6235330010, 5463133934  |  -12.38% |
-  total waittime by tasks on this processor (in jiffies)           :  8349785693, 5755097654  |  -31.07% |  (  133.91,     105.34 )
-  total timeslices run on this cpu                                 :      288869,     272599  |   -5.63% |
-  ----------------------------------------------------------------------------------------------------
-
-Below is the sample of domain stats diff:
-
-  ----------------------------------------------------------------------------------------------------
-  CPU <ALL CPUS SUMMARY>, DOMAIN SMT CPUS <0, 64>
-  ----------------------------------------------------------------------------------------------------
-  DESC                                                                    COUNT1      COUNT2  PCT_CHANGE     AVG_JIFFIES1  AVG_JIFFIES2
-  ----------------------------------------- <Category busy> ------------------------------------------
-  load_balance() count on cpu busy                                 :         154,         80  |  -48.05% |  $       13.05,       25.01 $
-  load_balance() found balanced on cpu busy                        :         120,         66  |  -45.00% |  $       16.74,       30.32 $
-  load_balance() move task failed on cpu busy                      :           0,          4  |    0.00% |  $        0.00,      500.25 $
-  imbalance sum on cpu busy                                        :        1640,        299  |  -81.77% |
-  pull_task() count on cpu busy                                    :          55,         18  |  -67.27% |
-  pull_task() when target task was cache-hot on cpu busy           :           0,          0  |    0.00% |
-  load_balance() failed to find busier queue on cpu busy           :           0,          0  |    0.00% |  $        0.00,        0.00 $
-  load_balance() failed to find busier group on cpu busy           :         120,         66  |  -45.00% |  $       16.74,       30.32 $
-  *load_balance() success count on cpu busy                        :          34,         10  |  -70.59% |
-  *avg task pulled per successful lb attempt (cpu busy)            :        1.62,       1.80  |   11.27% |
-  ----------------------------------------- <Category idle> ------------------------------------------
-  load_balance() count on cpu idle                                 :         299,        481  |   60.87% |  $        6.72,        4.16 $
-  load_balance() found balanced on cpu idle                        :         197,        331  |   68.02% |  $       10.20,        6.05 $
-  load_balance() move task failed on cpu idle                      :           1,          2  |  100.00% |  $     2009.00,     1000.50 $
-  imbalance sum on cpu idle                                        :         145,        222  |   53.10% |
-  pull_task() count on cpu idle                                    :         133,        199  |   49.62% |
-  pull_task() when target task was cache-hot on cpu idle           :           0,          0  |    0.00% |
-  load_balance() failed to find busier queue on cpu idle           :           0,          0  |    0.00% |  $        0.00,        0.00 $
-  load_balance() failed to find busier group on cpu idle           :         197,        331  |   68.02% |  $       10.20,        6.05 $
-  *load_balance() success count on cpu idle                        :         101,        148  |   46.53% |
-  *avg task pulled per successful lb attempt (cpu idle)            :        1.32,       1.34  |    2.11% |
-  ---------------------------------------- <Category newidle> ----------------------------------------
-  load_balance() count on cpu newly idle                           :       21791,      15976  |  -26.69% |  $        0.09,        0.13 $
-  load_balance() found balanced on cpu newly idle                  :       16226,      12125  |  -25.27% |  $        0.12,        0.17 $
-  load_balance() move task failed on cpu newly idle                :         236,         88  |  -62.71% |  $        8.51,       22.74 $
-  imbalance sum on cpu newly idle                                  :        6655,       4628  |  -30.46% |
-  pull_task() count on cpu newly idle                              :        5329,       3763  |  -29.39% |
-  pull_task() when target task was cache-hot on cpu newly idle     :           0,          0  |    0.00% |
-  load_balance() failed to find busier queue on cpu newly idle     :           0,          0  |    0.00% |  $        0.00,        0.00 $
-  load_balance() failed to find busier group on cpu newly idle     :       12649,       9914  |  -21.62% |  $        0.16,        0.20 $
-  *load_balance() success count on cpu newly idle                  :        5329,       3763  |  -29.39% |
-  *avg task pulled per successful lb attempt (cpu newly idle)      :        1.00,       1.00  |    0.00% |
-  --------------------------------- <Category active_load_balance()> ---------------------------------
-  active_load_balance() count                                      :           0,          0  |    0.00% |
-  active_load_balance() move task failed                           :           0,          0  |    0.00% |
-  active_load_balance() successfully moved a task                  :           0,          0  |    0.00% |
-  --------------------------------- <Category sched_balance_exec()> ----------------------------------
-  sbe_count is not used                                            :           0,          0  |    0.00% |
-  sbe_balanced is not used                                         :           0,          0  |    0.00% |
-  sbe_pushed is not used                                           :           0,          0  |    0.00% |
-  --------------------------------- <Category sched_balance_fork()> ----------------------------------
-  sbf_count is not used                                            :           0,          0  |    0.00% |
-  sbf_balanced is not used                                         :           0,          0  |    0.00% |
-  sbf_pushed is not used                                           :           0,          0  |    0.00% |
-  ------------------------------------------ <Wakeup Info> -------------------------------------------
-  try_to_wake_up() awoke a task that last ran on a diff cpu        :       16606,      10214  |  -38.49% |
-  try_to_wake_up() moved task because cache-cold on own cpu        :        3184,       2534  |  -20.41% |
-  try_to_wake_up() started passive balancing                       :           0,          0  |    0.00% |
-  ----------------------------------------------------------------------------------------------------
-
-v2: https://lore.kernel.org/all/20241122084452.1064968-1-swapnil.sapkal@amd.com/
-v2->v3:
- - Add perf unit test for basic sched stats functionalities
- - Describe new tool, it's usage and interpretation of report data in the
-   perf-sched man page.
- - Add /proc/schedstat version 17 support.
-
-v1: https://lore.kernel.org/lkml/20240916164722.1838-1-ravi.bangoria@amd.com
-v1->v2
- - Add the support for `perf sched stats diff`
- - Add column header in report for better readability. Use
-   procfs__mountpoint for consistency. Add hint for enabling
-   CONFIG_SCHEDSTAT if disabled. [James Clark]
- - Use a single header file for both cpu and domain fileds. Change
-   the layout of structs to minimise the padding. I tried changing
-   `v15` to `15` in the header files but it was not giving any
-   benefits so drop the idea. [Namhyung Kim]
- - Add tested-by.
-
-RFC: https://lore.kernel.org/r/20240508060427.417-1-ravi.bangoria@amd.com
-RFC->v1:
- - [Kernel] Print domain name along with domain number in /proc/schedstat
-   file.
- - s/schedstat/stats/ for the subcommand.
- - Record domain name and cpumask details, also show them in report.
- - Add CPU filtering capability at record and report time.
- - Add /proc/schedstat v16 support.
- - Live mode support. Similar to perf stat command, live mode prints the
-   sched stats on the stdout.
- - Add pager support in `perf sched stats report` for better scrolling.
- - Some minor cosmetic changes in report output to improve readability.
- - Rebase to latest perf-tools-next/perf-tools-next (1de5b5dcb835).
-
-TODO:
- - perf sched stats records /proc/schedstat which is a CPU and domain
-   level scheduler statistic. We are planning to add taskstat tool which
-   reads task stats from procfs and generate scheduler statistic report
-   at task granularity. this will probably a standalone tool, something
-   like `perf sched taskstat record/report`.
- - Except pre-processor related checkpatch warnings, we have addressed
-   most of the other possible warnings.
-
-Patches are prepared on v6.14-rc6 (80e54e84911a).
-
-[1] https://youtu.be/lg-9aG2ajA0?t=283
-[2] https://github.com/AMDESE/sched-scoreboard
-[3] https://lore.kernel.org/lkml/c50bdbfe-02ce-c1bc-c761-c95f8e216ca0@amd.com/
-[4] https://lore.kernel.org/lkml/3e32bec6-5e59-c66a-7676-7d15df2c961c@amd.com/
-[5] https://lore.kernel.org/all/20241122084452.1064968-1-swapnil.sapkal@amd.com/
-[6] https://lore.kernel.org/lkml/3170d16e-eb67-4db8-a327-eb8188397fdb@amd.com/
-[7] https://lore.kernel.org/lkml/feb31b6e-6457-454c-a4f3-ce8ad96bf8de@amd.com/
-
-Swapnil Sapkal (8):
-  perf sched stats: Add record and rawdump support
-  perf sched stats: Add schedstat v16 support
-  perf sched stats: Add schedstat v17 support
-  perf sched stats: Add support for report subcommand
-  perf sched stats: Add support for live mode
-  perf sched stats: Add support for diff subcommand
-  perf sched stats: Add basic perf sched stats test
-  perf sched stats: Add details in man page
-
- tools/lib/perf/Documentation/libperf.txt    |   2 +
- tools/lib/perf/Makefile                     |   2 +-
- tools/lib/perf/include/perf/event.h         |  70 ++
- tools/lib/perf/include/perf/schedstat-v15.h | 142 +++
- tools/lib/perf/include/perf/schedstat-v16.h | 142 +++
- tools/lib/perf/include/perf/schedstat-v17.h | 160 ++++
- tools/perf/Documentation/perf-sched.txt     | 243 ++++-
- tools/perf/builtin-inject.c                 |   2 +
- tools/perf/builtin-sched.c                  | 978 +++++++++++++++++++-
- tools/perf/tests/shell/perf_sched_stats.sh  |  64 ++
- tools/perf/util/event.c                     | 110 +++
- tools/perf/util/event.h                     |   2 +
- tools/perf/util/session.c                   |  20 +
- tools/perf/util/synthetic-events.c          | 260 ++++++
- tools/perf/util/synthetic-events.h          |   3 +
- tools/perf/util/tool.c                      |  20 +
- tools/perf/util/tool.h                      |   4 +-
- 17 files changed, 2220 insertions(+), 4 deletions(-)
- create mode 100644 tools/lib/perf/include/perf/schedstat-v15.h
- create mode 100644 tools/lib/perf/include/perf/schedstat-v16.h
- create mode 100644 tools/lib/perf/include/perf/schedstat-v17.h
- create mode 100755 tools/perf/tests/shell/perf_sched_stats.sh
+diff --git a/drivers/net/ovpn/io.c b/drivers/net/ovpn/io.c
+index 6ee1a40082ef637285d7f7f8183c53140583b716..5b673eae255033b9d7d6e7890a46686403d7c222 100644
+--- a/drivers/net/ovpn/io.c
++++ b/drivers/net/ovpn/io.c
+@@ -96,6 +96,7 @@ void ovpn_decrypt_post(void *data, int ret)
+ 	struct ovpn_crypto_key_slot *ks;
+ 	unsigned int payload_offset = 0;
+ 	struct sk_buff *skb = data;
++	struct ovpn_socket *sock;
+ 	struct ovpn_peer *peer;
+ 	__be16 proto;
+ 	__be32 *pid;
+@@ -137,6 +138,13 @@ void ovpn_decrypt_post(void *data, int ret)
+ 	/* keep track of last received authenticated packet for keepalive */
+ 	WRITE_ONCE(peer->last_recv, ktime_get_real_seconds());
+ 
++	rcu_read_lock();
++	sock = rcu_dereference(peer->sock);
++	if (sock && sock->sock->sk->sk_protocol == IPPROTO_UDP)
++		/* check if this peer changed local or remote endpoint */
++		ovpn_peer_endpoints_update(peer, skb);
++	rcu_read_unlock();
++
+ 	/* point to encapsulated IP packet */
+ 	__skb_pull(skb, payload_offset);
+ 
+diff --git a/drivers/net/ovpn/peer.c b/drivers/net/ovpn/peer.c
+index 45e87ac155b554044388490a403f64c777d283a6..0d8b12fd5de4cd6fe15455b435c7d6807203a825 100644
+--- a/drivers/net/ovpn/peer.c
++++ b/drivers/net/ovpn/peer.c
+@@ -127,6 +127,206 @@ struct ovpn_peer *ovpn_peer_new(struct ovpn_priv *ovpn, u32 id)
+ 	return peer;
+ }
+ 
++/**
++ * ovpn_peer_reset_sockaddr - recreate binding for peer
++ * @peer: peer to recreate the binding for
++ * @ss: sockaddr to use as remote endpoint for the binding
++ * @local_ip: local IP for the binding
++ *
++ * Return: 0 on success or a negative error code otherwise
++ */
++static int ovpn_peer_reset_sockaddr(struct ovpn_peer *peer,
++				    const struct sockaddr_storage *ss,
++				    const void *local_ip)
++{
++	struct ovpn_bind *bind;
++	size_t ip_len;
++
++	lockdep_assert_held(&peer->lock);
++
++	/* create new ovpn_bind object */
++	bind = ovpn_bind_from_sockaddr(ss);
++	if (IS_ERR(bind))
++		return PTR_ERR(bind);
++
++	if (ss->ss_family == AF_INET) {
++		ip_len = sizeof(struct in_addr);
++	} else if (ss->ss_family == AF_INET6) {
++		ip_len = sizeof(struct in6_addr);
++	} else {
++		net_dbg_ratelimited("%s: invalid family %u for remote endpoint for peer %u\n",
++				    netdev_name(peer->ovpn->dev),
++				    ss->ss_family, peer->id);
++		kfree(bind);
++		return -EINVAL;
++	}
++
++	memcpy(&bind->local, local_ip, ip_len);
++
++	/* set binding */
++	ovpn_bind_reset(peer, bind);
++
++	return 0;
++}
++
++/* variable name __tbl2 needs to be different from __tbl1
++ * in the macro below to avoid confusing clang
++ */
++#define ovpn_get_hash_slot(_tbl, _key, _key_len) ({	\
++	typeof(_tbl) *__tbl2 = &(_tbl);			\
++	jhash(_key, _key_len, 0) % HASH_SIZE(*__tbl2);	\
++})
++
++#define ovpn_get_hash_head(_tbl, _key, _key_len) ({		\
++	typeof(_tbl) *__tbl1 = &(_tbl);				\
++	&(*__tbl1)[ovpn_get_hash_slot(*__tbl1, _key, _key_len)];\
++})
++
++/**
++ * ovpn_peer_endpoints_update - update remote or local endpoint for peer
++ * @peer: peer to update the remote endpoint for
++ * @skb: incoming packet to retrieve the source/destination address from
++ */
++void ovpn_peer_endpoints_update(struct ovpn_peer *peer, struct sk_buff *skb)
++{
++	struct hlist_nulls_head *nhead;
++	struct sockaddr_storage ss;
++	struct sockaddr_in6 *sa6;
++	bool reset_cache = false;
++	struct sockaddr_in *sa;
++	struct ovpn_bind *bind;
++	const void *local_ip;
++	size_t salen = 0;
++
++	spin_lock_bh(&peer->lock);
++	bind = rcu_dereference_protected(peer->bind,
++					 lockdep_is_held(&peer->lock));
++	if (unlikely(!bind))
++		goto unlock;
++
++	switch (skb->protocol) {
++	case htons(ETH_P_IP):
++		/* float check */
++		if (unlikely(!ovpn_bind_skb_src_match(bind, skb))) {
++			/* unconditionally save local endpoint in case
++			 * of float, as it may have changed as well
++			 */
++			local_ip = &ip_hdr(skb)->daddr;
++			sa = (struct sockaddr_in *)&ss;
++			sa->sin_family = AF_INET;
++			sa->sin_addr.s_addr = ip_hdr(skb)->saddr;
++			sa->sin_port = udp_hdr(skb)->source;
++			salen = sizeof(*sa);
++			reset_cache = true;
++			break;
++		}
++
++		/* if no float happened, let's double check if the local endpoint
++		 * has changed
++		 */
++		if (unlikely(bind->local.ipv4.s_addr != ip_hdr(skb)->daddr)) {
++			net_dbg_ratelimited("%s: learning local IPv4 for peer %d (%pI4 -> %pI4)\n",
++					    netdev_name(peer->ovpn->dev),
++					    peer->id, &bind->local.ipv4.s_addr,
++					    &ip_hdr(skb)->daddr);
++			bind->local.ipv4.s_addr = ip_hdr(skb)->daddr;
++			reset_cache = true;
++		}
++		break;
++	case htons(ETH_P_IPV6):
++		/* float check */
++		if (unlikely(!ovpn_bind_skb_src_match(bind, skb))) {
++			/* unconditionally save local endpoint in case
++			 * of float, as it may have changed as well
++			 */
++			local_ip = &ipv6_hdr(skb)->daddr;
++			sa6 = (struct sockaddr_in6 *)&ss;
++			sa6->sin6_family = AF_INET6;
++			sa6->sin6_addr = ipv6_hdr(skb)->saddr;
++			sa6->sin6_port = udp_hdr(skb)->source;
++			sa6->sin6_scope_id = ipv6_iface_scope_id(&ipv6_hdr(skb)->saddr,
++								 skb->skb_iif);
++			salen = sizeof(*sa6);
++			reset_cache = true;
++			break;
++		}
++
++		/* if no float happened, let's double check if the local endpoint
++		 * has changed
++		 */
++		if (unlikely(!ipv6_addr_equal(&bind->local.ipv6,
++					      &ipv6_hdr(skb)->daddr))) {
++			net_dbg_ratelimited("%s: learning local IPv6 for peer %d (%pI6c -> %pI6c\n",
++					    netdev_name(peer->ovpn->dev),
++					    peer->id, &bind->local.ipv6,
++					    &ipv6_hdr(skb)->daddr);
++			bind->local.ipv6 = ipv6_hdr(skb)->daddr;
++			reset_cache = true;
++		}
++		break;
++	default:
++		goto unlock;
++	}
++
++	if (unlikely(reset_cache))
++		dst_cache_reset(&peer->dst_cache);
++
++	/* if the peer did not float, we can bail out now */
++	if (likely(!salen))
++		goto unlock;
++
++	if (unlikely(ovpn_peer_reset_sockaddr(peer,
++					      (struct sockaddr_storage *)&ss,
++					      local_ip) < 0))
++		goto unlock;
++
++	net_dbg_ratelimited("%s: peer %d floated to %pIScp",
++			    netdev_name(peer->ovpn->dev), peer->id, &ss);
++
++	spin_unlock_bh(&peer->lock);
++
++	/* rehashing is required only in MP mode as P2P has one peer
++	 * only and thus there is no hashtable
++	 */
++	if (peer->ovpn->mode == OVPN_MODE_MP) {
++		spin_lock_bh(&peer->ovpn->lock);
++		spin_lock_bh(&peer->lock);
++		bind = rcu_dereference_protected(peer->bind,
++						 lockdep_is_held(&peer->lock));
++		if (unlikely(!bind)) {
++			spin_unlock_bh(&peer->lock);
++			spin_unlock_bh(&peer->ovpn->lock);
++			return;
++		}
++
++		/* This function may be invoked concurrently, therefore another
++		 * float may have happened in parallel: perform rehashing
++		 * using the peer->bind->remote directly as key
++		 */
++
++		switch (bind->remote.in4.sin_family) {
++		case AF_INET:
++			salen = sizeof(*sa);
++			break;
++		case AF_INET6:
++			salen = sizeof(*sa6);
++			break;
++		}
++
++		/* remove old hashing */
++		hlist_nulls_del_init_rcu(&peer->hash_entry_transp_addr);
++		/* re-add with new transport address */
++		nhead = ovpn_get_hash_head(peer->ovpn->peers->by_transp_addr,
++					   &bind->remote, salen);
++		hlist_nulls_add_head_rcu(&peer->hash_entry_transp_addr, nhead);
++		spin_unlock_bh(&peer->lock);
++		spin_unlock_bh(&peer->ovpn->lock);
++	}
++	return;
++unlock:
++	spin_unlock_bh(&peer->lock);
++}
++
+ /**
+  * ovpn_peer_release_rcu - RCU callback performing last peer release steps
+  * @head: RCU member of the ovpn_peer
+@@ -230,19 +430,6 @@ static struct in6_addr ovpn_nexthop_from_skb6(struct sk_buff *skb)
+ 	return rt->rt6i_gateway;
+ }
+ 
+-/* variable name __tbl2 needs to be different from __tbl1
+- * in the macro below to avoid confusing clang
+- */
+-#define ovpn_get_hash_slot(_tbl, _key, _key_len) ({	\
+-	typeof(_tbl) *__tbl2 = &(_tbl);			\
+-	jhash(_key, _key_len, 0) % HASH_SIZE(*__tbl2);	\
+-})
+-
+-#define ovpn_get_hash_head(_tbl, _key, _key_len) ({		\
+-	typeof(_tbl) *__tbl1 = &(_tbl);				\
+-	&(*__tbl1)[ovpn_get_hash_slot(*__tbl1, _key, _key_len)];\
+-})
+-
+ /**
+  * ovpn_peer_get_by_vpn_addr4 - retrieve peer by its VPN IPv4 address
+  * @ovpn: the openvpn instance to search
+diff --git a/drivers/net/ovpn/peer.h b/drivers/net/ovpn/peer.h
+index e747c4b210642db990222986a80bb37c9a0413fe..f1288734ff100ee76b0c41ebb6dc71725ea33261 100644
+--- a/drivers/net/ovpn/peer.h
++++ b/drivers/net/ovpn/peer.h
+@@ -153,4 +153,6 @@ bool ovpn_peer_check_by_src(struct ovpn_priv *ovpn, struct sk_buff *skb,
+ void ovpn_peer_keepalive_set(struct ovpn_peer *peer, u32 interval, u32 timeout);
+ void ovpn_peer_keepalive_work(struct work_struct *work);
+ 
++void ovpn_peer_endpoints_update(struct ovpn_peer *peer, struct sk_buff *skb);
++
+ #endif /* _NET_OVPN_OVPNPEER_H_ */
 
 -- 
-2.43.0
+2.48.1
 
