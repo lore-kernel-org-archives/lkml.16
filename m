@@ -1,109 +1,133 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D881DE3B1;
-	Tue, 11 Mar 2025 02:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D6817741;
+	Tue, 11 Mar 2025 02:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741661055; cv=none; b=u3SvbDIjybB2SBMrprulwFhDKaXqTCJRjd7DyAJGyhLRTatv3i8N9ZIhJA3vFYmwTYHWILVTy0jt+bvP8PWmbfU7Yb8d2c8wEEKGx2JWJD3SPqU7QRzs3gm2pDgK35pP/4uEovJUeqiZUdR13EIht8d/zL+Lgj7gta/FyUgONwc=
+	t=1741661188; cv=none; b=Yi+iYYiWzAMxRE1/Mp6waxv+EWjZv99xdIdOdpgxG1but/eHIaM+gN8M9PcjByRib3hEaNDYgwX5MhRBbn4iUbR2CWxwEkr8Yzw9tJdBWHVn5r9+sJySYCHWxt3hxZk0wzEZ9BU2SjBn8rwN9HKzwF8uLKs2VxxrkOXGk0y9f0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741661055; c=relaxed/simple;
-	bh=ynlUBd0iiiCwJii8stYJcxV+x99uBGaiIDvKMu7Ds1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OD5QjZWNe1NzORj3IH5iJmj7v+vepg1+wbDVkhQ8rmxpgqmE4zTKfekmQWasPfl34xhpI0B4+5f0OVHn+tDvyMSBQnkMZB3BO1xhaX+N9/krUSiftJabVDHL4y9pwjuMFnsVMigKIYM5/ap9cCiK3M6trRfTkb8rFDEt/Z6HLSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Z1zqupUZ; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741661188; c=relaxed/simple;
+	bh=1aXVJSg11Eua7rWuqBBKCBKhT/CKhXCrfzRERrw6jnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LKXW3Fn+3uRbejSpr6lHX2ro9F+yOlsQPypZdtqdPeEhw2ZKRyqiVZT1arGTL2KVfmsumuAVSIbL7UpNGqJFLCrs1Nb7TKi3k1LrKKhEvPnujN5MP7T/+Hx/jbWx8wX05tGF8M8rucazPhxw04PhQGMus2CIxECBLK+nnPi4E0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MAqwJO7G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Z1zqupUZ"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52B2hf4b1875742
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 10 Mar 2025 19:43:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52B2hf4b1875742
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741661023;
-	bh=lm3/Pn/5S4Hn7cgXsQCrd48kvBMbcykNkA+URMJUL2w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z1zqupUZK/Kh44lSTqS2sZJ0zD3pDqtTZCClTH/Y5y1zWd5JVkFVdih3hxhxoUepC
-	 Qv+6JzHXBNQhUvHrD3fvYDLodCTM7YS7ScYyrAaETP6u3Sow8O3SZTJmkaThRGe5Wc
-	 MPKKRC4oBGVKafVSXATI+Tx2vELwd6lwIbrldRxTL7iNx9FwDuDxEgd5L0UIAg6VDY
-	 feqnPnT8IHfvMntfpCY7KFHYsQ+m7sHTXB+qsKo+6XM1kfrYGnX7NbrrsPzQB8gxyJ
-	 UqPrhKT0YBnrZ7eyCeSJFeulsry3BqhIXXU3EkdNK8lUwKKPDF+xic/KpLk8qnWYO0
-	 l7VQkr0cfxnFg==
-Message-ID: <9d1ddf00-97d7-4ccc-9952-2a3436327539@zytor.com>
-Date: Mon, 10 Mar 2025 19:43:40 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MAqwJO7G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD47EC4CEE5;
+	Tue, 11 Mar 2025 02:46:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741661188;
+	bh=1aXVJSg11Eua7rWuqBBKCBKhT/CKhXCrfzRERrw6jnk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MAqwJO7GDdbdroAYybh0rlmoK3CpCPAUsiBffBzXicQu2UuxQ3s3exPw4PCy7rSLX
+	 SaY6DU9voTfVm7pj0EXd6RNcSftbd1Mbh0x3QdKRgNokJzqCUQxq1AV1nPNWBjZrzg
+	 kQIKBi9a8/Y20ercE8xoSWPex7aHcSEqkWk8QPZmLRvaE3ZgNvn5AeF4juUlJ0V6Tf
+	 +fQr+VTmQHfMnSY3iEccF+T5K/JElHHcInpX2wCLRWGmc2HQUm+z+pjHzpmxIIKA1X
+	 oqhu1aAfHSDo+oNFuJC7cu89FpCwyxNtgSOn4WuYmQ+qd2Ny4WWxghI/SnK+amjJYl
+	 aVc1IRK4xVo7w==
+Date: Mon, 10 Mar 2025 21:46:24 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Felipe Balbi <balbi@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
+	Saravana Kannan <saravanak@google.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Frank Li <Frank.li@nxp.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 6/7] usb: dwc3: qcom: Transition to flattened model
+Message-ID: <u2u3mkybodsk3neura7nvhgd6iwky5cjkbqwpcs3rn3tm7dzpq@ecah6hnm4t6g>
+References: <20250226-dwc3-refactor-v4-0-4415e7111e49@oss.qualcomm.com>
+ <20250226-dwc3-refactor-v4-6-4415e7111e49@oss.qualcomm.com>
+ <vn7nrxpga7ewyqr7hpiczsn63qo2z4qzenif6powryqrtmnwjs@23jp6c7qdvxt>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] kbuild: Add "make headers" to "make help" output
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        nathan@kernel.org, nicolas@fjasle.eu, bp@alien8.de, hpa@zytor.com,
-        sraithal@amd.com
-References: <20250308040451.585561-1-xin@zytor.com>
- <CAK7LNARHvn4Sy-e4hMmjGt0C7TFaWrGJrLq3YvN0BjehZ8QwSg@mail.gmail.com>
- <6149ac51-07da-45e2-863e-1d4418f6b662@zytor.com>
- <CAK7LNATGToVHEfZ-hmJ=3xbQCdHmBZf7x9w2QtQVGV-nMiP2Ag@mail.gmail.com>
- <08bbfff0-4aef-4d9e-bbeb-661aedaf3737@zytor.com>
- <CAK7LNASsASD31+6EEramGaRk4McxgXiOQLzfBg8k43dLe6cFdQ@mail.gmail.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <CAK7LNASsASD31+6EEramGaRk4McxgXiOQLzfBg8k43dLe6cFdQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <vn7nrxpga7ewyqr7hpiczsn63qo2z4qzenif6powryqrtmnwjs@23jp6c7qdvxt>
 
-On 3/10/2025 7:40 PM, Masahiro Yamada wrote:
->>> If a help message for "headers" is desired, how about this?
->>>
->>>     headers  - Build read-to-install uapi headers in usr/include
->>>
->>
->> LGTM.
->>
->> I guess you will make the change right now?
->>
+On Fri, Mar 07, 2025 at 08:41:33AM +0200, Dmitry Baryshkov wrote:
+> On Wed, Feb 26, 2025 at 04:17:53PM -0800, Bjorn Andersson wrote:
+> > The USB IP-block found in most Qualcomm platforms is modelled in the
+> > Linux kernel as 3 different independent device drivers, but as shown by
+> > the already existing layering violations in the Qualcomm glue driver
+> > they can not be operated independently.
+> > 
+> > With the current implementation, the glue driver registers the core and
+> > has no way to know when this is done. As a result, e.g. the suspend
+> > callbacks needs to guard against NULL pointer dereferences when trying
+> > to peek into the struct dwc3 found in the drvdata of the child.
+> > Even with these checks, there are no way to fully protect ourselves from
+> > the race conditions that occur if the DWC3 is unbound.
+> > 
+> > Missing from the upstream Qualcomm USB support is handling of role
+> > switching, in which the glue needs to be notified upon DRD mode changes.
+> > Several attempts has been made through the years to register callbacks
+> > etc, but they always fall short when it comes to handling of the core's
+> > probe deferral on resources etc.
+> > 
+> > Moving to a model where the DWC3 core is instantiated in a synchronous
+> > fashion avoids above described race conditions.
+> > 
+> > It is however not feasible to do so without also flattening the
+> > DeviceTree binding, as assumptions are made in the DWC3 core and
+> > frameworks used that the device's associated of_node will the that of
+> > the core. Furthermore, the DeviceTree binding is a direct
+> > representation of the Linux driver model, and doesn't necessarily
+> > describe "the USB IP-block".
+> > 
+> > The Qualcomm DWC3 glue driver is therefor transitioned to initialize and
+> > operate the DWC3 within the one device context, in synchronous fashion.
+> > 
+> > To provide a limited time backwards compatibility, a snapshot of the
+> > driver is retained in a previous commit. As such no care is taken in the
+> > dwc3-qcom driver for the qcom,dwc3 backwards compatibility.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> > ---
+> >  drivers/usb/dwc3/dwc3-qcom.c | 138 +++++++++++++++++++++----------------------
+> >  1 file changed, 69 insertions(+), 69 deletions(-)
+> > 
+> > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > index 9d04c2457433..63e60f15ceaa 100644
+> > --- a/drivers/usb/dwc3/dwc3-qcom.c
+> > +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> > @@ -4,7 +4,6 @@
+> >   * Inspired by dwc3-of-simple.c
+> >   */
+> >  
+> > -#include <linux/cleanup.h>
+> >  #include <linux/io.h>
+> >  #include <linux/of.h>
+> >  #include <linux/clk.h>
+> > @@ -14,7 +13,6 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/extcon.h>
 > 
-> I will not do it myself, but I just suggested a change for v2.
+> As a heads up, would it make sense to also drop extcon support while we
+> are transitioning to the new driver / DT bindings?
 > 
 
-I will take care of it then.
+Yes, I believe this code should be cleaned out in favor of relying on
+the core's implementation thereof and callbacks into the qcom-code for
+configuration the glue hardware - which looks to be the same callback we
+want to add for the usb_role_switch.
+
+Regards,
+Bjorn
+
+> >  #include <linux/interconnect.h>
+> > -#include <linux/of_platform.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/phy/phy.h>
+> >  #include <linux/usb/of.h>
+> 
+> -- 
+> With best wishes
+> Dmitry
