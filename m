@@ -1,38 +1,70 @@
-Received: from mx24lb.world4you.com (mx24lb.world4you.com [81.19.149.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8F11EB5DD;
-	Wed, 12 Mar 2025 20:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58669258A;
+	Wed, 12 Mar 2025 20:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741812267; cv=none; b=iJcI6Lza2tSriqoFqHOqWNr+I4dXFBjoYO17ubVAa0PaFNVC7K+TbSVhZLLIot4iOCwz23C6YmE1DyXzjBJnK5pBlYDtGn2c6VBRstHsgmyjp4ThKtNUGrna80oe8uT1OfhLkrHZLN5i2pZ6gQ3vT+/ZUwVszu/NqZOpI+/vdAI=
+	t=1741812376; cv=none; b=V9PaRo2rYrl07x9qmfZNYQh4o5J6JoRufVfbAR48tv4Sm5n2T1Bg32xZlSvtAYsIE/tX+vqaAFv7sa0SJNarJIVCCZtHj9dTCEmcm/OPciA9hg1pDuWYkBy9PalTH2DoIW2bq4ph0lsWyk47pEC7yyWJpvRmlNrDlmR1N1TdqV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741812267; c=relaxed/simple;
-	bh=J1oZje+WV8g185SX0nKzlvP49TcZE1B9YOsqmkkiclE=;
+	s=arc-20240116; t=1741812376; c=relaxed/simple;
+	bh=ZhAUqzJvHYObpWLH9mLcwnLhiQIQNi1h4k4+f9ZHKY4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LotlSHweEfH7QPZkgtvy88ygc2K2fy9IJF2suQqJCKeHaI/TsKbG7j+bzLQUeWP16vg0xI+LUrc9pYs484qS2pfDDvqlJ7Q2q/egZvFO9fNBAIWbtJOoUhBYBOhpJugZoUyWW7C9wRqIT5/cxswnPeSEkQJqgyAPe3X8YwoBv+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=qlnIjymf; arc=none smtp.client-ip=81.19.149.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
+	 In-Reply-To:Content-Type; b=AjI8YbVXGIFXh5kot83qppEBvT6Gif13xQXtBf89f2yUeiV0/I+8IsXfk1TR0Ibt7sOmMuW0kNhlujtnFjO6shKvt8e6bQtU0UpQVxaCmmULsgGdVdff6o+GPuYAYb0ukC3heefKkp4IpcNgiG3KfYVXoCOwJlb7idZeE29QAgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J9dZ0kST; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="qlnIjymf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=souxOsPlCBPTeuPyUcbRSBsJixO1AHsrYMzGeA7HE90=; b=qlnIjymfTunOTpYm3/T0wz8pBk
-	GGL4d2xCwqZeTWYbF98fatmV1VoGMHfSf3l0EbkZQNos3yxIQo8P2x0StMr5+ZUVclWFqDI74ou7L
-	Qy4czKGBRLvIghJ8IzAU9RE92heKtQctwecEcOr0wQJ4+FmVgk77m12yad2HPHmvLPT4=;
-Received: from [80.121.79.4] (helo=[10.0.0.160])
-	by mx24lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <gerhard@engleder-embedded.com>)
-	id 1tsS8x-000000001oz-0FGl;
-	Wed, 12 Mar 2025 20:53:31 +0100
-Message-ID: <b753c0e7-e055-4764-b558-68b7258a6b6f@engleder-embedded.com>
-Date: Wed, 12 Mar 2025 20:53:29 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J9dZ0kST"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3913fdd0120so161755f8f.0;
+        Wed, 12 Mar 2025 13:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741812373; x=1742417173; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DGjJvpLZaNnI/h8nlwQZhmjhWQKA8BlfNqhabRPiDWQ=;
+        b=J9dZ0kST0EDisuYT2oDEQ22cr+rjSWq89F+rPC92ogp6VG/abuQmK3hsnvfSoiRVng
+         PVk/8IoAZQauxlF45aatw0GWzT0pYi1kog4YpDQ4XjynT9ZauqZ3MyF5aQI0WghexORJ
+         OLJkcrvqjMWfxCdZwt0Jlh2zzMdfIe/Cxkr6s9higdV8803k5pDFbNLxDcx4G5DwSt3M
+         jeEhVvI9zvaxMaLsdYenkLfxz+reJycqTEkKP/Ir2umlmMqGk8bXS7TmjRafTaM+Ddbc
+         BkQoowz0qq3JiwoXoWkigBKa3Y9c8Y84QvDpIbRjbCuG0wWerTtNiI3M5gDRGPSePAik
+         L6lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741812373; x=1742417173;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DGjJvpLZaNnI/h8nlwQZhmjhWQKA8BlfNqhabRPiDWQ=;
+        b=JrfXj8HNKGsdzInRmriG7vco6Scqzd8okXfE2f0a45ORG8N1uKpDGyRQ2xSIpMpdn+
+         ZPeIiqXA6jx/+yihBJpRheuOK1Xe2fIE3V1/mvk1FoZ9+PwBvBqgXtmUrj7/8ah6bo1N
+         KQcwRzje69wfufnawXx6IsIIhz9G8jPUv70vRVkuCUgnsSwMb8jcGrLNYPet9TeDSDM7
+         dvJ+evFqBubGYn8so1UifRibSlq0VxZmXrmS+5EP4bvob/Fm2T/1BA6vz7L/uaMwZxRq
+         1bITGZ8NbmId01xGLHKL4PWhF+K0zyb3Z4eLomt34J6FOqp/p6gjhb69RAOKoIE1sR82
+         2TQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUYr3bPHvUicgJNasyo8f+ZKC5RycTbLl7uNT+XxgEvWHBb7LED37Xl1uMcV1NIETuqeseDeTJLh1+zKw+Vmvs=@vger.kernel.org, AJvYcCVOaZyHl3GZSWqmKOQ8f8oVOfc5IjHkp2M4sATx3jSC5SS+mxqXCWa53xwbnQ9gW+O5kJryrufdRdOm+NvNWMo=@vger.kernel.org, AJvYcCVffZtAtR+oJNDkVsLPwFvevUPHQhTKqo1wsxIsXX2azrQZSn1exeKIcwPcXguPx1Y0mLjGjPDQHMkiJlHl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBzBIk+d7QZX9w9XcTQIprcErcia8VvMrTXoddpUikYVw3fXLq
+	b2fOwA4M1lpUHe7vWS/yWLupGsMJlRgyeSHhA4UWQNZCC576aaly
+X-Gm-Gg: ASbGncvEXURpoMmfL8VhYX/Iw8EoQJp229kp9ywuu4g/Tg2g5OMSXNtGOL4yWpfFPXa
+	aFGR8Mf5pFzWj08twP/0mUu5xE6yfQCX0pvCcF/EdYQfmFXco04DDKgYjAc4u4uguTIRVAMI5Ni
+	LI7XI60lmNMWnCT4pRVrngp2srW0kCaoDs7B1CZlw5iXe9/sa9THw6D2NULer5pZSJ3FB0OHrS+
+	Yqm6DP9wQcVOj7YcM2xBITVE0L1eT1m0peOtJeKlQSZiJrj88eYUreFfFRDEEOl0yLpgv+PW6sM
+	/YRDCcTKUz7WMFS8JTQgx8DRNnzNJooRTLfPLDvBVVLmTbg0LAmuBUXKoGiCy7MqbgsSk+orEcl
+	UlpvMHpINy2/OFbc/RLHqbniJEjeagzokenUNPXuXcfBnZcxQ
+X-Google-Smtp-Source: AGHT+IFyQpV8UXvbzdZ9eDgW3+95bDCiRDPHybVVQEL8Ud3eER+VffGLX9YUUdh0OfQZ5Nti/qcRqA==
+X-Received: by 2002:a5d:5987:0:b0:391:78a:33de with SMTP id ffacd0b85a97d-39132d1ca75mr15430230f8f.12.1741812372578;
+        Wed, 12 Mar 2025 13:46:12 -0700 (PDT)
+Received: from shift.daheim (p200300d5ff4f150050f496fffe46beef.dip0.t-ipconnect.de. [2003:d5:ff4f:1500:50f4:96ff:fe46:beef])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c103035sm21682889f8f.88.2025.03.12.13.46.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 13:46:12 -0700 (PDT)
+Received: from localhost.javelin ([127.0.0.1])
+	by shift.daheim with esmtp (Exim 4.98)
+	(envelope-from <chunkeey@gmail.com>)
+	id 1tsSx5-000000006HQ-3F5Q;
+	Wed, 12 Mar 2025 21:45:55 +0100
+Message-ID: <3793ce70-efed-4c86-8c34-7fe22f8e4b0f@gmail.com>
+Date: Wed, 12 Mar 2025 21:45:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,54 +72,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: phy: dp83822: fix transmit amplitude if
- CONFIG_OF_MDIO not defined
-To: dimitri.fedrau@liebherr.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dimitri Fedrau <dima.fedrau@gmail.com>, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, Russell King
- <linux@armlinux.org.uk>, Heiner Kallweit <hkallweit1@gmail.com>,
- Andrew Lunn <andrew@lunn.ch>
-References: <20250312-dp83822-fix-transceiver-mdio-v1-1-7b69103c5ab0@liebherr.com>
-Content-Language: en-US
-From: Gerhard Engleder <gerhard@engleder-embedded.com>
-In-Reply-To: <20250312-dp83822-fix-transceiver-mdio-v1-1-7b69103c5ab0@liebherr.com>
+Subject: Re: [PATCH] wifi: carl9170: Add __nonstring annotations for
+ unterminated strings
+To: Kees Cook <kees@kernel.org>, Christian Lamparter <chunkeey@googlemail.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250310222339.work.654-kees@kernel.org>
+Content-Language: de-DE
+From: Christian Lamparter <chunkeey@gmail.com>
+In-Reply-To: <20250310222339.work.654-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-AV-Do-Run: Yes
 
-On 12.03.25 18:23, Dimitri Fedrau via B4 Relay wrote:
-> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> 
-> When CONFIG_OF_MDIO is not defined the index for selecting the transmit
-> amplitude voltage for 100BASE-TX is set to 0, but it should be -1, if there
-> is no need to modify the transmit amplitude voltage. Add a flag to make
-> sure there is a need to modify it.
-> 
-> Fixes: 4f3735e82d8a ("net: phy: dp83822: Add support for changing the transmit amplitude voltage")
-> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+On 3/10/25 11:23 PM, Kees Cook wrote:
+> When a character array without a terminating NUL character has a static
+> initializer, GCC 15's -Wunterminated-string-initialization will only
+> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+> with __nonstring to and correctly identify the char array as "not a C
+> string" and thereby eliminate the warning.
+
+Sure. Thank you!
+
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+> Cc: Christian Lamparter <chunkeey@googlemail.com>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: linux-wireless@vger.kernel.org
+> Signed-off-by: Kees Cook <kees@kernel.org>
+Acked-by: Christian Lamparter <chunkeey@gmail.com>
 > ---
->   drivers/net/phy/dp83822.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
+>   drivers/net/wireless/ath/carl9170/fw.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-> index 3662f3905d5ade8ad933608fcaeabb714a588418..d69000cb0ceff28e8288ba24e0af1c960ea9cc97 100644
-> --- a/drivers/net/phy/dp83822.c
-> +++ b/drivers/net/phy/dp83822.c
-> @@ -201,6 +201,7 @@ struct dp83822_private {
->   	bool set_gpio2_clk_out;
->   	u32 gpio2_clk_out;
->   	bool led_pin_enable[DP83822_MAX_LED_PINS];
-> +	bool tx_amplitude_100base_tx_modify;
->   	int tx_amplitude_100base_tx_index;
->   };
+> diff --git a/drivers/net/wireless/ath/carl9170/fw.c b/drivers/net/wireless/ath/carl9170/fw.c
+> index 4c1aecd1163c..419f5530f885 100644
+> --- a/drivers/net/wireless/ath/carl9170/fw.c
+> +++ b/drivers/net/wireless/ath/carl9170/fw.c
+> @@ -15,7 +15,7 @@
+>   #include "fwcmd.h"
+>   #include "version.h"
+>   
+> -static const u8 otus_magic[4] = { OTUS_MAGIC };
+> +static const u8 otus_magic[4] __nonstring = { OTUS_MAGIC };
+>   
+>   static const void *carl9170_fw_find_desc(struct ar9170 *ar, const u8 descid[4],
+>   	const unsigned int len, const u8 compatible_revision)
 
-You could instead init tx_amplitude_100base_tx_index in
-dp8382x_probe() to -1.
-
-But functional it should be ok.
-
-Reviewed-by: Gerhard Engleder <gerhard@engleder-embedded.com>
-
-Gerhard
