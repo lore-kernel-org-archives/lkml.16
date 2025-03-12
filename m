@@ -1,243 +1,254 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3861C5D76;
-	Wed, 12 Mar 2025 01:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DED85684;
+	Wed, 12 Mar 2025 01:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741742279; cv=none; b=p493MszVKWBo2EtjTt3KIgSpi1rJ6BEgKpD6Y3Co2Y8He9M3DPP41324x8UzFuGnmsfPRUrqyVrcNoZWsbq6un7u1cnovbmAHYNuyJff+klK2WAFDXh8iRsWSuv4QSKnlSaJrHlt1VNVoVQvCA5hBpcoQ+lxRGrHWs0Zm6kp7cg=
+	t=1741742473; cv=none; b=SC4n0tapUPWrYYK0VqCkR2PptLnx6ERhMSKyp2NsbORH5PpiVmd8W+vzJO+jkyRuQgk5fVHPjo8Gbr4I3gOnY0iv09rXS+dLXv58TEUF43pUJVLNI4KcPMND5z8sV47Jg1c9S5i3Pci/4seq0oI4AJRPBUVoVPCdy+WyCErPXO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741742279; c=relaxed/simple;
-	bh=ym0uAM3173NwIdccsvRUaTQeHfi8HeK6xwWWzGXaISs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P0950ECdH3jcV7cEUih391dQnM5bBmT55t8lpZlUKcgeOhs5cBuJMKBZVd59BsjVMjnPGGvH5m1p+23SmWcCrZEM9x1GwGBk2vKSKBIMCkuEG6lHyQIOWi0vXDHo7NtJqGUsHOJgL9u82SS7qJcx08c/ulU4Q21c1ShjWMw2GX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XE1zuuqQ; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741742473; c=relaxed/simple;
+	bh=6a5cA9bmg/w9z4v7zievcrpf4I/JzZrTDotNHRzORqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MueYfDP/E0/WAin8rAgX+3vAZPllKac8bQXChmLi+knwzkOBNyHJ+wzYip6hqNbKmJ1RmPMD8gfnBCfRrprlRR3DEAX1NzqKe6R19F4wl6O1FysWnGTCFHnUE9GyVJ9G8UpBcVyTuf/EApCjjK9lydTshAjQk1xC8DRDgKFFwss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MJYsyrSx; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XE1zuuqQ"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4769f3e19a9so8696291cf.0;
-        Tue, 11 Mar 2025 18:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741742275; x=1742347075; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vuT/y5FKHmoEEzYb5QENOtK4YXwQR2+9pGyPJGYhzrk=;
-        b=XE1zuuqQvKqfdltd3GWO3UAW3nBO5c5SWldXK2rq2KZrm/9+2b4mbtNXHCKE2JH4ls
-         ls4X2Fx+6LMTlC9PEbjoPySssAScoL0ePZAgux660UCZKnsnhM/3AkPsC4/KEauJD+VI
-         JQppNXudrbmIR6i2kiwWckg9NO8AEoDSoryNOikT3YYOvKFvOGAClKPZba5ZosI/MYz3
-         knY0i1dg238AEPBH4EbiNfFMH9+vqsZ+xt1psUh25OXNdmBLsIikAsYXNn/38ec+44KS
-         0qdYXQ3PdC2xO++a9PtV4D2xdUw8yRJMjPM+GfiaVfp+LH4w1Q21tP2KhQhNeB76J0Cv
-         /Dbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741742275; x=1742347075;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vuT/y5FKHmoEEzYb5QENOtK4YXwQR2+9pGyPJGYhzrk=;
-        b=HsNDaCc87jGhXtsbcHoDNkd/WKXJ391qjP0vkZCgFlrRpe+6DUSZZZW1tfAZUbYyHK
-         9vH2Kr8VZYGo4E9pRXlJFraLotke5AEcDN7ENgbGpYrT4MSamoi6xnMHWTQ/dC5F1FvS
-         CtRE9NzzxDMnXdvb7Y6pkeD2ymOuWGUbsp1zIB/UBC/Ts7DSgRdlTSU/fQ31Gx6If3Hs
-         VwjBaisJDI+ipHz/CsIxJNaHlQSu5WADs48HCPuQNM0MIhJCxR35h94Usrt0FhQ/A4cH
-         4OVoZVOlXxqVSsLR4dwtlcfCflMBDcEHtXp6pzKgftn/a4cNBMcrc854ESMlNXmaTipg
-         PKag==
-X-Forwarded-Encrypted: i=1; AJvYcCU3/h2A2TpLei6HR/m/0399jddRBlFmJCxq6EU5MkAuf+rA4IxjS8suIowkGyMboaCxrjMirdAj/lHCz7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygaTVSPxz1MhBKO5IWOd6Oam/dz8sAckkNVXAk7Skjd3r/1HtJ
-	QZQsEe0WBY0eRijzb+oYUYxvk1dBk26Wz03pyQaixfU+sobV3f8y
-X-Gm-Gg: ASbGnctVJCjUosFuQTjeP1ucexBTiXDTPMN2x2IemUFJPb1I47MYrqvlJJWLRpfv45N
-	Z1OUl3XR/1rTnAu+9aXT1mMdWvoYvSDoWSw+GjTuQ9DxKscze5e/Ve6avwEmC9LqpGPvqQSOAQs
-	cy6sjAwGtAGS7fog7ZtcPmnj/cZmmEa9+XfdSwn1fyDAOg91PTlCMXkbKAZdCuJk3uKGArgXkrA
-	A1UOwTi8hALwwh03FVXCDGWpXvbsmib/PfwsmDrs+YPG18O5Nq2mgCGciW+bQNNGVTzaz4awoOQ
-	U2NPGXTA0QkvLSFIde17QVuQTj+EuiVH35/nGpD7Zb+I4fyTehxAZvlfum6gstTRlKgA
-X-Google-Smtp-Source: AGHT+IEIoOnXopKN0MF1B/3JIUyExCdONXIMAt+tn3yriPRLRlhcuPXT2fKYNdhEQR4lggfTpTocJA==
-X-Received: by 2002:a05:6214:e49:b0:6e8:f5db:d78d with SMTP id 6a1803df08f44-6e90067700amr233796776d6.23.1741742275373;
-        Tue, 11 Mar 2025 18:17:55 -0700 (PDT)
-Received: from tamird-mac.local ([2600:4041:5be7:7c00:2017:ee95:21ab:177f])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f70915ebsm78599976d6.49.2025.03.11.18.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 18:17:54 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 11 Mar 2025 21:17:27 -0400
-Subject: [PATCH v2 6/7] scripts: generate_rust_analyzer.py: identify crates
- explicitly
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MJYsyrSx"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BMH9hj015193;
+	Wed, 12 Mar 2025 01:20:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	gOAaVlaEm/vfp/T65ZkmYZIul8TnOLOP/BkOedl/Co4=; b=MJYsyrSxqwa72554
+	es28Bq8SS2qbWCTxhERCuD/t9iqOL4teB3v+9eHi4LjYMk+Z0zHRy4MGwZjgzbbO
+	6zcBadwrW+/DMscFdDPpOZbdwutZLi5mGTcB7rfEJd+/FwdfWTvLqmE+NpVlCv7t
+	G8DdDa/Xp2pwfe0k58/1AYOUW85BwnpTJDSB6GscLm82dwUvQMRbUCPkQWsa3V+E
+	pwTM0Hu2PIgud+4K0SdoTg2ZMR4xXf/pukGC/k0RclWxkfuBe7d0rnraxG4cq02Q
+	srXVWioUM8I1QVgKErfKQ08BvDERjBRDmGQFE5g/KmPkP4zt9sJH8T/l1cxzWIVA
+	Cu0qIw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2nrq65-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 01:20:51 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52C1Ko4M030795
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 01:20:50 GMT
+Received: from [10.64.68.153] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Mar
+ 2025 18:20:46 -0700
+Message-ID: <cef984d5-f369-4892-b970-a71285c2ebc5@quicinc.com>
+Date: Wed, 12 Mar 2025 09:20:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/4] coresight: tmc: Introduce new APIs to get the RWP
+ offset of ETR buffer
+To: Mike Leach <mike.leach@linaro.org>
+CC: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Clark
+	<james.clark@linaro.org>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Tingwei Zhang
+	<quic_tingweiz@quicinc.com>,
+        Jinlong Mao <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20250310090407.2069489-1-quic_jiegan@quicinc.com>
+ <20250310090407.2069489-2-quic_jiegan@quicinc.com>
+ <CAJ9a7Vh7PmBBbvwnUETfCYrTSiXNzeiWpsz+XAGaUWt1Rq1aZw@mail.gmail.com>
+Content-Language: en-US
+From: Jie Gan <quic_jiegan@quicinc.com>
+In-Reply-To: <CAJ9a7Vh7PmBBbvwnUETfCYrTSiXNzeiWpsz+XAGaUWt1Rq1aZw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250311-rust-analyzer-host-v2-6-30220e116511@gmail.com>
-References: <20250311-rust-analyzer-host-v2-0-30220e116511@gmail.com>
-In-Reply-To: <20250311-rust-analyzer-host-v2-0-30220e116511@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, 
- Fiona Behrens <me@kloenk.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: WX4PUy9R_3aW-j0jtHmsAp8SKORZRZA2
+X-Authority-Analysis: v=2.4 cv=ZObXmW7b c=1 sm=1 tr=0 ts=67d0e173 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=V1Y4aJ5uuwzZXcr4G30A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: WX4PUy9R_3aW-j0jtHmsAp8SKORZRZA2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-12_01,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 adultscore=0 impostorscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503120007
 
-Use the return of `append_crate` to declare dependency on that crate.
-This allows multiple crates with the same display_name be defined, which
-we'll use to define host crates separately from target crates.
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- scripts/generate_rust_analyzer.py | 60 +++++++++++++++++++--------------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
 
-diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_analyzer.py
-index 1bb185ae2e87..e1002867735b 100755
---- a/scripts/generate_rust_analyzer.py
-+++ b/scripts/generate_rust_analyzer.py
-@@ -68,40 +68,38 @@ def generate_crates(
-             line = line.replace("\n", "")
-             cfg.append(line)
- 
--    # Now fill the crates list -- dependencies need to come first.
--    #
--    # Avoid O(n^2) iterations by keeping a map of indexes.
-+    # Now fill the crates list.
-     crates: list[Crate] = []
--    crates_indexes: dict[str, int] = {}
-     crates_cfgs = args_crates_cfgs(cfgs)
- 
-     def append_crate(
-         display_name: str,
-         root_module: pathlib.Path,
--        deps: list[str],
-+        deps: list[Dependency],
-         cfg: list[str] = [],
-         is_workspace_member: bool = True,
--    ) -> None:
--        crates_indexes[display_name] = len(crates)
-+    ) -> Dependency:
-+        index = len(crates)
-         crates.append({
-             "display_name": display_name,
-             "root_module": str(root_module),
-             "is_workspace_member": is_workspace_member,
--            "deps": [{"crate": crates_indexes[dep], "name": dep} for dep in deps],
-+            "deps": deps,
-             "cfg": cfg,
-             "edition": "2021",
-             "env": {
-                 "RUST_MODFILE": "This is only for rust-analyzer"
-             },
-         })
-+        return {"crate": index, "name": display_name}
- 
-     def append_proc_macro_crate(
-         display_name: str,
-         root_module: pathlib.Path,
--        deps: list[str],
-+        deps: list[Dependency],
-         cfg: list[str] = [],
--    ) -> None:
--        append_crate(display_name, root_module, deps, cfg)
-+    ) -> Dependency:
-+        dep = append_crate(display_name, root_module, deps, cfg)
-         proc_macro_dylib_name = subprocess.check_output(
-             [os.environ["RUSTC"], "--print", "file-names", "--crate-name", display_name, "--crate-type", "proc-macro", "-"],
-             stdin=subprocess.DEVNULL,
-@@ -112,13 +110,14 @@ def generate_crates(
-             "proc_macro_dylib_path": str(objtree / "rust" / proc_macro_dylib_name),
-         }
-         crates[-1] = crate
-+        return dep
- 
-     def append_sysroot_crate(
-         display_name: str,
--        deps: list[str],
-+        deps: list[Dependency],
-         cfg: list[str] = [],
--    ) -> None:
--        append_crate(
-+    ) -> Dependency:
-+        return append_crate(
-             display_name,
-             sysroot_src / display_name / "src" / "lib.rs",
-             deps,
-@@ -129,34 +128,34 @@ def generate_crates(
-     # NB: sysroot crates reexport items from one another so setting up our transitive dependencies
-     # here is important for ensuring that rust-analyzer can resolve symbols. The sources of truth
-     # for this dependency graph are `(sysroot_src / crate / "Cargo.toml" for crate in crates)`.
--    append_sysroot_crate("core", [], cfg=crates_cfgs.get("core", []))
--    append_sysroot_crate("alloc", ["core"])
--    append_sysroot_crate("std", ["alloc", "core"])
--    append_sysroot_crate("proc_macro", ["core", "std"])
-+    core = append_sysroot_crate("core", [], cfg=crates_cfgs.get("core", []))
-+    alloc = append_sysroot_crate("alloc", [core])
-+    std = append_sysroot_crate("std", [alloc, core])
-+    proc_macro = append_sysroot_crate("proc_macro", [core, std])
- 
--    append_crate(
-+    compiler_builtins = append_crate(
-         "compiler_builtins",
-         srctree / "rust" / "compiler_builtins.rs",
-         [],
-     )
- 
--    append_proc_macro_crate(
-+    macros = append_proc_macro_crate(
-         "macros",
-         srctree / "rust" / "macros" / "lib.rs",
--        ["std", "proc_macro"],
-+        [std, proc_macro],
-     )
- 
--    append_crate(
-+    build_error = append_crate(
-         "build_error",
-         srctree / "rust" / "build_error.rs",
--        ["core", "compiler_builtins"],
-+        [core, compiler_builtins],
-     )
- 
-     def append_crate_with_generated(
-         display_name: str,
--        deps: list[str],
--    ) -> None:
--        append_crate(
-+        deps: list[Dependency],
-+    ) -> Dependency:
-+        dep = append_crate(
-             display_name,
-             srctree / "rust" / display_name / "lib.rs",
-             deps,
-@@ -174,10 +173,11 @@ def generate_crates(
-             }
-         }
-         crates[-1] = crate
-+        return dep
- 
--    append_crate_with_generated("bindings", ["core"])
--    append_crate_with_generated("uapi", ["core"])
--    append_crate_with_generated("kernel", ["core", "macros", "build_error", "bindings", "uapi"])
-+    bindings = append_crate_with_generated("bindings", [core])
-+    uapi = append_crate_with_generated("uapi", [core])
-+    kernel = append_crate_with_generated("kernel", [bindings, build_error, core, macros, uapi])
- 
-     def is_root_crate(build_file: pathlib.Path, target: str) -> bool:
-         try:
-@@ -207,7 +207,7 @@ def generate_crates(
-             append_crate(
-                 name,
-                 path,
--                ["core", "kernel"],
-+                [core, kernel],
-                 cfg=cfg,
-             )
- 
+On 3/12/2025 12:49 AM, Mike Leach wrote:
+> Hi,
+> 
+> On Mon, 10 Mar 2025 at 09:04, Jie Gan <quic_jiegan@quicinc.com> wrote:
+>>
+>> The new functions calculate and return the offset to the write pointer of
+>> the ETR buffer based on whether the memory mode is SG, flat or reserved.
+>> The functions have the RWP offset can directly read data from ETR buffer,
+>> enabling the transfer of data to any required location.
+>>
+>> Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
+>> ---
+>>   .../hwtracing/coresight/coresight-tmc-etr.c   | 40 +++++++++++++++++++
+>>   drivers/hwtracing/coresight/coresight-tmc.h   |  1 +
+>>   2 files changed, 41 insertions(+)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> index eda7cdad0e2b..ec636ab1fd75 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> @@ -267,6 +267,46 @@ void tmc_free_sg_table(struct tmc_sg_table *sg_table)
+>>   }
+>>   EXPORT_SYMBOL_GPL(tmc_free_sg_table);
+>>
+>> +static long tmc_flat_resrv_get_rwp_offset(struct tmc_drvdata *drvdata)
+>> +{
+>> +       dma_addr_t paddr = drvdata->sysfs_buf->hwaddr;
+>> +       u64 rwp;
+>> +
+> 
+> It is not valid to read RWP if the TMC is running. It must be in the
+> stopped or disabled state - see the specifications for TMC /ETR
+> 
+> It is likely that CSUNLOCK / CSLOCK are needed here too,  along with
+> the spinlock that protects drvdata
+> 
+> See the code in coresight_tmc_etr.c :-
+> 
+> e.g. in
+> 
+> tmc_update_etr_buffer()
+> 
+> ...
+> <take spinlock>
+> ...
+> CS_UNLOCK(drvdata->base);
+> tmc_flush_and_stop(drvdata); // this ensures tmc is stopped and
+> flushed to memory - essential to ensure full formatted frame is in
+> memory.
+> tmc_sync_etr_buf(drvdata); // this function reads rwp.
+> CS_LOCK(drvdata->base);
+> <release spinlokc>
+> 
+> This type of program flow is common to both sysfs and perf handling of
+> TMC buffers.
 
--- 
-2.48.1
+Hi Mike,
+
+I am fully understood your point here.
+
+The function is designed this way to read the w_offset (which may not be 
+entirely accurate because the etr buffer is not synced) when the 
+byte-cntr devnode is opened, aiming to reduce the length of redundant 
+trace data. In this case, we cannot ensure the TMC is stopped or 
+disabled. The byte-cntr only requires an offset to know where it can 
+start before the expected trace data gets into ETR buffer.
+
+The w_offset is also read when the byte-cntr function stops, which 
+occurs after the TMC is disabled.
+
+Maybe this is not a good idea and I should read r_offset upon open?
+The primary goal for byte-cntr is trying to transfer useful trace data 
+from the ETR buffer to the userspace, if we start from r_offset, a large 
+number of redundant trace data which the user does not expect will be 
+transferred simultaneously.
+
+
+> 
+>> +       rwp = tmc_read_rwp(drvdata);
+>> +       return rwp - paddr;
+>> +}
+>> +
+>> +static long tmc_sg_get_rwp_offset(struct tmc_drvdata *drvdata)
+>> +{
+>> +       struct etr_buf *etr_buf = drvdata->sysfs_buf;
+>> +       struct etr_sg_table *etr_table = etr_buf->private;
+>> +       struct tmc_sg_table *table = etr_table->sg_table;
+>> +       long w_offset;
+>> +       u64 rwp;
+>> +
+> 
+> Same comments as above
+> 
+>> +       rwp = tmc_read_rwp(drvdata);
+>> +       w_offset = tmc_sg_get_data_page_offset(table, rwp);
+>> +
+>> +       return w_offset;
+>> +}
+>> +
+>> +/*
+>> + * Retrieve the offset to the write pointer of the ETR buffer based on whether
+>> + * the memory mode is SG, flat or reserved.
+>> + */
+>> +long tmc_get_rwp_offset(struct tmc_drvdata *drvdata)
+>> +{
+>> +       struct etr_buf *etr_buf = drvdata->sysfs_buf;
+>> +
+> 
+> As this is an exported function, please ensure that the inputs are
+> valid - check the pointers
+
+Sure, will do.
+
+Thanks,
+Jie
+
+> 
+> Code to ensure TMC is flushed and stopped could be inserted here.
+> 
+> Regards
+> 
+> Mike
+> 
+>> +       if (etr_buf->mode == ETR_MODE_ETR_SG)
+>> +               return tmc_sg_get_rwp_offset(drvdata);
+>> +       else if (etr_buf->mode == ETR_MODE_FLAT || etr_buf->mode == ETR_MODE_RESRV)
+>> +               return tmc_flat_resrv_get_rwp_offset(drvdata);
+>> +       else
+>> +               return -EINVAL;
+>> +}
+>> +EXPORT_SYMBOL_GPL(tmc_get_rwp_offset);
+>> +
+>>   /*
+>>    * Alloc pages for the table. Since this will be used by the device,
+>>    * allocate the pages closer to the device (i.e, dev_to_node(dev)
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+>> index b48bc9a01cc0..baedb4dcfc3f 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc.h
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
+>> @@ -442,5 +442,6 @@ void tmc_etr_remove_catu_ops(void);
+>>   struct etr_buf *tmc_etr_get_buffer(struct coresight_device *csdev,
+>>                                     enum cs_mode mode, void *data);
+>>   extern const struct attribute_group coresight_etr_group;
+>> +long tmc_get_rwp_offset(struct tmc_drvdata *drvdata);
+>>
+>>   #endif
+>> --
+>> 2.34.1
+>>
+> 
+> 
 
