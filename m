@@ -1,127 +1,90 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C9121D59F;
-	Wed, 12 Mar 2025 10:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5997E23E326
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741774770; cv=none; b=jB2lxt9c5zkUqtr540JcrtF7hszJ6/qrVvVFiJJ7FRsb5UzmOU29shxgcgRVrjAD3sQAe3Un2oiT/hYTiw+esTWJOMMCrbXNVUMu8ioaSOokOJ1pHdH/TIK9f6w0/N5sAthtbgbZI2XRWtCOqW6gHN6e24AI9w1uyN9EvfdlO90=
+	t=1741774773; cv=none; b=SadkIZPtH35PO3KVZ85Zp4k8jpPLvaKFumgFggbCY4obAHqZCfFPUu5HtgL97+W277DflmgCIY8GCTHWHHKEa82dhqqckSF2gtFSUG84cF+Z9I0F+GUwsourLuraH+JieIivIPxndPIz2Uzq1wHZvg2epPOMgr6awBOvzwjhmjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741774770; c=relaxed/simple;
-	bh=TJHip2cx7e/NfYxyHq5bmIzuT5vtIAhIdopeDQLbvlg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TfbLKTC/1EdDI0Go7vaxae3s/d5Run1N4QYqWSFJKGAW2dI1qbgeOnToG85lA40RfycGKqqzA5ZHepGF1ikZIE5r0W/j9JltTX1NN0bWpYYpPLkvk9H9TRGCStyJ48mjA9yM4L6ebEdyIi3S75tHgIauNsQVaYNHoFzFT+wGf+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cBdIgCD5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741774773; c=relaxed/simple;
+	bh=28xJg6gapHqktUP3G98ig3pZzO9ELnPrig/osmgFQUA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=sVbjqEq+DPv0Nsj0rKScXlm7n5WNQkinefngDH74PoplJhB7HXcqEi6XU+fBVtAh8YgPjBgZeeGbN1opv5169wGS4Ryss6OEbMqIW87WaGfaOPP71qE64Oxvi85N4E/ym+avZN8TZE/iSSWcANCjG3nB+NJUIgem6MZXOz8fjCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g0zL4dey; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cBdIgCD5"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CACmi1017709;
-	Wed, 12 Mar 2025 10:19:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yLpwz5o8pHGC1j10ZFntjLYwLh7GdeyWYCoc3lVul+M=; b=cBdIgCD5bfCkIXpy
-	d8XiN32R1/vsJaDrhQ1qIwW4VnaCdA7Y7IfpJNwBJTaSSmsX3W5HoTDASkKkh+fu
-	rzVIwCdUGaSbiXckQiGvXpuAgIhnm8D5YDVgi/gsSSQmlAioMRcNufJ/uooP7YMe
-	v9Iw1S6P3V6VdVmaEf8oEX+oCFAc1DJ6VZiVzsT2Hg1TKYt+a3kusdIsMHbvwCjo
-	EjC8po6aLCzJaO11pJRChVs+u0AKWxrEtl6X+O3S1zsAXgJRtZPpwcI9sJgWv41B
-	rG9wU0rnAK2swcyrdjbGrV5FLcLRMMJqIsOQtDbsOXLNUqAE3xwbSNxQB0QEiWXZ
-	myHcvg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au50a0f8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 10:19:24 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52CAJNag009188
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 10:19:23 GMT
-Received: from [10.219.57.57] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Mar
- 2025 03:19:20 -0700
-Message-ID: <a59c99a0-262d-4f16-99a4-985486849218@quicinc.com>
-Date: Wed, 12 Mar 2025 15:49:17 +0530
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g0zL4dey"
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 3FEEB583C7B
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 09:59:59 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4370F43212;
+	Wed, 12 Mar 2025 09:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741773596;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YE1jiy9kN43iGRytxK1aWHUVaHmUxNQdzJgC95dMlMc=;
+	b=g0zL4deymrtd8MN4KO2/Qh7LgNN5pePACqlhrAV6WkWqMoKBwxG0oldRqDgAvRjqrr6w2M
+	2uLmzsOuKNrkhBMPTOz9+xtj+OIguIZfI3z58WD+j47Hny2W6obQSARDoltGTDP7BN7J4k
+	CwgunAMYVaAwHGXke8uG9W5jwb/oM8lUI+2AxOPXtXqG94A9/tKCM3ppdmJSpnwOWbsipQ
+	jXbA0eYVFwJ+IAD4l+7FaGmEDP9HBalpBnX9gRgFxjjZd7rnv7jnyY515n+bJIwTviqo2J
+	u62kZaaAsmNCtGiX504fufXtu0ttiwm0Frns7AgsKzc8Or9hC8eJRSHrF3JiLQ==
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250226-drm-debugfs-show-all-bridges-v8-0-bb511cc49d83@bootlin.com>
+References: <20250226-drm-debugfs-show-all-bridges-v8-0-bb511cc49d83@bootlin.com>
+Subject: Re: [PATCH v8 0/2] drm: show "all" bridges in debugfs
+Message-Id: <174177359506.2719371.292782597798658368.b4-ty@bootlin.com>
+Date: Wed, 12 Mar 2025 10:59:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: add the pcie smmu node
-To: Dmitry Baryshkov <lumag@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com>
- <aau6kgdbsq5mu5h4kqggzgua26o7dwc6hbkpmtgcnqx5dqhlgd@qcm2xzr64fyg>
- <43450c5e-837c-4215-9bb4-69066b175832@quicinc.com>
- <rj4jtqchuetrbtczbhvaa5hcp5olumwdbao3x4pulkxiqcq2ag@v6ftffk6bcc5>
-Content-Language: en-US
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-In-Reply-To: <rj4jtqchuetrbtczbhvaa5hcp5olumwdbao3x4pulkxiqcq2ag@v6ftffk6bcc5>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: hxadSXf6e1kmLW1MNVyyHlF4NY4_lIMk
-X-Proofpoint-ORIG-GUID: hxadSXf6e1kmLW1MNVyyHlF4NY4_lIMk
-X-Authority-Analysis: v=2.4 cv=a4ow9VSF c=1 sm=1 tr=0 ts=67d15fac cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=y0BQO-919zeWhUMib7cA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-12_04,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=427
- clxscore=1015 spamscore=0 malwarescore=0 impostorscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 bulkscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503120071
+X-Mailer: b4 0.15-dev
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdegjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejheeiledvkeeigeeluddtleejvdfhleefleffffeitdetvdeltddttddtgfelteenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgdujedvrddujedrtddrudgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtohepjhgrnhhirdhnihhkuhhlrgeslhhinhhugidrihhnthgvlhdrtghomhdpr
+ hgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhm
+X-GND-Sasl: louis.chauvet@bootlin.com
 
 
-On 3/12/2025 2:14 PM, Dmitry Baryshkov wrote:
-> On Wed, Mar 12, 2025 at 12:41:38PM +0530, Pratyush Brahma wrote:
->> On 3/12/2025 12:23 PM, Dmitry Baryshkov wrote:
->>> On Thu, Feb 06, 2025 at 07:13:17PM +0530, Pratyush Brahma wrote:
->>>> Add the PCIe SMMU node to enable address translations
->>>> for pcie.
->>>>
->>>> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
->>>> ---
->>>>    arch/arm64/boot/dts/qcom/qcs8300.dtsi | 75 +++++++++++++++++++++++++++++++++++
->>>>    1 file changed, 75 insertions(+)
->>>>
->>> Reviewed-by: Dmitry Baryshkov <lumag@kernel.org>
->>>
->>> Though I see a little benefit in having this SMMU node if it is not
->>> followed by the PCIe enablement.
->> Thanks for the review!
->>
->> PCIe enablement changes for qcs8300 have been posted already [1] and [1]
->> needs
->> this patch as mentioned in [2].
-> Ack. In future please consider posting series in a logical way: if PCIe
-> SMMU is only useful for PCIe and it is required for PCIe to work it
-> makes much more sense to have it as a part of the PCIe enablement series
-> rather than having it as a separate patch which can easily get lost.
-Sure, will keep this in mind further.
->
->> [1] https://lore.kernel.org/lkml/20250310063103.3924525-8-quic_ziyuzhan@quicinc.com
->> [2] https://lore.kernel.org/lkml/20250310063103.3924525-1-quic_ziyuzhan@quicinc.com
->>
->> -- 
->> Thanks and Regards
->> Pratyush Brahma
->>
+On Wed, 26 Feb 2025 22:23:51 +0100, Luca Ceresoli wrote:
+> This series adds a /sys/kernel/debug/dri/bridges file showing all bridges
+> between drm_bridge_add() and drm_bridge_remove(), which might not be bound
+> to any encoder and thus not visible anywhere in debugfs.
+> 
+> It also cleans up the DRM bridge debugfs code by moving code to
+> drm_bridge.c.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/2] drm/bridge: move bridges_show logic from drm_debugfs.c
+      commit: 9497c5a0f7c26ff81f11df738a94c6b80f890c0a
+[2/2] drm/debugfs: add top-level 'bridges' file showing all added bridges
+      commit: eff0347e7c228335e9ff64aaf02c66957803af6a
+
+Best regards,
 -- 
-Thanks and Regards
-Pratyush Brahma
+Louis Chauvet <louis.chauvet@bootlin.com>
 
