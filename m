@@ -1,87 +1,132 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E994C80034;
-	Wed, 12 Mar 2025 01:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2A28635E;
+	Wed, 12 Mar 2025 01:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741741842; cv=none; b=uR02RFk/2368r7UEhM+YLi3w3Mp+qBI7pgd6j+O6qrr4faSCl8F0LBCpLIXp82uVb5bshnLj4g475IylK7yMaJ/qTe3hDtLvI53SBPewdMMQVOYIZIbjKu534V6EfFKSeHXyiwkbhHo75Gh47Mcl2uhI1+TgLFPFWjjkZj7sNOc=
+	t=1741741917; cv=none; b=TiMkeyyw0Pd0/yiDi19KZYBATDC8jDdaFcbdNqGwJno3Ew9JgRKMqdW9ADjy4Tb6MpxeLJAp35Bf9ifcDM0GEoxhK+Zl+HWyq/KoTWT8LP2ER4TkyKh0bLRE+IW8dblHsi2SjTvg7vsWzegs5GxaKXipIMGInBAGoKSjTCAGZyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741741842; c=relaxed/simple;
-	bh=ihg5D7JjYwR8wMjfG32hR1vTg+jRmYudx4QHbcb4sIw=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=b444ltHQ1/6+qibohg5a+F7nQPZ1TIeag2DtUt1OoyNC0J/9kIZjbkGDDXijDMEXACjPoK1wfQlubXil3AIT1PE+sTj9BFo6xupchT9YS6rx0hPgOpKS/aUWnXzMH2zsPiGvd4by7j4FejSAUMAAHEnqzQYQLXJ/XZYS8AfNrQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=d0ZMyQeH; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1741741917; c=relaxed/simple;
+	bh=3uTBEAxnrvt8VckbMbO+YWzTrvx4Ky76r0yN7Fq88/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nU6x19lkjuJw/+GhhmY4qwupsMRmM5ceR1XLQL5rRuHwh2TUqjkq+MUSW9s7QezYonIZW4TS/2JKi8QaVgMQZY6z3Xwlx6OfVfOB5Za7Ib+noyy0HOpTvuH8sCL3s3Z4s7dkNhlvYHWMiujNFsP+10c6OAYJ48Hyn9P9OYWPUU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Yv8ohraZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="d0ZMyQeH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741741525; bh=hIU6OUXhJGBsv4djF82ZLszpiy8ehuXLtiXE6CrEhKw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=d0ZMyQeHx575wW8g1gphD92SMaTyenXQOIQPeJ9OSWmfRaTl89XhRxBAtNw4XNPen
-	 W2C4852advLemtQlSSTYMzACkOvYZA5WHqdkIdhDuypvcg8GiEBha24Rd+FHrQbH5u
-	 9b5uzyFHofyJOqiWSKk/MlBbL83GnIfafixRMwuw=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 1569A20B; Wed, 12 Mar 2025 09:05:22 +0800
-X-QQ-mid: xmsmtpt1741741522ts27i5q8l
-Message-ID: <tencent_E8AA2ECB6ED7CC88A7F746FED2C4065B0906@qq.com>
-X-QQ-XMAILINFO: NN8wcaRHkJbBpHtqXl713Cg9E1IV7rv2clcZUpgVcxgqdBJMexZy63zArzO5my
-	 PC14odSXYx4DDVDwSZYsPXOvHGljY+DODeNSAOd8cSeLRAguH9OYIwVRKxLQxmhSfBs/uya+hQy7
-	 +BMNCpcRUgXtpmY/M61bWh9sQcP8ve8Sq6EbsdzM/CKid4S8jz6oT+u4BFtyCH/FIgnduREAL+CO
-	 +qlgDpXoS0Rjp5uG19JEW957SYcn2b8381U6pMjtstru+oBqPUTApG0PoZZVK4mpoaJhM2jXXzXT
-	 m/q4u9ZluCrWZoETIH78D4LpZG5mSr8agwOCTYE/qkB+X/nQfpin/eTp3oWIBsg3eNdkyrrjy9wb
-	 AzINr+9Y8LVmZJyJhZ6UUMOjW1fFKPs1qPqbHD+bowAjxKDM31YIdX92jiPgbgvBBMn05CHY7nU6
-	 Ivl5lM8xsdQR3UoNYRb4d2MZVZbHDeiYHVM3BAXSKwTetsIjtGzg4+D+QCACyMRjWk33uaN1rkGz
-	 Wy+TiAX4ix28fLwuKvClP5F1aSj2nF66FDqi/IzWaKva2Vv3mTASJfu99z6ydrHF9g65Mfw9p7Av
-	 zHcb7GkHKxZ4hMiiLxTOHTVxStcVoBQcLvFls/uFBs3lxjC+ruiX3iM09DN76hB0Avy5hSSWkwHp
-	 qvuP7dEC4nEuljYiIAuo6tcLLpN/OsQs7zMqgTahf5dkb2HGO9r/0OGjfPDSzq88QirGJwTTFNCY
-	 ZW7V0RCU3vb2mHKVpSLZCYlbABwkeZFbt8/cAGlhlQ4XZHguH+CEyJ0omuYe3khFgaVnBc9f5AHV
-	 cMkBEEoPrvIxT4Mj5Pl371iY504g8qEyKh13fD51c64/gpZnSduzXZT52S8v3n2k5848hAEmzKZb
-	 e857yzKpKV5zCfaS7RmsL9zh1rYjKmf6glPmgGIXSXC9fj5cPiIHj5Wmkk93esTA==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: stephen.smalley.work@gmail.com
-Cc: eadavis@qq.com,
-	linux-kernel@vger.kernel.org,
-	omosnace@redhat.com,
-	paul@paul-moore.com,
-	selinux@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH V2] selinux: access sid under READ/WRITE_ONCE
-Date: Wed, 12 Mar 2025 09:05:23 +0800
-X-OQ-MSGID: <20250312010522.232131-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <CAEjxPJ7eFbsn7h7o90tOE6ymp4+g-bwYL_Rwy6t0EcxpaBAxAA@mail.gmail.com>
-References: <CAEjxPJ7eFbsn7h7o90tOE6ymp4+g-bwYL_Rwy6t0EcxpaBAxAA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Yv8ohraZ"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BMHCUh027310;
+	Wed, 12 Mar 2025 01:11:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TWkh4M++TmQNIquc8+aHVhprni9QfryS5YoQKKoySWk=; b=Yv8ohraZlZrLFjfF
+	V+W1U+eVBZA7PfQcKvh4VN5sAuIqwh8HT8xBkLmzbiC6gWOv/9n+nKp+q6Dt/zpN
+	KoADyUWW+mJkYzX7zv4wmr4uuuInAHzlLWoKcG2mFgfbquSa6KapRVharms5vT41
+	KZAyP9MeE1tnBFabNtsPEh1oB5FenJIY8n2dD93Qs9BRGn3UrHm9FdtZvVvulvCN
+	+GVk+JTKXU4WLCBUIUiWf3YTH/0UKS/CxUOmiWZcpr83+ls6JpyWmAloZMCKag5+
+	9YScKoAw9Roddva95Ege07RsOi8ceQSDIUc9UArqiX6BSFJCQ971/6J6svOv7ks1
+	rEbPmA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2prnxu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 01:11:50 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52C1BnPx009982
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 01:11:49 GMT
+Received: from [10.239.29.24] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Mar
+ 2025 18:11:47 -0700
+Message-ID: <72d95d77-674e-4ae7-83b0-ab58748b8251@quicinc.com>
+Date: Wed, 12 Mar 2025 09:11:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 ath-next 2/2] wifi: ath11k: fix HTC rx insufficient
+ length
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Johan Hovold
+	<johan@kernel.org>
+CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <johan+linaro@kernel.org>
+References: <20250310010217.3845141-1-quic_miaoqing@quicinc.com>
+ <20250310010217.3845141-3-quic_miaoqing@quicinc.com>
+ <Z866cCj8SWyZjCoP@hovoldconsulting.com>
+ <7b1c5e40-b11d-421b-8c8b-117a2a53298b@quicinc.com>
+ <c0cdcaf2-655b-4d22-a949-1519c552e6a4@oss.qualcomm.com>
+Content-Language: en-US
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
+In-Reply-To: <c0cdcaf2-655b-4d22-a949-1519c552e6a4@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=P506hjAu c=1 sm=1 tr=0 ts=67d0df56 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=_461mWaigf2Lx6hHz88A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: fZBtn93iCiPlEz8MMMF9tBzirgQJJk4p
+X-Proofpoint-ORIG-GUID: fZBtn93iCiPlEz8MMMF9tBzirgQJJk4p
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-12_01,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ mlxscore=0 spamscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503120005
 
-On Tue, 11 Mar 2025 11:19:49 -0400, Stephen Smalley wrote:
-> > Reported-by: syzbot+00c633585760c05507c3@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=00c633585760c05507c3
-> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> > ---
-> > V1 -> V2: replace with READ_ONCE/WRITE_ONCE
+
+
+On 3/11/2025 11:20 PM, Jeff Johnson wrote:
+> On 3/11/2025 1:29 AM, Miaoqing Pan wrote:
+>> On 3/10/2025 6:09 PM, Johan Hovold wrote:
+>>> I'm still waiting for feedback from one user that can reproduce the
+>>> ring-buffer corruption very easily, but another user mentioned seeing
+>>> multiple zero-length descriptor warnings over the weekend when running
+>>> with this patch:
+>>>
+>>> 	ath11k_pci 0006:01:00.0: rxed invalid length (nbytes 0, max 2048)
+>>>
+>>> Are there ever any valid reasons for seeing a zero-length descriptor
+>>> (i.e. unrelated to the race at hand)? IIUC the warning would only be
+>>> printed when processing such descriptors a second time (i.e. when
+>>> is_desc_len0 is set).
+>>>
+>>
+>> That's exactly the logic, only can see the warning in a second time. For
+>> the first time, ath12k_ce_completed_recv_next() returns '-EIO'.
 > 
-> Thanks for the patch. Did you audit all other users of sksec->sid to
-> see if they too should be wrapped with READ_ONCE()/WRITE_ONCE() or are
-> already safe?
-This fix is only for the issues reported by syzbot+00c633585760c05507c3.
-I have confirmed that there are many contexts related to "sksec->sid" (at
-least 29). I am not familiar with selinux, and it is unnecessary to do
-excessive fixes before syzbot reports other issues.
+> That didn't answer Johan's first question:
+> Are there ever any valid reasons for seeing a zero-length descriptor?
+> 
+The events currently observed are all firmware logs. The discarded 
+packets will not affect normal operation. I will adjust the logging to 
+debug level.
 
-Maybe the subject of my patch is not appropriate, and it may be more
-appropriate to adjust it to "selinux: fix data race in socket create and
-receive skb".
+> We have an issue that there is a race condition where hardware updates the
+> pointer before it has filled all the data. The current solution is just to
+> read the data a second time. But if that second read also occurs before
+> hardware has updated the data, then the issue isn't fixed.
+> 
+Thanks for the addition.
 
-BR,
-Edward
+> So should there be some forced delay before we read a second time?
+> Or should we attempt to read more times?
+> 
+
+The initial fix was to keep waiting for the data to be ready. The 
+observed phenomenon is that when the second read fails, subsequent reads 
+will continue to fail until the firmware's CE2 ring is full and triggers 
+an assert after timeout. However, this situation is relatively rare, and 
+in most cases, the second read will succeed. Therefore, adding a delay 
+or multiple read attempts is not useful.
 
