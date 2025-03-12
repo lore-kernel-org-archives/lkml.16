@@ -1,181 +1,107 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3713E1EE014
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 21:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94D161EC00C;
+	Wed, 12 Mar 2025 21:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741814295; cv=none; b=Mag+M8VSSfwJxXfRKp8hxp0TnbaLtvKjFbbdVBqg9H8KqokEjRVzX3xgFA2ZgOKC362LAtITAeptpb9iat37DAgmLqWhcc954tFG/1T8ryv4KhqrGe5JECO9V5B57w8HAQ0Ne4zhNBbTPY3FlKsuG8/GQBje2HMCU/zOYNd2vaQ=
+	t=1741814470; cv=none; b=mqNg+Ibf1+Tw3x9kU9X6EXE7PhVy2hn4GXi9IFZuUwAXdqm3qyiRqr89A9p9kSwp91epwOBMXGME1LKBQBWIx1A89Tfug0hXrKENEqoN05SdRkM1VVYfN2rnBq/u3/hDPao8xTzdVr0CXodWq2XLtb3l+KYVQMxubdyf00fqPGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741814295; c=relaxed/simple;
-	bh=UcmN1VlV6icK88x+PsR6N8aJg7b5k3NRdyPZEKfDrXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bLKwhOExZTLGBAbRGMrildeDOvbLre8VAyVD896E90sqmTjnttbTwPoeNPLAFFHnXeN1o1FS9VWmCNuBfIQxhZiIievjFU9Q8bB1IC79GKx5CKMCuRyyDt8yT2vO9O8LQWkowaCpoqTkmT5M8UrJ+VuFK5gHxYKS/Jtp99f4Lro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eAeVEYg1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1frobXGW; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qabWvGZU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lH5LOpbQ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1741814470; c=relaxed/simple;
+	bh=8lk79mDnF9WAaI75FvC+bpLneGj3wkxAcWyHOCuXSjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DVexfv4tTndPAZeOpRyvfKJTmGbo2EqBK3lP7F3WSKSWvSzquPlKXny7A1HpPXFC3zK62UFvYJb01AwZamTXmRP6+fMVcQTTShkF7IpVdOF6mHrLKL5dgWPDZk4dcn8WULL0KS7oaROtMuRQcOPNqtmGrWBOqkkgfKpBJag0a2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pm3SSAYs; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eAeVEYg1";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1frobXGW";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qabWvGZU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lH5LOpbQ"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id E633D21180;
-	Wed, 12 Mar 2025 21:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741813781; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YQbt+oFmaaNv/NMjBEdk51ik/ZthlcNfaY1dZ8X+y5Q=;
-	b=eAeVEYg1oKb/jqK3mj1MD6uelnRztRT+Vzy4iqSyyYRTRlZBOFW1mQtuPua1FSBjOaJKva
-	HDGYWVfNDLK0XAL9qao+hp53cVGQZbIproq/k0A4UJ6cIf9L1ojmJsr72qH1OfAj0vrNIw
-	Y6r36HEhUauJUjLQP7md4Juftp5E3m0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741813781;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YQbt+oFmaaNv/NMjBEdk51ik/ZthlcNfaY1dZ8X+y5Q=;
-	b=1frobXGW60b8vrjJwYPkDn6pGVf+XkrPnPKFop7agS5HVdl1fAaIxgbBH4Fjvm8mMSqO35
-	QqFr6XizbBstmSAQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741813780; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YQbt+oFmaaNv/NMjBEdk51ik/ZthlcNfaY1dZ8X+y5Q=;
-	b=qabWvGZUC1x9OUycHRz36WT2uQtOBRORelgR6FwUS1uxVODB1QT1ss6bMSXVj94+3F2G9w
-	rl6v94QXf4yf467sFcuh01Kykd/5B3lewjFpKOUUf7L4mqbBHfEcByM7eHic/EubPlkI5Z
-	aA1pQONsL+pd7qgss9TQ6Ct1+GJY/gU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741813780;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YQbt+oFmaaNv/NMjBEdk51ik/ZthlcNfaY1dZ8X+y5Q=;
-	b=lH5LOpbQ5XWfsn/0nLeKkW6+/+JSqAG7hgW9fz47VXPAkcn3Qqa08Gfx4CG40fyfbfUppo
-	B8Twq863Vbqz9lDA==
-Date: Wed, 12 Mar 2025 22:09:39 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v3 3/5] kdump, documentation: describe craskernel CMA
- reservation
-Message-ID: <Z9H4E82EslkGR7pV@dwarf.suse.cz>
-References: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pm3SSAYs"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 86B37210B157;
+	Wed, 12 Mar 2025 14:21:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 86B37210B157
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741814467;
+	bh=MgNM2rD8/EOf05M0lP85WV+gCmyNEYHLXXzpOfe5KVE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pm3SSAYshDZ0/J9DAnDCCWIg7IAiMKcF9WebEeevzy98VYIaLbtZxz8W0R4oz5bs3
+	 bx8W1PNJ4LBZ4FkX6cjdoD9OOn1KNZkGtH27nqPcPfkJxVFnXRqfUmYBYdXIJxg7dQ
+	 dkyAwa4NZs8ZWgWM4ZixgLD18JrAFkhBHsI7/1wQ=
+Message-ID: <996deaab-e1d1-4f04-ba31-c0dcab2d5e1d@linux.microsoft.com>
+Date: Wed, 12 Mar 2025 14:21:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.19)[-0.949];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	URIBL_BLOCKED(0.00)[suse.cz:email,dwarf.suse.cz:mid,localhost:helo];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
-X-Spam-Score: -4.29
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v5 03/11] Drivers: hv: Enable VTL mode for
+ arm64
+To: Arnd Bergmann <arnd@arndb.de>, Michael Kelley <mhklinux@outlook.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Joey Gouly <joey.gouly@arm.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Oliver Upton <oliver.upton@linux.dev>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ Sudeep Holla <sudeep.holla@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>,
+ Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>
+Cc: "apais@microsoft.com" <apais@microsoft.com>,
+ "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+References: <20250307220304.247725-1-romank@linux.microsoft.com>
+ <20250307220304.247725-4-romank@linux.microsoft.com>
+ <e0f81049-688e-4f53-a002-5d246281bf8d@app.fastmail.com>
+ <BN7PR02MB41488C06B7E42830C700318DD4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <119cfb59-d68b-4718-b7cb-90cba67827e8@app.fastmail.com>
+ <BN7PR02MB4148FC15ADF0E49327262B92D4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <caa0d793-3f05-4d7c-88d0-224ec0503cfb@linux.microsoft.com>
+ <45171fb1-7533-449f-83d4-066d038c839f@app.fastmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <45171fb1-7533-449f-83d4-066d038c839f@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Describe the new crashkernel ",cma" suffix in Documentation/
 
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
----
- Documentation/admin-guide/kdump/kdump.rst     | 24 +++++++++++++++++--
- .../admin-guide/kernel-parameters.txt         | 22 +++++++++++++++++
- 2 files changed, 44 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 5376890adbeb..0a7ec98c74fa 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -315,6 +314,27 @@ crashkernel syntax
- 
-             crashkernel=0,low
- 
-+4) crashkernel=size,cma
-+
-+	Reserve additional crash kernel memory from CMA. This reservation is
-+	usable by the first system's userspace memory and kernel movable
-+	allocations (memory balloon, zswap). Pages allocated from this memory
-+	range will not be included in the vmcore so this should not be used if
-+	dumping of userspace memory is intended and it has to be expected that
-+	some movable kernel pages may be missing from the dump.
-+
-+	A standard crashkernel reservation, as described above, is still needed
-+	to hold the crash kernel and initrd.
-+
-+	This option increases the risk of a kdump failure: DMA transfers
-+	configured by the first kernel may end up corrupting the second
-+	kernel's memory.
-+
-+	This reservation method is intended for systems that can't afford to
-+	sacrifice enough memory for standard crashkernel reservation and where
-+	less reliable and possibly incomplete kdump is preferable to no kdump at
-+	all.
-+
- Boot into System Kernel
- -----------------------
- 1) Update the boot loader (such as grub, yaboot, or lilo) configuration
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b42ec8..895b974dc3bb 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -987,6 +987,28 @@
- 			0: to disable low allocation.
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
-+	crashkernel=size[KMG],cma
-+			[KNL, X86] Reserve additional crash kernel memory from
-+			CMA. This reservation is usable by the first system's
-+			userspace memory and kernel movable allocations (memory
-+			balloon, zswap). Pages allocated from this memory range
-+			will not be included in the vmcore so this should not
-+			be used if dumping of userspace memory is intended and
-+			it has to be expected that some movable kernel pages
-+			may be missing from the dump.
-+
-+			A standard crashkernel reservation, as described above,
-+			is still needed to hold the crash kernel and initrd.
-+
-+			This option increases the risk of a kdump failure: DMA
-+			transfers configured by the first kernel may end up
-+			corrupting the second kernel's memory.
-+
-+			This reservation method is intended for systems that
-+			can't afford to sacrifice enough memory for standard
-+			crashkernel reservation and where less reliable and
-+			possibly incomplete kdump is preferable to no kdump at
-+			all.
- 
- 	cryptomgr.notests
- 			[KNL] Disable crypto self-tests
+On 3/12/2025 1:25 PM, Arnd Bergmann wrote:
+> On Wed, Mar 12, 2025, at 19:33, Roman Kisel wrote:
+>> On 3/10/2025 3:18 PM, Michael Kelley wrote:
+>>
+>> That's a minimal extension, its surprise factor is very low. It has not
+>> been seen to cause issues. If no one has strong opinions against that,
+>> I'd send that in V6.
+>>
+> 
+> Works for me. Thanks for your detailed explanations.
+> 
+
+Thank you for your review very much!
+
+>         Arnd
 
 -- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
+Thank you,
+Roman
 
