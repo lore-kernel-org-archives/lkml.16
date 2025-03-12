@@ -1,64 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809FB16FF44;
-	Wed, 12 Mar 2025 15:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFEE8183CD9
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 15:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741792412; cv=none; b=aqw6v2GFhELaK3z3+MDMWbKkSzbuyDfugT2hxzPXp2UknuBCDWM0v7bJXiXtotTt422p1UmXDOgOQ2nNm/IANbcpZFUB+RxoNsz7WGdrWuKcVgcPvbmDcJjzPKn/r1srDaaUt9QSy+C9nFp4ZPvv8bxF15ccs1w804mxE8kn8/Q=
+	t=1741792428; cv=none; b=iQ4o0qQMyp/3gmJXuAKNjNYBwo1xbdQEpCvrVSvxw3wOBZkPzAyJiaiT8N9ufG1Cjl3/7+tYMy95ufKFskaCMln2muJZsVO+QZuZfzq8KCpuMu2R5jkBW+rS6gxMDxgnO7BXxHW6eT5mBA0ctoSc7QtMzjwcgbuP6bda2ScuZ4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741792412; c=relaxed/simple;
-	bh=NfYIPDL/R5XU9ENmAwbJywG6k5yNmixA59CUlFuwHPo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KjDetCdM+iZ/Gy3o62IVij3iJDEBRFL6Mya+KaDn5dgZ+ZgUhK/YSWFZ8cIkwV8l4/x+6XVKenUEkCpW7Uji4q3/r4Co5HoLCqqc8rQYNUAJfrZDfg17XSYIkghbCshSE+cJpso++2EQE11CpD0yqWDo05zW8n6Ed6NWK0kpqEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NW9D3b3F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741792428; c=relaxed/simple;
+	bh=MnzSnpIIZ8/JOL3XJtaNEabor1jfWDSv10vvAly0zxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iLxu7J+WMDX5+ktGO73EYPXhamoJZas6LZOhAB4+P6w3TXzP9+RNdrV8KbTaybZiMOr/Cl0y9i8XT6TO2JisaoVTOEygNyi1iftdob1DlcL6dADaA/3XEHOjElEH7J+zHhG2fbwBN2B8Ylfa9jvfPcViwjx6U6bGjjnaVNubzOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=IV0o9Z0R; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NW9D3b3F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B953BC4CEDD;
-	Wed, 12 Mar 2025 15:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741792412;
-	bh=NfYIPDL/R5XU9ENmAwbJywG6k5yNmixA59CUlFuwHPo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=NW9D3b3FU4fX3QtjTLAnFvyyn3Kk26sXPf05cMKvp85ll2b1wbDhGgWx1JQw7VZzh
-	 Z/XZzKt3+Q8AE3swOVxzmqAmPsIkUHhRtK47WVnIlhW86R1DoQvPU/x+MP4b2eTwjU
-	 hNih9pFTDHSQwz2/QIuTMYhAytLcl3/VRrUUrcTrZSxqRMSIRSEyp7+2YyvuRqAJcB
-	 iAJ7PkMhishhDYNaavzD5uW+E9QIBOW/1SNn50LZxGCRAbENZUI4fODZunyZideioH
-	 qrfLspYGewKhaS9CAr6uoE6qIYhReU0B1trxghTp8DNVncvK9+2vjXl7QR4tUkCNkf
-	 /MA2Zpeo70ExQ==
-From: Niklas Cassel <cassel@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>, 
- Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-ide@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
- Xuerui Wang <kernel@xen0n.name>, Daniel Kral <d.kral@proxmox.com>, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250312133954.6666-1-chenhuacai@loongson.cn>
-References: <20250312133954.6666-1-chenhuacai@loongson.cn>
-Subject: Re: [PATCH] ata: libata: Return -EOPNOTSUPP instead of 1 in
- atapi_check_dma()
-Message-Id: <174179241047.984574.18019635919979994622.b4-ty@kernel.org>
-Date: Wed, 12 Mar 2025 16:13:30 +0100
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="IV0o9Z0R"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 8C92A45796;
+	Wed, 12 Mar 2025 16:13:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1741792424;
+	bh=MnzSnpIIZ8/JOL3XJtaNEabor1jfWDSv10vvAly0zxM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IV0o9Z0RmlHINk3PWEJHX8FQpxOMfZZNap98KJRHKlfLKO7nzXnIkLWaEd6DslPYk
+	 O7p/K2DAs/C6FNcTvthmfBGnvY68h8Bh6KecAX4Fjj6x3VX7MqnwWBoHxfcFHlXvZR
+	 9mI4XijtDJV1QJZMVb4EtDEO622iGsIsiSSr4nV+1svAF6nlimzkqQLt6NwUTKbYVZ
+	 Ht66byXqctY/cLlys57/lD4uS7Gb7nn/MJMWuWVV0IalKIdWN29LdL+NQUZj3S1ba8
+	 ufwawJKRNW+tbauKQdLY1qM/nip5/TTKCL9Ba+wBiOZSXA/k6LMUU5tEdcSeITTK9c
+	 ilnTgs28duseQ==
+Date: Wed, 12 Mar 2025 16:13:43 +0100
+From: Joerg Roedel <joro@8bytes.org>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86@kernel.org, hpa@zytor.com, Nikunj A Dadhania <nikunj@amd.com>,
+	Larry.Dewey@amd.com, linux-kernel@vger.kernel.org,
+	linux-coco@lists.linux.dev, Juergen Gross <jgross@suse.com>,
+	kirill.shutemov@linux.intel.com, alexey.gladkov@intel.com,
+	Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 1/2] x86/coco/sev: Move SEV SYSFS group to
+ /sys/hypervisor/
+Message-ID: <Z9Gkp6srd4uVz13y@8bytes.org>
+References: <20250312144107.108451-1-joro@8bytes.org>
+ <20250312144107.108451-2-joro@8bytes.org>
+ <6f2d0c92-2614-ead1-0b97-6d1cd4fc07cd@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f2d0c92-2614-ead1-0b97-6d1cd4fc07cd@amd.com>
 
-On Wed, 12 Mar 2025 21:39:54 +0800, Huacai Chen wrote:
-> -EOPNOTSUPP means not supported, so return -EOPNOTSUPP instead of 1 is
-> more suitable if ATAPI DMA is not supported in atapi_check_dma().
+On Wed, Mar 12, 2025 at 10:11:55AM -0500, Tom Lendacky wrote:
+> On 3/12/25 09:41, Joerg Roedel wrote:
+> > @@ -0,0 +1,10 @@
+> > +What:		/sys/devices/system/cpu/sev
+> > +		/sys/devices/system/cpu/sev/vmpl
 > 
-> 
+> Shouldn't these be /sys/hypervisor/sev ?
 
-Applied to libata/linux.git (for-6.15), thanks!
+Yes, copy&paste error on my side, thanks for point that out.
 
-[1/1] ata: libata: Return -EOPNOTSUPP instead of 1 in atapi_check_dma()
-      https://git.kernel.org/libata/linux/c/725ad028
+Regards,
 
-Kind regards,
-Niklas
-
+	Joerg
