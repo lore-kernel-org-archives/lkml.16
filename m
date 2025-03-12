@@ -1,103 +1,193 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B231BD9DD
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 19:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95C51BD9DD;
+	Wed, 12 Mar 2025 19:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741808432; cv=none; b=uXwX6EdzTACQwdIqPm5Xb32t4W+byN7dF9C8eV1v60YovCR/9z3WWzLZnhsYRMtK9i8iPL9wFRLcTtWa66TkoqfQSKn8RXLm2t7GWkINRPKibDOMveMuWY2N8OdRZe5QMK9I5vLA/y7ZJ0dRZAPIUaDgQBycrsneoBqR09KNpyk=
+	t=1741808459; cv=none; b=PFeklE6elcICiRMDpLMOfEgTDdlQ7VGg123a/I4GgN0LsTBaiumyr/jRCVN0fmqyEnRkwV66YOAB6eq/VeTA2vpYWxuhCCstlQTgefMuSx6ohHnJHywKdRrW4H8iwfQyy1rN7ECrfrCE05v7AfK3CGtFZA60b0oejmsq5iYmwnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741808432; c=relaxed/simple;
-	bh=0sfjWz9/dfa5XlkZjoh3Px9tGDJeE+Y8rOqWI/cZvJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A0Hu3r8a0RP4rMNAerPU7TJ8xy9z+2H4R0r5xNWA/b4qbPGGicH4DyVqfKOjUsvHSN3TRt3aXFJXrqgw8VqDQ7RTqcZmrsAP9lRLjZwT0m35iqHgcYU3T2guqOvch9Z4cZ63vI1BG6Rvwe+LWm1YjKyC/0S0QCLra2TfWrNOTvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGQ90LgB; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741808459; c=relaxed/simple;
+	bh=ln3H3jQdCuiVM92t2vEUQn4yuJC8lu3CZ5HIpkqTiC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fBaBPN0QF6Jh5qnZqXQvHghfCyiTdmXOTbCyOHCoQfKiUR2woSmZZdFjWDLRneX2QKg8Nbg2Av4tPMKJR663UnhRFfdoeqjMX95/SBLr9Naw30cO7aV6PFwdQALkAvU1Xa1Agnttp6G3y/PlbyJwxroceXBZ6m2mGm7a3HqLKiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KtN+MmIK; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGQ90LgB"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so1270085e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:40:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741808429; x=1742413229; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sS8kTorDyOHdKsMto1ObS5FPe8uF59EmpLR3eUldbQU=;
-        b=RGQ90LgBuEk72vAps+CDGcFcILMyvF5AT7vhxJEpHWgxUgySpxat4kW+KLwSGh71/E
-         28xjX/bPfpg7BA2EMoF6rtiXGD7ZofY4fWv5tTmfCKJMXUArn6GP1qDidc6u6I7nkYv7
-         PtSJz2Mo4dsq8Z5oWytX5RSw+fjLCom+typdOPw2AEzx5/J+xEhdYRKms7vaomqKACUv
-         uyl+nmBEusZ45/GoxPqZ1RDHdvQsP2Mbfvvt+wkNznp97zygge/7Y4oqkYVU4SPfwE3/
-         aghWfEuPqQQ3/XUFN6hVDNqqFGXH+deyVO6mmfhNey9POTXbPrcOVflNjrE4wexiGVBR
-         Zk7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741808429; x=1742413229;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sS8kTorDyOHdKsMto1ObS5FPe8uF59EmpLR3eUldbQU=;
-        b=Tind80wYTiFFYDSHpR5Kx6RbalQz3RH9Wmy1gKSLCmi99z7/MRAKdV3XlWiOGTU/sh
-         5kGggKnRE+rCH92o0vLIzIT+hExUFO5hhiwNSui4Qo54YryVvfcJPSkeznvBnI0lkTWZ
-         TeZaa2W0boFvasac3v5ptPZM61eC9R5pUIWocSBCOyOzsW3UMsUWx0udZl16aVS5WMVo
-         YnBqZMOK9VNDmvR+h/Z707J6d2vwJ4+gFnvvBDNYYxIbEF9Flf/dDs8igGPU9Y+V5TU4
-         AX0HTzs/DRSesefi63wjMaI6csdRgzBL06zsT6Lw1I3pQHxJZDgNFiWwKqX/rEzUMudW
-         nkWQ==
-X-Gm-Message-State: AOJu0Yx3k42utvuvSW/36RYbTMShNEWAPonxBM3ZMuOHngjJUHS+OGZP
-	cOokowWk8qDv/74UCU125pJ0jSdZultYGZIb94DteZ/FudNNxtYn
-X-Gm-Gg: ASbGnctB9f4o2Lvtz98CMajfpzJnVZ1cN5a46QTNzokIC2LFxENxpTctXoSdiED3occ
-	kWMVk5a49nQfF1UVk/+Fk5AhWYMqwtGeEGPP0h4zkplreWKhmAkKuxugUTUF0cjuazXYMYWEyEX
-	349LKaRviLs4Ny+UGNq9SyBQkSyIHwpF6NxrYPleqInQA8cEIM582kn3YsJJZWIsySd6YLeENzM
-	5azR3gKUwnVbDTno8imQ7rfqJ9Kv7F8R47GbaXRpUVCsry5X83XUsz4sDwu/5TGqi8PCX1wICBP
-	QZ6Uc3QNqw3c14ywD7OJju3CWZClAP/hC9f9WFOUB0IGy/Ul0xGie+J658Tp6t+UmKyFE2lWTxN
-	3o0qNQNo=
-X-Google-Smtp-Source: AGHT+IGoyh5LSAaHpp83B2PFWGk/1MertXP2HJBTaGWTdaMqGJ4/sfh9KZzasVwSZJfDKzCVDsslfQ==
-X-Received: by 2002:a05:600c:524d:b0:43c:f470:75df with SMTP id 5b1f17b1804b1-43cf470797emr122311905e9.3.1741808428650;
-        Wed, 12 Mar 2025 12:40:28 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d031d1438sm32442805e9.0.2025.03.12.12.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 12:40:28 -0700 (PDT)
-Date: Wed, 12 Mar 2025 19:40:27 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Arnd Bergmann <arnd@arndb.de>, Linus Torvalds
- <torvalds@linux-foundation.org>, Christophe Leroy
- <christophe.leroy@c-s.fr>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- nnac123@linux.ibm.com, horms@kernel.org
-Subject: Re: [PATCH next 5/8] test_hexdump: Fix sample output if zero bytes
- requested
-Message-ID: <20250312194027.70c38581@pumpkin>
-In-Reply-To: <Z86qy5LOAJUlmkC9@smile.fi.intel.com>
-References: <20250308093452.3742-1-david.laight.linux@gmail.com>
-	<20250308093452.3742-6-david.laight.linux@gmail.com>
-	<Z86qy5LOAJUlmkC9@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KtN+MmIK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=F33ePOWArlXRReOL+ROoU2zMPCNTE1WroPgaIoYuTZ4=; b=KtN+MmIK5oqH/DVENgXBtOHXPl
+	ltCNMiJ+zxb5qPcZ1udz+U4sLwA3Oa1S+wAb8vS1PLc4CdiW4lAJLqTkoszXIcYbi/eT/rS+uBM9a
+	fs0gCOztnapuKDeAejq8miFq3rReKS8hF9Wn2VWBHhes7gY+UUf5BhVsiXVgZ9HS9tjXnNpax3vht
+	QjlaqYF9CpL6Bl3HrJrkfRvIYz1/V6MM7c6pDuMVINuSjkDfawXFkE+uggePUgoIvQ1GDMQcyVx8L
+	coaQO3hQfyil1uyfkvotzqTmuyxtEPRXppQGvfBx0e0BaW1FENu06qrqUR4TlF/c0oFMDTIlL0rhF
+	RB3ba9Vg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40360)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tsRwZ-00063Y-1c;
+	Wed, 12 Mar 2025 19:40:43 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tsRwW-0004oj-3A;
+	Wed, 12 Mar 2025 19:40:41 +0000
+Date: Wed, 12 Mar 2025 19:40:40 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: "Gupta, Suraj" <Suraj.Gupta2@amd.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	"Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"Simek, Michal" <michal.simek@amd.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"git (AMD-Xilinx)" <git@amd.com>,
+	"Katakam, Harini" <harini.katakam@amd.com>
+Subject: Re: [PATCH net-next V2 2/2] net: axienet: Add support for 2500base-X
+ only configuration.
+Message-ID: <Z9HjOAnpNkmZcoeo@shell.armlinux.org.uk>
+References: <20250312095411.1392379-1-suraj.gupta2@amd.com>
+ <20250312095411.1392379-3-suraj.gupta2@amd.com>
+ <ad1e81b5-1596-4d94-a0fa-1828d667b7a2@lunn.ch>
+ <Z9GWokRDzEYwJmBz@shell.armlinux.org.uk>
+ <BL3PR12MB6571795DA783FD05189AD74BC9D02@BL3PR12MB6571.namprd12.prod.outlook.com>
+ <34ed11e7-b287-45c6-8ff4-4a5506b79d17@lunn.ch>
+ <BL3PR12MB6571540090EE54AC9743E17EC9D02@BL3PR12MB6571.namprd12.prod.outlook.com>
+ <fd686050-e794-4b2f-bfb8-3a0769abb506@lunn.ch>
+ <BL3PR12MB6571959081FC8DDC5D509560C9D02@BL3PR12MB6571.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL3PR12MB6571959081FC8DDC5D509560C9D02@BL3PR12MB6571.namprd12.prod.outlook.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, 10 Mar 2025 11:03:07 +0200
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-
-> On Sat, Mar 08, 2025 at 09:34:49AM +0000, David Laight wrote:
-> > If 'len' is zero the expected output is an empty string even if
-> > 'ascii' is requested.  
+On Wed, Mar 12, 2025 at 04:08:02PM +0000, Gupta, Suraj wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
 > 
-> It's related to the previous one...
-> So, seems to me the series need a bit more (re-)thinking...
+> > -----Original Message-----
+> > From: Andrew Lunn <andrew@lunn.ch>
+> > Sent: Wednesday, March 12, 2025 9:03 PM
+> > To: Gupta, Suraj <Suraj.Gupta2@amd.com>
+> > Cc: Russell King <linux@armlinux.org.uk>; Pandey, Radhey Shyam
+> > <radhey.shyam.pandey@amd.com>; andrew+netdev@lunn.ch;
+> > davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+> > pabeni@redhat.com; robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
+> > Simek, Michal <michal.simek@amd.com>; netdev@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; git (AMD-Xilinx) <git@amd.com>; Katakam, Harini
+> > <harini.katakam@amd.com>
+> > Subject: Re: [PATCH net-next V2 2/2] net: axienet: Add support for 2500base-X only
+> > configuration.
+> >
+> > Caution: This message originated from an External Source. Use proper caution
+> > when opening attachments, clicking links, or responding.
+> >
+> >
+> > On Wed, Mar 12, 2025 at 03:06:32PM +0000, Gupta, Suraj wrote:
+> > > [AMD Official Use Only - AMD Internal Distribution Only]
+> > >
+> > > > -----Original Message-----
+> > > > From: Andrew Lunn <andrew@lunn.ch>
+> > > > Sent: Wednesday, March 12, 2025 8:29 PM
+> > > > To: Gupta, Suraj <Suraj.Gupta2@amd.com>
+> > > > Cc: Russell King <linux@armlinux.org.uk>; Pandey, Radhey Shyam
+> > > > <radhey.shyam.pandey@amd.com>; andrew+netdev@lunn.ch;
+> > > > davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+> > > > pabeni@redhat.com; robh@kernel.org; krzk+dt@kernel.org;
+> > > > conor+dt@kernel.org; Simek, Michal <michal.simek@amd.com>;
+> > > > netdev@vger.kernel.org; devicetree@vger.kernel.org;
+> > > > linux-kernel@vger.kernel.org; linux-arm- kernel@lists.infradead.org;
+> > > > git (AMD-Xilinx) <git@amd.com>; Katakam, Harini
+> > > > <harini.katakam@amd.com>
+> > > > Subject: Re: [PATCH net-next V2 2/2] net: axienet: Add support for
+> > > > 2500base-X only configuration.
+> > > >
+> > > > Caution: This message originated from an External Source. Use proper
+> > > > caution when opening attachments, clicking links, or responding.
+> > > >
+> > > >
+> > > > > > On Wed, Mar 12, 2025 at 02:25:27PM +0100, Andrew Lunn wrote:
+> > > > > > > > +   /* AXI 1G/2.5G ethernet IP has following synthesis options:
+> > > > > > > > +    * 1) SGMII/1000base-X only.
+> > > > > > > > +    * 2) 2500base-X only.
+> > > > > > > > +    * 3) Dynamically switching between (1) and (2), and is not
+> > > > > > > > +    * implemented in driver.
+> > > > > > > > +    */
+> > > >
+> > > > > - Keeping previous discussion short, identification of (3) depends
+> > > > > on how user implements switching logic in FPGA (external GT or RTL
+> > > > > logic). AXI 1G/2.5G IP provides only static speed selections and
+> > > > > there is no standard register to communicate that to software.
+> > > >
+> > > > So if anybody has synthesised it as 3) this change will break their system?
+> > > >
+> > > >         Andrew
+> > >
+> > > It will just restrict their system to (2)
+> >
+> > Where as before, it was doing SGMII/1000base-X only. So such systems break?
+> >
+> >         Andrew
 > 
+> If the user wants (3), they need to add their custom FPGA logic which anyway will require additional driver changes. (3) was not completely supported by existing driver.
 
-Nope, all its own bug.
-This is a request to hexdump zero bytes into a valid buffer size.
-hex_dump_to_buffer() gets it right unless the output buffer length
-is also zero.
+This is not an approach that works with the Linux kernel, sorry.
 
-Found when I started doing a full range of tests.
+What we have today is a driver that works for people's hardware - and
+we don't know what the capabilities of that hardware is.
 
-	David
+If there's hardware out there today which has XAE_ABILITY_2_5G set, but
+defaults to <=1G mode, this will work with the current driver. However,
+with your patch applied, it stops working because instead of the driver
+indicating MAC_10FD | MAC_100FD | MAC_1000FD, it only indicates
+MAC_2500FD. If this happens, it will regress users setups, and that is
+something we try not to do.
+
+Saying "someone else needs to add the code for their FPGA logic" misses
+the point - there may not be "someone else" to do that, which means
+the only option is to revert your change if it were merged. That in
+itself can cause its own user regressions because obviously stuff that
+works with this patch stops working.
+
+This is why we're being cautious, and given your responses, it's not
+making Andrew or myself feel that there's a reasonable approach being
+taken here.
+
+From everything you have said, I am getting the feeling that using
+XAE_ABILITY_2_5G to decide which of (1) or (2) is supported is just
+wrong. Given that we're talking about an implementation that has been
+synthesized at 2.5G and can't operate slower, maybe there's some way
+that could be created to specify that in DT?
+
+e.g. (and I'm sure the DT folk aren't going to like it)...
+
+	xlnx,axi-ethernet-X.YY.Z-2.5G
+
+(where X.YY.Z is the version) for implementations that can _only_ do
+2.5G, and leave all other implementations only doing 1G and below.
+
+Or maybe some DT property. Or something else.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
