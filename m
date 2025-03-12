@@ -1,213 +1,126 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4662A23E342
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D142923BD09
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741774776; cv=none; b=e1ZFyelN1ODVzZjM7ab1YdoLTK/RrTR54XgE0b8GuTpB+rsBxoM/4C/CzxIQ0ehVbfTqLKY6dP1Zh2vLD+bJ5dcGBV8J9V38WTI4v6qj0iWC+zmJH7rIdkuC68SzW894q8MnZ5KecQIx4pCM7gAAlpF71U69pA9b0AC15aeUX08=
+	t=1741774832; cv=none; b=rJDeQGdYmWvxYtxDaKl+afhFYc4WohElWmxB6Vlg1b7PcmzqRAGdibdaGfu2s9Kv8/nTLqv16dh/W7GoP+IE26ZPcZPnPSSlUmOYeSsl1sCYT0CS5kHG7QdvLkzfPNyr64RbDtk6fmOfBHPU7fKc9wXJS3Aw18O4ZCh8GzZ4PXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741774776; c=relaxed/simple;
-	bh=4PnXVo/oullR/m+/uJCKBVHMjnOz39bvjEAJfAd50h0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tXKGjx5ZtDkstFeE3MLZhaBUr0hDSIhy93x0v2gYLyEU4my30A42K3c3aIlxv2hzpAJxOhtbUrAx+umA51mOqD4I0T0N83pqBjUq36nEnuDi5VxJu2ySwx9+t2dV+SHmiQfy2YdepQo8iiEBPfCUx2bJ2yZaPCXHQAzhRuhyrEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Naa11bcb; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741774832; c=relaxed/simple;
+	bh=kVD1cBOvbcjfuLGnWQGwAsJLPrywxdLU+w4aBmi2vMo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oCWf2HddfxtBhpuN5anhJGptRK7XlDfgWozseiNVJgM+jL9IQ/3q5Vr+3uwK2e5R+/InaRq95KXF4Lhfx0cC/og6pfCkaK1syVSng5F+uIqUOzWW/QxtOxF1mtwKgONZekw6HDDg6WxEboKMzpXV1D+NeOpTJZ9xoHoEE6MP0l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fdhyS6by; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Naa11bcb"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-390fdaf2897so6084578f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:19:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741774772; x=1742379572; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bAnXaXan8q+eIeBPOO4LIWIu74EXVlerHh73XPW6Gr0=;
-        b=Naa11bcboIb5hmNqOHXNk8D0haVYHKB46w15qfRc3Fyx7xPDYqT4uwedUOVTgXDH8y
-         /eBnEQ8PBPY79PjkKQpu6+a1us+iogScLSkc9NB3r8psfz81PHKs2tySNJEgX9YwwfMW
-         xo9pN8xyM3kbYGH43SFWxX6aURr1kOJOYmds1PL7mYR26w1mtQ6YckvV4CmUSuibQxUO
-         sMUE+b95+6pp/xR6Syf0juwlsWGL99dwYphVDa0dHVBzk5IJ8gqWK/Y0H9lgkhdGADMj
-         HqSb8h4WgO+pwagE+rdO3KTbU1IOw0d2CYd6ldXOUmnRtyg742ab1a8xoa6+v737VJn1
-         QI0Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fdhyS6by"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741774829;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=h0Yr5Vgm7RUBCb/M+U5Z8BVsZiNBVB+EPPiJ4rqIWDA=;
+	b=fdhyS6by15tZnEiIss0zjnherR7EKzyJ8RO2EVOGvlAREz1j/6L9iNPkC96siIqld2+bme
+	nodkwvdTPz6c1mSQcxRCOvf3G1ectoEQ2um01P2ktTAb3sO//Kvh1RGYkNVZxsgcWgozB4
+	YkWrPZKjBICaKBiBZ23CqUwH9iVmb5A=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-92-FczwfzDINxuzBIONHPW92Q-1; Wed, 12 Mar 2025 06:20:28 -0400
+X-MC-Unique: FczwfzDINxuzBIONHPW92Q-1
+X-Mimecast-MFC-AGG-ID: FczwfzDINxuzBIONHPW92Q_1741774827
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3912d9848a7so362226f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:20:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741774772; x=1742379572;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bAnXaXan8q+eIeBPOO4LIWIu74EXVlerHh73XPW6Gr0=;
-        b=Yud23J8U2wtPs9ep2xLdxTF0a9qmu+Joa9shw73WK63eHs1FGpR2tYrqr8HRujI7BJ
-         yMcmFQ8IVRX5sozhxHMWK5tnezgkVVpxd4egvjH2I0l5pRJPnDYZz6FsZD35YfTQyECO
-         l0zuDDhYtGRlpzyEHrFtBuOY+dpUnreral4g11ujGXN+78NEDxoMsBlz/AZUs2FGOJas
-         15QG6GXlpwnUcNUlJxcyeMJ8rFCF6phZPH98Q9Gjrk1umpu6MKlo20cX29Xj8XVfe6zo
-         pMYrAbG+arc9SyRWbpz9b9Hfqw9DNxPHXsIDVfhUAeHRDqJ1ilv6tBjlun9oEuYG92XM
-         va9Q==
-X-Gm-Message-State: AOJu0Yyc2vc7VeXhLr8HVErCXp9nfZn5kY+GY+NIIcIp7EV6K2aq67OV
-	nENjczfzC9H5LmCtT1SuRtpS2RjKhxK2jBiobIgaR1nkTctrQC8kHolNGyQbHLFhDV50HtE0Ipu
-	g
-X-Gm-Gg: ASbGnctwCXqBbNV1sxn9lhy912gh3WM8HV7F21Hnd8y21n5lSnotn+n5QunXHfeYmzG
-	fpFZ0k7BjMYF9/ynzlZHQDLiFTLu3DaB5MsD+kiXJgNY8JL7JHxs1RLs5LRiOFrxVLrWTlhpkCr
-	XlTY+se5X1ypz+1CDm3fhxKDZQaFE+3DDtrxrzt2+RZcb8MIHnImtIrH2QY1GXS3BTLaIRjoeaS
-	2t7vpqbEKnaMJqBp3AYA9ad6SFyDTzYZ4BcysHYkBQP+VhaSj4qsaZnXzAmshFzMU37rywAzIht
-	0lMp3stLhOENNX1yKte+ZI3Pq7flGmcnYASzSj3U41pTzeuX6HMtiw==
-X-Google-Smtp-Source: AGHT+IGR/07Qmf9smabg6S6zn97UBtsm5Jw10Ieg0WIleNha8nV/NH57N3KXiYK+7r8Klg1AgUB0Eg==
-X-Received: by 2002:a5d:6d8f:0:b0:38d:d9e4:9ba6 with SMTP id ffacd0b85a97d-39132d090b1mr18246613f8f.3.1741774772405;
-        Wed, 12 Mar 2025 03:19:32 -0700 (PDT)
-Received: from [192.168.1.247] ([209.198.129.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfba686sm21058822f8f.19.2025.03.12.03.19.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Mar 2025 03:19:32 -0700 (PDT)
-Message-ID: <4d058a15-376a-4e9a-bfc0-06bd4ffbd71a@linaro.org>
-Date: Wed, 12 Mar 2025 10:19:30 +0000
+        d=1e100.net; s=20230601; t=1741774827; x=1742379627;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h0Yr5Vgm7RUBCb/M+U5Z8BVsZiNBVB+EPPiJ4rqIWDA=;
+        b=aM4hAo3IVOgTJjDY/z8uYAelRMZJ4fFb/QBPQDhoOSoXCDXVePU+MmFKzPV5vgeOwb
+         1dE0laMjFRW/kCfekPTzXCLQEDU68dZozhX/Ex8QCyBt0dkXln7UaDfu4SODxGigtqAI
+         h/b+du1u+FwLRX1sMT+EK0W86LOGxbIenDcBy6rbPM/m/C+ihawRKKjuVfcSyGlZue3y
+         he2gL91Cwxoebytq9dx5YIElu/WBTvRRZiV7vs7pM0ncITvCpe3x9D32dtV9uiTF78nb
+         ZI8uIqLZRPTkEJ2JDBlNrW6luygfsK9uH8hVWRbhzZCPHalm3SnK9G/50jIpqR/zKeUw
+         t3jg==
+X-Forwarded-Encrypted: i=1; AJvYcCUV6qA2EfgzLpqY2KKDmfwLNjJuTPR8ZtJBUvZ7uSGgKo0EcNoApd7JRSAhlSzqioFvY7xzCAuccArJmD0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1CsnkevykzAESxx9n8IH542anQEiRuC1iefQHAUrw64YfTXBk
+	jr42Ig5Lq7UVM65ufd6m0wqpztT2fkZb+TK0xMq+9Y9B2TeaJVd6bkq4GIcLMk2hwDZhxXkz1lT
+	TnVI6Bhtd0Lr6oVBJiRrwMhmI4WGAFtYM/VmglbJZv8qMuXu4zLOtu5pLJdYHGw==
+X-Gm-Gg: ASbGnct4mNC0dGpvbzDFf9IFpA1gbjcWQZy6oPz4fvCA9AQn3kGp1d84lqmI20FcQb7
+	yRNge1DUaw+qD+Ldu2kpS94ZL8HqrXNC2+q9VjZAACV/ICzCDBsqabLp+7W/0pKVzb/XE53mrmY
+	TGctKy0GqFgSzYnJJ3igyNCrwQ3HRuhqh8PoSiO6SLxkKVBzIqd+nwSFcukc13QUkGnXqCAHy50
+	TmOkjUDZX/IxhYzCAP7Re2f+o6OgyHQQJCTGFdFVLoXuF/0/kNdSZGOrAZ2ZpRZ1MuWY5K5qFHA
+	F+rPSoJkg9CYIrpBZ8FwK16NON7i+14yCq4yvfr09MWRnoI2U7URF0vgqk6fd6M=
+X-Received: by 2002:a5d:6c65:0:b0:391:98b:e5b3 with SMTP id ffacd0b85a97d-3926cb6442fmr6821004f8f.14.1741774827291;
+        Wed, 12 Mar 2025 03:20:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFy2Q1sDAMgAbiGTwr0193U6ouUjNnUZZOSZ5Aaw1xNFil+VycgOfWKIaXwNWW/V12c4oR4JQ==
+X-Received: by 2002:a5d:6c65:0:b0:391:98b:e5b3 with SMTP id ffacd0b85a97d-3926cb6442fmr6820992f8f.14.1741774826959;
+        Wed, 12 Mar 2025 03:20:26 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e2eecsm20457196f8f.79.2025.03.12.03.20.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 03:20:26 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Frank Li <Frank.Li@nxp.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Cc: Stuart Yoder <stuyoder@gmail.com>,
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH RESEND] MAINTAINERS: adjust file entry in QORIQ DPAA2 FSL-MC BUS DRIVER
+Date: Wed, 12 Mar 2025 11:20:18 +0100
+Message-ID: <20250312102018.215018-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] coresight: Add a KUnit test for
- coresight_find_default_sink()
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Leo Yan <leo.yan@arm.com>
-Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250312-james-cs-kunit-test-v3-1-dcfb69730161@linaro.org>
- <d6194071-bc52-4f67-a36e-fc8d9d1be94c@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <d6194071-bc52-4f67-a36e-fc8d9d1be94c@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
+Commit 78fa0d19a50a ("dt-bindings: misc: fsl,qoriq-mc: convert to yaml
+format") converts fsl,qoriq-mc.txt to yaml format, but misses to adjust the
+file entry in QORIQ DPAA2 FSL-MC BUS DRIVER.
 
-On 12/03/2025 10:14 am, Suzuki K Poulose wrote:
-> Hi James
-> 
-> 
-> On 12/03/2025 10:11, James Clark wrote:
->> Add a test to confirm that default sink selection skips over an ETF
->> and returns an ETR even if it's further away.
->>
->> This also makes it easier to add new unit tests in the future.
->>
->> Reviewed-by: Leo Yan <leo.yan@arm.com>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->> Changes in v3:
->> - Use CORESIGHT_DEV_SUBTYPE_SOURCE_BUS type instead of the default
->>    (CORESIGHT_DEV_SUBTYPE_SOURCE_PROC) so that the test still works even
->>    when TRBE sinks are registered. This also removes the need for the
->>    fake CPU ID callback.
->> - Link to v2: https://lore.kernel.org/r/20250305-james-cs-kunit-test- 
->> v2-1-83ba682b976c@linaro.org
->>
->> Changes in v2:
->> - Let devm free everything rather than doing individual kfrees:
->>    "Like with managed drivers, KUnit-managed fake devices are
->>    automatically cleaned up when the test finishes, but can be manually
->>    cleaned up early with kunit_device_unregister()."
->> - Link to v1: https://lore.kernel.org/r/20250225164639.522741-1- 
->> james.clark@linaro.org
->> ---
->>   drivers/hwtracing/coresight/Kconfig                |  9 +++
->>   drivers/hwtracing/coresight/Makefile               |  3 +-
->>   drivers/hwtracing/coresight/coresight-core.c       |  1 +
->>   .../hwtracing/coresight/coresight-kunit-tests.c    | 77 ++++++++++++ 
->> ++++++++++
->>   4 files changed, 88 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/ 
->> coresight/Kconfig
->> index ecd7086a5b83..f064e3d172b3 100644
->> --- a/drivers/hwtracing/coresight/Kconfig
->> +++ b/drivers/hwtracing/coresight/Kconfig
->> @@ -259,4 +259,13 @@ config CORESIGHT_DUMMY
->>         To compile this driver as a module, choose M here: the module 
->> will be
->>         called coresight-dummy.
->> +
->> +config CORESIGHT_KUNIT_TESTS
->> +      tristate "Enable Coresight unit tests"
->> +      depends on KUNIT
->> +      default KUNIT_ALL_TESTS
->> +      help
->> +        Enable Coresight unit tests. Only useful for development and not
->> +        intended for production.
->> +
->>   endif
->> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/ 
->> coresight/Makefile
->> index 8e62c3150aeb..96f0dfedb1bf 100644
->> --- a/drivers/hwtracing/coresight/Makefile
->> +++ b/drivers/hwtracing/coresight/Makefile
->> @@ -51,5 +51,4 @@ coresight-cti-y := coresight-cti-core.o    
->> coresight-cti-platform.o \
->>              coresight-cti-sysfs.o
->>   obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
->>   obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
->> -obj-$(CONFIG_CORESIGHT_CTCU) += coresight-ctcu.o
->> -coresight-ctcu-y := coresight-ctcu-core.o
->> +obj-$(CONFIG_CORESIGHT_KUNIT_TESTS) += coresight-kunit-tests.o
->> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/ 
->> hwtracing/coresight/coresight-core.c
->> index bd0a7edd38c9..b101aa133ceb 100644
->> --- a/drivers/hwtracing/coresight/coresight-core.c
->> +++ b/drivers/hwtracing/coresight/coresight-core.c
->> @@ -959,6 +959,7 @@ coresight_find_default_sink(struct 
->> coresight_device *csdev)
->>       }
->>       return csdev->def_sink;
->>   }
->> +EXPORT_SYMBOL_GPL(coresight_find_default_sink);
->>   static int coresight_remove_sink_ref(struct device *dev, void *data)
->>   {
->> diff --git a/drivers/hwtracing/coresight/coresight-kunit-tests.c b/ 
->> drivers/hwtracing/coresight/coresight-kunit-tests.c
->> new file mode 100644
->> index 000000000000..87439769207c
->> --- /dev/null
->> +++ b/drivers/hwtracing/coresight/coresight-kunit-tests.c
->> @@ -0,0 +1,77 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <kunit/test.h>
->> +#include <kunit/device.h>
->> +#include <linux/coresight.h>
->> +
->> +#include "coresight-priv.h"
->> +
->> +static struct coresight_device *coresight_test_device(struct device 
->> *dev)
->> +{
->> +    struct coresight_device *csdev = devm_kcalloc(dev, 1,
->> +                             sizeof(struct coresight_device),
->> +                             GFP_KERNEL);
->> +    csdev->pdata = devm_kcalloc(dev, 1,
->> +                   sizeof(struct coresight_platform_data),
->> +                   GFP_KERNEL);
->> +    return csdev;
->> +}
->> +
->> +static void test_default_sink(struct kunit *test)
->> +{
->> +    /*
->> +     * ETM -> ETF -> ETR -> CATU
->> +     *                ^
->> +     *                | default
-> 
-> minor nit: Using ETM here is going to be confusing, with the SUBTYPE we
-> are using. Please could we rename it something else and also rename the 
-> variable "etm" ? Say, "source" ?
-> 
-> Rest looks good to me.
-> 
-> Suzuki
-> 
-> 
+Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
+broken reference.
 
-Yeah good point, "Source" makes sense.
+Adjust the file entry in QORIQ DPAA2 FSL-MC BUS DRIVER.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+Original patch was sent 8 months ago:
+https://lore.kernel.org/lkml/20240708075124.73522-1-lukas.bulwahn@redhat.com/
+
+Patch was not applied yet. No modifications in this RESEND patch other than
+rebasing it to the current linux-next tree.
+
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 67bfd9109535..e6609b78998d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19578,7 +19578,7 @@ M:	Laurentiu Tudor <laurentiu.tudor@nxp.com>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/ABI/stable/sysfs-bus-fsl-mc
+-F:	Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
++F:	Documentation/devicetree/bindings/misc/fsl,qoriq-mc.yaml
+ F:	Documentation/networking/device_drivers/ethernet/freescale/dpaa2/overview.rst
+ F:	drivers/bus/fsl-mc/
+ F:	include/uapi/linux/fsl_mc.h
+-- 
+2.48.1
 
