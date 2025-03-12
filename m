@@ -1,189 +1,110 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39F324A043
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5388F23A563;
+	Wed, 12 Mar 2025 13:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741784985; cv=none; b=YrXTUFH11NINnn0+TyRaMIjahRvOnOnoobimmU2Gxp4m9jdNn+ozk4wu+fJo4/T8RWXLjGGp9fiWYWLZtgu1WlH2DpMs5pM220E2rRP5lRctD1SJuxxNihh0n3ZXRXn1j4xQLByx2Y7j9PewHxfFiuZOe9PZ35L0hnRYE+aPKeI=
+	t=1741785031; cv=none; b=aGkwo0CIBwcs/88ZJqODZSAxdqqFD17k6M6vvh4lymyyZTBD8C7CqIe+uZi0Cm+ri0LmCs4cf7gDYaq4iHdDUXqhEf6QWSGa00eOvSPYypni4Suosd2/fHXr73eo4xh9cxI5ONLEejqlPnT5qeLB+sOZ7zaRHt39jUwxkhlXtns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741784985; c=relaxed/simple;
-	bh=ga2LSmT61md5n2p7rdCucn4O99aWE/jCY95aOOLVTH4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BGtfojqux31zbvKaDrUMJ01J2Vu/Fcxm+m0aDw0I2MNx8U4i8sG3K5/548mOgNA9BCBGhKqIiM08714V5j3Tg5xzcH8GkPL2HkC28TOSH84QAt0aY4VC4RwyUPH0a3CFLFUwAHePGHvhcva1ayyyKK4gBmQaqHDI4zW3ZTjiU8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=furiosa.ai; spf=none smtp.mailfrom=furiosa.ai; dkim=pass (2048-bit key) header.d=furiosa-ai.20230601.gappssmtp.com header.i=@furiosa-ai.20230601.gappssmtp.com header.b=0awkaYd9; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=furiosa.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=furiosa.ai
+	s=arc-20240116; t=1741785031; c=relaxed/simple;
+	bh=03Su45tvg5hFXwoAPydc+kGyfPPw0WcDWLM4ny1iarA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K+7X55JqUeWl1YqbT9o9FHHo+l7CUfwe8t4DrHKnZ9qM/HaI5L8RUoF5CBJ9wxY9ZstfvBT5K9OHVcPgCp3WO7ALrClEJ3NNzlHdX9mthwxBS9iWt2yo7qALroPUaoG52f5TPkoqjuVHtyw/ENZzwVm3aRsT0m0t60xA6Mm5s/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ak6hIBXK; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=furiosa-ai.20230601.gappssmtp.com header.i=@furiosa-ai.20230601.gappssmtp.com header.b="0awkaYd9"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22337bc9ac3so126921825ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 06:09:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ak6hIBXK"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso907500566b.1;
+        Wed, 12 Mar 2025 06:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=furiosa-ai.20230601.gappssmtp.com; s=20230601; t=1741784983; x=1742389783; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1741785027; x=1742389827; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Sf5Mim88v1zsUv2CF9zajfgiTTZumS4UoXrfg/qlMyE=;
-        b=0awkaYd9We31IKpPedZDh3uvKNmfLqn9OtPI56bX2wSvlrJjNNEEkBqJ6EMF1bOdJu
-         81ukfkIqH7bM5vRz/c7MeCLDiYJdDotmswVhUcZnF/Zyr7rnaj3NF0tnrbBVJJKFJqRk
-         70P+fNaZNNZfrMl6arvVrn49RFaDB/1zmdl94VdKWhhCuBcFlBatDjWz9+VqaQqbi0BM
-         WZuX72wNZ74DnD1eruYlAWmZgjvW+T6Sd+aC9Sj8eM6HOCZzeezgoGH/nFOQO+OlHAcX
-         htWQG2U6cbNI/370ofEH7CyeAkZh4C+ZJOQtmkx9rsGvTPLfAYbGA3pdVDsiGtWjAA5s
-         +l1Q==
+        bh=75nPXSZjGPj5ZqtWjCrn2ByIMWAAHynamAN9dBikK2Q=;
+        b=Ak6hIBXK/C/ZIGOwVog14q9wZu08wRIZ0cQ47j1eHNQ+ILuyoJd54FKoEl9siSRf/H
+         VZ9PaTAW7fJNWfWsck7OpnCVYAB5SCBOQd4jmaZOm8zaNGyD5xKEhVdmSgXJSYtV10KJ
+         V5x52AGgAtjru1HwhbX106fDhALjOn58crpIEKpOUI2Al454O1Yqt6MZIU/Wl6iKmE2z
+         uotf5jEJU/xJDFZhjwSn2vA/qGn8Gbsb+PzxJCKptrms1c0zZulz+pjVVoqNkTZDT9vW
+         DCblkHO47Uf6Myfcn6lQ2vUacdzJ5OQoYAlPYxaKjZl5aVlKr/IXh2lcaSrI8HdLDYlq
+         w7sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741784983; x=1742389783;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sf5Mim88v1zsUv2CF9zajfgiTTZumS4UoXrfg/qlMyE=;
-        b=gpYmaNr6Krcxxo88/eNXlgEWDqCM5N2KXRlrs6k/77A7Lg0AEguFAGwb5rXVp2c3gN
-         or9DWKRpSY5Ba1L7ItK/Pu721NBGU/HOhny5MdW3GQZTDAsGdBmeMkOcoWs35iJTltXH
-         qlcrmFVI4y9cTmAceh2gH5AIGhJliqDWj8CNpLTDwbfWm5+XEF5P5/ZfdhVp3NaMhicv
-         lOJ6Emlh5RnFSu7LYgXzydkGpp4G6eaZkj3aSh3j8rgNZjD1eyrurL/rYFFKdX97aCfV
-         Sbj/h/2VGdNgarTTk+Y0TSW4R/SJbNm8nq5hCHqgww5KDwnW9sd7Ub52dsRAlZdFaPue
-         pquw==
-X-Forwarded-Encrypted: i=1; AJvYcCWU9Cx2ksruv3q/oviFVNZ479bbZOXRlHzejqU9CqFa2ER++HK72PwextjBVEiBZVnxTZznLCzL2WzHptU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLd5mZ7O7WYAt2OdPU2g2FWRrMq9FzicBrypsSy8Mb0qGp5KEU
-	ZV5H5FoFvxOnMqpDgXtochk4yasKJsqdeKDWZKvtIVJx3OJXOIi2NndFsPmk+zgOSZfIAdiIO+b
-	1
-X-Gm-Gg: ASbGncs4OVVfJQ9u5lC045cCy2QnYT4JhI+xjoAoBmtJPD0uDUNN+OvgEO9v2XLVCzv
-	rbqKwZ9+HQfnRK97GBEK4MXI3fAHPX6jiCE976S0Hmh162WortN/G7oNsdwX/qdcrHOUPk8LlZW
-	d2poQm4/ATrpM8taAf51m9frJTNA+xh0NWeCDbpNZnnOUKYtFwCD/xDZh7eoQU1VkQwy7Ynnsg8
-	DHUSZIUveV/kFg1r/duXRX1f0V3ZXSaTl+0wxsgdgHbTvaj8GTC/B/uuUuMBCfF522RzlVB3gX5
-	xnXVqljC15Kggo94PrVA8wpHZEvfxyzRjyPmZ7Y92HYoAuA84Wk1oitOyG1VOmRDBCDDXMFu7Md
-	5AHpw
-X-Google-Smtp-Source: AGHT+IHINSsNMXDf/ujoGNsvP22wMUl9hboDvbpyzHad1RW7/6Vo+ySwFx65tyhXFD9eKYlgsO5pNA==
-X-Received: by 2002:a05:6a20:b68a:b0:1f5:619a:7f4c with SMTP id adf61e73a8af0-1f58cbb5ebbmr11897051637.29.1741784983366;
-        Wed, 12 Mar 2025 06:09:43 -0700 (PDT)
-Received: from sidong.sidong.yang.office.furiosa.vpn ([61.83.209.48])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af5053a85c2sm9432299a12.10.2025.03.12.06.09.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 06:09:43 -0700 (PDT)
-From: Sidong Yang <sidong.yang@furiosa.ai>
-To: Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Cc: Sidong Yang <sidong.yang@furiosa.ai>,
-	linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org
-Subject: [RFC PATCH v2 2/2] btrfs: ioctl: use registered buffer for IORING_URING_CMD_FIXED
-Date: Wed, 12 Mar 2025 13:09:22 +0000
-Message-ID: <20250312130924.11402-3-sidong.yang@furiosa.ai>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250312130924.11402-1-sidong.yang@furiosa.ai>
-References: <20250312130924.11402-1-sidong.yang@furiosa.ai>
+        d=1e100.net; s=20230601; t=1741785027; x=1742389827;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=75nPXSZjGPj5ZqtWjCrn2ByIMWAAHynamAN9dBikK2Q=;
+        b=vKNpwkdtmyw/HQi8D0KybWMjEH4ZTMi7KFIqsZ9Sc+Vzh331wbVpA7fY+/HAMgjJJD
+         /iyG0bkeh2dkTMU87BvHFgUPYK4VYHet4dKLCXR3AnmQupBU+Z8k8GqLTcH2se7jPrjF
+         wOKv36wv1cn0k7IQfWluMvbdZixi8cJi13RGQbD3qlr7RNX6TEvyWYMzMuWPgsfwhl0u
+         +nGLWSAkPnXQcbl2DIdHLCgbEptz6tygZzcHzqvgY1GM4gDenrWl+wCqVZUx19W8qjqH
+         29+aUMSiGHMoTiRpFc8pc7W/QbhMA6zYN2xDWQZvdR5KvENE5Q5oMcpd9KdUWdPAM4oV
+         CeEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4G0QhvJOTix+rOQdjoHOxlZkk27OIGCwSIeWgKDgOqVflK9gP93oT/Wc/B5C2pzhIU2iWGRKmKluw9g==@vger.kernel.org, AJvYcCWf4DiVw0j7eHFLHsqzJS4aQlLzanUMAqboHGVJHZdvGxv0wj1RovYxb3AyjpKIv/QL4aTbysyBtESPf5I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEQoUZIGc/mTRvEzk/qFEHLpo61qdg+v07J1q7aQW6VMQnlybg
+	jPzXio4+JA2hHQmgRh5TUb0G/N7QLJOm3wUAA/3x1sFb6O+N3Gn/
+X-Gm-Gg: ASbGncs18bo7PGukkiHTJN9y/ZrmrsA4dTI886Egva9zpjUvDyaF6DOT0ysDxy+znpB
+	M+2395/5utE5snB5TsEDRhvDPVHmM1yBa2rJ/0GH6+xBzDDrIsoAOpl7DvqRoluSik9iCDVQirp
+	rnKY8/ABV63JiFVO2DHJZGqQeMbbZq0RHfndxk7CBN4eIOHCsGBuOXXFe6CPRBqbcCNmAGOCy9v
+	N9TmUmGnuzK4l1Al6R4YP+4690WBBVYFksxIDyit3UQLfv5IzvUtGrng+t3KAwu8arQiiSMZxU6
+	r5jiQ7WwVWon3ReTF0umoNAtd+pmMvFUpuWaBVjncUuY
+X-Google-Smtp-Source: AGHT+IEdDRJ6qXBMfKuc/WyBjixNVZydYXAZICqURhWRFKP3xWJo0qizR4nH2ita/ugZWSSNuJlntQ==
+X-Received: by 2002:a17:907:c0d:b0:ac2:892f:439 with SMTP id a640c23a62f3a-ac2892f132emr1958853566b.37.1741785027200;
+        Wed, 12 Mar 2025 06:10:27 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2a21f34c1sm483656766b.19.2025.03.12.06.10.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Mar 2025 06:10:26 -0700 (PDT)
+Date: Wed, 12 Mar 2025 13:10:26 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Wei Yang <richard.weiyang@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the mm tree
+Message-ID: <20250312131026.lk5jqrzyrmrlt27v@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20250312113612.31ac808e@canb.auug.org.au>
+ <20250312021420.nvkahcd3enlt3i6s@master>
+ <20250312133050.1d23ed5a@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250312133050.1d23ed5a@canb.auug.org.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-This patch supports IORING_URING_CMD_FIXED flags in io-uring cmd. It
-means that user provided buf_index in sqe that is registered before
-submitting requests. In this patch, btrfs_uring_encoded_read() makes
-iov_iter bvec type by checking the io-uring cmd flag. And there is
-additional bvec field in btrfs_uring_priv for remaining bvec
-lifecycle.
+On Wed, Mar 12, 2025 at 01:30:50PM +1100, Stephen Rothwell wrote:
+>Hi Wei,
+>
+>On Wed, 12 Mar 2025 02:14:20 +0000 Wei Yang <richard.weiyang@gmail.com> wrote:
+>>
+>> Thanks for your fix. It looks good to me.
+>> 
+>> If it is ok to you, I would like to merge this into the original commit.
+>
+>Fine by me.
+>
 
-Signed-off-by: Sidong Yang <sidong.yang@furiosa.ai>
----
- fs/btrfs/ioctl.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+Thanks
 
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index 6c18bad53cd3..7ac5a387ae5d 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2007 Oracle.  All rights reserved.
-  */
- 
-+#include "linux/bvec.h"
- #include <linux/kernel.h>
- #include <linux/bio.h>
- #include <linux/file.h>
-@@ -4644,6 +4645,7 @@ struct btrfs_uring_priv {
- 	unsigned long nr_pages;
- 	struct kiocb iocb;
- 	struct iovec *iov;
-+	struct bio_vec *bvec;
- 	struct iov_iter iter;
- 	struct extent_state *cached_state;
- 	u64 count;
-@@ -4711,6 +4713,7 @@ static void btrfs_uring_read_finished(struct io_uring_cmd *cmd, unsigned int iss
- 
- 	kfree(priv->pages);
- 	kfree(priv->iov);
-+	kfree(priv->bvec);
- 	kfree(priv);
- }
- 
-@@ -4730,7 +4733,8 @@ static int btrfs_uring_read_extent(struct kiocb *iocb, struct iov_iter *iter,
- 				   struct extent_state *cached_state,
- 				   u64 disk_bytenr, u64 disk_io_size,
- 				   size_t count, bool compressed,
--				   struct iovec *iov, struct io_uring_cmd *cmd)
-+				   struct iovec *iov, struct io_uring_cmd *cmd,
-+				   struct bio_vec *bvec)
- {
- 	struct btrfs_inode *inode = BTRFS_I(file_inode(iocb->ki_filp));
- 	struct extent_io_tree *io_tree = &inode->io_tree;
-@@ -4767,6 +4771,7 @@ static int btrfs_uring_read_extent(struct kiocb *iocb, struct iov_iter *iter,
- 	priv->start = start;
- 	priv->lockend = lockend;
- 	priv->err = 0;
-+	priv->bvec = bvec;
- 
- 	ret = btrfs_encoded_read_regular_fill_pages(inode, disk_bytenr,
- 						    disk_io_size, pages, priv);
-@@ -4818,6 +4823,7 @@ static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue
- 	u64 start, lockend;
- 	void __user *sqe_addr;
- 	struct btrfs_uring_encoded_data *data = io_uring_cmd_get_async_data(cmd)->op_data;
-+	struct bio_vec *bvec = NULL;
- 
- 	if (!capable(CAP_SYS_ADMIN)) {
- 		ret = -EPERM;
-@@ -4875,9 +4881,19 @@ static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue
- 		}
- 
- 		data->iov = data->iovstack;
--		ret = import_iovec(ITER_DEST, data->args.iov, data->args.iovcnt,
--				   ARRAY_SIZE(data->iovstack), &data->iov,
--				   &data->iter);
-+
-+		if (cmd && (cmd->flags & IORING_URING_CMD_FIXED)) {
-+			ret = io_uring_cmd_import_fixed_vec(
-+				cmd, data->args.iov, data->args.iovcnt,
-+				ITER_DEST, issue_flags, &data->iter, &bvec);
-+			data->iov = NULL;
-+		} else {
-+			ret = import_iovec(ITER_DEST, data->args.iov,
-+					   data->args.iovcnt,
-+					   ARRAY_SIZE(data->iovstack),
-+					   &data->iov, &data->iter);
-+		}
-+
- 		if (ret < 0)
- 			goto out_acct;
- 
-@@ -4929,13 +4945,14 @@ static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue
- 		ret = btrfs_uring_read_extent(&kiocb, &data->iter, start, lockend,
- 					      cached_state, disk_bytenr, disk_io_size,
- 					      count, data->args.compression,
--					      data->iov, cmd);
-+					      data->iov, cmd, bvec);
- 
- 		goto out_acct;
- 	}
- 
- out_free:
- 	kfree(data->iov);
-+	kfree(bvec);
- 
- out_acct:
- 	if (ret > 0)
+Andrew
+
+Would you mind merging it or prefer me to send a new version? 
+
+>-- 
+>Cheers,
+>Stephen Rothwell
+
+
+
 -- 
-2.43.0
-
+Wei Yang
+Help you, Help me
