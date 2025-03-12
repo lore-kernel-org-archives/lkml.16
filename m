@@ -1,123 +1,338 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C156F233D85
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6E823E32D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741776606; cv=none; b=QGkq2SgzOnHZwFFbod3rJk4TUGvIwY2XWRnO19ulYUJWoIxxYTaM3uo8ugf+bVDXtujpmV4LQ2h6GK7n51EnZD04NNMMb0KMTBE/OM//UvHZkJA8aHLGcvZHeoXig7piby0UvVSGmpl4hxEkzUqkahaaRT4Y1wnuACR56ERbSdQ=
+	t=1741776671; cv=none; b=EH9fK65DvD7HRDp0BBh5GSb589XbGLKLZmlDRee9PQvfsaePJ/+fHTKci6ebUkWG2X6t8i0EkEOfgBuv1NBWMont0DkeGOpab8YNWa4MR6d0QcG5mrbiYLyHbk0tEyMZ7KNHsj/ANlP2HD5XWY4dh+v6GHVjitIpN/F1YJlPNQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741776606; c=relaxed/simple;
-	bh=Y45kkFaeGvu203KwL1jnYyfb4Gk/FkGEhZTM1WBbCRc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=r7DjX5M8G5ny55EQfiGHwL89SEduxPsaUZi9PoPKJBnPBX5uSzecdRuuuTOb7LMsrb7vGSB593gbznXV0FUrOF5S7rUIxLLNf10P2826y7Vqo1P81Wy65wSD4lWWCvsem1qKnewyxiIsoQ+n2qHOZny6oVG0lNSgnr9Y+lwibsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ZCRPX36Yhz9sgW;
-	Wed, 12 Mar 2025 11:16:48 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id sWOjLZKmmSMT; Wed, 12 Mar 2025 11:16:48 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZCRPX25Rsz9sgS;
-	Wed, 12 Mar 2025 11:16:48 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 34E478B768;
-	Wed, 12 Mar 2025 11:16:48 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id GVHOBlTWoH6b; Wed, 12 Mar 2025 11:16:48 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id DEF2F8B763;
-	Wed, 12 Mar 2025 11:16:47 +0100 (CET)
-Message-ID: <e5a67a3a-f2ca-45b7-b227-267477c62ccb@csgroup.eu>
-Date: Wed, 12 Mar 2025 11:16:47 +0100
+	s=arc-20240116; t=1741776671; c=relaxed/simple;
+	bh=E5bg+GLYVKpHYRKr5lfXct1sUfJCZ9dFFUkXW6fB0jc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SpLbGyMEYQ/RmaNBZW3MR6Zd6Iv8vfSjI+g8cYfzY6Az3oxxVmJl6479OEZyBVrD034KUDzecHsnMYDFm+jJK7pMh7sG6Syc5HToolW8TPnoP+FgpkzWEj7Zjlcljru0M9K4lFFH0PRRoSo1XhKGHOSCuZTg+cGATkdGZvf8r1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cYaA7A91; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jLaF5k/8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cYaA7A91; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jLaF5k/8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cYaA7A91";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jLaF5k/8";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cYaA7A91";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jLaF5k/8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B296421134;
+	Wed, 12 Mar 2025 10:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741776667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8ZmcVXPZ7+TXW24PsEAaSx1n69dwWK+qUZeeM3lHsqU=;
+	b=cYaA7A91xWHXxdl9U7K633S4EYQnKQmiCdOKZluqgk//Bc/WePa7cKqBLwFmgPqlBVsqFP
+	D8ODmChTV343NLqBj5jYpzWcpoUhWt0mNuTlia9aXgjk22Ga5BBOr/MHRJorpef7u/+aBn
+	PBS/J+8g4azRjbr5JAI3pLMN3aRDl6c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741776667;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8ZmcVXPZ7+TXW24PsEAaSx1n69dwWK+qUZeeM3lHsqU=;
+	b=jLaF5k/8VgjHU2tWUTL7ITjp9U8k1pbPZNZp82brEyj8XoelbF/qfnnKJAY3Xo/P9xCYIq
+	C9u2ORj77/49XFCw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=cYaA7A91;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="jLaF5k/8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741776667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8ZmcVXPZ7+TXW24PsEAaSx1n69dwWK+qUZeeM3lHsqU=;
+	b=cYaA7A91xWHXxdl9U7K633S4EYQnKQmiCdOKZluqgk//Bc/WePa7cKqBLwFmgPqlBVsqFP
+	D8ODmChTV343NLqBj5jYpzWcpoUhWt0mNuTlia9aXgjk22Ga5BBOr/MHRJorpef7u/+aBn
+	PBS/J+8g4azRjbr5JAI3pLMN3aRDl6c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741776667;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8ZmcVXPZ7+TXW24PsEAaSx1n69dwWK+qUZeeM3lHsqU=;
+	b=jLaF5k/8VgjHU2tWUTL7ITjp9U8k1pbPZNZp82brEyj8XoelbF/qfnnKJAY3Xo/P9xCYIq
+	C9u2ORj77/49XFCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A3901132CB;
+	Wed, 12 Mar 2025 10:51:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3vbrJxtn0Wf/LgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 12 Mar 2025 10:51:07 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 5F86DA08CF; Wed, 12 Mar 2025 11:51:03 +0100 (CET)
+Date: Wed, 12 Mar 2025 11:51:03 +0100
+From: Jan Kara <jack@suse.cz>
+To: Ritesh Harjani <ritesh.list@gmail.com>
+Cc: Ojaswin Mujoo <ojaswin@linux.ibm.com>, linux-ext4@vger.kernel.org, 
+	Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>, 
+	linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>
+Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if
+ journal is destroying
+Message-ID: <bct36ajzi6sardnmc6yz4ot4fbpr654b4k2xz54mrtyje7wofq@qpwzbtctwqnf>
+References: <cover.1741270780.git.ojaswin@linux.ibm.com>
+ <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
+ <87ldtfhmo7.fsf@gmail.com>
+ <Z8xAmyICsNlln4Y3@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <87ecz7hcw0.fsf@gmail.com>
+ <Z8xbLrdN3L1E50-G@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <87cyergyb1.fsf@gmail.com>
+ <Z82EjcExRMc8nz2v@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <871pv5cx6v.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linux-next-20250307] Build Failure
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
- Michael Ellerman <mpe@ellerman.id.au>
-References: <70ba4e80-53c4-4583-82f3-2851e0829aa6@linux.ibm.com>
- <5ab103b4-70f0-454e-bca6-0bfc66d143f5@csgroup.eu>
- <c0a716d0-6811-4b1b-b008-d4e97900cb0e@linux.ibm.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <c0a716d0-6811-4b1b-b008-d4e97900cb0e@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871pv5cx6v.fsf@gmail.com>
+X-Rspamd-Queue-Id: B296421134
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[linux.ibm.com,vger.kernel.org,mit.edu,suse.cz,huawei.com,gmail.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -2.51
+X-Spam-Flag: NO
 
+On Mon 10-03-25 10:13:36, Ritesh Harjani wrote:
+> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+> > On Sun, Mar 09, 2025 at 12:11:22AM +0530, Ritesh Harjani wrote:
+> >> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+> >> > On Sat, Mar 08, 2025 at 06:56:23PM +0530, Ritesh Harjani wrote:
+> >> >> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+> >> >> > On Sat, Mar 08, 2025 at 03:25:04PM +0530, Ritesh Harjani (IBM) wrote:
+> >> >> >> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+> >> >> >> > Presently we always BUG_ON if trying to start a transaction on a journal marked
+> >> >> >> > with JBD2_UNMOUNT, since this should never happen. However, while ltp running
+> >> >> >> > stress tests, it was observed that in case of some error handling paths, it is
+> >> >> >> > possible for update_super_work to start a transaction after the journal is
+> >> >> >> > destroyed eg:
+> >> >> >> >
+> >> >> >> > (umount)
+> >> >> >> > ext4_kill_sb
+> >> >> >> >   kill_block_super
+> >> >> >> >     generic_shutdown_super
+> >> >> >> >       sync_filesystem /* commits all txns */
+> >> >> >> >       evict_inodes
+> >> >> >> >         /* might start a new txn */
+> >> >> >> >       ext4_put_super
+> >> >> >> > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
+> >> >> >> >         jbd2_journal_destroy
+> >> >> >> >           journal_kill_thread
+> >> >> >> >             journal->j_flags |= JBD2_UNMOUNT;
+> >> >> >> >           jbd2_journal_commit_transaction
+> >> >> >> >             jbd2_journal_get_descriptor_buffer
+> >> >> >> >               jbd2_journal_bmap
+> >> >> >> >                 ext4_journal_bmap
+> >> >> >> >                   ext4_map_blocks
+> >> >> >> >                     ...
+> >> >> >> >                     ext4_inode_error
+> >> >> >> >                       ext4_handle_error
+> >> >> >> >                         schedule_work(&sbi->s_sb_upd_work)
+> >> >> >> >
+> >> >> >> >                                                /* work queue kicks in */
+> >> >> >> >                                                update_super_work
+> >> >> >> >                                                  jbd2_journal_start
+> >> >> >> >                                                    start_this_handle
+> >> >> >> >                                                      BUG_ON(journal->j_flags &
+> >> >> >> >                                                             JBD2_UNMOUNT)
+> >> >> >> >
+> >> >> >> > Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
+> >> >> >> > destroying only do a journaled (and deferred) update of sb if this flag is not
+> >> >> >> > set. Otherwise, just fallback to an un-journaled commit.
+> >> >> >> >
+> >> >> >> > We set sbi->s_journal_destroying = true only after all the FS updates are done
+> >> >> >> > during ext4_put_super() (except a running transaction that will get commited
+> >> >> >> > during jbd2_journal_destroy()). After this point, it is safe to commit the sb
+> >> >> >> > outside the journal as it won't race with a journaled update (refer
+> >> >> >> > 2d01ddc86606).
+> >> >> >> >
+> >> >> >> > Also, we don't need a similar check in ext4_grp_locked_error since it is only
+> >> >> >> > called from mballoc and AFAICT it would be always valid to schedule work here.
+> >> >> >> >
+> >> >> >> > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
+> >> >> >> > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
+> >> >> >> > Suggested-by: Jan Kara <jack@suse.cz>
+> >> >> >> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+> >> >> >> > ---
+> >> >> >> >  fs/ext4/ext4.h      | 2 ++
+> >> >> >> >  fs/ext4/ext4_jbd2.h | 8 ++++++++
+> >> >> >> >  fs/ext4/super.c     | 4 +++-
+> >> >> >> >  3 files changed, 13 insertions(+), 1 deletion(-)
+> >> >> >> >
+> >> >> >> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> >> >> >> > index 2b7d781bfcad..d48e93bd5690 100644
+> >> >> >> > --- a/fs/ext4/ext4.h
+> >> >> >> > +++ b/fs/ext4/ext4.h
+> >> >> >> > @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
+> >> >> >> >  	 */
+> >> >> >> >  	struct work_struct s_sb_upd_work;
+> >> >> >> >  
+> >> >> >> > +	bool s_journal_destorying;
+> >> >> >> > +
+> >> >> >> >  	/* Atomic write unit values in bytes */
+> >> >> >> >  	unsigned int s_awu_min;
+> >> >> >> >  	unsigned int s_awu_max;
+> >> >> >> > diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
+> >> >> >> > index 9b3c9df02a39..6bd3ca84410d 100644
+> >> >> >> > --- a/fs/ext4/ext4_jbd2.h
+> >> >> >> > +++ b/fs/ext4/ext4_jbd2.h
+> >> >> >> > @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
+> >> >> >> >  {
+> >> >> >> >  	int err = 0;
+> >> >> >> >  
+> >> >> >> > +	/*
+> >> >> >> > +	 * At this point all pending FS updates should be done except a possible
+> >> >> >> > +	 * running transaction (which will commit in jbd2_journal_destroy). It
+> >> >> >> > +	 * is now safe for any new errors to directly commit superblock rather
+> >> >> >> > +	 * than going via journal.
+> >> >> >> > +	 */
+> >> >> >> > +	sbi->s_journal_destorying = true;
+> >> >> >> 
+> >> >> >> This is not correct right. I think what we decided to set this flag
+> >> >> >> before we flush the workqueue. So that we don't schedule any new
+> >> >> >> work after this flag has been set. At least that is what I understood.
+> >> >> >> 
+> >> >> >> [1]: https://lore.kernel.org/all/87eczc6rlt.fsf@gmail.com/
+> >> >> >> 
+> >> >> >> -ritesh
+> >> >> >
+> >> >> > Hey Ritesh,
+> >> >> >
+> >> >> > Yes that is not correct, I missed that in my patch however we realised
+> >> >> > that adding it before flush_work() also has issues [1]. More
+> >> >> > specifically:
+> >> >> 
+> >> >> Ohk. right. 
+> >> >> 
+> >> >> >
+> >> >> >                      **kjournald2**
+> >> >> >                      jbd2_journal_commit_transaction()
+> >> >> >                      ...
+> >> >> >                      ext4_handle_error()
+> >> >> >                         /* s_journal_destorying is not set */
+> >> >> >                         if (journal && !s_journal_destorying)
+> >> >> 
+> >> >> Then maybe we should not schedule another work to update the superblock
+> >> >> via journalling, it the error itself occurred while were trying to
+> >> >> commit the journal txn? 
+> >> >> 
+> >> >> 
+> >> >> -ritesh
+> >> >
+> >> > Hmm, ideally yes that should not happen, but how can we achieve that?
+> >> > For example with the trace we saw:
+> >> >
+> >> >    **kjournald2**
+> >> >    jbd2_journal_commit_transaction()
+> >> >      jbd2_journal_get_descriptor_buffer
+> >> >        jbd2_journal_bmap
+> >> >          ext4_journal_bmap
+> >> >            ext4_map_blocks
+> >> >              ...
+> >> >              ext4_inode_error
+> >> >                ext4_handle_error
+> >> >                  schedule_work(&sbi->s_sb_upd_work)
+> >> >
+> >> > How do we tell ext4_handle_error that it is in the context of a
+> >> > committing txn.
 
+So I was thinking about this. It is not a problem to determine we are
+running in kjournald context - it is enough to check
 
-Le 12/03/2025 à 11:11, Venkat Rao Bagalkote a écrit :
-> 
-> On 12/03/25 4:20 am, Christophe Leroy wrote:
->>
->>
->> Le 09/03/2025 à 13:38, Venkat Rao Bagalkote a écrit :
->>> Greetings!!,
->>>
->>> I see linux-next-20250307 fails to build on IBM Power9 and Power10 
->>> servers.
->>>
->>>
->>> Errors:
->>>
->>> In file included from ^[[01m^[[K<command-line>^[[m^[[K:
->>> ^[[01m^[[K./usr/include/cxl/features.h:11:10:^[[m^[[K 
->>> ^[[01;31m^[[Kfatal error: ^[[m^[[Kuuid/uuid.h: No such file or directory
->>>     11 | #include ^[[01;31m^[[K<uuid/uuid.h>^[[m^[[K
->>>        |          ^[[01;31m^[[K^~~~~~~~~~~~~^[[m^[[K
->>
->> This is unreadable. Please avoid fancy colors that add escapes to 
->> logs. You can unset LANG environment var before building in order to 
->> get pastable stuff.
->>
->> By the way I don't think it is a kernel issue because nowhere in the 
->> kernel you have uuid/uuid.h
->>
->> But can you provide your .config (the actual one, not an old one from 
->> kernel 6.0.0-rc3 like last time) and tell which version of GCC you are 
->> using.
->>
-> Attached are the two config files on both CI nodes build failures were 
-> reported.
-> 
-> On both the CI nodes gcc version is 11.5.0.
-> 
-> Below data are from the failure nodes.
-> 
-> commit-time: 2025-03-07 20:31:46 +1100
-> commit-id: 0a2f889128969dab41861b6e40111aa03dc57014
-> version: 6.14.0-rc5-next-20250307-auto
-> 
+	current == EXT4_SB(sb)->s_journal->j_task
 
-Sorry I'm still puzzled with your config files.
+But I'm not sure checking this in ext4_handle_error() and doing direct sb
+update instead of scheduling a journalled one is always correct. For
+example kjournald does also writeback of ordered data and if that hits an
+error, we do not necessarily abort the journal (well, currently we do as
+far as I'm checking but it seems a bit fragile to rely on this).
 
+So I'd rather keep the solution for these umount issues specific to the
+umount path. What if we did:
 
-The one named p10_build_failure contains:
+static void ext4_journal_destroy(struct super_block *sb)
+{
+	/*
+	 * At this point only two things can be operating on the journal.
+	 * JBD2 thread performing transaction commit and s_sb_upd_work
+	 * issuing sb update through the journal. Once we set
+	 * EXT4_FLAGS_JOURNAL_DESTROY, new ext4_handle_error() calls will not
+	 * queue s_sb_upd_work and ext4_force_commit() makes sure any
+	 * ext4_handle_error() calls from the running transaction commit are
+	 * finished. Hence no new s_sb_upd_work can be queued after we
+	 * flush it here.
+	 */
+	set_bit(EXT4_FLAGS_JOURNAL_DESTROY, &EXT4_SB(sb)->s_ext4_flags);
+	ext4_force_commit(sb);
+	flush_work(&EXT4_SB(sb)->s_sb_upd_work);
+	jbd2_journal_destroy(EXT4_SB(sb)->s_journal);
+}
 
-# Linux/powerpc 6.3.0-rc3 Kernel Configuration
-#
-CONFIG_CC_VERSION_TEXT="gcc (GCC) 8.4.1 20200928 (Red Hat 8.4.1-1)"
+And then add the check to ext4_handle_error():
 
+                /*
+                 * In case the fs should keep running, we need to writeout
+                 * superblock through the journal. Due to lock ordering
+                 * constraints, it may not be safe to do it right here so we
+-		 * defer superblock flushing to a workqueue.
++		 * defer superblock flushing to a workqueue. We just need
++		 * to be careful when the journal is already shutting down.
++		 * If we get here in that case, just update the sb directly
++		 * as the last transaction won't commit anyway.
+                 */
+-		if (continue_fs && journal)
++		if (continue_fs && journal &&
++		    !test_bit(EXT4_FLAGS_JOURNAL_DESTROY,
++			      &EXT4_SB(sb)->s_ext4_flags))
+			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
+		else
+			ext4_commit_super(sb);
 
-The one named p10_kdump_config_build_failure contains:
+What do people think about this? Am I missing some possible race?
 
-# Linux/powerpc 6.3.0 Kernel Configuration
-#
-CONFIG_CC_VERSION_TEXT="gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18)"
+								Honza
 
-
-You are talking about CI nodes, do you have an online link to the full 
-report ?
-
-Christophe
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
