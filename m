@@ -1,115 +1,219 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA7D146A68
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74534685;
+	Wed, 12 Mar 2025 03:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741751279; cv=none; b=oKzNgwJ1AeupwzRG5tE0Ogw7opJCS5g7DPxfApuS374kvqXtU3xTLmyb0iX/mYZ05mhkkInapSBOEo/pn/0kHxzINY3753ZTqUPDljYQkLoAZd5VWIngvTc9NuwJCM+Ljct7MT/Dai3L1xREwjb7MqyrwlkBVAQYlndu9e5oN+Y=
+	t=1741751578; cv=none; b=rG3mVsGXuPG+2swhAwDHwpaUZh5OGx6XLVcuoAhZ4R1xiBWT0y8B/+jfwh0wdxyFhi9/2dJ+9wT4vdfy1D9p8/uzma25Nvt8383a1d1/cdyilkx34VCh95NTyvlZH9hdyAX31yVrYR12kXK/K9sRpvne6cP4WF20qhuToQA0jJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741751279; c=relaxed/simple;
-	bh=YQ49OF7BDZHO47nIspBXTN0qZN/kcC0Qb/6b2WEN5PQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jYTt8OrZMS5gDnm2WwiOCQbDj3ww+2elxS8Ht/Hd8ITT86tCsqU0QZ8P27mFsrltnMdRYCwBNrKbDllP1YeT19bwASzHLtZM195Qyg0uPKJxFEHqC5G6DbJ1HVYGYOTuRo2nfLP6IydZOSYpZ4j6l3eZdhouWKPgBnNJKRlhf20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=husD/r7k; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741751578; c=relaxed/simple;
+	bh=sLKqKjYLtwBaRwxi4pI2AP0lZkLdOBbifFarCNv34ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=JyX8cLOsb4wgutVjEwmnMAzTIxNYXzZiZY11F7GOAJEuhbhU1JvjfKRXa025iqAD3Tbmh/MTg6I/E/eLlppxSM88LG5eOodP/Ed93/iTe0EaaDUK66miAzfXCEib0Cklg0otBKYXWKrA3dy24Ue4sYdP0yp7Bb8+yWRYwXjF0QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AxHIzS5J; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="husD/r7k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741751276;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V/taELm4S5wjSnSK9zdR6jac90PyrwFhqo2me21EPLw=;
-	b=husD/r7kP501ofn4VEC1syenvYjHEAwNhk4tBx2j0zF1Mw9Dx+m/lq2yWZlFDL3+UsHUbd
-	vVixLfeGSH15AReSiqunpsyjjXifX8EwLOotDanIgO26vOuR1pDKzlOWb+j65fviB/2y/u
-	9A9+8NZZ2EbnBy/SOnj54iyCFL8Cy3k=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-410-EVC0RFCHPdmtsG1Sx8ft4g-1; Tue,
- 11 Mar 2025 23:47:55 -0400
-X-MC-Unique: EVC0RFCHPdmtsG1Sx8ft4g-1
-X-Mimecast-MFC-AGG-ID: EVC0RFCHPdmtsG1Sx8ft4g_1741751273
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AxHIzS5J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1741751571;
+	bh=csLI6VHnfoRTbr9Hhw1hlQTjIqbLO4KYY8VWFZt9+8w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=AxHIzS5J2+9Jp8BHuQmJ852mWt5T25ssDBoOpK2hnU5Dry6iHvJI7WEUu1tESqRdg
+	 J6Um/4FPtb9OXbJ0Sc9FPdVv06BJfR2RJNSB3I/gX8aQudFCUFEf69j3Ee4KrnEEPN
+	 tNtGC5FL8hH67953uZ/S3ehEpxpKAVMiaUnYtxx1sS+Flqkn3XQXKbj7QJ6tyRmcPa
+	 K7yTUPvNDGTe8tGi6ZTzCEpijCUBIJOaJbCkiXEbeqsJkl6Xnk8MEuI0nb249hyfDB
+	 sYBrzWqefi35hyvRCXdC7QExcaQgvIGjLipfATuFGsUbFf2HvDL8Yq6DUbiPh7qU5+
+	 1vxCsMEArvekg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F22071956087;
-	Wed, 12 Mar 2025 03:47:52 +0000 (UTC)
-Received: from [10.22.65.26] (unknown [10.22.65.26])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BA7391955BCB;
-	Wed, 12 Mar 2025 03:47:49 +0000 (UTC)
-Message-ID: <01d799d1-fc93-4285-aa8f-89ac2d01478b@redhat.com>
-Date: Tue, 11 Mar 2025 23:47:48 -0400
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZCGtV19Hfz4xCW;
+	Wed, 12 Mar 2025 14:52:49 +1100 (AEDT)
+Date: Wed, 12 Mar 2025 14:52:47 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov
+ <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Vlastimil Babka <vbabka@suse.cz>, bpf
+ <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the bpf-next tree
+Message-ID: <20250312145247.380c2aa5@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvme: remove multipath module parameter
-To: Nilay Shroff <nilay@linux.ibm.com>, Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
- Sagi Grimberg <sagi@grimberg.me>, bmarzins@redhat.com,
- Bryan Gurney <bgurney@redhat.com>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org, Marco Patalano <mpatalan@redhat.com>,
- axboe@kernel.dk, Randy Jennings <randyj@purestorage.com>
-References: <Z8hrJ5JVqi7TgFCn@kbusch-mbp> <20250305235119.GB896@lst.de>
- <Z8jk-D3EjEdyBIU5@kbusch-mbp> <20250306000348.GA1233@lst.de>
- <1ffebf60-5672-4cd0-bb5a-934376c16694@suse.de>
- <20250306141837.GA21353@lst.de> <Z8m4vzE36UHWjwep@kbusch-mbp>
- <20250306151654.GA22810@lst.de> <Z8pB9jQALxMN6WaA@kbusch-mbp>
- <b2c9df64-0afc-46cd-9e8d-6a3f41a4f1c7@linux.ibm.com>
- <Z8sUB2bbbMsurZmu@kbusch-mbp>
- <69cdaf9d-2fb4-4ee0-9c32-cc946405a23a@linux.ibm.com>
-Content-Language: en-US
-From: John Meneghini <jmeneghi@redhat.com>
-Organization: RHEL Core Storge Team
-In-Reply-To: <69cdaf9d-2fb4-4ee0-9c32-cc946405a23a@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: multipart/signed; boundary="Sig_/Agm1aDa=ntrjh5CZDTyBZLk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 3/9/25 1:23 PM, Nilay Shroff wrote:
->> It honestly has potential to solve some real problems, like
->> re-enumeration triggered by a link reset on an in-use drive. You'd
->> currently need to close the old handle and open a new on, even though
->> it's the same device. It may not even be possible to do that if that
->> device contains your root partition, and then you can only power cycle.
->>
->> The downside is we wouldn't get the short cut to blk_mq_submit_bio. We'd
->> instead stack that atop an indirect call, so it's not free.
->>
-> Yes agreed however it seems advantages of using an indirect call outweighs
-> using the short cut to blk_mq_submit_bio. Moreover it seems the cost of
-> indirect call is trivial because we already cache the nexthop.
-> 
-> I integrated your proposed patch (with few trivial additional changes on top)
-> and I see that it's coming out nicely. I ran few tests and confirmed it's
-> working well. However, in the proposed patch we*always* delay (~10 sec) the
-Have you tested this with a NVMe-oF controller... yet?
+--Sig_/Agm1aDa=ntrjh5CZDTyBZLk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Where did the number 10 seconds come from?
+Hi all,
 
-> removal of multipath head node. That means that even while removing the
-> nvme module (rmmod nvme) or if user delete/detache the namespace, we delay
-> the removal of head node but that may not be what we want. So I'd suggest
-> instead, delayed removal of multipath head not shall be configurable using a
-> sysfs attribute. With this attribute then we shall let user opt for pinning
-> the head node (with optional delayed time as well?). And it's only when user
+After merging the bpf-next tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
-So be aware the TP-4129 is adding a CQT parameter which does almost exactly this.
+In file included from include/asm-generic/percpu.h:7,
+                 from arch/powerpc/include/asm/percpu.h:28,
+                 from arch/powerpc/include/asm/smp.h:26,
+                 from include/linux/smp.h:119,
+                 from include/linux/lockdep.h:14,
+                 from include/linux/radix-tree.h:14,
+                 from include/linux/idr.h:15,
+                 from include/linux/cgroup-defs.h:13,
+                 from mm/memcontrol.c:28:
+mm/memcontrol.c: In function 'memcg_hotplug_cpu_dead':
+include/linux/percpu-defs.h:242:2: error: passing argument 1 of 'local_lock=
+_acquire' from incompatible pointer type [-Wincompatible-pointer-types]
+  242 | ({                                                                 =
+     \
+      | ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~~
+      |  |
+      |  localtry_lock_t *
+  243 |         __verify_pcpu_ptr(ptr);                                    =
+     \
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~~
+  244 |         arch_raw_cpu_ptr(ptr);                                     =
+     \
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~~
+  245 | })
+      | ~~
+include/linux/percpu-defs.h:254:27: note: in expansion of macro 'raw_cpu_pt=
+r'
+  254 | #define this_cpu_ptr(ptr) raw_cpu_ptr(ptr)
+      |                           ^~~~~~~~~~~
+include/linux/local_lock_internal.h:105:36: note: in expansion of macro 'th=
+is_cpu_ptr'
+  105 |                 local_lock_acquire(this_cpu_ptr(lock));         \
+      |                                    ^~~~~~~~~~~~
+include/linux/local_lock.h:31:9: note: in expansion of macro '__local_lock_=
+irqsave'
+   31 |         __local_lock_irqsave(lock, flags)
+      |         ^~~~~~~~~~~~~~~~~~~~
+mm/memcontrol.c:1960:9: note: in expansion of macro 'local_lock_irqsave'
+ 1960 |         local_lock_irqsave(&memcg_stock.stock_lock, flags);
+      |         ^~~~~~~~~~~~~~~~~~
+In file included from include/linux/local_lock.h:5,
+                 from include/linux/mmzone.h:24,
+                 from include/linux/gfp.h:7,
+                 from include/linux/xarray.h:16,
+                 from include/linux/radix-tree.h:21:
+include/linux/local_lock_internal.h:59:53: note: expected 'local_lock_t *' =
+but argument is of type 'localtry_lock_t *'
+   59 | static inline void local_lock_acquire(local_lock_t *l) { }
+      |                                       ~~~~~~~~~~~~~~^
+include/linux/percpu-defs.h:242:2: error: passing argument 1 of 'local_lock=
+_release' from incompatible pointer type [-Wincompatible-pointer-types]
+  242 | ({                                                                 =
+     \
+      | ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~~
+      |  |
+      |  localtry_lock_t *
+  243 |         __verify_pcpu_ptr(ptr);                                    =
+     \
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~~
+  244 |         arch_raw_cpu_ptr(ptr);                                     =
+     \
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~~
+  245 | })
+      | ~~
+include/linux/percpu-defs.h:254:27: note: in expansion of macro 'raw_cpu_pt=
+r'
+  254 | #define this_cpu_ptr(ptr) raw_cpu_ptr(ptr)
+      |                           ^~~~~~~~~~~
+include/linux/local_lock_internal.h:122:36: note: in expansion of macro 'th=
+is_cpu_ptr'
+  122 |                 local_lock_release(this_cpu_ptr(lock));         \
+      |                                    ^~~~~~~~~~~~
+include/linux/local_lock.h:52:9: note: in expansion of macro '__local_unloc=
+k_irqrestore'
+   52 |         __local_unlock_irqrestore(lock, flags)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+mm/memcontrol.c:1962:9: note: in expansion of macro 'local_unlock_irqrestor=
+e'
+ 1962 |         local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~
+include/linux/local_lock_internal.h:61:53: note: expected 'local_lock_t *' =
+but argument is of type 'localtry_lock_t *'
+   61 | static inline void local_lock_release(local_lock_t *l) { }
+      |                                       ~~~~~~~~~~~~~~^
 
-> shows the intent to pin the node we should delay its removal. This is what
-> exactly (pinning of head node) Christoph's proposed patch implements. So I'd
-> suggest a bit of amalgamation of yours as well as Christoph patch to implement
-> this change.
+Caused by commits
 
-Please cc: me on your patches Nilay, I'd like to test them with my NVMe-oF testbed.
+  0aaddfb06882 ("locking/local_lock: Introduce localtry_lock_t")
+  01d37228d331 ("memcg: Use trylock to access memcg stock_lock.")
 
-/John
+interacting with commit
 
+  885aa5fe7b1d ("memcg: drain obj stock on cpu hotplug teardown")
+
+from the mm-hotfixes tree.
+
+I applied the following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 12 Mar 2025 14:18:03 +1100
+Subject: [PATCH] fix up for "memcg: Use trylock to access memcg stock_lock"
+
+interacting with "memcg: drain obj stock on cpu hotplug teardown" from
+the mm-hotfixes tree.
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ mm/memcontrol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 8f88b8dd8097..87544df4c3b8 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1957,9 +1957,9 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ 	stock =3D &per_cpu(memcg_stock, cpu);
+=20
+ 	/* drain_obj_stock requires stock_lock */
+-	local_lock_irqsave(&memcg_stock.stock_lock, flags);
++	localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
+ 	old =3D drain_obj_stock(stock);
+-	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
++	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+=20
+ 	drain_stock(stock);
+ 	obj_cgroup_put(old);
+--=20
+2.45.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Agm1aDa=ntrjh5CZDTyBZLk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfRBQ8ACgkQAVBC80lX
+0Gwhjgf/SY1L6EY7sBqFhnP+flnrFZsbc+TyMvDrzfsz2JbnfFgufgdHuzR8+jcA
+aE/25UdSpp2x6Qfbe3AWyt5mn/XeMoEermZsV2axGhViqfGhQ8MKOMzD5UYVRUIX
+c2I4cY/mhJwdpDwy3SwLHuvvsKH61GRwxd7LIGgQGH8EdYbdhcfuInCu/owZgfGS
+dcTfqXg93FuwUEOWJAUEq/sJKbPUZxPA1EUUsz8GM9v7CGeAYY9X1X45ejfvO9nA
+pOq7ihS02sh/QbXbkatGZZF5b4s1VpxiV3LTCmqJqzYqRh1RPEdjOxodmXV58R2j
+3/8LfPHpQzkSoWaeL+kZIvEGRSwjwA==
+=KxSD
+-----END PGP SIGNATURE-----
+
+--Sig_/Agm1aDa=ntrjh5CZDTyBZLk--
