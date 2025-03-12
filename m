@@ -1,243 +1,221 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7E21DF735
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18CC23E327
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741775567; cv=none; b=EAgpqEUMYK1ChmB30Z7vHYo4B2VFIxfpszJKd7SqI//xvCCAyhLM+izF2HPxiPgSEUlT3gCI6qK8dMfrLj3hMLl5HbWU4Weqt2htCi4NoGMUs6ZcXPAqDpc7ZCwhkG4Sny0TNP/WosSBWwQ3wSjsHwfsNjAVUMlTjFqlwBi4N+0=
+	t=1741775596; cv=none; b=ON07pwUR7iuVNBSb5wlrO7FND/p+ngKf/VTgsAvmrWYln7/F5gYwPcmQiySiv4Oz6p442sUmzS78isxYRncsZWzJL5iibJTWvIXetKQsu8wiQztWf9PTlAjtiKQgYIOs9sZiWWtubGd7fWcB0OgPxS8DIOlLU3QYVkpo01hOUHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741775567; c=relaxed/simple;
-	bh=XGNhufp/P0Q8Q+TW0utBMugHRIX6fxVWb9Tf0tQVeGk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DUGMBk8xUSXXXM15eXEzfIYDQ5FFIIn1/VRdpt16Xt1vRY81n/6ZEpL5Ma2F70X6cw8mrcC4aSDvJwAuNbg7vxdaurekWTAdFL4BEr2Uo3Kwk0kNd1F8h1pIM3KLDv+3DjLg+cQQsbC3MV3BgKJaMQOVDPro63bGQbdL9Y8MqlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TvzabY/j; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1741775596; c=relaxed/simple;
+	bh=OxNjpOJ6VfzOUaMrWleIBMA1ReLbN1SeLEL4b38qWME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ITcDjAF4H40irylpho+XLbd+FzRkn2jhE/e2LyIqRLp3HpZ8Sqm8zftAH+2ETxQJMRBtPGLCC5aJh17nfelNtpxhl29AaqqHGI7IQFnPtMCGE8qj8vwuO1EXBPs54EQl97RYTMOK64O37xJ9c4XZxUeunqhPz4L2PWfJUBMt3HU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rKlg7GPd; arc=none smtp.client-ip=209.85.221.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TvzabY/j"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39129fc51f8so5072281f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:32:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rKlg7GPd"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-524125f6cadso2078699e0c.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:33:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741775563; x=1742380363; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MLNYJfrGVFfqNPfPze2ZbdlHRTv6KQKhBtISRpzv4Gk=;
-        b=TvzabY/jZ+/WSOAJ5exe4rAtbVPt6Afy7Tw42ftSYNaHj31gsszeQWhUCqu3mZ7IRj
-         gVCrFan27/ZgQuKaLHbEGMqP8o3R07HTur+yZP28WvvtvRVd7OAtG6UK/heFXMFTCZ+3
-         Fk/m31J4MMx6yv2E0LdX0hfOK2SuJLJjjcil72CkAWr9wrRxjd/6RyYi5XL6DOxFWadd
-         S+bbMjWW6hMJH7/CBX/HmlkRmYXD0318j5LI61dNSJS9lDSsxIFO+xR2hdpJFMKeckDH
-         y0twanc5UdrmLl+2v1mHK2QM+ESvtTCp0/XMGRp6KHiRvCdmtxI4Zchl4YGo+aNRVnRU
-         0XXg==
+        d=linaro.org; s=google; t=1741775593; x=1742380393; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KM0MvCdNVxzxXgBH2Q5bQqwEpszrc8WPfw4cYOnLhIo=;
+        b=rKlg7GPd+4NurfyBuZvh1oVboFFdhto0nKlucl3hRnN3sQM2FCpVzxWUQRgHTl7di0
+         CjbKETL4J9yiurUbb2thbiDL8fe8AoZPkQNrh8uAPggHMxE7bj1bMcqpLvwtlmYegPBd
+         W5YXD6uoYq7eVSwyxPu865mw97HnVN09/KqfKDeH8Dmu6K87IkoX8wn3fDsE/XO+W5gT
+         wyNMDs9QLWfzwZW7Lx6vj8HLxCRASQTK+rt4R4BSlHDeH/zN5tw/39pVhIHRK6i+dQ8H
+         KrXd6TxU6M5PE4iFA7MJBmNtFIgJX0Krmj6wPJyGL7/TfXmC3FL5csVWOvBG0TIspUhP
+         y1Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741775563; x=1742380363;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MLNYJfrGVFfqNPfPze2ZbdlHRTv6KQKhBtISRpzv4Gk=;
-        b=CAFf0gGcyHJHjDc6olrq/5RpfLENzMhdakuRyIgjZB8an+GhmRYfOy4E3K6MIiSYHF
-         7XVu/Nu/hNNViQVE2e2bzFsujZ3ZThTWcOpjrAWPXk96/FnOfla7hKQR46MBwjeheJFg
-         xxPK3QOXD27KVitSjg11yxS+efo67D3XTWb7gchK+F/tX/zGS8B32gwr6XiV2hPp2sxt
-         vSL417Df0CeWuW5Wv+pE1vYPQFwYmBpxlXuG3N5rfO9enHQhRn5ww4zRJxiRyXi6aRgA
-         EVeZVSSZ88E+FXxsdC0Wwk4uxOsFCBAFeCHqJZbbBba3holVnYk+u7jOwAyf4S1IzP7W
-         Ex/A==
-X-Gm-Message-State: AOJu0Yw4U8wS5Sfv7qsrOmhmEAauBhd+NEEXIqhfKd6jzQ2WrJxZSspV
-	p6IY9a1e/mW0FXoXWhcyHmS0eFJbj7MBTPeQxfCb4gisM068bDrYaF7jgY+sI0w=
-X-Gm-Gg: ASbGncvq/GpkppXhimH90XSQcNPm9LCh/U48MjIcIKxS+F/DWSJeKAvf6eQYlYMQ1K9
-	nA+zLgpcVutUxrpVl+klzZmnjcj4Ae8n+SLZ3ZhycugVFaYzn0518dXHP31JrmCLMNU5Ub5NcF1
-	5zjuDms8QPzpecXaNRaPjBzcf4Fwst/wK1zHzB866Q0xlwmoeroasIwz5acZmQHV+sCJ2bjWRSd
-	cRUyigWKdssbld5Fkg+w8bbZJJqWmkWMlqcUboPxdBSzmGfNtN0lC0qUsSFg0dYw2QFQPcEtBdN
-	mdl+0E4JYTrY3omBPXBksM0TKn0dhvAIJBLe+LbBIq48ga4=
-X-Google-Smtp-Source: AGHT+IFstWyoNbU2Br602U//uo/eIeA/3WTixN2oQDEHm/zr4ekh3UaCUO2yHxeImVG1RDIzlOdHjA==
-X-Received: by 2002:a5d:64e4:0:b0:391:4889:5045 with SMTP id ffacd0b85a97d-391488951femr9589432f8f.36.1741775563279;
-        Wed, 12 Mar 2025 03:32:43 -0700 (PDT)
-Received: from pop-os.lan ([209.198.129.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfca1sm20313128f8f.22.2025.03.12.03.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 03:32:42 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Wed, 12 Mar 2025 10:31:57 +0000
-Subject: [PATCH v4] coresight: Add a KUnit test for
- coresight_find_default_sink()
+        d=1e100.net; s=20230601; t=1741775594; x=1742380394;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KM0MvCdNVxzxXgBH2Q5bQqwEpszrc8WPfw4cYOnLhIo=;
+        b=KkntoYtRSMMAOm8fzZlNHJwYWp4QlyXKmyye5/uMHAjUGbnGnT0wWHcU1ZPkscTLkS
+         +4j2M/QGAfpz8+1rpog52QdkW/Iq6+jPQCvuiPanjVTcYBtU7isnI0vaTuGn0fp2ZAS0
+         MiJhpA94VpLB/uzyNSY9wUUlMrUh6Py+6PZyNbYmDq3OF+vplk/rtwEDhGhdLS16QfIT
+         vrf0w5apK5cV6lymwRPhtKng1Kz1Swp92dBHZDutrp2nEQVBUCWn/+XN63B4cvQOE0nu
+         1fwpPkn3FxWq94N3FF7l/mraVgbb9Isv1/oAcqvon/qLgcLh6NuWQef4RCTR3NraJzsg
+         bDpw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvjEA2sBsxlRbteE1+9DBK6eINslTtiCQq9CrXxvVsBFoXbTTTUz9Io2OryxzUxyUPdjwvzzzROOCuCgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvRrenQ9lzriR4Z7bc+0HYni6w2mxS1X7RaORUPXtg5UE3QoiL
+	fPNN3tUoute7PddSOi+da2XdXZTcqIdoGTQkFpljbHUXQTyquShpKTQDw5eXun87oK2dOrAueot
+	fD7DJvUAmytsOLQoRerVH6A4GsylKJ8w0EeURpQ==
+X-Gm-Gg: ASbGncuT0xaz1KBmBz0kM7zzP4Ve/2dQ0OAZJVinIXfyTWW8yftfa6j/VpI40VdwM53
+	Vw8ycCiBXOdhhji40/HdKbY1YESCJtbVrPDP94w5bwCuzHGXNEacVbCYE+nVzNwUY+DXGdsuqVp
+	5U5VkWXwHaMffHcPmkJ8nVPdNu66THx9VAiTa63Zo8EGH71LNxx4E6e+fMrnk=
+X-Google-Smtp-Source: AGHT+IFlw8H9uqBvw9xXA5rE2InxUbS79lI5zq6VR1c4tWkxgj7QEGwJsPaP1vOJJJKSz6buJDR0kzLt/Wt2JZPh3lA=
+X-Received: by 2002:a05:6122:8297:b0:520:5a87:66f0 with SMTP id
+ 71dfb90a1353d-523e3d8de95mr13152498e0c.0.1741775593628; Wed, 12 Mar 2025
+ 03:33:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250312-james-cs-kunit-test-v4-1-ae3dd718a26a@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAJxi0WcC/3XOQQ6CMBAF0KuQri3pTKGAK+9hXJRSoIJgWiQaw
- t0tsFCjLv8k//2ZiNPWaEf2wUSsHo0zfedDtAuIqmVXaWoKnwkyjBlnMT3Li3ZUOdrcOjPQQbu
- BcllCUWLEQAvim1erS3Nf1ePJ59q4obePdWSE5bp5iDGISPAsjBGTCChsfKhaaZtDazpp+7C3F
- VmUEV/Nf5+M6I2U51KkmGeJUF8If0MAfyPcI4Uqc5ElnIGAD2Se5yfSVMziNgEAAA==
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Leo Yan <leo.yan@arm.com>
-Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.14.0
+References: <20250311135648.989667520@linuxfoundation.org>
+In-Reply-To: <20250311135648.989667520@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 12 Mar 2025 16:03:01 +0530
+X-Gm-Features: AQ5f1Jp-kXQi5W-EyPUYylM5Jm9lw1_VYlNpkYa3ZexnBwthVaba4bKA-pk1Paw
+Message-ID: <CA+G9fYs0W=2xDtFzNhwg8pipi_iXiEZFNvD4tz8stZL=1fKWAg@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/144] 6.6.83-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a test to confirm that default sink selection skips over an ETF
-and returns an ETR even if it's further away.
+On Tue, 11 Mar 2025 at 19:32, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.6.83 release.
+> There are 144 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 13 Mar 2025 13:56:12 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.6.83-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-This also makes it easier to add new unit tests in the future.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-Signed-off-by: James Clark <james.clark@linaro.org>
----
-Changes in v4:
-- Rename etm to src now that it's not CORESIGHT_DEV_SUBTYPE_SOURCE_PROC
-- Remove the now empty src_ops too
-- Fix a rebase mistake in the Makefile that removed CTCU
-- Link to v3: https://lore.kernel.org/r/20250312-james-cs-kunit-test-v3-1-dcfb69730161@linaro.org
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Changes in v3:
-- Use CORESIGHT_DEV_SUBTYPE_SOURCE_BUS type instead of the default
-  (CORESIGHT_DEV_SUBTYPE_SOURCE_PROC) so that the test still works even
-  when TRBE sinks are registered. This also removes the need for the
-  fake CPU ID callback.
-- Link to v2: https://lore.kernel.org/r/20250305-james-cs-kunit-test-v2-1-83ba682b976c@linaro.org
+## Build
+* kernel: 6.6.83-rc2
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: e7347110295b72c0d0c942ed260f679edf70f859
+* git describe: v6.6.81-152-ge7347110295b
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.8=
+1-152-ge7347110295b
 
-Changes in v2:
-- Let devm free everything rather than doing individual kfrees:
-  "Like with managed drivers, KUnit-managed fake devices are
-  automatically cleaned up when the test finishes, but can be manually
-  cleaned up early with kunit_device_unregister()."
-- Link to v1: https://lore.kernel.org/r/20250225164639.522741-1-james.clark@linaro.org
----
- drivers/hwtracing/coresight/Kconfig                |  9 +++
- drivers/hwtracing/coresight/Makefile               |  1 +
- drivers/hwtracing/coresight/coresight-core.c       |  1 +
- .../hwtracing/coresight/coresight-kunit-tests.c    | 74 ++++++++++++++++++++++
- 4 files changed, 85 insertions(+)
+## Test Regressions (compared to v6.6.78-442-g8f0527d547fe)
 
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index ecd7086a5b83..f064e3d172b3 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -259,4 +259,13 @@ config CORESIGHT_DUMMY
- 
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called coresight-dummy.
-+
-+config CORESIGHT_KUNIT_TESTS
-+	  tristate "Enable Coresight unit tests"
-+	  depends on KUNIT
-+	  default KUNIT_ALL_TESTS
-+	  help
-+	    Enable Coresight unit tests. Only useful for development and not
-+	    intended for production.
-+
- endif
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 8e62c3150aeb..4e6ea5b05b01 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -53,3 +53,4 @@ obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
- obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
- obj-$(CONFIG_CORESIGHT_CTCU) += coresight-ctcu.o
- coresight-ctcu-y := coresight-ctcu-core.o
-+obj-$(CONFIG_CORESIGHT_KUNIT_TESTS) += coresight-kunit-tests.o
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index fb43ef6a3b1f..47af75ba7a00 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -959,6 +959,7 @@ coresight_find_default_sink(struct coresight_device *csdev)
- 	}
- 	return csdev->def_sink;
- }
-+EXPORT_SYMBOL_GPL(coresight_find_default_sink);
- 
- static int coresight_remove_sink_ref(struct device *dev, void *data)
- {
-diff --git a/drivers/hwtracing/coresight/coresight-kunit-tests.c b/drivers/hwtracing/coresight/coresight-kunit-tests.c
-new file mode 100644
-index 000000000000..c8f361767c45
---- /dev/null
-+++ b/drivers/hwtracing/coresight/coresight-kunit-tests.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <kunit/test.h>
-+#include <kunit/device.h>
-+#include <linux/coresight.h>
-+
-+#include "coresight-priv.h"
-+
-+static struct coresight_device *coresight_test_device(struct device *dev)
-+{
-+	struct coresight_device *csdev = devm_kcalloc(dev, 1,
-+						     sizeof(struct coresight_device),
-+						     GFP_KERNEL);
-+	csdev->pdata = devm_kcalloc(dev, 1,
-+				   sizeof(struct coresight_platform_data),
-+				   GFP_KERNEL);
-+	return csdev;
-+}
-+
-+static void test_default_sink(struct kunit *test)
-+{
-+	/*
-+	 * Source -> ETF -> ETR -> CATU
-+	 *                   ^
-+	 *                   | default
-+	 */
-+	struct device *dev = kunit_device_register(test, "coresight_kunit");
-+	struct coresight_device *src = coresight_test_device(dev),
-+				*etf = coresight_test_device(dev),
-+				*etr = coresight_test_device(dev),
-+				*catu = coresight_test_device(dev);
-+	struct coresight_connection conn = {};
-+
-+	src->type = CORESIGHT_DEV_TYPE_SOURCE;
-+	/*
-+	 * Don't use CORESIGHT_DEV_SUBTYPE_SOURCE_PROC, that would always return
-+	 * a TRBE sink if one is registered.
-+	 */
-+	src->subtype.source_subtype = CORESIGHT_DEV_SUBTYPE_SOURCE_BUS;
-+	etf->type = CORESIGHT_DEV_TYPE_LINKSINK;
-+	etf->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_BUFFER;
-+	etr->type = CORESIGHT_DEV_TYPE_SINK;
-+	etr->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_SYSMEM;
-+	catu->type = CORESIGHT_DEV_TYPE_HELPER;
-+
-+	conn.src_dev = src;
-+	conn.dest_dev = etf;
-+	coresight_add_out_conn(dev, src->pdata, &conn);
-+
-+	conn.src_dev = etf;
-+	conn.dest_dev = etr;
-+	coresight_add_out_conn(dev, etf->pdata, &conn);
-+
-+	conn.src_dev = etr;
-+	conn.dest_dev = catu;
-+	coresight_add_out_conn(dev, etr->pdata, &conn);
-+
-+	KUNIT_ASSERT_PTR_EQ(test, coresight_find_default_sink(src), etr);
-+}
-+
-+static struct kunit_case coresight_testcases[] = {
-+	KUNIT_CASE(test_default_sink),
-+	{}
-+};
-+
-+static struct kunit_suite coresight_test_suite = {
-+	.name = "coresight_test_suite",
-+	.test_cases = coresight_testcases,
-+};
-+
-+kunit_test_suites(&coresight_test_suite);
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("James Clark <james.clark@linaro.org>");
-+MODULE_DESCRIPTION("Arm CoreSight KUnit tests");
+## Metric Regressions (compared to v6.6.78-442-g8f0527d547fe)
 
----
-base-commit: 3eadce8308bc8d808fd9e3a9d211c84215087451
-change-id: 20250305-james-cs-kunit-test-3af1df2401e6
+## Test Fixes (compared to v6.6.78-442-g8f0527d547fe)
 
-Best regards,
--- 
-James Clark <james.clark@linaro.org>
+## Metric Fixes (compared to v6.6.78-442-g8f0527d547fe)
 
+## Test result summary
+total: 122461, pass: 100025, fail: 3148, skip: 18798, xfail: 490
+
+## Build Summary
+* arc: 6 total, 5 passed, 1 failed
+* arm: 133 total, 133 passed, 0 failed
+* arm64: 46 total, 42 passed, 4 failed
+* i386: 31 total, 26 passed, 5 failed
+* mips: 30 total, 25 passed, 5 failed
+* parisc: 5 total, 5 passed, 0 failed
+* powerpc: 36 total, 33 passed, 3 failed
+* riscv: 23 total, 22 passed, 1 failed
+* s390: 18 total, 14 passed, 4 failed
+* sh: 12 total, 10 passed, 2 failed
+* sparc: 9 total, 8 passed, 1 failed
+* x86_64: 38 total, 37 passed, 1 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
