@@ -1,91 +1,226 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1D33595E
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 08:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B0093595E
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 08:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741766474; cv=none; b=sqlguLCglKqGsWBGaC6xRZmzi3rV2v+5WuQtfHiKBvJkXHrbmPPhVFWkQS7B1PF65a39PoZ0JyK89Zs9FudXZEdZs1CCUdkshDxzwJ6YVBGZpDrkCgYrt518KoAerdhfRj9sJz0MsD1JZFfHD2c81Qduyj/iPDAV13FLCUE8n0Q=
+	t=1741766521; cv=none; b=gMPafYnK6bouDk1gaoG3uV+xYQ184tOVH6zrf8Ieg/ume+6IT9xPD7VJKbI6qxK54IFPltlfFMDHa89eMtK2hshVd7JRRBdj+qh5YepQyNlK0XICsargI2sSxv45hxmkZct/wvpoCWkZhudYZ8bAZQECjCOdG/vT6kA8TpbgqBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741766474; c=relaxed/simple;
-	bh=cV03ESb0BZFSnHGOdvbKkOjLSRJ8MayLsViiXqoCGyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kij6RImTr97zA/Ob2fNbwQHSmYCvBCx787PyZbB+cdfl9tEA0Q3lrxyDSYBQ+4vKk2cv/4rm6Au6zJwk89DnoLvdjmzPjMjM4HznfjpvN/iHfH8aqREXTGFUisbldbfnZYsSRddbrD+4erYc1/lo3EqcEz7NB39vv4SumvHULC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B/ScKAp4; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1741766521; c=relaxed/simple;
+	bh=W9ervlCwe7OgcuPAIH32zT5xurAdtHI7r9eObaBpcQc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lQfzdG8XmY39W2U7XfVXy3kUty2tZ+Pi6EgKZQ4wejHqL10JNWa9znkAgB9l8Lh+G3bOLOgr7Qi5W9rOXuhDWFcQ97o7jejbFjw0tE9Q/d9KvN+g2y4TCXvhkKkdBz8N0AodMiaxo8g9ezdxv2WjpOvW546oN/nCYcRSLKMCA6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HPbzTlQg; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B/ScKAp4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0yfgPQW3aVyZ3pxPAQkcuvzAyczIEDG/1UyKLgZ5UfM=; b=B/ScKAp4tU84syqN+XKwFwCjEJ
-	IRlrFurAKUV4+IKP6C5tYhyofag/DcH2bt7Mv9fkRoi/gDRg85NsaVpz0QZ7pQbvV4FuAorkguMLH
-	uFvpGoTCZ0Zdve0qoP5XvyP7DyPzGldZq4Sn+xXSZXe8eeglCAmo5D0HF6wWBdWLeDl5bPUY1jy4y
-	EOMoAix1Pa3+jDuKHXxTBsglztJtRGiuCi7xcr6/Fj4f8s9ynv1N1M6o+nYTm7+EMYQ1bM+q9SW5w
-	15fJRqVhC0LZG5DFP2bK4qF8w3C/FKSWrQlG6zDpyXCUzoqUA2VMK0D2KZJyzw2Fb+cbd40K47txC
-	2iwice+g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsH1T-00000002KjG-3jNP;
-	Wed, 12 Mar 2025 08:01:04 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 81CEE300599; Wed, 12 Mar 2025 09:01:02 +0100 (CET)
-Date: Wed, 12 Mar 2025 09:01:02 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Libo Chen <libo.chen@oracle.com>
-Cc: mgorman@techsingularity.net, linux-kernel@vger.kernel.org,
-	mingo@redhat.com, tj@kernel.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, akpm@linux-foundation.org,
-	longman@redhat.com, lorenzo.stoakes@oracle.com
-Subject: Re: [PATCH] sched/numa: skip VMA scanning on memory pinned to one
- NUMA node via cpuset.mems
-Message-ID: <20250312080102.GF19424@noisy.programming.kicks-ass.net>
-References: <20250311160447.2813222-1-libo.chen@oracle.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HPbzTlQg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=4QvIQ
+	XwRafvQ580MV0Rsrv/OXQwP41zDVRl4xERsjyo=; b=HPbzTlQgCtphrtXf8ZtoJ
+	xVfmywixzn63XAIArXBq8H31CcgyJHueheoDC/3zC4mleJXlgT+6eXoVxr3ZiIGd
+	BQsjsPIc5HGMOt5lpgB9jL+vGxuDT7Dc3ueHRqfwZ7wzo7u8HWKxLkpHvjLdW6pj
+	PmFpSkKVcKWPzITq8y7NUI=
+Received: from ProDesk.. (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wB3RA0rP9FnyOpJSA--.4036S2;
+	Wed, 12 Mar 2025 16:00:47 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: vkoul@kernel.org
+Cc: heiko@sntech.de,
+	kishon@kernel.org,
+	sebastian.reichel@collabora.com,
+	yubing.zhang@rock-chips.com,
+	dmitry.baryshkov@linaro.org,
+	lumag@kernel.org,
+	frank.wang@rock-chips.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v2] phy: rockchip: usbdp: Only verify link rates/lanes/voltage when the corresponding set flags are set
+Date: Wed, 12 Mar 2025 16:00:07 +0800
+Message-ID: <20250312080041.524546-1-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311160447.2813222-1-libo.chen@oracle.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wB3RA0rP9FnyOpJSA--.4036S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZF1DJFyUtr4fXFWrCr1ftFb_yoWrAr48pa
+	y5KFs8Gr15KFnxWay5tr1kCFn8Gan2qa1xJrWakayrX3W5A3yrZF97ury3Ar4rGr97AFWS
+	yFWftFy5CF4DA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jwTmfUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqBEOXmfRN93ULAAAsN
 
-On Tue, Mar 11, 2025 at 09:04:47AM -0700, Libo Chen wrote:
-> When the memory of the current task is pinned to one NUMA node by cgroup,
-> there is no point in continuing the rest of VMA scanning and hinting page
-> faults as they will just be overhead. With this change, there will be no
-> more unnecessary PTE updates or page faults in this scenario.
+From: Andy Yan <andy.yan@rock-chips.com>
 
-Its been a while since I looked at all this, but if we don't scan these
-pages, then it will not account for these pages, and the pinned memory
-will not become an attractor for the tasks that use this memory, right?
+According documentation of phy_configure_opts_dp, at the configure
+stage, link rates should only be verify/configure when set_rate
+flag is set, the same applies to lanes and voltage.
 
-> Signed-off-by: Libo Chen <libo.chen@oracle.com>
-> ---
->  kernel/sched/fair.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index c798d27952431..ec4749a7be33a 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -3315,6 +3315,13 @@ static void task_numa_work(struct callback_head *work)
->  	if (p->flags & PF_EXITING)
->  		return;
->  
-> +	/*
-> +	 * Memory is pinned to only one NUMA node via cpuset.mems, naturally
-> +	 * no page can be migrated.
-> +	 */
-> +	if (nodes_weight(cpuset_current_mems_allowed) == 1)
-> +		return;
-> +
->  	if (!mm->numa_next_scan) {
->  		mm->numa_next_scan = now +
->  			msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
-> -- 
-> 2.43.5
-> 
+So do it as the documentation says.
+Because voltage setting depends on the lanes, link rates set
+previously, so record the link rates and lanes at it's verify stage.
+
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
+---
+
+Changes in v2:
+- Make each check of link_rates/lanes/voltages helper functions
+- Refactor commit message
+
+ drivers/phy/rockchip/phy-rockchip-usbdp.c | 87 ++++++++++++++---------
+ 1 file changed, 53 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+index c04cf64f8a35..fff04e0fbd80 100644
+--- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
++++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+@@ -187,6 +187,8 @@ struct rk_udphy {
+ 	u32 dp_aux_din_sel;
+ 	bool dp_sink_hpd_sel;
+ 	bool dp_sink_hpd_cfg;
++	unsigned int link_rate;
++	unsigned int lanes;
+ 	u8 bw;
+ 	int id;
+ 
+@@ -1102,15 +1104,19 @@ static int rk_udphy_dp_phy_power_off(struct phy *phy)
+ 	return 0;
+ }
+ 
+-static int rk_udphy_dp_phy_verify_link_rate(unsigned int link_rate)
++/*
++ * Verify link rate
++ */
++static int rk_udphy_dp_phy_verify_link_rate(struct rk_udphy *udphy,
++					    struct phy_configure_opts_dp *dp)
+ {
+-	switch (link_rate) {
++	switch (dp->link_rate) {
+ 	case 1620:
+ 	case 2700:
+ 	case 5400:
+ 	case 8100:
++		udphy->link_rate = dp->link_rate;
+ 		break;
+-
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1118,45 +1124,44 @@ static int rk_udphy_dp_phy_verify_link_rate(unsigned int link_rate)
+ 	return 0;
+ }
+ 
+-static int rk_udphy_dp_phy_verify_config(struct rk_udphy *udphy,
+-					 struct phy_configure_opts_dp *dp)
++static int rk_udphy_dp_phy_verify_lanes(struct rk_udphy *udphy,
++					struct phy_configure_opts_dp *dp)
+ {
+-	int i, ret;
+-
+-	/* If changing link rate was required, verify it's supported. */
+-	ret = rk_udphy_dp_phy_verify_link_rate(dp->link_rate);
+-	if (ret)
+-		return ret;
+-
+-	/* Verify lane count. */
+ 	switch (dp->lanes) {
+ 	case 1:
+ 	case 2:
+ 	case 4:
+ 		/* valid lane count. */
++		udphy->lanes = dp->lanes;
+ 		break;
+ 
+ 	default:
+ 		return -EINVAL;
+ 	}
+ 
+-	/*
+-	 * If changing voltages is required, check swing and pre-emphasis
+-	 * levels, per-lane.
+-	 */
+-	if (dp->set_voltages) {
+-		/* Lane count verified previously. */
+-		for (i = 0; i < dp->lanes; i++) {
+-			if (dp->voltage[i] > 3 || dp->pre[i] > 3)
+-				return -EINVAL;
++	return 0;
++}
+ 
+-			/*
+-			 * Sum of voltage swing and pre-emphasis levels cannot
+-			 * exceed 3.
+-			 */
+-			if (dp->voltage[i] + dp->pre[i] > 3)
+-				return -EINVAL;
+-		}
++/*
++ * If changing voltages is required, check swing and pre-emphasis
++ * levels, per-lane.
++ */
++static int rk_udphy_dp_phy_verify_voltages(struct rk_udphy *udphy,
++					   struct phy_configure_opts_dp *dp)
++{
++	int i;
++
++	/* Lane count verified previously. */
++	for (i = 0; i < udphy->lanes; i++) {
++		if (dp->voltage[i] > 3 || dp->pre[i] > 3)
++			return -EINVAL;
++
++		/*
++		 * Sum of voltage swing and pre-emphasis levels cannot
++		 * exceed 3.
++		 */
++		if (dp->voltage[i] + dp->pre[i] > 3)
++			return -EINVAL;
+ 	}
+ 
+ 	return 0;
+@@ -1196,9 +1201,23 @@ static int rk_udphy_dp_phy_configure(struct phy *phy,
+ 	u32 i, val, lane;
+ 	int ret;
+ 
+-	ret = rk_udphy_dp_phy_verify_config(udphy, dp);
+-	if (ret)
+-		return ret;
++	if (dp->set_rate) {
++		ret = rk_udphy_dp_phy_verify_link_rate(udphy, dp);
++		if (ret)
++			return ret;
++	}
++
++	if (dp->set_lanes) {
++		ret = rk_udphy_dp_phy_verify_lanes(udphy, dp);
++		if (ret)
++			return ret;
++	}
++
++	if (dp->set_voltages) {
++		ret = rk_udphy_dp_phy_verify_voltages(udphy, dp);
++		if (ret)
++			return ret;
++	}
+ 
+ 	if (dp->set_rate) {
+ 		regmap_update_bits(udphy->pma_regmap, CMN_DP_RSTN_OFFSET,
+@@ -1243,9 +1262,9 @@ static int rk_udphy_dp_phy_configure(struct phy *phy,
+ 	}
+ 
+ 	if (dp->set_voltages) {
+-		for (i = 0; i < dp->lanes; i++) {
++		for (i = 0; i < udphy->lanes; i++) {
+ 			lane = udphy->dp_lane_sel[i];
+-			switch (dp->link_rate) {
++			switch (udphy->link_rate) {
+ 			case 1620:
+ 			case 2700:
+ 				regmap_update_bits(udphy->pma_regmap,
+-- 
+2.34.1
+
