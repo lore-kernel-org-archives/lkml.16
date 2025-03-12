@@ -1,32 +1,30 @@
 Received: from mail.mixaill.net (mail.mixaill.net [144.76.234.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF86E24293F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7D924293D
 	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:40:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.234.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741783210; cv=none; b=AKlKQK9Cx4IRI35+k84UOGTFzwqb2QKvwETAcXcsyOwQQRo5ETuGshKMQmcM1BT7//09LkdhU716dEhqSVwX6kypCcfT+XfdUggMe8hHSDPU1OVBlsr3z+Da1k64lvuF7It1o4Zg/0d3Kb5ggMPJE711sN55rRmI+k1UGTeEHp0=
+	t=1741783210; cv=none; b=PDXWgM51nkL7qH3ZuQT8Zw6yRzYnCoAesZE2Ofp8gwT1UdSM6RX0m8Y0/BB/fkDhOODK0R7xQLqU+8b9Xfn5NYZ3FEAGDPKwuHFY5VFZqFK5AtlPCbvRXnLdgMh5R3fCGhI2UIvC6FdHJOgL2udyIkTXYjj0guiJRg9UAoNodi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741783210; c=relaxed/simple;
-	bh=jMT9AsMuwXF1APi4NbcUAZSoszB8NSVVnpmjQkxw23k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CbdJKL7oB3OTQrXLvzmpzBxAaos+eMwVNPjzTEw+FQuFIcU4dB/SHZh7jYoS7vFFmwmqyUlpicSiOe0QVHuT0wumHI2oyXZpKtd4sXzqBgdVjVpLgNdjIOUBWx0biMLzNZZrbK3NxJbMfyClxz3bVv8qASIEKDC3xCyCN7KEH8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net; spf=pass smtp.mailfrom=mixaill.net; dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b=tkA3Ff7n; arc=none smtp.client-ip=144.76.234.135
+	bh=8p3wmtvaxpnaXmTnFpm3OTYjLw0zDBsKg9fMzhaO27A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mq5NJgCDYX5p9gKUmUCx5YGXpYvgTl90/aha2c4IOn4+CZlLHEJP2yJlN3ENs8Tii98Xd2x0AX9f1sIhVshFsMy0DKu3lvvTU/Qpsg1VfJFk4AxsxmAqnlrIsBcdAojKSdHThhScJ6RuNT8GCAs3wIOHTTw8BnbqjaRcOKjBsCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net; spf=pass smtp.mailfrom=mixaill.net; dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b=FC72MKj2; arc=none smtp.client-ip=144.76.234.135
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mixaill.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b="tkA3Ff7n"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 23978615E2;
-	Wed, 12 Mar 2025 12:32:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b="FC72MKj2"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 481D161630;
+	Wed, 12 Mar 2025 12:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mixaill.net; s=dkim;
-	t=1741782741; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=F5Rmm+CnhuT5tHMtHkTvsAOQTGz1NZaJrStAC8PQUF8=;
-	b=tkA3Ff7nq7L6d6/QZEHqxutLXpeazHekpRJQTR/sl4x2REpVQI0Cxd9t1djgN3aBthwXwa
-	V6Jkdf3ksU15e7x2MF4U8k1EVz03t51YD10NqoQxVgEmPlqZ0ITPy7Ze0p37glRrZOClxb
-	8TKFu+mPVikQ1cDu87W5PmeVuhP+HfAAR9r5jbReUEzguDNVBzHASKVjyG5Wasw87a9Heb
-	Ras4oNTq+jfDrwqwCMVrqr/yjN1cq/nAVlVZXCscziK/ctgKdfnVu94AKtAD0AFoyUde0r
-	tqd8GaHZmdBcsVsyy4LBhjvdQIo9MsbZDE7YSzFeP3uCSrNOIehDr2S3bU/6Mw==
+	t=1741782739; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=fKiS7lKcy8uLNsvd0XZ9yLjcg8QrtSx5yuZNndO+ZrA=;
+	b=FC72MKj22sFMpGd2RWIROysi2Zbl/EZJw9qeOy/jJ7ycJWZenr8YkVpKT5eNBju5CgNBvn
+	h5yNk0uUzSUy8pk5KAygRgnuXQygK/C+bNZFDIdWIzfOVJoHCsQ854aZNN3Fc7iA8YYZIP
+	n+F4LQHSkcQm0+iqhrM+puISWNBCosCsagnOtNe1itcfilYfOG3+49JzBxZ8FgWvKeu/Vc
+	OgUTMWAVKkrz1Nir/O4wKVUjGdf+Kt3SnNOK2bOcN4b2k0rCJZG2XZ9ik/YwGoC4uMp65Y
+	TZ1vCFSAXUMqcShVMbAxMNjKPrWVGA+ddfKb39ZDXouuuVLJzClM6RzPSY8avQ==
 From: Mikhail Paulyshka <me@mixaill.net>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -35,12 +33,10 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 	x86@kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Mikhail Paulyshka <me@mixaill.net>
-Subject: [PATCH 2/2] x86/rdrand: hide RDRAND and RDSEED from CPUID in case of a malfunction
-Date: Wed, 12 Mar 2025 15:31:30 +0300
-Message-ID: <20250312123130.8290-3-me@mixaill.net>
+Subject: [PATCH 0/2] x86/rdrand: implement sanity check for RDSEED
+Date: Wed, 12 Mar 2025 15:31:28 +0300
+Message-ID: <20250312123130.8290-1-me@mixaill.net>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250312123130.8290-1-me@mixaill.net>
-References: <20250312123130.8290-1-me@mixaill.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,73 +46,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Some applications use the CPUID call instead of /proc/cpuinfo to get
-CPU capabilities. In this case, they will still try to use non-functional
-RDRAND/RDSEED implementations.
+On the AMD Cyan Skillfish (Family 0x17 Model 0x47 Stepping 0x0), which 
+is a Zen2-based APU found on the AMD BC-250 board, there is a situation 
+where RDRAND works fine, but RDSEED generates FF. This leads to some 
+applications that use RDSEED to generate random numbers (such as 
+Qt and KDE) into a nearly unusable state.
 
-Disables visibility of RDRAND and RDSEED on AMD platforms.
+Although AMD has fixed the Zen2 RDRAND issues in 2019 with a microcode update, 
+no such update has been released for the Family 0x17 Model 0x47 core.
 
-Signed-off-by: Mikhail Paulyshka <me@mixaill.net>
----
- arch/x86/include/asm/msr-index.h       | 1 +
- arch/x86/kernel/cpu/rdrand.c           | 5 +++++
- tools/arch/x86/include/asm/msr-index.h | 1 +
- 3 files changed, 7 insertions(+)
+This patchset introduces an separate sanity check for RDSEED and hides the
+RDSEED and RDRAND from CPUID on AMD platforms in the case of a malfunction.
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 72765b2fe0d8..bc5ef95cf0cb 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -614,6 +614,7 @@
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
-+#define MSR_AMD64_CPUID_FN_7		0xc0011002
- #define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_LS_CFG		0xc0011020
- #define MSR_AMD64_DC_CFG		0xc0011022
-diff --git a/arch/x86/kernel/cpu/rdrand.c b/arch/x86/kernel/cpu/rdrand.c
-index e9f7ef5dfe25..031c4297a54a 100644
---- a/arch/x86/kernel/cpu/rdrand.c
-+++ b/arch/x86/kernel/cpu/rdrand.c
-@@ -11,6 +11,7 @@
- #include <asm/processor.h>
- #include <asm/archrandom.h>
- #include <asm/sections.h>
-+#include <asm/msr.h>
- 
- 
- enum { SAMPLES = 8, MIN_CHANGE = 5 };
-@@ -46,6 +47,8 @@ void x86_init_rdrand(struct cpuinfo_x86 *c)
- 
- 	if (failure) {
- 		clear_cpu_cap(c, X86_FEATURE_RDRAND);
-+		if (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON)
-+			msr_clear_bit(MSR_AMD64_CPUID_FN_1, 62);
- 		pr_emerg("RDRAND is not reliable on this platform; disabling.\n");
- 	}
- }
-@@ -82,6 +85,8 @@ void x86_init_rdseed(struct cpuinfo_x86 *c)
- 
- 	if (failure) {
- 		clear_cpu_cap(c, X86_FEATURE_RDSEED);
-+		if (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON)
-+			msr_clear_bit(MSR_AMD64_CPUID_FN_7, 18);
- 		pr_emerg("RDSEED is not reliable on this platform; disabling.\n");
- 	}
- }
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index 3ae84c3b8e6d..3deb6c11f134 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -612,6 +612,7 @@
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
-+#define MSR_AMD64_CPUID_FN_7		0xc0011002
- #define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_LS_CFG		0xc0011020
- #define MSR_AMD64_DC_CFG		0xc0011022
+Mikhail Paulyshka (2):
+  x86/rdrand: implement sanity check for RDSEED
+  x86/rdrand: hide RDRAND and RDSEED from CPUID in case of a malfunction
+
+ arch/x86/include/asm/archrandom.h      |  1 +
+ arch/x86/include/asm/msr-index.h       |  1 +
+ arch/x86/kernel/cpu/common.c           |  1 +
+ arch/x86/kernel/cpu/rdrand.c           | 48 ++++++++++++++++++++++++--
+ tools/arch/x86/include/asm/msr-index.h |  1 +
+ 5 files changed, 49 insertions(+), 3 deletions(-)
+
 -- 
 2.48.1
 
