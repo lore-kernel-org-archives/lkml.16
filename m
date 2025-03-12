@@ -1,95 +1,87 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F0980034
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 01:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E994C80034;
+	Wed, 12 Mar 2025 01:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741741759; cv=none; b=p+fB9GgYG5w/s+jX/y/X7g+Lu91V/W9KIhPsAU/w873LBQOZUCv3mA92CcPVQWXcUho19R67vM+8435qfgQ3tiMdd9K6I383spGCRRhBZQ/tsc0niuNZiBLpU7wKUtZ1Q3KBBdoZ6S8yp3JIA2SXmT0uirQOSJN2rPLWiQ6wAZA=
+	t=1741741842; cv=none; b=uR02RFk/2368r7UEhM+YLi3w3Mp+qBI7pgd6j+O6qrr4faSCl8F0LBCpLIXp82uVb5bshnLj4g475IylK7yMaJ/qTe3hDtLvI53SBPewdMMQVOYIZIbjKu534V6EfFKSeHXyiwkbhHo75Gh47Mcl2uhI1+TgLFPFWjjkZj7sNOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741741759; c=relaxed/simple;
-	bh=8v10IauO9+ZYWShfiIg8lWU0cAyNhQMaXPvPDC9VdPM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X4GACNokIgh1ZB+DrMF2JmMERS/e1WzH9F+T1vRn1x8NSFL4FN5lmhPUMKEZnwmt6VOc8wJTIs4580ry+WpysxSWufp1UVobsopCcOwGVD/TnrSMXAQE8htOOKgtVgUQw8juXUs1EWIXbbzbpFfnNdkqBCC012D247Alz74rdvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=one-eyed-alien.net; spf=pass smtp.mailfrom=one-eyed-alien.net; dkim=pass (1024-bit key) header.d=one-eyed-alien.net header.i=@one-eyed-alien.net header.b=o6io00gU; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=one-eyed-alien.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=one-eyed-alien.net
+	s=arc-20240116; t=1741741842; c=relaxed/simple;
+	bh=ihg5D7JjYwR8wMjfG32hR1vTg+jRmYudx4QHbcb4sIw=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=b444ltHQ1/6+qibohg5a+F7nQPZ1TIeag2DtUt1OoyNC0J/9kIZjbkGDDXijDMEXACjPoK1wfQlubXil3AIT1PE+sTj9BFo6xupchT9YS6rx0hPgOpKS/aUWnXzMH2zsPiGvd4by7j4FejSAUMAAHEnqzQYQLXJ/XZYS8AfNrQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=d0ZMyQeH; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=one-eyed-alien.net header.i=@one-eyed-alien.net header.b="o6io00gU"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso18371805e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 18:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=one-eyed-alien.net; s=google; t=1741741753; x=1742346553; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MA1s+CFJcoptHGHTr4whY7uZy+Mb8KOq82ve4XvNd6U=;
-        b=o6io00gUxRHmtE7NO/pMvwq/rJ2XppfTXupRns3Fs2A9g5ug/HR5bIXfrKiErix2T3
-         Upnx1WWjESXB1wuQ6YXs3jeqeJzyWL1f7ZPp8zncwxzo0b3r8ysoxskiqOfaiOzHHw7e
-         RNXkS2V4bwurkLqUUE4n0wJYtyknxiB4xWQSs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741741753; x=1742346553;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MA1s+CFJcoptHGHTr4whY7uZy+Mb8KOq82ve4XvNd6U=;
-        b=eHLBsdH6gAxR2LYjs8Lp3DDm3d1zeIwQrPbARHaWk5Ol9hziY9dnLObA/YzC+/UXZk
-         uxGVyHpcsIBLu1qm0x2Ah/LQ+86WqpKFN3mXng11y52tG0GIe0OzTclKfqn2jZ1CBUwD
-         pU6M+zR9lfL+i3kuPhlPdrSZgtEsW3Zl1INhHoK14mlvv87ArxgYRme36gL/KLEhDU49
-         +SgcJ0mP6eoXUQQGfkQua/s7x4V9GeAF06gQAn7s8O4mTXK8di24XI3nz2gUM7bLqdV4
-         NoyDhrU4EcVTD2VGMnIXTp/1rFCeIAuNzS926E2QqBOOv14vMv2gDVeoh+/f+8IURCpT
-         aE+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUuqzXRnO+oxIaSQOXaTzbtMaoFMCY6o7+0A2xIwkUR+Cyxg6yHyYoQKSJwckmTGQc3E0L2Wvv2IbKBh9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDMjkXlbHVdDkRazFcaZY9r7ZME/NmoLsxglZ2a5LPnljCN4D0
-	tQDtTjUHlfkgWGBIbRZJ5XNKmXj8vfb5cE5jBbXbHFRIaz/5/UAZqYoHeSIlpJI5iJtdxGKIdcK
-	HvVQs1gk218z19tA+Y26MdMb9YcbgO46kRkuLmQ==
-X-Gm-Gg: ASbGnctq++e3xwE88U77vEQ7YqNT7eDXy7/hludF1TvP+IN+3BG5MvJTCaV3nWuU3eQ
-	uiVerU+tOYNiiZyoP8qFzFUC6nm8ga7gb5+8Y3JOQkGdDI1c0OjUdJpfLl55gOqsEG7u9/tPwTa
-	XuMWDsAbt0H7Grdh658lsLjU4=
-X-Google-Smtp-Source: AGHT+IEzF0ireum6/FPbkjs402SHBM0UMUqmkV5EVVKUF1OpBtqyx/4FZi728uAGKSmhUDjUErnfEpjvsDzmXXOOq/s=
-X-Received: by 2002:a05:600c:198e:b0:43c:e478:889 with SMTP id
- 5b1f17b1804b1-43d01b85209mr71117685e9.0.1741741753407; Tue, 11 Mar 2025
- 18:09:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="d0ZMyQeH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1741741525; bh=hIU6OUXhJGBsv4djF82ZLszpiy8ehuXLtiXE6CrEhKw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=d0ZMyQeHx575wW8g1gphD92SMaTyenXQOIQPeJ9OSWmfRaTl89XhRxBAtNw4XNPen
+	 W2C4852advLemtQlSSTYMzACkOvYZA5WHqdkIdhDuypvcg8GiEBha24Rd+FHrQbH5u
+	 9b5uzyFHofyJOqiWSKk/MlBbL83GnIfafixRMwuw=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 1569A20B; Wed, 12 Mar 2025 09:05:22 +0800
+X-QQ-mid: xmsmtpt1741741522ts27i5q8l
+Message-ID: <tencent_E8AA2ECB6ED7CC88A7F746FED2C4065B0906@qq.com>
+X-QQ-XMAILINFO: NN8wcaRHkJbBpHtqXl713Cg9E1IV7rv2clcZUpgVcxgqdBJMexZy63zArzO5my
+	 PC14odSXYx4DDVDwSZYsPXOvHGljY+DODeNSAOd8cSeLRAguH9OYIwVRKxLQxmhSfBs/uya+hQy7
+	 +BMNCpcRUgXtpmY/M61bWh9sQcP8ve8Sq6EbsdzM/CKid4S8jz6oT+u4BFtyCH/FIgnduREAL+CO
+	 +qlgDpXoS0Rjp5uG19JEW957SYcn2b8381U6pMjtstru+oBqPUTApG0PoZZVK4mpoaJhM2jXXzXT
+	 m/q4u9ZluCrWZoETIH78D4LpZG5mSr8agwOCTYE/qkB+X/nQfpin/eTp3oWIBsg3eNdkyrrjy9wb
+	 AzINr+9Y8LVmZJyJhZ6UUMOjW1fFKPs1qPqbHD+bowAjxKDM31YIdX92jiPgbgvBBMn05CHY7nU6
+	 Ivl5lM8xsdQR3UoNYRb4d2MZVZbHDeiYHVM3BAXSKwTetsIjtGzg4+D+QCACyMRjWk33uaN1rkGz
+	 Wy+TiAX4ix28fLwuKvClP5F1aSj2nF66FDqi/IzWaKva2Vv3mTASJfu99z6ydrHF9g65Mfw9p7Av
+	 zHcb7GkHKxZ4hMiiLxTOHTVxStcVoBQcLvFls/uFBs3lxjC+ruiX3iM09DN76hB0Avy5hSSWkwHp
+	 qvuP7dEC4nEuljYiIAuo6tcLLpN/OsQs7zMqgTahf5dkb2HGO9r/0OGjfPDSzq88QirGJwTTFNCY
+	 ZW7V0RCU3vb2mHKVpSLZCYlbABwkeZFbt8/cAGlhlQ4XZHguH+CEyJ0omuYe3khFgaVnBc9f5AHV
+	 cMkBEEoPrvIxT4Mj5Pl371iY504g8qEyKh13fD51c64/gpZnSduzXZT52S8v3n2k5848hAEmzKZb
+	 e857yzKpKV5zCfaS7RmsL9zh1rYjKmf6glPmgGIXSXC9fj5cPiIHj5Wmkk93esTA==
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Edward Adam Davis <eadavis@qq.com>
+To: stephen.smalley.work@gmail.com
+Cc: eadavis@qq.com,
+	linux-kernel@vger.kernel.org,
+	omosnace@redhat.com,
+	paul@paul-moore.com,
+	selinux@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH V2] selinux: access sid under READ/WRITE_ONCE
+Date: Wed, 12 Mar 2025 09:05:23 +0800
+X-OQ-MSGID: <20250312010522.232131-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <CAEjxPJ7eFbsn7h7o90tOE6ymp4+g-bwYL_Rwy6t0EcxpaBAxAA@mail.gmail.com>
+References: <CAEjxPJ7eFbsn7h7o90tOE6ymp4+g-bwYL_Rwy6t0EcxpaBAxAA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311084111.322351-1-daixin_tkzc@163.com> <6a266eb7-0150-43e9-a712-b9e6fe8c71ea@rowland.harvard.edu>
-In-Reply-To: <6a266eb7-0150-43e9-a712-b9e6fe8c71ea@rowland.harvard.edu>
-From: Matthew Dharm <mdharm-usb@one-eyed-alien.net>
-Date: Tue, 11 Mar 2025 18:09:02 -0700
-X-Gm-Features: AQ5f1JrKnODlP4cRLeJ-QLQyz0b3tuL4cGZxHXaD9UPY5m6VAbrBbZF7y7QAN1A
-Message-ID: <CAA6KcBDjRPjrfQpYYHtqc6tnpFoLz9QAESqkaOLK5Hi1HbpQHw@mail.gmail.com>
-Subject: Re: [usb-storage] Re: [PATCH] usb: storage: Fix `us->iobuf` size for
- BOT transmission to prevent memory overflow
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Xin Dai <daixin_tkzc@163.com>, linux-usb@vger.kernel.org, 
-	usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 11, 2025 at 7:12=E2=80=AFAM Alan Stern <stern@rowland.harvard.e=
-du> wrote:
->
-> On Tue, Mar 11, 2025 at 04:41:11PM +0800, Xin Dai wrote:
-> > When the DWC2 controller detects a packet Babble Error, where a device
-> > transmits more data over USB than the host controller anticipates for a
-> > transaction. It follows this process:
-> >
-> There is no risk of memory overflow.  The length of the transfer for the
-> CSW is limited to US_BULK_CS_WRAP_LEN, which is 13.  And the length of a
-> CBW transfer is limited to US_BULK_CB_WRAP_LEN, which is 31 (or to 32
-> if the US_FL_BULK32 quirk flag is set).  Therefore a 64-byte buffer is
-> more than enough.
+On Tue, 11 Mar 2025 11:19:49 -0400, Stephen Smalley wrote:
+> > Reported-by: syzbot+00c633585760c05507c3@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=00c633585760c05507c3
+> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> > ---
+> > V1 -> V2: replace with READ_ONCE/WRITE_ONCE
+> 
+> Thanks for the patch. Did you audit all other users of sksec->sid to
+> see if they too should be wrapped with READ_ONCE()/WRITE_ONCE() or are
+> already safe?
+This fix is only for the issues reported by syzbot+00c633585760c05507c3.
+I have confirmed that there are many contexts related to "sksec->sid" (at
+least 29). I am not familiar with selinux, and it is unnecessary to do
+excessive fixes before syzbot reports other issues.
 
-There is no risk of memory overflow *unless* the DWC controller
-doesn't respect the buffer length as given in the URB.  If there is an
-overflow issue here, it is an issue with the controller level.
-Matt
+Maybe the subject of my patch is not appropriate, and it may be more
+appropriate to adjust it to "selinux: fix data race in socket create and
+receive skb".
 
+BR,
+Edward
 
---=20
-Matthew Dharm
-Former Maintainer, USB Mass Storage driver for Linux
