@@ -1,140 +1,109 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50508632E;
-	Wed, 12 Mar 2025 07:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E561D88A6
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 07:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741766132; cv=none; b=pAV4q4EpjAcLzoh+6hcgdsuFtkQJ2aV8vy9cHfvuZBmrD6aa7s4PQfg86GyfhX6BNfDy0x0XascVClbPpTTwuDzjTIBvTI6HNW7V3osEyg4g0EbMSvWBkTXkEjWhdARpC0HiVOXeFhlr5XJvlzykoBDelrGGNIK5mKmxU7lbGbA=
+	t=1741766198; cv=none; b=EAa3m0c1Xygylj/HVbu0snrReqySsw5rRr7I6LsEmv8knGpWKdXS5hBck7bLLNC/zo0TySsFzAv9+uKLtVuhHZtKrUiCEulX6ppLix62iT5oYG79NiwiCwad5v/rclD5xlx7G6W72XcJuHHA61pfkPTAZ0AuV4wzTlb3GNl3lpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741766132; c=relaxed/simple;
-	bh=A7opc6of0uvyt+izwCispQoBCudbTP6hdCXEIYMX7iE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dh1jY5lCq/xDzAE/p15ohpzROW8c1HHDIbWhQ0jxJ4zPBzmcpu6UcHLY39Pi1G5+QpMqYr4HBnZulqL1hBDnN2RN4K23Gno2MZ1n/fkq+nkN3f2U5JB07M0msnMsh5ZcoLOzbOwB8PBOsqUudgaqN4sa8ZC9NuNIeQh9nV5p1tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BVNtmS5K; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1741766198; c=relaxed/simple;
+	bh=35CZaj9e0EDEqpNnf5IVtlgWXdDQPbnOKfskpsFe6uc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L7eId2IslH5geKze7+CZfopcp8CVFkezatjCyXyAFivX4nefWzBKFhruoPpM9+AlYUJOQ2xvF/k1MW9g0rmM32Ol+M7TiCrBJnIdW7k2eIbCgY2UEeVr5lhy01agjJ7tDQPkOfMUeqXl07BxHiElLmpSa6Cra5pTVI4Gxzj9RjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hz0Ybvgt; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVNtmS5K"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so253696666b.0;
-        Wed, 12 Mar 2025 00:55:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hz0Ybvgt"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5495c1e1b63so6629672e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 00:56:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741766129; x=1742370929; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1741766193; x=1742370993; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mj5UzkJh+c6n0dhgXeheHxyYgb3hNGKyADmZDMM90gE=;
-        b=BVNtmS5KIynnRURUBq3v9AvQJTNI5iZEJlnolv0u5Rgz737sVhvMf5ptlN3apXcHUM
-         vf5IhNvMSALX1AKHHyUjm8mJk4I7sonPh99Y8DLrDA5dvnh4oU32r9dT1raO9OfGl0w4
-         SqI+eQWBqOnkmsGWui+r0e7yhsCd1Dc2hEW+EbTFFl1JD9kKPx1h2P/5V0j1inejibG1
-         PCv7oWT6i6xvRe28hjyKijrc3iYgkKb1hWO7A+FWh3X71FUj6n43kgLaBYBXpK91b5Jt
-         zpMQK/+uWESLF86AWJUGQcoDTKDPgJtv2bU3bsSBAEwqYV8parLgiCFvSYYO14bEOBMf
-         ckYQ==
+        bh=A3wyyfwOpoNsq0clOc6hSFVvZfLJtb8AcaIz2Ox+0V8=;
+        b=hz0Ybvgt0jq8t02yldqP9VnW7I5YgW2ZeXaln2Dqr9CpHQh+T+5KDW9MVghirW1Aqh
+         yeHPhNluxGvN+TNgkkabJ4TWNfJIOTRRGhyTNJLt4+kY5J3WcYGBzK/HKnAuUu5TVap4
+         sPoxf30yxxMpuNLc9tRZWQyM+C0pmXMmAzUDpMi8vhj6h0gCoZ+tXXrwoyyGP9w1kizf
+         lSE+9GPI2SgbL2WLp7kMGTe2Pc7pyNHf87slUIgEkTunVKhVkkmk40TZPyein4kAC3BH
+         LH7js3H998oI4XcO0kKOfidLrh8JZOvrbZvvT8CXk1BYxWFtN7TSsV4Cc5kyP//+vNCW
+         xNuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741766129; x=1742370929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741766193; x=1742370993;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mj5UzkJh+c6n0dhgXeheHxyYgb3hNGKyADmZDMM90gE=;
-        b=NKV1KtzgQltHDcSNehuNa/Zc5i/8aNYnCFU8YfavtNbG+eEnJQCIAfP8X9s8I4A5Ac
-         Ix+7wdKcFIxdfTld4mTFOXE5uU+32kSiReDYCgnQhgE3YRvtlPUFb6Cr5ziJelEZGmr7
-         X0V1p9x1wGhFIs8jSfdRH/9jaRMZJJj4wzwCfro4UGQaoHiz5RDZZYuj9MrZYy0nP1LY
-         5nntUuDlzlChbDrAh2WP6rcSQUSYR4KJFETq2SRp23FDok+JuB/JG0ad71HCr8agVC15
-         7GvB8RDA1W8z6e4Tvpi1+bjpe32k3EIdqohNZWcyWcgoD8YyANROQrahxUnNeFS1abJU
-         pB7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWMMn0FOVp5xWyiObh6E6xEvLw/YpnOrqrxtKaVTQYI5GgoyaL9MX8mMlvaO/FriMh/Sxc+rfoIKqjGXfUqsTVwoHbCTA==@vger.kernel.org, AJvYcCWeOMX0BROyJPMg4yv0wcBqY8/2WRhpu8OxCDIw9IyWzmq8GBOjFfPMQnEc20CXTzCXYaIptUS3Ew/Hb1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZZBxnME7PeBpWEcCX2KIEvPBc5AIifwod0QwkmwPo1/1a/XbK
-	WxnuJdzlA8gLYE6+ZfQa62t98PSK2+TQjl/XIXfJ5b5/S4XwoV8jAaeLfQ9a/llT6Fa8l+SR+pG
-	o1uLnckmWFxZXJVdKXikmLYXIdvg=
-X-Gm-Gg: ASbGncvYUwOOR2fZCi9c6DcSHgCVCsls5Rx+0PHC7M1+WS5LtgLHDGhGo3yypm2RSPg
-	B2Yuq/vvwakvcm3JNLSKotAJuURZR0LGcFpu3vX68vRpnrXgzqsIy43QbVSzF0rzfmcdsaxL4bf
-	3Ucl9I1C939x87MrQI4qY0O6+MxHfO98kPoia7
-X-Google-Smtp-Source: AGHT+IFhp5zEhDkcFcQBIOSZdBpn4+YesT8GbKRiTezSrgqkTSjZOnYdhkWp0KghWLO9P7lGlADU5MOm4lRfmUGj1bE=
-X-Received: by 2002:a17:906:b20a:b0:ac2:84db:5916 with SMTP id
- a640c23a62f3a-ac284db5ff9mr1700286066b.31.1741766128669; Wed, 12 Mar 2025
- 00:55:28 -0700 (PDT)
+        bh=A3wyyfwOpoNsq0clOc6hSFVvZfLJtb8AcaIz2Ox+0V8=;
+        b=vywt+1GM7GCIHOzwmDWziVOBgrsp7zWkhkz/M+s04EFPsM91p0gPqhRRYNprf88tgs
+         WhhhAT8UHqBQi0ydLG9KwISZsweSSRphjQaSdUNEWh1ienB/JII4GkDBR3hlgmdDoZYb
+         zAuNJKR3rUVa+t9nOxq0mQnKWQPwJh3tcz5qIa/uuQHIQIGSCPEwIKJxUbdXXgAxej7t
+         8haeBTeVAFOmlBx6REyDTpYQMFm2quldHcM2C5CvC7oHKXEBSEKsDh1HrnsQQbaM+Jwg
+         ZSKvVVLHLDwjkNk9h4TsfRnHV8Z+mKQ7OV+A5AND9wX+HaJGQc7I2tY1/yZ2EHNCgqZu
+         1DEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUA9AFxWyyp8rtv1nzwg0hzhVlOhz/MJO1rlxbFqexIq8bzrtuuKNfbi+0kD6PYD8yJ/bPktQi/f/O1v4Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1huJU1b9YF3jTBR22XGWAR4xhBIjDbJ1zcoNBZboxCPOjhNpk
+	fF4mIihyf3SsMVAiv8RfrUoGNUy4BQV4z1KM0OlwqSkch2HmVWMx
+X-Gm-Gg: ASbGncsyEOZzh/0UQV8tK9qYDtJf02ttfNq9bc9rmCZmYebWgyIpXfovCMrUA+5TGti
+	nUARR73Qut4FGt2r+3IQBw5KDH5vfDhB77mBLYUrnvPGRINUt9YUjkDhj/Q0Oh223mh3vXPy/HQ
+	aVPtQuOnaAdEa16Jdt72yKvQVcoH7p6jEHRxZxmAiez5GVGuhFBxSvf/n7+hEvJn+O+x0CmxQFv
+	+oSgZOw+pWcnjhS0IB+b1Q5XqXAk7RqD/S3HejRuqiUkk3tK0BTd/DUO7jlbs373ek44IypxGag
+	tQ36h2Lr4lKU8EtOj7riQa9Rd+GG2OPOpdWvcQ8w/UkiMws=
+X-Google-Smtp-Source: AGHT+IEjQaZs5T5ZDDjAKYJGVt1s6iYpZ8Lci0SjZKojtUFYU2/65513d3B9k+EdWSOZIVi3BNR3Hw==
+X-Received: by 2002:a05:6512:158e:b0:545:cd5:84d9 with SMTP id 2adb3069b0e04-549ababc3bcmr2484258e87.12.1741766193120;
+        Wed, 12 Mar 2025 00:56:33 -0700 (PDT)
+Received: from grain.localdomain ([5.18.255.97])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b0bd148sm2045714e87.139.2025.03.12.00.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 00:56:32 -0700 (PDT)
+Received: by grain.localdomain (Postfix, from userid 1000)
+	id 0AB565A0044; Wed, 12 Mar 2025 10:56:32 +0300 (MSK)
+Date: Wed, 12 Mar 2025 10:56:31 +0300
+From: Cyrill Gorcunov <gorcunov@gmail.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Benjamin Segall <bsegall@google.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrey Vagin <avagin@openvz.org>,
+	Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [patch V3a 17/18] posix-timers: Provide a mechanism to allocate
+ a given timer ID
+Message-ID: <Z9E-L1pvl1j_4E3f@grain>
+References: <20250308155501.391430556@linutronix.de>
+ <20250308155624.526740902@linutronix.de>
+ <Z9CsstMf-EVZpsiH@pavilion.home>
+ <87msdrz0i9.ffs@tglx>
+ <87jz8vz0en.ffs@tglx>
+ <Z9C6GpaB9WvNzvJS@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250312022955.1418234-1-yong.liang.choong@linux.intel.com>
-In-Reply-To: <20250312022955.1418234-1-yong.liang.choong@linux.intel.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 12 Mar 2025 09:54:52 +0200
-X-Gm-Features: AQ5f1Jq8etvGVZ1GnV5dG3EvZtajo350JiovFCO5GqzSraOmAbSAeAQsTgx6c6I
-Message-ID: <CAHp75VekTbp++4yw4yDhtB96K+C0w1uHiVih5x-jO+TWRLiPmw@mail.gmail.com>
-Subject: Re: [PATCH v1] platform/x86: intel_pmc_ipc: add option to build
- without ACPI
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	David E Box <david.e.box@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9C6GpaB9WvNzvJS@pavilion.home>
+User-Agent: Mutt/2.2.14 (2025-02-20)
 
-On Wed, Mar 12, 2025 at 4:30=E2=80=AFAM Choong Yong Liang
-<yong.liang.choong@linux.intel.com> wrote:
-
-Thank you, my comments below.
-
-> This patch introduces a configuration option that allows users to
-
-s/This patch introduces/Introduce/
-
-> build the intel_pmc_ipc driver without ACPI support. This is useful
-> for systems where ACPI is not available or desired.
->
-> Based on the discussion from the patch: https://patchwork.kernel.org/
-> project/netdevbpf/patch/20250227121522.1802832-6-
-> yong.liang.choong@linux.intel.com/#26280764, it was necessary to
-> provide this option to accommodate specific use cases.
-
-Make it a Link tag, like
-
-"...from the patch [1], it was..."
-
-
-Link: https://.... [1]
-
-
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-
-This is wrong as either it's a wrong tag (SoB --> Suggested-by?), or
-missing Co-developed-by, or wrong order (but in that case David should
-have sent the patch).
-
+On Tue, Mar 11, 2025 at 11:32:58PM +0100, Frederic Weisbecker wrote:
 ...
+> > 
+> > Recreating two timers with IDs 1000000 and 2000000 takes 1.5 seconds with
+> > the create/delete method. With the prctl() it takes 3 microseconds.
+> > 
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 
-> +#if CONFIG_ACPI
+One thing which just popped up in my head -- this interface may be used not
+only by criu but any application which wants to create timer with specified
+id (hell know why, but whatever). As far as I understand we don't provide
+an interface to _read_ this property, don't we? Thus criu will restore such
+application which already has this bit set incorrectly.
 
-Better to have #ifdef, but see below
-
->  static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_=
-ipc_rbuf *rbuf)
->  {
-
->  }
-> +#else
-> +static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_=
-ipc_rbuf *rbuf)
-> +{ return -ENODEV; }
-> +#endif /* CONFIG_ACPI */
-
-Since it's already static inline, it might be more natural to have
-this inside the function. The current is usually used for the C impl.
-+ static inline stub, like
-
-#ifdef FOO
-int foo(...);
-#else
-static inline int foo(...) { return ... }
-#endif
-
-But I'm not insisting, it's up to the PDx86 maintainers.
-
---=20
-With Best Regards,
-Andy Shevchenko
+	Cyrill
