@@ -1,39 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D7F23E32B
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C752F1E7C03
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741774554; cv=none; b=EOzT8/pL3fxyrpINNpqSO+HkuRs3d+3mlRhsN/MWnbFYgH8d1a+V5e5KuHZUIUWtLlqhxbSH/pHE7P+DKkx1V5Gnl23gXM+zSEjxEGFuswioMwE+rO4s992SdZkyW+BlJ3EmA6d3vSh6iyurguvC93TyrHtlFMUXWbm5lsBLerY=
+	t=1741774622; cv=none; b=jxwImXyuEgswLDIfbKLGFA9gc0HFXfclSnP0Y1FmXxHNx7Tb4XLfwIHX0BmNEN6DAS/z0ZJYaoUiBGvgpT+jFu+1AGM/rBeQN5vjAUYgu0lKMs3zUUQi4HK/tAbTi9OwzpwF9e0Q/kct6Re68QR24ioJk3BEJ3sGKRfXWGgmtIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741774554; c=relaxed/simple;
-	bh=m/8CcVSzjkw9ZPpZN5jkPhm7S6MvAm8LmEMxsh5n8gs=;
+	s=arc-20240116; t=1741774622; c=relaxed/simple;
+	bh=Mctx6HJK8lUcA4zMP/2/Ugvzc8u7NE4Q4XHmn0btEF8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mLc8IjyhJtE3BVOIqLpuofZ4ap9RJkctBy9dnnSdFgLC56I1NVzY1KKSqPniV3oBpB4Sx1XXiaenrXujjQDkPqCWik8BSmNPJIRC5csn/FVRf+ZyN2fQQS0rG84EuqtWu4Xle1+kxzNSzMA7hudrMuOZ/CJH+QcxPLrlt3oNNZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sSw4dYBs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GE8A7mclHaFqZIn5Yj+VyMXr4tdKA3kvZTzpUld1mCJYj1fOYkDd6UIZFKyrGYmvFuGIQQSjePcryTMA2TnxUKyu92IzD8dIzf8KyZAvxZBgulKalu8gdIr+Y6yKngAj8AcML2IMgk8jiwJdZkb4hSLYzIxKCKHygYo6n+ZBUFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TAScYI6y; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sSw4dYBs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D648AC4CEED;
-	Wed, 12 Mar 2025 10:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741774553;
-	bh=m/8CcVSzjkw9ZPpZN5jkPhm7S6MvAm8LmEMxsh5n8gs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sSw4dYBsCxGnySEMg3hkt3qJV7wpjYgy7SGfGBsq2oVn1HGy7tunr5GSEXL7lvYD3
-	 jNCpUY4QT1fVk/Xhe2xC0MCXcgVqP3m3mcYz3OfmtmK37bDBAb9cSlO0qyrAOF0Qk8
-	 q3GLhCGe+gnWnVxbyhJNJsM5yItW3iKHmDS3gHb8=
-Date: Wed, 12 Mar 2025 11:15:50 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Nipun Gupta <nipun.gupta@amd.com>
-Cc: linux-kernel@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, derek.kiernan@amd.com, dragan.cvetic@amd.com,
-	arnd@arndb.de, praveen.jain@amd.com, harpreet.anand@amd.com,
-	nikhil.agarwal@amd.com, srivatsa@csail.mit.edu, code@tyhicks.com,
-	ptsm@linux.microsoft.com
-Subject: Re: [RFC PATCH 1/2] drivers/misc: add silex multipk driver
-Message-ID: <2025031236-siamese-graffiti-5b98@gregkh>
-References: <20250312095421.1839220-1-nipun.gupta@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TAScYI6y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=iQm14u3vIWVFyr+TIJc7EsSWgpxdwY6CkflsM34hQds=; b=TAScYI6y+bPdXKPuEr7ASLxcqL
+	bMSkETexMzebEsLm7nLnB76BcyOeI5n2kpCpw1kxnRa482lnaI9vJ4tB/ticZis9LCO/MvA7d8Z00
+	0AorpUQhXw4+AYAYCx9YIfYGq33Bu8VueZehXjfVk4132nLca9ztflLGGvg+BdlQpXtWGHD2nur1+
+	9oP89NWBav15T+TJJ2NkfDdNfrgjIeV7sLlFPoo9F1Q4ZJwhCB4lBesgEwYt7grCxB7YNiBszLFzn
+	JCy50mllWz6Z6C+WM9Aqf+s0ZGC0SB38hR2Q20yOcr0iPFPtX4nyd3bpoO3P4yO+rxOKiOQgjY3eQ
+	5fTG3Ydw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsJ8q-0000000ChvF-3mx1;
+	Wed, 12 Mar 2025 10:16:49 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B2434300599; Wed, 12 Mar 2025 11:16:47 +0100 (CET)
+Date: Wed, 12 Mar 2025 11:16:47 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: mingo@kernel.org, lucas.demarchi@intel.com,
+	linux-kernel@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Subject: Re: [PATCH v3a 6/7] perf: Rename perf_event_exit_task(.child)
+Message-ID: <20250312101647.GK19424@noisy.programming.kicks-ass.net>
+References: <20250307193305.486326750@infradead.org>
+ <20250307193723.417881572@infradead.org>
+ <20250310153742.GE19344@noisy.programming.kicks-ass.net>
+ <b5a2260f-cedb-4c8c-8435-916d657ee616@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,14 +54,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250312095421.1839220-1-nipun.gupta@amd.com>
+In-Reply-To: <b5a2260f-cedb-4c8c-8435-916d657ee616@amd.com>
 
-On Wed, Mar 12, 2025 at 03:24:20PM +0530, Nipun Gupta wrote:
-> Silex MultiPK device provides a char device interface to interact
-> with Silex device for offloading asymmetric crypto operations.
+On Wed, Mar 12, 2025 at 12:01:00PM +0530, Ravi Bangoria wrote:
+> Hi Peter,
+> 
+> > The task passed to perf_event_exit_task() is not a child, it is
+> > current. Fix this confusing naming, since much of the rest of the code
+> > also relies on it being current.
+> > 
+> > Specifically, both exec() and exit() callers use it with current as
+> > the argument.
+> 
+> When perf_event_exit_task_context() gets called by perf_event_free_task():
+> 
+> 1) task_ctx_sched_out(ctx) function should be avoided because the 'ctx'
+>    argument is of the (half baked)child task whereas task_ctx_sched_out()
+>    expects 'ctx' to be the context of 'current'.
+> 2) Similarly, 'task' argument != 'current'.
+> 
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -13573,7 +13573,8 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+>  	 * in.
+>  	 */
+>  	raw_spin_lock_irq(&ctx->lock);
+> -	task_ctx_sched_out(ctx, NULL, EVENT_ALL);
+> +	if (exit)
+> +		task_ctx_sched_out(ctx, NULL, EVENT_ALL);
+>  
+>  	/*
+>  	 * Now that the context is inactive, destroy the task <-> ctx relation
+> @@ -13582,7 +13583,7 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+>  	RCU_INIT_POINTER(task->perf_event_ctxp, NULL);
+>  	put_ctx(ctx); /* cannot be last */
+>  	WRITE_ONCE(ctx->task, TASK_TOMBSTONE);
+> -	put_task_struct(current); /* cannot be last */
+> +	put_task_struct(task); /* cannot be last */
+>  
+>  	clone_ctx = unclone_ctx(ctx);
+>  	raw_spin_unlock_irq(&ctx->lock);
 
-Great, then why isn't this in drivers/accel/ or drivers/crypto/ ?
-
-thanks,
-
-greg k-h
+Right you are. Thanks!
