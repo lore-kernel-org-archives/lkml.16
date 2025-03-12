@@ -1,176 +1,172 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CE1241109;
-	Wed, 12 Mar 2025 11:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7881A256B
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 11:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741778948; cv=none; b=GZ5ZX4J1WtA7iyM5jJWh2wPzOqaCClEtVM4lQpPui3O/gQr7kMtXJ5OvIuvwZUILM7gr3eQHdTyjVwATrdz0Gvx1McceQNCNNkmN2cRDvoJMYe+ilwng1krF38ppMB/Vt/eXBrpl/rsBS/vvdLNsc+FJ699AW9LCveuEkG6itxk=
+	t=1741779082; cv=none; b=UsXFwsl+WvbI/MjU5Ic9tw7zsI0i2Ug4AV0dT1JSwiztQiE/PeOPAsd3IFdClklFRluiQoW7bsS02rqQ7Hf5kdjJ+XQc+yGsUTJBUi9UG79SOBVmw2xlErLCPvypwczjFTasmGkJwXykzmup6yHdBT3BZ8ZcYTaEeOpaR4AK+Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741778948; c=relaxed/simple;
-	bh=Y/+cR4hSH3W8GnEHVfKTpi6KgYPJIsatZB1YI6j8hCY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b5uMtMrjA0ZtBSUo8ht4PqGOo8ymdqGF8PnRWTjZhm5iY8n1/AXR8kJZKQBgZR8PoyzNJSUttNopm1dpnJm2Ku1AoFkRL0JvFiJIX7hMwpPqdfwRJbXVVWuCzX6sVXEkk3VbLOkQB9l5306wBBon0GpDj8AAbv+t1bTkqKqvAVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=P1upmFou; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1741779082; c=relaxed/simple;
+	bh=LamZ1dekJFD1CplIqMFq82A+Hivmj1FNR9Ba1K2yv3A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YYiUl5FXd/+nYGLpj6dBT3wJ9lAklo/Gi5j6OcWMANnhX4yT+SV9fbFScVyWNs8vVYsyd/OBGArpEOlB3wfYZRdnlDezWkr+CQNYjFK1N7Wyrec8FQ0clzILi2NLv8C/GuW1tdI9RbM1+amyfQJEKN+lwp7sZnwIUXhRXY3K3/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bUXOkLmN; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="P1upmFou"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1741778937; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=bbkn64ghX0689OXQU9V6jOFRXnCMdCl48Q1ObBbcJ48=;
-	b=P1upmFouRfxdLGsORVIZuJdLlx0UD09zTqyu3WGwJxTHeWFUWMN6/sOP4FQc2azr57PFriXc7C0M1q0frJJHHSK/CXAwvkcH4cPUK9DcqPKxG7SmLGc//CAeJ9APVdmcZ8NBUktjZwEQYDyVZnd6P8x6m8ytVqpcqnWkHoCmDoY=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WRCdv1J_1741778935 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Mar 2025 19:28:55 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com
-Cc: tony.luck@intel.com,
-	bp@alien8.de,
-	peterz@infradead.org,
-	catalin.marinas@arm.com,
-	yazen.ghannam@amd.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	jpoimboe@kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	baolin.wang@linux.alibaba.com,
-	tianruidong@linux.alibaba.com,
-	xueshuai@linux.alibaba.com
-Subject: [PATCH v4 2/3] mm/hwpoison: Do not send SIGBUS to processes with recovered clean pages
-Date: Wed, 12 Mar 2025 19:28:51 +0800
-Message-ID: <20250312112852.82415-3-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250312112852.82415-1-xueshuai@linux.alibaba.com>
-References: <20250312112852.82415-1-xueshuai@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bUXOkLmN"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72b0626c785so2833159a34.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 04:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741779078; x=1742383878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9UdPvnPkDYszULhre/XOAdt2THz5zT2TlDbP/t1A4yE=;
+        b=bUXOkLmN9a33mGpf9s4rT1BooLhOYIPBOVmm6ayBsCc0+1CAqb+WjfNank8ls8vxMb
+         WaFR5mI8j+j8hvhAlCrUt9qBwj8rIXWzd9yEOLErhbwHgJAQTJ0qZvLOwWtnFdO/WgZ5
+         gt5PGqyE557M3IXeC3q/H9M4ATmk3ee5PMbMeZPBSQJ7wsIFLRtQjkN6X5SXcEY12wq7
+         +X5C9RXZama5wC8l8XpriL5Eshd/BvLONvohndp54syjOn/mykX+nCPBHgag44g3xdE2
+         45JWE3zGYbDWURwuKt//aam8PcCTiRaLFp05Ksht27kN4XF0d71BxWF92mtex7zS8+Ki
+         TC9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741779078; x=1742383878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9UdPvnPkDYszULhre/XOAdt2THz5zT2TlDbP/t1A4yE=;
+        b=usStAEuRaFUT6e1Xhemu4P1RCWKfqcLfpY3zSfMm2+SzJs4LGG6iSgN0/0NYhuOLO+
+         FkGpDIArXSy8+E/EaGgVOgW2824U4CftNeolN/x9anHsxfC1t0fonpjp/4jkOzcSAoZn
+         ZKjZ2CkYCWTgPWT0BK+tz0lARjIxc0j9KGBA6LxZQ4CxNKbrt9n5gFAuK51hURVe179S
+         lKza3oVy4vDFKIKN4iOFG1xiXObxltEuZYqMJFK6gLLVrmg9/HPlF54GlChxGYTrJcrE
+         Cm7HrH3Tl4ray7WVgrRAVpPzGkzyutQfS53e3tCYfIdI18Inz/CUa986oVplekBQnUNW
+         zriQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWaNBg72qNgj/fp08SC38lUQtsQdefVLR0T6vrPD8RDhnyLj5aI1z4l875XP0yJzmqaK0NPjsI8BXbEZeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/FBODrPHHQ2e/gCqnoGxomVtYtWctOOgNChAeQwldFXOxxEfU
+	O9JU63GCoqM3spLurHMb0MLUPm5tSTaekfCYV45vvJwL0NmpA5DxVc96xXyeQUYzssjG4v0KKpd
+	TegsYd5X2RocRIm3UDt26405DX0CvPI1DU58M/w==
+X-Gm-Gg: ASbGnctAuLsaaNWy+hRC39GZWPUy9NhMj0IGf5RVz8Mjie5jhGuu/lzajMVsnhGzjPa
+	3DpbHrMX6Ev6KNcIcrKW4BU6SDVWv6zqqkjmGmO7YlEnWYq4tj+yYKBO16uK0vbGl+mGNdbISSm
+	adb/U8U7lYR7qHzolXEflq+p812KZg
+X-Google-Smtp-Source: AGHT+IHpN3V115z284qmxaOdgGA4PwV3v/6Lpfa9pDfmxTKlcBbQ43+xR982OzrJIgzm+w3NL49THbQiezCdr3Q3kYQ=
+X-Received: by 2002:a05:6830:91f:b0:727:2f79:ce33 with SMTP id
+ 46e09a7af769-72a37c6a7damr12652067a34.28.1741779078312; Wed, 12 Mar 2025
+ 04:31:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250307-pinctrl-fltcon-suspend-v4-0-2d775e486036@linaro.org>
+ <20250307-pinctrl-fltcon-suspend-v4-3-2d775e486036@linaro.org> <59a1a6eb-d719-49bd-a4b5-bfb9c2817f08@kernel.org>
+In-Reply-To: <59a1a6eb-d719-49bd-a4b5-bfb9c2817f08@kernel.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Wed, 12 Mar 2025 11:31:07 +0000
+X-Gm-Features: AQ5f1Jq8qDRuo8RWVbqyC-4s6dvJ3zqh5v94onY3xAq0EKJNYhbmQXeDH_scC5U
+Message-ID: <CADrjBPqYoHckqr43y1z8UtthZ9DOG15TJWSv_707Jbyf1yforw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] pinctrl: samsung: add gs101 specific eint
+ suspend/resume callbacks
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, andre.draszik@linaro.org, 
+	tudor.ambarus@linaro.org, willmcvicker@google.com, semen.protsenko@linaro.org, 
+	kernel-team@android.com, jaewon02.kim@samsung.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When an uncorrected memory error is consumed there is a race between the
-CMCI from the memory controller reporting an uncorrected error with a UCNA
-signature, and the core reporting and SRAR signature machine check when the
-data is about to be consumed.
+Hi Krzysztof,
 
-- Background: why *UN*corrected errors tied to *C*MCI in Intel platform [1]
+Thanks for the review feedback.
 
-Prior to Icelake memory controllers reported patrol scrub events that
-detected a previously unseen uncorrected error in memory by signaling a
-broadcast machine check with an SRAO (Software Recoverable Action Optional)
-signature in the machine check bank. This was overkill because it's not an
-urgent problem that no core is on the verge of consuming that bad data.
-It's also found that multi SRAO UCE may cause nested MCE interrupts and
-finally become an IERR.
+On Tue, 11 Mar 2025 at 19:36, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On 07/03/2025 11:29, Peter Griffin wrote:
+> > gs101 differs to other SoCs in that fltcon1 register doesn't
+> > always exist. Additionally the offset of fltcon0 is not fixed
+> > and needs to use the newly added eint_fltcon_offset variable.
+> >
+> > Fixes: 4a8be01a1a7a ("pinctrl: samsung: Add gs101 SoC pinctrl configura=
+tion")
+> > Cc: stable@vger.kernel.org
+>
+> It looks this depends on previous commit, right?
 
-Hence, Intel downgrades the machine check bank signature of patrol
-scrub from SRAO to UCNA (Uncorrected, No Action required), and signal
-changed to #CMCI. Just to add to the confusion, Linux does take an action
-(in uc_decode_notifier()) to try to offline the page despite the UC*NA*
-signature name.
+Yes that's right, it depends on the refactoring in the previous patch.
+To fix the bug (which is an Serror on suspend for gs101), we need the
+dedicated gs101 callback so it can have the knowledge that fltcon1
+doesn't always exist and it's varying offset.
 
-- Background: why #CMCI and #MCE race when poison is consuming in Intel platform [1]
+> That's really not
+> optimal, although I understand that if you re-order patches this code
+> would be soon changed, just like you changed other suspend/resume
+> callbacks in patch #2?
 
-Having decided that CMCI/UCNA is the best action for patrol scrub errors,
-the memory controller uses it for reads too. But the memory controller is
-executing asynchronously from the core, and can't tell the difference
-between a "real" read and a speculative read. So it will do CMCI/UCNA if an
-error is found in any read.
+Originally it was just one patch, but the previous review feedback was
+to split the refactor into a dedicated patch, and then add gs101
+specific parts separately. The refactoring was done primarily so we
+can fix this bug without affecting the other platforms, so I don't
+re-ordering the patches will help.
 
-Thus:
+Thanks,
 
-1) Core is clever and thinks address A is needed soon, issues a speculative read.
-2) Core finds it is going to use address A soon after sending the read request
-3) The CMCI from the memory controller is in a race with MCE from the core
-   that will soon try to retire the load from address A.
-
-Quite often (because speculation has got better) the CMCI from the memory
-controller is delivered before the core is committed to the instruction
-reading address A, so the interrupt is taken, and Linux offlines the page
-(marking it as poison).
-
-- Why user process is killed for instr case
-
-Commit 046545a661af ("mm/hwpoison: fix error page recovered but reported
-"not recovered"") tries to fix noise message "Memory error not recovered"
-and skips duplicate SIGBUSs due to the race. But it also introduced a bug
-that kill_accessing_process() return -EHWPOISON for instr case, as result,
-kill_me_maybe() send a SIGBUS to user process.
-
-If the CMCI wins that race, the page is marked poisoned when
-uc_decode_notifier() calls memory_failure(). For dirty pages,
-memory_failure() invokes try_to_unmap() with the TTU_HWPOISON flag,
-converting the PTE to a hwpoison entry. As a result,
-kill_accessing_process():
-
-- call walk_page_range() and return 1 regardless of whether
-  try_to_unmap() succeeds or fails,
-- call kill_proc() to make sure a SIGBUS is sent
-- return -EHWPOISON to indicate that SIGBUS is already sent to the
-  process and kill_me_maybe() doesn't have to send it again.
-
-However, for clean pages, the TTU_HWPOISON flag is cleared, leaving the
-PTE unchanged and not converted to a hwpoison entry. Conversely, for
-clean pages where PTE entries are not marked as hwpoison,
-kill_accessing_process() returns -EFAULT, causing kill_me_maybe() to
-send a SIGBUS.
-
-Console log looks like this:
-
-    Memory failure: 0x827ca68: corrupted page was clean: dropped without side effects
-    Memory failure: 0x827ca68: recovery action for clean LRU page: Recovered
-    Memory failure: 0x827ca68: already hardware poisoned
-    mce: Memory error not recovered
-
-To fix it, return 0 for "corrupted page was clean", preventing an
-unnecessary SIGBUS to user process.
-
-[1] https://lore.kernel.org/lkml/20250217063335.22257-1-xueshuai@linux.alibaba.com/T/#mba94f1305b3009dd340ce4114d3221fe810d1871
-Fixes: 046545a661af ("mm/hwpoison: fix error page recovered but reported "not recovered"")
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Tested-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Miaohe Lin <linmiaohe@huawei.com>
-Cc: stable@vger.kernel.org
----
- mm/memory-failure.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 995a15eb67e2..b037952565be 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -881,12 +881,17 @@ static int kill_accessing_process(struct task_struct *p, unsigned long pfn,
- 	mmap_read_lock(p->mm);
- 	ret = walk_page_range(p->mm, 0, TASK_SIZE, &hwpoison_walk_ops,
- 			      (void *)&priv);
-+	/*
-+	 * ret = 1 when CMCI wins, regardless of whether try_to_unmap()
-+	 * succeeds or fails, then kill the process with SIGBUS.
-+	 * ret = 0 when poison page is a clean page and it's dropped, no
-+	 * SIGBUS is needed.
-+	 */
- 	if (ret == 1 && priv.tk.addr)
- 		kill_proc(&priv.tk, pfn, flags);
--	else
--		ret = 0;
- 	mmap_read_unlock(p->mm);
--	return ret > 0 ? -EHWPOISON : -EFAULT;
-+
-+	return ret > 0 ? -EHWPOISON : 0;
- }
- 
- /*
--- 
-2.39.3
-
+Peter
+>
+>
+> > Reviewed-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> > Changes since v2:
+> > * make it clear exynos_set_wakeup(bank) is conditional on bank type (An=
+dre)
+> > * align style where the '+' is placed (Andre)
+> > * remove unnecessary braces (Andre)
+> > ---
+>
+> ...
+>
+> > +void gs101_pinctrl_suspend(struct samsung_pin_bank *bank)
+> > +{
+> > +     struct exynos_eint_gpio_save *save =3D bank->soc_priv;
+> > +     const void __iomem *regs =3D bank->eint_base;
+> > +
+> > +     if (bank->eint_type =3D=3D EINT_TYPE_GPIO) {
+> > +             save->eint_con =3D readl(regs + EXYNOS_GPIO_ECON_OFFSET
+> > +                                    + bank->eint_offset);
+> > +
+> > +             save->eint_fltcon0 =3D readl(regs + EXYNOS_GPIO_EFLTCON_O=
+FFSET
+> > +                                        + bank->eint_fltcon_offset);
+> > +
+> > +             /* fltcon1 register only exists for pins 4-7 */
+> > +             if (bank->nr_pins > 4)
+> > +                     save->eint_fltcon1 =3D readl(regs +
+> > +                                             EXYNOS_GPIO_EFLTCON_OFFSE=
+T
+> > +                                             + bank->eint_fltcon_offse=
+t + 4);
+> > +
+> > +             save->eint_mask =3D readl(regs + bank->irq_chip->eint_mas=
+k
+> > +                                     + bank->eint_offset);
+> > +
+> > +             pr_debug("%s: save     con %#010x\n",
+> > +                      bank->name, save->eint_con);
+> > +             pr_debug("%s: save fltcon0 %#010x\n",
+> > +                      bank->name, save->eint_fltcon0);
+> > +             if (bank->nr_pins > 4)
+> > +                     pr_debug("%s: save fltcon1 %#010x\n",
+> > +                              bank->name, save->eint_fltcon1);
+> > +             pr_debug("%s: save    mask %#010x\n",
+> > +                      bank->name, save->eint_mask);
+> > +     } else if (bank->eint_type =3D=3D EINT_TYPE_WKUP)
+> > +             exynos_set_wakeup(bank);
+>
+> Missing {}. Run checkpatch --strict.
+>
+>
+> Best regards,
+> Krzysztof
