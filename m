@@ -1,133 +1,122 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44969443
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 00:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EDF182D7
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 00:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741738728; cv=none; b=kWuplRVRioKNjmpMEJt+3XdCAbH9Flzv0Xa1wxVuUWsYI/VowN49nRezS+I9F5Kg7LcsGwKgMtBisCi2KHCif3nE0XR5gogt7rsN7Ocs7amNX8JbWuoX30MUTUoShpgHPG2BhEYdDDy/SbPydQUbF51/vTwJByHxK1IXtg0wdU0=
+	t=1741738887; cv=none; b=pighPRa0E5eGIWbHDJ/1CUYkVRbPZ7GuDASW3iKEH8lh4OtO+hnXB1kVyoNtezW05F4WcJx5AQcjBQMpFBHIf4z6wVCQIDNZsRloDZHnQIDwLOrTEq1QL6sJQkJhhM2HneeVZcv4RKgA43xTa3moMixnLpcgCmmC8yURhUZx43A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741738728; c=relaxed/simple;
-	bh=TuMadePkxb8jxDE0mIQj+ghINJIfrzK4xfCJJdF8X4o=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=OeBnrJb5focUPSaC5ZumUq1xUW8+DS9iVV7YDbvmgzuFOZxkGYYVKdSEpv0S+ERO/BwGY0hAQcBnlvNFS2Q1brJe+/hVmfTeQ3C34i6TVXuXHSfZAAI/S9/gxk4cLoJNu3CU32u4TBZNfaNoHXrJPWI1ktG6PR/a98PF/EgUyI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N1zmn+t9; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1741738887; c=relaxed/simple;
+	bh=H5++SEOlYVvHKWlmzOVPPdCy7O19bFEfJFTgn0kXp6U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Mqw5eWEq5Pp3yIVZRMTr4xSjPPcZ7OE2DLAxpTvcPUNx2Jut4XH9mxtGMeOu8lDdv15bgjl73E3S6BhGTv3KAYGsYhsKG1Y4rF+tQGPVBHSAY0GTReEhxOaVnAAjbt/dld7irmDfa+9kCCP39xopcGwHxFyLncNid37NKGvjHZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YOouwTYm; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N1zmn+t9"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6fddfe0448dso5242247b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 17:18:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YOouwTYm"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5b736b3fcso809520a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Mar 2025 17:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741738725; x=1742343525; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=REugdpu80t5x64k4y3HKelfVsb35Y8bQ1k2waLdzFQA=;
-        b=N1zmn+t9aT05KmsoSA3UnDar3Lc9VgKgmFcm29+AMk5Ld7r/ryxTK/9/u+4dcyV0bJ
-         GZhMZ9RXn3jFdSi7K0Mt1OahQgoMjj+55fzkP++p8ouvsbMwya0N3yUOVc5bg4o8TgZm
-         4ZItuFfUEE8pU87cCrcpo0FOY3rCEAbmBMBdwFOKhdjxkSPaGfYdJRAg3WEvH6CsJjPu
-         GzM3WLiVBRpVPQs/dRQczYxkXiM3/NkD6T87hZ0ZJHF7RcnbgwWi3GwI+L0Jfak8KPwf
-         M+q6MEV2Av9yGkopNSzi7wDvZozoygJxLDvp57kIhoxqP2SKAUUcTHLG1FuOEjmsVIDI
-         s4MA==
+        d=chromium.org; s=google; t=1741738883; x=1742343683; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HxhTVWfKMvwlygUn42tfW0inla3um9pm5PRUxvke0sk=;
+        b=YOouwTYmElHEvDj3gkv9FMjcMJdW2j5KeLo5+lYVNsjbiPKl0EM7sFYbpvWXLzoBeW
+         sm4bsJ6vDDil6mRIYFFkylR9sO2w1plR7RHp62o5JnNS2R8gujZRPMScPbwqg/LYh+80
+         K10BSAPW32Z8bMCF6WBRSlNZLp3DKqTruk18Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741738725; x=1742343525;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=REugdpu80t5x64k4y3HKelfVsb35Y8bQ1k2waLdzFQA=;
-        b=SQsVrjaVW+1bdVzxPe7IsuK+uwrONzf0F42h+vZKegxb0Cn4Xq+uJfEubbMxOu+tRe
-         +5sXvDGwZNf9SPFm1UEHaRnn/Rix80D5QocnFBzYt4YTyviZYv+bROQe/szVKVyiUdKI
-         LA3Y0EU68da77xTLxvtQl17hsnxwdgF6pUzRByaqpUy4l8aUsulZsQqa+DcqzCxiiiZd
-         fDaJlCgJvQgIlu5lpL8MyqFmqqZNwNn1EIF7W6fcTZNrmrbe4oxvCtXAvrBXxbfL/np6
-         zuEsvo62DK3enAERxWxDT9egt6yjofieQoAtpTESBYlPoa6Bih6LV2/dbpRgqxvLTvAz
-         TslQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTyL9DMpwhOfVwJjiRFLDqpOjVL5Uf17VJnu3H288+iqEWkYejuorFVpSOfmmGg5ihMT5qLYDGZwWE+3M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAyi8Epl5txcky3jquWHkPlLF9jfrZOoZQRW19GL771WoQautb
-	rEo7rOs85t6wkDM9tyIZII086bW92Q+NYFkRhsnILWSGYB+denpQfNb0cW9lVQLn8Rz5xm6Sl/G
-	gX0GFZQ==
-X-Google-Smtp-Source: AGHT+IEZVGyVhHcp5La5S9mDdx95clLmTIYUzQuT/zjQobj8BfFNDhxkugMKrMJCb+8E3WAqToYxgeYiMeZ+
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:8bc2:942f:1b93:42dd])
- (user=irogers job=sendgmr) by 2002:a05:690c:650e:b0:6ff:1f10:31fa with SMTP
- id 00721157ae682-6ff1f105c4cmr278467b3.3.1741738725415; Tue, 11 Mar 2025
- 17:18:45 -0700 (PDT)
-Date: Tue, 11 Mar 2025 17:18:41 -0700
-Message-Id: <20250312001841.1515779-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1741738883; x=1742343683;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HxhTVWfKMvwlygUn42tfW0inla3um9pm5PRUxvke0sk=;
+        b=YSjQoK/n7XOYihfaHXErej09cU//7/R23ner1VJwD7rXKm0dFA1qVgLuAEIfqqZJoF
+         /fPDvxaL/5KalA/CAmRQAnzcdIjQP0/QSmvFptJNAZFRfZpesi5B5jp5Yu9ov690UgiP
+         jNc3e+plLlz0X3ZfcjSW5oG8XAplzkThCuo7kmuQ6W5SUjOsjP3I21wk36NYtNXsG9Do
+         LSpNAkTACLPS+pmsT6K9R/gHOgNQWLhnOa37m9MKJ83KJW3Vc8C0ADMxrONI4VOlFHRI
+         BR9rTVjoPd4JNa0wP8m0sHgy6VkiO7zvDGCGJ3Kc1y9ZG/OxUIoTYTbDBQ3zvqpCMXBx
+         LyIQ==
+X-Gm-Message-State: AOJu0Yyren9YctzTczCSW9S3/m0opfym6mNLEWOL885WRivNJqx8H3HV
+	yqzELXRm7msSq+lgrWV5T1M2YF4D8N4WIvpuhSCgCT4Y94I3r4GMrK+k09mxJA==
+X-Gm-Gg: ASbGncs+boLniAg5oqwvwh8yC9kuxYx7wuj5Wal2LesZ9bHeXPPK9Bz22l0l55ydmm/
+	CKo3pLd7nqZnWaUn8LBUsCinvrb8bNZzDwFMxx2RmRJWYTLPkyjh8d2XuXRSn4nsh6zVlkAIAs9
+	ZQ3NstsuLXzrGv/9PFb88/X5xFh9JJhSM25R+zeGtIJttVFCD+KLxhNtVnB8jPTXRhnwKynlwhO
+	vPIYy1qHxuPi8mdOQNA2IOI20dOuxjHnbnuLebDYkJC4vU9pBD+MuJvpd976sbzo4KXsz+iopsu
+	iWAOSxDpwtTl1y50J/D0FlPfaRXrQeZ9EP4iIDmVJL7pEmfZ7HbsLoRuiMetB4roOLwi02lIQO9
+	3uIdTFU3zovI=
+X-Google-Smtp-Source: AGHT+IFtgvPPWm2btr1Xtn33I57TNFhVpEuzGkQix5y9M7OehAhXbs7W3QjpSSzY3kDwK7gNa2Zc0g==
+X-Received: by 2002:a05:6402:270d:b0:5e0:8b75:5470 with SMTP id 4fb4d7f45d1cf-5e75f2b404emr3051425a12.5.1741738882887;
+        Tue, 11 Mar 2025 17:21:22 -0700 (PDT)
+Received: from cfish.c.googlers.com.com (40.162.204.35.bc.googleusercontent.com. [35.204.162.40])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5c7669fd0sm8846503a12.51.2025.03.11.17.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 17:21:21 -0700 (PDT)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	vbabka@suse.cz,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@Oracle.com,
+	broonie@kernel.org,
+	skhan@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	jorgelo@chromium.org,
+	keescook@chromium.org,
+	pedro.falcato@gmail.com,
+	rdunlap@infradead.org,
+	jannh@google.com,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [RFC PATCH v1 0/2] mseal: allow noop mprotect
+Date: Wed, 12 Mar 2025 00:21:15 +0000
+Message-ID: <20250312002117.2556240-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
-Subject: [PATCH v1] perf tests diff: Fixes to variable expansion and stdout
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-When make_data fails its error message needs to go to stderr rather
-than stdout and the stdout value is captured in a variable.  Quote the
-$err value so that it is always a valid input for test.  This error is
-commonly encountered if no sample data is gathered by the test.
+From: Jeff Xu <jeffxu@chromium.org>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/diff.sh | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Initially, when mseal was introduced in 6.10, semantically, when a VMA
+within the specified address range is sealed, the mprotect will be rejected,
+leaving all of VMA unmodified. However, adding an extra loop to check the mseal
+flag for every VMA slows things down a bit, therefore in 6.12, this issue was
+solved by removing can_modify_mm and checking each VMA’s mseal flag directly
+without an extra loop [1]. This is a semantic change, i.e. partial update is
+allowed, VMAs can be updated until a sealed VMA is found.
 
-diff --git a/tools/perf/tests/shell/diff.sh b/tools/perf/tests/shell/diff.sh
-index 14b87af88703..e05a5dc49479 100755
---- a/tools/perf/tests/shell/diff.sh
-+++ b/tools/perf/tests/shell/diff.sh
-@@ -39,13 +39,13 @@ make_data() {
-   file="$1"
-   if ! perf record -o "${file}" ${testprog} 2> /dev/null
-   then
--    echo "Workload record [Failed record]"
-+    echo "Workload record [Failed record]" >&2
-     echo 1
-     return
-   fi
-   if ! perf report -i "${file}" -q | grep -q "${testsym}"
-   then
--    echo "Workload record [Failed missing output]"
-+    echo "Workload record [Failed missing output]" >&2
-     echo 1
-     return
-   fi
-@@ -55,12 +55,12 @@ make_data() {
- test_two_files() {
-   echo "Basic two file diff test"
-   err=$(make_data "${perfdata1}")
--  if [ $err != 0 ]
-+  if [ "$err" != 0 ]
-   then
-     return
-   fi
-   err=$(make_data "${perfdata2}")
--  if [ $err != 0 ]
-+  if [ "$err" != 0 ]
-   then
-     return
-   fi
-@@ -77,12 +77,12 @@ test_two_files() {
- test_three_files() {
-   echo "Basic three file diff test"
-   err=$(make_data "${perfdata1}")
--  if [ $err != 0 ]
-+  if [ "$err" != 0 ]
-   then
-     return
-   fi
-   err=$(make_data "${perfdata2}")
--  if [ $err != 0 ]
-+  if [ "$err" != 0 ]
-   then
-     return
-   fi
+The new semantic also means, we could allow mprotect on a sealed VMA if the new
+attribute of VMA remains the same as the old one. Relaxing this avoids unnecessary
+impacts for applications that want to seal a particular mapping. Doing this also
+has no security impact.
+
+The mseal_test is also modified by this patch to adapt to the new
+semantic. Please note, mseal_test is currently undergoing refactoring,
+and eventually will be replaced with a new memory sealing selftest.
+In this patch, I only make a minimum change to make it pass. I considered
+adding a new testcase in mseal_test to cover this new behavior, however, the
+existing mseal_test is using wrong patterns and won’t pass the review.
+Such a new test is better to be added in the new refactored memory sealing tests.
+The refactoring is currently pending review [2].
+
+[1] https://lore.kernel.org/all/20240817-mseal-depessimize-v3-0-d8d2e037df30@gmail.com/
+[2] https://lore.kernel.org/all/20241211053311.245636-1-jeffxu@google.com/
+
+Jeff Xu (2):
+  selftests/mm: mseal_test: avoid using no-op mprotect
+  mseal: allow noop mprotect
+
+ mm/mprotect.c                           | 6 +++---
+ tools/testing/selftests/mm/mseal_test.c | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
 -- 
 2.49.0.rc0.332.g42c0ae87b1-goog
 
