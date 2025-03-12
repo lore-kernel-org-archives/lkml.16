@@ -1,92 +1,139 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30B12356D8
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0F6192D96;
+	Wed, 12 Mar 2025 12:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741783573; cv=none; b=SG0TFvwQWwjV7owVsG8N94cqr1nhcIcAG2146eznrslvesIxuKsgttwDtoOy74TL/VZ/k2GLjD42cxN3z7cXdDDrXYB3+g3uE2Tnzt3a59H9kjaI4cPwj4Ypccgo9MdpwAAayohcYeCOLnn32u3p1kMJKst9ALnlIddZgsz/8g4=
+	t=1741783652; cv=none; b=H72QR2XyG51PxC4I14xAw1MCJwnq8aG4O9hIJ8xj0A8mii9QJrzmBa7JsM+fLNb+mDGYQASLyfaCQkIhuo4H3rCg/ou9lJl3QGHrcO88C7QEdXUQyJUnze5ZiHh3vsdf0Kog0V34lrxG6YuWFj7fNbQ/byd60OMvQpcIdy+Exe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741783573; c=relaxed/simple;
-	bh=B+qedQ9BPFQGW3J0khu8zBQfZvjtxhEh7jY3x2JZRBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wnx+Lp0yLTO1vN6v0E/NOnRnGVsn5lYtsfxF4SY0gacq2yZbr1l/78Lj4Mk8hsW6U7B1ogSd6w0ES1+Am9a7UO8/mRuwY3M7qDbkXoOSu8Za1RjTKLhfJur0VoWgEs1q5ks+qIc1Tg0I+qsNM9yduk3hf0Alj/WjGw71RVDigzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=RdoUpfOn; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741783652; c=relaxed/simple;
+	bh=yr2NeM5xZd+21Kz+8dbrA+63YokkKPeruGiWILIFWq0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S8CVpYZeTUxkUiBLN5jXGN6oL8lAEcyISEOawEGlz03B+HavmYARhk2eHw8POjdZnPsBFUUZkKTxBHWgB63MtVkpI5bR07ELqCfCo5006ElsA02EeAVkH0njmUSiSuRgJ1yTLDQx/eSaiwzWNjmkiTqlauhPbNH+oqVmPN8nRfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LTbPWsFa; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="RdoUpfOn"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A936240E0217;
-	Wed, 12 Mar 2025 12:40:24 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id i32IavrGJKHu; Wed, 12 Mar 2025 12:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741783220; bh=gZaH1Pl/yqZHDpOS25EIdgOwXhH8hvtxT3pmoNFopcM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RdoUpfOn4Fi5tDUmSmNolpSbaptx5fjMJ4mWpCKdCa1xvxr8jPsy1FKb0S5r/qxQT
-	 Sz+4O8paZT1cMuUSjZnSIEWNiVf5GrFRItfkClVq6zf8r6jfk3jj86eA4daV0XhlyN
-	 EqQOC4cZ24AI+Dnkw3iEmByXU7cQ/7jMCBZJeUWl+yRCznjo+rQSK4PvQwwkWdySqc
-	 u2aYx5JDA6fTxuYnsgnqgFASojfC7kG1slRfzDBLDOQFmhlY/T8CfGBW0SdzBy8Z9R
-	 6QKJosSaUujjaWMHdn9sdjeWz3IeyKKMCTDxbe6t6dmnnwpPoGHKDuDmewl4kxHSxQ
-	 4pla3vvuSP9iatGrXa0uJ0kvrPfRmasiklzQK0lLXjGhHbjPJNSXo983azf5EZ0MVb
-	 5BcH0vgM1bqKVi1fq6VErH2jviCkMjoo8IsSXIBAD1a+Dy+rVnEgc0ahPU0fGDcWxc
-	 +OboJbuDVjyPB6p7slehmuOcwCMc7AJpFxnkH1C+WCDcpGtr9s92SFlG6QVSIuJfmf
-	 Tc2LrGjX4+ofkvz24dufpT+ZceVb7mqB9hq31xGljFLPhmr4tGaPCzAi6ZsHePzgBg
-	 GXnJhlTeqC9f/ZUyqxLamz5Up8MmXPMVl68fOO5FYSL0RecuacrWuXuTLgIEvXXwUB
-	 8vd6uoPkf/YRRNUZGsntJi2A=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DC33040E0218;
-	Wed, 12 Mar 2025 12:40:12 +0000 (UTC)
-Date: Wed, 12 Mar 2025 13:40:06 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Mikhail Paulyshka <me@mixaill.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH 0/2] x86/rdrand: implement sanity check for RDSEED
-Message-ID: <20250312124006.GCZ9GApgQQ49dO_BMW@fat_crate.local>
-References: <20250312123130.8290-1-me@mixaill.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTbPWsFa"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff694d2d4dso9752082a91.0;
+        Wed, 12 Mar 2025 05:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741783651; x=1742388451; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4M/3rcO0sPMe5Iql+QqO4QeWNUxz9DotePxQss5GMBg=;
+        b=LTbPWsFatOWLpppfA5AsktsfLfTgtMvZnCj1DJTCdJO9bQz85BULJyRT/Ot+QtyVRJ
+         C25yYtHSvnZySxeUGBl18ySyN1uRK2+TnzVDZBcczrgsLry+9W5cVYVEgMzcSHPv+qHs
+         l3BmRhmfLrw3UKmpNFnPCCPUjK6UQrTJFrPxEPnKlvTOX/qeIgLbH5g3waaBN1dKGFei
+         m1PgCJOUjfngZyC439DLYjRGIBTzKjXK9vZG4dIyWie6+nl5C00qiBtAyV8Y6u1T8GR1
+         wVOrN514qgL9w9Y6GJVwLHpgCMMsUMQfYRPNq2d8qevYIakVMOE4rx2ActGvbok3t6F8
+         tksA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741783651; x=1742388451;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4M/3rcO0sPMe5Iql+QqO4QeWNUxz9DotePxQss5GMBg=;
+        b=WGIbv8dDDsI+DZFq9GwKyj3Jr+47KIz3FtSZyJuqG3WevXLlNwUhlx93wyckh0rTnB
+         LrwA480jgcUpbYiEfvbEgn3Q5Vu+fsAU54UrlAqmUv54+4Tow8mIsX30+Jl/72Cp6pls
+         oZUtMXUocrvZXLaMLNvBWBW2ltujXWdsZNyhkSatCslWcE0X8/Iso38W1krFSSDCvkdh
+         zoOwYP7R377WKVu91q1z4qULMVdSLFhLK1J7ExdMZ1vt5Gp+1XtDhVietsdkmP1eGGcs
+         NnpFwR1+ludarrCAf9Trgxa68Pog6+HJ+yUN9fLAm0eQ+aQkM18CxZdoFSJ9St1ACgR4
+         bxIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVusvrDob3Xaj4r5OD3OpaPEPA7zZbiohiHgfCQAx4NYCc6BupGFJgEetNw4ya+88YgrR5ISS8PUuUyhvz7LYVu4skz@vger.kernel.org, AJvYcCWZ/0ajGVBu1FAPTYH59vPx2OCDHyb0/8mmGjJ0wwHGkHb15z6ziMKMMwfT9ofcnl/6TeplNwO/ecA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwobKM5Ob630FQ8R/e/bXDaPK68tWEdF+fLLpTZh5K26iP1C9Mg
+	2FT6lSj2OaXCZkUJmlheBbf6fIj6GtrgN7mSCe7/oApeoyoD9t4G
+X-Gm-Gg: ASbGncseWo5N23sVJpRDRZHnhRqSGR7+LHFoxaLECWv8ZZ2K4ypwqy4Rek6UqqcqSXr
+	8fkCvPpL04SB87VZYyT3q8sIHp3jEyf0B9sbUazijvTDHn80O0U73g0RZRF4KX/2WDTeJIsptTp
+	vtwUXgFoGjE0wpgodoQzOxSWlLxuWYxie7T1D6lX8+qcSq6n+vYjNC5H7owvm32sxa2C9PfT9vy
+	VMENZTJTNgweBOlLO6BAM9ztx8Xotqk6Ayb0RMphQKfNVD86oeKqiYnBax7x9Mse5ACBFJs7ABU
+	Pi1OZ4P0n4+NWWsXlDjTNygf/DlHtfwTAj7YrsX8FZGEpRRxxWggIrwXECgfgbwplwXyUBWmLrQ
+	=
+X-Google-Smtp-Source: AGHT+IFWbvxz8UDjRoEtUCmgLDLjxbFxdBLMGus6HijIkfSeWRHuo3KliLRdNinI/I608X/mH2aLrQ==
+X-Received: by 2002:a17:90b:4b11:b0:2ff:5c4e:5ac2 with SMTP id 98e67ed59e1d1-2ff7ce59533mr29967704a91.6.1741783650701;
+        Wed, 12 Mar 2025 05:47:30 -0700 (PDT)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301191cb1f7sm1638141a91.43.2025.03.12.05.47.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 05:47:30 -0700 (PDT)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH v3 2/2] docs: tracing: Reduce maxdepth in index documentation
+Date: Wed, 12 Mar 2025 18:17:17 +0530
+Message-Id: <20250312124717.7208-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250312123130.8290-1-me@mixaill.net>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 12, 2025 at 03:31:28PM +0300, Mikhail Paulyshka wrote:
-> On the AMD Cyan Skillfish (Family 0x17 Model 0x47 Stepping 0x0), which 
-> is a Zen2-based APU found on the AMD BC-250 board, there is a situation 
-> where RDRAND works fine, but RDSEED generates FF. This leads to some 
-> applications that use RDSEED to generate random numbers (such as 
-> Qt and KDE) into a nearly unusable state.
-> 
-> Although AMD has fixed the Zen2 RDRAND issues in 2019 with a microcode update, 
-> no such update has been released for the Family 0x17 Model 0x47 core.
+Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
+contents, showing only top-level document titles for better readability.
 
-What's the microcode level on that machine?
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+---
+ Documentation/trace/index.rst | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Also, send
-
-cpuid -r
-
-output pls.
-
-Thx.
-
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index 6b268194f..5ddd47ee7 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -14,7 +14,7 @@ This section provides an overview of Linux tracing mechanisms
+ and debugging approaches.
+ 
+ .. toctree::
+-   :maxdepth: 2
++   :maxdepth: 1
+ 
+    debugging
+    tracepoints
+@@ -28,7 +28,7 @@ The following are the primary tracing frameworks integrated into
+ the Linux kernel.
+ 
+ .. toctree::
+-   :maxdepth: 2
++   :maxdepth: 1
+ 
+    ftrace
+    ftrace-design
+@@ -47,7 +47,7 @@ A detailed explanation of event tracing mechanisms and their
+ applications.
+ 
+ .. toctree::
+-   :maxdepth: 2
++   :maxdepth: 1
+ 
+    events
+    events-kmem
+@@ -65,7 +65,7 @@ This section covers tracing features that monitor hardware
+ interactions and system performance.
+ 
+ .. toctree::
+-   :maxdepth: 2
++   :maxdepth: 1
+ 
+    intel_th
+    stm
+@@ -85,7 +85,7 @@ These tools allow tracing user-space applications and
+ interactions.
+ 
+ .. toctree::
+-   :maxdepth: 2
++   :maxdepth: 1
+ 
+    user_events
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
