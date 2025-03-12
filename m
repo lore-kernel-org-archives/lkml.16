@@ -1,77 +1,48 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEBC156C6F
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 15:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471FB23A9B4;
+	Wed, 12 Mar 2025 15:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741794048; cv=none; b=PAkxbybsV7i+rnfML2jVZIbNJ+Py3QtOmNEMG+N1XmQ0N1sIa+7ChCYy//6Q7SID+84KVA6syIc9Dz4aaCKbcEMIhw3DEH/gDlJus8qx2wOjDdFhAVRzqUL0vhJn3Pz+zr4wV2j1jxzDgXecnKnKXgNYKhJVXajhK9Oacb0BNds=
+	t=1741794065; cv=none; b=DCeI+9SYELnDnY42roEiTYsIXeqH2W0D4ZJYRBTSNqgzp2eSCGGUqPJQi2SJdRL6BcFtKm8ueDEy5AfonTDagtWpsqiXIQJy6DBPjiMFr87iKzFKwx4HUNkMhLd6NHzGVN4j0APXqcQ5SiwI1JUBIZOOjU15hN+Ip7fOlbvf+Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741794048; c=relaxed/simple;
-	bh=ZsCJPcdSe7Tw1kb5p8vquVkzMebfiXs4Jd/L8C/W7qw=;
+	s=arc-20240116; t=1741794065; c=relaxed/simple;
+	bh=+DjZrMhoe4S80lso1kZouk0162bjEZBCnZ+ayHsbcco=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZEfpx0Zw2JPSN2nFB5aYVOHGPAOvoyz/zrHFYIUHVh3b/pRPSS3DurB00noq9O1z8pazDqXFJZhTCgXATHG+B4bgKeSWG7tmY1Aaeez/TFj9WTf25wanwoXie8BgTn0KTFJnyeY2tIp376cMOUJ1PT0khIzK/TKp1Hf5PUUbijo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FkAfEU3A; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=dO2HfJxEGZqX/tI3D/NzKuhT/GxrMfGF9rvim06oQPooC7OUQAi6agh5uilshTkxpJYn2l5k5Qgiz7MnFNC9cG0MOy/a6P1UrulCOvmLfxb+0CI5dk7uXrLrNigrvW7jYDzfSfOQ15F9MRxJMyz3070XZl97cp6b2xbL7oackHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2kI93PJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FkAfEU3A"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3913fdd003bso9791f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 08:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741794044; x=1742398844; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SohDC+MqOB5QB3dRD2BBd5gf9MI45ZJLD/i4I7QXdTE=;
-        b=FkAfEU3AAD7WkKDxNZ8JyGhXj0iIrCZhRbaC46t4/vdqn+YZBrSneJpnGrNJj3hMWO
-         U1XakA4GIOfmDcLdCN3MNG/PSP0rz89/iaQNzosk9+26BFe4iVXC9iEWnuXwQoc4ZWDl
-         r2rx1Ncx3ZDgqBpL2S7i7cAN8t8atpAnW2cLhE/Dbse29SGNVr6CF5v3SPilY65pVh5h
-         4Cur0ZSV2XvTaSkwjAL82pxjRdlc7PvNyqdz72p2tZyk3kDStBTuHjPX1gCfPMcbkraO
-         idsDVFMTNIZ/Lth5ImlsSPis2nu/D77NCBqTTteK4/zHrFUEK8m9LZ0VX4EF9u0IBz37
-         BEOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741794044; x=1742398844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SohDC+MqOB5QB3dRD2BBd5gf9MI45ZJLD/i4I7QXdTE=;
-        b=ccg6dkZg+Cq4siivxY8uADXaIRelr1uzdQWcIisLQ65sL5zq+UDQG/tiPmWM5udBQx
-         Grn3ETVQO82TZTQZTem4Qj7ShRsuv+Gcw7vxWqGJS96rHsFWQOmBfgF09mdkzKbJOQKg
-         dNG7dL+aBahjFkm5LDZIxNq/6iewRImpgj5B0brp2mKJryRq4TyNphILF1ytOtA4NAgh
-         n4MBIhndhoMmMXSBOYJMMOAtPr9jT1lDmvi+lvQVXfF77JKdTA1kb5R0o0KIAAAZNQKY
-         w7rj6gcummsb7CX9RtFWnEF6oFJx99JUnyfwiPbTkvqvKGfaF2eB6QhgtoTwNTaQkmeD
-         hFYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgiFvL5iJ+Y8ECHzBGk+p/4J54Zaf7J29rThHsaUtq4ckC9msaFgERjG5eRfplcQ17849YT3bKPuv0z1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK26D+EIDh6sjRDgZAkaWMGlYgRznZb9VE7t4a5DeS9WNaNHY8
-	rpam2nWruHRiQXNkae2tiHH+WQiU2ojbfSE8TMCGqgmefCIN05w3wiDeTEflAz3W48UecuX9gON
-	E
-X-Gm-Gg: ASbGnctOns+PHyuUfXpGfXI3+S+tSFq7Bc167a3HLhrl077Z/Pel8gfzu3rhMgnnuHC
-	ZEp0oulvVygcm03RQumgrfcpwI0mtgn9dr0R+5fG0QpG/NUFt+/xSaSto/PwBFXZasLD3o3ufkv
-	Tu8Uc7vCsnsTm+VLhSJBh6mFl46vnI6auYLWqlZbD6gVtNHaDqzkmltbjrMgAjN8e2gVa2MDuG4
-	HqmFIsuqn6dh3+S9/rlONNCysYspQwPUNf0Lc6gcxBcWHRJGv6cTI0XvUeQXbHGD1gDVxi+fZYL
-	JBLm9nf4MuwFBP/fHZsieo9lfH839M06s5/nqfQN9KTT6cFh2wSiY6MY8Q==
-X-Google-Smtp-Source: AGHT+IEI4qphOyuM6FRyf8K5fbXrZk7BGS7097WEPNMO96kH01+ahmZ3y3Q+T0Bk2uCXUnkiggKnWw==
-X-Received: by 2002:a5d:6d02:0:b0:391:3207:2e68 with SMTP id ffacd0b85a97d-395671d968bmr82842f8f.9.1741794044532;
-        Wed, 12 Mar 2025 08:40:44 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfb7aefsm21094101f8f.20.2025.03.12.08.40.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 08:40:44 -0700 (PDT)
-Date: Wed, 12 Mar 2025 16:40:42 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: adamsimonelli@gmail.com
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v8 4/4] Documentation/serial-console: Document
- CONFIG_NULL_TTY_DEFAULT_CONSOLE.
-Message-ID: <Z9Gq-oIr8wPGLGEy@pathway.suse.cz>
-References: <20250311033133.1859963-1-adamsimonelli@gmail.com>
- <20250311033133.1859963-5-adamsimonelli@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2kI93PJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D38C4CEDD;
+	Wed, 12 Mar 2025 15:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741794064;
+	bh=+DjZrMhoe4S80lso1kZouk0162bjEZBCnZ+ayHsbcco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e2kI93PJwrZsHc79AU8BZ5RCBZLJoSoYEnUXthRsPCJ44E4PlwcYVZCmSJx/3RqB1
+	 XlyLfcJNX6T75ZnzJH/NZI1KMS2od/AnGqIHY6u49ZrpOUgYpG+TXe/+SbF7wEqI24
+	 72RFgJ8LygU37SC4YmEj0oQ2Bm8SFVIXNU7LwyuZqyF+CVcxLanFGMJJ+cnyQYVi8M
+	 YrIfZhFiF/Heeusbqthq25bnHSgPq/8idyBLAE2bjTVQ6XuHMlKiObBy/V4bu9agt4
+	 JKc9OFaaCWyygI/3LB5cBhmeSLoML0jga1RfTwjNzUygLOCcY6tFifRQO7V85ShQPK
+	 IiDtquB5LnHTQ==
+Date: Wed, 12 Mar 2025 05:41:03 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Ming Lei <ming.lei@redhat.com>, axboe@kernel.dk, josef@toxicpanda.com,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+	"yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH] blk-throttle: support io merge over iops_limit
+Message-ID: <Z9GrD-7tW6tKVimk@slm.duckdns.org>
+References: <20250307090152.4095551-1-yukuai1@huaweicloud.com>
+ <Z8sZyElaHQQwKqpB@slm.duckdns.org>
+ <5fc124c9-e202-99ca-418d-0f52d027640f@huaweicloud.com>
+ <Z85LjhvkCzlqBVZy@fedora>
+ <Z88K5JtR4rhhIFsY@slm.duckdns.org>
+ <baba2f82-6c35-8c24-847c-32a002009b63@huaweicloud.com>
+ <Z9CQOuJA-bo4xZkH@slm.duckdns.org>
+ <c1e467a9-7499-e42b-88ed-b8e34b831515@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,24 +51,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250311033133.1859963-5-adamsimonelli@gmail.com>
+In-Reply-To: <c1e467a9-7499-e42b-88ed-b8e34b831515@huaweicloud.com>
 
-On Mon 2025-03-10 23:31:33, adamsimonelli@gmail.com wrote:
-> From: Adam Simonelli <adamsimonelli@gmail.com>
+Hello,
+
+On Wed, Mar 12, 2025 at 09:51:30AM +0800, Yu Kuai wrote:
+...
+> In the case of dirty pages writeback, BIO is 4k, while RQ can be up to
+> hw_sectors_kb. Our user are limiting iops based on real disk capacity
+> and they found BIO merge will be broken.
 > 
-> When the kernel is compiled with CONFIG_NULL_TTY_DEFAULT_CONSOLE and
-> no console= options are selected, it defaults to using the ttynull
-> device.
+> The idea way really is rq-qos based iops limit, which is after BIO merge
+> and BIO merge is ensured not borken. In this case, I have to suggest
+> them set a high iops limit or just remove the iops limit.
 
-There is a missing Signed-off-by.
+I get that that particular situation may be worked around with what you're
+suggesting but you should be able to see that this would create the exact
+opposite problem for people who are limiting by the IOs they issue, which
+would be the majority of the existing users, so I don't think we can flip
+the meaning of the existing knobs.
 
-The change looks fine to me. Feel free to use:
+re. introducing new knobs or a switch, one thing to consider is that
+independent iops limits are not that useful to begin with. A device's iops
+capacity can vary drastically depending on e.g. IO sizes and there usually
+is no one good iops limit value that both doesn't get in the way and
+isolates the impact on other users, so it does feel like trying to polish
+something which is fundamentally flawed.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Whether bio or rq based, can you actually achieve meaningful isolation with
+blk-throtl's iops/bw limits? If switching to rq based (or something
+approximating that) substantially improves the situation, adding new sets of
+knobs would make sense, but I'm skeptical this will be all that useful. If
+this is just going to be a coarse safety mechanism to guard against things
+going completely out of hands or throttle already known IO patterns, whether
+the limits are based on bio or rq doesn't make whole lot of difference.
 
-That said, I would personally squash this into the patch adding
-the CONFIG_NULL_TTY_DEFAULT_CONSOLE configure option.
+Thanks.
 
-Best Regards,
-Petr
-
+-- 
+tejun
