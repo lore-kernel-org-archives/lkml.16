@@ -1,176 +1,88 @@
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCEF256C62;
-	Wed, 12 Mar 2025 18:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFAB1D5173;
+	Wed, 12 Mar 2025 18:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741802968; cv=none; b=IEqOr2ykvTVJyGq0gAJj0Ct/vX4HQvgb9eZ5SUVEfqJtAoaZlvkoUijC6AIBLZnM/DbdGqAO+e15n2TgNJvBu2n2TTrmMQZcWiISTlChpEW/z36xqmUVN0XFyZHiS03+KwNNE6rGwr+tGA569NRG51eW408zMfp73U1WUP2kpaQ=
+	t=1741803118; cv=none; b=sCG58hze+6jWalvdj4z30E0vFGvK2kPQ4LvsWT+dU9n2WAejFXOLoq3lc8Kj3wsY6fNdakAvRsWrPVtq1cBs4UhXcutQNeG/vKaVm8heSWYVGxV5nYieLrAK65o/FhLjSwQzAgCB3w7vz34No/QwyNxRRx2YyXgUW9rvmh968B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741802968; c=relaxed/simple;
-	bh=XvrF3yVE/G56SwGUDsatfsDt/hGysLL5ZnG+rclTcPo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pMMimM6BYogAaXpDj8YCAeDK0XIxjt7IiMUl84hh583LGfKWGi8AO+LLfVuMxlnGpiYwFUMnzxgVYuOsHbWjKVGhROLzDybHiRQ+fscNb1ea7IksY2toS8N8Z7gVrk0FktAN8oqi3XmIu/ZNL1lLn+9yAzpU2yBHuSStr3+//Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=iEquGJ60; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=Cuboc5Sl; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
+	s=arc-20240116; t=1741803118; c=relaxed/simple;
+	bh=cV5aSqFJ33K30QuBwrJdyen4GmLJdTHeksSaAnwrNvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p6ty9vsVb7asw9LyVhTBaUYkHKLsRxBIF8TCkq5rvyBYZWpWMU6mnslZR84bUdfQ/I618+RKw2evQ3ChtjbtSf4krFA9JYzoE61ncUUv0WMzbCydQZqroT6f2ZgrPEJ56H1HCR67aQiISY/0/dnsZ6l0lhHEeV2YbiVSSOyUHno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0pP4BPu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="iEquGJ60";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="Cuboc5Sl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1741802366; bh=XvrF3yVE/G56SwGUDsatfsDt/hGysLL5ZnG+rclTcPo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iEquGJ608MXIhmBzMIp3HJ5OnIyCEK/PSn4JQTrOyTqydjE//gNb8KWbt040NjPqf
-	 8WT+C3BkM12w1O0s3i408LG+nKQF66SpcEwuDL5RhIJK1UDw4EGs4oAD5+irZ/+bWh
-	 3Ei4vMdSAHbB+7cro6QE1Sg1yd67aKVflNG3Cr1tlcWZ4rlHgV3ZuG0P+tT179eZMr
-	 PtMK3ARcv+qsKXGMbXdCJf6VMIDa3xKFNKt8Hxl2or630SpmAUPE9s9f4bLUM0lslA
-	 jZFenTmU3O+2LCq5muvEUiQ6yKNUvA41FYyLtlSXXuGAGr9onx2u5x+v/zEhDsDb15
-	 M85ErSBwOWfGw==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id 0BCCC3A8907;
-	Wed, 12 Mar 2025 17:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1741802365; bh=XvrF3yVE/G56SwGUDsatfsDt/hGysLL5ZnG+rclTcPo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Cuboc5SlGsRp6FT/y7LhbsQjWc4HOSl86dMHlOApVkyHygph78l4/0ko/v58ziuT9
-	 WHsMHoJ8WgMqZvXNpncpVbq1DetkzymXnry/xat45BXOReL6OMVmK39IhzqOGDeA9W
-	 w9BK9jujkPEC9O+6JkzF3OEZSdo3bQz+zsS4hix2MpfvkiBS2E35zbB8vHuzo06pw/
-	 7d4g3aI+vXdj7yTitXZtrOuM3UNed4wWDY9rJcrPMP6NYFO2RJbAAoPMQLuQpCP4Nw
-	 98tQ0pWSaZqaGwfyTOdJQVE3AlRYVVvJCP9WXAotIjSEK0rxHGOMyY4mtnu80jPBlf
-	 hlxJ2PtcQdbOw==
-Received: from [192.168.1.228] (74-111-126-194.sta.estpak.ee [194.126.111.74])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.mleia.com (Postfix) with ESMTPSA id E524B3A86E9;
-	Wed, 12 Mar 2025 17:59:23 +0000 (UTC)
-Message-ID: <57ae63a2-544b-4241-a54d-8fa9917c1e44@mleia.com>
-Date: Wed, 12 Mar 2025 19:59:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0pP4BPu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4192C4CEEA;
+	Wed, 12 Mar 2025 18:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741803116;
+	bh=cV5aSqFJ33K30QuBwrJdyen4GmLJdTHeksSaAnwrNvk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W0pP4BPua5VsTBkh0FpSVUqjdFqimB1E+VhzMfKj3ctZXHRbRoSqGEi2sXcYjAHkM
+	 AghgELe61AVdvO6cTJzCyvvnuYRi9FreuYv0GjGr2oYuKJVm7MWfVPuHHtqn40iGRI
+	 IErzgBV9Kmr6i6sTf90ZySBfDMiH/bQYM9r5ZlrkZw5YjXZ7hfUhD+bDu9izHJmgJ5
+	 oDzftJeZQckOAzX/RDfLlhNnH5zknbTIl++WmF+AmRWd6FwaC4UKbe8I4XddiJ6vzx
+	 Gv72okJGBz5sy9Xen7AHpUVXS84F/DtQxccnT+nnBBIsv2gxNPmEF8Nl/iyJ7JF6uV
+	 1vr8/HHt4tnlg==
+Date: Wed, 12 Mar 2025 11:11:54 -0700
+From: Minchan Kim <minchan@kernel.org>
+To: Qun-Wei Lin <qun-wei.lin@mediatek.com>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Chris Li <chrisl@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Kairui Song <kasong@tencent.com>,
+	Dan Schatzberg <schatzberg.dan@gmail.com>,
+	Barry Song <baohua@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Casper Li <casper.li@mediatek.com>,
+	Chinwen Chang <chinwen.chang@mediatek.com>,
+	Andrew Yang <andrew.yang@mediatek.com>,
+	James Hsu <james.hsu@mediatek.com>
+Subject: Re: [PATCH 0/2] Improve Zram by separating compression context from
+ kswapd
+Message-ID: <Z9HOavSkFf01K9xh@google.com>
+References: <20250307120141.1566673-1-qun-wei.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
-Content-Language: ru-RU
-To: Purva Yeshi <purvayeshi550@gmail.com>, ukleinek@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- piotr.wojtaszczyk@timesys.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250312122750.6391-1-purvayeshi550@gmail.com>
-From: Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20250312122750.6391-1-purvayeshi550@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20250312_175926_066546_4494210E 
-X-CRM114-Status: GOOD (  17.83  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250307120141.1566673-1-qun-wei.lin@mediatek.com>
 
-Hello Purva.
+Hi Qun-Wei
 
-Thank you for your contribution.
-
-On 3/12/25 14:27, Purva Yeshi wrote:
-> Convert the existing `lpc32xx-pwm.txt` bindings documentation into a
-> YAML schema (`nxp,lpc3220-pwm.yaml`).
+On Fri, Mar 07, 2025 at 08:01:02PM +0800, Qun-Wei Lin wrote:
+> This patch series introduces a new mechanism called kcompressd to
+> improve the efficiency of memory reclaiming in the operating system. The
+> main goal is to separate the tasks of page scanning and page compression
+> into distinct processes or threads, thereby reducing the load on the
+> kswapd thread and enhancing overall system performance under high memory
+> pressure conditions.
 > 
-> Set `"#pwm-cells"` to `const: 3` for expected PWM cell properties.
+> Problem:
+>  In the current system, the kswapd thread is responsible for both
+>  scanning the LRU pages and compressing pages into the ZRAM. This
+>  combined responsibility can lead to significant performance bottlenecks,
+>  especially under high memory pressure. The kswapd thread becomes a
+>  single point of contention, causing delays in memory reclaiming and
+>  overall system performance degradation.
 
-Actually it shall be set to 1.
-
-> 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
-> V1 - https://lore.kernel.org/all/20250311125756.24064-1-purvayeshi550@gmail.com/
-> V2 - Correct filename to match the compatible string, remove unnecessary
-> quotes in maintainers, and refine commit message.
-> 
->   .../devicetree/bindings/pwm/lpc32xx-pwm.txt   | 17 ---------
->   .../bindings/pwm/nxp,lpc3220-pwm.yaml         | 38 +++++++++++++++++++
->   2 files changed, 38 insertions(+), 17 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
->   create mode 100644 Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> deleted file mode 100644
-> index 74b5bc5dd..000000000
-> --- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> +++ /dev/null
-> @@ -1,17 +0,0 @@
-> -LPC32XX PWM controller
-> -
-> -Required properties:
-> -- compatible: should be "nxp,lpc3220-pwm"
-> -- reg: physical base address and length of the controller's registers
-> -
-> -Examples:
-> -
-> -pwm@4005c000 {
-> -	compatible = "nxp,lpc3220-pwm";
-> -	reg = <0x4005c000 0x4>;
-> -};
-> -
-> -pwm@4005c004 {
-> -	compatible = "nxp,lpc3220-pwm";
-> -	reg = <0x4005c004 0x4>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
-> new file mode 100644
-> index 000000000..432a5e9d4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/nxp,lpc3220-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LPC32XX PWM controller
-> +
-> +maintainers:
-> +  - Vladimir Zapolskiy <vz@mleia.com>
-> +  - Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: nxp,lpc3220-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    const: 3
-
-It shall be 1.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-
-There is an error in the original lpc32xx-pwm.txt file, one more property
-"clocks" is strictly required, please add it along with the conversion.
-
-Thank you!
-
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    pwm@4005c000 {
-> +        compatible = "nxp,lpc3220-pwm";
-> +        reg = <0x4005c000 0x4>;
-> +        #pwm-cells = <3>;
-> +    };
-
---
-Best wishes,
-Vladimir
+Isn't it general problem if backend for swap is slow(but synchronous)?
+I think zram need to support asynchrnous IO(can do introduce multiple
+threads to compress batched pages) and doesn't declare it's
+synchrnous device for the case.
