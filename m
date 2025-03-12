@@ -1,107 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7CA1CA9C
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 19:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741808171; cv=none; b=VkLNMZcBkkJYZ9LuwoBDhb2Zqp92VShG5XJ3IC0lci6wOfmRwpRkCVGBO2VOxjpL9jpekLMVtM1DSxYhR3maIvskDuzfGtGPoHFZ/rDYk93FIjJLYgydGU2p6J+4kLO6GSDTwp5uvPMhLwLH3YkH7Ibt6FxC3ONz0wVcQnJ084E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741808171; c=relaxed/simple;
-	bh=Kn/3/mhY/0nAp1jqnqOT1py7DRm7JEXgYRey0DGPiWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Os2wUIFen7hEIxAshhaSUBzEFeb6rCZLFqVizuGxDtXjoLQZainyZzfuKA3voTCcXnbO7JRTlHIfUuoYCugOpGgoUHa036LM6k352wBF1CJkPfQOkVQK1X/ZG6Y8NZqRReY/o5PhRsH/HOl7gf/pOEhQ1b1/PQl6hjjDRe7iVGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=APtsJFhf; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEF11F461D;
+	Wed, 12 Mar 2025 19:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741808212; cv=pass; b=NhnBFaGBz2sbEcQYidWfxyczwGlPQegb+em7vZ/jf3MyLgQSaQWZzU26JaJ8qCxuPC33UOH/L1Ky/FBKv9+U5zZYFNEZSFZw3YCY/gWU2tzHwJ/4qU9SK3nk8m1fxtHD+TTmjF+gN84RQGgIThQYTDJqMe2BziUNO1lfQVQf2IA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741808212; c=relaxed/simple;
+	bh=JGvc9t6eH0Disvyp4YztNchToLyen6Ed5SE8DsNC68M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iHWotVAVTEeNuTNBKfYSoHYXTdwVucMRSptv5WSgVXW/PkWjOFF5NBn4NQcBfBsgB5r6vsu2VE5GFTu7bPcTiQadJ9+dt+MExfUgIgfy8GYNItdBpte/AU0zNKOefjx6j84MfBUr1kaGU2a7Z8HJdyNJ04Sl67QsNpx8vlW6to4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=gt7FamQ2; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=QXCgkYUd; arc=pass smtp.client-ip=85.215.255.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="APtsJFhf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741808170; x=1773344170;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Kn/3/mhY/0nAp1jqnqOT1py7DRm7JEXgYRey0DGPiWA=;
-  b=APtsJFhfPD9y36CXysFhpmqCfFk2SX0CG6xGUcrcvBRrHsTkkI7zxRBq
-   TGK+m4YMMXPzhrvRGlHBKCDccn9PITDaeHfQAFOjHOmRy+Sj5U+ycnp9P
-   SKKYW5N9wxadOqGqQ8SZL3lQGDZOkKJHusaDbl4Yh7qkhHW04CV4X42Sq
-   rBZ0ywlZWODQhV+lbfRBp8F+1P/XrFjIcNcmgBdOePElwcSQWA8qJPBKs
-   gUMNbz+lpwOR50tpNkrluFBrgoglJ+/94UX5lvGizQRQJIPptRyuuDnG7
-   LfI9d1u6Fh5//CHpYvZUqItb0tyVVMm0I6Gimb2KcXydoDaQeLZbrZKEO
-   w==;
-X-CSE-ConnectionGUID: LWuPFvH5QNWRcO9ODPBy/A==
-X-CSE-MsgGUID: fKo1he1sSICOLVrZGBRKjw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="43106904"
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="43106904"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 12:36:09 -0700
-X-CSE-ConnectionGUID: 4BB7CRVwRt+mab/GVZiqBQ==
-X-CSE-MsgGUID: Si3R3YgrRpeab+E0Si8law==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="120690839"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 12:36:07 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tsRs4-00000001xyI-18TV;
-	Wed, 12 Mar 2025 21:36:04 +0200
-Date: Wed, 12 Mar 2025 21:36:04 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Christophe Leroy <christophe.leroy@c-s.fr>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, nnac123@linux.ibm.com,
-	horms@kernel.org
-Subject: Re: [PATCH next 2/8] test_hexdump: Create test output data from the
- binary input data buffer
-Message-ID: <Z9HiJM8VrXcglC5H@smile.fi.intel.com>
-References: <20250308093452.3742-1-david.laight.linux@gmail.com>
- <20250308093452.3742-3-david.laight.linux@gmail.com>
- <Z86jTvOdq0fgvqRO@smile.fi.intel.com>
- <20250312192811.7632a936@pumpkin>
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="gt7FamQ2";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="QXCgkYUd"
+ARC-Seal: i=1; a=rsa-sha256; t=1741808199; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=bZTM+TpNLvX2TTB1x5D6nVm6z3UwFgMWiNrpQs3N9yxuoKqt+C2OsafUxoMUxcNvv+
+    6S7vy+rlJ4cLs9mgc9X2cKmG4MFPLfnemMypjdrmy1zzV0dtVo1KS0ggGdswLcV4dZjm
+    Pm/34Xw5+//hUhdMINtRAkHLoRcN6YS2mWbIxUo7IP3wnTYVYhAG1//WC5jFDGej76Ea
+    rE0Ti/CQDgYtgMDE5YOq/C9DPvBHfVrZEBG5nW65zRiNE7Qd5W7ioQQYBWFHU7ryqaPl
+    WhtGczY05021riCyXNXTJrlzEGb9x3bVGUl4XrwBQnb3yAh4zQF3LdG1CMMcUDtCVZga
+    h28A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1741808199;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=lxcMHEKMN0k1o6vOkcWOO4z96etmbwK9XpxIauqtEzg=;
+    b=P1GfOOwvi1B3JVUQyFFdHAYDNy9n41E4PEttx23NEaO9+OU3aA0HO+GrIxi9IF9cDP
+    OVkvp8Y59XpGnDMvgVEgdNtWeDIsO5rhQ+XuhG77rM5PQOcmJJS8OLFKVCbAU8eHdOkO
+    RaSASdQAyj2YcqwKb402KS3agLPFlgrO405H4Q59pZI6kwwUo4h42AsoewzIeKnXonLv
+    Cj8xCAXiCPsjJP12JdrHbyy3eRjBZRo2m/2dfnlDIxtr9eSyQWGWezGPMCvm1DcQF8wt
+    wskJYhnn2psGKiDRye0oCg/MqdmsGhaW+BU0NnTeWwMuJkK17EoXNlN84IPduhdOi/I0
+    1C4g==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1741808199;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=lxcMHEKMN0k1o6vOkcWOO4z96etmbwK9XpxIauqtEzg=;
+    b=gt7FamQ25ZzxZ9sFrcg90bxaAuhAk3yFKTmHvQpXB7PGw0AWpXTRaG+VsrWAqE4N8T
+    IiXeuHlnfLQ0pIakXdNHDK/Wlv3NNFhUlL07lSENxJFHEa16TTTIy7g4RYF55gAwOXyL
+    Wmkt0I0aWVFw7TuQP9wkE9w6oNSswAwRrufUefDM3RRA2c1oDP3nOotH0j+nYHNMhHGq
+    qFoXTJ/+gCMvpu5xoWqc76bEaNVryl0G8XX+X6y3zAzPmbTaUPCFj3TEEt/hlj2dUYqR
+    x3UXFdl2AhKHz96xTvLqhDPHrx8xQwUTBC0zy+hHkF9Ol4NFCKKgQi4tsWf3SXxq9HtN
+    Pmgw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1741808199;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=lxcMHEKMN0k1o6vOkcWOO4z96etmbwK9XpxIauqtEzg=;
+    b=QXCgkYUdfs/CwX/mn9IEzU6DJkDIHTl1S+jLKvYoa9PAtq9eHaOt99/9NnnAVjfTVR
+    P1TuhcYisDn2Thgo0WAQ==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b3512CJackg5
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Wed, 12 Mar 2025 20:36:38 +0100 (CET)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with smtp (Exim 4.96)
+	(envelope-from <michael@a98shuttle.de>)
+	id 1tsRsb-00058E-1Q;
+	Wed, 12 Mar 2025 20:36:37 +0100
+Received: (nullmailer pid 85457 invoked by uid 502);
+	Wed, 12 Mar 2025 19:36:37 -0000
+From: Michael Klein <michael@fossekall.de>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>
+Cc: Michael Klein <michael@fossekall.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] ARM: dts: bananapi: add support for PHY LEDs
+Date: Wed, 12 Mar 2025 20:36:28 +0100
+Message-Id: <20250312193629.85417-2-michael@fossekall.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250312193629.85417-1-michael@fossekall.de>
+References: <20250312193629.85417-1-michael@fossekall.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312192811.7632a936@pumpkin>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Mar 12, 2025 at 07:28:11PM +0000, David Laight wrote:
-> On Mon, 10 Mar 2025 10:31:10 +0200
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Sat, Mar 08, 2025 at 09:34:46AM +0000, David Laight wrote:
-> > > Using the same data that is passed to hex_dump_to_buffer() lets
-> > > the tests be expanded to test different input data bytes.  
-> > 
-> > Do we really need to kill the static test cases?
-> > Are they anyhow harmful?
-> 
-> I was asked to add some extra tests for other byte values.
+The Bananapi M1 has three LEDs connected to the RTL8211E ethernet PHY.
+Add the corresponding nodes to the device tree.
 
-Right and thanks for doing that!
+Signed-off-by: Michael Klein <michael@fossekall.de>
+---
+ .../boot/dts/allwinner/sun7i-a20-bananapi.dts | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-> The static result buffers just get in the way.
-> 
-> They are also not necessary since the tests are comparing the output
-> of two (hopefully) different implementations and checking they are
-> the same.
-
-Not necessary doesn't mean harmful or working wrong. I would leave them as is
-and just add a dynamic test cases on top. Static data is kinda randomised, but
-at the same time it's always the same through the test runs. IIRC your dynamic
-case generates the expected output and hence uses the code that also needs to
-be tested strictly speaking.
-
+diff --git a/arch/arm/boot/dts/allwinner/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/allwinner/sun7i-a20-bananapi.dts
+index 46ecf9db2324..4976453ed192 100644
+--- a/arch/arm/boot/dts/allwinner/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/allwinner/sun7i-a20-bananapi.dts
+@@ -48,6 +48,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/leds/common.h>
+ 
+ / {
+ 	model = "LeMaker Banana Pi";
+@@ -169,6 +170,32 @@ &ir0 {
+ &gmac_mdio {
+ 	phy1: ethernet-phy@1 {
+ 		reg = <1>;
++
++		leds {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			led@0 {
++				reg = <0>;
++				color = <LED_COLOR_ID_GREEN>;
++				default-state = "keep";
++				linux,default-trigger = "netdev";
++			};
++
++			led@1 {
++				reg = <1>;
++				color = <LED_COLOR_ID_AMBER>;
++				default-state = "keep";
++				linux,default-trigger = "netdev";
++			};
++
++			led@2 {
++				reg = <2>;
++				color = <LED_COLOR_ID_BLUE>;
++				default-state = "keep";
++				linux,default-trigger = "netdev";
++			};
++		};
+ 	};
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
