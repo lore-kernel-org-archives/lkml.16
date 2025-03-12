@@ -1,266 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E27245027
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F959282F1;
+	Wed, 12 Mar 2025 13:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741784658; cv=none; b=Ei1VByHp5M2yOPl4I+VWsI6CMxQQeAwEpGd+SUSCX0kDY5NO1Xy+Iv4PLduPiPZ6BlkL1DPk8FXQZNdV4rTEHJBZOub0TGqpy8ebVSQZ/wlzx/Km93P6XIfYyVR28NcAEBukjjLwFI25g2Jsq/to7KElicI4387NABNVEdSeJEo=
+	t=1741784669; cv=none; b=hPU43iOS6yq3RlPjM+kgP6hYSLBn7B4E+Ydn44q+AW66KDgQoa3Gy8OQ6Utl1sZowgHBEkQb67uwedQoG0G1eNQ/kQm8qDqkAjR4yezgBD966Z7RpnehYS3lBi/858FXkxwVYtpyVpjM7VrpI72zWSs6HU6fXst0hxfWgRntHz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741784658; c=relaxed/simple;
-	bh=14xbXGEOiPFBABKnbfo7Lm+i8nGwnBx7gjtsirmkcXU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k+z+jvUVBB0dBpDK0SAI8lgBU0jJ1ukhzJgTp6MmCKVHZ4smc9JRGh+PsyNI7z/Z09OoYYzOMBv2KurgHhpL1GeE3kBNi3uCxeyXuOnMc44SsxRLi3GNtTE2fJX2Gjhw8/+rqV4V9lEG7vbWXJB1O4gf5aKJRoIdl61qbGBeMug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ejPSvb35; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741784669; c=relaxed/simple;
+	bh=NUKmvCFfHH4W1XJIKs4M9ElG9Fs50YPkTV1BEEFxWbE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=phyKj8fJ6yihvgcpe15L6QgyO38JpbfFyApgvsBHgq3VXsZ95mEFHANK+u2p45+NlFE6RSlp139dEvXVOyhQXMSASs/XyYIiBtzO+8Jb8wj8x5BDxJ6GAA5hBB+cLyS0cMdJTjCJ0LwY2JlrzW+u+FBMroPtDJTj0bN4z3w5jio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pp/BbA7o; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ejPSvb35"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741784657; x=1773320657;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=14xbXGEOiPFBABKnbfo7Lm+i8nGwnBx7gjtsirmkcXU=;
-  b=ejPSvb35/5kRhbCLisQepPqVhCRmHHVHmtui5qJVtlkwtrh1nKY54kd4
-   4PASEuOWrbfs/Cu1EPEuvaO+MABB85ERFazWrZ8D9Uimuvm02mKdlgL/a
-   rm/ISbliAOSayAy33xrWKK+Vqf4DC6an2SjF+yFJ9whxcUPe1VJCjuXDj
-   2uORLVmu1R7SXWBr0ADS1H26k9gaBhsiMxwBUc9JJw1e5K462RUD30PEp
-   R79cGmqBjAX3vD29XBzrzcpE/V+HamzXuSLVzvVp/+f1qrVkF3Qm5/YAA
-   ccwXISywsfvLfeSNmUeVdEtMEL6uHe6AKl4veVN/chkDBUUvQ03H9MsSt
-   w==;
-X-CSE-ConnectionGUID: p3h0MMZZTki4ipobXg1sBQ==
-X-CSE-MsgGUID: aKdjG7wmQNGTN3d804MGOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="43065002"
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="43065002"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 06:04:13 -0700
-X-CSE-ConnectionGUID: qN5fY4kTSwuuu2IbfVA4Tw==
-X-CSE-MsgGUID: R07d/A6ORau4T8HIj0R+PA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="120650311"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa007.fm.intel.com with ESMTP; 12 Mar 2025 06:04:13 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	linux-kernel@vger.kernel.org
-Cc: ak@linux.intel.com,
-	eranian@google.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V7 6/6] perf: Clean up pmu specific data
-Date: Wed, 12 Mar 2025 06:04:24 -0700
-Message-Id: <20250312130424.3863916-6-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250312130424.3863916-1-kan.liang@linux.intel.com>
-References: <20250312130424.3863916-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pp/BbA7o"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2feb96064e4so12824580a91.1;
+        Wed, 12 Mar 2025 06:04:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741784667; x=1742389467; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BrOEurKxcjjq8OkzdDYuj5GePA7tHx/oSCEN2/ELTlA=;
+        b=Pp/BbA7oftMg6+CVtqSR5ANfAf82zXL37AnjP0wq/IbVRHWelphQyDCpAmA6Zc+YKU
+         L7ZQnp6ic+YPuUm2Er3WXXPgrwJu97XIFNHieR+3C+FKjqigtL4iXLqLP65Uv44teGkI
+         siJDMEgzB9mZTZhKaPtHMfj9tOAxkjDJH4pGIPivBYMwrL75qcptyOz8bAuR8nFhAgkZ
+         MRl7sD1waKaxybG1lNcpQ2TP80Vcp30F6mjDWO+/CdD54GYN0O5i3w1yQGQNGkR0g32I
+         ANPUSrkZ5yQzFUuJ3hOWRw0Z5d1UtXmY5S1kA6DrpAzPnqG3mKc3ctA3KYNW+Ab7WkJp
+         oUcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741784667; x=1742389467;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BrOEurKxcjjq8OkzdDYuj5GePA7tHx/oSCEN2/ELTlA=;
+        b=kix8e8bSWMLr50cLAKy8rHSD4iSK+dgiqbS0+I3zEzOcZfQ809aX59G56bIkyjruf/
+         P5Hov1sl/2ZyE/UtgJiNaH9BV/R/xYByPViZo1TQeZo3ZeDpr3qZWvOQwmD8BcEgdB2t
+         Ne/a9iXtZK/AgBgc0Fz9VNBoQ+UHwFJBFQVcy8yhOIUjIJeWx7CyQhEVaXWwP4attdPB
+         OI/XEy45xkFKoiEdJ5W2yYmW5c1zim7auEf3ksznhECksZOOPSzhwcyir0vl/67diB8b
+         KpRDYKIHXKCT0UZaue6JCVeU18gP+MV5UErg3qN7iyxgh7jp07rFOEueGBW+zvwiM3S2
+         ZwAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOh5Fp6LlFa9DdHWUJIfSyxFOG4DcB73RxS5GLBHzhesrfTGinw97OMkri8XUOs1dNdGwvixqGLQ==@vger.kernel.org, AJvYcCXXElD2alcfihXx7nAr01UbNdJJviUQsVvuUYwh2GiGowESDoxf0fnv54MwWUbfBn7fuOiUtB7OMgcHcQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz/cCSI2xeT7JeMJIrJ9f8NKiywF4BK+Vp08W5BpNKUdnuUTJB
+	TfzLC4vmo55Gq4+4Cg6pP3m/hIyKJPjR88fwBZP3cl2gIRKuuC5PcsY1wIDCX1yH7Dl9198ImVy
+	86GIO1f5yiXWbPVsM//ujlXPgs/o=
+X-Gm-Gg: ASbGnctuIuilTYOmTR7SBuhRPymnSZ99Z8jmdK+f6tNGZoK38J7UjikgIO8c2k7rhVt
+	G6f6GQvmTQa06w4/vttNe8Io2BUUuIUgImGu/DjZGAPltYnxWMdCKrOIT1jOAXwkeOLf510N5iB
+	4p78qwP7UkUv0hYNKSNjClER4o9A==
+X-Google-Smtp-Source: AGHT+IEoZ46HX7CGcd1Ce5EO0f/LDiJHDc9sBv88EwwFZGAG63dkZ+OtOgIQK9Pb5EgZMrfO568zYNbdc3gkzhLOAmk=
+X-Received: by 2002:a17:90a:d605:b0:2ee:df70:1ff3 with SMTP id
+ 98e67ed59e1d1-2ff7cd31b16mr39369425a91.0.1741784667175; Wed, 12 Mar 2025
+ 06:04:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250312080055.8950-1-cgoettsche@seltendoof.de>
+In-Reply-To: <20250312080055.8950-1-cgoettsche@seltendoof.de>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Wed, 12 Mar 2025 09:04:15 -0400
+X-Gm-Features: AQ5f1Jp7sUoTSeKT84PKyrSnseU9L-kbdBkqb8eAsqXjy0y2NLZRQhFKSWbe1N0
+Message-ID: <CAEjxPJ4MAaN7P8ZtCcDhRvNt44LNyzL9azc-xNE54=tkW_4vjQ@mail.gmail.com>
+Subject: Re: [PATCH] selinux: get netlabel_wildcard policycap from policy
+ instead of cache
+To: cgzones@googlemail.com
+Cc: Paul Moore <paul@paul-moore.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	Casey Schaufler <casey@schaufler-ca.com>, =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
+	Mimi Zohar <zohar@linux.ibm.com>, GUO Zihua <guozihua@huawei.com>, 
+	Canfeng Guo <guocanfeng@uniontech.com>, selinux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Wed, Mar 12, 2025 at 4:01=E2=80=AFAM Christian G=C3=B6ttsche
+<cgoettsche@seltendoof.de> wrote:
+>
+> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+>
+> Retrieve the netlabel_wildcard policy capability in security_netif_sid()
+> from the locked active policy instead of the cached value in
+> selinux_state.
+>
+> Fixes: 8af43b61c17e ("selinux: support wildcard network interface names")
+> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
 
-The pmu specific data is saved in task_struct now. Remove it from event
-context structure.
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
 
-Remove swap_task_ctx() as well.
+Do we have tests for this feature? I didn't see any.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- include/linux/perf_event.h | 12 ------
- kernel/events/core.c       | 75 ++------------------------------------
- 2 files changed, 3 insertions(+), 84 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 1bf563df6a2c..5471f23705d5 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -504,16 +504,6 @@ struct pmu {
- 	 */
- 	struct kmem_cache		*task_ctx_cache;
- 
--	/*
--	 * PMU specific parts of task perf event context (i.e. ctx->task_ctx_data)
--	 * can be synchronized using this function. See Intel LBR callstack support
--	 * implementation and Perf core context switch handling callbacks for usage
--	 * examples.
--	 */
--	void (*swap_task_ctx)		(struct perf_event_pmu_context *prev_epc,
--					 struct perf_event_pmu_context *next_epc);
--					/* optional */
--
- 	/*
- 	 * Set up pmu-private data structures for an AUX area
- 	 */
-@@ -933,7 +923,6 @@ struct perf_event_pmu_context {
- 	atomic_t			refcount; /* event <-> epc */
- 	struct rcu_head			rcu_head;
- 
--	void				*task_ctx_data; /* pmu specific data */
- 	/*
- 	 * Set when one or more (plausibly active) event can't be scheduled
- 	 * due to pmu overcommit or pmu constraints, except tolerant to
-@@ -981,7 +970,6 @@ struct perf_event_context {
- 	int				nr_user;
- 	int				is_active;
- 
--	int				nr_task_data;
- 	int				nr_stat;
- 	int				nr_freq;
- 	int				rotate_disable;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 60fafc0e1b3a..ce771e4e367e 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1203,20 +1203,6 @@ static void get_ctx(struct perf_event_context *ctx)
- 	refcount_inc(&ctx->refcount);
- }
- 
--static void *alloc_task_ctx_data(struct pmu *pmu)
--{
--	if (pmu->task_ctx_cache)
--		return kmem_cache_zalloc(pmu->task_ctx_cache, GFP_KERNEL);
--
--	return NULL;
--}
--
--static void free_task_ctx_data(struct pmu *pmu, void *task_ctx_data)
--{
--	if (pmu->task_ctx_cache && task_ctx_data)
--		kmem_cache_free(pmu->task_ctx_cache, task_ctx_data);
--}
--
- static void free_ctx(struct rcu_head *head)
- {
- 	struct perf_event_context *ctx;
-@@ -3528,42 +3514,6 @@ static void perf_event_sync_stat(struct perf_event_context *ctx,
- 	}
- }
- 
--#define double_list_for_each_entry(pos1, pos2, head1, head2, member)	\
--	for (pos1 = list_first_entry(head1, typeof(*pos1), member),	\
--	     pos2 = list_first_entry(head2, typeof(*pos2), member);	\
--	     !list_entry_is_head(pos1, head1, member) &&		\
--	     !list_entry_is_head(pos2, head2, member);			\
--	     pos1 = list_next_entry(pos1, member),			\
--	     pos2 = list_next_entry(pos2, member))
--
--static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
--					  struct perf_event_context *next_ctx)
--{
--	struct perf_event_pmu_context *prev_epc, *next_epc;
--
--	if (!prev_ctx->nr_task_data)
--		return;
--
--	double_list_for_each_entry(prev_epc, next_epc,
--				   &prev_ctx->pmu_ctx_list, &next_ctx->pmu_ctx_list,
--				   pmu_ctx_entry) {
--
--		if (WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu))
--			continue;
--
--		/*
--		 * PMU specific parts of task perf context can require
--		 * additional synchronization. As an example of such
--		 * synchronization see implementation details of Intel
--		 * LBR call stack data profiling;
--		 */
--		if (prev_epc->pmu->swap_task_ctx)
--			prev_epc->pmu->swap_task_ctx(prev_epc, next_epc);
--		else
--			swap(prev_epc->task_ctx_data, next_epc->task_ctx_data);
--	}
--}
--
- static void perf_ctx_sched_task_cb(struct perf_event_context *ctx,
- 				   struct task_struct *task, bool sched_in)
- {
-@@ -3638,16 +3588,15 @@ perf_event_context_sched_out(struct task_struct *task, struct task_struct *next)
- 			WRITE_ONCE(next_ctx->task, task);
- 
- 			perf_ctx_sched_task_cb(ctx, task, false);
--			perf_event_swap_task_ctx_data(ctx, next_ctx);
- 
- 			perf_ctx_enable(ctx, false);
- 
- 			/*
- 			 * RCU_INIT_POINTER here is safe because we've not
- 			 * modified the ctx and the above modification of
--			 * ctx->task and ctx->task_ctx_data are immaterial
--			 * since those values are always verified under
--			 * ctx->lock which we're now holding.
-+			 * ctx->task is immaterial since this value is
-+			 * always verified under ctx->lock which we're now
-+			 * holding.
- 			 */
- 			RCU_INIT_POINTER(task->perf_event_ctxp, next_ctx);
- 			RCU_INIT_POINTER(next->perf_event_ctxp, ctx);
-@@ -4952,7 +4901,6 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 		     struct perf_event *event)
- {
- 	struct perf_event_pmu_context *new = NULL, *epc;
--	void *task_ctx_data = NULL;
- 
- 	if (!ctx->task) {
- 		/*
-@@ -4982,14 +4930,6 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 	if (!new)
- 		return ERR_PTR(-ENOMEM);
- 
--	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
--		task_ctx_data = alloc_task_ctx_data(pmu);
--		if (!task_ctx_data) {
--			kfree(new);
--			return ERR_PTR(-ENOMEM);
--		}
--	}
--
- 	__perf_init_event_pmu_context(new, pmu);
- 
- 	/*
-@@ -5017,14 +4957,7 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 	epc->ctx = ctx;
- 
- found_epc:
--	if (task_ctx_data && !epc->task_ctx_data) {
--		epc->task_ctx_data = task_ctx_data;
--		task_ctx_data = NULL;
--		ctx->nr_task_data++;
--	}
- 	raw_spin_unlock_irq(&ctx->lock);
--
--	free_task_ctx_data(pmu, task_ctx_data);
- 	kfree(new);
- 
- 	return epc;
-@@ -5039,7 +4972,6 @@ static void free_epc_rcu(struct rcu_head *head)
- {
- 	struct perf_event_pmu_context *epc = container_of(head, typeof(*epc), rcu_head);
- 
--	kfree(epc->task_ctx_data);
- 	kfree(epc);
- }
- 
-@@ -13997,7 +13929,6 @@ inherit_event(struct perf_event *parent_event,
- 	if (is_orphaned_event(parent_event) ||
- 	    !atomic_long_inc_not_zero(&parent_event->refcount)) {
- 		mutex_unlock(&parent_event->child_mutex);
--		/* task_ctx_data is freed with child_ctx */
- 		free_event(child_event);
- 		return NULL;
- 	}
--- 
-2.38.1
-
+> ---
+>  security/selinux/ss/services.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/service=
+s.c
+> index 1b11648d9b85..e431772c6168 100644
+> --- a/security/selinux/ss/services.c
+> +++ b/security/selinux/ss/services.c
+> @@ -2587,14 +2587,13 @@ int security_netif_sid(const char *name, u32 *if_=
+sid)
+>                 return 0;
+>         }
+>
+> -       wildcard_support =3D selinux_policycap_netif_wildcard();
+> -
+>  retry:
+>         rc =3D 0;
+>         rcu_read_lock();
+>         policy =3D rcu_dereference(selinux_state.policy);
+>         policydb =3D &policy->policydb;
+>         sidtab =3D policy->sidtab;
+> +       wildcard_support =3D ebitmap_get_bit(&policydb->policycaps, POLIC=
+YDB_CAP_NETIF_WILDCARD);
+>
+>         c =3D policydb->ocontexts[OCON_NETIF];
+>         while (c) {
+> --
+> 2.47.2
+>
