@@ -1,119 +1,123 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4E923F381
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 11:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BEC23F289
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 11:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741778696; cv=none; b=uP6H+CRkK3dRbTYZ0WL+Xzffn4OhdPVLAQCu/RP4C8l1Q0/EQB0rd2I0L9RrC0/Phe74QdqtTh2N3yhlsg3Bf3HrhKeBnHj+N5kKCfsKHuuTJqnnngQgE+2uRpWJARqMSx/ZCSSpoGLYoLlX1mpkJXw024cwSuGhFV1/1jL1h8w=
+	t=1741778698; cv=none; b=gHzBE9xcm5oNTjasfsnUw1iOQPC2c1eY2G13FevcgEKTh7bEeshrNyi/uRS6qSRS1/R3gyd4aL0LbhTa2Orv3ZbsCYcTZA84oaFb1DkR/RjSYTSib1Yb1IrlDN28XZrAJb6p7EoqqLEWPHY28dtpZLF2yCB8NH6ZoNT6ZBH5pyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741778696; c=relaxed/simple;
-	bh=UcXaR+GDawWoQaNRuFtyapQxtDjf/bEMrcOSC2FkQ1I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EKbaovwxViMc5DmBt0n3ZH9KEWVSVJ84CbtP5wcPCxDYvNr7DgrNuXPMV0Pezwdt0K0ZRqbuId/U1OX/iH69DG2YlbU7VB0i9NY8f+ukQWxd8LTq+ayAAp6zmWxiNcKf+zf5EeRAeQ3jLyQaeoqe4BxjoyV+y312EgPblait2uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tY4m9qUC; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741778698; c=relaxed/simple;
+	bh=jvVvf9lmAWqqcfy/yoPzj0oQxMDvWeUK94f+pQiwKyk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=o4Ot4VPBAyIz3qsTZh1A8IQQZNV+JAVzzdJlj3S+P24mPB+tkoUGUJdx3dyk4WmIUDBvt4g7zp5jL5TyCoz/JgAtHhcqZOb6vu8+6P1lGzmeKf8eIJACI98g/yZBuqB1naB4V3LupEYNQD0M7RqBrtfqMtXr8wR4XFBzdsCRCmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i9MesHfa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C7YRj9pd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tY4m9qUC"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f6c90b51c3so64435187b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 04:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741778692; x=1742383492; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7OnDqzR6YtSLwONQoTdDT31SC3+7fyj7xPsRU2pi+G4=;
-        b=tY4m9qUC71QAzCkvtu+FlH3ht9gu/SOiEZ3r+On8JHrv6xL+cPGeBd0HEpK2nbM4Al
-         A4bAIBRyHsRzBWf41VdzD0IH8KsP9RyUNlmz0jLe9dK2QTNHcvniOQFmMZQsexYGsYOn
-         pPPj0gVZTgM5BQvM4HgpNkrSfF6Z+iOISHwWNpZb2BwxF3Xm0P+gnTsimpUYNgjg9pAV
-         RNZqPejxRdlNhPwK4Z9vNgMg/1DbC5uqwHjBrN7oCzVFoBCZT8/5SR6oTk9u0FSTPEQk
-         9r1vDJeb2se0lcbh2yo42KYBXPchoTxqECASTWBNK6gZVjUsWl2YNtWHCyPoSxXRI8Ql
-         /BAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741778693; x=1742383493;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7OnDqzR6YtSLwONQoTdDT31SC3+7fyj7xPsRU2pi+G4=;
-        b=Ra7Q2eaF7ST3fPoqwjRWnZVyqhjGTEr9fQlLWHZSiULwFnKJ/VJQPIHql+PSCQm4Um
-         NHBC5qWQovh23W0kyFb9IDUNFDBQDl9VHNdTqeeb2pwCQCFyiWCl66zXTSjuzNteJ4np
-         R2IzmE6+gZ6sofnW1NuDAcAWA/h9DCgtA38sRPnfwR13YRpQt/O1tKvZbPmE8sxaAyFz
-         aFALnMTTl1HmV5DgI+5gtppDR5u9q27rpvF9Y2mfnNAMSAHkF304oK8CqLwjjOIDByHF
-         v42iPaRSXH3Ze/IPalyW08+4As7j80+egz0/zQGG5gJ08vJlex7xFUFOeJCkfmlrbU5l
-         NLlA==
-X-Forwarded-Encrypted: i=1; AJvYcCXzw1BlVPas31U3clnlKI/HTU7BCqgtJI3U855f2ZkojBEcjvmKsy407lCpHlZlgFysZXK4JGtO6APe5lk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1y17HCMfry6SSTxX2MGR15KCyXWmA2DM5V5R7rTqR1gyjSvd8
-	UwGb71/atk1CoGV1PzNzrB7k3lqKKSKEW0T6hWR5OwX0W2w5H8+METGtot7IWq4chkFhj3rBBpm
-	KZyKO7w23GaAC0Nws4ttK4ht0DjkgGsLzSBMtKw==
-X-Gm-Gg: ASbGncs9FutPT7Ev5IxOs3/l2UJlZIWtU6BMWCUwyTon1NFAwJ3Z//Ma+3eOwkUyK/2
-	1Eoa3KX9wqE0QVP2D+yV2ZZZA9ANrtTFG/tyev/hadiO9PVjujyuZb6rcZh1RFVbDivoO9iUzTp
-	EG1hcbvmk0UhmVsLTwb+R1cM4P6Rc=
-X-Google-Smtp-Source: AGHT+IHIrYfmo2j3yVIIaYFZE5oDvK+hQZ8/RGWocwnTto9a3k4qtBGozDsAeCNABMZLWFLC8+SYFjOJXfUQHYTuZMU=
-X-Received: by 2002:a05:690c:3612:b0:6ee:8363:96d3 with SMTP id
- 00721157ae682-6febf3ade28mr290798997b3.27.1741778692704; Wed, 12 Mar 2025
- 04:24:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i9MesHfa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C7YRj9pd"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741778695;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sWKpskQPjhCZutWc6OXz/+ZuVriZFdt1mzefqC2FGQ8=;
+	b=i9MesHfasV9uOwZ/EYOQqMxOhmxeA6bb3e+v2lF7ESGROwBQ6CrHObp0mLJyheoY3Y1x7Q
+	0dYxPWBysEQehXfwNX3WkCYpSmCfcSuglT2K+lFxrLtOH4iN911K5h/7UwFRX3MeP8sdVs
+	JVqO3H0Czs9ixJgqWib+ZROPFneKDirG4Th6MlpYKQnAUwgI4hmEV13AUKVXHSWOAmyrkY
+	gz/zoQA3j88hse0xG1vIPPg01f3KJrCZeksqaNr6IJhuOQNeNaZhWabNYA/M+IqoEVrrhY
+	sUECE/assyYJpIcb7PWLwp93Zq5e53XzF7dn3a85S3P3RXeK0YoYzCabaJcBbQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741778695;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sWKpskQPjhCZutWc6OXz/+ZuVriZFdt1mzefqC2FGQ8=;
+	b=C7YRj9pddMG4KvXqv1k7nFwBNZpKAdYe0Qz9LHxgYcj90XgAaov+R4hvxgmkJgp/8f3+OC
+	XEZH5jnEf+REKfDw==
+To: Cyrill Gorcunov <gorcunov@gmail.com>, Frederic Weisbecker
+ <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Benjamin Segall <bsegall@google.com>, Eric
+ Dumazet <edumazet@google.com>, Andrey Vagin <avagin@openvz.org>, Pavel
+ Tikhomirov <ptikhomirov@virtuozzo.com>, Peter Zijlstra
+ <peterz@infradead.org>
+Subject: Re: [patch V3a 17/18] posix-timers: Provide a mechanism to allocate
+ a given timer ID
+In-Reply-To: <Z9E-L1pvl1j_4E3f@grain>
+References: <20250308155501.391430556@linutronix.de>
+ <20250308155624.526740902@linutronix.de> <Z9CsstMf-EVZpsiH@pavilion.home>
+ <87msdrz0i9.ffs@tglx> <87jz8vz0en.ffs@tglx>
+ <Z9C6GpaB9WvNzvJS@pavilion.home> <Z9E-L1pvl1j_4E3f@grain>
+Date: Wed, 12 Mar 2025 12:24:54 +0100
+Message-ID: <87bju6ze2h.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219-exynos7870-mmc-v2-0-b4255a3e39ed@disroot.org>
-In-Reply-To: <20250219-exynos7870-mmc-v2-0-b4255a3e39ed@disroot.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 12 Mar 2025 12:24:16 +0100
-X-Gm-Features: AQ5f1JruelnoNSp1FLqFV_ATP8uAM2_7A2P1q-OWLObav93kN6mUQJG3IRna_fc
-Message-ID: <CAPDyKFrmn21xksS6Co9AjLQbtq_EWC8WF=r3RSAc6nfWTT9-zA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Introduce DW MMC support for Exynos7870
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Jaehoon Chung <jh80.chung@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-mmc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Tue, 18 Feb 2025 at 19:48, Kaustabh Chakraborty
-<kauschluss@disroot.org> wrote:
+On Wed, Mar 12 2025 at 10:56, Cyrill Gorcunov wrote:
+> On Tue, Mar 11, 2025 at 11:32:58PM +0100, Frederic Weisbecker wrote:
+> ...
+>> > 
+>> > Recreating two timers with IDs 1000000 and 2000000 takes 1.5 seconds with
+>> > the create/delete method. With the prctl() it takes 3 microseconds.
+>> > 
+>> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>> 
+>> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 >
-> This series adds support for SMU and non-SMU variants of Exynos7870 DW
-> MMC controllers.
->
-> Some DW MMC controllers require two 32-bit r/w from a 64-bit FIFO,
-> the series implements that feature as well.
->
-> This patch series is a part of Exynos7870 upstreaming.
->
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> One thing which just popped up in my head -- this interface may be used not
+> only by criu but any application which wants to create timer with specified
+> id (hell know why, but whatever). As far as I understand we don't provide
 
-The series applied for next, thanks!
+Sure. Application developers are creative :)
 
-Kind regards
-Uffe
+> an interface to _read_ this property, don't we? Thus criu will restore such
+> application which already has this bit set incorrectly.
 
+Delta patch below.
 
-> ---
-> Changes in v2:
-> - Take over ownership of patches by the co-author, upon their request.
-> - Link to v1: https://lore.kernel.org/r/20250204-exynos7870-mmc-v1-0-c87cfc72be4a@disroot.org
->
-> ---
-> Kaustabh Chakraborty (3):
->       dt-bindings: mmc: samsung,exynos-dw-mshc: add exynos7870 support
->       mmc: dw_mmc: add a quirk for accessing 64-bit FIFOs in two halves
->       mmc: dw_mmc: add exynos7870 DW MMC support
->
->  .../bindings/mmc/samsung,exynos-dw-mshc.yaml       |  2 +
->  drivers/mmc/host/dw_mmc-exynos.c                   | 41 +++++++++-
->  drivers/mmc/host/dw_mmc.c                          | 94 +++++++++++++++++++++-
->  drivers/mmc/host/dw_mmc.h                          | 27 +++++++
->  4 files changed, 161 insertions(+), 3 deletions(-)
-> ---
-> base-commit: e5d3fd687aac5eceb1721fa92b9f49afcf4c3717
-> change-id: 20250203-exynos7870-mmc-75bac583c864
->
-> Best regards,
-> --
-> Kaustabh Chakraborty <kauschluss@disroot.org>
->
+Thanks,
+
+        tglx
+---
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -362,5 +362,6 @@ struct prctl_mm_map {
+ #define PR_TIMER_CREATE_RESTORE_IDS		77
+ # define PR_TIMER_CREATE_RESTORE_IDS_OFF	0
+ # define PR_TIMER_CREATE_RESTORE_IDS_ON		1
++# define PR_TIMER_CREATE_RESTORE_IDS_GET	2
+ 
+ #endif /* _LINUX_PRCTL_H */
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -391,11 +391,17 @@ static enum hrtimer_restart posix_timer_
+ 
+ long posixtimer_create_prctl(unsigned long ctrl)
+ {
+-	if (ctrl > PR_TIMER_CREATE_RESTORE_IDS_ON)
+-		return -EINVAL;
+-
+-	current->signal->timer_create_restore_ids = ctrl == PR_TIMER_CREATE_RESTORE_IDS_ON;
+-	return 0;
++	switch (ctrl) {
++	case PR_TIMER_CREATE_RESTORE_IDS_OFF:
++		current->signal->timer_create_restore_ids = 0;
++		return 0;
++	case PR_TIMER_CREATE_RESTORE_IDS_ON:
++		current->signal->timer_create_restore_ids = 0;
++		return 0;
++	case PR_TIMER_CREATE_RESTORE_IDS_GET:
++		return current->signal->timer_create_restore_ids;
++	}
++	return -EINVAL;
+ }
+ 
+ static struct pid *good_sigevent(sigevent_t * event)
