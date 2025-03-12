@@ -1,86 +1,91 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5931D86F2;
-	Wed, 12 Mar 2025 06:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A43B1D86F2;
+	Wed, 12 Mar 2025 06:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741760636; cv=none; b=gXdDH4YCYnM8hNy8p2udqI+PNsI+Rb9QzmeszatBOf41ue/PJAu14ErpxPo9KFvINlY9+Kx8dbdygkaShuouKaJs3ok7qpxlOES2l6uU9S35p9FZ+F6dQZANCEzFxYkREyvL5sPQ3jx7c8Wj6BnaD7yLMQtMQxy7PIOO/06DrJQ=
+	t=1741760640; cv=none; b=ni4FNKwzMQBRD351j/sSWzvRrkyaUqYeahDYxIWIm8ijEdePEnJvWMJFzrXp7Q5LFq2qS+/JEC2OP0UQnyFlqmC93iM4No+MN+QtXUUEbXV69QmZ+zcOrqRN/nZnvgUJzDoxJPdX1xNSjeGqCzckO8SxcGYw9JUmMMYw9/oHZvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741760636; c=relaxed/simple;
-	bh=mml8n8fGPf3faaPFSXbVSSAyj/LWLLVVRLIZLQHPhjg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LdwO0KH6OTqHqZxi2OvX9eBOAKT2QBBRk1WG/v9WOIKnJ7QOoo71xD0kKDDaYX3z0MyFgchQDa7OjbuYlLDdmAaOSw/vwWMaDcQXRZrWgN0qD1SaGkMwc18rEj0lfJ5m47tBmFbeYgeNjTZQZUzfalVUfJQh18xtauoQRid+wG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZCLBt45w7zqVTs;
-	Wed, 12 Mar 2025 14:22:14 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id D7B781402C1;
-	Wed, 12 Mar 2025 14:23:43 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
- (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 12 Mar
- 2025 14:23:43 +0800
-From: Yue Haibing <yuehaibing@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: skbuff: Remove unused skb_add_data()
-Date: Wed, 12 Mar 2025 14:34:50 +0800
-Message-ID: <20250312063450.183652-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1741760640; c=relaxed/simple;
+	bh=9zvgvZkiaWoEZ55z6rTUOjWUlbOFQL48aHZbETK3QpQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RQuDcDOTotxf57c/Jpog9JIoNx70Cxx/Q8S/i8xZ6X/JBDPCfHZGjtF+Gapqa9nTfTWJ5fzu0VQKy/9uEIXZKlq0FJ5RZcRBd4LcLRIh/WhiCPclDTIX9p2L1A0w/atnRKicz7sxF9+ktmMPebdEOZhvhz7uF+5y7OxLXayMrW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLqHZud9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLqHZud9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DAA4C4CEE3;
+	Wed, 12 Mar 2025 06:23:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741760640;
+	bh=9zvgvZkiaWoEZ55z6rTUOjWUlbOFQL48aHZbETK3QpQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LLqHZud9zOui7Eb7XCnrN6ap2r/mPUzlbkYz50OB4aUBrZtL949bKKEtIDQWp18Jq
+	 /izDchkVJjBDozUe1/x3bE+6Dvjvm1hytznsCxmS185FW2Ls0MIEIySwKuijK4BFcu
+	 cDzI7uZtlvJ9yz6gahRQbvoAdBp44Za+LS0OmceViBJ6CVyqX8ShYO3yoTuBgCEv6u
+	 oHrO9Zw+WYuPxdY1KoK67oLbC9n4X0JZ8JUJGPgMO8fMcgjCrJHf9yvgJw+eo9jXoz
+	 tACLwKojd0c8tGwhFJeBxCzmwLtMRP1ClX+v4uLXpXoLq73W/IL/HzetVO9x+qbTNM
+	 pjFwK9jsQ5WsQ==
+Date: Wed, 12 Mar 2025 08:23:56 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org, James.Bottomley@hansenpartnership.com,
+	stefanb@linux.ibm.com, ardb@kernel.org, roberto.sassu@huawei.com,
+	viro@zeniv.linux.org.uk, gourry@gourry.net
+Subject: Re: [PATCH] MAINTAINERS: Add include/linux/tpm*.h to TPM maintainers
+Message-ID: <Z9EofB1oLBUgu05C@kernel.org>
+References: <3E528EFF1AE81A17+20250311131440.1468875-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3E528EFF1AE81A17+20250311131440.1468875-1-wangyuli@uniontech.com>
 
-Since commit a4ea4c477619 ("rxrpc: Don't use a ring buffer for call Tx
-queue") this function is not used anymore.
+On Tue, Mar 11, 2025 at 09:14:40PM +0800, WangYuli wrote:
+> As of now, within include/linux, there are three header files
+> pertaining to the TPM driver: tpm.h, tpm_eventlg.h and tpm_command.h.
+> 
+> Upon investigation when attempting code modifications, it has become
+> evident that these files are currently without a maintainer.
+> 
+> In light of their intrinsic relationship with the TPM driver itself,
+> stewardship of these files should fall under the TPM subsystem. So
+> that scripts/get_maintainer.pl can provide more accurate output
 
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
----
- include/linux/skbuff.h | 19 -------------------
- 1 file changed, 19 deletions(-)
+[SNIP]
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 14517e95a46c..bbc3b656c856 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -3865,25 +3865,6 @@ static inline int __must_check skb_put_padto(struct sk_buff *skb, unsigned int l
- bool csum_and_copy_from_iter_full(void *addr, size_t bytes, __wsum *csum, struct iov_iter *i)
- 	__must_check;
- 
--static inline int skb_add_data(struct sk_buff *skb,
--			       struct iov_iter *from, int copy)
--{
--	const int off = skb->len;
--
--	if (skb->ip_summed == CHECKSUM_NONE) {
--		__wsum csum = 0;
--		if (csum_and_copy_from_iter_full(skb_put(skb, copy), copy,
--					         &csum, from)) {
--			skb->csum = csum_block_add(skb->csum, csum, off);
--			return 0;
--		}
--	} else if (copy_from_iter_full(skb_put(skb, copy), copy, from))
--		return 0;
--
--	__skb_trim(skb, off);
--	return -EFAULT;
--}
--
- static inline bool skb_can_coalesce(struct sk_buff *skb, int i,
- 				    const struct page *page, int off)
- {
--- 
-2.34.1
+> 
+> In passing, also include include/uapi/linux/vtpm_proxy.h for TPM
+> maintainers, as it is facing a comparable plight.
+> 
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
 
+"Subnames" are separated with space, not with camel case.
+
+> ---
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ed7aa6867674..4a7b2e8b97de 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -24037,6 +24037,8 @@ Q:	https://patchwork.kernel.org/project/linux-integrity/list/
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git
+>  F:	Documentation/devicetree/bindings/tpm/
+>  F:	drivers/char/tpm/
+> +F:	include/linux/tpm*.h
+> +F:	include/uapi/linux/vtpm_proxy.h
+>  F:	tools/testing/selftests/tpm2/
+>  
+>  TPS546D24 DRIVER
+> -- 
+> 2.47.2
+> 
+
+BR, Jarkko
