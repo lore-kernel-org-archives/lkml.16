@@ -1,96 +1,162 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from birdy.pmhahn.de (birdy.pmhahn.de [88.198.22.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3275112E7F;
-	Wed, 12 Mar 2025 13:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C7A1E7C2B;
+	Wed, 12 Mar 2025 13:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.198.22.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741784518; cv=none; b=gJH3oVIE7jeyTeKzC29WCbKQjNtKZW8vr6NkTwKPuVU6u8VVcaeGjCphjzAxRqeltSRW3DBKH7RkAclpS1nf980xzfygkusX/WxRuRYpoYHC3yzwwbhcaYCExGYyCjwo7I5zLDs46iphbVV7EocoFuAZhuqKESk5mECeIF1FD4U=
+	t=1741784612; cv=none; b=kU4oU7zLwJ0v37mH6W0kbNZhWGFT6wGz6VbkbaXo3d9a0vDSyyxuZJBqFx9/hVYCN37Qs1owpFPafCcT34mi7TEGCv+LPYgRL8vbg9qmHgJfNkUkN8HFSS1mbulK9viLQ8C4HwvfAx/FmVcVUUj4CagoCO7PV5CEaNeb2iIEDdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741784518; c=relaxed/simple;
-	bh=BHGEqUBsRjSctZb37VInW2MFE8xUzgQxm0wCEbT3a8o=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=g4BU2kh7/TDo9+mP7KfwDHPJlYVOiW50X808Fsqqil347e3wv9Y/JkCqZL+IFl52RPAKx3MytFT0PLUMTVwVF79RIJPV0t+MM3owYjqK2QDZ1hvWk3uYN6SQBq0UHUXtWF47YQVkI9e6aQACJ0IUruJBZXprNxu1OtkF1lWnP50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XzToS2AL; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XzToS2AL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741784511; x=1742389311; i=markus.elfring@web.de;
-	bh=wa2E+e8YKnG1Xs+YxlyJJXzQdlJ5kCk+NRUrDAih9V4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=XzToS2ALHajoqXEtPD37x05suc523bwy0gv0fldiMPnf2IVYlmwQ/N7IIFMjS1zY
-	 9xuLyBJtplgx6Z+zkyDkYJI79vBny7rymvCJxXSP50SswUquYNisRB2H71l1S+OLC
-	 np1WTpA8qV3kVO5oykBAuRiEkpGigsaGGAitGoSoTJKxQE9WlxxJD7st+a4BkG21f
-	 2JX8BbD2L4zwcKsqrgxHBayXjwbc2WNrWVuSftr40OXT6/DdnjJZKQP6UcZb+tdxa
-	 G7XFMlkwlnRZogpzD3EAF5qt1o11Tjdno863AtpPDjS1Kb4pYvwQqw4ebZpVA7jjA
-	 IMfLzrgNCZGmv40uLg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.19]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MC0LJ-1u4D8k2HrZ-000oJ9; Wed, 12
- Mar 2025 14:01:51 +0100
-Message-ID: <27efccdc-3400-46b9-9359-4b2a6c8254e9@web.de>
-Date: Wed, 12 Mar 2025 14:01:48 +0100
+	s=arc-20240116; t=1741784612; c=relaxed/simple;
+	bh=urFl68uoAji+L/OZmu9MC+PGlUjZURSh42gOnWDdFzk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jhKlx+K/SEp3eTO2dhQBkH+R4ZDB8QF50XDTX8q3Yqo1zIlzUraXULTbt/5/4jX9KX/mnbjXEqumcQERZGI1gRFBBO81y3+N1DvsAlqgLAsTjIcUZuBTGBGMUgSYujlna4rYhwZ6UUSjZ6DD99T9B5Dei6fODsQ9BwFN4iUfdl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=avm.de; spf=fail smtp.mailfrom=avm.de; arc=none smtp.client-ip=88.198.22.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=avm.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=avm.de
+Received: from birdy.pmhahn.de (p200300e2774a7B00F7f5672D647b4c86.dip0.t-ipconnect.de [IPv6:2003:e2:774a:7b00:f7f5:672d:647b:4c86])
+	by birdy.pmhahn.de (Postfix) with ESMTPSA id 4565B220261D;
+	Wed, 12 Mar 2025 13:55:29 +0100 (CET)
+Date: Wed, 12 Mar 2025 13:55:27 +0100
+From: Philipp Hahn <phahn-oss@avm.de>
+To: netdev@vger.kernel.org
+Cc: Philipp Hahn <phahn-oss@avm.de>, Oliver Neukum <oliver@neukum.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Leon Schuermann <leon@is.currently.online>,
+	Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH net-next v3]: cdc_ether|r8152: ThinkPad Hybrid USB-C/A Dock
+ quirk
+Message-ID: <Z9GEP/TksqEWFbkd@birdy.pmhahn.de>
+Mail-Followup-To: netdev@vger.kernel.org, Oliver Neukum <oliver@neukum.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Leon Schuermann <leon@is.currently.online>,
+	Kory Maincent <kory.maincent@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Qasim Ijaz <qasdev00@gmail.com>, linux-fpga@vger.kernel.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Marco Pagani <marpagan@redhat.com>, Moritz Fischer <mdf@kernel.org>,
- Russ Weight <russ.weight@linux.dev>, Tom Rix <trix@redhat.com>,
- Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
-References: <20250311234509.15523-1-qasdev00@gmail.com>
-Subject: Re: [PATCH] fpga: fix potential null pointer deref in
- fpga_mgr_test_img_load_sgt()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250311234509.15523-1-qasdev00@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qRHTGPqNceH8IbA4YcipsJ6jRqi7gyRXpJ/J5IJMJ/4oZLWb+sV
- OuoaGdXteDQMl5G626O/Ne+2E07/FJBJcuS1hO1NYqJwceA7ag+i9f8JutLJtWcPEidcDW2
- cQ+wGcF6HXYTxGgeqnoOWi2CD/FAKdQT2vyXhNPgKJdCvdZ1yCTYnSuqEu2xHG77OiBZP8l
- eoqUr1NLoizc7ezDxRhWw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mEMseo+PhIY=;V0O/wxhwV2ei7Wbe26EVhEYz2Vf
- 5yheAmTS1xiTVfpdwjTb8KRJ7w01LyQlrMTjTGRqqdNONvomlNm/Y29sBE+7Xxdvc8OrLjRL7
- XtGpZyBDmn4h3P/NCDnJh2UgEf15Xrjn7136zmCYBe1htg4hcC/zFLx7FzXi3OIx1scuGRByf
- +N/hkxGzM+PZd5rQfO4hciRkdwk+YxhvID9zn/+hfpXi96khz7to63qrOGWQe5ErpiKQxMTEn
- s7XnTaM1/tRnVRUcP1l3QVJVc8oH2ZrZW3WD/fr6/7mazR5HON3Nbdxsguc63ytRbX4T0oUDy
- Z9oVWqOhWeLyoGBkmSnKowkEKcgy8pnchY+FKvQmWzoccFfnz+/n6mDh4HlCOVnNqxkRztC3M
- okKnX8F3gds7QJEELQVyppCe/AYu3ddjXHB6FSAKDLag+0czj8Vsnt2B1Fz2S24/TNzJ/NndY
- kkcBKGxzcuSgmLZOycKyEkOFMkber6stepfODSzjr9ToObq2J9+h5TmYcl4ZIeF97IKDz0lxr
- oo9OyTK02d03AXrYNfssxktF3n/IiMvVlqkQvziqmMysofSgphW84fx5A2GWi9iqFOR/EbVXn
- I9aBZsi3GuPhvtu1sxjL1z1DeMmg9vbldd5A7rn+xN5FwTHaEvKTiS6Z/xLiF6JQL5xMIaOwv
- pfsc9Ay7op3DP/S3/xA5LiRuAqkszh4qseWOYZX4JaoZ6DAvq2prbojZK9InF7gChRZzCbrgg
- szxhwBKEXW5vJtiLXcqRO9HIiYFR53sMxzL0sSM3QUhqttdoUgfH7p+ey7oHz4XA3XTgdPMSK
- /19TaFMxRsGBqPE1RygQ1xdEUm9mSaUJc1MZnBqtcaRnh3FZcslRGMNb2cKzVZPel+wOpCyMj
- 1AZXEz4iSbYnCKTEAiE3sqA6QV2aZTtv932+d89zXY//5cFrrijTsJpRvG+8We2cE7DRM9cY1
- rB0QqJ9adGvb9sebTXa+9RJMj3BJv/kDlEzvcmT5angAwOUzBU/pwGhbnKQe5yjKvnua4TL8b
- 5eoWIhRj0xPEzzMKIINVDG0/RYxUJ9gklMNlWAPfDkYhci2E7cctTBongCaI1HU8okNDEj4M8
- WQ2EzgiqZ6N6/95aga4WuBZCOmon/Dxbuwipxp6zooTsCt2TLLw0Vz5+dY9BFpyzshcgOjpLO
- DgWDnTvDLs8zV9tqzNmZTKbncgsKAnq3giuH1mgE0CyRRrv/FiHzcx4kUGKlKxS3/F2BjDUjE
- sH7zyO+W07rdeQpyLGYfFSOSpW+KoT7nooqJohhPQrhuyo2h/5S8OtG/HHeT7Et+Tes+CHlAq
- RwICmtGBK+afoFREBaU+YBAhHC0aXHwhwGDl5o6Y2EA5wtDHDgDS3mAAr1fPCLSMRvXFZ04M8
- j/v1W8AoTvQCoFYD0xN7uaCRmmoeKXojJpvR/5do0Od8SgXaHCwb/+b7YhDmNv7KH4dQ88dF4
- VI8U6ki0wl5ifZk1i78JaQEihhfk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-=E2=80=A6
-> zero it out. If the allocation fails then sgt will be NULL and the
-=E2=80=A6
-                                 failed?
+Lenovo ThinkPad Hybrid USB-C with USB-A Dock (17ef:a359) is affected by
+the same problem as the Lenovo Powered USB-C Travel Hub (17ef:721e):
+Both are based on the Realtek RTL8153B chip used to use the cdc_ether
+driver. However, using this driver, with the system suspended the device
+constantly sends pause-frames as soon as the receive buffer fills up.
+This causes issues with other devices, where some Ethernet switches stop
+forwarding packets altogether.
 
+Using the Realtek driver (r8152) fixes this issue. Pause frames are no
+longer sent while the host system is suspended.
 
-Can a summary phrase like =E2=80=9CPrevent null pointer dereference
-in fpga_mgr_test_img_load_sgt()=E2=80=9D be nicer?
+Cc: Oliver Neukum <oliver@neukum.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-usb@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Leon Schuermann <leon@is.currently.online>
+Link: https://git.kernel.org/netdev/net/c/cb82a54904a9
+Link: https://git.kernel.org/netdev/net/c/2284bbd0cf39
+Link: https://www.lenovo.com/de/de/p/accessories-and-software/docking/docking-usb-docks/40af0135eu
+Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
+Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+V2 -> V3: Move `net-next` in subject.
+V1 -> V2: Prefix subject with `net-next:`
+V1 -> V2: Add additional Cc:s
+ drivers/net/usb/cdc_ether.c | 7 +++++++
+ drivers/net/usb/r8152.c     | 6 ++++++
+ drivers/net/usb/r8153_ecm.c | 6 ++++++
+ 3 files changed, 19 insertions(+)
 
-Regards,
-Markus
+diff --git a/drivers/net/usb/cdc_ether.c b/drivers/net/usb/cdc_ether.c
+index a6469235d904..a032c1ded406 100644
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -783,6 +783,13 @@ static const struct usb_device_id	products[] = {
+ 	.driver_info = 0,
+ },
+ 
++/* Lenovo ThinkPad Hybrid USB-C with USB-A Dock (40af0135eu, based on Realtek RTL8153) */
++{
++	USB_DEVICE_AND_INTERFACE_INFO(LENOVO_VENDOR_ID, 0xa359, USB_CLASS_COMM,
++			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
++	.driver_info = 0,
++},
++
+ /* Aquantia AQtion USB to 5GbE Controller (based on AQC111U) */
+ {
+ 	USB_DEVICE_AND_INTERFACE_INFO(AQUANTIA_VENDOR_ID, 0xc101,
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 468c73974046..96fa3857d8e2 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -785,6 +785,7 @@ enum rtl8152_flags {
+ #define DEVICE_ID_THINKPAD_USB_C_DONGLE			0x720c
+ #define DEVICE_ID_THINKPAD_USB_C_DOCK_GEN2		0xa387
+ #define DEVICE_ID_THINKPAD_USB_C_DOCK_GEN3		0x3062
++#define DEVICE_ID_THINKPAD_HYBRID_USB_C_DOCK		0xa359
+ 
+ struct tally_counter {
+ 	__le64	tx_packets;
+@@ -9787,6 +9788,7 @@ static bool rtl8152_supports_lenovo_macpassthru(struct usb_device *udev)
+ 		case DEVICE_ID_THINKPAD_USB_C_DOCK_GEN2:
+ 		case DEVICE_ID_THINKPAD_USB_C_DOCK_GEN3:
+ 		case DEVICE_ID_THINKPAD_USB_C_DONGLE:
++		case DEVICE_ID_THINKPAD_HYBRID_USB_C_DOCK:
+ 			return 1;
+ 		}
+ 	} else if (vendor_id == VENDOR_ID_REALTEK && parent_vendor_id == VENDOR_ID_LENOVO) {
+@@ -10064,6 +10066,8 @@ static const struct usb_device_id rtl8152_table[] = {
+ 	{ USB_DEVICE(VENDOR_ID_MICROSOFT, 0x0927) },
+ 	{ USB_DEVICE(VENDOR_ID_MICROSOFT, 0x0c5e) },
+ 	{ USB_DEVICE(VENDOR_ID_SAMSUNG, 0xa101) },
++
++	/* Lenovo */
+ 	{ USB_DEVICE(VENDOR_ID_LENOVO,  0x304f) },
+ 	{ USB_DEVICE(VENDOR_ID_LENOVO,  0x3054) },
+ 	{ USB_DEVICE(VENDOR_ID_LENOVO,  0x3062) },
+@@ -10074,7 +10078,9 @@ static const struct usb_device_id rtl8152_table[] = {
+ 	{ USB_DEVICE(VENDOR_ID_LENOVO,  0x720c) },
+ 	{ USB_DEVICE(VENDOR_ID_LENOVO,  0x7214) },
+ 	{ USB_DEVICE(VENDOR_ID_LENOVO,  0x721e) },
++	{ USB_DEVICE(VENDOR_ID_LENOVO,  0xa359) },
+ 	{ USB_DEVICE(VENDOR_ID_LENOVO,  0xa387) },
++
+ 	{ USB_DEVICE(VENDOR_ID_LINKSYS, 0x0041) },
+ 	{ USB_DEVICE(VENDOR_ID_NVIDIA,  0x09ff) },
+ 	{ USB_DEVICE(VENDOR_ID_TPLINK,  0x0601) },
+diff --git a/drivers/net/usb/r8153_ecm.c b/drivers/net/usb/r8153_ecm.c
+index 20b2df8d74ae..8d860dacdf49 100644
+--- a/drivers/net/usb/r8153_ecm.c
++++ b/drivers/net/usb/r8153_ecm.c
+@@ -135,6 +135,12 @@ static const struct usb_device_id products[] = {
+ 				      USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
+ 	.driver_info = (unsigned long)&r8153_info,
+ },
++/* Lenovo ThinkPad Hybrid USB-C with USB-A Dock (40af0135eu, based on Realtek RTL8153) */
++{
++	USB_DEVICE_AND_INTERFACE_INFO(VENDOR_ID_LENOVO, 0xa359, USB_CLASS_COMM,
++				      USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
++	.driver_info = (unsigned long)&r8153_info,
++},
+ 
+ 	{ },		/* END */
+ };
+-- 
+2.34.1
+
