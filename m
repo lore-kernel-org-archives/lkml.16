@@ -1,65 +1,65 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2C124338F
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1844424A04B
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741785261; cv=none; b=qKzca+HA9xiWvyQ2O7udWNpxtULu7ZrCNkEdnn1UFXv/CaSgmkT7sjGQcCAJ/5Xtwy49xruXN57FfUhJdQM6fXtQVX9PMzFiEu8clBhxnkoPo3n3/nQEFQwjkWIwfMneNARIq+mgieXsQ6jDuD8uaZTdvQcUriPW2/xo0hZPSGA=
+	t=1741785272; cv=none; b=pur/cL2tot1olWW2Rwc3R6NdW8QNSjeFDKiUz9F1BkI1MN8pz9H2o4MG1nlVGfS5YlO/x7AhVUHT4lStMrl5gx7sNxGwGkOnPtbekVDKvfbDTLwMuKCJXEfq+yjOiKF4mSzVeT9s7ZzvQ5jNKgtOiHug0PL42eo0dQBdeIbpSNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741785261; c=relaxed/simple;
-	bh=vBJoYS6kgea9KnuipejUiu6W/UyWi3+gXOVaAXDBGu8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=r5p3Qi3bHeSj441hIkgilWAUb2QBotEPOEJmdiZyJ+NajDJI7gWVBJS0tcRbvGctToQKOTGNeXcwW9v56WvYT3L+ByBgzAvZYm1srh7q7c7GLmIVrtdZ8hWBlcarIeCArSXYbuL+CRdBHl0IVzIkN3dYvz/V+J84MdtZkKbo2Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uFbP5NzN; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1741785272; c=relaxed/simple;
+	bh=lR6PjoPFKVsHG2J5Mucpa/CnvA+OdHPQdfRh6cSHZ2Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YoN45trsaS8uCsev71A73a4wzIbumgYv4z+Ygz2qaZJ1F0yssvxJbGtYBDCH9rFvdSs2WPxrfpF8nzP7HhIU8hVEEYJOkyOx5AirVLWG6dGEQPGiRTtPNX1UjfoLv+kbAvJIDTTeOGHlP0vf+cBLrZ19HX/wwkG0Wga4oYqy9no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L3ttqbjH; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uFbP5NzN"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394944f161so7336835e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 06:14:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L3ttqbjH"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43938828d02so8369475e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 06:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741785258; x=1742390058; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DGzPkd7r2+zM91oQhOH/mQvzjdgz6ag3mHHJbjsWzpk=;
-        b=uFbP5NzNxDmAc+6S5//WxTBMbW+0oz/9oT1+a7tBviBZlEdhfIi3VMrQeFPwuRHiN0
-         2uKzJVTUEJigbegOTYu+8cf+Oo5rLGDpkNnXHd59hAdp0Y+i1UBPy4+iio35YV57IfTk
-         DeSX1+Pj8ZwJq44HaUtRskUewuLm/9if7SvHEKl5GJJ2C8EyE+iAiGYZiFvArt8XN+Oe
-         32uRNj8kHDU9TwiMgE3lpJiQ/N617MvvxiwhJa155HB9GfGhQFnPbmJLkt8UCkxzX3Z9
-         0/iwUdBRuZJiuISSsQvJ8kWowD7tZt2C4lPcT2Go5608UoWS1seNvkjjeZHOYtZD2s27
-         bTGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741785258; x=1742390058;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1741785269; x=1742390069; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DGzPkd7r2+zM91oQhOH/mQvzjdgz6ag3mHHJbjsWzpk=;
-        b=Xt7b+J8voI66DVPpA8axchnGjt286WAQJvJMaiNSn+RmuRlNWMoBlF9uOeP8+VlLk0
-         Go3mLvMgOZRIwQ1ZOPRTMAln50jRQd591zQAbjor5ScLHGiemmizA1iU43X7DHluCkD5
-         nCch7AQBjh8LYuyth9RvmTVuyE/MFqA34wIEPrpKxJBA8T2HEbgkIDOfekTnoGdyQSDF
-         qLb2JAs7E+al658WHz7SxkvS+NC3EpL3ADaXBdP0FZr8ypb7Gb0S9BdoVsEyoXAqiLFU
-         OvuPqr2Kfk4YbMFr9mshaD6j1ubduGR9deCxykcOKkL53Y/YDuWM5ZdZeQGBfjZYPXIf
-         uroA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8duvv+7H4K9ooeZuz3fpX1fWLBZWBKTxBnKZkiq38VP1HDOehXN6ptXW8TfHNIfzgvW6k9JAgYSrGnfY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5cFzQ1UcoPRiriHoF+JcQBVX3HwMq1IyfNOG+DdV0gRokuzqQ
-	h+iFW+jhHPyYsbXy5Z/x9k7Bx7qQsRBtcbxc1OSc8UlnokvQwrvSD9AY+aTEjmJ2qe6OOiSmIvY
-	Y
-X-Gm-Gg: ASbGncsNfhPEj8X2MXvpfvGAryV54N1NtzxgKOXFYm80z/2ZrK8KIpRZ+jA/B9eE052
-	UY7KTfPREcSkZ/Q2etK6lNMPNXiFzOLgWtbfrdpDmA/jO8ZlXS6m8Om5c1BUvvMSw0el8Rd7qnm
-	OInfGEYt1wY4xrva6eptpN2RBdU7CSjMZCJ6pEwu4tNzr/PlWWMmhk38xl1akvapiSlt9nV9CWS
-	Tu3B+OHRyssJSjQ/DlP/HbBicwjU6tCbVxsbbIDfK+DyGr7CycB9MRn5TN/+F5b+p9wK/eeK8DL
-	jNXcI0tDRNCUESfebixv4VTsaQLc6NSEIndhorL/VUr/y+uKqtNkr8SiUzoV+Qe49WayNg==
-X-Google-Smtp-Source: AGHT+IH+qpDNzN/QfZBrZqjgfeka3w0jEA+aQ5oaMH8e3V/VqjGWoPeo22IKDneXVdzf4OlJgAu3yw==
-X-Received: by 2002:a05:600c:b91:b0:439:9c0e:36e6 with SMTP id 5b1f17b1804b1-43d01c1fa4dmr32998775e9.3.1741785257752;
-        Wed, 12 Mar 2025 06:14:17 -0700 (PDT)
+        bh=XK+UGaMVwf9jHj43qw1MVxGsWYAAC0YY/TWDG0GH+T0=;
+        b=L3ttqbjHI9Y1mRKi7gIR3Q98GU/f6HerfDDg8JrwXybtqQ3U2vZ1RGR6skFjkil51q
+         qkIC9FJOlEB2UuQwckDWrMHaQVncFtvohkvR9hWmxuOdepaqB+S+bd+9OdxfKSILQkWC
+         Xd82SUCk4fJowLI3f5dfF+XDHex2ouCjPxQcLa66P+yWEfD/o4/x9zzEkXapzBIg9KKX
+         seY88mKI3FMgOgm2S80YmA3aVn6vSgR5ToGKntop5Hm81pCkE52ndmPbFMjnp7Co5CJ8
+         CvWtkJTO6NDAgkAWxGwJJ1WKQ/23qBqEhLf++e+kjlRrGAdfo7E/ecvbvKnfHRplcuis
+         iDQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741785269; x=1742390069;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XK+UGaMVwf9jHj43qw1MVxGsWYAAC0YY/TWDG0GH+T0=;
+        b=lltFZ9PdYLx2PbEvemtnHNxKPyDv+5Wr5rrl0BR0AkgEdIX91IJFcDWgz4thT3spWL
+         6FW1FgtYHAU1Ybm+2Q5hnpMuWonIWLsa3blcLRp6SuL6Rom+oOkyxpo+aAnwhnYFByR1
+         sFZF3NP+htcLcjWsB4HfwsJo/NR5Qunh5SJ0rQzS0TjzRISRuJzoBlkLxS+S07TX2F5g
+         uYPF6GLwkvoSa2Oi9BWZV3TKISwEZPYHFAQ+eTMNMiGeGXGbRDhWJQP1TdWzQwsyS99X
+         rX4AHaqFYUfAwjqZ4Dnr1HLzv8I9mcP5vwYkS0cK9HfjtTA92f3VA4jQ6Lzgmu3/ZyYx
+         9y3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWKUXiNi1Wmh01RT3mgVJ0FJP6HTwmVnUzZz8niWep14OygT77ibbZidCDKh0+bVluYR7pyboqt6GPVphc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzuqnie0nn2bQXl05Fn2ZGHceELdRk3v8U1XYi6m0CkyDLhXAIZ
+	niedHvowIhZsMvtTJsTkQ/noN39NU0LRirUYQ7euktSVLztlV0d8bu1K5zcJOFU=
+X-Gm-Gg: ASbGncvOmHnhz8fQiKfa4SCvoaVexUebx5goV00lgB/ndzZtLMqBTHFoHtgDTOWZrRP
+	1vGjuD6Lx3MpUwotFgvLJsZGGaUFYM7MLfSd/PH6v3yG4XnkOHXTEi2iGPDZZNAf9rgJVgM2aOu
+	vFcgK8UYziUorNMUGKA4bLX679fnG/wsFC72n0L0OuaBf2fuXBz/U8Y5VehD7OXCiEktrzA7wk8
+	Ps8GHL3aYihf2klvcCnngetffDKWWymiW2ekmZ5OYK2CD5b/XI0kClA7OYMhkOX3eSNjRWfPNnT
+	D9l3XlpxGUQqmVEbBQq3ZWBNMbDPDSVMLgMaSVGFy3uLi8g9q45wr99q9qE=
+X-Google-Smtp-Source: AGHT+IFXxegfmgQM5h+h3H6IEhCsssC0UnFb5yxq2rS2ER8UYMHh3dfRMTJTzORYWe0axLgbEZSsig==
+X-Received: by 2002:a05:600c:5107:b0:43b:c844:a4ba with SMTP id 5b1f17b1804b1-43d01c12945mr32907775e9.3.1741785269320;
+        Wed, 12 Mar 2025 06:14:29 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d0a8c5cb4sm20966745e9.25.2025.03.12.06.14.15
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d0a8c5cb4sm20966745e9.25.2025.03.12.06.14.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 06:14:16 -0700 (PDT)
+        Wed, 12 Mar 2025 06:14:28 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 0/3] arm64: dts: qcom: sm8750: CDSP
-Date: Wed, 12 Mar 2025 14:13:56 +0100
-Message-Id: <20250312-b4-sm8750-cdsp-v4-0-4925d607cea6@linaro.org>
+Date: Wed, 12 Mar 2025 14:13:58 +0100
+Subject: [PATCH v4 2/3] arm64: dts: qcom: sm8750-mtp: Enable CDSP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,13 +68,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJWI0WcC/3WQy27DIBBFf8ViXSpmsHl41f+ougAzTpBqk4Jjt
- Yry7yWOorayumBxkc6ZuXNhhXKkwvrmwjKtscQ019A+NWw4uvlAPIaaGQpsARC5b3mZjO4EH0I
- 5cWmcGlC10snAKnTKNMbPTfj6VvMxliXlr82/wu33X9UKXHDrlHXG2ABev7zH2eX0nPKB3VwrP
- vhOIIodj5V3WoSAQbQt2B0vf/Ow42XlR0JjwRPR+Hf+9V4u08e5Hmm5N/y5Ud9star34XTnEBM
- PkvTolVYaVF8XqBbvCvEhTVNc+obIYdcZKzUYVIbAedPh6OvTYlAgAwjrra0LXL8B0UmOka0BA
- AA=
-X-Change-ID: 20241122-b4-sm8750-cdsp-38a6c2643a3d
+Message-Id: <20250312-b4-sm8750-cdsp-v4-2-4925d607cea6@linaro.org>
+References: <20250312-b4-sm8750-cdsp-v4-0-4925d607cea6@linaro.org>
+In-Reply-To: <20250312-b4-sm8750-cdsp-v4-0-4925d607cea6@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -84,70 +80,51 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
  Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1719;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=848;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=vBJoYS6kgea9KnuipejUiu6W/UyWi3+gXOVaAXDBGu8=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn0YigT+3azmRAzoiP5kKesAhS+LovXxiaqTUSH
- XVtYyCkInOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ9GIoAAKCRDBN2bmhouD
- 11+0D/9UdkSkavwrurxGEPRe15zNeHtxOzWfEDEm0oYIm10dmRExyP0pe8nngv87n+LkuufxzxI
- vG1UocuOzfbuTSX30a1MW7E/Y4rfedXz0thQzC3TByH0CaR2On5LA09OR0Gky+Kz8XfpAPfXnKw
- wPnQMcEufV8wSeqZ3j5V6gkrQ9uHmuL58xzc3VryLn+D2K8M0BAyGRKGYzM86goJWTO2b9B38Ur
- ipF9asdV8Es2lyhnEKLtMHO8Rb7K8UpMawLgeOCKi8Ijio2LGvndS622ucd4SDeSR+FHULg7P5i
- EAYtQRPjXE8PecfUsMzC2O/4KCC9lV5L102oz5n5m5WiD0sTAEbUp+1t1UtT9anvZRKLJd1kkue
- Mk1cKdH0/XsXTSrWzUQV/Yk1/hP1R70h4sOhOG3Gsh3e2SSunYuikkFJES1dbKvu2BfOqCyUuEh
- NDFHgij7cLZGZoksVg8e7aIfo4az05M+XX78n79Ey/rR0PlPP5y7SCp4EdkK3PQpaUVExbyiidb
- i5ONm99gHRksHNB286+7SELcZaVwolMcSFezjg5/da2wZKD9kUBKGYGbOSefBQ67lizon8VFCfU
- NdqXWzoxqIDFdU+5IZRxMZmkxCJs+GW1qDcCgquHm+pq5YwwPt2GrsxQYrqGiCfJKtniqSxUaCg
- XIgrKQlLkfXp2SQ==
+ bh=lR6PjoPFKVsHG2J5Mucpa/CnvA+OdHPQdfRh6cSHZ2Y=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn0YikXG84GYnmOWpnaAFgNMm4qTMRZq+93nStP
+ 4JPUnW3x0aJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ9GIpAAKCRDBN2bmhouD
+ 13wwD/9c+P+vkuq58tSq5wtvVVR/bzLWwcw9QndgJkiARmh+9lQ4uj8qikAIl4F4PyaOjYPv9fd
+ pAoJXWLfCj2pplZWw8yfWpLGy+GRGShkehlu0HJLzqzdWZamMPQRSKX5eclCeBXhWRDSitX16S9
+ W8OrKrDVTdOhTUwK8mYwUMzQjeCp+3S+sx30/XBvYnZx9GNYub5Lpp1E8g5eRoDeD/tA+R8du5E
+ NTTkZPuriTwoO6ZR1pEOf0H9ON9bxrizmJyQseaYNUZ8fv148GYqT0BQqFXzwGQrxy5WDviMnmL
+ BPG+qGgy61RVhn4hqztzE/4frx2Mb+YVqIOI4DSp0XhpZtbvlyQUWSigIAihwzDKATpgu7oStOb
+ qU+k8zVlVQce8wpTqOqMJk5HAn0Ospb17mHNBg8i7Azg84BfBWD88Fd5Cw604jFuEL8NnYYuZ2v
+ byhIeANLy7BaObXIPjIP5fjYHvGeydSKC5WKTmoYT+ngLi7fxkQRpmTsC48bCEdeYnadNLi7JnP
+ A1Xdeo62nsoYyos7anjWmRf53vSUwDubUCHcCaATN9z7US0u733R+WIchc7Z5qwASQ0gBT4RKuU
+ WHdom4aDfSieXHYDIpriIwx3/OiOVe+WzQN+ZfhikR216XUH4DBP0aQ2RNKuQYiUwkp+LGXT281
+ wiVg/TuJ4mJIv5w==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Hi,
+Enable the CDSP on MPT8750 board.
 
-Remoteproc bindings were merged to remoteproc tree.
-
-Changes in v4:
-- None, only rebase (context changes).
-- Link to v3: https://lore.kernel.org/r/20250221-b4-sm8750-cdsp-v3-0-fe2891beeef7@linaro.org
-
-Changes in v3:
-- Based on Dmitry's feedback, move modem pieces to separate patchset, so
-  this can be easily merged.
-- Keep previous tags.
-- Link to v2: https://lore.kernel.org/r/20250220-b4-sm8750-cdsp-v2-0-a70dd2d04419@linaro.org
-
-Changes in v2:
-- Fix CDSP and MPSS PAS address space range.
-- Re-order nodes for correct placement.
-- Rb tags.
-- Link to v1: https://lore.kernel.org/r/20241122-b4-sm8750-cdsp-v1-0-9a69a889d1b7@linaro.org
-
-Context of this depends on my audio patches:
-https://lore.kernel.org/r/20250220-sm8750-audio-v2-0-fbe243c4afc3@linaro.org
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Krzysztof Kozlowski (3):
-      arm64: dts: qcom: sm8750: Add CDSP
-      arm64: dts: qcom: sm8750-mtp: Enable CDSP
-      arm64: dts: qcom: sm8750-qrd: Enable CDSP
+ arch/arm64/boot/dts/qcom/sm8750-mtp.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- arch/arm64/boot/dts/qcom/sm8750-mtp.dts |   7 ++
- arch/arm64/boot/dts/qcom/sm8750-qrd.dts |   7 ++
- arch/arm64/boot/dts/qcom/sm8750.dtsi    | 194 ++++++++++++++++++++++++++++++++
- 3 files changed, 208 insertions(+)
----
-base-commit: eea255893718268e1ab852fb52f70c613d109b99
-change-id: 20241122-b4-sm8750-cdsp-38a6c2643a3d
-prerequisite-change-id: 20241022-sm8750-audio-d3e7fb676716:v3
-prerequisite-patch-id: b55e186eee8900b7a4f58684018cb3babd1f6fab
-prerequisite-patch-id: f43e8633f9f6e2f50fda536727f8de5908d3e21a
-prerequisite-patch-id: 64e093ece66679a7a4b9290374176811e1938337
-prerequisite-patch-id: d2fd6b3e1a17a96b805b4eae6971168ed2bb11cf
+diff --git a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
+index 8eeed7f2f7766326cfc7830002768087e9783b9b..5d0decd2aa2d0e0849414534cdd504714402458e 100644
+--- a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
+@@ -791,6 +791,13 @@ &remoteproc_adsp {
+ 	status = "okay";
+ };
+ 
++&remoteproc_cdsp {
++	firmware-name = "qcom/sm8750/cdsp.mbn",
++			"qcom/sm8750/cdsp_dtb.mbn";
++
++	status = "okay";
++};
++
+ &tlmm {
+ 	/* reserved for secure world */
+ 	gpio-reserved-ranges = <36 4>, <74 1>;
 
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.43.0
 
