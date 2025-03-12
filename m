@@ -1,95 +1,222 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2058.outbound.protection.outlook.com [40.107.117.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECD223BF93
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741773675; cv=none; b=YwpINSxP2vklOJ3fOgC+mSv3ZWaAGQrmECejv1EeAlwGapjaOvy9+RGHvfZLWNNuurwjdhCHehzHhcu/uskfA1/zF3srT5pNe+uDc5ttSBiEr6Hm2KxTJPVbcqMFqAcjSR3uNudDR8lYl8ihjoRNrkO7yIzH1JOxyWcBaIL6b7A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741773675; c=relaxed/simple;
-	bh=H70cromMzBc7G1Dxdn7Ujl+1TcPLdylbz6SBFKEdUOo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W7wk1HL5khNmDTHgZLkihTKVf2jM7/1QNoQU/MpPCJ3/RjOKIFZ59HOgGOaOm91BV29objxP8WWaMQg+vuq8J+KjU97ypjILQczl/zUxzKoJvi2aFj4joLC4zEtQrld8BKufEFg0HqkeVveA72fYeKtbYAVOsbPit17YHxX0268=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LM+WMKTE; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A907D3232
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741773738; cv=fail; b=eTHCDVFHdsVV6J6FqyNJq5vxRje6RNDkclPR9LGvHUZoPoWE6+F2urLj1wD9h0Gak//beQpiJ6d262u1EE21kYPjzWBLEmYai1cYzhYW5rxCMVY/QUjeZXIdr3xRh68i3lHOK3Zl0lIDlq17GVekQyqTkaMfjv2KaIOpjfER+m8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741773738; c=relaxed/simple;
+	bh=r4UCwjRdyRbSysiydzsPM/hXDVvmWi8naeiPnzMlGQA=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=FdRqOWB7iaManbkQmQsyv8aDKN5n6i/HJ0jTMkDU+ipNa70XakvpmRNJX68yrt8hYkAJtmZ9w5S7eifmXUp3hMafwO5sw+WA5PjMsc85GvnOICzHjqVQ5LExfbVu1eRM2OWS4tUC91JyKsaVRcRwv1xvfb7vSgM6Cm0Ul2dUezM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=FbUMbHqZ; arc=fail smtp.client-ip=40.107.117.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LM+WMKTE"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30615661f98so68652961fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:01:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741773672; x=1742378472; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H70cromMzBc7G1Dxdn7Ujl+1TcPLdylbz6SBFKEdUOo=;
-        b=LM+WMKTEtBro67ucRHGFG82QurBUVVTKueWjq6fDb4ct1i3KejryugfkoRLxmXodsT
-         gEpX5bmbXgc0Pia5+kYM/u22mb5eE2PU965J+nKcNzU+gnD5g0qPMC+AGwDIvQNU6OvV
-         4gMhJu81ak6Plrm7PcR85qREnu0ChRdO7Emv1PqiXCRAnO4HUygSvj4GME7wukOG4JqE
-         nNvagmkxB0k4nQPKYBG9kk4nnP3qFHWfkRXv4BzJq1kZiCUbpYTyee0J/hz4Ljbj0zUU
-         mRyJzAftdRRvSOocXvmTHIPX+TQQJF6mMMuI2P28z22iLTQX56T6IOJLTq83PNJ5WsYz
-         J8xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741773672; x=1742378472;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H70cromMzBc7G1Dxdn7Ujl+1TcPLdylbz6SBFKEdUOo=;
-        b=DqWpoqcrOQQ9usyTV/K32ddtSmIh61CnN8uNz1J9Z8nVS1t4g8jCTfTvJChveGs0J3
-         piizcUtOtzTC8Gyx2Gwg62JkbvtCwhtIFxw+z2UE5TS4gG3vhHATIlIrVHMFuIkAfnRR
-         Y0vf+M7TK3uH59/otUNeSKUMJaDECZJfnuuwe+vNFok+/bPwsf5ACk0pFBlU5lvdkNUD
-         bHuuFqcWdn1KE7VZ2SYptyoDqBZXP0CkHlK+kRqDkiHxlt25bMXd3sEShT6Vk4XpRifa
-         M1U2tGusTfZ6eK9+E11AVFYDkUCkuMHiYHbtkzgGaqDwmJaV1p/YwlQTI4QPcIYPCDPN
-         /OgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW//FX6tnpddHsd+DTngP2YEgqOCi52dV7gNNBC6hTbrbpo3h+qUGlxYZJeSpDa9KFcJD4d9BndqpggMRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrflb1gTDLzQ/m8RitUL+/SsR/BNqFCXYMFWseFzwN464ey+D+
-	txC4iU1vjgrJo7TanLEj8Mh5fbKMw0GASOFN/VnMndTpKLtnDvy6cO5tduLmjNUpZ6LnSXw3O14
-	eXdZl1NpLoYekyrzbATVlU+gJAnr4Ei0hem/bBQ==
-X-Gm-Gg: ASbGnctloF6Io8CCfTeiMRWxaxQr+bunPi8Hag+z+HZbjl6ZcVfQLmAdz0d2zhSrRk1
-	C8eIxYeCKBzh1VsC4w4cu3MZpi5M8Ffzbsm9rNd8H+QZv7Q+djRwELKX6PEtG+UucSeiYfqPd00
-	N4BNKW3Krrsq46NZk91AiJFeT0L1BFv61kcJTapZ/0A7wmc8XQ2w3jIWZh0A==
-X-Google-Smtp-Source: AGHT+IF3JsnGDmtC8cFGGo9UJ3LwBpBWNU0LU9dhkqF7FdQC0xv6vW0juUcQgoshe4Cj7uKAJnjHv9k5v01339Iy9Rw=
-X-Received: by 2002:a05:6512:220a:b0:545:49d:547a with SMTP id
- 2adb3069b0e04-54990e5dac1mr7224533e87.18.1741773671774; Wed, 12 Mar 2025
- 03:01:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="FbUMbHqZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ivj76G5lMRlTEivDQWD11qLx5GQW1vWohoW5JtPotFtEri5D79xmdjxXqIpmEjy6uK53dXPg54LUl6PbGE2f5dAj25fX0nlS4JEsrAhalQvSfwpJKKWppd/CWv2Fmas9G6as2JRtM9aLkwWbp+HCoGMC0BA/k8Iys/kc+0N5iYV4zwDYHaHB2P8vRDA7MGNbxWMIG3RZ/pe8lKiGP5CZMHn24tA+Sw+PpzqZGP4DcgxVIV2KpRDAvUG4cE4JFXcKvqMd7dppFgfMCynxh25NvGNwC/dVpZuwfGidsO+nYFikVt9j0UlxP8gxdN8yo8ZGT72RcFV9dAFuGH8ziYKQ7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zi2kNaj0+gWPDFfJl4CNPjOVMArnGnCzfBecAOH141g=;
+ b=e6budn87ouDi3F01SsgOpvX2gBHe018dXcY/J3ktOirUhveYQE3xVfSYzfDWZk01L7Pi4hEGmevO4+Jfi7fBWcqgFkMLpJvJQmoHdYzShKgOhOfU48EEzR2eKBlPgt1Np23ImcpmKWSeFVFDza2gaOaBxBagmr/llbOS6xkDl+f4RrXTXCKqf9doEENv+QZDSYaYw9BRfa2BuRGM2pdZIXYjg7UTGrQwtEjVQJPD+M1e5AcYU9Cvn/xAZaYQBzIh0ZbI8Eo/c4uhL8WucX9B5e4xfW+RuFZ/brUBtVw9Wcdidro6cOPV2r/184EfI+18UPoCQWNRpfrlWMCkU6MZPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zi2kNaj0+gWPDFfJl4CNPjOVMArnGnCzfBecAOH141g=;
+ b=FbUMbHqZWSsGVZ+yusn4JJ/fvymzGsJXqtIHgAKw4jS/6dUBmxAPhxpJiDnF0X6xv3w73EYb/zKaKa3dpOV6zhfxeAuxVjUx+Og7eynPxxzbEYed04syV0L+zC5ts3lGhf0AbTukygFrck27hWQsEUeXO1VkiGRZ2KXUZYziAJXW1oU8iwWL4/iu1gW5W4EpG3vBVepyH1dDuteCci/7Jjo727ybnYEFzW6oa+HVvLvYQThSenjr9ySrA7zAky1ZI/0+iTTmH1ufxT+VrtI7uriGtSI2dgLF04/4UnQK3Dj/ubqi68SkHJ2buVFIjkDmwzkH41orHEmHpRfx/3X5Cw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TYZPR06MB7096.apcprd06.prod.outlook.com (2603:1096:405:b5::13)
+ by SEYPR06MB6929.apcprd06.prod.outlook.com (2603:1096:101:1d9::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.24; Wed, 12 Mar
+ 2025 10:02:13 +0000
+Received: from TYZPR06MB7096.apcprd06.prod.outlook.com
+ ([fe80::6c3a:9f76:c4a5:c2b]) by TYZPR06MB7096.apcprd06.prod.outlook.com
+ ([fe80::6c3a:9f76:c4a5:c2b%5]) with mapi id 15.20.8511.026; Wed, 12 Mar 2025
+ 10:02:13 +0000
+From: Chunhai Guo <guochunhai@vivo.com>
+To: chao@kernel.org,
+	jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chunhai Guo <guochunhai@vivo.com>
+Subject: [PATCH v3] f2fs: fix missing discard candidates in fstrim
+Date: Wed, 12 Mar 2025 04:20:05 -0600
+Message-Id: <20250312102005.2893698-1-guochunhai@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SGAP274CA0007.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::19)
+ To TYZPR06MB7096.apcprd06.prod.outlook.com (2603:1096:405:b5::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org> <20250312-max77759-mfd-v4-1-b908d606c8cb@linaro.org>
-In-Reply-To: <20250312-max77759-mfd-v4-1-b908d606c8cb@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 12 Mar 2025 11:01:00 +0100
-X-Gm-Features: AQ5f1Jp2A-9h5YN6Ed4bZKIBT4UotjU0jd3UNyhUp6pXeEy9BD3imBjHO6ZUslo
-Message-ID: <CAMRc=Mddcku1vokKQzxyJOtvpdJSjM2TFvG9r0tnZ_qY7HBGJA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: gpio: add max77759 binding
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR06MB7096:EE_|SEYPR06MB6929:EE_
+X-MS-Office365-Filtering-Correlation-Id: c4617362-eb7e-490b-722c-08dd614cf5e6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?kQUfcH3W0mxKRR4Z0NcZPXKJPIZQkcA2se/VuC37PpEAP+5gggTD8Yefb/ct?=
+ =?us-ascii?Q?Kv6zbG+wol03ELRLYlRDRJK3qrtqNh9k91QYiksjh5zlwwVcOCPJNr74quLn?=
+ =?us-ascii?Q?E3RQd1xBoxhU7m6JkYyeCNJOHHgFw0FGu6KLjuNzDP6yobEIJudXBeA9MqeI?=
+ =?us-ascii?Q?UPoB+ZRd1asV/aqBVQ/zNLZJf4HvA+2aOtxPb0xOKe1p+6wO+B9UtQdCrNI/?=
+ =?us-ascii?Q?q1gzxJBjlMKl7chVETkVU5LCsIRN2dJZCF4Vad5lrOTLuQkLzG9EIKcL3zpO?=
+ =?us-ascii?Q?3PdUa3CQI1w0mPNLGeWONTQVXAOheoH1jXlIFvUBKPG3UOUzabJGbrHN+Mz0?=
+ =?us-ascii?Q?KhWIasq691JpLBRjtNiTan5jN/ZQv8N4Vuy6UXn+/laIQqlxvXtZun6I+qN/?=
+ =?us-ascii?Q?86TUQOtH5fhiHJJazLJNdzBeTBG5XiLMirsLs8S0P3vqZ+2TRjRtmoH/QJsb?=
+ =?us-ascii?Q?C+of3FspKKbId/Ny7dZJH+VJ4F7nQjLXUFrWfNN0dvKT9lHze0XM5Q7oHcGv?=
+ =?us-ascii?Q?cesomJMpeWPgIItLT8NQo1T11CpiAJ/PG7PQ7yQ5i9M272feaC3UDhQYgb8a?=
+ =?us-ascii?Q?/wJhwNa0t9LaKzU0clBe9kLFdam46Q4pCinx1aje3XxLagRfwnBEXbxPeySG?=
+ =?us-ascii?Q?i0L+oujSePW44VbfSjpntbV/4u0gYuVkufElFmA1R7x3Yj2LE65B3oNGlEcg?=
+ =?us-ascii?Q?XpzvSVrVsrOXQkyLhL0pjCk0IpV+mKWdYCpK1YSpzRWJIfOgt7GTjg8Boxuc?=
+ =?us-ascii?Q?DhIS5/6K6Ufrg4NMnfK7rpNoJPC7DXlw5wsunsdiLF5nYjtW5TM+30TBaBfN?=
+ =?us-ascii?Q?DbHTgO3t4nJEs4RIgeamlRxZY7knuCGW3yltHe9q0wy2BeEfTJ5Roipqcnlk?=
+ =?us-ascii?Q?AxFbx64pTJ30poJ+N+2vSTEmpkij4ENsaodY5H+60mfuNgY5WRLy0KgoT8yL?=
+ =?us-ascii?Q?6OnAD/HVsSy4dp8dfFAPJCrwlAwKQH6F/IiDPtknp4oUXxf4s4hySoof0A+8?=
+ =?us-ascii?Q?irsgIsqJ0/I7/x5cTo6gcnX7Qlbnu+QdtVqtswtIIljP3cNDhFMFhH9XH2Wg?=
+ =?us-ascii?Q?5p81eCxXUTpPSPuoAvms9y2SMktGcEa2yQ4COgSKq9yf0EMyoTk5yYjY8uzU?=
+ =?us-ascii?Q?hlDJn2Q2lcR4cH8y3oqa97EAWEjH61sn7qspLj5x62/lhZQHKStmeqLO2aSg?=
+ =?us-ascii?Q?J4p6KRO8W699veXXr0az9aNgZmRrGFX9rgsdcekvSmu5ScdtKgSc/HLMbAFq?=
+ =?us-ascii?Q?Xpl/jvNuxDTX9YwomxnsOBkYVDlnt7ioGDE/JEQj7tqy61MEE8o5SMnuITgP?=
+ =?us-ascii?Q?PlBjpr/C1KjcwdU0exAAp2febKHPvSSV8dELkr+PpynzAEEkWbFeByubfOTi?=
+ =?us-ascii?Q?6GuSM1H25xzoGJqPR6MQziC4aSDixijzx0lsUMbIyi8MhA9xLmcDw04lq4hw?=
+ =?us-ascii?Q?JdqIDvs5YSut50O+H5BUMl8uLGbLoOQE?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB7096.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NnESFrRAFyiW/FKAL2XEPABLbGK8ISis/r0hEVsI6uY4S9Yfy+fSsRAXrgfK?=
+ =?us-ascii?Q?JdLmyTdlPSxfPofSHvYsLYOkPsRWRhbZipkwpUFlY1LzP9kIN5SzCG9IGQMA?=
+ =?us-ascii?Q?EBc04jlyt0P/C74I7idPXnSo1VnE0fe+zLDqH4beQz+HQdrG4se9DdRhWtf1?=
+ =?us-ascii?Q?sa8Ejst7XEBg9OF0MQbY3sx2jCSfqgFDABJJRAbOLntL856zV28VcpYrVvnf?=
+ =?us-ascii?Q?TPi6dRMIqeITKJdcKbR0yj2EDCGsH5Nb9kejOtI42Ed1qUQV4Ti5lx0k+cqM?=
+ =?us-ascii?Q?uSwgCmvCY8Yj9js4v4wTQqFFvVAqirRwW/B1XQ6IlJQgbZU4PalVu4V9+tBy?=
+ =?us-ascii?Q?DLPGTCk80VCtgzOIURtQQqxNjKCZRC8T+XtezLgaqCV2wk8zvPcbzhgeMxaV?=
+ =?us-ascii?Q?l5hkGJGjLTggitY56K5dWsRe5Oual60Nx1eD54A2DDal2ozTns1de29SgNBl?=
+ =?us-ascii?Q?oGIblamTmy+I08+MluyOdpAZIP1OukC6Hhhb702QzeaRN4Ib126E9qzZBHJO?=
+ =?us-ascii?Q?Qs0mlCrCNUwq/BcbLlBscamosq66xpuMRRv9mE2GNWuAq6vl8D3T7n8Kt3Hz?=
+ =?us-ascii?Q?OmJFswyeowi39mrqOZc6iOxf6jp2Bb9PUjKf1ySLVSy7vFZVj3W0oeHf263G?=
+ =?us-ascii?Q?w7YNKzs3JPmE6DHuRNJeQd98iY2K3yjw4jvoRvWgQKVZk108S9m5FfrvAf0D?=
+ =?us-ascii?Q?6TQNL+6QrWtzfhrfPGDuB/G4ahtScgmZLduN9J9P50hyPGtqA+cr8jCLXecP?=
+ =?us-ascii?Q?YyOYOqgmcvLQVAbtlI/S55tY6LaTcl29n7G35Z7wEisgjTNrtLJXXDQtUaai?=
+ =?us-ascii?Q?FROgJn18dXMf8VYivIp+bD8zwDD2lq0T8F8KmHj+y+QOsOKPhaV7wRky6QvQ?=
+ =?us-ascii?Q?VHicizdXKbGAMYLvzmCqCE6D8NmsLLUAyydpzD9eDdf7TuQcxgiC26kxMhUQ?=
+ =?us-ascii?Q?/eiYPPuYZwRnqToegYtenNi/WoTKCbr3qNur0X4vFPwE8bax6WbMUpaZR99H?=
+ =?us-ascii?Q?4AwSUjBPMYuKyfSVue1X4KQC8pAoKc7+A05p/qUXh6zEC4F2UufiU5W/F+oT?=
+ =?us-ascii?Q?C7bt/BXsehL6ExnByTSlIAWhK/C1AlYyTDHWho19Ck2QCTRTUcR0dnsdDeH8?=
+ =?us-ascii?Q?Q4+q5zt+fS90YubjXu856CW00TNfxPCmnUywVeYak4DOvgmPth5wPhOLverT?=
+ =?us-ascii?Q?dax5IbA6b/Vva4GAgVMZ/Isthx7jrbnp8XJq2DmDEfuTnRbL9VEr2szfT9Zd?=
+ =?us-ascii?Q?Jb0xY+b7HfvESWMUreou46g6kU/IJNzIR+5AVCti8T9Gy718xPJ2itB+8mYF?=
+ =?us-ascii?Q?k2yZ3sf32TnsYrQjRH++F0uJpVX822E6m2/d87P8OeRKFOOnLNRLntegLBqE?=
+ =?us-ascii?Q?i2nLr4OIHzztEv/4RtZCVQTVyxMBXJgm6PPaoFQBtih+0oU3swQv2gLg6hMz?=
+ =?us-ascii?Q?/r986k4s05vUtzxVVfEn0fB5Z4iWsWU33vMBuORwCgqDE9TDFRXP2IRmIP3Q?=
+ =?us-ascii?Q?E234kaTyXqPNAA150/VGzR121KlOHDmFpAxcYTB2WF/0n/vn/8KtXbkZdm+J?=
+ =?us-ascii?Q?DOPBigDD4DiKa6qm+FuE1axpqu8+eQBmAZLJtcsk?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4617362-eb7e-490b-722c-08dd614cf5e6
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB7096.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2025 10:02:12.9454
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OJCiUANLBcv0w3VssrEuGw4cko2XDP4VrmHvKpy2IyaDGOMDO7I44S6mqTOboaxKXNObGj7wPA9s0yzSO4r8zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6929
 
-On Wed, Mar 12, 2025 at 10:26=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik@=
-linaro.org> wrote:
->
-> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> Port Controller (TCPC), NVMEM, and a GPIO expander.
->
-> This describes its GPIO module.
->
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> ---
+fstrim may miss candidates that need to be discarded, as shown in the
+examples below.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The root cause is that when cpc->reason is set with CP_DISCARD,
+add_discard_addrs() expects that ckpt_valid_map and cur_valid_map have
+been synced by seg_info_to_raw_sit() [1], and it tries to find the
+candidates based on ckpt_valid_map and discard_map. However,
+seg_info_to_raw_sit() does not actually run before
+f2fs_exist_trim_candidates(), resulting in the failure.
+
+The code logic can be simplified for all cases by finding all the
+discard blocks based only on discard_map. This might result in more
+discard blocks being sent for the segment during the first checkpoint
+after mounting, which were originally expected to be sent only in
+fstrim. Regardless, these discard blocks should eventually be sent, and
+the simplified code makes sense in this context.
+
+root# cp testfile /f2fs_mountpoint
+
+root# f2fs_io fiemap 0 1 /f2fs_mountpoint/testfile
+Fiemap: offset = 0 len = 1
+        logical addr.    physical addr.   length           flags
+0       0000000000000000 0000000406a00000 000000003d800000 00001000
+
+root# rm /f2fs_mountpoint/testfile
+
+root# fstrim -v -o 0x406a00000 -l 1024M /f2fs_mountpoint -- no candidate is found
+/f2fs_mountpoint: 0 B (0 bytes) trimmed
+
+Relevant code process of the root cause:
+f2fs_trim_fs()
+    f2fs_write_checkpoint()
+        ...
+        if (cpc->reason & CP_DISCARD) {
+                if (!f2fs_exist_trim_candidates(sbi, cpc)) {
+                    unblock_operations(sbi);
+                    goto out; // No candidates are found here, and it exits.
+                }
+            ...
+        }
+
+[1] Please refer to commit d7bc2484b8d4 ("f2fs: fix small discards not
+to issue redundantly") for the relationship between
+seg_info_to_raw_sit() and add_discard_addrs().
+
+Fixes: 25290fa5591d ("f2fs: return fs_trim if there is no candidate")
+Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+---
+v2->v3: Add f2fs_bug_on() to make sure it never issues discard to valid data's block address.
+v1->v2: Find all the discard blocks based only on discard_map in add_discard_addrs().
+v1: https://lore.kernel.org/linux-f2fs-devel/20250102101310.580277-1-guochunhai@vivo.com/
+---
+ fs/f2fs/segment.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 86e547f008f9..c8ad8e3bfebb 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2075,7 +2075,6 @@ static bool add_discard_addrs(struct f2fs_sb_info *sbi, struct cp_control *cpc,
+ 	int entries = SIT_VBLOCK_MAP_SIZE / sizeof(unsigned long);
+ 	struct seg_entry *se = get_seg_entry(sbi, cpc->trim_start);
+ 	unsigned long *cur_map = (unsigned long *)se->cur_valid_map;
+-	unsigned long *ckpt_map = (unsigned long *)se->ckpt_valid_map;
+ 	unsigned long *discard_map = (unsigned long *)se->discard_map;
+ 	unsigned long *dmap = SIT_I(sbi)->tmp_map;
+ 	unsigned int start = 0, end = -1;
+@@ -2097,9 +2096,10 @@ static bool add_discard_addrs(struct f2fs_sb_info *sbi, struct cp_control *cpc,
+ 	}
+ 
+ 	/* SIT_VBLOCK_MAP_SIZE should be multiple of sizeof(unsigned long) */
+-	for (i = 0; i < entries; i++)
+-		dmap[i] = force ? ~ckpt_map[i] & ~discard_map[i] :
+-				(cur_map[i] ^ ckpt_map[i]) & ckpt_map[i];
++	for (i = 0; i < entries; i++) {
++		dmap[i] = ~discard_map[i];
++		f2fs_bug_on(sbi, (cur_map[i] ^ discard_map[i]) & cur_map[i]);
++	}
+ 
+ 	while (force || SM_I(sbi)->dcc_info->nr_discards <=
+ 				SM_I(sbi)->dcc_info->max_discards) {
+-- 
+2.34.1
+
