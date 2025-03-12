@@ -1,170 +1,120 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C261F2B90
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 23:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B521F30CC
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 23:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741823499; cv=none; b=R6zodF03b0rqXyEf8G82f98x56eAZhDIZ8KBt5lRArLZI/+KOHFuOHTfgcL9ueFkhiim/VwuemtAKgK2nMLjbtzwonVxLboE5NuUFmH8c1/KvHfL1uCyXmzpXZJpO4+4nMbKFoxoqVGk9zM4f0EqHVx/OrHJifPIrO7QNCNzTA0=
+	t=1741823501; cv=none; b=g7aVL6njn+VReaYAdfUihfJQCZXmhG2hlKLN1+9mrBkjqb2IJTnopo5e0kzHfqnU/zE3gXiR0BSBPIoPKv/oIIl5vZN8DnaN9isRT/n8vFFvyB52s6zbBchPVpUBknU80SG02C7Yeh/iRZwwWKkcPDm0AnMh6GX9cjGb1wjapic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741823499; c=relaxed/simple;
-	bh=y6im2FC9RnrBK0DsITVVl0clIoDEu4fT57zPgo7oKQI=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=QP/YJ7zAj1uUHbJ4JQuYqpi7q/OGCbHkVaDGadZMv6QtKB+VWrez5igaq+4cYGljwJ1w0G4rqEKPrR8IQ3fgUvGFbwsgLShkNkrF6CndVSVOwdw+Peo+2ek40SBSeUzuJu/Hx1wUrlqdnuQ2uOO0QkQScU7qdlEVPf6ADifiaIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=aagWl5ht; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1741823501; c=relaxed/simple;
+	bh=kz2scAfyGV/3NhQ9g5PL4QN9dT/vGyGmFmkva1NA/GY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UKzJ0my81ReGR3nvC6+6At6mK3WI4fDhZpFKkyYxVQQO4I81qvGznX4i/jCrFS0bqf/1i1WikZjjcSZsjsJAEB39iCRnfIPckBB96VdmBiz/5/ZQEZ0nA2cbPj7C3RK3FzqMCvaelZdXMCWvTqO5NIxNScgWmMi0sEIks87oMfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TkQOqOnR; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="aagWl5ht"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c56321b22cso45023685a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 16:51:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TkQOqOnR"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-85b58d26336so32723339f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 16:51:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1741823495; x=1742428295; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qEHvEcO4NOg0YRDF2fNEp3c9gsS6yXYNEicVD7ca+jg=;
-        b=aagWl5htvm96U1T2VDK+wTQWnB3Os1O1B4Smq1jlsN18q5uwQA1ye/O7YN9OFTgSYL
-         Q+5F76wxKqehkXX2JLKFrrPcUFOEhyaS/xp+ARN/5ANK6NAe5KtqkkNhq0cS275kr5ET
-         cfFb/pGJ4yCTm/8OFF3b9Cd2GdS+CrDaiHpmQ3ktrtByR2ZIC238a6tZgpeBAY2MXROo
-         gKhuRVk+lCXBzwjypUwZFPWGreAN41yWzjA10hNffGY3/YxPC2nqDvyaqR/rqn7xWX3J
-         Arc/43oUVhEoAcDOOEOwE12DI2UXwFlbJ+UnfSruPN8xj1jekQUB7+5h0PJB+yskVL58
-         Uv+g==
+        d=linuxfoundation.org; s=google; t=1741823497; x=1742428297; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GMdILqUTCbGjpyl5slWgWBb49xQQ6Sv5T+7HBXXgjuc=;
+        b=TkQOqOnRTXfKMeObLJ5hh/4W04FFXLXgXIppuDQiy51DCJAXnV3DrsKM9kdspdK8ri
+         maqwPOJhPWLccR0y1WwFtehQPLsRtZwIbKh5c/uym+EfVnk3Z76l1LtYg7gmc+kwJQAE
+         bEwO34OkyOP7+3WYwDTFrfHdwg3vzMjNl+bKc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741823495; x=1742428295;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qEHvEcO4NOg0YRDF2fNEp3c9gsS6yXYNEicVD7ca+jg=;
-        b=RMVqrJlltmQwh1oVijCGoFGDHx2C6ssaMa410wlfKRTC7zWAPUJG2wssGb1PAwHiKQ
-         3XeyiP8y/s6wJka6YlyMo4eCXdUp4zUr54ta8kR5lJ791+l35f4V0OUYnydLhMnTEWna
-         2F0lrgKiNBbKXX0Ef07Bk6rKaZgv/HKqjrUqUcJADx6tUxTVwoekCnoPw74qTcSKO1sM
-         6e5RJmBN+8aiUxoHqq9ba7pulOxOpYo5n3ThVXJivqtdMF25KjlcJQCwVRyRTEp4TDft
-         yTJxIShgE1vgNmk3m0WH+kLQfY5lX/O92j7dGoS7mr2NfrtO5kVKiMYSEndLkxOyIhV9
-         6J+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXZUuWsfK3CHDwAR7hPCkPaS6qheWnpbEvLMaWCphFEcJ05dyPPkAiNr1b5mUlziE2i5tZ+8SOiNgIY09Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziRlRD1EIm9cWMnfhvZq0N4EoLeqQNZhjXjKZ1cwPE+RIVhKXb
-	S06Reb9qzi9/MQV4bNyqZC6mO92pWkYeVHGrssgnzuIj+GEYIoMIuaO6RB6J1A==
-X-Gm-Gg: ASbGncs6Qa2a9YZBlV6gX6hCid7yWMeVQG447Icsw3Z+A8k9Sa2RByY9Mz2w41yK9zF
-	R1EjhylUcQfPDcf7F/cZDHAeU47dYFtSnbVhY2/pPdetdwVRe3GbaJyl1u/GjewFlKNhli186Kt
-	M6LWjnkFXklq6MMshV839mE4hN4bxXWz0QPvIA/uCZysV9BVvJ1NKOboPFVnhSsvEjVsMStLTCu
-	4jgYd8reS0RVI9bt2n0LaVWCc3lqaLgn5SDVdtHRJKVYGZxMhN8Z6uCDs1pYTGddV+VQeDN5nD+
-	1lBwnspwozfiqlGbpY6QkiJLmD+p4M/M/C7VeagLnmNvQ9EjycFkFmmrYBVbT3zhxSFPKdAowMw
-	5OrsqTZyliB540g==
-X-Google-Smtp-Source: AGHT+IEW0E6G8sFUJZrXjgx8IgIO7dCL/me5AKtsty8GXdCJQbxSmByGBM0HaBvG1kOgomgjfgPzCw==
-X-Received: by 2002:a05:620a:13d0:b0:7c0:add8:1759 with SMTP id af79cd13be357-7c5737b8c7dmr71231985a.18.1741823495217;
-        Wed, 12 Mar 2025 16:51:35 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c573c9d8b8sm18772585a.53.2025.03.12.16.51.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 16:51:34 -0700 (PDT)
-Date: Wed, 12 Mar 2025 19:51:34 -0400
-Message-ID: <69ee16ce82a564e09b2060d46fa2be0d@paul-moore.com>
+        d=1e100.net; s=20230601; t=1741823497; x=1742428297;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GMdILqUTCbGjpyl5slWgWBb49xQQ6Sv5T+7HBXXgjuc=;
+        b=LxuFf808Qgb9PDycXHPOr6tp9Fotwx/ZlM23zmvd4bOv2ogGM/FzVpYxIUxW7h+3h5
+         BLuWsXk7Pgyl4wwwLgK55JsNk6M1cg3lGfEp03Jq6jDuumRNE1/pqkAqPIBJ+oWOFBbr
+         I6QlTngqNLmSDpEpQzch5tq7xteE/8Nmn+8S+npRwSQZG5b2nFM4qu4D2NYHUYPrlHeD
+         ERbdYWTzchWTFo9vNKuSCwzPhwo7HFAEgqBCWiG39J8HaeNbHinnGNhIFqS+XOQiKas/
+         YsaR6kgSNKlM4iIGqdHVIaBE+Qrsj8rlYa71mpSvA17xsxsXmgq69pUxlW4939jETYJF
+         CP2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVIpGxwwJ4CufMkoIvlXwtgC0BoQOkvn09ew5kFdfi/cO+uDj8DdQJU4VngtrBRAZdcCn60i3gJYdtMsLw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz64auuQrmbXyiM5IbFbI4MFKMaDLWAErxA9esrJX7QVYTuU29+
+	YNhiJOpSf2Tvm51cxNmPlwJGs4sW8gVdzIFxiVCiANRzxodDLpZfyOZLYhWiOnY=
+X-Gm-Gg: ASbGncs2gPjbvv0fiKHrb23BpOI4rqWegvLPMPn7XnaXKNEIo8hBZ4ITD7kvjX64Tdj
+	OhyXmaEj6MGWvolPRa5l4AtuzgzVCXsuOqvbbFTIgAit1v91qdldjBfn7SYTs4aRnItqS8fQ90Y
+	AlId+fJ4syUA9RCNohZvrmQBrRgFIJkKnrFIX6PRN/lLl7RamRP4s60haUtkDyALvDTp9BQDtzY
+	K+2HNRYK50VHqNQiMJyf0TjWRwoOURaKdViVFPwidXaPm9TQIrq4d0U0XEgBg7ols9kPIEDx0Ih
+	erYz2BK78KacNDOFthPa1Z+s0EVw9wjKpoyYIAfzB62As+rKPBOpzss=
+X-Google-Smtp-Source: AGHT+IFJdEKouFDEl/CM11osjyRxzNZkSqQ0gWaQpK9UWqB6/Ss9dyGEFkXyoaOnnVpo99ZsIG4xbA==
+X-Received: by 2002:a05:6e02:198e:b0:3d4:36da:19a1 with SMTP id e9e14a558f8ab-3d44193ed4fmr301815755ab.21.1741823497495;
+        Wed, 12 Mar 2025 16:51:37 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d47a72ce54sm356225ab.51.2025.03.12.16.51.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Mar 2025 16:51:36 -0700 (PDT)
+Message-ID: <5a1e11fb-4213-45f6-a5ef-636de5e175d8@linuxfoundation.org>
+Date: Wed, 12 Mar 2025 17:51:36 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250312_1930/pstg-lib:20250312_1930/pstg-pwork:20250312_1930
-From: Paul Moore <paul@paul-moore.com>
-To: Casey Schaufler <casey@schaufler-ca.com>, casey@schaufler-ca.com, eparis@redhat.com, linux-security-module@vger.kernel.org, audit@vger.kernel.org
-Cc: jmorris@namei.org, serge@hallyn.com, keescook@chromium.org, john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] Audit: Allow multiple records in an audit_buffer
-References: <20250307183701.16970-3-casey@schaufler-ca.com>
-In-Reply-To: <20250307183701.16970-3-casey@schaufler-ca.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Error during --arch x86_64 kunit test run
+To: David Gow <davidgow@google.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <0842477c-6063-40f8-8e8e-b9ce98711f80@linuxfoundation.org>
+ <CABVgOSk+xztNcNJ5fQiRSGC3DKHS2H3kN1wHwAO4gCfG7cWY1Q@mail.gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <CABVgOSk+xztNcNJ5fQiRSGC3DKHS2H3kN1wHwAO4gCfG7cWY1Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mar  7, 2025 Casey Schaufler <casey@schaufler-ca.com> wrote:
+On 3/12/25 16:52, David Gow wrote:
+> Hi Shuah,
 > 
-> Replace the single skb pointer in an audit_buffer with
-> a list of skb pointers. Add the audit_stamp information
-> to the audit_buffer as there's no guarantee that there
-> will be an audit_context containing the stamp associated
-> with the event. At audit_log_end() time create auxiliary
-> records (none are currently defined) as have been added
-> to the list. Functions are created to manage the skb list
-> in the audit_buffer.
+> On Thu, 13 Mar 2025 at 05:14, Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>> David, Brendan, Rae,
+>>
+>> I am seeing the following error when I run
+>>
+>> ./tools/testing/kunit/kunit.py run --arch x86_64
+>>
+>> ERROR:root:ld:arch/x86/realmode/rm/realmode.lds:236: undefined symbol `sev_es_trampoline_start' referenced in expression
+>>
+>> I isolated it to dependency on CONFIG_AMD_MEM_ENCRYPT
+>>
 > 
-> Suggested-by: Paul Moore <paul@paul-moore.com>
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> ---
->  kernel/audit.c | 111 +++++++++++++++++++++++++++++++++++++++----------
->  1 file changed, 89 insertions(+), 22 deletions(-)
+> That's interesting. I recall seeing this issue briefly about a year
+> ago on an internal branch, and we worked around it there by enabling
+> CONFIG_AMD_MEM_ENCRYPT (which worked).
+> 
+> But I've been totally unable to reproduce it this morning: are you
+> seeing this on any particular branch / config / environment?
 
-This may need to be squashed with a later patch as I get
-"defined but not used" warnings/errors for audit_buffer_aux_{new,end}().
+linux_next - I did allmodconfig build prior to running the tests.
+That means I had to run make ARCH=x86_64 mrproper before running
 
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index 2a567f667528..a4945f1c3ec0 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -2412,26 +2471,14 @@ int audit_signal_info(int sig, struct task_struct *t)
->  }
->  
->  /**
-> - * audit_log_end - end one audit record
-> - * @ab: the audit_buffer
-> - *
-> - * We can not do a netlink send inside an irq context because it blocks (last
-> - * arg, flags, is not set to MSG_DONTWAIT), so the audit buffer is placed on a
-> - * queue and a kthread is scheduled to remove them from the queue outside the
-> - * irq context.  May be called in any context.
-> + * __audit_log_end - enqueue one audit record
-> + * @skb: the buffer to send
->   */
-> -void audit_log_end(struct audit_buffer *ab)
-> +static void __audit_log_end(struct sk_buff *skb)
->  {
-> -	struct sk_buff *skb;
->  	struct nlmsghdr *nlh;
->  
-> -	if (!ab)
-> -		return;
-> -
->  	if (audit_rate_check()) {
-> -		skb = ab->skb;
-> -		ab->skb = NULL;
-> -
->  		/* setup the netlink header, see the comments in
->  		 * kauditd_send_multicast_skb() for length quirks */
->  		nlh = nlmsg_hdr(skb);
-> @@ -2442,6 +2489,26 @@ void audit_log_end(struct audit_buffer *ab)
->  		wake_up_interruptible(&kauditd_wait);
+./tools/testing/kunit/kunit.py run --arch x86_64
 
-We should probably move the kauditd thread wake into audit_log_end()
-so we don't end up poking the scheduler multiple times.
+I tried something different checking out a fresh
+linux_next repo and running ./tools/testing/kunit/kunit.py run --arch x86_64
 
->  	} else
->  		audit_log_lost("rate limit exceeded");
-> +}
-> +
-> +/**
-> + * audit_log_end - end one audit record
-> + * @ab: the audit_buffer
-> + *
-> + * We can not do a netlink send inside an irq context because it blocks (last
-> + * arg, flags, is not set to MSG_DONTWAIT), so the audit buffer is placed on a
-> + * queue and a kthread is scheduled to remove them from the queue outside the
-> + * irq context.  May be called in any context.
-> + */
-> +void audit_log_end(struct audit_buffer *ab)
-> +{
-> +	struct sk_buff *skb;
-> +
-> +	if (!ab)
-> +		return;
-> +
-> +	while ((skb = skb_dequeue(&ab->skb_list)))
-> +		__audit_log_end(skb);
+No errors on
 
-Put the kauditd thread wake here.
+./tools/testing/kunit/kunit.py run --arch x86_64
 
->  	audit_buffer_free(ab);
->  }
-> -- 
-> 2.47.0
+I will try this again and let you know. Can you try this as well.
 
---
-paul-moore.com
+- Clean linux_next and run tests
+- Run tests after buidling allmodconfig and mrproper
+
+thanks,
+-- Shuah
