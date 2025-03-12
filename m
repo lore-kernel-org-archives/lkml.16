@@ -1,126 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E861BD9DD
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 19:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881111DE894;
+	Wed, 12 Mar 2025 19:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741808495; cv=none; b=O0DbF0LDlg9Lhl3AoaSQ9j38lyrF+binGkfgavE7RyeRZNjTngbd78HdR6/WSqDf3Ww31Gwi1AfzgITZwpVb6lCervtG6VkLhx5Heagbk1wi+gWr74DOOtIcf8qZML5f0594hNcCD6pYQj7gMvI4f2xEWos3Dcx17N9p5BJoH9o=
+	t=1741808547; cv=none; b=MMyJFyTSIZD0fCIP19NpD8CxMX3WoXfUVCKU0AgoY8k5CHeiRD6Uo5KhSFyTK1uExr+Cpm6G1d5NfaHPUPdYG1759FtjaCHtGx4/Y5laHUsNY1fqjl9sxY6SQCYf6OKrgjoyxSD5D3X9S6EVz7B14LsKP/OO8Su7ecr9K2sFTNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741808495; c=relaxed/simple;
-	bh=chqaRTqy0/9wIACLkVCZlXVspE39+hFf13nQroISW9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TdCJUHQXaHy66Cuk0gJUlSuLzvqUAGOz21Mn1FtLwcIWvzXDmfAJMkNeSl8n6LiAb31GvGym7bdqZne4yTrsBb6RdZIVRyBwZ0rtObE0+JzN2XPx9RxzLT1v6QgUns9CzNSHlOld+3vi3cxKu30yLKIGlvU3i2h5rh5DoYkuBkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UDilVDFu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741808547; c=relaxed/simple;
+	bh=rR9sGvDvTNBxumgD3sshwMYc//HMbHud/yj/n6J26f4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kAJiAm79QaR0C0yqPuiFhp82p7DA/ufra3H7Zetp5aPzvzLHTazBJMBQONk/IPm91wH3lpeBmG8Qjx5xn45J2tIk1+hDl6yqEmSDIXs1dxzmJRDW1cjwHTYhF7dWj5aQWvJ5UC95tYOQh7qbddQ8k+4w9Lw+n4viSxD6Omq7t64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8ejfFs7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UDilVDFu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741808486;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=chqaRTqy0/9wIACLkVCZlXVspE39+hFf13nQroISW9Q=;
-	b=UDilVDFuzbMNKzhUWXas3HbaR9sr4LOyRc3bljAjR7IBmkvYk5viTB2FaLaTXL8I2LvP8G
-	Z8c2OMvA5QvQs9qMh3XQq+bFT+MdokIjAARIrVl8Iul06R21rzAoz5SdqJmbXLVdPc+DfW
-	7mIi9zKN4WriJpuU+b9hDvMeZlTG2ms=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-696-Eh6T5tWDMBiZlsaCD7KXlQ-1; Wed, 12 Mar 2025 15:40:43 -0400
-X-MC-Unique: Eh6T5tWDMBiZlsaCD7KXlQ-1
-X-Mimecast-MFC-AGG-ID: Eh6T5tWDMBiZlsaCD7KXlQ_1741808438
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c3b53373f7so35212985a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:40:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741808438; x=1742413238;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=chqaRTqy0/9wIACLkVCZlXVspE39+hFf13nQroISW9Q=;
-        b=kCrTjMQr67z/re7nMB2JIP8EcU7GPSadh52mcmfYYx63XEcJZ/+Z5IwbpzU7UHMW/g
-         fGKKxRkAhxJ1/9WSbKfETd+kF8f5j4AG7khtA69wz/RoYYeiguNskxEOHh9xRboq8xmO
-         Ni+tJ7GM3aFfdLxQLXw8LvtLwXHKnnpPMuPfdqKU4JGYmk4+HvBNnCBy88Uo9S/kdWEH
-         6aa5ulvC0JLPPcF15musjt6FBfDMKF0RzIHKEXHB8WkzVLZWg2UZYVqjkKImZRSnCoAf
-         L8X1T+ptLNM4QGBSFYxcmtaNcAtvAT84W+UjTGN1w/pRslLT3+nhk/R5ks+PN2UrPbLS
-         /O5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWOWp9VG7tnUrVeWCWZfzqSjhn8uTEkKhcopIw7amQsccjKJhA1a6Q7k6ac5w455+5OSBomKR8XhUgf2Bk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMoAu4yNE4lgZdJ/c8C4aaT15v4GrV1DMXgXcI8+YibwtEcAlb
-	pxrJvD9kcDDkmZgmAZFw6FVBRqhBDUvQlWfT31kwCUkA5jgiPX6Yp3JAT+TzfkCzukwvAcuRsZB
-	BoHt97YapKrH86yNhRlmGi4Ygnn7FVkMnjZFDAsY/kjZhVC67+qV/c/5JnOwHLA==
-X-Gm-Gg: ASbGncthByzqkHq2d1cbGlHFSVFaiBrId6O0Q6+tn/A4ZH9Vz980ylqn6DSfmHLJ3uf
-	ICoOpr1kspc7zJnGDhcWczLU2rK5caiwlOnglm8d4tu5SDifNcobJ1B8A09AZcIrhA3BztbmDQ+
-	Zyq5dqXX9Fa/MxQQaW3QLz06ghgBiZ+wJgPcrKkCElQvD34F5gK9dFaYwgJTHJnP+RJdNIBdltI
-	3cfaPJx0Um659+ynhVIVr4dz/MHTa6+wtzeQoQ2KVCv9ZJXaaCa4NgSL530mTfluAKvIrse24TH
-	uccFMtnWLWLvcPx5NBB89Cp2hKUML3rbbrJ4yGk=
-X-Received: by 2002:a05:620a:271c:b0:7c5:544e:2ccf with SMTP id af79cd13be357-7c5544e2e11mr1931051185a.57.1741808438026;
-        Wed, 12 Mar 2025 12:40:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEFtjXSl18V3cVDW3uvVcF7AOwZPDm8P35ziMG/2MMADWgaMpNEr9E4j/T7ipIz220mu+4PBA==
-X-Received: by 2002:a05:620a:271c:b0:7c5:544e:2ccf with SMTP id af79cd13be357-7c5544e2e11mr1931048685a.57.1741808437783;
-        Wed, 12 Mar 2025 12:40:37 -0700 (PDT)
-Received: from x1 (c-98-219-206-88.hsd1.pa.comcast.net. [98.219.206.88])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5568480d8sm476215785a.91.2025.03.12.12.40.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 12:40:36 -0700 (PDT)
-Date: Wed, 12 Mar 2025 15:40:35 -0400
-From: Brian Masney <bmasney@redhat.com>
-To: Christopher Obbard <christopher.obbard@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm interconnects as
- built-in
-Message-ID: <Z9HjMyjzE9XlqrEj@x1>
-References: <20250311-wip-obbardc-qcom-defconfig-interconnects-builtin-v1-1-675b6bc57176@linaro.org>
- <CACr-zFC=mPNeeHMp9XnSby+cMQaPWt_3s8iUiCN+EnVPeGad8Q@mail.gmail.com>
- <uljqxwfgl26txrfqvkvzzpj6qurgmwcbuot7gu2u6rwjaqgncb@jeuyi4mexjff>
- <CACr-zFDSFizYmrVN-dV334n1kq17UB9k4FxrV20NNQCQMhzrwg@mail.gmail.com>
- <92dd35a2-d1cc-4f2b-b3a8-5752ec33b0d3@kernel.org>
- <CACr-zFCYWEFPO8yExp_8hOQdVtC9Zwu1ZOZNksSeyyS6Ht0e9A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8ejfFs7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 609C6C4CEDD;
+	Wed, 12 Mar 2025 19:42:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741808547;
+	bh=rR9sGvDvTNBxumgD3sshwMYc//HMbHud/yj/n6J26f4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=m8ejfFs7S7gvZAjwVFi7iiCr0PeRC/do7aIRRdyflsY7hQ8wteiVaAfizLGdCb8of
+	 8hEs/BUFpGALpTIwTD4aFwUGInbMnWWuSZyvjDGLD50Navj1UGHKtusrOgWqJoAnS5
+	 v9P1nervb54P1AqJWOfaZaa9hy0dKGytAsyR8yn3U0MrpvsFHFF8YDgU8DY+h16plr
+	 ZfDmIOyxSzxKJYTItaxHYQHPLVW5W1CDcine9ImoqJ0KGkPRvIMFUI2EXSsBL6vSOC
+	 TwAFO8CelBfshKFdvxrGDnBAGQLeAb/zoksqCxUzSGI8MhlgWoLMMWmLivDkjszrHe
+	 1zND03UUP4sXQ==
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72736498817so111364a34.1;
+        Wed, 12 Mar 2025 12:42:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMFQb3TqFdlYKjb7ylNZTcgeYm4omf1uwZXgnWNFncwwNI1OxMIXL2f0D2O68Tl+CQ34Vd+urcSJl5@vger.kernel.org, AJvYcCWdS89/69Z2vkf0YGnRLt/YR9+FMrGjE391biEU6CODYtJd/Xso1OcH9S+VcpuXik9bLafT4bIxV0CIOjT3@vger.kernel.org, AJvYcCWzCkEs1ZVM8KN2WDok85Or526Qjv5H/cvouKqi/CsDq/NYa48nUMmj03C+S29ogl6l5gigTtarfoHEtkIfymW7@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAP9cS+P8RNphSIhgAdovbYJY5q9cM7llbVLyQwZ2bZnVS4dfx
+	Zhvt5jS3vxxxwp19KLVvgR27+bqTkQwFPyoSoKx41FxEuSiBpIg7sC2SLtAQHLZ4CBBR7WTRYuy
+	ohdLpdMv+cx6IlM6/mZgQ4NlNJiU=
+X-Google-Smtp-Source: AGHT+IEB3NZFvCSX7ReDxQhwwLXfmo6c+PjIOwot7ArsH4J6MB0jCwvgW7uZczVb3k8WyB22HuX8jDYDSbid/yESwJo=
+X-Received: by 2002:a05:6830:2641:b0:72b:9506:8db6 with SMTP id
+ 46e09a7af769-72b95069043mr6591433a34.6.1741808546719; Wed, 12 Mar 2025
+ 12:42:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACr-zFCYWEFPO8yExp_8hOQdVtC9Zwu1ZOZNksSeyyS6Ht0e9A@mail.gmail.com>
-User-Agent: Mutt/2.2.14 (2025-02-20)
+References: <20250310222432.work.826-kees@kernel.org>
+In-Reply-To: <20250310222432.work.826-kees@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 12 Mar 2025 20:42:15 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hxrj-DW7a=3iXmsCFm-K4rJvsrG=f5YLJreVmaZ207Lw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq1Db5q6FqcKbKLJbTnKn0KewEQfAgm5Ujmcc0Zz0yAQlA2Oc6PZgy3cPE
+Message-ID: <CAJZ5v0hxrj-DW7a=3iXmsCFm-K4rJvsrG=f5YLJreVmaZ207Lw@mail.gmail.com>
+Subject: Re: [PATCH] PNP: Expand length of fixup id string
+To: Kees Cook <kees@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Christopher,
+On Mon, Mar 10, 2025 at 11:24=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> GCC 15's -Wunterminated-string-initialization saw that "id" was not
+> including the required trailing NUL character. Instead of marking "id"
+> with __nonstring[1], expand the length of the string as it is used in
+> (debugging) format strings that expect a properly formed C string.
+>
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
+> Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> Cc: linux-acpi@vger.kernel.org
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  include/linux/pnp.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/pnp.h b/include/linux/pnp.h
+> index b7a7158aaf65..23fe3eaf242d 100644
+> --- a/include/linux/pnp.h
+> +++ b/include/linux/pnp.h
+> @@ -290,7 +290,7 @@ static inline void pnp_set_drvdata(struct pnp_dev *pd=
+ev, void *data)
+>  }
+>
+>  struct pnp_fixup {
+> -       char id[7];
+> +       char id[8];
+>         void (*quirk_function) (struct pnp_dev *dev);   /* fixup function=
+ */
+>  };
+>
+> --
 
-On Wed, Mar 12, 2025 at 12:10:56PM +0100, Christopher Obbard wrote:
-> For reference, I am working on updating initramfs generation tools in
-> Debian/Fedora to include the required interconnect modules. Currently
-> the interconnect drivers are built as modules in these distros, but
-> are not included in the initrd. That is where my confusion initially
-> stemmed from.
-
-From a Fedora and centos-stream-9/10 perspective, we have dracut
-updated so that the interconnect modules are included in the initramfs
-by default.
-
-https://github.com/dracutdevs/dracut/blob/master/modules.d/90kernel-modules/module-setup.sh#L74
-
-Let me know if you are seeing a specific issue with the initramfs on
-Fedora and I can help you.
-
-We also configured all of the QC pinctrl drivers to be modules in
-Fedora, and this causes a large number of probe deferrals on boot up.
-One of the boots I measured was about a half second:
-
-https://lore.kernel.org/linux-embedded/Z6J3WpeJKIKENC81@x13s/
-
-Everything eventually loads and works as expected though. The upstream
-defconfig configures most of the pinctrl drivers to be built in for
-Qualcomm.
-
-Brian
-
+Applied as 6.15 material, thanks!
