@@ -1,76 +1,79 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EA8229B01;
-	Wed, 12 Mar 2025 07:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3DA229B01;
+	Wed, 12 Mar 2025 07:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741765597; cv=none; b=k0epHJlWhW7UV+/zfLqUcfLbOQSne3P76kMSsGJupuZphZozAD9cqhxYbV+He+r1DIbjOO3QYOexiRdQyg4jDJy0m8Z3HpSErrLFPyWK/tFJNGPaqRxtWyNT1yTaT/9FRdk9l3YDxlthKw4oe52jpztJHpdvKOjBHNN+F4JGK+k=
+	t=1741765600; cv=none; b=HPvqnae9RKACv4OM/mzNfUjRJz5IkLJP8sFinIsp+/UHczohyV6fjzqC8eDLBhufbO5m4Iumdsk4lT+Bcbti5Yg7oGmIW/wK2NRmgI9fzfsCM/ANNRWNl1Ed3MPT8ZJN3hFoHMHpa6JvQgXuNWJz+KYVesqQenjigizE/v8E64w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741765597; c=relaxed/simple;
-	bh=FuNqiDDZLA6XzYyYHRO8Ky3rEJzuFLHAXYqyx3TNvtI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=exbHsB/QpN0nGTVXRdMhxo/PONaUNcPIIAO4L2yTKc3AJKfGma37vsYk0TyfuflBiBOs4YBZnNRkGe3F5cQhnDynmtFq6e90yQEkADOT3sxvpbcmyhvzgjlOc0FH9ptUztzBlWs6s/E8BzEuYtVKRwX2ycCVXfLfWIurFMtrpyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=vcjeeP/R; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1741765600; c=relaxed/simple;
+	bh=J09aGGbgQYsRoQG3/u8dc0PBWybNtqjKp9EQ69smHyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZCjUnyZSLO0EoaNBEqX0jPIKaRK/TFFq+XkCimW12eIiIOK9/JACV6Wf56DYSEtnxkPQ5pivAVoQw4UzWIoKf5l0ENbbXkZ/8JY0mQr5BiBty+dOBUigG9p6CTmIirAX7BphED9QDBcBTanN74Hn/CUF/5K31nLndRxXUpvS51w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xB9bojV/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="vcjeeP/R"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=3122Wo2fSfR2TPlv6KJp3UkaT4U7LmFi/eDScIdI+bw=; b=vcjeeP/RFEc3s/ROSIdpdnOSAi
-	woidRou28FgDEniQ7+tfNBWNfFTWEu7vvnJ3sJPsejwTIdyYm6p2nacbWrTWyK/qX4HPL4cJmHAtF
-	/JhVuBlQUmlYSZ/ZcwEdDDfKIG5NIVOImnzlnXypkTuQqJ6v3iIBcs7lgNZfCFEekhLSOVMYU6I2v
-	QAV62zHyavflDcEmXi35GFB0VJZX2QuIMqRi2OQOVMVxr0Tpl6kIR+WogJr0r1UtbFgauXRt1NNGh
-	fJcdNBzhE48/GVnArXBduvYINw0RV6ZQ0D/ZCbU5E2nX8ZnS6GhekHG/4q0c00XhstUbDAa9qt8tS
-	HaoaTuBg==;
-Received: from ip-185-104-138-79.ptr.icomera.net ([185.104.138.79] helo=phil..)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tsGnM-0005zY-5X; Wed, 12 Mar 2025 08:46:29 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: linux-rockchip@lists.infradead.org,
-	Jianfeng Liu <liujianfeng1994@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Add AP6275P wireless support to ArmSoM Sige7
-Date: Wed, 12 Mar 2025 08:45:59 +0100
-Message-ID: <174176555630.249409.3989831081874397806.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250311142825.2727171-1-liujianfeng1994@gmail.com>
-References: <20250311142825.2727171-1-liujianfeng1994@gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xB9bojV/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70942C4CEEA;
+	Wed, 12 Mar 2025 07:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741765600;
+	bh=J09aGGbgQYsRoQG3/u8dc0PBWybNtqjKp9EQ69smHyo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=xB9bojV/z8AcQJVR2q8gB3bj2fjuKdy4GIcKHArMxWMS+Z9qT6+jX8O+BA4frFadf
+	 UVcGreEyKvL2YJtkJTbEbdFPtALMCQwDjvvF64FmH00rQqXKea/rKgTz9u21eN2FRV
+	 yj+ah2RIbjOuaSwcOqUe1c67YTPGcn6jKN7laXlI=
+Date: Wed, 12 Mar 2025 08:46:37 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Benjamin Berg <benjamin@sipsolutions.net>
+Cc: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
+	stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.13 000/197] 6.13.7-rc2 review
+Message-ID: <2025031219-tutor-lyrics-021e@gregkh>
+References: <20250311144241.070217339@linuxfoundation.org>
+ <00f382c4-1347-bc6d-b3ec-427de5658cf5@applied-asynchrony.com>
+ <523cf45116bab7a653994d5eaf17496ed57f8351.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <523cf45116bab7a653994d5eaf17496ed57f8351.camel@sipsolutions.net>
 
-
-On Tue, 11 Mar 2025 22:27:50 +0800, Jianfeng Liu wrote:
-> ArmSoM Sige7 uses the PCI-e AP6275P Wi-Fi 6 module. The pcie@0 node can
-> be used as Bridge1, so the wifi@0 node is used as a device under the
-> Bridege 1 similar with Khadas Edge 2.
+On Tue, Mar 11, 2025 at 09:17:49PM +0100, Benjamin Berg wrote:
+> Hi,
 > 
+> On Tue, 2025-03-11 at 18:45 +0100, Holger Hoffstätte wrote:
+> > On 2025-03-11 15:48, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 6.13.7
+> > > release.
+> > > There are 197 patches in this series, all will be posted as a
+> > > response
+> > > to this one.  If anyone has any issues with these being applied,
+> > > please
+> > > let me know.
+> > 
+> > Still missing a followup for iwlwifi as mentioned on rc1:
+> > https://lore.kernel.org/stable/5d129bda966b7a55b444f4d48f225038361e9253.camel@sipsolutions.net/
+> > 
+> > Not sure if that refers to the whole series or only the first patch,
+> > maybe Benjamin can clarify.
 > 
+> I meant that particular patch as it fixes a regression that was
+> introduced in "wifi: iwlwifi: Fix A-MSDU TSO preparation".
 
-Applied, thanks!
+Let me go dig into that, as I don't see it in Linus's tree yet...
 
-[1/1] arm64: dts: rockchip: Add AP6275P wireless support to ArmSoM Sige7
-      commit: d6166ea4cc4943cbabdeeedb13f3545fdba3ebf6
+thanks,
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+greg k-h
