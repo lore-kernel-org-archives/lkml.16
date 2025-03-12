@@ -1,102 +1,98 @@
-Received: from mail-m15586.qiye.163.com (mail-m15586.qiye.163.com [101.71.155.86])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477251F03C5;
-	Wed, 12 Mar 2025 07:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA711EFFB2;
+	Wed, 12 Mar 2025 07:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741764986; cv=none; b=NI1VscJmlTjHulKn/JWZka8WO2bfTevSRJZgo7DKqDgI8tqendCAYspb1zk3ZR7FO/p7ea8O3MBiYAeeXAOzK/WetISuT1sXqgyLS8cxfOh5ILxRF12IIvaqwVIC6uwwwKGjPadUZNI7u0Euy4smB4ocZUh+VMwrbZSnpAniT6g=
+	t=1741765023; cv=none; b=V9pgm3TyNYtP1zkcclejMmNNey6CbaskNJ8gL3L63gc1xX8lSNXWiKEcde9TCNWYi16n9HDOb+fSY9IQtZS1UXphExOTxVI3jjby5KeRRM17dHtG2Z3fQpKKKiL73Av9TbuUDAiExXLQ1pqWJ8HPRkHMnrAVFYkLktf187pwxPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741764986; c=relaxed/simple;
-	bh=M4loodvw08XWExl/OO2gkZzvlW+4IBmsYNS8q1SrjGw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sljQ3t4H+7le+GqfXJ2YhaNY7tGi/gxurb0IqBM90MwIUsYM748Nn+v1Wx9n6TP6MJCPhWOpUXvLGKi0vLc1F0zl6ow5zxIvR20sXhrd71ghuv0La487+jCgF4K1OKQ53M+IpR2MdtbnlRPR7qRQLHS9F6+b4HBd+i5BtW5O9P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=MKjocUGQ; arc=none smtp.client-ip=101.71.155.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1741765023; c=relaxed/simple;
+	bh=9WDvMlax5GMtGMX2KE7aCiiVjM7oukTeaIvua618FUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iz9tROrQqtIQhH8L24vgUaVEYewhBxE46gv+Rhfxg9zmIIXG3myZ3ztdhBpL1OaLLHKERAOXR/A3P9oTgXY3UiDncnIwnkoyi/itT+xCyNH+YBZHW3A8YBUbkMo6pG9Xcn+vNhTMqe71v4NE0yncccupRT65aFMdxEFHR/3/soE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Gvk5qrkh; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="MKjocUGQ"
-Received: from xxm-vm.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id dfe6f8d0;
-	Wed, 12 Mar 2025 14:20:38 +0800 (GMT+08:00)
-From: Simon Xue <xxm@rock-chips.com>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Shreeya Patel <shreeya.patel@collabora.com>,
-	linux-iio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Simon Xue <xxm@rock-chips.com>
-Subject: [PATCH] iio: adc: rockchip: Fix clock initialization sequence
-Date: Wed, 12 Mar 2025 14:20:16 +0800
-Message-Id: <20250312062016.137821-1-xxm@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gvk5qrkh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CXfgeNXdrWiHE5y6lsnibLhPb3YMKY8O67MCv6tPCFE=; b=Gvk5qrkh4UjeJ/5aXdTbgH6l4k
+	LlZh17xU8MlBz9wGR0q6wk/Uk7Yqhup1Vij6Y/GOyhIEPFShMa2Km0oVDPOc/TxyzVsZB6Pgoq+ag
+	WWTnlNfxV57lpTzVOvKLkDVhP9twPoQx4nKIflEsb2Is13CykTQMVLN2zh+2aJu1gMaZIBAQneKAS
+	0RV9ij7+Jkxrs0YR2i+BubuITpsiiBZXxvOPHkAvjsFcEsmDYng0/G5+pcSOe+eHFKbBHVq96zagk
+	dlxJq+459ZQuDN7kwE5D6GsXs7WWTRiIA8z55GRWqaN8Lkcz/9s97Pzbf/fEn6hS2umu2qkeSbaLm
+	f/4ddRow==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsGeC-00000007iT3-3xwf;
+	Wed, 12 Mar 2025 07:37:00 +0000
+Date: Wed, 12 Mar 2025 00:37:00 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, djwong@kernel.org, cem@kernel.org,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com
+Subject: Re: [PATCH v5 05/10] xfs: Iomap SW-based atomic write support
+Message-ID: <Z9E5nDg3_cred1bH@infradead.org>
+References: <20250310183946.932054-1-john.g.garry@oracle.com>
+ <20250310183946.932054-6-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRkeT1ZNS0xPTx8ZTR9PQkhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a9589031fa403ackunmdfe6f8d0
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OT46HSo4MTJLTR4tHRMaFxkL
-	Ai0wCytVSlVKTE9KTE1LT0hCSUpOVTMWGhIXVQMDFjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lBWU5D
-	VUlJVUxVSkpPWVdZCAFZQUpNS043Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=MKjocUGQwhTcya7uy6KiltggFcjzV3Phkl397oA9r3ld7SCj3DgZJUuK7XTS5OQCkfNAa472trd9GRbCX4g+Kda82/uMUT2FPz5UWNMCOpQCCB9HZGu5ExIvmYdCH/NVrm+gaIbXHAims7r/TyU4Ji/kpo3QOBlLJ3GYw+uSlpc=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=vy+9eAm5AK9uncKvL50rH3d9NuCi+vykIYrh7yJCQns=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310183946.932054-6-john.g.garry@oracle.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-clock_set_rate should be executed after devm_clk_get_enabled.
+On Mon, Mar 10, 2025 at 06:39:41PM +0000, John Garry wrote:
+> In cases of an atomic write occurs for misaligned or discontiguous disk
+> blocks, we will use a CoW-based method to issue the atomic write.
+> 
+> So, for that case, return -EAGAIN to request that the write be issued in
+> CoW atomic write mode. The dio write path should detect this, similar to
+> how misaligned regular DIO writes are handled.
 
-Fixes: 97ad10bb2901 ("iio: adc: rockchip_saradc: Make use of devm_clk_get_enabled")
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
----
- drivers/iio/adc/rockchip_saradc.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+How is -EAGAIN going to work here given that it is also used to defer
+non-blocking requests to the caller blocking context?
 
-diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-index a29e54754c8f..ab4de67fb135 100644
---- a/drivers/iio/adc/rockchip_saradc.c
-+++ b/drivers/iio/adc/rockchip_saradc.c
-@@ -480,15 +480,6 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 	if (info->reset)
- 		rockchip_saradc_reset_controller(info->reset);
- 
--	/*
--	 * Use a default value for the converter clock.
--	 * This may become user-configurable in the future.
--	 */
--	ret = clk_set_rate(info->clk, info->data->clk_rate);
--	if (ret < 0)
--		return dev_err_probe(&pdev->dev, ret,
--				     "failed to set adc clk rate\n");
--
- 	ret = regulator_enable(info->vref);
- 	if (ret < 0)
- 		return dev_err_probe(&pdev->dev, ret,
-@@ -515,6 +506,14 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 	if (IS_ERR(info->clk))
- 		return dev_err_probe(&pdev->dev, PTR_ERR(info->clk),
- 				     "failed to get adc clock\n");
-+	/*
-+	 * Use a default value for the converter clock.
-+	 * This may become user-configurable in the future.
-+	 */
-+	ret = clk_set_rate(info->clk, info->data->clk_rate);
-+	if (ret < 0)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "failed to set adc clk rate\n");
- 
- 	platform_set_drvdata(pdev, indio_dev);
- 
--- 
-2.34.1
+What is the probem with only setting the flag that causes REQ_ATOMIC
+to be set from the file system instead of forcing it when calling
+iomap_dio_rw?
+
+Also how you ensure this -EAGAIN only happens on the first extent
+mapped and you doesn't cause double writes?
+
+> +	bool			atomic_hw = flags & IOMAP_ATOMIC_HW;
+
+Again, atomic_hw is not a very useful variable name.  But the
+whole idea of using a non-descriptive bool variable for a flags
+field feels like an antipattern to me.
+
+> -		if (shared)
+> +		if (shared) {
+> +			if (atomic_hw &&
+> +			    !xfs_bmap_valid_for_atomic_write(&cmap,
+> +					offset_fsb, end_fsb)) {
+> +				error = -EAGAIN;
+> +				goto out_unlock;
+> +			}
+>  			goto out_found_cow;
+
+This needs a big fat comment explaining why bailing out here is
+fine and how it works.
+
+> +		/*
+> +		 * Use CoW method for when we need to alloc > 1 block,
+> +		 * otherwise we might allocate less than what we need here and
+> +		 * have multiple mappings.
+> +		*/
+
+Describe why this is done, not just what is done.
 
