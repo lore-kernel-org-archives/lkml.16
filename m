@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EB725CC9E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F6C25CC9F;
 	Wed, 12 Mar 2025 17:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800035; cv=none; b=M7V4Bs5HrZBpzm8Xafq2x2qZDaOA2GSZ86LRIJHORUp3tgUeyg+pPQ7GkAOUv4aGzuzydVCHT6127UcTgttRNJJ1WEHtfpCnpZJ2xlKCq4xwnhcv15x4BRmTYvTLMlbQc7M8rRYWOmhUGAmuX5Bwe5LMMO4QV5rJx2RrZWsogz0=
+	t=1741800034; cv=none; b=n6VniEwnSvdJXSWO9DgVyTOF9lVWIH0XTGnv0SpqRcXItIp0GSSpWFs/3SNAw4rF6lJSQ3tQrkhDa48mEwCRgBl3zyg2ebt/U45ya14oKmZbdz/XsX/o5P/Wlz85ToUjw2McreXJf4GFb16t/asBGj7atJMH622QND0LG722VjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741800035; c=relaxed/simple;
-	bh=Y9PvtJCtxgQTFbkdmcjSgGnLsTQEnDTEyt/V3jc0dSY=;
+	s=arc-20240116; t=1741800034; c=relaxed/simple;
+	bh=TXjY7L8ABk4dx025hAyDOsnJ+9mYyFuSUhmydrP53Po=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=a3vUt0/u1EurXaSKymEj8S3ssaasMyZZ0J8XC0GrpGBYQFWJF9LCa/4P76t8ZQc1bBw2pPjuDexq0JwAXXN30XWzRK0H7f6zmWpWiPhsvCmnglsiUpI6SmM4/7nHJkAZLJYUmVBAJ8V4YgVGsX60rs/tB2GdPkB3m59/VpLbcq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AwDUoQYV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fOnYx+kq; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=NepBZ6hbgoXRj9YOe5Ftw9fIxBn9tAXIcPi2ScH++EVDlCy35ZrgoGtk9HcBvXKRW+TMkmkzzVvc4IIfR6wIJFvTgNAYyDxNw1N/SEXIUsCQISvyiSydE/ZT2XxdIDM7089ZwUIGXRkyPDe7bef7RFo741ZyAqjVcV6YPsnP5fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q5MpEBDF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lO6OXbDx; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AwDUoQYV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fOnYx+kq"
-Date: Wed, 12 Mar 2025 17:20:30 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q5MpEBDF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lO6OXbDx"
+Date: Wed, 12 Mar 2025 17:20:29 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1741800030;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=STHqwG0teOKK+1jptxmVYM3YdhGPq9HkLAY6FPHmWsA=;
-	b=AwDUoQYVPQoQciBkv70VG09klKNKSHFzTuwLy25vG1qw6q3MbtH2HUYNBZGuE+SQ1/aFsF
-	FL3fczDD63wk34da7BJYqjJBGzIHud0NVF4ZqJrdIMvo3+ZLhLSqJ8+tALagpGWcT1rMfE
-	q0XlBeCHdsmlkZzEgqayYbiTgxRCflf+c0kZOcQ6Sp+Gm2ZhZtm6Oz7IC5FMf28yi1tlq6
-	Md4GbOWi+zhQYXUtRqrxs8r7qh+k+21qFm+4+UAevIHoD5ksjrjHUsGKQXUN5LApGNp3LO
-	3svpxCm4RymGAvaDblc9qWJFoUKevN0+JavUvrDk/B8rDigzqODG4MRYjMYXEg==
+	bh=aAl+ZRT8UvHHdTpK70TGngKi/4TlYVEZdioC5BERGsU=;
+	b=q5MpEBDFs43iWx0DkSh3fkT3MtTm9teWuOQOgEBRX6DxUfgE9YzHHsvqh5/7P2O5V401hW
+	RtOdpyg/Bg9tBGdk/5GNdQrgWfwlEETU1RWmr8YXX0V+uTMf/ZXGmpBicaiYNJ6CfoD98u
+	dJXWlas12en/WH/TlLWVf6Eh6v+844bz4FKc9avwxlemDSLST7yL5JbsKjy35fBlSrvhXq
+	szbIgPt6b6kjF9xpuWW50futeugmTHk+eSetrVnipwIdCO1x0IhZS3D/lCu+1DVmygKYZD
+	37iyewpF0donZkzaz7VSgXDcOEBErdBhM1DleHo/WaT17R2CTPPGxjYT+xUBLA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1741800030;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,32 +38,32 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=STHqwG0teOKK+1jptxmVYM3YdhGPq9HkLAY6FPHmWsA=;
-	b=fOnYx+kqGdmCcXD3b+0M+pM/ZLNOR5Kkdua0ElKOm4AS58wvHhGUTS3ucM6MfCsMBbPtDE
-	AdAJa79f2t67WeBQ==
+	bh=aAl+ZRT8UvHHdTpK70TGngKi/4TlYVEZdioC5BERGsU=;
+	b=lO6OXbDxsz+HLCuheA9CvzY0bSOOMF08X8V80acBc204UVG6lOPK3foo3DzcClmfM46H1u
+	5L35J9P8BRrOVqBw==
 From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: x86/cache] x86/resctrl: Add an arch helper to reset one resource
+ [tip: x86/cache] x86/resctrl: Move monitor exit work to a resctrl exit call
 Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Tony Luck <tony.luck@intel.com>, Reinette Chatre <reinette.chatre@intel.com>,
- Fenghua Yu <fenghuay@nvidia.com>, Babu Moger <babu.moger@amd.com>,
- Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+ Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
+ Babu Moger <babu.moger@amd.com>, Carl Worth <carl@os.amperecomputing.com>,
  Peter Newman <peternewman@google.com>,
  Amit Singh Tomar <amitsinght@marvell.com>,
  Shanker Donthineni <sdonthineni@nvidia.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250311183715.16445-15-james.morse@arm.com>
-References: <20250311183715.16445-15-james.morse@arm.com>
+In-Reply-To: <20250311183715.16445-16-james.morse@arm.com>
+References: <20250311183715.16445-16-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174180003010.14745.783925987153518671.tip-bot2@tip-bot2>
+Message-ID: <174180002923.14745.15958337522013936223.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,93 +73,129 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     9be68b144a5b539c8503f2944888f7a30e669291
-Gitweb:        https://git.kernel.org/tip/9be68b144a5b539c8503f2944888f7a30e669291
+Commit-ID:     011842727fa449f834c17b69d1273d88eb6e3309
+Gitweb:        https://git.kernel.org/tip/011842727fa449f834c17b69d1273d88eb6e3309
 Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Tue, 11 Mar 2025 18:36:59 
+AuthorDate:    Tue, 11 Mar 2025 18:37:00 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 12 Mar 2025 12:23:10 +01:00
+CommitterDate: Wed, 12 Mar 2025 12:23:13 +01:00
 
-x86/resctrl: Add an arch helper to reset one resource
+x86/resctrl: Move monitor exit work to a resctrl exit call
 
-On umount(), resctrl resets each resource back to its default configuration.
-It only ever does this for all resources in one go.
+rdt_put_mon_l3_config() is called via the architecture's resctrl_arch_exit()
+call, and appears to free the rmid_ptrs[] and closid_num_dirty_rmid[] arrays.
+In reality this code is marked __exit, and is removed by the linker as resctrl
+can't be built as a module.
 
-reset_all_ctrls() is architecture specific as it works with struct
-rdt_hw_resource.
+To separate the filesystem and architecture parts of resctrl, this free()ing
+work needs to be triggered by the filesystem, as these structures belong to
+the filesystem code.
 
-Make reset_all_ctrls() an arch helper that resets one resource.
+Rename rdt_put_mon_l3_config() to resctrl_mon_resource_exit() and call it from
+resctrl_exit(). The kfree() is currently dependent on r->mon_capable.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 Reviewed-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Peter Newman <peternewman@google.com>
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
 Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Peter Newman <peternewman@google.com>
 Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
 Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
-Link: https://lore.kernel.org/r/20250311183715.16445-15-james.morse@arm.com
+Link: https://lore.kernel.org/r/20250311183715.16445-16-james.morse@arm.com
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c |  9 +++++----
- include/linux/resctrl.h                |  9 +++++++++
- 2 files changed, 14 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c     |  5 -----
+ arch/x86/kernel/cpu/resctrl/internal.h |  2 +-
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 12 +++++++++---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |  2 ++
+ 4 files changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index b2dad68..9eb57eb 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2867,7 +2867,7 @@ static int rdt_init_fs_context(struct fs_context *fc)
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 850cb86..a1577bd 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -1074,14 +1074,9 @@ late_initcall(resctrl_arch_late_init);
+ 
+ static void __exit resctrl_arch_exit(void)
+ {
+-	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
+-
+ 	cpuhp_remove_state(rdt_online);
+ 
+ 	resctrl_exit();
+-
+-	if (r->mon_capable)
+-		rdt_put_mon_l3_config();
+ }
+ 
+ __exitcall(resctrl_arch_exit);
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 5f3713f..73005ca 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -586,7 +586,7 @@ void closid_free(int closid);
+ int alloc_rmid(u32 closid);
+ void free_rmid(u32 closid, u32 rmid);
+ int rdt_get_mon_l3_config(struct rdt_resource *r);
+-void __exit rdt_put_mon_l3_config(void);
++void __exit resctrl_mon_resource_exit(void);
+ bool __init rdt_cpu_has(int flag);
+ void mon_event_count(void *info);
+ int rdtgroup_mondata_show(struct seq_file *m, void *arg);
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index e8388d1..15e8c01 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -1040,10 +1040,13 @@ out_unlock:
+ 	return err;
+ }
+ 
+-static void __exit dom_data_exit(void)
++static void __exit dom_data_exit(struct rdt_resource *r)
+ {
+ 	mutex_lock(&rdtgroup_mutex);
+ 
++	if (!r->mon_capable)
++		goto out_unlock;
++
+ 	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID)) {
+ 		kfree(closid_num_dirty_rmid);
+ 		closid_num_dirty_rmid = NULL;
+@@ -1052,6 +1055,7 @@ static void __exit dom_data_exit(void)
+ 	kfree(rmid_ptrs);
+ 	rmid_ptrs = NULL;
+ 
++out_unlock:
+ 	mutex_unlock(&rdtgroup_mutex);
+ }
+ 
+@@ -1237,9 +1241,11 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
  	return 0;
  }
  
--static int reset_all_ctrls(struct rdt_resource *r)
-+void resctrl_arch_reset_all_ctrls(struct rdt_resource *r)
+-void __exit rdt_put_mon_l3_config(void)
++void __exit resctrl_mon_resource_exit(void)
  {
- 	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
- 	struct rdt_hw_ctrl_domain *hw_dom;
-@@ -2896,7 +2896,7 @@ static int reset_all_ctrls(struct rdt_resource *r)
- 		smp_call_function_any(&d->hdr.cpu_mask, rdt_ctrl_update, &msr_param, 1);
- 	}
- 
--	return 0;
-+	return;
+-	dom_data_exit();
++	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
++
++	dom_data_exit(r);
  }
  
- /*
-@@ -3015,9 +3015,10 @@ static void rdt_kill_sb(struct super_block *sb)
- 
- 	rdt_disable_ctx();
- 
--	/*Put everything back to default values. */
-+	/* Put everything back to default values. */
- 	for_each_alloc_capable_rdt_resource(r)
--		reset_all_ctrls(r);
-+		resctrl_arch_reset_all_ctrls(r);
+ void __init intel_rdt_mbm_apply_quirk(void)
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 9eb57eb..42c48e7 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -4296,4 +4296,6 @@ void __exit resctrl_exit(void)
+ 	debugfs_remove_recursive(debugfs_resctrl);
+ 	unregister_filesystem(&rdt_fs_type);
+ 	sysfs_remove_mount_point(fs_kobj, "resctrl");
 +
- 	rmdir_all_sub();
- 	rdt_pseudo_lock_release();
- 	rdtgroup_default.mode = RDT_MODE_SHAREABLE;
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index 326f7ba..487b965 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -394,6 +394,15 @@ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
-  */
- void resctrl_arch_reset_rmid_all(struct rdt_resource *r, struct rdt_mon_domain *d);
- 
-+/**
-+ * resctrl_arch_reset_all_ctrls() - Reset the control for each CLOSID to its
-+ *				    default.
-+ * @r:		The resctrl resource to reset.
-+ *
-+ * This can be called from any CPU.
-+ */
-+void resctrl_arch_reset_all_ctrls(struct rdt_resource *r);
-+
- extern unsigned int resctrl_rmid_realloc_threshold;
- extern unsigned int resctrl_rmid_realloc_limit;
- 
++	resctrl_mon_resource_exit();
+ }
