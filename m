@@ -1,162 +1,208 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CE41EE7C2
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 21:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B281E51EB
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 21:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741814222; cv=none; b=j+2NBUznfoeAJ7iT1O3oSxho5tYp7tjOJbYhAG14mdkZbJ1S0AzmPpSamcfEMHKaeFaN9yzh9xu+8LEUPjk82DEHe0OV/Hp7gz9qbKMtZLOMya9Yd6WqE9fKlSFhu6nYXS8dP7DfSm66I/xkVy33hXRhKEewrF/mI/hjkfQiq6U=
+	t=1741814247; cv=none; b=OVqHI3xwagw4zpzDf3usl2UpV/gffEI3zIKUKVc3DDS91FR3VeVMms+n7yg6KiPdBBFO1vkLU9/vH0us8xer0FmLkbTFFKsjs7ieTUt4wh9JOle/YMRDBh5h+0L9YTdbE3fiwf/cu5elm/DaES5C/6B+MzpEHGXkLBvXxv48v5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741814222; c=relaxed/simple;
-	bh=wPzK4zBNUgtZDWoviPcVV3sisFQVwXRO4Clib2QCtvA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kRgvBn/jXy6N/0rNDdo9nsFeApLQ2r9MfhkQP5tIj7ubUbdVfocoEODkQzOf8qCKR69fbOShtMHL++hb8RgFmY6JJQGnun6Vb8TCRssen4Mslvc9mKsyeFXOm0ANjAxoUNJH7klHjdKzUwAdDrEWBR8S0PPHyxa158mybvjsPa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=le1zkwAD; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741814247; c=relaxed/simple;
+	bh=XKX4Aucp/sBQshrMZR2LOMDydJSQWtIZFAAPJdcspIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XWOd1I5X1j+tymVNVskmmNzEj0PXCoxLKu0MN/hPocyLPGruAYhc/bmWJa8aIiN+u0KkQFlBmkMq5ER2Nt/NqMS+AAVPJc210Y7gmZro6X6GktvXua1898PhaO/i/Mkekw+yyyIDm56RD2cMCawXXAijYMPGid+/852Vv5M582U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DJ+zDR1r; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=B1wUh2iA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iFASKtiO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LN8yTHuR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="le1zkwAD"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e8ec399427so2631666d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 14:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741814219; x=1742419019; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XxDKgr5VuN6noi0Wfhw4cTV3jZ9TmVruadjdpxToKRg=;
-        b=le1zkwADDKWP8OkSlyweV1riHXhsqubTrAKSkyLsEdjZ4DnE15BzGDS7V+2V8kuqXy
-         esE2va7uYx3tRx4urUfkVsY5iuBuThpcPO567tEL4GdtNp2BBsTsPvoIQfOs0aoARwfz
-         FM/C+GBxe98A24/YWhFb3QFE/SdllVH8oeqtzNKv8MX1/RSZDwb1gPfVFyCrn2T8wftL
-         swrOV1xrmKeUbRe2GuJqwcD0VeiQYJsHqvYz25RTK4Clj3aO4imISdr222eXJus+0Yov
-         a1zW/QAhw1uivmWdvgHA8oBa6ixrEKnB/vuXySYayNiid2QNpDMUXchkgMdXPn2KY6tA
-         r9qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741814219; x=1742419019;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XxDKgr5VuN6noi0Wfhw4cTV3jZ9TmVruadjdpxToKRg=;
-        b=gbIubSPHsQmul046AvTekY0Zi34rYjUlP5V4xvv72qdf95CUEgMa0G3MPxAVvpW/4e
-         s+waHNDYkLHZKQXy8aQiCW9l8+Bx9PWerUznXuoytgUXXlSp+TULYSCzShEIw2W4aQQp
-         LnehYSb8cakzF7/p73pmN2bLc+JpLdZtBNNV9zZfGqFy3mUf+u4snWpX9gk+mT76HUm3
-         1npPzjYPCSDFJt2I1uiJt+3J/NCU7G+Mk4/9KfXdlQl34+Ds6i55w7xkYWGQwNoHKooh
-         b9W3FSrkGR7REbnL1HQ9H8Q7p7tJhuvSuvIhAVL3UwKs+zL732lL7vUYtNgf3tsIVpCj
-         vTLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWja1kSVfXk7z/rmdcQn+j84SQrVtT84SIRgeEgoeGInP4jb4b1cPpQi8jTLSQ95QoHiP3Zan1zxEy9hgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYwZAWB6WXlj1RPn8Y4BPr16/P8bHhOMZeEr+HqeaE26v8Z0dK
-	i50WvVgpBRbSUAv9zVYxvEAuK0lnufD9kmNVquRTvr2SDZWHAQjDJqnXW5cfeNO2tBm4h3z0YLb
-	L7czOA6Ks9PS6ql2w8rNZTLmbJKIALBhvv9NNaA==
-X-Gm-Gg: ASbGncv88eF7FhV7HDRqLnpluYg42kaqKRdgwjuYoLR4+wBWrgifYXIewpjTB17l4ai
-	nHSM4V2oykZ4K/G2hmPmTM3hd0ygYVWVARtGAVQ6XVnQcDciRK76Vrdbmn3WAGU7NMAnh3nBWgO
-	SXvnLiikfDh3IiS25DJO2qR+djaw==
-X-Google-Smtp-Source: AGHT+IE8URVhSLvPJIFsnTX7Z5pSwgsdAxYcwLbP1+O/xS7LPEmPA9PmITKDBxz3rcylfz6xQGMlbZxbKqtozlnBWHY=
-X-Received: by 2002:ad4:5b84:0:b0:6e6:698f:cafd with SMTP id
- 6a1803df08f44-6e900681c65mr390346036d6.37.1741814219178; Wed, 12 Mar 2025
- 14:16:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DJ+zDR1r";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="B1wUh2iA";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iFASKtiO";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LN8yTHuR"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 0056C21188;
+	Wed, 12 Mar 2025 21:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741813914; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
+	b=DJ+zDR1rvxpo4CFBsphteHd06ayzjJe7obkMvim5OrXFR9I3Ul13Xt7uS71jtAulaztqjz
+	IdtL/aczJ3KQX2b3C1vc2UbbjYrbMfK9Z9rGeWHFi0Q6sUQzgsIKOfPjpLucZ40r7WyVRi
+	Z1t412fuAUy79oGTLH6l51hVi/mdSho=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741813914;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
+	b=B1wUh2iASIXFF64/lrn6XsAOnKLNePX6KsYqIwCLNDxXbdIRbe2GBjh+1LM77fZvdZ0j5Q
+	MFgyxPvOfYwitFCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741813913; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
+	b=iFASKtiOdXhmoGEwqN9sf3TBx4C1NZi3uIAhvwwvSdJh/q2uHIFjLDTYs22GWRTFMUbl81
+	J/NMkxAnAHgTaDMkoJ1L7lnxMDBRCcWDt8aYrbYpsJSCq0Va8TZgUpCThPCRnocNEQGh/u
+	E7jJWDQnuEjF0r3HjEikZgDOJnj8cjU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741813913;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AAje/oszgqXSx3kWAldq5HwVj5OdtILzxGPWJh8nXcM=;
+	b=LN8yTHuR4LC6StVHbqOT31VjmZR44mWPKB4L4fIfn0JhLlOHl3ORJ4I5kfVIDhbx+hc4hp
+	l6bUWtbOKhjFpMAQ==
+Date: Wed, 12 Mar 2025 22:11:52 +0100
+From: Jiri Bohac <jbohac@suse.cz>
+To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: [PATCH v3 5/5] x86: implement crashkernel cma reservation
+Message-ID: <Z9H4mKXfqSP9j1rY@dwarf.suse.cz>
+References: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311234109.136510-1-alex.vinarskis@gmail.com>
-In-Reply-To: <20250311234109.136510-1-alex.vinarskis@gmail.com>
-From: Stefan Schmidt <stefan.schmidt@linaro.org>
-Date: Wed, 12 Mar 2025 22:16:48 +0100
-X-Gm-Features: AQ5f1JpPzCg_wcL5Oq5TpalUho1WYNfDBRHd08R0PtwUoX5vs0HUJe7LYQzHVM0
-Message-ID: <CAEvtbusre2PUwNiD42d-xTCVf4dV0npN-5UxxwrjriVOsbj0Fg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] drm/msm/dp: Introduce link training per-segment
- for LTTPRs
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, laurentiu.tudor1@dell.com, abel.vesa@linaro.org, 
-	johan@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
+X-Spam-Score: -4.29
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.19)[-0.949];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ZERO(0.00)[0];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,dwarf.suse.cz:mid,localhost:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hello Aleksandrs,
+Implement the crashkernel CMA reservation for x86:
+- enable parsing of the cma suffix by parse_crashkernel()
+- reserve memory with reserve_crashkernel_cma()
+- add the CMA-reserved ranges to the e820 map for the crash kernel
+- exclude the CMA-reserved ranges from vmcore
 
-On Wed, 12 Mar 2025 at 00:41, Aleksandrs Vinarskis
-<alex.vinarskis@gmail.com> wrote:
->
-> Recently added Initial LTTPR support in msm/dp has configured LTTPR(s)
-> to non-transparent mode to enable video output on X1E-based devices
-> that come with LTTPR on the motherboards. However, video would not work
-> if additional LTTPR(s) are present between sink and source, which is
-> the case for USB Type-C docks (eg. Dell WD19TB/WD22TB4), and at least
-> some universal Thunderbolt/USB Type-C monitors (eg. Dell U2725QE).
->
-> First, take into account LTTPR capabilities when computing max link
-> rate, number of lanes. Take into account previous discussion on the
-> lists - exit early if reading DPCD caps failed. This also fixes
-> "*ERROR* panel edid read failed" on some monitors which seems to be
-> caused by msm_dp_panel_read_sink_caps running before LTTPR(s) are
-> initialized.
->
-> Finally, implement link training per-segment. Pass lttpr_count to all
-> required helpers.
-> This seems to also partially improve UI (Wayland) hanging when
-> changing external display's link parameters (resolution, framerate):
-> * Prior to this series, via direct USB Type-C to display connection,
->   attempt to change resolution or framerate hangs the UI, setting does
->   not stick. Some back and forth replugging finally sets desired
->   parameters.
-> * With this series, via direct USB Type-C to display connection,
->   changing parameters works most of the time, without UI freezing. Via
->   docking station/multiple LTTPRs the setting again does not stick.
-> * On Xorg changing link paramaters works in all combinations.
->
-> These appear to be mainlink initialization related, as in all cases LT
-> passes successfully.
->
-> Test matrix:
-> * Dell XPS 9345, Ubuntu 24.10, Gnome 47, Wayland
->         * Left USB Type-C, Right USB Type-C
->         * Direct monitor connection, Dell WD19TB, Dell WD22TB4, USB
->           Type-C to HDMI dongle, USB Type-C to DP dongle
->         * Dell AW3423DWF, Samsung LS24A600, dual Samsung LS24A600 (one
->           monitor per USB Type-C connector)
-> * Dell XPS 9345, Ubuntu 24.10, Gnome 47, Wayland
->         * Left USB Type-C, Right USB Type-C
->         * Direct monitor connection
->         * Samsung S34BG85 (USB Type-C), Dell U2725QE (universal
->           Thunderbolt/USB Type-C, probes with an LTTPR when in USB
->           Type-C/DP Alt mode)
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+---
+ arch/x86/kernel/crash.c | 26 ++++++++++++++++++++++----
+ arch/x86/kernel/setup.c |  5 +++--
+ 2 files changed, 25 insertions(+), 6 deletions(-)
 
-You can  add the following:
-* Dell XPS 9345, Debian trixie/sid, Gnome 48, Wayland
-        * Left USB Type-C, Right USB Type-C
-        * Dell WD15 Dock with DisplayPort connected
-        * Dell HD22Q dock with HDMI connected
-        * USB Type-C to HDMI dongle
-        * Dell U3417W
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 340af8155658..70823fa9abea 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -163,10 +163,10 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ 		return NULL;
+ 
+ 	/*
+-	 * Exclusion of crash region and/or crashk_low_res may cause
+-	 * another range split. So add extra two slots here.
++	 * Exclusion of crash region, crashk_low_res and/or crashk_cma_ranges
++	 * may cause range splits. So add extra slots here.
+ 	 */
+-	nr_ranges += 2;
++	nr_ranges += 2 + crashk_cma_cnt;
+ 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+ 	if (!cmem)
+ 		return NULL;
+@@ -184,6 +184,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ static int elf_header_exclude_ranges(struct crash_mem *cmem)
+ {
+ 	int ret = 0;
++	int i;
+ 
+ 	/* Exclude the low 1M because it is always reserved */
+ 	ret = crash_exclude_mem_range(cmem, 0, SZ_1M - 1);
+@@ -198,8 +199,17 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
+ 	if (crashk_low_res.end)
+ 		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
+ 					      crashk_low_res.end);
++	if (ret)
++		return ret;
+ 
+-	return ret;
++	for (i = 0; i < crashk_cma_cnt; ++i) {
++		ret = crash_exclude_mem_range(cmem, crashk_cma_ranges[i].start,
++					      crashk_cma_ranges[i].end);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
+ }
+ 
+ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+@@ -352,6 +362,14 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 		add_e820_entry(params, &ei);
+ 	}
+ 
++	for (i = 0; i < crashk_cma_cnt; ++i) {
++		ei.addr = crashk_cma_ranges[i].start;
++		ei.size = crashk_cma_ranges[i].end -
++			  crashk_cma_ranges[i].start + 1;
++		ei.type = E820_TYPE_RAM;
++		add_e820_entry(params, &ei);
++	}
++
+ out:
+ 	vfree(cmem);
+ 	return ret;
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 853afde761a7..90e10a18f0c9 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -471,7 +471,7 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 
+ static void __init arch_reserve_crashkernel(void)
+ {
+-	unsigned long long crash_base, crash_size, low_size = 0;
++	unsigned long long crash_base, crash_size, low_size = 0, cma_size = 0;
+ 	char *cmdline = boot_command_line;
+ 	bool high = false;
+ 	int ret;
+@@ -481,7 +481,7 @@ static void __init arch_reserve_crashkernel(void)
+ 
+ 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base,
+-				&low_size, NULL, &high);
++				&low_size, &cma_size, &high);
+ 	if (ret)
+ 		return;
+ 
+@@ -492,6 +492,7 @@ static void __init arch_reserve_crashkernel(void)
+ 
+ 	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
+ 				    low_size, high);
++	reserve_crashkernel_cma(cma_size);
+ }
+ 
+ static struct resource standard_io_resources[] = {
 
-> In both cases, "Thunderbot Support"/"USB4 PCIE Tunneling" was disabled
-> in UEFI to force universal Thunderbolt/USB Type-C devices to work in
-> DP Alt mode.
-> In both cases laptops had HBR3 patches applied [1], resulting in
-> maximum successful link at 3440x1440@100hz and 4k@60hz respectively.
-> When using Dell WD22TB4/U2725QE, USB Type-C pin assigment D got enabled
-> and USB3.0 devices were working in parallel to video ouput.
->
-> Known issues:
-> * As mentioned above, it appears that on Gnome+Wayland framerate and
->   resolution parameter adjustment is not stable.
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
-I can confirm this on Gnome 48 + Wayland as well. Sometimes the resolution
-change from gnome settings gets stuck and does not apply. It normally works
-here around every third try or so when using a dock.
-
-> Due to lack of access to the official DisplayPort specfication, changes
-> were primarily inspired by/reverse engineered from Intel's i915 driver.
->
-> [1] https://lore.kernel.org/all/20250226231436.16138-2-alex.vinarskis@gmail.com/
->
-> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-
-Tested-by: Stefan Schmidt <stefan.schmidt@linaro.org>
-
-regards
-Stefan Schmidt
