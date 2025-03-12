@@ -1,147 +1,114 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BBB1D79B6
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 23:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915B216FF44;
+	Wed, 12 Mar 2025 23:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741822690; cv=none; b=YYLjyYyWYFVOZJCar2rL8UaMc7OuR/hOJXi3EM2V5GfeoLbQga04/mBImet4upkclZ47BtvnFS+762AmQUg8tuzdops5BNSRWbiKgTtlF9t1WUu4nQAi6GiX2vdqExeqJGYyytB9gD0UV6ESYr5Vnx1dmvADK+sOzfHRsyXiBNg=
+	t=1741822953; cv=none; b=f+EIHdqlR/iFq+6OnwEO4GifTCKlQ2O+0QDST4wLdctFbeIk/CTDSSsfiALolFngbcIi+561OFCiGuur2G4KGGezYnNP3PoE7x9tbzmdbt1sHtFuY2UC1q4JrCvHFi1W0f2ZFxtIE+/nGKk2taCegZIzfYs47iix4wrWY0Mi0gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741822690; c=relaxed/simple;
-	bh=vN3VEd66BFpxzGPu+gzWhrvDg3yMVNnbOuWzXhos1NE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jDj3jjn65rDwIgVXKhCLjvKCH3oUxCMjsBh3XystrhgvI3tkKGY8J6rPStsbPg6VtNpGIXxlLrWDc4QGG4HjsN4JF+2E9fyxnpJxKzREFtqsAYQdaE2uSMYTeLWMC7fD9Jx8U0cM6Ecc4s+twztdA6vxnmOsCtmOXa/8Q3SKbQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lCKF23Rb; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741822953; c=relaxed/simple;
+	bh=qfr+2zQR+Sacn+n4lmc0XvBgQVef5IcvW3V6IrEHRjY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oAR13DXRzfo81w7wueIIbklCyN7xjL8o649pdOtT9QGLTWFyL1Fanam1rjMm4NXh9hwsFrXepiFGR4ACtsi2aRBFXzOKllgbBYOyAQBmPjmmvW74zxbGleUERROg+ixarbOenBNN8wBSLwvKoSIcpYjyI1noOUSAEcduibEM/fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QEznmNDD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCKF23Rb"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22337bc9ac3so6722135ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 16:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741822688; x=1742427488; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Iv9X1O+iJ055EOoqMTSQh8pZkA9omS3qAlLfPhpnypc=;
-        b=lCKF23Rb0fxbzgp+zMdvn2rmKoe8osoDfGaJB7hesDyXw3rVkkHlyNKQj7LjDCna7U
-         NUEyGopZBG/wHANDngdY8BK25IL62aDh5llt2FDEOi8hlbPAw2KIWhUrwySDIMnrix2K
-         aIbuNxr98wKM0n1qd0JCXD/quror/mYXnBFdqf1HxTIY5imphwC24koT4RBypti03xjb
-         pIzbJQIOewkoJ26bkuzCXvsxqK90wxcfXcwh+hkL6m5X2TZ7CtJk8Nr3i0j8SGU3N08E
-         x1awBMisZXCNXDBtzYZwsrodw8WtOJXd1Q9PlLoxaRh0HYFoTrvXI0pzCff4Rn6WU1XP
-         5R9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741822688; x=1742427488;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Iv9X1O+iJ055EOoqMTSQh8pZkA9omS3qAlLfPhpnypc=;
-        b=WwEdDPxEBw49gbzAq85+hgdE+1MkQokLcB1w3jPDLM+HIL/uwh2oFurOeOYSwHr2c6
-         t9sJ9eSh3yfPhQkzZTxWqw7xs3LjkM/n4MCW1f8RRR+pyredBkw1Fbm+LDO7wBK/Qo7r
-         Xz8Qrbp6g4BjJCqZHIvE+bNd/HQI3kaecgQcJs+64v0BxDKaB+q/p4/l16WKvFvBIumj
-         Ofnr7FbdP4kJfarRhadjE8ohznyRJlmu9kcIovplwNN6hYizIzMfEvwKQZxWU3T5mBXl
-         +YBtqno0ZSadyre2uRR6+RrpNi4UidZKg8zj6Uk+WRpKTK+ABMwbwssB4yFrqcja4kKl
-         jjlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHrqWIr5gynwILAWqqTFJnAFzqXCHmMxvKKdWZO7Oqj0MyxyrSVeMWy0hg4e2l85EFe+f1Vj3OjvHVrwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD7t2MWqRb+zUvIkMVlgKl6YEQEzl0m4X6VVVzOTkQvHiyPo30
-	nOvIseNmrZiCALw/wj1ckD8lhegixOFPSyOQBl2wNOnanZr2jsth
-X-Gm-Gg: ASbGncuGvak3J3cfz7FdjulyY88MHvcwbzV5FWC/LCzjAGXWZz6ZTiDP+UfPZgPb1Uo
-	RwmzbRRMS0bwB5sjSEmxxmoH/JI2hJqWupE91eV4w6yxKYZWVjVw2CWGhEiCJi0bPJU+nx7wFdg
-	KFNR/SuxfSX/K6u2xLQExSCg52K2EKuzLPGEa/aBki1JRz+CWqhX/2WtqtB41XBL64DcsWRiB55
-	75O/qQ1dnaOe2yrjHPLNxoCnSTgHj2Tfy7j8XvOUjluk57W/ta95IRAGeq5D8/oAUlUvzR3Vdcj
-	T31HO9qav9aglNwQBwextXjoebQ0Lex9Vm7dJneLi9oC
-X-Google-Smtp-Source: AGHT+IG5xBWHcUI1ZiPr4lIPXq2LhR2k/iVfRjmn8GAY/lSsqcezJg1grQWMvGOFPF2cHAToz5e+tw==
-X-Received: by 2002:a17:902:f54f:b0:223:58ff:c722 with SMTP id d9443c01a7336-22592e44a1fmr156857395ad.28.1741822687725;
-        Wed, 12 Mar 2025 16:38:07 -0700 (PDT)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c68883d0sm1323525ad.10.2025.03.12.16.38.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 16:38:06 -0700 (PDT)
-Date: Wed, 12 Mar 2025 19:38:04 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Ignacio Encinas <ignacio@iencinas.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: fix test_and_{set,clear}_bit ordering
- documentation
-Message-ID: <Z9Ia3AMqFpNj6fUb@thinkpad>
-References: <20250311-riscv-fix-test-and-set-bit-comment-v1-1-8d2598e1e43b@iencinas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QEznmNDD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 345DDC4CEE3;
+	Wed, 12 Mar 2025 23:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741822953;
+	bh=qfr+2zQR+Sacn+n4lmc0XvBgQVef5IcvW3V6IrEHRjY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QEznmNDDw2mWRCdJFMz0BQsGUXBUqqp4i2TF1aqfqFjbP0mcv+ee+/aXL/ng+BycS
+	 smOraYvyBoMajGCCiToJlWpLF5eKHeP7MJtOnkrlHJCMGr36vMEyEZwrfwPOIvv1LH
+	 myE6FBt5+CjyT2qeUOvovlA1f8cJkI2VgW/dRU67o2den8CLJ7jBGMFC3QJ6YtdUuK
+	 zvKuyeBfl+tgwxSFvs1b6SnVpN93VZkkioU1wR3m7dLno2VBdokwwyKxh8T9U+BNSZ
+	 vj+eOVVnfExX2MrBPgxSRLxRsPtTscma0wR2C0ERGKcUPQFqo8xMsg8x2Fs57H5LUy
+	 59Iu6HTg/Gt8w==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Kalle Valo <kvalo@kernel.org>,
+	Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org,
+	ath10k@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] wifi: ath10k: Drop of_get_property() call
+Date: Wed, 12 Mar 2025 18:42:27 -0500
+Message-ID: <20250312234228.1243477-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311-riscv-fix-test-and-set-bit-comment-v1-1-8d2598e1e43b@iencinas.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 11, 2025 at 06:20:22PM +0100, Ignacio Encinas wrote:
-> test_and_{set,clear}_bit are fully ordered as specified in
-> Documentation/atomic_bitops.txt. Fix incorrect comment stating otherwise.
-> 
-> Note that the implementation is correct since commit
-> 9347ce54cd69 ("RISC-V: __test_and_op_bit_ord should be strongly ordered")
-> was introduced.
-> 
-> Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
+There's no need to check the property presence and length before calling
+of_property_read_u8_array() as it will return an error if the property
+is missing or the length is too small. The return errno doesn't matter
+to the caller, so no change in behavior there.
 
-Applied in bitmap-for-next.
+Change of_property_read_u8_array() to of_property_read_variable_u8_array()
+as the former allows properties to be longer than the requested length.
+Now the property has to be the exact length requested as the removed
+check required.
 
-Thanks,
-Yury
+This part of a larger effort to remove DT functions like
+of_get_property() and of_find_property() which return raw DT data
+having no reference counting.
 
-> ---
-> This seems to be a leftover comment from the initial implementation
-> which assumed these operations were relaxed.
-> 
-> Documentation/atomic_bitops.txt states:
-> 
->   [...]
->   RMW atomic operations with return value:
->   
->     test_and_{set,clear,change}_bit()
->     test_and_set_bit_lock()
->   [...]
-> 
->    - RMW operations that have a return value are fully ordered.
-> 
-> Similar comments can be found in
-> include/asm-generic/bitops/instrumented-atomic.h,
-> include/linux/atomic/atomic-long.h, etc...
-> ---
->  arch/riscv/include/asm/bitops.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/bitops.h
-> index c6bd3d8354a96b4e7bbef0e98a201da412301b57..49a0f48d93df5be4d38fe25b437378467e4ca433 100644
-> --- a/arch/riscv/include/asm/bitops.h
-> +++ b/arch/riscv/include/asm/bitops.h
-> @@ -226,7 +226,7 @@ static __always_inline int variable_fls(unsigned int x)
->   * @nr: Bit to set
->   * @addr: Address to count from
->   *
-> - * This operation may be reordered on other architectures than x86.
-> + * This is an atomic fully-ordered operation (implied full memory barrier).
->   */
->  static __always_inline int arch_test_and_set_bit(int nr, volatile unsigned long *addr)
->  {
-> @@ -238,7 +238,7 @@ static __always_inline int arch_test_and_set_bit(int nr, volatile unsigned long
->   * @nr: Bit to clear
->   * @addr: Address to count from
->   *
-> - * This operation can be reordered on other architectures other than x86.
-> + * This is an atomic fully-ordered operation (implied full memory barrier).
->   */
->  static __always_inline int arch_test_and_clear_bit(int nr, volatile unsigned long *addr)
->  {
-> 
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250311-riscv-fix-test-and-set-bit-comment-aa9081a27d61
-> 
-> Best regards,
-> -- 
-> Ignacio Encinas <ignacio@iencinas.com>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ drivers/net/wireless/ath/ath10k/core.c | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
+index b3294287bce1..db7444af251d 100644
+--- a/drivers/net/wireless/ath/ath10k/core.c
++++ b/drivers/net/wireless/ath/ath10k/core.c
+@@ -1889,7 +1889,7 @@ static int ath10k_download_cal_file(struct ath10k *ar,
+ static int ath10k_download_cal_dt(struct ath10k *ar, const char *dt_name)
+ {
+ 	struct device_node *node;
+-	int data_len;
++	int data_len = ar->hw_params.cal_data_len;
+ 	void *data;
+ 	int ret;
+ 
+@@ -1900,28 +1900,18 @@ static int ath10k_download_cal_dt(struct ath10k *ar, const char *dt_name)
+ 		 */
+ 		return -ENOENT;
+ 
+-	if (!of_get_property(node, dt_name, &data_len)) {
+-		/* The calibration data node is optional */
+-		return -ENOENT;
+-	}
+-
+-	if (data_len != ar->hw_params.cal_data_len) {
+-		ath10k_warn(ar, "invalid calibration data length in DT: %d\n",
+-			    data_len);
+-		ret = -EMSGSIZE;
+-		goto out;
+-	}
+-
+ 	data = kmalloc(data_len, GFP_KERNEL);
+ 	if (!data) {
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+ 
+-	ret = of_property_read_u8_array(node, dt_name, data, data_len);
++	ret = of_property_read_variable_u8_array(node, dt_name, data, data_len, data_len);
+ 	if (ret) {
+-		ath10k_warn(ar, "failed to read calibration data from DT: %d\n",
+-			    ret);
++		/* Don't warn if optional property not found  */
++		if (ret != -EINVAL)
++			ath10k_warn(ar, "failed to read calibration data from DT: %d\n",
++				    ret);
+ 		goto out_free;
+ 	}
+ 
+-- 
+2.47.2
+
