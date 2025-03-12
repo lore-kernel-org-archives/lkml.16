@@ -1,151 +1,187 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9D12AE8E;
-	Sun, 30 Mar 2025 20:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917F22AE8E;
+	Sun, 30 Mar 2025 20:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743365884; cv=none; b=nb8oxkNzNbdgjGSG4dRNo4rtd6CksdtTlawdutllk7FV0sh+Rozipdnjb7tnCG7c4wjKIDekriZVWcWw4yP9nZLbOFqhLiGAp8ZOFL2zTeElPhc+QsvJ1pcgrAQZ1CZM2ACi0ICgDRVFm2dj4jDYyQt2SyiyDPYtfm40qeLhh6k=
+	t=1743365900; cv=none; b=KYW89ZIwh6rOxecKD0eesJ2G+sw41tk56IM5XQ6H/DsGCF4vj5KgBK9Zis85pt3plwLLuoAMUMxJ9oUhcZllRMcsLGMeHTo01iML6odDVz3ddo3skxG2YZmDewLMYfzYvAZgcXlXFJjDCjQc1sJrWO+gOIcRo99qu95yMKY5zdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743365884; c=relaxed/simple;
-	bh=i/zZuquizU3rNnjsaeo6z64PLYbXEl+OVKP9uiO7kOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lw9GLiid4UP9ciu7/snS2gljGqRN5ywgDZnfuqGrmIPb226GnX+ycl5tTGjLnm+0GVSZFp3Rwct0UbMqfUKPxTldbXwUJxo9uFJpAe/mLYIAAS9ZB00CqDA87d6WMnLjMcok3iGhkY4PQeHhSWAeCy5uDMDdyn6zkKjsTyIJ5Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZAstD51j; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743365900; c=relaxed/simple;
+	bh=+bfG6qOlEQh5eLBGNJMznpv39k1A6x5V8I6QJ40ClqQ=;
+	h=Message-Id:Cc:To:From:Date:Subject; b=W83qDoqWUqO5BeUWw/2hoRE6QJK6jH3cPGZ0ULw9EM+ARiHjnrGb0Eq10nlk3pHleVGRUF+g+sVTqSpc3FwPjIo+sbmCXnqHx5cIIqjmOtAhavLgkfZD7IC4GsSJfX13fPdu5tUxjkrlXOpHuG96CmYaRGKB3vyVFMwAhA5uUa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=MNQ2d/x/; arc=none smtp.client-ip=195.201.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAstD51j"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2255003f4c6so70755275ad.0;
-        Sun, 30 Mar 2025 13:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743365882; x=1743970682; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d5coYYRPMmYyk90hyfQos6Hfk3JtJvsesMjWEHhnPPg=;
-        b=ZAstD51jAMgdtjHUjKHWIFNE3TvCRhxeTwfkGLGMRWcjgVqIIQ+wnPT/F+lZKYRmX1
-         PRLI1iiHmrs5g3AAo9ztulw8kPdn2DmiNR9FfLE/VrmbVwhrjCYlJi4lbER2oaFbHmeP
-         LpyUlhqegAE4Ku8cbk/vNm4yOVrJovetdnZTJFYaFYEbmRNF1XwfdumcNm9RhnMvMn+x
-         MXyJxsHA6UPJqv37g5DF+U7vVGVX/r5bSl99KPeqnRwPBl1ixYhq4r13FNBsxGbtlXP8
-         EEpnvAiOweFRLF8ztwLaAwVxHbBzvsSi5Xj2Hyfzz5nNNpvQUoSYZhBgzTS5jl/ZDn8N
-         YxAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743365882; x=1743970682;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d5coYYRPMmYyk90hyfQos6Hfk3JtJvsesMjWEHhnPPg=;
-        b=j2df6jkqZohoZxWx/RW5MUjN81XMuzNqCVXeAUmZjU3nJUoxfWaPMFpWcIH+AIiDa1
-         NXcUHzY9vxKgV3c5UMyHmsUJJwnrF7vwODy9Deoq6zEcs7KEZQKbdpIqFWkKcGa9fwmV
-         B8vynotON6f2cRupHirabVdiCU5Q3cSIxeg8gZvC5v5uN1IPf+wMzyVjbCqKh9fzZOlY
-         1awwNmD2HiAfZtU6I4kX43hIBskhjUxiezntIf7nWaT9fU8Hr+sZXOz6gqzseeOrBbdc
-         hYFWVWlm5TTU80nTk+tSR/uOiylw9ujqa7Eup/AXz6+NrEi4d/BfmeEO8fpAGBEPo6RZ
-         z72A==
-X-Forwarded-Encrypted: i=1; AJvYcCUM+EyU+IPCxsouef8DPlVcv6zngh7RjrMRWRfRReYTFXKUitctPnBace6N6MtprjF4zsVzBzMO22AV@vger.kernel.org, AJvYcCUrcZil60q6ylltCv8MdzmfU8gyOBWCLUTMFQSCA3CexTTL/diUrCuk0CnSzl3JDG8iLdXLpoi5vaqf7sICoHdwacM=@vger.kernel.org, AJvYcCUt1yYC2VVWylN4GAtPuAngViSyFRDFJCJopCSJGkzI9pXRTQoMVUevNTu6uRNI5KgaB9aS3H6RtzZ1FGuW@vger.kernel.org, AJvYcCW4ctXMlWPCM6I88hQkuQDP/CALpsHvfGT3cKVoGepW/HdG6D+VkFKbTJjBzVAL3VSN2c6TvnfM3tId@vger.kernel.org, AJvYcCXNxP+pmwcHvM2v06wcpJEmnMeIRu4LkvF9lfP/bNEXlf+mqxYlx2qZ8Ud10qTfVFa229Xikd+SPK2SXA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEJ4GDoHyIulx2iOIeiWg0NvVsPShqVw2qGtFzq88rprzFyJQk
-	JXgYs6XqEStHvRtrV/TmdwFOMsGxPLzijQKq10Ddb7CvjcoOfpQtjoZc59Su8pk=
-X-Gm-Gg: ASbGncv7o7uObYjHycYvn93NMqQjMegv71THfKGFvfB6w7Qa1R3WSCGTCmlemu3tf8Q
-	v8YpgPPX2I075G3hvI1c4Z2w45URJKAwCdw2RMHAawuLldVHYLay5u/+DhEmhJrj4LEiB54caTU
-	DH/HVj6B+VqWVmQ2MGBYXZITPQSJMdiEzR95CR81LhDwwTIShOmG12PhE+vqmNvDaZVEv0Gma7L
-	8nJea7LdUAjCQFuGd6YxnoT7EQOsdkImSGKOHLM79kkJqm68cFdehzOxlwrgtLxUhiAAii75h8D
-	yG+Ea0KaYn53XyhaXP5jK9xri/ZktsEdCTuRxjVxUEdKBlsXxR3vdg==
-X-Google-Smtp-Source: AGHT+IGdRb8RSEY/uMCLsBXs2PCUKzrfAlPuylZyCRqePE4ThlWVOzd97jd96fvdyjccpN5hsZkrrA==
-X-Received: by 2002:a17:902:f644:b0:224:1af1:87f4 with SMTP id d9443c01a7336-2292f974b63mr133802185ad.22.1743365882249;
-        Sun, 30 Mar 2025 13:18:02 -0700 (PDT)
-Received: from localhost ([2804:30c:b03:ee00:e0b8:a8b8:44aa:8d0b])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3039e1139fasm9042555a91.25.2025.03.30.13.18.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Mar 2025 13:18:01 -0700 (PDT)
-Date: Sun, 30 Mar 2025 17:19:02 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>, Nuno Sa <nuno.sa@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Guillaume Stols <gstols@baylibre.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH v10 3/8] iio: adc: add helpers for parsing ADC nodes
-Message-ID: <Z-mnNtYLkwsTYjMh@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1742560649.git.mazziesaccount@gmail.com>
- <f1d8b3e15237947738912c0d297b3e1e21d8b03e.1742560649.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="MNQ2d/x/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=folker-schwesinger.de; s=default2212; h=Subject:Date:From:To:Cc:Message-Id:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References;
+	bh=MFq0jSVBn19OTS0DWVYSuHMK3dPFrth1ryZM4cH58tw=; b=MNQ2d/x/j/Q65sgi7kGZIo+CWM
+	OqGKeuEKQmFZdCVaMvtemnHu/pLMImJQaLIJod7goj0oUc04Nrj3LB0Bmrg8kjvfBaoiF/2huV7Tn
+	VsD3RuqSXGd/tOyrUDeVrBFojBF653eS78zSDj8f6TBd5mmNKhaJOUiX7SbYX8Uz/sFL10igMDcOv
+	iutHQnfWr4fotJiCL6uk7A9MkPfFuXEOrrgN7LZGLwc/XW07DkkE3avYJOCKwSXcmczU0hF+nsQuL
+	sTTCx9PxemcdnNTPYwtMsae5pdKOg7XJtUoMSYCm/rp1DRaSqkOsaTyGyxHa4rORR87u2CSS54J6t
+	vLTu20aw==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1tyyhK-000Gux-2y;
+	Sun, 30 Mar 2025 21:51:58 +0200
+Received: from [170.62.100.233] (helo=localhost)
+	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1tyyhK-000118-1J;
+	Sun, 30 Mar 2025 21:51:58 +0200
+Message-Id: <D8TV2MP99NTE.1842MMA04VB9N@folker-schwesinger.de>
+Cc: "Vinod Koul" <vkoul@kernel.org>, "Michal Simek" <michal.simek@amd.com>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Manivannan Sadhasivam"
+ <manivannan.sadhasivam@linaro.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>, "Marek Vasut" <marex@denx.de>, "Radhey
+ Shyam Pandey" <radhey.shyam.pandey@amd.com>
+To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>
+From: "Folker Schwesinger" <dev@folker-schwesinger.de>
+Date: Wed, 12 Mar 2025 16:59:26 +0100
+Subject: [PATCH] dmaengine: xilinx_dma: Support descriptor setup from dma_vecs
+X-Authenticated-Sender: dev@folker-schwesinger.de
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27593/Sun Mar 30 10:30:26 2025)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1d8b3e15237947738912c0d297b3e1e21d8b03e.1742560649.git.mazziesaccount@gmail.com>
 
-Hi Matti,
+The DMAEngine provides an interface for obtaining DMA transaction
+descriptors from an array of scatter gather buffers represented by
+struct dma_vec.
+Add support for this interface in the Xilinx DMA driver by implementing
+the .device_prep_peripheral_dma_vec() callback of struct dma_device.
 
-The new helpers for ADC drivers look good to me.
-I am now very late to complain about anything but am leaving some minor comments
-below that can be completely ignored.
+Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+---
+ drivers/dma/xilinx/xilinx_dma.c | 94 +++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
 
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 3ad44afd0e74..2d4658b02d93 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -2172,6 +2172,99 @@ xilinx_cdma_prep_memcpy(struct dma_chan *dchan, dma_addr_t dma_dst,
+ 	return NULL;
+ }
+ 
++/**
++ * xilinx_dma_prep_peripheral_dma_vec - prepare descriptors for a DMA_SLAVE
++ *	transaction from DMA vectors
++ * @dchan: DMA channel
++ * @vecs: Array of DMA vectors that should be transferred
++ * @nb: number of entries in @vecs
++ * @direction: DMA direction
++ * @flags: transfer ack flags
++ *
++ * Return: Async transaction descriptor on success and NULL on failure
++ */
++static struct dma_async_tx_descriptor *xilinx_dma_prep_peripheral_dma_vec(
++	struct dma_chan *dchan, const struct dma_vec *vecs, size_t nb,
++	enum dma_transfer_direction direction, unsigned long flags)
++{
++	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
++	struct xilinx_dma_tx_descriptor *desc;
++	struct xilinx_axidma_tx_segment *segment, *head, *prev = NULL;
++	size_t copy;
++	size_t sg_used;
++	unsigned int i;
++
++	if (!is_slave_direction(direction) || direction != chan->direction)
++		return NULL;
++
++	desc = xilinx_dma_alloc_tx_descriptor(chan);
++	if (!desc)
++		return NULL;
++
++	dma_async_tx_descriptor_init(&desc->async_tx, &chan->common);
++	desc->async_tx.tx_submit = xilinx_dma_tx_submit;
++
++	/* Build transactions using information from DMA vectors */
++	for (i = 0; i < nb; i++) {
++		sg_used = 0;
++
++		/* Loop until the entire dma_vec entry is used */
++		while (sg_used < vecs[i].len) {
++			struct xilinx_axidma_desc_hw *hw;
++
++			/* Get a free segment */
++			segment = xilinx_axidma_alloc_tx_segment(chan);
++			if (!segment)
++				goto error;
++
++			/*
++			 * Calculate the maximum number of bytes to transfer,
++			 * making sure it is less than the hw limit
++			 */
++			copy = xilinx_dma_calc_copysize(chan, vecs[i].len,
++					sg_used);
++			hw = &segment->hw;
++
++			/* Fill in the descriptor */
++			xilinx_axidma_buf(chan, hw, vecs[i].addr, sg_used, 0);
++			hw->control = copy;
++
++			if (prev)
++				prev->hw.next_desc = segment->phys;
++
++			prev = segment;
++			sg_used += copy;
++
++			/*
++			 * Insert the segment into the descriptor segments
++			 * list.
++			 */
++			list_add_tail(&segment->node, &desc->segments);
++		}
++	}
++
++	head = list_first_entry(&desc->segments, struct xilinx_axidma_tx_segment, node);
++	desc->async_tx.phys = head->phys;
++
++	/* For the last DMA_MEM_TO_DEV transfer, set EOP */
++	if (chan->direction == DMA_MEM_TO_DEV) {
++		segment->hw.control |= XILINX_DMA_BD_SOP;
++		segment = list_last_entry(&desc->segments,
++					  struct xilinx_axidma_tx_segment,
++					  node);
++		segment->hw.control |= XILINX_DMA_BD_EOP;
++	}
++
++	if (chan->xdev->has_axistream_connected)
++		desc->async_tx.metadata_ops = &xilinx_dma_metadata_ops;
++
++	return &desc->async_tx;
++
++error:
++	xilinx_dma_free_tx_descriptor(chan, desc);
++	return NULL;
++}
++
+ /**
+  * xilinx_dma_prep_slave_sg - prepare descriptors for a DMA_SLAVE transaction
+  * @dchan: DMA channel
+@@ -3176,6 +3269,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
+ 	xdev->common.device_config = xilinx_dma_device_config;
+ 	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
+ 		dma_cap_set(DMA_CYCLIC, xdev->common.cap_mask);
++		xdev->common.device_prep_peripheral_dma_vec = xilinx_dma_prep_peripheral_dma_vec;
+ 		xdev->common.device_prep_slave_sg = xilinx_dma_prep_slave_sg;
+ 		xdev->common.device_prep_dma_cyclic =
+ 					  xilinx_dma_prep_dma_cyclic;
 
-Thanks,
-Marcelo
-
-On 03/24, Matti Vaittinen wrote:
-> There are ADC ICs which may have some of the AIN pins usable for other
-> functions. These ICs may have some of the AIN pins wired so that they
-> should not be used for ADC.
-> 
-> (Preferred?) way for marking pins which can be used as ADC inputs is to
-> add corresponding channels@N nodes in the device tree as described in
-> the ADC binding yaml.
-Not sure it's preferred to have ADC channels always declared in dt. That
-question was somewhat also raised during ADC doc review [1]. In short, ADC
-channel may and may not be declared under ADC dt node. ADC bindings often don't
-enforce channels to be declared. On IIO side of things, many ADC drivers just
-populate channels even if they are not declared in dt.
-The ADCs you are supporting in the other patches of this series seem to require 
-dt declared channels though.
-
-[1]: https://lore.kernel.org/linux-iio/20250118155153.2574dbe5@jic23-huawei/
-
-Would something like
-
-A common way of marking pins that can be used as ADC inputs is to add
-corresponding channel@N nodes in the device tree as described in the ADC
-binding yaml.
-
-be a good rephrasing of the above paragraph?
-
-> 
-> Add couple of helper functions which can be used to retrieve the channel
-> information from the device node.
-> 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-...
-> +static inline int iio_adc_device_num_channels(struct device *dev)
-> +{
-> +	return device_get_named_child_node_count(dev, "channel");
-> +}
-I wonder if this function name can eventually become misleading.
-
-In Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml we have
-temperature sensor with channel nodes named after external hardware connected to
-the sensor, leading to channels having different node names. Can anything like
-that ever be accepted for ADC bindings?
+base-commit: 6565439894570a07b00dba0b739729fe6b56fba4
+-- 
+2.49.0
