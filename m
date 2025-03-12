@@ -1,28 +1,28 @@
 Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68FC1E5B71;
-	Wed, 12 Mar 2025 19:09:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA631E5B71;
+	Wed, 12 Mar 2025 19:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741806574; cv=none; b=DQw5wLbztj4Tl4JYbi5LWKzSVvGXCNnC3EklR4ftHsc8FmWWlL6YD+zf10+zzMeaD1DURNC78L8mf2Y9/Bslgq5vvE7QY7txXhbTiX/6MynOsS5bHXuICqUAXnQ9D7hZBOD45jFGOhVLS2G4ouLkneN4bSxpw4ZVOaLylFKS+Ic=
+	t=1741806641; cv=none; b=WPYGhjoJ0hsaiUB+TQgjzeN8+5IEueoZPofGQ+V2OgNT30+xGCSsnwnl24p51MD4+HU0UGkN9PdNPMnrCgcQuplwrXuc46nRYyN3MCd+UWGYPcVH3aVymu3nFc2CgpUHnbSgHNoxyg5oobw6hCBsp5aGttTiQlVCm8kOPOojtq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741806574; c=relaxed/simple;
-	bh=Zjr+p94Ms+qEOumlrsyplJ+IzA+XZ5EGez4FBJy0I38=;
+	s=arc-20240116; t=1741806641; c=relaxed/simple;
+	bh=cgz5IX7ed0DoG9H5f0utfDXpJpyil9n5ltI04DxyhYc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YwZ/kPyLsVe4KQUAkEPRzydvd52GJb0pWuLRQ0CT1RAf1b95bXKJmKbDm5IHl+jzqlY8J1Ue5Tu8litOIW1ZalU4i073qHUsvV0Wtyp3NvDA+kQZ9OO8ezKR1O0XkbuSIUGjbHtps+7URz9FxPNjwiSOzV4c0f0k9SuRwGn5ptg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=jVoZ+e40; arc=none smtp.client-ip=49.12.72.200
+	 MIME-Version:Content-Type; b=Tak9o6JhPLAsdgXpHyvRwkeL9jRhXmbkHHb0XwXHIDILyQDU2tnTULSi3oQw+hQgAR4EJ2wYJGIF4wYhuS4I+hlBbMNvHhPTa07hF9lLIKzxpcMujQZpJzBK+zAJFwBbgfzhSUXbO3Ss3ToDe0a5NYyvB576ewLIQkn+1ulI0jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=JjcHXgAs; arc=none smtp.client-ip=49.12.72.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="jVoZ+e40"
+	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="JjcHXgAs"
 From: Fiona Behrens <me@kloenk.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
-	t=1741806570; bh=7MDZ/FQtrPpKNszUddqvpvcb6OpHOBdq1f05MOwaCfc=;
+	t=1741806037; bh=kw9gU0TN7H6ODehbFr1G1DOlc7O7YIx4un9PjAtfgFY=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=jVoZ+e40R/jxk5bcBKumN2qB2eWyOSSYDzA3QHksadwBRq96jihnyWjaoQV9pn2zm
-	 e/gxWEuWt0Fr0Qk64nMllk+ufRa6aVKLilOYbjTNaics6F1fBpaUIyP72df+JPnpy/
-	 NBTZpB17tUf4nNcrkuaCSdvk6/ifAXPhwPujx40M=
+	b=JjcHXgAssXzEQsToknvoQvcASXiUCr1l1jWfYjjq5HFC3BXLb2fBdUaaY0pPOsSiC
+	 +2jSPmKmphe4WW+OE8oH1Vy8YZZQNc6tANaytwJubDILtsED0VI1sQw8aHfFvTMFkJ
+	 DFiA5q/Quxfg4uZCgVBWMk/+Ze7XA1Ay1jjWqs60=
 To: Tamir Duberstein <tamird@gmail.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
   Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
@@ -34,14 +34,14 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
  <bobo1239@web.de>,  Kees Cook <kees@kernel.org>,
   rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,  Lukas
  Wirth <lukas.wirth@ferrous-systems.com>
-Subject: Re: [PATCH v2 7/7] scripts: generate_rust_analyzer.py: define host
- crates
-In-Reply-To: <20250311-rust-analyzer-host-v2-7-30220e116511@gmail.com> (Tamir
-	Duberstein's message of "Tue, 11 Mar 2025 21:17:28 -0400")
+Subject: Re: [PATCH v2 1/7] scripts: generate_rust_analyzer.py: add missing
+ whitespace
+In-Reply-To: <20250311-rust-analyzer-host-v2-1-30220e116511@gmail.com> (Tamir
+	Duberstein's message of "Tue, 11 Mar 2025 21:17:22 -0400")
 References: <20250311-rust-analyzer-host-v2-0-30220e116511@gmail.com>
-	<20250311-rust-analyzer-host-v2-7-30220e116511@gmail.com>
-Date: Wed, 12 Mar 2025 20:09:29 +0100
-Message-ID: <m25xkeysk6.fsf@kloenk.dev>
+	<20250311-rust-analyzer-host-v2-1-30220e116511@gmail.com>
+Date: Wed, 12 Mar 2025 20:00:36 +0100
+Message-ID: <m2y0xaysyz.fsf@kloenk.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,48 +52,41 @@ Content-Type: text/plain
 
 Tamir Duberstein <tamird@gmail.com> writes:
 
-> Define host crates used by the `macros` crate separately from target
-> crates, now that we can uniquely identify crates with the same name.
+> Add a space before the `/` operator for consistency with surrounding
+> code and code formatting tools. Add a second newline between top-level
+> items in accordance with PEP 8[1]:
 >
-> This avoids rust-analyzer thinking the host `core` crate has our target
-> configs applied to it.
+>> Surround top-level function and class definitions with two blank
+> lines.
 >
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Link: https://lore.kernel.org/all/CANiq72mw83RmLYeFFoJW6mUUygoyiA_f1ievSC2pmBESsQew+w@mail.gmail.com/
+> This change was made by a code formatting tool.
+>
+> Link: https://peps.python.org/pep-0008/ [1]
 > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
 Reviewed-by: Fiona Behrens <me@kloenk.dev>
 
 > ---
->  scripts/generate_rust_analyzer.py | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+>  scripts/generate_rust_analyzer.py | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
 > diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_analyzer.py
-> index e1002867735b..4832a4901c94 100755
+> index adae71544cbd..15a690ae2edb 100755
 > --- a/scripts/generate_rust_analyzer.py
 > +++ b/scripts/generate_rust_analyzer.py
-> @@ -128,10 +128,12 @@ def generate_crates(
->      # NB: sysroot crates reexport items from one another so setting up our transitive dependencies
->      # here is important for ensuring that rust-analyzer can resolve symbols. The sources of truth
->      # for this dependency graph are `(sysroot_src / crate / "Cargo.toml" for crate in crates)`.
-> +    host_core = append_sysroot_crate("core", [])
-> +    host_alloc = append_sysroot_crate("alloc", [host_core])
-> +    host_std = append_sysroot_crate("std", [host_alloc, host_core])
-> +    host_proc_macro = append_sysroot_crate("proc_macro", [host_core, host_std])
+> @@ -103,7 +103,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
+>      ):
+>          append_crate(
+>              display_name,
+> -            srctree / "rust"/ display_name / "lib.rs",
+> +            srctree / "rust" / display_name / "lib.rs",
+>              deps,
+>              cfg=cfg,
+>          )
+> @@ -178,5 +178,6 @@ def main():
+>  
+>      json.dump(rust_project, sys.stdout, sort_keys=True, indent=4)
+>  
 > +
->      core = append_sysroot_crate("core", [], cfg=crates_cfgs.get("core", []))
-> -    alloc = append_sysroot_crate("alloc", [core])
-> -    std = append_sysroot_crate("std", [alloc, core])
-> -    proc_macro = append_sysroot_crate("proc_macro", [core, std])
->  
->      compiler_builtins = append_crate(
->          "compiler_builtins",
-> @@ -142,7 +144,7 @@ def generate_crates(
->      macros = append_proc_macro_crate(
->          "macros",
->          srctree / "rust" / "macros" / "lib.rs",
-> -        [std, proc_macro],
-> +        [host_std, host_proc_macro],
->      )
->  
->      build_error = append_crate(
+>  if __name__ == "__main__":
+>      main()
