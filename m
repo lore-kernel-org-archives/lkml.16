@@ -1,76 +1,131 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59FF11D618E;
-	Wed, 12 Mar 2025 17:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC1723F369;
+	Wed, 12 Mar 2025 17:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800008; cv=none; b=LVbISqxeVuiQcBK4/bNL4Z6Uwho5aKVPUJxqBogVgs1+mA6HKP2umzObgXB3+E7IDqLEljWOtGPDLv4/2DD2nDAmsrvIu8ZbfYqe23Y2+9/uhcvGnUUUcK5LUfmB/adF5XHSad9T8GbWht3P904VSLXlkZNpIkSibluMiH4enHA=
+	t=1741800022; cv=none; b=fhDiAC07jbzopDobvy7ZbLr/jfIGVvEfVk6JLCcW4OwrVUN4hCfObex+qm3j+uPOnIxsOSxOdO/daE5y3UfhbEk64H2L/J44dwIppuaFQt4eVY5VBwcN2bYCvfIgwoZkg1/XL5Dd2FWe/lftr2ZwFUAih/p0LkjkpJpGovcx9Qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741800008; c=relaxed/simple;
-	bh=PXXAL+wAm6QaYU/gT6snMc/Zu8ONlhZRGmWPNfVGUuA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=p1HHbCKtIpHyxZMqhEI2q04Q5feMPCLp/SI4lv/VcPELnLiRmiiWCKKYrnQf2IAd5q+UexAgUFUnY/rZQI7VkcLzSSCY6Ola9SVrUIjT2R6h4020AguSI3Z8H/MSiPqFqRXnD02ndQECKpF0X66tlmC61SsnjUzE3w5EtmH+I28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hAAe1Szk; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1741800022; c=relaxed/simple;
+	bh=+z9ZTMm+ywSW9cK4py+Gn/5A/QzUp5MWoPjCNUGPUuY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qtq4UngE8CHpOHrm7WSAQxgeLxTNrZQAijxdXZxxkgpoQL5vobAlx2xgcP8Uf4/UcBZfH1EU9R4EESY606FR3k3pLLtFBZYJ9r5yvQdoX8kMD3geQP2cWOpdthQxQ8HMi//DPcAE/3AP1r7tvHgtAu5TUXL01r/mMSU/lkCafPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NrxGruL6; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hAAe1Szk"
-Received: by linux.microsoft.com (Postfix, from userid 1158)
-	id DDC54210B144; Wed, 12 Mar 2025 10:20:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DDC54210B144
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741800006;
-	bh=8t8Qck3OK+mqnyrM/lx4bqh1qgvMY7xZIfxxCR3feRo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hAAe1SzkxauidIbsOJ+qC6UFS2/tkAfyPxviyx1aTMFpnusRdm5WTD0Lg7E/HFBm4
-	 WyZmBbHh8KOOH2sU5u3gdhVxVFnmvfKDFJmLYMM5bx6mmBhlgNJ1tTda6owU+hmUfJ
-	 ha10e/fdxfn5YEpWZdOxdfWlv+7gkuRZRtmD5J9g=
-From: Hardik Garg <hargar@linux.microsoft.com>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org
-Subject: Re: [PATCH 6.13 000/207] 6.13.7-rc1 review
-Date: Wed, 12 Mar 2025 10:20:06 -0700
-Message-Id: <1741800006-17418-1-git-send-email-hargar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <20250310170447.729440535@linuxfoundation.org>
-References: <20250310170447.729440535@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NrxGruL6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741800021; x=1773336021;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=+z9ZTMm+ywSW9cK4py+Gn/5A/QzUp5MWoPjCNUGPUuY=;
+  b=NrxGruL6A/Br9HCgO1rhOBNLasYgoL8he2FxGsi8GM+K/uu9h9lUoWRI
+   mrbkqdXGek8v/vELxxIDQsWlwHW31j9MNhdbt3u41ExvAKBSqcsHKkfxj
+   ujjpec/ncBeEf/yUjPDHJjAcB0Q0onblMBx+z1ab4aZZZujO9RFUDfbtv
+   65J7KzTT/ziem0LRsexRD5IHCGr1exCZ+y/9Ej6YH//BHnFS48d0wdsIU
+   AW2bsEQBeYUaLd+A1d/i8aJfqNL46sr9sgOgDSCwaWO9SnnkxjW/+OZIJ
+   zjjtYiUJ2kSMUFyVXcKhhzLciN+2cw9fSZ2VCzR9v/bwfFXYBMxsd3xNY
+   g==;
+X-CSE-ConnectionGUID: fIG1libjTX6GD+YIS+2iHg==
+X-CSE-MsgGUID: PdRRRx1eQbSH5Q6TtbZR5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="60290610"
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="60290610"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 10:20:20 -0700
+X-CSE-ConnectionGUID: zmPXf+zDTiC9R94a2DNpJQ==
+X-CSE-MsgGUID: W93TXelxSxipWOsYnxa81g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="125769469"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa004.jf.intel.com with ESMTP; 12 Mar 2025 10:20:19 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 8CE3B130; Wed, 12 Mar 2025 19:20:17 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Longbin Li <looong.bin@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>
+Subject: [PATCH v1 1/2] spi: sg2044-nor: Fully convert to device managed resources
+Date: Wed, 12 Mar 2025 19:19:16 +0200
+Message-ID: <20250312172016.4070094-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250312172016.4070094-1-andriy.shevchenko@linux.intel.com>
+References: <20250312172016.4070094-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The kernel, bpf tool, perf tool, and kselftest builds fine for v6.13.7-rc1 on x86 and arm64 Azure VM.
+The driver has a wrong order of the cleaning up the resources,
+i.e. it first will destroy the mutex and only then free the SPI
+which might still use it. Fix this by switching to devm_mutex_init().
 
-Kernel binary size for x86 build:
-text      data      bss      dec       hex      filename
-29937422  17837074  6320128  54094624  3396b20  vmlinux
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/spi/spi-sg2044-nor.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-Kernel binary size for arm64 build:
-text      data      bss      dec       hex      filename
-36684450  15081117  1054416  52819983  325f80f  vmlinux
+diff --git a/drivers/spi/spi-sg2044-nor.c b/drivers/spi/spi-sg2044-nor.c
+index 454153a63b42..e104cac57d41 100644
+--- a/drivers/spi/spi-sg2044-nor.c
++++ b/drivers/spi/spi-sg2044-nor.c
+@@ -435,7 +435,6 @@ static int sg2044_spifmc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	spifmc = spi_controller_get_devdata(ctrl);
+-	dev_set_drvdata(&pdev->dev, ctrl);
+ 
+ 	spifmc->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+ 	if (IS_ERR(spifmc->clk))
+@@ -457,14 +456,15 @@ static int sg2044_spifmc_probe(struct platform_device *pdev)
+ 	ctrl->mem_ops = &sg2044_spifmc_mem_ops;
+ 	ctrl->mode_bits = SPI_RX_DUAL | SPI_TX_DUAL | SPI_RX_QUAD | SPI_TX_QUAD;
+ 
+-	mutex_init(&spifmc->lock);
++	ret = devm_mutex_init(&spifmc->lock);
++	if (ret)
++		return ret;
+ 
+ 	sg2044_spifmc_init(spifmc);
+ 	sg2044_spifmc_init_reg(spifmc);
+ 
+ 	ret = devm_spi_register_controller(&pdev->dev, ctrl);
+ 	if (ret) {
+-		mutex_destroy(&spifmc->lock);
+ 		dev_err(&pdev->dev, "spi_register_controller failed\n");
+ 		return ret;
+ 	}
+@@ -472,13 +472,6 @@ static int sg2044_spifmc_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static void sg2044_spifmc_remove(struct platform_device *pdev)
+-{
+-	struct sg2044_spifmc *spifmc = platform_get_drvdata(pdev);
+-
+-	mutex_destroy(&spifmc->lock);
+-}
+-
+ static const struct of_device_id sg2044_spifmc_match[] = {
+ 	{ .compatible = "sophgo,sg2044-spifmc-nor" },
+ 	{ /* sentinel */ }
+@@ -491,7 +484,6 @@ static struct platform_driver sg2044_nor_driver = {
+ 		.of_match_table = sg2044_spifmc_match,
+ 	},
+ 	.probe = sg2044_spifmc_probe,
+-	.remove = sg2044_spifmc_remove,
+ };
+ module_platform_driver(sg2044_nor_driver);
+ 
+-- 
+2.47.2
 
-
-
-Tested-by: Hardik Garg <hargar@linux.microsoft.com>
-
-
-
-
-Thanks,
-Hardik
