@@ -1,138 +1,163 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 737351D63D0;
-	Wed, 12 Mar 2025 03:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69A5154426
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 04:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741751601; cv=none; b=GTmpJBhMmaQ7Z9+KCfL+ceGx+u3TuZC5+H5wUQNgIkUlmuDUBJInH0rPo2yV4KnxPdUY1TZDi/Xhsrvh9IQMr+zV+LNretZpeSgXzcNjtUk7bxkYrfV2/nF6XtD9volkER70tdoYGqttU6CoGXcfkW7o4kQyyJkueyg9vzQUzfo=
+	t=1741752208; cv=none; b=Dgd5ZvTkhG4NNmjGju1jNZln5Uw3t5b/hxSkkcnkMlqPji3mdrOYsxtJWZejpA3HmHkN33adVWhurmefMxs+RETr1x2CpaDhhRUCT74PBGXlDi4Y7eYgq14Igr6GX2m2HwkVkJJr34pZM5tYqOsDd28JyjUCUzURbF5uKJg5h/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741751601; c=relaxed/simple;
-	bh=50QNA4rEUL5GW3S0GjFuhcMVbRtP6H/ea2M/vgXrMD0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=KCl6V8ruSwudStIdJrOI7l/qLhFlSroHtDiNvz9GBrMraqJ2wZXQWW3I0g0FV0ors5Y2jRWS8uFWQg4F4ZMMdGf8wlUYy45eJP6rgGh51HUcOOIoxobWFrD+Oc2mj0pjoB7KXaOubb9C67yvMOYviQ1QCl+mtyuwlqJdyjZ0r+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=mDV81nO3 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1741752208; c=relaxed/simple;
+	bh=DSIMBFNsY1w4xtxumS2VbvzlE4iL0ICS9Rp8Ydr7DS4=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Y6PZ9mRC3Q0jicYCBCNr9bkRy6Bejk8fXii28bmPI3qZugZzIzg1yme9uPUM6bl+IkLNH8y/SCLMb8Ufx7gQ/eZD8u8/gh6rZQZU+upiMV2iakp73lEED9uKeTWDV1jp+0cM3jB588Lw/jle9njVqeOHd4BHJFN+5uSRLZqFeTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ktv14dhd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="mDV81nO3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=6XI4Slkoy1M0rqTSf35Ow6UKaNFOV3PAv3wPbD3wF3U=; b=m
-	DV81nO3lQxMZpSA7zSkrPxZKLLfUMWvYOg+NmgJvjntqocjING6kNNYuuzdTFtqK
-	MHg+KcKLSFQ3xHOfl0cYmGk4UzOo1T19veUDwMMniYKJpPPuOus2Pw13PxWg8cL0
-	/G8jX7obo9v3pbOauvhrg3qccm/v12orF3K/EehGIo=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-123 (Coremail) ; Wed, 12 Mar 2025 11:51:58 +0800
- (CST)
-Date: Wed, 12 Mar 2025 11:51:58 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Piotr Oniszczuk" <piotr.oniszczuk@gmail.com>
-Cc: heiko@sntech.de, neil.armstrong@linaro.org,
-	sebastian.reichel@collabora.com, devicetree@vger.kernel.org,
-	hjc@rock-chips.com, mripard@kernel.org, linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, yubing.zhang@rock-chips.com,
-	dri-devel@lists.freedesktop.org,
-	"Andy Yan" <andy.yan@rock-chips.com>, krzk+dt@kernel.org,
-	robh@kernel.org, linux-arm-kernel@lists.infradead.org,
-	lumag@kernel.org, stephen@radxa.com
-Subject: Re:Re: [PATCH 0/6] Add support for RK3588 DisplayPort Controller
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <AD2A56F9-B4FB-406B-BE7C-49BB5DFD3BAD@gmail.com>
-References: <25401bfa.291d.19564244e54.Coremail.andyshrk@163.com>
- <75189787-28E1-4FC2-8E10-4960B3877A6F@gmail.com>
- <28b0d3fc.bb3.19568f6b5f8.Coremail.andyshrk@163.com>
- <44213B17-FE14-4FB8-8319-1E31BBF6EAA0@gmail.com>
- <74c154b6.8c50.1956aa8c8d2.Coremail.andyshrk@163.com>
- <1573D5D6-AFED-4D92-8112-B0C6BB52D5FF@gmail.com>
- <46c0d239.a4f5.1956b619b97.Coremail.andyshrk@163.com>
- <252BB2E2-4BC5-4402-953D-F7B30EA5DE14@gmail.com>
- <326B91E9-FB91-43C3-B98B-3EF079F313C6@gmail.com>
- <545cc438.7e3.1956e13a3e2.Coremail.andyshrk@163.com>
- <AD2A56F9-B4FB-406B-BE7C-49BB5DFD3BAD@gmail.com>
-X-NTES-SC: AL_Qu2fA/uevk0q7iOYZOlSyjNW+7xfHKv6+qRChMQvQtsqqTHr9T0KcVtuP1XR3/9iWlV8euuspyqU8XtlMgI5
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ktv14dhd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAA67C4CEE3;
+	Wed, 12 Mar 2025 04:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741752208;
+	bh=DSIMBFNsY1w4xtxumS2VbvzlE4iL0ICS9Rp8Ydr7DS4=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=ktv14dhdTjmcCCeMlLMQn8NFoOjnwA/Z+kN6QrXbZ5+mAfFQ9F0GnDcmICr43WIHj
+	 0qOkNcg4knR4ES2XWt9V3jZd4n6KI3KRzDhKKmezNjVbOG0cVt/AGYFLP2sZ94WCi6
+	 Gb1ZU8JK9okzB4J6vQi9O5gppynD/9B6dP0tvkC2P539ied6RQ3O9BAxY9Uc1Pzv0z
+	 foaCg1sLTzYVD4k9vK8ZBuXKB3FseA24ysl4/vEjQO6SJzNXUdyAdrhRDpbHmG17f4
+	 riEFvwJZ+6jX1quPPyo1YVQLRvy2xwZIyYxezBUCLRtR0o6Ku7o8HvwHPGiW6tM4Iv
+	 RqdTVfLfv0h+Q==
+Message-ID: <381ac49a-25e9-4c37-9855-e2adb64fa81d@kernel.org>
+Date: Wed, 12 Mar 2025 12:03:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4003289a.41da.195887b0462.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:eygvCgCXPn_eBNFnxoN8AA--.19966W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkAcOXmfQ-RqhAQAEsz
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org,
+ "linux-f2fs-devel@lists.sourceforge.net"
+ <linux-f2fs-devel@lists.sourceforge.net>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] f2fs: fix missing discard candidates in fstrim
+To: Chunhai Guo <guochunhai@vivo.com>, "jaegeuk@kernel.org"
+ <jaegeuk@kernel.org>
+References: <20250119140834.1061145-1-guochunhai@vivo.com>
+ <77fa4633-f7db-4daa-a9e1-3fdb5bf9dd1d@kernel.org>
+ <74811428-9fee-467b-802f-dcb9f9dbb5a5@vivo.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <74811428-9fee-467b-802f-dcb9f9dbb5a5@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-CkhpIFBpb3RyLArlnKggMjAyNS0wMy0xMCAwNDo1Mzo1MO+8jCJQaW90ciBPbmlzemN6dWsiIDxw
-aW90ci5vbmlzemN6dWtAZ21haWwuY29tPiDlhpnpgZPvvJoKPgo+Cj4+IFdpYWRvbW/Fm8SHIG5h
-cGlzYW5hIHByemV6IEFuZHkgWWFuIDxhbmR5c2hya0AxNjMuY29tPiB3IGRuaXUgNyBtYXIgMjAy
-NSwgbyBnb2R6LiAwMTo0ODoKPj4gCj4+IAo+PiBIaSBQaW90ciwKPj4g5ZyoIDIwMjUtMDMtMDYg
-MjI6Mjg6MDjvvIwiUGlvdHIgT25pc3pjenVrIiA8cGlvdHIub25pc3pjenVrQGdtYWlsLmNvbT4g
-5YaZ6YGT77yaCj4+PiAKPj4+IAo+PiAKPj4gQWxsIGR1bXAgaW5mb3JtYXRpb24gY3VycmVudGx5
-IGFwcGVhcnMgdG8gYmUgY29ycmVjdCwgc28gSSdtIHRlbXBvcmFyaWx5IHVuc3VyZSB3aHkKPj4g
-dGhlcmUgaXMgbm8gZGlzcGxheSBvbiB0aGUgbW9uaXRvci4KPj4gTWF5YmUgdHJ5IHNvbWUgcGx1
-ZyBhbmQgdW5wbHVnIGZvciB0aGUgRFAgY2FibGUsIG9yIHRyeSBhbm90aGVyIGNhYmxlIG9yIG1v
-bml0b3I/Cj4+IAo+PiBJdCBzZWVtcyB0aGF0IHRoaXMgYm9hcmQgdXNlcyBhIERQIHRvIEhETUkg
-Y29udmVydGVyPyBEb2VzIHRoaXMgdHJhbnNtaXR0ZXIgbmVlZCBhIGRyaXZlcj8KPj4gCj4+IEkg
-d29uJ3QgYmUgYXQgbXkgY29tcHV0ZXIgb3ZlciB0aGUgbmV4dCB0d28gb3IgdGhyZWUgZGF5cywg
-c28gYW55IGZ1cnRoZXIgcmVwbGllcyB0byB5b3VyIGVtYWlsCj4+IG1pZ2h0IGhhdmUgdG8gd2Fp
-dCB1bnRpbCBuZXh0IHdlZWsuCj4+IAo+PiAKPgo+QW5keSwKPkZZSToKPgo+SSBkb25lIHRlc3Qg
-b24gbWluZSByb2NrNWEgd2l0aCBhcHBsaWVkIE5hb2tpIGRwMCBlbmFibGVtZW50IGluIGR0cyAo
-YW5kIG9ubHkgaW4gZHRzKS4KPk5vIGFueSBjaGFuZ2VzIGluIGR3IGRwIGRyaXZlciAoc28gaeKA
-mW0gb24gdmFuaWxsYSAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4
-LXJvY2tjaGlwL2NvdmVyLzIwMjUwMjIzMTEzMDM2Ljc0MjUyLTEtYW5keXNocmtAMTYzLmNvbS8g
-ICApCj4KPm9uIG1pbmUgcm9jazVhIHJhNjIwIGhkbWkgcG9ydCB3b3JrcyBvay4KPihJIGNvbnRh
-Y3RlZCBhbHNvIFJhZHhhIGFib3V0IHJhNjIwIGFuZCB0aGV5IGNvbmZpcm1lZDogcmE2MjAgaXMg
-anVzdCBEUC0+SERNSSBjb252ZXJ0ZXIuIE5vIGFueSBkcml2ZXIgbm9yIHNwZWNpYWwgcHJvZ3Jh
-bW1pbmcvZW5hYmxlbWVudCBpcyBuZWVkZWQpCj4KPlRoaXMgdGVsbHMgbWUgdGhhdCBkcDAgKHJv
-Y2s1YSkgd29ya3Mgb2sgd2hpbGUgZHAxIChyb2NrNWl0eCkgbm90LgoKCj5pIHN1c3BlY3QgaXNz
-dWUgaXMgcHJvYmFibHkgaW4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xp
-bnV4LXJvY2tjaGlwL2NvdmVyLzIwMjUwMjIzMTEzMDM2Ljc0MjUyLTEtYW5keXNocmtAMTYzLmNv
-bS8gYW5kIGlzIHJlbGF0ZWQgdG8gZHAxIGhhbmRsaW5nPwoKV2l0aCBoZWxwIGZyb20gU3RlcGhl
-biwgd2UgZG8gc29tZSBvbmxpbmUgZGVidWcsIHRoZSBEUDEgZGlzcGxheSBpcyAgb2sgb24gaGlz
-IHJvY2s1aXR4IGJvYXJkIG5vd+OAggoKClRyeSB0aGUgcGF0Y2ggYXMgYmVsbG93OgoKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctZHAuYyBiL2RyaXZlcnMv
-Z3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctZHAuYwppbmRleCA3NWEwM2U2YTg3NWMuLmQ5NDM0
-MzEwYTE0MSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1k
-cC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctZHAuYwpAQCAtMzI5
-LDcgKzMyOSw3IEBAIHN0cnVjdCBkd19kcCB7CiAKICAgICAgICBzdHJ1Y3QgZHdfZHBfbGluayBs
-aW5rOwogICAgICAgIHN0cnVjdCBkd19kcF92aWRlbyB2aWRlbzsKLSAgICAgICBjb25zdCBzdHJ1
-Y3QgZHdfZHBfcGxhdF9kYXRhICpwbGF0X2RhdGE7CisgICAgICAgc3RydWN0IGR3X2RwX3BsYXRf
-ZGF0YSBwbGF0X2RhdGE7CgoKQEAgLTE5OTgsNyArMjAxMiw3IEBAIHN0cnVjdCBkd19kcCAqZHdf
-ZHBfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlciwK
-ICAgICAgICBkcC0+ZGV2ID0gZGV2OwogICAgICAgIGRwLT52aWRlby5waXhlbF9tb2RlID0gRFdf
-RFBfTVBfUVVBRF9QSVhFTDsKIAotICAgICAgIGRwLT5wbGF0X2RhdGEgPSBwbGF0X2RhdGE7Cisg
-ICAgICAgZHAtPnBsYXRfZGF0YS5tYXhfbGlua19yYXRlID0gcGxhdF9kYXRhLT5tYXhfbGlua19y
-YXRlOwogICAgICAgIGJyaWRnZSA9ICZkcC0+YnJpZGdlOwogICAgICAgIG11dGV4X2luaXQoJmRw
-LT5pcnFfbG9jayk7CiAgICAgICAgSU5JVF9XT1JLKCZkcC0+aHBkX3dvcmssIGR3X2RwX2hwZF93
-b3JrKTsKIAoKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBf
-ZHJtX3ZvcDIuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wMi5j
-CmluZGV4IDE3YTk4ODQ1ZmQzMS4uMmNmNzlhMTQwOWFmIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcDIuYworKysgYi9kcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcDIuYwpAQCAtMjA4OSw5ICsyMDg5LDkgQEAgc3RhdGlj
-IHVuc2lnbmVkIGxvbmcgcmszNTg4X3NldF9pbnRmX211eChzdHJ1Y3Qgdm9wMl92aWRlb19wb3J0
-ICp2cCwgaW50IGlkLCB1MzIKICAgICAgICAgICAgICAgIGRpcCB8PSBGSUVMRF9QUkVQKFJLMzU4
-OF9EU1BfSUZfUE9MX19EUDBfUElOX1BPTCwgcG9sZmxhZ3MpOwogICAgICAgICAgICAgICAgYnJl
-YWs7CiAgICAgICAgY2FzZSBST0NLQ0hJUF9WT1AyX0VQX0RQMToKLSAgICAgICAgICAgICAgIGRp
-ZSAmPSB+UkszNTg4X1NZU19EU1BfSU5GQUNFX0VOX01JUEkxX01VWDsKLSAgICAgICAgICAgICAg
-IGRpZSB8PSBSSzM1ODhfU1lTX0RTUF9JTkZBQ0VfRU5fTUlQSTEgfAotICAgICAgICAgICAgICAg
-ICAgICAgICAgICBGSUVMRF9QUkVQKFJLMzU4OF9TWVNfRFNQX0lORkFDRV9FTl9NSVBJMV9NVVgs
-IHZwLT5pZCk7CisgICAgICAgICAgICAgICBkaWUgJj0gflJLMzU4OF9TWVNfRFNQX0lORkFDRV9F
-Tl9EUDFfTVVYOworICAgICAgICAgICAgICAgZGllIHw9IFJLMzU4OF9TWVNfRFNQX0lORkFDRV9F
-Tl9EUDEgfAorICAgICAgICAgICAgICAgICAgICAgICAgICBGSUVMRF9QUkVQKFJLMzU4OF9TWVNf
-RFNQX0lORkFDRV9FTl9EUDFfTVVYLCB2cC0+aWQpOwogICAgICAgICAgICAgICAgZGlwICY9IH5S
-SzM1ODhfRFNQX0lGX1BPTF9fRFAxX1BJTl9QT0w7CiAgICAgICAgICAgICAgICBkaXAgfD0gRklF
-TERfUFJFUChSSzM1ODhfRFNQX0lGX1BPTF9fRFAxX1BJTl9QT0wsIHBvbGZsYWdzKTsKICAgICAg
-ICAgICAgICAgIGJyZWFrOwoKCgo+Cj5CVFc6IHRoZXJlIHNlZW1zIHRvIGJlIGlzc3VlIHdpdGgg
-dmlkZW8gbW9kZXMgaGFuZGxpbmcgb24gZHAwIHBvcnQ6IAo+LXBsYXlpbmcgdmlkZW8gMTkyMEAx
-MDgwQDUwIC0gb2sKPi1wbGF5aW5nIHRoZW4gdmlkZW8xOTIwQDEwODBANTksNjQgaGFuZ3MgYm9h
-cmTigKYuCj4KPmhkbWkwIHdvcmtzIG9rLiB2aWRlbyBtb2RlcyBpc3N1ZSBpcyBvbmx5IG9uIGRw
-MApUaGUgZGNsayBmb3IgdnAyIGlzIGRlZmF1bHQgZnJvbSBHUExMLCBpdCBjYW4ndCBkaXZkZSBw
-aXhlbCBjbG9jayBmb3Igc3VjaCBhIHJlZnJlc2ggcmF0ZXMsIApCdXQgaXQgc2hvdWxkIG5vdCBo
-YW5nIHRoZSBib2FyZCwgU2ViYXN0aWFuLCBpdCBzZWVtcyB0aGUgZnJlcXVlbmNlIG9mICBHUExM
-IGJlIGNoYW5nZWQ/CgoKUGxlc2FzZSB0cnkgaXQgbGlrZSB0aGlzOiBib25kIHRoZSBkY2xrIHNv
-dXJjZSBmb3IgVlAyIGZyb20gVjBQTEwuCgorJnZvcCB7CisJYXNzaWduZWQtY2xvY2tzID0gPCZj
-cnUgRENMS19WT1AyX1NSQz47CisJYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmY3J1IFBMTF9W
-MFBMTD47CisJc3RhdHVzID0gIm9rYXkiOworfTsKKwo+Cj4K
+
+
+On 3/12/25 11:19, Chunhai Guo wrote:
+> 在 1/20/2025 7:45 PM, Chao Yu 写道:
+>> On 1/19/25 22:08, Chunhai Guo wrote:
+>>> fstrim may miss candidates that need to be discarded, as shown in the
+>>> examples below.
+>>>
+>>> The root cause is that when cpc->reason is set with CP_DISCARD,
+>>> add_discard_addrs() expects that ckpt_valid_map and cur_valid_map have
+>>> been synced by seg_info_to_raw_sit() [1], and it tries to find the
+>>> candidates based on ckpt_valid_map and discard_map. However,
+>>> seg_info_to_raw_sit() does not actually run before
+>>> f2fs_exist_trim_candidates(), resulting in the failure.
+>>>
+>>> The code logic can be simplified for all cases by finding all the
+>>> discard blocks based only on discard_map. This might result in more
+>>> discard blocks being sent for the segment during the first checkpoint
+>>> after mounting, which were originally expected to be sent only in
+>>> fstrim. Regardless, these discard blocks should eventually be sent, and
+>>> the simplified code makes sense in this context.
+>>>
+>>> root# cp testfile /f2fs_mountpoint
+>>>
+>>> root# f2fs_io fiemap 0 1 /f2fs_mountpoint/testfile
+>>> Fiemap: offset = 0 len = 1
+>>>           logical addr.    physical addr.   length           flags
+>>> 0       0000000000000000 0000000406a00000 000000003d800000 00001000
+>>>
+>>> root# rm /f2fs_mountpoint/testfile
+>>>
+>>> root# fstrim -v -o 0x406a00000 -l 1024M /f2fs_mountpoint -- no candidate is found
+>>> /f2fs_mountpoint: 0 B (0 bytes) trimmed
+>>>
+>>> Relevant code process of the root cause:
+>>> f2fs_trim_fs()
+>>>       f2fs_write_checkpoint()
+>>>           ...
+>>>           if (cpc->reason & CP_DISCARD) {
+>>>                   if (!f2fs_exist_trim_candidates(sbi, cpc)) {
+>>>                       unblock_operations(sbi);
+>>>                       goto out; // No candidates are found here, and it exits.
+>>>                   }
+>>>               ...
+>>>           }
+>>>
+>>> [1] Please refer to commit d7bc2484b8d4 ("f2fs: fix small discards not
+>>> to issue redundantly") for the relationship between
+>>> seg_info_to_raw_sit() and add_discard_addrs().
+>>>
+>>> Fixes: 25290fa5591d ("f2fs: return fs_trim if there is no candidate")
+>>> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+>>> ---
+>>> v1: https://lore.kernel.org/linux-f2fs-devel/20250102101310.580277-1-guochunhai@vivo.com/
+>>> v1->v2: Find all the discard blocks based only on discard_map in add_discard_addrs().
+>>> ---
+>>>    fs/f2fs/segment.c | 5 +----
+>>>    1 file changed, 1 insertion(+), 4 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>> index 13ee73a3c481..25ea892a42dd 100644
+>>> --- a/fs/f2fs/segment.c
+>>> +++ b/fs/f2fs/segment.c
+>>> @@ -2074,8 +2074,6 @@ static bool add_discard_addrs(struct f2fs_sb_info *sbi, struct cp_control *cpc,
+>>>    {
+>>>      int entries = SIT_VBLOCK_MAP_SIZE / sizeof(unsigned long);
+>>>      struct seg_entry *se = get_seg_entry(sbi, cpc->trim_start);
+>>> -    unsigned long *cur_map = (unsigned long *)se->cur_valid_map;
+>>> -    unsigned long *ckpt_map = (unsigned long *)se->ckpt_valid_map;
+>>>      unsigned long *discard_map = (unsigned long *)se->discard_map;
+>>>      unsigned long *dmap = SIT_I(sbi)->tmp_map;
+>>>      unsigned int start = 0, end = -1;
+>>> @@ -2100,8 +2098,7 @@ static bool add_discard_addrs(struct f2fs_sb_info *sbi, struct cp_control *cpc,
+>>>
+>>>      /* SIT_VBLOCK_MAP_SIZE should be multiple of sizeof(unsigned long) */
+>>>      for (i = 0; i < entries; i++)
+>>> -            dmap[i] = force ? ~ckpt_map[i] & ~discard_map[i] :
+>>> -                            (cur_map[i] ^ ckpt_map[i]) & ckpt_map[i];
+>>> +            dmap[i] = ~discard_map[i];
+>> discard is critical, we need more sanity check here, maybe:
+>>
+>> /* never issue discard to valid data's block address */
+>> f2fs_bug_on(sbi, (cur_map[i] ^ discard_map[i]) & cur_map[i]);
+>>
+>> Can you please check this?
+> 
+> Sure. I have added the BUG_ON check and performed the following tests
+> without issue:
+> 1. Ran xfstests and fsstress in the QEMU environment.
+> 
+> 2. Ran monkey and reboot tests on ARM64 Android devices with the 6.6 kernel.
+
+Thanks, so it looks fine now, can you please update the patch w/ above
+f2fs_bug_on check?
+
+Thanks,
+
+> 
+> Thanks,
+> 
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>>      while (force || SM_I(sbi)->dcc_info->nr_discards <=
+>>>                              SM_I(sbi)->dcc_info->max_discards) {
+> 
+> 
+
