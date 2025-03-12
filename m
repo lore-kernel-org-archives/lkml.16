@@ -1,77 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F88924EAAE;
-	Wed, 12 Mar 2025 17:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15132417D6;
+	Wed, 12 Mar 2025 17:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800024; cv=none; b=rMDhLYbBucygxFkAdrYjEMz4ia3bmMqhGY1KnAWvjnr5fdCPSeKKpEtp42zBK+nc4fO2pkOgUMfyruFBPJJTrJptr7YTrKSrrq9x4UVnFDmg/QvgIiz4sAcwxi9o9Xi/SxfxJt0NBuvTEGHZ71lGjjemJZn5Vdqo5+CrPhvOqAc=
+	t=1741800023; cv=none; b=C5rLSIMCI/ZSE8Sl0AZRzL862fg84SzrJgkgKdjGgL2AQiMY3VoJ3zDThAj2SIQOet04YCoS9Ni/z5WYmVDORedpgEnxe6AgsmDPtnVugM8Pavzuy8Y4j0MnS28UqdnFJdEePwFCtSJPD1wVaDFmHHoUD8r82v3xSvoqq5gCSVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741800024; c=relaxed/simple;
-	bh=Myhv0yGQQB3mIdLPFVgRi5RvxLh/5Iv2Tj7DlB+lz1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OrHr5VAAAQic3dTSZXe4bRjjyNuli39DLrAoxreyqHLN6vkti3GUhZCRsuA+inw3J5UEuQDrZXdyDb7cE/d1ijOpFPByI5sS5FX/FFpcMF6Wl4qu10CzrxgkDJ5eCmgK6BJwlQhxCF0x1h1AQlIaYgRXbJA+9LMx2lQ1M9c5xpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HD0nQ+8t; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741800023; c=relaxed/simple;
+	bh=BKaH6Pfm9mhlsWtzaZKT1RgpMRm+MwgkNY86MKWga/k=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=iUyAFxub/f5kvXuIZsjyt3UdyHDbNH85sEwdXmq8/TFM3PRnqNlPdz2g3nG43ZiE3omW5pVb4ava2ZeqrhKcSusGQy71lEwIX/aOG7+qdHtePem3+lP4Em2CBEPhbY/GhoewwgvZ/RyqCR7rj7tROW/p9FRZ4dO056DT83sFjPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r/kvr7JW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6OMBTlwQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HD0nQ+8t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741800022; x=1773336022;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Myhv0yGQQB3mIdLPFVgRi5RvxLh/5Iv2Tj7DlB+lz1E=;
-  b=HD0nQ+8tL35AKHrRCJddVxxjvtORl35xnVK9FbK+dbejJ2nKZqmNKTlB
-   hMR0oEbWjARugKdtecgV7Zzvah6hW+GizH+RuISuMXnpouzLAw8d3XgOd
-   3fVLQtPqkPTmRAgO1JTW+Jh7i7r9GvbAEhBoonwDb1PGHn8c5r7YLhNUu
-   3QAq2Q43VWqISqZTez9a1PZdUpne9TuRqDdx13rSODDsfPnRyunWQaLP5
-   +2+IQVG0GErQEBzBeVXu34ZWRFG46uGwlCGrY8fLW5U38BaFmHsKs5gn1
-   IEM7dA09o4QUgZ5CU8fBKI4T+POl9B7/zR/xWCsxsFLVcYUPNHxTKCX7K
-   w==;
-X-CSE-ConnectionGUID: C+ExU6P4Q2mtbnSyUPOBKg==
-X-CSE-MsgGUID: 8rMeH2MDSKy6EK0pcZk9tw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="60290607"
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="60290607"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 10:20:20 -0700
-X-CSE-ConnectionGUID: m+HNnOfRRwCILfckPUhv8A==
-X-CSE-MsgGUID: KZZYwwkfSnKYumrnHVcEPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="125769470"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 12 Mar 2025 10:20:19 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7D54E1F2; Wed, 12 Mar 2025 19:20:17 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Longbin Li <looong.bin@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>
-Subject: [PATCH v1 0/2] spi: sg2044-nor: A couple of cleanups
-Date: Wed, 12 Mar 2025 19:19:15 +0200
-Message-ID: <20250312172016.4070094-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r/kvr7JW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6OMBTlwQ"
+Date: Wed, 12 Mar 2025 17:20:19 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741800020;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C7sl//RldBkwtHThz5V3oaI5BTQD1fSF/ojREj2JPNk=;
+	b=r/kvr7JWc4IlT8A1MB4TlZ6hsoK8LOYfBw94FlJYwiorJSBrjqnKD7I5Qa1ZgvdhrBi9iz
+	EVJB6fiF+tIOH3GTIYwWXyoqSxSyeE4USzoVE4Nr2HGDSeCfSpGanV9GifELZu6vsqTMVs
+	9aiD+A9Xwc/Lec80Wyb6yl9QeeFYOBywa7Xp9WqdvdZinCt1WDm6vekMekIb2tzUTRjrDP
+	QeisMcm4vrJQoCuK92PhDtMmMLR3w1njFvb5IXLsHzK0Om+2BYA8csL0B0xvq7zA1ICv5R
+	Jde899USEZdr2lRWE/p+coH0phI6f4Gw0GixoyXRBzwoaicn0EFSkU7CE9VSyQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741800020;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C7sl//RldBkwtHThz5V3oaI5BTQD1fSF/ojREj2JPNk=;
+	b=6OMBTlwQKBJD9lgpYLMRm3wfp729h9Z48cWJvgQX6Pufntrvt44XP0WdBzO+36nX0vYgWb
+	T4lDHlAeF6D03eDw==
+From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/cache] x86/resctrl: Move RFTYPE flags to be managed by resctrl
+Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
+ Babu Moger <babu.moger@amd.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+ Peter Newman <peternewman@google.com>,
+ Amit Singh Tomar <amitsinght@marvell.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250311183715.16445-28-james.morse@arm.com>
+References: <20250311183715.16445-28-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174180001947.14745.4859162220572284627.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-The driver has one ordering issue and one missed case for dev_err_probe().
-Address that in this mini-series.
+The following commit has been merged into the x86/cache branch of tip:
 
-Andy Shevchenko (2):
-  spi: sg2044-nor: Fully convert to device managed resources
-  spi: sg2044-nor: Convert to dev_err_probe()
+Commit-ID:     373af4ecfdc922657be081b3feebbd0af8e7fa65
+Gitweb:        https://git.kernel.org/tip/373af4ecfdc922657be081b3feebbd0af8e7fa65
+Author:        James Morse <james.morse@arm.com>
+AuthorDate:    Tue, 11 Mar 2025 18:37:12 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 12 Mar 2025 12:24:37 +01:00
 
- drivers/spi/spi-sg2044-nor.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
+x86/resctrl: Move RFTYPE flags to be managed by resctrl
 
--- 
-2.47.2
+resctrl_file_fflags_init() is called from the architecture specific code to
+make the 'thread_throttle_mode' file visible. The architecture specific code
+has already set the membw.throttle_mode in the rdt_resource.
 
+This forces the RFTYPE flags used by resctrl to be exposed to the architecture
+specific code.
+
+This doesn't need to be specific to the architecture, the throttle_mode can be
+used by resctrl to determine if the 'thread_throttle_mode' file should be
+visible. This allows the RFTYPE flags to be private to resctrl.
+
+Add thread_throttle_mode_init(), and use it to call resctrl_file_fflags_init()
+from resctrl_init(). This avoids publishing an extra function between the
+architecture and filesystem code.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+Reviewed-by: Babu Moger <babu.moger@amd.com>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Peter Newman <peternewman@google.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
+Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
+Tested-by: Babu Moger <babu.moger@amd.com>
+Link: https://lore.kernel.org/r/20250311183715.16445-28-james.morse@arm.com
+---
+ arch/x86/kernel/cpu/resctrl/core.c     |  3 ---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++++++++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index b9b74f5..e590dd3 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -227,9 +227,6 @@ static __init bool __get_mem_config_intel(struct rdt_resource *r)
+ 	else
+ 		r->membw.throttle_mode = THREAD_THROTTLE_MAX;
+ 
+-	resctrl_file_fflags_init("thread_throttle_mode",
+-				 RFTYPE_CTRL_INFO | RFTYPE_RES_MB);
+-
+ 	r->alloc_capable = true;
+ 
+ 	return true;
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index e592715..58feba3 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -2064,6 +2064,16 @@ static struct rftype *rdtgroup_get_rftype_by_name(const char *name)
+ 	return NULL;
+ }
+ 
++static void thread_throttle_mode_init(void)
++{
++	struct rdt_resource *r_mba;
++
++	r_mba = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
++	if (r_mba->membw.throttle_mode != THREAD_THROTTLE_UNDEFINED)
++		resctrl_file_fflags_init("thread_throttle_mode",
++					 RFTYPE_CTRL_INFO | RFTYPE_RES_MB);
++}
++
+ void resctrl_file_fflags_init(const char *config, unsigned long fflags)
+ {
+ 	struct rftype *rft;
+@@ -4277,6 +4287,8 @@ int __init resctrl_init(void)
+ 
+ 	rdtgroup_setup_default();
+ 
++	thread_throttle_mode_init();
++
+ 	ret = resctrl_mon_resource_init();
+ 	if (ret)
+ 		return ret;
