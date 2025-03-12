@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40208252907
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE08F253B4A
 	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 15:16:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741792606; cv=none; b=Emd53t6EgbxaSi/9nGVKcwZJoJvV3QDh0wBbrR0oG2q0FGH19uCrMmCVSr7/VUddVmWHJhPuAc9Lh1EuBIpYRsX/RQUQHGwuUH1UeNRs+mMLMFtruz3eO0P+UezZnlmw1LiHYxpxUhk+7HgBtuJveuSaEx7jrjaXgY2tFWNPaLg=
+	t=1741792607; cv=none; b=ROHpXG7LJKR/DAnoofI/L8d6UfAYbs4y/dOrkUiKGbvrZqMwbE/n3TvnRKmvKppAakt9+tSXlZDDRBzDnSX1Vt4cRG6mWeJW4Ge1Tc3VYaNGrdo8VDef+X4S+bHZEmOe3jUAtqbrEi19tTYJvn6xXzz6PCAc6F1dyqyKN87AO28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741792606; c=relaxed/simple;
-	bh=zNHF9gLRJbaWgJ86a6QXAXpvHh0UaOvRjG2O6sAVe6g=;
+	s=arc-20240116; t=1741792607; c=relaxed/simple;
+	bh=cAS8HrysPPVrUaecFoBO1lNGEIB8Qf5KtzktvdEyj8Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kYQ5RCFdJaIQnmYBXD+Fd0W64A8Cd8NdO5JIenEjEBzfdGU94ZEM3WuOciFZJSm4xcd31aC8IIThlk3iXbeDZ7pD6FGkvhr9lpKXFSTaj48QilpiAZrtap8Hot0JoJavV8fitFUCxooLAlryj/8rT5AIe57kEn7KObyIC07LMtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p8HQJS9j; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/6YnKMHK; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=KTMeeHp6L0yOoQX/jSlYEJMLaDCYeMHjSkFsyhF3in2Ko2/2sCPB3m5KVfjbUITaXWy155HDSUB+PsLFhaslH4CkFBVVSVr8TYjxQePbLYRQJPf0i+srYNQ+AFsIpjmn7oq/ivdbxLRWNtAkBlTbCI0HU/HV5nESMCZsl89yO6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a3pZYK3w; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=76mlXKq7; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p8HQJS9j";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/6YnKMHK"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a3pZYK3w";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="76mlXKq7"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1741792602;
@@ -24,21 +24,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k8eVr2NQkknRf1y68E2hvHz4ee/KkpMgqGwjShLOjZE=;
-	b=p8HQJS9joM1yZg+lnVruYvXCUayevADHVRUB48NXX2m/7EStQt+xCAuBB0bBnknsis08l4
-	GAumTG5wSqIGRlrAjgTiVPd3H6vu81U9xcfST3ygjUuQtaCbhDK+/BYTF1LNGOqyiPHvqT
-	clSSZQMjbuIjGos9zKgcYSFfeb3TZO+7taqmI6qKwuNyYaphHjxdJwCGRX8tD3MDCpZhB3
-	m8ZVCpefMgl8GB+DpZnw2FhFFseFkoSlCv6TfX6uqPX3E2a0teJSCw/HFXueVF995B1tmV
-	BsNdxFZaRriTgPBXO5/fpfBPJexEAX9WeHC+1JotWIVuLlcl2YJr0MDbZjKHxA==
+	bh=ShzZceWVd5JqsOVo7vox1R/+m1/uWlP73cHaeuIRA7U=;
+	b=a3pZYK3w0bDOVUrumnxRGCr7OvzGPBVo7vO7CRYH2AI668JoBxtulurh6LxcWSYJMe5a3A
+	iMBIfp2H95kyL2dqzUn3EWXae75LrPqygnuQmqgGohh3fd7TmVGgCxJW/QsJcBvimH8+03
+	XVb+Sa6dgIOBfNUEiVmr6ycfTzCpMSShgKoJFv6gRhQFx5K4CUIJOhWqkZDOyig8luTG3h
+	QOG6+sSQRmCTn95op8YeJvOxaKYd3F5kkgp3xhTufpTNA6iI/79gLjufH7mQVgH4tZ6+6H
+	Mdx9wnDhU8V9AQJgJY6TYXEat0mjAspAE0/BOA2cvsvwkAc1ufm1maUngghnaQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1741792602;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k8eVr2NQkknRf1y68E2hvHz4ee/KkpMgqGwjShLOjZE=;
-	b=/6YnKMHKwaTB/t80orjLcoyyRn91o/s9BKHuSBrfYjr7oCO4AXNHKdjfqYI8t7gy+KuOpO
-	vDjytlNFqusFnvDg==
+	bh=ShzZceWVd5JqsOVo7vox1R/+m1/uWlP73cHaeuIRA7U=;
+	b=76mlXKq78zsZisu6H6kU6eCUr6Cf5AjwbVFbkOa/Lxs8d5DJNSNfsRx3lwL6yzJVuBjepr
+	+zuUf2fDd2i/MdDg==
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Darren Hart <dvhart@infradead.org>,
@@ -50,9 +50,9 @@ Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v10 06/21] futex: Create helper function to initialize a hash slot.
-Date: Wed, 12 Mar 2025 16:16:19 +0100
-Message-ID: <20250312151634.2183278-7-bigeasy@linutronix.de>
+Subject: [PATCH v10 08/21] futex: Hash only the address for private futexes.
+Date: Wed, 12 Mar 2025 16:16:21 +0100
+Message-ID: <20250312151634.2183278-9-bigeasy@linutronix.de>
 In-Reply-To: <20250312151634.2183278-1-bigeasy@linutronix.de>
 References: <20250312151634.2183278-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -63,49 +63,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Factor out the futex_hash_bucket initialisation into a helpr function.
-The helper function will be used in a follow up patch implementing
-process private hash buckets.
+futex_hash() passes the whole futex_key to jhash2. The first two member
+are passed as the first argument and the offset as the "initial value".
+
+For private futexes, the mm-part is always the same and it is used only
+within the process. By excluding the mm part from the hash, we reduce
+the length passed to jhash2 from 4 (16 / 4) to 2 (8 / 2). This avoids
+the __jhash_mix() part of jhash.
+
+The resulting code is smaller and based on testing this variant performs
+as good as the original or slightly better.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/futex/core.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ kernel/futex/core.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 08cf54567aeb6..c6c5cde78e0cb 100644
+index 1feb7092635d0..8561c41df7dc5 100644
 --- a/kernel/futex/core.c
 +++ b/kernel/futex/core.c
-@@ -1122,6 +1122,13 @@ void futex_exit_release(struct task_struct *tsk)
- 	futex_cleanup_end(tsk, FUTEX_STATE_DEAD);
+@@ -117,6 +117,18 @@ static inline bool futex_key_is_private(union futex_ke=
+y *key)
+ 	return !(key->both.offset & (FUT_OFF_INODE | FUT_OFF_MMSHARED));
  }
 =20
-+static void futex_hash_bucket_init(struct futex_hash_bucket *fhb)
++static struct futex_hash_bucket *futex_hash_private(union futex_key *key,
++						    struct futex_hash_bucket *fhb,
++						    u32 hash_mask)
 +{
-+	atomic_set(&fhb->waiters, 0);
-+	plist_head_init(&fhb->chain);
-+	spin_lock_init(&fhb->lock);
++	u32 hash;
++
++	hash =3D jhash2((void *)&key->private.address,
++		      sizeof(key->private.address) / 4,
++		      key->both.offset);
++	return &fhb[hash & hash_mask];
 +}
 +
- static int __init futex_init(void)
- {
- 	unsigned long hashsize, i;
-@@ -1139,11 +1146,8 @@ static int __init futex_init(void)
- 					       hashsize, hashsize);
- 	hashsize =3D 1UL << futex_shift;
+ /**
+  * futex_hash - Return the hash bucket in the global hash
+  * @key:	Pointer to the futex key for which the hash is calculated
+@@ -131,14 +143,9 @@ struct futex_hash_bucket *__futex_hash(union futex_key=
+ *key)
+ 	u32 hash;
 =20
--	for (i =3D 0; i < hashsize; i++) {
--		atomic_set(&futex_queues[i].waiters, 0);
--		plist_head_init(&futex_queues[i].chain);
--		spin_lock_init(&futex_queues[i].lock);
+ 	fhb =3D current->mm->futex_hash_bucket;
+-	if (fhb && futex_key_is_private(key)) {
+-		u32 hash_mask =3D current->mm->futex_hash_mask;
++	if (fhb && futex_key_is_private(key))
++		return futex_hash_private(key, fhb, current->mm->futex_hash_mask);
+=20
+-		hash =3D jhash2((u32 *)key,
+-			      offsetof(typeof(*key), both.offset) / 4,
+-			      key->both.offset);
+-		return &fhb[hash & hash_mask];
 -	}
-+	for (i =3D 0; i < hashsize; i++)
-+		futex_hash_bucket_init(&futex_queues[i]);
-=20
- 	futex_hashmask =3D hashsize - 1;
- 	return 0;
+ 	hash =3D jhash2((u32 *)key,
+ 		      offsetof(typeof(*key), both.offset) / 4,
+ 		      key->both.offset);
 --=20
 2.47.2
 
