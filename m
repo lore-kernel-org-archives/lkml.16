@@ -1,160 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1937A2586FE
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 19:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E861BD9DD
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 19:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741808472; cv=none; b=R0UX9Or98x3TAugHGGZrA6Chm28Mup73GYWNVxHm79cQkCkLtR2z6kCgPm6n7n1spTfKFl2wmvisIBrjJq4ps0IkCacRam5lQuCKyxkUqwRzqQhh7ZLSXEjE5l7UFKoj4ko4OBAJbp18T586/XYOTUyJxMY/v1SgETp1yP33vOw=
+	t=1741808495; cv=none; b=O0DbF0LDlg9Lhl3AoaSQ9j38lyrF+binGkfgavE7RyeRZNjTngbd78HdR6/WSqDf3Ww31Gwi1AfzgITZwpVb6lCervtG6VkLhx5Heagbk1wi+gWr74DOOtIcf8qZML5f0594hNcCD6pYQj7gMvI4f2xEWos3Dcx17N9p5BJoH9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741808472; c=relaxed/simple;
-	bh=ecsMIWvUU/Gtq8Owfq4Mz0WiDv5U6XrDbR3jMx9dpgY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AH0JcikiflFD6Fns3G0pnEvCETeXVSWFQkAXtDLmIFYSTB+paH3gn1hsgd1uOrDalNmz34nQuUoS1Uuf8xU1ucJidw9xP/VPAdJ7TXoUWN7mu3i+NJjuneLuoWgMD3piyzUbA2mOWk6VbBax7vsSBIO+k+Z+9Q6AFJ5eUP4wKdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jP54j0tT; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741808495; c=relaxed/simple;
+	bh=chqaRTqy0/9wIACLkVCZlXVspE39+hFf13nQroISW9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TdCJUHQXaHy66Cuk0gJUlSuLzvqUAGOz21Mn1FtLwcIWvzXDmfAJMkNeSl8n6LiAb31GvGym7bdqZne4yTrsBb6RdZIVRyBwZ0rtObE0+JzN2XPx9RxzLT1v6QgUns9CzNSHlOld+3vi3cxKu30yLKIGlvU3i2h5rh5DoYkuBkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UDilVDFu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jP54j0tT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741808471; x=1773344471;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ecsMIWvUU/Gtq8Owfq4Mz0WiDv5U6XrDbR3jMx9dpgY=;
-  b=jP54j0tT/a5Wn6eRA9dF5TuY+hjM456L+P9vXRWG2lsRpmzJa3IXEKoM
-   eZXY5utfoId9fqUalrZ6EqqM7sKbim6noIQIYqm8bhqstGx4Bb2TSgMYb
-   gPJEo3yHlLF2zgjV7IDbxrEK1mkF1RwJLEYN4cYMoE5tG7vxjSV4vtytc
-   3uXXVKvIebZS4/0l0e+d3ResLmDjLp3PP9qfJwKXWntEMDhzA8ll2Iziz
-   Iu8cQrRKL4LP/tsLXoY27eGk7oL/d9VQZ7rk8LlxDUxKbVdmSLghc8G6t
-   YopETJUUlduxvMWI/D2EBCDQ3AiZmCgSIlInFBQUKGDrldGKGWUaBBPvW
-   g==;
-X-CSE-ConnectionGUID: f93pAmgeROKOs6WZBu2PPA==
-X-CSE-MsgGUID: xyyZLN35QcyR9wO2sxNifA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="30492400"
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="30492400"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 12:41:09 -0700
-X-CSE-ConnectionGUID: 0xtBciT3Q861ki5WaYEpNA==
-X-CSE-MsgGUID: IYD5duLyTMa4rlfYR4phCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="125357528"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 12:41:09 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id D30D220B58A2;
-	Wed, 12 Mar 2025 12:41:07 -0700 (PDT)
-Message-ID: <702802d2-7318-4575-81ac-4fad6f8ff42f@linux.intel.com>
-Date: Wed, 12 Mar 2025 15:41:06 -0400
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UDilVDFu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741808486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=chqaRTqy0/9wIACLkVCZlXVspE39+hFf13nQroISW9Q=;
+	b=UDilVDFuzbMNKzhUWXas3HbaR9sr4LOyRc3bljAjR7IBmkvYk5viTB2FaLaTXL8I2LvP8G
+	Z8c2OMvA5QvQs9qMh3XQq+bFT+MdokIjAARIrVl8Iul06R21rzAoz5SdqJmbXLVdPc+DfW
+	7mIi9zKN4WriJpuU+b9hDvMeZlTG2ms=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-696-Eh6T5tWDMBiZlsaCD7KXlQ-1; Wed, 12 Mar 2025 15:40:43 -0400
+X-MC-Unique: Eh6T5tWDMBiZlsaCD7KXlQ-1
+X-Mimecast-MFC-AGG-ID: Eh6T5tWDMBiZlsaCD7KXlQ_1741808438
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c3b53373f7so35212985a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:40:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741808438; x=1742413238;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=chqaRTqy0/9wIACLkVCZlXVspE39+hFf13nQroISW9Q=;
+        b=kCrTjMQr67z/re7nMB2JIP8EcU7GPSadh52mcmfYYx63XEcJZ/+Z5IwbpzU7UHMW/g
+         fGKKxRkAhxJ1/9WSbKfETd+kF8f5j4AG7khtA69wz/RoYYeiguNskxEOHh9xRboq8xmO
+         Ni+tJ7GM3aFfdLxQLXw8LvtLwXHKnnpPMuPfdqKU4JGYmk4+HvBNnCBy88Uo9S/kdWEH
+         6aa5ulvC0JLPPcF15musjt6FBfDMKF0RzIHKEXHB8WkzVLZWg2UZYVqjkKImZRSnCoAf
+         L8X1T+ptLNM4QGBSFYxcmtaNcAtvAT84W+UjTGN1w/pRslLT3+nhk/R5ks+PN2UrPbLS
+         /O5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWOWp9VG7tnUrVeWCWZfzqSjhn8uTEkKhcopIw7amQsccjKJhA1a6Q7k6ac5w455+5OSBomKR8XhUgf2Bk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMoAu4yNE4lgZdJ/c8C4aaT15v4GrV1DMXgXcI8+YibwtEcAlb
+	pxrJvD9kcDDkmZgmAZFw6FVBRqhBDUvQlWfT31kwCUkA5jgiPX6Yp3JAT+TzfkCzukwvAcuRsZB
+	BoHt97YapKrH86yNhRlmGi4Ygnn7FVkMnjZFDAsY/kjZhVC67+qV/c/5JnOwHLA==
+X-Gm-Gg: ASbGncthByzqkHq2d1cbGlHFSVFaiBrId6O0Q6+tn/A4ZH9Vz980ylqn6DSfmHLJ3uf
+	ICoOpr1kspc7zJnGDhcWczLU2rK5caiwlOnglm8d4tu5SDifNcobJ1B8A09AZcIrhA3BztbmDQ+
+	Zyq5dqXX9Fa/MxQQaW3QLz06ghgBiZ+wJgPcrKkCElQvD34F5gK9dFaYwgJTHJnP+RJdNIBdltI
+	3cfaPJx0Um659+ynhVIVr4dz/MHTa6+wtzeQoQ2KVCv9ZJXaaCa4NgSL530mTfluAKvIrse24TH
+	uccFMtnWLWLvcPx5NBB89Cp2hKUML3rbbrJ4yGk=
+X-Received: by 2002:a05:620a:271c:b0:7c5:544e:2ccf with SMTP id af79cd13be357-7c5544e2e11mr1931051185a.57.1741808438026;
+        Wed, 12 Mar 2025 12:40:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEFtjXSl18V3cVDW3uvVcF7AOwZPDm8P35ziMG/2MMADWgaMpNEr9E4j/T7ipIz220mu+4PBA==
+X-Received: by 2002:a05:620a:271c:b0:7c5:544e:2ccf with SMTP id af79cd13be357-7c5544e2e11mr1931048685a.57.1741808437783;
+        Wed, 12 Mar 2025 12:40:37 -0700 (PDT)
+Received: from x1 (c-98-219-206-88.hsd1.pa.comcast.net. [98.219.206.88])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5568480d8sm476215785a.91.2025.03.12.12.40.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 12:40:36 -0700 (PDT)
+Date: Wed, 12 Mar 2025 15:40:35 -0400
+From: Brian Masney <bmasney@redhat.com>
+To: Christopher Obbard <christopher.obbard@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm interconnects as
+ built-in
+Message-ID: <Z9HjMyjzE9XlqrEj@x1>
+References: <20250311-wip-obbardc-qcom-defconfig-interconnects-builtin-v1-1-675b6bc57176@linaro.org>
+ <CACr-zFC=mPNeeHMp9XnSby+cMQaPWt_3s8iUiCN+EnVPeGad8Q@mail.gmail.com>
+ <uljqxwfgl26txrfqvkvzzpj6qurgmwcbuot7gu2u6rwjaqgncb@jeuyi4mexjff>
+ <CACr-zFDSFizYmrVN-dV334n1kq17UB9k4FxrV20NNQCQMhzrwg@mail.gmail.com>
+ <92dd35a2-d1cc-4f2b-b3a8-5752ec33b0d3@kernel.org>
+ <CACr-zFCYWEFPO8yExp_8hOQdVtC9Zwu1ZOZNksSeyyS6Ht0e9A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V8 1/6] perf: Save PMU specific data in task_struct
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, tglx@linutronix.de, bp@alien8.de, acme@kernel.org,
- namhyung@kernel.org, irogers@google.com, linux-kernel@vger.kernel.org,
- ak@linux.intel.com, eranian@google.com
-References: <20250312182525.4078433-1-kan.liang@linux.intel.com>
- <20250312190533.GA10453@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250312190533.GA10453@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACr-zFCYWEFPO8yExp_8hOQdVtC9Zwu1ZOZNksSeyyS6Ht0e9A@mail.gmail.com>
+User-Agent: Mutt/2.2.14 (2025-02-20)
 
+Hi Christopher,
 
+On Wed, Mar 12, 2025 at 12:10:56PM +0100, Christopher Obbard wrote:
+> For reference, I am working on updating initramfs generation tools in
+> Debian/Fedora to include the required interconnect modules. Currently
+> the interconnect drivers are built as modules in these distros, but
+> are not included in the initrd. That is where my confusion initially
+> stemmed from.
 
-On 2025-03-12 3:05 p.m., Peter Zijlstra wrote:
-> 
-> I'm sorry, but since I spotted a bug in the second patch, I'm going to
-> reply and suggest some overall changes.
+From a Fedora and centos-stream-9/10 perspective, we have dracut
+updated so that the interconnect modules are included in the initramfs
+by default.
 
-Sure. Thanks.
+https://github.com/dracutdevs/dracut/blob/master/modules.d/90kernel-modules/module-setup.sh#L74
 
-> 
-> On Wed, Mar 12, 2025 at 11:25:20AM -0700, kan.liang@linux.intel.com wrote:
-> 
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index 3e270822b915..b8442047a2b6 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -1021,6 +1021,36 @@ struct perf_event_context {
->>  	local_t				nr_no_switch_fast;
->>  };
->>  
->> +/**
->> + * struct perf_ctx_data - PMU specific data for a task
->> + * @rcu_head:  To avoid the race on free PMU specific data
->> + * @refcount:  To track users
->> + * @global:    To track system-wide users
->> + * @ctx_cache: Kmem cache of PMU specific data
->> + * @data:      PMU specific data
->> + *
->> + * Currently, the struct is only used in Intel LBR call stack mode to
->> + * save/restore the call stack of a task on context switches.
->> + * The data only be allocated when Intel LBR call stack mode is enabled.
->> + * The data will be freed when the mode is disabled. The rcu_head is
->> + * used to prevent the race on free the data.
->> + * The content of the data will only be accessed in context switch, which
->> + * should be protected by rcu_read_lock().
->> + *
->> + * Careful: Struct perf_ctx_data is added as a pointor in struct task_struct.
-> 
-> pointer
-> 
->> + * When system-wide Intel LBR call stack mode is enabled, a buffer with
->> + * constant size will be allocated for each task.
->> + * Also, system memory consumption can further grow when the size of
->> + * struct perf_ctx_data enlarges.
->> + */
->> +struct perf_ctx_data {
->> +	struct rcu_head			rcu_head;
->> +	refcount_t			refcount;
->> +	int				global;
->> +	struct kmem_cache		*ctx_cache;
->> +	void				*data;
->> +};
-> 
-> I can't remember why this is complicated like this. Why do we have a
-> kmemcache and yet another data pointer in there?
+Let me know if you are seeing a specific issue with the initramfs on
+Fedora and I can help you.
 
-The kmem_cache is introduced to address the alignment requirement for
-Arch LBR.
-https://lore.kernel.org/lkml/159420190705.4006.11190540790919295173.tip-bot2@tip-bot2/
+We also configured all of the QC pinctrl drivers to be modules in
+Fedora, and this causes a large number of probe deferrals on boot up.
+One of the boots I measured was about a half second:
 
-When users do system-wide profiling, perf has to allocate a buffer when
-forking a thread or delete a buffer when deleting a thread. The
-pmu->task_ctx_cache is required. Perf has to search the perf_event_list
-every time to find the proper PMU.
-So the *ctx_cache is introduced to avoid the search.
+https://lore.kernel.org/linux-embedded/Z6J3WpeJKIKENC81@x13s/
 
-Thanks,
-Kan
+Everything eventually loads and works as expected though. The upstream
+defconfig configures most of the pinctrl drivers to be built in for
+Qualcomm.
 
-> 
-> Specifically, why can't we do something like:
-> 
-> struct perf_ctx_data {
-> 	struct rcu_head		rcu;
-> 	refcount_t		refcount;
-> 	int			global;
-> 	char			data[];
-> };
-> 
-> and simply allocate the whole thing as a single allocation?
-> 
-> So then the allocation is something like:
-> 
-> 	cd = kzalloc(sizeof(*cd) + event->pmu->task_ctx_size, GFP_KERNEL);
-> 
-> 
+Brian
 
