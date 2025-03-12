@@ -1,105 +1,90 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40308242930
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA43C1E489;
+	Wed, 12 Mar 2025 12:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741782605; cv=none; b=aVs5u7/9UGblDxi9Mp8GGUkX0i69VdPOsr3F3ndyJPrlO09oDeus0b+voC3R+0JkIX6E57DOTDnCH1qNbJJzRk1F1G2YFDoXX60vtg4K1kfZxAM0i4lzCSH5qOnar2dqJ4IXlJg9P10Z4Wx8B8TXsk6QvwY9g68fgGg8T5OXS9s=
+	t=1741782652; cv=none; b=Lughch4k5VaRbEDACMDBzcDQivUOSuDi0RWy906fmPovuHdfbNd4hCzxhUTilEASTNfYG9GScMUfHM9e+pV4BuoNyZ9oGVcLCuPghDVeDPWmraKzVrH1pWM9z5QKn1l3ZjJdCmnfWJPAgliUNcNXWbBmpca2qGdDnlvL/X968o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741782605; c=relaxed/simple;
-	bh=C6ik0I4TTm5al0vsqX+E332UtB3DtobFl/PwqgiXOYY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BbfSCLb72SwjJYBPWMeneoMsipRmir40ambBhc/JOepLEtVdkc7DhNeX0taVmK/k6MRmWknNHMlC92ykpRBTLEqmCL6tjiIwiazUXfDYwyvG5d+AKnhwKPIUqgshNTT3Q/VYwUMgxB0Z9uQO2XcCRW1kItyOYGDX4pVzGvYEB8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DoujRzdr; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741782652; c=relaxed/simple;
+	bh=laYQCx88mjcDu1ZnBLvTOB+6I7d/yFECJ8I8PLU/mrU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=V08j/Mph9TvcRJjv3BnlezDwHbaq961YAXC85McinfqdBIsIc7sbmry1FQWC5C4ROg6J/9HUAe+kso9NTg0983egH/lNDJP5cs+eApDC/iQnUDKDYyUTjzsqt2WPwLoS5uT5QhnuTV1azYJ8bRemzIh6dGllKe16txN+khNwC9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=qQ49a4EU; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DoujRzdr"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6feab7c5f96so54605857b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 05:30:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741782603; x=1742387403; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=C6ik0I4TTm5al0vsqX+E332UtB3DtobFl/PwqgiXOYY=;
-        b=DoujRzdrvsDbRxmvEdU6RyU7B4wTmEvvvSr0rlnbp6sW7Y6gQIM1UHbtrZ7bZUMLA7
-         s30IFFSEEvmw937dSsM8BYSMGoS/wFqR1BYEQYeCd1ldvlyrLJyjCm5LgrSf37eGM+x3
-         YvWKIIIQ79+hyN7D41P4sq0w/dE8BV4+G1adUV9gjI1AJ3Y6T1gj3CiDobG5MAaXDKMP
-         FEcMQhzjETeTimdM0xSR30LFFz14nP32xFjY/4ylvoSEwP/Rf/Us6IeOUnCETcTjBIy5
-         zmA4v35UEloU72a5opGC7hHnIgqd9cI0hhxL7H7X6D6ZGI3JDMhEe/upa+btIfeK+rbQ
-         yNmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741782603; x=1742387403;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C6ik0I4TTm5al0vsqX+E332UtB3DtobFl/PwqgiXOYY=;
-        b=Ekqb40wxs4QM84KCNaTpdY/nvjfasiq8Sr1lveNbuXHDHqkjqViMB0VtxbIUvYIhWV
-         +PppFxEepA+GGTWillw4cxeV0fzUQmoQGWRBETb6jr//+UunJmxhlAu0GuT5oBy3j1q9
-         iJiRzSrXlg9/QYGfpyM+7bk1v906nQ8TidXLZ2dmkY8s5I72OYBOzJ07P3PAQDogyOuH
-         Es7oxNg1Oz3F4DAOq1PkcpzbiC7ahW+92fC1dtca7HgyEpwDVXqeqKwkvbb7uA5wxsir
-         MCesPb+ye01sVUJCJv8Z4V9QtHiz2hFStxBFDoqFx2zo7oCQVHcBUCAAVck3A1tUiFdR
-         q1Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCV47fdyDKzWgjV+p0rlsP3uWMGGEYXzEKBQ9dw9KkdEXPRC+EcENoRAPCZLIBid714nfTIMYvm34Hj1lWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7kQhROZhMH1gmJXcIwdSWjJ5Z9IozXDyXgUQiySVq8qb9B6AS
-	HglNXM6k5PR2k1davbXfdnVPqn0qZPgWjXlcjpNbacKyy58TKKEVD+eJ1iH3l6vYqjaz4UcR55J
-	xAzhbM/JEN1EAZKgj/hBp73WsxU5qhEGtapUQrg==
-X-Gm-Gg: ASbGncui1E8hFxw9sB6xXDSB8C0Q9D2FzLiSTYdVl82rI/YqRstBl64dUO/rTJtrOlq
-	ObUt5x6EJ11IAn/JkJ44Vjxt2kPXs/6OQUtNBsurl08OEIKVPxQ+d0VWX2TxoMKM2UwPi3qaLlO
-	lJfB3RaqgZzC1thk1wQxj1WXEMqY0=
-X-Google-Smtp-Source: AGHT+IEOTymDhycwj3x4XJrFwn3GpynyoH/McVtHYKr6+MpNmJH9id1TqdMVe93G58v4pKq671t9MEut6J4fUtwcXvY=
-X-Received: by 2002:a05:690c:4b0e:b0:6ff:28b2:50e1 with SMTP id
- 00721157ae682-6ff28b25a30mr1908277b3.2.1741782603185; Wed, 12 Mar 2025
- 05:30:03 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="qQ49a4EU"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 4F763A0433;
+	Wed, 12 Mar 2025 13:30:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=cmklfvLlFZxYw5WHt0NS
+	MePxUydM1gh/qon5awTqfRY=; b=qQ49a4EU6xjyrrZrVO8B+hvj25GZPeSjA0jb
+	7nWqtx/yE+/PuOh6axYscnpPtJZnCUmT1XiXz34qdphteXIo2TKJ5KsVsaQbrXlk
+	tUylJKdzUJ6EfDz4qFK6yVM1aVGbxPGaUdWI/bQOuiBI7c3nXLNeTFPrfx5bv68J
+	vSJsJYx3lZujSrSva+A6xE/tym5fl0MQR/34G1oev+OcThulayAyqB90QYnXB8rS
+	EsMyweSxMqzxmwvlG/62+oJXrrRx/23oPcywfMzqCIHPrTizUL5I1hKt9qJxNQ7G
+	0hp4aELeQ8tdiUjwGqvTbbbqJykqBqzZzxeWmyZZ3TReORAfhJ7HnlLmirxrBbDa
+	bzfwMJAPkNNpRba8Z2ahlXTtuP/nQbOtBnaJj4Lm561VyLg1pj6n4nQyecsminBK
+	9JZ1iaOdx6ikfJeW+2aC9/eykxPtKm0CahpIScO09ixdrP6D2WUUHpAFdQ8AnqJT
+	FIxcYKKDwenm5asoKkx7K75nJxFX8DHeGnIoMFn3kV01Le7YYX2H3POwTWR8TbRo
+	Izrs5IjAB8SonwI2Nwdi3x4a1yt6XQNPRgXRZE6UQljKWhLFhfwTskZe+LdKCar4
+	bBitkR5bthaRvlro6f2XsFW/g08V6CvdOTl7UVQOg4knyzU6/miZUM2x/aMmdqTZ
+	nOE9+MU=
+Message-ID: <505c2e3b-f1bb-4e3a-96f2-eef0d0d682e6@prolan.hu>
+Date: Wed, 12 Mar 2025 13:30:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <c2f50eac-3270-8dfa-2440-4c737c366b17@tuwien.ac.at>
- <8fd7f1d9-fc0d-4fa7-81be-378a3fc47d2a@acm.org> <CAPDyKFpwZt9rezBhBbe9FeUX1BycD2br6RRTttvAVS_C99=TiQ@mail.gmail.com>
- <4e7162dfccbe44468f6a452896110cc8@realtek.com> <aebf263c-570a-ed4b-bb37-22ab6596fbb3@tuwien.ac.at>
-In-Reply-To: <aebf263c-570a-ed4b-bb37-22ab6596fbb3@tuwien.ac.at>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 12 Mar 2025 13:29:26 +0100
-X-Gm-Features: AQ5f1JojhidGObyleeO_01vFJ5qMdpz0_jjjac4sFNZbF6OZFcRqoqIx5daA8KI
-Message-ID: <CAPDyKFqyWFfyhkyB4ZA+uH8YanYbb2safzL_qM13vCDDyesPQA@mail.gmail.com>
-Subject: Re: mmc0: error -95 doing runtime resume
-To: Thomas Haschka <thomas.haschka@tuwien.ac.at>
-Cc: Ricky WU <ricky_wu@realtek.com>, Bart Van Assche <bvanassche@acm.org>, 
-	"axboe@kernel.dk" <axboe@kernel.dk>, 
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"James.Bottomley@hansenpartnership.com" <James.Bottomley@hansenpartnership.com>, 
-	"martin.peterson@oracle.com" <martin.peterson@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v4] dma-engine: sun4i: Use devm functions in probe()
+To: Markus Elfring <Markus.Elfring@web.de>, <dmaengine@vger.kernel.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>
+CC: LKML <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
+	Samuel Holland <samuel@sholland.org>, Vinod Koul <vkoul@kernel.org>
+References: <20250311180254.149484-1-csokas.bence@prolan.hu>
+ <885ceb3e-d6c6-4e7b-a3b6-585d2d110ccf@web.de>
+ <81f87d39-d3f8-4b6a-91cb-b0177d34171b@prolan.hu>
+ <9ef781b0-8a63-42b7-91a2-fa8a8ea3c0b4@web.de>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <9ef781b0-8a63-42b7-91a2-fa8a8ea3c0b4@web.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852627360
 
-On Thu, 27 Feb 2025 at 12:53, Thomas Haschka
-<thomas.haschka@tuwien.ac.at> wrote:
->
-> Hello Ricky,
->
-> yes [1] and this issue are the same. As I only have a Surface GO 2
-> at hand I can not speak for other effected systems, though I guess it is
-> reasonable that others are effected.
-> It probably works for some use cases, as it only fails if I read a
-> lot of files, like opening emacs or firefox ( from the SD Card ). Which then
-> causes symptoms as outlined
-> here: https://bugzilla.kernel.org/show_bug.cgi?id=218821
->
-> Hello Uffe,
-> I will try to see what I can do with MMC_CAP_AGGRESSIVE_PM.
->
-> All the best,
-> - Thomas
+Hi,
 
-Hi Thomas,
+On 2025. 03. 12. 12:44, Markus Elfring wrote:
+>>> How good does such a change combination fit to the patch requirement
+>>> according to separation of concerns?
+>>> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.14-rc6#n81
+>>
+>> It is a general refactor patch, it shouldn't change any functionality. I could split it to one part introducing `devm_clk_get_enabled()` and the other `dmaenginem_async_device_register()`, but I don't feel that to be necessary, nor does it bring any advantages I believe.
+> Can it matter a bit more to separate changes for the application of devm functions
+> and the adjustment of corresponding exception handling with dev_err_probe() calls?
 
-Any luck with disabling MMC_CAP_AGGRESSIVE_PM?
+The change in error handling is just the result of switching to devm 
+functions, because it is no longer needed to separately dev_err(), store 
+the error code to `ret` and goto a cleanup phase (as the whole point of 
+using devm functions is to have auto-cleanup), you can just return with 
+the error code (which dev_err_probe() returns for us) right away. The 
+devm functions are used precisely _because_ they allow us to simplify 
+this error handling.
 
-[...]
+> Regards,
+> Markus
 
-Kind regards
-Uffe
+Bence
+
