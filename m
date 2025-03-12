@@ -1,89 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mixaill.net (mail.mixaill.net [144.76.234.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598052417D4;
-	Wed, 12 Mar 2025 12:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF86E24293F
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.234.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741783196; cv=none; b=BvxoN+yDHAVf/ZPonTTNxO6VMie8ED8dH6l/7pr5dj2lE3HQyc9d2MO8msVRi1l8QKI3cKVw5f63eJqA3FFumlTxHhSg+eYIVhWfBRvfI54uoj7+4THmdSB6ls+tBA0VrAExJIdl/0lKoq8uYWnajjSZirfCga8e7fAvqQdm1Io=
+	t=1741783210; cv=none; b=AKlKQK9Cx4IRI35+k84UOGTFzwqb2QKvwETAcXcsyOwQQRo5ETuGshKMQmcM1BT7//09LkdhU716dEhqSVwX6kypCcfT+XfdUggMe8hHSDPU1OVBlsr3z+Da1k64lvuF7It1o4Zg/0d3Kb5ggMPJE711sN55rRmI+k1UGTeEHp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741783196; c=relaxed/simple;
-	bh=uZiOVB8yQ9iEfQm3YhLtHeR0IQkVJXdxQFzGtq4+Wns=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qT1FX/ROdEXfMQST/dKRCg5LkU5xoHcIKx5Usxb9fTEwp0ylIPmKUHm96oayUg59iqLhyaG/9LrSOs78gT6a6ENHyZB6W1DaItdqfCbjJ1J74eZBTa1J4jxWyms8cdfYTE60pgrMyH32OGjhRQ4CgiSTqOCRxnw82DH2z6dJKP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbQ4ukLv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741783210; c=relaxed/simple;
+	bh=jMT9AsMuwXF1APi4NbcUAZSoszB8NSVVnpmjQkxw23k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CbdJKL7oB3OTQrXLvzmpzBxAaos+eMwVNPjzTEw+FQuFIcU4dB/SHZh7jYoS7vFFmwmqyUlpicSiOe0QVHuT0wumHI2oyXZpKtd4sXzqBgdVjVpLgNdjIOUBWx0biMLzNZZrbK3NxJbMfyClxz3bVv8qASIEKDC3xCyCN7KEH8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net; spf=pass smtp.mailfrom=mixaill.net; dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b=tkA3Ff7n; arc=none smtp.client-ip=144.76.234.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mixaill.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbQ4ukLv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E249C4CEE3;
-	Wed, 12 Mar 2025 12:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741783195;
-	bh=uZiOVB8yQ9iEfQm3YhLtHeR0IQkVJXdxQFzGtq4+Wns=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=bbQ4ukLvpEYQWQ1qWqxi0sY7vsSyUPCOm3PHti24zHG0WGJnQqmiwt9xEuUHr3KMt
-	 htqoqorYex7ALPwAKmFH+rihbbwBKpjrpGMOS7DLt/jlJSfU67Ft4tYTaLO4hxQEtH
-	 VOTHI062k12tz9zfAWsPF0fNYVJIJa64nLWxWq6ze8PkSbfqfIgB4brTphVOPRFxHt
-	 SfmDpuucqlTH763Nfx6t8hYed2lg3MCcQTB176yG8fD7a39lOAm8ANOY1rD8nhQzF7
-	 dnWrMIwVLdyj8Wv28N1fVFtHori2uW3SPtBxNmOUq+HHSiVvZeTVrxFi/YN1Zx968V
-	 oOogCKhPP5P0g==
-From: Mark Brown <broonie@kernel.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
- Longbin Li <looong.bin@gmail.com>
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
- sophgo@lists.linux.dev
-In-Reply-To: <20250304083548.10101-1-looong.bin@gmail.com>
-References: <20250304083548.10101-1-looong.bin@gmail.com>
-Subject: Re: [PATCH v2 0/2] spi: sophgo: add Sophgo SPI NOR controller
- driver
-Message-Id: <174178319298.22638.1373062138685342011.b4-ty@kernel.org>
-Date: Wed, 12 Mar 2025 12:39:52 +0000
+	dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b="tkA3Ff7n"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 23978615E2;
+	Wed, 12 Mar 2025 12:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mixaill.net; s=dkim;
+	t=1741782741; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=F5Rmm+CnhuT5tHMtHkTvsAOQTGz1NZaJrStAC8PQUF8=;
+	b=tkA3Ff7nq7L6d6/QZEHqxutLXpeazHekpRJQTR/sl4x2REpVQI0Cxd9t1djgN3aBthwXwa
+	V6Jkdf3ksU15e7x2MF4U8k1EVz03t51YD10NqoQxVgEmPlqZ0ITPy7Ze0p37glRrZOClxb
+	8TKFu+mPVikQ1cDu87W5PmeVuhP+HfAAR9r5jbReUEzguDNVBzHASKVjyG5Wasw87a9Heb
+	Ras4oNTq+jfDrwqwCMVrqr/yjN1cq/nAVlVZXCscziK/ctgKdfnVu94AKtAD0AFoyUde0r
+	tqd8GaHZmdBcsVsyy4LBhjvdQIo9MsbZDE7YSzFeP3uCSrNOIehDr2S3bU/6Mw==
+From: Mikhail Paulyshka <me@mixaill.net>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mikhail Paulyshka <me@mixaill.net>
+Subject: [PATCH 2/2] x86/rdrand: hide RDRAND and RDSEED from CPUID in case of a malfunction
+Date: Wed, 12 Mar 2025 15:31:30 +0300
+Message-ID: <20250312123130.8290-3-me@mixaill.net>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250312123130.8290-1-me@mixaill.net>
+References: <20250312123130.8290-1-me@mixaill.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, 04 Mar 2025 16:35:41 +0800, Longbin Li wrote:
-> Add SPI NOR driver for Sophgo, including read, write operations.
-> This driver is only suitable for NOR flash.
-> 
+Some applications use the CPUID call instead of /proc/cpuinfo to get
+CPU capabilities. In this case, they will still try to use non-functional
+RDRAND/RDSEED implementations.
 
-Applied to
+Disables visibility of RDRAND and RDSEED on AMD platforms.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Signed-off-by: Mikhail Paulyshka <me@mixaill.net>
+---
+ arch/x86/include/asm/msr-index.h       | 1 +
+ arch/x86/kernel/cpu/rdrand.c           | 5 +++++
+ tools/arch/x86/include/asm/msr-index.h | 1 +
+ 3 files changed, 7 insertions(+)
 
-Thanks!
-
-[1/2] dt-bindings: spi: add SG2044 SPI NOR controller driver
-      commit: 9f95e2dff3fe6a5f4cec786a106558bb8f268a16
-[2/2] spi: sophgo: add SG2044 SPI NOR controller driver
-      commit: de16c322eefbe9026d4eabc8ae934bb778cffd1d
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 72765b2fe0d8..bc5ef95cf0cb 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -614,6 +614,7 @@
+ #define MSR_AMD64_OSVW_STATUS		0xc0010141
+ #define MSR_AMD_PPIN_CTL		0xc00102f0
+ #define MSR_AMD_PPIN			0xc00102f1
++#define MSR_AMD64_CPUID_FN_7		0xc0011002
+ #define MSR_AMD64_CPUID_FN_1		0xc0011004
+ #define MSR_AMD64_LS_CFG		0xc0011020
+ #define MSR_AMD64_DC_CFG		0xc0011022
+diff --git a/arch/x86/kernel/cpu/rdrand.c b/arch/x86/kernel/cpu/rdrand.c
+index e9f7ef5dfe25..031c4297a54a 100644
+--- a/arch/x86/kernel/cpu/rdrand.c
++++ b/arch/x86/kernel/cpu/rdrand.c
+@@ -11,6 +11,7 @@
+ #include <asm/processor.h>
+ #include <asm/archrandom.h>
+ #include <asm/sections.h>
++#include <asm/msr.h>
+ 
+ 
+ enum { SAMPLES = 8, MIN_CHANGE = 5 };
+@@ -46,6 +47,8 @@ void x86_init_rdrand(struct cpuinfo_x86 *c)
+ 
+ 	if (failure) {
+ 		clear_cpu_cap(c, X86_FEATURE_RDRAND);
++		if (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON)
++			msr_clear_bit(MSR_AMD64_CPUID_FN_1, 62);
+ 		pr_emerg("RDRAND is not reliable on this platform; disabling.\n");
+ 	}
+ }
+@@ -82,6 +85,8 @@ void x86_init_rdseed(struct cpuinfo_x86 *c)
+ 
+ 	if (failure) {
+ 		clear_cpu_cap(c, X86_FEATURE_RDSEED);
++		if (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON)
++			msr_clear_bit(MSR_AMD64_CPUID_FN_7, 18);
+ 		pr_emerg("RDSEED is not reliable on this platform; disabling.\n");
+ 	}
+ }
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index 3ae84c3b8e6d..3deb6c11f134 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -612,6 +612,7 @@
+ #define MSR_AMD64_OSVW_STATUS		0xc0010141
+ #define MSR_AMD_PPIN_CTL		0xc00102f0
+ #define MSR_AMD_PPIN			0xc00102f1
++#define MSR_AMD64_CPUID_FN_7		0xc0011002
+ #define MSR_AMD64_CPUID_FN_1		0xc0011004
+ #define MSR_AMD64_LS_CFG		0xc0011020
+ #define MSR_AMD64_DC_CFG		0xc0011022
+-- 
+2.48.1
 
