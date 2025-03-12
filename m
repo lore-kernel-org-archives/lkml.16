@@ -1,43 +1,63 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2760F1DED52
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 17:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741801781; cv=pass; b=RiOnDatMS8Y5j3UQ76gdjoMLQoROHYv2iplciAeAE/8hi4E3FjXIqUAnueg2MKCR+/hLbAqAxEqbzcjZQOgoDRw+2qQaWf0Vp9mEF98vRHwI7SfpAMUbjCNIoLfK57XRTwYap7i0Sci+wxnnHEaYPwx8J/XnrUCZinPqEZRhDEc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741801781; c=relaxed/simple;
-	bh=zDv0/KZmv1LdExGbKvPtGWRSkGpMX6h+Y85UZhzt1K8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9765024FC1F
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 17:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741801897; cv=none; b=FVJeZ3vKNDbAtWRVlHndzi7tHoVuddqMoYZaPIUwfmVgel2mE9RsjgfAhd5bcekro8l6zxp/qWHh4N9gHpcSUnVBElNK4l6R82p5DiB87Gem7anjIyf62150tiAKnOa/4IO7HOc8oXwDDNIl55tGLUqzP+yrwCEDuGDBAAVVoVo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741801897; c=relaxed/simple;
+	bh=/xRe3+zdN+gRFi+1v630ZRJ/P9iKJCBzIyjIxvI6h20=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UYxQXr5ui6zefP6CMA2zEsVIEcy+QHK4hKP30U2R13yut/syR70K+gKYPlMNfA53EMd27AXBLr4yN7ZPVKLBRS75EOC4OqQoeViitsWRQFGM99gSxKYiCpUEHqu1vrBVxE2KyqXKpFhQHLHFsOG3wwp0+5NDXIbXssVN2wD577A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=PcsztnZt; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=h58BZcCAr5fzbQhHv1M3toIQhBBPi687RS94OtfKk21zWb4Xd91o1Vrp6cg0RC0bKXWn8/65SOsfYiTNcwcvmflCHZH4z+SXjn+fSNNWlYaKeCHeuh6PPIQUl8B+KfLdQMpqgvx1ZbrKEMWNvEo1Shr0ydhxH3IkIk5n0Of2eC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=cPjS+/BE; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="PcsztnZt"
-ARC-Seal: i=1; a=rsa-sha256; t=1741801753; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=SAfl3N8rsewqYQDnkeV+PD2E0zfVHAAv5MietZH3WR2v2Y4QRPOYPD1rDyyxAoshpdUIPXsC5nF5jdsKmDot4M/Nl6bhbYBGjs3f6YFN9xh1e+h0P2AsYgC4AdhHiKpARRcRibWqpzz0E6gu8zDVVIVWUaoAoP5ONaXNWFk5XyA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741801753; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3f7x136P0U6iN8JQ3Mpr6oOy7NFn9xkBlwLZt3BmvGw=; 
-	b=JB5ctn7tlkBwWu0sHQ/s/JN7bvVvP9EXQSfrTN1xbxEhGBbu8u+C5xbZkVLWcLxQbjwUdZhGxYX7falDJKU5MP0o7UlLSaV+AFC1DfbEow8KB187SwSRiER+FzS/r0+wfssLfCTgNDrb2TjULjHYY1QF2W+Z1Jew9Z7Dpm7Ve9A=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
-	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741801753;
-	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=3f7x136P0U6iN8JQ3Mpr6oOy7NFn9xkBlwLZt3BmvGw=;
-	b=PcsztnZtOkz2ga7BERVEd9BX8jpKBSNjDMbEUtYwSKCPm7vk6cmCRZOv0MjPZLQo
-	dXjByBMvE1o4lyxCtUcfbqyZSFbsseTCXh1W6wxiWHjdhjeDhc9xSQHRLFNOPCYVfHF
-	BEK9mAWLiOCAuGLZILtpIaTFdDNHRH/s0JwHXrq0=
-Received: by mx.zohomail.com with SMTPS id 174180175060146.026318885376554;
-	Wed, 12 Mar 2025 10:49:10 -0700 (PDT)
-Message-ID: <6bc2abd2-4d1d-4b94-b2f3-6d3638f3e8ba@collabora.com>
-Date: Wed, 12 Mar 2025 14:49:03 -0300
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cPjS+/BE"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2bcc0c6c149so137655fac.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1741801890; x=1742406690; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zcwbwn2lH/wq2GnjEWUj7ie3kvxE7shHftPyeIQ9m+M=;
+        b=cPjS+/BEOYQLeAj8djHgTkIBUrhef9Omaac56yyWPHPful0kFIJIWUgFSkWOHjByJD
+         OWv2aN51Cyix0bEgxwzEkkWr/Uy9GWY+p6D46Kr+XSElbrcPrCG1AMa5EDTdzUCE1Jj/
+         cr6y1fw6cJXkr+1uUxozz/36ao05F2DDTJk9c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741801890; x=1742406690;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zcwbwn2lH/wq2GnjEWUj7ie3kvxE7shHftPyeIQ9m+M=;
+        b=q1saqZqvB7134N6paU+L/zbh2nm8C1zPdNWKKjDJ07ptjVZH/6nqWgHE3HK+5A+dlw
+         pO39rm+qG6FOOhjqlaww68DYNBlC/ZtxN6g08OCaryQw9TXa+Z/4tQwGkjSTofl9n6aX
+         Wmkirxpjobu+Mpv314UJiMBRfnXKVQ4aIiJi0hGzcBfpmAIU0ubm0svP8HL66//CxTXm
+         Q6WLf3HhVZPgBOkXgGCmKd1ELsxSkgJtAG4SXqpJHxxz8iTSf3I8Fj60jVzI/Co98vTd
+         /bA2B79uqAsyp1/HdYMw555iQfa1Cjc+OFJg0wjzfzOdvYbIgs3Lfpzyy9c4g1Opv//R
+         gd6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVV9jNttvS1FWjWZQWdMrmskPbdNGtzBHtgBwcwZDk91xyLIdOkbDWnJSw0btqH3viS10/L/ozWmHbqaHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxyy7nsJnvKr7eTOA4fiqb5jAKIWERhK2ltxUc+Fs6OgfKJ/0oF
+	Uhwf3mEURumpmVu4bxWqa7XuDu+a4q+6C0rzwJCfXF+QHtPFC9zZFCfaMslyAQ==
+X-Gm-Gg: ASbGncsUobW75wUnvIWm4wzlZ4TqEK3hCfqYkwDddTscX9MLLjHi5e1TxWOqvDp0v81
+	X2c4Ocv2tZrscj635j31bPII0j8aC7LO73AtT75AVlkI2l1FRVgDmWv7+i/3wsywHzRlM5auMAQ
+	RNC2hWyzj+ES2GGzzz+NF62Ut3GgzczR5RFk1Y+4RTdTjSTtFkCPIhr/oELPMPPgvWtuzCK2ebP
+	sYIdlLR5gaCmTTFJH8rje9C9ABm5f7WcwZo2JT+8knl7XnkMctnwKrdD8T9yLB8sKT12B+PFZHl
+	NbeMdbfWxxhydyCuHC4qKLRVoPmc/Wi+qCsyCadBxQmTWj0LQMGR73F5IrZrIS+hsLiuVzceISd
+	5Fpy2gHd3
+X-Google-Smtp-Source: AGHT+IGTe6RFQQ82TXIt6ZjT9vX2p9NsOi5VE0tMCgKcRs6lizvKwC6F5+6cc54HIilZFggI3MQbZA==
+X-Received: by 2002:a05:6870:a546:b0:2bc:918c:ee04 with SMTP id 586e51a60fabf-2c26102c6bdmr13301757fac.14.1741801890497;
+        Wed, 12 Mar 2025 10:51:30 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c248de52d8sm3054139fac.47.2025.03.12.10.51.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Mar 2025 10:51:29 -0700 (PDT)
+Message-ID: <6328fe8d-c4ea-4945-b6ba-d994403121b5@broadcom.com>
+Date: Wed, 12 Mar 2025 10:51:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,173 +65,136 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/6] drm/panfrost: Add support for AARCH64_4K page
- table format
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- robh@kernel.org, steven.price@arm.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- kernel@collabora.com, linux-mediatek@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, sjoerd@collabora.com
-References: <20250310195921.157511-1-ariel.dalessandro@collabora.com>
- <20250310195921.157511-5-ariel.dalessandro@collabora.com>
- <20250311090545.3b941567@collabora.com>
+Subject: Re: [PATCH RFC 0/3] mmc: sdhci-brcmstb: Add rpmb sharing support
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Avri Altman <Avri.Altman@sandisk.com>,
+ Kamal Dasu <kamal.dasu@broadcom.com>,
+ Jens Wiklander <jens.wiklander@linaro.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+ "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+ "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+ "bcm-kernel-feedback-list@broadcom.com"
+ <bcm-kernel-feedback-list@broadcom.com>
+References: <20250206220940.10553-1-kamal.dasu@broadcom.com>
+ <CAPDyKFq1ZbP4c9ECfM1SY+MEopf+dC19w9PkqXaUjevf=bPjcw@mail.gmail.com>
+ <115a59e1-75b2-4d09-bbf9-50dfcd2b62dd@broadcom.com>
+ <PH7PR16MB61967C18645C64E582B222B6E5FD2@PH7PR16MB6196.namprd16.prod.outlook.com>
+ <d51a9d7a-b942-4c3b-93d2-65b1bb04c8da@broadcom.com>
+ <CAPDyKFrCjo8gGnxmXWP6V39N+b1o62VQH9zwMUNb2_+D3-qrdw@mail.gmail.com>
 Content-Language: en-US
-From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-In-Reply-To: <20250311090545.3b941567@collabora.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <CAPDyKFrCjo8gGnxmXWP6V39N+b1o62VQH9zwMUNb2_+D3-qrdw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
 
-Boris,
-
-On 3/11/25 5:05 AM, Boris Brezillon wrote:
-> On Mon, 10 Mar 2025 16:59:19 -0300
-> Ariel D'Alessandro <ariel.dalessandro@collabora.com> wrote:
-> 
->> Currently, Panfrost only supports MMU configuration in "LEGACY" (as
->> Bifrost calls it) mode, a (modified) version of LPAE "Large Physical
->> Address Extension", which in Linux we've called "mali_lpae".
+On 3/12/25 06:17, Ulf Hansson wrote:
+> On Tue, 11 Feb 2025 at 18:01, Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
 >>
->> This commit adds support for conditionally enabling AARCH64_4K page
->> table format. To achieve that, a "GPU optional configurations" field was
->> added to `struct panfrost_features` with the related flag.
+>> On 2/11/25 00:13, Avri Altman wrote:
+>>>>>> This patch set adds support for Broadcom TZOS to read and write to
+>>>>>> RPMB partition using synchronized access to the controller hardware.
+>>> Practically it establishes a communication channel between the trust zone and the host controller regardless of the rpmb protocol.
+>>> Or did I get it wrong?
 >>
->> Note that, in order to enable AARCH64_4K mode, the GPU variant must have
->> the HW_FEATURE_AARCH64_MMU feature flag present.
+>> Rather than communication channel, I would describe it as an arbitration
+>> scheme between N participants, with guaranteed forward progress and
+>> fairness between all participants.
+> 
+> A scheduler in the MMC controller HW?
+
+There is no scheduler in the eMMC controller HW, all of the scheduling 
+and coordination is left to the OS and TZOS, and other participants.
+
+> 
+> Nevertheless, it means bypassing the I/O scheduler in Linux and the
+> mmc block layer, kind of breaking "fairness" from Linux point of view.
+
+Yes that is a given, our approach favors the TZOS that has the ability 
+to preempt for short periods of time the eMMC controller issue a RPMB 
+access and then return control of the eMMC controller back to Linux. The 
+very reason we came up with that scheme is that we are not comfortable 
+with having a Linux task responsible for issuing RPMB accesses to the 
+eMMC device on behalf of the TEE. That task is subject to the same Linux 
+scheduling rules as any other task (yes we can play with priorities and 
+classes) and our TEE team was not comfortable with that, they prefer 
+hard guarantees that their RPMB accesses can complete within a certain 
+time, which this scheme provides.
+
+> 
 >>
->> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
->> ---
->>   drivers/gpu/drm/panfrost/panfrost_device.h |  16 +++
->>   drivers/gpu/drm/panfrost/panfrost_mmu.c    | 132 +++++++++++++++++++--
->>   drivers/gpu/drm/panfrost/panfrost_regs.h   |  34 ++++++
->>   3 files changed, 169 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
->> index cffcb0ac7c111..0385702aa43c7 100644
->> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
->> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
->> @@ -42,6 +42,14 @@ enum panfrost_gpu_pm {
->>   	GPU_PM_VREG_OFF,
->>   };
->>   
->> +/**
->> + * enum panfrost_gpu_config - GPU optional configurations
->> + * @GPU_CONFIG_AARCH64_4K: Use AARCH64_4K page table format
->> + */
->> +enum panfrost_gpu_config {
->> +	GPU_CONFIG_AARCH64_4K,
->> +};
->> +
->>   struct panfrost_features {
->>   	u16 id;
->>   	u16 revision;
->> @@ -95,6 +103,9 @@ struct panfrost_compatible {
->>   
->>   	/* Allowed PM features */
->>   	u8 pm_features;
->> +
->> +	/* GPU features */
->> +	u8 gpu_configs;
+>> The interest here is for one of those participants to own the eMMC
+>> controller for a certain amount of time and indicate when it is done
+>> with it. This is not specific to eMMC as this could scale to virtually
+>> any piece of HW that is driven by transactions from a CPU, but the main
+>> application is for allowing the Trusted OS to own the eMMC controller
+>> for a short period of time in order to do its RPMB access, and then give
+>> it back in the same state it found it to the next participant.
 > 
-> I would probably name this gpu_quirks, with the GPU_CONFIG_AARCH64_4K
-> flag renamed GPU_QUIRK_FORCE_AARCH64_PAGE_TABLE.
+> Honestly, I think this is a really terrible idea, sorry.
+ > > Data and communication with an eMMC needs to be synchronized and
+> managed by a single owner. Having multiple clients with their own
+> channel to the eMMC sounds prone to problems. Is each client going to
+> have its own mmc protocol stack, dealing with eMMC initialization,
+> data-synchronization and power-management, etc?
 
-Will follow on this thread after latest responses.
+The synchronization is done around the start/end of transactions and yes 
+each participant does have a minimal amount of eMMC driver knowledge, 
+but is confined to doing RPMB accesses only. The contract is to put the 
+eMMC controller back into the state where you found it for the next 
+participant to make use of it.
 
->>   };
->>   
->>   struct panfrost_device {
->> @@ -162,6 +173,11 @@ struct panfrost_mmu {
->>   	int as;
->>   	atomic_t as_count;
->>   	struct list_head list;
->> +	struct {
->> +		u64 transtab;
->> +		u64 memattr;
->> +		u64 transcfg;
->> +	} cfg;
->>   };
->>   
->>   struct panfrost_engine_usage {
->> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> index 31df3a96f89bd..4a9b8de2ff987 100644
->> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> @@ -26,6 +26,48 @@
+When we operate with a single participant such as Linux, which is a 
+degraded mode there is no loss of performance nor any observable difference.
 
-[snip]
-
->> +static void mmu_cfg_init_aarch64_4k(struct panfrost_mmu *mmu)
->> +{
->> +	struct io_pgtable_cfg *pgtbl_cfg = &mmu->pgtbl_cfg;
->> +
->> +	mmu->cfg.transtab = pgtbl_cfg->arm_lpae_s1_cfg.ttbr &
->> +				AS_TRANSTAB_AARCH64_4K_ADDR_MASK;
 > 
-> Silently masking the low 4bits is not the solution, it's just papering
-> over a real issue. If pgtbl_cfg->arm_lpae_s1_cfg.ttbr is not aligned on
-> 16 bytes (PAGE_SIZE even) we have a problem, so I would drm_WARN_ON()
-> here, and return an error so we can fail the probe.
+> As I said, we now have the RPMB subsystem for in-kernel access. Please
+> use it instead.
 
-Good point. I'll add something like this in v2:
+That scheme works when all of the participants run on the same CPU, that 
+is not our case, as we have another participant that is a separate CPU 
+which you cannot factor into Linux's RPMB subsystem.
 
-         if (drm_WARN_ON(pfdev->ddev, pgtbl_cfg->arm_lpae_s1_cfg.ttbr &
-                                      ~AS_TRANSTAB_AARCH64_4K_ADDR_MASK))
-                 return -EINVAL;
-
->> +
->> +	mmu->cfg.memattr = mair_to_memattr(pgtbl_cfg->arm_lpae_s1_cfg.mair,
->> +					   pgtbl_cfg->coherent_walk);
->> +
->> +	mmu->cfg.transcfg = AS_TRANSCFG_PTW_MEMATTR_WB |
->> +			    AS_TRANSCFG_PTW_RA |
->> +			    AS_TRANSCFG_ADRMODE_AARCH64_4K |
->> +			    AS_TRANSCFG_INA_BITS(55 - pgtbl_cfg->ias);
->> +	if (pgtbl_cfg->coherent_walk)
->> +		mmu->cfg.transcfg |= AS_TRANSCFG_PTW_SH_OS;
->> +}
-
-[snip]
-
->> @@ -616,6 +709,7 @@ struct panfrost_mmu *panfrost_mmu_ctx_create(struct panfrost_device *pfdev)
->>   {
->>   	u32 va_bits = GPU_MMU_FEATURES_VA_BITS(pfdev->features.mmu_features);
->>   	u32 pa_bits = GPU_MMU_FEATURES_PA_BITS(pfdev->features.mmu_features);
->> +	enum io_pgtable_fmt fmt = ARM_MALI_LPAE;
->>   	struct panfrost_mmu *mmu;
->>   
->>   	mmu = kzalloc(sizeof(*mmu), GFP_KERNEL);
->> @@ -641,16 +735,28 @@ struct panfrost_mmu *panfrost_mmu_ctx_create(struct panfrost_device *pfdev)
->>   		.iommu_dev	= pfdev->dev,
->>   	};
->>   
->> -	mmu->pgtbl_ops = alloc_io_pgtable_ops(ARM_MALI_LPAE, &mmu->pgtbl_cfg,
->> -					      mmu);
->> -	if (!mmu->pgtbl_ops) {
->> -		kfree(mmu);
->> -		return ERR_PTR(-EINVAL);
->> +	if (pfdev->comp->gpu_configs & BIT(GPU_CONFIG_AARCH64_4K)) {
->> +		if (!panfrost_has_hw_feature(pfdev, HW_FEATURE_AARCH64_MMU)) {
->> +			dev_err_once(pfdev->dev,
->> +				     "AARCH64_4K page table not supported\n");
->> +			goto err_free_mmu;
->> +		}
->> +		fmt = ARM_64_LPAE_S1;
->>   	}
-> 
-> How about moving this check before allocating the mmu object, so you
-> don't have to free it if it fails?
-
-Yes, will fix in v2.
-
-Thanks!
-
+We considered doing a mediated/proxied eMMC access through a firmware 
+interface running on a CPU that would exclusively own the hardware, but 
+we really did not like losing access to mmc-utils and other things.
 -- 
-Ariel D'Alessandro
-Software Engineer
-
-Collabora Ltd.
-Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK 
-Registered in England & Wales, no. 5513718
-
+Florian
