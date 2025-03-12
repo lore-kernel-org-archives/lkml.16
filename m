@@ -1,93 +1,218 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1F41DDC3F
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 19:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF9B1E8823;
+	Wed, 12 Mar 2025 19:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741809251; cv=none; b=r+2oTHyFrvQ2Uw6632+DmE5JgOWzKr1qMGmOTZ/ewB7/U6Q+rK/xehBuk2SV+5Y//GYLmAv6ku5GlMwDTGIvGtQo95wIRZnf1YYMrPBrkrm4l2wfDrKf1oyXrmKz8xbDFXUBrVRdmou9Te2kPysN6CsceHmVxQf80/hrYAcdPBw=
+	t=1741809288; cv=none; b=jrYAVWYQN6qtUPbGY2LFWZeTUyb+1d42BQznEue2ylvEtcMfNV2GSHRAjIwA3XtaYX96LX2UCNPnAmk5w64bmoFfSWn18mTmWMZToY0YESJkl4nUwoCZzWrE9Y3sBDH59a5ZnYjTNSFre4tfa4thmze+JQH2pdYjMNH4j8rzYqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741809251; c=relaxed/simple;
-	bh=5vZP7CpJcceQEyeDzE28W+oXvxlBBvt4aIcN9qWy604=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UF2mRp2YFaBix1BS2KiXbjJx7xP91BLexq7gDJeD9Qwv8Ben4DR/nAcT+fV6ZYxZI4+qzGvZZuM/W18zuPxo3n1nG0uYyGLaZltICR09X+yAQDLR4+LVacvBVf1JVjs7963bC32tF5HUjBuSVleZVkEGJz9NmsisOv388cG4nig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lw2NHxdR; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741809288; c=relaxed/simple;
+	bh=lKt4v6B/Hv/DuheeaArB6L02/tBeX5Mg5/cRp3lVdsU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PWUiEHNO53szKVINZMODhWOtE7qlKNQchxx9veo42uciW/hI7vmATaskiVZVL+dEJaTD5DJTG1k4i0UDRdoCleXLBuc2ZVsrkPES++1xoNHl1606XkKh+rHLNC1z6UMB+ca1E8b4BOcI9bSCSUCDFjcYpHLLnfyxdTTgbr+nao4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhy+nLOc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lw2NHxdR"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5497e7bf2e0so248219e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:54:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741809244; x=1742414044; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RiZMorRI2puhN1dptiZYy2TXMfV6sCyUspmPm9Ypzjo=;
-        b=Lw2NHxdRaFEZu8d9CcDibq2uMY/C2+JHisDzIecfEfVEzVB+5ppAnfq62bzu86smtY
-         lxQUZbrVRm2QzHhylkWXg+zfCzBu5gBmuv9jeG1aIBo/1BSJUuCIbXtYaYui+VxNSo5X
-         4r9ikey9vqZWnAlVhOIPkL/nhBOvax0nFWBJ6gS92hr7pps/TyPOL5Gz+6ZqT5WXoQjk
-         42AA0DG+4kK+YKlcvhOpQbxEKxhw+E0cdXIqvqv0P9R/q11G53KFHfBfuwSuVtxPEkBi
-         26FBwz4ajDyLCgwy3JvtNgdzUGAdYYGCwC8MkjYsje6UtqNYQHYPVEHbSbsO+otvDAJN
-         IhXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741809244; x=1742414044;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RiZMorRI2puhN1dptiZYy2TXMfV6sCyUspmPm9Ypzjo=;
-        b=e2K9/2xnKO/rYh44MiP5/KK0SWtkmWDZiBE458yozY7StyhkcUWCUgYtFtDAgLZnBK
-         wnoLccTWXloriXgGHgHIRECaQvqRk0K8lWt7SnSfoXaIYeY+TTVCrFZ0dUVx7kQ+aHIm
-         b1EesCd6BPZ6bBk/veT8tfqGwtpPsIJoKkmcljPTliJBIOoMG+g0hE2PrAbcPiM9S4TB
-         3MitBKOZaHV+Za71/YndznBptWE9IPFRNTneuJj5x1fnAe7mlZzanO+o5SfMyqOqmPCg
-         pQSo4R1kz6yTug8fKcG9ZQivYPKRh+I726UT2zXVue2ITeLcughXowvx8SB3T8zAxyuT
-         I3Zg==
-X-Gm-Message-State: AOJu0YziJYZJtehYsp5kgXqZO35VDGRWGLeJ09DLXQI5KDnVqPd/5W7w
-	ay0AVFnKPBhI02mjCE3w5AUcFF8RXKEqMQdVREPt0TpEdKu73Qfn
-X-Gm-Gg: ASbGncuEBRTdhU3p0NSIwcFsya6O7w5lRTnyDyy8CbWeqUVz++4G9/cM5SbaeN6x3Vx
-	jrrOMvYLxyQ0nWjdJoJ+qqRnl7qBA+5biYI+LdtDKPNoPx9wysr53k+SmnQFGmOVnjgZjKW9cFX
-	KDM7bP9wd4aOm8H/LC8HHtWjE58KfLz9RBIV/UrZOeqgmZJpCbrKkjQgbmadkGt28uLw/Fix3vP
-	iywnnLs0Ij0g/a5xJIRJFHqz9zTLdxSM9wKK7QknyuIXzNeDfV8cl76EzfBlo/8o+yp2dA7JC2B
-	CyV81xPE6z7SHq8hI0vAwxJD1m9uFhixate/zirsk83ZVxY=
-X-Google-Smtp-Source: AGHT+IGzDL/vpqjy3KDVM4+o1qR0C1796dIKI2z6DirpvC0rP7wpmsbqrsmz3Q9ycwNc/t3Wz4O6qA==
-X-Received: by 2002:a05:6512:3a88:b0:549:5769:6ae3 with SMTP id 2adb3069b0e04-549abaad1e4mr3397039e87.6.1741809243976;
-        Wed, 12 Mar 2025 12:54:03 -0700 (PDT)
-Received: from grain.localdomain ([5.18.255.97])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b1b6483sm2235711e87.135.2025.03.12.12.54.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 12:54:03 -0700 (PDT)
-Received: by grain.localdomain (Postfix, from userid 1000)
-	id 381BE5A0044; Wed, 12 Mar 2025 22:54:03 +0300 (MSK)
-Date: Wed, 12 Mar 2025 22:54:03 +0300
-From: Cyrill Gorcunov <gorcunov@gmail.com>
-To: Jean Delvare <jdelvare@suse.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] firmware: dmi: Respect buffer size in get_modalias
-Message-ID: <Z9HmWxbTulCfBJfL@grain>
-References: <Z7eWSCCqp_HP3iSh@grain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhy+nLOc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21510C4CEEF;
+	Wed, 12 Mar 2025 19:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741809288;
+	bh=lKt4v6B/Hv/DuheeaArB6L02/tBeX5Mg5/cRp3lVdsU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rhy+nLOcuegG9GRsRnZfn4eUz+8IK92sp+r2Lnz20uoBfcf3B5PRZQuHld87R32Uy
+	 7sWWdbWS6T1lIznmf34VIwwYxOXN8UHInoQ+5qmVzKMK61xvvrpv+CoGCG6Iev9M18
+	 fmgtKmpE7yzAlAhA18cL0e/up9roNS/bW2tof5O/PFYf+dVMLrac3QZJXV78KTDbhs
+	 gXl+V3CFiF7dQ6LxA+sPAZBNKDoeDifu7/G9VU69XxDj6Oz1gLDIWtD73m2Jg7M/Zn
+	 EO1uMeC7kD//PfXKzVum72KWEBZw5oTs1FQv6r31Lg22J23zPxipMu7Y8yDNq98dJh
+	 FakOuJ+EyyW1Q==
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7275bc6638bso61952a34.2;
+        Wed, 12 Mar 2025 12:54:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUClm2WZ7don+6qvgQUjzrhTOl7xzse8r1W4hQFoNuRyW4rjcN0DMBVLcRETIYXdzlMcIEapc9B1vcW@vger.kernel.org, AJvYcCUPIYbzK5VWJSBX+Oh3/CxpldpBbhSKYjVKH3qeDy0qhWDs3Mpxs6qAf8oybBJvIZiRvMJYTszkbpHs8H/7@vger.kernel.org, AJvYcCXVaHipkrVdVdZPO/Q07Boiq8Pc2JVHjWCnIrAgi/owdT7o4RYwqgS0/cmNv1sci6AtOAq1GDUY4EA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYt3diDWdi5LUBcR3FS86os9Sgfn6qLWL+4bRasNr2XE/R/Bg3
+	4jMhvpH3ikqAp5WT1pPfmnHS9FSWNr49iv7J1eI2Cv/uEbxSrPkulcHsRTDsZLVdG0Fokj1/l6G
+	VBTDv0QYI81TOPdTjARKKJJyP1Dw=
+X-Google-Smtp-Source: AGHT+IFWQ+68T4cDYbzYqN7yYRPuiErjeJlW/C3PqbsPHji5gMhp9e3GkwZlyvDgbgSTRVqkboScmEK2ysD6txHZ8lU=
+X-Received: by 2002:a05:6830:314b:b0:72a:4804:77ff with SMTP id
+ 46e09a7af769-72a48047df7mr9950313a34.25.1741809287316; Wed, 12 Mar 2025
+ 12:54:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7eWSCCqp_HP3iSh@grain>
-User-Agent: Mutt/2.2.14 (2025-02-20)
+References: <20250206131428.3261578-1-zhenglifeng1@huawei.com> <20250206131428.3261578-4-zhenglifeng1@huawei.com>
+In-Reply-To: <20250206131428.3261578-4-zhenglifeng1@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 12 Mar 2025 20:54:36 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iNzNROkPD4+b=Au8DwdF9unajKivdRQMBFfwzjFxHLcg@mail.gmail.com>
+X-Gm-Features: AQ5f1JoSmulRpnfW_hUqrLihklxgXLKWq2sUIv3vB-S-zZVKKZq8CTuYE0thOsU
+Message-ID: <CAJZ5v0iNzNROkPD4+b=Au8DwdF9unajKivdRQMBFfwzjFxHLcg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/8] ACPI: CPPC: Rename cppc_get_perf() to cppc_get_reg_val()
+To: Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: rafael@kernel.org, lenb@kernel.org, robert.moore@intel.com, 
+	viresh.kumar@linaro.org, mario.limonciello@amd.com, gautham.shenoy@amd.com, 
+	ray.huang@amd.com, pierre.gondois@arm.com, acpica-devel@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linuxarm@huawei.com, yumpusamongus@gmail.com, 
+	srinivas.pandruvada@linux.intel.com, jonathan.cameron@huawei.com, 
+	zhanjie9@hisilicon.com, lihuisong@huawei.com, hepeng68@huawei.com, 
+	fanghao11@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2025 at 11:53:28PM +0300, Cyrill Gorcunov wrote:
-> When we collect data from DMI data the result is accumulated either
-> in a page buffer from sysfs entry or from uevent environment buffer.
-> Both are big enough (4K and 2K) and it is hard to imagine that we
-> overflow 4K page with the data, still the situation is different for
-> uevent buffer where buffer may be already filled with data and we
-> possibly may overflow it.
-> 
-> Thus lets respect buffer size given by a caller and never write
-> data unconditionally.
-> 
-> CC: Jean Delvare <jdelvare@suse.com>
-> Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
+On Thu, Feb 6, 2025 at 2:14=E2=80=AFPM Lifeng Zheng <zhenglifeng1@huawei.co=
+m> wrote:
+>
+> Rename cppc_get_perf() to cppc_get_reg_val() as a generic function to rea=
+d
+> cppc registers. And extract the operations if register is in pcc out as
+> cppc_get_reg_val_in_pcc(). Without functional change.
 
-Ping?
+This should be split into two patches IMV.
+
+> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> ---
+>  drivers/acpi/cppc_acpi.c | 66 +++++++++++++++++++++-------------------
+>  1 file changed, 35 insertions(+), 31 deletions(-)
+>
+> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+> index db22f8f107db..3c9c4ce2a0b0 100644
+> --- a/drivers/acpi/cppc_acpi.c
+> +++ b/drivers/acpi/cppc_acpi.c
+> @@ -1189,48 +1189,52 @@ static int cpc_write(int cpu, struct cpc_register=
+_resource *reg_res, u64 val)
+>         return ret_val;
+>  }
+>
+> -static int cppc_get_perf(int cpunum, enum cppc_regs reg_idx, u64 *perf)
+> +static int cppc_get_reg_val_in_pcc(int cpu, struct cpc_register_resource=
+ *reg, u64 *val)
+>  {
+> -       struct cpc_desc *cpc_desc =3D per_cpu(cpc_desc_ptr, cpunum);
+> -       struct cpc_register_resource *reg;
+> +       int pcc_ss_id =3D per_cpu(cpu_pcc_subspace_idx, cpu);
+> +       struct cppc_pcc_data *pcc_ss_data =3D NULL;
+> +       int ret;
+>
+> -       if (!cpc_desc) {
+> -               pr_debug("No CPC descriptor for CPU:%d\n", cpunum);
+> +       if (pcc_ss_id < 0) {
+> +               pr_debug("Invalid pcc_ss_id\n");
+>                 return -ENODEV;
+>         }
+>
+> -       reg =3D &cpc_desc->cpc_regs[reg_idx];
+> +       pcc_ss_data =3D pcc_data[pcc_ss_id];
+>
+> -       if (IS_OPTIONAL_CPC_REG(reg_idx) && !CPC_SUPPORTED(reg)) {
+> -               pr_debug("CPC register (reg_idx=3D%d) is not supported\n"=
+, reg_idx);
+> -               return -EOPNOTSUPP;
+> -       }
+
+I'm not a big fan of the IS_OPTIONAL_CPC_REG() macro.  I'm not
+convinced at all that it adds any value above (and in the next patch
+for that matter) and the message printing the register index is just
+plain unuseful to anyone who doesn't know how to decode it.
+
+If CPC_SUPPORTED(reg) is not true, the register cannot be used AFAICS
+regardless of what IS_OPTIONAL_CPC_REG() has to say about it.
+
+> +       down_write(&pcc_ss_data->pcc_lock);
+>
+> -       if (CPC_IN_PCC(reg)) {
+> -               int pcc_ss_id =3D per_cpu(cpu_pcc_subspace_idx, cpunum);
+> -               struct cppc_pcc_data *pcc_ss_data =3D NULL;
+> -               int ret;
+> +       if (send_pcc_cmd(pcc_ss_id, CMD_READ) >=3D 0)
+> +               ret =3D cpc_read(cpu, reg, val);
+> +       else
+> +               ret =3D -EIO;
+>
+> -               if (pcc_ss_id < 0) {
+> -                       pr_debug("Invalid pcc_ss_id\n");
+> -                       return -ENODEV;
+> -               }
+> +       up_write(&pcc_ss_data->pcc_lock);
+>
+> -               pcc_ss_data =3D pcc_data[pcc_ss_id];
+> +       return ret;
+> +}
+>
+> -               down_write(&pcc_ss_data->pcc_lock);
+> +static int cppc_get_reg_val(int cpu, enum cppc_regs reg_idx, u64 *val)
+> +{
+> +       struct cpc_desc *cpc_desc =3D per_cpu(cpc_desc_ptr, cpu);
+> +       struct cpc_register_resource *reg;
+>
+> -               if (send_pcc_cmd(pcc_ss_id, CMD_READ) >=3D 0)
+> -                       ret =3D cpc_read(cpunum, reg, perf);
+> -               else
+> -                       ret =3D -EIO;
+> +       if (!cpc_desc) {
+> +               pr_debug("No CPC descriptor for CPU:%d\n", cpu);
+> +               return -ENODEV;
+> +       }
+>
+> -               up_write(&pcc_ss_data->pcc_lock);
+> +       reg =3D &cpc_desc->cpc_regs[reg_idx];
+>
+> -               return ret;
+> +       if (IS_OPTIONAL_CPC_REG(reg_idx) && !CPC_SUPPORTED(reg)) {
+> +               pr_debug("CPC register (reg_idx=3D%d) is not supported\n"=
+, reg_idx);
+> +               return -EOPNOTSUPP;
+>         }
+>
+> -       return cpc_read(cpunum, reg, perf);
+> +       if (CPC_IN_PCC(reg))
+> +               return cppc_get_reg_val_in_pcc(cpu, reg, val);
+> +
+> +       return cpc_read(cpu, reg, val);
+>  }
+>
+>  /**
+> @@ -1242,7 +1246,7 @@ static int cppc_get_perf(int cpunum, enum cppc_regs=
+ reg_idx, u64 *perf)
+>   */
+>  int cppc_get_desired_perf(int cpunum, u64 *desired_perf)
+>  {
+> -       return cppc_get_perf(cpunum, DESIRED_PERF, desired_perf);
+> +       return cppc_get_reg_val(cpunum, DESIRED_PERF, desired_perf);
+>  }
+>  EXPORT_SYMBOL_GPL(cppc_get_desired_perf);
+>
+> @@ -1255,7 +1259,7 @@ EXPORT_SYMBOL_GPL(cppc_get_desired_perf);
+>   */
+>  int cppc_get_nominal_perf(int cpunum, u64 *nominal_perf)
+>  {
+> -       return cppc_get_perf(cpunum, NOMINAL_PERF, nominal_perf);
+> +       return cppc_get_reg_val(cpunum, NOMINAL_PERF, nominal_perf);
+>  }
+>
+>  /**
+> @@ -1267,7 +1271,7 @@ int cppc_get_nominal_perf(int cpunum, u64 *nominal_=
+perf)
+>   */
+>  int cppc_get_highest_perf(int cpunum, u64 *highest_perf)
+>  {
+> -       return cppc_get_perf(cpunum, HIGHEST_PERF, highest_perf);
+> +       return cppc_get_reg_val(cpunum, HIGHEST_PERF, highest_perf);
+>  }
+>  EXPORT_SYMBOL_GPL(cppc_get_highest_perf);
+>
+> @@ -1280,7 +1284,7 @@ EXPORT_SYMBOL_GPL(cppc_get_highest_perf);
+>   */
+>  int cppc_get_epp_perf(int cpunum, u64 *epp_perf)
+>  {
+> -       return cppc_get_perf(cpunum, ENERGY_PERF, epp_perf);
+> +       return cppc_get_reg_val(cpunum, ENERGY_PERF, epp_perf);
+>  }
+>  EXPORT_SYMBOL_GPL(cppc_get_epp_perf);
+>
+> --
+> 2.33.0
+>
+>
