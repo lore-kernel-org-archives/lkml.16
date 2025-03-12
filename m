@@ -1,68 +1,68 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D381243376
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:32:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66ADD24501D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741786360; cv=none; b=ViKi+Pz7o548OZ8ix87rBr5Y4MEpS//cxKwVmle41SKozT7GW7H98bUB3EWzGdq1/fC7+Q+3Ck3EhNvNsWmuPgBKyjdBRPw+a2HNfb7sfBX0VMu2PcYftAWng81KfQSCZaq+20OY/0UbeZ3HWpknWwmBlK/3J+XJAK8c0Im7bgM=
+	t=1741786369; cv=none; b=KcubNDg/CB0iHrOiKTvXiXY9m3fg6sCrCR99HWdVquyf1uyUGgcjAWjVL56Sq8j85N0LqX2Y40XYERdPhWRNayxMZBWrKyJvwfW5XCsG1duMxePl5DcrYAPn8+e+Hp03dSWzOf02Lt2eQHjVqNHie7uufQACSGG+xz0mHejg8Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741786360; c=relaxed/simple;
-	bh=pMBnQB/WptlgARfKUKxfFhODgPcRfYP9RORJ9mLu3/4=;
+	s=arc-20240116; t=1741786369; c=relaxed/simple;
+	bh=a0HQy0k5w53qyMHQeW87mKrINhCTs1ce/60tyzHSvj4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Fz9oUQQ9p95KxoOn6oOHTjt34EtIKeoDMQ2BR9Mg58pq1i7PclTzAb2rjkq2MH10EjmsEmem85QkIMye6JKi0mQalf5FzYH0Y9wEhIOOJYqWYfPNIvZWUbwFDTOenMxVT0aMGQOXfL6NMm4AM4d6zVraH66dpEdEnOqEEiY6uZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zbtk0rXC; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=DIGdVf/pZRQ6vPYK3xNxtL7DNQ5KG8DkGkD90K+MKHLFAQhwN9i7bjYaiL056G775yUPKgl9t6wccuJtuns+wa4J9B8pSfFNn7xJiuSWdfc4Hxvd5uA5b0KBeM2jAenvLosm1ql6ZqLpnUBzYNcskSYIotVdoCuHgpCjM0vWCbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H+pPJSw0; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zbtk0rXC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H+pPJSw0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741786357;
+	s=mimecast20190719; t=1741786366;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pMBnQB/WptlgARfKUKxfFhODgPcRfYP9RORJ9mLu3/4=;
-	b=Zbtk0rXCzpV8x/qYbWABLLFBt245/3R6z7m19gqRqdQKuzhD6qMMXtv8cZIH0LuInehcYS
-	U6iK+qLmhXlNzfbfroX50wk+WROAMYE9/1LfuKkRNf/p+XenP4vOa/3gYpt+nAsDzBno3o
-	YoyptgNTp1tZnghA3ndoxiay2YEHyqM=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=a0HQy0k5w53qyMHQeW87mKrINhCTs1ce/60tyzHSvj4=;
+	b=H+pPJSw0MAsBx6VtH+hf2JRVjWgjQHSLvr4Pbc8wh5X2QpKp3uDJwS8fHicwuv7dbmApP9
+	vXJG1Sp5LaoycI+orr6zPwkCoossU89hp1ui3y2oOGbYpxpZqiF/ZfUdyBpEcLg8slCvhy
+	6WeCjcoLNFUw4faZHMAT5S/F1HhlFSE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-650-O12KFQoMO36PTfoZNcYZZg-1; Wed, 12 Mar 2025 09:32:34 -0400
-X-MC-Unique: O12KFQoMO36PTfoZNcYZZg-1
-X-Mimecast-MFC-AGG-ID: O12KFQoMO36PTfoZNcYZZg_1741786354
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so20505255e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 06:32:34 -0700 (PDT)
+ us-mta-612-DOZ926roMtyakiUIhXH1rQ-1; Wed, 12 Mar 2025 09:32:43 -0400
+X-MC-Unique: DOZ926roMtyakiUIhXH1rQ-1
+X-Mimecast-MFC-AGG-ID: DOZ926roMtyakiUIhXH1rQ_1741786362
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so21881375e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 06:32:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741786353; x=1742391153;
+        d=1e100.net; s=20230601; t=1741786362; x=1742391162;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pMBnQB/WptlgARfKUKxfFhODgPcRfYP9RORJ9mLu3/4=;
-        b=ahuOMdxvDGYleCkRHKC6wmBO2tffZMO3e8dvNXxx5lek72slWS9Xf290UAhy37hKm7
-         gi8PG4+8wEC7Vgnuh7GheG4j6YQd+dNnZgDvAo6k6EhPUjTXRt4agZkuddFKYpNq/Ncc
-         gloSZDWTWLiRSTg1dbBjq+FVuQI5+jM27ZB4Yi+yVv9j5W0/h1ovJKbdPAEeD4Cb8mfU
-         qOveC2pOdO8Y+evvAvx5nQ7ghP5S+vBwAyfau0wCMEjaoOZxMultUsBTvTwIdpnUCQ23
-         c1ocwhauZ6SalkTGDdKrTFed5DNGgjTYwRdCUzPJ/Vvz1ZwImC9NDrJk98uAkUi/W+wp
-         RBKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRE4kI/JLf0CghGT/3rZahUbGmBNEssQEbx91c+HorRxYEliWhPsmqgHW8JexIv9EHYVR4EcQLFUYO4X8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA8TuNRDwk4HR8PoI7vYL0lSwOe231RFXu/nR9fMO5Qj61mXSN
-	6HkKPag4frN0C9GD39mlV9ZeHKRP9gr/SetUSSgqNvpjGS3tblWSrSMuNJnQOdsyjpybqrmW1P8
-	TdaMKreIP9GqR7i5dZEMn51O/92RFBeTlnxOrfQtoePvpvtAChw+PLfvnhJYuPw==
-X-Gm-Gg: ASbGncsWIZocYUgrgCOPQKVFNUTCd6BsKAtn2wRcJbOpLY1yBMqdNW6jm7d507XMAij
-	4OnLZ3HFCrGfMqLxQP23gwmN4JLF4wkE5T1MzbPU8V/HpU9LzfoT1V3G9C/g4PFfN1wrqdYD3Qx
-	umWTmcsttObNKT672hvJuyHVw0qzCTT7PnLuI1BbbpSR7pgiv4ip7Tw//gt7rARxGGbADNKDo3O
-	bHyX6TZ0Z43qsZhNgRisKleJkx4i+bk2tERqyKDk/nEB4Q23w+O5Ve8KrF3WY6C25F+YFXFPiu+
-	oqBZMankMJKlzCH1fS/NeyH+w1Ia59w6YAFkDQpGDvKZNt9UoVH+ZeLUDsrXYP86pDb6OgYtP7I
-	D
-X-Received: by 2002:a05:600c:4f14:b0:43d:7a:471f with SMTP id 5b1f17b1804b1-43d01be7e4bmr85573985e9.18.1741786353621;
-        Wed, 12 Mar 2025 06:32:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3ABjY0Wbyoz7mffI/6sHIGOzIiGV3f5HP6r39Oz4vaIdVFyhl7aarVfkrAHGsAg9ShJgZSQ==
-X-Received: by 2002:a05:600c:4f14:b0:43d:7a:471f with SMTP id 5b1f17b1804b1-43d01be7e4bmr85573675e9.18.1741786353291;
-        Wed, 12 Mar 2025 06:32:33 -0700 (PDT)
+        bh=a0HQy0k5w53qyMHQeW87mKrINhCTs1ce/60tyzHSvj4=;
+        b=nWK4MFynELrJGpnCjh1Vh2e8bbdX5xFmC1JVZBMDJ0JFlBxLXJGlkbTZye6mFjf1ih
+         Dhw8z1eJd1y/m0AgxLu/tXMfOm35peC+Yn+ibg053Xcw/ej4kuR5pWmTbPx7YKiWUoEI
+         jn69fxC1jolzKL3vrZoxLbX4uQ9MDkPs2fYZweNHHsZPQkWyQFUKQW9xvFKWN9UqLBjg
+         S39jeFwnYZxYzjTY09sCl1c38Fua3ebwAStkgsST3Ttz719R3xCGFAXENVaEn/03ycNQ
+         2PvxjY2tZ9YIfMZh/ZgNus6vh8CVceIla56yRtkyDOIYOXSj/3ofwmi/PEfDwgcr4CPF
+         P5pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjEhwH4vFrdMg13ltqjqbGo2rTIJWkzzBs+hHRnzjdS2X65qccTjp9vWZT6n+xDyxiTwxK1icLddDu2PA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxynqhw40kc0a5x0JfWwmiY6ip8FI37PXST3GgYChnVvZ9GpU50
+	soZBaRsdLGHXcQJXO1OssRkLTS3uX3/TkUrDsYmeoJhHdWhsdCbODG4qQjwy2frR3p02zqmPCVU
+	K94epEt2eLp2AbDb62GSrp2/Zufh2n98F2zSp9OzuRv+eWScL06bzgWdS98cCkQ==
+X-Gm-Gg: ASbGncuVKuve9cit9CeroScfKfdbMHb7c3I2uPcUfmQmv2VSYtoi1x8mFvRzgZhCmFo
+	6cHCHVG6PBuKDX1dd9YedpTb8fHFSUnTNRu+DmDbPR5EKo4xbNqbTRRg0WYhe9A0+OIEMd/q86E
+	3LNMAqm2h6KfrQuraPRwMp+Tp77F9LGpVoPkIpdjcot5pVqG32MBPhyL4Yzq/vzPOv7df3vhdtT
+	LHOaMjwXvQlLBOq7MeQLlF1Ul6zGHdOFklYHfratkj1PUMb5SqBBH6FsV7+Vz6UMbM5a3/FfTyC
+	yAUf362lSxaoWr3878CCwD44uXK92yxtnOrthE5ggM/DilbaIz2UfYTWkmy3d/VoDOW9EDCU+PB
+	y
+X-Received: by 2002:a05:6000:18a3:b0:391:32b1:9458 with SMTP id ffacd0b85a97d-39132d05bb7mr18256099f8f.3.1741786361776;
+        Wed, 12 Mar 2025 06:32:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBmYHadL05QdCXMwWJyreltC2sDc+Ii43t+J7joC9A2cXjFamelnxdyrEIk6da1YZ5loRJYQ==
+X-Received: by 2002:a05:6000:18a3:b0:391:32b1:9458 with SMTP id ffacd0b85a97d-39132d05bb7mr18256073f8f.3.1741786361444;
+        Wed, 12 Mar 2025 06:32:41 -0700 (PDT)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d0a78d245sm21220905e9.28.2025.03.12.06.32.32
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bee262esm20982120f8f.0.2025.03.12.06.32.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 06:32:32 -0700 (PDT)
+        Wed, 12 Mar 2025 06:32:40 -0700 (PDT)
 From: Valentin Schneider <vschneid@redhat.com>
 To: Juri Lelli <juri.lelli@redhat.com>, linux-kernel@vger.kernel.org,
  cgroups@vger.kernel.org
@@ -78,13 +78,13 @@ Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
  <sshegde@linux.ibm.com>, Phil Auld <pauld@redhat.com>,
  luca.abeni@santannapisa.it, tommaso.cucinotta@santannapisa.it, Jon Hunter
  <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 6/8] cgroup/cpuset: Remove
- partition_and_rebuild_sched_domains
-In-Reply-To: <Z86zO_uCamVRRUqe@jlelli-thinkpadt14gen4.remote.csb>
+Subject: Re: [PATCH v3 8/8] include/{topology,cpuset}: Move
+ dl_rebuild_rd_accounting to cpuset.h
+In-Reply-To: <Z86zp5ej0shjk-rT@jlelli-thinkpadt14gen4.remote.csb>
 References: <20250310091935.22923-1-juri.lelli@redhat.com>
- <Z86zO_uCamVRRUqe@jlelli-thinkpadt14gen4.remote.csb>
-Date: Wed, 12 Mar 2025 14:32:31 +0100
-Message-ID: <xhsmhldtape6o.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <Z86zp5ej0shjk-rT@jlelli-thinkpadt14gen4.remote.csb>
+Date: Wed, 12 Mar 2025 14:32:40 +0100
+Message-ID: <xhsmhikoepe6f.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,15 +93,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-On 10/03/25 10:39, Juri Lelli wrote:
-> partition_and_rebuild_sched_domains() and partition_sched_domains() are
-> now equivalent.
+On 10/03/25 10:40, Juri Lelli wrote:
+> dl_rebuild_rd_accounting() is defined in cpuset.c, so it makes more
+> sense to move related declarations to cpuset.h.
 >
-> Remove the former as a nice clean up.
+> Implement the move.
 >
 > Suggested-by: Waiman Long <llong@redhat.com>
 > Reviewed-by: Waiman Long <llong@redhat.com>
-> Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
 > Tested-by: Waiman Long <longman@redhat.com>
 > Tested-by: Jon Hunter <jonathanh@nvidia.com>
 > Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
