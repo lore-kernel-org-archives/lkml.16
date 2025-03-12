@@ -1,100 +1,105 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6782B7083C
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F5324292B;
+	Wed, 12 Mar 2025 12:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741784284; cv=none; b=aQospBO4Z7ewYp8bm3ocAaaK1FePMiDSUMWL1+UdXrtGyrak0WrhJlamdG9lO+pNGlVQlOtC+nv60miiVH9ceM09oKEXT6KSCWHpoPA68q9+v9Id7A5KL9e/GWlR7j/jon//bP1t3e8JmlQbC4Vji01+/XrxwuHtxxFbfFgbsU8=
+	t=1741784314; cv=none; b=YsW58+OJghSDkBUWE/s9zmvIfADfSkvTRbK5wknCSCrAiTHbKzfkJesh86WHkB5Ii6D/T0W4pAg+TDW4TvvM0ZxkX/UL5mU0JGY1kE6sk0dyUKRR77QH+PfUHjfvmSjVerSHd7/bs2QDKtWr/6EfbXYTx5038YAv8WHEGTHH9EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741784284; c=relaxed/simple;
-	bh=bl74ciPvTW5Ds69DkMal9hOQn07uY4RaUw/Gasyua4o=;
+	s=arc-20240116; t=1741784314; c=relaxed/simple;
+	bh=wKnXEfj46C5JCUUeX24Q1CC3iBZKwBrzqxVRa0EWDNA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qs9qOc308ZoxQbi+dijsFSs5+KEdvoK/L7o9mMjqgfl6yDO64x814tmQbtHJINqifqhfQhIMCgcOsTYFHof08sXBn6jO7sUSfbnRLU+K0N2gQZEabVxmnAywyL1AuRw6YSgYu9EomrDL9o1nWXp02gNuhW04WdW+RuiIhHbEBqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mkS3gcFb; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=noyRqW1Fpe43VOQUFVz2AkoiiUPDDYSMa7cmyl12ou/AgIxfW+DOTtyFmHOdV4ka8f/f7SQhGJUV+tnBIwOmzuX45hk/oiyw0by9Nsy3/F8d1HkQ8l166UaNrbl+v4XO5erh9PTjmRFsoMYFW0Tv+/4olWuVtbfqrgUJ93C4Yxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUFClxaC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mkS3gcFb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Ai6ukKOfO621HctvE3ks1IHNTAO+lgUNMqcOjSC6b2E=; b=mkS3gcFbmjqrcOF+bJOTqpmmWN
-	yHHZsFiHq09JvFzzOCx9uYVW2jzF1mJRW76vrSDSv2Eezf6JHl2SyDeSwwqvyHIxmKfdXMxZM4Bgr
-	HQ4rRRekK+5B+dhOLgKbK2mPQD8rNlp1TfeNQtMTrG2S4STqQguB7e7hmROLgYN43pJWkL1onsah+
-	GRtHObTt2NpxMuSUX/6EmrG58fxD9bOKOz+Wb09km6rpAnKwl7rh/La2Fv/EQrrk4twW0kJafszRT
-	isRsTRn1RheVdyW5oazyLITbrGhh7w/lKnp9KYE+YG7cnIM5r9Vog6G/CUbbdNQHNC4FrvmyWDfBx
-	PAcCh1Xw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsLel-0000000CrgP-0MTR;
-	Wed, 12 Mar 2025 12:57:55 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 15B36300599; Wed, 12 Mar 2025 13:57:54 +0100 (CET)
-Date: Wed, 12 Mar 2025 13:57:53 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: mingo@kernel.org, lucas.demarchi@intel.com,
-	linux-kernel@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Subject: Re: [PATCH v3 7/7] perf: Make perf_pmu_unregister() useable
-Message-ID: <20250312125753.GL19424@noisy.programming.kicks-ass.net>
-References: <20250307193305.486326750@infradead.org>
- <20250307193723.525402029@infradead.org>
- <05e39b53-8e2f-4e21-8106-028fe54c37a0@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUFClxaC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F1F1C4CEE3;
+	Wed, 12 Mar 2025 12:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741784313;
+	bh=wKnXEfj46C5JCUUeX24Q1CC3iBZKwBrzqxVRa0EWDNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iUFClxaC9gCg4LEeM1MRRO6F5PHlrsBIZOoWiN5hbwK6rKr1wKPB9KcKai2iqWdQ5
+	 /WXW/ZGPO64SVFiZwg6NUQBJoVVUyHMBArTXQOORlLOuRhTLuWQfXdCLBsLlvSdZx7
+	 kFADtJkPStuW0RCdP8ENLg0xkQUzUV1Qs35XhX+SL2EtfDhZZoZMnXIjPKWyQNFjst
+	 jB5UFrSwfZwjHo6jXW31QBBc7IbbsFnfdlCrma9mfADz3HPqxcomlO9keYgYl5o5Oi
+	 8ZvcdhC+5GOrXMPIFHIWDNgsQLb/JM/1Jrz2IdVgHK+9aQXfkYmKV3F1feviJmuEfT
+	 kgwB4lSt4rENw==
+Date: Wed, 12 Mar 2025 07:58:32 -0500
+From: Rob Herring <robh@kernel.org>
+To: James Calligeros <jcalligeros99@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
+	Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shi Fu <shifu0704@thundersoft.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	asahi@lists.linux.dev, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v3 17/20] ASoC: dt-bindings: tas2770: add flags for SDOUT
+ pulldown and zero-fill
+Message-ID: <20250312125832.GA359842-robh@kernel.org>
+References: <20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com>
+ <CAHgNfTxS1Q4PPsw520-J4Yn6xg+QZOYFkYhg5yv-uZFu5waN_g@mail.gmail.com>
+ <20250307205156.GA583954-robh@kernel.org>
+ <5996925.DvuYhMxLoT@setsuna>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <05e39b53-8e2f-4e21-8106-028fe54c37a0@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5996925.DvuYhMxLoT@setsuna>
 
-On Mon, Mar 10, 2025 at 10:16:09PM +0530, Ravi Bangoria wrote:
-> On 08-Mar-25 1:03 AM, Peter Zijlstra wrote:
-> > Previously it was only safe to call perf_pmu_unregister() if there
-> > were no active events of that pmu around -- which was impossible to
-> > guarantee since it races all sorts against perf_init_event().
-> > 
-> > Rework the whole thing by:
-> > 
-> >  - keeping track of all events for a given pmu
-> > 
-> >  - 'hiding' the pmu from perf_init_event()
-> > 
-> >  - waiting for the appropriate (s)rcu grace periods such that all
-> >    prior references to the PMU will be completed
-> > 
-> >  - detaching all still existing events of that pmu (see first point)
-> >    and moving them to a new REVOKED state.
-> > 
-> >  - actually freeing the pmu data.
-> > 
-> > Where notably the new REVOKED state must inhibit all event actions
-> > from reaching code that wants to use event->pmu.
+On Mon, Mar 10, 2025 at 07:30:07PM +1000, James Calligeros wrote:
+> On Sat, Mar 8, 2025 at 6:51 AM Rob Herring <robh@kernel.org> wrote:
+> > How would it work when you need a mask? "dai-tdm-slot-tx-mask" is
+> > enough?
 > 
-> I think perf_event_init_task() failure path can still race with
-> perf_pmu_unregister() and trigger a WARN():
-> 
->         CPU 1                                          CPU 2
-> 
->   perf_event_init_task()
->     perf_event_free_task()
->       perf_free_event(event1)
->       /* event1->refcount is 1 */
->                                                   perf_pmu_unregister()
->                                                     pmu_detach_events()
->                                                       pmu_get_event(pmu) /* Picks event1 */
->                                                         atomic_long_inc_not_zero(&event1->refcount) /* event1 */
->       /* event1->refcount became 2 (by CPU 2) */
->         free_event(event1)
->           WARN()
-> 
+> The existing TX/RX slot masks are used to control which slots the codec
+> is operating on, AIUI. I don't know if it makes sense to alter how codecs
+> deal with this. Could we combine the suggested dai-tdm-slot-tx-idle
+> with an optional dai-tdm-slot-tx-idle-mask property? From the machine
+> driver's perspective, the API would then be similar to the existing
+> set_tdm_slot ops. The current downstream macaudio machine driver builds
+> its links by allowing multiple codecs and CPUs to be linked to a DAI,
+> like so:
 
-Yeah, I think most free_event() users are broken at this point. Let me
-rip all that out. Not really worth the trouble anymore.
+Wouldn't the NOT of dai-tdm-slot-tx-mask be the idle mask?
+
+Don't think about the Linux APIs here. The DT is separate. So think in 
+terms of what you need to describe the TDM timing/waveform.
+
+> 
+> dai-link@0 {
+> 	cpu {
+> 		sound-dai = <&cpu0>, <&cpu1>;
+> 	};
+> 	codec {
+> 		sound-dai = <&speaker0>,
+> 			  ...,
+> 			  <&speaker6>;
+> 	};
+> };
+> 
+> In this case, the codec-specific mask property was added so that a mask
+> could be applied to a specific codec rather than the whole dai, however
+> from upstream drivers tt looks like the way this should be handled is to
+> have "dai-tdm-slot-tx-idle-mask-n" properties at the dai level, then have
+> the machine driver set the mask for the appropriate codec during setup. So
+> for macaudio, assuming speaker5 requires this zerofill mask, we would
+> have something like this:
+
+I'm now confused why you need n masks and what does n represent?
+
+Rob
