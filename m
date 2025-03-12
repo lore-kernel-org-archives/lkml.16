@@ -1,32 +1,67 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7357C256C9E;
-	Wed, 12 Mar 2025 18:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28BE1D5173
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 18:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741802704; cv=none; b=s6PazNnIEa54gWJi0sH5QWweHMuWx+E29brjn4k/kp4PspGCnMKdQRkyKW4/TxHcbNEB3o0NXB/buJvNZkqLdCQCrzb7KsBsn73PKbYihpHMgK4sDTI4qV5sDCwip4/wEhl6yD6aBVBg8oXg+fxZwx0TRAVJpuypR09J2lkNshs=
+	t=1741802850; cv=none; b=iRc5eL/oaBJZm3IOjUazsUxOvXcjdmIzXq+9EeCoGav65lwrLcMduuE9PGHBsWsTDg7Dr1umLdqvX32DgXCWx3rSH2lo94xckCmdVehO/ufN+SVDYBJe8pWQp5LbPodX4D5sjwkRqkDrbTT/o4jwCA8ogFhzQYPt2sMBk+4Z0Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741802704; c=relaxed/simple;
-	bh=YRkqEDAnEJO9uif9D8gYv3G3QiocUg9KYSfoxRMiepo=;
+	s=arc-20240116; t=1741802850; c=relaxed/simple;
+	bh=jNWQhmWvUQwsPmYzqUENU/t19l+L4CHbFjYd5Qalhak=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dX1QvFhfCwvnePpZDqCpbRNUj7skYFkHrAT5EboN8FIQda7LwZ0mHNamJsJ/p1XOgvPvfTsLKYKc7XSmM+7sN7dJkbOtQNZEVlwrkEEtv3veHiz4xBRl+iCVsPNVJrl09EaxBzJEDWRCeCaS0cMctrzQB2h0DfVXDcRMfDnc9U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jYKT7aaV; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 In-Reply-To:Content-Type; b=kGrv1nHkLUfVyO4u90WSCaQc5/WSLLSHjIfWOgPl5D/demDZJdF1wqA0vRdiT/6wKNCEB1KJdb6aKLazsdaBnyrxfXRYCwDK92QUHdowB1EKMXHGplthhbwNrSrZS2cvTaGvkjLCUT4OZIoXqNAMV6wLS10o50Rye2EBQyeTDjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aPtX3X/w; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jYKT7aaV"
-Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1B63C210B155;
-	Wed, 12 Mar 2025 11:05:02 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B63C210B155
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741802702;
-	bh=3LuHCHpuveXkpSQUcYt/4aNBi7uFbOG/3oEGn8E8LXY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jYKT7aaV5gspSop8H5hJDvSoYzQZSeYlg64Ifr722u0Nb9Lg5Imcrfh9r7PIfD5lT
-	 6Gx7WdXYzK5Qkk74C6o++r7isZrfq5nwtn1HQ8mbeg+mlVaPIh0Da7Nxn0zjSmQ6i1
-	 ISWSMrdAV6mX4SniwmTsX/jUZuFL1ANTVkqQw/UY=
-Message-ID: <8520ef42-6cb4-4e14-9700-de7ae8a99ae8@linux.microsoft.com>
-Date: Wed, 12 Mar 2025 11:04:37 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aPtX3X/w"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CCdmBs028627;
+	Wed, 12 Mar 2025 18:07:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
+	 bh=6/3eAEikSdPmZMH4s/wxtkNoG+URl5DwRd2UlPziTQo=; b=aPtX3X/w2nK2
+	UJLWzDgYe/ZX5A08G0EoC4UbekVNM7pBgtFVrNymYx99xdoO4ZTGqKoUTvCMRShu
+	ro88Oe+Jf2PrheBishuhjOmWwFafGB8II80QDFJ/u7ns0J8a9EKqIseiS6z9gztY
+	i1OB1Br+2tjAK8x01cwJ6Dt+9tF2EwoUd/Ki5PFyXE0izh8MHtFrRF/HsRPD5Ufd
+	X9NugCtm79Wf3Ebd5Q1m+4bzgTIOzvH3zmPH2zAzWyAETAvXUxcE3mHPU9V3kXIu
+	2A5x7ye6EZQ1BJ1hxZSGXqQ1jJgoaviQCGNEEGEDMJmIJtKbqHRpx32c+rGMgFXB
+	CD7tFmcrjA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45b2n9c52p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 18:07:11 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52CHwGq0009737;
+	Wed, 12 Mar 2025 18:07:10 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45b2n9c52m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 18:07:10 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52CHFOfb026048;
+	Wed, 12 Mar 2025 18:07:09 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45atspdgx3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 18:07:09 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52CI78JQ20972104
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Mar 2025 18:07:08 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4F21F58056;
+	Wed, 12 Mar 2025 18:07:08 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6551658052;
+	Wed, 12 Mar 2025 18:07:04 +0000 (GMT)
+Received: from [9.43.79.132] (unknown [9.43.79.132])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 12 Mar 2025 18:07:04 +0000 (GMT)
+Message-ID: <f3de3cc0-e519-42f7-aa0d-261c5f20ce59@linux.ibm.com>
+Date: Wed, 12 Mar 2025 23:37:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,122 +69,198 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/10] x86/mshyperv: Add support for extended Hyper-V
- features
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
- <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
- "joro@8bytes.org" <joro@8bytes.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>, "arnd@arndb.de"
- <arnd@arndb.de>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "apais@linux.microsoft.com" <apais@linux.microsoft.com>,
- "Tianyu.Lan@microsoft.com" <Tianyu.Lan@microsoft.com>,
- "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "vkuznets@redhat.com" <vkuznets@redhat.com>,
- "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
- "muislam@microsoft.com" <muislam@microsoft.com>,
- "anrayabh@linux.microsoft.com" <anrayabh@linux.microsoft.com>,
- "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
- <lenb@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
-References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-3-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157CBBC2D186E1944E6773AD4CA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Subject: Re: [PATCH RESEND] sched: Fix incorrect runnable time calculation in
+ sched_stat_wait tracepoint
+To: =?UTF-8?B?eGlhbmhlLnpob3Uo5ZGo5pi+6LWrKQ==?= <xianhe.zhou@transsion.com>
+Cc: "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "incent.guittot@linaro.org" <incent.guittot@linaro.org>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de"
+ <mgorman@suse.de>,
+        "vschneid@redhat.com" <vschneid@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <98cac8ca355d4aad963deb52a427fa2c@transsion.com>
 Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157CBBC2D186E1944E6773AD4CA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Reply-To: 98cac8ca355d4aad963deb52a427fa2c@transsion.com
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <98cac8ca355d4aad963deb52a427fa2c@transsion.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: hU92oMIp4DMQC3OGJe9PT_hri2DdyiV_
+X-Proofpoint-ORIG-GUID: UlDW10hDg2UtK-OOmBXWAmcVeel5Q1MN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-12_06,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ spamscore=0 mlxscore=0 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1011 priorityscore=1501 mlxlogscore=999 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503120124
 
-On 3/6/2025 10:30 AM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Wednesday, February 26, 2025 3:08 PM
->>
->> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
->>
->> Extend the "ms_hyperv_info" structure to include a new field,
->> "ext_features", for capturing extended Hyper-V features.
->> Update the "ms_hyperv_init_platform" function to retrieve these features
->> using the cpuid instruction and include them in the informational output.
->>
->> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> ---
->>  arch/x86/kernel/cpu/mshyperv.c | 6 ++++--
->>  include/asm-generic/mshyperv.h | 1 +
->>  2 files changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
->> index 4f01f424ea5b..2c29dfd6de19 100644
->> --- a/arch/x86/kernel/cpu/mshyperv.c
->> +++ b/arch/x86/kernel/cpu/mshyperv.c
->> @@ -434,13 +434,15 @@ static void __init ms_hyperv_init_platform(void)
->>  	 */
->>  	ms_hyperv.features = cpuid_eax(HYPERV_CPUID_FEATURES);
->>  	ms_hyperv.priv_high = cpuid_ebx(HYPERV_CPUID_FEATURES);
->> +	ms_hyperv.ext_features = cpuid_ecx(HYPERV_CPUID_FEATURES);
->>  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
->>  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
->>
->>  	hv_max_functions_eax = cpuid_eax(HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS);
->>
->> -	pr_info("Hyper-V: privilege flags low 0x%x, high 0x%x, hints 0x%x, misc 0x%x\n",
->> -		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
->> +	pr_info("Hyper-V: privilege flags low 0x%x, high 0x%x, ext 0x%x, hints 0x%x, misc 0x%x\n",
->> +		ms_hyperv.features, ms_hyperv.priv_high,
->> +		ms_hyperv.ext_features, ms_hyperv.hints,
->>  		ms_hyperv.misc_features);
->>
->>  	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
->> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
->> index dc4729dba9ef..c020d5d0ec2a 100644
->> --- a/include/asm-generic/mshyperv.h
->> +++ b/include/asm-generic/mshyperv.h
->> @@ -36,6 +36,7 @@ enum hv_partition_type {
->>  struct ms_hyperv_info {
->>  	u32 features;
->>  	u32 priv_high;
->> +	u32 ext_features;
->>  	u32 misc_features;
->>  	u32 hints;
->>  	u32 nested_features;
->> --
->> 2.34.1
+On 06/03/25 08:09, xianhe.zhou(周显赫) wrote:
+> From b07df3ed3fd2186a698ef87ad366523ec7c7fccb Mon Sep 17 00:00:00 2001
+> From: "xianhe.zhou" <xianhe.zhou@transsion.com>
+> Date: Thu, 20 Feb 2025 22:01:26 +0800
+> Subject: [PATCH] sched: Fix incorrect runnable time calculation in
+>  sched_stat_wait tracepoint
 > 
-> Are any of the extended features available on arm64? This code is obviously x86 specific,
-> so ms_hyperv.ext_features will be zero on arm64. From what I can see, ext_features is
-> referenced only in Patch 10 of this series, and in code that is under #ifdef CONFIG_X86_64,
-> so that should be OK.
+> The sched_stat_wait tracepoint is intended to record the runnable
+> time of a task. However, due to incorrect timestamp handling, two major
+> issues arise:
+> 
+> 1. The tracepoint may incorrectly record consecutive start timestamps
+>    or consecutive end timestamps, rather than properly pairing them.
+>    This leads to incorrect runnable time calculations.
+> 2. The recorded time may include temporary dequeuing and enqueuing
+>    events, such as when modifying a task's nice value while it is running.
+> 
+> This patch ensures that timestamps are properly paired and excludes
+> temporary dequeuing events to prevent incorrect measurements.
+> 
+> Testing:
+> This issue was tested on an Android 14 device. The following are the
+> trace results before and after applying the patch:
+> 
+> Before the fix (incorrect values):
+> 
+> sched_stat_wait: comm=OverlayEngine_0 pid=1533 delay=352418315839 [ns]
+> sched_stat_wait: comm=OverlayEngine_0 pid=1533 delay=352409961840 [ns]
+> sched_stat_wait: comm=OverlayEngine_0 pid=1533 delay=352393317455 [ns]
+> sched_stat_wait: comm=binder:1148_3 pid=2102 delay=352380493377 [ns]
+> sched_stat_wait: comm=OverlayEngine_0 pid=1533 delay=352360033377 [ns]
+> 
+> Clearly, these runnable time values, in the hundreds of seconds,
+> are incorrect.
+> 
+> After the fix (corrected values):
+> 
+> sched_stat_wait: comm=kworker/7:1 pid=13682 delay=63516923 [ns]
+> sched_stat_wait: comm=SuperA_R[136] pid=15074 delay=51324385 [ns]
+> sched_stat_wait: comm=SuperA_R[136] pid=15080 delay=50280539 [ns]
+> sched_stat_wait: comm=SuperA_R[136] pid=15071 delay=48995692 [ns]
+> sched_stat_wait: comm=SuperA_R[34] pid=14951 delay=41876308 [ns]
+> 
+> After the fix, the recorded runnable times are within expected ranges.
 
-Just checked - yes ARM64 has features in ECX, but they are different to the x86_64 ones.
-We can add the ARM64 ones when needed.
+As per my understanding, when a temporary dequeue occurs, the delay value
+printed should be smaller compared to when these temporary events are
+skipped, as the delay is then computed between the final dequeue and the
+original start time. 
 
-Thanks
-Nuno
+I think I am missing something. Can you take an example and explain?
+
+Thanks,
+Madadi Vineeth Reddy
 
 > 
-> The pr_info() line will now be slightly different on x86 and arm64 since arm64 won't have
-> the "ext" field, but I think that's OK too.
+> Fixes: 768d0c27226e ("sched: Add wait, sleep and iowait accounting tracepoints")
+> Signed-off-by: xianhe.zhou <xianhe.zhou@transsion.com>
+> ---
+>  kernel/sched/fair.c  | 13 +++++++------
+>  kernel/sched/rt.c    | 15 ++++++++++++---
+>  kernel/sched/stats.c |  7 ++++++-
+>  3 files changed, 25 insertions(+), 10 deletions(-)
 > 
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1c0ef435a7aa..37a315b3906b 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1331,11 +1331,12 @@ update_stats_enqueue_fair(struct cfs_rq *cfs_rq, struct sched_entity *se, int fl
+>  	if (!schedstat_enabled())
+>  		return;
+>  
+> -	/*
+> -	 * Are we enqueueing a waiting task? (for current tasks
+> -	 * a dequeue/enqueue event is a NOP)
+> +    /*
+> +     * Are we enqueueing a waiting task? And it is not
+> +     * a temporary enqueue?(for current tasks a
+> +     * dequeue/enqueue event is a NOP)
+>  	 */
+> -	if (se != cfs_rq->curr)
+> +	if (se != cfs_rq->curr && !(flags & ENQUEUE_RESTORE))
+>  		update_stats_wait_start_fair(cfs_rq, se);
+>  
+>  	if (flags & ENQUEUE_WAKEUP)
+> @@ -1351,9 +1352,9 @@ update_stats_dequeue_fair(struct cfs_rq *cfs_rq, struct sched_entity *se, int fl
+>  
+>  	/*
+>  	 * Mark the end of the wait period if dequeueing a
+> -	 * waiting task:
+> +	 * waiting task and it is not a temporary dequeue:
+>  	 */
+> -	if (se != cfs_rq->curr)
+> +	if (se != cfs_rq->curr && !(flags & DEQUEUE_SAVE))
+>  		update_stats_wait_end_fair(cfs_rq, se);
+>  
+>  	if ((flags & DEQUEUE_SLEEP) && entity_is_task(se)) {
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index 4b8e33c615b1..991251feeaf6 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1310,9 +1310,17 @@ static inline void
+>  update_stats_enqueue_rt(struct rt_rq *rt_rq, struct sched_rt_entity *rt_se,
+>  			int flags)
+>  {
+> +	struct task_struct *p = NULL;
+> +
+>  	if (!schedstat_enabled())
+>  		return;
+>  
+> +	if (rt_entity_is_task(rt_se))
+> +		p = rt_task_of(rt_se);
+> +
+> +	if (p != rq_of_rt_rq(rt_rq)->curr && !(flags & ENQUEUE_RESTORE))
+> +		update_stats_wait_start_rt(rt_rq, rt_se);
+> +
+>  	if (flags & ENQUEUE_WAKEUP)
+>  		update_stats_enqueue_sleeper_rt(rt_rq, rt_se);
+>  }
+> @@ -1348,6 +1356,10 @@ update_stats_dequeue_rt(struct rt_rq *rt_rq, struct sched_rt_entity *rt_se,
+>  	if (rt_entity_is_task(rt_se))
+>  		p = rt_task_of(rt_se);
+>  
+> +	if (p != rq_of_rt_rq(rt_rq)->curr && !(flags & DEQUEUE_SAVE)) {
+> +		update_stats_wait_end_rt(rt_rq, rt_se);
+> +	}
+> +
+>  	if ((flags & DEQUEUE_SLEEP) && p) {
+>  		unsigned int state;
+>  
+> @@ -1474,9 +1486,6 @@ enqueue_task_rt(struct rq *rq, struct task_struct *p, int flags)
+>  	if (flags & ENQUEUE_WAKEUP)
+>  		rt_se->timeout = 0;
+>  
+> -	check_schedstat_required();
+> -	update_stats_wait_start_rt(rt_rq_of_se(rt_se), rt_se);
+> -
+>  	enqueue_rt_entity(rt_se, flags);
+>  
+>  	if (!task_current(rq, p) && p->nr_cpus_allowed > 1)
+> diff --git a/kernel/sched/stats.c b/kernel/sched/stats.c
+> index 4346fd81c31f..367f4bb1c759 100644
+> --- a/kernel/sched/stats.c
+> +++ b/kernel/sched/stats.c
+> @@ -20,8 +20,13 @@ void __update_stats_wait_start(struct rq *rq, struct task_struct *p,
+>  void __update_stats_wait_end(struct rq *rq, struct task_struct *p,
+>  			     struct sched_statistics *stats)
+>  {
+> -	u64 delta = rq_clock(rq) - schedstat_val(stats->wait_start);
+> +	u64 delta;
+> +	u64 wait_start = schedstat_val(stats->wait_start);
+>  
+> +	if (!wait_start)
+> +		return;
+> +
+> +	delta = rq_clock(rq) - wait_start;
+>  	if (p) {
+>  		if (task_on_rq_migrating(p)) {
+>  			/*
 
