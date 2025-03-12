@@ -1,341 +1,187 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1891BD9DD
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 21:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92321D86F2
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 21:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741813392; cv=none; b=O8c8WU6Og5SmGdmorF/f6Da1mw8CIOYGKLoDo5nl8YYwjPjz0H18mTz49+9pWHJ8394ur9gNzHo/SJTN+dnILHitBtznzbNh/jMEa1dqc0ZrI+397qSrVPhU/cDYccO2eU6fTuIscHPvVD9KsSj1Ol/ZaYQOTkm8r4Iql6QQuSc=
+	t=1741813485; cv=none; b=a0MtFZCNQgvVq01ovOpP7gbgpycP+BuyDCM1jSjykRVPwBC8X5uhTOALZmbNBv+gpU3VllstZP0pb7PwNWOe0hhSdmqoq7ALw84vv8pMclpy6c7jHG3sDjZTppplv0bl2cQvr9UQakOxoSarkcMYiwoHOMlwWgW+EUZmS5Pn8WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741813392; c=relaxed/simple;
-	bh=GtbQVyI9HOTpjy93ppZfMLbvExGyUWM3I66gXtg1ggQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CTu5DQNSLC9YfBaO69nSqSt2mvkdiTQ0IZ9RaBczLoh3mod5GTA6FH7dUN918EfH0LU35TpWY23Bjh8T5MHuVbcwvxBsQtc2JjpEzlguXt6kmouZbaibmTHwsiIzmKBswk8md9KBMwfgbsnAc7vOmWI3apKrDqqW9byJb0HP4Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=igNDsUhA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=RnZmJeOi; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=igNDsUhA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=RnZmJeOi; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1741813485; c=relaxed/simple;
+	bh=Ot0S7PtwawZf3AV7XLRs4qgCTdhjXmhj0iYA5pT0WQI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a7yZDkBTHewZw8j8Ow5MeavDPZfeu2/wF23KM/Sl438xLjniWr/FXf0iposcKppIS0SW/OdST2fNj3alkd0rjJJZjLySwBlNmmpfkxMGEfriVanpGgvavwNx/r2c6ksXAFBixifAs9L2Tdp/hBYP9UHo7pPXHsmvNl9TWgtKJmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cM4ooXJ9; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="igNDsUhA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="RnZmJeOi";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="igNDsUhA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="RnZmJeOi"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 8D41B21169;
-	Wed, 12 Mar 2025 21:03:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741813387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QYPVIjuXtyEWnSA0TQuv2Z6ecwvOqLWWeLHzxxVGJgo=;
-	b=igNDsUhAvWy+YUiNrJnRnQDC0ArpaeNtUrBmYcEDdZh0wFR5Mw+Z0QJPNh0c1VmD991fT8
-	Z27g/xiL303sApjcrXhDO7pYq/1pv0NCnNFfPYU7Ug5kwXcLk0nWYqohQo8sLNCwz29nnL
-	GT2k+s4++ck5iMyka2t8MQIigcIBSvg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741813387;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QYPVIjuXtyEWnSA0TQuv2Z6ecwvOqLWWeLHzxxVGJgo=;
-	b=RnZmJeOiBjydxZ1YIiLlUR6JHiXCnzJo3F+DNMqrOOuWb5QsVONJODP/7AS5aYljf6Sgeg
-	bHzUN6KCtJewJ2Bw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741813387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QYPVIjuXtyEWnSA0TQuv2Z6ecwvOqLWWeLHzxxVGJgo=;
-	b=igNDsUhAvWy+YUiNrJnRnQDC0ArpaeNtUrBmYcEDdZh0wFR5Mw+Z0QJPNh0c1VmD991fT8
-	Z27g/xiL303sApjcrXhDO7pYq/1pv0NCnNFfPYU7Ug5kwXcLk0nWYqohQo8sLNCwz29nnL
-	GT2k+s4++ck5iMyka2t8MQIigcIBSvg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741813387;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QYPVIjuXtyEWnSA0TQuv2Z6ecwvOqLWWeLHzxxVGJgo=;
-	b=RnZmJeOiBjydxZ1YIiLlUR6JHiXCnzJo3F+DNMqrOOuWb5QsVONJODP/7AS5aYljf6Sgeg
-	bHzUN6KCtJewJ2Bw==
-Date: Wed, 12 Mar 2025 22:03:07 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v3 1/5] Add a new optional ",cma" suffix to the crashkernel=
- command line option
-Message-ID: <Z9H2iw83e7eXD8JB@dwarf.suse.cz>
-References: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cM4ooXJ9"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2240aad70f2so19885ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 14:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741813482; x=1742418282; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y/NYFOGJx3+utedM/+JCynhnYYN1+cS/l3CV1O7uUWI=;
+        b=cM4ooXJ9gvYqcJ/XrO6LDQ3KryrwmSBO1HyUvcZS61JWEZNzhzULnonecB9KSUu31i
+         rMKlff2mt81hRppWsSvFJ4YECBAFk1AZmv91vFSgM+fzJIiTmeHE2Y/10xyCP5mDXlLO
+         C37hhbNgGfJym/1xtFRgBwc7iDEG/+klFVmQonEjdaOlHtcl6rm9qnlyjXnY+R6iiUYU
+         U4xFZQnE268Bytlt5qCcCAZExmlhFAcLC4uxh9GHzQJJtKKeQ9Lh642xRaj0BEvlg5FW
+         mES+4ayvZi76ZtkOK6weW7hRsQT+BTxmeYkqfAvqQug9JmtFNZOyuWDOrOhKNNY+RzBn
+         QeJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741813482; x=1742418282;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y/NYFOGJx3+utedM/+JCynhnYYN1+cS/l3CV1O7uUWI=;
+        b=CSc492LEjuQ9NbNjoD79nfHG6QANkwG4a77qz+SkCB+X4wCLxsWl4WNflggvlYzGvu
+         LdpUqrq0bK3/dXqmEfgzvS6L4wt33fJJeIrNwC6nNzzlwSwcK4e+xBwiGntco/aDKeJf
+         Q7JJx+QSMPOROMSs5WHqeJI7PmsS6rxBOkpAAoaGqSZtsLEi3Ig3/slmOenDHzUnDrx8
+         FhPmcEdJPawiHQX7fgZ9yxeCqUc9EzqG7l9g33wtDcBGYckT9WTkt/PR3YHN+93CC1Wd
+         spSQ9nzrzRqqHEbekzyR86hnDcQTj2gi2rHBORAySUCQpiDW8yfRMMnf2XzehVj3QYrG
+         1ArQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxU8L7Hkgxe3Bcz7tAdwfNYay0kk0/VZ0zpDyJYvXIBoQ3BMpyfc5X3wCKjfIgthaDHFGMoG0E1orq3Nk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSF2DuIMt3TPFiNnefouRWKwlcyiEftHgHGZjgbkWs+0KrkK2Z
+	bUba/l+jYUrWS9hWTxzsEodKK6RZnOfR6LSPSt0n37EIAhEup/XhVwNGrWcB9pwyt9UflQp5bz7
+	ERjMCfcS5ZkWlUqf355d5TvosLprsWoFaqTpZ
+X-Gm-Gg: ASbGncvPnH7ao3Z9/gNtRq7RbwBOk12em7SvNZcMAawBfcaaVa7PDtbcj2nPl8EWexs
+	EqnBWoHVyM7v79zL0ZVyDJ/eeSgc9qRdF1McbkWCa5m3/4unsYxS/tV2dA/xKqPFxhfaiv0C/kt
+	9s9bYJziQ0sq3YwZwHFpaCHc1dhVNCqqPg+XfcAdrALzCQDiQHgkdGL6Y=
+X-Google-Smtp-Source: AGHT+IG2QAgZZb2P1DnYtlbmBhHsH8IbYPaNLVy98uYUpBgu/L7LIECGJjf1D4pL5sBwMndKUFhgflstMybnPkqFZnA=
+X-Received: by 2002:a17:903:2311:b0:216:21cb:2e14 with SMTP id
+ d9443c01a7336-225c5b9ad33mr436225ad.21.1741813481661; Wed, 12 Mar 2025
+ 14:04:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
-X-Spam-Score: -4.29
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.19)[-0.950];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20250122062332.577009-1-irogers@google.com> <Z5K712McgLXkN6aR@google.com>
+ <CAP-5=fX2n4nCTcSXY9+jU--X010hS9Q-chBWcwEyDzEV05D=FQ@mail.gmail.com> <CAP-5=fUHLP-vtktodVuvMEbOd+TfQPPndkajT=WNf3Mc4VEZaA@mail.gmail.com>
+In-Reply-To: <CAP-5=fUHLP-vtktodVuvMEbOd+TfQPPndkajT=WNf3Mc4VEZaA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 12 Mar 2025 14:04:30 -0700
+X-Gm-Features: AQ5f1Jrj8FttoWaX-jdga6H02EOp221HMf8mceTcXqVwlpfEOeFP0rT3a1IwFQk
+Message-ID: <CAP-5=fV_z+Ev=wDt+QDwx8GTNXNQH30H5KXzaUXQBOG1Mb8hJg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	Daniel Xu <dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a new cma_size parameter to parse_crashkernel().
-When not NULL, call __parse_crashkernel to parse the CMA
-reservation size from "crashkernel=size,cma" and store it
-in cma_size.
+On Mon, Feb 10, 2025 at 10:06=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Thu, Jan 23, 2025 at 3:36=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> > On Thu, Jan 23, 2025 at 1:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > > I like changes up to this in general.  Let me take a look at the
+> > > patches.
+>
+> So it would be nice to make progress with this series given some level
+> of happiness, I don't see any actions currently on the patch series as
+> is. If I may be so bold as to recap the issues that have come up:
+>
+> 1) Andi Kleen mentions that dlopen is inferior to linking against
+> libraries and those libraries aren't a memory overhead if unused.
+>
+> I agree but pointed-out the data center use case means that saving
+> size on binaries can be important to some (me). We've also been trying
+> to reduce perf's dependencies for distributions as perf dragging in
+> say the whole of libLLVM can be annoying for making minimal
+> distributions that contain perf. Perhaps somebody (Arnaldo?) more
+> involved with distributions can confirm or deny the distribution
+> problem, I'm hoping it is self-evident.
+>
+> 2) Namhyung Kim was uncomfortable with the code defining
+> types/constants that were in header files as the two may drift over
+> time
+>
+> I agree but in the same way as a function name is an ABI for dlysym,
+> the types/constants are too. Yes a header file may change, but in
+> doing so the ABI has changed and so it would be an incompatible change
+> and everything would be broken. We'd need to fix the code for this,
+> say as we did when libbpf moved to version 1.0, but using a header
+> file would only weakly guard against this problem. The problem with
+> including the header files is that then the build either breaks
+> without the header or we need to support a no linking against a
+> library and not using dlopen case. I suspect a lot of distributions
+> wouldn't understand the build subtlety in this, the necessary build
+> options and things installed, and we'd end up not using things like
+> libLLVM even when it is known to be a large performance win. I also
+> hope one day we can move from parsing text out of forked commands, as
+> it is slower and more brittle, to just directly using libraries.
+> Making dlopen the fallback (probably with a warning on failure) seems
+> like the right direction for this except we won't get it if we need to
+> drag in extra dependency header files for the build to succeed (well
+> we could have a no library or dlopen option, but then we'd probably
+> find distributions packaging this and things like perf annotate
+> getting broken as they don't even know how to dlopen a library).
+>
+> 3) Namhyung Kim (and I) also raises that the libcapstone patch can be
+> smaller by dropping the print_capstone_detail support on x86
+>
+> Note, given the similarity between capstone and libLLVM for
+> disassembly, it is curious that only capstone gives the extra detail.
+>
+> I agree. Given the capstone disassembly output will be compromised we
+> should warn for this, probably in Makefile.config to avoid running
+> afoul of -Werror. It isn't clear that having a warning is a good move
+> given the handful of structs needed to support print_capstone_detail.
+> I'd prefer to keep the structs so that we haven't got a warning that
+> looks like it needs cleaning up.
+>
+> 4) Namhyung Kim raised concerns over #if placement
+>
+> Namhyung raised that he'd prefer:
+> ```
+> #if HAVE_LIBCAPSTONE_SUPPORT
+> // lots of code
+> #else
+> // lots of code
+> #endif
+> ```
+> rather than the #ifs being inside or around individual functions. I
+> raised that the large #ifs is a problem in the current code as you
+> lose context when trying to understand a function. You may look at a
+> function but not realize it isn't being used because of a #if 10s or
+> 100s of lines above. Namhyung raised that the large #ifs is closer to
+> kernel style, I disagreed as I think kernel style is only doing this
+> when it stubs out a bunch of API functions, not when more context
+> would be useful. Hopefully as the person writing the patches the style
+> choice I've made can be respected.
+>
+> 5) Daniel Xu raised issues with the removal of libbfd for Rust
+> support, as the code implies libbfd C++ demangling is a pre-requisite
+> of legacy rust symbol demangling
+>
+> A separate patch was posted adding Rust v0 symbol demangling with no
+> libbfd dependency:
+> https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
+> The legacy support should work with the non-libbfd demanglers as
+> that's what we have today. We should really clean up Rust demangling
+> and have tests. This is blocked on the Rust community responding to:
+> https://github.com/rust-lang/rust/issues/60705
 
-Set cma_size to NULL in all calls to parse_crashkernel().
+Ping.
 
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
----
- arch/arm/kernel/setup.c              |  2 +-
- arch/arm64/mm/init.c                 |  2 +-
- arch/loongarch/kernel/setup.c        |  2 +-
- arch/mips/kernel/setup.c             |  2 +-
- arch/powerpc/kernel/fadump.c         |  2 +-
- arch/powerpc/kexec/core.c            |  2 +-
- arch/powerpc/mm/nohash/kaslr_booke.c |  2 +-
- arch/riscv/mm/init.c                 |  2 +-
- arch/s390/kernel/setup.c             |  2 +-
- arch/sh/kernel/machine_kexec.c       |  2 +-
- arch/x86/kernel/setup.c              |  2 +-
- include/linux/crash_reserve.h        |  3 ++-
- kernel/crash_reserve.c               | 16 ++++++++++++++--
- 13 files changed, 27 insertions(+), 14 deletions(-)
-
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index a41c93988d2c..0bfd66c7ada0 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -1004,7 +1004,7 @@ static void __init reserve_crashkernel(void)
- 	total_mem = get_total_mem();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
--				NULL, NULL);
-+				NULL, NULL, NULL);
- 	/* invalid value specified or crashkernel=0 */
- 	if (ret || !crash_size)
- 		return;
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 9c0b8d9558fc..06bf216a4b0d 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -107,7 +107,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, &high);
-+				&low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index edcfdfcad7d2..ffdfb5407043 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -266,7 +266,7 @@ static void __init arch_reserve_crashkernel(void)
- 		return;
- 
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
--				&crash_size, &crash_base, &low_size, &high);
-+				&crash_size, &crash_base, &low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index fbfe0771317e..11b9b6b63e19 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -458,7 +458,7 @@ static void __init mips_parse_crashkernel(void)
- 	total_mem = memblock_phys_mem_size();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
--				NULL, NULL);
-+				NULL, NULL, NULL);
- 	if (ret != 0 || crash_size <= 0)
- 		return;
- 
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 4b371c738213..f90aaa2263aa 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -334,7 +334,7 @@ static __init u64 fadump_calculate_reserve_size(void)
- 	 * memory at a predefined offset.
- 	 */
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--				&size, &base, NULL, NULL);
-+				&size, &base, NULL, NULL, NULL);
- 	if (ret == 0 && size > 0) {
- 		unsigned long max_size;
- 
-diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
-index 58a930a47422..35f92427d282 100644
---- a/arch/powerpc/kexec/core.c
-+++ b/arch/powerpc/kexec/core.c
-@@ -66,7 +66,7 @@ void __init reserve_crashkernel(void)
- 	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
- 	/* use common parsing */
- 	ret = parse_crashkernel(boot_command_line, total_mem_sz,
--			&crash_size, &crash_base, NULL, NULL);
-+			&crash_size, &crash_base, NULL, NULL, NULL);
- 	if (ret == 0 && crash_size > 0) {
- 		crashk_res.start = crash_base;
- 		crashk_res.end = crash_base + crash_size - 1;
-diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
-index 5c8d1bb98b3e..5e4897daaaea 100644
---- a/arch/powerpc/mm/nohash/kaslr_booke.c
-+++ b/arch/powerpc/mm/nohash/kaslr_booke.c
-@@ -178,7 +178,7 @@ static void __init get_crash_kernel(void *fdt, unsigned long size)
- 	int ret;
- 
- 	ret = parse_crashkernel(boot_command_line, size, &crash_size,
--				&crash_base, NULL, NULL);
-+				&crash_base, NULL, NULL, NULL);
- 	if (ret != 0 || crash_size == 0)
- 		return;
- 	if (crash_base == 0)
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 15b2eda4c364..9634a800629b 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1405,7 +1405,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, &high);
-+				&low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index d78bcfe707b5..4d9b5b5d0cb2 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -607,7 +607,7 @@ static void __init reserve_crashkernel(void)
- 	int rc;
- 
- 	rc = parse_crashkernel(boot_command_line, ident_map_size,
--			       &crash_size, &crash_base, NULL, NULL);
-+			       &crash_size, &crash_base, NULL, NULL, NULL);
- 
- 	crash_base = ALIGN(crash_base, KEXEC_CRASH_MEM_ALIGN);
- 	crash_size = ALIGN(crash_size, KEXEC_CRASH_MEM_ALIGN);
-diff --git a/arch/sh/kernel/machine_kexec.c b/arch/sh/kernel/machine_kexec.c
-index 8321b31d2e19..37073ca1e0ad 100644
---- a/arch/sh/kernel/machine_kexec.c
-+++ b/arch/sh/kernel/machine_kexec.c
-@@ -146,7 +146,7 @@ void __init reserve_crashkernel(void)
- 		return;
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--			&crash_size, &crash_base, NULL, NULL);
-+			&crash_size, &crash_base, NULL, NULL, NULL);
- 	if (ret == 0 && crash_size > 0) {
- 		crashk_res.start = crash_base;
- 		crashk_res.end = crash_base + crash_size - 1;
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index cebee310e200..853afde761a7 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -481,7 +481,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, &high);
-+				&low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
-index 5a9df944fb80..a681f265a361 100644
---- a/include/linux/crash_reserve.h
-+++ b/include/linux/crash_reserve.h
-@@ -16,7 +16,8 @@ extern struct resource crashk_low_res;
- 
- int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base,
--		unsigned long long *low_size, bool *high);
-+		unsigned long long *low_size, unsigned long long *cma_size,
-+		bool *high);
- 
- #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index a620fb4b2116..4969d60c00d6 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -172,17 +172,19 @@ static int __init parse_crashkernel_simple(char *cmdline,
- 
- #define SUFFIX_HIGH 0
- #define SUFFIX_LOW  1
--#define SUFFIX_NULL 2
-+#define SUFFIX_CMA  2
-+#define SUFFIX_NULL 3
- static __initdata char *suffix_tbl[] = {
- 	[SUFFIX_HIGH] = ",high",
- 	[SUFFIX_LOW]  = ",low",
-+	[SUFFIX_CMA]  = ",cma",
- 	[SUFFIX_NULL] = NULL,
- };
- 
- /*
-  * That function parses "suffix"  crashkernel command lines like
-  *
-- *	crashkernel=size,[high|low]
-+ *	crashkernel=size,[high|low|cma]
-  *
-  * It returns 0 on success and -EINVAL on failure.
-  */
-@@ -298,9 +300,11 @@ int __init parse_crashkernel(char *cmdline,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base,
- 			     unsigned long long *low_size,
-+			     unsigned long long *cma_size,
- 			     bool *high)
- {
- 	int ret;
-+	unsigned long long __always_unused cma_base;
- 
- 	/* crashkernel=X[@offset] */
- 	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
-@@ -331,6 +335,14 @@ int __init parse_crashkernel(char *cmdline,
- 
- 		*high = true;
- 	}
-+
-+	/*
-+	 * optional CMA reservation
-+	 * cma_base is ignored
-+	 */
-+	if (cma_size)
-+		__parse_crashkernel(cmdline, 0, cma_size,
-+			&cma_base, suffix_tbl[SUFFIX_CMA]);
- #endif
- 	if (!*crash_size)
- 		ret = -EINVAL;
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+Thanks,
+Ian
