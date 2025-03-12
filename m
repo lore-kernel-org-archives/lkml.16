@@ -1,168 +1,118 @@
-Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841B71DF735;
-	Wed, 12 Mar 2025 10:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352FA1DF735
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741773909; cv=none; b=nvHVDXKYixPuJ+AQTzDIdkRWTBr7T6VW7yBPbpSQWnm4S3saq8uUQGWl3WbPZZb8dXhPOBgGAb9bSSDV93mrlE2E28ayV6qGAYthJawGihE9FxyXl3jt8Pm7UCM3zya6MVKw9ljp8m62kbA58zy5Ya/aeYeamEb4UBRTj51At6Y=
+	t=1741773960; cv=none; b=BSE9yNQUKNyOYLW1+YHMMaFiieHCXVFtAANaaLlWAPbiVoghhccfxPvhdYcjQfA6N7CY9Ze6iOCM84pJnfDfzXG9uy8ay8tYAnt0U+hvIIGIRkfPK+MNalurFMHEXj85UelWoiQoUVXZKu5XdCQCJs9sFsZomej4nYbrxSLo9ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741773909; c=relaxed/simple;
-	bh=W17geC8O76oOSoaemmRBa62PV0mRbp043YTD+HRUYnM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tUPCeZVQ7PZWakM57S/dHBoRnk0twlS6vKhcqNRuzMkXkw/lyoHt7kOZmWurwFjPZJgypXfwzbmWF4dqv+dtwdpVwo+p8J9J9p6y9cd3hMi7YUVHKPWMRGcOPStYQEoKcBzgGndbamUuJlPoEobzB/U5ZuyVYMmz3NpmYKzhaX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=rjoyd4mQ; arc=none smtp.client-ip=5.189.157.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
+	s=arc-20240116; t=1741773960; c=relaxed/simple;
+	bh=TnV6haB5juXzLwYsnjfTeCliML9Uw7ciBtpPk7YGTJE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nmOpKnxmQcIgYBvUsYdqsOWGdT0V/wUzKhKDPbniO9w01O4qiWcieAnFcQ1TL447aFbzmvDarLZ2wuBvzUjOzeU6iXbOJ0R9hlYNtkE8C5SlvzZUz9x3YFA7ME1RFh9fGe8Tl7wQOeWj+9I+eLwdgA8oGzfnnJeqq1UbP3M9g3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PHpXNVJq; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="rjoyd4mQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Cc:
-	Content-ID:Content-Description;
-	bh=soJ+7cSs0XAkqlkvlTIv9267QzTdaow+9b6Ns8vHX1g=; b=rjoyd4mQbsvG1wumRuzw7+XhRI
-	uri5qMZzLMJsTOPq26FLWFyjGPhQgsfBoNunxpOcY+JAasvyZxDP0wEj630LPQoLINI43/yoAjaxr
-	zf6VVeFm3QZ+AuV8NEWePIcCw/87TcoRn+tpG4onShV8vxiueN34cKT41DyvkvYRBQRRTnBHsLJ+i
-	sje0/GuYuSCAfIz6Qu+g/hrEzLVJXIGVKyO0Kwd/hhN21YtdNM/MRuyDgIr49H8v3A23VNpeoOrFE
-	LRk2xvHtVwyRDjm0Jg+tjol5ILNHv3gMoWTt4+R+svWaGQ+Lp30HRda2imMOOnsuJ7wJXgZH+8OsR
-	dbIYbe/N+4xEV7e5JHvcWCQwvMFP+Sdwgb19nUTdoL8AbdNSlf3phFGnHmN6Z/1X10JGmcKtT87JX
-	/WMsZoBUSxp3IuaT1KpF/EBg/M7b0Qz58h7efOnLbk39Ck18wNi4Rdfah0/mnSceNCrsI5Fm9ese6
-	yiWMgld7nvUxJtUo1Hdklk9XeIXDknlELkn9L8/NTBYSfI4vzGFKYrWZlHCbMIT2gxoubxCD6gTDg
-	0XrZOHn9y2hImNRLYEcvhIspd+HEp6X9to8yv6jxzu3Y5Wq1j0BBwCLVQaB9x1Ka7npdsPLNrb/wh
-	+wtcwhfm1W7GUtShwqibRywu0Xy2V55lzOt+2qT6s=;
-From: Christian Schoenebeck <linux_oss@crudebyte.com>
-To: asmadeus@codewreck.org, ericvh@kernel.org, linux-kernel@vger.kernel.org,
- lucho@ionkov.net, syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev,
- syzbot <syzbot+5b667f9a1fee4ba3775a@syzkaller.appspotmail.com>
-Subject: Re: [syzbot] [v9fs?] general protection fault in p9_client_walk
-Date: Wed, 12 Mar 2025 10:36:15 +0100
-Message-ID: <34836920.9mNPFRc1x4@silver>
-In-Reply-To: <67d12512.050a0220.14e108.0024.GAE@google.com>
-References: <67d12512.050a0220.14e108.0024.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PHpXNVJq"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BMHFws015808
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:05:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=HgeWIhIMEhGODE3pVk6y8mTvnaewamGCGvX
+	6pDQJFHY=; b=PHpXNVJqqXprA0Vgw+XM7nNbkr16NUZ+BKsPkeG9YOZpBPZoLmh
+	M6NqRi800CD44xs1N4FNnjqZV21nFa7j5kEIFw8UwlE5IWyZKVxtpjN1ucAgszsj
+	VwIX459kY7yrj4vc4g+v15XxIX7xi0Y2MZZeu9lQGTCsAsQTap4jewJfVLJYt2D1
+	5f0XTyFciR1FbJZ0xWUgIVU03rauVX4xdZpDuySP+ERG7KtUCKtDhZ7U5DD0DHtx
+	KrFkv4J2UEhrJTyXjy72yHWDRLybP8uLy4AU97FFuBkqqckxiz+RMmdgMNIZ+mlf
+	Mml0HD/76/yh8RHBn+6Ny5W9PcIbhSzd61A==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2nt09a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:05:57 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-225505d1ca5so64239455ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:05:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741773956; x=1742378756;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HgeWIhIMEhGODE3pVk6y8mTvnaewamGCGvX6pDQJFHY=;
+        b=sIenRR32tpWT2mFA+cLTUPgDm7eMkFJ6fomZYrNlMZeYjqDb1k+L3n0TsU4kZWIqVd
+         rpQkIM9fFWvdVstBJo8P+25+eRoCgnyiJol+XXsjW/OBVujbMlprWdfoY2iHDq0s+0qM
+         UitjzsqGFxiOj4KXmbRNbTixvZ67NPj+03aloa+f5dQHXkr4MqWkwnXeeiM2AQa6KOyl
+         rktmS/YUYoNNAA8MBhmEkZNJuAoaGaIfYH7WdBGrzcgfcpksk5V0blsFWKJra2YvrrdB
+         +2IX5zSjLMYkfUscgWZA29a8WfyOgq5ekQHOSFFSfvKaJPff4+EwTVJeoC2AVzyb7q6b
+         Cn6A==
+X-Gm-Message-State: AOJu0YwRtQOu7gDo3+PeDdkMWzRoQWnOxD5NqNOQNbTmGqkmhhmsTrEr
+	srUti/zSjfmNbt/DCOVJtA7REOucU0Zk0dPsapE+HTMEqGAmrbjqRaSNmS5RjPFlsViCdwzRaCu
+	9X2vxMjtApwvmqBtZzOPUgJ+/W+QMSWktVWpCXzZXe/dQqv+Jas6g7AqVuxq22OI=
+X-Gm-Gg: ASbGnctAoc/vwSMu3D87Fdsfh06QPt45lCCOCwZCSbfWrAwAnQ0Rhz9Pb4y5xxWuP60
+	8dniNN2bimzdXhU9P8wA5mrHaQ8TvUojA2TZ8Raal8wxoa7p73n7Dh6d+eXaZ1FVIAvsLesxyuj
+	SOltYkbANA7/We21XSe7ojLJZL/VZ+fJA8VIdCJCWjat+rs+vNc5rdMQBq1DEocn/+KURaoluCq
+	InujSct6TEreER5S86dgtZM324XYtqTl/I5y8M39iVm2ZK/OHoYn3599O5tE7zBsENcktG/InGO
+	AuYJoiOtzrKHOSed5veOb1gS79kluwwjqA3ikRXREjupPekfnexO6Q==
+X-Received: by 2002:a05:6a00:6c96:b0:737:9b:582a with SMTP id d2e1a72fcca58-737009b5927mr2847416b3a.24.1741773956423;
+        Wed, 12 Mar 2025 03:05:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGrpFM9aC2Ybs7x0lcdpTYriXhI+a8LEqu97S/o5XlAYzlpGRhYyyTMTdxU6ktmIfaIwEj/Wg==
+X-Received: by 2002:a05:6a00:6c96:b0:737:9b:582a with SMTP id d2e1a72fcca58-737009b5927mr2847376b3a.24.1741773956090;
+        Wed, 12 Mar 2025 03:05:56 -0700 (PDT)
+Received: from hu-kriskura-hyd.qualcomm.com ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736ae7d24ccsm10023993b3a.48.2025.03.12.03.05.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 03:05:55 -0700 (PDT)
+From: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+Subject: [PATCH] arm64: dts: qcom: qcs6490-rb3gen2: Add orientation gpio
+Date: Wed, 12 Mar 2025 15:35:44 +0530
+Message-Id: <20250312100544.1510190-1-krishna.kurapati@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 559Z0RtCSeJg7KWdlZfIBooUOiXCz1nX
+X-Authority-Analysis: v=2.4 cv=ZObXmW7b c=1 sm=1 tr=0 ts=67d15c85 cx=c_pps a=JL+w9abYAAE89/QcEU+0QA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=76Bs7J6LVpVJVXfC1mgA:9 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-ORIG-GUID: 559Z0RtCSeJg7KWdlZfIBooUOiXCz1nX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-12_03,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=888 mlxscore=0
+ suspectscore=0 adultscore=0 impostorscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503120069
 
-On Wednesday, March 12, 2025 7:09:22 AM CET syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    0fed89a961ea Merge tag 'hyperv-fixes-signed-20250311' of g..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=173fa654580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f71f17a9b92472b2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5b667f9a1fee4ba3775a
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177b6874580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138b17a8580000
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0fed89a9.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/178c4c7fb0b4/vmlinux-0fed89a9.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/97ef169a8fde/bzImage-0fed89a9.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+5b667f9a1fee4ba3775a@syzkaller.appspotmail.com
-> 
-> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN NOPTI
-> KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-> CPU: 3 UID: 0 PID: 5936 Comm: syz-executor316 Not tainted 6.14.0-rc6-syzkaller-00016-g0fed89a961ea #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> RIP: 0010:p9_client_walk+0x9a/0x530 net/9p/client.c:1165
-> Code: 28 00 00 00 48 89 84 24 88 00 00 00 31 c0 e8 3d 44 b0 f6 48 89 d8 31 f6 48 c1 e8 03 66 89 74 24 40 48 c7 44 24 50 00 00 00 00 <42> 80 3c 30 00 0f 85 3e 04 00 00 31 ff 89 ee 4c 8b 33 e8 0f 3f b0
-> RSP: 0018:ffffc9000380faa0 EFLAGS: 00010246
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000001
-> RDX: ffff88802a9bc880 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000000001 R08: 0000000000000007 R09: fffffffffffff000
-> R10: 0000000000000000 R11: 0000000000000002 R12: 0000000000000000
-> R13: 0000000000000000 R14: dffffc0000000000 R15: 1ffff92000701f56
-> FS:  000055558c345380(0000) GS:ffff88806a900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f412d1932a9 CR3: 000000002107c000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  clone_fid fs/9p/fid.h:23 [inline]
->  v9fs_fid_xattr_set+0x119/0x2d0 fs/9p/xattr.c:121
->  v9fs_set_acl+0xe6/0x150 fs/9p/acl.c:276
->  v9fs_set_create_acl+0x4b/0x70 fs/9p/acl.c:306
->  v9fs_vfs_mkdir_dotl+0x517/0x6e0 fs/9p/vfs_inode_dotl.c:411
->  vfs_mkdir+0x57d/0x860 fs/namei.c:4313
->  do_mkdirat+0x301/0x3a0 fs/namei.c:4336
->  __do_sys_mkdir fs/namei.c:4356 [inline]
->  __se_sys_mkdir fs/namei.c:4354 [inline]
->  __x64_sys_mkdir+0xef/0x140 fs/namei.c:4354
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Specify orientation GPIO to the PMIC GLINK node.
 
-Just had a glimpse on it so far. IIUIC the trigger is in
-v9fs_vfs_mkdir_dotl() [fs/9p/vfs_inode_dotl.c:411] ?
+Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+---
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-    // NULLs out fid (since dafbe6897)
-    v9fs_fid_add(dentry, &fid);
-    // expects fid being non-NULL
-    v9fs_set_create_acl(inode, fid, dacl, pacl);
-
-/Christian
-
-> RIP: 0033:0x7fd26f335429
-> Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fff6d918e28 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-> RAX: ffffffffffffffda RBX: 00004000000000c0 RCX: 00007fd26f335429
-> RDX: 00007fd26f335429 RSI: 0000000000000040 RDI: 00004000000000c0
-> RBP: 0000000000000073 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-> R13: 00007fff6d919008 R14: 0000000000000001 R15: 0000000000000001
->  </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:p9_client_walk+0x9a/0x530 net/9p/client.c:1165
-> Code: 28 00 00 00 48 89 84 24 88 00 00 00 31 c0 e8 3d 44 b0 f6 48 89 d8 31 f6 48 c1 e8 03 66 89 74 24 40 48 c7 44 24 50 00 00 00 00 <42> 80 3c 30 00 0f 85 3e 04 00 00 31 ff 89 ee 4c 8b 33 e8 0f 3f b0
-> RSP: 0018:ffffc9000380faa0 EFLAGS: 00010246
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000001
-> RDX: ffff88802a9bc880 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000000001 R08: 0000000000000007 R09: fffffffffffff000
-> R10: 0000000000000000 R11: 0000000000000002 R12: 0000000000000000
-> R13: 0000000000000000 R14: dffffc0000000000 R15: 1ffff92000701f56
-> FS:  000055558c345380(0000) GS:ffff88806a900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f412d1932a9 CR3: 000000002107c000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> ----------------
-> Code disassembly (best guess):
->    0:	28 00                	sub    %al,(%rax)
->    2:	00 00                	add    %al,(%rax)
->    4:	48 89 84 24 88 00 00 	mov    %rax,0x88(%rsp)
->    b:	00
->    c:	31 c0                	xor    %eax,%eax
->    e:	e8 3d 44 b0 f6       	call   0xf6b04450
->   13:	48 89 d8             	mov    %rbx,%rax
->   16:	31 f6                	xor    %esi,%esi
->   18:	48 c1 e8 03          	shr    $0x3,%rax
->   1c:	66 89 74 24 40       	mov    %si,0x40(%rsp)
->   21:	48 c7 44 24 50 00 00 	movq   $0x0,0x50(%rsp)
->   28:	00 00
-> * 2a:	42 80 3c 30 00       	cmpb   $0x0,(%rax,%r14,1) <-- trapping instruction
->   2f:	0f 85 3e 04 00 00    	jne    0x473
->   35:	31 ff                	xor    %edi,%edi
->   37:	89 ee                	mov    %ebp,%esi
->   39:	4c 8b 33             	mov    (%rbx),%r14
->   3c:	e8                   	.byte 0xe8
->   3d:	0f 3f                	(bad)
->   3f:	b0                   	.byte 0xb0
-> 
-> 
-> ---
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
-> 
-
+diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+index fa7c54f882a4..e6811a094332 100644
+--- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
++++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+@@ -177,6 +177,7 @@ pmic-glink {
+ 
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		orientation-gpios = <&tlmm 140 GPIO_ACTIVE_HIGH>;
+ 
+ 		connector@0 {
+ 			compatible = "usb-c-connector";
+-- 
+2.34.1
 
