@@ -1,50 +1,32 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CC91E834B;
-	Wed, 12 Mar 2025 07:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 919011E9B34;
+	Wed, 12 Mar 2025 07:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741763269; cv=none; b=hFTpwDIZDTV4jsKY348ib+uWSY3g5cOFwA0JF2j5pVXf3g9hCxzlw6Wt7Ho2bhNei1vdrvD0Ao5CwMiZ4esOy/mh1fDf2xpMwi1ZNOMB42q2qijDF+Iut6I8u3nDHKtOBon0wYJ+WdaL/8D37EAUGiLIU3tKU+ttsGz0oe+7Waw=
+	t=1741763273; cv=none; b=QOOHp6Gjj7LQiqcHqolDkIUbALbJd4E6TJSKi4mFGl3YG5w3jwnqHQw40BPjV13q/LHq8Sf0/GZZ8joFY73jOLwEND9O6fwlo6gys+HJL8IvI1eylmJmhc2Pa0f/IHqjazy/zz8+8CrYa94bVTq6yHo3OSseBV9btODTim6DzTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741763269; c=relaxed/simple;
-	bh=xkX5hO3+T5vZpdAsfoZaLQBkb+ij52X34+ckdVAMjzQ=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mU1YRdUTiOjVI9rKiqEFGFi38TKos5ApyacOfUlurWw2XXgDnGW3xeFFjLlOeoF4eIlAAZLOwL6SXzWzyKJKyXZrJp2I4RjYhOL2R7HFVXPEYjiz1IahaYpLDYjROYZEMpRTp+N4rFWTQIwM6vxZkINr5qjmUnGTTB/pzSgvfBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D2C+OsRe; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741763273; c=relaxed/simple;
+	bh=p+8NQyptigK6LSXRY0dhiA9xz9BOW4cmtkxmZpnpj7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dGEgqRlm7SkrV0WrMAv0Q5HJZ3XNpxzspsXpZNG/cSouhGphCahnT/HSnHjTGzAjgIeHhx9y1+XNGyrw2scxSr5tGAmPSDmF189icJSywMQi24B47U12RHeOhT0HuMPQ/WXPnbZzBaI9bvocg61cIii98dBzA4Mnj4cQzkt3gZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=C6+vpoH2; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D2C+OsRe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741763268; x=1773299268;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xkX5hO3+T5vZpdAsfoZaLQBkb+ij52X34+ckdVAMjzQ=;
-  b=D2C+OsRei3bPFm195Fe5/jqsFQMrYDhCTuRhz/dUDWme1T2Xz6aboCha
-   EdSBco4v29lYhiX4frzRHmrbaRvp8xhpA0/6DDE+caGbs/JlEm7UJJcXw
-   8XTk9mi3hHnUnRXwiDKZHhJiOCd4HVxrY32Gragz28Gt5ZXiylsH8oWCD
-   v0rZWCAeAN5s+SZziPx5yhFGeMvWivp51SPR+lN19dYpiWgCEAVeiaidW
-   xFI3iY8F7KjQQuQ9i8lZ0aaDyEc10wbiMVr289BSRJSIjs0SM0O+u7Hlv
-   2JAnjt1Skt3UZUoKa/GmHV73t3vZGvrPcabBPL13PgpCjq0T59Q1Cqxto
-   Q==;
-X-CSE-ConnectionGUID: ii/Fqg6cTfyfS8i0sj368w==
-X-CSE-MsgGUID: xx5kjXguRf+zZ9JDrLTRhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="43008859"
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="43008859"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:07:47 -0700
-X-CSE-ConnectionGUID: 8ncVAMK5TiK/y6V+rgmE6A==
-X-CSE-MsgGUID: gi9Y5KxmQra4GmzB21WXbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="125179288"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.240.153]) ([10.124.240.153])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:07:41 -0700
-Message-ID: <57dab191-6383-4d51-ba77-4d2cd62cc1da@linux.intel.com>
-Date: Wed, 12 Mar 2025 15:07:36 +0800
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="C6+vpoH2"
+Received: from [100.79.162.36] (unknown [4.194.122.162])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EB7A72045FF0;
+	Wed, 12 Mar 2025 00:07:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EB7A72045FF0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741763270;
+	bh=K3+hbNRBuhKGQ5kI6/gUAGXIu2sJtNpSgo5MWwBx36U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=C6+vpoH24BuGgZQRrJkibK/XKfmr0bbe6cDCHyiYXPah3Ft4OZuDr3XzRlzbmgNqi
+	 mE3NC1MT8rR7rqVVvO7gj1AxydY5rD9896Rw9dXwJPMuw51sGpMFZXXCU1gey96IHu
+	 J79bVD0hIrtThp7q4mr9iG9Q58avOdnKaBvb3v6g=
+Message-ID: <16004c77-de73-4208-9a10-feee7225e738@linux.microsoft.com>
+Date: Wed, 12 Mar 2025 12:37:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,94 +34,122 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Russell King <linux@armlinux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Stuart Yoder <stuyoder@gmail.com>,
- Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun Gupta
- <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>,
- Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- Charan Teja Kalla <quic_charante@quicinc.com>
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-To: Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
- <Z9CEIlXoQJ-A0t-d@8bytes.org>
+Subject: Re: [PATCH v5] sched/topology: Enable topology_span_sane check only
+ for debug builds
+To: Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>
+Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Steve Wahl <steve.wahl@hpe.com>,
+ Saurabh Singh Sengar <ssengar@linux.microsoft.com>, srivatsa@csail.mit.edu,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Michael Kelley <mhklinux@outlook.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>
+References: <20250310052509.1416-1-namjain@linux.microsoft.com>
+ <xhsmh34fjr3av.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <Z9CEIlXoQJ-A0t-d@8bytes.org>
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <xhsmh34fjr3av.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2025/3/12 2:42, Joerg Roedel wrote:
-> On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
->> +	/*
->> +	 * And if we do now see any replay calls, they would indicate someone
->> +	 * misusing the dma_configure path outside bus code.
->> +	 */
->> +	if (dev->driver)
->> +		dev_WARN(dev, "late IOMMU probe at driver bind, something fishy here!\n");
-> This warning triggers on my workstation (with an AMD IOMMU), any ideas?
-> 
->   ------------[ cut here ]------------
->   reg-dummy reg-dummy: late IOMMU probe at driver bind, something fishy here!
->   WARNING: CPU: 0 PID: 1 at drivers/iommu/iommu.c:449 __iommu_probe_device+0x10b/0x510
->   Modules linked in:
-> 
->   CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc6-iommu-next+ #1 1d691d7aebf343bde741cf4c8610d78a2ea2d2d9
->   Hardware name: System manufacturer System Product Name/PRIME X470-PRO, BIOS 5406 11/13/2019
->   RIP: 0010:__iommu_probe_device+0x10b/0x510
->   Code: 68 00 74 28 48 8b 6b 50 48 85 ed 75 03 48 8b 2b 48 89 df e8 87 71 06 00 48 89 ea 48 c7 c7 90 dd 2c 8b 48 89 c6 e8 35 83 77 ff <0f> 0b 49 8b bd a8 00 00 00 e8 77 ab 85 ff 84 c0 0f 84 ad 01 00 00
->   RSP: 0018:ffffafba00047c58 EFLAGS: 00010282
->   RAX: 0000000000000000 RBX: ffffa00481301c10 RCX: 0000000000000003
->   RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000001
->   RBP: ffffa00480ffaee0 R08: 0000000000000000 R09: ffffafba00047ae8
->   R10: ffffa0135e93ffa8 R11: 0000000000000003 R12: ffffafba00047d18
->   R13: ffffffff8adac1a0 R14: 0000000000000000 R15: ffffa004802c5800
->   FS:  0000000000000000(0000) GS:ffffa0135ea00000(0000) knlGS:0000000000000000
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: ffffa00baca01000 CR3: 000000082b838000 CR4: 00000000003506f0
->   Call Trace:
->    <TASK>
->    ? __iommu_probe_device+0x10b/0x510
->    ? __warn.cold+0x93/0xf7
->    ? __iommu_probe_device+0x10b/0x510
->    ? report_bug+0xff/0x140
->    ? prb_read_valid+0x1b/0x30
->    ? handle_bug+0x58/0x90
->    ? exc_invalid_op+0x17/0x70
->    ? asm_exc_invalid_op+0x1a/0x20
->    ? __iommu_probe_device+0x10b/0x510
->    ? __iommu_probe_device+0x10b/0x510
->    ? __pfx_probe_iommu_group+0x10/0x10
->    probe_iommu_group+0x28/0x50
->    bus_for_each_dev+0x7e/0xd0
->    iommu_device_register+0xee/0x260
->    iommu_go_to_state+0xa2a/0x1970
->    ? srso_return_thunk+0x5/0x5f
->    ? blake2s_update+0x68/0x160
->    ? __pfx_pci_iommu_init+0x10/0x10
->    amd_iommu_init+0x14/0x50
->    ? __pfx_pci_iommu_init+0x10/0x10
->    pci_iommu_init+0x12/0x40
->    do_one_initcall+0x46/0x300
->    kernel_init_freeable+0x23d/0x2a0
->    ? __pfx_kernel_init+0x10/0x10
->    kernel_init+0x1a/0x140
->    ret_from_fork+0x34/0x50
->    ? __pfx_kernel_init+0x10/0x10
->    ret_from_fork_asm+0x1a/0x30
->    </TASK>
->   ---[ end trace 0000000000000000 ]---
 
-I saw the same issue on Intel platforms.
+
+On 3/11/2025 9:02 PM, Valentin Schneider wrote:
+> On 10/03/25 10:55, Naman Jain wrote:
+>> From: Saurabh Sengar <ssengar@linux.microsoft.com>
+>>
+>> On a x86 system under test with 1780 CPUs, topology_span_sane() takes
+>> around 8 seconds cumulatively for all the iterations. It is an expensive
+>> operation which does the sanity of non-NUMA topology masks.
+>>
+>> CPU topology is not something which changes very frequently hence make
+>> this check optional for the systems where the topology is trusted and
+>> need faster bootup.
+>>
+>> Restrict this to sched_verbose kernel cmdline option so that this penalty
+>> can be avoided for the systems who want to avoid it.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: ccf74128d66c ("sched/topology: Assert non-NUMA topology masks don't (partially) overlap")
+>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> Co-developed-by: Naman Jain <namjain@linux.microsoft.com>
+>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+>> ---
+>> Changes since v4:
+>> https://lore.kernel.org/all/20250306055354.52915-1-namjain@linux.microsoft.com/
+>>        - Rephrased print statement and moved it to sched_domain_debug.
+>>          (addressing Valentin's comments)
+>> Changes since v3:
+>> https://lore.kernel.org/all/20250203114738.3109-1-namjain@linux.microsoft.com/
+>>        - Minor typo correction in comment
+>>        - Added Tested-by tag from Prateek for x86
+>> Changes since v2:
+>> https://lore.kernel.org/all/1731922777-7121-1-git-send-email-ssengar@linux.microsoft.com/
+>>        - Use sched_debug() instead of using sched_debug_verbose
+>>          variable directly (addressing Prateek's comment)
+>>
+>> Changes since v1:
+>> https://lore.kernel.org/all/1729619853-2597-1-git-send-email-ssengar@linux.microsoft.com/
+>>        - Use kernel cmdline param instead of compile time flag.
+>>
+>> Adding a link to the other patch which is under review.
+>> https://lore.kernel.org/lkml/20241031200431.182443-1-steve.wahl@hpe.com/
+>> Above patch tries to optimize the topology sanity check, whereas this
+>> patch makes it optional. We believe both patches can coexist, as even
+>> with optimization, there will still be some performance overhead for
+>> this check.
+>>
+>> ---
+>>   kernel/sched/topology.c | 9 ++++++++-
+>>   1 file changed, 8 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+>> index c49aea8c1025..d7254c47af45 100644
+>> --- a/kernel/sched/topology.c
+>> +++ b/kernel/sched/topology.c
+>> @@ -132,8 +132,11 @@ static void sched_domain_debug(struct sched_domain *sd, int cpu)
+>>   {
+>>        int level = 0;
+>>
+>> -	if (!sched_debug_verbose)
+>> +	if (!sched_debug_verbose) {
+>> +		pr_info_once("%s: Scheduler topology debugging disabled, add 'sched_verbose' to the cmdline to enable it\n",
+>> +			     __func__);
+>>                return;
+>> +	}
+>>
+> 
+> Nit: I've been told not to break warnings over multiple lines so they can
+> be grep'ed, but given this has the "sched_domain_debug:" prefix I think we
+> could get away with the below.
+> 
+> Regardless:
+> Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+> 
+> ---
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index d7254c47af455..b4dc7c7d2c41c 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -133,7 +133,8 @@ static void sched_domain_debug(struct sched_domain *sd, int cpu)
+>   	int level = 0;
+>   
+>   	if (!sched_debug_verbose) {
+> -		pr_info_once("%s: Scheduler topology debugging disabled, add 'sched_verbose' to the cmdline to enable it\n",
+> +		pr_info_once("%s: Scheduler topology debugging disabled, "
+> +			     "add 'sched_verbose' to the cmdline to enable it\n",
+>   			     __func__);
+>   		return;
+>   	}
+
+
+Thanks for reviewing. I'll wait a couple more days to push the next
+version.
 
 Thanks,
-baolu
+Naman
