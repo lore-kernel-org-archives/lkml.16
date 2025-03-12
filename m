@@ -1,40 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEFD79CD;
-	Wed, 12 Mar 2025 07:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4536B79CD;
+	Wed, 12 Mar 2025 07:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741763742; cv=none; b=jMuV7v/dnIVZcc91BT86/izo57/s0pcM3G2cKUeyQ5bgOon2XgMRPpnmt4UJ8kD13jar/1X2hyTXzRA8/sDUYvvagiDmZkY+jUr0I4mqE3Aheyozl84RbbT2PRDe6qP9MIyygHyTQUWZckzO+RWZn8xZzPDbUWTYwYSnO9gGLIc=
+	t=1741763746; cv=none; b=WauzgY/duC92PHaa6QwiE02RNb6NT9h7gu/sp0xcjvKon7XRdpEFw5xt6IE78DSIWmCjVuzBP/KS2Qv50WG24c2CUIH8gYjnMOIRlGJLt5zzn5g9mrdYDEp5icT6/JltNwZE5DIg9xBGrOTWGTjbKTnZi4IfBLuxgl0Pf83/Gw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741763742; c=relaxed/simple;
-	bh=WPUZ5YogoyL5v/apNB+U1bNVQ5rIXUbcwsGSk6MLPwQ=;
+	s=arc-20240116; t=1741763746; c=relaxed/simple;
+	bh=tyu/VoV5E2lh23gXY3onXvEd0Lu1naDahKD0alV9Q1Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cr5QrDhKZrW6COtWsS/9wdPJn+0SqSHsoXC7FftTNzCA0Kxqe1NJ6QnmHX6FFPgUzpjQOSrCDbUmSiRsLFcMGGs5FloxtEKwFxfxyqruq3ncYGHrWhjiiSCQLp+ClMyceRdhB9ef92Uwe9zO5Bcg2EZ4mZ+O5JwSLCXtcjIvWiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BcUZxhg6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hMCXmqoJfUkJKPgpKTv4IwAPVM9d/FJh3O+2825NC/1Y4hzYUUi1bT7oucaVPK0twzicP9BHvMcxqqiX8PhqSUn23aOviT4u8V1XcQQErnv7axeuEATuvNDumxVqCeQhGBhdfmmySbNoxRlO5mKi1ohEtS4st0CZcDL3MjR09fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Lf0gzvzp; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BcUZxhg6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 105C8C4CEE3;
-	Wed, 12 Mar 2025 07:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741763741;
-	bh=WPUZ5YogoyL5v/apNB+U1bNVQ5rIXUbcwsGSk6MLPwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BcUZxhg6xSCnKeahLlxJ/cZ/A6ACxZMyc+/F0PRbn5JPx8vSQKMmTxW6ixZdB4fNT
-	 Fb3hKrNIRtbjfv4rm9udefnLyRUi/BOHzR2eC3GMNthGH6PAFYpw0PPCidsudbRu96
-	 xOJIZ9StSG/edVc+W68888VUOzeFnmCFBpowOZ1Q=
-Date: Wed, 12 Mar 2025 08:14:24 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, airlied@gmail.com, acourbot@nvidia.com,
-	jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 0/4] Auxiliary bus Rust abstractions
-Message-ID: <2025031228-saline-preset-ba9b@gregkh>
-References: <20250312002741.453350-1-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lf0gzvzp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mKXNynFfzsPXuIrBpQX5UyMexUljsPaGCJJZEjTneC8=; b=Lf0gzvzpjVR5kSOzVQzQGAGxbC
+	Gx5k3cFdVF/rMQr1EFMi1GruTOVsUuL+k5xJ5IYxy1KfhMw8G6i148/teXWwQ5/CSZNupuxXKkA4J
+	qYJg6ouOJQ0zBVcDuiAbkogbze8JpaGDr5GKsgqsa4qvMJYMh3C+yQ8wP3k2v8309OkXLqrI6XGja
+	xQHlmkMBqrzYycum5Y2vBIgk1uDHz9vhdacaOlIGTRY/GVBpOcaMXaazWowjrZ6p49WWdZh2PpSyQ
+	rxKyGkqHNyCBp0lQvJH6k+RUTYAd79dxsj2EaJ/QxTOioVw2spDqVCzEJiE7sdU9lee7I6Qqces51
+	/JpIeavw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsGJc-00000007gL0-2BTb;
+	Wed, 12 Mar 2025 07:15:44 +0000
+Date: Wed, 12 Mar 2025 00:15:44 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, djwong@kernel.org, cem@kernel.org,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com
+Subject: Re: [PATCH v5 01/10] xfs: Pass flags to xfs_reflink_allocate_cow()
+Message-ID: <Z9E0oEq67RJkDn1h@infradead.org>
+References: <20250310183946.932054-1-john.g.garry@oracle.com>
+ <20250310183946.932054-2-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,29 +48,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250312002741.453350-1-dakr@kernel.org>
+In-Reply-To: <20250310183946.932054-2-john.g.garry@oracle.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Mar 12, 2025 at 01:19:06AM +0100, Danilo Krummrich wrote:
-> This series adds Rust abstractions for the auxiliary bus.
-> 
-> It implements the required abstractions to write auxiliary drivers and create
-> auxiliary device registrations. A driver sample illustrates how the
-> corresponding abstractions work.
-> 
-> The auxiliary abstractions are required for the Nova driver project, in order to
-> connect nova-core with the nova-drm driver.
+All the patches (but not the cover letter) capitalize the first
+word after the prefix.  While some subsystems do that, xfs does not.
+Please be consistent with the other commit messages.
 
-Nice!
+> +/*
+> + * Flags for xfs_reflink_allocate_cow()
+> + */
+> +#define XFS_REFLINK_CONVERT	(1u << 0) /* convert unwritten extents now */
 
-> This patch series depends on [1] (taken through the nova tree for v6.15); a
-> branch containing the patches, including the dependency can be found in [2].
-> 
-> [1] https://lore.kernel.org/rust-for-linux/20250306222336.23482-2-dakr@kernel.org/
-> [2] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/auxiliary
+Please add a _UNWRITTEN prefix to avoid any confusion with delalloc
+conversions.
 
-Do you want this to wait until that lands in 6.15-rc1 or do you want to
-take this now through the nova tree?  Either is fine with me.
-
-thanks,
-
-greg k-h
