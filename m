@@ -1,331 +1,181 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012053.outbound.protection.outlook.com [52.101.66.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915E685C5E;
-	Wed, 12 Mar 2025 15:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741793779; cv=none; b=GPLHp0K0apiDFAmiNl0UUgIsAaRPWyXsxN9TOI3OCx/eDGNTmFFj+FeM9DorkofquJbDWYVx/yOi/1XBWBEBDSbgmBREl1GDz4MMwLF9GaClWq9WetuM5K5/glM9MhfswOxROr8A2+7IxR7pgllTP13rxW9WVL5EUNwQhKhSDbI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741793779; c=relaxed/simple;
-	bh=GgP4Q2Rw1VYckDi3OWRgZqr4KMKYjxv/IJPaeJKHppE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MDcfIQ6D0K/biV3ZdhXkNa7eI6zUq6gItq1KOc8n6quJA8mTUQ5mEx0FxVW4e5982PwQRoSlhJQ8T/zysd+tOAyKr9kOHATI+CdFHJb41rueJJvOYJxF+NOFL8EKVfmctDor7k+iZ4ddJ3BT0pDu61kpZc6d7jqj3+DU3zJ6BNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iBYWlO3A; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CA115539A;
+	Wed, 12 Mar 2025 15:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741793802; cv=fail; b=anP3rzHOzzsDzHmTpf65zkcSz+9LrinlOgRdYOT1RCtJdtPVdSAi4eHkUhSi95Ya6cegmfIYDC191UBGFU+CAv8e/MwY73TXYV9cfYn3EMoF5yAxlrKfiUVjcDDxi8fzDuYFmto0BfXSbEnuLiIXPf65fr1PlVoMe2mgaCN8dB4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741793802; c=relaxed/simple;
+	bh=dR6bqjLHgc+gDYd+b6TLzQRwVG9PrbeLON5cssifSwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=m5SfDASWovGC/EvP3Dp8yY15ZfH0C4mgYTBqPQCIUpv7Lrpn1JT/Idcb/WR8r8t6YIr5TYEc3kHIaQh5CbLC9w/tTjRlz1/wIQREBUvjJ5PBTfr0c95FJaJMOjYasIAAeqZGePH5i04RE5L7raBhB/3Lji4IAorW/D++kRgE4NM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=WdntoeN6; arc=fail smtp.client-ip=52.101.66.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBYWlO3A"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so10307988a12.0;
-        Wed, 12 Mar 2025 08:36:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741793776; x=1742398576; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QQMZOHAomyAzg4jiqshJe3nsZjhhUaDPG3i/RS5JDzk=;
-        b=iBYWlO3A+YxbfAPhM4rAPpC6lejvwvBHGJvHnyIjSHBW1Sd3iBQNus68Ob+2xo7ECd
-         zqQkVkII9P++eC2yvayhI/fQnVsM0EVFVhAn7ipbAC38GU8Hqn8nF8A1jZCOV3/m+vrx
-         MU13MDAjD6aexVKaq9mo1/GfMTxequ07FrxMZcq1xJxza/EaFvMvXhqSK5lUkaQ1T6ih
-         LWsKnH4Omt3clN2SG8gTlpMOrfY07N0ao8le1UFnLw+3avGxN/xJH6rxEdJtLwIgAuCt
-         6R+eZDpflgxWgVsGbEgAqEAG+NbjYAnGNmwkjoiuxhIJnRqR+2wOD998DreV22h9TnLh
-         r4ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741793776; x=1742398576;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QQMZOHAomyAzg4jiqshJe3nsZjhhUaDPG3i/RS5JDzk=;
-        b=ipN0otML/dCKiohI+VNzANxLQoY3N+Q5dAD4fjmd2HNW1D4g1+CFLRe/Cd9x0B7Nvg
-         QnQpoTaGj7VHHh2kmYbvHU19d7FuPGCe98TjH85LjwRAZwjUFcBWCFhIsjoshECxnpVl
-         jsyooWxkl+unQBgtP69LXk4l57IAmF+L2ZTTmY+F5zOGIvQz876yz+dwRZXCHAsthygi
-         isRE8FFVmJNB396M4x4bVjuhSAygrgPSaaHajwj72yjhTweKbz1XkRX4CLIOi30ATi2r
-         vD4xPZVfU9KgooUG+rDE+jCTFgliG4W5gENk98ZqTldMTPZ+6J35vcdv3lG/oFUsYmUV
-         LnWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+B2/ZtEqff82b7bODxT2DS2fhKIYka5ksOK08AWeIBZzKD2KmbQm4afqMS2igtHcJ9saKVLMLAXMEzjPT40v8@vger.kernel.org, AJvYcCVHL54B+djNcv4T5odgJihkJJQr1TFArjX7EPIHlUxQfFMCrtqVwDx9nT4s4GCEVJfKGWyUWTuBXoZOvcqi@vger.kernel.org, AJvYcCVS2GOZdagWxt9sAeJoAqP4jt1l0cjezA3ta3MujOEEeTqyCiGJ6FCbX6RNz5gEtTdOQ0HJYHOvgauA9rw=@vger.kernel.org, AJvYcCWoxhXsRB1I+FiHKUXoms7+2weoyK3YZGyOtIf5SNtIskNAvP0dMnm3qTo8wQ1hvMpvx1BXVydzy6a8gdzjX6c=@vger.kernel.org, AJvYcCXG06MNDofpfC8naxaA0DQudkiRB7nioeKTWdnxeno7CJsuNh8cyuotg1GOVf8/UnawXYHmB9VwkE5a@vger.kernel.org, AJvYcCXIhezsYX0PQGF1sn6DkvfoBcRXCjpXqcSojeMZgsG8DN1rIoZZMV/pr/gXb8WLuIqMhk3s7IW2/k7T+Hna@vger.kernel.org, AJvYcCXQARJ3SD3cbYhvpj4fSBvV9laTlod0mYbIixz4YTe53gqz+Jv1SAlw19F3oS3I8L+yaDB/IvQaWx0+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWWc1lX8F5NSg6DL5rQlF4X9IpJg5MO7hKHQ9XoBk6Ktqqqruy
-	D+DJz/lbx1cYEQEEWj82Z+xVo7Thiwo5MjDT+evKkIJjmRwpvQNHK/ZZGA/etLH9lrGynPFORR/
-	HNI2Vzv3lYWQKNQUe6d4ZP/g6bUk=
-X-Gm-Gg: ASbGncsJTatEceXOm88A4NGKqaqPv0FnKRs9D2qcGl/2QtJqH5sA0gP7woXaCbnXONb
-	IObrL313yo3yYmXikQaKgDJFYkfTWjh0GGVzPvhd/M5oHmfAtg6gFwdROcAIi+bTXJZBFXJwKKK
-	TBG4+Xj2ska4ebh27/gAprn8DW8cVNsI6fPwItWXesqA==
-X-Google-Smtp-Source: AGHT+IGNV8i6S+ubXKrjupQg31WxsAznMi2mVw6pqkziEFUnd13z/4zdnvWBup5ZJat6a3pGvU3yN7ENoZVbR0PzlcY=
-X-Received: by 2002:a17:906:882:b0:ac2:7be7:95c5 with SMTP id
- a640c23a62f3a-ac27be79e32mr1741806466b.33.1741793775528; Wed, 12 Mar 2025
- 08:36:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="WdntoeN6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YkI3hIXJ3WiBNlwMMR+17bpiU3tFCugYLFNDzSTndpebEe20+6gUlmQ+urxuIyigHaMUCvowoYUDGUVrEgXR3thlV8cx0/+hEwNtVO75e6IvezfTF3H650li/N7c0xiyFDK9cNs+u7JmTu+FqPN3bqJUex8PNbodV68MQsF4l9t59hCIqMVun4r7UQWLgBixE2GILReNuEI0f0fJH7G+fKGKeNjFYYQahPF+dqJWne/8t0J6WsIrdRUOTUO0QJSxXKNklkCXfHlO0b/vH/98fqQhl5PdYWRBKSpxT/78OvUCrqge6KD01YirsdoxP5pjgmNrIGtZcqxqeiq5EI4/FA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RMteELg+dXMMFeDqf50n4c7xlclrqT9cgjT4atq3+Xo=;
+ b=jZZkP3UQ4lw5mglq1mGiY//vSjfLQ3gy3EPUnK0qwKcrlp2xxlELysksbzwOJw33TNkxwkQnZr9wqChekhV/Vvl7urDmcUsiKI7OrBdtr/VfnI6MZGpLMF00IxNQO7BzMWJksJsGMmuffz05NUENojB+AZ9Jj9t+xMOtAhXvZtWyup9MXKwmrU9HKolyFe38mBxkUBMiRFPQ0dLjRMMNf0lrZpLwKm7nroOM03ywaV1UDUX86VY6OE2w4FDlHsm168KLyKn201bK+xCWM7g0J7mDcKePRQ6ioByfTk5Y1H08tRm7Pyl80nI7jpV2On2JOS5MA9yPft/Gk+JU99RiIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RMteELg+dXMMFeDqf50n4c7xlclrqT9cgjT4atq3+Xo=;
+ b=WdntoeN6t8aOpURcWF+SjpYWIOINYfdz7I9cXTxrhcOYtgeHwWNJrur3SeA+YYFvtqvZpWCWci0HNq8l4Y4Xls8QsaV428lqzLKNKTlPCWB2Y9tovMTPsl7HXv627l2vpsXim40ytDQaDHkz079ZiYJQ4mcpyUMQ8hJ8goJmk64rnN98d50AOZTA57nd3/OE9WnRfUrMLH2tSQUTUb/nsXud1QzkhqvOXt+PxIfmvyDVqNgJesrM/eXPohv20e9WeEnu3b/ROXUMRMm8UcultszI/zivwtv+ia2uPb2cisN3TGiwT8bngLsGnpjOaLTTf1tMFAMUnFl2U3HNM45dPA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by AM7PR04MB6902.eurprd04.prod.outlook.com (2603:10a6:20b:107::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Wed, 12 Mar
+ 2025 15:36:36 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%6]) with mapi id 15.20.8511.026; Wed, 12 Mar 2025
+ 15:36:36 +0000
+Date: Wed, 12 Mar 2025 17:36:32 +0200
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Simon Horman <horms@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Furong Xu <0x1207@gmail.com>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Xiaolei Wang <xiaolei.wang@windriver.com>,
+	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Gal Pressman <gal@nvidia.com>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Chwee-Lin Choong <chwee.lin.choong@intel.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+Subject: Re: [PATCH iwl-next v9 02/14] net: ethtool: mm: extract stmmac
+ verification logic into common library
+Message-ID: <20250312153632.evkqnjcsuspvzp5g@skbuf>
+References: <20250309104648.3895551-1-faizal.abdul.rahim@linux.intel.com>
+ <20250309104648.3895551-3-faizal.abdul.rahim@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250309104648.3895551-3-faizal.abdul.rahim@linux.intel.com>
+X-ClientProxiedBy: VI1P195CA0055.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:802:5a::44) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
- <20250309-ptr-as-ptr-v2-5-25d60ad922b7@gmail.com> <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me>
-In-Reply-To: <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 12 Mar 2025 11:35:29 -0400
-X-Gm-Features: AQ5f1JovFkieADK2j5qsaOP-ipWuDczGfkWnRMeg_0yLN1jvGEFw6PHwYpccKHM
-Message-ID: <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|AM7PR04MB6902:EE_
+X-MS-Office365-Filtering-Correlation-Id: cc8cfcdf-3071-4e5a-6763-08dd617bacd1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?lO/C3wXLlBX790ghRcvSUwc0QFb60phCtW1Wzd23I/31+v6Ev0NZeuxWyPwC?=
+ =?us-ascii?Q?EtcWeSeVZX+/X7sjtL8LnqomCP/8cZJDTtDY1MYEJV/KabqWKXxRZ9nZzJJ+?=
+ =?us-ascii?Q?5SAYDw146JGE2W1qCyh48P1+39T3fI5j6Jmp9BxoY/Rm8SQS8IsrXTLNLdPZ?=
+ =?us-ascii?Q?jkux7L1V6ItXOSwlotJrQ+Zfnylj4px041PHpPyzcwv4hIFxzTkHsYFyChLA?=
+ =?us-ascii?Q?glUa7g3vAIWhzv7eAH51SP8Z6P2xfPB3X0xES+sWdLQenpOBc5iCNtYg15Co?=
+ =?us-ascii?Q?C47156mZeGdbeZlbQ4HvTlZWeujM3oqyKyfsNyVeFKCfqVAHz+C6x4+/l9IH?=
+ =?us-ascii?Q?4CETctf+fw8gyZNkuHDH2gN7nu5hWEva39Y4CpFdMCM378Vo0sC8g+a85P2e?=
+ =?us-ascii?Q?6rsgcz61i/6P0jfK1plg1e8BLlY1altkHeHMw65IzxlTCrHi0APOMMZgtmDc?=
+ =?us-ascii?Q?FjpSpTv9FkPsSbIq/44a1gIqG7aRCtGOmdGlWimDAqkxTxPaFBxHvQgfx/NU?=
+ =?us-ascii?Q?9zJKPxNHGbmyDS2FmGF5ClE7YCyp5quMWEZBUgUg8jA+3izJhoqYu3r3fXoS?=
+ =?us-ascii?Q?FbjEv2eim+g4qio4dsKC7Og/UUBCwW4XAGRHqCxYuDgDe65AlMb/sRubIp2y?=
+ =?us-ascii?Q?LtIrfCYIivb9UygtrwXeJbNHjZXLm0FPgvJPPxXQzJm9NADf50B41W545oVO?=
+ =?us-ascii?Q?v3hZo2RtpO/LIcqa2rd9x5gUTuKK5fOGxadNCTJKZlM3GZfKUrAhxBodi3Qw?=
+ =?us-ascii?Q?nqwD8uqkW6Y36/1vKZGQP/ZrY92aJqqLp89K0QN8HsUXlUOk7a8usfcc0zkY?=
+ =?us-ascii?Q?iZJKSaA2Vg7TqgGhNARmosfFrXNeobvQMGtvl6cgSagN0dOFjYeT3aXudW4Q?=
+ =?us-ascii?Q?bRg1Zjmy4f3KIfZ7c5kGPfOiQI+pPKd52exis8YlHskvd4l632gKmsSnBO5i?=
+ =?us-ascii?Q?qghZRFmv3kd++/UieNqIrfJXAh+FPKrTmleLvqMbq421RYVAHUww1AO03YCQ?=
+ =?us-ascii?Q?Lcj8tZmLvKNjtN/j1HZV4hENv08VtyjiZGw249pkJ4l+hkFltfAZsRRTuqmw?=
+ =?us-ascii?Q?kv7A+akM+M7khY9Sk18UUaB3COYHAI0uCnnwkfVrCg9P0vXGjohRkBK+R1gD?=
+ =?us-ascii?Q?InG4P8Knr1yxfAAZ9nh4fV6VOtFstUuK0cEy6kjSNXXKbr38++Yjq++a4J7Z?=
+ =?us-ascii?Q?lk1XC0rEKu53/oD7WK+bs2DB0U78JFvbARlyuqV4Wc5SAqWJ7MLGaThUzBal?=
+ =?us-ascii?Q?o92GEkrkT7EiyT9OD3xEJxYwaUTRDODfoBKwVkWDazSa3/psdcXynsoTAC07?=
+ =?us-ascii?Q?Ixjs8mgqFq3RkIL37NdV36tEr8nKflwNknIVj9ktr2qga0IyyXODP+lVsJdn?=
+ =?us-ascii?Q?MZ2i7KJZM0xVxQt5pLaU2XtZ6CQs?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ZmqwO4BW8c9rkE3ubNkY15mfsJaOql0C9WQnp+jVY+O3Mse30J+2DlzLQUyg?=
+ =?us-ascii?Q?sl7vAj8uK6qE0wuSXP06HN/sYI46qPSztT1TcdAzUoZk9Q/fA6BolZ0P5BCY?=
+ =?us-ascii?Q?GnHWesQPTqcoiMYurPv9o+deoD+GsmepBQWeyz8PwMo0YnN0/DWcSxnoTU4b?=
+ =?us-ascii?Q?O6TA60zh4R8KmJOqEID5Enb1JJJnx5dQpuN0P2lDg08mQMDzzbdVSM60paBl?=
+ =?us-ascii?Q?z4zOxYrPrPkOOyDxXP7a0kJ6PwZUOOWT4AUlct67RwUqJ0iSEr53JNfiKBep?=
+ =?us-ascii?Q?dn+Db7l5yx1VXPut0KdSaf644yV0TIAQZGOmmIR8BzdyuFpY6+UFyFk+Xg6h?=
+ =?us-ascii?Q?+ufIwvdPyoSqRNomqRkLjhh9Ybyf+AwG/WhJKL/Cjrh82oovM54d+yLbexsV?=
+ =?us-ascii?Q?UyGUjD1RQRmZeb/zoMHtBy75CSJiojjwjkM3VsAonDPoTl65tcBCRhuIjlND?=
+ =?us-ascii?Q?BfgnzZswsVBFQP6A2f3R8uAvJ10eA3IhpXK7zyRKEnSgDVW1JVYtPc4uJpFH?=
+ =?us-ascii?Q?Uv4QobxlwqGDSnDTca7ypu1kAdfvSc4uItXXON0LwKTC7a8B/WrxBFVXXBn1?=
+ =?us-ascii?Q?4E3i3cMucVNMebtYVK24WF4oOWOtFLZrB5Ss25+/liumHFsbTuY/PYWUIOIi?=
+ =?us-ascii?Q?Ye3sSacpa5/P1Gkf4WXXsZMA+IDRabvpjzfUaawQnIZYtlp4q750GnNWKliz?=
+ =?us-ascii?Q?/jBoltMy6TKToYpRBU9K0rZBZGWPnEWIiGXO1x3WuNy9J+7eCvSYBNnGB2n+?=
+ =?us-ascii?Q?XCUy2KDqmdQN7r75S6a/sRv3a6zNF9xI1zlpWw8MfWtRKRPCVvHzvbYE/zKP?=
+ =?us-ascii?Q?wT/Pdwgubz8Z5ylAhukAGV9XFYm/fFOV0TIVWag12NZaB75bX5/En/qPZ+fR?=
+ =?us-ascii?Q?0zy8ytHXI5n31H0WgLar4zE9s4SOqR/cY8vpjcd1FRW3d846/14SLzjkPntO?=
+ =?us-ascii?Q?6XLjvV4BSEOCc9yqzNXaYsKyU42wNU4SUU9E5DKv1hJ25lOvyHVwcOAvdj2V?=
+ =?us-ascii?Q?eciQyvcS4acaAHF0l8VaSaR08O8mA1CE9TJ8rA6SDR/xhcKsMfYH0Sgyq+0U?=
+ =?us-ascii?Q?ZiRfKihyWjWUXOcQd5r1XqSW4ySqf9LKqkk5HgvdRbbSQ+M/W66X2uV2hCYQ?=
+ =?us-ascii?Q?J7C6vxr//icaMvyiwsSQ3FCFeMablUeh9qTmh3ZH0iKcuZfOCAjiYzLrggoA?=
+ =?us-ascii?Q?olbX/kNypz9lJ5NzYBxobxQ1i0KDpYKkX96Pct0xQIOwEscuUY6fTkTRyYN+?=
+ =?us-ascii?Q?M5t8KLOC5QOkwdpx8T+fcy6xaMPzmQf6eQpikWXTOYm5cwRuLEXmfv941xJ3?=
+ =?us-ascii?Q?fv8R3cYkz3kjroTxf34nWnc/T2ejxmz6VWnJCkcwgspZxIrQYfwmamwWALWN?=
+ =?us-ascii?Q?kJW2q33ZoSLSknoBCuu6ZON8zlRIBrKqap4LTwUfJjLibXAGr+IIhUBGMLxi?=
+ =?us-ascii?Q?K/Up5hNi1aztas5mAG4hop/DNLjfsrxqNgiNwfk/P1rB7Z9UT4IcqLdIPK3Q?=
+ =?us-ascii?Q?iBZZWzpzRzosQBqsqJpJAN7V0oPKHJMbM3RURnmgJWY+RhGAfPhNBY1aT5rT?=
+ =?us-ascii?Q?5vE4vkiQ4ddj+dvlk2vhrmCoe1xhb2jkEj3ZdIr3K/nnfStwW3tP+Kw8anHU?=
+ =?us-ascii?Q?ew=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc8cfcdf-3071-4e5a-6763-08dd617bacd1
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2025 15:36:36.6107
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L9QYdy9vLXufkRKY8OP1fxg2HbH6eExphWgOuOTMsH2sONzR1ZhqeA5TVQF2DvGswCR3Xe0sCd2I2/a+KOqs9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6902
 
-On Wed, Mar 12, 2025 at 11:05=E2=80=AFAM Benno Lossin <benno.lossin@proton.=
-me> wrote:
->
-> On Sun Mar 9, 2025 at 5:00 PM CET, Tamir Duberstein wrote:
-> > diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> > index 598001157293..20159b7c9293 100644
-> > --- a/rust/kernel/devres.rs
-> > +++ b/rust/kernel/devres.rs
-> > @@ -45,7 +45,7 @@ struct DevresInner<T> {
-> >  /// # Example
-> >  ///
-> >  /// ```no_run
-> > -/// # use kernel::{bindings, c_str, device::Device, devres::Devres, io=
-::{Io, IoRaw}};
-> > +/// # use kernel::{bindings, c_str, device::Device, devres::Devres, ff=
-i::c_void, io::{Io, IoRaw}};
-> >  /// # use core::ops::Deref;
-> >  ///
-> >  /// // See also [`pci::Bar`] for a real example.
-> > @@ -59,19 +59,19 @@ struct DevresInner<T> {
-> >  ///     unsafe fn new(paddr: usize) -> Result<Self>{
-> >  ///         // SAFETY: By the safety requirements of this function [`p=
-addr`, `paddr` + `SIZE`) is
-> >  ///         // valid for `ioremap`.
-> > -///         let addr =3D unsafe { bindings::ioremap(paddr as _, SIZE a=
-s _) };
-> > +///         let addr =3D unsafe { bindings::ioremap(paddr as u64, SIZE=
-) };
->
-> The argument of `ioremap` is defined as `resource_size_t` which
-> ultimately maps to `u64` on 64 bit systems and `u32` on 32 bit ones. I
-> don't think that we should have code like this... Is there another
-> option?
->
-> Maybe Gary knows something here, do we have a type that represents that
-> better?
+On Sun, Mar 09, 2025 at 06:46:36AM -0400, Faizal Rahim wrote:
+> @@ -7850,7 +7850,7 @@ int stmmac_suspend(struct device *dev)
+>  	rtnl_unlock();
+>  
+>  	if (stmmac_fpe_supported(priv))
+> -		timer_shutdown_sync(&priv->fpe_cfg.verify_timer);
+> +		ethtool_mmsv_stop(&priv->fpe_cfg.mmsv);
+>  
+>  	priv->speed = SPEED_UNKNOWN;
+>  	return 0;
 
-Ah yeah the problem is that this type is an alias rather than a
-newtype. How do you feel about `as bindings::phys_addr_t`?
-
-> >  ///         if addr.is_null() {
-> >  ///             return Err(ENOMEM);
-> >  ///         }
-> >  ///
-> > -///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
-> > +///         Ok(IoMem(IoRaw::new(addr as usize, SIZE)?))
->
-> This should be `addr.addr()` (requires `strict_provenance` on Rust 1.83
-> & before).
->
-> (I am assuming that we're never casting the usize back to a pointer,
-> since otherwise this change would introduce UB)
-
-Yeah, we don't have strict provenance APIs (and we can't introduce
-them without compiler tooling or bumping MSRV). I'm not sure if we are
-casting back to a pointer, but either way this change doesn't change
-the semantics - it is only spelling out the type.
-
-> >  ///     }
-> >  /// }
-> >  ///
-> >  /// impl<const SIZE: usize> Drop for IoMem<SIZE> {
-> >  ///     fn drop(&mut self) {
-> >  ///         // SAFETY: `self.0.addr()` is guaranteed to be properly ma=
-pped by `Self::new`.
-> > -///         unsafe { bindings::iounmap(self.0.addr() as _); };
-> > +///         unsafe { bindings::iounmap(self.0.addr() as *mut c_void); =
-};
->
-> Can't this be a `.cast::<c_void>()`?
-
-This is an integer-to-pointer cast. `addr` returns `usize`:
-
-impl<const SIZE: usize> IoRaw<SIZE> {
-    [...]
-
-    /// Returns the base address of the MMIO region.
-    #[inline]
-    pub fn addr(&self) -> usize {
-        self.addr
-    }
-
-    [...]
-}
-
->
-> >  ///     }
-> >  /// }
-> >  ///
->
-> > diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-> > index 8654d52b0bb9..eb8fa52f08ba 100644
-> > --- a/rust/kernel/error.rs
-> > +++ b/rust/kernel/error.rs
-> > @@ -152,7 +152,7 @@ pub(crate) fn to_blk_status(self) -> bindings::blk_=
-status_t {
-> >      /// Returns the error encoded as a pointer.
-> >      pub fn to_ptr<T>(self) -> *mut T {
-> >          // SAFETY: `self.0` is a valid error due to its invariant.
-> > -        unsafe { bindings::ERR_PTR(self.0.get() as _).cast() }
-> > +        unsafe { bindings::ERR_PTR(self.0.get() as isize).cast() }
->
-> Can't this be a `.into()`?
-
-error[E0277]: the trait bound `isize: core::convert::From<i32>` is not sati=
-sfied
-   --> ../rust/kernel/error.rs:155:49
-    |
-155 |         unsafe { bindings::ERR_PTR(self.0.get().into()).cast() }
-    |                                                 ^^^^ the trait
-`core::convert::From<i32>` is not implemented for `isize`
-
->
-> >      }
-> >
-> >      /// Returns a string representing the error, if one exists.
->
-> > @@ -119,7 +119,7 @@ pub fn $name(&self, offset: usize) -> $type_name {
-> >              let addr =3D self.io_addr_assert::<$type_name>(offset);
-> >
-> >              // SAFETY: By the type invariant `addr` is a valid address=
- for MMIO operations.
-> > -            unsafe { bindings::$name(addr as _) }
-> > +            unsafe { bindings::$name(addr as *const c_void) }
->
-> Also here, is `.cast::<c_void>()` enough? (and below)
-
-It's an integer-to-pointer cast. In the same `impl<const SIZE: usize>
-IoRaw<SIZE>` as above:
-
-    fn io_addr_assert<U>(&self, offset: usize) -> usize {
-        build_assert!(Self::offset_valid::<U>(offset, SIZE));
-
-        self.addr() + offset
-    }
-
->
-> >          }
-> >
-> >          /// Read IO data from a given offset.
->
-> > diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-> > index 04f2d8ef29cb..40d1bd13682c 100644
-> > --- a/rust/kernel/of.rs
-> > +++ b/rust/kernel/of.rs
-> > @@ -22,7 +22,7 @@ unsafe impl RawDeviceId for DeviceId {
-> >      const DRIVER_DATA_OFFSET: usize =3D core::mem::offset_of!(bindings=
-::of_device_id, data);
-> >
-> >      fn index(&self) -> usize {
-> > -        self.0.data as _
-> > +        self.0.data as usize
->
-> This should also be `self.0.data.addr()`.
-
-Can't do it without strict_provenance.
-
->
-> >      }
-> >  }
-> >
-> > @@ -34,10 +34,10 @@ pub const fn new(compatible: &'static CStr) -> Self=
- {
-> >          // SAFETY: FFI type is valid to be zero-initialized.
-> >          let mut of: bindings::of_device_id =3D unsafe { core::mem::zer=
-oed() };
-> >
-> > -        // TODO: Use `clone_from_slice` once the corresponding types d=
-o match.
-> > +        // TODO: Use `copy_from_slice` once stabilized for `const`.
->
-> This feature has just been stabilized (5 days ago!):
->
->     https://github.com/rust-lang/rust/issues/131415
-
-Yep! I know :)
-
-> @Miguel: Do we already have a target Rust version for dropping the
-> `RUSTC_BOOTSTRAP=3D1`? If not, then I think we should use this feature
-> now, since it will be stable by the time we bump the minimum version.
-> (not in this patch [series] though)
->
-> >          let mut i =3D 0;
-> >          while i < src.len() {
-> > -            of.compatible[i] =3D src[i] as _;
-> > +            of.compatible[i] =3D src[i];
-> >              i +=3D 1;
-> >          }
->
-> > @@ -317,7 +320,7 @@ unsafe fn do_release(pdev: &Device, ioptr: usize, n=
-um: i32) {
-> >          // `ioptr` is valid by the safety requirements.
-> >          // `num` is valid by the safety requirements.
-> >          unsafe {
-> > -            bindings::pci_iounmap(pdev.as_raw(), ioptr as _);
-> > +            bindings::pci_iounmap(pdev.as_raw(), ioptr as *mut kernel:=
-:ffi::c_void);
->
-> Again, probably castable.
-
-How? `ioptr` is a `usize` (you can see the prototype).
-
->
-> >              bindings::pci_release_region(pdev.as_raw(), num);
-> >          }
-> >      }
-> > diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-> > index 6a1a982b946d..0b80a119d5f0 100644
-> > --- a/rust/kernel/str.rs
-> > +++ b/rust/kernel/str.rs
-> > @@ -692,9 +692,9 @@ fn new() -> Self {
-> >      pub(crate) unsafe fn from_ptrs(pos: *mut u8, end: *mut u8) -> Self=
- {
-> >          // INVARIANT: The safety requirements guarantee the type invar=
-iants.
-> >          Self {
-> > -            beg: pos as _,
-> > -            pos: pos as _,
-> > -            end: end as _,
-> > +            beg: pos as usize,
-> > +            pos: pos as usize,
-> > +            end: end as usize,
->
-> I would prefer if we use `pos.expose_provenance()` (also for `end`)
-> here.
-
-Me too! But we can't until we actually start using strict provenance.
-
->
-> >          }
-> >      }
-> >
-> > @@ -719,7 +719,7 @@ pub(crate) unsafe fn from_buffer(buf: *mut u8, len:=
- usize) -> Self {
-> >      ///
-> >      /// N.B. It may point to invalid memory.
-> >      pub(crate) fn pos(&self) -> *mut u8 {
-> > -        self.pos as _
-> > +        self.pos as *mut u8
->
-> This should then also be `with_exposed_provenance(self.pos)`
-
-Same as other instances of strict provenance.
+FWIW, this trivially conflicts with net-next commit 64fdb808660d ("net:
+stmmac: remove write-only priv->speed").
