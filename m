@@ -1,53 +1,62 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBEE22528FC
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 14:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741790513; cv=none; b=AhsTublhcGVFonjeURRYmenslQIfHssVdhNgrutU8D33SkJoUClO1EtPMDrfJW7jmD/LTbS9FS617JnesrKPlaLunNgRzAuZp+cyezy2OSXQU9Ha1NMWsGDXp4gv3EtB9HJ5X0qBbjyR+ArAJ8FirC8oIXYGpL+M5zHl+v422oU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741790513; c=relaxed/simple;
-	bh=0qIK11Nxc/qG99PcihtfUwWqc93REynnXKH4VFL31IE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LdGrjag70tctrQK+0G3yi4Ns+4l5w0zd1sDVvQkLiHaaJpiWJTiyWybuMX9fO99mVpzaQt5qDtoy3+BT+mTc693vvmX3ABEGWkfVAN6sf6l+4hfRwOVoI1ppXxkSaoPyCK+/u6zTlrhZuzs7khs2Hh5FiFNEhdgvbWp5OSoJv0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=HoHVNj/I; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="HoHVNj/I"
-Received: from cap.home.8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id 7C8AB457E8;
-	Wed, 12 Mar 2025 15:41:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1741790503;
-	bh=0qIK11Nxc/qG99PcihtfUwWqc93REynnXKH4VFL31IE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HoHVNj/IbAvBuNXjpXmXmZXhmi/mV9g31NXzx+Q8ymiP69hnKc+IMTFmtlSR7OcaM
-	 ZtXOQpRSuosn2dXeWEjxB0NcIW4Nq6o/gEtvf2HlAYMUuy14ZbQn7M2q6Pma82s8ML
-	 65/qsWECVTDUw8hFjewyv9iNMoAjH+dvO98mQOXxemny9oelR+0fTEqmYJzWNkky9J
-	 8EGBIBN6nppdcsdXQqJW1PJqlwGM6riy9e+GvAg4VTtzDWTiarRmaWO+4meYLT73Tz
-	 Chd9fB+OaiKp99CKAMdYGZ2aKQmB+CLbtJI1pWlDV5Q24BD9vVkoKaRqq/hZb2gYpe
-	 CeFcDthvl4zSQ==
-From: Joerg Roedel <joro@8bytes.org>
-To: x86@kernel.org
-Cc: hpa@zytor.com,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Larry.Dewey@amd.com,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F4F86358
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 14:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741790593; cv=none; b=FjRhzoqIOZubhDsMG0mj5h6v3v+chYc+Q8IXgRNHPKVLCWX2xmQE/KQY7uUxWqC5COMnPplPa80F0rnQrwwAGkLJhysCibJaXpghXI7rSpL2S3KZePpNk5GWOJ6CN41tnZy8rXK3UWsBmKdrVme7uVZPJg3Oqk8fga04xXhkgys=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741790593; c=relaxed/simple;
+	bh=yB/1DMedibvtTqcKz2b+elEi0esJF8P5TQBtkTwCVB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SskibMKANuqbSA7YNZsvRX6SJgI93SHb+P0w6XhakCkYFayO0EvSbowjoHddTqsxSnDh2dAO7UsQxi49gRzSJsmA4YGGf3LcZvThMBijucUDLfx34AzNKir69zDbA48an/EBkfUqhn1e5p6ySBN+zO87u3FpOARWH4hW+Z1HV1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=K6NXXWyp; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K6NXXWyp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=oInsi2D7axo2egqLTm6zsJ7BfqLAvSOVJG6AQYZo6i4=; b=K6NXXWypJEHl+g3kj4kkSGqGfu
+	up08gClhXsMJsUWf5e5D2727V1MfG1Tr+1UtL6FsLLem+iaWKM26oRNeTGwR2LLoHVsYi1sxIsRF3
+	3molZPfDWGwrRfXIUvYO/Wvz6q4qBSten06E2YlZJD1dhmQrzoJYt0EsWCESGiVFN3/zILYKtwKtN
+	qgLa8hWEO437Ljep2PIxBIN04pXPaGzweCVkFpR5KtlW4QleFhTzAQ/+MH33XIjiIJubAxVdUQyjk
+	YFbUgTGdCFZ1PYPin3HOLhlICQcvnk2WezL79kLIQr2FYteEmyZTkncyVN8dtSujygRibdr7IYJlA
+	rRtF6k0Q==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsNIS-00000002QEt-2cM2;
+	Wed, 12 Mar 2025 14:43:00 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsNIR-00000009uUn-31Yp;
+	Wed, 12 Mar 2025 14:42:59 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: kexec@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
 	linux-kernel@vger.kernel.org,
-	linux-coco@lists.linux.dev,
-	Juergen Gross <jgross@suse.com>,
-	kirill.shutemov@linux.intel.com,
-	alexey.gladkov@intel.com,
-	Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 2/2] x86/sev: Make SEV_STATUS available via SYSFS
-Date: Wed, 12 Mar 2025 15:41:07 +0100
-Message-ID: <20250312144107.108451-3-joro@8bytes.org>
+	Simon Horman <horms@kernel.org>,
+	Dave Young <dyoung@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	jpoimboe@kernel.org,
+	bsz@amazon.de
+Subject: [PATCH v7 8/8] [DO NOT MERGE] x86/kexec: Add CFI type information to relocate_kernel()
+Date: Wed, 12 Mar 2025 14:34:20 +0000
+Message-ID: <20250312144257.2348250-9-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250312144107.108451-1-joro@8bytes.org>
-References: <20250312144107.108451-1-joro@8bytes.org>
+In-Reply-To: <20250312144257.2348250-1-dwmw2@infradead.org>
+References: <20250312144257.2348250-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,65 +64,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Joerg Roedel <jroedel@suse.de>
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-Current user-space tooling which needs access to the SEV_STATUS MSR is
-using the MSR module. The use of this module poses a security risk in
-any trusted execution environment and is generally discouraged.
+A previous commit added __nocfi to machine_kexec() because it makes an
+indirect call to relocate_kernel() which lacked CFI type information,
+and caused the system to crash.
 
-Instead, provide an file in SYSFS in the /sys/hypervisor/sev/
-directory to provide the value of the SEV_STATUS MSR to user-space.
+Use SYM_TYPED_FUNC_START() to ensure that the type information is
+present, and remove the __nocfi tag.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+I still can't make objtool happy with this in both GCC and Clang builds
+at the same time, so not yet for merging; only included in this series
+to nerd-snipe the objtool maintainers.
+
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- Documentation/ABI/testing/sysfs-hypervisor | 5 +++++
- arch/x86/coco/sev/core.c                   | 9 +++++++++
- 2 files changed, 14 insertions(+)
+ arch/x86/kernel/machine_kexec_64.c   | 2 +-
+ arch/x86/kernel/relocate_kernel_64.S | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-hypervisor b/Documentation/ABI/testing/sysfs-hypervisor
-index aca8b02c878c..54c80899c19c 100644
---- a/Documentation/ABI/testing/sysfs-hypervisor
-+++ b/Documentation/ABI/testing/sysfs-hypervisor
-@@ -1,5 +1,6 @@
- What:		/sys/devices/system/cpu/sev
- 		/sys/devices/system/cpu/sev/vmpl
-+		/sys/devices/system/cpu/sev/sev_status
- Date:		May 2024
- Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
- Description:	Secure Encrypted Virtualization (SEV) information
-@@ -8,3 +9,7 @@ Description:	Secure Encrypted Virtualization (SEV) information
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 7abc7aa0261b..84f59f18dcb6 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -380,7 +380,7 @@ void machine_kexec_cleanup(struct kimage *image)
+  * Do not allocate memory (or fail in any way) in machine_kexec().
+  * We are past the point of no return, committed to rebooting now.
+  */
+-void __nocfi machine_kexec(struct kimage *image)
++void machine_kexec(struct kimage *image)
+ {
+ 	unsigned long reloc_start = (unsigned long)__relocate_kernel_start;
+ 	relocate_kernel_fn *relocate_kernel_ptr;
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 2b7fc59af373..999aca909803 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -5,6 +5,7 @@
+  */
  
- 		vmpl: Reports the Virtual Machine Privilege Level (VMPL) at which
- 		      the SEV-SNP guest is running.
-+
-+		sev_status: Reports the value of the SEV_STATUS MSR which
-+		            enumerates the enabled features of an SEV-SNP
-+			    environment.
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 51a04a19449b..3e834ce9badc 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -2678,10 +2678,19 @@ static ssize_t vmpl_show(struct kobject *kobj,
- 	return sysfs_emit(buf, "%d\n", snp_vmpl);
- }
+ #include <linux/linkage.h>
++#include <linux/cfi_types.h>
+ #include <linux/stringify.h>
+ #include <asm/alternative.h>
+ #include <asm/page_types.h>
+@@ -59,8 +60,9 @@ SYM_DATA_END(kexec_debug_idt)
  
-+static ssize_t sev_status_show(struct kobject *kobj,
-+			       struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%llx\n", sev_status);
-+}
-+
- static struct kobj_attribute vmpl_attr = __ATTR_RO(vmpl);
-+static struct kobj_attribute sev_status_attr = __ATTR_RO(sev_status);
-+
- 
- static struct attribute *vmpl_attrs[] = {
- 	&vmpl_attr.attr,
-+	&sev_status_attr.attr,
- 	NULL
- };
- 
+ 	.section .text..relocate_kernel,"ax";
+ 	.code64
+-SYM_CODE_START_NOALIGN(relocate_kernel)
++SYM_TYPED_FUNC_START(relocate_kernel)
+ 	UNWIND_HINT_END_OF_STACK
++	UNWIND_HINT_FUNC
+ 	ANNOTATE_NOENDBR
+ 	/*
+ 	 * %rdi indirection_page
 -- 
 2.48.1
 
