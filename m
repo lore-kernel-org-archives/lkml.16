@@ -1,52 +1,51 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B5525E817;
-	Wed, 12 Mar 2025 17:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F59256C9B;
+	Wed, 12 Mar 2025 17:20:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800042; cv=none; b=iWhQUBA1zWHeFrUaIhL+FkNvx9ffHpA9nL7xNRFwDyp/I/PpC9t553ASJOg+/B2imKFEaNG2aGNGStPAtq4yKB9THzFjvK7lpMVqyANbtw6wTIajxD/hf8TGTYwThOaBrfRb4KtgA6gDJW1kURS9I9yg1QtqbJedi7Rb7KpbnWQ=
+	t=1741800043; cv=none; b=aCNoEbfPt1tCW8YXYVMdlpAdaZJFC/+XHEDwMKc9pykMnoX3cUh4PSggmWiDTPNuCYT3Cp0CTWW49ZsVUWsOEyvJmqT6Yhgkuy2Vfsgarh3YqE3u5t9h9xRWFRU+cZPPRUvVDa0y+KDwoWaEqN9Nsv9301bfX3IzCs42zvAHZR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741800042; c=relaxed/simple;
-	bh=WxG0Ek7ELZx4Jhl88ofMlJcbmL4+792+KAbhxBlQN50=;
+	s=arc-20240116; t=1741800043; c=relaxed/simple;
+	bh=xWyvRkWEeBRnxoE7vvGN0mIqkoVgHd2rpPst0CnjKT4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=tmYCSvCHR8MVyd4eZ0aGLVLLDHNe1RNcxD6JElYsJJA/+30GcEjjvTEd8tt52IkgMsr9Muc2w3Scj+pBUvaHJ6fTlKmJ6cgdAAz/QUj8bheRmY/4C4M6+2GSXWN5Jwg5XOPnBdhDIrCRsXGrB9dgi+e+3ZEkxsOqfNE1qiexfdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xgOIaG1s; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TjpDNIK3; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Kp5FMjQKutTEF8K1ikL76S53m+Nxhj9et6Oe1hfyLTuvW69kV8IpMnaWbjJYG6j1KH0DfA6LJXc3whYH5VXYWbSAOqT97tbPgv+QTsSLkNMafJVg8U9dbyptUyhK2n3VTax4UK0Ump1+unHaHnz452LG6vZ/48BpmLHAK6WPm8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sjkP3bv4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gjwro72O; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xgOIaG1s";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TjpDNIK3"
-Date: Wed, 12 Mar 2025 17:20:36 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sjkP3bv4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gjwro72O"
+Date: Wed, 12 Mar 2025 17:20:39 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741800037;
+	s=2020; t=1741800040;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dq0Z5tPyqBPs0WdFIlkyk8kWp8l5nm3GzkBmSYW4BRg=;
-	b=xgOIaG1s9g5ySG/P7P2S/R9mI15GDLqmi78lUU6dhinIDR1sMUo736pUbJnHPtYzOKClzJ
-	qt7pXCMkRALYjCA3hpfSf8/HplogiSy/ZZKlxdMfMwvqi1jKG6okJOXOh2cqS3CS9Gzidl
-	HqL5nGSF9aVyflVHXPnOOFLuBUIlqOcTD9h6qrYcH3aDeLtNtSuWv50hdRdKrzxGGyq+7X
-	P531VgNFpo98++C0UCG+STahZquxHtyqgfyMbwNzAc14WHDy0gIg/1s3x3fz/3kzyJAyg2
-	/MPNEkHBb6tK1BAduiMAEozPO1UujqGTp+ZcamhwIVykV5Vajb1mth04m/n/KQ==
+	bh=68XL2X4OiTEZjd0cTuan9H7k1pZXEMl9vvbHSuJLsbs=;
+	b=sjkP3bv4EqdAT7PgzBOxlRauVHT9oPF4/CA1cTfIpT/UIbQo/1RCsCQdbP3vIMERg7gHr0
+	42NEVtB+pgfcuShU63jAa3+pLVBzBKSKmtSuyYC+ltDNbi7teGAJdIAApZvrvyHsiX253w
+	K+5E5ZvQsjCT1ZncVNEc2cuA3V8UzMlv3/fqkv5w1GRJpI8etqv6s+EVBur7L//5lF43Tv
+	1gQ5KeNZ9e0cgevAuUpdri5K7DpNvV5wtpuZ/JNGy3WoYwLvwBETYKuLnsq+k7YHlTTGHn
+	tm3YlKXAMr4ZchvMQnp1K2PbzZ045NxRw0gKwq2TscYko16EVYVBqkYeD5z3dw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741800037;
+	s=2020e; t=1741800040;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dq0Z5tPyqBPs0WdFIlkyk8kWp8l5nm3GzkBmSYW4BRg=;
-	b=TjpDNIK3h6h2oaYUx/BU43y19ejo+JOnXMSMB3qDJEWJ89vndDnhkaIP9KQKQjtH/1rkMH
-	wn8qWEKALfmCUuCQ==
+	bh=68XL2X4OiTEZjd0cTuan9H7k1pZXEMl9vvbHSuJLsbs=;
+	b=gjwro72Omk4iI4Pytc/Y4f+glKKdQgkkKMu4sVxG6BsnlKHhuhnvAxcQNUa39M7MjkrNia
+	yrwk7DupMD5MXbAQ==
 From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cache] x86/resctrl: Remove data_width and the tabular format
+Subject: [tip: x86/cache] x86/resctrl: Remove fflags from struct rdt_resource
 Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>,
  Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
@@ -54,15 +53,15 @@ Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  Amit Singh Tomar <amitsinght@marvell.com>,
  Shanker Donthineni <sdonthineni@nvidia.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250311183715.16445-7-james.morse@arm.com>
-References: <20250311183715.16445-7-james.morse@arm.com>
+In-Reply-To: <20250311183715.16445-4-james.morse@arm.com>
+References: <20250311183715.16445-4-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174180003687.14745.12857836521662809331.tip-bot2@tip-bot2>
+Message-ID: <174180003930.14745.12527506976084153097.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -72,37 +71,24 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     43312b8ea1c61abbc5e3bdc87fe2e18f755d549d
-Gitweb:        https://git.kernel.org/tip/43312b8ea1c61abbc5e3bdc87fe2e18f755d549d
+Commit-ID:     131dab13a82d9edd97dd96d98d2919f56f339331
+Gitweb:        https://git.kernel.org/tip/131dab13a82d9edd97dd96d98d2919f56f339331
 Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Tue, 11 Mar 2025 18:36:51 
+AuthorDate:    Tue, 11 Mar 2025 18:36:48 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 12 Mar 2025 12:22:36 +01:00
+CommitterDate: Wed, 12 Mar 2025 12:22:26 +01:00
 
-x86/resctrl: Remove data_width and the tabular format
+x86/resctrl: Remove fflags from struct rdt_resource
 
-The resctrl architecture code provides a data_width for the controls of each
-resource. This is used to zero pad all control values in the schemata file so
-they appear in columns. The same is done with the resource names to complete
-the visual effect. e.g.
+The resctrl arch code specifies whether a resource controls a cache or memory
+using the fflags field. This field is then used by resctrl to determine which
+files should be exposed in the filesystem.
 
-  | SMBA:0=2048
-  |   L3:0=00ff
+Allowing the architecture to pick this value means the RFTYPE_ flags have to
+be in a shared header, and allows an architecture to create a combination that
+resctrl does not support.
 
-AMD platforms discover their maximum bandwidth for the MB resource from
-firmware, but hard-code the data_width to 4. If the maximum bandwidth requires
-more digits - the tabular format is silently broken.  This is also broken when
-the mba_MBps mount option is used as the field width isn't updated. If new
-schema are added resctrl will need to be able to determine the maximum width.
-The benefit of this pretty-printing is questionable.
-
-Instead of handling runtime discovery of the data_width for AMD platforms,
-remove the feature. These fields are always zero padded so should be harmless
-to remove if the whole field has been treated as a number.  In the above
-example, this would now look like this:
-
-  | SMBA:0=2048
-  |   L3:0=ff
+Remove the fflags field, and pick the value based on the resource id.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
@@ -116,161 +102,108 @@ Tested-by: Peter Newman <peternewman@google.com>
 Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
 Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
-Link: https://lore.kernel.org/r/20250311183715.16445-7-james.morse@arm.com
+Link: https://lore.kernel.org/r/20250311183715.16445-4-james.morse@arm.com
 ---
- arch/x86/kernel/cpu/resctrl/core.c        | 26 +----------------------
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  3 +--
- arch/x86/kernel/cpu/resctrl/internal.h    |  2 +-
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 10 ++++++--
- include/linux/resctrl.h                   |  2 +--
- 5 files changed, 10 insertions(+), 33 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c     |  4 ----
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 18 ++++++++++++++++--
+ include/linux/resctrl.h                |  2 --
+ 3 files changed, 16 insertions(+), 8 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 542503a..754fb65 100644
+index 12b4131..8ef2e44 100644
 --- a/arch/x86/kernel/cpu/resctrl/core.c
 +++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -44,12 +44,6 @@ static DEFINE_MUTEX(domain_list_lock);
- DEFINE_PER_CPU(struct resctrl_pqr_state, pqr_state);
- 
- /*
-- * Used to store the max resource name width and max resource data width
-- * to display the schemata in a tabular format
-- */
--int max_name_width, max_data_width;
--
--/*
-  * Global boolean for rdt_alloc which is true if any
-  * resource allocation is enabled.
-  */
-@@ -228,7 +222,6 @@ static __init bool __get_mem_config_intel(struct rdt_resource *r)
- 			return false;
- 		r->membw.arch_needs_linear = false;
- 	}
--	r->data_width = 3;
- 
- 	if (boot_cpu_has(X86_FEATURE_PER_THREAD_MBA))
- 		r->membw.throttle_mode = THREAD_THROTTLE_PER_THREAD;
-@@ -269,8 +262,6 @@ static __init bool __rdt_get_mem_config_amd(struct rdt_resource *r)
- 	r->membw.throttle_mode = THREAD_THROTTLE_UNDEFINED;
- 	r->membw.min_bw = 0;
- 	r->membw.bw_gran = 1;
--	/* Max value is 2048, Data width should be 4 in decimal */
--	r->data_width = 4;
- 
- 	r->alloc_capable = true;
- 
-@@ -290,7 +281,6 @@ static void rdt_get_cache_alloc_cfg(int idx, struct rdt_resource *r)
- 	r->cache.cbm_len = eax.split.cbm_len + 1;
- 	r->default_ctrl = BIT_MASK(eax.split.cbm_len + 1) - 1;
- 	r->cache.shareable_bits = ebx & r->default_ctrl;
--	r->data_width = (r->cache.cbm_len + 3) / 4;
- 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
- 		r->cache.arch_has_sparse_bitmasks = ecx.split.noncont;
- 	r->alloc_capable = true;
-@@ -786,20 +776,6 @@ static int resctrl_arch_offline_cpu(unsigned int cpu)
- 	return 0;
- }
- 
--/*
-- * Choose a width for the resource name and resource data based on the
-- * resource that has widest name and cbm.
-- */
--static __init void rdt_init_padding(void)
--{
--	struct rdt_resource *r;
--
--	for_each_alloc_capable_rdt_resource(r) {
--		if (r->data_width > max_data_width)
--			max_data_width = r->data_width;
--	}
--}
--
- enum {
- 	RDT_FLAG_CMT,
- 	RDT_FLAG_MBM_TOTAL,
-@@ -1102,8 +1078,6 @@ static int __init resctrl_late_init(void)
- 	if (!get_rdt_resources())
- 		return -ENODEV;
- 
--	rdt_init_padding();
--
- 	state = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
- 				  "x86/resctrl/cat:online:",
- 				  resctrl_arch_online_cpu,
-diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-index c763cb4..59610b2 100644
---- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-@@ -487,8 +487,7 @@ static void show_doms(struct seq_file *s, struct resctrl_schema *schema, int clo
- 			ctrl_val = resctrl_arch_get_config(r, dom, closid,
- 							   schema->conf_type);
- 
--		seq_printf(s, schema->fmt_str, dom->hdr.id, max_data_width,
--			   ctrl_val);
-+		seq_printf(s, schema->fmt_str, dom->hdr.id, ctrl_val);
- 		sep = true;
- 	}
- 	seq_puts(s, "\n");
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index b5543bd..f975cd6 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -326,7 +326,7 @@ struct rdtgroup {
- /* List of all resource groups */
- extern struct list_head rdt_all_groups;
- 
--extern int max_name_width, max_data_width;
-+extern int max_name_width;
- 
- int __init rdtgroup_init(void);
- void __exit rdtgroup_exit(void);
+@@ -74,7 +74,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+ 			.mon_domains		= mon_domain_init(RDT_RESOURCE_L3),
+ 			.parse_ctrlval		= parse_cbm,
+ 			.format_str		= "%d=%0*x",
+-			.fflags			= RFTYPE_RES_CACHE,
+ 		},
+ 		.msr_base		= MSR_IA32_L3_CBM_BASE,
+ 		.msr_update		= cat_wrmsr,
+@@ -88,7 +87,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+ 			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_L2),
+ 			.parse_ctrlval		= parse_cbm,
+ 			.format_str		= "%d=%0*x",
+-			.fflags			= RFTYPE_RES_CACHE,
+ 		},
+ 		.msr_base		= MSR_IA32_L2_CBM_BASE,
+ 		.msr_update		= cat_wrmsr,
+@@ -102,7 +100,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+ 			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_MBA),
+ 			.parse_ctrlval		= parse_bw,
+ 			.format_str		= "%d=%*u",
+-			.fflags			= RFTYPE_RES_MB,
+ 		},
+ 	},
+ 	[RDT_RESOURCE_SMBA] =
+@@ -114,7 +111,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+ 			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_SMBA),
+ 			.parse_ctrlval		= parse_bw,
+ 			.format_str		= "%d=%*u",
+-			.fflags			= RFTYPE_RES_MB,
+ 		},
+ 	},
+ };
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index e7862d0..1e0bae1 100644
+index 45093b9..3391ac8 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -57,6 +57,12 @@ static struct kernfs_node *kn_mongrp;
- /* Kernel fs node for "mon_data" directory under root */
- static struct kernfs_node *kn_mondata;
+@@ -2165,6 +2165,20 @@ static int rdtgroup_mkdir_info_resdir(void *priv, char *name,
+ 	return ret;
+ }
  
-+/*
-+ * Used to store the max resource name width to display the schemata names in
-+ * a tabular format.
-+ */
-+int max_name_width;
++static unsigned long fflags_from_resource(struct rdt_resource *r)
++{
++	switch (r->rid) {
++	case RDT_RESOURCE_L3:
++	case RDT_RESOURCE_L2:
++		return RFTYPE_RES_CACHE;
++	case RDT_RESOURCE_MBA:
++	case RDT_RESOURCE_SMBA:
++		return RFTYPE_RES_MB;
++	}
 +
- static struct seq_buf last_cmd_status;
- static char last_cmd_status_buf[512];
- 
-@@ -2613,10 +2619,10 @@ static int schemata_list_add(struct rdt_resource *r, enum resctrl_conf_type type
- 
- 	switch (r->schema_fmt) {
- 	case RESCTRL_SCHEMA_BITMAP:
--		s->fmt_str = "%d=%0*x";
-+		s->fmt_str = "%d=%x";
- 		break;
- 	case RESCTRL_SCHEMA_RANGE:
--		s->fmt_str = "%d=%0*u";
-+		s->fmt_str = "%d=%u";
- 		break;
++	return WARN_ON_ONCE(1);
++}
++
+ static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
+ {
+ 	struct resctrl_schema *s;
+@@ -2185,14 +2199,14 @@ static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
+ 	/* loop over enabled controls, these are all alloc_capable */
+ 	list_for_each_entry(s, &resctrl_schema_all, list) {
+ 		r = s->res;
+-		fflags = r->fflags | RFTYPE_CTRL_INFO;
++		fflags = fflags_from_resource(r) | RFTYPE_CTRL_INFO;
+ 		ret = rdtgroup_mkdir_info_resdir(s, s->name, fflags);
+ 		if (ret)
+ 			goto out_destroy;
  	}
  
+ 	for_each_mon_capable_rdt_resource(r) {
+-		fflags = r->fflags | RFTYPE_MON_INFO;
++		fflags = fflags_from_resource(r) | RFTYPE_MON_INFO;
+ 		sprintf(name, "%s_MON", r->name);
+ 		ret = rdtgroup_mkdir_info_resdir(r, name, fflags);
+ 		if (ret)
 diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index 736b9a9..e1a982a 100644
+index 37279e2..496ddca 100644
 --- a/include/linux/resctrl.h
 +++ b/include/linux/resctrl.h
-@@ -214,7 +214,6 @@ enum resctrl_schema_fmt {
-  * @ctrl_domains:	RCU list of all control domains for this resource
-  * @mon_domains:	RCU list of all monitor domains for this resource
-  * @name:		Name to use in "schemata" file.
-- * @data_width:		Character width of data when displaying
-  * @default_ctrl:	Specifies default cache cbm or memory B/W percent.
-  * @schema_fmt:		Which format string and parser is used for this schema.
+@@ -210,7 +210,6 @@ enum resctrl_scope {
+  * @format_str:		Per resource format string to show domain value
+  * @parse_ctrlval:	Per resource function pointer to parse control values
   * @evt_list:		List of monitoring events
+- * @fflags:		flags to choose base and info files
+  * @cdp_capable:	Is the CDP feature available on this resource
+  */
+ struct rdt_resource {
 @@ -232,7 +231,6 @@ struct rdt_resource {
- 	struct list_head	ctrl_domains;
- 	struct list_head	mon_domains;
- 	char			*name;
--	int			data_width;
- 	u32			default_ctrl;
- 	enum resctrl_schema_fmt	schema_fmt;
+ 						 struct resctrl_schema *s,
+ 						 struct rdt_ctrl_domain *d);
  	struct list_head	evt_list;
+-	unsigned long		fflags;
+ 	bool			cdp_capable;
+ };
+ 
