@@ -1,143 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18E123C376;
-	Wed, 12 Mar 2025 09:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECD223BF93
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741773476; cv=none; b=QTW0/KKp4p/3SNWpcxWcEwdMwIiI6ZtvyGHOSZQ2bKi5PoJUJO26buoJ/NbqRH0vBKlGeZ2eaGFwKlzjmY2NRekQqDtIkltlQIIvIXAgL86czsZpgZsP4doZUlTQ9oSlsjpSrGb9HtLor6aXhkG9KXrmZBFDkZ4JIE9Gz4JdV8w=
+	t=1741773675; cv=none; b=YwpINSxP2vklOJ3fOgC+mSv3ZWaAGQrmECejv1EeAlwGapjaOvy9+RGHvfZLWNNuurwjdhCHehzHhcu/uskfA1/zF3srT5pNe+uDc5ttSBiEr6Hm2KxTJPVbcqMFqAcjSR3uNudDR8lYl8ihjoRNrkO7yIzH1JOxyWcBaIL6b7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741773476; c=relaxed/simple;
-	bh=WPKZgWXS6TO2Pkm4H5Q0EXYryaAnMa+J46vPcty7+I8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gy2AZeSBKAr3zu/Vw9YlFRbeZAf80NCwYY/htgnKzNHOZvkUtvtyNPAHy/8QhwNAhosq580hxRVrmFF2PJrKKzcko+0LGDlxlA21IbmeoZanFK4B+QeHd8YgU4zkScxo6NNlvjnu6lGLIcIFH8OCTBjJHQCx3RBmsfVHONRjMfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hN7zTksC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741773675; c=relaxed/simple;
+	bh=H70cromMzBc7G1Dxdn7Ujl+1TcPLdylbz6SBFKEdUOo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W7wk1HL5khNmDTHgZLkihTKVf2jM7/1QNoQU/MpPCJ3/RjOKIFZ59HOgGOaOm91BV29objxP8WWaMQg+vuq8J+KjU97ypjILQczl/zUxzKoJvi2aFj4joLC4zEtQrld8BKufEFg0HqkeVveA72fYeKtbYAVOsbPit17YHxX0268=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LM+WMKTE; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hN7zTksC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EDA9C4CEE3;
-	Wed, 12 Mar 2025 09:57:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741773476;
-	bh=WPKZgWXS6TO2Pkm4H5Q0EXYryaAnMa+J46vPcty7+I8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hN7zTksClow5IIOcuncjzOHxvDCtnmKmgDHs1uD6jDzBa7Nktfiy0aQmjWsV3EfnE
-	 i7326JV1MpsxmC9oOU/pJ8oBd71VDSuzWdlme346oxXzL2Z5xjraNYgt9cbalogv7d
-	 tmPZLDXBwbhE0NzN7OQbfBKelb/McZfXyt6IM358SnCe9+qgz3vq2pFJ/hZH2YyGVT
-	 z0cKbLH/JlEH4Y8CDxSnBMAgO4d9u0pmEG012L0iXk9CHq7ZkHLAN8c/dS7CpdpAQi
-	 1Pw7oUN/8TAt71zzbvPLFBEtypIpOCinURBvBMm2ZwrIWVR5+qGjRevOUDd66KeisW
-	 nJicsFd95j5uA==
-Date: Wed, 12 Mar 2025 10:57:49 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	rust-for-linux@vger.kernel.org, daniel.almeida@collabora.com,
-	robin.murphy@arm.com, aliceryhl@google.com,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v14 06/11] rust: dma: add dma addressing capabilities
-Message-ID: <Z9FanUCUZAuBgQwk@cassiopeiae>
-References: <20250311174930.2348813-1-abdiel.janulgue@gmail.com>
- <20250311174930.2348813-7-abdiel.janulgue@gmail.com>
- <D8DZ2XP3AI2Z.76W9FKGRNM92@nvidia.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LM+WMKTE"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30615661f98so68652961fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741773672; x=1742378472; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H70cromMzBc7G1Dxdn7Ujl+1TcPLdylbz6SBFKEdUOo=;
+        b=LM+WMKTEtBro67ucRHGFG82QurBUVVTKueWjq6fDb4ct1i3KejryugfkoRLxmXodsT
+         gEpX5bmbXgc0Pia5+kYM/u22mb5eE2PU965J+nKcNzU+gnD5g0qPMC+AGwDIvQNU6OvV
+         4gMhJu81ak6Plrm7PcR85qREnu0ChRdO7Emv1PqiXCRAnO4HUygSvj4GME7wukOG4JqE
+         nNvagmkxB0k4nQPKYBG9kk4nnP3qFHWfkRXv4BzJq1kZiCUbpYTyee0J/hz4Ljbj0zUU
+         mRyJzAftdRRvSOocXvmTHIPX+TQQJF6mMMuI2P28z22iLTQX56T6IOJLTq83PNJ5WsYz
+         J8xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741773672; x=1742378472;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H70cromMzBc7G1Dxdn7Ujl+1TcPLdylbz6SBFKEdUOo=;
+        b=DqWpoqcrOQQ9usyTV/K32ddtSmIh61CnN8uNz1J9Z8nVS1t4g8jCTfTvJChveGs0J3
+         piizcUtOtzTC8Gyx2Gwg62JkbvtCwhtIFxw+z2UE5TS4gG3vhHATIlIrVHMFuIkAfnRR
+         Y0vf+M7TK3uH59/otUNeSKUMJaDECZJfnuuwe+vNFok+/bPwsf5ACk0pFBlU5lvdkNUD
+         bHuuFqcWdn1KE7VZ2SYptyoDqBZXP0CkHlK+kRqDkiHxlt25bMXd3sEShT6Vk4XpRifa
+         M1U2tGusTfZ6eK9+E11AVFYDkUCkuMHiYHbtkzgGaqDwmJaV1p/YwlQTI4QPcIYPCDPN
+         /OgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW//FX6tnpddHsd+DTngP2YEgqOCi52dV7gNNBC6hTbrbpo3h+qUGlxYZJeSpDa9KFcJD4d9BndqpggMRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzrflb1gTDLzQ/m8RitUL+/SsR/BNqFCXYMFWseFzwN464ey+D+
+	txC4iU1vjgrJo7TanLEj8Mh5fbKMw0GASOFN/VnMndTpKLtnDvy6cO5tduLmjNUpZ6LnSXw3O14
+	eXdZl1NpLoYekyrzbATVlU+gJAnr4Ei0hem/bBQ==
+X-Gm-Gg: ASbGnctloF6Io8CCfTeiMRWxaxQr+bunPi8Hag+z+HZbjl6ZcVfQLmAdz0d2zhSrRk1
+	C8eIxYeCKBzh1VsC4w4cu3MZpi5M8Ffzbsm9rNd8H+QZv7Q+djRwELKX6PEtG+UucSeiYfqPd00
+	N4BNKW3Krrsq46NZk91AiJFeT0L1BFv61kcJTapZ/0A7wmc8XQ2w3jIWZh0A==
+X-Google-Smtp-Source: AGHT+IF3JsnGDmtC8cFGGo9UJ3LwBpBWNU0LU9dhkqF7FdQC0xv6vW0juUcQgoshe4Cj7uKAJnjHv9k5v01339Iy9Rw=
+X-Received: by 2002:a05:6512:220a:b0:545:49d:547a with SMTP id
+ 2adb3069b0e04-54990e5dac1mr7224533e87.18.1741773671774; Wed, 12 Mar 2025
+ 03:01:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D8DZ2XP3AI2Z.76W9FKGRNM92@nvidia.com>
+References: <20250312-max77759-mfd-v4-0-b908d606c8cb@linaro.org> <20250312-max77759-mfd-v4-1-b908d606c8cb@linaro.org>
+In-Reply-To: <20250312-max77759-mfd-v4-1-b908d606c8cb@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 12 Mar 2025 11:01:00 +0100
+X-Gm-Features: AQ5f1Jp2A-9h5YN6Ed4bZKIBT4UotjU0jd3UNyhUp6pXeEy9BD3imBjHO6ZUslo
+Message-ID: <CAMRc=Mddcku1vokKQzxyJOtvpdJSjM2TFvG9r0tnZ_qY7HBGJA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] dt-bindings: gpio: add max77759 binding
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 12, 2025 at 12:37:45PM +0900, Alexandre Courbot wrote:
-> On Wed Mar 12, 2025 at 2:48 AM JST, Abdiel Janulgue wrote:
-> > @@ -18,7 +18,35 @@
-> >  /// The [`Device`] trait should be implemented by bus specific device representations, where the
-> >  /// underlying bus has potential support for DMA, such as [`crate::pci::Device`] or
-> >  /// [crate::platform::Device].
-> > -pub trait Device: AsRef<device::Device> {}
-> > +pub trait Device: AsRef<device::Device> {
-> > +    /// Inform the kernel about the device's DMA addressing capabilities.
-> > +    ///
-> > +    /// Set both the DMA mask and the coherent DMA mask to the same value.
-> > +    ///
-> > +    /// Note that we don't check the return value from the C `dma_set_coherent_mask` as the DMA API
-> > +    /// guarantees that the coherent DMA mask can be set to the same or smaller than the streaming
-> > +    /// DMA mask.
-> > +    fn dma_set_mask_and_coherent(&mut self, mask: u64) -> Result {
-> > +        // SAFETY: By the type invariant of `device::Device`, `self.as_ref().as_raw()` is valid.
-> > +        let ret = unsafe { bindings::dma_set_mask_and_coherent(self.as_ref().as_raw(), mask) };
-> > +        if ret != 0 {
-> > +            Err(Error::from_errno(ret))
-> > +        } else {
-> > +            Ok(())
-> > +        }
-> > +    }
-> > +
-> > +    /// Same as [`Self::dma_set_mask_and_coherent`], but set the mask only for streaming mappings.
-> > +    fn dma_set_mask(&mut self, mask: u64) -> Result {
-> > +        // SAFETY: By the type invariant of `device::Device`, `self.as_ref().as_raw()` is valid.
-> > +        let ret = unsafe { bindings::dma_set_mask(self.as_ref().as_raw(), mask) };
-> > +        if ret != 0 {
-> > +            Err(Error::from_errno(ret))
-> > +        } else {
-> > +            Ok(())
-> > +        }
-> > +    }
-> > +}
-> 
-> I'm not quite sure why this trait is needed.
-> 
-> The default implementations of the methods are not overridden in this
-> patchset and I don't see any scenario where they would need to be. Why
-> not do it the simple way by just adding an implementation block for
-> device::Device?
-> 
-> This also introduces a `&dyn Device` trait object as parameter to the
-> coherent allocation methods - not a big deal, but still inelegant IMHO.
+On Wed, Mar 12, 2025 at 10:26=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik@=
+linaro.org> wrote:
+>
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
+>
+> This describes its GPIO module.
+>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> ---
 
-There are mainly two reasons:
-
-(1) The dma_set_mask() function famility modifies the underlying struct device
-    without a lock. Therefore, we'd need a mutable reference to the
-    device::Device. However, we can't give out a mutable reference to a
-    device::Device, since it'd be prone to mem::swap().
-
-    Besides that - and I think that's even more important - we can't claim for a
-    generic device::Device in general, that we own it to an extend that we can
-    modify unprotected fields.
-
-    However, we can claim this for bus specific devices in probe()[1]. Hence the
-    trait, such that the DMA mask functions can be easily derived by bus
-    specific devices.
-
-(2) Setting a DMA mask only makes sense for devices that sit on a (potentially)
-    DMA capable bus. Having this trait implemented for only the applicable
-    device types prevents setting the DMA mask and allocating DMA memory for the
-    wrong device.
-
-    This isn't necessary for safety reasons, but I think it's still nice to
-    catch.
-
----
-
-[1] Gotcha with bus specific devices.
-
-Currently bus specific devices are implemented as Device<ARef<device::Device>>.
-
-This was a bad idea and is on my list to fix. As convinient as it is, it is
-unsound, since this means that driver can always derive a mutable reference to a
-bus specific device.
-
-I think that the upcoming Ownable stuff would be a good solution, but maybe I
-should wait any longer and fix it right away without Ownable.
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
