@@ -1,70 +1,68 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C49282F1;
-	Wed, 12 Mar 2025 17:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFEF25B68E;
+	Wed, 12 Mar 2025 17:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800030; cv=none; b=M/JLLTN/cFKBZQV5+Iiij5VhQjZNJH0E0SxVbkhd4+kHw0oaHdMZGJAEBSZNSruViVb5D7q7QlAV9qH9+n6NWpjUSxCrX+6NaHX4K4n3f9vJwAxyvaHATcVYl4Z2IcTmSXsbjyr0Tn296PHiYDNj1NvqN8MrcBsFOUyMNush00w=
+	t=1741800032; cv=none; b=fspXnJwZ5IddwZylAVH0uX4X/SQI60My6O9h5c5IGg6K3wo2JycoFnj8naFQU+w+K9VMo7JxN+9+3J2lA6m/MGrC2bhgE5Qy7y9/5jYLbGrSBf4/Sr7Gu4oKYKWwoiQyJ0UinJ9Bxipg3pDk51Bm0R7h6NsaMi80hs14/MVxe5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741800030; c=relaxed/simple;
-	bh=Rcv+TZJkplQ1npvLz7Jw/Sp0kmsuInfDPHslNzK2tzw=;
+	s=arc-20240116; t=1741800032; c=relaxed/simple;
+	bh=+cVv0wvrZ5POpYz2gs9MfqPK/1Ci7niLDKDfxr0ZmOo=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=gm8BdBCwwU4pJYFxsvov+gqGpgUZCZYyzrYo8mX7UMzhiTWdtH8tL9aQ/gi+/CCmPtNIScXG9HKL0qG7Az3eiRVNB4uDNUWIP0f7vOwexCP40Fy91kTSSRT2YraZcWDnaH7BgiEqPR9aeJW/TCbPMT8ZRrBz5Gg7teImNcIX7gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p6/7SbFX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HgIV/5t3; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=gzlHgCGoYYRPOJkchbCePbevJous+fLUlf6A0Z60fLKbCKkkboRBILA9f1YHMD2hv7jo82+DVSTazV5y2Bdem8cJGSC1W8+Q1br+cgpFuiSWsmZlWxwNZIpxKLh3gtUER3P9A7hOjWkwh8uoR355UczQFQz9l+7UCahCIfY0v98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cR6L4N3l; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0i69FzqN; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p6/7SbFX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HgIV/5t3"
-Date: Wed, 12 Mar 2025 17:20:25 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cR6L4N3l";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0i69FzqN"
+Date: Wed, 12 Mar 2025 17:20:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741800026;
+	s=2020; t=1741800028;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HG+KAxMRwj4pTVa1Ljq4AsVhE1xi+/Vl1PWRPLmDOCg=;
-	b=p6/7SbFXyXUKbdIECJjmrwHnLKQrNPeRutsNoYQZD88wwclr6NbEROAtUdXftHpNUIozo9
-	HYXDhij3Sw/coo49sg3LsbOjfJ+NrxNtqmo8hXdXlbiYRMnSmkhiwhcKZld/9ECZ/1Jrn2
-	rDI72HWWvYwIGUvTAKrh2U/uEWhq/aG7/QeNia5F/tkPLq0JbjVxrMwRDJiXqLy1f8cskv
-	nhqJpPwl25exMPVEY4rWYRwmk3M074KW05Fu47rDG093T8OtkE7EFsAaeV6mdieKJaaJrc
-	e1lMEeIlR81h9AXc3eO/4cBuAOmD1nHnd2qkT0PhDSR1xre49ip+UHtBwphqXA==
+	bh=eTl666/Q35C5tHBj8gV1LoWeo4JiCK5AuKRYiSSJ5+8=;
+	b=cR6L4N3lPEHvs7+MezPbZGyUGn8bXSGI17a5+ceEkU9+gfmFWdEMGGFo9shl/3CfWrWK1z
+	KaOG5r1J2BOJXX5BNBvJn57QoqeRV5/0A/LYVW4jX7KlIQ11/COsRiB7cu64v5IW82zgOj
+	UjFUHxtcLWL2C7bUj9EsBHxC86T2/+CWrtXigyEIjwilEGbXD1WMCFH4m+qJglQwj9Cd4b
+	o+fw1aHL63T9S52aKQ0LEVn83i2ju85MLKeKjhtlz9XDzOr+NohdOENmu71rOXSsaDv5u0
+	eV9DQeWWLHxcoH2s5VoljTrLDf4GYoFb0v7Fv8H5xqmyx6X+QljKwGSH1IsWRQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741800026;
+	s=2020e; t=1741800028;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HG+KAxMRwj4pTVa1Ljq4AsVhE1xi+/Vl1PWRPLmDOCg=;
-	b=HgIV/5t3rzMDXckAqIH90Xu9HHpqxx0ASNoB3fnkULL5b36DfuXw9LjTOmqxGumhKcGx93
-	H6pOyKSThlTkx7Ag==
+	bh=eTl666/Q35C5tHBj8gV1LoWeo4JiCK5AuKRYiSSJ5+8=;
+	b=0i69FzqNWxjERFdDmxcHmfk8c/3taasj6uhsT8OB8inBefogFAUI+JjJjrEcWHCzW2X7Ix
+	rHNvvcvmMbZdzoCQ==
 From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] x86/resctrl: Change mon_event_config_{read,write}()
- to be arch helpers
-Cc: Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>,
+Subject: [tip: x86/cache] x86/resctrl: Rewrite and move the
+ for_each_*_rdt_resource() walkers
+Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>,
  Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
- Babu Moger <babu.moger@amd.com>, Carl Worth <carl@os.amperecomputing.com>,
- Peter Newman <peternewman@google.com>,
+ Babu Moger <babu.moger@amd.com>, Peter Newman <peternewman@google.com>,
  Amit Singh Tomar <amitsinght@marvell.com>,
  Shanker Donthineni <sdonthineni@nvidia.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250311183715.16445-21-james.morse@arm.com>
-References: <20250311183715.16445-21-james.morse@arm.com>
+In-Reply-To: <20250311183715.16445-18-james.morse@arm.com>
+References: <20250311183715.16445-18-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174180002552.14745.12297322861336551129.tip-bot2@tip-bot2>
+Message-ID: <174180002784.14745.9886263851895536247.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -74,30 +72,30 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     650680d651aaf409f097ad904c3fea6c4b3a0884
-Gitweb:        https://git.kernel.org/tip/650680d651aaf409f097ad904c3fea6c4b3a0884
+Commit-ID:     88464bff035ecb28f8bf52dd9728fdc1aca228f9
+Gitweb:        https://git.kernel.org/tip/88464bff035ecb28f8bf52dd9728fdc1aca228f9
 Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Tue, 11 Mar 2025 18:37:05 
+AuthorDate:    Tue, 11 Mar 2025 18:37:02 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 12 Mar 2025 12:23:49 +01:00
+CommitterDate: Wed, 12 Mar 2025 12:23:30 +01:00
 
-x86/resctrl: Change mon_event_config_{read,write}() to be arch helpers
+x86/resctrl: Rewrite and move the for_each_*_rdt_resource() walkers
 
-mon_event_config_{read,write}() are called via IPI and access model specific
-registers to do their work.
+The for_each_*_rdt_resource() helpers walk the architecture's array of
+structures, using the resctrl visible part as an iterator. These became
+over-complex when the structures were split into a filesystem and
+architecture-specific struct. This approach avoided the need to touch every
+call site, and was done before there was a helper to retrieve a resource by
+rid.
 
-To support another architecture, this needs abstracting.
+Once the filesystem parts of resctrl are moved to /fs/, both the arch's
+resource array, and the definition of those structures is no longer
+accessible. To support resctrl, each architecture would have to provide
+equally complex macros.
 
-Rename mon_event_config_{read,write}() to have a "resctrl_arch_" prefix, and
-move their struct mon_config_info parameter into <linux/resctrl.h>.  This
-allows another architecture to supply an implementation of these.
+Rewrite the macro to make use of resctrl_arch_get_resource(), and move these
+to include/linux/resctrl.h so existing x86 arch code continues to use them.
 
-As struct mon_config_info is now exposed globally, give it a 'resctrl_'
-prefix. MPAM systems need access to the domain to do this work, add the
-resource and domain to struct resctrl_mon_config_info.
-
-Co-developed-by: Dave Martin <Dave.Martin@arm.com>
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
@@ -105,184 +103,90 @@ Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 Reviewed-by: Babu Moger <babu.moger@amd.com>
-Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
 Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Tested-by: Peter Newman <peternewman@google.com>
 Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
 Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
-Link: https://lore.kernel.org/r/20250311183715.16445-21-james.morse@arm.com
+Link: https://lore.kernel.org/r/20250311183715.16445-18-james.morse@arm.com
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 46 ++++++++++++-------------
- include/linux/resctrl.h                | 31 +++++++++++++++++-
- 2 files changed, 54 insertions(+), 23 deletions(-)
+ arch/x86/kernel/cpu/resctrl/internal.h | 29 +-------------------------
+ include/linux/resctrl.h                | 18 ++++++++++++++++-
+ 2 files changed, 18 insertions(+), 29 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index eb32fbc..e7d1d8b 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1580,11 +1580,6 @@ out:
- 	return ret;
- }
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 70fbb90..82dbc16 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -475,14 +475,6 @@ extern struct rdtgroup rdtgroup_default;
+ extern struct dentry *debugfs_resctrl;
+ extern enum resctrl_event_id mba_mbps_default_event;
  
--struct mon_config_info {
--	u32 evtid;
--	u32 mon_config;
--};
+-static inline struct rdt_resource *resctrl_inc(struct rdt_resource *res)
+-{
+-	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(res);
 -
- #define INVALID_CONFIG_INDEX   UINT_MAX
- 
- /**
-@@ -1609,31 +1604,32 @@ static inline unsigned int mon_event_config_index_get(u32 evtid)
- 	}
- }
- 
--static void mon_event_config_read(void *info)
-+void resctrl_arch_mon_event_config_read(void *_config_info)
+-	hw_res++;
+-	return &hw_res->r_resctrl;
+-}
+-
+ static inline bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l)
  {
--	struct mon_config_info *mon_info = info;
-+	struct resctrl_mon_config_info *config_info = _config_info;
- 	unsigned int index;
- 	u64 msrval;
+ 	return rdt_resources_all[l].cdp_enabled;
+@@ -492,27 +484,6 @@ int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool enable);
  
--	index = mon_event_config_index_get(mon_info->evtid);
-+	index = mon_event_config_index_get(config_info->evtid);
- 	if (index == INVALID_CONFIG_INDEX) {
--		pr_warn_once("Invalid event id %d\n", mon_info->evtid);
-+		pr_warn_once("Invalid event id %d\n", config_info->evtid);
- 		return;
- 	}
- 	rdmsrl(MSR_IA32_EVT_CFG_BASE + index, msrval);
+ void arch_mon_domain_online(struct rdt_resource *r, struct rdt_mon_domain *d);
  
- 	/* Report only the valid event configuration bits */
--	mon_info->mon_config = msrval & MAX_EVT_CONFIG_BITS;
-+	config_info->mon_config = msrval & MAX_EVT_CONFIG_BITS;
- }
- 
--static void mondata_config_read(struct rdt_mon_domain *d, struct mon_config_info *mon_info)
-+static void mondata_config_read(struct resctrl_mon_config_info *mon_info)
- {
--	smp_call_function_any(&d->hdr.cpu_mask, mon_event_config_read, mon_info, 1);
-+	smp_call_function_any(&mon_info->d->hdr.cpu_mask,
-+			      resctrl_arch_mon_event_config_read, mon_info, 1);
- }
- 
- static int mbm_config_show(struct seq_file *s, struct rdt_resource *r, u32 evtid)
- {
--	struct mon_config_info mon_info;
-+	struct resctrl_mon_config_info mon_info;
- 	struct rdt_mon_domain *dom;
- 	bool sep = false;
- 
-@@ -1644,9 +1640,11 @@ static int mbm_config_show(struct seq_file *s, struct rdt_resource *r, u32 evtid
- 		if (sep)
- 			seq_puts(s, ";");
- 
--		memset(&mon_info, 0, sizeof(struct mon_config_info));
-+		memset(&mon_info, 0, sizeof(struct resctrl_mon_config_info));
-+		mon_info.r = r;
-+		mon_info.d = dom;
- 		mon_info.evtid = evtid;
--		mondata_config_read(dom, &mon_info);
-+		mondata_config_read(&mon_info);
- 
- 		seq_printf(s, "%d=0x%02x", dom->hdr.id, mon_info.mon_config);
- 		sep = true;
-@@ -1679,30 +1677,32 @@ static int mbm_local_bytes_config_show(struct kernfs_open_file *of,
- 	return 0;
- }
- 
--static void mon_event_config_write(void *info)
-+void resctrl_arch_mon_event_config_write(void *_config_info)
- {
--	struct mon_config_info *mon_info = info;
-+	struct resctrl_mon_config_info *config_info = _config_info;
- 	unsigned int index;
- 
--	index = mon_event_config_index_get(mon_info->evtid);
-+	index = mon_event_config_index_get(config_info->evtid);
- 	if (index == INVALID_CONFIG_INDEX) {
--		pr_warn_once("Invalid event id %d\n", mon_info->evtid);
-+		pr_warn_once("Invalid event id %d\n", config_info->evtid);
- 		return;
- 	}
--	wrmsr(MSR_IA32_EVT_CFG_BASE + index, mon_info->mon_config, 0);
-+	wrmsr(MSR_IA32_EVT_CFG_BASE + index, config_info->mon_config, 0);
- }
- 
- static void mbm_config_write_domain(struct rdt_resource *r,
- 				    struct rdt_mon_domain *d, u32 evtid, u32 val)
- {
--	struct mon_config_info mon_info = {0};
-+	struct resctrl_mon_config_info mon_info = {0};
- 
- 	/*
- 	 * Read the current config value first. If both are the same then
- 	 * no need to write it again.
- 	 */
-+	mon_info.r = r;
-+	mon_info.d = d;
- 	mon_info.evtid = evtid;
--	mondata_config_read(d, &mon_info);
-+	mondata_config_read(&mon_info);
- 	if (mon_info.mon_config == val)
- 		return;
- 
-@@ -1714,7 +1714,7 @@ static void mbm_config_write_domain(struct rdt_resource *r,
- 	 * are scoped at the domain level. Writing any of these MSRs
- 	 * on one CPU is observed by all the CPUs in the domain.
- 	 */
--	smp_call_function_any(&d->hdr.cpu_mask, mon_event_config_write,
-+	smp_call_function_any(&d->hdr.cpu_mask, resctrl_arch_mon_event_config_write,
- 			      &mon_info, 1);
- 
- 	/*
+-/*
+- * To return the common struct rdt_resource, which is contained in struct
+- * rdt_hw_resource, walk the resctrl member of struct rdt_hw_resource.
+- */
+-#define for_each_rdt_resource(r)					      \
+-	for (r = &rdt_resources_all[0].r_resctrl;			      \
+-	     r <= &rdt_resources_all[RDT_NUM_RESOURCES - 1].r_resctrl;	      \
+-	     r = resctrl_inc(r))
+-
+-#define for_each_capable_rdt_resource(r)				      \
+-	for_each_rdt_resource(r)					      \
+-		if (r->alloc_capable || r->mon_capable)
+-
+-#define for_each_alloc_capable_rdt_resource(r)				      \
+-	for_each_rdt_resource(r)					      \
+-		if (r->alloc_capable)
+-
+-#define for_each_mon_capable_rdt_resource(r)				      \
+-	for_each_rdt_resource(r)					      \
+-		if (r->mon_capable)
+-
+ /* CPUID.(EAX=10H, ECX=ResID=1).EAX */
+ union cpuid_0x10_1_eax {
+ 	struct {
 diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index cc76f30..90b6563 100644
+index 487b965..a392480 100644
 --- a/include/linux/resctrl.h
 +++ b/include/linux/resctrl.h
-@@ -270,6 +270,13 @@ struct resctrl_cpu_defaults {
- 	u32 rmid;
- };
+@@ -26,6 +26,24 @@ int proc_resctrl_show(struct seq_file *m,
+ /* max value for struct rdt_domain's mbps_val */
+ #define MBA_MAX_MBPS   U32_MAX
  
-+struct resctrl_mon_config_info {
-+	struct rdt_resource	*r;
-+	struct rdt_mon_domain	*d;
-+	u32			evtid;
-+	u32			mon_config;
-+};
++/* Walk all possible resources, with variants for only controls or monitors. */
++#define for_each_rdt_resource(_r)						\
++	for ((_r) = resctrl_arch_get_resource(0);				\
++	     (_r) && (_r)->rid < RDT_NUM_RESOURCES;				\
++	     (_r) = resctrl_arch_get_resource((_r)->rid + 1))
++
++#define for_each_capable_rdt_resource(r)				      \
++	for_each_rdt_resource((r))					      \
++		if ((r)->alloc_capable || (r)->mon_capable)
++
++#define for_each_alloc_capable_rdt_resource(r)				      \
++	for_each_rdt_resource((r))					      \
++		if ((r)->alloc_capable)
++
++#define for_each_mon_capable_rdt_resource(r)				      \
++	for_each_rdt_resource((r))					      \
++		if ((r)->mon_capable)
 +
  /**
-  * resctrl_arch_sync_cpu_closid_rmid() - Refresh this CPU's CLOSID and RMID.
-  *					 Call via IPI.
-@@ -311,6 +318,30 @@ int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid);
- 
- __init bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
- 
-+/**
-+ * resctrl_arch_mon_event_config_write() - Write the config for an event.
-+ * @config_info: struct resctrl_mon_config_info describing the resource, domain
-+ *		 and event.
-+ *
-+ * Reads resource, domain and eventid from @config_info and writes the
-+ * event config_info->mon_config into hardware.
-+ *
-+ * Called via IPI to reach a CPU that is a member of the specified domain.
-+ */
-+void resctrl_arch_mon_event_config_write(void *config_info);
-+
-+/**
-+ * resctrl_arch_mon_event_config_read() - Read the config for an event.
-+ * @config_info: struct resctrl_mon_config_info describing the resource, domain
-+ *		 and event.
-+ *
-+ * Reads resource, domain and eventid from @config_info and reads the
-+ * hardware config value into config_info->mon_config.
-+ *
-+ * Called via IPI to reach a CPU that is a member of the specified domain.
-+ */
-+void resctrl_arch_mon_event_config_read(void *config_info);
-+
- /*
-  * Update the ctrl_val and apply this config right now.
-  * Must be called on one of the domain's CPUs.
+  * enum resctrl_conf_type - The type of configuration.
+  * @CDP_NONE:	No prioritisation, both code and data are controlled or monitored.
