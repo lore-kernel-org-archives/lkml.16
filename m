@@ -1,61 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1BC1BD9DD;
-	Wed, 12 Mar 2025 20:29:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C021BD9DD;
+	Wed, 12 Mar 2025 20:29:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741811390; cv=none; b=rVLaiyfagx2qRiJBpRMdHcNmH0ofalHyNf4iDTM+Q9Ea46C4LjQfDe396Vqc6hjZqDFb68sDlLk73UZXaiZJVd0oCvZEBTNf8LsGqjHGWcA4+W6Bl4y3OEo4txis6+5H0guorQMO9UFOi8NYYkczJ8cz5AbvKHxQ113GJPk75jA=
+	t=1741811396; cv=none; b=cMph+wmqdAgViAca3mj9+/i7S/7MJG+7ynw/ZROYhJB2Ln8mIr9jwYfK8W8dSJ+t0YR3+Fh0sN/ToTEI7Gn8n1TMzyYSyasLcaM2MLkxHJgVd7USm7JmfAyOjfnp2yZSkjGPX0+xISMbgha0VbkOp0dKUbJ9nSVwd8xAjRzuD70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741811390; c=relaxed/simple;
-	bh=onXuN2LGH83bYRtcbmLC5glTTauAdzMOlEZg3+qCzbQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o9G+KCPZ4wGCVSLOwTx7RS5cBALCBqTSYGbc2R7kVySTWT3EpyMVh8KN3MLpmMwhXVO5Ym3j+oJ0dz4ijxcWhs9F1IYD2kZDNeKHPF+DViQ5iH8ofR3s24TPKPwyk+2TBVGle6garz4e8m8iX07iZ2f02OcrYRkncXs7b8IMG/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ln6Jkbr/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741811396; c=relaxed/simple;
+	bh=BsDfTZ4J/ZD/x4CEynmxWK5PUtvjFEyamJLg8PXwsTo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=j2xa9q/UWM3S6ttbYUkMx2d68wwRwK3oSf7lnP3nQxAN4+Fmsu8ST1eRmRuQkQsYnLC6tPDX2ABySZrpPlCOrp7+Ed7UvuZn7X5qzt8iQFnTZH1PQxtRcVhCzJjwqecKuh3HGIPeg0CUjxw2stUZkzmZyEwchQPRXTNf0KBRofY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rsFxTw2H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ln6Jkbr/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F30BEC4CEDD;
-	Wed, 12 Mar 2025 20:29:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rsFxTw2H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8E0CC4CEDD;
+	Wed, 12 Mar 2025 20:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741811390;
-	bh=onXuN2LGH83bYRtcbmLC5glTTauAdzMOlEZg3+qCzbQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ln6Jkbr/J2TFMaMxmBw30DE+/ElwjX/AqnW0iFyzeHNmPb2XQx/WyHn40iYQUAHEM
-	 ZnuzgDXL3BdXl7wlh2QROJDK6o8cpGi6syZ0cORySPeYR41RHu3uUviRevCp8XcUJF
-	 YG+FbZT7Wl3JDbxfw1R5oLHFdUPkczlvw1BcAtZjsE/CqfDP8tC9kdhhneQLIPmWig
-	 ko4MPt5qYrNuocuPOLZ/NBvUGuNCIxKiHXWCZw1JCpUxdwnlH0bL59fvQ7yzqGtoZ4
-	 0VDOlbCSf0z9ScS9huzv/ZHbp4WmjW4xnwP7hXLslXEoPJaNk5wW0sc+oYRAHWvbiw
-	 yOeHfmJjjscfg==
-Date: Wed, 12 Mar 2025 21:29:42 +0100
-From: Jakub Kicinski <kuba@kernel.org>
-To: Tariq Toukan <ttoukan.linux@gmail.com>
-Cc: patchwork-bot+netdevbpf@kernel.org, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, andrew+netdev@lunn.ch,
- leon@kernel.org, saeedm@nvidia.com, gal@nvidia.com, mbloch@nvidia.com,
- moshe@nvidia.com, linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, leonro@nvidia.com, ychemla@nvidia.com, Tariq
- Toukan <tariqt@nvidia.com>
-Subject: Re: [pull-request] mlx5-next updates 2025-03-10
-Message-ID: <20250312212942.56d778e7@kernel.org>
-In-Reply-To: <9960fce1-991e-4aa3-b2a9-b3b212a03631@gmail.com>
-References: <1741608293-41436-1-git-send-email-tariqt@nvidia.com>
-	<174168972325.3890771.16087738431627229920.git-patchwork-notify@kernel.org>
-	<9960fce1-991e-4aa3-b2a9-b3b212a03631@gmail.com>
+	s=k20201202; t=1741811394;
+	bh=BsDfTZ4J/ZD/x4CEynmxWK5PUtvjFEyamJLg8PXwsTo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=rsFxTw2HX3gC2BsO6Wah0fc8SRPF4XCrhcyksYCisNi66O/lqF5BF2Pwe3+36jacb
+	 NCit5W19Z5brosZoCF134vljEbVAe6J7Azahxvhu7eu21r+xOdV47v35FP+je7Y0jk
+	 poG9gaXRHgZW9mh++TUCmGPvR6P3yyGqSg+pKOssf2Tkz8GUjvAU6wo0tIBXkhm0nh
+	 6MWuKyJqxoevxkejq1dMjVGU+5zLCSz15NCxlD0xsXMpiDnlK5qbhjyNTKfuuISPTL
+	 ZnaEezwg9IRWk8n5dPRVQdHXQ+3NIS+Cx5+ETrZbW/0vj2MCqOm1w9JpI0DOWRGh8y
+	 ayJub90Zj/Amw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70B8D380DBDF;
+	Wed, 12 Mar 2025 20:30:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2 1/3] eth: bnxt: switch to netif_close
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174181142926.921984.9414050988776137119.git-patchwork-notify@kernel.org>
+Date: Wed, 12 Mar 2025 20:30:29 +0000
+References: <20250309215851.2003708-1-sdf@fomichev.me>
+In-Reply-To: <20250309215851.2003708-1-sdf@fomichev.me>
+To: Stanislav Fomichev <sdf@fomichev.me>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
+ michael.chan@broadcom.com, pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch,
+ horms@kernel.org
 
-On Tue, 11 Mar 2025 22:50:24 +0200 Tariq Toukan wrote:
-> > This pull request was applied to bpf/bpf-next.git (net)  
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Sun,  9 Mar 2025 14:58:49 -0700 you wrote:
+> All (error) paths that call dev_close are already holding instance lock,
+> so switch to netif_close to avoid the deadlock.
 > 
-> Seems to be mistakenly applied to bpf-next instead of net-next.
+> v2:
+> - add missing EXPORT_MODULE for netif_close
+> 
+> Fixes: 004b5008016a ("eth: bnxt: remove most dependencies on RTNL")
+> Reported-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> 
+> [...]
 
-The bot gets confused. You should probably throw the date into the tag
-to make its job a little easier. In any case, the tag pulls 6 commits
-for me now.. (I may have missed repost, I'm quite behind on the ML
-traffic)
+Here is the summary with links:
+  - [net-next,v2,1/3] eth: bnxt: switch to netif_close
+    (no matching commit)
+  - [net-next,v2,2/3] eth: bnxt: request unconditional ops lock
+    https://git.kernel.org/netdev/net-next/c/eaca6e5dc6ba
+  - [net-next,v2,3/3] eth: bnxt: add missing netdev lock management to bnxt_dl_reload_up
+    https://git.kernel.org/netdev/net-next/c/adbf627f1703
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
