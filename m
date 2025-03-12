@@ -1,155 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BF51DE3AF;
-	Wed, 12 Mar 2025 20:04:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5BA1DE3AF;
+	Wed, 12 Mar 2025 20:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741809848; cv=none; b=GyYwhLTsJNwHfS+RwAbtmvrjdtka7bVSH3dS7ZyqESEcnTsU7X67Jy1HB5i6oYGNuzzz390wSXI2vV/uaew+1iG6Q92lWM3nHufaHG7LYJsMBnhXMY+qf/++dAsD6IDBJKFDwxKSI0ysRA0UjHw9LaGJid1x5tzWHY5qajwDVyw=
+	t=1741809941; cv=none; b=b6kijFbs0niKb9/pgqMP6aJzLYFFJpGFaQQvbiJVVjHRmCa8XdMCePQYtsT4I3s/x14J7jTnaOJMk8bltciYfV/6fYW6QmtcK97pEMDaIl/hXOHADef9hOI1WlvU8oUJVhjlCTKHFRaGFSMx41S+zK44PPWGgRA9LvsHdSqMTKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741809848; c=relaxed/simple;
-	bh=wNuqf53XUH4jcdwH6C0CQTwH9roS7HOh4G+zIDNCoWY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DPdtIPNLg36rOhnwVFFgfjOY4uX6X96cllZyu7MkL51LZ5Mq7GrI1E5Vf+q+6/7pze86RM8M+DHl+L0hd6x5+NlDMp8e+vV1GE1CdtLeuwLJMinB9ONG2njxLFrhqXESehynNs3OyDi91bBPpqFoEmarQwMeek/kE2pgkTihzfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTM0JBry; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741809941; c=relaxed/simple;
+	bh=x0rT9NEiiYRX5MkFRJvYMmCV2JTVEDgBLYkWCR5UE2s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h5nYpX1g5uwi2ds+3zUcBHa5AxGDKaKyieo6uMpDd41yKdx+UDD3ArBCOw3sguWB6oPWDRqg2C3CZ7t7nffnR6ygH53wynFskGvbHlRvO8oKzsimyrf2GS7o/VNtuA1I/Rd9NSKLnxVIdL9JTLpEW2kqCvroCzCo+e07yOl/G4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsrwRrCm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTM0JBry"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0CAAC4AF0B;
-	Wed, 12 Mar 2025 20:04:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsrwRrCm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B00C4CEEA;
+	Wed, 12 Mar 2025 20:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741809847;
-	bh=wNuqf53XUH4jcdwH6C0CQTwH9roS7HOh4G+zIDNCoWY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mTM0JBryU0uetVVV+cwk7RbNqcopRYfM+l0hJNW5gN/n2FUMH3WrbJUg46BwC4oFQ
-	 QaWGnYf9ruMYt2Txd/ekDGfWCTE+9rJmEim1uMdtmUyAYH30ZoGpvDgnA57AiqLsId
-	 Dqh7H9uj7NjvccuxYS8AiydrQVBZ2bUJUr9qhyHs8rn5AHAdnpoblLYTeMrO7cXqz6
-	 XsWapUqJ3R0Lljjfni/yc9JXWpMPlbD3050DTnYpAmc3I3Hrql+MdMDUHjgBtP2d+z
-	 Pki02SO8oVbFTHidWYjVLh2A1U++ZNVzsodtpn8PLAln4TOxJGhqdO0HoY2QkwV2xk
-	 WkCk1R/vnTnWA==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2bc66e26179so139737fac.2;
-        Wed, 12 Mar 2025 13:04:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVr4M7Zk0Y92U7vIxgKXsBg2UGIbQm7br4GyZD1aSxsZrC/X0w5PBL3goJiQKw0WyMADZNmD/MUHkwqOGI=@vger.kernel.org, AJvYcCVyFfDVIslNuigb+1aYPjhad+uiUPdCSPxZ28Gu36GjbGc3Ja0Dqx5tG+9owe79WjBW/1gwTAZ+GDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuiMM0WP/el1wXBlQ6rFcbcb8kxRXPyEThOr6LrylLv7UMU0Ik
-	BQOTWUdvfGXF1JMel1GA1tZeAkV6pGXBDJHvAzgPn9oTBqw7zz7phAcr3bs7+CpnMb5YP9BKSUm
-	ran2DxsKMCEp1jZUBwxXFC+cj10I=
-X-Google-Smtp-Source: AGHT+IHnIBq7OWoc386zouTDRs+6+dYYWygUAwuAs+Djbha1sU5onLDD3P3mJ3eI3pD/3QYB5AA8rLJ87LgDqh2xxlM=
-X-Received: by 2002:a05:6870:819d:b0:29e:40f8:ad9b with SMTP id
- 586e51a60fabf-2c261032b54mr13605881fac.14.1741809846947; Wed, 12 Mar 2025
- 13:04:06 -0700 (PDT)
+	s=k20201202; t=1741809940;
+	bh=x0rT9NEiiYRX5MkFRJvYMmCV2JTVEDgBLYkWCR5UE2s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XsrwRrCmBEHVV+lbD5wu78PeeixNX1nwJYlhdReSR5Ww3cDVenlhpv3LJkfHNW1sL
+	 LUE58nPEkPadhdyACVgsijRCjjSvxXMr+xW+BGxM8VF9RX0ANbPYHfAthhcsYTUPPY
+	 F0mujDm+LK67IzYL0cAPP4QYyk96qGe7rIDQ606QzDV2Tqk/LVa7G50UX5oBRmTmay
+	 RFqmjMWemfszgozOoavFt1/isxUNE2k5zFWADN0KH6Ha81iswWTA5q2OtwreNPv+9S
+	 XwTtguZBiq0D4KTFYZRMeANzSE1hPnf3cHdkpLdI64BCX/+dmdBjHJGt7fgRzMcOh9
+	 XcJlqCc6heKrQ==
+From: Kees Cook <kees@kernel.org>
+To: Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc: Kees Cook <kees@kernel.org>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] scsi: pm80xx: Use C String API for string comparisons
+Date: Wed, 12 Mar 2025 13:05:36 -0700
+Message-Id: <20250312200532.it.808-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307021750.457600-1-linux@treblig.org>
-In-Reply-To: <20250307021750.457600-1-linux@treblig.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Mar 2025 21:03:53 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hq-0yfinMG5=EHxqk4B=FfRvkaUuE9gjFgL9gfb35C7A@mail.gmail.com>
-X-Gm-Features: AQ5f1JrBuvQ0VlvbrZwfjzKvwWZOQUy1b2v1kE99vMI3SgvUovZSS0sOza7GoPg
-Message-ID: <CAJZ5v0hq-0yfinMG5=EHxqk4B=FfRvkaUuE9gjFgL9gfb35C7A@mail.gmail.com>
-Subject: Re: [PATCH] drivers: base: power: Remove unused pm_generic_ wrappers
-To: linux@treblig.org
-Cc: rafael@kernel.org, len.brown@intel.com, pavel@kernel.org, 
-	gregkh@linuxfoundation.org, dakr@kernel.org, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2142; i=kees@kernel.org; h=from:subject:message-id; bh=x0rT9NEiiYRX5MkFRJvYMmCV2JTVEDgBLYkWCR5UE2s=; b=owGbwMvMwCVmps19z/KJym7G02pJDOkXXwp4zXjT+XJrvd0CZW7zC3LBV2/pHfsXrWj7K/7aU UcvkY2HO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTAC5SyPDftZeLK6VsR4Dksl3d zIH8r0Ob+nPvi9vonCi+F3iyRl+PkWH5gTkSKoYtLx8uM/x1+cbvH+7l91hb9j7a9tF1iydj8jZ WAA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 7, 2025 at 3:18=E2=80=AFAM <linux@treblig.org> wrote:
->
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->
-> pm_generic_thaw_early() has been unused since 2016's
-> commit 294f47ffd55c ("PM / Domains: Remove redundant system PM callbacks"=
-)
->
-> pm_generic_freeze_late() has been unused since 2019's
-> commit 3cd7957e85e6 ("ACPI: PM: Simplify and fix PM domain hibernation
-> callbacks")
->
-> Remove them.
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  drivers/base/power/generic_ops.c | 24 ------------------------
->  include/linux/pm.h               |  4 ----
->  2 files changed, 28 deletions(-)
->
-> diff --git a/drivers/base/power/generic_ops.c b/drivers/base/power/generi=
-c_ops.c
-> index 4fa525668cb7..6502720bb564 100644
-> --- a/drivers/base/power/generic_ops.c
-> +++ b/drivers/base/power/generic_ops.c
-> @@ -114,18 +114,6 @@ int pm_generic_freeze_noirq(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(pm_generic_freeze_noirq);
->
-> -/**
-> - * pm_generic_freeze_late - Generic freeze_late callback for subsystems.
-> - * @dev: Device to freeze.
-> - */
-> -int pm_generic_freeze_late(struct device *dev)
-> -{
-> -       const struct dev_pm_ops *pm =3D dev->driver ? dev->driver->pm : N=
-ULL;
-> -
-> -       return pm && pm->freeze_late ? pm->freeze_late(dev) : 0;
-> -}
-> -EXPORT_SYMBOL_GPL(pm_generic_freeze_late);
-> -
->  /**
->   * pm_generic_freeze - Generic freeze callback for subsystems.
->   * @dev: Device to freeze.
-> @@ -186,18 +174,6 @@ int pm_generic_thaw_noirq(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(pm_generic_thaw_noirq);
->
-> -/**
-> - * pm_generic_thaw_early - Generic thaw_early callback for subsystems.
-> - * @dev: Device to thaw.
-> - */
-> -int pm_generic_thaw_early(struct device *dev)
-> -{
-> -       const struct dev_pm_ops *pm =3D dev->driver ? dev->driver->pm : N=
-ULL;
-> -
-> -       return pm && pm->thaw_early ? pm->thaw_early(dev) : 0;
-> -}
-> -EXPORT_SYMBOL_GPL(pm_generic_thaw_early);
-> -
->  /**
->   * pm_generic_thaw - Generic thaw callback for subsystems.
->   * @dev: Device to thaw.
-> diff --git a/include/linux/pm.h b/include/linux/pm.h
-> index 78855d794342..7bf22ed4a1d5 100644
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -838,10 +838,8 @@ extern int pm_generic_resume_early(struct device *de=
-v);
->  extern int pm_generic_resume_noirq(struct device *dev);
->  extern int pm_generic_resume(struct device *dev);
->  extern int pm_generic_freeze_noirq(struct device *dev);
-> -extern int pm_generic_freeze_late(struct device *dev);
->  extern int pm_generic_freeze(struct device *dev);
->  extern int pm_generic_thaw_noirq(struct device *dev);
-> -extern int pm_generic_thaw_early(struct device *dev);
->  extern int pm_generic_thaw(struct device *dev);
->  extern int pm_generic_restore_noirq(struct device *dev);
->  extern int pm_generic_restore_early(struct device *dev);
-> @@ -883,10 +881,8 @@ static inline void dpm_for_each_dev(void *data, void=
- (*fn)(struct device *, void
->  #define pm_generic_resume_noirq                NULL
->  #define pm_generic_resume              NULL
->  #define pm_generic_freeze_noirq                NULL
-> -#define pm_generic_freeze_late         NULL
->  #define pm_generic_freeze              NULL
->  #define pm_generic_thaw_noirq          NULL
-> -#define pm_generic_thaw_early          NULL
->  #define pm_generic_thaw                        NULL
->  #define pm_generic_restore_noirq       NULL
->  #define pm_generic_restore_early       NULL
-> --
+When a character array without a terminating NUL character has a static
+initializer, GCC 15's -Wunterminated-string-initialization will only
+warn if the array lacks the "nonstring" attribute[1]. There is no reason
+for the command lookup logic to not use strcmp(), so grow the string
+length and update the check to eliminate the warning:
 
-Applied as 6.15 material, thanks!
+../drivers/scsi/pm8001/pm8001_ctl.c:652:7: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (9 chars into 8 available) [-Wunterminated-string-initialization]
+  652 |      {"set_nvmd",    FLASH_CMD_SET_NVMD},
+      |       ^~~~~~~~~~
+
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+In taking another look at this, I realize that actually strcmp() should be used,
+so just grow the size of this character array and use strcmp().
+ v1: https://lore.kernel.org/lkml/20250310222553.work.437-kees@kernel.org/
+ v2: Use strcmp()
+---
+Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
+---
+ drivers/scsi/pm8001/pm8001_ctl.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/scsi/pm8001/pm8001_ctl.c b/drivers/scsi/pm8001/pm8001_ctl.c
+index 85ff95c6543a..bb8fd5f0f441 100644
+--- a/drivers/scsi/pm8001/pm8001_ctl.c
++++ b/drivers/scsi/pm8001/pm8001_ctl.c
+@@ -644,7 +644,7 @@ static DEVICE_ATTR(gsm_log, S_IRUGO, pm8001_ctl_gsm_log_show, NULL);
+ #define FLASH_CMD_SET_NVMD    0x02
+ 
+ struct flash_command {
+-     u8      command[8];
++     u8      command[9];
+      int     code;
+ };
+ 
+@@ -825,8 +825,7 @@ static ssize_t pm8001_store_update_fw(struct device *cdev,
+ 	}
+ 
+ 	for (i = 0; flash_command_table[i].code != FLASH_CMD_NONE; i++) {
+-		if (!memcmp(flash_command_table[i].command,
+-				 cmd_ptr, strlen(cmd_ptr))) {
++		if (!strcmp(flash_command_table[i].command, cmd_ptr)) {
+ 			flash_command = flash_command_table[i].code;
+ 			break;
+ 		}
+-- 
+2.34.1
+
