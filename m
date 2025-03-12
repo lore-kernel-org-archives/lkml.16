@@ -1,135 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D10B1DE3A4;
-	Wed, 12 Mar 2025 08:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B1CC1DE3A4;
+	Wed, 12 Mar 2025 08:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741768728; cv=none; b=sDw+bZz2sDEBWuc8C1DPki1d68+Y99IDleejVBMwR9b1bY4L6MmQkobaTdiTWwsz7Is+zpa1HNd7Sa0N5p1qOPD6lJpDlJJIdyXpRRG8ok3Qg8FsAh04Z0X43iRZY+cmHVQWZywgcoZ8bNWErdq8sFFCrN0J5KEPRUTUxxxTEzs=
+	t=1741768739; cv=none; b=VnKNt62WCUqQzriZOMf5AiXsYfwi+v9YlaFz4dEIpPLDaG6MhNxPfh52RJWloEGLg8c2fiGIJZnrNofo+rJMCPBcCXVv0UwJd9SOpOnO7tiJrO0kXF0pgB06skYqFMyY5f8iE8s9/t8RbT+qmdDinqub+AfgeGnSjPk2uuOZVF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741768728; c=relaxed/simple;
-	bh=aoRSn+Ge+OFGhJG+BqVTYAMNvaYrTDa2lkYMIa9r1Go=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pRvwog/GKOW/txbHE5frNvvDMA0k0Gtl1GJQJ/FPHS58CTVpODQedJFhj9PBi1SnfUv/e+0sdus672LARj8j636/TmHMMfJ7mnLqOTfuvSqqoQBLyKTiavHSJNAgvU7eK8LT/xojyInawfb2kuR91mH+r0CSHJjJKwedlcTjXxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMisL0Al; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMisL0Al"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 211B7C4CEE3;
-	Wed, 12 Mar 2025 08:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741768728;
-	bh=aoRSn+Ge+OFGhJG+BqVTYAMNvaYrTDa2lkYMIa9r1Go=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nMisL0Alo24OqfZs5DJsP7fMNYMn/y6s+lb+FUpIiJLNx8Y/vM8nboxVqWeM+VMdZ
-	 HowqnCvj4GoEdZ82v6YBjeAV43CFNO4ubGTbWp4WoMsLhdyT8pvyYIa5ygUkk5DSCH
-	 FXgI+Lqj/338K21275pV3Fnnj6e/uTWuKdBipCB7T7Ri+7IZGQ3mhbjJo+9XDZTwOI
-	 Wo6wNinEYQJ2NtLPyZ5zD4ZfTDM//0qfjzmlVheT0vkFjQ37qdovA3qr3xJi7ECE+B
-	 o9Khei00taruEW78qBahhRq1jXdcoGS4mHpfeFh8aF1xvS3ME9HlBlcznqvMKBgD8C
-	 XV1zRsw/Lhzaw==
-Received: from 82-132-232-216.dab.02.net ([82.132.232.216] helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tsHbx-00CnRd-QC;
-	Wed, 12 Mar 2025 08:38:46 +0000
-Date: Wed, 12 Mar 2025 08:38:43 +0000
-Message-ID: <87r0327iek.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	qperret@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v3 1/3] KVM: arm64: Add flags to kvm_hyp_memcache
-In-Reply-To: <20250307113411.469018-2-vdonnefort@google.com>
-References: <20250307113411.469018-1-vdonnefort@google.com>
-	<20250307113411.469018-2-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1741768739; c=relaxed/simple;
+	bh=U33hEvHJjZLQGk9HJu8MWoqd1bx3vlt2f9SlenNSOKg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=J77HLuDAoLOiSFG6N1pX5KEcQ/DA4uuavOfeZJsnhRXT8p04YDisYO7jz624bmV5H7ee/t5MbDtNd1ZyMaw70p/aB1KyHVCgAv5dE0nyv2cORLIYDbP+1Qrk9vUaT/WY360nEuOYRw6F7uZmevmendSMu5sck6KCzD/9s96casY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8CxqmoXSNFnrymTAA--.54647S3;
+	Wed, 12 Mar 2025 16:38:47 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMDxesQTSNFnu51FAA--.16811S2;
+	Wed, 12 Mar 2025 16:38:46 +0800 (CST)
+Subject: Re: [PATCH v4 1/6] mfd: Add support for Loongson Security Module
+To: Lee Jones <lee@kernel.org>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net, peterhuewe@gmx.de,
+ jarkko@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>
+References: <20250226030358.15924-1-zhaoqunqin@loongson.cn>
+ <20250226030358.15924-2-zhaoqunqin@loongson.cn>
+ <20250307200031.GG8350@google.com>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <5a3c49e7-3f80-25fe-6f08-a3a6ddc496d0@loongson.cn>
+Date: Wed, 12 Mar 2025 16:38:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 82.132.232.216
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+In-Reply-To: <20250307200031.GG8350@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMDxesQTSNFnu51FAA--.16811S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWFWrZr1kZFWfWFy5JF43urX_yoW5XF1fpa
+	yDJFyrCF48Jw42ka13W3WUuFy5Ga92grW3KFy7Wa4xuF9xZa47JrZ0kFy7GrZ7Jr1xXry2
+	gF95Za45CF1YyacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-On Fri, 07 Mar 2025 11:34:09 +0000,
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> Add flags to kvm_hyp_memcache and propagate the latter to the allocation
-> and free callbacks. This will later allow to account for memory, based
-> on the memcache configuration.
-> 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 3a7ec98ef123..12691ae23d4c 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -86,6 +86,7 @@ struct kvm_hyp_memcache {
->  	phys_addr_t head;
->  	unsigned long nr_pages;
->  	struct pkvm_mapping *mapping; /* only used from EL1 */
-> +	unsigned long flags;
->  };
->  
->  static inline void push_hyp_memcache(struct kvm_hyp_memcache *mc,
-> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> index 1f55b0c7b11d..c01ad4430729 100644
-> --- a/arch/arm64/kvm/mmu.c
-> +++ b/arch/arm64/kvm/mmu.c
-> @@ -1086,12 +1086,12 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
->  	}
->  }
->  
-> -static void hyp_mc_free_fn(void *addr, void *unused)
-> +static void hyp_mc_free_fn(void *addr, void *mc)
->  {
->  	free_page((unsigned long)addr);
->  }
->  
-> -static void *hyp_mc_alloc_fn(void *unused)
-> +static void *hyp_mc_alloc_fn(void *mc)
->  {
->  	return (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
->  }
-> @@ -1102,7 +1102,7 @@ void free_hyp_memcache(struct kvm_hyp_memcache *mc)
->  		return;
->  
->  	kfree(mc->mapping);
-> -	__free_hyp_memcache(mc, hyp_mc_free_fn, kvm_host_va, NULL);
-> +	__free_hyp_memcache(mc, hyp_mc_free_fn, kvm_host_va, (void *)mc);
 
-Why the cast? It looks superfluous to me.
+在 2025/3/12 下午4:08, Lee Jones 写道:
+> On Wed, 26 Feb 2025, Qunqin Zhao wrote:
+>
+>> This driver supports Loongson Security Module, which provides the control
+>> for it's hardware encryption acceleration child devices.
+>>
+>> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+>> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+>> ---
+>> v3-v4: None
+>>
+>> v2: Removed "ls6000se-sdf" device, added "ls6000se-tpm" device.
+>>      Passed dmamem size to SE firmware in se_init_hw() function.
+>>
+>>   drivers/mfd/Kconfig          |  10 +
+>>   drivers/mfd/Makefile         |   2 +
+>>   drivers/mfd/ls6000se.c       | 374 +++++++++++++++++++++++++++++++++++
+>>   include/linux/mfd/ls6000se.h |  75 +++++++
+>>   4 files changed, 461 insertions(+)
+>>   create mode 100644 drivers/mfd/ls6000se.c
+>>   create mode 100644 include/linux/mfd/ls6000se.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index d44c69bb3d..318fb113c1 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -2439,5 +2439,15 @@ config MFD_UPBOARD_FPGA
+>>   	  To compile this driver as a module, choose M here: the module will be
+>>   	  called upboard-fpga.
+>>   
+>> +config MFD_LS6000SE
+>> +	tristate "Loongson Security Module Interface"
+>> +	depends on LOONGARCH && ACPI
+>> +	select MFD_CORE
+>> +	help
+>> +	  The Loongson security module provides the control for hardware
+>> +	  encryption acceleration devices. Each device uses at least one
+>> +	  channel to interact with security module, and each channel may
+>> +	  have its own buffer provided by security module.
+>> +
+>>   endmenu
+>>   endif
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index 9220eaf7cf..9556de7715 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -294,3 +294,5 @@ obj-$(CONFIG_MFD_RSMU_I2C)	+= rsmu_i2c.o rsmu_core.o
+>>   obj-$(CONFIG_MFD_RSMU_SPI)	+= rsmu_spi.o rsmu_core.o
+>>   
+>>   obj-$(CONFIG_MFD_UPBOARD_FPGA)	+= upboard-fpga.o
+>> +
+>> +obj-$(CONFIG_MFD_LS6000SE)	+= ls6000se.o
+>> diff --git a/drivers/mfd/ls6000se.c b/drivers/mfd/ls6000se.c
+>> new file mode 100644
+>> index 0000000000..24d76c2ffc
+>> --- /dev/null
+>> +++ b/drivers/mfd/ls6000se.c
+> [...]
+>
+>> +static const struct mfd_cell se_devs[] = {
+>> +	{ .name = "ls6000se-sdf" },
+>> +	{ .name = "ls6000se-tpm" },
+>> +};
+> Where are the drivers for these devices?  I don't see them anywhere.
+>
+> I do see ls6000se-rng.  How is that registered?
 
->  }
->  
->  int topup_hyp_memcache(struct kvm_hyp_memcache *mc, unsigned long min_pages)
-> @@ -1117,7 +1117,7 @@ int topup_hyp_memcache(struct kvm_hyp_memcache *mc, unsigned long min_pages)
->  	}
->  
->  	return __topup_hyp_memcache(mc, min_pages, hyp_mc_alloc_fn,
-> -				    kvm_host_pa, NULL);
-> +				    kvm_host_pa, (void *)mc);
+Oh.... I made a slip of the pen and wrote that  "ls6000se-sdf" not  
+"ls6000se-rng".  Will fix it in next version.
 
-Same here.
+Driver for "ls6000se-tpm" is [PATCH v4 5/6].
 
-Thanks,
+Thanks for your comments.
 
-	M.
+BR, Qunqin.
 
--- 
-Without deviation from the norm, progress is not possible.
+>
+
