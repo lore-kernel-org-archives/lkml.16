@@ -1,95 +1,144 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C883B238D53
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 09:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF73122FF2E;
+	Wed, 12 Mar 2025 09:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741770863; cv=none; b=iX9Pj8vVnTplKxnz0c2BsbEHwxVuVC1HE4BGaED0CLgKrAXKOlrx6nOghwlj+lWNchJyz7C4FDhpd3WTtSRpV0YLz5X1jToXkef2JEuKxNWDb/gqW/3vaBTalUOGKvLYApy7sW4XTTuXiStQZF7i/fvaqUgMMLirP9AK+ODt4qA=
+	t=1741770882; cv=none; b=NUZqsUZfMXUPj3RF7YJQgaSyY1J0ub0oshcjH/7MTSwQUc9gxVa8dwOBHFxpa4gBoL1UErsBrpR6XDF8D8DH+P3O46jA0gkGepSWmDssOwslUx1kDpcTlbkmsR9v3Fv2fzFhNqv7WkYgJR0NvN4IeeYa79wrFHMFhUslbzYSNwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741770863; c=relaxed/simple;
-	bh=te+At9Lat2lla0qN32QWrOQCD1NQjHRc0Z4y5LAxu80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bDceuwbiNBkwSM5xeaGaGVqAMPtMmELvJcK8bwH4ROdfznqye5/4UjqScEXJaV/EM6vYNG60p2wGmHY+UTpYYIhPUAWDanR84d1PJgr5QR4BZUsw88wXGbHwq9Qc4DqVEljk1fhZQ2nUxYs/xG7Eoygr6xHZGdfLS/o/IDa944Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MkKNTYoF; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741770882; c=relaxed/simple;
+	bh=cEKd2zeZ03W0AvZfiQXuQHDW6ARtsp1IdpFeReEbqHs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aQ52WR3bfmdDyDuwUy2BgBKDd2h1QBkMxzRHd50eE7iKiTXlG/SBda2cKbWpxqVcyY5s8Mv4zZsRdKGNJ1dj7G14ucfRziedqtI+yOmMEmi4KR+aEnCYn+Qeb6lrcwROjj13CUYxeLlVTtACgfkEGI1jYRNNsv+f5iB1PzbNlNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jmBGBK3C; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MkKNTYoF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3598640E0217;
-	Wed, 12 Mar 2025 09:14:15 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id H1Xw5XrbJRib; Wed, 12 Mar 2025 09:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741770849; bh=iuZPpMPi93c9LpNUBLSzVQmBdj/437vgMpjRdqiXcFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MkKNTYoFgSDY7MK1nJbWVhdWSbz8dfZT16gHfepHa1fndep+Rw0Gn06LPqQqY1emS
-	 WoVSHdVfe8LTimgc6B+nHpgXFY8vnNtrmeHfJgod4AsKKfzLI/1xN91KQSkOcBOUHQ
-	 BBph4kvhzHey4MZnZ/q1CQ8Ar61IM0obCwzyFScqrel7IHYnuPfXkdpUc7SNc1HPfW
-	 +NjliiMcf85VeBWcx21H95lhzu3K4HO44QsaBaWwW3JkEvvt1DyGQJSmNuXjek7xfJ
-	 3tRaPGg5BizjBroH0A0OYBuUOw+R3gjC4/NvoAszn18AK0ZgmPfWrHuU356b8d66Sg
-	 PlT8bmhSyunfY+3zc3rcDhHh/v+zVF3AncVY5DTsRpZGfC6+Mw2Lsaj9WSt/1U3L0y
-	 k7NQVdoxzihz02iaFm9Ovj7gCGSozKna1HGI3fW5rI7NM1fAzDFegwNktFYZJU9MsD
-	 hPcBYtXZei7OK0+o2Ym0Ttc0kQgsnaIrpM6THSGRx2dVPxF5xeYGDOUI2FB8QkY84k
-	 tt8BOvoA6WYNASKW/ljK6G2iJnXavsl3UnyzAYD5ir2Hy/AZqjCRm+ZM7mCarJ1J6j
-	 sPHUmV1YiZd6vSy6bAZ4xOehUEABbHvIjSGzuiCFtFhk7sMtvnXSdJT9hfZdn6qokO
-	 RAXlQoCmJQYJYN5zjNXaGhHI=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 40B5A40E0219;
-	Wed, 12 Mar 2025 09:13:41 +0000 (UTC)
-Date: Wed, 12 Mar 2025 10:13:33 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-	Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>,
-	Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
-	Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v8:for-boris 22/30] x86/resctrl: Move mbm_cfg_mask to
- struct rdt_resource
-Message-ID: <20250312091333.GAZ9FQPWB0xQVlgw4b@fat_crate.local>
-References: <20250311183715.16445-1-james.morse@arm.com>
- <20250311183715.16445-23-james.morse@arm.com>
- <dd428220-ac94-4410-a90e-18c69cbea619@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jmBGBK3C"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BMHGuj017778;
+	Wed, 12 Mar 2025 09:14:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=8TmtBO5q52/HEosJi2z3Sf
+	AuxsDFYLPd1Yxz9r4Z7hk=; b=jmBGBK3Cl3eWB18rwgyQ02r+XokLvPrvEwH85p
+	3zZVboE7i2QcBOBmFjiYJtsng+DkUrEkfjINCUz7YA0r94MJ8AoifM/XTeroXzTA
+	pV/j/5ev5mq8c3J5BEOrJpIdS1tdXO5da5L9N9VyxDq/jd99aakbCc94tXhEN35p
+	dHI7MYFe2MU93iNaRpm/PKjPqqP/Xab/CCer31vrXucIy38o/vTPunEqZQEFSOly
+	W+jb2HadV2C5C8h8cV5pJ/bh4ybfU9X0/HszqkiVwcSR0+q/1zGQscd9/Rk6yqcK
+	gq7W46t7XH6hE/2i65e9ybN+ypNvEKaDGMMcY0rO8LbMd/Kg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au509t7n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 09:14:36 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52C9EZwF002387
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 09:14:35 GMT
+Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 12 Mar 2025 02:14:31 -0700
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <quic_srichara@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <quic_varada@quicinc.com>
+Subject: [PATCH v1] arm64: dts: qcom: ipq5424: fix and relocate uart1 gpio configurations
+Date: Wed, 12 Mar 2025 14:44:18 +0530
+Message-ID: <20250312091418.3265352-1-quic_mmanikan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <dd428220-ac94-4410-a90e-18c69cbea619@intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 2qaKB0eA9gO_rc_KZ4Nx7rP-PJUIuHkW
+X-Proofpoint-ORIG-GUID: 2qaKB0eA9gO_rc_KZ4Nx7rP-PJUIuHkW
+X-Authority-Analysis: v=2.4 cv=a4ow9VSF c=1 sm=1 tr=0 ts=67d1507c cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=jqHd-jEL5zBjBWWoCB0A:9 a=3EaL8tvSfWgu6Hm8GeNu:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-12_03,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=671
+ clxscore=1015 spamscore=0 malwarescore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503120062
 
-On Tue, Mar 11, 2025 at 09:47:38PM -0700, Reinette Chatre wrote:
-> Nit: checkpatch.pl warns about the duplicate signature for Fenghua.
+Update the bias configuration for UART1 TX and RX pins to ensure correct
+settings for RDP466.
 
-My patch massaging script whacked it already.
+Additionally, move the UART1 GPIO configurations from the common .dtsi
+file to the RDP-specific .dts files to account for differing bias
+configurations across RDPs of IPQ5424.
 
-:-)
+Fixes: 1a91d2a6021e ("arm64: dts: qcom: add IPQ5424 SoC and rdp466 board support")
+Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 16 +++++++++++++++-
+ arch/arm64/boot/dts/qcom/ipq5424.dtsi       |  7 -------
+ 2 files changed, 15 insertions(+), 8 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+index b6e4bb3328b3..7b85aaa11ee8 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
++++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+@@ -147,10 +147,24 @@ data-pins {
+ 			bias-pull-up;
+ 		};
+ 	};
++
++	uart1_tx_state: uart1-tx-state {
++		pins = "gpio44";
++		function = "uart1";
++		drive-strength = <8>;
++		bias-pull-down;
++	};
++
++	uart1_rx_state: uart1-rx-state {
++		pins = "gpio43";
++		function = "uart1";
++		drive-strength = <8>;
++		bias-pull-up;
++	};
+ };
+ 
+ &uart1 {
+-	pinctrl-0 = <&uart1_pins>;
++	pinctrl-0 = <&uart1_tx_state>, <&uart1_rx_state>;
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+index 7a7ad700a382..e190c43c1b11 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+@@ -262,13 +262,6 @@ tlmm: pinctrl@1000000 {
+ 			gpio-ranges = <&tlmm 0 0 50>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-
+-			uart1_pins: uart1-state {
+-				pins = "gpio43", "gpio44";
+-				function = "uart1";
+-				drive-strength = <8>;
+-				bias-pull-up;
+-			};
+ 		};
+ 
+ 		gcc: clock-controller@1800000 {
+
+base-commit: 0a2f889128969dab41861b6e40111aa03dc57014
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
