@@ -1,157 +1,106 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4172123817C;
-	Wed, 12 Mar 2025 09:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FF9238D34;
+	Wed, 12 Mar 2025 09:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741770664; cv=none; b=XGxJR0GGdKfxeJHK3M8V2iCjo4f6nGD9Vqrgg7AFVB2QtTBIF5w52jlwLGhJr8K+5t4mP3lLFjw84zjxATE6gHSdStvZ36XDwXILex/u2t+i5YtSIsuCPDUawWZIu5Tsrl64kbc6XRPAbW588K+B5mYoaKfyErcqphvg1w76RR8=
+	t=1741770688; cv=none; b=kbo0z8P4my8oK+r1lyh/Onixs28kIkPtDRfTsQhfBMBtz5evI0tzdc+4Ee830zU06lGDdDQXStoOZsGQNlqLv7Daol35Zns7uwQF0JFu6Je1G2hyjKQ2M6PZkaGzJQEPxWyf9buEGPz0+3nbcPegr1yf1x2BX4f/6uW4TjXOaec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741770664; c=relaxed/simple;
-	bh=jcdwIAyvAsmWrwkRu3VhDyBuLuvqCLIye4/7IL+KybU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OpoY8u2RmUdkbQBWEcRh9fwx2AFz7NnRLXZknllpYjNhu19hQGhBbN7BZtIkEYDicVh+zemwt8feNxmRp8UmVbLnZQTYG1rEkgQhyHi2ohns0hvX1aglQ72BeD2SPRcJZetHQJZoVKwGuTAVpHRv0qwDfEFTO6aVcpxRbTEExB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d/uewMVb; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741770688; c=relaxed/simple;
+	bh=yM4mhVvJmZfLeISwx/iN5lE/1L/nC+VHGrVR2s+Sbz4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=k3SllNrbcPfaUnsM2bvA5SdMMTQ3BQKtOC4+Pc25A9PjV/Q1gsLj8tWl0Mq4Hpf122MvvnXXAAvqv0pVXnUu2zWUpxqJ4kEbITMgfYd8OfZwqHqN6UmNTUX8WtjsAJMjQ+wnNveMGk8ZgB6KpHygV3EvlQa8seCFb5epGCpgsk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Smpk0arl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/uewMVb"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so1165719a91.1;
-        Wed, 12 Mar 2025 02:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741770662; x=1742375462; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Yuao92vyYyvOuLAqEseLZXchmmycIEL43Sipjav3b4=;
-        b=d/uewMVbVE1yrUn8hp2Vl4Ez05ZIiAtIxBk2AElfr6YRnPSrEHt3DWHcQKaJ35IM2b
-         I3d2Z86fadjUeDwS7qoJUIXBh26ZdzhoCxS+39f4w8YfM9/86UnSLW70WsWMn4L43edb
-         yk4v+/pxOpEeFxAN9fXhJnW2aZJYGv2iZ/0+rNws585zGScdT+1b4r9c1NjVyj4Wolam
-         vzL090ZWGCKJi1CTw1cIUr08HxOc9NoIIXaRBJca6eQUrjVov2lVeh3O9ZosbcGa3Iof
-         qIyQ3K8udvrzVH6yJoqqVrZP9sBl2zd2EU520KslNepcgPQfvCt+WUY798k2YgrofO6M
-         AarQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741770662; x=1742375462;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Yuao92vyYyvOuLAqEseLZXchmmycIEL43Sipjav3b4=;
-        b=HtFo3wnYr7edIK7ut8jPiKQUm8CBJpS8zVmY0Buv+aOGU9dftEHsJi0URLR0j68s9R
-         9WtEOm9sKax8bTtr7+fAgDRS0DvvwFk363fFmtTrJ3b0RPA5z2xzCi1vhSUtsFZaP1bu
-         jlaKVWhWOnzbDFUImZ6GYu5JMa6LnGMGw3gA3eG03StngZeB4HxhGEshaw2z5hd3gh0Z
-         RFC9kP/v8xtiIYkCUXaG/XCRsyb51+AwVLf+js0K8KvmiK5Incji8H8P074MebuW1LBF
-         fa/pcVddz2g71e2Bn77btPgcjqS2gxky186qEO5lMMZ098idLw4kxi69gemlD2XjU29G
-         9Fbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGF5WWmSGsWtoYfNXoJYxZg7NNe8uTqc4rqJ2qMusd4/Za3ii2KZ+mOgJXRThZSUsaWALe32ik9OLQvoj0@vger.kernel.org, AJvYcCWk2adIKdPFvIOapSx7HvrnP4ROoLeRgjcX4EaAPt34Ym8hbDVUMv9OgjuHP9q971gvb380WBIIARmw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9gS6Acho0AfLauT9Iy/23sQHNjYfz16di16PqKqbErs8LqvT/
-	terJGA1o6rT5GQzYdJSJr/NNhJqadozwfjx+eyrb2g/Et+2iArulw3JRB0nU
-X-Gm-Gg: ASbGncuaelcaQ59Lgw+hcprw96L6Ag1evBRYXotXLaJBeM+5wuRzLSrC111OzgGR8Ja
-	zgytLkN2cCHjXatoaJQe2Tqmh3dyqQNU+klNcHr8/tH7hSd9G6xHGRfsFddKCdXqO8Gq++AuXSZ
-	bzSFqSoC/cKGKXCdKFsZxhXD8fXq4haecQniKZ9Me8cM2ldPZzRmmEeuvpbIC7uDocT8woGcvrv
-	dzdPYqQDQdejQAZ2puzJe3r8S8WaoPXFthpd//qF2E7EqjsK5DFmlkqHbDLTA3vK+HmHLDf3vqn
-	S4LZklE931KIhT0+fxK8MIAs+0cBQ3z5TVwmPudRD6DiqAzj8Gv6VsnBSdP586wMoRlS
-X-Google-Smtp-Source: AGHT+IHWR6KjniqbGh3j+F5evq6UogMThr03XqfiesOahPU47kY8wRhnRpcbU6savc8Uv5mfpcNnrQ==
-X-Received: by 2002:a17:90b:2e42:b0:2ee:cbd0:4910 with SMTP id 98e67ed59e1d1-301005013f7mr9365479a91.1.1741770662242;
-        Wed, 12 Mar 2025 02:11:02 -0700 (PDT)
-Received: from rigel (27-32-83-166.static.tpgi.com.au. [27.32.83.166])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109dd51bsm111356825ad.49.2025.03.12.02.10.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 02:11:01 -0700 (PDT)
-Date: Wed, 12 Mar 2025 17:10:56 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: David Jander <david@protonic.nl>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: regression: gpiolib: switch the line state notifier to atomic
- unexpected impact on performance
-Message-ID: <20250312091056.GA105343@rigel>
-References: <20250311110034.53959031@erd003.prtnl>
- <CAMRc=MeWp=m1Bi_t_FCrxFOtiv3s8fSjiBjDk4pOB+_RuN=KGg@mail.gmail.com>
- <20250311120346.21ba086d@erd003.prtnl>
- <20250312013256.GB27058@rigel>
- <20250312090829.5de823b7@erd003.prtnl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Smpk0arl"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8F742C4CEED;
+	Wed, 12 Mar 2025 09:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741770687;
+	bh=yM4mhVvJmZfLeISwx/iN5lE/1L/nC+VHGrVR2s+Sbz4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Smpk0arlXQaGP8VufJdHYsVu1AgM9GIqemw/cA/R1uOVE99SXZMQfmj/sqfPec2g7
+	 yo3CuyB5au2/ouduOTvVnmyXbi1BB7QLlUoKLdNm2b1RWXq88x/hqtWrNj6737aHkr
+	 8KK8lMgIZz8XI2OD5g2zJ8T0Nb4zHz+Agk/1GXQ0D/nGbWYP1B/YnqiSdKpZ75CVyT
+	 rHEX17D4Bv9WnqL9KYI3KeOtN2SkB3by0DiUSRi5KzNqBeUfJNBp4b1d0ROhFGPf/a
+	 8VL59E31NOw9jSrvHPLH5RsoXuB0xvP+vcB6iT5jSxbIMEqfDKyHgoBDRfJRV4JL1W
+	 fZq2X5RLDbAHA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80050C2BA1B;
+	Wed, 12 Mar 2025 09:11:27 +0000 (UTC)
+From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
+Date: Wed, 12 Mar 2025 09:10:55 +0000
+Subject: [PATCH net 1/7] selftests/net: Print TCP flags in more common
+ format
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312090829.5de823b7@erd003.prtnl>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250312-tcp-ao-selftests-polling-v1-1-72a642b855d5@gmail.com>
+References: <20250312-tcp-ao-selftests-polling-v1-0-72a642b855d5@gmail.com>
+In-Reply-To: <20250312-tcp-ao-selftests-polling-v1-0-72a642b855d5@gmail.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dmitry Safonov <0x7f454c46@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741770685; l=1922;
+ i=0x7f454c46@gmail.com; s=20240410; h=from:subject:message-id;
+ bh=iOlW43ng3yBwP5kn3YXXAavX+5ElU/Vcbzg1cmgHkUw=;
+ b=FRPYyXOZbPmuvlev/hXq5yK0EP/muv/GXE5XFTI7TWoxOGPHCPluY1ZFLWSzx1ENxaQnfI27T
+ 36POI+xOkYeAJtRkMfYqimUBakKGcb4MHTQxtZ/Qx6eYiOLpB6zuVrA
+X-Developer-Key: i=0x7f454c46@gmail.com; a=ed25519;
+ pk=cFSWovqtkx0HrT5O9jFCEC/Cef4DY8a2FPeqP4THeZQ=
+X-Endpoint-Received: by B4 Relay for 0x7f454c46@gmail.com/20240410 with
+ auth_id=152
+X-Original-From: Dmitry Safonov <0x7f454c46@gmail.com>
+Reply-To: 0x7f454c46@gmail.com
 
-On Wed, Mar 12, 2025 at 09:08:29AM +0100, David Jander wrote:
-> On Wed, 12 Mar 2025 09:32:56 +0800
-> Kent Gibson <warthog618@gmail.com> wrote:
->
-> > On Tue, Mar 11, 2025 at 12:03:46PM +0100, David Jander wrote:
-> > >
-> > > Indeed, it does. My application is written in python and uses the python gpiod
-> > > module. Even in such an environment the impact is killing.
-> >
-> > Interesting - the only reason I could think of for an application
-> > requesting/releasing GPIOs at a high rate was it if was built on top of
-> > the libgpiod tools and so was unable to hold the request fd.
->
+From: Dmitry Safonov <0x7f454c46@gmail.com>
 
-Btw, I'm not suggesting that anyone build an app on top of the libgpiod
-tools - I was just hunting for an explanation as to why anyone might be
-opening and closing chips or requests at a high rate.
+Before:
+># 13145[lib/ftrace-tcp.c:427] trace event filter tcp_ao_key_not_found [2001:db8:1::1:-1 => 2001:db8:254::1:7010, L3index 0, flags: !FS!R!P!., keyid: 100, rnext: 100, maclen: -1, sne: -1] = 1
 
-> I didn't want to bother the list with the details, but this is during the
-> configuration phase of the application.
+After:
+># 13487[lib/ftrace-tcp.c:427] trace event filter tcp_ao_key_not_found [2001:db8:1::1:-1 => 2001:db8:254::1:7010, L3index 0, flags: S, keyid: 100, rnext: 100, maclen: -1, sne: -1] = 1
 
-The fact that close() was slow is valid but it left me wondering why you
-were needing to do that so frequently.
-It helps to understand what you are doing and why to see if there are
-other better solutions - or it there should be.
+For the history, I think the initial format was to emphasize the absence
+of flags as well as their presence (!R meant no RST flag). But looking
+again, it's just unreadable and hard to understand.
+Make it the standard/expected one.
 
-> It receives many configuration messages
-> for different IO objects at a fast pace. Most of those objects use one or more
-> GPIO lines identified by their label. So the application calls
-> gpiod.find_line(label) on each of them. Apparently libgiod (version 1.6.3 in
-> our case) isn't very efficient, since it will open and close each of the
-> gpiodev devices in order to query for each of the gpio lines. I wouldn't blame
-> libgpiod (python bindings) for doing it that way, since open()/close() of a
-> chardev are expected to be fast, and caching this information is probably
-> error prone anyway, since AFAIK user space cannot yet be informed of changes
-> to gpio chips from kernel space.
->
+Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
+---
+ tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-Ok, if the issue is purely the name -> (chip,offset) mapping it is pretty
-safe to assume that line names are immutable - though not unique, so
-caching the mapping should be fine.
+diff --git a/tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c b/tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c
+index 24380c68fec6b7613c363cdee68d13293e593aeb..27403f875054706718256e0007a4db77f82e60c8 100644
+--- a/tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c
++++ b/tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c
+@@ -427,11 +427,8 @@ static void dump_trace_event(struct expected_trace_point *e)
+ 	test_print("trace event filter %s [%s:%d => %s:%d, L3index %d, flags: %s%s%s%s%s, keyid: %d, rnext: %d, maclen: %d, sne: %d] = %zu",
+ 		   trace_event_names[e->type],
+ 		   src, e->src_port, dst, e->dst_port, e->L3index,
+-		   (e->fin > 0) ? "F" : (e->fin == 0) ? "!F" : "",
+-		   (e->syn > 0) ? "S" : (e->syn == 0) ? "!S" : "",
+-		   (e->rst > 0) ? "R" : (e->rst == 0) ? "!R" : "",
+-		   (e->psh > 0) ? "P" : (e->psh == 0) ? "!P" : "",
+-		   (e->ack > 0) ? "." : (e->ack == 0) ? "!." : "",
++		   e->fin ? "F" : "", e->syn ? "S" : "", e->rst ? "R" : "",
++		   e->psh ? "P" : "", e->ack ? "." : "",
+ 		   e->keyid, e->rnext, e->maclen, e->sne, e->matched);
+ }
+ 
 
-The kernel can already tell userspace about a number of changes.
-What changes are you concerned about - adding/removing chips?
+-- 
+2.42.2
 
-> If this had been this slow always (even before 6.13), I would probably have
-> done things a bit differently and cached the config requests to then "find"
-> the lines in batches directly working on the character devices instead of
-> using gpiod, so I could open/close each one just once for finding many
-> different lines each time.
->
-
-The libgpiod v2 tools do just that - they scan the chips once rather
-than once per line.  But that functionality is not exposed in the
-libgpiod v2 API as the C interface is hideous and it is difficult to
-provide well defined behaviour (e.g. in what order are the chips scanned?).
-So it is left to the application to determine how they want to do it.
-There isn't even a find_line() equivalent in v2, IIRC.
-
-> > Generally an application should request the lines it requires once and hold
-> > them for the duration.  Similarly functions such as find_line() should be
-> > performed once per line.
->
-> Of course it does that ;-)
-> This board has a large amount of GPIO lines, and like I said, it is during the
-> initial configuration phase of the application that I am seeing this problem.
->
-
-Good to hear - from your earlier description I was concerned that
-you might be doing it continuously.
-
-Cheers,
-Kent.
 
