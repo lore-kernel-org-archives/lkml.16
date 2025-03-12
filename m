@@ -1,112 +1,120 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58A425A62C;
-	Wed, 12 Mar 2025 17:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9942512EC;
+	Wed, 12 Mar 2025 17:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800161; cv=none; b=UhVcJdRJ+/jbWInMp15h2bqBXBjo6n5LDB970cVKDsCFCC5PUwyKTTtZMhkjSCZz/e6Man5rCcR02rNgvr7YDUDlP3ONImejG2XYVLfEnVNiszzGmU+xAv01H0cBaxejXNTt7J7B9fmBWVzSr5Yg3upwHXpiodw8m7+799dsgSs=
+	t=1741800214; cv=none; b=mcQAJrC+BrhyPgWJA2jT3WUfkR8XZnjoQaeAjACR8kfZOWh5wxKB6rzVhbKjNcQZItyK/2yiBaBQBLjBtIESI/RenMCHJ1ZTlJvBdJ4xTGOpjYSYS34i1c6lOFjBPdOmdA5Hb6vVTG5XWIJUchIIspiwheMhGAFI0o6BZ3/UXQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741800161; c=relaxed/simple;
-	bh=6127ygvZXTME1do5wRRtO3kMhMiQO3FkuwzLKOs7VxI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FgjYkfpnpj01LbYN44Acrct8dvEOhnHjfqGGezl9571vsoTubI7WJXiofADlCIxPj3maKgLZL8ulFSUMLdOJc+ih85hqGN03PFolJsjMgPhsUU6IzS+JPQnwJ3RPPBcgvME/p3x+kyaiddVnYEXIk0Ek4r3EQFRSJEw0Rwtbi3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=ACL9g4Zq; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1741800214; c=relaxed/simple;
+	bh=HRP31qOf8ZjL4WrltY8eJhifWwmnmgiDUdOBxrGEvD4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RBPEdK2Lk6qYQBm4SaW26dG1CR0sU8MCU/ufAldyyrT87AUs9ZfNV4swgB4VosTAX/OF6Y4yUGVwbm4mqH0X2rCG5BgfraY8asW1CPEr//itkrvEdJKPZccQPY4JnSLc4k6IV6iav3El4fk7Vmkdf28d6W1emj7MILppmTPjxNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enAwAT42; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ACL9g4Zq"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52C5qIHr028516;
-	Wed, 12 Mar 2025 12:22:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=0qla7TqeD7AP0VzkhQh1MZ4NW6vmChNeQKjzTjSN5wI=; b=
-	ACL9g4Zq0BJusHjl8UOPZHH6VAgyfmaaxdU4KqIMDDdAgzeliNsePJrnAtzWNSQt
-	+aesz4FU45VPgGhETW5i76skBQX6QmEYF+DiVaLA8uG6SwAjfU/tjoERdFz77qxE
-	D8plNtvN6dxT+gnqiw3trJMNOZEKl9KREmdkwOli/DgY1BqE2qfPQucla3fCyTQ9
-	uzxMUS6IQCilclzAdN8vduWqWtgH5syZvTcRpONINqj2AwgoOcVUHfkKO2mc401g
-	HwjffHiKmS07A3k6aJXij74s4Is6mC/RU/v/JL8SvTwwxpdv3Pn4IrY0iM0SPvKA
-	sKj8V7a4CMmsoTSXBGDWDg==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 45au85tfdn-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 12:22:10 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 12 Mar
- 2025 17:22:05 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Wed, 12 Mar 2025 17:22:05 +0000
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 4A513822560;
-	Wed, 12 Mar 2025 17:22:05 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <broonie@kernel.org>
-CC: <lgirdwood@gmail.com>, <pierre-louis.bossart@linux.dev>,
-        <yung-chuan.liao@linux.intel.com>, <peter.ujfalusi@linux.intel.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 5/6] ASoC: SDCA: Add SDCA Control Range data access helper
-Date: Wed, 12 Mar 2025 17:22:04 +0000
-Message-ID: <20250312172205.4152686-6-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250312172205.4152686-1-ckeepax@opensource.cirrus.com>
-References: <20250312172205.4152686-1-ckeepax@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enAwAT42"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D3D42C116C6;
+	Wed, 12 Mar 2025 17:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741800213;
+	bh=HRP31qOf8ZjL4WrltY8eJhifWwmnmgiDUdOBxrGEvD4=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=enAwAT42yvxtwbdSEVY3AGIifGdvmaR0YtbkhxAYgzYT/20MNwqiLY6dzrQk97gi1
+	 MpM90pxrXg8j3Mj2KksotOtDg6lLJ0RgnbxaRJHl9/rpzU+xGck3BN9FslovMi+C9F
+	 gkoBvfKIvq9CqaNm0zSiJwNv/7ekp8y1ep+/4F3SDcPSqcydgWxIGlbjyN+TrErWtq
+	 R8JSIyD+/LtqdmFGuLSIWZ4o072cfE9WLWdgYbo79++NwZeBC84awg7EZdhFPfynQb
+	 sRx/Fksrr+OYj9PXNgYLFiEVVQvP1GEf59/GUQlr1hLmD+x4HyMxZ9pbYgzb9mN5Ru
+	 bSHxk569r5Fkw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA752C28B28;
+	Wed, 12 Mar 2025 17:23:33 +0000 (UTC)
+From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
+Date: Wed, 12 Mar 2025 18:23:32 +0100
+Subject: [PATCH] net: phy: dp83822: fix transmit amplitude if
+ CONFIG_OF_MDIO not defined
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: I4pgDpYozK6LoXdN2NXB-_dU3ol17Ogp
-X-Proofpoint-GUID: I4pgDpYozK6LoXdN2NXB-_dU3ol17Ogp
-X-Authority-Analysis: v=2.4 cv=fv/cZE4f c=1 sm=1 tr=0 ts=67d1c2c2 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=Vs1iUdzkB0EA:10 a=w1d2syhTAAAA:8 a=-8eBNB2PD3_OK0XNUkQA:9
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250312-dp83822-fix-transceiver-mdio-v1-1-7b69103c5ab0@liebherr.com>
+X-B4-Tracking: v=1; b=H4sIABPD0WcC/x3MQQqDMBBG4avIrB1IJ6ixV5EugvnVWTTKpEhBv
+ HtDlx883kUFpij0bC4ynFp0zxWPtqF5i3kFa6omcdI57wZOR/BBhBf98sdiLjP0hPE76c4RMix
+ IwfXjSHVxGGr330+v+/4Bv2o46W4AAAA=
+X-Change-ID: 20250307-dp83822-fix-transceiver-mdio-ae27fed80699
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dimitri Fedrau <dima.fedrau@gmail.com>, 
+ Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741800212; l=1832;
+ i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
+ bh=mTFreHX34pBc+oU2pNBg+ke78ROdzLxTH0hZJ0yVXyw=;
+ b=E2EFw8PtEHMY2cU2EAObFNnLPVJSmYdJUHq4B1GKMusIPHWH28S+jC1WuDKZDUqDG8IEnSYiD
+ b5VmYCuMFNbBaB+pnQkyQHGHSVBtAjeCgfanKaHVq5O9lZLUOwCHkG+
+X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
+ pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
+X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
+ with auth_id=290
+X-Original-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Reply-To: dimitri.fedrau@liebherr.com
 
-SDCA Ranges are two dimensional arrays of data associated with controls,
-add a helper to provide an x,y access mechanism to the data and a helper
-to locate a specific value inside a range.
+From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+When CONFIG_OF_MDIO is not defined the index for selecting the transmit
+amplitude voltage for 100BASE-TX is set to 0, but it should be -1, if there
+is no need to modify the transmit amplitude voltage. Add a flag to make
+sure there is a need to modify it.
+
+Fixes: 4f3735e82d8a ("net: phy: dp83822: Add support for changing the transmit amplitude voltage")
+Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 ---
- include/sound/sdca_function.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/net/phy/dp83822.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/sound/sdca_function.h b/include/sound/sdca_function.h
-index ca0376903e87c..d7489e3c7e471 100644
---- a/include/sound/sdca_function.h
-+++ b/include/sound/sdca_function.h
-@@ -1136,6 +1136,25 @@ struct sdca_function_data {
- 	unsigned int busy_max_delay;
+diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
+index 3662f3905d5ade8ad933608fcaeabb714a588418..d69000cb0ceff28e8288ba24e0af1c960ea9cc97 100644
+--- a/drivers/net/phy/dp83822.c
++++ b/drivers/net/phy/dp83822.c
+@@ -201,6 +201,7 @@ struct dp83822_private {
+ 	bool set_gpio2_clk_out;
+ 	u32 gpio2_clk_out;
+ 	bool led_pin_enable[DP83822_MAX_LED_PINS];
++	bool tx_amplitude_100base_tx_modify;
+ 	int tx_amplitude_100base_tx_index;
  };
  
-+static inline u32 sdca_range(struct sdca_control_range *range,
-+			     unsigned int col, unsigned int row)
-+{
-+	return range->data[(row * range->cols) + col];
-+}
+@@ -527,7 +528,7 @@ static int dp83822_config_init(struct phy_device *phydev)
+ 			       FIELD_PREP(DP83822_IOCTRL2_GPIO2_CLK_SRC,
+ 					  dp83822->gpio2_clk_out));
+ 
+-	if (dp83822->tx_amplitude_100base_tx_index >= 0)
++	if (dp83822->tx_amplitude_100base_tx_modify)
+ 		phy_modify_mmd(phydev, MDIO_MMD_VEND2, MII_DP83822_LDCTRL,
+ 			       DP83822_100BASE_TX_LINE_DRIVER_SWING,
+ 			       FIELD_PREP(DP83822_100BASE_TX_LINE_DRIVER_SWING,
+@@ -851,6 +852,8 @@ static int dp83822_of_init(struct phy_device *phydev)
+ 				   val);
+ 			return -EINVAL;
+ 		}
 +
-+static inline u32 sdca_range_search(struct sdca_control_range *range,
-+				    int search_col, int value, int result_col)
-+{
-+	int i;
-+
-+	for (i = 0; i < range->rows; i++) {
-+		if (sdca_range(range, search_col, i) == value)
-+			return sdca_range(range, result_col, i);
-+	}
-+
-+	return 0;
-+}
-+
- int sdca_parse_function(struct device *dev,
- 			struct sdca_function_desc *desc,
- 			struct sdca_function_data *function);
++		dp83822->tx_amplitude_100base_tx_modify = true;
+ 	}
+ 
+ 	return dp83822_of_init_leds(phydev);
+
+---
+base-commit: c62e6f056ea308d6382450c1cb32e41727375885
+change-id: 20250307-dp83822-fix-transceiver-mdio-ae27fed80699
+
+Best regards,
 -- 
-2.39.5
+Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+
 
