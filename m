@@ -1,130 +1,271 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B5A257426
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 17:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16D4253322;
+	Wed, 12 Mar 2025 17:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800027; cv=none; b=Hp25ERF8DLATcdbOsGNBdufyDzyzl6nfoV16YfNegOJmYzJI7CpbpbUw9lBK3JyhPCxah+MkPdgsD6dZsCD8Ib3XGeDoxa1q9k612aGHr3+UViIbhTk7P2yGLyPrqZ+FJn4gHCr3Hr/EOsN4fHY7ujk43qJ8eVuXCMidOrxIl9E=
+	t=1741800025; cv=none; b=grtf/UD+rWltx56S8kspbSBh89Hp3bFXTyEP/0/VFpyImNIdwUarkVEMYs9TLwfm4jlhd1iXrJi7rvXECI57lWkHN+dtMbK1O6UMACmuDxE+kj/vQFg73YQMHFV35JOmAdfehawptS/0zT7FmUWCzt4lAXcUlJ9Ds//p+q9HruM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741800027; c=relaxed/simple;
-	bh=BgkmSmEqdAivThIbrZrYiT0kLf6v8P60d84U77VcbSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eal8sRBM75p1yCIAPylVMbBuMSWcP8QJDJPn7EgpmM/o6u0imZHVX/+TdVd1csE1e/gAkpIvs5Q0BhijilVTu8v1neV/IltbtMcbkWXU941kaXcU78lDjTDjaV6dQpTE0o5AoUExph3EksEl5eIx4XPMJVTeAIQ1CHKipbrcgqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K9VX7JmH; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741800025; c=relaxed/simple;
+	bh=kdzp2MvUahiT+/kCdu2GKNLAwFBNpD9Im6xENPRJ6Vs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=FXd3MvfzCRggn3Wk3wsioHuV4aa5JMspeI4SpP1wHZC2uPZpkvl0XpR9zT1+2OTBTRLobto2Jz3WcaEiSVSn0Gr16rhLlB+ri7nUixCHOSLYw4zcjQX0YnNBjII7rjSKMzRbflxJH9bTH5CYyPeE5x9YOYnRZZufiJaX1ybY4i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jgTUHn/G; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4nqi2UGX; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K9VX7JmH"
-Date: Wed, 12 Mar 2025 10:20:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741800012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jgTUHn/G";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4nqi2UGX"
+Date: Wed, 12 Mar 2025 17:20:20 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741800021;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mOs7eQJLJCUGEFSay4U24A8ybWT+TL/OSie+j9EubR4=;
-	b=K9VX7JmHz2x3px/JqTTXS6bOObpnE8iYmASgHZpf3YaLhlObaD2TuQ6CegwZRFbF1bPcsu
-	zsfhYfG64gFgM94Jjm6QbVRfeDERlVdDlrZwDlfU8QJWPWAxySkVUdGzcVY7Vqq77Ibu56
-	DwzXcJmp8MdTB6NrovutjeQmdpHOAEM=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sebastian Ott <sebott@redhat.com>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: arm64: Writable TGRAN*_2
-Message-ID: <Z9HCQ40LxShzL4nj@linux.dev>
-References: <20250306184013.30008-1-sebott@redhat.com>
+	bh=f7TQ+4PjJYlDAl71R00BL1fkcdhYNfyV9pHGh4e7eCw=;
+	b=jgTUHn/GZJRcn4IxeBuC+3SmAjltgioMPVQw/F27ObN31YNFv2n0VkH/Dt9VoXQkywfbCh
+	7XCC3R2fIgfrJU02WGL8Nh8+zHpo2CvsgweYpb0Yf3yaElD/PDuZTCtMrPGmKRNMxvD0/K
+	ptY/osUouxpW1dwQ2LkEwaBREglBxrBvmo0uNLvv30U4Tp4ZCdKM7rEZgf30N3Ze+n23OD
+	riGlbCXZ2CVFEa7DN5vgjxjNeEmDuQ7dqVMDyABMZl7onQgGzmzjdIqGQ/CspOCvkaExCH
+	Qda706rQV9j3pVZ88yOXsoLZ7+zLN8OBfYS//Th3V7mj3BUJzKlzfhDasErHgw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741800021;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f7TQ+4PjJYlDAl71R00BL1fkcdhYNfyV9pHGh4e7eCw=;
+	b=4nqi2UGXwcaqiBQqgjjpYNWCAN6sEoAl+ceh+vRKr1JxjER/+/hwfPx4v1+S6zBpogyUDB
+	CvwRjx4oeDLkf7CQ==
+From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/cache] x86/resctrl: Make resctrl_arch_pseudo_lock_fn() take a plr
+Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
+ Babu Moger <babu.moger@amd.com>, Carl Worth <carl@os.amperecomputing.com>,
+ Peter Newman <peternewman@google.com>,
+ Amit Singh Tomar <amitsinght@marvell.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250311183715.16445-27-james.morse@arm.com>
+References: <20250311183715.16445-27-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306184013.30008-1-sebott@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+Message-ID: <174180002033.14745.11512774629570617548.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Sebastian,
+The following commit has been merged into the x86/cache branch of tip:
 
-On Thu, Mar 06, 2025 at 07:40:13PM +0100, Sebastian Ott wrote:
-> Allow userspace to write the safe (NI) value for ID_AA64MMFR0_EL1.TGRAN*_2.
-> Disallow to change these fields for NV since kvm provides a sanitized view
-> for them based on the PAGE_SIZE.
-> Also add these bits to the set_id_regs selftest.
-> 
-> Signed-off-by: Sebastian Ott <sebott@redhat.com>
+Commit-ID:     4cf9acfc8f1a322576f0666b882d631cfdf714bf
+Gitweb:        https://git.kernel.org/tip/4cf9acfc8f1a322576f0666b882d631cfdf714bf
+Author:        James Morse <james.morse@arm.com>
+AuthorDate:    Tue, 11 Mar 2025 18:37:11 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 12 Mar 2025 12:24:33 +01:00
 
-I can't tell what you've based this patch on, it certainly doesn't apply
-on a 6.14 rc. Consider telling git to include the base commit next time
-you generate a patch.
+x86/resctrl: Make resctrl_arch_pseudo_lock_fn() take a plr
 
-> ---
->  arch/arm64/kvm/sys_regs.c                     | 21 +++++++++++++++----
->  .../testing/selftests/kvm/arm64/set_id_regs.c |  3 +++
->  2 files changed, 20 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 14faf213d483..0730ed8314d0 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1948,6 +1948,21 @@ static int set_id_aa64pfr1_el1(struct kvm_vcpu *vcpu,
->  	return set_id_reg(vcpu, rd, user_val);
->  }
->  
-> +static int set_id_aa64mmfr0_el1(struct kvm_vcpu *vcpu,
-> +				const struct sys_reg_desc *rd, u64 user_val)
-> +{
-> +	u64 sanitized_val = kvm_read_sanitised_id_reg(vcpu, rd);
-> +	u64 tgran2_mask = ID_AA64MMFR0_EL1_TGRAN4_2_MASK |
-> +			  ID_AA64MMFR0_EL1_TGRAN16_2_MASK |
-> +			  ID_AA64MMFR0_EL1_TGRAN64_2_MASK;
-> +
-> +	if (vcpu_has_nv(vcpu) &&
-> +	    ((sanitized_val & tgran2_mask) != (user_val & tgran2_mask)))
-> +		return -EINVAL;
-> +
-> +	return set_id_reg(vcpu, rd, user_val);
-> +}
-> +
->  static int set_id_aa64mmfr2_el1(struct kvm_vcpu *vcpu,
->  				const struct sys_reg_desc *rd, u64 user_val)
->  {
-> @@ -2787,10 +2802,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  	ID_UNALLOCATED(6,7),
->  
->  	/* CRm=7 */
-> -	ID_WRITABLE(ID_AA64MMFR0_EL1, ~(ID_AA64MMFR0_EL1_RES0 |
-> -					ID_AA64MMFR0_EL1_TGRAN4_2 |
-> -					ID_AA64MMFR0_EL1_TGRAN64_2 |
-> -					ID_AA64MMFR0_EL1_TGRAN16_2 |
-> +	ID_FILTERED(ID_AA64MMFR0_EL1, id_aa64mmfr0_el1,
-> +				      ~(ID_AA64MMFR0_EL1_RES0 |
->  					ID_AA64MMFR0_EL1_ASIDBITS)),
->  	ID_WRITABLE(ID_AA64MMFR1_EL1, ~(ID_AA64MMFR1_EL1_RES0 |
->  					ID_AA64MMFR1_EL1_HCX |
-> diff --git a/tools/testing/selftests/kvm/arm64/set_id_regs.c b/tools/testing/selftests/kvm/arm64/set_id_regs.c
-> index 1d65f4a09e6f..322b9d3b0125 100644
-> --- a/tools/testing/selftests/kvm/arm64/set_id_regs.c
-> +++ b/tools/testing/selftests/kvm/arm64/set_id_regs.c
-> @@ -146,6 +146,9 @@ static const struct reg_ftr_bits ftr_id_aa64pfr1_el1[] = {
->  static const struct reg_ftr_bits ftr_id_aa64mmfr0_el1[] = {
->  	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, ECV, 0),
->  	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, EXS, 0),
-> +	REG_FTR_BITS(FTR_EXACT, ID_AA64MMFR0_EL1, TGRAN4_2, 1),
-> +	REG_FTR_BITS(FTR_EXACT, ID_AA64MMFR0_EL1, TGRAN64_2, 1),
-> +	REG_FTR_BITS(FTR_EXACT, ID_AA64MMFR0_EL1, TGRAN16_2, 1),
->  	S_REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, TGRAN4, 0),
->  	S_REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, TGRAN64, 0),
->  	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, TGRAN16, 0),
+resctrl_arch_pseudo_lock_fn() has architecture specific behaviour,
+and takes a struct rdtgroup as an argument.
 
-Please do selftests changes in a separate patch.
+After the filesystem code moves to /fs/, the definition of struct
+rdtgroup will not be available to the architecture code.
 
-Don't worry about respinning, I'll fix this up and queue it in a moment.
+The only reason resctrl_arch_pseudo_lock_fn() wants the rdtgroup is
+for the CLOSID. Embed that in the pseudo_lock_region as a closid,
+and move the definition of struct pseudo_lock_region to resctrl.h.
 
-Thanks,
-Oliver
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+Reviewed-by: Babu Moger <babu.moger@amd.com>
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Peter Newman <peternewman@google.com>
+Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
+Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
+Tested-by: Babu Moger <babu.moger@amd.com>
+Link: https://lore.kernel.org/r/20250311183715.16445-27-james.morse@arm.com
+---
+ arch/x86/include/asm/resctrl.h            |  2 +-
+ arch/x86/kernel/cpu/resctrl/internal.h    | 37 +---------------------
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 12 +++----
+ include/linux/resctrl.h                   | 39 ++++++++++++++++++++++-
+ 4 files changed, 46 insertions(+), 44 deletions(-)
+
+diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
+index 86407db..011bf67 100644
+--- a/arch/x86/include/asm/resctrl.h
++++ b/arch/x86/include/asm/resctrl.h
+@@ -204,7 +204,7 @@ static inline void resctrl_arch_mon_ctx_free(struct rdt_resource *r, int evtid,
+ 					     void *ctx) { };
+ 
+ u64 resctrl_arch_get_prefetch_disable_bits(void);
+-int resctrl_arch_pseudo_lock_fn(void *_rdtgrp);
++int resctrl_arch_pseudo_lock_fn(void *_plr);
+ int resctrl_arch_measure_cycles_lat_fn(void *_plr);
+ int resctrl_arch_measure_l2_residency(void *_plr);
+ int resctrl_arch_measure_l3_residency(void *_plr);
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 8d35bb4..0d13006 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -209,43 +209,6 @@ struct mongroup {
+ };
+ 
+ /**
+- * struct pseudo_lock_region - pseudo-lock region information
+- * @s:			Resctrl schema for the resource to which this
+- *			pseudo-locked region belongs
+- * @d:			RDT domain to which this pseudo-locked region
+- *			belongs
+- * @cbm:		bitmask of the pseudo-locked region
+- * @lock_thread_wq:	waitqueue used to wait on the pseudo-locking thread
+- *			completion
+- * @thread_done:	variable used by waitqueue to test if pseudo-locking
+- *			thread completed
+- * @cpu:		core associated with the cache on which the setup code
+- *			will be run
+- * @line_size:		size of the cache lines
+- * @size:		size of pseudo-locked region in bytes
+- * @kmem:		the kernel memory associated with pseudo-locked region
+- * @minor:		minor number of character device associated with this
+- *			region
+- * @debugfs_dir:	pointer to this region's directory in the debugfs
+- *			filesystem
+- * @pm_reqs:		Power management QoS requests related to this region
+- */
+-struct pseudo_lock_region {
+-	struct resctrl_schema	*s;
+-	struct rdt_ctrl_domain	*d;
+-	u32			cbm;
+-	wait_queue_head_t	lock_thread_wq;
+-	int			thread_done;
+-	int			cpu;
+-	unsigned int		line_size;
+-	unsigned int		size;
+-	void			*kmem;
+-	unsigned int		minor;
+-	struct dentry		*debugfs_dir;
+-	struct list_head	pm_reqs;
+-};
+-
+-/**
+  * struct rdtgroup - store rdtgroup's data in resctrl file system.
+  * @kn:				kernfs node
+  * @rdtgroup_list:		linked list for all rdtgroups
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 90044a0..01fa789 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -414,7 +414,7 @@ static void pseudo_lock_free(struct rdtgroup *rdtgrp)
+ 
+ /**
+  * resctrl_arch_pseudo_lock_fn - Load kernel memory into cache
+- * @_rdtgrp: resource group to which pseudo-lock region belongs
++ * @_plr: the pseudo-lock region descriptor
+  *
+  * This is the core pseudo-locking flow.
+  *
+@@ -431,10 +431,9 @@ static void pseudo_lock_free(struct rdtgroup *rdtgrp)
+  *
+  * Return: 0. Waiter on waitqueue will be woken on completion.
+  */
+-int resctrl_arch_pseudo_lock_fn(void *_rdtgrp)
++int resctrl_arch_pseudo_lock_fn(void *_plr)
+ {
+-	struct rdtgroup *rdtgrp = _rdtgrp;
+-	struct pseudo_lock_region *plr = rdtgrp->plr;
++	struct pseudo_lock_region *plr = _plr;
+ 	u32 rmid_p, closid_p;
+ 	unsigned long i;
+ 	u64 saved_msr;
+@@ -494,7 +493,8 @@ int resctrl_arch_pseudo_lock_fn(void *_rdtgrp)
+ 	 * pseudo-locked followed by reading of kernel memory to load it
+ 	 * into the cache.
+ 	 */
+-	__wrmsr(MSR_IA32_PQR_ASSOC, rmid_p, rdtgrp->closid);
++	__wrmsr(MSR_IA32_PQR_ASSOC, rmid_p, plr->closid);
++
+ 	/*
+ 	 * Cache was flushed earlier. Now access kernel memory to read it
+ 	 * into cache region associated with just activated plr->closid.
+@@ -1312,7 +1312,7 @@ int rdtgroup_pseudo_lock_create(struct rdtgroup *rdtgrp)
+ 
+ 	plr->thread_done = 0;
+ 
+-	thread = kthread_run_on_cpu(resctrl_arch_pseudo_lock_fn, rdtgrp,
++	thread = kthread_run_on_cpu(resctrl_arch_pseudo_lock_fn, plr,
+ 				    plr->cpu, "pseudo_lock/%u");
+ 	if (IS_ERR(thread)) {
+ 		ret = PTR_ERR(thread);
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 914df24..226cc5c 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -58,6 +58,45 @@ enum resctrl_conf_type {
+ 
+ #define CDP_NUM_TYPES	(CDP_DATA + 1)
+ 
++/*
++ * struct pseudo_lock_region - pseudo-lock region information
++ * @s:			Resctrl schema for the resource to which this
++ *			pseudo-locked region belongs
++ * @closid:		The closid that this pseudo-locked region uses
++ * @d:			RDT domain to which this pseudo-locked region
++ *			belongs
++ * @cbm:		bitmask of the pseudo-locked region
++ * @lock_thread_wq:	waitqueue used to wait on the pseudo-locking thread
++ *			completion
++ * @thread_done:	variable used by waitqueue to test if pseudo-locking
++ *			thread completed
++ * @cpu:		core associated with the cache on which the setup code
++ *			will be run
++ * @line_size:		size of the cache lines
++ * @size:		size of pseudo-locked region in bytes
++ * @kmem:		the kernel memory associated with pseudo-locked region
++ * @minor:		minor number of character device associated with this
++ *			region
++ * @debugfs_dir:	pointer to this region's directory in the debugfs
++ *			filesystem
++ * @pm_reqs:		Power management QoS requests related to this region
++ */
++struct pseudo_lock_region {
++	struct resctrl_schema	*s;
++	u32			closid;
++	struct rdt_ctrl_domain	*d;
++	u32			cbm;
++	wait_queue_head_t	lock_thread_wq;
++	int			thread_done;
++	int			cpu;
++	unsigned int		line_size;
++	unsigned int		size;
++	void			*kmem;
++	unsigned int		minor;
++	struct dentry		*debugfs_dir;
++	struct list_head	pm_reqs;
++};
++
+ /**
+  * struct resctrl_staged_config - parsed configuration to be applied
+  * @new_ctrl:		new ctrl value to be loaded
