@@ -1,275 +1,378 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B903922F17B;
-	Wed, 12 Mar 2025 07:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120EF1E9B3F
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 07:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741766210; cv=none; b=aGC+kyQ+Bsvl8uZKy6M5/wED2H30JeL9FZ2XJoAcpdlG7nV+D3c+DpzcXMdRiCS6tu6YunlIJQ+oNqRwJnD9ourAWna5yqFp38TuDWjRSrJ/afxrrl4AoK8XLn2vXs6TzuT/B8h3GSGCv7KJnskEk/tzQ7d5NeR+ttiVG52oleE=
+	t=1741766349; cv=none; b=JesXudW6ayoj3Q5XkOw1JpvKxk1wpyIiGpTRW3sx55ovfzbe79145PPuLREE8MeWRcILHsbERyojIxtYQoGsPIvVToKwKNZmb1LHt5TUMmECBkPLS59ytEdxVx0RY/NfZQW1a4oXTyHl9T1n0swzA4OSqxC2KfizlKRMHYGKO7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741766210; c=relaxed/simple;
-	bh=naojThLXGwuclXGEGRCyWW1T9MXWuYeHQV/kPVsrArI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ms/PxvWDXJB8cnzthzxe+9kqRsQSCZq1T8TGwpiMT+w0oOAPOvmeAqps2y5IL0xqES1Nh/adhLNyqgH8+7cuphpKRSdXncpzIwWWD1vSmmnsG5V3yO1fzadImMi8OFojXCa3QeNWW5tLoKpw1gi4fXjLrrsSZPdMzWzovoo74GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-12-67d13e394814
-From: Rakie Kim <rakie.kim@sk.com>
-To: gourry@gourry.net
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com
-Subject: [PATCH v2 3/4] mm/mempolicy: Enable sysfs support for memory hotplug in weighted interleave
-Date: Wed, 12 Mar 2025 16:56:26 +0900
-Message-ID: <20250312075628.648-3-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250312075628.648-1-rakie.kim@sk.com>
-References: <20250312075628.648-1-rakie.kim@sk.com>
+	s=arc-20240116; t=1741766349; c=relaxed/simple;
+	bh=IrisppIwVRnGlJVZTg810G73qFO6PhKZXpjuQkMTNDY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=s8LCWw2eYFMdqAxaqhKczpXe65cmxXgkN1nLRshRyVr2RoQ87P8MUVu7GA3kh9SovEBafkahbqPnhnjl/5n4V2I8OagsjAhxstARktJgcFHuKF+W4VO3GGaOvpsdgRCV1pxirmToXlLnJcY3JrUTkt7FkLq20UlX1SQ9B+QAJeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AbEj16I8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AbEj16I8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741766344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1YTb5atTpDH4Sw5lOFzwaFCjTjpSJD+CwGAkxUWoJK0=;
+	b=AbEj16I84H0MCwH2ZLm7j2IPTBemC0lJa6wNObfhzwJ7rjQu4GXuAlPJrO7/489Kelofb/
+	//K7PsNN0gHsaJZPgFomm/YzrPTaIpdS0CJqK90huhFnvsZIeWi6BgD/HQjGhyK1Q3jBcP
+	G2ORg0VPRzAWj19dvh12B18SfSLlr7I=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-209-y0WLHrpUNFySla9_j5krkQ-1; Wed, 12 Mar 2025 03:59:00 -0400
+X-MC-Unique: y0WLHrpUNFySla9_j5krkQ-1
+X-Mimecast-MFC-AGG-ID: y0WLHrpUNFySla9_j5krkQ_1741766339
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43947a0919aso52843295e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 00:59:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741766339; x=1742371139;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1YTb5atTpDH4Sw5lOFzwaFCjTjpSJD+CwGAkxUWoJK0=;
+        b=uP+gZTPzBkvhYoawgoDCXtaeIi0tTmehIAoRsDDs0vhsNNSAEr4SHMFiDUBqW8nkWF
+         XrFx6icfF1W5ffMsjh0BEVstV/bdH/C0m04iRyuNZpIX7uZjt3W+CZgLW0YVnx0P5nWq
+         Cf45KoFY7MIqGzEWKs6EzHeW0rKehdtIrs3BSgH42ymCI/JxY7CpHoRyWnIGDio3u2b1
+         2j/U7SZDVR//DbMt5f2KJhAIVOkSES4w4iT+f+oIdiOIFj/7L1JaS4XXoHGFSbrMg1T/
+         vikQpeMFbKqy38IWFmX3ZHFiG+40v1JIn+DnF2OwBqtuhyiT4nMsMBRWMZHQRzL/WkYg
+         ikWA==
+X-Forwarded-Encrypted: i=1; AJvYcCURs3wOPejZUtTkh/dyl4Swv0530EbITvowsApAmWkNImrfVwdDHrQkfdN0V14+FXtGtyDb4P+EBtf3Ymc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV6tunsdOQngn5ugU0pldPazlrSYbCSLYmYEjwLcdqFcSpwMXP
+	lxjuLeFMbPKBpQsCz4fru7+8kKO3XHGnZPIMH1jHYP/6DBkhNkt1kIiPXvPDxCh8p9hxZie3uHn
+	rPMc9WR+y/x1MqALRG9lwu/cOve8y6kjHTWeaxH6uK4LfmQgWkz/VsBPzYHLTMQ==
+X-Gm-Gg: ASbGncuFXSB08N8OAzv7+8RyNa1rHSN52wWgtK0ZNwfQ0OKIZQ6SpZKaug+5P17goyt
+	ti9YOGF0iJZlAFe8mLOLtMihwhCukNC9I0DBi+wwx+lowqvBOI98PMzjviqaZo9tqEnF5Mz1urW
+	RADRk9Xc3tKLnzjiPporv8Rnl5O4YH1tk0Ds3S5U1KmTzsnZFbPfakie/TgVK4NvADZlkaoSbf6
+	DVKT1UUL/fzGNW72MoICMhl4eUTKtKX6tdvIpcDSW2gYDMDJx2qwz80yLuozCF8MYWrkXZ+Tekd
+	5/geKW24aBOSOtIyTNRfCkPYeWIsprxXgR5COEKmnw==
+X-Received: by 2002:a5d:47cc:0:b0:391:3049:d58d with SMTP id ffacd0b85a97d-39132b58ad8mr19705100f8f.0.1741766339495;
+        Wed, 12 Mar 2025 00:58:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHgH8YlIN8M80SafZ2e0Ts0SxDtQRxsit6/g0y2H7GtX97JmQP5wLdfdz+N4CV9QEDBE5bw2w==
+X-Received: by 2002:a5d:47cc:0:b0:391:3049:d58d with SMTP id ffacd0b85a97d-39132b58ad8mr19705080f8f.0.1741766339076;
+        Wed, 12 Mar 2025 00:58:59 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfbaa94sm20390707f8f.14.2025.03.12.00.58.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 00:58:58 -0700 (PDT)
+Message-ID: <e3f6e9a2e859e2c65ab960942543b8660f86edbc.camel@redhat.com>
+Subject: Re: [PATCH 02/10] rv: Let the reactors take care of buffers
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	john.ogness@linutronix.de, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky
+	 <senozhatsky@chromium.org>
+Date: Wed, 12 Mar 2025 08:58:56 +0100
+In-Reply-To: <90868f1dd49680ec63c961ec8c72ceb64f1af091.1741708239.git.namcao@linutronix.de>
+References: <cover.1741708239.git.namcao@linutronix.de>
+	 <90868f1dd49680ec63c961ec8c72ceb64f1af091.1741708239.git.namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXC9ZZnka6l3cV0gyn7xSzmrF/DZjF96gVG
-	i593j7NbHN86j93i/KxTLBaXd81hs7i35j+rxeo1GQ4cHjtn3WX36G67zO6xeM9LJo9Nnyax
-	e5yY8ZvFY+dDS4/Pm+QC2KO4bFJSczLLUov07RK4Mu5NVS7YrFMxa21sA+Mf5S5GTg4JAROJ
-	u5MusMHYf4+cZeli5OBgE1CSOLY3BiQsIiAqMe/obKAwFwezwGImiYWH1zOBJIQFUiTWP1kA
-	1ssioCoxpQmkl5ODV8BYYtm79ywQMzUlGi7dA6vnBJr/4vM1MFsIqGb5uumMEPWCEidnPgGr
-	ZxaQl2jeOpsZZJmEwBE2iZZDy6COk5Q4uOIGywRG/llIemYh6VnAyLSKUSgzryw3MTPHRC+j
-	Mi+zQi85P3cTIzCIl9X+id7B+OlC8CFGAQ5GJR5egZwL6UKsiWXFlbmHGCU4mJVEeFfbAoV4
-	UxIrq1KL8uOLSnNSiw8xSnOwKInzGn0rTxESSE8sSc1OTS1ILYLJMnFwSjUwTvxWl/Hp/uxg
-	iXeBK+ztm6ctlLSo3ZrbWL3ozvwVzzTmzX142HOqV7IdY/DpXx82t8gEzpg7r6CB0Tx693Ge
-	hKUBWbcMOt10JqzcXVp18VLw6qvph5IslD4F8v9aOfsok/2lto/657czitxmbDtZxbKkcu+L
-	uXqVme++7LpWqTL7wu4fB0x9LJVYijMSDbWYi4oTAU0ibYpeAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsXCNUNNS9fS7mK6wfMmLos569ewWUyfeoHR
-	4ufd4+wWn5+9ZrY4vnUeu8XhuSdZLc7POsVicXnXHDaLe2v+s1ocuvac1WL1mgyL39tWsDnw
-	eOycdZfdo7vtMrvH4j0vmTw2fZrE7nFixm8Wj50PLT2+3fbwWPziA5PH501yAZxRXDYpqTmZ
-	ZalF+nYJXBn3pioXbNapmLU2toHxj3IXIyeHhICJxN8jZ1m6GDk42ASUJI7tjQEJiwiISsw7
-	OhsozMXBLLCYSWLh4fVMIAlhgRSJ9U8WsIHYLAKqElOaQHo5OXgFjCWWvXvPAjFTU6Lh0j2w
-	ek6g+S8+XwOzhYBqlq+bzghRLyhxcuYTsHpmAXmJ5q2zmScw8sxCkpqFJLWAkWkVo0hmXllu
-	YmaOqV5xdkZlXmaFXnJ+7iZGYOAuq/0zcQfjl8vuhxgFOBiVeHgPqF5IF2JNLCuuzD3EKMHB
-	rCTCu9oWKMSbklhZlVqUH19UmpNafIhRmoNFSZzXKzw1QUggPbEkNTs1tSC1CCbLxMEp1cC4
-	8ZLu56tO3VkVWU1slq+DHb9lcy9h/nCnNs5+zp7sZ2oHbniLTJLzfLbz2+tnC5U/cymXl504
-	7GXS/jTDOkJf7v5fvzzvT/I/FWbdiHLLWcLlsFHVYOWnii/ntZsy8hK3HRZoOXGa3emwY5eB
-	kaqA4jeVtAsLu92v3rxyonMyz7bJlfrnl3srsRRnJBpqMRcVJwIABYdkhlgCAAA=
-X-CFilter-Loop: Reflected
 
-Previously, sysfs entries for weighted interleave were only created during
-initialization, preventing dynamically added memory nodes from being recognized.
 
-This patch enables sysfs registration for nodes added via memory hotplug,
-allowing weighted interleave settings to be updated as the system memory
-configuration changes.
 
-Signed-off-by: Rakie Kim <rakie.kim@sk.com>
----
- mm/mempolicy.c | 78 +++++++++++++++++++++++++++++---------------------
- 1 file changed, 45 insertions(+), 33 deletions(-)
+On Tue, 2025-03-11 at 18:05 +0100, Nam Cao wrote:
+> Each RV monitor has one static buffer to send to the reactors. If
+> multiple
+> errors are detected at the same time, the one buffer could be
+> overwritten.
+>=20
+> Instead, leave it to the reactors to handle buffering.
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: John Ogness <john.ogness@linutronix.de>
+> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+> =C2=A0include/linux/printk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0include/linux/rv.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 11 +++---
+> =C2=A0include/rv/da_monitor.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 61 ++++++------------------------
+> --
+> =C2=A0kernel/printk/internal.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0 1 -
+> =C2=A0kernel/trace/rv/reactor_panic.c=C2=A0 |=C2=A0 7 +---
+> =C2=A0kernel/trace/rv/reactor_printk.c |=C2=A0 8 +++--
+> =C2=A0kernel/trace/rv/rv_reactors.c=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A07 files changed, 26 insertions(+), 65 deletions(-)
+>=20
+> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+> index 510c88bfabd4..c55d45544a16 100644
+> --- a/include/rv/da_monitor.h
+> +++ b/include/rv/da_monitor.h
+> @@ -16,58 +16,11 @@
+> =C2=A0#include <linux/bug.h>
+> =C2=A0#include <linux/sched.h>
+> =C2=A0
+> -#ifdef CONFIG_RV_REACTORS
+> -
+> -#define DECLARE_RV_REACTING_HELPERS(name,
+> type)							\
+> -static char
+> REACT_MSG_##name[1024];								\
+> -
+> 												\
+> -static inline char *format_react_msg_##name(type curr_state, type
+> event)			\
+> -
+> {												\
+> -	snprintf(REACT_MSG_##name,
+> 1024,							\
+> -		 "rv: monitor %s does not allow event %s on state
+> %s\n",			\
+> -	=09
+> #name,										\
+> -	=09
+> model_get_event_name_##name(event),						\
+> -	=09
+> model_get_state_name_##name(curr_state));					\
+> -	return
+> REACT_MSG_##name;								\
+> -
+> }												\
+> -
+> 												\
+> -static void cond_react_##name(char
+> *msg)							\
+> -
+> {												\
+> -	if
+> (rv_##name.react)									\
+> -
+> 		rv_##name.react(msg);								\
+> -
+> }												\
+> -
+> 												\
+> -static bool
+> rv_reacting_on_##name(void)								\
+> -
+> {												\
+> -	return
+> rv_reacting_on();								\
+> -}
+> -
+> -#else /* CONFIG_RV_REACTOR */
+> -
+> -#define DECLARE_RV_REACTING_HELPERS(name,
+> type)							\
+> -static inline char *format_react_msg_##name(type curr_state, type
+> event)			\
+> -
+> {												\
+> -	return
+> NULL;										\
+> -
+> }												\
+> -
+> 												\
+> -static void cond_react_##name(char
+> *msg)							\
+> -
+> {												\
+> -
+> 	return;											\
+> -
+> }												\
+> -
+> 												\
+> -static bool
+> rv_reacting_on_##name(void)								\
+> -
+> {												\
+> -	return
+> 0;										\
+> -}
+> -#endif
+> -
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 94efff89e0be..71aff1276d4d 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3389,6 +3389,13 @@ struct iw_node_attr {
- 	int nid;
- };
- 
-+struct iw_node_group {
-+	struct kobject *wi_kobj;
-+	struct iw_node_attr **nattrs;
-+};
-+
-+static struct iw_node_group *ngrp;
-+
- static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
- 			 char *buf)
- {
-@@ -3431,24 +3438,22 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
- 	return count;
- }
- 
--static struct iw_node_attr **node_attrs;
--
--static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
--				  struct kobject *parent)
-+static void sysfs_wi_node_release(int nid)
- {
--	if (!node_attr)
-+	if (!ngrp->nattrs[nid])
- 		return;
--	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
--	kfree(node_attr->kobj_attr.attr.name);
--	kfree(node_attr);
-+
-+	sysfs_remove_file(ngrp->wi_kobj, &ngrp->nattrs[nid]->kobj_attr.attr);
-+	kfree(ngrp->nattrs[nid]->kobj_attr.attr.name);
-+	kfree(ngrp->nattrs[nid]);
- }
- 
- static void sysfs_wi_release(struct kobject *wi_kobj)
- {
--	int i;
-+	int nid;
- 
--	for (i = 0; i < nr_node_ids; i++)
--		sysfs_wi_node_release(node_attrs[i], wi_kobj);
-+	for (nid = 0; nid < nr_node_ids; nid++)
-+		sysfs_wi_node_release(nid);
- 	kobject_put(wi_kobj);
- }
- 
-@@ -3457,7 +3462,7 @@ static const struct kobj_type wi_ktype = {
- 	.release = sysfs_wi_release,
- };
- 
--static int add_weight_node(int nid, struct kobject *wi_kobj)
-+static int sysfs_wi_node_add(int nid)
- {
- 	struct iw_node_attr *node_attr;
- 	char *name;
-@@ -3479,19 +3484,17 @@ static int add_weight_node(int nid, struct kobject *wi_kobj)
- 	node_attr->kobj_attr.store = node_store;
- 	node_attr->nid = nid;
- 
--	if (sysfs_create_file(wi_kobj, &node_attr->kobj_attr.attr)) {
-+	if (sysfs_create_file(ngrp->wi_kobj, &node_attr->kobj_attr.attr)) {
- 		kfree(node_attr->kobj_attr.attr.name);
- 		kfree(node_attr);
- 		pr_err("failed to add attribute to weighted_interleave\n");
- 		return -ENOMEM;
- 	}
- 
--	node_attrs[nid] = node_attr;
-+	ngrp->nattrs[nid] = node_attr;
- 	return 0;
- }
- 
--struct kobject *wi_kobj;
--
- static int wi_node_notifier(struct notifier_block *nb,
- 			       unsigned long action, void *data)
- {
-@@ -3504,15 +3507,15 @@ static int wi_node_notifier(struct notifier_block *nb,
- 
- 	switch(action) {
- 	case MEM_ONLINE:
--		err = add_weight_node(nid, wi_kobj);
-+		err = sysfs_wi_node_add(nid);
- 		if (err) {
- 			pr_err("failed to add sysfs [node%d]\n", nid);
--			kobject_put(wi_kobj);
-+			kobject_put(ngrp->wi_kobj);
- 			return NOTIFY_BAD;
- 		}
- 		break;
- 	case MEM_OFFLINE:
--		sysfs_wi_node_release(node_attrs[nid], wi_kobj);
-+		sysfs_wi_node_release(nid);
- 		break;
- 	}
- 
-@@ -3524,14 +3527,14 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
- {
- 	int nid, err;
- 
--	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
--	if (!wi_kobj)
-+	ngrp->wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-+	if (!ngrp->wi_kobj)
- 		return -ENOMEM;
- 
--	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
-+	err = kobject_init_and_add(ngrp->wi_kobj, &wi_ktype, root_kobj,
- 				   "weighted_interleave");
- 	if (err) {
--		kfree(wi_kobj);
-+		kfree(ngrp->wi_kobj);
- 		return err;
- 	}
- 
-@@ -3539,7 +3542,7 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
- 		if (!node_state(nid, N_MEMORY))
- 			continue;
- 
--		err = add_weight_node(nid, wi_kobj);
-+		err = sysfs_wi_node_add(nid);
- 		if (err) {
- 			pr_err("failed to add sysfs [node%d]\n", nid);
- 			goto err_out;
-@@ -3550,7 +3553,7 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
- 	return 0;
- 
- err_out:
--	kobject_put(wi_kobj);
-+	kobject_put(ngrp->wi_kobj);
- 	return err;
- }
- 
-@@ -3565,7 +3568,9 @@ static void mempolicy_kobj_release(struct kobject *kobj)
- 	mutex_unlock(&iw_table_lock);
- 	synchronize_rcu();
- 	kfree(old);
--	kfree(node_attrs);
-+
-+	kfree(ngrp->nattrs);
-+	kfree(ngrp);
- 	kfree(kobj);
- }
- 
-@@ -3578,17 +3583,23 @@ static int __init mempolicy_sysfs_init(void)
- 	int err;
- 	static struct kobject *mempolicy_kobj;
- 
--	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
--			     GFP_KERNEL);
--	if (!node_attrs) {
-+	ngrp = kzalloc(sizeof(*ngrp), GFP_KERNEL);
-+	if (!ngrp) {
- 		err = -ENOMEM;
- 		goto err_out;
- 	}
- 
-+	ngrp->nattrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-+			       GFP_KERNEL);
-+	if (!ngrp->nattrs) {
-+		err = -ENOMEM;
-+		goto ngrp_out;
-+	}
-+
- 	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
- 	if (!mempolicy_kobj) {
- 		err = -ENOMEM;
--		goto node_out;
-+		goto nattr_out;
- 	}
- 
- 	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
-@@ -3606,12 +3617,13 @@ static int __init mempolicy_sysfs_init(void)
- 
- 	return 0;
- 
--node_out:
--	kfree(node_attrs);
-+nattr_out:
-+	kfree(ngrp->nattrs);
-+ngrp_out:
-+	kfree(ngrp);
- err_out:
- 	pr_err("mempolicy sysfs structure failed to initialize\n");
- 	return err;
--
- }
- 
- late_initcall(mempolicy_sysfs_init);
--- 
-2.34.1
+I don't think you need to remove those helper functions, why not just
+having format_react_msg_ prepare the arguments for react?
+
+cond_react might be mildly useful also for ltl, we may think about
+putting it somewhere else and/or refactoring it a bit to include
+reacting_on (which is indeed global and doesn't require a per-monitor
+wrapper).
+
+> =C2=A0/*
+> =C2=A0 * Generic helpers for all types of deterministic automata monitors=
+.
+> =C2=A0 */
+> =C2=A0#define DECLARE_DA_MON_GENERIC_HELPERS(name,
+> type)						\
+> =C2=A0							=09
+> 				\
+> -DECLARE_RV_REACTING_HELPERS(name,
+> type)								\
+> -
+> 												\
+> =C2=A0/*							=09
+> 				\
+> =C2=A0 * da_monitor_reset_##name - reset a monitor and setting it to init
+> state			\
+> =C2=A0
+> */												\
+> @@ -170,8 +123,11 @@ da_event_##name(struct da_monitor *da_mon, enum
+> events_##name event)				\
+> =C2=A0		return
+> true;									\
+> =C2=A0	}						=09
+> 				\
+> =C2=A0							=09
+> 				\
+> -	if
+> (rv_reacting_on_##name())								\
+> -
+> 		cond_react_##name(format_react_msg_##name(curr_state, event));			\
+> +	if (rv_reacting_on() &&
+> rv_##name.react)						\
+> +		rv_##name.react("rv: monitor %s does not allow event
+> %s on state %s\n",		\
+> +				#name,			=09
+> 				\
+> +				model_get_event_name_##name(event),
+> 				\
+> +				model_get_state_name_##name(curr_sta
+> te));			\
+> =C2=A0							=09
+> 				\
+> =C2=A0	trace_error_##name(model_get_state_name_##name(curr_state),
+> 				\
+> =C2=A0			=C2=A0=C2=A0
+> model_get_event_name_##name(event));					\
+> @@ -202,8 +158,11 @@ static inline bool da_event_##name(struct
+> da_monitor *da_mon, struct task_struct
+> =C2=A0		return
+> true;									\
+> =C2=A0	}						=09
+> 				\
+> =C2=A0							=09
+> 				\
+> -	if
+> (rv_reacting_on_##name())								\
+> -
+> 		cond_react_##name(format_react_msg_##name(curr_state, event));			\
+> +	if (rv_reacting_on() &&
+> rv_##name.react)						\
+> +		rv_##name.react("rv: monitor %s does not allow event
+> %s on state %s\n",		\
+> +				#name,			=09
+> 				\
+> +				model_get_event_name_##name(event),
+> 				\
+> +				model_get_state_name_##name(curr_sta
+> te));			\
+> =C2=A0							=09
+> 				\
+> =C2=A0	trace_error_##name(tsk-
+> >pid,								\
+> =C2=A0			=C2=A0=C2=A0
+> model_get_state_name_##name(curr_state),				\
+> diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+> index a91bdf802967..28afdeb58412 100644
+> --- a/kernel/printk/internal.h
+> +++ b/kernel/printk/internal.h
+> @@ -71,7 +71,6 @@ int vprintk_store(int facility, int level,
+> =C2=A0		=C2=A0 const char *fmt, va_list args);
+> =C2=A0
+> =C2=A0__printf(1, 0) int vprintk_default(const char *fmt, va_list args);
+> -__printf(1, 0) int vprintk_deferred(const char *fmt, va_list args);
+> =C2=A0
+> =C2=A0void __printk_safe_enter(void);
+> =C2=A0void __printk_safe_exit(void);
+> diff --git a/kernel/trace/rv/reactor_panic.c
+> b/kernel/trace/rv/reactor_panic.c
+> index 0186ff4cbd0b..4addabc9bcf1 100644
+> --- a/kernel/trace/rv/reactor_panic.c
+> +++ b/kernel/trace/rv/reactor_panic.c
+> @@ -13,15 +13,10 @@
+> =C2=A0#include <linux/init.h>
+> =C2=A0#include <linux/rv.h>
+> =C2=A0
+> -static void rv_panic_reaction(char *msg)
+> -{
+> -	panic(msg);
+> -}
+> -
+> =C2=A0static struct rv_reactor rv_panic =3D {
+> =C2=A0	.name =3D "panic",
+> =C2=A0	.description =3D "panic the system if an exception is found.",
+> -	.react =3D rv_panic_reaction
+> +	.react =3D panic
+> =C2=A0};
+
+For the sake of verbosity, I would still keep a wrapper function around
+panic, just to show directly from this file how should a react()
+function look like, as well as allowing future modifications, if
+needed. Not that the additional function call would be much of a
+problem during panic, I believe.
+
+Good improvement overall, thanks.
+
+Gabriele
+
+> =C2=A0
+> =C2=A0static int __init register_react_panic(void)
+> diff --git a/kernel/trace/rv/reactor_printk.c
+> b/kernel/trace/rv/reactor_printk.c
+> index 178759dbf89f..a15db3fc8b82 100644
+> --- a/kernel/trace/rv/reactor_printk.c
+> +++ b/kernel/trace/rv/reactor_printk.c
+> @@ -12,9 +12,13 @@
+> =C2=A0#include <linux/init.h>
+> =C2=A0#include <linux/rv.h>
+> =C2=A0
+> -static void rv_printk_reaction(char *msg)
+> +static void rv_printk_reaction(const char *msg, ...)
+> =C2=A0{
+> -	printk_deferred(msg);
+> +	va_list args;
+> +
+> +	va_start(args, msg);
+> +	vprintk_deferred(msg, args);
+> +	va_end(args);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static struct rv_reactor rv_printk =3D {
+> diff --git a/kernel/trace/rv/rv_reactors.c
+> b/kernel/trace/rv/rv_reactors.c
+> index 7b49cbe388d4..885661fe2b6e 100644
+> --- a/kernel/trace/rv/rv_reactors.c
+> +++ b/kernel/trace/rv/rv_reactors.c
+> @@ -468,7 +468,7 @@ void reactor_cleanup_monitor(struct
+> rv_monitor_def *mdef)
+> =C2=A0/*
+> =C2=A0 * Nop reactor register
+> =C2=A0 */
+> -static void rv_nop_reaction(char *msg)
+> +static void rv_nop_reaction(const char *msg, ...)
+> =C2=A0{
+> =C2=A0}
+> =C2=A0
 
