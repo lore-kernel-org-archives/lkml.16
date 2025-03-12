@@ -1,83 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDF72505B7;
-	Wed, 12 Mar 2025 15:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21359156F5E;
+	Wed, 12 Mar 2025 15:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741792039; cv=none; b=AcrrXzKjXzKtXVXCgkKenUcV/B/64a5VXsX6kXdVi7vdSpZ+kkJ+847f0QDRwRvCu5szI6TbIlmUOKmmS0wkRTxlEOidIyPxb+HqdzuPFJazcwRk/MRA/8bEYLAlOCaePTGrZZYGkK1xI80pEBlxLMnBIZ+cv8y4Xsv6sQ7WL3c=
+	t=1741792085; cv=none; b=ke51TiIJDEfnS9uQfh0B9URjIYcU3IARkUb57Fstc0LR9uiObNUiKntXm+WMbEBue+H1N2faMlJ5ygDwN6Eqw0m7ENLavLPN70p+b377Xg6CpjKtE189DobedKdJlTWC9yB3IWH3Gyozdul/6bySAYTA9z2NypkrXkvFKw3kncc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741792039; c=relaxed/simple;
-	bh=Se7dJCOHygh/Ix4OxsOUpCvp5TXO6X3D/g2L8B6xnpo=;
+	s=arc-20240116; t=1741792085; c=relaxed/simple;
+	bh=EQNdua2VLd3U3jzo/wjMCIM4ze/LCO+NyUs4QsHvXao=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jRuRp7T7tvf+2uHE+wp9D3ccK74m4yYxgS0T+8Y3sV3dG4BUWPjKpOkLnRWrvP547XjJC4168Faw0CHuW8PUTAb/jjf+BMeQBu0uZAWcdDZaErS2nzPpI45FMiPnnLlKP/r7iwOM00HDTL1rNafZH8kvDqsM9CAiTfDtVRHS5uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IyEoDS2b; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IyEoDS2b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDC5FC4CEDD;
-	Wed, 12 Mar 2025 15:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741792038;
-	bh=Se7dJCOHygh/Ix4OxsOUpCvp5TXO6X3D/g2L8B6xnpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IyEoDS2bz1WD6BjY34unecgaTfdLyNJPi7H27yB0XxJo5MCRDbla05lmA3/23J5tM
-	 ECa5SNFKAaftjsXvGma1PkcH4EmLSCL0cYCs2mNSNY4aKPH5GkGXdQms+bQWKRiNdm
-	 mO9hYYtOPvNLlAiGtpPNDfH/7je04eyUvpEfwiXs=
-Date: Wed, 12 Mar 2025 16:07:15 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Qasim Ijaz <qasdev00@gmail.com>, linux-fpga@vger.kernel.org,
-	stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Marco Pagani <marpagan@redhat.com>, Moritz Fischer <mdf@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Tom Rix <trix@redhat.com>,
-	Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH] fpga: fix potential null pointer deref in
- fpga_mgr_test_img_load_sgt()
-Message-ID: <2025031209-provider-docile-fbc3@gregkh>
-References: <20250311234509.15523-1-qasdev00@gmail.com>
- <27efccdc-3400-46b9-9359-4b2a6c8254e9@web.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=AF65pklj5UULujbmmXCikueLvt3dKAq296nrSF1vNtCQo40EEvegrP5XyOmXuTaCK+vg0nJWYmcqdGnm8C2t/U835zaiMRpX69SDiUx0mX1/vwbDAlElosagIfkx30EQ9rkOJpKUD5Fk5+Pm+ZtMW9NHRmGg8ujhJ/1EGHblO0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D0DF1515;
+	Wed, 12 Mar 2025 08:08:14 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7A853F5A1;
+	Wed, 12 Mar 2025 08:07:59 -0700 (PDT)
+Date: Wed, 12 Mar 2025 15:07:50 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Abel Vesa <abelvesa@kernel.org>, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH NOT APPLY v2 4/4] clk: scmi: Support spread spectrum
+Message-ID: <Z9GjRhQmsu0fBoWG@pluto>
+References: <20250205-clk-ssc-v2-0-fa73083caa92@nxp.com>
+ <20250205-clk-ssc-v2-4-fa73083caa92@nxp.com>
+ <Z6SqeNsAqbZM8nr1@pluto>
+ <20250303041125.GC13236@nxa18884-linux>
+ <Z8iKErarE0lHWxEy@pluto>
+ <20250310081635.GA16799@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <27efccdc-3400-46b9-9359-4b2a6c8254e9@web.de>
+In-Reply-To: <20250310081635.GA16799@nxa18884-linux>
 
-On Wed, Mar 12, 2025 at 02:01:48PM +0100, Markus Elfring wrote:
-> …
-> > zero it out. If the allocation fails then sgt will be NULL and the
-> …
->                                  failed?
+On Mon, Mar 10, 2025 at 04:16:35PM +0800, Peng Fan wrote:
+> On Wed, Mar 05, 2025 at 05:29:54PM +0000, Cristian Marussi wrote:
+> >On Mon, Mar 03, 2025 at 12:11:25PM +0800, Peng Fan wrote:
+> >> Hi Cristian,
+> >> 
+> >> On Thu, Feb 06, 2025 at 12:26:32PM +0000, Cristian Marussi wrote:
+> >> >On Wed, Feb 05, 2025 at 05:49:54PM +0800, Peng Fan (OSS) wrote:
+> >> >> From: Peng Fan <peng.fan@nxp.com>
+> >> >> 
+> >> >> Support Spread Spectrum with adding scmi_clk_set_spread_spectrum
+> >> >> 
+> >> >
+> >> >Hi,
+> >> >
+> >> >I forwarded ATG with our latest exchange on the possibility of using a
+> >> >standard OEM type instead of Vendor one if it is general enough....
+> >> 
+> >> Do you have any update?
+> >> 
+> >
+> >Yes I think you can go on with your original plan of using vendor OEM
+> >types: as of now we are not gonna standardize a new commmon SCMI type
+> >for Clock-SS, given there is really just one SCMI user of such clock
+> >features...maybe in the future if more users shows up...
 > 
-> 
-> Can a summary phrase like “Prevent null pointer dereference
-> in fpga_mgr_test_img_load_sgt()” be nicer?
-> 
-> Regards,
-> Markus
+> Thanks for updating me. Back to how to add extensions in clk-scmi.c,
+> do you have any suggestions? I am thinking to provide vendor/sub-vendor
+> for clk-scmi.c and use vendor "NXP" sub-vedor "IMX" for spread spectrum.
 > 
 
-Hi,
+Definitely based on vendors subvendors, not sure about how, I have not
+really though about the details: you also shoudl consider that the new
+clk ops for spread spectrum should be registered ONLY when you are on a
+supported platform (of course) AND the OEM types nnamespace is per-vendor:
+like vendor protocols your NXP OEM config type 0x80 must coexist with any
+future possible OTHER_VENDOR OEM ConfigType 0x80.
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+Thanks,
+Cristian
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
-
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
-
-thanks,
-
-greg k-h's patch email bot
