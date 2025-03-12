@@ -1,109 +1,138 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E561D88A6
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 07:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67E1822DFBB;
+	Wed, 12 Mar 2025 07:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741766198; cv=none; b=EAa3m0c1Xygylj/HVbu0snrReqySsw5rRr7I6LsEmv8knGpWKdXS5hBck7bLLNC/zo0TySsFzAv9+uKLtVuhHZtKrUiCEulX6ppLix62iT5oYG79NiwiCwad5v/rclD5xlx7G6W72XcJuHHA61pfkPTAZ0AuV4wzTlb3GNl3lpQ=
+	t=1741766206; cv=none; b=kirKzFoh84X6dSa3UL05Q1Zzi/kkUSfTi+7hwqm3SuTz8c5h5nvV+mH6IZo7CXWVqsyGmA3lxWRARUIR+fkRBGLVElFVTWF20nTbC2VatZvW/w1xguXkrRScTo2AI4fG1lMwcu86rHhE6a6BpYOgqIgODlD5FcNYMWbrdtXZR54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741766198; c=relaxed/simple;
-	bh=35CZaj9e0EDEqpNnf5IVtlgWXdDQPbnOKfskpsFe6uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L7eId2IslH5geKze7+CZfopcp8CVFkezatjCyXyAFivX4nefWzBKFhruoPpM9+AlYUJOQ2xvF/k1MW9g0rmM32Ol+M7TiCrBJnIdW7k2eIbCgY2UEeVr5lhy01agjJ7tDQPkOfMUeqXl07BxHiElLmpSa6Cra5pTVI4Gxzj9RjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hz0Ybvgt; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hz0Ybvgt"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5495c1e1b63so6629672e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 00:56:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741766193; x=1742370993; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A3wyyfwOpoNsq0clOc6hSFVvZfLJtb8AcaIz2Ox+0V8=;
-        b=hz0Ybvgt0jq8t02yldqP9VnW7I5YgW2ZeXaln2Dqr9CpHQh+T+5KDW9MVghirW1Aqh
-         yeHPhNluxGvN+TNgkkabJ4TWNfJIOTRRGhyTNJLt4+kY5J3WcYGBzK/HKnAuUu5TVap4
-         sPoxf30yxxMpuNLc9tRZWQyM+C0pmXMmAzUDpMi8vhj6h0gCoZ+tXXrwoyyGP9w1kizf
-         lSE+9GPI2SgbL2WLp7kMGTe2Pc7pyNHf87slUIgEkTunVKhVkkmk40TZPyein4kAC3BH
-         LH7js3H998oI4XcO0kKOfidLrh8JZOvrbZvvT8CXk1BYxWFtN7TSsV4Cc5kyP//+vNCW
-         xNuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741766193; x=1742370993;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A3wyyfwOpoNsq0clOc6hSFVvZfLJtb8AcaIz2Ox+0V8=;
-        b=vywt+1GM7GCIHOzwmDWziVOBgrsp7zWkhkz/M+s04EFPsM91p0gPqhRRYNprf88tgs
-         WhhhAT8UHqBQi0ydLG9KwISZsweSSRphjQaSdUNEWh1ienB/JII4GkDBR3hlgmdDoZYb
-         zAuNJKR3rUVa+t9nOxq0mQnKWQPwJh3tcz5qIa/uuQHIQIGSCPEwIKJxUbdXXgAxej7t
-         8haeBTeVAFOmlBx6REyDTpYQMFm2quldHcM2C5CvC7oHKXEBSEKsDh1HrnsQQbaM+Jwg
-         ZSKvVVLHLDwjkNk9h4TsfRnHV8Z+mKQ7OV+A5AND9wX+HaJGQc7I2tY1/yZ2EHNCgqZu
-         1DEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUA9AFxWyyp8rtv1nzwg0hzhVlOhz/MJO1rlxbFqexIq8bzrtuuKNfbi+0kD6PYD8yJ/bPktQi/f/O1v4Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1huJU1b9YF3jTBR22XGWAR4xhBIjDbJ1zcoNBZboxCPOjhNpk
-	fF4mIihyf3SsMVAiv8RfrUoGNUy4BQV4z1KM0OlwqSkch2HmVWMx
-X-Gm-Gg: ASbGncsyEOZzh/0UQV8tK9qYDtJf02ttfNq9bc9rmCZmYebWgyIpXfovCMrUA+5TGti
-	nUARR73Qut4FGt2r+3IQBw5KDH5vfDhB77mBLYUrnvPGRINUt9YUjkDhj/Q0Oh223mh3vXPy/HQ
-	aVPtQuOnaAdEa16Jdt72yKvQVcoH7p6jEHRxZxmAiez5GVGuhFBxSvf/n7+hEvJn+O+x0CmxQFv
-	+oSgZOw+pWcnjhS0IB+b1Q5XqXAk7RqD/S3HejRuqiUkk3tK0BTd/DUO7jlbs373ek44IypxGag
-	tQ36h2Lr4lKU8EtOj7riQa9Rd+GG2OPOpdWvcQ8w/UkiMws=
-X-Google-Smtp-Source: AGHT+IEjQaZs5T5ZDDjAKYJGVt1s6iYpZ8Lci0SjZKojtUFYU2/65513d3B9k+EdWSOZIVi3BNR3Hw==
-X-Received: by 2002:a05:6512:158e:b0:545:cd5:84d9 with SMTP id 2adb3069b0e04-549ababc3bcmr2484258e87.12.1741766193120;
-        Wed, 12 Mar 2025 00:56:33 -0700 (PDT)
-Received: from grain.localdomain ([5.18.255.97])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b0bd148sm2045714e87.139.2025.03.12.00.56.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 00:56:32 -0700 (PDT)
-Received: by grain.localdomain (Postfix, from userid 1000)
-	id 0AB565A0044; Wed, 12 Mar 2025 10:56:32 +0300 (MSK)
-Date: Wed, 12 Mar 2025 10:56:31 +0300
-From: Cyrill Gorcunov <gorcunov@gmail.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Benjamin Segall <bsegall@google.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrey Vagin <avagin@openvz.org>,
-	Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [patch V3a 17/18] posix-timers: Provide a mechanism to allocate
- a given timer ID
-Message-ID: <Z9E-L1pvl1j_4E3f@grain>
-References: <20250308155501.391430556@linutronix.de>
- <20250308155624.526740902@linutronix.de>
- <Z9CsstMf-EVZpsiH@pavilion.home>
- <87msdrz0i9.ffs@tglx>
- <87jz8vz0en.ffs@tglx>
- <Z9C6GpaB9WvNzvJS@pavilion.home>
+	s=arc-20240116; t=1741766206; c=relaxed/simple;
+	bh=dCE/P16YkVl+KIUZa+MHrNEuJMA21cffbL94Jk48VuA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HVRujRt/+EhoeTzSQU3kzi/+ln/+Vtovk+rmGmrDtsIT246lQdrDEs6m9eNk/hkatwVDYqfm6yqaLvV5k9tZ7/s6iBVymbH9wNW1JNyraufoaXUvkgnY4xMYUM+Q+h3XJzK4lriWwmmBkOiirLAUButax7QN+42IBnp6Yhf1MjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-02-67d13e357e71
+From: Rakie Kim <rakie.kim@sk.com>
+To: gourry@gourry.net
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v2 1/4] mm/mempolicy: Fix memory leaks in mempolicy_sysfs_init()
+Date: Wed, 12 Mar 2025 16:56:24 +0900
+Message-ID: <20250312075628.648-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9C6GpaB9WvNzvJS@pavilion.home>
-User-Agent: Mutt/2.2.14 (2025-02-20)
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsXC9ZZnka6p3cV0g9U9whZz1q9hs5g+9QKj
+	xc+7x9ktjm+dx25xftYpFovLu+awWdxb85/VYvWaDAcOj52z7rJ7dLddZvdYvOclk8emT5PY
+	PU7M+M3isfOhpcfnTXIB7FFcNimpOZllqUX6dglcGXfftTAWdAlUrD3/kKWBsZO3i5GTQ0LA
+	ROLFtE5WGHva/g0sXYwcHGwCShLH9saAhEUERCXmHZ0NFObiYBZYzCSx8PB6JpCEsECAxPpj
+	c9hBbBYBVYlbnY1gc3gFjCVmb5oGNVNTouHSPSaIuKDEyZlPWEBsZgF5ieats5lBhkoIbGCT
+	aHp/gQmiQVLi4IobLBMYeWch6ZmFpGcBI9MqRqHMvLLcxMwcE72MyrzMCr3k/NxNjMDAXFb7
+	J3oH46cLwYcYBTgYlXh4BXIupAuxJpYVV+YeYpTgYFYS4V1tCxTiTUmsrEotyo8vKs1JLT7E
+	KM3BoiTOa/StPEVIID2xJDU7NbUgtQgmy8TBKdXAGL90z40VmxN38xQvPfuX6dG2H0kvlH4e
+	4j9x86+NynXuicmGB9y57Is1ntr5lYo57m6I7Qq3L2/0lllwbdeGevZdzefbHhjEb0q9deK0
+	PvsHgwNfuhvTvB48PhZ8dl758XsRfdf7tFNyPZvKvURXXPsrcMvxlIW7Azfnf+sID7U5uxg+
+	sprfV2Ipzkg01GIuKk4EAN4JA+VIAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPLMWRmVeSWpSXmKPExsXCNUNNS9fU7mK6waVnLBZz1q9hs5g+9QKj
+	xc+7x9ktPj97zWxxfOs8dovDc0+yWpyfdYrF4vKuOWwW99b8Z7U4dO05q8XqNRkWv7etYHPg
+	8dg56y67R3fbZXaPxXteMnls+jSJ3ePEjN8sHjsfWnp8u+3hsfjFByaPz5vkAjijuGxSUnMy
+	y1KL9O0SuDLuvmthLOgSqFh7/iFLA2MnbxcjJ4eEgInEtP0bWLoYOTjYBJQkju2NAQmLCIhK
+	zDs6GyjMxcEssJhJYuHh9UwgCWGBAIn1x+awg9gsAqoStzobWUFsXgFjidmbprFCzNSUaLh0
+	jwkiLihxcuYTFhCbWUBeonnrbOYJjFyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZec
+	n7uJERiMy2r/TNzB+OWy+yFGAQ5GJR7eA6oX0oVYE8uKK3MPMUpwMCuJ8K62BQrxpiRWVqUW
+	5ccXleakFh9ilOZgURLn9QpPTRASSE8sSc1OTS1ILYLJMnFwSjUwbtFMz9984bPo7zipBRkX
+	e+pEwkICP/92f7Hu5OubZhl9X4wfyWu/PB0wOfK/0cSbCarFsxUi5ZjfcGdZ+n5NWa89Q9ii
+	i9Py75y3TIWra07etWI3VdArSNbolmeIzTIW5WGLMJz0o1a6s9NMLvbvKjextQ+E7Rfsmr/e
+	eE1HzH6Nk1PYe4WVWIozEg21mIuKEwEOm2ZYQgIAAA==
+X-CFilter-Loop: Reflected
 
-On Tue, Mar 11, 2025 at 11:32:58PM +0100, Frederic Weisbecker wrote:
-...
-> > 
-> > Recreating two timers with IDs 1000000 and 2000000 takes 1.5 seconds with
-> > the create/delete method. With the prctl() it takes 3 microseconds.
-> > 
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Improper cleanup of sysfs attributes caused kobject and memory leaks when
+initialization failed or nodes were removed.
 
-One thing which just popped up in my head -- this interface may be used not
-only by criu but any application which wants to create timer with specified
-id (hell know why, but whatever). As far as I understand we don't provide
-an interface to _read_ this property, don't we? Thus criu will restore such
-application which already has this bit set incorrectly.
+This patch ensures proper deallocation of kobjects and memory, preventing
+resource leaks and improving stability.
 
-	Cyrill
+Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+---
+ mm/mempolicy.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
+
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index bbaadbeeb291..1691748badb2 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -3541,39 +3541,40 @@ static int __init mempolicy_sysfs_init(void)
+ 	int err;
+ 	static struct kobject *mempolicy_kobj;
+ 
+-	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
+-	if (!mempolicy_kobj) {
++	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
++			     GFP_KERNEL);
++	if (!node_attrs) {
+ 		err = -ENOMEM;
+ 		goto err_out;
+ 	}
+ 
+-	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+-			     GFP_KERNEL);
+-	if (!node_attrs) {
++	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
++	if (!mempolicy_kobj) {
+ 		err = -ENOMEM;
+-		goto mempol_out;
++		goto node_out;
+ 	}
+ 
+ 	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
+ 				   "mempolicy");
+-	if (err)
+-		goto node_out;
++	if (err) {
++		kobject_put(mempolicy_kobj);
++		goto err_out;
++	}
+ 
+ 	err = add_weighted_interleave_group(mempolicy_kobj);
+ 	if (err) {
+-		pr_err("mempolicy sysfs structure failed to initialize\n");
+ 		kobject_put(mempolicy_kobj);
+-		return err;
++		goto err_out;
+ 	}
+ 
+-	return err;
++	return 0;
++
+ node_out:
+ 	kfree(node_attrs);
+-mempol_out:
+-	kfree(mempolicy_kobj);
+ err_out:
+-	pr_err("failed to add mempolicy kobject to the system\n");
++	pr_err("mempolicy sysfs structure failed to initialize\n");
+ 	return err;
++
+ }
+ 
+ late_initcall(mempolicy_sysfs_init);
+
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+-- 
+2.34.1
+
