@@ -1,81 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB803D81;
-	Wed, 12 Mar 2025 20:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CE73D81;
+	Wed, 12 Mar 2025 20:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741810837; cv=none; b=kEYoDOqgjgm5s4mXHJ5GNxmZKpN/jwLMbhAai1NtgExRN8fUddp38kO81tZnQ0+rCG7iVL7Wu1VxCvBe785PHZkFbrYz65Ewu9l0I+MjsrKba19mpufmYyYxono+VzovQxj5ImTP1Pdmj5wSAflJM1TG2mH+eO1abMdr0O3coQw=
+	t=1741810899; cv=none; b=HvsLjZL7W1HqgKwNZgV0PFO5H+7mQ21t7yFlIbqjy/7bI42fTcgwGoCoM3bsKU63Qbagnc/yMRTnbRrgHmpR+Q6unD1r649SYS0w8M1AgmW6Ga7nCl02ie7qIKhbI65v4+hDpvhlykCg9UW1dj5gkUF6ds2cfri5+FOTFCF6CKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741810837; c=relaxed/simple;
-	bh=191cN9Be6lYXTlsG5ApbiQoMSU4OQE2UppDIftw7wL4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=meRntukfcSmdSvhNVSeXgpzwjWxVqzAooexGsadC5rse9NM/gweEug2siC7oLugHgc43Q52QIqpha3twO3p772RNASzYfDGGjoPUvItpaQJWzFgc3aflK7hs1fAwTG1WPyRM7zs1hjZpW8I81UAlyPA9NHPZgcDYAk+/2q2vdYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFyF/bYS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741810899; c=relaxed/simple;
+	bh=eZn3M9mlWfZG7ziWvPoqQ68DoQzsS5rAy2tHFPgSILA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KI5xipinBEKOAnlTtRzAvpMgIiZUDTep/7FuXeZsAOMXf0TVl2GHXwx+FQ9HtzR+7w7Eo+ok6iOZ0+6GqAy3GCBQOQ6/EUKytGdHj7quuRl3n3p5gw9Se6ypdLOTMJS7wBMvCg/qky21RxlZee4Hxn8xK/5JkZp2PCHmLL8Qrc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwW7OVW3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFyF/bYS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37723C4CEE3;
-	Wed, 12 Mar 2025 20:20:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwW7OVW3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86521C4CEDD;
+	Wed, 12 Mar 2025 20:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741810837;
-	bh=191cN9Be6lYXTlsG5ApbiQoMSU4OQE2UppDIftw7wL4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HFyF/bYSVYtukHoyXWBFESDdzn60lTmtTg9dVLtsyW2B9J9uu5eNtAUjCbnZprmL0
-	 WlCai9Ii601DdgNiK2WaUxSCjU982O9rHpwntcTEoTv9Qs0jatgHDgLPCXcShUpiME
-	 LP5eU3JQZwjpywxY38nKHZ7yj2JgN4MdZ8pPS6MQfw9QhZrEvIQBy621d7Nsidr9ne
-	 R/ZRRcmVbtvW6GsipA9rATfWUzR38WyfF4pLxfXcGJu9PReaB9OHLwpQEZWkEb0LXm
-	 68kK4n8NGGDf+JuSjXU7Ps1CHLfEUbEKuOUbkw38bu2A2z6StZWXwicX2l1bK7LsLR
-	 Jh7gSpSzZr0aQ==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2bcc0c6c149so254820fac.1;
-        Wed, 12 Mar 2025 13:20:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUsnMsZ8xMNSksqzil0plPzLrkYP9Vlg0CyUGEbFRPirWagWX88towMvpRIZfM19szOQmX/tOkDTQE=@vger.kernel.org, AJvYcCW38L75g3bxOS8UcJPjYsJVN8NYpJeG0OKK16orhQlk8iMiuOq7QLY6YnabTmU+6su9I/q7Z+WMV8G/3jw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJuAoNJ1s2MiZx/NSf/dLkUp9mNGTsQQXnOOcyeN/qRzl4Vm2V
-	PWD5jW+XtWQpnSi60hJL/fU+lKSqF5NOA7gUk+iveWRIEf4fsr7o+gbP4qDeVxMs/JgoXCJmvBo
-	PcCPLQui4GAUZ/4gjQpJ3mqb5ULo=
-X-Google-Smtp-Source: AGHT+IFkQqFePGtzUqvRMUdvv06++o/IztrYHiosgInnc+5rxXilGbqHpHMEewloEEyPDF2c28FvTHjEKv2JdKlV6k4=
-X-Received: by 2002:a05:6870:d886:b0:2c1:5dbb:ecb6 with SMTP id
- 586e51a60fabf-2c261398a70mr11822143fac.38.1741810836496; Wed, 12 Mar 2025
- 13:20:36 -0700 (PDT)
+	s=k20201202; t=1741810898;
+	bh=eZn3M9mlWfZG7ziWvPoqQ68DoQzsS5rAy2tHFPgSILA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hwW7OVW36sV8XQpcekGwjWUAKZLABPhGuMylzhTZiktBd3awgZ8au4CoUwbL4uSeh
+	 877BnH6qV+pN6RN6/86qYDdHcnDBMWCyNnzejm4Kw3wUmVY/M2BUmxwP8LRzLATHJO
+	 Y+bD5YmoJc6/EdLNIq3s73S3xeGTdKq8ujVFjOUqJ2OIQGHxJC0MfIaxMU6w7w9MqU
+	 1KAMC7c7VCOI23sJ54sOfcYN/iEqOGfFwKFdPkuQHF3cmPWynJzZj7GS3TpWfTvZuF
+	 EnRmUWGp+LZAD1W2d/7xLQramMsP23g4Kqa2CCMqlCSzKCnA25vwN4tjElVTw3/ssh
+	 VFuKlz/yTi6Hg==
+Date: Wed, 12 Mar 2025 21:21:32 +0100
+From: Nathan Chancellor <nathan@kernel.org>
+To: Chin-Ting Kuo <chin-ting_kuo@aspeedtech.com>
+Cc: patrick@stwcx.xyz, andrew@codeconstruct.com.au, linux@roeck-us.net,
+	wim@linux-watchdog.org, joel@jms.id.au,
+	linux-watchdog@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, Peter.Yin@quantatw.com,
+	Patrick_NC_Lin@wiwynn.com, BMC-SW@aspeedtech.com,
+	chnguyen@amperecomputing.com, aaron_lee@aspeedtech.com
+Subject: Re: [PATCH v7 1/1] watchdog: aspeed: Update bootstatus handling
+Message-ID: <20250312202132.GA1072616@ax162>
+References: <20250113093737.845097-1-chin-ting_kuo@aspeedtech.com>
+ <20250113093737.845097-2-chin-ting_kuo@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311160827.1129643-1-ulf.hansson@linaro.org>
-In-Reply-To: <20250311160827.1129643-1-ulf.hansson@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Mar 2025 21:20:25 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hgzVvA6vcRxUeByhVPgjyeUfY7v5Aj5GPi=_T_XWpPvQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo4bcmkwN3s7uVPG_AArFVAMqWOsxYbRVJfnVX3sUEfnb9nLW56cGhcvVg
-Message-ID: <CAJZ5v0hgzVvA6vcRxUeByhVPgjyeUfY7v5Aj5GPi=_T_XWpPvQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] PM: s2idle: A couple of minor lock-simplifications
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, 
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250113093737.845097-2-chin-ting_kuo@aspeedtech.com>
 
-On Tue, Mar 11, 2025 at 5:08=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
->
-> While working on s2idle a few things caught my attention when looking
-> closer in the code in the s2idle_enter(), in regards to locks. These two
-> patches tries to improve the situation a bit.
->
-> Kind regards
-> Ulf Hansson
->
-> Ulf Hansson (2):
->   PM: s2idle: Drop redundant locks when entering s2idle
->   PM: s2idle: Extend comment in s2idle_enter()
->
->  kernel/power/suspend.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> --
+On Mon, Jan 13, 2025 at 05:37:37PM +0800, Chin-Ting Kuo wrote:
+> The boot status in the watchdog device struct is updated during
+> controller probe stage. Application layer can get the boot status
+> through the command, cat /sys/class/watchdog/watchdogX/bootstatus.
+> The bootstatus can be,
+> WDIOF_CARDRESET => System is reset due to WDT timeout occurs.
+> Others          => Other reset events, e.g., power on reset.
+> 
+> On ASPEED platforms, boot status is recorded in the SCU registers.
+> - AST2400: Only a bit is used to represent system reset triggered by
+>            any WDT controller.
+> - AST2500/AST2600: System reset triggered by different WDT controllers
+>                    can be distinguished by different SCU bits.
+> 
+> Besides, on AST2400 and AST2500, since alternating boot event is
+> also triggered by using WDT timeout mechanism, it is classified
+> as WDIOF_CARDRESET.
+> 
+> Signed-off-by: Chin-Ting Kuo <chin-ting_kuo@aspeedtech.com>
+> ---
+>  drivers/watchdog/aspeed_wdt.c | 81 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 79 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+...
+> +static void aspeed_wdt_update_bootstatus(struct platform_device *pdev,
+> +					 struct aspeed_wdt *wdt)
+> +{
+> +	const struct resource *res;
+> +	struct aspeed_wdt_scu scu = wdt->cfg->scu;
+> +	struct regmap *scu_base;
+> +	u32 reset_mask_width;
+> +	u32 reset_mask_shift;
+> +	u32 idx = 0;
+> +	u32 status;
+> +	int ret;
+> +
+> +	if (!of_device_is_compatible(pdev->dev.of_node, "aspeed,ast2400-wdt")) {
+> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		idx = ((intptr_t)wdt->base & 0x00000fff) / resource_size(res);
 
-Both patches applied as 6.15 material, but I rewrote the new comments.
-Hopefully, this is not a problem.
+This division breaks the build when CONFIG_ARM_LPAE is enabled, which
+selects CONFIG_PHYS_ADDR_T_64BIT, turning resource_size_t into a 64-bit
+type.
 
-Thanks!
+$ make -skj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- mrproper multi_v7_lpae_defconfig all
+arm-linux-gnueabi-ld: drivers/watchdog/aspeed_wdt.o: in function `aspeed_wdt_update_bootstatus':
+drivers/watchdog/aspeed_wdt.c:257:(.text+0x80c): undefined reference to `__aeabi_uldivmod'
+
+> +	}
+> +
+> +	scu_base = syscon_regmap_lookup_by_compatible(scu.compatible);
+> +	if (IS_ERR(scu_base)) {
+> +		wdt->wdd.bootstatus = WDIOS_UNKNOWN;
+> +		return;
+> +	}
+> +
+> +	ret = regmap_read(scu_base, scu.reset_status_reg, &status);
+> +	if (ret) {
+> +		wdt->wdd.bootstatus = WDIOS_UNKNOWN;
+> +		return;
+> +	}
+> +
+> +	reset_mask_width = hweight32(scu.wdt_reset_mask);
+> +	reset_mask_shift = scu.wdt_reset_mask_shift +
+> +			   reset_mask_width * idx;
+> +
+> +	if (status & (scu.wdt_reset_mask << reset_mask_shift))
+> +		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+> +
+> +	/* clear wdt reset event flag */
+> +	if (of_device_is_compatible(pdev->dev.of_node, "aspeed,ast2400-wdt") ||
+> +	    of_device_is_compatible(pdev->dev.of_node, "aspeed,ast2500-wdt")) {
+> +		ret = regmap_read(scu_base, scu.reset_status_reg, &status);
+> +		if (!ret) {
+> +			status &= ~(scu.wdt_reset_mask << reset_mask_shift);
+> +			regmap_write(scu_base, scu.reset_status_reg, status);
+> +		}
+> +	} else {
+> +		regmap_write(scu_base, scu.reset_status_reg,
+> +			     scu.wdt_reset_mask << reset_mask_shift);
+> +	}
+> +}
+> +
+
+Cheers,
+Nathan
