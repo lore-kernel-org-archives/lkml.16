@@ -1,152 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2DA1DF735
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC12231A51
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741774000; cv=none; b=PjE4BvZPrZedA4F0yzMDt3F5eQzlO0kwyK9YcjFYOwIsAz5LJ8XahkB4s1EbOqKbNcZ1WErHN8tV5P8uJ2Mc6jKcjChst2eFwhClAsdZoKkBpgcwLMSUGuRWSBs+3IpSWnhacxF1VIeBFAXGIVaPMgyOTSBFGkvy6Ezkw/QTTvI=
+	t=1741774177; cv=none; b=HmEueku/0dnN/iB65X/TOPfDVhovosqdposbh7K+UwQVFqLixQ22caSxPQFSe3sxL7pNSITsXHIyOSTdm3XAoNqUoIjQFk69v2XFnpjQ+I0QJ6DPiS5+kHHJhdyWeL+NVkz6aSeV0EHUhVF5rfGirPGaEFjX+/bUssPUxmn/QQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741774000; c=relaxed/simple;
-	bh=HTp+D2ea+WVjPous4zueoK9RTTBfupCYlsjSIQWXxjs=;
+	s=arc-20240116; t=1741774177; c=relaxed/simple;
+	bh=S743+2ahOXuPljV/reeQ/1enQbTDwpjWM1UaL2m9AeI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NU6JNLiBXH1CAxG/+vwfRLx9MF+4EzsUtcB47IETsbftf1V73neAK/L/rbJsMfPOKYUZ63mnk+oS7LrGLvxD0YddLiIO7ZJ3iWIPFMMtCxh7XC6abXCKp6HyhMPbv+pL3Uo5N5UnrDjg6grnuFVC4C7Vpz5pUWdGTOSJaCJZ/yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RKdeIwPf; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=c71GvSCzKM3sg3TTKzbOe7GhcPItOXvJRwsVJYIqK/UYgfPhyvFfQLMnSHpVQC4XPhnQs1VCMr992tCisLBkvSciJbqWaTBUIjrl351BvKmGG7md6Iik2770e7tWY1Lu1uETWXgq6TU0z41HccF+Q5j8SxgthYNHrxcEaiJom2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eU7TRk0W; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RKdeIwPf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741773998; x=1773309998;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=HTp+D2ea+WVjPous4zueoK9RTTBfupCYlsjSIQWXxjs=;
-  b=RKdeIwPfGIHx3En7JjjdKFxSugPyfC4hzk1+wjA4DZsMzCfCylmK8ntc
-   tod30QdTm9T/awhftulR5H97fAweWRl0U8DwDYz+qUSK0gY4seuqCdDdq
-   x/Cx+NveABB1pfWDHswWlOUSWuN5rlhxCBKrWy1lvlQAUhzjgWq/lC7yp
-   OvCuu8IJa0LXBsryJNXgfhyG87FwssWOhhJNXz15BEzv+jU7CzCcZsMq3
-   tBUgEN0J08l2qmZ+Yb2a5Vl8GM/CYTblhzRc7118EzjCQ/p3LHx6LPHp3
-   Sq3lBG/WI5DL56h2UT888J14GbtTWR2h+dRGvuqS1tvXtmwT8oeyV0gOO
-   w==;
-X-CSE-ConnectionGUID: qDYhVuaPRMC5QxDS8FK85w==
-X-CSE-MsgGUID: BeRngAkpSXCgYAKuR2VnZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="46756951"
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="46756951"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 03:06:30 -0700
-X-CSE-ConnectionGUID: Hgp4Er9GRlCjdCUbICZLdw==
-X-CSE-MsgGUID: EZCPIMOIRluCFSgq035BJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="121098600"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 03:06:19 -0700
-Date: Wed, 12 Mar 2025 12:06:16 +0200
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	Alex Deucher <alexander.deucher@amd.com>,
-	'Christian =?iso-8859-1?Q?K=F6nig'?= <christian.koenig@amd.com>,
-	siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
-	rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
-	lucas.demarchi@intel.com, Xaver Hugl <xaver.hugl@kde.org>
-Subject: Re: [PATCH 1/2] drm: Create an app info option for wedge events
-Message-ID: <Z9FcmDzSmBbVAsqD@black.fi.intel.com>
-References: <20250228121353.1442591-1-andrealmeid@igalia.com>
- <20250228121353.1442591-2-andrealmeid@igalia.com>
- <Z8HGFRGOYvyCCWWu@black.fi.intel.com>
- <58763d8e-46a1-4753-9401-987fb3dac50b@igalia.com>
- <Z8KgwswQQyGxhsR1@black.fi.intel.com>
- <db27ee44-f480-475b-be7e-710bd30eb7a5@igalia.com>
- <Z9BuU3RzMkEE_FL1@black.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eU7TRk0W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741774175;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S743+2ahOXuPljV/reeQ/1enQbTDwpjWM1UaL2m9AeI=;
+	b=eU7TRk0WVI1FxQboMjwvUi/D/vv9LFf9DTK1hVluZD1BkrjJa9etf4cJ7PkjWulDMd3W8x
+	AUtK88ScmS/UkJ5xCy+OzP+BFJrljiHBrt5bgwp+qfcXi82BInM2LUegHH5CsQmkf8T2Za
+	DpEvIX5o94WjJ18Eihd8FoVydeNGgGk=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-696-a-ld3HMXPq20OaGZVIk23Q-1; Wed, 12 Mar 2025 06:09:33 -0400
+X-MC-Unique: a-ld3HMXPq20OaGZVIk23Q-1
+X-Mimecast-MFC-AGG-ID: a-ld3HMXPq20OaGZVIk23Q_1741774172
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39141ffa913so2202386f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:09:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741774172; x=1742378972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S743+2ahOXuPljV/reeQ/1enQbTDwpjWM1UaL2m9AeI=;
+        b=qP2cVqOQYfOvzeOlVhpoDh81gg4dJ6XYlCGGPI1qM6uobEr4hMZfaCqvehADt9j+Cd
+         pU+GtwvHd0EZyp2WRZajBEYXs5p6Fa8gcuj5IiQdg8R0UXNgq6yUh/gNcZKF2HCCa2LC
+         GQWm6rXAt15vlOAZn0TXssLoDl8OP6jvA7yglslDChTrczdqr8a86QG16eUzCzVwKjOR
+         0vH6vzUVLf71lzjgEzc6JA16vvcsAokeXSi67uSFt7k+4XvQ1ge8fWaJoi90WSaxcZus
+         /0r7+CCqFeTdfljCkQ7+cUnHAPzQahAeBve0Bnuu76vO/T2KGvZngwZH7mlGM/L3fXGr
+         t3YA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZPFRgO37ckUrGld6pQly/7opeLk+GWbnh2zTfWrtqTQ1OtF7zxFs9k6mrQEfXOcbC4680jOfm7w4OgHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKgpTsozUPS7XGvIz3+aQ7/cP8osno/NyqMYNwsm1MFyov7dMY
+	gJ4iZt3/aWbuYQ5QOV5uTLwpV/NHrzoCyZ5NuvPhiSYopzyXOJtNsXHV3M99eJY5pRzpyOBkdr7
+	siQQZhPMeJRdSYaxytv71Mv9qcpE2QPzuTGSyLeJzO+vXRkrfV00gDgN5Eeqrlw==
+X-Gm-Gg: ASbGncsnb4DOjst6U7XkE07MXdiZOYCO2iAg3Rnx78qMuwc30oET3qk12Y+lcW/2KNc
+	bJJygfJyP4NCSnPdD4ONQsS/qONfPrcYk+uxlB8DB3LuGPY3t8gP6BX6YDz5vKwfZXD6qejkjLz
+	mnGyB0mlX6EP8LXFugbDf4OPnydt6WwcYO3KxqHY8gh93HuvHu9sKAPE/0/MVzAmjuz7QH2gOEK
+	TN8gJKFRydZaEHe+Hw9vDK9RKDU3UcylDRtVFg8nFLDVVkZ67D6P61dCOAlFrycj2pHS6QXJ9zj
+	20B/ydGQ/OEuphnku0FetNDTUBZJeCPOwHX0vWibDvY=
+X-Received: by 2002:a05:6000:2ac:b0:391:1458:2233 with SMTP id ffacd0b85a97d-39132d30145mr16025042f8f.11.1741774172439;
+        Wed, 12 Mar 2025 03:09:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEC/oegylWFmX8HIfDOEmL2IfKq6J8f3RVSsBgAXMYe83/CsTxWQv7uki2xiMPLn7D1hW+oew==
+X-Received: by 2002:a05:6000:2ac:b0:391:1458:2233 with SMTP id ffacd0b85a97d-39132d30145mr16025033f8f.11.1741774172078;
+        Wed, 12 Mar 2025 03:09:32 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.49.7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e34fasm20758388f8f.75.2025.03.12.03.09.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 03:09:31 -0700 (PDT)
+Date: Wed, 12 Mar 2025 11:09:29 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Waiman Long <llong@redhat.com>, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Qais Yousef <qyousef@layalina.io>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Phil Auld <pauld@redhat.com>, luca.abeni@santannapisa.it,
+	tommaso.cucinotta@santannapisa.it,
+	Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v3 4/8] sched/deadline: Rebuild root domain accounting
+ after every update
+Message-ID: <Z9FdWZsiI9riBImL@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250310091935.22923-1-juri.lelli@redhat.com>
+ <Z86yxn12saDHLSy3@jlelli-thinkpadt14gen4.remote.csb>
+ <797146a4-97d6-442e-b2d3-f7c4f438d209@arm.com>
+ <398c710f-2e4e-4b35-a8a3-4c8d64f2fe68@redhat.com>
+ <fd4d6143-9bd2-4a7c-80dc-1e19e4d1b2d1@redhat.com>
+ <Z9Alq55RpuFqWT--@jlelli-thinkpadt14gen4.remote.csb>
+ <be2c47b8-a5e4-4591-ac4d-3cbc92e2ce5d@redhat.com>
+ <e6731145-5290-41f8-aafb-1d0f1bcc385a@arm.com>
+ <7fb20de6-46a6-4e87-932e-dfc915fff3dc@redhat.com>
+ <724e00ea-eb27-46f1-acc3-465c04ffc84d@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9BuU3RzMkEE_FL1@black.fi.intel.com>
+In-Reply-To: <724e00ea-eb27-46f1-acc3-465c04ffc84d@arm.com>
 
-On Tue, Mar 11, 2025 at 07:09:45PM +0200, Raag Jadav wrote:
-> On Mon, Mar 10, 2025 at 06:27:53PM -0300, André Almeida wrote:
-> > Em 01/03/2025 02:53, Raag Jadav escreveu:
-> > > On Fri, Feb 28, 2025 at 06:54:12PM -0300, André Almeida wrote:
-> > > > Hi Raag,
-> > > > 
-> > > > On 2/28/25 11:20, Raag Jadav wrote:
-> > > > > Cc: Lucas
-> > > > > 
-> > > > > On Fri, Feb 28, 2025 at 09:13:52AM -0300, André Almeida wrote:
-> > > > > > When a device get wedged, it might be caused by a guilty application.
-> > > > > > For userspace, knowing which app was the cause can be useful for some
-> > > > > > situations, like for implementing a policy, logs or for giving a chance
-> > > > > > for the compositor to let the user know what app caused the problem.
-> > > > > > This is an optional argument, when `PID=-1` there's no information about
-> > > > > > the app caused the problem, or if any app was involved during the hang.
-> > > > > > 
-> > > > > > Sometimes just the PID isn't enough giving that the app might be already
-> > > > > > dead by the time userspace will try to check what was this PID's name,
-> > > > > > so to make the life easier also notify what's the app's name in the user
-> > > > > > event.
-> > > > > > 
-> > > > > > Signed-off-by: André Almeida <andrealmeid@igalia.com>
-> > 
-> > [...]
-> > 
-> > > > > >    	len = scnprintf(event_string, sizeof(event_string), "%s", "WEDGED=");
-> > > > > > @@ -562,6 +564,14 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
-> > > > > >    	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
-> > > > > >    		 "but recovered through reset" : "needs recovery");
-> > > > > > +	if (info) {
-> > > > > > +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
-> > > > > > +		snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
-> > > > > > +	} else {
-> > > > > > +		snprintf(pid_string, sizeof(pid_string), "%s", "PID=-1");
-> > > > > > +		snprintf(comm_string, sizeof(comm_string), "%s", "APP=none");
-> > > > > > +	}
-> > > > > This is not much use for wedge cases that needs recovery, since at that point
-> > > > > the userspace will need to clean house anyway.
-> > > > > 
-> > > > > Which leaves us with only 'none' case and perhaps the need for standardization
-> > > > > of "optional telemetry collection".
-> > > > > 
-> > > > > Thoughts?
-> > > > 
-> > > > I had the feeling that 'none' was already meant to be used for that. Do you
-> > > > think we should move to another naming? Given that we didn't reach the merge
-> > > > window yet we could potentially change that name without much damage.
-> > > 
-> > > No, I meant thoughts on possible telemetry data that the drivers might
-> > > think is useful for userspace (along with PID) and can be presented in
-> > > a vendor agnostic manner (just like wedged event).
-> > 
-> > I'm not if I agree that this will only be used for telemetry and for the
-> > `none` use case. As stated by Xaver, there's use case to know which app
-> > caused the device to get wedged (like switching to software rendering) and
-> > to display something for the user after the recovery is done (e.g. "The game
-> > <app name> stopped working and Plasma has reset").
-> 
-> Sure, but since this information is already available in coredump, I was
-> hoping to have something like a standardized DRM level coredump with both
-> vendor specific and agnostic sections, which the drivers can (and hopefully
-> transition to) use in conjunction with wedged event to provide wider
-> telemetry and is useful for all wedge cases.
+On 12/03/25 10:53, Dietmar Eggemann wrote:
+> On 11/03/2025 15:51, Waiman Long wrote:
 
-This is more useful because,
+...
 
-1. It gives drivers an opportunity to present the telemetry that they are
-   interested in without needing to add a new event string (like PID or APP)
-   for their case.
+> > You are right. cpuhp_tasks_frozen will be set in the suspend/resume
+> > case. In that case, we do need to add a cpuset helper to acquire the
+> > cpuset_mutex. A test patch as follows (no testing done yet):
 
-2. When we consider wedging as a usecase, there's a lot more that goes
-   into it than an application that might be behaving strangely. So a wider
-   telemetry is what I would hope to look at in such a scenario.
+...
 
-Raag
+> This seems to work.
+
+Thanks for testing!
+
+Waiman, how do you like to proceed. Separate patch (in this case can you
+please send me that with changelog etc.) or incorporate your changes
+into my original patch and possibly, if you like, add Co-authored-by?
+
+> But what about a !CONFIG_CPUSETS build. In this case we won't have
+> this DL accounting update during suspend/resume since
+> dl_rebuild_rd_accounting() is empty.
+
+I unfortunately very much suspect !CPUSETS accounting is broken. But if
+that is indeed the case, it has been broken for a while. :(
+
+Will need to double check that, but I would probably do it later on
+separated from this set that at least seems to cure the most common
+cases. What do people think?
+
+Thanks,
+Juri
+
