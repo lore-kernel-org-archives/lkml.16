@@ -1,98 +1,126 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B4B1CF8B
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0E71CF8B;
+	Wed, 12 Mar 2025 13:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741787196; cv=none; b=r9cljKyOs1Q82isfNas19Ir8Ncz1kOn4tAu2Csi4Oc70PNNOy0biAMQ5BJmbjJCamWLxdfq7ILRsJhNS49j1IGTBtMRnXSF1zdukKm1qXwcppuRzIw2kvuYaxoSsA4wH8Hm/PPtJt0nRTubmOMsBZyDWvIG+IFSQH38bmQdRIN8=
+	t=1741787228; cv=none; b=GHNolgPVKCk+Q5f0s3Hs+OYZ+vgPXvsTlgZN0bI+6hvOphOM0OLujnVB6gZW8Jz46CWRJf06eztrAzwswK2ePE5kSy3WwmEERriWBWmafnKAN8/bzD4Vn1lB5fkwnruXeZF7KPSfGQd4cf1Ywh22KOPBQI08MgLI6+gG1rtAzcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741787196; c=relaxed/simple;
-	bh=P4vE55AYHsys/MGCv23SCGQXidP0GHUzlbX2Ufr0iec=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=t0GqZIrJ1mnz8r76ZCE952njgHd9+p+SBnWEvgdLt3CIghD16ejJ33/St2SQw5HzmkPcdX5gl3klv0Toh+jrq6wuFQrgfZe+sI2APue8l3VORDzSudNsM5e6ffXrD/ld53XVd026J1BoUI3cpal18Aw6MZxs5IRAUiu5rw3Ij1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mSuNL+tl; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mSuNL+tl"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52CDkP6x1509037
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 12 Mar 2025 08:46:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741787185;
-	bh=St1OHBKFenhOMKyOuAwGEmP4LdUW/yuDHIRSEsAWFS8=;
-	h=Date:Subject:From:To:CC:References:In-Reply-To;
-	b=mSuNL+tlziSpgsYRGMRiAZ337EviHVssQ6jBwn+up9evY1iXCQFcMhUBoTZVkvW+q
-	 KjSb3If1wJbfvaX3vSwXiHQG21r39sy8yEggoUrw+XQhtvHjOFhnXGjaxshtjEyBEO
-	 928tO6XhikbpMfXqlvssgvjsThwEWX5NwCM0u3To=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52CDkPri117711;
-	Wed, 12 Mar 2025 08:46:25 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 12
- Mar 2025 08:46:24 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 12 Mar 2025 08:46:24 -0500
-Received: from [10.24.68.192] (dhcp-10-24-68-192.dhcp.ti.com [10.24.68.192])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52CDkLqP125702;
-	Wed, 12 Mar 2025 08:46:22 -0500
-Message-ID: <dec6ccc4-76df-47c3-8622-2c08035eff3e@ti.com>
-Date: Wed, 12 Mar 2025 19:16:21 +0530
+	s=arc-20240116; t=1741787228; c=relaxed/simple;
+	bh=1Yo6vM/LcPOOqzwVk6cJ8+2lf0fFmwLkSDVU6CLWfVo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gUlEbLU374S1A9VEyTxZlKfOM0ejUmyJJDq32MVA0mcAl6XKb0ANZMuQeGSjkVUG6wnkLSMCpn6k3yj0Ypa22yCGk6IQXzVqrLcCiELFkUmwLfS8zrAItucLtdXQKPbRKt4J7uhYej051tV6qnB8eTvjB/b+cfyKF48zDjR33Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF830C4CEDD;
+	Wed, 12 Mar 2025 13:47:04 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>
+Cc: linux-ide@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Daniel Kral <d.kral@proxmox.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Yuli Wang <wangyuli@uniontech.com>,
+	Jie Fan <fanjie@uniontech.com>,
+	Erpeng Xu <xuerpeng@uniontech.com>
+Subject: [PATCH V3] ahci: Marvell 88SE9215 controllers prefer DMA for ATAPI
+Date: Wed, 12 Mar 2025 21:46:54 +0800
+Message-ID: <20250312134654.6699-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [GIT PULL 2/2] arm64: defconfig: Updates for v6.15 for TI K3
- platforms
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        arm-soc
-	<arm@kernel.org>, SoC <soc@kernel.org>
-CC: Tero Kristo <kristo@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>
-References: <5d612c0e-4cd4-469a-9856-dd4552d74412@ti.com>
-Content-Language: en-US
-In-Reply-To: <5d612c0e-4cd4-469a-9856-dd4552d74412@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
 
-The following changes since commit c7691aec5e991cec9c5c5fdab08c24856a1fc56f:
+We use CD/DVD drives under Marvell 88SE9215 SATA controller on many
+Loongson-based machines. We found its PIO doesn't work well, and on the
+opposite its DMA seems work very well. We don't know the detail of the
+88SE9215 SATA controller, but we have tested different CD/DVD drives
+and they all have problems under 88SE9215 (but they all work well under
+an Intel SATA controller). So we can define a new dedicated AHCI board
+id named board_ahci_yes_fbs_atapi_dma for 88SE9215, and for this id we
+set the AHCI_HFLAG_ATAPI_DMA_QUIRK and ATA_QUIRK_ATAPI_MOD16_DMA flags
+on the SATA controller to prefer ATAPI DMA.
 
-  arm64: defconfig: Enable TISCI Interrupt Router and Aggregator (2025-02-06 09:10:24 +0530)
+Reported-by: Yuli Wang <wangyuli@uniontech.com>
+Tested-by: Jie Fan <fanjie@uniontech.com>
+Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
+Tested-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/ata/ahci.c    | 11 ++++++++++-
+ drivers/ata/ahci.h    |  1 +
+ drivers/ata/libahci.c |  4 ++++
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-are available in the Git repository at:
+diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+index 52ae8f9a7dd6..f3a6bfe098cd 100644
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -63,6 +63,7 @@ enum board_ids {
+ 	board_ahci_pcs_quirk_no_devslp,
+ 	board_ahci_pcs_quirk_no_sntf,
+ 	board_ahci_yes_fbs,
++	board_ahci_yes_fbs_atapi_dma,
+ 
+ 	/* board IDs for specific chipsets in alphabetical order */
+ 	board_ahci_al,
+@@ -188,6 +189,14 @@ static const struct ata_port_info ahci_port_info[] = {
+ 		.udma_mask	= ATA_UDMA6,
+ 		.port_ops	= &ahci_ops,
+ 	},
++	[board_ahci_yes_fbs_atapi_dma] = {
++		AHCI_HFLAGS	(AHCI_HFLAG_YES_FBS |
++				 AHCI_HFLAG_ATAPI_DMA_QUIRK),
++		.flags		= AHCI_FLAG_COMMON,
++		.pio_mask	= ATA_PIO4,
++		.udma_mask	= ATA_UDMA6,
++		.port_ops	= &ahci_ops,
++	},
+ 	/* by chipsets */
+ 	[board_ahci_al] = {
+ 		AHCI_HFLAGS	(AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_MSI),
+@@ -590,7 +599,7 @@ static const struct pci_device_id ahci_pci_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x91a3),
+ 	  .driver_data = board_ahci_yes_fbs },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x9215),
+-	  .driver_data = board_ahci_yes_fbs },
++	  .driver_data = board_ahci_yes_fbs_atapi_dma },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x9230),
+ 	  .driver_data = board_ahci_yes_fbs },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x9235),
+diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+index c842e2de6ef9..2c10c8f440d1 100644
+--- a/drivers/ata/ahci.h
++++ b/drivers/ata/ahci.h
+@@ -246,6 +246,7 @@ enum {
+ 	AHCI_HFLAG_NO_SXS		= BIT(26), /* SXS not supported */
+ 	AHCI_HFLAG_43BIT_ONLY		= BIT(27), /* 43bit DMA addr limit */
+ 	AHCI_HFLAG_INTEL_PCS_QUIRK	= BIT(28), /* apply Intel PCS quirk */
++	AHCI_HFLAG_ATAPI_DMA_QUIRK	= BIT(29), /* force ATAPI to use DMA */
+ 
+ 	/* ap->flags bits */
+ 
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index e7ace4b10f15..22afa4ff860d 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -1322,6 +1322,10 @@ static void ahci_dev_config(struct ata_device *dev)
+ {
+ 	struct ahci_host_priv *hpriv = dev->link->ap->host->private_data;
+ 
++	if ((dev->class == ATA_DEV_ATAPI) &&
++	    (hpriv->flags & AHCI_HFLAG_ATAPI_DMA_QUIRK))
++		dev->quirks |= ATA_QUIRK_ATAPI_MOD16_DMA;
++
+ 	if (hpriv->flags & AHCI_HFLAG_SECT255) {
+ 		dev->max_sectors = 255;
+ 		ata_dev_info(dev,
+-- 
+2.47.1
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git tags/ti-k3-config-for-v6.15
-
-for you to fetch changes up to 75a41c26351a77cd5dd01e14d059eaf11358689c:
-
-  arm64: defconfig: Enable SPI NAND flashes (2025-03-07 16:33:25 +0530)
-
-----------------------------------------------------------------
-TI K3 defconfig updates for v6.15
-
-- Enable Support for SPI NAND flashes on AM62Ax/J721s2 and other boards
-- HSR protocol support for AM65/AM64 ICSSG based multi-port ethernet
-- Greybus modules to support CC1352P7 chips on BeaglePlay
-
-----------------------------------------------------------------
-Ayush Singh (1):
-      arm64: defconfig: Enable gb_beagleplay
-
-Ravi Gunasekaran (1):
-      arm64: defconfig: Enable HSR protocol driver
-
-Santhosh Kumar K (1):
-      arm64: defconfig: Enable SPI NAND flashes
-
- arch/arm64/configs/defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
