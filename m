@@ -1,88 +1,131 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE59818858A;
-	Wed, 12 Mar 2025 07:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE54B18858A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 07:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741763015; cv=none; b=qRjwx/UsTpvWU51mG7LqOILRtnTHXlmnl2VqZNuZhRyZp+ka/eqdFEusR77RGmqnNq0fF4GYIXw80UXqgH4ToxcOs1uxI7h95/9+4vBXnzCgx6y01b48n9ErvEa57l6kZI1Emft2yuDFSSR1l4YA5ZcHvUOkFteq6iMSOAgf6l8=
+	t=1741763119; cv=none; b=KzRvHKnVFWliwb7ypHw3LaLCbv8TxCT6ZT1QubC78ie3eBl0z9I91NwdcITRhEJsDpkrYrm6Rj5+RTAP+r1/vbqnaSmsmqmh2cjW0+8BWRTAgjYxzmXDkJe/bx9lyz5lKh9X1N9A/fPBsaKXnwY0mh5remwHNLJIXeL/CyXWvok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741763015; c=relaxed/simple;
-	bh=7TDb34oGNMe0QfS+9S9q9/NfkMtcz48n5X+/oqeXS5E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GrX+Ca1XKmW9tl3Lqg4vToIE7Au277WD50Jzt3cFuxlkauxnBef99TxDJ2OafedLUKryzfdkPv7GHjgS+USkD4+sQKVlRmuZNRIpw/+djo3/Icvs4f/oACMzb6sUx6Ax4TeStd9qqq2awdK4/DCmhfbfmsCXjL8D7r0D7Lve0jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=FCu76uj8; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1741763119; c=relaxed/simple;
+	bh=FEbOfK0ey8liI08NuyrWFEw0OniKYYGH/Dmyspp9NK0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=eCekHggdL/z+UgSpymBc/Elb6EMprmOkGRt3IKrX2JSZvWqpMomB3nsMLh00jBOErnOgkNRsESSfMT5No76/LAAzE/iRlT+Em8zwImHDSTpLzwwXOY4Eqmb2NIstYiQJs5Sw13U9N/T4zTuZ40CLhKrMytslnbNvqCz3hG+bjS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Sm+nUs7C; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="FCu76uj8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=GssCyzw4bJImuWV+VY4l2Cw8GECeAM/HvdiRWBFW+bI=; b=FCu76uj8/0gZPisgHHd2IZHLvV
-	WlF9ti1qyzdNwZ1EbpKuPXNP8jXUApKto8SYjDujCwaqOJ677tWV+iNW1KNzgdlCxIwvsL4HOv4O/
-	jllyS+Wiep0/CtM9W+Lpf8O+vgL1o5d3gYNeHULrQQtVzOHZSvBYXqGlgyfzjhJTpqXhm7KwiGg+p
-	aZurr+IgrqVH6MS5dZ/EyTLpwH/lnvREFmr2WlrQyVODOVgnE+rUmzBIc/6RKndHuk4dmtJNeKS2b
-	sjqceTTv2mLWOE8UoCHsarueoSBML9sJSW8mHn4LYrjmTNvPs9WxQ1t52bVfdpjtbnm/qI/0BVoVK
-	kPES/QtA==;
-Received: from ip-185-104-138-79.ptr.icomera.net ([185.104.138.79] helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tsG7X-0005g0-Q5; Wed, 12 Mar 2025 08:03:15 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Detlev Casanova <detlev.casanova@collabora.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: linux-next: manual merge of the scsi tree with the rockchip tree
-Date: Wed, 12 Mar 2025 08:03:14 +0100
-Message-ID: <2300961.iZASKD2KPV@phil>
-In-Reply-To: <20250312085101.58cdd1e5@canb.auug.org.au>
-References:
- <20250311183524.38989e83@canb.auug.org.au> <6134949.lOV4Wx5bFT@earth>
- <20250312085101.58cdd1e5@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sm+nUs7C"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43bd0586b86so44425055e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 00:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741763116; x=1742367916; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4BN7/p/kplLMFpVggVcZWXKc7X2r0rN1QbraxZm9iOA=;
+        b=Sm+nUs7C9bvjtcgqCePQxVmqXIj/dbrZRMzxDsmCBFUVQC9FWsu1TBnO7meGex8Qdc
+         Oy5rexENJBiPS7AW+EjdwgRvG3Jq7dCdlueQoCG+/WVf9CMRrsSpWP83W18qhcz/MbsY
+         nwTCiXDH/xogdQqLG4M9F13Z5jqf7/7SmUeewVX0H1EOJzYUCdKXRCsJFQmgALw4cZzP
+         7CNAJxvpqRIipLPuHuWddDhhpJGT5YsM6Si8ukHiXkzCSi5b78sF2FHy2mUcmaLDP7Lq
+         tH9CGsrN3caWSgIGntkHpbkMjB88tE3PXCEb4Mk3E+IDl+v3ONcnMBg9SWYRAxGxAbsx
+         Y9sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741763116; x=1742367916;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4BN7/p/kplLMFpVggVcZWXKc7X2r0rN1QbraxZm9iOA=;
+        b=N0HxcLVLYtT7N1k9+VQbqtqMp9C/jk9zIYpIpq6i/fFiEzXDizMud6OXlKP0pn7skA
+         Ze4Yxl6pCO27mvBAXv+BuHGLFMcWwcJwvsVJ5Tc1ZkPymfE5Opo+6xWFBMkhMIarQGxx
+         EoSHJYc9hazN2UvLV6T39xhsTGKI1wEPfu8dAkjp1bbb/7ZubezEs7iapngMNlyV0gLZ
+         AcLZJTxTB4MWuuOI5YnaHq724ncNaGzuF15Qoi9GEj90kuP0usbpHbsv95gzU5S5jK6o
+         QmuiHxFemhKTBLlH9JMhUSqD45oQ3uj4kzW2oC9//UTs6g8sOEnLimBWrrKwGAZRO7QS
+         Xcrw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8sFCxNeS9KbnIUviqlRIrtuWswpU7DMTbOGA9STXM4OpqAZG4cXWG6Sojjp+mguWujkR69YlEqWwmEDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuJ7kUTlDf67fNoiVxfPpFZpmv7ZrVF40OlKhTmGcus7ReqW/T
+	8RQrXgnBWTc2twbsD0bXPuct61dPSeH8/zoecLXcADE41oaB1Z8pCWfAb4wSxpEZ4BOQFGAfZNI
+	OlhkvV0chvXrS3w==
+X-Google-Smtp-Source: AGHT+IE1Ndoas0phFTS9IKILHjYozDjJaUSr/37ugbBFiqmfz/CZUAbv+FfIm2JiPMaXQyasqJT6X/8dogmc6jE=
+X-Received: from wmbbe15.prod.google.com ([2002:a05:600c:1e8f:b0:43b:d6ca:6dd3])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1547:b0:43c:fceb:91f with SMTP id 5b1f17b1804b1-43cfceb0aedmr110482365e9.11.1741763116368;
+ Wed, 12 Mar 2025 00:05:16 -0700 (PDT)
+Date: Wed, 12 Mar 2025 07:05:14 +0000
+In-Reply-To: <Z9BLc7P2FKiJAo2p@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250311-iov-iter-v1-0-f6c9134ea824@google.com>
+ <20250311-iov-iter-v1-4-f6c9134ea824@google.com> <Z9BLc7P2FKiJAo2p@cassiopeiae>
+Message-ID: <Z9EyKgrlMVwBagfu@google.com>
+Subject: Re: [PATCH 4/5] rust: alloc: add Vec::clear
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Arnd Bergmann <arnd@arndb.de>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Matthew Maurer <mmaurer@google.com>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
 
-Am Dienstag, 11. M=C3=A4rz 2025, 22:51:01 MEZ schrieb Stephen Rothwell:
-> Hi Detlev,
->=20
-> On Tue, 11 Mar 2025 12:24:25 -0400 Detlev Casanova <detlev.casanova@colla=
-bora.com> wrote:
-> >
-> > Unfortunately, this fix is incorrect as nodes must be in address order,=
- so=20
-> > ufshc: ufshc@2a2d0000 must be above sfc1: spi@2a300000.
->=20
-> OK, I have switched it around in my resolution.
->=20
-> > As we are close the the merge window, I won't mind if the patches have =
-to be=20
-> > postponed to the next cycle, but some device trees won't build anymore.
-> >=20
-> > This can also be left as is with a new patch to fix the order (to be ba=
-ckported=20
-> > if needed)
->=20
-> This merge resolution will be redone by Linus when the trees are merged
-> during the merge window.  Someone just needs to mention it to him.
+On Tue, Mar 11, 2025 at 03:40:51PM +0100, Danilo Krummrich wrote:
+> On Tue, Mar 11, 2025 at 02:25:15PM +0000, Alice Ryhl wrote:
+> > Our custom Vec type is missing the stdlib method `clear`, thus add it.
+> > It will be used in the miscdevice sample.
+> > 
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > ---
+> >  rust/kernel/alloc/kvec.rs | 27 +++++++++++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> > 
+> > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+> > index ae9d072741cedbb34bed0be0c20cc75472aa53be..2d213ede2873cef87116a5527e8e24008c970a58 100644
+> > --- a/rust/kernel/alloc/kvec.rs
+> > +++ b/rust/kernel/alloc/kvec.rs
+> > @@ -395,6 +395,33 @@ pub fn into_raw_parts(self) -> (*mut T, usize, usize) {
+> >          (ptr, len, capacity)
+> >      }
+> >  
+> > +    /// Clears the vector, removing all values.
+> > +    ///
+> > +    /// Note that this method has no effect on the allocated capacity
+> > +    /// of the vector.
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```
+> > +    /// let mut v = kernel::kvec![1, 2, 3]?;
+> > +    ///
+> > +    /// v.clear();
+> > +    ///
+> > +    /// assert!(v.is_empty());
+> > +    /// # Ok::<(), Error>(())
+> > +    /// ```
+> > +    #[inline]
+> > +    pub fn clear(&mut self) {
+> > +        let elems: *mut [T] = self.as_mut_slice();
+> > +
+> > +        // INVARIANT: This call changes the number of elements to zero.
+> > +        self.len = 0;
+> 
+> Please use self.set_len() instead, such that we have to cover all safety
+> requirements enforced by self.set_len().
 
-I mentioned it now in my devicetree pull-request for the soc-side
-see https://lore.kernel.org/soc/3339830.aeNJFYEL58@phil/
+Will do.
 
-Heiko
+> With that,
+> 
+> 	Acked-by: Danilo Krummrich <dakr@kernel.org> # for char-misc
+> 
+> in case you want to take it through the char-misc tree.
+> 
+> Ironically, self.set_len() lacks your invariant comment and corresponding safety
+> requirement, I will send a patch to fix this up, unless you want to. :-)
 
+Go for it.
 
-
+Alice
