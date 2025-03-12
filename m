@@ -1,68 +1,37 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD4522DF8D;
-	Wed, 12 Mar 2025 07:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4CFA1D88A6;
+	Wed, 12 Mar 2025 07:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741766205; cv=none; b=Ap95RYemFUmS89iHlr3YfC+2F9TNUt6o5WhJcG/xoiBQK7NgfivnDSEEW+gEDP47PztFyH55DA4pozn0ztJQ8uZohzJ73cjniJwd1mk1NTZ1miJi17ohLBMGSK2+a2qJ6R73kfFIsewn3UsKoY7vtOjUO2Tk1AWeiLUcwjweNDc=
+	t=1741766207; cv=none; b=uuVOBPoHnal9gXbVfhWVyoxP/f7K41BD3cZlb2cwAKgvMwlqVku5eGI94J350x1LJTBaQhb6xPBIJqByTHVReyKK3TiFClssMjDAHxg3qKwgTePMc8aJBmVAdqf+9/XLRH9xCelLvNUUovOHHjSKXBtNnwnWNEhy5Z4jA0I7s1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741766205; c=relaxed/simple;
-	bh=9j32Q9ko3nzPeg45xM2NtQmpmXTW//lBQJ+uN6+5dN8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EM0jfowc6/Opr5tSgtk4sLCMN2h5trVnt6afW9wnbHyIaxMPkRD23SXITESfso1ZqsmraP5L7E6dlgsYctH+9mQhIys0RUvytd5TGrmROWC2+1f2fPHpmMNMgrg5IaEumKEo9d78VWEIvD+8ifSElUTkSBm8gmBVzz/qmoFWj7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W60plOnT; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W60plOnT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741766204; x=1773302204;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9j32Q9ko3nzPeg45xM2NtQmpmXTW//lBQJ+uN6+5dN8=;
-  b=W60plOnTcAat8iw+KFa6KluOl9qsIXcFZgKi1Zj8LDngmunh/sSYpMXG
-   FegwrQ6866OLaDxUpJwDnh6bYARWSmFnS6mDVtmPdFcJjGYfiRqd0PLfp
-   nRFfPRorse0OjhrvRc3D+SoDzwgRviNqXerWXzZkbsdR/gFZ2xC7uKsmN
-   6kF7R3Pn94cJccr34TMV/BeE+SU8K0diz1BGkwRCC0henkwkVN0pw5w1H
-   aL8hu+NGNGxhQ1oODVN65ow+xTThNlQO4BjEUbF4/R5Ecxl5YZov6NukH
-   A4ToMsmHAiTstlKd0PV95AcbIYRad/G5AdioFv/pa4RK738fz6dvUCImp
-   w==;
-X-CSE-ConnectionGUID: DV6sN3MuQICEO+0gpNkOcA==
-X-CSE-MsgGUID: 07aMHwYbRXyunWr9yOhtJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="42869911"
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="42869911"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:56:43 -0700
-X-CSE-ConnectionGUID: je2W3usmSyC6bdqstz/sZw==
-X-CSE-MsgGUID: nhpioELPS3+NzVxrnVtM3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="125462623"
-Received: from yujie-x299.sh.intel.com ([10.239.159.77])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 00:56:39 -0700
-From: Yujie Liu <yujie.liu@intel.com>
-To: linux-perf-users@vger.kernel.org,
+	s=arc-20240116; t=1741766207; c=relaxed/simple;
+	bh=zxa+4t3KKRufqMEkn26taifZ51+A+Z4AB1xus6xf6TY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Hx5AB3mOdYWpk0JXhC8AYZJrvue781bq38/QC0zkd2eOyybMmQZiWHbK8VB0a0TAqun6N1itINjigWwewiVWCP4/JQTQM8L4j8LE6fw8m1ybldL/f/gxCQzDkFLxzXsg8pMRaeyx/F4Wfqa4MEFOmqbzy0k08OZYZ0cs16kdZcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-09-67d13e371826
+From: Rakie Kim <rakie.kim@sk.com>
+To: gourry@gourry.net
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Leo Yan <leo.yan@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Paschalis.Mpeis@arm.com
-Subject: [PATCH] perf script: Fix typo in branch event mask
-Date: Wed, 12 Mar 2025 15:56:36 +0800
-Message-Id: <20250312075636.429127-1-yujie.liu@intel.com>
-X-Mailer: git-send-email 2.34.1
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v2 2/4] mm/mempolicy: Support memory hotplug in weighted interleave
+Date: Wed, 12 Mar 2025 16:56:25 +0900
+Message-ID: <20250312075628.648-2-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <20250312075628.648-1-rakie.kim@sk.com>
+References: <20250312075628.648-1-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,53 +39,139 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsXC9ZZnka653cV0gxM3pC3mrF/DZjF96gVG
+	i593j7NbHN86j93i/KxTLBaXd81hs7i35j+rxeo1GQ4cHjtn3WX36G67zO6xeM9LJo9Nnyax
+	e5yY8ZvFY+dDS4/Pm+QC2KO4bFJSczLLUov07RK4Mk7t62EqWC1VMWXNfvYGxm2iXYycHBIC
+	JhLzZs9ghbGv37zB1sXIwcEmoCRxbG8MSFhEQFRi3tHZLF2MXBzMAouZJBYeXs8EkhAWCJZ4
+	c/E/mM0ioCqxovsZ2BxeAWOJqXMOMUPM1JRouHQPrIYTaP6Lz9fAbCGgmuXrpjNC1AtKnJz5
+	hAXEZhaQl2jeOpsZZJmEwAk2iSXNa6EGSUocXHGDZQIj/ywkPbOQ9CxgZFrFKJSZV5abmJlj
+	opdRmZdZoZecn7uJERjIy2r/RO9g/HQh+BCjAAejEg+vQM6FdCHWxLLiytxDjBIczEoivKtt
+	gUK8KYmVValF+fFFpTmpxYcYpTlYlMR5jb6VpwgJpCeWpGanphakFsFkmTg4pRoYJbrvZv5r
+	j7Sez7DUR6rsezPb1fv5e6P47rMEFmz/ZPNxnt7KliXRC8JXXF+h2PQm2+LDHLOFEzoO91Z2
+	/Y4pO21oHyp4JVP6oFqQnXtxz9cbZRVs0y4vYF4j0cy6+HzgnTKW/hpm2U3NP2VfM3/66JP8
+	OCgpQaZR4YW+LPvfpvOxMzhy1O8osRRnJBpqMRcVJwIAscJsSGACAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOLMWRmVeSWpSXmKPExsXCNUNNS9fc7mK6wdEp3BZz1q9hs5g+9QKj
+	xc+7x9ktPj97zWxxfOs8dovDc0+yWpyfdYrF4vKuOWwW99b8Z7U4dO05q8XqNRkWv7etYHPg
+	8dg56y67R3fbZXaPxXteMnls+jSJ3ePEjN8sHjsfWnp8u+3hsfjFByaPz5vkAjijuGxSUnMy
+	y1KL9O0SuDJO7ethKlgtVTFlzX72BsZtol2MnBwSAiYS12/eYOti5OBgE1CSOLY3BiQsIiAq
+	Me/obJYuRi4OZoHFTBILD69nAkkICwRLvLn4H8xmEVCVWNH9jBXE5hUwlpg65xAzxExNiYZL
+	98BqOIHmv/h8DcwWAqpZvm46I0S9oMTJmU9YQGxmAXmJ5q2zmScw8sxCkpqFJLWAkWkVo0hm
+	XlluYmaOqV5xdkZlXmaFXnJ+7iZGYPAuq/0zcQfjl8vuhxgFOBiVeHgPqF5IF2JNLCuuzD3E
+	KMHBrCTCu9oWKMSbklhZlVqUH19UmpNafIhRmoNFSZzXKzw1QUggPbEkNTs1tSC1CCbLxMEp
+	1cCYs0mwrrdw0aKNvbf6ZIMvtlov95w0TXbh4kamrwXrbjkveSkh8nae02TpyPrfrLuOHFC/
+	sqLTxab304Hz9Xz/v6d3Hi3ws1u1ZGqYpLmkVuyZt2s0i97+P15upmZ9kjHJ2uKtk6kve8W/
+	A2sT9Ce4Pe9l23E4tKExXm/64ZDuS5tFFLhfKnoqsRRnJBpqMRcVJwIAYzKyqloCAAA=
+X-CFilter-Loop: Reflected
 
-BRACH -> BRANCH
+The weighted interleave policy distributes page allocations across multiple
+NUMA nodes based on their performance weight, thereby optimizing memory
+bandwidth utilization. The weight values for each node are configured
+through sysfs.
 
-Fixes: 88b1473135e4 ("perf script: Separate events from branch types")
-Signed-off-by: Yujie Liu <yujie.liu@intel.com>
+Previously, the sysfs entries for configuring weighted interleave were only
+created during initialization. This approach had several limitations:
+- Sysfs entries were generated for all possible nodes at boot time,
+  including nodes without memory, leading to unnecessary sysfs creation.
+- Some memory devices transition to an online state after initialization,
+  but the existing implementation failed to create sysfs entries for
+  these dynamically added nodes. As a result, memory hotplugged nodes
+  were not properly recognized by the weighed interleave mechanism.
+
+To resolve these issues, this patch introduces two key improvements:
+1) At initialization, only nodes that are online and have memory are
+   recognized, preventing the creation of unnecessary sysfs entries.
+2) Nodes that become available after initialization are dynamically
+   detected and integrated through the memory hotplug mechanism.
+
+With this enhancement, the weighted interleave policy now properly supports
+memory hotplug, ensuring that newly added nodes are recognized and sysfs
+entries are created accordingly.
+
+Signed-off-by: Rakie Kim <rakie.kim@sk.com>
 ---
- tools/perf/util/event.h                 | 2 +-
- tools/perf/util/trace-event-scripting.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ mm/mempolicy.c | 47 ++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index c7f4b4b841ca..664bf39567ce 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -91,7 +91,7 @@ enum {
- 	PERF_IP_FLAG_VMENTRY		|\
- 	PERF_IP_FLAG_VMEXIT)
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 1691748badb2..94efff89e0be 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -113,6 +113,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/tlb.h>
+ #include <linux/uaccess.h>
++#include <linux/memory.h>
  
--#define PERF_IP_FLAG_BRACH_EVENT_MASK	\
-+#define PERF_IP_FLAG_BRANCH_EVENT_MASK	\
- 	(PERF_IP_FLAG_BRANCH_MISS |	\
- 	 PERF_IP_FLAG_NOT_TAKEN)
+ #include "internal.h"
  
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index 29cc467be14a..72abb28b7b5a 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -347,7 +347,7 @@ static int sample_flags_to_name(u32 flags, char *str, size_t size)
+@@ -3489,9 +3490,38 @@ static int add_weight_node(int nid, struct kobject *wi_kobj)
+ 	return 0;
+ }
  
- 	flags &= ~(PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END);
++struct kobject *wi_kobj;
++
++static int wi_node_notifier(struct notifier_block *nb,
++			       unsigned long action, void *data)
++{
++	int err;
++	struct memory_notify *arg = data;
++	int nid = arg->status_change_nid;
++
++	if (nid < 0)
++		goto notifier_end;
++
++	switch(action) {
++	case MEM_ONLINE:
++		err = add_weight_node(nid, wi_kobj);
++		if (err) {
++			pr_err("failed to add sysfs [node%d]\n", nid);
++			kobject_put(wi_kobj);
++			return NOTIFY_BAD;
++		}
++		break;
++	case MEM_OFFLINE:
++		sysfs_wi_node_release(node_attrs[nid], wi_kobj);
++		break;
++	}
++
++notifier_end:
++	return NOTIFY_OK;
++}
++
+ static int add_weighted_interleave_group(struct kobject *root_kobj)
+ {
+-	struct kobject *wi_kobj;
+ 	int nid, err;
  
--	types = flags & ~PERF_IP_FLAG_BRACH_EVENT_MASK;
-+	types = flags & ~PERF_IP_FLAG_BRANCH_EVENT_MASK;
- 	for (i = 0; sample_flags[i].name; i++) {
- 		if (sample_flags[i].flags != types)
- 			continue;
-@@ -359,7 +359,7 @@ static int sample_flags_to_name(u32 flags, char *str, size_t size)
- 		break;
+ 	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+@@ -3505,16 +3535,23 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
+ 		return err;
  	}
  
--	events = flags & PERF_IP_FLAG_BRACH_EVENT_MASK;
-+	events = flags & PERF_IP_FLAG_BRANCH_EVENT_MASK;
- 	for (i = 0; branch_events[i].name; i++) {
- 		if (!(branch_events[i].flags & events))
- 			continue;
-
-base-commit: b10f74308e1305275e69ddde711ec817cc69e306
+-	for_each_node_state(nid, N_POSSIBLE) {
++	for_each_online_node(nid) {
++		if (!node_state(nid, N_MEMORY))
++			continue;
++
+ 		err = add_weight_node(nid, wi_kobj);
+ 		if (err) {
+ 			pr_err("failed to add sysfs [node%d]\n", nid);
+-			break;
++			goto err_out;
+ 		}
+ 	}
+-	if (err)
+-		kobject_put(wi_kobj);
++
++	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
+ 	return 0;
++
++err_out:
++	kobject_put(wi_kobj);
++	return err;
+ }
+ 
+ static void mempolicy_kobj_release(struct kobject *kobj)
 -- 
 2.34.1
 
