@@ -1,79 +1,90 @@
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D4F242927;
-	Wed, 12 Mar 2025 14:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE8A245039
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 14:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741790470; cv=none; b=UOT2V03xxbyy6sh6okfeLat0D1mhG/wZQ9UzR79M6dlQ2QglfSip1VrPfjJpDe46/jcprj2Rwj20DmrN1CJhmEKhbXU9XDqN5V6pdug5cpCtCshKgL14AXNW6swgcmiuUYVHBrJl2FRYcYt03p9EnyLGsX4W9pzhe+72jfx6ZZE=
+	t=1741790506; cv=none; b=Bn6syrQhT25bJyurzMjTPymEHS0whatlfbXKxGqXLp0bTehlp+AdF6TggzQckfR/0wbkqGNgzDwyRbenHkKBNVC+gkH+OTZDNl6cvaYYZXOGPevwCVZsy2LVW5u7Oh0z1MfH3CPXE1r10oAUrmyANU+6Apu3Nt/MrbMMnDARmdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741790470; c=relaxed/simple;
-	bh=8Z3f9St12qWcetrZIU5ZBX91BsZDoV5+6V34IbAU8/Q=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T53twsuPurMMToB6p69kCH91CjFJMK25vmNGLfYm/yIazjbQy3EnzPvHSChrw0ESztMDm3vOL3fUdun02EZfnAGNuWeZxgcgmQHJO4dSwUY6FWNeXSTOmxhegg0R1XBpu2YuTBRcpxtX1ppIxEHe+sAcQCmxJx2zi4JbYT9zkok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=b1oZhEt1; arc=none smtp.client-ip=185.70.40.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="b1oZhEt1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741790465; x=1742049665;
-	bh=D0FqqFXulxUsSxG/gB+0KynGvQTpgX0dOCuKKLUrQKA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=b1oZhEt1yfUJ61lbRrCyKeLedycU0anqAzq5qmFwT43G7bfsqd3jxepIuDJIgxOvG
-	 FMq66nJtyptjBHahmEmYRMVv1tvUJJUmG8m5wuhxpCjP4iHmLH5s0fwtH6wiXKQsE7
-	 v3AAMWJjkj7BGNqY+M2zRAutYn42y0AfFxJ7awi43zrXxtsx5bE6PmX9ZINbqnRtwS
-	 T6prNkA/GYscjtlDBezLcdNYtU8ajsbs2Ms2uwX+TrO557riSF+v8i7mdAyFeuUbh1
-	 +KHrPIQbTVTLTpD7gRuOT33ufFi8v2njzC4wQgJpKAWHuzCJ1MMI9PdYZqJTffs2Kd
-	 yRnFsYvQ+cRzQ==
-Date: Wed, 12 Mar 2025 14:40:58 +0000
-To: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] rust: enable `clippy::ptr_cast_constness` lint
-Message-ID: <D8ED6OB8UFD3.2O2SXDLJO5TUI@proton.me>
-In-Reply-To: <20250309-ptr-as-ptr-v2-3-25d60ad922b7@gmail.com>
-References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com> <20250309-ptr-as-ptr-v2-3-25d60ad922b7@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: e6f6237cc903833d4125e44bdcd40b2e67b08589
+	s=arc-20240116; t=1741790506; c=relaxed/simple;
+	bh=QYF2vzlo4Lst3pft5WC59+tCAzmX42djgz3/BF5bv+s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cTRXLJE2QnNEkkjnCsbCV/5lI7jqsQ5agQw5Ly5gwTJ8w9uE2szhH1jZ+mjCbAKLi1CziWsRsJtZkcFFErHHSf6o72naoT5kIz441zWfur/RPVb3hjLv+sQqvw6bxKPvvVOa+I//oy4JNPnT7yCYy1KXAarAbdpsXaxE5IG9PrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 360CA1515;
+	Wed, 12 Mar 2025 07:41:54 -0700 (PDT)
+Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E965A3F5A1;
+	Wed, 12 Mar 2025 07:41:41 -0700 (PDT)
+Message-ID: <51d24e59-247d-4b66-9ddb-4b9f0f53497b@arm.com>
+Date: Wed, 12 Mar 2025 15:41:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] /sched/core: Fix Unixbench spawn test regression
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Valentin Schneider <vschneid@redhat.com>, Hagar Hemdan
+ <hagarhem@amazon.com>, linux-kernel@vger.kernel.org, wuchi.zero@gmail.com
+References: <20250306162635.2614376-1-dietmar.eggemann@arm.com>
+ <CAKfTPtCfd_=gm7rsT_qBL8pw5uybEvYH4N2tvxpKndxxi4L7oA@mail.gmail.com>
+ <8ddd7bb2-3a18-48b5-85c6-23263134308a@arm.com>
+ <CAKfTPtD9DwWquFN6G8BXAii7HH5zJeEXiUjE8ma-eHdEqeHzdw@mail.gmail.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <CAKfTPtD9DwWquFN6G8BXAii7HH5zJeEXiUjE8ma-eHdEqeHzdw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun Mar 9, 2025 at 5:00 PM CET, Tamir Duberstein wrote:
-> In Rust 1.72.0, Clippy introduced the `ptr_cast_constness` lint [1]:
->
->> Though `as` casts between raw pointers are not terrible,
->> `pointer::cast_mut` and `pointer::cast_const` are safer because they
->> cannot accidentally cast the pointer to another type.
->
-> There are only 2 affected sites:
-> - `*mut T as *const U as *mut U` becomes `(*mut T).cast()`
-> - `&self as *const Self as *mut Self` becomes a reference-to-pointer
->   coercion + `(*const Self).cast()`.
->
-> Apply these changes and enable the lint -- no functional change
-> intended.
->
-> Link: https://rust-lang.github.io/rust-clippy/master/index.html#ptr_cast_=
-constness [1]
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On 11/03/2025 17:35, Vincent Guittot wrote:
+> On Mon, 10 Mar 2025 at 16:29, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 10/03/2025 14:59, Vincent Guittot wrote:
+>>> On Thu, 6 Mar 2025 at 17:26, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>
+>>>> Hagar reported a 30% drop in UnixBench spawn test with commit
+>>>> eff6c8ce8d4d ("sched/core: Reduce cost of sched_move_task when config
+>>>> autogroup") on a m6g.xlarge AWS EC2 instance with 4 vCPUs and 16 GiB RAM
+>>>> (aarch64) (single level MC sched domain) [1].
+>>>>
+>>>> There is an early bail from sched_move_task() if p->sched_task_group is
+>>>> equal to p's 'cpu cgroup' (sched_get_task_group()). E.g. both are
+>>>> pointing to taskgroup '/user.slice/user-1000.slice/session-1.scope'
+>>>> (Ubuntu '22.04.5 LTS').
+>>>
+>>> Isn't this same use case that has been used by commit eff6c8ce8d4d to
+>>> show the benefit of adding the test if ((group ==
+>>> tsk->sched_task_group) ?
+>>> Adding Wuchi who added the condition
+>>
+>> IMHO, UnixBench spawn reports a performance number according to how many
+>> tasks could be spawned whereas, IIUC, commit eff6c8ce8d4d was reporting
+>> the time spend in sched_move_task().
+> 
+> But does not your patch revert the benefits shown in the figures of
+> commit eff6c8ce8d4d ? It skipped sched_move task in do_exit autogroup
+> and you adds it back
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Yeah, we do need the PELT update in sched_change_group()
+(task_change_group_fair()) in the do_exit() path to get the 30% score
+back in 'UnixBench spawn'. Even that means we need more time due to this
+in sched_move_task().
 
----
-Cheers,
-Benno
+I retested this and it turns out that 'group == tsk->sched_task_group'
+is only true when sched_move_task() is called from exit.
 
-> ---
->  Makefile                        | 1 +
->  rust/kernel/block/mq/request.rs | 5 +++--
->  2 files changed, 4 insertions(+), 2 deletions(-)
+So to get the score back for 'UnixBench spawn' we should rather revert
+commit eff6c8ce8d4d.
 
+The analysis in my patch still holds though.
+
+If you guys agree I can send the revert with my analysis in the
+patch-header.
