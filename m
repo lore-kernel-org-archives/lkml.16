@@ -1,101 +1,152 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4617243951
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3236224500B;
+	Wed, 12 Mar 2025 13:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741784818; cv=none; b=j1hyyGZLLC6atNXbrAnIHurPAQ5qWkV4wGuqnJpU4hmQ+C8c1l3EIuHCoLODWys7on9hLGe2Ba7A3HNVnd9xYflji4guxXxvkG4CmLB3qjOecFiNnyW9rgJrnfWPXBKG1PL563wL8feMN4JqP1ibsIzGhYuR44oVxegxSAfyJys=
+	t=1741784855; cv=none; b=htR2FP0dgSJCsErAB74lvYTpis39q4QMWhCBsCHshj3tseVxMN6L5uRyXWIjL5Jd2cCOPOsvV0llfVCfe82VAsXeeOqFuoboY/AgWrfNb3CCrNvA5joiDoCnOo9NtCJjfL+EY/vXLfTPKoSFJx5rvHqK9WrVn1nKqOpiDPmecpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741784818; c=relaxed/simple;
-	bh=Vv8RYYNN32jkVSIlC3HEqjsVMtw6rjCGH2BUjDQtq4w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XnrGyQf77mN2qGJV/s0Dwo9DSV9I6nKL37L4wB8kXJ/pvTAvXelqrfaV0DTJMReGGZ6bUnw+O7ZcPJQTVnIc8O3kgk9fGixXgnA7iZlg+tPlKGedE/6tzh63iw5pD8g3l39uldzrmW0o1ZfJDdAZiYhq00UR0w57etdxcMvgdRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=furiosa.ai; spf=none smtp.mailfrom=furiosa.ai; dkim=pass (2048-bit key) header.d=furiosa-ai.20230601.gappssmtp.com header.i=@furiosa-ai.20230601.gappssmtp.com header.b=nlpvLYg6; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=furiosa.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=furiosa.ai
+	s=arc-20240116; t=1741784855; c=relaxed/simple;
+	bh=iRfFeBANOM2hUL7E2zRHWps4ofaq4IOnHQTovW0eFT4=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=DcjtaWZLhJ7dQY3fhmxYqy1Uqe5HSpRd3azwRHD+zSRHg2WflPtjXJjPkeMx726ljk5oXq5mh4Osnn+DGUDwufN2HIHUj9V9eloGX2NaaiaFE97TzNzeyT4HN9B1X1MeoD9lm1OxRoNT0Z30Op2iKZ7vPr9dOvtqR0fNDJw+Jx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/WGy8Jn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=furiosa-ai.20230601.gappssmtp.com header.i=@furiosa-ai.20230601.gappssmtp.com header.b="nlpvLYg6"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2241053582dso37128375ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 06:06:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=furiosa-ai.20230601.gappssmtp.com; s=20230601; t=1741784816; x=1742389616; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DjzZK8IYtDnC7MfW99ZbF8PngYp+A/NXbbGv9fyWHAs=;
-        b=nlpvLYg6WRGtMArxzvLvRaDRKJp+d5jFAdwXbOo0jDaBkWH3dUz19QRuRXz/J3AOc/
-         lDLxDCQzZlL2NcyH8Rnclx0jt0n6GrFIEk0R+222qgCAkVwc5QStAisXJH0C2wcDS4l0
-         OanfFEdGkNlLVg0sJ7PhOnoMMZhK+wAHigV6dNZ8duBS1xnQcCkAxNjHH8/g6jh8dzVi
-         8SDQhpF5AFk+7xXcBjyFQyQYoJrjZAHMk9SWNfdBdTWkkzTcV+P59n7DjQbAErySeDIv
-         1PjVpt+pS1beV6Lgn0+sDF70C5o6I1it3QJz1KjaSfPLyUQooTN1zwRScf8HelI0dUwf
-         ipbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741784816; x=1742389616;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DjzZK8IYtDnC7MfW99ZbF8PngYp+A/NXbbGv9fyWHAs=;
-        b=Bde2j6e5974pc12ccmjFPDKKE4gTKngdDtc/ZY558zJgpsNLn/ZCTrbCnawFtXbYDk
-         nglzpESR5Mhv/cpU3zgXpvkR3xHDuOpBJ7XMhfT9epBya+V2/jLq1JrHg3NqUcyEUl5b
-         ssgpG2qMJcuvsTnMW6Z51s4EAdkObFgL1BCmzDR5JKSN1dl7oMp7qrh3w6kUfHgMycYK
-         pfIDFyJdslQJNEtfAZlPUKCsyuQLJ0klGDKURNOY9pGfywQivmKfzy+yA/h3RlhUA59u
-         vnbLWmrzrX1/yulg+6nXXNH7NIxN4750GF3hPI7/U54s8HLQg3qvCJ2+f/0z0W9NMdy3
-         /31A==
-X-Forwarded-Encrypted: i=1; AJvYcCWoAtjOHMsnlCmGfOb+p5cgPpnI0Ru5yvjJug3p4EXy+ErJQsXDLT0/M71ecYzuvP4E//0yTwRFn+kWkPo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9hSCqAcuTicr+xVOM/t6EkSReI7CO0cAGpiEIJpiA+YpZfc4j
-	1qSPnG6dh6G6Dbj24pezn3+rWiPmt3SSCxbuMa9PDreMl9V2daRCsbeMu4XcX6E=
-X-Gm-Gg: ASbGncs8hxqcPtz/OrwZWCgBGUcXPq6b2FZW6v8jHBOFUvZDIl+8WT+9bhQzBq3WQD5
-	sTH3PK++VLNiGow2BVPyEFBXbJv18xKe9Tf/BzSeO1dv2YVSCe3UENeDWLj71RCQUbVunBmwvHE
-	73OYe2j5BxFv5fMwa6uCW7lDUvq++4+6iVUNbIKvjCjLny+S8y08Fcu8hyYcbX4gt84NunWVvf3
-	CKUZYqfw+vmXzJtGSTAvTYNOav8GCLS/9J0tyDPaV3GAtmNQqeuvsv+VujDt5uARRbLHwvi+Mw1
-	5MBYheS+arfL7fyKWlU0Sj3XIrgckh1zl7hoR6G8tTCpk8GCRtVeo8VgPjcSuPGxgu3Lkw4CnDY
-	qW69I
-X-Google-Smtp-Source: AGHT+IFamjSNfNQnwjC1H9gJyAaC00Hj63Guc4XKOhRigG44Fv7J/0RmFyGsrfXvYamATdRL+j5vPw==
-X-Received: by 2002:a17:903:283:b0:21f:74ec:1ff0 with SMTP id d9443c01a7336-22428ab7961mr347898355ad.32.1741784816077;
-        Wed, 12 Mar 2025 06:06:56 -0700 (PDT)
-Received: from sidong.sidong.yang.office.furiosa.vpn ([61.83.209.48])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a7fc55sm115418185ad.138.2025.03.12.06.06.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 06:06:55 -0700 (PDT)
-From: Sidong Yang <sidong.yang@furiosa.ai>
-To: Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Cc: Sidong Yang <sidong.yang@furiosa.ai>,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org
-Subject: [RFC PATCH v2 0/2] introduce io_uring_cmd_import_fixed_vec
-Date: Wed, 12 Mar 2025 13:04:49 +0000
-Message-ID: <20250312130455.11323-1-sidong.yang@furiosa.ai>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/WGy8Jn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E72C2C4CEED;
+	Wed, 12 Mar 2025 13:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741784855;
+	bh=iRfFeBANOM2hUL7E2zRHWps4ofaq4IOnHQTovW0eFT4=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=u/WGy8JnzjgFARu4QTlrYLqVyiB8cF/sKPT0p04wm36qe3i6b7f7akjITsx+I5Xzp
+	 wbOj1rjzZel+YvlZ6r5q7nUOOSqCGTby3jTOz2VrCmmTPv61XK/VTh03l8rqNfBnzn
+	 7Zg3h3LVbqFMaL1xtvMHR08zeTMcjmN24tuYl4ULZ5QMF0AiFVubjVat2RHPU1M+oI
+	 akiRsF4UFhQZFTewvZr6xMUytcmyLdXMfRfJlzqadOjJ0zOgtVZp/hRkJ6Jf+Bmggd
+	 P0W0zvneMf4QIUbj6sS12e6399Un3lAh+tcHwn259+Mlyuib2E+HZdPaoPQrGFgy+M
+	 pduEKQWW4NXQg==
+Date: Wed, 12 Mar 2025 08:07:34 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Tzung-Bi Shih <tzungbi@kernel.org>, devicetree@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, linux-input@vger.kernel.org, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Benson Leung <bleung@chromium.org>, linux-arm-kernel@lists.infradead.org, 
+ chrome-platform@lists.linux.dev
+To: Chen-Yu Tsai <wenst@chromium.org>
+In-Reply-To: <20250312104344.3084425-1-wenst@chromium.org>
+References: <20250312104344.3084425-1-wenst@chromium.org>
+Message-Id: <174178473613.434362.5052831169970866580.robh@kernel.org>
+Subject: Re: [PATCH 0/8] arm64: mediatek: mt8186-corsola: Consolidate and
+ add new devices
 
-This patche series introduce io_uring_cmd_import_vec. With this function,
-Multiple fixed buffer could be used in uring cmd. It's vectored version
-for io_uring_cmd_import_fixed(). Also this patch series includes a usage
-for new api for encoded read in btrfs by using uring cmd.
 
-v2:
- - don't export iou_vc, use bvec for btrfs
- - use io_is_compat for checking compat
- - reduce allocation/free for import fixed vec
- 
-Sidong Yang (2):
-  io_uring: cmd: introduce io_uring_cmd_import_fixed_vec
-  btrfs: ioctl: use registered buffer for IORING_URING_CMD_FIXED
+On Wed, 12 Mar 2025 18:43:34 +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+> 
+> Here's a follow up series of the I2C component probers for Chromebooks.
+> This series enables the component prober for the Corsola series of
+> devices, combines the two existing Voltorb SKUs, and adds a new
+> device, codename Squirtle.
+> 
+> Patch 1 adds a new HID-over-I2C touchscreen from Elan.
+> 
+> Patch 2 merges the Voltorb entries in the device tree bindings into one.
+> 
+> Patch 3 adds a new entry for the Squirtle device to the bindings.
+> 
+> Patch 4 fixes up the existing device trees for the component prober to
+> be active.
+> 
+> Patch 5 merges the device trees for the Voltorb device.
+> 
+> Patch 6 adds a device tree file for the Squirtle device, with I2C
+> components ready to be probed by the prober.
+> 
+> Patch 7 enables the prober to probe trackpads on some devices in the
+> Corsola family.
+> 
+> Patch 8 enables the prober to probe touchscreens on Squirtle.
+> 
+> Please take a look.
+> 
+> 
+> Thanks
+> ChenYu
+> 
+> 
+> Chen-Yu Tsai (8):
+>   dt-bindings: HID: i2c-hid: elan: Introduce Elan eKTH8D18
+>   dt-bindings: arm: mediatek: Merge MT8186 Voltorb entries
+>   dt-bindings: arm: mediatek: Add MT8186 Squirtle Chromebooks
+>   arm64: dts: mediatek: mt8186-steelix: Mark second source components
+>     for probing
+>   arm64: dts: mediatek: mt8186: Merge Voltorb device trees
+>   arm64: dts: mediatek: mt8186: Add Squirtle Chromebooks
+>   platform/chrome: of_hw_prober: Support trackpad probing on Corsola
+>     family
+>   platform/chrome: of_hw_prober: Support touchscreen probing on Squirtle
+> 
+>  .../devicetree/bindings/arm/mediatek.yaml     |   7 +-
+>  .../bindings/input/elan,ekth6915.yaml         |  29 ++++-
+>  arch/arm64/boot/dts/mediatek/Makefile         |   4 +-
+>  .../dts/mediatek/mt8186-corsola-squirtle.dts  | 107 ++++++++++++++++++
+>  .../dts/mediatek/mt8186-corsola-steelix.dtsi  |   9 +-
+>  .../mt8186-corsola-tentacool-sku327683.dts    |   2 +
+>  .../mt8186-corsola-tentacruel-sku262148.dts   |   2 +
+>  .../mt8186-corsola-voltorb-sku589824.dts      |  13 ---
+>  ...u589825.dts => mt8186-corsola-voltorb.dts} |   5 +-
+>  .../boot/dts/mediatek/mt8186-corsola.dtsi     |  10 +-
+>  .../platform/chrome/chromeos_of_hw_prober.c   |  29 +++++
+>  11 files changed, 185 insertions(+), 32 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-squirtle.dts
+>  delete mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dts
+>  rename arch/arm64/boot/dts/mediatek/{mt8186-corsola-voltorb-sku589825.dts => mt8186-corsola-voltorb.dts} (76%)
+> 
+> --
+> 2.49.0.rc0.332.g42c0ae87b1-goog
+> 
+> 
+> 
 
- fs/btrfs/ioctl.c             | 27 ++++++++++++++++++++++-----
- include/linux/io_uring/cmd.h | 14 ++++++++++++++
- io_uring/uring_cmd.c         | 31 +++++++++++++++++++++++++++++++
- 3 files changed, 67 insertions(+), 5 deletions(-)
 
---
-2.43.0
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/mediatek/' for 20250312104344.3084425-1-wenst@chromium.org:
+
+arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb.dtb: spmi@10015000: Unevaluated properties are not allowed ('interrupts' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spmi/mtk,spmi-mtk-pmif.yaml#
+arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb.dtb: sound: 'model' is a required property
+	from schema $id: http://devicetree.org/schemas/sound/mt8186-mt6366-rt1019-rt5682s.yaml#
+arch/arm64/boot/dts/mediatek/mt8186-corsola-squirtle.dtb: spmi@10015000: Unevaluated properties are not allowed ('interrupts' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spmi/mtk,spmi-mtk-pmif.yaml#
+
+
+
+
 
