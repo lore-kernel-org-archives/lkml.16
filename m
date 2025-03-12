@@ -1,300 +1,157 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3305523E35E;
-	Wed, 12 Mar 2025 09:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1E123C8AF;
+	Wed, 12 Mar 2025 09:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741773290; cv=none; b=iyVC3Z2LdRNkC1Dn0aOBoYb1dc1XDERjqddflJHWe0pND9nY5e4UBl4EzjjW5/WOk1Yt5Iztl07LdvdEMrBvmSPa5NRYz+G/X8eatKNkOk7oPKjMA/oOkXjr4ZYj/8ypssJAP+ZCdJua6KJldOMMuHTC+zR+6NDolf/x5LpNSSY=
+	t=1741773354; cv=none; b=LGUXln1MF9tO+YG9i1mCUaY4lgdbhTco1o/k/cix+9LbvTY3Hgau6I5QOWcTkB2N4p5XaOABu6V4+j499RojTFkIXsyDc74g3TI5WvgO74PhQkV4u+wd/9xxYdX4NJOEzcRQoJJapfzzyq/1vxt6OXjfE1sM5E3xjIquVHFM1B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741773290; c=relaxed/simple;
-	bh=7oYtQ5u9810BAduP1mdWSKZnTdy+IqcoRgA+JYIyT+U=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=eZ5HY/WT++YUYXD1x1hVHCGXLVNS+macg/+9ryJbwYT+TAgVV0IkB4DC+apiKaKobqhJalBHzO0LYh4Cq8F92cLYl0DRTMtObN4O8OcqAm0DIy/3Gz1Uwn2R1w4i0LNDoayq02tjDRPxO0XUmSCWy21tcChgDZRgab/IZXxe9+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NmyYyqlH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MlZd06D/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741773354; c=relaxed/simple;
+	bh=wM2HN1jol78lBKJONHq0uwXK+aLeXlK9dWyj0d8vnzw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BoUp+1f4ra4OzzRzhA8otuRxeJztidlUZtC/S6bDWI6Jt//6bs9DeCg0ALOfFAO7/igu/q/A251IdKljpiaxWzRFHMNrvPNvyD5Fhsg5B1jzaDn+mxw1d0LfiGWmYrJtRN1Etn/rTo1F6gRNSpMQEa31O+CqHQ8pSPXfrV/7sqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c7dpckgy; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NmyYyqlH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MlZd06D/"
-Date: Wed, 12 Mar 2025 09:54:44 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741773285;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F6s4Am1KqQV2YxS+hYODVjskUgADTGssQXrQg4n4GbU=;
-	b=NmyYyqlHxAoTIy+Quapg6MUmN1JDDwdptoWAllf9ZPDS42E893r7IQ9ZTlBTJ2rMwrmMiw
-	W9BOQMPSTuqVjzbv9InehCpJYMykXxVSS8OgF/nW3Q9h/rvX96AU/5x0uXvVQ+zYqKIjZT
-	VXwJ9NGyurbnWv/ooa+aFQnl/Vt3+AJ4PGORsjPZOjnSEXZ5vZutGN6pAHqVk8/X9byqXY
-	EMRKvt8h7y5boVIwbcnFlZno2FD9bMoiDMuWtszd+B0WXgyr/Jr9BXunBxUCTVnSLFdEQp
-	uM7YSlAuiB/+T2wcedMqzvbFUORhFFd+UQIxcEFDF9IeVWBqBdGU+cX4CDaRXQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741773285;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F6s4Am1KqQV2YxS+hYODVjskUgADTGssQXrQg4n4GbU=;
-	b=MlZd06D/UFCEAciGd/exmt3fgjS3qvNOzoPyJCcdLiqNPPRnwlccMjy3J4g+jofzNNHOAz
-	hrR5YncTTcc7S6Bw==
-From: "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu: Shorten CPU matching macro
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250311-add-cpu-type-v8-2-e8514dcaaff2@linux.intel.com>
-References: <20250311-add-cpu-type-v8-2-e8514dcaaff2@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7dpckgy"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso6960371fa.1;
+        Wed, 12 Mar 2025 02:55:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741773350; x=1742378150; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hxtLMkmvM1PHAfvgTkxjLhwip9CJUtQkdApYBOtXlFQ=;
+        b=c7dpckgykHIkOa66fAYLtaIagZdQjcGxL5x7YKGDHMiZ5LnioKJILA4ZR0Njdfa0xb
+         2aNsDH6DzT9TI9b8UmNiAnvjX1RgHkC1ArfEo3FJ9GfFcYn/qCLGIK3xmQ7NLB2OWU6f
+         NbajJ3VAFkLjDf/UdZlTom/hm5SC11fSgGwMd3AswNxprRNCep+NTNtL4qJFWGDJr9g7
+         EysRG++OURx1tZNlRuUZZCHLPbTOebyc+yj9C5qmSYJR1hBGPOOXWwoAn579EjD97BBq
+         QphWuYNqgokCuvxrXlIT+5L6r8ZPvVP+QywH6DqeCe8YKkA6ax1WK6+slgoLDcg7dRIo
+         cAuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741773350; x=1742378150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hxtLMkmvM1PHAfvgTkxjLhwip9CJUtQkdApYBOtXlFQ=;
+        b=R9+WNuwwka7WFteSeh2XmYfOLyczedV6eU8UK2tGyj2M5DkoLSwsKxSrNbJxK8oduX
+         wwmKCWH3nzHjOfLxtIRBRFU0uly5iFHk39vtxoQMog3nGf9wMICCLLgnAE5TFJz8nbN2
+         JMHnaZ19BE92tt0iU61NXy7fmrGMhpg8FfftWcekpk2YHhzcMUdyluyJZF/HxIBvixct
+         BabkevQOUGmetf37UrPu7qrSl/k3Le10xoHk9tiP35HBaDzismeKxcPsEAqfmK++NIPZ
+         S/25bZfpKzWhKGr2yf1Tt0zTB6H7o8fWBoK3nprul0/xqL6RwDLK15spWaL5smzsZh47
+         Oa6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVpPcehmJ0BMIm99imUHA78DyJrcEWMScSQ562uchI1FkIMtFUhAUmZ1KDYgXSb/8jymNX8A2iNvhw=@vger.kernel.org, AJvYcCXiY4IX2Jes+yS7KvOAque5eykhcqQJC493HwZ//DpZ0RbAOZTBPAbnvVFdR01lxMRUmaWyHf1r1l/WoYQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOhq9FUATcKBftq421I9fsCv8t9RjLQNDFe8dkLggfvmMdRNlQ
+	7UM4mTchU7tQtQXpoRTdudeVuwIrR2JhGnbzC33u+PC22+M4x7b2BfbcbwDHd0RrEE8gDhbpIwr
+	vReLs/1Qx7pgwgvODqjKK5lGSQeo=
+X-Gm-Gg: ASbGnctQfYLxxFv2nB8mar8OA6KGfcMXi9emRs0IGnCAtsDasU9TX8FJ3FOTL/JUt69
+	TIaArXDv4sonCCD7KHPLqNPyXXdZ+TyPcsC91Jz2FX6FBXU1HGgdhEApCGXF3tx1gBwlKsMgJZE
+	sJGIewrV7FrW47PeGr7zcMdWsFVw==
+X-Google-Smtp-Source: AGHT+IHc8Gi9SKOIsVlFCkkx6o96+MJgAWMgmEsek7pgXRVnRGL88Fz9vN1fXvRgOtct8JJ9We05PebnUBB7GGy67Xk=
+X-Received: by 2002:a2e:7006:0:b0:30b:f599:d78f with SMTP id
+ 38308e7fff4ca-30c20e883a0mr25759501fa.7.1741773349935; Wed, 12 Mar 2025
+ 02:55:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174177328489.14745.11811097110184780206.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250216175545.35079-1-contact@artur-rojek.eu>
+ <20250216175545.35079-2-contact@artur-rojek.eu> <5365422a9715376c76a89e255c978fc39064e243.camel@physik.fu-berlin.de>
+ <433bc8a0732bf8a63c64c4bf0e6ad4a7@artur-rojek.eu> <967e29681c8bc39edfdd9c645d943f17d341c2ae.camel@physik.fu-berlin.de>
+ <CAFULd4b8+HsmJC2XkW50pxtw=fHNrL9gH1_WM90jh+rfLCbSHw@mail.gmail.com> <CAMuHMdXaw117mimN_7UgwbfbG9grVg09WfjKa2Lz4eGqM24EvA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXaw117mimN_7UgwbfbG9grVg09WfjKa2Lz4eGqM24EvA@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 12 Mar 2025 10:55:56 +0100
+X-Gm-Features: AQ5f1JolTJVJhN2SYtghi2NyeluvO7V1pNUB6NL8-ykasafaE2lYgryvCC9OYyU
+Message-ID: <CAFULd4YhqH=5eEptwqSFrH=x02W7VKeuca-zBthS_ckLjHWN8g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] sh: align .bss section padding to 8-byte boundary
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Artur Rojek <contact@artur-rojek.eu>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, "D . Jeff Dionne" <jeff@coresemi.io>, 
+	Rob Landley <rob@landley.net>, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Wed, Mar 12, 2025 at 10:47=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Uros,
+>
+> On Wed, 12 Mar 2025 at 09:32, Uros Bizjak <ubizjak@gmail.com> wrote:
+> > On Wed, Mar 12, 2025 at 9:22=E2=80=AFAM John Paul Adrian Glaubitz
+> > <glaubitz@physik.fu-berlin.de> wrote:
+> > > > In the original BSS_SECTION(0, PAGE_SIZE, 4), the last argument ins=
+erts
+> > > > a 4 byte padding after the closing brace of .bss section definition=
+,
+> > > > causing the __bss_stop symbol offset to grow, but not the .bss sect=
+ion
+> > > > itself:
+> > > >
+> > > > #define BSS_SECTION(sbss_align, bss_align, stop_align)             =
+           \
+> > > >       . =3D ALIGN(sbss_align);                                     =
+     \
+> > > >       __bss_start =3D .;                                           =
+     \
+> > > >       SBSS(sbss_align)                                             =
+   \
+> > > >       BSS(bss_align)                                               =
+   \
+> > > >       . =3D ALIGN(stop_align);                                     =
+     \
+> > > >       __bss_stop =3D .;
+> > >
+> > > OK, that's really odd. So, the __bss_stop would be moved to the desir=
+ed
+> > > position but the section itself still remains small? What exactly doe=
+s the
+> > > linker fill the region with? Sounds very strange.
+> > >
+> > > > TurtleBoard loader is only concerned with the .bss section size - i=
+t
+> > > > doesn't care about any symbol offsets - and hence this seemingly cr=
+yptic
+> > > > change (you can display the section size information with
+> > > > readelf -t kernel_image).
+> > >
+> > > Looking at the actual kernel image with readelf is a very good sugges=
+tion!
+> > >
+> > > > The rest of the changes are simply to "inline" the BSS() macro (as =
+I
+> > > > needed to access that closing brace), and the former sbss_align,
+> > > > bss_align (that's your PAGE_SIZE) and stop_align arguments are pass=
+ed
+> > > > accordingly, the same way they used to be passed before. The only
+> > > > visible effect should be the move of ALIGN(stop_align) inside of .b=
+ss
+> > > > section definition, and the change of stop_align value from 4 to 8.
+> > >
+> > > OK. FWIW, do you understand what SBSS is for? I couldn't find any exp=
+lanation
+> > > for it.
+> >
+> > Small BSS section. The compiler can put data objects under a certain
+> > size threshold to the .sbss section. Looking at GCC sh config, sh does
+> > not use this section.
+>
+> Hence the moment gcc (or clang) starts using that section, the
+> TurtleBoard loader is broken again...
 
-Commit-ID:     6f91e60c38443f80c7d41aab3f535390f758d35f
-Gitweb:        https://git.kernel.org/tip/6f91e60c38443f80c7d41aab3f535390f758d35f
-Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-AuthorDate:    Tue, 11 Mar 2025 08:02:20 -07:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 11 Mar 2025 20:53:30 +01:00
+Rest assured that the compiler won't just magically start using SBSS.
+This is part of an ABI and in case ABI allows SBSS, the compiler needs
+something like:
 
-x86/cpu: Shorten CPU matching macro
+  if (in_small_data)
+    switch_to_section (get_named_section (NULL, ".sbss", 0));
 
-To add cpu-type to the existing CPU matching infrastructure, the base macro
-X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE need to append _CPU_TYPE. This
-makes an already long name longer, and somewhat incomprehensible.
+when emitting the declaration.
 
-To avoid this, rename the base macro to X86_MATCH_CPU. The macro name
-doesn't need to explicitly tell everything that it matches. The arguments
-to the macro already hint at that.
-
-For consistency, use this base macro to define X86_MATCH_VFM and friends.
-
-Remove unused X86_MATCH_VENDOR_FAM_MODEL_FEATURE while at it.
-
-  [ bp: Massage commit message. ]
-
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/r/20250311-add-cpu-type-v8-2-e8514dcaaff2@linux.intel.com
----
- arch/x86/include/asm/cpu_device_id.h | 110 ++++++--------------------
- 1 file changed, 26 insertions(+), 84 deletions(-)
-
-diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
-index 9ebc263..45489b0 100644
---- a/arch/x86/include/asm/cpu_device_id.h
-+++ b/arch/x86/include/asm/cpu_device_id.h
-@@ -57,7 +57,7 @@
- #define X86_CPU_ID_FLAG_ENTRY_VALID	BIT(0)
- 
- /**
-- * X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE - Base macro for CPU matching
-+ * X86_MATCH_CPU -  Base macro for CPU matching
-  * @_vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
-  *		The name is expanded to X86_VENDOR_@_vendor
-  * @_family:	The family number or X86_FAMILY_ANY
-@@ -74,19 +74,7 @@
-  * into another macro at the usage site for good reasons, then please
-  * start this local macro with X86_MATCH to allow easy grepping.
-  */
--#define X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(_vendor, _family, _model, \
--						    _steppings, _feature, _data) { \
--	.vendor		= X86_VENDOR_##_vendor,				\
--	.family		= _family,					\
--	.model		= _model,					\
--	.steppings	= _steppings,					\
--	.feature	= _feature,					\
--	.flags		= X86_CPU_ID_FLAG_ENTRY_VALID,			\
--	.driver_data	= (unsigned long) _data				\
--}
--
--#define X86_MATCH_VENDORID_FAM_MODEL_STEPPINGS_FEATURE(_vendor, _family, _model, \
--						    _steppings, _feature, _data) { \
-+#define X86_MATCH_CPU(_vendor, _family, _model, _steppings, _feature, _data) { \
- 	.vendor		= _vendor,					\
- 	.family		= _family,					\
- 	.model		= _model,					\
-@@ -97,24 +85,6 @@
- }
- 
- /**
-- * X86_MATCH_VENDOR_FAM_MODEL_FEATURE - Macro for CPU matching
-- * @_vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
-- *		The name is expanded to X86_VENDOR_@_vendor
-- * @_family:	The family number or X86_FAMILY_ANY
-- * @_model:	The model number, model constant or X86_MODEL_ANY
-- * @_feature:	A X86_FEATURE bit or X86_FEATURE_ANY
-- * @_data:	Driver specific data or NULL. The internal storage
-- *		format is unsigned long. The supplied value, pointer
-- *		etc. is casted to unsigned long internally.
-- *
-- * The steppings arguments of X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE() is
-- * set to wildcards.
-- */
--#define X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family, model, feature, data) \
--	X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(vendor, family, model, \
--						X86_STEPPING_ANY, feature, data)
--
--/**
-  * X86_MATCH_VENDOR_FAM_FEATURE - Macro for matching vendor, family and CPU feature
-  * @vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
-  *		The name is expanded to X86_VENDOR_@vendor
-@@ -123,13 +93,10 @@
-  * @data:	Driver specific data or NULL. The internal storage
-  *		format is unsigned long. The supplied value, pointer
-  *		etc. is casted to unsigned long internally.
-- *
-- * All other missing arguments of X86_MATCH_VENDOR_FAM_MODEL_FEATURE() are
-- * set to wildcards.
-  */
--#define X86_MATCH_VENDOR_FAM_FEATURE(vendor, family, feature, data)	\
--	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family,		\
--					   X86_MODEL_ANY, feature, data)
-+#define X86_MATCH_VENDOR_FAM_FEATURE(vendor, family, feature, data)		\
-+	X86_MATCH_CPU(X86_VENDOR_##vendor, family, X86_MODEL_ANY,		\
-+		      X86_STEPPING_ANY, feature, data)
- 
- /**
-  * X86_MATCH_VENDOR_FEATURE - Macro for matching vendor and CPU feature
-@@ -139,12 +106,10 @@
-  * @data:	Driver specific data or NULL. The internal storage
-  *		format is unsigned long. The supplied value, pointer
-  *		etc. is casted to unsigned long internally.
-- *
-- * All other missing arguments of X86_MATCH_VENDOR_FAM_MODEL_FEATURE() are
-- * set to wildcards.
-  */
--#define X86_MATCH_VENDOR_FEATURE(vendor, feature, data)			\
--	X86_MATCH_VENDOR_FAM_FEATURE(vendor, X86_FAMILY_ANY, feature, data)
-+#define X86_MATCH_VENDOR_FEATURE(vendor, feature, data)				\
-+	X86_MATCH_CPU(X86_VENDOR_##vendor, X86_FAMILY_ANY, X86_MODEL_ANY,	\
-+		      X86_STEPPING_ANY, feature, data)
- 
- /**
-  * X86_MATCH_FEATURE - Macro for matching a CPU feature
-@@ -152,12 +117,10 @@
-  * @data:	Driver specific data or NULL. The internal storage
-  *		format is unsigned long. The supplied value, pointer
-  *		etc. is casted to unsigned long internally.
-- *
-- * All other missing arguments of X86_MATCH_VENDOR_FAM_MODEL_FEATURE() are
-- * set to wildcards.
-  */
--#define X86_MATCH_FEATURE(feature, data)				\
--	X86_MATCH_VENDOR_FEATURE(ANY, feature, data)
-+#define X86_MATCH_FEATURE(feature, data)					\
-+	X86_MATCH_CPU(X86_VENDOR_ANY, X86_FAMILY_ANY, X86_MODEL_ANY,		\
-+		      X86_STEPPING_ANY, feature, data)
- 
- /**
-  * X86_MATCH_VENDOR_FAM_MODEL - Match vendor, family and model
-@@ -168,13 +131,10 @@
-  * @data:	Driver specific data or NULL. The internal storage
-  *		format is unsigned long. The supplied value, pointer
-  *		etc. is casted to unsigned long internally.
-- *
-- * All other missing arguments of X86_MATCH_VENDOR_FAM_MODEL_FEATURE() are
-- * set to wildcards.
-  */
--#define X86_MATCH_VENDOR_FAM_MODEL(vendor, family, model, data)		\
--	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(vendor, family, model,	\
--					   X86_FEATURE_ANY, data)
-+#define X86_MATCH_VENDOR_FAM_MODEL(vendor, family, model, data)			\
-+	X86_MATCH_CPU(X86_VENDOR_##vendor, family, model, X86_STEPPING_ANY,	\
-+		      X86_FEATURE_ANY, data)
- 
- /**
-  * X86_MATCH_VENDOR_FAM - Match vendor and family
-@@ -184,12 +144,10 @@
-  * @data:	Driver specific data or NULL. The internal storage
-  *		format is unsigned long. The supplied value, pointer
-  *		etc. is casted to unsigned long internally.
-- *
-- * All other missing arguments to X86_MATCH_VENDOR_FAM_MODEL_FEATURE() are
-- * set of wildcards.
-  */
--#define X86_MATCH_VENDOR_FAM(vendor, family, data)			\
--	X86_MATCH_VENDOR_FAM_MODEL(vendor, family, X86_MODEL_ANY, data)
-+#define X86_MATCH_VENDOR_FAM(vendor, family, data)				\
-+	X86_MATCH_CPU(X86_VENDOR_##vendor, family, X86_MODEL_ANY,		\
-+		      X86_STEPPING_ANY, X86_FEATURE_ANY, data)
- 
- /**
-  * X86_MATCH_VFM - Match encoded vendor/family/model
-@@ -197,15 +155,10 @@
-  * @data:	Driver specific data or NULL. The internal storage
-  *		format is unsigned long. The supplied value, pointer
-  *		etc. is cast to unsigned long internally.
-- *
-- * Stepping and feature are set to wildcards
-  */
--#define X86_MATCH_VFM(vfm, data)			\
--	X86_MATCH_VENDORID_FAM_MODEL_STEPPINGS_FEATURE(	\
--		VFM_VENDOR(vfm),			\
--		VFM_FAMILY(vfm),			\
--		VFM_MODEL(vfm),				\
--		X86_STEPPING_ANY, X86_FEATURE_ANY, data)
-+#define X86_MATCH_VFM(vfm, data)						\
-+	X86_MATCH_CPU(VFM_VENDOR(vfm), VFM_FAMILY(vfm),	VFM_MODEL(vfm),		\
-+		      X86_STEPPING_ANY, X86_FEATURE_ANY, data)
- 
- #define __X86_STEPPINGS(mins, maxs)    GENMASK(maxs, mins)
- /**
-@@ -217,16 +170,10 @@
-  * @data:	Driver specific data or NULL. The internal storage
-  *		format is unsigned long. The supplied value, pointer
-  *		etc. is cast to unsigned long internally.
-- *
-- * feature is set to wildcard
-  */
--#define X86_MATCH_VFM_STEPS(vfm, min_step, max_step, data)	\
--	X86_MATCH_VENDORID_FAM_MODEL_STEPPINGS_FEATURE(		\
--		VFM_VENDOR(vfm),				\
--		VFM_FAMILY(vfm),				\
--		VFM_MODEL(vfm),					\
--		__X86_STEPPINGS(min_step, max_step),		\
--		X86_FEATURE_ANY, data)
-+#define X86_MATCH_VFM_STEPS(vfm, min_step, max_step, data)			\
-+	X86_MATCH_CPU(VFM_VENDOR(vfm), VFM_FAMILY(vfm), VFM_MODEL(vfm),		\
-+		      __X86_STEPPINGS(min_step, max_step), X86_FEATURE_ANY, data)
- 
- /**
-  * X86_MATCH_VFM_FEATURE - Match encoded vendor/family/model/feature
-@@ -235,15 +182,10 @@
-  * @data:	Driver specific data or NULL. The internal storage
-  *		format is unsigned long. The supplied value, pointer
-  *		etc. is cast to unsigned long internally.
-- *
-- * Steppings is set to wildcard
-  */
--#define X86_MATCH_VFM_FEATURE(vfm, feature, data)	\
--	X86_MATCH_VENDORID_FAM_MODEL_STEPPINGS_FEATURE(	\
--		VFM_VENDOR(vfm),			\
--		VFM_FAMILY(vfm),			\
--		VFM_MODEL(vfm),				\
--		X86_STEPPING_ANY, feature, data)
-+#define X86_MATCH_VFM_FEATURE(vfm, feature, data)				\
-+	X86_MATCH_CPU(VFM_VENDOR(vfm), VFM_FAMILY(vfm), VFM_MODEL(vfm),		\
-+		      X86_STEPPING_ANY, feature, data)
- 
- extern const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match);
- extern bool x86_match_min_microcode_rev(const struct x86_cpu_id *table);
+Uros.
