@@ -1,102 +1,88 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2E11B6CF1;
-	Wed, 12 Mar 2025 08:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52E323644E
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 08:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741769838; cv=none; b=l9rEOgGP2xGHtwFA9UwmMgdZKxRUEFVA9qvoAlnWAmop5yw6R6MlujDu3UigwH1rgG5mBrJSHqmIFHzNpXBQe1FQI8s/zqAckDe0XUbD3sMMp9eP44uizhinpGYxx9jzIWjffScFkEJgAcGyYqeC2gxq+FBNSbMwZQ+Dr1uijJc=
+	t=1741769855; cv=none; b=PdjBr8hzajBJN2Ln+uiK4ml5Gj0J/950G9K+DmYbEYUbJd1R8Cd6O/haIiCgvKyyFU/TfzAwdHqDBE0YtmRiPBDTCVu4ENgLNPBMB3QK3sVifqNZ2gT2G6GS2TMvu22vBjUJwNFI2b/4OcE+aUof/2T1BdeexC3ZuDsMQ9TfVRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741769838; c=relaxed/simple;
-	bh=BCmP6T//nG2YqwP/jSL4GXaPOKeO31UqtsTcys901gE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sp+cGDJmeVmrb1LUTdaYRTrDi/FxTm/yW8O1V+HoHUzLjyvhg3tvbUrgviohwqbrOFb1xTbL38dWw9tSQ4D1Xogp3t38vstV6WsUCEHmQl0B1BRT0R3n/m9EOUDsVrxf2gWQu5J2Y4q0cGl34Jo/gpctmH6b8MPMbBkrTj167U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.224] (ip5f5ae865.dynamic.kabel-deutschland.de [95.90.232.101])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 570CB61E64844;
-	Wed, 12 Mar 2025 09:54:02 +0100 (CET)
-Message-ID: <7c2626fa-d923-4ef8-a102-2d9413319110@molgen.mpg.de>
-Date: Wed, 12 Mar 2025 09:54:01 +0100
+	s=arc-20240116; t=1741769855; c=relaxed/simple;
+	bh=8/QLN8kIjzii/jWFCF8iv2COgMB2Hoz2uueduVnmzbo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PAv/vdNBD4usQy8HbPzLeX8CzExxff3V5o5+rCKsZyjJWONdRpo/wXiTr5t3aMi13KoU0KwUy3CQJBTrKew77qCVz5J1MZDL0SSdumB8ttBIOVr1TOZ8EXZcdHbWnj+qt7pWAZ2K2Q+ohfN4943y8/yrXAt5Is9V9Rh4OGI/+vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowACXn9NtTNFnA2KCFA--.65235S2;
+	Wed, 12 Mar 2025 16:57:18 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: hch@lst.de,
+	sagi@grimberg.me,
+	kch@nvidia.com,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] nvmet: pci-epf: Remove redundant 'flush_workqueue()' calls
+Date: Wed, 12 Mar 2025 16:56:25 +0800
+Message-Id: <20250312085625.1624394-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: HCI: Fix value of
- HCI_ERROR_UNSUPPORTED_REMOTE_FEATURE
-To: Si-Jie Bai <sy2239101@buaa.edu.cn>
-Cc: luiz.dentz@gmail.com, marcel@holtmann.org, johan.hedberg@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, linux-bluetooth@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, cuijianw@buaa.edu.cn,
- sunyv@buaa.edu.cn, baijiaju@buaa.edu.cn, =?UTF-8?Q?Jonas_Dre=C3=9Fler?=
- <verdre@v0yd.nl>
-References: <20250312083847.7364-1-sy2239101@buaa.edu.cn>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250312083847.7364-1-sy2239101@buaa.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowACXn9NtTNFnA2KCFA--.65235S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKF1xZFy7tr1DuryrtFyxZrb_yoWfZFgEk3
+	9rAF4kKa1Duw1qk3yUGr1YvFy0kasYqF12va95trZxta4UWw4rZw1vvws3X3s7uw10qr17
+	ury7W343Wr9rCjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbsAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUj22NtUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-[Cc: +Jonas Dreßler]
+'destroy_workqueue()' already drains the queue before destroying it, so
+there is no need to flush it explicitly.
 
-Dear Si-Jie,
+Remove the redundant 'flush_workqueue()' calls.
 
+This was generated with coccinelle:
 
-Welcome to the mailing list, and thank you for your patch!
+@@
+expression E;
+@@
+- flush_workqueue(E);
+  destroy_workqueue(E);
 
-Am 12.03.25 um 09:38 schrieb Si-Jie Bai:
-> HCI_ERROR_UNSUPPORTED_REMOTE_FEATURE is actually 0x1a not 0x1e:
-> 
-> BLUETOOTH CORE SPECIFICATION Version 5.3 | Vol 1, Part F
-> page 371:
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/nvme/target/pci-epf.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The above length is 66 characters (< 72), and fits in one line.
+diff --git a/drivers/nvme/target/pci-epf.c b/drivers/nvme/target/pci-epf.c
+index 565d2bd36dcd..82956c207b42 100644
+--- a/drivers/nvme/target/pci-epf.c
++++ b/drivers/nvme/target/pci-epf.c
+@@ -1385,7 +1385,6 @@ static u16 nvmet_pci_epf_delete_sq(struct nvmet_ctrl *tctrl, u16 sqid)
+ 	if (!test_and_clear_bit(NVMET_PCI_EPF_Q_LIVE, &sq->flags))
+ 		return NVME_SC_QID_INVALID | NVME_STATUS_DNR;
+ 
+-	flush_workqueue(sq->iod_wq);
+ 	destroy_workqueue(sq->iod_wq);
+ 	sq->iod_wq = NULL;
+ 
+-- 
+2.25.1
 
->    0x1A  Unsupported Remote Feature
-> 
-
-Maybe add:
-
-The value was probably changed by mistake, when defining the macro.
-
-Please add a Fixes: tag. It should be:
-
-Fixes: 79c0868ad65a ("Bluetooth: hci_event: Use HCI error defines 
-instead of magic values")
-
-> Signed-off-by: Si-Jie Bai <sy2239101@buaa.edu.cn>
-> ---
->   include/net/bluetooth/hci.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index 0d51970d8..3ec915738 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -683,7 +683,7 @@ enum {
->   #define HCI_ERROR_REMOTE_POWER_OFF	0x15
->   #define HCI_ERROR_LOCAL_HOST_TERM	0x16
->   #define HCI_ERROR_PAIRING_NOT_ALLOWED	0x18
-> -#define HCI_ERROR_UNSUPPORTED_REMOTE_FEATURE	0x1e
-> +#define HCI_ERROR_UNSUPPORTED_REMOTE_FEATURE	0x1a
->   #define HCI_ERROR_INVALID_LL_PARAMS	0x1e
->   #define HCI_ERROR_UNSPECIFIED		0x1f
->   #define HCI_ERROR_ADVERTISING_TIMEOUT	0x3c
-
-With the above fixes, you can add:
-
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-
-Kind regards,
-
-Paul
