@@ -1,215 +1,286 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865D51E8353;
-	Wed, 12 Mar 2025 19:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741808365; cv=none; b=k5r8+y8GNiszPFOJSadntRm99PyQMlQWLtr3oF4KDppcDMhe8FvT2Ct691KfkW4ecOgyoMde+uNR54EN0Hx4dF1tHDYCZDCZfabCXaP7OPFW4Nnra6eHhxS+bb4Hbd9fxi4O0sGXADnsuHfI5OHazUA4DaX1Gy6ECjWv09axRiI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741808365; c=relaxed/simple;
-	bh=CKbvTcQjktbb/fkm2xvKUFHJAUWPFJnyE/7YkFwSoUY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WsCRdfu79734wALfUgj8QkKgTyFd6DamdnXhw4qg9kciivTPMGReX+RB44phLM8A4Fn653WfOKQLAb/iuviibYwz3ou0vqRdBeudZBHbQr3uVIpdpJbm0OIdlQvwkKtBnEgYhM5hYYWYqcITCZaEwBYGFjAZoFyqA4YqPhmhwws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3PMhgLi; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F9F2571A4;
+	Wed, 12 Mar 2025 19:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741808385; cv=pass; b=aZTF5cuHDbzyPor/tPcQdfxpfTRTm7K4EdVfCgUZuuRQgje8Tlg+xvcqF2EfUJ5NXYVtihmweVtkgWbw9JGDiqDZb+JD+/P3yNw2+G4OEz8BZZgpb8zdperjCVLA3BAQQcUP7XiyR/N6/z2kkRkzFqDGeJAP6HFdJIbnufOpFfQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741808385; c=relaxed/simple;
+	bh=9LHZqETUxUNt66FmBa/3tY6eBPTCTvDIOse2AO2Y0p0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=IyQRBuQxKzD+MLRIdBaKEROKIADskXlWFEy7xeo4O/O3/j+Wz6RDnbwpFbr6hIDhcu6MU497R1IFgh+78Vl7c1uAgwZo4w1m1LPcph9C+emdzOzMEBAio/RgfT9H59MgL5aytlOKKSWvAQ4c2nGIKG83pGlfLE8gIc7ciBVYAiw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=GPMEC+OE; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=zu2lOdpT; arc=pass smtp.client-ip=81.169.146.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3PMhgLi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131A6C4AF09;
-	Wed, 12 Mar 2025 19:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741808365;
-	bh=CKbvTcQjktbb/fkm2xvKUFHJAUWPFJnyE/7YkFwSoUY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=T3PMhgLiC+1jN2fQn/s868b7rQ4xuI6jCK7ojznJRarsOayJt/9kF0gFd7jd/iYyb
-	 G772gtE9y/TQyqnd9lvi1gqvGrC76fLi4Ho7YBpioi5+QOfOpdUVeB4tHZ8G+dT0qs
-	 pXpBBd51/rP23Iat5xyDHYzcjbs3mCNTIXvUAY8uWMoGtMf9ry+M/3Fub9OANd+Ry3
-	 It5R0yQ6ghT3QEK9dddsbb8H47+sTDAEqIgwH7y1lvcR3Fg+Rbm04NWqlMhC+y9Ufy
-	 l7XzMgJTtri6ZJd7TM2lhWjb1vloMFH5u1kvvJF9NA/4ssGRtn7F7lAXm2OqgpJoEL
-	 +zgDzc5GzdnFQ==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2a88c7fabdeso188642fac.1;
-        Wed, 12 Mar 2025 12:39:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW04ZQ8dvw3SP+7fagWU7Ka80vWviUZDZuQb+EqObe+PxOpqdfAg+Uj285lRsZW1Wfbo2le6FOOBYfN9viw@vger.kernel.org, AJvYcCWT+IPffjgs1d0PS478Yd5fj9tA17I1hrdp7aKBDobYm3TZ2cpq9U58lRgnzyTlpxgbgW2x6I0GZM0T@vger.kernel.org, AJvYcCXr+s3PbhlisGmXUj926eQKI9GFlUaaN1ucrQxM06z34PepHUP+Sqe88owQJu+mYOaR41IZfEUjDlET@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiK5ig4xQT5zD9Zs3Yf559ZjGWIuJVnWyhHpBI27MhEvKOEbI9
-	nt8kaPb3SrSfb4nzpoqtxrnGBG5nyz21J6EuPvo/3wEMdBFpvvi3nW6EihfGw7hc0SqblOPAbNH
-	FWDKvMm7jU0ePz2yi/u0jJw7/QUQ=
-X-Google-Smtp-Source: AGHT+IHuNDHlZF9Ucfxr2gTlbfeWhfR5MVXJQ/d0SqzrupN1QuL8KSZ2cjTwH8+Q2igiU3qP86o6sWS8Qs+oYXJUACA=
-X-Received: by 2002:a05:6871:8a8:b0:2c2:50a5:1248 with SMTP id
- 586e51a60fabf-2c2614d4a3cmr11747453fac.38.1741808364302; Wed, 12 Mar 2025
- 12:39:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="GPMEC+OE";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="zu2lOdpT"
+ARC-Seal: i=1; a=rsa-sha256; t=1741808195; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=Hkm5zCCyZ1rYRVi/To1srG9U5kTicMGyX7X78zkhfwBB3ISUjPA50rJ1+QnEfvHSR7
+    6hNpX0KFRDZJjCnB/4ZA9vDYy+fuLlYoS5+FZ2c2t8Lb7x0kBzfRXXsByasSjuaqHMhb
+    bSbs1NeA5+Baasvp1zMoUzkyqziOc73og2VsOCJ8b71nZtuok0T3qPaxzLZT6jnAsu3n
+    zZgbc8mPOKgxLaXt+QpECS8Jasr7fXv5NIZ1MNbDt+bHRU1cO4a5nVXMKwhc1DedjnkB
+    /o6GGKfWS+Sq29v9qKc2bLrPqzv4glGrjBjUo3eQtLwjX0zLdYcrCiO5acVi4bcw32p+
+    xtXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1741808195;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=rJ18HIBPB0es5ZImxh5nwXUc5nhaYpMnoN95dARg6r8=;
+    b=GcKD6HMxV2CAVmC24bdjbsQ72lG5so9a1UyZrrmpcRRfqThI3UPaLZbuMcjP+OS2jy
+    yU4dkpsTMvkBUnuIvOjxf+IF3agndRGQ+QLoyUOqgv0xOcWp2zH79szFD2DAva0jASOZ
+    s9QvxBlx80uQ72iYxgDnVDnXkzzuCPUACUJOq61ujZG+KnopqxMaUpGo676RmIDln/yj
+    XKMIwN8D4Yx962holo5mFXpFrjJ9uryX+FZrgmpwbRxSCTFuyaq9JHntxiT3u8fppOay
+    0lFr2FF8JAq2Ustt8nv62GyOEksANK+KLw56XcDcQfylJ3Z0ED48OONhZzRrWzYjZlq8
+    xq4A==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1741808195;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=rJ18HIBPB0es5ZImxh5nwXUc5nhaYpMnoN95dARg6r8=;
+    b=GPMEC+OEgh7iByF/dwcd0+gdvsAM1kr67+NRNkfgah7WcSV5LAK/rjT4y/ErWBoSSc
+    y3MX1btmZEbtg+3sd3c04vDgwlP1Z5+QL2YLPepAIqNq+yxhs4iWDwTWiolk91RLFHDk
+    /+QMHjvQ2lxm9Cl3oMfj5gWQe+NIt1OrpfyUzZkqhYha/v3vkxXAoH4DWeBU5G9HRryM
+    8nlwiJpU1EvFxlMlxKEh9YedSmaWvv33oN8bIllkGOd9WXt7ZRYsD2R88uUEB2hPUZjy
+    k9SSxjFPveUUvEYldn1fcGZuRS9wiuTBjZVvFR+qJFFuybBsSTcqRNb1rhrfGEaHVt1H
+    gQLw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1741808195;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=rJ18HIBPB0es5ZImxh5nwXUc5nhaYpMnoN95dARg6r8=;
+    b=zu2lOdpTMwUVluCguSNe9Ifi9MkEMR6a11Xxf76Uzr/nyd9BswQEso+Yw484gQfWil
+    tHQfE/CBYYXm8v0SRpDQ==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b3512CJaZkg4
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Wed, 12 Mar 2025 20:36:35 +0100 (CET)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with smtp (Exim 4.96)
+	(envelope-from <michael@a98shuttle.de>)
+	id 1tsRsY-00057w-00;
+	Wed, 12 Mar 2025 20:36:34 +0100
+Received: (nullmailer pid 85443 invoked by uid 502);
+	Wed, 12 Mar 2025 19:36:33 -0000
+From: Michael Klein <michael@fossekall.de>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] net: phy: realtek: Add support for PHY LEDs on RTL8211E
+Date: Wed, 12 Mar 2025 20:36:27 +0100
+Message-Id: <20250312193629.85417-1-michael@fossekall.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307214936.74504-1-linux@treblig.org>
-In-Reply-To: <20250307214936.74504-1-linux@treblig.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Mar 2025 20:39:13 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0j+=WYm+j340Z+1fs3aZ4PtTaF4XAFeSgm9s7NA=BR0=g@mail.gmail.com>
-X-Gm-Features: AQ5f1JrtyjGeDehvAPKabOsddC766J_8Cjm-oJ9-AbMlE98bvzAsdgHk-YLJY9E
-Message-ID: <CAJZ5v0j+=WYm+j340Z+1fs3aZ4PtTaF4XAFeSgm9s7NA=BR0=g@mail.gmail.com>
-Subject: Re: [PATCH] PNP: Remove prehistoric deadcode
-To: linux@treblig.org
-Cc: rafael.j.wysocki@intel.com, linux-acpi@vger.kernel.org, corbet@lwn.net, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Mar 7, 2025 at 10:49=E2=80=AFPM <linux@treblig.org> wrote:
->
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->
-> pnp_remove_card() is currently unused, it has been since it was
-> added in 2003's BKrev: 3e6d3f19XSmESWEZnNEReEJOJW5SOw
->
-> pnp_unregister_protocol() is currently unused,  it has been since
-> it was added in 2002's BKrev: 3df0cf6d4FVUKndhbfxjL7pksw5PGA
->
-> Remove them, and pnp_remove_card_device() and __pnp_remove_device()
-> which are now no longer used.
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  Documentation/admin-guide/pnp.rst |  3 ---
->  drivers/pnp/base.h                |  4 ----
->  drivers/pnp/card.c                | 32 -------------------------------
->  drivers/pnp/core.c                | 16 ----------------
->  4 files changed, 55 deletions(-)
->
-> diff --git a/Documentation/admin-guide/pnp.rst b/Documentation/admin-guid=
-e/pnp.rst
-> index 3eda08191d13..24d80e3eb309 100644
-> --- a/Documentation/admin-guide/pnp.rst
-> +++ b/Documentation/admin-guide/pnp.rst
-> @@ -129,9 +129,6 @@ pnp_put_protocol
->  pnp_register_protocol
->    use this to register a new PnP protocol
->
-> -pnp_unregister_protocol
-> -  use this function to remove a PnP protocol from the Plug and Play Laye=
-r
-> -
->  pnp_register_driver
->    adds a PnP driver to the Plug and Play Layer
->
-> diff --git a/drivers/pnp/base.h b/drivers/pnp/base.h
-> index 4e80273dfb1e..b342570d0236 100644
-> --- a/drivers/pnp/base.h
-> +++ b/drivers/pnp/base.h
-> @@ -9,7 +9,6 @@ extern const struct attribute_group *pnp_dev_groups[];
->  extern const struct bus_type pnp_bus_type;
->
->  int pnp_register_protocol(struct pnp_protocol *protocol);
-> -void pnp_unregister_protocol(struct pnp_protocol *protocol);
->
->  #define PNP_EISA_ID_MASK 0x7fffffff
->  void pnp_eisa_id_to_string(u32 id, char *str);
-> @@ -21,9 +20,7 @@ int pnp_add_device(struct pnp_dev *dev);
->  struct pnp_id *pnp_add_id(struct pnp_dev *dev, const char *id);
->
->  int pnp_add_card(struct pnp_card *card);
-> -void pnp_remove_card(struct pnp_card *card);
->  int pnp_add_card_device(struct pnp_card *card, struct pnp_dev *dev);
-> -void pnp_remove_card_device(struct pnp_dev *dev);
->
->  struct pnp_port {
->         resource_size_t min;    /* min base number */
-> @@ -138,7 +135,6 @@ void pnp_init_resources(struct pnp_dev *dev);
->  void pnp_fixup_device(struct pnp_dev *dev);
->  void pnp_free_options(struct pnp_dev *dev);
->  int __pnp_add_device(struct pnp_dev *dev);
-> -void __pnp_remove_device(struct pnp_dev *dev);
->
->  int pnp_check_port(struct pnp_dev *dev, struct resource *res);
->  int pnp_check_mem(struct pnp_dev *dev, struct resource *res);
-> diff --git a/drivers/pnp/card.c b/drivers/pnp/card.c
-> index 9610a9f08ff4..c7596dc24fbd 100644
-> --- a/drivers/pnp/card.c
-> +++ b/drivers/pnp/card.c
-> @@ -269,25 +269,6 @@ int pnp_add_card(struct pnp_card *card)
->         return 0;
->  }
->
-> -/**
-> - * pnp_remove_card - removes a PnP card from the PnP Layer
-> - * @card: pointer to the card to remove
-> - */
-> -void pnp_remove_card(struct pnp_card *card)
-> -{
-> -       struct list_head *pos, *temp;
-> -
-> -       device_unregister(&card->dev);
-> -       mutex_lock(&pnp_lock);
-> -       list_del(&card->global_list);
-> -       list_del(&card->protocol_list);
-> -       mutex_unlock(&pnp_lock);
-> -       list_for_each_safe(pos, temp, &card->devices) {
-> -               struct pnp_dev *dev =3D card_to_pnp_dev(pos);
-> -               pnp_remove_card_device(dev);
-> -       }
-> -}
-> -
->  /**
->   * pnp_add_card_device - adds a device to the specified card
->   * @card: pointer to the card to add to
-> @@ -306,19 +287,6 @@ int pnp_add_card_device(struct pnp_card *card, struc=
-t pnp_dev *dev)
->         return 0;
->  }
->
-> -/**
-> - * pnp_remove_card_device- removes a device from the specified card
-> - * @dev: pointer to the device to remove
-> - */
-> -void pnp_remove_card_device(struct pnp_dev *dev)
-> -{
-> -       mutex_lock(&pnp_lock);
-> -       dev->card =3D NULL;
-> -       list_del(&dev->card_list);
-> -       mutex_unlock(&pnp_lock);
-> -       __pnp_remove_device(dev);
-> -}
-> -
->  /**
->   * pnp_request_card_device - Searches for a PnP device under the specifi=
-ed card
->   * @clink: pointer to the card link, cannot be NULL
-> diff --git a/drivers/pnp/core.c b/drivers/pnp/core.c
-> index 6a60c5d83383..ac48db6dcfe3 100644
-> --- a/drivers/pnp/core.c
-> +++ b/drivers/pnp/core.c
-> @@ -78,16 +78,6 @@ int pnp_register_protocol(struct pnp_protocol *protoco=
-l)
->         return ret;
->  }
->
-> -/**
-> - * pnp_unregister_protocol - removes a pnp protocol from the pnp layer
-> - * @protocol: pointer to the corresponding pnp_protocol structure
-> - */
-> -void pnp_unregister_protocol(struct pnp_protocol *protocol)
-> -{
-> -       pnp_remove_protocol(protocol);
-> -       device_unregister(&protocol->dev);
-> -}
-> -
->  static void pnp_free_ids(struct pnp_dev *dev)
->  {
->         struct pnp_id *id;
-> @@ -220,12 +210,6 @@ int pnp_add_device(struct pnp_dev *dev)
->         return 0;
->  }
->
-> -void __pnp_remove_device(struct pnp_dev *dev)
-> -{
-> -       pnp_delist_device(dev);
-> -       device_unregister(&dev->dev);
-> -}
-> -
->  static int __init pnp_init(void)
->  {
->         return bus_register(&pnp_bus_type);
-> --
+Like the RTL8211F, the RTL8211E PHY supports up to three LEDs.
+Add netdev trigger support for them, too.
 
-Applied as 6.15 material, thanks!
+Signed-off-by: Michael Klein <michael@fossekall.de>
+---
+ drivers/net/phy/realtek.c | 120 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 114 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index 166f6a728373..906640d6dca5 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -52,6 +52,18 @@
+ #define RTL8211E_TX_DELAY			BIT(12)
+ #define RTL8211E_RX_DELAY			BIT(11)
+ 
++#define RTL8211E_LEDCR1				0x1a
++#define RTL8211E_LEDCR1_ACT_TXRX		BIT(4)
++#define RTL8211E_LEDCR1_MASK			BIT(4)
++#define RTL8211E_LEDCR1_SHIFT			1
++
++#define RTL8211E_LEDCR2				0x1c
++#define RTL8211E_LEDCR2_LINK_1000		BIT(2)
++#define RTL8211E_LEDCR2_LINK_100		BIT(1)
++#define RTL8211E_LEDCR2_LINK_10			BIT(0)
++#define RTL8211E_LEDCR2_MASK			GENMASK(2, 0)
++#define RTL8211E_LEDCR2_SHIFT			4
++
+ #define RTL8211F_CLKOUT_EN			BIT(0)
+ 
+ #define RTL8201F_ISR				0x1e
+@@ -96,7 +108,8 @@
+ #define RTL_8221B_VN_CG				0x001cc84a
+ #define RTL_8251B				0x001cc862
+ 
+-#define RTL8211F_LED_COUNT			3
++/* RTL8211E and RTL8211F support up to three LEDs */
++#define RTL8211x_LED_COUNT			3
+ 
+ MODULE_DESCRIPTION("Realtek PHY driver");
+ MODULE_AUTHOR("Johnson Leung");
+@@ -487,7 +500,7 @@ static int rtl821x_resume(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
+-static int rtl8211f_led_hw_is_supported(struct phy_device *phydev, u8 index,
++static int rtl8211x_led_hw_is_supported(struct phy_device *phydev, u8 index,
+ 					unsigned long rules)
+ {
+ 	const unsigned long mask = BIT(TRIGGER_NETDEV_LINK_10) |
+@@ -506,9 +519,11 @@ static int rtl8211f_led_hw_is_supported(struct phy_device *phydev, u8 index,
+ 	 *      rates and Active indication always at all three 10+100+1000
+ 	 *      link rates.
+ 	 * This code currently uses mode B only.
++	 *
++	 * RTL8211E PHY LED has one mode, which works like RTL8211F * mode B.
+ 	 */
+ 
+-	if (index >= RTL8211F_LED_COUNT)
++	if (index >= RTL8211x_LED_COUNT)
+ 		return -EINVAL;
+ 
+ 	/* Filter out any other unsupported triggers. */
+@@ -527,7 +542,7 @@ static int rtl8211f_led_hw_control_get(struct phy_device *phydev, u8 index,
+ {
+ 	int val;
+ 
+-	if (index >= RTL8211F_LED_COUNT)
++	if (index >= RTL8211x_LED_COUNT)
+ 		return -EINVAL;
+ 
+ 	val = phy_read_paged(phydev, 0xd04, RTL8211F_LEDCR);
+@@ -560,7 +575,7 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
+ 	const u16 mask = RTL8211F_LEDCR_MASK << (RTL8211F_LEDCR_SHIFT * index);
+ 	u16 reg = 0;
+ 
+-	if (index >= RTL8211F_LED_COUNT)
++	if (index >= RTL8211x_LED_COUNT)
+ 		return -EINVAL;
+ 
+ 	if (test_bit(TRIGGER_NETDEV_LINK_10, &rules))
+@@ -583,6 +598,96 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
+ 	return phy_modify_paged(phydev, 0xd04, RTL8211F_LEDCR, mask, reg);
+ }
+ 
++static int rtl8211e_led_hw_control_get(struct phy_device *phydev, u8 index,
++				       unsigned long *rules)
++{
++	int oldpage, ret;
++	u16 cr1, cr2;
++
++	if (index >= RTL8211x_LED_COUNT)
++		return -EINVAL;
++
++	oldpage = phy_select_page(phydev, 0x7);
++	if (oldpage < 0)
++		goto err_restore_page;
++
++	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0x2c);
++	if (ret)
++		goto err_restore_page;
++
++	cr1 = ret = __phy_read(phydev, RTL8211E_LEDCR1);
++	if (ret < 0)
++		goto err_restore_page;
++
++	cr1 >>= RTL8211E_LEDCR1_SHIFT * index;
++	if (cr1 & RTL8211E_LEDCR1_ACT_TXRX) {
++		set_bit(TRIGGER_NETDEV_RX, rules);
++		set_bit(TRIGGER_NETDEV_TX, rules);
++	}
++
++	cr2 = ret = __phy_read(phydev, RTL8211E_LEDCR2);
++	if (ret < 0)
++		goto err_restore_page;
++
++	cr2 >>= RTL8211E_LEDCR2_SHIFT * index;
++	if (cr2 & RTL8211E_LEDCR2_LINK_10)
++		set_bit(TRIGGER_NETDEV_LINK_10, rules);
++
++	if (cr2 & RTL8211E_LEDCR2_LINK_100)
++		set_bit(TRIGGER_NETDEV_LINK_100, rules);
++
++	if (cr2 & RTL8211E_LEDCR2_LINK_1000)
++		set_bit(TRIGGER_NETDEV_LINK_1000, rules);
++
++err_restore_page:
++	return phy_restore_page(phydev, oldpage, ret);
++}
++
++static int rtl8211e_led_hw_control_set(struct phy_device *phydev, u8 index,
++				       unsigned long rules)
++{
++	const u16 cr1mask = RTL8211E_LEDCR1_MASK << (RTL8211E_LEDCR1_SHIFT * index);
++	const u16 cr2mask = RTL8211E_LEDCR2_MASK << (RTL8211E_LEDCR2_SHIFT * index);
++	u16 cr1 = 0, cr2 = 0;
++	int oldpage, ret;
++
++	if (index >= RTL8211x_LED_COUNT)
++		return -EINVAL;
++
++	oldpage = phy_select_page(phydev, 0x7);
++	if (oldpage < 0)
++		goto err_restore_page;
++
++	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0x2c);
++	if (ret)
++		goto err_restore_page;
++
++	if (test_bit(TRIGGER_NETDEV_RX, &rules) ||
++	    test_bit(TRIGGER_NETDEV_TX, &rules)) {
++		cr1 |= RTL8211E_LEDCR1_ACT_TXRX;
++	}
++
++	cr1 <<= RTL8211E_LEDCR1_SHIFT * index;
++	ret = __phy_modify(phydev, RTL8211E_LEDCR1, cr1mask, cr1);
++	if (ret < 0)
++		goto err_restore_page;
++
++	if (test_bit(TRIGGER_NETDEV_LINK_10, &rules))
++		cr2 |= RTL8211E_LEDCR2_LINK_10;
++
++	if (test_bit(TRIGGER_NETDEV_LINK_100, &rules))
++		cr2 |= RTL8211E_LEDCR2_LINK_100;
++
++	if (test_bit(TRIGGER_NETDEV_LINK_1000, &rules))
++		cr2 |= RTL8211E_LEDCR2_LINK_1000;
++
++	cr2 <<= RTL8211E_LEDCR2_SHIFT * index;
++	ret = __phy_modify(phydev, RTL8211E_LEDCR2, cr2mask, cr2);
++
++err_restore_page:
++	return phy_restore_page(phydev, oldpage, ret);
++}
++
+ static int rtl8211e_config_init(struct phy_device *phydev)
+ {
+ 	int ret = 0, oldpage;
+@@ -1296,6 +1401,9 @@ static struct phy_driver realtek_drvs[] = {
+ 		.resume		= genphy_resume,
+ 		.read_page	= rtl821x_read_page,
+ 		.write_page	= rtl821x_write_page,
++		.led_hw_is_supported = rtl8211x_led_hw_is_supported,
++		.led_hw_control_get = rtl8211e_led_hw_control_get,
++		.led_hw_control_set = rtl8211e_led_hw_control_set,
+ 	}, {
+ 		PHY_ID_MATCH_EXACT(0x001cc916),
+ 		.name		= "RTL8211F Gigabit Ethernet",
+@@ -1309,7 +1417,7 @@ static struct phy_driver realtek_drvs[] = {
+ 		.read_page	= rtl821x_read_page,
+ 		.write_page	= rtl821x_write_page,
+ 		.flags		= PHY_ALWAYS_CALL_SUSPEND,
+-		.led_hw_is_supported = rtl8211f_led_hw_is_supported,
++		.led_hw_is_supported = rtl8211x_led_hw_is_supported,
+ 		.led_hw_control_get = rtl8211f_led_hw_control_get,
+ 		.led_hw_control_set = rtl8211f_led_hw_control_set,
+ 	}, {
+-- 
+2.39.5
+
