@@ -1,91 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E88AB23F38C;
-	Wed, 12 Mar 2025 11:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C39155333;
+	Wed, 12 Mar 2025 11:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741778940; cv=none; b=KzfvP8mBmbTfPEmh9OqNzZhjLlgSbuelj+1gsu4OORRWzdGQm2ZNqkpjJdt9QvHObpdq/0kyc97KRSh6Trg3RJvri1ozHPf8QIwRiJBbL4bvsFqYoCT4j1I5XAlWpzVVH9hY6IQBqk5S3j7Ab7aEdq564ZJcqoisnqxb+hBwh5s=
+	t=1741778942; cv=none; b=SqueT6fOUF7oJ2HvGec0in1XLxDNjQvVKa9bZ5qhYe3mgOVk4wdWcSJ8B1R+oEqsOWkYosThUNoxqRB45SbZU9ihyR6vEiB5+n/HDJANMHltThdhgk9xahTKshj4Hiw4RRP04Z6KLFoEa11pamBAlEzrdzk23dJWCxXpS6BseHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741778940; c=relaxed/simple;
-	bh=X5+GB3yUeu0AMb3m1p/GP6GJgAjCm9u72uZGthp/DlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a+i8CYa7TpQ3ZLNs5AKBpKP/BCGxuFGr+SS1czHQEYOcZdR39pR5fv7bWjKGTlWrcKzTssFaI4ugvLZpOsSYXRYIcEsZqlNV+Bv+rZxcVKi4OnXeinQmEpob3Vmmm56NQuCnkx+rar5tDf38A3scevLIbm/SchQzGejxKigxM/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25A46152B;
-	Wed, 12 Mar 2025 04:29:09 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 962C83F694;
-	Wed, 12 Mar 2025 04:28:55 -0700 (PDT)
-Date: Wed, 12 Mar 2025 11:28:52 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Aisheng Dong <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <Z9Fv9JPdF5OWUHfk@bogus>
-References: <Z7Wvyn1QJQMVigf9@bogus>
- <Z7Z-ZnztmvUxWoQJ@NXL53680.wbi.nxp.com>
- <Z86w3ZRS6T2MvV3X@bogus>
- <DB9PR04MB84614FBF96E7BC0D125D97F688D62@DB9PR04MB8461.eurprd04.prod.outlook.com>
- <Z87UJdhiTWhssnbl@bogus>
- <Z87sGF_jHKau_FMe@bogus>
- <PAXPR04MB8459EA5C7898393E51C246AD88D12@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <PAXPR04MB8459A73179FFF0ED0C9A51E488D12@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <Z9AdICiyaCmzKh-N@bogus>
- <Z9FnZzBQuZ1j5k3I@bogus>
+	s=arc-20240116; t=1741778942; c=relaxed/simple;
+	bh=bT/nJAXFmHd6EnGcFSBetthh2ryHhFLbX5hC7UrIWz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EcsR8kpaASEdUUbs3jXnYbC67fJ0Ne2So3dzCXYYlsMnNYoGX9uJV5O/ERc7AUyCptaybiKo9QE6hEvXqi+YRXiI9xPB4OlhxF5Kp5V0gNo7qV5skeUjmeKtvF1Ve5BH02J7tHDM4fXvBGsXSKGr6Fujwf1kNiwbKU4vwrXzE9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XiiHiyJS; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XiiHiyJS"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741778936; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=vDfxkI5giWrkXyBcohVPuoNEY+c5llJuxem0Ij3I5bc=;
+	b=XiiHiyJSasEU+6GzgSOkMpeqxWs8aKhkUP8/a8RZW/3/EgoAXmRQnEuNEjj4zWl2BU3Po6pZLFvc1yc7SsKvCKX+h6k7EM0nA663hA1OJetrB4DapwAbB2sQTtZHYCHlsBT9DUQViNu3/Jkl8fIuK4NNajH2O3WtstZodvhrlzo=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WRCdv11_1741778934 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 12 Mar 2025 19:28:54 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com
+Cc: tony.luck@intel.com,
+	bp@alien8.de,
+	peterz@infradead.org,
+	catalin.marinas@arm.com,
+	yazen.ghannam@amd.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	jpoimboe@kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	baolin.wang@linux.alibaba.com,
+	tianruidong@linux.alibaba.com,
+	xueshuai@linux.alibaba.com
+Subject: [PATCH v4 1/3] x86/mce: Use is_copy_from_user() to determine copy-from-user context
+Date: Wed, 12 Mar 2025 19:28:50 +0800
+Message-ID: <20250312112852.82415-2-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20250312112852.82415-1-xueshuai@linux.alibaba.com>
+References: <20250312112852.82415-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9FnZzBQuZ1j5k3I@bogus>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 12, 2025 at 10:52:23AM +0000, Sudeep Holla wrote:
-> On Tue, Mar 11, 2025 at 11:23:12AM +0000, Sudeep Holla wrote:
-> > On Tue, Mar 11, 2025 at 11:12:45AM +0000, Peng Fan wrote:
-> > >
-> > > So it is clear that wrong fw_devlink is created, it is because scmi cpufreq device is
-> > > created earlier and when device_add, the below logic makes the fwnode pointer points
-> > > to scmi cpufreq device.
-> > >         if (dev->fwnode && !dev->fwnode->dev) {
-> > >                 dev->fwnode->dev = dev;
-> > >                 fw_devlink_link_device(dev);
-> > >         }
-> > >
-> >
-> > Thanks, looks like simple way to reproduce the issue. I will give it a try.
-> >
-> 
-> I could reproduce but none of my solution solved the problem completely
-> or properly. And I don't like the DT proposal you came up with. I am
-> not inclined to just drop this fwnode setting in the scmi devices and
-> just use of_node.
->
+Commit 4c132d1d844a ("x86/futex: Remove .fixup usage") introduced a new
+extable fixup type, EX_TYPE_EFAULT_REG, and commit 4c132d1d844a
+("x86/futex: Remove .fixup usage") updated the extable fixup type for
+copy-from-user operations, changing it from EX_TYPE_UACCESS to
+EX_TYPE_EFAULT_REG. The error context for copy-from-user operations no
+longer functions as an in-kernel recovery context. Consequently, the error
+context for copy-from-user operations no longer functions as an in-kernel
+recovery context, resulting in kernel panics with the message: "Machine
+check: Data load in unrecoverable area of kernel."
 
-Sorry for the typo that changes the meaning: s/not/now
+To address this, it is crucial to identify if an error context involves a
+read operation from user memory. The function is_copy_from_user() can be
+utilized to determine:
 
-I meant "I am now inclined ..", until we figure out a way to make this
-work with devlinks properly.
+    - the current operation is copy
+    - when reading user memory
 
+When these conditions are met, is_copy_from_user() will return true,
+confirming that it is indeed a direct copy from user memory. This check is
+essential for correctly handling the context of errors in these operations
+without relying on the extable fixup types that previously allowed for
+in-kernel recovery.
+
+So, use is_copy_from_user() to determine if a context is copy user directly.
+
+Fixes: 4c132d1d844a ("x86/futex: Remove .fixup usage")
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+Tested-by: Tony Luck <tony.luck@intel.com>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/kernel/cpu/mce/severity.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/severity.c b/arch/x86/kernel/cpu/mce/severity.c
+index dac4d64dfb2a..2235a7477436 100644
+--- a/arch/x86/kernel/cpu/mce/severity.c
++++ b/arch/x86/kernel/cpu/mce/severity.c
+@@ -300,13 +300,12 @@ static noinstr int error_context(struct mce *m, struct pt_regs *regs)
+ 	copy_user  = is_copy_from_user(regs);
+ 	instrumentation_end();
+ 
+-	switch (fixup_type) {
+-	case EX_TYPE_UACCESS:
+-		if (!copy_user)
+-			return IN_KERNEL;
+-		m->kflags |= MCE_IN_KERNEL_COPYIN;
+-		fallthrough;
++	if (copy_user) {
++		m->kflags |= MCE_IN_KERNEL_COPYIN | MCE_IN_KERNEL_RECOV;
++		return IN_KERNEL_RECOV;
++	}
+ 
++	switch (fixup_type) {
+ 	case EX_TYPE_FAULT_MCE_SAFE:
+ 	case EX_TYPE_DEFAULT_MCE_SAFE:
+ 		m->kflags |= MCE_IN_KERNEL_RECOV;
 -- 
-Regards,
-Sudeep
+2.39.3
+
