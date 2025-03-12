@@ -1,299 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E73F1E8346
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 19:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4516D1E8346;
+	Wed, 12 Mar 2025 19:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741809142; cv=none; b=Lm3eHvIhmErS7oyFnQhM25w4d85/PAgdBMz9YGQuIqX7W263N1oVRbI2LMl0JQ11pI1ulA075sbdpGKjB3+9j5FYtqCXoWdMndjAIrvHqSm9dGevmiJA9iPf0uPfL4PFs+17p9r2qmOvyTeK671L60znoTyhdzZRZUPRMy0wgFo=
+	t=1741809233; cv=none; b=py63Q2B+zcJi/S1QVsLLGD8pSW/L3pxuXtQTxKSniiRYFYEuNJSkSPktnGEit2hMFMn8qLjWuUzYbKSt532uGtYcQl1gSsI27zAErDEGMHtB1GNtltEqdGWv1e8GvV8o7/09+/mO5fuAzDpjpqkxhhIq1HsTG7siOntQqWOplrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741809142; c=relaxed/simple;
-	bh=wMBJKRI1jgs1UA7UuLcMi4YOteNf8/9ao2RduXR/UMo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=djYuYonEBAcz6yqv8rVipbGF6gkcBHKOFsivmguU0/owsKwy1U9t1IWtkVIRI7rZQo93i7Gh2DYNsUavnq4KGiFmcaLXfnhTiF5+3FwS5sX3+ttkye2HE1hN1obchbw8lAEw8KgEHIR972fvSj1Mke0bkWxVY8sLAFIeXPA2+f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k849Rvsf; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741809233; c=relaxed/simple;
+	bh=T17z7ZZgBrdvFAyiwQUxd/nAm4zqegF5ywX2Di6uSZE=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=aW7vg/8jARoZXuRm8zB5NsQp8tOA23/K1X7bRYVWZhB+1CtuXtlmDlhq2sh4AWQadxKn7nHW52dd0Kku2lelocuSHEbIxatJvMfosXBskYYWdlRAbIHjB9ZEYtZCpPNsnkjMeKe48qJm6AAWc68My2/qeMauujl16nDF/qZm1Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPQM8VTS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k849Rvsf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741809140; x=1773345140;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wMBJKRI1jgs1UA7UuLcMi4YOteNf8/9ao2RduXR/UMo=;
-  b=k849RvsfL3c4Rrz4o7u1RH2odfQrQHzja/WgLZ7ub358dbRSr4fwqroF
-   soKQl+wlLolcNfiS0BZvmq9dvb0PrRRv6W9H6IXfpz10FLIYt90dweKKh
-   X/jNm9TTzrJPcKraNHfxa4Lz6p53kmVkQ77eI7LQJOTgw7rRMR7FG8nja
-   9YT5GFXSCOjae+/fAVdDbOlYVSJpCpAmuga623u0G1Ktt6dX6WNcpa+pa
-   C/VOsB17FYeH/R98NgqTqw5+WiSSXSeFqxszyTm9uyZysQalV+u6j3O3y
-   Qp+ljHePJSn1qBl6fUX9uoiZXRkY4RImnHj+XzzwkJzXEimJQrTIG3rCS
-   A==;
-X-CSE-ConnectionGUID: GAeboWCIQ4606JBU0OmhyQ==
-X-CSE-MsgGUID: g3GeQZ16SrO8h0uvVTWKwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="60450188"
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="60450188"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 12:52:18 -0700
-X-CSE-ConnectionGUID: 0DfzXucPTiaNc46tXUS6/A==
-X-CSE-MsgGUID: qMkYS50FQBS/F1qU19ZHyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="121236045"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 12:52:09 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 41B4F20B5736;
-	Wed, 12 Mar 2025 12:52:07 -0700 (PDT)
-Message-ID: <29655aae-e1fd-4f3a-88f9-033034943ddd@linux.intel.com>
-Date: Wed, 12 Mar 2025 15:52:06 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPQM8VTS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276C4C4CEDD;
+	Wed, 12 Mar 2025 19:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741809232;
+	bh=T17z7ZZgBrdvFAyiwQUxd/nAm4zqegF5ywX2Di6uSZE=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=lPQM8VTSIIPVSNrpygoaXTPNRVy55y6Ui/P6+wvFKhkECX7cIPUCykyK7WEzcUZ5t
+	 UKhWAxKS3fdwM2cRyC9ng+lKKE718Q0CwDXSwn+gvh3E19pStCGmGLKzi7WVE5/Uz/
+	 pntMUmUfQwt7rtpLWv7sbC1z0fChVAD6RpV1DUJtl3OvjSLaIRP1QgL9iJz6OrtOoe
+	 hPCQJRwHx3zrt7lpLc1fOHG2go4HotUeUcEsTKruKc6nZ6zE4KC90PBDfblBw3oeVz
+	 30qnqoh1RdRyAEeUltg4gAuLkSJTRaqAyE0nl/oz80Ru1ARyJD64o4bOSbL7H8AkK8
+	 sa9J+wYmC8eIw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, 
+ Yicong Yang <yangyicong@hisilicon.com>, 
+ James Clark <james.clark@linaro.org>, 
+ "Dr. David Alan Gilbert" <linux@treblig.org>, 
+ Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>, 
+ Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>
+In-Reply-To: <20250228222308.626803-1-irogers@google.com>
+References: <20250228222308.626803-1-irogers@google.com>
+Subject: Re: [PATCH v2 00/11] Python improvements for a real use of
+ parse_events
+Message-Id: <174180923210.2923844.7937416471195450232.b4-ty@kernel.org>
+Date: Wed, 12 Mar 2025 12:53:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V8 2/6] perf: attach/detach PMU specific data
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, tglx@linutronix.de, bp@alien8.de, acme@kernel.org,
- namhyung@kernel.org, irogers@google.com, linux-kernel@vger.kernel.org,
- ak@linux.intel.com, eranian@google.com
-References: <20250312182525.4078433-1-kan.liang@linux.intel.com>
- <20250312182525.4078433-2-kan.liang@linux.intel.com>
- <20250312191823.GB10453@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250312191823.GB10453@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-
-
-On 2025-03-12 3:18 p.m., Peter Zijlstra wrote:
-> On Wed, Mar 12, 2025 at 11:25:21AM -0700, kan.liang@linux.intel.com wrote:
+On Fri, 28 Feb 2025 14:22:57 -0800, Ian Rogers wrote:
+> While parse_events access in python was added, it wasn't used by any
+> python script. In enabling this for the tracepoint.py script a number
+> of latent bugs and necessary improvements were discovered.
 > 
->> +static int
->> +attach_global_ctx_data(struct kmem_cache *ctx_cache)
->> +{
->> +	if (refcount_inc_not_zero(&global_ctx_data_ref))
->> +		return 0;
->> +
->> +	percpu_down_write(&global_ctx_data_rwsem);
->> +	if (!refcount_inc_not_zero(&global_ctx_data_ref)) {
->> +		struct task_struct *g, *p;
->> +		struct perf_ctx_data *cd;
->> +		int ret;
->> +
->> +again:
->> +		/* Allocate everything */
->> +		rcu_read_lock();
->> +		for_each_process_thread(g, p) {
->> +			cd = rcu_dereference(p->perf_ctx_data);
->> +			if (cd && !cd->global) {
->> +				cd->global = 1;
->> +				if (!refcount_inc_not_zero(&cd->refcount))
->> +					cd = NULL;
->> +			}
->> +			if (!cd) {
->> +				get_task_struct(p);
->> +				rcu_read_unlock();
->> +
->> +				ret = attach_task_ctx_data(p, ctx_cache, true);
->> +				put_task_struct(p);
->> +				if (ret) {
->> +					__detach_global_ctx_data();
->> +					return ret;
+> v2: Fix a whitespace issue on the evlist.config patch spotted by
+>     Howard and add his reviewed-by tags.
 > 
-> AFAICT this returns with global_ctx_data_rwsem taken, no?
+> [...]
+Applied to perf-tools-next, thanks!
 
-Ah, yes
-
-> 
->> +				}
->> +				goto again;
->> +			}
->> +		}
->> +		rcu_read_unlock();
->> +
->> +		refcount_set(&global_ctx_data_ref, 1);
->> +	}
->> +	percpu_up_write(&global_ctx_data_rwsem);
->> +
->> +	return 0;
->> +}
-> 
-> Can we rework this with guards? A little something like so?
-> 
-
-Yes. I will do more test and send a V9.
-
-Thanks,
-Kan
-
-> ---
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -5233,18 +5233,20 @@ static refcount_t global_ctx_data_ref;
->  static int
->  attach_global_ctx_data(struct kmem_cache *ctx_cache)
->  {
-> +	struct task_struct *g, *p;
-> +	struct perf_ctx_data *cd;
-> +	int ret;
-> +
->  	if (refcount_inc_not_zero(&global_ctx_data_ref))
->  		return 0;
->  
-> -	percpu_down_write(&global_ctx_data_rwsem);
-> -	if (!refcount_inc_not_zero(&global_ctx_data_ref)) {
-> -		struct task_struct *g, *p;
-> -		struct perf_ctx_data *cd;
-> -		int ret;
-> +	guard(percpu_write)(&global_ctx_data_rwsem);
-> +	if (refcount_inc_not_zero(&global_ctx_data_ref))
-> +		return 0;
->  
->  again:
-> -		/* Allocate everything */
-> -		rcu_read_lock();
-> +	/* Allocate everything */
-> +	scoped_guard (rcu) {
->  		for_each_process_thread(g, p) {
->  			cd = rcu_dereference(p->perf_ctx_data);
->  			if (cd && !cd->global) {
-> @@ -5254,24 +5256,23 @@ attach_global_ctx_data(struct kmem_cache
->  			}
->  			if (!cd) {
->  				get_task_struct(p);
-> -				rcu_read_unlock();
-> -
-> -				ret = attach_task_ctx_data(p, ctx_cache, true);
-> -				put_task_struct(p);
-> -				if (ret) {
-> -					__detach_global_ctx_data();
-> -					return ret;
-> -				}
-> -				goto again;
-> +				goto alloc;
->  			}
->  		}
-> -		rcu_read_unlock();
-> -
-> -		refcount_set(&global_ctx_data_ref, 1);
->  	}
-> -	percpu_up_write(&global_ctx_data_rwsem);
-> +
-> +	refcount_set(&global_ctx_data_ref, 1);
->  
->  	return 0;
-> +
-> +alloc:
-> +	ret = attach_task_ctx_data(p, ctx_cache, true);
-> +	put_task_struct(p);
-> +	if (ret) {
-> +		__detach_global_ctx_data();
-> +		return ret;
-> +	}
-> +	goto again;
->  }
->  
->  static int
-> @@ -5338,15 +5339,12 @@ static void detach_global_ctx_data(void)
->  	if (refcount_dec_not_one(&global_ctx_data_ref))
->  		return;
->  
-> -	percpu_down_write(&global_ctx_data_rwsem);
-> +	guard(perpcu_write)(&global_ctx_data_rwsem);
->  	if (!refcount_dec_and_test(&global_ctx_data_ref))
-> -		goto unlock;
-> +		return;
->  
->  	/* remove everything */
->  	__detach_global_ctx_data();
-> -
-> -unlock:
-> -	percpu_up_write(&global_ctx_data_rwsem);
->  }
->  
->  static void detach_perf_ctx_data(struct perf_event *event)
-> @@ -8776,9 +8774,9 @@ perf_event_alloc_task_data(struct task_s
->  	if (!ctx_cache)
->  		return;
->  
-> -	percpu_down_read(&global_ctx_data_rwsem);
-> +	guard(percpu_read)(&global_ctx_data_rwsem);
-> +	guard(rcu)();
->  
-> -	rcu_read_lock();
->  	cd = rcu_dereference(child->perf_ctx_data);
->  
->  	if (!cd) {
-> @@ -8787,21 +8785,16 @@ perf_event_alloc_task_data(struct task_s
->  		 * when attaching the perf_ctx_data.
->  		 */
->  		if (!refcount_read(&global_ctx_data_ref))
-> -			goto rcu_unlock;
-> +			return;
->  		rcu_read_unlock();
->  		attach_task_ctx_data(child, ctx_cache, true);
-> -		goto up_rwsem;
-> +		return;
->  	}
->  
->  	if (!cd->global) {
->  		cd->global = 1;
->  		refcount_inc(&cd->refcount);
->  	}
-> -
-> -rcu_unlock:
-> -	rcu_read_unlock();
-> -up_rwsem:
-> -	percpu_up_read(&global_ctx_data_rwsem);
->  }
->  
->  void perf_event_fork(struct task_struct *task)
-> @@ -13845,9 +13838,8 @@ void perf_event_exit_task(struct task_st
->  	/*
->  	 * Detach the perf_ctx_data for the system-wide event.
->  	 */
-> -	percpu_down_read(&global_ctx_data_rwsem);
-> +	guard(percpu_read)(&global_ctx_data_rwsem);
->  	detach_task_ctx_data(child);
-> -	percpu_up_read(&global_ctx_data_rwsem);
->  }
->  
->  static void perf_free_event(struct perf_event *event,
-> diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
-> index c012df33a9f0..36f3082f2d82 100644
-> --- a/include/linux/percpu-rwsem.h
-> +++ b/include/linux/percpu-rwsem.h
-> @@ -8,6 +8,7 @@
->  #include <linux/wait.h>
->  #include <linux/rcu_sync.h>
->  #include <linux/lockdep.h>
-> +#include <linux/cleanup.h>
->  
->  struct percpu_rw_semaphore {
->  	struct rcu_sync		rss;
-> @@ -125,6 +126,13 @@ extern bool percpu_is_read_locked(struct percpu_rw_semaphore *);
->  extern void percpu_down_write(struct percpu_rw_semaphore *);
->  extern void percpu_up_write(struct percpu_rw_semaphore *);
->  
-> +DEFINE_GUARD(percpu_read, struct perpcu_rw_semaphore *,
-> +	     perpcu_down_read(_T), percpu_up_read(_T))
-> +DEFINE_GUARD_COND(perpcu_read, _try, percpu_down_read_trylock(_T))
-> +
-> +DEFINE_GUARD(percpu_write, struct percpu_rw_semaphore *,
-> +	     percpu_down_write(_T), perpcu_up_write(_T))
-> +
->  static inline bool percpu_is_write_locked(struct percpu_rw_semaphore *sem)
->  {
->  	return atomic_read(&sem->block);
-> 
+Best regards,
+Namhyung
 
 
