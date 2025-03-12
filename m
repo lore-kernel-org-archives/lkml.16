@@ -1,184 +1,219 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1085023496B
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE90423496B;
+	Wed, 12 Mar 2025 10:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741775616; cv=none; b=dda/UmuAJ8GbmEO3iP36vJzt3FVeDxrmyI+d7CyznI7aEzYwCOTTD1tmvY5SXXL1yjVBE52RqdOpENYnNsW7KS7Nu4PYX3OSAIDSspzBQSJUh8Ldu0IrdQ0qpCrwnLrgvqRLCXQQtUETxNyDLnsEs8TejTFt1NudNV1T55Z5HMc=
+	t=1741775675; cv=none; b=Exf5/CYAJyR52+nptW5w07+gByDKSrlq8vs1RULtXhey2j2cVPFXOiVgzz1bWoAmWy6h2FmTHyzoJvefEHLp1ptJa0hsXwoqxov89cqqsIJALxIp3mCMVpPAiqF9XBEj03kiTmucZFeK0V3Bj8fzzRj949jolRKQrJ8yGvX1igo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741775616; c=relaxed/simple;
-	bh=Lu3o8fM/Acuzi2zTVCVuxwBJ//tlyEq3749eXR0EwoI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=AojX2OkMFe4g8HZ2Wfgl5zaYc6qUoZmcz640uaZMenHEr+i53UOW7vD9kUD25s4Dja4x+kJyDmkg7zbsvaB+/A/mUZTb07kL9Y2t8s+ghiAtfld5WP1EXai7heL3WkW+ZRCOMs3A/c9rMiVJIKqpEaY1cbO1rIgE7VPjRNHwg+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XoYi4Wph; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741775675; c=relaxed/simple;
+	bh=vtEgiFiNKz4mOrS9h4JjnDKiS+PYUsjqaZRsDlaZ44Q=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=fGZVE7zyeyoFdGjYM/+atdKlONmuT5ZFGawIODGqY2ZLQmb+Ex3ldufoCxlfImDJICgJn0QHQ6e/0qSIO48x2QW9E+mW2rCN03p3792LLztkoRFE1jCnatcGNIHuUFu1tG93qZeBRlEEw+mORkzMH1sYcihZQsXwBCseN+XtGZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=WNMOmc6v; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XoYi4Wph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741775615; x=1773311615;
-  h=date:from:to:cc:subject:message-id;
-  bh=Lu3o8fM/Acuzi2zTVCVuxwBJ//tlyEq3749eXR0EwoI=;
-  b=XoYi4WphB9o53NwmVfjJ+0vqOx3kYix6LLTIHNX1XQzVJx5qfWBCjd44
-   bh2AxDolziknhiu19ttuQjm7fF5tAHIE2S0ZJ6m54bQF2lMXhZfuxNfS2
-   T7ehwjqvpJg/RASWMGbDWK7oZWB3taBTsUv+Tq5cRHxiwcRZTvCwoeYpd
-   zDqbM/js6+oEhFAHrpGzOPDsi5Stm2s3GK9toNRscKDt3IZWveL0WFtUI
-   SE0OPA9n/zZixPXMh0phWeoV3DvKgGHjLUE5zpm3D72v3zQX9ZdsXEREo
-   vm12L3IVU9e+5SkWwgl1XDcTTkPaA/3d5W4BGM22nu+Nnpgmzy8Qf/Ugz
-   g==;
-X-CSE-ConnectionGUID: 9QCSS2erRda0/JBlJNFWNQ==
-X-CSE-MsgGUID: ZRumeO4TTvqTI+pvxTNhnQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="54230976"
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="54230976"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 03:33:35 -0700
-X-CSE-ConnectionGUID: xvgdCU4ZQbCm6DY91ekHcA==
-X-CSE-MsgGUID: M119qpDITjOLuli2QZK8cQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="125646298"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 12 Mar 2025 03:33:34 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tsJP0-0008Oi-0u;
-	Wed, 12 Mar 2025 10:33:30 +0000
-Date: Wed, 12 Mar 2025 18:32:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:tip/urgent] BUILD SUCCESS
- 841f1fadc7d9f5472aca0448b332aa817cbc4da3
-Message-ID: <202503121827.puMpRG4R-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="WNMOmc6v"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1741775664;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RCx5YAH/sAsaL16jy2DXOMRm0Fr1aAKlpBDGrdma5Zw=;
+	b=WNMOmc6vboNRAgv8JLDAr228Cs7eNkjbwkz0CNj6JfukEymA5BgjrT1MlN9++KpY3Lyo4F
+	PpA1H5ibX3N6R1qU0aU+JVGJesw70AXKUC2rurEwEsMedGq4zpaTxPmTsgT26JhSpP+rj2
+	c8VRPMruMYnyJdPceQhktYHaYO98OP2UxTtbsnsTbAhzzFUVJgrQPW4UVxqzWwrpf/GuHU
+	KQiriIKlpSJcjTFbkM5yblTCRpxPTKod5q4zUV4bHk0ujc5I4Ryrv25y9MBe4KFar+LxXH
+	VW9hn4uNwUf3GHlzdLON+fT9DIwEL4DsI1GSkn/T28XeywhBQlvsokD/GDUWeQ==
+Date: Wed, 12 Mar 2025 11:34:21 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Alexey Charkov <alchark@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Viresh Kumar
+ <viresh.kumar@linaro.org>, Chen-Yu Tsai <wens@kernel.org>, Diederik de Haas
+ <didi.debian@cknow.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>
+Subject: Re: [PATCH v5 7/8] arm64: dts: rockchip: Add OPP data for CPU cores
+ on RK3588j
+In-Reply-To: <e55125ed-64fb-455e-b1e4-cebe2cf006e4@cherry.de>
+References: <20240617-rk-dts-additions-v5-0-c1f5f3267f1e@gmail.com>
+ <d8ce8db2-1717-40f8-b53e-24cc71a758c9@cherry.de>
+ <CABjd4Yw-r-ogfwcrph4K1wbkybS25gk6LFg8wpqLG27uWdybNA@mail.gmail.com>
+ <2914631.KiezcSG77Q@diego>
+ <CABjd4YxF4N1tAgGUZk-oKkMUO+Q9rWHZsas9gMQdJ+TF4A1=NA@mail.gmail.com>
+ <e55125ed-64fb-455e-b1e4-cebe2cf006e4@cherry.de>
+Message-ID: <a56b59a21dc3c21192fe45197eee4865@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
-branch HEAD: 841f1fadc7d9f5472aca0448b332aa817cbc4da3  Merge branch into tip/master: 'sched/urgent'
+Hello Quentin,
 
-elapsed time: 1451m
+On 2025-03-12 11:15, Quentin Schulz wrote:
+> On 2/16/25 1:32 PM, Alexey Charkov wrote:
+>> On Sat, Feb 15, 2025 at 11:30 PM Heiko Stübner <heiko@sntech.de> 
+>> wrote:
+>>> Am Samstag, 15. Februar 2025, 19:59:44 MEZ schrieb Alexey Charkov:
+>>>> On Tue, Feb 11, 2025 at 7:32 PM Quentin Schulz 
+>>>> <quentin.schulz@cherry.de> wrote:
+>>>>> On 6/17/24 8:28 PM, Alexey Charkov wrote:
+> [...]
+>>>>>> +     };
+>>>>>> +
+>>>>>> +     cluster2_opp_table: opp-table-cluster2 {
+>>>>>> +             compatible = "operating-points-v2";
+>>>>>> +             opp-shared;
+>>>>>> +
+>>>>>> +             opp-1416000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <1416000000>;
+>>>>>> +                     opp-microvolt = <750000 750000 950000>;
+>>>>>> +                     clock-latency-ns = <40000>;
+>>>>>> +             };
+>>>>>> +             opp-1608000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <1608000000>;
+>>>>>> +                     opp-microvolt = <787500 787500 950000>;
+>>>>>> +                     clock-latency-ns = <40000>;
+>>>>>> +             };
+>>>>>> +             opp-1800000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <1800000000>;
+>>>>>> +                     opp-microvolt = <875000 875000 950000>;
+>>>>>> +                     clock-latency-ns = <40000>;
+>>>>>> +             };
+>>>>>> +             opp-2016000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <2016000000>;
+>>>>>> +                     opp-microvolt = <950000 950000 950000>;
+>>>>>> +                     clock-latency-ns = <40000>;
+>>>>>> +             };
+>>>>> 
+>>>>> opp-1800000000 and opp-2016000000 should be removed as well.
+>>>>> 
+>>>>> Did I misunderstand what Rockchip did here? Adding Kever in Cc at 
+>>>>> least
+>>>>> for awareness on Rockchip side :)
+>>>>> 
+>>>>> I guess another option could be to mark those above as
+>>>>> 
+>>>>> turbo-mode;
+>>>>> 
+>>>>> though no clue what this would entail. From a glance at cpufreq, it
+>>>>> seems that for Rockchip since we use the default cpufreq-dt, it 
+>>>>> would
+>>>>> mark those as unusable, so essentially a no-op, so better remove 
+>>>>> them
+>>>>> entirely?
+>>>> 
+>>>> I believe the opp core just marks 'turbo-mode' opps as
+>>>> CPUFREQ_BOOST_FREQ, and cpufreq-dt only passes that flag along to 
+>>>> the
+>>>> cpufreq core. But then to actually use those boost frequencies I 
+>>>> would
+>>>> guess the governor needs to somehow know the power/thermal 
+>>>> constraints
+>>>> of the chip?.. Don't know where that is defined.
+>>> 
+>>> personally I don't believe in "boost" frequencies - except when they 
+>>> are
+>>> declared officially.
+>>> 
+>>> Rockchip for the longest time maintains that running the chip outside
+>>> the declared power/rate envelope can reduce its overall lifetime.
+>>> 
+>>> So for Rockchip in mainline a "it runs stable for me" has never been 
+>>> a
+>>> suitable reasoning ;-) .
+>> 
+>> My key concern here was perhaps that we are looking at a file inside
+>> the Rockchip source tree which looks relevant by the name of it, but
+>> doesn't actually get included anywhere for any of the boards. This may
+>> or may not constitute an endorsement by Rockchip of any OPPs listed
+>> there :-D
+> 
+> Rockchip support stated:
+> 
+> """
+> If you run overdrive mode, you do not need to include rk3588j.dtsi,
+> and you can change it to #incldue rk3588.dtsi to ensure that the
+> maximum frequency can reach 2GHz
+> 
+> below picture from datasheet.
+> """
+> 
+> The picture is the table 3-2 Recommended operating conditions, page 30
+> from the RK3588J datasheet, e.g.
+> https://www.lcsc.com/datasheet/lcsc_datasheet_2403201054_Rockchip-RK3588J_C22364189.pdf
+> 
+> What is overdrive?
+> 
+> """
+> Overdrive mode brings higher frequency, and the voltage will increase
+> accordingly. Under
+> the overdrive mode for a long time, the chipset may shorten the
+> lifetime, especially in high temperature condition
+> """
+> 
+> according to the same datasheet, end of the same table, page 31.
+> 
+> so this seems like a turbo-mode frequency to me.
+> 
+> Additionally, the note for the "normal mode" (the one with the lower
+> freqs) states:
+> 
+> """
+> Normal mode means the chipset works under safety voltage and frequency. 
+> For the
+> industrial environment, highly recommend to keep in normal mode, the 
+> lifetime is
+> reasonably guaranteed.
+> """
+> 
+> I believe "industrial environment" means RK3588J used in the
+> temperatures that aren't OK for the standard RK3588 variant?
 
-configs tested: 107
-configs skipped: 3
+Thanks a lot for obtaining these clarifications!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Yes, I'd say that in this case "industrial environment" boils down
+to the extended temperature range for the RK3588J variant.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250311    gcc-13.2.0
-arc                   randconfig-002-20250311    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250311    gcc-14.2.0
-arm                   randconfig-002-20250311    clang-16
-arm                   randconfig-003-20250311    gcc-14.2.0
-arm                   randconfig-004-20250311    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250311    gcc-14.2.0
-arm64                 randconfig-002-20250311    gcc-14.2.0
-arm64                 randconfig-003-20250311    gcc-14.2.0
-arm64                 randconfig-004-20250311    gcc-14.2.0
-csky                  randconfig-001-20250311    gcc-14.2.0
-csky                  randconfig-002-20250311    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250311    clang-21
-hexagon               randconfig-002-20250311    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250311    gcc-12
-i386        buildonly-randconfig-002-20250311    clang-19
-i386        buildonly-randconfig-003-20250311    clang-19
-i386        buildonly-randconfig-004-20250311    clang-19
-i386        buildonly-randconfig-005-20250311    clang-19
-i386        buildonly-randconfig-006-20250311    gcc-11
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch             randconfig-001-20250311    gcc-14.2.0
-loongarch             randconfig-002-20250311    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           ip28_defconfig    gcc-14.2.0
-nios2                         10m50_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250311    gcc-14.2.0
-nios2                 randconfig-002-20250311    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250311    gcc-14.2.0
-parisc                randconfig-002-20250311    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                        fsp2_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250311    clang-21
-powerpc               randconfig-002-20250311    clang-16
-powerpc               randconfig-003-20250311    gcc-14.2.0
-powerpc64             randconfig-001-20250311    gcc-14.2.0
-powerpc64             randconfig-002-20250311    clang-18
-powerpc64             randconfig-003-20250311    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                 randconfig-001-20250311    gcc-14.2.0
-riscv                 randconfig-002-20250311    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250311    clang-15
-s390                  randconfig-002-20250311    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                          r7780mp_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250311    gcc-14.2.0
-sh                    randconfig-002-20250311    gcc-14.2.0
-sh                            shmin_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250311    gcc-14.2.0
-sparc                 randconfig-002-20250311    gcc-14.2.0
-sparc                       sparc32_defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250311    gcc-14.2.0
-sparc64               randconfig-002-20250311    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250311    gcc-12
-um                    randconfig-002-20250311    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250311    gcc-12
-x86_64      buildonly-randconfig-002-20250311    gcc-12
-x86_64      buildonly-randconfig-003-20250311    clang-19
-x86_64      buildonly-randconfig-004-20250311    clang-19
-x86_64      buildonly-randconfig-005-20250311    gcc-12
-x86_64      buildonly-randconfig-006-20250311    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250311    gcc-14.2.0
-xtensa                randconfig-002-20250311    gcc-14.2.0
+>> I haven't seen a TRM for the J variant, nor do I have a board with
+>> RK3588J to run tests, so it would be great if Kever could chime in
+>> with how these OPPs are different from the others (or not).
+>> 
+>>> So while the situation might be strange for the rk3588j, I really 
+>>> only want
+>>> correct frequencies here please - not any pseudo "turbo freqs".
+>>> 
+>>> I don't care that much what people do on their own device{s/trees}, 
+>>> but
+>>> the devicetrees we supply centrally (and to u-boot, etc) should only
+>>> contain frequencies vetted by the manufacturer.
+>> 
+>> Fair enough. Let's just try and get another data point on whether
+>> these frequencies are vetted or not.
+> 
+> So the higher freqs seems to be vetted (and used by default on
+> Rockchip's BSP kernel), it just feels like you aren't really supposed
+> to run those higher frequencies all the time? And especially not in
+> "industrial environment"?
+> 
+> I would assume we want to stay on the safer side and remove those
+> higher frequencies? Heiko?
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I agree, we should remove the higher-frequency OPPs.  I'd like
+to go through everything once again in detail and prepare a patch
+that removes the unsafe OPPs, and you could review it once it's
+on the ML, to make sure it's fine.
