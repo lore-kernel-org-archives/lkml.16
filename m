@@ -1,90 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03662236445;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACCF237705;
 	Wed, 12 Mar 2025 08:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741769055; cv=none; b=eucAw5JxgKmbZKa54YlDHOQFUwmw6t1q/APp3pJfBNUKuJnMxX9HJMUUSx1+AvIR41T5iO7ZZvTycHHlQt9QMt8ybnlHfhZps/w3iTUWGs8Ye8RlNa6gbGLLU2sCWSQIPm+A5RRV0vcB74mKIxsboLJVDOYUKAcW2irPryflHLY=
+	t=1741769056; cv=none; b=Uo7RybZ6sD/4Xc3XglpMBrQBcx0YChddfutZBgCIZHXQsA8WoEpqE//TJh9PXhrZzJgmipRXW+uGn7cfz8JZrkTvjmqwSESqHZSru9qtOiUmv6hypKE8z/2rvuY6w15AWNc1htcnOFWiE0xas2JMdTBARXOonhG9ftarzDCij5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741769055; c=relaxed/simple;
-	bh=90jj+F1PoWmDkHrasAfWGfMv1PJi2auNqpCIRetLGdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c5xUCopZzOclKZtn4od92OxNmfdgOLR1GBS5nQPZfV05UAVJ7n6IH+69QLNPdfgGWmfWoygVyoMqXE16z4KMTvUJoP36p0YswvVEhw64mswpmMhvLKMsrqZUJ6sONKZ9B97+hMPZ68x0U/qfdL9QNWlbnZwHQaNzOYm3AxyfmrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHmsYWCH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741769056; c=relaxed/simple;
+	bh=pokr2ga+xAN9vqh02gAMtIotrsuEA2w49+E2/xDPxLQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WI72vyns6dgGkkGaRaP08ICZWbE62hHJP9jeyguIsAPxTHG4utGJGUL4Wspru9xpqLjzUSRJTyM/mwfP0/P/LCWftbvEn5RL2yHfbZqgcxLA6m15mBysrBj7DL8QR7Bsg6AtK+fS0bHCSOMA7l6bI7qS9iB1XnMNJkDO+Fip9qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ghrQbzsm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHmsYWCH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD6A1C4CEED;
-	Wed, 12 Mar 2025 08:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741769054;
-	bh=90jj+F1PoWmDkHrasAfWGfMv1PJi2auNqpCIRetLGdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JHmsYWCH20ivwHnzwwENo7L3r+EjwK4dZp/ZLdRGgej60MBYAkt9v7bGB2hqwjnxi
-	 ER/Wsr7SZc3QVrLQbRzD3CztAk3qOviT+4+chhrq9vJ5uLmCihcdmdmZHdU1Qy7FsR
-	 7feOyGXeGFo1eX7XgQ5vcdqn4amzn0WojhF3z47oR6dq3OSQeGgHdriSqTbYyPjGL1
-	 3kabv87vlyazujPXpPF3vyI7au0smv5CnOxWEkNH+B5nZ/WByztkQWRkFl7kKirkyD
-	 WlnKeCsdOAduV5VCMhiB1tPDbqSfNU/WooQP3QWPdc/7UYZ60DDJuF5LLDxVX5GcrO
-	 6FMS2a1OlNuhw==
-Date: Wed, 12 Mar 2025 10:44:10 +0200
-From: Dmitry Baryshkov <lumag@kernel.org>
-To: Pratyush Brahma <quic_pbrahma@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: add the pcie smmu node
-Message-ID: <rj4jtqchuetrbtczbhvaa5hcp5olumwdbao3x4pulkxiqcq2ag@v6ftffk6bcc5>
-References: <20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com>
- <aau6kgdbsq5mu5h4kqggzgua26o7dwc6hbkpmtgcnqx5dqhlgd@qcm2xzr64fyg>
- <43450c5e-837c-4215-9bb4-69066b175832@quicinc.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ghrQbzsm"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BMH9qW023245;
+	Wed, 12 Mar 2025 08:44:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EDuMQ7LYnkP271F4aNUECeQ+q+CTHt2uK1MmUiieRtQ=; b=ghrQbzsmksxmqfCg
+	jjDfHwvmcQcKYhKLkUx5OpSFpdeKfEKOhwMX7vK/sKTJuxZkP6SsB+Kfh24fb73Z
+	P0kqCJ2F5o342p72DeXOmsHoIWLkZySrTXizOFjKxNzl6vbuRLKADuzoXTnEY8lK
+	BH/zj8zPwFH+GK9H9yO06VOVMc+1hSIr8hvhK0bm7JD8aKOUuX6f5rQElPjNN3qu
+	Awjj7tOzgFwu70QdSp6ma8c/0IIpbSOJ5fUVNpUn8kBcq8OGWG9LOPrC7VMaDbhf
+	U80HAFSyYOsG7EcicPJw+nBQYC6hUMwBruXYrKszkysMnZVs9lWmvpk1nrfOPbnI
+	Qrhf0w==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2mhq0p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 08:43:59 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52C8hxiw012386
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 08:43:59 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 12 Mar 2025 01:43:54 -0700
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <quic_srichara@quicinc.com>,
+        <quic_devipriy@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Varadarajan Narayanan <quic_varada@quicinc.com>
+Subject: [PATCH v12 2/4] arm64: dts: qcom: ipq9574: Add MHI to pcie nodes
+Date: Wed, 12 Mar 2025 14:13:28 +0530
+Message-ID: <20250312084330.873994-3-quic_varada@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250312084330.873994-1-quic_varada@quicinc.com>
+References: <20250312084330.873994-1-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <43450c5e-837c-4215-9bb4-69066b175832@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: EMRHXXQskSJ9Xq_IHDMJHaIhGzCMkIja
+X-Authority-Analysis: v=2.4 cv=aKnwqa9m c=1 sm=1 tr=0 ts=67d1494f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=PA9gvwGdt4CPNWq3bz8A:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: EMRHXXQskSJ9Xq_IHDMJHaIhGzCMkIja
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-12_03,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=730 clxscore=1015
+ adultscore=0 malwarescore=0 priorityscore=1501 phishscore=0 spamscore=0
+ bulkscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 suspectscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503120058
 
-On Wed, Mar 12, 2025 at 12:41:38PM +0530, Pratyush Brahma wrote:
-> 
-> On 3/12/2025 12:23 PM, Dmitry Baryshkov wrote:
-> > On Thu, Feb 06, 2025 at 07:13:17PM +0530, Pratyush Brahma wrote:
-> > > Add the PCIe SMMU node to enable address translations
-> > > for pcie.
-> > > 
-> > > Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
-> > > ---
-> > >   arch/arm64/boot/dts/qcom/qcs8300.dtsi | 75 +++++++++++++++++++++++++++++++++++
-> > >   1 file changed, 75 insertions(+)
-> > > 
-> > Reviewed-by: Dmitry Baryshkov <lumag@kernel.org>
-> > 
-> > Though I see a little benefit in having this SMMU node if it is not
-> > followed by the PCIe enablement.
-> 
-> Thanks for the review!
-> 
-> PCIe enablement changes for qcs8300 have been posted already [1] and [1]
-> needs
-> this patch as mentioned in [2].
+Append the MHI range to the pcie nodes. Convert reg-names to vertical
+list.
 
-Ack. In future please consider posting series in a logical way: if PCIe
-SMMU is only useful for PCIe and it is required for PCIe to work it
-makes much more sense to have it as a part of the PCIe enablement series
-rather than having it as a separate patch which can easily get lost.
+Fixes: d80c7fbfa908 ("arm64: dts: qcom: ipq9574: Add PCIe PHYs and controller nodes")
+Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+---
+New patch introduced in this patchset. MHI range was missed in the
+initial post
+---
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi | 40 +++++++++++++++++++++------
+ 1 file changed, 32 insertions(+), 8 deletions(-)
 
-> 
-> [1] https://lore.kernel.org/lkml/20250310063103.3924525-8-quic_ziyuzhan@quicinc.com
-> [2] https://lore.kernel.org/lkml/20250310063103.3924525-1-quic_ziyuzhan@quicinc.com
-> 
-> -- 
-> Thanks and Regards
-> Pratyush Brahma
-> 
-
+diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+index cac58352182e..c27b3a90bd96 100644
+--- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+@@ -880,8 +880,14 @@ pcie1: pcie@10000000 {
+ 			      <0x10000f20 0xa8>,
+ 			      <0x10001000 0x1000>,
+ 			      <0x000f8000 0x4000>,
+-			      <0x10100000 0x1000>;
+-			reg-names = "dbi", "elbi", "atu", "parf", "config";
++			      <0x10100000 0x1000>,
++			      <0x000fe000 0x1000>;
++			reg-names = "dbi",
++				    "elbi",
++				    "atu",
++				    "parf",
++				    "config",
++				    "mhi";
+ 			device_type = "pci";
+ 			linux,pci-domain = <1>;
+ 			bus-range = <0x00 0xff>;
+@@ -960,8 +966,14 @@ pcie3: pcie@18000000 {
+ 			      <0x18000f20 0xa8>,
+ 			      <0x18001000 0x1000>,
+ 			      <0x000f0000 0x4000>,
+-			      <0x18100000 0x1000>;
+-			reg-names = "dbi", "elbi", "atu", "parf", "config";
++			      <0x18100000 0x1000>,
++			      <0x000f6000 0x1000>;
++			reg-names = "dbi",
++				    "elbi",
++				    "atu",
++				    "parf",
++				    "config",
++				    "mhi";
+ 			device_type = "pci";
+ 			linux,pci-domain = <3>;
+ 			bus-range = <0x00 0xff>;
+@@ -1040,8 +1052,14 @@ pcie2: pcie@20000000 {
+ 			      <0x20000f20 0xa8>,
+ 			      <0x20001000 0x1000>,
+ 			      <0x00088000 0x4000>,
+-			      <0x20100000 0x1000>;
+-			reg-names = "dbi", "elbi", "atu", "parf", "config";
++			      <0x20100000 0x1000>,
++			      <0x0008e000 0x1000>;
++			reg-names = "dbi",
++				    "elbi",
++				    "atu",
++				    "parf",
++				    "config",
++				    "mhi";
+ 			device_type = "pci";
+ 			linux,pci-domain = <2>;
+ 			bus-range = <0x00 0xff>;
+@@ -1120,8 +1138,14 @@ pcie0: pci@28000000 {
+ 			      <0x28000f20 0xa8>,
+ 			      <0x28001000 0x1000>,
+ 			      <0x00080000 0x4000>,
+-			      <0x28100000 0x1000>;
+-			reg-names = "dbi", "elbi", "atu", "parf", "config";
++			      <0x28100000 0x1000>,
++			      <0x00086000 0x1000>;
++			reg-names = "dbi",
++				    "elbi",
++				    "atu",
++				    "parf",
++				    "config",
++				    "mhi";
+ 			device_type = "pci";
+ 			linux,pci-domain = <0>;
+ 			bus-range = <0x00 0xff>;
 -- 
-With best wishes
-Dmitry
+2.34.1
+
