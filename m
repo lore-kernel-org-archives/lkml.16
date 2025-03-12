@@ -1,126 +1,106 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BA123F38E;
-	Wed, 12 Mar 2025 11:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05071A256B
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 11:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741779416; cv=none; b=CC8vn7Hch5flE+YsLw21vUUeQm2qtHyOdbCNOh9y9Vjk1sN4XZsbCZHP8wq0X3DvK3hfnO7uZkrm8QhbiR6gILA+LVWljWwwKnKRinXDaesb9OLiUPPM76DC7+gdNhPuw8YETsCb3FEfoSstK3b2t4BluHeRzaj3W6B4z6oPAFQ=
+	t=1741779435; cv=none; b=Tr6yMG/TRSozY7x5eQEde+jke7UXOFIK4P30Z0acizBJuySa6n9PLWExVB6sET68huFgWNtmEUlr5Pc7TSexcLBBeZeIaqfodWM53spP9nRX3TsWHdPS4OGq1j65c+sQn/gX1Wo8AIquD/5u6QeNIAe9zEhXUbuOFrgBmIQ82Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741779416; c=relaxed/simple;
-	bh=gknEh2t/Je3Rn3xjD+1SZpU4HNy9nSnVGJ/aaMZ0Ecg=;
+	s=arc-20240116; t=1741779435; c=relaxed/simple;
+	bh=7Z26bGllpYXu8uBHNuMML/I4jSffsSVsXJKQG3g7s9g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wx5Tp3ntLyWoe5aboAzjwNIs+jql4+BWFqhhuVVqzeW+suK+7lVfY6aBJVb3WUHc8joAfN35tANop/Ci0cqICWxrZv9pZut5FJ+gqVKiAWfoxfjU2+T46075ySp8KkrV0agy0zTdde2lhM2ASpQlbPu//vBWCCtsAiXpHtkDIvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lNKyjftN; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=fsnzl/bOQGGYE+GNca/hTegSExcC/WBlrRjyTOqECmcP43eel9Dr8yIjLYbe8X2e6rHbRPQULzWK4im4dqlO5VV8ls14zEzMJ3PJyzjSFCiIX7tjA0JVme0zOpvZkXu9UPnFS3nSYExVY68RWhvD8+M4bz6/phRTn0DRYGddMhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HwJvAkD0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNKyjftN"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so1751704a91.1;
-        Wed, 12 Mar 2025 04:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741779414; x=1742384214; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gknEh2t/Je3Rn3xjD+1SZpU4HNy9nSnVGJ/aaMZ0Ecg=;
-        b=lNKyjftNloIjlsjeTRPqp3XTG5gE4YWblcdl1DnnXlZATJVt4IVro1MZHd+D2kKyu2
-         dI/IuV0AB+VT/UDG0txP+tFHMMbuuh06gvhlsTmLR3Lc92UK3tSqDyI6VO9nynx2hCkt
-         cW1JGhLcPXEJZsQJnX8QFpj3XuXLE0y7qUvBbIc+fSX2Pc+LKKAUyPAYDlkPzI9+RGNl
-         LQeUofa1smf9DgZiNHlFpAbm3OJfjliA6r6udZKkPTy9p8gf+lAAfcKqYfaZhLTi4RSu
-         EmQNCv/RFqR+FpuCAuGjfI6wILK8MA2jYhKzjLT56lJ9TOINiv5xVCkuu7Y9YQGS0z3z
-         Sg/A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HwJvAkD0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741779432;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v39mmJ/ZoF+dw+zjNgOr5RkZMHs7oG2cf+OVSp6s3sM=;
+	b=HwJvAkD0cnKPxz+/hkAmilNPE8BBGyFV/ArWs2Pr4N1NtPOPZZU7/TrNijNq1d/xYT73Gl
+	g3/P5MCWi+KsM8oGdvA7oU6ADC1dkaIUY/7BbT9nugT7iR1JnyQB6PuO/TbI7OenVJ047b
+	2GYkNK1lRCRJ9txfndiM3XmQAa0gGwI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-620-2hX1PTfDPNyCyCWh9Rh1Vw-1; Wed, 12 Mar 2025 07:37:11 -0400
+X-MC-Unique: 2hX1PTfDPNyCyCWh9Rh1Vw-1
+X-Mimecast-MFC-AGG-ID: 2hX1PTfDPNyCyCWh9Rh1Vw_1741779430
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3912539665cso354055f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 04:37:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741779414; x=1742384214;
+        d=1e100.net; s=20230601; t=1741779430; x=1742384230;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gknEh2t/Je3Rn3xjD+1SZpU4HNy9nSnVGJ/aaMZ0Ecg=;
-        b=OMGORJuCkuJfH2voPpdkProV+1YVZvBLO4Z312LJVpEboVab+gfLl3cDYMlfhAEWyk
-         3JZx5zEw5tSeCfoUgQkpEAiC5mVDvoKEqE177c5t7EwG1nQkNMYPV2zk2TXLTT9MvCLa
-         qD9hqWptpbQZ0XdHd2QBfkCLnbSx+Jjs00ZetEarBiAM68vNFnGp8EZlg1zB4vIeLM5I
-         EnHrr8aKWFxLXKarmwI+Hvog2Kf/0oI0a+o7mk7hE10plV5wbDMDAlLwpH1HHP37r9p3
-         bV1M4O+VNKmPsd6h8B8V76hqnNHxFELOkeEqFg0KPvzm7sQV8KBbViI+4uvRzpqYHFwN
-         OTgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8LPTC6VkK0xkeXIvGPksYS5qB365eq3BehtIB2YrZA3qKNBGGXXXLt45D+netU9YEm2fqJkirMWrjiQAJ26pXaQI=@vger.kernel.org, AJvYcCWmhdh5/jwUIVWWAKwrfQjRG1E1sfK598EUGtrFZzcbGWo1/+tUJsrEmWbCTKN+anVNpk7c7xD4fal3szQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypiThAtP2dPVIlG32LqWw2p6tUSf35aS+3WaMwJDIjtjVMrHp1
-	nrPLO2cnFOJZBNrRnez5TZXDUTMv5FkzAtBt5hgzkjsq5JSE+6Yd2lmhbVAjMOvhEn3jU7JfSyn
-	Thdn+R/rAQIUFMRou0R8Z7+5GEyE=
-X-Gm-Gg: ASbGncvET9yYdf71a353J1JemeUdaS1TO/N1ksV1ar4Jwree8hLLfZJbUX9st+oC8cy
-	RV9IyxfLX6ZclXCqqj4t1aVbkSUJmi/Ra6BXAwUPen2E5yHK+PjMBeuiIas7o4H2h2zJvNxubBx
-	17ebKUsdeR6t6BQ2fwbtu2u7ngaA==
-X-Google-Smtp-Source: AGHT+IEDN2xmhNlHD/KpfAlbk7SO5pRX4Yth6unjvNI0fUm0BIoxX6m646b5DTRt63pZIvK66yoOhveOUoUHNzUZqQU=
-X-Received: by 2002:a17:90b:1d0b:b0:2ff:7970:d2bd with SMTP id
- 98e67ed59e1d1-300ff9090d1mr3647168a91.5.1741779414383; Wed, 12 Mar 2025
- 04:36:54 -0700 (PDT)
+        bh=v39mmJ/ZoF+dw+zjNgOr5RkZMHs7oG2cf+OVSp6s3sM=;
+        b=Sz1nPx80tASsuHmDVEAsSszedPYnAUsCSGsdFezXTm/JalIvvH7btaVSQ72OcaA3Bt
+         ou/84AnTEobtMc/uMkBrQYe1DQMvH0Vu4mjLD2sOAWzLNa+/iZOALFzp/sU56VnSPIH4
+         3lFsGU9fTRR4FNJpBY1c2u53qKc2tTcOthYKH/rHE8OXx2RWfRLhrVTLnm/ewUmhpLEY
+         PrJSIjiGGzucABjLFkglc/3ql7mkRoV/OJViZcqaQwN5QkEO5SdK0R9qoqlPd4Qb+p8a
+         Z6uUyWyD8JuFe6SZ8rPPsEfoJVbuGqsrFsXzhWcGACR1u/AQvNkhTX5d4CizXfo7NYTv
+         eZKw==
+X-Gm-Message-State: AOJu0YziR1qdhXWfYCTfySzwlVJPTqZgHuQDuXGVGvhutQYVqc89Lt6R
+	XBTxSP9UirD3AkCXRTRPTJeSNyc+uEW5vis4GEYw8aei/rlphifaP8NgLNsoJLtyhnGKWuPKHSU
+	E0+rVFwvg1jz0nJskO9M97JDpLRAr/hGnO+ZBOqXQ6FHrnoqrSJ0iMlOl2y4nT5N57csVORiElK
+	j+EQtqRr/wwVIrb4UkoxkKg4kex8rRapGl0rmQ
+X-Gm-Gg: ASbGncs8S2/Y8Of8Q2VmrxQHeJU5ZNMNko0PZVgMN4o1kiNDWVdq4yLV5j642sHTbJV
+	DZIehXUGGZy113sLVuiPBUVcPGk0yzft4SuHPLkwe7UvpSq4oPdgR6pr5pCwVz44XDz8b7WAksZ
+	I=
+X-Received: by 2002:a5d:6c65:0:b0:391:98b:e5b3 with SMTP id ffacd0b85a97d-3926cb6442fmr6993445f8f.14.1741779430055;
+        Wed, 12 Mar 2025 04:37:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7hIva+qqfbAEoA76LRf9FvRMmtz4KNW3wTSXaAkTtMnkEd0MmL7x1VFb9AhRfs/15MSWdNi4TGmI00qsBok8=
+X-Received: by 2002:a5d:6c65:0:b0:391:98b:e5b3 with SMTP id
+ ffacd0b85a97d-3926cb6442fmr6993432f8f.14.1741779429767; Wed, 12 Mar 2025
+ 04:37:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224124200.820402212@infradead.org> <174057447519.10177.9447726208823079202.tip-bot2@tip-bot2>
- <20250226195308.GA29387@noisy.programming.kicks-ass.net> <CANiq72=3ghFxy8E=AU9p+0imFxKr5iU3sd0hVUXed5BA+KjdNQ@mail.gmail.com>
- <20250310160242.GH19344@noisy.programming.kicks-ass.net> <CAOcBZOSPBsTvWFdpwE0-ZU76yMDGBEo3p9y614XYEu+ZSnQ6Sg@mail.gmail.com>
- <CANiq72mcCEbeWb-RAXLcWRnJms2LA6xV=QqQ5=N3ii=3TC89fw@mail.gmail.com>
- <CAOcBZOQnGCqKut-BTvfJNgB9Rz+f5DAANwMs9DU16Js+QDGOrw@mail.gmail.com> <20250312091633.GI19424@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250312091633.GI19424@noisy.programming.kicks-ass.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 12 Mar 2025 12:36:42 +0100
-X-Gm-Features: AQ5f1JoWE1IHsvmTAsXyQOhSft5_BwvvABh61PPokhGerXhpR6A5ZQumzZyMbRA
-Message-ID: <CANiq72mi62AkrKzre254DDd_VwUsZzEMqNuXpFeY_4AjObrNVw@mail.gmail.com>
-Subject: Re: [tip: x86/core] x86/ibt: Implement FineIBT-BHI mitigation
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ramon de C Valle <rcvalle@google.com>, Matthew Maurer <mmaurer@google.com>, linux-kernel@vger.kernel.org, 
-	ojeda@kernel.org, linux-tip-commits@vger.kernel.org, 
-	Scott Constable <scott.d.constable@intel.com>, Ingo Molnar <mingo@kernel.org>, 
-	Kees Cook <kees@kernel.org>, x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Nathan Chancellor <nathan@kernel.org>
+References: <20250307212053.2948340-1-pbonzini@redhat.com> <20250307212053.2948340-6-pbonzini@redhat.com>
+ <405c30e9-73be-4812-86dc-6791b08ba43c@intel.com>
+In-Reply-To: <405c30e9-73be-4812-86dc-6791b08ba43c@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Wed, 12 Mar 2025 12:36:58 +0100
+X-Gm-Features: AQ5f1Jr4qB7EzSh_KRS3HvUL2rvLWxmR_egbZcCrsJItfsIes2DzNlQGEhnpkNw
+Message-ID: <CABgObfZOhNtk0DKq+nB2UC+FFhsEkyiysngZoovoJP-vF43bYA@mail.gmail.com>
+Subject: Re: [PATCH v3 05/10] KVM: TDX: restore host xsave state when exit
+ from the guest TD
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, adrian.hunter@intel.com, 
+	seanjc@google.com, rick.p.edgecombe@intel.com, 
+	Isaku Yamahata <isaku.yamahata@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 12, 2025 at 10:16=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
+On Mon, Mar 10, 2025 at 8:24=E2=80=AFAM Xiaoyao Li <xiaoyao.li@intel.com> w=
+rote:
 >
-> The rust-log-analyzer seems to suggest the nightly build failed?
+> On 3/8/2025 5:20 AM, Paolo Bonzini wrote:
+> > From: Isaku Yamahata <isaku.yamahata@intel.com>
+> >
+> > On exiting from the guest TD, xsave state is clobbered; restore it.
 >
-> Suppose it didn't fail, where do I find it?
+> I prefer the implementation as this patch, which is straightforward.
+> (I would be much better if the changelog can describe more)
 
-Ah, sorry for the confusion -- by "nightly" here I meant the toolchain
-that gets built and distributed by the Rust project.
+Ok:
 
-To get one, we need the PR to land first, and then we can use the new
-flag. It is easy to land such a PR/feature because it lands as an
-"unstable feature", i.e. meant for testing and so on only. So we can
-get quickly "proper" toolchains (i.e. tested and built like the
-full/normal releases are), and if everything checks out, then upstream
-Rust can commit to stabilize the feature later on.
+Do not use kvm_load_host_xsave_state(), as it relies on vcpu->arch
+to find out whether other KVM_RUN code has loaded guest state into
+XCR0/PKRU/XSS or not.  In the case of TDX, the exit values are known
+independent of the guest CR0 and CR4, and in fact the latter are not
+available.
 
-That is why I suggested to wait for that, since the PR seemed
-straightforward to land to me, and thus it could land soon.
+Thanks!
 
-I don't know if there may be a way to pick up the toolchains that
-their CI built for testing PRs, though. It is not too hard to build
-from scratch anyway if you want to do so -- I can also build it for
-you if you want to test right away before it lands. Otherwise, I can
-ping you when the nightly toolchain is ready.
+Paolo
 
-> I normally build llvm toolchains using tc-build, but it seems rust is
-> not actually part of llvm?
-
-Yeah, Rust uses LLVM but is not part of the LLVM project.
-
-But I think we could have support to build Rust there easily -- I
-discussed it with Nathan (Cc'd) in the past. Currently, for the
-LLVM+Rust toolchains he provides in kernel.org, he just bundles the
-upstream Rust binaries AFAIR -- and IIRC he uses tc-build to drive
-that build, so if we do that we could also "easily" get the full chain
-in kernel.org too ("easily" if we ignore doing the PGO dance for the
-Rust side etc. and assuming the building time/resources makes it
-doable, which I don't know about).
-
-If that is correct, I could take a look into adding a simple Rust
-build to tc-build (i.e. without PGO etc.).
-
-Cheers,
-Miguel
