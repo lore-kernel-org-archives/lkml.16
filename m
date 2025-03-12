@@ -1,103 +1,114 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FBD244EA1
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 12:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333062417F0;
+	Wed, 12 Mar 2025 12:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741783269; cv=none; b=gyzVsGb9soXn2EE0M/LwDYhADspt2hGpp3fOlAYOKtqPVku+IaZzL1+bBFRdP/DHV1its0ih6gmkdhCe+dgciEjhRiX1wxt6zvYedHToG4hu2Azv0OwyZMXRZt231RPFQpEfevbzRTFSM7LGF97pQexUSA1BxEpstWe1hK/CE1o=
+	t=1741783287; cv=none; b=bQqmspD6yFwgPaulTMI3IH72xttaqyulNv5wQU7BiwAHWyTrg4VRl7VVyz4WxVX4kl3VZttSv1J/qizTY/ppzVyzKz5OKHVSjKWHXh4p53/Xec+BKiej0kEYYUUkyGo0KNWHEjxrSJ85vXBVALXmXzHwtVOTsJPGW8/UZF/FSSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741783269; c=relaxed/simple;
-	bh=bUaSlUg3RSFBTsJCJQtMWIt/F/YS6Geb3jIJDsgvVi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MxOyME1VRV1smu2mmkZjw2t3ksuVynC2F8LTwk3poTuGfDf0I3O/YwYBuM8cUgv2Gc2UwCtcAb4NrS7b0VCB1f2ay/zov2PTDAx6ISo2QMVMzCG8J38OPwIU6/VMSGJAMQMf7JgCtph8vEkpOS6vPrTK8rkAmTDbnp8BBWQ2+HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=M5Shd+Wz; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
+	s=arc-20240116; t=1741783287; c=relaxed/simple;
+	bh=/gFBfjP5wMjeSlpjUQ0wcsO/6jE1wnulS8MRvTH6J/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C4hyVT6Yqxwb1ncOOjPpfkBTdXGkUPUJOtoU66mgNUfAZpaYaJCl0caPyZbF1RAWoFfuHLy+NuwvKBe58nrMXwzKk4VeWjfNQSc+O3Gc2+7B94jTtznI16gp4FgmP7+pxu12IzfF9G+SvtbLkMlD0D+eWwcy2FQMnjYwXGiaLxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=i3qoLWyK; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="M5Shd+Wz"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85b5e49615aso255632439f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 05:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google; t=1741783264; x=1742388064; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9dP4A1PaPKl7EUlUOAH0m0yidu5CcqdMAHhNJvQYeKs=;
-        b=M5Shd+WzC7GB6bjfp/h+Z0i3ZsVVuaO6Q2Lc9jxjclwprMYa4SWAUOzO9bYYvbLuVb
-         KsD0wvtMLDSqBoSonFnjrWLczXateIFvbARFkqGpbYwlDz+XowASRJj71wUIlhQlFMYK
-         iB3UYYWASs3XOJbPscVqBzgJiriwFQevWIlVk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741783264; x=1742388064;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9dP4A1PaPKl7EUlUOAH0m0yidu5CcqdMAHhNJvQYeKs=;
-        b=tlb2my6OYqC1v54w3+r8WOG0yVssOfrz5GVTb9BjE1kZgdecSwDruAsLiTqzK7MPkr
-         uiX37ymh22cyjDMfQANAvq1PcF4fTXqyUhHIXuNr3IEsQgWMgBWgfNckb4rTJ8x3WjTP
-         Juoz3WIFCgM8OKSoKmD4BaePH9MI7DQLOzq28sQecedYeGG9WagqqhQcm5XmdkUTiQ49
-         XtGI9I0V5c+0Yivf49EhCartYtNsHCwQlx9m/T1iZAdOcw5uwTihb4n1NQfBmvwjWIp/
-         sGkILhH43dOUVR+5lIzjcZ5j0L/PjvUQk8qvVG7X4jNwPH5o62zP2RUN5njffgB/Om0C
-         L8aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJwR1isoRzxomTgl+Q/P6BUj5mgP7Peh43BTRBaz3sv+cpmZ4xKtLVz8W6zI7vDOMOEwMD2rOoPgyS0BE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCdxv9M3xFWfsQ0VxpWxc35ijYE+VGFMbyJVRYSpM/YRMwAenh
-	6mq5USPmMkGZbCMjoSFzIrIBZJs+iAjZCBR1DwQvW079je+Zruv5PssBP7Q/yQ==
-X-Gm-Gg: ASbGncuYzGDXKpZEL5C7wcRb4XMAphgnqWCY9ke7rjAVVlUOqJhPA8VPBNipMcFUeA4
-	y+IZQdhngX80oLNECpGAe42HwROixZ3edD21vhpEsX01eXxOZyoHUgniaMQWU7PbOI/4hUOdu7Q
-	tFF+ad+p/BTtb9RrHmighp+zBG1cypRU/Q3AUbeEbzdQ14cSzuY1T3rah74WLgMOhife0MejpvT
-	iv8ev9OM4l9NnAl/bRBaCa2MnfwVNkvndtAyhP+pXzWdpyi05lD37Y8fQIKWF28wEBNn1pHEwzg
-	yVf6vtDOB7wf6hRWtbcg78R9FXwJ43EjeWzKFZ2HsqwhK8TQgQfVEr2tvJQfMA==
-X-Google-Smtp-Source: AGHT+IFLQqpuypHSRNnz0zBPbGSRwBTTy9nuZ3EEUDWO1+xrScavLssIudJZMqoxc71JqTU36mYhUw==
-X-Received: by 2002:a05:6602:4008:b0:85b:577a:e419 with SMTP id ca18e2360f4ac-85d8e1ac1cfmr810913739f.1.1741783264692;
-        Wed, 12 Mar 2025 05:41:04 -0700 (PDT)
-Received: from fedora64.linuxtx.org ([72.42.103.70])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f209e15822sm3165046173.37.2025.03.12.05.41.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 05:41:04 -0700 (PDT)
-Sender: Justin Forbes <jmforbes@linuxtx.org>
-Date: Wed, 12 Mar 2025 06:41:02 -0600
-From: Justin Forbes <jforbes@fedoraproject.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.13 000/197] 6.13.7-rc2 review
-Message-ID: <Z9GA3nNRacBJxmiX@fedora64.linuxtx.org>
-References: <20250311144241.070217339@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="i3qoLWyK"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741783279; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=byoy4lGPHlk+/7jnyQFo8ZlkUybA3oGJHC4262MlS70=;
+	b=i3qoLWyKZNdejafaLlapWkfCAztofj6eCt1dqOqONpLGx6hN6g8/duBxviyfIVsNjfLnuTX7gpyXY+zhvDmzSQC2uOKZX5jMnlaiK7kOVnk65jsJlqQ/dxAjcEjvMhBCqNteLtJMiDBpf75NeGR6HRYX1bXNEPTpBIkHUkhOfew=
+Received: from 30.74.129.75(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WRCvGy4_1741783275 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 12 Mar 2025 20:41:15 +0800
+Message-ID: <0ca82e20-1424-4564-972f-4f7ffb73ccaf@linux.alibaba.com>
+Date: Wed, 12 Mar 2025 20:41:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311144241.070217339@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
+ only NULL elements
+To: Yunsheng Lin <linyunsheng@huawei.com>, NeilBrown <neilb@suse.de>
+Cc: Yunsheng Lin <yunshenglin0825@gmail.com>,
+ Dave Chinner <david@fromorbit.com>, Yishai Hadas <yishaih@nvidia.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+ Sandeep Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>,
+ "Darrick J. Wong" <djwong@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ Luiz Capitulino <luizcap@redhat.com>,
+ Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
+ linux-nfs@vger.kernel.org
+References: <> <316d62c1-0e56-4b11-aacf-86235fba808d@linux.alibaba.com>
+ <174173371062.33508.12685894810362310394@noble.neil.brown.name>
+ <14ef70cc-beba-4abb-b206-e9fb29381023@linux.alibaba.com>
+ <c5cdd730-1e11-4440-849d-8841b5ce86ef@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <c5cdd730-1e11-4440-849d-8841b5ce86ef@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 11, 2025 at 03:48:06PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.7 release.
-> There are 197 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 13 Mar 2025 14:41:52 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.7-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
 
-Tested rc2 against the Fedora build system (aarch64, ppc64le, s390x,
-x86_64), and boot tested x86_64. No regressions noted.
 
-Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
+On 2025/3/12 20:05, Yunsheng Lin wrote:
+> On 2025/3/12 9:45, Gao Xiang wrote:
+>>
+>>
+>> On 2025/3/12 06:55, NeilBrown wrote:
+>>> On Mon, 10 Mar 2025, Gao Xiang wrote:
+>>>>
+>>>>     - Your new api covers narrow cases compared to the existing
+>>>>       api, although all in-tree callers may be converted
+>>>>       properly, but it increases mental burden of all users.
+>>>>       And maybe complicate future potential users again which
+>>>>       really have to "check NULL elements in the middle of page
+>>>>       bulk allocating" again.
+>>>
+>>> I think that the current API adds a mental burden for most users.  For
+>>> most users, their code would be much cleaner if the interface accepted
+>>> an uninitialised array with length, and were told how many pages had
+>>> been stored in that array.> A (very) few users benefit from the complexity.  So having two
+>>> interfaces, one simple and one full-featured, makes sense.
+> 
+> Thanks for the above clear summarization.
+> 
+>>
+>> Ok, I think for this part, diferrent people has different
+>> perference on API since there is no absolutely right and
+>> wrong in the API design area.
+>>
+>> But I have no interest to follow this for now.
+> 
+> Just to be clearer, as erofs seems to be able to be changed to
+> use a simple interface, do you prefer to keep using the full-featured
+> interface or change to use the simple interface?
+
+Please keep using the old interface because I don't have any
+bandwidth on this considering no real benefit.
+
+Thanks,
+Gao Xiang
+
