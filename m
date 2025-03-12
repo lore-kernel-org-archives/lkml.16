@@ -1,133 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ABA23F411;
-	Wed, 12 Mar 2025 11:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442EB235375;
+	Wed, 12 Mar 2025 11:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741780745; cv=none; b=HK1rcKHsTVblbaztwFv0jjPajaizFOSrT63YxbRONSnEvCGgoUDLf0733OSAT96ykRz2zutenx2nJso9CVlU95FUdMrHkVPq6RIG1rh/hUK4AnJTxW/DMpzBhPaJgOhrV/VpIZtbyw+eG27vZrhLl7kjAJRXEh2jq53cuKOvg/Q=
+	t=1741780763; cv=none; b=Uu5SY1LaUh3zx5NE9sY87CbbuYP/ygYQUqqem7iPc66eVrSpE1RbA8wbxmL1OHy1s7tz66TIeksiEXxx96Z/ZQWRpMTplVd95xoIzQ+94HnFf1/v2dBtRduWDoFTTpc1pYOjpeuOnTFFItM7T8OiIGXYme5heCE0Fg6OlLgWq24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741780745; c=relaxed/simple;
-	bh=2+E249FoMxeCPtng7rCF3Mn0z7RfCf3h+Vca3R9nky8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hc7m2bvGCTEcWpFGjQlIpTot1XPqV8BTlr6o61cvrGClpsnNh6dPjylBlvNMqkQ/IxX1eKw5NETENeaMEi0y0qQc/z2Eosg2myyJo5VOQfNo8cGGmy/RvIwz6ogrp8CpwFjpWEwz6E/eKN9oOIdWm8bMl0+LlLE/wcHxrKBjVf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJfgyygt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741780763; c=relaxed/simple;
+	bh=pyxS0qKDm/XLUtcB3BwLahufh9XtBnS6Y4mYWkWeM54=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=ttc8QwfOhtN8V93UczNrBI+XCIh8uMZ+FiDMkm5XeVIOyJk9xoVcV2TPvq5BS6N+YPIN+GHY1MAP+vJnuZOUr4MAQWmSESCESnl16x6UfFXXIpASxD3Sl6KUlGOjwETlU3hoBv+xsgrYInKzSieB4H78Uk84HwEQSWxifNDA1Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fwApoWCc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XtbLEzwu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJfgyygt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0154C4CEED;
-	Wed, 12 Mar 2025 11:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741780744;
-	bh=2+E249FoMxeCPtng7rCF3Mn0z7RfCf3h+Vca3R9nky8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oJfgyygtRo4YfzZIpKTQx5huLeuEx676YcqWcsXT0VH3VkMbeqmdqDNVh6qHIzZSz
-	 HzaLwjW1T9+SYNVSiJbvkwtsF8AA1axicWAGUfoMSNPls//Vb//5Lmh5indWZhEYfQ
-	 INbpin4GnMfb77i3j2GLT84pDjC+f5Uhej7TloEfofddldjmUCwLTGl0F9ElKQKrDK
-	 wnVPor30O9w82lK57+t5VktPDIFPbu+8qFIu4wRgVRs+kfBOeJt2Gr3DH6mfU3Y6ca
-	 g3c1VdTaHuWCUyJQJg4HyYFCf+vjV6CcoesBGxPXMyWiqDGWJNyDDmPglK1ili4CwF
-	 qo2V+Ky+sEBZQ==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so1621742a12.0;
-        Wed, 12 Mar 2025 04:59:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUH0R8fwcF39ADD/iD4+4uJQrvFV5A0aLkO6NAfxYfxxNc9Tb4K/6X7e1aQ5FXMis3EmnL62MjGGTMMgg25@vger.kernel.org, AJvYcCVHeWQdUivgkBQCgFbgbw+6jCUXeBJMyY8NNA0CDKd6KVym3y0Yz0bJxTFBBcMSN6Cj87tvzMs2bMU=@vger.kernel.org, AJvYcCVlgUjXmmFItQnWPjPTgTOGF3E0P5X2w3FnXNxZvwNLR3nKSPJnHfMUdOe/fNG8x7hptZevFzkBDmOV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5Ud5VmgMjp46bcfshrG/LGQjBiGtEy4TiBxKoFDfZ2Ml1OkCt
-	kjscM5VFsC/bq3HBI6hPvRFFzWW/fwm4OduV2R7pKP0IaecoKChLENGphAdxlfpfwUqjJfWsAz6
-	mBjXuf+zicaUKikkD9KWz5yHs8w==
-X-Google-Smtp-Source: AGHT+IH5BQD7ITN/g2eBCi7T0dAu5ljpqR2DL4+BQ5AiD3G98QJvLyb/xuTbUHCaciB5iJ/2IYVIIXj4q33YzTwu+gA=
-X-Received: by 2002:a05:6402:280d:b0:5e5:9c04:777 with SMTP id
- 4fb4d7f45d1cf-5e762900175mr9572561a12.6.1741780743338; Wed, 12 Mar 2025
- 04:59:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fwApoWCc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XtbLEzwu"
+Date: Wed, 12 Mar 2025 11:59:17 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741780760;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o7q4TsRWn4vTYIPq0RC5CG3NmCoB5GOnKjeOpE2lXz4=;
+	b=fwApoWCcMHPH/6mJ4bkGmF6tmcPfi0miMbohYcB2LRFHCiHPyZHNFROv5CdVHXfOI3JMM6
+	Np70JhHqfhsKQAkMhDdNJLlT7Sax6um8DKmpla3tBcVKI5MUi5WtGmQDvckV3JyOUhfaX4
+	Oq0XXc/rssj3uaK9apGC+s2nM2VW+1qG5Z56Fjn/aFuNUCOIuIaM8AssoVSpxl2JNEmrdp
+	768oFHqDQU0TaSqap7KScHwusbJTla7xdja/xqxw35U+njhSh6q41DmVpeopBEvgV6L37j
+	DobYnHXzdDKaxQ9YpnarLte1fGrLKu+m1PEGpDyS/7g06OaHCSGA97VNBIy3dQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741780760;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o7q4TsRWn4vTYIPq0RC5CG3NmCoB5GOnKjeOpE2lXz4=;
+	b=XtbLEzwu74kObLXKrfORTeCgx4fI2iZ0ADgXUqFxZU1Cub037UxcCNAhclpIcEtzkcbgFG
+	FzUD9fQdBB03MSBw==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/stackprotector/64: Only export
+ __ref_stack_chk_guard on CONFIG_SMP
+Cc: Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Uros Bizjak <ubizjak@gmail.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250123190747.745588-8-brgerst@gmail.com>
+References: <20250123190747.745588-8-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310080237.7400-1-clamor95@gmail.com> <20250310080237.7400-2-clamor95@gmail.com>
- <20250311193732.GA4183071-robh@kernel.org> <CAPVz0n09ZP1i2tasdTvnt8RvjhALvUYjv9u_EGRtnXPOYQtuqQ@mail.gmail.com>
-In-Reply-To: <CAPVz0n09ZP1i2tasdTvnt8RvjhALvUYjv9u_EGRtnXPOYQtuqQ@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 12 Mar 2025 06:58:50 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK53DY7xV8eFBpf+zpN8qPT2bYaR5Z1pyzSgdi1z5yXHg@mail.gmail.com>
-X-Gm-Features: AQ5f1JqxwbCmUdSE4dbkfReQ51RA6N_SE-HhOIL5Mfs-CfN5v7Ilewsjv3M2Q0Q
-Message-ID: <CAL_JsqK53DY7xV8eFBpf+zpN8qPT2bYaR5Z1pyzSgdi1z5yXHg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: power: supply: Document Maxim MAX8971 charger
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <174178075738.14745.15433710467224904900.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 12, 2025 at 1:03=E2=80=AFAM Svyatoslav Ryhel <clamor95@gmail.co=
-m> wrote:
->
-> =D0=B2=D1=82, 11 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 21:37 Ro=
-b Herring <robh@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
-> >
-> > On Mon, Mar 10, 2025 at 10:02:36AM +0200, Svyatoslav Ryhel wrote:
-> > > Add bindings for Maxim MAX8971 charger.
-> > >
-> > > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > > ---
-> > >  .../bindings/power/supply/maxim,max8971.yaml  | 64 +++++++++++++++++=
-++
-> > >  1 file changed, 64 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/power/supply/ma=
-xim,max8971.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/power/supply/maxim,max=
-8971.yaml b/Documentation/devicetree/bindings/power/supply/maxim,max8971.ya=
-ml
-> > > new file mode 100644
-> > > index 000000000000..d7b3e6ff6906
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/power/supply/maxim,max8971.ya=
-ml
-> > > @@ -0,0 +1,64 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/power/supply/maxim,max8971.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Maxim MAX8971 IC charger
-> > > +
-> > > +maintainers:
-> > > +  - Svyatoslav Ryhel <clamor95@gmail.com>
-> > > +
-> > > +description:
-> > > +  The MAX8971 is a compact, high-frequency, high-efficiency switch-m=
-ode charger
-> > > +  for a one-cell lithium-ion (Li+) battery.
-> > > +
-> > > +allOf:
-> > > +  - $ref: power-supply.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: maxim,max8971
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  monitored-battery: true
-> > > +
-> > > +  maxim,usb-connector:
-> >
-> > Just 'connector', so when we have a 3rd case, we don't have a 3rd
-> > vendor.
-> >
->
-> Please, please be explicit and specific, you could not tell me this in
-> v3, you could but you decided to fuck up v4 as well. So wise.
-> Additionally, if you want a generic 'connector' which can be
-> referenced as 'connector: true' then add one, ATM this is classified
-> under your own terms as 'vendor property' and needs a vendor prefix.
+The following commit has been merged into the x86/asm branch of tip:
 
-I don't care for your attitude, so I will be reviewing the 20+ other
-bindings a day I have to review and not yours.
+Commit-ID:     c0560fbaab0dab0afbdb3e339b3cb61ef8d3115e
+Gitweb:        https://git.kernel.org/tip/c0560fbaab0dab0afbdb3e339b3cb61ef8d=
+3115e
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Wed, 12 Mar 2025 12:48:49 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 12 Mar 2025 12:51:35 +01:00
 
-Rob
+x86/stackprotector/64: Only export __ref_stack_chk_guard on CONFIG_SMP
+
+The __ref_stack_chk_guard symbol doesn't exist on UP:
+
+  <stdin>:4:15: error: =E2=80=98__ref_stack_chk_guard=E2=80=99 undeclared her=
+e (not in a function)
+
+Fix the #ifdef around the entry.S export.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Link: https://lore.kernel.org/r/20250123190747.745588-8-brgerst@gmail.com
+---
+ arch/x86/entry/entry.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/entry/entry.S b/arch/x86/entry/entry.S
+index fe5344a..35a91cf 100644
+--- a/arch/x86/entry/entry.S
++++ b/arch/x86/entry/entry.S
+@@ -62,6 +62,6 @@ THUNK warn_thunk_thunk, __warn_thunk
+  * entirely in the C code, and use an alias emitted by the linker script
+  * instead.
+  */
+-#ifdef CONFIG_STACKPROTECTOR
++#if defined(CONFIG_STACKPROTECTOR) && defined(CONFIG_SMP)
+ EXPORT_SYMBOL(__ref_stack_chk_guard);
+ #endif
