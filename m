@@ -1,155 +1,108 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F2B23C8B8
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 10:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EB0423C8C3;
+	Wed, 12 Mar 2025 10:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741774188; cv=none; b=dmgWFZv2qC5s0/GCaNy7E3ROsK1J+gX21Yw0dgPaM+uKrYzkB55rJO0PZ1OU1H2PA7dkurFcw9YQMn/RYuOHmug6Z/2dIFaCAnwf2gFI6dC4ms6pis8jNjBvppN8SC7TWUHnp1b9WJJU0E89oCt0iVqE3LWoRMRMvudJDvYiGNk=
+	t=1741774213; cv=none; b=AdSG37TZ3y2HIDqv1RK0jjQVriEiiAZdC/9XBXLj6HLsWOv+Lr5kMN04u3/jVu5nhpWsMVOScKQUY5UArZGIG6xTsP/3MNfUQc56q5Ln3d3q8yzcR/gZHCSEn3qLHphU/HozfOobyqfNgB+Wt32QiN3C0IULZaKhr5h4Nh71nIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741774188; c=relaxed/simple;
-	bh=yeBvl9NQXB6/tc/9Z2/OzmuKYdFcsirwgsfjsOKJD7g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JML55l64WBTOEcb9RW4W966E1P7jA9l78tOYSrlwWiBEXla38PL2aba9JJG8cSByqC4XjxdgKrJk931VrFEfLhM6zrMLNL3Yn3lKg6FgcSAWeJ0Ce86jm8y+jH62T3vLWJO4IIbnI9sF6BzflyoMyz0V+3ZVnas16zYyJ/rio2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrmyhZBR; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrmyhZBR"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-300f92661fcso4133222a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 03:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741774185; x=1742378985; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SUkmPYNjy0UdU5Zc+KUzHJuQSSwR0lKvxdX/nX9inOM=;
-        b=lrmyhZBRvVDIYLln21Gfkieip5pwJo9paRLmoTIQFJUnB47mA1Chn378jVWlOPY8R9
-         aTEuURzkIJE23KP0TOkCKRbJBn/3Y+fWboIqTdqoEUULqT9FiXuw8Rgdlek/ZtYjr4LW
-         1UcYMbJTkEMyOMRsTNOaVwfRWfdmfLvyl1voFBbWZHCVUUXFuSN/7DAAl59WUQqq3nNi
-         WIfHztrYcRGnH+q/VJ9R+dfptsmclpgsat7RTruLVN/wDwwwCizYJ6IG3k/eL84TRjks
-         +uektXKi6j8/1wUVRL5ML/VwTXXHBOo9/qXMj5PP9irTXArEbctVsn3OStG/f4U2y94T
-         SoOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741774185; x=1742378985;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SUkmPYNjy0UdU5Zc+KUzHJuQSSwR0lKvxdX/nX9inOM=;
-        b=EmfW/RkTKU++crAko2r7LjIe3zxsL91DVxivlDyaSZPFx1ZR5ZYvYizovXSujHZM5I
-         6UFI9eeWSg1i5fRjuuGoWBHpG6La+5l9jZ2uzLJRHlItIeHhdz9pF89VV8qrBfrlQzcR
-         RmdF2SlHkP3m35je2jUB30LaHPdRpyzaHcMane9drhqFjQtKhCMgYZTDhTa0o2Mi1hiZ
-         AdRJiY/lh6o/i2V1ykmyPUNl9qkJ+7S2acir2EakCQ/i/zZAApavroP/PuNXmQTlD3QC
-         zMLfx9HfCJrkW/10s0ArBW0CbIw5VNcsE6BM0B8NJsVdbZzWu52XqBNeL6h+xhca2ng9
-         9/GA==
-X-Gm-Message-State: AOJu0YyzLK7zoW/uwdxeowuq9Pymu+1WZQ1GqVkeEqFrGZEFab2Y9jOy
-	ikIYcQLsHfNr/k0gW2zi4NM36R6bjvnuCw+k4vb0AwdAbOLNA4dhXQT+G3zn
-X-Gm-Gg: ASbGncsxfuJcSc4DFNnotWt6jx9Pd05iFKwwIvnBbGT1d85WMgKMn+RfspNscTkAMCG
-	MrN3/PmZBbg0vgQdpnuwA5FYtDWqx6YJcgcHXFse7sGr0RRpE8OV5w5jEvmLN7tgh6uJN2FLl02
-	OzBcPHjTJ4bj79I53NjKHtOPb2vCaQ+BvttexMm6a29NA+XKOQi3ggGpzvILOnDrJafGZ3hSFeg
-	ytjvFzPWhNDLDGTYOfgDeCzDf8Me+74xO9tsOD0ZGQDQbIhU45fj3gS3L2WdW88F8A7tuQDeRPH
-	zXzmwrbq6kEuqhVet/vYJ3K7utrIDGX7Q9WZuwaXaHJSkCAcBRF/d733Aq8cNNg9S2bmbnUcs2f
-	F7lb3FJBymM72IOJg
-X-Google-Smtp-Source: AGHT+IG5W7avSkqFsM0U4VrqHLdYim2Wlk3cNiyBJN+U721KvUWNp1+CxCtYAdKtRAYZKbtMVRGUAQ==
-X-Received: by 2002:a17:90b:17d0:b0:2ee:ee5e:42fb with SMTP id 98e67ed59e1d1-2ff7ce7abc1mr31550232a91.13.1741774185017;
-        Wed, 12 Mar 2025 03:09:45 -0700 (PDT)
-Received: from suda-ws01.. (p1201013-ipoe.ipoe.ocn.ne.jp. [122.26.46.12])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-224109e99dfsm112380335ad.91.2025.03.12.03.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 03:09:44 -0700 (PDT)
-From: Akihiro Suda <suda.gitsendemail@gmail.com>
-X-Google-Original-From: Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	suda.kyoto@gmail.com,
-	regressions@lists.linux.dev,
-	aruna.ramakrishna@oracle.com,
-	tglx@linutronix.de,
-	Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
-Subject: [PATCH v2] x86: disable PKU when running on Apple Virtualization
-Date: Wed, 12 Mar 2025 19:09:26 +0900
-Message-ID: <20250312100926.34954-1-akihiro.suda.cz@hco.ntt.co.jp>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <CAG8fp8Qdmt9vLk=8ORccY5B+ec1huhazXG4PBaNyLEkq31HDjw@mail.gmail.com>
-References: <CAG8fp8Qdmt9vLk=8ORccY5B+ec1huhazXG4PBaNyLEkq31HDjw@mail.gmail.com>
+	s=arc-20240116; t=1741774213; c=relaxed/simple;
+	bh=/8ncitlyunX6JU7zE0YnHRfHzTzK/FruopaJkPi/R/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BxnSIh7pau6QGwDKZ4SyVK2ybB8sq2MS5Hj3BU8qF7MlSagnrrPmn3Bj1+qQTPyYQVYJpEUnhOQhsmy3yhoXGGa/sYfTUTVb1f9cprXFH9h2LHe34CjnRb5v4EVbSVnib8KuMhIy4eB0FuetiifU0n2GPh4g+GwQWdSB9AKuuRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18CE0152B;
+	Wed, 12 Mar 2025 03:10:22 -0700 (PDT)
+Received: from [10.57.38.75] (unknown [10.57.38.75])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 734303F5A1;
+	Wed, 12 Mar 2025 03:10:06 -0700 (PDT)
+Message-ID: <d55240a4-fe4a-48ea-b3a8-9a997bb7267c@arm.com>
+Date: Wed, 12 Mar 2025 10:10:04 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+To: Joerg Roedel <joro@8bytes.org>, Baolu Lu <baolu.lu@linux.intel.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>, Stuart Yoder <stuyoder@gmail.com>,
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun Gupta
+ <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>,
+ Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+ Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ Charan Teja Kalla <quic_charante@quicinc.com>
+References: <cover.1740753261.git.robin.murphy@arm.com>
+ <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <Z9CEIlXoQJ-A0t-d@8bytes.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <Z9CEIlXoQJ-A0t-d@8bytes.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-OSPKE seems broken on Apple Virtualization.
+On 2025-03-11 6:42 pm, Joerg Roedel wrote:
+> Hi Robin,
+> 
+> On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
+>> +	/*
+>> +	 * And if we do now see any replay calls, they would indicate someone
+>> +	 * misusing the dma_configure path outside bus code.
+>> +	 */
+>> +	if (dev->driver)
+>> +		dev_WARN(dev, "late IOMMU probe at driver bind, something fishy here!\n");
+> 
+> This warning triggers on my workstation (with an AMD IOMMU), any ideas?
 
-  WARNING: CPU: 0 PID: 1 at arch/x86/kernel/fpu/xstate.c:1003 get_xsave_addr_user+0x28/0x40
-  (...)
-  Call Trace:
-   <TASK>
-   ? get_xsave_addr_user+0x28/0x40
-   ? __warn.cold+0x8e/0xea
-   ? get_xsave_addr_user+0x28/0x40
-   ? report_bug+0xff/0x140
-   ? handle_bug+0x3b/0x70
-   ? exc_invalid_op+0x17/0x70
-   ? asm_exc_invalid_op+0x1a/0x20
-   ? get_xsave_addr_user+0x28/0x40
-   copy_fpstate_to_sigframe+0x1be/0x380
-   ? __put_user_8+0x11/0x20
-   get_sigframe+0xf1/0x280
-   x64_setup_rt_frame+0x67/0x2c0
-   arch_do_signal_or_restart+0x1b3/0x240
-   syscall_exit_to_user_mode+0xb0/0x130
-   do_syscall_64+0xab/0x1a0
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Argh! When I moved the dma_configure call into iommu_init_device() for
+v2 I moved the warning with it, but of course that needs to stay where
+it was, *after* the point that ops->probe_device has had a chance to
+filter out irrelevant devices. Does this make it behave?
 
-Tested on macOS 13.5.1 running on MacBook Pro 2020 with
-Intel(R) Core(TM) i7-1068NG7 CPU @ 2.30GHz.
+Thanks,
+Robin.
 
-Fixes: 70044df250d0 ("x86/pkeys: Update PKRU to enable all pkeys before XSAVE")
-Link: https://lore.kernel.org/regressions/CAG8fp8QvH71Wi_y7b7tgFp7knK38rfrF7rRHh-gFKqeS0gxY6Q@mail.gmail.com/T/#u
-Link: https://github.com/lima-vm/lima/issues/3334
-Signed-off-by: Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
----
-v2: check oem_table_id rather than oem_id for better robustness
----
- arch/x86/kernel/cpu/common.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 7cce91b19fb2..8d78d34cd434 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -26,6 +26,7 @@
- #include <linux/pgtable.h>
- #include <linux/stackprotector.h>
- #include <linux/utsname.h>
-+#include <linux/acpi.h>
- 
- #include <asm/alternative.h>
- #include <asm/cmdline.h>
-@@ -516,6 +517,21 @@ static bool pku_disabled;
- 
- static __always_inline void setup_pku(struct cpuinfo_x86 *c)
- {
+----->8-----
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 09798ddbce9d..1da6c55a0d02 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -437,12 +437,6 @@ static int iommu_init_device(struct device *dev)
+  		ret = -ENODEV;
+  		goto err_free;
+  	}
+-	/*
+-	 * And if we do now see any replay calls, they would indicate someone
+-	 * misusing the dma_configure path outside bus code.
+-	 */
+-	if (dev->driver)
+-		dev_WARN(dev, "late IOMMU probe at driver bind, something fishy here!\n");
+  
+  	if (!try_module_get(ops->owner)) {
+  		ret = -EINVAL;
+@@ -565,6 +559,12 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
+  	ret = iommu_init_device(dev);
+  	if (ret)
+  		return ret;
 +	/*
-+	 * OSPKE seems broken on Apple Virtualization.
-+	 * https://lore.kernel.org/regressions/CAG8fp8QvH71Wi_y7b7tgFp7knK38rfrF7rRHh-gFKqeS0gxY6Q@mail.gmail.com/T/#u
-+	 *
-+	 * TODO: conditionally enable pku depending on the DMI BIOS version when Apple
-+	 * fixes the issue.
-+	 *
-+	 * However, this would be still not enough because DMI is missing when vmlinuz
-+	 * is directly loaded into VM.
++	 * And if we do now see any replay calls, they would indicate someone
++	 * misusing the dma_configure path outside bus code.
 +	 */
-+	if (!memcmp(acpi_gbl_FADT.header.oem_table_id, "Apple Vz", 8)) {
-+		pr_info("pku: disabled on Apple Virtualization platform (Intel) due to a bug\n");
-+		pku_disabled = true;
-+	}
-+
- 	if (c == &boot_cpu_data) {
- 		if (pku_disabled || !cpu_feature_enabled(X86_FEATURE_PKU))
- 			return;
--- 
-2.45.2
++	if (dev->driver)
++		dev_WARN(dev, "late IOMMU probe at driver bind, something fishy here!\n");
+  
+  	group = dev->iommu_group;
+  	gdev = iommu_group_alloc_device(group, dev);
 
