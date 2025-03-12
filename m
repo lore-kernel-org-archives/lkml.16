@@ -1,33 +1,70 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C841EFF93;
-	Wed, 12 Mar 2025 07:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BA21EFFA3
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 07:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741764872; cv=none; b=UAedVKtnYQ7Z9IIDTyBOo39vdugLXyMXU/iEHZ0ef4CUiEDZCyT4/fvG+X7hbx5c5470KG26BMC2KrIhOb5rb9U93eOoJ91kUuxleVcfEDgd0QkwZa23LOxX9k9B1cdPKbqB1kdaOeGUqZD1SDA1txe3+IaL3/rlxFhHXBpsunQ=
+	t=1741764979; cv=none; b=I1bm19fNjCRIA+OVkgm4+kaCF7oBCJZza3Ty6g28r35zgUVoZ0Ju9o+dNcnDxWLzs76MmOKcTTCA4E9u0zLQqQsKAJ3bA+Cd5/dmU0eMnENiKjqZdbF2jQn1egw/0BbetSLalECYPEGLIujUwvzJgDWNQjD0j3FoW4aUGPNbOFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741764872; c=relaxed/simple;
-	bh=OLTuU8F2AI5YTT87vjxQRcxdax0NuEjM2Mk6iK3m5K4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pbYW7dRXf+joO4P274GpBShN4USMgr6ZnKDIh/0QpgzJmBEFKytwH5R0tyErE5pkSP7dAWUaC4gjQqMPp4Fz/FCSBeHSuYw3cnWlQhl7GFwgmhnAQI5ywUYEMlwbFK4nCqMV8MPyKfrjV5LXsb3eHJovaSDiDcWG6exqx+5RTPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowACXn9P9ONFn+Px8FA--.64272S2;
-	Wed, 12 Mar 2025 15:34:21 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: jeff.hugo@oss.qualcomm.com,
-	quic_carlv@quicinc.com,
-	ogabbay@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] accel/qaic: Remove redundant 'flush_workqueue()' calls
-Date: Wed, 12 Mar 2025 15:34:04 +0800
-Message-Id: <20250312073404.1429992-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1741764979; c=relaxed/simple;
+	bh=EusCgc+K994RYD1EIXFqcmDLz8FKECBaGdIb8kSqTVg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=r/KfvIqQ+3DyuHFE/O7S4xqj5+4IP6TJysJHsBRuCp85pO0UqCqp3kB+EX31tDwQXCypzz1Ij/ANYgotP6+FdzKXgf/08QBzQzgRHD8b8VAk4xBb4tpA6uf8Nv7wBm8Mpk8APOlYTgpraS9k8P2OwEZvi6Yr2G4CPW7tY6Xf88o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HgnRqHJa; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HgnRqHJa"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250312073609epoutp01481d6bc6ca70b98408bd294dc53bb055~r-gLWXEjR1029710297epoutp01C
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 07:36:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250312073609epoutp01481d6bc6ca70b98408bd294dc53bb055~r-gLWXEjR1029710297epoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741764969;
+	bh=nYzmAloJgMWfnQGtVRz2+KakhQLybe8oRE6g4jnnmwQ=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=HgnRqHJaLhoXrJCgwRbwJDWYIoBagbu/xY8CyV3t4MMqql0bWSjVFj4k8582APQwH
+	 5ZqWQbFZ/qhlEz0KT3tXVLQSyQyZ4M8v7FpadasPZfFhuoc448/UjbXxsMsnaFQBl/
+	 XEP8rDEW5MhJKzOiid87fnAwuSM6/0d9JrNxl5xM=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250312073605epcas5p4c8d1eee147097f83250f641ca18b70fe~r-gISmIFW1209912099epcas5p4u;
+	Wed, 12 Mar 2025 07:36:05 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4ZCMr43DxFz4x9Q1; Wed, 12 Mar
+	2025 07:36:04 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A0.EA.19933.46931D76; Wed, 12 Mar 2025 16:36:04 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250312061053epcas5p3b33ffac4d9af89de5ef01d42f6157c47~r_Vu5PMjE3187631876epcas5p36;
+	Wed, 12 Mar 2025 06:10:53 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250312061053epsmtrp18e12ed5322127dd6d6eb70c800f65f0d~r_Vu4ZsdO1995219952epsmtrp1b;
+	Wed, 12 Mar 2025 06:10:53 +0000 (GMT)
+X-AuditID: b6c32a4a-b87c770000004ddd-0e-67d13964241d
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	BB.6C.33707.D6521D76; Wed, 12 Mar 2025 15:10:53 +0900 (KST)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250312061051epsmtip128e0306e6f842b40f3c37e72f9d3179b~r_VtHIbGI2855128551epsmtip1k;
+	Wed, 12 Mar 2025 06:10:51 +0000 (GMT)
+From: Faraz Ata <faraz.ata@samsung.com>
+To: alim.akhtar@samsung.com, dev.tailor@samsung.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	faraz.ata@samsung.com, rosa.pila@samsung.com, suyash.bitti@samsung.com,
+	abhijeet.s23@samsung.com
+Subject: [PATCH 1/2] tty: serial: samsung_tty: update UART_NR for
+ ExynosAutov920
+Date: Wed, 12 Mar 2025 11:49:31 +0530
+Message-Id: <20250312061932.1797993-1-faraz.ata@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,63 +72,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowACXn9P9ONFn+Px8FA--.64272S2
-X-Coremail-Antispam: 1UD129KBjvJXoWrKF1xZFy7tr1DuryrtFyxZrb_yoW8Jryfpa
-	95AF4rtrs3Jr4DC390kw4UWFyfuan0kFy7XrWIg34av3Z8Jr98X3W5KFW7tr95CF93Jr4q
-	kF4Yy39ava4UKF7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfUYl1vDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBJsWRmVeSWpSXmKPExsWy7bCmum6K5cV0g++vxS2+djhbPJi3jc1i
+	zd5zTBb3dixjt5h/5ByrxbUbC9ktXs66x2ax6fE1VovLu+awWcw4v4/J4v+eHewWX34+YLaY
+	Pb/Ggddj06pONo/NS+o9+rasYvT4vEkugCUq2yYjNTEltUghNS85PyUzL91WyTs43jne1MzA
+	UNfQ0sJcSSEvMTfVVsnFJ0DXLTMH6DglhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFK
+	ToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbGwmVfmQr6WCuuHn3E3MC4mKWLkZNDQsBEYsaM
+	TvYuRi4OIYHdjBJTTzSxgSSEBD4xSry6VAeRALL/zZvHDtNxZ/tNFojETkaJ06sWMUI47xkl
+	tn85BjaXTUBdYuaNI2C2iEC+xPUTu8BsZoG3jBKvV0aC2MICQRI/G68ygdgsAqoSG2fsBVvN
+	K2Aj8WLeVaht8hL7D55lhogLSpyc+QRqjrxE89bZzCCLJQTesku8a18C1eAicenCNyYIW1ji
+	1fEtUHEpiZf9bVC2j8Tko9+AruYAsjMk7qwVgQjbS6xecIYVJMwsoCmxfpc+RFhWYuqpdUwQ
+	a/kken8/gZrOK7FjHoytLHFyzx5WCFtS4tDtF1C2h8TSdbOYICEaK7Hl8H6mCYzys5B8MwvJ
+	N7MQNi9gZF7FKJlaUJybnlpsWmCUl1oOj9fk/NxNjOAkquW1g/Hhgw96hxiZOBgPMUpwMCuJ
+	8K62vZAuxJuSWFmVWpQfX1Sak1p8iNEUGMQTmaVEk/OBaTyvJN7QxNLAxMzMzMTS2MxQSZy3
+	eWdLupBAemJJanZqakFqEUwfEwenVAPTLB2n1JXVEyxi7UoLktezC+UrvrAIcl8/7QxnrlBR
+	+BS1HxE+046+OeP7K7XT9UhXHE/9uczLzE9NJs0ISnNRiamd2pW38cNKQ4MGpmhxdrGtQu1/
+	WZgL0k17Ju0/LvQ6IvfQ6mmZu6Lkvxi/kfq2ZeJvJZYD0lE/rkz8dujeKq0zU59s0z9TvMv9
+	acqyyb9ZHl9cJ57Zff0sq8HzyrN/hU9F7N/7wrL6fPkvR93Qi7GZc27cDrirbml/cs3cdw52
+	a76Z8xcubvzX8LFO85N9U4KzR3ERf/FBvZIMlzknggofPl9+OGTaxPuskokMb2Ye+n5st0C9
+	xpr5nbw7FGKmPQ0QuxzJvzOYx7WI2eOJEktxRqKhFnNRcSIAEH9UvisEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrALMWRmVeSWpSXmKPExsWy7bCSnG6u6sV0gyk3uCy+djhbPJi3jc1i
+	zd5zTBb3dixjt5h/5ByrxbUbC9ktXs66x2ax6fE1VovLu+awWcw4v4/J4v+eHewWX34+YLaY
+	Pb/Ggddj06pONo/NS+o9+rasYvT4vEkugCWKyyYlNSezLLVI3y6BK2Phsq9MBX2sFVePPmJu
+	YFzM0sXIySEhYCJxZ/tNIJuLQ0hgO6PEmRk/mSASkhKHn95lhbCFJVb+e84OUfSWUeLhrzlg
+	CTYBdYmZN44AdXNwiAiUSpx/mAhSwyzwlVHi8JWpTCBxYYEAieMvbUDKWQRUJTbO2MsGYvMK
+	2Ei8mHeVHWK+vMT+g2eZIeKCEidnPgE7jhko3rx1NvMERr5ZSFKzkKQWMDKtYhRNLSjOTc9N
+	LjDUK07MLS7NS9dLzs/dxAgOZK2gHYzL1v/VO8TIxMF4iFGCg1lJhHe17YV0Id6UxMqq1KL8
+	+KLSnNTiQ4zSHCxK4rzKOZ0pQgLpiSWp2ampBalFMFkmDk6pBqYg8cszv/dECbg9bPT8zWbz
+	KTm675dT8w1F022TLwQzMM/UXztNLWl15Ym5Pr/U3VNat0WuN/+ylTVYuPfeqtfHc3dutulf
+	+8PohtHyF3+f7M/Zk/NwcWrZ7soCQbv2439C7FZcbo36fMflc37KFaUiwQdvVlUlXn+Xdken
+	L6IxqTnyb/vSg4tv5f3R97Zje/xPe+XcMIVD22N/Lj2y8uWzmP1PZaYIbZP5vCNs+fXIBpXA
+	JW/SH601Ptek+JBtler9/Lc+bu3GqywNDbIvntBvdTf4f3mFwzPrC9/m/HOTun75r8TaP7/P
+	Fi3sOcPyU4LviKax7PI8/3TFgKZXk0qEVhdwcq29K2l689Bb7ugMJZbijERDLeai4kQAyUdc
+	LNMCAAA=
+X-CMS-MailID: 20250312061053epcas5p3b33ffac4d9af89de5ef01d42f6157c47
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250312061053epcas5p3b33ffac4d9af89de5ef01d42f6157c47
+References: <CGME20250312061053epcas5p3b33ffac4d9af89de5ef01d42f6157c47@epcas5p3.samsung.com>
 
-'destroy_workqueue()' already drains the queue before destroying it, so
-there is no need to flush it explicitly.
+ExynosAutov920 SoC supports 18 UART ports, update
+the value of UART_NR to accommodate the same.
 
-Remove the redundant 'flush_workqueue()' calls.
-
-This was generated with coccinelle:
-
-@@
-expression E;
-@@
-- flush_workqueue(E);
-  destroy_workqueue(E);
-
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Faraz Ata <faraz.ata@samsung.com>
 ---
- drivers/accel/qaic/qaic_debugfs.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/tty/serial/samsung_tty.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/accel/qaic/qaic_debugfs.c b/drivers/accel/qaic/qaic_debugfs.c
-index ba0cf2f94732..a991b8198dc4 100644
---- a/drivers/accel/qaic/qaic_debugfs.c
-+++ b/drivers/accel/qaic/qaic_debugfs.c
-@@ -240,7 +240,6 @@ static int qaic_bootlog_mhi_probe(struct mhi_device *mhi_dev, const struct mhi_d
- mhi_unprepare:
- 	mhi_unprepare_from_transfer(mhi_dev);
- destroy_workqueue:
--	flush_workqueue(qdev->bootlog_wq);
- 	destroy_workqueue(qdev->bootlog_wq);
- out:
- 	return ret;
-@@ -253,7 +252,6 @@ static void qaic_bootlog_mhi_remove(struct mhi_device *mhi_dev)
- 	qdev = dev_get_drvdata(&mhi_dev->dev);
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 210fff7164c1..9a5211b730fb 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -52,7 +52,7 @@
+ #define S3C24XX_SERIAL_MINOR	64
  
- 	mhi_unprepare_from_transfer(qdev->bootlog_ch);
--	flush_workqueue(qdev->bootlog_wq);
- 	destroy_workqueue(qdev->bootlog_wq);
- 	qdev->bootlog_ch = NULL;
- }
+ #ifdef CONFIG_ARM64
+-#define UART_NR			12
++#define UART_NR			18
+ #else
+ #define UART_NR			CONFIG_SERIAL_SAMSUNG_UARTS
+ #endif
 -- 
-2.25.1
+2.34.1
 
