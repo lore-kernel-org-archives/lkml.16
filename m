@@ -1,93 +1,209 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516731E4929;
-	Wed, 12 Mar 2025 06:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63AF1E5701;
+	Wed, 12 Mar 2025 06:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741761097; cv=none; b=bVjU0PLx+TcenSDd2bE64GB4usfNxn+TD65Jn+/SZRcDiq1mtfRZE/RSndthg4O2Sladd3d8hbljuru8FTg3ssF2A22Y/f9N/0cgn/KpwzwTJRsgh3/jSf/h6Cye7CrXuJjNEAAwJPzfMpAt/l+PsxRgYROLEi6m/Nd10I1S8sE=
+	t=1741761320; cv=none; b=moXZK/UtD2p2bySJATUc3SvXMN7/OVYOdTgNRhbyHO9KJDIdRoLNAMiagieLmptEqsNqy3UMswjc96Z2G/3AQh9viXnhLsNheQR+tM/pWq3v+wJaSrmTXWpalUav+KOLHyXroZdkA1AVE1WLXI50CQLuH1MUmpKbVt5P0huB53k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741761097; c=relaxed/simple;
-	bh=1GGLTSO/cCsSpoGDptYKoajR+ZwOpgbJKrvikdoOCRs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j+vdR1fMvR+vu5svVbGi6sLIZiHhJpGraCp2XaeURlluJkLuz1pYRoX+pYRAEVv/Aqoh90tpsXvVA/k7r9JCvJg62s5lzbKBuL443201kctF8VSMeNtC9+4X5G5HLw0+ydLFGfW75Edlin7Gp0Vr3pJBEq9UtrHPOILBAbogQoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowABXhPs6KtFneEl5FA--.37073S2;
-	Wed, 12 Mar 2025 14:31:23 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: Hawking.Zhang@amd.com,
-	Likun.Gao@amd.com,
-	sunil.khatri@amd.com,
-	kenneth.feng@amd.com,
-	Jack.Xiao@amd.com,
-	marek.olsak@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] drm/amdgpu/gfx12: correct cleanup of 'me' field with gfx_v12_0_me_fini()
-Date: Wed, 12 Mar 2025 14:31:06 +0800
-Message-ID: <20250312063106.772-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1741761320; c=relaxed/simple;
+	bh=5mdaPZVI9H0/LV5hmobVgKrUIL2iuMSKhSTxPs81fPU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jrk+q2A8RBxWW5DthX4LRQA4N3kRlpbHsRv7abk7x+F/Mz16Fu+RlUiPFSe4OlX1QTMybemZiQ51STrsf2EL0aXlykcg2SQR0v9ZoTIy7EG79PvLV4re2IKpmKcVKudK3LyzAdI35bgVELVjFymcDEguB7kmg2V3gVbyouki+lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5OTgyGp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5OTgyGp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407D8C4CEE3;
+	Wed, 12 Mar 2025 06:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741761319;
+	bh=5mdaPZVI9H0/LV5hmobVgKrUIL2iuMSKhSTxPs81fPU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s5OTgyGpaumshikTp+iDDuLZlaDN5ZFNt0xhyxhEjxDoGdrRr5fCFJqupGsQ1e9mc
+	 x5+ujh1N69RbM6sMUkTLS3DxQMtFw4J494229H1wYU5SpwxEIdYz9MdPy8mIFSl7pw
+	 l37VuFqhXXoOyw7aw+nwsTVBrmtEviGrZHfYnDThjgKfYUlSm8F0VvgI37TsJEXPQg
+	 Z/TS0S2P3vKV4E8YK2hLZIT0IUPWeSPBaDZrgP63fW1/ioeooSw+E437KEQCfrER7m
+	 3bE2KZoye8/AcR9u24hQHDyQiTnD+Psif0K5SR2GQnCkTLYx0lBk09w8YpbQLP/phf
+	 PvVxVGjqV5khg==
+Date: Wed, 12 Mar 2025 08:34:56 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Mark Brown <broonie@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH 10/13] arch, mm: set high_memory in free_area_init()
+Message-ID: <Z9ErEBuMMvd6i2n9@kernel.org>
+References: <20250306185124.3147510-1-rppt@kernel.org>
+ <20250306185124.3147510-11-rppt@kernel.org>
+ <cee346ec-5fa5-4d0b-987b-413ee585dbaa@sirena.org.uk>
+ <Z9CyRHewqfZlmgIo@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABXhPs6KtFneEl5FA--.37073S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw17Aw17Kw4xtw4UZFyfCrg_yoWkGFX_CF
-	4UJr93Wr4UCF1qqw1xZr1YvasFkF15ZF48Ka1aqas5GrZ8Z343Kry8Kr95WF4fuan3C3Wk
-	XFyUWF1ftasxWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbf8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb7Ks5UUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsTA2fQ4meNigABso
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9CyRHewqfZlmgIo@shell.armlinux.org.uk>
 
-In gfx_v12_0_cp_gfx_load_me_microcode_rs64(), gfx_v12_0_pfp_fini() is
-incorrectly used to free 'me' field of 'gfx', since gfx_v12_0_pfp_fini()
-can only release 'pfp' field of 'gfx'. The release function of 'me' field
-should be gfx_v12_0_me_fini().
+On Tue, Mar 11, 2025 at 09:59:32PM +0000, Russell King (Oracle) wrote:
+> On Tue, Mar 11, 2025 at 05:51:06PM +0000, Mark Brown wrote:
+> > On Thu, Mar 06, 2025 at 08:51:20PM +0200, Mike Rapoport wrote:
+> > > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > > 
+> > > high_memory defines upper bound on the directly mapped memory.
+> > > This bound is defined by the beginning of ZONE_HIGHMEM when a system has
+> > > high memory and by the end of memory otherwise.
+> > > 
+> > > All this is known to generic memory management initialization code that
+> > > can set high_memory while initializing core mm structures.
+> > > 
+> > > Remove per-architecture calculation of high_memory and add a generic
+> > > version to free_area_init().
+> > 
+> > This patch appears to be causing breakage on a number of 32 bit arm
+> > platforms, including qemu's virt-2.11,gic-version=3.  Affected platforms
+> > die on boot with no output, a bisect with qemu points at this commit and
+> > those for physical platforms appear to be converging on the same place.
+> 
+> I'm not convinced that the old and the new code is doing the same
+> thing.
+> 
+> The new code:
+> 
+> +       phys_addr_t highmem = memblock_end_of_DRAM();
+> +
+> +#ifdef CONFIG_HIGHMEM
+> +       unsigned long pfn = arch_zone_lowest_possible_pfn[ZONE_HIGHMEM];
+> +
+> +       if (arch_has_descending_max_zone_pfns() || highmem > PFN_PHYS(pfn))
+> +               highmem = PFN_PHYS(pfn);
+> +#endif
+> +
+> +       high_memory = phys_to_virt(highmem - 1) + 1;
+> 
+> First, when CONFIG_HIGHMEM is disabled, this code assumes that the last
+> byte of DRAM declared to memblock is the highmem limit. This _could_
+> overflow phys_to_virt() and lead to an invalid value for high_memory.
+> 
+> Second, arch_zone_lowest_possible_pfn[ZONE_HIGHMEM] is the _start_ of
+> highmem. This is not what arch code sets high_memory to - because
+> the start of highmem may not contiguously follow on from lowmem.
+> 
+> In arch/arm/mm/mmu.c, lowmem_limit is computed to be the highest + 1
+> physical address that lowmem can possibly be, taking into account the
+> amount of vmalloc memory that is required. This is used to set
+> high_memory.
+> 
+> We also limit the amount of usable RAM via memblock_set_current_limit()
+> which memblock_end_of_DRAM() doesn't respect.
+> 
+> I don't think the proposed generic version is suitable for 32-bit arm.
 
-Fixes: 52cb80c12e8a ("drm/amdgpu: Add gfx v12_0 ip block support (v6)")
-Cc: stable@vger.kernel.org # 6.11+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Unless I'm missing something, both memblock.current_limit and start of
+ZONE_HIGHMEM are set to arm_lowmem_limit which will be different from
+memblock_end_of_DRAM() only for machines with more than nearly 4GiB of RAM
+and those will supposedly use HIGHMEM anyway.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-index da327ab48a57..02bc2eddf0c0 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-@@ -2413,7 +2413,7 @@ static int gfx_v12_0_cp_gfx_load_me_microcode_rs64(struct amdgpu_device *adev)
- 				      (void **)&adev->gfx.me.me_fw_data_ptr);
- 	if (r) {
- 		dev_err(adev->dev, "(%d) failed to create me data bo\n", r);
--		gfx_v12_0_pfp_fini(adev);
-+		gfx_v12_0_me_fini(adev);
- 		return r;
- 	}
+But this does not matter anyway because failures Mark reported happen
+because 32-bit arm uses high_memory before mem_init() and that what causes
+the hangs. 
+
+Here's the fix I have, I'll send v2 shortly.
+
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index e492d58a0386..f02f872ea8a9 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -1250,6 +1250,8 @@ void __init adjust_lowmem_bounds(void)
  
--- 
-2.42.0.windows.2
+ 	arm_lowmem_limit = lowmem_limit;
+ 
++	high_memory = __va(arm_lowmem_limit - 1) + 1;
++
+ 	if (!memblock_limit)
+ 		memblock_limit = arm_lowmem_limit;
+ 
+diff --git a/arch/arm/mm/nommu.c b/arch/arm/mm/nommu.c
+index 65903ed5e80d..1a8f6914ee59 100644
+--- a/arch/arm/mm/nommu.c
++++ b/arch/arm/mm/nommu.c
+@@ -146,6 +146,7 @@ void __init adjust_lowmem_bounds(void)
+ 	phys_addr_t end;
+ 	adjust_lowmem_bounds_mpu();
+ 	end = memblock_end_of_DRAM();
++	high_memory = __va(end - 1) + 1;
+ 	memblock_set_current_limit(end);
+ }
+ 
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 545e11f1a3ba..0aef4bef93c4 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1765,14 +1765,20 @@ static bool arch_has_descending_max_zone_pfns(void)
+ 
+ static void set_high_memory(void)
+ {
++	unsigned long pfn = arch_zone_lowest_possible_pfn[ZONE_HIGHMEM];
+ 	phys_addr_t highmem = memblock_end_of_DRAM();
+ 
+-#ifdef CONFIG_HIGHMEM
+-	unsigned long pfn = arch_zone_lowest_possible_pfn[ZONE_HIGHMEM];
++	/*
++	 * Some architectures (e.g. ARM) set high_memory very early and
++	 * use it in arch setup code.
++	 * If an architecture already set high_memory don't overwrite it
++	 */
++	if (high_memory)
++		return;
+ 
+-	if (arch_has_descending_max_zone_pfns() || highmem > PFN_PHYS(pfn))
++	if (IS_ENABLED(CONFIG_HIGHMEM) &&
++	    (arch_has_descending_max_zone_pfns() || highmem > PFN_PHYS(pfn)))
+ 		highmem = PFN_PHYS(pfn);
+-#endif
+ 
+ 	high_memory = phys_to_virt(highmem - 1) + 1;
+ }
 
+-- 
+Sincerely yours,
+Mike.
