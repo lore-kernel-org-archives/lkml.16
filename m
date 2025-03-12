@@ -1,126 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386E41CDFCE;
-	Wed, 12 Mar 2025 16:43:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EEF1D9A5F;
+	Wed, 12 Mar 2025 16:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741797816; cv=none; b=qdLuyUv1pCf0J2kAdPiHCgieM7t3NuLEaCEAzxhifsg2Hb4gTDuBr5MTITP7kPOL0NsMEAkCT0nNoqSOIjKZ+4VGNysdkP5Iec8Au51Wmm2yOMNyZFsgMU0KiERET7KNJ/oTz0/uXZMYzXHno3SkkKChcj4ilVR6u+W51Oi8tQ4=
+	t=1741797841; cv=none; b=WyutPSpfHyqh2gbWmw/mcff50yi0BGW3O03Efpa3MEpwmE/dfsn/5tMwMEgM7X7shcFqapSf1pTFT2XNybhByd+kxsRKQooeGqwCq8lQzcyi7m9ZgLCycocHRgjEk9M9Lv+30H83S9iPCxqP+oDzCen/Bd8fcPUyDNGIs0nUFDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741797816; c=relaxed/simple;
-	bh=6Nlfx24/5WyMWH+mVg/nVlAYQ94lGe7m8lLJJ4G7Slk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nf3+S1JfDfsr7Vou6JilYXtFrH2D+mowKRRk7QO+ApT1d3yMMWY4B7LSV5q6kuVKSJoD4yKVBnLU2bqSuu8IY3oCWOVFoE2GgyN6/iQxIDa3FHgsYvMA3eJEhPkOOiSU+mvnS2087WpVw0YPX46HjTlqrpzcEgGZHT4e8oPyr4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sILim1Bn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741797841; c=relaxed/simple;
+	bh=aB+fKBf4e/39ssSV8LODysl3QPBeZYXnSlKp30KzAZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QUir0B/WKuSfS84VH9RawvxO+/Bwc3Yjtm6oZAraosVSYyNAUc9M/IOYAS2tC3zJ67eaNH/r3OxyDobdkhFEl4JzoZWxfDDYjzC53h8HYKL9P5r6zntHHHew6d9ZbXyWV6f8HB73MtkF4e9iiAYfaUJ1v4wQVbRVQ9aIzEAAfzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNsr0Cee; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sILim1Bn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 809CCC4CEDD;
-	Wed, 12 Mar 2025 16:43:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNsr0Cee"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BDFDC4CEDD;
+	Wed, 12 Mar 2025 16:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741797815;
-	bh=6Nlfx24/5WyMWH+mVg/nVlAYQ94lGe7m8lLJJ4G7Slk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sILim1BnZ9ITmiC6nb8CcNmG9QTkPLkeT5hpmzawAd9hQICLb7L6sGXuqAfgPqXHP
-	 H6ue/fML9DXKqFI/6DYvd/4mxgtBH8kYvj6uVdql+gWQJl7ssFdt3z6O6m/olh8eQ/
-	 v+dhGFeEYRF+aMSL3jytu3/pTWSOdqGNZs2mSLQMFL4mm+rBcRDDfot4xyL983+Ed8
-	 IPHK1qCntdz4S5kY9X3QtT3sjJaTlHCRNjP9BuD+JhJTJO4/g7E0qP1DfzGLcLwEzH
-	 Q9483bpienLKlDOyj0wTGPxbaXjzzpdOcZ32VxN5Lfa/YPsxPkRScq9dHo1svLDKby
-	 qSVRMOU2hNezA==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Tero Kristo <kristo@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-omap@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: ti: Simplify ti_find_clock_provider()
-Date: Wed, 12 Mar 2025 11:33:30 -0500
-Message-ID: <20250312163330.865573-2-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	s=k20201202; t=1741797840;
+	bh=aB+fKBf4e/39ssSV8LODysl3QPBeZYXnSlKp30KzAZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QNsr0CeeK8TEi2ixz6hiv8ukZO6THXnZBB204xkkMpBr+51bI3qaeLVf0S3ZL4q2e
+	 GffB/uKwCOWF3uUavWusH7UUGxr4Y5PeICJ681WvjZrQjL5XSNae4P2z6z9eU5t+93
+	 ZmXvMOWC7ofl5pV0+IiXVDJ0zwfrlslYE/FTNRDrVuxrA1FJNlm6GYKMmyziW6VJqU
+	 gzLDvcoYe7+MvxWiBlg5jFtqf5NRX/m7w7KRuny++hEgkxayEDKDtLsUDF/3LYda/w
+	 1Trb4hs5ae5DLM0weY7YCWUTJFrxiSW+tuP188/BkGg9AUuD/Z4/8sNKi0DgqVTAtz
+	 qrK05t+pxByJQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tsPBU-000000008A2-3xed;
+	Wed, 12 Mar 2025 17:43:57 +0100
+Date: Wed, 12 Mar 2025 17:43:56 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Miaoqing Pan <quic_miaoqing@quicinc.com>
+Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org, johan+linaro@kernel.org
+Subject: Re: [PATCH v2 ath-next 2/2] wifi: ath11k: fix HTC rx insufficient
+ length
+Message-ID: <Z9G5zEOcTdGKm7Ei@hovoldconsulting.com>
+References: <20250310010217.3845141-1-quic_miaoqing@quicinc.com>
+ <20250310010217.3845141-3-quic_miaoqing@quicinc.com>
+ <Z866cCj8SWyZjCoP@hovoldconsulting.com>
+ <7b1c5e40-b11d-421b-8c8b-117a2a53298b@quicinc.com>
+ <c0cdcaf2-655b-4d22-a949-1519c552e6a4@oss.qualcomm.com>
+ <72d95d77-674e-4ae7-83b0-ab58748b8251@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72d95d77-674e-4ae7-83b0-ab58748b8251@quicinc.com>
 
-Remove using for_each_of_allnodes_from() which is not safe to use
-without holding the DT spinlock. In reality that probably doesn't
-matter here. This is the only user in the whole tree, so it can be
-made private once removed here. The "from" argument is always NULL, so
-it can be dropped as well.
+On Wed, Mar 12, 2025 at 09:11:45AM +0800, Miaoqing Pan wrote:
+> On 3/11/2025 11:20 PM, Jeff Johnson wrote:
+> > On 3/11/2025 1:29 AM, Miaoqing Pan wrote:
+> >> On 3/10/2025 6:09 PM, Johan Hovold wrote:
+> >>> I'm still waiting for feedback from one user that can reproduce the
+> >>> ring-buffer corruption very easily, but another user mentioned seeing
+> >>> multiple zero-length descriptor warnings over the weekend when running
+> >>> with this patch:
+> >>>
+> >>> 	ath11k_pci 0006:01:00.0: rxed invalid length (nbytes 0, max 2048)
+> >>>
+> >>> Are there ever any valid reasons for seeing a zero-length descriptor
+> >>> (i.e. unrelated to the race at hand)? IIUC the warning would only be
+> >>> printed when processing such descriptors a second time (i.e. when
+> >>> is_desc_len0 is set).
+> >>
+> >> That's exactly the logic, only can see the warning in a second time. For
+> >> the first time, ath12k_ce_completed_recv_next() returns '-EIO'.
+> > 
+> > That didn't answer Johan's first question:
+> > Are there ever any valid reasons for seeing a zero-length descriptor?
+>
+> The events currently observed are all firmware logs. The discarded 
+> packets will not affect normal operation. I will adjust the logging to 
+> debug level.
 
-There's a slight change in behavior in matching the "clock-output-names"
-value as the prior code would match if the node name matched the
-beginning of the value and the comparision was case insensitive. Now
-it must be an exact match.
+That still does not answer the question whether there are ever any valid
+reasons for seeing zero-length descriptors. I assume there are none?
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > We have an issue that there is a race condition where hardware updates the
+> > pointer before it has filled all the data. The current solution is just to
+> > read the data a second time. But if that second read also occurs before
+> > hardware has updated the data, then the issue isn't fixed.
+>  
+> Thanks for the addition.
+> 
+> > So should there be some forced delay before we read a second time?
+> > Or should we attempt to read more times?
+> 
+> The initial fix was to keep waiting for the data to be ready. The 
+> observed phenomenon is that when the second read fails, subsequent reads 
+> will continue to fail until the firmware's CE2 ring is full and triggers 
+> an assert after timeout. However, this situation is relatively rare, and 
+> in most cases, the second read will succeed. Therefore, adding a delay 
+> or multiple read attempts is not useful.
+
+The proposed fix is broken since ath11k_hal_ce_dst_status_get_length()
+not just reads the length but also sets it to zero so that the updated
+length may indeed never be seen.
+
+I've taken a closer look at the driver and it seems like we're missing a
+read barrier to make sure that the updated descriptor is not read until
+after the head pointer.
+
+Miaoqing, could you try the below patch with your reproducer and see if
+it is enough to fix the corruption?
+
+If so I can resend with the warning removed and include a corresponding
+fix for ath12k (it looks like there are further places where barriers
+are missing too).
+
+Johan
+
+
+From 656dbd0894741445aeb16ee8357e6fef51b6084c Mon Sep 17 00:00:00 2001
+From: Johan Hovold <johan+linaro@kernel.org>
+Date: Wed, 12 Mar 2025 16:49:20 +0100
+Subject: [PATCH] wifi: ath11k: fix ring-buffer corruption
+
+Users of the Lenovo ThinkPad X13s have reported that Wi-Fi sometimes
+breaks and the log fills up with errors like:
+
+	ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1484, expected 1492
+	ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1460, expected 1484
+
+which based on a quick look at the driver seemed to indicate some kind
+of ring-buffer corruption.
+
+Miaoqing Pan tracked it down to the host seeing the updated destination
+ring head pointer before the updated descriptor, and the error handling
+for that in turn leaves the ring buffer in an inconsistent state.
+
+Add the missing the read barrier to make sure that the descriptor is
+read after the head pointer to address the root cause of the corruption.
+
+The error handling can be fixed separately in case there can ever be
+actual zero-length descriptors.
+
+FIXME: remove WARN_ON_ONCE() added for verification purposes
+
+Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
+
+Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218623
+Link: https://lore.kernel.org/20250310010217.3845141-3-quic_miaoqing@quicinc.com
+Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>
+Cc: stable@vger.kernel.org	# 5.6
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
-Compiled only. I'm not sure if the the change in behavior is going to 
-matter. 
+ drivers/net/wireless/ath/ath11k/ce.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- drivers/clk/ti/clk.c | 27 ++++++---------------------
- 1 file changed, 6 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/clk/ti/clk.c b/drivers/clk/ti/clk.c
-index 9c75dcc9a534..693a4459a01b 100644
---- a/drivers/clk/ti/clk.c
-+++ b/drivers/clk/ti/clk.c
-@@ -118,13 +118,10 @@ int ti_clk_setup_ll_ops(struct ti_clk_ll_ops *ops)
-  * Eventually we could standardize to using '_' for clk-*.c files to follow the
-  * TRM naming.
-  */
--static struct device_node *ti_find_clock_provider(struct device_node *from,
--						  const char *name)
-+static struct device_node *ti_find_clock_provider(const char *name)
- {
- 	char *tmp __free(kfree) = NULL;
- 	struct device_node *np;
--	bool found = false;
--	const char *n;
- 	char *p;
- 
- 	tmp = kstrdup_and_replace(name, '-', '_', GFP_KERNEL);
-@@ -137,25 +134,13 @@ static struct device_node *ti_find_clock_provider(struct device_node *from,
- 		*p = '\0';
- 
- 	/* Node named "clock" with "clock-output-names" */
--	for_each_of_allnodes_from(from, np) {
--		if (of_property_read_string_index(np, "clock-output-names",
--						  0, &n))
--			continue;
--
--		if (!strncmp(n, tmp, strlen(tmp))) {
--			of_node_get(np);
--			found = true;
--			break;
--		}
--	}
--
--	if (found) {
--		of_node_put(from);
--		return np;
-+	for_each_node_with_property(np, "clock-output-names") {
-+		if (of_property_match_string(np, "clock-output-names", tmp) == 0)
-+			return np;
+diff --git a/drivers/net/wireless/ath/ath11k/ce.c b/drivers/net/wireless/ath/ath11k/ce.c
+index e66e86bdec20..423b970e288c 100644
+--- a/drivers/net/wireless/ath/ath11k/ce.c
++++ b/drivers/net/wireless/ath/ath11k/ce.c
+@@ -393,8 +393,12 @@ static int ath11k_ce_completed_recv_next(struct ath11k_ce_pipe *pipe,
+ 		goto err;
  	}
  
- 	/* Fall back to using old node name base provider name */
--	return of_find_node_by_name(from, tmp);
-+	return of_find_node_by_name(NULL, tmp);
- }
- 
- /**
-@@ -208,7 +193,7 @@ void __init ti_dt_clocks_register(struct ti_dt_clk oclks[])
- 		if (num_args && clkctrl_nodes_missing)
- 			continue;
- 
--		node = ti_find_clock_provider(NULL, buf);
-+		node = ti_find_clock_provider(buf);
- 		if (num_args && compat_mode) {
- 			parent = node;
- 			child = of_get_child_by_name(parent, "clock");
++	/* Make sure descriptor is read after the head pointer. */
++	dma_rmb();
++
+ 	*nbytes = ath11k_hal_ce_dst_status_get_length(desc);
+ 	if (*nbytes == 0) {
++		WARN_ON_ONCE(1);	// FIXME: remove
+ 		ret = -EIO;
+ 		goto err;
+ 	}
 -- 
-2.47.2
+2.48.1
 
