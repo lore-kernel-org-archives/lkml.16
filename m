@@ -1,87 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D131D5147;
-	Wed, 12 Mar 2025 20:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4711EB191;
+	Wed, 12 Mar 2025 20:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741810774; cv=none; b=cBchHP7mBFAP5fhA/2vEInVhsEDhjd6rb2Ygz5KkymrAN/7ODI9I40YnNlxC8b3zG1oq2WZzNHMBQyxSN4dlAP0A4PfSsb53srQBBUZ5iFuNILXlIR0lcQruNCwIMBVvxZgvb/WGY7+yWKVp333l5SUJgl28HYzov7UWjCFgP/I=
+	t=1741810796; cv=none; b=Xwnq9H+ScFaLl/96fgEU6n/7JI1JjSlEIbszygnWDbEu8FznbRC2ItRU+W/aWHA+rfoRjCqtxshUFRYiwryWdRKpT6eCdS5yLgqgBPZMqU9hxqkUXn/M6QuJlCv9jMcgT8vt0t/GhIJskrctuykb34X0qvmQvwACIDaPVsKF888=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741810774; c=relaxed/simple;
-	bh=dP8j15QLVHCFzZENDuU3agpW/8W1hNls4T8B5Yzf/1c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jz4RLG5VKoavPvrEyAaI++d4qugdGvrAR5ORXgOGZahRAuT0qQNBDsPdp7LDFcIkMRRqg1i7VSrbX/ljYyzTpx/an84dz9ZyeIKlLR7GWhhMKnU4KCwQUV22io7zdJOvQiQDGlGryPvbPq9RzifRcewDtFb6Rk6V/HbuNV+E7X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c10uLhiM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741810796; c=relaxed/simple;
+	bh=eUPDWDjxdEdOfOSl6gOwd5Lk7nckPxgTXNP4nYLK3/g=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Hm3Esr+CQzu8dyhRdTfwgev7Pjn71XLrl2TjOXXsv6J3lHouzM2LEyPbd1PzPayHaTHsVOQRqC568FA6tKnFqFAUrzs2AlXJA0AOLNTB8HRWgwAo+5HRbnZ2Vsgzk67BfUMCw2LOgcG+Xek6BuZ+GN/4JHbnAetnpjoWUhe9AwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GRopA5nT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c10uLhiM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0846FC4CEE3;
-	Wed, 12 Mar 2025 20:19:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GRopA5nT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 896CAC4CEDD;
+	Wed, 12 Mar 2025 20:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741810774;
-	bh=dP8j15QLVHCFzZENDuU3agpW/8W1hNls4T8B5Yzf/1c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=c10uLhiMpHqHwE7ODWos3IqpFPyBUJ+KfUvijj0PEczyscybTbinIYiRp1LASzmcy
-	 5FL3iLGYUK28us2+DIUbKuds/JsC/iZ/GWCTrdAYh6IRsuHpsmSzJkeSVY8nwMZ3K8
-	 8r+OhG2RpiPwr7Ft37S8CZuSsDl1mRd+ev/V4I+tNa1xtoXIUVGfk7eJxjsCYbY80V
-	 QgxVx0OWrfGbmmQLjPruMDowgGr3/1/w1ADnVYKTFWPkDEMHHJFkR2oYM+skBWaBbO
-	 tPmOTY4ggYretfdttoTkN2MbYXc/Qqr3bWfYLt46HNX0bAcjIv/MOakwcvhzGBm3+W
-	 4klrE8ScBFdyA==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2b38896c534so154377fac.0;
-        Wed, 12 Mar 2025 13:19:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXVKTxfmqNrWnYXCB7UJ5AmiO6ERSgd15oiAd2aUz2LN72DW4jW4b/xukBcGBorkS3UGIO3P4zUc5HC7No=@vger.kernel.org, AJvYcCXkbVTa5TxP4Den6MTBHN3OJHf2nLkx/TQpS0stRyuDAEx6cW6uIbn2c43qbstmO7HkDly4q1KUH88=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYBEHcrBaAAL/wrme9lbNac9XgNCyzTNB9okiL72I7M3nEna8F
-	uekyuEUW6KQ+6oFziiRcA75BiHuY95ngaEzAj2vfUMlqg1GEHVRvlsvjyAqKEKi1mMWh65G38ym
-	vUccj4OFHedSaEI0wXotd2koJ3gU=
-X-Google-Smtp-Source: AGHT+IGPtIF9n8Q2zJiH5GLOWyfayshIf1MppX2HsgP9ODt5i6P6R9UmXD/Y4iQWdD9K8NuF29K1ZXcbQwiWtnigJ08=
-X-Received: by 2002:a05:6871:8416:b0:2c2:b18c:9be9 with SMTP id
- 586e51a60fabf-2c2b18d470amr5236207fac.3.1741810773370; Wed, 12 Mar 2025
- 13:19:33 -0700 (PDT)
+	s=k20201202; t=1741810796;
+	bh=eUPDWDjxdEdOfOSl6gOwd5Lk7nckPxgTXNP4nYLK3/g=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=GRopA5nTl1UI8BIj/22q0D3CqVF1tD1x54XFYeQh3RA8o7+Okj90wto+YNjVCehC2
+	 GXCGD8mOa7T5w25BoAHP2YpoWVLv/iV5V+b4jWzsDhfHISkB7DwmjopJ14px3LwvD5
+	 2h0awpU+20q5NufImWzu7PQBiPfqUFYdZ/H8VPCKEXWpLEy3Fmd/EM3xj5yrSB1f4s
+	 NYLS3IiBW3QcAuVnqYXvCYsGJuTvDnJOyH1QYnTduwJ2yP+tU39gd3tpS+8BuQU8N8
+	 IIUJm+R3FlOhZc6W1FU21jpt+X4oGkIPx4Z8PFZxxcAH1XjN4UWY6YMKHSsN/Zp05z
+	 RQQujsm+j69BA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DD8380DBDF;
+	Wed, 12 Mar 2025 20:20:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <9c8ff2b103c3ba7b0d27bdc8248b05e3b1dc9551.1741776430.git.geert+renesas@glider.be>
-In-Reply-To: <9c8ff2b103c3ba7b0d27bdc8248b05e3b1dc9551.1741776430.git.geert+renesas@glider.be>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Mar 2025 21:19:22 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hOUHQeWYtJ2Nousa9C6Coi7W6njaXDCa_=vk0Rzo6=pw@mail.gmail.com>
-X-Gm-Features: AQ5f1JoQXdRNfRAL6c45dmkPkHvUFlBg-EBDerL3rMhug15BgJN_QHAryHC73xE
-Message-ID: <CAJZ5v0hOUHQeWYtJ2Nousa9C6Coi7W6njaXDCa_=vk0Rzo6=pw@mail.gmail.com>
-Subject: Re: [PATCH] PM: core: Fix indentation in dpm_wait_for_children()
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, 
-	Pavel Machek <pavel@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: revert to lockless TC_SETUP_BLOCK and
+ TC_SETUP_FT
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174181083101.918963.13075833361323469787.git-patchwork-notify@kernel.org>
+Date: Wed, 12 Mar 2025 20:20:31 +0000
+References: <20250308044726.1193222-1-sdf@fomichev.me>
+In-Reply-To: <20250308044726.1193222-1-sdf@fomichev.me>
+To: Stanislav Fomichev <sdf@fomichev.me>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, horms@kernel.org, corbet@lwn.net,
+ andrew+netdev@lunn.ch, pablo@netfilter.org, kadlec@netfilter.org
 
-On Wed, Mar 12, 2025 at 11:47=E2=80=AFAM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> The body of dpm_wait_for_children() is indented by 7 spaces instead of a
-> single TAB.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/base/power/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index e4103d29a21a6b2f..2fc37658b0b582e2 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -249,7 +249,7 @@ static int dpm_wait_fn(struct device *dev, void *asyn=
-c_ptr)
->
->  static void dpm_wait_for_children(struct device *dev, bool async)
->  {
-> -       device_for_each_child(dev, &async, dpm_wait_fn);
-> +       device_for_each_child(dev, &async, dpm_wait_fn);
->  }
->
->  static void dpm_wait_for_suppliers(struct device *dev, bool async)
-> --
+Hello:
 
-Applied as 6.15 material, thanks!
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri,  7 Mar 2025 20:47:26 -0800 you wrote:
+> There is a couple of places from which we can arrive to ndo_setup_tc
+> with TC_SETUP_BLOCK/TC_SETUP_FT:
+> - netlink
+> - netlink notifier
+> - netdev notifier
+> 
+> Locking netdev too deep in this call chain seems to be problematic
+> (especially assuming some/all of the call_netdevice_notifiers
+> NETDEV_UNREGISTER) might soon be running with the instance lock).
+> Revert to lockless ndo_setup_tc for TC_SETUP_BLOCK/TC_SETUP_FT. NFT
+> framework already takes care of most of the locking. Document
+> the assumptions.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next] net: revert to lockless TC_SETUP_BLOCK and TC_SETUP_FT
+    https://git.kernel.org/netdev/net-next/c/0a13c1e0a449
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
