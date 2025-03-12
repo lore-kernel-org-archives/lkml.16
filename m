@@ -1,78 +1,53 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965601EB5E3
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 15:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97FC15539A;
+	Wed, 12 Mar 2025 15:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741793106; cv=none; b=WUq0zgPvvW5wPKjeC+DKDl57JvOVx6ba67fbsjTA3rcpAQeBq/CLsMqdfTpZCXxGHSQWTEzWRlJb3+2SlgudvsVod9595EQ6j4CyaXkn2fyE8jXZ/zv0H0dKNensu+1H8cyGo43cfUE4OmqeZW4REc2gPHOmSVwzjx2tEUp9Jzc=
+	t=1741793108; cv=none; b=L2hCr8TXphviLrtcpzPC0bwm9y5FZLPNVMeTBJvUsIoP+jN+tXYZGV8KEAt4uWLjDeQwJGV4yM+g1eH4Osczyiy3U0ajtPNHn0vqvZW2roMGFj9GMtBDTse37F1XVSYmG+pqPdC3JI4tx1VcRvKX+xP48h0SLVdfGC1NFEXaD7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741793106; c=relaxed/simple;
-	bh=Emp6Z3aIQvwk7fgn4fyq/ADmvkKqA6pgqsXlO4s06/k=;
+	s=arc-20240116; t=1741793108; c=relaxed/simple;
+	bh=qCy31R7dww0j1i0US9AlZoqTPW70teVl4tpDVXWN810=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1hDtGp7N76ieUOnrJ0UltiHnxjQYN+MczN7eIuKA8si8t7ls/mS9shcx8NNij7+peI1ZWdBUH4ACPSOc/ldxkmRqpFtd9U8aRhWSNP07E3xYrsLJFkPoinjre9Rzad35vOaefVlyYSJvtCUrOs2IjrXSF7KkqViE81HDQNXJsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EJLSYGBx; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=GT0eXATK4DatTS272LRNzIolZi4/DT3gOkHGCBFSMSqJS9MSIad7ZXKAo3r4gLGmdPlsYJFf6dHA7bYBD9zKJDJO5wxLhGspWi+8lqeZ/7XbOUaWjUc208LjBdsy+P1gPfCEdfDNtDvICD88KXPlwbEdVAR/WtxsvHfnVyN/s/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hzlgqTqV; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EJLSYGBx"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-391342fc0b5so5876129f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 08:25:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741793102; x=1742397902; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fLzKPMExXtwTBCfsr8dbxK/LiBLIFtL0pBVuR4STJfg=;
-        b=EJLSYGBxA0Gl6eQ60LDZb/afzU9576enjDJ6bpfkzzd/V1MPVl+Zj4k97gZw398DUo
-         h+mo/0/QqIdOXXQvXs2n450nr5KuUwsKL10AGQ6fLuxWgNQrpPBYPjAk3FEHI4BYkZow
-         RdgkPh1rMrEWCmdnbGjmy+AXhzU9DFUNYAQJcbHRicdHEppoGnwJx6DJAXaMIsxrlTuX
-         xvR3yQDPGaW4nOJjj1H6ejwMJV3lCczXVW0A3z2O05UUr977Ryltld26jwmjdMY+okdd
-         IlEv42cQ5dcenJSrY4CrfhQEX4wyMlFqmi8hqMyGZRI8fhwCk74/DoKiBAE9kwYi2L3f
-         ChtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741793102; x=1742397902;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fLzKPMExXtwTBCfsr8dbxK/LiBLIFtL0pBVuR4STJfg=;
-        b=JbaKa265RMB936BNXj8NDtMD1XARZjPo68ZsX6itTcd8uLA3nDzhikjGPgSI0IbgvP
-         owgI57EGp+8TuLrnTcuvcjrQhHgGIvDnAejkFWJN4vLiCF6i5JG9eaGIdo3wibTw7e0N
-         KDJD6Y/ZZUsYgAN5z4uD7I6Sg/u+YJbV4KE45ShQ6ylx2F3UqOCJtklL8oDwjdSMDj6k
-         Gll1hJTdVbMEJc0F5N/Iy8JdjFSObhpPVNQScZlNEbpxn7kkAg/FD3BIPD9sgjApGTvZ
-         si+Yzro1xRra9vbOyyajdwgj5kM9I0GO+waQqaJP/FFMMa+ndpGDngP3Dg+WnyoOZFw6
-         iyFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXM/KVwU5XVgN0QnljCwTfhTMTI2SaV+Mnxuykt0bQzFPCkTNk6gwhrW0GK8nx5oNEu5obpXHf4eGp2nBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjVLNuQByjLstfeFh6l1gYF39azQBtazDglijk6ps2i5nVSoJn
-	X2FL0TQiNCDAMbTmfED5ofpUzoOSdCFwmo99L8xTVWtRFUqiHlBHEHFvANl+rLM=
-X-Gm-Gg: ASbGncu5Wc3Y6SSTaNO9mNVXvdyFAyq8WkemDNk7m3mFN9LYxyuJBAGl/Zv6PznOjne
-	HrQbBEUI0DNMi9vUNIpJ3dklz7VlJHxg52ip0tp+zw/EWP+AtaizX3r/ubhR46SeZq+IWd0FQWK
-	jvcd8M6fJcX6tbHuUV4ordfU+4frFfAYNrcfM1zRhmKfA1HXhp8Fkmfvf2l8jZLkPymodGfNciP
-	4TvfhRZfaINMGzt8/IgKwmELlGwtSQ1rHpdps9PAOFrNtv4dVW7npDV6uZmiss3LxBDCVGoaEj2
-	YrajN+MFxG3WGIRhfG0jZFHhMVBf4CtnLlqawcXe40qSFHnrdw==
-X-Google-Smtp-Source: AGHT+IHn215KXGxBksWYO6IGqlkECpcXD3aN6+wMQCz0c2YurmIv585IQFuPkM2YCeNe5QHeih3GEA==
-X-Received: by 2002:a05:6000:1849:b0:391:158f:3d59 with SMTP id ffacd0b85a97d-39132d21141mr22108859f8f.15.1741793101874;
-        Wed, 12 Mar 2025 08:25:01 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d0a8c5cbfsm23813665e9.30.2025.03.12.08.25.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 08:25:01 -0700 (PDT)
-Date: Wed, 12 Mar 2025 18:24:58 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
-	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-	Avraham Stern <avraham.stern@intel.com>,
-	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
-	Daniel Gabay <daniel.gabay@intel.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] wifi: iwlwifi: Fix uninitialized variable with
- __free()
-Message-ID: <341d748f-55ae-451b-983a-ca9684d265b7@stanley.mountain>
-References: <f7c17a7f-f173-43bf-bc39-316b8adde349@stanley.mountain>
- <a21610ae-e155-44bc-bcc5-b9b8b1c8cbd1@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hzlgqTqV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=j+Uxy4UgqZ01TMYocbtqbznCHYwDjKEPy1F0RAtlmZA=; b=hzlgqTqV1c7iAagiTWiaVa6U2l
+	0iHfK9bc6oWAIxUTiaaVHTJT2qSGyN9k7icitCFpm5owgGRNv8sLo3vhGgpvSvbrfiCYJ46DfB6MZ
+	2W/k/eQbp1z0FKgeTtLOLOJYb0VWQpuZJbdpZ5ENuzc7EaFaFdcHz9/TZ6OxWWPS5h0hzeqsZmVsE
+	mNUivblro2QSUYCpCJPnMdUvM9JXjp44b8hybJlJBWv7IW8gLn7i++jQe+oAihGk4pCwarJikD+wf
+	FT3/Os+f/IqXlI3a9jmtSo1iaRo+P86f9CaM0amimyOjJ3kSka14ADw1v01rmHlOoQd4NoPRHwqYv
+	2ycBJh1Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tsNxB-00000008r6s-0921;
+	Wed, 12 Mar 2025 15:25:05 +0000
+Date: Wed, 12 Mar 2025 08:25:05 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>, Sooyong Suk <s.suk@samsung.com>,
+	Jaewon Kim <jaewon31.kim@gmail.com>, viro@zeniv.linux.org.uk,
+	linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+	linux-mm@kvack.org, spssyr@gmail.com, axboe@kernel.dk,
+	linux-block@vger.kernel.org, dhavale@google.com
+Subject: Re: [RFC PATCH] block, fs: use FOLL_LONGTERM as gup_flags for direct
+ IO
+Message-ID: <Z9GnUaUD-iaFre_i@infradead.org>
+References: <CGME20250306074101epcas1p4b24ac546f93df2c7fe3176607b20e47f@epcas1p4.samsung.com>
+ <20250306074056.246582-1-s.suk@samsung.com>
+ <Z8m-vJ6mP1Sh2pt3@infradead.org>
+ <CAJrd-UuLvOPLC2Xr=yOzZYvOw9k8qwbNa0r9oNjne31x8Pmnhw@mail.gmail.com>
+ <848301db8f05$a1d79430$e586bc90$@samsung.com>
+ <CAJuCfpHjV=nRmkAGrf-tyCxEEygZ0CuW-PRp+F_vHwFbfYS8dA@mail.gmail.com>
+ <Z9Gld_s3XYic8-dG@infradead.org>
+ <CAJuCfpGa43OQHG9BmnvxROX1AneCvkuLxFwM+TdxAdR1v9kWSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,43 +56,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a21610ae-e155-44bc-bcc5-b9b8b1c8cbd1@oss.qualcomm.com>
+In-Reply-To: <CAJuCfpGa43OQHG9BmnvxROX1AneCvkuLxFwM+TdxAdR1v9kWSg@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Mar 12, 2025 at 08:15:18AM -0700, Jeff Johnson wrote:
-> On 3/12/2025 1:31 AM, Dan Carpenter wrote:
-> > Pointers declared with the __free(kfree) attribute need to be initialized
-> > because they will be passed to kfree() on every return path.  There are
-> > two return statement before the "cmd" pointer is initialized so this
-> > leads to an uninitialized variable bug.
-> > 
-> > Fixes: d1e879ec600f ("wifi: iwlwifi: add iwlmld sub-driver")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> >  drivers/net/wireless/intel/iwlwifi/mld/debugfs.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/net/wireless/intel/iwlwifi/mld/debugfs.c b/drivers/net/wireless/intel/iwlwifi/mld/debugfs.c
-> > index c759c5c68dc0..1d4b2ad5d388 100644
-> > --- a/drivers/net/wireless/intel/iwlwifi/mld/debugfs.c
-> > +++ b/drivers/net/wireless/intel/iwlwifi/mld/debugfs.c
-> > @@ -556,8 +556,8 @@ iwl_dbgfs_vif_twt_setup_write(struct iwl_mld *mld, char *buf, size_t count,
-> >  	};
-> >  	struct ieee80211_vif *vif = data;
-> >  	struct iwl_mld_vif *mld_vif = iwl_mld_vif_from_mac80211(vif);
-> > +	struct iwl_dhc_cmd *cmd __free(kfree) = NULL;
+On Wed, Mar 12, 2025 at 08:20:36AM -0700, Suren Baghdasaryan wrote:
+> > Direct I/O pages are not unmovable.  They are temporarily pinned for
+> > the duration of the direct I/O.
 > 
-> hmm, I thought the recommended convention was to define __free() pointers at
-> the point of allocation. cleanup.h explicitly says:
-> 
->  * Given that the "__free(...) = NULL" pattern for variables defined at
->  * the top of the function poses this potential interdependency problem
->  * the recommendation is to always define and assign variables in one
->  * statement and not group variable definitions at the top of the
->  * function when __free() is used.
-> 
+> Yes but even temporarily pinned pages can cause CMA allocation
+> failure. My point is that if we know beforehand that the pages will be
+> pinned we could avoid using CMA and these failures would go away.
 
-People do it either way.  I'm agnostic so long as it doesn't have bugs.
-
-regards,
-dan carpenter
+Direct I/O (and other users of pin_user_pages) are designed to work
+on all anonymous and file backed pages, which is kinda the point.
+If you CMA user can't wait for the time of an I/O something is wrong
+with that caller and it really should not use CMA.
 
