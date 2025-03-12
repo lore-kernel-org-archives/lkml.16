@@ -1,91 +1,96 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57676198E76;
-	Wed, 12 Mar 2025 04:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA844431
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 04:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741752591; cv=none; b=BkNOMpJTg7rK18FyO+Ag9Qi0btkGpCZSRobSEeXofJAIj5pTuMOFXlPl4+gfaPXKoDY6kYgt5e8kkRPvQvxKYMF7LB/d5jLNjoPfy1zyNbZz+B7l2NwEut+nvBCMQsW5sa5BYrcrI1pAT77VbcQLoEIOvo5Bkcimw9fbf7zPpEM=
+	t=1741753203; cv=none; b=fU2NdwpH+Hz+9gxuKQBmFQ1EgBYLN5++6QR8tl4nUiZ/uHdjvvkHTUnRDXOMxq9nhicDM2LVk8t/UVomIO2MTYRTv46ftPrcUxQGieY9M0BLOGI4HrJxEP9zjiGFYXkAFjEGiqJdMa9SIUHwsjguZ1oLcdxlVZi2YZ3vsRMpitE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741752591; c=relaxed/simple;
-	bh=7FqfPB0ty1BYScJ3/y5F2wHazwbUgmYWPVtY2g6yglA=;
-	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
-	 In-Reply-To:Content-Type; b=sjoHOGwYbJ2Pvu0gxA3R1pkLzZsY9auq3K+a0cOkKn0fEISOPndLUMu5HKEe1Ya5OZ6B80HCtfj7VgzfSPsFT7D1JhAfPyI6dIkiFR1E1meJwrCPFo8B4g/vO/rwlFmzeFck0lX8jehotOOt6AcSJm5+kwNMjbMBoJffR1WdQIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Cwg8E6p8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741753203; c=relaxed/simple;
+	bh=Op82FnMA6ZPl41SuqG45nSPyrCAYqZpLWkb4fvJiVFY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i4LIhuq0lzekvNt0kL5fG+RahK5MQILrMoeNCcqLQHmcDfC/csUAyJ/kP+EjjIuqH0sbyYzMdqASfgs04rHl7NbpDy8bl8pZPaBpZm2PhI+ZnRPBiPv5r6BvtxCeD2P9/02Pj9ZMlmyCbApeB9g31KeAzsPyFIpvFBQFnpS4NvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MVU8lvmu; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Cwg8E6p8"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BNKEcR017367;
-	Wed, 12 Mar 2025 04:09:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pZKFNUNxB7FZPmJ/VbU/nqeENYDp3QFO7WMJpIM1ZHo=; b=Cwg8E6p8MTWwT5fQ
-	2bh6uM4TY2PGF24qj7zpCe7bHaaFxzlfepSI2RCVW+lEw8MIF7/tA288ynVhwqT2
-	aXbWxw0zLb17BrGSyt4fBiNkWV23Vfjx8gfJWMYHJ5Cux9wAOS2cA6XBqEZQT7U7
-	d8T6j518C7jKoUEQaEgzXJ3SYgKtF9f8r8JPDN+goeMAdcRE1gruv1DHhyCAaKVD
-	QCGAUCDzM3GYoK3QFVmuonoOvfGvz7sionQOYJ7aIA0F3bCO0GJ5tv3179tC/PAo
-	WxuQyrtnlInYpyF7JTHVsgJvMqW/MHkiJnYRSDpYZq3vchYPohE8b0L+1idtEdWb
-	IwACwA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2qh1sw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 04:09:47 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52C49kCL021108
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 04:09:46 GMT
-Received: from [10.216.35.7] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Mar
- 2025 21:09:43 -0700
-Message-ID: <c7feb2c1-aa07-4bdf-bfa0-c5a071078a14@quicinc.com>
-Date: Wed, 12 Mar 2025 03:35:42 +0530
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MVU8lvmu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741753199;
+	bh=Op82FnMA6ZPl41SuqG45nSPyrCAYqZpLWkb4fvJiVFY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MVU8lvmuywj2g9NPj5JTqM7VeNcV/IjOzcy3gM6He9cqODaXdC4BGprosVhZV50UO
+	 JEOMFzVUR5IxM/LOqMKt1ymBPzV3ew/f6cDr+lsqI4EerKruGY7mBSIah5xHcb1A30
+	 Hzv6xcGW0zOxT8KGznUx8qASyCwA14KfoK1gZ941IYqmaQs2f0Xw5cAoVprXYw3gU0
+	 inIjvAGOSByxaEm7b5i4+aNBJsMa6lNlOsGXaP+p1iBylh7Ia4KnHb4PBPso+YYdlo
+	 htSmeAZqTLcC6zbIuKQjW9+kylkFG8SepQ+Fro3GDASUlNebF3nq+yq38Gi0bFtypI
+	 jJ3qtdwGZXOaw==
+Received: from localhost.localdomain (unknown [171.76.87.92])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id CE33717E0CA6;
+	Wed, 12 Mar 2025 05:19:56 +0100 (CET)
+From: Vignesh Raman <vignesh.raman@collabora.com>
+To: linux-mediatek@lists.infradead.org
+Cc: chunkuang.hu@kernel.org,
+	p.zabel@pengutronix.de,
+	nfraprado@collabora.com,
+	angelogioacchino.delregno@collabora.com,
+	krzk@kernel.org,
+	daniels@collabora.com,
+	airlied@gmail.com,
+	simona.vetter@ffwll.ch,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] arm64: defconfig: mediatek: enable PHY drivers
+Date: Wed, 12 Mar 2025 09:49:26 +0530
+Message-ID: <20250312041943.25676-1-vignesh.raman@collabora.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: <quic_pbrahma@quicinc.com>
-CC: <andersson@kernel.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <konradybcio@kernel.org>,
-        <krzk+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robh@kernel.org>
-References: <20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: add the pcie smmu node
-Content-Language: en-US
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-In-Reply-To: <20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: c439w7uVePmdboYR15BpqjDBg9bJB88Z
-X-Authority-Analysis: v=2.4 cv=G5ccE8k5 c=1 sm=1 tr=0 ts=67d1090b cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=zReUl0LmTZ4h1ARIbA8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: c439w7uVePmdboYR15BpqjDBg9bJB88Z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-12_01,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 priorityscore=1501 mlxscore=0 bulkscore=0 impostorscore=0
- phishscore=0 clxscore=1015 adultscore=0 suspectscore=0 spamscore=0
- mlxlogscore=544 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503120027
+Content-Transfer-Encoding: 8bit
 
-Hi Everyone
+The mediatek display driver fails to probe on mt8173-elm-hana and
+mt8183-kukui-jacuzzi-juniper-sku16 in v6.14-rc4 due to missing PHY
+configurations.
 
-Requesting your kind attention on this patch. I would highly welcome any 
-feedback
-on this and truly appreciate your time and consideration.
+Enable the following PHY drivers for MediaTek platforms:
+- CONFIG_PHY_MTK_HDMI=m for HDMI display
+- CONFIG_PHY_MTK_MIPI_DSI=m for DSI display
+- CONFIG_PHY_MTK_XSPHY=m for USB
 
+Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+---
+
+v2:
+  - Include board details in the commit message.  
+  - Sort newly added PHY configs in defconfig.
+
+---
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 1f25423de383..87e8cbd3fd26 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1572,7 +1572,10 @@ CONFIG_PHY_HI6220_USB=y
+ CONFIG_PHY_HISTB_COMBPHY=y
+ CONFIG_PHY_HISI_INNO_USB2=y
+ CONFIG_PHY_MVEBU_CP110_COMPHY=y
++CONFIG_PHY_MTK_HDMI=m
++CONFIG_PHY_MTK_MIPI_DSI=m
+ CONFIG_PHY_MTK_TPHY=y
++CONFIG_PHY_MTK_XSPHY=m
+ CONFIG_PHY_QCOM_EDP=m
+ CONFIG_PHY_QCOM_PCIE2=m
+ CONFIG_PHY_QCOM_QMP=m
 -- 
-Thanks and Regards
-Pratyush Brahma
+2.47.2
 
