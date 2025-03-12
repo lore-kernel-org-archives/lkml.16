@@ -1,118 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABA323A9B4;
-	Wed, 12 Mar 2025 17:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491D022DF8D;
+	Wed, 12 Mar 2025 17:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800022; cv=none; b=Qx+qm+juXWCrux7jyDxZFT6kq7CWnHrVkW0wgC4VAKk5YJpRGlegxdQAA2fzmcfZ4Wr09Lqw26Yrnimbd2t+4aLOAhKacEkS6xzFIBNMMbC9ZxOAudQJy8EDR17O9t9N18tCUKp9GraC8VNKl4cwtfHa9qi6WLPbDk/OQ4QBb5g=
+	t=1741800022; cv=none; b=a7fjOzh9EopvBZjc28KJLoaawC8UBts2/QbT0zPIp4XJdE/uLl/g7nTMKFndVTMAf7dL12mwTvrANRDRr8LRMdRegASDGN9d07LVhAui3On5cnCuJyZcM6r4ra1OsiCwcimtUkL0+go1ETO+hUCZAaJQjmYo5J7Jue0uP2hZd5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741800022; c=relaxed/simple;
-	bh=DSY/0ZYdgoOqfhegeeH5tpLBcAHVsHe199It4fxl4ng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eBZfK7KH4G3wlS41Vu6+lvGGCClGzNnSdXGQSErX3fTmmfVhW8BZXqBuHPJWRyLAPOpxS/nrknC5TDTUwZl71cqOYbUeBK0qwp6HP2ot1A11a2LbRE/VHTlDBzp4qACgmCLWiatwgTICMfJ5a5sp+Mkz8Hr3TXjdO0gEFrw3Jkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F2WErT8m; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=FcMnXU3mEnLxU8VKwzzn/zWoWJZBhZPcp3UYfj+8tWQ=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=NLIWfqHg+dqqa27ghN6fQEvHUmpXB56J2VIa9S9m2Idv3jro/5pQbt+lLPkwXXrLJICQjEqqyMesUIuL8pCCe5cUR1le/f11bBCWjROez3Ax5i0TKMdnFzyEB/JtOANBVFC2GeXxLpw6HOd9hMUOXIaAXNwI0UNocXU1ypPkljE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G88ir4Ii; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8tPh4i2x; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F2WErT8m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741800021; x=1773336021;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DSY/0ZYdgoOqfhegeeH5tpLBcAHVsHe199It4fxl4ng=;
-  b=F2WErT8mb0BbJFbwY6IhPQUfj7lqJp/pIzMcoF186EQ0bucCCTF4Vk2t
-   DoWSCKBDnqsTFHYP2Ef+ciXujz1k6e4cf8ev+90E2a9A5A8dtMBiAVq9o
-   x0T1HXpIGj4/UWIXhu96mQvxM8UqaVhsokIrVz2cayCH4L310DYxJ+ZRT
-   8++mgvcLlakHbYF9Fo5pWdx8D9w7cVxBMCKPO5QpEFkY7Pang4Tr0Ffmu
-   JxnI7yS7HkU+W5lFKSK7iGfERaHkfnype0aSTmehmT+KuuyMsj4JppmvG
-   +bfSK0bX1hf6E4/l8F+EsL9VlGYF+1Y0t5El17KyX99VuArWO38Gy1Zm2
-   w==;
-X-CSE-ConnectionGUID: 8T+GjSXSSDqvRka2nEWajw==
-X-CSE-MsgGUID: YOPMO1odQbiJ6lneMBx2HA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="60437576"
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="60437576"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 10:20:20 -0700
-X-CSE-ConnectionGUID: 2tPf249mTYO4jMnqB0k1Gg==
-X-CSE-MsgGUID: 8ky2A82DQCmlItJRwbczBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="125337215"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 12 Mar 2025 10:20:19 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 9F395214; Wed, 12 Mar 2025 19:20:17 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Longbin Li <looong.bin@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>
-Subject: [PATCH v1 2/2] spi: sg2044-nor: Convert to dev_err_probe()
-Date: Wed, 12 Mar 2025 19:19:17 +0200
-Message-ID: <20250312172016.4070094-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250312172016.4070094-1-andriy.shevchenko@linux.intel.com>
-References: <20250312172016.4070094-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G88ir4Ii";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8tPh4i2x"
+Date: Wed, 12 Mar 2025 17:20:12 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741800018;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gz+RpLic19MX4bLS6gh67Yr0UWDiEOC3u5GMMAWKII0=;
+	b=G88ir4IiKGcMRKy8MbH4/UjGKY4fYKi8DBtQXvC+qir4sRbwjVkSh80elccABg+4z5FzzE
+	CpoCo8+yvg01VigH2C9BjnMOG/WMntwG04hbLUtXlVOcNnTuXVma01TFYkSY+2Z0REsM6c
+	kTmzj27jpcqmnW9Nzcc+MTXPvjf9SCazr0aKJImTl5eNf8UDNraUSnxNBRX5zgSaxWFIdk
+	6mrttLycOGA6MqOY6PPFrXqnivcillAa3uh4KMF1VqqhTgLAYK0ELAmRzvNKf6G77TtK/Z
+	/6vrKN//E1N13YfHRQ2ohNBTynxFxRaWvjm2MRjfY5c/TSPTwkb+ZDhFbLtlGA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741800018;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gz+RpLic19MX4bLS6gh67Yr0UWDiEOC3u5GMMAWKII0=;
+	b=8tPh4i2xWAUJ/yT+CRnsZy7B8eLz8IBIcjEbPlbZXBK6wVUj+bQ27cifDYlA4/BSJ8+Rup
+	sYoyZwG7v2cpbYAA==
+From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cache] x86/resctrl: Move get_{mon,ctrl}_domain_from_cpu()
+ to live with their callers
+Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Fenghua Yu <fenghuay@nvidia.com>, Reinette Chatre <reinette.chatre@intel.com>,
+ Babu Moger <babu.moger@amd.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+ Peter Newman <peternewman@google.com>,
+ Amit Singh Tomar <amitsinght@marvell.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250311183715.16445-31-james.morse@arm.com>
+References: <20250311183715.16445-31-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174180001282.14745.4934382896961256317.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-One of the cases in sg2044_spifmc_probe() may be converted to use
-dev_err_probe(). Do it.
+The following commit has been merged into the x86/cache branch of tip:
 
-While at it, use local device pointer in all such calls and drop
-unneeded __func__ parameter as dev_err_probe() is assumed to be called
-only during probe phase.
+Commit-ID:     823beb31e55673bf2fd21374e095eec73a761ee7
+Gitweb:        https://git.kernel.org/tip/823beb31e55673bf2fd21374e095eec73a761ee7
+Author:        James Morse <james.morse@arm.com>
+AuthorDate:    Tue, 11 Mar 2025 18:37:15 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 12 Mar 2025 12:24:58 +01:00
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+x86/resctrl: Move get_{mon,ctrl}_domain_from_cpu() to live with their callers
+
+Each of get_{mon,ctrl}_domain_from_cpu() only has one caller.
+
+Once the filesystem code is moved to /fs/, there is no equivalent to
+core.c.
+
+Move these functions to each live next to their caller. This allows
+them to be made static and the header file entries to be removed.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Babu Moger <babu.moger@amd.com>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Peter Newman <peternewman@google.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
+Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
+Tested-by: Babu Moger <babu.moger@amd.com>
+Link: https://lore.kernel.org/r/20250311183715.16445-31-james.morse@arm.com
 ---
- drivers/spi/spi-sg2044-nor.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c     | 30 +-------------------------
+ arch/x86/kernel/cpu/resctrl/internal.h |  2 +--
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 16 +++++++++++++-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 16 +++++++++++++-
+ 4 files changed, 32 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/spi/spi-sg2044-nor.c b/drivers/spi/spi-sg2044-nor.c
-index e104cac57d41..572792a59195 100644
---- a/drivers/spi/spi-sg2044-nor.c
-+++ b/drivers/spi/spi-sg2044-nor.c
-@@ -425,6 +425,7 @@ static void sg2044_spifmc_init(struct sg2044_spifmc *spifmc)
- 
- static int sg2044_spifmc_probe(struct platform_device *pdev)
- {
-+	struct device *dev = &pdev->dev;
- 	struct spi_controller *ctrl;
- 	struct sg2044_spifmc *spifmc;
- 	void __iomem *base;
-@@ -438,9 +439,7 @@ static int sg2044_spifmc_probe(struct platform_device *pdev)
- 
- 	spifmc->clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(spifmc->clk))
--		return dev_err_probe(&pdev->dev, PTR_ERR(spifmc->clk),
--				     "%s: Cannot get and enable AHB clock\n",
--				     __func__);
-+		return dev_err_probe(dev, PTR_ERR(spifmc->clk), "Cannot get and enable AHB clock\n");
- 
- 	spifmc->dev = &pdev->dev;
- 	spifmc->ctrl = ctrl;
-@@ -464,10 +463,8 @@ static int sg2044_spifmc_probe(struct platform_device *pdev)
- 	sg2044_spifmc_init_reg(spifmc);
- 
- 	ret = devm_spi_register_controller(&pdev->dev, ctrl);
--	if (ret) {
--		dev_err(&pdev->dev, "spi_register_controller failed\n");
--		return ret;
--	}
-+	if (ret)
-+		return dev_err_probe(dev, ret, "spi_register_controller failed\n");
- 
- 	return 0;
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index e590dd3..cf29681 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -347,36 +347,6 @@ static void cat_wrmsr(struct msr_param *m)
+ 		wrmsrl(hw_res->msr_base + i, hw_dom->ctrl_val[i]);
  }
--- 
-2.47.2
-
+ 
+-struct rdt_ctrl_domain *get_ctrl_domain_from_cpu(int cpu, struct rdt_resource *r)
+-{
+-	struct rdt_ctrl_domain *d;
+-
+-	lockdep_assert_cpus_held();
+-
+-	list_for_each_entry(d, &r->ctrl_domains, hdr.list) {
+-		/* Find the domain that contains this CPU */
+-		if (cpumask_test_cpu(cpu, &d->hdr.cpu_mask))
+-			return d;
+-	}
+-
+-	return NULL;
+-}
+-
+-struct rdt_mon_domain *get_mon_domain_from_cpu(int cpu, struct rdt_resource *r)
+-{
+-	struct rdt_mon_domain *d;
+-
+-	lockdep_assert_cpus_held();
+-
+-	list_for_each_entry(d, &r->mon_domains, hdr.list) {
+-		/* Find the domain that contains this CPU */
+-		if (cpumask_test_cpu(cpu, &d->hdr.cpu_mask))
+-			return d;
+-	}
+-
+-	return NULL;
+-}
+-
+ u32 resctrl_arch_get_num_closid(struct rdt_resource *r)
+ {
+ 	return resctrl_to_arch_res(r)->num_closid;
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 0d13006..c44c5b4 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -475,8 +475,6 @@ unsigned int rdtgroup_cbm_to_size(struct rdt_resource *r, struct rdt_ctrl_domain
+ 				  unsigned long cbm);
+ enum rdtgrp_mode rdtgroup_mode_by_closid(int closid);
+ int rdtgroup_tasks_assigned(struct rdtgroup *r);
+-struct rdt_ctrl_domain *get_ctrl_domain_from_cpu(int cpu, struct rdt_resource *r);
+-struct rdt_mon_domain *get_mon_domain_from_cpu(int cpu, struct rdt_resource *r);
+ int closids_supported(void);
+ void closid_free(int closid);
+ int alloc_rmid(u32 closid);
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 83f9012..a93ed7d 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -718,6 +718,22 @@ void mon_event_count(void *info)
+ 		rr->err = 0;
+ }
+ 
++static struct rdt_ctrl_domain *get_ctrl_domain_from_cpu(int cpu,
++							struct rdt_resource *r)
++{
++	struct rdt_ctrl_domain *d;
++
++	lockdep_assert_cpus_held();
++
++	list_for_each_entry(d, &r->ctrl_domains, hdr.list) {
++		/* Find the domain that contains this CPU */
++		if (cpumask_test_cpu(cpu, &d->hdr.cpu_mask))
++			return d;
++	}
++
++	return NULL;
++}
++
+ /*
+  * Feedback loop for MBA software controller (mba_sc)
+  *
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 5fc60c9..c6274d4 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -4257,6 +4257,22 @@ static void clear_childcpus(struct rdtgroup *r, unsigned int cpu)
+ 	}
+ }
+ 
++static struct rdt_mon_domain *get_mon_domain_from_cpu(int cpu,
++						      struct rdt_resource *r)
++{
++	struct rdt_mon_domain *d;
++
++	lockdep_assert_cpus_held();
++
++	list_for_each_entry(d, &r->mon_domains, hdr.list) {
++		/* Find the domain that contains this CPU */
++		if (cpumask_test_cpu(cpu, &d->hdr.cpu_mask))
++			return d;
++	}
++
++	return NULL;
++}
++
+ void resctrl_offline_cpu(unsigned int cpu)
+ {
+ 	struct rdt_resource *l3 = resctrl_arch_get_resource(RDT_RESOURCE_L3);
