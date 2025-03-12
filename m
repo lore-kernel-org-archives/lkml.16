@@ -1,107 +1,139 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94D161EC00C;
-	Wed, 12 Mar 2025 21:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463AC1EE00F
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 21:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741814470; cv=none; b=mqNg+Ibf1+Tw3x9kU9X6EXE7PhVy2hn4GXi9IFZuUwAXdqm3qyiRqr89A9p9kSwp91epwOBMXGME1LKBQBWIx1A89Tfug0hXrKENEqoN05SdRkM1VVYfN2rnBq/u3/hDPao8xTzdVr0CXodWq2XLtb3l+KYVQMxubdyf00fqPGA=
+	t=1741814577; cv=none; b=HfK7fjOOq0Ppw1XsQdqA7CRAk5VEEch1mATLceCYHYqTC3fzMG+mvbQejL1F2rJtBkXZmLxRavvHklhbvvwi+UYQTScGbFbvkvjcUReFVyG4x7Qmuam0JUgPqoOdeFc4X9pJDEkQu2o/ES6Elyh0GvKG/eq1PnYgY2Kmr9rqguI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741814470; c=relaxed/simple;
-	bh=8lk79mDnF9WAaI75FvC+bpLneGj3wkxAcWyHOCuXSjo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DVexfv4tTndPAZeOpRyvfKJTmGbo2EqBK3lP7F3WSKSWvSzquPlKXny7A1HpPXFC3zK62UFvYJb01AwZamTXmRP6+fMVcQTTShkF7IpVdOF6mHrLKL5dgWPDZk4dcn8WULL0KS7oaROtMuRQcOPNqtmGrWBOqkkgfKpBJag0a2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pm3SSAYs; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1741814577; c=relaxed/simple;
+	bh=b4+VVCuulTVS3lasReYQ2g8sMWbZpqYEurik+q7TDIU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PIifF+7WhR8o7oz1tGfBnmfMJcLxPkw9cQKbAmdOjkbUOXcwti1XGwD60oNgIPiC04m673S2o/a6caDOy1iODYWwNqycUgsxpp0RuOCJuGh9W0tQ7soH1PHu2CCLEhPBi+xirLp0ahzYuM2hzjRRyh5Cd8UInaE240eXjP7gxn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=R8AMoyi4; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pm3SSAYs"
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 86B37210B157;
-	Wed, 12 Mar 2025 14:21:07 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 86B37210B157
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741814467;
-	bh=MgNM2rD8/EOf05M0lP85WV+gCmyNEYHLXXzpOfe5KVE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pm3SSAYshDZ0/J9DAnDCCWIg7IAiMKcF9WebEeevzy98VYIaLbtZxz8W0R4oz5bs3
-	 bx8W1PNJ4LBZ4FkX6cjdoD9OOn1KNZkGtH27nqPcPfkJxVFnXRqfUmYBYdXIJxg7dQ
-	 dkyAwa4NZs8ZWgWM4ZixgLD18JrAFkhBHsI7/1wQ=
-Message-ID: <996deaab-e1d1-4f04-ba31-c0dcab2d5e1d@linux.microsoft.com>
-Date: Wed, 12 Mar 2025 14:21:07 -0700
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="R8AMoyi4"
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C46DA3F72D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 21:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1741814569;
+	bh=uqtVwBDq5g90YIrppYWGT9PUS27SLEfARyjY6b0CvJw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+	b=R8AMoyi4bhODNm305KBDX20h8UhWeJ3MOBSXl7Vq8utyp+yoc/lB1JLqzW2zcWBaJ
+	 rzX4UIwFTfFb6Xz5L2xiYdVo/v+U1kBRWz340piaXHpFI+vEILVfL0cTVou9a20QNd
+	 czzw7EzuHFSefnl94FjRicY7F+/pJU3Wij9SNEC+pEiqkepelH/0wb6LzD85z4BSG1
+	 6aTCA5hlmMY6Zqqi4k+DOdBfGzIC1QL6MStjYgBF33M2XvCCppQ1z+Fp+APzOczUcF
+	 AYOD0k5qGvMQUnmry40JSe3VP+1chOyKz+i0DM68aXafx4u3RnsCJd/HdyCVSd/6g9
+	 fiPB2w1j63xhA==
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso734270a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 14:22:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741814566; x=1742419366;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uqtVwBDq5g90YIrppYWGT9PUS27SLEfARyjY6b0CvJw=;
+        b=MWsjWyggyE7iYyACmDYFq2CwhDSQIgEFvs8tL1A0hMMmx2Agvu0c1uPx1Ricawpm0B
+         7sddaJ9a/XU2YWmTfckN/Di7gqFZZWhB0wusNZdhl32FCW2miDqYs3rwjbPJSM4jMCEj
+         99GxSVDjyjKa1oCGhSHU2prhVgeV098Dyxr8ncNfYt29TOKuXUI8+Nvj9M66YrWqJ/vV
+         EV250GEZ0k9vwxjC7LfEyJacYSvXjODg6UShmatmE1KeWaA+4+MV4w2aZI2ybkxkBz52
+         L7IuDTB4eYbowDgJ5oGFaOJyNwJAILDVqbH2rhFVVEjz3Ktpti6/1d4kC1lJ5ysVLEiT
+         cWEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUE5S5QTYwgtN7/1F04gyjO5HNoCCli/EMrk0KHVSR6yU2mkKfXg380yklffCIv1+GO4q6eJvksCCIzLnk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr9GGgn/7pCt5eIm9ch2cevd52TbbXC33pMGcavfQ87u1HhPSM
+	F4Fsn8Wj8be4ZtA6jlAH1pgMAVh1DFodpgLmCzkchU0DXNP8EL5U/MeWyr+8tJ+sv0OPySwglLs
+	Sxo1ueBWgFi8g4BgWnFUZ/0Cj8rt4VBp14/xVxfW+YPevIcREjLMRBsOhQcaNc7a8P0vVZVW1Nd
+	Z7ug==
+X-Gm-Gg: ASbGncuRrZwSj7HTKPsZHv2RTlNL7Adrw1QIzZvaG7/l52DMfJI/X3mss3VMBigot99
+	vIJ2NfU3mn5Kgz+FtuAUUKXd0R9PwZWucJmKM2FMpaORpsL+Zqv03l7/xpCzVjODjvym6BXwYlF
+	wL0E6FItCZKb/sycVh6lqxqbrO+K80aLvsuLufBG7H5lbGhXMykNiaW4FyCmmz1+JVCs1P0gh/G
+	YOBdQo+FqZZsrHyO7ZYLxNF0ILa50CUVC9+VEDDeh2mgO56RXW6PkHKzyGhgByVRpORSxbK5iFx
+	BrRbYt9qOSRi8qEwkVBKsw0sRg/ON87o9SyBvPGGSrkFl+4SQvOvpD48/nfRfXKiHBTnmHw=
+X-Received: by 2002:a17:90b:38c7:b0:2ff:62f3:5b31 with SMTP id 98e67ed59e1d1-2ff7cf2a4dfmr33760040a91.29.1741814566534;
+        Wed, 12 Mar 2025 14:22:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGAh7edf+w4rzXzQLR0fkq9YMtlXCTroL93A1jr+Tsldo2r/RTEDBE9CJvpxWToVeKTIWZWGQ==
+X-Received: by 2002:a17:90b:38c7:b0:2ff:62f3:5b31 with SMTP id 98e67ed59e1d1-2ff7cf2a4dfmr33760017a91.29.1741814566237;
+        Wed, 12 Mar 2025 14:22:46 -0700 (PDT)
+Received: from ryan-lee-laptop-13-amd.. (c-76-103-38-92.hsd1.ca.comcast.net. [76.103.38.92])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301190b98b7sm2353887a91.32.2025.03.12.14.22.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 14:22:45 -0700 (PDT)
+From: Ryan Lee <ryan.lee@canonical.com>
+To: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	selinux@vger.kernel.org
+Cc: Ryan Lee <ryan.lee@canonical.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Kentaro Takeda <takedakn@nttdata.co.jp>,
+	Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [RFC PATCH 2/6] apparmor: explicitly skip mediation of O_PATH file descriptors
+Date: Wed, 12 Mar 2025 14:21:42 -0700
+Message-ID: <20250312212148.274205-3-ryan.lee@canonical.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250312212148.274205-1-ryan.lee@canonical.com>
+References: <20250312212148.274205-1-ryan.lee@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v5 03/11] Drivers: hv: Enable VTL mode for
- arm64
-To: Arnd Bergmann <arnd@arndb.de>, Michael Kelley <mhklinux@outlook.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
- <conor+dt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Joey Gouly <joey.gouly@arm.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Oliver Upton <oliver.upton@linux.dev>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- Sudeep Holla <sudeep.holla@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>,
- Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-4-romank@linux.microsoft.com>
- <e0f81049-688e-4f53-a002-5d246281bf8d@app.fastmail.com>
- <BN7PR02MB41488C06B7E42830C700318DD4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
- <119cfb59-d68b-4718-b7cb-90cba67827e8@app.fastmail.com>
- <BN7PR02MB4148FC15ADF0E49327262B92D4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
- <caa0d793-3f05-4d7c-88d0-224ec0503cfb@linux.microsoft.com>
- <45171fb1-7533-449f-83d4-066d038c839f@app.fastmail.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <45171fb1-7533-449f-83d4-066d038c839f@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Previously, we saw O_PATH fds only when mediating fd inheritance on exec,
+but because they would have no request associated with them, we would
+unconditionally let them be inherited. Until we have better handling of
+O_PATH fds, preserve the existing behavior of unconditionally allowing
+them.
 
+Signed-off-by: Ryan Lee <ryan.lee@canonical.com>
+---
+ security/apparmor/lsm.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-On 3/12/2025 1:25 PM, Arnd Bergmann wrote:
-> On Wed, Mar 12, 2025, at 19:33, Roman Kisel wrote:
->> On 3/10/2025 3:18 PM, Michael Kelley wrote:
->>
->> That's a minimal extension, its surprise factor is very low. It has not
->> been seen to cause issues. If no one has strong opinions against that,
->> I'd send that in V6.
->>
-> 
-> Works for me. Thanks for your detailed explanations.
-> 
-
-Thank you for your review very much!
-
->         Arnd
-
+diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
+index 11ace667cbbf..2349a1dd41f4 100644
+--- a/security/apparmor/lsm.c
++++ b/security/apparmor/lsm.c
+@@ -647,6 +647,16 @@ static int apparmor_file_open(struct file *file)
+ 		return 0;
+ 	}
+ 
++	/*
++	 * Preserve the behavior of O_PATH fd creation not being mediated.
++	 *
++	 * TODO: we weren't handling O_PATH fds in aa_inherit_files anyways
++	 * (all-zero request -> fds unconditionally inherited), so proper
++	 * mediation of those will require changes in multiple places.
++	 */
++	if (file->f_flags & O_PATH)
++		return 0;
++
+ 	label = aa_get_newest_cred_label_condref(file->f_cred, &needput);
+ 	if (!unconfined(label)) {
+ 		struct mnt_idmap *idmap = file_mnt_idmap(file);
 -- 
-Thank you,
-Roman
+2.43.0
 
+base-kernel: v6.14-rc6
