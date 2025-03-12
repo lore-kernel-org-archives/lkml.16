@@ -1,104 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B661F09A8;
-	Wed, 12 Mar 2025 21:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6CB15CD74;
+	Wed, 12 Mar 2025 21:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741814630; cv=none; b=CkWiwL6iRH3wCvQlgniO3Dw4V5YVULDdd6jjDNawdiUiVx6Pv2pTmYtimsRFjvLwQC+B43mrdzyNyauC8KKNch48qfNSAz+en+ivI8EWQs/qK9qNoy5J+q4bto6O9wfaB03/iD3RaRXtMGwAfBFOBOwX/txU+Ly0sCmLOiDYQmU=
+	t=1741814879; cv=none; b=GiwSmOVN/S0pYYANOk0M7ujxLiTUvCoBOarnpsKEwE57EVxxYxjRsUd4rqou+fcqKL+zBFMGMt1D2KHZ3nIsEUlY0JYfUXKo45xRvRkrDnwsfm8ljtmcInbav7RHFWUccP2VYMb2Eg9IEYxkaf55kqHPITkXYTWBU1If7djAwfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741814630; c=relaxed/simple;
-	bh=xHL+MXLk8oTL6JktnRTqQNOjTVW4eIBGCZKvQxz6iNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MjMA08nci0HnhBE/W+MeXDc57M6Mw1XUS5nQoI8ZQvAPGTk6viP9/fK6Rn8LmDL+fmexc0QpedvReTLIJ19uAIkh0c5h9M7XaP8hS+mOa9C1XopTVFhzYf5Ogp3hsgtsXMKGE95+ALs4cCb/sviw1+WSi1HUo9F3XKBH8kNgLiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkauvbMZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741814879; c=relaxed/simple;
+	bh=U/K4ghgdDMZqhVdOkbTux0NzP/wpTcuqS0NSyHrGk7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gl91geekA2PARZ6uvR1/5GOUh+hi11L/xdV91p2NX+/triRjLWk/qh3mDUpYAvgetBGQkOpvsHptWEekIGY8nJfuC4KQoggCBCO4EpDX7syoxx+La3eqeabp3KfYdPzcsTIasoiqUvchRQzb2RaTrZ1EtHqYEGYSFR9sAqbppGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HRSLU4Y7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkauvbMZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8012C4CEDD;
-	Wed, 12 Mar 2025 21:23:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRSLU4Y7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51188C4CEDD;
+	Wed, 12 Mar 2025 21:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741814630;
-	bh=xHL+MXLk8oTL6JktnRTqQNOjTVW4eIBGCZKvQxz6iNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NkauvbMZ7KhZaA+uaw5PFaE1H57K5JMNxYkinpXh1jtBfCQESM1QsyXChyy0F/VPx
-	 7/xjhVS9cFep4gRdypc2UpPx9qG8M+1BGsoHa7IEth/nKJ55rk0sypINr8RzoSEjJY
-	 LqT4Ab9IbHdSHj9hy+3gG5CiGCBlYOyQJrMMSqrRw7bUxgaMFXBPNBGg8qGZ7PbeKo
-	 d1+7vPvFYrs4tLZ+USMobqnzooFZPzbXFeEsOQocWk9PrGhpF5H84QX6zDpqh3YJAs
-	 7wxGPZw+uLS7zSvifegFb9kSjgVD/nWYWjgKjbAEd+DbOlWKfjUisgqw+TXvfwqlxi
-	 bPSb1iQTshuFQ==
-Date: Mon, 10 Mar 2025 14:51:11 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Ruiwu Chen <rwchen404@gmail.com>
-Cc: mcgrof@kernel.org, corbet@lwn.net, keescook@chromium.org, 
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	viro@zeniv.linux.org.uk, zachwade.k@gmail.com
-Subject: Re: [PATCH v2] drop_caches: re-enable message after disabling
-Message-ID: <zaiqpjvkekhgipcs7smqhbb7hqt5dcneyoyndycofjepitxznf@q22hsykugpme>
-References: <Z7tZTCsQop1Oxk_O@bombadil.infradead.org>
- <20250308080549.14464-1-rwchen404@gmail.com>
+	s=k20201202; t=1741814878;
+	bh=U/K4ghgdDMZqhVdOkbTux0NzP/wpTcuqS0NSyHrGk7g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HRSLU4Y75hRJh2aS8mvRR+HgOCr2dG6Xk8lx9yk4MBe2M6zUS+AmWyM8KtvNcTVHF
+	 TWk8lsTNiMNgj3meQQgVJzRa9+NL65oRaSGyqfDFvOJPnoDAX2xQhTr1ujCTjQbQJM
+	 IuuIhwqVFTVHYkU6PcZWG2SaRLkWrHfyJBZ0yboZtJpWIG+kzystb27WJJEAv1JLr4
+	 cEOlKp+HW6MpgFVKc22W+wj26V35mAIGA/vRU/+/q4a2kLh0A9HnT/d1cw6BDJYjqJ
+	 JPooKkrriQKQXCeORKoUjNDYvOvD2DrSg/3U4F+OjzCQCLySqI7t5baev9hoV5nuGp
+	 scMopgxog4ixA==
+Message-ID: <88e95b2f-3ffa-4876-a83b-38d25ac9cbc2@kernel.org>
+Date: Wed, 12 Mar 2025 16:27:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250308080549.14464-1-rwchen404@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd: pmf: Fix missing hidden options for
+ Smart PC
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Hans de Goede
+ <hdegoede@redhat.com>, "Luke D . Jones" <luke@ljones.dev>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:ACPI" <linux-acpi@vger.kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ Antheas Kapenekakis <lkml@antheas.dev>, me@kylegospodneti.ch,
+ Denis Benato <benato.denis96@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Yijun Shen <Yijun.Shen@dell.com>
+References: <20250306034402.50478-1-superm1@kernel.org>
+ <50adcc9d-241d-19b6-7b03-2e91ef7d017b@linux.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <50adcc9d-241d-19b6-7b03-2e91ef7d017b@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 08, 2025 at 04:05:49PM +0800, Ruiwu Chen wrote:
-> >> When 'echo 4 > /proc/sys/vm/drop_caches' the message is disabled,
-> >> but there is no interface to enable the message, only by restarting
-> >> the way, so add the 'echo 0 > /proc/sys/vm/drop_caches' way to
-> >> enabled the message again.
-> >> 
-> >> Signed-off-by: Ruiwu Chen <rwchen404@gmail.com>
-> >
-> > You are overcomplicating things, if you just want to re-enable messages
-> > you can just use:
-> >
-> > -		stfu |= sysctl_drop_caches & 4;
-> > +		stfu = sysctl_drop_caches & 4;
-> >
-> > The bool is there as 4 is intended as a bit flag, you can can figure
-> > out what values you want and just append 4 to it to get the expected
-> > result.
-> >
-> >  Luis
-> 
-> Is that what you mean ?
-> 
-> -               stfu |= sysctl_drop_caches & 4;
-> +               stfu ^= sysctl_drop_caches & 4;
-> 
-> 'echo 4 > /sys/kernel/vm/drop_caches' can disable or open messages,
-> This is what I originally thought, but there is uncertainty that when different operators execute the command,
-> It is not possible to determine whether this time is enabled or turned on unless you operate it twice.
 
-So can you use ^= or not? And what does operate it twice mean?
 
-Best
+On 3/10/25 12:19, Ilpo Järvinen wrote:
+> On Wed, 5 Mar 2025, Mario Limonciello wrote:
 > 
-> Ruiwu
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> amd_pmf_get_slider_info() checks the current profile to report correct
+>> value to the TA inputs.  If hidden options are in use then the wrong
+>> values will be reported to TA.
+>>
+>> Add the two compat options PLATFORM_PROFILE_BALANCED_PERFORMANCE and
+>> PLATFORM_PROFILE_QUIET for this use.
+>>
+>> Reported-by: Yijun Shen <Yijun.Shen@dell.com>
+>> Fixes: 9a43102daf64d ("platform/x86/amd: pmf: Add balanced-performance to hidden choices")
+>> Fixes: 44e94fece5170 ("platform/x86/amd: pmf: Add 'quiet' to hidden choices")
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   drivers/platform/x86/amd/pmf/spc.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+>> index f34f3130c3307..1d90f9382024b 100644
+>> --- a/drivers/platform/x86/amd/pmf/spc.c
+>> +++ b/drivers/platform/x86/amd/pmf/spc.c
+>> @@ -219,12 +219,14 @@ static int amd_pmf_get_slider_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>>   
+>>   	switch (dev->current_profile) {
+>>   	case PLATFORM_PROFILE_PERFORMANCE:
+>> +	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+>>   		val = TA_BEST_PERFORMANCE;
+>>   		break;
+>>   	case PLATFORM_PROFILE_BALANCED:
+>>   		val = TA_BETTER_PERFORMANCE;
+>>   		break;
+>>   	case PLATFORM_PROFILE_LOW_POWER:
+>> +	case PLATFORM_PROFILE_QUIET:
+>>   		val = TA_BEST_BATTERY;
+>>   		break;
+>>   	default:
 > 
-> >
-> >> ---
-> >> v2: - updated Documentation/ to note this new API.
-> >>     - renamed the variable.
-...
-> >> @@ -85,7 +88,7 @@ static const struct ctl_table drop_caches_table[] = {
-> >>  		.maxlen		= sizeof(int),
-> >>  		.mode		= 0200,
-> >>  		.proc_handler	= drop_caches_sysctl_handler,
-> >> -		.extra1		= SYSCTL_ONE,
-> >> +		.extra1		= SYSCTL_ZERO,
-> >>  		.extra2		= SYSCTL_FOUR,
-> >>  	},
-> >>  };
-> >> -- 
-> >> 2.27.0
-> >> 
+> Hi Mario,
+> 
+> Just for me to be sure what I'm supposed to do with all these patches
+> related to this platform profile legacy handling... :-)
+> 
+> So this fix is necessary in addition to the 3 patches that got already
+> merged through Rafaels tree?
+> 
+> What about this patch from Luke:
+> 
+> https://patchwork.kernel.org/project/platform-driver-x86/patch/20250224223551.16918-1-luke@ljones.dev/
+> 
+> Is that also needed?
+> 
+> Thanks in advance.
+> 
 
--- 
+Yes; this was another finding that Yijun discovered missing as part of 
+testing Rafael's tree.  It can go through your tree or Rafael's.  It 
+doesn't really matter.
 
-Joel Granados
+Luke's patch isn't needed anymore.
