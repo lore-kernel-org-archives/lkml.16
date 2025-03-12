@@ -1,93 +1,65 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7346022FF35;
-	Wed, 12 Mar 2025 09:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD63E2F43;
+	Wed, 12 Mar 2025 09:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741770999; cv=none; b=ZIyjBbAjpJYj9J01RdV7Cm3jDhnxvcmre17yfHejotRRHcc2FCWCNPGtg885Aa2Im4yv5+25ou6yp8Z0uaOcVeslDDi6nVgpHHg1gsJNuqJehGwlddEbi6pwydj8MQOlI7+Qd9+Pw4GT8sDHXOt1BNnQHHwTw+id1qNPoOwmLKA=
+	t=1741771105; cv=none; b=NNU1wsDjrKi2wxvaibVSgaGqWA70/wDgdwCBnGCi4uZEtq0cnqxyVblkSA6kifyaBVKMSGe9z45v3MknBv2YlYFgELvfjLfzkwSXOGHkla3wmQq+XNm/EoOSZZvVBKI1E3AZIMMEqXGcUh6m/HLzk29notVR39tXUVP0CQ9rh/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741770999; c=relaxed/simple;
-	bh=s/m/3vOZyWA5Ev2YRSMVCybMw1FuS/WZtbR1ovRpVI4=;
+	s=arc-20240116; t=1741771105; c=relaxed/simple;
+	bh=L5LRFen0oPnHLLLTll7iSQFwMAp6pxeYh/KddPhM9fQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KFtO8S8ebJYLUd1Rjx3SdF4x2Qh3T3dijJ5CTxXpPmf6Nd7/83xL41DxPIanXmXVzboOAiMCfrq+0aB9ALTuyRBibe5ig+k9EU+bt9EMkbKxGIbTJhqN8pn7aa31NVWV62baoHex5eyhg8d7wTT3trvZjgM1itoIeH8yG8mjr8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cQyFGRQp; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=BMWPmB+cx4Vhzu9ytzV7Hvhh+if8ElqekKkafHdBPjdrpwtCcmuTABimH7yZM5zRZKjFzVWr2suOGpGdjCxcZFeyaJirMHkr+yuLKcm4jB+Fmwgg4fT8QP7G6Z/i/b7S/bK7WeWZMu7OIU1pgn2UunnyLhM+kTY0bsbrX0b4v2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3PKEM1O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cQyFGRQp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=6+A1HD2y168nRPLvWEMVKwxYLgogdLxXeB0ZDGFNz98=; b=cQyFGRQpp/GGkyrHYcZ1O7au/d
-	uPM2XH5F1Ol10VzaBx9DzeDUgUZmVEquM/5KFjynXkV33jzRRgCP/KX/ytt7P2hGxau0KP065imtl
-	roEgnaGNPoe+oHL/zFMbdb5D4/rmrJf6o9P0oa/wl2l5/MbD8YA3X1XkRHFvLHLKq902TxwEBIpnl
-	TEEQgJVy4hmRWI/CSvjYnL6GrEJa2VhPDfFp9ZtyY8tVbUU1YWSqJUHd6VQu6tEdx1Vo+EaFW+cJ9
-	U5gvL0mYLFeNapT9VAsTD7iEQ66glg+fRuW+7qdQcu4oYrd8lyqMuDsvQejl4FsnZNoJrnkUwmbPC
-	5/U49SJg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsICY-0000000Ceue-0sV1;
-	Wed, 12 Mar 2025 09:16:34 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9B1FF300599; Wed, 12 Mar 2025 10:16:33 +0100 (CET)
-Date: Wed, 12 Mar 2025 10:16:33 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ramon de C Valle <rcvalle@google.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Matthew Maurer <mmaurer@google.com>, linux-kernel@vger.kernel.org,
-	ojeda@kernel.org, linux-tip-commits@vger.kernel.org,
-	Scott Constable <scott.d.constable@intel.com>,
-	Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>,
-	x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-	Alice Ryhl <aliceryhl@google.com>
-Subject: Re: [tip: x86/core] x86/ibt: Implement FineIBT-BHI mitigation
-Message-ID: <20250312091633.GI19424@noisy.programming.kicks-ass.net>
-References: <20250224124200.820402212@infradead.org>
- <174057447519.10177.9447726208823079202.tip-bot2@tip-bot2>
- <20250226195308.GA29387@noisy.programming.kicks-ass.net>
- <CANiq72=3ghFxy8E=AU9p+0imFxKr5iU3sd0hVUXed5BA+KjdNQ@mail.gmail.com>
- <20250310160242.GH19344@noisy.programming.kicks-ass.net>
- <CAOcBZOSPBsTvWFdpwE0-ZU76yMDGBEo3p9y614XYEu+ZSnQ6Sg@mail.gmail.com>
- <CANiq72mcCEbeWb-RAXLcWRnJms2LA6xV=QqQ5=N3ii=3TC89fw@mail.gmail.com>
- <CAOcBZOQnGCqKut-BTvfJNgB9Rz+f5DAANwMs9DU16Js+QDGOrw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3PKEM1O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D306C4CEE3;
+	Wed, 12 Mar 2025 09:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741771104;
+	bh=L5LRFen0oPnHLLLTll7iSQFwMAp6pxeYh/KddPhM9fQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W3PKEM1O5Q9QFmPBJypbkEgsY4Qe4QIo7anP/XfUx4kJkzUEHLAPGIxTCAVrjI645
+	 xFPQbMyHjZJwpvK3mOWxQM32nBITXOYhhWlq6ZUHaxbaTyL/iRa3jsW2LgdIJTW+4+
+	 QU64vc7XE24WX+P9gg/Zig3iEUZ1bOg0BdEgeN9OXXLImAaChJsYyPDolDqDUSL3Fr
+	 miWDSSgQHGTBKOT8uh2dfqm+M3wv5cyYq2o2cz5NRg+nB7EpiODEL16+bEMkXG/wl7
+	 R/Z7qAiTPwXQ2CAMob88dWIjaVTEejKdBb8ICCKJM08gT6e/3ajp5s+WM4BD4cmRst
+	 8uZVu3iWEIjaA==
+Date: Wed, 12 Mar 2025 11:18:19 +0200
+From: Dmitry Baryshkov <lumag@kernel.org>
+To: Wasim Nazir <quic_wasimn@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@quicinc.com
+Subject: Re: [PATCH v2 2/2] pinctrl: qcom: sa8775p: Enable egpio function
+Message-ID: <l7yq5kdyfeb36tv5oighkh2qjnuo4u4afy4gybzq3jq3ufdb3c@dej5twju4c2r>
+References: <20250312072509.3247885-1-quic_wasimn@quicinc.com>
+ <20250312072509.3247885-3-quic_wasimn@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOcBZOQnGCqKut-BTvfJNgB9Rz+f5DAANwMs9DU16Js+QDGOrw@mail.gmail.com>
+In-Reply-To: <20250312072509.3247885-3-quic_wasimn@quicinc.com>
 
-On Tue, Mar 11, 2025 at 01:23:39PM -0700, Ramon de C Valle wrote:
-> On Tue, Mar 11, 2025 at 12:41 PM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
-> >
-> > On Tue, Mar 11, 2025 at 8:09 PM Ramon de C Valle <rcvalle@google.com> wrote:
-> > >
-> > > I've submitted a PR for it:
-> > > https://github.com/rust-lang/rust/pull/138368. Let me know if you're
-> > > able to give it a try.
-> >
-> > Thanks Ramon, that was quick!
-> >
-> > Left a comment there and linked it -- if you meant to ask Peter, then
-> > I guess it would be easiest for him to use the first nightly that has
-> > it as a `-Z` flag.
-> >
-> > i.e. I think it is simple enough to land it as-is, especially if we
-> > add the quick check I suggested.
+On Wed, Mar 12, 2025 at 12:55:09PM +0530, Wasim Nazir wrote:
+> Egpio feature allows IsLand Domain IOs to be reused as TLMM GPIOs.
+> sa8775p supports egpio feature for GPIOs ranging from 126 to 148.
 > 
-> Left a note there. Let me know what you think. Yes, I guess we could
-> just check the next nightly that has those changes.
+> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sa8775p.c | 58 +++++++++++++++-----------
+>  1 file changed, 34 insertions(+), 24 deletions(-)
+> 
 
-The rust-log-analyzer seems to suggest the nightly build failed?
+Reviewed-by: Dmitry Baryshkov <lumag@kernel.org>
 
-Suppose it didn't fail, where do I find it? 
-
-I normally build llvm toolchains using tc-build, but it seems rust is
-not actually part of llvm?
+-- 
+With best wishes
+Dmitry
