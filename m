@@ -1,169 +1,108 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A44E156C6F
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 15:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0B72528F0;
+	Wed, 12 Mar 2025 15:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741794086; cv=none; b=AtnSG9MFoadbvaHfZY1g/z3Q6RR6Zfom/NPywwkQO0P+f57zjnBeKFV4IwOGtEn1SK5lRVI/EVnugMgT8Lfe3Vi9N8dJtQonmIQAItz8zR9wec5os0yH0sbxYkCm5+5yBt46L84nmz3y09XKEXxTuypK83+STLzAFDB1aCt2SHM=
+	t=1741794120; cv=none; b=DBijpDGxAPiJU6qQ11NGRUnzLvx9TyACPDITSxrbd9Mg590duaQ4+fnHF842lRsaq8ZU1lmDVcidtRYWgTlZBBuLtIC+/mRKxSZaNdvL9RYFlWYpfzgk08wqJcneA65BOBD1261f829TvyiW09moxbhXHB1OitjkojqAV0f2CsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741794086; c=relaxed/simple;
-	bh=ttjbYA7yaI7UDQBnkiqg0UmkK7tRlb+j8MXZbpjoXrk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=E/CN/4j0chOhAlfZAvaSVkjjUaHspxQF6vrxGRDU8rGfovdA+RzxfYiovbN/VXWh9AyV/g4mkG10nLulrGPy5DPcmJi7VizSUXgrTVpvrzNzdeeaKlkPkuCanzLrRvoJwrsZu5ZCIMqmX1xj/e7VUD/PBrFBIaHH1aUgR2gj+zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=S0ehEW0q; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1741794120; c=relaxed/simple;
+	bh=rVyI2hyXWnqjdQ/L5d1P7OfpuOy/O8xinkcb+3jPNQw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SKvikvETPmjVhSBF0/1Kz5k7pO658zqcktdQsZVWZI10WNho716N4+hGW3WcwgqPhzSeb/w16At1f+4S9aQaDepbmzHf3SUpCBoxl7upNOqHvEfW2HT4XVLM+cgWWcrw41FT/vnCIoMWj3Xd2ro7pNSGX2hg1kMF51h8hDHvBjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OOmxNJdU; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="S0ehEW0q"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf257158fso24890945e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 08:41:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOmxNJdU"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff611f2ed1so12693a91.0;
+        Wed, 12 Mar 2025 08:41:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1741794082; x=1742398882; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1oEmtbJbAjDfE5NhrrJZgMsbc4ZNOupTbBSety67qvQ=;
-        b=S0ehEW0qy7Mk/84tgpvf7AWu04LqNNbbMrGymBUxn1lvZy08q9QNp0BzpZq0LaAAGf
-         zQ4gH4XiQ3C6rv87YPs3aSurB/25TQejIRHGPBE98hbo8RZpzDxHpQMxG2ZzRjvaEBjn
-         WL5JrGw+ezQjj8mS2HcsajyZTIlCc4qpYFeV4XmTI2gAzkqJuFfpkwBmjnmAj/e1glmT
-         3FeOyKjXuJhWEOxPc1TCaMXgC/OTck0F+SGtNcvWTIdg7MsbeADt+Wb7PmoK2VARB4pF
-         PNOa4kOMODoVBdMboX9nnaHgd01YsOtde8iVgT+FiUCqMotFeIenvSO3DgFBYCJU0t4d
-         UWQA==
+        d=gmail.com; s=20230601; t=1741794119; x=1742398919; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PSIc6zjw40CXJ+jdVdC/xrdJhQRSfGjxhYqyq3jHZow=;
+        b=OOmxNJdUoT0n1ukdhU/QLcZTcPn3QsTESeqT6EOj6uH+8e8cDuf7ibi0LBEC05iIer
+         +6HX5AeGFxZZ64TQOsCIUzwKWOw+KH3+TGssHG48yHn5tLvTuHlFaUFwFJ/5McY/mflS
+         axuZfpYVMeXMdPopMfdUHrzq9cAP396ZLc7nMJ10gX4Cnehf3nkQvFBxhm4IV9tvzOdX
+         8mem2B0sGxJjsqatyjhXkLCghHcOHCghvWORHgNA6zJQcr9cTwWGrwRomGD7sHk6LHZh
+         50gcaL5KjIAj/ZmsUojTEAhXhR2xoktnMLkftx1t+nTIIKWg13wuniL2w/wSVKqOp2e9
+         3ECA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741794082; x=1742398882;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741794119; x=1742398919;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1oEmtbJbAjDfE5NhrrJZgMsbc4ZNOupTbBSety67qvQ=;
-        b=Hn3AX6RYVGRqncuJaCNfMA29/zWkrDIZdlFmFh2OW3XjQH0yV0HFLmBW1V85zah7gD
-         uY10xXUiZEnKR2KdLyfaV1r/RdXhAnDfMwSFwAzp8Hh0sG4jGOxg3vW0iyLlwUtkvs/t
-         MQ41clZAvqDoAT6zPJFTgxgziPbUgFGzwLgl5pjX4Go/RvcS722OxCMg4+Op+CMD2jQe
-         ltpuPahttPp/WcX3kAQRZsvMD4PBUGLlryGyWzC9WI2ThnFdG0sHKdI8h5CapAeI8obC
-         jeHZlC4bAY0HLBus0YuRh5vI/SvVzcvy3B7aXF62Z6FwfIw9L5ZjazhFT18MflOfytBx
-         KU1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXWaao6PDWpRK9ZFklwNxCKbJ+670ZUP0ARusXZRR8/+KyPRxwmN9VENRfnrGHn0BUbjV+VIyVkS9Zd7vI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVqGyYPknWv/+ED8LYx5Ac7lhdIGA3ZhTBn8qzlkqRwadGI/Ar
-	wBSNiL5UoiNoVptfvQS2lpKwaAuS0MBOn7BQsipXkDX7UEMlnKrl9n6kaqEWmo4hCMDpr0luzNC
-	3dcA=
-X-Gm-Gg: ASbGncuhKQiYYUgS/fo1tzkdgFNkMYKoa4mIXY5DTBwXXCCVQ5xUkhJ8dQFS3N1cB2Z
-	QJZbj3eap9Bsprtdayfcvx2A8DphQOH9rJMFautEaEsoQK3ymgXQFGnZP/p+olWfMN06Ldzddr3
-	YxJqcnWiMNYE6nf6mxpnf5bYG++TXcuLQ3VIxc2EQpYJ2m02a6Pb0LGOdQaRQx0DZsmRA1OzloI
-	H6OqmePBK8OVinAW03b/VVn0XtEivt/1IUcrQ1kd1wxnl6Asjt8wUlxUA7T6+KYPppL7n74gLxF
-	yYK8ucC6MH69FxAohR0RPbPuY2p3WQA3Gqaa4x3xQfIG
-X-Google-Smtp-Source: AGHT+IEuj+E29WQ/OOpJvqQ3EDVSbJiu5HyHbTRxHeTQ9s89qRgpRlIWvsn6eHPGJl3Ru6tmiOdhpg==
-X-Received: by 2002:a05:600c:3b94:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-43cf8fcf902mr113708705e9.4.1741794082171;
-        Wed, 12 Mar 2025 08:41:22 -0700 (PDT)
-Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d0a78bdbfsm24374915e9.25.2025.03.12.08.41.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 08:41:21 -0700 (PDT)
-From: David Turner <david.turner@raspberrypi.com>
-Date: Wed, 12 Mar 2025 15:40:56 +0000
-Subject: [PATCH v3 2/2] drm/vc4: hdmi: Add jack detection to HDMI audio
- driver
+        bh=PSIc6zjw40CXJ+jdVdC/xrdJhQRSfGjxhYqyq3jHZow=;
+        b=CqWu2NNhjAQMS6nKu9PtNE5P3VJgYto9GBU8xyFcM7hA2AoylevG0TXpeO0pleHZRS
+         heHSLsTrzlNVZsmrHEPA6LjLz0FT5EGIydkHMhYU2YUXRoXQNSQ7Z8/twZ8xV0cJN+Rr
+         8D7A9a14hg/35vRgJKWHiq481PRA7RE61dmF+MNba1gEzR7UlbYvYS88035zLqndR1CK
+         qLr00IZ8qOh+8zUA+pVNvAbTFpMscEpCwFp0M6nvKAhXX3cKriEaLSDGIFUDoUYUeGSm
+         C7pksMb6Gf1oEjmWAot19FNtdozS2iJVpid+g1eJdi9Q96maCoR/iQqxMQd5rygfyQVO
+         s40w==
+X-Forwarded-Encrypted: i=1; AJvYcCV0gr9PuafHqiJw/RMQlD9xkRE8mBhGMbYaafjFIzt5lq82y4jS4W5H1AREZYqe5eicskLRi7dWpWLoJqlU@vger.kernel.org, AJvYcCV7JH4wuiHFENYJSLh6b7dB123KAiR4y2zURz3Dt/A/4DoMQfEAllGnThFh5PrMSfarFh6AYJz2Y3UykNDcfaze@vger.kernel.org, AJvYcCVmpyHX+W8l1ChCD04tBy2jEqDRUbbT58RDllNRtChTtTbNkShuueNFLhrtfONN79bBqZAHEfZlMCrG@vger.kernel.org, AJvYcCW1jkbUT2V6GWLowJ2jGn4S+zewV7359OjSDTkG3sL85JnJjOd7/EI5MPi5chsFyBJo25cvE0st2MpegZYw@vger.kernel.org, AJvYcCWkh5u4uhVu8riVc+aEBOKiFaN+eFGSnvr+L2tjizXrNHAKepJNosmo9l17uKpa7F8mG88oJdBmz7Xf@vger.kernel.org, AJvYcCXAxdGpKnU+6xcIspsvh/ezXhDJNJ0z5GhJlBuuhNve71+S9mDRKjmhSY02ugXBCvOJzRFG1Yk6ZGN9htwjY8I=@vger.kernel.org, AJvYcCXem8Ku5RKo+ILnKL+mZAuNOkS5i167FGk5mg+7af2YXwPaezADDvOn8l9mH0MUA6KayRV54KV5pYPm+AY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmirRtv5k08SqGeMLg01zVTswXbYR711ScADJcmE32bvwpIAsT
+	W2Il7KMjgLZZl1UZam56OhMSOB2lusy6wnaNATNZsgt/autNsa1zxB7uRZQ5U287A8aE5XaRL7L
+	8h8jouNabdwBT4ITqB7Pap4gEB38=
+X-Gm-Gg: ASbGnctzIwWk5Q/slZOOAsr13ZBYlCVm9qlhBkIxfDfv5ZjnD9/Hhek3xIRIjgVrzqv
+	nh7SMVUSjCjAVkYXIOOmQHtqIQPW6KfQHJFrC1mXbmiNwngR7ajBYBx9Kle1g0LVCZVicaiucGr
+	IONxNkcUbfZTNIOXPn/XScWDk2DMmeZhJQ03VR
+X-Google-Smtp-Source: AGHT+IEt32npMpSqc+oYfdWpGkaYjwOFJINr1egP2ot21DLx4xWJJGYwPyDhSVWDhviXTKqL4pePrdaK2WSZoTZqHL4=
+X-Received: by 2002:a17:90b:1a90:b0:2ff:682b:b754 with SMTP id
+ 98e67ed59e1d1-300a2b70cb9mr9440235a91.2.1741794118639; Wed, 12 Mar 2025
+ 08:41:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250312-vc4_hotplug-v3-2-d75878677de8@raspberrypi.com>
-References: <20250312-vc4_hotplug-v3-0-d75878677de8@raspberrypi.com>
-In-Reply-To: <20250312-vc4_hotplug-v3-0-d75878677de8@raspberrypi.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- David Turner <david.turner@raspberrypi.com>, 
- Stefan Wahren <wahrenst@gmx.net>
-X-Mailer: b4 0.14.2
+References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
+ <20250309-ptr-as-ptr-v2-5-25d60ad922b7@gmail.com> <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me>
+In-Reply-To: <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 12 Mar 2025 16:41:45 +0100
+X-Gm-Features: AQ5f1JoZBLbz_9g1m5DAAT9P0cIviCXCDpXwY5moXYtRUgpKeuGx2DKNWmq7oaM
+Message-ID: <CANiq72mB+PHCfq6M9=2SjiX27=vdahkK-Rm6zDJtCg8TtuEi=w@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add ALSA jack detection to the vc4-hdmi audio driver so userspace knows
-when to add/remove HDMI audio devices.
+On Wed, Mar 12, 2025 at 4:05=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> This feature has just been stabilized (5 days ago!):
+>
+>     https://github.com/rust-lang/rust/issues/131415
+>
+> @Miguel: Do we already have a target Rust version for dropping the
+> `RUSTC_BOOTSTRAP=3D1`? If not, then I think we should use this feature
+> now, since it will be stable by the time we bump the minimum version.
+> (not in this patch [series] though)
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Signed-off-by: David Turner <david.turner@raspberrypi.com>
----
- drivers/gpu/drm/vc4/vc4_hdmi.c | 18 ++++++++++++++++++
- drivers/gpu/drm/vc4/vc4_hdmi.h |  7 +++++++
- 2 files changed, 25 insertions(+)
+We don't (in any case, while we will not use languages unstable
+features soon, we will still need tooling features).
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 37a7d45695f236d3ab281d9a8676921fd434955c..a29a6ef266f9a5952af53030a9a2d313e2ecdfce 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -51,6 +51,7 @@
- #include <linux/reset.h>
- #include <sound/dmaengine_pcm.h>
- #include <sound/hdmi-codec.h>
-+#include <sound/jack.h>
- #include <sound/pcm_drm_eld.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-@@ -2175,6 +2176,22 @@ static const struct drm_connector_hdmi_audio_funcs vc4_hdmi_audio_funcs = {
- 	.shutdown = vc4_hdmi_audio_shutdown,
- };
- 
-+static int vc4_hdmi_codec_init(struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct vc4_hdmi *vc4_hdmi = snd_soc_card_get_drvdata(rtd->card);
-+	struct snd_soc_component *component = snd_soc_rtd_to_codec(rtd, 0)->component;
-+	int ret;
-+
-+	ret = snd_soc_card_jack_new(rtd->card, "HDMI Jack", SND_JACK_LINEOUT,
-+				    &vc4_hdmi->hdmi_jack);
-+	if (ret) {
-+		dev_err(rtd->dev, "HDMI Jack creation failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return snd_soc_component_set_jack(component, &vc4_hdmi->hdmi_jack, NULL);
-+}
-+
- static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
- {
- 	const struct vc4_hdmi_register *mai_data =
-@@ -2288,6 +2305,7 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
- 	dai_link->cpus->dai_name = dev_name(dev);
- 	dai_link->codecs->name = dev_name(&vc4_hdmi->connector.hdmi_audio.codec_pdev->dev);
- 	dai_link->platforms->name = dev_name(dev);
-+	dai_link->init = vc4_hdmi_codec_init;
- 
- 	card->dai_link = dai_link;
- 	card->num_links = 1;
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index e3d989ca302b72533c374dfa3fd0d5bd7fe64a82..a31157c99bee6b33527c4b558fc72fff65d2a278 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -4,6 +4,7 @@
- #include <drm/drm_connector.h>
- #include <media/cec.h>
- #include <sound/dmaengine_pcm.h>
-+#include <sound/hdmi-codec.h>
- #include <sound/soc.h>
- 
- #include "vc4_drv.h"
-@@ -211,6 +212,12 @@ struct vc4_hdmi {
- 	 * KMS hooks. Protected by @mutex.
- 	 */
- 	enum hdmi_colorspace output_format;
-+
-+	/**
-+	 * @hdmi_jack: Represents the connection state of the HDMI plug, for
-+	 * ALSA jack detection.
-+	 */
-+	struct snd_soc_jack hdmi_jack;
- };
- 
- #define connector_to_vc4_hdmi(_connector)				\
+So please feel free to use it, but it seems it is only unstably const
+since 1.85.0, no?
 
--- 
-2.34.1
-
+Cheers,
+Miguel
