@@ -1,189 +1,94 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FAD1DE4CE
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 19:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715F41DED49
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 20:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741809314; cv=none; b=E9Tf4j3IJoYgN/fm1PBaTsp/3ZQGZDnJylZy0z1FAmABFsVtlLwXQMpEMUp8U5GPh9ciLhbNzO7CLTLQeNKluoXmFH8ZTUsfayGKOb3v85gKTXWaoudbzBv/ZJmaCd7P8UzxDvva7bB+QVY61lPi7XOcCfO/tEwly+M3qDEmjqA=
+	t=1741809613; cv=none; b=KZI7R36B3DDxUrWbD0Lp+xD+LZducEoBZeH7ds8+pjSsFntp0XNw2UAIqOW+la/9sKz18sfeBxtome9ACHlQZ4KSs50iGZuNfvUyStq1jrOx63+8RX+SQbPKNtryC6nNOmWNMWSO3SkSTUMztg/qeyHlKGMekVTIeoIjQoqLVKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741809314; c=relaxed/simple;
-	bh=CplhzlJ4smylxHe7GvjlK3HB9K0ptwoBb3gJK2jRDiY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=g8ruCMjbf7KlVgWvoUQR/OgjdlLzLDXmc6JvNa6qM9Xrnc10oXw38pqF6ls0Vf966FaiQzsJU/TRCGagHDm3CTU7Mo+ZTaTYUuup20i5dF6YkAut4a6cG+Setou0g8rYKZUlBH8VNKtKPL5qcvqj9c5MRHVV5rxUMMhEmt/dy+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ND7GjzrA; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741809613; c=relaxed/simple;
+	bh=P5NZbbFKye8GqSKijmH2j8hmBxSuTTWkUAi9/ZWgQC4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GkKgXehOp1npDsrTng7NMrElPqxHMF4u7clVdpaEY5cMLAfCMkvFxVP1+Onxqd3orwQqwSA3m184jWuGZoF9qVqMb3NGsd5JQmhMrOouBCxNNtJtwPPCZGpU6qcw/MzTq7aUU3AR1VT3uYikHMeZVuHs+u88eqJUnXaOnhx54ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QQiioHf3; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ND7GjzrA"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52CJsVp02657411
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 12 Mar 2025 12:54:31 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52CJsVp02657411
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741809272;
-	bh=doQCaHhiMQgxyHB06XJnVyXGfPJ4R8+yj4l9i89I6Lg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=ND7GjzrARImK75gOCS1BYdgH7YfLk9S8LAtRJvc/z0F1ooXAYkjFqdR+D61Jg4bwm
-	 Q015uCD2hatqoXf2PQXa4vMIUqC+We1q9rDUFe3Pm6rwp0Eo/lIIuXTkG5F1DQUwN9
-	 gIdwKgvQtBv5vi7Muasa3wxaLkhMkBV7xMpz7ws7ZS+rEmQYZdT45WS4SVw26Xzvv0
-	 MCzjfsYj+1zUeAontoRpQDFY1tw4VnOL+2gHQEqmAb1xHKe/cw1XjDGM/D8Nu3Z857
-	 BqMtdQlFQzNA4xRSbST8dk1ZQJktRRjig5zUkv1CsXC1wWCEaH8/GQsqhmhf11pqU2
-	 i+8S/efzWwvPg==
-Date: Wed, 12 Mar 2025 12:54:31 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>
-CC: Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-        x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_19/20=5D_tools/x86/kcpuid=3A?=
- =?US-ASCII?Q?_Update_bitfields_to_x86-cpuid-db_v2=2E3?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250312143738.458507-20-darwi@linutronix.de>
-References: <20250312143738.458507-1-darwi@linutronix.de> <20250312143738.458507-20-darwi@linutronix.de>
-Message-ID: <4BCBA481-AC3A-4A65-B791-235E580286CC@zytor.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QQiioHf3"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff798e8c93so379658a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:00:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741809611; x=1742414411; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GCtXfZQjeCD3fq5iyjoL5SOi4U37CC2OFkybAtefkLw=;
+        b=QQiioHf3Zbd/ixAEVGx7t8CgLaW3qGOaz8nWs6arKhsX32hc3Ifvg5R/aGCAODnTtl
+         KX0yW11TGIUBTXULeuMY4BZnzIgZIlIO7CCOtsCh4FJt8yP6b8p9cnsCa2nZzeqwULPt
+         pY5G3vV8dK+wBs3Lj0a+E9dvQT5ibWdwZDiMNkseLg0Vk5pbOd6H2xnaNX4EPdiKjndn
+         Maa3zJeGWD3aT5sOp0KmlPAHBJDgSBX4S5vRABPbUsEsK2l1fSk5te/HnvsZj8bBOss0
+         cFrJHp6vq80ioSuoAxmR5ZuE4CoN1NBqQUU40AEOqYs4fpFBr5iCMZk024gjKVxyxTYe
+         lYfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741809611; x=1742414411;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GCtXfZQjeCD3fq5iyjoL5SOi4U37CC2OFkybAtefkLw=;
+        b=fXbkW2jo8Owjv/Y7dmUQJT6XK7Z5W2dDAFfn2mTl2UyChRgYGlVVM6hfOcVmgT5at+
+         6oh/5UwvuJoKYymssBrElUdLXI3H2ip1WdG/kWta6j4XjVPHTxZjK0eR34bliwn/V4D+
+         QIz7f8GsT1SsTU8hh9Pa0h+vVXIwyHr4oUeubD9A1bXNJ/IJPYBDJ4cM9/zL/Qw1DFVp
+         hhzH7KsHm/3Q/E+iTgZRk9W1L1KaaKfUmwZbT/cHS86HWrAPloisDLex4LEVoabsSrgg
+         8nKsNTXWYlJ1InQUR/e7AjbqoEp2acnpw3THgUoXnGoXU5jppZqZE2iC7Qjw/WV5plij
+         4NcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+rwe032MB+90cNj1u1qZIewRtzfX7/BDW4d1bTJA1ZABYfDZwLI7JqdgmUgoosgwkkzMsqqs/RkhppEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCW+m6trxCCUiP2x2HI+qa0PnsyuVCnqPlyJDiO+dL4wWF6E6r
+	24pAuXdmPzcg5r1pGuFGCkABCHurOqHbCfRannt0PW6RTb21Bs86w6iYUP4kF5VyPtTCj/shNWH
+	HYQ==
+X-Google-Smtp-Source: AGHT+IHv0lWNMl7veaoEBiVdC1it/rtCEXkxkD7IR0gVxFD7q3EHrQjh4nCeL+gbO2bxgEmR+LqkqRyXAro=
+X-Received: from pjbpb8.prod.google.com ([2002:a17:90b:3c08:b0:2fa:15aa:4d1e])
+ (user=jthies job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3fcd:b0:2ee:aed2:c15c
+ with SMTP id 98e67ed59e1d1-300ff350ce7mr11396305a91.28.1741809610712; Wed, 12
+ Mar 2025 13:00:10 -0700 (PDT)
+Date: Wed, 12 Mar 2025 19:59:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+Message-ID: <20250312195951.1579682-1-jthies@google.com>
+Subject: [PATCH v1 0/3] Load cros_ec_ucsi from OF and ACPI definitions
+From: Jameson Thies <jthies@google.com>
+To: tzungbi@kernel.org, ukaszb@chromium.org, bleung@chromium.org, 
+	heikki.krogerus@linux.intel.com, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, groeck@chromium.org, swboyd@chromium.org, 
+	akuchynski@chromium.org
+Cc: devicetree@vger.kernel.org, chrome-platform@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Jameson Thies <jthies@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On March 12, 2025 7:37:36 AM PDT, "Ahmed S=2E Darwish" <darwi@linutronix=2E=
-de> wrote:
->Update kcpuid's CSV file to version 2=2E3, as generated by x86-cpuid-db=
-=2E
->
->Summary of the v2=2E3 changes:
->
->* Per H=2E Peter Anvin's feedback, leaf 0x3 is not unique to Transmeta as
->  the CSV file earlier claimed=2E  Since leaf 0x3's format differs betwee=
-n
->  Intel and Transmeta, and the project does not yet support having the
->  same CPUID bitfield with varying interpretations across vendors, leaf
->  0x3 is removed for now=2E  Given that Intel discontinued support for PS=
-N
->  from Pentium 4 onward, and Linux force disables it on early boot for
->  privacy concerns, this should have minimal impact=2E
->
->* Leaf 0x80000021: Make bitfield IDs and descriptions coherent with each
->  other=2E  Remove "_support" from bitfield IDs, as no other leaf has suc=
-h
->  convention=2E
->
->Reported-by: "H=2E Peter Anvin" <hpa@zytor=2Ecom>
->Closes: https://lkml=2Ekernel=2Eorg/r/C7684E03-36E0-4D58-B6F0-78F4DB82D73=
-7@zytor=2Ecom
->Signed-off-by: Ahmed S=2E Darwish <darwi@linutronix=2Ede>
->Link: https://gitlab=2Ecom/x86-cpuid=2Eorg/x86-cpuid-db/-/blob/v2=2E3/CHA=
-NGELOG=2Erst
->---
-> tools/arch/x86/kcpuid/cpuid=2Ecsv | 30 +++++++++++-------------------
-> 1 file changed, 11 insertions(+), 19 deletions(-)
->
->diff --git a/tools/arch/x86/kcpuid/cpuid=2Ecsv b/tools/arch/x86/kcpuid/cp=
-uid=2Ecsv
->index 9613e09cbfb3=2E=2E8d25b0b49f3b 100644
->--- a/tools/arch/x86/kcpuid/cpuid=2Ecsv
->+++ b/tools/arch/x86/kcpuid/cpuid=2Ecsv
->@@ -1,5 +1,5 @@
-> # SPDX-License-Identifier: CC0-1=2E0
->-# Generator: x86-cpuid-db v2=2E2
->+# Generator: x86-cpuid-db v2=2E3
->=20
-> #
-> # Auto-generated file=2E
->@@ -116,14 +116,6 @@
->        0x2,         0,  edx,   30:24,    desc15                 , Descri=
-ptor #15
->        0x2,         0,  edx,      31,    edx_invalid            , Descri=
-ptors 12-15 are invalid if set
->=20
->-# Leaf 3H
->-# Transmeta Processor Serial Number (PSN)
->-
->-       0x3,         0,  eax,    31:0,    cpu_psn_0              , Proces=
-sor Serial Number bytes 0 - 3
->-       0x3,         0,  ebx,    31:0,    cpu_psn_1              , Proces=
-sor Serial Number bytes 4 - 7
->-       0x3,         0,  ecx,    31:0,    cpu_psn_2              , Proces=
-sor Serial Number bytes 8 - 11
->-       0x3,         0,  edx,    31:0,    cpu_psn_3              , Proces=
-sor Serial Number bytes 12 - 15
->-
-> # Leaf 4H
-> # Intel deterministic cache parameters
->=20
->@@ -1020,20 +1012,20 @@
-> 0x80000021,         0,  eax,       0,    no_nested_data_bp      , No nes=
-ted data breakpoints
-> 0x80000021,         0,  eax,       1,    fsgs_non_serializing   , WRMSR =
-to {FS,GS,KERNEL_GS}_BASE is non-serializing
-> 0x80000021,         0,  eax,       2,    lfence_rdtsc           , LFENCE=
- always serializing / synchronizes RDTSC
->-0x80000021,         0,  eax,       3,    smm_page_cfg_lock      , SMM pa=
-ging configuration lock is supported
->+0x80000021,         0,  eax,       3,    smm_page_cfg_lock      , SMM pa=
-ging configuration lock
-> 0x80000021,         0,  eax,       6,    null_sel_clr_base      , Null s=
-elector clears base
->-0x80000021,         0,  eax,       7,    upper_addr_ignore      , EFER M=
-SR Upper Address Ignore Enable bit supported
->-0x80000021,         0,  eax,       8,    autoibrs               , EFER M=
-SR Automatic IBRS enable bit supported
->-0x80000021,         0,  eax,       9,    no_smm_ctl_msr         , SMM_CT=
-L MSR (0xc0010116) is not present
->-0x80000021,         0,  eax,      10,    fsrs_supported         , Fast S=
-hort Rep STOSB (FSRS) is supported
->-0x80000021,         0,  eax,      11,    fsrc_supported         , Fast S=
-hort Rep CMPSB (FSRC) is supported
->-0x80000021,         0,  eax,      13,    prefetch_ctl_msr       , Prefet=
-ch control MSR is supported
->+0x80000021,         0,  eax,       7,    upper_addr_ignore      , EFER M=
-SR Upper Address Ignore
->+0x80000021,         0,  eax,       8,    autoibrs               , EFER M=
-SR Automatic IBRS
->+0x80000021,         0,  eax,       9,    no_smm_ctl_msr         , SMM_CT=
-L MSR (0xc0010116) is not available
->+0x80000021,         0,  eax,      10,    fsrs                   , Fast S=
-hort Rep STOSB
->+0x80000021,         0,  eax,      11,    fsrc                   , Fast S=
-hort Rep CMPSB
->+0x80000021,         0,  eax,      13,    prefetch_ctl_msr       , Prefet=
-ch control MSR is available
-> 0x80000021,         0,  eax,      16,    opcode_reclaim         , Reserv=
-es opcode space
-> 0x80000021,         0,  eax,      17,    user_cpuid_disable     , #GP wh=
-en executing CPUID at CPL > 0 is supported
->-0x80000021,         0,  eax,      18,    epsf_supported         , Enhanc=
-ed Predictive Store Forwarding (EPSF) is supported
->+0x80000021,         0,  eax,      18,    epsf                   , Enhanc=
-ed Predictive Store Forwarding
-> 0x80000021,         0,  eax,      22,    wl_feedback            , Worklo=
-ad-based heuristic feedback to OS
->-0x80000021,         0,  eax,      24,    eraps_support          , Enhanc=
-ed Return Address Predictor Security
->-0x80000021,         0,  eax,      27,    sbpb                   , Suppor=
-t for the Selective Branch Predictor Barrier
->+0x80000021,         0,  eax,      24,    eraps                  , Enhanc=
-ed Return Address Predictor Security
->+0x80000021,         0,  eax,      27,    sbpb                   , Select=
-ive Branch Predictor Barrier
-> 0x80000021,         0,  eax,      28,    ibpb_brtype            , Branch=
- predictions flushed from CPU branch predictor
-> 0x80000021,         0,  eax,      29,    srso_no                , CPU is=
- not subject to the SRSO vulnerability
-> 0x80000021,         0,  eax,      30,    srso_uk_no             , CPU is=
- not vulnerable to SRSO at user-kernel boundary
+The ChromeOS UCSI driver (cros_ec_ucsi) currently gets added as
+subdevice of cros_ec_dev. But without it being defined by an ACPI
+node or in the OF device tree, the typec connectors are not correctly
+associated with other part of the device tree. This series updates the
+cros_ec_ucsi driver to load based on device definitions in ACPI and OF.
+It also changes the cros_ec_dev driver to block adding cros_ec_ucsi
+as a subdevice if it is defined in the device tree.
 
-As I said, you can simply treat leaf 3 as raw 128-bit hexadecimal number; =
-there really isn't a need to "interpret" it since the only meaningful use o=
-f it is as a unique identifier combined with vendor-FMS=2E
+Jameson Thies (3):
+  dt-bindings: Add cros-ec-ucsi to cros-ec-typec device tree
+    documentation
+  usb: typec: cros_ec_ucsi: Load driver from OF and ACPI definitions
+  mfd: cros_ec: Don't add cros_ec_ucsi if it is defined in OF or ACPI
+
+ .../bindings/chrome/google,cros-ec-typec.yaml | 13 +++++--
+ drivers/mfd/cros_ec_dev.c                     | 39 ++++++++++++++++---
+ drivers/usb/typec/ucsi/cros_ec_ucsi.c         | 26 ++++++++++++-
+ 3 files changed, 68 insertions(+), 10 deletions(-)
+
+
+base-commit: 9fc83373f0ffb8834da48b1446a5c2fef9525bb1
+-- 
+2.49.0.rc0.332.g42c0ae87b1-goog
+
