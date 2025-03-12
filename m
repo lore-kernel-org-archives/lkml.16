@@ -1,110 +1,408 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358D024501E
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 11:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E4523F39D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 11:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741780599; cv=none; b=MaAySrlgljDJUV+eTAxipSuwp1igfpLQeGLJVOzO4JVnv1dzA1fzdh9awcNG6m81QA2pD2m+pPVAPPxTulQQJLTUcDhnQaIWt1r9WEAoF6Bi7KLkJHEC1BwKwmxiCn5R9GR2/ZdVhYgs3g+idDOT02IoJitNNPi4JE3+LeJ6GAc=
+	t=1741780736; cv=none; b=tnhJeq70eExYBXjT3CXJjEE451lxNSSUmpiQ2ZyfdsRDTcixbGTi0E1TbPznBxhryg22OdtIcMTqNyCacX0sxbkvIRZtwftWoOiasNRhoAKBQu3HJUYugdJSy/q3vgcYAVvnzHUhG2Q3uw1P5l8POhyUCybfDMX9iAKeZ/6mdls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741780599; c=relaxed/simple;
-	bh=HzzfwQzBMa06gpOYm7ED9Z4TNgABvoHrMUKZXgLGOoE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nNhIgANGNkO2KSCz2O/swuPs7/AKpb1WsP160ldZi66R4LnIAs2zkTS8Z5lycMxQK06751oUZOQDqYlhHa7noJi1Jr/rnl4gNtDP+RGoluOL7ObyHik3x+xX2NY/eIqOWweK1oqWsS0SS+p8ACri2j7SdNqgOqQ53MX5822AJu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=hRDLXru1; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1741780736; c=relaxed/simple;
+	bh=uwviro9Sh2mbLX/1qsKdeUg9X+f83TGkHLAG0bzlRqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qPFveF/ufSuArUzx2ujzwYe/yv6yNto4TKn5OMr4Phidh2XhOm5Kdqw2XpCaxw2yBNJ9J/Erb1BIeMV5fbR5LMeYDVucMtnInEmNvBhbfPnC8LbHN3UstiuXs1GlfmRMOtvRi6l3/3rqBJZ3l2zzQRV5OUCnJ4n6B4H3iW4sQS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WA+2hijl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=05suShhz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WA+2hijl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=05suShhz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="hRDLXru1"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22355618fd9so124762115ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 04:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1741780597; x=1742385397; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u2W4Xv+9VQWQQBSPngguZ3XObUjYW0AuhHcxMG6Wj0Y=;
-        b=hRDLXru1x5Yej7QYsI9zqFpP0u+2kNee6ctEfJ1WFijqggxofnUosdicEClpxgIaMg
-         r5/6QAtSy8jEXCykBidMjMIBLoTKHYQ4/5qeq5u0X143wy+dQvJpHuYUGw0ojsmOdxDt
-         CIW6nWtFn/dkf3NhtRDRKpWO9wnn0MQJVIz2YdrvTC8Q3GXK7GMcoqeo58Rjm3sUlGQA
-         WT0st++TKvxDU1H4WmrKCePPVK6KFb3855tPm4BSx/gk9F8ffukklGneA3UyKFQk4+3F
-         MYem+1pqSQTjVihpCweGbzjb6RZ3CUUznpnQ4hMvtdYe0lpg//31FpdUKKaozUiYgF87
-         0zyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741780597; x=1742385397;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u2W4Xv+9VQWQQBSPngguZ3XObUjYW0AuhHcxMG6Wj0Y=;
-        b=u9zT3Wxi4RZ7r2kxpgyMMwJBU4/+szb60DcarzmQi2Tdbn0pc+XftblX4ENmCjGGPM
-         AkRGj+V1GlEYUStHZJd8EDS1/KFyKYZZ9XthwyaA5w7tx1w9twwwQzOzQQc3qWufL29V
-         ByEIBQAi+ZdEh9Dax2U+v2Lvy6++ca42RogosEoDqah2Cu7yAqGNWuMTfdYcBStAuxBm
-         L+QG/+SEJC0/vcX1CF8Y4IyQY4QZEAx6cv3xv5EOggqM0tqjnOVRKifcEDC/EVbROsmJ
-         3c584T3PuHXCRqIFDQI7LHEj3+nkeddcn7Ar3XGPRGA/vFlDtJGFz8KGThnAfqypkckL
-         tPjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNFtO4IfTts6E4yLhgv5A2zRQ2GsgSRnn2Q6udZhQW6iP60yZ3PfBKgKQhL9nHp6EhgDATNnMNQlwdX8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQKJ01zeYWJJqJELnJ/6fafl/PXTZpK6R6KqV/ZSAutJUIQsYl
-	0DCzFK5mOV+Je9bsbfCCTDl5MM3W6hS+rWOUleLUrkqltUhRCz7Or1pCFeKRmKYle/4iJ7J6TxM
-	O8sc=
-X-Gm-Gg: ASbGncuukuJgB+t+bzkdzRN5dB9kFrgnaAlZRqHlaSmMj6wOOfuigwV4BtbxFgqXmiM
-	azRuIM0IH1PrnHCKPI/8ubzEhqkh1qnKaCqbi5ryNEidAsXOxxgMxgr5fGvxY04lYF6tisPIN6Q
-	EY338K+degIsq5KoL72vF+i5VkgHXs8mkQcjtQGwEbC1eGnTBbcJuNrVhgH0+BYOo+7NT7NpLNI
-	B5SbZZxxe4iOhQUUGWH6MZBtPYUmfXeVNYR6LY7T5ZT3XCYioC23Y1WgoBW+hPCQebVNeedTBJB
-	zYlzEkABaiSZQYQifw04AcTPD743+jLBnxP0Wn6HkYPDe/nJ
-X-Google-Smtp-Source: AGHT+IFKd8JzPs00shGeDPszPVRqf7Tdd+CUl4POW8V13KNLbNVMybkA3YJRReDGIm9qT/E2zqWsNQ==
-X-Received: by 2002:a05:6a21:9d48:b0:1f5:8a1d:38fd with SMTP id adf61e73a8af0-1f58caefbf9mr12020498637.2.1741780597517;
-        Wed, 12 Mar 2025 04:56:37 -0700 (PDT)
-Received: from localhost ([157.82.205.237])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-736d4f20913sm6410407b3a.13.2025.03.12.04.56.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Mar 2025 04:56:37 -0700 (PDT)
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Wed, 12 Mar 2025 20:56:00 +0900
-Subject: [PATCH v3 6/6] KVM: arm64: Reload PMCNTENSET_EL0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WA+2hijl";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="05suShhz";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WA+2hijl";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="05suShhz"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4CBE11F385;
+	Wed, 12 Mar 2025 11:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741780732; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BJozpFjObkVNBtmvlTu6/zOx/tI2eF0iSbrX/MIRk9E=;
+	b=WA+2hijlJ+wbcaRt6ShsZAdg0kx2dNfRdW3JHaHhcercYGVhxRpK84WLAlxahd+6vroicE
+	xCmsxnj5xe659zBj40v4AAQw772SMNw1N/oZY/l3uTpGUy3rbpMoizcbg0D/akP4VNpA7X
+	zvpu1pdqje+mbO5NaFTfA22sx85hcDI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741780732;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BJozpFjObkVNBtmvlTu6/zOx/tI2eF0iSbrX/MIRk9E=;
+	b=05suShhzdjmD+nlHx3wD61vlQJN61XeMzGqaaIzptmV9sWUaY36SUCaG5yW1a1z3y228NJ
+	hj+zDkeXZlvBkmBw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=WA+2hijl;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=05suShhz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741780732; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BJozpFjObkVNBtmvlTu6/zOx/tI2eF0iSbrX/MIRk9E=;
+	b=WA+2hijlJ+wbcaRt6ShsZAdg0kx2dNfRdW3JHaHhcercYGVhxRpK84WLAlxahd+6vroicE
+	xCmsxnj5xe659zBj40v4AAQw772SMNw1N/oZY/l3uTpGUy3rbpMoizcbg0D/akP4VNpA7X
+	zvpu1pdqje+mbO5NaFTfA22sx85hcDI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741780732;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BJozpFjObkVNBtmvlTu6/zOx/tI2eF0iSbrX/MIRk9E=;
+	b=05suShhzdjmD+nlHx3wD61vlQJN61XeMzGqaaIzptmV9sWUaY36SUCaG5yW1a1z3y228NJ
+	hj+zDkeXZlvBkmBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B88731377F;
+	Wed, 12 Mar 2025 11:58:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id goM+K/p20Wf3RAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 12 Mar 2025 11:58:50 +0000
+Message-ID: <9092a9ed-aecf-40bd-9d15-b53d60d035b5@suse.de>
+Date: Wed, 12 Mar 2025 12:58:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250312-pmc-v3-6-0411cab5dc3d@daynix.com>
-References: <20250312-pmc-v3-0-0411cab5dc3d@daynix.com>
-In-Reply-To: <20250312-pmc-v3-0-0411cab5dc3d@daynix.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Zenghui Yu <yuzenghui@huawei.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Andrew Jones <drjones@redhat.com>, Shannon Zhao <shannon.zhao@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
- linux-kernel@vger.kernel.org, devel@daynix.com, 
- Akihiko Odaki <akihiko.odaki@daynix.com>
-X-Mailer: b4 0.15-dev-edae6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] lib/vsprintf: Add support for generic FourCCs by
+ extending %p4cc
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>,
+ "airlied@redhat.com" <airlied@redhat.com>, Simona Vetter <simona@ffwll.ch>,
+ "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+ Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ "apw@canonical.com" <apw@canonical.com>, "joe@perches.com"
+ <joe@perches.com>, "dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
+ "lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+ "asahi@lists.linux.dev" <asahi@lists.linux.dev>
+References: <ABAEA9D0-97CB-4ADD-9606-A12D5815335A@live.com>
+ <376C9BD3-2F41-4511-BE52-1B8468FE2CB3@live.com>
+ <b74df4b5-ecda-45ba-a98a-c84b0a29e380@suse.de>
+ <PN3PR01MB9597AC6A02B0BF873920D94CB8D02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <PN3PR01MB9597AC6A02B0BF873920D94CB8D02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4CBE11F385
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[live.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
+	FREEMAIL_CC(0.00)[kodeit.net,kernel.org,redhat.com,ffwll.ch,linux.intel.com,suse.com,goodmis.org,rasmusvillemoes.dk,chromium.org,lwn.net,linux-foundation.org,canonical.com,perches.com,gmail.com,vger.kernel.org,lists.freedesktop.org,marcan.st,svenpeter.dev,lists.linux.dev];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[rasmusvillemoes.dk:email,live.com:email,suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,intel.com:email,marcan.st:email]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-Disable counters that are no longer included in PMCNTENSET_EL0. It is
-not necessary to enable counters included in PMCNTENSET_EL0 because
-kvm_pmu_handle_pmcr() does so if appropriate.
+Hi
 
-Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
----
- arch/arm64/kvm/pmu-emul.c | 2 ++
- 1 file changed, 2 insertions(+)
+Am 12.03.25 um 12:49 schrieb Aditya Garg:
+>
+>> On 12 Mar 2025, at 5:16 PM, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>>
+>> ﻿Hi
+>>
+>>> Am 12.03.25 um 10:05 schrieb Aditya Garg:
+>>> From: Hector Martin <marcan@marcan.st>
+>>>
+>>> %p4cc is designed for DRM/V4L2 FourCCs with their specific quirks, but
+>>> it's useful to be able to print generic 4-character codes formatted as
+>>> an integer. Extend it to add format specifiers for printing generic
+>>> 32-bit FourCCs with various endian semantics:
+>>>
+>>> %p4ch    Host byte order
+>>> %p4cn    Network byte order
+>>> %p4cl    Little-endian
+>>> %p4cb    Big-endian
+>> That looks like someone trying to be too clever for their own good. Just my 2 cts.
+> I don't understand what you are trying to say. Anyways, I thought it's obvious, but Petr's Ack is still left and thus cannot be merged into DRM for now unless he says so in this thread.
 
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index 2d19c6048091..b14655dda6db 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -831,6 +831,8 @@ void kvm_vcpu_reload_pmu(struct kvm_vcpu *vcpu)
- {
- 	u64 mask = kvm_pmu_valid_counter_mask(vcpu);
- 
-+	kvm_pmu_disable_counter_mask(vcpu, ~__vcpu_sys_reg(vcpu, PMCNTENSET_EL0));
-+
- 	__vcpu_sys_reg(vcpu, PMOVSSET_EL0) &= mask;
- 	__vcpu_sys_reg(vcpu, PMINTENSET_EL1) &= mask;
- 	__vcpu_sys_reg(vcpu, PMCNTENSET_EL0) &= mask;
+I'm trying to say that the author of this patch found the %p4cc 
+functionality and over-generalized the feature. Source code should 
+express the idea of what it's doing in clear terms. %p4ch somehow 
+doesn't do that for me. Printing 4 bytes in various orders without 
+context seems arbitrary and confusing.
+
+(I don't really have a say here. I'm just asking to reconsider this change.)
+
+Best regards
+Thomas
+
+>> Best regards
+>> Thomas
+>>
+>>> The endianness determines how bytes are interpreted as a u32, and the
+>>> FourCC is then always printed MSByte-first (this is the opposite of
+>>> V4L/DRM FourCCs). This covers most practical cases, e.g. %p4cn would
+>>> allow printing LSByte-first FourCCs stored in host endian order
+>>> (other than the hex form being in character order, not the integer
+>>> value).
+>>>
+>>> Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>> Signed-off-by: Hector Martin <marcan@marcan.st>
+>>> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+>>> ---
+>>>   Documentation/core-api/printk-formats.rst | 32 +++++++++++++++++++
+>>>   lib/test_printf.c                         | 39 +++++++++++++++++++----
+>>>   lib/vsprintf.c                            | 35 ++++++++++++++++----
+>>>   scripts/checkpatch.pl                     |  2 +-
+>>>   4 files changed, 94 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+>>> index ecccc0473..bd420e8aa 100644
+>>> --- a/Documentation/core-api/printk-formats.rst
+>>> +++ b/Documentation/core-api/printk-formats.rst
+>>> @@ -648,6 +648,38 @@ Examples::
+>>>       %p4cc    Y10  little-endian (0x20303159)
+>>>       %p4cc    NV12 big-endian (0xb231564e)
+>>>   +Generic FourCC code
+>>> +-------------------
+>>> +
+>>> +::
+>>> +    %p4c[hnlb]    gP00 (0x67503030)
+>>> +
+>>> +Print a generic FourCC code, as both ASCII characters and its numerical
+>>> +value as hexadecimal.
+>>> +
+>>> +The generic FourCC code is always printed in the big-endian format,
+>>> +the most significant byte first. This is the opposite of V4L/DRM FourCCs.
+>>> +
+>>> +The additional ``h``, ``n``, ``l``, and ``b`` specifiers define what
+>>> +endianness is used to load the stored bytes. The data might be interpreted
+>>> +using the host byte order, network byte order, little-endian, or big-endian.
+>>> +
+>>> +Passed by reference.
+>>> +
+>>> +Examples for a little-endian machine, given &(u32)0x67503030::
+>>> +
+>>> +    %p4ch    gP00 (0x67503030)
+>>> +    %p4cn    00Pg (0x30305067)
+>>> +    %p4cl    gP00 (0x67503030)
+>>> +    %p4cb    00Pg (0x30305067)
+>>> +
+>>> +Examples for a big-endian machine, given &(u32)0x67503030::
+>>> +
+>>> +    %p4ch    gP00 (0x67503030)
+>>> +    %p4cn    00Pg (0x30305067)
+>>> +    %p4cl    00Pg (0x30305067)
+>>> +    %p4cb    gP00 (0x67503030)
+>>> +
+>>>   Rust
+>>>   ----
+>>>   diff --git a/lib/test_printf.c b/lib/test_printf.c
+>>> index 59dbe4f9a..b9e8afc01 100644
+>>> --- a/lib/test_printf.c
+>>> +++ b/lib/test_printf.c
+>>> @@ -776,21 +776,46 @@ static void __init fwnode_pointer(void)
+>>>       software_node_unregister_node_group(group);
+>>>   }
+>>>   +struct fourcc_struct {
+>>> +    u32 code;
+>>> +    const char *str;
+>>> +};
+>>> +
+>>> +static void __init fourcc_pointer_test(const struct fourcc_struct *fc, size_t n,
+>>> +                       const char *fmt)
+>>> +{
+>>> +    size_t i;
+>>> +
+>>> +    for (i = 0; i < n; i++)
+>>> +        test(fc[i].str, fmt, &fc[i].code);
+>>> +}
+>>> +
+>>>   static void __init fourcc_pointer(void)
+>>>   {
+>>> -    struct {
+>>> -        u32 code;
+>>> -        char *str;
+>>> -    } const try[] = {
+>>> +    static const struct fourcc_struct try_cc[] = {
+>>>           { 0x3231564e, "NV12 little-endian (0x3231564e)", },
+>>>           { 0xb231564e, "NV12 big-endian (0xb231564e)", },
+>>>           { 0x10111213, ".... little-endian (0x10111213)", },
+>>>           { 0x20303159, "Y10  little-endian (0x20303159)", },
+>>>       };
+>>> -    unsigned int i;
+>>> +    static const struct fourcc_struct try_ch[] = {
+>>> +        { 0x41424344, "ABCD (0x41424344)", },
+>>> +    };
+>>> +    static const struct fourcc_struct try_cn[] = {
+>>> +        { 0x41424344, "DCBA (0x44434241)", },
+>>> +    };
+>>> +    static const struct fourcc_struct try_cl[] = {
+>>> +        { (__force u32)cpu_to_le32(0x41424344), "ABCD (0x41424344)", },
+>>> +    };
+>>> +    static const struct fourcc_struct try_cb[] = {
+>>> +        { (__force u32)cpu_to_be32(0x41424344), "ABCD (0x41424344)", },
+>>> +    };
+>>>   -    for (i = 0; i < ARRAY_SIZE(try); i++)
+>>> -        test(try[i].str, "%p4cc", &try[i].code);
+>>> +    fourcc_pointer_test(try_cc, ARRAY_SIZE(try_cc), "%p4cc");
+>>> +    fourcc_pointer_test(try_ch, ARRAY_SIZE(try_ch), "%p4ch");
+>>> +    fourcc_pointer_test(try_cn, ARRAY_SIZE(try_cn), "%p4cn");
+>>> +    fourcc_pointer_test(try_cl, ARRAY_SIZE(try_cl), "%p4cl");
+>>> +    fourcc_pointer_test(try_cb, ARRAY_SIZE(try_cb), "%p4cb");
+>>>   }
+>>>     static void __init
+>>> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+>>> index 56fe96319..56511a994 100644
+>>> --- a/lib/vsprintf.c
+>>> +++ b/lib/vsprintf.c
+>>> @@ -1781,27 +1781,50 @@ char *fourcc_string(char *buf, char *end, const u32 *fourcc,
+>>>       char output[sizeof("0123 little-endian (0x01234567)")];
+>>>       char *p = output;
+>>>       unsigned int i;
+>>> +    bool pixel_fmt = false;
+>>>       u32 orig, val;
+>>>   -    if (fmt[1] != 'c' || fmt[2] != 'c')
+>>> +    if (fmt[1] != 'c')
+>>>           return error_string(buf, end, "(%p4?)", spec);
+>>>         if (check_pointer(&buf, end, fourcc, spec))
+>>>           return buf;
+>>>         orig = get_unaligned(fourcc);
+>>> -    val = orig & ~BIT(31);
+>>> +    switch (fmt[2]) {
+>>> +    case 'h':
+>>> +        break;
+>>> +    case 'n':
+>>> +        orig = swab32(orig);
+>>> +        break;
+>>> +    case 'l':
+>>> +        orig = (__force u32)cpu_to_le32(orig);
+>>> +        break;
+>>> +    case 'b':
+>>> +        orig = (__force u32)cpu_to_be32(orig);
+>>> +        break;
+>>> +    case 'c':
+>>> +        /* Pixel formats are printed LSB-first */
+>>> +        pixel_fmt = true;
+>>> +        break;
+>>> +    default:
+>>> +        return error_string(buf, end, "(%p4?)", spec);
+>>> +    }
+>>> +
+>>> +    val = pixel_fmt ? swab32(orig & ~BIT(31)) : orig;
+>>>         for (i = 0; i < sizeof(u32); i++) {
+>>> -        unsigned char c = val >> (i * 8);
+>>> +        unsigned char c = val >> ((3 - i) * 8);
+>>>             /* Print non-control ASCII characters as-is, dot otherwise */
+>>>           *p++ = isascii(c) && isprint(c) ? c : '.';
+>>>       }
+>>>   -    *p++ = ' ';
+>>> -    strcpy(p, orig & BIT(31) ? "big-endian" : "little-endian");
+>>> -    p += strlen(p);
+>>> +    if (pixel_fmt) {
+>>> +        *p++ = ' ';
+>>> +        strcpy(p, orig & BIT(31) ? "big-endian" : "little-endian");
+>>> +        p += strlen(p);
+>>> +    }
+>>>         *p++ = ' ';
+>>>       *p++ = '(';
+>>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+>>> index 7b28ad331..5595a0898 100755
+>>> --- a/scripts/checkpatch.pl
+>>> +++ b/scripts/checkpatch.pl
+>>> @@ -6904,7 +6904,7 @@ sub process {
+>>>                           ($extension eq "f" &&
+>>>                            defined $qualifier && $qualifier !~ /^w/) ||
+>>>                           ($extension eq "4" &&
+>>> -                         defined $qualifier && $qualifier !~ /^cc/)) {
+>>> +                         defined $qualifier && $qualifier !~ /^c[hnlbc]/)) {
+>>>                           $bad_specifier = $specifier;
+>>>                           last;
+>>>                       }
+>> --
+>> --
+>> Thomas Zimmermann
+>> Graphics Driver Developer
+>> SUSE Software Solutions Germany GmbH
+>> Frankenstrasse 146, 90461 Nuernberg, Germany
+>> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+>> HRB 36809 (AG Nuernberg)
+>>
 
 -- 
-2.48.1
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
