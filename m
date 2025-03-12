@@ -1,108 +1,71 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A9E78F32
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741785903; cv=pass; b=LoqvmUQkucUZx8aTioEYeG0Y/i84Fk4peVXkzumju691pEdSHrMSJqgMQ6rj4zbZYbKoRVumm6PiM2WiKv0nwt/1b1nSM0Rc4UBR389JknyNvabSEUc6NQD/gKIBOhLP02qgwI6Y97Cn/ey68bdFjXXbUWtOQzP3v601WE2+waA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741785903; c=relaxed/simple;
-	bh=hLu17MWewNAkrCmOPiFU0LnsZECIatECY63qMJ9ANhg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i9q5HvasuwH0orFImlg2IcND3hB0ZvgE6YRauQ2Gm2TNN6zF9DFTO/nNhuSwUmc4u54pqFkWnCULWTHJ+qFWkH8y3nTwF8RxsQVSFl5ZL44txZHVh4rk01N/M6UtnS8zqO+vlYZMNL0koz99vMwxOnC5NiqYJ0lhPqeEV3mnZLE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=D/UFUKhG; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C3923F38F;
+	Wed, 12 Mar 2025 13:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741785935; cv=none; b=eJteu5/HwWCdXqGPkEpOuvqR+Iagz/kPiG9TSMvvHqDJGSV0L81y5SdnQ4YAOgsgXJ1lhvA/PuP6tmh1+vNHgSv15j1yBEFmU1T5tm9akmWbetXByxLi44dmPeoEaVSJF1lVid0RKKDRNYJnLYiUovRpPdSjH2gR0Fgvv8Bw1m0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741785935; c=relaxed/simple;
+	bh=mrmea888E5Dssk2tV3wb2er0cgRGTeCz9otVTPzTT8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b0Go8PJspx7WnOcg+X6dxMZb9C3ILXwGGeH4COGZ/O5CvcIU5R1q7AAisuu/gTfTLxEhL6E6KqulA9NV5d/Q/oOZZjNjgswzrx926qJK4ygT4AAu5Q5/QkuwHzT6kXWbWutsAZKukYW7wL7+jzCrV+XtyYfdbh9+xtPhlrNVR2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bYtfIQCp; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="D/UFUKhG"
-ARC-Seal: i=1; a=rsa-sha256; t=1741785874; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=KQ2P/C6BtkYsueq4akRJPsp2naRHaM7GZ9RL9q/HknxMqsZ/t5EvSXen297LmjxH4CUXZHk7qFgYS0Q2NIGXE2V5uMsCi7o5G3kZuOQ43ORA71hSJJLHp4vgfH3mDCh2oIVbkOSE/JPvQ/P3NThah7EoXKW4HKltNqtwVClsc5E=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741785874; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=zATmQj0XyB7/VoZzjPmz0V+W644epir4Rl4IGnvK18o=; 
-	b=BXsSNOEqCeOufLJNWTjNcx3/6+LmMi2c3f59FFUK7kSGQQyDsVqVKD8CU04rMN2uSt2kgvrui/1WgqHpOF/jnVGpMkwy/GE0vCbkRETpaeFgpuQcrgFiV9LvpHRaRcD6QxhcGneqmXcb+G9tY2lP1e80YuEdXjjV5KAsgJ+rvNo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
-	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741785874;
-	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=zATmQj0XyB7/VoZzjPmz0V+W644epir4Rl4IGnvK18o=;
-	b=D/UFUKhGVuHLpq0HvEd/liwgMeVn13FHRlBLaLu7IOARHB62GAz0tEKwquyBZfNx
-	rJ2Vw+kG2SEajG9072z1u05X2ZmvLxXX/A+92OmcHrofUcR9mGZjrAMwUUpYXYKHSHz
-	nb7bowQoGRkqA24ygY9kQEUESaft6X0CN82kJ1A8=
-Received: by mx.zohomail.com with SMTPS id 1741785871899734.2310655484773;
-	Wed, 12 Mar 2025 06:24:31 -0700 (PDT)
-Message-ID: <3aca6477-6014-4c24-8aa6-6c601fc54a32@collabora.com>
-Date: Wed, 12 Mar 2025 10:24:24 -0300
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bYtfIQCp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=4gO+URnsQQ7ytYQbborbvXI40PBwXJiX1pwI38d3wI8=; b=bYtfIQCpfh6upACEiKQBnm2fs5
+	Fqq1bTrOCNhzTh/e00oyD1XeftmKbWLXGXC3O3X/LASJT6TMYK3D8/UUnt8oX7oji+I5AR29MmdhV
+	/1XJhJI/0A+dSe9RWwCdqGweaTjOLU613LbaSpbXiKXebqk1oySBf7EKCvbvalKu9/pI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tsM5P-004fuS-BF; Wed, 12 Mar 2025 14:25:27 +0100
+Date: Wed, 12 Mar 2025 14:25:27 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Suraj Gupta <suraj.gupta2@amd.com>
+Cc: radhey.shyam.pandey@amd.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	michal.simek@amd.com, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, git@amd.com,
+	harini.katakam@amd.com
+Subject: Re: [PATCH net-next V2 2/2] net: axienet: Add support for 2500base-X
+ only configuration.
+Message-ID: <ad1e81b5-1596-4d94-a0fa-1828d667b7a2@lunn.ch>
+References: <20250312095411.1392379-1-suraj.gupta2@amd.com>
+ <20250312095411.1392379-3-suraj.gupta2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/6] drm/panfrost: Unify panfrost_mmu_enable/disable
- common code
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- robh@kernel.org, steven.price@arm.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- kernel@collabora.com, linux-mediatek@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, sjoerd@collabora.com
-References: <20250310195921.157511-1-ariel.dalessandro@collabora.com>
- <20250310195921.157511-4-ariel.dalessandro@collabora.com>
- <20250311085158.37329b0c@collabora.com>
-Content-Language: en-US
-From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-In-Reply-To: <20250311085158.37329b0c@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250312095411.1392379-3-suraj.gupta2@amd.com>
 
-Boris,
+> +	/* AXI 1G/2.5G ethernet IP has following synthesis options:
+> +	 * 1) SGMII/1000base-X only.
+> +	 * 2) 2500base-X only.
+> +	 * 3) Dynamically switching between (1) and (2), and is not
+> +	 * implemented in driver.
+> +	 */
+> +
+> +	if (axienet_ior(lp, XAE_ABILITY_OFFSET) & XAE_ABILITY_2_5G)
 
-On 3/11/25 4:51 AM, Boris Brezillon wrote:
-> On Mon, 10 Mar 2025 16:59:18 -0300
-> Ariel D'Alessandro <ariel.dalessandro@collabora.com> wrote:
-> 
->> Both these functions write to MMU_AS_CONTROL register in the same way.
->> Define a common _panfrost_mmu_as_control_write function with the shared
->> code.
->>
->> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
->> ---
->>   drivers/gpu/drm/panfrost/panfrost_mmu.c | 33 ++++++++++++-------------
->>   1 file changed, 16 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> index 294f86b3c25e7..31df3a96f89bd 100644
->> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
->> @@ -121,38 +121,37 @@ static int mmu_hw_do_operation(struct panfrost_device *pfdev,
->>   	return ret;
->>   }
->>   
->> -static void panfrost_mmu_enable(struct panfrost_device *pfdev, struct panfrost_mmu *mmu)
->> +static void
->> +_panfrost_mmu_as_control_write(struct panfrost_device *pfdev, u32 as_nr,
->> +			       u64 transtab, u64 memattr)
-> 
-> I'm honestly not convinced this is needed. Let's just stick to
-> panfrost_mmu_enable/disable().
+How can we tell if the synthesis allows 3)?
 
-Ok, will drop in v2.
+Don't we have a backwards compatibility issue here? Maybe there are
+systems which have been synthesised with 3), but are currently limited
+to 1) due to the driver. If you don't differentiate between 2 and 3,
+such systems are going to swap to 2) and regress.
 
-Thanks!
-
--- 
-Ariel D'Alessandro
-Software Engineer
-
-Collabora Ltd.
-Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK 
-Registered in England & Wales, no. 5513718
-
+	Andrew
