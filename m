@@ -1,146 +1,211 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FD31E48A
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 13:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E49924293B;
+	Wed, 12 Mar 2025 13:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741786600; cv=none; b=OulsUIUPlZpVaWLLh/wv2U25I5y75B/Lq+Ppw1+w3H1gmXVsf6khKfIc3ANZbUbq0Mqwk8qKkLmC97jYwghT89h1804kf/bd7PEbX+VrE9RiH2nQKtZASopPfWfqFjeUlKaJ8ZpszF90MPlc6Bw4D8XQGJT5GAw8Xki1dvzTs6o=
+	t=1741786612; cv=none; b=o6ZT1Ol0YM4SoehQ05fUMcODS8ZYuq8Id+lEbl3VxAPMytI9Mj54KWvjPeSOIVKHEjSXvFhKN6P0gKXqskUZMFq5p9DlWWmr6OEuPV6gwa1+UsVBQLaIhRrA5d3duKrQmkAI+8Ja5p70NX3fUlPWmEeSQR3DpGlWhwNWqqA921I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741786600; c=relaxed/simple;
-	bh=zD5ceLjbuXPe6+5fOTicgv3WUEXkziJ/7+hhKU7mWaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjpJhLvw2gk9PLk4Rec2pSnheGqjnxA3dfhnBGmm3JRQcehlZjUi0NK35DZKCwQqkdZ3BK+qIF71G5pv7zqkSTK2ILG8VU7/kbFsE8ch1DdUwP8369hxkUmJCTAYWOp6k5CrE5dRtkT36W2PnNfU8cRGOCzI4t9iRLTEoRlSBlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tsMFk-0006Gj-GU; Wed, 12 Mar 2025 14:36:08 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tsMFi-005Mqb-0w;
-	Wed, 12 Mar 2025 14:36:06 +0100
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id DFFB73D8DBF;
-	Wed, 12 Mar 2025 13:36:05 +0000 (UTC)
-Date: Wed, 12 Mar 2025 14:36:05 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Matias Ezequiel Vara Larsen <mvaralar@redhat.com>
-Cc: Harald Mommer <harald.mommer@opensynergy.com>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-	Mikhail Golubev-Ciuchea <Mikhail.Golubev-Ciuchea@opensynergy.com>, Wolfgang Grandegger <wg@grandegger.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Damir Shaikhutdinov <Damir.Shaikhutdinov@opensynergy.com>, 
-	linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH v5] can: virtio: Initial virtio CAN driver.
-Message-ID: <20250312-able-refreshing-hog-ed14e7-mkl@pengutronix.de>
-References: <20240108131039.2234044-1-Mikhail.Golubev-Ciuchea@opensynergy.com>
- <a366f529-c901-4cd1-a1a6-c3958562cace@wanadoo.fr>
- <0878aedf-35c2-4901-8662-2688574dd06f@opensynergy.com>
- <Z9FicA7bHAYZWJAb@fedora>
- <20250312-conscious-sloppy-pegasus-b5099d-mkl@pengutronix.de>
- <Z9GL6o01fuhTbHWO@fedora>
+	s=arc-20240116; t=1741786612; c=relaxed/simple;
+	bh=y79pXJ4Od+2hvd3+4EHDD+A70nDTedAiKbF4hsrYSbI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PGfs/7oMfrjS+4bA7XY8zb3YsgySNLjfluVY7nFdN8STVnU2Ls/hK5k3ZrWCJzSjVn+5q0pQzQdVyXqGahZQjUPNJOfzJoziTao1rPFgk+XrA7HKl54cmlf5TKEnkeRdgZDK8ps/7Sr05QnSyb+m09MYwliCfVBSj/rI3PZpzJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YL4F1y/1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YL4F1y/1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D95AC4CEE3;
+	Wed, 12 Mar 2025 13:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741786611;
+	bh=y79pXJ4Od+2hvd3+4EHDD+A70nDTedAiKbF4hsrYSbI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=YL4F1y/1IfKdLAcoJTo1QmOjbaGv6Ev/QiZKpgMqMOaPt6ZYDLdpwWMjd9ZXi0DlW
+	 V1CmpfoTg1GuDNseOfV63YoYi+I+bzCSkPZhterHaf6PfMAzJ/HHOE1GxBbUv4wR09
+	 ZS6U48bpv/VBLlBgo1s8cBv4i0pGYFzdVFS6UrwFDJ4fD/5yotidn+lFEeW648u/v+
+	 Itg0+U70DJoiOrdvMJIMoAxvomrMaVehVHdIqoQgWanwBlT81vPrHdidl2c7rCcu1i
+	 xY331HY4NT62Pv9HwPPAKkHhk+MoMVsJyVQZ1avUrcbIjNgIqu2FFfQSgENQN3mFIM
+	 BgbtAOEcZ1Hkw==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Wed, 12 Mar 2025 09:36:44 -0400
+Subject: [PATCH] sunrpc: add a rpc_clnt shutdown control in debugfs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vs4q5lbuhwsinm4l"
-Content-Disposition: inline
-In-Reply-To: <Z9GL6o01fuhTbHWO@fedora>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250312-rpc-shutdown-v1-1-cc90d79a71c2@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAOuN0WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDY0Mj3aKCZN3ijNKSlPzyPN3kVMsksxRjU0vLlEQloJaCotS0zAqwcdG
+ xtbUAKyDmD14AAAA=
+X-Change-ID: 20250312-rpc-shutdown-ce9b6d3599da
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Benjamin Coddington <bcodding@redhat.com>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5057; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=y79pXJ4Od+2hvd3+4EHDD+A70nDTedAiKbF4hsrYSbI=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn0Y3yumawZjbtmMAMLA9iBl2LpgtfS9hAp5KBE
+ VK+7a/f5nOJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ9GN8gAKCRAADmhBGVaC
+ Fbh0D/9Pcr5ofMyB+vfLAx/Gcsww/YYNgKW0auT4fMdTxkHvZxjjnVAkUsmR7qVCGbnXDUm5qq2
+ cIkj3P0JCO8/V9HezNgSnsEUduNKjVu6rZJUz44Gwb9Hppf3HbjtsLFFYmP5/k43Rx1POcU66b9
+ nx8lXFioohDYfQ9ouq8w0LCBX8BxQ8dEoteug6CAWZM+DoMw7lqw8obYnJINwtKVv22QQHGDBww
+ OOl9FgHowRc+Mp1NA35tnnYARmv397ZkIsHiRKRbhBpKpYdI22afk8wbvb4t+vKKLXTego6WeuB
+ dMi9ScK1CToTIYJJC+FqQe1q2OtuJO6n3uh/qUUUi0G15WcmyS7CS4tkhV22MImTR9hWU4bSDJ6
+ BRbZT/FfOZhoNul+WWRMFG/5NepRKZOl1+ZaRHlLDscOgH9FsZuhdWgaZj6IISiw15FO2iu/cWj
+ BJ5Y56RG5p1L2PAl21FvEHfve+luwGJ6AuYNUj+VgLWa0y8uShNRZ82+HNda2pnh+cbjcSNvihS
+ vb1R1NBLv9W6bRXyixUvorgwg4ebKpVnbFOM5fBqmKY/VNibp5Mpcjk1Xt0DAcmAmrp59F51V1z
+ O65V0E1YeRv9KbYYY+tzay1nPiL3DM1SxQccrFpgCZ1U78EV7hxchmt4FAEZ0KaD1aup4WKSHFN
+ C+XhSETgjhPuOGg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
+There have been confirmed reports where a container with an NFS mount
+inside it dies abruptly, along with all of its processes, but the NFS
+client sticks around and keeps trying to send RPCs after the networking
+is gone.
 
---vs4q5lbuhwsinm4l
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5] can: virtio: Initial virtio CAN driver.
-MIME-Version: 1.0
+We have a reproducer where if we SIGKILL a container with an NFS mount,
+the RPC clients will stick around indefinitely. The orchestrator
+does a MNT_DETACH unmount on the NFS mount, and then tears down the
+networking while there are still RPCs in flight.
 
-On 12.03.2025 14:28:10, Matias Ezequiel Vara Larsen wrote:
-> On Wed, Mar 12, 2025 at 11:41:26AM +0100, Marc Kleine-Budde wrote:
-> > On 12.03.2025 11:31:12, Matias Ezequiel Vara Larsen wrote:
-> > > On Thu, Feb 01, 2024 at 07:57:45PM +0100, Harald Mommer wrote:
-> > > > Hello,
-> > > >=20
-> > > > I thought there would be some more comments coming and I could addr=
-ess
-> > > > everything in one chunk. Not the case, besides your comments silenc=
-e.
-> > > >=20
-> > > > On 08.01.24 20:34, Christophe JAILLET wrote:
-> > > > >=20
-> > > > > Hi,
-> > > > > a few nits below, should there be a v6.
-> > > > >=20
-> > > >=20
-> > > > I'm sure there will be but not so soon. Probably after acceptance o=
-f the
-> > > > virtio CAN specification or after change requests to the specificat=
-ion are
-> > > > received and the driver has to be adapted to an updated draft.
-> > > >=20
-> > > What is the status of this series?
-> >=20
-> > There has been no movement from the Linux side. The patch series is
-> > quite extensive. To get this mainline, we need not only a proper Linux
-> > CAN driver, but also a proper VirtIO specification.=20
->=20
-> Thanks for your answer. AFAIK the spec has been merged (see
-> https://github.com/oasis-tcs/virtio-spec/tree/virtio-1.4).=20
+Recently new controls were added[1] that allow shutting down an NFS
+mount. That doesn't help here since the mount namespace is detached from
+any tasks at this point.
 
-Yes, the spec was merged. I think it was written with a specific
-use-case (IIRC: automotive, Linux on-top of a specific hypervisor) in
-mind, in Linux we have other use cases that might not be covered.
+Transplant shutdown_client() to the sunrpc module, and give it a more
+distinct name. Add a new debugfs sunrpc/rpc_clnt/*/shutdown knob that
+allows the same functionality as the one in /sys/fs/nfs, but at the
+rpc_clnt level.
 
-> > This whole project is too big for me to do it as a collaborative
-> > effort.
->=20
-> What do you mean?
+[1]: commit d9615d166c7e ("NFS: add sysfs shutdown knob").
 
-I mean the driver is too big to review on a non-paid community based
-effort.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfs/sysfs.c               | 19 ++++---------------
+ include/linux/sunrpc/sched.h |  1 +
+ net/sunrpc/clnt.c            | 12 ++++++++++++
+ net/sunrpc/debugfs.c         | 15 +++++++++++++++
+ 4 files changed, 32 insertions(+), 15 deletions(-)
 
-regards,
-Marc
+diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
+index 7b59a40d40c061a41b0fbde91aa006314f02c1fb..c29c5fd639554461bdcd9ff612726194910d85b5 100644
+--- a/fs/nfs/sysfs.c
++++ b/fs/nfs/sysfs.c
+@@ -217,17 +217,6 @@ void nfs_netns_sysfs_destroy(struct nfs_net *netns)
+ 	}
+ }
+ 
+-static bool shutdown_match_client(const struct rpc_task *task, const void *data)
+-{
+-	return true;
+-}
+-
+-static void shutdown_client(struct rpc_clnt *clnt)
+-{
+-	clnt->cl_shutdown = 1;
+-	rpc_cancel_tasks(clnt, -EIO, shutdown_match_client, NULL);
+-}
+-
+ static ssize_t
+ shutdown_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 				char *buf)
+@@ -258,14 +247,14 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 		goto out;
+ 
+ 	server->flags |= NFS_MOUNT_SHUTDOWN;
+-	shutdown_client(server->client);
+-	shutdown_client(server->nfs_client->cl_rpcclient);
++	rpc_clnt_shutdown(server->client);
++	rpc_clnt_shutdown(server->nfs_client->cl_rpcclient);
+ 
+ 	if (!IS_ERR(server->client_acl))
+-		shutdown_client(server->client_acl);
++		rpc_clnt_shutdown(server->client_acl);
+ 
+ 	if (server->nlm_host)
+-		shutdown_client(server->nlm_host->h_rpcclnt);
++		rpc_clnt_shutdown(server->nlm_host->h_rpcclnt);
+ out:
+ 	return count;
+ }
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index eac57914dcf3200c1a6ed39ab030e3fe8b4da3e1..fe7c39a17ce44ec68c0cf057133d0f8e7f0ae797 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -232,6 +232,7 @@ unsigned long	rpc_cancel_tasks(struct rpc_clnt *clnt, int error,
+ 				 bool (*fnmatch)(const struct rpc_task *,
+ 						 const void *),
+ 				 const void *data);
++void		rpc_clnt_shutdown(struct rpc_clnt *clnt);
+ void		rpc_execute(struct rpc_task *);
+ void		rpc_init_priority_wait_queue(struct rpc_wait_queue *, const char *);
+ void		rpc_init_wait_queue(struct rpc_wait_queue *, const char *);
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 2fe88ea79a70c134e58abfb03fca230883eddf1f..0028858b12d97e7b45f4c24cfbd761ba2a734b32 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -934,6 +934,18 @@ unsigned long rpc_cancel_tasks(struct rpc_clnt *clnt, int error,
+ }
+ EXPORT_SYMBOL_GPL(rpc_cancel_tasks);
+ 
++static bool shutdown_match_client(const struct rpc_task *task, const void *data)
++{
++	return true;
++}
++
++void rpc_clnt_shutdown(struct rpc_clnt *clnt)
++{
++	clnt->cl_shutdown = 1;
++	rpc_cancel_tasks(clnt, -EIO, shutdown_match_client, NULL);
++}
++EXPORT_SYMBOL_GPL(rpc_clnt_shutdown);
++
+ static int rpc_clnt_disconnect_xprt(struct rpc_clnt *clnt,
+ 				    struct rpc_xprt *xprt, void *dummy)
+ {
+diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
+index 32417db340de3775c533d0ad683b5b37800d7fe5..4df31dcca2d747db6767c12ddfa29963ed7be204 100644
+--- a/net/sunrpc/debugfs.c
++++ b/net/sunrpc/debugfs.c
+@@ -145,6 +145,17 @@ static int do_xprt_debugfs(struct rpc_clnt *clnt, struct rpc_xprt *xprt, void *n
+ 	return 0;
+ }
+ 
++static int
++clnt_shutdown(void *data, u64 value)
++{
++	struct rpc_clnt *clnt = data;
++
++	rpc_clnt_shutdown(clnt);
++	return 0;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(shutdown_fops, NULL, clnt_shutdown, "%llu\n");
++
+ void
+ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
+ {
+@@ -163,6 +174,10 @@ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
+ 	debugfs_create_file("tasks", S_IFREG | 0400, clnt->cl_debugfs, clnt,
+ 			    &tasks_fops);
+ 
++	/* make shutdown file */
++	debugfs_create_file("shutdown", S_IFREG | 0200, clnt->cl_debugfs, clnt,
++			    &shutdown_fops);
++
+ 	rpc_clnt_iterate_for_each_xprt(clnt, do_xprt_debugfs, &xprtnum);
+ }
+ 
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+---
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+change-id: 20250312-rpc-shutdown-ce9b6d3599da
 
---vs4q5lbuhwsinm4l
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfRjcIACgkQDHRl3/mQ
-kZzDpAf/X6+oHnjKGYwW4I9Lv9kcQu6D2ENfhcQKgS/Mb01KLJgVym9THvjrXq2p
-gsxtzzjHc6kiPBwgrx0CRcqL4lOMmaJOCciAzmeCU+3WYPB8GxJceCk09gw4tJJj
-0maj4PsCePgTekqu/hD0Oe5K8rImw2wKn+5xbFBf5fKrgLGyWNLwkoIO2CMj0E89
-a1w7czCUBG5F8tpS/ryzfs/kNbXMgCAB0od26HgHOKggYPvL9hqkSMejiVfBsRlu
-mM0w7H2GyJHXLnuBQqS7YPNDSPH0/NJSEwo2+AbX30ALhQDK5md3FSgQZ9MaxYj7
-OAK+ES+660rBsbPscWDNlk6Q94CdIA==
-=hEiz
------END PGP SIGNATURE-----
-
---vs4q5lbuhwsinm4l--
