@@ -1,212 +1,216 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C3D1EF38E;
-	Wed, 12 Mar 2025 21:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477E01D5160
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 21:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741813492; cv=none; b=R4wZHN2zaHFkiSPbXKBPjqL9Mi6azWcMOfy5qYNlfHFGFp92Tq4gOdonQRakUZkayjFwC4DwWhEOaEP4oQkAkivppv/07xzBCGssae8zDTG7XWTCT3FuPJpoSYxSMQMT570PqwfCr6Urxmp97YM2vCUg0IfY7T6e9d0JYgfqv8k=
+	t=1741813538; cv=none; b=AMQwT27u7p7gcOqCt3L9S26PlORPnClq2HnHnE+yQAZV0zPr9BrcE2ZxH33TVLala4Bf4tuGoxZ94n0mqShns+eGasQjBzqznyW3hLFjJFcvLavym+28AbIhk1JxZ0DTTNGmZRmfjGquMBViFlcKtP/S8f3Rtna9lt3zqTOj2jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741813492; c=relaxed/simple;
-	bh=+LGUaVivceWptpxAIWBUUKprgy/a0XLvVKd+sJ6qOOc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fA/wRZMA0jcw0ZZHAZnqnJoMLCcPzzY7es806h4y5mE/TsARKib6cQ63M3q23HiVBP8/EU+do0FlJPByH7/wdpZqG//6ZUSs+IzaKjOD9N+yXALQEaBxsOQRy2UXTpZ7Kyox7faRUxfcfyfwHU9VVl78MAoqH8nkBXuW5MbD8a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gwYIHqoG; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741813538; c=relaxed/simple;
+	bh=L5b1D6TYJmrcirdRDXeL6oPNjbgb5hY7R0NAnPP1gXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mk5WNzQ/8LR+G/7RT5FECxRVgPh1qbIhAl2+tYMYO44+Gy3DaZBc6Dm3p2Bs5qs8sWi7ywRPJNhCz4MQvlVb7vspUQ8S5RlHNmwmhERvDyuO4SXKUHwwaFYo71JGAvbRbsfpVX0jdctvzlGDQnXnnFIPFKTXAHbZ+pw+kaif7lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ItjU3FFM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qqJs26uY; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ItjU3FFM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qqJs26uY; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwYIHqoG"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bfed67e08so3221361fa.2;
-        Wed, 12 Mar 2025 14:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741813489; x=1742418289; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9kZxK/2Q5hehdq6vdu9VftqHSqPJSU1J/P2JUB6zgGk=;
-        b=gwYIHqoGCNZTQ3ySiUpmlkDGm5v3Bo72Ya6/Rd3u1QBorCkX2IWzKnYlp4dj47RvGP
-         aB7rOinDtkkV62F7ytA9Lk80zVrmUfsimJ69dA026UMl596Mjt9u0lJpZHYItojR3+WL
-         w5gR8GjlJ+4zHiuCAsB92YoIXrFXqB/gOMjOJ9NPPmu5NElWf6qSVhVqLMhJ890VrcIV
-         iSXHbjasrLqdxpy/C6l6uRcancWSlnXIwaJAeuyWSR/ZucGx2/5wzTkEj/M94ErucKgV
-         bzQWiZOVtJzpC4s/LC9GP4Bi2+vvGYmxWfBlTWbPjGPf4WsMQagjB13pq53fEGPZaogQ
-         wrZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741813489; x=1742418289;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9kZxK/2Q5hehdq6vdu9VftqHSqPJSU1J/P2JUB6zgGk=;
-        b=mHu873MOhqThNcRCkvyWGC1FhPHqFM+y8k9+r26wDE1h7yNLEFFBzvVGdKGU7EJ/vu
-         Uszl5AsS+83jlctj4gTRU0Gg3LnrYJrzPC6wu9XIDmsN5f1IlFs/efqPGhxBps4dtRXt
-         DSDSx5SCMeBEHwR3mx31zYzcveu+4L2w9PZAvTIfI68OKPRJULZIkjn2wxhmyctQ5U9V
-         A9C8DxDv9pYuHqOVPeux2tXB/HUv3ESIDwU8YQwCh6jCMVdiB2L/QhAUNJeClLGpLyV2
-         pZYZJNmRsVtaQfkB0njRX63fgybfFcu3GPeh72piDGV5ANKGU6LycFQRWt0IVr774N0t
-         X89g==
-X-Forwarded-Encrypted: i=1; AJvYcCUGUfxqWuG+fqklSWn0JDsDTP0Gegd4kjvEopBeSYQVBtBmCUg4ngU1OgGTlheQzLzh6kP19uucTgYAFExg@vger.kernel.org, AJvYcCUss6GCPnWZVNZphHW7EI3uBYmRpqkXmJX7BTIwYy7T3MTsngPIIe0F8WKcUg/MQAwzIQbBwLZvdSgw@vger.kernel.org, AJvYcCVWKMGfa3xeBG7SkrJKaTqOwdc77kkssbP8L/CGmDG9gEp7IiwfuZWTFHVbftQ74qCKUlAjDO7n8s5F2yPTun5F@vger.kernel.org, AJvYcCW2LpMGEPjwNRkpZNJzYeGJysOEmMwko+xXaU5gutUrZX5VdmcHJHvcMsZfioNq/mNzVnDV3KXkpRzpV2cI@vger.kernel.org, AJvYcCXQLn1gcZUnQaIkLv0hCTxpuqqHWncBIyZVejW3zE5WtUC3rPlaofOAHqSUYgU22W464fbD+mScuu18@vger.kernel.org, AJvYcCXVsiuCWL03QaxapTbeNKJWph3uNTJ7jJmtMPus57/2ezpSrKTll3JxdF/hBuCLPr8GiFbsAZMDlj5+sZE=@vger.kernel.org, AJvYcCXmvohTbj7CLXUNAESuY2LEmnmaNcA7BOA9epM3WMCEzgJt9t4bYgy/cTgFR/abbX+udqaJX2pzM9tHjgWHkeI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb0Um29IRCcRoPXxikEgP0rNFIhlK3GzGM+cpiZBMZ0FPGHaLJ
-	eA195Aa+zQFWVUMcQp+4GlJLPnC5/tEx3fqsGOoUqq/15qPa4ZgV9WZcACZk+QlX1kYD6RHbdC5
-	42u/iWlB52b0v91lMaDeCq2C9PgA=
-X-Gm-Gg: ASbGncuYvB22BMXbLhhimtkNsJofKKdgqP2DRWCE7NNnMk2rASLJHotB5t/ginuXFFM
-	ZZw+bLIlBXKGhO5CHXoXgUWzm+M7F+HNVopXA5i3IIs6mlEyRaycLBiWYqtjb9yhVPxXVmiRdq9
-	LzNHCNjQyCI70W9jk7ZbbiFZ87jmMOQG0/3rw8TZyz/g==
-X-Google-Smtp-Source: AGHT+IHa+R1rvAMaQooEb8PCVQbXlUkUJjsQQodlQM3HWgy+TunL6fhJjqkj5E6QZhONq/5o1zkY/uhUY13Bk/SqCNg=
-X-Received: by 2002:a2e:7015:0:b0:30b:ee81:9622 with SMTP id
- 38308e7fff4ca-30bf466ce80mr71528251fa.31.1741813488633; Wed, 12 Mar 2025
- 14:04:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ItjU3FFM";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qqJs26uY";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ItjU3FFM";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qqJs26uY"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 4184121169;
+	Wed, 12 Mar 2025 21:05:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741813535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cgwdaiGrUlctdcj6fv/5v5nJ5M1ZA0uA4RV22Jpwxwc=;
+	b=ItjU3FFMnsbjIZz7O0l1thN6lna3mhz/0MBviz4CY1MEWCX7VPUdAP19LhBbfa7YCtkxka
+	ddlpmCUj4T4VBpJAUXcLbGRiEEUIwLiAzvR3czSBugvKIkUhg5UQiYWL+ns94QLLYBeF7V
+	M/CBE1vbD5TVqIaBWjdf8gryJGGONVI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741813535;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cgwdaiGrUlctdcj6fv/5v5nJ5M1ZA0uA4RV22Jpwxwc=;
+	b=qqJs26uYe0Yj9Cb1joXDW6mSq2Y9K0M9K12prbfEKWUzcEetq21jhdAEytQE1KN7er6L3Z
+	L+/+WMwTs+z2EOCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741813535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cgwdaiGrUlctdcj6fv/5v5nJ5M1ZA0uA4RV22Jpwxwc=;
+	b=ItjU3FFMnsbjIZz7O0l1thN6lna3mhz/0MBviz4CY1MEWCX7VPUdAP19LhBbfa7YCtkxka
+	ddlpmCUj4T4VBpJAUXcLbGRiEEUIwLiAzvR3czSBugvKIkUhg5UQiYWL+ns94QLLYBeF7V
+	M/CBE1vbD5TVqIaBWjdf8gryJGGONVI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741813535;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cgwdaiGrUlctdcj6fv/5v5nJ5M1ZA0uA4RV22Jpwxwc=;
+	b=qqJs26uYe0Yj9Cb1joXDW6mSq2Y9K0M9K12prbfEKWUzcEetq21jhdAEytQE1KN7er6L3Z
+	L+/+WMwTs+z2EOCw==
+Date: Wed, 12 Mar 2025 22:05:35 +0100
+From: Jiri Bohac <jbohac@suse.cz>
+To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>,
+	Michal Hocko <mhocko@suse.cz>
+Subject: [PATCH v3 2/5] kdump: implement reserve_crashkernel_cma
+Message-ID: <Z9H3H04VX0lfKhGz@dwarf.suse.cz>
+References: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
- <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com>
- <D8EG9EM9UU0B.2GLHXRU2XROZ3@proton.me> <CAJ-ks9=+3MQb-tp8TAwYvVj=GOFFFVKJxRMprc8YXZHKhqnDrg@mail.gmail.com>
- <D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me> <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com>
- <D8EJM4CJ4HAN.1PB2YV8DB77V7@proton.me> <CAJ-ks9mo-H46Wwcu_LOvDy0ncwMR9ii74Fyf3OX-aWNnrZ397g@mail.gmail.com>
- <CAJ-ks9kCgATKDE2qAuO3XpQfjVO2jGyq3D4sbUcVKyW6G1vuuQ@mail.gmail.com> <D8EL9QFS1XNT.JBSMRXD4D7GT@proton.me>
-In-Reply-To: <D8EL9QFS1XNT.JBSMRXD4D7GT@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 12 Mar 2025 17:04:12 -0400
-X-Gm-Features: AQ5f1JqqQd3v2xiRI6ykASVSL1cdIxLsCz3uQjlsEDwmvIguhgD94ZHee5gDvtY
-Message-ID: <CAJ-ks9=TRDg3g=NG7k97P_5jXpZ4K4v0DxrmJFR+uF0-3zJkXw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9H10pYIFLBHNKpr@dwarf.suse.cz>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.19)[-0.949];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	URIBL_BLOCKED(0.00)[dwarf.suse.cz:mid,suse.cz:email,localhost:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
+X-Spam-Score: -4.29
+X-Spam-Flag: NO
 
-On Wed, Mar 12, 2025 at 5:01=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> On Wed Mar 12, 2025 at 9:41 PM CET, Tamir Duberstein wrote:
-> > On Wed, Mar 12, 2025 at 4:07=E2=80=AFPM Tamir Duberstein <tamird@gmail.=
-com> wrote:
-> >>
-> >> On Wed, Mar 12, 2025 at 3:43=E2=80=AFPM Benno Lossin <benno.lossin@pro=
-ton.me> wrote:
-> >> >
-> >> > On Wed Mar 12, 2025 at 8:19 PM CET, Tamir Duberstein wrote:
-> >> > > I tried using the strict provenance lints locally and I think we c=
-an't
-> >> > > until we properly bump MSRV due to `clippy::incompatible_msrv`:
-> >> > >
-> >> > > warning: current MSRV (Minimum Supported Rust Version) is `1.78.0`=
- but
-> >> > > this item is stable since `1.84.0`
-> >> > >    --> ../rust/kernel/str.rs:696:22
-> >> > >     |
-> >> > > 696 |             pos: pos.expose_provenance(),
-> >> > >     |                      ^^^^^^^^^^^^^^^^^^^
-> >> > >     |
-> >> > >     =3D help: for further information visit
-> >> > > https://rust-lang.github.io/rust-clippy/master/index.html#incompat=
-ible_msrv
-> >> >
-> >> > Oh this is annoying...
-> >> >
-> >> > > This is with `#![feature(strict_provenance)]`. I can file the issu=
-e
-> >> > > but I think it's blocked on MSRV >=3D 1.84.0. But maybe you know o=
-f a
-> >> > > path forward :)
-> >> >
-> >> > I think we should be able to just `allow(clippy::incompatible_msrv)`=
-,
-> >> > since Miguel & other maintainers will test with 1.78 (or at least ar=
-e
-> >> > supposed to :).
-> >>
-> >> Alright, you've sniped me. This is coming in v3.
-> >
-> > I just realized I only covered the kernel crate. In order to cover all
-> > Rust code, I need to move the lints and the features out to the root
-> > Makefile. I tried something like this:
-> >
-> >> diff --git a/Makefile b/Makefile
-> >> index 2af40bfed9ce..10af1e44370b 100644
-> >> --- a/Makefile
-> >> +++ b/Makefile
-> >> @@ -466,13 +466,21 @@ KBUILD_USERHOSTCFLAGS :=3D -Wall -Wmissing-proto=
-types -Wstrict-prototypes \
-> >>  KBUILD_USERCFLAGS  :=3D $(KBUILD_USERHOSTCFLAGS) $(USERCFLAGS)
-> >>  KBUILD_USERLDFLAGS :=3D $(USERLDFLAGS)
-> >>
-> >> +# Lints were moved to `strict_provenance_lints` when `strict_provenan=
-ce` was stabilized.
-> >> +#
-> >> +# See https://github.com/rust-lang/rust/commit/56ee492a6e7a917b2b3f88=
-8e33dd52a13d3ecb64.
-> >> +KBUILD_RUST_STRICT_PROVENANCE_FEATURE =3D $(if $(CONFIG_RUSTC_HAS_STA=
-BLE_STRICT_PROVENANCE),strict_provenance_lints,strict_provenance)
-> >> +
-> >>  # These flags apply to all Rust code in the tree, including the kerne=
-l and
-> >>  # host programs.
-> >>  export rust_common_flags :=3D --edition=3D2021 \
-> >>      -Zbinary_dep_depinfo=3Dy \
-> >> +     -Zcrate-attr=3D"feature($(KBUILD_RUST_STRICT_PROVENANCE_FEATURE)=
-)" \
-> >>      -Astable_features \
-> >>      -Dnon_ascii_idents \
-> >>      -Dunsafe_op_in_unsafe_fn \
-> >> +     -Wfuzzy_provenance_casts \
-> >> +     -Wlossy_provenance_casts \
-> >>      -Wmissing_docs \
-> >>      -Wrust_2018_idioms \
-> >>      -Wunreachable_pub \
-> >> diff --git a/rust/Makefile b/rust/Makefile
-> >> index ea3849eb78f6..d7d5be741245 100644
-> >> --- a/rust/Makefile
-> >> +++ b/rust/Makefile
-> >> @@ -435,8 +435,10 @@ $(obj)/helpers/helpers.o: $(src)/helpers/helpers.=
-c $(recordmcount_source) FORCE
-> >>  # symbol versions generated from Rust objects.
-> >>  $(obj)/exports.o: private skip_gendwarfksyms =3D 1
-> >>
-> >> +KBUILD_RUST_STRICT_PROVENANCE_FEATURE :=3D $(if $(CONFIG_RUSTC_HAS_ST=
-ABLE_STRICT_PROVENANCE),strict_provenance_lints,strict_provenance)
-> >> +
-> >>  $(obj)/core.o: private skip_clippy =3D 1
-> >> -$(obj)/core.o: private skip_flags =3D -Wunreachable_pub
-> >> +$(obj)/core.o: private skip_flags =3D -Zcrate-attr=3D"feature($(KBUIL=
-D_RUST_STRICT_PROVENANCE_FEATURE))" -Wunreachable_pub -Wfuzzy_provenance_ca=
-sts -Wlossy_provenance_casts
-> >>  $(obj)/core.o: private rustc_objcopy =3D $(foreach sym,$(redirect-int=
-rinsics),--redefine-sym $(sym)=3D__rust$(sym))
-> >>  $(obj)/core.o: private rustc_target_flags =3D $(core-cfgs)
-> >>  $(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs \
-> >
-> > but this doesn't work because
-> > `CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE` is not yet defined when I
-> > read it in the root Makefile. I can read it lower down and then append
-> > the feature flag to `KBUILD_RUSTFLAGS` but by then the rustdoc flags
-> > have been copied from `rust_common_flags` and so rustdoc doesn't get
-> > the feature flag, resulting in unknown lint warnings in rustdoc and
-> > kunit tests.
-> >
-> > Any ideas?
->
-> Always enable the features, we have `allow(stable_features)` for this
-> reason (then you don't have to do this dance with checking if it's
-> already stable or not :)
+reserve_crashkernel_cma() reserves CMA ranges for the
+crash kernel. If allocating the requested size fails,
+try to reserve in smaller blocks.
 
-It's not so simple. In rustc < 1.84.0 the lints *and* the strict
-provenance APIs are behind `feature(strict_provenance)`. In rustc >=3D
-1.84.0 the lints are behind `feature(strict_provenance_lints)`. So you
-need to read the config to learn that you need to enable
-`feature(strict_provenance_lints)`.
+Store the reserved ranges in the crashk_cma_ranges array
+and the number of ranges in crashk_cma_cnt.
+
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+---
+ include/linux/crash_reserve.h | 12 +++++++++
+ kernel/crash_reserve.c        | 49 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+
+diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
+index a681f265a361..97964f2a583d 100644
+--- a/include/linux/crash_reserve.h
++++ b/include/linux/crash_reserve.h
+@@ -13,12 +13,24 @@
+  */
+ extern struct resource crashk_res;
+ extern struct resource crashk_low_res;
++extern struct range crashk_cma_ranges[];
++#if defined(CONFIG_CMA) && defined(CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION)
++#define CRASHKERNEL_CMA
++#define CRASHKERNEL_CMA_RANGES_MAX 4
++extern int crashk_cma_cnt;
++#else
++#define crashk_cma_cnt 0
++#define CRASHKERNEL_CMA_RANGES_MAX 0
++#endif
++
+ 
+ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base,
+ 		unsigned long long *low_size, unsigned long long *cma_size,
+ 		bool *high);
+ 
++void __init reserve_crashkernel_cma(unsigned long long cma_size);
++
+ #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+ #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
+ #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index 4969d60c00d6..3d35d90dde38 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -14,6 +14,8 @@
+ #include <linux/cpuhotplug.h>
+ #include <linux/memblock.h>
+ #include <linux/kmemleak.h>
++#include <linux/cma.h>
++#include <linux/crash_reserve.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -470,6 +472,53 @@ void __init reserve_crashkernel_generic(char *cmdline,
+ #endif
+ }
+ 
++struct range crashk_cma_ranges[CRASHKERNEL_CMA_RANGES_MAX];
++#ifdef CRASHKERNEL_CMA
++int crashk_cma_cnt;
++void __init reserve_crashkernel_cma(unsigned long long cma_size)
++{
++	unsigned long long request_size = roundup(cma_size, PAGE_SIZE);
++	unsigned long long reserved_size = 0;
++
++	while (cma_size > reserved_size &&
++	       crashk_cma_cnt < CRASHKERNEL_CMA_RANGES_MAX) {
++
++		struct cma *res;
++
++		if (cma_declare_contiguous(0, request_size, 0, 0, 0, false,
++				       "crashkernel", &res)) {
++			/* reservation failed, try half-sized blocks */
++			if (request_size <= PAGE_SIZE)
++				break;
++
++			request_size = roundup(request_size / 2, PAGE_SIZE);
++			continue;
++		}
++
++		crashk_cma_ranges[crashk_cma_cnt].start = cma_get_base(res);
++		crashk_cma_ranges[crashk_cma_cnt].end =
++			crashk_cma_ranges[crashk_cma_cnt].start +
++			cma_get_size(res) - 1;
++		++crashk_cma_cnt;
++		reserved_size += request_size;
++	}
++
++	if (cma_size > reserved_size)
++		pr_warn("crashkernel CMA reservation failed: %lld MB requested, %lld MB reserved in %d ranges\n",
++			cma_size >> 20, reserved_size >> 20, crashk_cma_cnt);
++	else
++		pr_info("crashkernel CMA reserved: %lld MB in %d ranges\n",
++			reserved_size >> 20, crashk_cma_cnt);
++}
++
++#else /* CRASHKERNEL_CMA */
++void __init reserve_crashkernel_cma(unsigned long long cma_size)
++{
++	if (cma_size)
++		pr_warn("crashkernel CMA reservation not supported\n");
++}
++#endif
++
+ #ifndef HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
+ static __init int insert_crashkernel_resources(void)
+ {
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
