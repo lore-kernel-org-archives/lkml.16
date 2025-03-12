@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8A72517B8
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 14:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63C3252913
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 14:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741790285; cv=none; b=dH7qmNHgB+C2ABlQO8sO7YAn+ldyAIuZmEHhJiPt6tiqhzOpKAIQS57laZVVG/00keDxOnq9vGfUYtS7e0E52XnixuGgaOBkBWv9At6LB12y6XtF5EqomZoAvfiDHdsEY+gfCDwpW4lbfLhv+tHNKNK87IgeA+qwDMVA+ZNDuLM=
+	t=1741790288; cv=none; b=EQ9A5TaQ/ECDzG1kwhS+aitRgj2S+ZDfl/YWhFQquu2WN1gyTSG3gJSPSAO7WYYNpSLUabJ07NYI6EYKiRhNjh6L3kIT2K5bAsVUVL48GyBqfmkP2hP0zQbwLdluRxyfden4ZdXOhLCdf0zm9GWJYadqR2tOaMr0QeJDSO/vUM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741790285; c=relaxed/simple;
-	bh=a0P0gl/D62qUuSPbpqJlT0jpvngBvF4VU9cToBKlJjM=;
+	s=arc-20240116; t=1741790288; c=relaxed/simple;
+	bh=Ushz4JR4gBXwlY3rF7uYB5PnO6rgziwqmj7rQX1GkQw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JcrPZ212rttTSQhZ/7oWRmST8NKMWuOc2ii5LCQAzntsLFkO84plR0Utx3V8h3lpxbqQRb9inSvxvTte4RWpBrNWNWpDBzWfbVF3DCCUEfxjixpSoaMOkaKDH/uwqHj4NTKM9O0AgwQHkLJ7iqQeEv9UqZxogTEEE+MUNG9NFko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CAhTpxAV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P7QQxuGL; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Rc0GuUdc3cob2xvohE8m/zB3Td8OrJ2lIwR7V4Bzg2LBcEnaIPgmnzBstZ7vvFZ+ZG3P6qWUPhHP0jX/hMsQ4Q8CVE4Qe+F0FeVRDjQ3WvJRk3kuSO7Phnsm6TNyLjDcJ72PK2WjllFfW6RFUDxjJtVBxqSchrqkVH3QoZ0FO/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=33tg6GIJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XFXTnEw/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CAhTpxAV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P7QQxuGL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="33tg6GIJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XFXTnEw/"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741790282;
+	s=2020; t=1741790285;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KJ3mWi1ubbGZzGTVge5QxLcEVVnFacXIqMDfQWpgz5U=;
-	b=CAhTpxAViVnxz1+szk46mnBYXb6Krln1qkcnlPhkux8n1M5OlDTSO1HXzItJwfagOvciV7
-	X0mO/G6QY7Tl1t6L8aSuv55pqBaQ3quegVg39mNavVLbUlNVYFIuk2oPAKhAzZRZMzTyoo
-	9XP/uyjA6crm1PHZkHONADTPPZsFXBkkHatDhK5zAeQtQO8ApLmiHgjLKBtvmhxg5c4J75
-	kn1dfA8xypwQBsYj2HKng6E23C5Ky5ZRl6xEFGtKsSCZN7Xphiy88DIELRwIbM7gWRjVd7
-	SlIjKtGXIPhDd/Tfu75uiU2Je8Rjy86+kwh6/hqD/lGXyPk1NSbHDGLDXLbw/g==
+	bh=6aVpvhv/pT52r13e6wll8TyOiNsXUS27/wMFfsB28/g=;
+	b=33tg6GIJmdg0y8KK27z7FeGkRLv8mU2la1PmiDeg8PmUaQNWrCGlmPs/8LzhvEkGOO31/U
+	VhSFH8pAiYQnkX5N+LlDuvSaR05B4bybwqSQvOwf1qOf3b3ZzbY3PiJIlymL+NNDcJy1J1
+	vnJeB7h0oIQu5Rg61993jYfEFQ7Xkx23CZ78mGFlePO2ctXUBiuPUKGTVpXwhbMgY5RT0o
+	leFA8LIuTRcbGUFBKGgqxwJeU2krMujbSzBTj3hwUBV0/nXaolqqAlfurL/ZHIydjXTaPD
+	1MVxpKZ/yQ1QaVVyjzl27mq7spzb8whQeMeIYg2UVIs3m+eQk8XfL046qaOlfQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741790282;
+	s=2020e; t=1741790285;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KJ3mWi1ubbGZzGTVge5QxLcEVVnFacXIqMDfQWpgz5U=;
-	b=P7QQxuGLcvVCWNzWJlWs9AqfcRpVY0o3xBmMPfvsRTFgD7xsDC4N5r3ZvLO8Am7kZD0l90
-	hmgAIHBvwyWYqrAQ==
+	bh=6aVpvhv/pT52r13e6wll8TyOiNsXUS27/wMFfsB28/g=;
+	b=XFXTnEw/Ga6sbY7fVEayGl+SMZzilAN4EDI+pPiKrXSGtlp1pHjUEpZhxjDFiMg2yiBv28
+	Am+CiHBOUW/1PcDw==
 To: Ingo Molnar <mingo@redhat.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	Borislav Petkov <bp@alien8.de>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v2 05/20] tools/x86/kcpuid: Print correct CPUID output register names
-Date: Wed, 12 Mar 2025 15:37:22 +0100
-Message-ID: <20250312143738.458507-6-darwi@linutronix.de>
+Subject: [PATCH v2 06/20] tools/x86/kcpuid: Remove unused local variable
+Date: Wed, 12 Mar 2025 15:37:23 +0100
+Message-ID: <20250312143738.458507-7-darwi@linutronix.de>
 In-Reply-To: <20250312143738.458507-1-darwi@linutronix.de>
 References: <20250312143738.458507-1-darwi@linutronix.de>
 Precedence: bulk
@@ -63,82 +63,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-kcpuid --all --detail claims that all bits belong to ECX, in the form
-of the header CPUID_${leaf}_ECX[${subleaf}].
-
-Print the correct register name for all CPUID output.
-
-kcpuid --detail also dumps the raw register value if a leaf/subleaf is
-covered in the CSV file, but a certain output register within it is not
-covered by any CSV entry.  Since register names are now properly printed,
-and since the CSV file has become exhaustive using x86-cpuid-db, remove
-that value dump as it pollutes the output.
-
-While at it, rename decode_bits() to show_reg().  This makes it match its
-show_range(), show_leaf() and show_reg_header() counterparts.
+The local variable "index" is written to, but is not read from
+anywhere.  Remove it.
 
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- tools/arch/x86/kcpuid/kcpuid.c | 31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+ tools/arch/x86/kcpuid/kcpuid.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/tools/arch/x86/kcpuid/kcpuid.c b/tools/arch/x86/kcpuid/kcpuid.c
-index dfabc0a56507..d518a13e4386 100644
+index d518a13e4386..a89da2af98e9 100644
 --- a/tools/arch/x86/kcpuid/kcpuid.c
 +++ b/tools/arch/x86/kcpuid/kcpuid.c
-@@ -436,20 +436,12 @@ static void parse_text(void)
- 	fclose(file);
- }
+@@ -181,10 +181,6 @@ static void raw_dump_range(struct cpuid_range *range)
  
+ 	for (f = 0; (int)f < range->nr; f++) {
+ 		struct cpuid_func *func = &range->funcs[f];
+-		u32 index = f;
 -
--/* Decode every eax/ebx/ecx/edx */
--static void decode_bits(u32 value, struct reg_desc *rdesc, enum cpuid_reg reg)
-+static void show_reg(const struct reg_desc *rdesc, u32 value)
- {
--	struct bits_desc *bdesc;
-+	const struct bits_desc *bdesc;
- 	int start, end, i;
- 	u32 mask;
+-		if (range->is_ext)
+-			index += 0x80000000;
  
--	if (!rdesc->nr) {
--		if (show_details)
--			printf("\t %s: 0x%08x\n", reg_names[reg], value);
--		return;
--	}
--
- 	for (i = 0; i < rdesc->nr; i++) {
- 		bdesc = &rdesc->descs[i];
- 
-@@ -480,18 +472,21 @@ static void decode_bits(u32 value, struct reg_desc *rdesc, enum cpuid_reg reg)
- 	}
- }
- 
-+static void show_reg_header(bool has_entries, u32 leaf, u32 subleaf, const char *reg_name)
-+{
-+	if (show_details && has_entries)
-+		printf("CPUID_0x%x_%s[0x%x]:\n", leaf, reg_name, subleaf);
-+}
-+
- static void show_leaf(struct subleaf *leaf)
- {
--	if (show_raw) {
-+	if (show_raw)
- 		leaf_print_raw(leaf);
--	} else {
--		if (show_details)
--			printf("CPUID_0x%x_ECX[0x%x]:\n",
--				leaf->index, leaf->sub);
--	}
- 
--	for (int i = R_EAX; i < NR_REGS; i++)
--		decode_bits(leaf->output[i], &leaf->info[i], i);
-+	for (int i = R_EAX; i < NR_REGS; i++) {
-+		show_reg_header((leaf->info[i].nr > 0), leaf->index, leaf->sub, reg_names[i]);
-+		show_reg(&leaf->info[i], leaf->output[i]);
-+	}
- 
- 	if (!show_raw && show_details)
- 		printf("\n");
+ 		/* Skip leaf without valid items */
+ 		if (!func->nr)
 -- 
 2.48.1
 
