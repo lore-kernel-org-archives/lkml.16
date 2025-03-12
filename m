@@ -1,129 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228DF78F29;
-	Wed, 12 Mar 2025 16:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793F51ADC98
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 16:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741796162; cv=none; b=FtPomc7+o2C8VuqqBqSP3kFSj2K+UL97qu78MCp/Ml5TaoVmmCnR+F5gYBSupCEeiCvHxmeiX+NlfMqx1cTeZ8QXX9D5z38yXXypvZpVWWWljaaKvkx9EuO/ymarA2uLloHJdDI1U+CZjDI2E30emb7gT31kCz/maSQu43XjLuo=
+	t=1741796209; cv=none; b=cNUGNAKd5Y3qi7r6qdgGqj1Pkvs2QP7MhGrLH4QQv8ZEThHVFWlBDEV2wwzqPN5u6aI2+V41HBl6QSR/39ZuRDW1Ae4wyvxq2CJwDRgbKbKc0ItT7fuNC7VYAhRxv4eNU8cjxeX6JZWEXDUU/QgL81dQw2X35MemQ8zbgGg8lkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741796162; c=relaxed/simple;
-	bh=VsNryCp6Jdy8Cj9W96kO7ltsyTKRP2vUyvO8MTRIRCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=K66pd0pgK5CrW+mor17LcAT4pXNe1HkKLqUDt5kApzHLxsbXY1aPJasRlx1wcPxX2xQ5s/ueiIrC4FC1hROdL4oDqjWl8MP7Lri1NzFm2Qta/1ZkkzRN0y+7wiz5yS28wgN6vsvGMnf9DBVs6+38fJ6bRfrr2IKaby5CZPInMFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltpF4bv2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741796209; c=relaxed/simple;
+	bh=4EQSks7ABnZp8jyg+gvmTS0PjFV2gBcRNtca8KtuZfI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WA5pL6IFN9I8xCTfKJa5SOWtZfL3MeDnm/0yQtBabKeVWHHEv4ZQglnZcknpedtniR79a3626bYv73YbXKUTMo8n5aYKumUfV2atSZro/qf3jjR67hHfsOnFvWfQBheDpqs6dnBirJUdcifQDxof7IwEgz06XZpUyVv4j9viW3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=GMj1FHqk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8Xp5iAxR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=GMj1FHqk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8Xp5iAxR; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltpF4bv2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67DDDC4CEEA;
-	Wed, 12 Mar 2025 16:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741796161;
-	bh=VsNryCp6Jdy8Cj9W96kO7ltsyTKRP2vUyvO8MTRIRCA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ltpF4bv2tpgig/rLF/SWUcRuVcjvjoqZTAwgDD/ab0SRZVZNFMNz/pO2uKoKFdUZ3
-	 Efa7P5+PybmQOFHqmjcy+GO9MJyiAtGOYfr+mrGhlQpC7/AuJ9lGqOhXLihiXLnT/6
-	 Tr/U34cIicPdZye4F1wPbcYYZNmQi9jSuLORnyM8fsy/2kkE/iVqElEgCVK/Ffm8F7
-	 01PQdXAtnn/gCdy0zkV60RsSHtz2V4JgT6B5WM00VL29bZHnuFvCp8zH4ma+HBw7h6
-	 J8Vcp02yuuuib4zPHSES5zqgX+d2N3xlacNeY4YPx6wiOVy8l/3OSk4Xj1JX7VN1mf
-	 D+5gS6kD2oJ2Q==
-Date: Wed, 12 Mar 2025 11:16:00 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Matt Ranostay <mranostay@ti.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, vigneshr@ti.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, rogerq@kernel.org, linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	srk@ti.com
-Subject: Re: [PATCH] PCI: j721e: Fix the value of linkdown_irq_regfield for
- J784S4
-Message-ID: <20250312161600.GA680640@bhelgaas>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="GMj1FHqk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8Xp5iAxR";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="GMj1FHqk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8Xp5iAxR"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6391C1F388;
+	Wed, 12 Mar 2025 16:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741796206; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ppOhyx0kE4ei6ipVBks4/WS+k6TC55C6fYxiAo4Xs3Y=;
+	b=GMj1FHqkciFjlfl2AbEeGCyGdU+HLEtzneLUWGK16/ZDxRLJNsrFKTI2Db1/c3rwIErFWh
+	MyeA8bpbRNpAURd93YMDpiTP44d0m6DWwtpko5eH9l1Aw/gih2F1oGnfgKGSHCTwrFhl+z
+	ApW92AV1wP0PkzwWLWmv19MyuKXuZso=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741796206;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ppOhyx0kE4ei6ipVBks4/WS+k6TC55C6fYxiAo4Xs3Y=;
+	b=8Xp5iAxR/kq7ggDTGycn6cEhGYwSIn0zz2Ajays4o20u/gBLUvXJArlJH8RhsdSjKBmlMn
+	mkeeJHmMEir5rlDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=GMj1FHqk;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=8Xp5iAxR
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741796206; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ppOhyx0kE4ei6ipVBks4/WS+k6TC55C6fYxiAo4Xs3Y=;
+	b=GMj1FHqkciFjlfl2AbEeGCyGdU+HLEtzneLUWGK16/ZDxRLJNsrFKTI2Db1/c3rwIErFWh
+	MyeA8bpbRNpAURd93YMDpiTP44d0m6DWwtpko5eH9l1Aw/gih2F1oGnfgKGSHCTwrFhl+z
+	ApW92AV1wP0PkzwWLWmv19MyuKXuZso=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741796206;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ppOhyx0kE4ei6ipVBks4/WS+k6TC55C6fYxiAo4Xs3Y=;
+	b=8Xp5iAxR/kq7ggDTGycn6cEhGYwSIn0zz2Ajays4o20u/gBLUvXJArlJH8RhsdSjKBmlMn
+	mkeeJHmMEir5rlDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 46F051377F;
+	Wed, 12 Mar 2025 16:16:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Azr6EG6z0WfkHAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 12 Mar 2025 16:16:46 +0000
+Message-ID: <711b5e47-ed20-45a2-a912-42db5491a25f@suse.cz>
+Date: Wed, 12 Mar 2025 17:16:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305132018.2260771-1-s-vadapalli@ti.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 02/10] slab: add sheaf support for batching
+ kfree_rcu() operations
+Content-Language: en-US
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter
+ <cl@linux.com>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Uladzislau Rezki <urezki@gmail.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ maple-tree@lists.infradead.org
+References: <20250214-slub-percpu-caches-v2-0-88592ee0966a@suse.cz>
+ <20250214-slub-percpu-caches-v2-2-88592ee0966a@suse.cz>
+ <Z7wwlLQFBDlcmsDT@harry>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <Z7wwlLQFBDlcmsDT@harry>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 6391C1F388
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[google.com,oracle.com,linux.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-[+to Matt, author of e49ad667815d]
+On 2/24/25 09:40, Harry Yoo wrote:
+>> +static bool kfree_rcu_sheaf(void *obj)
+>> +{
+>> +	struct kmem_cache *s;
+>> +	struct folio *folio;
+>> +	struct slab *slab;
+>> +
+>> +	folio = virt_to_folio(obj);
+>> +	if (unlikely(!folio_test_slab(folio)))
+>> +		return false;
+> 
+> Does virt_to_folio() work for vmalloc addresses?
 
-On Wed, Mar 05, 2025 at 06:50:18PM +0530, Siddharth Vadapalli wrote:
-> Commit under Fixes assigned the value of 'linkdown_irq_regfield' for the
-> J784S4 SoC as 'LINK_DOWN' which corresponds to BIT(1). However, according
-> to the Technical Reference Manual and Register Documentation for the J784S4
-> SoC [0], BIT(1) corresponds to "ENABLE_SYS_EN_PCIE_DPA_1" which is __NOT__
-> the field for the link-state interrupt. Instead, it is BIT(10) of the
-> "PCIE_INTD_ENABLE_REG_SYS_2" register that corresponds to the link-state
-> field named as "ENABLE_SYS_EN_PCIE_LINK_STATE".
+Hm, no. Good catch.
 
-I guess the reason we want this is that on J784S4, we ignore actual
-link-down interrupts (and we don't write STATUS_CLR_REG_SYS_2 to clear
-the interrupt indication, so maybe there's an interrupt storm), and we
-think some other interrupt (DPA_1, whatever that is) is actually a
-link-down interrupt?
+> Probably it should check is_vmalloc_addr() first?
 
-> Hence, set 'linkdown_irq_regfield' to the macro 'J7200_LINK_DOWN' which
-> expands to BIT(10) and was first defined for the J7200 SoC. Other SoCs
-> already reuse this macro since it accurately represents the link-state
-> field in their respective "PCIE_INTD_ENABLE_REG_SYS_2" register.
-> 
-> [0]: https://www.ti.com/lit/zip/spruj52
+Yes, thanks!
 
-Thanks for the spec URL.  Can you include a relevant section number?
-I searched for some of this stuff but couldn't find it.
-
-Since I have low confidence that the URL will be valid after a few
-years, I wish the spec also had a human-readable name and revision
-number.  But maybe the alphabet soup or "SPRUJ52D", "revised July
-2024" is all we can hope for.
-
-> Fixes: e49ad667815d ("PCI: j721e: Add TI J784S4 PCIe configuration")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> ---
-> 
-> Hello,
-> 
-> This patch is based on commit
-> 48a5eed9ad58 Merge tag 'devicetree-fixes-for-6.14-2' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
-> of the master branch of Linux.
-> 
-> Patch has been tested on J784S4-EVM, validating that disconnecting an
-> Endpoint Device connected to J784S4-EVM results in the following message
-> on the J784S4-EVM:
-> 	j721e-pcie 2900000.pcie: LINK DOWN!
-> which wasn't seen earlier.
-> 
-> Regards,
-> Siddharth.
-> 
->  drivers/pci/controller/cadence/pci-j721e.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index 0341d51d6aed..1da9d9918d0d 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -376,13 +376,13 @@ static const struct j721e_pcie_data j784s4_pcie_rc_data = {
->  	.mode = PCI_MODE_RC,
->  	.quirk_retrain_flag = true,
->  	.byte_access_allowed = false,
-> -	.linkdown_irq_regfield = LINK_DOWN,
-> +	.linkdown_irq_regfield = J7200_LINK_DOWN,
->  	.max_lanes = 4,
->  };
->  
->  static const struct j721e_pcie_data j784s4_pcie_ep_data = {
->  	.mode = PCI_MODE_EP,
-> -	.linkdown_irq_regfield = LINK_DOWN,
-> +	.linkdown_irq_regfield = J7200_LINK_DOWN,
->  	.max_lanes = 4,
->  };
->  
-> -- 
-> 2.34.1
+> Otherwise look good to me.
 > 
