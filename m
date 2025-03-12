@@ -1,68 +1,69 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15132417D6;
-	Wed, 12 Mar 2025 17:20:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241812571A6;
+	Wed, 12 Mar 2025 17:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800023; cv=none; b=C5rLSIMCI/ZSE8Sl0AZRzL862fg84SzrJgkgKdjGgL2AQiMY3VoJ3zDThAj2SIQOet04YCoS9Ni/z5WYmVDORedpgEnxe6AgsmDPtnVugM8Pavzuy8Y4j0MnS28UqdnFJdEePwFCtSJPD1wVaDFmHHoUD8r82v3xSvoqq5gCSVA=
+	t=1741800026; cv=none; b=HfGRwS+xqn/PAmfA8M9lgIobmblPozmI1kHzpNBfpxelvEyLnDP5pAV2lX3Byl6EZh3pk+VcTo481t3KT2OXA3rI33lK9300VfFtWUBwbBKn3KNgAkbU1+5bDT9uGweQlBHIWqnXhsAxUdDpYI7NeJ/EDVNx3z8TCreYaph/bR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741800023; c=relaxed/simple;
-	bh=BKaH6Pfm9mhlsWtzaZKT1RgpMRm+MwgkNY86MKWga/k=;
+	s=arc-20240116; t=1741800026; c=relaxed/simple;
+	bh=EaTi/48jpa8K2rytyxZNMBpIB0EDkMSLiWmGfAEhG7o=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=iUyAFxub/f5kvXuIZsjyt3UdyHDbNH85sEwdXmq8/TFM3PRnqNlPdz2g3nG43ZiE3omW5pVb4ava2ZeqrhKcSusGQy71lEwIX/aOG7+qdHtePem3+lP4Em2CBEPhbY/GhoewwgvZ/RyqCR7rj7tROW/p9FRZ4dO056DT83sFjPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r/kvr7JW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6OMBTlwQ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=aGFSouq9xB8ycc0heHNuzvKDWzMsAIq0FpPRSMGGNjPZWxpg5WbcSPR+vRp/bShsS3Q9dMjn3baL9nTN7feOqPjvFZfY+fMTp4voRxLykfQr9NIQgIItp25i/8wmVOKpz/obh60FjXMoeMFA8ENRIWUSK1rhfBkwg0ymsmB9ROE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OMzoKwu0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KI6gd/S3; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r/kvr7JW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6OMBTlwQ"
-Date: Wed, 12 Mar 2025 17:20:19 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OMzoKwu0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KI6gd/S3"
+Date: Wed, 12 Mar 2025 17:20:21 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741800020;
+	s=2020; t=1741800021;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=C7sl//RldBkwtHThz5V3oaI5BTQD1fSF/ojREj2JPNk=;
-	b=r/kvr7JWc4IlT8A1MB4TlZ6hsoK8LOYfBw94FlJYwiorJSBrjqnKD7I5Qa1ZgvdhrBi9iz
-	EVJB6fiF+tIOH3GTIYwWXyoqSxSyeE4USzoVE4Nr2HGDSeCfSpGanV9GifELZu6vsqTMVs
-	9aiD+A9Xwc/Lec80Wyb6yl9QeeFYOBywa7Xp9WqdvdZinCt1WDm6vekMekIb2tzUTRjrDP
-	QeisMcm4vrJQoCuK92PhDtMmMLR3w1njFvb5IXLsHzK0Om+2BYA8csL0B0xvq7zA1ICv5R
-	Jde899USEZdr2lRWE/p+coH0phI6f4Gw0GixoyXRBzwoaicn0EFSkU7CE9VSyQ==
+	bh=VPRNPaN020NLWUZd8x+3MaPuz2nVpHT8MJiVwjhol2Q=;
+	b=OMzoKwu00e5UFAc1EtnjHMxhq6Dt5hHgKxyKgIwP/kHUxzguEhJo01/UXXm/YZXKGDxZL4
+	Z60sfKETX1L8eeJvp0yk8wj5GDGrF0nFRrxu3/2/bhqqGQyRKLTZctWpiwJ4lRRsO0hDW2
+	j/VxTLCAYmZ7cHBu1JpJFSYGu2e0mROQe+Wj02eNgjppopO99vpu1sgPqiS9v4NFAjYoby
+	nBRzVKd9fh1wF80Oa5mgAN97Saig6CHJcPkh/8EHk35U8+oiyHkZPidq1Fakjrvhfs2cLw
+	1W5aX3rxewNcKU244ga3meeQ+7QsqKG6/IAxJTPeQ/wOl0t84Oegzdi43wwNNA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741800020;
+	s=2020e; t=1741800021;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=C7sl//RldBkwtHThz5V3oaI5BTQD1fSF/ojREj2JPNk=;
-	b=6OMBTlwQKBJD9lgpYLMRm3wfp729h9Z48cWJvgQX6Pufntrvt44XP0WdBzO+36nX0vYgWb
-	T4lDHlAeF6D03eDw==
+	bh=VPRNPaN020NLWUZd8x+3MaPuz2nVpHT8MJiVwjhol2Q=;
+	b=KI6gd/S3wO6kB66uSF0OYB6G32dowfsWmRh1W4g2MP8qzmVr2m/O1NWU/gUkp9Mz6ueW3x
+	9Dc2C/yvkso/IdDg==
 From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cache] x86/resctrl: Move RFTYPE flags to be managed by resctrl
+Subject: [tip: x86/cache] x86/resctrl: Make prefetch_disable_bits belong to
+ the arch code
 Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>,
  Reinette Chatre <reinette.chatre@intel.com>, Fenghua Yu <fenghuay@nvidia.com>,
- Babu Moger <babu.moger@amd.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+ Babu Moger <babu.moger@amd.com>, Carl Worth <carl@os.amperecomputing.com>,
  Peter Newman <peternewman@google.com>,
  Amit Singh Tomar <amitsinght@marvell.com>,
  Shanker Donthineni <sdonthineni@nvidia.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250311183715.16445-28-james.morse@arm.com>
-References: <20250311183715.16445-28-james.morse@arm.com>
+In-Reply-To: <20250311183715.16445-26-james.morse@arm.com>
+References: <20250311183715.16445-26-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174180001947.14745.4859162220572284627.tip-bot2@tip-bot2>
+Message-ID: <174180002117.14745.15433290797717039575.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -72,88 +73,85 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cache branch of tip:
 
-Commit-ID:     373af4ecfdc922657be081b3feebbd0af8e7fa65
-Gitweb:        https://git.kernel.org/tip/373af4ecfdc922657be081b3feebbd0af8e7fa65
+Commit-ID:     4d20f38ab6d922dd6b8a33795b6e72516d733eb2
+Gitweb:        https://git.kernel.org/tip/4d20f38ab6d922dd6b8a33795b6e72516d733eb2
 Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Tue, 11 Mar 2025 18:37:12 
+AuthorDate:    Tue, 11 Mar 2025 18:37:10 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 12 Mar 2025 12:24:37 +01:00
+CommitterDate: Wed, 12 Mar 2025 12:24:30 +01:00
 
-x86/resctrl: Move RFTYPE flags to be managed by resctrl
+x86/resctrl: Make prefetch_disable_bits belong to the arch code
 
-resctrl_file_fflags_init() is called from the architecture specific code to
-make the 'thread_throttle_mode' file visible. The architecture specific code
-has already set the membw.throttle_mode in the rdt_resource.
+prefetch_disable_bits is set by rdtgroup_locksetup_enter() from a value
+provided by the architecture, but is largely read by other architecture
+helpers.
 
-This forces the RFTYPE flags used by resctrl to be exposed to the architecture
-specific code.
-
-This doesn't need to be specific to the architecture, the throttle_mode can be
-used by resctrl to determine if the 'thread_throttle_mode' file should be
-visible. This allows the RFTYPE flags to be private to resctrl.
-
-Add thread_throttle_mode_init(), and use it to call resctrl_file_fflags_init()
-from resctrl_init(). This avoids publishing an extra function between the
-architecture and filesystem code.
+Make resctrl_arch_get_prefetch_disable_bits() set prefetch_disable_bits so
+that it can be isolated to arch-code from where the other arch-code helpers
+can use its cached value.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 Reviewed-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Peter Newman <peternewman@google.com>
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
 Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Peter Newman <peternewman@google.com>
 Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
 Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
-Link: https://lore.kernel.org/r/20250311183715.16445-28-james.morse@arm.com
+Link: https://lore.kernel.org/r/20250311183715.16445-26-james.morse@arm.com
 ---
- arch/x86/kernel/cpu/resctrl/core.c     |  3 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++++++++
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index b9b74f5..e590dd3 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -227,9 +227,6 @@ static __init bool __get_mem_config_intel(struct rdt_resource *r)
- 	else
- 		r->membw.throttle_mode = THREAD_THROTTLE_MAX;
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 1f42c11..90044a0 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -84,6 +84,8 @@ static const struct class pseudo_lock_class = {
+  */
+ u64 resctrl_arch_get_prefetch_disable_bits(void)
+ {
++	prefetch_disable_bits = 0;
++
+ 	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL ||
+ 	    boot_cpu_data.x86 != 6)
+ 		return 0;
+@@ -99,7 +101,8 @@ u64 resctrl_arch_get_prefetch_disable_bits(void)
+ 		 * 3    DCU IP Prefetcher Disable (R/W)
+ 		 * 63:4 Reserved
+ 		 */
+-		return 0xF;
++		prefetch_disable_bits = 0xF;
++		break;
+ 	case INTEL_ATOM_GOLDMONT:
+ 	case INTEL_ATOM_GOLDMONT_PLUS:
+ 		/*
+@@ -110,10 +113,11 @@ u64 resctrl_arch_get_prefetch_disable_bits(void)
+ 		 * 2     DCU Hardware Prefetcher Disable (R/W)
+ 		 * 63:3  Reserved
+ 		 */
+-		return 0x5;
++		prefetch_disable_bits = 0x5;
++		break;
+ 	}
  
--	resctrl_file_fflags_init("thread_throttle_mode",
--				 RFTYPE_CTRL_INFO | RFTYPE_RES_MB);
--
- 	r->alloc_capable = true;
- 
- 	return true;
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index e592715..58feba3 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2064,6 +2064,16 @@ static struct rftype *rdtgroup_get_rftype_by_name(const char *name)
- 	return NULL;
+-	return 0;
++	return prefetch_disable_bits;
  }
  
-+static void thread_throttle_mode_init(void)
-+{
-+	struct rdt_resource *r_mba;
-+
-+	r_mba = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
-+	if (r_mba->membw.throttle_mode != THREAD_THROTTLE_UNDEFINED)
-+		resctrl_file_fflags_init("thread_throttle_mode",
-+					 RFTYPE_CTRL_INFO | RFTYPE_RES_MB);
-+}
-+
- void resctrl_file_fflags_init(const char *config, unsigned long fflags)
- {
- 	struct rftype *rft;
-@@ -4277,6 +4287,8 @@ int __init resctrl_init(void)
- 
- 	rdtgroup_setup_default();
- 
-+	thread_throttle_mode_init();
-+
- 	ret = resctrl_mon_resource_init();
- 	if (ret)
- 		return ret;
+ /**
+@@ -713,8 +717,7 @@ int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp)
+ 	 * Not knowing the bits to disable prefetching implies that this
+ 	 * platform does not support Cache Pseudo-Locking.
+ 	 */
+-	prefetch_disable_bits = resctrl_arch_get_prefetch_disable_bits();
+-	if (prefetch_disable_bits == 0) {
++	if (resctrl_arch_get_prefetch_disable_bits() == 0) {
+ 		rdt_last_cmd_puts("Pseudo-locking not supported\n");
+ 		return -EINVAL;
+ 	}
