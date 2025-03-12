@@ -1,168 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic309-27.consmr.mail.ne1.yahoo.com (sonic309-27.consmr.mail.ne1.yahoo.com [66.163.184.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BE51F1515;
-	Wed, 12 Mar 2025 23:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526B41F12F8
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 23:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.184.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741821731; cv=none; b=Qui1IhfpANCdTu0xIeOx6wFj410GIajP756bDZnR9kxuSv92I1jI5JfkUMWz8nfcfPBTokAJwOT2fX7GGj/RMDfcnFugm2h0pp6bsLNBuIHkM9up/p2nrI4OkBfoF4QYTZa+tVbRzHTdkXUAvzaeui05KGjIQhUM85FlQ2uzXcE=
+	t=1741821786; cv=none; b=f/WjYDo9BG4XS9koB4ewkdTVDtg79+whIdEeRpretc99kTy95+422vNyKfcUrqAfUoXpU0Sv0d15oWn3jefl9NpDPym8v4BK0OZGhaZlj1+L7DtFzc1XwF9UWtOeSo4sAu6KuXslJPAo5fZUxptuCtW6JfWlMq8v6YNWOTKxXSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741821731; c=relaxed/simple;
-	bh=EMf9sg4/j4jBcXvtW6xBhGZjpQXXIzxJRQwIhVs1+EQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k75UckC39A56jMWRrtdMhQLNK+kmK0TX9u7Zu8ZhnzfHcPHMt6gpzO2u6HzaLhsYJXLr5H+dNtVtGOk9a1fZeU58UdDdVeEZ5aPGryRAkItkI6jVJDD2bbcCpXwkaK+VBp4eVrqUnYJea4VBnaL/n28SsXv91V5rzDkMsGgRto8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngsOwFCe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741821786; c=relaxed/simple;
+	bh=vT6PAURo4MNN0PEl7mxHirVrCIwv91xowfPOi+urB3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UWH7wccFWH1oxT04soi9a77s0hAoa9uUdMiuvjvVrjZJkyRMuwa1MGB/jNvl/rFE5Ak6cteQ3A8jt+bRTDxdyon9xlagDnF8p8SM15+ihtzSwKdY+qUY9dexSFrZNPrhC+qAt/wNg269c8QGsCzRnQ+v/k1EHzYkBOCvSr2Ua+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=uRaLHXom; arc=none smtp.client-ip=66.163.184.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngsOwFCe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1324C4CEDD;
-	Wed, 12 Mar 2025 23:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741821731;
-	bh=EMf9sg4/j4jBcXvtW6xBhGZjpQXXIzxJRQwIhVs1+EQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ngsOwFCe0FGH3KUSoKGDGqwb2IG1oRBThYTZLnQqe8/5ra+J5IcYTVdS+min3bRtV
-	 YH8qhQPJRe+Ql9is5SVX2y0EG4x250mMvr34d1s4CRnHtpgnGSz4DgMfIapnNXWlRd
-	 OuByWsII+rzDYotcH0ltsYtTHJvviJ4+8IVdwiXLJnMYVn2mgvXuw+9wn4thtG24IF
-	 9+cV/J+c3x5Xh/d9zl2j13nT6A4dN0FmXy8/ceOtp6gIsADsVS1t+ZddajltnNGLg3
-	 HYBpE+7nfSR42t6pSi3mywy5DzFwpl02cLtZT32L19df/GZUlx16u5kQXPkuGpiRiJ
-	 UPyW6e2HmLElQ==
-Date: Wed, 12 Mar 2025 16:22:10 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, brauner@kernel.org,
-	cem@kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com
-Subject: Re: [PATCH v5 03/10] xfs: Refactor xfs_reflink_end_cow_extent()
-Message-ID: <20250312232210.GD2803730@frogsfrogsfrogs>
-References: <20250310183946.932054-1-john.g.garry@oracle.com>
- <20250310183946.932054-4-john.g.garry@oracle.com>
- <Z9E2kSQs-wL2a074@infradead.org>
- <589f2ce0-2fd8-47f6-bbd3-28705e306b68@oracle.com>
- <Z9FHSyZ7miJL7ZQM@infradead.org>
- <20250312154636.GX2803749@frogsfrogsfrogs>
- <62f035a9-05e7-40fc-ae05-3d21255d89f4@oracle.com>
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="uRaLHXom"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741821776; bh=GksvniJbV2RDtt/B/FzhP1sVZRmoi2tuT6NLJdfZJFE=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=uRaLHXomKxZ2xrqisyy4h6jcl5pJo5XoPsUEbAptjkVuKkmpMvf8yQ8MbPEut0SflJKm+ta8AssYgNZCr7Em4KKU4Gb/19QzEhD2sk7Mk8tsvn/LvRwzaGwB/XzlxCHYqRHfa4/pC8XlwgN+po2qG53264YPlL5d+TibCd3cc+ZmDCQwAjCknvI16CnL8VwgSoiU6KsFrYzueSqLomjJ1d3ROEvRUR5j0lFOwLET4owaZIyTG0RiwrHwk0bHdBgoBNuJ6guy+ruUhb0x1jTshl6L58JEsBSxYnGabXoV4GiFYCXI7+5RIWsoSPH/I81qO28AqTKZnPv9pdlf9Q3R5Q==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741821776; bh=em3dtkZUluq5KMbA8rNiurn6EnGForQf8ywQE5VCz+2=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=ThW+6XYJxn50pWEy7DHLfUvLHwawFwo1pd+fTZeoA6YQTka8tUONU8MhJcrGmdYbhBwlVEoV/4MbwivGJ+UuQSeDx+SKRL8vNNJBx/XiR9ND2xvsZG+YIriWSlcvHGkhGylPlBYVxeR4PeG5kvFq8m2kGYaBIAvTLIYpivLk2L5WTBCd0I7rPP7wsIPV6PlBpsfrFNPVKrUL6CYtKUY+qda8HU2STh9TeW5GGlvmjOCsg6Zpi21CyPa9KGl5sjiTDicoKNBvLSAUiiLDieHTD7XThqzORxBw0P7h8eLjBf+V9d5Q3VKdsxOtpFuWQn6IdHjPulSBDpJtuV/Quh8F0g==
+X-YMail-OSG: CblqW54VM1mlJoZ1Vh_N7qHqJXDbZX4uGEHXP1NHJeEbB4MozVPfLB92ulLKVaz
+ mIh26SA02syEWkisYf_rAu.UGSdmizh9PqVHTSqJZ5n5b.uWLFaxtjTv1EmJHiIqUfAIixCm1Y1U
+ 4LBp2MprB.UmA3ykYS.Fnkv6qAN_asM9FI60U8i0I2jeI2ceY4ldVMFo3mQFpwAoa3sl7wvxvJWX
+ B41lf6w4xqGPLI6jf5KO.MktqaxW5wCHr323_nCNDIK80oYdiXq2rIXa9YGrtWg46VjNsYdjIguy
+ kV85u0PcaTR2SVfBiiMEbvWHrvMDMrmmsFHSDKqVYnQs12RZnPUn0V7hvY6hgHKx2WD9xw1Gynb4
+ wewbA30H7DCS15wzS3BIMaBmRAE0AX6WWmqsEA3Sbu8xyqj88qdBbIHn_i31b9lSq9qaOwtUcYnV
+ GIslh4Mvabafz6Egik7YpiFdlXKdv4DhxtPSJE5wTqORlpRXM4NSqNebnp5QF.Tmyx95IqJxhepg
+ Q10nm9b21_3zMMXdysiu3foRYCPoanoaPHfEhfcHauIVqpczR.WCcnYX4_Ybvw8d5qY8afipeuYU
+ ECq_BmnQCmIS3u7te.7LvNOsxMSNrZ3FjDKf2GZTH_XG_jq7bPExa4tC0iMWApXRwUxHBpp3aE9e
+ BZ4YEZiFh1WcpAPLjIjHRsFU9VvMz9JOuRDTj1sdo_qLALScOOMDeSr3gr1CLXHqo8diJbQ4p5xX
+ vOy7sWjLIJ2QcL7pTs7B_G6jt_vLb_Fnnzh9U_QjP2V__uzhPfPsmkfDteF2mnhJPhG35TaDArgU
+ _bvRCrHIY1iFeVjXa.WxKngFNV5whESnWOpTAaJ8D2xiIU91MHH5oIc.wjaSXRHtAuTcbG_J9kcM
+ AA6jp8KiQ8l11PoYyh6Cyzae9mH6vMODdRaqAJ9W.IlYyeeqQPYTyT5ORcxg0_ZqvdfolJMBjDJB
+ BJsvYfvWEtY.z4pcPGfhg32wiZ92WoShH1CRuGMraQ21M6fR01DSVTTnlpmqAHsZxUdw4hgTLjbG
+ tDeES_ijWOMIpi6.55cWQ.pP1LbOLBnWInQ27fZVypXJ2OWVXTU7ku09mD0kKJeIRSqUdW.IrR2a
+ odyV_GMwBoTXtaSm3D.7JWTviROUQwsovdIvJ_2TR1sbsR6Ei3uAVCsFfwwzPdNj52hAOwBXdJ2j
+ IjmG.tsoOh17XMJCF4Dcg5LBlzFI9.VJT08AQ0csf0z22Fj9TeUWdAt2TpHcOoa9WdADbEbMuCW3
+ AukpgJLGpRBY_eAARMVdjRUFYK8UOTdB6NvebCSWCEQ0NR1cZxacue64Dhf5RoXZ3YIiO9XCsPHO
+ H0oWDI9CqHjf5gzE5sElKEps9wZW_fX12ouiK4f.4MfMBgSqr11R2fgdEkQSvnqAudSSmxkFYYgU
+ 67n_uQY5NHui2cnblL_Tj6I.K_zjrclJ03v5abj92m8w1DjFD6ak2b5ovrTUAuZZ7Ta2.ME7sK.Y
+ b5eCiLtaPnhxOrCzGf8lY5x9Nnq2icnVWbAvGeXSyWdMYK1z4K6o3d1eSw147sbAjot_ejG42oEN
+ 8rQzvrsXWGrdD6R9Mil.jof5EPzwP.cWceS8EPinRzMQAaQCk0LknjFtUZjffWrAV87MJpeN2yP_
+ v2A7YbHQH.NQgHMcSjGy3iWmRemiZrqBZpLoyHVs2trWFRcdmkQNiprbF3HRqjlMf3lo6mOFVSPt
+ bLuBCXGG6g0QOyGI7pyIxYzHgCnRqELF8ZeRI.t.3lb.2BXDa8zLKxCCZVNYcDXwGMPLzZ7c0hkx
+ fCAe_ZkXralxcDehrf5lUbbXa9zkfH_a5w21MJMdgLiBSWNr3znVhM3GrjOC.WVa.HELylfUXvYB
+ 9AyqZ4.G.jxGQNBHq2lnhClOgK9_KOYbcJ5C7fA51vUHzzHvaWtbDO.a.RsfdtJyE6ySbvIO02W.
+ VIONzjVQ6rQRHgRkGKMbUNncJBK3e9vkuT9o05LBh11DY8aGupVBxf.6w8hhjwqUuHBJv0gjU9xz
+ P04sluQIUpezYH3PWBj3biyCSbzTYyXJcmBGeTS1yl1bImyNQQy2KSWBSAgvYFDr1_YJm1ys3RIv
+ C0.GCqHvJW0pOfNWWfGPp25oer3S.N_mmXXJRhvPgQq_18zMOVeaYhbboujD3jfrqkJQzXdbGCv1
+ Guzi3LIISknIt5_h6eIF5r5iAw7xnnv3uySgEtu_.ijM29O2KT03RsNAp397Sp6.2IaJ82iYVzVg
+ TzjME8302.mLWNOzdzcve5RnKghz6EGnwcHp4YNwhhDNJA9LeWQOPT90Nbm.g1xYC99ipjnuArJC
+ WDF1VToI-
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: c231de60-f6ae-47b3-b766-6c39b1353092
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Wed, 12 Mar 2025 23:22:56 +0000
+Received: by hermes--production-gq1-7d5f4447dd-n5sg2 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID fae0248b384e80f26af981590c55b4fe;
+          Wed, 12 Mar 2025 23:12:44 +0000 (UTC)
+Message-ID: <fdf0e86a-5ba3-4d28-8c63-b2019af009f1@schaufler-ca.com>
+Date: Wed, 12 Mar 2025 16:12:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62f035a9-05e7-40fc-ae05-3d21255d89f4@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 5/6] smack: explicitly skip mediation of O_PATH file
+ descriptors
+To: Ryan Lee <ryan.lee@canonical.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ John Johansen <john.johansen@canonical.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>,
+ Kentaro Takeda <takedakn@nttdata.co.jp>,
+ Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+ Casey Schaufler <casey@schaufler-ca.com>
+References: <20250312212148.274205-1-ryan.lee@canonical.com>
+ <20250312212148.274205-6-ryan.lee@canonical.com>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <20250312212148.274205-6-ryan.lee@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.23435 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Wed, Mar 12, 2025 at 10:06:11PM +0000, John Garry wrote:
-> On 12/03/2025 15:46, Darrick J. Wong wrote:
-> > On Wed, Mar 12, 2025 at 01:35:23AM -0700, Christoph Hellwig wrote:
-> > > On Wed, Mar 12, 2025 at 08:27:05AM +0000, John Garry wrote:
-> > > > On 12/03/2025 07:24, Christoph Hellwig wrote:
-> > > > > On Mon, Mar 10, 2025 at 06:39:39PM +0000, John Garry wrote:
-> > > > > > Refactor xfs_reflink_end_cow_extent() into separate parts which process
-> > > > > > the CoW range and commit the transaction.
-> > > > > > 
-> > > > > > This refactoring will be used in future for when it is required to commit
-> > > > > > a range of extents as a single transaction, similar to how it was done
-> > > > > > pre-commit d6f215f359637.
-> > > > > 
-> > > > > Darrick pointed out that if you do more than just a tiny number
-> > > > > of extents per transactions you run out of log reservations very
-> > > > > quickly here:
-> > > > > 
-> > > > > https://urldefense.com/v3/__https://lore.kernel.org/all/20240329162936.GI6390@frogsfrogsfrogs/__;!!ACWV5N9M2RV99hQ!PWLcBof1tKimKUObvCj4vOhljWjFmjtzVHLx9apcU5Rah1xZnmp_3PIq6eSwx6TdEXzMLYYyBfmZLgvj$
-> > > > > 
-> > > > > how does your scheme deal with that?
-> > > > > 
-> > > > The resblks calculation in xfs_reflink_end_atomic_cow() takes care of this,
-> > > > right? Or does the log reservation have a hard size limit, regardless of
-> > > > that calculation?
-> > > 
-> > > The resblks calculated there are the reserved disk blocks and have
-> > > nothing to do with the log reservations, which comes from the
-> > > tr_write field passed in.  There is some kind of upper limited to it
-> > > obviously by the log size, although I'm not sure if we've formalized
-> > > that somewhere.  Dave might be the right person to ask about that.
-> > 
-> > The (very very rough) upper limit for how many intent items you can
-> > attach to a tr_write transaction is:
-> > 
-> > per_extent_cost = (cui_size + rui_size + bui_size + efi_size + ili_size)
-> > max_blocks = tr_write::tr_logres / per_extent_cost
-> > 
-> > (ili_size is the inode log item size)
-> 
-> So will it be something like this:
-> 
-> static size_t
-> xfs_compute_awu_max_extents(
-> 	struct xfs_mount	*mp)
-> {
-> 	struct xfs_trans_res	*resp = &M_RES(mp)->tr_write;
-> 	size_t			logtotal = xfs_bui_log_format_sizeof(1)+
+On 3/12/2025 2:21 PM, Ryan Lee wrote:
+> Now that O_PATH fds are being passed to the file_open hook,
+> unconditionally skip mediation of them to preserve existing behavior.
+>
+> Signed-off-by: Ryan Lee <ryan.lee@canonical.com>
+> ---
+>  security/smack/smack_lsm.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index 2f65eb392bc0..c05e223bfb33 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -2062,6 +2062,10 @@ static int smack_file_open(struct file *file)
+>  	struct smk_audit_info ad;
+>  	int rc;
+>  
+> +	/* Preserve the behavior of O_PATH fd creation not being mediated */
 
-Might want to call it "per_extent_logres" since that's what it is.
+In Smack the single line comment is discouraged. Please use
 
-> 				xfs_cui_log_format_sizeof(1) +
-> 				xfs_efi_log_format_sizeof(1) +
-> 				xfs_rui_log_format_sizeof(1) +
-> 				sizeof(struct xfs_inode_log_format);
++	/*
++	 * Preserve the behavior of O_PATH fd creation not being mediated
++	 */
 
-Something like that, yeah.  You should probably add
-xfs_log_dinode_size(ip->i_mount) to that.
-
-What you're really doing is summing the *nbytes output of the
-->iop_size() call for each possible log item.  For the four log intent
-items it's the xfs_FOO_log_format_sizeof() function like you have above.
-For inode items it's:
-
-	*nbytes += sizeof(struct xfs_inode_log_format) +
-		   xfs_log_dinode_size(ip->i_mount);
-
-> 	return rounddown_pow_of_two(resp->tr_logres / logtotal);
-
-and like I said earlier, you should double logtotal to be on the safe
-side with a 2x safety margin:
-
-	/* 100% safety margin for safety's sake */
-	return rounddown_pow_of_two(resp->tr_logres /
-				    (2 * per_extent_logres));
-
-I'm curious what number you get back from this function?  Hopefully it's
-at least a few hundred blocks.
-
-Thanks for putting that together.  :)
-
---D
-
-> }
-> 
-> static inline void
-> xfs_compute_awu_max(
-> 	struct xfs_mount	*mp, int jjcount)
-> {
-> ....
-> 	mp->m_awu_max =
-> 	min_t(unsigned int, awu_max, xfs_compute_awu_max_extents(mp));
-> }
-> 
-> > 
-> > ((I would halve that for the sake of paranoia))
-> > 
-> > since you have to commit all those intent items into the first
-> > transaction in the chain.  The difficulty we've always had is computing
-> > the size of an intent item in the ondisk log, since that's a (somewhat
-> > minor) layering violation -- it's xfs_cui_log_format_sizeof() for a CUI,
-> > but then there' could be overhead for the ondisk log headers themselves.
-> > 
-> > Maybe we ought to formalize the computation of that since reap.c also
-> > has a handwavy XREAP_MAX_DEFER_CHAIN that it uses to roll the scrub
-> > transaction periodically... because I'd prefer we not add another
-> > hardcoded limit.  My guess is that the software fallback can probably
-> > support any awu_max that a hardware wants to throw at us, but let's
-> > actually figure out the min(sw, hw) that we can support and cap it at
-> > that.
-> > 
-> > --D
-> 
-> 
+> +	if (file->f_flags & O_PATH)
+> +		return 0;
+> +
+>  	smk_ad_init(&ad, __func__, LSM_AUDIT_DATA_PATH);
+>  	smk_ad_setfield_u_fs_path(&ad, file->f_path);
+>  	rc = smk_tskacc(tsp, smk_of_inode(inode), MAY_READ, &ad);
