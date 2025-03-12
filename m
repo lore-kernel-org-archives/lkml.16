@@ -1,150 +1,197 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5D5800;
-	Wed, 12 Mar 2025 21:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A591E5714;
+	Wed, 12 Mar 2025 21:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741816320; cv=none; b=Yealw0WL4Dqpmwg0zXDR0fJvABivM6pjpf6t8gsQzTZULkuVjUWoTORejUkIMlIQ+m/xkLhTkKO5mXQ5cVXTX4A4JC1jNf/ugvzqMeP+jvjtSdGlHf/mHrk3vjI3rF+U5N3bq38Qz0AI3tamj9dox6xdl4K1elANZWzy6i1EB9Y=
+	t=1741816673; cv=none; b=hKQOZ49H7t0JlcK3Zp6mBkwiKtEVCSAP5Dj0UJaNpm8HymvWZMex4puOCqyN03FI+b6Jkp0NYm96RziNWVmtp9mgbRx43+oXDGruOGcyNbSpKObbDrt3APhve/Ps7PRLLSbjpPSX2PDTjzCWtjaz0WFbRR6OQapTcLAWB61Brak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741816320; c=relaxed/simple;
-	bh=lRF/0eWGEo17rOoHzn3WqGHKNE91Fy8uXujWsuWOgjg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oIPrmyd2aWNaZvc4WpA6eYHXfqWX27EwfKnSYzry/zAZ3l0VsY/3COfO1DH30FwvX0k6cuTHNfsuYPMaT14iphONT5yeNQ8FYr1Ukclj0G3IpSqq2BMsy6HZptuKVtVgjjBnknpI/qI4zApssrNj2JWqdE5EsUT1EWyz/TlA4uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grabatoulnz.fr; spf=pass smtp.mailfrom=grabatoulnz.fr; dkim=pass (2048-bit key) header.d=grabatoulnz.fr header.i=@grabatoulnz.fr header.b=BtRZ/JWD; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grabatoulnz.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grabatoulnz.fr
+	s=arc-20240116; t=1741816673; c=relaxed/simple;
+	bh=nGcJgkCoJtQtvRizpm3fbRxdCL9kPsxqBFdpAYH9m/w=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=jE+ucH4Yg1yHrAjWoMk06+29n2gwWwQtGz4LiAOsGHkw7cLkkuC+TZpUciJ28Piopn13LKBBLV0yTkwl991NfVLciy/LkzPigiFeXCrp76XYeDYFaed4mKRGUqkO5d9E2x9F+y3ZJblcPW0mlkcDqU9tgcWN8yQjZj9nr8K/OFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=bqzjTbkt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Erl3rH2W; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=grabatoulnz.fr header.i=@grabatoulnz.fr header.b="BtRZ/JWD"
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id AEBBE5804DE;
-	Wed, 12 Mar 2025 21:39:52 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1C70F43422;
-	Wed, 12 Mar 2025 21:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grabatoulnz.fr;
-	s=gm1; t=1741815585;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YklmBJcxcY2KsLFAtA/p1LgdCgtFDQI4M6+OKUASHF8=;
-	b=BtRZ/JWD4kcEmEhYnLBg814fbS3qwLq73+AQEDPtH3AmLHJuyHW9uPh+3OWd5JRAhhM57/
-	WWK7Oe6RWcENVDCUOhFuz898UKhmqflwXk3tvuqU5BsUTDZ+2T52RozzBoQwpy85nLOCiS
-	6jxzIS440YyUDgvo6pci1yZCUveoORLe76E2zHXqeAO1IH3gxwTAU27sNVMezvWQ3Q6nJD
-	f8kls2X3tu52WQU61wTbyuuV2+dyqr+lIt7R6yfUoeX9JQyUqqK8EHTdYqDuBhlejrpUyG
-	4+uwRI45vXWl3QLI6p7YisCSarhfk/rnb4YMKJ19CSsQ8YNmSCcu6J6RJ/ieVA==
-Message-ID: <95783730-0a77-40a0-9933-509eaa0ba558@grabatoulnz.fr>
-Date: Wed, 12 Mar 2025 22:39:37 +0100
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="bqzjTbkt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Erl3rH2W"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id 54DF31382D0E;
+	Wed, 12 Mar 2025 17:57:50 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-02.internal (MEProxy); Wed, 12 Mar 2025 17:57:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1741816670;
+	 x=1741903070; bh=AW3u1nv38LQ6380aEyc8+b6LZ30uxmKTmGKWtqc/wP4=; b=
+	bqzjTbkt80rt8bDORRv8hCOupadvmc0+H8OwR7m4SWNny+Benxh7W1ElyaxUSGyN
+	vSguJogwXEagqaps9JGIk+tJmfP4tQm/Ii+go/CZ4scrw+h6bp8af4LNRTL3BI+z
+	fvTT2yuIQQdyHyQ/hb/SxT1tEqiCAyYHbA8gmoB5RJdQ44mieX7YE3r+sbuqLvBF
+	cVXGhxJwRrSxnG51H8Uvoe1VnsbqtG1/Ui7VwXcbPkz2XMXS8wMBnaMXjARem6iZ
+	YpOtJODSNSkodoIdpvaSBak4fVxljzk90hLQsUPwx5J3rnIk6sIpySN6pJYjMs8z
+	HpvjCBH2UOG7fdeCIJi83Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741816670; x=
+	1741903070; bh=AW3u1nv38LQ6380aEyc8+b6LZ30uxmKTmGKWtqc/wP4=; b=E
+	rl3rH2WAG5xfo0syewwG7xC3IP4ZxYspcw3r+K2bEudQV2iYhWgSpID8qnV9yXzi
+	uChKh9vVhBB7F16EeRf7R6pRjTDMGKyczNrYfZONObEyGMjfz4wGNlcbiPC7PZHT
+	+EHwa+g1lU79pt53/IXFyoK+uuaZ9l9iSBvP5pwMPzmFyxQ3beaTuyFMOOe0/1zS
+	a/vyEBZbL5F3XeyngVvC/oogKFR7CuHZzWxLIwsJ1c9R/lnD3Eq/ADrDwFBukLxF
+	vUWbgobq0WzOzPjNntMOSGqckL+R/nW9f+fT5y3W8frZGhTP/+zH3keh4C6hn0NI
+	WC4oWzbyIRNdmytkA1MFg==
+X-ME-Sender: <xms:XQPSZ2dTboDqoLor48QHmFDFFXNjPVfE8vV_sV-AiLR-PyUMZRFcKA>
+    <xme:XQPSZwMp0kqSci2Jff14OqDLpfsJk0FdZIRDvB4SLKztCB8q4QolSyfu5DpmN8nDC
+    DDwA-5G5bbIZpc_ExA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdeivddtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrd
+    guvghvqeenucggtffrrghtthgvrhhnpeekvdelteefleefudffgfeukeefheeuffevveev
+    teevgeevjeegtdelteffkeffheenucffohhmrghinhepghhithdqshgtmhdrtghomhdpgh
+    hithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghdptddurdhorhhgnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvsh
+    druggvvhdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpthhtoh
+    eplhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopegsvghnthhishhssehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghp
+    thhtohepohgvqdhksghuihhlugdqrghllheslhhishhtshdrlhhinhhugidruggvvhdprh
+    gtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhi
+    nhhugidqihhnphhuthesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
+    hnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:XgPSZ3iAeAzP8am4aYLot8WuBtePCDZ1k2a187KG7T_RhGaDBw2rcw>
+    <xmx:XgPSZz_vPVbqRizicmTNT7KQ_6DGzOJwdQSF6D1nywcYc1Pex4avAg>
+    <xmx:XgPSZys8qcmzwO95o5kkf-cvDpbNsnG6sEB13DcsQ8ZpqZSWWArG_Q>
+    <xmx:XgPSZ6HcpysqETxCAWe9YoOGjp5P6zIEX_x73c4CqVJxHSfCBnC9DA>
+    <xmx:XgPSZwB3qIlKjj3-oS7p03F0Dvq6R_TpWhtTiroYGxlbCDZTzu3uS849>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id E5E403360079; Wed, 12 Mar 2025 17:57:49 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
- board type") on reboot (but not cold boot)
-From: Eric <eric.4.debian@grabatoulnz.fr>
-To: Niklas Cassel <cassel@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Christoph Hellwig <hch@infradead.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Damien Le Moal <dlemoal@kernel.org>, Jian-Hong Pan <jhp@endlessos.org>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, linux-ide@vger.kernel.org,
- Dieter Mummenschanz <dmummenschanz@web.de>
-References: <8763ed79-991a-4a19-abb6-599c47a35514@grabatoulnz.fr>
- <Z8VLZERz0FpvpchM@x1-carbon>
- <8b1cbfd4-6877-48ef-b17d-fc10402efbf7@grabatoulnz.fr>
- <Z8l61Kxss0bdvAQt@ryzen> <Z8l7paeRL9szo0C0@ryzen>
- <689f8224-f118-47f0-8ae0-a7377c6ff386@grabatoulnz.fr>
- <Z8rCF39n5GjTwfjP@ryzen> <9c4a635a-ce9f-4ed9-9605-002947490c61@redhat.com>
- <Z88rtGH39C-S8phk@ryzen> <383d5740-7740-4051-b39a-b8c74b035ec2@redhat.com>
- <Z9BFSM059Wj2cYX5@ryzen>
- <9670400b-4723-4028-b5ae-5005ed3766c1@grabatoulnz.fr>
-Content-Language: en-US
-In-Reply-To: <9670400b-4723-4028-b5ae-5005ed3766c1@grabatoulnz.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdeiudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuhffvvehfjggtgfesthekredttddvjeenucfhrhhomhepgfhrihgtuceovghrihgtrdegrdguvggsihgrnhesghhrrggsrghtohhulhhniidrfhhrqeenucggtffrrghtthgvrhhnpeetieehtdelgeevhffgveevgeegtdefvdelveeujeffkeeijefhtedtjeelhedvfeenucfkphepvdgrtddumegtsgdtgeemleegudemsgdutddtmeegvdduieemjegvfhhfmehfvgdvheemleehrgdunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdtgeemleegudemsgdutddtmeegvdduieemjegvfhhfmehfvgdvheemleehrgdupdhhvghloheplgfkrfggieemvdgrtddumegtsgdtgeemleegudemsgdutddtmeegvdduieemjegvfhhfmehfvgdvheemleehrgdungdpmhgrihhlfhhrohhmpegvrhhitgdrgedruggvsghirghnsehgrhgrsggrthhouhhlnhiirdhfrhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheptggrshhsvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptggrrhhnihhls
- eguvggsihgrnhdrohhrghdprhgtphhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpthhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepughlvghmohgrlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhhphesvghnughlvghsshhoshdrohhrgh
-X-GND-Sasl: eric.degenetais@grabatoulnz.fr
+Date: Thu, 13 Mar 2025 10:57:29 +1300
+From: "Luke Jones" <luke@ljones.dev>
+To: "kernel test robot" <lkp@intel.com>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+ "Benjamin Tissoires" <bentiss@kernel.org>, "Jiri Kosina" <jikos@kernel.org>,
+ "Mario Limonciello" <mario.limonciello@amd.com>
+Message-Id: <3d8df52d-4338-4235-b1fa-183f39e3c3aa@app.fastmail.com>
+In-Reply-To: <202503081003.gNlKWt4M-lkp@intel.com>
+References: <20250227085817.1007697-3-luke@ljones.dev>
+ <202503081003.gNlKWt4M-lkp@intel.com>
+Subject: Re: [PATCH v3 2/2] platform/x86: asus-wmi: Refactor Ally suspend/resume
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
 
-Le 12/03/2025 à 18:11, Eric a écrit :
-> Hi Niklas
+
+On Sat, 8 Mar 2025, at 3:55 PM, kernel test robot wrote:
+> Hi Luke,
 >
-> Le 11/03/2025 à 15:14, Niklas Cassel a écrit :
->> Hello Hans, Eric,
->>
->> Eric, could you please run:
->> $ sudo hdparm -I /dev/sdX | grep "interface power management"
->>
->> on both your Samsung and Maxtor drive?
->> (A star to the left of feature means that the feature is enabled)
+> kernel test robot noticed the following build errors:
 >
-> Here is the result (apparently PM is enabled on the maxtor but it 
-> doesn't create the same problem) :
+> [auto build test ERROR on hid/for-next]
+> [also build test ERROR on linus/master v6.14-rc5 next-20250307]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 >
-> (trixieUSB)eric@gwaihir:~$ sudo hdparm -I 
-> /dev/disk/by-id/ata-MAXTOR_STM3250310AS_6RY2WB82 | grep "interface 
-> power management"
->        *    Device-initiated interface power management
-> (trixieUSB)eric@gwaihir:~$ sudo hdparm -I 
-> /dev/disk/by-id/ata-Samsung_SSD_870_QVO_2TB_S5RPNF0T419459E | grep 
-> "interface power management"
->        *    Device-initiated interface power management
+> url:    
+> https://github.com/intel-lab-lkp/linux/commits/Luke-Jones/hid-asus-check-ROG-Ally-MCU-version-and-warn/20250227-165941
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git 
+> for-next
+> patch link:    
+> https://lore.kernel.org/r/20250227085817.1007697-3-luke%40ljones.dev
+> patch subject: [PATCH v3 2/2] platform/x86: asus-wmi: Refactor Ally 
+> suspend/resume
+> config: mips-allyesconfig 
+> (https://download.01.org/0day-ci/archive/20250308/202503081003.gNlKWt4M-lkp@intel.com/config)
+> compiler: mips-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): 
+> (https://download.01.org/0day-ci/archive/20250308/202503081003.gNlKWt4M-lkp@intel.com/reproduce)
 >
->>
->>
->> One guess... perhaps it could be Device Initiated PM that is broken with
->> these controllers? (Even though the controller does claim to support 
->> it.)
->>
->> Eric, could you please try this patch:
->>
->> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
->> index f813dbdc2346..ca690fde8842 100644
->> --- a/drivers/ata/ahci.c
->> +++ b/drivers/ata/ahci.c
->> @@ -244,7 +244,7 @@ static const struct ata_port_info 
->> ahci_port_info[] = {
->>       },
->>       [board_ahci_sb700] = {    /* for SB700 and SB800 */
->>           AHCI_HFLAGS    (AHCI_HFLAG_IGN_SERR_INTERNAL),
->> -        .flags        = AHCI_FLAG_COMMON,
->> +        .flags        = AHCI_FLAG_COMMON | ATA_FLAG_NO_DIPM,
->>           .pio_mask    = ATA_PIO4,
->>           .udma_mask    = ATA_UDMA6,
->>           .port_ops    = &ahci_pmp_retry_srst_ops,
-> Will do. I'll report back as soon as I've built the modified kernel 
-> and tested it.
+> If you fix the issue in a separate patch/commit (i.e. not just a new 
+> version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: 
+> https://lore.kernel.org/oe-kbuild-all/202503081003.gNlKWt4M-lkp@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>    In file included from drivers/hid/hid-asus.c:29:
+>    include/linux/platform_data/x86/asus-wmi.h: In function 'set_ally_mcu_hack':
+>>> include/linux/platform_data/x86/asus-wmi.h:168:16: error: 'return' with a value, in function returning void [-Wreturn-mismatch]
+>      168 |         return -ENODEV;
+>          |                ^
+>    include/linux/platform_data/x86/asus-wmi.h:166:20: note: declared 
+> here
+>      166 | static inline void set_ally_mcu_hack(bool enabled)
+>          |                    ^~~~~~~~~~~~~~~~~
+>    include/linux/platform_data/x86/asus-wmi.h: In function 
+> 'set_ally_mcu_powersave':
+>    include/linux/platform_data/x86/asus-wmi.h:172:16: error: 'return' 
+> with a value, in function returning void [-Wreturn-mismatch]
+>      172 |         return -ENODEV;
+>          |                ^
+>    include/linux/platform_data/x86/asus-wmi.h:170:20: note: declared 
+> here
+>      170 | static inline void set_ally_mcu_powersave(bool enabled)
+>          |                    ^~~~~~~~~~~~~~~~~~~~~~
 
-Tested. Both disks now respond that way (no Device-initiated interface 
-power management) :
+*Groaning sounds*.
+Ilpo/Hans, you guys want me to fix this and submit new series or can this be corrected when pulled in?
+There's two more of the same below this.
 
-(trixieUSB)eric@gwaihir:~$ sudo hdparm -I 
-/dev/disk/by-id/ata-MAXTOR_STM3250310AS_6RY2WB82 | grep "interface power 
-management"
-            Device-initiated interface power management
-(trixieUSB)eric@gwaihir:~$ sudo hdparm -I 
-/dev/disk/by-id/ata-Samsung_SSD_870_QVO_2TB_S5RPNF0T419459E | grep 
-"interface power management"
-            Device-initiated interface power management
-
-
-With the patch you asked me to test, the SSD is properly detected at 
-reboot, both by the UEFI and the kernel.
-
->>
->>
->> Kind regards,
->> Niklas
-
-Kind regards
-
-Eri
-
+>
+> vim +/return +168 include/linux/platform_data/x86/asus-wmi.h
+>
+>    159	
+>    160	#if IS_REACHABLE(CONFIG_ASUS_WMI)
+>    161	void set_ally_mcu_hack(bool enabled);
+>    162	void set_ally_mcu_powersave(bool enabled);
+>    163	int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 
+> *retval);
+>    164	int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, 
+> u32 *retval);
+>    165	#else
+>    166	static inline void set_ally_mcu_hack(bool enabled)
+>    167	{
+>  > 168		return -ENODEV;
+>    169	}
+>    170	static inline void set_ally_mcu_powersave(bool enabled)
+>    171	{
+>    172		return -ENODEV;
+>    173	}
+>    174	static inline int asus_wmi_set_devstate(u32 dev_id, u32 
+> ctrl_param, u32 *retval)
+>    175	{
+>    176		return -ENODEV;
+>    177	}
+>    178	static inline int asus_wmi_evaluate_method(u32 method_id, u32 
+> arg0, u32 arg1,
+>    179						   u32 *retval)
+>    180	{
+>    181		return -ENODEV;
+>    182	}
+>    183	#endif
+>    184	
+>
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
