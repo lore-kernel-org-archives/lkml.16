@@ -1,76 +1,139 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BC8156C62
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 17:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2C6198E76
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 17:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741800627; cv=none; b=Ur1TXdOq8dl0P1hFaXc2cVcI7PqpLdDEsfYatsY0D9l5ki8hd5wMFtMzb/iWlaUmdE10BY17KgeuIus1+auu9WjTGr/NkdMhks+m5T7CrboIhR+KNEhukOE3HSw26GmZrEMBP6H4VeQbnz7c6f0Ste9l0QOmRH/3vHEC9L5aKpg=
+	t=1741800736; cv=none; b=WHuQVfS+aCMQQgFQyvdo480NSzD6r666zvk6Ax6yazWRWYuZcQNwe0NPobBbD2q4/aRWxbViqRNphlZc7zMQEtGK4LOc1VP5NEAqtKvZuZLLvwcm2XQv288DPbGP1sXk/N1KaJU5IfcCi0+XKS7enMo5vbBwwF/3jjLDaOlr1GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741800627; c=relaxed/simple;
-	bh=KxWDkPWGnHmqMDQnBBo7Yerq9+ImTLxqJPNlp9Sr11s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZhCwwPUdi3MdRzC4SQN+WkaycF/RKapWrPajwlgqzqTskPyULo+z749Hz4JHAdEZO2IFMFah681F+pUfhWLSd3tiaLYlwROpPcgPcc9lLqhg5RhlIWJ3p06TQpCvUJm30sjYbM+KMln+Y1IqCWQqm8ry0vR/wF8LfUgF/wbNue4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tsPk0-000000006zq-1rZn;
-	Wed, 12 Mar 2025 13:19:36 -0400
-Date: Wed, 12 Mar 2025 13:19:32 -0400
-From: Rik van Riel <riel@surriel.com>
-To: Corey Minyard <corey@minyard.net>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
- openipmi-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- kernel-team@meta.com
-Subject: [PATCH] ipmi: fix suspicious RCU usage warning
-Message-ID: <20250312131932.44d901f7@fangorn>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1741800736; c=relaxed/simple;
+	bh=CfaKg21h1SLchsyMHjVjdRmtRE2GGhngxM2giOK+PCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ihxToBB4pW5tFY5sIV94jYwsVe0zTy+kqCkoC5WOD7tSn8I5vgRjHN7S86yb8/caSns6t4Er6XYfe00Fe95oS2/YkyWSRiOx3omcUAro877bm6+Jvk77HauRVJ6KKn7VK2AUm482ARE/cOcfx4IEsAc0xvVb+x6FSzz34G0YVyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vXDF0426; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vXDF0426"
+Date: Wed, 12 Mar 2025 10:32:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741800732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SdaEm1VNGTVs7e8vROCN0lC4A4+/l+BdkvlB4cJdMRM=;
+	b=vXDF0426B5OZljtJCJNvlYdWu08s1ZbpovJJYcgUb07F0RA1TGjYRncGuVg7BWpEEyxA5e
+	R2OpLHpeoM8w4dUA9uveEie1VFlSCfaIJcejGMODufGunQU9JLK5NI8iVIQxAlGhNvihC6
+	iKdeT9RNrMqqWa6L1IL5nnubsLGDELM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sebastian Ott <sebott@redhat.com>
+Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: arm64: Writable TGRAN*_2
+Message-ID: <Z9HE92ZlNlJbHJBB@linux.dev>
+References: <20250306184013.30008-1-sebott@redhat.com>
+ <Z9HCQ40LxShzL4nj@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9HCQ40LxShzL4nj@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On recent kernels this warning fires:
+On Wed, Mar 12, 2025 at 10:20:03AM -0700, Oliver Upton wrote:
+> Hi Sebastian,
+> 
+> On Thu, Mar 06, 2025 at 07:40:13PM +0100, Sebastian Ott wrote:
+> > Allow userspace to write the safe (NI) value for ID_AA64MMFR0_EL1.TGRAN*_2.
+> > Disallow to change these fields for NV since kvm provides a sanitized view
+> > for them based on the PAGE_SIZE.
+> > Also add these bits to the set_id_regs selftest.
+> > 
+> > Signed-off-by: Sebastian Ott <sebott@redhat.com>
+> 
+> I can't tell what you've based this patch on, it certainly doesn't apply
+> on a 6.14 rc. Consider telling git to include the base commit next time
+> you generate a patch.
 
-drivers/char/ipmi/ipmi_msghandler.c:1238 RCU-list traversed in non-reader section!!
+/me finishes a cup of coffee
 
-This looks like a fairly simple lockdep trigger, where
-list_for_each_entry_rcu and list_for_each_entry_srcu are
-functionally identical, but the lockdep annotation in
-the former has an extra check.
+The conflict is obviously with 9d6745572899 ("KVM: arm64: Hide
+ID_AA64MMFR2_EL1.NV from guest and userspace"), which is in
+kvmarm/next...
 
-That extra check is whether the RCU read lock is held,
-which is not true when the code uses srcu_read_lock.
-
-Get rid of the warning by using the properly annotated
-list traversal macro.
-
-Signed-off-by: Rik van Riel <riel@surriel.com>
----
- drivers/char/ipmi/ipmi_msghandler.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 1e5313748f8b..a2823763fd37 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -1235,7 +1235,7 @@ int ipmi_create_user(unsigned int          if_num,
- 		return -ENOMEM;
- 
- 	index = srcu_read_lock(&ipmi_interfaces_srcu);
--	list_for_each_entry_rcu(intf, &ipmi_interfaces, link) {
-+	list_for_each_entry_srcu(intf, &ipmi_interfaces, link) {
- 		if (intf->intf_num == if_num)
- 			goto found;
- 	}
--- 
-2.48.1
-
+> > ---
+> >  arch/arm64/kvm/sys_regs.c                     | 21 +++++++++++++++----
+> >  .../testing/selftests/kvm/arm64/set_id_regs.c |  3 +++
+> >  2 files changed, 20 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> > index 14faf213d483..0730ed8314d0 100644
+> > --- a/arch/arm64/kvm/sys_regs.c
+> > +++ b/arch/arm64/kvm/sys_regs.c
+> > @@ -1948,6 +1948,21 @@ static int set_id_aa64pfr1_el1(struct kvm_vcpu *vcpu,
+> >  	return set_id_reg(vcpu, rd, user_val);
+> >  }
+> >  
+> > +static int set_id_aa64mmfr0_el1(struct kvm_vcpu *vcpu,
+> > +				const struct sys_reg_desc *rd, u64 user_val)
+> > +{
+> > +	u64 sanitized_val = kvm_read_sanitised_id_reg(vcpu, rd);
+> > +	u64 tgran2_mask = ID_AA64MMFR0_EL1_TGRAN4_2_MASK |
+> > +			  ID_AA64MMFR0_EL1_TGRAN16_2_MASK |
+> > +			  ID_AA64MMFR0_EL1_TGRAN64_2_MASK;
+> > +
+> > +	if (vcpu_has_nv(vcpu) &&
+> > +	    ((sanitized_val & tgran2_mask) != (user_val & tgran2_mask)))
+> > +		return -EINVAL;
+> > +
+> > +	return set_id_reg(vcpu, rd, user_val);
+> > +}
+> > +
+> >  static int set_id_aa64mmfr2_el1(struct kvm_vcpu *vcpu,
+> >  				const struct sys_reg_desc *rd, u64 user_val)
+> >  {
+> > @@ -2787,10 +2802,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+> >  	ID_UNALLOCATED(6,7),
+> >  
+> >  	/* CRm=7 */
+> > -	ID_WRITABLE(ID_AA64MMFR0_EL1, ~(ID_AA64MMFR0_EL1_RES0 |
+> > -					ID_AA64MMFR0_EL1_TGRAN4_2 |
+> > -					ID_AA64MMFR0_EL1_TGRAN64_2 |
+> > -					ID_AA64MMFR0_EL1_TGRAN16_2 |
+> > +	ID_FILTERED(ID_AA64MMFR0_EL1, id_aa64mmfr0_el1,
+> > +				      ~(ID_AA64MMFR0_EL1_RES0 |
+> >  					ID_AA64MMFR0_EL1_ASIDBITS)),
+> >  	ID_WRITABLE(ID_AA64MMFR1_EL1, ~(ID_AA64MMFR1_EL1_RES0 |
+> >  					ID_AA64MMFR1_EL1_HCX |
+> > diff --git a/tools/testing/selftests/kvm/arm64/set_id_regs.c b/tools/testing/selftests/kvm/arm64/set_id_regs.c
+> > index 1d65f4a09e6f..322b9d3b0125 100644
+> > --- a/tools/testing/selftests/kvm/arm64/set_id_regs.c
+> > +++ b/tools/testing/selftests/kvm/arm64/set_id_regs.c
+> > @@ -146,6 +146,9 @@ static const struct reg_ftr_bits ftr_id_aa64pfr1_el1[] = {
+> >  static const struct reg_ftr_bits ftr_id_aa64mmfr0_el1[] = {
+> >  	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, ECV, 0),
+> >  	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, EXS, 0),
+> > +	REG_FTR_BITS(FTR_EXACT, ID_AA64MMFR0_EL1, TGRAN4_2, 1),
+> > +	REG_FTR_BITS(FTR_EXACT, ID_AA64MMFR0_EL1, TGRAN64_2, 1),
+> > +	REG_FTR_BITS(FTR_EXACT, ID_AA64MMFR0_EL1, TGRAN16_2, 1),
+> >  	S_REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, TGRAN4, 0),
+> >  	S_REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, TGRAN64, 0),
+> >  	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64MMFR0_EL1, TGRAN16, 0),
+> 
+> Please do selftests changes in a separate patch.
+> 
+> Don't worry about respinning, I'll fix this up and queue it in a moment.
+> 
+> Thanks,
+> Oliver
+> 
