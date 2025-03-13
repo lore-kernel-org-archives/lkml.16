@@ -1,62 +1,63 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DAB26AA88
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE25E26AAA2
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741885281; cv=none; b=btX/wFHdBAAUGmAKZCA8K9zphHwGd1OQp9ciuXR5XcbFb+0gqsjA2S6uRGPTGRLBrNz4Y9HDTRmx+cOLxRf2GqYwCJU6AS2Mx6G24AK2aF1gg0XxpXS63iSINrW+YEMC7mgmsqTJFgAhJGo+O2YjtzpPhIWHzzGrSxc2eKgL9RA=
+	t=1741885287; cv=none; b=OOz7NGpo7UcdC71N0syE9MFMYMcdgRhPpB/4o5FJh/RAnsos4LPBUB1IwtD0Jwjx4h4AXQJ1z/P7dWQSF1xTbNzbGxmqtnjmdANOS/+2NFub/AgS7GLFeL6d2DBDQiQSL+FqdHpyJuZ1wvfJMITmGN5GlPd/tunAPwE9mwWQGzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741885281; c=relaxed/simple;
-	bh=CKet4m8V3++JJj6egp5O6U4HIkFGKFAGQObq/K0Fa08=;
+	s=arc-20240116; t=1741885287; c=relaxed/simple;
+	bh=NFp+Q2uV9XDHr257rWXEdLfhEuoHWCUowjBWvgSEjKc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Go3lGFVGPIOta7kvZxFrkDp0G4xRRHK0RMjTIIUATvFyu6J6zKHwVSt2c7x4cPEg1jyxPSj9KB0kWn3VMi5+9sF6+2iczfQpFwpaZuZlCSS4E7rNXHxrX1lSnZvOUACD8DM4ZQpi4BNaAqzq8taTWpl6C7V0V2gzER8VQ2iqUKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mOwJDeMX; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=J2ZQmyN2bBISE69jj7i5tLeDF15tHdR6LP+w4RAkyHS/2A+su4t8s4xxQ/ibJoJ3q0T6j9l4rky6gcCTssyVRmLlFPYapFilRiVazNaaHnQKeRu6lBnvFpnMYVHkc8pRHaNsxGliUQXIKzH8MgamzVDl2Ts4NU3UeFQYd1aWe3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=npYIFgEt; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOwJDeMX"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22423adf751so19963065ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:01:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="npYIFgEt"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22337bc9ac3so25561525ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:01:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741885279; x=1742490079; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741885285; x=1742490085; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=nUQ+OrAh02CbWtjPdQxW9RlcKT1xdT7Rpo6ksTT/P0Y=;
-        b=mOwJDeMXAheJUlyiTrI/PYWU/nw28LfMI5YOZaKbV2RtXOJ/kxltGfg5ucGkWKeH23
-         IKm/1PxkMUv3s3KMv6BFIUUHZAJdnfSfbSs4TWaIAhlrmeBE0QXcpW0Q1ROG5IeHD6+D
-         +4MIPUhYwJgFj4wv4Z+6TDAmVAU//B30D+Bfx0SwnopSi517AIfIwoB0FTMwMylxaAYU
-         6GhHPZmyFRz+Jc4gBnN6oFZTnt1SByvDFTd60JGwOGCXzDmnLY8vwUA06b51nusqIZyr
-         VgenVPAIKxCL0n6xdo0cSCvaub+/QhuqB+vfOjMzTV28Bbrhn4aArln1roI624w0rmxp
-         kpRA==
+        bh=CBQw+jqSF0UF2k99azwHt4J3S+nAnROIiT87OqHHQ/M=;
+        b=npYIFgEt8vmNJF6mKAXSqOpJhbumUFhDMxYfNS4g5amQ3HVIzchbuLC27ia3e7eWNu
+         UppE7lMzPGScTvVJ9kwEP2JObeLSCms2I2f1PK1nuwiA07b1r0ACPIcPjaeH+XhUBD4x
+         2pKwCVriG0VjHNEg6uoiC/uu0tr1V/N6CiL9ahR798wc4JSw+DXNIZ2YirlsBnl91c5R
+         307G/h9w8mQ1j86CwW4XeTcEUcCGQi3XSeR7gpdv9LJ7jP4GGSqAC+wek83aqGLsAMx+
+         9sVqaCm5TALCvi71CiEKQHE1XAmWbumFvWYvQPeqq4EoBuH2yA4S8mbERwfTT4bhMYMt
+         zOXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741885279; x=1742490079;
+        d=1e100.net; s=20230601; t=1741885285; x=1742490085;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=nUQ+OrAh02CbWtjPdQxW9RlcKT1xdT7Rpo6ksTT/P0Y=;
-        b=AciLOxgjxuL6Er7pYd9HyEUjhtkGmcBLrwzPOeukSy/O+az2zkEBSGzTbMtGXAgsg9
-         74+KUbJ/lzoL1mLdpTufMBz/fQxpmVP2kfKyBp2VbhiviDPoJgUTU+p39OJ/opa5qwLL
-         2japNogiqi0zqhCIGbUY9HRYehVQ50I+5ELLLBtxg40RoK3AUUPtyaKFK/DRBApc3dL+
-         RQQlU1jsXzOlh+qllsz3vqGWS5fEq1/2PwErGD9UJNbsQr2Isg+NtoJoSKdDk1fGXY3B
-         SxjTkiAl1gFpUxLUIVHwng/zH7z0dGY6ZBV2h+jeRzHD+A0CfoSUMPeIVKcud1dwmLBw
-         PiIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyd+Y6uMKfla6cXvRHqmZYHuUdgvZwdHMc5FlxQ9LQTA2Vl4/X/DeVkRJk7FhiLo13GfxCWdYv+r5BSnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyshFX0eCiExNydkt3uJwo9gIwDnqLbyyMPjN/Spn3HuQKtlcZw
-	BCEzawyuP0uk/7PJsK9lrL/uQVKWhmqeZsZshl15wGIDnZF6aaNl
-X-Gm-Gg: ASbGnctDgemTKpOmkiaDWe+r4WXqGoJjFQdXlFadJD6NPP3Gc/85gJ/fAOepcYS+yo2
-	JEG1gIvg21qXvXb4dxAicTPIn7ViEdhL1UzvrujIvjzBXCjVDNJ/9dqzEky0H4qsTwwahuD2j9M
-	+Qv0X3MEUEaumEI7dCDr56Crf7IJJM4XaR45iN03rPNDu794RX2om9kSvhcqYopcUdmqxNdkqAU
-	wAdcGblR6pKQ+o86Tb3HQwSF2mZ6WJRkjENgQOl6o3wYPxNMVLvJQe8hOYQ7LnCc4x5s+Fexg7M
-	ZvyDQzJhr6vnF6qA6khkT7bFlRWp5bMRjBhYcdCoq/vwcymFOdo4ptPOla2U0MNkkA==
-X-Google-Smtp-Source: AGHT+IEtL0owIxoYlBZ71gxEIW/LFwX9S1V54rOpGhTHmxstlznzvgnxMsNk+OzJF8x7byESxSp3WQ==
-X-Received: by 2002:a17:903:1c8:b0:223:26da:4b8e with SMTP id d9443c01a7336-22592e21948mr178552515ad.4.1741885278863;
-        Thu, 13 Mar 2025 10:01:18 -0700 (PDT)
+        bh=CBQw+jqSF0UF2k99azwHt4J3S+nAnROIiT87OqHHQ/M=;
+        b=qDhggab2MwSCkQZwzfIyMOvLGi2aFH7AaoTyypFQIEIi69/3Ix/fiWelS2vH98S3+D
+         HAy+i1l/lrGb6aFWLjQT+ku9JoqwPSGvclE5+xswU2UJbUGD8S4xjxisHGEpa1eghRx1
+         BIcpnYuzg7Akh7Zdd4SMQwg5QdxBeHxRaMYUqyeWrBE8wAK0z0eQ7Zu+JM/a4BmO8E0a
+         u21p6XJAAL7a5iKH+/rUfVwVMx1MxZUDEVZqpHjVFL1DNhBOu5Ti1UhypBpeFwL0HzCh
+         GDDcVZkUa7JUABa6CeGHVJyN4GdI7X+2W0DfZLYCAOp/GF6P0Dng2WXtAOoaVEgprqlS
+         GSMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwWwE9HDAldRyckJlgwryhNSHj61YI2FT3VsZJ8DNbdcyQw3ZwL06QFUJumSEGfPEoedsI00i3HEatWGI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX4dxKfblueYtDkQgqyL06yI7xdkw9YxNhECgh2gfEk63DKLWo
+	OztuAzsaIuNu5gntOrwXmFJqJJYMo8nWZTuXEbayn+8ZTC6gbb4p
+X-Gm-Gg: ASbGncvvtnbmrFgJ62FHx96dxJOWuJe0FScGKEhCufHTNtK0z+6SPqLAJZQRW5RniG5
+	e21V0nITa30l19eaOHAtrUFrbPpu1xGPHtLXnApg8zV3Lzn0E1lI1lxjTPuA0fQ0JrIFb8SA2+E
+	l+9WCJkdS3Zmw+zgbrb8UNEWnj0vQMPoqXK3m5ZPxudm1EPDepO/ifuFie0uBd0haFVNUnue7nf
+	PzIViUNvgWZSp3RNfgTnOGKF069UmWVKLY/iBiDm22utSlfpm9TSHWbPKX7WNJZnHPRquS7ABk7
+	2Cl8rwS6e09/u0hKDhXG7fsi4ARpCT1vT4YpEPNSAKE9mNoNEiOzblffG8egN/VdRL20AXub94i
+	D
+X-Google-Smtp-Source: AGHT+IGt3mQfnAVqFY2K3f10aCR6eUv3elLxAx9cwot21o1/wrOdRjDlzZvktfS1qoxjfYK8Kmbx8g==
+X-Received: by 2002:a05:6a00:88f:b0:736:ab48:5b0 with SMTP id d2e1a72fcca58-736eb7b2f97mr15996283b3a.2.1741885284743;
+        Thu, 13 Mar 2025 10:01:24 -0700 (PDT)
 Received: from KASONG-MC4.tencent.com ([106.37.123.220])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167df0esm1613529b3a.93.2025.03.13.10.01.13
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167df0esm1613529b3a.93.2025.03.13.10.01.19
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 13 Mar 2025 10:01:18 -0700 (PDT)
+        Thu, 13 Mar 2025 10:01:24 -0700 (PDT)
 From: Kairui Song <ryncsn@gmail.com>
 To: linux-mm@kvack.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -73,9 +74,9 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Matthew Wilcox <willy@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	Kairui Song <kasong@tencent.com>
-Subject: [PATCH v3 1/7] mm, swap: avoid reclaiming irrelevant swap cache
-Date: Fri, 14 Mar 2025 00:59:29 +0800
-Message-ID: <20250313165935.63303-2-ryncsn@gmail.com>
+Subject: [PATCH v3 2/7] mm, swap: drop the flag TTRS_DIRECT
+Date: Fri, 14 Mar 2025 00:59:30 +0800
+Message-ID: <20250313165935.63303-3-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250313165935.63303-1-ryncsn@gmail.com>
 References: <20250313165935.63303-1-ryncsn@gmail.com>
@@ -90,57 +91,75 @@ Content-Transfer-Encoding: 8bit
 
 From: Kairui Song <kasong@tencent.com>
 
-Swap allocator will do swap cache reclaim to recycle HAS_CACHE slots for
-allocation.  It initiates the reclaim from the offset to be reclaimed and
-looks up the corresponding folio.  The lookup process is lockless, so it's
-possible the folio will be removed from the swap cache and given a
-different swap entry before the reclaim locks the folio.  If it happens,
-the reclaim will end up reclaiming an irrelevant folio, and return wrong
-return value.
+This flag exists temporarily to allow the allocator to bypass the slot
+cache during freeing, so reclaiming one slot will free the slot
+immediately.
 
-This shouldn't cause any problem with correctness or stability, but it is
-indeed confusing and unexpected, and will increase fragmentation, decrease
-performance.
-
-Fix this by checking whether the folio is still pointing to the offset the
-allocator want to reclaim before reclaiming it.
+But now we have already removed slot cache usage on freeing, so this flag
+has no effect now.
 
 Signed-off-by: Kairui Song <kasong@tencent.com>
 Reviewed-by: Baoquan He <bhe@redhat.com>
 ---
- mm/swapfile.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ mm/swapfile.c | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index a7f60006c52c..5618cd1c4b03 100644
+index 5618cd1c4b03..6f2de59c6355 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -210,6 +210,7 @@ static int __try_to_reclaim_swap(struct swap_info_struct *si,
- 	int ret, nr_pages;
- 	bool need_reclaim;
+@@ -158,8 +158,6 @@ static long swap_usage_in_pages(struct swap_info_struct *si)
+ #define TTRS_UNMAPPED		0x2
+ /* Reclaim the swap entry if swap is getting full */
+ #define TTRS_FULL		0x4
+-/* Reclaim directly, bypass the slot cache and don't touch device lock */
+-#define TTRS_DIRECT		0x8
  
-+again:
- 	folio = filemap_get_folio(address_space, swap_cache_index(entry));
- 	if (IS_ERR(folio))
- 		return 0;
-@@ -227,8 +228,16 @@ static int __try_to_reclaim_swap(struct swap_info_struct *si,
- 	if (!folio_trylock(folio))
- 		goto out;
+ static bool swap_only_has_cache(struct swap_info_struct *si,
+ 			      unsigned long offset, int nr_pages)
+@@ -257,23 +255,8 @@ static int __try_to_reclaim_swap(struct swap_info_struct *si,
+ 	if (!need_reclaim)
+ 		goto out_unlock;
  
--	/* offset could point to the middle of a large folio */
-+	/*
-+	 * Offset could point to the middle of a large folio, or folio
-+	 * may no longer point to the expected offset before it's locked.
-+	 */
- 	entry = folio->swap;
-+	if (offset < swp_offset(entry) || offset >= swp_offset(entry) + nr_pages) {
-+		folio_unlock(folio);
-+		folio_put(folio);
-+		goto again;
-+	}
- 	offset = swp_offset(entry);
- 
- 	need_reclaim = ((flags & TTRS_ANYWAY) ||
+-	if (!(flags & TTRS_DIRECT)) {
+-		/* Free through slot cache */
+-		delete_from_swap_cache(folio);
+-		folio_set_dirty(folio);
+-		ret = nr_pages;
+-		goto out_unlock;
+-	}
+-
+-	xa_lock_irq(&address_space->i_pages);
+-	__delete_from_swap_cache(folio, entry, NULL);
+-	xa_unlock_irq(&address_space->i_pages);
+-	folio_ref_sub(folio, nr_pages);
++	delete_from_swap_cache(folio);
+ 	folio_set_dirty(folio);
+-
+-	ci = lock_cluster(si, offset);
+-	swap_entry_range_free(si, ci, entry, nr_pages);
+-	unlock_cluster(ci);
+ 	ret = nr_pages;
+ out_unlock:
+ 	folio_unlock(folio);
+@@ -697,7 +680,7 @@ static bool cluster_reclaim_range(struct swap_info_struct *si,
+ 			offset++;
+ 			break;
+ 		case SWAP_HAS_CACHE:
+-			nr_reclaim = __try_to_reclaim_swap(si, offset, TTRS_ANYWAY | TTRS_DIRECT);
++			nr_reclaim = __try_to_reclaim_swap(si, offset, TTRS_ANYWAY);
+ 			if (nr_reclaim > 0)
+ 				offset += nr_reclaim;
+ 			else
+@@ -849,7 +832,7 @@ static void swap_reclaim_full_clusters(struct swap_info_struct *si, bool force)
+ 			if (READ_ONCE(map[offset]) == SWAP_HAS_CACHE) {
+ 				spin_unlock(&ci->lock);
+ 				nr_reclaim = __try_to_reclaim_swap(si, offset,
+-								   TTRS_ANYWAY | TTRS_DIRECT);
++								   TTRS_ANYWAY);
+ 				spin_lock(&ci->lock);
+ 				if (nr_reclaim) {
+ 					offset += abs(nr_reclaim);
 -- 
 2.48.1
 
