@@ -1,93 +1,99 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B48526A0E0;
-	Thu, 13 Mar 2025 14:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64337267B78;
+	Thu, 13 Mar 2025 14:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741876245; cv=none; b=FmqLapo0DUtLToMZ0yRFJKpcldjeBPe1LDkuJBX+0dpfXwvJ4CZ2+82T1CbIvkkAJ3DyZq+U9ktL7Bn5qpMdOOzi1kvRzFqwUcMt9VzBAHzrsziGGR9/sK5qLL4+mJ7k3dP4V4URQ0hS89IbBepwbB8ciNVapfeL5OK9AcKDpbA=
+	t=1741876271; cv=none; b=AWzdbw3wLVn8dAPW0Z0vVWbKube/8ZI9rIIQTM/HL+HkuUiLlzj9UwzjXyhnRNyK++9Xhs88WdvlJatowvzorYuiq7nCfK8ZwVHFsiu4IF5ZU3ajz+N7n4T/6WQJUoRctd2y6tFbkNynr9YegVQzjv+X824uOJSgA09TwdAPURE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741876245; c=relaxed/simple;
-	bh=zz9OKaHpyYWuhTHYCFpBeMMjlsOXeK8pV/uVlGaqErU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cCZGJeKUWf0g4u8TbU5tldfDpa1Fq3YMBXWMf6fDfjfWgVh5Rf8rlidSiqDIRkx83ILkp/lDzld9Nx04HPppGBwUZag4ZRXNm1DAZ26KngiSpGKtSD4zd4iNBF7/Y3IpS3T0kL0vIMMmUPTEs74U5e68O2iT33wrdsyaaKc5vqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=k4ommqUg; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1741876271; c=relaxed/simple;
+	bh=q7tcXhM/G+j/VE2KX9E2hy+pT9MDKbegYTC6EBQh5HM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=VGsB6+f1pwxiZldFcj8S8BO4t2My0AdFKSBv7h5DOF2gscJWrLdZMNm7nUv3G4P8KFnk2QrX+40g5/ZXaqrMNCABIgMsC/d3hlobOXXCHHy/rklyZg7GYfhQn7jjKxRFaju5JNl0JBt+xBeUTyZBlHsd1yWVZa7aqfpehVtGe4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i/5mtUAa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="k4ommqUg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741876236; x=1742135436;
-	bh=F6M4s+ILHt7DM/PwWL75YNy9CFejS8naNQqvpm0Y5MM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=k4ommqUgBcITHpFz9jGy2Q4yTqBr63A0LyH2aHQny0PXRqHyzOsP7VyiY60Hyqlym
-	 VnI7W8Sp9l13GvyQh9ufwBvLeUWA2RmZtsIrhSihIirtvLm8kznxdkdiOvo+YrtLFg
-	 jCA+2bBVWu1NhyBe5h0yLzuPpPhK+wGY8GdvNnE7/OQwjWj6Y1aSzeZWht5xFgeChC
-	 4LKyznGvRyC1loILA34aqIqqollscW7Cgfb+Lf2onzsW3hBaWp3reH49rgrDglSbL1
-	 LVnZG8lRk/TEY0G1K8KOGAv83E6yOXnqlFvAK+K7eqX87/zQ/74TGSWSHKWl0932hQ
-	 HT5BLpatyXHmA==
-Date: Thu, 13 Mar 2025 14:30:32 +0000
-To: Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 3/4] rust: pci: fix unrestricted &mut pci::Device
-Message-ID: <D8F7L7ZGQW9J.3Q8MVXYPTJIT@proton.me>
-In-Reply-To: <Z9Lq8xyTbIzfPhRX@pollux>
-References: <20250313021550.133041-1-dakr@kernel.org> <20250313021550.133041-4-dakr@kernel.org> <D8F2S8YNYGZP.3JQKC7ZMRAB2C@proton.me> <Z9Lq8xyTbIzfPhRX@pollux>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 3006e74b50f619147a17f02ee397e88943aa2cc2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i/5mtUAa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BFB4C4CEDD;
+	Thu, 13 Mar 2025 14:31:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741876270;
+	bh=q7tcXhM/G+j/VE2KX9E2hy+pT9MDKbegYTC6EBQh5HM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=i/5mtUAaLkbWg/nIPtp5cJInyu+dncYZuqJPUOt9jcMookYcqt4XIZ6IupkOaDuHm
+	 uLFMF6c4mBtyc5IAXD1F4vO0BBjIaKTk7c9o36jMBCa2H1Q0ZgJjtNYxtkQ2Mp2bJQ
+	 gtQF5ysN0QNxgTZI2w5SeC886c7/LLH/qOtsHJKtnsC9I69Bp+KQYSm00/ngLcduB4
+	 Qyt3kP20zJhSTir8Kj2uH96DEiJO8IV/u2apvPw4SMBF0ztztAWtIQ/VOt0gn+6Cf2
+	 cn1TpIXuLRH+gi1JRC3OqzkArMfgqQNtH6easUrn+/p5MXvwkyYvHtUp4ZJA1XBVAf
+	 yoFuBsIbwuXfg==
+Date: Thu, 13 Mar 2025 09:31:09 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: vigneshr@ti.com, andersson@kernel.org, linux-mtd@lists.infradead.org, 
+ miquel.raynal@bootlin.com, conor+dt@kernel.org, agross@kernel.org, 
+ krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org, richard@nod.at, 
+ dmaengine@vger.kernel.org, vkoul@kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, konradybcio@kernel.org, 
+ manivannan.sadhasivam@linaro.org
+To: Kaushal Kumar <quic_kaushalk@quicinc.com>
+In-Reply-To: <20250313130918.4238-2-quic_kaushalk@quicinc.com>
+References: <20250313130918.4238-1-quic_kaushalk@quicinc.com>
+ <20250313130918.4238-2-quic_kaushalk@quicinc.com>
+Message-Id: <174187626948.2759710.10340632443652482523.robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: mtd: qcom,nandc: Document the SDX75
+ NAND
 
-On Thu Mar 13, 2025 at 3:25 PM CET, Danilo Krummrich wrote:
-> On Thu, Mar 13, 2025 at 10:44:38AM +0000, Benno Lossin wrote:
->> On Thu Mar 13, 2025 at 3:13 AM CET, Danilo Krummrich wrote:
->> > As by now, pci::Device is implemented as:
->> >
->> > =09#[derive(Clone)]
->> > =09pub struct Device(ARef<device::Device>);
->> >
->> > This may be convenient, but has the implication that drivers can call
->> > device methods that require a mutable reference concurrently at any
->> > point of time.
->>=20
->> Which methods take mutable references? The `set_master` method you
->> mentioned also took a shared reference before this patch.
->
-> Yeah, that's basically a bug that I never fixed (until now), since making=
- it
-> take a mutable reference would not have changed anything in terms of
-> accessibility.
 
-Gotcha.
+On Thu, 13 Mar 2025 18:39:13 +0530, Kaushal Kumar wrote:
+> Document the QPIC NAND controller v2.1.1 being used in
+> SDX75 SoC and it uses BAM DMA.
+> 
+> SDX75 NAND controller has DMA-coherent and iommu support
+> so define them in the properties section, without which
+> 'dtbs_check' reports the following error:
+> 
+>   nand-controller@1cc8000: Unevaluated properties are not
+>   allowed ('dma-coherent', 'iommus' were unexpected)
+> 
+> Signed-off-by: Kaushal Kumar <quic_kaushalk@quicinc.com>
+> ---
+>  .../devicetree/bindings/mtd/qcom,nandc.yaml   | 23 ++++++++++++++-----
+>  1 file changed, 17 insertions(+), 6 deletions(-)
+> 
 
->> >  impl AsRef<device::Device> for Device {
->> >      fn as_ref(&self) -> &device::Device {
->> > -        &self.0
->> > +        // SAFETY: By the type invariant of `Self`, `self.as_raw()` i=
-s a pointer to a valid
->> > +        // `struct pci_dev`.
->> > +        let dev =3D unsafe { addr_of_mut!((*self.as_raw()).dev) };
->> > +
->> > +        // SAFETY: `dev` points to a valid `struct device`.
->> > +        unsafe { device::Device::as_ref(dev) }
->>=20
->> Why not use `&**self` instead (ie go through the `Deref` impl)?
->
-> `&**self` gives us a `Device` (i.e. `pci::Device`), not a `device::Device=
-`.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Ah, yeah then you'll have to use `unsafe`.
+yamllint warnings/errors:
 
----
-Cheers,
-Benno
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/qcom,nandc.yaml: properties:compatible: 'anyOf' conditional failed, one must be fixed:
+	'OneOf' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+	'type' was expected
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/qcom,nandc.yaml: properties:compatible: Additional properties are not allowed ('OneOf' was unexpected)
+	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250313130918.4238-2-quic_kaushalk@quicinc.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
