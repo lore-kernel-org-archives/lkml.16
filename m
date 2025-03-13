@@ -1,139 +1,107 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B882267730
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715E0261396;
+	Thu, 13 Mar 2025 13:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741871243; cv=none; b=LTCXdbemhpGXp9z9rYhlpk6R5c6yhHQ7cQaGDukx67ksPup4ngQVjaGbCvnIZcduodxn0HZ1ECuGZfcnH+/0KNENNBdrFiLucK4Jg1b884WulnCP6K13EENJkphObNKnvpa+e/ODHZ90+STB42yxUtYPL7Ygu6gCAcwpDF6hchY=
+	t=1741871303; cv=none; b=pZIHdFh/b/Vy5fBT6e9bDy8A7QudNG7w4y+dDLtRt8aHSp/6NQnTwBXb9nVV1ccFxjtxgytvBZd2Zwjs1WIBD2Y86HOmUj5cm5yiniZA66/OQA3rnXHY1Yk+251sfHtrqjlIdmR+YgGnZmaYjXgbCrNJnb02BKXl0CCkMUreos4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741871243; c=relaxed/simple;
-	bh=ePOGO+hf+gquyZ0RYyw7U39AF4wEnWB02GOCC4MwDag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZw+CukPWfaMu6wqk7fotqfRSgvQkCcn5pgCHm/qCJ5JDhtKDkqWBE24iTOFySm49wR4lqdx2595qAT6xCT1GCoo30wd3kjaFxiP8bLLH9PnNLTFQO7RindLnHLb8Bk3MHGH61hRBf141VY1dmLeQId9qFg694IHzLuXpKo1904=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=pOF+MY8E; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1741871303; c=relaxed/simple;
+	bh=l7/nvKtdJpfEE3FPoJjanh1QHvfzO9GOB6E4aJRGnec=;
+	h=From:Date:Subject:To:Cc:Message-Id; b=Kr7wNpQ2pliwutVLb9nHRhJgz+LvOLZ2FIT+eL5FYZ1q/aCsPiPonr/6qrDhgf5NQ+AZbSuMlXss6/kSja31cb3m69ALu8yTND7Ggox4yu3hdFF1BlD/KtuoP8AJvaxqetoQ1C2jhj7NWc8D7dVV3pFoio9+TkBe7yPIu/d2tp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=kylie.crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=pegRD4Il; arc=none smtp.client-ip=5.189.157.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylie.crudebyte.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="pOF+MY8E"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3912e96c8e8so562421f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 06:07:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1741871239; x=1742476039; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kL64DFiTXok1q71S+zi/kYHeS1QK7/sbz4oMoXWMASU=;
-        b=pOF+MY8EZRyPaaP7WZ3sOxNWl3uNUObMOz4vWlBTP3DowPKgOJq3FTev1pEYNbDmvs
-         RsN1h31pTtEWX4/hu0dEJF7JtSNA5RAPeEmi1k8QRNh72iGDGyOfOhsLt8vC6MpsQomY
-         Ex/WVwdj+YLjeEDcHx+VGele3Qe8o6uy79svrcFp1zOMzBLr1U2wO/fl6/pe+MyfuMbS
-         81+LGnKkA4J/oHlS+MqoHrimRBK3l7QxVtydJ9bsSUO3debEti2lLX8ueghjoGsvZDa5
-         s08nw2+okNl1ZMygu24qJzgXFO80YjfPTe3awzICSBlre8voBGkQtC+wEgX23S/r0SX1
-         aK6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741871239; x=1742476039;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kL64DFiTXok1q71S+zi/kYHeS1QK7/sbz4oMoXWMASU=;
-        b=lxrlwTe8XNWjK3ekdbm8G7kqUpuOAX0xtc2n0cugc0SbWdLO8lxqw01GKtzZq7MhND
-         Fj6xpW7gvZdxiG+luzftigU+OIv6AXCDUVe8VI05D229Otr3a7I7qDAFQOEQWnolbuB9
-         HGtUobw9tupylMW/b7Wqks6U2cRG/o9GU7TVa8ptKt0/XBQgBeBzBuYI2GDVlKQu0Vgm
-         OF11DmkkUezHrJsb2c+lueB8uaBHcNC48X/YZIypATqimR/8G7/MFYfZcZJP+ZdZXRr4
-         14ZDwOh8zMZpBZc25wghpcS3vKM0EQkXdvZImMDl/NrMqy5pNlFW8WWZAsx2uVFxLDFd
-         Pigg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbuBqiIvTvrJYDn07UPclxXNNcPUpv1Te96yy1N3shM9Ekn5gJO/DGjLiXHBFwBvun4RZX00pkpHIPax8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTdRBeWzCqTXLeazjHyYFonJJ5PrpTi56rVMUWb6kAOWDLC3om
-	ziCUCdWQ/nvQvWTAQc53xld3Tks+0RtBTbSOJqPYHjFAV4l8sTsSZgB/b4lJ6H0=
-X-Gm-Gg: ASbGnctAdIWFYAwl0t0fyru1Q/y/7qtsiy2Y0n6kJlxBf40BO5UMsSUHbTtPdYr6U22
-	VQYbvgoEoJVqilJfGiaZtKwa8ncgyxLde288onZEGdCBXNbpEmO4woNo9JZccujykxQ/EsbT5l/
-	xpsBKZfli8N6JHmpn6ZSvBVOzRS/iqOBx/9fUxj88PQ4nP1+MJHI0DKo5byxF8QHTJo7gA1MRbX
-	du5KkOrIRqrekaAN9eNFlEOHTeDypTERSlVq4uNJkdHXomI8Vf1bOhtapPFiOG1SIWs5966w3zm
-	6hcHakcpY/8A1PVHsbicViSS79w5a11f
-X-Google-Smtp-Source: AGHT+IFa3kUJDoicJ8fhht/dP0MNLzwH7jshhQs0/MiP3cN1RHdBOvdNu6RA1GEeL6KH0hkbmig8fQ==
-X-Received: by 2002:a05:6000:18a3:b0:390:e7c1:59d3 with SMTP id ffacd0b85a97d-39132d16de1mr20255337f8f.2.1741871239342;
-        Thu, 13 Mar 2025 06:07:19 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::59a5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb7ebbc3sm2013164f8f.88.2025.03.13.06.07.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 06:07:18 -0700 (PDT)
-Date: Thu, 13 Mar 2025 14:07:18 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH v3 07/17] riscv: misaligned: move emulated access
- uniformity check in a function
-Message-ID: <20250313-89b46bd06fbea0072ac4932f@orel>
-References: <20250310151229.2365992-1-cleger@rivosinc.com>
- <20250310151229.2365992-8-cleger@rivosinc.com>
+	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="pegRD4Il"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crudebyte.com; s=kylie; h=Message-Id:Cc:To:Subject:Date:From:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Content-ID:
+	Content-Description; bh=twJYDBirwmXLVr0Fm4IHc5rcNUlk8rsVDi+Ys8RdkGk=; b=pegRD
+	4IlhFymvfrjnQ+CF8n55HWAnPouP4MBYWqn3+GutaVxp5cJgwmNmmGETgSJlRGR9ewXtXjPa4vqk2
+	3CKg/BaKYb4dYQRiye8BXRhDgKTV3AqbD2p4tyuHMjL3Yy8H67seJre0c4T0K73FBEsUQC6Ae5Wfz
+	d8YQtqmPVDX3oJyUU4v/M+tPCeAmT9QLJ2UAMw68e5IxI2CtJQS7LCzGoQO0atmnKA5bfGBt2nssT
+	fMku+Q8fpjgmy/XfxSFFN9RMt2f3Iwgh6x4PV3CNj1imWpL1rWuB3CfiCF66DF8aTyivrm/5wr991
+	rZgG9npZnYPxbqIbW2+ZqmmYysFdymwZWmR9+5eWsUFzKD8PVxzXedNiS+YWGV20o4HzXJ7cxXJJR
+	UmZdOO6/QhQYtiYCj/rPUkhCdHwdMz4LsXQiFUg1Cwhp0C9boEa1X2uQsheOfV6fmEZ7qSw1hwYLm
+	J5CeAye4rzxjIm7f3Nr1dUQkH+C5Xo8x56AM0ZDwk2K5b8XFCamU6TtVbmSaU0+U0ZgnYPDwGA/04
+	ewh1ymfPtpGM+0uo7jLPK8MOHkJOVnW9AJRjcjsK8R4Pl3BSJCPP4HgfOMcUScy7SNvOD6GOCBzFQ
+	2J8vM19On2pLV97qOqlYDdIpGh+1PGS3qa6Ay7/bZMXflasdN5sbitfD46Oj+8=;
+From: Christian Schoenebeck <linux_oss@crudebyte.com>
+Date: Thu, 13 Mar 2025 13:59:32 +0100
+Subject: [PATCH] fs/9p: fix NULL pointer dereference on mkdir
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Eric Van Hensbergen <ericvh@kernel.org>,
+    Latchesar Ionkov <lucho@ionkov.net>,
+    v9fs@lists.linux.dev,
+    linux-kernel@vger.kernel.org,
+    syzbot <syzbot+5b667f9a1fee4ba3775a@syzkaller.appspotmail.com>
+Message-Id: <E1tsiI6-002iMG-Kh@kylie.crudebyte.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250310151229.2365992-8-cleger@rivosinc.com>
 
-On Mon, Mar 10, 2025 at 04:12:14PM +0100, Clément Léger wrote:
-> Split the code that check for the uniformity of misaligned accesses
-> performance on all cpus from check_unaligned_access_emulated_all_cpus()
-> to its own function which will be used for delegation check. No
-> functional changes intended.
-> 
-> Signed-off-by: Clément Léger <cleger@rivosinc.com>
-> ---
->  arch/riscv/kernel/traps_misaligned.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-> index 7fe25adf2539..db31966a834e 100644
-> --- a/arch/riscv/kernel/traps_misaligned.c
-> +++ b/arch/riscv/kernel/traps_misaligned.c
-> @@ -673,10 +673,20 @@ static int cpu_online_check_unaligned_access_emulated(unsigned int cpu)
->  	return 0;
->  }
->  
-> -bool check_unaligned_access_emulated_all_cpus(void)
-> +static bool all_cpus_unaligned_scalar_access_emulated(void)
->  {
->  	int cpu;
->  
-> +	for_each_online_cpu(cpu)
-> +		if (per_cpu(misaligned_access_speed, cpu) !=
-> +		    RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED)
-> +			return false;
-> +
-> +	return true;
-> +}
-> +
-> +bool check_unaligned_access_emulated_all_cpus(void)
-> +{
->  	/*
->  	 * We can only support PR_UNALIGN controls if all CPUs have misaligned
->  	 * accesses emulated since tasks requesting such control can run on any
-> @@ -684,10 +694,8 @@ bool check_unaligned_access_emulated_all_cpus(void)
->  	 */
->  	on_each_cpu(check_unaligned_access_emulated, NULL, 1);
->  
-> -	for_each_online_cpu(cpu)
-> -		if (per_cpu(misaligned_access_speed, cpu)
-> -		    != RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED)
-> -			return false;
-> +	if (!all_cpus_unaligned_scalar_access_emulated())
-> +		return false;
->  
->  	unaligned_ctl = true;
->  	return true;
-> -- 
-> 2.47.2
->
+When a 9p tree was mounted with option 'posixacl', parent directory had a
+default ACL set for its subdirectories, e.g.:
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+  setfacl -m default:group:simpsons:rwx parentdir
+
+then creating a subdirectory crashed 9p client, as v9fs_fid_add() call in
+function v9fs_vfs_mkdir_dotl() sets the passed 'fid' pointer to NULL
+(since dafbe689736) even though the subsequent v9fs_set_create_acl() call
+expects a valid non-NULL 'fid' pointer:
+
+  [   37.273191] BUG: kernel NULL pointer dereference, address: 0000000000000000
+  ...
+  [   37.322338] Call Trace:
+  [   37.323043]  <TASK>
+  [   37.323621]  ? __die+0x1f/0x60
+  [   37.324448]  ? page_fault_oops+0x158/0x470
+  [   37.325532]  ? search_module_extables+0x4a/0x80
+  [   37.326742]  ? p9_client_walk+0x1c/0x2c0 [9pnet]
+  [   37.328006]  ? search_bpf_extables+0x5b/0x80
+  [   37.329142]  ? exc_page_fault+0x72/0x190
+  [   37.330196]  ? asm_exc_page_fault+0x22/0x30
+  [   37.331330]  ? p9_client_walk+0x1c/0x2c0 [9pnet]
+  [   37.332562]  ? v9fs_fid_xattr_get+0x59/0x120 [9p]
+  [   37.333824]  v9fs_fid_xattr_set+0x6f/0x130 [9p]
+  [   37.335077]  v9fs_set_acl+0x82/0xc0 [9p]
+  [   37.336112]  v9fs_set_create_acl+0x41/0x60 [9p]
+  [   37.337326]  v9fs_vfs_mkdir_dotl+0x20d/0x2e0 [9p]
+  [   37.338590]  vfs_mkdir+0x192/0x250
+  [   37.339535]  do_mkdirat+0x135/0x160
+  [   37.340465]  __x64_sys_mkdir+0x42/0x60
+  [   37.341455]  do_syscall_64+0x4b/0x110
+  [   37.342447]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+Fix this by simply swapping the sequence of these two calls in
+v9fs_vfs_mkdir_dotl(), i.e. calling v9fs_set_create_acl() before
+v9fs_fid_add().
+
+Fixes: dafbe689736 ('9p fid refcount: cleanup p9_fid_put calls')
+Reported-by: syzbot+5b667f9a1fee4ba3775a@syzkaller.appspotmail.com
+Signed-off-by: Christian Schoenebeck <linux_oss@crudebyte.com>
+---
+ fs/9p/vfs_inode_dotl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
+index 143ac03b7425..3397939fd2d5 100644
+--- a/fs/9p/vfs_inode_dotl.c
++++ b/fs/9p/vfs_inode_dotl.c
+@@ -407,8 +407,8 @@ static int v9fs_vfs_mkdir_dotl(struct mnt_idmap *idmap,
+ 			 err);
+ 		goto error;
+ 	}
+-	v9fs_fid_add(dentry, &fid);
+ 	v9fs_set_create_acl(inode, fid, dacl, pacl);
++	v9fs_fid_add(dentry, &fid);
+ 	d_instantiate(dentry, inode);
+ 	err = 0;
+ 	inc_nlink(dir);
+-- 
+2.39.5
+
