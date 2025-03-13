@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFC5268FDB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30B6267F77;
 	Thu, 13 Mar 2025 16:22:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741882957; cv=none; b=VEm1ZFj7D5uiETm3fovC+9YYtLNMwZzZm0pdprpNK86r7iZm7xXhxqPuXxpWYQyb5uu5PpWS37+eqzT3TA1vNjs+x+/64tzZFk4vpNZc3QQIJZbb64yyf2NJHou6g+sNWJpm/Eroa4gGEGltvDhFITCjO+FNs12lmf295pH/y6M=
+	t=1741882957; cv=none; b=UVaKTr61HhBRdps1TNX1/Ir+k/+IA0rSgkJZXBcgp7dAkub2b3Z/mTYcqQ5ACj0LaA3oqjA4VyS5isNVXyvYrX4Vu3ZGamYopI1XVXJO+7cbUyQbI2tFcyyh2TY+Xy1wjounz/NTV/hETCa1SQt7eys0IBZRrO8yxgwz4LeXhUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741882957; c=relaxed/simple;
-	bh=MfSHnyZm0yVz16E71tES1BWKJpkHw6ZtGzY9orpm0ks=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jIwtqk2IQpO+1uAwcJGxTQTtlzW6PhyxrfA0+UpoxYHFLfWeLBqbsd2HoCEMZfjvThKCypvLRJN+OnNSMy6J01hDuLBUxZD3DKBp6hdXm2vOAf0wtCMDUZvVLPWX0Fg0u3qjtw1IE4Xj5hirWU0G+jcPpOqVLbJS5AUAeaqnzWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyX2+cwm; arc=none smtp.client-ip=10.30.226.201
+	bh=9BJrspz9yE1EjgzFvirmz3UiLOLMBPHH+mtqER++Sv4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=M8alPbHB3KIOU/p14kUQD2EuUy7IeKbA1WkjWVMlUrEj9eQAjzbpdhwpr++P3xGo0brB0/gCHzkbYB1IYDSsGIs5PO2XJkasEltrZOY2Az7YpuBULgNg0doDc8fFaRdWXNAA9OVy1PVXCpeTbXTz3Hl1ctJjFjm8o/yVTptNbwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cowdBlzD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyX2+cwm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 60965C4CEF3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cowdBlzD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 23D30C4CEDD;
 	Thu, 13 Mar 2025 16:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741882957;
-	bh=MfSHnyZm0yVz16E71tES1BWKJpkHw6ZtGzY9orpm0ks=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=dyX2+cwmhKdvGCW6WrgOQ7gtPk4B/c733iJojDtU9rMtjtp+I2CdtG9zaAPCFWomz
-	 89BVpPjf/ly8+cb4OzqlLiQZ9ok85vJf6wblHWDZDc9Jn3LkMeuBuGsuX+eqsA8WIU
-	 kP9AW7vNOslVwRTU4+4CLvduFp/QQsz2O5zefdbjXjMgeByx7Kv/NZ+y+gO/KIohNY
-	 9eo0vLSO3E/YKN3i4Gl73vngZy+nQQ5DdjZ7H/KhjvthO4zKaoSsUi+T/IUqRec7TV
-	 gEB8+2zPc6HaySnBBjZu6iMtLwJXvj9NLTB96WI4zQJx+Vtdxsjgo2pP0A+TfZctCO
-	 06QoS8aAHBp+g==
+	bh=9BJrspz9yE1EjgzFvirmz3UiLOLMBPHH+mtqER++Sv4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=cowdBlzDy6FflC/ZLWngg82GGSp87Lv+258sp3afuZWEodpoUgpmcY+ykT2FKbOWq
+	 M97H1mze30wQ+MSTSmLcdxhgDGjxizkuz55nPhgQG3AEPzV47LljyTkIbpLgDPXUv+
+	 JIls9M3M4lekWtald2eM9Mj8ACAq+GRSWvsahnhm9llpuJTQSlFMCdWRvdSucUSPIi
+	 qL3KaviRXN7H8hTaqi90/QrYAg5o6OXqetmdEsMCX8ghNKoOBQB+/D21mBk4fTWpNn
+	 2G2FWdnswjoP8nzkXOLTAis5sMoEs+/2ZEK2rKoZeTRhjWvM+lWLxDLJN4+weIdOUP
+	 hX6JXfA68z+cg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A90C282DE;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE67C282EC;
 	Thu, 13 Mar 2025 16:22:37 +0000 (UTC)
 From: Joel Granados <joel.granados@kernel.org>
-Date: Thu, 13 Mar 2025 17:22:26 +0100
-Subject: [PATCH v3 4/5] stack_tracer: move sysctl registration to
- kernel/trace/trace_stack.c
+Subject: [PATCH v3 0/5] sysctl: Move sysctls from kern_table into their
+ respective subsystems
+Date: Thu, 13 Mar 2025 17:22:22 +0100
+Message-Id: <20250313-jag-mv_ctltables-v3-0-91f3bb434d27@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-jag-mv_ctltables-v3-4-91f3bb434d27@kernel.org>
-References: <20250313-jag-mv_ctltables-v3-0-91f3bb434d27@kernel.org>
-In-Reply-To: <20250313-jag-mv_ctltables-v3-0-91f3bb434d27@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAD4G02cC/23N3wqCMBTH8VeJc91if9TNrnqPiJjbUVemsckox
+ HdvChFRl98fnM+ZIKB3GGC/mcBjdMENfQqx3YBpdd8gcTY1cMpzypkkF92QWzybsRt11WEgppY
+ 5ZpIiVTmks7vH2j1W8nhK3bowDv65fohsWd+Y+sUiI5QYK4pS6UpZXh6u6HvsdoNvYNEi/wiCF
+ n8EngTJKp4Jo6yo1Zcwz/MLvJ2Q0PMAAAA=
+X-Change-ID: 20250217-jag-mv_ctltables-cf75e470e085
 To: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>, 
  Steven Rostedt <rostedt@goodmis.org>, 
  Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -53,115 +55,88 @@ To: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
  linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2758;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2666;
  i=joel.granados@kernel.org; h=from:subject:message-id;
- bh=MfSHnyZm0yVz16E71tES1BWKJpkHw6ZtGzY9orpm0ks=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGfTBkoivtPbtMABnBvE2KmMz4XYD8Cn2nTWJ
- z4m5ek2+gN2mIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJn0wZKAAoJELqXzVK3
- lkFPi2AMAIo1WRv089+BmxGptd/TJePHQVLa7cdoYx+DnuWWEF5qUWkDia4wlCQ1t1NxbD2UnVH
- zE4JGfXONaiyWyoRVHHg8/VGZsPjrsXL/XQvt8sohtDZeKTiHoafh9Itd9zobXxJU6AcRoa5W36
- mEgSjO4nd2+yt6Q2b/5WJVT6/1CpDVYKK93dYuz4kMXY6CB/NvoBM16rhuLoK6xdsYQVaUZ7SWt
- J9R70xYY2E9tLBre+0hMMDj2iCHI6WxJJ0EQI6oP0kk7pLQBYWclmTVwvbp5emqXmtCq2ASLHZh
- Nzr5WHhJOdGKuH6+vOCubjmX8qCKRQ65HhcViojv4DBx+vMFlsQkp1rv8/PHk2H1kKlrlz6nxLu
- iWN7yTNr20CubFYKWcjxemnBI2Ai2kjxvEKh9GgZbjeXCQh9HvIZKxVVzZW0nQJO0UEBOjKJzux
- 5iv9+vQ3GKuXOGlCEfXOWAmwXMAktwC5mpYYQGv3ly5K91gW4AO564EaR5X2j/Gya4t3Z6g8227
- RU=
+ bh=9BJrspz9yE1EjgzFvirmz3UiLOLMBPHH+mtqER++Sv4=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGfTBkiMKwNqoKHHDpFPfiyeQ2Fe0oUt/OEGr
+ v94WKqL/HG7rIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJn0wZIAAoJELqXzVK3
+ lkFPvoAL/3V02KJiyAmy9V2bEiQYwDMb29ke6mz1PS2I1Hyq6bTTE+UOFqXEJK3263QufMxE1ym
+ 1ngbr1fQ9ayJAjPqDVxalEbAM4tm9tUipTiJBCAKrjWIXbn9c8SuonY7lcTWLzuIf9KJDOOO8MP
+ ta6m3pLU+J2mbCgPqyJg0CrbyOltjxkWWK0YnyzlTA0EMNYfkTBOOKK+bHpeQdqhV/yM+444WM/
+ pBDKXOb3Xtvid9OKx62BqIPJ6d0DlFf+TdmorQWitW0YtjhFJ4p8qyh5Ju5ToW/uoCYKsc8EJqU
+ MC74luzxZNer3UwjAwWz0kYQimT8QvW6bGQhBLcDUL70aLr/srJ1KquVbYbGW+L8CfS0buGn9VD
+ MDw79Hh9mX8QiUB/B1D5/KIVdaDEFe9IgO6TabiX3NYvJI+gUQB1iSZt2Bo8W8Sy7i1zuPRisYg
+ tJDqSuvoCNPD/N/ffv96zxA7FdMtJ5SBRIpvxGyWi4cIxc8Fv2fL2LGkdUgQKwK5ER+I1ouBmr7
+ uo=
 X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
  auth_id=239
 
-Move stack_tracer_enabled into trace_stack_sysctl_table. This is part of
-a greater effort to move ctl tables into their respective subsystems
-which will reduce the merge conflicts in kerenel/sysctl.c.
+This series relocates sysctl tables from kern_table to their respective
+subsystems. To keep the scope manageable, this patchset focuses on
+architecture-specific and core kernel sysctl tables. Further relocations
+will follow once this series progresses.
 
-Signed-off-by: Joel Granados <joel.granados@kernel.org>
+By decentralizing sysctl registrations, subsystem maintainers regain
+control over their sysctl interfaces, improving maintainability and
+reducing the likelihood of merge conflicts. All this is made possible by
+the work done to reduce the ctl_table memory footprint in commit
+d7a76ec87195 ("sysctl: Remove check for sentinel element in ctl_table
+arrays").
+
+* Birds eye view of what has changed:
+    - Archs: sparc
+        arch/sparc/kernel/{Makefile,setup.c}
+    - Kernel core:
+        kernel/{panic.c,signal.c,trace/trace.c}
+        kernel/events/{core.c,callchain.c}
+
+* Testing was done by running sysctl selftests on x86_64 and 0-day.
+
+Comments are greatly appreciated
+
+Changes in v3:
+- Removed s390 from the series as it is being upstreamed through s390
+  tree. Adjusted the Cc and To to reflect this.
+- made stack_tracer_enabled static
+- Link to v2: https://lore.kernel.org/r/20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org
+
+Changes in v2:
+- Dropped the perf and x86 patches as they are making their way
+  upstream. Removed relevant ppl from To: and Cc: mail header.
+- "ftrace:..." -> "tracing:..." for patch 3
+- Moved stac_tracer_enabled to trace_stack.c instead of trace.c
+- s390: fixed typo and removed the CONFIG_SMP ifdefs
+- Updated trailers
+- Link to v1: https://lore.kernel.org/r/20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org
+
 ---
- include/linux/ftrace.h     |  2 --
- kernel/sysctl.c            | 10 ----------
- kernel/trace/trace_stack.c | 22 +++++++++++++++++++++-
- 3 files changed, 21 insertions(+), 13 deletions(-)
+Signed-off-by: Joel Granados <joel.granados@kernel.org>
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 59774513ae456a5cc7c3bfe7f93a2189c0e3706e..95851a6fb9429346e279739be0045827f486cbad 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -569,8 +569,6 @@ static inline void arch_ftrace_set_direct_caller(struct ftrace_regs *fregs,
- 
- #ifdef CONFIG_STACK_TRACER
- 
--extern int stack_tracer_enabled;
--
- int stack_trace_sysctl(const struct ctl_table *table, int write, void *buffer,
- 		       size_t *lenp, loff_t *ppos);
- 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index baa250e223a26bafc39cb7a7d7635b4f7f5dcf56..dc3747cc72d470662879e4f2b7f2651505b7ca90 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -68,7 +68,6 @@
- 
- #ifdef CONFIG_X86
- #include <asm/nmi.h>
--#include <asm/stacktrace.h>
- #include <asm/io.h>
- #endif
- #ifdef CONFIG_SPARC
-@@ -1674,15 +1673,6 @@ static const struct ctl_table kern_table[] = {
- 		.proc_handler	= proc_dointvec,
- 	},
- #endif
--#ifdef CONFIG_STACK_TRACER
--	{
--		.procname	= "stack_tracer_enabled",
--		.data		= &stack_tracer_enabled,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= stack_trace_sysctl,
--	},
--#endif
- #ifdef CONFIG_MODULES
- 	{
- 		.procname	= "modprobe",
-diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-index 14c6f272c4d8a382070d45e1cf0ee97db38831c9..e34223c8065de544e603440827bcaa76e1894df2 100644
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -32,7 +32,7 @@ static arch_spinlock_t stack_trace_max_lock =
- DEFINE_PER_CPU(int, disable_stack_tracer);
- static DEFINE_MUTEX(stack_sysctl_mutex);
- 
--int stack_tracer_enabled;
-+static int stack_tracer_enabled;
- 
- static void print_max_stack(void)
- {
-@@ -578,3 +578,23 @@ static __init int stack_trace_init(void)
- }
- 
- device_initcall(stack_trace_init);
-+
-+
-+static const struct ctl_table trace_stack_sysctl_table[] = {
-+	{
-+		.procname	= "stack_tracer_enabled",
-+		.data		= &stack_tracer_enabled,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= stack_trace_sysctl,
-+	},
-+};
-+
-+static int __init init_trace_stack_sysctls(void)
-+{
-+	register_sysctl_init("kernel", trace_stack_sysctl_table);
-+	return 0;
-+}
-+subsys_initcall(init_trace_stack_sysctls);
-+
-+
+---
+Joel Granados (5):
+      panic: Move panic ctl tables into panic.c
+      signal: Move signal ctl tables into signal.c
+      tracing: Move trace sysctls into trace.c
+      stack_tracer: move sysctl registration to kernel/trace/trace_stack.c
+      sparc: mv sparc sysctls into their own file under arch/sparc/kernel
 
+ arch/sparc/kernel/Makefile |   1 +
+ arch/sparc/kernel/setup.c  |  46 +++++++++++++++++++
+ include/linux/ftrace.h     |   9 ----
+ kernel/panic.c             |  30 +++++++++++++
+ kernel/signal.c            |  11 +++++
+ kernel/sysctl.c            | 108 ---------------------------------------------
+ kernel/trace/trace.c       |  36 ++++++++++++++-
+ kernel/trace/trace_stack.c |  22 ++++++++-
+ 8 files changed, 144 insertions(+), 119 deletions(-)
+---
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+change-id: 20250217-jag-mv_ctltables-cf75e470e085
+
+Best regards,
 -- 
-2.47.2
+Joel Granados <joel.granados@kernel.org>
 
 
