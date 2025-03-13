@@ -1,255 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4467B43159;
-	Thu, 13 Mar 2025 09:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF68262D35;
+	Thu, 13 Mar 2025 09:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741857180; cv=none; b=uuaMAFsjMrl66bSIjHPWuwpI6/ASdflJiuOUJbB+yQvadRyacJDpBxtxwcM+JpXunfW9e94RR0Ad/4M9EV3seHdcae9u65b+6jF1qN6fJOCg2NqaoQgME+tEg5H+aGr6dzEol8KPXbwiBEHE8gAkTxl/iX+l7ofGWv7pnuFtj9s=
+	t=1741857205; cv=none; b=rw4kBIjTgRyMcrHUfRodbIC03SOzs3me70UXA1Rne6ivE8nTsL/rpw5Hnc5xlDDuieYLOlEXuf8TmWxHSYp7Z8nSIAJZ63ENz3umaeZ40bmaSm53G6DiP99zG7R38eXmG9jgwZCDmSGRCZ1terSeawi0ErmGOqz4c79RfpwzJZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741857180; c=relaxed/simple;
-	bh=5PbUeh6WBXBtwNcFqeXgxXqosFjPNOkIMa6lwYzuAjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R2RSgUYG45kVSq4E/1zTOjrxyWlJTiX3icjdsZqjLxKNJjYUH8i1TDciYXySq8ldBrRCmO6lTM5teObwVJHYu3ssj+0pQp2tFa2oNJrEsLOqJEOjrVR61wy2pi0j08CTpk4UhwiGqpw1OaNj0R1ODrAFbGngSd/hxlRxGsIgigo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdU6BL+M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdU6BL+M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 403D0C4CEDD;
-	Thu, 13 Mar 2025 09:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741857180;
-	bh=5PbUeh6WBXBtwNcFqeXgxXqosFjPNOkIMa6lwYzuAjI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mdU6BL+ME64Ci5u78OkfuTG5Qx9oiiF/4K1NM6EPepI+iey9JqeMgciRqlHyOiJAT
-	 Jpj9i1z8/k/pmqr2rFgmi4jW2XjFGuTWyHnZac6iZkk2QvqmexpLuBrs5B9ImSrIC0
-	 0dsFT52fY8/lhFTn/muJYHbCsTc9lf3LlMYtofcjCLOzB5XEpo5SAf+6zIM9byl5MP
-	 N0J7nkIXZ+bSc/j/39aOAo2OV060GxiJkAYgowwGz20zOiDoavZqCAtsVuiWEFHBct
-	 +00MWLiFOIiS/ehfs+n/sdZVk8VMXnV44o0FG10i78nbaV/0w68b0c/cJaC9/rsK8m
-	 AM+bUeaB1a1Yg==
-Date: Thu, 13 Mar 2025 14:42:53 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [RFC PATCH 2/3] tpm/tpm_ftpm_tee: use send_recv() op
-Message-ID: <Z9KhlSr7qG6VooeC@sumit-X1>
-References: <20250311100130.42169-1-sgarzare@redhat.com>
- <20250311100130.42169-3-sgarzare@redhat.com>
+	s=arc-20240116; t=1741857205; c=relaxed/simple;
+	bh=IiRSjZC306l0QfdSmXfziWG9GzftM2Gct2I+h9fVN/Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C7Z4HKahR7iXxpnkFIj76s1qo88oZPQaof0bco0mJPyMLx5yHpvAXe8fcibPy0CjTv8+i9nnC1jFuOXMWGqA62OMy8tKT71UmoqOAsJ1hB0IlL0Z9SqD17uY0gYDLlt1dqBAe3gRwHILBbafEclH53HSZq9xWvP2vnHfh9Ohcz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZD1sh2k7WzCs7D;
+	Thu, 13 Mar 2025 17:09:44 +0800 (CST)
+Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 907731401E9;
+	Thu, 13 Mar 2025 17:13:17 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemg200005.china.huawei.com
+ (7.202.181.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Mar
+ 2025 17:13:16 +0800
+From: Wang Liang <wangliang74@huawei.com>
+To: <jgg@ziepe.ca>, <leon@kernel.org>, <cmeiohas@nvidia.com>,
+	<michaelgur@nvidia.com>, <huangjunxian6@hisilicon.com>, <liyuyu6@huawei.com>,
+	<markzhang@nvidia.com>, <linux@treblig.org>, <jbi.octave@gmail.com>,
+	<dsahern@kernel.org>
+CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<wangliang74@huawei.com>, <linux-rdma@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH net v2] infiniband: fix use-after-free when rename device name
+Date: Thu, 13 Mar 2025 17:24:21 +0800
+Message-ID: <20250313092421.944658-1-wangliang74@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311100130.42169-3-sgarzare@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg200005.china.huawei.com (7.202.181.32)
 
-+ Jens
+Syzbot reported a slab-use-after-free with the following call trace:
 
-Hi Stefano,
+==================================================================
+BUG: KASAN: slab-use-after-free in nla_put+0xd3/0x150 lib/nlattr.c:1099
+Read of size 5 at addr ffff888140ea1c60 by task syz.0.988/10025
 
-On Tue, Mar 11, 2025 at 11:01:29AM +0100, Stefano Garzarella wrote:
-> This driver does not support interrupts, and receiving the response is
-> synchronous with sending the command.
-> 
-> It used an internal buffer to cache the response when .send() is called,
-> and then return it when .recv() is called.
-> 
-> Let's simplify the driver by implementing the new send_recv() op, so that
-> we can also remove the 4KB internal buffer used to cache the response.
+CPU: 0 UID: 0 PID: 10025 Comm: syz.0.988
+Not tainted 6.14.0-rc4-syzkaller-00859-gf77f12010f67 #0
+Hardware name: Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0x16e/0x5b0 mm/kasan/report.c:521
+ kasan_report+0x143/0x180 mm/kasan/report.c:634
+ kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+ __asan_memcpy+0x29/0x70 mm/kasan/shadow.c:105
+ nla_put+0xd3/0x150 lib/nlattr.c:1099
+ nla_put_string include/net/netlink.h:1621 [inline]
+ fill_nldev_handle+0x16e/0x200 drivers/infiniband/core/nldev.c:265
+ rdma_nl_notify_event+0x561/0xef0 drivers/infiniband/core/nldev.c:2857
+ ib_device_notify_register+0x22/0x230 drivers/infiniband/core/device.c:1344
+ ib_register_device+0x1292/0x1460 drivers/infiniband/core/device.c:1460
+ rxe_register_device+0x233/0x350 drivers/infiniband/sw/rxe/rxe_verbs.c:1540
+ rxe_net_add+0x74/0xf0 drivers/infiniband/sw/rxe/rxe_net.c:550
+ rxe_newlink+0xde/0x1a0 drivers/infiniband/sw/rxe/rxe.c:212
+ nldev_newlink+0x5ea/0x680 drivers/infiniband/core/nldev.c:1795
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x6dd/0x9e0 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:709 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:724
+ ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+ ___sys_sendmsg net/socket.c:2618 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2650
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f42d1b8d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 ...
+RSP: 002b:00007f42d2960038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f42d1da6320 RCX: 00007f42d1b8d169
+RDX: 0000000000000000 RSI: 00004000000002c0 RDI: 000000000000000c
+RBP: 00007f42d1c0e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f42d1da6320 R15: 00007ffe399344a8
+ </TASK>
 
-Looks like a nice cleanup to me but it needs to be tested. Jens, can you
-give this patch a try?
+Allocated by task 10025:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:394
+ kasan_kmalloc include/linux/kasan.h:260 [inline]
+ __do_kmalloc_node mm/slub.c:4294 [inline]
+ __kmalloc_node_track_caller_noprof+0x28b/0x4c0 mm/slub.c:4313
+ __kmemdup_nul mm/util.c:61 [inline]
+ kstrdup+0x42/0x100 mm/util.c:81
+ kobject_set_name_vargs+0x61/0x120 lib/kobject.c:274
+ dev_set_name+0xd5/0x120 drivers/base/core.c:3468
+ assign_name drivers/infiniband/core/device.c:1202 [inline]
+ ib_register_device+0x178/0x1460 drivers/infiniband/core/device.c:1384
+ rxe_register_device+0x233/0x350 drivers/infiniband/sw/rxe/rxe_verbs.c:1540
+ rxe_net_add+0x74/0xf0 drivers/infiniband/sw/rxe/rxe_net.c:550
+ rxe_newlink+0xde/0x1a0 drivers/infiniband/sw/rxe/rxe.c:212
+ nldev_newlink+0x5ea/0x680 drivers/infiniband/core/nldev.c:1795
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x6dd/0x9e0 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:709 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:724
+ ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+ ___sys_sendmsg net/socket.c:2618 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2650
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-> 
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> Note: I don't know how to test this driver, so I just build it.
-> If someone can test it, or tell me how to do, it will be great!
+Freed by task 10035:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kfree+0x196/0x430 mm/slub.c:4757
+ kobject_rename+0x38f/0x410 lib/kobject.c:524
+ device_rename+0x16a/0x200 drivers/base/core.c:4525
+ ib_device_rename+0x270/0x710 drivers/infiniband/core/device.c:402
+ nldev_set_doit+0x30e/0x4c0 drivers/infiniband/core/nldev.c:1146
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x6dd/0x9e0 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:709 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:724
+ ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+ ___sys_sendmsg net/socket.c:2618 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2650
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-The fTPM is now maintained as part of OP-TEE project here [1]. The
-instructions to test it on Qemu can be found here [2] as part of CI
-pipeline.
+This is because if rename device happens, the old name is freed in
+ib_device_rename() with lock, but ib_device_notify_register() may visit
+the dev name locklessly by event RDMA_REGISTER_EVENT or
+RDMA_NETDEV_ATTACH_EVENT.
 
-[1] https://github.com/OP-TEE/optee_ftpm
-[2] https://github.com/OP-TEE/optee_ftpm/blob/master/.github/workflows/ci.yml
+Fix this by hold devices_rwsem in ib_device_notify_register().
 
--Sumit
+Reported-by: syzbot+f60349ba1f9f08df349f@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=25bc6f0ed2b88b9eb9b8
+Fixes: 9cbed5aab5ae ("RDMA/nldev: Add support for RDMA monitoring")
+Signed-off-by: Wang Liang <wangliang74@huawei.com>
+---
+ drivers/infiniband/core/device.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-> ---
->  drivers/char/tpm/tpm_ftpm_tee.h |  4 --
->  drivers/char/tpm/tpm_ftpm_tee.c | 86 ++++++++-------------------------
->  2 files changed, 21 insertions(+), 69 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_ftpm_tee.h b/drivers/char/tpm/tpm_ftpm_tee.h
-> index f98daa7bf68c..72b2f5c41274 100644
-> --- a/drivers/char/tpm/tpm_ftpm_tee.h
-> +++ b/drivers/char/tpm/tpm_ftpm_tee.h
-> @@ -23,16 +23,12 @@
->   * @chip:     struct tpm_chip instance registered with tpm framework.
->   * @state:    internal state
->   * @session:  fTPM TA session identifier.
-> - * @resp_len: cached response buffer length.
-> - * @resp_buf: cached response buffer.
->   * @ctx:      TEE context handler.
->   * @shm:      Memory pool shared with fTPM TA in TEE.
->   */
->  struct ftpm_tee_private {
->  	struct tpm_chip *chip;
->  	u32 session;
-> -	size_t resp_len;
-> -	u8 resp_buf[MAX_RESPONSE_SIZE];
->  	struct tee_context *ctx;
->  	struct tee_shm *shm;
->  };
-> diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-> index 139556b21cc6..f0393d843780 100644
-> --- a/drivers/char/tpm/tpm_ftpm_tee.c
-> +++ b/drivers/char/tpm/tpm_ftpm_tee.c
-> @@ -31,45 +31,19 @@ static const uuid_t ftpm_ta_uuid =
->  		  0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
->  
->  /**
-> - * ftpm_tee_tpm_op_recv() - retrieve fTPM response.
-> - * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h.
-> - * @buf:	the buffer to store data.
-> - * @count:	the number of bytes to read.
-> - *
-> - * Return:
-> - *	In case of success the number of bytes received.
-> - *	On failure, -errno.
-> - */
-> -static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-> -{
-> -	struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
-> -	size_t len;
-> -
-> -	len = pvt_data->resp_len;
-> -	if (count < len) {
-> -		dev_err(&chip->dev,
-> -			"%s: Invalid size in recv: count=%zd, resp_len=%zd\n",
-> -			__func__, count, len);
-> -		return -EIO;
-> -	}
-> -
-> -	memcpy(buf, pvt_data->resp_buf, len);
-> -	pvt_data->resp_len = 0;
-> -
-> -	return len;
-> -}
-> -
-> -/**
-> - * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory.
-> + * ftpm_tee_tpm_op_send_recv() - send TPM commands through the TEE shared memory
-> + * and retrieve the response.
->   * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h
-> - * @buf:	the buffer to send.
-> - * @len:	the number of bytes to send.
-> + * @buf:	the buffer to send and to store the response.
-> + * @buf_len:	the size of the buffer.
-> + * @cmd_len:	the number of bytes to send.
->   *
->   * Return:
-> - *	In case of success, returns 0.
-> + *	In case of success, returns the number of bytes received.
->   *	On failure, -errno
->   */
-> -static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +static int ftpm_tee_tpm_op_send_recv(struct tpm_chip *chip, u8 *buf,
-> +				     size_t buf_len, size_t cmd_len)
->  {
->  	struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
->  	size_t resp_len;
-> @@ -80,16 +54,15 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
->  	struct tee_param command_params[4];
->  	struct tee_shm *shm = pvt_data->shm;
->  
-> -	if (len > MAX_COMMAND_SIZE) {
-> +	if (cmd_len > MAX_COMMAND_SIZE) {
->  		dev_err(&chip->dev,
->  			"%s: len=%zd exceeds MAX_COMMAND_SIZE supported by fTPM TA\n",
-> -			__func__, len);
-> +			__func__, cmd_len);
->  		return -EIO;
->  	}
->  
->  	memset(&transceive_args, 0, sizeof(transceive_args));
->  	memset(command_params, 0, sizeof(command_params));
-> -	pvt_data->resp_len = 0;
->  
->  	/* Invoke FTPM_OPTEE_TA_SUBMIT_COMMAND function of fTPM TA */
->  	transceive_args = (struct tee_ioctl_invoke_arg) {
-> @@ -103,7 +76,7 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
->  		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT,
->  		.u.memref = {
->  			.shm = shm,
-> -			.size = len,
-> +			.size = cmd_len,
->  			.shm_offs = 0,
->  		},
->  	};
-> @@ -115,7 +88,7 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
->  		return PTR_ERR(temp_buf);
->  	}
->  	memset(temp_buf, 0, (MAX_COMMAND_SIZE + MAX_RESPONSE_SIZE));
-> -	memcpy(temp_buf, buf, len);
-> +	memcpy(temp_buf, buf, cmd_len);
->  
->  	command_params[1] = (struct tee_param) {
->  		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
-> @@ -156,38 +129,21 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
->  			__func__, resp_len);
->  		return -EIO;
->  	}
-> +	if (resp_len > buf_len) {
-> +		dev_err(&chip->dev,
-> +			"%s: Invalid size in recv: buf_len=%zd, resp_len=%zd\n",
-> +			__func__, buf_len, resp_len);
-> +		return -EIO;
-> +	}
->  
-> -	/* sanity checks look good, cache the response */
-> -	memcpy(pvt_data->resp_buf, temp_buf, resp_len);
-> -	pvt_data->resp_len = resp_len;
-> -
-> -	return 0;
-> -}
-> -
-> -static void ftpm_tee_tpm_op_cancel(struct tpm_chip *chip)
-> -{
-> -	/* not supported */
-> -}
-> -
-> -static u8 ftpm_tee_tpm_op_status(struct tpm_chip *chip)
-> -{
-> -	return 0;
-> -}
-> +	memcpy(buf, temp_buf, resp_len);
->  
-> -static bool ftpm_tee_tpm_req_canceled(struct tpm_chip *chip, u8 status)
-> -{
-> -	return false;
-> +	return resp_len;
->  }
->  
->  static const struct tpm_class_ops ftpm_tee_tpm_ops = {
->  	.flags = TPM_OPS_AUTO_STARTUP,
-> -	.recv = ftpm_tee_tpm_op_recv,
-> -	.send = ftpm_tee_tpm_op_send,
-> -	.cancel = ftpm_tee_tpm_op_cancel,
-> -	.status = ftpm_tee_tpm_op_status,
-> -	.req_complete_mask = 0,
-> -	.req_complete_val = 0,
-> -	.req_canceled = ftpm_tee_tpm_req_canceled,
-> +	.send_recv = ftpm_tee_tpm_op_send_recv,
->  };
->  
->  /*
-> -- 
-> 2.48.1
-> 
-> 
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index 0ded91f056f3..8e2d12cdbd13 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -1341,9 +1341,11 @@ static void ib_device_notify_register(struct ib_device *device)
+ 	u32 port;
+ 	int ret;
+ 
++	down_read(&devices_rwsem);
++
+ 	ret = rdma_nl_notify_event(device, 0, RDMA_REGISTER_EVENT);
+ 	if (ret)
+-		return;
++		goto out;
+ 
+ 	rdma_for_each_port(device, port) {
+ 		netdev = ib_device_get_netdev(device, port);
+@@ -1354,8 +1356,11 @@ static void ib_device_notify_register(struct ib_device *device)
+ 					   RDMA_NETDEV_ATTACH_EVENT);
+ 		dev_put(netdev);
+ 		if (ret)
+-			return;
++			goto out;
+ 	}
++
++out:
++	up_read(&devices_rwsem);
+ }
+ 
+ /**
+-- 
+2.34.1
+
