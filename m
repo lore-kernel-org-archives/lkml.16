@@ -1,238 +1,219 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DBE1EE7D6
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7372C16DC28
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741887335; cv=none; b=NChCZxy/T+kI7MCt7DROE7xFkyYsB1ERwTijbIg0Ju4GlBaAfpO8Oq3W+muHo3YbUWauLAMHEI/+VbrVYk+rOfmUpz26lFhwe1KoRSMCMv1aNSaEZEepSeEiKQz9taeyKQPkMusWEQNbXcn6oUDv8ofZLzHsDHE8QhWemBssUjc=
+	t=1741887382; cv=none; b=YQm6nfBcNS/3mVRi4+unu9/BLl7VxSqLvcy+Nf9C9i8UNm5VFX+ZAZ7DLF9zUgOZSvl2EvkpTpZ7C0DIvC+4sa6CSeItBvxARC4IlaL6XVL7NVAS8L98aoZzTwI6j0cBjkKkePGyD2CGZD/pwSk/+xchkAH87rxn51oKxmtyMqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741887335; c=relaxed/simple;
-	bh=vQdoq9CEvtCoxe0/XgIj7OuZW3qXJ4NL8kAMzq1rRbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aR57/3JsemVybuBv45uiunh52o1aOg2EQbmwg9233x30dyY40qtN74R7ygq33QFxNUe5r3Q+xso2obDe28gncypfMGUBIOnUhF0L8iuu3v3iXfwKKc7z1b6MX5FwwN/NllexxmbFCAM4oxcKwoO+sjWTxYIdDMgOJNMERJgjTzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=y1NGj7YI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0CctoGQm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=y1NGj7YI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0CctoGQm; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="y1NGj7YI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0CctoGQm";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="y1NGj7YI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0CctoGQm"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 712A01F76B;
-	Thu, 13 Mar 2025 17:35:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741887332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AssL4APWosYRwux5Sl/5PXBGFriuHOGNHF7c4W1mHz4=;
-	b=y1NGj7YI236QfMjWfjyv7LrwSGiLStdfqnuRlM/CfAdhXKWKN4iTh2TRCrHzstePyZi12z
-	+jPHKtd85Q3xbppcEPJoFHJ0lt4wfypY2T3zUTirUov+7hJc6c1pcTe1z9M99oouxg3cE+
-	33y7xP7FMuqZBEhC8J2ZIqGLP+JiiAU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741887332;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AssL4APWosYRwux5Sl/5PXBGFriuHOGNHF7c4W1mHz4=;
-	b=0CctoGQmht81QUlHsTv3wXnswkFWaKpZaDxclDD902ge4IuSoD8+Egh84CnLffg3g3M+9p
-	gGX9yD+fq9CwKVDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741887332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AssL4APWosYRwux5Sl/5PXBGFriuHOGNHF7c4W1mHz4=;
-	b=y1NGj7YI236QfMjWfjyv7LrwSGiLStdfqnuRlM/CfAdhXKWKN4iTh2TRCrHzstePyZi12z
-	+jPHKtd85Q3xbppcEPJoFHJ0lt4wfypY2T3zUTirUov+7hJc6c1pcTe1z9M99oouxg3cE+
-	33y7xP7FMuqZBEhC8J2ZIqGLP+JiiAU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741887332;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AssL4APWosYRwux5Sl/5PXBGFriuHOGNHF7c4W1mHz4=;
-	b=0CctoGQmht81QUlHsTv3wXnswkFWaKpZaDxclDD902ge4IuSoD8+Egh84CnLffg3g3M+9p
-	gGX9yD+fq9CwKVDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6105E137BA;
-	Thu, 13 Mar 2025 17:35:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id uzqGFmQX02cwQwAAD6G6ig
-	(envelope-from <nstange@suse.de>); Thu, 13 Mar 2025 17:35:32 +0000
-From: Nicolai Stange <nstange@suse.de>
-To: Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc: Eric Snowberg <eric.snowberg@oracle.com>,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nicolai Stange <nstange@suse.de>
-Subject: [RFC PATCH v1 7/7] ima: make SHA1 non-mandatory
-Date: Thu, 13 Mar 2025 18:33:39 +0100
-Message-ID: <20250313173339.3815589-8-nstange@suse.de>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250313173339.3815589-1-nstange@suse.de>
-References: <20250313173339.3815589-1-nstange@suse.de>
+	s=arc-20240116; t=1741887382; c=relaxed/simple;
+	bh=XNL7SjgEWbuj0RlOTms4N6GFMRUx3ozOE1PYOxjnvj8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t1IWtG4ENoGNC45peNj3eli/ryGsNzRvzDTiRfbPOje6fsqnhDuTNuf+LWio1+LnP+fGXIAmnNyYfcqGE4rjJu57W6xy60zcD7dmNnxhE68qcDOO7KzUTqFH/OhYQee6rWz2HByXfOpjimEkGMcl39RjKRBTWaLn+fp1mVFV7Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 188FD150C;
+	Thu, 13 Mar 2025 10:36:30 -0700 (PDT)
+Received: from [10.57.85.159] (unknown [10.57.85.159])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D5C63F673;
+	Thu, 13 Mar 2025 10:36:18 -0700 (PDT)
+Message-ID: <2fb974bb-1470-4a5f-90d5-97456140c98f@arm.com>
+Date: Thu, 13 Mar 2025 17:36:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
+ mapping when rodata=full
+Content-Language: en-GB
+To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
+ catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
+ scott@os.amperecomputing.com, cl@gentwo.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250304222018.615808-1-yang@os.amperecomputing.com>
+ <3750d3f8-17c6-4bb8-8107-215d442e4ec3@os.amperecomputing.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <3750d3f8-17c6-4bb8-8107-215d442e4ec3@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[linux.ibm.com,huawei.com,gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Score: -5.30
-X-Spam-Flag: NO
 
-For CONFIG_IMA_COMPAT_FALLBACK_TPM_EXTEND=n, SHA-1 is not a hard
-requirement anymore. Make ima_init_crypto() continue on SHA-1
-instantiation errors.
+On 13/03/2025 17:28, Yang Shi wrote:
+> Hi Ryan,
+> 
+> I saw Miko posted a new spin of his patches. There are some slight changes that
+> have impact to my patches (basically check the new boot parameter). Do you
+> prefer I rebase my patches on top of his new spin right now then restart review
+> from the new spin or review the current patches then solve the new review
+> comments and rebase to Miko's new spin together?
 
-Note that the configure ima_hash must still be available. If that
-happened to be set to SHA-1 and SHA-1 was missing, then IMA would
-still fail to initialize.
+Hi Yang,
 
-Signed-off-by: Nicolai Stange <nstange@suse.de>
----
- security/integrity/ima/ima_crypto.c | 60 ++++++++++++++---------------
- 1 file changed, 28 insertions(+), 32 deletions(-)
+Sorry I haven't got to reviewing this version yet, it's in my queue!
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 118ea15d737b..f68435f2679f 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -147,56 +147,51 @@ int __init ima_init_crypto(void)
- 		goto out;
- 	}
- 
-+	ima_algo_array[ima_hash_algo_idx].tfm = ima_shash_tfm;
-+	ima_algo_array[ima_hash_algo_idx].algo = ima_hash_algo;
-+
-+	if (ima_hash_algo != HASH_ALGO_SHA1) {
-+		ima_algo_array[ima_sha1_idx].tfm =
-+			ima_alloc_tfm(HASH_ALGO_SHA1);
-+		if (IS_ERR(ima_algo_array[ima_sha1_idx].tfm)) {
-+#if IS_ENABLED(CONFIG_IMA_COMPAT_FALLBACK_TPM_EXTEND)
-+			/*
-+			 * For backwards compatible fallback PCR
-+			 * extension, SHA1 is the fallback for missing
-+			 * algos.
-+			 */
-+			rc = PTR_ERR(ima_algo_array[ima_sha1_idx].tfm);
-+			goto out_array;
-+#endif
-+			ima_algo_array[ima_sha1_idx].tfm = NULL;
-+			ima_unsupported_tpm_banks_mask |= BIT(ima_sha1_idx);
-+		}
-+		ima_algo_array[ima_sha1_idx].algo = HASH_ALGO_SHA1;
-+	}
-+
- 	for (i = 0; i < NR_BANKS(ima_tpm_chip); i++) {
- 		algo = ima_tpm_chip->allocated_banks[i].crypto_id;
- 		ima_algo_array[i].algo = algo;
- 
-+		/* Initialized separately above. */
-+		if (i == ima_hash_algo_idx || i == ima_sha1_idx)
-+			continue;
-+
- 		/* unknown TPM algorithm */
- 		if (algo == HASH_ALGO__LAST) {
- 			ima_unsupported_tpm_banks_mask |= BIT(i);
- 			continue;
- 		}
- 
--		if (algo == ima_hash_algo) {
--			ima_algo_array[i].tfm = ima_shash_tfm;
--			continue;
--		}
--
- 		ima_algo_array[i].tfm = ima_alloc_tfm(algo);
- 		if (IS_ERR(ima_algo_array[i].tfm)) {
--			if (algo == HASH_ALGO_SHA1) {
--				rc = PTR_ERR(ima_algo_array[i].tfm);
--				ima_algo_array[i].tfm = NULL;
--				goto out_array;
--			}
--
- 			ima_algo_array[i].tfm = NULL;
- 			ima_unsupported_tpm_banks_mask |= BIT(i);
- 		}
- 	}
- 
--	if (ima_sha1_idx >= NR_BANKS(ima_tpm_chip)) {
--		if (ima_hash_algo == HASH_ALGO_SHA1) {
--			ima_algo_array[ima_sha1_idx].tfm = ima_shash_tfm;
--		} else {
--			ima_algo_array[ima_sha1_idx].tfm =
--						ima_alloc_tfm(HASH_ALGO_SHA1);
--			if (IS_ERR(ima_algo_array[ima_sha1_idx].tfm)) {
--				rc = PTR_ERR(ima_algo_array[ima_sha1_idx].tfm);
--				goto out_array;
--			}
--		}
--
--		ima_algo_array[ima_sha1_idx].algo = HASH_ALGO_SHA1;
--	}
--
--	if (ima_hash_algo_idx >= NR_BANKS(ima_tpm_chip) &&
--	    ima_hash_algo_idx != ima_sha1_idx) {
--		ima_algo_array[ima_hash_algo_idx].tfm = ima_shash_tfm;
--		ima_algo_array[ima_hash_algo_idx].algo = ima_hash_algo;
--	}
--
- 	return 0;
-+#if IS_ENABLED(CONFIG_IMA_COMPAT_FALLBACK_TPM_EXTEND)
- out_array:
- 	for (i = 0; i < NR_BANKS(ima_tpm_chip) + ima_extra_slots; i++) {
- 		if (!ima_algo_array[i].tfm ||
-@@ -206,6 +201,7 @@ int __init ima_init_crypto(void)
- 		crypto_free_shash(ima_algo_array[i].tfm);
- 	}
- 	kfree(ima_algo_array);
-+#endif
- out:
- 	crypto_free_shash(ima_shash_tfm);
- 	return rc;
--- 
-2.47.1
+I'm happy to review against v3 as it is. I'm familiar with Miko's series and am
+not too bothered about the integration with that; I think it's pretty straight
+forward. I'm more interested in how you are handling the splitting, which I
+think is the bulk of the effort.
+
+I'm hoping to get to this next week before heading out to LSF/MM the following
+week (might I see you there?)
+
+Thanks,
+Ryan
+
+
+> 
+> Thanks,
+> Yang
+> 
+> 
+> On 3/4/25 2:19 PM, Yang Shi wrote:
+>> Changelog
+>> =========
+>> v3:
+>>    * Rebased to v6.14-rc4.
+>>    * Based on Miko's BBML2 cpufeature patch (https://lore.kernel.org/linux-
+>> arm-kernel/20250228182403.6269-3-miko.lenczewski@arm.com/).
+>>      Also included in this series in order to have the complete patchset.
+>>    * Enhanced __create_pgd_mapping() to handle split as well per Ryan.
+>>    * Supported CONT mappings per Ryan.
+>>    * Supported asymmetric system by splitting kernel linear mapping if such
+>>      system is detected per Ryan. I don't have such system to test, so the
+>>      testing is done by hacking kernel to call linear mapping repainting
+>>      unconditionally. The linear mapping doesn't have any block and cont
+>>      mappings after booting.
+>>
+>> RFC v2:
+>>    * Used allowlist to advertise BBM lv2 on the CPUs which can handle TLB
+>>      conflict gracefully per Will Deacon
+>>    * Rebased onto v6.13-rc5
+>>    * https://lore.kernel.org/linux-arm-kernel/20250103011822.1257189-1-
+>> yang@os.amperecomputing.com/
+>>
+>> RFC v1: https://lore.kernel.org/lkml/20241118181711.962576-1-
+>> yang@os.amperecomputing.com/
+>>
+>> Description
+>> ===========
+>> When rodata=full kernel linear mapping is mapped by PTE due to arm's
+>> break-before-make rule.
+>>
+>> A number of performance issues arise when the kernel linear map is using
+>> PTE entries due to arm's break-before-make rule:
+>>    - performance degradation
+>>    - more TLB pressure
+>>    - memory waste for kernel page table
+>>
+>> These issues can be avoided by specifying rodata=on the kernel command
+>> line but this disables the alias checks on page table permissions and
+>> therefore compromises security somewhat.
+>>
+>> With FEAT_BBM level 2 support it is no longer necessary to invalidate the
+>> page table entry when changing page sizes.  This allows the kernel to
+>> split large mappings after boot is complete.
+>>
+>> This patch adds support for splitting large mappings when FEAT_BBM level 2
+>> is available and rodata=full is used. This functionality will be used
+>> when modifying page permissions for individual page frames.
+>>
+>> Without FEAT_BBM level 2 we will keep the kernel linear map using PTEs
+>> only.
+>>
+>> If the system is asymmetric, the kernel linear mapping may be repainted once
+>> the BBML2 capability is finalized on all CPUs.  See patch #6 for more details.
+>>
+>> We saw significant performance increases in some benchmarks with
+>> rodata=full without compromising the security features of the kernel.
+>>
+>> Testing
+>> =======
+>> The test was done on AmpereOne machine (192 cores, 1P) with 256GB memory and
+>> 4K page size + 48 bit VA.
+>>
+>> Function test (4K/16K/64K page size)
+>>    - Kernel boot.  Kernel needs change kernel linear mapping permission at
+>>      boot stage, if the patch didn't work, kernel typically didn't boot.
+>>    - Module stress from stress-ng. Kernel module load change permission for
+>>      linear mapping.
+>>    - A test kernel module which allocates 80% of total memory via vmalloc(),
+>>      then change the vmalloc area permission to RO, this also change linear
+>>      mapping permission to RO, then change it back before vfree(). Then launch
+>>      a VM which consumes almost all physical memory.
+>>    - VM with the patchset applied in guest kernel too.
+>>    - Kernel build in VM with guest kernel which has this series applied.
+>>    - rodata=on. Make sure other rodata mode is not broken.
+>>    - Boot on the machine which doesn't support BBML2.
+>>
+>> Performance
+>> ===========
+>> Memory consumption
+>> Before:
+>> MemTotal:       258988984 kB
+>> MemFree:        254821700 kB
+>>
+>> After:
+>> MemTotal:       259505132 kB
+>> MemFree:        255410264 kB
+>>
+>> Around 500MB more memory are free to use.  The larger the machine, the
+>> more memory saved.
+>>
+>> Performance benchmarking
+>> * Memcached
+>> We saw performance degradation when running Memcached benchmark with
+>> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB pressure.
+>> With this patchset we saw ops/sec is increased by around 3.5%, P99
+>> latency is reduced by around 9.6%.
+>> The gain mainly came from reduced kernel TLB misses.  The kernel TLB
+>> MPKI is reduced by 28.5%.
+>>
+>> The benchmark data is now on par with rodata=on too.
+>>
+>> * Disk encryption (dm-crypt) benchmark
+>> Ran fio benchmark with the below command on a 128G ramdisk (ext4) with disk
+>> encryption (by dm-crypt).
+>> fio --directory=/data --random_generator=lfsr --norandommap --randrepeat 1 \
+>>      --status-interval=999 --rw=write --bs=4k --loops=1 --ioengine=sync \
+>>      --iodepth=1 --numjobs=1 --fsync_on_close=1 --group_reporting --thread \
+>>      --name=iops-test-job --eta-newline=1 --size 100G
+>>
+>> The IOPS is increased by 90% - 150% (the variance is high, but the worst
+>> number of good case is around 90% more than the best number of bad case).
+>> The bandwidth is increased and the avg clat is reduced proportionally.
+>>
+>> * Sequential file read
+>> Read 100G file sequentially on XFS (xfs_io read with page cache populated).
+>> The bandwidth is increased by 150%.
+>>
+>>
+>> Mikołaj Lenczewski (1):
+>>        arm64: Add BBM Level 2 cpu feature
+>>
+>> Yang Shi (5):
+>>        arm64: cpufeature: add AmpereOne to BBML2 allow list
+>>        arm64: mm: make __create_pgd_mapping() and helpers non-void
+>>        arm64: mm: support large block mapping when rodata=full
+>>        arm64: mm: support split CONT mappings
+>>        arm64: mm: split linear mapping if BBML2 is not supported on secondary
+>> CPUs
+>>
+>>   arch/arm64/Kconfig                  |  11 +++++
+>>   arch/arm64/include/asm/cpucaps.h    |   2 +
+>>   arch/arm64/include/asm/cpufeature.h |  15 ++++++
+>>   arch/arm64/include/asm/mmu.h        |   4 ++
+>>   arch/arm64/include/asm/pgtable.h    |  12 ++++-
+>>   arch/arm64/kernel/cpufeature.c      |  95 +++++++++++++++++++++++++++++++++++++
+>>   arch/arm64/mm/mmu.c                 | 397 ++++++++++++++++++++++++++++++++++
+>> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>> ++++++++++++++++++++++-------------------
+>>   arch/arm64/mm/pageattr.c            |  37 ++++++++++++---
+>>   arch/arm64/tools/cpucaps            |   1 +
+>>   9 files changed, 518 insertions(+), 56 deletions(-)
+>>
+>>
+> 
 
