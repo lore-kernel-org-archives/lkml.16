@@ -1,140 +1,140 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F151626BD98;
-	Thu, 13 Mar 2025 16:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B5E26D5A4
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881612; cv=none; b=T9wRpKYOFLe0qDSyc7H0VoNKjJBPW5fGb7Mxi1lRo5JbgeMsV930kAxX3b6svrQCNUZZxU1A5xSXVKOSqMMS8vDuSmqC697PeeSuzXJnP02nYKnBfzxMdHnnwkzUjnh89N7D/rm4aKdPG+fuosqI9gaJ+nC/Jcx/eXI1rw3a78M=
+	t=1741881614; cv=none; b=GPo5LJNSHGElozGMF2+VNpgS9/4zRXOLOjbqshH64yOgTLN4vewbNtyjL3F+fEUSklzZWs9Ph1YAXr1rV6LpgqM6h81G7x7tx+4Zh0YEV79mXT/ZeF6kZbxUlt4GNNaNrWtKLo29Xd9LpCJO86AE6NTiOYWLmLTN5sn07dwPTUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741881612; c=relaxed/simple;
-	bh=akPSqB4bnq/Gk7XfIf9b8rGVbx/xa0qH4KI+K1dCpGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ckbQZTyp7XoXw8xthIa3+nLs1umzjaQRHtHErKxF5502pLiZQ0BmVRCXTge/HaxN2zEQttHOMCj9fxu9aoJUcpLrDtUNKXiBOsoUg8Ch1KLK30G0kIcaiUGp299KhibmXBMsG0+PGTpKz8sK2Hy+fHd6b9SdvIMrIdp9jccbAic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=PCayOayt; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1741881614; c=relaxed/simple;
+	bh=vSuEFkUiIwR2lWjUNEItYlzLFkTCgRS7eBEJTslAWXc=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=Vre+G7TemaZGuCmUML/hc5V36DQInFu3X9P+p5fnFzDD0BpPoOL29bKqf7voVaffS9uAJTV43N0j4wBcblAMe3eWS7udBTCTF9/3iTljYM5vJ7FNCu0rnSRwGNMsT0+vkb9F/jXl8HjQ7f40pnqsIvL23YrcSPgAORBkLbRdhDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WRzI6LOE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E7X0/U5P; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="PCayOayt"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
- id 2a54659c66572b9d; Thu, 13 Mar 2025 17:00:01 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 1278B8E44D5;
-	Thu, 13 Mar 2025 17:00:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1741881601;
-	bh=akPSqB4bnq/Gk7XfIf9b8rGVbx/xa0qH4KI+K1dCpGQ=;
-	h=From:Subject:Date;
-	b=PCayOaytVwiQFxLnGPo+mhYCPDqqioseQc2TMrlqvgamXFrzY9xUw0nmWEobjJqK3
-	 Oklm0ra/B2N/YyE81aDGGUkNZn03MqRD9PGIDdik3/xzTLhFjDl3Y4iV2UfRixBRcI
-	 ewJZwRxk+osUb38AtnkDJXZ+VEEXPlu4v2HdCD9mXfa29kk5yQA9LWQJp8ARyvqdiP
-	 cJ/4ivGyeYDuq+IRGXqfPMQN4wodjl0aDBVEdDi8ks0BQrXTyQLjYF6ZM0NAl8zgk2
-	 +waJykxXG9b0C1QFsrVei0+2pRNoWXH9PLaheHxA6k6mfWblP2keSg8kjE3FaS3xkk
-	 u+S8lYabDnZ8w==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>,
- Johan Hovold <johan@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jon Hunter <jonathanh@nvidia.com>, Saravana Kannan <saravanak@google.com>
-Subject:
- [PATCH v1] PM: sleep: Fix handling devices with direct_complete set on errors
-Date: Thu, 13 Mar 2025 17:00:00 +0100
-Message-ID: <12627587.O9o76ZdvQC@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WRzI6LOE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E7X0/U5P"
+Message-ID: <20250313155914.943799712@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741881610;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=S/PCa3dU5Q78O6c+ooh++IFo/+FxyxivVyDPyxSN9/c=;
+	b=WRzI6LOEmH8ZdqpT1CgSWDn8/8vi7TZuMhSgJBUz2IJp0V66S8NHxfRugxHYNRnW9odlyf
+	KJjcgmkD6D6mwjMsDe7EvEDln0l9mxYdCOD8A0EYDnVrlWLyUEdUM4jkhB9XneNze8UagL
+	+ZB/pDWDz/1fyu+NsKW7PqrmnlLj8tYzfAmbsxduMGjWBHT016djn+QUIiFR1WCl+D15JR
+	nGD1cXKPZrNK574IKhdYh/B+XedYM9lewH5NC6MILcS+FNabGDPen4l1i+RImk4cRsaCml
+	9s8EAqvKIk6tiHEMM5m++wgma5Fuyl4lwwFl8DggNPI+SGWppkUFqfdnoJbpNQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741881610;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=S/PCa3dU5Q78O6c+ooh++IFo/+FxyxivVyDPyxSN9/c=;
+	b=E7X0/U5PuTRqnugi+3P8OZHRIWwo2iO/GRlpBBXJ5Fa442OKgIzO38avKCakeOqaWmjglx
+	YD2sNFpkFe226BAg==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+ Jiri Slaby <jirislaby@kernel.org>
+Subject: [patch 16/46] genirq/chip: Rework handle_eoi_irq()
+References: <20250313154615.860723120@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdekfeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtvghrnhesrhhofihlrghnugdrhhgrrhhvrghrugdrvgguuhdprhgtphhtthhopehulhhfrdhhrghnshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehjohh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 13 Mar 2025 17:00:09 +0100 (CET)
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Use the new helpers to decide whether the interrupt should be handled and
+switch the descriptor locking to guard().
 
-When dpm_suspend() fails, some devices with power.direct_complete set
-may not have been handled by device_suspend() yet, so runtime PM has
-not been disabled for them yet even though power.direct_complete is set.
+Fixup the kernel doc comment while at it.
 
-Since device_resume() expects that runtime PM has been disabled for all
-devices with power.direct_complete set, it will attempt to reenable
-runtime PM for the devices that have not been processed by device_suspend()
-which does not make sense.  Had those devices had runtime PM disabled
-before device_suspend() had run, device_resume() would have inadvertently
-enable runtime PM for them, but this is not expected to happen because
-it would require ->prepare() callbacks to return positive values for
-devices with runtime PM disabled, which would be invalid.
+No functional change.
 
-In practice, this issue is most likely benign because pm_runtime_enable()
-will not allow the "disable depth" counter to underflow, but it causes a
-warning message to be printed for each affected device.
-
-To allow device_resume() to distinguish the "direct complete" devices
-that have been processed by device_suspend() from those which have not
-been handled by it, make device_suspend() set power.is_suspended for
-"direct complete" devices.
-
-Next, move the power.is_suspended check in device_resume() before the
-power.direct_complete check in it to make it skip the "direct complete"
-devices that have not been handled by device_suspend().
-
-This change is based on a preliminary patch from Saravana Kannan.
-
-Fixes: aae4518b3124 ("PM / sleep: Mechanism to avoid resuming runtime-suspended devices unnecessarily")
-Link: https://lore.kernel.org/linux-pm/20241114220921.2529905-2-saravanak@google.com/
-Reported-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/base/power/main.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/irq/chip.c |   42 ++++++++++++++++++------------------------
+ 1 file changed, 18 insertions(+), 24 deletions(-)
 
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -938,6 +938,9 @@
- 	if (dev->power.syscore)
- 		goto Complete;
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -653,20 +653,26 @@ static void cond_unmask_eoi_irq(struct i
+ 	}
+ }
  
-+	if (!dev->power.is_suspended)
-+		goto Complete;
++static inline void cond_eoi_irq(struct irq_chip *chip, struct irq_data *data)
++{
++	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
++		chip->irq_eoi(data);
++}
 +
- 	if (dev->power.direct_complete) {
- 		/*
- 		 * Allow new children to be added under the device after this
-@@ -963,9 +966,6 @@
- 	 */
- 	dev->power.is_prepared = false;
+ /**
+- *	handle_fasteoi_irq - irq handler for transparent controllers
+- *	@desc:	the interrupt description structure for this irq
++ * handle_fasteoi_irq - irq handler for transparent controllers
++ * @desc:	the interrupt description structure for this irq
+  *
+- *	Only a single callback will be issued to the chip: an ->eoi()
+- *	call when the interrupt has been serviced. This enables support
+- *	for modern forms of interrupt handlers, which handle the flow
+- *	details in hardware, transparently.
++ * Only a single callback will be issued to the chip: an ->eoi() call when
++ * the interrupt has been serviced. This enables support for modern forms
++ * of interrupt handlers, which handle the flow details in hardware,
++ * transparently.
+  */
+ void handle_fasteoi_irq(struct irq_desc *desc)
+ {
+ 	struct irq_chip *chip = desc->irq_data.chip;
  
--	if (!dev->power.is_suspended)
--		goto Unlock;
+-	raw_spin_lock(&desc->lock);
++	guard(raw_spinlock)(&desc->lock);
+ 
+ 	/*
+ 	 * When an affinity change races with IRQ handling, the next interrupt
+@@ -676,19 +682,14 @@ void handle_fasteoi_irq(struct irq_desc
+ 	if (!irq_can_handle_pm(desc)) {
+ 		if (irqd_needs_resend_when_in_progress(&desc->irq_data))
+ 			desc->istate |= IRQS_PENDING;
+-		goto out;
++		cond_eoi_irq(chip, &desc->irq_data);
++		return;
+ 	}
+ 
+-	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
 -
- 	if (dev->pm_domain) {
- 		info = "power domain ";
- 		callback = pm_op(&dev->pm_domain->ops, state);
-@@ -1005,7 +1005,6 @@
- 	error = dpm_run_callback(callback, dev, state, info);
- 	dev->power.is_suspended = false;
+-	/*
+-	 * If its disabled or no action available
+-	 * then mask it and get out of here:
+-	 */
+-	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
+-		desc->istate |= IRQS_PENDING;
++	if (!irq_can_handle_actions(desc)) {
+ 		mask_irq(desc);
+-		goto out;
++		cond_eoi_irq(chip, &desc->irq_data);
++		return;
+ 	}
  
-- Unlock:
- 	device_unlock(dev);
- 	dpm_watchdog_clear(&wd);
+ 	kstat_incr_irqs_this_cpu(desc);
+@@ -704,13 +705,6 @@ void handle_fasteoi_irq(struct irq_desc
+ 	 */
+ 	if (unlikely(desc->istate & IRQS_PENDING))
+ 		check_irq_resend(desc, false);
+-
+-	raw_spin_unlock(&desc->lock);
+-	return;
+-out:
+-	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
+-		chip->irq_eoi(&desc->irq_data);
+-	raw_spin_unlock(&desc->lock);
+ }
+ EXPORT_SYMBOL_GPL(handle_fasteoi_irq);
  
-@@ -1669,6 +1668,7 @@
- 			pm_runtime_disable(dev);
- 			if (pm_runtime_status_suspended(dev)) {
- 				pm_dev_dbg(dev, state, "direct-complete ");
-+				dev->power.is_suspended = true;
- 				goto Complete;
- 			}
- 
-
-
 
