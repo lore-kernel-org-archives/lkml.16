@@ -1,104 +1,241 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDB528399
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2BF2E3391;
+	Thu, 13 Mar 2025 01:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741828765; cv=none; b=WIK7FxrWNPu1t4UnrV0JhixS4/u1zSGim12rCJqOafhS4399Q7CKxxh/4dkH8XEguivOJZr/3H/QVFlumbjlstzoQOWhe5XHJ3mdtigGkKITVAb+HyOehZwBXsrbz3qW0KlNqjJk/gUWiubzfSSp6vvUEwGeNnULc9Ro4YhI3R0=
+	t=1741828848; cv=none; b=fbMxMLB8lPd+l3pTmJTOOiybjLjyek1CWB3srZ/PMLB9Kf1cW7BHBfrlUg8y+aioj+c6LCjji3v2d1s42kySzNv1VkvErVj6ThWd1x3bGjhrlJcovcFn9G4yOUIfAoTXGb+klbE0G/4ETjBTOqkipb0WsAZPdSP77n39PgQJvXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741828765; c=relaxed/simple;
-	bh=DB68pVaJJ4VS0y+Z+2ellm8XL9+PFw9fg9mxEwWFP1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dva1sWC59FsU4lt9bQjg7vdrviaJd20fWR1BbSdQwjJVQ6o1E/qbZs7KGjmRLiE4r6NfHTx2A+rLm72J7R6MqPjxXB1U99mnukzKeX7Y7crq8uHAGd280URr460I6mJ3LtBTFqkruZ7r5PZV34Gukwbgw6UbHckFUHWvSr20Ee8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BXPR9wXN; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BXPR9wXN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=DB68
-	pVaJJ4VS0y+Z+2ellm8XL9+PFw9fg9mxEwWFP1s=; b=BXPR9wXNEzGvWgE7maOj
-	Z2BxD7vbxL5FWMIlcQDzKY6qPnmNui2p07GkK87cf/jjk29HLYbAWaXPU3ER+sDM
-	i0P6cPvK7yKnKYa4mIBQBqaLBzdk/604S+QyMH1OOTDgd5zi5y9c1aVc2opvsBvI
-	gS/TWPT2PIbOuXN72teTk/P5XiPjOcnU239brcOqE6jKiSM01odL0bmoJL8QRubv
-	5ujbeytgi6TngDyzZI/z/2dPtNGTgOKqQzakbf5QgdiltMCnDavT7edmW7Qz4RB7
-	5NHfIEokx5q9y49JMBAhiOKciVhe9yl5Nqz7U+HQBsVZPbzzBPpxE8UssewYCJqv
-	3Q==
-Received: (qmail 1441578 invoked from network); 13 Mar 2025 02:19:13 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Mar 2025 02:19:13 +0100
-X-UD-Smtp-Session: l3s3148p1@OGcbHC8wPJcgAQnoAFAeAGR2+CrWUxoz
-Date: Thu, 13 Mar 2025 02:19:13 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Alex Elder <elder@riscstar.com>,
-	Troy Mitchell <troymitchell988@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
-	linux-riscv@lists.infradead.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	spacemit@lists.linux.dev, Guodong Xu <guodong@riscstar.com>
-Subject: Re: [PATCH v6 2/2] i2c: spacemit: add support for SpacemiT K1 SoC
-Message-ID: <Z9IykQgaOL8_Yh_Y@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Alex Elder <elder@riscstar.com>,
-	Troy Mitchell <troymitchell988@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
-	linux-riscv@lists.infradead.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	spacemit@lists.linux.dev, Guodong Xu <guodong@riscstar.com>
-References: <20250307-k1-i2c-master-v6-0-34f17d2dae1c@gmail.com>
- <20250307-k1-i2c-master-v6-2-34f17d2dae1c@gmail.com>
- <7d9e90ba-8c23-44dc-b64f-80213216faf7@riscstar.com>
- <nrmoj7gookedlz2e3fgu3hvn3s5fc6vrxgjueynyp5orj63k4b@cqlhflioxv7h>
+	s=arc-20240116; t=1741828848; c=relaxed/simple;
+	bh=3781Hg3C1AWPyTqnjQIlwBTcW6zEcraiVhV3ndblFCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aJ8nXB1eZSIJv4iWBVp+W+pVGpLDL7mOzgrLT4DhL0ofdYNxRYToG/CMpV1imPgCQkz1W3Qb6BKLMzIo/ufVJRSHY/k8m+J1N+AiZhkcIDzmDRmvkbqlxxE3WDYTqZqcvk1KszMz3LMtT3FvERCRG6j1f1dpDpYYsospo8ph0Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZCqMN6KXrz1f0bG;
+	Thu, 13 Mar 2025 09:16:16 +0800 (CST)
+Received: from kwepemf100017.china.huawei.com (unknown [7.202.181.16])
+	by mail.maildlp.com (Postfix) with ESMTPS id C83581A0188;
+	Thu, 13 Mar 2025 09:20:39 +0800 (CST)
+Received: from [10.174.179.80] (10.174.179.80) by
+ kwepemf100017.china.huawei.com (7.202.181.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 13 Mar 2025 09:20:38 +0800
+Message-ID: <ee4156da-e199-443a-9af9-246e8d89559e@huawei.com>
+Date: Thu, 13 Mar 2025 09:20:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CpEyUD+s7U217eGg"
-Content-Disposition: inline
-In-Reply-To: <nrmoj7gookedlz2e3fgu3hvn3s5fc6vrxgjueynyp5orj63k4b@cqlhflioxv7h>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] ext4: avoid journaling sb update on error if
+ journal is destroying
+To: Jan Kara <jack@suse.cz>
+CC: Ritesh Harjani <ritesh.list@gmail.com>, <linux-ext4@vger.kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>, Baokun Li <libaokun1@huawei.com>,
+	<linux-kernel@vger.kernel.org>, Mahesh Kumar <maheshkumar657g@gmail.com>,
+	Ojaswin Mujoo <ojaswin@linux.ibm.com>
+References: <1bf59095d87e5dfae8f019385ba3ce58973baaff.1741270780.git.ojaswin@linux.ibm.com>
+ <87ldtfhmo7.fsf@gmail.com>
+ <Z8xAmyICsNlln4Y3@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <87ecz7hcw0.fsf@gmail.com>
+ <Z8xbLrdN3L1E50-G@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <87cyergyb1.fsf@gmail.com>
+ <Z82EjcExRMc8nz2v@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <871pv5cx6v.fsf@gmail.com>
+ <bct36ajzi6sardnmc6yz4ot4fbpr654b4k2xz54mrtyje7wofq@qpwzbtctwqnf>
+ <Z9GZdSiDL0J80720@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <5ygal3ht47dcpftsxxksmk4lid47al2g4xzlbennmtteeqqsed@uswr3gimu3wc>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huawei.com>
+In-Reply-To: <5ygal3ht47dcpftsxxksmk4lid47al2g4xzlbennmtteeqqsed@uswr3gimu3wc>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemf100017.china.huawei.com (7.202.181.16)
 
+On 2025/3/13 1:15, Jan Kara wrote:
+> On Wed 12-03-25 19:56:36, Ojaswin Mujoo wrote:
+>> On Wed, Mar 12, 2025 at 11:51:03AM +0100, Jan Kara wrote:
+>>> On Mon 10-03-25 10:13:36, Ritesh Harjani wrote:
+>>>> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+>>>>> On Sun, Mar 09, 2025 at 12:11:22AM +0530, Ritesh Harjani wrote:
+>>>>>> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+>>>>>>> On Sat, Mar 08, 2025 at 06:56:23PM +0530, Ritesh Harjani wrote:
+>>>>>>>> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+>>>>>>>>> On Sat, Mar 08, 2025 at 03:25:04PM +0530, Ritesh Harjani (IBM) wrote:
+>>>>>>>>>> Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+>>>>>>>>>>> Presently we always BUG_ON if trying to start a transaction on a journal marked
+>>>>>>>>>>> with JBD2_UNMOUNT, since this should never happen. However, while ltp running
+>>>>>>>>>>> stress tests, it was observed that in case of some error handling paths, it is
+>>>>>>>>>>> possible for update_super_work to start a transaction after the journal is
+>>>>>>>>>>> destroyed eg:
+>>>>>>>>>>>
+>>>>>>>>>>> (umount)
+>>>>>>>>>>> ext4_kill_sb
+>>>>>>>>>>>   kill_block_super
+>>>>>>>>>>>     generic_shutdown_super
+>>>>>>>>>>>       sync_filesystem /* commits all txns */
+>>>>>>>>>>>       evict_inodes
+>>>>>>>>>>>         /* might start a new txn */
+>>>>>>>>>>>       ext4_put_super
+>>>>>>>>>>> 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
+>>>>>>>>>>>         jbd2_journal_destroy
+>>>>>>>>>>>           journal_kill_thread
+>>>>>>>>>>>             journal->j_flags |= JBD2_UNMOUNT;
+>>>>>>>>>>>           jbd2_journal_commit_transaction
+>>>>>>>>>>>             jbd2_journal_get_descriptor_buffer
+>>>>>>>>>>>               jbd2_journal_bmap
+>>>>>>>>>>>                 ext4_journal_bmap
+>>>>>>>>>>>                   ext4_map_blocks
+>>>>>>>>>>>                     ...
+>>>>>>>>>>>                     ext4_inode_error
+>>>>>>>>>>>                       ext4_handle_error
+>>>>>>>>>>>                         schedule_work(&sbi->s_sb_upd_work)
+>>>>>>>>>>>
+>>>>>>>>>>>                                                /* work queue kicks in */
+>>>>>>>>>>>                                                update_super_work
+>>>>>>>>>>>                                                  jbd2_journal_start
+>>>>>>>>>>>                                                    start_this_handle
+>>>>>>>>>>>                                                      BUG_ON(journal->j_flags &
+>>>>>>>>>>>                                                             JBD2_UNMOUNT)
+>>>>>>>>>>>
+>>>>>>>>>>> Hence, introduce a new sbi flag s_journal_destroying to indicate journal is
+>>>>>>>>>>> destroying only do a journaled (and deferred) update of sb if this flag is not
+>>>>>>>>>>> set. Otherwise, just fallback to an un-journaled commit.
+>>>>>>>>>>>
+>>>>>>>>>>> We set sbi->s_journal_destroying = true only after all the FS updates are done
+>>>>>>>>>>> during ext4_put_super() (except a running transaction that will get commited
+>>>>>>>>>>> during jbd2_journal_destroy()). After this point, it is safe to commit the sb
+>>>>>>>>>>> outside the journal as it won't race with a journaled update (refer
+>>>>>>>>>>> 2d01ddc86606).
+>>>>>>>>>>>
+>>>>>>>>>>> Also, we don't need a similar check in ext4_grp_locked_error since it is only
+>>>>>>>>>>> called from mballoc and AFAICT it would be always valid to schedule work here.
+>>>>>>>>>>>
+>>>>>>>>>>> Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
+>>>>>>>>>>> Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
+>>>>>>>>>>> Suggested-by: Jan Kara <jack@suse.cz>
+>>>>>>>>>>> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+>>>>>>>>>>> ---
+>>>>>>>>>>>  fs/ext4/ext4.h      | 2 ++
+>>>>>>>>>>>  fs/ext4/ext4_jbd2.h | 8 ++++++++
+>>>>>>>>>>>  fs/ext4/super.c     | 4 +++-
+>>>>>>>>>>>  3 files changed, 13 insertions(+), 1 deletion(-)
+>>>>>>>>>>>
+>>>>>>>>>>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+>>>>>>>>>>> index 2b7d781bfcad..d48e93bd5690 100644
+>>>>>>>>>>> --- a/fs/ext4/ext4.h
+>>>>>>>>>>> +++ b/fs/ext4/ext4.h
+>>>>>>>>>>> @@ -1728,6 +1728,8 @@ struct ext4_sb_info {
+>>>>>>>>>>>  	 */
+>>>>>>>>>>>  	struct work_struct s_sb_upd_work;
+>>>>>>>>>>>  
+>>>>>>>>>>> +	bool s_journal_destorying;
+>>>>>>>>>>> +
+>>>>>>>>>>>  	/* Atomic write unit values in bytes */
+>>>>>>>>>>>  	unsigned int s_awu_min;
+>>>>>>>>>>>  	unsigned int s_awu_max;
+>>>>>>>>>>> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
+>>>>>>>>>>> index 9b3c9df02a39..6bd3ca84410d 100644
+>>>>>>>>>>> --- a/fs/ext4/ext4_jbd2.h
+>>>>>>>>>>> +++ b/fs/ext4/ext4_jbd2.h
+>>>>>>>>>>> @@ -437,6 +437,14 @@ static inline int ext4_journal_destroy(struct ext4_sb_info *sbi, journal_t *jour
+>>>>>>>>>>>  {
+>>>>>>>>>>>  	int err = 0;
+>>>>>>>>>>>  
+>>>>>>>>>>> +	/*
+>>>>>>>>>>> +	 * At this point all pending FS updates should be done except a possible
+>>>>>>>>>>> +	 * running transaction (which will commit in jbd2_journal_destroy). It
+>>>>>>>>>>> +	 * is now safe for any new errors to directly commit superblock rather
+>>>>>>>>>>> +	 * than going via journal.
+>>>>>>>>>>> +	 */
+>>>>>>>>>>> +	sbi->s_journal_destorying = true;
+>>>>>>>>>>
+>>>>>>>>>> This is not correct right. I think what we decided to set this flag
+>>>>>>>>>> before we flush the workqueue. So that we don't schedule any new
+>>>>>>>>>> work after this flag has been set. At least that is what I understood.
+>>>>>>>>>>
+>>>>>>>>>> [1]: https://lore.kernel.org/all/87eczc6rlt.fsf@gmail.com/
+>>>>>>>>>>
+>>>>>>>>>> -ritesh
+>>>>>>>>>
+>>>>>>>>> Hey Ritesh,
+>>>>>>>>>
+>>>>>>>>> Yes that is not correct, I missed that in my patch however we realised
+>>>>>>>>> that adding it before flush_work() also has issues [1]. More
+>>>>>>>>> specifically:
+>>>>>>>>
+>>>>>>>> Ohk. right. 
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>                      **kjournald2**
+>>>>>>>>>                      jbd2_journal_commit_transaction()
+>>>>>>>>>                      ...
+>>>>>>>>>                      ext4_handle_error()
+>>>>>>>>>                         /* s_journal_destorying is not set */
+>>>>>>>>>                         if (journal && !s_journal_destorying)
+>>>>>>>>
+>>>>>>>> Then maybe we should not schedule another work to update the superblock
+>>>>>>>> via journalling, it the error itself occurred while were trying to
+>>>>>>>> commit the journal txn? 
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> -ritesh
+>>>>>>>
+>>>>>>> Hmm, ideally yes that should not happen, but how can we achieve that?
+>>>>>>> For example with the trace we saw:
+>>>>>>>
+>>>>>>>    **kjournald2**
+>>>>>>>    jbd2_journal_commit_transaction()
+>>>>>>>      jbd2_journal_get_descriptor_buffer
+>>>>>>>        jbd2_journal_bmap
+>>>>>>>          ext4_journal_bmap
+>>>>>>>            ext4_map_blocks
+>>>>>>>              ...
+>>>>>>>              ext4_inode_error
+>>>>>>>                ext4_handle_error
+>>>>>>>                  schedule_work(&sbi->s_sb_upd_work)
+>>>>>>>
+>>>>>>> How do we tell ext4_handle_error that it is in the context of a
+>>>>>>> committing txn.
+>>>
+>>> So I was thinking about this. It is not a problem to determine we are
+>>> running in kjournald context - it is enough to check
+>>>
+>>> 	current == EXT4_SB(sb)->s_journal->j_task
+>>
+>> Oh, right :) 
+>>
+>>>
+>>> But I'm not sure checking this in ext4_handle_error() and doing direct sb
+>>> update instead of scheduling a journalled one is always correct. For
+>>> example kjournald does also writeback of ordered data and if that hits an
+>>> error, we do not necessarily abort the journal (well, currently we do as
+>>> far as I'm checking but it seems a bit fragile to rely on this).
+>>
+>> Okay so IIUC your concern is there might be some codepaths, now or in
+>> the future, where kjournald might call the FS layer, hit an error and
+>> still decide to not abort. In which case we would still want to update
+>> the sb via journal.
+> 
+> Yeah. The reason why I'm a bit concerned about it is mostly the case of
+> kjournald also handling ordered data and situations like
+> !(journal->j_flags & JBD2_ABORT_ON_SYNCDATA_ERR) where people want to
+> continue although ordered data had issues. Or situations where something in
+> j_commit_callback or another jbd2 hook ends up calling ext4_error()...
+> 
 
---CpEyUD+s7U217eGg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ha, right! This is a case where kjournald triggers an ext4 error but does
+not abort the journal for now, I forgot this one, and there may be more.
+Thanks for pointing it out. I would also prefer to use this solution of
+adding ext4_journal_destory().
 
+Thanks,
+Yi.
 
-> I checked the two drivers last night and I can see some
-> similarities, on the other hand I also understand that it might
-> require some extra effort.
-
-I think it is okay that it is a seperate driver. If register sets are
-too different, the resulting combined driver would be a maintenance
-nightmare.
-
-
---CpEyUD+s7U217eGg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfSMo0ACgkQFA3kzBSg
-KbYCDxAAkhFVL8kRdmj5c8fja6ix5dc1ANAZJYGlh/G5aNdbj9MhxbQn1OgWSvxZ
-Ap7DZ/G1dkvv/CN7mjMUjqQOaOJzuNdL4m8+pzbVjWwt9odvqe2dzlx2f1Odn/Nj
-g+3FTwbctyi+W4sxkYsv9Fvu6+Z4VybShwmwBzai8HcLvDYrMCTXYUFefX4xodi7
-ZD9mvoGSzRGEKiOITWxDaR6u/6YDZ9fQE2LDEbqGluz6ecDE4YHjIOa/tH6HBx9y
-ut8KLeze7qRvFbkKTVSAXzTnICPRzhE74arEscNQgJDAa0HjJaTPCHT26Z+dS8ne
-+uyF37G/pzBw21/78IEmvaPr40YYn0oJ6nYL8Z6hankoJPA2MpCGhEPFqv1zxRMo
-fnD/CkZSrarzdzZ/5hWPau5cTiqfhvJXOHGXy1Qc0ZT95lAKoynxpmqSxKsFBjmr
-wUZ3fEcR07oMH4NibpI+pTW/q6ah9aUpESH7SDEZrhJ5UQ1Iqhs3Abym02cNc31z
-XckFbHTT3ED1NNvImxNx7lH0AD8rWwWJiiCHTM3SPPAuCjXX01nwCOYhUu0s53iK
-jXmQq8IFMQ8w+QFpVJ52yzlSoTzWB4QRpoztES4C74EWEznf/azvRi3GGQKCdfEK
-k7yd47ORfzrtVqrCNKJQLsODzFbAvo1is5nfxcWpD2KOttuXI28=
-=2C6g
------END PGP SIGNATURE-----
-
---CpEyUD+s7U217eGg--
