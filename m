@@ -1,309 +1,111 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4F9267F4E;
-	Thu, 13 Mar 2025 14:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3489268683;
+	Thu, 13 Mar 2025 14:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741877437; cv=none; b=rttXvGSIuT9a5UgcWuU/sy+Zi4PGdMavTFnDz385/FIbFyH+pHXgpvrsPghZL6BV4kexjQDi31WbNbi00DzkMBTA+FXv/UtWjV+QcQNdsrta57LhiQd7+8DTl1lCQV6gxNnjSolbtlPtsY5dBB4MOhxmq4RmGBTY5v8bpsZVWJ8=
+	t=1741877447; cv=none; b=djjziBm0V57Ac5VNx8HQxNznyyUg7xi+b8KJUgOFt4JtUwZ+U/DAPMKeXrvXG0JrMLNMMuGj/vh8kTl2b/Ko5nb+pj5QP2j6SNYVyo+GY6r7rypILGZ7wT1PNDHfPtTOVNpeWYd6gSPrPwvTGbxTrCoP0Aij5Ay2wd3CK1S7ZtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741877437; c=relaxed/simple;
-	bh=DYH8mWP/uN3km4ih67jjOC5+KKiOCx4dt/AnPwkGK2o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OSriR+mSIhQXSYC8yXdK+ECjTYPg8hSxpDX4ea7qIlPptqAznbGSSkhS0aKl9jGBtV8G0BQzF7O9l/MDmKAKSmvnoxSGx6SI4XUKtDwlFqE3lIh7oUOsrc96n9+CGlCLTOhDuVV6lVCztPAizRp8As74cGj5f52UE0w4QJrt6cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=uAVbXm9K; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1741877447; c=relaxed/simple;
+	bh=Qpg/XjL8t+s1Ksmau+PLv7qisAyo9hnfIWOSuA18wNc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=glvwGVwd9T3ovJ4G7dFV05kWvSADQyBRVkZx4VjHPOGAihxCpI7NYT9qitYlBq0fRcIMg+jNoIYFBLeTsrripuwl5sVLydtJlyFLfVI9CH0ueuTpHuEo2bPYk0gWxWKdPVMCdVCIPbO+CT0UCjczbYbrxZ29F2og2fJq9gheam4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7dRRuV8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="uAVbXm9K"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id A05251FDF5;
-	Thu, 13 Mar 2025 15:43:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1741877017;
-	bh=QIeoyNI/Bl3f0J8dwVu4JRPZtINHSBcSBhcO5FHDDoc=; h=From:To:Subject;
-	b=uAVbXm9KIB4cNxKmrxWPEPRtFwrn8//o56yDJXm0yjKWXpc8A32TqgM49g1jLK0f4
-	 QiXkktqwnMEwcM4Wng93EkmFcZh0rlqL1lnW7J+WIYnCShAUmL6Qd4/FGpI121LUX2
-	 mE33VGp5saBkA6E0R9JRESJxCns1Mr4D/6bZY7HuyspOSRt1abUl5Gbeo1gkI82mnq
-	 PUlpCXbCe99sTMysRQCpOT4NhwFiGvxk6Y8MXBjONVNjxkSi65v0YevazieS9iTqkU
-	 j+30HKJM6fADr4NlLI0KHUJyWQKJ9+S0zF5IJfOw+JuNKhpLXS6dg2AG3aBMqQL5nv
-	 pXjxG6C22Aybw==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	soc@kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [RFC PATCH v1 2/2] platform: toradex: add preliminary support for Embedded Controller
-Date: Thu, 13 Mar 2025 15:43:31 +0100
-Message-Id: <20250313144331.70591-3-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250313144331.70591-1-francesco@dolcini.it>
-References: <20250313144331.70591-1-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7dRRuV8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BEDC4CEE9;
+	Thu, 13 Mar 2025 14:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741877446;
+	bh=Qpg/XjL8t+s1Ksmau+PLv7qisAyo9hnfIWOSuA18wNc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=J7dRRuV8CDolunVXqS68B5+F5mrn9/qxN3c8hSA3lEvTAo+JFD46RObdOXRDhBsph
+	 W56lFlgFheae5///80tVSfhSEbi6kflVlp/VfQ8y3dytTvo+f9DooyFnJBElqrIo47
+	 ZQnohdQs61xIVxXsnXAvciP0BByUIDX40bbwojD3VDX7sWSECmqDzFqG28hLb9Bo5z
+	 qG7BWO+jy5dtmS0xH9FqWnGD/dTQ6myt+fNU67huAK5nL3MIxw8Psh5sQ/9JtsQhNw
+	 +v/PrUir5abV0OqaKxBWEri4xfRWLY9mfCcrtrlRgtjl3dJeDdjblBf5s0gDwICmu/
+	 Xg5eObhJEl7MA==
+Message-ID: <171197fc-05a9-41a2-bd3b-d117a5cb8f63@kernel.org>
+Date: Thu, 13 Mar 2025 15:50:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] ARM: dts: qcom: sdx75: Add QPIC NAND support
+To: Kaushal Kumar <quic_kaushalk@quicinc.com>, vkoul@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ manivannan.sadhasivam@linaro.org, miquel.raynal@bootlin.com, richard@nod.at,
+ vigneshr@ti.com, andersson@kernel.org, konradybcio@kernel.org,
+ agross@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mtd@lists.infradead.org
+References: <20250313130918.4238-1-quic_kaushalk@quicinc.com>
+ <20250313130918.4238-5-quic_kaushalk@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250313130918.4238-5-quic_kaushalk@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+On 13/03/2025 14:09, Kaushal Kumar wrote:
+> Add devicetree node to enable support for QPIC
+> NAND controller on Qualcomm SDX75 platform.
+> Since there is no "aon" clock in SDX75, a dummy
+> clock is provided.
 
-Add new platform driver for the Embedded Controller currently used
-in Toradex SMARC iMX8MP and SMARC iMX95.
-It currently provides power-off and restart (reset) handlers.
+Add the clock first.
 
-Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- MAINTAINERS                           |   1 +
- drivers/platform/Kconfig              |   2 +
- drivers/platform/Makefile             |   1 +
- drivers/platform/toradex/Kconfig      |  18 +++
- drivers/platform/toradex/Makefile     |   1 +
- drivers/platform/toradex/toradex-ec.c | 155 ++++++++++++++++++++++++++
- 6 files changed, 178 insertions(+)
- create mode 100644 drivers/platform/toradex/Kconfig
- create mode 100644 drivers/platform/toradex/Makefile
- create mode 100644 drivers/platform/toradex/toradex-ec.c
+Please wrap code according to the preferred limit expressed in Kernel
+coding style (checkpatch is not a coding style description, but only a
+tool).  However don't wrap blindly (see Kernel coding style).
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 19d7c17c0115..fa1630f0f725 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23977,6 +23977,7 @@ M:	Emanuele Ghidoli <ghidoliemanuele@gmail.com>
- M:	Francesco Dolcini <francesco@dolcini.it>
- S:	Maintained
- F:	Documentation/devicetree/bindings/firmware/toradex,embedded-controller.yaml
-+F:	drivers/platform/toradex/toradex-ec.c
- 
- TORTURE-TEST MODULES
- M:	Davidlohr Bueso <dave@stgolabs.net>
-diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
-index 960fd6a82450..84aabb88fb4a 100644
---- a/drivers/platform/Kconfig
-+++ b/drivers/platform/Kconfig
-@@ -15,6 +15,8 @@ source "drivers/platform/olpc/Kconfig"
- 
- source "drivers/platform/surface/Kconfig"
- 
-+source "drivers/platform/toradex/Kconfig"
-+
- source "drivers/platform/x86/Kconfig"
- 
- source "drivers/platform/arm64/Kconfig"
-diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
-index 19ac54648586..2d849a8f3ccf 100644
---- a/drivers/platform/Makefile
-+++ b/drivers/platform/Makefile
-@@ -13,3 +13,4 @@ obj-$(CONFIG_CHROME_PLATFORMS)	+= chrome/
- obj-$(CONFIG_CZNIC_PLATFORMS)	+= cznic/
- obj-$(CONFIG_SURFACE_PLATFORMS)	+= surface/
- obj-$(CONFIG_ARM64_PLATFORM_DEVICES)	+= arm64/
-+obj-$(CONFIG_TORADEX_PLATFORMS)	+= toradex/
-diff --git a/drivers/platform/toradex/Kconfig b/drivers/platform/toradex/Kconfig
-new file mode 100644
-index 000000000000..635d955df79d
---- /dev/null
-+++ b/drivers/platform/toradex/Kconfig
-@@ -0,0 +1,18 @@
-+menuconfig TORADEX_PLATFORMS
-+	bool "Platform support for Toradex hardware"
-+	help
-+	  Say Y here to be able to choose driver support for Toradex
-+	  devices. This option alone does not add any kernel code.
-+
-+if TORADEX_PLATFORMS
-+config TORADEX_EC
-+	tristate "Toradex Embedded Controller driver"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Say Y here to add support for the features implemented by the
-+	  Embedded Controller on the Toradex Modules.
-+	  To compile this driver as a module, choose M here; the module will be
-+	  called toradex-ec.
-+
-+endif # TORADEX_PLATFORMS
-diff --git a/drivers/platform/toradex/Makefile b/drivers/platform/toradex/Makefile
-new file mode 100644
-index 000000000000..eb918819ad35
---- /dev/null
-+++ b/drivers/platform/toradex/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_TORADEX_EC)			+= toradex-ec.o
-diff --git a/drivers/platform/toradex/toradex-ec.c b/drivers/platform/toradex/toradex-ec.c
-new file mode 100644
-index 000000000000..f01addf2a0a6
---- /dev/null
-+++ b/drivers/platform/toradex/toradex-ec.c
-@@ -0,0 +1,155 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Toradex Embedded Controller driver
-+ *
-+ * Copyright (C) 2025 Toradex
-+ *
-+ * Author: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+
-+#define EC_CHIP_ID_REG                  0x00
-+#define EC_VERSION_REG_MAJOR            0x01
-+#define EC_VERSION_REG_MINOR            0x02
-+#define EC_CMD_REG                      0xD0
-+#define EC_REG_MAX                      0xD0
-+
-+#define EC_CHIP_ID_SMARC_IMX95          0x11
-+#define EC_CHIP_ID_SMARC_IMX8MP         0x12
-+
-+#define EC_POWEROFF_CMD                 0x01
-+#define EC_RESET_CMD                    0x02
-+
-+#define EC_ID_VERSION_LEN               3
-+
-+struct tdx_ec {
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+};
-+
-+static const struct regmap_range volatile_ranges[] = {
-+	regmap_reg_range(EC_CMD_REG, EC_CMD_REG),
-+};
-+
-+static const struct regmap_access_table volatile_table = {
-+	.yes_ranges	= volatile_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(volatile_ranges),
-+};
-+
-+static const struct regmap_range read_ranges[] = {
-+	regmap_reg_range(EC_CHIP_ID_REG, EC_VERSION_REG_MINOR),
-+};
-+
-+static const struct regmap_access_table read_table = {
-+	.yes_ranges	= read_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(read_ranges),
-+};
-+
-+static const struct regmap_config regmap_config = {
-+	.reg_bits	= 8,
-+	.val_bits	= 8,
-+	.max_register	= EC_REG_MAX,
-+	.cache_type	= REGCACHE_RBTREE,
-+	.rd_table	= &read_table,
-+	.volatile_table = &volatile_table,
-+};
-+
-+static int tdx_ec_cmd(struct tdx_ec *ec, u8 cmd)
-+{
-+	int err = regmap_write(ec->regmap, EC_CMD_REG, cmd);
-+
-+	if (err)
-+		dev_err(&ec->client->dev, "Failed to send command 0x%02X: %d\n", cmd, err);
-+	return err;
-+}
-+
-+static int tdx_ec_power_off(struct sys_off_data *data)
-+{
-+	struct tdx_ec *ec = data->cb_data;
-+	int err;
-+
-+	err = tdx_ec_cmd(ec, EC_POWEROFF_CMD);
-+	return err ? NOTIFY_BAD : NOTIFY_DONE;
-+}
-+
-+static int tdx_ec_restart(struct sys_off_data *data)
-+{
-+	struct tdx_ec *ec = data->cb_data;
-+	int err;
-+
-+	err = tdx_ec_cmd(ec, EC_RESET_CMD);
-+	return err ? NOTIFY_BAD : NOTIFY_DONE;
-+}
-+
-+static int tdx_ec_register_power_off_restart(struct device *dev, struct tdx_ec *ec)
-+{
-+	int err;
-+
-+	err = devm_register_sys_off_handler(dev, SYS_OFF_MODE_RESTART,
-+					    SYS_OFF_PRIO_FIRMWARE,
-+					    tdx_ec_restart, ec);
-+	if (err)
-+		return err;
-+
-+	err = devm_register_sys_off_handler(dev, SYS_OFF_MODE_POWER_OFF,
-+					    SYS_OFF_PRIO_FIRMWARE,
-+					    tdx_ec_power_off, ec);
-+	return err;
-+}
-+
-+static int tdx_ec_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	u8 reg_val[EC_ID_VERSION_LEN];
-+	struct tdx_ec *ec;
-+	int err;
-+
-+	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-+	if (!ec)
-+		return -ENOMEM;
-+
-+	ec->client = client;
-+	i2c_set_clientdata(client, ec);
-+
-+	ec->regmap = devm_regmap_init_i2c(client, &regmap_config);
-+	if (IS_ERR(ec->regmap))
-+		return PTR_ERR(ec->regmap);
-+
-+	err = regmap_bulk_read(ec->regmap, EC_CHIP_ID_REG, &reg_val, EC_ID_VERSION_LEN);
-+	if (err)
-+		return dev_err_probe(dev, err,
-+				     "Cannot read id and version registers\n");
-+
-+	dev_info(dev, "Toradex Embedded Controller id %x - Firmware %d.%d\n",
-+		 reg_val[0], reg_val[1], reg_val[2]);
-+
-+	err = tdx_ec_register_power_off_restart(dev, ec);
-+	if (err)
-+		return dev_err_probe(dev, err,
-+				     "Cannot register system restart handler\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id __maybe_unused of_tdx_ec_match[] = {
-+	{ .compatible = "toradex,embedded-controller" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, of_tdx_ec_match);
-+
-+static struct i2c_driver toradex_ec_driver = {
-+	.probe			= tdx_ec_probe,
-+	.driver			= {
-+		.name		= "toradex-ec",
-+		.of_match_table = of_tdx_ec_match,
-+	},
-+};
-+module_i2c_driver(toradex_ec_driver);
-+
-+MODULE_AUTHOR("Emanuele Ghidoli <emanuele.ghidoli@toradex.com>");
-+MODULE_DESCRIPTION("Toradex Embedded Controller driver");
-+MODULE_LICENSE("GPL");
--- 
-2.39.5
-
+Best regards,
+Krzysztof
