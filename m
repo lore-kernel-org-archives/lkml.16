@@ -1,226 +1,275 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011020.outbound.protection.outlook.com [52.101.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A74626138E;
-	Thu, 13 Mar 2025 16:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741883996; cv=none; b=px7/ELaa+f5qVt1Jd28m7KmITlILmzPu2DgrB/LaKg0SFbNElH2agsrPsNKKgaUie4EG1FCQeVwsaMhkPFfJWytddsArGgM30J3IcChrSs0CeJzeafZ/66HDaYcCrjJI7KmD7tksvGErsS+eSQsRNiEr+keG+nhLBkBj0K78+6s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741883996; c=relaxed/simple;
-	bh=kTTXTVPn8NUHqRiIZEKZXhYTmuz1K7M32fm2acNDAS4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UAVrtPbaH5P5lO4eFcPtuNhTk+IgYgglFjgrdIYRAb3TVaHDkO+BeeEJaMjcgCPfNRuEfOBgpqhe2K984KT2WvjaiHZQ5H2cX9rg8MnalLV1b/KWm4eBR+y9sYLI8R/w6rDoOpdg/UmPB9bkupMFmt+DrtMI5YgOyZNrV0MiSsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IeHioJ2u; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CBA26A09A;
+	Thu, 13 Mar 2025 16:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741884004; cv=fail; b=bbP48SVLiuzRNExL/afcb46AS1ZaYob0dRdWs4oV68dUE0L6xfig3hof0wBvGSc6uygliG4S+Ssij+kwceSog+WjkVxrfLPPEwpfVcrtGN2m3Qcu9PEPKGzscQOhPl6+4aRyEO+jHZdVmLYP/j1mOlvHvep+vdX2nUSvc9crAeY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741884004; c=relaxed/simple;
+	bh=d60Y6MteTD/4sp4irprRuda8epxYwG9B0YmwqkVU67E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KvHgL8ITUybqQRbS71Of0yA3JsOAyZnkXagdOyNiUuVpeciqmVW2EAtOhjwbSDiZVoCb6cQLwczXn1lMevgLclbB/4FRdbncBpjFtsBeuIajj4T3D4IQx35EXjIulV9gVL53AspMjKoNqeaSz6vIUZa2E2XJFCGRfaNQrYszTyE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=kWdQBQv6; arc=fail smtp.client-ip=52.101.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IeHioJ2u"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e636caf2aa4so145329276.0;
-        Thu, 13 Mar 2025 09:39:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741883993; x=1742488793; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jpMfEfEeQMMLUbXgHwTtp/6maKEVU/1Ktyh/Yj20O60=;
-        b=IeHioJ2uXukzcrdQb+j6lPKHDh2aEA8BlYXLG/xHJuvgMwb9DHef2JMLrquvtiNXTw
-         hMepzkA1uKHyFnbqlqrjt+vUGt9uNp0uljnsGXQNiz82oRSG6Gcido2My9L42SDJPUP3
-         ffDI5VKfY/8OSRdTgPsS5vhoWyOL2uMN7/YgdA787a4O+0FtIHOUKHMLTOLEEdEEBm7J
-         kSRlfliIsJXKjz8z+aBDk0EtXRLZ0Hw/dqeFmMfjc49z/EWEGTFrigsA9HcQjACJNwWg
-         GytqyB8LRpm5ASWJKg/se6oTWFPPL7tcWplFSu/2BaBb+H1KHCOW3edbxOqtXwW5OrYE
-         rUpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741883993; x=1742488793;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jpMfEfEeQMMLUbXgHwTtp/6maKEVU/1Ktyh/Yj20O60=;
-        b=fjdoQRdwe8Jiet8JCOCPsJi9LAIBbIIaEeQjJ1ypVGOpmrZu7hFlzXiDXClzzzJOTp
-         rEnQh8pGFyvbSZ4K7wqPM18/psrJ2vLicXGJXDZK5Rz7LEZhyFmO7NVZFXkHg1Atd6co
-         rnFrP82NM/sh93Y4IXyfpdp7SywPD53iWdwLhSQBK2QeprEnq4C1iIhcK8lLz11De0OD
-         7WODRGozLtHj8LKA/mGYJtOpkPMj+ov8o2tvcam31YaBbRCpq5deGYcPN80auAsKpJEw
-         4myox3QJFhIrYHVCUJyRBAL3WqwxFj8LOQJ8JQk/N4chQ1V9najWpcsa2/DhVp+hEi38
-         aemw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDAMWtzCN/+XYbgpBl4EciOMLKZ3JobvYVLXk9CsrU5DyrskILUNabNTNV5poM7ygGii/qTAGvpmA=@vger.kernel.org, AJvYcCXlDw9fGELF7YMSwOWuh36Ds0pQe8XdYioGcHy9hbt8i+JvKODAqE9D1ujPnm6fcvxzirRv0ufH0mq2VZJG@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRJ+3WFTf1r4/PVdsd8dUi4BBSmeCOcJXOVjKlK5l0w8GRWWTk
-	rf0Tl3OmhiQdtogUWn7Vrevok0BLZJs07Njf+V8rmd1rGpn5daZhQMIhCKc7lpOOR5XxFJHnitz
-	n1332tIowHrShOhtT4QapwGlP4bg=
-X-Gm-Gg: ASbGncviMhnYHCEdWQCxr1NDVddDAnDAyWBOdEksVxFE0YEwIyjdmBxygz9M+hXXFXd
-	7kJvS752qt9wYb46yQ27uBSt1Fgw0RWucFKQnVuatHtuFrzMOCSEd/RXbYCM21utuQ+/LzDnLJk
-	AMhS4eqACoclC3F62T9CxYmSec6Q==
-X-Google-Smtp-Source: AGHT+IE0krfPf6hIkHHa9rxku57tVFK/Jsev9YJhQ/qB/W7cUa2X/VyX9hKtLNC3J8STcZ0V+ZQH+EROE85gYb/9xPw=
-X-Received: by 2002:a05:6902:1701:b0:e60:974f:a03e with SMTP id
- 3f1490d57ef6-e63b51eb164mr7277937276.6.1741883993426; Thu, 13 Mar 2025
- 09:39:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="kWdQBQv6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DrywrlyiX0YyY7QtB49IOC877I+GGjgALtc48GaqVeRHMthHhasZpLQSGedmWXBtvt0qXERcC6yaGQRptpO5pzWDK0J7FKyZjtidwJHzhU4NpzSEhmVD6FuXUioVrCERFoXrsV+hFnLUQm70sAGfaYXDAuidk1V6aQhtIv/ze3mtNl4mysE2pm1u1y3SPMRfrHsCm67RKuWXjTwBxi9mwkeG9HyCNftgzaU2S2rfXU+MZDNjDqCONSc7I1qI5v8PzuM7OF1QON8da3H9aoFMr8TV11fxDTv0EjfQXTh71+9m6bAEbKeZQ9AtZQo5+++dN+0oybz9eX/Zf7QJFFgUGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MiATwUEVUGE2micnLxAuIsSa5nkNr0llEfjBx0LIP+w=;
+ b=DOMyyttRa5DBNylKskapveFq+e5s8C6a8pvnPbq1UZrmeU38GrdodViBu3uuata9pcZ1vEksJ0jnytp+1vMm8c+VJZZKqnUTrE2Ku9+s8mOU4iEaLVfCh6IGf2PqH2Xz7hpMNK3DXRz++efL31JvFhrCYJS591ry6TYHTwHwxlDNlb/d9QEiWXcFkaYMHDyvfgvpRFz5vioClyNHn/tVwdHaE2+HJP+WIVqvWHlGz2QjdkWkH3dx+oHsmYa2kSkWtElkKD3F69nVy/F1l4LD0QBKpJVWz4t6VmJJB161Rdy3BR5mk/FR0LVDJ3seSMQrPHJulQ1tBivgXxD3IFFtag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MiATwUEVUGE2micnLxAuIsSa5nkNr0llEfjBx0LIP+w=;
+ b=kWdQBQv6tBc+Csa9uNI771mb3UmqI/UV1sMTyQj0mQuo3U8qCzc6gQE6qcGptwDavJSURGKOP3Rtt9FtkoexefyiO1HW8jvSFTmqh3E9x4syu9uB8l/nbkgmUZZcxKx24oBhsN8YgOO7LD8rcIvVJUGSk3F9aSvaflIoJlcwMtFZ75jnilfRnkrIWQ/S2DgrHQVwSq17GlYptU0C5fFENYkTU9x82yFZFmMCdcYVQgErLBuRBba9MIwaswedj9JPQknGeFRe9gkdCHDo+GGTKJ4ChtWWx86B9oepPrCHMy1VC1Ti7gC1qu3ZaixVfhN+zf04WsF9gLppVG2+VmwdVw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by VI2PR04MB10268.eurprd04.prod.outlook.com (2603:10a6:800:21f::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Thu, 13 Mar
+ 2025 16:39:58 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8511.026; Thu, 13 Mar 2025
+ 16:39:58 +0000
+Date: Thu, 13 Mar 2025 12:39:49 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: florin.leotescu@oss.nxp.com
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Shych <michaelsh@nvidia.com>, linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	viorel.suman@nxp.com, carlos.song@nxp.com,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	festevam@gmail.com, Florin Leotescu <florin.leotescu@nxp.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: hwmon: Add Microchip emc2305 support
+Message-ID: <Z9MKVd8NeLKNIkd2@lizhi-Precision-Tower-5810>
+References: <20250313125746.2901904-1-florin.leotescu@oss.nxp.com>
+ <20250313125746.2901904-2-florin.leotescu@oss.nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313125746.2901904-2-florin.leotescu@oss.nxp.com>
+X-ClientProxiedBy: SJ0PR13CA0188.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::13) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220104234.40958-1-l.rubusch@gmail.com> <20250220104234.40958-15-l.rubusch@gmail.com>
- <20250304135917.39ef0071@jic23-huawei>
-In-Reply-To: <20250304135917.39ef0071@jic23-huawei>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Thu, 13 Mar 2025 17:39:17 +0100
-X-Gm-Features: AQ5f1JqDvQ9suFRK-JOPQEi1z8ToTfC5DsNr_wSDRZtRwddfjEHdw75T_MnVYYI
-Message-ID: <CAFXKEHZDo=AYFswbM48T7syNzk03rPa0PbLceh3C_HPUkKKxQw@mail.gmail.com>
-Subject: Re: [PATCH v3 14/15] iio: accel: adxl345: add coupling detection for activity/inactivity
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI2PR04MB10268:EE_
+X-MS-Office365-Filtering-Correlation-Id: 87893e58-f2d5-4148-97a0-08dd624db106
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?AeJC0FmqSc56wHG+q+G4A3jC7/Blm8F+O/WwpvMKtreQOrBi+JhX5yxI92ub?=
+ =?us-ascii?Q?7ZXYsoJhOAx6v3FN9P91zbWe888SnBjEy4f2iyo7jFXu2+ITeUDJROY/OB/g?=
+ =?us-ascii?Q?UM4eym1PlQy5LQBf11DmhrthgRh8QYRHbnmVLOzFQP8i2x4jxM5pjuJmbTFG?=
+ =?us-ascii?Q?JfBDHkmHUEOA8UjQCxw9+uY/+8aluv9aw9d0/AUCRAuko2cxJ3JAfQ6kb+3u?=
+ =?us-ascii?Q?n25C2/6hyCqpK8N6mj3dQEOMNt5EQ+44SSVpQS3zuhS5Wt9m8Hm/lOOztpNn?=
+ =?us-ascii?Q?sObicOKscwNkUhD/uolPwfNm/x322Fyrj6gkhyEpTQCTh1UW+wnJ2dhZG+uE?=
+ =?us-ascii?Q?crAkYxuo7FXVSDYiyVVAEZEhFNj5Me4H3N0HciCovUKBY1AOUR2kMHdWERrt?=
+ =?us-ascii?Q?wDUmWVf9PCfyzLi5tBorazadX2w/dk22+Imm3ISFsnwCjjVX9zQhOPFxRC9d?=
+ =?us-ascii?Q?cdpvpl6Q+dZLXXrwrKHwPPN39uLYrGnQCCs2yFpHymEerHaIVOFO3rELoMex?=
+ =?us-ascii?Q?kGMeTPeFHqbx9PQuaf7y0RJ8qbOU61rCS5dg2HaNzocKCxCdqD2mVnpRuI27?=
+ =?us-ascii?Q?woijiQMAp/lbILY1NKr56rex3eIFLDRUWZ8QqfydAyn+v5mQizjeRSEOWype?=
+ =?us-ascii?Q?zU/kxLcQsmsf3jV9MbL4/7BILlxrlXWUL9TD+7ccPlur5dmCt1rBapE2IEmL?=
+ =?us-ascii?Q?j7VcAQmVm/aZs7fgD/tNTpiat/MGFJew1TFUfYAQW2/oruf8Pvz+HQbDbQOO?=
+ =?us-ascii?Q?zwaBupgQKoJZry5WBnUPNiYqz2Yq4Ca7cUKHQA3Gahie6LYfT6/etEswkTX+?=
+ =?us-ascii?Q?+urr4HidhNwLc585djt6k8GyMqgb1yJzIMx7zVfUlvG9cIrI6vVMJ9ovU6K6?=
+ =?us-ascii?Q?7y2gBpKZiqZxbVH+nZF5oBiCPC6M9uhzrLCKvqrASFWIO+V3L3cOdIfFQ6e0?=
+ =?us-ascii?Q?v8eWZU8fMjm/f++Ry/xLfYfDhQcQiaHQPnJtntKPSOVv2OJ3SiJQQPtkxM2+?=
+ =?us-ascii?Q?4A18R9zkQUE6mxjUsMCGld+xp4iaB3ReJScXPKvOpBYH+2DiKghdVN4gZ8np?=
+ =?us-ascii?Q?l42Y8mFY13hD+RrNsTq5WYoPKl47ZIEVnfynSdhTCitzkbMRBPKl8P3UTW0t?=
+ =?us-ascii?Q?dMTZfgPju7HyuMbOJAuUYYB+vabAxi0GRnGrmbzOCvSGBbZ6V4AyCywgpb0a?=
+ =?us-ascii?Q?4E5MOjAS60G8dUPfmSpxfidf6VftYh0JdVmYfWRhKNiAcnqsE+VXCYJT9Q8p?=
+ =?us-ascii?Q?c2F9k/uQi+kKC4HK2fYqPdIkWGN6qB2mTz1vCrN+T/DkM3Dy/uCwBzVQch4v?=
+ =?us-ascii?Q?/0LYxxrjalxCP5oVNuJ678uqtVMsAab5xzXcXtoeMEt2p+FbgkzoxlShAYGe?=
+ =?us-ascii?Q?BUsZ3wdRnICrQ8qVxgVSTSdB5+3c?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?igZV4FjiWD2hEyv/7aOunAVFhk49b6tIjbNvK2v//tgxA+Fo8ZaMG9aoSp+B?=
+ =?us-ascii?Q?etbYE8coHWanpNC7Kl6apBfbS25PwyYKYRvxfsF5jBPVgCLyJdv4olPj7dfX?=
+ =?us-ascii?Q?DSbp/v1YBIiu6KxeflIlRroHb+QjwcPvDaaWtkgYTq84pbpUi0Yvnbs6OEyo?=
+ =?us-ascii?Q?4B1agtIMDSIdogD20Hwx9+paAINaDN/sNjIcTSImDMM8PrLC3lX2WO5fCkyq?=
+ =?us-ascii?Q?f7mH0NppKFjZUD7LAcjGkvlg5J7/C1njCJPObH3zX3SMCKEJaOl1+lKDcYrK?=
+ =?us-ascii?Q?47RFJC+f7W5c/as29ysXXvJax1/h5ZxQccKIe5/4NyOnj6sihlpHgNxNCYah?=
+ =?us-ascii?Q?t/+FGQdzBn4YtH3uwF6EsFak2Wq19d/BXMWXrXZtdRle63fbyFHiXCr9QC3N?=
+ =?us-ascii?Q?ozt3uK++aqOrV51V/WYAsWGMAkmikM161/1gqyE3TsM7fup1G4MR7mWAmBiJ?=
+ =?us-ascii?Q?CtXygEHLjqEtNzgbkEaws/4pWolhIquudaIR/Z5h44/FLSZpo+pY+IO8CHC6?=
+ =?us-ascii?Q?oIj4+pIpgo2vGVeApIrftCO51EAauqEvUzP50j4fE0OwO84nb6B7gZL9a2Ov?=
+ =?us-ascii?Q?QayiocmDuREm+2xnj3dgTTttho1oSZNAULigV2FUp73IX6HGb2UewRoE5cDH?=
+ =?us-ascii?Q?I65XXrWdMZLMOuncap0Kz6AWVYwDNSN1QkN60Y+4lTtsiEPAG2IdxgpBaERI?=
+ =?us-ascii?Q?whwCMA6xOkJ+SIRj4g8DqynHOMphzm7iSOX9a/8OcHXvyOYLdQ44inrMtjtj?=
+ =?us-ascii?Q?sBbnfGxJJ92xtG9LEE1k3qHAp2u/uRD1xZ0TOv0KPiERsNYb3s6eNauJdmHU?=
+ =?us-ascii?Q?4fYOHpzQf75lVijY96aIii5IHFYlKxTkLZBNzKqOfVpeVi97fEKtIcbwDBDQ?=
+ =?us-ascii?Q?qA7Ve+4B55IW1VAPk9sg9oDFWk6EgqaeMqUEfHyH30J4pNW049bApzfMTwUP?=
+ =?us-ascii?Q?xLE/F1D1cIBL204w+uirwWXjgzM8mDnEyYucYiOI74/sF0kYu8e3j1Zf948u?=
+ =?us-ascii?Q?gDvHk52/FtrFExWYSKdfPNRZ8mU+ofbK5cAHKpm/A8NXHLhgl6CsEz6WmiKw?=
+ =?us-ascii?Q?vXhFHZbZKwGBcuZwZHXfWk4QYCYtuMHR33zG60JEMrEQVGwdwZs7xAoj6UrV?=
+ =?us-ascii?Q?NcJLu7MCTyM6j8VTR2vn/rvBT+JK2fUxqozblwr73uv5vbWzucD8CulhC4ta?=
+ =?us-ascii?Q?by6zcJS3bTU5KX+TLZMD5P7xF3czdRBiS7sHN38n1Itck08yKp60T3DBKr5x?=
+ =?us-ascii?Q?M3TRSIWUvivCFUgwAMgtKjtnvzG+cPhr5W4rIcjyx6HSSR6xGt7xtvDuBqY7?=
+ =?us-ascii?Q?CyPf+ktNpq/e+9PXXTazwYqCc8nrzg1FKpGiGCV8v7iDY3T1TUPCHTJVyMkU?=
+ =?us-ascii?Q?rpZvBTaXYmeMme0GZrIrX8Rc+wCqBxbW0CE5PCaM/517BL3cMNPU4L7jPkoh?=
+ =?us-ascii?Q?hGTMK4XH+KshngdF6q5PYaZ92dH9Y+flw+LOkBdbaRB7l7MVpylqgHC0SHrw?=
+ =?us-ascii?Q?kmBtAOkb8SbIxtvbsUpAw5u8PmCQUCJyAnYD7Sam84MdZj7z5rFE+/1hZsGE?=
+ =?us-ascii?Q?eGn73oe9fISejH/q8NoLAeWfx/2fFUvXDjIi0Efq?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87893e58-f2d5-4148-97a0-08dd624db106
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 16:39:58.0557
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zDpF4xRpSFd0amcuIjxM98sGm1I1IjpmtTTC0ecIW15tqskf4Os8dFCB4fzE/eM97eKtCJVyv1RsRt0pK5X9tw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10268
 
-On Tue, Mar 4, 2025 at 2:59=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
-wrote:
+On Thu, Mar 13, 2025 at 02:57:44PM +0200, florin.leotescu@oss.nxp.com wrote:
+> From: Florin Leotescu <florin.leotescu@nxp.com>
 >
-> On Thu, 20 Feb 2025 10:42:33 +0000
-> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> Introduce yaml schema for Microchip emc2305 pwm fan controller.
 >
-> > Add coupling activity/inactivity detection by the AC/DC bit. This is an
-> > addititional enhancement for the detection of activity states and
-> > completes the activity / inactivity feature of the ADXL345.
-> >
-> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> > @@ -337,6 +356,69 @@ static int adxl345_write_act_axis(struct adxl345_s=
-tate *st,
-> >       return 0;
-> >  }
-> >
-> > +static int adxl345_is_act_inact_ac(struct adxl345_state *st,
-> > +                                enum adxl345_activity_type type, bool =
-*ac)
-> > +{
-> > +     unsigned int regval;
-> > +     int ret;
-> > +
-> > +     ret =3D regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &regv=
-al);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if (type =3D=3D ADXL345_ACTIVITY)
-> > +             *ac =3D (FIELD_GET(ADXL345_REG_ACT_ACDC_MSK, regval) > 0)=
- ? true : false;
-> > +     else
-> > +             *ac =3D (FIELD_GET(ADXL345_REG_INACT_ACDC_MSK, regval) > =
-0) ? true : false;
-> > +
-> Why the ternaries?
->                 *ac =3D FIELD_GET() > 0;
-> is a boolean right hand side anyway.
+> Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
+> ---
+>  .../bindings/hwmon/microchip,emc2305.yaml     | 104 ++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml
 >
-> > +     return 0;
-> > +}
-> > +
-> > +static int adxl345_set_act_inact_ac(struct adxl345_state *st,
-> > +                                 enum adxl345_activity_type type, bool=
- ac)
-> > +{
-> > +     unsigned int act_inact_ac =3D ac ? 0xff : 0x00;
-> > +
-> > +     /*
-> > +      * A setting of 0 selects dc-coupled operation, and a setting of =
-1
-> false and true rather than 0 / 1?
+> diff --git a/Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml b/Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml
+> new file mode 100644
+> index 000000000000..3107fcafcf6a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +
+> +$id: http://devicetree.org/schemas/hwmon/microchip,emc2305.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip EMC2305 SMBus compliant PWM fan controller
+> +
+> +maintainers:
+> +  - Michael Shych <michaelsh@nvidia.com>
+> +
+> +description:
+> +  Microchip EMC2301/2/3/5 pwm controller which supports
+> +  up to five programmable fan control circuits.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +          - microchip,emc2305
+> +      - items:
+> +          - enum:
+> +              - microchip,emc2303
+> +              - microchip,emc2302
+> +              - microchip,emc2301
+> +          - const: microchip,emc2305
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  '#pwm-cells':
+> +    const: 2
+> +
+> +patternProperties:
+> +  "^fan@[0-4]$":
+> +    $ref: fan-common.yaml#
+> +    unevaluatedProperties: false
+> +    properties:
+> +      reg:
+> +        description:
+> +          The fan number.
+> +
+> +    required:
+> +      - reg
+> +      - pwms
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        fan_controller: fan-controller@2f {
+> +            compatible = "microchip,emc2305";
+> +            reg = <0x2f>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            #pwm-cells = <2>;
+> +
+> +            fan@0 {
+> +                #cooling-cells = <2>;
+> +                reg = <0x0>;
+> +                pwms = <&fan_controller 1 1>;
+> +            };
+> +
+> +            fan@1 {
+> +                #cooling-cells = <2>;
+> +                reg = <0x1>;
+> +                pwms = <&fan_controller 1 1>;
+> +            };
+> +
+> +            fan@2 {
+> +                #cooling-cells = <2>;
+> +                reg = <0x2>;
+> +                pwms = <&fan_controller 1 1>;
+> +            };
+> +
+> +            fan@3 {
+> +                #cooling-cells = <2>;
+> +                reg = <0x3>;
+> +                pwms = <&fan_controller 1 1>;
+> +            };
+> +
+> +            fan@4 {
+> +                #cooling-cells = <2>;
+> +                reg = <0x4>;
+> +                pwms = <&fan_controller 1 1>;
+> +            };
 
-I don't see where "false" and "true" here has an advantage over 0 and
-1, since the text speaks
-about setting a bit to 1 or 0. Anyway I changed this in v4.
+I think one child node should be enough for example.
 
-BTW. in v4 I re-added the comments about the channels for /* single
-tap */ and /* double tap */ although this is possible to see from the
-iio channel. Since I add comments for freefall, for activity, etc. it
-looked cleaner to me, if definitely not ok, let me know please.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-> > +      * enables ac-coupled operation. In dc-coupled operation, the cur=
-rent
-> > +      * acceleration magnitude is compared directly with
-> > +      * ADXL345_REG_THRESH_ACT and ADXL345_REG_THRESH_INACT to determi=
-ne
-> > +      * whether activity or inactivity is detected.
-> ...
-> >  static int adxl345_is_act_inact_en(struct adxl345_state *st,
-> >                                  enum adxl345_activity_type type, bool =
-*en)
-> >  {
-> > @@ -695,6 +777,11 @@ static int adxl345_set_odr(struct adxl345_state *s=
-t, enum adxl345_odr odr)
-> >       if (ret)
-> >               return ret;
-> >
-> > +     /* update inactivity time by ODR */
-> > +     ret =3D adxl345_set_inact_time_s(st, 0);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> >       return 0;
->
-> return adxl345_set_inact_time_s()
->
-> >  }
-> >
-> > @@ -718,14 +805,54 @@ static int adxl345_find_range(struct adxl345_stat=
-e *st, int val, int val2,
-> >
-> >  static int adxl345_set_range(struct adxl345_state *st, enum adxl345_ra=
-nge range)
-> >  {
-> > +     unsigned int act_threshold, inact_threshold;
-> > +     unsigned int range_old;
-> > +     unsigned int regval;
-> >       int ret;
-> >
-> > +     ret =3D regmap_read(st->regmap, ADXL345_REG_DATA_FORMAT, &regval)=
-;
-> > +     if (ret)
-> > +             return ret;
-> > +     range_old =3D FIELD_GET(ADXL345_DATA_FORMAT_RANGE, regval);
-> > +
-> > +     ret =3D regmap_read(st->regmap,
-> > +                       adxl345_act_thresh_reg[ADXL345_ACTIVITY],
-> > +                       &act_threshold);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D regmap_read(st->regmap,
-> > +                       adxl345_act_thresh_reg[ADXL345_INACTIVITY],
-> > +                       &inact_threshold);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> >       ret =3D regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
-> >                                ADXL345_DATA_FORMAT_RANGE,
-> >                                FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, ra=
-nge));
-> >       if (ret)
-> >               return ret;
-> >
-> > +     act_threshold =3D act_threshold
-> > +             * adxl345_range_factor_tbl[range_old]
-> > +             / adxl345_range_factor_tbl[range];
-> > +     act_threshold =3D min(255, max(1, inact_threshold));
-> > +
-> > +     inact_threshold =3D inact_threshold
-> > +             * adxl345_range_factor_tbl[range_old]
-> > +             / adxl345_range_factor_tbl[range];
-> > +     inact_threshold =3D min(255, max(1, inact_threshold));
-> > +
-> > +     ret =3D regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_A=
-CTIVITY],
-> > +                        act_threshold);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_I=
-NACTIVITY],
-> > +                        inact_threshold);
-> > +     if (ret)
-> > +             return ret;
-> return regmap_write()
-> > +
-> >       return 0;
-> >  }
+> +        };
+> +    };
+> +...
+> --
+> 2.34.1
 >
