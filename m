@@ -1,206 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4069537FF
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E77267731;
+	Thu, 13 Mar 2025 13:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741872930; cv=none; b=BjyyRw/k9NBleLz1MMpnvrAI1at8LAgNa0wewuHF7dXGRBHnddlnH7Z4PCaTJ0FiENJpCWYN2n+dginYtZufQx2wOowGKzXFeJfk9GlVUvbvT1NfkvOGdUp6JKbvHS4k2OvgYoey19bfhrXJPNy68+HcBZAQwO7gz0jFDULfxBI=
+	t=1741873257; cv=none; b=eKLNfNzODX/tk/vVIltnQcS8dVUfFB7wh7uiofgeqzwI4j5T9K5SNdU2WV14yi0xUUqpqS7ubQZlIsGrFtmd3tpZPU/5LSJtlJdTb8AQW3E352hIMsROyT2UOLqs475+nbIkE491JtQgfkr+WAzJy575z9ERHbGXBY+7S2vXr6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741872930; c=relaxed/simple;
-	bh=GSvuKDn6GvEj4StlyA9y4pE71cNqRY2cL2gZwvYxJgY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a+23L62LF5e2DLzVTooSTQWm8yPUKt5imwV6Tb64KHapm2UW/WBc7vG1q2AqV0zNxjHocl1ekWW7Ysh5W9LeGXfyszI3ngrO+Ldu2YfIhMeuonocRpptxkuKIoAccu8k89AyX6ebj2LgaTUMwr1cbizjUi1VZu7ZniNxLoHG3RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HdNVAvns; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741873257; c=relaxed/simple;
+	bh=fDrllgJwbtF5U+EFRF19R7vCBQLB8dfEURQCxyc9ok0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SscldYA0yr9hyC8YjUOiX5a/gNhv8/BLseTC5i7etbn6OY3+oN0VipNVMY6ebPSLpVCNcDODoFqKGuMhApcnY8UigA/ISO5p9LbYqiWCvhMCGEDsBHH7KVA3vL3f655jQ6nbdKTrHp3YOn/IezuKpm85iBTNjva9f3B4RKyourA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=gyJyVrD1; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HdNVAvns"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741872927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cJptmV2ov9F43XWgGQgvpiN+Bxm0Brgya5E5ifNGox0=;
-	b=HdNVAvnsqLVcILKjBBf7hvbvENUnPnfXFkB3E+H82Fq/nb0PUGh6vLXKvcHHHr1iY0CCBT
-	vvYhfB55wRYY2mNzL/dMgQBhMdomP2nrElK94bynj4x6Gl1/NsTk7k6F4jwime4j3+n/WK
-	XwP/Hosiz4XshEI7dhW6Z6t6wPwpxPE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-296-KGjL1ptYNkWWD2Vs9RyrpA-1; Thu,
- 13 Mar 2025 09:35:22 -0400
-X-MC-Unique: KGjL1ptYNkWWD2Vs9RyrpA-1
-X-Mimecast-MFC-AGG-ID: KGjL1ptYNkWWD2Vs9RyrpA_1741872921
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E903D180AF59;
-	Thu, 13 Mar 2025 13:35:20 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.76.7])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8464F1828AA7;
-	Thu, 13 Mar 2025 13:35:19 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Trond Myklebust <trondmy@hammerspace.com>, anna@kernel.org,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sunrpc: add a rpc_clnt shutdown control in debugfs
-Date: Thu, 13 Mar 2025 09:35:17 -0400
-Message-ID: <0E1E14E2-BD4B-433B-8355-EEF45384BE83@redhat.com>
-In-Reply-To: <ee74d5920532d81f77e503d6ef8bc5fbfc66d04e.camel@kernel.org>
-References: <20250312-rpc-shutdown-v1-1-cc90d79a71c2@kernel.org>
- <7906109F-91D2-4ECF-B868-5519B56D2CEE@redhat.com>
- <997f992f951bd235953c5f0e2959da6351a65adb.camel@kernel.org>
- <8bf55a6fb64ba9e21a1ec8c5644355ffd6496c6e.camel@hammerspace.com>
- <ee74d5920532d81f77e503d6ef8bc5fbfc66d04e.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="gyJyVrD1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=4CWs8MteW/WaidbFLCARB0U29Fg/zJsP3Gsrar0C4Ew=; b=gyJyVrD1SJUsXkw6uxZS3GyW3g
+	yN5gt3IJJom2RAdV08DWMh0KkFwfK18ljaOcqm4qZWt1izix6OXX2Auikxa04YcUR6+zDUNjglmYE
+	VyOyTWb74IUejLowq3DWuBg8J4yF3Iu7EnWN+HGsPGnGEs6RkPFdzXj1ywrAuRwF+vuqlXPKwPckJ
+	VBGZmJMpsIutJjLqs9/Hajm7p8B4mCeJsI/tZ562ePWcQKI9BuQg7GOnAPmGTC2vcj18QIkJMHBtl
+	ubbZMr45dsNr4lewH6/APGmfJ8/G8A3TmiASAJWn+Pzdy/iNaFtiD6URQDxbv8hL3CjX1Xkhsszis
+	iVHssZHQ==;
+Received: from [62.91.42.92] (helo=phil..)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tsine-0008Rg-Vf; Thu, 13 Mar 2025 14:40:39 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: vkoul@kernel.org,
+	kishon@kernel.org
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	quentin.schulz@cherry.de,
+	sebastian.reichel@collabora.com,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	dse@thaumatec.com,
+	heiko@sntech.de
+Subject: [PATCH v8 0/2] MIPI DSI phy for rk3588
+Date: Thu, 13 Mar 2025 14:40:30 +0100
+Message-ID: <20250313134035.278133-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 13 Mar 2025, at 9:15, Jeff Layton wrote:
+This adds the phy driver need for DSI output on rk3588.
 
-> On Wed, 2025-03-12 at 22:31 +0000, Trond Myklebust wrote:
->> On Wed, 2025-03-12 at 10:37 -0400, Jeff Layton wrote:
->>> On Wed, 2025-03-12 at 09:52 -0400, Benjamin Coddington wrote:
->>>> On 12 Mar 2025, at 9:36, Jeff Layton wrote:
->>>>
->>>>> There have been confirmed reports where a container with an NFS
->>>>> mount
->>>>> inside it dies abruptly, along with all of its processes, but the
->>>>> NFS
->>>>> client sticks around and keeps trying to send RPCs after the
->>>>> networking
->>>>> is gone.
->>>>>
->>>>> We have a reproducer where if we SIGKILL a container with an NFS
->>>>> mount,
->>>>> the RPC clients will stick around indefinitely. The orchestrator
->>>>> does a MNT_DETACH unmount on the NFS mount, and then tears down
->>>>> the
->>>>> networking while there are still RPCs in flight.
->>>>>
->>>>> Recently new controls were added[1] that allow shutting down an
->>>>> NFS
->>>>> mount. That doesn't help here since the mount namespace is
->>>>> detached from
->>>>> any tasks at this point.
->>>>
->>>> That's interesting - seems like the orchestrator could just reorder
->>>> its
->>>> request to shutdown before detaching the mount namespace.  Not an
->>>> objection,
->>>> just wondering why the MNT_DETACH must come first.
->>>>
->>>
->>> The reproducer we have is to systemd-nspawn a container, mount up an
->>> NFS mount inside it, start some I/O on it with fio and then kill -9
->>> the
->>> systemd running inside the container. There isn't much the
->>> orchestrator
->>> (root-level systemd) can do to at that point other than clean up
->>> what's
->>> left.
->>>
->>> I'm still working on a way to reliably detect when this has happened.
->>> For now, we just have to notice that some clients aren't dying.
->>>
->>>>> Transplant shutdown_client() to the sunrpc module, and give it a
->>>>> more
->>>>> distinct name. Add a new debugfs sunrpc/rpc_clnt/*/shutdown knob
->>>>> that
->>>>> allows the same functionality as the one in /sys/fs/nfs, but at
->>>>> the
->>>>> rpc_clnt level.
->>>>>
->>>>> [1]: commit d9615d166c7e ("NFS: add sysfs shutdown knob").
->>>>>
->>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>>>
->>>> I have a TODO to patch Documentation/ for this knob mostly to write
->>>> warnings
->>>> because there are some potential "gotchas" here - for example you
->>>> can have
->>>> shared RPC clients and shutting down one of those can cause
->>>> problems for a
->>>> different mount (this is true today with the
->>>> /sys/fs/nfs/[bdi]/shutdown
->>>> knob).  Shutting down aribitrary clients will definitely break
->>>> things in
->>>> weird ways, its not a safe place to explore.
->>>>
->>>
->>> Yes, you really do need to know what you're doing. 0200 permissions
->>> are
->>> essential for this file, IOW. Thanks for the R-b!
->>
->> Sorry, but NACK! We should not be adding control mechanisms to debugfs.
->>
->
-> Ok. Would adding sunrpc controls under sysfs be more acceptable? I do
-> agree that this is a potential footgun, however. It would be nicer to
-> clean this situation up automagically.
->
->> One thing that might work in situations like this is perhaps to make
->> use of the fact that we are monitoring whether or not rpc_pipefs is
->> mounted. So if the mount is containerised, and the orchestrator
->> unmounts everything, including rpc_pipefs, we might take that as a hint
->> that we should treat any future connection errors as being fatal.
->>
->
-> rpc_pipefs isn't being mounted at all in the container I'm using. I
-> think that's not going to be a reliable test for this.
->
->> Otherwise, we'd have to be able to monitor the root task, and check if
->> it is still alive in order to figure out if out containerised world has
->> collapsed.
->>
->
-> If by the root task, you mean the initial task in the container, then
-> that method seems a little sketchy too. How would we determine that
-> from the RPC layer?
->
-> To be clear: the situation here is that we have a container with a veth
-> device that is communicating with the outside world. Once all of the
-> processes in the container exit, the veth device in the container
-> disappears. The rpc_xprt holds a ref on the netns though, so that
-> sticks around trying to retransmit indefinitely.
->
-> I think what we really need is a lightweight reference on the netns.
-> Something where we can tell that there are no userland tasks that care
-> about it anymore, so we can be more aggressive about giving up on it.
->
-> There is a "passive" refcount inside struct net, but that's not quite
-> what we need as it won't keep the sunrpc_net in place.
->
-> What if instead of holding a netns reference in the xprt, we have it
-> hold a reference on a new refcount_t that lives in sunrpc_net? Then, we
-> add a pre_exit pernet_ops callback that does a shutdown_client() on all
-> of the rpc_clnt's attached to the xprts in that netns. The pre_exit can
-> then just block until the sunrpc_net refcount goes to 0.
->
-> I think that would allow everything to be cleaned up properly?
+The phy itself is used for both DSI output and CSI input, though the
+CSI part for the whole chain needs a lot more work, so is left out for
+now and only the DSI part implemented.
 
-Do you think that might create unwanted behaviors for a netns that might
-still be repairable?   Maybe that doesn't make a lot of sense if there are no
-processes in it, but I imagine a network namespace could be in this state
-and we'd still want to try to use it.
+This allows the rk3588 with its current VOP support to drive a DSI display
+using the DSI2 controller driver I'll submit in a next step.
 
-I think there's an out-of-kernel (haven't tried yet) way to do it with udev,
-which, if used, creates an explicit requirement for the orchestrator to
-define exactly what should happen if the veth goes away.  When creating the
-namespace, the orchestrator should insert a rule that says "when this veth
-disappears, we shutdown this fs".
+Only generic phy interfaces are used, so the DSI part is pretty straight
+forward.
 
-Again, I'm not sure if that's even possible, but I'm willing to muck around
-a bit and give it a try.
+changes in v8:
+- add comment that the timing values comes from the vendor kernel (Vinod)
 
-Ben
+changes in v7:
+- missing pclk-disable in resume error path
+- replace remaining magic values with actual constants
+- lower-case hex values
+- made lane_disable behave similar to lane_enable wrt. lane count
+
+changes in v6:
+- rebase onto 6.14-rc1
+- add Krzysztof binding review
+- v5 was sent at the beginning of december '24, so probably has been lost
+
+changes in v5:
+- add bitfield.h for the FIELD_PROP definition
+  (reported by kernel-test-robot)
+- add Sebastian's Reviewed-by
+- add Conor's Ack to the dt-binding
+
+changes in v4:
+- moved to #phy-cells = 1 as suggested by Sebastian, with the argument
+  denoting the requested phy-type (C-PHY, D-PHY). This works similarly
+  how the Mediatek C/D-PHY already implements this, see mails around:
+  https://lore.kernel.org/all/20230608200552.GA3303349-robh@kernel.org/
+- dropped Krzysztof's review tag from the binding because of this
+- dropped custom UPDATE macro and use FIELD_PREP instead
+- build a FIELD_PREP_HIWORD macro for the GRF settings
+- add received Tested-by tags
+
+changes in v3:
+- add Krzysztof review tag to the binding
+- address Sebastian's review comments
+  - better error handling
+  - dropping empty function
+  - headers
+  - not using of_match_ptr - this should also make the
+    test-robot happier
+
+changes in v2:
+- fix error in dt-binding example
+- drop unused frequency table
+- pull in some more recent improvements from the vendor-kernel
+  which includes a lot less magic values
+- already include the support for rk3576
+- use dev_err_probe
+
+Heiko Stuebner (2):
+  dt-bindings: phy: Add Rockchip MIPI C-/D-PHY schema
+  phy: rockchip: Add Samsung MIPI D-/C-PHY driver
+
+ .../phy/rockchip,rk3588-mipi-dcphy.yaml       |   87 +
+ drivers/phy/rockchip/Kconfig                  |   12 +
+ drivers/phy/rockchip/Makefile                 |    1 +
+ .../phy/rockchip/phy-rockchip-samsung-dcphy.c | 1719 +++++++++++++++++
+ 4 files changed, 1819 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip,rk3588-mipi-dcphy.yaml
+ create mode 100644 drivers/phy/rockchip/phy-rockchip-samsung-dcphy.c
+
+-- 
+2.47.2
 
