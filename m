@@ -1,195 +1,198 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2046.outbound.protection.outlook.com [40.107.223.46])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FD7747F;
-	Thu, 13 Mar 2025 21:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741900877; cv=fail; b=lIlfyfW8JzqIogjOTPtzKvDgu2n8EryCv/JTDlPSpOohTX1mk7/m7vQ10dHm69zHDE1eOiclRUP6xS8/IIucTIS6UoklYxM24Y3wtHd3NYqzn4zlJhrJSnGLKX6kuAQu/u+Oli1bDjGW5rRK/tF0ueQfEyjjZI7CMRdHmFVB9pQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741900877; c=relaxed/simple;
-	bh=RffNUvxKJ/F6meGDBc1xxtqeBxsIqfuJRdqUbDj1fDc=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Uea9tIMW60Kspw5nM0Mx+qvXdtobFDmPF2BCT4Weg8K9G5dZtLwwWx4JY+eF985MhpLr3/yOvWGzfbamHNJWYF777KyUmeeqoktCb1k7cSGE2DdiVUd5TwGcaXJnS350e563A5YD6MKvlDxZJROGtdYBoAZq6/IhSf9PZocd0rY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jT4ptvZR; arc=fail smtp.client-ip=40.107.223.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673471F471D
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 21:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741900903; cv=none; b=e5g8TPm3EEUPeiZ9qXqPgfnv/S+T3w01FmFC5KIuguP8ya9ITfCpa24kboJUPLLsPBLWNd+AIWDO+n4cK9f2VqMpxTB8esojEARHAYVYsMe9CVJV5iFO/MuFkzLm1meSWJeG0Eoz5TdmSwyHGmcU1jF3FA6KZafNqRLtjUDq+gI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741900903; c=relaxed/simple;
+	bh=bxwRGhp1n0pI0/lcXsC1uFENkA1yhmJSWsvPZhEto9M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XpHXxtK6IXd+BT03DyGJzCZcpTekKOsdU9lLCLCwsK65qS0l95mzfkkUyk/YHOsnmRw18ZohJArmuL8/4Gmuq3bwRX4nC3iJEvYbAewzgHF/9XfC96lic6nZSnd4PY/J7oVhHVa7JhBc4JF8Z2IbB/MRPXvJV94V6eoATNY+ztw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Hy9mTsMI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jT4ptvZR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ct6MtS0WX+VEMtej21DAHy1MzyS+qWefiulqgVBgpjIJG6HsEhtzb4SPD3NgyB+LewwdPzhp9Pcf3zKX+sZmydVJcUwuwUesZSqo1k2xRXq/Dq6Gs53LoL5b0Wd7UOw/jY0pFP1ciOpZhyRLR6lyVmrrzkbPk1lNqwiBOJytBJ8Hkv/BebF05LoA7FKlj3CmUuUVTK3KXNb+3ICcSyY5KY5R9J9p08TeAEXJ7fH6uy3QNLROXRr5etSPPbpJXg1hOX4eJq+bllceeYPYfCkRMIokTmBWDPeOrbkSh45Cw9B+26GVeu7v8CfHshd4nq+KhfcI62WVLakJY3cfc2ki+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RffNUvxKJ/F6meGDBc1xxtqeBxsIqfuJRdqUbDj1fDc=;
- b=or5p52FgG6pQ6c6uNrJuzyruWpw9biCCsabpd1AD4q+56MAb55X2zANImaE1sFKyzMhXOmmMKJ8PQHukQyX5CueTIfoeuq628smNsxDwKH5r/WatdLKYfAw1LtzQtSaz0fMrrjifm3iDFp2dz89pVt83KTwTQGWd0b7pGDoFHorzUqKBT/23zZFj/xJfCxOrJNPLxCHXPPwJloSfvajmXmsCG6oLdc0ZvhW64E7YBgDWDCrP/AP21Gt6mG6VPxSwzWRV+NqTmcsTZ0xXMmURA7RVIKpLgUffB6nbeJdv/nt9R+GI374eSRR5wZCKV9m8C7EZlFGHq4by48xTxiQFSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RffNUvxKJ/F6meGDBc1xxtqeBxsIqfuJRdqUbDj1fDc=;
- b=jT4ptvZRRdfgxhY7Mmy9pH6USCrGuR9+MTyfbIzkLtiaABFnF93veaQY2q7Uu7Xn1ILFy1ztVmTuGAWORaZfNBHercIveoVIXUveI6ixQGTU2dj1yQr3Y/sa8cotthWdLFrge/FPCLtIMwyofdUznFhRus2JEpNOSyBerk4zta0=
-Received: from BLAPR03CA0003.namprd03.prod.outlook.com (2603:10b6:208:32b::8)
- by SA1PR12MB7125.namprd12.prod.outlook.com (2603:10b6:806:29f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Thu, 13 Mar
- 2025 21:21:10 +0000
-Received: from BN3PEPF0000B373.namprd21.prod.outlook.com
- (2603:10b6:208:32b:cafe::da) by BLAPR03CA0003.outlook.office365.com
- (2603:10b6:208:32b::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.24 via Frontend Transport; Thu,
- 13 Mar 2025 21:21:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B373.mail.protection.outlook.com (10.167.243.170) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8558.0 via Frontend Transport; Thu, 13 Mar 2025 21:21:10 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Mar
- 2025 16:21:09 -0500
-From: Nathan Lynch <nathan.lynch@amd.com>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vinod Koul
-	<vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <dave.jiang@intel.com>, <kristen.c.accardi@intel.com>, kernel test robot
-	<oliver.sang@intel.com>
-Subject: Re: [PATCH v1] dmaengine: dmatest: Fix dmatest waiting less when
- interrupted
-In-Reply-To: <87wmcslwg4.fsf@intel.com>
-References: <20250305230007.590178-1-vinicius.gomes@intel.com>
- <878qpa13fe.fsf@AUSNATLYNCH.amd.com> <87senhoq1k.fsf@intel.com>
- <874izx10nx.fsf@AUSNATLYNCH.amd.com> <87wmcslwg4.fsf@intel.com>
-Date: Thu, 13 Mar 2025 16:21:08 -0500
-Message-ID: <871pv01vaz.fsf@AUSNATLYNCH.amd.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Hy9mTsMI"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DLGV8W028043
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 21:21:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=sc2tdTqGtA5fEOw5t3e1Qi
+	cFcw5LIwEMfE0xdIoaMts=; b=Hy9mTsMI0ApadFr/gtOT8wGCpEQspH9O1Phqqk
+	R6DlGp9a0t1vudbh2u9TlItieYDKOVY1YWuGm1dC6MItWi/CBIn6AogLvnjUlIl7
+	5G0sZRtLVUKA6aSx1cjMN8oHVzOnAwShyHJQM7b7fChSKPXjxLpopukMDkbnx7Aj
+	PB+DW2SuXtmGTD8MjstFbLOQQipOJbAxWIaWzz0+IlRApBGd4ajzk8xx/qObiWWT
+	sLXp9o5ESfJ0okaswAtw4wNLtW2i6b367kAH9vwLW2q/k1/afUj6C/TnOTR2aRTm
+	p+70npb03WJtt912BCAWb99L0BePBrMa/i216FczDmreOGwg==
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com [209.85.210.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2py61x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 21:21:40 +0000 (GMT)
+Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-72bbb1899b4so25608a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:21:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741900899; x=1742505699;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sc2tdTqGtA5fEOw5t3e1QicFcw5LIwEMfE0xdIoaMts=;
+        b=Cj1AdHxmkHBpZnjaHzk4IrV37h9+yslE/aRiXPC3Sbumf7qiyaCvSxEixIGh8F7F39
+         CDIPPAS3dM0PHMuSvtKSwPyKnnfdKCwhM8LrCwTuOxsO31ujHIADxGkHU6GaRwpH/qJ3
+         Kd95FFZlJrnU2Rgo6pHLDJp1IqUG4yliuEYF62C+y1dG/Zt73hk4yaBftkNmCvUO+s1N
+         +MYyywGhNdMHd+qEGhmRLse7K9955xL12JkLHSWEMI4s5B4l+QJCT3sJseyr/irDKOJQ
+         OsbWNqbz+X2JgisTNkTh0wXstdxBIC4xU1XAXbp9EJh6CjPx2QytVl7qrRLDZW09AF/K
+         fjRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVLlT9BbCfAErNJjAZvyowUuSRhBcMgj45rJ7mwv2R5BV0cgAJi39A20tZT44bQN5m6TNFAnwQT6L7/87E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyen9KH+RQKXTqDxE+P7AlFV7mcK3+FTrpsE3pGw6Q6LD+GhIR4
+	al2OyMYH73hUxeyRbqy/ayHIQMekBDDrPra4fLyqhyI+pH3ZLQ0Fd4m0khENwLWE4WZZggNtJav
+	6l7J5k7+PIoO1Xc8dzZdijdHjTv9y5wAwXwp2KZNDAqJt8q5EOYYCR2HQAKMPXDE=
+X-Gm-Gg: ASbGncuVZ4vpGh7P4mmtq9bv7wjRJ5gDC7hwyB1UhQHz51IK1/RhTer6zwQhc9fsQp9
+	r2OB9LwSxAcd4YWHKxSC8gIlBAekWjqWTRYC1eXbWyFbBCi65YMSwqESzm5J+DBFRCGiMaLDpG9
+	KNDYv7S3QZPcvxBQB0HOwDMR//bZl1/V9afnAfk39a0RASudRq6I/XN9ZFT8c3JTQ95YRfjxuBx
+	pL8OjbF/+8SSJ1tFwWrnTlSAiU9uVQL+0UNhLiQD6dyg+Nzj/q4ftQHVhfVksfLWaDcBKSONKiz
+	+we/l4j9eXPNlONQU6OXq/PH85Rj21mcioUbZnuz9JcmHvYjKRyvHrmePg40uKmCe5LzoaZ26th
+	4EaOPQXBgv+6VkwM=
+X-Received: by 2002:a05:6830:4905:b0:72a:1625:ef11 with SMTP id 46e09a7af769-72b9b593d8cmr7658943a34.27.1741900899382;
+        Thu, 13 Mar 2025 14:21:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFSJfSSomTC3SCdbcrgeOpL44R+cUJ/sgfFjrWaSF6qXtM2EgPsMKfh4s/9jEulvEPGOITeDg==
+X-Received: by 2002:a05:6830:4905:b0:72a:1625:ef11 with SMTP id 46e09a7af769-72b9b593d8cmr7658927a34.27.1741900899001;
+        Thu, 13 Mar 2025 14:21:39 -0700 (PDT)
+Received: from [192.168.86.65] (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c670f86a17sm478881fac.6.2025.03.13.14.21.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 14:21:38 -0700 (PDT)
+From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Date: Thu, 13 Mar 2025 14:27:27 -0700
+Subject: [PATCH] pinctrl: qcom: tlmm-test: Validate irq_enable delivers
+ edge irqs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B373:EE_|SA1PR12MB7125:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9f6cd29d-74ee-424b-fcd6-08dd6274f9a8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BtLgBFjsIz2n2bheuCeRVebeyM5cTpbVavdfLHZeHVEtEwvH16nTucl5F8Qd?=
- =?us-ascii?Q?sPLgE+NJ7MecjSiQl158ses1PA9fae5hgf/eMQBYeE5Nfm3xkcq44SwXV5nb?=
- =?us-ascii?Q?KNZNHdlyt1UNjI3jHAmLwUNBI75P8rHDauDJXIMM4KEt8rzmxsPx5h8181ox?=
- =?us-ascii?Q?hnLNTId36bxi/qggVJYECBGLUkGlx/TIQdQ2Osgc9SfF3KFoInJLpY249iP8?=
- =?us-ascii?Q?AwVsNKLYfN6tbhKzly6xsbpt2IeKdgTmIESB6N2Gtc1Or0PzI7f1KzVghsBc?=
- =?us-ascii?Q?fIBJiylOm0GK8C3NrZrr9xJS3ao0W5Ih3ETw4sdSZBBNqmUW4oqhFrhutz4b?=
- =?us-ascii?Q?ryZ8DrqwhuMAVmcBn6GVUThTqgpDssXDbpWuRr47IOqHWlIU6M+YxpMOegS1?=
- =?us-ascii?Q?ecRimvwSx9yvPHKeLIzgJaBt9SIjC3FA5w8QBxVBjLrD4HcxzD6Wzgr4tmD1?=
- =?us-ascii?Q?XkWygXmYuX822VxgemlCc2hnHhKhRQhB08PxvP6MF26irnXH1RODhzU/T3Pu?=
- =?us-ascii?Q?qNQf3ILcNOlFkOYSb0GKLsJKNZhclNKsfUbEyVDEbS0F4KCYfq821D8zNONv?=
- =?us-ascii?Q?Uu6tdNIaPPRxb1so25ENCFnLknEN73JF96DiNv1jqTVmU2I/FCvcqj3X2K+R?=
- =?us-ascii?Q?SK1NEPoKStcYGCo6lK+fNOeuCk0Gh+Rx0Z5vKxhD4q8aOcqTqqKqGmZuSrny?=
- =?us-ascii?Q?o1aLWPrAVW3TEaihxYbCPITsB+ZCfCRsHkBqIbbmswfpnHxwwvDVy0hj4v+8?=
- =?us-ascii?Q?+pMtFW6NUzE9FVK0vL1FB7CL8DwFxMk9S4sJusgNgQdl5gBkoYGqtgPQPBJm?=
- =?us-ascii?Q?Lercx2G4BNQXjC0UwWaDWB87K5i8utShF/oY/rl3Cwo38EQ3gCz9Ktsm9oa5?=
- =?us-ascii?Q?1Bik3zACrk3AvV9GiHbRFr+sU4lEnt8D0ZtmEyTDz7knewZ3NBP/+ARYT3f8?=
- =?us-ascii?Q?lPrQIV055dvEQcn2gxJtAu1YGcIaoLs+uQTQAloPDi+cT62FDqFbb5QnJGsc?=
- =?us-ascii?Q?DgS6JrTqvc/FKGsh79olPUCOEcnRF1ZUzAaPDQYor+sKhxwNLwTgQAqw0vu2?=
- =?us-ascii?Q?rJYs5m/KmMBQ+TCBTMu0YF8vldel1mFSGkLqfUI52bKrhjtdf+rqrNNPl5gk?=
- =?us-ascii?Q?mxa8tz2QmpEXBKm9L5igV3HRioQ13IvS20OoW0CAxY57hOtvkyDAtcO9V187?=
- =?us-ascii?Q?JhCry5ycxU366UfuJ8nJn63gvdVJsd8JiRZGu0ZZdo/f+cetZhO7CVIxjJY0?=
- =?us-ascii?Q?Smtwvj7mdUEkGZobaa0TfhWo0YWhCZMM4Ct6+8U7P2m7mo89i2y0WclkvPq/?=
- =?us-ascii?Q?1BWJi2F3HAZRQSSoraWY2Ah6QcGsXyLUA8KLfrlEblnkPCWO2kxq9sKxVqWR?=
- =?us-ascii?Q?ojxwupYjaEN5MlsflnO/0bInuDDb+T0RTH5EP6I04vB8mYomICQl2Aclp2b7?=
- =?us-ascii?Q?GYIViH5yBpj9m+aZeNSGm0WVHKhrw2Ki6718xWbPwe47u+06HXFxrzKQcHfq?=
- =?us-ascii?Q?BG+XIUx2/oe1VTM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 21:21:10.0339
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f6cd29d-74ee-424b-fcd6-08dd6274f9a8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B373.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7125
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250313-tlmm-test-disabled-irq-delivered-v1-1-f0be903732ac@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAL5N02cC/x3NQQ6CMBBG4auQWTtJCxKUqxgXrf2VSQroTENMC
+ He3cflt3tvJoAKjsdlJsYnJulT4U0OPKSwvsKRqal3bu853XPI8c4EVTmIhZiQW/XBClg1aFdz
+ QX6L353gF1cxb8ZTvf3G7H8cPwud4nnIAAAA=
+X-Change-ID: 20250313-tlmm-test-disabled-irq-delivered-a0758b114b9e
+To: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc: Douglas Anderson <dianders@chromium.org>,
+        Stephan Gerhold <stephan.gerhold@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2379;
+ i=bjorn.andersson@oss.qualcomm.com; h=from:subject:message-id;
+ bh=bxwRGhp1n0pI0/lcXsC1uFENkA1yhmJSWsvPZhEto9M=;
+ b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBn003G2C9slR48Upk3nATcOyK7ugL3Dasv72Zrc
+ Ggcd/i3JqKJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZ9NNxhUcYW5kZXJzc29u
+ QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcVLTA/8CBpkKNPjbvMqFrVl/S2Oogv2nA49C9YOM9prNGh
+ dhu9KoK73LDA7Oxn7nAGNigeEgvbpYq0wkT4c4ZYn+kF0zDiw+NwzNL7vXJOGk9YfFNdz+Z1ceo
+ Klicq4sQM+yo2tOrThul7pxbNOITiRg9dUeA6vJDZr44nf3+Ej82x1EFSKGDJLEgfOGbeE0gL9L
+ ClZhez2hmFXWrUWOPQzt0+vKOF3+B2yhgYswaeOogtT7b8LoWPff8mRrpWvaUH0Nw2tgwUCI+Cd
+ 4che8RE60va7HiY41JWhn2uUzkICEqqNyHvhLWmPcp1ba3Ur0u6XDLdL1OTW2R1/IYL9QM3/qEI
+ 4nN8JlVdBwfJHYUVylQL+3Jclx1F1ECBKKTX6Ur361ojmLJQkQUWzglrLHS7QJz62Lv+H94T486
+ 8ymFVLKrIJaM6ttQ054D96IL+S219QoIZ4D2+t91yPQj/PHe8bRl2wpceOggjpiOmzTxu31/7rd
+ oMIZ+twN7dbC5JvcNXt9TKf+6Fo4ZSvFhyF0qq5m9+A1tGtvgMmIRwVNxYR8ZeyAY6Vs+a5duh2
+ Zf5bnVC8XYYomIOKJUeLv818BH2Sf1Zif5fpz7V0VSGhCzbKuAEVCnMcsyltIPg7+9pueBV/wMP
+ pezNPdwuPWymGDtyL00dbTTfrtVXiUMlYMjJclTxOSCY=
+X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=openpgp;
+ fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
+X-Authority-Analysis: v=2.4 cv=P506hjAu c=1 sm=1 tr=0 ts=67d34c64 cx=c_pps a=z9lCQkyTxNhZyzAvolXo/A==:117 a=DaeiM5VmU20ml6RIjrOvYw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=qPeax27BKI-lfaCsB2gA:9 a=QEXdDO2ut3YA:10
+ a=EyFUmsFV_t8cxB2kMr4A:22
+X-Proofpoint-GUID: AvsT7LygVfngTiptmtFljuftVGk0s2aD
+X-Proofpoint-ORIG-GUID: AvsT7LygVfngTiptmtFljuftVGk0s2aD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_10,2025-03-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ mlxscore=0 spamscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130164
 
-Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
-> Nathan Lynch <nathan.lynch@amd.com> writes:
->
->> Hi Vinicius,
->>
->> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
->>> Nathan Lynch <nathan.lynch@amd.com> writes:
->>>> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
->>>>> Change the "wait for operation finish" logic to take interrupts into
->>>>> account.
->>>>>
->>>>> When using dmatest with idxd DMA engine, it's possible that during
->>>>> longer tests, the interrupt notifying the finish of an operation
->>>>> happens during wait_event_freezable_timeout(), which causes dmatest to
->>>>> cleanup all the resources, some of which might still be in use.
->>>>>
->>>>> This fix ensures that the wait logic correctly handles interrupts,
->>>>> preventing premature cleanup of resources.
->>>>>
->>>>> Reported-by: kernel test robot <oliver.sang@intel.com>
->>>>> Closes: https://lore.kernel.org/oe-lkp/202502171134.8c403348-lkp@intel.com
->>>>
->>>> Given the report at the URL above I'm struggling to follow the rationale
->>>> for this change. It looks like a use-after-free in idxd while
->>>> resetting/unbinding the device, and I can't see how changing whether
->>>> dmatest threads perform freezeable waits would change this.
->>>>
->>>
->>> I think that the short version is that the reproducition script triggers
->>> different problems on different platforms/configurations.
->>>
->>> The solution I proposed fixes a problem I was seeing on a SPR system, on
->>> a GNR system (that I was only able to get later) I see something more similar
->>> to this particular splat (currently working on the fix).
->>>
->>> Seeing this question, I realize that I should have added a note to the
->>> commit detailing this.
->>>
->>> So I am planning on proposing two (this and another) fixes for the same
->>> report, hoping that it's not that confusing/unusual.
->>
->> I'm still confused... why is wait_event_freezable_timeout() the wrong
->> API for dmatest to use, and how could changing it to
->> wait_event_timeout() cause it to "take interrupts into account" that it
->> didn't before?
->>
->
-> My understanding (and testing) is that wait_event_timeout() will block
-> for the duration even in the face of interrupts, 'freezable' will not.
+In commit 'cf9d052aa600 ("pinctrl: qcom: Don't clear pending interrupts
+when enabling")' Doug establishes an expectation that edge interrupts
+occurring while an interrupt is disabled should be delivered once the
+interrupt is enabled again.
 
-They have different behaviors with respect to *signals* and the
-wake_up() variant used, but not device interrupts.
+Implement a test to validate that this is the case.
 
-dmatest_callback() employs wake_up_all(), which means this change
-introduces no beneficial difference in the wakeup behavior. The dmatest
-thread gets woken on receipt of the completion interrupt either way.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+---
+ drivers/pinctrl/qcom/tlmm-test.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-And to reiterate, the change regresses the combination of dmatest and
-the task freezer, which is a use case people have cared about,
-apparently.
+diff --git a/drivers/pinctrl/qcom/tlmm-test.c b/drivers/pinctrl/qcom/tlmm-test.c
+index 9c31798b3c08b59ba9a77454a297ac6630cf829f..fd02bf3a76cbccd290735f77f19dfb26730be679 100644
+--- a/drivers/pinctrl/qcom/tlmm-test.c
++++ b/drivers/pinctrl/qcom/tlmm-test.c
+@@ -506,6 +506,42 @@ static void tlmm_test_thread_falling_in_handler(struct kunit *test)
+ 	KUNIT_ASSERT_EQ(test, atomic_read(&priv->thread_count), 10);
+ }
+ 
++/*
++ * Validate that edge interrupts occurring while irq is disabled is delivered
++ * once the interrupt is reenabled.
++ */
++static void tlmm_test_rising_while_disabled(struct kunit *test)
++{
++	struct tlmm_test_priv *priv = test->priv;
++	unsigned int after_edge;
++	unsigned int before_edge;
++
++	priv->intr_op = TLMM_TEST_COUNT;
++	atomic_set(&priv->thread_op_remain, 10);
++
++	tlmm_output_low();
++
++	tlmm_test_request_hard_irq(test, IRQF_TRIGGER_RISING);
++	msleep(20);
++
++	disable_irq(tlmm_suite.irq);
++	before_edge = atomic_read(&priv->intr_count);
++
++	tlmm_output_high();
++	msleep(20);
++	after_edge = atomic_read(&priv->intr_count);
++
++	msleep(20);
++	enable_irq(tlmm_suite.irq);
++	msleep(20);
++
++	free_irq(tlmm_suite.irq, priv);
++
++	KUNIT_ASSERT_EQ(test, before_edge, 0);
++	KUNIT_ASSERT_EQ(test, after_edge, 0);
++	KUNIT_ASSERT_EQ(test, atomic_read(&priv->intr_count), 1);
++}
++
+ static int tlmm_test_init(struct kunit *test)
+ {
+ 	struct tlmm_test_priv *priv;
+@@ -609,6 +645,7 @@ static struct kunit_case tlmm_test_cases[] = {
+ 	KUNIT_CASE(tlmm_test_thread_low),
+ 	KUNIT_CASE(tlmm_test_thread_rising_in_handler),
+ 	KUNIT_CASE(tlmm_test_thread_falling_in_handler),
++	KUNIT_CASE(tlmm_test_rising_while_disabled),
+ 	{}
+ };
+ 
 
->> AFAIK the only change made here is that dmatest threads effectively
->> become unfreezeable, which is contrary to prior authors' intentions:
->>
->> commit 981ed70d8e4f ("dmatest: make dmatest threads freezable")
->> commit adfa543e7314 ("dmatest: don't use set_freezable_with_signal()")
+---
+base-commit: 9fbcd7b32bf7c0a5bda0f22c25df29d00a872017
+change-id: 20250313-tlmm-test-disabled-irq-delivered-a0758b114b9e
+
+Best regards,
+-- 
+Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+
