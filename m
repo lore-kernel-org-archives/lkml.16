@@ -1,45 +1,45 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4C9271801
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:00:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B715271819
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881661; cv=none; b=qJLzAoUwWA5pPhNh8I/7OJt648aBTKw4TKRZu6SpJw+kOP2171sUwBUFdl4jQZcp1zL7toqMmc8hzQgo0ntJyoTuv0kAiuBj2ZPzeNQ+GRCFljre/gTMBcMRmdilzten5hcKL6M0E2mfEw1FFowA8I7sOucwA1shLvpYeTRp3EY=
+	t=1741881662; cv=none; b=UP4SLQ0rNvEDVxVipWQTlYPvVG7IlDDzIL6XoMAqcNtrmEDLqFmv0gBmPByT7tij0SdmiJ6XAdPuY17wVAzwvyF9L1/QVHgIuJriXA04tpl10AjV4/KgHduZhtD9Erv1BXuZfayWkpw7Tom8s6q1UZDzK7ArAB8FENc3xBk1roo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741881661; c=relaxed/simple;
-	bh=yg/ZmJBXFmKbBU6mz6fzEYdtgoVGLcu5d+ojwtGnWXc=;
+	s=arc-20240116; t=1741881662; c=relaxed/simple;
+	bh=OTtHhkGGlcFKDopIicgXvVvIR1TMBLwXHoae0RuWRb4=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=KBn8scWI4/NYssiSLO3O1KNwy9Bynzk8+DxeJ53xDYvQnTdgGZ0f/9puobgxIIvH5iiG0l9BY9uEveWnZf6QpuGXL1B3D88gJAwRnJO8WHb7VgfOJPbQbkAcqNK6KGdwPp3HhuPe4XMSJSbaxLoEVmX1MbEcbYps7Wctm2yTeZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f/KvRQH3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JeLVVep0; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=cwkeMQPk2lQZv0XdWTUUAVq6alNLV0UtMgMRpafcXogGy1q5OOHJW9EBslaXEErUe2rmqpSfEia99tALgbMJ7WMbaz2u1uveuTxuC+yEWe0aWZ4JxOUG2hwgFefUmifiUuRwVTPq4MjZUUAhFjh/OMmUEnG42kxwzKRRqOHJlZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oV+AsFhA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zpMF8uOl; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f/KvRQH3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JeLVVep0"
-Message-ID: <20250313155916.793162927@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oV+AsFhA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zpMF8uOl"
+Message-ID: <20250313155916.858899502@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741881657;
+	s=2020; t=1741881659;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=V5kaBJf0gcS62Piw8Vm7nlUZqbdpY8K201MQEACMUxM=;
-	b=f/KvRQH3kOjEtpb799i96hyVD2jB4OYRoXiW2DYKliCToFMikmifeE2FyKuKQHZvWoHdkp
-	20yUNKeEWY6+jxWkFGVz1EXggkSFAEv+oNtSGcjWIocLG93fZeQMzFFyvDctQfAHnkKmDs
-	CPU+nbfQjTPqvFrefUTJM7E63FvQJN2tXnCETQ8aXIYaBXSyCr+4MmhQ63DTAxp06F2XXe
-	aOLAIajB4v1lnIp1oSAutMd07ASfG0RhGfbFFecqbAUdLE1xnpdavKB/Ll7o/MTuAQsx2k
-	6op8F0zCPd6OPeOZO1kDZ1qh3PT2wHnf2PZ52udYjUn8+OUXQz1c6SCf7Yjoqg==
+	 references:references; bh=58zsQ9UX99bgd9bgWnnVYlqUIZPx3Nt2FsMFZCwYlDQ=;
+	b=oV+AsFhAkIKqvuYebhU78L8re/0CzIRRbizI0sdH1hlM1VjlKrqMDZ7Xik9Cx8sClakuw5
+	q6jZFQ9oMbbEAiqSQDwi2V6e9ouN0gpMLLYxjhr0i3mfMqHe9MAiL3JiGWDpKK1L8I7znp
+	ojbFa/Wo1M2L+9l/iR6/SRJoXqY0PPwYBVm2FDAzrUkftU9M0KkncumiVYx+iPTcEOs+0c
+	lqGYdpOTlONtEiZG3ZTBGQa/Js+rDLtcDdHUauM1BJeq4voj5yzP2cKfzt88kpGQRZC2R7
+	3FIq/aIOsnmlSYnwAe/WclDprt8qQwMlmB7B1kLpOP6kZV8Zh1Qc12ms6UojfQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741881657;
+	s=2020e; t=1741881659;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=V5kaBJf0gcS62Piw8Vm7nlUZqbdpY8K201MQEACMUxM=;
-	b=JeLVVep05ijCwCUj8G8dnbzasknLOltTnpyryIK/F3Hrfzz1HketeSu1P6kF0ATU6PyaZv
-	DjZA9SQV6Kbo9lBQ==
+	 references:references; bh=58zsQ9UX99bgd9bgWnnVYlqUIZPx3Nt2FsMFZCwYlDQ=;
+	b=zpMF8uOlchygSRiefK8E2PwAh0IhXOxVClASxQlxgMeZAgF+cjTPMKmPZOSDMggi+8wXOq
+	yCSwiq8mntAJ0cAA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>,
  Jiri Slaby <jirislaby@kernel.org>
-Subject: [patch 43/46] genirq/manage: Rework teardown_percpu_nmi()
+Subject: [patch 44/46] genirq/manage: Rework irq_get_irqchip_state()
 References: <20250313154615.860723120@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,7 +48,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 13 Mar 2025 17:00:57 +0100 (CET)
+Date: Thu, 13 Mar 2025 17:00:58 +0100 (CET)
 
 Use the new guards to get and lock the interrupt descriptor and tidy up the
 code.
@@ -57,37 +57,40 @@ No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/irq/manage.c |   19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ kernel/irq/manage.c |   22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
 --- a/kernel/irq/manage.c
 +++ b/kernel/irq/manage.c
-@@ -2633,22 +2633,13 @@ int prepare_percpu_nmi(unsigned int irq)
+@@ -2678,24 +2678,14 @@ int __irq_get_irqchip_state(struct irq_d
+  * This function should be called with preemption disabled if the interrupt
+  * controller has per-cpu registers.
   */
- void teardown_percpu_nmi(unsigned int irq)
+-int irq_get_irqchip_state(unsigned int irq, enum irqchip_irq_state which,
+-			  bool *state)
++int irq_get_irqchip_state(unsigned int irq, enum irqchip_irq_state which, bool *state)
  {
--	unsigned long flags;
 -	struct irq_desc *desc;
--
- 	WARN_ON(preemptible());
+-	struct irq_data *data;
+-	unsigned long flags;
+-	int err = -EINVAL;
++	scoped_irqdesc_get_and_buslock(irq, 0) {
++		struct irq_data *data = irq_desc_get_irq_data(scoped_irqdesc);
  
--	desc = irq_get_desc_lock(irq, &flags,
--				 IRQ_GET_DESC_CHECK_PERCPU);
+-	desc = irq_get_desc_buslock(irq, &flags, 0);
 -	if (!desc)
--		return;
+-		return err;
 -
--	if (WARN_ON(!irq_is_nmi(desc)))
--		goto out;
+-	data = irq_desc_get_irq_data(desc);
 -
--	irq_nmi_teardown(desc);
--out:
--	irq_put_desc_unlock(desc, flags);
-+	scoped_irqdesc_get_and_lock(irq, IRQ_GET_DESC_CHECK_PERCPU) {
-+		if (WARN_ON(!irq_is_nmi(scoped_irqdesc)))
-+			return;
-+		irq_nmi_teardown(scoped_irqdesc);
+-	err = __irq_get_irqchip_state(data, which, state);
+-
+-	irq_put_desc_busunlock(desc, flags);
+-	return err;
++		return __irq_get_irqchip_state(data, which, state);
 +	}
++	return -EINVAL;
  }
+ EXPORT_SYMBOL_GPL(irq_get_irqchip_state);
  
- int __irq_get_irqchip_state(struct irq_data *data, enum irqchip_irq_state which,
 
