@@ -1,39 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7874D266B41;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04D0266B60;
 	Thu, 13 Mar 2025 10:48:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741862899; cv=none; b=DWB+9FgAoGlteKcKrGR/rOi4CGrJlY4Dys+uAq5hCEfiaPbHefe1v8NLyzpiwNkTpF8H4Gv2QyAjev5+S/KI72IcUIjIV0WkL3kPHOVUud/K6qnTdyKR0kwWiF2CnK0SsJ1R5Q9YHTFTEQhXVCrpcgtjMZdchxyQX7nFd7QGd3w=
+	t=1741862900; cv=none; b=C/hTqtfnIysfKz28f3zHApA39VuweIaNRkIOwtqYK9gsIN9THzbjGVH2UiMzMqWpMeym6Dl1l2QFmthkHddE69nHy+HXztJ4c0Ko96QCtjHno2vaSfKr9ClkA+h1FATzVyNAsnM7Wl9JjYbgL5mHQpO6xn6ZxsOxer8KSdupMM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741862899; c=relaxed/simple;
-	bh=rdlBQ/9cR69+PuOmroy/ajzlNeMG3kAPngtSW7aanS8=;
+	s=arc-20240116; t=1741862900; c=relaxed/simple;
+	bh=ZQaZFd7AW9f9/unsK2igQLPsHgcymG632UXUfYrQN5I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=d/Jt0Ik70qaGfTcFMyrIvX5eCXfgkaoh8UThlpE5gJvo3ccWOMXPslsS/TbhvbhGurJDrXVRidN9G3XCE56lmlx0oJ7iA3Mx8LwP/awCZ0eciwxJdxiHi/FBkwCjiE+dP819ZGZd02ZoKF+bgaF7thfXcMs3NiB2kfWDzXxYLUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PhzzVpJ/; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=DC5McuK28q6SF4o0Co7i6Jzl8IbLq5DPQzEhGNTkT5WS7ANVbvg78nwOd6OvDwHyK5CyjDnsCrdo29njG+ofiC83260V1Udd8ba4jk1pb1iGjSfi0LVevsPLPyAEzfL2bTknJZiFodN62jPsFthUGm5tZZWZvMFNxy0FfmXgkok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nSFMOV0p; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PhzzVpJ/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EEF344419D;
-	Thu, 13 Mar 2025 10:48:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nSFMOV0p"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C47854322D;
+	Thu, 13 Mar 2025 10:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741862890;
+	t=1741862896;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=op67NNxbforWlSNJbclp0mBeqaWx1V4Ywj9DWeO0Ca0=;
-	b=PhzzVpJ/0rA/jVC4dXcxF0mI0m+rN4gpMy+CvSQe6O2AmgUb3aNf8WPYPO2okrIEJPO6aI
-	JzMVCrzIOfxfPWKgXpCxcSIpnDoitpVmHFu2KomKpmGMl7HzETwPHmHzIapLR0L2KGFIQJ
-	sVFpu8W7dIbeNggv1L1fjL+dVGhSfFiAKKYSIOHKR7N+B2AJ/Dlk6XV3OLTHHVPSpYke1H
-	yYqRIv+PNnWOMtYHaAbFHTtxT+u4AkoiwcJNbLobDzOknkutLiXF9rKBL5Coyf4OImy1lj
-	Ex1eJU8kxRbQrJ4C1XkSZhjWiwl0wetifS2DmJg1JYnug3bji/83gd0fFWssOA==
+	bh=pFl7R25Q4N3Infj10DbmvYfGESOwYYT/HdPxE8csK44=;
+	b=nSFMOV0pJcTZrHvnY+qtT8cnnPIkOyTgUGh7z2KaHe1u88wOw3O0Sr3To9Px0NIFgSUVXz
+	QyGFFeHg8CIuIwBjwCRbgEutuTrPc58qsGrkU8bKbPENPtzRcaQRF1hYcvuaekAQAtihnh
+	ZNZ+YTtbjJtP5ZhRSdJUAmmSjHZMhDAlKAvvorMbYMGgHdH5PALHzI6eLygFP41hJTFoe4
+	rRukKdp3BCT/s6nRXpD3znD6tpQ1RNkCMbseAw7D1xbTzqBp93CNR9kS54mFJePSma6GIg
+	tHJS9vT5yIv5Upd8bjL4+G3yjXXljwuUE3YGBBUBK3QPbPYaCA5H0mB+gylujA==
 From: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
-Date: Thu, 13 Mar 2025 11:48:02 +0100
-Subject: [PATCH 04/13] selftests/bpf: test_xsk: Add return value to
- init_iface()
+Date: Thu, 13 Mar 2025 11:48:06 +0100
+Subject: [PATCH 08/13] selftests/bpf: test_xsk: Don't exit immediately if
+ validate_traffic fails
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-xsk-v1-4-7374729a93b9@bootlin.com>
+Message-Id: <20250313-xsk-v1-8-7374729a93b9@bootlin.com>
 References: <20250313-xsk-v1-0-7374729a93b9@bootlin.com>
 In-Reply-To: <20250313-xsk-v1-0-7374729a93b9@bootlin.com>
 To: =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>, 
@@ -67,76 +67,48 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdejjeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepfdeurghsthhivghnucevuhhruhhttghhvghtucdlvgeurffhucfhohhunhgurghtihhonhdmfdcuoegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegfeduhfeutddtieffteffleejffekveeviedutdegjeelfedtjeegtdejtddthfenucfkphepvdgrtddumegtsgduleemkedvheefmeguuddttdemfhelvgdumeeftgejudemjeeitdgtmedutggsrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekvdehfeemugdutddtmehflegvudemfegtjedumeejiedttgemudgtsggrpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhrtghpt
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdejjeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepfdeurghsthhivghnucevuhhruhhttghhvghtucdlvgeurffhucfhohhunhgurghtihhonhdmfdcuoegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegfeduhfeutddtieffteffleejffekveeviedutdegjeelfedtjeegtdejtddthfenucfkphepvdgrtddumegtsgduleemkedvheefmeguuddttdemfhelvgdumeeftgejudemjeeitdgtmedutggsrgenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekvdehfeemugdutddtmehflegvudemfegtjedumeejiedttgemudgtsggrpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhrtghpt
  hhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhihkhholhgrlhesfhgsrdgtohhmpdhrtghpthhtohephihonhhghhhonhhgrdhsohhngheslhhinhhugidruggvvhdprhgtphhtthhopehmrghgnhhushdrkhgrrhhlshhsohhnsehinhhtvghlrdgtohhmpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepsggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomh
 X-GND-Sasl: bastien.curutchet@bootlin.com
 
-init_iface() doesn't have any return value while it can fail. In case of
-failure it calls exit_on_error() which will terminate the test
-immediately.
+__testapp_validate_traffic() calls exit_on_error() on failures. This
+exits the program immediately and can lead to memory leaks.
 
-Add a return value to init_iface() so errors can be handled more
-smoothly.
+Return TEST_FAILURE instead of calling exit_on_error().
 
 Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
 ---
- tools/testing/selftests/bpf/xskxceiver.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ tools/testing/selftests/bpf/xskxceiver.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/testing/selftests/bpf/xskxceiver.c b/tools/testing/selftests/bpf/xskxceiver.c
-index 8b74a0f79c2e594b4db495acabd02a01a5b1b95f..01a0ddbf1cf52760a4a4d168da2fec1859e6b4b8 100644
+index 5b1b05c21a04e05673d01855567320452db1f9c5..41c744c627d9b8acffc687f6893a01557e6556c5 100644
 --- a/tools/testing/selftests/bpf/xskxceiver.c
 +++ b/tools/testing/selftests/bpf/xskxceiver.c
-@@ -2380,7 +2380,7 @@ static bool hugepages_present(void)
- 	return true;
- }
- 
--static void init_iface(struct ifobject *ifobj, thread_func_t func_ptr)
-+static int init_iface(struct ifobject *ifobj, thread_func_t func_ptr)
- {
- 	LIBBPF_OPTS(bpf_xdp_query_opts, query_opts);
- 	int err;
-@@ -2390,7 +2390,7 @@ static void init_iface(struct ifobject *ifobj, thread_func_t func_ptr)
- 	err = xsk_load_xdp_programs(ifobj);
+@@ -1931,12 +1931,12 @@ static int __testapp_validate_traffic(struct test_spec *test, struct ifobject *i
+ 	err = test_spec_set_mtu(test, test->mtu);
  	if (err) {
- 		print_msg("Error loading XDP program\n");
+ 		print_msg("Error, could not set mtu.\n");
 -		exit_with_error(err);
-+		return err;
++		return TEST_FAILURE;
  	}
  
- 	if (hugepages_present())
-@@ -2399,7 +2399,7 @@ static void init_iface(struct ifobject *ifobj, thread_func_t func_ptr)
- 	err = bpf_xdp_query(ifobj->ifindex, XDP_FLAGS_DRV_MODE, &query_opts);
- 	if (err) {
- 		print_msg("Error querying XDP capabilities\n");
--		exit_with_error(-err);
-+		return err;
- 	}
- 	if (query_opts.feature_flags & NETDEV_XDP_ACT_RX_SG)
- 		ifobj->multi_buff_supp = true;
-@@ -2411,6 +2411,8 @@ static void init_iface(struct ifobject *ifobj, thread_func_t func_ptr)
- 			ifobj->xdp_zc_max_segs = 0;
- 		}
- 	}
-+
-+	return 0;
- }
- 
- static int testapp_send_receive(struct test_spec *test)
-@@ -2719,8 +2721,11 @@ int main(int argc, char **argv)
- 		ifobj_tx->set_ring.default_rx = ifobj_tx->ring.rx_pending;
+ 	if (ifobj2) {
+ 		if (pthread_barrier_init(&barr, NULL, 2))
+-			exit_with_error(errno);
++			return TEST_FAILURE;
+ 		pkt_stream_reset(ifobj2->xsk->pkt_stream);
  	}
  
--	init_iface(ifobj_rx, worker_testapp_validate_rx);
--	init_iface(ifobj_tx, worker_testapp_validate_tx);
-+	if (init_iface(ifobj_rx, worker_testapp_validate_rx) ||
-+	    init_iface(ifobj_tx, worker_testapp_validate_tx)) {
-+		print_msg("Error : can't initialize interfaces\n");
-+		ksft_exit_xfail();
-+	}
+@@ -1951,7 +1951,7 @@ static int __testapp_validate_traffic(struct test_spec *test, struct ifobject *i
+ 	if (ifobj2) {
+ 		pthread_barrier_wait(&barr);
+ 		if (pthread_barrier_destroy(&barr))
+-			exit_with_error(errno);
++			return TEST_FAILURE;
  
- 	test_spec_init(&test, ifobj_tx, ifobj_rx, 0, &tests[0]);
- 	tx_pkt_stream_default = pkt_stream_generate(DEFAULT_PKT_CNT, MIN_PKT_SIZE);
+ 		/*Spawn TX thread */
+ 		pthread_create(&t1, NULL, ifobj2->func_ptr, test);
 
 -- 
 2.48.1
