@@ -1,154 +1,146 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7AB42AA9
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A12C1F417E;
+	Thu, 13 Mar 2025 20:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741897150; cv=none; b=Aozc37MwI+sdii6y7/aEQ7X4ilJ6YsPhCszqKWN5nblkT7n/oVgDpfoM2TiYmFZW/fNn+21/tNZQFM8ffx3ydLX9D55bRloT1jWEzPPvWbSbZK9t3pdWwRsgE5qZBldU3iJdwvGVSkwRlmxs3puUzxzYeb/8mM6wOIk5C+AbmZ4=
+	t=1741897213; cv=none; b=TNyYIVMYKgEodsWH2v75mafsY352xxXxBvBcqbN51gh1D6aGpJrO5woANXN6B9u9sKslb8rdZNex4ztoD47JhkMszwHiC0KrrsAIRY7caF9dHPr7xut0Z/c1nTNxNn1XmN0TH8JvKwvVXwWf8hiWBdWjDDMGcxv3BdXdzlh158Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741897150; c=relaxed/simple;
-	bh=GwNXEPzVcYXJ1nmphyJMfGIxqNCqJjVL84gD7F2VovI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X6EEAeDvhWrWvyM1c7BTubbfXqEXAsr1/Oh8psOQp9Jhoh+DIQoDBQYeWoN1GjNfT0GRZaU8jm8EaS5kjTh1O40bSoKrMzGVa8Ciw6RlRLyorFctTiBFzqjSAQf+i6PaZFIXgz6s4Facu68w9NXO4XVXgREBovFBuXdqNtYMZ0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=grJ9HdPi; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1741897213; c=relaxed/simple;
+	bh=7PeCj+W4btHHKEEgyWVcs04k5u5DYkGktv3w5M/oHMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGMDeMo7jqueghwToFo55G0N2opoNJBgXSbXsPPPsPiFBUsPMARu9FcBdToNc/7GGGU7g3Q1oBZ2f85laGdYAgLQXmeDFG2BOmc8eCZY5ppW7JfHuqs2BHJGF9XRDsQX+xhhyjWSl+4GGzQhLnT+hk375pgegB9vODC1sUQFM5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyjZmA1S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="grJ9HdPi"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d03ac846a7so4817415ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1741897147; x=1742501947; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=am1e3Yr0N9sJ7xnCyU39iPs0xuOYmSNADUSGEo4MjnQ=;
-        b=grJ9HdPidBkpVJaMGcYkaPdnkYgqBBPoiTOj2LpVXuJ48La78EtB74KnK4SCU/5k+x
-         yrgR8puuJghafDggQiWYA8/ig3zTbxMl5+hEa8ScDMIKI6stX3Fx6NBzwKIpf0znJPx/
-         8jwIeCsKp4UFft4jh01vI/hMscLKm6+fkvyTQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741897147; x=1742501947;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=am1e3Yr0N9sJ7xnCyU39iPs0xuOYmSNADUSGEo4MjnQ=;
-        b=w57hU5kotEcSblb2kw5m4+dpMxf798J5eajbE6cUCLiYtGY6Yy/67/wNp0pC38rU2h
-         OxzBab3I1RnB6IzOxxdz8+e3PGKpo1kmz12GNhvEH5g9W6d8m8eStU91O9Ec3e5KfILY
-         xu7p+if6/5kcmT9ESGRSFjywRxIXzeGo1rEFMnF/rHbDVibIoI6IJMuF59kKXnFPTtTR
-         f0uxMq2Nn66otGo+UthJ1o4DABRiyB/KoEZZkhNBe0QLflkR6TnJXJ3iA9RTjTiZUYl4
-         faVbv28hUuQHze4mxDmq0agwLwJ5K+bpmxdIN7x5kB1hZWqorTWRmVbfuL/faC4RVI6J
-         dMAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWju6g4suLEoLl74QIpkfj/44bpqcK8Z+rdUXR8DPGWExXU+bIw9OYj61mLWKw8fE6O5H9wuosBE1/DIhU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2VTFW660V0MkVdylj/srzQZGFTNmusPzRrRW4i+XxBdkizgC8
-	JQcS+Kol3A+4u5di4gV0/o6Nn51/twd15pJGNMsHY+OZrNgblc0kGlcgbJ0rrVE=
-X-Gm-Gg: ASbGncuJppAXUjn0MC6N282gg3tiGP6S5q1Eqs9Qm0wOVTyJwW787vugz29i9yizAL/
-	x+viVe/AQOrKTleAgQmISvoCOtq/mjY9sexQVU4NaIJIAnEziAQ/7lNT7UlFpOYHWKxFXm1q8rB
-	WuaKKhTq6oLvZJj3AWcSHYN/pvuJtWEQXv+9Nm4hjJYY6HazFYkFLZZ5Dmc94HS/8mslgSOI7Te
-	IWNkWrn4/ydCWofNg220aZLAwOLAM1UfaeJCCILfUoAIEBxqS+6jEQhJEWEZrmuOjLTn1uUIedj
-	bxukfLYWBPmUCoxOG6fQB6R/gU12icWxkr+Nb9i74cQ3gn0ykfZ5H8R/LosB9TFRBg==
-X-Google-Smtp-Source: AGHT+IGa/5eAuSmarcFKHqqOj2hcTd+7r+7qyTF/LSe7zhj2zp1QDtRJ6+rjw+eQw5dmnyJZFVG3Mg==
-X-Received: by 2002:a05:6e02:20e4:b0:3d3:fbae:3978 with SMTP id e9e14a558f8ab-3d4816fa3b5mr11336425ab.9.1741897147299;
-        Thu, 13 Mar 2025 13:19:07 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2637274aasm527015173.64.2025.03.13.13.19.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Mar 2025 13:19:06 -0700 (PDT)
-Message-ID: <65050389-2b80-4355-be2e-604c1c5b6b9a@linuxfoundation.org>
-Date: Thu, 13 Mar 2025 14:19:06 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyjZmA1S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 045BAC4CEE3;
+	Thu, 13 Mar 2025 20:20:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741897212;
+	bh=7PeCj+W4btHHKEEgyWVcs04k5u5DYkGktv3w5M/oHMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DyjZmA1Sv+IEeuEtF6WeykYgVhtgrHpisnROviZ79Bes51/ehhkepJm9b30ri/aw2
+	 3IGI2vdaL46imyaYjy5dC2z6muRAaVhdPk8Vg5uGxEHnvR16gyiFgfsEQhhba/S7Ix
+	 BSUB11Yn1fOJ5/zIvPobTRTnal8ofDK1fmjq91MxpohvmidJctsFPLh0XoIj59acz0
+	 wFKK2zDhMr2lrNRMsQriW9rrQaYNBYtuZ4bjPwkGOUHDKCy6fBNVqOiGIa902KoClS
+	 NwcTEv7WgS/fCcDHfKVBs6rnhJ1Fq/h63yCB/+JoqbsrRtYSn/v9ZjVgFaHJ8p6f+V
+	 1U8RMUKskYSpw==
+Date: Thu, 13 Mar 2025 17:20:09 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 00/11] perf: Support multiple system call tables in
+ the build
+Message-ID: <Z9M9-YhDJg3NgiUy@x1>
+References: <20250308003209.234114-1-irogers@google.com>
+ <Z9KFLGpenwOP32q3@google.com>
+ <Z9M24AJzui9lFbGo@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Error during --arch x86_64 kunit test run
-To: David Gow <davidgow@google.com>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <0842477c-6063-40f8-8e8e-b9ce98711f80@linuxfoundation.org>
- <CABVgOSk+xztNcNJ5fQiRSGC3DKHS2H3kN1wHwAO4gCfG7cWY1Q@mail.gmail.com>
- <5a1e11fb-4213-45f6-a5ef-636de5e175d8@linuxfoundation.org>
- <CABVgOSmvKgE6EHcWWR0CnCSjsSkBPsJy_+sDS5thgzuq9=T14A@mail.gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <CABVgOSmvKgE6EHcWWR0CnCSjsSkBPsJy_+sDS5thgzuq9=T14A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9M24AJzui9lFbGo@x1>
 
-On 3/12/25 20:21, David Gow wrote:
-> On Thu, 13 Mar 2025 at 07:51, Shuah Khan <skhan@linuxfoundation.org> wrote:
->>
->> On 3/12/25 16:52, David Gow wrote:
->>> Hi Shuah,
->>>
->>> On Thu, 13 Mar 2025 at 05:14, Shuah Khan <skhan@linuxfoundation.org> wrote:
->>>>
->>>> David, Brendan, Rae,
->>>>
->>>> I am seeing the following error when I run
->>>>
->>>> ./tools/testing/kunit/kunit.py run --arch x86_64
->>>>
->>>> ERROR:root:ld:arch/x86/realmode/rm/realmode.lds:236: undefined symbol `sev_es_trampoline_start' referenced in expression
->>>>
->>>> I isolated it to dependency on CONFIG_AMD_MEM_ENCRYPT
->>>>
->>>
->>> That's interesting. I recall seeing this issue briefly about a year
->>> ago on an internal branch, and we worked around it there by enabling
->>> CONFIG_AMD_MEM_ENCRYPT (which worked).
->>>
->>> But I've been totally unable to reproduce it this morning: are you
->>> seeing this on any particular branch / config / environment?
->>
->> linux_next - I did allmodconfig build prior to running the tests.
->> That means I had to run make ARCH=x86_64 mrproper before running
->>
->> ./tools/testing/kunit/kunit.py run --arch x86_64
->>
->> I tried something different checking out a fresh
->> linux_next repo and running ./tools/testing/kunit/kunit.py run --arch x86_64
->>
->> No errors on
->>
->> ./tools/testing/kunit/kunit.py run --arch x86_64
->>
->> I will try this again and let you know. Can you try this as well.
->>
->> - Clean linux_next and run tests
->> - Run tests after buidling allmodconfig and mrproper
->>
+On Thu, Mar 13, 2025 at 04:49:52PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Mar 13, 2025 at 12:11:40AM -0700, Namhyung Kim wrote:
+> > On Fri, Mar 07, 2025 at 04:31:58PM -0800, Ian Rogers wrote:
+> > > This work builds on the clean up of system call tables and removal of
+> > > libaudit by Charlie Jenkins <charlie@rivosinc.com>.
+> > > 
+> > > The system call table in perf trace is used to map system call numbers
+> > > to names and vice versa. Prior to these changes, a single table
+> > > matching the perf binary's build was present. The table would be
+> > > incorrect if tracing say a 32-bit binary from a 64-bit version of
+> > > perf, the names and numbers wouldn't match.
+> > > 
+> > > Change the build so that a single system call file is built and the
+> > > potentially multiple tables are identifiable from the ELF machine type
+> > > of the process being examined. To determine the ELF machine type, the
+> > > executable's maps are searched and the associated DSOs ELF headers are
+> > > read. When this fails and when live, /proc/pid/exe's ELF header is
+> > > read. Fallback to using the perf's binary type when unknown.
+> > 
+> > Now it works well for me!
 > 
-> Thanks, Shuah.
-> 
-> Alas, I've tried both on a clean linux-next (next-20250312), and after
-> doing an allmodconfig build (and make mrproper), and am still unable
-> to reproduce this here.
-> 
-> I also dug up the old 5.10-based version we saw something similar on,
-> and wasn't able to reproduce it there, either. (That had been built
-> with clang, but using clang on upstream doesn't seem to reproduce it
-> either.)
-> 
-> I'll continue to play around with different setups, but none of the
-> obvious things seem to work. Worst-case, I don't think it'd be a
-> _problem_ to make EFI + AMD_MEM_ENCRYPT the default for the
-> x86_64/qemu KUnit configuration.
-> 
+> Its working for me on x86_64 as well, I'm doing some more tests, the
+> container builds and will do 32-bit tracing on 64-bit ARM (rpi5 aarch64)
+> and then report results here, should be later today as the default
+> kernel for the rpi5 doesn't come with CONFIG_FTRACE_SYSCALLS=y and BTF,
+> so building one with it.
 
-I tried again starting with a clean linux_next repo next-20250313
+Still building, but noticed this on x86_64:
 
-- Ran tests first
-- Built allmodconfig
-- Ran mrproper
-- Ran tests
+105: perf trace enum augmentation tests                              : FAILED!
+106: perf trace BTF general tests                                    : FAILED!
+107: perf trace exit race                                            : Ok
+108: perf trace record and replay                                    : FAILED!
 
-Saw no problems. Let's watch and see if we can narrow the problem.
-For now I was able to test the pr I will be sending soon.
 
-thanks,
--- Shuah
+The first doesn´t help that much with verbose mode, haven't checked if
+before this series it was failing :-\
 
+root@x1:~# perf test -vvv 105
+105: perf trace enum augmentation tests:
+--- start ---
+test child forked, pid 19411
+Checking if vmlinux exists
+Tracing syscall landlock_add_rule
+---- end(-1) ----
+105: perf trace enum augmentation tests                              : FAILED!
+root@x1:~#
+
+Ditto for 106:
+
+root@x1:~# perf test -vv 106
+106: perf trace BTF general tests:
+--- start ---
+test child forked, pid 19467
+Checking if vmlinux BTF exists
+Testing perf trace's string augmentation
+Testing perf trace's buffer augmentation
+Buffer augmentation test failed
+---- end(-1) ----
+106: perf trace BTF general tests                                    : FAILED!
+root@x1:~# 
+
+108 works when its the only test:
+
+root@x1:~# perf test 108
+108: perf trace record and replay                                    : Ok
+root@x1:~# perf test 108
+108: perf trace record and replay                                    : Ok
+root@x1:~# perf test 108
+108: perf trace record and replay                                    : Ok
+root@x1:~#
+
+I'll try to check what is happening with the first two later today.
+
+- Arnaldo
