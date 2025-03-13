@@ -1,45 +1,45 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F62326B08D
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A1C13AA20
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881602; cv=none; b=S9RsJm38+FnRhCHS9/uUWmayfd9KNYtB0ZiUCe2MthtnaaUJJiuLB3PmSowZd9j1jwTITZ2BCFKQYYGFpEnZ+BoN+quduUpI8GGK+sinx0dWCW1Yroe6t7H1OgVXsRvAvbuYrOMCL0BZCyHLJw53Hd+gUbSMMo0tjczg55/IEQ0=
+	t=1741881604; cv=none; b=pCTh8RplJneWjCcbLNs+j5tKUGDcE/2p5jh5/9NIPyZo9+E+ybc1GR8zlaEnM/EVeJxavMMDWoHL/z1w9/lRTqj5r7Kolit8emq6YhPRAONmAnmUttorrCNFcaaBUJ1q/FMuJHyeCjCPC/tne66KlXkvvx91/+vE23ax8SGUejw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741881602; c=relaxed/simple;
-	bh=8nc0Udtrh3p0WdZlunXEF/3qKBirL0LzIUuWvtLbWIk=;
+	s=arc-20240116; t=1741881604; c=relaxed/simple;
+	bh=U6xnEiiLcxoUlj5oziXTzUPFCVFD860N0hio44XXlp0=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=mLunYX5t2z85C8dn7RonUKp/GlTyO7gAk7p7ax9e8Vqt4qXbaRGnxCeO4aVE2Nz+OQJQnDnSirN7ssZCsLDSAI2qPW4QNfDn1ratCUZMw23xJ+ZWLOQ+zYv867rCmKJpYNHrBjHUm2wN/XOkUHWQv7imBgFdKLxjTkw55N564jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GFGMK7ja; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d6gwj5V4; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=rJV9PMklb6L+O08Su2gldI7uqyDkaDojTKlndJIEpMosaebpd0D/ypzErXvWdQXq8e5jG+HiaGuBa4M7F4oxU2NYbemw5TAft6F66s1rjNSiZlnQNKZpAFIa1VhGrv20d0mhd3tu3t9iSsFcLTiwhZ1hm5KOblvGBbj2efa/jxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FcDYFk7r; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z7Ykj2n8; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GFGMK7ja";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d6gwj5V4"
-Message-ID: <20250313155914.542595506@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FcDYFk7r";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z7Ykj2n8"
+Message-ID: <20250313155914.608834932@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741881599;
+	s=2020; t=1741881601;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=BaBDaqHlzc8qnLL0P0eR5zS1rCHI9lEMLIjAmMGd1QI=;
-	b=GFGMK7jaA8oafcP5sXIcCJIU9eS9daOnQ3/971//I2wFek6GYly1lTSHEB3TrkhhOwfP6T
-	nfOclbPCPlm1tMj1uzW4I3AVvrYVfhVwFIBDvR8bM7MmdkSW17Ll9fgsfZ6MaNLCzQcC+k
-	UTZ/wUiRBa1TfW3JheGs36NbfolFmDEJXNoriMkFN7OBsr66jv8W0g44K4IkhoeKOpKmCl
-	/U3UsrGqB3+QXjVToF538L8nBla66xKLtbHxKEsZmuKMvBIt9FanYQ3v8tBLluoV4gPbJC
-	S4xgdR37ZFcFzYunuzM5DZx7urlWVqfnOWP+zm4YUR71ozx5G9FI2S/YAFe8zA==
+	 references:references; bh=v9TPN0WGgiXJz+hAgbLeIiP+glBj25kHZkxUWZhnzK4=;
+	b=FcDYFk7r4qpYrNzDyXzSok7grPr1HkMqpXfQBTX4RN19cdoDbLtG0Wn83nh88oPeDKff5X
+	siZq1ktWbrwl6MSEaXBfIQNjl7sNbKCmDuy8JLt+OfwKXR2Etky5fWKf2VrAyeH6oNGBSz
+	OoWZPYlHTUe2IQUeyM8JDCqZm/NNkDTUhXyYRIfALBqmbRGca3fcvS1vfCxO3j53vlcE8z
+	qZJMM8WkTfrNHfyHE9M0ljwnVn9LnSRffvNeKraN81aPmJVwgmoO4ardwCTVVvz1EmnikP
+	gfxaUDieU363C5FCBQhJP1lDxEMLBbv3/bQ9XRBYjNLGqgvxnCB3coxBJarSDA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741881599;
+	s=2020e; t=1741881601;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=BaBDaqHlzc8qnLL0P0eR5zS1rCHI9lEMLIjAmMGd1QI=;
-	b=d6gwj5V4lYz2PN5Mmj/DLx1yvbJ9+V2Z1W4LcOzQkgD50P/HkNupkxn0r3htxL+qMeK1ZP
-	u4wWBGsOY/tWpVDw==
+	 references:references; bh=v9TPN0WGgiXJz+hAgbLeIiP+glBj25kHZkxUWZhnzK4=;
+	b=z7Ykj2n80telETYKwGRQYAK7Pe5c5Kg6kRsYZEj8ae1UxeLvfnAgoJDGkmjAtsSR0jPdFt
+	jYGwMwNzuDFmKcDQ==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>,
  Jiri Slaby <jirislaby@kernel.org>
-Subject: [patch 10/46] genirq/debugfs: Convert to lock guards
+Subject: [patch 11/46] genirq/chip: Prepare for code reduction
 References: <20250313154615.860723120@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,34 +48,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 13 Mar 2025 16:59:59 +0100 (CET)
+Date: Thu, 13 Mar 2025 17:00:00 +0100 (CET)
 
-Convert all lock/unlock pairs to guards and tidy up the code.
+The interrupt flow handlers have similar patterns to decide whether to
+handle an interrupt or not.
 
-No functional change.
+Provide common helper functions to allow removal of duplicated code.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/irq/debugfs.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/irq/chip.c |   37 ++++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
 
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -160,7 +160,7 @@ static int irq_debug_show(struct seq_fil
- 	struct irq_desc *desc = m->private;
- 	struct irq_data *data;
- 
--	raw_spin_lock_irq(&desc->lock);
-+	guard(raw_spinlock_irq)(&desc->lock);
- 	data = irq_desc_get_irq_data(desc);
- 	seq_printf(m, "handler:  %ps\n", desc->handle_irq);
- 	seq_printf(m, "device:   %s\n", desc->dev_name);
-@@ -178,7 +178,6 @@ static int irq_debug_show(struct seq_fil
- 	seq_printf(m, "node:     %d\n", irq_data_get_node(data));
- 	irq_debug_show_masks(m, desc);
- 	irq_debug_show_data(m, data, 0);
--	raw_spin_unlock_irq(&desc->lock);
- 	return 0;
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -499,7 +499,7 @@ static bool irq_check_poll(struct irq_de
+ 	return irq_wait_for_poll(desc);
  }
  
+-static bool irq_may_run(struct irq_desc *desc)
++static bool irq_can_handle_pm(struct irq_desc *desc)
+ {
+ 	unsigned int mask = IRQD_IRQ_INPROGRESS | IRQD_WAKEUP_ARMED;
+ 
+@@ -524,6 +524,25 @@ static bool irq_may_run(struct irq_desc
+ 	return irq_check_poll(desc);
+ }
+ 
++static inline bool irq_can_handle_actions(struct irq_desc *desc)
++{
++	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
++
++	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
++		desc->istate |= IRQS_PENDING;
++		return false;
++	}
++	return true;
++}
++
++static inline bool irq_can_handle(struct irq_desc *desc)
++{
++	if (!irq_can_handle_pm(desc))
++		return false;
++
++	return irq_can_handle_actions(desc);
++}
++
+ /**
+  *	handle_simple_irq - Simple and software-decoded IRQs.
+  *	@desc:	the interrupt description structure for this irq
+@@ -539,7 +558,7 @@ void handle_simple_irq(struct irq_desc *
+ {
+ 	raw_spin_lock(&desc->lock);
+ 
+-	if (!irq_may_run(desc))
++	if (!irq_can_handle_pm(desc))
+ 		goto out_unlock;
+ 
+ 	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
+@@ -574,7 +593,7 @@ void handle_untracked_irq(struct irq_des
+ {
+ 	raw_spin_lock(&desc->lock);
+ 
+-	if (!irq_may_run(desc))
++	if (!irq_can_handle_pm(desc))
+ 		goto out_unlock;
+ 
+ 	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
+@@ -630,7 +649,7 @@ void handle_level_irq(struct irq_desc *d
+ 	raw_spin_lock(&desc->lock);
+ 	mask_ack_irq(desc);
+ 
+-	if (!irq_may_run(desc))
++	if (!irq_can_handle_pm(desc))
+ 		goto out_unlock;
+ 
+ 	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
+@@ -695,7 +714,7 @@ void handle_fasteoi_irq(struct irq_desc
+ 	 * can arrive on the new CPU before the original CPU has completed
+ 	 * handling the previous one - it may need to be resent.
+ 	 */
+-	if (!irq_may_run(desc)) {
++	if (!irq_can_handle_pm(desc)) {
+ 		if (irqd_needs_resend_when_in_progress(&desc->irq_data))
+ 			desc->istate |= IRQS_PENDING;
+ 		goto out;
+@@ -790,7 +809,7 @@ void handle_edge_irq(struct irq_desc *de
+ 
+ 	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
+ 
+-	if (!irq_may_run(desc)) {
++	if (!irq_can_handle_pm(desc)) {
+ 		desc->istate |= IRQS_PENDING;
+ 		mask_ack_irq(desc);
+ 		goto out_unlock;
+@@ -854,7 +873,7 @@ void handle_edge_eoi_irq(struct irq_desc
+ 
+ 	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
+ 
+-	if (!irq_may_run(desc)) {
++	if (!irq_can_handle_pm(desc)) {
+ 		desc->istate |= IRQS_PENDING;
+ 		goto out_eoi;
+ 	}
+@@ -1213,7 +1232,7 @@ void handle_fasteoi_ack_irq(struct irq_d
+ 
+ 	raw_spin_lock(&desc->lock);
+ 
+-	if (!irq_may_run(desc))
++	if (!irq_can_handle_pm(desc))
+ 		goto out;
+ 
+ 	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
+@@ -1265,7 +1284,7 @@ void handle_fasteoi_mask_irq(struct irq_
+ 	raw_spin_lock(&desc->lock);
+ 	mask_ack_irq(desc);
+ 
+-	if (!irq_may_run(desc))
++	if (!irq_can_handle_pm(desc))
+ 		goto out;
+ 
+ 	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
 
