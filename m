@@ -1,87 +1,102 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE9C1DEFE7;
-	Thu, 13 Mar 2025 07:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBA31DEFE7
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741852007; cv=none; b=RQPHib9+CQmNJxnGMWWRhmXDZrBzmejnquJ+EJbqH1H58bYu+tZoZNDkJfl9+CWPQjRt1pfU7QoDRH+s2wfRI0lybTuAxhRHWEXADnAy7ag3l0MRgfeVPQdn1thaJMDNh5p2TV3JyQRJUoswE2YsPq36mJRdRWHgjFIhlHzj6C0=
+	t=1741852016; cv=none; b=BxFxXxxnMebHVeIxWFnKSmTGNPLtJfZq/ueLF9EAy2vHgzGYVccSU9hvaKQ/vEqLdKlq2pqOZvuJ82PahHyYSzysSNO/FVvt+08oya446TWLkoY1qTJ7RHrgbF9nlODO9PHBkyMxFicQMNEu7VrrGGUr6rXHztKx5RDbO6hIjjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741852007; c=relaxed/simple;
-	bh=NLbx9CE9um5e8ZDX049W9Xu5o5hK1fC/rGBjNeq0Izk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SnV48w8vAHJsczdPRj6zKTlZvP/N/Sab1noobRZYwvQn3hn56hVU/4uXJyZ/SDi9cyFQBBEwJcNCwkLfQvarfi6eGpLVxm0vBqJH7EJasGALaT8WlWl3P2ncvHALwj27tb2PzuZEfKhzpyFY+NwvaQUbpHbg3HLk0U1sa2xRF84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MetFFPVn; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1741852016; c=relaxed/simple;
+	bh=Kcw/cri+106dKos1f1Natr9iLqISBP6t2M/k6NuJoeA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TWryv0WVNmBLzD9dO84zV7ZkGMl7UaMJkoP4aaSmM54Di3VtKswdxJptLSoHLwlObnNa2P7t0rDeYTqOocKmW/FCgp5jisfow20PD//+jb+bbnq7Ubj4llWiSm0NS+fPzY1whDCPGW+5jal8HWqbQmPBcEvAdsCp+t4OHwsMLaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wVVBZDUw; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MetFFPVn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741852002;
-	bh=NLbx9CE9um5e8ZDX049W9Xu5o5hK1fC/rGBjNeq0Izk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MetFFPVnzzVr6xvvb3mlAKcDR+PYPtdikx/pzSHCq6JPVsbiuw7xRtOM1wyNbmAYX
-	 G0klwcaU4t5oA9UPxpu2e8owgxNK7hlnF3L19X23W/OCaZ40Q2jNWaKOFE9ISSOILS
-	 iPqZOmM65iY4/0LsMYUet94MN4ezE6j5+uStLAxmFnaJzMqFXl20E8N/XhSP3jKeF1
-	 9xuetda7hgotoUko15iPpqKPu6SMVi8D6ByNCdzKdbi9Eq1MpSXUSrHoL7FogFgsg4
-	 obVyfdgve7JwQncxTbOtyxz+uS7G4xSb5GRJhdltf02KtzZa03odc/4om4zqqLMyQ4
-	 O+kYBzUKzrEMA==
-Received: from apertis-1.home (2a01cb0892F2D600c8f85Cf092D4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6677D17E0CA6;
-	Thu, 13 Mar 2025 08:46:42 +0100 (CET)
-Message-ID: <64b82675410733368fa420d29b31921bba4e224d.camel@collabora.com>
-Subject: Re: [PATCH 5/5] media/i2c: max96717: allow user to override
- operation mode from DT
-From: Julien Massot <julien.massot@collabora.com>
-To: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- linux-kernel@vger.kernel.org, 	linux-media@vger.kernel.org
-Date: Thu, 13 Mar 2025 08:46:41 +0100
-In-Reply-To: <twfyc6qllxcssrw7ydfinby56azxadw6zjcinzukncoxnunixu@swknfqwn2qez>
-References: <20250207112958.2571600-1-laurentiu.palcu@oss.nxp.com>
-	 <20250207112958.2571600-6-laurentiu.palcu@oss.nxp.com>
-	 <3c46bbb64e6e9c7b836c3ca82d678e550d1b2ddf.camel@collabora.com>
-	 <twfyc6qllxcssrw7ydfinby56azxadw6zjcinzukncoxnunixu@swknfqwn2qez>
-Organization: Collabora Ltd.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wVVBZDUw"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741852002;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=A1k4rvRiNGwMmsF5RLcMl0KSYAR5wW+8BJa1JeXnczs=;
+	b=wVVBZDUwJMfdTy9EFL9OKjRb4HM/biVq9ZaJh0Ar2oo+cRJH67geNPyjJXZhKgquo6Pz3I
+	Wbpa/MhNEg05bLPlCgxyLOvtff4qSGAzTB/CmziQ+4OAX3PgItsWQYflwsOBo1hP15oKD9
+	QgZ7J4exDWdpCXvn2EGXIGxCzjGmJsE=
+From: Kunwu Chan <kunwu.chan@linux.dev>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	morbo@google.com,
+	justinstitt@google.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Kunwu Chan <kunwu.chan@hotmail.com>,
+	Grace Deng <Grace.Deng006@Gmail.com>
+Subject: [PATCH] rust: sync: optimize Rust symbol generation for PollCondVar
+Date: Thu, 13 Mar 2025 15:45:36 +0800
+Message-ID: <20250313074537.729578-1-kunwu.chan@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Laurentiu,
+From: Kunwu Chan <kunwu.chan@hotmail.com>
 
-> > > @@ -1101,6 +1110,9 @@ static int max96717_parse_dt(struct max96717_pr=
-iv *priv)
-> > > =C2=A0
-> > > =C2=A0	priv->mipi_csi2 =3D vep.bus.mipi_csi2;
-> > > =C2=A0
-> > > +	if (fwnode_property_present(dev_fwnode(dev), "maxim,cfg-mode-overri=
-de"))
-> > > +		priv->mode_override =3D true;
-> > > +
-> > 	source_fwnode =3D fwnode_graph_get_endpoint_by_id(dev_fwnode(dev),
-> > 							MAX96717_PAD_SOURCE, 0, 0);
-> > 	if (fwnode_property_present(source_fwnode, "maxim,tunnel-mode")) {
-> > 		priv->mode_override =3D true;
-> > 		priv->mode =3D GMSL2_MODE_TUNNEL;
-> > 	}
->=20
-> So, I don't think the boolean 'maxim,tunnel-mode' would work well when
-> the pin configuration is 'tunnel' and the user wants to switch to
-> 'pixel'. Maybe, replace the boolean 'maxim,cfg-mode-override' property
-> with an optional enum property 'maxim,cfg-mode'? Does that sound better?
+When build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
+with ARCH=arm64, the following symbols are generated:
 
-Yes, please see my comment on patch 3/5
+$nm vmlinux | grep ' _R'.*PollCondVar  | rustfilt
+ffff800080019e90 T <kernel::sync::poll::PollCondVar>
+			::new::{closure#0}::{closure#0}::panic_cold_explicit
+ffff8000805b8e04 T <kernel::sync::poll::PollCondVar
+			as kernel::init::PinnedDrop>::drop
+ffff8000805b8e04 T <kernel::sync::poll::PollCondVar
+			as core::ops::drop::Drop>::drop
 
-Regards,
---
-Julien
+This Rust symbol
+(<kernel::sync::poll::PollCondVar as kernel::init::PinnedDrop>::drop)
+is trivial wrappers around the C functions __wake_up_pollfree
+and synchronize_rcu. It doesn't make sense to go through a trivial
+wrapper for its functions,so mark them inline.
+
+After doing so, the above symbol will not in output.
+
+Signed-off-by: Kunwu Chan <kunwu.chan@hotmail.com>
+Co-developed-by: Grace Deng <Grace.Deng006@Gmail.com>
+Signed-off-by: Grace Deng <Grace.Deng006@Gmail.com>
+---
+ rust/kernel/sync/poll.rs | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rust/kernel/sync/poll.rs b/rust/kernel/sync/poll.rs
+index d5f17153b424..a4f92c545fec 100644
+--- a/rust/kernel/sync/poll.rs
++++ b/rust/kernel/sync/poll.rs
+@@ -107,6 +107,7 @@ fn deref(&self) -> &CondVar {
+ 
+ #[pinned_drop]
+ impl PinnedDrop for PollCondVar {
++    #[inline]
+     fn drop(self: Pin<&mut Self>) {
+         // Clear anything registered using `register_wait`.
+         //
+-- 
+2.43.0
+
