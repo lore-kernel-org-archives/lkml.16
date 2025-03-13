@@ -1,85 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABD41F461C;
-	Thu, 13 Mar 2025 22:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B105F1F63D6;
+	Thu, 13 Mar 2025 22:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741903507; cv=none; b=ncaL53BSyPj3adE7I3N0RsDA23UNBeWRjb4XthZpJJqyQHaJfdDe1I7gwT8mW0EI9RB3pQzcQ9zjQKxePULdDVMZNfbPmL5dqRpQI5OPj+GZ4kLmIEX+idLGPTgTs7bwcC56GcsXKaI5HCx8GBVLENf/nZeKgua0AyLwrILVdos=
+	t=1741903520; cv=none; b=Z1mET73Arkj4wZir1ian/IJyHVLFDb+0f6FFafHgY8Lwm6x4siGeiuEVHayzQT8QHh7tCO1WsKDuJmFaaW7n2uRTg69UPFrILy0DFk7LKHhdIMsmkX0s1SCBuR7W3JsAkHfXPhf/rLhVvCgFCfyfZVYhwzW7MXxtCkcpfAMhZgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741903507; c=relaxed/simple;
-	bh=GxNzFgXlCVEFcpDf3VLptEglWoUTczleCr4VuzyQIr4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bM6b1vDwiwZCyuulZaq9A3/GVreeojBgyeGdU3lhESOmjWp57ZfnL6/C9N0J2hvd3q6ar9I0EDctkbMkFdPntl7rNUtLkENKiY//qb69xdws1tgM7QGQafGP5WM1eOuXSA3GlvlG50nt6Rgv4fXiC14j2WCMHL1hoSbsZ+uQee8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=vNslcPvd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741903520; c=relaxed/simple;
+	bh=/qID/VJTvjXyKUcft2ck54TEmpFJ7EugT3z1mM/v51A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GEeXVxnkcjHj1uxa4Ax8zZ0KcLLDqKz8xzLa6XLNI+8iEb7VX5t3F0K7yuW7Ukr16yEGBysxO/I7T2xoVD6Vmt6LUYxTzpI1N3Rrj6lZm3Zp2XLcXnm8syUAHMLzw90MWItNpAWzVBmcx+Y1n6W6tk1iddxS/WytAnxw0E/08mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aM7+DADa; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="vNslcPvd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6615C4CEE5;
-	Thu, 13 Mar 2025 22:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1741903506;
-	bh=GxNzFgXlCVEFcpDf3VLptEglWoUTczleCr4VuzyQIr4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vNslcPvdVPNB7E9fplso2uwQWydxF0LuafyC8Ekj6LJ17WeoKPzAu1lWUeLyq4wyx
-	 YSG2VtnirdV4PAoDW58QNKBURHFBXAkymAmOjx0cdlO9qH75IKZQbVpmmhcAjZ7EP7
-	 0n/ABlCGS0sNpOunuAQvLiC/vVhLZ4IVMsVmABVs=
-Date: Thu, 13 Mar 2025 15:05:05 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Maxime Ripard <mripard@kernel.org>, Kees Cook <kees@kernel.org>,
- Alessandro Carminati <acarmina@redhat.com>,
- linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, Arnd
- Bergmann <arnd@arndb.de>, =?ISO-8859-1?Q?Ma=EDra?= Canal
- <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>, Daniel Diaz
- <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>, Arthur Grillo
- <arthurgrillo@riseup.net>, Brendan Higgins <brendan.higgins@linux.dev>,
- Naresh Kamboju <naresh.kamboju@linaro.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Ville =?ISO-8859-1?Q?Syrj=E4l=E4?=
- <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>, Thomas
- Zimmermann <tzimmermann@suse.de>, Alessandro Carminati
- <alessandro.carminati@gmail.com>, Jani Nikula <jani.nikula@intel.com>,
- dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, loongarch@lists.linux.dev, x86@kernel.org
-Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
-Message-Id: <20250313150505.cf1568bf7197a52a8ab302e6@linux-foundation.org>
-In-Reply-To: <c8287bde-fa1c-4113-af22-4701d40d386e@roeck-us.net>
-References: <20250313114329.284104-1-acarmina@redhat.com>
-	<202503131016.5DCEAEC945@keescook>
-	<20250313-abiding-vivid-robin-159dfa@houat>
-	<c8287bde-fa1c-4113-af22-4701d40d386e@roeck-us.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aM7+DADa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741903518; x=1773439518;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/qID/VJTvjXyKUcft2ck54TEmpFJ7EugT3z1mM/v51A=;
+  b=aM7+DADabt8EiwrQsBnFn0c26NzV4tyfW/zCTuqUkgEsCRf2U446MAKz
+   uLyJAqqKRGweQhPKHara9fYz3Aezv/rx8aE/tHCNl+lN44RKLJ/8LKLIi
+   VG2Q45MKUx2BvR+VbIeOrlmlkfRMnTehbgc0ePVmwsafz1cpPkkwjzhfP
+   U4SMKjf3HXR8HL3wnbRTfZ9SjWBy2gSFiIqBzlHzCPaCiaDSvfDW7nR/l
+   dP7hLSfQL5LcDIWMNXEUotpUciD5Fry1hyE1ro1Gbbp/GVQOdum3R10KK
+   7NkfAJ4Lq/P85cai7bbZjlMphCGiB0fTTs9UB5KVyuOWesJHw79Mloj7E
+   A==;
+X-CSE-ConnectionGUID: OHy1MrqIQKqsMtd9JzpB7Q==
+X-CSE-MsgGUID: yp47F3FKRfuDNHEOhTQUBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="45813444"
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="45813444"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 15:04:40 -0700
+X-CSE-ConnectionGUID: EiacCQtMSiy4kHroew28yA==
+X-CSE-MsgGUID: jA7u+aJNQsaZZVOWbh/5yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="121788862"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.96])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 15:04:40 -0700
+Date: Thu, 13 Mar 2025 15:04:38 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cxl/acpi: Add Null check for adev
+Message-ID: <Z9NWdob3CSy9UDq5@aschofie-mobl2.lan>
+References: <20250313190753.450546-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313190753.450546-1-chenyuan0y@gmail.com>
 
-On Thu, 13 Mar 2025 11:31:12 -0700 Guenter Roeck <linux@roeck-us.net> wrote:
-
-> On Thu, Mar 13, 2025 at 06:24:25PM +0100, Maxime Ripard wrote:
-> > > 
-> > > Yeah, as with my prior review, I'm a fan of this. It makes a bunch of my
-> > > very noisy tests much easier to deal with.
-> > 
-> > And for the record, we're also affected by this in DRM and would very
-> > much like to get it merged in one shape or another.
-> > 
+On Thu, Mar 13, 2025 at 02:07:53PM -0500, Chenyuan Yang wrote:
+> Not all devices have an ACPI companion fwnode, so adev might be NULL.
+> This is similar to the commit cd2fd6eab480
+> ("platform/x86: int3472: Check for adev == NULL").
 > 
-> I was unable to get maintainers of major architectures interested enough
-> to provide feedback, and did not see a path forward. Maybe Alessandro
-> has more success than me.
+> Add a check for adev not being set and return -ENODEV in that case to
+> avoid a possible NULL pointer deref in cxl_acpi_probe().
+> 
 
-I'll put them into mm.git, to advance things a bit.
+Avoiding the NULL ptr deref seems obvious as ACPI_COMPANION() return
+is routinely checked throughout the kernel. Why the reference to the
+other commit? Do these devices have something in common?
 
-If someone wants to merge via a different tree, please speak up.
+I'm curious as to when *this* specific adev can be NULL.
 
-Hopefully the various arch maintainers will review at least their parts
-of the series.
+Looks good to check it like you do here, or if someone chimes in that
+it can never be NULL, just add a code comment saying so.
 
+Perhaps emit a message on NULL too.
+
+
+
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> ---
+>  drivers/cxl/acpi.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index cb14829bb9be..9195001db3c1 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -823,6 +823,9 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+>  	struct acpi_device *adev = ACPI_COMPANION(host);
+>  	struct cxl_cfmws_context ctx;
+>  
+> +	if (!adev)
+> +		return -ENODEV;
+> +
+>  	device_lock_set_class(&pdev->dev, &cxl_root_key);
+>  	rc = devm_add_action_or_reset(&pdev->dev, cxl_acpi_lock_reset_class,
+>  				      &pdev->dev);
+> -- 
+> 2.34.1
+> 
