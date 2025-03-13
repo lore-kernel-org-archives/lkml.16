@@ -1,122 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3621FC7F6
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCFA1FCD1A;
+	Thu, 13 Mar 2025 07:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741850450; cv=none; b=Dc4rH5zTwAUK2jjY1SDLra1ll0pclUNwbt3VBy5h/jGevTHVBAqjQtZfkk6bRv4fR/m3+qywuLjssLdfmGK/bLak1uR6t8e/AerN9dXiz1EbwY2M0UX+dyOzlrFgDFdEyq41Bv9AIkjK+ltsqmQNFxgrhPhyHuou2mecm4H8OaY=
+	t=1741850456; cv=none; b=IR27N1wYi7++A348Pu6x5rkgi1L2Yi6UrHDYeAQeyvSbwmIxE7nTP1cfXzrY2Ru8qeKM3ZP5lNDxFur+Dbnj89zdxvGV4A7lh0FHnmct1VRMkKPVBGnCYPys/5HgotKiNu2GgOkjHzVTl+hxaMr8VI8rtREkJ2EsfoShrVRX/yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741850450; c=relaxed/simple;
-	bh=KtmKrH0Gsv0sBFL6B7nZq6RHI/4HDfiECApPAP1vOr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E5u0mf9+UjW/PraN2+rj+K9Lr6qRs3OTiZIUbVxBcbukCtq9zejBUh9IDIPROuBSSw58EWDTbZeoflSjGdOIzkWAlfCTZZscJAjjw685JGzhAV4slS8k7CGiZt1W/rLy6L46u2geoW3wgw7O9P+ZYNyQJMX+xVGMTTP0Jk36Djg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FqJo5nOP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FqJo5nOP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741850447;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o4bfYEIbp/kS2X2cwGn1CJqsR/J4F2IpC4H45RKU2a4=;
-	b=FqJo5nOPWDZvXMnUaMq8yz7DAur3XgvRRlldH1KzVjncJ0fRNlVzjqNZFuXxvAjubh5CLt
-	5jKxjXawWTfdH8AWnvBzqXRPxrEq0ySpYNjo+t4cSIWfVKj7VHmk6qIelpyJAHuOg2rHkT
-	6r9zYLj7QvIxHGSArTietsOR7zVC46A=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-465-maGDIocdO-C8r8s6XrAoFQ-1; Thu, 13 Mar 2025 03:20:45 -0400
-X-MC-Unique: maGDIocdO-C8r8s6XrAoFQ-1
-X-Mimecast-MFC-AGG-ID: maGDIocdO-C8r8s6XrAoFQ_1741850444
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39131f2bbe5so210725f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 00:20:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741850444; x=1742455244;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o4bfYEIbp/kS2X2cwGn1CJqsR/J4F2IpC4H45RKU2a4=;
-        b=vPXkYOQC/bm6WjK+BrOQH9ou5EHeyhjxe7lxDRWHOIlhRBU2a4dxY0VCEg4VGC0c72
-         8kefaeTiyy2l7MuBpviLDYKaCP3mSUMXda5pJQbqGcCTilxtIzcPa3+LR5PV3+phYgDK
-         JwFY73NeHsywUsd8AeyQFThVhYe/AA2Wlz4zLK5jRFw9fYF0KCuhdq/Gubh8+Nyj92hB
-         4ipTZRrfWhZ5Y27oeuHeg2peUDjn/sAudtlERq06KEGOnKC/6LOZo6wZW0X2PFaDzwM5
-         ppNn1qtXslwdh9A9wzBVw0ZEqYQK3RkWQS5Sl9vqMlujgIamNDEo09CHPDS29sd61tjl
-         pCXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkjxZWrUqjIoGn+vMr27fFM/1LOY/M+Ws6kXhhoMjXhJgAIsOexOM0Hrk6yKNTYsEGPwxVHzkWiNjCs5M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeyAFJHdFyO++YXHEI1+RNIAmWqY9yDIf8QRVnLC+ZxxoDs+QL
-	aPoUsEb3trotMkywQTCUWR1WpEgYPOCwt/MspnUeZGkOH70QkV19typmSEw0fDNOS/ZL+B/sN0l
-	EMfwKrua8i2LpUk9HJIZbGBxggoEjZL3RTyjnDgev/5ymOeUQLd/bWcMTh4/0ow==
-X-Gm-Gg: ASbGncty3xMNgQtLeE9WLp0cN9nb+yLSHim+lCon3Mwy+CutE2ahpWxYqe0+fkYO6IB
-	Cfdhqqyc5M+eMBsapOxQwexJoihjKcg7nIcf2JHejD7B7XXYDGILpPPXaUhmw0/VTaMe5ol3VX3
-	ad1cOOxITCXZe4wUu2MAKWfjH0XmGKd3x0zccfxeB7Jnlf+SaWXGFaaxh67JE4gGqg5CIQo1w6M
-	gjg0BcX4FZECcQ5K+S/eeB6qlfsMMqPQXqGasXwjRlLp7t0IWDWcHc1/HnD1Fc+FIAhz9j+4WFn
-	EV54hDLQiA==
-X-Received: by 2002:a05:6000:144d:b0:391:2e58:f085 with SMTP id ffacd0b85a97d-39132dab192mr19228447f8f.54.1741850444456;
-        Thu, 13 Mar 2025 00:20:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGdSno6hSKVsk5d06B4EsgagrhEFS5vVdfXL2wu7cQUeZCwJ3oOQpqMw11c+iVNeKk+NLYSpA==
-X-Received: by 2002:a05:6000:144d:b0:391:2e58:f085 with SMTP id ffacd0b85a97d-39132dab192mr19228411f8f.54.1741850444109;
-        Thu, 13 Mar 2025 00:20:44 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d18a2af42sm10316185e9.32.2025.03.13.00.20.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 00:20:43 -0700 (PDT)
-Date: Thu, 13 Mar 2025 03:20:37 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Nico Pache <npache@redhat.com>, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, cgroups@vger.kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	jerrin.shaji-george@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com, arnd@arndb.de,
-	gregkh@linuxfoundation.org, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, eperezma@redhat.com, jgross@suse.com,
-	sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
-	akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, nphamcs@gmail.com, yosry.ahmed@linux.dev,
-	kanchana.p.sridhar@intel.com, alexander.atanasov@virtuozzo.com
-Subject: Re: [RFC 1/5] meminfo: add a per node counter for balloon drivers
-Message-ID: <20250313032001-mutt-send-email-mst@kernel.org>
-References: <20250312000700.184573-1-npache@redhat.com>
- <20250312000700.184573-2-npache@redhat.com>
- <c4229ea5-d991-4f5e-a0ff-45dce78a242a@redhat.com>
+	s=arc-20240116; t=1741850456; c=relaxed/simple;
+	bh=Yaey8bweuapW9z7cxwM51gfcgZNyxn3hib6H/fyGEN4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uImGH3Ph+FrN7AEw9gogazGFZxa8b9wXydl5gnwVF9wdDCCQXEShvCUT+ke1s44YfSNGqJglG4IZ+XdjEBveDDrhOBCu+l3rWok70OkMXwuqsH7sUjWEgSEneX6ZaDWqhWcs6W8lggjm2Sby6C+YK+e3ArFpTNxuQNyENQH642Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZCzQC5nr0zqVT2;
+	Thu, 13 Mar 2025 15:19:15 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id DCAC2140158;
+	Thu, 13 Mar 2025 15:20:44 +0800 (CST)
+Received: from huawei.com (10.50.165.33) by kwepemg500006.china.huawei.com
+ (7.202.181.43) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Mar
+ 2025 15:20:44 +0800
+From: Longfang Liu <liulongfang@huawei.com>
+To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
+Subject: [PATCH v5 1/5] hisi_acc_vfio_pci: fix XQE dma address error
+Date: Thu, 13 Mar 2025 15:20:06 +0800
+Message-ID: <20250313072010.57199-2-liulongfang@huawei.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20250313072010.57199-1-liulongfang@huawei.com>
+References: <20250313072010.57199-1-liulongfang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4229ea5-d991-4f5e-a0ff-45dce78a242a@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-On Wed, Mar 12, 2025 at 11:19:06PM +0100, David Hildenbrand wrote:
-> On 12.03.25 01:06, Nico Pache wrote:
-> > Add NR_BALLOON_PAGES counter to track memory used by balloon drivers and
-> > expose it through /proc/meminfo and other memory reporting interfaces.
-> 
-> In balloon_page_enqueue_one(), we perform a
-> 
-> __count_vm_event(BALLOON_INFLATE)
-> 
-> and in balloon_page_list_dequeue
-> 
-> __count_vm_event(BALLOON_DEFLATE);
-> 
-> 
-> Should we maybe simply do the per-node accounting similarly there?
+The dma addresses of EQE and AEQE are wrong after migration and
+results in guest kernel-mode encryption services  failure.
+Comparing the definition of hardware registers, we found that
+there was an error when the data read from the register was
+combined into an address. Therefore, the address combination
+sequence needs to be corrected.
 
+Even after fixing the above problem, we still have an issue
+where the Guest from an old kernel can get migrated to
+new kernel and may result in wrong data.
 
-BTW should virtio mem be tied into this too, in some way? or is it too
-different?
+In order to ensure that the address is correct after migration,
+if an old magic number is detected, the dma address needs to be
+updated.
 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
+Fixes: b0eed085903e ("hisi_acc_vfio_pci: Add support for VFIO live migration")
+Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+---
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 41 ++++++++++++++++---
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    | 14 ++++++-
+ 2 files changed, 47 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+index 451c639299eb..304dbdfa0e95 100644
+--- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
++++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+@@ -350,6 +350,32 @@ static int vf_qm_func_stop(struct hisi_qm *qm)
+ 	return hisi_qm_mb(qm, QM_MB_CMD_PAUSE_QM, 0, 0, 0);
+ }
+ 
++static int vf_qm_version_check(struct acc_vf_data *vf_data, struct device *dev)
++{
++	switch (vf_data->acc_magic) {
++	case ACC_DEV_MAGIC_V2:
++		if (vf_data->major_ver != ACC_DRV_MAJOR_VER) {
++			dev_info(dev, "migration driver version<%u.%u> not match!\n",
++				 vf_data->major_ver, vf_data->minor_ver);
++			return -EINVAL;
++		}
++		break;
++	case ACC_DEV_MAGIC_V1:
++		/* Correct dma address */
++		vf_data->eqe_dma = vf_data->qm_eqc_dw[QM_XQC_ADDR_HIGH];
++		vf_data->eqe_dma <<= QM_XQC_ADDR_OFFSET;
++		vf_data->eqe_dma |= vf_data->qm_eqc_dw[QM_XQC_ADDR_LOW];
++		vf_data->aeqe_dma = vf_data->qm_aeqc_dw[QM_XQC_ADDR_HIGH];
++		vf_data->aeqe_dma <<= QM_XQC_ADDR_OFFSET;
++		vf_data->aeqe_dma |= vf_data->qm_aeqc_dw[QM_XQC_ADDR_LOW];
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+ 			     struct hisi_acc_vf_migration_file *migf)
+ {
+@@ -363,7 +389,8 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+ 	if (migf->total_length < QM_MATCH_SIZE || hisi_acc_vdev->match_done)
+ 		return 0;
+ 
+-	if (vf_data->acc_magic != ACC_DEV_MAGIC) {
++	ret = vf_qm_version_check(vf_data, dev);
++	if (ret) {
+ 		dev_err(dev, "failed to match ACC_DEV_MAGIC\n");
+ 		return -EINVAL;
+ 	}
+@@ -418,7 +445,9 @@ static int vf_qm_get_match_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+ 	int vf_id = hisi_acc_vdev->vf_id;
+ 	int ret;
+ 
+-	vf_data->acc_magic = ACC_DEV_MAGIC;
++	vf_data->acc_magic = ACC_DEV_MAGIC_V2;
++	vf_data->major_ver = ACC_DRV_MAJOR_VER;
++	vf_data->minor_ver = ACC_DRV_MINOR_VER;
+ 	/* Save device id */
+ 	vf_data->dev_id = hisi_acc_vdev->vf_dev->device;
+ 
+@@ -496,12 +525,12 @@ static int vf_qm_read_data(struct hisi_qm *vf_qm, struct acc_vf_data *vf_data)
+ 		return -EINVAL;
+ 
+ 	/* Every reg is 32 bit, the dma address is 64 bit. */
+-	vf_data->eqe_dma = vf_data->qm_eqc_dw[1];
++	vf_data->eqe_dma = vf_data->qm_eqc_dw[QM_XQC_ADDR_HIGH];
+ 	vf_data->eqe_dma <<= QM_XQC_ADDR_OFFSET;
+-	vf_data->eqe_dma |= vf_data->qm_eqc_dw[0];
+-	vf_data->aeqe_dma = vf_data->qm_aeqc_dw[1];
++	vf_data->eqe_dma |= vf_data->qm_eqc_dw[QM_XQC_ADDR_LOW];
++	vf_data->aeqe_dma = vf_data->qm_aeqc_dw[QM_XQC_ADDR_HIGH];
+ 	vf_data->aeqe_dma <<= QM_XQC_ADDR_OFFSET;
+-	vf_data->aeqe_dma |= vf_data->qm_aeqc_dw[0];
++	vf_data->aeqe_dma |= vf_data->qm_aeqc_dw[QM_XQC_ADDR_LOW];
+ 
+ 	/* Through SQC_BT/CQC_BT to get sqc and cqc address */
+ 	ret = qm_get_sqc(vf_qm, &vf_data->sqc_dma);
+diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+index 245d7537b2bc..91002ceeebc1 100644
+--- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
++++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+@@ -39,6 +39,9 @@
+ #define QM_REG_ADDR_OFFSET	0x0004
+ 
+ #define QM_XQC_ADDR_OFFSET	32U
++#define QM_XQC_ADDR_LOW	0x1
++#define QM_XQC_ADDR_HIGH	0x2
++
+ #define QM_VF_AEQ_INT_MASK	0x0004
+ #define QM_VF_EQ_INT_MASK	0x000c
+ #define QM_IFC_INT_SOURCE_V	0x0020
+@@ -50,10 +53,15 @@
+ #define QM_EQC_DW0		0X8000
+ #define QM_AEQC_DW0		0X8020
+ 
++#define ACC_DRV_MAJOR_VER 1
++#define ACC_DRV_MINOR_VER 0
++
++#define ACC_DEV_MAGIC_V1	0XCDCDCDCDFEEDAACC
++#define ACC_DEV_MAGIC_V2	0xAACCFEEDDECADEDE
++
+ struct acc_vf_data {
+ #define QM_MATCH_SIZE offsetofend(struct acc_vf_data, qm_rsv_state)
+ 	/* QM match information */
+-#define ACC_DEV_MAGIC	0XCDCDCDCDFEEDAACC
+ 	u64 acc_magic;
+ 	u32 qp_num;
+ 	u32 dev_id;
+@@ -61,7 +69,9 @@ struct acc_vf_data {
+ 	u32 qp_base;
+ 	u32 vf_qm_state;
+ 	/* QM reserved match information */
+-	u32 qm_rsv_state[3];
++	u16 major_ver;
++	u16 minor_ver;
++	u32 qm_rsv_state[2];
+ 
+ 	/* QM RW regs */
+ 	u32 aeq_int_mask;
+-- 
+2.24.0
 
