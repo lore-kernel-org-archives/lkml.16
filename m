@@ -1,206 +1,260 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2049.outbound.protection.outlook.com [40.107.94.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA6B1F2BAD;
-	Thu, 13 Mar 2025 19:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741894936; cv=fail; b=hJrUxuSwlCX8FpMpEUVU2tbi3SRlUOnInD3oFH4SzdwhPBT0oq04EkzlwnCIq0TyG0iOVoBoHx23BQQtL5TZfeuKnoqWYL3Ow9WB+eCO7VXxHB36nx5gMenCDJdCNUnb5mDPeR06rmmDFSXzWVpbNusunoLINeoo2zGDwjNHrYo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741894936; c=relaxed/simple;
-	bh=8YXwIblioDcyz0pQoNmaJ9lZk0qZNkNZD2A+zj3qgRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=U9sc0eIRT8id+z4/Bg0B6TRi9OvQyh5hgjJyipziQzBBf+G7T3q+GIO1q4l0ZjrabnC0g72llQv19tHOF4tzPG4JpsT/QwJiCk49ay/Ce/ELFxkQd1GCSptVros5L6+EQvjxiX3EYxYoVtcGUK1xZpGxqjVGap+v/ehGlBxEZS0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SiGp1dL2; arc=fail smtp.client-ip=40.107.94.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBDC5464E;
+	Thu, 13 Mar 2025 19:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741895026; cv=none; b=Xa/V1IDJ3VDxSYLF59T1tAtfZMnAxAVbtfid+faDmWex8YTFVEXGUxA/fjKTNuNrnPh3BBnMPKXJbBNK2KcBgFcxGyJLZNCZgSQEVRjKge1tx7tguj+o034SRK9qHrL7FR3RqZ+I+thum206aIW/Jhi74pJOcYEP6qpLO/gNakc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741895026; c=relaxed/simple;
+	bh=TAyJgC0+VZW7fmpUhYlcq9DyILO8ChhSK8tB2x5yuO8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=FZf72Qd9WzUdVRDsBBDDExy+tRqNMWT/WzBLIRBU0jypdPx9a1MkPfPfScrWNBX3Nzjl15WZaWgjqgObxh0ezL74Wjd9i6tl1WbW9RwWID1vmtZU/tHsGFVbZ0KA34/IIbVIoMZPTAEFIYf5ON9UcDzUlC341hsGFDKO3d46Bt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=dE/+DN+Z; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SiGp1dL2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hUJsdG7R/nbzt8MTjMByQr3P4Dpb9xJ3YaU8cr0OPOCAT21r1iEufYtr6CuAE2friXoSOLE02GLY/5cIPmmaTP/Lg55G2o1Mu2bMlDgrw49T8SiiUK7glpj2pUX+rXdeIST356kx2l+aq+C6+mWDk2OxI3HDKXkkf0evxJuLGGc5dX/MwqTfaywpIHHSUDpUbggLcyPQa3TEl+8Z45Cyvkz7Tm3yjusdNfJ+tD4p93mW5FEfYvCVQvSd5IJORXtzsQZVg5ZWHkJl6At6864BUNyLqoEMphETVggPiBttSRnnVQax8QRBha+51EDF2BGMVR1qMCNgElVV60AMMxtaKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4tuN1UCCe6yex95yZh8aJW5ZLDJ6olgu1n3aHES3Vnk=;
- b=RfKNhthOiz1PxFakYR3YNfSAqmiG+O263FMa4mBLNRwP/tOYpw183beq1AkOo3gTN+02C8QkfMIAeiRBWFSYJHbRm/+hafPeYV96X9MbdqQrTRN5oMu4vLu7IAKV4dNQ0fbsPBXyNtn51+pUN6i+2W9WHOONcPwvCGzk4qCeBziWccYJlVgNd+Tup9Mtdk8J/Ppni1WzsAt2/vm1jGJW9J12UxOPFPwrKHwsm7w9hIdLIAAUK/1BHZXYMV2BuRhgNqGAK3A8iwKW7LVHm0KUimYZlURc5J11RSWRIiF1C4luocpW1y1w8qKFctsp+YDDXI91zQvcmor11iHcOQFf3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4tuN1UCCe6yex95yZh8aJW5ZLDJ6olgu1n3aHES3Vnk=;
- b=SiGp1dL2glepxhuTN+v4I4wjrf/0IIOQPhh01zwytcKHm7+iaAHMzWW88cTEXxHVhU+ogCNW7bF237xLd3VIfIn6LrCtvHCNr4ySdR3cvv4drCrnZD+H0GBvmoedKWoH0frQUuHpl6uWasEDcQPd3zNQtEpb94DE7RtW0F2GnLTOiChuqaQnrLPvsdlZq/x+Oe4f5pzXBU6PWtC/MDh7YDcRwK92Mr/UAHfql7DryhUy6Ssw6z+uFUqitTeb9RlfMyhqYfDZ2MCfI8+Ee00bPOsY3Vr6WYXhBE/OjAIu1mPJTvCrJGBPnSZhhQMW/FDMhf1HlMI9m8EHPxVBXphWgg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com (2603:10b6:806:306::12)
- by MN6PR12MB8516.namprd12.prod.outlook.com (2603:10b6:208:46f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Thu, 13 Mar
- 2025 19:42:08 +0000
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::66fc:f8a2:1bfb:6de8]) by SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::66fc:f8a2:1bfb:6de8%7]) with mapi id 15.20.8534.027; Thu, 13 Mar 2025
- 19:42:06 +0000
-Date: Thu, 13 Mar 2025 21:41:55 +0200
-From: Ido Schimmel <idosch@nvidia.com>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, andrew+netdev@lunn.ch,
-	chenlinxuan@uniontech.com, czj2441@163.com, davem@davemloft.net,
-	edumazet@google.com, guanwentao@uniontech.com, kuba@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	niecheng1@uniontech.com, petrm@nvidia.com, zhanjun@uniontech.com
-Subject: Re: [PATCH net 1/2] mlxsw: spectrum_acl_bloom_filter: Expand
- chunk_key_offsets[chunk_index]
-Message-ID: <Z9M1A8lOuXE4UkyR@shredder>
-References: <484364B641C901CD+20250311141025.1624528-1-wangyuli@uniontech.com>
- <78951564F9FEA017+20250311141701.1626533-1-wangyuli@uniontech.com>
- <Z9GKE-mP3qbmK9cL@shredder>
- <70a2fa44-c0cf-4dd4-8c17-8cc7abf1fbce@redhat.com>
- <Z9L43xpibqHZ07vW@shredder>
- <8563032ED2B6B840+7af17f62-992a-4275-80c7-ac7ef5276ae7@uniontech.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8563032ED2B6B840+7af17f62-992a-4275-80c7-ac7ef5276ae7@uniontech.com>
-X-ClientProxiedBy: LO4P265CA0182.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:311::12) To SA3PR12MB7901.namprd12.prod.outlook.com
- (2603:10b6:806:306::12)
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="dE/+DN+Z"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR12MB7901:EE_|MN6PR12MB8516:EE_
-X-MS-Office365-Filtering-Correlation-Id: 766c3df7-227d-48a8-b5d6-08dd62672311
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?M7tgLZSQ/+Fv4bJzyZgSujkg6w3dV+HyWHkDfR+uEa6XgQeYeZKGcTKMSExT?=
- =?us-ascii?Q?kJXCBgCZBlikevwA34shui6CyiZBFKAeEtZlVG+bEP5YENYs2gFcsX/JP7q3?=
- =?us-ascii?Q?L4uqwGo8nQLTKI12pb+Lo0ONLJWC53uhZzq2hDpExb/HRRzkzfO48fDdidn+?=
- =?us-ascii?Q?iesByco2izeNuQS5rBjNXLjtSUAkZQl7EY3pL9r4L3rO/DSek8FZb5J1OvtL?=
- =?us-ascii?Q?vR0KAV+T2/3Z545nKHMaHG3jFkBwmK+saZpLo27ZoXjH4X7FIlWPNG0YPjo0?=
- =?us-ascii?Q?gCIlkjnfVLgSLpVwanalmFFhJy18KYaQfScIm/4fGrHe+11dF4DbCJYLr8KB?=
- =?us-ascii?Q?Nzqi5OvBhs0fGLUqKnorfj30kYgiYhF1ZmTeQax/xL91PJfEvEdmmI41kl4l?=
- =?us-ascii?Q?bxIRr7+1O7INnHxzN1HRbNuG4CR+LhodaCMsKNEL9SVqHrfWyPTXiquGfqY3?=
- =?us-ascii?Q?pz3btm6sUi/HLcU8Dx2/zpobw6SeSB7pk308Mb9n2rql4qePFLwFuoqNgznI?=
- =?us-ascii?Q?Z0TON7l/l7CAyK+L5HThsiEU3MaKYq885NY2H+j/0hf+s4g7YfLUhJxcqQ53?=
- =?us-ascii?Q?u1Aei0i0RSlxYInIFG6rx1300CAOPtAoPUWYnDagItKCdLiKaXW+dwuKhPWU?=
- =?us-ascii?Q?uWdAC+bZEbII+YBO4KHsWYAwO8udtMt4fBns3clNfQL5Z5zY59nFG99b+Ee9?=
- =?us-ascii?Q?s991LnwMXSSNOXyVsT9cVdZO5/m05YB5TnwA9KoeiKktpQ4GVoli4zLxPGou?=
- =?us-ascii?Q?SRR5Zs0sq6+7FqQId8yZ/bpw5drFx6vseUHZx0EvHQQkEhkrlYGpkL2XUSWK?=
- =?us-ascii?Q?I+xd2E+qOL2VqxCFCSt2pqi+9ohsjdqhKNeH8oaruLDfRo8RjR6uKxQnF9s7?=
- =?us-ascii?Q?aJLwMlU0AUOtYsbZuD0AgwF+eHxIVbGrIGgVNBKJlj3aK4BH6KGiAf4qvK8o?=
- =?us-ascii?Q?gaxNeb4/UifYavnFaAHUwhKCwrEiiceWGxK/wLZa1uFqlsn8O7IBVDvfPzaU?=
- =?us-ascii?Q?oh74HjWJLCgVKgLUKHgH96OSo+2atLlIbk8V6JY1wzx/19Qqivp12XKswXBr?=
- =?us-ascii?Q?Fz3lZl0ODv6YgGyk64wPtl/k3kjWKpOkq2xyZPIzs1wq9XHkv8dTQcD51ZA/?=
- =?us-ascii?Q?uOLPVZvTNVxdHIN8ctX0RMTx6KNO2RUeYfxaLXOhwRmsfsif9Hj4c4ABdW1r?=
- =?us-ascii?Q?Eu5GTFfHQpNQ305Ex7Kku9Gn+c7gpKZ7yO/vKWF7JqenWHAniS6hw5C1iQg5?=
- =?us-ascii?Q?DHu4ywSy9mboU0SIK6SQegvwnJ7DJ+L6HN5bbENFL/3NRAXU4umMZnoh8CF5?=
- =?us-ascii?Q?Xdbid7rWvRTFITZdyayJlXe22anxtRGgKFKXFZiJjjIkOoPSmmMiBGaE6MwR?=
- =?us-ascii?Q?O6aj/OAnwkdDoHNNKOXcQK8EsrDs?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR12MB7901.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZTDQTMHktyK7f4Ui57/AW6J1IV19KiXr1upKGIA0hDiZxwageyXTkYfLDDPK?=
- =?us-ascii?Q?z0wl9W2y9V4+oT837d4wAi4g3Uax1y2xInSFnXTqTIQDav+dtEnrYM0NwjLB?=
- =?us-ascii?Q?QydJ9ZN3S4foWl1HZgYExK7HWDwwIYQHSoi0/rzxD1YuGEz+2oIzXf/Yswiw?=
- =?us-ascii?Q?ttjCApX6ogzZk+HQFWATt6uDZrGW5geffUCa68Xn/LZpdXglW7jmnP+Lg4GH?=
- =?us-ascii?Q?Wol2KE5UCHxO3WuOLYT36V3Ka3M5DTdmZwuVR2fejpL3Pcb0KFBC0auXMCOb?=
- =?us-ascii?Q?ak3eKMcaa9pCxSbrshyYndDCj5eI7sF7kLB29vBk7Ztvmc57U3vSxR2IiJPr?=
- =?us-ascii?Q?sJaId+um7Aq7fUTyKQljQ/MiQY8LPyHGSbqqIJ3BDjPrQUDRfwbRUm8j3Y1f?=
- =?us-ascii?Q?oJCK/sIb8cWvNOyaeaZccb3PaEqXV8M2Am486F0aYckJzpkxB8TpKDac9QAa?=
- =?us-ascii?Q?6eE+eRDWbOXRWh4Fcsge/XX76EPrmYDU5cdyaQOLXvZ5pKRfswNuHRIQsvfp?=
- =?us-ascii?Q?+kgWhv5bz1lRiu+1vjqRlGPG958XUrCHDt8BiXxqpyJF0Dt7ITM9loTwZ4F/?=
- =?us-ascii?Q?UzkdfsdCDgYlvWITrUQMPpSiyP9oz/ZL8FHaJJDqb4SaOzLb9RHilWqiueaz?=
- =?us-ascii?Q?gpkaESVIBdG8UgvLmg8Y/dtIEmZZplIQ8WCJLqnS1dox6goqetmhIdx+EWrM?=
- =?us-ascii?Q?mQreCGS5j1013Pl7zX9L9/W/CzI1yyfaeaSFIUDB6w8qwGMfmCHNvIRz8s18?=
- =?us-ascii?Q?Y1Si1kEBsovhnX28PNNHO54TWabWWiEW2eAuKM0hk+ipeBicSt9TZAzHZHA+?=
- =?us-ascii?Q?4bvTLKNOwtx2BcoptD+K6ACdCTAGJ+BvLA+iIA6GBSBqzbACjp4ww2Yd3r7V?=
- =?us-ascii?Q?fiA3AU8c1XTWPJYl+AIb1vcg8T8eyQ2aulnR3gOeRllI4jJiViuX1vBF6DJd?=
- =?us-ascii?Q?eD6EY42GsMgxPdnR5Yz4rqma0AaOdYU6b8zFDj+kOKOadyY5uBKtGzOQLXTz?=
- =?us-ascii?Q?kxJF9oiR2kYeGMwW1KmvKwlB6tjQdFmvopvyGZ/zpIX8aDNYm+BA/JetyFH+?=
- =?us-ascii?Q?zgFBViDlBZbj/MV6K7K5hM6pD/yuN0uEBSpvpG2/LZkWo4DzuB5kKx7ly91s?=
- =?us-ascii?Q?fdBXWAXTDHM/XySPuGegLpxbeegYThfL14LZuNCT0D70QlHxEdhWX950UIRs?=
- =?us-ascii?Q?atW1oS5zNzwQDGqvGg6Gi1lmr4mNro7x+y+nP6lxft2/rUtxF41tGJa4Fhpq?=
- =?us-ascii?Q?bsLnkgr16JgRdbRbRak6XUSJ0LPVcnvZ+6BlAoFQO57G5cEdf6PM0b0ywfil?=
- =?us-ascii?Q?u/BuHBK/4MTKPuSD9EQDjv2d8A7AuuttcWrxSf8LsrwTE9JE4sv5nziICqc2?=
- =?us-ascii?Q?INv2Pn2T6aQRGsehAIHTfHefYHuEdtgYNEJcRgkXHO4ieTNPq9HpKBkTivRg?=
- =?us-ascii?Q?WA1XYT3dwTOWZ4qevqJQ3VJSNe/gtjplfqF2utB2AVMJ583yL8ItmivZuJvn?=
- =?us-ascii?Q?SUJXhS3OL9rKv1hD62LOI50kFqT5uhdRkdXU1OU37eiCA+I3185mqNYSpW3M?=
- =?us-ascii?Q?vBaK/mDalOC7GwAW/It2B8WSTHb4Kw7pSQSL4UPE?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 766c3df7-227d-48a8-b5d6-08dd62672311
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR12MB7901.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 19:42:06.8109
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TZ+b0LYJlEHM4sGsvubt5Rbl3++ePv1fit3Nw7rGUecwTBXoS/AYL8acaSdkPRNynmf0qyLT+dsjMm75bMNzww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8516
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1741895022;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P8TnEmqSHNmEFF2Gnw1R5cVX6hnoXPw8fB05bPnBUqE=;
+	b=dE/+DN+ZBOTdTSE44pKduxHrktT3P0T3mJE54QcXa1CssIfbI2E7pJGRixf6iMC6TNqG2P
+	7Gg8u/bn/pBFrOxEOKdYdE8PBHJySRi8q9yw9LdnoAfU5DgiGWh1xWBDl8Ey25o3ar+1na
+	uIN8hdE7ZZmKg8Kdb+8Vuhr7bktDRJ50DW8aHlf7xi6W3Cr6MC1NQ0svgXRWROLzH+a+7y
+	Ojc+eZnD38JL4yAF76nC+YBvUW+dx1uKSG4VPd0mnO4stoJmO1dpMZEo6f8bJBIKL7iT3O
+	Va61HSg+Wv+xpatv0k0JfhdJeDdiHmsnN9G1tLUJLkVUac9+YtVWMfcqrRyQOA==
+Date: Thu, 13 Mar 2025 20:43:41 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Quentin Schulz <quentin.schulz@cherry.de>, Alexey Charkov
+ <alchark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Viresh Kumar
+ <viresh.kumar@linaro.org>, Chen-Yu Tsai <wens@kernel.org>, Diederik de Haas
+ <didi.debian@cknow.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>
+Subject: Re: [PATCH v5 7/8] arm64: dts: rockchip: Add OPP data for CPU cores
+ on RK3588j
+In-Reply-To: <3271211.5fSG56mABF@phil>
+References: <20240617-rk-dts-additions-v5-0-c1f5f3267f1e@gmail.com>
+ <a56b59a21dc3c21192fe45197eee4865@manjaro.org>
+ <2cf3889741f84584d8f23a4407fed08e@manjaro.org> <3271211.5fSG56mABF@phil>
+Message-ID: <80c7d9fcdd270df2c61fbd61eec44d70@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Please use plain text emails.
+Hello Heiko,
 
-On Fri, Mar 14, 2025 at 12:10:42AM +0800, WangYuli wrote:
-> My tests still show the same compilation failing.
+On 2025-03-13 20:00, Heiko Stuebner wrote:
+> Am Donnerstag, 13. März 2025, 11:42:17 MEZ schrieb Dragan Simic:
+>> On 2025-03-12 11:34, Dragan Simic wrote:
+>> > On 2025-03-12 11:15, Quentin Schulz wrote:
+>> >> On 2/16/25 1:32 PM, Alexey Charkov wrote:
+>> >>> On Sat, Feb 15, 2025 at 11:30 PM Heiko Stübner <heiko@sntech.de>
+>> >>> wrote:
+>> >>>> Am Samstag, 15. Februar 2025, 19:59:44 MEZ schrieb Alexey Charkov:
+>> >>>>> On Tue, Feb 11, 2025 at 7:32 PM Quentin Schulz
+>> >>>>> <quentin.schulz@cherry.de> wrote:
+>> >>>>>> On 6/17/24 8:28 PM, Alexey Charkov wrote:
+>> >> [...]
+>> >>>>>>> +     };
+>> >>>>>>> +
+>> >>>>>>> +     cluster2_opp_table: opp-table-cluster2 {
+>> >>>>>>> +             compatible = "operating-points-v2";
+>> >>>>>>> +             opp-shared;
+>> >>>>>>> +
+>> >>>>>>> +             opp-1416000000 {
+>> >>>>>>> +                     opp-hz = /bits/ 64 <1416000000>;
+>> >>>>>>> +                     opp-microvolt = <750000 750000 950000>;
+>> >>>>>>> +                     clock-latency-ns = <40000>;
+>> >>>>>>> +             };
+>> >>>>>>> +             opp-1608000000 {
+>> >>>>>>> +                     opp-hz = /bits/ 64 <1608000000>;
+>> >>>>>>> +                     opp-microvolt = <787500 787500 950000>;
+>> >>>>>>> +                     clock-latency-ns = <40000>;
+>> >>>>>>> +             };
+>> >>>>>>> +             opp-1800000000 {
+>> >>>>>>> +                     opp-hz = /bits/ 64 <1800000000>;
+>> >>>>>>> +                     opp-microvolt = <875000 875000 950000>;
+>> >>>>>>> +                     clock-latency-ns = <40000>;
+>> >>>>>>> +             };
+>> >>>>>>> +             opp-2016000000 {
+>> >>>>>>> +                     opp-hz = /bits/ 64 <2016000000>;
+>> >>>>>>> +                     opp-microvolt = <950000 950000 950000>;
+>> >>>>>>> +                     clock-latency-ns = <40000>;
+>> >>>>>>> +             };
+>> >>>>>>
+>> >>>>>> opp-1800000000 and opp-2016000000 should be removed as well.
+>> >>>>>>
+>> >>>>>> Did I misunderstand what Rockchip did here? Adding Kever in Cc at
+>> >>>>>> least
+>> >>>>>> for awareness on Rockchip side :)
+>> >>>>>>
+>> >>>>>> I guess another option could be to mark those above as
+>> >>>>>>
+>> >>>>>> turbo-mode;
+>> >>>>>>
+>> >>>>>> though no clue what this would entail. From a glance at cpufreq,
+>> >>>>>> it
+>> >>>>>> seems that for Rockchip since we use the default cpufreq-dt, it
+>> >>>>>> would
+>> >>>>>> mark those as unusable, so essentially a no-op, so better remove
+>> >>>>>> them
+>> >>>>>> entirely?
+>> >>>>>
+>> >>>>> I believe the opp core just marks 'turbo-mode' opps as
+>> >>>>> CPUFREQ_BOOST_FREQ, and cpufreq-dt only passes that flag along to
+>> >>>>> the
+>> >>>>> cpufreq core. But then to actually use those boost frequencies I
+>> >>>>> would
+>> >>>>> guess the governor needs to somehow know the power/thermal
+>> >>>>> constraints
+>> >>>>> of the chip?.. Don't know where that is defined.
+>> >>>>
+>> >>>> personally I don't believe in "boost" frequencies - except when they
+>> >>>> are
+>> >>>> declared officially.
+>> >>>>
+>> >>>> Rockchip for the longest time maintains that running the chip
+>> >>>> outside
+>> >>>> the declared power/rate envelope can reduce its overall lifetime.
+>> >>>>
+>> >>>> So for Rockchip in mainline a "it runs stable for me" has never been
+>> >>>> a
+>> >>>> suitable reasoning ;-) .
+>> >>>
+>> >>> My key concern here was perhaps that we are looking at a file inside
+>> >>> the Rockchip source tree which looks relevant by the name of it, but
+>> >>> doesn't actually get included anywhere for any of the boards. This
+>> >>> may
+>> >>> or may not constitute an endorsement by Rockchip of any OPPs listed
+>> >>> there :-D
+>> >>
+>> >> Rockchip support stated:
+>> >>
+>> >> """
+>> >> If you run overdrive mode, you do not need to include rk3588j.dtsi,
+>> >> and you can change it to #incldue rk3588.dtsi to ensure that the
+>> >> maximum frequency can reach 2GHz
+>> >>
+>> >> below picture from datasheet.
+>> >> """
+>> >>
+>> >> The picture is the table 3-2 Recommended operating conditions, page 30
+>> >> from the RK3588J datasheet, e.g.
+>> >> https://www.lcsc.com/datasheet/lcsc_datasheet_2403201054_Rockchip-RK3588J_C22364189.pdf
+>> >>
+>> >> What is overdrive?
+>> >>
+>> >> """
+>> >> Overdrive mode brings higher frequency, and the voltage will increase
+>> >> accordingly. Under
+>> >> the overdrive mode for a long time, the chipset may shorten the
+>> >> lifetime, especially in high temperature condition
+>> >> """
+>> >>
+>> >> according to the same datasheet, end of the same table, page 31.
+>> >>
+>> >> so this seems like a turbo-mode frequency to me.
+>> >>
+>> >> Additionally, the note for the "normal mode" (the one with the lower
+>> >> freqs) states:
+>> >>
+>> >> """
+>> >> Normal mode means the chipset works under safety voltage and
+>> >> frequency. For the
+>> >> industrial environment, highly recommend to keep in normal mode, the
+>> >> lifetime is
+>> >> reasonably guaranteed.
+>> >> """
+>> >>
+>> >> I believe "industrial environment" means RK3588J used in the
+>> >> temperatures that aren't OK for the standard RK3588 variant?
+>> >
+>> > Thanks a lot for obtaining these clarifications!
+>> >
+>> > Yes, I'd say that in this case "industrial environment" boils down
+>> > to the extended temperature range for the RK3588J variant.
+>> >
+>> >>> I haven't seen a TRM for the J variant, nor do I have a board with
+>> >>> RK3588J to run tests, so it would be great if Kever could chime in
+>> >>> with how these OPPs are different from the others (or not).
+>> >>>
+>> >>>> So while the situation might be strange for the rk3588j, I really
+>> >>>> only want
+>> >>>> correct frequencies here please - not any pseudo "turbo freqs".
+>> >>>>
+>> >>>> I don't care that much what people do on their own device{s/trees},
+>> >>>> but
+>> >>>> the devicetrees we supply centrally (and to u-boot, etc) should only
+>> >>>> contain frequencies vetted by the manufacturer.
+>> >>>
+>> >>> Fair enough. Let's just try and get another data point on whether
+>> >>> these frequencies are vetted or not.
+>> >>
+>> >> So the higher freqs seems to be vetted (and used by default on
+>> >> Rockchip's BSP kernel), it just feels like you aren't really supposed
+>> >> to run those higher frequencies all the time? And especially not in
+>> >> "industrial environment"?
+>> >>
+>> >> I would assume we want to stay on the safer side and remove those
+>> >> higher frequencies? Heiko?
+>> >
+>> > I agree, we should remove the higher-frequency OPPs.  I'd like
+>> > to go through everything once again in detail and prepare a patch
+>> > that removes the unsafe OPPs, and you could review it once it's
+>> > on the ML, to make sure it's fine.
+>> 
+>> Just as a note, everything above (and even a bit more) is confirmed
+>> and clearly described in the publicly available RK3588J datasheet,
+>> which I'll provide as a reference in my upcoming patch.
+> 
+> so just to reiterate my stance, in mainline I really only want 
+> frequencies
+> that are not possibly influencing the lifetime of the chip.
+> 
+> It doesn't even matter about the variant we're talking about being
+> industrial :-) . When someone is using mainline I want them to be
+> reasonable assured that we don't have stuff in here that may affect
+> the lifetime of their board.
+> 
+> All gambling on performance for possible lifetime reduction people
+> can do on their own ... for example with a dt-overlay ;-) .
+> 
+> So TL;DR, I agree to both Quentin and Dragan
 
-It passed with clang 18 on Fedora 40, but now I tested with clang 19 on
-Fedora 41 and it's indeed failing.
+Thanks!  Indeed, we must provide only the OPPs that are declared
+by the manufacturer to be always safe for the particular SoC
+variant.  The RK3588J is actually a good example, because it, in
+theory, can run safely at higher OPPs as well, but only when not
+enjoying the extended temperature range that the RK3588J, as an
+SoC variant targeted at industrial applications, is specifically
+made (or binned) for.
 
-How about [1]? It's similar to yours and passes with both clang
-versions.
+Thus, we must support only the RK3588J OPPs that are declared to
+be safe throughout the entire extended temperature range, while
+anyone who actually can assure that their RK3588J-based board is
+never going to run within the extended temperature range, probably
+may safely apply an overlay that adds the higher OPPs.  As we
+obviously can't know what will be the temperature conditions, we
+may provide only the lower OPPs that are always safe.
 
-Thanks
-
-[1]
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c
-index a54eedb69a3f..9c54dba5ad12 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c
-@@ -212,7 +212,22 @@ static const u8 mlxsw_sp4_acl_bf_crc6_tab[256] = {
-  * This array defines key offsets for easy access when copying key blocks from
-  * entry key to Bloom filter chunk.
-  */
--static const u8 chunk_key_offsets[MLXSW_BLOOM_KEY_CHUNKS] = {2, 20, 38};
-+static char *
-+mlxsw_sp_acl_bf_enc_key_get(struct mlxsw_sp_acl_atcam_entry *aentry,
-+                           u8 chunk_index)
-+{
-+       switch (chunk_index) {
-+       case 0:
-+               return &aentry->ht_key.enc_key[2];
-+       case 1:
-+               return &aentry->ht_key.enc_key[20];
-+       case 2:
-+               return &aentry->ht_key.enc_key[38];
-+       default:
-+               WARN_ON_ONCE(1);
-+               return &aentry->ht_key.enc_key[0];
-+       }
-+}
- 
- static u16 mlxsw_sp2_acl_bf_crc16_byte(u16 crc, u8 c)
- {
-@@ -245,12 +260,13 @@ __mlxsw_sp_acl_bf_key_encode(struct mlxsw_sp_acl_atcam_region *aregion,
-                                   (aregion->region->id << 4));
-        for (chunk_index = max_chunks - chunk_count; chunk_index < max_chunks;
-             chunk_index++) {
-+               char *enc_key;
-+
-                memset(chunk, 0, pad_bytes);
-                memcpy(chunk + pad_bytes, &erp_region_id,
-                       sizeof(erp_region_id));
--               memcpy(chunk + key_offset,
--                      &aentry->ht_key.enc_key[chunk_key_offsets[chunk_index]],
--                      chunk_key_len);
-+               enc_key = mlxsw_sp_acl_bf_enc_key_get(aentry, chunk_index);
-+               memcpy(chunk + key_offset, enc_key, chunk_key_len);
-                chunk += chunk_len;
-        }
-        *len = chunk_count * chunk_len;
+I'll finish the patch and send it over tomorrow or so...  I still
+need to go through the changes once again, to make 100% sure I've
+missed nothing, and that I haven't included anything extraneous. :)
