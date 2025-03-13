@@ -1,73 +1,115 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED0618B48B;
-	Thu, 13 Mar 2025 22:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62B21F426F;
+	Thu, 13 Mar 2025 22:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741905715; cv=none; b=HF6ahW+VMUSyniWyBLPOUXJBExV22p56KQOtqIGFvN7ICeI8qrBYSAIKqcGu9A/RJUh9dNfHjBuxJhAR7JW0+Gbb3WJIX331AMwP+8QvxS58EQqLPQKqjDbySjhQjjoi64GcvB3Mv1Wy7q51YlGT7uyDeCYVtONfmzkTrXcnImM=
+	t=1741905873; cv=none; b=RNo4syAp04moNjYheSXAT+XVcqza4c6BkGPVDAvyya3Nu8hYHeyeo9/3ZxY+5l6zm8SaWdV2bqlzh5HG/ZMrb+RnDVe4T9yr13zV6a0e6FTiPs5Cyx15qbqLESBxl2+uhEaTRxOdYjwy2hKB4ZHCRd3SFPUr/1s1ykJb/22slK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741905715; c=relaxed/simple;
-	bh=kmQLpP1H/8R9Re5ysO3RWYCNcQwK9I9FBWIQICank4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fZLLLN6PMpGDKaajB5Cb2LxB7L+G/XGynUM0zwUaSMoeEcRjkim5TRZFerXlHwaNh1OU8hI8ZlwhvkzNnlmuBv6LxQU7ZhKKxS/T8m9+PM+VcNYBbkh3N9vs7SB7x2/vaduLRJjv+dSOHBG96ns4v806CmeIBbbrTqq09GsSbeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=wXb11wbo; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1741905873; c=relaxed/simple;
+	bh=MxRtD3K0VYD0WwkRDlCQHlSfNJ6Mekz5X2R3NT5flNg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d7Xq80Pa4jnFbN87G0YLZaoB7wWeQEZ9JsMGi97YwTQgkZ6aSirqRhV0OByWq4UcIUTQYVtd6m7uBOCaaQGbTmqL9gkJqxWmOAAnMtwMAafgdjzzmMupRq7XBrcd0zET+yv27uAPFPixRl6GhxZDYkNW3H+d/mh4uLIvSo+KVyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=bxouhzuz; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wXb11wbo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=o/1Mh0o88Dsb3LEqDeTz/KouVD4jeGs3U4MDb1Mlz1A=; b=wXb11wboAunMU07oXJuhWFbgd5
-	aJpj/k9vObm1zqZS3szTeZFJROQeX+GijsnYf3MJ7cNndJ+PplW9sF9Uedl/Os4phaLpsR2zUhc0I
-	JKHIBOFvidUdzs1JU1E/lRadZjY1ACecfk+uHw5IitYJRWy5G5mS/DTXg4ajGIUFhUhA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tsqiZ-0057P3-LD; Thu, 13 Mar 2025 23:07:55 +0100
-Date: Thu, 13 Mar 2025 23:07:55 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"daniel@makrotopia.org" <daniel@makrotopia.org>,
-	"markus.stockhausen@gmx.de" <markus.stockhausen@gmx.de>,
-	"sander@svanheule.net" <sander@svanheule.net>,
-	netdev <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10] net: mdio: Add RTL9300 MDIO driver
-Message-ID: <f6165df5-eedb-4a11-add0-2ae4d4052d6a@lunn.ch>
-References: <20250313010726.2181302-1-chris.packham@alliedtelesis.co.nz>
- <f7c7f28b-f2b0-464a-a621-d4b2f815d206@lunn.ch>
- <5ea333ec-c2e4-4715-8a44-0fd2c77a4f3c@alliedtelesis.co.nz>
- <be39bb63-446e-4c6a-9bb9-a823f0a482be@lunn.ch>
- <539762a3-b17d-415c-9316-66527bfc6219@alliedtelesis.co.nz>
- <6a98ba41-34ee-4493-b0ea-0c24d7e979b1@lunn.ch>
- <6ae8b7c6-8e75-4bfc-9ea3-302269a26951@alliedtelesis.co.nz>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bxouhzuz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1741905872; x=1773441872;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=u0qX6UC7IOIJfm7M210IpWYiJIykCaspPvAT0hqf9Vs=;
+  b=bxouhzuzcFIbW8B5753FtckYSfDm/tRyzJQMtD6Uu48o1s0NBjR+fpGR
+   K4gXggBcNhPLkLW7DeVmYRheN0LX0LLxATnYhB3iiNrlPgRwk5it50Gcl
+   K9DIeSUQjqYpuAP7LacDjUNdPwyNG+9Qv5hPgcBCWifHZ9Z/fwTpo9wwo
+   E=;
+X-IronPort-AV: E=Sophos;i="6.14,245,1736812800"; 
+   d="scan'208";a="480264924"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 22:44:27 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.7.35:2568]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.18.34:2525] with esmtp (Farcaster)
+ id c2f65031-ac34-44fe-9948-982f3bb7760f; Thu, 13 Mar 2025 22:44:26 +0000 (UTC)
+X-Farcaster-Flow-ID: c2f65031-ac34-44fe-9948-982f3bb7760f
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 13 Mar 2025 22:44:26 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.142.242.222) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 13 Mar 2025 22:44:23 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <kangyan91@outlook.com>
+CC: <aleksander.lobakin@intel.com>, <davem@davemloft.net>,
+	<edumazet@google.com>, <florian.fainelli@broadcom.com>, <horms@kernel.org>,
+	<kory.maincent@bootlin.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <syzkaller@googlegroups.com>
+Subject: Re: unregister_netdevice: waiting for DEV to become free [unbalanced refcount bug in dev_ifsioc]
+Date: Thu, 13 Mar 2025 15:44:06 -0700
+Message-ID: <20250313224415.60894-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <SY8P300MB0421225D54EB92762AE8F0F2A1D32@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
+References: <SY8P300MB0421225D54EB92762AE8F0F2A1D32@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6ae8b7c6-8e75-4bfc-9ea3-302269a26951@alliedtelesis.co.nz>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D038UWC003.ant.amazon.com (10.13.139.209) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-> I'm pretty sure it would upset the hardware polling mechanism which 
-> unfortunately we can't disable (earlier I thought we could but there are 
-> various switch features that rely on it).
+From: YAN KANG <kangyan91@outlook.com>
+Date: Thu, 13 Mar 2025 16:18:22 +0000
+> I have repro to trigger it.
 
-So we need to get a better understanding of that polling. How are you
-telling it about the aquantia PHY features? How does it know it needs
-to get the current link rate from MDIO_MMD_AN, MDIO_AN_TX_VEND_STATUS1
-which is a vendor register, not a standard C45 register? How do you
-teach it to decode bits in that register?
+FTR, I think the attached prog is not a repro by itself.
 
-	Andrew
+> ...
+>
+> Syzkaller reproducer:
+> # {Threaded:false Repeat:true RepeatTimes:0 Procs:4 Slowdown:1 Sandbox: SandboxArg:0 Leak:false NetInjection:false NetDevices:false NetReset:false
+
+This syz prog does not unshare() nor create necessary devices.
+Someone must create a bridge and another device.
+
+
+> r0 = syz_init_net_socket$nl_generic(0x10, 0x3, 0x10)
+> ioctl$sock_SIOCGIFINDEX_802154(r0, 0x89a2, &(0x7f0000000a80)={'wpan3\x00'})
+> r1 = syz_init_net_socket$nl_generic(0x10, 0x3, 0x10)
+> ioctl$sock_SIOCGIFINDEX_802154(r1, 0x89a0, &(0x7f0000000a80)={'wpan3\x00'})
+> r2 = syz_init_net_socket$nl_generic(0x10, 0x3, 0x10)
+> ioctl$sock_SIOCGIFINDEX_802154(r2, 0x89a1, &(0x7f0000000a80)={'wpan3\x00'})
+
+0x89a1 is SIOCBRDELBR, and wpan3 is the name of the bridge dev, which
+looks correct from this line.
+
+> unregister_netdevice: waiting for wpan3 to become free. Usage count = 2
+
+But apparently SIOCBRDELIF (0x89a3) is missing in the repro, so
+there must be another prog running that adds and removes a dev
+to wpan3.
+
+When you share a repro, please make sure it's standalone.
+
+
+> I GET backtrace for panic by gdb
+> (gdb) bt
+> #0  netdev_wait_allrefs_any (list=0xffffc9001bfa7bc8) at net/core/dev.c:11151
+
+Also, this should not panic.
+
+Under RTNL pressure, the SIOCBRDELIF's thread may not be able to acquire
+RTNL and complete SIOCBRDELIF, then netdev_wait_allrefs_any() will log the
+message but it's not under RTNL.  Once the SIOCBRDELIF's thread acquire
+RTNL, the refcnt will be released soon and __rtnl_unlock() will be
+unblocked.
+
+Thanks
