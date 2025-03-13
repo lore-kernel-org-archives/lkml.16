@@ -1,240 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45A01F5821;
-	Thu, 13 Mar 2025 22:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741904883; cv=fail; b=BVZCiSs1Ep2x2lMpHyjFu6HWcIkhhul5Q9ruEdUsxKkPjh8xBfaI+0TmG4LCrgBtZu6BfXoDwZ1fhZ5W/3tjSctvmcok2mK0Okmt6sOvzCf9bUmldMEYGaFYhr3uzxmcmthnQAbHl7bbsnX979/KAOvtiTa9DKRRj9qDrY/R1BE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741904883; c=relaxed/simple;
-	bh=n8rywSAUHHrzoj8EpHZ9ri1bQHgujpg+8z4DLoV3mgc=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=avaYDD4eMSrGKvg+Wgs6CqpLl776+fY3ExlrAHV94raTtjLads/kisKbVOo5yNa2p4VtS7aXyHkrU8K++1a3nxZ2uymErkmDEit2z9owZU0KL0Fv//nFtgRLNmLLfU870/i0EVUkNkkXG5MI010aIw9ngazJtX+bjnlwWSDRnio=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QYdYPJtT; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C572F1F6696
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 22:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741904897; cv=none; b=LACiF3r5wWXdfpS7rBzaoR7/I9KUnfpPmnepJdldnwnZerE+Hrrl/EgfggS5bAMfWUjZMpsOw3FZLUS+yjz3QSC93357x3CkUPgIlB2qqux74JF5XlABupZCfmEODun6+bEo/G5JVgCNCuSu2hd1kBaVCQOzdxjey5pGiVIhrbc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741904897; c=relaxed/simple;
+	bh=UZHfDSu598HqL1JYZaRqo0hyksFnTWQ90LTcyrIig0s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=goISHR0Ge+ush7OZ/vEoRa1de3CRuCpqcRXThSua7DdnEayGGAFidkTUTtLm9QPL6fVZuhPU2nkInf7quk19hRWbSjPulRVtvv5eb2HW3ofritq6XVtyra/FG2OX24yKCzp1Fk/OFsntbxP0P994zWegUgOTICXArol4T2NNqr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=fqmtFbDz; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QYdYPJtT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741904882; x=1773440882;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=n8rywSAUHHrzoj8EpHZ9ri1bQHgujpg+8z4DLoV3mgc=;
-  b=QYdYPJtTebL0Bf3hDp2BNdKHiFDzg9R93eOIqK6bKIK2he5VEmKI+tXN
-   2mx7sd2GLyzFtmQxE8JEd2ddW6gZSDSRJL261EiIlGOv4cvQUWrA1RKxF
-   1EuB79tYWbPipuCz7vD+uHxSL0A/QqtKQYt8aV83aUYJohJqkD6HXhnCN
-   wWS8Z8GlPmVLP824zMppOlj8TlpiRTOl3PtcmwzV7T+rf3S9GMSsnSRzv
-   tt81ELtjkc6rUmT5y+7Iv8GX0b1IP2OtpOk/nSpE7tR3AnB+dSeDQS79M
-   E75C8dik02m+T8Pgek9iKQ9kbISdwlJE0X8iBkjvdjthtjFxXdwgxdo6Y
-   g==;
-X-CSE-ConnectionGUID: 6phvZfBJRCCBFrKCcQGNjw==
-X-CSE-MsgGUID: fccN18KXTVSb6VX0iQpldQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="65503787"
-X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
-   d="scan'208";a="65503787"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 15:28:01 -0700
-X-CSE-ConnectionGUID: eHfg+HGtQvK2udmgx9+oaw==
-X-CSE-MsgGUID: DEyVQF7pQ++A8aCYwXUUXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
-   d="scan'208";a="152026299"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Mar 2025 15:28:00 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 13 Mar 2025 15:28:00 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Thu, 13 Mar 2025 15:28:00 -0700
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.42) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 13 Mar 2025 15:27:57 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lSzlqC6k6wcnm0A921Td2qsPNEQ/uDVrIu2Sy77YKA73Xep3swQ4MEzsNqn1yY49h27e1p3m8sMjNqT6H5KUQC/Ce1XD/OyfXRv8Rn6qYnHSzGvHwEYVefrsZSaJ+uwdeuxsKvZfO8kEahQw8LvKbDK/bgAkOI3GNpP1cVMn/N9MugwhWyBBoDDpXqOCPr+aQQ3ygqD5Q9/GcvbnlC90AePcA2ayOW6znVa/GdR6LHmZxaqQLeIlxZiTKJkGznSQlqOLRe78mGBUQCaTeXLg3OBQOwBa435gjJgY3xAn1fUvp8/CMV0xXVyNJc/hKa+0JfNxI9vVAdR9McsUKzCMjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DhgE2ZqpNP6bbXc6rL3xg9aGyBF94rCkzLqE22ACNGA=;
- b=UEAjaQwTuPyRF7+igg16RzYszGyXKHBgKAUtWEJNyThDT2rWDqRBjfrxP3tXOUAoKlFSqewOIa+3b/DtoWuiN2UnLGQ7Tcb+WWavq3vr/A9r+wlPuJ5zXLqWYpmE8Caoa8Y0mxCzLxWJi7PZkDY1xW+DI9iWt52eRbBX93/vrLzPVMxZFlznJpdbBy5ESMHxGbt6lXTTWYLuwqreq0Rqr15kx6VwHfdgboBrz6WP9pGacDBS+qcg1wwhRRW0g9wyHkrK1mxjgIBin18jbFSsbv9DywZZJD+HACnZ/7C8+vjTUsgLAk4TixXP3aKg2PqwpQy0aUJHpfIZUTNAX4wR/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16)
- by SA3PR11MB7581.namprd11.prod.outlook.com (2603:10b6:806:31b::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Thu, 13 Mar
- 2025 22:27:19 +0000
-Received: from CO1PR11MB5089.namprd11.prod.outlook.com
- ([fe80::7de8:e1b1:a3b:b8a8]) by CO1PR11MB5089.namprd11.prod.outlook.com
- ([fe80::7de8:e1b1:a3b:b8a8%4]) with mapi id 15.20.8511.026; Thu, 13 Mar 2025
- 22:27:19 +0000
-Message-ID: <358039ad-930d-464a-9a77-9bc1554ed6c5@intel.com>
-Date: Thu, 13 Mar 2025 15:27:18 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 0/4] mlx5: Support setting a parent for a devlink
- rate node
-To: Tariq Toukan <tariqt@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>
-CC: Gal Pressman <gal@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, "Moshe
- Shemesh" <moshe@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>, "Leon
- Romanovsky" <leon@kernel.org>, <netdev@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Carolina Jubran
-	<cjubran@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>, Dragos Tatulea
-	<dtatulea@nvidia.com>
-References: <1741642016-44918-1-git-send-email-tariqt@nvidia.com>
-Content-Language: en-US
-From: Jacob Keller <jacob.e.keller@intel.com>
-In-Reply-To: <1741642016-44918-1-git-send-email-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="fqmtFbDz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1741904873; x=1742509673; i=spasswolf@web.de;
+	bh=UZHfDSu598HqL1JYZaRqo0hyksFnTWQ90LTcyrIig0s=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=fqmtFbDzh6r1wVFhsafKuJ5bVrCw3fr1Wvk/SR0LsS6EyNeLoHkR1UrpRu7hUvS7
+	 VE8zsEwK/U/fBegCdYUrcB/7glY6ltwQc2b9zELwGAF8vLMI2RIESNHcI0152mAyT
+	 5++g/eo7Y0W2phnifk8+M65UDzRPNXY578R5DFTfdJ9+IN8x8jGs14DLNMhBigRa+
+	 28PjvFrQDFfz0/Qj1dComJ+XkfFP7VVLLfMdbd3JuYFNgA+3eBVCZD62W0z5WgktH
+	 IKQRNT1XX0/Oa81m3BFRL5GAcHUfL/SdhgPknT4yD2idTxkvre8TCbsLJWMwOpdOJ
+	 r2MmyRLqTArvQSMQgg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M4sc1-1tt8Bc3Si7-00G8ss; Thu, 13
+ Mar 2025 23:22:07 +0100
+Message-ID: <fa8d5e76694918bdaae9faee9648776f298f78ca.camel@web.de>
+Subject: Re: commit 7ffb791423c7 breaks steam game
+From: Bert Karwatzki <spasswolf@web.de>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>, Bjorn
+ Helgaas	 <bhelgaas@google.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
+ Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, spasswolf@web.de
+Date: Thu, 13 Mar 2025 23:22:06 +0100
+In-Reply-To: <b63b1de8-7eec-4235-b61e-e654e78543ba@nvidia.com>
+References: <20250310112206.4168-1-spasswolf@web.de>
+	 <951f9d13-72e4-41c3-9ace-8639e2a9485d@nvidia.com>
+	 <ce940e2a-632d-41be-9f13-e5b11d49b0db@nvidia.com>
+	 <09131c563332c892284ec7fb4ce706996131db8c.camel@web.de>
+	 <9a5df5627d3d72b2a97f501dfb7d944cc1e9920f.camel@web.de>
+	 <fdea59fe-f570-489f-bf88-1ffd47119cac@nvidia.com>
+	 <414f4deb8c7670a159854006b0c410ce05a6049e.camel@web.de>
+	 <12d950ee-4152-4ad6-b93e-7c5b75804b1a@nvidia.com>
+	 <705e95cec3dc5181ca2aa73722e6b84f63f3e91d.camel@web.de>
+	 <20b5823e-247a-456a-bb55-d50f212a9f5a@nvidia.com>
+	 <a34a1ae0b1d226b1bac7d73daa24da8e5899cb3e.camel@web.de>
+	 <c7bb0bd1-529d-466d-9cce-abbac4b480ab@nvidia.com>
+	 <146277bb0ecbb392d490683c424b8ae0dfa82838.camel@web.de>
+	 <b63b1de8-7eec-4235-b61e-e654e78543ba@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW2PR16CA0017.namprd16.prod.outlook.com (2603:10b6:907::30)
- To CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16)
+User-Agent: Evolution 3.55.3-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR11MB5089:EE_|SA3PR11MB7581:EE_
-X-MS-Office365-Filtering-Correlation-Id: 63dac4e0-de06-4c33-8c9d-08dd627e377d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?YWJJK20wVytoVTBVYStZc0JrcjhqVnpGLy83dUluN3JFbm1vWHFjWGVYT0pl?=
- =?utf-8?B?STZPTTlKbkZHWEJDK0FjUmVFNHhDZE1qbUpuVSt3MWo5bWJBUkMvQ04vWHB0?=
- =?utf-8?B?K1FMZlRWNzRMcCtVSG5DOXg2NmlsWUl0clhKQWZLZUh1cnRDdFJ2Tk4wVnV4?=
- =?utf-8?B?LzZoOFcxSnRHQ2dVS1RSZFJYd3FmQkxTSk1nSy93NjlWY1NSV2hERWdkVXNP?=
- =?utf-8?B?eFgrb1B4R0dEUVNjQnQxNGdkb1BMaFU3SzZ6a29meCtQc2M2R2pEZjE2ejNG?=
- =?utf-8?B?WDZhb0NNYlEvMTJEUG1XTUpyZ0U2T0dpR01HL3czQVFoaVpibEsyTnZUQlhZ?=
- =?utf-8?B?UW12WW1GYlFQdW9GZWczQmhiRkRybjFuTXZudXo4b0ZHZzJyZWdlSGZTWHdF?=
- =?utf-8?B?ZTFpcFlWU2RYTG5XbjRtdHYyby8xV0pSRyt0RXo4THV6aDNrWEg3MmxoZzJO?=
- =?utf-8?B?bFAxOWxjMi9OT3ZUckRUYy82RjAyYjNIaW5BUFBpT0FTTVFRQ1phc2FaY25C?=
- =?utf-8?B?V252UFQzMjE5T0dIYjZWbkpEcERVMWt4N2FoVFc3T0dhNDgvY1l0TWN4ekJG?=
- =?utf-8?B?b0ExeHhyL0R3SWo0eko0NEhnNmZpRTRXVW54VXJUV1lDVjJTOEhDVWF6djJa?=
- =?utf-8?B?WE5qMWJ6d1RMNjl5dE1uRkJPajM1UG5YUGgrWG1TbXlqSjhCZEJyK1ZmbERQ?=
- =?utf-8?B?OWZpV0M2Z3dpY2JPbE1kNzBQOWo5WkJ2R3JBY2pjYUVTK1BaRXpUVGt3cVdI?=
- =?utf-8?B?VnFtNzFTUDk4K3Uya2lYTThrMUZEYW9pN2YxTWUxV3dGQlhWWlp0aDNQdk8x?=
- =?utf-8?B?YzE1QU1reFhGTXZmSG9adEZ1VjYzM08vZ05VRnI2SnFTdGQ4enl2Z3BEVTR2?=
- =?utf-8?B?Y3psRytOU29NZWYzZ0x5QnoweDQvUmhTUTd2VmFTdTJjdXM5bzF1Y1NSUFVr?=
- =?utf-8?B?UWxmeVhPZ1V4a2l2T0lnMktoZWpwdDEvcG1kN0l3NjlsK0dOTkp2ZEorQ0R3?=
- =?utf-8?B?a0FoVmNSOThuL2xiaXl1ZXlJek9vVFVtYjFVVlR0M2FTR1pkZjI1UGplZUgx?=
- =?utf-8?B?V3grc2VZQ0RzYW81RnVPSFVMVWxTdnJGTUVWNnk3VDl3dCtyZ21vZFhmd3FG?=
- =?utf-8?B?d0ZJc0hua0tKWFZBdXgzbUJHa0ZkbFBnL3dLdFRkcFBML095WFJZUCtNV3dV?=
- =?utf-8?B?b0RGdzFkRGpFWEJwK25KSlhqRE1IQk5KUHNLR3RXZExLRU5lR014Wi91c1BM?=
- =?utf-8?B?QWcrdm5ORXh0cjdNTWo3K2NjaUpLTExpeWEycmp1QTFOeFBEWktSWFJGWU1w?=
- =?utf-8?B?KzVXWTczVGNxTEhZQU9sUWtDNGMzT2VaRE12aWs1K2FKTzNCOFVZZmNOUG03?=
- =?utf-8?B?MGVJM3dsbEZpYlBxa3Q4K0VGdE9lU0NRb2hVQkVUVFNJUUtIR09WbTdMUkFq?=
- =?utf-8?B?NjUzN00xbnBCMm1oMU9tZFhrRDBpVVREdWhERkhwanIveUs5OTVFNUc0aUdG?=
- =?utf-8?B?OW9lS3ovNEc1aWVyM005ZHRkZEFWcFdGRWVuNHdvczhJUFdQSGlUSTBYY0l3?=
- =?utf-8?B?MEN1ZVNITi9hOHR6SDZ0a2FweVcxenlIMk84QTlIWlBUVnFpYmt2L3dtZDZB?=
- =?utf-8?B?VS83V0RlTFlJSkVMRDFwTjVpTlZubnRMMWxTeEFGRkpKd1A5OXRyMnR6VkNH?=
- =?utf-8?B?TjZId3UwTXFNT25kNEZvNmlPb0k1RU1CazJ2SEFqZnF5TTdBT3A5TE5iT2hq?=
- =?utf-8?B?MUEwbXdyK0tpcVlINjExMHJzMy9PY2tpMkYyT0FuTDl5eWZQMm1aNjRhSkhO?=
- =?utf-8?B?ejcyMHFDQWpXZVN6czMwUEpQTG1Yb2dqQ3F1a3d3ZldTL09TQ0ZscmpzVENt?=
- =?utf-8?Q?xI2Qc/1Dg/LRy?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5089.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZDkxVmxWUHpTUnJEckFPVGhvZkNUZHYzeTFwNWdCam5DTFRucys4QXN1ejRk?=
- =?utf-8?B?bmU3RjhkOXJvakxQZVBUSCtZN0VycEtxVFo3MUNlc3gzMjdoNWhFQnpKeTlt?=
- =?utf-8?B?QzREQzhDRFRLSGVKajNUc1lVZGJQTUxNMUwrNnBLbWJUcUlOZTBybGxkTXNV?=
- =?utf-8?B?Rlg0YXpBWFd0Wnh5MVBXWVM1dGxPb3lERkJWMXpSS0Rud3dCaGpLTmxtdEpK?=
- =?utf-8?B?T0hqeXpQcHBxVXlaZW5pVmEwL0V3SStTa09sNUh2ckl3bXk5ZWF1bm1YcjF3?=
- =?utf-8?B?SlhQY2JidzdwTE52THVpSUttZlB1TFg3RTV4cllvUzVpQTZqSmxrRzRaWi9Z?=
- =?utf-8?B?K0tJSURzMW5SbHVXOGh1RTdqbDFmRG8zSjJ2YTAyUmNiWUdBZzBXbmh3aHAv?=
- =?utf-8?B?bklPRFlKLzZvcHRTeHpYcjRLWmVmNkl1bHJpMHlwaTg5amlwRXkrVTBuWEhy?=
- =?utf-8?B?V1EzaE03TDNHdXYrNjY0b1pmZTlwWTBUODlMMlpnSkE0MklxSVJVcnBFZ0Fw?=
- =?utf-8?B?K0lNT1o4NERhYjNjVCsvbS9NdC9CcC80ZkhyMFI1QmZ0Uy9VUmw1eXQ4c0tJ?=
- =?utf-8?B?b2ZOTUlKdU1LR2hzUXRDSFBsVFByQlNMNm1RZ3lHZGZuWnN1RUswT3Vqajly?=
- =?utf-8?B?ZkZoYU9JejY1RU9ITGp5RllvQzlNbnpPQ3BVTm9GOGI1d1FGZldNQWxvYnFB?=
- =?utf-8?B?cDhwbDZqcGp1UGsvaGJnTUZrYTc2VXh3ZXpmSnlCK3VmNUFPeFJJWUU0aGdZ?=
- =?utf-8?B?eDFxQ2YzU0x0SVJ5aWJJZlhtWnIxQjZDbHZrci9JdGpwSVRYZUdaMDZJcWE5?=
- =?utf-8?B?aHhWL2ExRnljRCtMQkZIem9LOEwycmlnMi8wblVnczhhVjNGenI5eUxReXJC?=
- =?utf-8?B?RGg5akZrZDhDVTZUc25zMlRpWFhkeVFTMm5hVlJDQ0RaR3ZJL3lUV3gvWjgr?=
- =?utf-8?B?bmdZdkYxVDl0YmpHZzExdnRnL0s5ZVNPL21kbjFVTVhoRlZMT01Zb2NUdUJw?=
- =?utf-8?B?L3I4TVBUUVJSdDJyekNrVWxxTU01ODEwNjVqa2daRXNOQjhtTXJZOVR4ckk4?=
- =?utf-8?B?T0VXdVZJRzhzbW5rT3lTNXFJYkJwc0RhWTkxUUdRUVUrY0FXcC9hODkzSmEw?=
- =?utf-8?B?RnlhNkxIRVU0RXhRUzkyK0lyL1RuLzNwc0V1WENWWHhqdGU1OU13R0NuZHZB?=
- =?utf-8?B?TWt3UDZlSldBdm5UaXk2clA2TFViUnJHcHlhclR4RitNUzNOR083aFdrQmd2?=
- =?utf-8?B?akw0UTAyaVI0bXUzU3hqaXkzRnF4ZmtvdGl3VDkyTFpIazgwSjJtUnEvR2RJ?=
- =?utf-8?B?eXZ3ejN6SWpvQkFMbDVSeUlRWlpVQm95cEJzSmlKK2RHYVllWFhBZlFkNlBP?=
- =?utf-8?B?eGVRZTFWVVdSWGxXRzQwaWdteWRTeDFacllzSTZyQzlHRm9adS9HM0RZZUhq?=
- =?utf-8?B?ZXVqcDNsZ2NnK1llMUZSWFIycjF1LzM1Z2FVUVIxSVVSOTJYaW93UGtqQ21C?=
- =?utf-8?B?MU0xS1pkcFhvekx4Q2IweVNzZGJrWkthcVVOa1lWV2oyWmp6OVg3L0FTMnJo?=
- =?utf-8?B?RXhockpidGdvVjlqYXduSFdZeVBHTStIZzV0SmlTSmF0Y0RCaHRmc1FwY1lK?=
- =?utf-8?B?WDRwT2xSaHBGSEhGWXNtSWRVaE9XWER2Rjk0T2xJYlI4d0tqbFVkdXg0WmNV?=
- =?utf-8?B?SXk0UjlKaEgxRWhJSkwwZUp0Vyt1NHdQZ2s1TnVMN252YkoxbFZSRFhpL3NB?=
- =?utf-8?B?c0U1alRmSVo5TDNMZThzWFRVQThOKy9CdnNxdWZtdUdVNzBxVEU1bDZzU3JQ?=
- =?utf-8?B?S0pkeFhTZ0c1Z0VSQ0lkVXFHd0Jrc0Ywdi9wemVGTU44RnNEZkpQMmwxL0h5?=
- =?utf-8?B?WkNSWER5SG11TUF6VWxtbWdYN1lBNjFoU0JRMW1ubklidW5jRmRFd2ZCcnQy?=
- =?utf-8?B?amlhclZoVVBoZmdubU42WWhXTUI1QzFLNWJhck5lbVZ3Y21Ld3hOMThLVC9x?=
- =?utf-8?B?Q3FpWkV1YlQ5dHlDTXVXdkR4SmRxaStRcUJZSUdOUWZ3RW1FdWlQQmpCbjdG?=
- =?utf-8?B?NVZidSt2UmNWZzdhTnN2aWM2cTJEdUNlcTU4Si90aDQvcC9wR2s0RHlta2hu?=
- =?utf-8?B?NGs1bzdiQzJxTFV5TmU1WEoxR09RUzdJU2ozUzlLeVRWRFkxdUpUVWZxaXZV?=
- =?utf-8?B?bFE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63dac4e0-de06-4c33-8c9d-08dd627e377d
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5089.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 22:27:19.4357
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qFClLOV/01MBCxPahcJUZFfriYArCyw+tOhHsYoh/QSfCqlflQaU8dyFR/sGirx/WKXhsnbbf1tWOxZFwrxDlJPBwIRr87Tx1ecjHBcE2hE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7581
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rj5ELexmLntZ+I/BKImxJ2NUsGXQQm8Hq6gR1qO/SPDNeJg8NQ9
+ sHM7ffS84LkVEazHXNw2DXtrNrE/Jc/dDttLUOzVz16AToVD8PIJCDZKv7QsOfCpPM4mntg
+ cy1yODf++W8vlKldAEhrdFtb0St5LQ+gbKqFJ5Gr9LZ0ZQ+MviyhOznAH8rrgHy1iB7qvlT
+ h0/KwB6q8qzqv41j7F4/A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:xs21HzjfLmM=;srPHX5ZTK5pbj7nQhCTd1pIwZYb
+ H8mzmkoMrmUAVJ2IucF0Om4GxF+jABv9DT4QsiLAJbliq97Cn2nutVCN8TBCf6BbYIYbOM0gI
+ BLuh/4dtGKI6KSUbMjq1igd7fI61bZQ8GILXah8zmB6DkH0slXZGKysRZe6eYEGFN72r5Wdf+
+ wuJPcOC/oZL9QzLq7fgrKBekg6T+YA7dv/ItlVqtwaAT+uVnK+JAann/yeOWr7K3HCG/VN8yN
+ hKj1WC99XYlBR0beXUu+TDpZ+hRa+jvlAtPeb36nE2Dx823sSJs7o15UJlNBoBKgAtRCW5HWf
+ Y1WVdosi8fffWvwqoVqlgk6ZnISolZV8sN5cymUopKIwJtJg0usvZyUCMbLOSZgPDcqiv1nMP
+ F3VNSbPmrgSrIfHbw0BFjIyT4Cd1T95HmXzLMpnW4LCVIv/TolbiKfv36eVGqC//CfJouRO/V
+ jfGGf8ccNCsrx6wy5PPtCLlH7DCcUVKpQt4cDHhsn6G9wdEmEkyNQDRDL7odTgMd8nIEMQi2w
+ zyPUvKdyxaELlb4SUzYtRG+9qgdymg+cYT+kNgxZ8dnSee03zjvo/P9Y7TzSgrweTE68xGuDF
+ m9KQ1lw/Xiohq7urlKf+JWv4XkTVktHOR2y/znjP6Fx4uhVha3kNxk3X5izjtA9nm0+2ALxtY
+ MZ6lELoyDm7XQ0MlH6537WnHzMWAbgBKLrWm3MCvN0FFJxvlmTJrWK44U2rUObaxjwh2wVWyZ
+ RIqwVd41VbZokImOI8qGcvuFN5keyti5oTF0c5KYHz3mmqQYs54BGHMZOc+nbwzzAl5HxOiGu
+ Zi8A/jPHQHju8ALnAVReesv+OLFPr1c4yULwRxAGKga3NGt7EkDANyjBNbFB/z8IB9EeiGRuz
+ zyilGRnooU0p/wvThFV5+6WISG2p8tAbFi3MBjaQ8YzoktcldDSUdr8Kb5WfPZMZs9q4vOTgQ
+ Y6GRhhAREpe93e0aUMJBoP1AD+5j0Ue/eX/Dbo4a0uieoBSrLnT+1TorDS4LFUQHTMvaMj3Cz
+ A7Yx26OkVuhB1cPEOj/JFt8JOhQ2loX2MLDJNgdE9U6atycMOhcMU2sZ9GNgTI1mGb12LFeeT
+ c1Y8iP0upjCO1HqrysxvvHCCV72izW38hO4PM1V94AupL6dX+HQqnKscijfveARwiRVTSOZrn
+ pT/UWOgvAuVDyTg5QOsTds+/iVgY7FOElMHr2uqfUNUHOfJ5GeJ4zoZODCPhsdEtj9/S57Sea
+ FMzOgkC8mFGHfTNQdjSQNn8s5kPfrdvTzE5R1dbVZaLnsnMDiINpzPsxeNX63dKGjgfTRFXaP
+ K+Sl8M1zqgnG5ZVb36EgmH/5deDEQOnw4Euzb5jXKiY2XQrlCteIDTrGJl2FzSWgvBuXtYfIR
+ BQqpQUmyOHUxLJR6Q5cYOe9iVOg4hUGfXghSkgrFskG5keTxaz4AwEFuskjZMNlne9bBuBSgX
+ Opv5UhQv8xdZVgEY66KYi9mYCtx8=
 
+Am Freitag, dem 14.03.2025 um 08:54 +1100 schrieb Balbir Singh:
+> On 3/14/25 05:12, Bert Karwatzki wrote:
+> > Am Donnerstag, dem 13.03.2025 um 22:47 +1100 schrieb Balbir Singh:
+> > >
+> > >
+> > > Anyway, I think the nokaslr result is interesting, it seems like wit=
+h nokaslr
+> > > even the older kernels have problems with the game
+> > >
+> > > Could you confirm if with nokaslr
+> > >
+> > Now I've tested kernel 6.8.12 with nokaslr
+> >
+> > > 1. Only one single game stellaris is not working?
+> > > 2. The entire laptop does not work?
+> > > 3. Laptop works and other games work? Just one game is not working a=
+s
+> > expected?
+> >
+> >
+> > Stellaris is showing the input lag and the entire graphical user inter=
+face shows
+> > the same input lag as long as stellaris is running.
+> > Civilization 6 shows the same input lag as stellaris, probably even wo=
+rse.
+> > Magic the Gathering: Arena (with wine) works normally.
+> > Valheim also works normally.
+> > Crusader Kings 2 works normally
+> > Rogue Heroes: Ruins of Tasos (a Zelda lookalike) works normally.
+> > Baldur's Gate I & II and Icewind Dale work normally.
+> >
+> > Also the input lag is only in the GUI, if I switch to a text console (=
+ctrl + alt
+> > + Fn), input works normally even while the affected games are running.
+> >
+> > Games aside everything else (e.g. compiling kernels) seems to work wit=
+h nokaslr.
+> >
+>
+> Would it be fair to assume that anything Xorg/Wayland is working fine
+> when the game is not running, even with nokaslr?
+>
+Yes, Xorg (I'm normally using xfce4 as desktop) works fine. I also tested =
+with
+gnome using Xwayland, here the buggy behaviour also exists, with the addti=
+on
+that mouse position is off, i.e. to click a button in the game you have to=
+ click
+somewhat above it.
 
+> +amd-gfx@lists.freedesktop.org to see if there are known issues with
+> nokaslr and the games you mentioned.
+>
+>
+> Balbir Singh
+>
+> PS: I came across an interesting link
+> https://www.alex-ionescu.com/behind-windows-x64s-44-bit-memory-addressin=
+g-limit/
+>
+> I think SLIST_HEADER is used by wine as well for user space and I am not=
+ sure
+> if in this situation the game is hitting this scenario, but surprisingly=
+ the other
+> games are not. This is assuming the game uses wine. I am not sure it's r=
+elated,
+> but the 44 bits caught my attention.
 
-On 3/10/2025 2:26 PM, Tariq Toukan wrote:
-> Hi,
-> 
-> This series by Carolina adds mlx5 support for the setting of a parent to
-> devlink rate nodes.
-> 
-> By introducing a hierarchical level to scheduling nodes, these changes
-> allow for more granular control over bandwidth allocation and isolation
-> of Virtual Functions.
-> 
-> Function renaming for parent setting on leafs:
-> - net/mlx5: Rename devlink rate parent set function for leaf nodes
-> 
-> Add support for hierarchy level tracking:
-> - net/mlx5: Introduce hierarchy level tracking on scheduling nodes
-> - net/mlx5: Preserve rate settings when creating a rate node
-> 
-> Support setting parent for rate nodes:
-> - net/mlx5: Add support for setting parent of nodes
-> 
-> Regards,
-> Tariq
-> 
-> Carolina Jubran (4):
->   net/mlx5: Rename devlink rate parent set function for leaf nodes
->   net/mlx5: Introduce hierarchy level tracking on scheduling nodes
->   net/mlx5: Preserve rate settings when creating a rate node
->   net/mlx5: Add support for setting parent of nodes
-> 
+Stellaris is a native linux game (x86_64), the one game (MTGA) I tested wi=
+th
+wine worked fine.
 
-Nice work. The whole series was a pleasant read.
+By the way, the warning
+[ T8562] WARNING: CPU: 14 PID: 8562 at mm/slub.c:5028
+__kvmalloc_node_noprof+0x2fd/0x360
+that appeared in the dmesg I sent you is caused by the upgrade of mesa fro=
+m
+25.0.0 to 25.0.1. (I'm still bisecting ...)
 
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-
->  .../net/ethernet/mellanox/mlx5/core/devlink.c |   3 +-
->  .../net/ethernet/mellanox/mlx5/core/esw/qos.c | 146 ++++++++++++++++--
->  .../net/ethernet/mellanox/mlx5/core/esw/qos.h |  12 +-
->  3 files changed, 143 insertions(+), 18 deletions(-)
-> 
-> 
-> base-commit: 8ef890df4031121a94407c84659125cbccd3fdbe
-
+Bert Karwatzki
