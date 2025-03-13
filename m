@@ -1,160 +1,186 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BC217E;
-	Thu, 13 Mar 2025 00:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EF54A2D;
+	Thu, 13 Mar 2025 00:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741824817; cv=none; b=P46VO8yBf1qfzUZC/XKCoZehmFiTnoEAHvdNEA74FUE6/kD2MhLWucVzXhbaTIXVbEga//3jAP4maPNgxba7dKvRn4upQpnBdM1AE63dThZUg3YhNtihUWydVpcnccUi+XsDw1zkDg8F5V2+PVJJlrrJbN5tcfNikkc7stM2tBY=
+	t=1741825171; cv=none; b=rhMQexG5s1JwFsE+Qwu8A1K+4oMUyjGBAQ858HooAEnswrU/tuBPYWd69A1DcF22JgNE4jtMCW5J7EFWjTHdjiv3atQWaG2hSt6AGUZfb9v/ACBx2rQTw3rxpIrlFx2Ofn3xzyM3PNe2LvSpqhqehq9B3KOp3eSJMWYRBSu4srs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741824817; c=relaxed/simple;
-	bh=8dEfo6LCVjShHE42wf1ejHBUNUNXIYH6qPYnJMKcwbs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=e+Z9mNW2E+fjkzEZatNWaCuhXNrgU27+PcKSN5Q0zdE/Nv20yul0jHxfUvkAdQNwZCNu9a/WaE3hM+iwwsJ9fxa3dUZXLG2CT0mYr+Y3MvYq2ErQj3GDqRMZclzt+ZD4o4+BNNtTFTBssKRbBlHB7u7kglEqyehze6zu49LFAg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=JP9c4+NI; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741825171; c=relaxed/simple;
+	bh=OC2kJdO0bX1Vrlgy1KVz18BJpr1zZxwC8vQSJOOX8ws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FSzq1Hlg4H2LiuuQSbhgs/6ajiXVQB8m6J5nfN7nt2Dkt8pnw6SrKjncRh7N+JDBoXPtzHXPH9NE8Dx4Q8u/7kcliRTn7NNvXixuqdx2/7A/3pBFxHV4MWBN9Xkc/S7SbVNDLr7Mh/meHeWwLFT+gUz/NiS+Ze9RdJ6gCg008bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aDSvSjIo; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JP9c4+NI"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52D09Gjf2730497
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 12 Mar 2025 17:09:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52D09Gjf2730497
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741824561;
-	bh=pOuTjU0DLlw9muSdV/bvRsUk/zEVswSeTDmcSBtrmzk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=JP9c4+NI9BKncKU+1PsEB9cZeQpNxCxpJ0LmRuYoHNmwWD/IZKSycv5sN9IICpIEz
-	 fR/hn+rQhnfZM1uUiHFsG6gUoBL9neiS+JGil7wI30UkDhHcG1QRaLCxVEOb8Avej8
-	 KQCseXzhw1xoqlckAoMQLS0jGXtjlqSg5eaOuTyA+VT8jx0ImUcERkYzUzACSp2jWz
-	 iveP8ZtK+pI4qfkTCfKTJm+BI905HMMN61AY3/MbPJkw2r62IkxWg6XH1CtdvGTrlr
-	 6CALlw7rm8dk1ZxjmoEuThEn4j6+yLh7OqapigzBfq/66ixFRWdc3P5KvqHGfpwwnf
-	 wFX8jsnXRMF2A==
-Date: Wed, 12 Mar 2025 17:09:16 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Jacob Keller <jacob.e.keller@intel.com>,
-        David Laight <david.laight.linux@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>
-CC: Ingo Molnar <mingo@kernel.org>, Kuan-Wei Chiu <visitorckw@gmail.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
-        joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-        dmitry.torokhov@gmail.com, mchehab@kernel.org, awalls@md.metrocast.net,
-        hverkuil@xs4all.nl, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, louis.peens@corigine.com, andrew+netdev@lunn.ch,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-        parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-        johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-        yury.norov@gmail.com, akpm@linux-foundation.org, alistair@popple.id.au,
-        linux@rasmusvillemoes.dk, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-        brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-        Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH v3 01/16] bitops: Change parity8() return type to bool
-User-Agent: K-9 Mail for Android
-In-Reply-To: <cbb26a91-807b-4227-be81-8114e9ea72cb@intel.com>
-References: <20250306162541.2633025-1-visitorckw@gmail.com> <20250306162541.2633025-2-visitorckw@gmail.com> <9d4b77da-18c5-4551-ae94-a2b9fe78489a@kernel.org> <Z8ra0s9uRoS35brb@gmail.com> <a4040c78-8765-425e-a44e-c374dfc02a9c@kernel.org> <20250307193643.28065d2d@pumpkin> <cbb26a91-807b-4227-be81-8114e9ea72cb@intel.com>
-Message-ID: <0F794C6F-32A9-4F34-9516-CEE24EA4BC49@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aDSvSjIo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741825170; x=1773361170;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OC2kJdO0bX1Vrlgy1KVz18BJpr1zZxwC8vQSJOOX8ws=;
+  b=aDSvSjIoJXB5I6161vAeXjdHxa/FK9dmvWjFUbps21OvuJF/ik1n2hJk
+   x7Ss3tfQFO6UipiaE4NAddaqza1I4tkijHkDJk0D9ijgb1mIhWOcZnQyF
+   6CpTFyOxoWHrWBwyvivTBMJWrVG7Aic7IlofkRyeHdkQ+NCfNVvcHUHzU
+   di3sJBYa/fnLrsPj5GlMdRZHYv3Oer44NyelJ2p8gAPypjU2mQAG0sL/z
+   Bh16yZuK6fS/ES/a8lznWOzU4B2G6OrCJNITQCkDrHxD1zNpfDxvBf5fk
+   kjNfCg6CyKO2Ues6jr/U4es+WyUB7HhacNXPnxMZKqDyK9RoUbcySBs4F
+   A==;
+X-CSE-ConnectionGUID: Hsb3R31kQ+mbhx346WVS3w==
+X-CSE-MsgGUID: Me6u2/y6Tm2CWblJW5J6nQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42654588"
+X-IronPort-AV: E=Sophos;i="6.14,243,1736841600"; 
+   d="scan'208";a="42654588"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 17:19:30 -0700
+X-CSE-ConnectionGUID: s3sqfxtzSe6SU3Vj1W6z7Q==
+X-CSE-MsgGUID: nwNajwp9RgyA/BRF2hWX+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,243,1736841600"; 
+   d="scan'208";a="125870236"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 12 Mar 2025 17:19:25 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tsWIE-000908-2X;
+	Thu, 13 Mar 2025 00:19:22 +0000
+Date: Thu, 13 Mar 2025 08:19:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v6 3/4] clk: meson: a1: add the audio clock controller
+ driver
+Message-ID: <202503131003.x6L69hJL-lkp@intel.com>
+References: <20250309180940.1322531-4-jan.dakinevich@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250309180940.1322531-4-jan.dakinevich@salutedevices.com>
 
-On March 12, 2025 4:56:31 PM PDT, Jacob Keller <jacob=2Ee=2Ekeller@intel=2E=
-com> wrote:
->
->
->On 3/7/2025 11:36 AM, David Laight wrote:
->> On Fri, 7 Mar 2025 12:42:41 +0100
->> Jiri Slaby <jirislaby@kernel=2Eorg> wrote:
->>=20
->>> On 07=2E 03=2E 25, 12:38, Ingo Molnar wrote:
->>>>
->>>> * Jiri Slaby <jirislaby@kernel=2Eorg> wrote:
->>>>  =20
->>>>> On 06=2E 03=2E 25, 17:25, Kuan-Wei Chiu wrote: =20
->>>>>> Change return type to bool for better clarity=2E Update the kernel =
-doc
->>>>>> comment accordingly, including fixing "@value" to "@val" and adjust=
-ing
->>>>>> examples=2E Also mark the function with __attribute_const__ to allo=
-w
->>>>>> potential compiler optimizations=2E
->>>>>>
->>>>>> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail=2Ecom>
->>>>>> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail=2Ecom>
->>>>>> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail=2Ecom>
->>>>>> ---
->>>>>>    include/linux/bitops=2Eh | 10 +++++-----
->>>>>>    1 file changed, 5 insertions(+), 5 deletions(-)
->>>>>>
->>>>>> diff --git a/include/linux/bitops=2Eh b/include/linux/bitops=2Eh
->>>>>> index c1cb53cf2f0f=2E=2E44e5765b8bec 100644
->>>>>> --- a/include/linux/bitops=2Eh
->>>>>> +++ b/include/linux/bitops=2Eh
->>>>>> @@ -231,26 +231,26 @@ static inline int get_count_order_long(unsign=
-ed long l)
->>>>>>    /**
->>>>>>     * parity8 - get the parity of an u8 value
->>>>>> - * @value: the value to be examined
->>>>>> + * @val: the value to be examined
->>>>>>     *
->>>>>>     * Determine the parity of the u8 argument=2E
->>>>>>     *
->>>>>>     * Returns:
->>>>>> - * 0 for even parity, 1 for odd parity
->>>>>> + * false for even parity, true for odd parity =20
->>>>>
->>>>> This occurs somehow inverted to me=2E When something is in parity me=
-ans that
->>>>> it has equal number of 1s and 0s=2E I=2Ee=2E return true for even di=
-stribution=2E
->>>>> Dunno what others think? Or perhaps this should be dubbed odd_parity=
-() when
->>>>> bool is returned? Then you'd return true for odd=2E =20
->>>>
->>>> OTOH:
->>>>
->>>>   - '0' is an even number and is returned for even parity,
->>>>   - '1' is an odd  number and is returned for odd  parity=2E =20
->>>
->>> Yes, that used to make sense for me=2E For bool/true/false, it no long=
-er=20
->>> does=2E But as I wrote, it might be only me=2E=2E=2E
->>=20
->> No me as well, I've made the same comment before=2E
->> When reading code I don't want to have to look up a function definition=
-=2E
->> There is even scope for having parity_odd() and parity_even()=2E
->> And, with the version that shifts a constant right you want to invert
->> the constant!
->>=20
->> 	David
->
->This is really a question of whether you expect odd or even parity as
->the "true" value=2E I think that would depend on context, and we may not
->reach a good consensus=2E
->
->I do agree that my brain would jump to "true is even, false is odd"=2E
->However, I also agree returning the value as 0 for even and 1 for odd
->kind of made sense before, and updating this to be a bool and then
->requiring to switch all the callers is a bit obnoxious=2E=2E=2E
+Hi Jan,
 
-Odd =3D 1 =3D true is the only same definition=2E It is a bitwise XOR, or =
-sum mod 1=2E
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on clk/clk-next]
+[also build test ERROR on robh/for-next krzk/for-next krzk-dt/for-next linus/master v6.14-rc6 next-20250312]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jan-Dakinevich/clk-meson-axg-share-the-set-of-audio-helper-macros/20250310-022012
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+patch link:    https://lore.kernel.org/r/20250309180940.1322531-4-jan.dakinevich%40salutedevices.com
+patch subject: [PATCH v6 3/4] clk: meson: a1: add the audio clock controller driver
+config: arm64-randconfig-r131-20250312 (https://download.01.org/0day-ci/archive/20250313/202503131003.x6L69hJL-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250313/202503131003.x6L69hJL-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503131003.x6L69hJL-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/clk/meson/a1-audio.c: In function 'a1_audio_clkc_probe':
+>> drivers/clk/meson/a1-audio.c:807:18: error: implicit declaration of function '__devm_auxiliary_device_create'; did you mean '__auxiliary_device_add'? [-Wimplicit-function-declaration]
+     807 |         auxdev = __devm_auxiliary_device_create(dev, dev->driver->name,
+         |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                  __auxiliary_device_add
+>> drivers/clk/meson/a1-audio.c:807:16: error: assignment to 'struct auxiliary_device *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     807 |         auxdev = __devm_auxiliary_device_create(dev, dev->driver->name,
+         |                ^
+
+
+vim +807 drivers/clk/meson/a1-audio.c
+
+   748	
+   749	static int a1_audio_clkc_probe(struct platform_device *pdev)
+   750	{
+   751		struct device *dev = &pdev->dev;
+   752		const struct a1_audio_data *data;
+   753		struct auxiliary_device *auxdev;
+   754		struct regmap *map;
+   755		void __iomem *base;
+   756		struct clk *clk;
+   757		unsigned int i;
+   758		int ret;
+   759	
+   760		data = device_get_match_data(dev);
+   761		if (!data)
+   762			return -EINVAL;
+   763	
+   764		clk = devm_clk_get_enabled(dev, "pclk");
+   765		if (IS_ERR(clk))
+   766			return PTR_ERR(clk);
+   767	
+   768		base = devm_platform_ioremap_resource(pdev, 0);
+   769		if (IS_ERR(base))
+   770			return PTR_ERR(base);
+   771	
+   772		map = devm_regmap_init_mmio(dev, base, &a1_audio_regmap_cfg);
+   773		if (IS_ERR(map))
+   774			return PTR_ERR(map);
+   775	
+   776		ret = device_reset(dev);
+   777		if (ret)
+   778			return ret;
+   779	
+   780		for (i = 0; i < data->hw_clks.num; i++) {
+   781			struct clk_hw *hw = data->hw_clks.hws[i];
+   782			struct clk_regmap *clk_regmap = to_clk_regmap(hw);
+   783	
+   784			if (!hw)
+   785				continue;
+   786	
+   787			clk_regmap->map = map;
+   788		}
+   789	
+   790		for (i = 0; i < data->hw_clks.num; i++) {
+   791			struct clk_hw *hw;
+   792	
+   793			hw = data->hw_clks.hws[i];
+   794			if (!hw)
+   795				continue;
+   796	
+   797			ret = devm_clk_hw_register(dev, hw);
+   798			if (ret)
+   799				return ret;
+   800		}
+   801	
+   802		ret = devm_of_clk_add_hw_provider(dev, meson_clk_hw_get,
+   803						  (void *)&data->hw_clks);
+   804		if (ret)
+   805			return ret;
+   806	
+ > 807		auxdev = __devm_auxiliary_device_create(dev, dev->driver->name,
+   808							data->rst_drvname, NULL, 0);
+   809		if (!auxdev)
+   810			return -ENODEV;
+   811	
+   812		return 0;
+   813	}
+   814	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
