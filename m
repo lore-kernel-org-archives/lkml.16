@@ -1,140 +1,93 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9568C26770C;
-	Thu, 13 Mar 2025 13:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920BA267B13;
+	Thu, 13 Mar 2025 13:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741871022; cv=none; b=geSS9zuo4cCw8L4Ba9aOW3RXTFSAg6f9UEPz93mG5ZxJv4XJkrBj0Wr41h3N8ykYwohCp7smNtrRf4zWuPIqhscpUhi30ykXBIvdVA7dT6dCN6ku+suKQK2vd3KgyElwYe4XLDwt9NBm/HmOIei8nFOYZrFSJGHCH1ugrYCIVUg=
+	t=1741871024; cv=none; b=Xa2vtqLJL5L+pnMi7JHf0IOiLX2IiVTj/mgyh+ANN2sFRaCMn3Hfoi17oAfhPR4B2JpM3iEpERUUBEYyh8XCwigfw8gjjNxLxqI21UZkMh3Uo6caTwO1XXMMR4W+Gq/tYZC8OKyzfZXZXmFme6JlXQGbnXb4plDmTNmO4Tpbg/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741871022; c=relaxed/simple;
-	bh=98KRXcGEbIO50H7NCISaJsrQv87mCIk32utux6MRmis=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=Y0hoa9Ylj53X1ckX8OQwvfAkakh1v4fsfhynxrLGX61IAg5pRnBDvXjLPcGLZHdixUsmTrdpISusVpqZk1vwNesfXcQNgFOlGQeHdd4AMnh7/krYsaMgKB4SoaHKdGARys0KiSUM5xx8ZR+YPEJJoY/U0F1gNaqLCd8gGcj2Gnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=shj5CAde; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=byiMxgR9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741871024; c=relaxed/simple;
+	bh=cSyffy+PWmVQesGeNOfjRD3854cMxOy2XIo3+guxtEk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nSpF6ydcVzqrFewG8iJvKy9K8bXE5fSTuSU9I7GhLr1wVttOh9vJaA/UASPTIrXtWw7sGDB6+K00BVcMisNgVbooyyuVjwEj2ObwvlhsVOZLDVg6Wi0IBJpcVzWLYhYzshzmjypd4aMwBlI86rEX5kLgJSx41Bzxgjr3CrFXRMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3n7WI2+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="shj5CAde";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="byiMxgR9"
-Message-ID: <20250313130321.442025758@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741871018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=VeVnnwSReah5wOC9Iz7ded+zOeZPkraBXHsDPNXcIs4=;
-	b=shj5CAdewFdh89n7ia0O9o8wc9yKPHi/tldIDoAodBKxyF+cFmiDEmEjtYyMAPgZjYScMI
-	l5cNO6lvwa+TmWNrr+Qsyrf630p24vGKBMnTExIq2Y/T92SWfvXg2xzGgBY+1cGMYLsivY
-	DlZcq4AVeT0feSydUHjIczYk9QZ3X5zE4vfK9Fc2VnZDWzQ2PAj1t8nKypbEiszDEQ356a
-	Fe/V+/OEHJ3wLYHJYTPJt4V2zXoTF1HxXwB2K00o21Dx48t5thojcjBdb3jNb/QVAjuF7P
-	eCUrGrSsp+EBC75dRo/DClUSWmDbo4FXhDbtHGiZi+lTpQjoyUqfqDb3bN1ErQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741871018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=VeVnnwSReah5wOC9Iz7ded+zOeZPkraBXHsDPNXcIs4=;
-	b=byiMxgR9qFLezNWz2uxirZ2d+2cD07D0KcxtSE0jlqbSKJ+lcH/sx6VeqWfua+hDn1Tu7X
-	4A/2eBhQq0y7SIAg==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Nishanth Menon <nm@ti.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Dhruva Gole <d-gole@ti.com>,
- Tero Kristo <kristo@kernel.org>,
- Santosh Shilimkar <ssantosh@kernel.org>,
- Logan Gunthorpe <logang@deltatee.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Jon Mason <jdmason@kudzu.us>,
- Allen Hubbe <allenbh@gmail.com>,
- ntb@lists.linux.dev,
- Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org,
- Michael Kelley <mhklinux@outlook.com>,
- Wei Liu <wei.liu@kernel.org>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- linux-hyperv@vger.kernel.org,
- Wei Huang <wei.huang2@amd.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org,
- Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: [patch V2 01/10] cleanup: Provide retain_ptr()
-References: <20250313130212.450198939@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3n7WI2+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D6E8C4CEDD;
+	Thu, 13 Mar 2025 13:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741871024;
+	bh=cSyffy+PWmVQesGeNOfjRD3854cMxOy2XIo3+guxtEk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=W3n7WI2+kNBRhRstzjeL3M06/rCnf1LzWx2YyBLD01j8VmFJANn56CrImwA8yW2+T
+	 S0sch8ELktEv1lgKKdJE8batVk23w+yl7Go8YUO4NPYFP3oR+x6ZlO7uJb/jlanFvX
+	 S7ZjZTXv/idYIrZSik396jx+G+Yrzt4aKXk/agPeTHfga4jUvCgUIBaYVPj9qEB7u9
+	 zFE7QK8bZEplyvWlCoOpYD10A3xrxtVXiRkIZRvB6lxI7GnFZqr67QFT9R/jWP/dS4
+	 BRO2/qxom67N+cLtVTodyDfZllKLzMgiaZThXp0n9imUIQcuY7xDNHmMOvwHFRcqNF
+	 SCzy9gFfTB/iA==
+From: Lee Jones <lee@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+ Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ Leon Romanovsky <leon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, 
+ Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Robin Murphy <robin.murphy@arm.com>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-arch@vger.kernel.org, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+ linux-mtd@lists.infradead.org
+In-Reply-To: <20250221-rmv_return-v1-15-cc8dff275827@quicinc.com>
+References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
+ <20250221-rmv_return-v1-15-cc8dff275827@quicinc.com>
+Subject: Re: (subset) [PATCH *-next 15/18] mfd: db8500-prcmu: Remove
+ needless return in three void APIs
+Message-Id: <174187101580.3629935.6842247156301298100.b4-ty@kernel.org>
+Date: Thu, 13 Mar 2025 13:03:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 13 Mar 2025 14:03:38 +0100 (CET)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-In cases where an allocation is consumed by another function, the
-allocation needs to be retained on success or freed on failure. The code
-pattern is usually:
+On Fri, 21 Feb 2025 05:02:20 -0800, Zijun Hu wrote:
+> Remove needless 'return' in the following void APIs:
+> 
+>  prcmu_early_init()
+>  prcmu_system_reset()
+>  prcmu_modem_reset()
+> 
+> Since both the API and callee involved are void functions.
+> 
+> [...]
 
-	struct foo *f = kzalloc(sizeof(*f), GFP_KERNEL);
-	struct bar *b;
+Applied, thanks!
 
-	,,,
-	// Initialize f
-	...
-	if (ret)
-		goto free;
-        ...
-	bar = bar_create(f);
-	if (!bar) {
-		ret = -ENOMEM;
-	   	goto free;
-	}
-	...
-	return 0;
-free:
-	kfree(f);
-	return ret;
+[15/18] mfd: db8500-prcmu: Remove needless return in three void APIs
+        commit: ccf5c7a8e5b9fe7c36d8c384f8f7c495f45c63a0
 
-This prevents using __free(kfree) on @f because there is no canonical way
-to tell the cleanup code that the allocation should not be freed.
-
-Abusing no_free_ptr() by force ignoring the return value is not really a
-sensible option either.
-
-Provide an explicit macro retain_ptr(), which NULLs the cleanup
-pointer. That makes it easy to analyze and reason about.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- include/linux/cleanup.h |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
---- a/include/linux/cleanup.h
-+++ b/include/linux/cleanup.h
-@@ -216,6 +216,23 @@ const volatile void * __must_check_fn(co
- 
- #define return_ptr(p)	return no_free_ptr(p)
- 
-+/*
-+ * Only for situations where an allocation is handed in to another function
-+ * and consumed by that function on success.
-+ *
-+ *	struct foo *f __free(kfree) = kzalloc(sizeof(*f), GFP_KERNEL);
-+ *
-+ *	setup(f);
-+ *	if (some_condition)
-+ *		return -EINVAL;
-+ *	....
-+ *	ret = bar(f);
-+ *	if (!ret)
-+ *		retain_ptr(f);
-+ *	return ret;
-+ */
-+#define retain_ptr(p)				\
-+	__get_and_null(p, NULL)
- 
- /*
-  * DEFINE_CLASS(name, type, exit, init, init_args...):
+--
+Lee Jones [李琼斯]
 
