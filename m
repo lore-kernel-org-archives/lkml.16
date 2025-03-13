@@ -1,120 +1,137 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 480D92EAF7;
-	Thu, 13 Mar 2025 16:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9211A268FF4;
+	Thu, 13 Mar 2025 16:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741882705; cv=none; b=kSCiZb2onR40iGCGGkF9lA/iN1ZnQF5ItSUJmBRqOWLXBFVrroQW0i9949GUMklCV6iWSLct6Nlg7avx4axGth06vCLrmNWqTNNYQAtpaFAzUnJCrdWFVE+4xLFbLiCBCENxIf2A5xpeVngo0/Bn0mC2odTxAwRnTzzN0bI8jPo=
+	t=1741882752; cv=none; b=uXVBYZykiPqdIfF9h/GkP1zAZBDNnKpNpqTmdllRCSdlDc89Pr44Y9oMV9CsWJn42Jr4EiXBfdOaby8r0wU/4jtaIa/9jcez7N32dHQAPO3TZHtsB6UsT+vi2sNcTCa6AhpbrfsHMSYw4ezTzGnnr0hYAEbo5Ws4OzaW1sjT6Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741882705; c=relaxed/simple;
-	bh=emhOxbt8ayK8YAjk5FgUv/PSIwEYDr74r6dRQTxBPCY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UpUdLLp6h7dJuwO/ACfE//iG7alsDedzoNFtZInaXgDLZmH1Ir5jgQpNc1t+xFqHHrkIDVhBQftzUO2yDdmUoaQSHDHKaSlbafgODEsFb95zEBm5E0yhk25i3dYVtiolMPwcxgt2huteD2TLQL4BiXg862rkg9+FC67gtEfBn3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4F80150C;
-	Thu, 13 Mar 2025 09:18:33 -0700 (PDT)
-Received: from [10.57.85.159] (unknown [10.57.85.159])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F4C23F673;
-	Thu, 13 Mar 2025 09:18:14 -0700 (PDT)
-Message-ID: <07c36889-10d3-4944-a039-3a30fbdca883@arm.com>
-Date: Thu, 13 Mar 2025 16:18:12 +0000
+	s=arc-20240116; t=1741882752; c=relaxed/simple;
+	bh=CM3XdOQtMRDGoNrytaM4lxfbhkyuqNr4n2ugVSRqcDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B/TqOQLTu6UBujf8WNFaV1QG5gPAE+oI0x5pGi/qiSzYjA9kpOMtx5woqFaRIG0gQqEz6FAyfqt094VJlH8TXsx6FqBn6FB16fJN/VaBzppDgxRSa8GBUNGvuEtyCw9c47nIzNKFS/j6gJokQbe8noKabveaHLsW20FCxPa4xEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cu8prNQf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cu8prNQf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E17C4CEEA;
+	Thu, 13 Mar 2025 16:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741882752;
+	bh=CM3XdOQtMRDGoNrytaM4lxfbhkyuqNr4n2ugVSRqcDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cu8prNQfApsdNwHKLjiD6EWiOTEp7fGiIH/TZ9N64o7KQSIbVlWhqReYofAl637kX
+	 BUTyt2Hxhav+62TzBQH4pBDjK8lN49jU+NbNVegqnODzvdI5VMCNkzmkTrDtW99z7Z
+	 ruyYL5qA+AJMKNPvxqrlzL3BXJN4GLWEvyWrAXYiXj/ur4yy/D9iWKX+RUFeHzseXr
+	 JRzTuVR1j0QX3g7sX6Jxaw/tgsyzjlinrn34BuU0m2w1eaVp5aPq/Bq2ELqPgFFbkQ
+	 EvhNr3kSNuPHXD0ola7saJYckFpPdIYEoJvTULwTC9aIhekI8oQ9jXIsFraxfVlpML
+	 IVtIkOwmchynw==
+Date: Thu, 13 Mar 2025 17:19:06 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <kees@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] stack_tracer: move sysctl registration to
+ kernel/trace/trace_stack.c
+Message-ID: <zeijhrq5umjjiectrpbuebdnnwrdaqjoxd3aonhkesxj6a3pgi@mmqoadbqoh4n>
+References: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
+ <20250306-jag-mv_ctltables-v2-4-71b243c8d3f8@kernel.org>
+ <20250306103138.3cfc2955@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] iommu/arm: Add BBM Level 2 smmu feature
-Content-Language: en-GB
-To: =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
- suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
- catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org,
- robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
- mark.rutland@arm.com, joey.gouly@arm.com, maz@kernel.org,
- james.morse@arm.com, broonie@kernel.org, anshuman.khandual@arm.com,
- oliver.upton@linux.dev, ioworker0@gmail.com, baohua@kernel.org,
- david@redhat.com, jgg@ziepe.ca, shameerali.kolothum.thodi@huawei.com,
- nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com,
- smostafa@google.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- iommu@lists.linux.dev
-References: <20250313104111.24196-2-miko.lenczewski@arm.com>
- <20250313104111.24196-4-miko.lenczewski@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250313104111.24196-4-miko.lenczewski@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306103138.3cfc2955@gandalf.local.home>
 
-On 13/03/2025 10:41, Mikołaj Lenczewski wrote:
-> For supporting BBM Level 2 for userspace mappings, we want to ensure
-> that the smmu also supports its own version of BBM Level 2. Luckily, the
-> smmu spec (IHI 0070G 3.21.1.3) is stricter than the aarch64 spec (DDI
-> 0487K.a D8.16.2), so already guarantees that no aborts are raised when
-> BBM level 2 is claimed.
+On Thu, Mar 06, 2025 at 10:31:38AM -0500, Steven Rostedt wrote:
+> On Thu, 06 Mar 2025 12:29:44 +0100
+> Joel Granados <joel.granados@kernel.org> wrote:
 > 
-> Add the feature and testing for it under arm_smmu_sva_supported().
+> > Move stack_tracer_enabled into trace_stack_sysctl_table. This is part of
+> > a greater effort to move ctl tables into their respective subsystems
+> > which will reduce the merge conflicts in kerenel/sysctl.c.
+> > 
+> > Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> > ---
+> >  kernel/sysctl.c            | 10 ----------
+> >  kernel/trace/trace_stack.c | 20 ++++++++++++++++++++
+> >  2 files changed, 20 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> > index baa250e223a26bafc39cb7a7d7635b4f7f5dcf56..dc3747cc72d470662879e4f2b7f2651505b7ca90 100644
+> > --- a/kernel/sysctl.c
+> > +++ b/kernel/sysctl.c
+> > @@ -68,7 +68,6 @@
+> >  
+> >  #ifdef CONFIG_X86
+> >  #include <asm/nmi.h>
+> > -#include <asm/stacktrace.h>
+> >  #include <asm/io.h>
+> >  #endif
+> >  #ifdef CONFIG_SPARC
+> > @@ -1674,15 +1673,6 @@ static const struct ctl_table kern_table[] = {
+> >  		.proc_handler	= proc_dointvec,
+> >  	},
+> >  #endif
+> > -#ifdef CONFIG_STACK_TRACER
+> > -	{
+> > -		.procname	= "stack_tracer_enabled",
+> > -		.data		= &stack_tracer_enabled,
+> > -		.maxlen		= sizeof(int),
+> > -		.mode		= 0644,
+> > -		.proc_handler	= stack_trace_sysctl,
+> > -	},
+> > -#endif
+> >  #ifdef CONFIG_MODULES
+> >  	{
+> >  		.procname	= "modprobe",
+> > diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+> > index 14c6f272c4d8a382070d45e1cf0ee97db38831c9..b7ffbc1da8357f9c252cb8936c8f789daa97eb9a 100644
+> > --- a/kernel/trace/trace_stack.c
+> > +++ b/kernel/trace/trace_stack.c
+> > @@ -578,3 +578,23 @@ static __init int stack_trace_init(void)
+> >  }
+> >  
+> >  device_initcall(stack_trace_init);
+> > +
+> > +
+> > +static const struct ctl_table trace_stack_sysctl_table[] = {
+> > +	{
+> > +		.procname	= "stack_tracer_enabled",
+> > +		.data		= &stack_tracer_enabled,
+> > +		.maxlen		= sizeof(int),
+> > +		.mode		= 0644,
+> > +		.proc_handler	= stack_trace_sysctl,
+> > +	},
+> > +};
+> > +
+> > +static int __init init_trace_stack_sysctls(void)
+> > +{
+> > +	register_sysctl_init("kernel", trace_stack_sysctl_table);
+> > +	return 0;
+> > +}
+> > +subsys_initcall(init_trace_stack_sysctls);
+> > +
+> > +
+> > 
 > 
-> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
+> This should also make the variable "stack_tracer_enabled" static and
+> removed from the ftrace.h header.
+oops, my bad. just sent out V3.
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+Thx
+Best
 
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c | 3 +++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c     | 3 +++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h     | 4 ++++
->  3 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-> index 9ba596430e7c..6ba182572788 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-> @@ -222,6 +222,9 @@ bool arm_smmu_sva_supported(struct arm_smmu_device *smmu)
->  		feat_mask |= ARM_SMMU_FEAT_VAX;
->  	}
->  
-> +	if (system_supports_bbml2_noabort())
-> +		feat_mask |= ARM_SMMU_FEAT_BBML2;
-> +
->  	if ((smmu->features & feat_mask) != feat_mask)
->  		return false;
->  
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index 358072b4e293..dcee0bdec924 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -4406,6 +4406,9 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
->  	if (FIELD_GET(IDR3_RIL, reg))
->  		smmu->features |= ARM_SMMU_FEAT_RANGE_INV;
->  
-> +	if (FIELD_GET(IDR3_BBML, reg) == IDR3_BBML2)
-> +		smmu->features |= ARM_SMMU_FEAT_BBML2;
-> +
->  	/* IDR5 */
->  	reg = readl_relaxed(smmu->base + ARM_SMMU_IDR5);
->  
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> index bd9d7c85576a..85eaf3ab88c2 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> @@ -60,6 +60,9 @@ struct arm_smmu_device;
->  #define ARM_SMMU_IDR3			0xc
->  #define IDR3_FWB			(1 << 8)
->  #define IDR3_RIL			(1 << 10)
-> +#define IDR3_BBML			GENMASK(12, 11)
-> +#define IDR3_BBML1			(1 << 11)
-> +#define IDR3_BBML2			(2 << 11)
->  
->  #define ARM_SMMU_IDR5			0x14
->  #define IDR5_STALL_MAX			GENMASK(31, 16)
-> @@ -754,6 +757,7 @@ struct arm_smmu_device {
->  #define ARM_SMMU_FEAT_HA		(1 << 21)
->  #define ARM_SMMU_FEAT_HD		(1 << 22)
->  #define ARM_SMMU_FEAT_S2FWB		(1 << 23)
-> +#define ARM_SMMU_FEAT_BBML2		(1 << 24)
->  	u32				features;
->  
->  #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
+-- 
 
+Joel Granados
