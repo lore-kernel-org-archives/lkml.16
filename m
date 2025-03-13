@@ -1,130 +1,107 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFC41DF26F
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D461DF26F
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741853992; cv=none; b=bhBZG+fiU/Ih8aQG+4uooSJa+x5fgdn5iVnN0BASU7mCNNpPL0o+TJ7OGp2xAwep4rfhqf9yBbgQn+b7kRhQZ5iNg6NpS4jfHnph2lt9SKrXhX/iv46/zmflUemtv6Ig+Sv0gJ+mc8I1/J9yrZDmcmO13SvgkIR4Sg6EdkF+UBw=
+	t=1741854043; cv=none; b=dolNpeF3J0BEjpeUaqFj7EN6e8CL31jCGmafDPWrhsZln91IOo0P/8kZkgqoHjTEPtvsPbtGKzwxDfDN0BhnCPhlzG7S9hFvmv/FTMO6l4VRRq1aPAxrYGbLGE7cgPbof/GVO9uNIl0/LzGgLFxRbyjEo+xWF6273DGZIFdSKNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741853992; c=relaxed/simple;
-	bh=ICD6c+vTcPmgCvlPSfErvejItxtLWXfY+HODu9IhgnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HrjUPjlgUvrhKrSjLwHTs6Z/PmULC3AGkZpy+9zsxaw1k8/9dnaedmE1Sft4pVx+A0qYVYXggK1GL1fAwKyqbx0kK31r8tu/0CrX6j/qtkNg+grysIWPRga4D95brBu3z63ZRrjlvCMychVxKlTUPejBWs+h901ldPlOtrJnw4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tsdn3-0005SZ-8X; Thu, 13 Mar 2025 09:19:41 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tsdn1-005VJV-2Z;
-	Thu, 13 Mar 2025 09:19:39 +0100
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 1CD723D9534;
-	Thu, 13 Mar 2025 07:12:07 +0000 (UTC)
-Date: Thu, 13 Mar 2025 08:12:06 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Chenyuan Yang <chenyuan0y@gmail.com>
-Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, heiko@sntech.de, 
-	linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] can: rockchip: bail out if skb cannot be allocated
-Message-ID: <20250313-urban-bat-of-cubism-bf5a4a-mkl@pengutronix.de>
-References: <20250313011506.3132295-1-chenyuan0y@gmail.com>
+	s=arc-20240116; t=1741854043; c=relaxed/simple;
+	bh=Hy+xSuVofnwueySGzw2wHE0q2UL2HSvh3hUYR0Xn/ko=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tVBaO8VUbwOcv5GkMxyFj0DFW9K/FtSrIhbMYDaajW4gZcfxvovKbrkx8yBb1I/MtkTkTd8Gg0ASwNThB31p3FmN0fgfTHKqxmohyT74WwIr+J9uZlZvO3Ge1FOhUOe2B/cwJz/QGpH0JFtb9RIxKI34Hep8trjUSuSokrB/sy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jKtdhVlm; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jKtdhVlm"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so5487045e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741854039; x=1742458839; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lNbTO5TjicLjBY2S6bO59mh/PAXU4LLxrsvGBXuMbkE=;
+        b=jKtdhVlmMwPyE2+sppV3ay+nJcv+9tPETYnXdKA9fmcG1Gs0fFpC2koFTNVHhyxvLT
+         E5zCacAOaCLUZ1aVWjhv0ME96TbKnOv7BgoQ6KEs8ZqNwcephA4prbe6jms1w3Lt5KcL
+         UN+1Qfv8Yf1ruROCb+54956b5G0WRUUeZjBnzvOBugpsIqYJCpLLvEQu27VE/6D3Z2Kx
+         jfH1SCihNWkaR3V5oaNU0LJS8dm0CxCpS+wFylMKQqMSoQMEjg2q1BSmT23RyyOCFXU1
+         U5n+kdt3BMVjlrHO2BqHGexQY6jbCxTNWBJXSZ2pqsLUuT+Nb+J7VDpE6Ar1t4ZPiOgh
+         +Qgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741854039; x=1742458839;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lNbTO5TjicLjBY2S6bO59mh/PAXU4LLxrsvGBXuMbkE=;
+        b=QKU4b8V1aPDJZH+uzAki6+DWB+IrNLlyz04B/rB9QmcROZsifQOvHf6A5nAZbSMgw4
+         v/S+yxHLVr+DJmGlpJx9T1TQ0N0np7O1k4Fxgc5TUQtTgNuSXp+GQZW32ycO4uk+OdH8
+         JTdtgTeavGJjjv8RA4ETnC97K+6CpWCxg57rO4w6s/GCA+9paWU9hPvoLcJQJIpOhQ2c
+         iVD4megcc0XS2Y3YNBomPcVRhvPSXyi2DhBkOfBPcEjRdJJx6CDL9rtb3DClIZRMr/z9
+         JqMItqKJukTmcVjpCsD3lx/sFaLBoEFJyLfM1IVC6l9EdemlW83FpM2tPWPAPNUsHg0P
+         EhNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqbQ9+IU6/t0Yn3TwJI7W0jxicHXORp6Ox9WO6zzF7lVMbvPUsu4wZKQ44zkREXptir/N59+X+TIMsORQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw02qseHuPS98OimvbxwIUHpW8b7z8M/OGmsKDFblcX1iNTWg4H
+	Fotn68FoI0t1otegMSNP9pyMR7Et2dAaofXOVWDvsgpB12C01LDHbKDTSngG9F8=
+X-Gm-Gg: ASbGncvHBfqDRLbm6LzlPKo7mw47EQg/Fu1hysvuBaOQemeOZbA3YE01tRJu/TWxBQ0
+	7yb/rj8fX0fPzXWpYlHOHvdWcmy/crwp7tgcF5l3iykwFGcOZHb2CneNrrPl1y3lq7wwvMYunlc
+	6AN5nBCoSuXLACjMGts8EmdVhcItfZAxfd9T5X24bZvrzUApua0MBy7/W3q/Z4htT8aNRyJKuCP
+	MBu3aCn8Q5I0qKbP6YJT4ERtrS/rw9RkzBE855g5BhwLSKTzCcA1im0M7Lu5O5EavqMtzQQVgGD
+	XEKnzOZ17QawDTrbkPHwEFWeCw/qlevRkAQfu3tjQcIF5wmlLf1wowg=
+X-Google-Smtp-Source: AGHT+IGrcDtQowxkrSkzeof6W2aS9uYKvk3LTW2BB4YIJuRbMAtEH7ewNad2BvzkhFhHtn4QOTOMdA==
+X-Received: by 2002:a05:600c:3554:b0:43c:fffc:787b with SMTP id 5b1f17b1804b1-43cfffc7b0fmr139852135e9.12.1741854039440;
+        Thu, 13 Mar 2025 01:20:39 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:90f7:ca4b:a5e1:8693])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d0a8d068esm45070275e9.33.2025.03.13.01.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 01:20:39 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Genes Lists <lists@sapience.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH] gpiolib: don't check the retval of get_direction() when registering a chip
+Date: Thu, 13 Mar 2025 09:20:36 +0100
+Message-ID: <174185403526.7115.15257225871449545065.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250311175631.83779-1-brgl@bgdev.pl>
+References: <20250311175631.83779-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hi4c7kylwypwmzkk"
-Content-Disposition: inline
-In-Reply-To: <20250313011506.3132295-1-chenyuan0y@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
---hi4c7kylwypwmzkk
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] can: rockchip: bail out if skb cannot be allocated
-MIME-Version: 1.0
+On Tue, 11 Mar 2025 18:56:31 +0100, Bartosz Golaszewski wrote:
+> During chip registration we should neither check the return value of
+> gc->get_direction() nor hold the SRCU lock when calling it. The former
+> is because pin controllers may have pins set to alternate functions and
+> return errors from their get_direction() callbacks. That's alright - we
+> should default to the safe INPUT state and not bail-out. The latter is
+> not needed because we haven't registered the chip yet so there's nothing
+> to protect against dynamic removal. In fact: we currently hit a lockdep
+> splat. Revert to calling the gc->get_direction() callback directly and
+> *not* checking its value.
+> 
+> [...]
 
-Hello Chenyuan Yang,
+Applied, thanks!
 
-thanks for your contribution.
+[1/1] gpiolib: don't check the retval of get_direction() when registering a chip
+      commit: 0102fbf52b93e609fec0dab53b1fb4fe69113f5e
 
-On 12.03.2025 20:15:05, Chenyuan Yang wrote:
-> Add NULL pointer check in rkcanfd_handle_error_int() to
-> bail out if skb cannot be allocated.
-
-If the skb cannot be allocated, the cf is also NULL.
-
-regards,
-Marc
-
-> This is similar to the commit f7f0adfe64de
-> ("can: rockchip: rkcanfd_handle_rx_fifo_overflow_int(): bail out if skb c=
-annot be allocated").
->=20
-> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-> ---
->  drivers/net/can/rockchip/rockchip_canfd-core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/can/rockchip/rockchip_canfd-core.c b/drivers/net=
-/can/rockchip/rockchip_canfd-core.c
-> index d9a937ba126c..90395cbdaab9 100644
-> --- a/drivers/net/can/rockchip/rockchip_canfd-core.c
-> +++ b/drivers/net/can/rockchip/rockchip_canfd-core.c
-> @@ -551,7 +551,7 @@ static int rkcanfd_handle_error_int(struct rkcanfd_pr=
-iv *priv)
-> =20
->  	rkcanfd_handle_error_int_reg_ec(priv, cf, reg_ec);
-> =20
-> -	if (!cf)
-> +	if (!cf || !skb)
->  		return 0;
-> =20
->  	err =3D can_rx_offload_queue_timestamp(&priv->offload, skb, timestamp);
-> --=20
-> 2.34.1
->=20
->=20
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---hi4c7kylwypwmzkk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfShUIACgkQDHRl3/mQ
-kZw+Vgf+Opaq2kYtMPX9Sc52f+TJg+T4rZBFr2HjmKx59vTMbPeQwECyTkMiZRyG
-+KKA5CF5MTLZoS0+mi5Jh2Ju7iUVfH+PON/Yzk7bI1tGkGJ0T1WU5O6q2wrVx1rs
-MXLa/FNPQbCGvJQsIVpylRq3cw2Ny0kXv9vEMrdCa3RWKDEU/jZxgnYiAc49wyZV
-WlJ6RwNXJLO4fwr03+o8l/YUstsQ2vk/SqRB9/r10a2cduWUORBg7TWKPXy7sEoa
-TvrcPdFFKhHB8hScGokd367/9wL2VjPPojL3k1d76maZobHNaYZ9doXv2O4zoAC8
-aAghWiucEJKt71ZqaqKf47d8494AwA==
-=TqR1
------END PGP SIGNATURE-----
-
---hi4c7kylwypwmzkk--
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
