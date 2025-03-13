@@ -1,291 +1,323 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2110.outbound.protection.outlook.com [40.107.21.110])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2063.outbound.protection.outlook.com [40.107.220.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC47268C58;
-	Thu, 13 Mar 2025 15:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.110
-ARC-Seal:i=4; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741878505; cv=fail; b=H5lr0zCnWpPJ99+QyH2IwIvNsxiKcNtfD7G5HoEsK774y5gFRtr3SL6vXbRDNMbpRFzWn2LbaURY5DdFnbUJ7+hCj+PW483ImDGGpr6EuR+QA1JyBmZ0p/Ud7qlaWtqU5PrP13DxfiAY1iHXSW+Vf6ioyQv8kYrh0WLa1FCzlU4=
-ARC-Message-Signature:i=4; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741878505; c=relaxed/simple;
-	bh=JhUC5djoQ1apDl2k4iyomJX8tmnO3+zWq3tWheN1D1s=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7066268C49;
+	Thu, 13 Mar 2025 15:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741878515; cv=fail; b=uWuu2gNgaVkKbAd+1pLXtW4CdYdR+2xT9oGfeIzZmCijp1iIRpUwflA7USs0qVqN3oSA+dAj/tbG0xzWdOXGAQRfWQjFZ8Do3bNcLJ/CGQWG2D0S/ymXUeNJoScUnD7QR7DBZJh5ykrePTatjKz84l3okDkvqzTwCfoCzHDXv34=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741878515; c=relaxed/simple;
+	bh=exUn/IKnjW+H75PL8HqtIkpp5vtmmO1DWKS0795J+7I=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CU6CYOgtAHVO7a7+RdFgHjkTJ/xBy/0XtjOQwn48gJmppoltxngAL2wEkVBw5Is2yEUaAZK4wpdwGiyOiKTjUa1iFmR7YhrhuMOi7kNpbLSaY3sqXejO/5ef6oSa/7ivjhtvKw+Z/pqrnzOE3Sr6xqgV4HIFg4X9H4J0U76ZRcc=
-ARC-Authentication-Results:i=4; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xsightlabs.com; spf=pass smtp.mailfrom=xsightlabs.com; dkim=pass (1024-bit key) header.d=xsightlabs.com header.i=@xsightlabs.com header.b=SVYpPVmJ; dkim=pass (1024-bit key) header.d=xsightlabs.com header.i=@xsightlabs.com header.b=SVYpPVmJ; arc=fail smtp.client-ip=40.107.21.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xsightlabs.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xsightlabs.com
+	 Content-Type:MIME-Version; b=lL663iMLgacfUX4i2vTj+ywHI+AK8PRW2pzjC9+HxH0qRUPofTzY3tCFpMTlFHrGOVNAON6/JD1FskGwdWDpdeLu2OYSXajJ6ANHByAGR92PVXelZnLih2kShO3WV31D/0eC1Beq6Wo4p9BTyi0/sb8pV5rhEfzM8vGCPOy9GRY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4SMEsk0m; arc=fail smtp.client-ip=40.107.220.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xsightlabs.com header.i=@xsightlabs.com header.b="SVYpPVmJ";
-	dkim=pass (1024-bit key) header.d=xsightlabs.com header.i=@xsightlabs.com header.b="SVYpPVmJ"
-ARC-Seal: i=3; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=oqBa6PMw5kMk+x7au+ZNbggZgwtavx2JnSROkXqlbklMcfszcrtO3K7HF2bpjyPyOT8GizrZhfUjESGjdz5QxkHMvQwLe9Vvpb4vcLdN1mnQ72bkgTgp7ufJI99VmSOwmiccH4oaP+6LuppwYh7+fCX8AIomacW8eQdkXorp6MsJtIHEN+brNe/vBEEgVEgwvSYWe3+qOFEIJ9M5vT0b6ncDqoVLYJAjR5bP+vWNHIJN+65p6jepiSM0R/vx2HiKIiUtWmWv2WFGIFupgWQXPtU0wyQR1wUwp6x4s/4675DABPI9jgO9d3rVNm9vPcNy0FAwAcyh6dHfXB7exRVSfg==
-ARC-Message-Signature: i=3; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lTIfsH7b3AfVgLiQ44HtFWmol4EcH8d/vTOC3v3Dq6g=;
- b=mwuDx4ry4+fqmVgmAobVTsLQ2gMkNPZSyvIbQAi6EpXJbobmJKa2iE5NGmwjxVdp6BDZJV83QiVfWrUpTyiSrOU+Q+lmaOeXNB+GhX/LAWdXGtznVGKmywPGBQ2N1GoOmDKMmGVXsXeC2//9HdOaDlALZYR0Yq95rsWRBRvExGfqS3gcYXfu0+87lr1lkdylw7ooBhEG3i2Ec289HcJl0lTySjQ3/m6DSYm1S8BLAoKR7vJ22e5kDBX3+DNP3vgmyQprXQvNCLmolcuLl6up4zPds9z3qjiDtHCdUIt0La4t+iFdfzFIhD77NwDu5OIg9RFAGPL3X/mqEkkPPdC6Og==
-ARC-Authentication-Results: i=3; mx.microsoft.com 1; spf=pass (sender ip is
- 52.17.62.50) smtp.rcpttodomain=arm.com smtp.mailfrom=xsightlabs.com;
- dmarc=bestguesspass action=none header.from=xsightlabs.com; dkim=pass
- (signature was verified) header.d=xsightlabs.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=xsightlabs.com] dkim=[1,1,header.d=xsightlabs.com]
- dmarc=[1,1,header.from=xsightlabs.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xsightlabs.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lTIfsH7b3AfVgLiQ44HtFWmol4EcH8d/vTOC3v3Dq6g=;
- b=SVYpPVmJUfB/eUrmCuqakeusqZ4xptfEbCJxRzs3VUNlJKIE9mlrw3AguJPnGKDCikzzTF4REshY1kcs83Vg95s+oXQIOoO5yw9Rp4kkF/SBm0Wbt+q41m7vDUcwkSJK2gTOKhe61Ar4drrwsnFzr0+t37iR1kDUp4evYEw6KM0=
-Received: from AS4P251CA0014.EURP251.PROD.OUTLOOK.COM (2603:10a6:20b:5d2::14)
- by AM8P193MB0899.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:1c8::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.28; Thu, 13 Mar
- 2025 15:08:20 +0000
-Received: from AM2PEPF0001C70F.eurprd05.prod.outlook.com
- (2603:10a6:20b:5d2:cafe::f2) by AS4P251CA0014.outlook.office365.com
- (2603:10a6:20b:5d2::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.24 via Frontend Transport; Thu,
- 13 Mar 2025 15:08:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 52.17.62.50)
- smtp.mailfrom=xsightlabs.com; dkim=pass (signature was verified)
- header.d=xsightlabs.com;dmarc=bestguesspass action=none
- header.from=xsightlabs.com;
-Received-SPF: Pass (protection.outlook.com: domain of xsightlabs.com
- designates 52.17.62.50 as permitted sender) receiver=protection.outlook.com;
- client-ip=52.17.62.50; helo=eu-dlp.cloud-sec-av.com; pr=C
-Received: from eu-dlp.cloud-sec-av.com (52.17.62.50) by
- AM2PEPF0001C70F.mail.protection.outlook.com (10.167.16.203) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.20
- via Frontend Transport; Thu, 13 Mar 2025 15:08:19 +0000
-Received: from emails-8549281-6-mt-prod-cp-eu-2.checkpointcloudsec.com (ip-10-20-5-245.eu-west-1.compute.internal [10.20.5.245])
-	by mta-outgoing-dlp-862-mt-prod-cp-eu-2.checkpointcloudsec.com (Postfix) with ESMTPS id A322B805D4;
-	Thu, 13 Mar 2025 15:08:19 +0000 (UTC)
-ARC-Authentication-Results: i=2; mx.checkpointcloudsec.com; arc=pass;
-  dkim=none header.d=none
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed;
- d=checkpointcloudsec.com; s=arcselector01; t=1741878499; h=from : to :
- subject : date : message-id : content-type : mime-version;
- bh=lTIfsH7b3AfVgLiQ44HtFWmol4EcH8d/vTOC3v3Dq6g=;
- b=EoviC+Ek6Rwtah1ALnctI+4dIpVd3q++m6ZzIyZPM1V3U9iKgCGr9TitsJgSy8M1+J5eK
- VzAFBF3HzPDPpHy6pYMQLkiSsIBtyUBmOr2E7hXhDh/hykXa6R82JMHxd4tQqX+NGeZBDP1
- 7LbkDgWLddhLW4amtl7CKuAH93K2fwc=
-ARC-Seal: i=2; cv=pass; a=rsa-sha256; d=checkpointcloudsec.com;
- s=arcselector01; t=1741878499;
- b=pzisk7GCOMCQKkDuf/exyaSQfNHVSyQQdAchnk8tjZ0821PmgihVIKfhcopDevQQDGXZ7
- EcJC3S15yn45/5zNAxjlFKwRLdhbhPDssKdHPrM4k2ca1Izocbc7c14ILvfZRdBUJJx9QU9
- hTW8GGQQpMRMAYfZu6umpSr/R6moTKE=
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4SMEsk0m"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VIU8sa2RwTDAcLg3SZzze6CSQ8vcAzboNhmEpTRfuxrnw2lnBObL9K+BTxxUEo6AHC+wL6BolCYLVD2EsEiLiI6MeK8nud+s+xlUgb/9IcbdPhLIMu4hIXeDLGpish9zWrNJLqUeuugoai/8YHyzxSUgvHbiIAngGqQvRSe4V2b4Gy8lJo6zTdYvvEl2xy7y8VW00houYuYHdSVuSnca11gPAZkhRlQl08Yt7HdkLxWXCiwG3uif5qoLdFOPUGQsm7LrENXIEturxiUmVPjXfMhu7KZi5LY0S3tg9AEruNsn/j9z9ocharW48lhj/4xLqCi8g7V44JOqR3wPXIel4A==
+ b=w2bOadPGCOY6MXQF5kj6ZCmpEIpZD5mwlh6O3v4nDCzWbutD/c5AGWpIvHXF4VFLE6tZJ4Q5qRr6AkiGJkIFMV/EOem50gQ8cOMxQNAHsmDaVWVBZ0UvmoJkI8OGMx5h5zePOOpgzfzZvkAiJjykTyShCU8848TsOGXDedxD7kjC8j2nobS/2p2naR88co0ZMyIe4TIZ6s51arKjA/DNTSxoTdf/BWU2p/N/LW3T75Q8ZEMFen82Maj+5DrrMM+MbzD77on8Pi8RuvFdOOoO7Cz1YkWc6hxP2vjZH/IgcHD5LkegaY8aX7VLYx/5uPGWvVtEIeYRDLKvK8Xsv7SpKA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lTIfsH7b3AfVgLiQ44HtFWmol4EcH8d/vTOC3v3Dq6g=;
- b=OwlKzTrlVk9I6rBc/R3XRxgMMSQWZzGoa7eYI0duvldaQuqGYxrK8p9V74aCdtqagLOc2dnI/IgivAv9+42OqUVA9DJv2YfA82pIRIDYrrsOlG+1KbokBGEB0osBKNizZL9Soi8coiYiTtFbL6nRF6fMhHIW8OR7UI9nVsn6Vu8eTau99XHd8RNROhWUnqY/Sh3eZ3nVnDaOYsqb2BF2cFXopfo5T59m52wYda6n8Nd2816YALscjZwv/CPEpYNpaDzCsQ7jYXUoerzM5V8yzFVZ3DCaKX4AR2yi/u6FAIoMppzu0SwEDUCI4jFjEkbthIImUMfr0WJWVt1Hr20Lqg==
+ bh=5uZZEpiUiaU4OrSHyj5c7idszylG1gmbEhBxH90R+b8=;
+ b=fZxhaXjif2PdIMLvj17q68zFZatmZXo5HPTlO6teTDXcHzH2rxIcX7grMXUz77dGoTWDTntFdoEQHjo/8YmfX6rq3MB+TN91ijatGG3ptsA/OWozAUKprhU1hOYxch+5o0qcOkQuDCysQVyVtnI1LB2jNGlWkCHLrFNwE3e0zh/KSwZsn2rZn77MHFjAU9uPo/fcsXmjHvsEnzjC6mwEEq2yefLG18LUyl51E1AfbSUkk5s4jb1lMWKDU+1QvcHlRzKRXEh4BqdxlKUweFZghSvdQvOGbmQ0fwACaiCKslrzvv/046T8CkJwkFOynVToay+y0oQDMuiV1nT87A/T6w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xsightlabs.com; dmarc=pass action=none
- header.from=xsightlabs.com; dkim=pass header.d=xsightlabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xsightlabs.com;
- s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lTIfsH7b3AfVgLiQ44HtFWmol4EcH8d/vTOC3v3Dq6g=;
- b=SVYpPVmJUfB/eUrmCuqakeusqZ4xptfEbCJxRzs3VUNlJKIE9mlrw3AguJPnGKDCikzzTF4REshY1kcs83Vg95s+oXQIOoO5yw9Rp4kkF/SBm0Wbt+q41m7vDUcwkSJK2gTOKhe61Ar4drrwsnFzr0+t37iR1kDUp4evYEw6KM0=
-Received: from AS8P193MB2335.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:446::5)
- by PAXP193MB2171.EURP193.PROD.OUTLOOK.COM (2603:10a6:102:233::17) with
+ bh=5uZZEpiUiaU4OrSHyj5c7idszylG1gmbEhBxH90R+b8=;
+ b=4SMEsk0mLExRwase6NDtn7k/tah+9EC5W9izbt7rn9DkE9INplKvkgjadv9VdnZG/ghN5dbvQCaVjjFduo5N5GCcSZZ9H7c925edRwNli7y8wmI/UGQAZk1RL7Sl5By/I/K6rq9C7nvxTOLTnaJx6u013CY559yB4MzirV/XMgo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5311.namprd12.prod.outlook.com (2603:10b6:5:39f::7) by
+ CH3PR12MB8259.namprd12.prod.outlook.com (2603:10b6:610:124::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.25; Thu, 13 Mar
- 2025 15:08:08 +0000
-Received: from AS8P193MB2335.EURP193.PROD.OUTLOOK.COM
- ([fe80::7f2f:5721:1f5:aade]) by AS8P193MB2335.EURP193.PROD.OUTLOOK.COM
- ([fe80::7f2f:5721:1f5:aade%4]) with mapi id 15.20.8534.027; Thu, 13 Mar 2025
- 15:08:07 +0000
-Message-ID: <4ef4df06-c6f8-4151-96e1-78be58f32f54@xsightlabs.com>
-Date: Thu, 13 Mar 2025 11:08:04 -0400
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Thu, 13 Mar
+ 2025 15:08:31 +0000
+Received: from DM4PR12MB5311.namprd12.prod.outlook.com
+ ([fe80::a846:49eb:e660:1b5b]) by DM4PR12MB5311.namprd12.prod.outlook.com
+ ([fe80::a846:49eb:e660:1b5b%3]) with mapi id 15.20.8511.026; Thu, 13 Mar 2025
+ 15:08:31 +0000
+Message-ID: <a77432c5-a02a-451e-a316-594e8fdf5ba8@amd.com>
+Date: Thu, 13 Mar 2025 11:08:28 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/13] mailbox: pcc: Always clear the platform ack
- interrupt first
-To: Sudeep Holla <sudeep.holla@arm.com>, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>,
- Adam Young <admiyo@os.amperecomputing.com>
-References: <20250305-pcc_fixes_updates-v2-0-1b1822bc8746@arm.com>
- <20250305-pcc_fixes_updates-v2-2-1b1822bc8746@arm.com>
+Subject: Re: [PATCH] drm/amd/display: avoid NPD when ASIC does not support
+ DMUB
+To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
+ Harry Wentland <harry.wentland@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Tom Chung <chiahsuan.chung@amd.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, kernel-dev@igalia.com, stable@vger.kernel.org,
+ Daniel Wheeler <daniel.wheeler@amd.com>
+References: <20250205-amdgpu-dmub-v1-1-88151fe565d8@igalia.com>
+ <Z9LBt2ePtxJ0Nzz4@quatroqueijos>
 Content-Language: en-US
-From: Robbie King <robbiek@xsightlabs.com>
-In-Reply-To: <20250305-pcc_fixes_updates-v2-2-1b1822bc8746@arm.com>
-Content-Type: text/plain; charset=UTF-8
+From: Leo Li <sunpeng.li@amd.com>
+In-Reply-To: <Z9LBt2ePtxJ0Nzz4@quatroqueijos>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TL2P290CA0024.ISRP290.PROD.OUTLOOK.COM (2603:1096:950:3::8)
- To AS8P193MB2335.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:446::5)
+X-ClientProxiedBy: YQBPR0101CA0315.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:6c::16) To DM4PR12MB5311.namprd12.prod.outlook.com
+ (2603:10b6:5:39f::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AS8P193MB2335:EE_|PAXP193MB2171:EE_|AM2PEPF0001C70F:EE_|AM8P193MB0899:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7aaa6afa-6b20-4477-1f1d-08dd6240e412
-X-CLOUD-SEC-AV-Info: xsightlabs,office365_emails,sent,inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5311:EE_|CH3PR12MB8259:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9ae37956-0303-4822-1950-08dd6240ea8c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?cjJUSW9aV2ROaU9BckN1ZHRSeUl3cXg3eG5WRHgrRDl6NGtCQlhUdFBjdnpJ?=
- =?utf-8?B?Z3ppSkxlVjh0S3kxRXhpS3E0T1dVQnR2R3ozYnpkMTJPUGFFckZYUGcyN0tE?=
- =?utf-8?B?V3RHY2dXdlFsNmR2Z2FhTjRkSkU0U21SbE96L2JZRXhTemovVkFrUVlsdldN?=
- =?utf-8?B?OUc4RnE5YWVKR3FzSjk2TUkzYXVxQ2tVNSt5enczZXZXd3J4UVNKdU1tcHhD?=
- =?utf-8?B?cjg1TC9oMmd2Z2JXWnVkUmtSNUtkNkhsUUNzVEFRT3Z3SjVkWmNmZWl5QWhy?=
- =?utf-8?B?RlRYdzNuMU1kVU03QUE1STIzTDczMGdETnNzQ2VpRytzYTh3L0FnNHNNQ1dE?=
- =?utf-8?B?UnhVUngwZENGdXViblJsb3p4RS9FOU9pWGgvYWJNcUlLTjFNanp5cHRVQXo1?=
- =?utf-8?B?Z1R0MjMrTTRVeStqVktQc1o2S3BsZ3Z0L2VPV2JzMGlDaWR5R1JRUXgyamtR?=
- =?utf-8?B?VlBmdHM2a0YyWTNDMzRTV1lYYVVyZkZsdW4rM1VtMHJWNGNRaGZXSWZZTFh6?=
- =?utf-8?B?aUR6eElBUE5PUGtlY3RUS0V1U0xLU0V1VEpkT0Q1eEpzT3Z6b244NDdvSVRt?=
- =?utf-8?B?OWRxcnhjQlpDeGNwamRwaDJaYzYvMDZreXFuOHJ3VVlMZ2p4V3VUOWpOajBV?=
- =?utf-8?B?azlJK1lsSGdKNXdRaGhhOHVPaGdOUXVOM2FCRFY5OVo1MTFPVjhQV2VUem1X?=
- =?utf-8?B?NGlpVHF0c0UwbXhMcmZNQW5ybi9CdXdNb2dtVVhOQUpKMEVzS3BXaVQ3K29x?=
- =?utf-8?B?SE5YY0RpT25lNmtUOThhaTdOd1cydk5nYlVQYkNZSjk4TkN4cUhqMytWL2Z2?=
- =?utf-8?B?NCtHVjhkTE5MTG5Uakt5bDh0ZzJOSEZtZUVaaWxlVmNmM01zRG5HYWd4NkRa?=
- =?utf-8?B?amh0VnBkMitySzZBUEdoOTFIY09rdnNaaE4vUGxXUEVRVVVRRFFWdUtkdWlz?=
- =?utf-8?B?S2xuMG83U05oZEg5Nzg2cDB2eE8xVFVjcXBtLzZKOWRaaTlzRWxqbk96bWw1?=
- =?utf-8?B?Mk50cWFGVENhZXRvSU5kNUpHSTUzRHZWZWlhTXg2anAyV3RXRGFwb0h3NmNj?=
- =?utf-8?B?NXNFS3RzaXNYK1FwRnZVS3IxZEF0Ri9kN2JKQithQzA3U1Vsb01BRnltRGpx?=
- =?utf-8?B?ZUZva2Y1clc1akNieFplV0M5eFBNbnBFaGZ0S1dYSDRsdDNIVG9kcVhBSGxR?=
- =?utf-8?B?dDBpOWNwRmZZS2Fkb0ZyY0VheE1QL1dTUTExbVd1TTJJbmhOZFNwZTdmZ3c2?=
- =?utf-8?B?dXJVSDBGRnF1Q1hQZnhkWHJJNnI5YnlxUjY4ck1ybmZOdGg4N3RhdHdwakZv?=
- =?utf-8?B?RVJ2bTdUSXlhRWJKNmcyM01VQW1XaHROdnZnTFJlV1ZySWwvU1cyUFZMNDdy?=
- =?utf-8?B?Yk9KME5ra3ZibVoxYzAwQ210RkFsNk9pZWJNZnlwM2tFeno1bmJGWHZyS0hr?=
- =?utf-8?B?NGdMaEZOaXRCK1ZJamwreExVWmZNQnZhUzJ3VmIwajlPbWtQOXNmMnFQY3pR?=
- =?utf-8?B?Vi9EQXJNODh2TlR6M21VMzZpNlpGSlVkTjdMazNBUW9qSXpmNTNzZE9qaHZw?=
- =?utf-8?B?WHJMa2t0UWNobG9UYlo4R1ZscGRKYVhXU0RXY3BxU3FhZTBmdm9vMEU2aXla?=
- =?utf-8?B?Q2NsRXJWMk85dEUvVUROK2U5Ly96NFJFQTZSWmh4Rm9uMUwzUjF2aFp3WTFh?=
- =?utf-8?B?TndzcERvWVczc09MdVYyY3ZEWHRXdm9ZZ3MxZ1ZIdWpsNmtqYmNRNjczSlJS?=
- =?utf-8?B?Wlh2SDVsOEliR1ZHUVBRNVNnZ1dRMGtwZ3FUeWNINjk5amVJUGpOMDZZRFJv?=
- =?utf-8?B?MFpSeG4wZFZ6aUcrcytadVpGK1VCSERKMnZXdGpnZEV4OFpZWEI1b1g4d0xq?=
- =?utf-8?Q?UZpHqULo1bUdD?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8P193MB2335.EURP193.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXP193MB2171
-X-CLOUD-SEC-AV-INT-Relay: sent<mta-outgoing-dlp-mt-prod-cp-eu-2.checkpointcloudsec.com>
-X-CLOUD-SEC-AV-UUID: 1bb8308b73c543afa99abedf9ded8a43:xsightlabs,office365_emails,sent,inline:62ed86a2fb091e1d53df26aa891d540a
-Authentication-Results-Original: mx.checkpointcloudsec.com; arc=pass;
- dkim=none header.d=none
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM2PEPF0001C70F.eurprd05.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	f134e303-10d9-4b98-c754-08dd6240dc7d
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|14060799003|376014|36860700013|82310400026|1800799024|35042699022;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZndvVGpDSlFxbExqTG9xa2tmR1FkdzNPMjdMUmtwMVRMZk95V2NVdm9jUjhW?=
- =?utf-8?B?VnFmdkdPcUhkaFRaNEEzdTdsNW9vNU9jOVpBRlkzcVNsNVBrdDRUamNWcmdG?=
- =?utf-8?B?TXpVakphSjhtcDJFUldGcGsxbEUxdEtoZDRxWmdLalJmYVdMWWU2SDlyT2ZF?=
- =?utf-8?B?UXFDcldNRVByNStldHREQ2x6eFo3ZEVobUZrNXFoenRXZUgzSms1UGRPbTNK?=
- =?utf-8?B?aEJDTnFvRHdxTVF2UVdwMDZUaFRYQmxGeTgvRndDTmorVkwrM25XTEsrUUFO?=
- =?utf-8?B?dkx3QnRudzlNUGIvU21GWkhweEgvd2lGSEkvbEVKeGJIWjkzdGtTcm1CWEJN?=
- =?utf-8?B?UTNZcDJrT1BhcGZWbXpoNmp5ZzVxS1B2VFZkTFdiN0VobENINDNYbjV3ZEoy?=
- =?utf-8?B?d2U4b0Uxdi91czFWaDdrdVJGYjVrU2U1RWRYMUhEZU5xdlZPZFF5bzJFS2Fl?=
- =?utf-8?B?QzVtelZKYS90ODQ3NHZZT3JGQVY5Ky9tNzE0Y0MvL2czeE10NmQ3UTczNWNM?=
- =?utf-8?B?TUc5dXd0ckhPK0VVVGNqWHFXQXljU21zZTdWZ2toR3hZMkF3MXhJUVNKTk1q?=
- =?utf-8?B?L0RsNzN3a3pmVG1nRkE3VFRDcnZhUWQ2ZjFYWFRHeU1tOWFSeUNScnBCZTdF?=
- =?utf-8?B?NmZaWjFodGFMVU40K2g3OGd1T09BS3pXZVJhazBPdkNzWU83bndrcmhUa3Ez?=
- =?utf-8?B?ZkpnWFB4YWN5Nk50Vks4MzJzUTRqRUVwNmJaRGtkdWRQRFJMMVkvTXZ0YTJH?=
- =?utf-8?B?MVcyVzJxc3BwaEZCdllPUzU1bGgxWm5xS2FqOU8rc0dGTEx5Z2hrelhhV0h2?=
- =?utf-8?B?QWhIUlhRaWhKOXNvbUdBcDZUQjAvSituSmN0V09CR3RIVi9SWHA3QStIRU80?=
- =?utf-8?B?MFNudTkyd3Jta0Z2N3NFZkk2ZkRxckR4YVBRM3ArbGRlWnBEZTE5a0E1UzJK?=
- =?utf-8?B?dVVRZHpJcjhqL3pkaEYwdFVFNU5KTTNqakRyK001UjJqVUpFTGRNbUVFRE9I?=
- =?utf-8?B?aVpyeW5GWkxQZVdlenora3B1SGlFNCs3WGlDS0RMNHZXNEpyT3ZGejlvVmQ4?=
- =?utf-8?B?aFcyYlJuNEllWE0rN2VCOS9vZjhES0VJZkJma0ZpUlk1L1FZTUtQM2RSc2hI?=
- =?utf-8?B?Z2hwTXB3TFJWQXJEWENhNmtFSFNBc0FSYmVOM25hcFlQT01icTVJR1JUYmtS?=
- =?utf-8?B?aUw3bGhDT3FrSEJ4SEc5TEMrdzFoMkZGK0t6ODlITkdIR0o5RXh1NXRDeFE5?=
- =?utf-8?B?VUUvQlppZHhvYXp1TlpUZENZS2tJT0c2RkF3aTM5SFNjOWd6OW42UkRxQWlv?=
- =?utf-8?B?ejlaTDZSYndkeEozbTg2OTZLaTdHQ0h2RGtJL05VVmRzQnVnQ0NuQm9tYlJJ?=
- =?utf-8?B?Q2FLdGR3V083QUZGMy9tdUsyclRNRkFYK2t2MDZDR3pOV2d1cmljdHZlVkVU?=
- =?utf-8?B?ZGl0cG04bnh6alBNa2JKbC9MSFN0ZW91U0ZPY2wydVdwTFBLN1hRTk82UmhG?=
- =?utf-8?B?NGxuc0JGaDZNUWxWVTRRZzFTOXN4NjJ4ZkhzWmdwTll6aHNMdjRvSWk5VDFZ?=
- =?utf-8?B?QjlPVFhCZlVDbXp1N1ZEWXlnTXpjWjlLK2toL3REc3RqQkkwUDlxVFlpZldC?=
- =?utf-8?B?UGExblgrMUhITloxd2lJdUJSK2ltQ1N4NVF3VmVMK2M3d0d1clVxNGY3Zm5p?=
- =?utf-8?B?clNQaTNwam81WTQ5NmFFaU5WWFU2TGhuSzBFUjUrR1J3VkxqNndmQUhXTkxU?=
- =?utf-8?B?M01ZQ1IwMkViazMzTkwxYllGb24zS1ErOElxSkdvbUFFbitwQ3JSSzNVeFow?=
- =?utf-8?B?WGpqRWNUbXNPVGp4dnd2WGgyOHJId0F4cWVKc1dLeXJxeTh0K0ZpSWlta0Zj?=
- =?utf-8?B?Zk5qNFVxN2o3bjM5YTk4b0RQeksyTWJmTDhJZmJWUVJXWUtZcTFNMnpBSHhU?=
- =?utf-8?B?dkQwaFRKTzhSTmdjOEtlRi9oYllIR1NSS1pDVnNWSlJ4Mm95VVpJZ0hHdVBD?=
- =?utf-8?B?dXhMU2k4RzJRPT0=?=
+	=?utf-8?B?VnJnazgweFBUNWs5RWx2YWZmZFR1R0t2ZWRxQ1RadXFKdVlrYkZ4b21aWWYy?=
+ =?utf-8?B?Qm83c05LMHN5NDZsUExxR1pkQndiYTlGQWt3c2E1cDRVbmQ1SU15RHNNL3E5?=
+ =?utf-8?B?bm1jbG1SZjEzclNSOXg2WUpVb3A2SVlPVmlVcFlQT005QXY1SkRrc3ZqaWRn?=
+ =?utf-8?B?cml3MDg0dTJKV1d0TjZaN0NBL1lFc202bE9xcXNkdTNYcVkrbzhtOXdUYlVS?=
+ =?utf-8?B?VE5JOFdZUHg0SEFxQ1ZrZGdpNmswcmpTOEpxMkNRUG5VN2JocTl6Zkg3S0da?=
+ =?utf-8?B?Tys2SVdXN0l4WWF0UGxyZzgwcyt6SEdpOFY2TnJZUG9TaExvTlhjSEsyNkV3?=
+ =?utf-8?B?SHhTSDA5aW51QlVhWGpiZVNsbmJEeFhFd2FNMmgvMncwcktneWx3Qk9CS0RZ?=
+ =?utf-8?B?KzdRdXF0d1VMOWtXNHdnTSt0Y2V4VTlsMUVwR2NXUCtwY0pzVmZnT3RnSng4?=
+ =?utf-8?B?ZnMyRHNlYmNJck8yVGR3cFlPZGdML1BhWVZWZkxHUWdyMHBUaWl1ekJpSzc5?=
+ =?utf-8?B?YUI2ZklQSnNobmJyd0l0dUVDMGxEVlEwdldTZ0lhVDFmSWRDalRBMHlHSTJD?=
+ =?utf-8?B?TEJ4SjRpOFR0SkNFeTZRWExJTTFWbmNNUWJtSUVyaHZ1by82QjdQVkUzOTEv?=
+ =?utf-8?B?ZVRPV0RmcnVqYlBvSHhMRmgxWEJLT3pPTVdDRnRHZVI0Q1hPbys3Z3hWd0k2?=
+ =?utf-8?B?dHA4VlUyREw1ZU01QkxDRXIrZ0p5UEJKanorOCtpeGFuL3pyMStjS2ZIbnJX?=
+ =?utf-8?B?RjFyZk1XclQvV01HYXJycnlnUC9iZVZXWCt6Yjd0VFVIZU9PUk1QUjl0bTA3?=
+ =?utf-8?B?SldGK0xXRjNvRTZNT0JXUC9yaXBMb094QlpsRkFyeU1xajcxUmhNemlLUm4x?=
+ =?utf-8?B?Uzg2c2Fib1dkakNYTWVEcnNrb1g2SXpvaDdpalpnK2kzZlFJOFNPTGhhYW1W?=
+ =?utf-8?B?VmVITHpFc2EzekZYdHVBWERaVTVYTVdpMXBpUGt3RlVxS3E2OEFNSTExVnlw?=
+ =?utf-8?B?TmpGZ1kxOWYzcHhFUVNUcHBlRlliLzhtMERJOW1iREs4MGY0T1VPYWJRcU1a?=
+ =?utf-8?B?Qm12Z0E1T0kxUXExWVFlZGNiYXQwSWpSZTFJMFFZY3IwWE5JWXZ4MWFMSk83?=
+ =?utf-8?B?UThJb3NrejU4K21yZU5DeE5tNU5Xc2lYU1VXd2RpQVhsNXYweEtTNGRyVnBo?=
+ =?utf-8?B?enFHd0FNWUE0VExQbHEvUmxRR285aSswL21kdEFXL01zWlRUcjJjYUxKRits?=
+ =?utf-8?B?OGJmQ1BEU1FFWXNWRHh6WEZHQmlmbXh3VmJuLzFtM09UQTVYY2puSjdCNTh3?=
+ =?utf-8?B?bUFsOVF1UWV6dXNaUUgyMnlia2hGVmNGd2s2QXpSUkRnSkIydnJCcmNXcWlJ?=
+ =?utf-8?B?d2JsaFl3cWh5WmtMVGpNNVlPOUdwMjVBMEJGZ0NDSkM0TnhXb2pGZ2huUnJa?=
+ =?utf-8?B?cExTZmhNbzRIbkdVUTZlVk1jS0ZWdVkxZkx4K1JieG5CQTFIK3lBVThlbFdB?=
+ =?utf-8?B?UEM4NlIvdHY2VXJJd3EweGcwcU9KZmZOWFhYUmNPR3c3eldsUkFic3B6YVVO?=
+ =?utf-8?B?Q1dkN2VFeVJ4eHpBdkJqNlF3a1ptbjVWRUdZR1l4MFpWSDE1YSs5Qlhmc3B2?=
+ =?utf-8?B?KzlnemhnUnRLaHdUd3Bua1MybnJyK2I5Y2I2QzBtRWpxSHMrQUVBVnBlMEUz?=
+ =?utf-8?B?YStrcnYyYmVWc1lneStERTJ1TklhWmY5WHErK01WZklQaHIzVWdldTIvR3Zh?=
+ =?utf-8?B?SDMrc1FBV1lQYXUyK0RZMVNPS1hrTFdTWDhmS3FoeVpRSHAzN0NhWTRveC9k?=
+ =?utf-8?B?Umh3NnA3bGYzTVJJc0ZRUnE3ZFNIYnU4aExPWUVTWkhNZTh0VFlCQXFOdjZv?=
+ =?utf-8?Q?k0+MouLGgXRzc?=
 X-Forefront-Antispam-Report:
-	CIP:52.17.62.50;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:eu-dlp.cloud-sec-av.com;PTR:eu-dlp.cloud-sec-av.com;CAT:NONE;SFS:(13230040)(14060799003)(376014)(36860700013)(82310400026)(1800799024)(35042699022);DIR:OUT;SFP:1102;
-X-OriginatorOrg: xsightlabs.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 15:08:19.9362
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5311.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ODgzMmcrV01keTFlMjJONDVmWXdCV1pFd0svNWRyOHp5dE12R2s2YmhPM0FP?=
+ =?utf-8?B?VUFnd1MzZnZObEdlNGVOWEt0emVDRkg1V0xHV1JuOGszWWZwSkRHTVB4WlQx?=
+ =?utf-8?B?Y29DLzVJYUFJVzI2RTVUbDJxNkRSL1ZvYmVsQlVkUEVHWlltUjNPdGR2c0pn?=
+ =?utf-8?B?anVOMXZCVkFURVBSMmVpOHRFamZ6clRMeXVhZWVBNGN1d0diN0V2ZjVJWkov?=
+ =?utf-8?B?L1FiTUFWYzJGdVZXUnQ5N0o1MXNGcjVGVDVTdkkxQlA1RTJ5c3YyTXZTSTVl?=
+ =?utf-8?B?ckhrYTlORlU5YytlVUtLZklQMjUra0V3eWpIdzBUQnQ3cFpUNlZGL3lCZmpy?=
+ =?utf-8?B?MkRieG9odUt5ZElBSFlCNDg5cjBLYXI3Zzh1dXJ5STZkOTFjZFhuVmR4ZnJU?=
+ =?utf-8?B?MktyYWZUTkR5bTkvMWludnRUbmgvL25RVkpOUHZReEJsQTRDRU5ScHc0NnN4?=
+ =?utf-8?B?TkFCREJXRFovdndTWS9WaEZxajJtNUp0WGxKTDRNaTRsT3o4cHRMQlh0aStM?=
+ =?utf-8?B?N0V5RFFDdW5NZlVnQXBFcHcxUHZ1ZXN4Y2NmRlo0VHYvRWpEZ2JSUTkwZkgw?=
+ =?utf-8?B?TEhJTTBmeGlyNlFHMVpWODJiZGt6M1Rwa2RyS0wrZVBQeEo5MlB0SkU4SzhV?=
+ =?utf-8?B?Zk5nL0lMVzdMVi81Z3VLaWJ0Vmd5b08wVHNKbkttT00yMW4vSGxvU2poeVor?=
+ =?utf-8?B?bmMxWEtFVkpsMHRlWTNHUzl3TXpPeDYwWldlNzlSajVGbkYvZlE0TnV1cVpE?=
+ =?utf-8?B?emdQZ2JPWnBIRWUwVUIxTVJacUlMUjI2bUdQRktlVHFrYWZISmhiemRVWUp0?=
+ =?utf-8?B?eDNQUDNhcDJSclpvaU12OThtbUlnTDl0YjY4UytyVmt0cHdZQ3pXa2pjQm5Z?=
+ =?utf-8?B?NkxaZnhjb1ByaWREZnlDUU5kL3JyVDMvYWRMcTdlVmdOYUJ6aTFWbXJlNGVy?=
+ =?utf-8?B?TE5GOERwdGlQODZyNjAvaHp4ZXFQbEo4ZHlINUxsNjhaQll4VGhSNTBPSlZq?=
+ =?utf-8?B?dFQ2QWxMbkRkUDhLaW5mSWJ6WjRReS9WN2dVUk9iRW9kVXh0NWNPWFhTSDVB?=
+ =?utf-8?B?em9rWUlyYkYxckw4NG01bFdUVkFFWG0zakV2eEhUQk4vblJjamJ6TE5ucVU1?=
+ =?utf-8?B?TndyL056U1pOdGZCbW1mYS81VXBRYXo2ZjJUbmhWWm5HdVdNRFBWNW1DY1dZ?=
+ =?utf-8?B?d1FRV2d2Q2dGU3VhOUhiZFhnWGVVRXpGUUoyR0kzU2gvaVhBMVFxRnlmdVVt?=
+ =?utf-8?B?WmZ4ZUFzQU5PSUhETGJ5VUN2MDhiYll4RllPeXZCYWs5NVJaQmQyOXlOVTNZ?=
+ =?utf-8?B?MGpEWGlMRFF2cHNlRzR6MFQ3ZHU4bnJlYkV0dXNiYXBWY1hmMmw0aXhvV0ZQ?=
+ =?utf-8?B?QW9OdTdRM2NQUFFONmZQWCswMXB3SWxlL2syZ0tYNzhUMVBIN2FJcjlHUzZX?=
+ =?utf-8?B?YUhNK0lOR3RSVzkrWTVOOVlncnY2Y0RkYWZRc0Jaby9Od042WkFPVEJaa2g2?=
+ =?utf-8?B?NkI5ZWROclFYNTRSUk10Wk1xc0ZQRDZSM0pHdklQUFF3Mk9HMFJaZWVGYVBO?=
+ =?utf-8?B?MmlHZEozcHhjWlJ6VU55VElhV3ZUNUltaHkwZitNWnBnTWd6c3RlUStrK0xF?=
+ =?utf-8?B?cTZ2UUpiS21vOHl5MC9pWG5meHpmY2hHNjBZdjd0M3djUVVwMWUwWERIRUJX?=
+ =?utf-8?B?ZndleVpoKzNMYldpMlJmWFJWcFJ3QUllZTN1QUEzNWx4Y2laUEVBaEVZU0hJ?=
+ =?utf-8?B?Y29NZW52cTZwdUlDZkVLYzBxM0JaRHBLYVNLK0VmNjgyMzFMQ2w5S3VlbzFE?=
+ =?utf-8?B?VyswTXZnY1pNNGQxK2pKSEwwWkVSTFRCQm01dVlEbGpJSUNHNkViRUNOb3d4?=
+ =?utf-8?B?WFA3SEY1ZXkzK2ZwSXNEcUhQWC9YcGNxZlBRZ3h6a2JEUnNxb2s0R0tqR0U2?=
+ =?utf-8?B?MGY1LzJUY3IvU2VieWxDY0swY3cvYkJ1aktLU0R5cjZ2VXh0ZXh2akxBSlBV?=
+ =?utf-8?B?UFdIQmcyTkR4RUQ5b0xDaFF3QTVwKzNMbU5HT2dwYjlFZE13aTBNZXZ5MXUz?=
+ =?utf-8?B?bkl1dEhpU0F5bll6SG5BZU8rZ0Z5MElyWkY1TmdQdml6bU1ZYjV5bVhPYVVh?=
+ =?utf-8?Q?GP27U+zhlj6yS9z3CknC8EGOo?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ae37956-0303-4822-1950-08dd6240ea8c
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5311.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 15:08:31.0879
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7aaa6afa-6b20-4477-1f1d-08dd6240e412
-X-MS-Exchange-CrossTenant-Id: 646a3e34-83ea-4273-9177-ab01923abaa9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=646a3e34-83ea-4273-9177-ab01923abaa9;Ip=[52.17.62.50];Helo=[eu-dlp.cloud-sec-av.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM2PEPF0001C70F.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8P193MB0899
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gyHtyisHwPJv/22x8uefKbODWVAFkP1uB8JX+GPAUYmzuf2XW8jSnx/oZkKbMN+/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8259
 
-On 3/5/2025 11:38 AM, Sudeep Holla wrote:
-> The PCC mailbox interrupt handler (pcc_mbox_irq()) currently checks
-> for command completion flags and any error status before clearing the
-> interrupt.
-> 
-> The below sequence highlights an issue in the handling of PCC mailbox
-> interrupts, specifically when dealing with doorbell notifications and
-> acknowledgment between the OSPM and the platform where type3 and type4
-> channels are sharing the interrupt.
-> 
-> -------------------------------------------------------------------------
-> | T |       Platform Firmware         |    OSPM/Linux PCC driver        |
-> |---|---------------------------------|---------------------------------|
-> | 1 |                                 | Build message in shmem          |
-> | 2 |                                 | Ring Type3 chan doorbell        |
-> | 3 | Receives the doorbell interrupt |                                 |
-> | 4 | Process the message from OSPM   |                                 |
-> | 5 | Build response for the message  |                                 |
-> | 6 | Ring Platform ACK interrupt on  |                                 |
-> |   |  Type3 chan to OSPM             | Received the interrupt          |
-> | 7 | Build Notification in Type4 Chan|                                 |
-> | 8 |                                 | Start processing interrupt in   |
-> |   |                                 |  pcc_mbox_irq() handler         |
-> | 9 |                                 | Enter PCC handler for Type4 chan|
-> |10 |                                 | Check command complete cleared  |
-> |11 |                                 | Read the notification           |
-> |12 |                                 | Clear Platform ACK interrupt    |
-> |   | No effect from the previous step yet as the Platform ACK          |
-> |   |  interrupt has not yet been triggered for this channel            |
-> |13 | Ring Platform ACK interrupt on  |                                 |
-> |   | Type4 chan to OSPM              |                                 |
-> |14 |                                 | Enter PCC handler for Type3 chan|
-> |15 |                                 | Command complete is set.        |
-> |16 |                                 | Read the response.              |
-> |17 |                                 | Clear Platform ACK interrupt    |
-> |18 |                                 | Leave PCC handler for Type3     |
-> |19 |                                 | Leave pcc_mbox_irq() handler    |
-> |20 |                                 | Re-enter pcc_mbox_irq() handler |
-> |21 |                                 | Enter PCC handler for Type4 chan|
-> |22 |                                 | Leave PCC handler for Type4 chan|
-> |23 |                                 | Enter PCC handler for Type3 chan|
-> |24 |                                 | Leave PCC handler for Type3 chan|
-> |25 |                                 | Leave pcc_mbox_irq() handler    |
-> -------------------------------------------------------------------------
-> 
-> The key issue occurs when OSPM tries to acknowledge platform ack
-> interrupt for a notification which is ready to be read and processed
-> but the interrupt itself is not yet triggered by the platform.
-> 
-> This ineffective acknowledgment leads to an issue later in time where
-> the interrupt remains pending as we exit the interrupt handler without
-> clearing the platform ack interrupt as there is no pending response or
-> notification. The interrupt acknowledgment order is incorrect.
-> 
-> To resolve this issue, the platform acknowledgment interrupt should
-> always be cleared before processing the interrupt for any notifications
-> or response.
-> 
-> Reported-by: Robbie King <robbiek@xsightlabs.com>
-> Reviewed-by: Huisong Li <lihuisong@huawei.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Tested-by: Robbie King <robbiek@xsightlabs.com>
+
+On 2025-03-13 07:29, Thadeu Lima de Souza Cascardo wrote:
+> On Wed, Feb 05, 2025 at 10:06:38AM -0300, Thadeu Lima de Souza Cascardo wrote:
+>> ctx->dmub_srv will de NULL if the ASIC does not support DMUB, which is
+>> tested in dm_dmub_sw_init.
+>>
+>> However, it will be dereferenced in dmub_hw_lock_mgr_cmd if
+>> should_use_dmub_lock returns true.
+>>
+>> This has been the case since dmub support has been added for PSR1.
+> 
+> This bug has landed on stable trees. Any chance for a review here?
+> 
+> Thanks.
+> Cascardo.
+
+Thanks for the ping and fix!
+
+Reviewed-by: Leo Li <sunpeng.li@amd.com>
+
+> 
+>>
+>> Fix this by checking for dmub_srv in should_use_dmub_lock.
+>>
+>> [   37.440832] BUG: kernel NULL pointer dereference, address: 0000000000000058
+>> [   37.447808] #PF: supervisor read access in kernel mode
+>> [   37.452959] #PF: error_code(0x0000) - not-present page
+>> [   37.458112] PGD 0 P4D 0
+>> [   37.460662] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+>> [   37.465553] CPU: 2 UID: 1000 PID: 1745 Comm: DrmThread Not tainted 6.14.0-rc1-00003-gd62e938120f0 #23 99720e1cb1e0fc4773b8513150932a07de3c6e88
+>> [   37.478324] Hardware name: Google Morphius/Morphius, BIOS Google_Morphius.13434.858.0 10/26/2023
+>> [   37.487103] RIP: 0010:dmub_hw_lock_mgr_cmd+0x77/0xb0
+>> [   37.492074] Code: 44 24 0e 00 00 00 00 48 c7 04 24 45 00 00 0c 40 88 74 24 0d 0f b6 02 88 44 24 0c 8b 01 89 44 24 08 85 f6 75 05 c6 44 24 0e 01 <48> 8b 7f 58 48 89 e6 ba 01 00 00 00 e8 08 3c 2a 00 65 48 8b 04 5
+>> [   37.510822] RSP: 0018:ffff969442853300 EFLAGS: 00010202
+>> [   37.516052] RAX: 0000000000000000 RBX: ffff92db03000000 RCX: ffff969442853358
+>> [   37.523185] RDX: ffff969442853368 RSI: 0000000000000001 RDI: 0000000000000000
+>> [   37.530322] RBP: 0000000000000001 R08: 00000000000004a7 R09: 00000000000004a5
+>> [   37.537453] R10: 0000000000000476 R11: 0000000000000062 R12: ffff92db0ade8000
+>> [   37.544589] R13: ffff92da01180ae0 R14: ffff92da011802a8 R15: ffff92db03000000
+>> [   37.551725] FS:  0000784a9cdfc6c0(0000) GS:ffff92db2af00000(0000) knlGS:0000000000000000
+>> [   37.559814] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [   37.565562] CR2: 0000000000000058 CR3: 0000000112b1c000 CR4: 00000000003506f0
+>> [   37.572697] Call Trace:
+>> [   37.575152]  <TASK>
+>> [   37.577258]  ? __die_body+0x66/0xb0
+>> [   37.580756]  ? page_fault_oops+0x3e7/0x4a0
+>> [   37.584861]  ? exc_page_fault+0x3e/0xe0
+>> [   37.588706]  ? exc_page_fault+0x5c/0xe0
+>> [   37.592550]  ? asm_exc_page_fault+0x22/0x30
+>> [   37.596742]  ? dmub_hw_lock_mgr_cmd+0x77/0xb0
+>> [   37.601107]  dcn10_cursor_lock+0x1e1/0x240
+>> [   37.605211]  program_cursor_attributes+0x81/0x190
+>> [   37.609923]  commit_planes_for_stream+0x998/0x1ef0
+>> [   37.614722]  update_planes_and_stream_v2+0x41e/0x5c0
+>> [   37.619703]  dc_update_planes_and_stream+0x78/0x140
+>> [   37.624588]  amdgpu_dm_atomic_commit_tail+0x4362/0x49f0
+>> [   37.629832]  ? srso_return_thunk+0x5/0x5f
+>> [   37.633847]  ? mark_held_locks+0x6d/0xd0
+>> [   37.637774]  ? _raw_spin_unlock_irq+0x24/0x50
+>> [   37.642135]  ? srso_return_thunk+0x5/0x5f
+>> [   37.646148]  ? lockdep_hardirqs_on+0x95/0x150
+>> [   37.650510]  ? srso_return_thunk+0x5/0x5f
+>> [   37.654522]  ? _raw_spin_unlock_irq+0x2f/0x50
+>> [   37.658883]  ? srso_return_thunk+0x5/0x5f
+>> [   37.662897]  ? wait_for_common+0x186/0x1c0
+>> [   37.666998]  ? srso_return_thunk+0x5/0x5f
+>> [   37.671009]  ? drm_crtc_next_vblank_start+0xc3/0x170
+>> [   37.675983]  commit_tail+0xf5/0x1c0
+>> [   37.679478]  drm_atomic_helper_commit+0x2a2/0x2b0
+>> [   37.684186]  drm_atomic_commit+0xd6/0x100
+>> [   37.688199]  ? __cfi___drm_printfn_info+0x10/0x10
+>> [   37.692911]  drm_atomic_helper_update_plane+0xe5/0x130
+>> [   37.698054]  drm_mode_cursor_common+0x501/0x670
+>> [   37.702600]  ? __cfi_drm_mode_cursor_ioctl+0x10/0x10
+>> [   37.707572]  drm_mode_cursor_ioctl+0x48/0x70
+>> [   37.711851]  drm_ioctl_kernel+0xf2/0x150
+>> [   37.715781]  drm_ioctl+0x363/0x590
+>> [   37.719189]  ? __cfi_drm_mode_cursor_ioctl+0x10/0x10
+>> [   37.724165]  amdgpu_drm_ioctl+0x41/0x80
+>> [   37.728013]  __se_sys_ioctl+0x7f/0xd0
+>> [   37.731685]  do_syscall_64+0x87/0x100
+>> [   37.735355]  ? vma_end_read+0x12/0xe0
+>> [   37.739024]  ? srso_return_thunk+0x5/0x5f
+>> [   37.743041]  ? find_held_lock+0x47/0xf0
+>> [   37.746884]  ? vma_end_read+0x12/0xe0
+>> [   37.750552]  ? srso_return_thunk+0x5/0x5f
+>> [   37.754565]  ? lock_release+0x1c4/0x2e0
+>> [   37.758406]  ? vma_end_read+0x12/0xe0
+>> [   37.762079]  ? exc_page_fault+0x84/0xe0
+>> [   37.765921]  ? srso_return_thunk+0x5/0x5f
+>> [   37.769938]  ? lockdep_hardirqs_on+0x95/0x150
+>> [   37.774303]  ? srso_return_thunk+0x5/0x5f
+>> [   37.778317]  ? exc_page_fault+0x84/0xe0
+>> [   37.782163]  entry_SYSCALL_64_after_hwframe+0x55/0x5d
+>> [   37.787218] RIP: 0033:0x784aa5ec3059
+>> [   37.790803] Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 77 1d 48 8b 45 c8 64 48 2b 04 25 28 00 0
+>> [   37.809553] RSP: 002b:0000784a9cdf90e0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>> [   37.817121] RAX: ffffffffffffffda RBX: 0000784a9cdf917c RCX: 0000784aa5ec3059
+>> [   37.824256] RDX: 0000784a9cdf917c RSI: 00000000c01c64a3 RDI: 0000000000000020
+>> [   37.831391] RBP: 0000784a9cdf9130 R08: 0000000000000100 R09: 0000000000ff0000
+>> [   37.838525] R10: 0000000000000000 R11: 0000000000000246 R12: 0000025c01606ed0
+>> [   37.845657] R13: 0000025c00030200 R14: 00000000c01c64a3 R15: 0000000000000020
+>> [   37.852799]  </TASK>
+>> [   37.854992] Modules linked in:
+>> [   37.864546] gsmi: Log Shutdown Reason 0x03
+>> [   37.868656] CR2: 0000000000000058
+>> [   37.871979] ---[ end trace 0000000000000000 ]---
+>> [   37.880976] RIP: 0010:dmub_hw_lock_mgr_cmd+0x77/0xb0
+>> [   37.885954] Code: 44 24 0e 00 00 00 00 48 c7 04 24 45 00 00 0c 40 88 74 24 0d 0f b6 02 88 44 24 0c 8b 01 89 44 24 08 85 f6 75 05 c6 44 24 0e 01 <48> 8b 7f 58 48 89 e6 ba 01 00 00 00 e8 08 3c 2a 00 65 48 8b 04 5
+>> [   37.904703] RSP: 0018:ffff969442853300 EFLAGS: 00010202
+>> [   37.909933] RAX: 0000000000000000 RBX: ffff92db03000000 RCX: ffff969442853358
+>> [   37.917068] RDX: ffff969442853368 RSI: 0000000000000001 RDI: 0000000000000000
+>> [   37.924201] RBP: 0000000000000001 R08: 00000000000004a7 R09: 00000000000004a5
+>> [   37.931336] R10: 0000000000000476 R11: 0000000000000062 R12: ffff92db0ade8000
+>> [   37.938469] R13: ffff92da01180ae0 R14: ffff92da011802a8 R15: ffff92db03000000
+>> [   37.945602] FS:  0000784a9cdfc6c0(0000) GS:ffff92db2af00000(0000) knlGS:0000000000000000
+>> [   37.953689] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [   37.959435] CR2: 0000000000000058 CR3: 0000000112b1c000 CR4: 00000000003506f0
+>> [   37.966570] Kernel panic - not syncing: Fatal exception
+>> [   37.971901] Kernel Offset: 0x30200000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+>> [   37.982840] gsmi: Log Shutdown Reason 0x02
+>>
+>> Fixes: b5c764d6ed55 ("drm/amd/display: Use HW lock mgr for PSR1")
+>> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+>> Cc: stable@vger.kernel.org
+>> Cc: Sun peng Li <sunpeng.li@amd.com>
+>> Cc: Tom Chung <chiahsuan.chung@amd.com>
+>> Cc: Daniel Wheeler <daniel.wheeler@amd.com>
+>> Cc: Alex Deucher <alexander.deucher@amd.com>
+>> ---
+>>   drivers/gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c b/drivers/gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c
+>> index 5bb8b78bf250a0e56c3e99ce7c99ed7f70c8f0f6..eef817a4c580aca2ebc7fb1b77cfc0377d477bdc 100644
+>> --- a/drivers/gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c
+>> +++ b/drivers/gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c
+>> @@ -63,6 +63,9 @@ void dmub_hw_lock_mgr_inbox0_cmd(struct dc_dmub_srv *dmub_srv,
+>>   
+>>   bool should_use_dmub_lock(struct dc_link *link)
+>>   {
+>> +	/* ASIC doesn't support DMUB */
+>> +	if (!link->ctx->dmub_srv)
+>> +		return false;
+>>   	if (link->psr_settings.psr_version == DC_PSR_VERSION_SU_1 ||
+>>   	    link->psr_settings.psr_version == DC_PSR_VERSION_1)
+>>   		return true;
+>>
+>> ---
+>> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+>> change-id: 20250205-amdgpu-dmub-3fc25a0bc68e
+>>
+>> Best regards,
+>> -- 
+>> Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+>>
 
