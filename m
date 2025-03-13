@@ -1,154 +1,142 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31191F3FD0;
-	Thu, 13 Mar 2025 19:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E92EADA;
+	Thu, 13 Mar 2025 19:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741895695; cv=none; b=FyL5ZhekO0oAcQMSZUiBUkLvlbyfZxSJSMhzTSDiwZkYFTzkVmye5mztIRa1od9zIojjSzyj8+jY3XH/XaRO630VqnIGdFOlMdSIZAZ7rKYN4kj26RDyOUCjqyxVlS9DdL6CbFiEMsyhNngF/LU6l0YLikOP4/FTzrF/8OxYauY=
+	t=1741895759; cv=none; b=m4ndWVTS7mCNnUbN+7WK7BWks7Chg4wyRwi6nai04Jr+G1bAHCzmVFi0CREtXwFQm7cX6JX8bqJLfCKlB4wZVGPOfi6OmnUanf9b4hWr7bYn2XWKlKVzU0GEJ9j9PU4wWudyej8GndRMn7CcO+Mr3L6kCROfqn/S39oy2UqrCQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741895695; c=relaxed/simple;
-	bh=OD+/u621mwUN73ktY519JVVMPBtMQmjjQicMrkJACVk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MrKvPjAcgYNFuv7CDXc4BVebJ/ozZqvt8vkVQ4VcwuUw3Oow14LuQmO6VsoOLB7EyC49gRb7GeJfdrcdmdgvL5VDi4TV9sJdLx3tEYx8Zt8M2sEFahBm2DhDtLMiTWfZkJxwM8+pwHoRmYbscAQJJ9N5JvmlQw6OgQxwHnHgSCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2F24wbF; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741895759; c=relaxed/simple;
+	bh=fYqkeQRnWF5f+DKytRvz15lVWn76of85/QsqfnCc3FQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NUKnpIQOpM6OZa0YK4bvPtvo/ckuSQ0e0rvUhwboADzhFEvpkGPSV/5lHXtgKAN2FrE5FGGsAn5SMOhf78sCqWZgkkVHCTZNpYq+7Wd+jnM74CgwJP8w/4lhTOetq/gNjDX5RxqcZ4p+drQhTi9erzPD2yjzTYQDcs54Pk4rRJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tayN66tO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2F24wbF"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22355618fd9so29224285ad.3;
-        Thu, 13 Mar 2025 12:54:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741895693; x=1742500493; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wHH4myFoiuxDS6apQJvZG9O0Yk3Qnm1cC4Wjl8gE+b0=;
-        b=T2F24wbFln/ZBk7Qfe+faMRbJFEkNXKNeqvinnooj8eHrXTVpi1ZY0rjfgFU/iHIDv
-         7n1CovnE5qsq0QvTBt9dxpuLcn83oyHPmP6L34qwoadER7sVzlAZOMjcz7Mp9n14zDug
-         aYwIuq6EDQc8M616a/IGbFXMZKT0XaU4AoVaROaA4txP823DXAqx9PyPLK9+ZecTiIDg
-         8pyLU06CtI1uIXhCWzO4VeGC+XIDQpNpNdIWJDXnMQ9sy8LIxv2LxyW00YvPaQc0SB2g
-         h5/+j7VqfbWPN8HgHgKoexgUlxa5x2sDbpMEY6wafAFbJGVI2c0YhtUpknIZIU2xDtbo
-         DKlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741895693; x=1742500493;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wHH4myFoiuxDS6apQJvZG9O0Yk3Qnm1cC4Wjl8gE+b0=;
-        b=EzcyEe1YZbYvq6k5Q84apybrCt1l4vvA2WA4+PaWpieMRfrgWGpCxQG8KS9w6h0wlX
-         VuJBs8IWpy1C/DKgVlFt+3bUWMuf1DINb7R8tq5RTbVhFHr0/+GORYRWPZaRHfGdFSSU
-         aY5mhF+f2RhYyVkGXq+pBVxNRJkA7XtalI32dq0k2JVaOliwEP5o2ZuoPR4+TQyH+lHO
-         Kd+5WXqDCKx2y2sIpHOEYtVmXg5tOB58HBceZLxwfYRcYRZParHdtQiBOWY4c66xUNZZ
-         wd2DE0Hej0Y/30xuYjTTPArG11+8oxUbFO7cml0owyF5f91I6uANtCjOZUiPcJWI0Jn8
-         ivTg==
-X-Gm-Message-State: AOJu0YxYeRpcWSM8t73koGW9jC34h/5wtV+65+a8rg4xEdOmE+nabngK
-	f0yjuwARH8pWCPIOBEJ355/07IyGDl1fxkEfqStZsOuYJnFSgFQWrN3teanU1xQ=
-X-Gm-Gg: ASbGnctB2DxCh1AFT8Y7MxHwBZX/Ya2yC4R+nnfiwFYHDk6L32UE+SoIIp9tJk2Wc4y
-	bJwDprC/QKNoHKz8xkIOcqAqzP3mUXwjJaphMio/Do6izKerNH1d6i/Xg3iyDWzRVGEtzFa/ZdI
-	Zncqo8NU72fwZPzOvTXZ57pW6WfI2VnAhndJuW8OM1N4y+2YtlfR1Zf3p7HUJAtpY7wFHRAhp/6
-	CUQHL8A+1xbPYup99WSTYBN+iJKoDkBME98TxZZ54gnQc12C85BIu6wDyHLgcl9bzVuSeYv1Y1S
-	eRf+jC5xE55BJ3CxQfaGGHQF1bNKnlGV9HqbHJ9PaQ==
-X-Google-Smtp-Source: AGHT+IGYW/k2YlFAjqkFNaFWxXE5BZL1uTyV8DQEqt8Utpg9j1U75c1XYijGakd2K6eWuDEhHRwpRg==
-X-Received: by 2002:a17:903:1b03:b0:215:4a4e:9262 with SMTP id d9443c01a7336-225df2d700emr3225495ad.8.1741895693013;
-        Thu, 13 Mar 2025 12:54:53 -0700 (PDT)
-Received: from fedora.. ([2409:40f2:357:8702:7d06:7e16:a88a:f1b5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6c76sm17397275ad.148.2025.03.13.12.54.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 12:54:52 -0700 (PDT)
-From: Siddharth Menon <simeddon@gmail.com>
-To: linux-iio@vger.kernel.org,
-	lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	jic23@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Siddharth Menon <simeddon@gmail.com>,
-	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Subject: [PATCH] iio: frequency: ad9832: Use FIELD_PREP macro to set bit fields
-Date: Fri, 14 Mar 2025 01:24:17 +0530
-Message-ID: <20250313195442.30264-1-simeddon@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tayN66tO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5735BC4CEDD;
+	Thu, 13 Mar 2025 19:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741895759;
+	bh=fYqkeQRnWF5f+DKytRvz15lVWn76of85/QsqfnCc3FQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tayN66tOOF6jMNqkZ5ePRkN7Ee8y31+K7eOP673REb6XV5zLOulLsRfo22a7MqFoR
+	 r05dup9BfCoNTPi13Zt83sIUdU+jQp+O6qGxWwhxvO9rqtQzqhlgsYmC6J6o96heGe
+	 tEZKHpS32417/8hRF8VY9nI86YAlkqCylsTC58mV+N6MaC89xKmr+Fw0aYT1thVWVD
+	 kLLQq6AjOM3w5/E47TIz0UotatLlZ8zec9LhnkXbtISpJG7a5wnaa24YnUNxeOXM36
+	 xdRBDo37cTFAdPfkCSrUG1AI/Z2PyR8BcDXtw87iq3W7zxnUfCSnwF40tvVk3JMEPq
+	 vPcac02Z+5zwA==
+Date: Thu, 13 Mar 2025 12:55:56 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 09/11] perf syscalltbl: Use lookup table containing
+ multiple architectures
+Message-ID: <Z9M4TIY9HstTLzNs@google.com>
+References: <20250308003209.234114-1-irogers@google.com>
+ <20250308003209.234114-10-irogers@google.com>
+ <Z9MwQJ5bRu6-N43w@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z9MwQJ5bRu6-N43w@x1>
 
-Refactor code to use the FIELD_PREP macro for setting bit fields
-instead of manual bit manipulation.
+On Thu, Mar 13, 2025 at 04:21:36PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Mar 07, 2025 at 04:32:07PM -0800, Ian Rogers wrote:
+> > Switch to use the lookup table containing all architectures rather
+> > than tables matching the perf binary.
+> > 
+> > This fixes perf trace when executed on a 32-bit i386 binary on an
+> > x86-64 machine. Note in the following the system call names of the
+> > 32-bit i386 binary as seen by an x86-64 perf.
+> > 
+> 
+> Reproduced the results here:
+> 
+> root@number:/home/acme/c# file faccessat2
+> faccessat2: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, BuildID[sha1]=8dafcc1549658d57248dce883e8ec7eea3d6e8a5, for GNU/Linux 3.2.0, not stripped
+> root@number:/home/acme/c#
+> 
+> root@number:/home/acme/c# strace ./faccessat2 |& head 
+> execve("./faccessat2", ["./faccessat2"], 0x7ffce63265e0 /* 39 vars */) = 0
+> [ Process PID=2552445 runs in 32 bit mode. ]
+> brk(NULL)                               = 0x849a000
+> mmap2(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xf7fb3000
+> access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+> openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_LARGEFILE|O_CLOEXEC) = 3
+> statx(3, "", AT_STATX_SYNC_AS_STAT|AT_NO_AUTOMOUNT|AT_EMPTY_PATH, STATX_BASIC_STATS, {stx_mask=STATX_ALL|STATX_MNT_ID|STATX_SUBVOL, stx_attributes=0, stx_mode=S_IFREG|0644, stx_size=85091, ...}) = 0
+> mmap2(NULL, 85091, PROT_READ, MAP_PRIVATE, 3, 0) = 0xf7f9e000
+> close(3)                                = 0
+> openat(AT_FDCWD, "/lib/libc.so.6", O_RDONLY|O_LARGEFILE|O_CLOEXEC) = 3
+> root@number:/home/acme/c#
+> 
+> Before:
+> 
+> root@number:/home/acme/c# perf trace ./faccessat2 |& head
+> faccessat2(123, (null), X_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW) = -1
+>          ? (         ): faccessat2/2552543  ... [continued]: munmap())                                           = 0
+>      0.024 ( 0.002 ms): faccessat2/2552543 recvfrom(ubuf: 0x2, size: 4159848428, flags: DONTROUTE|CTRUNC|TRUNC|DONTWAIT|EOR|WAITALL|FIN|SYN|CONFIRM|RST|ERRQUEUE|SOCK_DEVMEM|ZEROCOPY|FASTOPEN|CMSG_CLOEXEC|0x91f20000, addr: 0xe30, addr_len: 0xffcda98c) = 138993664
+>      0.047 ( 0.006 ms): faccessat2/2552543 lgetxattr(name: "", value: 0x3, size: 34)                             = 4159602688
+>      0.063 ( 0.003 ms): faccessat2/2552543 dup2(oldfd: -135160188, newfd: 4)                                     = -1 ENOENT (No such file or directory)
+>      0.071 ( 0.023 ms): faccessat2/2552543 preadv(fd: 4294967196, vec: 0xf7f16420, vlen: 557056, pos_h: 4159848428) = 3
+>      0.098 ( 0.004 ms): faccessat2/2552543 lgetxattr(name: "", value: 0x1, size: 2)                              = 4159516672
+>      0.104 ( 0.001 ms): faccessat2/2552543 lstat(filename: "", statbuf: 0x14c63)                                 = 0
+>      0.114 ( 0.004 ms): faccessat2/2552543 preadv(fd: 4294967196, vec: 0xf7ee8380, vlen: 557056, pos_h: 4159848428) = 3
+>      0.118 ( 0.002 ms): faccessat2/2552543 close(fd: 3)                                                          = 512
+> root@number:/home/acme/c# 
+> 
+> After:
+> 
+> root@number:/home/acme/c# perf trace ./faccessat2 |& head
+> faccessat2(123, (null), X_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW) = -1
+> sh: line 1: perf-read-vdso32: command not found
+>          ? (         ): faccessat2/2556897  ... [continued]: execve())                                           = 0
+>      0.028 ( 0.002 ms): faccessat2/2556897 brk()                                                                 = 0x8fe4000
+>      0.068 ( 0.003 ms): faccessat2/2556897 access(filename: 0xf7ff2e84, mode: R)                                 = -1 ENOENT (No such file or directory)
+>      0.080 ( 0.005 ms): faccessat2/2556897 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+>      0.094 ( 0.001 ms): faccessat2/2556897 close(fd: 3)                                                          = 0
+>      0.103 ( 0.003 ms): faccessat2/2556897 openat(dfd: CWD, filename: "/lib/libc.so.6", flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+>      0.108 ( 0.002 ms): faccessat2/2556897 read(fd: 3, buf: 0xffdd84b0, count: 512)                              = 512
+>      0.216 ( 0.001 ms): faccessat2/2556897 close(fd: 3)                                                          = 0
+> root@number:/home/acme/c#
+> 
+> And interestingly the openat syscall got its contents obtained via the
+> BPF augmenter... better to test this more thoroughly, but I think it
+> should come after this series lands.
 
-Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Signed-off-by: Siddharth Menon <simeddon@gmail.com>
----
- drivers/staging/iio/frequency/ad9832.c | 39 ++++++++++++++------------
- 1 file changed, 21 insertions(+), 18 deletions(-)
+Right, I don't see the filename in openat() in my tests.
 
-diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-index 140ee4f9c137..bbde1f0e84ff 100644
---- a/drivers/staging/iio/frequency/ad9832.c
-+++ b/drivers/staging/iio/frequency/ad9832.c
-@@ -70,6 +70,9 @@
- #define AD9832_FREQ_BITS	32
- #define AD9832_PHASE_BITS	12
- #define RES_MASK(bits)		((1 << (bits)) - 1)
-+#define DATA_MASK       0xFF
-+#define CMD_MASK        (0xF << CMD_SHIFT)
-+#define ADD_MASK        (0xF << ADD_SHIFT)
- 
- /**
-  * struct ad9832_state - driver instance specific data
-@@ -139,18 +142,18 @@ static int ad9832_write_frequency(struct ad9832_state *st,
- 
- 	regval = ad9832_calc_freqreg(clk_freq, fout);
- 
--	st->freq_data[0] = cpu_to_be16((AD9832_CMD_FRE8BITSW << CMD_SHIFT) |
--					(addr << ADD_SHIFT) |
--					((regval >> 24) & 0xFF));
--	st->freq_data[1] = cpu_to_be16((AD9832_CMD_FRE16BITSW << CMD_SHIFT) |
--					((addr - 1) << ADD_SHIFT) |
--					((regval >> 16) & 0xFF));
--	st->freq_data[2] = cpu_to_be16((AD9832_CMD_FRE8BITSW << CMD_SHIFT) |
--					((addr - 2) << ADD_SHIFT) |
--					((regval >> 8) & 0xFF));
--	st->freq_data[3] = cpu_to_be16((AD9832_CMD_FRE16BITSW << CMD_SHIFT) |
--					((addr - 3) << ADD_SHIFT) |
--					((regval >> 0) & 0xFF));
-+	st->freq_data[0] = cpu_to_be16(FIELD_PREP(CMD_MASK, AD9832_CMD_FRE8BITSW) |
-+					FIELD_PREP(ADD_MASK, addr) |
-+					FIELD_PREP(DATA_MASK, (regval >> 24) & 0xFF));
-+	st->freq_data[1] = cpu_to_be16(FIELD_PREP(CMD_MASK, AD9832_CMD_FRE16BITSW) |
-+					FIELD_PREP(ADD_MASK, (addr - 1)) |
-+					FIELD_PREP(DATA_MASK, (regval >> 16) & 0xFF));
-+	st->freq_data[2] = cpu_to_be16(FIELD_PREP(CMD_MASK, AD9832_CMD_FRE8BITSW) |
-+					FIELD_PREP(ADD_MASK, (addr - 2)) |
-+					FIELD_PREP(DATA_MASK, (regval >> 8) & 0xFF));
-+	st->freq_data[3] = cpu_to_be16(FIELD_PREP(CMD_MASK, AD9832_CMD_FRE16BITSW) |
-+					FIELD_PREP(ADD_MASK, (addr - 3)) |
-+					FIELD_PREP(DATA_MASK, (regval >> 0) & 0xFF));
- 
- 	return spi_sync(st->spi, &st->freq_msg);
- }
-@@ -161,12 +164,12 @@ static int ad9832_write_phase(struct ad9832_state *st,
- 	if (phase >= BIT(AD9832_PHASE_BITS))
- 		return -EINVAL;
- 
--	st->phase_data[0] = cpu_to_be16((AD9832_CMD_PHA8BITSW << CMD_SHIFT) |
--					(addr << ADD_SHIFT) |
--					((phase >> 8) & 0xFF));
--	st->phase_data[1] = cpu_to_be16((AD9832_CMD_PHA16BITSW << CMD_SHIFT) |
--					((addr - 1) << ADD_SHIFT) |
--					(phase & 0xFF));
-+	st->phase_data[0] = cpu_to_be16(FIELD_PREP(CMD_MASK, AD9832_CMD_PHA8BITSW) |
-+					FIELD_PREP(ADD_MASK, addr) |
-+					FIELD_PREP(DATA_MASK, (phase >> 8) & 0xFF));
-+	st->phase_data[1] = cpu_to_be16(FIELD_PREP(CMD_MASK, AD9832_CMD_PHA16BITSW) |
-+					FIELD_PREP(ADD_MASK, (addr - 1)) |
-+					FIELD_PREP(DATA_MASK, phase & 0xFF));
- 
- 	return spi_sync(st->spi, &st->phase_msg);
- }
--- 
-2.48.1
+openat() is 295 on i386 and that's preadv() on x86_64 so BPF won't try
+to augment the argument.  I wonder how it can get the filename.  But
+anyway we can take a look later.
+
+Thanks,
+Namhyung
 
