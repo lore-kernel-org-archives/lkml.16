@@ -1,134 +1,114 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9241FCF74;
-	Thu, 13 Mar 2025 07:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86D01FF1C8;
+	Thu, 13 Mar 2025 07:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741850575; cv=none; b=JVczzna1k4b7Z2Zj9xP45Jf0/exa04w4AYNSuz325yrqVb4OsLi5EtfcuVLBE0UKsnvNbgoQyrmRjFunLRx1/3wRuEe+XNuJhSo9dU/EhG1HFySX42OnXrxsqZQ+SsL5caJ7SRJaq2et+FOr3Y8Gq1SJghwXvchcQ38qFqxAj/g=
+	t=1741850576; cv=none; b=r5XviWtap9hY0rv/GimEB3/Y+FJYGorKn+63AO2FVg5QDYx+mVhHZIVUM4BSBC68onxovcDAA6f48NjNXkcIWqm3RSMjsZaMQIzKw2cFXLUN9deMf1N0Pc2hyKRyJyaukhMRQIhFG64pXuwrDaazfod6vBomq4sBXNUWOGz/Xpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741850575; c=relaxed/simple;
-	bh=MdOGDK+6pHLRWCUrvTLmjR3vj8SHXrPceHACVI50xXs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fMBsgPGOoQnjFnjmsU2xESCv2+IQFyWPMORPer3zGAk3n4GglU7E0CcGwFA2GVo4Tq0x3H+vNGVJ2kphHJNTyPiLHYduE88lPJv2puBc7i4x+5haMOmRlBlMvEyUptGnhfQgyBPoG1+pr0YQ3Z67D9sfJKtW7Te3xMEGSjg7rfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZCzPG1hFKz2RTXC;
-	Thu, 13 Mar 2025 15:18:26 +0800 (CST)
-Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
-	by mail.maildlp.com (Postfix) with ESMTPS id E1341180069;
-	Thu, 13 Mar 2025 15:22:48 +0800 (CST)
-Received: from huawei.com (10.50.165.33) by kwepemg500006.china.huawei.com
- (7.202.181.43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Mar
- 2025 15:22:48 +0800
-From: Longfang Liu <liulongfang@huawei.com>
-To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
-Subject: [PATCH v5 5/5] hisi_acc_vfio_pci: bugfix live migration function without VF device driver
-Date: Thu, 13 Mar 2025 15:20:10 +0800
-Message-ID: <20250313072010.57199-6-liulongfang@huawei.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20250313072010.57199-1-liulongfang@huawei.com>
-References: <20250313072010.57199-1-liulongfang@huawei.com>
+	s=arc-20240116; t=1741850576; c=relaxed/simple;
+	bh=aFeZ0mb9JxHxNrB2IY5dAI8W9F+KCqBlNLKvYHsoUrk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MmWXsKLkQNgM5cWGmnT6V7MhRxbMtnfyg2C0+ShnzDPWHxihsULwF9bFDxOU4bziC7u8p2/1hUd+OburF3vYHFs5UlmpMv/MpiPwZKKwoHK7EyabB93o/YeAjwPva8VmLkuEE5qYfh4FHPt2qYKvxx8mLkh22gQId5hDEuYCYbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZZIQ0Zf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZZIQ0Zf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 989D6C4CEDD;
+	Thu, 13 Mar 2025 07:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741850576;
+	bh=aFeZ0mb9JxHxNrB2IY5dAI8W9F+KCqBlNLKvYHsoUrk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BZZIQ0Zf+Wn/FHwFCF0brh5DPmkCHW1BS1cd1iNC0PhnojOpCR/hvAjs0T6TxsxIO
+	 iYSZC7Udi+50z/MBOeevkqK7QJp4VeX+v3NUceNdYMHz33m13zbCIeMq2qaKOqyqwG
+	 wDmbuyZTBgLUcuwr/H628jKCmOxqY6hbVEoYz2NCKWpYsqaEunNpOro4cnoMnE11iB
+	 jwEM+kVFyyPhZ1nKZVDURvDd23e+APOdGjr/9AEwv8r1i96E94z2dIgxgFgCeJ47SK
+	 jqpDIoc2pPRFxF/6LAys8KcKhhtbUfPTDjUnCx0+sD73qovvh5eXxlwXL+EiQqYXwq
+	 lHyfdJQqgS0NQ==
+Date: Thu, 13 Mar 2025 08:22:53 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Purva Yeshi <purvayeshi550@gmail.com>, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, piotr.wojtaszczyk@timesys.com, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
+Message-ID: <b2nlqt3gp4sk7cax722n7t7xonnrjzi6amsfrhylxmurctytiy@yqp7qpttyc5h>
+References: <20250312122750.6391-1-purvayeshi550@gmail.com>
+ <57ae63a2-544b-4241-a54d-8fa9917c1e44@mleia.com>
+ <yvljnqnlka3ecw2n3hw2zgfszlldvbww3k7gq72dczmf6jwzfo@4vqnygxuzvk5>
+ <5b62671c-719a-44f2-b28e-878159859a01@mleia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg500006.china.huawei.com (7.202.181.43)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fbj5kzio535yua6p"
+Content-Disposition: inline
+In-Reply-To: <5b62671c-719a-44f2-b28e-878159859a01@mleia.com>
 
-If the VF device driver is not loaded in the Guest OS and we attempt to
-perform device data migration, the address of the migrated data will
-be NULL.
-The live migration recovery operation on the destination side will
-access a null address value, which will cause access errors.
 
-Therefore, live migration of VMs without added VF device drivers
-does not require device data migration.
-In addition, when the queue address data obtained by the destination
-is empty, device queue recovery processing will not be performed.
+--fbj5kzio535yua6p
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
+MIME-Version: 1.0
 
-Fixes: b0eed085903e ("hisi_acc_vfio_pci: Add support for VFIO live migration")
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
----
- .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 25 +++++++++++++------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+Hello Vladimir,
 
-diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-index cadc82419dca..44fa2d16bbcc 100644
---- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-+++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-@@ -426,13 +426,6 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
- 		return -EINVAL;
- 	}
- 
--	ret = qm_write_regs(vf_qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
--	if (ret) {
--		dev_err(dev, "failed to write QM_VF_STATE\n");
--		return ret;
--	}
--
--	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
- 	hisi_acc_vdev->match_done = true;
- 	return 0;
- }
-@@ -498,6 +491,13 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
- 	if (migf->total_length < sizeof(struct acc_vf_data))
- 		return -EINVAL;
- 
-+	ret = qm_write_regs(qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
-+	if (ret) {
-+		dev_err(dev, "failed to write QM_VF_STATE\n");
-+		return -EINVAL;
-+	}
-+	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
-+
- 	qm->eqe_dma = vf_data->eqe_dma;
- 	qm->aeqe_dma = vf_data->aeqe_dma;
- 	qm->sqc_dma = vf_data->sqc_dma;
-@@ -506,6 +506,12 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
- 	qm->qp_base = vf_data->qp_base;
- 	qm->qp_num = vf_data->qp_num;
- 
-+	if (!vf_data->eqe_dma || !vf_data->aeqe_dma ||
-+	    !vf_data->sqc_dma || !vf_data->cqc_dma) {
-+		dev_err(dev, "resume dma addr is NULL!\n");
-+		return -EINVAL;
-+	}
-+
- 	ret = qm_set_regs(qm, vf_data);
- 	if (ret) {
- 		dev_err(dev, "set VF regs failed\n");
-@@ -726,8 +732,12 @@ static int hisi_acc_vf_load_state(struct hisi_acc_vf_core_device *hisi_acc_vdev)
- {
- 	struct device *dev = &hisi_acc_vdev->vf_dev->dev;
- 	struct hisi_acc_vf_migration_file *migf = hisi_acc_vdev->resuming_migf;
-+	struct acc_vf_data *vf_data = &migf->vf_data;
- 	int ret;
- 
-+	if (vf_data->vf_qm_state != QM_READY)
-+		return 0;
-+
- 	/* Recover data to VF */
- 	ret = vf_qm_load_data(hisi_acc_vdev, migf);
- 	if (ret) {
-@@ -1531,6 +1541,7 @@ static int hisi_acc_vfio_pci_migrn_init_dev(struct vfio_device *core_vdev)
- 	hisi_acc_vdev->vf_id = pci_iov_vf_id(pdev) + 1;
- 	hisi_acc_vdev->pf_qm = pf_qm;
- 	hisi_acc_vdev->vf_dev = pdev;
-+	hisi_acc_vdev->vf_qm_state = QM_NOT_READY;
- 	mutex_init(&hisi_acc_vdev->state_mutex);
- 	mutex_init(&hisi_acc_vdev->open_mutex);
- 
--- 
-2.24.0
+On Thu, Mar 13, 2025 at 05:37:44AM +0200, Vladimir Zapolskiy wrote:
+> On 3/13/25 00:56, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > On Wed, Mar 12, 2025 at 07:59:21PM +0200, Vladimir Zapolskiy wrote:
+> > > > +  "#pwm-cells":
+> > > > +    const: 3
+> > >=20
+> > > It shall be 1.
+> >=20
+> > No, 3 is the right choice.
+> >=20
+>=20
+> could you please elaborate?
+>=20
+> I find that here the only configurable parameter is PWM period, so it
+> should be sufficient to have one cell only like in marvell,pxa-pwm.yaml
+> or google,cros-ec-pwm.yaml.
 
+These two bindings are special snow-flakes and the only drivers that
+have #pwm-cells =3D <1>. Most other bindings use 3 and since commit
+895fe4537cc8 ("pwm: Add upgrade path to #pwm-cells =3D <3> for users of
+of_pwm_single_xlate()") (which was created for the pxa driver) the pxa
+driver also supports 3 cells. The cros-ec driver even has comment about
+that being ugly.=20
+
+I intend to convert all bindings to use 3 soon.
+
+While that isn't necessary for each individual piece of hardware to
+provide 3 values, having a uniform binding for PWMs provides a nice user
+experience and also simplifies matters with nexus nodes (see
+e71e46a6f19c ("pwm: Add support for pwm nexus dt bindings")).
+
+Best regards
+Uwe
+
+--fbj5kzio535yua6p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfSh8oACgkQj4D7WH0S
+/k4vDgf/ehubFXBJkC/7G707LTPd9SMCRiU7yo8xzDN/MgRlnqjDQxNaFFrE8xN5
+7MIZqJNGy4dCdHGnGsbN6Nk7bpY/gNm/vXJhQepGVo2gBnpNyHrHVHoDsTNVz/Ka
+61FazZfuGm6K6sHgwu1RploF6vajrJUYnxf4/+fRJWjLYWbwquaVC0sRrM1k7BXM
+97aF6PQYAGMxDLQI4j5CS5Bmn3k4MtOgbgXu2GaPyIIkLP7f9AWy4ZQDmOR96MxN
+10z2K223iXO02U8fyRVWwSbu5ya0KZ/q8IANcX/LEmh1gAuaJg56TFQCEDkxkuX4
+6RESqFawU5aKcNqipOGIYitK3rzR3g==
+=5IFd
+-----END PGP SIGNATURE-----
+
+--fbj5kzio535yua6p--
