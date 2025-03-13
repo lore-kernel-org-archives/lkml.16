@@ -1,205 +1,286 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D4F523A
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD48171C9
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741829127; cv=none; b=TZaXTPsQnzt/9rDPWYIcumyfXqSiBEln4QuK3IK86l6im/T5mTDGVSSMOdQGUrW3ErvM24ir+NE3A+5JhcHJZggVgx/2GnGbzItLGQ2D5TAv7920rjBzVz5SSJ+9/bwQ+fImJIxzVGcC2ub+EitIUs5dLZQdfldhoK3shmjMGp4=
+	t=1741829259; cv=none; b=ZzfM47ZRybXugfrm7QyJqrBNp8kPjq58P6FI7S18yqBcpUgFQbt+fpilPEsdCP4UDDoG7F/Dm7fUCN9pvHoNY5/MN6uJp6wmi+mTERU9lk2IsAZLfparEBZ3Mn8Tgb4bbtklFW43FG3yEh0UaREB1LdNGRbgUSyfDKVjljU4U9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741829127; c=relaxed/simple;
-	bh=h/Ugb2wptsQIMENRnFBhTS1WCGZkf5moORc0K+sdwMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i6vRO/iLKu8rWqh3YHlnCUU9CqlPt9HUCmR2kuU6Hts7Io9eo+THbL3CWgGoLPvDqg0uaSzRlKMsrXVFWcKq6Mw8lSydgIMCBfgpHQOQsHd/bOVOjAOBh7LxL/k3cioQT2G+K1o5/L8cK4O+qOfjBpk/2c+3OOVx5UfN0h9QlXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=V120Vi2M; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="V120Vi2M"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fef5c978ccso798889a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 18:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1741829125; x=1742433925; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/zHbOQiom4kiVHLmxXFl6+bExJ+6jLT2xvKjM7Gchos=;
-        b=V120Vi2M50FFPm2XwDVxnzmhQxH9G+kpvzisIbpf7rhss5KBIwdVV53mBynSUquhJg
-         OxsTBkoEsMRwp6siTRX/mEVj6igRLj+/FhrDkpI6kd5M8MDgB+bfi3BHgFD5SQPJaemf
-         EmOgQvd+1cVpZE/75jaZjj8OgRJWBrLcAVETjrhh47qS9H5osKwVP83mgyyfKwBMIbeH
-         DFch16Skg0AIQq1m04Hve+ZG0m/w7YOZBiar1GxeBPKwZe/v3+fE85oh3Dbc/Pj2FM9u
-         ysazX/zIBArl+ckzlTWUML17axzS/qAhri5T0ywHmrY08s4HWLIhVqOp47Ai0knwC8WT
-         IzZw==
+	s=arc-20240116; t=1741829259; c=relaxed/simple;
+	bh=x+gg8idzfKggNQqug6Qgo8/z/n+kY8bUkk9P1yBPCiM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=YqGLY+q/MPAQXO0mWGq/T9wjNMckuvaVdAX7Rgr8LrohMgMP3ptlnx0ocOZmWhxcxh91q/Gjqhwtv1nAcbQhEtjNi8tJayGfG4pU6ldapx+evckNM6ZMB/UNKCodrOVYFzYSFbpZKNLzIn5Rwc4QdpPFBNGfQBLgkDRuEdmxShk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ce81a40f5cso9115255ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 18:27:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741829125; x=1742433925;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/zHbOQiom4kiVHLmxXFl6+bExJ+6jLT2xvKjM7Gchos=;
-        b=JbIwh5VwvjJMk8AltrIf5WAbZnUpsv+f3Nap8gk+B6pPKYqnb/Gv+EFQfoCUQOiZH3
-         pSUAUedAgH+fOKonPuUErZOg4hDEuiiB1Xf1F4uASgSHFVb1PiA408J80jAHJ+LMf4py
-         hSlPzlJVeWlagyMGEiQcOk4ZHIk/AisuisYvm2gNE/2+XLtRbh8GDzst47IiYeUIhoAT
-         ft8QWKXD2UUo95dLS6CWB9+sZ0ClG2YGDek86GJeHyxd8sl4K4tvXmaQW3/Ga7jrna5j
-         t9GfcEct+P7s3YuvlvGkgQsZkcEo1axy3Ii3JMm2eUeMzmJPzTrSgS5OT/eLZ3URudAj
-         KfSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsG5WmiT96rYlzViWCp/a2AeKHJtUZ6LPFu/l9xE+ZJYZYydp5V4iTfu9CzTpXrsgp4mnOUzyVuhlT7OI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnP3CbPzg3vbE9476rMB63iOqICrNYkAM+zhTbXq+0TTl/MsWQ
-	4CsxQtk20+xripzb2c3D3ycBhnGkmjklRogIoII5iMxGcjW4tV81Wqie2ubxq/k=
-X-Gm-Gg: ASbGncsAQmXAOC7L7ydXUlcuCGxNjt51rUWyFX8VJwCJMl7GTqfLYUPXdIO3UG2MXOt
-	6jyFmwJXI9t02LrhKo0bczvhrgI4jiksoakLJvLuQPA6wIBP9ds6Pby5pjaOiCER+ZkYXeNAEmP
-	j1vCYI0Ubb24TG05J9GOJsCINJ5CylGdKnHU6t5s4wxfpmdqJEIvmnHUB7JbVTGETB7MFcUsuFD
-	fPQnZZcHPouCRFszvyNjtCQN+s9OHpKhZeiItDeVHmeYAfOj/dKEsEMnyEUDiWDJcucm64IahYk
-	6Gj8aeP6k5Uka1KXgFK00uToNGmxiYymGimpQk65X2q3AcwpC3hgcRMRZvh9MTLKGV1lOuOW2xb
-	A+LU9cY9Pag==
-X-Google-Smtp-Source: AGHT+IGyj4oBnrPOUXCm7aHzwU7QxPPlJajw237NzAa34xKCgxu/l2WrTQSi/az+Ci/KcOqkNz1yrQ==
-X-Received: by 2002:a17:90b:164f:b0:2fe:baa3:b8b9 with SMTP id 98e67ed59e1d1-2ff7ce4f306mr32732496a91.4.1741829124656;
-        Wed, 12 Mar 2025 18:25:24 -0700 (PDT)
-Received: from dread.disaster.area (pa49-186-89-135.pa.vic.optusnet.com.au. [49.186.89.135])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30138b3b5f1sm126965a91.8.2025.03.12.18.25.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 18:25:24 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.98)
-	(envelope-from <david@fromorbit.com>)
-	id 1tsXK5-0000000CNaw-30mS;
-	Thu, 13 Mar 2025 12:25:21 +1100
-Date: Thu, 13 Mar 2025 12:25:21 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	John Garry <john.g.garry@oracle.com>, brauner@kernel.org,
-	cem@kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com
-Subject: Re: [PATCH v5 03/10] xfs: Refactor xfs_reflink_end_cow_extent()
-Message-ID: <Z9I0Ab5TyBEdkC32@dread.disaster.area>
-References: <20250310183946.932054-1-john.g.garry@oracle.com>
- <20250310183946.932054-4-john.g.garry@oracle.com>
- <Z9E2kSQs-wL2a074@infradead.org>
- <589f2ce0-2fd8-47f6-bbd3-28705e306b68@oracle.com>
- <Z9FHSyZ7miJL7ZQM@infradead.org>
- <20250312154636.GX2803749@frogsfrogsfrogs>
+        d=1e100.net; s=20230601; t=1741829256; x=1742434056;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sMlcA2wErFWPbBrp1KtabkznrcHqoObPY78uG7OyyXE=;
+        b=QL9mcpWgLlIKgJ1FD+JLZ1NibEKjXAgj12U7FrqgHhumtHPxuZTx0ZctK5wgkLd9aQ
+         gotcmwfiH1ud5mthT1vEMmW3mcNH3zQ4XIAzL2mdNEe1fzjKxq7NcCS24LEf5LXX9D7C
+         x4otHejvATvyxR9v3AibAl+qhJTXRcb+RoP21NHONduTxUzz3wRGwykOnVQq8e2U66T1
+         EmTedMHIbPGokvj3hTyN3sDbB8v9fTjYNb1VyOjWq31A7D7ujO9OPgCI9Wc5x54OHDwO
+         aJt7ABdshh/3xf3bMZEoUgsZJ8hCNLrmdbEv7QKWjSfKNaR7XAy08ogPfFFMoVsRxsBp
+         R4jA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDKT8+cYt6ZqTCFW1AeQ1RzKegSYJOTRyaZjR3iq4cY1jZeaZ8SxHKwZgHZohNnXIyw38Jsy1YWFdtOtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGz/jZzUmvo90x01Iiu5yw2+2/o3gCrM0qUfYIclIOQJh7EG5V
+	Iuqj0NY4fhV7oTKmiXvSST57tgU7tcganhzkhlHgqSGej8BYKnSV5BDwO+Lte5yMp6KQzufSGRc
+	jEvJO4LWzfWKAQZbMH+Mo+9YEvGmAp8DqcuJoezkKWhXs/PLMKuL1iVA=
+X-Google-Smtp-Source: AGHT+IHh994Fvn9JOwXqFIVSmwZ4qezxHh0TjDpnEtNrcYYJRi2/9ULmWcH4ndN1Fy0KkiQnySatMid/8zCXEu7ZoNZIB4+5k88O
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312154636.GX2803749@frogsfrogsfrogs>
+X-Received: by 2002:a05:6e02:3f88:b0:3d3:dfc2:912f with SMTP id
+ e9e14a558f8ab-3d4418a5148mr301418165ab.7.1741829256487; Wed, 12 Mar 2025
+ 18:27:36 -0700 (PDT)
+Date: Wed, 12 Mar 2025 18:27:36 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67d23488.050a0220.14e108.002a.GAE@google.com>
+Subject: [syzbot] [kernel?] upstream test error: KASAN: slab-use-after-free
+ Write in binderfs_evict_inode
+From: syzbot <syzbot+353d7b75658a95aa955a@syzkaller.appspotmail.com>
+To: arve@android.com, brauner@kernel.org, cmllamas@google.com, 
+	gregkh@linuxfoundation.org, joel@joelfernandes.org, 
+	linux-kernel@vger.kernel.org, maco@android.com, surenb@google.com, 
+	syzkaller-bugs@googlegroups.com, tkjos@android.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 12, 2025 at 08:46:36AM -0700, Darrick J. Wong wrote:
-> On Wed, Mar 12, 2025 at 01:35:23AM -0700, Christoph Hellwig wrote:
-> > On Wed, Mar 12, 2025 at 08:27:05AM +0000, John Garry wrote:
-> > > On 12/03/2025 07:24, Christoph Hellwig wrote:
-> > > > On Mon, Mar 10, 2025 at 06:39:39PM +0000, John Garry wrote:
-> > > > > Refactor xfs_reflink_end_cow_extent() into separate parts which process
-> > > > > the CoW range and commit the transaction.
-> > > > > 
-> > > > > This refactoring will be used in future for when it is required to commit
-> > > > > a range of extents as a single transaction, similar to how it was done
-> > > > > pre-commit d6f215f359637.
-> > > > 
-> > > > Darrick pointed out that if you do more than just a tiny number
-> > > > of extents per transactions you run out of log reservations very
-> > > > quickly here:
-> > > > 
-> > > > https://urldefense.com/v3/__https://lore.kernel.org/all/20240329162936.GI6390@frogsfrogsfrogs/__;!!ACWV5N9M2RV99hQ!PWLcBof1tKimKUObvCj4vOhljWjFmjtzVHLx9apcU5Rah1xZnmp_3PIq6eSwx6TdEXzMLYYyBfmZLgvj$
-> > > > 
-> > > > how does your scheme deal with that?
-> > > > 
-> > > The resblks calculation in xfs_reflink_end_atomic_cow() takes care of this,
-> > > right? Or does the log reservation have a hard size limit, regardless of
-> > > that calculation?
-> > 
-> > The resblks calculated there are the reserved disk blocks
+Hello,
 
-Used for btree block allocations that might be needed during the
-processing of the transaction.
+syzbot found the following issue on:
 
-> > and have
-> > nothing to do with the log reservations, which comes from the
-> > tr_write field passed in.  There is some kind of upper limited to it
-> > obviously by the log size, although I'm not sure if we've formalized
-> > that somewhere.  Dave might be the right person to ask about that.
-> 
-> The (very very rough) upper limit for how many intent items you can
-> attach to a tr_write transaction is:
-> 
-> per_extent_cost = (cui_size + rui_size + bui_size + efi_size + ili_size)
-> max_blocks = tr_write::tr_logres / per_extent_cost
-> 
-> (ili_size is the inode log item size)
+HEAD commit:    0fed89a961ea Merge tag 'hyperv-fixes-signed-20250311' of g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=151e1874580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a5498c9c3175e1fe
+dashboard link: https://syzkaller.appspot.com/bug?extid=353d7b75658a95aa955a
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-That doesn't sound right. The number of intents we can log is not
-dependent on the aggregated size of all intent types. We do not log
-all those intent types in a single transaction, nor do we process
-more than one type of intent in a given transaction. Also, we only
-log the inode once per transaction, so that is not a per-extent
-overhead.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/29b86e707aa9/disk-0fed89a9.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b58942c7cd28/vmlinux-0fed89a9.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/dc389da41680/bzImage-0fed89a9.xz
 
-Realistically, the tr_write transaction is goign to be at least a
-100kB because it has to be big enough to log full splits of multiple
-btrees (e.g. BMBT + both free space trees). Yeah, a small 4kB
-filesystem spits out:
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+353d7b75658a95aa955a@syzkaller.appspotmail.com
 
-xfs_trans_resv_calc:  dev 7:0 type 0 logres 193528 logcount 5 flags 0x4
+==================================================================
+BUG: KASAN: slab-use-after-free in __hlist_del include/linux/list.h:982 [inline]
+BUG: KASAN: slab-use-after-free in hlist_del_init include/linux/list.h:1008 [inline]
+BUG: KASAN: slab-use-after-free in binderfs_evict_inode+0x335/0x340 drivers/android/binderfs.c:277
+Write of size 8 at addr ffff8880290d5c08 by task syz.1.52/5889
 
-About 190kB.
+CPU: 0 UID: 0 PID: 5889 Comm: syz.1.52 Not tainted 6.14.0-rc6-syzkaller-00016-g0fed89a961ea #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xd9/0x110 mm/kasan/report.c:634
+ __hlist_del include/linux/list.h:982 [inline]
+ hlist_del_init include/linux/list.h:1008 [inline]
+ binderfs_evict_inode+0x335/0x340 drivers/android/binderfs.c:277
+ evict+0x409/0x960 fs/inode.c:796
+ iput_final fs/inode.c:1946 [inline]
+ iput fs/inode.c:1972 [inline]
+ iput+0x52a/0x890 fs/inode.c:1958
+ dentry_unlink_inode+0x29c/0x480 fs/dcache.c:440
+ __dentry_kill+0x1d0/0x600 fs/dcache.c:643
+ shrink_kill fs/dcache.c:1088 [inline]
+ shrink_dentry_list+0x140/0x5d0 fs/dcache.c:1115
+ shrink_dcache_parent+0xe2/0x530 fs/dcache.c:1549
+ do_one_tree fs/dcache.c:1578 [inline]
+ shrink_dcache_for_umount+0xa1/0x3e0 fs/dcache.c:1595
+ generic_shutdown_super+0x6c/0x390 fs/super.c:620
+ kill_anon_super fs/super.c:1237 [inline]
+ kill_litter_super+0x70/0xa0 fs/super.c:1247
+ binderfs_kill_super+0x3b/0xa0 drivers/android/binderfs.c:792
+ deactivate_locked_super+0xbe/0x1a0 fs/super.c:473
+ deactivate_super+0xde/0x100 fs/super.c:506
+ cleanup_mnt+0x222/0x450 fs/namespace.c:1413
+ task_work_run+0x14e/0x250 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xad8/0x2d70 kernel/exit.c:938
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ get_signal+0x24ed/0x26c0 kernel/signal.c:3036
+ arch_do_signal_or_restart+0x90/0x7e0 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ irqentry_exit_to_user_mode+0x13f/0x280 kernel/entry/common.c:231
+ asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+RIP: 0033:0x0
+Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+RSP: 002b:0000400000000008 EFLAGS: 00010217
+RAX: 0000000000000000 RBX: 00007f566aba5fa0 RCX: 00007f566a98d169
+RDX: 0000400000000000 RSI: 0000400000000000 RDI: 0000000000000000
+RBP: 00007f566aa0e2a0 R08: 0000400000000000 R09: 0000000000000000
+R10: 0000400000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f566aba5fa0 R14: 00007f566aba5fa0 R15: 0000000000000005
+ </TASK>
 
-However, intents are typically very small - around 32 bytes in size
-plus another 12 bytes for the log region ophdr.
+Allocated by task 5829:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ binderfs_binder_device_create.isra.0+0x17a/0xb70 drivers/android/binderfs.c:147
+ binderfs_fill_super+0x8d6/0x1360 drivers/android/binderfs.c:730
+ vfs_get_super fs/super.c:1280 [inline]
+ get_tree_nodev+0xda/0x190 fs/super.c:1299
+ vfs_get_tree+0x8b/0x340 fs/super.c:1814
+ do_new_mount fs/namespace.c:3560 [inline]
+ path_mount+0x14e6/0x1f10 fs/namespace.c:3887
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount fs/namespace.c:4088 [inline]
+ __x64_sys_mount+0x28f/0x310 fs/namespace.c:4088
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-This implies that we can fit thousands of individual intents in a
-single tr_write log reservation on any given filesystem, and the
-number of loop iterations in a transaction is therefore dependent
-largely on how many intents are logged per iteration.
+Freed by task 5829:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kfree+0x2c4/0x4d0 mm/slub.c:4757
+ binderfs_evict_inode+0x29f/0x340 drivers/android/binderfs.c:279
+ evict+0x409/0x960 fs/inode.c:796
+ iput_final fs/inode.c:1946 [inline]
+ iput fs/inode.c:1972 [inline]
+ iput+0x52a/0x890 fs/inode.c:1958
+ dentry_unlink_inode+0x29c/0x480 fs/dcache.c:440
+ __dentry_kill+0x1d0/0x600 fs/dcache.c:643
+ shrink_kill fs/dcache.c:1088 [inline]
+ shrink_dentry_list+0x140/0x5d0 fs/dcache.c:1115
+ shrink_dcache_parent+0xe2/0x530 fs/dcache.c:1549
+ do_one_tree fs/dcache.c:1578 [inline]
+ shrink_dcache_for_umount+0xa1/0x3e0 fs/dcache.c:1595
+ generic_shutdown_super+0x6c/0x390 fs/super.c:620
+ kill_anon_super fs/super.c:1237 [inline]
+ kill_litter_super+0x70/0xa0 fs/super.c:1247
+ binderfs_kill_super+0x3b/0xa0 drivers/android/binderfs.c:792
+ deactivate_locked_super+0xbe/0x1a0 fs/super.c:473
+ deactivate_super+0xde/0x100 fs/super.c:506
+ cleanup_mnt+0x222/0x450 fs/namespace.c:1413
+ task_work_run+0x14e/0x250 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xad8/0x2d70 kernel/exit.c:938
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ get_signal+0x24ed/0x26c0 kernel/signal.c:3036
+ arch_do_signal_or_restart+0x90/0x7e0 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x150/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xda/0x250 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Hence if we are walking a range of extents in the BMBT to unmap
-them, then we should only be generating 2 intents per loop - a BUI
-for the BMBT removal and a CUI for the shared refcount decrease.
-That means we should be able to run at least a thousand iterations
-of that loop per transaction without getting anywhere near the
-transaction reservation limits.
+The buggy address belongs to the object at ffff8880290d5c00
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 8 bytes inside of
+ freed 512-byte region [ffff8880290d5c00, ffff8880290d5e00)
 
-*However!*
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff8880290d5800 pfn:0x290d4
+head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+anon flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff88801b041c80 0000000000000000 dead000000000001
+raw: ffff8880290d5800 000000000010000f 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff88801b041c80 0000000000000000 dead000000000001
+head: ffff8880290d5800 000000000010000f 00000000f5000000 0000000000000000
+head: 00fff00000000002 ffffea0000a43501 ffffffffffffffff 0000000000000000
+head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5222, tgid 5222 (udevadm), ts 30673243450, free_ts 30319293045
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1551
+ prep_new_page mm/page_alloc.c:1559 [inline]
+ get_page_from_freelist+0xfce/0x2f80 mm/page_alloc.c:3477
+ __alloc_frozen_pages_noprof+0x221/0x2470 mm/page_alloc.c:4740
+ alloc_pages_mpol+0x1fc/0x540 mm/mempolicy.c:2270
+ alloc_slab_page mm/slub.c:2423 [inline]
+ allocate_slab mm/slub.c:2587 [inline]
+ new_slab+0x23d/0x330 mm/slub.c:2640
+ ___slab_alloc+0xc5d/0x1720 mm/slub.c:3826
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3916
+ __slab_alloc_node mm/slub.c:3991 [inline]
+ slab_alloc_node mm/slub.c:4152 [inline]
+ __kmalloc_cache_noprof+0xfa/0x410 mm/slub.c:4320
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ kernfs_fop_open+0x28b/0xdb0 fs/kernfs/file.c:623
+ do_dentry_open+0x735/0x1c40 fs/open.c:956
+ vfs_open+0x82/0x3f0 fs/open.c:1086
+ do_open fs/namei.c:3830 [inline]
+ path_openat+0x1e88/0x2d80 fs/namei.c:3989
+ do_filp_open+0x20c/0x470 fs/namei.c:4016
+ do_sys_openat2+0x17a/0x1e0 fs/open.c:1428
+ do_sys_open fs/open.c:1443 [inline]
+ __do_sys_openat fs/open.c:1459 [inline]
+ __se_sys_openat fs/open.c:1454 [inline]
+ __x64_sys_openat+0x175/0x210 fs/open.c:1454
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+page last free pid 25 tgid 25 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1127 [inline]
+ free_frozen_pages+0x6db/0xfb0 mm/page_alloc.c:2660
+ rcu_do_batch kernel/rcu/tree.c:2546 [inline]
+ rcu_core+0x79d/0x14d0 kernel/rcu/tree.c:2802
+ handle_softirqs+0x213/0x8f0 kernel/softirq.c:561
+ run_ksoftirqd kernel/softirq.c:950 [inline]
+ run_ksoftirqd+0x3a/0x60 kernel/softirq.c:942
+ smpboot_thread_fn+0x661/0xa30 kernel/smpboot.c:164
+ kthread+0x3af/0x750 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 
-We have to relog every intent we haven't processed in the deferred
-batch every-so-often to prevent the outstanding intents from pinning
-the tail of the log. Hence the larger the number of intents in the
-initial batch, the more work we have to do later on (and the more
-overall log space and bandwidth they will consume) to relog them
-them over and over again until they pop to the head of the
-processing queue.
+Memory state around the buggy address:
+ ffff8880290d5b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880290d5b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8880290d5c00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                      ^
+ ffff8880290d5c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880290d5d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-Hence there is no real perforamce advantage to creating massive intent
-batches because we end up doing more work later on to relog those
-intents to prevent journal space deadlocks. It also doesn't speed up
-processing, because we still process the intent chains one at a time
-from start to completion before moving on to the next high level
-intent chain that needs to be processed.
 
-Further, after the first couple of intent chains have been
-processed, the initial log space reservation will have run out, and
-we are now asking for a new resrevation on every transaction roll we
-do. i.e. we now are now doing a log space reservation on every
-transaction roll in the processing chain instead of only doing it
-once per high level intent chain.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Hence from a log space accounting perspective (the hottest code path
-in the journal), it is far more efficient to perform a single high
-level transaction per extent unmap operation than it is to batch
-intents into a single high level transaction.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-My advice is this: we should never batch high level iterative
-intent-based operations into a single transaction because it's a
-false optimisation.  It might look like it is an efficiency
-improvement from the high level, but it ends up hammering the hot,
-performance critical paths in the transaction subsystem much, much
-harder and so will end up being slower than the single transaction
-per intent-based operation algorithm when it matters most....
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
