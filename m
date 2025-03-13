@@ -1,544 +1,127 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D01269D15;
-	Thu, 13 Mar 2025 14:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D043C26A0DB
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741876238; cv=none; b=g5ghgm/+oNTN+wbEVRR/NyuVGdtmvDQ17q4bdo0d5T5OmrFWuYg2reuEWSTR6CKTw1gIyzmzwS0PoGE7eN4n3lvnaUumj5t5Kp9x/wHIFw2PmNm1CcU8/e4I1yq25fniP1OIyCq3Zm+Yzi+F7S2Z/vKUw2WATqPrxniA8pcSyRw=
+	t=1741876243; cv=none; b=mstRgA1M3HjJ4hxLzR0K4HuIsnjadCNVHAi1JzjBn5a40oYJ58zjSpTvAv4WRSbXbodql1DMFNoQaxS/UIcnQ/yADOH+0nr1D+GVfSbSLpQ2ydM2Br23bfx+o3fIIVsp8MliGZmJsfNYPSxZSqIE9up5ABfe2upvQtg9eGZ4Luk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741876238; c=relaxed/simple;
-	bh=7xu59QVIatBVpYJa1Dkam5LKCr4ecNWmwMnn1XOpgxM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Pr84w7xezKvAgGFdflbZ3jzHggpqyg3cj+w39aJfoDLz5z2Rr/kkRK+n2LRRCW5+p95kRgDNkmGaT+o6aurYPciFepRliZVruFRLPq8iZdAlj/PtVD4R5dN5cuZ6IVFXUx7J9mj9XREMl/ZcJIzrMszK4qZuu1NwwX5mWX10u+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MpQzWP6V; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741876243; c=relaxed/simple;
+	bh=kzt33hJsTa85KuEVyT53fPaWcVDArcEY6RG1XvTBeAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dtixm2nvP8AhP2Ug2Rfx7lKosvWm/yd1I7M6ap5HOJhNJoViux4kcb1Gm+x77q3Rsbb8UT2NezTXBF6csZfO2rphkStD/SuirsRq8ST8FaFnnSlOk0KRBSJzVDukh4HQayJMonnbUdNXXUzpyTFVrep15+DrVxc7v6HZUEsdBzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ju7BUlzC; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpQzWP6V"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e46ebe19489so888247276.2;
-        Thu, 13 Mar 2025 07:30:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741876233; x=1742481033; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2yxTxBzVJ1jb8Memke4DOGdfoivqF5ZiHtqL+IiDifo=;
-        b=MpQzWP6VBk70YtiOcZ/tCgMuHN6Md22qcGakX79G3yzl6QTyXpQ4befYi03FwqIltd
-         46cc9zlngeyYZG4pkPVbOOGPPcXSKENnBu6Za2fWyADD9QJlOYSXsO39bvHFuIYFzMMx
-         /yoe4DYccJHP80qCX8r99SytyqR9IVvum1qcRX5Gem5JBOgELHmQ03YgQHd2wVSmZs4S
-         jCBhLiLOhhzR9X++/lSghCEsj+HcqBvd5TXdYX/bIKPs5/Ec0I+rLa+GE0oD19VPugHq
-         K+hAlf+sJWqPc3CGUGmsFRWYCp9tVFVSUu4wfUBxcnQxLlMN4KxJyJV2x2DJPHqo7wXy
-         /Gvw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ju7BUlzC"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DAUBg4020069
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:30:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	JHUDmC4PTSFYAcWgaACKX1N5/pWQOKndXgV5ZuGvDLc=; b=ju7BUlzCln+YLfMy
+	kdWXxUplQuGwkchYliq91VG/zEC2L20ojpqBGdIC36R6pUF3od3KUsdXY5vyKDSj
+	QtDeTHqzqpAh7/qyWGnMbPnUyg9iYvIL9KVT5njNA4IVHul4nuR0vGEHDrMYnIIM
+	WdoqiHIIjl/Yrv1iYl5CWZAlF//x1PmnAC2WX8n6ZHHvE6qQ2/meMkZ7rjeW83Gh
+	mybOs+DSAlmlOjbMVxoloQoGO5V7OJgAmTMzD25rVCkyIzvlXur9Jdw8qX73mDY9
+	64i6WXRPuuNeeprpab06KNhC4TWIeYh74ebIhTRLYoXhLz1D7KsHMxcZbDfRESNG
+	TccUjg==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2p66g3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:30:40 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e8f3c21043so3130096d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:30:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741876233; x=1742481033;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2yxTxBzVJ1jb8Memke4DOGdfoivqF5ZiHtqL+IiDifo=;
-        b=lhgobS1RDmRgl1APRENV1Sw0h+pCAr3Ch1pC3hB+Vgs86WTg//AeKpRycnyYdBbOQy
-         jOijrr4zhl+w61BfXIXNq4SqgXCHgSziJwKDazvnr6E3DwsWVjaGjAivRZuMCuV9z9uH
-         yKb3BRM0v1zqCBZPRwMeY/evg0yiSmVAnlKaRwJXO4Iad3scWQXyWNITTvGM/ZwVPCnN
-         WnQSG31BjEnaw6iFr9RGZJghuJJqhwxgM/6Kg0QBatrJ7H9h7b+n031pPjIk31b9VFwI
-         7QBvv/LHAtZQDb9ZoDALZlSuujUjJk0wuyTMpyFs7oyFvHmODLpo73XBKshS3Lve7+lT
-         FxHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWTZZr1AzwJKaKkd7M1POYoP6C1rpxzjcK1j/tRTaKrDjMdaItXw8+Hl4nyYKg6Vn1BHyBxZeAR+T5oKkw=@vger.kernel.org, AJvYcCWvJgzL67p/jh22sL2SCP60eUSjFsdlyaQkSQvNfuONxO6OXO44Xk/HVoA8P0kgGvEsDjEk40wPc9qHszor5YYcObV5KA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx87W0HHtatyQs4wz+DdFtjdd57+25aId8zYXG+35t4pFXWbKI/
-	4zP45939Doojow+yzdHMaVDvOMg9kL8NyMUGAy+9Yk6TFnm9wai1
-X-Gm-Gg: ASbGncv4rhkMt6wZb8jLIlg3+1l5FciePPq45EmFC2HlysWRrGFsMqonBYB1K6VzhGg
-	2upPRQy/2QISCy9HtM0J4JuuAU/hRUwcdFSHunwzYFRUUiilKyCjWYpuMSz+LQsB9uQzFgzBj1t
-	Ew4yLiFOKVqwje09BwqiRilEoaL13UeM9lgmB9nFiMpzlkj1FEewUl4WUJMCIwStTDN2VMeuFjH
-	2zgSlZcEfiePvZSgEkv5XA4rSfdZ3Su1byx1+ht1Im3lZsAW9SruEnfXFg5D0kOBDNzIR0rZXHU
-	SmlIgD3u8mniYW6sR8JfZp3gkzmCvlm7Sv4kuD8ivT19ow==
-X-Google-Smtp-Source: AGHT+IH09AesIQBjUBxsApIZQvHyYZm6UZ9u67B7m+1ckEnFWBOgtSLn7GunC15gO9RKs7x54Sd2Lg==
-X-Received: by 2002:a05:6902:310b:b0:e5b:4482:a4f7 with SMTP id 3f1490d57ef6-e635c1382fdmr31684786276.12.1741876233099;
-        Thu, 13 Mar 2025 07:30:33 -0700 (PDT)
-Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e63e56718d0sm338938276.50.2025.03.13.07.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 07:30:32 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Thu, 13 Mar 2025 09:30:05 -0500
-Subject: [PATCH v6 10/12] Documentation: wmi: Improve and update
- alienware-wmi documentation
+        d=1e100.net; s=20230601; t=1741876239; x=1742481039;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JHUDmC4PTSFYAcWgaACKX1N5/pWQOKndXgV5ZuGvDLc=;
+        b=J67VYiEBd5PwxZHhsO3Mnkn7hNIGrLCBGh60Zwa2xWK2LwLMFlaETetxkXlOKy11A5
+         HJ8bN5k60VAwhP6igbN3H8RN0ctBh7Os7/bjEULJUWxDIBUXHcD83EoG/oKh3U5NDH1m
+         zdlzcBSOGA6XRJhNVK9SIElqBvitDL9WWNHeQxxTgPOlhc8wapL6AalH/i6Rli6SNHrB
+         oV/FBgsUih251ipfw6xeLptgdV+kaJ3tm7VpC1WaG/m6ieVWp3033+gdoUpdmy2oJYjJ
+         GMDRGtn2HFCeMTCk2fz1MHad7j+KO2LeG8iiD6myFlpSRGTxoVqK2pmrnkgc9WmiYW0C
+         N+hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIMo38LIfHJR2eqEqy/UiadY7NfH2aD1EP/2VLS3mqY/i6Vv82QAtVpoAxdwHN4t9lcnaN5mREOUR1vzQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/9PDQmiy0t6VZJI6bUbr7JDQry4u6lt4am0EwZOgplFafdYBE
+	Je0huKxUwjvbVO6V1ExpVh2iof1YKrDJmV/q83vD8s7ixNu7DEcLhYtk7WD5EKbO8+hsFKfPdEt
+	MsAFAVXFi8GlCH/I/9sQRz/69BBA5W7OhoxxsBOv56kbdU1b5yS8hIuaV9kFm9ic=
+X-Gm-Gg: ASbGncsW5XertDcr+dWmdMsolB9pdr3Wqa8HwqJ+ax9QSl2IIZ4cpgnOxeW5CE0W7rf
+	7KdjeLNcYFzQDgurqh7+O1j+KKGRuu7naB5glq3IOpVeN5GuCORGWaCLotLeYL1EIuJ7n1O0Xsp
+	U4/tiEJtKnubSrCHozMDkMYZ5XSR9EFXjf7ehYuv4RdeCymL4HDE4Hgx+ftO2PgCZoHCGq1S7Mt
+	SS/gSvW700VM5CV0r9UaRut8oYkus3fyQuNnZJINAoce41sp/RsW9SFop1L0GyvLKJUS5Ga6U6a
+	LVJ7IFFFnfTOiTcodU+6W8ONIyNg4tJANGh/iD+VutXAzf6bXK13zz0vWvWdSKVjcNzIUw==
+X-Received: by 2002:a05:620a:40d1:b0:7c5:6fee:1634 with SMTP id af79cd13be357-7c56fee175emr285585685a.3.1741876239688;
+        Thu, 13 Mar 2025 07:30:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGew7PamKyiAcrPgUIZlCIP2W0SkL4/r8o51tM8nCHDl5YMpcw4o7WNySRMHlagbq/nm3aG7w==
+X-Received: by 2002:a05:620a:40d1:b0:7c5:6fee:1634 with SMTP id af79cd13be357-7c56fee175emr285583085a.3.1741876239273;
+        Thu, 13 Mar 2025 07:30:39 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149cf25csm85386166b.113.2025.03.13.07.30.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Mar 2025 07:30:38 -0700 (PDT)
+Message-ID: <07957f72-ce7e-41f7-8ea8-5839a33f04a3@oss.qualcomm.com>
+Date: Thu, 13 Mar 2025 15:30:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] Enable QPIC BAM and QPIC NAND support for SDX75
+To: Kaushal Kumar <quic_kaushalk@quicinc.com>, vkoul@kernel.org,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        manivannan.sadhasivam@linaro.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, andersson@kernel.org,
+        konradybcio@kernel.org, agross@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <20250313130918.4238-1-quic_kaushalk@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250313130918.4238-1-quic_kaushalk@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-hwm-v6-10-17b57f787d77@gmail.com>
-References: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
-In-Reply-To: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
- platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>
-X-Mailer: b4 0.14.2
+X-Authority-Analysis: v=2.4 cv=HP/DFptv c=1 sm=1 tr=0 ts=67d2ec10 cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=puiEX6dKtv1lSrn3j0sA:9 a=QEXdDO2ut3YA:10
+ a=pJ04lnu7RYOZP9TFuWaZ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: ePHrJquKTqpJiM-qua0bbcphTZvG9CKd
+X-Proofpoint-GUID: ePHrJquKTqpJiM-qua0bbcphTZvG9CKd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_06,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=741
+ clxscore=1015 priorityscore=1501 adultscore=0 impostorscore=0
+ malwarescore=0 spamscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130113
 
-Use tables to describe method operations instead of using pseudo-code.
-Drop unknown method descriptions to avoid redundancy. Drop GPIO section
-as it is currently irrelevant to this driver. Update Thermal_Information
-method documentation. Add one more helpful developer to the kudos section.
+On 3/13/25 2:09 PM, Kaushal Kumar wrote:
+> Hello,
+> 
+> This series adds and enables devicetree nodes for QPIC BAM
+> and QPIC NAND for Qualcomm SDX75 platform.
+> 
+> This patch series depends on the below patches:
+> https://lore.kernel.org/linux-spi/20250310120906.1577292-5-quic_mdalam@quicinc.com/T/
+> 
+> Kaushal Kumar (6):
+>   dt-bindings: mtd: qcom,nandc: Document the SDX75 NAND
+>   dt-bindings: dma: qcom,bam: Document dma-coherent property
+>   ARM: dts: qcom: sdx75: Add QPIC BAM support
+>   ARM: dts: qcom: sdx75: Add QPIC NAND support
+>   ARM: dts: qcom: sdx75-idp: Enable QPIC BAM support
+>   ARM: dts: qcom: sdx75-idp: Enable QPIC NAND support
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- Documentation/wmi/devices/alienware-wmi.rst | 383 +++++++++-------------------
- 1 file changed, 117 insertions(+), 266 deletions(-)
+subjects: sdx75 is arm64 and the prefix in that dir is:
 
-diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation/wmi/devices/alienware-wmi.rst
-index ddc5e561960e05fc7cffe700d7d278e32ff2e7b2..79238051b18bc5de9b502325017cd5c5fcf41748 100644
---- a/Documentation/wmi/devices/alienware-wmi.rst
-+++ b/Documentation/wmi/devices/alienware-wmi.rst
-@@ -11,7 +11,7 @@ The WMI device WMAX has been implemented for many Alienware and Dell's G-Series
- models. Throughout these models, two implementations have been identified. The
- first one, used by older systems, deals with HDMI, brightness, RGB, amplifier
- and deep sleep control. The second one used by newer systems deals primarily
--with thermal, overclocking, and GPIO control.
-+with thermal control and overclocking.
- 
- It is suspected that the latter is used by Alienware Command Center (AWCC) to
- manage manufacturer predefined thermal profiles. The alienware-wmi driver
-@@ -69,9 +69,6 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-    [WmiMethodId(164), Implemented, read, write, Description("Tobii Camera Power Off.")] void TobiiCameraPowerOff([out] uint32 argr);
-  };
- 
--Some of these methods get quite intricate so we will describe them using
--pseudo-code that vaguely resembles the original ASL code.
--
- Methods not described in the following document have unknown behavior.
- 
- Argument Structure
-@@ -87,175 +84,133 @@ ID 0xA0, the argument you would pass to the method is 0xA001.
- Thermal Methods
- ===============
- 
-+WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
-+-------------------------------------------------------------
-+
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| 0x01               | Get the number of temperature      | - Byte 1: Fan ID   |
-+|                    | sensors related with a fan ID      |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x02               | Get the temperature sensor IDs     | - Byte 1: Fan ID   |
-+|                    | related to a fan sensor ID         | - Byte 2: Index    |
-++--------------------+------------------------------------+--------------------+
-+
- WMI method Thermal_Information([in] uint32 arg2, [out] uint32 argr)
- -------------------------------------------------------------------
- 
--::
--
-- if BYTE_0(arg2) == 0x01:
--         argr = 1
--
-- if BYTE_0(arg2) == 0x02:
--         argr = SYSTEM_DESCRIPTION
--
-- if BYTE_0(arg2) == 0x03:
--         if BYTE_1(arg2) == 0x00:
--                 argr = FAN_ID_0
--
--         if BYTE_1(arg2) == 0x01:
--                 argr = FAN_ID_1
--
--         if BYTE_1(arg2) == 0x02:
--                 argr = FAN_ID_2
--
--         if BYTE_1(arg2) == 0x03:
--                 argr = FAN_ID_3
--
--         if BYTE_1(arg2) == 0x04:
--                 argr = SENSOR_ID_CPU | 0x0100
--
--         if BYTE_1(arg2) == 0x05:
--                 argr = SENSOR_ID_GPU | 0x0100
--
--         if BYTE_1(arg2) == 0x06:
--                 argr = THERMAL_MODE_QUIET_ID
--
--         if BYTE_1(arg2) == 0x07:
--                 argr = THERMAL_MODE_BALANCED_ID
--
--         if BYTE_1(arg2) == 0x08:
--                 argr = THERMAL_MODE_BALANCED_PERFORMANCE_ID
--
--         if BYTE_1(arg2) == 0x09:
--                 argr = THERMAL_MODE_PERFORMANCE_ID
--
--         if BYTE_1(arg2) == 0x0A:
--                 argr = THERMAL_MODE_LOW_POWER_ID
--
--         if BYTE_1(arg2) == 0x0B:
--                 argr = THERMAL_MODE_GMODE_ID
--
--         else:
--                 argr = 0xFFFFFFFF
--
-- if BYTE_0(arg2) == 0x04:
--         if is_valid_sensor(BYTE_1(arg2)):
--                 argr = SENSOR_TEMP_C
--         else:
--                 argr = 0xFFFFFFFF
--
-- if BYTE_0(arg2) == 0x05:
--         if is_valid_fan(BYTE_1(arg2)):
--                 argr = FAN_RPM()
--
-- if BYTE_0(arg2) == 0x06:
--         skip
--
-- if BYTE_0(arg2) == 0x07:
--         argr = 0
--
-- If BYTE_0(arg2) == 0x08:
--         if is_valid_fan(BYTE_1(arg2)):
--                 argr = 0
--         else:
--                 argr = 0xFFFFFFFF
--
-- if BYTE_0(arg2) == 0x09:
--         if is_valid_fan(BYTE_1(arg2)):
--                 argr = FAN_UNKNOWN_STAT_0()
--
--         else:
--                 argr = 0xFFFFFFFF
--
-- if BYTE_0(arg2) == 0x0A:
--         argr = THERMAL_MODE_BALANCED_ID
--
-- if BYTE_0(arg2) == 0x0B:
--         argr = CURRENT_THERMAL_MODE()
--
-- if BYTE_0(arg2) == 0x0C:
--         if is_valid_fan(BYTE_1(arg2)):
--                 argr = FAN_UNKNOWN_STAT_1()
--         else:
--                 argr = 0xFFFFFFFF
--
--Operation 0x02 returns a *system description* buffer with the following
--structure:
--
--::
--
-- out[0] -> Number of fans
-- out[1] -> Number of sensors
-- out[2] -> 0x00
-- out[3] -> Number of thermal modes
--
--Operation 0x03 list all available fan IDs, sensor IDs and thermal profile
--codes in order, but different models may have different number of fans and
--thermal profiles. These are the known ranges:
--
--* Fan IDs: from 2 up to 4
--* Sensor IDs: 2
--* Thermal profile codes: from 1 up to 7
--
--In total BYTE_1(ARG2) may range from 0x5 up to 0xD depending on the model.
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| 0x01               | Unknown.                           | - None             |
-++--------------------+------------------------------------+--------------------+
-+| 0x02               | Get system description number with | - None             |
-+|                    | the following structure:           |                    |
-+|                    |                                    |                    |
-+|                    | - Byte 0: Number of fans           |                    |
-+|                    | - Byte 1: Number of temperature    |                    |
-+|                    |   sensors                          |                    |
-+|                    | - Byte 2: Unknown                  |                    |
-+|                    | - Byte 3: Number of thermal        |                    |
-+|                    |   profiles                         |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x03               | List an ID or resource at a given  | - Byte 1: Index    |
-+|                    | index. Fan IDs, temperature IDs,   |                    |
-+|                    | unknown IDs and thermal profile    |                    |
-+|                    | IDs are listed in that exact       |                    |
-+|                    | order.                             |                    |
-+|                    |                                    |                    |
-+|                    | Operation 0x02 is used to know     |                    |
-+|                    | which indexes map to which         |                    |
-+|                    | resources.                         |                    |
-+|                    |                                    |                    |
-+|                    | **Returns:** ID at a given index   |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x04               | Get the current temperature for a  | - Byte 1: Sensor   |
-+|                    | given temperature sensor.          |   ID               |
-++--------------------+------------------------------------+--------------------+
-+| 0x05               | Get the current RPM for a given    | - Byte 1: Fan ID   |
-+|                    | fan.                               |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x06               | Get fan speed percentage. (not     | - Byte 1: Fan ID   |
-+|                    | implemented in every model)        |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x07               | Unknown.                           | - Unknown          |
-++--------------------+------------------------------------+--------------------+
-+| 0x08               | Get minimum RPM for a given FAN    | - Byte 1: Fan ID   |
-+|                    | ID.                                |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x09               | Get maximum RPM for a given FAN    | - Byte 1: Fan ID   |
-+|                    | ID.                                |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x0A               | Get balanced thermal profile ID.   | - None             |
-++--------------------+------------------------------------+--------------------+
-+| 0x0B               | Get current thermal profile ID.    | - None             |
-++--------------------+------------------------------------+--------------------+
-+| 0x0C               | Get current `boost` value for a    | - Byte 1: Fan ID   |
-+|                    | given fan ID.                      |                    |
-++--------------------+------------------------------------+--------------------+
- 
- WMI method Thermal_Control([in] uint32 arg2, [out] uint32 argr)
- ---------------------------------------------------------------
- 
--::
--
-- if BYTE_0(arg2) == 0x01:
--         if is_valid_thermal_profile(BYTE_1(arg2)):
--                 SET_THERMAL_PROFILE(BYTE_1(arg2))
--                 argr = 0
--
-- if BYTE_0(arg2) == 0x02:
--         if is_valid_fan(BYTE_1(arg2)):
--                 SET_FAN_SPEED_MULTIPLIER(BYTE_2(arg2))
--                 argr = 0
--         else:
--                 argr = 0xFFFFFFFF
--
--.. note::
--   While you can manually change the fan speed multiplier with this method,
--   Dell's BIOS tends to overwrite this changes anyway.
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| 0x01               | Activate a given thermal profile.  | - Byte 1: Thermal  |
-+|                    |                                    |   profile ID       |
-++--------------------+------------------------------------+--------------------+
-+| 0x02               | Set a `boost` value for a given    | - Byte 1: Fan ID   |
-+|                    | fan ID.                            | - Byte 2: Boost    |
-++--------------------+------------------------------------+--------------------+
- 
- These are the known thermal profile codes:
- 
--::
-++------------------------------+----------+------+
-+| Thermal Profile              | Type     | ID   |
-++==============================+==========+======+
-+| Custom                       | Special  | 0x00 |
-++------------------------------+----------+------+
-+| G-Mode                       | Special  | 0xAB |
-++------------------------------+----------+------+
-+| Quiet                        | Legacy   | 0x96 |
-++------------------------------+----------+------+
-+| Balanced                     | Legacy   | 0x97 |
-++------------------------------+----------+------+
-+| Balanced Performance         | Legacy   | 0x98 |
-++------------------------------+----------+------+
-+| Performance                  | Legacy   | 0x99 |
-++------------------------------+----------+------+
-+| Balanced                     | USTT     | 0xA0 |
-++------------------------------+----------+------+
-+| Balanced Performance         | USTT     | 0xA1 |
-++------------------------------+----------+------+
-+| Cool                         | USTT     | 0xA2 |
-++------------------------------+----------+------+
-+| Quiet                        | USTT     | 0xA3 |
-++------------------------------+----------+------+
-+| Performance                  | USTT     | 0xA4 |
-++------------------------------+----------+------+
-+| Low Power                    | USTT     | 0xA5 |
-++------------------------------+----------+------+
- 
-- CUSTOM                         0x00
-+If a model supports the User Selectable Thermal Tables (USTT) profiles, it will
-+not support the Legacy profiles and vice-versa.
- 
-- BALANCED_USTT                  0xA0
-- BALANCED_PERFORMANCE_USTT      0xA1
-- COOL_USTT                      0xA2
-- QUIET_USTT                     0xA3
-- PERFORMANCE_USTT               0xA4
-- LOW_POWER_USTT                 0xA5
--
-- QUIET                          0x96
-- BALANCED                       0x97
-- BALANCED_PERFORMANCE           0x98
-- PERFORMANCE                    0x99
--
-- GMODE                          0xAB
--
--Usually if a model doesn't support the first four profiles they will support
--the User Selectable Thermal Tables (USTT) profiles and vice-versa.
--
--GMODE replaces PERFORMANCE in G-Series laptops.
-+Every model supports the CUSTOM (0x00) thermal profile. GMODE replaces
-+PERFORMANCE in G-Series laptops.
- 
- WMI method GameShiftStatus([in] uint32 arg2, [out] uint32 argr)
- ---------------------------------------------------------------
- 
--::
--
-- if BYTE_0(arg2) == 0x1:
--         TOGGLE_GAME_SHIFT()
--         argr = GET_GAME_SHIFT_STATUS()
--
-- if BYTE_0(arg2) == 0x2:
--         argr = GET_GAME_SHIFT_STATUS()
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| 0x01               | Toggle *Game Shift*.               | - None             |
-++--------------------+------------------------------------+--------------------+
-+| 0x02               | Get *Game Shift* status.           | - None             |
-++--------------------+------------------------------------+--------------------+
- 
- Game Shift Status does not change the fan speed profile but it could be some
- sort of CPU/GPU power profile. Benchmarks have not been done.
-@@ -267,131 +222,27 @@ Thermal_Information does not list it.
- G-key on Dell's G-Series laptops also changes Game Shift status, so both are
- directly related.
- 
--WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
---------------------------------------------------------------
--
--::
--
-- if BYTE_0(arg2) == 0x1:
--        if is_valid_fan(BYTE_1(arg2)):
--                argr = 1
--        else:
--                argr = 0
--
-- if BYTE_0(arg2) == 0x2:
--        if is_valid_fan(BYTE_1(arg2)):
--                if BYTE_2(arg2) == 0:
--                        argr == SENSOR_ID
--                else
--                        argr == 0xFFFFFFFF
--        else:
--                argr = 0
--
- Overclocking Methods
- ====================
- 
--.. warning::
--   These methods have not been tested and are only partially reverse
--   engineered.
--
--WMI method Return_OverclockingReport([out] uint32 argr)
---------------------------------------------------------
--
--::
--
-- CSMI (0xE3, 0x99)
-- argr = 0
--
--CSMI is an unknown operation.
--
--WMI method Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr)
---------------------------------------------------------------------
--
--::
--
-- CSMI (0xE3, 0x99)
-- argr = 0
--
--CSMI is an unknown operation.
--
--WMI method Clear_OCFailSafeFlag([out] uint32 argr)
----------------------------------------------------
--
--::
--
-- CSMI (0xE3, 0x99)
-- argr = 0
--
--CSMI is an unknown operation.
--
--
- WMI method MemoryOCControl([in] uint32 arg2, [out] uint32 argr)
- ---------------------------------------------------------------
- 
- AWCC supports memory overclocking, but this method is very intricate and has
- not been deciphered yet.
- 
--GPIO methods
--============
--
--These methods are probably related to some kind of firmware update system,
--through a GPIO device.
--
--.. warning::
--   These methods have not been tested and are only partially reverse
--   engineered.
--
--WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
--------------------------------------------------------------------
--
--::
--
-- if BYTE_0(arg2) == 0:
--         if BYTE_1(arg2) == 1:
--                 SET_PIN_A_HIGH()
--         else:
--                 SET_PIN_A_LOW()
--
-- if BYTE_0(arg2) == 1:
--         if BYTE_1(arg2) == 1:
--                 SET_PIN_B_HIGH()
--
--         else:
--                 SET_PIN_B_LOW()
--
-- else:
--         argr = 1
--
--WMI method ReadTotalofGPIOs([out] uint32 argr)
------------------------------------------------
--
--::
--
-- argr = 0x02
--
--WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
--------------------------------------------------------------------
--
--::
--
-- if BYTE_0(arg2) == 0:
--         argr = PIN_A_STATUS
--
-- if BYTE_0(arg2) == 1:
--         argr = PIN_B_STATUS
--
- Other information Methods
- =========================
- 
- WMI method ReadChassisColor([out] uint32 argr)
- ----------------------------------------------
- 
--::
--
-- argr = CHASSIS_COLOR_ID
-+Returns the chassis color internal ID.
- 
- Acknowledgements
- ================
- 
--Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ for documenting
--and testing available thermal profile codes.
-+Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ and
-+`T-Troll <https://github.com/T-Troll/alienfx-tools/>`_ for documenting and
-+testing some of this device's functionality, making it possible to generalize
-+this driver.
+arm64: dts: qcom: <soc/board>: foo
 
--- 
-2.48.1
-
+Konrad
