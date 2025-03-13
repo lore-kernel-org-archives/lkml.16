@@ -1,89 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A582D1EF0A5;
-	Thu, 13 Mar 2025 16:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7694D269B1C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741882981; cv=none; b=ksxnkXuRWHhGnwgJEPRa2m61Y7vS0fvUUfuX0g81B2L4j3ZjvgQtBxhC/1s3j6bZmN6Yujgz5LCgTsdLI2uBVbGE4bK6QjtCpxYd1BemLkVXp+ia0k5t5oQoWJwSGk4OBM+TGqXbq+JHxqQ1jxmHmw+MlFwW6zjvKmjXVc1AZGg=
+	t=1741883002; cv=none; b=SyOoe4JcWJOgzQRd7kZO37Mv+Nerc4AebAtwV0fKnHN8tmjd6I9tEfs1sD4K8qBkEAQIcW9+Wv5t/y9gA7mQ757mlhdmwvaQz4p12GN5vUnBqT48J6jWUBKAQiEqX52wiEZjBAJ5koFnIQH+ZK41cj3vzpM16UC1Vx4p2e7/U+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741882981; c=relaxed/simple;
-	bh=P5R3F0s5D5HlzbFQP8b72oupiPY/dzZzf3y7zl8VGxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t5f9JfCJi7VVwjTsw5Ww+jfYWRq6cQS0aJC43KThFip1sqSV9WY2v4T0ZQU0DRV6FfOnLXRHpZk9ivXFBCVWQpFQp9NQ5MUhZqc7flkwHfZ2Ses2wme4H4w4UYqJ3nAlmDTvr3ple8rNg0JHYN+F6efUnZ/1utHP/lA53zEoTWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJfMsnKe; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741883002; c=relaxed/simple;
+	bh=/5QGkHSFyJa5DA2sSvtJkXhuwRiWIIlBOYTheGh7mm4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=amtDgNNnkYZCki3FIjKbGj7fnmU47DbULiPIz/B8eaIOzqvcx+UgOKveSpuAC3nweqhWKbJbfSb0N01RzkZ06zwxJ4pMRaCAqD4vS4lHiOHsphrNz3xH8gC3V264IeZs+PLwb3usHclRAA4dOAse6br2tntYqMqkUBSYQ6MqHHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nX1bZiBp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJfMsnKe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741882979; x=1773418979;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=P5R3F0s5D5HlzbFQP8b72oupiPY/dzZzf3y7zl8VGxU=;
-  b=jJfMsnKerzn3vRKVpc3VB4YU3zkdyNdLVqZDBfhFJmz+4wOndess3CRi
-   0S1V4TmAXL60X4aRXNOlNMUyrAKf2aRWmEy/fiaS99ONkC9ZqYtPrf5An
-   eMHtX2fDFtphAyQGvhOyeKy6p4XTIp9oY8BYGK2jZ7KyaoAPm9IEWVW9Q
-   dyb54MF6vKcTfNd0lGbP8CQ4G+7KBXk/MwBGQDmTBRYkmf+iGzPoeFIe6
-   B7PAx46tPW7Dc1foPuhDgTqpTMo5GN2d0dxWzq5o1xscqhz+qTE2A7BLx
-   x42qHK8Z6Rdi3bfTw0zXJI2E5bELlGUxgjBL01ASqvMnMetUfHo9RWEVS
-   w==;
-X-CSE-ConnectionGUID: LmnpfIPhTECPsfzL4JnqLg==
-X-CSE-MsgGUID: fazMzV6TT/OcjboDgjtLSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="46800124"
-X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
-   d="scan'208";a="46800124"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 09:22:58 -0700
-X-CSE-ConnectionGUID: 3spZhGmWTZCTemtFuHZ1zQ==
-X-CSE-MsgGUID: BgKOe3xMRiSkev+0VQhWTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
-   d="scan'208";a="151859277"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 13 Mar 2025 09:22:57 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C3080156; Thu, 13 Mar 2025 18:22:54 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: David Lechner <dlechner@baylibre.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] iio: amplifiers: hmc425a: Remove not fully correct comment
-Date: Thu, 13 Mar 2025 18:22:53 +0200
-Message-ID: <20250313162254.416422-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nX1bZiBp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A10C4CEDD;
+	Thu, 13 Mar 2025 16:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741883002;
+	bh=/5QGkHSFyJa5DA2sSvtJkXhuwRiWIIlBOYTheGh7mm4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=nX1bZiBp5EFxmqJdMoijkzOJ50sU1yiMLc7ckCRqZwlQs7KGOS3qytNnMl7Bl9DJc
+	 4w1UW3+8sicFBleItKVqoMKe8TF2bUo0djsSx3LZRc2R+aOEJzFNNQvHNIWSLYyeOC
+	 Gu/Ur2vk6texVDYPuWunyXMna0OKuWZvIhD879CGt5d39JojKlvyqF8HucrpkC5yfp
+	 lakmzpRv90ogOOtWZhSrc11PDAVlkoKH/HSQYnnUATH3RKmWvHsTkBrm3PeOEha1uQ
+	 DCR+I4FEDB9ImDaP2kv8qnFZnbNDBO2nHLmPpZmEi16yv7f4iHzZN/mtROW3JZMQz6
+	 0WqbvLs2hkiEQ==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Christian Eggers <ceggers@arri.de>
+Cc: linux-kernel@vger.kernel.org
+In-Reply-To: <20250313103051.32430-1-ceggers@arri.de>
+References: <20250313103051.32430-1-ceggers@arri.de>
+Subject: Re: (subset) [PATCH v3 0/2] regulator: fix race with probing of
+ dummy regulator
+Message-Id: <174188300085.450690.13914957191633099426.b4-ty@kernel.org>
+Date: Thu, 13 Mar 2025 16:23:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-The OF match table can be used outside of OF-based platforms.
-Remove the (misleading) comment.
+On Thu, 13 Mar 2025 11:27:37 +0100, Christian Eggers wrote:
+> These two patches are already in linux-next. I made a minor adjustment
+> proposed by Doug. Can they still be updated?
+> 
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/iio/amplifiers/hmc425a.c | 1 -
- 1 file changed, 1 deletion(-)
+Applied to
 
-diff --git a/drivers/iio/amplifiers/hmc425a.c b/drivers/iio/amplifiers/hmc425a.c
-index d9a359e1388a..e92d7f399e33 100644
---- a/drivers/iio/amplifiers/hmc425a.c
-+++ b/drivers/iio/amplifiers/hmc425a.c
-@@ -398,7 +398,6 @@ static int hmc425a_probe(struct platform_device *pdev)
- 	return devm_iio_device_register(&pdev->dev, indio_dev);
- }
- 
--/* Match table for of_platform binding */
- static const struct of_device_id hmc425a_of_match[] = {
- 	{ .compatible = "adi,hmc425a",
- 	  .data = &hmc425a_chip_info_tbl[ID_HMC425A]},
--- 
-2.47.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+
+Thanks!
+
+[2/2] regulator: check that dummy regulator has been probed before using it
+      commit: 2c7a50bec4958f1d1c84d19cde518d0e96a676fd
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
