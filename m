@@ -1,50 +1,68 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9BAF4FA
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAEC78F37
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741839907; cv=none; b=J/8w8MNXMiUV1gkqikuo5Cm4/6H0nAdmUTXIqBnqcS30G2zoJuVBt81tpNIDipBiZhvfjWxakqexJHo98AC07yaYFF3tBGwg9WTxmvDx2mrc2g3PyH2wR0hkqBnkPXHUHR4bn5tu4g96W5Cjov0PX5ltUgjPtovJHVzHLqb3ESI=
+	t=1741839966; cv=none; b=p+B0qq1DdSpvQVbI4/Mwo9Wu7Iz0VHAnIXtREDDfPFTVz8yaRWK47O4gQ6FBu35XfN2bUhEK1g/j8wbqip+1MnW5LghPWNUpvK5hdFC1QxEYq6Vkgui7sxPpax2rifAru8hYBVNDe4QZUN8bBZ/Dz8IC7kNoVSQET6lx6g4YgsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741839907; c=relaxed/simple;
-	bh=uOmNbrGMfropRywYdxYE8WWIPfslWOr4+goJLmUglPY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bjGa1RTWNhSeWaJmRlUotIsS3hon+8U04BbeWC99uXcu71XTZFOWpkiWj0p1f2llPKbpzLL8WFmmkXaD/99ZteIqx59i4xXhkUR96qX0JDiks31O3v7gvMLiSvB/o1HYdJqFJ+SQnTKIEHwe/g6cineCYMapG1aQfSQpDT8z5hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=dGE+CHhX; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1741839966; c=relaxed/simple;
+	bh=t0i3xxB9NqroYdqkYjp3FPjZ7hOFU7ETmVWx06sy33s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QBvzAaAJaKrk4ACVH8Dqrl5uRIXBlW/E+sbeOMsBY4WZcll0Cbn78db+vOfVQMDEJ/vs6gb4yK2qHZJpIrBxcCDpe/G8kUHhzjVVlTYJ3owPMrzVAfyUrpEnROWnwv51vHyeNGTWPPJTVp4/mNzKf3twWhoNuv/xGt0A2J8ucCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J7TudeMN; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="dGE+CHhX"
-Received: from localhost.localdomain (unknown [10.101.200.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 35E6B3F942;
-	Thu, 13 Mar 2025 04:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1741839463;
-	bh=c+lwiNEeZKR7bI4cisdbs6du9vDi2xjExAwAe2kT2pU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
-	b=dGE+CHhX76Bjsezh7k3+mUoKnaOtigHVK8ZgjC3t+JdL598zHcLvL+cEbBWMBVhrC
-	 I9hqbl5AxOeN6xgdOr5eERdLUfCZwNgbx+tKBQs/DS49ye20oc9jK421R2BxxxjfEN
-	 /t/GDbo4f2Ev77VWm4OhNH432h+XFEYMYF4JEyNVLqXSrx7+f6Usgeg2RX98otPtU5
-	 FxnRl4iGXKzD7NGj1logg0lXeZ9D/9SvxDS9dAD+B2HiPOZG+2ynkgPvwV4OpuOMYy
-	 FMjkRcw5KwG2KXErJxXLJcz/mEeVm83d+XR3pEQeaSN5pWOFwcIRGedFYXP09hPrVv
-	 VWMPFSEveZHsQ==
-From: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>
-To: 
-Cc: leo.lin@canonical.com,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm: add .hdrtest to .gitignore under drm directories
-Date: Thu, 13 Mar 2025 12:16:56 +0800
-Message-ID: <20250313041711.872378-1-leo.lin@canonical.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7TudeMN"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8ff3072a1so872776d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 21:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741839963; x=1742444763; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nieNMs7+cI01uDGtEbChh5VGZnwSZ+dW8uHTjSJv+is=;
+        b=J7TudeMNq2G9i5PpY0kjIjeK8eSX4fMPpxx1C6hGiDpBDiJJyWg8YxhJBbJaW/TW5j
+         +3SO7EolOdZBwCbvHd9/TmZAuX+gioBGELsk3StGoDwJXUXDNoFLm+h5TzKRt25bfEa6
+         gkKZ/ozHSyySS4+/VxUJ+R3tsVLEaJS8PEAazIu/stqgGbyrH0xEEJIIY5vOT+/1DWK8
+         A5rXNoQmXxcqD3UUqgGre4WJb7EyYp413TR6YwaJNjPbJXeedOj/1veh3gD2x4CYWa45
+         c5nYdZPaK1vpX9fP/VF+/nY9FW7u583JZteDS+K7O4igdSgV7BMXv09FxW6+J+S5zoqr
+         BCgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741839963; x=1742444763;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nieNMs7+cI01uDGtEbChh5VGZnwSZ+dW8uHTjSJv+is=;
+        b=FGqh7JOGTfOoKRulplzdIDFsKJub73kU2AMFqMSE/Yhuh56K1VSMFxwXiB7KxpsIOB
+         cff37DXVdFmLbhDbHybvHphw7wKB7gRyHCjQ9RpKEZh9BaWeSK4/Q6wJct8UMVksfTbQ
+         E6s4Sb9GK8wRJVjXwkAhUnZVJ8IJpCUMMEUzLjmzCln9HSSK87rvDXEFxmN6S/8gp7CS
+         fzrB4kwXYHf5tsj3kxcxujiLpkpxW05oE2rjiJKuJhjgW3A/FP5Z7qN1yP+2rgLxTbdM
+         YEWgSXcpa1W2HzTrP1bzVj7Gtn+Y9cNPVqMbbxrJNFXQ4KJ4Wi7zEBsz+qF7qiuPkj8R
+         +apg==
+X-Gm-Message-State: AOJu0YyD+AGW0FNagWf83V9rZy5W9mors0eKwn74YJ959bwvXy11f44d
+	6vIhykQEeFn1sMzTAQTIo1jckwY8YFc9m/bJKgq9tw+L2Zs6mS0=
+X-Gm-Gg: ASbGncvq5jLmHTPsW/chDhw85RWJRpdTKnei9CJb3P5zYRz9bH44dq6Jnbr5l+ZSnSi
+	H3BoGJir+NhwAYxLylYGRBHKwRdO3+9V0JXLIZOZCp6LtHx/J5qxXHJoRGxJgE+RNhpk+pSv9Z2
+	aBesgyTUoMpOrJGGDo0CGCBEZTycgtKRenjifLHIg+yWRbQCq6mcKy9k+nCitnoHzDSp8s2XYu9
+	Ufbd2Jz1XftHJrGLCWoxsesNwL4Pmy543Dcas6IvvpQ4jeYYCDChpBk+qpM8ehJ894ui6HOsOAm
+	ZETOi+A9nRoSdHy1If9lup+RFCse5eTjH2eysypebA==
+X-Google-Smtp-Source: AGHT+IFkON6ImdZyt7KPbmMEVe2zyi0T917+yTblILKjYzPy5CsyUdH8ke3k+tpd50IvwCP7f+O75w==
+X-Received: by 2002:a05:620a:450a:b0:7c3:e1ef:e44d with SMTP id af79cd13be357-7c55e6e77b6mr587745585a.0.1741839963288;
+        Wed, 12 Mar 2025 21:26:03 -0700 (PDT)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c573d89b8fsm45680085a.105.2025.03.12.21.26.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 21:26:02 -0700 (PDT)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: tytso@mit.edu,
+	Jason@zx2c4.com
+Cc: linux-kernel@vger.kernel.org,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] virt: vmgenid: Add Null check for device
+Date: Wed, 12 Mar 2025 23:26:00 -0500
+Message-Id: <20250313042600.1168619-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,31 +71,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The header self-contained tests in drm may leave .hdrtest files in
-include/drm/ and drivers/gpu/drm/. Omit them by adding .gitignore
+Not all devices have an ACPI companion fwnode, so device might be NULL.
+This is similar to the commit cd2fd6eab480
+("platform/x86: int3472: Check for adev == NULL").
 
-Signed-off-by: Yo-Jung (Leo) Lin <leo.lin@canonical.com>
+Add a check for device not being set and return -ENODEV in that case to
+avoid a possible NULL pointer deref in vmgenid_add_acpi().
+
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
 ---
- drivers/gpu/drm/.gitignore | 1 +
- include/drm/.gitignore     | 1 +
- 2 files changed, 2 insertions(+)
- create mode 100644 drivers/gpu/drm/.gitignore
- create mode 100644 include/drm/.gitignore
+ drivers/virt/vmgenid.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/.gitignore b/drivers/gpu/drm/.gitignore
-new file mode 100644
-index 000000000000..d9a77f3b59b2
---- /dev/null
-+++ b/drivers/gpu/drm/.gitignore
-@@ -0,0 +1 @@
-+*.hdrtest
-diff --git a/include/drm/.gitignore b/include/drm/.gitignore
-new file mode 100644
-index 000000000000..d9a77f3b59b2
---- /dev/null
-+++ b/include/drm/.gitignore
-@@ -0,0 +1 @@
-+*.hdrtest
+diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
+index 66135eac3abf..0cfa2fbf0d44 100644
+--- a/drivers/virt/vmgenid.c
++++ b/drivers/virt/vmgenid.c
+@@ -59,6 +59,9 @@ static int vmgenid_add_acpi(struct device *dev, struct vmgenid_state *state)
+ 	void *virt_addr;
+ 	int ret = 0;
+ 
++	if (!device)
++		return -ENODEV;
++
+ 	status = acpi_evaluate_object(device->handle, "ADDR", NULL, &parsed);
+ 	if (ACPI_FAILURE(status)) {
+ 		ACPI_EXCEPTION((AE_INFO, status, "Evaluating ADDR"));
 -- 
-2.43.0
+2.34.1
 
