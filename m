@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAAB1FFC4E
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 23:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F57220100E
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 23:34:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741908883; cv=none; b=OQ10NABjBvMsYwSoBiKRI8xMWbF6SrmhzEbfB9YahYE38DIGkogLVfzO+km/4mBYFe35Efhmmb3/hbeTRmeHyEKlCeixeaKNnGvYj8Q1ob4RP0/zFhUnSy2opFUoTm+jSqljx0/Z18KBN6ikD6LqnX44m+jUuXLDZvV+AJoSVtA=
+	t=1741908895; cv=none; b=R7ay/u++7YCvDb2lecwA4KynDtQQPaMyaa2EkTlzyjnpfwtPWygSlsJ8nvkGLI8O4HPMQJxczkBwPJzKGES01aXuBQSMS4s+nxUJuqVg+Pcdk2XyGZCxoD3FTUTNB1fKxZiR5CdDNuv4CRfKqwSoMxFVP0f/0eAX6X40B36Z8uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741908883; c=relaxed/simple;
-	bh=bUmykwDxrEmtIQ9GoL8F0xFmqiOF9yATjusg+hmIxWc=;
+	s=arc-20240116; t=1741908895; c=relaxed/simple;
+	bh=dgaJKJPLu+2m9DfyFnPJ/5d+sJeqh9WzlokmjF3zf3E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pmP1cHuGkoh0vla9lTXTOakawqAMv/uxLcv74vYHMj5/nVt989Eze9nSKt6OYR+HmxS4xFvpzabWhLWvfyqdXeqUFuCLweyGveCP9AomDs0zlR6pIeyT76uU/qXC/bJSqxoiAomZeVyO5qjrq6/lRl7VuiOGEe9P32/JNWorG8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L77oWvOa; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=XUaBPwOXLGHVAh7iyzq1QGG9nUszP+7MPmpJvj5sW3ey0xI0LYwnDsl1/7nmFNAtJWXL7Jqpbw6o3saIo5hj7vf+hgid7S/CctmDOKMHi4mmdRdUR3FmLr5li204CitWNipe/whhAQaMHmMCN0/bAjSgv/FieP4P+RyC1O18Yus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fgtu75Aq; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L77oWvOa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fgtu75Aq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741908880;
+	s=mimecast20190719; t=1741908892;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xCq288hnIzAt6EE/D2KI6gM8OPNMHb29b2SqQDvuZUg=;
-	b=L77oWvOaG0PxQKsuy5GgZVahg6Z5KwLMNeogxZpMsEXEPiM7Sx5kEdR4Yvv5VVIVcSNp29
-	1MNuBKOcZst1qhXsBOipcmW9GWRP65Apw+xH0YVGYg6SHSPsdMQLnP1dtX4yM9nYGmsS3P
-	QKFdxTDYJ6JN9vARoFmJdPwLBKXQbmY=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=DBEmQI/3EJ1uZKgrd77H/O1zAeWoD9Sx9X2aQy7MD78=;
+	b=Fgtu75AqCNJ7jmUxy/cAOVho6aTNaVcnZKmA9wGXJc4TCScGwONm7nk1stiXmdC/yKww2E
+	YcjxF9K5SAVLL0+iet1DoXgatjQjMFOPmashEkTvfKv74cgpJXSqTLYAkKKTzvMbJnDF+0
+	1iW+FBM2rBDLE+scZ42jT0dN9aKgPek=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-20-VEEEos5ANpi7A-NKHDFhlA-1; Thu,
- 13 Mar 2025 19:34:37 -0400
-X-MC-Unique: VEEEos5ANpi7A-NKHDFhlA-1
-X-Mimecast-MFC-AGG-ID: VEEEos5ANpi7A-NKHDFhlA_1741908875
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-434-wUzYjETROGCpdz79VYS9tw-1; Thu,
+ 13 Mar 2025 19:34:48 -0400
+X-MC-Unique: wUzYjETROGCpdz79VYS9tw-1
+X-Mimecast-MFC-AGG-ID: wUzYjETROGCpdz79VYS9tw_1741908886
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 90AA319560B6;
-	Thu, 13 Mar 2025 23:34:35 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87AEA180AF4C;
+	Thu, 13 Mar 2025 23:34:46 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.61])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 505061828A87;
-	Thu, 13 Mar 2025 23:34:33 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 50D1E1800945;
+	Thu, 13 Mar 2025 23:34:44 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Viacheslav Dubeyko <slava@dubeyko.com>,
 	Alex Markuze <amarkuze@redhat.com>
@@ -53,9 +53,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 12/35] libceph: Bypass the messenger-v1 Tx loop for databuf/iter data blobs
-Date: Thu, 13 Mar 2025 23:33:04 +0000
-Message-ID: <20250313233341.1675324-13-dhowells@redhat.com>
+Subject: [RFC PATCH 15/35] libceph: Make osd_req_op_cls_init() use a ceph_databuf and map it
+Date: Thu, 13 Mar 2025 23:33:07 +0000
+Message-ID: <20250313233341.1675324-16-dhowells@redhat.com>
 In-Reply-To: <20250313233341.1675324-1-dhowells@redhat.com>
 References: <20250313233341.1675324-1-dhowells@redhat.com>
 Precedence: bulk
@@ -65,12 +65,11 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Don't use the messenger-v1 Tx loop for databuf/iter data blobs, which sends
-page fragments individually, but rather pass the entire iterator to the
-socket in one go.  This uses the loop inside of tcp_sendmsg() to do the
-work and allows TCP to make better choices.
+Make osd_req_op_cls_init() use a ceph_databuf to hold the request_info data
+and then map it and write directly into it rather than using the databuf
+encode functions.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Viacheslav Dubeyko <slava@dubeyko.com>
@@ -79,157 +78,91 @@ cc: Ilya Dryomov <idryomov@gmail.com>
 cc: ceph-devel@vger.kernel.org
 cc: linux-fsdevel@vger.kernel.org
 ---
- include/linux/ceph/messenger.h |  1 +
- net/ceph/messenger.c           |  1 +
- net/ceph/messenger_v1.c        | 76 ++++++++++++++++++++++++++++------
- 3 files changed, 65 insertions(+), 13 deletions(-)
+ net/ceph/osd_client.c | 55 +++++++++++++++++--------------------------
+ 1 file changed, 22 insertions(+), 33 deletions(-)
 
-diff --git a/include/linux/ceph/messenger.h b/include/linux/ceph/messenger.h
-index 864aad369c91..1b646d0dff39 100644
---- a/include/linux/ceph/messenger.h
-+++ b/include/linux/ceph/messenger.h
-@@ -255,6 +255,7 @@ struct ceph_msg_data_cursor {
- 		};
- 		struct {
- 			struct iov_iter		iov_iter;
-+			struct iov_iter		crc_iter;
- 			unsigned int		lastlen;
- 		};
- 	};
-diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
-index 02439b38ec94..dc8082575e4f 100644
---- a/net/ceph/messenger.c
-+++ b/net/ceph/messenger.c
-@@ -975,6 +975,7 @@ static void ceph_msg_data_iter_cursor_init(struct ceph_msg_data_cursor *cursor,
- 	struct ceph_msg_data *data = cursor->data;
+diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+index 10f65e9b1906..405ccf7e7a91 100644
+--- a/net/ceph/osd_client.c
++++ b/net/ceph/osd_client.c
+@@ -245,14 +245,14 @@ void osd_req_op_extent_osd_iter(struct ceph_osd_request *osd_req,
+ }
+ EXPORT_SYMBOL(osd_req_op_extent_osd_iter);
  
- 	cursor->iov_iter = data->iter;
-+	cursor->crc_iter = data->iter;
- 	cursor->lastlen = 0;
- 	iov_iter_truncate(&cursor->iov_iter, length);
- 	cursor->resid = iov_iter_count(&cursor->iov_iter);
-diff --git a/net/ceph/messenger_v1.c b/net/ceph/messenger_v1.c
-index 0cb61c76b9b8..d6464ac62b09 100644
---- a/net/ceph/messenger_v1.c
-+++ b/net/ceph/messenger_v1.c
-@@ -3,6 +3,7 @@
+-static void osd_req_op_cls_request_info_pagelist(
+-			struct ceph_osd_request *osd_req,
+-			unsigned int which, struct ceph_pagelist *pagelist)
++static void osd_req_op_cls_request_info_databuf(struct ceph_osd_request *osd_req,
++						unsigned int which,
++						struct ceph_databuf *dbuf)
+ {
+ 	struct ceph_osd_data *osd_data;
  
- #include <linux/bvec.h>
- #include <linux/crc32c.h>
-+#include <linux/iov_iter.h>
- #include <linux/net.h>
- #include <linux/socket.h>
- #include <net/sock.h>
-@@ -74,6 +75,21 @@ static int ceph_tcp_sendmsg(struct socket *sock, struct kvec *iov,
- 	return r;
+ 	osd_data = osd_req_op_data(osd_req, which, cls, request_info);
+-	ceph_osd_data_pagelist_init(osd_data, pagelist);
++	ceph_osd_databuf_init(osd_data, dbuf);
  }
  
-+static int ceph_tcp_sock_sendmsg(struct socket *sock, struct iov_iter *iter,
-+				 unsigned int flags)
-+{
-+	struct msghdr msg = {
-+		.msg_iter  = *iter,
-+		.msg_flags = MSG_DONTWAIT | MSG_NOSIGNAL | flags,
-+	};
-+	int r;
+ void osd_req_op_cls_request_databuf(struct ceph_osd_request *osd_req,
+@@ -778,42 +778,31 @@ int osd_req_op_cls_init(struct ceph_osd_request *osd_req, unsigned int which,
+ 			const char *class, const char *method)
+ {
+ 	struct ceph_osd_req_op *op;
+-	struct ceph_pagelist *pagelist;
+-	size_t payload_len = 0;
+-	size_t size;
+-	int ret;
++	struct ceph_databuf *dbuf;
++	size_t csize = strlen(class), msize = strlen(method);
++	void *p;
 +
-+	r = sock_sendmsg(sock, &msg);
-+	if (r == -EAGAIN)
-+		r = 0;
-+	return r;
-+}
-+
- /*
-  * @more: MSG_MORE or 0.
-  */
-@@ -455,6 +471,24 @@ static int write_partial_kvec(struct ceph_connection *con)
- 	return ret;  /* done! */
++	BUG_ON(csize > (size_t) U8_MAX);
++	BUG_ON(msize > (size_t) U8_MAX);
+ 
+ 	op = osd_req_op_init(osd_req, which, CEPH_OSD_OP_CALL, 0);
++	op->cls.class_name = class;
++	op->cls.class_len  = csize;
++	op->cls.method_name = method;
++	op->cls.method_len  = msize;
+ 
+-	pagelist = ceph_pagelist_alloc(GFP_NOFS);
+-	if (!pagelist)
++	dbuf = ceph_databuf_req_alloc(1, PAGE_SIZE, GFP_NOFS);
++	if (!dbuf)
+ 		return -ENOMEM;
+ 
+-	op->cls.class_name = class;
+-	size = strlen(class);
+-	BUG_ON(size > (size_t) U8_MAX);
+-	op->cls.class_len = size;
+-	ret = ceph_pagelist_append(pagelist, class, size);
+-	if (ret)
+-		goto err_pagelist_free;
+-	payload_len += size;
+-
+-	op->cls.method_name = method;
+-	size = strlen(method);
+-	BUG_ON(size > (size_t) U8_MAX);
+-	op->cls.method_len = size;
+-	ret = ceph_pagelist_append(pagelist, method, size);
+-	if (ret)
+-		goto err_pagelist_free;
+-	payload_len += size;
++	p = ceph_databuf_enc_start(dbuf);
++	ceph_encode_copy(&p, class, csize);
++	ceph_encode_copy(&p, method, msize);
++	ceph_databuf_enc_stop(dbuf, p);
+ 
+-	osd_req_op_cls_request_info_pagelist(osd_req, which, pagelist);
+-	op->indata_len = payload_len;
++	osd_req_op_cls_request_info_databuf(osd_req, which, dbuf);
++	op->indata_len = ceph_databuf_len(dbuf);
+ 	return 0;
+-
+-err_pagelist_free:
+-	ceph_pagelist_release(pagelist);
+-	return ret;
  }
- 
-+static size_t ceph_crc_from_iter(void *iter_from, size_t progress,
-+				 size_t len, void *priv, void *priv2)
-+{
-+	u32 *crc = priv;
-+
-+	*crc = crc32c(*crc, iter_from, len);
-+	return 0;
-+}
-+
-+static void ceph_calc_crc(struct iov_iter *iter, size_t count, u32 *crc)
-+{
-+	size_t done;
-+
-+	done = iterate_and_advance_kernel(iter, count, crc, NULL,
-+					  ceph_crc_from_iter);
-+	WARN_ON(done != count);
-+}
-+
- /*
-  * Write as much message data payload as we can.  If we finish, queue
-  * up the footer.
-@@ -467,7 +501,7 @@ static int write_partial_message_data(struct ceph_connection *con)
- 	struct ceph_msg *msg = con->out_msg;
- 	struct ceph_msg_data_cursor *cursor = &msg->cursor;
- 	bool do_datacrc = !ceph_test_opt(from_msgr(con->msgr), NOCRC);
--	u32 crc;
-+	u32 crc = 0;
- 
- 	dout("%s %p msg %p\n", __func__, con, msg);
- 
-@@ -484,9 +518,6 @@ static int write_partial_message_data(struct ceph_connection *con)
- 	 */
- 	crc = do_datacrc ? le32_to_cpu(msg->footer.data_crc) : 0;
- 	while (cursor->total_resid) {
--		struct page *page;
--		size_t page_offset;
--		size_t length;
- 		int ret;
- 
- 		if (!cursor->resid) {
-@@ -494,17 +525,36 @@ static int write_partial_message_data(struct ceph_connection *con)
- 			continue;
- 		}
- 
--		page = ceph_msg_data_next(cursor, &page_offset, &length);
--		ret = ceph_tcp_sendpage(con->sock, page, page_offset, length,
--					MSG_MORE);
--		if (ret <= 0) {
--			if (do_datacrc)
--				msg->footer.data_crc = cpu_to_le32(crc);
-+		if (cursor->data->type == CEPH_MSG_DATA_DATABUF ||
-+		    cursor->data->type == CEPH_MSG_DATA_ITER) {
-+			ret = ceph_tcp_sock_sendmsg(con->sock, &cursor->iov_iter,
-+						    MSG_MORE);
-+			if (ret <= 0) {
-+				if (do_datacrc)
-+					msg->footer.data_crc = cpu_to_le32(crc);
- 
--			return ret;
-+				return ret;
-+			}
-+			if (do_datacrc && cursor->need_crc)
-+				ceph_calc_crc(&cursor->crc_iter, ret, &crc);
-+		} else {
-+			struct page *page;
-+			size_t page_offset;
-+			size_t length;
-+
-+			page = ceph_msg_data_next(cursor, &page_offset, &length);
-+			ret = ceph_tcp_sendpage(con->sock, page, page_offset,
-+						length, MSG_MORE);
-+			if (ret <= 0) {
-+				if (do_datacrc)
-+					msg->footer.data_crc = cpu_to_le32(crc);
-+
-+				return ret;
-+			}
-+			if (do_datacrc && cursor->need_crc)
-+				crc = ceph_crc32c_page(crc, page, page_offset,
-+						       length);
- 		}
--		if (do_datacrc && cursor->need_crc)
--			crc = ceph_crc32c_page(crc, page, page_offset, length);
- 		ceph_msg_data_advance(cursor, (size_t)ret);
- 	}
+ EXPORT_SYMBOL(osd_req_op_cls_init);
  
 
