@@ -1,834 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-002c1b01.pphosted.com (mx0a-002c1b01.pphosted.com [148.163.151.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B17A1F4169;
-	Thu, 13 Mar 2025 20:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741896635; cv=none; b=NHR+a3QVx3mBwjHN5vno7l26wZMlYDDkA2Mza4eWL42A063jptqIcNHqHCjdNci9ELF/CsmuZK2+ZW7YnirnqndNzQl79vv1LqqygjtOUJTosYwgt5SDLkQDcD1Ii3GvffB32Z0peXGeEOKBWU+jVJChDzNH6RPPjFWPQROxwTU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741896635; c=relaxed/simple;
-	bh=uGT11bCkVZYbdgrDyJAFoA3U5QNO3uFlFw8zv+NsMu0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EU2ldof0Giqh/saJOaID0I7pzxwEArCBBSguqN4QjXeyn1UIhaRLEoHw47I4DSvV0sdQId8t0H92Tzguu+74L4HKCzYwhae56ww6a3t2/A377GtW7YO8PObwbbBsz3namEr1c/SsDkJxynr8fdRAhAK0o9oYHom+1aCTHGgz56c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPE7tcQb; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475681F460B;
+	Thu, 13 Mar 2025 20:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.151.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741896638; cv=fail; b=iKgXh5ZrzyDUarLGkhJGzxLfvtE5D71N2xMBk9QABM97cbfyqYoZv8wUmA7XRTw/wrBFNM7IxIPBIHLu5SkE46tCMKcR7YeDZoG/Tu9O5EXGo+UgGTbhwVgrGVCB0hX3Lp17K39jzEF+4QKu+CeBk6b1ZA/fLQhdnwjL+P9GyB4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741896638; c=relaxed/simple;
+	bh=5F9HK8wDitgLiXRHnV0kkOJP9YR1aVsd3ME1Ux4l6l4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GkClMkobL/3yNNzhRqnlgugQuqDhFOypf3p2x9DcYeK30sqrUjytNYa+uhAbjrNM3qU592RUs79YmHDFZI9/JRqTLQHrB7x/iCRUP/aEl19zupFVzYIMC39aSBPklGC79DCe26vJ0+3SgNgadc10B7Z8UFM9B3p5IcboeWq6UEo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com; spf=pass smtp.mailfrom=nutanix.com; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=B5WMdQKE; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=BgZp0Dwc; arc=fail smtp.client-ip=148.163.151.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nutanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPE7tcQb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 071A3C4CEEA;
-	Thu, 13 Mar 2025 20:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741896635;
-	bh=uGT11bCkVZYbdgrDyJAFoA3U5QNO3uFlFw8zv+NsMu0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KPE7tcQboD46DGhj/qIwTDVcXxB4eQ2+pCx5USSgO6tQyE2V1hlPCguOgva6gt8WY
-	 DUhzuq57w6eXnPHNLrPBkEwK72pI9yzPNA613TZ6Io4bOCdNUAGzUHL0PNR5NxPWR3
-	 +6NLbz7Kh6I+o8DK6MmRA1bzRteS+FGSbKrC/HjuUWrGeg7ewwFKVbKzcLXHzHAaT0
-	 fOP87jKqpMsO6gtOlYQ4rqF5qgm9gM5xi906rAJvp5riDkaoiF0wrj5TDhI5Hgsag3
-	 3q2u76Aqwp4saViEGaSyaWJntXtnPVdpzLb3KEbsg0aGTyAG2vyL5u4Fxsir8CsFID
-	 8c3kQQasTMTDQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F12C35FF1;
-	Thu, 13 Mar 2025 20:10:34 +0000 (UTC)
-From: Cryolitia PukNgae via B4 Relay <devnull+Cryolitia.gmail.com@kernel.org>
-Date: Fri, 14 Mar 2025 04:10:30 +0800
-Subject: [PATCH v6 1/2] hwmon: add GPD devices sensor driver
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="B5WMdQKE";
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="BgZp0Dwc"
+Received: from pps.filterd (m0127840.ppops.net [127.0.0.1])
+	by mx0a-002c1b01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DFSiGW011159;
+	Thu, 13 Mar 2025 13:10:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	proofpoint20171006; bh=1guDpteyDK9Mkh2C9+sR5agtugU71kb9jyl8MW/Zb
+	Ek=; b=B5WMdQKEJFAp8O4Bws9l+mYi+FEVN2bwvgyKV23iiUedI/Zoclv5pdyVQ
+	Js54C5lwIYbgGPrp8InPYViLaDyoNBmDF+KyYrXEOE/UEIjjPhbFuFlVDvrQrKws
+	1kC9UwuLVoFLDrJHTckmEXJ4yR7KMz5jAWPEn3o69WSw7p+QuGP6keU2MQN8qWLD
+	tjT7VW8kqnKapHWBA3+hAHh+cRWW8rAqpBL9bKop1lglmQdl8IG4TBbcnaYFbt2k
+	thDpRrT7z/tcNik3GJXDOwuJkOL/fGVpeT5K7UusbY2/OQtdOuroA0lPzBtbodBa
+	dPoP/UUkeFgzm6bQ1MOpJZnMMmKzw==
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazlp17010003.outbound.protection.outlook.com [40.93.13.3])
+	by mx0a-002c1b01.pphosted.com (PPS) with ESMTPS id 45au9ge76s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 13:10:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wK19Ax6z1w4dfA3WLqBX4rOr0BKFQ/HLLa0T+y/YCDVm6O8PqbZ1yNvdLPRacvxdjC+BOl2sp6PO2m6vS+OUotYcekQ3K6KMGfuRoKX5lMKu+trKdSYhSu+hGaG6rzduN5Mfd+i5s/JVlU0fzDbwuqC410H3dv7rnZ+RqXTB/WMBWs894rxktLzoTHfPDDgKNVvOci7MTssheDLi4XkjTt71aHab15fmHWJtxAukKV4FDCbYBxfCdX6YZ61+fDV0ymHPois/saFSMeq/RYlBOsE5Pifqe4NvE92fyntkGsMrbLw49OjSshULoQ7wjzkb/9B4FCUWMsARv6LnMOEdmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1guDpteyDK9Mkh2C9+sR5agtugU71kb9jyl8MW/ZbEk=;
+ b=pqYTXoZq8fUrd+D6qO8ybEL2HxDx5eirNFj3aT2SAnJtFAWMSrhJq2ImSz+rn3zLA/v9/Ac5JQaBDs59tIyfDbBaPUXVpliZ6U4QOh7VnnQIYiZFcWRYgTUAIHmtCyHnS/DqYI56KfK6MIMELLSjdY2T0VsYkhX0VaNHw4W4xviwZHGJPP8dL1qvjgfZWHYN7nFmwcqzzVvk2hD+ImZjv3idvMJhdSfESQrKrS++n44nFKNlqSxdkBjDU9C9ekS1RzeYRONNHCufmTk705Ho3SFowWArsxeBfLdpFyFhWkNacsnGDPy446sJdNK+d9srRolmpWlwatJ/mKnBRde7LA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
+ dkim=pass header.d=nutanix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1guDpteyDK9Mkh2C9+sR5agtugU71kb9jyl8MW/ZbEk=;
+ b=BgZp0Dwc0TKF+x8RUN1XjksuYKolx5Ut7wCXKfWAJSNrFIAsoKAu/VtUR6jkLAoCPtCKmPMiQ5cqTJU+Sl48kVL+lsrbE3MVPoHBMQHoWxQqrtCW9RjFuKzkWn18F+9/1/wehelqC/8bFxg4w+mssW5H67CzAOCYUUmsXucvNkaa5tC7OP7KKGw7nCFVC5mX6VEpDhWnrfor8kHvBmQMl4koo1JCoLxloMdOwQmmdyxQqd5yV4RiponMXJ4300PCO2FcfqezYvsZ7LlAkPZknC5zJhCuNxuigwKDymc3PjpEA/DGrBCyHC9+St6cxFLmBctt28JrcXHFmdWCDv8YTw==
+Received: from LV8PR02MB10287.namprd02.prod.outlook.com
+ (2603:10b6:408:1fa::10) by PH0PR02MB9384.namprd02.prod.outlook.com
+ (2603:10b6:510:280::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.28; Thu, 13 Mar
+ 2025 20:10:20 +0000
+Received: from LV8PR02MB10287.namprd02.prod.outlook.com
+ ([fe80::b769:6234:fd94:5054]) by LV8PR02MB10287.namprd02.prod.outlook.com
+ ([fe80::b769:6234:fd94:5054%4]) with mapi id 15.20.8534.028; Thu, 13 Mar 2025
+ 20:10:20 +0000
+From: Jon Kohler <jon@nutanix.com>
+To: seanjc@google.com, pbonzini@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Jon Kohler <jon@nutanix.com>
+Subject: [RFC PATCH 08/18] KVM: x86/mmu: Remove SPTE_PERM_MASK
+Date: Thu, 13 Mar 2025 13:36:47 -0700
+Message-ID: <20250313203702.575156-9-jon@nutanix.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250313203702.575156-1-jon@nutanix.com>
+References: <20250313203702.575156-1-jon@nutanix.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PH8PR02CA0007.namprd02.prod.outlook.com
+ (2603:10b6:510:2d0::18) To LV8PR02MB10287.namprd02.prod.outlook.com
+ (2603:10b6:408:1fa::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250314-gpd_fan-v6-1-1dc992050e42@gmail.com>
-References: <20250314-gpd_fan-v6-0-1dc992050e42@gmail.com>
-In-Reply-To: <20250314-gpd_fan-v6-0-1dc992050e42@gmail.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
- Cryolitia PukNgae <Cryolitia@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
- linux-doc@vger.kernel.org, Celeste Liu <CoelacanthusHex@gmail.com>, 
- Yao Zi <ziyao@disroot.org>, Derek John Clark <derekjohn.clark@gmail.com>, 
- =?utf-8?q?Marcin_Str=C4=85gowski?= <marcin@stragowski.com>, 
- someone5678 <someone5678.dev@gmail.com>, 
- Justin Weiss <justin@justinweiss.com>, 
- Antheas Kapenekakis <lkml@antheas.dev>, command_block <mtf@ik.me>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=18644;
- i=Cryolitia@gmail.com; s=20250314; h=from:subject:message-id;
- bh=5qmn8clKpasF6FW4Yqlefda6eiRB559jPgQzExbfx6w=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0did012TXdNRm9GeXRlOUtlcjd5N2phY
- lVraHZUTDF0dTlWQmxuR2R5Y2RDZnAzOWVTZk5VMXA5a21YOXV2CjRyOUpzT0RuS2JORkI4TFVP
- aG1OV1JnWU9SaGt4UlJaU2t4ek5VOTlML0FRck9GUWd4bkV5Z1F5aFlHTFV3QW0KNHJlSy9YL1l
- 4UkNScWxkS0h3VUVUbnRNbkxEdmJvTDFpMElPSWVZVk9kekhHWGN3TGpOdGVyeGdoV0VDNXdXMg
- oybjg1cmhkbTV5ZldpYzdjZXVxTC9CdU9reDNjYzRvRjFmWk1aOGtKakl5OHkzeGl1cENFWnNSM
- 3Y2elBUZFVMCmt1NFlNd1NkMW1PUnQvUUozN1hRUWZQRTdCUExWNVhrYlp2cmIxekVNRDluU2Nn
- K2FZc0ptbG1QNmk4OE5nNDYKL2R0MXJlN1pFL1VTQmx4VEtrMytMVGtWdHpvOFB2eVgrb3BrKzN
- rN0hkWXo1VDgrTzN2TnkvTHNNUE9LS1dldgo3ZFhVU2xGUjY3akZ5V3Z1MG5NN3hPOXZlUDRrSm
- RQRHAyMkw0OHE1R0E3dWVSQ3F6ZHlwNHNBdE5QSE4vcU52ClV6OVlzMVJhMVVybEJpM3FWaFBMe
- nJGczdBZ1JEYXozYmd3eVZqaVZNbWNTQUE9PQo9Q3gwYQotLS0tLUVORCBQR1AgTUVTU0FHRS0t
- LS0tCg==
-X-Developer-Key: i=Cryolitia@gmail.com; a=openpgp;
- fpr=1C3C6547538D7152310C0EEA84DD0C0130A54DF7
-X-Endpoint-Received: by B4 Relay for Cryolitia@gmail.com/20250314 with
- auth_id=358
-X-Original-From: Cryolitia PukNgae <Cryolitia@gmail.com>
-Reply-To: Cryolitia@gmail.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR02MB10287:EE_|PH0PR02MB9384:EE_
+X-MS-Office365-Filtering-Correlation-Id: e9d2d77f-eaa7-4de1-5e83-08dd626b1465
+x-proofpoint-crosstenant: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|1800799024|376014|7416014|366016|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4tgZxpLs6zN2i16Jul4/A8zFnO9WeVX6DmBk9uaTlm9H2/6rw/yYT/xs/AXQ?=
+ =?us-ascii?Q?aAcBUYgcD2CD8r9W0JF2MoVMB0JRVL0ebHo7qZS5CVXu8wejwy+odLdp0mHr?=
+ =?us-ascii?Q?Dmu/ks3qyBYKZz7h2cQmCi7Yg66c2Xxg3H5Mb2+fy/pHWSRFoqHJyZ+TJZpJ?=
+ =?us-ascii?Q?bO2YZHTXDDuoRnZsbKq0S6ojaS8jgF2+D5qwiG2Fqv9OQ0n3MQ4z9Iq7sPZG?=
+ =?us-ascii?Q?hKaWda18EBG1jNhz//fduffLPpsZj8BY5g+OMgoLnlJInetS2ZoAZVDVvlR2?=
+ =?us-ascii?Q?gkl5opzpUQwZljLOQQe8WB44czV7MIIBGo+z4RelKDnFKU7/lyn2F4x4Cep2?=
+ =?us-ascii?Q?ir6/FwQokeGmU87rrkPiyGN/yjr9IS5+zzg7BZymu5zNIIaZG3bA1zpgnxUk?=
+ =?us-ascii?Q?1YE58ynyLZiqoOk/OaJJR5POS1WuXeLMzC+2GYBIK4wQsNTDAm8xU1GXoZBa?=
+ =?us-ascii?Q?ep35r4RdS2oehO8+vN4iEZklxIqQyaYEE/NMDJDGr2kGCkzttPl8xtF2r41s?=
+ =?us-ascii?Q?enNXQwsGZuuVv9PZgEc2jQdTCbmXIH3+Z24OySjFD0ruLnLOplVhf/VW1Ty9?=
+ =?us-ascii?Q?tOcig1epIJ63b9gApllmfDv0raWYL8bUJ/fIFubjGWwNb5Mx2MLUjXSbTmJ1?=
+ =?us-ascii?Q?2aCckJa5bnWv8BpGK9pB8gU9vYJPpj+0ASrjWxNWIKtcM89EjDiBezyqwfyq?=
+ =?us-ascii?Q?cKfbev3Vy/4Nzacjm5Gn9RrxBj23FlmB3CQblWk2hz8C9TB0ucOH/GSdv3cZ?=
+ =?us-ascii?Q?lIhgoskvsDlqCnE9PASm/wH43jQOBChy1p4VE5qlNLGptu2GtWYVcatUCM9V?=
+ =?us-ascii?Q?k98Q7hjDepxJMXYtjBzfHPRKGsH0C9scXW4NeR08TztI4BGeR00mCEDtA0Pa?=
+ =?us-ascii?Q?6MA1z1LlA4aGX+7t7w2wTfm7mO+jceQAxNnZVcB+bbK9vQ53BbXE09p2ERUY?=
+ =?us-ascii?Q?SC1ows2I96rXfUp6yBJPoDabQzI1G9dNXL1hFWQgig87cvnDxycKqOHrYVSV?=
+ =?us-ascii?Q?GEnNIqJ1SKVuncuO8L2qZJ5LVkogvmJQcDM99giut3yiFx52B+ggeRsD5cJl?=
+ =?us-ascii?Q?oejQH8FZp7dJdG7FaZZA+1rxKHwXA7+ZrljgrUFT+lHeKlNHiM79IK4qk5BB?=
+ =?us-ascii?Q?x3gu2ERR6rZYuXRy7Tn/vuJ3CGiUfqPOeOuGWwV0Ou/p75MZZiZGJoqlNLCx?=
+ =?us-ascii?Q?cDK/HyxuCrF0R0Re4XxyxOD14NLUUhC4qxRrF8T31TZ+XudIL7EMHJMOUg55?=
+ =?us-ascii?Q?gi5B1fn+t25yu3ke5gf4ZQDLoBPaxCGvCnrZqmCVQQfxHT9rBjMML6KDy62V?=
+ =?us-ascii?Q?H0UzlK73s+QnrzO3XbUt5qzJs/2jKJ/+GibwXomgVIG/h3j4Mb75rrkV2OAB?=
+ =?us-ascii?Q?rl9zeslgnhpdqb+Fa0wbu6EWBZYUTX32nHOJ5y3qOjvBP6uFEmbNLh+DI6ML?=
+ =?us-ascii?Q?4MwYOBoja4MANR5I854YUPinMXHwgw736IrNgx8nxDiJXEM/KK6EVg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR02MB10287.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(376014)(7416014)(366016)(921020)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+aa9W0llT7NYPNRortyCC+LBNHCujhvBIVfFLZ1KsANIOp2Cgdkpy/VUXwO7?=
+ =?us-ascii?Q?QHL4d5+qm2lTIGeNsfV7HWbmbWS+ZGqzTMR9PV1jpqqcHaTSKGeFuBipPHNo?=
+ =?us-ascii?Q?QtQoE3OvOa002ceHOIRlCwLYs2QYY4S2F6NsJGNpOZXp0fVW1t/RVvi7EzY+?=
+ =?us-ascii?Q?8xA01N+qFF87RHjruQZZ1N+aL/g93xuxxAxOVfMiDEw5SCpY1CZT4q96MiH4?=
+ =?us-ascii?Q?uBQQkZ4hhFc2z8AbqyyHowfiiHTnkT74QYibjmfQOSDEej1hEIr2/wVVPYUL?=
+ =?us-ascii?Q?MsB3VsD156wmQi7FCmwKIjMstdHeIbHhisaH9n0i7d6pdy47pnZIzX0Xqmti?=
+ =?us-ascii?Q?ySD6Qke6hDV5JUy2Kbj5wQ+x5+bYhBmw1A7FxD9o1MuiJ0JjGraoNjPOrDBs?=
+ =?us-ascii?Q?lzHNu+cDF7rgTjvnlmubTkeeN+TI0Tz/8EA0x+3RAVt36AkLonA9Ko7g2Vc4?=
+ =?us-ascii?Q?eBbfVlRw/zDhRwOEwbV7fHCnVTAd1R6D81Dk/mnJkdgig7CMUcv5FljZIoh0?=
+ =?us-ascii?Q?lrxSorppUCZD251JvHNW6Ncazb5a1y0RQDGkSsttMA9vbfFtmCEJmHlhJA5y?=
+ =?us-ascii?Q?23Dvg+8CvGaswnixOz+YHTgOGbiQfMAWp9mtalBjRyT+hE+3r+6CVZ/A6K8Z?=
+ =?us-ascii?Q?a5/mKwqiNsH4V5bTITRKfpL/a1DYvhklZYG7Aal1xvBjQRVL0rlOFe4FAyZp?=
+ =?us-ascii?Q?92XCutkiIn4J37YnDu7Fahzn4A7yMkidNldnPg/KkZtNxQPcgI0qYdNM/ILx?=
+ =?us-ascii?Q?UZGqvUbyY3u8N7xCaia0PZTj0axlMYXW7k6K36xCjkhy3JRfkIiXILs0T5FX?=
+ =?us-ascii?Q?0zd0aqR0UNYElasFTz8oS66Gm2P341+jn66EeQR77pT495KDBxpf6FGNNYjo?=
+ =?us-ascii?Q?109sdBIaS+Nxvhy5SCSgVsLHpe2ci4h4ku2YEmKZEzdM8yInANqFYHQX6NVL?=
+ =?us-ascii?Q?XpHkNDCOjsfDGyBhBmhKvcC+NL9HQJYkKUHSqEkHJ/1aEmFu7LM8htiJsR8K?=
+ =?us-ascii?Q?yXzyd+RGqAjfHqkQNS5+Q3EJemCmC7okUfIInm4f7PXU9Bu9uM8jh/75pA2b?=
+ =?us-ascii?Q?0eetpMXUOl0rtfB2uCuosY8TTgLqaQ/ByCkIJVhTRz1KqLyhfTzPSIBy0Kbi?=
+ =?us-ascii?Q?MJkPT8iRMg6UX2mA52pK8lIM+yS11a7FwCPmlp3uGI74KSeNEsf+ZD6f4iFF?=
+ =?us-ascii?Q?P6AxJ2DwwIsz5XM+K3SFmG9mv3l96xmvVB0KA1C2aoWc/3jrhs1mk/H3d1NZ?=
+ =?us-ascii?Q?rVs2pw/DzXbvoCN4uhlb+c8lUp75f6h1NkKUGn5W8BwZO+xPT2kHlryeOUj7?=
+ =?us-ascii?Q?iUJjzUppEu0Hbl92nIDcGG7s2ZSQkiqPWrFlHQM7ezq8zVPNKSna3XnStHHU?=
+ =?us-ascii?Q?to7UMIAwB1k4qhFqpPLHlYAsutEFvz1G8czv8lPext1tC0pRmtjzAy8WAjYa?=
+ =?us-ascii?Q?wLv6C8egbp9LDgy9U1AARxy/6lOJvz4SMxG1vYjVj7cLZZWRrWxWo1rJeoX1?=
+ =?us-ascii?Q?OsdjcHTW8CYi56eKfTEwKO7G/S2Yreo/3r9hnA8qkYJds1mlag32qBGiVAGM?=
+ =?us-ascii?Q?+uj9IfJvJGWBgVnya5ayDKubdl8Vjk769J9nvK4cLX4t9C244GB0qYy3AWds?=
+ =?us-ascii?Q?tw=3D=3D?=
+X-OriginatorOrg: nutanix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9d2d77f-eaa7-4de1-5e83-08dd626b1465
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR02MB10287.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 20:10:20.1544
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bb047546-786f-4de1-bd75-24e5b6f79043
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MbaPnK64mmNWNyrAhk8POGWO7gDlxXtb9LQ2c2FY1jX0grDR1XVR0BVp96GUYs9PprjVx5na98XT1j2njowTqkqdYomGdYxFSVc1mdFlwAw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB9384
+X-Proofpoint-GUID: 4JiSiVgT0F5xT6cJJw5_s5x1Fmbq1fDN
+X-Proofpoint-ORIG-GUID: 4JiSiVgT0F5xT6cJJw5_s5x1Fmbq1fDN
+X-Authority-Analysis: v=2.4 cv=P8U6hjAu c=1 sm=1 tr=0 ts=67d33bae cx=c_pps a=wModh8UEFt2TZzYV9Lvs5Q==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=Vs1iUdzkB0EA:10
+ a=H5OGdu5hBBwA:10 a=0kUYKlekyDsA:10 a=64Cc0HZtAAAA:8 a=sKgUPJO2Fa4kC_44OIQA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_09,2025-03-13_01,2024-11-22_01
+X-Proofpoint-Spam-Reason: safe
 
-From: Cryolitia PukNgae <Cryolitia@gmail.com>
+SPTE_PERM_MASK is no longer referenced by anything in the kernel.
 
-Sensors driver for GPD Handhelds that expose fan reading and control via
-hwmon sysfs.
+Signed-off-by: Jon Kohler <jon@nutanix.com>
 
-Shenzhen GPD Technology Co., Ltd. manufactures a series of handheld
-devices. This driver implements these functions through x86 port-mapped IO.
-
-Signed-off-by: Cryolitia PukNgae <Cryolitia@gmail.com>
 ---
- MAINTAINERS             |   6 +
- drivers/hwmon/Kconfig   |  10 +
- drivers/hwmon/Makefile  |   1 +
- drivers/hwmon/gpd-fan.c | 681 ++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 698 insertions(+)
+ arch/x86/kvm/mmu/spte.h | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0fa7c5728f1e64d031f4a47b6fce1db484ce0fc2..777ba74ccb07ccc0840c3cd34e7b4d98d726f964 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9762,6 +9762,12 @@ F:	drivers/phy/samsung/phy-gs101-ufs.c
- F:	include/dt-bindings/clock/google,gs101.h
- K:	[gG]oogle.?[tT]ensor
+diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+index 2cb816ea2430..71d6fe28fafc 100644
+--- a/arch/x86/kvm/mmu/spte.h
++++ b/arch/x86/kvm/mmu/spte.h
+@@ -42,9 +42,6 @@ static_assert(SPTE_TDP_AD_ENABLED == 0);
+ #define SPTE_BASE_ADDR_MASK (((1ULL << 52) - 1) & ~(u64)(PAGE_SIZE-1))
+ #endif
  
-+GPD FAN DRIVER
-+M:	Cryolitia PukNgae <Cryolitia@gmail.com>
-+L:	linux-hwmon@vger.kernel.org
-+S:	Maintained
-+F:	drivers/hwmon/gpd-fan.c
-+
- GPD POCKET FAN DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	platform-driver-x86@vger.kernel.org
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index dd376602f3f19c6f258651afeffbe1bb5d9b6b72..974b341c0bdaba147370de59f510140c0c937913 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -729,6 +729,16 @@ config SENSORS_GL520SM
- 	  This driver can also be built as a module. If so, the module
- 	  will be called gl520sm.
- 
-+config SENSORS_GPD
-+	tristate "GPD handhelds"
-+	depends on X86
-+	help
-+	  If you say yes here you get support for fan readings and
-+	  control over GPD handheld devices.
-+
-+	  Can also be built as a module. In that case it will be
-+	  called gpd-fan.
-+
- config SENSORS_G760A
- 	tristate "GMT G760A"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index b827b92f2a7844418f3f3b6434a63b744b52c33d..cd512c19caa9737a2926a3d4860f65b65cd013c3 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -87,6 +87,7 @@ obj-$(CONFIG_SENSORS_GIGABYTE_WATERFORCE) += gigabyte_waterforce.o
- obj-$(CONFIG_SENSORS_GL518SM)	+= gl518sm.o
- obj-$(CONFIG_SENSORS_GL520SM)	+= gl520sm.o
- obj-$(CONFIG_SENSORS_GSC)	+= gsc-hwmon.o
-+obj-$(CONFIG_SENSORS_GPD)	+= gpd-fan.o
- obj-$(CONFIG_SENSORS_GPIO_FAN)	+= gpio-fan.o
- obj-$(CONFIG_SENSORS_GXP_FAN_CTRL) += gxp-fan-ctrl.o
- obj-$(CONFIG_SENSORS_HIH6130)	+= hih6130.o
-diff --git a/drivers/hwmon/gpd-fan.c b/drivers/hwmon/gpd-fan.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..782c9981d5357b11faad4e6cd75242828e667f95
---- /dev/null
-+++ b/drivers/hwmon/gpd-fan.c
-@@ -0,0 +1,681 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+/* Platform driver for GPD devices that expose fan control via hwmon sysfs.
-+ *
-+ * Fan control is provided via pwm interface in the range [0-255].
-+ * Each model has a different range in the EC, the written value is scaled to
-+ * accommodate for that.
-+ *
-+ * Based on this repo:
-+ * https://github.com/Cryolitia/gpd-fan-driver
-+ *
-+ * Copyright (c) 2024 Cryolitia PukNgae
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/dmi.h>
-+#include <linux/hwmon.h>
-+#include <linux/ioport.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define DRIVER_NAME "gpdfan"
-+#define GPD_PWM_CTR_OFFSET 0x1841
-+
-+static char *gpd_fan_board = "";
-+module_param(gpd_fan_board, charp, 0444);
-+
-+// EC read/write locker
-+// Should never access EC at the same time, otherwise system down.
-+static DEFINE_MUTEX(gpd_fan_lock);
-+
-+enum gpd_board {
-+	win_mini,
-+	win4_6800u,
-+	win_max_2,
-+};
-+
-+enum FAN_PWM_ENABLE {
-+	DISABLE		= 0,
-+	MANUAL		= 1,
-+	AUTOMATIC	= 2,
-+};
-+
-+static struct {
-+	enum FAN_PWM_ENABLE pwm_enable;
-+	u8 pwm_value;
-+
-+	const struct gpd_fan_drvdata *drvdata;
-+} gpd_driver_priv;
-+
-+struct gpd_fan_drvdata {
-+	const char *board_name; /* Board name for module param comparison */
-+	const enum gpd_board board;
-+
-+	const u8 addr_port;
-+	const u8 data_port;
-+	const u16 manual_control_enable;
-+	const u16 rpm_read;
-+	const u16 pwm_write;
-+	const u16 pwm_max;
-+};
-+
-+static struct gpd_fan_drvdata gpd_win_mini_drvdata = {
-+	.board_name		= "win_mini",
-+	.board			= win_mini,
-+
-+	.addr_port		= 0x4E,
-+	.data_port		= 0x4F,
-+	.manual_control_enable	= 0x047A,
-+	.rpm_read		= 0x0478,
-+	.pwm_write		= 0x047A,
-+	.pwm_max		= 244,
-+};
-+
-+static struct gpd_fan_drvdata gpd_win4_drvdata = {
-+	.board_name		= "win4",
-+	.board			= win4_6800u,
-+
-+	.addr_port		= 0x2E,
-+	.data_port		= 0x2F,
-+	.manual_control_enable	= 0xC311,
-+	.rpm_read		= 0xC880,
-+	.pwm_write		= 0xC311,
-+	.pwm_max		= 127,
-+};
-+
-+static struct gpd_fan_drvdata gpd_wm2_drvdata = {
-+	.board_name		= "wm2",
-+	.board			= win_max_2,
-+
-+	.addr_port		= 0x4E,
-+	.data_port		= 0x4F,
-+	.manual_control_enable	= 0x0275,
-+	.rpm_read		= 0x0218,
-+	.pwm_write		= 0x1809,
-+	.pwm_max		= 184,
-+};
-+
-+static const struct dmi_system_id dmi_table[] = {
-+	{
-+		// GPD Win Mini
-+		// GPD Win Mini with AMD Ryzen 8840U
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1617-01")
-+		},
-+		.driver_data = &gpd_win_mini_drvdata,
-+	},
-+	{
-+		// GPD Win Mini
-+		// GPD Win Mini with AMD Ryzen HX370
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02")
-+		},
-+		.driver_data = &gpd_win_mini_drvdata,
-+	},
-+	{
-+		// GPD Win Mini
-+		// GPD Win Mini with AMD Ryzen HX370
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02-L")
-+		},
-+		.driver_data = &gpd_win_mini_drvdata,
-+	},
-+	{
-+		// GPD Win 4 with AMD Ryzen 6800U
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
-+			DMI_MATCH(DMI_BOARD_VERSION, "Default string"),
-+		},
-+		.driver_data = &gpd_win4_drvdata,
-+	},
-+	{
-+		// GPD Win 4 with Ryzen 7840U
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
-+			DMI_MATCH(DMI_BOARD_VERSION, "Ver. 1.0"),
-+		},
-+		// Since 7840U, win4 uses the same drvdata as wm2
-+		.driver_data = &gpd_wm2_drvdata,
-+	},
-+	{
-+		// GPD Win 4 with Ryzen 7840U (another)
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
-+			DMI_MATCH(DMI_BOARD_VERSION, "Ver.1.0"),
-+		},
-+		.driver_data = &gpd_wm2_drvdata,
-+	},
-+	{
-+		// GPD Win Max 2 with Ryzen 6800U
-+		// GPD Win Max 2 2023 with Ryzen 7840U
-+		// GPD Win Max 2 2024 with Ryzen 8840U
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1619-04"),
-+		},
-+		.driver_data = &gpd_wm2_drvdata,
-+	},
-+	{
-+		// GPD Win Max 2 with AMD Ryzen HX370
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1619-05"),
-+		},
-+		.driver_data = &gpd_wm2_drvdata,
-+	},
-+	{
-+		// GPD Pocket 4
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04"),
-+		},
-+		.driver_data = &gpd_win_mini_drvdata,
-+	},
-+	{
-+		// GPD Pocket 4 (another)
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04-L"),
-+		},
-+		.driver_data = &gpd_win_mini_drvdata,
-+	},
-+	{}
-+};
-+
-+static const struct gpd_fan_drvdata *gpd_module_drvdata[] = {
-+	&gpd_win_mini_drvdata, &gpd_win4_drvdata, &gpd_wm2_drvdata, NULL
-+};
-+
-+/* Helper functions to handle EC read/write */
-+static int gpd_ecram_read(const struct gpd_fan_drvdata *drvdata, u16 offset,
-+			  u8 *val)
-+{
-+	int ret;
-+	u16 addr_port = drvdata->addr_port;
-+	u16 data_port = drvdata->data_port;
-+
-+	ret = mutex_lock_interruptible(&gpd_fan_lock);
-+
-+	if (ret)
-+		return ret;
-+
-+	outb(0x2E, addr_port);
-+	outb(0x11, data_port);
-+	outb(0x2F, addr_port);
-+	outb((u8)((offset >> 8) & 0xFF), data_port);
-+
-+	outb(0x2E, addr_port);
-+	outb(0x10, data_port);
-+	outb(0x2F, addr_port);
-+	outb((u8)(offset & 0xFF), data_port);
-+
-+	outb(0x2E, addr_port);
-+	outb(0x12, data_port);
-+	outb(0x2F, addr_port);
-+	*val = inb(data_port);
-+
-+	mutex_unlock(&gpd_fan_lock);
-+	return 0;
-+}
-+
-+static int gpd_ecram_write(const struct gpd_fan_drvdata *drvdata, u16 offset,
-+			   u8 value)
-+{
-+	int ret;
-+	u16 addr_port = drvdata->addr_port;
-+	u16 data_port = drvdata->data_port;
-+
-+	ret = mutex_lock_interruptible(&gpd_fan_lock);
-+
-+	if (ret)
-+		return ret;
-+
-+	outb(0x2E, addr_port);
-+	outb(0x11, data_port);
-+	outb(0x2F, addr_port);
-+	outb((u8)((offset >> 8) & 0xFF), data_port);
-+
-+	outb(0x2E, addr_port);
-+	outb(0x10, data_port);
-+	outb(0x2F, addr_port);
-+	outb((u8)(offset & 0xFF), data_port);
-+
-+	outb(0x2E, addr_port);
-+	outb(0x12, data_port);
-+	outb(0x2F, addr_port);
-+	outb(value, data_port);
-+
-+	mutex_unlock(&gpd_fan_lock);
-+	return 0;
-+}
-+
-+static int gpd_generic_read_rpm(void)
-+{
-+	u8 high, low;
-+	int ret;
-+	const struct gpd_fan_drvdata *const drvdata = gpd_driver_priv.drvdata;
-+
-+	ret = gpd_ecram_read(drvdata, drvdata->rpm_read, &high);
-+	if (ret)
-+		return ret;
-+
-+	ret = gpd_ecram_read(drvdata, drvdata->rpm_read + 1, &low);
-+	if (ret)
-+		return ret;
-+
-+	return (u16)high << 8 | low;
-+}
-+
-+static int gpd_win4_read_rpm(void)
-+{
-+	const struct gpd_fan_drvdata *const drvdata = gpd_driver_priv.drvdata;
-+	u8 pwm_ctr_reg;
-+	int ret;
-+
-+	gpd_ecram_read(drvdata, GPD_PWM_CTR_OFFSET, &pwm_ctr_reg);
-+
-+	if (pwm_ctr_reg != 0x7F)
-+		gpd_ecram_write(drvdata, GPD_PWM_CTR_OFFSET, 0x7F);
-+
-+	ret = gpd_generic_read_rpm();
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret == 0) {
-+		// re-init EC
-+		u8 chip_id;
-+
-+		gpd_ecram_read(drvdata, 0x2000, &chip_id);
-+		if (chip_id == 0x55) {
-+			u8 chip_ver;
-+
-+			if (gpd_ecram_read(drvdata, 0x1060, &chip_ver))
-+				gpd_ecram_write(drvdata, 0x1060,
-+						chip_ver | 0x80);
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int gpd_wm2_read_rpm(void)
-+{
-+	const struct gpd_fan_drvdata *const drvdata = gpd_driver_priv.drvdata;
-+
-+	for (u16 pwm_ctr_offset = GPD_PWM_CTR_OFFSET;
-+	     pwm_ctr_offset <= GPD_PWM_CTR_OFFSET + 2; pwm_ctr_offset++) {
-+		u8 PWMCTR;
-+
-+		gpd_ecram_read(drvdata, pwm_ctr_offset, &PWMCTR);
-+
-+		if (PWMCTR != 0xB8)
-+			gpd_ecram_write(drvdata, pwm_ctr_offset, 0xB8);
-+	}
-+
-+	return gpd_generic_read_rpm();
-+}
-+
-+// Read value for fan1_input
-+static int gpd_read_rpm(void)
-+{
-+	switch (gpd_driver_priv.drvdata->board) {
-+	case win_mini:
-+		return gpd_generic_read_rpm();
-+	case win4_6800u:
-+		return gpd_win4_read_rpm();
-+	case win_max_2:
-+		return gpd_wm2_read_rpm();
-+	}
-+
-+	return 0;
-+}
-+
-+static int gpd_wm2_read_pwm(void)
-+{
-+	const struct gpd_fan_drvdata *const drvdata = gpd_driver_priv.drvdata;
-+	u8 var;
-+	int ret = gpd_ecram_read(drvdata, drvdata->pwm_write, &var);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return var * 255 / drvdata->pwm_max;
-+}
-+
-+// Read value for pwm1
-+static int gpd_read_pwm(void)
-+{
-+	switch (gpd_driver_priv.drvdata->board) {
-+	case win_mini:
-+	case win4_6800u:
-+		return gpd_driver_priv.pwm_value;
-+	case win_max_2:
-+		return gpd_wm2_read_pwm();
-+	}
-+	return 0;
-+}
-+
-+static int gpd_generic_write_pwm(u8 val)
-+{
-+	const struct gpd_fan_drvdata *const drvdata = gpd_driver_priv.drvdata;
-+	u8 pwm_reg;
-+
-+	// PWM value's range in EC is 1 - pwm_max, cast 0 - 255 to it.
-+	pwm_reg = val * (drvdata->pwm_max - 1) / 255 + 1;
-+	return gpd_ecram_write(drvdata, drvdata->pwm_write, pwm_reg);
-+}
-+
-+static int gpd_win_mini_write_pwm(u8 val)
-+{
-+	if (gpd_driver_priv.pwm_enable == MANUAL)
-+		return gpd_generic_write_pwm(val);
-+	else
-+		return -EPERM;
-+}
-+
-+static int gpd_wm2_write_pwm(u8 val)
-+{
-+	if (gpd_driver_priv.pwm_enable != DISABLE)
-+		return gpd_generic_write_pwm(val);
-+	else
-+		return -EPERM;
-+}
-+
-+// Write value for pwm1
-+static int gpd_write_pwm(u8 val)
-+{
-+	switch (gpd_driver_priv.drvdata->board) {
-+	case win_mini:
-+		return gpd_win_mini_write_pwm(val);
-+	case win4_6800u:
-+		return gpd_generic_write_pwm(val);
-+	case win_max_2:
-+		return gpd_wm2_write_pwm(val);
-+	}
-+
-+	return 0;
-+}
-+
-+static int gpd_win_mini_set_pwm_enable(enum FAN_PWM_ENABLE pwm_enable)
-+{
-+	const struct gpd_fan_drvdata *drvdata;
-+
-+	switch (pwm_enable) {
-+	case DISABLE:
-+		return gpd_generic_write_pwm(255);
-+	case MANUAL:
-+		return gpd_generic_write_pwm(gpd_driver_priv.pwm_value);
-+	case AUTOMATIC:
-+		drvdata = gpd_driver_priv.drvdata;
-+		return gpd_ecram_write(drvdata, drvdata->pwm_write, 0);
-+	}
-+
-+	return 0;
-+}
-+
-+static int gpd_wm2_set_pwm_enable(enum FAN_PWM_ENABLE enable)
-+{
-+	const struct gpd_fan_drvdata *const drvdata = gpd_driver_priv.drvdata;
-+	int ret;
-+
-+	switch (enable) {
-+	case DISABLE: {
-+		ret = gpd_generic_write_pwm(255);
-+
-+		if (ret)
-+			return ret;
-+
-+		return gpd_ecram_write(drvdata, drvdata->manual_control_enable,
-+				       1);
-+	}
-+	case MANUAL: {
-+		ret = gpd_generic_write_pwm(gpd_driver_priv.pwm_value);
-+
-+		if (ret)
-+			return ret;
-+
-+		return gpd_ecram_write(drvdata, drvdata->manual_control_enable,
-+				       1);
-+	}
-+	case AUTOMATIC: {
-+		ret = gpd_ecram_write(drvdata, drvdata->manual_control_enable,
-+				      0);
-+
-+		return ret;
-+	}
-+	}
-+
-+	return 0;
-+}
-+
-+// Write value for pwm1_enable
-+static int gpd_set_pwm_enable(enum FAN_PWM_ENABLE enable)
-+{
-+	switch (gpd_driver_priv.drvdata->board) {
-+	case win_mini:
-+	case win4_6800u:
-+		return gpd_win_mini_set_pwm_enable(enable);
-+	case win_max_2:
-+		return gpd_wm2_set_pwm_enable(enable);
-+	}
-+
-+	return 0;
-+}
-+
-+static umode_t gpd_fan_hwmon_is_visible(__always_unused const void *drvdata,
-+					enum hwmon_sensor_types type, u32 attr,
-+					__always_unused int channel)
-+{
-+	if (type == hwmon_fan && attr == hwmon_fan_input) {
-+		return 0444;
-+	} else if (type == hwmon_pwm) {
-+		switch (attr) {
-+		case hwmon_pwm_enable:
-+		case hwmon_pwm_input:
-+			return 0644;
-+		default:
-+			return 0;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int gpd_fan_hwmon_read(__always_unused struct device *dev,
-+			      enum hwmon_sensor_types type, u32 attr,
-+			      __always_unused int channel, long *val)
-+{
-+	if (type == hwmon_fan) {
-+		if (attr == hwmon_fan_input) {
-+			int ret = gpd_read_rpm();
-+
-+			if (ret < 0)
-+				return ret;
-+
-+			*val = ret;
-+			return 0;
-+		}
-+		return -EOPNOTSUPP;
-+	} else if (type == hwmon_pwm) {
-+		int ret;
-+
-+		switch (attr) {
-+		case hwmon_pwm_enable:
-+			*val = gpd_driver_priv.pwm_enable;
-+			return 0;
-+		case hwmon_pwm_input:
-+			ret = gpd_read_pwm();
-+
-+			if (ret < 0)
-+				return ret;
-+
-+			*val = ret;
-+			return 0;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static int gpd_fan_hwmon_write(__always_unused struct device *dev,
-+			       enum hwmon_sensor_types type, u32 attr,
-+			       __always_unused int channel, long val)
-+{
-+	u8 var;
-+
-+	if (type == hwmon_pwm) {
-+		switch (attr) {
-+		case hwmon_pwm_enable:
-+			if (!in_range(val, 0, 3))
-+				return -EINVAL;
-+
-+			gpd_driver_priv.pwm_enable = val;
-+
-+			return gpd_set_pwm_enable(gpd_driver_priv.pwm_enable);
-+		case hwmon_pwm_input:
-+			var = clamp_val(val, 0, 255);
-+
-+			gpd_driver_priv.pwm_value = var;
-+
-+			return gpd_write_pwm(var);
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static const struct hwmon_ops gpd_fan_ops = {
-+	.is_visible = gpd_fan_hwmon_is_visible,
-+	.read = gpd_fan_hwmon_read,
-+	.write = gpd_fan_hwmon_write,
-+};
-+
-+static const struct hwmon_channel_info *gpd_fan_hwmon_channel_info[] = {
-+	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
-+	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
-+	NULL
-+};
-+
-+static struct hwmon_chip_info gpd_fan_chip_info = {
-+	.ops = &gpd_fan_ops,
-+	.info = gpd_fan_hwmon_channel_info
-+};
-+
-+static int gpd_fan_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	const struct resource *res;
-+	const struct device *hwdev;
-+	const struct resource *region;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
-+	if (IS_ERR(res))
-+		return dev_err_probe(dev, PTR_ERR(res),
-+				     "Failed to get platform resource\n");
-+
-+	region = devm_request_region(dev, res->start,
-+				     resource_size(res), DRIVER_NAME);
-+	if (IS_ERR(region))
-+		return dev_err_probe(dev, PTR_ERR(region),
-+				     "Failed to request region\n");
-+
-+	hwdev = devm_hwmon_device_register_with_info(dev,
-+						     DRIVER_NAME,
-+						     NULL,
-+						     &gpd_fan_chip_info,
-+						     NULL);
-+	if (IS_ERR(hwdev))
-+		return dev_err_probe(dev, PTR_ERR(region),
-+				     "Failed to register hwmon device\n");
-+
-+	return 0;
-+}
-+
-+static void gpd_fan_remove(__always_unused struct platform_device *pdev)
-+{
-+	gpd_driver_priv.pwm_enable = AUTOMATIC;
-+	gpd_set_pwm_enable(AUTOMATIC);
-+}
-+
-+static struct platform_driver gpd_fan_driver = {
-+	.probe = gpd_fan_probe,
-+	.remove = gpd_fan_remove,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+	},
-+};
-+
-+static struct platform_device *gpd_fan_platform_device;
-+
-+static int __init gpd_fan_init(void)
-+{
-+	const struct gpd_fan_drvdata *match = NULL;
-+
-+	for (const struct gpd_fan_drvdata **p = gpd_module_drvdata; *p; p++) {
-+		if (strcmp(gpd_fan_board, (*p)->board_name) == 0) {
-+			match = *p;
-+			break;
-+		}
-+	}
-+
-+	if (!match) {
-+		const struct dmi_system_id *dmi_match =
-+			dmi_first_match(dmi_table);
-+		if (dmi_match)
-+			match = dmi_match->driver_data;
-+	}
-+
-+	if (!match)
-+		return -ENODEV;
-+
-+	gpd_driver_priv.pwm_enable = AUTOMATIC;
-+	gpd_driver_priv.pwm_value = 255;
-+	gpd_driver_priv.drvdata = match;
-+
-+	struct resource gpd_fan_resources[] = {
-+		{
-+			.start = match->addr_port,
-+			.end = match->data_port,
-+			.flags = IORESOURCE_IO,
-+		},
-+	};
-+
-+	gpd_fan_platform_device = platform_create_bundle(&gpd_fan_driver,
-+							 gpd_fan_probe,
-+							 gpd_fan_resources,
-+							 1, NULL, 0);
-+
-+	if (IS_ERR(gpd_fan_platform_device)) {
-+		pr_warn("Failed to create platform device\n");
-+		return PTR_ERR(gpd_fan_platform_device);
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit gpd_fan_exit(void)
-+{
-+	platform_device_unregister(gpd_fan_platform_device);
-+	platform_driver_unregister(&gpd_fan_driver);
-+}
-+
-+MODULE_DEVICE_TABLE(dmi, dmi_table);
-+
-+module_init(gpd_fan_init);
-+module_exit(gpd_fan_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Cryolitia PukNgae <Cryolitia@gmail.com>");
-+MODULE_DESCRIPTION("GPD Devices fan control driver");
-
+-#define SPTE_PERM_MASK (PT_PRESENT_MASK | PT_WRITABLE_MASK | shadow_user_mask \
+-			| shadow_x_mask | shadow_nx_mask | shadow_me_mask)
+-
+ #define ACC_EXEC_MASK    1
+ #define ACC_WRITE_MASK   PT_WRITABLE_MASK
+ #define ACC_USER_MASK    PT_USER_MASK
 -- 
-2.48.1
-
+2.43.0
 
