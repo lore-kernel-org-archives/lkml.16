@@ -1,145 +1,135 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42513261398
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07542C80;
+	Thu, 13 Mar 2025 09:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741857810; cv=none; b=XRlGYEVJXgEKQkoLNEBFtTr3Ube65YAFkMh6Z2gnDZ6LY7+zsQ0mQB7eBIikpzDSUczoIBLm/gXEYJQKPauicGAjMVi2OV1dJ7l6//y7xGdty8wViD3hP43kr8uIVUr1mazU02BfwdqskhSBaSxWmFvpQG8E5Zg4WpBKfyzGKQM=
+	t=1741857901; cv=none; b=tuJRvfhiFuaNN8tvzY7rCChaPAcUKGu8G+n1JoRrCSyLCC+raFzLOWDdcbYG37zXdIWsIxNm+Zjxb+pvslXueXADGZPNam8DUO7VSb7xEuZevnTMfGNdLI44UKljfVrJPoOdGhuE4bzwdpMIAMs/7+EDkpDIiqY1FgrXQp2i5xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741857810; c=relaxed/simple;
-	bh=cs474VhcPI7t3tkfrTw36JqTIy+bKA2J9+FdsPImD9s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TCKysZowLNxWfL6fHDPeN37da26TFOj/nKpHhJBwsFxD8JLl7/6zyMRoeTI8kmhUfR0KcKfJstLjZOxWgf6hHTAwnOmjayGRM0M3LSF/DP1OgZd75LLnHo6cUuTDqBQ/rTtNMV8Cg3o9d2lu5LkE1QiA4T5bA9U+8xX097riHFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=FSFDk+xr; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="FSFDk+xr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741857777; x=1742462577; i=spasswolf@web.de;
-	bh=pYpuvv3ulxmuz+oME4r4W7lHEM+O3DhRjxPNwprJx2k=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=FSFDk+xrUrm1IDushjeGh6BmDXnQunU34z4X3u3M2KqV9c5RKIzSkWHd0JOPJrb6
-	 yyEWWLlR7ethXJL+4nRdQhZHCXnuSjdA+TJSy1QgGFGt4nXbroulTCskLWQD2F1S8
-	 gxn6ECPOmwcPxhgnPfk6RlLqmZiIxhBtIuFinMKEfhxNUd4p4mBcFOvibmYRLyapG
-	 SwUbWlBAsb3HAn8SAQpN30ahYwm5X4CrmkHbgvIJRWLF4Nzj7skOcqtdm7GQiRcte
-	 rTnJ27+2uUqlI/DPVb20YifRjVw0+x6cUyHtDOq3v+LvzPGYv7OwbnCKx7nyAbt7G
-	 EXnzKnOPb9BgTRG25w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MV2OY-1tkRYF2GgA-00Tkj1; Thu, 13
- Mar 2025 10:22:57 +0100
-Message-ID: <705e95cec3dc5181ca2aa73722e6b84f63f3e91d.camel@web.de>
-Subject: Re: commit 7ffb791423c7 breaks steam game
-From: Bert Karwatzki <spasswolf@web.de>
-To: Balbir Singh <balbirs@nvidia.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>, Bjorn
- Helgaas	 <bhelgaas@google.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
- Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Date: Thu, 13 Mar 2025 10:22:53 +0100
-In-Reply-To: <12d950ee-4152-4ad6-b93e-7c5b75804b1a@nvidia.com>
-References: <20250310112206.4168-1-spasswolf@web.de>
-	 <951f9d13-72e4-41c3-9ace-8639e2a9485d@nvidia.com>
-	 <ce940e2a-632d-41be-9f13-e5b11d49b0db@nvidia.com>
-	 <09131c563332c892284ec7fb4ce706996131db8c.camel@web.de>
-	 <9a5df5627d3d72b2a97f501dfb7d944cc1e9920f.camel@web.de>
-	 <fdea59fe-f570-489f-bf88-1ffd47119cac@nvidia.com>
-	 <414f4deb8c7670a159854006b0c410ce05a6049e.camel@web.de>
-	 <12d950ee-4152-4ad6-b93e-7c5b75804b1a@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.55.3-1 
+	s=arc-20240116; t=1741857901; c=relaxed/simple;
+	bh=pqAgI5Ds9EZBhvzdtWvnK+kgH1uDcwphe5LWdH3KVU4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OZ+ijJbgiS2nyr03vX4IATUjFgDCdfn4XtflKAqiNuM4Ozz7HLXd86jMlRJEJ1s8TT3Zco65y1jPAMcxc0fw7T0Gm++InfjI2buk0QRe6lb+KQxpKoWw1YXIwJWZz+RHLx7JeqvUmief8PQR7Ey7wvKnFn8WjghiyUU024resgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-523efb24fb9so303263e0c.3;
+        Thu, 13 Mar 2025 02:24:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741857897; x=1742462697;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pilag2znkjIk4UPDdmSrDSzG1dL350jsjUFlH6gACu8=;
+        b=E+KwivdLMLC+zNnBFqeB8su09jX9PeL52a6aNHHHDYgUMnzvaafYilA6SUL4NbW7jW
+         sVdJB/vmUhnDBf2PsFOP+PkhqaOO+ChzU2wLasNXXDe0q6a1Q2QgxM7IHjO4k9liRusK
+         UahiJbYoWi9Uhm+rtmS1X9sEw3oYQRUTZU4EAiOvrVZnph9x9awrjmk5ng//cLpYCbMA
+         q25r4jErUmb+zP1l9HoM+QduPusJfJq43Tet4SmpbSblB3idQb/dwFksv4BZqT+6CXLI
+         LsAAur243YwWrL8Bhug0+UakmN2vPna/q2CutE4i+Y9fMXuXgcA2rjVCnXIauxPiAIbA
+         qfGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUi7cNy8EaH1StXILu+rtJjE4FOn0wzjEFdMGK38DlK4yV8Gnz/GIhCM0JrfJOJfmeNsfvhI77s@vger.kernel.org, AJvYcCWCO7DryHO6XGHatkZc93s+SXaNzoDze646Q3dATS3MpSmf6t4RBbqKZni5dMkTOXDdUvttigomWzb+xj0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRtHjxw8aUHsSgDdiHjBk/mL6ZmPjX+kbMlHeCCekGbWsYPU6t
+	mKEfoM3JfR5i127XMJ0LD6RHke4BQ6fioaZkkL5/dWK2pnpl5yx0H1RQg0o9UHY=
+X-Gm-Gg: ASbGncteqata49xB3s/fFIBXPE8mPkMMczswRZ5QW84IR5+wOopmso7VjtjL1g1pBQd
+	ZY5L7+wz4jvmGqWAdJiNqZEx2FroAGI22ZB3erLbYUJ7dQYzGhOVnutZsYuCORBd0+ZJF0N3evS
+	QI0/aeF/nHmOcCnBLwE0El0gyOfviNevUPvIDzps2qgRWUGtUaqk2B3cmhZODLh5VIr44X9P0Lr
+	v4uW8Xb2/gy6mGXPjG6RVOgcfI/m982Swr6yeNnkRAeqlgRa3mNfpkFBlcGBIBv2dl5XkpIwXAf
+	5te72ubH3SRvp0yDCcWgTTtainMlSW7D9ryHIl3NNThuXLvI+4RXvM4VboPbQAkVB6RPnwyy1oD
+	DwDUeB4HD/bz5YDdZ5XTvAA==
+X-Google-Smtp-Source: AGHT+IEU2oq8XnnTBqFl4ehWfSZe+W5vqT6ofuzDPzyAof+bp0cfFH5hpNPTiNO9UVvcScxHat/Lyw==
+X-Received: by 2002:a05:6122:45a2:b0:520:5a87:66ed with SMTP id 71dfb90a1353d-523e4191f4emr18248046e0c.5.1741857896858;
+        Thu, 13 Mar 2025 02:24:56 -0700 (PDT)
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5243a7184c5sm147572e0c.41.2025.03.13.02.24.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Mar 2025 02:24:55 -0700 (PDT)
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-523efb24fb9so303246e0c.3;
+        Thu, 13 Mar 2025 02:24:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKEM688X/vojsE7wzqYnC/q6/F+iVwfWVzzP7/VLa9lbcTkxzc30BNMJT3iD5vClMlsxSKRh7+k4rP3V0=@vger.kernel.org, AJvYcCV8JpOctNyni5HYTeuqibHrCyCkV1s3uvXLSSteBF5iVVuPQiiflwmZhlBg5CtvUd2xtyIfuVrx@vger.kernel.org
+X-Received: by 2002:a05:6102:50a0:b0:4bb:c9bd:8dc5 with SMTP id
+ ada2fe7eead31-4c30a52a041mr20328667137.3.1741857895543; Thu, 13 Mar 2025
+ 02:24:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Hm88DMByuin05tl6BRWZUDMGa+++Ie5GTImESR7eVkeSkS7hZAV
- 8WdT5ARDb1geVlfwMNVmqwCbOejEcUnLz4u+S/8WsJz0Bi6Cmm8/F+4WkFoPpZFfRhFqbHM
- tl7tcESz6Kj7ZvWEGV9rZ/yK6z5PJgTQn+4i4Dt2cIXF8Rx4bQ7DLpVgPb9eDZX9v+1Ejlf
- hfmvsOuKv0hxqEdeZE4nQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:icYF9Nsijpg=;pi9D9Es9ppxtixb7j0ZLijERGds
- pN2pvF8UlMrOz3OzGkMRE08514nE5bi2UOdOWBXmHa9Yz4tC1lE1mXKefaWu7TyntDJVMVipz
- H+VHTIcO78XDbV9bwer0N/FZdb7w1gozib5cz8oPW0/1gf7c38Bap2p3XCzy8agp4xbBk8oK6
- 3D4LnsoxiAlZx+4YTNdoBGAY4grkiXVljgTxpBUlELHm7kc1pC6kz06aMb6xQNmMYI0xArkD/
- jNQ2ikSYvXvJadzISuHGN3criKTySFXHqTyb9cKTlv4oMwQpdP3w09QSBTGxEi/gJp7h3Me3s
- PAOpeNjVBEBjNVco/t8EBepHalZBhjR1p3BAKudXTfoUOoxOFXZCA2krPaM1pzGeXqjrSDCKx
- pZ95pl0qoyWVbtIhhpKJVSa++Q3+azM00FFHA8VHaIomYN4Nki25DhZsuzqsz8k1Lwr7v19gC
- t6FJjVJ6Sw7ztnyY6o4tx6fow8xJ/aZHvt+Z9TOMGauFzbe4eVNWcphnvTEh8p86aGA7BePXx
- nRhFwdUud1fvctixjMp+WDG/EK7oaWEbYmY31vtakkxdCMGrRLdHNGxtQ0hvbmRxY/FcU5EAt
- dmztUBPitzHHGXofdyusnAeUZUuv9Vd8BLecsWUMhCYUpPrfRmFluzMzWwyZxJ+jiClADChIb
- XV53AJwTkR1Rvs4bC7VwkRg6XJbGa3Yjgqs3/5+BjAYQz8fmMYrsHgje1lVer5YG9BSFlnpfV
- 5Ar/ncU0MpbbGsg1U33uQLmjmP9AhoB7ZqvkRYWTM1I/Md2rmYEuM2cLqtwmpIWGMXNuyNt7r
- 8Io9thGMzjA2COoYfqwhTFzAD+5zua0Hv9UV9iqVJnZ80YEmZovyJq9serCtEqV+6dys1tMQf
- 7qyqnvKZJjLhVRqsMYS7EP7kgGYrScSpd9eyHbOgBqTRLhD4mk4v1o7ySsdJ5+qG6ubHXD47A
- /qPz5IYVo9haTIh3rVrUuwhu5gmjKn4b4L+y1PK3lFDJGDeiVUcHIXYJBvKFHI6JDnilUg052
- 3IJ5dkHi5ay3q+bI6jB1I/1kvnvGtcGvZeDSoMDa6HrkBg3nfbk+DiEg8UB60NzhKdXl7tWcc
- rITEV3pcLW62GgL3Zr1DzciJ9V/2DSvamBqkfVr/frGjAVMzpzAgkbP2/Hxz53TRMBLumwq9U
- d+zNoXDGw083Ww48DlEdcUY+LyyeNzIEUAiP1ZLizW9bAhUbohNDtZyRkvek3EGvOJL0oIqJ+
- JSGNfXTQd75xFyubDhquboypOoTAqmLKiYm7f1QGXI+wUj2AuSQP8Vn+xWk0/D2VjvQdNsggv
- TEBw+7i/zM7+ozjhUwOUscfEeZx37DMG827dcQG2PtQ/1O4S6mrA63VJX33/qTzSxCwBgt/xR
- AhT5atVOa8L+1ITf2bKVx8VS1qX67xYttmIJO/kqK2UzmRp4A8X/lmtSzXFMWM/o1g0cVim6G
- BDHKyCj7ZxeC03pOs+rSbExiG6Qs=
+References: <20250313080219.306311-1-make24@iscas.ac.cn>
+In-Reply-To: <20250313080219.306311-1-make24@iscas.ac.cn>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 13 Mar 2025 10:24:43 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWC90pwMqbVzgjXiCdQhHPNCn7H63qpLR_gnkd_KnmX6w@mail.gmail.com>
+X-Gm-Features: AQ5f1JqQ_oaKDsBDau4ePq88smh-AvPy8WWYdFpV0xoJTZrekkZ3xtkqYb-jFaQ
+Message-ID: <CAMuHMdWC90pwMqbVzgjXiCdQhHPNCn7H63qpLR_gnkd_KnmX6w@mail.gmail.com>
+Subject: Re: [PATCH] [POWERPC] ps3: fix error handling in ps3_system_bus_device_register()
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: geoff@infradead.org, maddy@linux.ibm.com, mpe@ellerman.id.au, 
+	npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org, 
+	arnd.bergmann@de.ibm.com, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, akpm@linux-foundation.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Am Mittwoch, dem 12.03.2025 um 12:24 +1100 schrieb Balbir Singh:
-> > >
-> > > >
-> > > > As a sidenote, I've tested several kernel with nokaslr as command =
-line parameter
-> > > > (6.1.128, 6.8.12, 6.12.17 (the debian sid distributional kernel)) =
-and nokaslr is
-> > > > not recognized as a command line parameter in any of them
-> > > >
-> > >
-> > > Please see my comment above about booting. How did you check if noka=
-slr is being
-> > > recognized, is it via looking up dmesg?
-> > >
-> > When I boot with nokaslr I get the following messages in dmesg
-> > [    T0] Unknown kernel command line parameters "nokaslr
-> > BOOT_IMAGE=3D/boot/vmlinuz-6.14.0-rc5-next-20250307-master", will be p=
-assed to
-> > user space.
-> >
-> > This also happens when I use the debian kernel with standard .config
+Hi Ma,
+
+On Thu, 13 Mar 2025 at 09:03, Ma Ke <make24@iscas.ac.cn> wrote:
+> Once device_register() failed, we should call put_device() to
+> decrement reference count for cleanup. Or it could cause memory leak.
 >
-> That is quite strange, I can see nokaslr handling in choose_random_locat=
-ion() in
-> arch/x86/boot/compressed/kaslr.c (which depends on CONFIG_RANDOMIZE_BASE=
-)
+> As comment of device_register() says, 'NOTE: _Never_ directly free
+> @dev after calling this function, even if it returned an error! Always
+> use put_device() to give up the reference initialized in this function
+> instead.'
 >
-> Thanks,
-> Balbir
+> Found by code review.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: a3d4d6435b56 ("[POWERPC] ps3: add ps3 platform system bus support")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 
-The command line parameter nokaslr does actually work, I tested that by bo=
-oting
-the kernel with and without nokaslr and checked /proc/iomem for the physic=
-al
-address of the kernel. With nokalsr it's always at 0x1200000.
+Thanks for your patch!
 
-The warning message in the code
-	if (cmdline_find_option_bool("nokaslr")) {
-		warn("KASLR disabled: 'nokaslr' on cmdline.");
-		return;
-	}
-on the other hand is not shown, because warn is basically __putstr() which
-outputs to the serial console and the screen, not the log buffer (Which we=
- do
-not have this early in boot anyway, I assume).
+> --- a/arch/powerpc/platforms/ps3/system-bus.c
+> +++ b/arch/powerpc/platforms/ps3/system-bus.c
+> @@ -769,6 +769,9 @@ int ps3_system_bus_device_register(struct ps3_system_bus_device *dev)
+>         pr_debug("%s:%d add %s\n", __func__, __LINE__, dev_name(&dev->core));
+>
+>         result = device_register(&dev->core);
+> +       if (result)
+> +               put_device(&dev->core);
 
-So with this solved I tested stellaris with a kernel without CONFIG_PCI_P2=
-PDMA
-and nokaslr and found the same buggy behaviour (i.e. laggy input while ste=
-llaris
-is running).
+Good catch!
 
-Bert Karwatzki
+> +
+>         return result;
+>  }
 
+However, there is an issue with that:
+ps3_system_bus_device_register() sets
 
+    dev->core.release = ps3_system_bus_release_device;
+
+and:
+
+    static void ps3_system_bus_release_device(struct device *_dev)
+    {
+            struct ps3_system_bus_device *dev = ps3_dev_to_system_bus_dev(_dev);
+            kfree(dev);
+    }
+
+As the ps3_system_bus_device is typically embedded in another struct,
+which is allocated/freed separately, releasing the device will cause
+a double free?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
