@@ -1,228 +1,203 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC3C267B93;
-	Thu, 13 Mar 2025 11:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB92267F67
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866080; cv=none; b=oG+w3bja3tcDz2MmrTadNxiSaDoJVti8+ViLktk8+BObvL/yxC58cMDwxwI/gpI17CQ4A/9fwSFFZv2exeaC4+jZsuVf1Fsf89zvKcppHiojuGypPFfofJPjzNqkwAkUPGSO8aktp9DM4UdruklQOc+bwKU+cqBfQ+5/mIsTFTM=
+	t=1741866083; cv=none; b=OIUpNhyxaDNVQkrH7NPMRNEO9eiezWQcz3ygH5taRSP7KxSlMSIYiTEulgwubJ0yeydMEbpz77WrVA+vVZGECJXVsmKrWUnYXHJlUJSdTmot3J+AtlOvobnFJYCJUokHfK3/Vo0/zMRM41y65bmhaBtmt24d6jcy4fwuF0KjDPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741866080; c=relaxed/simple;
-	bh=N97BpYlbNSPfzJGQZ1D7SkQx/OmwuZruOYtg7xU7yyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dER5P7vXRt6+qomYxe8MQW7eH9tE5cM35KgvK4hDaQMsKV8m6WNs6PSgJaYKEenvWEDO2ucx0ksSy5N+4gaqC/6I56Wx8AEBQ1BgOCyDkQKlTqYs619N85aPe39ndFjMiG0iSEe9/U8XxbKq+IbUOgLWLjkQTngRvwa0Zap/SL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=POG4t+cB; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741866083; c=relaxed/simple;
+	bh=YqqLhB2sDmeRf0yvSJdYtwvNNWc93ZsNkQgc1bLXWOA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=c/0ojHQJIp8gnaCyuhgrMbkhwcO+gYse3/Gbsrxx9npfUOq/qMG7e6OkRr4gb7rhi1cZG9zZVInt/nA61jwC3MpQoOOjQHkDCwlC91ynD6cb+zRPa6v3c585f1+tTPpXHsb7Md5O28S7ExNK/nq0kjUzTVM6UPnwr58zUlCfFNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Eg5R5OUd; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="POG4t+cB"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54996d30bfbso717718e87.2;
-        Thu, 13 Mar 2025 04:41:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741866076; x=1742470876; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G+NTzzn1Fnv8JX9NGjwEvgHmyeUTwJ8v4hknnj/x0Lo=;
-        b=POG4t+cBWbpjFb7UK4AAT60fdcOcMzXnViszpv6xYlm0FNJFlKdx9HKW2RchA4zH++
-         NbdsGSqNn5K0DkMxZE9oZLd19qIHUmfnw+1z4HBPdWKxtcv3fRnZXe+Bbgla2pEad0t6
-         LXf9yt9hddmay4Jcyhnlv+tZGJycx9XbZSIHF0/lPH/x4PMGaaXOyuWueeRBil7bIXKd
-         OfweNV8+/17xqanQBk5cuZAhF7Gn2YpBbvTYFUvkVy+yhuXXtqSuiGsP8ZxgeGPJUsYs
-         4PXJ7N5EY9OLd1qM/0oHgVAccFByjL10PdIKK5Jz830TaRTAhLJKeQ6X5srVQXP/DFPI
-         xTqw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Eg5R5OUd"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D7CB3L019817
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	b66c7trNFzZoQyrgHszRHq0+mVYbdCkWT7Z8WHwPyWo=; b=Eg5R5OUdQy8jNCEN
+	0VRV4pCIdH2ZAv4vYoi8UxipxY+HxxUIvBIxlkFhfNyJLpZ++iaUASj9L7nnAKuk
+	9agqdC9uTJnmnfiTgx8boHYqwtafRDLhGII1MBBD+Cf46BUB/+L+8cXelXc7tUCh
+	0gB6G+j1Wo55WTPJZbU2JGfy7tlR0MMWMeS4qtBCqGVz7oOHctsA6KQQYS9nQJT/
+	yM5UWOizBiQo8K+5Hh54P0xzQiCBHLiyBL77UxjHcjUSvlWX1bNMGnltvV0drNT4
+	ntTGelCrpYvOLN1wKu+yDx+i5bSt1j02XN90i4+GJyqOqItDeCVBWyj59vcN7Ek/
+	RCdQZA==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45bts0gre3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:20 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff4b130bb2so1600206a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:41:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741866076; x=1742470876;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G+NTzzn1Fnv8JX9NGjwEvgHmyeUTwJ8v4hknnj/x0Lo=;
-        b=QKgGcjFZFXHTbEm7oE1jzRMY9HlgY0x8qND0z4dS6H98dIDLfWI0eYnj61CrFsB/3a
-         GEu9l6x/guStnGgK8lYh1qLUCI/ST6K5QqNkG+yRdyPWHwgT8vb8PXx4fQ6lj97zLCTG
-         I+J0ttU9Y2vMBOkhPNKtwTf1plJ4kY1k0r1fjV0KBqMUf26EwCoXEdQb/+sAt4p0/qb1
-         VKDImAF66M+TbPELk+kCblfwEjqVBUapNL2pmHjtaxvPbzEG11J4EI1iQplyoseVAjZY
-         /rziNHpuunJICWNuTcjPL6pTQra7bGAdX9keIQZcG3sRKqKS0GwkcAzSIUQCCbcoSybl
-         i5Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjItLeS4I6pfRGoHX0wlN4EAhspCG5tVgzQ7p3h23+zO9iXaxGh9Ys4eNZzlkljQC/14Y7BMObJ7Qu3gln@vger.kernel.org, AJvYcCWM9dFqbgO8CcVD2r3NXlG/9JDS5DouT/TgsvpAWWUOkXUSMQpne0v3Z1uwGNU1f3AeiThXKskJdOkr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEU3gxINn1mQMTuyRLZD7DLclPDAKuLT8yBf+2XTxQNno3li+E
-	1IctbTS9mXieFn07YdgO1EQOMj7KasjZUuB++8neBdWu5SlkdANT
-X-Gm-Gg: ASbGncvKvGFWcGWA3Jv0mnTwxvl4lvU4ZE/EWYc3bVrJ9fOX2KikErGtXjoZ0uS8V+O
-	FGuGWAXzsy08ChaTkl4jV6TZe9rnAvbWx4RlCW68Q3GV4XPv9+WraguPBlgC0wJ2cKANsdEs3A3
-	W4OFC5CDpKk90dbxg9jPLjadXVquuyVRTyzWvoomzkfRdowCsqsl+tDoxNXMDKTtOAS35AnkUVP
-	PSyHYydAqvG1LtJp2n8jaQlZWeKJt28YiPC6KyTmZnVB4Ubk2OUl94O6xXzjff+el9ZqFEPYVSn
-	zBKm+MZnrnv0NEFVTun0YE3mA7oZA9Xx/xvvGp5/xw9xtGmG2yA=
-X-Google-Smtp-Source: AGHT+IFuZEL6MZEjWuwNLfzDYfGHyS/llMVd1NMMeT9bsPSWu/Jy2JNXc5sF0MhHkWdyYmsc8EnSpg==
-X-Received: by 2002:ac2:44c6:0:b0:549:91d3:cb16 with SMTP id 2adb3069b0e04-54991d3cb26mr7381426e87.4.1741866075720;
-        Thu, 13 Mar 2025 04:41:15 -0700 (PDT)
-Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba7c1a26sm185901e87.97.2025.03.13.04.41.14
+        d=1e100.net; s=20230601; t=1741866079; x=1742470879;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b66c7trNFzZoQyrgHszRHq0+mVYbdCkWT7Z8WHwPyWo=;
+        b=n2sB6QkLxmuApK7GUeGej/gvw9dN9BCVodZKFCt+SYpawCiSsRmjDUZgtOpb9oBJje
+         PDnGowIYc/gEJCEtEgE9sdat2y1ufLR2t43aeR5euJOdFik37d4LJoFOCMjD32CNsK7W
+         iYYFFcVQSnhBbmwm5kerkZJe/t3ZFKuVF8+Gwt4Ff4sSQgVOF5TVWo5PoA2850w499sw
+         lyq6QTSJJ1FHI3tl9E9WLx+OY9h8zUtJW2M4QuEEyG2YrasuJcnhTzB+0uZcRnDbYFvP
+         lqp1qj028BUe0GoTc0/uPB8so22C5xdpX6SzEMYBB8lZpUAY3YrKpivvFBqzQUjb7+r4
+         3EqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaVd3waZaA7d3oZCKwu/B/LqNmbj+OO2gNULqBe9ttq/QB9V8iA/xs3ErhsnPyKcayjoxCGL9Q7x2a1bs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9uO7ztMvnMYpNY759Ewr52u5V/MKIs/5ejLJHTXpcpXA+CaAc
+	jw2NX14Dc3tmol+PmCoVFmXVcvbvFaxzq3uHoKHkxqupLgCR6LNXNTIp/F+POQNxAAeGR9DcuuU
+	zIFxn+4hEpi6rV4q+bQyF/ShK9sIBYaFrmirTmqziMF/qvT2Daw4imP/MsnR618Y=
+X-Gm-Gg: ASbGnctomI14L43o6bmp1EqXYwV0JREhR5hY6GiemLyTGNpnck5uM9iaCxXfujkj2qE
+	yHEju22ZXVvQ/QeZvihorHELvy+ELXkbQQm+anK/NRfD5cEJhz2YP44nXEMXwObZy8Mxpxj+zPh
+	DdpcdKHi2zotoa3Jh8ZQA9eEtxO6ldcY0HM2k5aljy7znwIcgUIQsC/Z1rgemXQGX9wDyy50Gjm
+	TCAGGQ+TfiwP7NtWPQOMVIgNmk3zb1NAXVHv4JCelRKWWIuFRkjUKhTIWgF/GdQUV4VYxaBBIDD
+	S6076z8CM+N9UyI6kEvn+HMgR0eJq0pR0B/ZCozw1wlEHDH/a4E=
+X-Received: by 2002:a05:6a21:150d:b0:1f5:51d5:9ef3 with SMTP id adf61e73a8af0-1f551d5a599mr32029787637.20.1741866079480;
+        Thu, 13 Mar 2025 04:41:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHyqb7Zqga/alnBVVjkfYTwBJb/FL7B8cMycyybsa0F6n3AwQrzJM7hwVPKpY5cioC6dQOrZQ==
+X-Received: by 2002:a05:6a21:150d:b0:1f5:51d5:9ef3 with SMTP id adf61e73a8af0-1f551d5a599mr32029748637.20.1741866079107;
+        Thu, 13 Mar 2025 04:41:19 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea964e3sm1063219a12.76.2025.03.13.04.41.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 04:41:14 -0700 (PDT)
-Date: Thu, 13 Mar 2025 13:41:10 +0200
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/14] dt-bindings: mfd: Add ROHM BD96802 PMIC
-Message-ID: <b8cd10416e2c3751fda58bf2b3dad86c78ebd43f.1741864404.git.mazziesaccount@gmail.com>
-References: <cover.1741864404.git.mazziesaccount@gmail.com>
+        Thu, 13 Mar 2025 04:41:18 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Date: Thu, 13 Mar 2025 17:10:13 +0530
+Subject: [PATCH v2 06/10] bus: mhi: host: Add support to read MHI
+ capabilities
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Ft2n4GX3RX91ewdq"
-Content-Disposition: inline
-In-Reply-To: <cover.1741864404.git.mazziesaccount@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250313-mhi_bw_up-v2-6-869ca32170bf@oss.qualcomm.com>
+References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
+In-Reply-To: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+        quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com,
+        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741866038; l=2486;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=nMXDxyNhjI58pEdLUQqctmcAdSRLINO8la+ypV3eSj8=;
+ b=IQFrsWjbiSFkhhFBnz/9ECFoXIf7GbLmM1L6/nMA8GY8bq3hdf6o2GCxsl0IkRddYfEnufKMF
+ 7l0la06C7++BPXkI71ClW+XSU+tDbkr2gtqK0EIF/oHROpwpoeEt/nS
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-ORIG-GUID: dpm6dlTlVBco2DfTxGQ0t3MX2UxOFNTO
+X-Authority-Analysis: v=2.4 cv=DNSP4zNb c=1 sm=1 tr=0 ts=67d2c460 cx=c_pps a=0uOsjrqzRL749jD1oC5vDA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=8tVK0NU1EB3xojDYR3gA:9 a=QEXdDO2ut3YA:10
+ a=mQ_c8vxmzFEMiUWkPHU9:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: dpm6dlTlVBco2DfTxGQ0t3MX2UxOFNTO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_05,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 phishscore=0 malwarescore=0 mlxlogscore=999
+ priorityscore=1501 mlxscore=0 spamscore=0 bulkscore=0 impostorscore=0
+ suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130092
 
+From: Vivek Pernamitta <quic_vpernami@quicinc.com>
 
---Ft2n4GX3RX91ewdq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As per MHI spec sec 6.6, MHI has capability registers which are located
+after the ERDB array. The location of this group of registers is
+indicated by the MISCOFF register. Each capability has a capability ID to
+determine which functionality is supported and each capability will point
+to the next capability supported.
 
-BD96802Qxx-C is an automotive grade configurable Power Management
-Integrated Circuit supporting Functional Safety features for application
-processors, SoCs and FPGAs. BD96802 is controlled via I2C, provides two
-interrupt lines and has two controllable buck regulators.
+Add a basic function to read those capabilities offsets.
 
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Signed-off-by: Vivek Pernamitta <quic_vpernami@quicinc.com>
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
- .../bindings/mfd/rohm,bd96802-pmic.yaml       | 100 ++++++++++++++++++
- 1 file changed, 100 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic=
-=2Eyaml
+ drivers/bus/mhi/common.h    |  4 ++++
+ drivers/bus/mhi/host/init.c | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml b=
-/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
-new file mode 100644
-index 000000000000..d5d9e69dc0c2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
-@@ -0,0 +1,100 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/rohm,bd96802-pmic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/bus/mhi/common.h b/drivers/bus/mhi/common.h
+index dda340aaed95..eedac801b800 100644
+--- a/drivers/bus/mhi/common.h
++++ b/drivers/bus/mhi/common.h
+@@ -16,6 +16,7 @@
+ #define MHICFG				0x10
+ #define CHDBOFF				0x18
+ #define ERDBOFF				0x20
++#define MISCOFF				0x24
+ #define BHIOFF				0x28
+ #define BHIEOFF				0x2c
+ #define DEBUGOFF			0x30
+@@ -113,6 +114,9 @@
+ #define MHISTATUS_MHISTATE_MASK		GENMASK(15, 8)
+ #define MHISTATUS_SYSERR_MASK		BIT(2)
+ #define MHISTATUS_READY_MASK		BIT(0)
++#define MISC_CAP_MASK			GENMASK(31, 0)
++#define CAP_CAPID_MASK			GENMASK(31, 24)
++#define CAP_NEXT_CAP_MASK		GENMASK(23, 12)
+ 
+ /* Command Ring Element macros */
+ /* No operation command */
+diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+index a9b1f8beee7b..0b14b665ed15 100644
+--- a/drivers/bus/mhi/host/init.c
++++ b/drivers/bus/mhi/host/init.c
+@@ -467,6 +467,35 @@ int mhi_init_dev_ctxt(struct mhi_controller *mhi_cntrl)
+ 	return ret;
+ }
+ 
++static int mhi_get_capability_offset(struct mhi_controller *mhi_cntrl, u32 capability, u32 *offset)
++{
++	u32 val, cur_cap, next_offset;
++	int ret;
 +
-+title: ROHM BD96802 Scalable Power Management Integrated Circuit
++	/* get the 1st supported capability offset */
++	ret = mhi_read_reg_field(mhi_cntrl, mhi_cntrl->regs, MISCOFF,
++				 MISC_CAP_MASK, offset);
++	if (ret)
++		return ret;
++	do {
++		if (*offset >= mhi_cntrl->reg_len)
++			return -ENXIO;
 +
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++		ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->regs, *offset, &val);
++		if (ret)
++			return ret;
 +
-+description: |
-+  BD96802Qxx-C is an automotive grade configurable Power Management
-+  Integrated Circuit supporting Functional Safety features for application
-+  processors, SoCs and FPGAs
++		cur_cap = FIELD_PREP(CAP_CAPID_MASK, val);
++		next_offset = FIELD_PREP(CAP_NEXT_CAP_MASK, val);
++		if (cur_cap == capability)
++			return 0;
 +
-+properties:
-+  compatible:
-+    const: rohm,bd96802
++		*offset = next_offset;
++	} while (next_offset);
 +
-+  reg:
-+    description:
-+      I2C slave address.
-+    maxItems: 1
++	return -ENXIO;
++}
 +
-+  interrupts:
-+    description:
-+      The PMIC provides intb and errb IRQ lines. The errb IRQ line is used
-+      for fatal IRQs which will cause the PMIC to shut down power outputs.
-+      In many systems this will shut down the SoC contolling the PMIC and
-+      connecting/handling the errb can be omitted. However, there are cases
-+      where the SoC is not powered by the PMIC. In that case it may be
-+      useful to connect the errb and handle errb events.
-+    minItems: 1
-+    maxItems: 2
-+
-+  interrupt-names:
-+    minItems: 1
-+    items:
-+      - enum: [intb, errb]
-+      - const: errb
-+
-+  regulators:
-+    $ref: ../regulator/rohm,bd96802-regulator.yaml
-+    description:
-+      List of child nodes that specify the regulators.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/leds/common.h>
-+    i2c {
-+        #address-cells =3D <1>;
-+        #size-cells =3D <0>;
-+        pmic: pmic@62 {
-+            reg =3D <0x62>;
-+            compatible =3D "rohm,bd96802";
-+            interrupt-parent =3D <&gpio1>;
-+            interrupts =3D <29 IRQ_TYPE_LEVEL_LOW>, <6 IRQ_TYPE_LEVEL_LOW>;
-+            interrupt-names =3D "intb", "errb";
-+
-+            regulators {
-+                buck1: BUCK1 {
-+                    regulator-name =3D "buck1";
-+                    regulator-ramp-delay =3D <1250>;
-+                    /* 0.5V min INITIAL - 150 mV tune */
-+                    regulator-min-microvolt =3D <350000>;
-+                    /* 3.3V + 150mV tune */
-+                    regulator-max-microvolt =3D <3450000>;
-+
-+                    /* These can be set only when PMIC is in STBY */
-+                    rohm,initial-voltage-microvolt =3D <500000>;
-+                    regulator-ov-error-microvolt =3D <230000>;
-+                    regulator-uv-error-microvolt =3D <230000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-warn-kelvin =3D <0>;
-+                };
-+                buck2: BUCK2 {
-+                    regulator-name =3D "buck2";
-+                    regulator-min-microvolt =3D <350000>;
-+                    regulator-max-microvolt =3D <3450000>;
-+
-+                    rohm,initial-voltage-microvolt =3D <3000000>;
-+                    regulator-ov-error-microvolt =3D <18000>;
-+                    regulator-uv-error-microvolt =3D <18000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-warn-kelvin =3D <1>;
-+                };
-+            };
-+        };
-+    };
---=20
-2.48.1
+ int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
+ {
+ 	u32 val;
 
+-- 
+2.34.1
 
---Ft2n4GX3RX91ewdq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfSxFYACgkQeFA3/03a
-ocVhHQgAnLpjnJKwh/semeo1xD2I3Jt6+sp29OCZ2Nxg1ofkSNTjP7Yqq4snTECY
-oLT6jHbnLiWOSxjaM2n+he4nbU9VAAilT3nCdTGkVvSCmli/kKWcSokEpGymufJt
-qJYWp94FPUSX6B8qa6GYlVRCnembYG+ThG/R0ey3MYkSw6J2vJpGiA2oZLkSijUP
-wt/GXryKHiCQYiepcfNNlVlzATGidrazSgk5EKh8pjEXz0CilvGgJ0uYWRSAO9sf
-fk1xTl7edkK2g15lhX2iBlMm5X5ONKQhbP99HeQAwE1qf0OTZv51dGRf51kymK6w
-JhXViahJowVC0R5SkF/axepApHHIXg==
-=oGI1
------END PGP SIGNATURE-----
-
---Ft2n4GX3RX91ewdq--
