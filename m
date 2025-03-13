@@ -1,184 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A85E14D29B
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BB7268FE6
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741885121; cv=none; b=f5mbGA/lwKQ9Cek3Ab6M035Gbk1l+t7yI1w6z/yEDwh7GZIOXf/nKlroHZKRAd4RmuZTxMUf4mfdGkXxB56NfWfmEcWdw6tyATWmxUl0owV396QA6KE+DR6WMEf7BH14Oo3dkWjgKqSvyqJXkTX6HyCNUPgZ2S/zExR0TE7Hqfg=
+	t=1741885173; cv=none; b=W7K6Tdk5DNrJErqHieqgkGzrHXHWnqXflXNzl5QPTcMs/KILn3mrYuix9ZT0l0WduOt+SLNCec1u1JNIe5PQ93IfwNCMScfRw+XMTB/S3x0aeZ6D3iMG32w++uleWIXLCKwFLo6QkKfmK0fwPu0bek3oFPMY+OkhMPaJZ4besnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741885121; c=relaxed/simple;
-	bh=4LOJG5LANL9VKSEqiuiXMCW9QjiqEYlbfcwFQUZNUJk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nl21iowVee/eCFOemVZDtMq1X+Cgp25G4PpiKT/WQ7GOOAGaG3jY+WhtJh5bXmMtidFa/yM5WN/tlPZmWUzGf40VXLNvySpWSpbNZOOjcp48byB1MEK7pG5FRd0CWATWCnCqEc5pEafa8L0oCMRh3gGaDQkF+iCflqFPiuqCW5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NNLBIWMV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NNLBIWMV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741885118;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5E/X2960dgOpPkkr3NA3ursQ9UNrA7fKelexI4Oc0Lo=;
-	b=NNLBIWMV4XsGg6tKwk5rBunDigBrkoclJF5hn6dFaAPZ6dtHPhF9Gp4exKqWw6DZqWyLFW
-	wnCgFcoMQN+ZOombaGVfvfugzVdr8GMcbFwzWldh9gEpeteSbU8J8oQMOVft96uohk2Ujl
-	ZuuG1qQcMCwDwtyYRspcs9DXvflNSEI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-658-kEKOQ6xUNG-K4iw3jO81Fw-1; Thu,
- 13 Mar 2025 12:58:35 -0400
-X-MC-Unique: kEKOQ6xUNG-K4iw3jO81Fw-1
-X-Mimecast-MFC-AGG-ID: kEKOQ6xUNG-K4iw3jO81Fw_1741885113
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ED61019560AB;
-	Thu, 13 Mar 2025 16:58:32 +0000 (UTC)
-Received: from jbrnak-thinkpadx1carbongen9.tpbc.com (unknown [10.44.32.42])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EED261955BCB;
-	Thu, 13 Mar 2025 16:58:27 +0000 (UTC)
-From: Jakub Brnak <jbrnak@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	kan.liang@linux.intel.com,
-	mpetlan@redhat.com,
-	tglozar@redhat.com,
-	jbrnak@redhat.com,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v2] perf test probe_vfs_getname: Skip if no suitable line detected
-Date: Thu, 13 Mar 2025 17:58:24 +0100
-Message-ID: <20250313165824.7711-1-jbrnak@redhat.com>
+	s=arc-20240116; t=1741885173; c=relaxed/simple;
+	bh=5plUZokiGNszsQd5jMdJREBDilijqjztiPfhbU0oomI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=AFyjtJ0k19cgfh/kBdJBH4GrBqM0wQjKCdMclL8HVOXsRUTVtQKlOunOruQZgwHHUeu1Z0w5INxW12zZXEPRfuxxBiARS4OLIw1ngQDyLBPEOfunINtAf7C7iH9tYuyIfnJoIlCOxOceobS+gXIJc53H5iBBS7Usa+Q6NOaVRBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85db3356bafso300803739f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:59:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741885171; x=1742489971;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CAVyUdjA1Fi7LXzB/oZslQ8tsF7/jZYEXnsjntzroqE=;
+        b=Ap7N7f3WNPwgp9oEs9f+fEnKvMr+Vt0dpW3lvhphV42QBel2xmcvFKLFdrU5bmZsyX
+         n/g4HlDC5qNgPwhHkhywOv41bYP0QLu3k+VjJAPH+/lRN/7XhktJJi4h7hAINE5HXXXl
+         IxqgPVj4OBuyEp3CHoCPi/mlYSrJEtI5fAN6Af1jf7caHrDY7vszpmiJxL2XtxhpUeEi
+         Xh5GEVvQqQAFHG9iABCkiNIDp3Id962IPBplkZJ5DXnCpyepn31M0WStOgT6U9aI5X44
+         oyD2kAvQI1nPTUoS1qb5mXMVQ7rrPcdTJ0aYyXgUbhwlUVasRZiSkS0c/b58ebNd3Y2c
+         02iA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGkjl8LZkrwcnzcFaB50axjuSDmNtGcO56ZejIBrkOAF7fiBo5FC2XYzpAG3uPy2rtkil3CFkRaNtE1pY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC1R/jtPcLAsUYX0W8UaHX6mdPGJhYPTFEOKsWmeBgRIqZ7PaZ
+	8MnVUpvws6AUlqc32V5y7+4jWwV0wpJV1a2MQ+TSQ/fBMNO1p0yLNL9mHtYs+NouPYDfO9PpndB
+	Yj+ax9dtv32o8PmEXhH2/RjG1bUtWodaYcjoRNalgzdVKKjMQJPlhKVI=
+X-Google-Smtp-Source: AGHT+IGaGZzlBUeOGaoLnZmW9bgDBCxgtJaE55nziPEvab/sw8+W63R2zUJ4P/BgZbmd5Zz4Rq0ngyXdUb7Mlq/C3Db/n3UoXyQz
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Received: by 2002:a92:c262:0:b0:3d4:712e:29eb with SMTP id
+ e9e14a558f8ab-3d482051ea1mr6445ab.5.1741885170964; Thu, 13 Mar 2025 09:59:30
+ -0700 (PDT)
+Date: Thu, 13 Mar 2025 09:59:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67d30ef2.050a0220.14e108.003a.GAE@google.com>
+Subject: [syzbot] [input?] [usb?] WARNING in hanwang_open/usb_submit_urb
+From: syzbot <syzbot+9fe8f6caeb5661802ca2@syzkaller.appspotmail.com>
+To: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-In some cases when calling function add_probe_vfs_getname, line number
-can't be detected by perf probe -L getname_flags:
+Hello,
 
-  78         atomic_set(&result->refcnt, 1);
+syzbot found the following issue on:
 
-	     // one of the following lines should have line number
-	     // but sometimes it does not because of optimization
-	     result->uptr = filename;
-             result->aname = NULL;
+HEAD commit:    b331a3d8097f xhci: Handle spurious events on Etron host is..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=17db1fa0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f429368eda610a89
+dashboard link: https://syzkaller.appspot.com/bug?extid=9fe8f6caeb5661802ca2
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164a34b7980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11f04664580000
 
-  81         audit_getname(result);
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/6dd3e4d1c59b/disk-b331a3d8.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/58f91d593dc0/vmlinux-b331a3d8.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6cbf2795aa43/bzImage-b331a3d8.xz
 
-To prevent false failures, skip the affected tests
-if no suitable line numbers can be detected.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9fe8f6caeb5661802ca2@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+WARNING: CPU: 0 PID: 2827 at drivers/usb/core/urb.c:503 usb_submit_urb+0xe4b/0x1730 drivers/usb/core/urb.c:503
+Modules linked in:
+CPU: 0 UID: 0 PID: 2827 Comm: acpid Not tainted 6.14.0-rc3-syzkaller-00071-gb331a3d8097f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:usb_submit_urb+0xe4b/0x1730 drivers/usb/core/urb.c:503
+Code: 84 3c 02 00 00 e8 65 93 ee fc 4c 89 ef e8 fd ca d4 fe 45 89 e0 89 e9 4c 89 f2 48 89 c6 48 c7 c7 00 53 a2 87 e8 f6 a8 b2 fc 90 <0f> 0b 90 90 e9 e9 f8 ff ff e8 37 93 ee fc 49 81 c4 c0 05 00 00 e9
+RSP: 0018:ffffc90001617818 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffff888104e85600 RCX: ffffffff813f4dd9
+RDX: ffff8881163eba80 RSI: ffffffff813f4de6 RDI: 0000000000000001
+RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000003
+R13: ffff88810138b0b0 R14: ffff888113321760 R15: ffff888104e8567c
+FS:  00007fd474ef6740(0000) GS:ffff8881f5800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055c4f0adf170 CR3: 00000001163ca000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ hanwang_open+0xa8/0xf0 drivers/input/tablet/hanwang.c:284
+ input_open_device+0x230/0x390 drivers/input/input.c:600
+ evdev_open_device drivers/input/evdev.c:391 [inline]
+ evdev_open+0x52d/0x690 drivers/input/evdev.c:478
+ chrdev_open+0x237/0x6a0 fs/char_dev.c:414
+ do_dentry_open+0x6cb/0x1390 fs/open.c:956
+ vfs_open+0x82/0x3f0 fs/open.c:1086
+ do_open fs/namei.c:3830 [inline]
+ path_openat+0x1e88/0x2d80 fs/namei.c:3989
+ do_filp_open+0x20c/0x470 fs/namei.c:4016
+ do_sys_openat2+0x17a/0x1e0 fs/open.c:1428
+ do_sys_open fs/open.c:1443 [inline]
+ __do_sys_openat fs/open.c:1459 [inline]
+ __se_sys_openat fs/open.c:1454 [inline]
+ __x64_sys_openat+0x175/0x210 fs/open.c:1454
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd474fc09a4
+Code: 24 20 48 8d 44 24 30 48 89 44 24 28 64 8b 04 25 18 00 00 00 85 c0 75 2c 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 76 60 48 8b 15 55 a4 0d 00 f7 d8 64 89 02 48 83
+RSP: 002b:00007ffd7571ff60 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007ffd75720248 RCX: 00007fd474fc09a4
+RDX: 0000000000080800 RSI: 00007ffd75720148 RDI: 00000000ffffff9c
+RBP: 00007ffd75720148 R08: 00000000000000f4 R09: 00007ffd75720148
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000080800
+R13: 0000000000000020 R14: 00007ffd75720248 R15: 00007ffd75720148
+ </TASK>
 
 
-Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
 ---
-v2:
-- check if return from add_vfs_getname equals to 1 since
-it is only option in case of fail
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-v1: https://lore.kernel.org/linux-perf-users/Z8pAep0GJsMFTyEi@google.com/T/#t
----
- tools/perf/tests/shell/lib/probe_vfs_getname.sh          | 8 +++++++-
- tools/perf/tests/shell/probe_vfs_getname.sh              | 8 +++++++-
- .../perf/tests/shell/record+script_probe_vfs_getname.sh  | 8 +++++++-
- tools/perf/tests/shell/trace+probe_vfs_getname.sh        | 9 +++++++--
- 4 files changed, 28 insertions(+), 5 deletions(-)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 5c33ec7a5a63..89f72a4c818c 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -19,8 +19,14 @@ add_probe_vfs_getname() {
- 			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
- 			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
- 		fi
-+
-+		if [ -z "$line" ] ; then
-+			echo "Could not find probeable line"
-+			return 2
-+		fi
-+
- 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
--		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
-+		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
- 	fi
- }
- 
-diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
-index c51a32931af6..b210576f1971 100755
---- a/tools/perf/tests/shell/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-@@ -13,7 +13,13 @@ skip_if_no_perf_probe || exit 2
- # shellcheck source=lib/probe_vfs_getname.sh
- . "$(dirname $0)"/lib/probe_vfs_getname.sh
- 
--add_probe_vfs_getname || skip_if_no_debuginfo
-+add_probe_vfs_getname
- err=$?
-+
-+if [[ $err -eq 1 ]] ; then
-+	skip_if_no_debuginfo
-+	err=$?
-+fi
-+
- cleanup_probe_vfs_getname
- exit $err
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index fd5b10d46915..a26248d52628 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -35,8 +35,14 @@ perf_script_filenames() {
- 	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:vfs_getname[_0-9]*: +\([[:xdigit:]]+\) +pathname=\"${file}\""
- }
- 
--add_probe_vfs_getname || skip_if_no_debuginfo
-+add_probe_vfs_getname
- err=$?
-+
-+if [[ $err -eq 1 ]] ; then
-+        skip_if_no_debuginfo
-+        err=$?
-+fi
-+
- if [ $err -ne 0 ] ; then
- 	exit $err
- fi
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 60fccb62c540..4956cd9be41f 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -25,9 +25,14 @@ trace_open_vfs_getname() {
- 	grep -E " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +\"?${file}\"?, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
- }
- 
--
--add_probe_vfs_getname || skip_if_no_debuginfo
-+add_probe_vfs_getname
- err=$?
-+
-+if [[ $err -eq 1 ]] ; then
-+        skip_if_no_debuginfo
-+        err=$?
-+fi
-+
- if [ $err -ne 0 ] ; then
- 	exit $err
- fi
--- 
-2.48.1
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
