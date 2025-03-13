@@ -1,89 +1,85 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B9B268FDA;
-	Thu, 13 Mar 2025 15:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1CD2690D7
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 15:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881569; cv=none; b=AP5yir+OBADxMtXHjd688YgE1vNq8fo4PBI+Uz/doof9ZmHqoksqVKwGcbTVDGKjGTRyXGTfoUPdzQwNxekzhAG5tR9h62hoGAkI538dofaXy2n4eyv19fSf69btmD9WcxApnecHHWLbpsyyRyWDUxADF4qVVFEAvHkCXDqxBzk=
+	t=1741881585; cv=none; b=f5jgZ7zPkPvXX385XC6fYWgjEDCt9nEx8ZPa5pN6kTQHnsJ+nnY30VNvFjH8Gueit4BKv623ho57gSLI6ilf7OGiQTHSeCx2iQOnqAYvwoqf5ljsVWJRNZMAyIQIlotkFExdId9HCqW9h+QwtKf/OvwQTKoFkmIXdv4lGrrEvJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741881569; c=relaxed/simple;
-	bh=62zTkdL3ALYfRPzWe/8lphFjkzK4FS/qXrxPsWWWSrA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TzNdgco6SJqHGfeQUzOGE/1gKJePxEY4DTxgrUfvAmoqVbe3AilqbAJQLAH9xSdX2gUQJ2v8S8rSpgbSFpscEo3vELlxp3V+iNKt76fxQ/FQhLXRv8R/6WcU5uloSFrURq6kekC48rj37ahJ5MMuJua9taIMYOGXZuY7QMVwhDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=lK3Teh3Y; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1741881585; c=relaxed/simple;
+	bh=qmDjoX8h7NEB+eT+QeAl4QsgBucU40XmMm5U6V0gatE=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=dE9uETB9Q79J0Pk6qc01IaE74D7/CY5VwL6QvTCRW+DJ7FdLeZeCSRRFtGE3HSaHCYBfCWfy/pHPCZ7RWYtbLWAncOyWUNZtgjb/zJTgWLt1kGnp2umeo7OF0wcN6bJP4KTyFgUyMDO6BZYAXYYhBDvfT+C5qH0USjGKApU/JJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OCQH7Obx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=teH3p7U7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="lK3Teh3Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1741881564;
-	bh=62zTkdL3ALYfRPzWe/8lphFjkzK4FS/qXrxPsWWWSrA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lK3Teh3YUOjmJFWSy7m5FP7PtmD/xk72BuNPwB/NPIHPW5sNGJTQK2FRSQVHnxAds
-	 Abi4Nz6mverESCGS/hz4cVKBzoNuFKh7ljoFR9ZSAW6mHjCnxEwbINk3Xb51rSd+Sj
-	 bCPey6dkiDsqBZQ34ryzWFXT+iJCCg/CXlOqjFCI=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Thu, 13 Mar 2025 16:59:09 +0100
-Subject: [PATCH 1/4] kbuild: make all file references relative to source
- root
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OCQH7Obx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="teH3p7U7"
+Message-ID: <20250313154615.860723120@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741881582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=pC5u9IABiaLSzqnFooP5hA+9dFjsd9YXaN72QMClq10=;
+	b=OCQH7ObxZUU6lnkrIcTfdQ8HDsvfirXW75Jxkidk+zO+7PNuDhq8pzMsWsO41A3GYEZMaN
+	79BWoZ3+9gTKrqqt78CmtuRAnWqcq/jRT0cQh6wkuiU8sOJJ2yWtDqyBLBUhgOA7zmxOO9
+	oELoQtxv9fNyRMVHUEsJwDF9xVEuCkhFSxFt+78Tj+OsLUPCKGLV6Y/4XxLo0gVUbeMK2w
+	81iAr/oOQ58IiGqB3pf/tsJQ6w7w7oKsv8UpRsxj5hBaQJhx59IDB/uM3qyVCatkSnOrwT
+	NNkzb8wMvaFqKBQNAPHCY44wuInsscFbz5frCzOBZc4abqctXTxfJuaZyJ19kg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741881582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=pC5u9IABiaLSzqnFooP5hA+9dFjsd9YXaN72QMClq10=;
+	b=teH3p7U7E0QN1oYeJxEiAlmy7/bx6AAh+KJ8Nps7uujVf9OteziRBzJNougoyY+MZQW3a3
+	d5hyy6s7odsrg6CQ==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+ Jiri Slaby <jirislaby@kernel.org>
+Subject: [patch 00/46] genirq: Cleanups and conversion to lock guards
+Date: Thu, 13 Mar 2025 16:59:41 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250313-kbuild-prefix-map-v1-1-38cea8448c5f@weissschuh.net>
-References: <20250313-kbuild-prefix-map-v1-0-38cea8448c5f@weissschuh.net>
-In-Reply-To: <20250313-kbuild-prefix-map-v1-0-38cea8448c5f@weissschuh.net>
-To: Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
- Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, Ben Hutchings <ben@decadent.org.uk>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741881563; l=1113;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=62zTkdL3ALYfRPzWe/8lphFjkzK4FS/qXrxPsWWWSrA=;
- b=nfzE1uQOaMdStFiOzQldd0472aZEEpFNHJCNBKyUu13oZ5lyK9asa2U3CpmCC+DkSD1dv/CQ+
- Kp9ZeR1wXQ7C35yDBwoMO2T91+fvoz6Vb1V7uQpG8mNEdeNei+Hqfu5
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
--fmacro-prefix-map only affects __FILE__ and __BASE_FILE__.
-Other references, for example in debug information, is not affected.
-This makes handling of file references in the compiler output harder to
-use and creates problems for reproducible builds.
+The generic interrupt core code has accumulated quite some inconsistencies
+over time and a common pattern in various API functions is:
 
-Switch to -ffile-prefix map which affects all references.
+    unsigned long flags;
+    struct irq_desc *desc = irq_get_desc_[bus]lock(irq, &flags, mode);
 
-Suggested-by: Ben Hutchings <ben@decadent.org.uk>
-Link: https://lore.kernel.org/lkml/c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk/
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+    if (!desc)
+       return -EINVAL;
+    ....
+    irq_put_desc_[bus]unlock(desc, flags);
+
+That's awkward and requires gotos in failure paths.
+
+This series provides conditional lock guards and converts the core code
+over to use those guards. Along with that it converts the other open coded
+lock/unlock pairs and fixes up coding and kernel doc formatting.  The
+conversions were partially done with Coccinelle where possible.
+
+The series applies on Linus tree and is also available from git:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git irq/core
+
+Thanks,
+
+	tglx
 ---
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index 30242e731a0d19faa0ffbeada8313e77c4105b41..7b1683bb60e2f473b255fb8a0bde97b15d19ddb6 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1067,7 +1067,7 @@ endif
- 
- # change __FILE__ to the relative path to the source directory
- ifdef building_out_of_srctree
--KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
-+KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
- KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
- endif
- 
-
--- 
-2.48.1
-
+ include/linux/irq.h     |    2 
+ kernel/irq/autoprobe.c  |   26 -
+ kernel/irq/chip.c       |  640 ++++++++++----------------
+ kernel/irq/cpuhotplug.c |   10 
+ kernel/irq/debugfs.c    |    3 
+ kernel/irq/internals.h  |   47 -
+ kernel/irq/irqdesc.c    |  136 +----
+ kernel/irq/manage.c     | 1154 ++++++++++++++++++++----------------------------
+ kernel/irq/pm.c         |   38 -
+ kernel/irq/proc.c       |   65 --
+ kernel/irq/resend.c     |   50 --
+ kernel/irq/spurious.c   |  104 +---
+ 12 files changed, 920 insertions(+), 1355 deletions(-)
