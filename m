@@ -1,150 +1,117 @@
-Received: from out.smtpout.orange.fr (out-11.smtpout.orange.fr [193.252.22.11])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0037A1F9A85
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 06:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FE1132117
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 06:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741845664; cv=none; b=tFIslLxcRJvqVwZGRmtkmH0v1DhVabjQMaC9WNoNJqebD1Nvpwb+/1xzQMOajqura6Qqinb3bccQgEch912fLGwe98tuWMMtY/ZMYJxJMHeW1ZPG8f9OteH0xZrwH4IicZawkuVAcxwCGU4PZQja/U6ayuNlWKrgVMR5yG5JQMQ=
+	t=1741845792; cv=none; b=eYc4/hxdQq0Yn6Aj1vOwqO6uZC5o3ZazQ1qyMgzOeRdXCnf1o1KdgypaWJzzuAqM/4aD6GPpqWuW3dTlULeJwO23XqpvFdeN0YeMmeg2dicZ3/nMARNE2b8eKF+ay1nBsBdXpkxHKybR5tDHfbla3m6RffVlzn0LIb89aq4g4mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741845664; c=relaxed/simple;
-	bh=yCrqjtdOyeLCtQFP3HlCHRI8dQ0Jt1EQeq01KB0Hn08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nN6LJoshqXWFPwiRyFodabZNgGxe86N5S4e74Qm6YOyjH2IuPZ8i2h3HBtfxi1qd5Wrx8k3CiaT32YMpRosP2OUxQ228RtsEaDrF+Wc1CkaqdsgSimz5LxMHbLUHsuNJsMQWVfJ9MgE0XjXbhDIOAq7/uSE43hEGtaSgw/uYxR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=smsQezoJ; arc=none smtp.client-ip=193.252.22.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1741845792; c=relaxed/simple;
+	bh=3IHj0fwKLeVDGBEhR8BPbj3M6F9IduKAqL/V0C9213o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aP011SQmFL2snVE/S8hTmEaz7jWpsNkGSSHwenqP402PTk6828qEAQvFvleVB+3u34tCh33S3070muYxAXziaBykxLGEHkIUn9SVUZaSbiakHEn5oTybsTDoFZmUYcVBvLEwBDIDwLY5WHeF1gXi03LQzmz4mgLugchis3vtzhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zplUBdIc; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="smsQezoJ"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id sbcRtDEdRPGDMsbcctHq0o; Thu, 13 Mar 2025 07:00:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1741845653;
-	bh=B7wryxTeR4Td6Rfuy3YKp1Ppg9ZS+9mGllvjIUPWfnE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=smsQezoJo6Gdb475kcPPl02/Keo4+WSgK5Yo5tMPGkBg0vx0I/XASikaaWDjy1Iwe
-	 EJHadEE2JgDAYp20Qap4X9n8FpSiacWOR/gVb0BUOVtpOVgzIG2Baj57tWtjRZsMw2
-	 hOQBOMDiz535v0UvWuLsxfXf6wvm3BL2XHpLSyAc3J40yyzfgshux74HgS0ptA9wC6
-	 6ELL8RpnUmMJTG4fRTvNtfkGlVEuxPbwkXILdN+4opWhued8vnvzi61YwFkd3U6jIG
-	 P5cLDnKnolsUJGQAHUZgtpJmAnov+ba1SKQPaX6gK0QZMNQGJHDGW0wXL98U2JCn1z
-	 6IeIZywWGj3bg==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 13 Mar 2025 07:00:53 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <b65e5d8c-e7ca-4137-b697-3322e112fff7@wanadoo.fr>
-Date: Thu, 13 Mar 2025 15:00:34 +0900
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zplUBdIc"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2243803b776so16003415ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 23:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741845790; x=1742450590; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f6MdjnJ3ua2k7HKceKUirt21FtnY4dMiCyblx2R2tuo=;
+        b=zplUBdIcrp7/hOs653ldpWZ0xoFlR1vsnxtwjz2h+Ci9p/zwf3/5J2K20czzrE6cTz
+         dTO9HluaW/hMJFKnuRg++aptR3zGIB3zAiz8Wg6VOzRM3GA3ogzBozHoPVmfOVuABoOR
+         2xjJ1cVihKMgJDT83AoBq2joYl2HGsw6CQo/9iMmFNy7inj2y87VoKkMoFu+g3Iqbktd
+         /vPdrqW3P/EAlFyqU3azOhiV+PikG2uciQ6vM3kPFhLG3Th7ohFl3VD1j+j18j0HQuAN
+         TPhnq9+uXXSFzQK82qY1ASsQwHGu/ZLLRilNPI/fsBzc9apQCM/xrpxZq5PqEwdTkpQc
+         bAMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741845790; x=1742450590;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f6MdjnJ3ua2k7HKceKUirt21FtnY4dMiCyblx2R2tuo=;
+        b=Go26h4JsutXRZTxe/i72ko7q40bRTI+tQOCDa0ricbbx1Mnq+ufc82xu2n6sPoohDx
+         GFAVe2dKxc3xeZcU149KBJiGv8QdlZfwfO+KHc8AGaVIKnH/aI0SYDoUqrludVGlW72S
+         sbwOyoy2O1Q7ye8uOqMGKGjPwRzgxCeuVflvp8v+oq37zzp3/8om4s31PFr0L+72fN1H
+         f7g7sFHymfqJaM4C77HsL8G3aVKQ5MPwUfbpHKyH0NsFGatFXlnoNyawQcKbe/T2lEAz
+         E5JqJ7SDjKLxSq42sayDlZ2oJQjYB+seEBzKKFgxRy6dBkikbnEdsKdIa1JuQY3JmAF9
+         FYrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxKc4Q/mkk3Vcfhdo01xPc4cRfMRQF4aLM8ru8hO4CI+6JmuL3wkbVmswnvT3tsxrTjgCEl5GoRWMGlxs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWt2YlPgKnEl1Op3d3kf/V+2w++25oLDyGSmoY27W5dJmvryTu
+	do4gLwoVfqYDR0abSJDitDFz6ORGNtDTLUxoUqQGSCloUbqhCyoqFy7A8uf4VMrsEpXFw53fE0U
+	=
+X-Gm-Gg: ASbGncsCgLLWHgvPdGyAqeLfHjjftg9NelWbNPLWcElAWxYzTFuzMECQgSNX9fzv9sR
+	Ixzc7kEyNTBKte/tqWQO0gs6NP1sAwuwKPjDkB8F8dOyU0+ueciQBk2B0pVmNk9JERgAvFnVBuI
+	SEBLGcMTsvGwM4nSitfym2Aev1oiMN4ZVZNVzJsfa1Dn/plPWZMaez2zs0Gww1PR6KbgFup+0co
+	OfatoFddzfMtIVt7fzOCMgQoD1ecG57aN21Fj+kfxOg2NrWQd6Vf6UDFSgaaflrB8AdDucuOv9y
+	h7HMUWxaQLzA1rQkuKqj5jXp7wBtZQxEMkUu646V9eWQnl0exSc/vA==
+X-Google-Smtp-Source: AGHT+IFPxLRLvvJqzA698/VJnGHbi0WkE2Kuvvzmsfile6eRsQmYWiTTJ/9mF+iWI4d+NDoThioxKg==
+X-Received: by 2002:a17:902:e802:b0:224:584:6f04 with SMTP id d9443c01a7336-2242888ab27mr315006605ad.18.1741845790022;
+        Wed, 12 Mar 2025 23:03:10 -0700 (PDT)
+Received: from thinkpad ([120.60.60.84])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c688866asm5616385ad.50.2025.03.12.23.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 23:03:09 -0700 (PDT)
+Date: Thu, 13 Mar 2025 11:33:03 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Vidya Sagar <vidyas@nvidia.com>, Frank Li <Frank.Li@nxp.com>,
+	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: ep: Return -ENOMEM for allocation failures
+Message-ID: <20250313060303.66eqdf7ok5xpkokw@thinkpad>
+References: <36dcb6fc-f292-4dd5-bd45-a8c6f9dc3df7@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/7] test_bits: add tests for __GENMASK() and
- __GENMASK_ULL()
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>,
- David Laight <David.Laight@aculab.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20250306-fixed-type-genmasks-v5-0-b443e9dcba63@wanadoo.fr>
- <20250306-fixed-type-genmasks-v5-5-b443e9dcba63@wanadoo.fr>
- <e5afhg75ry6km3hjmzbimonxc6qfl4vzma7ucv55h6iohrbmbn@xqmxfuvoinp6>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <e5afhg75ry6km3hjmzbimonxc6qfl4vzma7ucv55h6iohrbmbn@xqmxfuvoinp6>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <36dcb6fc-f292-4dd5-bd45-a8c6f9dc3df7@stanley.mountain>
 
-On 13/03/2025 at 13:13, Lucas De Marchi wrote:
-> On Thu, Mar 06, 2025 at 08:29:56PM +0900, Vincent Mailhol via B4 Relay
-> wrote:
->> From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
->>
->> The definitions of GENMASK() and GENMASK_ULL() do not depend any more
->> on __GENMASK() and __GENMASK_ULL(). Duplicate the existing unit tests
->> so that __GENMASK{,ULL}() is still covered.
->>
->> Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
->> ---
->> lib/test_bits.c | 18 ++++++++++++++++++
->> 1 file changed, 18 insertions(+)
->>
->> diff --git a/lib/test_bits.c b/lib/test_bits.c
->> index
->> c7b38d91e1f16d42b7ca92e62fbd6c19b37e76a0..dc93ded9fdb201e0d44b3c1cd71e233fd62258a5 100644
->> --- a/lib/test_bits.c
->> +++ b/lib/test_bits.c
->> @@ -7,6 +7,22 @@
->> #include <linux/bits.h>
->>
->>
->> +static void __genmask_test(struct kunit *test)
->> +{
->> +    KUNIT_EXPECT_EQ(test, 1ul, __GENMASK(0, 0));
->> +    KUNIT_EXPECT_EQ(test, 3ul, __GENMASK(1, 0));
->> +    KUNIT_EXPECT_EQ(test, 6ul, __GENMASK(2, 1));
->> +    KUNIT_EXPECT_EQ(test, 0xFFFFFFFFul, __GENMASK(31, 0));
+On Wed, Mar 05, 2025 at 06:00:07PM +0300, Dan Carpenter wrote:
+> If the bitmap allocations fail then dw_pcie_ep_init_registers() currently
+> returns success.  Return -ENOMEM instead.
 > 
-> why are you dropping the ones for TEST_GENMASK_FAILURES ?
+> Fixes: 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Because the __GENMASK() and the __GENMASK_ULL() do not use
-GENMASK_INPUT_CHECK(), it is not possible to have those
-TEST_GENMASK_FAILURES negative test cases here.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-I will add one sentence to the commit message to explain this.
+- Mani
 
->> +}
->> +
->> +static void __genmask_ull_test(struct kunit *test)
->> +{
->> +    KUNIT_EXPECT_EQ(test, 1ull, __GENMASK_ULL(0, 0));
->> +    KUNIT_EXPECT_EQ(test, 3ull, __GENMASK_ULL(1, 0));
->> +    KUNIT_EXPECT_EQ(test, 0x000000ffffe00000ull, __GENMASK_ULL(39, 21));
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> ditto
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 20f2436c7091..1b873d486b2d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -908,6 +908,7 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = -ENOMEM;
+>  	if (!ep->ib_window_map) {
+>  		ep->ib_window_map = devm_bitmap_zalloc(dev, pci->num_ib_windows,
+>  						       GFP_KERNEL);
+> -- 
+> 2.47.2
 > 
-> thanks
-> Lucas De Marchi
-> 
->> +    KUNIT_EXPECT_EQ(test, 0xffffffffffffffffull, __GENMASK_ULL(63, 0));
->> +}
->> +
->> static void genmask_test(struct kunit *test)
->> {
->>     KUNIT_EXPECT_EQ(test, 1ul, GENMASK(0, 0));
->> @@ -93,6 +109,8 @@ static void genmask_input_check_test(struct kunit
->> *test)
->>
->>
->> static struct kunit_case bits_test_cases[] = {
->> +    KUNIT_CASE(__genmask_test),
->> +    KUNIT_CASE(__genmask_ull_test),
->>     KUNIT_CASE(genmask_test),
->>     KUNIT_CASE(genmask_ull_test),
->>     KUNIT_CASE(genmask_u128_test),
 
-
-Yours sincerely,
-Vincent Mailhol
-
+-- 
+மணிவண்ணன் சதாசிவம்
