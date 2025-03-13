@@ -1,178 +1,136 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9FA54654
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 12:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E68267B9A;
+	Thu, 13 Mar 2025 12:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741867770; cv=none; b=eKsA1aeW1K0vNTn0lDWcdtwFmABIYRxRPd5KoO7gnvsi/CCSiFt+FsQPys+eQt8MO5u1qk5ZckV8GKthZxF/dhGGxgtTJ0aJiXLsV3nAt3DAf8e0dmJ97HiObNGAyrVfy/kwtaWniBdLxzKKHGOpvLLbMuJOIwXsr/C4oEA+tVk=
+	t=1741867781; cv=none; b=dV9DvPQjebNFeLBGHwpCyi/HwP10+iCH9ahETVWcN9SYa6f9h9jPKAZ8R+H2nYyruVMbPn6s+OAcHlswZXqm55hLNG3Zm9QABmMGK1g4BgWRiaq8TkGMtff3+WbIiCkY8dLgV8jY4mI47dmEmqYHNKfrkCyJXYNmoYCtB51XZ2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741867770; c=relaxed/simple;
-	bh=K+C6Thnd1fMiMEXaduaPw+rWEgDJbOdEG0FCKmBb8/4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GwL9ru2hUHvShx6SSr3etmQVMbb4mmy6NNcDJfWlurotFCs6S2wCbA/jWUItBEQS8xeGWbiJPXySZejmDkrzc0thd7arF9pmS8W4vHohRy03LmeULJos8HBFWya8fKq83OPFUK8udCXn6gOGi8+KN2FQfyFlWbapeyYHYh1B4yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZD5rX4FnBz4f3m7J
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:09:00 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 7BC901A1199
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:09:24 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP2 (Coremail) with SMTP id Syh0CgCnsGPyytJnTaZeGQ--.9643S3;
-	Thu, 13 Mar 2025 20:09:24 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: akpm@linux-foundation.org
-Cc: kasong@tencent.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/9] mm: swap: rename __swap_[entry/entries]_free[_locked] to swap_[entry/entries]_put[_locked]
-Date: Fri, 14 Mar 2025 05:05:07 +0800
-Message-Id: <20250313210515.9920-2-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250313210515.9920-1-shikemeng@huaweicloud.com>
-References: <20250313210515.9920-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1741867781; c=relaxed/simple;
+	bh=/jdmrrYLryvXv8srvg9uxHzbJWZOpIDvDn8UcNKJvRU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kchj63MhXbnaArDqydjvGI4QeaK93e2RWIpJqCTwSGxb3QCciqkMXVDyYfOh9wd+1w356ffvD2i2UoMxgNM03gM4ul8g+hyPXefkFFMmP40ik9ggo4l7Xvx8WNPYTSC+yL6nSWvviL/nkz/KiilytYeHbY76GuIgU3tBSnsFFkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXj8mXD5; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXj8mXD5"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c5675dec99so101016585a.0;
+        Thu, 13 Mar 2025 05:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741867779; x=1742472579; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3mAU+08l83PeGzw4/E2OYnPhEcr7Ovsn8UVQNoJ5/84=;
+        b=BXj8mXD5ey3FQ6DsQ0dMKFE+CXyiscSwaiwOyuYoW4EMkUMq3bQnEVIkdzzIO8k2Oa
+         4NIvkIiPbDu42p/UPnZkEPzrsAeH5lIiv1z1YL+TGvo+5rXxhUVjbiPb2HpHEtv7XSgV
+         a2z7sd6rNMSL1WXl8RwS2MZN+uFgbFUtwtYPczn64WGLj0ux6SkkjVhtMh5qnPp6n6YS
+         nmFcT2nvxuvUL8CDOFWOZ69/YFqVEN0dHX6FaLoN3PCOSbhNKREyGsUS3s+bAxfgaK6J
+         95FO+rPdTGod+4px42KnJmIRCSgbG99lkV5UeEVHiTk27T75I3pKTpCyf/1PCYpyt7x/
+         F6gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741867779; x=1742472579;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3mAU+08l83PeGzw4/E2OYnPhEcr7Ovsn8UVQNoJ5/84=;
+        b=drW7b4hPoqVyjnWnMslxzK6fwSRskMpYqg0fP67QhZBrKxW2wXZoeWMwPTVgZPnqWS
+         lmaL9n5qZRw51u7WdMR7bLvAioFFxOUa2B9oEpXBPPhTLQFxSVu8bhG1xfgRMsmwyvb/
+         XLffvFomlg3pUKDvPnBvx7ilAf+o+K+2x9PHES732LdrBV3UTemkHmUjXAggWMIjG1V9
+         8aiRhma9WqkjzCizkxdWhxx5wCTmsB0iStQC3vt2CzLlnUOejAWbc67aQ2+5Q2u4Qe2M
+         ceD03AI/WTEG1a4yN7wC/i7pR5nyir2KToO6c7fYkiDejZzSH4p/5dus6DW6p1ZG8+Cc
+         Ldlw==
+X-Forwarded-Encrypted: i=1; AJvYcCULoxDrVIsPBmH2rvZDIcRkIK86i0RwI/8+AF7RinDmoOQ0rY9LROtTQ3mCHnX2miGhNxpXE1H9u09+OUo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2sJ0cpsIrsv8LaX2dga8UFEdxC32ok9YNLYgSZKdPdZPOE0eM
+	0GGyIP+0wHza0/GbHP1HPbE+Kgd8vfIpZI42lWh4ophS9Lnue6ny
+X-Gm-Gg: ASbGncsXnjxBhwFoPQ2syWCtHemzP5SgVhXN76QvV6QQVyt4ur1aiwiFB9jLIfnI6VL
+	aYPjqgqaD4qJmZRUdz29VE5tNnES+wh4mF4zH44oZFyODWwR4GYXjSiOXi9BPSYJ9QzvQEjJvZl
+	l/Hc5EiOLdR4C7Gf/PHr83FUlG5e/IwNx7M3o/FHIqNuIbgW8vi+T2sTV2k/9X3Wzggah/Mzh6u
+	Uz+cTBCJ1z7ZNQzbBWjqqKZ/dRW0COvQxua6829476KPOg7NLDJKZW9HgZiq4MSo87EUr+uRUUq
+	OFQJIaTw3MZ/Zu1ucpDDui9FL+gPtr/sywfUW1vkSbRkgTMTHPrbzZq6xkJnhre3FA==
+X-Google-Smtp-Source: AGHT+IGq64HwIW8ZLXRexo/Sl5uDNfM++bQIWTjMTwM82E+RoVIQzUTxWYCM+6Co70rfhftuvEqa8w==
+X-Received: by 2002:a05:6214:daa:b0:6e6:646e:a0f8 with SMTP id 6a1803df08f44-6e9005f899emr405651506d6.16.1741867778783;
+        Thu, 13 Mar 2025 05:09:38 -0700 (PDT)
+Received: from nerdopolis2.localnet ([2600:4040:5e66:a800:1190:f8d0:801f:5e0a])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade334d02sm8728466d6.80.2025.03.13.05.09.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 05:09:38 -0700 (PDT)
+From: Adam Simonelli <adamsimonelli@gmail.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v8 1/4] ttynull: Always initialize console index to -1
+Date: Thu, 13 Mar 2025 08:09:36 -0400
+Message-ID: <4810112.n0HT0TaD9V@nerdopolis2>
+In-Reply-To: <Z9Gcg-iMMCAhLUJf@pathway.suse.cz>
+References:
+ <20250311033133.1859963-1-adamsimonelli@gmail.com>
+ <20250311033133.1859963-2-adamsimonelli@gmail.com>
+ <Z9Gcg-iMMCAhLUJf@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCnsGPyytJnTaZeGQ--.9643S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZrWUKFW5Zw1DuF4rGF47CFg_yoWrtFyxpF
-	9Igrn8KFs7Xr1fGw4xXw48ZrWFvw4xWw18tFy7Gw1avasxJryFqFyDC3y7KFyUCr95Cr90
-	ya1Utry7GF4jvF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY020Ec7CjxVAFwI0_Jrv_JF4l8cAvFVAK
-	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4
-	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
-	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07js2-5UUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-In __swap_entry_free[_locked] and __swap_entries_free, we decrease count
-first and only free swap entry if count drops to zero. This behavior is
-more akin to a put() operation rather than a free() operation. Therefore,
-rename these functions with "put" instead of "free".
-Additionally, add "_nr" suffix to swap_entries_put to indicate the input
-range may span swap clusters.
+On Wednesday, March 12, 2025 10:38:59 AM EDT Petr Mladek wrote:
+> On Mon 2025-03-10 23:31:30, adamsimonelli@gmail.com wrote:
+> > From: Adam Simonelli <adamsimonelli@gmail.com>
+> > 
+> > This allows ttynull to be considered in console selection.
+> 
+> This is not true. It should be possible to register ttynull even
+> when .index == 0.
+> 
+> The .index is important only for drivers which support more devices,
+> e.g. the serial port or virtual terminal.
+> 
+> > 
+> > Suggested-by: Petr Mladek <pmladek@suse.com>
+> > Signed-off-by: Adam Simonelli <adamsimonelli@gmail.com>
+> > ---
+> >  drivers/tty/ttynull.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/tty/ttynull.c b/drivers/tty/ttynull.c
+> > index 6b2f7208b564..d8b51edde628 100644
+> > --- a/drivers/tty/ttynull.c
+> > +++ b/drivers/tty/ttynull.c
+> > @@ -57,6 +57,7 @@ static struct tty_driver *ttynull_device(struct console *c, int *index)
+> >  static struct console ttynull_console = {
+> >  	.name = "ttynull",
+> >  	.device = ttynull_device,
+> > +	.index = -1,
+> 
+> There is only one "/dev/ttynull". And its index is initialized to "0".
+> At least it seems to be the last parameter in:
+> 
+> static int __init ttynull_init(void)
+> {
+> [...]
+> 	tty_port_link_device(&ttynull_port, driver, 0);
+> [...]
+> }
+> 
+> So, I believe this it should be perfectly fine to keep the default "0"
+> here. Note that it is special for ttynull because it is only one...
+> 
+> IMHO, this patch adds more harm than good :-)
+> 
+> Best Regards,
+> Petr
+> 
+Understood, thanks for the explanation about that.
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- mm/swapfile.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 628f67974a7c..5a775456e26c 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1347,9 +1347,9 @@ static struct swap_info_struct *_swap_info_get(swp_entry_t entry)
- 	return NULL;
- }
- 
--static unsigned char __swap_entry_free_locked(struct swap_info_struct *si,
--					      unsigned long offset,
--					      unsigned char usage)
-+static unsigned char swap_entry_put_locked(struct swap_info_struct *si,
-+					   unsigned long offset,
-+					   unsigned char usage)
- {
- 	unsigned char count;
- 	unsigned char has_cache;
-@@ -1453,15 +1453,15 @@ struct swap_info_struct *get_swap_device(swp_entry_t entry)
- 	return NULL;
- }
- 
--static unsigned char __swap_entry_free(struct swap_info_struct *si,
--				       swp_entry_t entry)
-+static unsigned char swap_entry_put(struct swap_info_struct *si,
-+				    swp_entry_t entry)
- {
- 	struct swap_cluster_info *ci;
- 	unsigned long offset = swp_offset(entry);
- 	unsigned char usage;
- 
- 	ci = lock_cluster(si, offset);
--	usage = __swap_entry_free_locked(si, offset, 1);
-+	usage = swap_entry_put_locked(si, offset, 1);
- 	if (!usage)
- 		swap_entry_range_free(si, ci, swp_entry(si->type, offset), 1);
- 	unlock_cluster(ci);
-@@ -1469,8 +1469,8 @@ static unsigned char __swap_entry_free(struct swap_info_struct *si,
- 	return usage;
- }
- 
--static bool __swap_entries_free(struct swap_info_struct *si,
--		swp_entry_t entry, int nr)
-+static bool swap_entries_put_nr(struct swap_info_struct *si,
-+				swp_entry_t entry, int nr)
- {
- 	unsigned long offset = swp_offset(entry);
- 	unsigned int type = swp_type(entry);
-@@ -1501,7 +1501,7 @@ static bool __swap_entries_free(struct swap_info_struct *si,
- fallback:
- 	for (i = 0; i < nr; i++) {
- 		if (data_race(si->swap_map[offset + i])) {
--			count = __swap_entry_free(si, swp_entry(type, offset + i));
-+			count = swap_entry_put(si, swp_entry(type, offset + i));
- 			if (count == SWAP_HAS_CACHE)
- 				has_cache = true;
- 		} else {
-@@ -1552,7 +1552,7 @@ static void cluster_swap_free_nr(struct swap_info_struct *si,
- 
- 	ci = lock_cluster(si, offset);
- 	do {
--		if (!__swap_entry_free_locked(si, offset, usage))
-+		if (!swap_entry_put_locked(si, offset, usage))
- 			swap_entry_range_free(si, ci, swp_entry(si->type, offset), 1);
- 	} while (++offset < end);
- 	unlock_cluster(ci);
-@@ -1599,7 +1599,7 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry)
- 		swap_entry_range_free(si, ci, entry, size);
- 	else {
- 		for (int i = 0; i < size; i++, entry.val++) {
--			if (!__swap_entry_free_locked(si, offset + i, SWAP_HAS_CACHE))
-+			if (!swap_entry_put_locked(si, offset + i, SWAP_HAS_CACHE))
- 				swap_entry_range_free(si, ci, entry, 1);
- 		}
- 	}
-@@ -1798,7 +1798,7 @@ void free_swap_and_cache_nr(swp_entry_t entry, int nr)
- 	/*
- 	 * First free all entries in the range.
- 	 */
--	any_only_cache = __swap_entries_free(si, entry, nr);
-+	any_only_cache = swap_entries_put_nr(si, entry, nr);
- 
- 	/*
- 	 * Short-circuit the below loop if none of the entries had their
-@@ -1811,7 +1811,7 @@ void free_swap_and_cache_nr(swp_entry_t entry, int nr)
- 	 * Now go back over the range trying to reclaim the swap cache. This is
- 	 * more efficient for large folios because we will only try to reclaim
- 	 * the swap once per folio in the common case. If we do
--	 * __swap_entry_free() and __try_to_reclaim_swap() in the same loop, the
-+	 * swap_entry_put() and __try_to_reclaim_swap() in the same loop, the
- 	 * latter will get a reference and lock the folio for every individual
- 	 * page but will only succeed once the swap slot for every subpage is
- 	 * zero.
-@@ -3758,7 +3758,7 @@ int add_swap_count_continuation(swp_entry_t entry, gfp_t gfp_mask)
-  * into, carry if so, or else fail until a new continuation page is allocated;
-  * when the original swap_map count is decremented from 0 with continuation,
-  * borrow from the continuation and report whether it still holds more.
-- * Called while __swap_duplicate() or caller of __swap_entry_free_locked()
-+ * Called while __swap_duplicate() or caller of swap_entry_put_locked()
-  * holds cluster lock.
-  */
- static bool swap_count_continued(struct swap_info_struct *si,
--- 
-2.30.0
 
