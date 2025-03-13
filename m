@@ -1,310 +1,124 @@
-Received: from mxde.zte.com.cn (mxde.zte.com.cn [209.9.37.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2611372;
-	Thu, 13 Mar 2025 05:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.9.37.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F39F17E
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 06:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741845582; cv=none; b=dozaZn9CVg7rBVXd5nt9sAXy/o/kHnhLdTYGttUtdQSZNu24YXzNr/+BDT5ZEKfiM/1ttmRKyV87MuboUwR70EeMpiHNSRn9K7azIFvt4LBz5IVUepuzWLJRl3mhE9kKtcqqVXK5Kt6+LMDbNbovwEkNTEnXPLoHK5owh0nYv1A=
+	t=1741845651; cv=none; b=mH9WwzhLw2qkHFAauqfAV7D27UZz7hq+rdhl0ipU4NOpN41PMv097IB0FtvuK6y+CF2bnVclCQN1J/1mcKhnVi+kU1RuDW4FrHPg53ELj0RaiXlL9fi7fKEYZW66OBKbX0Qp2cdR2Kr37n/BdBmZR59oeLINWw34WOil/QHknl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741845582; c=relaxed/simple;
-	bh=ikenFsmUjZ6MVfZ8nL3sickctm5OeHqxVW2So8W8dXs=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=fmaNkjDy/nqXX2fqEOGhH0h5SKCqHwtAgEj1LvW3TDoWpSAO3p+KKXiBhqr5o9R55LMHlr3ibaFVSpUzS5g79ekubl3pQMDR4L4ipEiDuU5xFanOLc1Be1wPtK1E5Gc570AkwtfSpGbR2vzdxgawTkgLssVyho1RJglhefqXOnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=209.9.37.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4ZCxfB2tNDzBRHKM;
-	Thu, 13 Mar 2025 13:59:30 +0800 (CST)
-Received: from mxct.zte.com.cn (unknown [192.168.251.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZCxdy0RsFz8QrkZ;
-	Thu, 13 Mar 2025 13:59:18 +0800 (CST)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZCxdp12GRz50FXJ;
-	Thu, 13 Mar 2025 13:59:10 +0800 (CST)
-Received: from njb2app06.zte.com.cn ([10.55.23.119])
-	by mse-fl1.zte.com.cn with SMTP id 52D5x23e032393;
-	Thu, 13 Mar 2025 13:59:02 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njy2app01[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Thu, 13 Mar 2025 13:59:04 +0800 (CST)
-Date: Thu, 13 Mar 2025 13:59:04 +0800 (CST)
-X-Zmail-TransId: 2af967d27428ffffffffbf2-31216
-X-Mailer: Zmail v1.0
-Message-ID: <20250313135904589bPGz00-l-A1PtKxvMW5TC@zte.com.cn>
+	s=arc-20240116; t=1741845651; c=relaxed/simple;
+	bh=QW70e1/mfz3TjZGJIpQD+B6tcZSkZLU5rl5INwW+S3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h+D/pWhXG++iRpcEGx3+y/Q/241vbLViDn1BQTcJJG0gDaHwC+ZRAZgONs42qz5Kx+1CICXOyYl0hgOTqH+LWdvMB23gfXQwOzSvgbSGv+TrU5B8+oXf+iL/MBAE7X1OoM6BOqwbQj92Rl09GfoS3tsELWwyRZYLvPFfJPaHibQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dwX7igfa; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dwX7igfa"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so1383257a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 23:00:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741845649; x=1742450449; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BR/Nog4BFFAbGskl6Y3iDgtMEiZ/gcMqksEKy4uZav4=;
+        b=dwX7igfaEgVa/tiCi+qwyafZWrTRBFaNflH3xtIKo5wv5qj5djlA+36KcNQCdgtEW3
+         SlCfu7lyMcDc2/1ZX/3REK+05elnamA2XbdbHFuHf8pB5nN1k8uqY+GX+PaZbX9EdwKS
+         m/9BhdUNDwOliS7opGV2o+OWXr6kagjjD7Yu3g4xvkcbqJaqaqpWxHL0JUaZ33ptjgPV
+         8mM+VhRQA1S0Dwcvq7ioQouQt73CXL4CWZ85GTWOOR+d3vN+fBLFUSIHtyfMKrFv3GCM
+         lFw5FVtltHBACsq8hthZ0MG9KgpAJO2UlkrQeq0PIr1Jlq0CsjF8K7Ru3mQdUUIxUqcw
+         Al/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741845649; x=1742450449;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BR/Nog4BFFAbGskl6Y3iDgtMEiZ/gcMqksEKy4uZav4=;
+        b=KACvjOU781LgauDXrbzLozKxzEf5k3SIgRG2kG3afUqi/kymCkzvy56pwhX4dBAet8
+         /ReG+7ihb2sVnhuvqEXwxSpagVintXZDjCuj+DVQTvxNMiMNuXfssEbzUi/4Ux7bYiqw
+         ux8B7eXswaZ2A+K3Gudv57/gWO7T3Md+PnobOl1MYWHbCEGbiT3hfCoQwSe05vEEqn8t
+         ZIvhUTEd1t02GPKxIKg2gZ0/elhWMmGpeY+mrqDlfOAtaT8M2rwsKz2/J9KclTQSXTvs
+         AeC2UERKiTQYl3J/iSdjh7JSQv1rM0uQ1WJoIaON2GPiiYKsof+K6dnYAcfuUd0VOIf8
+         cQ3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWMzDj9NvbK5g/jPk+xfkuNXyFPCPtCB3XTyoMLdIRpr9qQLoDrgjDMuEBf3lwkx8gmA47EhSCOruvwJHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS9JTJgrBBJvcubOC6avxUWIjoy6BLviBROhNOBu3DP2yugg6j
+	DHfJ7KEkgF2AQMWK1nxZb5yJuqj7UzKaLK9SUvjMyYY0BUIHs9yYoLSJ90Qhyg==
+X-Gm-Gg: ASbGncun6iSapTDjmWyNS1TcDcDys20dtYhrplKhxg2XQzTUDMwxWtsh6jqHuSmbYvg
+	HTQv6uV0/lBMvBwOvSDiSecNYcSyV7enDhjjgDXH6Tp6M+7aDidJqKAmTu4qg1XSychh3dCkE9O
+	ZGztJoWkGZChh91E77PtPOqeqHWf2FvnOeZ7QBL8YBB/PjdDv9Egxs1VfWfmIvjjcW+cGlRDd8B
+	f4yiFTuM5Du2IrOhYkttd+T6sToKzUSnggs9kbOorYzbdoO+5xF8pm5bWGK+x3GRBlzFRUarFLq
+	ZdZBkFqyy9rhOgk/B2jjDvE5T47dYF+Au+/n3NR1I4lX9yHSC88dIA==
+X-Google-Smtp-Source: AGHT+IHd7v3l5gC+ULRc3VvMD4ILgDoSZwbG5Pc5B7gUogOGvMxCnx3dXhAQVvQfzF5QcQ4WhJ3dFQ==
+X-Received: by 2002:a05:6a20:85aa:b0:1f5:9961:c29 with SMTP id adf61e73a8af0-1f599612c17mr9615691637.21.1741845649523;
+        Wed, 12 Mar 2025 23:00:49 -0700 (PDT)
+Received: from thinkpad ([120.60.60.84])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73711578d15sm527696b3a.82.2025.03.12.23.00.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 23:00:49 -0700 (PDT)
+Date: Thu, 13 Mar 2025 11:30:41 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: George Moussalem <george.moussalem@outlook.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+	andersson@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, dmitry.baryshkov@linaro.org,
+	kishon@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
+	kw@linux.com, lpieralisi@kernel.org, p.zabel@pengutronix.de,
+	quic_nsekar@quicinc.com, robh@kernel.org, robimarko@gmail.com,
+	vkoul@kernel.org, quic_srichara@quicinc.com
+Subject: Re: [PATCH v3 4/6] PCI: qcom: Add support for IPQ5018
+Message-ID: <20250313060041.27fdpovo6kerlyft@thinkpad>
+References: <20250305134239.2236590-1-george.moussalem@outlook.com>
+ <DS7PR19MB8883AB310FF217F669FE32939DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <alexs@kernel.org>, <si.yanteng@linux.dev>, <corbet@lwn.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Cc: <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
-        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4IG5leHQgdjRdIERvY3MvemhfQ046IFRyYW5zbGF0ZSBtc2dfemVyb2NvcHkucnN0IHRvCiBTaW1wbGlmaWVkIENoaW5lc2U=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 52D5x23e032393
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67D27441.000/4ZCxfB2tNDzBRHKM
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DS7PR19MB8883AB310FF217F669FE32939DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
 
-From: Wang Yaxin <wang.yaxin@zte.com.cn>
-translate the "msg_zerocopy.rst" into Simplified Chinese.
+On Wed, Mar 05, 2025 at 05:41:29PM +0400, George Moussalem wrote:
+> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> 
+> Add IPQ5018 platform with is based on Qcom IP rev. 2.9.0
+> and Synopsys IP rev. 5.00a.
+> 
+> The platform itself has two PCIe Gen2 controllers: one single-lane and
+> one dual-lane. So let's add the IPQ5018 compatible and re-use 2_9_0 ops.
+> 
+> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 
-Update to commit bac2cac12c26("docs: net: description of
-MSG_ZEROCOPY for AF_VSOCK")
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
----
-v3->v4:
-https://lore.kernel.org/all/8945250c-3f6e-43eb-bac8-03ca044fcbae@linux.dev/
-1. add the Reviewed-by tag in v4.
+- Mani
 
- .../zh_CN/networking/msg_zerocopy.rst         | 223 ++++++++++++++++++
- 1 file changed, 223 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/networking/msg_zerocopy.rst
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index e4d3366ead1f..94800c217d1d 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1840,6 +1840,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+>  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+>  	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
+> +	{ .compatible = "qcom,pcie-ipq5018", .data = &cfg_2_9_0 },
+>  	{ .compatible = "qcom,pcie-ipq6018", .data = &cfg_2_9_0 },
+>  	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
+>  	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+> -- 
+> 2.48.1
+> 
 
-diff --git a/Documentation/translations/zh_CN/networking/msg_zerocopy.rst b/Documentation/translations/zh_CN/networking/msg_zerocopy.rst
-new file mode 100644
-index 000000000000..7362b8514e70
---- /dev/null
-+++ b/Documentation/translations/zh_CN/networking/msg_zerocopy.rst
-@@ -0,0 +1,223 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: Documentation/networking/msg_zerocopy.rst
-+
-+:翻译:
-+
-+   王亚鑫 Wang Yaxin <wang.yaxin@zte.com.cn>
-+
-+:校译:
-+
-+   - 徐鑫 xu xin <xu.xin16@zte.com.cn>
-+   - 何配林 He Peilin <he.peilin@zte.com.cn>
-+
-+============
-+MSG_ZEROCOPY
-+============
-+
-+简介
-+====
-+
-+MSG_ZEROCOPY 标志用于启用套接字发送调用的免拷贝功能。该功能目前适用于 TCP、UDP 和 VSOCK
-+（使用 virtio 传输）套接字。
-+
-+机遇与注意事项
-+--------------
-+
-+在用户进程与内核之间拷贝大型缓冲区可能会消耗大量资源。Linux 支持多种免拷贝的接口，如sendfile
-+和 splice。MSG_ZEROCOPY 标志将底层的拷贝避免机制扩展到了常见的套接字发送调用中。
-+
-+免拷贝并非毫无代价。在实现上，它通过页面固定（page pinning）将按字节拷贝的成本替换为页面统计
-+（page accounting）和完成通知的开销。因此，MSG_ZEROCOPY 通常仅在写入量超过大约 10 KB 时
-+才有效。
-+
-+页面固定还会改变系统调用的语义。它会暂时在进程和网络堆栈之间共享缓冲区。与拷贝不同，进程在系统
-+调用返回后不能立即覆盖缓冲区，否则可能会修改正在传输中的数据。内核的完整性不会受到影响，但有缺
-+陷的程序可能会破坏自己的数据流。
-+
-+当内核返回数据可以安全修改的通知时，进程才可以修改数据。因此，将现有应用程序转换为使用
-+MSG_ZEROCOPY 并非总是像简单地传递该标志那样容易。
-+
-+更多信息
-+--------
-+
-+本文档的大部分内容是来自于 netdev 2.1 上发表的一篇长篇论文。如需更深入的信息，请参阅该论文和
-+演讲，或者浏览 LWN.net 上的精彩报道，也可以直接阅读源码。
-+
-+  论文、幻灯片、视频：
-+    https://netdevconf.org/2.1/session.html?debruijn
-+
-+  LWN 文章：
-+    https://lwn.net/Articles/726917/
-+
-+  补丁集：
-+    [PATCH net-next v4 0/9] socket sendmsg MSG_ZEROCOPY
-+    https://lore.kernel.org/netdev/20170803202945.70750-1-willemdebruijn.kernel@gmail.com
-+
-+接口
-+====
-+
-+传递 MSG_ZEROCOPY 标志是启用免拷贝功能的最明显步骤，但并非唯一的步骤。
-+
-+套接字设置
-+----------
-+
-+当应用程序向 send 系统调用传递未定义的标志时，内核通常会宽容对待。默认情况下，它会简单地忽略
-+这些标志。为了避免为那些偶然传递此标志的遗留进程启用免拷贝模式，进程必须首先通过设置套接字选项
-+来表明意图：
-+
-+::
-+
-+    if (setsockopt(fd, SOL_SOCKET, SO_ZEROCOPY, &one, sizeof(one)))
-+        error(1, errno, "setsockopt zerocopy");
-+
-+传输
-+----
-+
-+对 send（或 sendto、sendmsg、sendmmsg）本身的改动非常简单。只需传递新的标志即可。
-+
-+::
-+
-+    ret = send(fd, buf, sizeof(buf), MSG_ZEROCOPY);
-+
-+如果零拷贝操作失败，将返回 -1，并设置 errno 为 ENOBUFS。这种情况可能发生在套接字超出其
-+optmem 限制，或者用户超出其锁定页面的 ulimit 时。
-+
-+混合使用免拷贝和拷贝
-+~~~~~~~~~~~~~~~~~~~~
-+
-+许多工作负载同时包含大型和小型缓冲区。由于对于小数据包来说，免拷贝的成本高于拷贝，因此该
-+功能是通过标志实现的。带有标志的调用和没有标志的调用可以安全地混合使用。
-+
-+通知
-+----
-+
-+当内核认为可以安全地重用之前传递的缓冲区时，它必须通知进程。完成通知在套接字的错误队列上
-+排队，类似于传输时间戳接口。
-+
-+通知本身是一个简单的标量值。每个套接字都维护一个内部的无符号 32 位计数器。每次带有
-+MSG_ZEROCOPY 标志的 send 调用成功发送数据时，计数器都会增加。如果调用失败或长度为零，
-+则计数器不会增加。该计数器统计系统调用的调用次数，而不是字节数。在 UINT_MAX 次调用后，
-+计数器会循环。
-+
-+通知接收
-+~~~~~~~~
-+
-+下面的代码片段展示了 API 的使用。在最简单的情况下，每次 send 系统调用后，都会对错误队列
-+进行轮询和 recvmsg 调用。
-+
-+从错误队列读取始终是一个非阻塞操作。poll 调用用于阻塞，直到出现错误。它会在其输出标志中
-+设置 POLLERR。该标志不需要在 events 字段中设置。错误会无条件地发出信号。
-+
-+::
-+
-+    pfd.fd = fd;
-+    pfd.events = 0;
-+    if (poll(&pfd, 1, -1) != 1 || pfd.revents & POLLERR == 0)
-+        error(1, errno, "poll");
-+
-+    ret = recvmsg(fd, &msg, MSG_ERRQUEUE);
-+    if (ret == -1)
-+        error(1, errno, "recvmsg");
-+
-+    read_notification(msg);
-+
-+
-+这个示例仅用于演示目的。在实际应用中，不等待通知，而是每隔几次 send 调用就进行一次非阻塞
-+读取会更高效。
-+
-+零拷贝通知可以与其他套接字操作乱序处理。通常，拥有错误队列套接字会阻塞其他操作，直到错误
-+被读取。然而，零拷贝通知具有零错误代码，因此不会阻塞 send 和 recv 调用。
-+
-+通知批处理
-+~~~~~~~~~~~~
-+
-+可以使用 recvmmsg 调用来一次性读取多个未决的数据包。这通常不是必需的。在每条消息中，内核
-+返回的不是一个单一的值，而是一个范围。当错误队列上有一个通知正在等待接收时，它会将连续的通
-+知合并起来。
-+
-+当一个新的通知即将被排队时，它会检查队列尾部的通知的范围是否可以扩展以包含新的值。如果是这
-+样，它会丢弃新的通知数据包，并增大未处理通知的范围上限值。
-+
-+对于按顺序确认数据的协议（如 TCP），每个通知都可以合并到前一个通知中，因此在任何时候在等待
-+的通知都不会超过一个。
-+
-+有序交付是常见的情况，但不能保证。在重传和套接字拆除时，通知可能会乱序到达。
-+
-+通知解析
-+~~~~~~~~
-+
-+下面的代码片段演示了如何解析控制消息：前面代码片段中的 read_notification() 调用。通知
-+以标准错误格式 sock_extended_err 编码。
-+
-+控制数据中的级别和类型字段是协议族特定的，对于 TCP 或 UDP 套接字，分别为 IP_RECVERR 或
-+IPV6_RECVERR。对于 VSOCK 套接字，cmsg_level 为 SOL_VSOCK，cmsg_type 为 VSOCK_RECVERR。
-+
-+错误来源是新的类型 SO_EE_ORIGIN_ZEROCOPY。如前所述，ee_errno 为零，以避免在套接字上
-+阻塞地读取和写入系统调用。
-+
-+32 位通知范围编码为 [ee_info, ee_data]。这个范围是包含边界值的。除了下面讨论的 ee_code
-+字段外，结构中的其他字段应被视为未定义的。
-+
-+::
-+
-+    struct sock_extended_err *serr;
-+    struct cmsghdr *cm;
-+
-+    cm = CMSG_FIRSTHDR(msg);
-+    if (cm->cmsg_level != SOL_IP &&
-+        cm->cmsg_type != IP_RECVERR)
-+        error(1, 0, "cmsg");
-+
-+    serr = (void *) CMSG_DATA(cm);
-+    if (serr->ee_errno != 0 ||
-+        serr->ee_origin != SO_EE_ORIGIN_ZEROCOPY)
-+        error(1, 0, "serr");
-+
-+    printf("completed: %u..%u\n", serr->ee_info, serr->ee_data);
-+
-+
-+延迟拷贝
-+~~~~~~~~
-+
-+传递标志 MSG_ZEROCOPY 是向内核发出的一个提示，让内核采用免拷贝的策略，同时也是一种约
-+定，即内核会对完成通知进行排队处理。但这并不保证拷贝操作一定会被省略。
-+
-+拷贝避免不总是适用的。不支持分散/聚集 I/O 的设备无法发送由内核生成的协议头加上零拷贝用户
-+数据组成的数据包。数据包可能需要在协议栈底层转换为一份私有数据副本，例如用于计算校验和。
-+
-+在所有这些情况下，当内核释放对共享页面的持有权时，它会返回一个完成通知。该通知可能在（已
-+拷贝）数据完全传输之前到达。因此。零拷贝完成通知并不是传输完成通知。
-+
-+如果数据不在缓存中，延迟拷贝可能会比立即在系统调用中拷贝开销更大。进程还会因通知处理而产
-+生成本，但却没有带来任何好处。因此，内核会在返回时通过在 ee_code 字段中设置标志
-+SO_EE_CODE_ZEROCOPY_COPIED 来指示数据是否以拷贝的方式完成。进程可以利用这个信号，在
-+同一套接字上后续的请求中停止传递 MSG_ZEROCOPY 标志。
-+
-+实现
-+====
-+
-+环回
-+----
-+
-+对于 TCP 和 UDP：
-+如果接收进程不读取其套接字，发送到本地套接字的数据可能会无限期排队。无限期的通知延迟是不
-+可接受的。因此，所有使用 MSG_ZEROCOPY 生成并环回到本地套接字的数据包都将产生延迟拷贝。
-+这包括环回到数据包套接字（例如，tcpdump）和 tun 设备。
-+
-+对于 VSOCK：
-+发送到本地套接字的数据路径与非本地套接字相同。
-+
-+测试
-+====
-+
-+更具体的示例代码可以在内核源码的 tools/testing/selftests/net/msg_zerocopy.c 中找到。
-+
-+要留意环回约束问题。该测试可以在一对主机之间进行。但如果是在本地的一对进程之间运行，例如当使用
-+msg_zerocopy.sh 脚本在跨命名空间的虚拟以太网（veth）对之间运行时，测试将不会显示出任何性能
-+提升。为了便于测试，可以通过让 skb_orphan_frags_rx 与 skb_orphan_frags 相同，来暂时放宽
-+环回限制。
-+
-+对于 VSOCK 类型套接字的示例可以在 tools/testing/vsock/vsock_test_zerocopy.c 中找到。
 -- 
-2.25.1
+மணிவண்ணன் சதாசிவம்
