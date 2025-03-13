@@ -1,184 +1,210 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13E7267385;
-	Thu, 13 Mar 2025 11:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E63E268FF6
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866105; cv=none; b=VAGF3QldJMRUKd/IoVI8QFKhaj2qN+utDRWsCIbJUMOrk5FWkveEHMdBCm2me2ZFMrEIcK6qWAehsHGStDYKW2rG7U/AjVb2Ou3AxMvTDoaH/PSbk/F28WE6jqPTPke9uwxCssv9nvN/Hal48ALJpu4WGhpfx3oTtbms8CAYRSQ=
+	t=1741866107; cv=none; b=WlA23iZ/XI4DRtzo+w3mmiv0QMQxm3oaQGFQca48Ubg4FtIPsqwG14c5s2wspwgnFNhX3sErbNrhHTcmp1qFICIJ8QRCvKfO3+lT9QawylyQu60k5SYn5qQIZ+g2CqK0i+O7Kp60lbyw+quPg6wUSvguTZdxuskZU2hb7MaMyPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741866105; c=relaxed/simple;
-	bh=t2VwkGuSomJ8qenwL1C9A11juJRqs3O4eFcCna2Wkv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p1+UefxxVoDjDrcqXRNiisWOXZIn/wnMYXB7JiH7yAOo+BzBWhRK6viEUb356eWw29wqvTvGpNsYCQB6IOicQPuimjrA1bnWhwcuOqsnAiHWNj7PxWpG/Zyiz1f7aw8MYFihcU0f9cV/gRSj83q4VojV+fd5l8V4MKz5JnMnxw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKo3/S3I; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741866107; c=relaxed/simple;
+	bh=YwmsO4C4jzMys3yOFXfr4pKkNHJr9gwQXUbncX4449Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aPGsj/JqyKksgPK6VyAWd7et1se2+z7AcdoBB1xfUjaD3fbpvTTRqitVFMm4yxJGrihRxiXV9nkeSZPSvYqVD5xgjn3vTq3fGiHx3CS2Uf9cbEEqPakKW4vpyuunnD+Ep4Bj7DMQzvWrtWNnxgMAL/5t4MIrqG3Wm89887NHh+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FhyFqFtj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKo3/S3I"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso9607571fa.0;
-        Thu, 13 Mar 2025 04:41:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741866101; x=1742470901; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eZmwH3CjF4AxxJqxTRCmwxCt3TSXdOVbA/04hf9p0WU=;
-        b=WKo3/S3Irq+Mwpu1p1DyiKqr5GhxPLT526k38De00vh1aqepYXmk1kZq07ClUrx644
-         gXJrLWfsUskY13ImbTmlSfw9uzGGnA5OlIvzWTc6mjIqEuBiTppxiYcJ3EzmvM7UsF9N
-         kiibwbLZxeaF46+W7NRXL/2F3Lq0kWEZWjifaO+ZCoH4O2ChI93QVGTPpngUAb3G5yHu
-         Pc20bc+xad8oBqMDBcLJUnAtpb3uz5N6Dj3DWhJopUwt2Adg3l+j4nefIR2Y3tJjRPEU
-         1ltkGF5nJ6uzmZVthtKTzzJ4V02KutemlxU/BqUQSwJWVjXXAQZ+3JiBIMkccV5cBLT6
-         Kg/w==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FhyFqFtj"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DAtZC7031816
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	d9qoisNOG/J+QBYyjCN2S8XuP76MA1VccskcGW+lCGw=; b=FhyFqFtjZKeb7Tme
+	9j7nwFU6jIELF+7849JGGhbLgkzQyEYYxfwvnp+6CwsqP2ImuhrQ6IkdhMd/cNzL
+	NBEo/2zBc3eIRCeKe778/VPjyF+ixwOLnyOItKkqNQbnEWpe4LM3Ub0XKqXQux9f
+	x65A1I+qg+TAX4w12ujZXutnRYgV+Epuv6iELyjZNmF9s9pLkMCGDMdepxOhq10N
+	OPOzlfD4YcsJ1xmofyEXTwk88zFpv4YwFUvdmlfnZ9LorYkelan+PSKTjAg3Lhr/
+	pdPc+rjWodzuT8RTW+kxMVKmAL9hR7gTELCCw2JvO9hJlACS48osyHHJb1qBuUzV
+	Wwg/3g==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45bx1jg448-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:43 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff7cf599beso1607625a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:41:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741866101; x=1742470901;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eZmwH3CjF4AxxJqxTRCmwxCt3TSXdOVbA/04hf9p0WU=;
-        b=V1CoLgpsyzJciyR9sePVtIgCUhtpyB62gPt652hnfMVVwqNOkQjr3E45qOAgu5+EQF
-         uElj7QTVgAUCzuT1Ke7ou3s3VVDO8G4vMEIsSPXW74iyrXkn3X6115SOw5R5vnH0Hv05
-         /KrrUMOnaqTkzdPP3pcHz2SLFfg4eAsdcqMkbqRsAUF+ByWeP0YkFgLgzFeX2hRztFoW
-         HxMca7sDiCbJeEoNjJGq8pvkKbp8DAlawjV6t/4FpLWjGGdGKQDHVpRhDu8V1V9gSDwh
-         zcH2F5vkon2FFbty78CT4ur0x23v/9h/p30nBxGf7betEfKB2v8JAbnaWFQR1ep3QGsq
-         keSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKJoMzFm5zhoEKDeK+gQ/AopsKBE1pVYeoKSlVLnpGcttzG0BSHn1WERIZj+Cjaj2XRyc3C+YPn1qJNCep@vger.kernel.org, AJvYcCW+T82T7tKoWoyH4ducwPYMDGOwtU7wSX51FQKUW+S7ff6Q0s4mv4Q8kub/+ocVFrh9cUuyDiooY80L@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaoEWatCkKk+kQ2Snktc5TKtRTZPhDyWk22NC4dFRf4uJcZiYG
-	HWOVNv4+cbGTNbV3yKD5xuxKpN6uY5fyP30Yr6B4bTRir69vtLJV
-X-Gm-Gg: ASbGncsy/xt0hKR/Ybn96JqiKyCVG2U9Rju+AF0Qf/kxmxlIcQYAOcrqvcAr1Mmj//P
-	Ak8dB5ye0IuV61rmMmUK297odCCbclfPFl2GPGS6QY1u+aoSqZS3jfutW28HgFNAFqkLEiRaA7f
-	TUo2UGLwcP6BdUM7Gr5MWqXMiK0Ks+80pVladc3yHPc3YHRTibui+Err2zMfAEMj5E/8H6nZhWn
-	UH1qbkjS7emPl+GM4IJ0yR4jnTGtT52PN1nEmGlK+uM3q6wsrJ2C2KzZhy8hW4WE4PvaSoyWLRP
-	m9eW/rQxQJWL6b8vhGOpAriaBgq4tyO4FwrGGLRjVht+O7yQewo=
-X-Google-Smtp-Source: AGHT+IGbMTcjaF71gs8UEmllm/cZdGSu9SSF39iyWed21Q+1hKmMPd9h3Z1V8ZGE/nAjslPn95Q19A==
-X-Received: by 2002:a05:6512:3048:b0:549:8d16:7267 with SMTP id 2adb3069b0e04-54990e2bbc2mr8547605e87.10.1741866100410;
-        Thu, 13 Mar 2025 04:41:40 -0700 (PDT)
-Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba864e01sm187376e87.112.2025.03.13.04.41.39
+        d=1e100.net; s=20230601; t=1741866103; x=1742470903;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d9qoisNOG/J+QBYyjCN2S8XuP76MA1VccskcGW+lCGw=;
+        b=uQDey5CyvRNmBSV1mxj9oU/meUlOtze+/cK9SegA4yZMWCT41auV3lB41HDKd6NVtG
+         aSCXlDpkyLQuBnraKfzpmkqZja/WqHb0w2w/0+oK9pcUakwSIXgMsw0MkUDGXfPH7qn0
+         0M+sVh5oNXlmbZOnsz1TNAPmy2NdL18FGnetJfqxcBrgJFeYeTb+B4naaoq2Pphl6TEp
+         ce0itsYVJJA0IKyWLSQdYRKFPDDL5dwUDLSr7JV969kDc1hyw3IpjrBJpBa+f1YxRv2G
+         8yFG1SOSF3rf5vgd7tXtOiH+RhFFsuKh6OMeT0SGB9ID4RzYOitOpqRs1u4pxRoK0XJb
+         28Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRWEnbeE0q+P7wf1pVo3c0aZYkW/C5UlWkbhanakTopULa2QS8vyP2pQAuCA/0Xhfkn0NKwySjxnlGlm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzWJnmjca/NjgUI99yWPFt3V9AVOPqp1isJ7GdCviapQDQFRZk
+	C1oNidD9F5w/6rXAGlHkurA3VetaduEXaWh2QZi7PmLaNZ36rVAvt9848rXmJulvZMwjdzg+5bn
+	spKE+7EaGxrFXzYUTzXtX4qKpdiwJTT4rnMz8+kniu1FhRsejSKxocYiPKWWbJHB0brMXdPk=
+X-Gm-Gg: ASbGncusVQ4YJpeF6ssLOiTudEsYOQ2lnHE+/WkaCMfIwBfA24NJP/c7FcYsk4gK9XL
+	VMae+haZY682HeUAZJtF9pc38srP4156vNiodtMhhnjm/XGkE/jF7anIK14+PIl6xqUGArkiXqQ
+	Ggyh+nEC5qZaztoaswFtfnKgTDNXItNg92PMx0bIbzAv6AWPab9g4ZvtFucS8aCl9btRMEQU02s
+	Q5KyAy6hRx6g7MJe0KhwcOxJbBBDAqffCKCNY7OzGouywWL4D3DuWZPqZCdNge+N8DqjMXVReDu
+	q0iXmKxfnHRPfLIyttDJrKQrOHxvo5zOv7OqitoUU9XyUFguLAQ=
+X-Received: by 2002:a05:6a21:a4a:b0:1f5:769a:a4c0 with SMTP id adf61e73a8af0-1f58cb40d0fmr19674097637.22.1741866103013;
+        Thu, 13 Mar 2025 04:41:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH4KS059o50FJ3zNErZOLROVvjQZDc2HgJ5OaS3d/rE1XNS/o6bFbi0r6LR6J9lgfSFiRTe6g==
+X-Received: by 2002:a05:6a21:a4a:b0:1f5:769a:a4c0 with SMTP id adf61e73a8af0-1f58cb40d0fmr19674070637.22.1741866102667;
+        Thu, 13 Mar 2025 04:41:42 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea964e3sm1063219a12.76.2025.03.13.04.41.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 04:41:39 -0700 (PDT)
-Date: Thu, 13 Mar 2025 13:41:35 +0200
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 04/14] dt-bindings: mfd: bd96802: Add ROHM BD96806
-Message-ID: <40a47b9ab61e9092bc16747b8e92ba0ce44fb1ac.1741864404.git.mazziesaccount@gmail.com>
-References: <cover.1741864404.git.mazziesaccount@gmail.com>
+        Thu, 13 Mar 2025 04:41:42 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Date: Thu, 13 Mar 2025 17:10:17 +0530
+Subject: [PATCH v2 10/10] wifi: ath11k: add support for MHI bandwidth
+ scaling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lOj8NaVvEWD5XEyi"
-Content-Disposition: inline
-In-Reply-To: <cover.1741864404.git.mazziesaccount@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250313-mhi_bw_up-v2-10-869ca32170bf@oss.qualcomm.com>
+References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
+In-Reply-To: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+        quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com,
+        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Miaoqing Pan <quic_miaoqing@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741866038; l=2735;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=UDj4phVy/DG+9hjqxt6EGxZVpcx8i+kJ4nOzNceABAI=;
+ b=hqdCuLeJn0OqieMuIehjgOVSVH10bKZwuK9rz+XDm+BSXBAIpRQvbjfXjpv4/+/BYkNxW94aN
+ OFUd0jheytFBkp8l/OA96dvuqcapnrWdXf6JwA+9nMflIMTRzatgsbn
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Authority-Analysis: v=2.4 cv=CNQqXQrD c=1 sm=1 tr=0 ts=67d2c477 cx=c_pps a=RP+M6JBNLl+fLTcSJhASfg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=PcFPl4qhhl0nOZx1bFwA:9 a=QEXdDO2ut3YA:10
+ a=iS9zxrgQBfv6-_F4QbHw:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: oPYqlfjx5bSI7yXUMnC_omIvrG4inNbV
+X-Proofpoint-GUID: oPYqlfjx5bSI7yXUMnC_omIvrG4inNbV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_05,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 impostorscore=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 phishscore=0 malwarescore=0 clxscore=1015 bulkscore=0
+ adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130092
 
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
 
---lOj8NaVvEWD5XEyi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add support for MHI bandwidth scaling, which will reduce power consumption
+if WLAN operates with lower bandwidth. This feature is only enabled for
+QCA6390.
 
-The ROHM BD96806 is very similar to the BD96802. The differences visible
-to the drivers is different tune voltage ranges.
-
-Add compatible for the ROHM BD96805 PMIC.
-
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Tested-on: WCN6855 hw2.1 PCI WLAN.HSP.1.1-04546-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
+Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
 ---
- .../bindings/mfd/rohm,bd96802-pmic.yaml       | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/net/wireless/ath/ath11k/mhi.c | 41 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml b=
-/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
-index d5d9e69dc0c2..c6e6be4015b2 100644
---- a/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
-@@ -4,23 +4,23 @@
- $id: http://devicetree.org/schemas/mfd/rohm,bd96802-pmic.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
-=20
--title: ROHM BD96802 Scalable Power Management Integrated Circuit
-+title: ROHM BD96802 / BD96806Scalable Power Management Integrated Circuit
-=20
- maintainers:
-   - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-=20
- description: |
--  BD96802Qxx-C is an automotive grade configurable Power Management
--  Integrated Circuit supporting Functional Safety features for application
-+  BD96802Qxx-C and BD96806 are automotive grade configurable Power Managem=
-ent
-+  Integrated Circuits supporting Functional Safety features for application
-   processors, SoCs and FPGAs
-=20
- properties:
-   compatible:
--    const: rohm,bd96802
-+    enum:
-+      - rohm,bd96802
-+      - rohm,bd96806
-=20
-   reg:
--    description:
--      I2C slave address.
-     maxItems: 1
-=20
-   interrupts:
-@@ -29,7 +29,8 @@ properties:
-       for fatal IRQs which will cause the PMIC to shut down power outputs.
-       In many systems this will shut down the SoC contolling the PMIC and
-       connecting/handling the errb can be omitted. However, there are cases
--      where the SoC is not powered by the PMIC. In that case it may be
-+      where the SoC is not powered by the PMIC or has a short time backup
-+      energy to handle shutdown of critical hardware. In that case it may =
-be
-       useful to connect the errb and handle errb events.
-     minItems: 1
-     maxItems: 2
-@@ -69,7 +70,7 @@ examples:
-             interrupt-names =3D "intb", "errb";
-=20
-             regulators {
--                buck1: BUCK1 {
-+                buck1 {
-                     regulator-name =3D "buck1";
-                     regulator-ramp-delay =3D <1250>;
-                     /* 0.5V min INITIAL - 150 mV tune */
-@@ -84,7 +85,7 @@ examples:
-                     regulator-temp-protection-kelvin =3D <1>;
-                     regulator-temp-warn-kelvin =3D <0>;
-                 };
--                buck2: BUCK2 {
-+                buck2 {
-                     regulator-name =3D "buck2";
-                     regulator-min-microvolt =3D <350000>;
-                     regulator-max-microvolt =3D <3450000>;
---=20
-2.48.1
+diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
+index 6e45f464a429..74769c0993ae 100644
+--- a/drivers/net/wireless/ath/ath11k/mhi.c
++++ b/drivers/net/wireless/ath/ath11k/mhi.c
+@@ -20,6 +20,7 @@
+ #define MHI_TIMEOUT_DEFAULT_MS	20000
+ #define RDDM_DUMP_SIZE	0x420000
+ #define MHI_CB_INVALID	0xff
++#define MHI_BW_SCALE_CHAN_DB 126
+ 
+ static const struct mhi_channel_config ath11k_mhi_channels_qca6390[] = {
+ 	{
+@@ -73,6 +74,17 @@ static struct mhi_event_config ath11k_mhi_events_qca6390[] = {
+ 		.client_managed = false,
+ 		.offload_channel = false,
+ 	},
++	{
++		.num_elements = 8,
++		.irq_moderation_ms = 0,
++		.irq = 1,
++		.mode = MHI_DB_BRST_DISABLE,
++		.data_type = MHI_ER_BW_SCALE,
++		.priority = 2,
++		.hardware_event = false,
++		.client_managed = false,
++		.offload_channel = false,
++	},
+ };
+ 
+ static const struct mhi_controller_config ath11k_mhi_config_qca6390 = {
+@@ -313,6 +325,33 @@ static void ath11k_mhi_op_write_reg(struct mhi_controller *mhi_cntrl,
+ 	writel(val, addr);
+ }
+ 
++static int ath11k_mhi_op_get_misc_doorbell(struct mhi_controller *mhi_cntrl,
++					   enum mhi_er_data_type type)
++{
++	if (type == MHI_ER_BW_SCALE)
++		return MHI_BW_SCALE_CHAN_DB;
++
++	return -EINVAL;
++}
++
++static int ath11k_mhi_op_bw_scale(struct mhi_controller *mhi_cntrl,
++				  struct mhi_link_info *link_info)
++{
++	enum pci_bus_speed speed = pci_lnkctl2_bus_speed(link_info->target_link_speed);
++	struct ath11k_base *ab = dev_get_drvdata(mhi_cntrl->cntrl_dev);
++	struct pci_dev *pci_dev = to_pci_dev(ab->dev);
++	struct pci_dev *pdev;
++
++	if (!pci_dev)
++		return -EINVAL;
++
++	pdev = pci_upstream_bridge(pci_dev);
++	if (!pdev)
++		return -ENODEV;
++
++	return pcie_set_target_speed(pdev, speed, true);
++}
++
+ static int ath11k_mhi_read_addr_from_dt(struct mhi_controller *mhi_ctrl)
+ {
+ 	struct device_node *np;
+@@ -389,6 +428,8 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
+ 	mhi_ctrl->status_cb = ath11k_mhi_op_status_cb;
+ 	mhi_ctrl->read_reg = ath11k_mhi_op_read_reg;
+ 	mhi_ctrl->write_reg = ath11k_mhi_op_write_reg;
++	mhi_ctrl->bw_scale = ath11k_mhi_op_bw_scale;
++	mhi_ctrl->get_misc_doorbell = ath11k_mhi_op_get_misc_doorbell;
+ 
+ 	switch (ab->hw_rev) {
+ 	case ATH11K_HW_QCN9074_HW10:
 
+-- 
+2.34.1
 
---lOj8NaVvEWD5XEyi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfSxG8ACgkQeFA3/03a
-ocUx8gf+Mb2iVzao1T9FPrIGbDSq9EH6AC0es8g3J5888Li0mQMfjmwz/1pqd20M
-Ev32ChMeUwcjphlHVziqVHyBH5eJR8eLMSr70lhUdGg2F1i4k/uxhk5tikh7HcLo
-3aw/K7L/j3GK+6/M9rViFn6/zqH+W8zNsHT7D5u2t3IoLzeFNlv6jkeFKgw3UTc4
-TgotxFgPK2DcL/lVGCLgPo0SDzjpUpmqd5csRgKi7kLV2VM+E9WHdxbDZyPmCcF+
-v2M2gG6fSh/0p32t/bpY4ihGyplHdEvff5eMZMDlClKA6GB5vHM8zoWyJYA2DMFv
-nO9yjukaN92LtWdc/PLLRZw0gPcNyw==
-=aTet
------END PGP SIGNATURE-----
-
---lOj8NaVvEWD5XEyi--
