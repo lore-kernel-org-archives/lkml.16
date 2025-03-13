@@ -1,45 +1,45 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0280426E179
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A72426E16A
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:00:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881621; cv=none; b=WOXOb3oNpLbjdZwWyaBphsNwNC7MPIbFrmJFB+D9q37B3Q3D7ABSBBYgwKEK3wN7Yn6rDfxz0wz8xwSXRyPKIQ75nsbrIzgwipC9fXwGIVv4luWaU4QLR5/Wvoz93rpUYhzBEhqhv9N3JjpdxWPoA8dBQgGtDvtqvMEgpXKCga8=
+	t=1741881621; cv=none; b=KP4hh+45IKDdtYP+EznMDEHf/bAy+ET/yikVkaRGX2y71OgyiAVyRE/7QADwmviiRDOYW5I6BeE1zti/9sDGsikB8WCszJp1KHmvgPYIfok77d7kC+uvmRTJAg3FPOH38CfRI/ZTAFX1qiO66eM7RBdOxbF+GBl8iRNv52keYnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741881621; c=relaxed/simple;
-	bh=+jb2cVMFrK3JLI4YXqGnO7W/g2skxpSgj42RVfVe45U=;
+	bh=b0JZPSifyH4V9k3xP9rALjjJADVVPT8f22DBM2AIRkc=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=iYD/bQ/odSoVQ8uxqUJqFFmJER54JgY2kt0FcYs2fXBgxmGIsSaDxdTOj5gRodMEbeT2ppZ2kYQwYKoyk/eC0C2NxiFN0EZtO9ymJcuSvqzZ3zpPKlX/QBoXBAyEc2qHUN4XE+qm6UOEMeJYsi6JA69QQL50rb5M4/mkY6x5wyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L5OWeVDX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gf0BIsoH; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=uTTX54+lp4L8dsiwneEP9LlHDF5obaydCCpdUnMsugaXGVkIBKlH4kq7zcALGpUK9bmblv0tbOptEbj7StJbY8AOSHQLP0QC/tnT7vMOCW72F42zrw8+fNVuvX8KbA2UIHPcML5qJhMqPrTdZCyiqTP3I/hiPsWdGSz+4k0nFSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VBAno23t; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HvWRmyrp; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L5OWeVDX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gf0BIsoH"
-Message-ID: <20250313155915.232665756@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VBAno23t";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HvWRmyrp"
+Message-ID: <20250313155915.301000372@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741881617;
+	s=2020; t=1741881619;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=SWG0FodRQ91tGX7TEvKXx2mG4eaRCsEYB9dnpaH3VVM=;
-	b=L5OWeVDXAbplbGD6nk/6onDcT/rtjipgFjrfndQ5vmmgmjBlgeB/9w/JEJGEbgiM24tm8c
-	ggPZr01pLyoHF72oyKWeR/bejDu3c04WXJKzAVypob22EohMujLmpG1FiYhFRyHfgNAKWx
-	jiDXsFIELYBuEybubNjZX86MdoJ/enX4e0bfq1l2E7LYgTNYa+AnRaKPXMWnNQ2YfFXjvY
-	sjBqoDnJFdBAPNKATTW08G4BA4vavjP23q9ZKRbeCabUMKxmXkODrZNAY/C5zWxQseWcUi
-	XRUmKrPNefUVGn6dvaD8wwyaaxz+wux4Cz/hIt/su1+0VrrTcn+eKZwFLw1cZg==
+	 references:references; bh=21qxaZJUMfrnR91zfcgARK5+Av80xk5Antj7rW6iFIo=;
+	b=VBAno23tKtjY32EkCAgiq+CghvliLpwm+CDVhBiaHiihyYKK5GFJ23z2kMf72KJ52FTJH8
+	KYWxD8ki3tETm5HBWsOei0FqJgtF0JH+6TgVddbWaGHm12j8Xt0nIqTukvZrna3y/lJiyY
+	SmyraxOe6J3E6uXzwIidIdzOCRolRAoboJMMRsan7PZeW+L61jIpVz28LcmCYjWxosGhiq
+	a/4cVBbSkpISmpmH6E5xvIOAZiCEry7yo/54f64mL1ev353vD4VO/bT39i+v/ATtGtHhkK
+	qQfyrMxWJPz1dcdVU/d1r3vOpVJGseBcqQJ/llHxGexJCLcA2muS9Vv/dq+/EQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741881617;
+	s=2020e; t=1741881619;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=SWG0FodRQ91tGX7TEvKXx2mG4eaRCsEYB9dnpaH3VVM=;
-	b=gf0BIsoHny5Ga9jsO14JKjVPi1He/XT39dARgs4gwYFeJ/9p1d/v2HRYf7B/6P4srGAF8g
-	2i8zUcxHI0/sfsCQ==
+	 references:references; bh=21qxaZJUMfrnR91zfcgARK5+Av80xk5Antj7rW6iFIo=;
+	b=HvWRmyrp7szvuEs2oMyKIEiHzpUlvYNq9wctIieR+zts1esJZVAGVc6GqCVYj9q+BkZGpv
+	8pb2zV5LqqeuqWBg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>,
  Jiri Slaby <jirislaby@kernel.org>
-Subject: [patch 20/46] genirq/chip: Rework handle_fasteoi_mask_irq()
+Subject: [patch 21/46] genirq/chip: Use lock guards where applicable
 References: <20250313154615.860723120@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,84 +48,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 13 Mar 2025 17:00:16 +0100 (CET)
+Date: Thu, 13 Mar 2025 17:00:18 +0100 (CET)
 
-Use the new helpers to decide whether the interrupt should be handled and
-switch the descriptor locking to guard().
-
-Note: The mask_irq() operation in the second condition was redundant as the
-interrupt is already masked right at the beginning of the function.
-
-Fixup the kernel doc comment while at it.
+Convert all lock/unlock pairs to guards and tidy up the code.
 
 No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/irq/chip.c |   38 +++++++++-----------------------------
- 1 file changed, 9 insertions(+), 29 deletions(-)
+ kernel/irq/chip.c |   24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
 --- a/kernel/irq/chip.c
 +++ b/kernel/irq/chip.c
-@@ -1176,51 +1176,31 @@ void handle_fasteoi_ack_irq(struct irq_d
- EXPORT_SYMBOL_GPL(handle_fasteoi_ack_irq);
- 
- /**
-- *	handle_fasteoi_mask_irq - irq handler for level hierarchy
-- *	stacked on transparent controllers
-+ * handle_fasteoi_mask_irq - irq handler for level hierarchy stacked on
-+ *			     transparent controllers
-  *
-- *	@desc:	the interrupt description structure for this irq
-+ * @desc:	the interrupt description structure for this irq
-  *
-- *	Like handle_fasteoi_irq(), but for use with hierarchy where
-- *	the irq_chip also needs to have its ->irq_mask_ack() function
-- *	called.
-+ * Like handle_fasteoi_irq(), but for use with hierarchy where the irq_chip
-+ * also needs to have its ->irq_mask_ack() function called.
+@@ -1081,25 +1081,21 @@ EXPORT_SYMBOL_GPL(irq_modify_status);
   */
- void handle_fasteoi_mask_irq(struct irq_desc *desc)
+ void irq_cpu_online(void)
  {
- 	struct irq_chip *chip = desc->irq_data.chip;
+-	struct irq_desc *desc;
+-	struct irq_chip *chip;
+-	unsigned long flags;
+ 	unsigned int irq;
  
--	raw_spin_lock(&desc->lock);
-+	guard(raw_spinlock)(&desc->lock);
- 	mask_ack_irq(desc);
+ 	for_each_active_irq(irq) {
+-		desc = irq_to_desc(irq);
++		struct irq_desc *desc = irq_to_desc(irq);
++		struct irq_chip *chip;
++
+ 		if (!desc)
+ 			continue;
  
--	if (!irq_can_handle_pm(desc))
--		goto out;
+-		raw_spin_lock_irqsave(&desc->lock, flags);
 -
--	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
++		guard(raw_spinlock_irqsave)(&desc->lock);
+ 		chip = irq_data_get_irq_chip(&desc->irq_data);
+ 		if (chip && chip->irq_cpu_online &&
+ 		    (!(chip->flags & IRQCHIP_ONOFFLINE_ENABLED) ||
+ 		     !irqd_irq_disabled(&desc->irq_data)))
+ 			chip->irq_cpu_online(&desc->irq_data);
 -
--	/*
--	 * If its disabled or no action available
--	 * then mask it and get out of here:
--	 */
--	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
--		desc->istate |= IRQS_PENDING;
--		mask_irq(desc);
--		goto out;
-+	if (!irq_can_handle(desc)) {
-+		cond_eoi_irq(chip, &desc->irq_data);
-+		return;
+-		raw_spin_unlock_irqrestore(&desc->lock, flags);
  	}
- 
- 	kstat_incr_irqs_this_cpu(desc);
--	if (desc->istate & IRQS_ONESHOT)
--		mask_irq(desc);
- 
- 	handle_irq_event(desc);
- 
- 	cond_unmask_eoi_irq(desc, chip);
--
--	raw_spin_unlock(&desc->lock);
--	return;
--out:
--	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
--		chip->irq_eoi(&desc->irq_data);
--	raw_spin_unlock(&desc->lock);
  }
- EXPORT_SYMBOL_GPL(handle_fasteoi_mask_irq);
  
+@@ -1111,25 +1107,21 @@ void irq_cpu_online(void)
+  */
+ void irq_cpu_offline(void)
+ {
+-	struct irq_desc *desc;
+-	struct irq_chip *chip;
+-	unsigned long flags;
+ 	unsigned int irq;
+ 
+ 	for_each_active_irq(irq) {
+-		desc = irq_to_desc(irq);
++		struct irq_desc *desc = irq_to_desc(irq);
++		struct irq_chip *chip;
++
+ 		if (!desc)
+ 			continue;
+ 
+-		raw_spin_lock_irqsave(&desc->lock, flags);
+-
++		guard(raw_spinlock_irqsave)(&desc->lock);
+ 		chip = irq_data_get_irq_chip(&desc->irq_data);
+ 		if (chip && chip->irq_cpu_offline &&
+ 		    (!(chip->flags & IRQCHIP_ONOFFLINE_ENABLED) ||
+ 		     !irqd_irq_disabled(&desc->irq_data)))
+ 			chip->irq_cpu_offline(&desc->irq_data);
+-
+-		raw_spin_unlock_irqrestore(&desc->lock, flags);
+ 	}
+ }
+ #endif
 
