@@ -1,119 +1,285 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD92B15E97;
-	Thu, 13 Mar 2025 15:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83419269809
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 15:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741879153; cv=none; b=MZWWSbdVw6Ct3y2O+uxE/4dsP4pfmi6Sq1q+72aaPKUT9iHocwPfmJ44okrbFR8kMLDABX1q/8zIYV2rTFm/OnEL/WnJUnyq/FAqJB4TMdcDzv5XlQpViaw5/Oq6HxQGxoSM9oOOWCKZ7SpKrsAaHqRQsFntT16ea8T6DL3dBp4=
+	t=1741879157; cv=none; b=t0UK4GBPvUi1tGgTePZNESrc+DKaubScM/1CSqxqFldzfrUgb2orlFAjWbAqqvGDlx/+loLLXd5JAXreUpY7eCQCqDu/QcfxtBgBCIacUie8JAZLeIAd7JeZ8Cj1VH5FcnAcxvSMDmiuzfTfqJYb7/l6PP1ZrJ/03bSiTijq0MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741879153; c=relaxed/simple;
-	bh=LC011z6AwHjc7tVf34PLdUgUl30pEZi9+T4ZlM0W3y4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=um30Ds/r6WiCraZcDEt3GzShDsoEjrKdej6jg0jelmoXOX0KOBWtdVucaHmqy6FFIuuuSUMUSosTCNBXWFHm8b/P3Ry9yCH2zwtDReic3KBfkDcq93SSDWZd7tfyoLmy8CHhJsKliHuPOA7QU3oR34j53x7IDNwaPZ4eBN1vvWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WwnmLC3F; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741879157; c=relaxed/simple;
+	bh=Dahx4YCeDFazmQDtfk0gy0C6DwC6v3J6Nwvt1/nlFxs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oxlcY7QGkh2p1IYTxTGX4gJw4E6Tm2o0Fi8yl/e8/txiekg8mJk4QUprzStY3cZvK0xOuk8sKWS6Wtt9KPjcshMpsrOLm0+Jqnp7Dc82Pg8xNHPhZA4QN2NkWavRAvc9fm2gxCXYGFZJfQkhkTl5KFFSxJw9iAh41Hvii3XZnYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L5Yzwm/p; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WwnmLC3F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741879152; x=1773415152;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LC011z6AwHjc7tVf34PLdUgUl30pEZi9+T4ZlM0W3y4=;
-  b=WwnmLC3Fu65HJdIB8zNLTqawENDCw8qRYpdzhRNkeSqMyiB4h8r5MhOG
-   wu6bKdticVTxBk+5DzeiEvPGON9SVoW84mXWa+dbUhPIKxXfE3LmnaaPO
-   wzL2WVhZvFldgX7P8O78j/Xo9tmiHKbmJUnlmrpFLQ5Jfk6C2xohJm0xL
-   FSEkezcrlIKf6cJVEAo0h0Qs7LHrSeP9Nvw5Ui+F8ScbRDPpXhav31s7i
-   +Mcc55j3l+3BJjODKjTMud/93T+K6TMbcfUsUPMEkwDNt0drmiYsy7cNW
-   Wzt68mhWXL0xkRgs/hU05tIy6IremSdmoAAIh1jGgYpnZ0TkPeQbZw4+s
-   Q==;
-X-CSE-ConnectionGUID: aLrmJK9eRUmvTvXIDdsoAQ==
-X-CSE-MsgGUID: Uec/1IdST4ymbLwvrqtI7Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="60404188"
-X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
-   d="scan'208";a="60404188"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 08:19:11 -0700
-X-CSE-ConnectionGUID: 4obyxuIlS0aXMAj7NLH8Ew==
-X-CSE-MsgGUID: 5T3/LeCkRhmrGnHgFI4YdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
-   d="scan'208";a="121202588"
-Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmviesa008.fm.intel.com with ESMTP; 13 Mar 2025 08:19:09 -0700
-Message-ID: <8001828c-f623-409a-8ba0-6da00d1db4f3@linux.intel.com>
-Date: Thu, 13 Mar 2025 17:20:14 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L5Yzwm/p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741879154;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G9zaHgixonSILPYIqqBFAZyXZsf0jbzyGyxAoGfZOaA=;
+	b=L5Yzwm/pJ7/bMg0dpU007Wuwgc3+b9WN5ersKY0eWqnNuZSM5bkspxA6Xt+COzf8GeNNKj
+	1WILfi8kF1QvhJbJWV/V+Vy/EDM1eUzyhRJEuu5gpPwIqa7DE3fh5NQl/BuC5DjM0jQ2+I
+	Fo9RYoP0Oymevu420KO3VlHWVMK/mOo=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-527-Gji8Z6jlOeSsyoEMH6KeKw-1; Thu,
+ 13 Mar 2025 11:19:10 -0400
+X-MC-Unique: Gji8Z6jlOeSsyoEMH6KeKw-1
+X-Mimecast-MFC-AGG-ID: Gji8Z6jlOeSsyoEMH6KeKw_1741879148
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 646961800258;
+	Thu, 13 Mar 2025 15:19:08 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.22.76.11])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 36B5A300376F;
+	Thu, 13 Mar 2025 15:19:03 +0000 (UTC)
+Date: Thu, 13 Mar 2025 11:18:59 -0400
+From: Richard Guy Briggs <rgb@redhat.com>
+To: Steve Grubb <sgrubb@redhat.com>
+Cc: Paul Moore <paul@paul-moore.com>,
+	Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
+	LKML <linux-kernel@vger.kernel.org>, linux-modules@vger.kernel.org,
+	Linux Kernel Audit Mailing List <audit@vger.kernel.org>,
+	Eric Paris <eparis@parisplace.org>
+Subject: Re: [PATCH v1] audit,module: restore audit logging in load failure
+ case
+Message-ID: <Z9L3YwDxHcRI5EWp@madcap2.tricolour.ca>
+References: <999cdd694f951acd2f4ad665fe7ab97d0834e162.1729717542.git.rgb@redhat.com>
+ <b7f8e0d11b6cfc7547709c7efc472021@paul-moore.com>
+ <Z8oWlAwgKWW+M8yL@madcap2.tricolour.ca>
+ <2743964.lGaqSPkdTl@x2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5] usb:xhci: Add debugfs support for xHCI port bandwidth
-To: raoxu <raoxu@uniontech.com>, mathias.nyman@intel.com,
- gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- wangyuli@uniontech.com, zhanjun@uniontech.com
-References: <20250313132132.2856-1-raoxu@uniontech.com>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <20250313132132.2856-1-raoxu@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2743964.lGaqSPkdTl@x2>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 13.3.2025 15.21, raoxu wrote:
-> From: Xu Rao <raoxu@uniontech.com>
+On 2025-03-07 14:41, Steve Grubb wrote:
+> On Thursday, March 6, 2025 4:41:40 PM Eastern Standard Time Richard Guy 
+> Briggs wrote:
+> > On 2024-10-24 16:41, Paul Moore wrote:
+> > > On Oct 23, 2024 Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > The move of the module sanity check to earlier skipped the audit
+> > > > logging
+> > > > call in the case of failure and to a place where the previously used
+> > > > context is unavailable.
+> > > > 
+> > > > Add an audit logging call for the module loading failure case and get
+> > > > the module name when possible.
+> > > > 
+> > > > Link: https://issues.redhat.com/browse/RHEL-52839
+> > > > Fixes: 02da2cbab452 ("module: move check_modinfo() early to
+> > > > early_mod_check()") Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > ---
+> > > > 
+> > > >  kernel/module/main.c | 4 +++-
+> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/kernel/module/main.c b/kernel/module/main.c
+> > > > index 49b9bca9de12..1f482532ef66 100644
+> > > > --- a/kernel/module/main.c
+> > > > +++ b/kernel/module/main.c
+> > > > @@ -3057,8 +3057,10 @@ static int load_module(struct load_info *info,
+> > > > const char __user *uargs,> > 
+> > > >  	 * failures once the proper module was allocated and
+> > > >  	 * before that.
+> > > >  	 */
+> > > > 
+> > > > -	if (!module_allocated)
+> > > > +	if (!module_allocated) {
+> > > > +		audit_log_kern_module(info->name ? info->name : 
+> "(unavailable)");
+> > > > 
+> > > >  		mod_stat_bump_becoming(info, flags);
+> > > > 
+> > > > +	}
+> > > 
+> > > We probably should move the existing audit_log_kern_module() to just
+> > > after the elf_validity_cache_copy() call as both info->name and
+> > > info->mod->name should be as valid as they are going to get at that
+> > > point.  If we do that then we only have two cases we need to worry about,
+> > > a failed module_sig_check() or a failed elf_validity_cache_copy(), and
+> > > in both cases we can use "(unavailable)" without having to check
+> > > info->name first.
+> > 
+> > Fair enough.
+> > 
+> > > However, assuming we move the audit_log_kern_module() call up a bit as
+> > > described above, I'm not sure there is much value in calling
+> > > audit_log_kern_module() with an "(unavailable)" module name in those
+> > > early two cases.  We know it's an attempted module load based on the
+> > > SYSCALL record, seeing an associated "(unavailable)" KERN_MODULE record
+> > > doesn't provide us with any more information than if we had simply
+> > > skipped the KERN_MODULE record.
+> > 
+> > Understood.  I wonder if the absence of the record in the error case
+> > will leave us guessing if we lost a record from the event?  We will have
+> > the error code from the SYSCALL record but not much more than that, and
+> > some of those error codes could just as well be generated after that
+> > point too.  This would be a similar situation to the vanishing fields in
+> > an existing record, but is likely easier to mitigate than a
+> > non-last-field vanishing or shifting around in an existing record.
+> > 
+> > Steve?  Atilla?  Any comments?
 > 
-> In many projects, you need to obtain the available bandwidth of the
-> xhci roothub port. Refer to xhci rev1_2 and use the TRB_GET_BW
-> command to obtain it.
+> We should only get the events if we have syscall rules that would result in 
+> kernel module loading/unloading events. I suppose that by the time audit 
+> loads it's rules, many modules have already loaded. So, I don't think we need 
+> to worry about early cases. But when we do get a kernel module load/unload 
+> event based on the rules, we need it's name - even in failures. We need to be 
+> able to determine what was attempted since this could affect system 
+> integrity.
+
+Ok, yes, agreed.  But that information isn't available yet for a number
+of error cases.  It hasn't even been looked for yet after
+module_sig_check() and can't be reliably found until halfway through
+elf_validity_cache_copy().
+
+So, we should provide the record and make a best effort to fill in that
+information if we can.  We could try more aggressively to extract it
+from the info blob, but I don't know if that is worth the effort because
+a number of the steps leading up to it are necessary to check the
+validity and set up structures to extract it.
+
+> -Steve
 > 
-> hardware tested:
-> 03:00.3 USB controller: Advanced Micro Devices, Inc. [AMD] Raven USB 3.1
-> (prog-if 30 [XHCI])
-> Subsystem: Huawei Technologies Co., Ltd. Raven USB 3.1
-> Flags: bus master, fast devsel, latency 0, IRQ 30
-> Memory at c0300000 (64-bit, non-prefetchable) [size=1M]
-> Capabilities: [48] Vendor Specific Information: Len=08 <?>
-> Capabilities: [50] Power Management version 3
-> Capabilities: [64] Express Endpoint, MSI 00
-> Capabilities: [a0] MSI: Enable- Count=1/8 Maskable- 64bit+
-> Capabilities: [c0] MSI-X: Enable+ Count=8 Masked-
-> Kernel driver in use: xhci_hcd
-> 
+> > > Untested, but this is what I'm talking about:
+> > > 
+> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > index 0050ef288ab3..eaa10e3c7eca 100644
+> > > --- a/include/linux/audit.h
+> > > +++ b/include/linux/audit.h
+> > > @@ -417,7 +417,7 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm
+> > > *bprm,> 
+> > >  extern void __audit_log_capset(const struct cred *new, const struct cred
+> > >  *old); extern void __audit_mmap_fd(int fd, int flags);
+> > >  extern void __audit_openat2_how(struct open_how *how);
+> > > 
+> > > -extern void __audit_log_kern_module(char *name);
+> > > +extern void __audit_log_kern_module(const char *name);
+> > > 
+> > >  extern void __audit_fanotify(u32 response, struct
+> > >  fanotify_response_info_audit_rule *friar); extern void
+> > >  __audit_tk_injoffset(struct timespec64 offset);
+> > >  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
+> > > 
+> > > @@ -519,7 +519,7 @@ static inline void audit_openat2_how(struct open_how
+> > > *how)> 
+> > >                 __audit_openat2_how(how);
+> > >  
+> > >  }
+> > > 
+> > > -static inline void audit_log_kern_module(char *name)
+> > > +static inline void audit_log_kern_module(const char *name)
+> > > 
+> > >  {
+> > >  
+> > >         if (!audit_dummy_context())
+> > >         
+> > >                 __audit_log_kern_module(name);
+> > > 
+> > > @@ -677,7 +677,7 @@ static inline void audit_mmap_fd(int fd, int flags)
+> > > 
+> > >  static inline void audit_openat2_how(struct open_how *how)
+> > >  { }
+> > > 
+> > > -static inline void audit_log_kern_module(char *name)
+> > > +static inline void audit_log_kern_module(const char *name)
+> > > 
+> > >  {
+> > >  }
+> > > 
+> > > diff --git a/kernel/audit.h b/kernel/audit.h
+> > > index a60d2840559e..5156ecd35457 100644
+> > > --- a/kernel/audit.h
+> > > +++ b/kernel/audit.h
+> > > @@ -199,7 +199,7 @@ struct audit_context {
+> > > 
+> > >                         int                     argc;
+> > >                 
+> > >                 } execve;
+> > >                 struct {
+> > > 
+> > > -                       char                    *name;
+> > > +                       const char              *name;
+> > > 
+> > >                 } module;
+> > >                 struct {
+> > >                 
+> > >                         struct audit_ntp_data   ntp_data;
+> > > 
+> > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > > index 0627e74585ce..f79eb3a5a789 100644
+> > > --- a/kernel/auditsc.c
+> > > +++ b/kernel/auditsc.c
+> > > @@ -2870,7 +2870,7 @@ void __audit_openat2_how(struct open_how *how)
+> > > 
+> > >         context->type = AUDIT_OPENAT2;
+> > >  
+> > >  }
+> > > 
+> > > -void __audit_log_kern_module(char *name)
+> > > +void __audit_log_kern_module(const char *name)
+> > > 
+> > >  {
+> > >  
+> > >         struct audit_context *context = audit_context();
+> > > 
+> > > diff --git a/kernel/module/main.c b/kernel/module/main.c
+> > > index 49b9bca9de12..3acb65073c53 100644
+> > > --- a/kernel/module/main.c
+> > > +++ b/kernel/module/main.c
+> > > @@ -2884,6 +2884,8 @@ static int load_module(struct load_info *info,
+> > > const char __user *uargs,> 
+> > >         if (err)
+> > >         
+> > >                 goto free_copy;
+> > > 
+> > > +       audit_log_kern_module(info->name);
+> > > +
+> > > 
+> > >         err = early_mod_check(info, flags);
+> > >         if (err)
+> > >         
+> > >                 goto free_copy;
+> > > 
+> > > @@ -2897,8 +2899,6 @@ static int load_module(struct load_info *info,
+> > > const char __user *uargs,> 
+> > >         module_allocated = true;
+> > > 
+> > > -       audit_log_kern_module(mod->name);
+> > > -
+> > > 
+> > >         /* Reserve our place in the list. */
+> > >         err = add_unformed_module(mod);
+> > >         if (err)
+> > > 
+> > > --
+> > > paul-moore.com
+> > 
+> > - RGB
 
-...
+- RGB
 
-> @@ -2463,7 +2497,16 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
->   	 * will be allocated with dma_alloc_coherent()
->   	 */
-> 
-> -	if (!xhci->small_streams_pool || !xhci->medium_streams_pool)
-> +	/* refer to xhci rev1_2 protocol 5.3.3 max ports is 255.
-> +	 * refer to xhci rev1_2 protocol 6.2.6 port bandwidth buffer need to be
-> +	 * 8-byte aligned.
-> +	 */
-
-The context size needs to be rounded up to nearest 8-byte boundary.
-We allocate 256 bytes so we are covered.
-
-Specification unfortunately fails to mention about the 16-byte context alignment
-requirement here in section 6.2.6 'Port Bandwith Context'.
-
-This info is hidden in section 6.4.3.14 'Get Port Bandwidth Command TRB' in
-'Port Bandwidth Context Pointer Hi and Lo' field 63:4
-
-"The memory structure referenced by this physical memory pointer shall be aligned
-  on a 16-byte address boundary."
-
-> +	xhci->port_bw_pool =
-> +		dma_pool_create("xHCI 256 port bw ctx arrays",
-> +			dev, GET_PORT_BW_ARRAY_SIZE, 8, 0);
-
-Thanks
-Mathias
-
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+Upstream IRC: SunRaycer
+Voice: +1.613.860 2354 SMS: +1.613.518.6570
 
