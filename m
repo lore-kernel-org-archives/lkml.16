@@ -1,141 +1,95 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BB91E51EE
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 18:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE821E9B26;
+	Thu, 13 Mar 2025 18:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741889325; cv=none; b=oCCuF3pZQUU6IBlDD2kG3oySqMiM9ciJIT2/GRPug0mqLzExkJxlslRgBV7exUhklXnudb+tTfoQxnjR1w/tvOvaZFlITz5GWQGtR0YVbAwRzwqROooE3GYw+9vwkCbPaftg5hSS3hPQKpM77Izn2hVLU5MFzZ4VQ/WyQBjEtkQ=
+	t=1741889348; cv=none; b=LZzAzipW6368DLQfmVDIK4iV7tfDjHHnEmRg1njIGC3V87VCxy/vs8lwcPqpXuKqM7TIY9w9XPxgE6b4IGuUTlv8vMu/lPnA7Desu1594vPTGvPxUYyPUH81Dfh3MYvdnlMWCkkGENgqE5Rp2EWkN8A/sYy9Rw+OqPc9Lx0CXrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741889325; c=relaxed/simple;
-	bh=MXtePF6repqds/x6JPCzOwKs4bPaXnVnBSNXtX5OfIc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MfWcvEHXrH9z2WQSduShKi48TT7ZLxqXFvBTmDkg8nzp/01/2e8DHHekNCb4FZs70uzBWaBPXDCvfYM/2zMNSsJigRlEUCXLoKIrgC0Mv9LhA+kKgJBJkxqR/BzgGtue1xT9kYYeEKp246tZw0xYVpfbfx9Tx8o3to2Ppm4Hqvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=Ao39xEo/; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="Ao39xEo/"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
-	s=key1; t=1741889320;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oWH7hszwO9I5RYZpht/nXn68Y2cBdPRRedslDcO5mD8=;
-	b=Ao39xEo/pSp/j5tAL4U5bRkiqX/8hAJD2h5Q3TQYeoM2KfRkAZOXysg68TccSm87i+b8UV
-	kiREpjW7qU6Qz5NKsUVUQSnyPRUNScPmTvRmGLrA0zOQMJD51uK13Ub6Bq8SXcopsvd1VE
-	7p3Zn+BdFU4Rjarkxrw6vR2AaFmrOwPBr8UlVsv32H+n6YPJ04zzwb7xuKMCLJB9l4PWdZ
-	yBjQeWsgIXA8Fjn6KqCNIcpPA+5z0Y4LVRZ40AMGel90Z5xTXaDVtGl8rqS+TEXPS+AHHF
-	K4lghj57TDh/oo+B50iD8d9RL/q4sqoc1cB84Av2UH7VZRWeFsP3gjRg8Pw/UA==
-From: Ignacio Encinas <ignacio@iencinas.com>
-Date: Thu, 13 Mar 2025 19:08:19 +0100
-Subject: [PATCH v2] 9p/trans_fd: mark concurrent read and writes to
- p9_conn->err
+	s=arc-20240116; t=1741889348; c=relaxed/simple;
+	bh=/2TX7oqp5EZ59EfzAb/BphrBtCTWtTDGm2PFTAUVHZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhGbdVDuoh4AeLOAXJsfZ2rA+BtMtmSTeoGj8IgBbJqHLYGWTJ70NMsE52u+5B230QuZHe5oBstZDqO9+wecj8PfxrTka5jRdZHaknXlUh98FWxqxH22EHMDxd3zO9P+Yzm1UP+EGvSbGKC04XIRz/GhNcGKs1N4P7riSnBc62Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2b10bea16so256362866b.0;
+        Thu, 13 Mar 2025 11:09:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741889344; x=1742494144;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VaouCn+gVoU+eTcyNhX+f9Nv54n71MJJFoVOkqHdXiY=;
+        b=EYZENX9IublUrY3iv4E+vHW+HwLoeihjHjgmHGSDDURHTwuHhYwowS4KuORS73CexS
+         Lhh7AaZwpLexAvFt6+GdF04TFHTIGWadzaSyzB3bNkCKEC1DDoJ1x3+Vi9b5m8VgeaKc
+         7KEK32I6TcFV+db4TXAbgsM+rxJyCFqKKkU2XkvOgXFA+RBLUm+Td02eFjJqtmGmsMEV
+         xiTHNDo/tEzsXY99r87guuDReD3opg8t9/I3hH6fE4zcWi0CT14OuFpo4d2uEVEgnrmM
+         CBRE2jVy0hv0DXP2eZCHcyDbJ562KfdqkiZSk5JKF96hjTlWwq1AqlQvSvlyyhNc0YFw
+         1YxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVw/V5s+zVVtA/Aw5b66Dl0g1qQcGE7n4XcBPgdI0fKW/HFk5VGOcbhkt65mUEzlMa3Uc20YbefN+w8gH/76C4sWg==@vger.kernel.org, AJvYcCXJk4y9s95SQb20/j1lF4dRsO4Jv0JoyEYJexL/IzgKoIxzgmIX/L1pvNjY+/ba3Cp0gN0heXpSMnKSoig=@vger.kernel.org, AJvYcCXQ5n8ewcDEC8XqutVm6JNnm+GclVjUnJyA8bxJFJ3dP0y0OiN5Vi1kUkLmmWW0mXP9ilFGzUN2hAuCKpp8Jw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzklHC1xpgjeU0GlK6V+zOBAwqWQNA9YifWKu/srw1If6MBjpfg
+	Suj8s21goE109FY3Np1rx2lz11qphkGhyi9mQjfHsfnyUAkBQOkH
+X-Gm-Gg: ASbGncvFnpPLePlqorVBdtfaQZwc7gy5+4KeQuQeOQh8Y2VVARpH0X9juOLfxpB3my3
+	mA9uKU/CdBdBomFJ/trdHBZ2lX5Q9wBgsQHr8ze65u0Let7fBcSDTxxQo06EJfV3CYTDRboFs5F
+	07pdpYjaaDlF1ny+o2sbWvha1pgvySfJhnX1JlXPQlcgObi6AaY1B+Syt1KyPkgW+Mswp49rWKJ
+	pBmrz66l7+gLArTlRMSEgrVN14+5IOW5UYuKFVdPrTRfXK/O8HPAPQ8LninV+q4cqe1R3PFbnQJ
+	TlSwi6IY/ueOLikHH0fvrxz5Lrgkfazdlwc=
+X-Google-Smtp-Source: AGHT+IH9avSX5v9rVOb5M/GqkETrqEWlWjAuanfOK7yi22Ikj/OiRCa+LiNivmTskXBxpPr+KOjuBQ==
+X-Received: by 2002:a17:906:da88:b0:ac1:fcda:78c1 with SMTP id a640c23a62f3a-ac3290221f0mr50851066b.34.1741889344124;
+        Thu, 13 Mar 2025 11:09:04 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:8::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147f0bd3sm109488066b.67.2025.03.13.11.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 11:09:03 -0700 (PDT)
+Date: Thu, 13 Mar 2025 11:09:01 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Song Liu <song@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-toolchains@vger.kernel.org, live-patching@vger.kernel.org,
+	indu.bhagat@oracle.com, puranjay@kernel.org, wnliu@google.com,
+	irogers@google.com, joe.lawrence@redhat.com, jpoimboe@kernel.org,
+	mark.rutland@arm.com, peterz@infradead.org,
+	roman.gushchin@linux.dev, rostedt@goodmis.org, will@kernel.org,
+	kernel-team@meta.com, Suraj Jitindar Singh <surajjs@amazon.com>,
+	Torsten Duwe <duwe@suse.de>
+Subject: Re: [PATCH 2/2] arm64: Implement HAVE_LIVEPATCH
+Message-ID: <20250313-grinning-giraffe-of-holiness-3dbda1@leitao>
+References: <20250308012742.3208215-1-song@kernel.org>
+ <20250308012742.3208215-3-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-p9_conn_err_benign_data_race-v2-1-0bb9f45f6bb2@iencinas.com>
-X-B4-Tracking: v=1; b=H4sIABIf02cC/43NTQqDMBCG4atI1k2JkWDsqvcoEvIz6iw6KRORF
- vHuTT1Bl8+3eL9dFGCEIm7NLhg2LJipQl8aERdPM0hM1UIrbVSnrHwNLmYiB8wuAOFMLvnVO/Y
- RpO6NncCGAEmJmngxTPg+84+xesGyZv6cb1v7W/8Mb61sZa8HMH0yttPhjkARyZdrzE8xHsfxB
- eL3bFzLAAAA
-X-Change-ID: 20250308-p9_conn_err_benign_data_race-2758fe8bbed0
-To: linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org, 
- Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Dominique Martinet <asmadeus@codewreck.org>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>
-Cc: Sishuai Gong <sishuai.system@gmail.com>, Marco Elver <elver@google.com>, 
- v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, 
- syzbot+d69a7cc8c683c2cb7506@syzkaller.appspotmail.com, 
- syzbot+483d6c9b9231ea7e1851@syzkaller.appspotmail.com, 
- Ignacio Encinas <ignacio@iencinas.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250308012742.3208215-3-song@kernel.org>
 
-Writes for the error value of a connection are spinlock-protected inside
-p9_conn_cancel, but lockless reads are present elsewhere to avoid
-performing unnecessary work after an error has been met.
+On Fri, Mar 07, 2025 at 05:27:42PM -0800, Song Liu wrote:
+> This is largely based on [1] by Suraj Jitindar Singh.
+> 
+> Test coverage:
+> 
+> - Passed manual tests with samples/livepatch.
+> - Passed all but test-kprobe.sh in selftests/livepatch.
+>   test-kprobe.sh is expected to fail, because arm64 doesn't have
+>   KPROBES_ON_FTRACE.
+> - Passed tests with kpatch-build [2]. (This version includes commits that
+>   are not merged to upstream kpatch yet).
+> 
+> [1] https://lore.kernel.org/all/20210604235930.603-1-surajjs@amazon.com/
+> [2] https://github.com/liu-song-6/kpatch/tree/fb-6.13
+> Cc: Suraj Jitindar Singh <surajjs@amazon.com>
+> Cc: Torsten Duwe <duwe@suse.de>
+> Signed-off-by: Song Liu <song@kernel.org>
 
-Mark the write and lockless reads to make KCSAN happy. Mark the write as
-exclusive following the recommendation in "Lock-Protected Writes with
-Lockless Reads" in tools/memory-model/Documentation/access-marking.txt
-while we are at it.
+Tested-by: Breno Leitao <leitao@debian.org>
 
-Reported-by: syzbot+d69a7cc8c683c2cb7506@syzkaller.appspotmail.com
-Reported-by: syzbot+483d6c9b9231ea7e1851@syzkaller.appspotmail.com
-Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
----
-Changes in v2:
+PS: I've tested this patchset with the examples from samples/ on a arm64
+host, and they worked as expected.
 
-Drop unnecessary READ_ONCE in p9_fd_request (that I added in v1)
-
--@@ net/9p/trans_fd.c: static int p9_fd_request(struct p9_client *client, struct p9_req_t *req)
-- 
--   spin_lock(&m->req_lock);
-- 
---  if (m->err < 0) {
--+  if (READ_ONCE(m->err) < 0) {
--           spin_unlock(&m->req_lock);
--           return m->err;
--   }
-
-- Link to v1: https://lore.kernel.org/r/20250308-p9_conn_err_benign_data_race-v1-1-729e57d5832b@iencinas.com
----
- net/9p/trans_fd.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index 196060dc6138af10e99ad04a76ee36a11f770c65..758eaeddf32b480e0a88914da66f923f7021e608 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -196,7 +196,8 @@ static void p9_conn_cancel(struct p9_conn *m, int err)
- 		return;
- 	}
- 
--	m->err = err;
-+	WRITE_ONCE(m->err, err);
-+	ASSERT_EXCLUSIVE_WRITER(m->err);
- 
- 	list_for_each_entry_safe(req, rtmp, &m->req_list, req_list) {
- 		list_move(&req->req_list, &cancel_list);
-@@ -283,7 +284,7 @@ static void p9_read_work(struct work_struct *work)
- 
- 	m = container_of(work, struct p9_conn, rq);
- 
--	if (m->err < 0)
-+	if (READ_ONCE(m->err) < 0)
- 		return;
- 
- 	p9_debug(P9_DEBUG_TRANS, "start mux %p pos %zd\n", m, m->rc.offset);
-@@ -450,7 +451,7 @@ static void p9_write_work(struct work_struct *work)
- 
- 	m = container_of(work, struct p9_conn, wq);
- 
--	if (m->err < 0) {
-+	if (READ_ONCE(m->err) < 0) {
- 		clear_bit(Wworksched, &m->wsched);
- 		return;
- 	}
-@@ -622,7 +623,7 @@ static void p9_poll_mux(struct p9_conn *m)
- 	__poll_t n;
- 	int err = -ECONNRESET;
- 
--	if (m->err < 0)
-+	if (READ_ONCE(m->err) < 0)
- 		return;
- 
- 	n = p9_fd_poll(m->client, NULL, &err);
-
----
-base-commit: 2a520073e74fbb956b5564818fc5529dcc7e9f0e
-change-id: 20250308-p9_conn_err_benign_data_race-2758fe8bbed0
-
-Best regards,
--- 
-Ignacio Encinas <ignacio@iencinas.com>
-
+Thanks
+--breno
