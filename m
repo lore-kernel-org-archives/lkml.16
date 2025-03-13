@@ -1,226 +1,191 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE78A2046B3
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57211127E18
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741849349; cv=none; b=jfnSpPFcBoCeApg6QD9evc8qOi6psHJdcVNFRmVus9TthY1GUixiFmoi+updWnvm/49s6BVVt6EU+plXo33EO7r27WKUD2yLb5r6Z3DUokxfuFJ8OYf4yXiGj+GbBTSqUFmIjCRfg7Hk4P4YCroHxB35O4sH060LfOfMLIRHC/0=
+	t=1741849822; cv=none; b=Cc7CgyvBe6iYGyjd5BMXAr9bOpRhlrA7SFLLoUKRTDv/FDGCyMY4LYwjHwcvnnJ5TQtRQ9z9Lkz1LEQvbOap/lRnTvaZO0Gc7gMiTLc2j91iO4pwp3ENouC0Galw8D4HTopBtJR6+T++rInjw4+srX1RqtLIlPhz4rSXVs/dtaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741849349; c=relaxed/simple;
-	bh=QysKwJMoIqaKFtrng8JoZjRW/Qn7QIvbuXMh0UY/638=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=DQHsyb7VN6FBoYSYFHDHw6jsbUwvBZyqcwi2GkJJVGvm/UcpWTLLDW+w70TnnQ0foyNF1BZbLQcdUkDu8h/HIudDRhV7UOW0QjRxKeogUntZYMdG2NTQhpTSjQRk7odrD0i/Q2pe+By6oSGM5fTT2zRzrOUhIBt8nlHVKnllmXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=GmEyoS97; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1741849822; c=relaxed/simple;
+	bh=nudi+TGQps9XlV6V0TrOSaI78he7hxB5cdI2VNYI98s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MY6YJjPBKYrw6pkKnUhC0hlENtz68xZI3KZz3BAe/VZOtLGVXIwmJp3TNwQ1waC32ifWzkI+1cqGmCLi42c8EeeI9JcioaMhX4venVIq5qPBFS28+XJCIE2rLWfu207HcTv9zoKfyNMQw7FZ6hINP/vKjJpPrIfbGf9sOWXefo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SFXiCVM/; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="GmEyoS97"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2fec3176ef3so1129011a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 00:02:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SFXiCVM/"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e4d18a2c51so107943a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 00:10:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1741849347; x=1742454147; darn=vger.kernel.org;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jXhv781+liPB0AwwevhkbIFrQwob4kiywxMETbO/hoM=;
-        b=GmEyoS97Nt/5JMl1iIhPkE/V0ILB5YyZLkYleokMg6O/uguC1HD//6dcex3s8HXiev
-         OEBu5bzZzypBs1bTA7JS3+wfIzkLoPA1aUeEgp0mJ7IeOSQ8cyTly8NMchROZfY3jDT4
-         gPDfaNK/UKKGUp8FduHud/EX5Jxp2LePwoIA1OpiQdnYvzwR1ZDV/OTOdT6HFeJO4zat
-         mSkjqihMUXrH3nSF6HiCotlqz8ttd/+I8si9fziCOU5dZYcS8Onh++7hM0++JDvIDHZb
-         X7UeRT+eqxZCsAyNjgJrrDKqiIP2fFB68dYz1k2uKuB+J+juUWh5AF+zfJCZmss47Tvm
-         JUTA==
+        d=linaro.org; s=google; t=1741849818; x=1742454618; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=TIPNMpgvaQACUq81WXkhf23EdKNGR/5Qd6zG9mSv7sE=;
+        b=SFXiCVM/DQ6ijwvFcRuW/jzFZWPc6l7NhBM5MAmUcNz6Po3B/5vuvHZA18Tg+/eDGB
+         QADnX3ABpoR+KTTfNtUeTAgpMGzuhLk8fG1jiaiRu331U8BESt/IrwZ+z8wje6onS7KQ
+         mqMkMfBL9A7bokGwIZQisni+Jyc9Aq46WOMxM6+IorKoarq5fKik50hot5O8maDH4uC4
+         /B7HUUqHbiZNtfA1n17CXskd1r1e7RYSQSaKnb4mpbhEMaz3fkxsmSdN82nf/lqU3Rjt
+         dkJLAJsDq02k4QYyo+o7ei2i4ZlglagY3DJWuafU2LFSpaVUFPpCKEV8pygCTPDCRiut
+         ATjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741849347; x=1742454147;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jXhv781+liPB0AwwevhkbIFrQwob4kiywxMETbO/hoM=;
-        b=dq60XhvBvJGNVaoxk/y3jlyjnLCCzcjV55E7Pn6gL0YdaxaTmBGyNl0hqLZp2kYOed
-         CoWWkk2wiJxZfec2Y/OjG72VAHSt7JE1yU+m9MdCI3IgQhJFFSgEBauIcCkdO5cIkwap
-         UwjVZr+EuJf3BkF3ypMaYr7IDFozQJ+nvKjky27Xs0SLoIQQQMFMB6kvoI6iSG+butvX
-         6TwzzyGwNONZ8SSt15qZq9tgbPZrfdF2yH+YjFjeGXCX+zSSjOt9s7YAopGhFFXhjqaS
-         yDdNw77C5OXIHfTRHtVDGp0x9SxmHS0qfinsyjyPLfrlJM51R/ycQLkGsqkaaTNuNCm9
-         ZJSw==
-X-Forwarded-Encrypted: i=1; AJvYcCURy36NSabKQElxjQFKW/2kbLRPmQ5OGYLl0+/LMTalvv9JU6Hr4BDSgBYZaXAEWi9D30N2z2h+z3mf/1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrHJdDjdJ4NKLstUvC8mQwd586LJG9E9vB9UMywChbo7Gw433B
-	OEoT7cGAcKZrAEr6GeBLuKlRUtow+CR8OYgrM62yl40uy7fNGzX/J/bpeyU+KIg=
-X-Gm-Gg: ASbGncvCT4Bqf7ht0AwNyX3cZjM9CmfqtWEfMJGX4FbXOAz855jREHbCDRHwlSzXJdR
-	0bXBo0EtkAsyK4b/paHIDXMnrt51NG/xMTfXD5K/70Fnu7qoetgE/Rb+6SWz4EAnNt9zutIDjoa
-	ipF12POm8Jx22KGFdkS4u8/AF1jHiMlSHO8z0FXbBwImzxgxhdcwHiyy40HTKOX3kt3uWglWWxY
-	UlO+8/I5Cq9Vzd0uQB55ZofOJbqtqO0fj5yIdXxOpJ20aFI6TXPBwYuYwnHsWkOCmFwIELvzt32
-	KkLBkkCckvcQ9bLohzdo/WDeTdhfq/TixYCtH/qKj1nXd/wj
-X-Google-Smtp-Source: AGHT+IGccZgOJLORtXOMA8FoHHhk3Vs+fThzqAecT9XzOzLOKltyG5QMhk3cYTHxosFWc0Sd5b9x1g==
-X-Received: by 2002:a17:90b:3e4f:b0:2ff:7b15:813b with SMTP id 98e67ed59e1d1-2ff7ce93a00mr40091027a91.17.1741849346958;
-        Thu, 13 Mar 2025 00:02:26 -0700 (PDT)
-Received: from localhost ([157.82.205.237])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-225c68a4095sm6633235ad.66.2025.03.13.00.02.22
+        d=1e100.net; s=20230601; t=1741849818; x=1742454618;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TIPNMpgvaQACUq81WXkhf23EdKNGR/5Qd6zG9mSv7sE=;
+        b=MWz81lrc5rPJnh2Sk9/R51O8hTov0DuMY2G8Cbnfp1pBnr70nhilfG5ZojVF+iJagK
+         FavW0/KJNc7cjLvRHCPXf1fx5tNLeRRwnq2UrIv+XDny0DhXN/48vThyhE0DTbLUYlav
+         Ulz0D61LSClpAe0Ag+qiG5ZDxWIzF4kXlyMi1JUBoUG8ZmSdL5i2zpuyGW7QpXJPNPrV
+         pyIGe3SGTObbdl3Ij+QTQPn/4cigAgC2xoxW9mVMDOpGIAlCB8tQrWQrL3xJdy298eHo
+         sh2tW7quk6iBtWI5U6w4Cig0jNF45vFO6scwIHlKjG4UOkhrhpfsaVqC9Rn9VyuSM5RM
+         zqSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSvFhH9k5BkL4B3vY1o6WXidgcC9UTjHVkw5jBJP1D7iGpGwq6sOCh5uxv/c7Ft0PhvOpBiuUfuNJ8r+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZWiVKG11dC0iD5QJqTb09aKYsGSLDByf8myUfA/GBXqzKkXGF
+	aVIze6usSRCabs7Zxfbug3ID6y78GNUV5DotOOTXJNlrkw8l1IlIScH0qhlZ8a4=
+X-Gm-Gg: ASbGncvpbCwxY2aB9sFIHZ8GJKpQT+86vlrgjWqMGkdcZ3pa+YzbnmXPCobS9+mXlAk
+	a6H0LjQauNx1oQym+qRsfNDRMVwkH6NJh27JUjySho1trBkkQaLT34PNOzBA/4iZ4MhZkDYsJsN
+	NGPrplo9YdDH/6e7dzT2+4oX9Xb3iOVIlRfS9JzXOOfnqCLFy6EeQVGp4dYBjytDRUjpOHEOUj7
+	u34u5SvHXHtNIOr7Icp7kjwJ6D7q58PAXHq6XVjGLGgxM/Jvcrx4EUeAIspklAGMxRnQUr4yHp+
+	13zNkchP/MxqDbiNm9CLlU692+3wvhjBiFPBUQZsjcZvHWHjr9fuyIwakAYkAN4=
+X-Google-Smtp-Source: AGHT+IHwNh8Lx8mi4327vSGxzOotD8FcetvPsnqbMqLzIH73o66Q5vduqsZMQbIghSXMFWU9TTgjQA==
+X-Received: by 2002:a05:6402:268f:b0:5e0:36fa:ac1c with SMTP id 4fb4d7f45d1cf-5e75f983d16mr4935457a12.9.1741849817597;
+        Thu, 13 Mar 2025 00:10:17 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e81692e67bsm402988a12.15.2025.03.13.00.10.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Mar 2025 00:02:26 -0700 (PDT)
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Thu, 13 Mar 2025 16:01:13 +0900
-Subject: [PATCH net-next v10 10/10] vhost/net: Support
- VIRTIO_NET_F_HASH_REPORT
+        Thu, 13 Mar 2025 00:10:17 -0700 (PDT)
+Message-ID: <f6b84c52-b0f7-4ab4-b05a-dc78e1d7556f@linaro.org>
+Date: Thu, 13 Mar 2025 08:10:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-rss-v10-10-3185d73a9af0@daynix.com>
-References: <20250313-rss-v10-0-3185d73a9af0@daynix.com>
-In-Reply-To: <20250313-rss-v10-0-3185d73a9af0@daynix.com>
-To: Jonathan Corbet <corbet@lwn.net>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jason Wang <jasowang@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, kvm@vger.kernel.org, 
- virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
- Yuri Benditovich <yuri.benditovich@daynix.com>, 
- Andrew Melnychenko <andrew@daynix.com>, 
- Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
- Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>, 
- Akihiko Odaki <akihiko.odaki@daynix.com>
-X-Mailer: b4 0.15-dev-edae6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] dt-bindings: Add cros-ec-ucsi to cros-ec-typec
+ device tree documentation
+To: Jameson Thies <jthies@google.com>, tzungbi@kernel.org,
+ ukaszb@chromium.org, bleung@chromium.org, heikki.krogerus@linux.intel.com,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, groeck@chromium.org,
+ swboyd@chromium.org, akuchynski@chromium.org
+Cc: devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250312195951.1579682-1-jthies@google.com>
+ <20250312195951.1579682-2-jthies@google.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20250312195951.1579682-2-jthies@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-VIRTIO_NET_F_HASH_REPORT allows to report hash values calculated on the
-host. When VHOST_NET_F_VIRTIO_NET_HDR is employed, it will report no
-hash values (i.e., the hash_report member is always set to
-VIRTIO_NET_HASH_REPORT_NONE). Otherwise, the values reported by the
-underlying socket will be reported.
+On 12/03/2025 20:59, Jameson Thies wrote:
+> Add documentation for the cros-ec-ucsi device tree definition. Defining
+> this node will load the cros_ec_ucsi driver which is used for USB-C port
 
-VIRTIO_NET_F_HASH_REPORT requires VIRTIO_F_VERSION_1.
+Your patch does not do it at all.
 
-Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
-Tested-by: Lei Yang <leiyang@redhat.com>
----
- drivers/vhost/net.c | 68 +++++++++++++++++++++++++++--------------------------
- 1 file changed, 35 insertions(+), 33 deletions(-)
+> control on PDC based ChromeOS systems. Additionally, update mantainers
+> list to reflect changes to the ChromeOS USB owners.
+> 
+> Signed-off-by: Jameson Thies <jthies@google.com>
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index b9b9e9d40951..fc5b43e43a06 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -73,6 +73,7 @@ enum {
- 	VHOST_NET_FEATURES = VHOST_FEATURES |
- 			 (1ULL << VHOST_NET_F_VIRTIO_NET_HDR) |
- 			 (1ULL << VIRTIO_NET_F_MRG_RXBUF) |
-+			 (1ULL << VIRTIO_NET_F_HASH_REPORT) |
- 			 (1ULL << VIRTIO_F_ACCESS_PLATFORM) |
- 			 (1ULL << VIRTIO_F_RING_RESET)
- };
-@@ -1097,10 +1098,6 @@ static void handle_rx(struct vhost_net *net)
- 		.msg_controllen = 0,
- 		.msg_flags = MSG_DONTWAIT,
- 	};
--	struct virtio_net_hdr hdr = {
--		.flags = 0,
--		.gso_type = VIRTIO_NET_HDR_GSO_NONE
--	};
- 	size_t total_len = 0;
- 	int err, mergeable;
- 	s16 headcount;
-@@ -1174,11 +1171,15 @@ static void handle_rx(struct vhost_net *net)
- 		/* We don't need to be notified again. */
- 		iov_iter_init(&msg.msg_iter, ITER_DEST, vq->iov, in, vhost_len);
- 		fixup = msg.msg_iter;
--		if (unlikely((vhost_hlen))) {
--			/* We will supply the header ourselves
--			 * TODO: support TSO.
--			 */
--			iov_iter_advance(&msg.msg_iter, vhost_hlen);
-+		/*
-+		 * Supply virtio_net_hdr if VHOST_NET_F_VIRTIO_NET_HDR
-+		 * TODO: support TSO.
-+		 */
-+		if (unlikely(vhost_hlen) &&
-+		    iov_iter_zero(vhost_hlen, &msg.msg_iter) != vhost_hlen) {
-+			vq_err(vq, "Unable to write vnet_hdr at addr %p\n",
-+			       vq->iov->iov_base);
-+			goto out;
- 		}
- 		err = sock->ops->recvmsg(sock, &msg,
- 					 sock_len, MSG_DONTWAIT | MSG_TRUNC);
-@@ -1191,30 +1192,24 @@ static void handle_rx(struct vhost_net *net)
- 			vhost_discard_vq_desc(vq, headcount);
- 			continue;
- 		}
--		/* Supply virtio_net_hdr if VHOST_NET_F_VIRTIO_NET_HDR */
--		if (unlikely(vhost_hlen)) {
--			if (copy_to_iter(&hdr, sizeof(hdr),
--					 &fixup) != sizeof(hdr)) {
--				vq_err(vq, "Unable to write vnet_hdr "
--				       "at addr %p\n", vq->iov->iov_base);
--				goto out;
--			}
--		} else {
--			/* Header came from socket; we'll need to patch
--			 * ->num_buffers over if VIRTIO_NET_F_MRG_RXBUF
--			 */
--			iov_iter_advance(&fixup, sizeof(hdr));
--		}
- 		/* TODO: Should check and handle checksum. */
- 
-+		/*
-+		 * We'll need to patch ->num_buffers over if
-+		 * VIRTIO_NET_F_MRG_RXBUF or VIRTIO_F_VERSION_1
-+		 */
- 		num_buffers = cpu_to_vhost16(vq, headcount);
--		if (likely(set_num_buffers) &&
--		    copy_to_iter(&num_buffers, sizeof num_buffers,
--				 &fixup) != sizeof num_buffers) {
--			vq_err(vq, "Failed num_buffers write");
--			vhost_discard_vq_desc(vq, headcount);
--			goto out;
-+		if (likely(set_num_buffers)) {
-+			iov_iter_advance(&fixup, offsetof(struct virtio_net_hdr_v1, num_buffers));
-+
-+			if (copy_to_iter(&num_buffers, sizeof(num_buffers),
-+					 &fixup) != sizeof(num_buffers)) {
-+				vq_err(vq, "Failed num_buffers write");
-+				vhost_discard_vq_desc(vq, headcount);
-+				goto out;
-+			}
- 		}
-+
- 		nvq->done_idx += headcount;
- 		if (nvq->done_idx > VHOST_NET_BATCH)
- 			vhost_net_signal_used(nvq);
-@@ -1607,10 +1602,13 @@ static int vhost_net_set_features(struct vhost_net *n, u64 features)
- 	size_t vhost_hlen, sock_hlen, hdr_len;
- 	int i;
- 
--	hdr_len = (features & ((1ULL << VIRTIO_NET_F_MRG_RXBUF) |
--			       (1ULL << VIRTIO_F_VERSION_1))) ?
--			sizeof(struct virtio_net_hdr_mrg_rxbuf) :
--			sizeof(struct virtio_net_hdr);
-+	if (features & (1ULL << VIRTIO_NET_F_HASH_REPORT))
-+		hdr_len = sizeof(struct virtio_net_hdr_v1_hash);
-+	else if (features & ((1ULL << VIRTIO_NET_F_MRG_RXBUF) |
-+			     (1ULL << VIRTIO_F_VERSION_1)))
-+		hdr_len = sizeof(struct virtio_net_hdr_mrg_rxbuf);
-+	else
-+		hdr_len = sizeof(struct virtio_net_hdr);
- 	if (features & (1 << VHOST_NET_F_VIRTIO_NET_HDR)) {
- 		/* vhost provides vnet_hdr */
- 		vhost_hlen = hdr_len;
-@@ -1691,6 +1689,10 @@ static long vhost_net_ioctl(struct file *f, unsigned int ioctl,
- 			return -EFAULT;
- 		if (features & ~VHOST_NET_FEATURES)
- 			return -EOPNOTSUPP;
-+		if ((features & ((1ULL << VIRTIO_F_VERSION_1) |
-+				 (1ULL << VIRTIO_NET_F_HASH_REPORT))) ==
-+		    (1ULL << VIRTIO_NET_F_HASH_REPORT))
-+			return -EINVAL;
- 		return vhost_net_set_features(n, features);
- 	case VHOST_GET_BACKEND_FEATURES:
- 		features = VHOST_NET_BACKEND_FEATURES;
+You need to work on upstream, not downstream trees.
 
--- 
-2.48.1
+You CC-ed an address, which suggests you do not work on mainline kernel
+or you do not use get_maintainers.pl/b4/patman. Please rebase and always
+work on mainline or start using mentioned tools, so correct addresses
+will be used.
 
+> ---
+>  .../bindings/chrome/google,cros-ec-typec.yaml       | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> index 9f9816fbecbc..ab39c5280681 100644
+> --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> @@ -8,17 +8,24 @@ title: Google Chrome OS EC(Embedded Controller) Type C port driver.
+>  
+>  maintainers:
+>    - Benson Leung <bleung@chromium.org>
+> -  - Prashant Malani <pmalani@chromium.org>
+> +  - Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> +  - Łukasz Bartosik <ukaszb@chromium.org>
+> +  - Jameson Thies <jthies@google.com>
+> +  - Andrei Kuchynski <akuchynski@chromium.org>
+>  
+>  description:
+>    Chrome OS devices have an Embedded Controller(EC) which has access to
+>    Type C port state. This node is intended to allow the host to read and
+>    control the Type C ports. The node for this device should be under a
+> -  cros-ec node like google,cros-ec-spi.
+> +  cros-ec node like google,cros-ec-spi. On TCPC systems, ChromeOS should
+> +  use cros-ec-typec. On PDC systems, ChromeOS should use cros-ec-ucsi.
+
+What does it mean? How is it related to description?
+
+>  
+>  properties:
+>    compatible:
+> -    const: google,cros-ec-typec
+> +    oneOf:
+> +      - items:
+> +          - const: google,cros-ec-typec
+> +          - const: google,cros-ec-ucsi
+
+I don't understand at all why you are growing now this with fallback.
+And if you tested your patch, you would see it does not make any sense.
+
+NAK, test your patches before posting.
+
+Best regards,
+Krzysztof
