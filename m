@@ -1,69 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9432226B09C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E8326BD98
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866306; cv=none; b=VBaAuDaS7U2x9Ep7ynTtutdyTXTI2rmaywvIgwtydxzeIW4sDtpHQE9ogvM1eSeL35ik9jLdIh3YMn4XoCQknrkTYVRrlBkue1JOzEl16wfBsYarDYuidf6jAj/n+UYHIKiW7sc++U4NYlRFpNVgIs7jbYhbTrxpavz3A+dMe/Y=
+	t=1741866316; cv=none; b=eJ53kDH3DkKJ0gp6XutQHZdXMKsH2vM0RlL6PDCh6kHqprsv4eqp0rwuMNm9VhJZOESujXcKze1YdYYY1cMk6N8XINgXVeuzcelQLNqwZMIQOTZ0YcXFIQ35f7fRf5EgQIAXyDNTUPOLcEX1b+smwgKDSZ5AZo1uwkGaKjiTjPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741866306; c=relaxed/simple;
-	bh=xetTM7NbHTpP54GNd2evXkwpRCX6m2HaBd9Qo2PRDeA=;
+	s=arc-20240116; t=1741866316; c=relaxed/simple;
+	bh=NbfqpVn1osOn99nDNr/w9uuM1r2DWHYwWsVBZu8K+4o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-type; b=LE4kLH8tkMLDgBjlW/4tLSk4rX6LXVXl6Mu4yZbAukQVcTRn4vrstzM3Fhm/PuvkoDPi3zO6XiLzAZfffsiK1tq6VtrTEaHsF0B1sU2ZUH62N5a5cRs46R1Ydn8s+NFbe7nLJNScvCanpeNDUJoMOWnWtokHyYkRx3soacILst8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F/2V9pXa; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-type; b=juU2eXEWgtls7aTj889oU4b8QI77oFiUyPNbYkkm69p+W3lGX7ZYVpxZCzkl7w1ljdQC+J0+AYYh1NScDj3/bq6tsrD8EXGxyzYJeD9c0llZTsuOWnAf1G7NBSl8ti176EcY/uRHnkvrmAuP0Gvdwrhrv9diJt8iH3booMuonO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VPDkZAXy; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/2V9pXa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VPDkZAXy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741866302;
+	s=mimecast20190719; t=1741866313;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BMlGspdrpbJ31u0fCjYvjyAZlqg7W4BaKawB7P7nRsE=;
-	b=F/2V9pXaQDMq8XkKa7HMN1xwIDZSBBumicXTmNitD+MuqjrqPmOGEsfndB1NcwMcWfD4Oo
-	eJZpkQTMJeA31r+5fXX+P4MGvg28VDi3Sxedmr0JB1PeT/jtj1O633oTOsgt5oVZA8GdL/
-	CZxfUGSXRH9c4ZsssSdNu+pzI+lhLXY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=fuCFF39iXwBMHtdVpJheMeZKmjdk+AFM9NbRaPloTHM=;
+	b=VPDkZAXyh21FxMvtQBZQG2NFLpelK1kWJrYJI9z1ghnZSRekx6GJYjmO4zeH78Gb/u4Z3J
+	K8jM1p7LLq8fn1/drle8lv0HaAiUMSfj2NHTqgGJZr4PTuABOPZap/zsiKJTQWjzG1j4Bq
+	zDT4wEc6cHJ+h/gmdLoe9Pz+AJFeuSE=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-600-_A_14MZnNT2tZC_hTonr-w-1; Thu, 13 Mar 2025 07:45:01 -0400
-X-MC-Unique: _A_14MZnNT2tZC_hTonr-w-1
-X-Mimecast-MFC-AGG-ID: _A_14MZnNT2tZC_hTonr-w_1741866301
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so6439435e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:45:01 -0700 (PDT)
+ us-mta-21-_yHzAmiqM2iF-kLKAjWXoA-1; Thu, 13 Mar 2025 07:44:55 -0400
+X-MC-Unique: _yHzAmiqM2iF-kLKAjWXoA-1
+X-Mimecast-MFC-AGG-ID: _yHzAmiqM2iF-kLKAjWXoA_1741866294
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso4357185e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:44:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741866300; x=1742471100;
+        d=1e100.net; s=20230601; t=1741866294; x=1742471094;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BMlGspdrpbJ31u0fCjYvjyAZlqg7W4BaKawB7P7nRsE=;
-        b=Yxlz1w0TUjlMd+oEl2sODFLkkHj8Ql8mWFdSlU0BEj4j5zUHqbsDUdjJ2ITOxeru5q
-         ZscwtEfy72RGMY0tm3sEd+CreGW3fSvSPHBD6q6mJcDOAd0dHCrqMkZBeo/E0ppfEr2F
-         OsgudVx7/GqHd2G851u5MHbeVZvZvrQqzmB1YQbZGTMRMAaAEBajanDJ0NmhRGo7y9Fl
-         XdgHMQJ9jDziEXiQucfoLUCuyEbZ/NRQT/4UfKB2pf19LkJIJoPSQ/0wzUvJcWFeXfF7
-         PN/V/n+D+ZGDLWPriV87ieDfvnMNtqFPxJLaFP7ciNkSbntKQvHiNY0oxMvBJRBnf0wG
-         yH7A==
-X-Forwarded-Encrypted: i=1; AJvYcCU1PjS7xSrVg6CPQj55byZlmyIl6UfE08f6d1dY7MesZ0DKyGueXVlJXamBbJXbq89pXTA9rGoajaL8ad4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZcriWHmXEqlXRSOjzR2Juj1AoWwV4e39N5xABgos1o2MjdN2+
-	gz+r/V+WV8MtLAbqYkHFp7byp8pBQuQzFpDtACWO6v82RNa/B5ZISeaysL6FwdjzCCq+DIsx2hG
-	FOwgedrB028lpDhOW2SEtHV9KILfEAw3ZVcrW25lkTDyzgiLqaXP+zY5F8D0wpQ==
-X-Gm-Gg: ASbGncule7B3QnqAN2B5MPVigHmXDi6BWB5OmNp+QbLOF0j5Zl+igMWziMoUMUA+8/V
-	GXe+Keli/+Oxr07+5KUhlqBgoZNFPdN6tzh3+UgR5wIzYiEcZ3rVoU8yIXTJ4njGJaSzaPHtOid
-	0Dtt5j+4rYlxOVlHcSmMG6ubxX5g7ApfN5Rvo1IzT8lxWk6j7ul2zFqJ25pXvOEA1aF6asF/gch
-	L/h/pDtLAvl9+p39lMj9+T0usuRqMpSC38O4cT7DvQ7/lt4Kz1rua06ezg6qC+M1ylK8PX2nTGM
-	MerMZ0GCl4huDHT1aEfJ
-X-Received: by 2002:a05:600c:470a:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-43cf44c76ccmr144327165e9.2.1741866300528;
-        Thu, 13 Mar 2025 04:45:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IERxTxm4YW1Ezaow82Z48NXt1aSx6Vv01Gh0iy7KljuVnLSLjwCs9KSAjTKcqnBX6jh4hKEWQ==
-X-Received: by 2002:a05:600c:470a:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-43cf44c76ccmr144326735e9.2.1741866300120;
-        Thu, 13 Mar 2025 04:45:00 -0700 (PDT)
+        bh=fuCFF39iXwBMHtdVpJheMeZKmjdk+AFM9NbRaPloTHM=;
+        b=Jontuk8q2CZuMmmUN3od1ioXfAtTFwcT0giVfofVaojNh2D2nnsfuSwgcwzwKR0xzM
+         SkU7PezfyUX1bwLcWvyw/OuMSQtzrgZ+RBCQd/ZLap5KzjINtjKzLgXh/uUU7IXNo00l
+         gv8g3EGTpG8wgeACzLZ7hOKqhrATtT/jVWXoy14RMNK7y026BiWLupp9BkpXpDXaGkyg
+         TmqNcgYBQk+ZzRP4W4VaI6RrSpWEmPqoz0jiUVTRR0DP0SbXWgJ8ggVg46ic7B62OIfg
+         ak/yMp8VbO3SOoQP7FEt+Awa0zVr5ojgaGpbw++N3YXSMFDTzJ0OhPupHJsvg75xvNj9
+         3sVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhbHs4rtCrSSw5BAIK4pujUM2qRhzYP3F2uNMQfOeRNjlmDKbkI/udKUwf91wkFLxCkqeR07ZuHbSoUeg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyreVQ/o++w5eEw06ow/RwsMIGOzKogBPMEQRzk0rYgCF2wrLoV
+	XFZn3UpNeTBhSH6yh8ChbRUeslRHm2848vrWe+oJgfDk3Pzu4y+1yUFMRujpYBkm53SwWNRI50x
+	LFQ0ia7vf1jjikpN7zibVGRbc7UbSBsLltvuwqUtwWv46rsVdAEntXiEOgbA1Hg==
+X-Gm-Gg: ASbGnctFzBHjDPUyhr8TjSVDEhgcGivtopwm05/AG3LOAPeG/qEG9wUlUTeR+XRcDUC
+	zBQZq3qN9RViIWmjeQii+sVGywWhMm2ULE7rzV4+TgWM6im/gB6ozPZDgjtd2fS223jCFr+1rFG
+	mPG75qmKaS3dnXeeDmREhi/MT8qFQL7bARdgBWUISWccOEGpgxfDIf4nARt/3TDX+MWOVsDW5Gi
+	nkR1DpdN3lqaZbD7uIHrzaVNqdHBtA8YWcwodFP8KscHobmN3hduk3v6Ss4XtmjgtqkZmp/JjTO
+	F3VyJ1GrMBzE5hrUwGNf
+X-Received: by 2002:a05:600c:448a:b0:43c:ee62:33f5 with SMTP id 5b1f17b1804b1-43cee6235b7mr136023245e9.27.1741866293862;
+        Thu, 13 Mar 2025 04:44:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH0wHJ2zwJ8yj3cYw/s9VH9lfhVlHVsfQsMYeCFjOVxBPaF+5L2/VWS3+5UdzriUt/uCnhyuw==
+X-Received: by 2002:a05:600c:448a:b0:43c:ee62:33f5 with SMTP id 5b1f17b1804b1-43cee6235b7mr136023005e9.27.1741866293519;
+        Thu, 13 Mar 2025 04:44:53 -0700 (PDT)
 Received: from lab.hqhome163.com ([81.57.75.210])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d188b754asm17844115e9.14.2025.03.13.04.44.58
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d188b754asm17844115e9.14.2025.03.13.04.44.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 04:44:59 -0700 (PDT)
+        Thu, 13 Mar 2025 04:44:52 -0700 (PDT)
 From: Alessandro Carminati <acarmina@redhat.com>
 To: linux-kselftest@vger.kernel.org
 Cc: David Airlie <airlied@gmail.com>,
@@ -99,11 +99,13 @@ Cc: David Airlie <airlied@gmail.com>,
 	loongarch@lists.linux.dev,
 	x86@kernel.org,
 	Linux Kernel Functional Testing <lkft@linaro.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
 	Alessandro Carminati <acarmina@redhat.com>
-Subject: [PATCH v4 14/14] powerpc: Add support for suppressing warning backtraces
-Date: Thu, 13 Mar 2025 11:43:29 +0000
-Message-Id: <20250313114329.284104-15-acarmina@redhat.com>
+Subject: [PATCH v4 11/14] sh: Add support for suppressing warning backtraces
+Date: Thu, 13 Mar 2025 11:43:26 +0000
+Message-Id: <20250313114329.284104-12-acarmina@redhat.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250313114329.284104-1-acarmina@redhat.com>
 References: <20250313114329.284104-1-acarmina@redhat.com>
@@ -130,64 +132,49 @@ is not a define but a virtual variable).
 
 Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Alessandro Carminati <acarmina@redhat.com>
 ---
- arch/powerpc/include/asm/bug.h | 37 +++++++++++++++++++++++++---------
- 1 file changed, 28 insertions(+), 9 deletions(-)
+ arch/sh/include/asm/bug.h | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
-index 1db485aacbd9..5b06745d20aa 100644
---- a/arch/powerpc/include/asm/bug.h
-+++ b/arch/powerpc/include/asm/bug.h
-@@ -14,6 +14,9 @@
- 	 .section __bug_table,"aw"
- 5001:	 .4byte \addr - .
- 	 .4byte 5002f - .
-+#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
-+	 .4byte 0
-+#endif
- 	 .short \line, \flags
- 	 .org 5001b+BUG_ENTRY_SIZE
- 	 .previous
-@@ -32,30 +35,46 @@
- #endif /* verbose */
- 
- #else /* !__ASSEMBLY__ */
--/* _EMIT_BUG_ENTRY expects args %0,%1,%2,%3 to be FILE, LINE, flags and
--   sizeof(struct bug_entry), respectively */
-+/* _EMIT_BUG_ENTRY expects args %0,%1,%2,%3,%4 to be FILE, __func__, LINE, flags
-+   and sizeof(struct bug_entry), respectively */
+diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
+index 05a485c4fabc..470ce6567d20 100644
+--- a/arch/sh/include/asm/bug.h
++++ b/arch/sh/include/asm/bug.h
+@@ -24,21 +24,36 @@
+  * The offending file and line are encoded in the __bug_table section.
+  */
  #ifdef CONFIG_DEBUG_BUGVERBOSE
 +
 +#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
 +# define HAVE_BUG_FUNCTION
-+# define __BUG_FUNC_PTR	"	.4byte %1 - .\n"
++# define __BUG_FUNC_PTR	"\t.long %O2\n"
 +#else
 +# define __BUG_FUNC_PTR
 +#endif /* CONFIG_KUNIT_SUPPRESS_BACKTRACE */
 +
  #define _EMIT_BUG_ENTRY				\
- 	".section __bug_table,\"aw\"\n"		\
- 	"2:	.4byte 1b - .\n"		\
- 	"	.4byte %0 - .\n"		\
--	"	.short %1, %2\n"		\
--	".org 2b+%3\n"				\
+ 	"\t.pushsection __bug_table,\"aw\"\n"	\
+ 	"2:\t.long 1b, %O1\n"			\
+-	"\t.short %O2, %O3\n"			\
+-	"\t.org 2b+%O4\n"			\
 +	__BUG_FUNC_PTR				\
-+	"	.short %2, %3\n"		\
-+	".org 2b+%4\n"				\
- 	".previous\n"
++	"\t.short %O3, %O4\n"			\
++	"\t.org 2b+%O5\n"			\
+ 	"\t.popsection\n"
  #else
  #define _EMIT_BUG_ENTRY				\
- 	".section __bug_table,\"aw\"\n"		\
- 	"2:	.4byte 1b - .\n"		\
--	"	.short %2\n"			\
--	".org 2b+%3\n"				\
-+	"	.short %3\n"			\
-+	".org 2b+%4\n"				\
- 	".previous\n"
+ 	"\t.pushsection __bug_table,\"aw\"\n"	\
+ 	"2:\t.long 1b\n"			\
+-	"\t.short %O3\n"			\
+-	"\t.org 2b+%O4\n"			\
++	"\t.short %O4\n"			\
++	"\t.org 2b+%O5\n"			\
+ 	"\t.popsection\n"
  #endif
  
 +#ifdef HAVE_BUG_FUNCTION
@@ -196,34 +183,33 @@ index 1db485aacbd9..5b06745d20aa 100644
 +# define __BUG_FUNC	NULL
 +#endif
 +
- #define BUG_ENTRY(insn, flags, ...)			\
- 	__asm__ __volatile__(				\
- 		"1:	" insn "\n"			\
- 		_EMIT_BUG_ENTRY				\
--		: : "i" (__FILE__), "i" (__LINE__),	\
-+		: : "i" (__FILE__), "i" (__BUG_FUNC),	\
-+		  "i" (__LINE__),			\
- 		  "i" (flags),				\
- 		  "i" (sizeof(struct bug_entry)),	\
- 		  ##__VA_ARGS__)
-@@ -80,7 +99,7 @@
- 		if (x)						\
- 			BUG();					\
- 	} else {						\
--		BUG_ENTRY(PPC_TLNEI " %4, 0", 0, "r" ((__force long)(x)));	\
-+		BUG_ENTRY(PPC_TLNEI " %5, 0", 0, "r" ((__force long)(x)));	\
- 	}							\
- } while (0)
- 
-@@ -90,7 +109,7 @@
- 		if (__ret_warn_on)				\
- 			__WARN();				\
- 	} else {						\
--		BUG_ENTRY(PPC_TLNEI " %4, 0",			\
-+		BUG_ENTRY(PPC_TLNEI " %5, 0",			\
- 			  BUGFLAG_WARNING | BUGFLAG_TAINT(TAINT_WARN),	\
- 			  "r" (__ret_warn_on));	\
- 	}							\
+ #define BUG()						\
+ do {							\
+ 	__asm__ __volatile__ (				\
+@@ -47,6 +62,7 @@ do {							\
+ 		 :					\
+ 		 : "n" (TRAPA_BUG_OPCODE),		\
+ 		   "i" (__FILE__),			\
++		   "i" (__BUG_FUNC),			\
+ 		   "i" (__LINE__), "i" (0),		\
+ 		   "i" (sizeof(struct bug_entry)));	\
+ 	unreachable();					\
+@@ -60,6 +76,7 @@ do {							\
+ 		 :					\
+ 		 : "n" (TRAPA_BUG_OPCODE),		\
+ 		   "i" (__FILE__),			\
++		   "i" (__BUG_FUNC),			\
+ 		   "i" (__LINE__),			\
+ 		   "i" (BUGFLAG_WARNING|(flags)),	\
+ 		   "i" (sizeof(struct bug_entry)));	\
+@@ -85,6 +102,7 @@ do {							\
+ 		 :					\
+ 		 : "n" (TRAPA_BUG_OPCODE),		\
+ 		   "i" (__FILE__),			\
++		   "i" (__BUG_FUNC),			\
+ 		   "i" (__LINE__),			\
+ 		   "i" (BUGFLAG_UNWINDER),		\
+ 		   "i" (sizeof(struct bug_entry)));	\
 -- 
 2.34.1
 
