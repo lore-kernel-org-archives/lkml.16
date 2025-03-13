@@ -1,430 +1,184 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EFE26982E;
-	Thu, 13 Mar 2025 16:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D8E13B58A
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741883388; cv=none; b=j7oY9L+g5u/RZ3nurswdziL7Oix8B03g53nKMwrkej1/Z4FP3JgPFNXEzHgfWR4M3dQZoCsUVTrT0CjwfBfQsi6oBHTP0lCc/LDIY8Vyonuvw33hqQSKE85nmVAC8vCrA6lAD4w5ecmXtOB6WrqHNE+JIElvQfH+y/WWrp8N7Fs=
+	t=1741883424; cv=none; b=TreS1GF/EttUUd1pLad2Xlh7YcXFwXd5tTscMr0Ua8NrjHXBqdQdZtUj5edyU4xpkgJr+P60odDtA44nj5X6JS6Bge30+Vei002kOAHpqXhsTeonuZKjLm31EKtlByBYuZk6ZraplCRMDK0toRJHWgvztBrjTnSsBv6YbUuxaug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741883388; c=relaxed/simple;
-	bh=vu+WsiknG6iUDrXpUia0LQ5dXF+xVOwv3DCgcusjSrY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jh+edKC9zHuAFUeS6IZ60l/rtV7oetnZi+VMsSF3BYt4QNTr94GAXZO2n47ceehcgRGB5NRq4W/nP3lPbp18liYdIRjDZgg3jtu27p4lDxKFmXytn5kS6Bk07VBB9DrKr5/F0W09PNrVH2QHEy0fz53zlabVEZZb4mfR0Hvbbc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P5fzmoU7; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741883424; c=relaxed/simple;
+	bh=4hhdqF3Rp1vH31nmCsGM4U9PNPxQFzWtChioTmpUmgE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u4azSGd9qlx1MKjlyaCfcnTpvuBUi4Ois4eaefwJ2sVUc/z28BuVyw9TMJNTJqc4IMbzz7vxAANxFl1WcPanfKyCEL84y4jCvTE7WsxDmIxUfovlTZQO+tHlkBz2VYKFiSA4E8SilNyzLXvpSc7M0UgtYeOecnv8FjsHqoGMuXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BdSHNCwS; arc=none smtp.client-ip=217.140.110.172; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5fzmoU7"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e5dbca2b787so151922276.2;
-        Thu, 13 Mar 2025 09:29:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BdSHNCwS"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54953b2c112so123355e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741883385; x=1742488185; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TNiRZ77hzFeyCNLXebrBhAMWf5VIczec18g8T4FcXCA=;
-        b=P5fzmoU7oy+q2Zlqz5MQ37FiVSixBFM4xBqbxstrVgHKY9vXwNY8H2pmsxcJm7GjkI
-         BmH+rCB26T2EPknRF3mBH2JHOEGZMFX7ZGr95p8Hxz9xW6lCDWf7i3OHk1wKSqOOs878
-         Y0gv31Src5mvb6oBQsvL/UZOONwb/6B7KaSv3uRBOq0uPiLM3UfHxr3630d5XbtWlvyG
-         eNHQlDUJw32PhDpM/XHkN5UC4Uz9B2XKMuR1ELyFn8gwPDrVC6UzACll57whgUfA2ke4
-         tnb2nwIVbOsfZvNBehX4P6cfCA8AfGcprhMZ/gfFGL5iz+pzuXmt6GzjqkYrPCR6hXq6
-         jBZQ==
+        d=linaro.org; s=google; t=1741883420; x=1742488220; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:user-agent:mime-version
+         :list-unsubscribe:list-subscribe:list-id:precedence:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=aFrAK725pGLGAzrUp2Rsi/GlBUn5vFqjGk9jd1UKZys=;
+        b=BdSHNCwSAeeL5Y3xTG/X+vUoIFihijZZoWuYcRRMTHFIRnsBz4De3p6QtmdcHbrb3Y
+         16F1R4C+ZCbk4YBFzW3fXK0CV5BR5BpPaUfnTf615Lflxjhcup3I9ZQqhc+TCDRxbGEq
+         RtVJnuC3ZKo4tDm5GL76ZfoPvN4MJrn3WVaujV50V5L9sfjEfFKirOx1AZ86PJqDFT/v
+         /PsMoNS+jNceKIuS4QmqRoFqYYNSDhw0Vf8NTF6ypP6ZtP3DQuJK7d4YrFMJz11EBsXl
+         mzP81WvgtvLLUYJxKUX6Oyk5o/nXoo9wksUJaImn7aG3/KZmRKly2eCYKXfnWpAW92KG
+         3V/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741883385; x=1742488185;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TNiRZ77hzFeyCNLXebrBhAMWf5VIczec18g8T4FcXCA=;
-        b=sncIT111n+Tbmr6y31AQwdGOQsZxqsvADOh2lLKf88braiGzN/sOmZwW0lDRD4qD9A
-         RGcVIboElXoeIR4bV+jWQ2Zx3zthwIdJWYGCOvKC4Zw4LLDkSpOLl09wukZ5ThtE8CWz
-         P1ZjE8/PVrJVoSsODHi6NcTHajexBz3qlDbXPzNI/zOEQ7dS00qKgBF+GYRt9IeEWVzN
-         LntIuyVFgkfbpUp1c+eBfqqCzaKDyLGd4sZcubZGMjze2EoaAakaeQ7RwK0ed/13jL28
-         gQ41sWacDWaeGvNSzwe0v7EJpVC1c067ruw9lKLdXVUDa+I9C0z/mVvQ+MPj414YBfvW
-         rCLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCflZVxO+vdwmwRCKo7ezttL/pRl32CZUuHQwHsCFAgK4/v777gfUh2I7Z9DHcekxwoUa+f5tUzQQ=@vger.kernel.org, AJvYcCVwJT+GIHhXwQvUgK+A3HRHYf9p3DA9gphJbuajl3P8eydG2XO0H/kClR4/Rb3et3gZG1AiXmnRHst0eR+U@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJphbzPK51C1RqMKPvbJ9FYyUhidNClZPkChhQ+ROts4Rv52q9
-	1O1iOZWEkfpSAHVCMJi8NBgJoQTkGxkCuhUtdHrq3FLthksrIqybdBYI8FYzP54dHjLGB8dDEva
-	3N8k1e+dqV339nttzqvrhYNKUDYLCOws8
-X-Gm-Gg: ASbGnct5/1VS82xr+cDIFI7nlbPHblAYiSUmi1LRbLytVBJ81SaDilWenuK+gkG9/x7
-	lxlOdYyHNsxcdW11zoVxxxhld0yk9ZTAVJ3GakzQARlQmZWv8ju3BFgwrGyO7Lf7kMSUODnkZCU
-	etlh1oqZTbOgSo6+vaHmG0u4XNgg==
-X-Google-Smtp-Source: AGHT+IGC++v3lGqaqO3Yn//+6Oos8Cg+xRCzBXLsAHz9PRXhd7abU5iKlxNZQdCizapI75vgruiU7jHR6y8a6un1DZA=
-X-Received: by 2002:a05:6902:120b:b0:e60:aa9c:8c94 with SMTP id
- 3f1490d57ef6-e63b517860dmr6397207276.4.1741883385084; Thu, 13 Mar 2025
- 09:29:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741883420; x=1742488220;
+        h=content-transfer-encoding:content-language:user-agent:mime-version
+         :list-unsubscribe:list-subscribe:list-id:precedence:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aFrAK725pGLGAzrUp2Rsi/GlBUn5vFqjGk9jd1UKZys=;
+        b=bBdnl3pSN+HT9P5LX4e8hAuBAMa1W2SBGYM9JyChGQTg5yJ06Iim8Kjqq7VvsdvW8Z
+         3Q5YWi3VHcdKkYdzDMEiGhH/iBIlvSsOrcU0P0LgDnJOkxsSaoLUQO4v1gGPjo+p5i3h
+         I0GgVSfX9QsqFYKC6M8A/kf5x6tNR2TWxM2klWdsCA3+XVKq5txdjU36BA878DVixlo2
+         hys1fKkbbFlSMeJrR84SJUIIjsIf8egtmelE9RYNSCH6MWl3kMeAqru87ljoOFFe4sSO
+         Vd4bBfVsEMffOfARegUARrcfqCcKIAC0gZjfIZc46/69wGS8jwt706LODVs2mnM4HXxa
+         wORw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPKeH5HuiquSsvr1zfFp0oa2ZhZCQ8GNiVMNgotaosG+3cHpjB1iRRyC/UQB8oQhfvCLJtqj1HKQqGfoY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHQ1KOMx4OgJwT1Jw58Yq6Oi4GTi0DFxLRIzYhSAnqtkfR4hHT
+	3/2VfBLSHKNRMe5rDAypH3RLhcKCQFsAn40ZNM9Lqrft/HfcZUGtCjO2pAzWMqo=
+X-Gm-Gg: ASbGncsHrSwYbkzo3jL+bQ5RSAhkCFCOcMNOoav2Dg7EPVd4SnXRR+6YFmJ2R6znqyg
+	WJIYPXYyeIg/enYS59hIiNM8+hsYk6FJREMmqMPVNjdFSSiC1cVH9MH9l7KAbphc5Fg3GDexpop
+	uJQHzQJmatn3eNJTFFuhi02pSrU7acgyiqEiHbumm7wiwIp4vzXAksJoV4aLLVwvnRsgCxZA2sw
+	/xCYm32Cpfc3gQi8IThdYZ+rgRIiq1BY51jLykZMJscagjZC7sNJ4KnR4FbkcwWwjTh1K6A7o0R
+	pOd1X10FKHokiM8WQRXc3VYKCCnnR1UfRQ/n60Un9BQW6o1ni+vURaSroYnWfH9neCJpMYa7zhu
+	YVwM7XveKVWX5Iuu8aQ==
+X-Google-Smtp-Source: AGHT+IGtn9WumNOaMuo9cAzRTdloUKB5tTLRLe9/61uA56u97uNJuHXYLD/mRuofS9RqJFSJqixgYg==
+X-Received: by 2002:a05:6512:b0a:b0:549:8f39:3e63 with SMTP id 2adb3069b0e04-549abaea8b6mr1524832e87.9.1741883419995;
+        Thu, 13 Mar 2025 09:30:19 -0700 (PDT)
+Received: from localhost (c-85-229-14-155.bbcust.telenor.se. [85.229.14.155])
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-549ba8851e1sm256528e87.201.2025.03.13.09.30.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 09:30:18 -0700 (PDT)
+From: Anders Roxell <anders.roxell@linaro.org>
+To: robin.murphy@arm.com,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Stuart Yoder <stuyoder@gmail.com>,
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: devicetree@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	quic_charante@quicinc.com,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe path
+Date: Thu, 13 Mar 2025 17:30:11 +0100
+Message-ID: <417d6f59-0d78-4e81-ad0b-e06846f786b0@arm.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <9b358d68-332e-404e-9a75-740297f7b28d@samsung.com>
+References: <cover.1740753261.git.robin.murphy@arm.com> <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com> <CGME20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd@eucas1p2.samsung.com> <9b358d68-332e-404e-9a75-740297f7b28d@samsung.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172]) by smtp.subspace.kernel.org (Postfix) with ESMTP id 65FBD1EE7A7 for <iommu@lists.linux.dev>; Thu, 13 Mar 2025 11:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14]) by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21D5E1516; Thu, 13 Mar 2025 04:01:50 -0700 (PDT)
+Received: from [10.57.40.246] (unknown [10.57.40.246]) by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C60353F673; Thu, 13 Mar 2025 04:01:35 -0700 (PDT)
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220104234.40958-1-l.rubusch@gmail.com> <20250220104234.40958-7-l.rubusch@gmail.com>
- <20250302121436.32f96b35@jic23-huawei>
-In-Reply-To: <20250302121436.32f96b35@jic23-huawei>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Thu, 13 Mar 2025 17:29:08 +0100
-X-Gm-Features: AQ5f1JoVeEROo5B2P7WRe0LdLTbW_GDA6mJB2X3WlxgX8Z3829xuU2JHTH-cMqE
-Message-ID: <CAFXKEHbV-PP8jLiW2+7Jc00Q_DWjoj==a7MOO=nE6_t-2wbCCQ@mail.gmail.com>
-Subject: Re: [PATCH v3 06/15] iio: accel: adxl345: add single tap feature
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Content-Language: en-GB
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Message-ID: <20250313163011.R_zhEw_IFbqRtIBQPTudfCj6gGklnTTEC_RMZh6lCNk@z>
 
-Hi Jonathan,
+From: Robin Murphy <robin.murphy@arm.com>
 
-I prepared, reorganized and tested a v4 patch set. Given that I see
-how busy you must be these days with current increased mail traffic
-just in IIO ML when I compare it to some years ago,
-I don't want to bother you too much.
-Some particular doubts I will inline down below. If possible with your
-work flow and to avoid giving you extra work, I'd like to ask you to
-read the questions here, but to give your answers right to the
-v4 patch set (so, i.e. after having seen the current state of source).
-It also should make my points
-a bit clearer. Anyway, this is just my idea, since I'm always happy
-about any feedback!
+> On 2025-03-13 9:56 am, Marek Szyprowski wrote:
+> [...]
+> > This patch landed in yesterday's linux-next as commit bcb81ac6ae3c
+> > ("iommu: Get DT/ACPI parsing into the proper probe path"). In my tests I
+> > found it breaks booting of ARM64 RK3568-based Odroid-M1 board
+> > (arch/arm64/boot/dts/rockchip/rk3568-odroid-m1.dts). Here is the
+> > relevant kernel log:
+> 
+> ...and the bug-flushing-out begins!
+> 
+> > Unable to handle kernel NULL pointer dereference at virtual address
+> > 00000000000003e8
+> > Mem abort info:
+> >     ESR = 0x0000000096000004
+> >     EC = 0x25: DABT (current EL), IL = 32 bits
+> >     SET = 0, FnV = 0
+> >     EA = 0, S1PTW = 0
+> >     FSC = 0x04: level 0 translation fault
+> > Data abort info:
+> >     ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> >     CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> >     GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > [00000000000003e8] user address but active_mm is swapper
+> > Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+> > Modules linked in:
+> > CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc3+ #15533
+> > Hardware name: Hardkernel ODROID-M1 (DT)
+> > pstate: 00400009 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > pc : devm_kmalloc+0x2c/0x114
+> > lr : rk_iommu_of_xlate+0x30/0x90
+> > ...
+> > Call trace:
+> >    devm_kmalloc+0x2c/0x114 (P)
+> >    rk_iommu_of_xlate+0x30/0x90
+> 
+> Yeah, looks like this is doing something a bit questionable which can't
+> work properly. TBH the whole dma_dev thing could probably be cleaned up
+> now that we have proper instances, but for now does this work?
+> 
+> (annoyingly none of my Rockchip boards are set up for testing right now, 
+> but I might have time to dig one out later)
+> 
+> Thanks,
+> Robin.
+> 
+> ----->8-----
+> 
+> Subject: [PATCH] iommu/rockchip: Allocate per-device data sensibly
+> 
+> Now that DT-based probing is finally happening in the right order again,
+> it reveals an issue in Rockchip's of_xlate, which can now be called
+> during registration, but is using the global dma_dev which is only
+> assigned later. However, this makes little sense when we're already
+> looking up the correct IOMMU device, who should logically be the owner
+> of the devm allocation anyway.
+> 
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe 
+> path")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
-On Sun, Mar 2, 2025 at 1:14=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
-wrote:
->
-> On Thu, 20 Feb 2025 10:42:25 +0000
-> Lothar Rubusch <l.rubusch@gmail.com> wrote:
->
-> > Add the single tap feature with a threshold in 62.5mg/LSB points and a
-> > scaled duration in us. Keep singletap threshold in regmap cache but
-> > the scaled value of duration in us as member variable.
-> >
-> > Both use IIO channels for individual enable of the x/y/z axis. Initiali=
-zes
-> > threshold and duration with reasonable content. When an interrupt is
-> > caught it will be pushed to the according IIO channel.
-> >
-> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> > ---
-> >  drivers/iio/accel/adxl345_core.c | 364 ++++++++++++++++++++++++++++++-
-> >  1 file changed, 362 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl3=
-45_core.c
-> > index 0cee81bc1877..d05593c0d513 100644
-> > --- a/drivers/iio/accel/adxl345_core.c
-> > +++ b/drivers/iio/accel/adxl345_core.c
-> > @@ -8,6 +8,7 @@
-> >   */
-> >
-> >  #include <linux/bitfield.h>
-> > +#include <linux/bitops.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/module.h>
-> >  #include <linux/property.h>
-> > @@ -17,6 +18,7 @@
-> >  #include <linux/iio/iio.h>
-> >  #include <linux/iio/sysfs.h>
-> >  #include <linux/iio/buffer.h>
-> > +#include <linux/iio/events.h>
-> >  #include <linux/iio/kfifo_buf.h>
-> >
-> >  #include "adxl345.h"
-> > @@ -31,6 +33,33 @@
-> >  #define ADXL345_INT1                 0
-> >  #define ADXL345_INT2                 1
-> >
-> > +#define ADXL345_REG_TAP_AXIS_MSK     GENMASK(2, 0)
-> This is a bit confusing.  Here we have a mask for axis that
-> has 3 bits.
-> > +
-> > +enum adxl345_axis {
-> > +     ADXL345_Z_EN =3D BIT(0),
-> > +     ADXL345_Y_EN =3D BIT(1),
-> > +     ADXL345_X_EN =3D BIT(2),
-> > +     /* Suppress double tap detection if value > tap threshold */
-> > +     ADXL345_TAP_SUPPRESS =3D BIT(3),
-> and here an enum that is closely related with 4.
+This patch fixed the boot on rockpi4.
+Applied it ontop of next-20250313
 
-I see your point. There are several registers used in the sensor for
-directions. A status register for tap and activity directions, and a
-activity/inactivity direction register. For Tap, direction enables are
-stored using the suppress bit in the fourth position. All those
-locations use actually four bit. Partly the upper four, partly the
-lower four. That's why I use here four bit for reading and writing.
-The locations 0, 1, 2 then can be used directly. Location 3 only
-applies to tap detection.
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
 
-I'll keep this in v4 patches, and hope to understand you correctly
-that this is not a "real" issue?
-
->
-> > +};
-> ...
->
-> >  enum adxl345_chans {
-> > @@ -83,6 +128,7 @@ bool adxl345_is_volatile_reg(struct device *dev, uns=
-igned int reg)
-> >       case ADXL345_REG_DATA_AXIS(3):
-> >       case ADXL345_REG_DATA_AXIS(4):
-> >       case ADXL345_REG_DATA_AXIS(5):
-> > +     case ADXL345_REG_ACT_TAP_STATUS:
->
-> ah.   I thought this had a full list from earlier patches.
-> Move this and any later additions back to patch 4.
->
-> >       case ADXL345_REG_FIFO_STATUS:
-> >       case ADXL345_REG_INT_SOURCE:
-> >               return true;
-> > @@ -112,6 +158,117 @@ static int adxl345_set_measure_en(struct adxl345_=
-state *st, bool en)
-> >       return regmap_write(st->regmap, ADXL345_REG_POWER_CTL, val);
-> >  }
-> >
-> > +/* tap */
-> > +
-> > +static int adxl345_write_tap_axis(struct adxl345_state *st,
-> > +                               enum adxl345_axis axis, bool en)
-> > +{
-> > +     st->tap_axis_ctrl =3D FIELD_GET(ADXL345_REG_TAP_AXIS_MSK,
-> > +                                   en ? st->tap_axis_ctrl | axis
-> > +                                   : st->tap_axis_ctrl & ~axis);
-> > +
-> > +     return regmap_update_bits(st->regmap, ADXL345_REG_TAP_AXIS,
-> > +                               ADXL345_REG_TAP_AXIS_MSK,
-> > +                               FIELD_PREP(ADXL345_REG_TAP_AXIS_MSK,
-> > +                                          st->tap_axis_ctrl));
-> Given that mask is bottom few bits anyway and you can just define the
-> tap axis as separate fields.
->
-> See below, but I would push the IIO_MOD values down into here. Put the sw=
-itch
-> per axis in at this level and then use a simple if statement to
-> call regmap_clear_bits() / regmap_set_bits() based on enable.
->
-
-Thank you for this hint. I  reimplemented that, though, I was guessing
-quite a bit
-how you might like to have the source. Please have a look into
-upcoming v4 series and let me
-know if I got it wrong.
-
-> > +}
->
-> ...
->
-> > +static int adxl345_is_tap_en(struct adxl345_state *st,
-> > +                          enum adxl345_tap_type type, bool *en)
-> > +{
-> > +     int ret;
-> > +     unsigned int regval;
-> > +
-> > +     ret =3D regmap_read(st->regmap, ADXL345_REG_INT_ENABLE, &regval);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     *en =3D (adxl345_tap_int_reg[type] & regval) > 0;
->
-> Could use 0/1 return rather than passing a paramter for the output.
-> I don't mind much either way.
->
-
-Hum. I took this rather as suggestion, and I will keep this as is for
-now. I'm a bit unsure, on
-the one side I'm using the return value for error handling (return
-ret), on the other side there
-is the enable. If using enable in the return, this would mix up, but
-probably not a big issue.
-It feels rather then to me, if the function is really needed, or if I
-can put this in another place.
-Anyway, I think it could/should be fine like that. Let me know in v4
-context, what you think.
-
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int adxl345_set_singletap_en(struct adxl345_state *st,
-> I'd push the IIO modifier in here instead of axis.
-> > +                                 enum adxl345_axis axis, bool en)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret =3D adxl345_write_tap_axis(st, axis, en);
-> And push it into here as well.
->
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return _adxl345_set_tap_int(st, ADXL345_SINGLE_TAP, en);
-> > +}
-> > +
->
-> ...
->
-> > @@ -197,6 +354,160 @@ static int adxl345_write_raw(struct iio_dev *indi=
-o_dev,
-> >       return -EINVAL;
-> >  }
-> >
-> > +static int adxl345_read_event_config(struct iio_dev *indio_dev,
-> > +                                  const struct iio_chan_spec *chan,
-> > +                                  enum iio_event_type type,
-> > +                                  enum iio_event_direction dir)
-> > +{
-> > +     struct adxl345_state *st =3D iio_priv(indio_dev);
-> > +     bool int_en;
-> > +     bool axis_en;
-> > +     int ret =3D -EFAULT;
-> > +
-> > +     switch (type) {
-> > +     case IIO_EV_TYPE_GESTURE:
-> > +             switch (chan->channel2) {
-> > +             case IIO_MOD_X:
-> > +                     axis_en =3D FIELD_GET(ADXL345_X_EN, st->tap_axis_=
-ctrl);
-> > +                     break;
-> > +             case IIO_MOD_Y:
-> > +                     axis_en =3D FIELD_GET(ADXL345_Y_EN, st->tap_axis_=
-ctrl);
-> > +                     break;
-> > +             case IIO_MOD_Z:
-> > +                     axis_en =3D FIELD_GET(ADXL345_Z_EN, st->tap_axis_=
-ctrl);
-> > +                     break;
-> > +             default:
-> > +                     axis_en =3D ADXL345_TAP_SUPPRESS;
-> > +                     break;
-> > +             }
-> I'd check axis_en here.
->                 if (!axis_en)
->                         return false;
-> > +
-> > +             switch (dir) {
-> > +             case IIO_EV_DIR_SINGLETAP:
-> > +                     ret =3D adxl345_is_tap_en(st, ADXL345_SINGLE_TAP,=
- &int_en);
-> > +                     if (ret)
-> > +                             return ret;
-> > +                     return int_en && axis_en;
->
-> Then this just becomes return int_en;
->
-> > +             default:
-> > +                     return -EINVAL;
-> > +             }
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +}
-> > +
-> > +static int adxl345_write_event_config(struct iio_dev *indio_dev,
-> > +                                   const struct iio_chan_spec *chan,
-> > +                                   enum iio_event_type type,
-> > +                                   enum iio_event_direction dir,
-> > +                                   int state)
-> > +{
-> > +     struct adxl345_state *st =3D iio_priv(indio_dev);
-> > +     enum adxl345_axis axis;
-> > +
-> > +     switch (type) {
-> > +     case IIO_EV_TYPE_GESTURE:
-> > +             switch (chan->channel2) {
-> > +             case IIO_MOD_X:
-> > +                     axis =3D ADXL345_X_EN;
-> > +                     break;
-> > +             case IIO_MOD_Y:
-> > +                     axis =3D ADXL345_Y_EN;
-> > +                     break;
-> > +             case IIO_MOD_Z:
-> > +                     axis =3D ADXL345_Z_EN;
-> > +                     break;
-> > +             default:
-> > +                     axis =3D ADXL345_TAP_SUPPRESS;
->
-> How are we getting another axis here?
-
-:)
-
-> > +                     break;
-> > +             }
-> > +
-> > +             switch (dir) {
-> > +             case IIO_EV_DIR_SINGLETAP:
-> > +                     return adxl345_set_singletap_en(st, axis, state);
->
-> As above, pass chan->channel2 into here so we can simplify the eventual
-> setting of the the register values.
->
-> > +             default:
-> > +                     return -EINVAL;
-> > +             }
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +}
-> > +
-> > +static int adxl345_read_event_value(struct iio_dev *indio_dev,
-> > +                                 const struct iio_chan_spec *chan,
-> > +                                 enum iio_event_type type,
-> > +                                 enum iio_event_direction dir,
-> > +                                 enum iio_event_info info,
-> > +                                 int *val, int *val2)
-> > +{
-> > +     struct adxl345_state *st =3D iio_priv(indio_dev);
-> > +     unsigned int tap_threshold;
-> > +     int ret;
-> > +
-> > +     switch (type) {
-> > +     case IIO_EV_TYPE_GESTURE:
-> > +             switch (info) {
-> > +             case IIO_EV_INFO_VALUE:
-> > +                     /*
-> > +                      * The scale factor is 62.5mg/LSB (i.e. 0xFF =3D =
-16g) but
-> > +                      * not applied here.
->
-> Maybe say why.
->
-
-Usually I did scaling for the time values. Time values is something I
-can understand someone
-rather wants to configure in corresponding time units, such as [ms],
-[us] or [s] rather than bit
-values. For [mg] values, franckly speaking, I imagine this is a bit overkil=
-l.
-
-The threshold quite often is rather expect to be higher or lower,
-depending a bit on variation of
-the measurements. In the context of this rather "cheap" sensor, I
-guess I'm not putting up a
-seismic instrument, but rather generic tap detection, freefall or
-general activity in a general
-purpose context such as gaming, or the like. Let me know if this
-assumption here is too lazy.
-
-I added a bit more comment to the source, pls have a look into v4.
-
-> > +                      */
-> > +                     ret =3D regmap_read(st->regmap, ADXL345_REG_THRES=
-H_TAP, &tap_threshold);
->
-> Bit of a long line. Aim for sub 80 chars unless readability is greatly
-> hurt.
->
-> > +                     if (ret)
-> > +                             return ret;
-> > +                     *val =3D sign_extend32(tap_threshold, 7);
-> > +                     return IIO_VAL_INT;
-> > +             case IIO_EV_INFO_TIMEOUT:
-> > +                     *val =3D st->tap_duration_us;
-> > +                     *val2 =3D 1000000;
-> > +                     return IIO_VAL_FRACTIONAL;
-> > +             default:
-> > +                     return -EINVAL;
-> > +             }
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +}
-> ...
->
+Cheers,
+Anders
