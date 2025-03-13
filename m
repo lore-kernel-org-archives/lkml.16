@@ -1,62 +1,62 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDFB1F463F
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 21:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3DF1F540F
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 21:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741900023; cv=none; b=VOHhcDieSuRnOdJT9s91wGnc4jQS/KMqFdYflO1r1uj/OUGK/n4uQBbH9sEB7BCdQdVMnIT3JYGe9XZHPfxmTEQi99WBI+7Fyc5RDDWhz9MTi7wVR4zlwTv28GcBDaC2M6/u+ziQ+MziXPo5+ZD4vMU7XKag1+zL5G0H5xhHzLU=
+	t=1741900027; cv=none; b=U0+DYSvQOdPezagx1L+ZUqUjbMqvhk2hAQ/BLg+pLyV/MXmx/PmGXVXH5rzzOAiRAEfC932XJPydnisZGlSNVv0SWABR8KO/DdewcPWtP2PMY/kjbFdHTIsr2XPsVd6yZVS1XTT0G43m+emF/nqgd3VUQ0pvavpKXs2Xk2OQkXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741900023; c=relaxed/simple;
-	bh=fJg1sbubYJbEynraiys1Xl4shibh+vkLbDd7XREzGuY=;
+	s=arc-20240116; t=1741900027; c=relaxed/simple;
+	bh=G5viki70LrhtbkQE4Q5MpsJyR7EHFb+uxi7SbmxvjUM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pu2V9tBDopnlOHxhIGQ3eZG6mqT8eMuMgOzbziGzA004xo+z5KbEKcnsE5nIL2TqXM7+e+QCW5Bjc+a8P02IQwp9DIliZhbBb51WOhRh4TrpwNRyqde+Uv2bud6wSjvDFOGbND1Lm4z7lCR2iowNrXPbf37dixDB/x2XJFrhJbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=sT9d9hXn; arc=none smtp.client-ip=209.85.160.179
+	 MIME-Version; b=Nu21ribhpi0Gb2WkLBsIpc4Mld5gaPoeyX9iDFaGVtd6fgNzxypxvZcEj2MaFUUrnPt1v7GPn+DrCEa/Uu/gK0gA37n95S9CmhEWNSGZPr6cbFe6tWnQ6aOslj7uGQvsce5gvDkNR8v1oQ0NrGyyOLwL6fKnHcaCf3HNfd1ZTuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=VueEj8pF; arc=none smtp.client-ip=209.85.219.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="sT9d9hXn"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4769aef457bso16223561cf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:06:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="VueEj8pF"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ddcff5a823so12826116d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:07:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1741900018; x=1742504818; darn=vger.kernel.org;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1741900024; x=1742504824; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jrFqfcieZOq9at8nTRvNC7n7QX7bSrdSSf1BjUE4qFU=;
-        b=sT9d9hXnhFdayOotyAI8Ec/a9d/4x87RiWayDZswu15o8a0mr4/G40mSAJRYz9UJ+w
-         BdSL4z+ysRNYGf1tjGM9wKaI6cuNuX7wCay2FG1H/QGTktxpdi4hzeoxRn3OzXOslAcu
-         t0OCsjWVuuNkNBG/4TaDTZy/3kZ8TadAVO0cguUoXgUefBsABV7kTmuhKc5eB89NS9Li
-         UCQCbdN7XRCUULVs/h5q2Dw+RRxdFuhWhbnd2Kwot9ixO2B9fiO+JJJxElENepL5hn9W
-         7N41HcZyc6qAoJSS8f6vUgnA0Cs4piEiei6A1UHmPKxqgJ0wS9yajMX0fCNDmPX8+UuF
-         qHnA==
+        bh=sZHRsjhwN4k6tUsXlsg8AVWAXyHTwCMhLnhjRmadEFs=;
+        b=VueEj8pFsLksb5cIDfWIXaZZUXlOwlZZjHb1zEIeest6oB0PnuknAaRPdXfPlQRel2
+         ENPAgITF6SaTDGIpcsiPfvYEsqUa1NkhIMjUVC9roc0aKfi7rhkvwjW+A5NSvJU/pIHL
+         Qs3VOSw2i+Mx6C0TverAVbTlnuGTHr+Wm7eD4Dk918wbWZhoy8DJwa8Qy5lXwQQlfhw7
+         7jHx7B+4WbSxH2QlDjEJi2+iUpSilKPmimJOpRon4FqEj6Bbn0QGV3QNawxfx9rQFOTD
+         T2ISVwHeVEieGQmLFOiV2xAGBWl3xFe9XXKDo4tEFFgK4KVx/X0nfSpMX17MvhTonu/S
+         z7ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741900018; x=1742504818;
+        d=1e100.net; s=20230601; t=1741900024; x=1742504824;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jrFqfcieZOq9at8nTRvNC7n7QX7bSrdSSf1BjUE4qFU=;
-        b=WA+vE4taTfTca1hUEdCT+fg3d+acrRbdFaraXFUVkATd0CIlWYbvjCMUAoZKeqhmAu
-         RJmteGnFyi0Juj+a66bWQkUAPqZtxqsZrdQO9zrEnUWUAhgxXnPrtYBvLlN1Q2y88AWK
-         yaudCe2A26NMesi9k4+RPb2IYqmSoOYSgDdj9vYbcy70SSiHItUnXnDN9ecFZEnxkgyA
-         OOJzaqllWOMf1M1eYuladHdK0jNrd7nX06h9IEZrSzWhkLgxGyg6hPBllwDAXZqcyzFY
-         ho1uEHqDyElzImR/Diyd8622qNnskmu3fMOIisr0Jh7fe8QhY0YvacF14brFIp4i0+AX
-         MRfg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4k9AX+gjNJ3YBphmkDkilplLN739f2p7qDjkXOeA4XdnXmITxm7p3RpIGMwZ21SNqjymmCW2HZ7VV4lo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOiFT7MJx/yB7/1Lmcy330PuJ3FMEjtrEdFusTcmyABEBwc0nF
-	RiZ5PMeksMXBia/xPaCbxZcd81L81o2kY2wXaK0EQ2xNuSm+EWPkA/P/Yik8qf0=
-X-Gm-Gg: ASbGncuvUw5JmtnysK59r1NsZd2T1K4QpmR7uEO0kyj1x9vQJmFqrwY+hXAhGMxwC5l
-	uvs4vOgHoXkgpqEGbFccdFqxZup5VwqTHuRSQVDkvmau1XhZzbZ0TBXU6Ft214MV30FJsdfRZXm
-	WyiQV05rtzf4bqmwcMuGfsHRf81dTdmlR1IE7xFlJpkyrGz2BPaJP4ziz2QXNzNwkdIqKeDFlK4
-	Uv5u25/U3thQ06HFCB7mmU4FidIckjor+h6ooX3SDe5njxtxdq5KirSFNzDjYlGAHZJlm1bnYgN
-	xzbT8v088ZNs4VJBVcOaeKe2PcLNCMgzNlaXWmk6JL0=
-X-Google-Smtp-Source: AGHT+IEDyN0M6bIcmPwzaon/X4MJTAlHo+m+s2WcqlwJf5d95cUnnQdEITXcrYwXBCRzts6TlH0+Zw==
-X-Received: by 2002:a05:622a:45:b0:476:84c0:4864 with SMTP id d75a77b69052e-476c8152dfbmr1632161cf.31.1741900018472;
-        Thu, 13 Mar 2025 14:06:58 -0700 (PDT)
+        bh=sZHRsjhwN4k6tUsXlsg8AVWAXyHTwCMhLnhjRmadEFs=;
+        b=rbNr6z8p8HXWHD27tLLsHcLSvs7MIieiAroM/qHg1BWS8AwUVzLVu+vIR776S3uPnU
+         94LxMaKuTOxDnz7Jl5xUdVyNTfSnStRPQOLuaXXDjGqBsrcCToolo5XC3OB93MkP1df2
+         3bKIJE92FbF4N7jDcj+w2Q9D13WOdsokRjhjDGFDGVIsnOLxpAkuooLXCP+hTM9oAwGb
+         D+5S9tsAESOIi9C2Nlwq9thdj9n5GLxOkAzAEodmOKGWHvmooIuzOiL0DKHREoFFjwWO
+         2K8GrBAzeXWcvG8dmeu89T9ietV4HrGlS2Dik2ZSTfH/rqNu8pjzCQXBeW9EUOW3ZelE
+         8sCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXx8j4WOtYkAVlgGtrMc6foM055FUbKp2jCtOEo/yrvhAeEaQvEzbikrAGRtMuJr8pNX8TsUtlS+fJLMSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe3p4ox6Jej9Dmn3UwzY8KboRFv21JLaG7BtFuGDjrcnqIyk2D
+	i8VZho+Nu9DrPHoWiLDLCrhLaTt2RBSLcIARXtgpO2/AbQcGnEL2YrrhuWEpwJE=
+X-Gm-Gg: ASbGnct9M5jUJGeuFOhot+lIQyMHXvAhxEh9B/iapvrhtQdJAyO1QJ8gK7cC5+cruUA
+	XGdjTI5lgtpXkHF11fiVT4wuCmtvX4KtcqmNB8V0YsXrb2GvjbcJjAifQLLVX7IMtzee5OBkc54
+	gQLeJE57lkKvm7PaLS9f8e7M/G4m8rh9CHgvfrJUAP8ZdtgNZWwC3kaUOF/8sNaq06YpP6m9U9L
+	d3lT1jkH/nUve674UJwhE+swsgivc7+ALPzYnmSi/47+3FftDqRgfcWNZPdqj0N983ZQNZeTLF3
+	bOashCoGY8JMHviFjaH4PJaYzD5VBZt8yWMdInySdw0=
+X-Google-Smtp-Source: AGHT+IHwO+cZb5MGTiwyC3MJf2gMVF38ko0IXPhHKQ4bI2CQqbDOb0AFS8ZUsuofmUulVbWhY9Mvjw==
+X-Received: by 2002:a05:6214:5299:b0:6e6:6c39:cb71 with SMTP id 6a1803df08f44-6eae7b3faa0mr22068376d6.45.1741900024009;
+        Thu, 13 Mar 2025 14:07:04 -0700 (PDT)
 Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eade231256sm13909986d6.32.2025.03.13.14.06.56
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eade230de3sm14015326d6.28.2025.03.13.14.07.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 14:06:56 -0700 (PDT)
+        Thu, 13 Mar 2025 14:07:02 -0700 (PDT)
 From: Johannes Weiner <hannes@cmpxchg.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>,
@@ -64,9 +64,9 @@ Cc: Vlastimil Babka <vbabka@suse.cz>,
 	Zi Yan <ziy@nvidia.com>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] mm: compaction: push watermark into compaction_suitable() callers
-Date: Thu, 13 Mar 2025 17:05:32 -0400
-Message-ID: <20250313210647.1314586-2-hannes@cmpxchg.org>
+Subject: [PATCH 3/5] mm: page_alloc: defrag_mode
+Date: Thu, 13 Mar 2025 17:05:34 -0400
+Message-ID: <20250313210647.1314586-4-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250313210647.1314586-1-hannes@cmpxchg.org>
 References: <20250313210647.1314586-1-hannes@cmpxchg.org>
@@ -78,247 +78,231 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-compaction_suitable() hardcodes the min watermark, with a boost to the
-low watermark for costly orders. However, compaction_ready() requires
-order-0 at the high watermark. It currently checks the marks twice.
+The page allocator groups requests by migratetype to stave off
+fragmentation. However, in practice this is routinely defeated by the
+fact that it gives up *before* invoking reclaim and compaction - which
+may well produce suitable pages. As a result, fragmentation of
+physical memory is a common ongoing process in many load scenarios.
 
-Make the watermark a parameter to compaction_suitable() and have the
-callers pass in what they require:
+Fragmentation deteriorates compaction's ability to produce huge
+pages. Depending on the lifetime of the fragmenting allocations, those
+effects can be long-lasting or even permanent, requiring drastic
+measures like forcible idle states or even reboots as the only
+reliable ways to recover the address space for THP production.
 
-- compaction_zonelist_suitable() is used by the direct reclaim path,
-  so use the min watermark.
+In a kernel build test with supplemental THP pressure, the THP
+allocation rate steadily declines over 15 runs:
 
-- compact_suit_allocation_order() has a watermark in context derived
-  from cc->alloc_flags.
+    thp_fault_alloc
+    61988
+    56474
+    57258
+    50187
+    52388
+    55409
+    52925
+    47648
+    43669
+    40621
+    36077
+    41721
+    36685
+    34641
+    33215
 
-  The only quirk is that kcompactd doesn't initialize cc->alloc_flags
-  explicitly. There is a direct check in kcompactd_do_work() that
-  passes ALLOC_WMARK_MIN, but there is another check downstack in
-  compact_zone() that ends up passing the unset alloc_flags. Since
-  they default to 0, and that coincides with ALLOC_WMARK_MIN, it is
-  correct. But it's subtle. Set cc->alloc_flags explicitly.
+This is a hurdle in adopting THP in any environment where hosts are
+shared between multiple overlapping workloads (cloud environments),
+and rarely experience true idle periods. To make THP a reliable and
+predictable optimization, there needs to be a stronger guarantee to
+avoid such fragmentation.
 
-- should_continue_reclaim() is direct reclaim, use the min watermark.
+Introduce defrag_mode. When enabled, reclaim/compaction is invoked to
+its full extent *before* falling back. Specifically, ALLOC_NOFRAGMENT
+is enforced on the allocator fastpath and the reclaiming slowpath.
 
-- Finally, consolidate the two checks in compaction_ready() to a
-  single compaction_suitable() call passing the high watermark.
+For now, fallbacks are permitted to avert OOMs. There is a plan to add
+defrag_mode=2 to prefer OOMs over fragmentation, but this requires
+additional prep work in compaction and the reserve management to make
+it ready for all possible allocation contexts.
 
-  There is a tiny change in behavior: before, compaction_suitable()
-  would check order-0 against min or low, depending on costly
-  order. Then there'd be another high watermark check.
+The following test results are from a kernel build with periodic
+bursts of THP allocations, over 15 runs:
 
-  Now, the high watermark is passed to compaction_suitable(), and the
-  costly order-boost (low - min) is added on top. This means
-  compaction_ready() sets a marginally higher target for free pages.
+                                        vanilla    defrag_mode=1
+@claimer[unmovable]:                        189              103
+@claimer[movable]:                           92              103
+@claimer[reclaimable]:                      207               61
+@pollute[unmovable from movable]:            25                0
+@pollute[unmovable from reclaimable]:        28                0
+@pollute[movable from unmovable]:         38835                0
+@pollute[movable from reclaimable]:      147136                0
+@pollute[reclaimable from unmovable]:       178                0
+@pollute[reclaimable from movable]:          33                0
+@steal[unmovable from movable]:              11                0
+@steal[unmovable from reclaimable]:           5                0
+@steal[reclaimable from unmovable]:         107                0
+@steal[reclaimable from movable]:            90                0
+@steal[movable from reclaimable]:           354                0
+@steal[movable from unmovable]:             130                0
 
-  In a kernelbuild + THP pressure test, though, this didn't show any
-  measurable negative effects on memory pressure or reclaim rates. As
-  the comment above the check says, reclaim is usually stopped short
-  on should_continue_reclaim(), and this just defines the worst-case
-  reclaim cutoff in case compaction is not making any headway.
+Both types of polluting fallbacks are eliminated in this workload.
+
+Interestingly, whole block conversions are reduced as well. This is
+because once a block is claimed for a type, its empty space remains
+available for future allocations, instead of being padded with
+fallbacks; this allows the native type to group up instead of
+spreading out to new blocks. The assumption in the allocator has been
+that pollution from movable allocations is less harmful than from
+other types, since they can be reclaimed or migrated out should the
+space be needed. However, since fallbacks occur *before*
+reclaim/compaction is invoked, movable pollution will still cause
+non-movable allocations to spread out and claim more blocks.
+
+Without fragmentation, THP rates hold steady with defrag_mode=1:
+
+    thp_fault_alloc
+    32478
+    20725
+    45045
+    32130
+    14018
+    21711
+    40791
+    29134
+    34458
+    45381
+    28305
+    17265
+    22584
+    28454
+    30850
+
+While the downward trend is eliminated, the keen reader will of course
+notice that the baseline rate is much smaller than the vanilla
+kernel's to begin with. This is due to deficiencies in how reclaim and
+compaction are currently driven: ALLOC_NOFRAGMENT increases the extent
+to which smaller allocations are competing with THPs for pageblocks,
+while making no effort themselves to reclaim or compact beyond their
+own request size. This effect already exists with the current usage of
+ALLOC_NOFRAGMENT, but is amplified by defrag_mode insisting on whole
+block stealing much more strongly.
+
+Subsequent patches will address defrag_mode reclaim strategy to raise
+the THP success baseline above the vanilla kernel.
 
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/compaction.h |  5 ++--
- mm/compaction.c            | 52 ++++++++++++++++++++------------------
- mm/vmscan.c                | 26 ++++++++++---------
- 3 files changed, 45 insertions(+), 38 deletions(-)
+ Documentation/admin-guide/sysctl/vm.rst |  9 +++++++++
+ mm/page_alloc.c                         | 27 +++++++++++++++++++++++--
+ 2 files changed, 34 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/compaction.h b/include/linux/compaction.h
-index 7bf0c521db63..173d9c07a895 100644
---- a/include/linux/compaction.h
-+++ b/include/linux/compaction.h
-@@ -95,7 +95,7 @@ extern enum compact_result try_to_compact_pages(gfp_t gfp_mask,
- 		struct page **page);
- extern void reset_isolation_suitable(pg_data_t *pgdat);
- extern bool compaction_suitable(struct zone *zone, int order,
--					       int highest_zoneidx);
-+				unsigned long watermark, int highest_zoneidx);
+diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
+index ec6343ee4248..e169dbf48180 100644
+--- a/Documentation/admin-guide/sysctl/vm.rst
++++ b/Documentation/admin-guide/sysctl/vm.rst
+@@ -29,6 +29,7 @@ files can be found in mm/swap.c.
+ - compaction_proactiveness
+ - compaction_proactiveness_leeway
+ - compact_unevictable_allowed
++- defrag_mode
+ - dirty_background_bytes
+ - dirty_background_ratio
+ - dirty_bytes
+@@ -162,6 +163,14 @@ On CONFIG_PREEMPT_RT the default value is 0 in order to avoid a page fault, due
+ to compaction, which would block the task from becoming active until the fault
+ is resolved.
  
- extern void compaction_defer_reset(struct zone *zone, int order,
- 				bool alloc_success);
-@@ -113,7 +113,8 @@ static inline void reset_isolation_suitable(pg_data_t *pgdat)
- }
- 
- static inline bool compaction_suitable(struct zone *zone, int order,
--						      int highest_zoneidx)
-+				       unsigned long watermark,
-+				       int highest_zoneidx)
- {
- 	return false;
- }
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 550ce5021807..036353ef1878 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2382,40 +2382,42 @@ static enum compact_result compact_finished(struct compact_control *cc)
- }
- 
- static bool __compaction_suitable(struct zone *zone, int order,
--				  int highest_zoneidx,
--				  unsigned long wmark_target)
-+				  unsigned long watermark, int highest_zoneidx,
-+				  unsigned long free_pages)
- {
--	unsigned long watermark;
- 	/*
- 	 * Watermarks for order-0 must be met for compaction to be able to
- 	 * isolate free pages for migration targets. This means that the
--	 * watermark and alloc_flags have to match, or be more pessimistic than
--	 * the check in __isolate_free_page(). We don't use the direct
--	 * compactor's alloc_flags, as they are not relevant for freepage
--	 * isolation. We however do use the direct compactor's highest_zoneidx
--	 * to skip over zones where lowmem reserves would prevent allocation
--	 * even if compaction succeeds.
--	 * For costly orders, we require low watermark instead of min for
--	 * compaction to proceed to increase its chances.
-+	 * watermark have to match, or be more pessimistic than the check in
-+	 * __isolate_free_page().
-+	 *
-+	 * For costly orders, we require a higher watermark for compaction to
-+	 * proceed to increase its chances.
-+	 *
-+	 * We use the direct compactor's highest_zoneidx to skip over zones
-+	 * where lowmem reserves would prevent allocation even if compaction
-+	 * succeeds.
-+	 *
- 	 * ALLOC_CMA is used, as pages in CMA pageblocks are considered
--	 * suitable migration targets
-+	 * suitable migration targets.
- 	 */
--	watermark = (order > PAGE_ALLOC_COSTLY_ORDER) ?
--				low_wmark_pages(zone) : min_wmark_pages(zone);
- 	watermark += compact_gap(order);
-+	if (order > PAGE_ALLOC_COSTLY_ORDER)
-+		watermark += low_wmark_pages(zone) - min_wmark_pages(zone);
- 	return __zone_watermark_ok(zone, 0, watermark, highest_zoneidx,
--				   ALLOC_CMA, wmark_target);
-+				   ALLOC_CMA, free_pages);
- }
- 
- /*
-  * compaction_suitable: Is this suitable to run compaction on this zone now?
-  */
--bool compaction_suitable(struct zone *zone, int order, int highest_zoneidx)
-+bool compaction_suitable(struct zone *zone, int order, unsigned long watermark,
-+			 int highest_zoneidx)
- {
- 	enum compact_result compact_result;
- 	bool suitable;
- 
--	suitable = __compaction_suitable(zone, order, highest_zoneidx,
-+	suitable = __compaction_suitable(zone, order, highest_zoneidx, watermark,
- 					 zone_page_state(zone, NR_FREE_PAGES));
- 	/*
- 	 * fragmentation index determines if allocation failures are due to
-@@ -2453,6 +2455,7 @@ bool compaction_suitable(struct zone *zone, int order, int highest_zoneidx)
- 	return suitable;
- }
- 
-+/* Used by direct reclaimers */
- bool compaction_zonelist_suitable(struct alloc_context *ac, int order,
- 		int alloc_flags)
- {
-@@ -2475,8 +2478,8 @@ bool compaction_zonelist_suitable(struct alloc_context *ac, int order,
- 		 */
- 		available = zone_reclaimable_pages(zone) / order;
- 		available += zone_page_state_snapshot(zone, NR_FREE_PAGES);
--		if (__compaction_suitable(zone, order, ac->highest_zoneidx,
--					  available))
-+		if (__compaction_suitable(zone, order, min_wmark_pages(zone),
-+					  ac->highest_zoneidx, available))
- 			return true;
- 	}
- 
-@@ -2513,13 +2516,13 @@ compaction_suit_allocation_order(struct zone *zone, unsigned int order,
- 	 */
- 	if (order > PAGE_ALLOC_COSTLY_ORDER && async &&
- 	    !(alloc_flags & ALLOC_CMA)) {
--		watermark = low_wmark_pages(zone) + compact_gap(order);
--		if (!__zone_watermark_ok(zone, 0, watermark, highest_zoneidx,
--					   0, zone_page_state(zone, NR_FREE_PAGES)))
-+		if (!__zone_watermark_ok(zone, 0, watermark + compact_gap(order),
-+					 highest_zoneidx, 0,
-+					 zone_page_state(zone, NR_FREE_PAGES)))
- 			return COMPACT_SKIPPED;
- 	}
- 
--	if (!compaction_suitable(zone, order, highest_zoneidx))
-+	if (!compaction_suitable(zone, order, watermark, highest_zoneidx))
- 		return COMPACT_SKIPPED;
- 
- 	return COMPACT_CONTINUE;
-@@ -3082,6 +3085,7 @@ static void kcompactd_do_work(pg_data_t *pgdat)
- 		.mode = MIGRATE_SYNC_LIGHT,
- 		.ignore_skip_hint = false,
- 		.gfp_mask = GFP_KERNEL,
-+		.alloc_flags = ALLOC_WMARK_MIN,
- 	};
- 	enum compact_result ret;
- 
-@@ -3100,7 +3104,7 @@ static void kcompactd_do_work(pg_data_t *pgdat)
- 			continue;
- 
- 		ret = compaction_suit_allocation_order(zone,
--				cc.order, zoneid, ALLOC_WMARK_MIN,
-+				cc.order, zoneid, cc.alloc_flags,
- 				false);
- 		if (ret != COMPACT_CONTINUE)
- 			continue;
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 2bc740637a6c..3370bdca6868 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -5890,12 +5890,15 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
- 
- 	/* If compaction would go ahead or the allocation would succeed, stop */
- 	for_each_managed_zone_pgdat(zone, pgdat, z, sc->reclaim_idx) {
-+		unsigned long watermark = min_wmark_pages(zone);
++defrag_mode
++===========
 +
- 		/* Allocation can already succeed, nothing to do */
--		if (zone_watermark_ok(zone, sc->order, min_wmark_pages(zone),
-+		if (zone_watermark_ok(zone, sc->order, watermark,
- 				      sc->reclaim_idx, 0))
- 			return false;
++When set to 1, the page allocator tries harder to avoid fragmentation
++and maintain the ability to produce huge pages / higher-order pages.
++
++It is recommended to enable this right after boot, as fragmentation,
++once it occurred, can be long-lasting or even permanent.
  
--		if (compaction_suitable(zone, sc->order, sc->reclaim_idx))
-+		if (compaction_suitable(zone, sc->order, watermark,
-+					sc->reclaim_idx))
- 			return false;
- 	}
+ dirty_background_bytes
+ ======================
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 6f0404941886..9a02772c2461 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -273,6 +273,7 @@ int min_free_kbytes = 1024;
+ int user_min_free_kbytes = -1;
+ static int watermark_boost_factor __read_mostly = 15000;
+ static int watermark_scale_factor = 10;
++static int defrag_mode;
  
-@@ -6122,22 +6125,21 @@ static inline bool compaction_ready(struct zone *zone, struct scan_control *sc)
- 			      sc->reclaim_idx, 0))
- 		return true;
- 
--	/* Compaction cannot yet proceed. Do reclaim. */
--	if (!compaction_suitable(zone, sc->order, sc->reclaim_idx))
--		return false;
--
- 	/*
--	 * Compaction is already possible, but it takes time to run and there
--	 * are potentially other callers using the pages just freed. So proceed
--	 * with reclaim to make a buffer of free pages available to give
--	 * compaction a reasonable chance of completing and allocating the page.
-+	 * Direct reclaim usually targets the min watermark, but compaction
-+	 * takes time to run and there are potentially other callers using the
-+	 * pages just freed. So target a higher buffer to give compaction a
-+	 * reasonable chance of completing and allocating the pages.
-+	 *
- 	 * Note that we won't actually reclaim the whole buffer in one attempt
- 	 * as the target watermark in should_continue_reclaim() is lower. But if
- 	 * we are already above the high+gap watermark, don't reclaim at all.
+ /* movable_zone is the "real" zone pages in ZONE_MOVABLE are taken from */
+ int movable_zone;
+@@ -3389,6 +3390,11 @@ alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
  	 */
--	watermark = high_wmark_pages(zone) + compact_gap(sc->order);
-+	watermark = high_wmark_pages(zone);
-+	if (compaction_suitable(zone, sc->order, watermark, sc->reclaim_idx))
-+		return true;
+ 	alloc_flags = (__force int) (gfp_mask & __GFP_KSWAPD_RECLAIM);
  
--	return zone_watermark_ok_safe(zone, 0, watermark, sc->reclaim_idx);
-+	return false;
++	if (defrag_mode) {
++		alloc_flags |= ALLOC_NOFRAGMENT;
++		return alloc_flags;
++	}
++
+ #ifdef CONFIG_ZONE_DMA32
+ 	if (!zone)
+ 		return alloc_flags;
+@@ -3480,7 +3486,7 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
+ 				continue;
+ 		}
+ 
+-		if (no_fallback && nr_online_nodes > 1 &&
++		if (no_fallback && !defrag_mode && nr_online_nodes > 1 &&
+ 		    zone != zonelist_zone(ac->preferred_zoneref)) {
+ 			int local_nid;
+ 
+@@ -3591,7 +3597,7 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
+ 	 * It's possible on a UMA machine to get through all zones that are
+ 	 * fragmented. If avoiding fragmentation, reset and try again.
+ 	 */
+-	if (no_fallback) {
++	if (no_fallback && !defrag_mode) {
+ 		alloc_flags &= ~ALLOC_NOFRAGMENT;
+ 		goto retry;
+ 	}
+@@ -4128,6 +4134,9 @@ gfp_to_alloc_flags(gfp_t gfp_mask, unsigned int order)
+ 
+ 	alloc_flags = gfp_to_alloc_flags_cma(gfp_mask, alloc_flags);
+ 
++	if (defrag_mode)
++		alloc_flags |= ALLOC_NOFRAGMENT;
++
+ 	return alloc_flags;
  }
  
- static void consider_reclaim_throttle(pg_data_t *pgdat, struct scan_control *sc)
+@@ -4510,6 +4519,11 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 				&compaction_retries))
+ 		goto retry;
+ 
++	/* Reclaim/compaction failed to prevent the fallback */
++	if (defrag_mode) {
++		alloc_flags &= ALLOC_NOFRAGMENT;
++		goto retry;
++	}
+ 
+ 	/*
+ 	 * Deal with possible cpuset update races or zonelist updates to avoid
+@@ -6286,6 +6300,15 @@ static const struct ctl_table page_alloc_sysctl_table[] = {
+ 		.extra1		= SYSCTL_ONE,
+ 		.extra2		= SYSCTL_THREE_THOUSAND,
+ 	},
++	{
++		.procname	= "defrag_mode",
++		.data		= &defrag_mode,
++		.maxlen		= sizeof(defrag_mode),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
+ 	{
+ 		.procname	= "percpu_pagelist_high_fraction",
+ 		.data		= &percpu_pagelist_high_fraction,
 -- 
 2.48.1
 
