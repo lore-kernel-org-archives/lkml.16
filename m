@@ -1,111 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C5B262D16
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 12:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F56B265CC1;
+	Thu, 13 Mar 2025 12:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741868697; cv=none; b=GxGa934TfmUPBh937hj3yInq1FQMPabl7Gxzy/vjD5T8yODsBzSYawN7Ke9QJzWuocthEBr8Jk33E+pizAUiEpslT0IUPV/GZCx2avwQcEp2lKh6vmWMqoW/gysYDvW7H/gfdjRvRMqSYnsFrPwYB9Mspj8vYbH/ZMCNOkDAmq0=
+	t=1741868714; cv=none; b=AGVC1beKQlql9FtD7z163M+otV3IBdSes/mJYt/vpjtR0Vg54ZbwBtip4YxO4ybm4ZQW5NOWm4IrksBOgW/s2CN2gCTKJJTqBEFmdx9MLhOFBR/StdWO2TIEC3mDMqQaJzt0HBtfu+A9+/uIfV+Av2ldFpnOcUZOfs7MEmMgz/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741868697; c=relaxed/simple;
-	bh=3piGY6Mos9lWEASypJlgl6NU89/tZvm07nsj0xWexd4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TA08Mi1z7OKnPrEutXP/zLk6w4S3RkyFhXccH2iWhKm8vJDLaK7uutnEG6bOjnvAzJiTLnNJiC2ktqcXP0GSa0jTr7rNXhWHbka7XHIKhRkfB/LlNnZZ7z4cmYg5mz1KYjPJIp7JF9+Akb7LV/9pZtN5tN4auPo3B+scbJ9S8JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JjkD1jE6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741868714; c=relaxed/simple;
+	bh=VMUOnEKoimQN6pwJj0HJ250fPvnAR+FrAocdRJsHq8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dKWVDjygNtHEXnP7qDEV9x+tRapVZ90nhxsj7hoWY54rXWVrTSJNFkHFR9fxzGiDmRPt/9d94vmYs43iQ+a2Rjsy5Eyu0bKhuVp8/iL/gRYYwcohfKjpTlCDnlhIOm+fvbhVnkh268ORSVpug2PFx+EmQ1ORIWeYCfSRWUVPtIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDz7LQrx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JjkD1jE6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741868694;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=41pRJjFSQunsUf3a0XIIQpPveoWhQuMHRR8nqruq92Q=;
-	b=JjkD1jE6ZWC9EmxhTFooXcaD5Iye+3cS5piCyqdB1z/eqSWJsFDH63Ggb8mjVXaMgFA343
-	PmkQyWMS1UFdIPug5kQDcjVyR1VEVCmTBwJVbyXdY6cWoJ/gptwBgD0tjFdWB60VC18p2J
-	qn1PLYJRMUUDkdnZPt+kLIkieTtcj3U=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-MND7UQJqPKi8yxXfEnUnZw-1; Thu, 13 Mar 2025 08:24:53 -0400
-X-MC-Unique: MND7UQJqPKi8yxXfEnUnZw-1
-X-Mimecast-MFC-AGG-ID: MND7UQJqPKi8yxXfEnUnZw_1741868692
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so4524195e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 05:24:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741868692; x=1742473492;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=41pRJjFSQunsUf3a0XIIQpPveoWhQuMHRR8nqruq92Q=;
-        b=fVH+jSx3xfJmByUyfc2Nsvsfh2+8cYbPwcAgyWbO1d3qlr7gTPCjYinnsUoykwpZCU
-         8jZAl5UfdUdy+7fIE4hgWPa9/d85zuv7SdjXjPzGnbr7/x0gq5RRHU82RDf1I1OaJk5v
-         vI8TzClKYJ5mJEOJYdjDa2OUzaZCbXAr0BH/50gAZVz9SL6fsnVG8R/riy3PVLuU/wPS
-         +EyltEak5hK5ju1fuL2Xki87/kQMlrM5vyhBf3vj1H9QOEDcIpFAwDCwo+KgyhuxDzbv
-         nTOBSAWotFZAKuN/Yn2lCWWt97VphqP8Vi3GpLdvif0VmCmzJiZcvQ0YIAYNu0LV9PhH
-         eEEg==
-X-Gm-Message-State: AOJu0YzJWgJr1CjmtX9/iKdryd5S68JXZ6HJVegF8MWbi2pH4vnAO0YW
-	Lpf9pddEyg+Sz3EdgepD1WrFrNhpl7nNqbP/UUxiEqB/kczwQ1u86+ldwA7QHFjFjSYh/6Gbwr1
-	fKFIbBXIF+QyVYQCKG814EyWBbd3ip7a2rG4c1zGDcb+jZY/S91FQYKoDTwYcag==
-X-Gm-Gg: ASbGnctlbROq9NFfYi67ECfnjcj/7CDsqkN/QyTCrrq3ebFx24dbpwPfxuDfiLXIy13
-	Dr0y4mmiYMiBd1tzJ1XxTI1ts2YnjNqX+bAp3JNVQIQRRThUZtNZ7Ufh2bG5C+Tz5qEWExozH7w
-	D7RVPko4nKTueKgOEiy0El2BrrO3lxXWyn6sPNSe+dOU88AO+3P/lEOuUEfzZcGITjqWJ9EKhVW
-	tKMJE/7I5TcDQbD6SAThTa9VEgrdCKRhAOCn3U61vgJRpGOg7xbEVeciSYrNwaqcjjFiHBNU+A7
-	0n2NloSwOR8oFFqIyIeMGQZBMDi1eo3u6p48Kb+4
-X-Received: by 2002:a05:600c:3545:b0:434:fa55:eb56 with SMTP id 5b1f17b1804b1-43c5a600909mr210437655e9.7.1741868692009;
-        Thu, 13 Mar 2025 05:24:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFTta66vARQNmkgMsRaEzJLNRUO1YbSPiH3Ss6xOHBxWgJdBqQI4Hnl8PBkX5FvrFzJP6jwiQ==
-X-Received: by 2002:a05:600c:3545:b0:434:fa55:eb56 with SMTP id 5b1f17b1804b1-43c5a600909mr210437455e9.7.1741868691619;
-        Thu, 13 Mar 2025 05:24:51 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-6-87.dyn.eolo.it. [146.241.6.87])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d0a7310e1sm52414735e9.6.2025.03.13.05.24.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Mar 2025 05:24:51 -0700 (PDT)
-Message-ID: <932f543d-8fa4-4891-a804-f58a55356ab9@redhat.com>
-Date: Thu, 13 Mar 2025 13:24:49 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDz7LQrx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED05C4CEDD;
+	Thu, 13 Mar 2025 12:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741868713;
+	bh=VMUOnEKoimQN6pwJj0HJ250fPvnAR+FrAocdRJsHq8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HDz7LQrxn+5uMzYuKmUsr/MzQI/7LjUYAH6U0Rv69RHDL6kJTg7T/TlyBDu9nRw3f
+	 +yscSRgZu10unC9voBYFntcNfukiIMd+J2bcz0am9R1N+EDQUjRDdCzHDa7E6jAT9G
+	 elRWWLQjvLtJ+557HYrrxSzTWHiUmMyB6V6XwrGmcTe4DZAObyymSQ9P/m4v3yKCOP
+	 xCAlBAwGAQVNMI3WMjv8hvbMIBFI0Nh29MW5H2CicZPp09a6Qz/dohbQ8rK8OUI9pq
+	 70yUl1cBUcyKqDoTT3szQWbiaOW9pyrWRuXo8DTYexs+TSxJGXCTYPsEmUMP7nS12s
+	 c+V7rKX2dyaMg==
+Date: Thu, 13 Mar 2025 12:25:04 +0000
+From: Will Deacon <will@kernel.org>
+To: Alessandro Carminati <acarmina@redhat.com>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Alessandro Carminati <alessandro.carminati@gmail.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, loongarch@lists.linux.dev, x86@kernel.org,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v4 07/14] arm64: Add support for suppressing warning
+ backtraces
+Message-ID: <20250313122503.GA7438@willie-the-truck>
+References: <20250313114329.284104-1-acarmina@redhat.com>
+ <20250313114329.284104-8-acarmina@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rndis_host: Flag RNDIS modems as WWAN devices
-To: Lubomir Rintel <lkundrak@v3.sk>, linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew+netdev@lunn.ch>
-References: <20250311091035.2523903-1-lkundrak@v3.sk>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250311091035.2523903-1-lkundrak@v3.sk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313114329.284104-8-acarmina@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On 3/11/25 10:10 AM, Lubomir Rintel wrote:
-> Set FLAG_WWAN instead of FLAG_ETHERNET for RNDIS interfaces on Mobile
-> Broadband Modems, as opposed to regular Ethernet adapters.
-> 
-> Otherwise NetworkManager gets confused, misjudges the device type,
-> and wouldn't know it should connect a modem to get the device to work.
-> What would be the result depends on ModemManager version -- older
-> ModemManager would end up disconnecting a device after an unsuccessful
-> probe attempt (if it connected without needing to unlock a SIM), while
-> a newer one might spawn a separate PPP connection over a tty interface
-> instead, resulting in a general confusion and no end of chaos.
-> 
-> The only way to get this work reliably is to fix the device type
-> and have good enough version ModemManager (or equivalent).
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+On Thu, Mar 13, 2025 at 11:43:22AM +0000, Alessandro Carminati wrote:
+> diff --git a/arch/arm64/include/asm/bug.h b/arch/arm64/include/asm/bug.h
+> index 28be048db3f6..044c5e24a17d 100644
+> --- a/arch/arm64/include/asm/bug.h
+> +++ b/arch/arm64/include/asm/bug.h
+> @@ -11,8 +11,14 @@
+>  
+>  #include <asm/asm-bug.h>
+>  
+> +#ifdef HAVE_BUG_FUNCTION
+> +# define __BUG_FUNC	__func__
+> +#else
+> +# define __BUG_FUNC	NULL
+> +#endif
+> +
+>  #define __BUG_FLAGS(flags)				\
+> -	asm volatile (__stringify(ASM_BUG_FLAGS(flags)));
+> +	asm volatile (__stringify(ASM_BUG_FLAGS(flags, %c0)) : : "i" (__BUG_FUNC));
 
-This looks like a fix for the net tree, could you please provide a
-suitable 'Fixes' tag? Also next time please additionally specify the
-target tree in the subj prefix,
+Why is 'i' the right asm constraint to use here? It seems a bit odd to
+use that for a pointer.
 
-Thanks!
-
-Paolo
-
+Will
