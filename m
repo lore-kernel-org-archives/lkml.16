@@ -1,150 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6463B267721;
-	Thu, 13 Mar 2025 13:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C258101E6;
+	Thu, 13 Mar 2025 13:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741872590; cv=none; b=buS6rXhtfyorUufdFA9R1AAsEgzUeczMGhUkc/x/rscN9k9g/HUhimL6xRzBWz2i9C7Oe+uT2dhZ6XQlW4+98Cf5aYTsQTK41mqyO23mEWUXn9MZ4v/V8DZOR4Bx+uJmDFmj4U/2d2BVSx8CgNLIFXstajIdMIfoAczJ0rDLyok=
+	t=1741872730; cv=none; b=gFlj8NXFNQisA99VyHB2PyLH9KKOxN9rhs9kfmuDznrWiEMCkTSJjdAbLD57Hv4sB3/v//s8hHwBTUOBg+v3+Y24xC2cty1BU+nVzxJ/EpRFmEJsTiLwMm/fv3z/rv6jbnnjxcpqVWeb5H+mL0gOLUl42aaxrpw8eWnoS/r9EQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741872590; c=relaxed/simple;
-	bh=3R5NqPG75eCifry1xE8jCo+Ba/RPNsND3Th6ewF0DW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mbJBe+/PMZmtXxKsJhn18ZUxwtkuvjw6WbOJVK15ot0cM6E8aRcpx8cvDpAXWdoLqojrWFy+QexSMiL2HEx4Fd9h4XW+FA8tbPNPiATRpf6fVFsB00c5giWV6Ql4ehLdZLW2mFKIe+CRNE+CN70NxFgEb6xGRopk+tre5M+qo/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LUOQWDVp; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741872730; c=relaxed/simple;
+	bh=lv9WD/LyfzkEiwc6v8Z5TUZKz9TC2fvHQxlDBZKxZIc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JgPl/a+zYmKiTMrKZLj5F7LbnEFMzgTQsQI9usfV984FPFKSjbklURUmLMY334xZjM6NuwQTFlPaiQU+RhOuiG5nifux/1jinmRPFZX3frcnv6GelItCb2lBTWiOx0z4KVHtMwZTaBouo/7e/XbesKHTrhGxhvEFWEfuuWSjwn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=O7dwPxh8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LUOQWDVp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741872588; x=1773408588;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3R5NqPG75eCifry1xE8jCo+Ba/RPNsND3Th6ewF0DW8=;
-  b=LUOQWDVpcOi8PI2qbyByY+2qScKBOOZtthpREA7utobv+e4OSJ9vhNSy
-   pYTVOP2t+jxFIuYYwDYJ8rF7EujzPCkqTyjUwbwv1AALqiB5O5vO5InMp
-   Sr1Ij9n8iQoe1rHbCS7orbAiFaCcnpPdld8YplDbk/ZSiYbedVwldkH13
-   4K756Ohf1jMeQ+rx7Zu9U+QMd9Tw+jcy0O8o/W5u58Nsn/Y0W7RoN7/aB
-   Mlvpqqtr9Isa/ebhOt5eQ5EddubBZhhN6WQhY1KNoEdz4MOca5RO4sax0
-   BNvSwae4hDe49XBZEqxYoHT9vpTgpuCvIMZop4JjI8IpDZrT82sPKe0PZ
-   Q==;
-X-CSE-ConnectionGUID: AmIDVn6mT9Sd1lrJ62tyPQ==
-X-CSE-MsgGUID: v/kLCct7RkyfoMQuyGhNrg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="43119151"
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="43119151"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 06:29:47 -0700
-X-CSE-ConnectionGUID: 04qS8wQPRn6wZVe4oTPTzg==
-X-CSE-MsgGUID: 4xEfR6NSTcGJ84TSNnC6hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="120669500"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 06:29:42 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tsid0-00000002BNc-0muS;
-	Thu, 13 Mar 2025 15:29:38 +0200
-Date: Thu, 13 Mar 2025 15:29:37 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Guillaume Stols <gstols@baylibre.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH v7 03/10] iio: adc: add helpers for parsing ADC nodes
-Message-ID: <Z9LdwUVBOEx-Tbvr@smile.fi.intel.com>
-References: <cover.1741849323.git.mazziesaccount@gmail.com>
- <c8899e8c535a1d93cd7588b7c160eb0fae5d26d2.1741849323.git.mazziesaccount@gmail.com>
- <Z9LQFqSweiV-zT3b@smile.fi.intel.com>
- <bca95d63-fb6e-4d6c-8ab6-df67f0e697e6@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="O7dwPxh8"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D9SZ84028501;
+	Thu, 13 Mar 2025 13:32:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	C7BMESZ1albT009zS/aJeY7GPt60TCH4RI2gYZnDsn4=; b=O7dwPxh8+xa+D257
+	SoABzQ62NyFOR2Ex/VVRqQEjKQF+iu1BhK4FjpbXRFVRJciGjIMUb4Xsf9oFUU5e
+	d8Xl+4jT5+VwHsHXRStlK14doLUZDK7fXgifplk5CEllRiP2XeisWGfqyjBMg+/m
+	3QDbtSyvnQ1pxCl9+Bt9UGC6GNV5q6Fy4CqYxaWvJH3svH4hPmJWhVAbxEdrpfuY
+	DeoA/lc174hgHHqtWgHw2LUl7+9CjMrgd+dEM9mVbPhBMvxpjwX8ZRSyLkgrQQ0l
+	DwiG129nMxQ33wbabPCaCzyuFHyNuCLG8HLvKB8YbhU790o38bKFxzMw9H2eK1Cl
+	XEUEBg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2px03c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 13:32:03 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52DDW2Aa026700
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 13:32:02 GMT
+Received: from [10.253.32.44] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 13 Mar
+ 2025 06:32:00 -0700
+Message-ID: <8ea7fe7c-7b4d-4a6f-ae03-b9ca127c23f8@quicinc.com>
+Date: Thu, 13 Mar 2025 21:31:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bca95d63-fb6e-4d6c-8ab6-df67f0e697e6@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 ath-next 2/2] wifi: ath11k: fix HTC rx insufficient
+ length
+To: Johan Hovold <johan@kernel.org>
+CC: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, <ath11k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <johan+linaro@kernel.org>
+References: <20250310010217.3845141-1-quic_miaoqing@quicinc.com>
+ <20250310010217.3845141-3-quic_miaoqing@quicinc.com>
+ <Z866cCj8SWyZjCoP@hovoldconsulting.com>
+ <7b1c5e40-b11d-421b-8c8b-117a2a53298b@quicinc.com>
+ <c0cdcaf2-655b-4d22-a949-1519c552e6a4@oss.qualcomm.com>
+ <72d95d77-674e-4ae7-83b0-ab58748b8251@quicinc.com>
+ <Z9G5zEOcTdGKm7Ei@hovoldconsulting.com>
+Content-Language: en-US
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
+In-Reply-To: <Z9G5zEOcTdGKm7Ei@hovoldconsulting.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=P506hjAu c=1 sm=1 tr=0 ts=67d2de53 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=POYSu9ou3bP9OeXHj2YA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: zzDgsTmd8_OvdzKPbx0FA4Ze8PppLFIs
+X-Proofpoint-ORIG-GUID: zzDgsTmd8_OvdzKPbx0FA4Ze8PppLFIs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_06,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ mlxscore=0 spamscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130106
 
-On Thu, Mar 13, 2025 at 03:17:27PM +0200, Matti Vaittinen wrote:
-> On 13/03/2025 14:31, Andy Shevchenko wrote:
-> > On Thu, Mar 13, 2025 at 09:18:18AM +0200, Matti Vaittinen wrote:
 
-...
 
-> > > +	num_chan = iio_adc_device_num_channels(dev);
-> > > +	if (num_chan < 1)
-> > > +		return num_chan;
-> > 
-> > This is really interesting code. So, if the above returns negative error code,
-> > we return it, if it returns 0, we return success (but 0 channels)?
+On 3/13/2025 12:43 AM, Johan Hovold wrote:
+> On Wed, Mar 12, 2025 at 09:11:45AM +0800, Miaoqing Pan wrote:
+>> On 3/11/2025 11:20 PM, Jeff Johnson wrote:
+>>> On 3/11/2025 1:29 AM, Miaoqing Pan wrote:
+>>>> On 3/10/2025 6:09 PM, Johan Hovold wrote:
+>>>>> I'm still waiting for feedback from one user that can reproduce the
+>>>>> ring-buffer corruption very easily, but another user mentioned seeing
+>>>>> multiple zero-length descriptor warnings over the weekend when running
+>>>>> with this patch:
+>>>>>
+>>>>> 	ath11k_pci 0006:01:00.0: rxed invalid length (nbytes 0, max 2048)
+>>>>>
+>>>>> Are there ever any valid reasons for seeing a zero-length descriptor
+>>>>> (i.e. unrelated to the race at hand)? IIUC the warning would only be
+>>>>> printed when processing such descriptors a second time (i.e. when
+>>>>> is_desc_len0 is set).
+>>>>
+>>>> That's exactly the logic, only can see the warning in a second time. For
+>>>> the first time, ath12k_ce_completed_recv_next() returns '-EIO'.
+>>>
+>>> That didn't answer Johan's first question:
+>>> Are there ever any valid reasons for seeing a zero-length descriptor?
+>>
+>> The events currently observed are all firmware logs. The discarded
+>> packets will not affect normal operation. I will adjust the logging to
+>> debug level.
 > 
-> Yes. I don't think it's that interesting though. Checking the devicetree
-> succeeded while no channels were found. I think returning 0 is very much
-> aligned with this.
-
-Right, but as I suggested, let's follow already established APIs that return
--ENOENT and never 0 in similar cases.
-
-> > Shouldn't we do *cs = NULL; at the case of 0 channels if it's a success?
+> That still does not answer the question whether there are ever any valid
+> reasons for seeing zero-length descriptors. I assume there are none?
 > 
-> I suppose you're right.
+>>> We have an issue that there is a race condition where hardware updates the
+>>> pointer before it has filled all the data. The current solution is just to
+>>> read the data a second time. But if that second read also occurs before
+>>> hardware has updated the data, then the issue isn't fixed.
+>>   
+>> Thanks for the addition.
+>>
+>>> So should there be some forced delay before we read a second time?
+>>> Or should we attempt to read more times?
+>>
+>> The initial fix was to keep waiting for the data to be ready. The
+>> observed phenomenon is that when the second read fails, subsequent reads
+>> will continue to fail until the firmware's CE2 ring is full and triggers
+>> an assert after timeout. However, this situation is relatively rare, and
+>> in most cases, the second read will succeed. Therefore, adding a delay
+>> or multiple read attempts is not useful.
 > 
-> But, as you pointed out in review of the 05/10:
-> > Usually in other similar APIs we return -ENOENT. And user won't need
-> > to have an additional check in case of 0 being considered as an error
-> > case too.
+> The proposed fix is broken since ath11k_hal_ce_dst_status_get_length()
+> not just reads the length but also sets it to zero so that the updated
+> length may indeed never be seen.
 > 
-> I don't know whether to agree with you here. For majority of the ADC
-> drivers, having no channels in devicetree is indeed just another error,
-> which I think is not in any ways special.
-
-So...? (I see below your answer :-)
-
-> However, for 33,3333% of the users added in this patch, the "no channels
-> found" is not really an error condition ;) The BD79124 could have all
-> channels used for GPO - although this would probably be very very unusual.
-> (Why buying an ADC chip if you need just a GPO?). Still, this wouldn't be an
-> error. (And I need to handle this better in BD79124 probe - so thanks).
-
-ENOENT check is again established for optional/not_found cases.
-
-> > (Under success I assume that returned values are okay to go with, and cs in
-> > your case will be left uninitialised or contain something we don't control.
+> I've taken a closer look at the driver and it seems like we're missing a
+> read barrier to make sure that the updated descriptor is not read until
+> after the head pointer.
 > 
-> I see your point although I wouldn't be concerned with cs not being NULL for
-> as long as number of channels is zero.
+> Miaoqing, could you try the below patch with your reproducer and see if
+> it is enough to fix the corruption?
 > 
-> Anyway, I think it makes sense to simplify ~67% of callers by returning
-> -ENODEV if there is no channels. The remaining ~33% can then check for the
-> -ENODEV and handle it separately from other returned errors. So, thanks.
+> If so I can resend with the warning removed and include a corresponding
+> fix for ath12k (it looks like there are further places where barriers
+> are missing too).
+> 
+> Johan
+> 
+> 
+>  From 656dbd0894741445aeb16ee8357e6fef51b6084c Mon Sep 17 00:00:00 2001
+> From: Johan Hovold <johan+linaro@kernel.org>
+> Date: Wed, 12 Mar 2025 16:49:20 +0100
+> Subject: [PATCH] wifi: ath11k: fix ring-buffer corruption
+> 
+> Users of the Lenovo ThinkPad X13s have reported that Wi-Fi sometimes
+> breaks and the log fills up with errors like:
+> 
+> 	ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1484, expected 1492
+> 	ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1460, expected 1484
+> 
+> which based on a quick look at the driver seemed to indicate some kind
+> of ring-buffer corruption.
+> 
+> Miaoqing Pan tracked it down to the host seeing the updated destination
+> ring head pointer before the updated descriptor, and the error handling
+> for that in turn leaves the ring buffer in an inconsistent state.
+> 
+> Add the missing the read barrier to make sure that the descriptor is
+> read after the head pointer to address the root cause of the corruption.
+> 
+> The error handling can be fixed separately in case there can ever be
+> actual zero-length descriptors.
+> 
+> FIXME: remove WARN_ON_ONCE() added for verification purposes
+> 
+> Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
+> 
+> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218623
+> Link: https://lore.kernel.org/20250310010217.3845141-3-quic_miaoqing@quicinc.com
+> Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>
+> Cc: stable@vger.kernel.org	# 5.6
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>   drivers/net/wireless/ath/ath11k/ce.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/ath/ath11k/ce.c b/drivers/net/wireless/ath/ath11k/ce.c
+> index e66e86bdec20..423b970e288c 100644
+> --- a/drivers/net/wireless/ath/ath11k/ce.c
+> +++ b/drivers/net/wireless/ath/ath11k/ce.c
+> @@ -393,8 +393,12 @@ static int ath11k_ce_completed_recv_next(struct ath11k_ce_pipe *pipe,
+>   		goto err;
+>   	}
+>   
+> +	/* Make sure descriptor is read after the head pointer. */
+> +	dma_rmb();
+> +
+>   	*nbytes = ath11k_hal_ce_dst_status_get_length(desc);
+>   	if (*nbytes == 0) {
+> +		WARN_ON_ONCE(1);	// FIXME: remove
+>   		ret = -EIO;
+>   		goto err;
+>   	}
 
-Not at all!
+This issue can still be reproduced.
 
--- 
-With Best Regards,
-Andy Shevchenko
+[ 3283.687469] WARNING: CPU: 0 PID: 0 at 
+/drivers/net/wireless/ath/ath11k/ce.c:405 
+ath11k_ce_per_engine_service+0x228/0x3e4 [ath11k]
 
+[ 3283.688685] Call trace:
+[ 3283.688692]  ath11k_ce_per_engine_service+0x228/0x3e4 [ath11k]
+[ 3283.688807]  ath11k_pcic_ce_tasklet+0x34/0x54 [ath11k]
+[ 3283.688920]  tasklet_action_common.isra.0+0xec/0x338
+[ 3283.688958]  tasklet_action+0x28/0x34
+[ 3283.688972]  handle_softirqs+0x120/0x36c
 
