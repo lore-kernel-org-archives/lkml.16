@@ -1,105 +1,173 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24B31BDCF;
-	Thu, 13 Mar 2025 08:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05E5263F21;
+	Thu, 13 Mar 2025 08:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741856216; cv=none; b=HVkrx/A3/sXdg96DNvgpXAYdiZa3mlFWBaFSuDB5lu33xCpw/VUVwexi7odQFjcMojDTQY2D3zqmxcV6IW7IfvrlEBYYzCULJw8tzZRea7Ae7/bVb8vb5XBvYks7f4uqey5IRMuqlF3clqqTo1+oeC3vt4361LH6gW/ilhTQjks=
+	t=1741856216; cv=none; b=XT0eMpMWAKzulfCUCHpOUDgXXfXb0zsRGkS3EneBk0jqFnk6RJyWb0o3nKt66lG+5n1xX4Mk+wTFuC1PGLwaWRyOVl+wFciZ5tUsznaUPlYuonAyYboVMioeXEq0KW9VzNMOdhatZi+5KkjpmhWqodVaRgU9yKIZVYWaVD8lDlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741856216; c=relaxed/simple;
-	bh=c039YNETMcNqRqnRXKVd621FpuTy63kWGtPKmojyopM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=paLJoooKPg/qGbjJKUJbCf9sk+I248Yeqc3wAiOnE1b34nTM4yfh9ZFYtKs2oS6NVDxsafbagKaV84LdyaIOlnL+RQrX/FmHiYTZ+w0QmUONqC+0mDoMd5oG4GvrSYx05qT+YpAYjKcRL9DgV8+I+0/0XWQXP7MCH7jH3xKNBk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RbHr2b77; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=SQM3zpDeZQPCL/TOKD7Cr+jhtK+DlHqqKnNo1aTLtRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JuYL8TnzO7esdWLnWJkKiX2DTUGkUPk8l4IBpQBI1fMZd4JhD3B4cm8WnkpoTtBjp6WpJlVauontfLaD+EwMwXiVoBtl5SfSLi5keQU7WX0n64qYUS7Ph6rAnIoPE3hfWyIL94Hj+Boggijq288NSwDwxj0NbkaDlPzv4RdwQNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fXsMI9tk; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbHr2b77"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so4320445e9.1;
-        Thu, 13 Mar 2025 01:56:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741856212; x=1742461012; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oRQXI6lA2k16mQbfcxjJ2ekaa8g5t6U5iqSudrtHjjA=;
-        b=RbHr2b77WEX+8OQYm9ei0rK7hDls0lNU+tMkWCYnCRiwspPM8Q6fCJE/Jno8x5atJH
-         m7KuVAG9SNEXU2faLk9C+qwjvVzwNGE9QUxzm6xjhXAM1asV7HqZ+8sE9LbRGI0CvPVC
-         2Hp+EnlRIovpN6bohh2ahV/H7TeA1vbKtXTVMpFLrOBI0++ILsXJNKHCAw3roXdINiWG
-         3C0RDMLiYs/VQGsDpHZwP00D4xRP2VMaki2oUdyC1b1QwE7GbEcbO4T9eDZPGS053iv0
-         UJ36GcsnHV2e4vEPY45dqmzsVa7jKCXkqv1m9661HNmUqmmb0PL71ASAhD56Ntd6N7yD
-         UPYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741856212; x=1742461012;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oRQXI6lA2k16mQbfcxjJ2ekaa8g5t6U5iqSudrtHjjA=;
-        b=I5AiJkAt8jioh81GWypOn7vsF94nZioD/RyGp2gIZbxkl6pu/xCw1Lny53HVxEWbtG
-         3UHvUGg/0rjCBEwzr0+Yx5jrtNb+3+I2CrU76VvzMr0CnbNwE+l82dIiXFDrsA2cNiFp
-         zhD/ivlM5vEhFahzwbAwz4yg+tXA5Ar7kGWW1tZAw3oLzrjnTOhyQhrtysw9onClexOc
-         +sNR6eA6QcBXX4/49V/nZxLbwkNUFYvgJKnYxjM9c/uI/NNRmBTSjC4UShP2JDe0FICg
-         yD4sQlFT0aGI4Eks7ruWNHA7sG7BcORx2q2yczYMDAJsJg+qtcqp8DTwZjTsO6cYCNdW
-         oodg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpuePeSBxyHMH858TbP+x1rzACqmlGNuLEXLg+7yk0xyYTjioGGLgm5oo2ce4h/2DEWpvCTKFcFg==@vger.kernel.org, AJvYcCV6ykcz47UWj/2TNrxT00R4G8I5DGd3ko3NbuH26uaNSGWh63YrFX6nU2fucuzcymCNCvwmJd/Up/3ptKj1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTfERvr3HcIjor+gB+cyQ45L4kYjBYPmTFNfqkQeHqh1nmOIu/
-	5QAR/Z26fJQ/roVRe65dtn831hD2snO4QYVZlDWQkjvfMQK3zJnvxhWFgKEp
-X-Gm-Gg: ASbGncsPamE9oDwit0uTOSTvfXFPcNh67hKAl8m2tfxbvWyiewGj0TfIYFWsOyHn5y2
-	+S53D0NAsC0a4CsooZmm2FvetYoZlKrtryUJzJMjAprZrFuAMxMaCk+k5G5iHT2HKxaG8mdl5LO
-	KwDwTiWVvfSEjRJyqVr1gpCLlSituRu+muNxGjiGKQINjV1zrkr1x/z+Za+GkXWe2sRMKEmmQI9
-	fArZz/n7DCzFZzNdHRMuTqYkKlcoH6aX20/x2ZvwC9RCRu5gP+SHBKD9gZfp2KPThyFwI3iskIe
-	EU2xSuEW2F4xgDUrhOsOGfQBqhGz9RhFIydTKiStuOin4ikE6BNOORJ6eA==
-X-Google-Smtp-Source: AGHT+IGzld6XmsHuSGyS5xO4/BFT6L9qRZC3dbHu5qjOj3rnyoHn2qbidcUUT57sIIpYDj10Qe2Y+w==
-X-Received: by 2002:a05:600c:548e:b0:439:873a:1114 with SMTP id 5b1f17b1804b1-43d1c18289cmr70405e9.6.1741856211785;
-        Thu, 13 Mar 2025 01:56:51 -0700 (PDT)
-Received: from [192.168.116.141] ([148.252.129.108])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d188bb34asm13182135e9.18.2025.03.13.01.56.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Mar 2025 01:56:51 -0700 (PDT)
-Message-ID: <7a4217ce-1251-452c-8570-fb36e811b234@gmail.com>
-Date: Thu, 13 Mar 2025 08:57:45 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fXsMI9tk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741856215; x=1773392215;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=SQM3zpDeZQPCL/TOKD7Cr+jhtK+DlHqqKnNo1aTLtRM=;
+  b=fXsMI9tklqQ+vEfJ57l9hi59YwTNEB/StP0vWtIvqncRXilW9sdiM+Rt
+   2/xyxgY5/mJcHDGJNf8hWEevK7kHDcxw7BiQHVpaQa9gWQp5s3fMfinfi
+   PU7tHLDf6p190/n1K4tTNgQfdhVUPnxDLjHwJSJPdttHRGcpW+ICNRKhc
+   d0lUAYicAmDlNoOS3PV/4va4dXm+Pm201ub5W0A1plQNEmAHjl/vDWRDL
+   1mo9fhgQPpgdYQUZwIgDKZpZnGhDzDPXrj3+CiDLvpPKcUlnB27H1/34r
+   s4OppI1p3x3n3Bv2kDI4voST4ukJqlVkuZlngSnOo9vE4ZplE8V6iRiBU
+   w==;
+X-CSE-ConnectionGUID: 3oOgnovVTGGSJBw8T2QbNg==
+X-CSE-MsgGUID: e0aodzN3Qf6nwkG2a405jw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="60503242"
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="60503242"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 01:56:54 -0700
+X-CSE-ConnectionGUID: Z88IionqRJSJFQ6JE494Og==
+X-CSE-MsgGUID: JmCaoyouS5Cep8IvRsdnJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="121104151"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 01:56:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tseMv-000000027hM-29FB;
+	Thu, 13 Mar 2025 10:56:45 +0200
+Date: Thu, 13 Mar 2025 10:56:45 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Sven Peter <sven@svenpeter.dev>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Aun-Ali Zaidi <admin@kodeit.net>,
+	Maxime Ripard <mripard@kernel.org>,
+	"airlied@redhat.com" <airlied@redhat.com>,
+	Simona Vetter <simona@ffwll.ch>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"apw@canonical.com" <apw@canonical.com>,
+	"joe@perches.com" <joe@perches.com>,
+	"dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
+	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	Hector Martin <marcan@marcan.st>,
+	"asahi@lists.linux.dev" <asahi@lists.linux.dev>
+Subject: Re: [PATCH 1/2] lib/vsprintf: Add support for generic FourCCs by
+ extending %p4cc
+Message-ID: <Z9KdzZUxs3vlwp0Z@smile.fi.intel.com>
+References: <b74df4b5-ecda-45ba-a98a-c84b0a29e380@suse.de>
+ <PN3PR01MB9597AC6A02B0BF873920D94CB8D02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <9092a9ed-aecf-40bd-9d15-b53d60d035b5@suse.de>
+ <PN3PR01MB959715C19BCEA54426D24934B8D02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <ff3a9c58-5c7a-4c48-8a9e-cc828a43baed@app.fastmail.com>
+ <PN3PR01MB9597E5C609290DB1A967263CB8D02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <Z9HgVn-XELC065w0@smile.fi.intel.com>
+ <47AE7FCD-0F30-4379-ADE9-090A15ACD58F@live.com>
+ <Z9Kb8zMJgmSP-rgD@smile.fi.intel.com>
+ <PN3PR01MB959780176C0B16C36FBD59C3B8D32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/2] introduce io_uring_cmd_import_fixed_vec
-To: Sidong Yang <sidong.yang@furiosa.ai>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>, Jens Axboe <axboe@kernel.dk>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- io-uring@vger.kernel.org
-References: <20250312142326.11660-1-sidong.yang@furiosa.ai>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250312142326.11660-1-sidong.yang@furiosa.ai>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <PN3PR01MB959780176C0B16C36FBD59C3B8D32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 3/12/25 14:23, Sidong Yang wrote:
-> This patche series introduce io_uring_cmd_import_vec. With this function,
-> Multiple fixed buffer could be used in uring cmd. It's vectored version
-> for io_uring_cmd_import_fixed(). Also this patch series includes a usage
-> for new api for encoded read in btrfs by using uring cmd.
+On Thu, Mar 13, 2025 at 08:53:28AM +0000, Aditya Garg wrote:
+> > On 13 Mar 2025, at 2:19 PM, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Mar 13, 2025 at 07:26:05AM +0000, Aditya Garg wrote:
+> >>>> On 13 Mar 2025, at 12:58 AM, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> >>> On Wed, Mar 12, 2025 at 07:14:36PM +0000, Aditya Garg wrote:
+> >>>>> On 12 Mar 2025, at 9:05 PM, Sven Peter <sven@svenpeter.dev> wrote:
+> >>>>> On Wed, Mar 12, 2025, at 13:03, Aditya Garg wrote:
 
-Pretty much same thing, we're still left with 2 allocations in the
-hot path. What I think we can do here is to add caching on the
-io_uring side as we do with rw / net, but that would be invisible
-for cmd drivers. And that cache can be reused for normal iovec imports.
+...
 
-https://github.com/isilence/linux.git regvec-import-cmd
-(link for convenience)
-https://github.com/isilence/linux/tree/regvec-import-cmd
+> >>>>> I don't have a strong opinion either way: for SMC I just need to print
+> >>>>> FourCC keys for debugging / information in a few places.
+> >>>>> 
+> >>>>> I'm preparing the SMC driver for upstreaming again (after a two year delay :-()
+> >>>>> and was just going to use macros to print the SMC FourCC keys similar to
+> >>>>> DRM_MODE_FMT/DRM_MODE_ARG for now to keep the series smaller and revisit
+> >>>>> the topic later.
+> >>>>> 
+> >>>>> Right now I have these in my local tree (only compile tested so far):
+> >>>>> 
+> >>>>> #define SMC_KEY_FMT "%c%c%c%c (0x%08x)"
+> >>>>> #define SMC_KEY_ARG(k) (k)>>24, (k)>>16, (k)>>8, (k), (k)
+> >>>> 
+> >>>> That seems to be a nice alternative, which I guess Thomas was also suggesting.
+> >>> 
+> >>> I don't think it's "nice". Each of the approaches has pros and cons.
+> >>> You can start from bloat-o-meter here and compare it with your %p extension.
+> >>> 
+> >>> Also, can you show the bloat-o-meter output for the vsprintf.c?
+> >> 
+> >> Here are your outputs:
+> > 
+> > Thank you!
+> > 
+> >> ---------------------------------------------------------------------
+> >> For appletbdrm:
+> >> 
+> >> aditya@MacBook:~/linux$ ./scripts/bloat-o-meter $P4 $MACRO
+> >> add/remove: 0/0 grow/shrink: 1/1 up/down: 64/-19 (45)
+> >> Function                                     old     new   delta
+> >> appletbdrm_read_response                     395     459     +64
+> >> appletbdrm_probe                            1786    1767     -19
+> >> Total: Before=13418, After=13463, chg +0.34%
+> > 
+> > This is enough, no need to repeat this for every parameter.
+> > 
+> >> ---------------------------------------------------------------------
+> >> For vsprintf:
+> >> 
+> >> aditya@MacBook:~/linux$ ./scripts/bloat-o-meter $OLD $NEW
+> >> add/remove: 0/0 grow/shrink: 1/0 up/down: 220/0 (220)
+> >> Function                                     old     new   delta
+> >> fourcc_string                                479     699    +220
+> >> Total: Before=26454, After=26674, chg +0.83%
+> > 
+> > So, we get +220 bytes vs +43 bytes. It means if we found 5+ users, it worth
+> > doing.
+> 
+> Will it also depend upon the number of times it's being used? In appletbdrm,
+> it is being used 3 times. Probably more in Asahi SMC.
 
-Not really target tested, no btrfs, not any other user, just an idea.
-There are 4 patches, but the top 3 are of interest.
+Right, it depends on the usage count. Also on different architectures it may
+give different results. On 32-bit it probably gives better statistics.
 
-Another way would be to cache in btrfs, but then btrfs would need to
-care about locking for the cache and some other bits, and we wouldn't
-be able to reuse it for other drivers.
+> >>>>> which are then used like this:
+> >>>>> 
+> >>>>> dev_info(dev,
+> >>>>>     "Initialized (%d keys " SMC_KEY_FMT " .. " SMC_KEY_FMT ")\n",
+> >>>>>      smc->key_count, SMC_KEY_ARG(smc->first_key),
+> >>>>>      SMC_KEY_ARG(smc->last_key));
 
 -- 
-Pavel Begunkov
+With Best Regards,
+Andy Shevchenko
+
 
