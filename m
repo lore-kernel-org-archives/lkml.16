@@ -1,352 +1,332 @@
-Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638A515747C;
-	Thu, 13 Mar 2025 17:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE3A189BAF;
+	Thu, 13 Mar 2025 17:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741887502; cv=none; b=R05qKgppiu3x2wpzh/rOtILNzBfp+hZsrPJTT4scr4A7OJXxilxH1xgc2gMrDhFOLKIfXPKISKqhb6QkjBQ77Q3odKehQdTWBD49HO23htoVH1b+Zl+j2KuD9iSe5mdOLTuQBz0vu6n5GqO3UqsQCYBpEUvi4SF05MqHg+BZECg=
+	t=1741887504; cv=none; b=SJXmj9Sodw9yt172dN3FkPbGBAwRpejSCEMuNm/D6xNa3MiXROr9r0gyqDg3AK4QeJeoRI+n35E9bObrqnS4sGIasg24vLdQdDn/0j9QjzkUbviNIiiMH2PK4SbitQqMTlCcuAtKBMBEF/F6U9quPBdnYDsR5B1xqrn2CGqms8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741887502; c=relaxed/simple;
-	bh=5KfbacWLsULiNldo/LNtihIo5NNdJMWDhB1poyd8VG8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D29fTjIksaJH2edZLNjEFGGMLa3DHIhuUCnwg63q6/ZKSDb/0BOw0MffNRzQ3CRKx6u0uxMch2Eg1yO9YY1ZfxM60Dj9X50XvYQ+GYnztG9uwcznWaeyrGIOZfSa75wZv0AVbL4abHADeh2M8BN82Fh64+D1KYzxpzese1QDMQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=RkVUDFeC; arc=none smtp.client-ip=131.188.11.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1741887504; c=relaxed/simple;
+	bh=sJQHlDmoBndg40QlRDNVL8OjmbHYcQ5yy/Ir1GAjq2o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r/CNTj1YpaP3ucSHao5r9xN0MAB+CCcU+SsAIJpOTn1D1iPTddJ77A5NSzCOF7p54MTEskEu+77ExWdeazECJqFgxDAVPlMoDtTjID4EAxtZ7bKtyUGhnx/vj76FRPqgvpOFitQd67iljpOEOAnNxfHk9VR13WwUbB/Uus7nhF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aA1tknTS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="RkVUDFeC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1741887495; bh=eW2eeHETzxLvUsqrL+MZ6GPGt+BC/MD7zKOadcpo8Do=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
-	 Subject;
-	b=RkVUDFeCqnNBBaG5C75KZpud4BNHX8/rUi7LoeN0oVbcbEEOdpFFNH9OwgsGyhwKK
-	 YKHSGnBUmSbjTqs5V55VW168gBiQiuWN4G+Q2sk8R4EAULKPfGzeBLVGhBva77gc+K
-	 2EQ5GlymrUjABSITyHNdB2mjKIJ/D3SfYuD7dJOiJ8z+Cnx7eAV0vP1RRY/gCbWSmO
-	 tUoqfUUzxGJHKgb4WLbXeVTJngp9ZzOHLd0gip1/Xjp8BzHaq8HHWfbONKYP6H1V4k
-	 gOMwY9IVXylAH9eGScatUBcytoJozVMx33VrIcTWa8ltkjFG9UR6n2KMCPw+bQyu9K
-	 Me3ttBDDWzLgA==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4ZDF8Q6MJ3z8srZ;
-	Thu, 13 Mar 2025 18:38:14 +0100 (CET)
-X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3614:2b00:7ee6:68e5:4447:ba92
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3614:2b00:7ee6:68e5:4447:ba92])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX19lS0EV9t6hwL0QN4CCoE3W3J8ymvf/Hn8=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4ZDF8L5L85z8sjS;
-	Thu, 13 Mar 2025 18:38:10 +0100 (CET)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Cupertino Miranda <cupertino.miranda@oracle.com>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>,
-	WANG Xuerui <git@xen0n.name>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Maximilian Ott <ott@cs.fau.de>,
-	Milan Stephan <milan.stephan@fau.de>
-Subject: [PATCH bpf-next 05/11] bpf, arm64, powerpc: Change nospec to include v1 barrier
-Date: Thu, 13 Mar 2025 18:38:08 +0100
-Message-ID: <20250313173808.1109600-1-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250313172127.1098195-1-luis.gerhorst@fau.de>
-References: <20250313172127.1098195-1-luis.gerhorst@fau.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aA1tknTS"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D9pjYR018375;
+	Thu, 13 Mar 2025 17:37:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=wnjrGjtplq5ITag3q2KDIs
+	jhDvdS8gSP3aILgKJHZbw=; b=aA1tknTSxPHDFvZ2MVvuk0yOz0AnaMXeOEzRpp
+	Urp8ypwmiEU10BWGWpzPdqkToaWjAZcFifJZmWAmWbaEH7WO/PWyUC/VCdf6FUUA
+	JP+baRhKt3Cm/g2+ikQTJjhe133oXF65uyRM3DEo6bsHl1Yvb2/9aW0FnYOxaZQn
+	IB7tW15A8jor5z2R3/9LBc5Ae+hpgxf9IIa019pXLuRlfMkAf7UXF7RsqIVPJ8L5
+	EhNUUeQb8pproJzEgXS4W5BJzthDS7n/3Z4YNFosqpazeTMFYFWabJsjKcVCAdC8
+	vD6FuBa/zx02ecvdfeMcsTY282xWVRYNVNhkyVGqvL4IcENA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2nxqsp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 17:37:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52DHbhfI025196
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 17:37:43 GMT
+Received: from PHILBER.na.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 13 Mar 2025 10:37:38 -0700
+From: Peter Hilber <quic_philber@quicinc.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+CC: Trilok Soni <quic_tsoni@quicinc.com>,
+        Peter Hilber
+	<quic_philber@quicinc.com>,
+        =?UTF-8?q?Eugenio=20P=C3=A9rez?=
+	<eperezma@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <virtualization@lists.linux.dev>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Ridoux, Julien" <ridouxj@amazon.com>,
+        Daniel Lezcano
+	<daniel.lezcano@linaro.org>,
+        Alexandre Belloni
+	<alexandre.belloni@bootlin.com>,
+        Parav Pandit <parav@nvidia.com>,
+        "Matias
+ Ezequiel Vara Larsen" <mvaralar@redhat.com>,
+        Cornelia Huck
+	<cohuck@redhat.com>, Simon Horman <horms@kernel.org>,
+        <virtio-dev@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-rtc@vger.kernel.org>
+Subject: [PATCH v6 0/4] Add virtio_rtc module
+Date: Thu, 13 Mar 2025 18:36:56 +0100
+Message-ID: <20250313173707.1492-1-quic_philber@quicinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: MOVWaCWILqQBWsCpWUGNq9pmqWxcDy9_
+X-Authority-Analysis: v=2.4 cv=Q4XS452a c=1 sm=1 tr=0 ts=67d317e8 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=dIu3SnmMAAAA:8 a=nYO1uykr7MxyYb2uiYgA:9
+ a=TjNXssC_j7lpFel5tvFf:22 a=Ua9G7VpiFza3u12uuhVB:22
+X-Proofpoint-ORIG-GUID: MOVWaCWILqQBWsCpWUGNq9pmqWxcDy9_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_08,2025-03-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 clxscore=1015 phishscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130135
 
-This changes the semantics of BPF_NOSPEC (previously a v4-only barrier)
-to always emit a speculation barrier that works against both Spectre v1
-AND v4. If mitigation is not needed on an architecture, the backend
-should set bpf_jit_bypass_spec_v4/v1().
+This series implements a driver for a virtio-rtc device conforming to spec
+proposal v8 [1]. It includes a PTP clock driver and an RTC class driver
+with alarm.
 
-As of now, this commit only has the user-visible implication that unpriv
-BPF's performance on PowerPC is reduced. This is required because we
-have emit additional v1 barrier instructions for BPF_NOSPEC.
+v6 updates
+==========
 
-This commit is required for a future commit to allow us to rely on
-BPF_NOSPEC for Spectre v1 mitigation. As of this commit, the feature
-that nospec acts as a v1 barrier is unused.
+v6 fixes the PTP clock name length, and a few style issues, some of which
+resulted in warnings.
 
-Commit f5e81d111750 ("bpf: Introduce BPF nospec instruction for
-mitigating Spectre v4") noted that mitigation instructions for v1 and v4
-might be different on some archs. While this would potentially offer
-improved performance on PowerPC, it was dismissed after the following
-considerations:
+Overview
+========
 
-* Only having one barrier simplifies the verifier and allows us to
-  easily rely on v4-induced barriers for reducing the complexity of
-  v1-induced speculative path verification.
+This patch series adds the virtio_rtc module, and related bugfixes. The
+virtio_rtc module implements a driver compatible with the proposed Virtio
+RTC device specification [1]. The Virtio RTC (Real Time Clock) device
+provides information about current time. The device can provide different
+clocks, e.g. for the UTC or TAI time standards, or for physical time
+elapsed since some past epoch. The driver can read the clocks with simple
+or more accurate methods. Optionally, the driver can set an alarm.
 
-* For the architectures that implemented BPF_NOSPEC, only PowerPC has
-  distinct instructions for v1 and v4. Even there, some insns may be
-  shared between the barriers for v1 and v4 (e.g., 'ori 31,31,0' and
-  'sync'). If this is still found to impact performance in an
-  unacceptable way, BPF_NOSPEC can be split into BPF_NOSPEC_V1 and
-  BPF_NOSPEC_V4 later. As an optimization, we can already skip v1/v4
-  insns from being emitted for PowerPC with this setup if
-  bypass_spec_v1/v4 is set.
+For the Virtio RTC device, there is currently a proprietary implementation,
+which has been used for testing.
 
-Vulnerability-status for BPF_NOSPEC-based Spectre mitigations (v4 as of
-this commit, v1 in the future) is therefore:
+PTP clock interface
+===================
 
-* x86 (32-bit and 64-bit), ARM64, and PowerPC (64-bit): Mitigated - This
-  patch implements BPF_NOSPEC for these architectures. The previous
-  v4-only version was supported since commit f5e81d111750 ("bpf:
-  Introduce BPF nospec instruction for mitigating Spectre v4") and
-  commit b7540d625094 ("powerpc/bpf: Emit stf barrier instruction
-  sequences for BPF_NOSPEC").
+virtio_rtc exposes clocks as PTP clocks to userspace, similar to ptp_kvm.
+If both the Virtio RTC device and this driver have special support for the
+current clocksource, time synchronization programs can use
+cross-timestamping using ioctl PTP_SYS_OFFSET_PRECISE2 aka
+PTP_SYS_OFFSET_PRECISE. Similar to ptp_kvm, system time synchronization
+with single-digit ns precision is possible with a quiescent reference clock
+(from the Virtio RTC device). This works even when the Virtio device
+response is slow compared to ptp_kvm hypercalls.
 
-* LoongArch: Not Vulnerable - Commit a6f6a95f2580 ("LoongArch, bpf: Fix
-  jit to skip speculation barrier opcode") is the only other past commit
-  related to BPF_NOSPEC and indicates that the insn is not required
-  there.
+The following illustrates a test using PTP_SYS_OFFSET_PRECISE, with
+interspersed strace log and chrony [2] refclocks log, on arm64. In the
+example, chrony tracks a virtio_rtc PTP clock ("PHCV", /dev/ptp0). The raw
+offset between the virtio_rtc clock and CLOCK_REALTIME is 0 to 1 ns. At the
+device side, the Virtio RTC device artificially delays both the clock read
+request, and the response, by 50 ms. Cross-timestamp interpolation still
+works with this delay. chrony also monitors a ptp_kvm clock ("PHCK",
+/dev/ptp3) for comparison, which yields a similar offset.
 
-* MIPS: Vulnerable (if unprivileged BPF is enabled) -
-  Commit a6f6a95f2580 ("LoongArch, bpf: Fix jit to skip speculation
-  barrier opcode") indicates that it is not vulnerable but this
-  contradicts the kernel and Debian documentation. Therefore I assume
-  that there exist vulnerable MIPS CPUs (but maybe not from Loongson?).
-  In the future, BPF_NOSPEC could be implemented for MIPS based on the
-  GCC speculation_barrier [1]. For now, we rely on unprivileged BPF
-  being disabled by default.
+	ioctl(5</dev/ptp3>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.000329>
+	===============================================================================
+	   Date (UTC) Time         Refid  DP L P  Raw offset   Cooked offset      Disp.
+	===============================================================================
+	2023-06-29 18:49:55.595742 PHCK    0 N 0  1.000000e-09  8.717931e-10  5.500e-08
+	2023-06-29 18:49:55.595742 PHCK    - N -       -        8.717931e-10  5.500e-08
+	ioctl(6</dev/ptp0>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.101545>
+	2023-06-29 18:49:56.147766 PHCV    0 N 0  1.000000e-09  8.801870e-10  5.500e-08
+	2023-06-29 18:49:56.147766 PHCV    - N -       -        8.801870e-10  5.500e-08
+	ioctl(5</dev/ptp3>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.000195>
+	2023-06-29 18:49:56.202446 PHCK    0 N 0  1.000000e-09  7.364180e-10  5.500e-08
+	2023-06-29 18:49:56.202446 PHCK    - N -       -        7.364180e-10  5.500e-08
+	ioctl(6</dev/ptp0>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.101484>
+	2023-06-29 18:49:56.754641 PHCV    0 N 0  0.000000e+00 -2.617368e-10  5.500e-08
+	2023-06-29 18:49:56.754641 PHCV    - N -       -       -2.617368e-10  5.500e-08
+	ioctl(5</dev/ptp3>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.000270>
+	2023-06-29 18:49:56.809282 PHCK    0 N 0  1.000000e-09  7.779321e-10  5.500e-08
+	2023-06-29 18:49:56.809282 PHCK    - N -       -        7.779321e-10  5.500e-08
+	ioctl(6</dev/ptp0>, PTP_SYS_OFFSET_PRECISE, 0xffffe86691c8) = 0 <0.101510>
+	2023-06-29 18:49:57.361376 PHCV    0 N 0  0.000000e+00 -2.198794e-10  5.500e-08
+	2023-06-29 18:49:57.361376 PHCV    - N -       -       -2.198794e-10  5.500e-08
 
-* Other: Unknown - To the best of my knowledge there is no definitive
-  information available that indicates that any other arch is
-  vulnerable. They are therefore left untouched (BPF_NOSPEC is not
-  implemented, but bypass_spec_v1/v4 is also not set).
+This patch series only adds special support for the Arm Generic Timer
+clocksource. At the driver side, it should be easy to support more
+clocksources.
 
-I did the following testing to ensure the insn encoding is correct:
+Fallback PTP clock interface
+----------------------------
 
-* ARM64:
-  * 'dsb nsh; isb' was successfully tested with the BPF CI in [2]
-  * 'sb' locally using QEMU v7.2.15 -cpu max (emitted sb insn is
-    executed for example with './test_progs -t verifier_array_access')
+Without special support for the current clocksource, time synchronization
+programs can still use ioctl PTP_SYS_OFFSET_EXTENDED2 aka
+PTP_SYS_OFFSET_EXTENDED. In this case, precision will generally be worse
+and will depend on the Virtio device response characteristics.
 
-* PowerPC: The following configs were tested locally with ppc64le QEMU
-  v8.2 '-machine pseries -cpu POWER9':
-  * STF_BARRIER_EIEIO + CONFIG_PPC_BOOK32_64
-  * STF_BARRIER_SYNC_ORI (forced on) + CONFIG_PPC_BOOK32_64
-  * STF_BARRIER_FALLBACK (forced on) + CONFIG_PPC_BOOK32_64
-  * CONFIG_PPC_E500 (forced on) + STF_BARRIER_EIEIO
-  * CONFIG_PPC_E500 (forced on) + STF_BARRIER_SYNC_ORI (forced on)
-  * CONFIG_PPC_E500 (forced on) + STF_BARRIER_FALLBACK (forced on)
-  * CONFIG_PPC_E500 (forced on) + STF_BARRIER_NONE (forced on)
-  Most of those cobinations should not occur in practice, but I was not
-  able to get an PPC e6500 rootfs (for testing PPC_E500 without forcing
-  it on). In any case, this should ensure that there are no unexpected
-  conflicts between the insns when combined like this. Individual v1/v4
-  barriers were already emitted elsewhere.
+The following illustrates a test using PTP_SYS_OFFSET_EXTENDED, with
+interspersed strace log and chrony refclocks log, on x86-64 (with `ts'
+values omitted):
 
-[1] https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=29b74545531f6afbee9fc38c267524326dbfbedf
-    ("MIPS: Add speculation_barrier support")
-[2] https://github.com/kernel-patches/bpf/pull/8576
+	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
+	===============================================================================
+	   Date (UTC) Time         Refid  DP L P  Raw offset   Cooked offset      Disp.
+	===============================================================================
+	2023-06-28 14:11:26.697782 PHCV    0 N 0  3.318200e-05  3.450891e-05  4.611e-06
+	2023-06-28 14:11:26.697782 PHCV    - N -       -        3.450891e-05  4.611e-06
+	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
+	2023-06-28 14:11:27.208763 PHCV    0 N 0 -3.792800e-05 -4.023965e-05  4.611e-06
+	2023-06-28 14:11:27.208763 PHCV    - N -       -       -4.023965e-05  4.611e-06
+	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
+	2023-06-28 14:11:27.722818 PHCV    0 N 0 -3.328600e-05 -3.134404e-05  4.611e-06
+	2023-06-28 14:11:27.722818 PHCV    - N -       -       -3.134404e-05  4.611e-06
+	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
+	2023-06-28 14:11:28.233572 PHCV    0 N 0 -4.966900e-05 -4.584331e-05  4.611e-06
+	2023-06-28 14:11:28.233572 PHCV    - N -       -       -4.584331e-05  4.611e-06
+	ioctl(5, PTP_SYS_OFFSET_EXTENDED, {n_samples=10, ts=OMITTED}) = 0
+	2023-06-28 14:11:28.742737 PHCV    0 N 0  4.902700e-05  5.361388e-05  4.611e-06
+	2023-06-28 14:11:28.742737 PHCV    - N -       -        5.361388e-05  4.611e-06
 
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-Cc: Henriette Herzog <henriette.herzog@rub.de>
-Cc: Maximilian Ott <ott@cs.fau.de>
-Cc: Milan Stephan <milan.stephan@fau.de>
----
- arch/arm64/net/bpf_jit.h          |  5 +++
- arch/arm64/net/bpf_jit_comp.c     |  9 +++--
- arch/powerpc/net/bpf_jit_comp64.c | 58 ++++++++++++++++++++++---------
- include/linux/filter.h            |  2 +-
- kernel/bpf/core.c                 | 17 ++++-----
- 5 files changed, 64 insertions(+), 27 deletions(-)
+PTP clock setup
+---------------
 
-diff --git a/arch/arm64/net/bpf_jit.h b/arch/arm64/net/bpf_jit.h
-index a3b0e693a125..bbea4f36f9f2 100644
---- a/arch/arm64/net/bpf_jit.h
-+++ b/arch/arm64/net/bpf_jit.h
-@@ -325,4 +325,9 @@
- #define A64_MRS_SP_EL0(Rt) \
- 	aarch64_insn_gen_mrs(Rt, AARCH64_INSN_SYSREG_SP_EL0)
- 
-+/* Barriers */
-+#define A64_SB aarch64_insn_get_sb_value()
-+#define A64_DSB_NSH (aarch64_insn_get_dsb_base_value() | 0x7 << 8)
-+#define A64_ISB aarch64_insn_get_isb_value()
-+
- #endif /* _BPF_JIT_H */
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index 0f617b55866e..ccd6a2f31e35 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -1581,9 +1581,14 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
- 			return ret;
- 		break;
- 
--	/* speculation barrier */
-+	/* speculation barrier against v1 and v4 */
- 	case BPF_ST | BPF_NOSPEC:
--		/* See bpf_jit_bypass_spec_v4() */
-+		if (alternative_has_cap_likely(ARM64_HAS_SB)) {
-+			emit(A64_SB, ctx);
-+		} else {
-+			emit(A64_DSB_NSH, ctx);
-+			emit(A64_ISB, ctx);
-+		}
- 		break;
- 
- 	/* ST: *(size *)(dst + off) = imm */
-diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
-index b5339c541283..c00951e2a50e 100644
---- a/arch/powerpc/net/bpf_jit_comp64.c
-+++ b/arch/powerpc/net/bpf_jit_comp64.c
-@@ -800,26 +800,52 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
- 
- 		/*
- 		 * BPF_ST NOSPEC (speculation barrier)
-+		 *
-+		 * The following must act as a barrier against both Spectre v1
-+		 * and v4 if we requested both mitigations. Therefore, also emit
-+		 * 'isync; sync' on E500 or 'ori31' on BOOK3S_64 in addition to
-+		 * the insns needed for a Spectre v4 barrier.
-+		 *
-+		 * If we requested only !bypass_spec_v1 OR only !bypass_spec_v4,
-+		 * we can skip the respective other barrier type as an
-+		 * optimization.
- 		 */
- 		case BPF_ST | BPF_NOSPEC:
--			switch (stf_barrier) {
--			case STF_BARRIER_EIEIO:
--				EMIT(PPC_RAW_EIEIO() | 0x02000000);
--				break;
--			case STF_BARRIER_SYNC_ORI:
-+			bool sync_emitted = false;
-+			bool ori31_emitted = false;
-+#ifdef CONFIG_PPC_E500
-+			if (!bpf_jit_bypass_spec_v1()) {
-+				EMIT(PPC_RAW_ISYNC());
- 				EMIT(PPC_RAW_SYNC());
--				EMIT(PPC_RAW_LD(tmp1_reg, _R13, 0));
--				EMIT(PPC_RAW_ORI(_R31, _R31, 0));
--				break;
--			case STF_BARRIER_FALLBACK:
--				ctx->seen |= SEEN_FUNC;
--				PPC_LI64(_R12, dereference_kernel_function_descriptor(bpf_stf_barrier));
--				EMIT(PPC_RAW_MTCTR(_R12));
--				EMIT(PPC_RAW_BCTRL());
--				break;
--			case STF_BARRIER_NONE:
--				break;
-+				sync_emitted = true;
-+			}
-+#endif
-+			if (!bpf_jit_bypass_spec_v4()) {
-+				switch (stf_barrier) {
-+				case STF_BARRIER_EIEIO:
-+					EMIT(PPC_RAW_EIEIO() | 0x02000000);
-+					break;
-+				case STF_BARRIER_SYNC_ORI:
-+					if (!sync_emitted)
-+						EMIT(PPC_RAW_SYNC());
-+					EMIT(PPC_RAW_LD(tmp1_reg, _R13, 0));
-+					EMIT(PPC_RAW_ORI(_R31, _R31, 0));
-+					ori31_emitted = true;
-+					break;
-+				case STF_BARRIER_FALLBACK:
-+					ctx->seen |= SEEN_FUNC;
-+					PPC_LI64(_R12, dereference_kernel_function_descriptor(bpf_stf_barrier));
-+					EMIT(PPC_RAW_MTCTR(_R12));
-+					EMIT(PPC_RAW_BCTRL());
-+					break;
-+				case STF_BARRIER_NONE:
-+					break;
-+				}
- 			}
-+#ifdef CONFIG_PPC_BOOK3S_64
-+			if (!bpf_jit_bypass_spec_v1() && !ori31_emitted)
-+				EMIT(PPC_RAW_ORI(_R31, _R31, 0));
-+#endif
- 			break;
- 
- 		/*
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 590476743f7a..9b933d459b7a 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -82,7 +82,7 @@ struct ctl_table_header;
- #define BPF_CALL_ARGS	0xe0
- 
- /* unused opcode to mark speculation barrier for mitigating
-- * Speculative Store Bypass
-+ * Spectre v1 and v4
-  */
- #define BPF_NOSPEC	0xc0
- 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index a3e434851614..eda82877169e 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -2102,14 +2102,15 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
- #undef COND_JMP
- 	/* ST, STX and LDX*/
- 	ST_NOSPEC:
--		/* Speculation barrier for mitigating Speculative Store Bypass.
--		 * In case of arm64, we rely on the firmware mitigation as
--		 * controlled via the ssbd kernel parameter. Whenever the
--		 * mitigation is enabled, it works for all of the kernel code
--		 * with no need to provide any additional instructions here.
--		 * In case of x86, we use 'lfence' insn for mitigation. We
--		 * reuse preexisting logic from Spectre v1 mitigation that
--		 * happens to produce the required code on x86 for v4 as well.
-+		/* Speculation barrier for mitigating Speculative Store Bypass,
-+		 * Bounds-Check Bypass and Type Confusion. In case of arm64, we
-+		 * rely on the firmware mitigation as controlled via the ssbd
-+		 * kernel parameter. Whenever the mitigation is enabled, it
-+		 * works for all of the kernel code with no need to provide any
-+		 * additional instructions here. In case of x86, we use 'lfence'
-+		 * insn for mitigation. We reuse preexisting logic from Spectre
-+		 * v1 mitigation that happens to produce the required code on
-+		 * x86 for v4 as well.
- 		 */
- 		barrier_nospec();
- 		CONT;
+The following udev rule can be used to get a symlink /dev/ptp_virtio to the
+UTC clock:
+
+	SUBSYSTEM=="ptp", ATTR{clock_name}=="Virtio PTP type 0/variant 0", SYMLINK += "ptp_virtio"
+
+The following chrony configuration directive can then be added in
+/etc/chrony/chrony.conf to synchronize to the Virtio UTC clock:
+
+	refclock PHC /dev/ptp_virtio refid PHCV poll -1 dpoll -1
+
+RTC interface
+=============
+
+This patch series adds virtio_rtc as a generic Virtio driver, including
+both a PTP clock driver and an RTC class driver.
+
+Feedback is greatly appreciated.
+
+[1] https://lore.kernel.org/virtio-comment/20250306095112.1293-1-quic_philber@quicinc.com/
+[2] https://chrony.tuxfamily.org/
+
+Changelog
+=========
+
+v6:
+
+- Shorten PTP clock names to always fit into 32 bytes.
+
+- Fix sparse warning about endianness mismatch (Simon Horman).
+
+- Do not mark comments missing parameter documentation as kernel doc (Simon
+  Horman).
+
+- Improve error status computation readability.
+
+- Avoid conditional locking within a block.
+
+v5:
+
+- Update to virtio-rtc spec v7, essentially removing definitions.
+
+- Fix multiple bugs after readying device during probe and restore.
+
+- Actually initialize Virtio clock id for RTC class device.
+
+- Add freeze/restore ops already in first patch.
+
+- Minor changes:
+
+  - Use new APIs devm_device_init_wakeup(), secs_to_jiffies().
+
+  - Fix style issues.
+
+  - Improve logging types and clarity.
+
+  - Drop unnecessary memory barrier pair.
+
+  - Return error status from device, whenever available.
+
+v4:
+
+- Update Virtio interface to spec v6.
+
+- Distinguish UTC-like clocks by handling of leap seconds (spec v6).
+
+- Do not create RTC class device for clocks which may step on leap seconds
+  (Alexandre Belloni).
+
+- Clear RTC class feature bit instead of defining reduced ops
+  (Alexandre Belloni).
+
+- For PTP clock name, always use numeric clock type, and numeric variant.
+
+- Use macros for 64-bit divisions.
+
+- Remove unnecessary memory barriers.
+
+- Cosmetic improvements.
+
+- Drop upstreamed timekeeping bugfixes from series.
+
+v3:
+
+- Update to conform to virtio spec RFC v3 (no significant behavioral
+  changes).
+
+- Add RTC class driver with alarm according to virtio spec RFC v3.
+
+- For cross-timestamp corner case fix, switch back to v1 style closed
+  interval test (Thomas Gleixner).
+
+v2:
+
+- Depend on patch series "treewide: Use clocksource id for
+  get_device_system_crosststamp()" to avoid requiring a clocksource pointer
+  with get_device_system_crosststamp().
+
+- Assume Arm Generic Timer will use CP15 virtual counter. Drop
+  arm_arch_timer helper functions (Marc Zyngier).
+
+- Improve cross-timestamp fixes problem description and implementation
+  (John Stultz).
+
+
+Peter Hilber (4):
+  virtio_rtc: Add module and driver core
+  virtio_rtc: Add PTP clocks
+  virtio_rtc: Add Arm Generic Timer cross-timestamping
+  virtio_rtc: Add RTC class driver
+
+ MAINTAINERS                          |    7 +
+ drivers/virtio/Kconfig               |   64 ++
+ drivers/virtio/Makefile              |    5 +
+ drivers/virtio/virtio_rtc_arm.c      |   23 +
+ drivers/virtio/virtio_rtc_class.c    |  262 +++++
+ drivers/virtio/virtio_rtc_driver.c   | 1407 ++++++++++++++++++++++++++
+ drivers/virtio/virtio_rtc_internal.h |  122 +++
+ drivers/virtio/virtio_rtc_ptp.c      |  347 +++++++
+ include/uapi/linux/virtio_rtc.h      |  237 +++++
+ 9 files changed, 2474 insertions(+)
+ create mode 100644 drivers/virtio/virtio_rtc_arm.c
+ create mode 100644 drivers/virtio/virtio_rtc_class.c
+ create mode 100644 drivers/virtio/virtio_rtc_driver.c
+ create mode 100644 drivers/virtio/virtio_rtc_internal.h
+ create mode 100644 drivers/virtio/virtio_rtc_ptp.c
+ create mode 100644 include/uapi/linux/virtio_rtc.h
+
+
+base-commit: 9d8960672d63db4b3b04542f5622748b345c637a
 -- 
-2.48.1
+2.43.0
 
