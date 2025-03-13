@@ -1,207 +1,77 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14BB1BDCF
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A88262D35;
+	Thu, 13 Mar 2025 08:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741856095; cv=none; b=obHYHwa53XMdQR1yqwrmh318xcHOKUDv2TciwXBowWO/N1/ibLE22JaY3S2kfMICBt0m35o91V00r/zHpa7mqC7bKD708gqXBc6ZZQhssT7k8dWaT7XjLRbGaiwr1EmMYr44rzWitbrkiCqjHBNVY3eQY/depzP8PZUvBFLNQIY=
+	t=1741856106; cv=none; b=NsMlH1Ob5O1MB/Fmv92/o9paNyIMxSRdUIJZ9KSUkZ7Penuf+xXDyPxdgQDE0HWvix9ZdEiocw9kvZcHMSiJ1kMtLKmLdd72XAASF/r1AeEyq33SidkmKN5mz64J7BpO2l+0gCzbcYG4O3Orx3IhMo0ZIi2zenLSoRsXifR3PGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741856095; c=relaxed/simple;
-	bh=z4kFVAh8ZwdeetGifHupttht3HiRwRg8if5+O9Ubfv4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=vDodm/l2xbu/+/AUy6SRqBYEctZcij/peW8LOWngBGzBr0p1DNL7QOvyOTsYypeaY1lAIjgZ+NTxN5jvz6yLko4rGk8bkjFWyfCf+W4SDUE+zOA9wtwrJ/FUIPa6GngZNunJzD7uEgBxEIxnpEkUesREH5T/puXMGN+QU5lvyVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <l.stach@pengutronix.de>)
-	id 1tseKg-00021i-Us; Thu, 13 Mar 2025 09:54:26 +0100
-Message-ID: <b425a7c7a7d6508daf23fe7046864a498029a7ac.camel@pengutronix.de>
-Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace the
- hardcodes
-From: Lucas Stach <l.stach@pengutronix.de>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Hongxing Zhu <hongxing.zhu@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>,
-  "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>,  "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "shawnguo@kernel.org" <shawnguo@kernel.org>,  "lpieralisi@kernel.org"
- <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, 
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,  "s.hauer@pengutronix.de"
- <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,  "kernel@pengutronix.de"
- <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Date: Thu, 13 Mar 2025 09:54:25 +0100
-In-Reply-To: <Z9GYm/jp9VIhCEeY@lizhi-Precision-Tower-5810>
-References: 
-	<AS8PR04MB8676E66BD40C37B2A7E390178CD12@AS8PR04MB8676.eurprd04.prod.outlook.com>
-	 <20250311155452.GA629749@bhelgaas>
-	 <DU2PR04MB8677AC699DF11D847AB768708CD02@DU2PR04MB8677.eurprd04.prod.outlook.com>
-	 <fcb5f09f8e4311c7a6ef60aaf3cb4e3f05a8f05e.camel@pengutronix.de>
-	 <Z9GYm/jp9VIhCEeY@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1741856106; c=relaxed/simple;
+	bh=v/UmHuy4+WdwC6rhInMSg1tPkA5XhywUNIcfydkGDm4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Htg0YPTGIrWqfMcxO4AVhePijEL7asQ42NDVytAfA9QLbHgqtITbzgKlMB3gbVnWOAPNPMAEsDs4KIVYb4kutu9mn2XBn9Jw7iONLviqgcgeeekJgXp6KV0ippeXTCw+qNBLXvAiFj3I/T7DLnJT48QU87njXUSUvEYf/1BLHAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rwsincOu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rwsincOu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE8DFC4CEDD;
+	Thu, 13 Mar 2025 08:55:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741856105;
+	bh=v/UmHuy4+WdwC6rhInMSg1tPkA5XhywUNIcfydkGDm4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rwsincOuRDAoSQT7lNAF68R69LNaC03bQM8KuC1oAriCzmL6sVDXq5upuGHB8mOt1
+	 CkI37FUnrMb70XF+CdKUrgp9+FFl3p01wwea0lTg1KcxtoHIyaL+75+BEHsNmjQem1
+	 IMCg57BCyobor7B9pzVU6Rj5kNhExNThXtlzjem6D7VnfkN194mbTJnOIXjMwJAL2C
+	 liZVsUWuMngJ/jQfsC1/tHTXi+H10wyQQ/yPBRRU1/e1C1ixagjBWYS678eeoA97u+
+	 HbJ+TMY4g8Uo2MA40KhDAacGDWw15U+zvXtMAxrKnFw0hO1boWr0bLV6/yse0FYVoP
+	 ze+ZsrcmkAVIA==
+From: Christian Brauner <brauner@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] fs: use debug-only asserts around fd allocation and install
+Date: Thu, 13 Mar 2025 09:54:56 +0100
+Message-ID: <20250313-einspannen-auktion-2f2b8e212eaf@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250312161941.1261615-1-mjguzik@gmail.com>
+References: <20250312161941.1261615-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1079; i=brauner@kernel.org; h=from:subject:message-id; bh=v/UmHuy4+WdwC6rhInMSg1tPkA5XhywUNIcfydkGDm4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRfmpsYdDLWv8wpLJdn4yy5tr9uundmaqkH9165VLQj0 6s/03B3RykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwESSJjH84f831ffCn59PIy5v elW3j+tjYUTuzslMC3gn1T35ZZyos42RYWrTi3kh63vMe3snqq4J8N+1Zkdv2N/967zVn1Tn/To twA8A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Am Mittwoch, dem 12.03.2025 um 10:22 -0400 schrieb Frank Li:
-> On Wed, Mar 12, 2025 at 09:28:02AM +0100, Lucas Stach wrote:
-> > Am Mittwoch, dem 12.03.2025 um 04:05 +0000 schrieb Hongxing Zhu:
-> > > > -----Original Message-----
-> > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > Sent: 2025=E5=B9=B43=E6=9C=8811=E6=97=A5 23:55
-> > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > Cc: robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
-> > > > shawnguo@kernel.org; l.stach@pengutronix.de; lpieralisi@kernel.org;
-> > > > kw@linux.com; manivannan.sadhasivam@linaro.org; bhelgaas@google.com=
-;
-> > > > s.hauer@pengutronix.de; festevam@gmail.com; devicetree@vger.kernel.=
-org;
-> > > > linux-pci@vger.kernel.org; imx@lists.linux.dev; kernel@pengutronix.=
-de;
-> > > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace th=
-e
-> > > > hardcodes
-> > > >=20
-> > > > On Tue, Mar 11, 2025 at 01:11:04AM +0000, Hongxing Zhu wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > > > Sent: 2025=E5=B9=B43=E6=9C=8810=E6=97=A5 23:11
-> > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > > Cc: robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
-> > > > > > shawnguo@kernel.org; l.stach@pengutronix.de; lpieralisi@kernel.=
-org;
-> > > > > > kw@linux.com; manivannan.sadhasivam@linaro.org;
-> > > > bhelgaas@google.com;
-> > > > > > s.hauer@pengutronix.de; festevam@gmail.com;
-> > > > > > devicetree@vger.kernel.org; linux-pci@vger.kernel.org;
-> > > > > > imx@lists.linux.dev; kernel@pengutronix.de;
-> > > > > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.=
-org
-> > > > > > Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replac=
-e the
-> > > > > > hardcodes
-> > > > > >=20
-> > > > > > On Wed, Feb 26, 2025 at 10:42:56AM +0800, Richard Zhu wrote:
-> > > > > > > Use the domain number replace the hardcodes to uniquely ident=
-ify
-> > > > > > > different controller on i.MX8MQ platforms. No function change=
-s.
-> > > > > > >=20
-> > > > > > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > > > > > ---
-> > > > > > > =C2=A0drivers/pci/controller/dwc/pci-imx6.c | 14 ++++++------=
---
-> > > > > > > =C2=A01 file changed, 6 insertions(+), 8 deletions(-)
-> > > > > > >=20
-> > > > > > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > b/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > index 90ace941090f..ab9ebb783593 100644
-> > > > > > > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > @@ -41,7 +41,6 @@
-> > > > > > > =C2=A0#define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
-> > > > > > > =C2=A0#define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
-> > > > > > > =C2=A0#define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11,
-> > > > 8)
-> > > > > > > -#define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
-> > > > > > >=20
-> > > > > > > =C2=A0#define IMX95_PCIE_PHY_GEN_CTRL			0x0
-> > > > > > > =C2=A0#define IMX95_PCIE_REF_USE_PAD			BIT(17)
-> > > > > > > @@ -1474,7 +1473,6 @@ static int imx_pcie_probe(struct
-> > > > > > > platform_device
-> > > > > > *pdev)
-> > > > > > > =C2=A0	struct dw_pcie *pci;
-> > > > > > > =C2=A0	struct imx_pcie *imx_pcie;
-> > > > > > > =C2=A0	struct device_node *np;
-> > > > > > > -	struct resource *dbi_base;
-> > > > > > > =C2=A0	struct device_node *node =3D dev->of_node;
-> > > > > > > =C2=A0	int i, ret, req_cnt;
-> > > > > > > =C2=A0	u16 val;
-> > > > > > > @@ -1515,10 +1513,6 @@ static int imx_pcie_probe(struct
-> > > > > > platform_device *pdev)
-> > > > > > > =C2=A0			return PTR_ERR(imx_pcie->phy_base);
-> > > > > > > =C2=A0	}
-> > > > > > >=20
-> > > > > > > -	pci->dbi_base =3D devm_platform_get_and_ioremap_resource(pd=
-ev,
-> > > > 0,
-> > > > > > &dbi_base);
-> > > > > > > -	if (IS_ERR(pci->dbi_base))
-> > > > > > > -		return PTR_ERR(pci->dbi_base);
-> > > > > >=20
-> > > > > > This makes me wonder.
-> > > > > >=20
-> > > > > > IIUC this means that previously we set controller_id to 1 if th=
-e
-> > > > > > first item in devicetree "reg" was 0x33c00000, and now we will =
-set
-> > > > > > controller_id to 1 if the devicetree "linux,pci-domain" propert=
-y is 1.
-> > > > > > This is good, but I think this new dependency on the correct
-> > > > > > "linux,pci-domain" in devicetree should be mentioned in the com=
-mit log.
-> > > > > >=20
-> > > > > > My bigger worry is that we no longer set pci->dbi_base at all. =
- I
-> > > > > > see that the only use of pci->dbi_base in pci-imx6.c was to
-> > > > > > determine the controller_id, but this is a DWC-based driver, an=
-d the
-> > > > > > DWC core certainly uses
-> > > > > > pci->dbi_base.  Are we sure that none of those DWC core paths a=
-re
-> > > > > > important to pci-imx6.c?
-> > > > > Hi Bjorn:
-> > > > > Thanks for your concerns.
-> > > > > Don't worry about the assignment of pci->dbi_base.
-> > > > > If pci-imx6.c driver doesn't set it. DWC core driver would set it=
- when
-> > > > > =C2=A0dw_pcie_get_resources() is invoked.
-> > > >=20
-> > > > Great, thanks!  Maybe we can amend the commit log to mention that a=
-nd
-> > > > the new "linux,pci-domain" dependency.
-> > > How about the following updates of the commit log?
-> > >=20
-> > > Use the domain number replace the hardcodes to uniquely identify
-> > > different controller on i.MX8MQ platforms. No function changes.
-> > > Please make sure the " linux,pci-domain" is set for i.MX8MQ correctly=
-, since
-> > > =C2=A0the controller id is relied on it totally.
-> > >=20
-> > This breaks running a new kernel on an old DT without the
-> > linux,pci-domain property, which I'm absolutely no fan of. We tried
-> > really hard to keep this way around working in the i.MX world.
->=20
-> 8MQ already add linux,pci-domain since Jan, 2021
->=20
-> commit c0b70f05c87f3b09b391027c6f056d0facf331ef
-> Author: Peng Fan <peng.fan@nxp.com>
-> Date:   Fri Jan 15 11:26:57 2021 +0800
->=20
-> Only missed is pcie-ep side, which have not been used at all boards dts
-> file in upstream.
+On Wed, 12 Mar 2025 17:19:41 +0100, Mateusz Guzik wrote:
+> This also restores the check which got removed in 52732bb9abc9ee5b
+> ("fs/file.c: remove sanity_check and add likely/unlikely in alloc_fd()")
+> for performance reasons -- they no longer apply with a debug-only
+> variant.
+> 
+> 
 
-I wasn't aware of this. 2021 is quite a while ago, so I suspect that
-nobody is going to run a new kernel with a DT this old. I retract my
-objection.
+Applied to the vfs-6.15.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.15.misc branch should appear in linux-next soon.
 
-Regards,
-Lucas
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.15.misc
+
+[1/1] fs: use debug-only asserts around fd allocation and install
+      https://git.kernel.org/vfs/vfs/c/dc530c44cd64
