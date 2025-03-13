@@ -1,196 +1,219 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0834D1FBCB1;
-	Thu, 13 Mar 2025 07:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A041FBE80;
+	Thu, 13 Mar 2025 07:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741849211; cv=none; b=VCwSEe3QrztCQAyVg4jnAumy7CcWgmV9BwBGIhbCg71FxF/aIybIiJik8cYnf3M6ItNHA+YBCaxoX7qHd5YvFMVcf9Zr5HnXU8aZ9kaDMsSt+hR2y8m+OmmGw06lMvtNbxnH+UdbPTeuQ9bphape5NRJDtjIBeVsdkZPhWhHq84=
+	t=1741849215; cv=none; b=a0W/nv9kXbWJvWmTliY0g5XfRakrRfWSBA29Y8c75JulMC5eCE2g5t1iIlXwr09E07BM4uRDfxh99D3bTqrz/SNSNhKJNxTlCoFW7YXndoRohWhOUb3IRtz0NF64hX/mQZRQw2yLb14aVFnlo1InPELuMj9eqcDn4Pgu7b18Blg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741849211; c=relaxed/simple;
-	bh=ZWu7yEmYDtCiCJ92mO+ZjNEmu6CsBl2tJ1BCQ1nkDBA=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=c7bGAK8f94OUTy0yQ8df54Xt8bDauy/rBi/J3fMYPNEfd2ySv+HRHhZIjVsvTeERArzUEhzEV6UENV25rnqIHNnfFqogZ24FVQwpTrObNGc/xoEP1IJYYc8hz5Q8my4UR2FWlUQVANv+mKjz2/ZUeR88B7fNnfTSIWAbm7K1cSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OU9jz2Qe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741849215; c=relaxed/simple;
+	bh=jnFn2vcB5VWw0rZqsKmCyDWaFtK3hja6aZdpBwbKEy8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W0fte6QM/EAUqyXUfvK9jMyxlSiQOI2JzjRYxZKe4lfq42E2dOEdxuYV1bUWaezBwXylZ4TqopcRcxL5mJ1BdCVmukreavGjqKRQvz2KjV2WFDkXKhS8d2A+chP389WH4AuFEOUYgXeZZhUyZH9lgAnoCq4r0lTiNbKw32zsbXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=b9nxJkr1; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OU9jz2Qe"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CNoRx2008907;
-	Thu, 13 Mar 2025 06:59:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=yxn8b4CHhcz1mQvwWS88Lu
-	dFQd7CqZ4eIcIt3qiRtK0=; b=OU9jz2Qe9z5s9gdA5s6kABnreJygM9bFud7l6l
-	mGOc0Aa8Rbi9+UtMdCNmsn3E1YiS8vP1nFQ2+aHVxdpDU2ROkuEHyJ2xpzI0Ve4R
-	Mxp3xADecUDtPgZKTRQHgaMx5NIiI8mF3nVYiRWwga5PYH08NUvFIFc6Ru3cOYsG
-	El0vnSEFNZaq22eH4TZTWB6Fq5DoroUsOe1IKy1o2VfF1ZqHzB+Jctfbt5uTKgWG
-	RVzDnbLvdvZh5Tq2yw2+pExf53SLqxfPvIgPH6zWzY9QngR4pmZoxLcQvQLoHMya
-	DdJ88jhp4yo5be+kynBrGsxB80uSjBWMUoMljJFsJNxEPc1g==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2rcvx2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 06:59:54 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52D6xr4W032677
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 06:59:53 GMT
-Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 12 Mar 2025 23:59:47 -0700
-From: Taniya Das <quic_tdas@quicinc.com>
-Subject: [PATCH v6 00/10] Add support for videocc, camcc, dispcc and gpucc
- on Qualcomm QCS615 platform
-Date: Thu, 13 Mar 2025 12:29:37 +0530
-Message-ID: <20250313-qcs615-v5-mm-cc-v6-0-ebf4b9a5e916@quicinc.com>
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="b9nxJkr1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1741849209; x=1742108409;
+	bh=4HsT2cKX2K3tPRqJkqJjiIIHXeC79sujqS8iGVYQ9sM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=b9nxJkr13l05aFWMpb3tTCfcYbNT+6fhQTjr4GrlGPy/dGQdO1HyiPX6KrZ0Z9b5x
+	 Q4drN5cBwqeLq0MwKhsgu4QOo3fsiy19riACcEbgpotxp690GlNZcT4dbmnR2qlU7/
+	 aXZEMRP6lRPWzME9VN2nhYdZ6pMgClG6tRmgKXOYA0HaPbIeecZNYuqTy1yi9BA7qI
+	 mjipRadvqfcr9oD/iCgUYmKImp/a0odncDDHW5ctyc1w1Dpjy6p6cuvSAoLjYYQX0E
+	 zd7WeCgsgsUAeIhHUJwYNG8zNM2cBUDJEv7C2TwQgozw5tqgP91TRdtT3iWS6fg32y
+	 Hs3sZpUzGw7KQ==
+Date: Thu, 13 Mar 2025 07:00:04 +0000
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
+Subject: [PATCH v8 1/4] rust: types: Add Ownable/Owned types
+Message-ID: <20250313-unique-ref-v8-1-3082ffc67a31@pm.me>
+In-Reply-To: <20250313-unique-ref-v8-0-3082ffc67a31@pm.me>
+References: <20250313-unique-ref-v8-0-3082ffc67a31@pm.me>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: 6a764f87ee32e6c517908ae92f0b857b918e3080
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFmC0mcC/3WNwQ7CIBBEf6XZs2taIoR68j+aHtoF7B4KFpRoG
- v5d7N3bvEnmzQ7JRrYJrs0O0WZOHHwFdWqAlsnfLbKpDKIVshWiw42S6iRmieuKRKjn/jI5mnR
- PEurqEa3j92EcxsoLp2eIn+Mgy1/731VDi7MyvTFOOKHNbXsxsaczhRXGUsoXAVXnvbAAAAA=
-X-Change-ID: 20250221-qcs615-v5-mm-cc-8b94afca89c5
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon
-	<will@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.15-dev-aa3f6
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=D6NHKuRj c=1 sm=1 tr=0 ts=67d2826a cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=pGLkceISAAAA:8
- a=C8cLAskXDhL-uTxbcdAA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: fPOEEW0si2gk5Z6nIwwnbpMVrXWYLzFr
-X-Proofpoint-ORIG-GUID: fPOEEW0si2gk5Z6nIwwnbpMVrXWYLzFr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-13_03,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 spamscore=0 lowpriorityscore=0 phishscore=0
- adultscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015 impostorscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503130054
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add support for multimedia clock controllers on Qualcomm QCS615 platform.
-Update the defconfig to enable these clock controllers.
+From: Asahi Lina <lina@asahilina.net>
 
-Global clock controller support
-https://lore.kernel.org/all/20241022-qcs615-clock-driver-v4-0-3d716ad0d987@quicinc.com/
+By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
+C FFI) type that *may* be owned by Rust, but need not be. Unlike
+AlwaysRefCounted, this mechanism expects the reference to be unique
+within Rust, and does not allow cloning.
 
-Changes in v6:
-- Remove wrongly RB-By tags which got introduced in v4 and was carried
-  to v5 as well.
-- Adding the reference where the tags were added and dropped.
-  -[01/10] clk: qcom: clk-alpha-pll: Add support for dynamic update for slewing PLLs
-    - RB-By from Imran (v2)
-  -[02/10] dt-bindings: clock: Add Qualcomm QCS615 Camera clock controller
-    - RB-By from Krzysztof (v2), drop wrong RB-By from Dmitry (v5)
-  -[03/10] clk: qcom: camcc-qcs615: Add QCS615 camera clock controller driver
-    - R-By from Bryan (v2)
-  -[04/10] dt-bindings: clock: Add Qualcomm QCS615 Display clock controller
-    - Drop wrong RB-By from Dmitry (v5)
-  -[05/10] clk: qcom: dispcc-qcs615: Add QCS615 display clock controller driver
-    - R-By from Dmitry (v1)
-  -[06/10] dt-bindings: clock: Add Qualcomm QCS615 Graphics clock controller
-    - Drop wrong RB-By from Dmitry(v5)
-  -[07/10] clk: qcom: gpucc-qcs615: Add QCS615 graphics clock controller driver
-    - R-By from Dmitry (v1)
-  -[08/10] dt-bindings: clock: Add Qualcomm QCS615 Video clock controller
-    - Drop wrong RB-By from Dmitry(v5)
-  -[09/10] clk: qcom: videocc-qcs615: Add QCS615 video clock controller driver
-    - R-By from Dmitry and Bryan (v3)
-  -[10/10] arm64: defconfig: Enable QCS615 clock controllers
-    - Drop wrong RB-By from Dmitry (v5)
-- Link to v5: https://lore.kernel.org/r/20250221-qcs615-v5-mm-cc-v5-0-b6d9ddf2f28d@quicinc.com
+Conceptually, this is similar to a KBox<T>, except that it delegates
+resource management to the T instead of using a generic allocator.
 
-Changes in v5:
-- Update ARM64 || COMPILE_TEST in all Kconfig to resolve kismet warnings.
-- Fix sparse errors in GPUCC.
-- Link to v4: https://lore.kernel.org/r/20250119-qcs615-mm-v4-clockcontroller-v4-0-5d1bdb5a140c@quicinc.com
-
-Changes in v4:
-- Drop patch Update the support for alpha mode configuration as this
-  patch was picked - https://lore.kernel.org/all/20241021-fix-alpha-mode-config-v1-1-f32c254e02bc@gmail.com/
-- Update the bindings to include "qcom,gcc.yaml" [Dmitry]
-
-Changes in v3:
-- update PLL configs to use BIT and GENMASK for vco_val and vco_mask for all CCs [Bryan O'Donoghue]
-- Link to v2: https://lore.kernel.org/r/20241101-qcs615-mm-clockcontroller-v2-0-d1a4870a4aed@quicinc.com
-
-Changes in v2:
-- cleanups in clk_alpha_pll_slew_update and clk_alpha_pll_slew_enable functions [Christophe]
-- update PLL configs for "vco_val = 0x0" shift(20)  [Bryan O'Donoghue]
-- update PLL configs to use lower case for L value  [Dmitry]
-- Link parents for IFE/IPE/BPS GDSCs as Titan Top GDSC [Bryan O'Donoghue, Dmitry]
-- Remove DT_BI_TCXO_AO from camcc-qcs615           [Dmitry]
-- Remove HW_CTRL_TRIGGER from camcc-qcs615         [Bryan O'Donoghue]
-- Update platform name for default configuration   [Dmitry]
-- Link to v1: https://lore.kernel.org/r/20241019-qcs615-mm-clockcontroller-v1-0-4cfb96d779ae@quicinc.com
-
-Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asah=
+ilina.net/
+Signed-off-by: Asahi Lina <lina@asahilina.net>
+[ om: make from_raw() and into_raw() public, small fixes to documentation ]
+Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
 ---
-Taniya Das (10):
-      clk: qcom: clk-alpha-pll: Add support for dynamic update for slewing PLLs
-      dt-bindings: clock: Add Qualcomm QCS615 Camera clock controller
-      clk: qcom: camcc-qcs615: Add QCS615 camera clock controller driver
-      dt-bindings: clock: Add Qualcomm QCS615 Display clock controller
-      clk: qcom: dispcc-qcs615: Add QCS615 display clock controller driver
-      dt-bindings: clock: Add Qualcomm QCS615 Graphics clock controller
-      clk: qcom: gpucc-qcs615: Add QCS615 graphics clock controller driver
-      dt-bindings: clock: Add Qualcomm QCS615 Video clock controller
-      clk: qcom: videocc-qcs615: Add QCS615 video clock controller driver
-      arm64: defconfig: Enable QCS615 clock controllers
+ rust/kernel/types.rs | 109 +++++++++++++++++++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 109 insertions(+)
 
- .../bindings/clock/qcom,qcs615-camcc.yaml          |   54 +
- .../bindings/clock/qcom,qcs615-dispcc.yaml         |   73 +
- .../bindings/clock/qcom,qcs615-gpucc.yaml          |   66 +
- .../bindings/clock/qcom,qcs615-videocc.yaml        |   64 +
- arch/arm64/configs/defconfig                       |    4 +
- drivers/clk/qcom/Kconfig                           |   38 +
- drivers/clk/qcom/Makefile                          |    4 +
- drivers/clk/qcom/camcc-qcs615.c                    | 1591 ++++++++++++++++++++
- drivers/clk/qcom/clk-alpha-pll.c                   |  170 +++
- drivers/clk/qcom/clk-alpha-pll.h                   |    1 +
- drivers/clk/qcom/dispcc-qcs615.c                   |  786 ++++++++++
- drivers/clk/qcom/gpucc-qcs615.c                    |  525 +++++++
- drivers/clk/qcom/videocc-qcs615.c                  |  332 ++++
- include/dt-bindings/clock/qcom,qcs615-camcc.h      |  110 ++
- include/dt-bindings/clock/qcom,qcs615-dispcc.h     |   52 +
- include/dt-bindings/clock/qcom,qcs615-gpucc.h      |   39 +
- include/dt-bindings/clock/qcom,qcs615-videocc.h    |   30 +
- 17 files changed, 3939 insertions(+)
----
-base-commit: 50a0c754714aa3ea0b0e62f3765eb666a1579f24
-change-id: 20250221-qcs615-v5-mm-cc-8b94afca89c5
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index 55ddd50e8aaa075ac33d5f1088a7f72df05f74f4..65f6d0721f5f23c8db79c6735dc=
+7d5e1ac984ea7 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -551,6 +551,115 @@ fn drop(&mut self) {
+     }
+ }
+=20
++/// Types that may be owned by Rust code or borrowed, but have a lifetime =
+managed by C code.
++///
++/// It allows such types to define their own custom destructor function to=
+ be called when
++/// a Rust-owned reference is dropped.
++///
++/// This is usually implemented by wrappers to existing structures on the =
+C side of the code.
++///
++/// # Safety
++///
++/// Implementers must ensure that any objects borrowed directly as `&T` st=
+ay alive for the duration
++/// of the lifetime, and that any objects owned by Rust as [`Owned<T>`] st=
+ay alive while that owned
++/// reference exists, until the [`Ownable::release()`] trait method is cal=
+led.
++pub unsafe trait Ownable {
++    /// Releases the object (frees it or returns it to foreign ownership).
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that the object is no longer referenced after =
+this call.
++    unsafe fn release(this: NonNull<Self>);
++}
++
++/// A subtrait of Ownable that asserts that an [`Owned<T>`] Rust reference=
+ is not only unique
++/// within Rust and keeps the `T` alive, but also guarantees that the C co=
+de follows the
++/// usual mutable reference requirements. That is, the kernel will never m=
+utate the
++/// `T` (excluding internal mutability that follows the usual rules) while=
+ Rust owns it.
++///
++/// When this type is implemented for an [`Ownable`] type, it allows [`Own=
+ed<T>`] to be
++/// dereferenced into a &mut T.
++///
++/// # Safety
++///
++/// Implementers must ensure that the kernel never mutates the underlying =
+type while
++/// Rust owns it.
++pub unsafe trait OwnableMut: Ownable {}
++
++/// An owned reference to an ownable kernel object.
++///
++/// The object is automatically freed or released when an instance of [`Ow=
+ned`] is
++/// dropped.
++///
++/// # Invariants
++///
++/// The pointer stored in `ptr` is non-null and valid for the lifetime of =
+the [`Owned`] instance.
++pub struct Owned<T: Ownable> {
++    ptr: NonNull<T>,
++    _p: PhantomData<T>,
++}
++
++// SAFETY: It is safe to send `Owned<T>` to another thread when the underl=
+ying `T` is `Send` because
++// it effectively means sending a unique `&mut T` pointer (which is safe b=
+ecause `T` is `Send`).
++unsafe impl<T: Ownable + Send> Send for Owned<T> {}
++
++// SAFETY: It is safe to send `&Owned<T>` to another thread when the under=
+lying `T` is `Sync`
++// because it effectively means sharing `&T` (which is safe because `T` is=
+ `Sync`).
++unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
++
++impl<T: Ownable> Owned<T> {
++    /// Creates a new instance of [`Owned`].
++    ///
++    /// It takes over ownership of the underlying object.
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that the underlying object is acquired and can=
+ be considered owned by
++    /// Rust.
++    pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
++        // INVARIANT: The safety requirements guarantee that the new insta=
+nce now owns the
++        // reference.
++        Self {
++            ptr,
++            _p: PhantomData,
++        }
++    }
++
++    /// Consumes the [`Owned`], returning a raw pointer.
++    ///
++    /// This function does not actually relinquish ownership of the object=
+.
++    /// After calling this function, the caller is responsible for ownersh=
+ip previously managed
++    /// by the [`Owned`].
++    pub fn into_raw(me: Self) -> NonNull<T> {
++        ManuallyDrop::new(me).ptr
++    }
++}
++
++impl<T: Ownable> Deref for Owned<T> {
++    type Target =3D T;
++
++    fn deref(&self) -> &Self::Target {
++        // SAFETY: The type invariants guarantee that the object is valid.
++        unsafe { self.ptr.as_ref() }
++    }
++}
++
++impl<T: OwnableMut> DerefMut for Owned<T> {
++    fn deref_mut(&mut self) -> &mut Self::Target {
++        // SAFETY: The type invariants guarantee that the object is valid,
++        // and that we can safely return a mutable reference to it.
++        unsafe { self.ptr.as_mut() }
++    }
++}
++
++impl<T: Ownable> Drop for Owned<T> {
++    fn drop(&mut self) {
++        // SAFETY: The type invariants guarantee that the `Owned` owns the=
+ object we're about to
++        // release.
++        unsafe { T::release(self.ptr) };
++    }
++}
++
+ /// A sum type that always holds either a value of type `L` or `R`.
+ ///
+ /// # Examples
 
-Best regards,
--- 
-Taniya Das <quic_tdas@quicinc.com>
+--=20
+2.48.1
+
 
