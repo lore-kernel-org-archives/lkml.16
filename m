@@ -1,35 +1,35 @@
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B75A189915;
-	Thu, 13 Mar 2025 18:26:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4C81F03D1;
+	Thu, 13 Mar 2025 18:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741890417; cv=none; b=Lfc8gwQWDcv/vQSY/9Gniov9PbvV184IviCJ52fWxX4tJOc/6fBOnpHu8NfH/BlcANUO0Submc5EQhYu0qV2rkyEgQQUHEN33mvQ0nzs9UhiDingn65YBG+qyGa+KGMn0UKMeauyLii68uavHEMUHS7llm8xTSHqlgjnuVEga88=
+	t=1741890419; cv=none; b=dL18VK2YXEb/cd0uV99gIq+yo8qN9lDu9ZE/QxZ4RfSvT4yUg8hhqXcdI2sAE70JuM8aOl260G4/BBcfKrg/68tWMSmYQhjBv0tBgYxWXEGvgizyD1S//I59l2T+GpDhr0TgpHuvWNjNBAIcQ39z0IVVOtSrwo1unhW1R/IRIqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741890417; c=relaxed/simple;
-	bh=0uY8xIwbq9p0juSLdPgZBHcxHXa3T885RfgLDIXH6Bw=;
+	s=arc-20240116; t=1741890419; c=relaxed/simple;
+	bh=zSHp2s2RWp1zc36h9jicWQ3maZMsIrIz4IOdHFbX0WI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gNn5b3V26oBjmC8MK7lj2GpgwWHTAqYScbA4219UWLQod1kWDZiTK3dHUqv9cgKbc7qaOxzDd1zXWXp4l9myXS801NKQIBbqOCeE89fDVpy6WEmtF5Zk+CT/4khjUaidPF7/uLDwuSJHt8i0tvgr989ysJ11zeXDkYdYK6S8zWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZO+9Mhq/; arc=none smtp.client-ip=217.70.183.195
+	 MIME-Version; b=K8pHlLfPESkUKt3axYazNERMHL2xyC658/xO2B2geNPAQ4gQUwqtQo7326wmZT0gq9wB9RvWk27X9eqB3Bkb/VY4WkW/4GpqaRvUa1H8WSNiHCU5ABNZlpO0ON/AZGKTH5hx9Nckowl35IPuJplB0yh3JclgiSefmZ80YyqnwYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QCp0Kh97; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZO+9Mhq/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EE67020479;
-	Thu, 13 Mar 2025 18:26:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QCp0Kh97"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5BB0A20482;
+	Thu, 13 Mar 2025 18:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741890413;
+	t=1741890415;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+QJeRvWt4UkHaBTliCWdYR/evWkKDG2k/rxh/t0R1Z8=;
-	b=ZO+9Mhq/ztUPNYbtFp3WN5/7Vtyjww4NRp03XNiAZTw8W6doobPncAolknETfltZXEVsTr
-	b2txe8uL8cVUnDIhrY1krFal571dtJpBFYEFJS2kBS0x+djQBlhBtcuEzT7dJHA8gQW0W0
-	HAKBS3x99nOtcLCUb/DQCi4ASQ9BEDeLVPgVnt2WEwxOydIoXzuP6yXEPvstUsGWz0BUwE
-	Ovsj8O2oHTfJvrpfKt3+OIdn2Ub/bq3IPkFzKrqPlcvtSQRYQMBG7C8/ZCg4gmioEAOEv1
-	uAIxLUR4ybKswrAYbYh9tU9Bg6GPDw3Ywf55Y9JJ2YMCQYm3+U4tzHR2N9vtfA==
+	bh=CeG3Jdmr+lZNVf40XxjCsp44vRCTlz+2wyIgPkpcb8A=;
+	b=QCp0Kh97l8IN/TqgwgOH7y+UeEGIayoPRelNpLSikR5xk/XHd4EMHL+OrSdJ4HkxU/c7Te
+	1wYRL8MnxNgyhZ0zlTVkkzHbrDqSDSYOvAXqC/viDfTkkOQ+YkiDJJeYNRBLetxj0zakom
+	xNcly4kLokIlAUpWG3iw9SU2zqsa+P4c9TyuGaM+wXgIJHvaBz8FdrE3qgjeJsoYrAHF21
+	DH6YFLluIc4FhKvytxfCETi3fRfnwdRMEi0Od4dyfI9Tt309VzOJhwidDSE4LSlp2b/89f
+	GnLCWBkBXLIgRXgWe2GZGAYZ5RdPZyp9ZTpFfCz8kHDwW/VVHC1BzSlkNNoufw==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -52,9 +52,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Simon Horman <horms@kernel.org>,
 	Romain Gantois <romain.gantois@bootlin.com>,
 	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>
-Subject: [PATCH net-next v3 2/7] net: ethtool: netlink: Rename ethnl_default_dump_one
-Date: Thu, 13 Mar 2025 19:26:41 +0100
-Message-ID: <20250313182647.250007-3-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v3 4/7] net: ethtool: netlink: Introduce per-phy DUMP helpers
+Date: Thu, 13 Mar 2025 19:26:43 +0100
+Message-ID: <20250313182647.250007-5-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250313182647.250007-1-maxime.chevallier@bootlin.com>
 References: <20250313182647.250007-1-maxime.chevallier@bootlin.com>
@@ -67,58 +67,133 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdekieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdqvddrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguu
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdekieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdqvddrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguu
  hhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-As we work on getting more objects out of a per-netdev DUMP, rename
-ethnl_default_dump_one() into ethnl_default_dump_one_dev(), making it
-explicit that this dumps everything for one netdev.
+As there are multiple ethnl commands that report messages based on
+phy_device information, let's introduce a set of ethnl generic dump
+helpers to allow DUMP support for each PHY on a given netdev.
+
+This logic iterates over the phy_link_topology of each netdev (or a
+single netdev for filtered DUMP), and call ethnl_default_dump_one() with
+the req_info populated with ifindex + phyindex.
+
+This allows re-using all the existing infra for phy-targetting commands
+that already use ethnl generic helpers.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- net/ethtool/netlink.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ net/ethtool/netlink.c | 78 +++++++++++++++++++++++++++++++++++++++++++
+ net/ethtool/netlink.h |  6 ++++
+ 2 files changed, 84 insertions(+)
 
 diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 7adede5e4ff1..644c202d284d 100644
+index 2dc6086e1ab5..821bc8b99306 100644
 --- a/net/ethtool/netlink.c
 +++ b/net/ethtool/netlink.c
-@@ -540,9 +540,9 @@ static int ethnl_default_doit(struct sk_buff *skb, struct genl_info *info)
+@@ -560,6 +560,84 @@ static int ethnl_default_dump_one(struct sk_buff *skb,
  	return ret;
  }
  
--static int ethnl_default_dump_one(struct sk_buff *skb, struct net_device *dev,
--				  const struct ethnl_dump_ctx *ctx,
--				  const struct genl_info *info)
-+static int ethnl_default_dump_one_dev(struct sk_buff *skb, struct net_device *dev,
-+				      const struct ethnl_dump_ctx *ctx,
-+				      const struct genl_info *info)
- {
- 	void *ehdr;
- 	int ret;
-@@ -593,8 +593,8 @@ static int ethnl_default_dumpit(struct sk_buff *skb,
- 		/* Filtered DUMP request targeted to a single netdev. We already
- 		 * hold a ref to the netdev from ->start()
- 		 */
--		ret = ethnl_default_dump_one(skb, dev, ctx,
--					     genl_info_dump(cb));
-+		ret = ethnl_default_dump_one_dev(skb, dev, ctx,
-+						 genl_info_dump(cb));
- 		rcu_read_lock();
- 		netdev_put(ctx->req_info->dev, &ctx->req_info->dev_tracker);
++/* Specific context for phy-targeting command DUMP operatins. We keep in context
++ * the latest phy_index we dumped, in case of an interrupted DUMP.
++ */
++struct ethnl_dump_ctx_perphy {
++	unsigned long phy_index;
++};
++
++/**
++ * ethnl_dump_start_perphy() - Initialise a dump for PHY cmds
++ * @ctx: Generic ethnl dump context whose cmd_ctx will be initialized
++ *
++ * Initializes a dump context for ethnl commands that may return
++ * one message per PHY on a single netdev.
++ *
++ * Returns: 0 for success, a negative value for errors.
++ */
++int ethnl_dump_start_perphy(struct ethnl_dump_ctx *ctx)
++{
++	struct ethnl_dump_ctx_perphy *dump_ctx;
++
++	dump_ctx = kzalloc(sizeof(*dump_ctx), GFP_KERNEL);
++	if (!dump_ctx)
++		return -ENOMEM;
++
++	ctx->cmd_ctx = dump_ctx;
++
++	return 0;
++}
++
++/**
++ * ethnl_dump_done_perphy() - Releases the per-phy dump context
++ * @ctx: Generic ethnl dump context whose cmd_ctx will be released
++ */
++void ethnl_dump_done_perphy(struct ethnl_dump_ctx *ctx)
++{
++	kfree(ctx->cmd_ctx);
++}
++
++/**
++ * ethnl_dump_one_dev_perphy() - Dump all PHY-related messages for one netdev
++ * @skb: skb containing the DUMP result
++ * @ctx: Dump context. Will be kept across the DUMP operation.
++ * @info: Genl receive info
++ *
++ * Some commands are related to PHY devices attached to netdevs. As there may be
++ * multiple PHYs, this DUMP handler will populate the reply with one message per
++ * PHY on a single netdev.
++ *
++ * Returns: 0 for success or when nothing to do, a negative value otherwise.
++ */
++int ethnl_dump_one_dev_perphy(struct sk_buff *skb,
++			      struct ethnl_dump_ctx *ctx,
++			      const struct genl_info *info)
++{
++	struct ethnl_dump_ctx_perphy *dump_ctx = ctx->cmd_ctx;
++	struct net_device *dev = ctx->reply_data->dev;
++	struct phy_device_node *pdn;
++	int ret = 0;
++
++	if (!dev->link_topo)
++		return 0;
++
++	xa_for_each_start(&dev->link_topo->phys, dump_ctx->phy_index,
++			  pdn, dump_ctx->phy_index) {
++		ctx->req_info->phy_index = dump_ctx->phy_index;
++
++		/* We can re-use the original dump_one as ->prepare_data in
++		 * commands use ethnl_req_get_phydev(), which gets the PHY from
++		 * what's in req_info
++		 */
++		ret = ethnl_default_dump_one(skb, ctx, info);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
+ static int ethnl_default_dump_one_dev(struct sk_buff *skb, struct net_device *dev,
+ 				      struct ethnl_dump_ctx *ctx,
+ 				      const struct genl_info *info)
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index 79fe98190c64..530a9b5c8b39 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -327,6 +327,12 @@ struct ethnl_dump_ctx {
+ 	void				*cmd_ctx;
+ };
  
-@@ -606,8 +606,8 @@ static int ethnl_default_dumpit(struct sk_buff *skb,
- 			dev_hold(dev);
- 			rcu_read_unlock();
++/* Generic callbacks to be used by PHY targeting commands */
++int ethnl_dump_start_perphy(struct ethnl_dump_ctx *ctx);
++int ethnl_dump_one_dev_perphy(struct sk_buff *skb, struct ethnl_dump_ctx *ctx,
++			      const struct genl_info *info);
++void ethnl_dump_done_perphy(struct ethnl_dump_ctx *ctx);
++
+ int ethnl_ops_begin(struct net_device *dev);
+ void ethnl_ops_complete(struct net_device *dev);
  
--			ret = ethnl_default_dump_one(skb, dev, ctx,
--						     genl_info_dump(cb));
-+			ret = ethnl_default_dump_one_dev(skb, dev, ctx,
-+							 genl_info_dump(cb));
- 
- 			rcu_read_lock();
- 			dev_put(dev);
 -- 
 2.48.1
 
