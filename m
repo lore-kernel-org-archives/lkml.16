@@ -1,101 +1,101 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F65267735;
-	Thu, 13 Mar 2025 13:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D143F2676E3;
+	Thu, 13 Mar 2025 13:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741871869; cv=none; b=GhHMS+rCa+HGrcZh64+LbX9rvu8CkTqMdFlGM7FYU1ahlPlrJVnLxpXmCaS48yAxaSbaV42b1W2xRyj3tVF5RwFCqPzxa9ji/vk9BRatoJOlhSv5qEzG2ey96S3p/2QUYKkKe+2o8U7WpABno4YDcXnEjYcVdLwKzI/Uu9KGRBM=
+	t=1741871876; cv=none; b=aXtxDSqy6qzC9/YbdiCB5fa7DJhl3ogvWU6lPVZWaIFk6jyYAJARCip/lzNHgb5DjR8QKqxvyGAzMXzdgZ3VpsErkzdcBcLO+pIWhdZotUVWwFvqCv8PiHgujx02tT0wowE3yllC11x05urQZc1ugg1zF9fQ6qi4WFQP7lhNfXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741871869; c=relaxed/simple;
-	bh=yDGWynoa4NHLG+/FL8La2c2pXIbj5JLF9ZRJKihaX0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JXeoA3aMiAKgz/9mdvWRAufys9FPB39eL60zrK71s1Y0i66f0kDJkhnDrGgMHQ/v+zQNRLhPBPOTPjQcONX7LRz7pEjWU4xy1NWOt+Qj5ug+1a3Gg75m73VZGXBvqFB2HTHZ01Vcbf0y/rcEbKvvk2U5gKBiTj3f7bYxL4syv0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=CbxcRkr5; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1741871876; c=relaxed/simple;
+	bh=pC0PcVhoXVR7D0DR4WGT2BxCw9RoFrMDTd8TbE77dk4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G9D4ypkSDdSBDwvDp692n8RRhvV9QpobeLGV4R7YLnR6yeRLHxhE9hUB/kv8p5u8j8Zu7j0Oe4vaE3V0nyjG/qsQdKVsrxVIaA9SP7qXm9zEzlWERSO3fg+2+s0+TXn7nAW7n3xWvXiK4AcdoX7yeZtgf1bLSJ6bPQxWhp3FHN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRBYINJg; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CbxcRkr5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=4EvY1LEFvjjHJU3jZAtzphl1AzmykKRYyWCA/SvfCK4=; b=Cb
-	xcRkr5Js6+IwxGpOdQ1oKGkQeF2cq/TMzpc3U5FT2lIMY76EHMFIggsHj8bcQ651yDwsQnnj+ykg/
-	VVeS7E5Fzb19hUdFqt2smal5gYticNcoGaqM1qybqC23066JPaLgcwYgNZK7XSU5DFkTI5Si9hhIM
-	sbyH5zQuUwYlRao=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tsiRD-004zrS-Is; Thu, 13 Mar 2025 14:17:27 +0100
-Date: Thu, 13 Mar 2025 14:17:27 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Michael Klein <michael@fossekall.de>,
-	Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Samuel Holland <samuel@sholland.org>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] ARM: dts: bananapi: add support for PHY LEDs
-Message-ID: <7cf91323-d550-496a-a8ec-ae104c77224d@lunn.ch>
-References: <20250312193629.85417-1-michael@fossekall.de>
- <20250312193629.85417-2-michael@fossekall.de>
- <4637912.LvFx2qVVIh@jernej-laptop>
- <Z9KYqlfUYxRaWnGQ@a98shuttle.de>
- <20250313104042.694c1856@donnerap.manchester.arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRBYINJg"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86715793b1fso442819241.0;
+        Thu, 13 Mar 2025 06:17:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741871873; x=1742476673; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pC0PcVhoXVR7D0DR4WGT2BxCw9RoFrMDTd8TbE77dk4=;
+        b=VRBYINJgWXvR1TCrELJDE6ATUme9omkS0pE7rcp6zn6hXqGKb0f9tV6ZvK4wFImYBu
+         QnOIq85/SkvFWTGHfJUlkSccNIi/Nit7wjEjZ3Lc/PHYs5DPSt5ldSWjPCugmF9PXvOn
+         sf8uNNqYhXtLV2j0CvMpToQSEPOn4rWLNdQ0DhNIYCRQIl38JxTirJb1m+myu2WtFDl0
+         yxJ4IfvrVqwAkTDtX4On1hnlr2Ip5N6QQ4UkVgtUB/hlRuXpV3XEJH9lGcYPfM1wx0SC
+         sJgQMc1cqpYSW1f6ok/6xy5HTrbCfeWzqg5hpWRv3JVRBuT6+30qHUVhuLhIJtqTtAWU
+         raCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741871873; x=1742476673;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pC0PcVhoXVR7D0DR4WGT2BxCw9RoFrMDTd8TbE77dk4=;
+        b=caKNGejNBmPAdXfwEX4GqOH3GuqYt/h6sAE5afZvgI0z1g1R4UswL1MhfEvXFO5ozK
+         JdMTqwjaPe9hYZWJhqkqOyhtbKv8qO4WPB/HRXvg8n+shdQeqT4hr35vSjdsVI078UM3
+         pGTRe2N8NLYSStGU/JVeiFcH0Wl5ngjPZRZ6Az6FIyxs5xy44kS3VnXqTnnS4ZPPAmPU
+         LaEkfhmcXzK8fDBynAo1pFQiTYeI/shCFy6FH9uHrADFIlU/XfcSmSRu8Ca7Oku23DKj
+         W2LW41PXnQyg0gQ9hOZPCaucsh02UdxEyX0YjMZb+XOEfTWP/SbnqrSdRClZCTBoglcg
+         jqpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUivZkubCT90IuFu2p9gALqEiqO/Yuc5UqelmqARS9TJx6xWPNWq+1nHvrmomOPZf0IlThUS8Wb95E2e2t5e7iMpsc=@vger.kernel.org, AJvYcCV1CiRpeXTKsbJo7zgr3LIH1CdSz9qrr1t0zAuXoHfwXAjuNaGJEbw8DJa5p9IclnlluGkJmHNyQzBijb0b@vger.kernel.org, AJvYcCV8dZ1pzZTG7wPXgMyZi2/Pz0p2cr53wQPFv0YtBrcUSEVMQzVo0t9E5+4MTvbegO0Xk0WiX34I5PGB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRlhPTfBdwGPtls6IHw4lt19/P6SRBjSRysO5QNfPEm8FfVFE3
+	25dQCq87NV4Ucv6CYNllpxo8io9txeHxsuQJopPB1hygW9oASF7AEHGxWKuMNfzOjS/VsZezDrk
+	vJxIOK2rN07SHjby3eEc/xWI5jDA=
+X-Gm-Gg: ASbGncvoPLmYH++H49qlLa4K7FLk9WVWAv4DE/gAQCL/S5hidTy/kpZHDFCey6OkRd9
+	ITbtR9Oxlclfi030kBgxf0fi1LtS4JU5dejMk1YvpFOl083zw6AgF8H4qJx4gGFz7smQNGJ0Ke6
+	gLrvgykBmWRMoklNWX1k1MlKpSlfV3RhvFOpWy3Xw2lUomELYzZvniXvCNyWk=
+X-Google-Smtp-Source: AGHT+IGGQOLkqUqA/cVO0v+DjHSuM89sY5CvtqACB4v/Rd/XSNFARkEi/y/Fn9hwZxQh/GkdawD4UqbjaBQz53i5GiM=
+X-Received: by 2002:a05:6122:54b:b0:50b:e9a5:cd7b with SMTP id
+ 71dfb90a1353d-523e4173295mr20322538e0c.9.1741871873619; Thu, 13 Mar 2025
+ 06:17:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313104042.694c1856@donnerap.manchester.arm.com>
+References: <20250305123915.341589-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250305123915.341589-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250305-cesspool-headlock-4d28a2a1333e@spud> <CA+V-a8uQTL+SHYqVU_J0th4PT6YPF7q6ypzDu33nS_6onWLoOQ@mail.gmail.com>
+ <20250306-slather-audition-a6b28ba1483e@spud> <18780ad4be2c28999af314c97ae4104fb161a691.camel@pengutronix.de>
+In-Reply-To: <18780ad4be2c28999af314c97ae4104fb161a691.camel@pengutronix.de>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 13 Mar 2025 13:17:27 +0000
+X-Gm-Features: AQ5f1Jp8QT8lpKATDD6d5YojihdkZ8BzAZGZfjvYnMXXrc6nld8Mvop2s4MlR9A
+Message-ID: <CA+V-a8tYv_u4UM5XVysVMPbfJoVwKFHqucLdJOmDP-xrXZ0L5Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Document RZ/V2H(P) USB2PHY Control
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Conor Dooley <conor@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 13, 2025 at 10:40:42AM +0000, Andre Przywara wrote:
-> On Thu, 13 Mar 2025 09:34:50 +0100
-> Michael Klein <michael@fossekall.de> wrote:
-> 
-> Hi,
-> 
-> > On Thu, Mar 13, 2025 at 07:07:24AM +0100, Jernej Škrabec wrote:
-> > >Dne sreda, 12. marec 2025 ob 20:36:28 Srednjeevropski standardni čas je Michael Klein napisal(a):  
-> > >> The Bananapi M1 has three LEDs connected to the RTL8211E ethernet PHY.
-> > >> Add the corresponding nodes to the device tree.
-> > >>
-> > >> Signed-off-by: Michael Klein <michael@fossekall.de>  
-> > >
-> > >This is patch 2/2. Which one is patch 1/2? I got only one.  
-> > 
-> > https://patchwork.kernel.org/project/netdevbpf/patch/20250312193629.85417-1-michael@fossekall.de/
-> > 
-> > Sorry for any inconvenience in case I messed up the patch submission.
-> > 
-> > I made two commits for this change and submitted them via `git send-email 
-> > HEAD^^`. The first patch went to netdev@vger.kernel.org, the second 
-> > to linux-arm-kernel@lists.infradead.org, which seems logical. Have I 
-> > done something wrong?
-> 
-> Well, for those really small "series" it's probably better to send all
-> patches to everyone, especially if the first patch gives some context,
-> without which the second leaves people (like me) scratching their head.
+Hi Philipp,
 
-However, netdev does not like pathchsets which contain patches which
-should not be applied to the netdev tree. DT patches generally go
-through a different Maintainer to driver changes implementing the
-binding.
+On Thu, Mar 13, 2025 at 1:09=E2=80=AFPM Philipp Zabel <p.zabel@pengutronix.=
+de> wrote:
+>
+> On Do, 2025-03-06 at 16:26 +0000, Conor Dooley wrote:
+> [...]
+> > That sounds awfully like "it was wrong before, and I want to keep using
+> > the wrong node name"... If you're claiming to be some other class of
+> > device, "ctrl" should really be "controller" like all the other sorts o=
+f
+> > controllers ;)
+>
+> There are "usb-phy-controller" nodes on the rcar-gen2 SoCs.
+>
+Ok, I will rename the node name to "usb-phy-controller".
 
-So for your DT patch, you could add to the commit message something
-like:
-
-The RTL8211E ethernet PHY driver has recently gained support for
-controlling PHY LEDs via /sys/class/leds. The Bananapi M1 has three
-LEDs connected to the RTL8211E PHY.  Add the corresponding nodes to
-the device tree.
-
-	Andrew
+Cheers
+Prabhakar
