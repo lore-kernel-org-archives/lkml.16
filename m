@@ -1,78 +1,257 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806BA41760
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83294267AEC
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741873806; cv=none; b=j/jaTE/0PmLRUq/7SoPkwLegoN7VXlIa9Lt5siupbaikMUA9RcfoknlDUoan665bEoU2yU6oihNt2yb9+MUjlL0QSgdbS/8nDkih0w46hHkBVVqfFHUUEDOMJbVjxNvWT+iyYMW3ATwhgQB9Zan1+pL7wFL9iaMdVZDQVGTH6ek=
+	t=1741873807; cv=none; b=BW9rguBDMkVHAkDYEeo7AEIOxSvwO2koKER3OT8HLnJM3kasnP/ZQCxvQRJrwomoF7+Gtd9f4GqyCwf8GIlqwZGEGkVv/RubOmfe41sEeeTYMLJohyiRnkV1hEaoLdlnTHypWR4+tce/kmOL4AdfSPB8TDIEgbAPoDf3cN8ndbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741873806; c=relaxed/simple;
-	bh=jRgklwSpOObB3tgAKwapZBR1LtUC3VEGXkKBpRqY8qY=;
+	s=arc-20240116; t=1741873807; c=relaxed/simple;
+	bh=c5BwsiMUEcE3FxlbLKMbbMYxcD4AgL6mpQVpTtKlUJ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iBdNeAtf04O9P7/k9wfJz743OdnvrK/QpGkwCiKcM7tAZvRE6OPBI47dkPszjbAsHLZeHa/bYg+72aV0fdwh4W6mPvZsX8UaobsJeEmQ0P4PDu0bJxl2F5+oBHvnbUQwA156QEXIcXRpS9Imjz/OmR5PvfWP0rMm6iPMl+B85rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=JOW6V3vy; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="JOW6V3vy"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 668E01020E4C2;
-	Thu, 13 Mar 2025 14:49:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1741873795;
-	h=from:reply-to:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=zwZpJol3r+NZfuPaketwR5AKh9kAknjnnobmvM92/Kg=;
-	b=JOW6V3vyrlwAYaE654BuUamBuLqqbSp4zV+zSf1rcfMd4KjpvOyOh+yJ50hOgGXe4NfRZi
-	LjfMJU2AKCodXW0KboUIPgH3P8YF9pJWjUdlD4F75gTXYB6Kp7+9R6FAi4QlgW8xJRJV3H
-	ZpRP9vMphJdYWJXz5+mdXs+8i1Hn1+hN3OpVIL5o2TB0HEldrD+R3JwCU7fT8iQKQCwAT9
-	NJAof/0sHfkhvRSlqGF8TnuPR+6E8qdROePI5szQ7e9jjezojfNek57Q2Ad2E6HZ+cFMfx
-	Y4BsYiKbLHU69e+SO6Xr9YE4+SyZV4h1ewLSx+LckqSy3VbXCvNK4OXVIBQ4tQ==
-Message-ID: <27e6e64b-9627-1307-3ca5-2bcfc471f157@denx.de>
-Date: Thu, 13 Mar 2025 14:50:23 +0100
+	 In-Reply-To:Content-Type; b=GnbT6cuQNVgC6KRZTvhzXJ0IJFEykWXZPR5rziKyG+SaApB0VP0wbkeDJ80PYTi4EFfjzuRUVaaEv5BqhS1l7h4cAHXWiVpZMum40O4qyMeTQgcBXPL5lQmw1rBTmPAQgMv5hAexKzsRmaag+4xnqInbcEt/iI6m2PiLTFGKeBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZD7qG0qYKz9sSY;
+	Thu, 13 Mar 2025 14:38:02 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id bhtE9KRHTdsR; Thu, 13 Mar 2025 14:38:02 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZD7q91zC1z9sSL;
+	Thu, 13 Mar 2025 14:37:57 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 302D58B779;
+	Thu, 13 Mar 2025 14:37:57 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id WdQEpeFRVBdp; Thu, 13 Mar 2025 14:37:57 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C86C58B770;
+	Thu, 13 Mar 2025 14:37:56 +0100 (CET)
+Message-ID: <362f9392-f891-4a15-9ffd-5f5a6cac41b8@csgroup.eu>
+Date: Thu, 13 Mar 2025 14:37:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH 2/2] mtd: mchp48l640: Use str_enable_disable() in
- mchp48l640_write_prepare()
-Content-Language: en-US
-To: Zhang Heng <zhangheng@kylinos.cn>, miquel.raynal@bootlin.com,
- richard@nod.at, vigneshr@ti.com, han.xu@nxp.com, david@protonic.nl,
- jre@pengutronix.de
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev
-References: <20250313095756.945890-1-zhangheng@kylinos.cn>
- <20250313095756.945890-2-zhangheng@kylinos.cn>
-Reply-To: hs@denx.de
-From: Heiko Schocher <hs@denx.de>
-In-Reply-To: <20250313095756.945890-2-zhangheng@kylinos.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bus: fsl-mc: Remove deadcode
+To: "Dr. David Alan Gilbert" <linux@treblig.org>, ioana.ciornei@nxp.com,
+ stuyoder@gmail.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20241115152055.279732-1-linux@treblig.org>
+ <3f9dbb7b-6527-48e1-9028-b46e5a0c58ce@csgroup.eu>
+ <Z9LbwRUsHwFLpBZA@gallifrey>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <Z9LbwRUsHwFLpBZA@gallifrey>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
-Hello Zhang,
 
-On 13.03.25 10:57, Zhang Heng wrote:
-> Remove hard-coded strings by using the str_enable_disable() helper
-> function.
+
+Le 13/03/2025 à 14:21, Dr. David Alan Gilbert a écrit :
+> [Vous ne recevez pas souvent de courriers de linux@treblig.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
 > 
-> Signed-off-by: Zhang Heng <zhangheng@kylinos.cn>
-> ---
->   drivers/mtd/devices/mchp48l640.c | 9 +++++----
->   1 file changed, 5 insertions(+), 4 deletions(-)
+> * Christophe Leroy (christophe.leroy@csgroup.eu) wrote:
+>>
+>>
+>> Le 15/11/2024 à 16:20, linux@treblig.org a écrit :
+>>> [Vous ne recevez pas souvent de courriers de linux@treblig.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+>>>
+>>> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>>>
+>>> fsl_mc_allocator_driver_exit() was added explicitly by
+>>> commit 1e8ac83b6caf ("bus: fsl-mc: add fsl_mc_allocator cleanup function")
+>>> but was never used.
+>>>
+>>> Remove it.
+>>>
+>>> fsl_mc_portal_reset() was added in 2015 by
+>>> commit 197f4d6a4a00 ("staging: fsl-mc: fsl-mc object allocator driver")
+>>> but was never used.
+>>>
+>>> Remove it.
+>>>
+>>> fsl_mc_portal_reset() was the only caller of dpmcp_reset().
+>>>
+>>> Remove it.
+>>>
+>>> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+>>
+>> Acked-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> 
+> Hi,
+>    Can someone pick this old change up please?  I see the PPC patchwork says
+>    'handled elsewhere' but doesn't say where.
 
-Thanks!
+MAINTAINERS file says where:
 
-Reviewed-by: Heiko Schocher <hs@denx.de>
+QORIQ DPAA2 FSL-MC BUS DRIVER
+M:	Stuart Yoder <stuyoder@gmail.com>
+M:	Laurentiu Tudor <laurentiu.tudor@nxp.com>
+L:	linux-kernel@vger.kernel.org
+S:	Maintained
+F:	Documentation/ABI/stable/sysfs-bus-fsl-mc
+F:	Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+F: 
+Documentation/networking/device_drivers/ethernet/freescale/dpaa2/overview.rst
+F:	drivers/bus/fsl-mc/
+F:	include/uapi/linux/fsl_mc.h
 
-bye,
-Heiko
--- 
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-52   Fax: +49-8142-66989-80   Email: hs@denx.de
+FREESCALE SOC DRIVERS
+M:	Christophe Leroy <christophe.leroy@csgroup.eu>
+L:	linuxppc-dev@lists.ozlabs.org
+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+S:	Maintained
+F:	Documentation/devicetree/bindings/misc/fsl,dpaa2-console.yaml
+F:	Documentation/devicetree/bindings/soc/fsl/
+F:	drivers/soc/fsl/
+F:	include/linux/fsl/
+F:	include/soc/fsl/
+
+I acked the 2 line changes in include/linux/fsl/mc.h, the main changes 
+being in the C files which are not under my scope.
+
+Stuart, Laurentiu, can you pick up the patch ?
+
+Christophe
+
+> 
+> Thanks,
+> 
+> Dave
+>>
+>>> ---
+>>>    drivers/bus/fsl-mc/dpmcp.c            | 22 ----------------------
+>>>    drivers/bus/fsl-mc/fsl-mc-allocator.c |  5 -----
+>>>    drivers/bus/fsl-mc/fsl-mc-private.h   |  6 ------
+>>>    drivers/bus/fsl-mc/mc-io.c            | 20 --------------------
+>>>    include/linux/fsl/mc.h                |  2 --
+>>>    5 files changed, 55 deletions(-)
+>>>
+>>> diff --git a/drivers/bus/fsl-mc/dpmcp.c b/drivers/bus/fsl-mc/dpmcp.c
+>>> index 5fbd0dbde24a..7816c0a728ef 100644
+>>> --- a/drivers/bus/fsl-mc/dpmcp.c
+>>> +++ b/drivers/bus/fsl-mc/dpmcp.c
+>>> @@ -75,25 +75,3 @@ int dpmcp_close(struct fsl_mc_io *mc_io,
+>>>           /* send command to mc*/
+>>>           return mc_send_command(mc_io, &cmd);
+>>>    }
+>>> -
+>>> -/**
+>>> - * dpmcp_reset() - Reset the DPMCP, returns the object to initial state.
+>>> - * @mc_io:     Pointer to MC portal's I/O object
+>>> - * @cmd_flags: Command flags; one or more of 'MC_CMD_FLAG_'
+>>> - * @token:     Token of DPMCP object
+>>> - *
+>>> - * Return:     '0' on Success; Error code otherwise.
+>>> - */
+>>> -int dpmcp_reset(struct fsl_mc_io *mc_io,
+>>> -               u32 cmd_flags,
+>>> -               u16 token)
+>>> -{
+>>> -       struct fsl_mc_command cmd = { 0 };
+>>> -
+>>> -       /* prepare command */
+>>> -       cmd.header = mc_encode_cmd_header(DPMCP_CMDID_RESET,
+>>> -                                         cmd_flags, token);
+>>> -
+>>> -       /* send command to mc*/
+>>> -       return mc_send_command(mc_io, &cmd);
+>>> -}
+>>> diff --git a/drivers/bus/fsl-mc/fsl-mc-allocator.c b/drivers/bus/fsl-mc/fsl-mc-allocator.c
+>>> index b5e8c021fa1f..6c3beb82dd1b 100644
+>>> --- a/drivers/bus/fsl-mc/fsl-mc-allocator.c
+>>> +++ b/drivers/bus/fsl-mc/fsl-mc-allocator.c
+>>> @@ -656,8 +656,3 @@ int __init fsl_mc_allocator_driver_init(void)
+>>>    {
+>>>           return fsl_mc_driver_register(&fsl_mc_allocator_driver);
+>>>    }
+>>> -
+>>> -void fsl_mc_allocator_driver_exit(void)
+>>> -{
+>>> -       fsl_mc_driver_unregister(&fsl_mc_allocator_driver);
+>>> -}
+>>> diff --git a/drivers/bus/fsl-mc/fsl-mc-private.h b/drivers/bus/fsl-mc/fsl-mc-private.h
+>>> index b3520ea1b9f4..e1b7ec3ed1a7 100644
+>>> --- a/drivers/bus/fsl-mc/fsl-mc-private.h
+>>> +++ b/drivers/bus/fsl-mc/fsl-mc-private.h
+>>> @@ -66,10 +66,6 @@ int dpmcp_close(struct fsl_mc_io *mc_io,
+>>>                   u32 cmd_flags,
+>>>                   u16 token);
+>>>
+>>> -int dpmcp_reset(struct fsl_mc_io *mc_io,
+>>> -               u32 cmd_flags,
+>>> -               u16 token);
+>>> -
+>>>    /*
+>>>     * Data Path Resource Container (DPRC) API
+>>>     */
+>>> @@ -631,8 +627,6 @@ int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
+>>>
+>>>    int __init fsl_mc_allocator_driver_init(void);
+>>>
+>>> -void fsl_mc_allocator_driver_exit(void);
+>>> -
+>>>    void fsl_mc_init_all_resource_pools(struct fsl_mc_device *mc_bus_dev);
+>>>
+>>>    void fsl_mc_cleanup_all_resource_pools(struct fsl_mc_device *mc_bus_dev);
+>>> diff --git a/drivers/bus/fsl-mc/mc-io.c b/drivers/bus/fsl-mc/mc-io.c
+>>> index 95b10a6cf307..a0ad7866cbfc 100644
+>>> --- a/drivers/bus/fsl-mc/mc-io.c
+>>> +++ b/drivers/bus/fsl-mc/mc-io.c
+>>> @@ -263,23 +263,3 @@ void fsl_mc_portal_free(struct fsl_mc_io *mc_io)
+>>>           dpmcp_dev->consumer_link = NULL;
+>>>    }
+>>>    EXPORT_SYMBOL_GPL(fsl_mc_portal_free);
+>>> -
+>>> -/**
+>>> - * fsl_mc_portal_reset - Resets the dpmcp object for a given fsl_mc_io object
+>>> - *
+>>> - * @mc_io: Pointer to the fsl_mc_io object that wraps the MC portal to free
+>>> - */
+>>> -int fsl_mc_portal_reset(struct fsl_mc_io *mc_io)
+>>> -{
+>>> -       int error;
+>>> -       struct fsl_mc_device *dpmcp_dev = mc_io->dpmcp_dev;
+>>> -
+>>> -       error = dpmcp_reset(mc_io, 0, dpmcp_dev->mc_handle);
+>>> -       if (error < 0) {
+>>> -               dev_err(&dpmcp_dev->dev, "dpmcp_reset() failed: %d\n", error);
+>>> -               return error;
+>>> -       }
+>>> -
+>>> -       return 0;
+>>> -}
+>>> -EXPORT_SYMBOL_GPL(fsl_mc_portal_reset);
+>>> diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+>>> index c90ec889bfc2..37316a58d2ed 100644
+>>> --- a/include/linux/fsl/mc.h
+>>> +++ b/include/linux/fsl/mc.h
+>>> @@ -417,8 +417,6 @@ int __must_check fsl_mc_portal_allocate(struct fsl_mc_device *mc_dev,
+>>>
+>>>    void fsl_mc_portal_free(struct fsl_mc_io *mc_io);
+>>>
+>>> -int fsl_mc_portal_reset(struct fsl_mc_io *mc_io);
+>>> -
+>>>    int __must_check fsl_mc_object_allocate(struct fsl_mc_device *mc_dev,
+>>>                                           enum fsl_mc_pool_type pool_type,
+>>>                                           struct fsl_mc_device **new_mc_adev);
+>>> --
+>>> 2.47.0
+>>>
+>>
+> --
+>   -----Open up your eyes, open up your mind, open up your code -------
+> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \
+> \        dave @ treblig.org |                               | In Hex /
+>   \ _________________________|_____ https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.treblig.org%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C707d35bccc9a4949428b08dd6231e98a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638774688697894005%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ncMBG9AvSfn4mKmQkFv%2F6UfFYp%2FBMDOna7uejbavhUc%3D&reserved=0   |_______/
+
