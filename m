@@ -1,177 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mta-65-226.siemens.flowmailer.net (mta-65-226.siemens.flowmailer.net [185.136.65.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D83E1EFF98;
-	Thu, 13 Mar 2025 09:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060A914AD20
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741859166; cv=none; b=mOdlpRXy/C+LgUKzUSdbckQAvxOOr+neT4/C1fH+fEXh2LMJK0xWi3LgZk5lrJRjMPoM2zr0DHV4aA3ymt+tvCbZEpCrjk59coSOcAgF9ZPDyq013Kt+4jOFh/LQ10XF7pTOiiUhz5QHJl3MyyVpEGReBiPbeEtHoQJm6h5pMpk=
+	t=1741859237; cv=none; b=h1UKBvacoWqmQlnH08x+gb+lLO6LbicNcrdNwMF5UZ8TemF1HLKKtJz5lBBdfHKqlFs1QLHXfLiE6VLm/NcvLjKWKCSzOZV7OwKUyrL8MkQH9qayx5kDBjMMo84aQZ0xo8XqJjRjB8UpbE70MXgd45paLCMop+ujWmT+WzIcY7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741859166; c=relaxed/simple;
-	bh=KnDKEsArudUs0xPOlJ+UrPFKez4u7XPSRF38hrC27AY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nETt2K5KH/u4zLniZgdwnNK7xDNFDvkJsls2gwEbfUtakF67r5AJh0g4S9pyBbylPG7+tmKvoXJSPZ2G9Gck6EfI6H6jRVbsgmbGEKGkSpoXQoQfgVVuUm7g+xKLhpjpgllehBcNVC0Qx65eP0fNzsVdFcv0s4A/49yE0hE/KJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DOZ7Cs0s; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741859237; c=relaxed/simple;
+	bh=e/YRPj6RUaOq76Rd/cALVFxmh2DBSQ4Kxxlj2FhISN0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CuzVx7LV0lIv+36ND28v8yYAAE5dq0FHdI0IR5si+byg/MsoSIKJU2w8TYuW57oDAzSCBNsh8txNa3WKslaxyuqR/H9lZSZSblFXzS1jEP3NEns50NtNQ2OnDrDKCgq1CdnqiI+XylTr/AqEQcoFemOfZqfTuJ/URaCNdFYzQT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b=OyGQ53mB; arc=none smtp.client-ip=185.136.65.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DOZ7Cs0s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741859165; x=1773395165;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=KnDKEsArudUs0xPOlJ+UrPFKez4u7XPSRF38hrC27AY=;
-  b=DOZ7Cs0sRaTKqYvXiRIye7u2Y0gOZ6eDl+Gb1gBrJ9JRYlJC9Mwbxn9J
-   1cC+VjcR9/zhs2C0jiQE4urJKhDMNfw7fWRgN/MjoQ6P6el+SPVLGJWZR
-   XLxqUMpIRTdu0qOluD4iLc222mS4NG8H4G2vHGW3s1Ny1kht5qtJjCcUl
-   saRLyAGPYl0M++zTapDSKz6ULxCPSMBcmYUihJYom6IVUdx1jgAJGAumT
-   ClQUOL+Zq90+YpuESiJb8XLVBqv1GUSOqGIhN3VpWIQhTv9z4bgalOvjl
-   0FMApkSP7hZNdpj4KNiA+9fYxi+R7Ia+dIXzqmigLAQs1nx3gyz+IzMq3
-   w==;
-X-CSE-ConnectionGUID: B7LVfIo+RwOX4f51lj13kQ==
-X-CSE-MsgGUID: 1axMC7G2THqpkKmVxyFK3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42218666"
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="42218666"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:46:04 -0700
-X-CSE-ConnectionGUID: OgZTVnicSw2ndjoz67HmGA==
-X-CSE-MsgGUID: h+IV8g1JRiycZ2xpDz+NkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="121400702"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.195])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:45:59 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Mar 2025 11:45:45 +0200 (EET)
-To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v5 1/6] PCI/IOV: Restore VF resizable BAR state after
- reset
-In-Reply-To: <20250312225949.969716-2-michal.winiarski@intel.com>
-Message-ID: <d6e026ad-4dd4-2e03-6f8b-a10980fa0ce7@linux.intel.com>
-References: <20250312225949.969716-1-michal.winiarski@intel.com> <20250312225949.969716-2-michal.winiarski@intel.com>
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b="OyGQ53mB"
+Received: by mta-65-226.siemens.flowmailer.net with ESMTPSA id 202503130947118435b45ee901dea5ff
+        for <linux-kernel@vger.kernel.org>;
+        Thu, 13 Mar 2025 10:47:11 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=alexander.sverdlin@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=kF4icJdfP5lYpb8j8rEZ0/bmq66zQh7c61dM/j9rTKo=;
+ b=OyGQ53mBnlX/kxdCGiKDZ/Bdh0HnbzuOlKTqe0CaVPs+HtUnX0aRcIWo00h9uBYNaVkFwa
+ yyM0o0D5DrgQMAziGVk1BZG0CCyksS0YBM3blo3t1w7ltoZ+aoaSuP6fY7pGWhk9sXGMT1RR
+ JcduQxAP+dbk2OLxJI/uYmBeCBNopGxql+xKBHRVmhIt7ZtwXZb+cZrPYVWSS4iHHvgBWxQx
+ bIEKEJ/hK5ZU5EdKKDtqD0rCtIjBcOUOz+knSOj2UWe8iLuihbDc8diySnEoEu0rqxNA62m3
+ 4gSbfwsXjyO7oPpnm/l/y0AQcvPrU3jV0zxMTgg4EX3Jyr2jj8WbQazg==;
+From: "A. Sverdlin" <alexander.sverdlin@siemens.com>
+To: Tony Lindgren <tony@atomide.com>,
+	linux-omap@vger.kernel.org
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg interconnect devices first"
+Date: Thu, 13 Mar 2025 10:47:06 +0100
+Message-ID: <20250313094708.1003092-1-alexander.sverdlin@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1098235586-1741859145=:1742"
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-456497:519-21489:flowmailer
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
---8323328-1098235586-1741859145=:1742
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+This reverts commit 4700a00755fb5a4bb5109128297d6fd2d1272ee6.
 
-On Wed, 12 Mar 2025, Micha=C5=82 Winiarski wrote:
+It brakes target-module@2b300050 ("ti,sysc-omap2") probe on AM62x in a case
+when minimally-configured system tries to network-boot:
 
-> Similar to regular resizable BAR, VF BAR can also be resized, e.g. by
-> the system firmware or the PCI subsystem itself.
->=20
-> Add the capability ID and restore it as a part of IOV state.
->=20
-> See PCIe r4.0, sec 9.3.7.4.
->=20
-> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> ---
->  drivers/pci/iov.c             | 29 ++++++++++++++++++++++++++++-
->  include/uapi/linux/pci_regs.h |  1 +
->  2 files changed, 29 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 121540f57d4bf..eb4d33eacacb8 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -7,6 +7,7 @@
->   * Copyright (C) 2009 Intel Corporation, Yu Zhao <yu.zhao@intel.com>
->   */
-> =20
-> +#include <linux/bitfield.h>
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/export.h>
-> @@ -868,6 +869,30 @@ static void sriov_release(struct pci_dev *dev)
->  =09dev->sriov =3D NULL;
->  }
-> =20
-> +static void sriov_restore_vf_rebar_state(struct pci_dev *dev)
-> +{
-> +=09unsigned int pos, nbars, i;
-> +=09u32 ctrl;
-> +
-> +=09pos =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_VF_REBAR);
-> +=09if (!pos)
-> +=09=09return;
+[    6.888776] probe of 2b300050.target-module returned 517 after 258 usecs
+[   17.129637] probe of 2b300050.target-module returned 517 after 708 usecs
+[   17.137397] platform 2b300050.target-module: deferred probe pending: (reason unknown)
+[   26.878471] Waiting up to 100 more seconds for network.
 
-FYI, the commit f7c9bb759161 ("PCI: Cache offset of Resizable BAR=20
-capability") which is currently in pci/enumeration makes this simpler.
+Arbitrary 10 deferrals is really not a solution to any problem.
+Stable mmc enumeration can be achiever by filling /aliases node properly
+(4700a00755fb commit's rationale).
 
-> +=09pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
-> +=09nbars =3D FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
-> +
-> +=09for (i =3D 0; i < nbars; i++, pos +=3D 8) {
-> +=09=09int bar_idx, size;
-> +
-> +=09=09pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
-> +=09=09bar_idx =3D FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, ctrl);
-> +=09=09size =3D pci_rebar_bytes_to_size(dev->sriov->barsz[bar_idx]);
-> +=09=09ctrl &=3D ~PCI_REBAR_CTRL_BAR_SIZE;
-> +=09=09ctrl |=3D FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-> +=09=09pci_write_config_dword(dev, pos + PCI_REBAR_CTRL, ctrl);
-> +=09}
-> +}
-> +
->  static void sriov_restore_state(struct pci_dev *dev)
->  {
->  =09int i;
-> @@ -1027,8 +1052,10 @@ resource_size_t pci_sriov_resource_alignment(struc=
-t pci_dev *dev, int resno)
->   */
->  void pci_restore_iov_state(struct pci_dev *dev)
->  {
-> -=09if (dev->is_physfn)
-> +=09if (dev->is_physfn) {
-> +=09=09sriov_restore_vf_rebar_state(dev);
->  =09=09sriov_restore_state(dev);
-> +=09}
->  }
-> =20
->  /**
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.=
-h
-> index 3c2558b98d225..aadd483c47d6f 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -744,6 +744,7 @@
->  #define PCI_EXT_CAP_ID_L1SS=090x1E=09/* L1 PM Substates */
->  #define PCI_EXT_CAP_ID_PTM=090x1F=09/* Precision Time Measurement */
->  #define PCI_EXT_CAP_ID_DVSEC=090x23=09/* Designated Vendor-Specific */
-> +#define PCI_EXT_CAP_ID_VF_REBAR 0x24=09/* VF Resizable BAR */
->  #define PCI_EXT_CAP_ID_DLF=090x25=09/* Data Link Feature */
->  #define PCI_EXT_CAP_ID_PL_16GT=090x26=09/* Physical Layer 16.0 GT/s */
->  #define PCI_EXT_CAP_ID_NPEM=090x29=09/* Native PCIe Enclosure Management=
- */
->=20
+After revert:
 
---=20
- i.
+[    9.006816] IP-Config: Complete:
+[    9.010058]      device=lan0, ...
 
---8323328-1098235586-1741859145=:1742--
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+---
+ drivers/bus/ti-sysc.c | 49 -------------------------------------------
+ 1 file changed, 49 deletions(-)
+
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index f67b927ae4caa..e5c02e950f2c1 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -677,51 +677,6 @@ static int sysc_parse_and_check_child_range(struct sysc *ddata)
+ 	return 0;
+ }
+ 
+-/* Interconnect instances to probe before l4_per instances */
+-static struct resource early_bus_ranges[] = {
+-	/* am3/4 l4_wkup */
+-	{ .start = 0x44c00000, .end = 0x44c00000 + 0x300000, },
+-	/* omap4/5 and dra7 l4_cfg */
+-	{ .start = 0x4a000000, .end = 0x4a000000 + 0x300000, },
+-	/* omap4 l4_wkup */
+-	{ .start = 0x4a300000, .end = 0x4a300000 + 0x30000,  },
+-	/* omap5 and dra7 l4_wkup without dra7 dcan segment */
+-	{ .start = 0x4ae00000, .end = 0x4ae00000 + 0x30000,  },
+-};
+-
+-static atomic_t sysc_defer = ATOMIC_INIT(10);
+-
+-/**
+- * sysc_defer_non_critical - defer non_critical interconnect probing
+- * @ddata: device driver data
+- *
+- * We want to probe l4_cfg and l4_wkup interconnect instances before any
+- * l4_per instances as l4_per instances depend on resources on l4_cfg and
+- * l4_wkup interconnects.
+- */
+-static int sysc_defer_non_critical(struct sysc *ddata)
+-{
+-	struct resource *res;
+-	int i;
+-
+-	if (!atomic_read(&sysc_defer))
+-		return 0;
+-
+-	for (i = 0; i < ARRAY_SIZE(early_bus_ranges); i++) {
+-		res = &early_bus_ranges[i];
+-		if (ddata->module_pa >= res->start &&
+-		    ddata->module_pa <= res->end) {
+-			atomic_set(&sysc_defer, 0);
+-
+-			return 0;
+-		}
+-	}
+-
+-	atomic_dec_if_positive(&sysc_defer);
+-
+-	return -EPROBE_DEFER;
+-}
+-
+ static struct device_node *stdout_path;
+ 
+ static void sysc_init_stdout_path(struct sysc *ddata)
+@@ -947,10 +902,6 @@ static int sysc_map_and_check_registers(struct sysc *ddata)
+ 	if (error)
+ 		return error;
+ 
+-	error = sysc_defer_non_critical(ddata);
+-	if (error)
+-		return error;
+-
+ 	sysc_check_children(ddata);
+ 
+ 	if (!of_property_present(np, "reg"))
+-- 
+2.48.1
+
