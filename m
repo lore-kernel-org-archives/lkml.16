@@ -1,93 +1,87 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C361EA7FC
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8412F1EA7FC
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741855236; cv=none; b=IDrMRi/UAo2+zODzOeR5mlih07ftKEPtzQxC0q4JPwZ2YNAPFHrmmlk9NWN4oHXc5LisAqPJRcEIrgOs2G0knBjym2z6kG5rwRt0lfF2W6SktTtpcPYsofVvF9SSHy0hHPj3cXHW8HShoRLndVBPQkLszjmoweLpWPaWuRFQRlw=
+	t=1741855241; cv=none; b=C6UNrBcgbpElrFjcvaMk3PAzlIfDnsLr8x2yqd/yW26TW7I3KMSX7Q31MKhiMMRYlXaXutrZyU6duKI1jM6r9QSYVE+fI5/qNo3DE43gWyraVCPgtY2+nzjyrLiWdWZ0eoXhNH8OkPtI4TQComw6fPlEL+J+jh0dRo1zkbY1TxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741855236; c=relaxed/simple;
-	bh=/UnOtOyXolEONVcwhuDAvAWAW3FkdEDQOLvBaBK8tJI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N3e6NfWfgI/YsIaLPx9539zxTCF2eiPkMjH0UJ+ZehwlNAWMBZoCo26rhB0f0cMUUzcCYWn4xtP57oKKQpzyMWlSYqf1FTV0TN0W9hQw7dB6nEoV2qP1ztynodYjgiviHDiLGWGtUzbNZZ5BpYmd1hQphm9dlaVzRnIb2p3djDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowADHztL3mdJno3fUFA--.2900S2;
-	Thu, 13 Mar 2025 16:40:24 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: tomi.valkeinen@ideasonboard.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] drm/omap: Remove unnecessary NULL check before clk_prepare_enable/clk_disable_unprepare
-Date: Thu, 13 Mar 2025 16:37:56 +0800
-Message-Id: <20250313083756.2481659-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1741855241; c=relaxed/simple;
+	bh=5hofGVLuvv5HvKXqqs/LTfujpXCIvanrxTC9zjxAsRA=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=jafbkze8dX6bPSaOhyko1o6KDhQwqYWpC8dt+oLq81ol45CZctVIZl/rOpsCQR0Tl1nUs0EzEzZ0iHBru8dAXFIyxFvVIRfIHRlywGLEwxEW+DYe2GhG7OEkExXJBls2eY053hb8kIqAXNHg1+xvfmyTMJebbx/xgXOlMCTP0+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZD1D10pS8z8R044;
+	Thu, 13 Mar 2025 16:40:33 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl2.zte.com.cn with SMTP id 52D8eNQF021947;
+	Thu, 13 Mar 2025 16:40:23 +0800 (+08)
+	(envelope-from ye.xingchen@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid31;
+	Thu, 13 Mar 2025 16:40:25 +0800 (CST)
+Date: Thu, 13 Mar 2025 16:40:25 +0800 (CST)
+X-Zmail-TransId: 2afa67d299f9ffffffffb85-46491
+X-Mailer: Zmail v1.0
+Message-ID: <20250313164025540bRPvAP8qt5DGLTl-W2R_K@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADHztL3mdJno3fUFA--.2900S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gw4kZF43WryfJr4kZFW3GFg_yoWkJFb_GF
-	4DurZxWFW5G3Z2yw15Aw1UZrZ2yFn2vFWFgr1IvayrKFW7Xws8Zry2vrWfAwsrGFWxtF1U
-	A3ZrWa47Ar1xujkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbxxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUrr
-	WFUUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Mime-Version: 1.0
+From: <ye.xingchen@zte.com.cn>
+To: <brauner@kernel.org>
+Cc: <jeff.johnson@oss.qualcomm.com>, <jack@suse.cz>,
+        <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?B?W1BBVENIIHYyXSBubHM6IEZpeCB1dGYzMl90b191dGY4IHBhcmFtZXRlciB0eXBlIGluIGRlY2xhcmF0aW9uIGFuZMKgZGVmaW5pdGlvbg==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 52D8eNQF021947
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67D29A01.000/4ZD1D10pS8z8R044
 
-clk_prepare_enable() and clk_disable_unprepare() already checked
-NULL clock parameter.Remove unneeded NULL check for clk here.
+From: YeXingchen <ye.xingchen@zte.com.cn>
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+The declaration of utf32_to_utf8 in the header file uses
+bool maxlen as the parameter type, while the definition uses bool maxout.
+
+This patch aligns the parameter name in the definition with the
+declaration,changing maxout to maxlen to ensure consistency.
+
+Signed-off-by: YeXingchen <ye.xingchen@zte.com.cn>
 ---
- drivers/gpu/drm/omapdrm/dss/venc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+v1 -> v2
+fix the parameter
+ fs/nls/nls_base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/venc.c b/drivers/gpu/drm/omapdrm/dss/venc.c
-index aaeef603682c..7d521840d4f6 100644
---- a/drivers/gpu/drm/omapdrm/dss/venc.c
-+++ b/drivers/gpu/drm/omapdrm/dss/venc.c
-@@ -882,8 +882,7 @@ static __maybe_unused int venc_runtime_suspend(struct device *dev)
- {
- 	struct venc_device *venc = dev_get_drvdata(dev);
- 
--	if (venc->tv_dac_clk)
--		clk_disable_unprepare(venc->tv_dac_clk);
-+	clk_disable_unprepare(venc->tv_dac_clk);
- 
- 	return 0;
+diff --git a/fs/nls/nls_base.c b/fs/nls/nls_base.c
+index 18d597e49a19..3bae9c201139 100644
+--- a/fs/nls/nls_base.c
++++ b/fs/nls/nls_base.c
+@@ -83,7 +83,7 @@ int utf8_to_utf32(const u8 *s, int inlen, unicode_t *pu)
  }
-@@ -892,8 +891,7 @@ static __maybe_unused int venc_runtime_resume(struct device *dev)
+ EXPORT_SYMBOL(utf8_to_utf32);
+
+-int utf32_to_utf8(unicode_t u, u8 *s, int maxout)
++int utf32_to_utf8(unicode_t u, u8 *s, int maxlen)
  {
- 	struct venc_device *venc = dev_get_drvdata(dev);
- 
--	if (venc->tv_dac_clk)
--		clk_prepare_enable(venc->tv_dac_clk);
-+	clk_prepare_enable(venc->tv_dac_clk);
- 
- 	return 0;
- }
+ 	unsigned long l;
+ 	int c, nc;
+@@ -97,7 +97,7 @@ int utf32_to_utf8(unicode_t u, u8 *s, int maxout)
+ 		return -1;
+
+ 	nc = 0;
+-	for (t = utf8_table; t->cmask && maxout; t++, maxout--) {
++	for (t = utf8_table; t->cmask && maxlen; t++, maxlen--) {
+ 		nc++;
+ 		if (l <= t->lmask) {
+ 			c = t->shift;
 -- 
 2.25.1
-
