@@ -1,83 +1,93 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5947F261565
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C361EA7FC
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741855196; cv=none; b=Sl63XlAD8BCoUqzoKYzv8r0pypYY4kqfdPoiSvttCOJQSB2LaHTQIksHI0tRRcqoMEXAKYDFkve48YXsuLFc9qy5xqfEnOEaU6OX52pQv2My0ht1TpiXIpMt2jvy4RKEg2zVdGHsQRo4Uvg3inLksJyxbBU0QZpgtG5JA6q2gCg=
+	t=1741855236; cv=none; b=IDrMRi/UAo2+zODzOeR5mlih07ftKEPtzQxC0q4JPwZ2YNAPFHrmmlk9NWN4oHXc5LisAqPJRcEIrgOs2G0knBjym2z6kG5rwRt0lfF2W6SktTtpcPYsofVvF9SSHy0hHPj3cXHW8HShoRLndVBPQkLszjmoweLpWPaWuRFQRlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741855196; c=relaxed/simple;
-	bh=Cf6rsk3OuercVA9uw+yCpjusH9Si5XFM6JJkapDMcXE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z6UzlXLq87y6pdL2II6dFaiN8zDH0kpM5sqg8y/Et8mHOJolBieCXa5Q4NrTFPyi+byc3p0gsPDPCDMxXmeojTEji+4tg7xQjpyekiJeU9/W9vQTKUgqm7yzgQThpgH3pCRpDPboDfuUEV0R/AgpsVQzhUdgokzl6fNNd0L3hyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tse6J-00085z-03; Thu, 13 Mar 2025 09:39:35 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tse6H-005VQC-0X;
-	Thu, 13 Mar 2025 09:39:33 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tse6H-0003PA-0M;
-	Thu, 13 Mar 2025 09:39:33 +0100
-Message-ID: <5849017e43db7ece72463f5c84854386aa7d8e9d.camel@pengutronix.de>
-Subject: Re: [PATCH v3 02/12] reset: imx: Add SCU reset driver for i.MX8QXP
- and i.MX8QM
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Dong
- Aisheng <aisheng.dong@nxp.com>,  Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Laurent
- Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>,  Rui Miguel Silva <rmfrfs@gmail.com>, Martin
- Kepplinger <martink@posteo.de>, Purism Kernel Team <kernel@puri.sm>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-media@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>, 
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Date: Thu, 13 Mar 2025 09:39:33 +0100
-In-Reply-To: <20250210-8qxp_camera-v3-2-324f5105accc@nxp.com>
-References: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com>
-	 <20250210-8qxp_camera-v3-2-324f5105accc@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1741855236; c=relaxed/simple;
+	bh=/UnOtOyXolEONVcwhuDAvAWAW3FkdEDQOLvBaBK8tJI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N3e6NfWfgI/YsIaLPx9539zxTCF2eiPkMjH0UJ+ZehwlNAWMBZoCo26rhB0f0cMUUzcCYWn4xtP57oKKQpzyMWlSYqf1FTV0TN0W9hQw7dB6nEoV2qP1ztynodYjgiviHDiLGWGtUzbNZZ5BpYmd1hQphm9dlaVzRnIb2p3djDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowADHztL3mdJno3fUFA--.2900S2;
+	Thu, 13 Mar 2025 16:40:24 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: tomi.valkeinen@ideasonboard.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] drm/omap: Remove unnecessary NULL check before clk_prepare_enable/clk_disable_unprepare
+Date: Thu, 13 Mar 2025 16:37:56 +0800
+Message-Id: <20250313083756.2481659-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADHztL3mdJno3fUFA--.2900S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw4kZF43WryfJr4kZFW3GFg_yoWkJFb_GF
+	4DurZxWFW5G3Z2yw15Aw1UZrZ2yFn2vFWFgr1IvayrKFW7Xws8Zry2vrWfAwsrGFWxtF1U
+	A3ZrWa47Ar1xujkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUrr
+	WFUUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Mo, 2025-02-10 at 15:59 -0500, Frank Li wrote:
-> Add System Controller Firmware(SCU) reset driver for i.MX8QM and i.MX8QXP=
-.
-> SCU Manage resets for peripherals such as MIPI CSI. Currently, support tw=
-o
-> reset sources: IMX_SC_R_CSI_0 and IMX_SC_R_CSI_1.
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+clk_prepare_enable() and clk_disable_unprepare() already checked
+NULL clock parameter.Remove unneeded NULL check for clk here.
 
-Applied to reset/next, thanks!
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/gpu/drm/omapdrm/dss/venc.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-[01/12] dt-bindings: firmware: imx: add property reset-controller
-        https://git.pengutronix.de/cgit/pza/linux/commit/?id=3D778752759bd0
-[02/12] reset: imx: Add SCU reset driver for i.MX8QXP and i.MX8QM
-        https://git.pengutronix.de/cgit/pza/linux/commit/?id=3D6b64fde5c183
+diff --git a/drivers/gpu/drm/omapdrm/dss/venc.c b/drivers/gpu/drm/omapdrm/dss/venc.c
+index aaeef603682c..7d521840d4f6 100644
+--- a/drivers/gpu/drm/omapdrm/dss/venc.c
++++ b/drivers/gpu/drm/omapdrm/dss/venc.c
+@@ -882,8 +882,7 @@ static __maybe_unused int venc_runtime_suspend(struct device *dev)
+ {
+ 	struct venc_device *venc = dev_get_drvdata(dev);
+ 
+-	if (venc->tv_dac_clk)
+-		clk_disable_unprepare(venc->tv_dac_clk);
++	clk_disable_unprepare(venc->tv_dac_clk);
+ 
+ 	return 0;
+ }
+@@ -892,8 +891,7 @@ static __maybe_unused int venc_runtime_resume(struct device *dev)
+ {
+ 	struct venc_device *venc = dev_get_drvdata(dev);
+ 
+-	if (venc->tv_dac_clk)
+-		clk_prepare_enable(venc->tv_dac_clk);
++	clk_prepare_enable(venc->tv_dac_clk);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
-regards
-Philipp
