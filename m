@@ -1,90 +1,180 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D406267AF8
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC78DDDC;
+	Thu, 13 Mar 2025 13:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741872734; cv=none; b=W/SkaZWHeLZFvXUI2p6FnhqR8gTWBD1GrFf/b9WABrPUE0YG7JFhEBrYbHuwXNf79oBWzFgxSVh250eqXCIF8nBqr1J/Pa1iXd3QbsAF0LiAY6rLclYHXCwvPcLqDN569m56mdoY8+Oyi0aABgDbS+YoKKwbbND1zpn0NMMqQfU=
+	t=1741872786; cv=none; b=RJiXRLgxQpfcIKozt5HmKdXxQvPnAx+/Cjd8nFVcFGJvpXhndwylDi007lvJc5lPj8ge1utFJGwwlsfUUqXf/MDGbczhb8KcOULvQNBsxTgWiel2sccBXw/4YN5Qyj42nqbEjZ6s7PIS5iPoUncdg53vkXQBbtkIQALy3tI/ljA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741872734; c=relaxed/simple;
-	bh=AECcWww6Tf2VbVqFmnGwEIKamySDLJ1qqx+m5Bfribo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KHjsoDnvZl4jzFYNxyyBf9nR8uMLqjqMovEhN/i66VtWpmM8lIOvYDc+djf/peQNpMt+jFHMmk1AVcfRUErWd6dBqH/NBZDfAy/4NMC0JzZWBOGncEkNeHtEItubU2eh4Alo6r61Uxk+gDcduK72g95xLhiNPDDu3qBAc/KzEkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pxY93nuP; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741872786; c=relaxed/simple;
+	bh=XuNfwVZH74W5UU9BfBiDYpp8IqrD1Na93CcN16Z/tIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yq7VwXgIm+p/fCilYleDSFgOBwE4h+voyXFSY2e3hy97vJ4BvONKt48IecdKx6lMjDbp7t2+ZDUu3745UPJ5WhwMxJyzQElV9R7dbQK/MBjLTK4DrAXEemDHr9XwVnqBY6yLQi26KsWtU+0Xdr5pc3QitrzaGZnKvYZvVDL9/aA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I4LJjbsC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pxY93nuP"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741872730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1tAC6FrZfssFC8hLTnPDxdfC5S49p/m9V+OqiWaLwGE=;
-	b=pxY93nuPkhxkVqBmB96EE6MQ9mnMcU9ZWWsVhhfdsTihqTjC5KLb9u2iVbcSbVLseLs5bA
-	7SaH1HZ26fwBPMjjSw6IliMyrcvtyQ9QssI+KvuwdNKuARJBeMAny7IRsU1y9pJ448V6Km
-	71QeU5W9CEgknVEV/jnZvurjH058mGk=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Song Liu <song@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] watchdog/perf: Optimize bytes copied and remove manual NUL-termination
-Date: Thu, 13 Mar 2025 14:30:02 +0100
-Message-ID: <20250313133004.36406-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I4LJjbsC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91333C4CEEF;
+	Thu, 13 Mar 2025 13:33:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741872785;
+	bh=XuNfwVZH74W5UU9BfBiDYpp8IqrD1Na93CcN16Z/tIM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=I4LJjbsCY9PGv7Jvw7YhXMc1fvi5lZ+b5uYPmwu1smKYPlPLICoO+nSwJ//+/Y10/
+	 5U1IeG1X2q+OhMpWOmfl2/+YpP583aHZqxduHUP/z+80UpFsBckB76iXxiVAbrFBVM
+	 8aA/L0uKKUe04NBIM+gbeAcEogjWf9CH99qqld6W+gCDGScuCfg8gXUeNOdhxwMBIV
+	 mYrqV82etsAubzhkxLxBt8yIe1CE1KEYCZv3F+M8g5CM5YdE4EbJb2KcY0qSbydgJD
+	 WtASrHvxzXB6566M98W7UyFl0lZgj4MUvm0tRXAyTXaWT3X+K/A8QDKvhHO4gjWYmJ
+	 xg99R2cnA6m9Q==
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2bcc0c6c149so973768fac.1;
+        Thu, 13 Mar 2025 06:33:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVkoHlLKpR1zABNy6w+RC4fBYAWCZtrbtk6JiWpkZow/YYGrd3PuxP1kaFlrNMNry2Z4ZUAf7IzyVgdyr0=@vger.kernel.org, AJvYcCXyTaVdfOwlKwZqSoa9F5ObxsfZpil/dW6mmhKVaSuSBrgR5pbj0DPbkZDsmTgg3zI5GYXzG30VhO0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7V5Mf/bc6Xc99GLQAYNyjTLt4hWTWSGnkSNr9wCS275HgUdUe
+	EGf37I0oqQeoy9B8A23S3JVrSo8BPbhbErpuMShEYupXK5ztim/gQqdrDSvfMIqoKaA/+7YjfcM
+	wtIu6QZRywMzl7KHN8bW6zhAZplk=
+X-Google-Smtp-Source: AGHT+IGkPwuAC9RvVaAjV7Vla8jW9hy4OPGMSPR+shxk7LKgl53PqLOuTMaknbmPrrhzKzhepZMWcCWlXloQ9uFPw+8=
+X-Received: by 2002:a05:6871:109:b0:289:2126:6826 with SMTP id
+ 586e51a60fabf-2c261304b27mr15019905fac.30.1741872784779; Thu, 13 Mar 2025
+ 06:33:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <13709135.uLZWGnKmhe@rjwysocki.net> <2016539.usQuhbGJ8B@rjwysocki.net>
+ <CAGETcx8WOezY5-MePZ8X8f7_deys1eB-VvQLQwUPtd5MO8ApSA@mail.gmail.com>
+In-Reply-To: <CAGETcx8WOezY5-MePZ8X8f7_deys1eB-VvQLQwUPtd5MO8ApSA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 13 Mar 2025 14:32:52 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hghyWwd_kZXS1+9pD+DkWiP_4MYORryvkhmFoqayQVaw@mail.gmail.com>
+X-Gm-Features: AQ5f1JpYFF509PP0Fu3AHxgL1jmkJIzqwRhd-FBPM-1QI89Z0k3rbdYuPNlRmY4
+Message-ID: <CAJZ5v0hghyWwd_kZXS1+9pD+DkWiP_4MYORryvkhmFoqayQVaw@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] PM: sleep: Make late and noirq suspend of devices
+ more asynchronous
+To: Saravana Kannan <saravanak@google.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Johan Hovold <johan@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, up to 23 bytes of the source string are copied to the
-destination buffer (including the comma and anything after it), only to
-then manually NUL-terminate the destination buffer again at index 'len'
-(where the comma was found).
+On Thu, Mar 13, 2025 at 2:47=E2=80=AFAM Saravana Kannan <saravanak@google.c=
+om> wrote:
+>
+> On Tue, Feb 25, 2025 at 8:46=E2=80=AFAM Rafael J. Wysocki <rjw@rjwysocki.=
+net> wrote:
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > In analogy with previous changes, make device_suspend_late() and
+> > device_suspend_noirq() start the async suspend of the device's parent
+> > and suppliers after the device itself has been processed and make
+> > dpm_suspend_late() and dpm_noirq_suspend_devices() start processing
+> > "async" leaf devices (that is, devices without children or consumers)
+> > upfront because they don't need to wait for any other devices.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  drivers/base/power/main.c |   60 +++++++++++++++++++++++++++++++++++++=
+++-------
+> >  1 file changed, 52 insertions(+), 8 deletions(-)
+> >
+> > --- a/drivers/base/power/main.c
+> > +++ b/drivers/base/power/main.c
+> > @@ -1317,6 +1317,8 @@
+> >         device_links_read_unlock(idx);
+> >  }
+> >
+> > +static void async_suspend_noirq(void *data, async_cookie_t cookie);
+> > +
+> >  /**
+> >   * device_suspend_noirq - Execute a "noirq suspend" callback for given=
+ device.
+> >   * @dev: Device to handle.
+> > @@ -1396,7 +1398,13 @@
+> >  Complete:
+> >         complete_all(&dev->power.completion);
+> >         TRACE_SUSPEND(error);
+> > -       return error;
+> > +
+> > +       if (error || async_error)
+> > +               return error;
+> > +
+> > +       dpm_async_suspend_superior(dev, async_suspend_noirq);
+> > +
+> > +       return 0;
+> >  }
+> >
+> >  static void async_suspend_noirq(void *data, async_cookie_t cookie)
+> > @@ -1410,6 +1418,7 @@
+> >  static int dpm_noirq_suspend_devices(pm_message_t state)
+> >  {
+> >         ktime_t starttime =3D ktime_get();
+> > +       struct device *dev;
+> >         int error =3D 0;
+> >
+> >         trace_suspend_resume(TPS("dpm_suspend_noirq"), state.event, tru=
+e);
+> > @@ -1419,15 +1428,28 @@
+> >
+> >         mutex_lock(&dpm_list_mtx);
+> >
+> > +       /*
+> > +        * Start processing "async" leaf devices upfront because they d=
+on't need
+> > +        * to wait.
+> > +        */
+> > +       list_for_each_entry_reverse(dev, &dpm_late_early_list, power.en=
+try) {
+> > +               dpm_clear_async_state(dev);
+> > +               if (dpm_leaf_device(dev))
+> > +                       dpm_async_fn(dev, async_suspend_noirq);
+> > +       }
+> > +
+> >         while (!list_empty(&dpm_late_early_list)) {
+> > -               struct device *dev =3D to_device(dpm_late_early_list.pr=
+ev);
+> > +               dev =3D to_device(dpm_late_early_list.prev);
+> >
+> >                 list_move(&dev->power.entry, &dpm_noirq_list);
+>
+> This issue is present in the previous patch too, but it's easier for
+> me to point it out here. Suspend abort will break now.
+>
+> For example, say the devices are suspended in the order A -> B -> C ->
+> D -> E if everything was sync.
+>
+> Case 1: Fully sync devices
+> If C aborts, only A and B will be in the dpm_noirq_list. When we try
+> to undo the suspend, we just resume devices in dpm_noirq_list and that
+> just resumes A and B.
+>
+> Case 2: Only C is sync.
+> When C aborts, A, B, D and E could have finished suspending. But only
+> A and B will be in the dpm_noirq_list. When we try to undo the
+> suspend, we just resume devices in dpm_noirq_list and that just
+> resumes A and B. D and E never get resumed.
+>
+> My fix for this is to move all devices to dpm_noirq_list if a suspend
+> aborts and then using the existing
+> is_suspended/is_noirq_suspended/is_late_suspended flags to skip over
+> devices that haven't been suspended. That works nicely except in
+> is_suspended and I tried to fix it in [2]. But you had an issue with
+> [2] that I didn't fully understand and I meant to dig deeper and fix.
+> But I didn't get around to it as I got swamped with other work.
+>
+> [2] - https://lore.kernel.org/linux-pm/20241114220921.2529905-2-saravanak=
+@google.com/
 
-Fix this by calling strscpy() with 'len' instead of the destination
-buffer size to copy only as many bytes from the source string as needed.
+I hope that my last message in this thread clarifies this a bit.
 
-Change the length check to allow 'len' to be less than or equal to the
-destination buffer size to fill the whole buffer if needed.
+Anyway, yes, this is a bug and yes, it can be addressed by just
+continuing to move devices to the target list on errors until all of
+them get moved and then look at
+is_suspended/is_noirq_suspended/is_late_suspended.
 
-Remove the if-check for the return value of strscpy(), because calling
-strscpy() with 'len' always truncates the source string at the comma as
-expected and NUL-terminates the destination buffer at the corresponding
-index instead. Remove the manual NUL-termination.
-
-No functional changes intended.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- kernel/watchdog_perf.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/watchdog_perf.c b/kernel/watchdog_perf.c
-index 59c1d86a73a2..b81167cb0dfc 100644
---- a/kernel/watchdog_perf.c
-+++ b/kernel/watchdog_perf.c
-@@ -294,12 +294,10 @@ void __init hardlockup_config_perf_event(const char *str)
- 	} else {
- 		unsigned int len = comma - str;
- 
--		if (len >= sizeof(buf))
-+		if (len > sizeof(buf))
- 			return;
- 
--		if (strscpy(buf, str, sizeof(buf)) < 0)
--			return;
--		buf[len] = 0;
-+		strscpy(buf, str, len);
- 		if (kstrtoull(buf, 16, &config))
- 			return;
- 	}
--- 
-2.48.1
-
+I'll post a fix for the direct-complete handling in device_suspend()
+and an update of the last three patches in this series with this issue
+addressed.
