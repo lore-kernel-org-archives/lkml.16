@@ -1,240 +1,118 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2062.outbound.protection.outlook.com [40.107.237.62])
+Received: from out28-149.mail.aliyun.com (out28-149.mail.aliyun.com [115.124.28.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8A81F9F70
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741860451; cv=fail; b=NPxvJz1PFfJ8uo57RIQjKrTtKplNzURqeBSFAmX8SXEmsDqFoyuRxiPPyLn5BTl3mL8B8tMeW5YH/0K0ckGXPiCpJ00RusOBjHYs7bqccgdgGQR0ztrofLOcPVGm0LPxQuDi8Y51UZZJ15Zdl0GHiMCkhUGJtsbzGq8b5pYRhkQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741860451; c=relaxed/simple;
-	bh=r9QhK59LWdXTBKYpIwF+ZwGFts0frYcpN71OtYXYTbo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pKduq3aKhE5SRD93AIg28iwPKex8p4qCAt/QDJteiQ/FPlXFqX0iUcsf5zSmLoZiGCdKS4HjhymhSNmT6JNB+osSP9fBMnLwoOJa2EkFs/Tsf+eU9GeCHmvt9epACicM2r28D8cno3GFrfyqhzTyzZHNdV081yUbtiKxZq+qpAo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gFaS1/5k; arc=fail smtp.client-ip=40.107.237.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gFaS1/5k"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v/jTV46vm4S/fbVd40x98HuowHstroe0PZv2z0w0BRVyYeHNb+UTbg1dAicQ3S/6l6d6fvplnIjCOB4X7wG+08FHhz5Cph2lUgGRbAQ6FDsh6cb2QldH0nksr2rW0fBocjIuhDVmxIbWHkMbALG1LL6497s7wJ30mYJ/HXz+37ktW8NTp99YahNWxuC9vYXWnJ1V1kkZ609kQ9dKDR1rFagtYVfWHFRjDvvpTlQBLMzmK/4RRUHzdd9Dy3Lqevn6d6q3WYgrg3zRUi9sYSas2m9/iM4efQLgrhSupYCQVOzJK0H875YWymkjcjVsV4LuJY2Tiwf+QO+ZoRJPLlaQCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OckP4Gg/lzIdiNJjeurIPaQr28SiJnbt9scVABz2lJg=;
- b=Jil/qSLrIq6r0xS3cF1OKGtWUIOuisagtCdcIRPv5jOd6PmsBPde6xz/2CLQYzF0vaHxM/51wMorvKhQNJWbVBpH6uXTEX58JqbfzOurOeoOCuOGZSb/1cPV9jTueuksUVHdVeMZnEvWEi+myiVa0/lyHuyo7gug2NTywdHcKip7rvfarC/zrVHZRxoVsHh/KLg5HA1t8MPbD6er4W2UhAVwmHrG5onBkK+1GVBdNR/rSfVL0MisQ5lMrs9bBhfCYzCRL1V/SZOz0ZIDWVN5feCZJ+fc6JbdtBBlX4457lKGgJznYO2zUNVyrKKd67BD1dG/5Y6uIassvirkzvmPKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OckP4Gg/lzIdiNJjeurIPaQr28SiJnbt9scVABz2lJg=;
- b=gFaS1/5k1qS/3ge3XQP3kaQJjRo2SqA+AZtMOc23t5oUjHNxWZU1swirIFTrFICew9uPXMRkGZYjzyVJrO0XKGyPYkcnbzZmtG/mg4w+aGvO7sm9sYb5OrSDTU4YNMCXqz6SJeA9VDPExxfWNkPcKKqdlE+BYKzxWtTcTEnqwlQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by SJ0PR12MB7034.namprd12.prod.outlook.com (2603:10b6:a03:449::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Thu, 13 Mar
- 2025 10:07:26 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8511.026; Thu, 13 Mar 2025
- 10:07:26 +0000
-Message-ID: <d02a205a-c7e7-45a5-bcba-b5a5a6bebf4e@amd.com>
-Date: Thu, 13 Mar 2025 11:07:20 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/sched: Clarify docu concerning drm_sched_job_arm()
-To: Philipp Stanner <phasta@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250313093053.65001-2-phasta@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20250313093053.65001-2-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0036.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:c7::9) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C561BC5C;
+	Thu, 13 Mar 2025 10:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.149
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741860455; cv=none; b=jvrMS1eQ0xFM9m4VGSaTNCeO08ycVaQn3CIljgDairI3VI0DWGgc+xdfTMWLNH/k6QV/LRNmndf5ppbzf8CCei3PXvrEMIs25ecH+kNJucUH/d3mvT/CnABwItcykrjYezSsOxvdP8mgPd12v1taVZh/LMxIMVUHMo8EaHEh3bA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741860455; c=relaxed/simple;
+	bh=zvbPfCLNKc8V9LagADA8Bo6HWwITIiFmeG6g0Erq4Ng=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T9DYHCUCGC+pNO66HtqSPUABExO5co7SnoUkFNtlJ4cNRTXG0Tjr3l6+O3s63MSGTFfYOvylaGQTJyfqVieGlO1AF1pyUxbYxse7nokn9uQzqRB4vB6pX/Eyl2i1w42vg34H5Kgm6o9ip0cxc+xsBXuTVYl4rFeW12ASeSKbLOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=115.124.28.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
+Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.bsXubKn_1741860439 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Thu, 13 Mar 2025 18:07:19 +0800
+From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	rafael@kernel.org,
+	zhoushengqing@ttyinfo.com
+Subject: [PATCH v5 1/2] Add rev 2 check for PRESERVE_BOOT_CONFIG function
+Date: Thu, 13 Mar 2025 10:06:55 +0000
+Message-Id: <20250313100658.15805-1-zhoushengqing@ttyinfo.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SJ0PR12MB7034:EE_
-X-MS-Office365-Filtering-Correlation-Id: d55b2a24-ecda-450f-859e-08dd6216db11
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VXJzMWlMbFJaRmIwQW04NFVJU2srTTZxNEZUZFpMd28wMlRNem5PQTBlZVVR?=
- =?utf-8?B?RitBV1JrRjVjV0pMSGdLa0JtM3hpcENESGlnM0Q3REpSbURvZmh3VjNKdXdw?=
- =?utf-8?B?QkxUKytLaUwvMjh6cmExYS8wRXloTklzallCeHBqNStjdXlwU016aEIzKzJm?=
- =?utf-8?B?QWlUOUxhRTlOY1RERmRBeEhXdkNtVDB0WFpTZlkweDJuaHhGZ0xMOVY1Skd1?=
- =?utf-8?B?L2NrWVd3dC9waEZLc2l2WXErdTMrenV3SkJlL2hBUTRZTTJlc1p0NjAyNUxD?=
- =?utf-8?B?YkJ0cFd0dTVzMW9kVG1KL2c5Wjk0UnlhNWw5M1I0QUhlbmovZFFBRFJKWHFH?=
- =?utf-8?B?bGtHZi9QZzN6WSsxQjZ6Z2h2MG4zOGE0VlZKdkp0VGJRSXBieG5Xeis0eGhP?=
- =?utf-8?B?NVBPTjFuZHdzR1htRFU5Y1dqUkdzS2dwb2FHQlBwUCtFZGNBV0RPQXJDNmho?=
- =?utf-8?B?K3JVVklFbXhabkwwMFo1M2hoK1ZoOEt1UEF1dDVsT2RyOGxxQityalVXZlBP?=
- =?utf-8?B?RXppTEUyMkp4QXVHaDljclZCRmQ2cDZpWVBMMzcyL2FxY1lzaVpXc1E2bkJR?=
- =?utf-8?B?V2NGMXpsNmdNczg3OWdzL2JDamhNaEpmeDNlL0VESHIrNjIxaW1ralMzajBx?=
- =?utf-8?B?TmdCaTBuNlM5TnZjSWQ5U2JHRWZXQUdVMVg3TGFxUzNleGV6V2pRQ1BjWmxK?=
- =?utf-8?B?VThaUFpsWWl2Uk5RVUZWeFVqZU5JN0tZeVFoMEJacVJnelBudWdGeWVkL2E4?=
- =?utf-8?B?THVNK2FkRTNPTU5tWHppNGI1RFJiRHJoYVlhT2Q3ajVEb0dWTXFoWDE3ZldJ?=
- =?utf-8?B?N3pJTitFV0EyWDZsbHY1SUhWaHlJSkp1ODFYRjRZdFlYOU9GdFlTR2tWdGs2?=
- =?utf-8?B?eDN1R1V5eGxKNnBSZitNeWRMM1N5em1GSTUyNURtS3o2OURqY1BPdE0zNWtT?=
- =?utf-8?B?aUY1bjkrdzdVd2U5NEtMeHUvN1VVSFAwN3M0Q0NMTzhTenhocWd1UitVTU80?=
- =?utf-8?B?MVlhdTdCV0R5L0xCTHlvaHJxZEhUYWxoTkxvSVM2MUlCQ2Q4eWljYVRnLzFr?=
- =?utf-8?B?U2hzVVpOQVRmaUh0a1ljRFFsdUN5SjFDZnN0aUlBZmNFQjlWUC9tdG12bU9C?=
- =?utf-8?B?TnF5TndjMzcvODM0bDFlZ3ZpVXhQTDdnYXhpSHRSeXdUTGN1NUF3d2hCbnh4?=
- =?utf-8?B?V0haZUN6YTl5cytmblI3Wk9kS0VYZ3hlaU9jWWN0R3lTU0laWTdYNVdZejJM?=
- =?utf-8?B?clhRNkJCMElWYnkvTGpRKzhlZDA0cTIzUTVQSUoyL2Vxb1dNY2pMd0FJOVZL?=
- =?utf-8?B?bkJRZUM0R0FKem5QYkc2QjRqRStxelFTU0RUUVNWRE01bytQd2JRb3FuYTVw?=
- =?utf-8?B?dFA5ZCthZVlvUXF0ZTZLeGx1b3Y0UWNlckV6T2JCdjFYK2ozQVFHTlN1R2ho?=
- =?utf-8?B?cVNZUlJHZ1ordEtuVWNsTUFDWC9PMjdhRjhtK1o0ajJHQi8vZUdDUUdad3JP?=
- =?utf-8?B?UmZBdE90YUdnSzAyVFlWT3BFU1hFSWx6c0Z5N2N1dkVhUlkvK3dDdUlZZ2o2?=
- =?utf-8?B?cFFtVlFNekpLTUx3THltQkVBSTZoWStJRjV1QTFFNnFseHZFYW1JR1JxMzJN?=
- =?utf-8?B?VklzbVlLU0xvTDVhWjNHcXBvaXZKN25OcW9uSlYzTXV4TTZhTDJ2dHNDbm9p?=
- =?utf-8?B?MFh6UG5QRE5tMkxKVWM3MDZ1NmNsYVZVMFVDVEJpRVFEK2dmaFY1TVhCNkl5?=
- =?utf-8?B?RjZDbEdXb0R4cTZGVHlYMmkyS2V6bUN1MmZhRm1Qb1UwakNVanFoRnhKakhy?=
- =?utf-8?B?SWR1eVpwZUxKd2w0RUlSQkdUZlI5VWQrMGdJVkUyd1dlaTZwK0d3UFZCZ1VK?=
- =?utf-8?Q?Vj+q3skFTF8CN?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SFhsdzVXS0puQkwwSGVVNjZnU2FWbUc2bXBCeHpPSVpuWlpHeGRIMm5uclpK?=
- =?utf-8?B?MDVSeXdxOEQwZHFZNlcyUElCY20rK3RGaFJJMlpkWE1jSGRLT09VWUFMb1hG?=
- =?utf-8?B?eURpT0xlNUR3eEtEYlFOTWt5UkZWYVdRRUF0ZWhSL2oyTmpqellNaUFWdDgv?=
- =?utf-8?B?STY3d3ZvbE5Ja2Q5VUFzOVdwZDVzMTY1MlNyZ0didUxlSTV1SzZveWV3RTBj?=
- =?utf-8?B?eGpUNCtyb0pxRDNqaVcveHlIcGJmUDA1VExZVFdndW9ncnB0MGtiTGhPVDI5?=
- =?utf-8?B?OW91c2NvRUxXVkpESnUyTnJBUzUzMjFYSG5YUnpma1g1TlVsTUQvUndoRlVh?=
- =?utf-8?B?Y3ZtTEdxaVpNNkdVNlNWaXlRZXpwaU40QzJuTDVSL0hxWXNLb2x5R2M3Mk8w?=
- =?utf-8?B?YWRRcmhOK3VWUGI3MDVpc3FHOS93MGoyV1p3cFVBdWRmc1VoZ2d2TGc4L0NM?=
- =?utf-8?B?TnQvUDlId1BMWjJLZGNRTGhwQkFsWGkySHd3STE5OVBHQ2g3ZG5VaWhnOERY?=
- =?utf-8?B?Q0tnZHNXTVd1aWFJUjRPUGhOU1N4b1BlUFFyMkNFU1BheUZOeVByNldQZmlz?=
- =?utf-8?B?RzU3OXgwaitGcWJQbW1LNlBvRjhiZFEzWFdEa0JEbFc3N0IxZHZ4SkxQSWlF?=
- =?utf-8?B?N3BGenRTNmxsM2lNL1hwQW9VSlpBajJqYUNjMzZSR2tEQ0o1czVrcmhRYTlH?=
- =?utf-8?B?YVN2UE5yRjlzTUpybGFndW5meUM2M0pvR1Y4VVpmR09UdWpxa2tIMnNvb3FS?=
- =?utf-8?B?RXNsOGs4b241ck5xWVBzNmdtSUhBYlM3WVZxSlg5SlgxK1gvSW1CODhyL2RT?=
- =?utf-8?B?SS9VYkgwN0VYQ3RjRkpTTHRnYUw5dWEwQVZQZENrSytVekdkeitoTnluZUU0?=
- =?utf-8?B?MVBxVlV0WjJXd0R1cDJyYVpreFRzUHFCN0o3N2pyaXNtalVqMEN5QmYxNnA3?=
- =?utf-8?B?czgydUJBS0IvK3N1c3RJYko4NElGN2FrS1F6NlZpRnFWbDZJckc0aS9hRmVP?=
- =?utf-8?B?NUtFSG1PUkNpb0FvQUJpMG9wYi9WbjZjeDB1ZHZyMXVvV3VUSlhXZnUrMkZX?=
- =?utf-8?B?d3hGY3Rwa04yVVlQY3dWWXBWS1JET24zOUwvWUk3dUhNbVFIalZ6emJCL2Fq?=
- =?utf-8?B?Qmx3TjVkdG5WS3VGMEFLaVgzQm93aGUwYmdlN2hKS3g0aGQ5K0RmdFp5bVlk?=
- =?utf-8?B?MGpJYkYrbmZYM1pPV0Q0UkpzS3E5VEI2cWxpcmFXL25pc1p1TWh1ei9jVFE5?=
- =?utf-8?B?ZjlKdXhtNlNZMFhVY0crUWJ6N2hOQngwMitwVVZyTVpUdHhqR3AwekhCTUJi?=
- =?utf-8?B?ekpMTitXVTBBbUhNbWhXeC8zdjMwUmtpK2ZsL3F6VmxRVkc5Ly9qL2pJUHVv?=
- =?utf-8?B?aUxUay9wTnRJWXg2TElqV3hXbVl3L2xhUUV3RllqSXhoVEorUHV1N1h0bDUz?=
- =?utf-8?B?eG5jdnJzVTltNTIwc1YxWDdIdGcrQ1k5ZWJtN3Q1d24velBYK2R3RzFVa2Rz?=
- =?utf-8?B?KzR5N25qL1ZMWHYwV2tFanp4b3lYZEgxaXlaU2k3L1JzRjRjL01VNlNGQ3Uv?=
- =?utf-8?B?dC81VTNvbi9SWW50VURXMHUxL0l1SDd6L2ZScFVDU1Q2ejBpak8rZjVEQkJx?=
- =?utf-8?B?d1pFNHpwT29ZMHFRdHJWNFJWQXk3c0VQRUtkQ2dGc3lZSzZxZWh1N01jTCtM?=
- =?utf-8?B?ci9Xd2QveWdvMnZsODA3OEE2QVdwT3hXa3ROckJmQnRwSnJoMVpsM2dXNEkr?=
- =?utf-8?B?TW5YZHhoaUZLem91cFZURGVJSlErQTErVmFEM2psVTRTUUhjNUVPQTgzVkdN?=
- =?utf-8?B?UGpwL1N5QmJwTTBDOGtZRC9VQXhBNlBLZyt0ankwTVQxNHJnZ1ptRHpURDdY?=
- =?utf-8?B?Y1JIbUpoVlpkMXVTZFd5SFhKNDF2Z3VDUkNBOUdNMGVWUEZxK2FDTEFIOG13?=
- =?utf-8?B?dlkvazVUamQ3eVZxNTVTUEtBbEgvbHQyS3BxWGVKTWhVK1MzSjlBSzN6ZzhN?=
- =?utf-8?B?bXUzZDhqRFMzWnEvbkdZSFpzSDI3SEUzcmdDcEVHYyt3Nzk4MEJYYjFxd2hC?=
- =?utf-8?B?ekRDbUtWYWxXMHRBMUxwQUVKaTBGS0ZCS05UZ28wTWFncVZ1WGVmN1lScE5v?=
- =?utf-8?Q?eMZQ=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d55b2a24-ecda-450f-859e-08dd6216db11
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 10:07:26.3454
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rBxGDn0htkIISmi4IUWGtnR/ekRg75Y9OmkXotxUIRePoeZmS1NuWomqFWlneakL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7034
+Content-Transfer-Encoding: 8bit
 
-Am 13.03.25 um 10:30 schrieb Philipp Stanner:
-> The documentation for drm_sched_job_arm() and especially
-> drm_sched_job_cleanup() does not make it very clear why
-> drm_sched_job_arm() is a point of no return, which it indeed is.
->
-> Make the nature of drm_sched_job_arm() in the docu as clear as possible.
->
-> Suggested-by: Christian König <christian.koenig@amd.com>
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Per PCI Firmware Specification Revision 3.3 Table 4-7 _DSM Definitions
+for PCI. Preserve PCI Boot Configuration Initial Revision ID changed to 2.
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
+And add acpi_check_dsm() for DSM_PCI_PRESERVE_BOOT_CONFIG.
 
-I'm currently looking into how to fix the amdgpu CS path for gang submission regarding this.
+Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+---
+v5:follow Bjorn advice, add acpi_check_dsm for PCI _DSM.
+v4:Initialize *obj to NULL.
+v3:try revision id 1 first, then try revision id 2.
+v2:add Fixes tag.
 
-Any objections that I add a preload function to allocate the memory for the XA outside of the critical section?
+Fixes: 9d7d5db8e78e ("PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to pci_re")
+---
+ drivers/pci/pci-acpi.c | 43 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 12 deletions(-)
 
-Regards,
-Christian.
-
-> ---
->  drivers/gpu/drm/scheduler/sched_main.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-> index 4d4219fbe49d..829579c41c6b 100644
-> --- a/drivers/gpu/drm/scheduler/sched_main.c
-> +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> @@ -828,11 +828,15 @@ EXPORT_SYMBOL(drm_sched_job_init);
->   *
->   * This arms a scheduler job for execution. Specifically it initializes the
->   * &drm_sched_job.s_fence of @job, so that it can be attached to struct dma_resv
-> - * or other places that need to track the completion of this job.
-> + * or other places that need to track the completion of this job. It also
-> + * initializes sequence numbers, which are fundamental for fence ordering.
->   *
->   * Refer to drm_sched_entity_push_job() documentation for locking
->   * considerations.
->   *
-> + * Once this function was called, you *must* submit @job with
-> + * drm_sched_entity_push_job().
-> + *
->   * This can only be called if drm_sched_job_init() succeeded.
->   */
->  void drm_sched_job_arm(struct drm_sched_job *job)
-> @@ -1017,9 +1021,12 @@ EXPORT_SYMBOL(drm_sched_job_has_dependency);
->   * Drivers should call this from their error unwind code if @job is aborted
->   * before drm_sched_job_arm() is called.
->   *
-> - * After that point of no return @job is committed to be executed by the
-> - * scheduler, and this function should be called from the
-> - * &drm_sched_backend_ops.free_job callback.
-> + * drm_sched_job_arm() is a point of no return since it initializes the fences
-> + * and their sequence number etc. Once that function has been called, you *must*
-> + * submit it with drm_sched_entity_push_job() and cannot simply abort it by
-> + * calling drm_sched_job_cleanup().
-> + *
-> + * This function should be called in the &drm_sched_backend_ops.free_job callback.
->   */
->  void drm_sched_job_cleanup(struct drm_sched_job *job)
->  {
-> @@ -1027,10 +1034,15 @@ void drm_sched_job_cleanup(struct drm_sched_job *job)
->  	unsigned long index;
->  
->  	if (kref_read(&job->s_fence->finished.refcount)) {
-> -		/* drm_sched_job_arm() has been called */
-> +		/* The job has been processed by the scheduler, i.e.,
-> +		 * drm_sched_job_arm() and drm_sched_entity_push_job() have
-> +		 * been called.
-> +		 */
->  		dma_fence_put(&job->s_fence->finished);
->  	} else {
-> -		/* aborted job before committing to run it */
-> +		/* The job was aborted before it has been committed to be run;
-> +		 * notably, drm_sched_job_arm() has not been called.
-> +		 */
->  		drm_sched_fence_free(job->s_fence);
->  	}
->  
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index af370628e583..4f9e0548c96d 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -122,24 +122,43 @@ phys_addr_t acpi_pci_root_get_mcfg_addr(acpi_handle handle)
+ 
+ bool pci_acpi_preserve_config(struct pci_host_bridge *host_bridge)
+ {
+-	if (ACPI_HANDLE(&host_bridge->dev)) {
+-		union acpi_object *obj;
++	bool rc = false;
++	union acpi_object *obj;
+ 
+-		/*
+-		 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+-		 * exists and returns 0, we must preserve any PCI resource
+-		 * assignments made by firmware for this host bridge.
+-		 */
++	if (!ACPI_HANDLE(&host_bridge->dev))
++		return false;
++
++	/*
++	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
++	 * exists and returns 0, we must preserve any PCI resource
++	 * assignments made by firmware for this host bridge.
++	 *
++	 * Per PCI Firmware r3.2, released Jan 26, 2015,
++	 * DSM_PCI_PRESERVE_BOOT_CONFIG Revision ID is 1. But PCI Firmware r3.3,
++	 * released Jan 20, 2021, changed sec 4.6.5 to say
++	 * "lowest valid Revision ID value: 2". So check rev 1 first, then rev 2.
++	 */
++	if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev),
++				&pci_acpi_dsm_guid, 1, BIT(DSM_PCI_PRESERVE_BOOT_CONFIG))) {
+ 		obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
+-					      &pci_acpi_dsm_guid,
+-					      1, DSM_PCI_PRESERVE_BOOT_CONFIG,
+-					      NULL, ACPI_TYPE_INTEGER);
++						&pci_acpi_dsm_guid,
++						1, DSM_PCI_PRESERVE_BOOT_CONFIG,
++						NULL, ACPI_TYPE_INTEGER);
+ 		if (obj && obj->integer.value == 0)
+-			return true;
++			rc = true;
++		ACPI_FREE(obj);
++	} else if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev),
++					&pci_acpi_dsm_guid, 2, BIT(DSM_PCI_PRESERVE_BOOT_CONFIG))) {
++		obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
++						&pci_acpi_dsm_guid,
++						2, DSM_PCI_PRESERVE_BOOT_CONFIG,
++						NULL, ACPI_TYPE_INTEGER);
++		if (obj && obj->integer.value == 0)
++			rc = true;
+ 		ACPI_FREE(obj);
+ 	}
+ 
+-	return false;
++	return rc;
+ }
+ 
+ /* _HPX PCI Setting Record (Type 0); same as _HPP */
+-- 
+2.39.2
 
