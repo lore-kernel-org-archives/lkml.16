@@ -1,168 +1,122 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF2C1D8A10
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 22:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BF61D8A10;
+	Thu, 13 Mar 2025 22:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741904761; cv=none; b=M/i6u90grUQeHyHBVkUTWU6xy6q7ORElku5/kPlmH+8PLfMlGg+nsaCrHgmhtSXDXs0FSqZniZj4p4+5mJrM7lcbSbiprqN2piluPrAJspmHVZ525XdJP/FftQekxsKizaWze5dlmHYpZ8s4ntONBb931RI2v/qQbxpFj/BToEg=
+	t=1741904843; cv=none; b=fTuOwuhJ195IDLU2onHAmykILmNKk+Q9AMGV0+BfQLJtc4s5BaWaIA9cYXGRbqBxKsfvIMlZu6jtXynlm0H2i9kxywgTNdhP/P5+LDd2jcCNgHJ0XgJmGHcZRpM8lC8Qs6tz6klsGtsxq2bht8ITXcjvA+Ad/5VigI8hSpfh8L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741904761; c=relaxed/simple;
-	bh=QZV2NTgEg7k+1XHNq5HE27b9f2LssIVk3RUzMP/R1r8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZFddEYYFdsfuQB7lueNB+3GaywbUZXjD6h9Whg8Xj9DpimVb6EZBMZL23r0gUZ+fZUNSAMTxDGKsh6Dn69hJyoclTTe1Kja4DvRN9QUFUoXzK/e5UlYPh+TCPt+NuxlUSdaHq3zgXQAP4mPn2a+qzez/JcXPESvwo7Uu6m+RUJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lPQcFsDm; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741904843; c=relaxed/simple;
+	bh=oqMznX9Nd36QyVtbCLNhEMH/gemQ9Km8Eei7KAjhxC0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dWB86KPKGTmTdYwI7eytEHlC3YQYHs5QmP6pPht8X2xwppu9niRm72inYJ4m/iXXKwfIsMCVXXNpjTy+VAmcG/7LPc0a/paDCNlzW5QUrS/9PuNvn13WdD6sJmhH9gP66/U1TTHUkAhrGoWBhJDZd9zT7TxEQ6jxaa6sl5W+fJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YVsz8wcN; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lPQcFsDm"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2c2bc6acd74so201061fac.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 15:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741904758; x=1742509558; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HO0VpTSFVmDIRg6D2iUyymvRyONg1pufELLgkVchWVM=;
-        b=lPQcFsDmbZy6AEqIflKhd9RqVMEAaX/V3CmrKtK+/ehEXw4UlsUl0Zws0QlR/IlV1X
-         VX6iRbMJzUxxvi5tW2J/EBjQ+HaG2QEMleLlE50U4ZC05e26SNkMixHWajrQo/edHZQI
-         YSuwXegy7cgYyyUHqWbY+iZA38i8ox4dkYskQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741904758; x=1742509558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HO0VpTSFVmDIRg6D2iUyymvRyONg1pufELLgkVchWVM=;
-        b=QlROympLDyB/T5h36jqkeF0vE333QB1qR6pR7jnyrrL6xSnL/Shcfsj8YmcZvmryeB
-         jWWZhNgvgcarwJot4ZoL42+Gy058iebDqF69VSFlqZRkUbvbRv+D+87fCOJxwdKtsWzH
-         5KXM3jYhe0hZMtIidso9XI3XZLO6R+kc6yDkkh8hQmhj6yULRcil59Hb5vloYnWX5AYM
-         fzO6mstIBPwrCXjVGl3fKZ988JnzXcaN58tguQvrDEIQdlgaHZzanHK8ZKTpIqxE0Kc3
-         pwEMFbnRhV7c//gT7Sv4kukF4oA7eKW7J27XRBMo5ffBaglP6/gUaA+uY+XPZgSNLTLY
-         1CZw==
-X-Forwarded-Encrypted: i=1; AJvYcCU11rdNMhpffDq0vE7Qgig+jCFQ+teogGH7I/Du9IMV7NgXbHY34F/AA4wnTT47j+gjQk6yZeuXU3NAGjY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLtp5jWxMQVkKlSIIvXCpzk8u47zpJErM89uWWZBAz51DjJ77G
-	czhwAGFey6tRoXuUZvNwOr6su4S0itJHcalbZofdQkvL8hcZBbXHqN9I5sU/0LIjlvVuDJS4JAm
-	s8IWPSssUHWtJ4kO/SgLtLFc4j6sQ1fL2YC80
-X-Gm-Gg: ASbGncu/3EHf0O+kRIvsc1KH+oivUdymDGrj4pJFxB+dsTX204HL+hCPM1zRmZgPrJP
-	hxeSnTIpXvS/zhuoQ3OQCK1JoDzOuSjWWhBKuFQ9JCSqxQPm0IC8lRfszvupoPgSldg8I0q1ZuQ
-	XlVp8x9VwymCxkMz0ReZl9zNHfYwRzn2JaO9I=
-X-Google-Smtp-Source: AGHT+IFGFOX+JdCKJ5EW0lljriIIgVcYBIERJmy8IRbYMG52NjTsVEcHPVx2F0p10iZ15QufBCgqhdZZ/AQ7u3A452s=
-X-Received: by 2002:a05:6870:41cd:b0:29e:723c:8e9d with SMTP id
- 586e51a60fabf-2c690f385c8mr57268fac.4.1741904757815; Thu, 13 Mar 2025
- 15:25:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YVsz8wcN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741904842; x=1773440842;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=oqMznX9Nd36QyVtbCLNhEMH/gemQ9Km8Eei7KAjhxC0=;
+  b=YVsz8wcNFG8rSziNXv7p9YgrEqzjbGx4WJW0H+NvZyUdF0sPEHJGNJuJ
+   KxVSN/miN2jwtgDmu77SHi7tkgnZK+RPQPRyV1BVhwnYcYlFtgeYLQsSO
+   cD9chxC7CJBS8L42vDAsxR3Ygrf1t9RiMYtHyJp4V28zkLZz525J8JBB7
+   kn+EGm6Ft676yGMuMQdW9qz0HZxGg9quGAdoAOs4TIGXRCDB1pia2rhBt
+   ADORp4gbILsSiCctkLzSSJbUyeDVve8c1UN7AW5qsvJjdJrLqzodi95rv
+   Wbai7Cs5pwwWaz/VRWYmphuS7lRxOkqd37WTdP9fce2PNgGisn8QoLMLN
+   g==;
+X-CSE-ConnectionGUID: iDImOkpcTwSlU3LubxpFgw==
+X-CSE-MsgGUID: LkPRswgbRCqL1yf2m+038g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="53252577"
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="53252577"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 15:27:21 -0700
+X-CSE-ConnectionGUID: HUmAPeRjTqOMgxyfZS0kcQ==
+X-CSE-MsgGUID: gRdjlx2oS0uGP+mByYzGgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="121591133"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.108.86]) ([10.125.108.86])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 15:27:19 -0700
+Message-ID: <b2bb61f0-6250-4b90-a765-c2873eccb07d@intel.com>
+Date: Thu, 13 Mar 2025 15:27:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313000623.3192896-1-jeffxu@google.com> <1bbce89c-1efe-40cf-9085-ec4ec16f7996@lucifer.local>
-In-Reply-To: <1bbce89c-1efe-40cf-9085-ec4ec16f7996@lucifer.local>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 13 Mar 2025 15:25:46 -0700
-X-Gm-Features: AQ5f1Jp2EPkBExs0LgI3wECuDDPaXmKkN-4wE1NQSGw_NG7eEjTDTsm1Ivwa46c
-Message-ID: <CABi2SkVKxyX0uDabg+wHiq_vTBFbUST-nRdur7cCPB2myhCWhg@mail.gmail.com>
-Subject: Re: [PATCH] mseal sysmap: add arch-support txt
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, agordeev@linux.ibm.com, 
-	borntraeger@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
-	kees@kernel.org, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, svens@linux.ibm.com, 
-	thomas.weissschuh@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/acpi: Add Null check for adev
+To: Alison Schofield <alison.schofield@intel.com>,
+ Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250313190753.450546-1-chenyuan0y@gmail.com>
+ <Z9NWdob3CSy9UDq5@aschofie-mobl2.lan>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <Z9NWdob3CSy9UDq5@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 12, 2025 at 10:21=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Thu, Mar 13, 2025 at 12:06:23AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > Add Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > ---
-> >  .../core/mseal_sys_mappings/arch-support.txt  | 30 +++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> >  create mode 100644 Documentation/features/core/mseal_sys_mappings/arch=
--support.txt
-> >
-> > diff --git a/Documentation/features/core/mseal_sys_mappings/arch-suppor=
-t.txt b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> > new file mode 100644
-> > index 000000000000..8db637254de9
-> > --- /dev/null
-> > +++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> > @@ -0,0 +1,30 @@
-> > +#
-> > +# Feature name:          mseal-system-mappings
-> > +#         Kconfig:       ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
-> > +#         description:   arch supports mseal system mappings
-> > +#
-> > +    -----------------------
-> > +    |         arch |status|
-> > +    -----------------------
-> > +    |       alpha: | TODO |
-> > +    |         arc: | TODO |
-> > +    |         arm: |  N/A |
-> > +    |       arm64: |  ok  |
-> > +    |        csky: | TODO |
-> > +    |     hexagon: | TODO |
-> > +    |   loongarch: | TODO |
-> > +    |        m68k: | TODO |
-> > +    |  microblaze: | TODO |
-> > +    |        mips: | TODO |
-> > +    |       nios2: | TODO |
-> > +    |    openrisc: | TODO |
-> > +    |      parisc: | TODO |
-> > +    |     powerpc: | TODO |
-> > +    |       riscv: | TODO |
-> > +    |        s390: |  ok  |
-> > +    |          sh: | TODO |
-> > +    |       sparc: | TODO |
-> > +    |          um: | TODO |
-> > +    |         x86: |  ok  |
-> > +    |      xtensa: | TODO |
-> > +    -----------------------
-> > --
-> > 2.49.0.rc0.332.g42c0ae87b1-goog
-> >
->
-> I mean fine, but why not in the existing mseal documentation file where y=
-ou
-> already document system mappings?
->
-you mean adding s390 in the mseal.rst ? I thought Heiko was going to
-add that ? [1], maybe not ?
 
-From the example given by Heiko [1] , arch-support.txt is the official
-way of documenting arch specific support. But adding these info in
-mseal.rst won't hurt.
 
-> Plus I feel this need expansion a bit 'N/A' is because of being non-64 bi=
-t
-> right?
->
-Below is the definition of N/A in Documentation/features/arch-support.txt
-   | N/A|  # feature doesn't apply to the architecture
+On 3/13/25 3:04 PM, Alison Schofield wrote:
+> On Thu, Mar 13, 2025 at 02:07:53PM -0500, Chenyuan Yang wrote:
+>> Not all devices have an ACPI companion fwnode, so adev might be NULL.
+>> This is similar to the commit cd2fd6eab480
+>> ("platform/x86: int3472: Check for adev == NULL").
+>>
+>> Add a check for adev not being set and return -ENODEV in that case to
+>> avoid a possible NULL pointer deref in cxl_acpi_probe().
+>>
+> 
+> Avoiding the NULL ptr deref seems obvious as ACPI_COMPANION() return
+> is routinely checked throughout the kernel. Why the reference to the
+> other commit? Do these devices have something in common?
+> 
+> I'm curious as to when *this* specific adev can be NULL.
 
-It fits the arm case because mseal is not supported in 32 bit.
+You get a NULL by either the the platform device being probed is not setup correctly and the fwnode end up failing is_acpi_device_node() or CONFIG_ACPI is not set. The second is impossible as cxl_acpi depends on CONFIG_CXL_ACPI which
+depends on CONFIG_ACPI. The likelihood of the first I don't think is high unless the platform device for ACPI0017 is corrupted. So in this instance in the probe function, the checking while is fine for code correctness, may not be absolutely necessary perhaps. Just my 2 cents.
 
-> Actually this will change soon btw, based on Matthew's idea I plan to dro=
-p the
-> 32-bit vma flags limit.
->
-Okay, we can update this section to TODO when 32-bit vma flags are
-expanded. Based on past comments, I gather we want the document to
-reflect the current state of the kernel, not future features.
+DJ
 
-> Anyway yeah, let's move that over there please.
+> 
+> Looks good to check it like you do here, or if someone chimes in that
+> it can never be NULL, just add a code comment saying so.
+> 
+> Perhaps emit a message on NULL too.
+> 
+> 
+> 
+>> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+>> ---
+>>  drivers/cxl/acpi.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+>> index cb14829bb9be..9195001db3c1 100644
+>> --- a/drivers/cxl/acpi.c
+>> +++ b/drivers/cxl/acpi.c
+>> @@ -823,6 +823,9 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+>>  	struct acpi_device *adev = ACPI_COMPANION(host);
+>>  	struct cxl_cfmws_context ctx;
+>>  
+>> +	if (!adev)
+>> +		return -ENODEV;
+>> +
+>>  	device_lock_set_class(&pdev->dev, &cxl_root_key);
+>>  	rc = devm_add_action_or_reset(&pdev->dev, cxl_acpi_lock_reset_class,
+>>  				      &pdev->dev);
+>> -- 
+>> 2.34.1
+>>
 
-I'm looking at Heiko's direction first to see if mseal.rst will be
-updated as part of the s390 patch, technically that belongs to Heiko's
-patch series. I can also add that if Heiko doesn't care :-)
-
-Thanks
--Jeff
-
-[1]https://lore.kernel.org/all/20250312153946.10610B02-hca@linux.ibm.com/
