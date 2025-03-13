@@ -1,130 +1,102 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9D6266EF0;
-	Thu, 13 Mar 2025 12:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A46F146585
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 12:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741867646; cv=none; b=ml+FOGpUv1uAGe05xytw1r1JhIfkybD1cKzM3BbegkgIhRbcqfC1UMPjmNAA7r2XANG3mtySFpLpen86saeTikjScGIpx8N9nZaVJbT0fFN5Yu4vrlCNkr1xYB++/NIv5moC7hxpHcds4hh30rPfl1jAhh/VfHZDmCZz0O+8SxM=
+	t=1741867769; cv=none; b=qr1aGr6XHydFRuOuX5Xzi/Nmt8nOka31+uA0SUxjkhIHg9t5S9ZPBTQ0dJddayi0lXO5C9VtjYxMX2f9umDmjT4ZM20KK6+IjqYjHnN0LpESLK0dX/YVKpi8rl7CvhrApYMeWxsam3sfFXoVDnmjt0vD2gNJ7g3zbOdkmi7hFWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741867646; c=relaxed/simple;
-	bh=Ne9bu4AIDTj8Q9X7Md4hyfZO5+zIRYhUdbapdiAxKLA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OHF5IFxnMDXh6dO7q0qebhXd11wJbOdA0WJRXLm+mt2S0Lp0rGifFIDXywXinCtVzZJn82QqS2/FHZQBByEmncXjkguwuEDzXiJhe56h4HzRaK2IiPoizDV24jazoT57f0juDakvJcUai903n1r2sMtmx2OK6nTbfA+Kh4xWPo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GxCw559e; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GxCw559e"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52DC74d11863344
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Mar 2025 07:07:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741867624;
-	bh=jjf48QJ5dtYgMD1JQM2Mlfhy8pxv4LcRNvoLveym56k=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=GxCw559eoPGYb9fX3q4TLyLRN2QNZ3S0+Mp0sJZ0CVOXqdHZDb5zRTXy1y8DLJ+2P
-	 vACo6EtyFGTCaD2I++3Gnwe4mxvcpytLATrP20+FeQTeYzyCjN/VdoNbrl27qUk+y/
-	 DDCtbO8j/X+ta/0pgoes46okh5M1FIKNP9GCZwlc=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52DC74bk004764
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 13 Mar 2025 07:07:04 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
- Mar 2025 07:07:04 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 13 Mar 2025 07:07:04 -0500
-Received: from localhost (lcpd911.dhcp.ti.com [172.24.227.226])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52DC73mJ113302;
-	Thu, 13 Mar 2025 07:07:04 -0500
-Date: Thu, 13 Mar 2025 17:37:03 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Santosh
- Shilimkar <ssantosh@kernel.org>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang
-	<dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
-        <ntb@lists.linux.dev>, Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu
-	<wei.liu@kernel.org>, <linux-hyperv@vger.kernel.org>,
-        Wei Huang
-	<wei.huang2@amd.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen"
-	<martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>
-Subject: Re: [patch 03/10] soc: ti: ti_sci_inta_msi: Switch MSI descriptor
- locking to guard()
-Message-ID: <20250313120703.nchgmrvgx2dt5fjc@lcpd911>
-References: <20250309083453.900516105@linutronix.de>
- <20250309084110.330984023@linutronix.de>
+	s=arc-20240116; t=1741867769; c=relaxed/simple;
+	bh=Toe05CGuFIzZSAtZ+R/jLB87y//iL+v6NXBc4JHjgL4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=alCGIipOqq+m2a3ae/oSqDx65VKNISboZLAnHmQ9sApX5fWp11ASeuavubzgC2858NkGstkmeGYuynKQN6+tLirS3zBGGf/I7EXE/7dSpCi/gMz1t9KBY7dNazxXToh9kbMObJr1boF3uLfySItB14T8jdr2/vF0SJf/5DXkF1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZD5rX2XGrz4f3mHV
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:09:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 407631A1195
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:09:24 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP2 (Coremail) with SMTP id Syh0CgCnsGPyytJnTaZeGQ--.9643S2;
+	Thu, 13 Mar 2025 20:09:24 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: akpm@linux-foundation.org
+Cc: kasong@tencent.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/9] Minor cleanups and improvements to swap freeing code
+Date: Fri, 14 Mar 2025 05:05:06 +0800
+Message-Id: <20250313210515.9920-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250309084110.330984023@linutronix.de>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgCnsGPyytJnTaZeGQ--.9643S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF43AF1DZw1fWF45Xw48tFb_yoW8ZF1fpF
+	W3uwnxGF18JrnaywsxAw10qryrX3yrKF47G3W7ur18Zw43uF18XryjyrZ5ZFyDA395JrWq
+	qF48K34UuF4YvrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_
+	tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
+	xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
+	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
+	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28I
+	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
+	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
+	aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUsBMNUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On Mar 09, 2025 at 09:41:46 +0100, Thomas Gleixner wrote:
-> Convert the code to use the new guard(msi_descs_lock).
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Tero Kristo <kristo@kernel.org>
-> Cc: Santosh Shilimkar <ssantosh@kernel.org>
-> ---
->  drivers/soc/ti/ti_sci_inta_msi.c |   10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
+Hi All,
+This series contains some cleanups and improvements which are made
+during learning swapfile. Here is a summary of the changes:
+1. Function nameing improvments.
+-Use "put" instead of "free" to name functions which only do actual free
+when count drops to zero.
+-Use "entry" to name function only frees one swap slot. Use "entries" to
+name function could may free multi swap slots within one cluster. Use
+"_nr" suffix to name function which could free multi swap slots spanning
+cross multi clusters.
+2. Eliminate the need to set swap slot to intermediate SWAP_HAS_CACHE
+value before do actual free by using swap_entry_range_free()
+3. Add helpers swap_entries_put_map() and swap_entries_put_cache() as a
+general-purpose routine to free swap entries within a single cluster
+which will try batch-remove first and fallback to put eatch entry
+indvidually with cluster lock acquired/released only once. By using 
+these helpers, we could remove repeated code, levarage batch-remove in
+more cases and aoivd to acquire/release cluster lock for each single
+swap entry.
 
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Kemeng Shi (9):
+  mm: swap: rename __swap_[entry/entries]_free[_locked] to
+    swap_[entry/entries]_put[_locked]
+  mm: swap: factor out the actual swap entry freeing logic to new helper
+  mm: swap: use __swap_entry_free() to free swap entry in
+    swap_entry_put_locked()
+  mm: swap: remove unneeded VM_BUG_ON(*map != SWAP_HAS_CACHE) in
+    swap_entry_range_free()
+  mm: swap: use swap_entries_free() drop last 1 flag in
+    swap_entries_put_nr()
+  mm: swap: drop last SWAP_MAP_SHMEM flag in batch in
+    swap_entries_put_nr()
+  mm: swap: free each cluster individually in swap_entries_put_map_nr()
+  mm: swap: factor out helper to drop cache of entries within a single
+    cluster
+  mm: swap: replace cluster_swap_free_nr() with
+    swap_entries_put_[map/cache]()
 
-> 
-> --- a/drivers/soc/ti/ti_sci_inta_msi.c
-> +++ b/drivers/soc/ti/ti_sci_inta_msi.c
-> @@ -103,19 +103,15 @@ int ti_sci_inta_msi_domain_alloc_irqs(st
->  	if (ret)
->  		return ret;
->  
-> -	msi_lock_descs(dev);
-> +	guard(msi_descs_lock)(dev);
->  	nvec = ti_sci_inta_msi_alloc_descs(dev, res);
-> -	if (nvec <= 0) {
-> -		ret = nvec;
-> -		goto unlock;
-> -	}
-> +	if (nvec <= 0)
-> +		return nvec;
->  
->  	/* Use alloc ALL as it's unclear whether there are gaps in the indices */
->  	ret = msi_domain_alloc_irqs_all_locked(dev, MSI_DEFAULT_DOMAIN, nvec);
->  	if (ret)
->  		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
-> -unlock:
-> -	msi_unlock_descs(dev);
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
-> 
-> 
+ mm/swapfile.c | 173 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 86 insertions(+), 87 deletions(-)
 
 -- 
-Best regards,
-Dhruva Gole
-Texas Instruments Incorporated
+2.30.0
+
