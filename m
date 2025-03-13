@@ -1,85 +1,109 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F8E1F12F9;
-	Thu, 13 Mar 2025 19:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A2718FDBD;
+	Thu, 13 Mar 2025 19:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741893701; cv=none; b=Lf5yKcSx9+aHgevz0OKDOv7g1K6HTkpo3/ZQNLHjZ5a0D42l3uUikl+cdQH7EeHRRb2sjyGhAQvm9qviu+kKczDNjH9pnFaE5UL9bpX3AQVyMGIwbwBwOZvXjxpbQ7sdnfNW+6xDVg4Rqm9NoJbjEoriAIfNQ+cy9ChfkdbgLNM=
+	t=1741893776; cv=none; b=MIeiGKbegINTkTs7SIGdP2LUI41UY/wHwcQS4moSjB3r1THnhf3QwGIk5jUdB1qVagSzGIt1W3r1GGv6AXTCD2tlCxqvxRK75V/pZUtFgAGvgkfzw8wiXjRwD4xbZDY98Ejcvug8V/LcxRnQtOSJ7k/89Gw0B3VttLdErXK0GTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741893701; c=relaxed/simple;
-	bh=L0AvhxZ12qI07UjqeOh7oV2Gu8FLAZOgK1oLVO31CRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UWjWMygQ5y6ttRGjRuhmiy4r6VxrQzPdJZXfwehkQZ1wy5bhWcU3pan5Vv1PgHgfOpZ5m6XEvilwivuIlFZ+APBtFnOWuuznwk0v/Jb7Y4EfevCILVNqUX28SoRRyveBzrBdC0pVGLnQJTZVBLg7oPUuM/nI5E/5yNa6ttFRnpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=yv+MFX5+; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1741893776; c=relaxed/simple;
+	bh=TPxMt3+3ya/xiakX1ZCCMTSMgWKwulEPWUUTcrGsWsg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Lx/T4uwHZWxy9C3edSgFn3Odauy2Bf59+LpOkAl2klKjjlLRuusOxyKpLp3YtBUn8IzeLPAzBUJpuymLoyfCeQZrNT0V7C+qEnbqMDA4wC8z8MxH8OuFc+NNUgB602PsSOpwBY5WDAU8d3HtVmKCqvJfb5BS+O47yHLIzbGs284=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PwAdaVuI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="yv+MFX5+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=CgU6TUOIPlDMD+REA5JKB0zRv3EEjrSx/AftiArfusE=; b=yv+MFX5+sCF3LhBRXp3kWnvmOb
-	MqNT+NXLVk754rUoHAl95u7xiaXBC+clKlyfoIgHvQAXa0yiegFnpbK0ZzLvk1fctJ/1h/ULiuxiG
-	+ll83Ad/TV9oLExhxYCI8j8i2Rw1hzGbEaFOZh39mr5C+PlYp2Xck62WPzlZwVkB7Y3cX1E4DNgqu
-	QCj1bHHIDVNjEQBtr+JD0yy8QvhiS9sLRdOzlV+NFGksojV5waRhK77DVAovEuEi/g3FhpYN7TTLr
-	3X+pD5j5Ungbg0MoVWt/nPldD4dU9gXHS7FQicnys7aNaVxR60XAtvRS1w1Y3t89YrKk1fw/ufSoZ
-	utS4OT5g==;
-Date: Thu, 13 Mar 2025 20:21:29 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: "A. Sverdlin" <alexander.sverdlin@siemens.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, Aaro
- Koskinen <aaro.koskinen@iki.fi>, Kevin Hilman <khilman@baylibre.com>, Roger
- Quadros <rogerq@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg
- interconnect devices first"
-Message-ID: <20250313202129.0dcfc44e@akair>
-In-Reply-To: <20250313094708.1003092-1-alexander.sverdlin@siemens.com>
-References: <20250313094708.1003092-1-alexander.sverdlin@siemens.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PwAdaVuI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA799C4CEDD;
+	Thu, 13 Mar 2025 19:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741893776;
+	bh=TPxMt3+3ya/xiakX1ZCCMTSMgWKwulEPWUUTcrGsWsg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=PwAdaVuI88bABqmdfBg5C1kTVcvgUmvX7VqesS1VWd0Ud8riwvyk+HvI2t4gYSCsF
+	 d41BZvSxcnz1lQAmsDr3hBfnCdaZHzh0r2qhv+n/iIj9GqZ5cKXS0NrVM8ObiV0fPn
+	 m9DkUeXjo6ZcsFiHos9vgjfyS5OHJSUWozwiIoR2A6gVYnsQqooIAl+jBHwyBpBhQ+
+	 7YByORQoccpAEsbytgrm9nX1z2sov8VX73UEfGXFO9FUSeNYhAcIdPxls9tndIA7+m
+	 T6QCBwUA6MqW8XpKg1RxqeBANdPXBbueMGPTRW7Bx+1GLuXrlaXZtOafVvGSzZWZIa
+	 GQqLBeCwkR3Yw==
+Date: Thu, 13 Mar 2025 14:22:54 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v11 04/11] PCI: dwc: Move devm_pci_alloc_host_bridge() to
+ the beginning of dw_pcie_host_init()
+Message-ID: <20250313192254.GA745234@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313-pci_fixup_addr-v11-4-01d2313502ab@nxp.com>
 
-Hi Alexander,
-
-Am Thu, 13 Mar 2025 10:47:06 +0100
-schrieb "A. Sverdlin" <alexander.sverdlin@siemens.com>:
-
-> From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+On Thu, Mar 13, 2025 at 11:38:40AM -0400, Frank Li wrote:
+> Move devm_pci_alloc_host_bridge() to the beginning of dw_pcie_host_init().
+> Since devm_pci_alloc_host_bridge() is common code that doesn't depend on
+> any DWC resource, moving it earlier improves code logic and readability.
 > 
-> This reverts commit 4700a00755fb5a4bb5109128297d6fd2d1272ee6.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> It brakes target-module@2b300050 ("ti,sysc-omap2") probe on AM62x in a case
-> when minimally-configured system tries to network-boot:
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index c57831902686e..52a441662cabe 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -452,6 +452,12 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  
+>  	raw_spin_lock_init(&pp->lock);
+>  
+> +	bridge = devm_pci_alloc_host_bridge(dev, 0);
+> +	if (!bridge)
+> +		return bridge;
+
+This returns NULL (0) where it previously returned -ENOMEM.  Callers
+interpret zero as "success", so I think it should stil return -ENOMEM.
+
+I tentatively changed it back to -ENOMEM locally, let me know if
+that's wrong.
+
+> +	pp->bridge = bridge;
+> +
+>  	ret = dw_pcie_get_resources(pci);
+>  	if (ret)
+>  		return ret;
+> @@ -460,12 +466,6 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  	if (ret)
+>  		return ret;
+>  
+> -	bridge = devm_pci_alloc_host_bridge(dev, 0);
+> -	if (!bridge)
+> -		return -ENOMEM;
+> -
+> -	pp->bridge = bridge;
+> -
+>  	/* Get the I/O range from DT */
+>  	win = resource_list_first_type(&bridge->windows, IORESOURCE_IO);
+>  	if (win) {
 > 
-brakes or breaks? To unterstand the severity of the issue...
-
-> [    6.888776] probe of 2b300050.target-module returned 517 after 258 usecs
-> [   17.129637] probe of 2b300050.target-module returned 517 after 708 usecs
-> [   17.137397] platform 2b300050.target-module: deferred probe pending: (reason unknown)
-> [   26.878471] Waiting up to 100 more seconds for network.
+> -- 
+> 2.34.1
 > 
-> Arbitrary 10 deferrals is really not a solution to any problem.
-
-So there is a point where no more probe of anything pending are
-triggered and therefore things are not probed?
-
-> Stable mmc enumeration can be achiever by filling /aliases node properly
-> (4700a00755fb commit's rationale).
->
-yes, it does not look like a clean solution. And we have the
-proper aliases node in many places. What I am a bit wondering about is
-what kind of sleeping dogs we are going to wake up by this revert. So I
-think this should be tested a lot esp. about possible pm issues.
-
-Not every dependency in the sysc probe area is properly defined.
-
-Regards,
-Andreas
