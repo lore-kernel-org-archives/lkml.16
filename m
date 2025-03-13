@@ -1,63 +1,148 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BFC1F3FE3
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 23:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A07D154C04;
+	Thu, 13 Mar 2025 23:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741908401; cv=none; b=sWo+U4bzr2096LAISpg20mnUaq/u4oQVhie28YLI/5dU+n4NlRpX4DJUoCO/mKmsweS7EfP1viNU7b28wQPI3nmU6vDYMvRp7FptO88tAt15+p/jYY+d8rxu5heNrJ8eV/9VCLrlGcZ5oU5BSBsIDM1z7XAST0rs7ez1abwVG/Q=
+	t=1741908553; cv=none; b=kQ+E60vfWFVz8EGf4vO1AVDu8v7fd+U8ratyZI79NVlyhiv7e4ZnttmOd70vgPcQuiac5htBKLATn/NwEpGMkuxAKMGWM5oseuRjZvw9MTdzJ9Ew0FjkTXZSW//AL7VaWx0hg5Y093Ca5rIEJiiIYweYX0mSkdgftF3QQcomlv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741908401; c=relaxed/simple;
-	bh=9K9DwrvmeBbzdSmjxG17JuEyCBdJKm86SEYFgpbl45I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aEPCSB1Eh+kUHXn32GlbVoezrDjFsD/F7NlFk0RrBM6c+sFHz4dCWRz8Ux8ZpBxezjL4zVRJ8bgJQ6dJzezd/lZ006IE+gR28m4yyJ5BPhPjxQsaQNvVVMlfN+e139MUR8PoxGCGCd6aSQxjQ/tg45j6UAvWgZshZlK4KhpjnX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b75CgLQQ; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741908553; c=relaxed/simple;
+	bh=7OL19V8QvGyEj3D1qqdQDk2ZmmAsVQ4HgWQt23MbCdQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kNItqAjFXjEMddOUSREytZi8EOxrz7BALbdqqaJ6QN3B3n4y6xz7iTplMNs10hBoNPqsRNafDSwkDSlzw13RLyFDBl6+WbGZTpB1rJtBXaoM1O4/U6fYiLACFFk8MziKXuabi2jbMxdT5DhCwUYpFK6BA3u2ekCpnOA8I/OByCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YfnOorzl; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b75CgLQQ"
-Message-ID: <bda3add5-a001-458e-a8d5-351967dbcab3@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741908387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JcgTRng7rubdt5hkMeAB9iE5M5ixzFPc079zcVyCH+c=;
-	b=b75CgLQQl6SeSsyBcyaPBnN9pO3zELeFgSPoReRiPJumiF/ry8j0aDzWPX4QFHMkrG5X9e
-	wfZmTvRcXyBy2n8B5MTAnmmdh8MraWQtpjnmmT8FwX7JgJn6yS861hj86a5YGdkcVxRaO7
-	NQQ8uq4LEcXEAZvOXqw/p7KcESduldY=
-Date: Fri, 14 Mar 2025 07:26:10 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YfnOorzl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741908549; x=1773444549;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=7OL19V8QvGyEj3D1qqdQDk2ZmmAsVQ4HgWQt23MbCdQ=;
+  b=YfnOorzl3n5/RoawFK2Dl7WBiHR/fhTcA1sfyuXips23ASjqrIfucbtl
+   bNGaFqJQ8N++7H9Mw3YqNSGDVHfuRRWdfoDq7Dx10Lmzh4fwto6FMy3Ww
+   WzPcGfYB07clSElYgqJsn76GccpHy/REec9z0yOSCeFTEfu/JVL9oa8D1
+   lFGVT4k+Vre1mftpEateCAND4fQ4o9ggnu6Uld2dNnIKqWCorcYZZklQz
+   +2LPi65Tl4JPzH7teViqDloRMQ6BF5rfsLSsIa01FkqbAoirW1Tjn+ORe
+   Aea6chMAIZd3h/jD2tRvgeN9vWv3IwnUgcAVQWqHSnBVIjl47I6waeP6u
+   w==;
+X-CSE-ConnectionGUID: AxxT9Y0zTO6hw+WSqTLNng==
+X-CSE-MsgGUID: 1rwPYTBhRim39NHGYzFD7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="53688475"
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="53688475"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 16:29:08 -0700
+X-CSE-ConnectionGUID: lRIqvr29TbunDK8++YePHg==
+X-CSE-MsgGUID: v0LtyT1ZSgmVLhEr9ZiYsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="121806021"
+Received: from philliph-desk.amr.corp.intel.com (HELO vcostago-mobl3) ([10.124.222.83])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 16:29:08 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Nathan Lynch <nathan.lynch@amd.com>, Vinod Koul <vkoul@kernel.org>,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dave.jiang@intel.com, kristen.c.accardi@intel.com, kernel test robot
+ <oliver.sang@intel.com>
+Subject: Re: [PATCH v1] dmaengine: dmatest: Fix dmatest waiting less when
+ interrupted
+In-Reply-To: <871pv01vaz.fsf@AUSNATLYNCH.amd.com>
+References: <20250305230007.590178-1-vinicius.gomes@intel.com>
+ <878qpa13fe.fsf@AUSNATLYNCH.amd.com> <87senhoq1k.fsf@intel.com>
+ <874izx10nx.fsf@AUSNATLYNCH.amd.com> <87wmcslwg4.fsf@intel.com>
+ <871pv01vaz.fsf@AUSNATLYNCH.amd.com>
+Date: Thu, 13 Mar 2025 16:29:07 -0700
+Message-ID: <87r030ldbw.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH linux-next] perf/ring_buffer: Add EPOLLRDNORM flag for
- poll
-To: Ingo Molnar <mingo@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250313051047.2436098-1-chen.dylane@linux.dev>
- <Z9Kt57aAC7XET7Na@gmail.com> <87b67a79-d97e-4f81-9bf2-aa34d613b5bf@linux.dev>
- <Z9MRWT5PWtPaY-pl@gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <Z9MRWT5PWtPaY-pl@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-在 2025/3/14 01:09, Ingo Molnar 写道:
-> explain that this patch fixes
-> this particular poll() functionality and semantics
+Nathan Lynch <nathan.lynch@amd.com> writes:
 
-will do it, thanks.
+> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+>> Nathan Lynch <nathan.lynch@amd.com> writes:
+>>
+>>> Hi Vinicius,
+>>>
+>>> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+>>>> Nathan Lynch <nathan.lynch@amd.com> writes:
+>>>>> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+>>>>>> Change the "wait for operation finish" logic to take interrupts into
+>>>>>> account.
+>>>>>>
+>>>>>> When using dmatest with idxd DMA engine, it's possible that during
+>>>>>> longer tests, the interrupt notifying the finish of an operation
+>>>>>> happens during wait_event_freezable_timeout(), which causes dmatest to
+>>>>>> cleanup all the resources, some of which might still be in use.
+>>>>>>
+>>>>>> This fix ensures that the wait logic correctly handles interrupts,
+>>>>>> preventing premature cleanup of resources.
+>>>>>>
+>>>>>> Reported-by: kernel test robot <oliver.sang@intel.com>
+>>>>>> Closes: https://lore.kernel.org/oe-lkp/202502171134.8c403348-lkp@intel.com
+>>>>>
+>>>>> Given the report at the URL above I'm struggling to follow the rationale
+>>>>> for this change. It looks like a use-after-free in idxd while
+>>>>> resetting/unbinding the device, and I can't see how changing whether
+>>>>> dmatest threads perform freezeable waits would change this.
+>>>>>
+>>>>
+>>>> I think that the short version is that the reproducition script triggers
+>>>> different problems on different platforms/configurations.
+>>>>
+>>>> The solution I proposed fixes a problem I was seeing on a SPR system, on
+>>>> a GNR system (that I was only able to get later) I see something more similar
+>>>> to this particular splat (currently working on the fix).
+>>>>
+>>>> Seeing this question, I realize that I should have added a note to the
+>>>> commit detailing this.
+>>>>
+>>>> So I am planning on proposing two (this and another) fixes for the same
+>>>> report, hoping that it's not that confusing/unusual.
+>>>
+>>> I'm still confused... why is wait_event_freezable_timeout() the wrong
+>>> API for dmatest to use, and how could changing it to
+>>> wait_event_timeout() cause it to "take interrupts into account" that it
+>>> didn't before?
+>>>
+>>
+>> My understanding (and testing) is that wait_event_timeout() will block
+>> for the duration even in the face of interrupts, 'freezable' will not.
+>
+> They have different behaviors with respect to *signals* and the
+> wake_up() variant used, but not device interrupts.
+>
 
+Ah! That's something that I wasn't considering. That it could be
+something other than interrupts that were unblocking wait_event_*().
+
+> dmatest_callback() employs wake_up_all(), which means this change
+> introduces no beneficial difference in the wakeup behavior. The dmatest
+> thread gets woken on receipt of the completion interrupt either way.
+>
+> And to reiterate, the change regresses the combination of dmatest and
+> the task freezer, which is a use case people have cared about,
+> apparently.
+>
+
+If this change in behavior causes a regression for others, glad to send
+a revert and find another solution.
+
+>>> AFAIK the only change made here is that dmatest threads effectively
+>>> become unfreezeable, which is contrary to prior authors' intentions:
+>>>
+>>> commit 981ed70d8e4f ("dmatest: make dmatest threads freezable")
+>>> commit adfa543e7314 ("dmatest: don't use set_freezable_with_signal()")
+
+
+Cheers,
 -- 
-Best Regards
-Tao Chen
+Vinicius
