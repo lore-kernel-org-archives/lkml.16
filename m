@@ -1,236 +1,110 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ADB14900B
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F96C2641DE
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741858616; cv=none; b=TgjIej5s+nFVSQ6f6wllA9qfKjLhz+5iBIkveAJPPJs4sxvnodjTV/6ddmKjeBiyZaGel0moanCK1KsUFwd0uhlhJZDGclvXSqybjQTi7bwEt2ehH9PBNL5jw8qgcWelBfnof99/SD4JV93LDFNy5A0QbBprlBIILB/RKUdeyLU=
+	t=1741858646; cv=none; b=sXzvk3zeMnjdlVNxiTEkYWaMvmId6OXpqlbjqgdnsEFvQcpFsIn/m+QEfX2aH8ogvynSLMeYH+TefbES0IeL+dudbC/7r0GkW+nkPpaakz1Y4uSI5K8/E4XzMSxq/ltTIoiA22Oo9+PASA25fPtAUDR8WsNtl4+kXoOp6bzWq2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741858616; c=relaxed/simple;
-	bh=IhOhrSlxnKxVcldcxXlp8ols+uH5O4m44LWa+1opQtk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nIZ6k7EulCh3awZ6e7q2e7HYP+YbFNMZtNzDpazaNpZS1wZqZPwpSScVZ+6m2Srj/9MaeRQbE5uprkz5NDljafTwFMAluZX2Xu1B4/pNyrVNZTBwd0LQGUxPTw13AJAQPOn2HdSIw/MGRvK+3rTsNNpJzXK+QKuHqhA/KDBwaAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VS3yr2Tl; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741858646; c=relaxed/simple;
+	bh=0O9+tvS721NPS5SfhMQUQOXZjZEeYgWVPm6bA9exrc0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gKGPQuwKHaUWa2tOd926KIWyutQQ/+s7xfVjosRJeq1vX49ITgJ8bNjUxHztzbSV5PbOFWYfNi3LEHa0+ZpnLrEGQKBpUafAWHdwT5wSxq0NTKPG55x0EM7TRy+JQybTF4bYpVmXBGVRIYNFHanoB+Lf2X8Qn7ydnL7MfiaHpSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HnlykSsG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VS3yr2Tl"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 538B240E020E;
-	Thu, 13 Mar 2025 09:36:43 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Ezr2xfWOvaST; Thu, 13 Mar 2025 09:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741858598; bh=uNcgx3nJkSQVLH76uZj0J408nXFmhO/9yySOGft4o9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VS3yr2TlyC0wrfRay563yevuhnuEcvQ5oSspuN37j8AX8eiff3mKoEEioqK1u2Vo6
-	 d5wOCcncn0cD7SHD+reNjs+mzXqIZmx1/X6L8uJnQGwWY2Y4N0hGSlcLQ6fAU53oj/
-	 xLxgCGOIeVX8DkDXaI36V1nk/u5JkRnOizFq0b+VuD7DaDp0R9WmXfXlEI60b70VMi
-	 20Qh4tMtzl/JxtTlp67amw1rPcjqEtDRUrdP5VhzEEG1HE46d6xjDs236nnExqDwfB
-	 Y1Oy3CnzIOESjHw/xRIfvCAxn3iw7R9d7hkoO1ymE3ogCNmIPh/grQF/8V/AMxQ5/E
-	 i1cGH5CAfLgDKj5dpT6w4RcASMch/IHLC3tGQDLpSdzq+1WKc/oEihH41x+69pCaeU
-	 r7oL2zf5ZyheYjyNcQRBcU2JFJp3fWyLNsqhzlT2mASZYF25o0fHz5OI0e4HuaR90R
-	 kzST9WKY0DvkMzbfDOGpQGkXKs/BLmQvg8siOj7CNJ7Bx4t+du8RANTrzuvvSlE9+h
-	 wvMg8dgPll4mKRzWdM5Ill6ztRj1kcGB3dhz7F/wKj0iCWpbAQsevGvkx8osxmeFj8
-	 Upyi/Gzuq3RZYrpymVFAqN4ldvcHwEgqJ9ezZbxIkzUZRLe87ouVKecScDKYydhVzp
-	 zLcGavq+hS8cf7tds+eP31nI=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E20A40E023C;
-	Thu, 13 Mar 2025 09:36:26 +0000 (UTC)
-Date: Thu, 13 Mar 2025 10:36:17 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: David Kaplan <david.kaplan@amd.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	Brendan Jackman <jackmanb@google.com>,
-	Derek Manwaring <derekmn@amazon.com>
-Subject: Re: [PATCH v4 03/36] x86/bugs: Restructure mmio mitigation
-Message-ID: <20250313093617.GHZ9KnEXpdM4dwLYFz@fat_crate.local>
-References: <20250310164023.779191-1-david.kaplan@amd.com>
- <20250310164023.779191-4-david.kaplan@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HnlykSsG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741858643;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TkMmQDKhA8euP7OgbcejyvBbDNEneAYENQsYyU/R2lQ=;
+	b=HnlykSsGr88XHoI0UfhMORZGg9f9NWOMmKEPcoa+OsAVd824jiqXG+z5daT1qTTI1VEssV
+	HjBsKOgBftQIu5iegcYadiyvn63Nd3KfYsQgsJI0MPSwMq6dpYlOhQIfqpik9NXhMfVFf7
+	uZ5uRkOG61D3f02ICwj5WUwOjXsuC5g=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-495-i0oZ1z9tPd6bAgvVvTjkPA-1; Thu, 13 Mar 2025 05:37:21 -0400
+X-MC-Unique: i0oZ1z9tPd6bAgvVvTjkPA-1
+X-Mimecast-MFC-AGG-ID: i0oZ1z9tPd6bAgvVvTjkPA_1741858640
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3913f97d115so367919f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 02:37:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741858640; x=1742463440;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TkMmQDKhA8euP7OgbcejyvBbDNEneAYENQsYyU/R2lQ=;
+        b=p/UerHVB00xcuOCpLDatDwuluSe9RqdZNWo/EClVlkW9CMF4uDwUrTZfCsPAoAuqG3
+         FvAiGXgG4PjtcFySRyws9Aca4lJhMf+VGDPAoBRDvkReEvMWqDlQ+o35abp43LqYkDyN
+         7oeZn0M73djesg1Ux3OhtSnTe2XKZY6U7XoZ/irDDzEtrj+pSC4pFerPDRGbXolb+Gzk
+         ewIwhG29BJx45iY8Kn+Fiun/AyoJCcU4dW7kk0P1NLbfIuPnWXFGxHtrI5bn8Ag7g9xa
+         abJCrJKPoJCQe/3idj2g0Ejp3tTAy5Lj4wupy3tC0oHWtI2ftMDU1Ndra+5jQuwLAPCn
+         OTJA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6akvvsA0dz3uX5GqFMF5dOyWZji5aSMHLafXqZgm8FoB/vZFeeHIE02jYVfqDzqMCka3qo+GLntvtd6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDf9UUirPkYxXzxysp3fg6jbQedFpNuHB2cFUdSO/58Oxc2pEX
+	UyK8XC5uBsQi6BvBk5Ma8ld/kWk43ewokXNhfyNoykRUdLha6iCfYn+0IeqGwJ0/V8QhsUE5+pg
+	/nRh3IElFLxmHkCME0Hkpj20J093j3+wMSUJP7v8SmdQiKHyVQKg1Q4gOxn6EwQ==
+X-Gm-Gg: ASbGncsaedcjiyMOgWqHMeH4ZdxP0SaT7KBt7q9O1tUtUISPDV0evl2AF/tlRbkCcnV
+	hqrD4lMH3SFB8GZYLHeWnOI4zI7kcsAi5SNK7itW4lChA6wD0cON9Pv3I/gRXX2UEDtsD2pFVcb
+	R19jU11cBVwNJ3W+sH8cRaQRyyGPEyTlHK5pXe5Xxh1Hq3Xrl4fYKQnO1RNPtPgxnP3oAJbf1qC
+	rXrBcumK7/4zhW/POJvVUTb6vhvSM1E0esv89v7EmqquBwnM0uF6s7Zf1yFd38xPjPUMj15BQBk
+	/TBuzRTkpTWkxqdJkpux2zTBEX1vPFoWrCZknB9kEuGs6qhsUQqizpHyTm1+o7TCtA==
+X-Received: by 2002:a05:6000:402c:b0:38d:b028:d906 with SMTP id ffacd0b85a97d-395b830da39mr1197681f8f.21.1741858640550;
+        Thu, 13 Mar 2025 02:37:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFHvIc+eTQqAlF1+2P3Z2fgggj2iNqsracn6CCyYCJT454xBxSLuaRc9Q7eu4Ab6lnc9ZGgWw==
+X-Received: by 2002:a05:6000:402c:b0:38d:b028:d906 with SMTP id ffacd0b85a97d-395b830da39mr1197645f8f.21.1741858640065;
+        Thu, 13 Mar 2025 02:37:20 -0700 (PDT)
+Received: from stex1.redhat.com (host-79-46-200-29.retail.telecomitalia.it. [79.46.200.29])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975d1dsm1531444f8f.50.2025.03.13.02.37.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 02:37:19 -0700 (PDT)
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Peter Huewe <peterhuewe@gmx.de>,
+	linux-integrity@vger.kernel.org,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-kernel@vger.kernel.org,
+	Stefano Garzarella <sgarzare@redhat.com>
+Subject: [PATCH] tpm/tpm_ftpm_tee: fix struct ftpm_tee_private documentation
+Date: Thu, 13 Mar 2025 10:37:17 +0100
+Message-ID: <20250313093717.69270-1-sgarzare@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250310164023.779191-4-david.kaplan@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 10, 2025 at 11:39:50AM -0500, David Kaplan wrote:
-> @@ -511,24 +516,60 @@ static void __init mmio_select_mitigation(void)
->  		return;
->  	}
->  
-> -	if (mmio_mitigation == MMIO_MITIGATION_OFF)
-> -		return;
-> +	/* Microcode will be checked in mmio_update_mitigation(). */
-> +	if (mmio_mitigation == MMIO_MITIGATION_AUTO)
-> +		mmio_mitigation = MMIO_MITIGATION_VERW;
->  
->  	/*
->  	 * Enable CPU buffer clear mitigation for host and VMM, if also affected
-> -	 * by MDS or TAA. Otherwise, enable mitigation for VMM only.
-> +	 * by MDS or TAA.
->  	 */
-> -	if (boot_cpu_has_bug(X86_BUG_MDS) || (boot_cpu_has_bug(X86_BUG_TAA) &&
-> -					      boot_cpu_has(X86_FEATURE_RTM)))
-> -		setup_force_cpu_cap(X86_FEATURE_CLEAR_CPU_BUF);
-> +	if (boot_cpu_has_bug(X86_BUG_MDS) || taa_vulnerable())
-> +		verw_mitigation_selected = true;
-> +}
+The `state` member in `struct ftpm_tee_private` is in the documentation,
+but it has never been in the implementation since the commit 09e574831b27
+("tpm/tpm_ftpm_tee: A driver for firmware TPM running inside TEE") that
+introduced it.
 
-So applied this reads strange:
+Remove it to have a match between documentation and implementation.
 
-        if (mmio_mitigation == MMIO_MITIGATION_AUTO)
-                mmio_mitigation = MMIO_MITIGATION_VERW;
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ drivers/char/tpm/tpm_ftpm_tee.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-        if (boot_cpu_has_bug(X86_BUG_MDS) || taa_vulnerable())
-                verw_mitigation_selected = true;
-
-I'd expect to see:
-
-	if (mmio_mitigation == MMIO_MITIGATION_AUTO) {
-                mmio_mitigation = MMIO_MITIGATION_VERW;
-		verw_mitigation_selected = true;
-	}
-
-        if (boot_cpu_has_bug(X86_BUG_MDS) || taa_vulnerable())
-                verw_mitigation_selected = true;
-
-because the above branch already selected MMIO_MITIGATION_VERW so we might as
-well set verw_mitigation_selected, right?
-
-> +static void __init mmio_update_mitigation(void)
-> +{
-> +	if (!boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA) || cpu_mitigations_off())
-> +		return;
-> +
-> +	if (verw_mitigation_selected)
-> +		mmio_mitigation = MMIO_MITIGATION_VERW;
-
-... and the above change would obviate this one.
-
-Looking at that verw_mitigation_selected switch - that seems like the higher
-prio thing we should be looking at first as in: *something* selected VERW
-mitigation so we must honor it.
-
-And then the *_select_mitigation() functions will simply use the respective
-*_mitigation variable to perhaps override it only when really needed.
-
-I think.
-
-Or maybe I'm missing an aspect.
-
-Because if we make verw_mitigation_selected the higher prio thing, we can
-remove some of that additional checking.
-
-Or?
-
-> +
-> +	if (mmio_mitigation == MMIO_MITIGATION_VERW) {
-
-I.e., in mmio_update_mitigation(), the only check you need to do is:
-
-	if (verw_mitigation_selected)
-
-and then adjust mmio_mitigation depending on microcode presence or not.
-
-> +		/*
-> +		 * Check if the system has the right microcode.
-> +		 *
-> +		 * CPU Fill buffer clear mitigation is enumerated by either an explicit
-> +		 * FB_CLEAR or by the presence of both MD_CLEAR and L1D_FLUSH on MDS
-> +		 * affected systems.
-> +		 */
-> +		if (!((x86_arch_cap_msr & ARCH_CAP_FB_CLEAR) ||
-> +		      (boot_cpu_has(X86_FEATURE_MD_CLEAR) &&
-> +		       boot_cpu_has(X86_FEATURE_FLUSH_L1D) &&
-> +		     !(x86_arch_cap_msr & ARCH_CAP_MDS_NO))))
-> +			mmio_mitigation = MMIO_MITIGATION_UCODE_NEEDED;
-
-... as you do here.
-
-> +	}
-> +
-> +	if (boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN))
-
-Btw, that UNKNOWN thing is just silly. Looking at git history:
-
-7df548840c49 ("x86/bugs: Add "unknown" reporting for MMIO Stale Data")
-
-this was added just so that it doesn't say "Not affected" about those CPUs but
-"unknown."
-
-But
-
-  "Mitigation is not deployed when the status is unknown."
-
-so if it is only about reporting, I think we can synthesize the logic of this:
-
-        if (!arch_cap_mmio_immune(x86_arch_cap_msr)) {
-                if (cpu_matches(cpu_vuln_blacklist, MMIO))
-                        setup_force_cpu_bug(X86_BUG_MMIO_STALE_DATA);
-                else if (!cpu_matches(cpu_vuln_whitelist, NO_MMIO))
-                        setup_force_cpu_bug(X86_BUG_MMIO_UNKNOWN);
-        }
-
-into a separate function and get rid of that X86_BUG_MMIO_UNKNOWN thing.
-
-Pawan?
-
-I'll try to whack it later to see how ugly it gets.
-
-> +		pr_info("Unknown: No mitigations\n");
-> +	else
-> +		pr_info("%s\n", mmio_strings[mmio_mitigation]);
-> +}
-> +
-> +static void __init mmio_apply_mitigation(void)
-> +{
-> +	if (mmio_mitigation == MMIO_MITIGATION_OFF)
-> +		return;
->  
->  	/*
-> -	 * X86_FEATURE_CLEAR_CPU_BUF could be enabled by other VERW based
-> -	 * mitigations, disable KVM-only mitigation in that case.
-> +	 * Only enable the VMM mitigation if the CPU buffer clear mitigation is
-> +	 * not being used.
-
-So this comment doesn't fit with what the code now does...
-
->  	 */
-> -	if (boot_cpu_has(X86_FEATURE_CLEAR_CPU_BUF))
-> +	if (verw_mitigation_selected) {
-
-... which is to check whether something enabled the VERW mitigation...
-
-> +		setup_force_cpu_cap(X86_FEATURE_CLEAR_CPU_BUF);
->  		static_branch_disable(&mmio_stale_data_clear);
-> -	else
-> +	} else
->  		static_branch_enable(&mmio_stale_data_clear);
-
-{ } around the else branch too pls.
-
-Thx.
-
+diff --git a/drivers/char/tpm/tpm_ftpm_tee.h b/drivers/char/tpm/tpm_ftpm_tee.h
+index f98daa7bf68c..e39903b7ea07 100644
+--- a/drivers/char/tpm/tpm_ftpm_tee.h
++++ b/drivers/char/tpm/tpm_ftpm_tee.h
+@@ -21,7 +21,6 @@
+ /**
+  * struct ftpm_tee_private - fTPM's private data
+  * @chip:     struct tpm_chip instance registered with tpm framework.
+- * @state:    internal state
+  * @session:  fTPM TA session identifier.
+  * @resp_len: cached response buffer length.
+  * @resp_buf: cached response buffer.
 -- 
-Regards/Gruss,
-    Boris.
+2.48.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
