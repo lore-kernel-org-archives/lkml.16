@@ -1,45 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D36944F;
-	Thu, 13 Mar 2025 16:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33713126C03
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741883519; cv=none; b=ovu9xVDJdagMaXAJ+y3cD+iqBBNxo+wzlk7K+9L0LjUSdsL69ifyInnxQdaTz3+GK8b80jqGOYvg4+pRggRlFBfjmkLKguvBsDGXC0y+ITHd2KEDKHqlu+VcH86jWoki2Kc4Y9ame6+PNUV2WlvQP4I66Qi6Rkn5yZJOwLp3ik8=
+	t=1741883571; cv=none; b=BanHVSTrzJk5Ee5ck4CHFhQHtcHV+YYnVVK4YBqSoeMMFt/i+ANVLTv/LpZqe97HEm1UD+lzP6JxFvpFvVSRD3hlwdM8TdLxAfa2UeHhlYj1GXANxBi/xYuxXiEaezTHJiQlGSwMEUuoTDdtvL/oRvMynk+sq9aDhZD2rOVQ7U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741883519; c=relaxed/simple;
-	bh=D1wJYQ4E1c6EX9Y7XAzWUJGTuFgvctcFIgyy0djnxcY=;
+	s=arc-20240116; t=1741883571; c=relaxed/simple;
+	bh=3veIpjO8FY9cGq7h4dDd4e1jM0+O2U93qbLKOByNvLc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AicGiqp4rYpisxL0LMNXTBHBNFjd2cNtsafdULJ2J8D3V4arycJAE/AU/QWQEnGIx15kAtkB6zx9hX5Abjx1UYjS/OPmtfAOU5Jf+DzqlMs6wSnnV47DpVv+kR5c8vR9TSJ0cKJe/1s1RBoT7KF/P8EMGX6iqh37C/+Z5TvQWR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pfUdbEav; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dnEIjPMIfnancmYr8jx510LBkV0KSAOaHPH4fIro163Zkg3NtQMmhhTVGV0GDQAIP3iRMeltRs/3HCv3MBUPGB7rRmQSjqKwIBWNZ7I3JpiGKAUQW7QzCf5n1HOChCF5HsBraA3lWTStLUZxapJhbpOoPZz6vQ+F3/IY6Wlf5Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JWd7Cop5; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pfUdbEav"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2901BC4CEEB;
-	Thu, 13 Mar 2025 16:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741883519;
-	bh=D1wJYQ4E1c6EX9Y7XAzWUJGTuFgvctcFIgyy0djnxcY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pfUdbEavUcaxItWtO14JhEGoMOStRWraM6Cg5fbkwenfkqVFwHwVSaAG7rwvG4c4I
-	 h1v/NqSIluz2CpaxKqgI1v8hl8/C8sucDxg8/g4ViLwNzYoB6tx06JVfQfZWQGbeDo
-	 rLDVY6dkNG46MKi5/Nf/oDuKgCFvLEiT67KGzZ6PEyxKLEm7lh2VWEFVTewNMqdvoN
-	 v3UISxZiz1yJF3+vEDqNXvJyNE2BrT1kFLiqIE6goUGS7lPwVYGcTW3uFrqW3yI/Dm
-	 nmexUvJE8NoHEznGvOdvTEFXz6tPZDOXaDq6QrA4gcD+o23kAWeXsatMvI+TAVhD3s
-	 vjSOLWhiNJL2Q==
-Date: Thu, 13 Mar 2025 17:31:53 +0100
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org, Jiri Kosina <jikos@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH RFC 0/3] Initial work for Rust abstraction for HID device
- driver development
-Message-ID: <f6rizzlygznuebh22psrdkzfki7jfjzfaamuolobvpbgxoxjoi@gfu2eyzrm5wl>
-References: <20250313160220.6410-2-sergeantsagara@protonmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JWd7Cop5"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43690d4605dso8443375e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741883567; x=1742488367; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pk/Fm7AsuFr4JJo8BZ86u/lcrGPbAwJL5zM3d+jgaXU=;
+        b=JWd7Cop5QoaU7zfiVwkD+hpbVl4RYkzVRDKcdDUCpjSwQHB3S1G4m58i4qnMQkywk2
+         G4anDUyJv4nf9BAiG8a+yGBV3J+97k459owgXH///x0XQ9kb0Z9nLQBV9X7/j3mRPtAT
+         SajuhL4V7elPEuSDX4ZUiAE+uyODZ8ZjXYKpDPUXdn1oqHBO2OSXLAT6XHsipA/8RIsY
+         o9dlV/6pvvJOxfHqsGJFgYaMIm+pGUpxxVrToIQG67OYrgwAvl4oRrqHRAICkN+mLO0n
+         5b+w3joM+qfKjM+hYFZC/FFhbL0YuOqCQtnANOwnHbNreWvuAmGSFCSarzl16JTSYySU
+         f8OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741883567; x=1742488367;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pk/Fm7AsuFr4JJo8BZ86u/lcrGPbAwJL5zM3d+jgaXU=;
+        b=if+dZ4C0AZazlgSk/Zusw4wo0HN5vxf9HEJZeROXUkCqHj3MgAdF5ZjG8lLAbbV5Xg
+         IYdVDjwQbB5uU/IBOqAoVRgKMvGuiTcn2mzlu2yOaHDxgBrtYHYKF7Od6jOIpRuks3oD
+         5tnfn5tK1SQbOBK4Q3GVlbxLKFdUKFAI+2LHZwqopxhuUuf0OxuxiMMXwaz5JHnn0n5n
+         rgh/zLwjqUIY/moWpTodZb7qZfaC50XntdAHx5rSxyUcf7R7wERhI8HYU0ywXOQtPgaZ
+         CubLAaGxNyLRiPShGy81IWrKO+4+6KztjIyWfSuYc09s4MR+eYI/raKre2746ylUdRwK
+         fWMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9pmuIIXJp9+CUE3vSYSxy0gVlh8TiSa3i4KoBn5GIv7OdNcAfEoYm/cK/3xBaVhZDVB2uwqRfpZ17iTg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY/jgGy91jnZtm2B4WVzdZERunYsEIQ7wjdLN9XejJ1HaoZp6u
+	3gUSkzASswtbIH6iYvBetWdyJSNidEPYe8y9Ygq7oEkfvfOHNNTkcTJ1e8uZ
+X-Gm-Gg: ASbGnctPL9qhcu7p3q1g5qZYVjB3SjHmronTKHxoDiUY11dtMcGT7xxiMj+egLVrNFx
+	xMGlNjscJETP0hsahECp2c1DSh1KZkSgKrQHTRL3EJM9ySwtupOgXPQZKY0nKefJzzlIt0J5XRO
+	QZexLICh8ZiI0LqzAeFvZ9rFPH/TeJ/1JVE5n6QEEVrVByLrYAlraW7IIQBRS3VorU0+stwq2oG
+	wyKcmsGMDS0y5rHQqDQQDURtrK815oO18Vusj+b1TWllXqCchR26XzNnRsN9IFrv4V+1jsW6mCC
+	cf+pPd5JD+xRBmYxprI+8jnbUzOa3CmY0VvFqDGfhuiGD+uN0UDItHsxBqZ+
+X-Google-Smtp-Source: AGHT+IG/hk48lJj+8hPeuQY7ZauK3kX+fOhVWAQsxMsK5NG87kEnNFiSO3KeVKBv0+Muv22DdhY3yg==
+X-Received: by 2002:a05:600c:1c83:b0:43c:fb36:d296 with SMTP id 5b1f17b1804b1-43d1d8e7dc9mr2479425e9.25.1741883567071;
+        Thu, 13 Mar 2025 09:32:47 -0700 (PDT)
+Received: from egonzo (82-64-73-52.subs.proxad.net. [82.64.73.52])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d188b12f3sm26084425e9.4.2025.03.13.09.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 09:32:46 -0700 (PDT)
+Date: Thu, 13 Mar 2025 17:32:44 +0100
+From: Dave Penkler <dpenkler@gmail.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: gpib: Add return value to request_control
+Message-ID: <Z9MIrOJ-8NQjtwLA@egonzo>
+References: <20250222202301.3729-1-dpenkler@gmail.com>
+ <f7521c95-e69c-4618-b078-283c156ca594@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,82 +73,111 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250313160220.6410-2-sergeantsagara@protonmail.com>
+In-Reply-To: <f7521c95-e69c-4618-b078-283c156ca594@stanley.mountain>
 
-Hi,
-
-[quick reply because I am completely under the water for the next 2
-weeks]
-
-On Mar 13 2025, Rahul Rameshbabu wrote:
-> Hello,
+On Tue, Feb 25, 2025 at 11:59:56AM +0300, Dan Carpenter wrote:
+> On Sat, Feb 22, 2025 at 09:23:01PM +0100, Dave Penkler wrote:
+> > A number of drivers are unable to release control due to
+> > hardware or software limitations. As request_control was defined
+> > as void - no error could be signalled. Some drivers also did
+> > not implement request_control correctly by setting
+> > controller_in_charge instead of system_controller.
+> > 
+> > This patch changes the prototype of request_control to int
+> > and adds the appropriate checking and returns. In the case
+> > that a board cannot release control EPERM is returned. The
+> > faulty implementations have been corrected.
+> > 
 > 
-> I am a hobbyist developer who has been working on a project to create a new Rust
-> HID device driver and the needed core abstractions for writing more HID device
-> drivers in Rust. My goal is to support the USB Monitor Control Class needed for
-> functionality such as backlight control for monitors like the Apple Studio
-> Display and Apple Pro Display XDR. A new backlight API will be required to
-> support multiple backlight instances and will be mapped per DRM connector. The
-> current backlight API is designed around the assumption of only a single
-> internal panel being present. I am currently working on making this new API for
-> DRM in parallel to my work on the HID side of the stack for supporting these
-> displays.
-
-Thanks a lot for this work, though I wonder if your goal is not too big,
-too far from the HID point of view. HID is simple, and there is only a
-few bindings that you would need to be able to make "simple" HID
-drivers.
-
-My assumption would be to introduce the binding with a functional but
-small driver (like one that just changes the report descriptor, or does
-a sime raw event processing). Then we can look at integrating with the
-DRM interface.
-
-Though it's up to you to decide how you want to play ;)
-
+> This patch is hard to read because it does several things:
+> 1) It changes the functions from returning void to int.
+>    This is the overwhelming noisiest part of the patch so
+>    it's hard to even see the other changes in amongst the
+>    noise.
+> 2) Returns -EPERM if request_control is false.
+> 3) Changes some stuff like SET_DIR_WRITE(priv); and
+>    ENABLE_IRQ(priv->irq_SRQ, IRQ_TYPE_EDGE_FALLING);  I can't tell if
+>    that's related or not.
 > 
->   https://binary-eater.github.io/tags/usb-monitor-control/
+> You'll need to do it in two or three patches.  The first thing is to
+> just change the void to int.  That's a simple mechanical change.  The
+> only worry is if some functions are returning an error code on failure
+> and I don't know the answer to that.  (That would break git bisect so it
+> would be against the rules, even if it's fixed in patch 2 and 3).
 > 
-> Julius Zint had attempted to do so a year ago with a C HID driver but was gated
-> by the lack of an appropriate backlight API for external displays. I asked him
-> for permission to do the work need in Rust and plan to accredit him for the HID
-> report handling for backlight in the USB Monitor Control Class standard.
+> The actual logic changes will hopefully be easier to understand when the
+> diff is smaller.
 > 
->   https://lore.kernel.org/lkml/f95da7ff-06dd-2c0e-d563-7e5ad61c3bcc@redhat.com/
+> > -static void agilent_82350b_request_system_control(gpib_board_t *board, int request_control)
+> > +static int agilent_82350b_request_system_control(gpib_board_t *board, int request_control)
+> >  
+> >  {
+> >  	struct agilent_82350b_priv *a_priv = board->private_data;
+> > +	int retval;
+> >  
+> >  	if (request_control) {
+> >  		a_priv->card_mode_bits |= CM_SYSTEM_CONTROLLER_BIT;
+> > @@ -354,7 +355,9 @@ static void agilent_82350b_request_system_control(gpib_board_t *board, int reque
+> >  			writeb(0, a_priv->gpib_base + INTERNAL_CONFIG_REG);
+> >  	}
+> >  	writeb(a_priv->card_mode_bits, a_priv->gpib_base + CARD_MODE_REG);
+> > -	tms9914_request_system_control(board, &a_priv->tms9914_priv, request_control);
+> > +	retval = tms9914_request_system_control(board, &a_priv->tms9914_priv, request_control);
+> > +
+> > +	return retval;
 > 
-> I was hoping to get initial feedback on this work to make sure I am on the right
-> path for making a Rust HID abstraction that would be acceptable upstream. The
-> patches compile with WERROR being disabled. This is necessary since Rust treats
-> missing documentation comments as warnings (which is a good thing). I also need
-> to go in and add more SAFETY comments.
-
-K, I'll give you my opinion in the patches as the HID co-maintainer. I
-do have a very little rust experience, but this is my first in kernel,
-so I hope the more experience rust people here will chime in as well.
-
-Cheers,
-Benjamin
-
+> Get rid of the retval variable.  This should be:
 > 
-> Thanks,
-> Rahul Rameshbabu
+> 	return tms9914_request_system_control(board, &a_priv->tms9914_priv, request_control);
 > 
-> Rahul Rameshbabu (3):
->   rust: core abstractions for HID drivers
->   rust: hid: USB Monitor Control Class driver
->   rust: hid: demo the core abstractions for probe and remove
+> > diff --git a/drivers/staging/gpib/common/iblib.c b/drivers/staging/gpib/common/iblib.c
+> > index fd2874c2fff4..3d51a093fc8b 100644
+> > --- a/drivers/staging/gpib/common/iblib.c
+> > +++ b/drivers/staging/gpib/common/iblib.c
+> > @@ -418,12 +418,19 @@ int ibsic(gpib_board_t *board, unsigned int usec_duration)
+> >  	return 0;
+> >  }
+> >  
+> > -	/* FIXME make int */
+> > -void ibrsc(gpib_board_t *board, int request_control)
+> > +int ibrsc(gpib_board_t *board, int request_control)
+> >  {
+> > -	board->master = request_control != 0;
+> > +	int retval;
+> > +
+> >  	if (board->interface->request_system_control)
+> > -		board->interface->request_system_control(board, request_control);
+> > +		retval = board->interface->request_system_control(board, request_control);
+> > +	else
+> > +		retval = -EPERM;
+> > +
+> > +	if (!retval)
+> > +		board->master = request_control != 0;
+> > +
+> > +	return retval;
+> >  }
+> >  
 > 
->  drivers/hid/Kconfig                |  16 ++
->  drivers/hid/Makefile               |   1 +
->  drivers/hid/hid_monitor_control.rs |  42 +++++
->  rust/bindings/bindings_helper.h    |   1 +
->  rust/kernel/hid.rs                 | 245 +++++++++++++++++++++++++++++
->  rust/kernel/lib.rs                 |   2 +
->  6 files changed, 307 insertions(+)
->  create mode 100644 drivers/hid/hid_monitor_control.rs
->  create mode 100644 rust/kernel/hid.rs
+> It would be better to reverse some of these conditions are return earlier
+> where it's possible.  (Always do failure handling, not success handling).
 > 
-> -- 
-> 2.47.2
+> int ibrsc(gpib_board_t *board, int request_control)
+> {
+>         int ret;
 > 
+>         if (!board->interface->request_system_control)
+>                 return -EPERM;
+>         ret = board->interface->request_system_control(board, request_control);
+>         if (ret)
+>                 return ret;
 > 
+>         board->master = !request_control;
+> 
+>         return 0;
+> }
+> 
+> regards,
+> dan carpenter
+Thanks Dan.
+I will submit separate patches once Greg has merged a new baseline.
+-dave
