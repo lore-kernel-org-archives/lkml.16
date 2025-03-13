@@ -1,64 +1,92 @@
-Received: from bsdbackstore.eu (128-116-240-228.dyn.eolo.it [128.116.240.228])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B368262D1C;
-	Thu, 13 Mar 2025 09:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.116.240.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5761326461C;
+	Thu, 13 Mar 2025 09:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741856482; cv=none; b=RPS6yGGEO/7CeT8MRdHUE1nJyAdTgHAG1jtdD/lLQWG3bmZ+whhzRssqtVfAUoCzw1ot5v2GBjh8TWGIJLMR4tQ9LHPAUR91aoPz84TEepDlAW8rS4JomzaVaj+tnXkSMditlvQldiJt6k2EVOBrE0bk1B1xx+sUIl7o/YgznPw=
+	t=1741856487; cv=none; b=RXU2lvstivkkPf/QRKfpKO4CXPd8PXz5PQOQOZ4bXwgfTkJko569CqFxtS3QS1WALAtpoC2D213VjcNPwniJIS94mcJcp5Y1nWO0dLsgi+yMClqNJPh6WQf2gVcBQr/YyRiek2z0PTpPq0timv+6fpdY58W2TdPuTxwVqhdmXpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741856482; c=relaxed/simple;
-	bh=6dKxJ9dsiOX0QPDvCIPj7hxyJrK+VLs58cYZ78OfvA0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=qNiJ+qVnQ67cfAGk558pe3ki6do5MiOye9rdvIo+M3rsHwqsEMO5J0cfGc7Rweu76k/BYmOkrhs1076T7hgqicakNh8jB9cl+YcB74QCrWxG9EQVcFLxKGkrejyatjnEJZU6w6+j8UUDBD28jNh1k4+mC8c+7/P75RE8gSGflUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu; spf=pass smtp.mailfrom=bsdbackstore.eu; arc=none smtp.client-ip=128.116.240.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsdbackstore.eu
-Received: from localhost (25.205.forpsi.net [80.211.205.25])
-	by bsdbackstore.eu (OpenSMTPD) with ESMTPSA id fd0d5281 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 13 Mar 2025 10:01:09 +0100 (CET)
+	s=arc-20240116; t=1741856487; c=relaxed/simple;
+	bh=pZpHIxn8X7wku+BRIf/Q8fpkyPJtfSmtiqJspDYseeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YK5/hsK3/EPUOM213ehE4qgdzQdSJr0oDDBtos0GB5mK/8zihQqLDB7r7xsyT6stLCexCmuRgq3ArREQaOPT8o9kIrvyq+aSVNP8ANWk/Mx1X19pIs5+ABq8tDORrdzeM+0M+0JV2wAFzCkm40Y6tLtEEm33rLxLUeI0En4sYsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xk6EHSFi; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xk6EHSFi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741856486; x=1773392486;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pZpHIxn8X7wku+BRIf/Q8fpkyPJtfSmtiqJspDYseeU=;
+  b=Xk6EHSFid/b6GDM8AV2SqLCHZm5WTQhW+n3NiTilJ6X1t3sjQyUzX10K
+   swHdBS0KIxsKbCFO/8EQDqqpUIw4I9qDrhOSu9pbaRPHl1P6sx/LJIYNt
+   OtZ3KdvBd7gfcF5gVAydAlpZEhiISWZpFjg5X8+zgd0UmN4DbMLXMkion
+   8MyL+efA7C1/Hf3rHOHkUDfy64yBtCUBMzjSZU/mlR9vFVtOeMGYNP2ef
+   PNZfoA+Zs57x4+AreC9SGPtq1Wgc+iFZCZSe8egVz3yGewRaBao3lzNRt
+   1vwAu1aeJuL0kxFkSC6UQD7sUHjYbNgbgUx5Um6r6jQnTS095RaOhrOPZ
+   g==;
+X-CSE-ConnectionGUID: DDNIfNFXRi+y3rFdtLgHQw==
+X-CSE-MsgGUID: uuWzSgkDQY+cBBavBVGOqw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="53956649"
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="53956649"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:01:25 -0700
+X-CSE-ConnectionGUID: gloHZR0kQASo1lI5EMvOOg==
+X-CSE-MsgGUID: iv+Aim2oTf28GiUBCA8S/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="144082437"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:01:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tseRK-000000027la-3hv4;
+	Thu, 13 Mar 2025 11:01:18 +0200
+Date: Thu, 13 Mar 2025 11:01:18 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, jdamato@fastly.com,
+	aleksander.lobakin@intel.com, quic_zijuhu@quicinc.com,
+	wanghai26@huawei.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] net-sysfs: fix error handling in
+ netdev_register_kobject()
+Message-ID: <Z9Ke3moM5BVSsPax@smile.fi.intel.com>
+References: <20250313075528.306019-1-make24@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 13 Mar 2025 10:01:07 +0100
-Message-Id: <D8F0L25A8NP6.MR1S5ORJC9XE@bsdbackstore.eu>
-Subject: =?utf-8?q?Re:_nvme-tcp:_fix_a_possible_UAF_when_failing_to_send_request?= =?utf-8?q?=E3=80=90=E8=AF=B7=E6=B3=A8=E6=84=8F=EF=BC=8C=E9=82=AE=E4=BB=B6?= =?utf-8?q?=E7=94=B1sagigrim@gmail.com=E4=BB=A3=E5=8F=91=E3=80=91?=
-From: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>
-To: "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>, "Hannes Reinecke"
- <hare@suse.de>, "sagi" <sagi@grimberg.me>, "mgurtovoy"
- <mgurtovoy@nvidia.com>, "kbusch" <kbusch@kernel.org>, "sashal"
- <sashal@kernel.org>, "chunguang.xu" <chunguang.xu@shopee.com>
-Cc: "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-nvme"
- <linux-nvme@lists.infradead.org>, "linux-block"
- <linux-block@vger.kernel.org>
-X-Mailer: aerc
-References: <2025021015413817916143@cestc.cn>
- <aed9dde7-3271-4b97-9632-8380d37505d9@grimberg.me>
- <202503071810452687957@cestc.cn>
- <D8DDP6LIPOKB.2ACTHLE9FPI2A@bsdbackstore.eu>
- <2025031309485746586710@cestc.cn>
- <deb1584c-67b8-4543-9017-9ca18a9ee7d8@suse.de>
- <2025031316185747646815@cestc.cn> <2025031316313196627826@cestc.cn>
-In-Reply-To: <2025031316313196627826@cestc.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313075528.306019-1-make24@iscas.ac.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu Mar 13, 2025 at 9:31 AM CET, zhang.guanghui@cestc.cn wrote:
-> Hi,
->   in fact, the nvme_tcp_try_send() failure, the target may send C2HTermRe=
-q immediately. while the host receives the C2HTermReq and still starting er=
-ror recovery. =20
->  so when queue->rd_enabled is false,  can avoid starting error recovery a=
-gagin.
+On Thu, Mar 13, 2025 at 03:55:28PM +0800, Ma Ke wrote:
+> Once device_add() failed, we should call put_device() to decrement
+> reference count for cleanup. Or it could cause memory leak.
+> 
+> As comment of device_add() says, 'if device_add() succeeds, you should
+> call device_del() when you want to get rid of it. If device_add() has
+> not succeeded, use only put_device() to drop the reference count'.
+
+Okay, have you read the history of this?
+6b70fc94afd1 ("net-sysfs: Fix memory leak in netdev_register_kobject")
+8ed633b9baf9 ("Revert "net-sysfs: Fix memory leak in netdev_register_kobject"")
+https://syzkaller.appspot.com/x/log.txt?x=1737671b200000
+
+TL;DR: next time provide a better changelog and clean syzkaller report.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Not all targets send C2HTermReq (for example, the Linux target doesn't
-at the moment) so you can't rely on that.
-In any case, calling nvme_tcp_error_recovery() twice is harmless;
-the first call moves the controller to the resetting state, the second
-call is ignored.
-
-Maurizio
