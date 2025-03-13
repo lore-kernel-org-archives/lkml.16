@@ -1,135 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673B4264F90;
-	Thu, 13 Mar 2025 10:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF02265CAF;
+	Thu, 13 Mar 2025 10:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741861420; cv=none; b=fmuj7WADfgisvEa8FJQiiYJiHKaHeB0evISfjIdKxDNXON8zAo33gLiCkdY3oRA74uNN8T0NCQ127DiXfM3qBLT6BW3vZX6p+wh7bs3xHclJzA3YjYlj6bPpAeBL1HoRSl9VOaiBc0GA7CBplIvX/W6sj8q2Ug6VRoqIT7ZsgnM=
+	t=1741861435; cv=none; b=GuLnO8kFWnFzM0fiYfyh5idbATBykKk+WGeifoSqtslSKtS3lX4PkvqyyNmkSzGbvqqO28PMePlpbBb/vZNr21SP+1y6oGAiyElWmoMsEq5ljEO13NwEk71QMzF/AKQIfA65AfKplFRnrtNNyB24/3OWaupRMpkhdK+7ARnTFnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741861420; c=relaxed/simple;
-	bh=3F984dgkxbY6fPkXv+6fJCMjPaWNvKS7SFLAjQ5BVr4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ad105awX4dWhv+fE91musVaqga7Mu2SRXc/AJPW/wFvspvE+R6WL+R1YuemNru+S0y79VgaWxZ0zb5gHl1Sgq+mWefpSd5I4E2XKg9qEpsl2gctJEmv1icYi9O8vNyM/fAt7hKB8/qHcJUah9sxs3EVd7f+YJwvCJpmjnO9oAcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnmz/Ive; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741861435; c=relaxed/simple;
+	bh=ZQtNwbAkNNsl8udTvZE9qtF99bHC259EAPIcckU+49I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M3yHPp6JpJJV++En8UKq5M4X6Rs4j2jTAyWh8WKk7aEJSxzrsUep5p4sLDHpEXTSSk55ndreY/VbIfFSw0gvX9d6H8V/LNGS65LX0Ljl+URksclju1jb+ZRclVjTJFG3+mneQaXBjNImrQEaQthyAW5e4lnu2ayGe1mqp4Mzuz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNMS/hVR; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnmz/Ive"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2DFCC4CEE3;
-	Thu, 13 Mar 2025 10:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741861419;
-	bh=3F984dgkxbY6fPkXv+6fJCMjPaWNvKS7SFLAjQ5BVr4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fnmz/IvenKzyDaTbcaqWf4f8uu+jh6px4VUuCIEptlCm2OeaDysjT3zmIb3b0Z3wE
-	 1yu5TRA8yMXGqQkPLEvs2P74ul2Fu83l5BJ0Ty4PnLaXPCAWpoUbJF/M6E7N2U+egd
-	 LByaippAqOHi7557T4pj1nemmRTCWQ9IU1LmAKEup2myWtHfFFv6JXMu6E5gR+eT2f
-	 w3TeteCXXOyxAZcwS4fYZuORHmVibqCeqsnjLtWJKu6QY4hAVbE3PqhLINxtI8pE/M
-	 9MYdmR4OYJxJd8LgX0TalbgG6rTQR+qAzIKIExva5vqsi8Tt62+x2SJNbaqopUHErn
-	 87OMlU4OsUzcg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 13 Mar 2025 11:21:01 +0100
-Subject: [PATCH net-next 12/12] selftests: mptcp: add pm sysctl mapping
- tests
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNMS/hVR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741861435; x=1773397435;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZQtNwbAkNNsl8udTvZE9qtF99bHC259EAPIcckU+49I=;
+  b=dNMS/hVRO6M5bujSSzN8Q8gxnBy/s63jQw5X4OtPMR4ipqRhM+4+0LiS
+   YWEvzN0KWu3PzEaXFqc1Qv7fzXEC29LOJn4k0V3q68XGjczGUIj/mJW4f
+   HvdREq50oCohTAZdVWUNTYlhIKF9Mn90k8msN3rZvR1eJW3FfZYNtxRaW
+   DgFDKl51iXQeyxEd0rbLIHGyh2jczy1/dOoEw2+gMR7M2wh4Uwreg5kxb
+   MSPQRG2mwOA6K/T3juxO9mYED1rUeR+YmtEhbDLA6og7ZSqRuaFCq9ATz
+   Budb2XC5aAQLtv6RAu1XkyiYAl+Bfl+vIlhHiHM6AqM8hCelrOhxWSMRL
+   A==;
+X-CSE-ConnectionGUID: VXQIVsXfRdCqUjvXhsa1CA==
+X-CSE-MsgGUID: Fk7+yJtMTL2oOoAOA4MAFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42876732"
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="42876732"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 03:23:54 -0700
+X-CSE-ConnectionGUID: b9SeeQFFQzK2+zUVwwtadg==
+X-CSE-MsgGUID: AdmzUk5XSoCTpleSuNLcew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="151865467"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 13 Mar 2025 03:23:51 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tsfjA-0009Jk-1k;
+	Thu, 13 Mar 2025 10:23:48 +0000
+Date: Thu, 13 Mar 2025 18:23:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kurt Borja <kuurtb@gmail.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Cc: oe-kbuild-all@lists.linux.dev, Kurt Borja <kuurtb@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v5 08/12] platform/x86: alienware-wmi-wmax: Add support
+ for manual fan control
+Message-ID: <202503131819.lgRZtPus-lkp@intel.com>
+References: <20250312-hwm-v5-8-deb15ff8f3c6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-net-next-mptcp-pm-ops-intro-v1-12-f4e4a88efc50@kernel.org>
-References: <20250313-net-next-mptcp-pm-ops-intro-v1-0-f4e4a88efc50@kernel.org>
-In-Reply-To: <20250313-net-next-mptcp-pm-ops-intro-v1-0-f4e4a88efc50@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2235; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Tc4PpQ+Y/jnprgu+15f2z73L06rmBn9s1LlWpDmpj4I=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBn0rGbRH937aT7yKRBus6q5SgVNpqGBqg2hpW9t
- CbZC9NalcCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ9KxmwAKCRD2t4JPQmmg
- c5SUD/9Sy+sMpYkhdzaJ4ijw9HCSPkKvL7xPzQB1qvLOh0PkXQlZf2gBvQ8KXhqOJg2P9TtUkJm
- xVW37RogFdsV3ByxlQD0Bib9rUGWIFIj6C8LXi1MBglQdo5xPlYkZzhcWWyXSOMGDANfEKzw4DZ
- j8R4N2rlwwzmbuFNBxR87Nk+Tet4kvHHL6YMG/ts3voh1PT1QyR7se27NrMAIFaqdWVbqAXLZsX
- yF4SlNVYo7Oz7+bZTWywLpT9dZbGkMHV+x0YC8+C1bh/sLT0jtF/tCxUkZLXIjcVNdeg5JRuHq8
- +Yz/5L+XqeocpGfhjp+df4ZGgujez+IlcnlT3YBg00s0Opi/HGY5ELlXYyYKZkJhiNjj7NdVgNW
- f2ARUlaFf1x/yYoLwyR7GzOIfnVhzKiGtmn3c42+iOicAgf311JfFdodVCaPbtrazNTjQTtEiSr
- qZREkGGiOaBcEoA3Z+Wk1TZokBdvtdGHx70LLvspqKZqjzS7QARsc+BAbLqbin/lV9+zGZafmvQ
- /0Ujw1PTSqbNJHWgpWXlGrpO+lFXg9xwOn4/4gpdqxVw9y7+6v5+A+ildw0nSfzpgRsfHekyoUj
- HNLLx9jwaEEARmKat34yC+0/B7TlcAlVsZFWK/PB8IOv6xtJrJs3K1RDJSvtFQ2WTijat9K5jzp
- KkS9TRXHDUJTB8w==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250312-hwm-v5-8-deb15ff8f3c6@gmail.com>
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Kurt,
 
-This patch checks if the newly added net.mptcp.path_manager is mapped
-successfully from or to the old net.mptcp.pm_type in userspace_pm.sh.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 30 ++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+[auto build test WARNING on f895f2493098b862f1ada0568aba278e49bf05b4]
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 3651f73451cf8b07d4492c60da45e88aabc44b7a..333064b0b5ac03ae003417d2070f3c08f94743ed 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -117,7 +117,36 @@ cleanup()
- trap cleanup EXIT
- 
- # Create and configure network namespaces for testing
-+print_title "Init"
- mptcp_lib_ns_init ns1 ns2
-+
-+# check path_manager and pm_type sysctl mapping
-+if [ -f /proc/sys/net/mptcp/path_manager ]; then
-+	ip netns exec "$ns1" sysctl -q net.mptcp.path_manager=userspace
-+	pm_type="$(ip netns exec "$ns1" sysctl -n net.mptcp.pm_type)"
-+	if [ "${pm_type}" != "1" ]; then
-+		test_fail "unexpected pm_type: ${pm_type}"
-+		mptcp_lib_result_print_all_tap
-+		exit ${KSFT_FAIL}
-+	fi
-+
-+	ip netns exec "$ns1" sysctl -q net.mptcp.path_manager=error 2>/dev/null
-+	pm_type="$(ip netns exec "$ns1" sysctl -n net.mptcp.pm_type)"
-+	if [ "${pm_type}" != "1" ]; then
-+		test_fail "unexpected pm_type after error: ${pm_type}"
-+		mptcp_lib_result_print_all_tap
-+		exit ${KSFT_FAIL}
-+	fi
-+
-+	ip netns exec "$ns1" sysctl -q net.mptcp.pm_type=0
-+	pm_name="$(ip netns exec "$ns1" sysctl -n net.mptcp.path_manager)"
-+	if [ "${pm_name}" != "kernel" ]; then
-+		test_fail "unexpected path-manager: ${pm_name}"
-+		mptcp_lib_result_print_all_tap
-+		exit ${KSFT_FAIL}
-+	fi
-+fi
-+
- for i in "$ns1" "$ns2" ;do
- 	ip netns exec "$i" sysctl -q net.mptcp.pm_type=1
- done
-@@ -152,7 +181,6 @@ mptcp_lib_events "${ns1}" "${server_evts}" server_evts_pid
- sleep 0.5
- mptcp_lib_subtests_last_ts_reset
- 
--print_title "Init"
- print_test "Created network namespaces ns1, ns2"
- test_pass
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/Kurt-Borja/platform-x86-alienware-wmi-wmax-Rename-thermal-related-symbols/20250312-131534
+base:   f895f2493098b862f1ada0568aba278e49bf05b4
+patch link:    https://lore.kernel.org/r/20250312-hwm-v5-8-deb15ff8f3c6%40gmail.com
+patch subject: [PATCH v5 08/12] platform/x86: alienware-wmi-wmax: Add support for manual fan control
+config: x86_64-randconfig-122-20250313 (https://download.01.org/0day-ci/archive/20250313/202503131819.lgRZtPus-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250313/202503131819.lgRZtPus-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503131819.lgRZtPus-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/platform/x86/dell/alienware-wmi-wmax.c:1359:1: sparse: sparse: symbol 'wmax_wmi_pm_ops' was not declared. Should it be static?
+
+vim +/wmax_wmi_pm_ops +1359 drivers/platform/x86/dell/alienware-wmi-wmax.c
+
+  1358	
+> 1359	DEFINE_SIMPLE_DEV_PM_OPS(wmax_wmi_pm_ops, wmax_wmi_suspend, wmax_wmi_resume);
+  1360	
 
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
