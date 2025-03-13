@@ -1,102 +1,174 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBA31DEFE7
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73BB1FC0FE;
+	Thu, 13 Mar 2025 07:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741852016; cv=none; b=BxFxXxxnMebHVeIxWFnKSmTGNPLtJfZq/ueLF9EAy2vHgzGYVccSU9hvaKQ/vEqLdKlq2pqOZvuJ82PahHyYSzysSNO/FVvt+08oya446TWLkoY1qTJ7RHrgbF9nlODO9PHBkyMxFicQMNEu7VrrGGUr6rXHztKx5RDbO6hIjjk=
+	t=1741852059; cv=none; b=KPBo4LydK51cHc1EIANkzAoKda0gYhaFBLsyxQ4SEulWxdL0Rx7rcXN9kqQm3L6ms6dGmXQxxIAhe8ZC8B7r6cgt6HMq/BtiWEvGbfYgvrdfUhE04eq28DO77bnpfkPk9rp60GzQmXEAGIyywOAhDS86g9blcpXhBwBqNlbh72Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741852016; c=relaxed/simple;
-	bh=Kcw/cri+106dKos1f1Natr9iLqISBP6t2M/k6NuJoeA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TWryv0WVNmBLzD9dO84zV7ZkGMl7UaMJkoP4aaSmM54Di3VtKswdxJptLSoHLwlObnNa2P7t0rDeYTqOocKmW/FCgp5jisfow20PD//+jb+bbnq7Ubj4llWiSm0NS+fPzY1whDCPGW+5jal8HWqbQmPBcEvAdsCp+t4OHwsMLaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wVVBZDUw; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741852059; c=relaxed/simple;
+	bh=8hHJ/HFvfkEZ6i76S/7Osadp/4nyw/q4ACUf+uYItAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rM67MzzmX+cU7GElhdxwuWCgCtJvNqWTrxHRx1+VcW5VAVFhsjGcDjuJ0KdzKSR9m2cvxpoiYAY/NB4tMj8EEzYW7quewdEqSuPwbz67MXQ/zADwnvr1B2KpXqik84KENUeyAGJIy55HNxSMSvepS+qgp3V97KODlQpnDl0izQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sTWg1cgk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wVVBZDUw"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741852002;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=A1k4rvRiNGwMmsF5RLcMl0KSYAR5wW+8BJa1JeXnczs=;
-	b=wVVBZDUwJMfdTy9EFL9OKjRb4HM/biVq9ZaJh0Ar2oo+cRJH67geNPyjJXZhKgquo6Pz3I
-	Wbpa/MhNEg05bLPlCgxyLOvtff4qSGAzTB/CmziQ+4OAX3PgItsWQYflwsOBo1hP15oKD9
-	QgZ7J4exDWdpCXvn2EGXIGxCzjGmJsE=
-From: Kunwu Chan <kunwu.chan@linux.dev>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	morbo@google.com,
-	justinstitt@google.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Kunwu Chan <kunwu.chan@hotmail.com>,
-	Grace Deng <Grace.Deng006@Gmail.com>
-Subject: [PATCH] rust: sync: optimize Rust symbol generation for PollCondVar
-Date: Thu, 13 Mar 2025 15:45:36 +0800
-Message-ID: <20250313074537.729578-1-kunwu.chan@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sTWg1cgk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E734C4CEE9;
+	Thu, 13 Mar 2025 07:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741852058;
+	bh=8hHJ/HFvfkEZ6i76S/7Osadp/4nyw/q4ACUf+uYItAQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sTWg1cgkF0HN+R3Lg8H/q/Qfjx3ASKAcsERfvzaHk+wqZXINU/PpwXojnwHctHxN2
+	 pnwecDDH1dZYi/0IudVv/vq/4AWn5X0Ie/cc/iqapwIqu7FlJGBgNSjAY6sAdCbmHQ
+	 mFrbh/bGD8i/JyODx1v8kBN72mqfabTlCLWwDl3EAoFmGrYHXSL+ayydujC3gDNVgU
+	 QDRyGK745K9PoW6FwPtlizS+JwHawvlwVFOZk28JB3TcIj5Vk2ZnJNXfkzzaimDUWB
+	 m1OWmFSQqL7n+KU5/4MHY8BXqtiEmpyUl/kv+vtCVXbeqlFj4Buv7Mf2dy7f0fDqlP
+	 dJSfRcH8a4W0A==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5495078cd59so667389e87.1;
+        Thu, 13 Mar 2025 00:47:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWec4tYNnT2JKvbELdE3pxEOT+bVBDFZNJK8xx8FJGHhvcOOlErORrxjgwDVu00Gran7u6DgE0I5Qzc8Ryy@vger.kernel.org, AJvYcCX6TJ5GGCULGUtKzmHjDuYMZdG1GZrZ7sVt63AxCPBrRpLMDSm6FPkG3re5ekV+Z+4ZtJezQ+EZQoXZyS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz46vLHowm8AwyOkx5fF1Yt8CXOsFkhdDrxczOF26/NtDGtMdrF
+	I3NKOu2Pzmfm8CWDcoSHcZpUcbje4cOFX2UTUHlSi3BUehydT2nWuPQ393pT3eGlCj3oC9wi3MG
+	nz9OvJb6KKQ/xxxoOApT0clKfCS8=
+X-Google-Smtp-Source: AGHT+IFLgYAj/1b+D8/tOT9N04CdBa+1enXtS6QVrZnRpM8XirsjiCQj5kY6LGKs43WUlwcKAqmgm6k6rbNO5qrbN90=
+X-Received: by 2002:a05:6512:3d19:b0:549:4d78:2418 with SMTP id
+ 2adb3069b0e04-549abacd211mr3858294e87.27.1741852056477; Thu, 13 Mar 2025
+ 00:47:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250311110616.148682-6-ardb+git@google.com> <20250311110616.148682-10-ardb+git@google.com>
+ <CAK7LNASxNhDnCmpuf7yEW4Lcz-vRtitx8HPeoZnGNWdb-6pEsA@mail.gmail.com>
+In-Reply-To: <CAK7LNASxNhDnCmpuf7yEW4Lcz-vRtitx8HPeoZnGNWdb-6pEsA@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 13 Mar 2025 08:47:24 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFXo1dkh4iE=hnuPoQF61g2YPaeuG0Swp7CxSP4FYgvQQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JrHAxVQxXq5RYt8jcT41tgYQ48AFEtuc3b0FjorUifa7uvMV9EZ8TqwqHI
+Message-ID: <CAMj1kXFXo1dkh4iE=hnuPoQF61g2YPaeuG0Swp7CxSP4FYgvQQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] x86: Get rid of Makefile.postlink
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kunwu Chan <kunwu.chan@hotmail.com>
+On Thu, 13 Mar 2025 at 03:09, Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Tue, Mar 11, 2025 at 8:06=E2=80=AFPM Ard Biesheuvel <ardb+git@google.c=
+om> wrote:
+> >
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Instead of generating the vmlinux.relocs file (needed by the
+> > decompressor build to construct the KASLR relocation tables) as a
+> > vmlinux postlink step, which is dubious because it depends on data that
+> > is stripped from vmlinux before the build completes, generate it from
+> > vmlinux.unstripped, which has been introduced specifically for this
+> > purpose.
+> >
+> > This ensures that each artifact is rebuilt as needed, rather than as a
+> > side effect of another build rule.
+> >
+> > This effectively reverts commit
+> >
+> >   9d9173e9ceb6 ("x86/build: Avoid relocation information in final vmlin=
+ux")
+> >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> >  arch/x86/Makefile.postlink        | 38 --------------------
+> >  arch/x86/boot/compressed/Makefile |  9 +++--
+> >  2 files changed, 6 insertions(+), 41 deletions(-)
+> >
+> > diff --git a/arch/x86/Makefile.postlink b/arch/x86/Makefile.postlink
+> > deleted file mode 100644
+> > index 445fce66630f..000000000000
+> > --- a/arch/x86/Makefile.postlink
+> > +++ /dev/null
+> > @@ -1,38 +0,0 @@
+> > -# SPDX-License-Identifier: GPL-2.0
+> > -# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > -# Post-link x86 pass
+> > -# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > -#
+> > -# 1. Separate relocations from vmlinux into vmlinux.relocs.
+> > -# 2. Strip relocations from vmlinux.
+> > -
+> > -PHONY :=3D __archpost
+> > -__archpost:
+> > -
+> > --include include/config/auto.conf
+> > -include $(srctree)/scripts/Kbuild.include
+> > -
+> > -CMD_RELOCS =3D arch/x86/tools/relocs
+> > -OUT_RELOCS =3D arch/x86/boot/compressed
+> > -quiet_cmd_relocs =3D RELOCS  $(OUT_RELOCS)/vmlinux.relocs
+> > -      cmd_relocs =3D \
+> > -       mkdir -p $(OUT_RELOCS); \
+> > -       $(CMD_RELOCS) $@ > $(OUT_RELOCS)/vmlinux.relocs; \
+> > -       $(CMD_RELOCS) --abs-relocs $@
+> > -
+> > -# `@true` prevents complaint when there is nothing to be done
+> > -
+> > -vmlinux vmlinux.unstripped: FORCE
+> > -       @true
+> > -ifeq ($(CONFIG_X86_NEED_RELOCS),y)
+> > -       $(call cmd,relocs)
+> > -endif
+> > -
+> > -clean:
+> > -       @rm -f $(OUT_RELOCS)/vmlinux.relocs
+> > -
+> > -PHONY +=3D FORCE clean
+> > -
+> > -FORCE:
+> > -
+> > -.PHONY: $(PHONY)
+> > diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compress=
+ed/Makefile
+> > index 606c74f27459..5edee7a9786c 100644
+> > --- a/arch/x86/boot/compressed/Makefile
+> > +++ b/arch/x86/boot/compressed/Makefile
+> > @@ -117,9 +117,12 @@ $(obj)/vmlinux.bin: vmlinux FORCE
+> >
+> >  targets +=3D $(patsubst $(obj)/%,%,$(vmlinux-objs-y)) vmlinux.bin.all =
+vmlinux.relocs
+> >
+> > -# vmlinux.relocs is created by the vmlinux postlink step.
+> > -$(obj)/vmlinux.relocs: vmlinux
+> > -       @true
+> > +CMD_RELOCS =3D arch/x86/tools/relocs
+> > +quiet_cmd_relocs =3D RELOCS  $@
+> > +      cmd_relocs =3D $(CMD_RELOCS) $< > $@;$(CMD_RELOCS) --abs-relocs =
+$<
+> > +
+> > +$(obj)/vmlinux.relocs: vmlinux.unstripped FORCE
+> > +       $(call if_changed,relocs)
+>
+> Perhaps, it may make sense to rebuild vmlinux.relocs
+> when arch/x86/tools/relocs is changed, but
+> I do not see such dependency in the other
+> arch/x86/realmode/rm/Makefile.
+>
+> https://github.com/torvalds/linux/blob/v6.14-rc5/arch/x86/realmode/rm/Mak=
+efile#L61
+>
+>
+> So, I decided it is ok.
+> If you mind, you can send v3.
+>
 
-When build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
-with ARCH=arm64, the following symbols are generated:
-
-$nm vmlinux | grep ' _R'.*PollCondVar  | rustfilt
-ffff800080019e90 T <kernel::sync::poll::PollCondVar>
-			::new::{closure#0}::{closure#0}::panic_cold_explicit
-ffff8000805b8e04 T <kernel::sync::poll::PollCondVar
-			as kernel::init::PinnedDrop>::drop
-ffff8000805b8e04 T <kernel::sync::poll::PollCondVar
-			as core::ops::drop::Drop>::drop
-
-This Rust symbol
-(<kernel::sync::poll::PollCondVar as kernel::init::PinnedDrop>::drop)
-is trivial wrappers around the C functions __wake_up_pollfree
-and synchronize_rcu. It doesn't make sense to go through a trivial
-wrapper for its functions,so mark them inline.
-
-After doing so, the above symbol will not in output.
-
-Signed-off-by: Kunwu Chan <kunwu.chan@hotmail.com>
-Co-developed-by: Grace Deng <Grace.Deng006@Gmail.com>
-Signed-off-by: Grace Deng <Grace.Deng006@Gmail.com>
----
- rust/kernel/sync/poll.rs | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/rust/kernel/sync/poll.rs b/rust/kernel/sync/poll.rs
-index d5f17153b424..a4f92c545fec 100644
---- a/rust/kernel/sync/poll.rs
-+++ b/rust/kernel/sync/poll.rs
-@@ -107,6 +107,7 @@ fn deref(&self) -> &CondVar {
- 
- #[pinned_drop]
- impl PinnedDrop for PollCondVar {
-+    #[inline]
-     fn drop(self: Pin<&mut Self>) {
-         // Clear anything registered using `register_wait`.
-         //
--- 
-2.43.0
-
+No I think that's fine: this patch reverts the changes to
+arch/x86/boot/compressed/Makefile; if we need to improve it, it should
+be a separate change in any case.
