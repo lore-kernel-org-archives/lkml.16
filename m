@@ -1,191 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2044.outbound.protection.outlook.com [40.107.237.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C473264FA8
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741858729; cv=none; b=LAorq75+1QBsdjzIzbgcTeV1osSbWk4vpRv9xr2HjH3u2L+OTaaXzVsWWbGaRdrsszyOAohDxCjaKZXQ585SauENnmyZPnH5YuhAi0K+dCffLlDM6pWUAMzNovOyIuaT156UFWKwH0M/pGYM9dQl0770D5OUVsuKXCdoTXCR6tc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741858729; c=relaxed/simple;
-	bh=XduVv5oWP5XVLUDadTwpUfDqlbjfXc9kb+OmeMBd47E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P6y3mVinH5Zoq4fRhKitAKQnzl0A3+eulAJZZjKa3226hgThE3qkI3nKVKcoFcoeycaYto809w/Bw47XkF5lwFPyVDGm+NnoUtNC2yJ5cidX2gKTfXx3/2KYXLA0JVJlUSemBoTgt7rNut2twWznrXitfvvlYNPJ4ctErawxjsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJsnqep8; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C2D264FAF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741858728; cv=fail; b=GBBykzzl0fQg0QuMyPAE182Nx55FOaMLTo11kuawAe2oNhk3/nJArpt4ZcZUZ59wvgKlRtJMQGcH779EEHC7JyPcJ+F6FZcCXgYclR13YJZjJrLfifZgRKm8uNAOq1l6J75s5L+oRVDIFNFVjdzB1q5GezOXv7Qrm398lqfCrcA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741858728; c=relaxed/simple;
+	bh=beoNR2DjWWdAZMCEaieA0dVGdwpnNn5+3YntxgTzqUE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S++IDHh8Uo3/9ZivWhlQCZpTkwM5mwaqKIKphg+Uet8Du0Z2W9FtDcQh1iQ6uL5Q8uCtJpFxYyo3P5pCwJqc+awnWuYkoXfCsotURd1yMA6sTIqD603cXBq2WCgaKdTDHYOsKRnwHssgbAxo47jG67kspiVAuO5paFPNanQFokM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nR2LqVIq; arc=fail smtp.client-ip=40.107.237.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJsnqep8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39340C4CEE3;
-	Thu, 13 Mar 2025 09:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741858728;
-	bh=XduVv5oWP5XVLUDadTwpUfDqlbjfXc9kb+OmeMBd47E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oJsnqep8qoQtltsZ/P/mRMfuyLIVgPWJvJ96dFaI743K7A26Mt4Bn2l4reKhD4rJL
-	 3Re/al7IX35asDsCZnCbvBIuqxZrIVFl6GNsw61JRTl3Cbet+ev4tpT+YCRK9dl0Wk
-	 VK4dlpvncb6NdP42b9uYFAqmUSoZfVxhVIb5LEbgYumXdRbg4S4nY5klkFpB3+HjUK
-	 ynxh5Er6qVNEWTEun0WR9srYLTP+BmG4YQr5jiRcHlpwMRFTpcZK+5VOtpnIqAF1Fp
-	 Pwlc+MV3jDNGkgZXVcJHPnzD7h1WSA2gHHXMuPNfd9zpzOnH36SCjPYB1gU25R3COX
-	 K554Voa4h2cow==
-Message-ID: <f019144d-3ecd-4d90-9c57-790a93966176@kernel.org>
-Date: Thu, 13 Mar 2025 10:38:43 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nR2LqVIq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gLeF0l4Va2herFYteQoRIxe0wBYkUrnu4r9Cz192zXJJgrGc9Vaa/PKBGgJgeUJYOim4bP3uBr3qky+AC/+8z0e+YSbwmKxsu5y1WYubCO7yjsEfX0OX8aBb/0gZPyvrIGp6oAlHEm+ZgwkO/zG9qVRauk28jAxb6LZgmhfLpQB9+7607g05FNo/6t61mumhbtiTtvHVjv0d8qovjkSHhLnMI40reCDus/L/9fc5VSbcFZSuzoPl2P098s49rK7v6rJo5IadmEyTDAg8aRFVVRSDXJOuXCUjFPcYVvFls1dJZSEWy0mnJSEAwV2SBVm1V+IiY5X11VXccY0bo77ZfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IR1T1f8MV2sZYH0x+6dfeth/EPpxARwjEU5Ut2W1Wbc=;
+ b=dc1YB3+ih9bPP5MC+jUgNf9qfQYY7GJwON5Jy29U4bVRrnX7N5i/ABGqoX5hGU85Edl4jD+T6Kfk2j+K8aTPA8s4tfS/pOR4F+SyaZ4SxrLGtTYHvvSNx4KNll1t6Hur0mELsuyyJGOgTszhThCiyAB54Eg+GnhwHbgPjh98JKRNuUIJgufrCbKFQpU2cRnCzgASNPsQvEYGe6Up8hPqITCjiASRhvomAnm2TpeWfZlivQ/SNQXAkxDObNxFEbj81jkRYGkO1EnKxPjZcvgdBW+Gb627gArwTca/uIDYkDlFJ2Q/CGqby4Gx2964E3DxX59WO7EF94CxI3sRtlyAwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IR1T1f8MV2sZYH0x+6dfeth/EPpxARwjEU5Ut2W1Wbc=;
+ b=nR2LqVIqyGiCUs7GVkgK+3Ymdii2H/3nuysKmPl8UhtbyhABx8crYujIJAu6Vhc3iu3qT1eCNApbykEUaPPfqI/rpSE9etXV34wDnO/WCruFgbnVOPdLPZEkBQtjQG2jrfRCyobgAXfNouLy5UrZAXzV4m7JIghz0xqIpAuT/Lw=
+Received: from CY5PR13CA0031.namprd13.prod.outlook.com (2603:10b6:930:11::16)
+ by CH0PR12MB8577.namprd12.prod.outlook.com (2603:10b6:610:18b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Thu, 13 Mar
+ 2025 09:38:43 +0000
+Received: from CY4PEPF0000E9D9.namprd05.prod.outlook.com
+ (2603:10b6:930:11:cafe::94) by CY5PR13CA0031.outlook.office365.com
+ (2603:10b6:930:11::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.26 via Frontend Transport; Thu,
+ 13 Mar 2025 09:38:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9D9.mail.protection.outlook.com (10.167.241.72) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Thu, 13 Mar 2025 09:38:42 +0000
+Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Mar
+ 2025 04:38:37 -0500
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Chen Yu <yu.c.chen@intel.com>,
+	<linux-kernel@vger.kernel.org>
+CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, David Vernet
+	<void@manifault.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, "Swapnil
+ Sapkal" <swapnil.sapkal@amd.com>, Shrikanth Hegde <sshegde@linux.ibm.com>, "K
+ Prateek Nayak" <kprateek.nayak@amd.com>
+Subject: [RFC PATCH 2/8] sched/topology: Introduce sg->shared
+Date: Thu, 13 Mar 2025 09:37:40 +0000
+Message-ID: <20250313093746.6760-3-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250313093746.6760-1-kprateek.nayak@amd.com>
+References: <20250313093746.6760-1-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/2] dt-bindings: add device tree binding for silex
- multipk
-To: "Gupta, Nipun" <nipun.gupta@amd.com>, linux-kernel@vger.kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- derek.kiernan@amd.com, dragan.cvetic@amd.com, arnd@arndb.de,
- gregkh@linuxfoundation.org
-Cc: praveen.jain@amd.com, harpreet.anand@amd.com, nikhil.agarwal@amd.com,
- srivatsa@csail.mit.edu, code@tyhicks.com, ptsm@linux.microsoft.com
-References: <20250312095421.1839220-1-nipun.gupta@amd.com>
- <20250312095421.1839220-2-nipun.gupta@amd.com>
- <37707900-9162-43f2-b89b-3e1fec514daf@kernel.org>
- <270daefd-22a6-9359-edcb-c514644cfe4f@amd.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <270daefd-22a6-9359-edcb-c514644cfe4f@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D9:EE_|CH0PR12MB8577:EE_
+X-MS-Office365-Filtering-Correlation-Id: aee2aa5b-b773-4e13-1af9-08dd6212d81a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?IF+lWFupTc5ALRop3Zg5h0IpHdI7q6sTXs32FgTuJofMW2aS+plbK19qAMgQ?=
+ =?us-ascii?Q?LQyKHnD3F+AI6M10K9etmJeChT6coWVRJB4tBwRNEjM1DAnKIJfMzn2qEBJj?=
+ =?us-ascii?Q?jQcf3GUaQyAWCgiy4QSK/7pL1aTL9N+vA1BS+Auka2irVDcOaB7e2j3DkxGE?=
+ =?us-ascii?Q?fiq3tgwefcdJcU+suH1rBwRpv2SLhI0Hh3YP6vK14Wn9EsoPrETcB8liKJHq?=
+ =?us-ascii?Q?XRd7ijtobgd9J0N77Sqdf+kkWFeRw0F+KfciiUo28W+HU0Q44UK1i67Y9ZWY?=
+ =?us-ascii?Q?9GOvdCBlGg2qAMFouAvhgzVhNUU7+JJ472k5phlNqJuWD4li9wovOiOZc+MX?=
+ =?us-ascii?Q?znkAfrTHJfTwuJywFxFRGXaY5/cGynT0mDkM0t2YP3Ctq1jS14w3L+XufBnE?=
+ =?us-ascii?Q?M7mVUrkIFfvhbPnXw7A2ipWFRS+h/3riIch8kAR1BlYTpwt4ZWq1I0e08f0O?=
+ =?us-ascii?Q?WQZTdzPRGpnTHXAkoMxUfV6fSdXsxp9maG2M6YyxHli8myQbOzJlNKwk7ra0?=
+ =?us-ascii?Q?AhiYgzONxs8x6FtNaHPgt5YDzN8ySocFqO1TGb6GOabxcucS2FC3d2c7Xh+O?=
+ =?us-ascii?Q?xIjRzJbGXFh5rHxfbOd7VVHyBrtlWZv91yaikCqtp1xyOp1vMwakd0lZe87F?=
+ =?us-ascii?Q?mTjdLQnJ89g5WIyy1FwCYi5kjCNnb+aElwmmNKxUd7WmbsY1xmMMuY0/kAFD?=
+ =?us-ascii?Q?9odSNefPHs15KmG9mQL9DaWrjWQtvu3hNR7zHIJAQvcu/muJttxxQCMP/eYy?=
+ =?us-ascii?Q?2LH6COL4qNCnY63UUNpZPlLWmMZgx6YwNImjGYDIKXKSpxWz4+A0ri7iy9RT?=
+ =?us-ascii?Q?GIfEgI35XXTi0mzxtP99pilOXvMUdEvjB8kf50bNGAELLN7fz1Yz0ap61p6M?=
+ =?us-ascii?Q?/wlykOCiLtBV7J+XIKI1hb9vkNEPAwlXAviyL/ZKJ3+3rTKqu7XW1pyGGpm2?=
+ =?us-ascii?Q?Lil0fyYkcFSvh+lTj+3LG94eleDUmRTNMF1osJ6nzPTNeH4pYhXJRexB7dEg?=
+ =?us-ascii?Q?gcbyasYGTmb2Tm+h5REDnu5Ew3ttcMLRNrNzKwcux5uispOlrj9zkWoqSIjv?=
+ =?us-ascii?Q?cCw1vhLQVC4RGtxE+9OneySwRrsseyCVbhs1SP05BbrJL7/JEaPc/Eamzc2U?=
+ =?us-ascii?Q?5Gv/oXyZ7B3eC2HXnQQtv2gd3LhqeJ9N/6+a1cJ4uIYo1HdRTZBjL2M1BIcD?=
+ =?us-ascii?Q?9JIDDpMnwPEk0Zuwf1ISOB5zrLBHpvQIdJADj/8e952Y80Gjo/WZaP3mtc1G?=
+ =?us-ascii?Q?EGibjvu11cLbvYT08z6ANVy8ANth1rkH4k5/9ZoAXtnP/n5VWSE03gNG7TwK?=
+ =?us-ascii?Q?Xj1KBX3LeKmNJS89bvyH2+KFRo5fhKCd2bAs8k8E6oIDSMH0I22zh7UjI4X4?=
+ =?us-ascii?Q?eCWy3VT8jSi7acHiOqWfSc2G7BdM8/kn0eGu0ZX84W6wnSoIwYfEUwD4YQ2i?=
+ =?us-ascii?Q?y7D0UOzD9OKDjeDwUXPMdJjYDXISBtCLuSSMdfGzoYomV2lEq+nQDw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 09:38:42.9751
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aee2aa5b-b773-4e13-1af9-08dd6212d81a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9D9.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8577
 
-On 13/03/2025 10:25, Gupta, Nipun wrote:
->>> +
->>> +maintainers:
->>> +  - Nipun Gupta <nipun.gupta@amd.com>
->>> +  - Praveen Jain <praveen.jain@amd.com>
->>> +
->>> +description: |
->>> +  Silex Multipk device handles the Asymmetric crypto operations. The
->>> +  driver provides interface to user-space to directly interact with the
->>> +  Silex MultiPK device.
->>
->> Why this isn't in crypto?
-> 
-> It is mentioned in patch RFC 1/2 - because Crypto AF_ALG does not 
-> support offloading asymmetric operations from user-space (which was 
-> attempted to be added earlier in Linux at: 
-> https://lore.kernel.org/all/146672253157.23101.15291203749122389409.stgit@tstruk-mobl1.ra.intel.com/)
+sched_group(s) of a particular sched_domain are created using the
+sched_domain struct of the child domain. Attach the sched_domain_shared
+struct from the corresponding child domain to the sched_group.
 
-And if crypto framework starts supporting it, would it mean that
-hardware should be relocated? No, place it in directory matching the
-class of the device.
+This shared struct will be used to propagate the sched group stats up
+the sched domain hierarchy to optimize load balancing in subsequent
+commits.
 
-> 
->>
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: silex,mutlipk
->>
->> Unknown vendor prefix
->>
->> Device name part is weirdly generic. How is this device exactly called?
->> Where is it used? Where is datasheet?
-> 
-> The device is on AMD versal series and is named "Multi PKI" device. I
-> will update to use compatible as xlnx,multipk (AMD versal series link: 
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+---
+ kernel/sched/sched.h    |  3 +++
+ kernel/sched/topology.c | 27 +++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
-Then a SoC? So no, you are supposed to use SoC specific compatibles.
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 023b844159c9..38aa4cba5d1f 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2089,6 +2089,9 @@ struct sched_group {
+ 	int			asym_prefer_cpu;	/* CPU of highest priority in group */
+ 	int			flags;
+ 
++	/* sd->shared of the domain from which this group was created */
++	struct sched_domain_shared *shared;
++
+ 	/*
+ 	 * The CPUs this group covers.
+ 	 *
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 815474823b3f..508ee8aa492b 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -612,6 +612,23 @@ static struct root_domain *alloc_rootdomain(void)
+ 	return rd;
+ }
+ 
++static void link_sg_shared(struct sched_group *sg, struct sched_domain_shared *sds)
++{
++	if (!sds)
++		return;
++
++	sg->shared = sds;
++	atomic_inc(&sds->ref);
++}
++
++static void free_sg_shared(struct sched_group *sg)
++{
++	if (sg->shared && atomic_dec_and_test(&sg->shared->ref))
++		kfree(sg->shared);
++
++	sg->shared = NULL;
++}
++
+ static void free_sched_groups(struct sched_group *sg, int free_sgc)
+ {
+ 	struct sched_group *tmp, *first;
+@@ -626,6 +643,8 @@ static void free_sched_groups(struct sched_group *sg, int free_sgc)
+ 		if (free_sgc && atomic_dec_and_test(&sg->sgc->ref))
+ 			kfree(sg->sgc);
+ 
++		free_sg_shared(sg);
++
+ 		if (atomic_dec_and_test(&sg->ref))
+ 			kfree(sg);
+ 		sg = tmp;
+@@ -746,6 +765,9 @@ cpu_attach_domain(struct sched_domain *sd, struct root_domain *rd, int cpu)
+ 			if (parent->parent) {
+ 				parent->parent->child = tmp;
+ 				parent->parent->groups->flags = tmp->flags;
++
++				free_sg_shared(parent->parent->groups);
++				link_sg_shared(parent->parent->groups, tmp->shared);
+ 			}
+ 
+ 			/*
+@@ -773,6 +795,7 @@ cpu_attach_domain(struct sched_domain *sd, struct root_domain *rd, int cpu)
+ 			 * the child is being destroyed.
+ 			 */
+ 			do {
++				free_sg_shared(sg);
+ 				sg->flags = 0;
+ 			} while (sg != sd->groups);
+ 
+@@ -972,10 +995,12 @@ build_group_from_child_sched_domain(struct sched_domain *sd, int cpu)
+ 	if (!sg)
+ 		return NULL;
+ 
++	sg->shared = NULL;
+ 	sg_span = sched_group_span(sg);
+ 	if (sd->child) {
+ 		cpumask_copy(sg_span, sched_domain_span(sd->child));
+ 		sg->flags = sd->child->flags;
++		link_sg_shared(sg, sd->child->shared);
+ 	} else {
+ 		cpumask_copy(sg_span, sched_domain_span(sd));
+ 	}
+@@ -1225,9 +1250,11 @@ static struct sched_group *get_group(int cpu, struct sd_data *sdd)
+ 	if (already_visited)
+ 		return sg;
+ 
++	sg->shared = NULL;
+ 	if (child) {
+ 		cpumask_copy(sched_group_span(sg), sched_domain_span(child));
+ 		cpumask_copy(group_balance_mask(sg), sched_group_span(sg));
++		link_sg_shared(sg, child->shared);
+ 		sg->flags = child->flags;
+ 	} else {
+ 		cpumask_set_cpu(cpu, sched_group_span(sg));
+-- 
+2.43.0
 
-But this does not really answer about undocumented prefix, although
-maybe you want to say that it is too generic?
-
-> https://www.amd.com/en/products/adaptive-socs-and-fpgas/versal/premium-series.html). 
-> Seems also renaming files to xlnx_multipk.c etc would be better. Will 
-
-We talk about binding here.
-
-> update.
-> 
-> The device is used for PKI offload for OpenSSL based applications.
-> Unfortunately data sheet is not available in public domain.
-> 
->>
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  reg:
->>> +    items:
->>> +      - description: PKI Queues memory region
->>> +      - description: PKI TRNG memory region
->>> +      - description: PKI reset memory region
->>
->> reset? Like reset controller? Why is this here instead of using existing
->> reset framework?
-> 
-> Not exactly, there is a clock reset which is separate from the device. I 
-> explored and there is a soft reset as well which will do the 
-> functionality and we do not need this memory region. Will remove it.
-
-So that's a separate device and you need to use here resets property.
-
-> 
->>
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - interrupts
->>> +  - iommus
->>
->> You did not test your patches.
-> 
-> We have tested the driver code, but device tree yaml needs some changes 
-> you mentioned (and so the dts)
-
-Bouncing back such argument is just making me disappointed in this work.
-
-You did not test it. Period. Send patches only after testing. See
-documentation in the DT directory (or talks or online resources).
-
-Best regards,
-Krzysztof
