@@ -1,38 +1,25 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA372690F4;
-	Thu, 13 Mar 2025 16:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F11C268FFA;
+	Thu, 13 Mar 2025 16:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741882372; cv=none; b=TbpIKqifQrgeuJPIedG0HKmISMyq95ooPNq6EkD8iQ2J9gobxdsOo1xlpmsic/IB+dPgIjMWPHFSurgTKz4is4Acwle6evvItJ9YldTR6L5c1uqQkcu/9oKxfZYC85pDCuwQQVqCox/0nMe0uMREDODXtiXINU1rg8tn2aNuXhU=
+	t=1741882413; cv=none; b=i3LpbMqMmJYyPBrXlN4fAZ0/mUWNfo1++k8UsogZVzExYaLV1f0Sbnke8CfRLA8pmjpYTHjblHjr07CmWMBPvQDJz/bQ+ERdD6bAWa9qa98dOaLWsa1ll1UBL2yUh4yNvm9W/1TgZ708CogUqTG0UloFUa4RBe3aQjYj2x9+JCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741882372; c=relaxed/simple;
-	bh=5WTjyQjqiZlITXL/Hqqnhk2xRpGKhNIkm0JjXZTIGFw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jIgEe0Vb6XUfyISEuhtinSHJpxjw9yGYNYwc+lQfWGOum0RXflkUmGd73JCpBPz2+UiDHq45rspt3YpL5Zp1PibuThOzYSDaXF0ovGloUv1UH6CGRk10Q0zWPMZl70SPHfizYISz27TuHoFvv5j3hxpdBSQ+vhfsKLOCgqXIt94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=FtuwpaN0; arc=none smtp.client-ip=54.204.34.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="FtuwpaN0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1741882292;
-	bh=QN+pqP5WGQxw5m+xISBGa0dBdHFpjziMM8lqs45W21k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=FtuwpaN0MLz1qkVwEkgM0kVPe0OMMG0RK3uLnFESmSnB2cHLWYCFTKW2FJvGK2r9e
-	 BiG8kRprxN8mvZzGy088Kr9ee/Em1UujP1lFVEmNxl9vqjuUo6joMxE3jd5wKcy312
-	 Ty3h+eZxRQ7LDZpYjCemwRwrtD6IvZaPd6sbBnII=
-X-QQ-mid: bizesmtpip2t1741882244t1ooon7
-X-QQ-Originating-IP: mTyvzFoj2eAkBSqSL+st6jNWXUYoEKlLxLkaiL6XBYs=
-Received: from [IPV6:240e:36c:d16:500:4589:e5b ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 14 Mar 2025 00:10:42 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 5201203476452846978
-Message-ID: <8563032ED2B6B840+7af17f62-992a-4275-80c7-ac7ef5276ae7@uniontech.com>
-Date: Fri, 14 Mar 2025 00:10:42 +0800
+	s=arc-20240116; t=1741882413; c=relaxed/simple;
+	bh=qDQpxnFleLv3LFu0RuGYQWEblbnNu04jHg/Mi33/xmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qiEPEvot9uVIYWVSKmAnFq1EMb6v72vCq8SzVopopOfDENneXlIDz6srG14XNWywNfxtR/Yw4ZT11CUCEXqx+Sar16kza5VmM2wTrPxTjoWalxR8kPYIkjp3QrTuRuKOaLxXYtpjUhCYX+3mVT04vqPNzOwVaTcJo14vZnYRTcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5EE2150C;
+	Thu, 13 Mar 2025 09:13:39 -0700 (PDT)
+Received: from [10.57.85.159] (unknown [10.57.85.159])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2EF9A3F673;
+	Thu, 13 Mar 2025 09:13:25 -0700 (PDT)
+Message-ID: <ea10caee-59ef-4a00-9b61-37cb0a379411@arm.com>
+Date: Thu, 13 Mar 2025 16:13:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,300 +27,276 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 1/2] mlxsw: spectrum_acl_bloom_filter: Expand
- chunk_key_offsets[chunk_index]
-To: Ido Schimmel <idosch@nvidia.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: andrew+netdev@lunn.ch, chenlinxuan@uniontech.com, czj2441@163.com,
- davem@davemloft.net, edumazet@google.com, guanwentao@uniontech.com,
- kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- niecheng1@uniontech.com, petrm@nvidia.com, zhanjun@uniontech.com
-References: <484364B641C901CD+20250311141025.1624528-1-wangyuli@uniontech.com>
- <78951564F9FEA017+20250311141701.1626533-1-wangyuli@uniontech.com>
- <Z9GKE-mP3qbmK9cL@shredder> <70a2fa44-c0cf-4dd4-8c17-8cc7abf1fbce@redhat.com>
- <Z9L43xpibqHZ07vW@shredder>
-From: WangYuli <wangyuli@uniontech.com>
-Content-Language: en-US
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <Z9L43xpibqHZ07vW@shredder>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------CZDE3t3J09XbRT611EWB2l2u"
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OPGrLrMdbUDMGI+pjYZK/iY9rGaYRBBBIBzai7yBlWGcoBjLzLLM5QSM
-	gRvG7y0jJu9raeQvvST2R7TKTZQcj+QRTuBWboTE14c9QEw44vzlMxyuHqe9soVngEVSlW+
-	r+dhWa+uIib1r2tyU8TVmlQEjZij09Ay8bEc11MXy0bIAMKyk5kO5K7v3DBHv3BrQcX0AmV
-	2bPWcHHOCW5xYnWgbLjiH+uQAlqtMtaowU/6hCPTZih7xuscjzc4t4N1/nKekMPjQ9x09Jp
-	GxedUJOFmYRVKFj8T+WHTlbccrH66gWaOXTsxNK1nuVRh7gUlz/zjcmtrVHPH10gtfQEHw7
-	HVu5/1+wUIUUEIBUkYIsIu1MC6kcIg0p/OtSSyOZf47ZAMy2G5GtMjMZ9A0uR/I7tooHXA2
-	uI9k89ozLkqTAjAUycKAzwFzOy94wuCzc1M5b9tWBvQlkkVKSUfuzcK0fEryG67lGBuYOpd
-	epjNANZeN95mvZE5LJ7sSBIxyyMgar7LcBLOBPMZqI3pEgxSiSLe8OwZ17apnJZkSKG4l7E
-	MhZEto7VAM6U1gB4NcDdAC2p/b3RVofdZs2TlsU4T4lW1WIAnF92Hopby1Woc3B3oeADQJI
-	/jkd5svekJarnqu7lSupJaUTCRgrIdSDOsGjhdLF2e3g58bifdDzzOQD4jzy1+b34yAZNBY
-	Agg/QXJsvzR0O+WoguTxetZFbIhm9KbOHbS059ju5aNo5PG+FwfjXtIv3Wa3/MJ1wyNPOZy
-	I/aNNV8NoAbE4lXPlc3C+c7d4hpNpmsRoQoK+C9W1WCI6DDORY9+cv47Yn7bL7qrACD3RZy
-	ZzhUUHT4IVi9yJdqklUGVIq+O9qDbdg2aTfYl7dO6yUyhUN2h79Jupmdil7gW1FiJ/vk6lc
-	2rorxcnihJ8GennsvQ7CENMj3Oh5vWfBRNP3RpDO8mAUuozZD14TbzzIUXdmJIecbhA+Mgc
-	8kTXN7fffdt40XNhRMPmZYMZ9iaGHAmb3OsdAYZJUKAeSaXC5e6hswghR5SlADvydLSIb7s
-	aarUxuF/S8y35CzqnvswbIzBNiryNGGCiCwSWgKvfWkgJS0BvGO/moKKwk/1VT6s8GLACOt
-	Xu8ueSkWxBDPJleJ0vzJfo=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+Subject: Re: [PATCH v3 1/3] arm64: Add BBM Level 2 cpu feature
+Content-Language: en-GB
+To: =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
+ suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
+ catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org,
+ robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
+ mark.rutland@arm.com, joey.gouly@arm.com, maz@kernel.org,
+ james.morse@arm.com, broonie@kernel.org, anshuman.khandual@arm.com,
+ oliver.upton@linux.dev, ioworker0@gmail.com, baohua@kernel.org,
+ david@redhat.com, jgg@ziepe.ca, shameerali.kolothum.thodi@huawei.com,
+ nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com,
+ smostafa@google.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev
+References: <20250313104111.24196-2-miko.lenczewski@arm.com>
+ <20250313104111.24196-3-miko.lenczewski@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250313104111.24196-3-miko.lenczewski@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------CZDE3t3J09XbRT611EWB2l2u
-Content-Type: multipart/mixed; boundary="------------zkLbIZBFofBxPl5MmnWbCdGZ";
- protected-headers="v1"
-From: WangYuli <wangyuli@uniontech.com>
-To: Ido Schimmel <idosch@nvidia.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: andrew+netdev@lunn.ch, chenlinxuan@uniontech.com, czj2441@163.com,
- davem@davemloft.net, edumazet@google.com, guanwentao@uniontech.com,
- kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- niecheng1@uniontech.com, petrm@nvidia.com, zhanjun@uniontech.com
-Message-ID: <7af17f62-992a-4275-80c7-ac7ef5276ae7@uniontech.com>
-Subject: Re: [PATCH net 1/2] mlxsw: spectrum_acl_bloom_filter: Expand
- chunk_key_offsets[chunk_index]
-References: <484364B641C901CD+20250311141025.1624528-1-wangyuli@uniontech.com>
- <78951564F9FEA017+20250311141701.1626533-1-wangyuli@uniontech.com>
- <Z9GKE-mP3qbmK9cL@shredder> <70a2fa44-c0cf-4dd4-8c17-8cc7abf1fbce@redhat.com>
- <Z9L43xpibqHZ07vW@shredder>
-In-Reply-To: <Z9L43xpibqHZ07vW@shredder>
+On 13/03/2025 10:41, Mikołaj Lenczewski wrote:
+> The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
+> and this commit adds a dedicated BBML2 cpufeature to test against
+> support for, as well as a kernel commandline parameter to optionally
+> disable BBML2 altogether.
+> 
+> This is a system feature as we might have a big.LITTLE architecture
+> where some cores support BBML2 and some don't, but we want all cores to
+> be available and BBM to default to level 0 (as opposed to having cores
+> without BBML2 not coming online).
+> 
+> To support BBML2 in as wide a range of contexts as we can, we want not
+> only the architectural guarantees that BBML2 makes, but additionally
+> want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
+> us having to prove that no recursive faults can be induced in any path
+> that uses BBML2, allowing its use for arbitrary kernel mappings.
+> Support detection of such CPUs.
+> 
+> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
 
---------------zkLbIZBFofBxPl5MmnWbCdGZ
-Content-Type: multipart/mixed; boundary="------------SdEWfqeqxLIUntY2Kr3is73x"
+I have 2 nits below, but with those resolved:
 
---------------SdEWfqeqxLIUntY2Kr3is73x
-Content-Type: multipart/alternative;
- boundary="------------U72oK4dhadUK2E63rCcS0hmG"
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
---------------U72oK4dhadUK2E63rCcS0hmG
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  3 +
+>  arch/arm64/Kconfig                            | 11 +++
+>  arch/arm64/include/asm/cpucaps.h              |  2 +
+>  arch/arm64/include/asm/cpufeature.h           |  6 ++
+>  arch/arm64/kernel/cpufeature.c                | 76 +++++++++++++++++++
+>  arch/arm64/kernel/pi/idreg-override.c         |  2 +
+>  arch/arm64/tools/cpucaps                      |  1 +
+>  7 files changed, 101 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index fb8752b42ec8..3e4cc917a07e 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -453,6 +453,9 @@
+>  	arm64.no32bit_el0 [ARM64] Unconditionally disable the execution of
+>  			32 bit applications.
+>  
+> +	arm64.nobbml2	[ARM64] Unconditionally disable Break-Before-Make Level
+> +			2 support
+> +
+>  	arm64.nobti	[ARM64] Unconditionally disable Branch Target
+>  			Identification support
+>  
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 940343beb3d4..49deda2b22ae 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -2057,6 +2057,17 @@ config ARM64_TLB_RANGE
+>  	  The feature introduces new assembly instructions, and they were
+>  	  support when binutils >= 2.30.
+>  
+> +config ARM64_BBML2_NOABORT
+> +	bool "Enable support for Break-Before-Make Level 2 detection and usage"
+> +	default y
+> +	help
+> +	  FEAT_BBM provides detection of support levels for break-before-make
+> +	  sequences. If BBM level 2 is supported, some TLB maintenance requirements
+> +	  can be relaxed to improve performance. We additonally require the
+> +	  property that the implementation cannot ever raise TLB Conflict Aborts.
+> +	  Selecting N causes the kernel to fallback to BBM level 0 behaviour
+> +	  even if the system supports BBM level 2.
+> +
+>  endmenu # "ARMv8.4 architectural features"
+>  
+>  menu "ARMv8.5 architectural features"
+> diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+> index 0b5ca6e0eb09..2d6db33d4e45 100644
+> --- a/arch/arm64/include/asm/cpucaps.h
+> +++ b/arch/arm64/include/asm/cpucaps.h
+> @@ -23,6 +23,8 @@ cpucap_is_possible(const unsigned int cap)
+>  		return IS_ENABLED(CONFIG_ARM64_PAN);
+>  	case ARM64_HAS_EPAN:
+>  		return IS_ENABLED(CONFIG_ARM64_EPAN);
+> +	case ARM64_HAS_BBML2_NOABORT:
+> +		return IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT);
+>  	case ARM64_SVE:
+>  		return IS_ENABLED(CONFIG_ARM64_SVE);
+>  	case ARM64_SME:
+> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+> index e0e4478f5fb5..7f5b220dacde 100644
+> --- a/arch/arm64/include/asm/cpufeature.h
+> +++ b/arch/arm64/include/asm/cpufeature.h
+> @@ -18,6 +18,7 @@
+>  #define ARM64_SW_FEATURE_OVERRIDE_NOKASLR	0
+>  #define ARM64_SW_FEATURE_OVERRIDE_HVHE		4
+>  #define ARM64_SW_FEATURE_OVERRIDE_RODATA_OFF	8
+> +#define ARM64_SW_FEATURE_OVERRIDE_NOBBML2	12
+>  
+>  #ifndef __ASSEMBLY__
+>  
+> @@ -866,6 +867,11 @@ static __always_inline bool system_supports_mpam_hcr(void)
+>  	return alternative_has_cap_unlikely(ARM64_MPAM_HCR);
+>  }
+>  
+> +static inline bool system_supports_bbml2_noabort(void)
+> +{
+> +	return alternative_has_cap_unlikely(ARM64_HAS_BBML2_NOABORT);
+> +}
+> +
+>  int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
+>  bool try_emulate_mrs(struct pt_regs *regs, u32 isn);
+>  
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index d561cf3b8ac7..b936e0805161 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -2176,6 +2176,76 @@ static bool hvhe_possible(const struct arm64_cpu_capabilities *entry,
+>  	return arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_HVHE);
+>  }
+>  
+> +static inline bool bbml2_possible(void)
+> +{
+> +	return !arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_NOBBML2);
 
-SGkgSWRvIFNjaGltbWVsLA0KDQpPbiAyMDI1LzMvMTMgMjM6MjUsIElkbyBTY2hpbW1lbCB3
-cm90ZToNCj4gSSB3b3VsZCBsaWtlIHRvIGdldCBhIHdhcm5pbmcgaWYgJ2NodW5rX2NvdW50
-JyBpcyBsYXJnZXIgdGhhbg0KPiAnTUxYU1dfQkxPT01fS0VZX0NIVU5LUycgc2luY2UgaXQg
-c2hvdWxkIG5ldmVyIGhhcHBlbi4NCj4NCj4gSSB3YXMgYWJsZSB0byByZXByb2R1Y2UgdGhl
-IGJ1aWxkIGZhaWx1cmUgYW5kIHRoZSBmb2xsb3dpbmcgcGF0Y2ggc2VlbXMNCj4gdG8gc29s
-dmUgaXQgZm9yIG1lLiBJdCByZW1vdmVzIHRoZSAnbWF4X2NodW5rcycgYXJndW1lbnQgc2lu
-Y2UgaXQncw0KPiBhbHdheXMgJ01MWFNXX0JMT09NX0tFWV9DSFVOS1MnICgzKSBhbmQgdmVy
-aWZpZXMgdGhhdCB0aGUgbnVtYmVyIG9mDQo+IGNodW5rcyB0aGF0IHdhcyBjYWxjdWxhdGVk
-IGlzIG5ldmVyIGdyZWF0ZXIgdGhhbiBpdC4NCj4NCj4gV2FuZ1l1bGksIGNhbiB5b3UgcGxl
-YXNlIHRlc3QgaXQ/DQoNCk15IHRlc3RzIHN0aWxsIHNob3cgdGhlIHNhbWUgY29tcGlsYXRp
-b24gZmFpbGluZy4NCg0KSW5kZWVkLCBJIGhhdmUgYWxyZWFkeSB0cmllZCBzaW1pbGFyIGZp
-eGVzIGR1cmluZyBteSBpbnZlc3RpZ2F0aW9uLCBidXQgDQp0byBubyBhdmFpbC4NCg0KPiBB
-bHNvLCBpZiB5b3Ugd2FudCBpdCBpbiBuZXQuZ2l0IChhcyBvcHBvc2VkIHRvIG5ldC1uZXh0
-LmdpdCksIHRoZW4gaXQNCj4gbmVlZHMgYSBGaXhlcyB0YWc6DQo+DQo+IEZpeGVzOiA3NTg1
-Y2FjZGI5NzggKCJtbHhzdzogc3BlY3RydW1fYWNsOiBBZGQgQmxvb20gZmlsdGVyIGhhbmRs
-aW5nIikNCk9LDQo+DQo+IEFuZCBJIGRvbid0IHRoaW5rIHdlIG5lZWQgcGF0Y2ggIzIuDQpX
-aGlsZSAjMiBpcyBhZG1pdHRlZGx5IGEgc2Vjb25kYXJ5IG1vZGlmaWNhdGlvbiBjb21wYXJl
-ZCB0byAjMSwgc2hvdWxkIA0KeW91IGJlIGFncmVlYWJsZSwgSSBiZWxpZXZlIGl0J3Mgc3Rp
-bGwgcHJlZmVyYWJsZSB0byBjb21iaW5lICMyIHdpdGggIzEgDQppbnN0ZWFkIG9mIG91dHJp
-Z2h0IGRpc2NhcmRpbmcgIzIuDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhl
-cm5ldC9tZWxsYW5veC9tbHhzdy9zcGVjdHJ1bV9hY2xfYmxvb21fZmlsdGVyLmMgYi9kcml2
-ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHhzdy9zcGVjdHJ1bV9hY2xfYmxvb21fZmls
-dGVyLmMNCj4gaW5kZXggYTU0ZWVkYjY5YTNmLi5hMWFiNWIwOWE2YzUgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seHN3L3NwZWN0cnVtX2FjbF9i
-bG9vbV9maWx0ZXIuYw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9t
-bHhzdy9zcGVjdHJ1bV9hY2xfYmxvb21fZmlsdGVyLmMNCj4gQEAgLTIzMSw3ICsyMzEsNyBA
-QCBzdGF0aWMgdTE2IG1seHN3X3NwMl9hY2xfYmZfY3JjKGNvbnN0IHU4ICpidWZmZXIsIHNp
-emVfdCBsZW4pDQo+ICAgc3RhdGljIHZvaWQNCj4gICBfX21seHN3X3NwX2FjbF9iZl9rZXlf
-ZW5jb2RlKHN0cnVjdCBtbHhzd19zcF9hY2xfYXRjYW1fcmVnaW9uICphcmVnaW9uLA0KPiAg
-IAkJCSAgICAgc3RydWN0IG1seHN3X3NwX2FjbF9hdGNhbV9lbnRyeSAqYWVudHJ5LA0KPiAt
-CQkJICAgICBjaGFyICpvdXRwdXQsIHU4ICpsZW4sIHU4IG1heF9jaHVua3MsIHU4IHBhZF9i
-eXRlcywNCj4gKwkJCSAgICAgY2hhciAqb3V0cHV0LCB1OCAqbGVuLCB1OCBwYWRfYnl0ZXMs
-DQo+ICAgCQkJICAgICB1OCBrZXlfb2Zmc2V0LCB1OCBjaHVua19rZXlfbGVuLCB1OCBjaHVu
-a19sZW4pDQo+ICAgew0KPiAgIAlzdHJ1Y3QgbWx4c3dfYWZrX2tleV9pbmZvICprZXlfaW5m
-byA9IGFyZWdpb24tPnJlZ2lvbi0+a2V5X2luZm87DQo+IEBAIC0yNDEsMTAgKzI0MSwxNCBA
-QCBfX21seHN3X3NwX2FjbF9iZl9rZXlfZW5jb2RlKHN0cnVjdCBtbHhzd19zcF9hY2xfYXRj
-YW1fcmVnaW9uICphcmVnaW9uLA0KPiAgIA0KPiAgIAlibG9ja19jb3VudCA9IG1seHN3X2Fm
-a19rZXlfaW5mb19ibG9ja3NfY291bnRfZ2V0KGtleV9pbmZvKTsNCj4gICAJY2h1bmtfY291
-bnQgPSAxICsgKChibG9ja19jb3VudCAtIDEpID4+IDIpOw0KPiArCWlmIChXQVJOX09OX09O
-Q0UoY2h1bmtfY291bnQgPiBNTFhTV19CTE9PTV9LRVlfQ0hVTktTKSkgew0KPiArCQkqbGVu
-ID0gMDsNCj4gKwkJcmV0dXJuOw0KPiArCX0NCj4gICAJZXJwX3JlZ2lvbl9pZCA9IGNwdV90
-b19iZTE2KGFlbnRyeS0+aHRfa2V5LmVycF9pZCB8DQo+ICAgCQkJCSAgIChhcmVnaW9uLT5y
-ZWdpb24tPmlkIDw8IDQpKTsNCj4gLQlmb3IgKGNodW5rX2luZGV4ID0gbWF4X2NodW5rcyAt
-IGNodW5rX2NvdW50OyBjaHVua19pbmRleCA8IG1heF9jaHVua3M7DQo+IC0JICAgICBjaHVu
-a19pbmRleCsrKSB7DQo+ICsJZm9yIChjaHVua19pbmRleCA9IE1MWFNXX0JMT09NX0tFWV9D
-SFVOS1MgLSBjaHVua19jb3VudDsNCj4gKwkgICAgIGNodW5rX2luZGV4IDwgTUxYU1dfQkxP
-T01fS0VZX0NIVU5LUzsgY2h1bmtfaW5kZXgrKykgew0KPiAgIAkJbWVtc2V0KGNodW5rLCAw
-LCBwYWRfYnl0ZXMpOw0KPiAgIAkJbWVtY3B5KGNodW5rICsgcGFkX2J5dGVzLCAmZXJwX3Jl
-Z2lvbl9pZCwNCj4gICAJCSAgICAgICBzaXplb2YoZXJwX3JlZ2lvbl9pZCkpOw0KPiBAQCAt
-MjYyLDcgKzI2Niw2IEBAIG1seHN3X3NwMl9hY2xfYmZfa2V5X2VuY29kZShzdHJ1Y3QgbWx4
-c3dfc3BfYWNsX2F0Y2FtX3JlZ2lvbiAqYXJlZ2lvbiwNCj4gICAJCQkgICAgY2hhciAqb3V0
-cHV0LCB1OCAqbGVuKQ0KPiAgIHsNCj4gICAJX19tbHhzd19zcF9hY2xfYmZfa2V5X2VuY29k
-ZShhcmVnaW9uLCBhZW50cnksIG91dHB1dCwgbGVuLA0KPiAtCQkJCSAgICAgTUxYU1dfQkxP
-T01fS0VZX0NIVU5LUywNCj4gICAJCQkJICAgICBNTFhTV19TUDJfQkxPT01fQ0hVTktfUEFE
-X0JZVEVTLA0KPiAgIAkJCQkgICAgIE1MWFNXX1NQMl9CTE9PTV9DSFVOS19LRVlfT0ZGU0VU
-LA0KPiAgIAkJCQkgICAgIE1MWFNXX1NQMl9CTE9PTV9DSFVOS19LRVlfQllURVMsDQo+IEBA
-IC0zNzksNyArMzgyLDYgQEAgbWx4c3dfc3A0X2FjbF9iZl9rZXlfZW5jb2RlKHN0cnVjdCBt
-bHhzd19zcF9hY2xfYXRjYW1fcmVnaW9uICphcmVnaW9uLA0KPiAgIAl1OCBjaHVua19jb3Vu
-dCA9IDEgKyAoKGJsb2NrX2NvdW50IC0gMSkgPj4gMik7DQo+ICAgDQo+ICAgCV9fbWx4c3df
-c3BfYWNsX2JmX2tleV9lbmNvZGUoYXJlZ2lvbiwgYWVudHJ5LCBvdXRwdXQsIGxlbiwNCj4g
-LQkJCQkgICAgIE1MWFNXX0JMT09NX0tFWV9DSFVOS1MsDQo+ICAgCQkJCSAgICAgTUxYU1df
-U1A0X0JMT09NX0NIVU5LX1BBRF9CWVRFUywNCj4gICAJCQkJICAgICBNTFhTV19TUDRfQkxP
-T01fQ0hVTktfS0VZX09GRlNFVCwNCj4gICAJCQkJICAgICBNTFhTV19TUDRfQkxPT01fQ0hV
-TktfS0VZX0JZVEVTLA0KPg0KLS0gDQpXYW5nWXVsaQ0K
---------------U72oK4dhadUK2E63rCcS0hmG
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+If you're going to keep this helper, I think it really needs to be:
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF=
--8">
-  </head>
-  <body>
-    <p>Hi Ido Schimmel,</p>
-    <div class=3D"moz-cite-prefix">On 2025/3/13 23:25, Ido Schimmel wrote=
-:<span
-      style=3D"white-space: pre-wrap">
-</span></div>
-    <blockquote type=3D"cite" cite=3D"mid:Z9L43xpibqHZ07vW@shredder">
-      <pre wrap=3D"" class=3D"moz-quote-pre">I would like to get a warnin=
-g if 'chunk_count' is larger than
-'MLXSW_BLOOM_KEY_CHUNKS' since it should never happen.
+return IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT) &&
+       !arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_NOBBML2);
 
-I was able to reproduce the build failure and the following patch seems
-to solve it for me. It removes the 'max_chunks' argument since it's
-always 'MLXSW_BLOOM_KEY_CHUNKS' (3) and verifies that the number of
-chunks that was calculated is never greater than it.
+Then you would simplify the caller to remove it's own
+IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT) check.
 
-WangYuli, can you please test it?</pre>
-    </blockquote>
-    <p>My tests still show the same compilation failing.</p>
-    <p>Indeed, I have already tried similar fixes during my
-      investigation, but to no avail.</p>
-    <blockquote type=3D"cite" cite=3D"mid:Z9L43xpibqHZ07vW@shredder">
-      <pre wrap=3D"" class=3D"moz-quote-pre">
-Also, if you want it in net.git (as opposed to net-next.git), then it
-needs a Fixes tag:
+But personally I would remove the helper and just fold the test into
+has_bbml2_noabort().
 
-Fixes: 7585cacdb978 ("mlxsw: spectrum_acl: Add Bloom filter handling")</p=
-re>
-    </blockquote>
-    OK
-    <blockquote type=3D"cite" cite=3D"mid:Z9L43xpibqHZ07vW@shredder">
-      <pre wrap=3D"" class=3D"moz-quote-pre">
+Thanks,
+Ryan
 
-And I don't think we need patch #2.</pre>
-    </blockquote>
-    While #2 is admittedly a secondary modification compared to #1,
-    should you be agreeable, I believe it's still preferable to combine
-    #2 with #1 instead of outright discarding #2.
-    <blockquote type=3D"cite" cite=3D"mid:Z9L43xpibqHZ07vW@shredder">
-      <pre wrap=3D"" class=3D"moz-quote-pre">
+> +}
+> +
+> +static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
+> +{
+> +	/* We want to allow usage of bbml2 in as wide a range of kernel contexts
+> +	 * as possible. This list is therefore an allow-list of known-good
+> +	 * implementations that both support bbml2 and additionally, fulfill the
+> +	 * extra constraint of never generating TLB conflict aborts when using
+> +	 * the relaxed bbml2 semantics (such aborts make use of bbml2 in certain
+> +	 * kernel contexts difficult to prove safe against recursive aborts).
+> +	 *
+> +	 * Note that implementations can only be considered "known-good" if their
+> +	 * implementors attest to the fact that the implementation never raises
+> +	 * TLBI conflict aborts for bbml2 mapping granularity changes.
+> +	 */
+> +	static const struct midr_range supports_bbml2_noabort_list[] = {
+> +		MIDR_REV_RANGE(MIDR_CORTEX_X4, 0, 3, 0xf),
+> +		MIDR_REV_RANGE(MIDR_NEOVERSE_V3, 0, 2, 0xf),
+> +		{}
+> +	};
+> +
+> +	return is_midr_in_range_list(cpu_midr, supports_bbml2_noabort_list);
+> +}
+> +
+> +static inline unsigned int __cpu_read_midr(int cpu)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filte=
-r.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c
-index a54eedb69a3f..a1ab5b09a6c5 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c
-@@ -231,7 +231,7 @@ static u16 mlxsw_sp2_acl_bf_crc(const u8 *buffer, siz=
-e_t len)
- static void
- __mlxsw_sp_acl_bf_key_encode(struct mlxsw_sp_acl_atcam_region *aregion,
- 			     struct mlxsw_sp_acl_atcam_entry *aentry,
--			     char *output, u8 *len, u8 max_chunks, u8 pad_bytes,
-+			     char *output, u8 *len, u8 pad_bytes,
- 			     u8 key_offset, u8 chunk_key_len, u8 chunk_len)
- {
- 	struct mlxsw_afk_key_info *key_info =3D aregion-&gt;region-&gt;key_info=
-;
-@@ -241,10 +241,14 @@ __mlxsw_sp_acl_bf_key_encode(struct mlxsw_sp_acl_at=
-cam_region *aregion,
-=20
- 	block_count =3D mlxsw_afk_key_info_blocks_count_get(key_info);
- 	chunk_count =3D 1 + ((block_count - 1) &gt;&gt; 2);
-+	if (WARN_ON_ONCE(chunk_count &gt; MLXSW_BLOOM_KEY_CHUNKS)) {
-+		*len =3D 0;
-+		return;
-+	}
- 	erp_region_id =3D cpu_to_be16(aentry-&gt;ht_key.erp_id |
- 				   (aregion-&gt;region-&gt;id &lt;&lt; 4));
--	for (chunk_index =3D max_chunks - chunk_count; chunk_index &lt; max_chu=
-nks;
--	     chunk_index++) {
-+	for (chunk_index =3D MLXSW_BLOOM_KEY_CHUNKS - chunk_count;
-+	     chunk_index &lt; MLXSW_BLOOM_KEY_CHUNKS; chunk_index++) {
- 		memset(chunk, 0, pad_bytes);
- 		memcpy(chunk + pad_bytes, &amp;erp_region_id,
- 		       sizeof(erp_region_id));
-@@ -262,7 +266,6 @@ mlxsw_sp2_acl_bf_key_encode(struct mlxsw_sp_acl_atcam=
-_region *aregion,
- 			    char *output, u8 *len)
- {
- 	__mlxsw_sp_acl_bf_key_encode(aregion, aentry, output, len,
--				     MLXSW_BLOOM_KEY_CHUNKS,
- 				     MLXSW_SP2_BLOOM_CHUNK_PAD_BYTES,
- 				     MLXSW_SP2_BLOOM_CHUNK_KEY_OFFSET,
- 				     MLXSW_SP2_BLOOM_CHUNK_KEY_BYTES,
-@@ -379,7 +382,6 @@ mlxsw_sp4_acl_bf_key_encode(struct mlxsw_sp_acl_atcam=
-_region *aregion,
- 	u8 chunk_count =3D 1 + ((block_count - 1) &gt;&gt; 2);
-=20
- 	__mlxsw_sp_acl_bf_key_encode(aregion, aentry, output, len,
--				     MLXSW_BLOOM_KEY_CHUNKS,
- 				     MLXSW_SP4_BLOOM_CHUNK_PAD_BYTES,
- 				     MLXSW_SP4_BLOOM_CHUNK_KEY_OFFSET,
- 				     MLXSW_SP4_BLOOM_CHUNK_KEY_BYTES,
+nit: why the double underscrore prefix?
 
-</pre>
-    </blockquote>
-    <div class=3D"moz-signature">-- <br>
-      <meta http-equiv=3D"content-type" content=3D"text/html; charset=3DU=
-TF-8">
-      WangYuli</div>
-  </body>
-</html>
-
---------------U72oK4dhadUK2E63rCcS0hmG--
-
---------------SdEWfqeqxLIUntY2Kr3is73x
-Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
-P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
-FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
-AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
-bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
-AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
-GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
-7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
-/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
-=3DBlkq
------END PGP PUBLIC KEY BLOCK-----
-
---------------SdEWfqeqxLIUntY2Kr3is73x--
-
---------------zkLbIZBFofBxPl5MmnWbCdGZ--
-
---------------CZDE3t3J09XbRT611EWB2l2u
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ9MDggUDAAAAAAAKCRDF2h8wRvQL7oRP
-AP9aJyF72tDQlCSxErenGTOZri/lHe+9QvALTa50c/urTAD+KBXDQfp4TRgU+NPkPopoAXvBUKON
-g5rwczc5knm9dwI=
-=Er4c
------END PGP SIGNATURE-----
-
---------------CZDE3t3J09XbRT611EWB2l2u--
+> +{
+> +	WARN_ON_ONCE(!cpu_online(cpu));
+> +
+> +	return per_cpu(cpu_data, cpu).reg_midr;
+> +}
+> +
+> +static bool has_bbml2_noabort(const struct arm64_cpu_capabilities *caps, int scope)
+> +{
+> +	if (!IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT))
+> +		return false;
+> +
+> +	if (!bbml2_possible())
+> +		return false;
+> +
+> +	if (scope & SCOPE_SYSTEM) {
+> +		int cpu;
+> +
+> +		/* We are a boot CPU, and must verify that all enumerated boot
+> +		 * CPUs have MIDR values within our allowlist. Otherwise, we do
+> +		 * not allow the BBML2 feature to avoid potential faults when
+> +		 * the insufficient CPUs access memory regions using BBML2
+> +		 * semantics.
+> +		 */
+> +		for_each_online_cpu(cpu) {
+> +			if (!cpu_has_bbml2_noabort(__cpu_read_midr(cpu)))
+> +				return false;
+> +		}
+> +
+> +		return true;
+> +	} else if (scope & SCOPE_LOCAL_CPU) {
+> +		/* We are a hot-plugged CPU, so only need to check our MIDR.
+> +		 * If we have the correct MIDR, but the kernel booted on an
+> +		 * insufficient CPU, we will not use BBML2 (this is safe). If
+> +		 * we have an incorrect MIDR, but the kernel booted on a
+> +		 * sufficient CPU, we will not bring up this CPU.
+> +		 */
+> +		return cpu_has_bbml2_noabort(read_cpuid_id());
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  #ifdef CONFIG_ARM64_PAN
+>  static void cpu_enable_pan(const struct arm64_cpu_capabilities *__unused)
+>  {
+> @@ -2926,6 +2996,12 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>  		.matches = has_cpuid_feature,
+>  		ARM64_CPUID_FIELDS(ID_AA64MMFR2_EL1, EVT, IMP)
+>  	},
+> +	{
+> +		.desc = "BBM Level 2 without conflict abort",
+> +		.capability = ARM64_HAS_BBML2_NOABORT,
+> +		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
+> +		.matches = has_bbml2_noabort,
+> +	},
+>  	{
+>  		.desc = "52-bit Virtual Addressing for KVM (LPA2)",
+>  		.capability = ARM64_HAS_LPA2,
+> diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi/idreg-override.c
+> index c6b185b885f7..9728faa10390 100644
+> --- a/arch/arm64/kernel/pi/idreg-override.c
+> +++ b/arch/arm64/kernel/pi/idreg-override.c
+> @@ -209,6 +209,7 @@ static const struct ftr_set_desc sw_features __prel64_initconst = {
+>  		FIELD("nokaslr", ARM64_SW_FEATURE_OVERRIDE_NOKASLR, NULL),
+>  		FIELD("hvhe", ARM64_SW_FEATURE_OVERRIDE_HVHE, hvhe_filter),
+>  		FIELD("rodataoff", ARM64_SW_FEATURE_OVERRIDE_RODATA_OFF, NULL),
+> +		FIELD("nobbml2", ARM64_SW_FEATURE_OVERRIDE_NOBBML2, NULL),
+>  		{}
+>  	},
+>  };
+> @@ -246,6 +247,7 @@ static const struct {
+>  	{ "rodata=off",			"arm64_sw.rodataoff=1" },
+>  	{ "arm64.nolva",		"id_aa64mmfr2.varange=0" },
+>  	{ "arm64.no32bit_el0",		"id_aa64pfr0.el0=1" },
+> +	{ "arm64.nobbml2",		"arm64_sw.nobbml2=1" },
+>  };
+>  
+>  static int __init parse_hexdigit(const char *p, u64 *v)
+> diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+> index 1e65f2fb45bd..b03a375e5507 100644
+> --- a/arch/arm64/tools/cpucaps
+> +++ b/arch/arm64/tools/cpucaps
+> @@ -14,6 +14,7 @@ HAS_ADDRESS_AUTH_ARCH_QARMA5
+>  HAS_ADDRESS_AUTH_IMP_DEF
+>  HAS_AMU_EXTN
+>  HAS_ARMv8_4_TTL
+> +HAS_BBML2_NOABORT
+>  HAS_CACHE_DIC
+>  HAS_CACHE_IDC
+>  HAS_CNP
 
