@@ -1,57 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0A32690C9;
-	Thu, 13 Mar 2025 16:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B37E26A0A2
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741882486; cv=none; b=QhdeMeEyvA6skdePNpygzP87u/oGzEB+xPSc7Sf4aABAkMQue+raWVfGD6GKLauX9tRaJ3xM2YPP8yG8B5o5sRVXoSNhusX+N7NPy//QMDldkbXAAho1WuUKj2atYprbjKBsBC61MVx+2QJ/J7FdK1iLLHAZlQEyg2SQf2r4zTE=
+	t=1741882488; cv=none; b=VtUjvFzVTG70jEX6IYr8+1vzyiLnkpENpMk4oo6QutucNJUg/SFI6h8oalNegG00yTvXrKZhysJKgovALY/XjpP/38F80GOPYqbwhP7fWqfMCnQtlBwpPeVmjxYsW1Z6KyHcGVf0I69u2gsTT7GwtSoCyXsjfuCpETTOAT5Rdcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741882486; c=relaxed/simple;
-	bh=lIHNdIK6hPFeIvlmwhxstmnP1ls57wGiXfAx3JVAMPs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GFFPUlp/PPMQOjiGWPEqI89Irb9t/xd0IY3zFH1pDiSUlsi2zjudQWUJ1MAE4Yf+gdkYqodtpTydGdMIslh5CCxWKYcyMjs0h2axRWwN8h+YsGZQItRyuMiZS9i7x+8DqYNlt6631Fq+ThGkjnyzaP5s221Vm0DZwFgrLI/NbZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QBzVQKD6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741882488; c=relaxed/simple;
+	bh=9N/P0gsrSaPyvMxnl5goMi6Yiohr0Th43iTaeqFq6K0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=of+4/t9lpRAfs9AHQ7+Y8AUqT8vksMmqiQuHTUH+KsT8vCp9H7J3oKxDAklGugpvN7NB8GIMsiHodV5E4X1T03WRtL/8WtNZzrTkXeRUmYfhgZ5ceWHN4yrtyK4PWhH72ECdXNaZ6bmaLItv4UNP4BFNuXXx8x+YDSPT7V02IbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ELGyxWmk; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBzVQKD6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 344ECC4CEEB;
-	Thu, 13 Mar 2025 16:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741882485;
-	bh=lIHNdIK6hPFeIvlmwhxstmnP1ls57wGiXfAx3JVAMPs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QBzVQKD6Svv3aG0hcCqbk3fiNaZGQyvt8d3RC0Q1h2bDF3ukGOcLHRbjpszA2HMJY
-	 xYCvzlubxxkJzthlxcAYaXFaBi429vOLx6+lkZotUBR0Jo2dl4L96LsmvkEh0bOcHd
-	 ditNl2D+0gqwRdtF6btsu11+kdTvr/HlnGhewLkOBYHPBCeH2oN2tIRtDORPG8a4NE
-	 sjbXXu5USkuTe9uEwlTNAq4q9nhsZRBxJ2hGdNUsdot9uirwktObCpW+/ZaabXKYAV
-	 HxaQ15diI4jWCcUhEAkKNaSygEXdWsRda2dFuiDYGkXlASesP1qFQzWKpawFUDrRL4
-	 pKLeu/wbKDDbg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Philipp Stanner <pstanner@redhat.com>
-Cc: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Philipp Stanner <phasta@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Henry Chen <chenx97@aosc.io>
-Subject: [PATCH net-next 2/3] stmmac: Remove pcim_* functions for driver detach
-Date: Thu, 13 Mar 2025 17:14:22 +0100
-Message-ID: <20250313161422.97174-4-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250313161422.97174-2-phasta@kernel.org>
-References: <20250313161422.97174-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELGyxWmk"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3913d45a148so986963f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741882485; x=1742487285; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/7iciAKS3QF0Rjid5oBOozUpBYB/1kUNlh/Uit+k5yc=;
+        b=ELGyxWmkxVALpbyU7nKNwTge7w/Smn0jihCf9a30Hd1OsoRT4WmNOwuMNeEXRI7iNH
+         wD79nb0SaeSwugWDTRdDY4FeaUN8JVq1Df1Hs6vUizRq5fzDzMhqmR3ZxqrGUwOfSSAA
+         rKiFXTp0Naspdy7YHEqfWOjCgTfUQwwxy2BRud6kFbNzBaC+G9uTatUF8u9UN+IR6lWQ
+         U5+WoT2sQuFPdUVj61YigLXqNn5zeH4UrOd6jjP10IDDmXYjgSdV7ijl+boV/M36YCr3
+         xjke670LHHyGEPQszKRIjIhn8kVqW7bYXxEOkGyDhyy2oWRBCO8e3Z+QRAg2eQJCSW/X
+         B6IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741882485; x=1742487285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/7iciAKS3QF0Rjid5oBOozUpBYB/1kUNlh/Uit+k5yc=;
+        b=qeGSPXpclHIRG5BrKOEAQNAByxbsh8M0JuutIRRh8Xi5my3jQhvxUstZZpWIHRCd0s
+         M2lsqHfyQTixaelUYS6MjF05GUidrisT8MiN/t9kH62/ShSWyZZrLcL7eJ4zu7U1BBp1
+         u4tHHKFehweQu2V4PblugcyTm07ToqFYfYFNgdHOQrhIKROmctRzAq24b3GQeNfu7EEY
+         y4WGMnii6ryHFbmFjz/ryIyiPFI+To5mQTWteHU3GITQ3nsjk0+sAxtBCb6lIgqhEfmY
+         8IOuk4vnAp2TZkEWQK7NcIzJXuiwMSQkognmw9do0vClo+xazrIR+rem/PSeB0ZMTKVs
+         NCbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlwiQ0C3dhvuCvZfC/N3y7AgXC1b/1WLTvrXqLGozRNyca7+zA55HZJ9iy5g+cI2CcFuNOxNJwq9m3dUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8tH4Z1kJLXCdtjm8A+2gBKQcQAqsP/UVahmYkOrehkP8QvdYj
+	5GqWIV7rDlwKEUxalYIZ6R5gVLYM2DJgG3hDIXpzl2CVx8VBQBrF
+X-Gm-Gg: ASbGncvjWELU2EERVYVe8/dC+0YNekQYfzDFpMwpLhSHWfHdduU3JxMg5rW6ugbMhxH
+	IpXTPLDjR8KO8+ypgYb7VXUV48P5XZZ357GP/pIYssICtqIavsUawC81MtwDdvCpUnafR7+3Cxr
+	m10xyreMLa+1sa+vUdAA7DC4Ou7oDWPkt9W5IunyYzL17r1+YbkO1Nd0dE1TZW4AJV4wh6Wc+dy
+	95SZ9l56ei4OxOpM7BKV7o2a4rlyagdroX8spZoz3TLmzuKW3qUNGjrToC6EKeRnuvAVoBScSTL
+	lsXqoWQdpjcaKjt3e2bKULDqrnLjn6XmBYhLN+k4bxxL+g==
+X-Google-Smtp-Source: AGHT+IHXAw3BfWqOXz0Wo0hoZ6qISw2lxtxABE9KJ5Emvwop5XDdhFITpSqR7vJSKMaMzhuVEZocjg==
+X-Received: by 2002:a5d:6c63:0:b0:390:f6aa:4e7c with SMTP id ffacd0b85a97d-396c210606fmr178125f8f.28.1741882485043;
+        Thu, 13 Mar 2025 09:14:45 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:41ee:4f4e:e8e9:935f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975b83sm2664465f8f.52.2025.03.13.09.14.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 09:14:44 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: christian.koenig@amd.com,
+	ray.huang@amd.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	thomas.hellstrom@linux.intel.com,
+	Arunpravin.PaneerSelvam@amd.com,
+	karolina.stolarek@intel.com,
+	jeff.johnson@oss.qualcomm.com,
+	bigeasy@linutronix.de
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/ttm/tests: fix incorrect assert in ttm_bo_unreserve_bulk()
+Date: Thu, 13 Mar 2025 16:14:24 +0000
+Message-Id: <20250313161424.10688-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,74 +82,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Functions prefixed with "pcim_" are managed devres functions which
-perform automatic cleanup once the driver unloads. It is, thus, not
-necessary to call any cleanup functions in remove() callbacks.
+In the ttm_bo_unreserve_bulk() test function, resv is allocated using
+kunit_kzalloc(), but the subsequent assertion mistakenly verifies the
+ttm_dev pointer instead of the resv pointer.
 
-Remove the pcim_ cleanup function calls in the remove() callbacks.
+Fix the assertion to properly verify the resv pointer.
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
-Tested-by: Henry Chen <chenx97@aosc.io>
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c |  8 --------
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c     | 12 +-----------
- 2 files changed, 1 insertion(+), 19 deletions(-)
+ drivers/gpu/drm/ttm/tests/ttm_bo_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index e2959ac5c1ca..5d7746d787ac 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -603,7 +603,6 @@ static void loongson_dwmac_remove(struct pci_dev *pdev)
- 	struct net_device *ndev = dev_get_drvdata(&pdev->dev);
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	struct loongson_data *ld;
--	int i;
+diff --git a/drivers/gpu/drm/ttm/tests/ttm_bo_test.c b/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
+index f8f20d2f6174..e08e5a138420 100644
+--- a/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
++++ b/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
+@@ -340,7 +340,7 @@ static void ttm_bo_unreserve_bulk(struct kunit *test)
+ 	KUNIT_ASSERT_NOT_NULL(test, ttm_dev);
  
- 	ld = priv->plat->bsp_priv;
- 	stmmac_dvr_remove(&pdev->dev);
-@@ -614,13 +613,6 @@ static void loongson_dwmac_remove(struct pci_dev *pdev)
- 	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN)
- 		loongson_dwmac_msi_clear(pdev);
+ 	resv = kunit_kzalloc(test, sizeof(*resv), GFP_KERNEL);
+-	KUNIT_ASSERT_NOT_NULL(test, ttm_dev);
++	KUNIT_ASSERT_NOT_NULL(test, resv);
  
--	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
--		if (pci_resource_len(pdev, i) == 0)
--			continue;
--		pcim_iounmap_regions(pdev, BIT(i));
--		break;
--	}
--
- 	pci_disable_device(pdev);
- }
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 352b01678c22..1637c8139b9d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -226,21 +226,11 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
-  * stmmac_pci_remove
-  *
-  * @pdev: platform device pointer
-- * Description: this function calls the main to free the net resources
-- * and releases the PCI resources.
-+ * Description: this function calls the main to free the net resources.
-  */
- static void stmmac_pci_remove(struct pci_dev *pdev)
- {
--	int i;
--
- 	stmmac_dvr_remove(&pdev->dev);
--
--	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
--		if (pci_resource_len(pdev, i) == 0)
--			continue;
--		pcim_iounmap_regions(pdev, BIT(i));
--		break;
--	}
- }
- 
- static int __maybe_unused stmmac_pci_suspend(struct device *dev)
+ 	err = ttm_device_kunit_init(priv, ttm_dev, false, false);
+ 	KUNIT_ASSERT_EQ(test, err, 0);
 -- 
-2.48.1
+2.39.5
 
