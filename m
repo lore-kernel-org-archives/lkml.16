@@ -1,137 +1,165 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5614616DC28
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737B81D516A
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741887301; cv=none; b=NdQtPEuGl0NuJb5APdTfLu+xOjtqZFI9hailEVnaQAaK/i/PlwqkHgc3mEUrHZz+bd92tRhXEck8tJjMYg9CYQtyGiW5jAtiU5SWpsb5GWWS6ffJ/KlI1Q8xpTSEQepY3K+ZH1215DTEfGGJzXIQh/ssZGfBUk8pkAce5NFPk8c=
+	t=1741887304; cv=none; b=oYOYanySgLHKDoZ6IG2X8lK5mj+eSZy4+mpWgiXgAM6NIzfHhxV4WTmJtT8c6JVqn1LF6GLyDBCCt87lu3fVGIwxBJYnrMnQjM4JBuEnK3MaPWlleZUCAIxZrJ0Ysb/lvcrbueJ2VP6FlHH9IzDT9cuwFIjAxbsNJj1/Ew6mdJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741887301; c=relaxed/simple;
-	bh=teNW5gIZaqNNqnPivdYVGhV0iuN3q+s0pOAIQRfvUdI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FBiP+5IYp7ZBNTAhLj7gWpZ1PLBzDMvAUsjfjcFVjfva3EEQ9+BMEtES+FbJtXNSUKRDOe+uija/f7FABvb9SL2U8VbXk5+177P15gD4chzIi5AvKXVPGU//B2e49Hlki37vDiSsZmYJL9g4MXpP4sPIxQBid9loCfDtuus7DNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IaB2WuN2; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741887304; c=relaxed/simple;
+	bh=ofk0dyiGJGUPbX7KRZbBwqReFP1t2mJ0ikjz0JZiPHg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HFoGbTrhNjgO8yaA2KdRNTIF1E17SEoiw5Y2lGOc+tIfwCVeouf0BdXvdHzlZzFVInfugQvv9pS9YXAZ5uIAnAu+OkyOTS7E+zDYhBHFaaDjmrqCm4ncBbb1PDWZYwNe6tQs9rQkldTZ1p80Py/jMWkMfVSHY/2IlbRJOnlFW94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yYZgIEcS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=npLhIGwW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yYZgIEcS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=npLhIGwW; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IaB2WuN2"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfe574976so8244565e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:34:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741887298; x=1742492098; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oXkYzz2Ho7HoWYUA45E8jVGK6oEmHJXqvRS4IbzYytA=;
-        b=IaB2WuN2w7gYjcHt1Uwp/c0H3IvM4cm2xe9st2dygFqSTtb8QhJfAaoI4J5/TzekFD
-         8yyo8Gx4O7veB5CKFARZ1cppceVT3zLRZgWEwkAs/vT7sfLq5SKH+wKslk+bxGewCx7M
-         tFmFfB2LA9ujzxcCdQbS/wJuGWs1GL4cetnngLE/BVrdZ6T0tqjSar9DQCHhdFDHH5xE
-         Jv3t7J/7bCs36+OchcNEOnn0LJFw2sJsW/AK4Lhf9CK7aOf0HBVicIxlqxwyL6Q0LNCu
-         bT1UnNAxQ9omQ4NKBlzSaLU/sp/JuD749GEOsa5czywnrJvc/ksKqieZcbiwf4zHP0z6
-         3gOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741887298; x=1742492098;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oXkYzz2Ho7HoWYUA45E8jVGK6oEmHJXqvRS4IbzYytA=;
-        b=coduOLWLFiURo5JkSmf6iqS4PFvVTVvKMhbubJUGdB6nVg631rHGe/rt6oGjca50xj
-         xrK99rxDW3Y6ubHCgXSnyAGke91AY9C/5gB8Vk05KwadcX6BXqGbzSBGhFmE93rGgNHZ
-         7ZvrTaKk0ODr7wY7Chs7/uVPmZqlQTofsjM4QQST1YiTLaO/jHmJkcILT8JEhGsgVXcD
-         q0oK1y+ujS96SXOWgZC4onAS631Mh2xIeyM/3jViTE8KfgPaUbLXys7h7mont1NoMtKO
-         SmbDlVfx+7BLVPGVHRF4xFSiXMDRkXTBux4E08DzgjwqK/MGJfnH/XgoOgNS7tGGWcTw
-         8jBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVp/4/ohoZYq8/jcHVJMrkfykozuXtcF0tIJxCikq13DS2ELzMoqCcJRlO6DxXWA/mkjR5kgzgjjo8x7yw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweXbVUgGeFaWs6DhAaKLLs4aYk/ClorBRGA8jQKveiSi6Gq5XD
-	Qjm3zeoyvdMArhyQCQKx557dEFx3WtEW63wAQTeXOYhyKmuiMqiXJYkjumuuL10G8aXwOSpe+5h
-	ZsQ+NlUSS6t7SOd65nLSc/mLhjOro7MM4p9/bxw==
-X-Gm-Gg: ASbGncvJhitFTIo41FVEMU8YH+iWaG5/sBBv8CxB4yjUTUbYbCQlD8LRRbRCdWS1WC6
-	eq5Sky9jxmR1il+cMlVUl7kTDI3XxKZSlA0PPrwRx0GITn6o5MReymaT5TkaNQdfy5q6gsxK83y
-	I0fVKBh8iimvAGHpElOrTPMgPvo75QgrrsxVPIto1IihtLgpJnEkvOfpeEsM5HqfVDM5SOAQ==
-X-Google-Smtp-Source: AGHT+IE1c9T0TY/pjJhjtchTkkrxDWqZJglz/azIkv2TkxGPgH3NolVO9vmQFRaJtQOUi7YI3c4g7vzs00zqUmzqNzw=
-X-Received: by 2002:a5d:5989:0:b0:38d:cf33:31d6 with SMTP id
- ffacd0b85a97d-39263b006c5mr11690959f8f.3.1741887297667; Thu, 13 Mar 2025
- 10:34:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yYZgIEcS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="npLhIGwW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yYZgIEcS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="npLhIGwW"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 98F371F769;
+	Thu, 13 Mar 2025 17:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741887300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=USlxaMFieu/+hsrqsfqIHnzxT/feUUlitxBTpJXrB0A=;
+	b=yYZgIEcSLtOx0ewkStIVSpei4aI/h2rg7Cd2fJABZjV8oAg3gCpga9bLnA9sg8RfF5Uw1D
+	9SUzAzgRzYQ0FKiO413dI2WH0pcK55689D7UXSC7dLVFnazvanUkUJeXvicp1voTykXG60
+	bg5RQoA4OH5wg7Hpu7LCx3YpeEt2nig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741887300;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=USlxaMFieu/+hsrqsfqIHnzxT/feUUlitxBTpJXrB0A=;
+	b=npLhIGwWRHukPgeghFs+Ofeb/dKs1vyAZkY46PpxpBYPkhOjcbfx+RoEC5NDAGrS0P3QVE
+	qgpGSAeoWZNpoyAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741887300; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=USlxaMFieu/+hsrqsfqIHnzxT/feUUlitxBTpJXrB0A=;
+	b=yYZgIEcSLtOx0ewkStIVSpei4aI/h2rg7Cd2fJABZjV8oAg3gCpga9bLnA9sg8RfF5Uw1D
+	9SUzAzgRzYQ0FKiO413dI2WH0pcK55689D7UXSC7dLVFnazvanUkUJeXvicp1voTykXG60
+	bg5RQoA4OH5wg7Hpu7LCx3YpeEt2nig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741887300;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=USlxaMFieu/+hsrqsfqIHnzxT/feUUlitxBTpJXrB0A=;
+	b=npLhIGwWRHukPgeghFs+Ofeb/dKs1vyAZkY46PpxpBYPkhOjcbfx+RoEC5NDAGrS0P3QVE
+	qgpGSAeoWZNpoyAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8847B137BA;
+	Thu, 13 Mar 2025 17:35:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QycUIEQX02cLQwAAD6G6ig
+	(envelope-from <nstange@suse.de>); Thu, 13 Mar 2025 17:35:00 +0000
+From: Nicolai Stange <nstange@suse.de>
+To: Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: Eric Snowberg <eric.snowberg@oracle.com>,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nicolai Stange <nstange@suse.de>
+Subject: [RFC PATCH v1 2/7] ima: always create runtime_measurements sysfs file for ima_hash
+Date: Thu, 13 Mar 2025 18:33:34 +0100
+Message-ID: <20250313173339.3815589-3-nstange@suse.de>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250313173339.3815589-1-nstange@suse.de>
+References: <20250313173339.3815589-1-nstange@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311-wip-obbardc-qcom-defconfig-interconnects-builtin-v1-1-675b6bc57176@linaro.org>
- <CACr-zFC=mPNeeHMp9XnSby+cMQaPWt_3s8iUiCN+EnVPeGad8Q@mail.gmail.com>
- <uljqxwfgl26txrfqvkvzzpj6qurgmwcbuot7gu2u6rwjaqgncb@jeuyi4mexjff>
- <CACr-zFDSFizYmrVN-dV334n1kq17UB9k4FxrV20NNQCQMhzrwg@mail.gmail.com>
- <92dd35a2-d1cc-4f2b-b3a8-5752ec33b0d3@kernel.org> <CACr-zFCYWEFPO8yExp_8hOQdVtC9Zwu1ZOZNksSeyyS6Ht0e9A@mail.gmail.com>
- <Z9HjMyjzE9XlqrEj@x1>
-In-Reply-To: <Z9HjMyjzE9XlqrEj@x1>
-From: Christopher Obbard <christopher.obbard@linaro.org>
-Date: Thu, 13 Mar 2025 17:34:46 +0000
-X-Gm-Features: AQ5f1JrDO9V43KtazVC9qZW1Wz_qdtZmiVsFJZOGkGi6dHNCT7HLwGuh8qsdaME
-Message-ID: <CACr-zFAHGcQtwSz0EF0kt7_PUXxwi3GZY2BmAVedbLjh3+4LhA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm interconnects as built-in
-To: Brian Masney <bmasney@redhat.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-5.30 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[linux.ibm.com,huawei.com,gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Score: -5.30
+X-Spam-Flag: NO
 
-Hi Brian,
+runtime_measurements_<hash-algo> sysfs files are getting created for
+each PCR bank + for SHA-1.
 
-On Wed, 12 Mar 2025 at 19:40, Brian Masney <bmasney@redhat.com> wrote:
->
-> Hi Christopher,
->
-> On Wed, Mar 12, 2025 at 12:10:56PM +0100, Christopher Obbard wrote:
-> > For reference, I am working on updating initramfs generation tools in
-> > Debian/Fedora to include the required interconnect modules. Currently
-> > the interconnect drivers are built as modules in these distros, but
-> > are not included in the initrd. That is where my confusion initially
-> > stemmed from.
->
-> From a Fedora and centos-stream-9/10 perspective, we have dracut
-> updated so that the interconnect modules are included in the initramfs
-> by default.
->
-> https://github.com/dracutdevs/dracut/blob/master/modules.d/90kernel-modules/module-setup.sh#L74
->
-> Let me know if you are seeing a specific issue with the initramfs on
-> Fedora and I can help you.
+Now that runtime_measurements_<hash-algo> sysfs file creation is being
+skipped for unsupported hash algorithms, it will become possible that no
+such file would be provided at all once SHA-1 is made optional in a
+later patch.
 
-Awesome, turns out I am wrong and the interconnect drivers are in fact
-present in the latest nightly Fedora 42 image I am testing:
+Always create the file for the 'ima_hash' algorithm, even if it's not
+associated with any of the PCR banks. As IMA initialization will
+continue to fail if the ima_hash algorithm is not available to the
+kernel, this guarantees that at least one such file will always be
+there.
 
-$ lsinitramfs initramfs-6.14.0-0.rc3.29.fc42.aarch64.img  | grep interconnect
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx-interconnect.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx8mm-interconnect.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx8mn-interconnect.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx8mp-interconnect.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx8mq-interconnect.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/icc-osm-l3.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/icc-smd-rpm.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-msm8916.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-msm8953.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-msm8996.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-qcm2290.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sa8775p.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sc7280.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sc8180x.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sc8280xp.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sdm845.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sdx75.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sm6115.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sm8150.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sm8250.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sm8450.ko.xz
-usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-x1e80100.ko.xz
+Signed-off-by: Nicolai Stange <nstange@suse.de>
+---
+ security/integrity/ima/ima_fs.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index a8df2fe5f4cb..f030ff7f56da 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -436,10 +436,8 @@ static int __init create_securityfs_measurement_lists(void)
+ 	u16 algo;
+ 	int i;
+ 
+-	securityfs_measurement_list_count = NR_BANKS(ima_tpm_chip);
+-
+-	if (ima_sha1_idx >= NR_BANKS(ima_tpm_chip))
+-		securityfs_measurement_list_count++;
++	securityfs_measurement_list_count =
++		NR_BANKS(ima_tpm_chip) + ima_extra_slots;
+ 
+ 	ascii_securityfs_measurement_lists =
+ 	    kcalloc(securityfs_measurement_list_count, sizeof(struct dentry *),
+-- 
+2.47.1
 
-
-Thanks,
-
-Chris
