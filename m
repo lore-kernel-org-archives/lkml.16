@@ -1,79 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1861F418B;
-	Thu, 13 Mar 2025 20:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0021F3FED;
+	Thu, 13 Mar 2025 20:17:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741896845; cv=none; b=BiAVz+bACox8mb+nsw1xaA7eYHYxjwxwFMokhlAyoJsHh9nKkLXfXFv9ir1l6Y9sfFUnfw3qE8fL/vDnlabcL+zlMccqgyvznvzCi5fngcTbTUcYMX9ZiOX8kNGEp8GrBGm8fhGhSUOncT5IpyxSml4XxhyaA59B11W73nmgj9M=
+	t=1741897047; cv=none; b=hCpHi40Kak1lW4Nx4kMT6cXi6HnltAROKprT2+Y9RdMpeTFdtou3NgLwLLB9pEgWi3TJ6cckUUGGtnaTFjtCR6qoZrxfXv/6t0c0aJYqLjWPVtdKbAx8AlBu3zX1A3ouyDR9XCns5pc56CVEALsTh8Tf6Ow+IENM5dBxdIrQoBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741896845; c=relaxed/simple;
-	bh=d0438YSJjxB+9yjxJTjmg+eiSvzdjIpE7hGkOviNOms=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=fcCDaiuIXHv2kee7sULXPsX86TAv51vFNoUFuY8LAzrmW9u91llf+XHmcHOrJy6O6bmoq2NXAYPoIM8i4Hy5BnbANCDHN7o0O22ZjZ4Tebkay/lcRC+La5WfoEZSPfAeZUimTcul1V8pIFtgWrc5UdwxkScHxstOIMQUFvMxh7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+mqUpWm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741897047; c=relaxed/simple;
+	bh=ZRWtB3rv+AKys/z8/S91KGoR6y3uP/Y1TIBFLbBQNwg=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:To:Date; b=G4SUWzqLu49x+/zO6/lGE87cUFavuJFsUb4ls9zTVSO4xoH8CMAn8Wea7pVsjUy7Wmkw21Wv77/ZoUHIXtQb4cWyCB5ZZEkeS62hh0Tn4S72/5ga8E8qmm1rjoNgJSPor1H2zaxkRpLrMiRhP7I6Pvgex7+oTBasMmV+GjiZMlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oh/hUlRD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+mqUpWm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BAE0C4CEDD;
-	Thu, 13 Mar 2025 20:14:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oh/hUlRD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54407C4CEDD;
+	Thu, 13 Mar 2025 20:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741896845;
-	bh=d0438YSJjxB+9yjxJTjmg+eiSvzdjIpE7hGkOviNOms=;
-	h=Subject:From:To:Date:From;
-	b=T+mqUpWmB5SEeVW/xCXE5aIHMJALotmXU5xS95ibiidrIqNrudI8FuSdkRGjCifbl
-	 ujLzY7/3IDgM5LbvR9igmdcB9zuaLQjN0MwnKZ74kpbaO2ZaaqH38Ep7Z2wky+qiFb
-	 /58mjc265JEevFcjzYduXM6RKBtqagwWfhev64o/nzRQe48TjsYLPDdnX/yL99Wd3I
-	 czZDlTXM+oN2Rc0f0nWt2YTV7kr+eRI/AGNd1lpbAlNqwR7LN+jjp2NKGMwpQLXqui
-	 iO/t96ccCAQbnD2XNOp+SPC9emK3J6nviXTye83ATNXTcRvNBNhbTE2bXo9FyLvTVe
-	 8FltKDD70kgiQ==
-Message-ID: <c232ee2b77d601f5a6d41f4a96df99189aff2e4d.camel@kernel.org>
-Subject: [ANNOUNCE] 5.4.290-rt96
-From: Tom Zanussi <zanussi@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-rt-users
- <linux-rt-users@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Carsten Emde <C.Emde@osadl.org>, John
- Kacur <jkacur@redhat.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Daniel Wagner <wagi@monom.org>, Clark Williams
- <williams@redhat.com>,  "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
- Joseph Salisbury <joseph.salisbury@oracle.com>, Tom Zanussi
- <zanussi@kernel.org>
-Date: Thu, 13 Mar 2025 15:14:03 -0500
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1741897046;
+	bh=ZRWtB3rv+AKys/z8/S91KGoR6y3uP/Y1TIBFLbBQNwg=;
+	h=In-Reply-To:References:Subject:From:To:Date:From;
+	b=oh/hUlRDmMYFyWmn4VmL5tu5bi5jqC1dqBcqkJArjFHu5sH8vxz3fAmk6/Gx4cL6l
+	 DUMvyNSapxbW3AXnKyEIYHNsZGI7wdrPqFtL+gAAaExVcuAJH1rnYDEMaHAwb5EcbX
+	 Ivu1Mfg5u0rXOMiTpBUyULt374cgbf++C3oP/o+8xovzy73Jm3kQzKK7zlpqFk2mPA
+	 +7NIQ5yPyWDj7LnC4pJB6xKivmMmdX9XI/qbhayVQ1WCn/syRGo0J59SoYWP8v2re2
+	 fLd5F88vnGgVHjJkivUun96P/ALb3ZNHHbX4uLkLFo/CqVHmYko9hOetHF2kjh9Dwr
+	 2JSF64C6qrwvQ==
+Message-ID: <76a8bb40aa94465aa54233d191d142ef.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250311180215.173634-1-andreas@kemnade.info>
+References: <20250311180215.173634-1-andreas@kemnade.info>
+Subject: Re: [PATCH v2] dt-bindings: clock: ti: Convert ti-clkctrl.txt to json-schema
+From: Stephen Boyd <sboyd@kernel.org>
+To: andreas@kemnade.info, conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, robh@kernel.org, tony@atomide.com
+Date: Thu, 13 Mar 2025 13:17:24 -0700
+User-Agent: alot/0.12.dev8+g17a99a841c4b
 
-Hello RT Folks!
+Quoting Andreas Kemnade (2025-03-11 11:02:15)
+> Convert the TI clkctrl clock device tree binding to json-schema.
+> Specify the creator of the original binding as a maintainer.
+>=20
+> reg property is used mostly with one item, in am3xxx also with
+> an arbitrary number of items, so divert from the original binding
+> specifying two (probably meaning one address and one size).
+> The consumer part of the example is left out because the full consumer
+> node would be needed.
+>=20
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
 
-I'm pleased to announce the 5.4.290-rt96 stable release.
-
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v5.4-rt
-  Head SHA1: 6ad55e55c574e9cdd1bce8ad3c5bb9dedc1c53ab
-
-Or to build 5.4.290-rt96 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.290.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.290-rt9=
-6.patch.xz
-
-
-You can also build from 5.4.290-rt95 by applying the incremental patch:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.4/incr/patch-5.4.29=
-0-rt95-rt96.patch.xz
-
-Enjoy!
-
-   Tom
-
+Applied to clk-next
