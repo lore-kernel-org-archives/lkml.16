@@ -1,71 +1,25 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C5D260382
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65F661EDA17;
+	Thu, 13 Mar 2025 11:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741863544; cv=none; b=NNcKq5zWKD8EnC6os4JtDkuImyvxJ7rYnHqIyz7mdBEqY1rkX6k7tHc5IEwnTqUO1f28p0lwyoLGl8L9GB2hUNFII/2EVbLUTHpv2ypOxJQUw3xSqT7iFS0FLQlLDBqapdydR9XXTSR+MiV2cVnaePjDbhRXkD+xotVXvU4JCjA=
+	t=1741863702; cv=none; b=nu0w+C1zMK4Av52TTrCN+All5roBil9U6UaphAKv1zzyCqJAcTL6t8Di606B62myCxfj0uIjI44hPlFd5fm/P1Z16ZL3XRDZ3rKXxtbdD7Vs5dkM2yqZ5Jo5mXeU0DdF6PXHCk7fjFzi6nLLce98Jj3IS67DQimqW6DUb7nq9GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741863544; c=relaxed/simple;
-	bh=37LJNif6aGyyhlJh5h8ixFPgluvePWafJrCynYtE1IE=;
+	s=arc-20240116; t=1741863702; c=relaxed/simple;
+	bh=XefTSzn/nQqjD6JMR5JYpIY4KIl/yqcRheoDY2b+ilE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DU+jtQuPRhTCZ17YDXaRrkh1c2UiEp5ML2XFXeiGiH+KUzb8KtGLzygPHcq6WvaVgtaSLjNm0Yt0zT1sfeBxXd4Ijej71Y3jEj8unYCp++AGyYopDKyysARQQrYNjyVntahoXtVcAsQHKuufYDnl6Fj7D5B/NT1hNH3ofq8yV3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iVLZfptD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iVLZfptD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741863541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I8+KGKdJ4EK24n18Z2V3Wf8YYaN68pwFttwmHD5FeXs=;
-	b=iVLZfptD+pn64iyDSyI9HvKJqVIM7VARZHxcm78tK7bXK16d5pvAEVqfSAZ+i/8WL45NFP
-	aPWFUwTjTeAcgfyqPAK6tfAFSlncRiHt6fnRxCRDA0tfz23QQmF7w305BVYFt5RPOx90Nj
-	Aay6tMPBv48kV7h3ux+IRm/SmWV6868=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-246-EfhqeiNJNl2uDd9GbiEKvg-1; Thu, 13 Mar 2025 06:59:00 -0400
-X-MC-Unique: EfhqeiNJNl2uDd9GbiEKvg-1
-X-Mimecast-MFC-AGG-ID: EfhqeiNJNl2uDd9GbiEKvg_1741863539
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf446681cso4043495e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 03:58:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741863539; x=1742468339;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I8+KGKdJ4EK24n18Z2V3Wf8YYaN68pwFttwmHD5FeXs=;
-        b=KEs/NeB2rf5FN+wKZmlQ/6TafeM/+yn9wdLpx9qv3eD/KiZhIQBFD+vbot5v4tin33
-         P25/NxeG+fT1l7UJ4HgGACN8j023+3on3jYaPTmaLwYrhqJQllAz9bZAYhiARNLAL3js
-         ybT/b4QUBbjHy8P9+C8lKKqBNHAx6YvnKpeguCSFZT8OlWWNAaL/t0VT/gqpQrja9CMN
-         nRUtYmpHlSTYlaTyBGyiwGKmK8CPwsnNb82BofsN7nLzc4ueHm46lIS02qeNyDpjHqWv
-         7YAy/O54Y8Xyk50TgJwDsnvJyPyNz/89QMYkgbat2X8leCSoEY1rojBK9c2MbpBy/6tu
-         Fjbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXX3NNgh4Ddvh4gkYvL1K40EV+n7eGtuRXRjYXMJ+aTLR3gniOp7p1gh4dwaNYGi123mMLheqIr31YGLbo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHKXfQCyegiql1ltehMR8dQfObu1vsQ/R2FNSgxMI7trL207aq
-	1wxjwq4o4NweBYnXx0nAxxmnfONTEArFS7M/qdp7lvb6WtHj/Dd+RAJTA2T5DC7Ef3NcRInjEOc
-	iFmFwzbm7D4hgIXpwxrG6Dv6z9nHHsyAMEj4wa0VnJOkGHoQivBsJfux/5F0tIw==
-X-Gm-Gg: ASbGncsbZRW6PXFaQMxsZcJ6T5ikJpSvNrj6b0SLoKt++6Qint2diQZZ0kEVBn6ACQT
-	v0fmCQKZK6v2kryX/gMw3DHnKdgPLbCqD5w8d4ydX0fLU1OAfgg36ohCfSXSIISPJ/WlwzOVVFb
-	TCCJJBQkCBdGWBqe2FTQ9igmOoo+PgA4aTqpECrnW5MaLAqcpRY/YVZpOpKGPaftflE2UbhYTII
-	OCogkeCGBEF5+EVHMZobz+WTSRDlgn06qYUbPKdAm764eS7RiAWWw4YfmQDJyMwedXChXemP+cA
-	9tNxXASVnZzlLtgMK3awRF6rjFUPpiSszrRjIEo9
-X-Received: by 2002:a05:6000:1aca:b0:390:f738:246b with SMTP id ffacd0b85a97d-39132d1cc3fmr19536594f8f.15.1741863538703;
-        Thu, 13 Mar 2025 03:58:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFl5a/zzB4j/bQzrh0zOYukq0rCxpL/1iN9vmTUtNgl3blwOPgCRfDtKqTKHkVbblM4clhX9A==
-X-Received: by 2002:a05:6000:1aca:b0:390:f738:246b with SMTP id ffacd0b85a97d-39132d1cc3fmr19536568f8f.15.1741863538262;
-        Thu, 13 Mar 2025 03:58:58 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-6-87.dyn.eolo.it. [146.241.6.87])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d0a7582absm49566905e9.17.2025.03.13.03.58.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Mar 2025 03:58:57 -0700 (PDT)
-Message-ID: <b62ea2ac-aff3-4a00-bc3a-960c28bc5522@redhat.com>
-Date: Thu, 13 Mar 2025 11:58:54 +0100
+	 In-Reply-To:Content-Type; b=SWJggU+BI5x5FzF8dySMseJiNiSdVvnBDWWisLiGCKxzdIh5wZEut4gIvHGD2eRo5qsqHDSpr0RT60EO/iecNHSQdZ3G78lxBtAzFissZYg6aqnraswrels4schCNLx664w/WD3DUpZcFw7QSCS14hJOZxg7TGaXsARMLWeJlr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21D5E1516;
+	Thu, 13 Mar 2025 04:01:50 -0700 (PDT)
+Received: from [10.57.40.246] (unknown [10.57.40.246])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C60353F673;
+	Thu, 13 Mar 2025 04:01:35 -0700 (PDT)
+Message-ID: <417d6f59-0d78-4e81-ad0b-e06846f786b0@arm.com>
+Date: Thu, 13 Mar 2025 11:01:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,88 +27,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v7 8/9] net: check for driver support in netmem
- TX
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, virtualization@lists.linux.dev,
- linux-kselftest@vger.kernel.org
-Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
- <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Jeroen de Borst <jeroendb@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
- <willemb@google.com>, David Ahern <dsahern@kernel.org>,
- Neal Cardwell <ncardwell@google.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, "Michael S. Tsirkin"
- <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Shuah Khan <shuah@kernel.org>, sdf@fomichev.me,
- asml.silence@gmail.com, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>,
- Victor Nogueira <victor@mojatatu.com>, Pedro Tammela
- <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-References: <20250308214045.1160445-1-almasrymina@google.com>
- <20250308214045.1160445-9-almasrymina@google.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250308214045.1160445-9-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+To: Marek Szyprowski <m.szyprowski@samsung.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Hanjun Guo
+ <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>, Stuart Yoder <stuyoder@gmail.com>,
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun Gupta
+ <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ Charan Teja Kalla <quic_charante@quicinc.com>
+References: <cover.1740753261.git.robin.murphy@arm.com>
+ <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <CGME20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd@eucas1p2.samsung.com>
+ <9b358d68-332e-404e-9a75-740297f7b28d@samsung.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <9b358d68-332e-404e-9a75-740297f7b28d@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 3/8/25 10:40 PM, Mina Almasry wrote:
-> We should not enable netmem TX for drivers that don't declare support.
-> 
-> Check for driver netmem TX support during devmem TX binding and fail if
-> the driver does not have the functionality.
-> 
-> Check for driver support in validate_xmit_skb as well.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
-> 
-> ---
-> 
-> v5: https://lore.kernel.org/netdev/20250227041209.2031104-8-almasrymina@google.com/
-> - Check that the dmabuf mappings belongs to the specific device the TX
->   is being sent from (Jakub)
-> 
-> v4:
-> - New patch
-> 
-> ---
->  net/core/dev.c         | 33 +++++++++++++++++++++++++++++++++
->  net/core/devmem.h      |  6 ++++++
->  net/core/netdev-genl.c |  7 +++++++
->  3 files changed, 46 insertions(+)
-> 
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index 1cb134ff7327..5553947123a0 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -3868,10 +3868,43 @@ int skb_csum_hwoffload_help(struct sk_buff *skb,
->  }
->  EXPORT_SYMBOL(skb_csum_hwoffload_help);
->  
-> +static struct sk_buff *validate_xmit_unreadable_skb(struct sk_buff *skb,
-> +						    struct net_device *dev)
-> +{
-> +	struct skb_shared_info *shinfo;
-> +	struct net_iov *niov;
-> +
-> +	if (likely(skb_frags_readable(skb)))
-> +		goto out;
-> +
-> +	if (likely(!dev->netmem_tx))
+On 2025-03-13 9:56 am, Marek Szyprowski wrote:
+[...]
+> This patch landed in yesterday's linux-next as commit bcb81ac6ae3c
+> ("iommu: Get DT/ACPI parsing into the proper probe path"). In my tests I
+> found it breaks booting of ARM64 RK3568-based Odroid-M1 board
+> (arch/arm64/boot/dts/rockchip/rk3568-odroid-m1.dts). Here is the
+> relevant kernel log:
 
-Minor nit: I think the above is actually unlikely. The skb is
-unreadable: is supposed to be transmitted on a device supporting
-netmem_tx, otherwise we are in exceptional/error path.
+...and the bug-flushing-out begins!
 
-No need to repost just for this.
+> Unable to handle kernel NULL pointer dereference at virtual address
+> 00000000000003e8
+> Mem abort info:
+>     ESR = 0x0000000096000004
+>     EC = 0x25: DABT (current EL), IL = 32 bits
+>     SET = 0, FnV = 0
+>     EA = 0, S1PTW = 0
+>     FSC = 0x04: level 0 translation fault
+> Data abort info:
+>     ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+>     CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>     GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [00000000000003e8] user address but active_mm is swapper
+> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+> Modules linked in:
+> CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc3+ #15533
+> Hardware name: Hardkernel ODROID-M1 (DT)
+> pstate: 00400009 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> pc : devm_kmalloc+0x2c/0x114
+> lr : rk_iommu_of_xlate+0x30/0x90
+> ...
+> Call trace:
+>    devm_kmalloc+0x2c/0x114 (P)
+>    rk_iommu_of_xlate+0x30/0x90
+
+Yeah, looks like this is doing something a bit questionable which can't
+work properly. TBH the whole dma_dev thing could probably be cleaned up
+now that we have proper instances, but for now does this work?
+
+(annoyingly none of my Rockchip boards are set up for testing right now, 
+but I might have time to dig one out later)
 
 Thanks,
+Robin.
 
-Paolo
+----->8-----
+
+Subject: [PATCH] iommu/rockchip: Allocate per-device data sensibly
+
+Now that DT-based probing is finally happening in the right order again,
+it reveals an issue in Rockchip's of_xlate, which can now be called
+during registration, but is using the global dma_dev which is only
+assigned later. However, this makes little sense when we're already
+looking up the correct IOMMU device, who should logically be the owner
+of the devm allocation anyway.
+
+Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe 
+path")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+  drivers/iommu/rockchip-iommu.c | 6 +++---
+  1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+index 323cc665c357..48826d1ccfd8 100644
+--- a/drivers/iommu/rockchip-iommu.c
++++ b/drivers/iommu/rockchip-iommu.c
+@@ -1148,12 +1148,12 @@ static int rk_iommu_of_xlate(struct device *dev,
+  	struct platform_device *iommu_dev;
+  	struct rk_iommudata *data;
+
+-	data = devm_kzalloc(dma_dev, sizeof(*data), GFP_KERNEL);
++	iommu_dev = of_find_device_by_node(args->np);
++
++	data = devm_kzalloc(&iommu_dev->dev, sizeof(*data), GFP_KERNEL);
+  	if (!data)
+  		return -ENOMEM;
+
+-	iommu_dev = of_find_device_by_node(args->np);
+-
+  	data->iommu = platform_get_drvdata(iommu_dev);
+  	data->iommu->domain = &rk_identity_domain;
+  	dev_iommu_priv_set(dev, data);
+-- 
+2.39.2.101.g768bb238c484.dirty
+
 
