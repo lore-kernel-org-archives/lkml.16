@@ -1,90 +1,78 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6177A2641FD
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806BA41760
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741873782; cv=none; b=a9pGXHFd37FjpS4XHYfhB2FbIrZ4t/v2C8QF4E23YqEZcIww9Q4Bu563RYl4CSiF8e8Hf8UU7ejO0Gl5j7YKtf+0B/lUoOgYvSk5QtRfaxHUYnMVKXUJ6zJ1JTsqpM7pcOS2kf+LKrF/9c8z+QJm++JJksGeB+SAAHwhooUif+k=
+	t=1741873806; cv=none; b=j/jaTE/0PmLRUq/7SoPkwLegoN7VXlIa9Lt5siupbaikMUA9RcfoknlDUoan665bEoU2yU6oihNt2yb9+MUjlL0QSgdbS/8nDkih0w46hHkBVVqfFHUUEDOMJbVjxNvWT+iyYMW3ATwhgQB9Zan1+pL7wFL9iaMdVZDQVGTH6ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741873782; c=relaxed/simple;
-	bh=s72E+WiRW3VjWXLF2oTp3RR6w8yjtvEkUxbaH/xY8NM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RyxssL/aWfBuKftmc3Yz/4uk5wJKs8DPqTOBL0nLCrlFa/p+CS41FxRY+mtEzSY1i08TzWjh4IkeFTU/t2CU5RnWrxA/AgwB/ydglzpVFmTyi28wVEr1vqX5mhuC879xxdJFktk6hE6KKMpUPIrqCwTKN/tNX+MKMBWX4zEUPmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xqZhhW4J; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741873806; c=relaxed/simple;
+	bh=jRgklwSpOObB3tgAKwapZBR1LtUC3VEGXkKBpRqY8qY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iBdNeAtf04O9P7/k9wfJz743OdnvrK/QpGkwCiKcM7tAZvRE6OPBI47dkPszjbAsHLZeHa/bYg+72aV0fdwh4W6mPvZsX8UaobsJeEmQ0P4PDu0bJxl2F5+oBHvnbUQwA156QEXIcXRpS9Imjz/OmR5PvfWP0rMm6iPMl+B85rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=JOW6V3vy; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xqZhhW4J"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54993c68ba0so1124107e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 06:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741873778; x=1742478578; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s72E+WiRW3VjWXLF2oTp3RR6w8yjtvEkUxbaH/xY8NM=;
-        b=xqZhhW4JohVTUOHFheAsOQtE6SJv9dP80A83z3yd1jtaMdKuDVNoEhT9MdfNGMtAdA
-         1WTssz3u7a5UrYp7w2N2sdLhjtvbGX74TfaGOZwolASBdLLaHCmHIWdH/a7RMt4McxHe
-         txAzu7R3bxmOiQoC+EHZYfgPa+c06ZzVYPdakDtXRI+PpCgZNppCTzAyC1QoPhruzeLv
-         t6Vl0J/aw1LmIxx1TIa6kJTMWmnOzHZVTqR//vBaxrZ5JZ0KDup+VurX5/kBz+yaMhQ8
-         Kre8CEWHOknIwbIbq1lR9N2XulpReP14Ymeyy9Bp4N/6azqgxRlekUtrSGymcExZueKq
-         3+hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741873778; x=1742478578;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s72E+WiRW3VjWXLF2oTp3RR6w8yjtvEkUxbaH/xY8NM=;
-        b=wTiYruWXSY7sPgZoY9YeaWY0NxdtQ0JhZmfPtDkSix05PzxYDCZ3fF0+SHMsTD1gGP
-         CCB4VC+d/gjhPw0+gfD9UM7Lga/9cTg2ulviUvrzV6G2cKGCP4NfK423guhq0lsNy2wt
-         /aFiyFa8itMHIQtNI4EyKguoEyFeG+WQkyzoklTp8bkgZMqbtsM3As3IHm0KRR8ajsBB
-         okJk6ng+o0hPFCEVplE8MfX5VJpE6MZjy6aAbSG6dVsDmUDctCh1wjsuHQlpNVpwtmN+
-         Y4jeWhLY/9CGJ+WYf4Ds3nuPLgnOv8dHwY+XGMA9piqf0FevyPfg/k7U78C8nxill2uy
-         45jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUs1zm1g1WSXAP0qw/kAaC5wqc2mCYHPvyA4DGiWWg8Eq/8blc0vNm+dTmmjBqIngz89pYU022fk7zAMEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+y79GTkTUSA808bpgccAHPWtWypA5nee4beSZuDfzSemA8n4A
-	ksz+JZPD+xKuJJ5EVmO/tVd7GhsLsNwNTn8B4Q36St8YCCSHNtzZvC0ZjyG6BeAJO/y/sm1vns5
-	eBqJcIX3Vj4GCxf944kQE8WBmsMMsdtW29P+Xvg==
-X-Gm-Gg: ASbGnct4azvzGuK3qHhi5RoqgXrHBBR67ThWJOt4T7TE+wLLX9tdsL0F7HI9Z1IMrtf
-	DiAd3hxmItzA0NTosRQwg0SrBQ4Ilv6kpCwjir08jRtZ88GTcs2spk1qOGbisIIVivQ60R9TkJf
-	5k9V0eLsJENHro9oGC4zB1WG6jvA==
-X-Google-Smtp-Source: AGHT+IEccZO3i5+lVUwnSS/WaACh7JJj5Xo6UXfk6dLNaFoPEkEoI3mENp7/zCsA/uhLA0RMiNFyQBBG0+AbjlILsis=
-X-Received: by 2002:a05:6512:304a:b0:545:6ee:8396 with SMTP id
- 2adb3069b0e04-549ababc849mr4033095e87.13.1741873778434; Thu, 13 Mar 2025
- 06:49:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="JOW6V3vy"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 668E01020E4C2;
+	Thu, 13 Mar 2025 14:49:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1741873795;
+	h=from:reply-to:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=zwZpJol3r+NZfuPaketwR5AKh9kAknjnnobmvM92/Kg=;
+	b=JOW6V3vyrlwAYaE654BuUamBuLqqbSp4zV+zSf1rcfMd4KjpvOyOh+yJ50hOgGXe4NfRZi
+	LjfMJU2AKCodXW0KboUIPgH3P8YF9pJWjUdlD4F75gTXYB6Kp7+9R6FAi4QlgW8xJRJV3H
+	ZpRP9vMphJdYWJXz5+mdXs+8i1Hn1+hN3OpVIL5o2TB0HEldrD+R3JwCU7fT8iQKQCwAT9
+	NJAof/0sHfkhvRSlqGF8TnuPR+6E8qdROePI5szQ7e9jjezojfNek57Q2Ad2E6HZ+cFMfx
+	Y4BsYiKbLHU69e+SO6Xr9YE4+SyZV4h1ewLSx+LckqSy3VbXCvNK4OXVIBQ4tQ==
+Message-ID: <27e6e64b-9627-1307-3ca5-2bcfc471f157@denx.de>
+Date: Thu, 13 Mar 2025 14:50:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306235827.4895-1-andre.przywara@arm.com>
-In-Reply-To: <20250306235827.4895-1-andre.przywara@arm.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 13 Mar 2025 14:49:27 +0100
-X-Gm-Features: AQ5f1JrLPVPuCTomUP4jXqnxl_0p1ehI2pivoJIVPNCchweDQ93p9WO-dULZ7nM
-Message-ID: <CACRpkdaVH8GAx_K0a01FbRKe8CQ=jh7jwfVrs_PgS9og4vnWmQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/8] pinctrl: sunxi: Add Allwinner A523 support
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH 2/2] mtd: mchp48l640: Use str_enable_disable() in
+ mchp48l640_write_prepare()
+Content-Language: en-US
+To: Zhang Heng <zhangheng@kylinos.cn>, miquel.raynal@bootlin.com,
+ richard@nod.at, vigneshr@ti.com, han.xu@nxp.com, david@protonic.nl,
+ jre@pengutronix.de
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev
+References: <20250313095756.945890-1-zhangheng@kylinos.cn>
+ <20250313095756.945890-2-zhangheng@kylinos.cn>
+Reply-To: hs@denx.de
+From: Heiko Schocher <hs@denx.de>
+In-Reply-To: <20250313095756.945890-2-zhangheng@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Mar 7, 2025 at 12:58=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
-com> wrote:
+Hello Zhang,
 
-> this is the fourth drop of the series introducing pinctrl support for the
-> Allwinner A523 family of SoCs (comprising A523, A527, T527, H728). [1]
-> This time only a small fix, spotted by Jernej, thanks for that. Also
-> adding the new tags. Changelog below.
+On 13.03.25 10:57, Zhang Heng wrote:
+> Remove hard-coded strings by using the str_enable_disable() helper
+> function.
+> 
+> Signed-off-by: Zhang Heng <zhangheng@kylinos.cn>
+> ---
+>   drivers/mtd/devices/mchp48l640.c | 9 +++++----
+>   1 file changed, 5 insertions(+), 4 deletions(-)
 
-Patches applied!
+Thanks!
 
-Yours,
-Linus Walleij
+Reviewed-by: Heiko Schocher <hs@denx.de>
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-52   Fax: +49-8142-66989-80   Email: hs@denx.de
