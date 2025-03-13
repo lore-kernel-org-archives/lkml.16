@@ -1,244 +1,137 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A9E1C84CB
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5614616DC28
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741887301; cv=none; b=YuOlQ8uARSoV5GBjyLVe14TTatwH/Y92qWtX/rsqgHDVrQIiGbqOcjLOQZsOSTQqKImkAXZ9CXU7u2RTf7IGC8b5I1xXHTsXLlhKABAMNMX+/MR0BTMnb67FfyiL2fM76qp1GGBkVN1v5CREtzK/LZ/t0QoGjKKW530TVwwPaJY=
+	t=1741887301; cv=none; b=NdQtPEuGl0NuJb5APdTfLu+xOjtqZFI9hailEVnaQAaK/i/PlwqkHgc3mEUrHZz+bd92tRhXEck8tJjMYg9CYQtyGiW5jAtiU5SWpsb5GWWS6ffJ/KlI1Q8xpTSEQepY3K+ZH1215DTEfGGJzXIQh/ssZGfBUk8pkAce5NFPk8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741887301; c=relaxed/simple;
-	bh=v1rvhmq9flKJdSz5Ye+r21lmnpjN+EZa7Dx6O7Yts0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AcyfwhPMZ6Q6PLxQdXAxCVfAn5VE4x+9QJD2LahwAuXLBKHm+2QZq5XVBOZXFurYHqPFy6V6B+iPd65e3OybBKbnVNbW9XWyCQQgln44f6PjB+e5HAUcZZ1tViL36mqF+ZdPKOb14gZnEuNTLuFe1R7rbpM2k2N+RGhQBvcbkGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UuBmwy3i; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yfYZxTpT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UuBmwy3i; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yfYZxTpT; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	bh=teNW5gIZaqNNqnPivdYVGhV0iuN3q+s0pOAIQRfvUdI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FBiP+5IYp7ZBNTAhLj7gWpZ1PLBzDMvAUsjfjcFVjfva3EEQ9+BMEtES+FbJtXNSUKRDOe+uija/f7FABvb9SL2U8VbXk5+177P15gD4chzIi5AvKXVPGU//B2e49Hlki37vDiSsZmYJL9g4MXpP4sPIxQBid9loCfDtuus7DNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IaB2WuN2; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UuBmwy3i";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yfYZxTpT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UuBmwy3i";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yfYZxTpT"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 42A6F21180;
-	Thu, 13 Mar 2025 17:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741887297; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ov3jCGTl7GwgRNl8Ff+VlfzSKuKGonTrVISwQrPpSHI=;
-	b=UuBmwy3iB4ebdyeo3YELrvg3tEt3ETM4jdQhpXtPj5Cv7FmiMKmw7kkzHEYyqPanxvfngj
-	/ceVG5J2ZWe1bgLW19g7m9hhDmN6duGLnx4VJRvl6IncmStldVDK+qlUvAbKSoUCSNUdV7
-	8tpA8Fg0jGge4Q7pnArZLYeQO/I8yLQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741887297;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ov3jCGTl7GwgRNl8Ff+VlfzSKuKGonTrVISwQrPpSHI=;
-	b=yfYZxTpTtjKKJzEdNrWGggIWxYUzJ2jgOOfJEn5NO4oAlURlOSwXBvvZMeugw2ItY6AGvs
-	il2Q1rbroxhTzbCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741887297; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ov3jCGTl7GwgRNl8Ff+VlfzSKuKGonTrVISwQrPpSHI=;
-	b=UuBmwy3iB4ebdyeo3YELrvg3tEt3ETM4jdQhpXtPj5Cv7FmiMKmw7kkzHEYyqPanxvfngj
-	/ceVG5J2ZWe1bgLW19g7m9hhDmN6duGLnx4VJRvl6IncmStldVDK+qlUvAbKSoUCSNUdV7
-	8tpA8Fg0jGge4Q7pnArZLYeQO/I8yLQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741887297;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ov3jCGTl7GwgRNl8Ff+VlfzSKuKGonTrVISwQrPpSHI=;
-	b=yfYZxTpTtjKKJzEdNrWGggIWxYUzJ2jgOOfJEn5NO4oAlURlOSwXBvvZMeugw2ItY6AGvs
-	il2Q1rbroxhTzbCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 332BA137BA;
-	Thu, 13 Mar 2025 17:34:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id iG1VC0EX02cHQwAAD6G6ig
-	(envelope-from <nstange@suse.de>); Thu, 13 Mar 2025 17:34:57 +0000
-From: Nicolai Stange <nstange@suse.de>
-To: Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc: Eric Snowberg <eric.snowberg@oracle.com>,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nicolai Stange <nstange@suse.de>
-Subject: [RFC PATCH v1 1/7] ima: don't expose runtime_measurements for unsupported hashes
-Date: Thu, 13 Mar 2025 18:33:33 +0100
-Message-ID: <20250313173339.3815589-2-nstange@suse.de>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250313173339.3815589-1-nstange@suse.de>
-References: <20250313173339.3815589-1-nstange@suse.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IaB2WuN2"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfe574976so8244565e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:34:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741887298; x=1742492098; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oXkYzz2Ho7HoWYUA45E8jVGK6oEmHJXqvRS4IbzYytA=;
+        b=IaB2WuN2w7gYjcHt1Uwp/c0H3IvM4cm2xe9st2dygFqSTtb8QhJfAaoI4J5/TzekFD
+         8yyo8Gx4O7veB5CKFARZ1cppceVT3zLRZgWEwkAs/vT7sfLq5SKH+wKslk+bxGewCx7M
+         tFmFfB2LA9ujzxcCdQbS/wJuGWs1GL4cetnngLE/BVrdZ6T0tqjSar9DQCHhdFDHH5xE
+         Jv3t7J/7bCs36+OchcNEOnn0LJFw2sJsW/AK4Lhf9CK7aOf0HBVicIxlqxwyL6Q0LNCu
+         bT1UnNAxQ9omQ4NKBlzSaLU/sp/JuD749GEOsa5czywnrJvc/ksKqieZcbiwf4zHP0z6
+         3gOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741887298; x=1742492098;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oXkYzz2Ho7HoWYUA45E8jVGK6oEmHJXqvRS4IbzYytA=;
+        b=coduOLWLFiURo5JkSmf6iqS4PFvVTVvKMhbubJUGdB6nVg631rHGe/rt6oGjca50xj
+         xrK99rxDW3Y6ubHCgXSnyAGke91AY9C/5gB8Vk05KwadcX6BXqGbzSBGhFmE93rGgNHZ
+         7ZvrTaKk0ODr7wY7Chs7/uVPmZqlQTofsjM4QQST1YiTLaO/jHmJkcILT8JEhGsgVXcD
+         q0oK1y+ujS96SXOWgZC4onAS631Mh2xIeyM/3jViTE8KfgPaUbLXys7h7mont1NoMtKO
+         SmbDlVfx+7BLVPGVHRF4xFSiXMDRkXTBux4E08DzgjwqK/MGJfnH/XgoOgNS7tGGWcTw
+         8jBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVp/4/ohoZYq8/jcHVJMrkfykozuXtcF0tIJxCikq13DS2ELzMoqCcJRlO6DxXWA/mkjR5kgzgjjo8x7yw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweXbVUgGeFaWs6DhAaKLLs4aYk/ClorBRGA8jQKveiSi6Gq5XD
+	Qjm3zeoyvdMArhyQCQKx557dEFx3WtEW63wAQTeXOYhyKmuiMqiXJYkjumuuL10G8aXwOSpe+5h
+	ZsQ+NlUSS6t7SOd65nLSc/mLhjOro7MM4p9/bxw==
+X-Gm-Gg: ASbGncvJhitFTIo41FVEMU8YH+iWaG5/sBBv8CxB4yjUTUbYbCQlD8LRRbRCdWS1WC6
+	eq5Sky9jxmR1il+cMlVUl7kTDI3XxKZSlA0PPrwRx0GITn6o5MReymaT5TkaNQdfy5q6gsxK83y
+	I0fVKBh8iimvAGHpElOrTPMgPvo75QgrrsxVPIto1IihtLgpJnEkvOfpeEsM5HqfVDM5SOAQ==
+X-Google-Smtp-Source: AGHT+IE1c9T0TY/pjJhjtchTkkrxDWqZJglz/azIkv2TkxGPgH3NolVO9vmQFRaJtQOUi7YI3c4g7vzs00zqUmzqNzw=
+X-Received: by 2002:a5d:5989:0:b0:38d:cf33:31d6 with SMTP id
+ ffacd0b85a97d-39263b006c5mr11690959f8f.3.1741887297667; Thu, 13 Mar 2025
+ 10:34:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -5.30
-X-Spamd-Result: default: False [-5.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[linux.ibm.com,huawei.com,gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20250311-wip-obbardc-qcom-defconfig-interconnects-builtin-v1-1-675b6bc57176@linaro.org>
+ <CACr-zFC=mPNeeHMp9XnSby+cMQaPWt_3s8iUiCN+EnVPeGad8Q@mail.gmail.com>
+ <uljqxwfgl26txrfqvkvzzpj6qurgmwcbuot7gu2u6rwjaqgncb@jeuyi4mexjff>
+ <CACr-zFDSFizYmrVN-dV334n1kq17UB9k4FxrV20NNQCQMhzrwg@mail.gmail.com>
+ <92dd35a2-d1cc-4f2b-b3a8-5752ec33b0d3@kernel.org> <CACr-zFCYWEFPO8yExp_8hOQdVtC9Zwu1ZOZNksSeyyS6Ht0e9A@mail.gmail.com>
+ <Z9HjMyjzE9XlqrEj@x1>
+In-Reply-To: <Z9HjMyjzE9XlqrEj@x1>
+From: Christopher Obbard <christopher.obbard@linaro.org>
+Date: Thu, 13 Mar 2025 17:34:46 +0000
+X-Gm-Features: AQ5f1JrDO9V43KtazVC9qZW1Wz_qdtZmiVsFJZOGkGi6dHNCT7HLwGuh8qsdaME
+Message-ID: <CACr-zFAHGcQtwSz0EF0kt7_PUXxwi3GZY2BmAVedbLjh3+4LhA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm interconnects as built-in
+To: Brian Masney <bmasney@redhat.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-IMA creates one runtime_measurements_<hash-algo> sysfs file for every TPM
-bank + for SHA1 if not covered by any such. These differ only in that the
-template hash value for each record is of the file's associated algorithm
-each.
+Hi Brian,
 
-The kernel does not necessarily support each hash algorithm associated
-with some TPM bank though -- the most common case probably being that the
-algorithm is not built-in, but provided as a module, if at all, and thus
-not available at IMA init time yet.
+On Wed, 12 Mar 2025 at 19:40, Brian Masney <bmasney@redhat.com> wrote:
+>
+> Hi Christopher,
+>
+> On Wed, Mar 12, 2025 at 12:10:56PM +0100, Christopher Obbard wrote:
+> > For reference, I am working on updating initramfs generation tools in
+> > Debian/Fedora to include the required interconnect modules. Currently
+> > the interconnect drivers are built as modules in these distros, but
+> > are not included in the initrd. That is where my confusion initially
+> > stemmed from.
+>
+> From a Fedora and centos-stream-9/10 perspective, we have dracut
+> updated so that the interconnect modules are included in the initramfs
+> by default.
+>
+> https://github.com/dracutdevs/dracut/blob/master/modules.d/90kernel-modules/module-setup.sh#L74
+>
+> Let me know if you are seeing a specific issue with the initramfs on
+> Fedora and I can help you.
 
-If that happens to be the case, the behavior is a bit counter-intuitive:
-probably for historic reasons and to still extend the TPM bank with
-something, a record's template hash is filled with the padded SHA1 value.
-That is, it is perfectly possible that runtime_measurements_sha256 contains
-padded SHA1 template hashes if SHA-256 was unavailable at IMA init.
+Awesome, turns out I am wrong and the interconnect drivers are in fact
+present in the latest nightly Fedora 42 image I am testing:
 
-I would argue that it's likely that no existing userspace tool is relying
-on this fallback logic -- they either wouldn't consume the hash value from
-the measurement list directly but recreate it by themselves, as is required
-for verification against PCRs, or, if they did, they would somehow assume a
-hash algorithm and expect the hashes in the measurement list to be of that
-type. If of the latter kind, this could even lead to hard to debug
-verification failures. For example, from looking at keylime's current
-code, the verifier logic seems to assume that the template hashes found
-in the provided measurement list are of the configured 'ima_log_hash_alg'
-type. In particular, it does not check against padded SHA1 upon
-mismatch.
+$ lsinitramfs initramfs-6.14.0-0.rc3.29.fc42.aarch64.img  | grep interconnect
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx-interconnect.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx8mm-interconnect.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx8mn-interconnect.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx8mp-interconnect.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/imx/imx8mq-interconnect.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/icc-osm-l3.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/icc-smd-rpm.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-msm8916.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-msm8953.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-msm8996.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-qcm2290.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sa8775p.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sc7280.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sc8180x.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sc8280xp.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sdm845.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sdx75.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sm6115.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sm8150.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sm8250.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-sm8450.ko.xz
+usr/lib/modules/6.14.0-0.rc3.29.fc42.aarch64/kernel/drivers/interconnect/qcom/qnoc-x1e80100.ko.xz
 
-That being said, there's also another dimension: currently IMA has a
-hard requirement on SHA-1 and subsequent patches in this series will
-attempt to get rid of that. If SHA-1 is not available at IMA init though,
-it would also mean that padded SHA-1 values cannot get filled in as a
-fallback for other unsupported algorithms. Substituting something like
-hard coded all-zeroes or all-ones would be dangerous, because some
-application or user scripts could perhaps (ab)use the template hashes from
-the exported measurement lists for some kind of fingerprinting scheme or
-so.
 
-In conclusion, I think it's best to not create the
-runtime_measurements_<hash-algo> sysfs files for hash algorithms not
-supported by the kernel. That way, applications expecting a certain
-hash algorithm for the measurement list and which are not able to handle
-the padded-SHA1 fallback scheme would fail with a clear indication on what
-the problem is. Furthermore, as digests for unsupported banks are not
-getting exposed to userspace anymore, we'll have all flexibility to
-set it to any value internally, including all-ones as will be needed in
-a subsequent patch when addressing PCR extend for unsupported banks.
 
-So, do not create runtime_measurements_<hash-algo> sysfs files for
-unsupported hash algorithms. Likewise for their ascii counterparts.
+Thanks,
 
-Note that at this point, SHA-1 is still mandatory, and thus,
-runtime_measurements_sha1 as well as the "runtime_measurements" will
-remain there, even though the code has provisions already to skip their
-creation as well in case SHA-1 was unavailable.
-
-Signed-off-by: Nicolai Stange <nstange@suse.de>
----
- security/integrity/ima/ima_fs.c | 35 +++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 13 deletions(-)
-
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index e4a79a9b2d58..a8df2fe5f4cb 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -454,6 +454,9 @@ static int __init create_securityfs_measurement_lists(void)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < securityfs_measurement_list_count; i++) {
-+		if (!ima_algo_array[i].tfm)
-+			continue;
-+
- 		algo = ima_algo_array[i].algo;
- 
- 		sprintf(file_name, "ascii_runtime_measurements_%s",
-@@ -573,20 +576,26 @@ int __init ima_fs_init(void)
- 	if (ret != 0)
- 		goto out;
- 
--	binary_runtime_measurements =
--	    securityfs_create_symlink("binary_runtime_measurements", ima_dir,
--				      "binary_runtime_measurements_sha1", NULL);
--	if (IS_ERR(binary_runtime_measurements)) {
--		ret = PTR_ERR(binary_runtime_measurements);
--		goto out;
--	}
-+	if (ima_algo_array[ima_sha1_idx].tfm) {
-+		binary_runtime_measurements =
-+		    securityfs_create_symlink("binary_runtime_measurements",
-+					      ima_dir,
-+					      "binary_runtime_measurements_sha1",
-+					      NULL);
-+		if (IS_ERR(binary_runtime_measurements)) {
-+			ret = PTR_ERR(binary_runtime_measurements);
-+			goto out;
-+		}
- 
--	ascii_runtime_measurements =
--	    securityfs_create_symlink("ascii_runtime_measurements", ima_dir,
--				      "ascii_runtime_measurements_sha1", NULL);
--	if (IS_ERR(ascii_runtime_measurements)) {
--		ret = PTR_ERR(ascii_runtime_measurements);
--		goto out;
-+		ascii_runtime_measurements =
-+		    securityfs_create_symlink("ascii_runtime_measurements",
-+					      ima_dir,
-+					      "ascii_runtime_measurements_sha1",
-+					      NULL);
-+		if (IS_ERR(ascii_runtime_measurements)) {
-+			ret = PTR_ERR(ascii_runtime_measurements);
-+			goto out;
-+		}
- 	}
- 
- 	runtime_measurements_count =
--- 
-2.47.1
-
+Chris
