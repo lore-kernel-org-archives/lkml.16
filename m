@@ -1,137 +1,192 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EE8260366
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 15:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23000268684;
+	Thu, 13 Mar 2025 15:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741879736; cv=none; b=rQOyLCi+vpb0Iz58em7+2vo+/UpKvKn20AxEEB4XF7Jte+IqPxAaA1zqLSWc7buVbaP6/IyI8YT1fGlIAay8D0cV8BV2C9ZzLZySbkjzyvchaAkuOgxMS8eVwzK2X6mgx1RQi/5OSNkK4ap2AplpPj9GlxKd/0jac2wyLPOfPfE=
+	t=1741879754; cv=none; b=Y1el33amSolpelrte+yyZehlGjTkk0NUQ+63CmFY+htaeSZ9AB5nbOet4qqotgShRxkH5vXqViTTdlR0d0QOy9Laa/nCs5iCe7bvlMFPpDQZhUQ6LYojWZhKelsxL8ssxWtGKVpGu5AVmP4S9vl0Rw49//NZFV2tWvBShM2ZRBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741879736; c=relaxed/simple;
-	bh=36k0TlL5aEc2I8sZ0kU+FjEBUdKQFkuUdXwaj2GmVT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/CJFhSACDRpfPeRaKHaC3XH08NRw0kEmlx20dnoqfNnxq/MemSiJgQjW2/wDd7yPCuGWoLpG4X4YBmPqMYHTMZuUBblpBbjvaDzk6e3T3lbwu8/USrSnZxKNiCEnViRNOA9TAmoU90A9241clvGstHh4Bta35o2+L/XUSgAhuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=z0YuMFnX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KjImxb+x; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=z0YuMFnX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KjImxb+x; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="z0YuMFnX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KjImxb+x";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="z0YuMFnX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KjImxb+x"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B18FF1F388;
-	Thu, 13 Mar 2025 15:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741879732; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Da3VwQ0Q/TpvbUSlTbof5uzpY0q8GBI7PkAEVqPXZmA=;
-	b=z0YuMFnX4Gl9Vol4QPmUR9Vs2SUZZMhAKm5PJxIqg466iddNC7rFXEFBj6UDYUDmXLoGm+
-	oYWrRo0Hh30IunT4SH1+hLK2TF09Gu3CViBtzaKws4CgEvUR2cve7Yh8IZtVJGXRc93o0L
-	dYiq+L3i3c1DPZUitNYSSlrO6p5l8e4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741879732;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Da3VwQ0Q/TpvbUSlTbof5uzpY0q8GBI7PkAEVqPXZmA=;
-	b=KjImxb+x9GkRIoNLRBiM/Ok1yYUEgPo/AH1cUEi8OMxkMNDlWYRGuhezrgGQ1dqnE5w9vz
-	E9yxzmps+nBOK9BA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741879732; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Da3VwQ0Q/TpvbUSlTbof5uzpY0q8GBI7PkAEVqPXZmA=;
-	b=z0YuMFnX4Gl9Vol4QPmUR9Vs2SUZZMhAKm5PJxIqg466iddNC7rFXEFBj6UDYUDmXLoGm+
-	oYWrRo0Hh30IunT4SH1+hLK2TF09Gu3CViBtzaKws4CgEvUR2cve7Yh8IZtVJGXRc93o0L
-	dYiq+L3i3c1DPZUitNYSSlrO6p5l8e4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741879732;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Da3VwQ0Q/TpvbUSlTbof5uzpY0q8GBI7PkAEVqPXZmA=;
-	b=KjImxb+x9GkRIoNLRBiM/Ok1yYUEgPo/AH1cUEi8OMxkMNDlWYRGuhezrgGQ1dqnE5w9vz
-	E9yxzmps+nBOK9BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9DDE9137BA;
-	Thu, 13 Mar 2025 15:28:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 66KFJrT50mdXHQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 13 Mar 2025 15:28:52 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 5E1CFA0908; Thu, 13 Mar 2025 16:28:48 +0100 (CET)
-Date: Thu, 13 Mar 2025 16:28:48 +0100
-From: Jan Kara <jack@suse.cz>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the ext3 tree
-Message-ID: <bvj5iudnoftzgevrgt2yomwnt3jfgecjcg3cx7jh7pehnyvgej@3wjfqkiiljob>
-References: <20250313115026.364a8147@canb.auug.org.au>
+	s=arc-20240116; t=1741879754; c=relaxed/simple;
+	bh=zdbR99QGJYPC1f34tuZXVggykQp/849xlZYMuWUfaQ0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=L3KvWViQuuZzJvVvipYw9+2rq9Vn4Ks/j8CsmKzAzArIo4X/JBtxse9N1KgX9FHEDR+bA4Kd/m8sH4HvCBYQe0/7U5yV+9kVYm3WOZ3FdWjM5XAGcVcog8dsrtoBhTeNVaeZMACPFApSjJH2OacIkSw++V1UbV7eJmtNtkX3OhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDCB11477;
+	Thu, 13 Mar 2025 08:29:21 -0700 (PDT)
+Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72EE13F694;
+	Thu, 13 Mar 2025 08:29:09 -0700 (PDT)
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v3 00/13] mailbox: pcc: Fixes and cleanup/refactoring
+Date: Thu, 13 Mar 2025 15:28:46 +0000
+Message-Id: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313115026.364a8147@canb.auug.org.au>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,gmail.com,vger.kernel.org];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIALL50mcC/33Nyw6CMBAF0F8hs7amTyCu+A9jSB+DdMEjLTYaw
+ r9b2OjCuLw3c+6sEDF4jHApVgiYfPTTmIM4FWB7Pd6ReJczcMoVFVSQ2dq280+M7WN2esFIlNK
+ s6hyvsSohuzngcZDZ9ZZz7+MyhdfxIrG9/beWGKFEGCk74ZiQhjU6DGc7DbBvJf7t1S/Ps2eG1
+ ZwbW1ey/Pht297ekLDt8AAAAA==
+X-Change-ID: 20250303-pcc_fixes_updates-55a17fd28e76
+To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, 
+ Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>, 
+ Adam Young <admiyo@os.amperecomputing.com>, 
+ Robbie King <robbiek@xsightlabs.com>, Andi Shyti <andi.shyti@kernel.org>, 
+ linux-i2c@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, 
+ Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, 
+ "Rafael J. Wysocki" <rafael@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5426; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=zdbR99QGJYPC1f34tuZXVggykQp/849xlZYMuWUfaQ0=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBn0vnDYCUZPlafqDSwEs9LsaePtULqedBwfFF2d
+ ad3xsVEwIOJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ9L5wwAKCRAAQbq8MX7i
+ mBFHD/4oiodnKGh1JYmVO/F1ApXy+9binXe5A4h09BA30dSOLyXe3VXXDBg1aeQz79QugzSDr36
+ 9LsEZqSvlupZ9HbGWvHc8bz5upqwBbeLe/Gyg4fYrDFInoARWw692IqltBivm4WuALKTwcs+kE+
+ Q6RU+FzkL2v2iYJ1rzKpjB/Leb/Goguk3hPv3ZXkPs1bbtFfB/Nh8MFrjt2ETrLQLtqFiyrsLPr
+ caKVfPodbnaiCCeO9qhMky0hXb6B5mP05DnIKpXZV31snNzyoikvexR5Fd+i1Nu6gPwkjeIqPpi
+ IE736y+quX/+hm6M4rAiVy6WZNvtBhCnIkzebSlbLp4V7RMrqOOzIDFk2lU6kARI7aFRQpXMJLr
+ LZLGuNjOG7lXHltmw3yOHzoshjj0NFhC0/qHpDDuLqDmuBmun97wY8y4AKFI9BYUZq17sUCVo7Q
+ 1Eh33l7XZppgt1k9D8CX5jijkFH4/Cm429GsASaas0xfeqers/uvGYfbCxCl244TWtnmuaVxBT/
+ n1wuItVkgwoRIKnhPyIRTGRmfqNOoBfcsh96+JPZISu948w1x1G2IVFv4PhXRNC6qrmEAkh7DGV
+ QNhh/dn8TZL6sdV5prtBTzJPWFjuFQN3yXTaci8GUPATj3FAUaWwAC4c4/5oppOqLRb0LeQyEJB
+ Oeou6XJvIC/z8BQ==
+X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
+ fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
-On Thu 13-03-25 11:50:26, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Commits
-> 
->   c27bb2f1343c ("Revert "fanotify: disable readahead if we have pre-content watches"")
->   4fea134e1712 ("Revert "mm: don't allow huge faults for files with pre content watches"")
->   e28a4bdddc53 ("Revert "xfs: add pre-content fsnotify hook for DAX faults"")
->   df4447e2b3ef ("Revert "ext4: add pre-content fsnotify hook for DAX faults"")
-> 
-> are missing a Signed-off-by from their author.
-> 
-> Reverts are commits as well, so need reasonable commit messages and SoBs.
+Here is a summary of the changes in this patch series:
 
-Yeah, I wasn't sure about reverts so thanks for letting me know. I'll fix
-that up.
+1. Fix for race condition in updating of the chan_in_use flag
 
-								Honza
+   Ensures correct updating of the chan_in_use flag to avoid potential race
+   conditions.
+
+2. Interrupt handling fix
+
+   Ensures platform acknowledgment interrupts are always cleared to avoid
+   leaving the interrupt asserted forever.
+
+3. Endian conversion cleanup
+
+   Removes unnecessary endianness conversion in the PCC mailbox driver.
+
+4. Memory mapping improvements
+
+   Uses acpi_os_ioremap() instead of direct mapping methods for better ACPI
+   compatibility.
+
+5. Return early if the command complete register is absent
+
+   Ensures that if no GAS (Generic Address Structure) register is available,
+   the function exits early.
+
+6. Refactor IRQ handler and move error handling to a separate function
+
+   Improves readability of error handling in the PCC mailbox driver’s
+   interrupt handler.
+
+7. Shared memory mapping refactoring/enhancements
+
+   Ensures the shared memory is always mapped and unmapped in the PCC
+   mailbox driver when the PCC channel is requested and release.
+
+8. Refactored check_and_ack() Function
+
+   Simplifies and improves the logic for handling type4 platform notification
+   acknowledgments.
+
+09-13. Shared memory handling simplifications across multiple drivers
+
+    Simplifies shared memory handling in:
+        Kunpeng HCCS driver (soc: hisilicon)
+        Apm X-Gene Slimpro I2C driver
+        X-Gene hardware monitoring driver (hwmon)
+        ACPI PCC driver
+        ACPI CPPC driver
+
+The X-gene related changes now change the mapping attributes to align
+with ACPI specification. There are possibilities for more cleanups on
+top of these changes around how the shmem is accessed within these
+driver.
+
+Also, my main aim is to get 1-8 merged first and target 9-13 for
+following merge window through respective tree.
+
+Overall, the patch series focuses on improving correctness, efficiency, and
+maintainability of the PCC mailbox driver and related components by fixing
+race conditions, optimizing memory handling, simplifying shared memory
+interactions, and refactoring code for clarity.
+
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+Jassi,
+
+Please take patch [1-8]/13 through the mailbox tree if and when you are
+happy with the changes. I haven't got Ack from I2C still, but if you are
+happy to take [9-13]/13, I can check with I2C maintainer. Or else I am
+happy to take it individually later once the PCC changes are merged. I
+am still keeping it together if anyone is interested in testing.
+
+Changes in v3:
+- Updated the comment around updation of chan_in_use flag to keep it
+  appropriate even after acknowledging the interrupt as first action
+  in the irq handler
+- Added all the review/ack/tested-by tags from Huisong Li, Adam Young
+  and Robbie King
+- Added a note that double mapping introduced temporarily will not
+  impact any existing mbox client drivers as all the drivers move to
+  using new and only mapping after all the changes
+- s/pcc_chan_check_and_ack/pcc_chan_acknowledge/ which was originally
+  check_and_ack()
+- Link to v2: https://lore.kernel.org/r/20250305-pcc_fixes_updates-v2-0-1b1822bc8746@arm.com
+
+Changes in v2:
+- Improved time vs flow graph for the platform ack interrupt
+  acknowledgment issue in patch 2
+- Replaced PCC_ACK_FLAG_MASK with PCC_CMD_COMPLETION_NOTIFY in patch 3
+- Fixed return value check from pcc_mbox_error_check_and_clear() in patch 6
+- Dropped the change moving the function pcc_mbox_ioremap()
+- Adjusted error message in kunpeng_hccs driver after the change
+- Added the received ack/review tags
+- Link to v1: https://lore.kernel.org/r/20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com
+
+---
+Huisong Li (1):
+      mailbox: pcc: Fix the possible race in updation of chan_in_use flag
+
+Sudeep Holla (12):
+      mailbox: pcc: Always clear the platform ack interrupt first
+      mailbox: pcc: Drop unnecessary endianness conversion of pcc_hdr.flags
+      mailbox: pcc: Return early if no GAS register from pcc_mbox_cmd_complete_check
+      mailbox: pcc: Use acpi_os_ioremap() instead of ioremap()
+      mailbox: pcc: Refactor error handling in irq handler into separate function
+      mailbox: pcc: Always map the shared memory communication address
+      mailbox: pcc: Refactor and simplify check_and_ack()
+      soc: hisilicon: kunpeng_hccs: Simplify PCC shared memory region handling
+      i2c: xgene-slimpro: Simplify PCC shared memory region handling
+      hwmon: (xgene-hwmon) Simplify PCC shared memory region handling
+      ACPI: PCC: Simplify PCC shared memory region handling
+      ACPI: CPPC: Simplify PCC shared memory region handling
+
+ drivers/acpi/acpi_pcc.c                |  13 +---
+ drivers/acpi/cppc_acpi.c               |  16 +----
+ drivers/hwmon/xgene-hwmon.c            |  40 ++----------
+ drivers/i2c/busses/i2c-xgene-slimpro.c |  39 ++----------
+ drivers/mailbox/pcc.c                  | 113 ++++++++++++++++-----------------
+ drivers/soc/hisilicon/kunpeng_hccs.c   |  42 +++++-------
+ drivers/soc/hisilicon/kunpeng_hccs.h   |   2 -
+ include/acpi/pcc.h                     |   6 --
+ 8 files changed, 84 insertions(+), 187 deletions(-)
+---
+base-commit: 4d872d51bc9d7b899c1f61534e3dbde72613f627
+change-id: 20250303-pcc_fixes_updates-55a17fd28e76
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Regards,
+Sudeep
+
