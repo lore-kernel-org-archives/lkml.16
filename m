@@ -1,257 +1,193 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83294267AEC
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0590A7603F;
+	Thu, 13 Mar 2025 13:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741873807; cv=none; b=BW9rguBDMkVHAkDYEeo7AEIOxSvwO2koKER3OT8HLnJM3kasnP/ZQCxvQRJrwomoF7+Gtd9f4GqyCwf8GIlqwZGEGkVv/RubOmfe41sEeeTYMLJohyiRnkV1hEaoLdlnTHypWR4+tce/kmOL4AdfSPB8TDIEgbAPoDf3cN8ndbY=
+	t=1741873823; cv=none; b=G8lrQ7b3wuR43h2LgsUMdAd/itIPaD6reYek4Zbt2Bxg25pF9gVXAL9k+yWJV5kkQY05UJMcqtraRz3X5BpHto08lnq0PS6fQh2hGOYh2We35Dbi6vElnOu2GBopT20e+7OO1EGacoNT8DMpu0WMHQlbCj9Q/+CayW7B6sX4DOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741873807; c=relaxed/simple;
-	bh=c5BwsiMUEcE3FxlbLKMbbMYxcD4AgL6mpQVpTtKlUJ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GnbT6cuQNVgC6KRZTvhzXJ0IJFEykWXZPR5rziKyG+SaApB0VP0wbkeDJ80PYTi4EFfjzuRUVaaEv5BqhS1l7h4cAHXWiVpZMum40O4qyMeTQgcBXPL5lQmw1rBTmPAQgMv5hAexKzsRmaag+4xnqInbcEt/iI6m2PiLTFGKeBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ZD7qG0qYKz9sSY;
-	Thu, 13 Mar 2025 14:38:02 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id bhtE9KRHTdsR; Thu, 13 Mar 2025 14:38:02 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZD7q91zC1z9sSL;
-	Thu, 13 Mar 2025 14:37:57 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 302D58B779;
-	Thu, 13 Mar 2025 14:37:57 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id WdQEpeFRVBdp; Thu, 13 Mar 2025 14:37:57 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id C86C58B770;
-	Thu, 13 Mar 2025 14:37:56 +0100 (CET)
-Message-ID: <362f9392-f891-4a15-9ffd-5f5a6cac41b8@csgroup.eu>
-Date: Thu, 13 Mar 2025 14:37:56 +0100
+	s=arc-20240116; t=1741873823; c=relaxed/simple;
+	bh=62myLVbZVVZFvzPE89he3yMa/a5QAFc2vHsMKxeLVb8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GIB9bRAf2ZokgW7BIFb32QXwx91mCHg7tLYfrP9Jo0aXmCfmZaonSxHU+w6M8rvQZmfEt/WK00DM7JPIcPBdwNmxF6zz6+9RApC1doafFEB/GYIcYlTxUtbhSlC7pHwOjSrrg6OTnZBf6L1VLiC0V6P0ThVhIZzhNy5Lqj60ZU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBWKPm/h; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBWKPm/h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C704BC4CEEA;
+	Thu, 13 Mar 2025 13:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741873822;
+	bh=62myLVbZVVZFvzPE89he3yMa/a5QAFc2vHsMKxeLVb8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aBWKPm/h37x/i5+4FCPzxXZYbNjC4QtR+6/uzYQ4j82YaZ0nkwcNlRiBhZ3s4R+Lr
+	 UbF6tAw/GLOmZOSjCm3jrX37f1OqnkT6FdjX3Szfhc1wjS/Zyf835B0imLzLMqYjcF
+	 W5cI3ghKtUKRswhAYc77+5GSp1YmJnwSpf+x4AqcOGMZBAqFa6QHJIit/O7bFjGzmZ
+	 g/lU9Dt6wqDCDU2wFqrq4LXF68UvvU/ytVgt54uUuF2Vagcx8WobuHEk6mGKRWMGKp
+	 aLWh5ch4M9p8CvWw5jWVVvEJFFmiQHZ9S4CLDqJpDLqZJs/1wj2uAhd2lAzYblfH7W
+	 BgZb5J0KHNyow==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Guo Ren <guoren@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Mike Rapoport <rppt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [PATCH v2 00/13] arch, mm: reduce code duplication in mem_init()
+Date: Thu, 13 Mar 2025 15:49:50 +0200
+Message-ID: <20250313135003.836600-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bus: fsl-mc: Remove deadcode
-To: "Dr. David Alan Gilbert" <linux@treblig.org>, ioana.ciornei@nxp.com,
- stuyoder@gmail.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20241115152055.279732-1-linux@treblig.org>
- <3f9dbb7b-6527-48e1-9028-b46e5a0c58ce@csgroup.eu>
- <Z9LbwRUsHwFLpBZA@gallifrey>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <Z9LbwRUsHwFLpBZA@gallifrey>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+
+Hi,
+
+Every architecture has implementation of mem_init() function and some
+even more than one. All these release free memory to the buddy
+allocator, most of them set high_memory to the end of directly
+addressable memory and many of them set max_mapnr for FLATMEM case.
+
+These patches pull the commonalities into the generic code and refactor
+some of the mem_init() implementations so that many of them can be just
+dropped.
+
+v2 changes:
+* don't use generic version for setting high_memory on architectures
+  that use that varialble earlier than free_area_init()
+* use memblock_alloc_or_panig() to allocate zero pages on MIPS and s390
+* fix alignment in allocation of zero pages on s390
+* add Acked-by
+
+v1: https://lore.kernel.org/all/20250306185124.3147510-1-rppt@kernel.org
+
+Mike Rapoport (Microsoft) (13):
+  arm: mem_init: use memblock_phys_free() to free DMA memory on SA1111
+  csky: move setup_initrd() to setup.c
+  hexagon: move initialization of init_mm.context init to paging_init()
+  MIPS: consolidate mem_init() for NUMA machines
+  MIPS: make setup_zero_pages() use memblock
+  nios2: move pr_debug() about memory start and end to setup_arch()
+  s390: make setup_zero_pages() use memblock
+  xtensa: split out printing of virtual memory layout to a function
+  arch, mm: set max_mapnr when allocating memory map for FLATMEM
+  arch, mm: set high_memory in free_area_init()
+  arch, mm: streamline HIGHMEM freeing
+  arch, mm: introduce arch_mm_preinit
+  arch, mm: make releasing of memory to page allocator more explicit
+
+ arch/alpha/mm/init.c               |  8 ----
+ arch/arc/mm/init.c                 | 25 +----------
+ arch/arm/mm/init.c                 | 43 +------------------
+ arch/arm64/mm/init.c               | 12 +-----
+ arch/csky/kernel/setup.c           | 43 +++++++++++++++++++
+ arch/csky/mm/init.c                | 67 ------------------------------
+ arch/hexagon/mm/init.c             | 32 ++------------
+ arch/loongarch/kernel/numa.c       |  6 ---
+ arch/loongarch/mm/init.c           |  8 ----
+ arch/m68k/mm/init.c                |  2 -
+ arch/microblaze/mm/init.c          | 25 -----------
+ arch/mips/include/asm/mmzone.h     |  2 -
+ arch/mips/loongson64/numa.c        |  7 ----
+ arch/mips/mm/init.c                | 51 ++++-------------------
+ arch/mips/sgi-ip27/ip27-memory.c   |  9 ----
+ arch/nios2/kernel/setup.c          |  3 +-
+ arch/nios2/mm/init.c               | 16 +------
+ arch/openrisc/mm/init.c            |  6 ---
+ arch/parisc/mm/init.c              |  4 --
+ arch/powerpc/kernel/setup-common.c |  2 -
+ arch/powerpc/mm/mem.c              | 18 +-------
+ arch/riscv/mm/init.c               |  5 +--
+ arch/s390/mm/init.c                | 20 +--------
+ arch/sh/mm/init.c                  | 10 -----
+ arch/sparc/mm/init_32.c            | 31 +-------------
+ arch/sparc/mm/init_64.c            |  4 --
+ arch/um/include/shared/mem_user.h  |  1 -
+ arch/um/kernel/mem.c               |  9 ++--
+ arch/um/kernel/physmem.c           | 12 ------
+ arch/um/kernel/um_arch.c           |  2 -
+ arch/x86/include/asm/highmem.h     |  3 --
+ arch/x86/include/asm/numa.h        |  4 --
+ arch/x86/include/asm/numa_32.h     | 13 ------
+ arch/x86/kernel/setup.c            |  2 -
+ arch/x86/mm/Makefile               |  2 -
+ arch/x86/mm/highmem_32.c           | 34 ---------------
+ arch/x86/mm/init_32.c              | 41 ++----------------
+ arch/x86/mm/init_64.c              |  7 ++--
+ arch/x86/mm/numa_32.c              |  3 --
+ arch/xtensa/mm/init.c              | 66 +++++++----------------------
+ include/asm-generic/memory_model.h |  5 ++-
+ include/linux/memblock.h           |  1 -
+ include/linux/mm.h                 | 13 +-----
+ mm/internal.h                      |  3 +-
+ mm/memblock.c                      |  3 +-
+ mm/memory.c                        | 16 -------
+ mm/mm_init.c                       | 65 +++++++++++++++++++++++++----
+ mm/nommu.c                         |  6 ---
+ 48 files changed, 158 insertions(+), 612 deletions(-)
+ delete mode 100644 arch/x86/include/asm/numa_32.h
+ delete mode 100644 arch/x86/mm/highmem_32.c
 
 
-Le 13/03/2025 à 14:21, Dr. David Alan Gilbert a écrit :
-> [Vous ne recevez pas souvent de courriers de linux@treblig.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> * Christophe Leroy (christophe.leroy@csgroup.eu) wrote:
->>
->>
->> Le 15/11/2024 à 16:20, linux@treblig.org a écrit :
->>> [Vous ne recevez pas souvent de courriers de linux@treblig.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
->>>
->>> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->>>
->>> fsl_mc_allocator_driver_exit() was added explicitly by
->>> commit 1e8ac83b6caf ("bus: fsl-mc: add fsl_mc_allocator cleanup function")
->>> but was never used.
->>>
->>> Remove it.
->>>
->>> fsl_mc_portal_reset() was added in 2015 by
->>> commit 197f4d6a4a00 ("staging: fsl-mc: fsl-mc object allocator driver")
->>> but was never used.
->>>
->>> Remove it.
->>>
->>> fsl_mc_portal_reset() was the only caller of dpmcp_reset().
->>>
->>> Remove it.
->>>
->>> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
->>
->> Acked-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> 
-> Hi,
->    Can someone pick this old change up please?  I see the PPC patchwork says
->    'handled elsewhere' but doesn't say where.
-
-MAINTAINERS file says where:
-
-QORIQ DPAA2 FSL-MC BUS DRIVER
-M:	Stuart Yoder <stuyoder@gmail.com>
-M:	Laurentiu Tudor <laurentiu.tudor@nxp.com>
-L:	linux-kernel@vger.kernel.org
-S:	Maintained
-F:	Documentation/ABI/stable/sysfs-bus-fsl-mc
-F:	Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-F: 
-Documentation/networking/device_drivers/ethernet/freescale/dpaa2/overview.rst
-F:	drivers/bus/fsl-mc/
-F:	include/uapi/linux/fsl_mc.h
-
-FREESCALE SOC DRIVERS
-M:	Christophe Leroy <christophe.leroy@csgroup.eu>
-L:	linuxppc-dev@lists.ozlabs.org
-L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-S:	Maintained
-F:	Documentation/devicetree/bindings/misc/fsl,dpaa2-console.yaml
-F:	Documentation/devicetree/bindings/soc/fsl/
-F:	drivers/soc/fsl/
-F:	include/linux/fsl/
-F:	include/soc/fsl/
-
-I acked the 2 line changes in include/linux/fsl/mc.h, the main changes 
-being in the C files which are not under my scope.
-
-Stuart, Laurentiu, can you pick up the patch ?
-
-Christophe
-
-> 
-> Thanks,
-> 
-> Dave
->>
->>> ---
->>>    drivers/bus/fsl-mc/dpmcp.c            | 22 ----------------------
->>>    drivers/bus/fsl-mc/fsl-mc-allocator.c |  5 -----
->>>    drivers/bus/fsl-mc/fsl-mc-private.h   |  6 ------
->>>    drivers/bus/fsl-mc/mc-io.c            | 20 --------------------
->>>    include/linux/fsl/mc.h                |  2 --
->>>    5 files changed, 55 deletions(-)
->>>
->>> diff --git a/drivers/bus/fsl-mc/dpmcp.c b/drivers/bus/fsl-mc/dpmcp.c
->>> index 5fbd0dbde24a..7816c0a728ef 100644
->>> --- a/drivers/bus/fsl-mc/dpmcp.c
->>> +++ b/drivers/bus/fsl-mc/dpmcp.c
->>> @@ -75,25 +75,3 @@ int dpmcp_close(struct fsl_mc_io *mc_io,
->>>           /* send command to mc*/
->>>           return mc_send_command(mc_io, &cmd);
->>>    }
->>> -
->>> -/**
->>> - * dpmcp_reset() - Reset the DPMCP, returns the object to initial state.
->>> - * @mc_io:     Pointer to MC portal's I/O object
->>> - * @cmd_flags: Command flags; one or more of 'MC_CMD_FLAG_'
->>> - * @token:     Token of DPMCP object
->>> - *
->>> - * Return:     '0' on Success; Error code otherwise.
->>> - */
->>> -int dpmcp_reset(struct fsl_mc_io *mc_io,
->>> -               u32 cmd_flags,
->>> -               u16 token)
->>> -{
->>> -       struct fsl_mc_command cmd = { 0 };
->>> -
->>> -       /* prepare command */
->>> -       cmd.header = mc_encode_cmd_header(DPMCP_CMDID_RESET,
->>> -                                         cmd_flags, token);
->>> -
->>> -       /* send command to mc*/
->>> -       return mc_send_command(mc_io, &cmd);
->>> -}
->>> diff --git a/drivers/bus/fsl-mc/fsl-mc-allocator.c b/drivers/bus/fsl-mc/fsl-mc-allocator.c
->>> index b5e8c021fa1f..6c3beb82dd1b 100644
->>> --- a/drivers/bus/fsl-mc/fsl-mc-allocator.c
->>> +++ b/drivers/bus/fsl-mc/fsl-mc-allocator.c
->>> @@ -656,8 +656,3 @@ int __init fsl_mc_allocator_driver_init(void)
->>>    {
->>>           return fsl_mc_driver_register(&fsl_mc_allocator_driver);
->>>    }
->>> -
->>> -void fsl_mc_allocator_driver_exit(void)
->>> -{
->>> -       fsl_mc_driver_unregister(&fsl_mc_allocator_driver);
->>> -}
->>> diff --git a/drivers/bus/fsl-mc/fsl-mc-private.h b/drivers/bus/fsl-mc/fsl-mc-private.h
->>> index b3520ea1b9f4..e1b7ec3ed1a7 100644
->>> --- a/drivers/bus/fsl-mc/fsl-mc-private.h
->>> +++ b/drivers/bus/fsl-mc/fsl-mc-private.h
->>> @@ -66,10 +66,6 @@ int dpmcp_close(struct fsl_mc_io *mc_io,
->>>                   u32 cmd_flags,
->>>                   u16 token);
->>>
->>> -int dpmcp_reset(struct fsl_mc_io *mc_io,
->>> -               u32 cmd_flags,
->>> -               u16 token);
->>> -
->>>    /*
->>>     * Data Path Resource Container (DPRC) API
->>>     */
->>> @@ -631,8 +627,6 @@ int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
->>>
->>>    int __init fsl_mc_allocator_driver_init(void);
->>>
->>> -void fsl_mc_allocator_driver_exit(void);
->>> -
->>>    void fsl_mc_init_all_resource_pools(struct fsl_mc_device *mc_bus_dev);
->>>
->>>    void fsl_mc_cleanup_all_resource_pools(struct fsl_mc_device *mc_bus_dev);
->>> diff --git a/drivers/bus/fsl-mc/mc-io.c b/drivers/bus/fsl-mc/mc-io.c
->>> index 95b10a6cf307..a0ad7866cbfc 100644
->>> --- a/drivers/bus/fsl-mc/mc-io.c
->>> +++ b/drivers/bus/fsl-mc/mc-io.c
->>> @@ -263,23 +263,3 @@ void fsl_mc_portal_free(struct fsl_mc_io *mc_io)
->>>           dpmcp_dev->consumer_link = NULL;
->>>    }
->>>    EXPORT_SYMBOL_GPL(fsl_mc_portal_free);
->>> -
->>> -/**
->>> - * fsl_mc_portal_reset - Resets the dpmcp object for a given fsl_mc_io object
->>> - *
->>> - * @mc_io: Pointer to the fsl_mc_io object that wraps the MC portal to free
->>> - */
->>> -int fsl_mc_portal_reset(struct fsl_mc_io *mc_io)
->>> -{
->>> -       int error;
->>> -       struct fsl_mc_device *dpmcp_dev = mc_io->dpmcp_dev;
->>> -
->>> -       error = dpmcp_reset(mc_io, 0, dpmcp_dev->mc_handle);
->>> -       if (error < 0) {
->>> -               dev_err(&dpmcp_dev->dev, "dpmcp_reset() failed: %d\n", error);
->>> -               return error;
->>> -       }
->>> -
->>> -       return 0;
->>> -}
->>> -EXPORT_SYMBOL_GPL(fsl_mc_portal_reset);
->>> diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
->>> index c90ec889bfc2..37316a58d2ed 100644
->>> --- a/include/linux/fsl/mc.h
->>> +++ b/include/linux/fsl/mc.h
->>> @@ -417,8 +417,6 @@ int __must_check fsl_mc_portal_allocate(struct fsl_mc_device *mc_dev,
->>>
->>>    void fsl_mc_portal_free(struct fsl_mc_io *mc_io);
->>>
->>> -int fsl_mc_portal_reset(struct fsl_mc_io *mc_io);
->>> -
->>>    int __must_check fsl_mc_object_allocate(struct fsl_mc_device *mc_dev,
->>>                                           enum fsl_mc_pool_type pool_type,
->>>                                           struct fsl_mc_device **new_mc_adev);
->>> --
->>> 2.47.0
->>>
->>
-> --
->   -----Open up your eyes, open up your mind, open up your code -------
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \
-> \        dave @ treblig.org |                               | In Hex /
->   \ _________________________|_____ https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.treblig.org%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C707d35bccc9a4949428b08dd6231e98a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638774688697894005%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ncMBG9AvSfn4mKmQkFv%2F6UfFYp%2FBMDOna7uejbavhUc%3D&reserved=0   |_______/
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+-- 
+2.47.2
 
