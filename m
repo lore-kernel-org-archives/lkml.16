@@ -1,72 +1,51 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C972641DD
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DCA16BE17
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741862661; cv=none; b=qNeoUd/LicOldJ2IJclCrRuEyfZrpe4i/DcJ580y8Bnm5VxINKg4gjd5DMU6w+BA53ocbmGlvWB6XpiRIU+lYfS4cZVmNqZsWWX7iaHJJxK4nzD2xWZ5LShXKfiaN93w80ByRbRF0ZX6tb5oAXfn1a9i46X/7FmdI5ihZTsrG9g=
+	t=1741862688; cv=none; b=O5Xw4RrAEtoKSYUnwXCkkcAuuaLyiVcpONpAgYeZI0HxEj6hYPn+cRgvpquR/Nw/fC5Y/DkGykeoWvzGr88MohWXjv1a9QAo4moyR6b3QysFTFmmeo3faRiIWTQaT/LrTyPMGVjFSjPoocPjKcs+ekFRsRx/ttpAfK31WQCgsE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741862661; c=relaxed/simple;
-	bh=cdJZRMBGrkonFB3hvNUzys+FuUKN9910SmSB9F1d9xE=;
+	s=arc-20240116; t=1741862688; c=relaxed/simple;
+	bh=Ea/nF/6yF8q+yD6HjryxJLrzxjPzAhV6V2F/wso++vc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FlPeFJKUx8meD+y5ltE93He9kOcPTftAN1Fl+o5jsTfoDgCMi0ReZZYOHFPSH9jhPRXTSCSdcAkakneKo/vkfqkNYUGPKQ4x8Z7CH9GrFX2ogomTCZmriIrH3Kzy1gboeJAmDb1EJbasE9AFkQvS0rSOKVsWiGy+Ort7610VtUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=furiosa.ai; spf=none smtp.mailfrom=furiosa.ai; dkim=pass (2048-bit key) header.d=furiosa-ai.20230601.gappssmtp.com header.i=@furiosa-ai.20230601.gappssmtp.com header.b=W5ZpnldR; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=furiosa.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=furiosa.ai
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZARHBxDrdoRscRwMIjlTd6TEI/1e1B0aErgpJrLI3KDLy2mBIaWSoRSA4wHOupEXAb4nStLsKwlksXnZq5iFdkcMiylpM9uCdr7iSeAzYscvaHqfL52fXnhMU5MHb8xvzcmEh0hdYHsg62fcWUD+eRe28XJjXEyg89lQHpINQUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfwuO4E7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=furiosa-ai.20230601.gappssmtp.com header.i=@furiosa-ai.20230601.gappssmtp.com header.b="W5ZpnldR"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ff694d2d4dso1430324a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 03:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=furiosa-ai.20230601.gappssmtp.com; s=20230601; t=1741862659; x=1742467459; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ek1S1M2Z/3jRrIpDz7olPRb3vs2yw04VJj39Sas7Xhc=;
-        b=W5ZpnldRQfxcSJJinZVeOcGGXQfAX49Kypw13lm1k9ifGsLkO2alZ2e/WEcN9RxQA0
-         D54te9B60rKU0TItcrivmXHWUgw1+VNTi8TWTL5aKNhu5bG+Kgh+VAFPGdgdWLJmn2Qa
-         G/Gbn5Il1b+KVPrdM0fE4ECOns6zvhuEugCN4+FLA+kBK2UIeLIP8ZGTOllycjybHD19
-         PsVKL7TGiKDcRtt8dLu8RG4snOzZvJtt0MpH1BIHlDk3GO67DZElgpaNPXtAyKBlG+86
-         TXwhrYFzhZNyYQVZjN8e/IyxV/caOpcn8ev4/g2wrzLGAeslKn0TUkfI+lPtF2TIyu+y
-         hkrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741862659; x=1742467459;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ek1S1M2Z/3jRrIpDz7olPRb3vs2yw04VJj39Sas7Xhc=;
-        b=EhchCKNhIcWahm6hPPdn99Qx8VAFUrIYJnNaISlDng4KIayYSJ8UcE1NnOAIjHWW0i
-         zdw3JP120OoZXQr4oo/6r8GrCKwrcsu91cdFOj27iV7zh+MWIE5H5GnJwwh7W00hS14f
-         BXb+SbqUhbkbcs7ejSZlvA7ImQxXD2Y8jm6TqPoLaBas1tHvEQB6Zu4C4RFR+JG/QThb
-         pyvqUwCt5qLbsJRDfn1WllI5ob8q57kStQE4Qdj0fVUebFCFHUzmi/zuZ3CcsBC3uNjF
-         Jlz+u3QlWsspSsgOzs2cKbyjMlxIxQTGkBdO5CKhO0JE8H79EIx/0rzhp5/MAARgEU8s
-         tAgg==
-X-Forwarded-Encrypted: i=1; AJvYcCWv7f5541QG1vQLIrXVKtoixNRS3KoubyZkDJd8jLoQBp3HhQajM3qQWR04UEK2FqBEQgH103Lc1ef/6Iw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+JAC1c/RmFj0VAFFXJMfnkGLE+kCtPdTWKizxwO4Wy5Z1Hqws
-	K26g2R7Hz9iGJREn+/gYiQ6X+0vJQtxDt7KXbdsrU74vooO3O6Q3AMXw1ybWM94=
-X-Gm-Gg: ASbGnctYQec2OTxdVa6TPjBbkqQxTaTzBqwrnflfiH3MWj0CKLvtmY5tLqX/BgjPR6P
-	xoM0SPDlligbhF8lJceZTZVcAOqd4Qs9xF80jqsp13c5O7i4M/RpY/uVIVRTn7MSye9dY0KMqdp
-	yiRSmKWGmZDpSL9nwHs2ccXCWh0Cm7Gn6DhTqs6y0M7CMksj0LpqW92j1dHvpwRUETvs3aytprJ
-	VE/ED68UKCwuCM215Llv4VTvTrTmD4Xd00n8p8w5mjzZfj/aNnkMQYet5TA5TmjJ/AwxAsZXHcY
-	VVFRNldXiZOuUTg4fvyAROyTXxCHTrfHy4IhO09yxTMRwlWL74b3aN5lE54rgzMqTdVnt4VqlZi
-	X
-X-Google-Smtp-Source: AGHT+IHsVelts5SRr/WJziCKIuWWVYPcap8L5SU4CGAcvx6m6TS5z81715eoW1D7sFPeTWFvFyFeiA==
-X-Received: by 2002:a17:90b:17d0:b0:2ee:ee5e:42fb with SMTP id 98e67ed59e1d1-2ff7ce7abc1mr36460554a91.13.1741862658705;
-        Thu, 13 Mar 2025 03:44:18 -0700 (PDT)
-Received: from sidongui-MacBookPro.local ([221.148.76.1])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3011928706bsm3493605a91.46.2025.03.13.03.44.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 03:44:18 -0700 (PDT)
-Date: Thu, 13 Mar 2025 19:44:10 +0900
-From: Sidong Yang <sidong.yang@furiosa.ai>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Jens Axboe <axboe@kernel.dk>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: Re: [RFC PATCH v2 0/2] introduce io_uring_cmd_import_fixed_vec
-Message-ID: <Z9K2-mU3lrlRiV6s@sidongui-MacBookPro.local>
-References: <20250312142326.11660-1-sidong.yang@furiosa.ai>
- <7a4217ce-1251-452c-8570-fb36e811b234@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfwuO4E7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E27C4CEDD;
+	Thu, 13 Mar 2025 10:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741862688;
+	bh=Ea/nF/6yF8q+yD6HjryxJLrzxjPzAhV6V2F/wso++vc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZfwuO4E7CBH0225uI4SAo32VIdUKvpQ2GRBTZkOarnahlXaW9r933s3zWIgLiurhe
+	 /RZbf0TQLYgyWwGN9gqyZ067XyA3AUe60Z8xL9UB1KynBpWSH4tReS6K+hvnwgxUMj
+	 RQEFKCEbTeXXH7uyPtnlm/aqiZ+hAZFrJLW/WS2JLmVS2Ouc4QKk9vY3dRLzykS2a7
+	 1PJsvBSbGr53MrI9FvxGdwaDom62AUo68cqHlP3dHM2G6cIwm3WH1fskmz0nubAen/
+	 F5XtF8pZjchZ5e2ZHS83RaIVya7AcB73xx3N3IR/0JYmJVXdsZx+KjYGCVdMP2pQc/
+	 2x86DWb/qTzwQ==
+Date: Thu, 13 Mar 2025 11:44:41 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
+	Dave Young <dyoung@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, jpoimboe@kernel.org,
+	bsz@amazon.de
+Subject: Re: [PATCH v7 7/8] [DO NOT MERGE] x86/kexec: Add int3 in kexec path
+ for testing
+Message-ID: <Z9K3GXSaZUcVr8cb@gmail.com>
+References: <20250312144257.2348250-1-dwmw2@infradead.org>
+ <20250312144257.2348250-8-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,41 +54,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7a4217ce-1251-452c-8570-fb36e811b234@gmail.com>
+In-Reply-To: <20250312144257.2348250-8-dwmw2@infradead.org>
 
-On Thu, Mar 13, 2025 at 08:57:45AM +0000, Pavel Begunkov wrote:
-> On 3/12/25 14:23, Sidong Yang wrote:
-> > This patche series introduce io_uring_cmd_import_vec. With this function,
-> > Multiple fixed buffer could be used in uring cmd. It's vectored version
-> > for io_uring_cmd_import_fixed(). Also this patch series includes a usage
-> > for new api for encoded read in btrfs by using uring cmd.
-> 
-> Pretty much same thing, we're still left with 2 allocations in the
-> hot path. What I think we can do here is to add caching on the
-> io_uring side as we do with rw / net, but that would be invisible
-> for cmd drivers. And that cache can be reused for normal iovec imports.
-> 
-> https://github.com/isilence/linux.git regvec-import-cmd
-> (link for convenience)
-> https://github.com/isilence/linux/tree/regvec-import-cmd
-> 
-> Not really target tested, no btrfs, not any other user, just an idea.
-> There are 4 patches, but the top 3 are of interest.
 
-Thanks, I justed checked the commits now. I think cache is good to resolve
-this without allocation if cache hit. Let me reimpl this idea and test it
-for btrfs.
+* David Woodhouse <dwmw2@infradead.org> wrote:
 
+> From: David Woodhouse <dwmw@amazon.co.uk>
 > 
-> Another way would be to cache in btrfs, but then btrfs would need to
-> care about locking for the cache and some other bits, and we wouldn't
-> be able to reuse it for other drivers.
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> ---
+>  arch/x86/kernel/relocate_kernel_64.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 17d41e6e1a4b..2b7fc59af373 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -158,7 +158,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>  	lidt	(%rsp)
+>  	addq	$10, %rsp
+>  
+> -	//int3
+> +	int3
 
-Agreed, it could be better to reuse it for other driver.
+So this is all boot-serialized functionality with no SMP concerns 
+whatsoever, right?
+
+If yes then we could use something like this:
+
+	static int exception_selftest = 1;
+
+and add the INT3 point:
+
+	int3
+.globl after_int3
+after_int3:
+
+And do this in the early exception handler:
+
+	...
+	
+	if (exception_selftest) {
+		exception_selftest = 0;
+
+		print_something_warm_and_fuzzy();
+
+		IRET-to-after_int3;
+	}
+
+	...
+
+	... regular exception path ...
+
+... but all in assembly or so ;-)
+
+This would make it reasonably certain that the most complex bits of 
+this new debuging code are in working order, all the time.
 
 Thanks,
-Sidong
-> 
-> -- 
-> Pavel Begunkov
-> 
+
+	Ingo
