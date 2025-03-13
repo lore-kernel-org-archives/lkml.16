@@ -1,101 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2EF26137F;
-	Thu, 13 Mar 2025 08:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DAF1FBE86
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741856030; cv=none; b=H0nSl28WRu8YDk6u0+/LLcJ/MIexTWnEROLL/HfFqx+dsouB/uwT5Z6j7wZqpuFyKNyAg8MFiJMpO2TpRpQbXar1ZufK3mcAt16BJRAB2von881Mp0USEd6cON01n0a97UdVjkQ0qVdztmP4j9JMhORtoBxPlkYa6ix8LgTjN7o=
+	t=1741856085; cv=none; b=NwaryNdiwRx8YqX1vLqm97liA6Ig8YzxXyXu3b7dbIV543poM4+67TETGeo/WKjOAwi0RHoodNt7XJmQOt9/Z6Cf1iYzDLavLXqLu2TyaFzsw3gjSk6oNzlvIKfuKbOYMCEP7OQsSkYQcTHAc/ncD5/LJgLBJex6eiBRcTSeYmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741856030; c=relaxed/simple;
-	bh=DGDOMC0GYV/bil6LMIxE+mGIXtVxjPcXlE2MjWiHu90=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FMy5s9s3RmQYliyOtJhFw1j2uVSsJiFi2zATuB1fsPw300+azYOYeEkYV9Cp+37DONGesSTWHXg7g8OHenGE/nikptsrjP9fWXHVMAsklMAyFvZHY3uQpNF9bQ2NTSJH89kGYSCEbmUy+zL+YAjk4XV54LJ2GhiZRC1BVWWl17E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIgV65KG; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIgV65KG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741856029; x=1773392029;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DGDOMC0GYV/bil6LMIxE+mGIXtVxjPcXlE2MjWiHu90=;
-  b=kIgV65KGQTflCCByfcbCJ/dfmtXfnizMG7yf58LyXpOYiIB1nF1e/pT/
-   nlCoDwxwUbqRopyB6hNBDJiOcJtBhNrCBLn+LlyntaE1L7ci2sjal/y8I
-   kWTAZpLkD9NDtycU6WbVjbG/C+tEHDgYcbZ+pD2CQxYWlQJ1ycaeIm3qN
-   lta6MhPv2jBAFBUvFtuuyuRIV2TXzAxMVPvdXsE36P4F/eVos+ZVco2X/
-   ZNiY9Sfp1yak8eDxH+d7/YGInJpVVNsAjpzVnKjt3z4BYLic1uvkXi71M
-   W0J+UqM3JnitqeicY8kqHZVSvQjFh1u2ezGL8Ql26tNbz0Rbsq+X78TlC
-   Q==;
-X-CSE-ConnectionGUID: 0B2Pt4jqR8ifzwAi9FeWRw==
-X-CSE-MsgGUID: xLZG71HhQWKRcj8ejMGC1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42214077"
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="42214077"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 01:53:48 -0700
-X-CSE-ConnectionGUID: VDe/2QC7Ssi6NJarAyXqZQ==
-X-CSE-MsgGUID: BCOFWHxJSveIQzI8eeT0Tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="121389107"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 13 Mar 2025 01:53:46 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7218A1FC; Thu, 13 Mar 2025 10:53:45 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Paul Moore <paul@paul-moore.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	audit@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Eric Paris <eparis@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 1/1] audit: Mark audit_log_vformat() with __printf() attribute
-Date: Thu, 13 Mar 2025 10:52:39 +0200
-Message-ID: <20250313085343.241623-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1741856085; c=relaxed/simple;
+	bh=Mtsg04ahUEYyeV5JwVGj733jmCr9/jhyx/vmXj0i19o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ub05ffKyEtXqHi+BMNb2hlMr5bZI2VJopDkmFb3F+AWKM3DGk7GSCg59BrNCpPB4K5uC4lDOir+AfSVK1o6+/1dzUnO1+K7Ek0kBeGwZe7/3CbeHgigijUtzdTE5VTrLKUor5wF2fpCtzZfmGwHGLzmZII8PjqSyqFgEF0HflhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tseKr-00025H-Ib; Thu, 13 Mar 2025 09:54:37 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tseKr-005VRu-10;
+	Thu, 13 Mar 2025 09:54:37 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tseKr-00041e-0i;
+	Thu, 13 Mar 2025 09:54:37 +0100
+Message-ID: <a37615a87d242df0ad858e3926f33e4246bc00ef.camel@pengutronix.de>
+Subject: Re: [PATCH v5 0/8] imx8mp: Add support to Run/Stall DSP via reset
+ API
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>, Daniel Baluta
+	 <daniel.baluta@nxp.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, shawnguo@kernel.org, 
+ devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+ conor+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+ festevam@gmail.com, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, andersson@kernel.org,
+ Frank.Li@nxp.com,  peng.fan@nxp.com, laurentiu.mihalcea@nxp.com,
+ iuliana.prodan@nxp.com,  shengjiu.wang@nxp.com
+Date: Thu, 13 Mar 2025 09:54:37 +0100
+In-Reply-To: <Z9BkbVHlx60VFD7q@p14s>
+References: <20250311085812.1296243-1-daniel.baluta@nxp.com>
+	 <Z9BkbVHlx60VFD7q@p14s>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-audit_log_vformat() is using printf() type of format, and GCC compiler
-(Debian 14.2.0-17) is not happy about this:
+Hi Mathieu,
 
-kernel/audit.c:1978:9: error: function ‘audit_log_vformat’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-kernel/audit.c:1987:17: error: function ‘audit_log_vformat’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+On Di, 2025-03-11 at 10:27 -0600, Mathieu Poirier wrote:
+> Thanks for the re-spin.  I will wait for Shawn and Sascha to review their
+> respective bits before picking up this set.
 
-Fix the compilation errors (`make W=1` when CONFIG_WERROR=y, which is default)
-by adding __printf() attribute.
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+for merging the whole series via rproc.
 
-v2: added necessary technical information to the commit message (Paul)
-
- kernel/audit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 5f5bf85bcc90..f365e1bbeac6 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1956,8 +1956,8 @@ static inline int audit_expand(struct audit_buffer *ab, int extra)
-  * will be called a second time.  Currently, we assume that a printk
-  * can't format message larger than 1024 bytes, so we don't either.
-  */
--static void audit_log_vformat(struct audit_buffer *ab, const char *fmt,
--			      va_list args)
-+static __printf(2, 0)
-+void audit_log_vformat(struct audit_buffer *ab, const char *fmt, va_list args)
- {
- 	int len, avail;
- 	struct sk_buff *skb;
--- 
-2.47.2
-
+regards
+Philipp
