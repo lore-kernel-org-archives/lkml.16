@@ -1,252 +1,216 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F5F267393
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 12:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0207526659C;
+	Thu, 13 Mar 2025 12:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741869559; cv=none; b=QDG98k9IpftXF7J0gmnLmKeoiG8APc50vYieKEunCQ+/RkmQ7uUpRapomFe01pRmSj584P0zkv9J+gZwoe6kxWQNMViNAGqOj0U86zGk8WGqFgs9Y75PjjlA9gdU2ed7F7MggWhtaxsYjcy/TwNB3gmSNZiw2tTbskz37cCCmbQ=
+	t=1741869561; cv=none; b=kin6CL+GW7qXuYr00S/bW04eSdhMN3rkfhNWxyBa0NJ3q3W7qJ1bWkCmYpzY5ZsV3M7mWWCWhAXnRfDttokFlGiruwgcsZFf4dCTVUKEdyHQ54NxXdAxI4oOQKfeHhoRH4SScT+stHukcjMi0cdyjfM/3tKgLTM2vzpZG3YPex4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741869559; c=relaxed/simple;
-	bh=cg5D6pfaTmMxWwYRdSc3ve1jzhcFg1ZIMZvTd79kFXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FZdzRjksqxBEedp7FBh6RskhJtD2Pbyy3xgXUCcDAscKyWcmZanEg6YlQvsktuAUAUVSr2kjtKKxzd2b58uPABh/w7HWzwqv6Isx2Hrwk9F/r0C9TWae6NlcsnLwqza193+Pt2c8s9ubgdGFtI3gq0Uc+HGnt8WzfoQNDK68ofc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=g8/beGCL; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1741869561; c=relaxed/simple;
+	bh=R49ux7GAa6FUdQ6XiRq1pWMwNgAMVVqQ1suhvkWncjQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uoQFBVPDflgLSzmqoU5TzhXLsAWnPME+/Hi4eXCsXvYfG6DSbMRoumWzXIqrjkIOl9ZDXLQER2a5Oer1Z1DgeJD4LoFVqMkv9jhvPPqnSMGwP8CWTWyhzuAIiICLzoTgHxxocQlJ1K1iTafq08g6qeeFUdaTu9zhnm1yOkBFofY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Igh6mdiC; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="g8/beGCL"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso8147715e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 05:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1741869556; x=1742474356; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xSlQ1L6rFi2oeV1zF6QF9pposhG4AHSuAju9zq00g0c=;
-        b=g8/beGCLOIwMbAr2nOkT6riGp9wK5SU+DNXVeYT8uNdesrrwWIU5ahZ6rcrcSpz+xi
-         fouAPAFJKfZxZqeyMRMDQAdFXtxnw0fjXVc0fLArJTBF0RK+C6S8o4a0mnCbf2/cYdJP
-         qIk7jOORmsHdORaeoK4TZvXgSElkeq1sN2h21She9BJLs32XBBVVWDcSja/wwO20pn0x
-         5vFZ+tsoYK2IiNObKtBp4hV2sAnNGqf0FQtagqEjIAaplToKtn+1iCL+vvUocrICMasP
-         7z7xUfI2deJU0YW7K9/Ls2Q9a6FE+3nF1vGOM+tGxt/5u/k1KH1N7YqiMwYLTSnEhUvP
-         k0EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741869556; x=1742474356;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xSlQ1L6rFi2oeV1zF6QF9pposhG4AHSuAju9zq00g0c=;
-        b=X3F9Ht4XwgHhzZEBALS0zKBNnhmWP7OO5whpnPT8uimxjP9dekROyXa4S0fT1rT6ME
-         yA3kA/HfAbH6I11qYY7sWeIBrUqR5kGjQdDAdG2mwoMN7dhw77ZKsUCN0dvBJgUXCB8O
-         dvdv2Bwd15s0lmVMXOw6vE/URPKEOxUcHONKJf4PfohPZgSLRGsCoSiwwn/hIsKmBx+q
-         wpymM0gprpfzUnf7CLi2Y7jwAnfvSzzyelmJmEIykdua1EiwEzdNPGUk4KLgec+1YcJH
-         iMWbU5zulIH3yXffphDPBHDqKzB6Ez/3ImVGZbJn15JNim9I6bOShGgg1tYrrTeeeLhJ
-         waSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEzoda4aSfk1RchHPyAVIOSi0kqyJcqlbyA83lJSiApFNrmnKtVvSO8O4aDKmb8tcoiRuNlO5nybYvXJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw16ynFixBjeKp4gzQpGO/EN1l+629qksEjwduXrTeWy1dXkq+/
-	agfHoxJY/v9rSvXhRrwwytXAffurBYIEbeKEaV8T+W8TgS5kU1kw7qBZVNjKLCg=
-X-Gm-Gg: ASbGncuDHfnkPb6BkOJFsJ+ddbi2RR9BIsT/iGOqF+YKs5vA7NnkODmchR7j7jxLDg7
-	X16OH6oiv72nlXfLYBc+wv0SyyaSP/vZVbVl6tqKQb5wx86I5ykhNAyUiJufhsujTTz55W+wPne
-	7LHkDtn3tq0ViDACQQF/nG9Gl41iwJShhu2ysv6CWYHkbqK+J0+lCnu9Rp3CrxwY99LzRhGktsO
-	mzjIzvvfb8f4t0sdGcl02c5MUvd91W0GVH1ou67Fe81jq6kT0A4+wJx5/RwPgjEaM9WAUwikasP
-	kBZ4xSXRszCBonzZjXQ7wqiAw4gnFTM22XNizpjoBHc=
-X-Google-Smtp-Source: AGHT+IHljsBKLiMSwe9a9spi/guXRSlSUeFAziwYEZ2f83TIkAwW439SP28/QrmHbhabYpknI9/fAQ==
-X-Received: by 2002:a5d:64ac:0:b0:38d:dfb8:3679 with SMTP id ffacd0b85a97d-39132d228c5mr22022486f8f.17.1741869556082;
-        Thu, 13 Mar 2025 05:39:16 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::59a5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df33aasm1978419f8f.2.2025.03.13.05.39.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 05:39:15 -0700 (PDT)
-Date: Thu, 13 Mar 2025 13:39:14 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH v3 02/17] riscv: sbi: add FWFT extension interface
-Message-ID: <20250313-5c22df0c08337905367fa125@orel>
-References: <20250310151229.2365992-1-cleger@rivosinc.com>
- <20250310151229.2365992-3-cleger@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Igh6mdiC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=6d9ZK
+	FjuV8GSrxW8OgiOZ8jd/gQ05HIDF0SS4LvlBJU=; b=Igh6mdiCXdySqXS4x2tgO
+	5A3sWqZl6fE+QatLFrL6jL1Z17KVhRDav6OFKUcsWL54GyDj0Hi35VlJBaUCyGR0
+	zFw6D2akRSKFJkc3vmSYCbyOCjntu4xsu9amRDjgiGXdRNueoc3/gpxsapZRtTCv
+	ULUtGFHN8APhQiNizP+8oo=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnEv+60dJnJuINRw--.30448S2;
+	Thu, 13 Mar 2025 20:38:18 +0800 (CST)
+From: oushixiong1025@163.com
+To: Simona Vetter <simona@ffwll.ch>
+Cc: Helge Deller <deller@gmx.de>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Samuel Thibault <samuel.thibault@ens-lyon.org>,
+	Zsolt Kajtar <soci@c64.rulez.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: [PATCH] fbcon: Use static attribute groups for sysfs entries
+Date: Thu, 13 Mar 2025 20:38:16 +0800
+Message-Id: <20250313123816.393397-1-oushixiong1025@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250310151229.2365992-3-cleger@rivosinc.com>
+X-CM-TRANSID:_____wDnEv+60dJnJuINRw--.30448S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGF1fArW3GrykCr18trW3trb_yoWrtrWfpr
+	4Uta4YgF45G3ZxWw45Zw4DZwnxWwn7C34fXr4kKw1SgFykArZaqa48JFyjyayfJrZ7GF1r
+	Aa4qyry8AF4xur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnPEfUUUUU=
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXAoPD2fSzZxRWgAAs5
 
-On Mon, Mar 10, 2025 at 04:12:09PM +0100, Clément Léger wrote:
-> This SBI extensions enables supervisor mode to control feature that are
-> under M-mode control (For instance, Svadu menvcfg ADUE bit, Ssdbltrp
-> DTE, etc).
-> 
-> Signed-off-by: Clément Léger <cleger@rivosinc.com>
-> ---
->  arch/riscv/include/asm/sbi.h |  5 ++
->  arch/riscv/kernel/sbi.c      | 97 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 102 insertions(+)
-> 
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index bb077d0c912f..fc87c609c11a 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -503,6 +503,11 @@ int sbi_remote_hfence_vvma_asid(const struct cpumask *cpu_mask,
->  				unsigned long asid);
->  long sbi_probe_extension(int ext);
->  
-> +int sbi_fwft_all_cpus_set(u32 feature, unsigned long value, unsigned long flags,
-> +			  bool revert_on_failure);
-> +int sbi_fwft_get(u32 feature, unsigned long *value);
-> +int sbi_fwft_set(u32 feature, unsigned long value, unsigned long flags);
-> +
->  /* Check if current SBI specification version is 0.1 or not */
->  static inline int sbi_spec_is_0_1(void)
->  {
-> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> index 1989b8cade1b..256910db1307 100644
-> --- a/arch/riscv/kernel/sbi.c
-> +++ b/arch/riscv/kernel/sbi.c
-> @@ -299,6 +299,103 @@ static int __sbi_rfence_v02(int fid, const struct cpumask *cpu_mask,
->  	return 0;
->  }
->  
-> +int sbi_fwft_get(u32 feature, unsigned long *value)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +/**
-> + * sbi_fwft_set() - Set a feature on all online cpus
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
-copy+paste of description from sbi_fwft_all_cpus_set(). This function
-only sets the feature on the calling hart.
+Using device_create_with_groups() to simplify creation and removal.
+Same as commit 1083a7be4504 ("tty: Use static attribute groups for
+sysfs entries").
 
-> + * @feature: The feature to be set
-> + * @value: The feature value to be set
-> + * @flags: FWFT feature set flags
-> + *
-> + * Return: 0 on success, appropriate linux error code otherwise.
-> + */
-> +int sbi_fwft_set(u32 feature, unsigned long value, unsigned long flags)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +struct fwft_set_req {
-> +	u32 feature;
-> +	unsigned long value;
-> +	unsigned long flags;
-> +	cpumask_t mask;
-> +};
-> +
-> +static void cpu_sbi_fwft_set(void *arg)
-> +{
-> +	struct fwft_set_req *req = arg;
-> +
-> +	if (sbi_fwft_set(req->feature, req->value, req->flags))
-> +		cpumask_clear_cpu(smp_processor_id(), &req->mask);
-> +}
-> +
-> +static int sbi_fwft_feature_local_set(u32 feature, unsigned long value,
-> +				      unsigned long flags,
-> +				      bool revert_on_fail)
-> +{
-> +	int ret;
-> +	unsigned long prev_value;
-> +	cpumask_t tmp;
-> +	struct fwft_set_req req = {
-> +		.feature = feature,
-> +		.value = value,
-> +		.flags = flags,
-> +	};
-> +
-> +	cpumask_copy(&req.mask, cpu_online_mask);
-> +
-> +	/* We can not revert if features are locked */
-> +	if (revert_on_fail && flags & SBI_FWFT_SET_FLAG_LOCK)
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+---
+ drivers/video/fbdev/core/fbcon.c | 67 +++++++++-----------------------
+ 1 file changed, 19 insertions(+), 48 deletions(-)
 
-Should use () around the flags &. I thought checkpatch complained about
-that?
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index e8b4e8c119b5..7f96b60c07f5 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -160,7 +160,6 @@ static int info_idx = -1;
+ 
+ /* console rotation */
+ static int initial_rotation = -1;
+-static int fbcon_has_sysfs;
+ static int margin_color;
+ 
+ static const struct consw fb_con;
+@@ -3157,7 +3156,7 @@ static const struct consw fb_con = {
+ 	.con_debug_leave	= fbcon_debug_leave,
+ };
+ 
+-static ssize_t store_rotate(struct device *device,
++static ssize_t rotate_store(struct device *device,
+ 			    struct device_attribute *attr, const char *buf,
+ 			    size_t count)
+ {
+@@ -3179,7 +3178,7 @@ static ssize_t store_rotate(struct device *device,
+ 	return count;
+ }
+ 
+-static ssize_t store_rotate_all(struct device *device,
++static ssize_t rotate_all_store(struct device *device,
+ 				struct device_attribute *attr,const char *buf,
+ 				size_t count)
+ {
+@@ -3201,7 +3200,7 @@ static ssize_t store_rotate_all(struct device *device,
+ 	return count;
+ }
+ 
+-static ssize_t show_rotate(struct device *device,
++static ssize_t rotate_show(struct device *device,
+ 			   struct device_attribute *attr,char *buf)
+ {
+ 	struct fb_info *info;
+@@ -3220,7 +3219,7 @@ static ssize_t show_rotate(struct device *device,
+ 	return sysfs_emit(buf, "%d\n", rotate);
+ }
+ 
+-static ssize_t show_cursor_blink(struct device *device,
++static ssize_t cursor_blink_show(struct device *device,
+ 				 struct device_attribute *attr, char *buf)
+ {
+ 	struct fb_info *info;
+@@ -3245,7 +3244,7 @@ static ssize_t show_cursor_blink(struct device *device,
+ 	return sysfs_emit(buf, "%d\n", blink);
+ }
+ 
+-static ssize_t store_cursor_blink(struct device *device,
++static ssize_t cursor_blink_store(struct device *device,
+ 				  struct device_attribute *attr,
+ 				  const char *buf, size_t count)
+ {
+@@ -3279,35 +3278,18 @@ static ssize_t store_cursor_blink(struct device *device,
+ 	return count;
+ }
+ 
+-static struct device_attribute device_attrs[] = {
+-	__ATTR(rotate, S_IRUGO|S_IWUSR, show_rotate, store_rotate),
+-	__ATTR(rotate_all, S_IWUSR, NULL, store_rotate_all),
+-	__ATTR(cursor_blink, S_IRUGO|S_IWUSR, show_cursor_blink,
+-	       store_cursor_blink),
+-};
+-
+-static int fbcon_init_device(void)
+-{
+-	int i, error = 0;
++static DEVICE_ATTR_RW(rotate);
++static DEVICE_ATTR_WO(rotate_all);
++static DEVICE_ATTR_RW(cursor_blink);
+ 
+-	fbcon_has_sysfs = 1;
+-
+-	for (i = 0; i < ARRAY_SIZE(device_attrs); i++) {
+-		error = device_create_file(fbcon_device, &device_attrs[i]);
+-
+-		if (error)
+-			break;
+-	}
+-
+-	if (error) {
+-		while (--i >= 0)
+-			device_remove_file(fbcon_device, &device_attrs[i]);
+-
+-		fbcon_has_sysfs = 0;
+-	}
++static struct attribute *fbcon_device_attrs[] = {
++	&dev_attr_rotate.attr,
++	&dev_attr_rotate_all.attr,
++	&dev_attr_cursor_blink.attr,
++	NULL
++};
+ 
+-	return 0;
+-}
++ATTRIBUTE_GROUPS(fbcon_device);
+ 
+ #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
+ static void fbcon_register_existing_fbs(struct work_struct *work)
+@@ -3367,14 +3349,16 @@ void __init fb_console_init(void)
+ 	console_lock();
+ 	fbcon_device = device_create(fb_class, NULL, MKDEV(0, 0), NULL,
+ 				     "fbcon");
++	fbcon_device = device_create_with_groups(fb_class, NULL,
++						 MKDEV(0, 0), NULL,
++						 fbcon_device_groups, "fbcon");
+ 
+ 	if (IS_ERR(fbcon_device)) {
+ 		printk(KERN_WARNING "Unable to create device "
+ 		       "for fbcon; errno = %ld\n",
+ 		       PTR_ERR(fbcon_device));
+ 		fbcon_device = NULL;
+-	} else
+-		fbcon_init_device();
++	}
+ 
+ 	for (i = 0; i < MAX_NR_CONSOLES; i++)
+ 		con2fb_map[i] = -1;
+@@ -3385,18 +3369,6 @@ void __init fb_console_init(void)
+ 
+ #ifdef MODULE
+ 
+-static void __exit fbcon_deinit_device(void)
+-{
+-	int i;
+-
+-	if (fbcon_has_sysfs) {
+-		for (i = 0; i < ARRAY_SIZE(device_attrs); i++)
+-			device_remove_file(fbcon_device, &device_attrs[i]);
+-
+-		fbcon_has_sysfs = 0;
+-	}
+-}
+-
+ void __exit fb_console_exit(void)
+ {
+ #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
+@@ -3409,7 +3381,6 @@ void __exit fb_console_exit(void)
+ #endif
+ 
+ 	console_lock();
+-	fbcon_deinit_device();
+ 	device_destroy(fb_class, MKDEV(0, 0));
+ 
+ 	do_unregister_con_driver(&fb_con);
+-- 
+2.17.1
 
-> +		return -EINVAL;
-> +
-> +	/* Reset value is the same for all cpus, read it once. */
-
-How do we know we're reading the reset value? sbi_fwft_all_cpus_set() may
-be called multiple times on the same feature. And harts may have had
-sbi_fwft_set() called on them independently. I think we should drop the
-whole prev_value optimization.
-
-> +	ret = sbi_fwft_get(feature, &prev_value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Feature might already be set to the value we want */
-> +	if (prev_value == value)
-> +		return 0;
-> +
-> +	on_each_cpu_mask(&req.mask, cpu_sbi_fwft_set, &req, 1);
-> +	if (cpumask_equal(&req.mask, cpu_online_mask))
-> +		return 0;
-> +
-> +	pr_err("Failed to set feature %x for all online cpus, reverting\n",
-> +	       feature);
-
-nit: I'd let the above line stick out. We have 100 chars.
-
-> +
-> +	req.value = prev_value;
-> +	cpumask_copy(&tmp, &req.mask);
-> +	on_each_cpu_mask(&req.mask, cpu_sbi_fwft_set, &req, 1);
-> +	if (cpumask_equal(&req.mask, &tmp))
-> +		return 0;
-
-I'm not sure we want the revert_on_fail support either. What happens when
-the revert fails and we return -EINVAL below? Also returning zero when
-revert succeeds means the caller won't know if we successfully set what
-we wanted or just successfully reverted.
-
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +/**
-> + * sbi_fwft_all_cpus_set() - Set a feature on all online cpus
-> + * @feature: The feature to be set
-> + * @value: The feature value to be set
-> + * @flags: FWFT feature set flags
-> + * @revert_on_fail: true if feature value should be restored to it's orignal
-
-its original
-
-> + * 		    value on failure.
-
-Line 'value' up under 'true'
-
-> + *
-> + * Return: 0 on success, appropriate linux error code otherwise.
-> + */
-> +int sbi_fwft_all_cpus_set(u32 feature, unsigned long value, unsigned long flags,
-> +			  bool revert_on_fail)
-> +{
-> +	if (feature & SBI_FWFT_GLOBAL_FEATURE_BIT)
-> +		return sbi_fwft_set(feature, value, flags);
-> +
-> +	return sbi_fwft_feature_local_set(feature, value, flags,
-> +					  revert_on_fail);
-> +}
-> +
->  /**
->   * sbi_set_timer() - Program the timer for next timer event.
->   * @stime_value: The value after which next timer event should fire.
-> -- 
-> 2.47.2
-
-Thanks,
-drew
