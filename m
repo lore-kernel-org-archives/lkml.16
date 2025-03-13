@@ -1,220 +1,162 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2073.outbound.protection.outlook.com [40.107.249.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF120267F5C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741873911; cv=fail; b=Wra9AsR5pgMsdG4hQMwLH2/B3SShKQTBDfawaVrhCVqpOuQtHwYXKlpqvTkkRB/apZ0waNHe4cjXvkPvoQW5/qELknAmwnxDVddJNl3P04ZOn0OgvYIhg/QD6vgeUjfuZRKR5gmldt/MQH4Wa48mQtUdjckmjTCq9BtEcQ0zAn8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741873911; c=relaxed/simple;
-	bh=cSUfwuf8Pxe1WyGdUC0FIgLGRBSLj3/mhl1QaO0Y0ek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nwsXA3WikHyLPAT1JOd4qp2nRSwk8zD4/plLEcitcmgTNJI9CM8f6zg86npxCDsAaDIz77QgKyOMnvjO0vvng0elxu6RxKTl5PjDMZn/dWaVQENZtqYXhZg5wxANXTTjN8pPwF1WTa6x7xsadR8fnoZ4YYyquttrNMS5OEFF2A0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=S6GtSI/d reason="signature verification failed"; arc=fail smtp.client-ip=40.107.249.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F2F267B62;
+	Thu, 13 Mar 2025 13:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741873917; cv=none; b=DGiDiY3IOEs3JZIHgJ/ui8qHFqcuh5g7hIFh2ichm2s8zi3GEJNW1CXDnvlol/sd9v90NF7f2JpfYPhBiv9Vi5nipqy1iQv87jJLG0yrMQO751Ehx5xDx44w+lQEYG97ngyn6Opp7OLT/nf5n5yNA/QupROZpBSIwNPJo2br41s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741873917; c=relaxed/simple;
+	bh=vJ1t8jcOv4IahmAbojjG/hS3bRjZ1yhzZyXAgkQKcCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eBAzGs+u6EHZLqXCqMD+m4WQR/g2rGUaLesyf5NWALy249IcE9whNbwYDw/eIjVKOAqciqromZMSsRV5BqypvsfF13mO0ruLzZjfWNLnVq1rbYrz25XRBc2KElhoeReeuCUlsHGOQYYeDBn4dFaQg1SU8sdCW9braooblL3id4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkivtWoT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="S6GtSI/d"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NnUBEWXwd5XzY156ERmWwXdnrle/AKgp3dIKVXO+b2uBlpWJuoUVpwWoeLqt42VcqqVSN9UtFPwOSjD7PuHRLpLN4+8mrvOBll3Rj8T6YZry9waBU1qfnceyDHcf+yDuPEMyodf8eTKc3E9ojznH01esn8w18xVzqrzH7awaL5r6Zb/8aGx+eICPDWVscvpYbl+7aVHciaVD8w5Lb2LgHmu8ENI9UxieY/h/4YpicIRqvQz+319EEqH78BQZnn74XBWGU4pwzmsxRY70P/7DLgGPsRc/tNj9A1uoRoNh3wYacRa3hcOuzjTn1S15Xjp2SyqseMqkotMz+ATpdvXHoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GUp5I9bxDRXMsjAfEJ7jXsjtxjZLP9YU0HGEB/1/mWI=;
- b=cUK0PqH/k5cxPqhZMB8wL1FXbBz9bM6/my42F8lA9ghJdXGkfgqFuhQKDDQrQ2MyVyut/msyESPDiYRQ3P6Gu5Z3bB3MIIrrGpiZXuWOjc82SAzrC3mvnAIfK3IPpc64JZn2mZZzrFRLv5HQPCx7etNnh8eZyywj06QGzCF2K/Pco8SeVEF+lj08beiGUizGH1w3kXF1qRyzAqvhVMtDXg/xZLOuisR+hc47cRHyM65+k1Do/4NEPK3DOLTcCuPCKzoEwSM2GTDpNGN+Mv9vHe9OMDvh3PItz3oZjJnapwbKOBLkqrtSMktoLnNQPNW2+Bz2gcOExC7JJ0FAXSCgYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GUp5I9bxDRXMsjAfEJ7jXsjtxjZLP9YU0HGEB/1/mWI=;
- b=S6GtSI/di9797Qc/7yno+0Nspp9/Zkl26l/uYNclvqDosKyQKGE5su6tooouYU5frONord2j5LSICuub3z3N70B5IYZTQ+pJGRzoU/XyvLHe15ynn5aS43rTTvlONBQKXGa4Dnu1uc+xp3OgxEYccDT8EwE9Ia+m7idoYWEihcpeqX7e0pHZ/2I/Eq5H2+A8MCHv6TZ+NmfM55YTwDWT3RbU0u3rnZAKuBCj15TUiEiUYrq2BIuaTAl7N6hd4w1XNH7sZJPGpbA7u6n4gmik6ggUzour5kKu2fxVcU+JWeDCa/i5Y5atSO5/jWjldxo+N+kT6SnK8NruihjNQrCdzg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
- by VI1PR04MB7039.eurprd04.prod.outlook.com (2603:10a6:800:12b::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.28; Thu, 13 Mar
- 2025 13:51:46 +0000
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e]) by AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e%5]) with mapi id 15.20.8534.027; Thu, 13 Mar 2025
- 13:51:46 +0000
-Date: Thu, 13 Mar 2025 15:51:42 +0200
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: "Dr. David Alan Gilbert" <linux@treblig.org>, stuyoder@gmail.com, 
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>, linuxppc-dev@lists.ozlabs.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: fsl-mc: Remove deadcode
-Message-ID: <oz65tdekf2ywyzadbntuxntwxulcdzyo33se54qqdsddkogquh@bqnmsmqijfvb>
-References: <20241115152055.279732-1-linux@treblig.org>
- <3f9dbb7b-6527-48e1-9028-b46e5a0c58ce@csgroup.eu>
- <Z9LbwRUsHwFLpBZA@gallifrey>
- <362f9392-f891-4a15-9ffd-5f5a6cac41b8@csgroup.eu>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <362f9392-f891-4a15-9ffd-5f5a6cac41b8@csgroup.eu>
-X-ClientProxiedBy: AM6PR10CA0015.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:209:89::28) To AS8PR04MB8868.eurprd04.prod.outlook.com
- (2603:10a6:20b:42f::6)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkivtWoT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D278CC4CEE5;
+	Thu, 13 Mar 2025 13:51:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741873916;
+	bh=vJ1t8jcOv4IahmAbojjG/hS3bRjZ1yhzZyXAgkQKcCk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lkivtWoTeJzPisCwCmeZ9L2Fz06iBYCw7N7oUdPfSyVbKGHBQSJRQN557ej/tzus0
+	 RT9LYZZKsZEuccc831bWhcS16iFVfInWEJvOyu28bZGwYqulYjyTkus9rBocPVvhz4
+	 m8zeNcqioCGuPo109d5hVWHgDD9f18aJRE/THVHMZkClmOyxFtvaA5ad1Sbfx5UsQa
+	 /mN176Bn7itUz9e8h5ICJhb2Pyd0QqADYzYHfdo8hw/y2vYpPI7xdW6pUdF2K5dqLP
+	 rpEfF6BvQYYCTc7YKFjKCOY7th9g+KIym2sJYOE6kTLClyLAp0snpD940nJFfAVx96
+	 iFppF0Okn7hYA==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Guo Ren <guoren@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Mike Rapoport <rppt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	x86@kernel.org
+Subject: [PATCH v2 07/13] s390: make setup_zero_pages() use memblock
+Date: Thu, 13 Mar 2025 15:49:57 +0200
+Message-ID: <20250313135003.836600-8-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250313135003.836600-1-rppt@kernel.org>
+References: <20250313135003.836600-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|VI1PR04MB7039:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2accff3-5a4a-4d95-2f92-08dd623631ab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|13003099007|7053199007|27256017;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?n7d9ClzdfJ6mpC8REkARTPKTtkNyksyrVT/wRqA6wt9n3dTW4o5klE88ws?=
- =?iso-8859-1?Q?sTvhajq/xFl2pUHiJM8HC+OPnRdjY10S7AL7uP/dpArCbzjO01VHjD6xq7?=
- =?iso-8859-1?Q?vSy9ZniC73jqw/431lw2OeKraOx+QGEhdAolJwxKAelWVS1DDb4tq5Z3/s?=
- =?iso-8859-1?Q?/Fha7pB5B7FjVhl6mivObmLxftmUDgVLTYFDniXKEijFDoYNy+2tune/RL?=
- =?iso-8859-1?Q?/+dV/kudFIkVkeh3ko1qw1e5Awd1EtFM+zDkzb0wNqf03P5A7Ph/SpJfq3?=
- =?iso-8859-1?Q?9c2HOOPXZ/ItMA/a/HWI6TAXoLjNbOgHo4809Oh3C5GUB4Ven5E9vJzDWE?=
- =?iso-8859-1?Q?SHw19w/zv4x8vLbDGlVnSUWaE3N9KMaX8zjK4l/D/9WOR0yHeg6aerWI9J?=
- =?iso-8859-1?Q?1tvvXY2+Di1y1GqO+gN0o5B8HKICctQCFBtCCp7j7NDfAjngDCa/pDNcyO?=
- =?iso-8859-1?Q?peitxNlp54lCsRnyi7HKWzAUM9obHTy8rjdR6k5AiK2ms8ghp8bN/Q75w5?=
- =?iso-8859-1?Q?+cvOJqi4qAHDeC/Mqw1Rtex+/xBatrpxxHxUr7YKWuFMqfa2EOgxVLDJ6Q?=
- =?iso-8859-1?Q?/IxaCPczaHCNXYmjr4HwyOZ2hxdTjScvzNnYDO9xXfwAUTYI/AzmJTMrqQ?=
- =?iso-8859-1?Q?Wfiv0orVMGwIjPH9xJmQnztuVcR6IWsXL/3zeUYtDsWShjjsUk8vrYSTT4?=
- =?iso-8859-1?Q?FMM6Ugk1C+AQp7MkDWSTB24gT++E/K/VKpT/nwUbHP+GeyjM2CDUlhvU7q?=
- =?iso-8859-1?Q?Ui+pM74J7WS9+XZRxayXvKn7cfh5NSNvLP+3dzFQwm189V+biBZqC7ZmwE?=
- =?iso-8859-1?Q?oTcxEWHgu8MUwijPde/szUcjFBtLo3rpZNMq/DuEQc7ESjl1ByT5vTQrvI?=
- =?iso-8859-1?Q?ghV7104x6bK/tdeB5jhuTTd59HQmxM9KxAnRf9tyC8O0e/qjxsDwiv7gXR?=
- =?iso-8859-1?Q?YXwxCQE98LSTCLDmJdNzWau6xlvxynrQ273f3QDMVSTdWU+S4RhIHzYTWq?=
- =?iso-8859-1?Q?raIrP2R2/GRYDDfjWNhO4gaXTpeGSycqus84ICNDs/Futjsw9ylAqSdDCO?=
- =?iso-8859-1?Q?CyRtRmStrFlIPwlzMSKpjITvYlQgUiklTAbc+3m0Ayhpx3F5ij1OvsTinS?=
- =?iso-8859-1?Q?OLqpyL2cGbkMmaTjzKuOOpYqmINUhGrs6rho0966Qr6g4Dv0KS/FRUTqoJ?=
- =?iso-8859-1?Q?gAcIeajMXlY/Di/56Oj6jVsO+hmkTpiaeaDwsMi7fSXHktQxdVeYYBM4SQ?=
- =?iso-8859-1?Q?rhoq1e6HiG1sw9m/pvi2PsulIhBbBCMGtSG3GDzGhnpoV5KkKJprFg+MPI?=
- =?iso-8859-1?Q?gGsu3KW5MH/XFEmt0N41pu2z2823kvOmW7ztC7fFtIvmjebYHKBbWkg0Wt?=
- =?iso-8859-1?Q?37LUg4A8CULrmfByVqKlzM1t0faLKX6WA9jnYd5b7mqvCJ7rD99F6OUmlD?=
- =?iso-8859-1?Q?cMlYOkW3uXUR6wDKO8fd5RywqOVqJa4TRVPDbNTpGYOR2MeHkSfd/etQFE?=
- =?iso-8859-1?Q?Q=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(13003099007)(7053199007)(27256017);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?hilon3FNFlz5K+L9QHfczcKb/zzNhzAmxcxd2RrGJ6dwBBPwUtkaYW8e2v?=
- =?iso-8859-1?Q?D0Na+Mww0mX3PmSpja5kiuVw3Q3IceS4cUdRpaWBGe2c6yLVeHD0bxJh8p?=
- =?iso-8859-1?Q?5TTjbaNABI0aHW0XybUVHEOWEoyNe7swXuq3ru5HOsS2+5XPfekiiVjkx5?=
- =?iso-8859-1?Q?e/E0rvS4HkPBF/rZWQCIPTSe2JejxtjmYgYIdn9vBMbs3vh47TxQiwEQ3A?=
- =?iso-8859-1?Q?XGwm/3iBLCsRq4T8/8cgjfwC0AEiyZ51MB5bnKm4ScqiMWF2TWdrQLxCbC?=
- =?iso-8859-1?Q?9knBh50dqN9Cq0/mOAKS/uWp8nuaLG8yubrvfWPdRcaJMnvQL+Ow/lmyTY?=
- =?iso-8859-1?Q?cbxuVAP6Yc6WRv1USqhpPkMxg5qTQCLtXPUOGDdV2TmJgC9ygjNjgfswsc?=
- =?iso-8859-1?Q?6DA0+jOOKdAEZF487gRLl813dTvWq24OIwmcjhMX3MZkW0y2tG8rZFDFs6?=
- =?iso-8859-1?Q?cDKVLjznUPzqsRWnSaoNPhVjs09YezHSNEL9jlRtSlpmIk8uz5oQJLSSkU?=
- =?iso-8859-1?Q?VmeqMc4ULnG+u7lfyzmJBWNRnfk5U24PADAeSmq1XoXo2AZeqMqWLN6zzn?=
- =?iso-8859-1?Q?YxzxBDm/F6HTqLqF+4QPUB9nhhkUA0X5N/LzLbEDWd14G7/jl2GvzvCd1P?=
- =?iso-8859-1?Q?X2DH8aw94pvxzMUyyRoTD7kh4XCNT73cY3Jfa2PMtMqms/ONf1Hll3Wzjl?=
- =?iso-8859-1?Q?ILmCtR9gbQDMgAn0ppN4vTVjVubJPKt1uEyaQD4GunW3Xxomix1V/tY04o?=
- =?iso-8859-1?Q?FZbSL/E8uScJ7ZRe3NkF5cubo7+VWXe0mkSyVRJ5+pX0V3OuqfpRW0wLHl?=
- =?iso-8859-1?Q?xKyX3eawHgXafFH6r9yFncjTBlFTdylRmWI7GNa4G8CQzoLNsN+cqgkV7v?=
- =?iso-8859-1?Q?eUdN6Pg35JrO3CNtKYRMhG2HFiq2pfnqri5Rpv8WJBkeK+Z8D0ACNaOxxV?=
- =?iso-8859-1?Q?tSRMBfNKYf/w5tXhgv0RAQfn+CsIC7kDpvRNf9TVtiyyjYNfjdXw4xMXE8?=
- =?iso-8859-1?Q?n4oUFaXlivf2EaCqc4M57f5EeZym5m9t6i0UvteIDdvrGPHV9xDSh/3Gmy?=
- =?iso-8859-1?Q?0Yc2e+yCMq9woFIgWGDPvIuFaDVOWI62DEHmZl451eo8Xkh2VP8l9krIKn?=
- =?iso-8859-1?Q?H5GV0zg1tE1enGbepfe7eK4mPLGnTHY45BeLfpA+QqAsa3xLzIwblgVExL?=
- =?iso-8859-1?Q?kj9YiW0+WaM303LBBE0ieMj3JE9frs0IpYY/SD4LVD9kmbWuRCt5IQWNck?=
- =?iso-8859-1?Q?rPn1QX5QlPxBwLemXViqYUUmo82yu6dfqbsLPHcW9eu+UAuZSlUWv5rbW7?=
- =?iso-8859-1?Q?jG46ua4P2ERjsa9re+u7N3AirmnXmrxnj2ZkxBsF5kkWh81F6mQHrVezJv?=
- =?iso-8859-1?Q?29lt6Y67ayK7P8tgSQXJmvY3RlHdmDM1BJ6NjlFRPYK86PKLFeFwT0sUs9?=
- =?iso-8859-1?Q?i7jl2yzS6fbZIUWLUAAlrTIz2mWgBtg6LAuvmXswBo81SAv1cHQcfSR8RL?=
- =?iso-8859-1?Q?6kDepWMlkB3EGBYpC2zmiGNAHsMTwFYqAJrW1Vu+DAkX8jqetDxx0NnxhY?=
- =?iso-8859-1?Q?VRRIdXIIwzvCpxRWj0HMHENbmh8cjBuTpD3qi9LGtfTJF+EUftKdUk0cIe?=
- =?iso-8859-1?Q?CeS3kmTgTPXZKm6KQXTueXdE6e0PkAD0nH?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2accff3-5a4a-4d95-2f92-08dd623631ab
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 13:51:45.9849
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rXHJ9/TsAcFLrPp9pJgzeO6szhfQi7nJwn2L74QbeeVWYNkJ/qJAxfH5rDBbP7jTyGOYNF5H1XoxAIfpFqqJLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7039
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 13, 2025 at 02:37:56PM +0100, Christophe Leroy wrote:
-> 
-> 
-> Le 13/03/2025 à 14:21, Dr. David Alan Gilbert a écrit :
-> > [Vous ne recevez pas souvent de courriers de linux@treblig.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> > 
-> > * Christophe Leroy (christophe.leroy@csgroup.eu) wrote:
-> > > 
-> > > 
-> > > Le 15/11/2024 à 16:20, linux@treblig.org a écrit :
-> > > > [Vous ne recevez pas souvent de courriers de linux@treblig.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> > > > 
-> > > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > > 
-> > > > fsl_mc_allocator_driver_exit() was added explicitly by
-> > > > commit 1e8ac83b6caf ("bus: fsl-mc: add fsl_mc_allocator cleanup function")
-> > > > but was never used.
-> > > > 
-> > > > Remove it.
-> > > > 
-> > > > fsl_mc_portal_reset() was added in 2015 by
-> > > > commit 197f4d6a4a00 ("staging: fsl-mc: fsl-mc object allocator driver")
-> > > > but was never used.
-> > > > 
-> > > > Remove it.
-> > > > 
-> > > > fsl_mc_portal_reset() was the only caller of dpmcp_reset().
-> > > > 
-> > > > Remove it.
-> > > > 
-> > > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > > 
-> > > Acked-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > 
-> > Hi,
-> >    Can someone pick this old change up please?  I see the PPC patchwork says
-> >    'handled elsewhere' but doesn't say where.
-> 
-> MAINTAINERS file says where:
-> 
-> QORIQ DPAA2 FSL-MC BUS DRIVER
-> M:	Stuart Yoder <stuyoder@gmail.com>
-> M:	Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> L:	linux-kernel@vger.kernel.org
-> S:	Maintained
-> F:	Documentation/ABI/stable/sysfs-bus-fsl-mc
-> F:	Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> F:
-> Documentation/networking/device_drivers/ethernet/freescale/dpaa2/overview.rst
-> F:	drivers/bus/fsl-mc/
-> F:	include/uapi/linux/fsl_mc.h
-> 
-> FREESCALE SOC DRIVERS
-> M:	Christophe Leroy <christophe.leroy@csgroup.eu>
-> L:	linuxppc-dev@lists.ozlabs.org
-> L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> S:	Maintained
-> F:	Documentation/devicetree/bindings/misc/fsl,dpaa2-console.yaml
-> F:	Documentation/devicetree/bindings/soc/fsl/
-> F:	drivers/soc/fsl/
-> F:	include/linux/fsl/
-> F:	include/soc/fsl/
-> 
-> I acked the 2 line changes in include/linux/fsl/mc.h, the main changes being
-> in the C files which are not under my scope.
-> 
-> Stuart, Laurentiu, can you pick up the patch ?
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Stuart and Laurentiu are no longer at NXP. Even when they handled the
-fsl-mc bus driver, they didn't have a tree themselves to pick patches up
-but rather, historically, patches on the fsl-mc bus were picked by Greg
-KH.
+Allocating the zero pages from memblock is simpler because the memory is
+already reserved.
 
-Ioana
+This will also help with pulling out memblock_free_all() to the generic
+code and reducing code duplication in arch::mem_init().
+
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ arch/s390/mm/init.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+index f2298f7a3f21..f8333feb6a7e 100644
+--- a/arch/s390/mm/init.c
++++ b/arch/s390/mm/init.c
+@@ -73,8 +73,6 @@ static void __init setup_zero_pages(void)
+ {
+ 	unsigned long total_pages = memblock_estimated_nr_free_pages();
+ 	unsigned int order;
+-	struct page *page;
+-	int i;
+ 
+ 	/* Latest machines require a mapping granularity of 512KB */
+ 	order = 7;
+@@ -83,16 +81,7 @@ static void __init setup_zero_pages(void)
+ 	while (order > 2 && (total_pages >> 10) < (1UL << order))
+ 		order--;
+ 
+-	empty_zero_page = __get_free_pages(GFP_KERNEL | __GFP_ZERO, order);
+-	if (!empty_zero_page)
+-		panic("Out of memory in setup_zero_pages");
+-
+-	page = virt_to_page((void *) empty_zero_page);
+-	split_page(page, order);
+-	for (i = 1 << order; i > 0; i--) {
+-		mark_page_reserved(page);
+-		page++;
+-	}
++	empty_zero_page = (unsigned long)memblock_alloc_or_panic(PAGE_SIZE << order, PAGE_SIZE);
+ 
+ 	zero_page_mask = ((PAGE_SIZE << order) - 1) & PAGE_MASK;
+ }
+@@ -176,9 +165,10 @@ void __init mem_init(void)
+ 	pv_init();
+ 	kfence_split_mapping();
+ 
++	setup_zero_pages();	/* Setup zeroed pages. */
++
+ 	/* this will put all low memory onto the freelists */
+ 	memblock_free_all();
+-	setup_zero_pages();	/* Setup zeroed pages. */
+ }
+ 
+ unsigned long memory_block_size_bytes(void)
+-- 
+2.47.2
+
