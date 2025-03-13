@@ -1,141 +1,122 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85B61DD9AB
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 18:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D34FB1DC046;
+	Thu, 13 Mar 2025 18:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741889288; cv=none; b=uRJbOAka24oXSQ/RsomEAurxuzY4YV2wOswcMlpDVjvBta2Odx+pm5Op/VG0Ll9SYloFPw8mBlSQhxMiUqwSkwA1JOhUKF8u5TNyXPZ/Jrka8WvpYFi8SCzMz++XTZA1cgNyp96vsfnavveXK6BrOFz/b4N6D2VFOVSh9RCrD3M=
+	t=1741889322; cv=none; b=QgrA3iy928JoG0RwFOe46rYTbSn4aaflb7BbZt2zvE1hFJhc9pLO/2MlUThK68hKNdqJ9GDBPwmMT8NNZQCEdEEs2K6oa69a84yCS5RYBefLkcTi0QEoZqL1f8MegIUORfSTjlLmrXXJuCDRnxeHZX/POyGB0gr67SmSKSS7jZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741889288; c=relaxed/simple;
-	bh=UkNKXb1bKramp3ecbD5yyn/qkZfQyoZLvEdDU3QZzHw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jp5CU0gTQx7LqatmZ+AQ34cazg7KXt6raVOvc4Gv16X8JEiDx6pH9bL7yoIHKiEzL+triuk4ehzz4IjhwBntjEYG0FXG5+8kpHFOdn6bEZTaFQFXuXqoef+iJWw24MJSHrfR+I5QmetpUyxOhntdAqhxJ+hNa2bY+VUyAFDsXog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JVmEhSdO; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JVmEhSdO"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-476693c2cc2so35521cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741889285; x=1742494085; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MQ3C4fOkeNWFHbw5y8h5vEhHAYC7Z2Nh+a7nGhBzcEA=;
-        b=JVmEhSdOuZ0EGN/kFyDiKUEUx9zOgQUnWqOb4kfI8V5p3tXlPQsfQJDW1PaobEiun7
-         XrQV3es3S2mknWDaUT5C7Gpq1Xuokwd8Hk3oMaPMEXsCwx1b7JKfmIgPQ1OVjUaLbhEh
-         b3YQmVF3L+RGtVpgz6im5drDMUbvWz83JaXcbvY5UFrDCdqh4FCIgD1lWLmkL/IaiM4U
-         Ori10N2WUAkS1hLJH/kGj8ri/kmr78mu51hClwATOd7yrN+ejIoCN9H6W0XKgzYrHTv4
-         /7dmUCnkqMbKOer8dNeE/2+x1rXErN4EIJpRk1fucKIQyuyRp/NKMWLmY7r9TCeluSYc
-         9ldw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741889285; x=1742494085;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MQ3C4fOkeNWFHbw5y8h5vEhHAYC7Z2Nh+a7nGhBzcEA=;
-        b=r5pwvohCCfGyLRuh8KHPrMc7P0zSVybXwOynN3fGnind4MlqIQGebXUh3KImtm1dYQ
-         Yz3GRlIpJ6rUOtmFiBeVEnXsiZQIaBT79PGIt7XHZVkvZ9PGDaFzI3Dq6OA/KiNXsvKi
-         ngjN1cD8btMZE+fte7wXKIZo5JN1GYLjtBIGWD21iUtymQ5/hq+O9llHeh5CK2idKBWi
-         nyKc06WYyDJ+KRw+yM5s5Yusz9QjlvvRpJxKEv6NEaeMEcyiFkz81enuQ3dVr+07ileU
-         p1UrJt191cBKDN/NyQoEHaUo5fygcEkXnhBZUNb8fl2qiGoMhKHO809DsCIoNwChbOaJ
-         ijiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUog3DBh+SyDmVEK5mmh9kmo7z+CD/sRdqLflhcPV6ltZCUUqDFxxVDozQUN83lgb+qaXblOyPMYurRHRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDOZVr+Qjfa1dmzd9zMWat9T4Pd+C3OGpo7qXXeC40fGVhi2JY
-	uojbgEaY086ZkrlGv41gmaTbMM3L/L8VqFHJMzDsSvAbGjpTUQr+Zao8CMMm/MrReE9d/b9TIcp
-	Hvx7XcW4QspYuzWrlZzM2z4+RFATpkL21xzgq
-X-Gm-Gg: ASbGncvRgXfXUS0WiFbgbf8uMm8ah3KLDxMe8ajb1DUsMyZ4S+4MgRaKB3bCe++XNo8
-	OYB2micbXbpZzKW/khRzyoZr3p4nUzBr7fPWbuTG/O3Ay+UA7s7Fw1aNoaI3wqSjlypKp2plmt+
-	PO+Otmam7b3/5A/Dx0r10mXkRGfktTkJMQ5arAZ/ZS3XPDwszZ2E76epi9
-X-Google-Smtp-Source: AGHT+IHrpWqTbMqDznsTHsJ8E9Do30+x9d4gdSw8dj7dE/tKMqx+yW62kkvZYTMbk6yRcBICLabCKUwu3xD7MbVZ4tg=
-X-Received: by 2002:ac8:5f4b:0:b0:471:9480:a14b with SMTP id
- d75a77b69052e-476c6a5313cmr230021cf.12.1741889285223; Thu, 13 Mar 2025
- 11:08:05 -0700 (PDT)
+	s=arc-20240116; t=1741889322; c=relaxed/simple;
+	bh=pQGtB9l33v5PfLU1rNDNQq3i+W59p2jIMsURHN1eO7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nRpkBMHoliVU+SqFi8dB/jIVMCN7wWpQoTWeJcwXIvlgqeBFMyPuzbheycXTZgQegZkEmxJ35+iN9G827ACRcR7kfGR1oxPfpKdqNb8d5VGNr7bhKrIp1pSBs90/Vxs3lIIbomEdKmUXDZdwHMGcJDZ0xDGTKy6bNjRTWKZu5jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 472DD1477;
+	Thu, 13 Mar 2025 11:08:50 -0700 (PDT)
+Received: from mazurka.cambridge.arm.com (mazurka.cambridge.arm.com [10.2.80.18])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECDD53F694;
+	Thu, 13 Mar 2025 11:08:35 -0700 (PDT)
+Date: Thu, 13 Mar 2025 18:08:33 +0000
+From: =?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
+	catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org,
+	robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
+	mark.rutland@arm.com, joey.gouly@arm.com, maz@kernel.org,
+	james.morse@arm.com, broonie@kernel.org, anshuman.khandual@arm.com,
+	oliver.upton@linux.dev, ioworker0@gmail.com, baohua@kernel.org,
+	david@redhat.com, jgg@ziepe.ca,
+	shameerali.kolothum.thodi@huawei.com, nicolinc@nvidia.com,
+	mshavit@google.com, jsnitsel@redhat.com, smostafa@google.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+Subject: Re: [PATCH v3 1/3] arm64: Add BBM Level 2 cpu feature
+Message-ID: <20250313180833.GA40525@mazurka.cambridge.arm.com>
+References: <20250313104111.24196-2-miko.lenczewski@arm.com>
+ <20250313104111.24196-3-miko.lenczewski@arm.com>
+ <ea10caee-59ef-4a00-9b61-37cb0a379411@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313143002.9118-1-petr.pavlu@suse.com> <jmcazyqlkimqhswwqn2du7ik5sbm5fommonrgovy5d6knqbqcr@xebmu4akkkoy>
-In-Reply-To: <jmcazyqlkimqhswwqn2du7ik5sbm5fommonrgovy5d6knqbqcr@xebmu4akkkoy>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 13 Mar 2025 11:07:53 -0700
-X-Gm-Features: AQ5f1JqTh6MJsjdch2B1hiY959vhHY_r5y3ZS715LvCN36Z2QzffjAcAKrSyahw
-Message-ID: <CAJuCfpEpFqLX-WtXzSdktkp7w3s3JWeSqeG_fms6Ydun+docTA@mail.gmail.com>
-Subject: Re: [PATCH] codetag: Avoid unused alloc_tags sections/symbols
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ea10caee-59ef-4a00-9b61-37cb0a379411@arm.com>
 
-On Thu, Mar 13, 2025 at 10:16=E2=80=AFAM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Thu, Mar 13, 2025 at 03:29:20PM +0100, Petr Pavlu wrote:
-> > With CONFIG_MEM_ALLOC_PROFILING=3Dn, vmlinux and all modules unnecessar=
-ily
-> > contain the symbols __start_alloc_tags and __stop_alloc_tags, which def=
-ine
-> > an empty range. In the case of modules, the presence of these symbols a=
-lso
-> > forces the linker to create an empty .codetag.alloc_tags section.
-> >
-> > Update codetag.lds.h to make the data conditional on
-> > CONFIG_MEM_ALLOC_PROFILING.
-> >
-> > Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
->
-> Reviewed-by: Kent Overstreet <kent.overstreet@linux.dev>
+On Thu, Mar 13, 2025 at 04:13:22PM +0000, Ryan Roberts wrote:
+> On 13/03/2025 10:41, Mikołaj Lenczewski wrote: 
+> > diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> > index d561cf3b8ac7..b936e0805161 100644
+> > --- a/arch/arm64/kernel/cpufeature.c
+> > +++ b/arch/arm64/kernel/cpufeature.c
+> > @@ -2176,6 +2176,76 @@ static bool hvhe_possible(const struct arm64_cpu_capabilities *entry,
+> >  	return arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_HVHE);
+> >  }
+> >  
+> > +static inline bool bbml2_possible(void)
+> > +{
+> > +	return !arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_NOBBML2);
+> 
+> If you're going to keep this helper, I think it really needs to be:
+> 
+> return IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT) &&
+>        !arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_NOBBML2);
+> 
+> Then you would simplify the caller to remove it's own
+> IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT) check.
+> 
+> But personally I would remove the helper and just fold the test into
+> has_bbml2_noabort().
+> 
+> Thanks,
+> Ryan
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+I was debating folding it into has_bbml2_noabort(), but went ahead and
+implemented it separately to match hvhe_possible(), which was another sw
+feature helper.
 
->
-> > ---
-> >  include/asm-generic/codetag.lds.h | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/asm-generic/codetag.lds.h b/include/asm-generic/co=
-detag.lds.h
-> > index 372c320c5043..0ea1fa678405 100644
-> > --- a/include/asm-generic/codetag.lds.h
-> > +++ b/include/asm-generic/codetag.lds.h
-> > @@ -2,6 +2,12 @@
-> >  #ifndef __ASM_GENERIC_CODETAG_LDS_H
-> >  #define __ASM_GENERIC_CODETAG_LDS_H
-> >
-> > +#ifdef CONFIG_MEM_ALLOC_PROFILING
-> > +#define IF_MEM_ALLOC_PROFILING(...) __VA_ARGS__
-> > +#else
-> > +#define IF_MEM_ALLOC_PROFILING(...)
-> > +#endif
+But I agree, folding it will be simpler and read just as easily (if not
+easier). Will do so.
+
+> > +}
 > > +
-> >  #define SECTION_WITH_BOUNDARIES(_name)       \
-> >       . =3D ALIGN(8);                   \
-> >       __start_##_name =3D .;            \
-> > @@ -9,7 +15,7 @@
-> >       __stop_##_name =3D .;
-> >
-> >  #define CODETAG_SECTIONS()           \
-> > -     SECTION_WITH_BOUNDARIES(alloc_tags)
-> > +     IF_MEM_ALLOC_PROFILING(SECTION_WITH_BOUNDARIES(alloc_tags))
-> >
-> >  /*
-> >   * Module codetags which aren't used after module unload, therefore ha=
-ve the
-> > @@ -28,6 +34,6 @@
-> >   * unload them individually once unused.
-> >   */
-> >  #define MOD_SEPARATE_CODETAG_SECTIONS()              \
-> > -     MOD_SEPARATE_CODETAG_SECTION(alloc_tags)
-> > +     IF_MEM_ALLOC_PROFILING(MOD_SEPARATE_CODETAG_SECTION(alloc_tags))
-> >
-> >  #endif /* __ASM_GENERIC_CODETAG_LDS_H */
-> >
-> > base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
-> > --
-> > 2.43.0
-> >
+> > +static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
+> > +{
+> > +	/* We want to allow usage of bbml2 in as wide a range of kernel contexts
+> > +	 * as possible. This list is therefore an allow-list of known-good
+> > +	 * implementations that both support bbml2 and additionally, fulfill the
+> > +	 * extra constraint of never generating TLB conflict aborts when using
+> > +	 * the relaxed bbml2 semantics (such aborts make use of bbml2 in certain
+> > +	 * kernel contexts difficult to prove safe against recursive aborts).
+> > +	 *
+> > +	 * Note that implementations can only be considered "known-good" if their
+> > +	 * implementors attest to the fact that the implementation never raises
+> > +	 * TLBI conflict aborts for bbml2 mapping granularity changes.
+> > +	 */
+> > +	static const struct midr_range supports_bbml2_noabort_list[] = {
+> > +		MIDR_REV_RANGE(MIDR_CORTEX_X4, 0, 3, 0xf),
+> > +		MIDR_REV_RANGE(MIDR_NEOVERSE_V3, 0, 2, 0xf),
+> > +		{}
+> > +	};
+> > +
+> > +	return is_midr_in_range_list(cpu_midr, supports_bbml2_noabort_list);
+> > +}
+> > +
+> > +static inline unsigned int __cpu_read_midr(int cpu)
+> 
+> nit: why the double underscrore prefix?
+
+Again copying other helpers I saw that seemed to do similar things.
+Didn't know if this was the expected style, so did as other helpers did.
+Will remove.
+
+Thank you for the review.
+
+-- 
+Kind regards,
+Mikołaj Lenczewski
