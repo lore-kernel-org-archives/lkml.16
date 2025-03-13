@@ -1,48 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488E4262D16;
-	Thu, 13 Mar 2025 08:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59660262D22;
+	Thu, 13 Mar 2025 08:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741855843; cv=none; b=fzTKEv3KsfIGOCWiV+VtRwFgfVO8I8b8gsmtpPashAyzLp28x2/9ELplkhIP9MuY4H6squzA9KpWtp7FTtTB2JeFm1Go7jfMXlRV1QqjOqupJbi85xeb2A8fq57hvViOM0PV8EJRkOLYXjZEQie4bQtGnJ4TysLBObFVV8t37hY=
+	t=1741855856; cv=none; b=oBpyxGVjbN8xTGY1R63kt9fHLmCm/qoHwWEAAq62q3b06dhjs8tab7natU6YQMq+IYBa4JLUtxa13aimkTWioEdCQ7NPe58lFQ3Lk1gWaRxX9Se5Wno9rfDo2dVx5rCDZettleb9kRmJ4SoMXLcRilykd+WKwT2l+C+nVKaDFxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741855843; c=relaxed/simple;
-	bh=AaLGvCMflk/8nmpvfygkfLg+3xhOY9lgQwRoQdX2ybU=;
+	s=arc-20240116; t=1741855856; c=relaxed/simple;
+	bh=3bZY8dzTemq47JF2feV0u6lsWsSXG/UGcVjGTgCxZxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Li1OuxCkhrTdRwUfvoc4WQPxO7S7Noo/VKDiB/giMVPcBdndE5L6u2anqGYQX1YjcI3/ceYOvThdVpJZgL2Usc603UQLMzuxJgqM2u3BNWIOJvC7liJ7uaTsq2dtf8f9+fHySY/I030wQS2lszMhHvZsbxdPwsj57GqXwA9Wt2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmO3jUKm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MOntyA41DAQMNuKL9oU+RdNEe2D8bSjbLrLgJ12k9OEmvHsZaYyui/9bvdRdP99F92TPK5UywZcnKoE4/7FmrNmdRqmaR3u02LJ3ipPDvH9HkBmjq2ITinyfMnQv/42SS8nODkNTOrKT07QsKJUWn1V8iFtRwCpp1PJ/iNQwqPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZdvj38U; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmO3jUKm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB19C4CEEB;
-	Thu, 13 Mar 2025 08:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741855843;
-	bh=AaLGvCMflk/8nmpvfygkfLg+3xhOY9lgQwRoQdX2ybU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dmO3jUKmBVspgoGdMHJ6GCTqbnJmH88g3j1T8G5EAl0THm9yLOFaue5sqRj5OvulL
-	 JDFz0riU11zg/X78iwbTarr4TvFmfK8DLqSfW3eTe6WB8kL6Es42n6O3tlpkHbZAK/
-	 MddO4H7+nAkEsGBtjkyOaEPQGzf99i47IvgYSdPnrbUs4nUDEiD7dXUj7+ljxhekex
-	 WIblD0DPkQSvW7b4+4lYaNNABQnwgyKp9/zbAcNER9k3wtivj85pEii/P8wzA8SRLt
-	 D19EmWaE9tfDyJ7ywnhhFy5RIha0IUNNb88eI8PbrBIswq/SKVNbBt/+G+QCiEvSIQ
-	 5jMpnYmgMMg6w==
-Date: Thu, 13 Mar 2025 09:50:31 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>, Ryan Lee <ryan.lee@canonical.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
-	Jan Kara <jack@suse.cz>, John Johansen <john.johansen@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Kentaro Takeda <takedakn@nttdata.co.jp>, Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: [RFC PATCH 1/6] fs: invoke LSM file_open hook in do_dentry_open
- for O_PATH fds as well
-Message-ID: <20250313-dompteur-dachten-bb695fcbebf1@brauner>
-References: <20250312212148.274205-1-ryan.lee@canonical.com>
- <20250312212148.274205-2-ryan.lee@canonical.com>
- <20250312213714.GT2023217@ZenIV>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZdvj38U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741855855; x=1773391855;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=3bZY8dzTemq47JF2feV0u6lsWsSXG/UGcVjGTgCxZxw=;
+  b=fZdvj38UiBL/fezTYnNra9tmL7nAX7654FDk5gYQqNCQ/Y16gMUTqh5Q
+   saeIoNSGNJSR21plL+lgCQAxtHvvJcIjRDBYp3XbRWGIK9bzHYLADG688
+   zWiGC2IX+9q6hpr4U0ybBcZVIR/2h3V4zZNNiR8G5M0TUAzXDdnORxp3w
+   ESmE+Dhn6Ln2KQQznSaRyMLn0pvoCzaPpqeMN5Q/7HpG3KDkCGrxdotEI
+   Yy4BptR9OpVED6Cu6+S5hQ7aqtbtTY47SaPvpeltugdD6vRoMjTap1+HY
+   tI5jNAF/sRvcdL2z5pZTYTN+lSOa1c0rN81BC9mV1hOr3atFpZF/pweZY
+   g==;
+X-CSE-ConnectionGUID: xQMi+n/RRsmbV/cQ+GZi1g==
+X-CSE-MsgGUID: OYgIMuGWTh+MpQ8Ps29CFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42213914"
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="42213914"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 01:50:54 -0700
+X-CSE-ConnectionGUID: haSQ1Kz9QSSRm0ia77PnGg==
+X-CSE-MsgGUID: cU62JTwkScmr13W/KeB/iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="121590465"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 01:50:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tseHB-000000027bn-3yAw;
+	Thu, 13 Mar 2025 10:50:49 +0200
+Date: Thu, 13 Mar 2025 10:50:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Casey Schaufler <casey@schaufler-ca.com>, audit@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Eric Paris <eparis@redhat.com>
+Subject: Re: [PATCH v1 1/1] audit: Mark audit_log_vformat() with __printf()
+ attribute
+Message-ID: <Z9KcaWFLe3n4xCmA@smile.fi.intel.com>
+References: <20250312200216.104986-1-andriy.shevchenko@linux.intel.com>
+ <CAHC9VhRHZL+QTsfK2Sg5+rw7RSxUoaF=YTwGW9Oia5xnvqAL1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,60 +65,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250312213714.GT2023217@ZenIV>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhRHZL+QTsfK2Sg5+rw7RSxUoaF=YTwGW9Oia5xnvqAL1w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Mar 12, 2025 at 09:37:14PM +0000, Al Viro wrote:
-> On Wed, Mar 12, 2025 at 02:21:41PM -0700, Ryan Lee wrote:
-> > Currently, opening O_PATH file descriptors completely bypasses the LSM
-> > infrastructure. Invoking the LSM file_open hook for O_PATH fds will
-> > be necessary for e.g. mediating the fsmount() syscall.
+On Wed, Mar 12, 2025 at 04:16:36PM -0400, Paul Moore wrote:
+> On Wed, Mar 12, 2025 at 4:02 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > audit_log_vformat() is using printf() type of format, and compiler
+> > is not happy about this:
+> >
+> > kernel/audit.c:1978:9: error: function ‘audit_log_vformat’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+> > kernel/audit.c:1987:17: error: function ‘audit_log_vformat’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+> >
+> > Fix the compilation errors by adding __printf() attribute.
 
-LSM mediation for the mount api should be done by adding appropriate
-hooks to the new mount api.
+> It would be good to list the compiler version/flags that triggers this
+> error in the patch description
 
-> > 
-> > Signed-off-by: Ryan Lee <ryan.lee@canonical.com>
-> > ---
-> >  fs/open.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/open.c b/fs/open.c
-> > index 30bfcddd505d..0f8542bf6cd4 100644
-> > --- a/fs/open.c
-> > +++ b/fs/open.c
-> > @@ -921,8 +921,13 @@ static int do_dentry_open(struct file *f,
-> >  	if (unlikely(f->f_flags & O_PATH)) {
-> >  		f->f_mode = FMODE_PATH | FMODE_OPENED;
-> >  		file_set_fsnotify_mode(f, FMODE_NONOTIFY);
-> >  		f->f_op = &empty_fops;
-> > -		return 0;
-> > +		/*
-> > +		 * do_o_path in fs/namei.c unconditionally invokes path_put
-> > +		 * after this function returns, so don't path_put the path
-> > +		 * upon LSM rejection of O_PATH opening
-> > +		 */
-> > +		return security_file_open(f);
-> 
-> Unconditional path_put() in do_o_path() has nothing to do with that -
-> what gets dropped there is the reference acquired there; the reference
-> acquired (and not dropped) here is the one that went into ->f_path.
-> Since you are leaving FMODE_OPENED set, you will have __fput() drop
-> that reference.
-> 
-> Basically, you are simulating behaviour on the O_DIRECT open of
-> something that does not support O_DIRECT - return an error, with
-> ->f_path and FMODE_OPENED left in place.
-> 
-> Said that, what I do not understand is the point of that exercise -
-> why does LSM need to veto anything for those and why is security_file_open()
+CONFIG_WERROR=y (this is default), gcc (Debian 14.2.0-17) 14.2.0, `make W=1`.
 
-I really think this is misguided. This should be done via proper hooks
-into apis that use O_PATH file descriptors for specific purposes but not
-for the generic open() path.
+> as I've compiled the audit code quite a bit and haven't seen these errors :)
 
-> the right place for such checks?
+Good for you, I have 100% reproducibility of this :-)
 
-It isn't.
+I'll do a v2 today.
 
-> 
-> The second part is particularly interesting...
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
