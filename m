@@ -1,183 +1,112 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D1D16BE17
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA7416BE17;
+	Thu, 13 Mar 2025 10:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741862083; cv=none; b=K+jbDkD0uK1uxT8OZE3SS8Vb7NfBQ29u3ZvYUH/xvl/6japVk/shuyJjBD+suV/I9rXrUYyfgH3312//iUygu4WDwm2WaqscGIG9ckjS6OlcSJTfDK0x+6PZh8blQPKErwfjazMfv2nWaC4pP7RPq/4NEnK9PfT2aLEzv7KGPmM=
+	t=1741862139; cv=none; b=d+3I1YyRDGQwFsf9tZpoBqAgH+CY2wSc4Ct6DkeTkKsjWVN1EcSMxljpPhlfunNfCUW+qerB+8PbHOk+eqHu7H+jzDujTPJchY3zPZe8A3+0XaQh91tWNef4u4mDb5/5TqHFZBScmfnjMdLEzIVctE2exorVwAJtmks1cUOweCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741862083; c=relaxed/simple;
-	bh=dWrZK2Che0Oj1K8eXjyyR/nMtqhjsvb9o7XC/B4TG1Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=k5aFFj7pHHb/ifQjAiOIRw/YznKQesGFidBqVhJRqjIk7J7BmY9mgHiz3b2O8OYhQ2Iv3FriXaYVqWdoNiXelVdGX1Isgt0kxmi3l8/QQ+uhUZDSsF84lFHozc+t362iJiD8NK6d/Y9i7fBayq2A1xSPw1rD5iFuMLi6p/qsDOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=kH7PQNm8; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1741862139; c=relaxed/simple;
+	bh=Npgx+feD9B5ju6h0vSLbNEvVLPehQS1oYhr9YCjF7/8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N5Pv1B0pzo2nujJbHCwpJeGURh1SIcCHf21bcJwVauVrEy9/atrQAuo8SCWGx/neC5uFrljD9I5RZBZjr3VPUKvLuulFnaBnkHZk79LZNU3EC+4WCoVEMi2KwUtMBA4uLAbRbq7ANW+vB7AjZDdmRScMyDOu6q1kFu7upxo8ryc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZSI3nUBW; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="kH7PQNm8"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZD3ZL61Ldz9shm;
-	Thu, 13 Mar 2025 11:26:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1741861594; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E3/0fiTphVhNpO3GO8VF4Utcp8LrQmjfthlEnqhlIL0=;
-	b=kH7PQNm8X1ch8L7/Af0/YNi0ikA6/yuC013LCL7FrgV/82/etT3kX8PA5Ap0iAH+gU+vT5
-	ThtX4gyhEVIf4sbzhJDSUgnhwb0ZS6vBiMX4qhUTlLSccRxEq1hGJKq4HBxc89f7GvY3en
-	fjq2mH7QK9qzB88pmix90amH6hmErm81ToQA/+2C9WRHN9TwzUz8xWIQhZZwn2pXCHL0WF
-	1iGywYo1QnYhXcFUhkF+DVT86gpLJ1wuUFbAmxgqMFuV5JxVRQiOJRutc7xVJUvFJtbj+J
-	h2E2yp8ZitbbebU4gO/QpH6HRkwMNost6yaOO5yUyOYLBRpikkMxBkb+eAfcDg==
-Message-ID: <db82a8a37e548f7c893c999bb476551c6793b411.camel@mailbox.org>
-Subject: Re: [PATCH] drm/sched: Clarify docu concerning drm_sched_job_arm()
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Philipp
- Stanner <phasta@kernel.org>, Matthew Brost <matthew.brost@intel.com>,
- Danilo Krummrich <dakr@kernel.org>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date: Thu, 13 Mar 2025 11:26:30 +0100
-In-Reply-To: <d02a205a-c7e7-45a5-bcba-b5a5a6bebf4e@amd.com>
-References: <20250313093053.65001-2-phasta@kernel.org>
-	 <d02a205a-c7e7-45a5-bcba-b5a5a6bebf4e@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSI3nUBW"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac29af3382dso130466366b.2;
+        Thu, 13 Mar 2025 03:35:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741862136; x=1742466936; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UNbbqeHoDPt7k8hD93XF4WARB2PnI7whAsDobeRau8o=;
+        b=ZSI3nUBW0KxQVJXsXwckcupNAfSVggqQBYjYxhnYvD7N/z87Cku0ihzwSrl1Npf2ob
+         e5nk5103wo/r4rwjj8UHmtbYJX4lIlFEE9cLP5j2ulN4XjPfaWICE3t00O58tr2La/5j
+         hUkk2sOVIilEOKbpfv7S7rJIou0LpDhVuvA/6jqON7Fnp/nko9083J5XSJdAxE95d4lo
+         DURHGfsSrYtcAIkm4F0qROzPmN9eyza5kZ1ilpzhiAmBb4DVxHfDljeRA0mEmUoHGBy3
+         E8WAqr2bQ5E4pE/WyjEpCCeLONOST4Q+WrQAe/d2CwaC7FuHAhwCVPTfd12YBdevYCIp
+         4FTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741862136; x=1742466936;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UNbbqeHoDPt7k8hD93XF4WARB2PnI7whAsDobeRau8o=;
+        b=vHBRXog58CFI8k3vaOxmDnc7KIBQaGZdt9p1h9fo+BMF4YbmBGuwXIqAbKZsXz8gUw
+         IMGLvzQwtmmYEWiibbHHyPRavzK8dri2hqqIyZ2KIvBJpP/aaqRDaBeo9ks/e7aoQQ8r
+         3im/s8NyA5f8l1PhiyGmFXKOIr8S9GGT1YaVJst0qI2HwVso1JewWA2dLBi9xZn0nPqL
+         3g23ui5ItSSTNRtq4uzh6MVjIA6Mu1XM1DYwl4zX5eQL672zt7Fuj7EJe3nMH7ENJHFw
+         Qm78gNvKuHM1D6aIW8bD+Rotzl3Evk0yKm8qKGcHx6QSQsRbZ48NJ5yF3bVoHvLAzMUZ
+         ZQXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9PqC19M6PF94GG9D6Ed9podM14Lf2PM4WYRb9pMs60KrMSb2Hk3LSYNCCHKzPSRlnUwTMaAKJcw86Fh4=@vger.kernel.org, AJvYcCX/rL2b+vAZf+q63hAeyAHKoJ4+jpFskIUA56uUqsEBOeLavKEoyiCsp6BeIL9zEXn9cAww3vnnsYs=@vger.kernel.org, AJvYcCX3brVwidG4whySLPJ3W13LWun2VQxnkr3JEKhsY9EgF7lj4SqYjNoxVxFz2swodYnb1q4IwTwVna6e01gpgXuPxPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjQ8PuwahkuN15WMIc07H7Uwk+UG+wv54haklRwDFK8lMjOThP
+	UI0MkTyWj8azPGkEKdASVuiscw/d5Cpa4pWcIHJRw0ZODpWAMA/h55A21zCQENKsFTyEMWgVA7k
+	/a8jqpv6pOcIBIjSbzZwUmH2JRf2ziA==
+X-Gm-Gg: ASbGncuTDHZYGTy1MwmR8TK3TZ1O3NX2UWsO8gpy5+Fm4vfqMaL7VIxv+/4pZiQCQfj
+	yApJKs+TtjkTyx+heh1Ws8IExBqmbNRpeJNV98AFkKOPsXyjnc23H9lBRULOAB9BcIj0hr3tlFy
+	BNoZdf1S3D0c445w/odPKmAcbbow==
+X-Google-Smtp-Source: AGHT+IGVDv1pE4BCE3Na+yhBb8R0foRSsykxpcDNkCfJpVC2H375ipT8Y9+Iaqn+hyKEC5XYMz497CWVlxAo0aZojpo=
+X-Received: by 2002:a17:907:890:b0:abf:768f:9a1f with SMTP id
+ a640c23a62f3a-ac252f5ad70mr2132021166b.42.1741862135398; Thu, 13 Mar 2025
+ 03:35:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: dufrggazb1dtq9n4wp46d3dgp4wc13eh
-X-MBO-RS-ID: b4c9879f8d01a5ce94b
+References: <20250310143450.8276-1-linux.amoon@gmail.com> <20250310143450.8276-5-linux.amoon@gmail.com>
+ <25fa661b-98e4-468b-bb4d-4a2c95f32b71@kernel.org> <CANAwSgTeZ83oqatrsWQxT+4RYwEtEqma=R4XX_iGrP2N=phz9Q@mail.gmail.com>
+ <43506f83-13d7-46c5-b022-473ac78f0cab@kernel.org>
+In-Reply-To: <43506f83-13d7-46c5-b022-473ac78f0cab@kernel.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Thu, 13 Mar 2025 16:05:18 +0530
+X-Gm-Features: AQ5f1JogTFqIfMNUkGXZqHbmGpfdP1dSo4ev8vVzdcAwRmde2Tjv4RErgvCNJmA
+Message-ID: <CANAwSgQeE0NQp_xwWcYBgZVQnm1N4PaQbaoMXGyFK4KKWAzxNw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] drivers/thermal/exymos: Use guard notation when
+ acquiring mutex
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	"open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>, 
+	"open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>, 
+	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 2025-03-13 at 11:07 +0100, Christian K=C3=B6nig wrote:
-> Am 13.03.25 um 10:30 schrieb Philipp Stanner:
-> > The documentation for drm_sched_job_arm() and especially
-> > drm_sched_job_cleanup() does not make it very clear why
-> > drm_sched_job_arm() is a point of no return, which it indeed is.
-> >=20
-> > Make the nature of drm_sched_job_arm() in the docu as clear as
-> > possible.
-> >=20
-> > Suggested-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
->=20
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+Hi Krzysztof,
 
-Thx
+On Thu, 13 Mar 2025 at 13:19, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On 12/03/2025 15:59, Anand Moon wrote:
+> >>
+> >>> +          mutex_lock(&_T->lock), mutex_unlock(&_T->lock))
+> >>> +
+> >>>  /*
+> >>>   * TMU treats temperature as a mapped temperature code.
+> >>>   * The temperature is converted differently depending on the calibration type.
+> >>> @@ -256,7 +260,7 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+> >>>       unsigned int status;
+> >>>       int ret = 0;
+> >>>
+> >>> -     mutex_lock(&data->lock);
+> >>> +     guard(mutex)(&data->lock);
+> >>
+> >> Which you do not use... Please don't use cleanup.h if you do not know
+> >> it. It leads to bugs.
+> >>
+> > Ok, I will drop this include of cleanup.h.
+>
+> So the guards as well...
+>
+Ok I will drop this patch thanks.
 
->=20
-> I'm currently looking into how to fix the amdgpu CS path for gang
-> submission regarding this.
->=20
-> Any objections that I add a preload function to allocate the memory
-> for the XA outside of the critical section?
+> Best regards,
+> Krzysztof
 
-I can't fully follow, you mean when creating the dependencies xarray?
-
-I think in a perfect world we wouldn't have any more functions that
-only have 1 user to work around driver-internal problems. That said, I
-realize that the world isn't perfect. Would still be cool if every
-function we add would be useful to >1 driver.
-
-I think it's probably best if you just propose sth in form of a patch
-and we discuss it there
-
-Gr=C3=BC=C3=9Fe
-P.
-
-
->=20
-> Regards,
-> Christian.
->=20
-> > ---
-> > =C2=A0drivers/gpu/drm/scheduler/sched_main.c | 24 ++++++++++++++++++---=
--
-> > --
-> > =C2=A01 file changed, 18 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/scheduler/sched_main.c
-> > b/drivers/gpu/drm/scheduler/sched_main.c
-> > index 4d4219fbe49d..829579c41c6b 100644
-> > --- a/drivers/gpu/drm/scheduler/sched_main.c
-> > +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> > @@ -828,11 +828,15 @@ EXPORT_SYMBOL(drm_sched_job_init);
-> > =C2=A0 *
-> > =C2=A0 * This arms a scheduler job for execution. Specifically it
-> > initializes the
-> > =C2=A0 * &drm_sched_job.s_fence of @job, so that it can be attached to
-> > struct dma_resv
-> > - * or other places that need to track the completion of this job.
-> > + * or other places that need to track the completion of this job.
-> > It also
-> > + * initializes sequence numbers, which are fundamental for fence
-> > ordering.
-> > =C2=A0 *
-> > =C2=A0 * Refer to drm_sched_entity_push_job() documentation for locking
-> > =C2=A0 * considerations.
-> > =C2=A0 *
-> > + * Once this function was called, you *must* submit @job with
-> > + * drm_sched_entity_push_job().
-> > + *
-> > =C2=A0 * This can only be called if drm_sched_job_init() succeeded.
-> > =C2=A0 */
-> > =C2=A0void drm_sched_job_arm(struct drm_sched_job *job)
-> > @@ -1017,9 +1021,12 @@ EXPORT_SYMBOL(drm_sched_job_has_dependency);
-> > =C2=A0 * Drivers should call this from their error unwind code if @job
-> > is aborted
-> > =C2=A0 * before drm_sched_job_arm() is called.
-> > =C2=A0 *
-> > - * After that point of no return @job is committed to be executed
-> > by the
-> > - * scheduler, and this function should be called from the
-> > - * &drm_sched_backend_ops.free_job callback.
-> > + * drm_sched_job_arm() is a point of no return since it
-> > initializes the fences
-> > + * and their sequence number etc. Once that function has been
-> > called, you *must*
-> > + * submit it with drm_sched_entity_push_job() and cannot simply
-> > abort it by
-> > + * calling drm_sched_job_cleanup().
-> > + *
-> > + * This function should be called in the
-> > &drm_sched_backend_ops.free_job callback.
-> > =C2=A0 */
-> > =C2=A0void drm_sched_job_cleanup(struct drm_sched_job *job)
-> > =C2=A0{
-> > @@ -1027,10 +1034,15 @@ void drm_sched_job_cleanup(struct
-> > drm_sched_job *job)
-> > =C2=A0	unsigned long index;
-> > =C2=A0
-> > =C2=A0	if (kref_read(&job->s_fence->finished.refcount)) {
-> > -		/* drm_sched_job_arm() has been called */
-> > +		/* The job has been processed by the scheduler,
-> > i.e.,
-> > +		 * drm_sched_job_arm() and
-> > drm_sched_entity_push_job() have
-> > +		 * been called.
-> > +		 */
-> > =C2=A0		dma_fence_put(&job->s_fence->finished);
-> > =C2=A0	} else {
-> > -		/* aborted job before committing to run it */
-> > +		/* The job was aborted before it has been
-> > committed to be run;
-> > +		 * notably, drm_sched_job_arm() has not been
-> > called.
-> > +		 */
-> > =C2=A0		drm_sched_fence_free(job->s_fence);
-> > =C2=A0	}
-> > =C2=A0
->=20
-
+Thanks
+-Anand
