@@ -1,117 +1,73 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C08267F4F;
-	Thu, 13 Mar 2025 15:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8B726739D
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 15:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741880308; cv=none; b=ezrhdX/5VKLL5o93TgduznALc8ilyfoOptiowYGKHlJn19izhCOUklnLpCE3oiG25IZCJIFa7jiZClapbHGk2rRP0kRCKecMWTYQhu/PgtJRMsJrBrv/Y5bfp++H+g9wdaNFI44eVV4KKou/OqfQaWnuDU7aAnePKTUt6PPw0yE=
+	t=1741880345; cv=none; b=JFFLkVeMTmb5xqw6eYRLvo6J7/1GhRhBumD0ApxCoP/vfe10RuBiJsCAql4p8LqY/XOWTJkPjNkzDeViD4a8l+cxbKcPvDV6pEbPFzFlCJ1XcuiLaQ7Mu3KUP9QSJlhHx0dN05QXLU5mNcwDJpRnBVWw/Fj2fGdFPO69Regxoqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741880308; c=relaxed/simple;
-	bh=wMkjK3eM/J+DCnwY/w1FF80+Pw0go5FynljZX0c9TcY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VCPYCgHei/Q/9rLTNPlKWUZSP+ouQzyizE23k/t6RGmI1qGeQtNsQp4I89luqaAFxgV+1BpYSNeSSv2lbM88LfalW5sbQMmykr/efsqG6WK18z+UJFh+O9KX+jMx0jfZ3eq4Jh+MzIEHeB9UX1gVk3Ec4/cc0JX8KS66FNMITXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=alVjjR3M; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741880345; c=relaxed/simple;
+	bh=u/DqT7WsvW5y3HPapc4o8ENLn/k/lws31ASQPvKv24o=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tip1W4swgCWvyXuUaX8rR2ZcM0QCun0Pj/BywUmlgDveWG89CVAmhr6ky0o63y4iZ5ulWLC2gg+Rt22lz+hmD6RL81E7ph08uevQO5kD5nMlmHIoYbQyyw48P0keCja0nY6U97E9R48Dsnw6ltmA2ZciOUr7t+W7njNMjax04DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=DVdP3ZaL; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alVjjR3M"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ff7cf59a8fso288616a91.3;
-        Thu, 13 Mar 2025 08:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741880305; x=1742485105; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2/IG2UNH9lhkw2/E8UkhZN3j0Io+vt9kP0caOhOAn4M=;
-        b=alVjjR3M+qE1AcxwNaxlJz5MHGRDT7rMqFCr0JEhECKcerjBtKr4Js7Ci8piw+sr5I
-         CuYgVX8TMAOPT1SFKLsM7ux87Gag1RwT5yyHEGm5xQdesM2MuqLjQgE7HEht9tJh+i2d
-         +TtJh4D5GtX+Srb289yN4mfijeQijbxcCP5ZaU0P4v4My/V8DDeZmvXH2DhVLbBUE5ld
-         jAnWT6UvhXxtyKc9pqcFVoBl03Q+7+oU8kVJGamIcOZcd2UuWUhHDeCoChnEGG3GJNNE
-         9CRf1uODCW4dFSqeEWmJJavdCOK2jZqZbkdz4KTIzqnU9e1mo/mU5ksQDFSsLYmSc/3N
-         L5hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741880305; x=1742485105;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2/IG2UNH9lhkw2/E8UkhZN3j0Io+vt9kP0caOhOAn4M=;
-        b=qIabviYTioEvKVYt4IhpN5XeoEAP/1g2Yv2u2U2UAPLjENtS1Ev9H5AS/ZkADxzCRo
-         f4y0Zi81XGi2V3qzwsaR47BBqvlUsZr0ov0Gaa2qIhwXDyolm6qepyJtI6v4yoWLdwl8
-         PwOnLF83UK9v7Ou+cBM+BeOQsiZIJLqFZAb4wy4DplQMtpRSdVzPKJ3F0YkCuw0Xv7Ie
-         8EhMZ+ezWtT4iN6Nj7Mex4bhmI5YkkiUBL+s+9ALRlMTBc8iQD9C7AjPb+MFBVjJuTeb
-         knhNCR1eoXUYmZDbc/lCQ6OtNpuGJkKV+idVkcO3+crUVSIJYDTs4u0eJ1Cp1JBdJQuN
-         4Uvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFpUqyGM2x10dQV3da02K9XcyKSwMoEu/AoaZQDZ3W69hUxahobiKNU/NfBP4iEGNFzU/1xa7V@vger.kernel.org, AJvYcCWmucXJunJuMgzqYrmavFNUBVxdGIZJWKzY48CTGemY5TXJtXPN+/nefMbIVsDKp4o8MwzVkGCt664hBJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/4zDcGpf++0/kHjYE3RgOlD4C2d5+HPt5qOnyWgCEbdrNQYji
-	dQkdLHhNzNGQqOQzQvHz9e9pIh3tNwGed1p3QNDvldVrgzU/jtt0BTKub4DDAUl6Fliw3BunnfK
-	Sn6dH+bfGctBdz018w20y5QASPH8=
-X-Gm-Gg: ASbGncvZ1y8ENsgFDvEO65/g039z5unZYyniA+0/zyFbkRcH/nH5BKOR6/9vWo8sm7y
-	u5Buln0udTMDpa+VO/Bxll5BgIT0ctNvhy/iccdd2WGiwKQCyWc1yfYrZy2vbyk87NFnc5JJVdF
-	K4ddM6XfhWcN+9dFeV5IGS9qOwng==
-X-Google-Smtp-Source: AGHT+IF6424p+zrs81oK/FMpNgLrtT9UJ2LVWKyFJVkfm6+/bB/C+cR8PsMtaS4M3CsCMWprNAn/8jFeuEpAYxVJzTI=
-X-Received: by 2002:a17:90b:3812:b0:2ff:4a6d:b359 with SMTP id
- 98e67ed59e1d1-300ff91fb2fmr5520980a91.7.1741880305351; Thu, 13 Mar 2025
- 08:38:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="DVdP3ZaL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1741880341; x=1742139541;
+	bh=8q+SZJUpgQ03dKvuHkjBJKCWHfj+BfWFT9znt1M8GMk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=DVdP3ZaLkw3Ju+EqzzH3DrBILU9AC6DTt5VZSb2IazfyIg8NbLV+3ws2/fKPICCWE
+	 kxA42d5DkysRz4l6QDhsQCZGk4u+WSRZF/pmPvpMbVzw2qOQ4wc4guIxff+OQRFNKt
+	 IZ9e1YtupYuzCQej8c8FeAuCDnUd9toHuErm0OYilZMDa5ahMomTGhgIad9t4oSQ5K
+	 MGTT1RWf7pSo0+N0mY8l8CvuhYK2l8F7g0TWfUkn7RVzM9ybuazwdh4DhHzBppHUjI
+	 y+pS5rD3pVF0hyZKoWFivTgQfG9UNGwlBMawcC9l3Klo+8G/siwi7I8mPviFuMhKAE
+	 C6dFyHgRugasg==
+Date: Thu, 13 Mar 2025 15:38:55 +0000
+To: Alexandre Courbot <acourbot@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, Danilo Krummrich <dakr@kernel.org>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust/revocable: add try_with() convenience method
+Message-ID: <D8F91L51P2EA.2FBHGJYSV06HY@proton.me>
+In-Reply-To: <D8F8E4PBHK7O.399Y83M1L3XK3@nvidia.com>
+References: <20250313-try_with-v1-1-adcae7ed98a9@nvidia.com> <D8F7D2RPRVAO.2EF39MZXM6FPR@proton.me> <D8F8E4PBHK7O.399Y83M1L3XK3@nvidia.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 60d3158b1274c71f57645e115fd565706d6d5414
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250312063106.772-1-vulab@iscas.ac.cn>
-In-Reply-To: <20250312063106.772-1-vulab@iscas.ac.cn>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Thu, 13 Mar 2025 11:38:13 -0400
-X-Gm-Features: AQ5f1JpzKR_TjlBfb7plqnz-2EyQBV5yCEiQgCqhVC2krXJgZq2oSKe1L_igh0M
-Message-ID: <CADnq5_O8s5=bOmQDU=FRLxz75LuNq5BzON_i=-KBM9o8JeSDLQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu/gfx12: correct cleanup of 'me' field with gfx_v12_0_me_fini()
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com, 
-	airlied@gmail.com, simona@ffwll.ch, Hawking.Zhang@amd.com, Likun.Gao@amd.com, 
-	sunil.khatri@amd.com, kenneth.feng@amd.com, Jack.Xiao@amd.com, 
-	marek.olsak@amd.com, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Applied.  Thanks!
+On Thu Mar 13, 2025 at 4:08 PM CET, Alexandre Courbot wrote:
+> On Thu Mar 13, 2025 at 11:19 PM JST, Benno Lossin wrote:
+>> Would it make sense to not use `Result` here and continue with `Option`?
+>
+> We would have to return an Option<Result<R>> in this case. The current
+> code folds the closure's Result into the one of the guard's acquisition
+> for convenience.
+>
+> Actually, I don't think I have ever used try_access() a single time
+> without converting its returned Option into a Result. Wouldn't it make
+> sense to do the opposite, i.e. make try_access() return Err(ENXIO) when
+> the guard cannot be acquired and document this behavior?
 
-Alex
+Sure, if you're always doing
 
-On Wed, Mar 12, 2025 at 6:09=E2=80=AFAM Wentao Liang <vulab@iscas.ac.cn> wr=
-ote:
->
-> In gfx_v12_0_cp_gfx_load_me_microcode_rs64(), gfx_v12_0_pfp_fini() is
-> incorrectly used to free 'me' field of 'gfx', since gfx_v12_0_pfp_fini()
-> can only release 'pfp' field of 'gfx'. The release function of 'me' field
-> should be gfx_v12_0_me_fini().
->
-> Fixes: 52cb80c12e8a ("drm/amdgpu: Add gfx v12_0 ip block support (v6)")
-> Cc: stable@vger.kernel.org # 6.11+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c b/drivers/gpu/drm/amd=
-/amdgpu/gfx_v12_0.c
-> index da327ab48a57..02bc2eddf0c0 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-> @@ -2413,7 +2413,7 @@ static int gfx_v12_0_cp_gfx_load_me_microcode_rs64(=
-struct amdgpu_device *adev)
->                                       (void **)&adev->gfx.me.me_fw_data_p=
-tr);
->         if (r) {
->                 dev_err(adev->dev, "(%d) failed to create me data bo\n", =
-r);
-> -               gfx_v12_0_pfp_fini(adev);
-> +               gfx_v12_0_me_fini(adev);
->                 return r;
->         }
->
-> --
-> 2.42.0.windows.2
->
+    let guard =3D rev.try_access().ok_or(ENXIO)?;
+
+Then it makes sense from my view, maybe Danilo has some other argument
+for why `Option` is better.
+
+---
+Cheers,
+Benno
+
