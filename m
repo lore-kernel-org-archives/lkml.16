@@ -1,134 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71B31F91E3;
-	Thu, 13 Mar 2025 10:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3131EE028;
+	Thu, 13 Mar 2025 10:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741861287; cv=none; b=fAcUHfpiKvJxwtNbjdZNqmjAYNtPdCgKGxrAruf8A2UeEh6xKY6hEpPwjCi8WnfKvL4fgWT2QZ8Zp8DnURSxgg6aYuTkNe4505YllxuKWoObDEAmU5ax5hSxtZcUgMWFsBUrlwCj+VsTkHzs3OLEcAlH4+4va/hjENUvVx4gAzw=
+	t=1741861288; cv=none; b=l1EqIFw6NbqK+AA1ylr154iAStLy+xErwutORF9VdXAbkx8Vy9AVKBgGJpxzQzmzA2STch7FB0KliVJZyPw14FhzplzWOLwJ6dLOMX0LdmeHH15RoqYQmnNTRvQR8EP5kgTuZjAIOE5tg/cpsDBWEyAGBPplWtvI/F7fBl5HiS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741861287; c=relaxed/simple;
-	bh=8JyIlfgp7w/OCFYo3PZ+U2rTibygUjcYlz7++ApC0+o=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=A+wcOu2VedT9zCFIWL5mWIGTT4GI06DJzia78afOSDrRsnvW9beGUCu5FV6Ynzkd2IyUiXJt22cmYNT2JOzu7HU5pKZiUJF3MBoRULlYDo5JgAxEMrDTb1ZCFxuorhDMhzDzXxa5gUWAlfCuenXvjSzLQu4rCwJx76OgbHjRTTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mq5imFqX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741861288; c=relaxed/simple;
+	bh=cfebVLUHNUezFRL9YCM9hxV/pp652rwNYdE3gxbbonM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U4Nt3AemMB94p9wZnpt340s1/GzX0RS9JWqxk8wW9vwoseQslrxaYLy3dbtTNIMeu0VoU6GsfNfPB3v202lTOGtYTxOJ/AjBx64Nvrc22jUoQrxtP4+amhAgoMbAA/DDgSsUGTUBFyvvuQWfkmOO8iVicsvqac7cgP6lGQo/JYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=chRVdD5c; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mq5imFqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5078EC4CEDD;
-	Thu, 13 Mar 2025 10:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741861287;
-	bh=8JyIlfgp7w/OCFYo3PZ+U2rTibygUjcYlz7++ApC0+o=;
-	h=From:Subject:Date:To:Cc:From;
-	b=Mq5imFqXA9NuI7CXg5Ywpo3gxfJdCZekjxV9E/SN3CEydmIz8fotIlg4lle9mUIDM
-	 OtGZq4MPqPG4vjj+T2Ed9tcs3hUrnwMJkNp9NvY7PvUP4OeONy2J5g1c8bkJjn7uWI
-	 2aceD3Dj3z/jewr9UfiEUNDco00Z0EroNagQcTKZH2Wl1p2NOx2SsFsKf83NHO1s5h
-	 dufgE/d1zJr3DUVSEaEcEAwQ6pV6wXYzxWLKypOSQkMfDtlAH9NftuvhYhgzYqbWVW
-	 8Rj3OPX6d/NAMnYHi1k/hq9gg61mVPMYcWaKAMUreCzP4X9NJm/lu8panPhQWnvqyE
-	 Ddnpni37nwyew==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH net-next 00/12] mptcp: pm: prep work for new ops and sysctl
- knobs
-Date: Thu, 13 Mar 2025 11:20:49 +0100
-Message-Id: <20250313-net-next-mptcp-pm-ops-intro-v1-0-f4e4a88efc50@kernel.org>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="chRVdD5c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=xdvi7iawbva2dofelbrkhjtklu.protonmail; t=1741861283; x=1742120483;
+	bh=oSHmWh3vAbBN7vdlEzmuzXiqy2c6RHhX3Wjngq/DT6w=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=chRVdD5cD5bMyhhzC7qUlj1mgmQaBNY2avdn/wyhbmYM6pGc9Jm2uH373MKcXtSAs
+	 19YHh2ecQb40Kz7MGBM7EMCbz8Vz95hSkbdPq7l6KGmeXy4wmm5fzM3wZibATHGxZ+
+	 ZvFoeTD9BP96vW4XGKYT6aycnhmSTugSELsEp/W7BkIq7HDzGN1v+mb40fPXkah5Hl
+	 Q4GhI63BKUYqIONJyZUx73wZ4IdFKiCqoYb1VVbbn05tswo0XlTIcS7gld4QWMae+B
+	 b6w3Iw9bGyrJKvktt4mfJnWNkG9yqi4KPca5HMw86GAnrVXLjXjHEAdcPm9QCvC1V2
+	 iZJC8m6NDfLHQ==
+Date: Thu, 13 Mar 2025 10:21:18 +0000
+To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 1/4] rust: pci: use to_result() in enable_device_mem()
+Message-ID: <D8F2AE364QC3.11HU88HZQCS43@proton.me>
+In-Reply-To: <20250313021550.133041-2-dakr@kernel.org>
+References: <20250313021550.133041-1-dakr@kernel.org> <20250313021550.133041-2-dakr@kernel.org>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: cd9fd983219177ffe633db16d80de1f2dce5082b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIKx0mcC/zWMMQqAMAwAvyKZDTSVLn5FHKRGzdA2tEUE8e8Ww
- eGGG+5uKJyFC4zdDZlPKZJiE+o78McSd0ZZm4M11pmBLEaujati0OoVNWDSghJrTmjIkaHB+dU
- xtINm3uT67hP8IczP8wLcJFAedwAAAA==
-X-Change-ID: 20250312-net-next-mptcp-pm-ops-intro-01510135cd5e
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2454; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=8JyIlfgp7w/OCFYo3PZ+U2rTibygUjcYlz7++ApC0+o=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBn0rGaj8Sk9NALlMru3ASwzLQMZEh0aB6QRF4lw
- 5gEJ15Kf0uJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ9KxmgAKCRD2t4JPQmmg
- c9yKEACujq2P7gI5r5YxnZlMzqrgCcIxbZbeUqv2KhAFHsA8Hpm1ed7jmkpQOErCt5W9IRPJQip
- opZOyKZTUY4B118dnGPYn3y1PrQ5s1fJO57uDNN3bmBYLwhmXos3mOpIKa7RkkIpT8bxOOhFnf+
- RMXl5k9G6ogQDaP2BSW61qDFW1rkpvMyIP3ribMDCkgVWcfkANRRRzc1uw7DJytJ14OYwQC8pm3
- axaZdXKsj4kJnn9BgX1AO4wnqoiqqyH7hXVFBx/KmtG4sVhpOitLr+n434xB+AprRN2SToOPopz
- JYmBnDbIcOeO42l+D+OVvIORItyYSLqqADDuwn0T5rIRQl7CK21qHqOYswPnpJWLDMEKdTDdpJo
- hbw8hoNQo1g+qd7dVUZyijs13rZ3owydq1Srb8TxwcVbA8+RN2aNYcLqXSRaPGAjJgKLRZg+Fzi
- oxeQATVFe0qDJ1n8PhTfqLDYZKaEGiiYpewUE74MWXRRcCOSQEdFaxdPsIFOgAXjLlu0tlsSup6
- OqvifheAg+jUljlJmIoBZW5gMYBJAQRqpAsWXs0otX9rh4gTZ71twGsbmovBQN127y06Ue4eEa4
- pfc7Tf2Q+N2idxNwkVwbVMlUcLAamoA92zTqVq7nnL4cqvslHjFqW9Fi6z1MvrEsN1evG6hIc8W
- FH37mwF3wHbn0FQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Here are a few cleanups, preparation work for the new PM ops, and sysctl
-knobs.
+On Thu Mar 13, 2025 at 3:13 AM CET, Danilo Krummrich wrote:
+> Simplify enable_device_mem() by using to_result() to handle the return
+> value of the corresponding FFI call.
+>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-- Patch 1: reorg: move generic NL code used by all PMs to pm_netlink.c.
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 
-- Patch 2: use kmemdup() instead of kmalloc + copy.
-
-- Patch 3: small cleanup to use pm var instead of msk->pm.
-
-- Patch 4: reorg: id_avail_bitmap is only used by the in-kernel PM.
-
-- Patch 5: use struct_group to easily reset a subset of PM data vars.
-
-- Patch 6: introduce the minimal skeleton for the new PM ops.
-
-- Patch 7: register in-kernel and userspace PM ops.
-
-- Patch 8: new net.mptcp.path_manager sysctl knob, deprecating pm_type.
-
-- Patch 9: map the new path_manager sysctl knob with pm_type.
-
-- Patch 10: map the old pm_type sysctl knob with path_manager.
-
-- Patch 11: new net.mptcp.available_path_managers sysctl knob.
-
-- Patch 12: new test to validate path_manager and pm_type mapping.
-
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Geliang Tang (11):
-      mptcp: pm: in-kernel: use kmemdup helper
-      mptcp: pm: use pm variable instead of msk->pm
-      mptcp: pm: only fill id_avail_bitmap for in-kernel pm
-      mptcp: pm: add struct_group in mptcp_pm_data
-      mptcp: pm: define struct mptcp_pm_ops
-      mptcp: pm: register in-kernel and userspace PM
-      mptcp: sysctl: set path manager by name
-      mptcp: sysctl: map path_manager to pm_type
-      mptcp: sysctl: map pm_type to path_manager
-      mptcp: sysctl: add available_path_managers
-      selftests: mptcp: add pm sysctl mapping tests
+Cheers,
+Benno
 
-Matthieu Baerts (NGI0) (1):
-      mptcp: pm: split netlink and in-kernel init
+> ---
+>  rust/kernel/pci.rs | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+>
+> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> index 4c98b5b9aa1e..386484dcf36e 100644
+> --- a/rust/kernel/pci.rs
+> +++ b/rust/kernel/pci.rs
+> @@ -382,12 +382,7 @@ pub fn device_id(&self) -> u16 {
+>      /// Enable memory resources for this device.
+>      pub fn enable_device_mem(&self) -> Result {
+>          // SAFETY: `self.as_raw` is guaranteed to be a pointer to a vali=
+d `struct pci_dev`.
+> -        let ret =3D unsafe { bindings::pci_enable_device_mem(self.as_raw=
+()) };
+> -        if ret !=3D 0 {
+> -            Err(Error::from_errno(ret))
+> -        } else {
+> -            Ok(())
+> -        }
+> +        to_result(unsafe { bindings::pci_enable_device_mem(self.as_raw()=
+) })
+>      }
+> =20
+>      /// Enable bus-mastering for this device.
 
- Documentation/networking/mptcp-sysctl.rst         |  23 +++++
- include/net/mptcp.h                               |  14 +++
- net/mptcp/ctrl.c                                  | 113 +++++++++++++++++++++-
- net/mptcp/pm.c                                    |  97 ++++++++++++++++---
- net/mptcp/pm_kernel.c                             |  16 +--
- net/mptcp/pm_netlink.c                            |   6 ++
- net/mptcp/pm_userspace.c                          |  10 ++
- net/mptcp/protocol.h                              |  17 ++++
- tools/testing/selftests/net/mptcp/userspace_pm.sh |  30 +++++-
- 9 files changed, 301 insertions(+), 25 deletions(-)
----
-base-commit: e016cf5f39e9c53e274a7b7122a949d8839b8782
-change-id: 20250312-net-next-mptcp-pm-ops-intro-01510135cd5e
-
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
