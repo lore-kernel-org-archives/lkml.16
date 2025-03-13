@@ -1,221 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82752641FD
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F3D267701;
+	Thu, 13 Mar 2025 13:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741872524; cv=none; b=u5BbCV8Gan1vRMRpDGloOTf3yx4s+JV5tm5oTzLCDyoYtIhcmvUkfw5fZMml4VJrVSr5D5Ct2a2R1X43hTF7+I+aCKeW0ZnW7FCE3Uz2h4iL6EcIGzwMB24g5vNy8bxcUGgg/q7vFW6DTEHSVDp1hEu40r9CfHeKbX7xGtx3Nxo=
+	t=1741872589; cv=none; b=WWPm66freWgMxIEjg3nRR8WFb///mc8nETgtEzKG3P5y4m5JqC9er8r1uuaXST006kywRVt74iBqk3qt/GdStcBc6/0+gfui0pqk1B+2ycf0/f67govVA9iMWdcv89ZTSkkDfcHLHM1wTEgnUPFwlvJw/0+D6ySiIWCIvaiiaFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741872524; c=relaxed/simple;
-	bh=iqxmpqxwezW/E0wQ2/ag0wQd5oigAqsm5H9ZXnRt95Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IcMLeVNhlgXstz1WgXP2wDrQqoI8noPUh9HW94AOodAuF4MpsRcd2vBkE5DJqiT7HuYEdjQaI8sA2sMSYbfxMOgXi5MGkZ7GBOjvP8/uvrj3QWBpmnCOIH1yXTTngdMOAMkxlp4z7zTu09N8YDf0TW7URz3Ehjwlp84NgNgr2bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JB0Fw2dn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741872589; c=relaxed/simple;
+	bh=SWcBEiDC6xd/PujYJvpj52/K9l9YFvwj3Xw6G6hAUuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MFwaTTVD265Dxq5p4rOB3AkjMT64rqLKhLpDG634QLR/Q+nix/qTHJ7Nz6jiuHEoOxzp3zhHNYL6BbhuPOZIDxUsWtfphMmmagMRBbMmcmLX5pEmuNxbD3tQE0BiTj9ze9X3lcBHgCzOT8Ul9DU3O7DqJQvZPpdqkPyjTZSeqfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=fQbnOpSb; arc=none smtp.client-ip=5.189.157.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JB0Fw2dn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C56EC4CEEE;
-	Thu, 13 Mar 2025 13:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741872523;
-	bh=iqxmpqxwezW/E0wQ2/ag0wQd5oigAqsm5H9ZXnRt95Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JB0Fw2dnKEi8allw1f9x9jy6Rklb2BEA5hll8CoHT4vJeaooCf11PN0qFIytQpemr
-	 WPH85qa4jn6kTjVQ+DmDVCiddEGsJEkt/7s3ZgSMQl5wbl48zC9knG0Raw4/Yb/QHn
-	 Gjy82N3arJDKlQOH1eftxrDNTJq8DieQKgAR3WKDckWww6jSmPTVwwkOGM/jNCV6J/
-	 6bmVORSGSZfEXyEpP/4HgPNPHT8t4rTISecLCP0g2hCrrfVEG6go/2up2M/wCyEXRA
-	 7O6gLnXzXSSKaZ/Ygfxg7523qo+5M4VMVE09vC+h4K9qb5Q4XwE+44GvC2GlRXpoU5
-	 wiSTyhJyDMWZw==
-Message-ID: <27cf6dab-da29-458a-b376-4013c05434ab@kernel.org>
-Date: Thu, 13 Mar 2025 14:28:36 +0100
+	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="fQbnOpSb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Content-ID:Content-Description;
+	bh=ITLasxmQDerXuSjwxhFppjXCgBmI89lbRmvF9Iy20jA=; b=fQbnOpSbDJIJdf3sQaILolccPG
+	DQWcJ4ixHQF2Kts21kpaZ64J6HoOt0b/6kEwDpofSKO9VBIcTVZRFASmIImcSQ5Vp7NgGFxPNDgKa
+	Qu+UD+6qVeVbg42s+Rm2o/LBPu95oyy/x6yic9ETZhWh+mxoft7vEqaN8f93kX7DsqG6bBXI89NKt
+	5wddGm4BYPbOlP0Q910pGiRRgXxFiW1tdyectSqVfpWVx9Ura3YcwTE8C6vLGLBlfGCEaclwCXhjP
+	On39TH1+c8xdIsdp68i/Rl8caM7n8yU9BWRPtXDWhCKxYhXPou8ZcYjBnXh4E4/Vt9wMSgCgTjBBG
+	dON0V5WfUNQE7qCBMN6vaG4sHaBWkPpw+belxDr7nQwBshraDyf5yLa9QrRiTcUtd7KDMo8rGDoOD
+	pJPPdWTgeZMkroEO/AJJ3JuFHaVT0gPM3YUOV+G+xPFyjK4+5hvL8ojs8E3gLyiv8BpI0wmz8U65x
+	FFyHNlLbjJl2YhOhBkbIpcpRq9TM9TvTcgVgQaIxN5DhN1At9Wg76dpSQ0DaDPuNpJFf+ECuOvs8D
+	b81ZvExbeezTTh32CFm4WjXSYAgx5CMQRoPQgUHWwy0Io8VmUhTB/OQ838EXZI8FPaEMy0zGE3vfg
+	cp/fQn7qK5BhAImvwwIOWGsLaprnsXNLaT6F6XqB8=;
+From: Christian Schoenebeck <linux_oss@crudebyte.com>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>, v9fs@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ syzbot <syzbot+5b667f9a1fee4ba3775a@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] fs/9p: fix NULL pointer dereference on mkdir
+Date: Thu, 13 Mar 2025 14:29:42 +0100
+Message-ID: <4597443.VRNSQfLuZI@silver>
+In-Reply-To: <E1tsiI6-002iMG-Kh@kylie.crudebyte.com>
+References: <E1tsiI6-002iMG-Kh@kylie.crudebyte.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: mailbox: cix: add device tree binding
- documentation.
-To: Guomin Chen <guomin.chen@cixtech.com>,
- Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- Peter Chen <peter.chen@cixtech.com>, Lihua Liu <Lihua.Liu@cixtech.com>
-References: <20250313132405.742360-1-guomin.chen@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250313132405.742360-1-guomin.chen@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 13/03/2025 14:24, Guomin Chen wrote:
-> From: Guomin Chen <Guomin.Chen@cixtech.com>
+On Thursday, March 13, 2025 1:59:32 PM CET Christian Schoenebeck wrote:
+> When a 9p tree was mounted with option 'posixacl', parent directory had a
+> default ACL set for its subdirectories, e.g.:
 > 
-> This patch adds device tree binding for mailbox from Cixtech.
-
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
-A nit, subject: drop second/last, redundant "device tree binding
-documentation.". The "dt-bindings" prefix is already stating that these
-are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-
-Also, no full stop in the subject.
-
+>   setfacl -m default:group:simpsons:rwx parentdir
 > 
-> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
-> Signed-off-by: Lihua Liu <Lihua.Liu@cixtech.com>
-> Signed-off-by: Guomin Chen <Guomin.Chen@cixtech.com>
+> then creating a subdirectory crashed 9p client, as v9fs_fid_add() call in
+> function v9fs_vfs_mkdir_dotl() sets the passed 'fid' pointer to NULL
+> (since dafbe689736) even though the subsequent v9fs_set_create_acl() call
+> expects a valid non-NULL 'fid' pointer:
+> 
+>   [   37.273191] BUG: kernel NULL pointer dereference, address: 0000000000000000
+>   ...
+>   [   37.322338] Call Trace:
+>   [   37.323043]  <TASK>
+>   [   37.323621]  ? __die+0x1f/0x60
+>   [   37.324448]  ? page_fault_oops+0x158/0x470
+>   [   37.325532]  ? search_module_extables+0x4a/0x80
+>   [   37.326742]  ? p9_client_walk+0x1c/0x2c0 [9pnet]
+>   [   37.328006]  ? search_bpf_extables+0x5b/0x80
+>   [   37.329142]  ? exc_page_fault+0x72/0x190
+>   [   37.330196]  ? asm_exc_page_fault+0x22/0x30
+>   [   37.331330]  ? p9_client_walk+0x1c/0x2c0 [9pnet]
+>   [   37.332562]  ? v9fs_fid_xattr_get+0x59/0x120 [9p]
+>   [   37.333824]  v9fs_fid_xattr_set+0x6f/0x130 [9p]
+>   [   37.335077]  v9fs_set_acl+0x82/0xc0 [9p]
+>   [   37.336112]  v9fs_set_create_acl+0x41/0x60 [9p]
+>   [   37.337326]  v9fs_vfs_mkdir_dotl+0x20d/0x2e0 [9p]
+>   [   37.338590]  vfs_mkdir+0x192/0x250
+>   [   37.339535]  do_mkdirat+0x135/0x160
+>   [   37.340465]  __x64_sys_mkdir+0x42/0x60
+>   [   37.341455]  do_syscall_64+0x4b/0x110
+>   [   37.342447]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+Oops, forgot to decode the trace back:
+
+[   37.322338] Call Trace:
+[   37.323043]  <TASK>
+[   37.323621] ? __die (arch/x86/kernel/dumpstack.c:421 arch/x86/kernel/dumpstack.c:434) 
+[   37.324448] ? page_fault_oops (arch/x86/mm/fault.c:714) 
+[   37.325532] ? search_module_extables (kernel/module/main.c:3733) 
+[   37.326742] ? p9_client_walk (net/9p/client.c:1165) 9pnet 
+[   37.328006] ? search_bpf_extables (kernel/bpf/core.c:804) 
+[   37.329142] ? exc_page_fault (./arch/x86/include/asm/paravirt.h:686 arch/x86/mm/fault.c:1488 arch/x86/mm/fault.c:1538) 
+[   37.330196] ? asm_exc_page_fault (./arch/x86/include/asm/idtentry.h:574) 
+[   37.331330] ? p9_client_walk (net/9p/client.c:1165) 9pnet 
+[   37.332562] ? v9fs_fid_xattr_get (fs/9p/xattr.c:30) 9p 
+[   37.333824] v9fs_fid_xattr_set (fs/9p/fid.h:23 fs/9p/xattr.c:121) 9p 
+[   37.335077] v9fs_set_acl (fs/9p/acl.c:276) 9p 
+[   37.336112] v9fs_set_create_acl (fs/9p/acl.c:307) 9p 
+[   37.337326] v9fs_vfs_mkdir_dotl (fs/9p/vfs_inode_dotl.c:411) 9p 
+[   37.338590] vfs_mkdir (fs/namei.c:4313) 
+[   37.339535] do_mkdirat (fs/namei.c:4336) 
+[   37.340465] __x64_sys_mkdir (fs/namei.c:4354) 
+[   37.341455] do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83) 
+[   37.342447] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+
+Dominique, do you want me to send a v2 or would you update the commit log on
+your end?
+
+/Christian
+
+> Fix this by simply swapping the sequence of these two calls in
+> v9fs_vfs_mkdir_dotl(), i.e. calling v9fs_set_create_acl() before
+> v9fs_fid_add().
+> 
+> Fixes: dafbe689736 ('9p fid refcount: cleanup p9_fid_put calls')
+> Reported-by: syzbot+5b667f9a1fee4ba3775a@syzkaller.appspotmail.com
+> Signed-off-by: Christian Schoenebeck <linux_oss@crudebyte.com>
 > ---
->  .../bindings/mailbox/cix-mailbox.yaml         | 74 +++++++++++++++++++
-
-Filename matching compatible.
-
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/cix-mailbox.yaml
+>  fs/9p/vfs_inode_dotl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mailbox/cix-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/cix-mailbox.yaml
-> new file mode 100644
-> index 000000000000..85cb54ae2e79
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/cix-mailbox.yaml
-> @@ -0,0 +1,74 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/cix-mailbox.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Cix mailbox controller
-> +
-> +maintainers:
-> +  - Lihua Liu <Lihua.Liu@cixtech.com>
-> +
-> +description:
-> +  CIX mailbox controller is used to exchange message within
-> +  multiple processors, such as AP, AUDIO DSP, SensorHub MCU,
-> +  etc. It supports 10 mailbox channels with different operating
-> +  mode and every channel is unidirectional.
-
-uni but configurable or each channel has specific direction?
-
-> +
-> +properties:
-> +  compatible:
-> +    const: cix,sky1-mbox
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#mbox-cells":
-> +    description: |
-> +      <&phandle channel>
-> +      phandle   : Label name of controller
-> +      channel   : Channel number
-
-Drop above and explain what the cell argument is.
-
-> +
-> +      This controller supports three types of unidirectional channels, they are
-> +      1 register based channel, 1 fifo based channel and 8 fast channels.
-> +      A total of 10 channels for each controller. Following types are
-> +      supported:
-> +      channel 0_7 - Fast channel with 32bit transmit register and IRQ support.
-> +      channel 8   - Reg based channel with 32*32bit transsmit register and
-> +                    Doorbell+transmit acknowledgment IRQ support
-> +      channel 9   - Fifo based channel with 32*32bit depth fifo and IRQ support.
-> +    const: 1
-> +
-> +  cix,mbox-dir:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Direction of the mailbox (0:TX or 1:RX)
-> +    enum: [0, 1]
-
-I don't understand why do you need it. By not sending us driver patch,
-you are not making it easier. Why would provider care how consumers use
-the mbox channel? Maybe consumer should choose the direction?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#mbox-cells"
-> +  - cix,mbox-dir
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        mbox0: mailbox@30000000 {
-> +            compatible = "cix,sky1-mbox";
-> +            reg = <0 0x30000000 0 0x10000>;
-> +            interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH 0>;
-> +            #mbox-cells = <1>;
-> +            cix,mbox-dir = <0>;
-> +            status = "okay";
-
-Drop
-
-> +        };
-> +    };
+> diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
+> index 143ac03b7425..3397939fd2d5 100644
+> --- a/fs/9p/vfs_inode_dotl.c
+> +++ b/fs/9p/vfs_inode_dotl.c
+> @@ -407,8 +407,8 @@ static int v9fs_vfs_mkdir_dotl(struct mnt_idmap *idmap,
+>  			 err);
+>  		goto error;
+>  	}
+> -	v9fs_fid_add(dentry, &fid);
+>  	v9fs_set_create_acl(inode, fid, dacl, pacl);
+> +	v9fs_fid_add(dentry, &fid);
+>  	d_instantiate(dentry, inode);
+>  	err = 0;
+>  	inc_nlink(dir);
+> 
 
 
-Best regards,
-Krzysztof
