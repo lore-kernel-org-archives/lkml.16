@@ -1,132 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E341FBE9C;
-	Thu, 13 Mar 2025 07:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B82422DFBB;
+	Thu, 13 Mar 2025 07:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741850947; cv=none; b=FFZsBYiUN297hh410+D2Q3ODlLlbQS45rBd6pwaTt9dBm42YfOKcOxk3QOGJLr+81INlrUTDALfS8xfEtNeQGa49TgxLGnNeMFEN2e8sS/tdz4wAhotg1mvVcuVgpZQeij3Z7kSuLogg7bn7X/bcBhsHm+qWkkt3NekD/JgFfjk=
+	t=1741851021; cv=none; b=rhWn9LJpbRWN1HJcCKs7nZhLRHyCEDWt2Rq7YRqCIAX/0jYpvfeFViOqUfU2Qbs2sXI+wa6nIk40sqMGxmIKUvNHAJsLAz1SvUy6HFGM+qN5ugKP4ErPDIUxF7UvMk2Z1hB88ZbeTrXDd+QJyRUd8lyXJjWZdOyAYEL+VoV3qdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741850947; c=relaxed/simple;
-	bh=bXd5Zvd7dZCJ4R1puUhsaSnoSdsh9qOuJCYZlCWoGgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jti9vEUTJoKX7SJty8uZoxC3N+F/1MwYrVlTDDwTpa4vR7pU/L6y+LjzlQDSdCoMMv53OAOWb4TD/rIa8IaOjSJoo/qIF2smC73BXWWduTm1bpRt27DAwMsvmjdciKPLz/TfxD80d+WbBJZlztqY1r2riwnor/BDoL/MSo3LwHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dw6NfMQk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741851021; c=relaxed/simple;
+	bh=QbnEtM3KvInKXQ/kzErd6KRfneGlpRJhzPkXfRN9iBs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T+XPzmC9ZIA51DkHSgwWhPF6ZT44NXaPDac3snPZ0VPy3qFalg5DgA1aU7XTEvSan3OSnbkjSZpFdrEO5dZyzKuYKD+yOH8rzMkA0DOD2Q9I3V8ikknVw895dAZ8jZSc5UjekiMCV3PKKsdMOaNcyEuYvL8KFolNfo8/fG6u8QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbuiWT2i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dw6NfMQk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCDF2C4CEDD;
-	Thu, 13 Mar 2025 07:29:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbuiWT2i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66EC4C4CEE9;
+	Thu, 13 Mar 2025 07:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741850947;
-	bh=bXd5Zvd7dZCJ4R1puUhsaSnoSdsh9qOuJCYZlCWoGgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dw6NfMQko4STR5OR0+dkKeiLiHPVnPVIwaPlVHIXrgH/3QvFEp4FDClO9lW3KPBbo
-	 XNYNgGRRu9VX2X/iw47GZ+v8N3O0jMdxo4Egj88CjCFiLkhgBaE4EeXfm0Xt8JaT3N
-	 B4dw0g90oNdwfWgHb+tD4O7PrCxnUNEyk+Xcajep5EfUMRDuyG6HPS2IC3hGmLrVAf
-	 97+oYBs2OwbmBJU2X5xDFvUD8nqdJtSG7n3BuMf1ZPcUmSpVBNAcaJ8zz4p/gHjTia
-	 r+WZOwBAP/kdqFX1NnIFeH8q0CS6q4EkhEMD8sxpk09tAdacrLzMj0QempPAvCP+7o
-	 sK0rCcYjRT1Tg==
-Date: Thu, 13 Mar 2025 00:29:05 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 3/3] perf hist stdio: Do bounds check when printing
- callchains to avoid UB with new gcc versions
-Message-ID: <Z9KJQdUkEel3OP1X@google.com>
-References: <20250310194534.265487-1-acme@kernel.org>
- <20250310194534.265487-4-acme@kernel.org>
- <Z89f6JbpZUQoi2hR@google.com>
+	s=k20201202; t=1741851019;
+	bh=QbnEtM3KvInKXQ/kzErd6KRfneGlpRJhzPkXfRN9iBs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RbuiWT2id1vk9SO5vP9IVGY4KLvk+bWx0qdDElkGMxC2gYERw/QsfdRQ28KKLdtag
+	 0ke+edEIZ9T42U/pIyJgGb/i8XwKr/smO4zasvXrUdwPBF9OSPhQrwVXXOHSerNcea
+	 lo34vcCiPaMcFOyN/w/o+1c2tJi9vlm0vJcaTACpS+lZiAJizxE2CFIdF4lHGSXcZ7
+	 REiJcIfMEJiNQh6SUF1uYdZLrd+pm32tGgob0WnGPmYcwpH00QgCMB0hfxirAuTDqi
+	 dLNbtYs7u0SiK5Tk945gtzCHiFh7z4sWETHt4eoTv9rx4qnBbH0NjLlKyI5szysUvK
+	 b5L4UzVav22QQ==
+Message-ID: <49e87f3a-2f02-40d2-9307-22cfaaa8be7a@kernel.org>
+Date: Thu, 13 Mar 2025 08:30:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z89f6JbpZUQoi2hR@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/8] memory: Add STM32 Octo Memory Manager driver
+To: Patrice CHOTARD <patrice.chotard@foss.st.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ christophe.kerello@foss.st.com
+References: <20250219080059.367045-1-patrice.chotard@foss.st.com>
+ <20250219080059.367045-5-patrice.chotard@foss.st.com>
+ <6e1757ea-3f5e-4cc0-b142-aee52f016c8f@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <6e1757ea-3f5e-4cc0-b142-aee52f016c8f@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 10, 2025 at 02:55:52PM -0700, Namhyung Kim wrote:
-> On Mon, Mar 10, 2025 at 04:45:33PM -0300, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > Do a simple bounds check to avoid this on new gcc versions:
-> > 
-> >   31    15.81 fedora:rawhide                : FAIL gcc version 15.0.1 20250225 (Red Hat 15.0.1-0) (GCC)
-> >     In function 'callchain__fprintf_left_margin',
-> >         inlined from 'callchain__fprintf_graph.constprop' at ui/stdio/hist.c:246:12:
-> >     ui/stdio/hist.c:27:39: error: iteration 2147483647 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
+On 10/03/2025 14:52, Patrice CHOTARD wrote:
+>> +module_platform_driver(stm32_omm_driver);
+>> +
+>> +MODULE_DESCRIPTION("STMicroelectronics Octo Memory Manager driver");
+>> +MODULE_LICENSE("GPL");
 > 
-> Hmm.. does it warn about a signed integer overflow?
 > 
-> 2147483647 is 0x7fffffff in hex and it should be INT_MAX.
-> I'm not sure what is the problem.
+> Hi all,
+> 
+> Anybody alse has additionnal remarks on this driver ?
+BTW, you explained nothing about merging in the cover letter, mark
+already took the patch, but I see there is dependency. This cannot be
+merged and pinging will not change anything here.
 
-Maybe the aggressive loop optimization can unroll the loop more than the
-INT_MAX...?  Anyway the fix is simple and makes sense.
+In the future, ALWAYS document dependencies between patches and make it
+explicit for the maintainers.
 
-> 
-> 
-> >        27 |         for (i = 0; i < left_margin; i++)
-> >           |                                      ~^~
-> >     ui/stdio/hist.c:27:23: note: within this loop
-> >        27 |         for (i = 0; i < left_margin; i++)
-> >           |                     ~~^~~~~~~~~~~~~
-> >     cc1: all warnings being treated as errors
-> >     --
-> >     util/units.c: In function 'unit_number__scnprintf':
-> >     util/units.c:67:24: error: initializer-string for array of 'char' is too long [-Werror=unterminated-string-initialization]
-> >        67 |         char unit[4] = "BKMG";
-> >           |                        ^~~~~~
-> >     cc1: all warnings being treated as errors
-> 
-> This part belongs to the previous commit. :)
-
-I'll drop this part.
-
-Thanks,
-Namhyung
-
-> 
-> > 
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: James Clark <james.clark@linaro.org>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/ui/stdio/hist.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-> > index 74b2c619c56c8ba3..7ac4b98e28bca82e 100644
-> > --- a/tools/perf/ui/stdio/hist.c
-> > +++ b/tools/perf/ui/stdio/hist.c
-> > @@ -1,4 +1,5 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> > +#include <limits.h>
-> >  #include <stdio.h>
-> >  #include <stdlib.h>
-> >  #include <linux/string.h>
-> > @@ -24,6 +25,9 @@ static size_t callchain__fprintf_left_margin(FILE *fp, int left_margin)
-> >  	int i;
-> >  	int ret = fprintf(fp, "            ");
-> >  
-> > +	if (left_margin > USHRT_MAX)
-> > +		left_margin = USHRT_MAX;
-> > +
-> >  	for (i = 0; i < left_margin; i++)
-> >  		ret += fprintf(fp, " ");
-> >  
-> > -- 
-> > 2.48.1
-> > 
+Best regards,
+Krzysztof
