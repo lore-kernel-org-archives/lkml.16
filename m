@@ -1,112 +1,323 @@
-Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
+Received: from mx0b-00154904.pphosted.com (mx0b-00154904.pphosted.com [148.163.137.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0ED1F417E
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.225
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741896005; cv=none; b=rRHQnzkor/W6mgNlWVcjAEULJ4IT/ILuVcsm6KUJaqK0zk5dGk6bZiTXvXCzUIV6Oe1+lpvB/3MxLu/nY2G4WcmbhUmI4BHr9GBYkqD320tyEXFFXIm7FTwJL5nDuUoChegjHcR96XbkhHy3aKrpmpN7z7GCnnpN/Y8OocQtAts=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741896005; c=relaxed/simple;
-	bh=8FPGb/YadvHr8SNwanMMuST8IvaIB2I6i5+G0qB8Vwk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ahy/zaAlCOz2840hGEX59NmBeNI31wBrWXmqAMjzJh54LJy83XBABRBbzj8Dq9q3YpU2tL+sFtEMTW0Ej+D9LOa5lg+Tn7g5QEFcd60GUT6Nr9SWig/24GoCOip+XQvwun7K+WZ8PiH0oJBrGWKKHEcwC64Xfg3KKhGyylmNOW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=VpQH5icP; arc=none smtp.client-ip=185.136.65.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984B4149C64;
+	Thu, 13 Mar 2025 20:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.137.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741896277; cv=fail; b=uSwXuTyRMyIS3y0Od5607aa5zNkBuHD05HUpxabpFb81E8H88aftrf1FNBF4qhakAzPtwAlU+3HXLCTUp6+kjgBlr08iMiGyVJE/pU0Nf9UO+a295bZnpSh0f/+uDneWyV8rVAZ4HQLscuOBAPBRbTDDVadS/cYAIb0U9iMHjiU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741896277; c=relaxed/simple;
+	bh=XcOsMmPx/5KNJ2rz0YXfZLNZfnzMjFHPlbt/EgGWB7k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KC05NWxxi1TsUSrxqABQ6oJUncwsjQXkazGpgorhZh9P1fvtSqwzZN6Dc43Rz20YBMvA0FrwoUmVv2t65B/Qt4/8uzuRy+b5zx8QM9Kf95yhfzfW/pVnqL+sq87pxyNeAK3iYIaDEZBokITAqP7JoB+zQ3xxOTarv75F0+rCNkc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com; spf=pass smtp.mailfrom=dell.com; dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b=KmG50+MF; arc=fail smtp.client-ip=148.163.137.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="VpQH5icP"
-Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 20250313195955aff4238d474db45646
-        for <linux-kernel@vger.kernel.org>;
-        Thu, 13 Mar 2025 20:59:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=diogo.ivo@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=NDfjYY/U1OQvpRpujwRTPoXFd7EYoHPyoCvKTvmLJiU=;
- b=VpQH5icPDynYf8fghHSeGSrUCiPCMjOiAxrCgKIAwXq25nqoSQXEcQQo3DeNLJmYLvITDX
- Msh+7cSmLHIz9IRbl57ffJcXVAiAUKTjuKtb5kkhP7fzybZqBhb4ZxaBAubk+T0rIbroJVRv
- zWqcPCHJ31Qi87s6KzYw2xvrOEz0FJoxsiXa9JJx1w5L/C4awSTGfjknonfuVIrNbKuGLgRH
- 0u4HpxkCBZdh1jvMfMqwDTzYGtuBx92AogEhgvaZSnxP1ZuIPbTAWnXldGUSDOL63NcVqNT7
- /8ngKNORoY4xRIsfCKMiZMt6OmsxH4aFx/QXFpDufPyk2TEVi7xhKh9Q==;
-Message-ID: <b842cfe5-f4ee-435b-acbd-6bc24069bcc1@siemens.com>
-Date: Thu, 13 Mar 2025 19:59:52 +0000
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="KmG50+MF"
+Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
+	by mx0b-00154904.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DFpmxA018559;
+	Thu, 13 Mar 2025 12:34:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=smtpout1; bh=h
+	Ljub6PoD3/IHa+flUhTkrbH6y3HLdm6Ln4miE+NA34=; b=KmG50+MF9wkbYQnea
+	Z9J5Ea6ZgP78VoTS9tX3Ei/3JSEk16RyW04iDFAfoVg7gX6h4JV/ZYWbYExDxvqb
+	nEK0W26PRYU1d7uxf5DnhN9RrdkHMy+bOO/EQcYvSe1pFVnSW2AVfriDO0QKWbVo
+	e4m3S0SpCss+FlW1Shc+6frdebQa0IYh+rGMpJnWGk8QNgU4VlyDhmADgf7nAwYq
+	2sN89hgFEShj58efhFfLJbX/jI1PEhk7qJaLWhuJmp86a+4v1Y/XNsO0Id+jdJdV
+	86xY8zcs4QLNLYqSRQHHaY1FvC452N5CWMqkACyS1CwMDoO1e06swIWKimRkwLDe
+	pdPhQ==
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+	by mx0b-00154904.pphosted.com (PPS) with ESMTPS id 45au44jcwf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 12:34:20 -0400 (EDT)
+Received: from pps.filterd (m0142693.ppops.net [127.0.0.1])
+	by mx0a-00154901.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DFbEMQ028129;
+	Thu, 13 Mar 2025 12:34:19 -0400
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2047.outbound.protection.outlook.com [104.47.70.47])
+	by mx0a-00154901.pphosted.com (PPS) with ESMTPS id 45c25j0xbv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Mar 2025 12:34:18 -0400 (EDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=o4ogS7GC68ApMXfwqkctvQxks/9wVcoQYNuE5Nl3Y3d+QVXnpx4OecBnXgTCoON6OZtcbDVri3QYZfPKBNpFUdLE48PoKsiTtqMmGnFfR8oL8BpqOzyzd7zHuSErrxNIDZcmTUdKf/hAi3yO8zVBMX03J9kxoyQV9+fwoYWVSTAxBBrf8KH9sb4GffzUM6a06PXnKOqzNyYRf/nvThy1EDlr7kPTOesfL1WTKR+Q6jN3z6OqHcbU+finw0KO9a0K4bvoOb16bx8RGq398X0rSC+hwPCwBML6MhG6CHQHgjwQ7ZbVjNO2vks5nCqTnMXB8amZOq9cYq9lsJ/m+RFQjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hLjub6PoD3/IHa+flUhTkrbH6y3HLdm6Ln4miE+NA34=;
+ b=a69IsIY/2xlwhQACZfNhQ2BMSYgRYGh8duc3HVfnfME2zpC9VA6joVA+LSEagcT9dPlioYTOjNweFT3jVgbT+pxMFDAxHfp509ms+6IVsZP3nkVod/vEmEvBrBeY0YY0x4Cf9CroDyPjSyogbEwkis3aulLoOE3oKhxcqK9560xDHFYNbGKRc0I99d2was4DjO6UW5I2elcLwL73bIzpqyOJFgnXoewtGxMOOYrstyfmHsOFQ/NihR8YW/EQ547y0SnlNlEAe0UG2W3FzqB/elBWBrd/20DLUT/kWM6nGpi8zoE4oKuHszVj6lGQgUsiWbS+HJmfPUq4LBS9TVpNjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+Received: from CY5PR19MB6147.namprd19.prod.outlook.com (2603:10b6:930:c::14)
+ by DM6PR19MB4106.namprd19.prod.outlook.com (2603:10b6:5:24e::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Thu, 13 Mar
+ 2025 16:34:14 +0000
+Received: from CY5PR19MB6147.namprd19.prod.outlook.com
+ ([fe80::d390:13bd:b078:f743]) by CY5PR19MB6147.namprd19.prod.outlook.com
+ ([fe80::d390:13bd:b078:f743%7]) with mapi id 15.20.8511.026; Thu, 13 Mar 2025
+ 16:34:14 +0000
+From: "Tudor, Laurentiu" <Laurentiu.Tudor1@dell.com>
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>,
+        "freedreno@lists.freedesktop.org"
+	<freedreno@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>,
+        "abel.vesa@linaro.org" <abel.vesa@linaro.org>,
+        "johan@kernel.org" <johan@kernel.org>
+Subject: RE: [PATCH v2 0/2] drm/msm/dp: Introduce link training per-segment
+ for LTTPRs
+Thread-Topic: [PATCH v2 0/2] drm/msm/dp: Introduce link training per-segment
+ for LTTPRs
+Thread-Index: AQHbkt8aD0iZ7dHIsUSDlD3K/YJUJ7NxROqg
+Date: Thu, 13 Mar 2025 16:34:14 +0000
+Message-ID:
+ <CY5PR19MB6147B4E21D67D2E2A1913E6FBAD32@CY5PR19MB6147.namprd19.prod.outlook.com>
+References: <20250311234109.136510-1-alex.vinarskis@gmail.com>
+In-Reply-To: <20250311234109.136510-1-alex.vinarskis@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_ActionId=dde3064c-cb63-4bf2-8ff7-9ab61fd45b6c;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_ContentBits=0;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Enabled=true;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Method=Privileged;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Name=Public
+ No Visual
+ Label;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_SetDate=2025-03-13T16:34:00Z;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;MSIP_Label_dad3be33-4108-4738-9e07-d8656a181486_Tag=10,
+ 0, 1, 1;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY5PR19MB6147:EE_|DM6PR19MB4106:EE_
+x-ms-office365-filtering-correlation-id: b6aee14b-6694-4983-5938-08dd624ce43f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|10070799003|366016|7416014|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?ySJ+kgjjYNZvzT6l5Q4dKJv5AjzuEHRMz1A5cycGIjdxyHvLMVYYswHV4P3P?=
+ =?us-ascii?Q?NH00DOa+SlnO78cE8H3aEToO6VTk4+n8qVGuoXjs80ZcA25otJE1Hd4neNBw?=
+ =?us-ascii?Q?vIMceLxNmokJ1zUjkUvQ9ByUhgc/JCuZq6m/t8jEwjlJdHzww2csdgHkbQDw?=
+ =?us-ascii?Q?QvlS4NzyvWgGj3TE2ATv8WYEAnry/pzZVM068FWwyQ1gxkR3UFPi9kG9A9sk?=
+ =?us-ascii?Q?BwllRuk3mgfzXP1tsk25pcS8lYY0NE7op9aEIH+BD0pVwDZpDSLfbGHquIqp?=
+ =?us-ascii?Q?vxYVDJfvUag7LBlK4f+D9Cdq00mFN8EBIZvwg02DP6plwqxC39OhVuNr95iM?=
+ =?us-ascii?Q?XA0YfAg+l1Pe1Bn0XrKhumnNcHKT5Zq1fEzTdwKa36WWz0oj/uKVyvC6L+i9?=
+ =?us-ascii?Q?hW6YvgMXSjubP58GNp9H6EtabYreqNJ93pJGQQJi/3VQUzZXOO8hVBc31wrZ?=
+ =?us-ascii?Q?8E6VYnoshgPFliltHpbokvaBYB9iK/4VItdzOTmO9ynjYMZs7Sh/Aez4xDnr?=
+ =?us-ascii?Q?aziGOXQly2/Ssn/Z0+9NemardZEaj5lzjl/L7IVzf2aejeUUWSLXf2eAe4Q5?=
+ =?us-ascii?Q?EbdU6aWHeXBiwyPwSWfmTu8yR8VEDzfWzKBUjZ3HjO8u1gj7pXkJfGz8F9II?=
+ =?us-ascii?Q?9BYryRL40fRWC0Bt39ZaQpc9nLT/V8U9TAyIU8aXlHtST36IkmRwuu4Dq1AK?=
+ =?us-ascii?Q?TSDffglKW9bLtMa04mhFj40xKTA+JekAU0Rc4aGtCBZySu2eaBkd8f5RIZFv?=
+ =?us-ascii?Q?xOLzf0+Bojg1nS6u0jq3A6W+TO2o+JsYggRfAD4KGfoXoA5pGWWoSwdzAkRa?=
+ =?us-ascii?Q?+jpag0e1ar6LLtJqNWr0d98iDDKNrDWyCkOTz9KH1MUY1JkSzrgq0V4Y3bvO?=
+ =?us-ascii?Q?FYlbdl+Q3+C7AtxLvDlzo+Zo0QaSJ4UNEJBFm0nc60u0Sv3DlB9IojiLZNJf?=
+ =?us-ascii?Q?fb0/RjFxKfUWcrK8Dkl2UhRuyUa7VFdpQGgA7BWrxKZIOjlt6i8LG6Ek09uR?=
+ =?us-ascii?Q?H1rtKrm9K2ntogb07wlFczZA/YnQ+N3TQKr6xheWL3lS8siJ4C4WRQ6OA5bW?=
+ =?us-ascii?Q?l5VhngxWU4s+lJb3QhZutooxB1Id+q83jZxtdjiznrhfjcyRKd41KVKZQ6va?=
+ =?us-ascii?Q?AGpXZ828QlzMwLdhXhEDI1jBZkmqKUm1X5UOP/mS4zxlX6BebA/RIQCmhIen?=
+ =?us-ascii?Q?1SPqg+ExBya+Y1Jjw55QMXUKzDKP3Cx6W2LTY57rqXDhMzX9Isbc1U/oYwP5?=
+ =?us-ascii?Q?PI7L1hnk1CaMuodIons6E8Nc16eDCQtRlTyy3EdrkKtMzkpjxspQEZKnG4Ou?=
+ =?us-ascii?Q?e7LxX1K3S5Ax0r0BxwX7L/hpASPo8AhU0rqlBoxQP7gxSC4H56FRTq/9Hfp3?=
+ =?us-ascii?Q?yV/sL3K6h9/cqvjS8CjuJxGli9xR3Da2ZkG1r2rxzMOvXQsdGg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR19MB6147.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(7416014)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?qvGFCLBdj9CIbW5vBbN1Lz2fPadLyRnqYXlkMbtZrMTEtAuKJenMh3p028i4?=
+ =?us-ascii?Q?G1T/MiOTrZbQMz762G63fZi5ixRZA1yvWcThp/26B7gbLgQ213HsSdYvteSJ?=
+ =?us-ascii?Q?mXd6M4DHLGcBtwjRQU6uQVWfhXQHLyIG+vXUapnn82vc282vlXlf958Buln1?=
+ =?us-ascii?Q?wBKMmFrlzDWPf1FaDThk14flbB6S544idPMePLulds57ICXAxHYKn8U77v1v?=
+ =?us-ascii?Q?H1fh27FOccaqTUEbzBPeBtvBdKVLOrZhx2GjkYdzMABz7Ar2ffHnDRP+uPl4?=
+ =?us-ascii?Q?pO1X2aOhDVtl5z/v0twbdElhy4R+oLDm7fnyRhEXfKYjwWOe7iIAPa1KoQsY?=
+ =?us-ascii?Q?ztUFyMehQLXF1HTi+kCo+nsZJM5W4VXZF/Y7BUru3XnZwU5s0A2O3n1vNdmQ?=
+ =?us-ascii?Q?7Ludp67MNm/5/OnCJCQtBByFzHucnwD92QAMUWuANso1dwDzC2drZYfD2bHu?=
+ =?us-ascii?Q?d1Hmni/ilHFVMsM3WIppv+t8KkcOEBatNzA6bXnH50O/ILeOEoBtDGsHCYHH?=
+ =?us-ascii?Q?R2ToyaXmLODV2HZnjntohs6fSPgFPKcMa2mpXqQ5tmMAKYr2hsZBgOCUyi3N?=
+ =?us-ascii?Q?ps7kvsHJf/ESJV2p0AUGc0H/v6D/GEnWoqCnBldpD346Z84YqX4ZE4FtlnW9?=
+ =?us-ascii?Q?e5p3sXIuW3mf9ikn9ohaf+Fuh3TLrtUkk07U22SWui+661aBx3qFgxzXMqEY?=
+ =?us-ascii?Q?iU/MP13JK9wh+Rxxj+oZ3UEs1LMD3yrS2eXCeCcyM5WmkxBOjzynd8wqKHwP?=
+ =?us-ascii?Q?bRqfj5ywrxt+llHUFwi3rU2JxJnqfd6wA1rWhwfEJi6IVUwVcUrNeNQgFWIb?=
+ =?us-ascii?Q?UNtqzrO+ipD97Z1E+hN5bLNt4y9GOxD1PhxCsHIz3bpVMF0Myd/UuKHrzNiu?=
+ =?us-ascii?Q?oZ7opXjrkW6mLpLrXfaKc5gqhjtAa22o/+/0bw8tbxFKrhDKEm57FIWT3mHj?=
+ =?us-ascii?Q?JX8WmXJvaBesJgPq7Uqoh8m0VHI2W0kMzB4xRnIxESVUFj2EYRnZTd/tdqko?=
+ =?us-ascii?Q?OqMQ7RyWZo9WH09+PZFzZqXMUsml585l0CdsuD4NQVgikq7xHOg1cCJJBb0P?=
+ =?us-ascii?Q?N6LM5EBlJw72F6K97CUTM3IoSY20tPEaTR059m3mLN8IpSi4kr1w1NCyuUOZ?=
+ =?us-ascii?Q?JqwN3CgwPYopDCWq6tPFGWCfcjGnLO3D1EAgwUh5Nhhoi/xPbyh4VuA/nufQ?=
+ =?us-ascii?Q?mQZ4G3m1FILazIh7/SAKlahSfa4NKz3X8b3mZ/l0kBgHl9dmHPovcVX4hdfH?=
+ =?us-ascii?Q?EpLXU8VHneHN1XXLsXq2fbZHbSImq2SHmwOFWL6+hSx+vMEIlfxe0Z6TYXPX?=
+ =?us-ascii?Q?O82WJssMZJKzBy1ySXpEZnromCdA35bhv94kkLCkYjnVjTJqGGtiCvf0zZIN?=
+ =?us-ascii?Q?0lgPjv1AlyomTXNtMJEhsEYlERzlnRD98c1QHWQACNFueJNJRZYwbOY8s5wR?=
+ =?us-ascii?Q?yuA/kkRB7abXJZ5q0dnDGEkQKZ2B4dSxKw1M+od5gKb87Yjm2DfaSL9sgncY?=
+ =?us-ascii?Q?DeB8gvvtffbQ1EznciUbcF09FQBA8zPQzv2a4G4dskIRFAMr+5VIF5K6nF5f?=
+ =?us-ascii?Q?4GpvEHSUJzRrFIXzQPYtbXjH9pAIXKjy7/RQOfUTDIULdGkYejazowE6fO+b?=
+ =?us-ascii?Q?tgfI98/F+QqLFvAj/9yxr32ThN4eqR4iM7i1V5eZOYWQXd1enNhEw2TpfXF6?=
+ =?us-ascii?Q?5dqCTw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 2/2] ACPI: PNP: Add Intel OC Watchdog IDs to non-PNP
- device list
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>,
- Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-watchdog@vger.kernel.org,
- jan.kiszka@siemens.com, benedikt.niedermayr@siemens.com
-References: <20250312-ivo-intel_oc_wdt-v2-0-52d09738cd0b@siemens.com>
- <20250312-ivo-intel_oc_wdt-v2-2-52d09738cd0b@siemens.com>
- <CAJZ5v0iBcxGcqp88kHN64WddvmC-y6F1XaFeSNHFYuQnayg7dQ@mail.gmail.com>
- <63e69331-bb8f-45f6-adb8-872f594fa02e@siemens.com>
- <CAJZ5v0ij0UyLr+tBBia-M4Y7grs+w3fhxnuvRCh67YXPe3h=ig@mail.gmail.com>
-Content-Language: en-US
-From: Diogo Ivo <diogo.ivo@siemens.com>
-In-Reply-To: <CAJZ5v0ij0UyLr+tBBia-M4Y7grs+w3fhxnuvRCh67YXPe3h=ig@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1328357:519-21489:flowmailer
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR19MB6147.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6aee14b-6694-4983-5938-08dd624ce43f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2025 16:34:14.2364
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xh8Yd0e8HIIDDJbD+wLMOMQ2nA3zxwx6BGXQp2qcamDdG1TMQgzycENl7Z0YvfKrdFLze1lekmoeUAzICBAcBfGjOGenjW6RwRlDhtsFJ2o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR19MB4106
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_07,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ mlxscore=0 priorityscore=1501 impostorscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 clxscore=1011 lowpriorityscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130128
+X-Proofpoint-ORIG-GUID: vVVMmBlG1iDmkPzHodrG-d2J6lYv7Neb
+X-Proofpoint-GUID: vVVMmBlG1iDmkPzHodrG-d2J6lYv7Neb
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
+ spamscore=0 adultscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130128
 
-On 3/13/25 3:29 PM, Rafael J. Wysocki wrote:
-> Hi,
-> 
-> On Thu, Mar 13, 2025 at 11:28 AM Diogo Ivo <diogo.ivo@siemens.com> wrote:
->>
->> Hi Rafael,
->>
->> On 3/12/25 7:31 PM, Rafael J. Wysocki wrote:
->>> On Wed, Mar 12, 2025 at 4:46 PM Diogo Ivo <diogo.ivo@siemens.com> wrote:
->>>>
->>>> With the kernel having an ACPI driver for these watchdog devices add
->>>> their IDs to the known non-PNP device list. Note that this commit is
->>>> not a complete list of all the possible watchdog IDs.
->>>>
->>>> Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
->>>> ---
->>>>    drivers/acpi/acpi_pnp.c | 2 ++
->>>>    1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/drivers/acpi/acpi_pnp.c b/drivers/acpi/acpi_pnp.c
->>>> index 01abf26764b00c86f938dea2ed138424f041f880..3f5a1840f573303c71f5d579e32963a5b29d2587 100644
->>>> --- a/drivers/acpi/acpi_pnp.c
->>>> +++ b/drivers/acpi/acpi_pnp.c
->>>> @@ -355,8 +355,10 @@ static bool acpi_pnp_match(const char *idstr, const struct acpi_device_id **matc
->>>>     * device represented by it.
->>>>     */
->>>>    static const struct acpi_device_id acpi_nonpnp_device_ids[] = {
->>>> +       {"INT3F0D"},
->>>>           {"INTC1080"},
->>>>           {"INTC1081"},
->>>> +       {"INTC1099"},
->>>>           {""},
->>>>    };
->>>>
->>>>
->>>> --
->>>
->>> Is there a particular reason for this patch?
->>
->> Yes, since the ACPI tables for these watchdogs have both a PNP0C02 CID and
->> and then an HID (such as INT3F0D or INTC1099) without this patch the driver
->> in patch 01 will not bind to the device because PNP will bind to it first.
->> My understanding is that this table was added to solve exactly this problem
->> so I added these HIDs here, but if this is wrong and I misunderstood
->> please let me know.
-> 
-> You are right, but the above information is missing from the
-> changelog.  Please add it there.
 
-I'll add it and send v3 after receiving feedback on the other patch in
-the series.
 
-Best regards,
-Diogo
+> -----Original Message-----
+> From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> Sent: Wednesday, March 12, 2025 1:38 AM
+> Subject: [PATCH v2 0/2] drm/msm/dp: Introduce link training per-segment f=
+or
+> LTTPRs
+>=20
+> Recently added Initial LTTPR support in msm/dp has configured LTTPR(s) to
+> non-transparent mode to enable video output on X1E-based devices that com=
+e
+> with LTTPR on the motherboards. However, video would not work if addition=
+al
+> LTTPR(s) are present between sink and source, which is the case for USB T=
+ype-C
+> docks (eg. Dell WD19TB/WD22TB4), and at least some universal
+> Thunderbolt/USB Type-C monitors (eg. Dell U2725QE).
+>=20
+> First, take into account LTTPR capabilities when computing max link rate,
+> number of lanes. Take into account previous discussion on the lists - exi=
+t early if
+> reading DPCD caps failed. This also fixes
+> "*ERROR* panel edid read failed" on some monitors which seems to be cause=
+d
+> by msm_dp_panel_read_sink_caps running before LTTPR(s) are initialized.
+>=20
+> Finally, implement link training per-segment. Pass lttpr_count to all req=
+uired
+> helpers.
+> This seems to also partially improve UI (Wayland) hanging when changing
+> external display's link parameters (resolution, framerate):
+> * Prior to this series, via direct USB Type-C to display connection,
+>   attempt to change resolution or framerate hangs the UI, setting does
+>   not stick. Some back and forth replugging finally sets desired
+>   parameters.
+> * With this series, via direct USB Type-C to display connection,
+>   changing parameters works most of the time, without UI freezing. Via
+>   docking station/multiple LTTPRs the setting again does not stick.
+> * On Xorg changing link paramaters works in all combinations.
+>=20
+> These appear to be mainlink initialization related, as in all cases LT pa=
+sses
+> successfully.
+>=20
+> Test matrix:
+> * Dell XPS 9345, Ubuntu 24.10, Gnome 47, Wayland
+> 	* Left USB Type-C, Right USB Type-C
+> 	* Direct monitor connection, Dell WD19TB, Dell WD22TB4, USB
+>           Type-C to HDMI dongle, USB Type-C to DP dongle
+> 	* Dell AW3423DWF, Samsung LS24A600, dual Samsung LS24A600 (one
+> 	  monitor per USB Type-C connector)
+> * Dell XPS 9345, Ubuntu 24.10, Gnome 47, Wayland
+> 	* Left USB Type-C, Right USB Type-C
+> 	* Direct monitor connection
+> 	* Samsung S34BG85 (USB Type-C), Dell U2725QE (universal
+>           Thunderbolt/USB Type-C, probes with an LTTPR when in USB
+>           Type-C/DP Alt mode)
+>=20
+> In both cases, "Thunderbot Support"/"USB4 PCIE Tunneling" was disabled in
+> UEFI to force universal Thunderbolt/USB Type-C devices to work in DP Alt
+> mode.
+> In both cases laptops had HBR3 patches applied [1], resulting in maximum
+> successful link at 3440x1440@100hz and 4k@60hz respectively.
+> When using Dell WD22TB4/U2725QE, USB Type-C pin assigment D got enabled
+> and USB3.0 devices were working in parallel to video ouput.
+>=20
+> Known issues:
+> * As mentioned above, it appears that on Gnome+Wayland framerate and
+>   resolution parameter adjustment is not stable.
+>=20
+> Due to lack of access to the official DisplayPort specfication, changes w=
+ere
+> primarily inspired by/reverse engineered from Intel's i915 driver.
+>=20
+> [1]
+> https://urldefense.com/v3/__https://lore.kernel.org/all/20250226231436.16=
+1
+> 38-2-
+> alex.vinarskis@gmail.com/__;!!LpKI!hlok7KSBKQntrFMYAFr0mFGIjXmlwtqOD
+> mQuO_6YwQ1pNJWCY9KqVJjzRZFzLv9fDgYOinq0MkYpccsMJFtXiQWvlNs2$ [lo
+> re[.]kernel[.]org]
+>=20
+> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+
+Tested-by: Laurentiu Tudor <Laurentiu.Tudor1@dell.com>
+
+---
+Thanks & Best Regards, Laurentiu
+
+> ---
+>=20
+> Changes in v2:
+> - Picked up Abel's R-b tags
+> - Fixed typo as per Abel, fixed readability as per Johan
+> - Updated cover and commit message on mailink issue which appears to be
+>   specific to Gnome+Wayland. No problems on Xorg.
+> - Link to v1:
+> https://urldefense.com/v3/__https://lore.kernel.org/all/20250310211039.29=
+8
+> 43-1-
+> alex.vinarskis@gmail.com/__;!!LpKI!hlok7KSBKQntrFMYAFr0mFGIjXmlwtqOD
+> mQuO_6YwQ1pNJWCY9KqVJjzRZFzLv9fDgYOinq0MkYpccsMJFtXiW5uR0d1$ [l
+> ore[.]kernel[.]org]
+>=20
+> ---
+>=20
+> Aleksandrs Vinarskis (2):
+>   drm/msm/dp: Fix support of LTTPR handling
+>   drm/msm/dp: Introduce link training per-segment for LTTPRs
+>=20
+>  drivers/gpu/drm/msm/dp/dp_ctrl.c    | 137 +++++++++++++++++++---------
+>  drivers/gpu/drm/msm/dp/dp_ctrl.h    |   2 +-
+>  drivers/gpu/drm/msm/dp/dp_display.c |  31 +++++--
+>  drivers/gpu/drm/msm/dp/dp_panel.c   |  30 ++++--
+>  drivers/gpu/drm/msm/dp/dp_panel.h   |   2 +
+>  5 files changed, 141 insertions(+), 61 deletions(-)
+>=20
+> --
+> 2.45.2
+
