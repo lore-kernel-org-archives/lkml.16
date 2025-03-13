@@ -1,62 +1,62 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0972267AEE;
-	Thu, 13 Mar 2025 11:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9998C266B68;
+	Thu, 13 Mar 2025 11:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866207; cv=none; b=qaTeOBBzzWR4trjlVAraq3qqcg/wlPz7FlAoFtSpioMjfKMsuHRK7RIpeylr0nIdy/ni8LA/n29zOCPP51dXZomw6XhwPCvqrJkYe1b1UEDaIsEdfZIgi0NGam6KjFGFtlOPqGH1/KBxBmqYJZlcNWhxuGpkUMu7oC1kwZbGVSs=
+	t=1741866219; cv=none; b=nQlmZeJOXZlh708BR1tgiaffL+UAPEIJix6lhwBIOKSRueYCzO8wR6H63gbZG+SpXAf+2SImpDK3N/WHRD+MxxZkRgau2bT2UxhutzdJwfrV86a6aBUgZPLeusKqHghr66ezwVGp7E6U8PFuNjyEPLfhbINncXeEbkN8ZkN+jbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741866207; c=relaxed/simple;
-	bh=aOuAHGxcnRtk/Pkiao9pk0UX5ytOAfh8VIkWizPd7hs=;
+	s=arc-20240116; t=1741866219; c=relaxed/simple;
+	bh=37VGCJ9l34Kl6e8QTDgTw+xjQ93SlK9QihwqNQMovnQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AjoNrWJuH6zLa7MhJJ7/tBtr1A0HrzBlu/0CPfY2JDoTbec1osyRKA9WmOC4vd5cCtQAsdak6ug2OuvJ1QlqNnrjYaKbInHSF7cl34FWIn6h7KZiTck9+IY0TK8pvVp5UT5JdN3vgaqlKIQhI8ZFCWVO2aDhF2Lvmn2/cng85ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWSrgbzW; arc=none smtp.client-ip=209.85.167.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=sW00E5iPdVcGsUda7OVDhP1taUSHqDlmd0dOPtVmTRjIQdUoMti5YLaqsIj4L/ACWJl0MWD3HwOd+ZHEMmlxFwIUN1qmNQ/CTPOGbHpxL6gafAgkCMRQazqxhhpvUPmLrDYTKDmLuQ6VwzNBjzubxgSfP/AUeKpokmzMGDi0fZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M5X5oC24; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWSrgbzW"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-549b159c84cso819997e87.3;
-        Thu, 13 Mar 2025 04:43:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5X5oC24"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30613802a04so9351091fa.2;
+        Thu, 13 Mar 2025 04:43:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741866204; x=1742471004; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741866215; x=1742471015; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QJd3ktIYsibSVEvB4l7L9L4g5QLxlan9AKGzvbB0x2Y=;
-        b=EWSrgbzWXh9Gu9MSf0ChwMlLaHzY1YR1mHGSFb5QKkw+qohZbDt7Mkm33VqNlTHpPO
-         xiOXg1oSjHlEkgUK3TifqXLXj9oy+Lgcduuc+1Q1fRa5SRNySJjMEY/l7ML49/TDpU+7
-         ptZYcEFbhPOexHDCWoQrilxH0tjPz/AMq+wUjyr7/8HvUjm+ezC58xStGwC5XviaLOfG
-         jggGAqyngi+zaSoCcfTgW36XRmtwcAk+PF8N/Ch5unRZdRI8EI6OieeDv8f7YQm5vG6b
-         vXC9klJWfMMD1K+Pb5yArIUbJHWF9/V1s/z0PJieLxY9mTSIYvZRE/U4+pefwKK2V1nL
-         /gXA==
+        bh=DVVUMHJT4ebI5yi18DjMis2HZfPjrDvIaHIkuYtdOvA=;
+        b=M5X5oC24TjRvlosWP1Fd41IjuIFe9/K2VF9ui8dSU3VuvnyosNHglDQRf3Nuvks8vk
+         J2390HEH9M+hIbWT1ikxVU0Lc/2r6HQitrxH6JYCKL+lhgk0JFBYUg58jyVkyr3Fh/HR
+         Ha7S6d2HhU0fUMbVLLE9/TzuJS3XMFTu6rLfop7UQNpBAqEErWKrd6RsJqf6F47bmNHm
+         qj/xqQLt4nPagpvIl1vYwcf9Aqjb6kbYKIBebcF2oSBYf4OEtkhIsVlKufsryoxGlPti
+         lQ4G/0d6nDCTdCLreuM8nCqNL4oWbb7G02hOJcNCa//Izu9LERGb3bLDyx+YKt1OyVdF
+         2Jsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741866204; x=1742471004;
+        d=1e100.net; s=20230601; t=1741866215; x=1742471015;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QJd3ktIYsibSVEvB4l7L9L4g5QLxlan9AKGzvbB0x2Y=;
-        b=b17BCEhpU2COBL1PFCxAYUHgmFnuwebV1K8akfMWpAqUcRFHJM7k1gJ/MmYvLLJbBe
-         7VQcRZwEHfds8pkrQ1963pRCMMPfRSCN1Yy5rFDC1Hj1y9Eu4RG9bQ6uBENIgt0tEoaR
-         w+THv5VPxRmdtr59iRaQbHLngt1+l/0NvCvAiIyB+sBkM3cm3tifVkzJiCVqnvZW2pXc
-         wJtXTgqNQljsTEAACTNFCfvSDKVG762n/JMLPQSdvN+7rxmIXqZVCUG+be4W3SXFvcJv
-         USRg103GLOwpoEQlqSOdM4IdCnKM2wNMqP6Pzk8QmDZXtA+R3X7+A+ssABBWHQyujxBt
-         /aCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIPWI8rwJwWrMFPRylkVhzB2lYjycVPFdIxEC7C07ymPo8vXZ4hV4E/bD+DDHFOTedq76nbUt9yTFDzqJh@vger.kernel.org, AJvYcCWpplQJ7//5HiXXgJV9lwqSNcY0qwuB0AylQWSObS7u4ZmZJ4oSo7BaGCdGn04IErm7sKuVON+M1bWU@vger.kernel.org
-X-Gm-Message-State: AOJu0YyU96S8YYqDxodZwfHHWjKW/AiTQ+hz9Cy7T1i2+6lpNz6ib7F9
-	fJUUEPZ1PVBvXVmGd9WgyqAQlh+4rRsFhhk7miw/wzjsdo/jvho1a1P6QQ==
-X-Gm-Gg: ASbGncuw7El0jYxVMhqeRf2F0PBxz2JnCbvBoWFKUvb1kValaHvm+D5Xmfm+ypD2OIz
-	Q8ohIcO8TBE/05PVWS3nn//6sq7/2QV6zOrwAZocbxrEHEVYg8t2mBRJYcsdI8gtjfr9ZsVsX8L
-	SlmFTfIHyM/5Cf2wpTy2za0QCSsaI8aIPMK7DGwuAxVroUHbCwkzAF0KikWqXOsFhSeQ2IexeKb
-	i1qGcbhuCUvY/14vxbKiTBrGdh/LNtj3AkMTUaXkJMXkZVYXfsdl/5ZjIOXjJaw9uTiRdOi8u5O
-	InFBUUU+sxC/kmz8Uxp6HlTtW/WwKhyo52L82cWeYInLlI3cTro=
-X-Google-Smtp-Source: AGHT+IEG0wltFXtjS/14Jt0pwjdHNn3dsLrpK0PYYKqe3cZjSuD1//Iu9EdunyYhh0xqqi3yIOHgYA==
-X-Received: by 2002:ac2:4308:0:b0:549:903a:1bf with SMTP id 2adb3069b0e04-549910b7c7amr7770110e87.48.1741866203825;
-        Thu, 13 Mar 2025 04:43:23 -0700 (PDT)
+        bh=DVVUMHJT4ebI5yi18DjMis2HZfPjrDvIaHIkuYtdOvA=;
+        b=UdZVDt8FtTWmMVHeDGgS9WfpG5kGxYiHcYAx8LKpav509FnzTR3bRSXbJ8usCdhLNr
+         Y33LJ7dfVHPd9Y8bkwqmvSq7ls3dyVH5qih6RCiiDY6C8oKxA53ZfKl2XB2262XRK+3b
+         SAhBRDfwN//aow6aqGHFtxLxcCQ88LZRBV5fN65MG5lbTZAQm0veM0wd5ksnfPrKQCzT
+         I7tUHpwXZpAxDTMiomXKkfyqS/3YFEByrjb9BFgvk7NLJiuCOSwKepMt1vzmpvxgb3WB
+         +yhfgZPoZL+6Toq+/OitveFpFxCRRBeVntbFPV4Sp4AcXKs1p1VVHVsp+CZQs3HRBpgq
+         uH4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUNhATPOF5CSgodjaDtRJDZ5SgUZpQr0mel8VjicfCeMWN7tIWdawvzuTZMSH9Csv9D4oI9qy52Wkwx@vger.kernel.org, AJvYcCVbPI8zGAjglAyK879KOKrw1tByS1/aA8JuRXDcD5YcKMgxQPBkYgnX/+nEjc9ejxq48Eupb9qKlwKrBcOC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW2lJ29pxFHZXs7vAIx1Tix/YC3dMaJ1VU6vKN0kw/VeUrvmKm
+	yYVMJStylPv6d6J+Uu7G24PB6HhjZk0BAWhmAuq+fPVUGImee76i
+X-Gm-Gg: ASbGncsfRTOBHYX/0ZRXENokQ0IcSHcojaSYlXHjAT1hHcJQ/ozxXRdncTyUXNnzy+m
+	0lV7znKkCjtKYTIpJP/XNoPD3SI+3SqL1fPVD1w/rpEEugsY2HsiImjG3SNFWvQoFajHSaxfXCQ
+	t/OgWbfJ/bcUXI/WpblZLeq7DFEPs29Q+cnIfvs8bcFyUiwI8jgpQt2XzCMIFXjbTuL5nFNNB+K
+	u68Eh8qbXaXXkJH4ziHHiNFms7xDWkHXd69VMNN4R63xDWHNVi0hYdW/e0Wbl6CmvEs68I3aihD
+	lS1AOLvmbOWd9Y2zmCMnYWs2XkysbXbqpEa5X+QRa6k5wkFwqs8=
+X-Google-Smtp-Source: AGHT+IHHDtAC4wsRKaHF5r9bwCTHbHnjherN8iguJ9N4g4M+s6iIQSB6KZUcrlU8p9B52pxpmTsIuw==
+X-Received: by 2002:a05:6512:234d:b0:549:8c86:740d with SMTP id 2adb3069b0e04-549abac0101mr4515428e87.18.1741866215339;
+        Thu, 13 Mar 2025 04:43:35 -0700 (PDT)
 Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba7beceasm188171e87.58.2025.03.13.04.43.21
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba7ce9e3sm186339e87.106.2025.03.13.04.43.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 04:43:22 -0700 (PDT)
-Date: Thu, 13 Mar 2025 13:43:18 +0200
+        Thu, 13 Mar 2025 04:43:34 -0700 (PDT)
+Date: Thu, 13 Mar 2025 13:43:31 +0200
 From: Matti Vaittinen <mazziesaccount@gmail.com>
 To: Matti Vaittinen <mazziesaccount@gmail.com>,
 	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
@@ -67,8 +67,8 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	Mark Brown <broonie@kernel.org>,
 	Matti Vaittinen <mazziesaccount@gmail.com>,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/14] mfd: bd96801: Support ROHM BD96806
-Message-ID: <8fd61949bdd3a85f19c86fc3e2e768a990803586.1741864404.git.mazziesaccount@gmail.com>
+Subject: [PATCH 13/14] regulator: bd96801: Support ROHM BD96806 PMIC
+Message-ID: <1cd9265e4396296d05db100d74f334e7f95c7907.1741864404.git.mazziesaccount@gmail.com>
 References: <cover.1741864404.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -77,90 +77,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="twVtW0S7FqJP+3Is"
+	protocol="application/pgp-signature"; boundary="nuj5i02+lN0dO3xp"
 Content-Disposition: inline
 In-Reply-To: <cover.1741864404.git.mazziesaccount@gmail.com>
 
 
---twVtW0S7FqJP+3Is
+--nuj5i02+lN0dO3xp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 The ROHM BD96806 is from the software perspective almost identical to
 the ROHM BD96802. The main difference is different voltage tuning
-ranges. Add support differentiating these PMICs based on the compatible,
-and invoking the regulator driver with correct IC type.
+ranges.
+
+Add support differentiating these PMICs and provide correct voltages
+for both models.
 
 Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 ---
- drivers/mfd/rohm-bd96801.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/regulator/bd96801-regulator.c | 65 +++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-diff --git a/drivers/mfd/rohm-bd96801.c b/drivers/mfd/rohm-bd96801.c
-index 2ab4e1c0f9b8..3b85aaa27f54 100644
---- a/drivers/mfd/rohm-bd96801.c
-+++ b/drivers/mfd/rohm-bd96801.c
-@@ -225,6 +225,11 @@ static struct mfd_cell bd96805_cells[] =3D {
- 	[REGULATOR_CELL] =3D { .name =3D "bd96805-regulator", },
+diff --git a/drivers/regulator/bd96801-regulator.c b/drivers/regulator/bd96=
+801-regulator.c
+index d829289942f9..fb9e7c3314a3 100644
+--- a/drivers/regulator/bd96801-regulator.c
++++ b/drivers/regulator/bd96801-regulator.c
+@@ -962,6 +962,70 @@ static const struct bd96801_pmic_data bd96805_data =3D=
+ {
+ 	.num_regulators =3D 7,
  };
 =20
-+static struct mfd_cell bd96806_cells[] =3D {
-+	[WDG_CELL] =3D { .name =3D "bd96806-wdt", },
-+	[REGULATOR_CELL] =3D { .name =3D "bd96806-regulator", },
++static const struct bd96801_pmic_data bd96806_data =3D {
++	.regulator_data =3D {
++	{
++		.desc =3D {
++			.name =3D "buck1",
++			.of_match =3D of_match_ptr("buck1"),
++			.regulators_node =3D of_match_ptr("regulators"),
++			.id =3D BD96801_BUCK1,
++			.ops =3D &bd96801_buck_ops,
++			.type =3D REGULATOR_VOLTAGE,
++			.linear_ranges =3D bd96805_tune_volts,
++			.n_linear_ranges =3D ARRAY_SIZE(bd96805_tune_volts),
++			.n_voltages =3D BD96805_BUCK_VOLTS,
++			.enable_reg =3D BD96801_REG_ENABLE,
++			.enable_mask =3D BD96801_BUCK1_EN_MASK,
++			.enable_is_inverted =3D true,
++			.vsel_reg =3D BD96801_BUCK1_VSEL_REG,
++			.vsel_mask =3D BD96805_BUCK_VSEL_MASK,
++			.ramp_reg =3D BD96801_BUCK1_VSEL_REG,
++			.ramp_mask =3D BD96801_MASK_RAMP_DELAY,
++			.ramp_delay_table =3D &buck_ramp_table[0],
++			.n_ramp_values =3D ARRAY_SIZE(buck_ramp_table),
++			.owner =3D THIS_MODULE,
++		},
++		.init_ranges =3D bd96801_buck_init_volts,
++		.num_ranges =3D ARRAY_SIZE(bd96801_buck_init_volts),
++		.irq_desc =3D {
++			.irqinfo =3D (struct bd96801_irqinfo *)&buck1_irqinfo[0],
++			.num_irqs =3D ARRAY_SIZE(buck1_irqinfo),
++		},
++	},
++	{
++		.desc =3D {
++			.name =3D "buck2",
++			.of_match =3D of_match_ptr("buck2"),
++			.regulators_node =3D of_match_ptr("regulators"),
++			.id =3D BD96801_BUCK2,
++			.ops =3D &bd96801_buck_ops,
++			.type =3D REGULATOR_VOLTAGE,
++			.linear_ranges =3D bd96805_tune_volts,
++			.n_linear_ranges =3D ARRAY_SIZE(bd96805_tune_volts),
++			.n_voltages =3D BD96805_BUCK_VOLTS,
++			.enable_reg =3D BD96801_REG_ENABLE,
++			.enable_mask =3D BD96801_BUCK2_EN_MASK,
++			.enable_is_inverted =3D true,
++			.vsel_reg =3D BD96801_BUCK2_VSEL_REG,
++			.vsel_mask =3D BD96805_BUCK_VSEL_MASK,
++			.ramp_reg =3D BD96801_BUCK2_VSEL_REG,
++			.ramp_mask =3D BD96801_MASK_RAMP_DELAY,
++			.ramp_delay_table =3D &buck_ramp_table[0],
++			.n_ramp_values =3D ARRAY_SIZE(buck_ramp_table),
++			.owner =3D THIS_MODULE,
++		},
++		.irq_desc =3D {
++			.irqinfo =3D (struct bd96801_irqinfo *)&buck2_irqinfo[0],
++			.num_irqs =3D ARRAY_SIZE(buck2_irqinfo),
++		},
++		.init_ranges =3D bd96801_buck_init_volts,
++		.num_ranges =3D ARRAY_SIZE(bd96801_buck_init_volts),
++	},
++	},
++	.num_regulators =3D 2,
 +};
 +
- static const struct regmap_range bd96801_volatile_ranges[] =3D {
- 	/* Status registers */
- 	regmap_reg_range(BD96801_REG_WD_FEED, BD96801_REG_WD_FAILCOUNT),
-@@ -617,6 +622,20 @@ static const struct bd968xx_chip_data bd96805_chip_dat=
-a =3D {
- 	.unlock_val =3D BD96801_UNLOCK,
- };
-=20
-+static struct bd968xx_chip_data bd96806_chip_data =3D {
-+	.errb_irqs =3D bd96802_reg_errb_irqs,
-+	.intb_irqs =3D bd96802_reg_intb_irqs,
-+	.num_errb_irqs =3D ARRAY_SIZE(bd96802_reg_errb_irqs),
-+	.num_intb_irqs =3D ARRAY_SIZE(bd96802_reg_intb_irqs),
-+	.errb_irq_chip =3D &bd96802_irq_chip_errb,
-+	.intb_irq_chip =3D &bd96802_irq_chip_intb,
-+	.regmap_config =3D &bd96802_regmap_config,
-+	.cells =3D bd96806_cells,
-+	.num_cells =3D ARRAY_SIZE(bd96806_cells),
-+	.unlock_reg =3D BD96801_LOCK_REG,
-+	.unlock_val =3D BD96801_UNLOCK,
-+};
-+
- static int bd96801_i2c_probe(struct i2c_client *i2c)
+ static int initialize_pmic_data(struct platform_device *pdev,
+ 				struct bd96801_pmic_data *pdata)
  {
- 	struct regmap_irq_chip_data *intb_irq_data, *errb_irq_data;
-@@ -728,6 +747,7 @@ static const struct of_device_id bd96801_of_match[] =3D=
- {
- 	{ .compatible =3D "rohm,bd96801", .data =3D &bd96801_chip_data, },
- 	{ .compatible =3D "rohm,bd96802", .data =3D &bd96802_chip_data, },
- 	{ .compatible =3D "rohm,bd96805", .data =3D &bd96805_chip_data, },
-+	{ .compatible =3D "rohm,bd96806", .data =3D &bd96806_chip_data, },
- 	{ }
+@@ -1260,6 +1324,7 @@ static const struct platform_device_id bd96801_pmic_i=
+d[] =3D {
+ 	{ "bd96801-regulator", (kernel_ulong_t)&bd96801_data },
+ 	{ "bd96802-regulator", (kernel_ulong_t)&bd96802_data },
+ 	{ "bd96805-regulator", (kernel_ulong_t)&bd96805_data },
++	{ "bd96806-regulator", (kernel_ulong_t)&bd96806_data },
+ 	{ },
  };
- MODULE_DEVICE_TABLE(of, bd96801_of_match);
+ MODULE_DEVICE_TABLE(platform, bd96801_pmic_id);
 --=20
 2.48.1
 
 
---twVtW0S7FqJP+3Is
+--nuj5i02+lN0dO3xp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfSxNYACgkQeFA3/03a
-ocXT6Qf9GHv4kVj0p+kl+w7jKhDKmM5R2io6m/uS5RFMCUjfv18ZimvDuirZcfL+
-ZVsW6ig8EerNjyeD+mxJpAF32SR+KtAk1/KdvWCcjzpAqK2K9PRdIrNLCbngwaW5
-+ajPLifPQxqbO/SEMMJQsjPav6EgRBRWd/3uf5n5688QlHubrgmjhjAN4yQaD2yz
-TLsejfSimGMaaN9b8UKboeCMIY28N0dgGlNKdcXAggdTw7lvgmN7EvgHOO5zH7PA
-uPxf+k182dk/nlrku5QXjXqfAT57H8VJbZTK0y1rTQPahfY2PD58e20hR9P6AbYt
-9+5I8rZizupdr/5DG9zWuQq64oazog==
-=CU5T
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfSxOMACgkQeFA3/03a
+ocUD6AgAqOEi2FLJFEU8mmru9URPSLjoFj6MJ3fe+Z3ZfJv5n1VJCXtATIwXu+Ic
+ieSfREA8+dluWdAMPRwMiElLQ+81a+bxQkUTmNcs2iLvVOnDuOghtNfbEUpdlXeI
+xYF026zjpbCPevAYOf59JJvYPe2Si/Gp0/tolc/fw1HhvIE2F2gCiB5uUv6nsgRt
+QRU5TF0//WUBktivi/dSW8urxFYU2EvmJP5adkzf7h1ZtCQSJKc2eh82ZwCIIOq5
+zvu04ZId+eRO5hC/yV0D4yPil33IfeFCMsNTrNnkjnpktnaVtx1yc9DVHe2M4tLQ
+Lk9+PiFDEI9SvWvUPqLYMxwfMxOtEQ==
+=mEk8
 -----END PGP SIGNATURE-----
 
---twVtW0S7FqJP+3Is--
+--nuj5i02+lN0dO3xp--
