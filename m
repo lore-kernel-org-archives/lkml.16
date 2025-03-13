@@ -1,112 +1,134 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D00578C9C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 19:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D2B78C9C;
+	Thu, 13 Mar 2025 19:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741893519; cv=none; b=tjMmZ9IsM2q6eNq3oaZQZndsAjb1EZW+sFWV67fFZXFnnTPh8Q+no+EbqjbHYNSlDrjSrHwXoKMpc9PbWtreEMaQHBCVkv6iquZYDL9/BTLd+Y3bwyoH5+7RR2fvtPmhJKrnwNx4GHXNSXK2DBAltm3flX0Uj2A15P9ISlsDsIc=
+	t=1741893700; cv=none; b=mM5iiBjUTNIKWHf3Cj1F1M/HEjmzjBhqk4IdFRkq1MzCnR113EX90wOrn9JDQDrVLzJsIEkDmJtr/uGbroeVT/FPEEZkFkHiR8f/dRcjEqrKGD3IREIKUtkCLxJxYTtH8c6AcGD3XZbnT/NPWuUgdr/ZIIUjr37B4s//RS/fqdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741893519; c=relaxed/simple;
-	bh=zyd3wfrqeA51j92jPdAmVNyeubowO7IMOJmbCkaz26w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S0dx6Gqt4/3nx7xcKEb/cPK/5IdVV8PIuSWs/nZxJbMYwIL0b9sPUS/h8KbKRXFZWAxIBkgt+MlZFXDoe8BaO+0gvHoao3Q6oCTkilYyEs67ilEsxGq8BbE+pOq68Zhm2i9Fax2eCQ7gufqVOGV+itSyJ6UTuW++iR2bBdV1838=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k8aGs9zv; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741893700; c=relaxed/simple;
+	bh=IYiWOwwKf+URAc5DyfQcTEda3N2qRFfbrrv01xDgHQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rMbM0muVPBqRNg4p09gamEuvT71AeUk+amsl/Lkk/IlSZ2MsAt9Pxe9abLetfQos3RPIgG8riykwLePvtcASJIShCIsp4yX3BwaW8hb9BBAfFcKMsovpSToy8l8K0NvjWbf+iT13rbqv9+p8u0H+EZ1Ez1t0yj6wPITsBnbMeHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NzRoteWb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8aGs9zv"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso4341309a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 12:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741893516; x=1742498316; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4UlfrwtCi4oKjPorzQpE56B5Hyzvi3SXFdkx/VMTk44=;
-        b=k8aGs9zv6PCIKglggaFAPn3W2d3ZGOSp7L0YmZKHmUSFsdccOSENLHTHEbSRi+ZOhr
-         f/8W02tFlKxYN1LQG4xtLutWgbWOOwB6TyFsy0REta8OZn38TX6obEPgtoRUez8gQpBU
-         wp259175HxSgRdidxSB8c/jwLnlCYBfCnyRJVy89uNGtpGsexKvtOWbUsOE/aP5qsdSn
-         cr0gkcaHuCaGjTUGxxOMnzWdlEJASQiaSDoXyHqvrlqqQsxpBGAr8q74FniYgJuxfPdB
-         ENlPBsKDNUsMHf6vRIaoOuN39+hiBmh3gw23jRP7lCrNVLf6jMwM4c6rUteyLyeaKMdu
-         +GHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741893516; x=1742498316;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4UlfrwtCi4oKjPorzQpE56B5Hyzvi3SXFdkx/VMTk44=;
-        b=M235waZMhDyFZKhoPOz/JJ/W1PULaS0h2MdRbs5HR0B2VFxFVjQodPHO8EUUFZiJ3T
-         W2OGH/++RkbN1xaLh8TO/1XJ+f74ArzDrr4bY3Kkr5p0SWXGUfujyCa1557l9TQGHhC5
-         wrWPI0oPswFygjojx8xdWTP2fVfljmWkFB1F93PFRkRPysxnTN3isW9vKDhFEt9N5CFS
-         7PwbJWRWztjuYsl1yRat2cL8iV3HEviQh8P0Lc5ZCAFBDBu1dLcIV4KgJEzNxqaHJQgU
-         ZSOjP7f8ro51vQaReqTvG5qcPs/Dg8KYJo0DHvyt4+KkPHr+InBtDDEZAJmHM8hx9AGc
-         IugQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5j0bdxuOlx08ihw82bPJCF8Ke0Omts71L326+5R+++fd5pXDatowYxcJlIC9KzcpvW8dAa5YeyHx4adI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0pq1b1EVx2vy/C8HQA6qfTFsyeIZtGonLC3jf5LIkyG+CWa4y
-	D+RS4Nrkx7EYiVYNXDnHmdke0rAiq/kLlpUpMLALCoElwvU/OAlN/bX7yUSQ
-X-Gm-Gg: ASbGnctrEsGHbLI1KKHM3wMn5GWFUcbHTpsGUJB/Doy7oV/iAFFioygoYUAb+1jh/Nd
-	nfspmwKUCbG/HntYYAwzknuHXe6+Lr8Ws0rHFrBf6NpC+197+mSa2Bugznr+Mvuz11jQY19b3iy
-	KVI31MHPAkFPXkdXSjERz7d/nK0PTJiQm+YjRB5wmdbmt4JfIUVptulaB6jXTUY5BhPvUDJoD8x
-	P6n8aaJlEZ1NaEBtby0d7uMQWVdX1c9ROVyvqyIRiR5cOggscCX9Xzw9NUD/1wOr4z0mWOrsDFO
-	t3fRt24Hs1CIqK+TnqHaErx19OPtr1RFnEL5ICQrszeNoio+1MmHbPPmVke4KWdU
-X-Google-Smtp-Source: AGHT+IH5gRZ4B79MTLl+F5wXhD3+OXMScw3jhZEjIwjjyI0/q45vZMKYlIvZaoeB68q2wsRV1z/tQg==
-X-Received: by 2002:a17:907:2d0e:b0:ac3:2747:9fe with SMTP id a640c23a62f3a-ac327470c30mr89121066b.13.1741893515936;
-        Thu, 13 Mar 2025 12:18:35 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149ce8efsm115518666b.102.2025.03.13.12.18.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 12:18:35 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/asm: Use asm_inline() instead of asm() in amd_clear_divider()
-Date: Thu, 13 Mar 2025 20:18:09 +0100
-Message-ID: <20250313191828.83855-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NzRoteWb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 325E1C4CEDD;
+	Thu, 13 Mar 2025 19:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741893699;
+	bh=IYiWOwwKf+URAc5DyfQcTEda3N2qRFfbrrv01xDgHQQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NzRoteWbepqPDywTZDbjJoY2BY85XR+U1gJ0nTqL+Pie++q/sD/n18VPLE8gn9Q3J
+	 rbtoK/p63FJzkxrjLkwznrDk4S9cxXcKpSFnV4UappZrog3/DkrsGf2Uxfwy3taih/
+	 RoacYLFFyb9ZNEKwzHui5uUkx/TzcoJdLDjMIKvMeAeUF6XbgHQaR8Y0SwcWFVwb/X
+	 ZWUe6pZS/awCUgDuN9rB526lr7esdyfu16l4YfL/n969WNNktjbYUNBLvEdnMFx+sG
+	 Z2C31KeKoamew8eHXD/O9dRCmgztqNfXVrbzoN4QjPT580ZqvQvTA6RGvInl1MLcyz
+	 nrSePUi8nznnw==
+Date: Thu, 13 Mar 2025 16:21:36 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 09/11] perf syscalltbl: Use lookup table containing
+ multiple architectures
+Message-ID: <Z9MwQJ5bRu6-N43w@x1>
+References: <20250308003209.234114-1-irogers@google.com>
+ <20250308003209.234114-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250308003209.234114-10-irogers@google.com>
 
-Use asm_inline() to instruct the compiler that the size of asm()
-is the minimum size of one instruction, ignoring how many instructions
-the compiler thinks it is. ALTERNATIVE macro that expands to several
-pseudo directives causes instruction length estimate to count
-more than 20 instructions.
+On Fri, Mar 07, 2025 at 04:32:07PM -0800, Ian Rogers wrote:
+> Switch to use the lookup table containing all architectures rather
+> than tables matching the perf binary.
+> 
+> This fixes perf trace when executed on a 32-bit i386 binary on an
+> x86-64 machine. Note in the following the system call names of the
+> 32-bit i386 binary as seen by an x86-64 perf.
+> 
 
-bloat-o-meter reports no code size changes.
+Reproduced the results here:
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/processor.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+root@number:/home/acme/c# file faccessat2
+faccessat2: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, BuildID[sha1]=8dafcc1549658d57248dce883e8ec7eea3d6e8a5, for GNU/Linux 3.2.0, not stripped
+root@number:/home/acme/c#
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 5d2f7e5aff26..06e499ba4fe8 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -707,7 +707,7 @@ static inline u32 per_cpu_l2c_id(unsigned int cpu)
-  */
- static __always_inline void amd_clear_divider(void)
- {
--	asm volatile(ALTERNATIVE("", "div %2\n\t", X86_BUG_DIV0)
-+	asm_inline volatile(ALTERNATIVE("", "div %2", X86_BUG_DIV0)
- 		     :: "a" (0), "d" (0), "r" (1));
- }
- 
--- 
-2.42.0
+root@number:/home/acme/c# strace ./faccessat2 |& head 
+execve("./faccessat2", ["./faccessat2"], 0x7ffce63265e0 /* 39 vars */) = 0
+[ Process PID=2552445 runs in 32 bit mode. ]
+brk(NULL)                               = 0x849a000
+mmap2(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xf7fb3000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_LARGEFILE|O_CLOEXEC) = 3
+statx(3, "", AT_STATX_SYNC_AS_STAT|AT_NO_AUTOMOUNT|AT_EMPTY_PATH, STATX_BASIC_STATS, {stx_mask=STATX_ALL|STATX_MNT_ID|STATX_SUBVOL, stx_attributes=0, stx_mode=S_IFREG|0644, stx_size=85091, ...}) = 0
+mmap2(NULL, 85091, PROT_READ, MAP_PRIVATE, 3, 0) = 0xf7f9e000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/libc.so.6", O_RDONLY|O_LARGEFILE|O_CLOEXEC) = 3
+root@number:/home/acme/c#
+
+Before:
+
+root@number:/home/acme/c# perf trace ./faccessat2 |& head
+faccessat2(123, (null), X_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW) = -1
+         ? (         ): faccessat2/2552543  ... [continued]: munmap())                                           = 0
+     0.024 ( 0.002 ms): faccessat2/2552543 recvfrom(ubuf: 0x2, size: 4159848428, flags: DONTROUTE|CTRUNC|TRUNC|DONTWAIT|EOR|WAITALL|FIN|SYN|CONFIRM|RST|ERRQUEUE|SOCK_DEVMEM|ZEROCOPY|FASTOPEN|CMSG_CLOEXEC|0x91f20000, addr: 0xe30, addr_len: 0xffcda98c) = 138993664
+     0.047 ( 0.006 ms): faccessat2/2552543 lgetxattr(name: "", value: 0x3, size: 34)                             = 4159602688
+     0.063 ( 0.003 ms): faccessat2/2552543 dup2(oldfd: -135160188, newfd: 4)                                     = -1 ENOENT (No such file or directory)
+     0.071 ( 0.023 ms): faccessat2/2552543 preadv(fd: 4294967196, vec: 0xf7f16420, vlen: 557056, pos_h: 4159848428) = 3
+     0.098 ( 0.004 ms): faccessat2/2552543 lgetxattr(name: "", value: 0x1, size: 2)                              = 4159516672
+     0.104 ( 0.001 ms): faccessat2/2552543 lstat(filename: "", statbuf: 0x14c63)                                 = 0
+     0.114 ( 0.004 ms): faccessat2/2552543 preadv(fd: 4294967196, vec: 0xf7ee8380, vlen: 557056, pos_h: 4159848428) = 3
+     0.118 ( 0.002 ms): faccessat2/2552543 close(fd: 3)                                                          = 512
+root@number:/home/acme/c# 
+
+After:
+
+root@number:/home/acme/c# perf trace ./faccessat2 |& head
+faccessat2(123, (null), X_OK, AT_EACCESS | AT_SYMLINK_NOFOLLOW) = -1
+sh: line 1: perf-read-vdso32: command not found
+         ? (         ): faccessat2/2556897  ... [continued]: execve())                                           = 0
+     0.028 ( 0.002 ms): faccessat2/2556897 brk()                                                                 = 0x8fe4000
+     0.068 ( 0.003 ms): faccessat2/2556897 access(filename: 0xf7ff2e84, mode: R)                                 = -1 ENOENT (No such file or directory)
+     0.080 ( 0.005 ms): faccessat2/2556897 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+     0.094 ( 0.001 ms): faccessat2/2556897 close(fd: 3)                                                          = 0
+     0.103 ( 0.003 ms): faccessat2/2556897 openat(dfd: CWD, filename: "/lib/libc.so.6", flags: RDONLY|CLOEXEC|LARGEFILE) = 3
+     0.108 ( 0.002 ms): faccessat2/2556897 read(fd: 3, buf: 0xffdd84b0, count: 512)                              = 512
+     0.216 ( 0.001 ms): faccessat2/2556897 close(fd: 3)                                                          = 0
+root@number:/home/acme/c#
+
+And interestingly the openat syscall got its contents obtained via the
+BPF augmenter... better to test this more thoroughly, but I think it
+should come after this series lands.
+
+- Arnaldo
 
