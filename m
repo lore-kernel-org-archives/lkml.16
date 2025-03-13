@@ -1,73 +1,73 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE9F1FCCEA
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35551FC0E9
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741850517; cv=none; b=Z5lV2IMuTo5KLXHE6lyycrXmDF8jjuQ79MPHI2Nx03VyV/OrfNeZT32mTEuu4oNIT4lQZDPkwbjmHPBwX5iSRtqYPkb7viAw7PQkGwrPsr4adUh9a8b3535FObNCAP99A0j4xl+Nd43QlFJ2/J/pv/QdFD8tbnX+J2qYtcq5DLU=
+	t=1741850527; cv=none; b=TDLKm0tu7Xpuj80Qiqv/nYd/GAWKqiIiUHXZj1BCZ8Qx18xm91PG669Lp3OUG8SHlLgCrrDAdgNhFaC/RtNiO0w7ervxoi6EjpV/7JKcVfX3PyMFnXVb4uQ3aGnfnFTIa2OjZQvC2cK0I29WwWYMsdmsclUAyGGylmcm4sSsYgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741850517; c=relaxed/simple;
-	bh=F2iSSOdR/hDLzHj6tvB8TPDBA4YNdpFnG46Hrlaho/Y=;
-	h=From:Mime-Version:References:In-Reply-To:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oc4RlVp/KElLG7bXQIw3lWcTg7Swgp5ZLecFKB9fw5hzZmJlHpqON0zyL5aYi+o0wgusQWehLOjFMCYA7zqT8Tyev8bxnNzkQjKOn4XgeOA7Imp15B5I+AeIkg0hAuuON7SwTqo8dU1xQJE4MrqnMohxQrG8qLuTflk9auZ1BQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NoMIY2vZ; arc=none smtp.client-ip=209.85.208.46
+	s=arc-20240116; t=1741850527; c=relaxed/simple;
+	bh=ABdjK49NUCTMY7T5xxi5URbrXzpCVmOiO3AOk1OmA3A=;
+	h=Mime-Version:From:References:In-Reply-To:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bnsGwLucfRdKMx32IMYAI9IfQR7gGhNjAMJFEFoaF47UNUiggyMy3o0HDZW66psM3IapFD0S3BzhYiPIS0z/Tj/Oa5MiH01WdcQlBnAYxkijrY4OcqYbTOQC2GZjuwchu3YKmvy5gJeaFdAaFBK7rSEdDexo4T+7q1+DkWkU7pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ac/CWr6H; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NoMIY2vZ"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so1063656a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 00:21:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ac/CWr6H"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso3118838a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 00:22:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1741850514; x=1742455314; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:in-reply-to:references:mime-version
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jQAPUFnO9nEMuZGJ5x9hWTx/DhspMU7TljFp3+HbdFk=;
-        b=NoMIY2vZP0t/tX8yBbh7F1TL6xfLB3UbCqHxkPiPpFlc4u0j9lcXwtO1YNr72jcWK0
-         XXfM1XuzC0054OFHErCYjOPqB5I2lfF6vg+jhIug4Wprqz8lpNyXvTLeJ5xvPYbCaC1s
-         JVc3MoR3Igfi7P1Y/ZZLvYs5+Ys1Tu3SfxLeic/k/jCCzcQw+wxsPnr3CVoKUllcWsWd
-         GHHiyEV+wuDBxyX/LzzkVHq14jAn9RYTjoTUhAjuyTvuyuhrsZp6n3tAR1V7O6RlIpuu
-         ZN29yiAgYfcpl/9ZdqGJCJOFOJBZ8JwPABJarArK3ZbdDfnDjZkn/ddq8Hfm/OHHdnSD
-         w+Tw==
+        d=bytedance.com; s=google; t=1741850524; x=1742455324; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:in-reply-to:references:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mpdHZooSnnkS+K92aYRbLN7CIlx+7CoXTHdbFnteGvg=;
+        b=ac/CWr6HWNIzT/enpGrH0S9ZJwXv11081w7nJzu4u0CF+G8uBoB9FXCpsXNv4mol8V
+         6KCR5WB8Zq/9ofQKFmFHeLzjdL1RDAKTkGDj4z/RVdPwUUBLgy3ubQij45vtrUWCjnY4
+         OGaiyWfWRMAb4VwjWRV+RQJ9QLoQ9gfW/Y8u9XiDj18U4jQ5RU7I+2VU5xHY15BEEc8b
+         p3ugvAlZWRs1bGHz8f74jeSaY0lCvZagxOpX/HlG+x+EIwKLpbweW5mS9D8drzydG1xH
+         bgZCmxGz/feSH4Gcgcf50/lMnoauVlKdeU35BzdCKdKD8/UTodAWbedcoJ6/JiAxuhSN
+         SXyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741850514; x=1742455314;
-        h=cc:to:subject:message-id:date:in-reply-to:references:mime-version
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jQAPUFnO9nEMuZGJ5x9hWTx/DhspMU7TljFp3+HbdFk=;
-        b=qt6wXx+FxhOyWWgRQZV78XOcRmbWBbdQYk3+P73WbIw/5h7FhDP1DdH/6FkKo2jzDg
-         jvlFGgx2VcA6TmAgrpdNMFHj2dbVCQVk30uSiUMlPoMBKUvVPCrhdjv6SJIOJCksBfrK
-         vp9QAmJmceIHETpslvHf5g+X4xDC8OC/wXF1weXsnCYLo5+/1UkZLt71eYyHElC3Tg5F
-         zAKuIshA9WZCtjUP6/DjS29cQbf7/LiX0vJuXoPSt22oN0k6UZho+0izBdHEO7ktXSM/
-         I6RTPVLSwHyRDazWLyXkai5a0Kfa/dc3WBt+Jtsz75cHbh3KMoOtYa0h94nI7ax9QmvQ
-         RAGg==
-X-Gm-Message-State: AOJu0YzbVhmoHBHwnFeBiwhqn31U4fRsrGX2wU95BwvJLpSXsTAY8u7F
-	PoKljK4NI4q4Ce8yeukHHQYzl6p7+66kKE+FMnmdO9YtuhZDJxCPXEbQTxavom7gg1ayDxMUkjx
-	mXRkW+ssQ9bVJ8JjdUaazVT7TFhdzk93OcQoc
-X-Gm-Gg: ASbGnctzhzrxii9Bg2wEbn2vrXMbdHc3ALGC7Eftqw8H+b1uLXa+o5O24Iw/i6wYvCn
-	FzqMnXjMpDvT/oN2IpDwJpw6gCFcZxUxjHwznk70g0iL+t6ZiWElpYuQcl677UdESA/DGY33CfD
-	rCZPmAoIEkkgQoAiupP2B7tEQlWp4=
-X-Google-Smtp-Source: AGHT+IFfeWDlYHQTGMGMpO3/ozaP1dGAKoleEHFUOzP5BCuASPpC5R/F94l3F6TLYPhgGf2jH/VO5O2ShcA1DRsgK60=
-X-Received: by 2002:a05:6402:2747:b0:5e0:2e70:c2af with SMTP id
- 4fb4d7f45d1cf-5e5e24909a2mr28745235a12.26.1741850514277; Thu, 13 Mar 2025
- 00:21:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741850524; x=1742455324;
+        h=cc:to:subject:message-id:date:in-reply-to:references:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mpdHZooSnnkS+K92aYRbLN7CIlx+7CoXTHdbFnteGvg=;
+        b=CE1Y17iMm/aal3Aa8NOCTfPtBtrxFsB1TwHndvKotnAM/x98hVvvGz83wtJg60oY5v
+         vYMgm27Xb1KEpZ0tFgU1GYidAqTigb0nWX53f4a7ZJd9VhNS3LSadEIZoABbwNJva266
+         /lhWWz4ww0jnvyMvx8kdWuFkc3VMxoNRPGy96LfNUed1to9CyufpWxiqmihsIAkueeXW
+         gABlNeYhb9I0CQ4WgDh2Ki9soSdbPUSMM6o7knA6GqUvNuhenuSOyfpUpzhzScwq+06K
+         lDTQHCkwz2JawK2q2H7PyvCTTlXfTrsuzbVIVfTPxZC/vXM9oh+tcDGKpPZ+Bhsi5ag3
+         6bgQ==
+X-Gm-Message-State: AOJu0YwH7KILgAy2EpBEITpfZzehUHoKLUhnrBeCPIipYxDKlRlbp5MD
+	U8CIuayrGR9Ohb03s4D+SJ6DMPGXaDEJRyc/vYFOXxNKM78ZtBK7akiDTbEzgrVMnwlESePbJLY
+	2SskYEnipS+Lqj2kfF5CbQEPcNEVglLk0e8Wk
+X-Gm-Gg: ASbGncslxrGL+g+ZF70VRhRA2DlFYUl0g6hnCo82VHgjY0IAondk+rH07tnrepD2ml8
+	Z8G6l7HMA/mMqmoTu5p1IpzG6ZKloQfDAgQWPhsnnHVK8u9KIjymOtFpeFYaRRUUEtG3XDvyP0L
+	NOyeWtH52atejUxO/MR9KvWu/3zq+zpOnojrMoPg==
+X-Google-Smtp-Source: AGHT+IH+IMhoSkaWpJS5TRkmjFwrwbFe9U/nZkypYcakAA2YPfL6JqR499A40vDIj5a4m3lqPAs4L2zH2oBrrA5kvzs=
+X-Received: by 2002:a05:6402:2805:b0:5db:e88c:914f with SMTP id
+ 4fb4d7f45d1cf-5e814d8e710mr1565687a12.4.1741850524075; Thu, 13 Mar 2025
+ 00:22:04 -0700 (PDT)
 Received: from 44278815321 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 13 Mar 2025 02:21:53 -0500
+ Thu, 13 Mar 2025 00:22:03 -0700
 X-Mailer: git-send-email 2.39.5
-From: Aaron Lu <ziqianlu@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+From: Aaron Lu <ziqianlu@bytedance.com>
 X-Original-From: Aaron Lu <ziqianlu@bytedance.com>
 References: <20250313072030.1032893-1-ziqianlu@bytedance.com>
 In-Reply-To: <20250313072030.1032893-1-ziqianlu@bytedance.com>
-Date: Thu, 13 Mar 2025 02:21:53 -0500
-X-Gm-Features: AQ5f1JokQNZnRoxq3hXBX0TkqhOuxJ2KX7RFvRrM-srb1Xpe3594xFdcKDUmfTQ
-Message-ID: <CANCG0Gcm92LNtei5yLym-5dK96gb5GF2-tDoLJ+YS0fMx8jADg@mail.gmail.com>
-Subject: [RFC PATCH 5/7] sched/fair: Take care of group/affinity/sched_class
- change for throttled task
+Date: Thu, 13 Mar 2025 00:22:03 -0700
+X-Gm-Features: AQ5f1JqKcMI_Wdoy74ykvkqqoq0GJML9yKZWszLN8__AcBW_Ar7AZHPLoJbMPRM
+Message-ID: <CANCG0GehTMm3sbtXMy9MMFtG=kPYpHiFwy63OO4+dmXh68bWfA@mail.gmail.com>
+Subject: [RFC PATCH 6/7] sched/fair: fix tasks_rcu with task based throttle
 To: Valentin Schneider <vschneid@redhat.com>, Ben Segall <bsegall@google.com>, 
 	K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>, 
@@ -78,65 +78,44 @@ Cc: linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
 	Chuyi Zhou <zhouchuyi@bytedance.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On task group change, for a queued task, core will dequeue it and then
-requeued it. The throttled task is still considered as queued by core
-because p->on_rq is still set so core will dequeue it too, but since
-the task is already dequeued on throttle, handle this case properly in
-fair class code.
+Taskes throttled on exit to user path are scheduled by cond_resched() in
+task_work_run() but that is a preempt schedule and doesn't mark a task
+rcu quiescent state.
 
-Affinity and sched class change is similar.
+Fix this by directly calling schedule() in throttle_cfs_rq_work().
 
 Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
 ---
- kernel/sched/fair.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ kernel/sched/fair.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 9e036f18d73e6..f26d53ac143fe 100644
+index f26d53ac143fe..be96f7d32998c 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -5876,8 +5876,8 @@ static void throttle_cfs_rq_work(struct
+@@ -5847,6 +5847,7 @@ static void throttle_cfs_rq_work(struct
 callback_head *work)
+ 	struct cfs_rq *cfs_rq;
+ 	struct rq *rq;
+ 	struct rq_flags rf;
++	bool sched = false;
 
- 	update_rq_clock(rq);
- 	WARN_ON_ONCE(!list_empty(&p->throttle_node));
--	list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+ 	WARN_ON_ONCE(p != current);
+ 	p->sched_throttle_work.next = &p->sched_throttle_work;
+@@ -5879,9 +5880,13 @@ static void throttle_cfs_rq_work(struct
+callback_head *work)
  	dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
-+	list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+ 	list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
  	resched_curr(rq);
++	sched = true;
 
  out_unlock:
-@@ -5920,10 +5920,6 @@ static int tg_unthrottle_up(struct task_group
-*tg, void *data)
- 	/* Re-enqueue the tasks that have been throttled at this level. */
- 	list_for_each_entry_safe(p, tmp, &cfs_rq->throttled_limbo_list,
-throttle_node) {
- 		list_del_init(&p->throttle_node);
--		/*
--		 * FIXME: p may not be allowed to run on this rq anymore
--		 * due to affinity change while p is throttled.
--		 */
- 		enqueue_task_fair(rq_of(cfs_rq), p, ENQUEUE_WAKEUP);
- 	}
+ 	task_rq_unlock(rq, p, &rf);
++
++	if (sched)
++		schedule();
+ }
 
-@@ -7194,6 +7190,16 @@ static int dequeue_entities(struct rq *rq,
-struct sched_entity *se, int flags)
-  */
- static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- {
-+	if (task_is_throttled(p)) {
-+		/* sched/core wants to dequeue this throttled task. */
-+		SCHED_WARN_ON(p->se.on_rq);
-+		SCHED_WARN_ON(flags & DEQUEUE_SLEEP);
-+
-+		list_del_init(&p->throttle_node);
-+
-+		return true;
-+	}
-+
- 	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags &
-DEQUEUE_SAVE))))
- 		util_est_dequeue(&rq->cfs, p);
-
+ void init_cfs_throttle_work(struct task_struct *p)
 -- 
 2.39.5
