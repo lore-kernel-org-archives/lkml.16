@@ -1,210 +1,304 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E63E268FF6
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CD2267394;
+	Thu, 13 Mar 2025 11:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866107; cv=none; b=WlA23iZ/XI4DRtzo+w3mmiv0QMQxm3oaQGFQca48Ubg4FtIPsqwG14c5s2wspwgnFNhX3sErbNrhHTcmp1qFICIJ8QRCvKfO3+lT9QawylyQu60k5SYn5qQIZ+g2CqK0i+O7Kp60lbyw+quPg6wUSvguTZdxuskZU2hb7MaMyPo=
+	t=1741866116; cv=none; b=LfLaeNG4nmg0eH+2s1rygVWq6kX2sJhDPiEuHQdaMdlkMU23mE8oHXqOGqCSbzC2rfQ45Q/rv20y7Rxlnktd8vOVjrszL/QxPbyj9XjzBvqar681+7w4jgqMNTyQR7Mdn3vcXI75a+Uyl6vxgr911yf5SVDV4EsLNE4uXU1IR/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741866107; c=relaxed/simple;
-	bh=YwmsO4C4jzMys3yOFXfr4pKkNHJr9gwQXUbncX4449Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aPGsj/JqyKksgPK6VyAWd7et1se2+z7AcdoBB1xfUjaD3fbpvTTRqitVFMm4yxJGrihRxiXV9nkeSZPSvYqVD5xgjn3vTq3fGiHx3CS2Uf9cbEEqPakKW4vpyuunnD+Ep4Bj7DMQzvWrtWNnxgMAL/5t4MIrqG3Wm89887NHh+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FhyFqFtj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1741866116; c=relaxed/simple;
+	bh=eU3YYf7hONR7o/hLM2pq9T5D9nlYZakGVI/JxgEwViw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ym/FygXYSOsijQYx6vky8whhJ/RZcYtCyjnsQLfTvJNiJrcKCXvSdeH96dmQoGjlZ0k+MQ6Do21GycdaaYW/UhTj59J0A8zbuz+CkeOFIwVPC/r4BkMCpV0aDITRldUxxsEyTPr06A6tf3O1T1bDMJNypHvMoWygzUmkC2elk/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d4iA/RUg; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FhyFqFtj"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DAtZC7031816
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	d9qoisNOG/J+QBYyjCN2S8XuP76MA1VccskcGW+lCGw=; b=FhyFqFtjZKeb7Tme
-	9j7nwFU6jIELF+7849JGGhbLgkzQyEYYxfwvnp+6CwsqP2ImuhrQ6IkdhMd/cNzL
-	NBEo/2zBc3eIRCeKe778/VPjyF+ixwOLnyOItKkqNQbnEWpe4LM3Ub0XKqXQux9f
-	x65A1I+qg+TAX4w12ujZXutnRYgV+Epuv6iELyjZNmF9s9pLkMCGDMdepxOhq10N
-	OPOzlfD4YcsJ1xmofyEXTwk88zFpv4YwFUvdmlfnZ9LorYkelan+PSKTjAg3Lhr/
-	pdPc+rjWodzuT8RTW+kxMVKmAL9hR7gTELCCw2JvO9hJlACS48osyHHJb1qBuUzV
-	Wwg/3g==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45bx1jg448-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:43 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff7cf599beso1607625a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:41:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4iA/RUg"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-307325f2436so8432041fa.0;
+        Thu, 13 Mar 2025 04:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741866113; x=1742470913; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iKR3l47tZ2hjthfOksJtoXtf/Vrl/m0urp6K2tpp6Xk=;
+        b=d4iA/RUgwbMjekzDKq646vteOmPvUJgGzOx4BCXui0DTNYNxmaUfGVvpROBY7/dego
+         LBkubaK022J8N0boismIPeomKPkU3EnIHwuMAgm9/CqIKD4wL4YS4yzujN7mY9OXVt/c
+         cC6e+T/BfuWBr6Sn4k6YRD56XNeKZcjp8bJByhrT+yQJaWdqhbr+PL+4giGzyqeA6i8Z
+         ZIweU94kYb3+dxY+Bfji8/vh+sEYFwyIVWZIQdFWMYu0Jx3nPcv1vR0VIhcw4Ou7sH16
+         kPiOrBwZMy7U8tXXETgmilqDzpz8LXWx4Lfo1Zt7LbtqB3xVg7gXdywxhICjT+9lf0h3
+         zW8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741866103; x=1742470903;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d9qoisNOG/J+QBYyjCN2S8XuP76MA1VccskcGW+lCGw=;
-        b=uQDey5CyvRNmBSV1mxj9oU/meUlOtze+/cK9SegA4yZMWCT41auV3lB41HDKd6NVtG
-         aSCXlDpkyLQuBnraKfzpmkqZja/WqHb0w2w/0+oK9pcUakwSIXgMsw0MkUDGXfPH7qn0
-         0M+sVh5oNXlmbZOnsz1TNAPmy2NdL18FGnetJfqxcBrgJFeYeTb+B4naaoq2Pphl6TEp
-         ce0itsYVJJA0IKyWLSQdYRKFPDDL5dwUDLSr7JV969kDc1hyw3IpjrBJpBa+f1YxRv2G
-         8yFG1SOSF3rf5vgd7tXtOiH+RhFFsuKh6OMeT0SGB9ID4RzYOitOpqRs1u4pxRoK0XJb
-         28Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCWRWEnbeE0q+P7wf1pVo3c0aZYkW/C5UlWkbhanakTopULa2QS8vyP2pQAuCA/0Xhfkn0NKwySjxnlGlm8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzWJnmjca/NjgUI99yWPFt3V9AVOPqp1isJ7GdCviapQDQFRZk
-	C1oNidD9F5w/6rXAGlHkurA3VetaduEXaWh2QZi7PmLaNZ36rVAvt9848rXmJulvZMwjdzg+5bn
-	spKE+7EaGxrFXzYUTzXtX4qKpdiwJTT4rnMz8+kniu1FhRsejSKxocYiPKWWbJHB0brMXdPk=
-X-Gm-Gg: ASbGncusVQ4YJpeF6ssLOiTudEsYOQ2lnHE+/WkaCMfIwBfA24NJP/c7FcYsk4gK9XL
-	VMae+haZY682HeUAZJtF9pc38srP4156vNiodtMhhnjm/XGkE/jF7anIK14+PIl6xqUGArkiXqQ
-	Ggyh+nEC5qZaztoaswFtfnKgTDNXItNg92PMx0bIbzAv6AWPab9g4ZvtFucS8aCl9btRMEQU02s
-	Q5KyAy6hRx6g7MJe0KhwcOxJbBBDAqffCKCNY7OzGouywWL4D3DuWZPqZCdNge+N8DqjMXVReDu
-	q0iXmKxfnHRPfLIyttDJrKQrOHxvo5zOv7OqitoUU9XyUFguLAQ=
-X-Received: by 2002:a05:6a21:a4a:b0:1f5:769a:a4c0 with SMTP id adf61e73a8af0-1f58cb40d0fmr19674097637.22.1741866103013;
-        Thu, 13 Mar 2025 04:41:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH4KS059o50FJ3zNErZOLROVvjQZDc2HgJ5OaS3d/rE1XNS/o6bFbi0r6LR6J9lgfSFiRTe6g==
-X-Received: by 2002:a05:6a21:a4a:b0:1f5:769a:a4c0 with SMTP id adf61e73a8af0-1f58cb40d0fmr19674070637.22.1741866102667;
-        Thu, 13 Mar 2025 04:41:42 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea964e3sm1063219a12.76.2025.03.13.04.41.37
+        d=1e100.net; s=20230601; t=1741866113; x=1742470913;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iKR3l47tZ2hjthfOksJtoXtf/Vrl/m0urp6K2tpp6Xk=;
+        b=e7F1jkhTDAU/O48gsObDPmwOzyoZS64fjImobMZsgjIxaonoN1t29LFst82hviezKl
+         7E/65/SROftOrdm+TNKJKp49qAXd9Djg6C/aNiZMNgvpx2n/HEKw0dwr6VjwkXqKXXcR
+         20pbfcoe9xP3Et4Aq19Qx4iHjjbNz7xNwH+8c52W1bmMtcgxSxWItVhyQA7BDFZ+d/Sj
+         pNR+GdyGIatIW17fZoURv94oU7eWcSQaWnTBJ0njKT/Lu8T5zhgkIFLMw98hJ5OJRjoG
+         DJcdPQsrBP0vfR+9xO3T0Rok0IbJ4XKXeH0TnGOJAzuCcEOJUpiNYVJhn2wSKhpGGHe1
+         G91Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVzaCeRM+a1stAkZNvY+1cTp6qljR0Y4I40Ua/FH2NZ0ZWTG0xUB5M8jsdhmnuttUjP2PI1Gw9Lx/ddFOOh@vger.kernel.org, AJvYcCWoyuHeOOWTEuujnjO8y4ib4xiVy4VOc3tDBKxFQYuw2v0UCfIWczcpslpGPoNP608y80obu5GaXNhK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPQuW+kMglI6UR3mBHT7d+ZXlbLVEnh4HQGGAGZF6Pn+MLkBiO
+	IKF/mHmJnZhXb7+fcBxkfJM0xjf2duuRBALrRB6+czi6Lg1+Lyl0
+X-Gm-Gg: ASbGncucFz/irY6KLtl1PUZ3IirqE8DSuioSAnXfxCK1AQ5YEyQKWb+pijDvtnw0Ikz
+	zQeyRDhygx3lU8tJhf/fRAXw2RgzJ+uEZVEsP+XpEYEJr3DqM76LFBexgQfTkuGtM95fVSAuM70
+	5VWRTXrufzQuNGCh8yBkn4QBdYAXwKU+isVhzcpUVPiInu5l1Jp/qFNE3m/CgN1FWAGvkYBTE1J
+	TBnt5c7DKD0D8SVfTjqiWIiwDhfGFEDUQhHkocgmIV4J4DT1CUjZRRCe3O2WnS02MaUWukzwJ/l
+	9+ePUPOWNTq/gV42KLCsTvsm1UnwOJoK8LeCbnmp4SW+0eD5hM5kP9J5nb2qvw==
+X-Google-Smtp-Source: AGHT+IEhQeJqQXegmX8nsuEwNbVnR9xVzXrXv4FIcsBCk6YSb4iXu6HxPXoaLLnydiR4R2nwn9Bppg==
+X-Received: by 2002:a05:651c:4ca:b0:30c:aae:6d4e with SMTP id 38308e7fff4ca-30c0aae6eafmr76166591fa.23.1741866112687;
+        Thu, 13 Mar 2025 04:41:52 -0700 (PDT)
+Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c3f100c39sm1855861fa.48.2025.03.13.04.41.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 04:41:42 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Thu, 13 Mar 2025 17:10:17 +0530
-Subject: [PATCH v2 10/10] wifi: ath11k: add support for MHI bandwidth
- scaling
+        Thu, 13 Mar 2025 04:41:50 -0700 (PDT)
+Date: Thu, 13 Mar 2025 13:41:47 +0200
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 05/14] mfd: rohm-bd96801: Add chip info
+Message-ID: <fd445f9cbbdaa3fd5d7a9e59093f86e5ff7139b1.1741864404.git.mazziesaccount@gmail.com>
+References: <cover.1741864404.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-mhi_bw_up-v2-10-869ca32170bf@oss.qualcomm.com>
-References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
-In-Reply-To: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Miaoqing Pan <quic_miaoqing@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741866038; l=2735;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=UDj4phVy/DG+9hjqxt6EGxZVpcx8i+kJ4nOzNceABAI=;
- b=hqdCuLeJn0OqieMuIehjgOVSVH10bKZwuK9rz+XDm+BSXBAIpRQvbjfXjpv4/+/BYkNxW94aN
- OFUd0jheytFBkp8l/OA96dvuqcapnrWdXf6JwA+9nMflIMTRzatgsbn
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Authority-Analysis: v=2.4 cv=CNQqXQrD c=1 sm=1 tr=0 ts=67d2c477 cx=c_pps a=RP+M6JBNLl+fLTcSJhASfg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=PcFPl4qhhl0nOZx1bFwA:9 a=QEXdDO2ut3YA:10
- a=iS9zxrgQBfv6-_F4QbHw:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: oPYqlfjx5bSI7yXUMnC_omIvrG4inNbV
-X-Proofpoint-GUID: oPYqlfjx5bSI7yXUMnC_omIvrG4inNbV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-13_05,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 mlxscore=0 priorityscore=1501
- suspectscore=0 phishscore=0 malwarescore=0 clxscore=1015 bulkscore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503130092
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Xni6nKO7BxNC7pNi"
+Content-Disposition: inline
+In-Reply-To: <cover.1741864404.git.mazziesaccount@gmail.com>
 
-From: Miaoqing Pan <quic_miaoqing@quicinc.com>
 
-Add support for MHI bandwidth scaling, which will reduce power consumption
-if WLAN operates with lower bandwidth. This feature is only enabled for
-QCA6390.
+--Xni6nKO7BxNC7pNi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-on: WCN6855 hw2.1 PCI WLAN.HSP.1.1-04546-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
-Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
+Prepare for adding support for BD96802 which is very similar to BD96801.
+Separate chip specific data into own structure which can be picked to be
+used by the device-tree.
+
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 ---
- drivers/net/wireless/ath/ath11k/mhi.c | 41 +++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ drivers/mfd/rohm-bd96801.c | 83 ++++++++++++++++++++++++++------------
+ 1 file changed, 57 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
-index 6e45f464a429..74769c0993ae 100644
---- a/drivers/net/wireless/ath/ath11k/mhi.c
-+++ b/drivers/net/wireless/ath/ath11k/mhi.c
-@@ -20,6 +20,7 @@
- #define MHI_TIMEOUT_DEFAULT_MS	20000
- #define RDDM_DUMP_SIZE	0x420000
- #define MHI_CB_INVALID	0xff
-+#define MHI_BW_SCALE_CHAN_DB 126
- 
- static const struct mhi_channel_config ath11k_mhi_channels_qca6390[] = {
- 	{
-@@ -73,6 +74,17 @@ static struct mhi_event_config ath11k_mhi_events_qca6390[] = {
- 		.client_managed = false,
- 		.offload_channel = false,
- 	},
-+	{
-+		.num_elements = 8,
-+		.irq_moderation_ms = 0,
-+		.irq = 1,
-+		.mode = MHI_DB_BRST_DISABLE,
-+		.data_type = MHI_ER_BW_SCALE,
-+		.priority = 2,
-+		.hardware_event = false,
-+		.client_managed = false,
-+		.offload_channel = false,
-+	},
+diff --git a/drivers/mfd/rohm-bd96801.c b/drivers/mfd/rohm-bd96801.c
+index 60ec8db790a7..1232f571e4b1 100644
+--- a/drivers/mfd/rohm-bd96801.c
++++ b/drivers/mfd/rohm-bd96801.c
+@@ -40,7 +40,21 @@
+ #include <linux/mfd/rohm-bd96801.h>
+ #include <linux/mfd/rohm-generic.h>
+=20
+-static const struct resource regulator_errb_irqs[] =3D {
++struct bd968xx_chip_data {
++	const struct resource *errb_irqs;
++	const struct resource *intb_irqs;
++	int num_errb_irqs;
++	int num_intb_irqs;
++	const struct regmap_irq_chip *errb_irq_chip;
++	const struct regmap_irq_chip *intb_irq_chip;
++	const struct regmap_config *regmap_config;
++	struct mfd_cell *cells;
++	int num_cells;
++	int unlock_reg;
++	int unlock_val;
++};
++
++static const struct resource bd96801_reg_errb_irqs[] =3D {
+ 	DEFINE_RES_IRQ_NAMED(BD96801_OTP_ERR_STAT, "bd96801-otp-err"),
+ 	DEFINE_RES_IRQ_NAMED(BD96801_DBIST_ERR_STAT, "bd96801-dbist-err"),
+ 	DEFINE_RES_IRQ_NAMED(BD96801_EEP_ERR_STAT, "bd96801-eep-err"),
+@@ -98,7 +112,7 @@ static const struct resource regulator_errb_irqs[] =3D {
+ 	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_SHDN_ERR_STAT, "bd96801-ldo7-shdn-err"),
  };
- 
- static const struct mhi_controller_config ath11k_mhi_config_qca6390 = {
-@@ -313,6 +325,33 @@ static void ath11k_mhi_op_write_reg(struct mhi_controller *mhi_cntrl,
- 	writel(val, addr);
- }
- 
-+static int ath11k_mhi_op_get_misc_doorbell(struct mhi_controller *mhi_cntrl,
-+					   enum mhi_er_data_type type)
-+{
-+	if (type == MHI_ER_BW_SCALE)
-+		return MHI_BW_SCALE_CHAN_DB;
+=20
+-static const struct resource regulator_intb_irqs[] =3D {
++static const struct resource bd96801_reg_intb_irqs[] =3D {
+ 	DEFINE_RES_IRQ_NAMED(BD96801_TW_STAT, "bd96801-core-thermal"),
+=20
+ 	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OCPH_STAT, "bd96801-buck1-overcurr-h"),
+@@ -345,18 +359,37 @@ static const struct regmap_config bd96801_regmap_conf=
+ig =3D {
+ 	.cache_type =3D REGCACHE_MAPLE,
+ };
+=20
++static const struct bd968xx_chip_data bd96801_chip_data =3D {
++	.errb_irqs =3D bd96801_reg_errb_irqs,
++	.intb_irqs =3D bd96801_reg_intb_irqs,
++	.num_errb_irqs =3D ARRAY_SIZE(bd96801_reg_errb_irqs),
++	.num_intb_irqs =3D ARRAY_SIZE(bd96801_reg_intb_irqs),
++	.errb_irq_chip =3D &bd96801_irq_chip_errb,
++	.intb_irq_chip =3D &bd96801_irq_chip_intb,
++	.regmap_config =3D &bd96801_regmap_config,
++	.cells =3D bd96801_cells,
++	.num_cells =3D ARRAY_SIZE(bd96801_cells),
++	.unlock_reg =3D BD96801_LOCK_REG,
++	.unlock_val =3D BD96801_UNLOCK,
++};
 +
-+	return -EINVAL;
-+}
-+
-+static int ath11k_mhi_op_bw_scale(struct mhi_controller *mhi_cntrl,
-+				  struct mhi_link_info *link_info)
-+{
-+	enum pci_bus_speed speed = pci_lnkctl2_bus_speed(link_info->target_link_speed);
-+	struct ath11k_base *ab = dev_get_drvdata(mhi_cntrl->cntrl_dev);
-+	struct pci_dev *pci_dev = to_pci_dev(ab->dev);
-+	struct pci_dev *pdev;
-+
-+	if (!pci_dev)
-+		return -EINVAL;
-+
-+	pdev = pci_upstream_bridge(pci_dev);
-+	if (!pdev)
+ static int bd96801_i2c_probe(struct i2c_client *i2c)
+ {
+ 	struct regmap_irq_chip_data *intb_irq_data, *errb_irq_data;
+ 	struct irq_domain *intb_domain, *errb_domain;
++	static const struct bd968xx_chip_data *cd;
+ 	const struct fwnode_handle *fwnode;
+ 	struct resource *regulator_res;
+ 	struct resource wdg_irq;
+ 	struct regmap *regmap;
+-	int intb_irq, errb_irq, num_intb, num_errb =3D 0;
++	int intb_irq, errb_irq, num_errb =3D 0;
+ 	int num_regu_irqs, wdg_irq_no;
+ 	int i, ret;
+=20
++	cd =3D device_get_match_data(&i2c->dev);
++	if (!cd)
 +		return -ENODEV;
 +
-+	return pcie_set_target_speed(pdev, speed, true);
-+}
+ 	fwnode =3D dev_fwnode(&i2c->dev);
+ 	if (!fwnode)
+ 		return dev_err_probe(&i2c->dev, -EINVAL, "Failed to find fwnode\n");
+@@ -365,34 +398,32 @@ static int bd96801_i2c_probe(struct i2c_client *i2c)
+ 	if (intb_irq < 0)
+ 		return dev_err_probe(&i2c->dev, intb_irq, "INTB IRQ not configured\n");
+=20
+-	num_intb =3D  ARRAY_SIZE(regulator_intb_irqs);
+-
+ 	/* ERRB may be omitted if processor is powered by the PMIC */
+ 	errb_irq =3D fwnode_irq_get_byname(fwnode, "errb");
+-	if (errb_irq < 0)
+-		errb_irq =3D 0;
++	if (errb_irq =3D=3D -EPROBE_DEFER)
++		return errb_irq;
+=20
+-	if (errb_irq)
+-		num_errb =3D ARRAY_SIZE(regulator_errb_irqs);
++	if (errb_irq > 0)
++		num_errb =3D cd->num_errb_irqs;
+=20
+-	num_regu_irqs =3D num_intb + num_errb;
++	num_regu_irqs =3D cd->num_intb_irqs + num_errb;
+=20
+ 	regulator_res =3D devm_kcalloc(&i2c->dev, num_regu_irqs,
+ 				     sizeof(*regulator_res), GFP_KERNEL);
+ 	if (!regulator_res)
+ 		return -ENOMEM;
+=20
+-	regmap =3D devm_regmap_init_i2c(i2c, &bd96801_regmap_config);
++	regmap =3D devm_regmap_init_i2c(i2c, cd->regmap_config);
+ 	if (IS_ERR(regmap))
+ 		return dev_err_probe(&i2c->dev, PTR_ERR(regmap),
+ 				    "Regmap initialization failed\n");
+=20
+-	ret =3D regmap_write(regmap, BD96801_LOCK_REG, BD96801_UNLOCK);
++	ret =3D regmap_write(regmap, cd->unlock_reg, cd->unlock_val);
+ 	if (ret)
+ 		return dev_err_probe(&i2c->dev, ret, "Failed to unlock PMIC\n");
+=20
+ 	ret =3D devm_regmap_add_irq_chip(&i2c->dev, regmap, intb_irq,
+-				       IRQF_ONESHOT, 0, &bd96801_irq_chip_intb,
++				       IRQF_ONESHOT, 0, cd->intb_irq_chip,
+ 				       &intb_irq_data);
+ 	if (ret)
+ 		return dev_err_probe(&i2c->dev, ret, "Failed to add INTB IRQ chip\n");
+@@ -404,24 +435,25 @@ static int bd96801_i2c_probe(struct i2c_client *i2c)
+ 	 * has two domains so we do IRQ mapping here and provide the
+ 	 * already mapped IRQ numbers to sub-devices.
+ 	 */
+-	for (i =3D 0; i < num_intb; i++) {
++	for (i =3D 0; i < cd->num_intb_irqs; i++) {
+ 		struct resource *res =3D &regulator_res[i];
+=20
+-		*res =3D regulator_intb_irqs[i];
++		*res =3D cd->intb_irqs[i];
+ 		res->start =3D res->end =3D irq_create_mapping(intb_domain,
+ 							    res->start);
+ 	}
+=20
+ 	wdg_irq_no =3D irq_create_mapping(intb_domain, BD96801_WDT_ERR_STAT);
+ 	wdg_irq =3D DEFINE_RES_IRQ_NAMED(wdg_irq_no, "bd96801-wdg");
+-	bd96801_cells[WDG_CELL].resources =3D &wdg_irq;
+-	bd96801_cells[WDG_CELL].num_resources =3D 1;
 +
- static int ath11k_mhi_read_addr_from_dt(struct mhi_controller *mhi_ctrl)
- {
- 	struct device_node *np;
-@@ -389,6 +428,8 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
- 	mhi_ctrl->status_cb = ath11k_mhi_op_status_cb;
- 	mhi_ctrl->read_reg = ath11k_mhi_op_read_reg;
- 	mhi_ctrl->write_reg = ath11k_mhi_op_write_reg;
-+	mhi_ctrl->bw_scale = ath11k_mhi_op_bw_scale;
-+	mhi_ctrl->get_misc_doorbell = ath11k_mhi_op_get_misc_doorbell;
- 
- 	switch (ab->hw_rev) {
- 	case ATH11K_HW_QCN9074_HW10:
++	cd->cells[WDG_CELL].resources =3D &wdg_irq;
++	cd->cells[WDG_CELL].num_resources =3D 1;
+=20
+ 	if (!num_errb)
+ 		goto skip_errb;
+=20
+ 	ret =3D devm_regmap_add_irq_chip(&i2c->dev, regmap, errb_irq, IRQF_ONESHO=
+T,
+-				       0, &bd96801_irq_chip_errb, &errb_irq_data);
++				       0, cd->errb_irq_chip, &errb_irq_data);
+ 	if (ret)
+ 		return dev_err_probe(&i2c->dev, ret,
+ 				     "Failed to add ERRB IRQ chip\n");
+@@ -429,18 +461,17 @@ static int bd96801_i2c_probe(struct i2c_client *i2c)
+ 	errb_domain =3D regmap_irq_get_domain(errb_irq_data);
+=20
+ 	for (i =3D 0; i < num_errb; i++) {
+-		struct resource *res =3D &regulator_res[num_intb + i];
++		struct resource *res =3D &regulator_res[cd->num_intb_irqs + i];
+=20
+-		*res =3D regulator_errb_irqs[i];
++		*res =3D cd->errb_irqs[i];
+ 		res->start =3D res->end =3D irq_create_mapping(errb_domain, res->start);
+ 	}
+=20
+ skip_errb:
+-	bd96801_cells[REGULATOR_CELL].resources =3D regulator_res;
+-	bd96801_cells[REGULATOR_CELL].num_resources =3D num_regu_irqs;
+-
+-	ret =3D devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO, bd96801_cell=
+s,
+-				   ARRAY_SIZE(bd96801_cells), NULL, 0, NULL);
++	cd->cells[REGULATOR_CELL].resources =3D regulator_res;
++	cd->cells[REGULATOR_CELL].num_resources =3D num_regu_irqs;
++	ret =3D devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
++				   cd->cells, cd->num_cells, NULL, 0, NULL);
+ 	if (ret)
+ 		dev_err_probe(&i2c->dev, ret, "Failed to create subdevices\n");
+=20
+@@ -448,7 +479,7 @@ static int bd96801_i2c_probe(struct i2c_client *i2c)
+ }
+=20
+ static const struct of_device_id bd96801_of_match[] =3D {
+-	{ .compatible =3D "rohm,bd96801",	},
++	{ .compatible =3D "rohm,bd96801", .data =3D &bd96801_chip_data, },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, bd96801_of_match);
+--=20
+2.48.1
 
--- 
-2.34.1
 
+--Xni6nKO7BxNC7pNi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfSxHsACgkQeFA3/03a
+ocU+pAf+M58z/a9hjMZCiFNnbXIxQPCF6b7e376ZvY1kDO8mGqbTOhey5mIStxBA
+oKM3dFTeZdVbjvvJA5wwl6ngL9EBK+N5uNoQGbxN/MCxHEPpS3jLDcVojdBztSUa
+1STqXqOeKgTAHaKV5mNxrNypg3E9ZW9NYemGOtDz0b47sez3QVhlfVsMbMGxlgSs
+No7lb7BVmyBwCXQv4pKCRXn5fvvQsGxzIOTz5iChGsZy6h29J1ZfdHck+G4BFcdD
+wkJR7zKw83BIAGD79eQZQNazqgDqCoP9UqzlOds5rjU4rkzR+G8q8qeJS1bgggzw
+Ox8iylO7VnF6ksN9RCLDWz7FHQtIfw==
+=keq5
+-----END PGP SIGNATURE-----
+
+--Xni6nKO7BxNC7pNi--
