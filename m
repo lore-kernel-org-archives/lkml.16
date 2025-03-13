@@ -1,111 +1,112 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFAB266578;
-	Thu, 13 Mar 2025 10:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872F1265CCF;
+	Thu, 13 Mar 2025 10:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741863068; cv=none; b=W/9OI+7xFVulpgFfAjGL19u+VXsMcOqjUGvfHpGmImKdqHfO5yy4D3fORSlJ2FSxJ8jPfIUvlUYBkJWxwYDLsgk0jqd6w/wG5k2ogl4ySwmrfcDR3LKgRPlX2nd2GiA49JB1avW0CwXPW7weg7e6q6/HYSQUy8vzMzaau+FOenk=
+	t=1741863143; cv=none; b=pDwId+Al6WRjMXSHpZhMqmma78qloEaWlO+IVmR1RZ0bE9ZvcJLsrEvgiec7DZvGlkGQawpP/M4wvlvqhSINKzs5rmgQTYf8SkSKia7ZEVKfZLV3l/d2a9T1Dh90AMiJcvmw63ko36AWs/3aQrdD4ev2CTuatXvLCgUxRxuxOxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741863068; c=relaxed/simple;
-	bh=VlSKajxwCcrAGC2H4wSEe/GQJ2Aq09jTQ6WAdOURlA4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MxpK3LbHL2LlvOv56MvoD+u9b43TdtgXj7POSeHXsKWpJUud56weJwgHgtjn7Y10H2VUIadcq9JylYBfu5qTJ5gfFolv+2DkRujX+05z/f+VcPTEYQ/C/7LrTFDpnM8VwG9SJaaMd0jZIrIhWxQr4uF9mRULTIHhVYHO3TenzFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZD46G4ZFDz4f3jYl;
-	Thu, 13 Mar 2025 18:50:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id B01CC1A0D4C;
-	Thu, 13 Mar 2025 18:51:03 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP2 (Coremail) with SMTP id Syh0CgBHUGORuNJn1k9ZGQ--.22745S2;
-	Thu, 13 Mar 2025 18:51:03 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Zheng Yejian <zhengyejian1@huawei.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Correct the refcount for hist/hist_debug file if single_open() fails
-Date: Thu, 13 Mar 2025 10:37:19 +0000
-Message-Id: <20250313103719.1191073-1-wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1741863143; c=relaxed/simple;
+	bh=TzivXsG/NGBs0zhQ8qiGsbyj51VRjseykzDRfC0/pyU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=F9n26AjLJ6qdzRKVAIPdFvKN1cRH17PcmH5CRJUTLfwkCAtAmxmHtXqB4fslXt67/vH0v2ohRz9922itnVGeR/JiB+4V7VNjsuAvMTxT1Pe3ZHhd+JFvRHhBW+XsRi62lPlPdlIFhKmzANJu8F+7s4kOXk4T1XuGLfJ27uds33s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cbHgnhP9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iMrIPhyL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cbHgnhP9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iMrIPhyL"
+Date: Thu, 13 Mar 2025 10:52:18 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741863139;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UCLlV0qqqs37BI5qq/BhU1RiR9gu+fcSMvoWIOa7yeQ=;
+	b=cbHgnhP9sDK6H74SukDMLBn13g/yyPlGtE+UowROueXVltCfL/oPvN6c2YGYcIEhkhcmXA
+	8AF7l7yZh7JzcNawbAA/H9ZDyLofpHUEkn/bQtau+HmX1J/EX4DDFtMLURTWOotFBSqUgd
+	xqMy0d9NeFP3IhkXDiE0eXPB0pOuRaCLwaIOzi5RCjCfPQQHUP2HeAvFaEGrzVHD5y6yxI
+	ReMjyo2RkmB39jLw0QyEcAvuInBOCjUGrN/+nel6A+MOW2uDv3SasUrqCMEr5EaDF3ibnP
+	V6xHdz26kXeu6JGYuJ3gMfB4DnUEdRP1PuqaRRX5cDk+he1z9e4dS3ZtiB5LKg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741863139;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UCLlV0qqqs37BI5qq/BhU1RiR9gu+fcSMvoWIOa7yeQ=;
+	b=iMrIPhyLoiJv/EDKbYEhfToM1TtMDUT5NHxJQQHMLZgcFjQOB84tBlKkJON0tcTFggWdT/
+	5NTslprmFAMwepAw==
+From: "tip-bot2 for Thorsten Blum" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: timers/core] clocksource: Remove unnecessary strscpy() size argument
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250311110624.495718-2-thorsten.blum@linux.dev>
+References: <20250311110624.495718-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBHUGORuNJn1k9ZGQ--.22745S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1kur43JrW8Jr4kJrW3GFg_yoW8CF45pa
-	95Jrs8Kr18JF1vg3Z7Aan7u34fC3yktrW7Wa4Du34fJrn8X34FqanrKrW5ZF1YqrZ5XrWj
-	va1jgFyjkrWUZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1yE_tUUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Message-ID: <174186313842.14745.7996578935421128528.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-The function event_{hist,hist_debug}_open() maintains the refcount of
-'file->tr' and 'file' through tracing_open_file_tr(), but it does not
-roll back these counts when the subsequent single_open() call fails,
-leading to a refcount leak.
+The following commit has been merged into the timers/core branch of tip:
 
-A very obvious case is that if the hist/hist_debug file belongs to a
-certain instance, the failure of single_open() will prevent the deletion
-of that instance, as it relies on the condition 'tr->ref == 1' within
-__remove_instance().
+Commit-ID:     fc661d0a78673f23a3fd78d0bb20900ee64d1839
+Gitweb:        https://git.kernel.org/tip/fc661d0a78673f23a3fd78d0bb20900ee64d1839
+Author:        Thorsten Blum <thorsten.blum@linux.dev>
+AuthorDate:    Tue, 11 Mar 2025 12:06:24 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 13 Mar 2025 11:37:44 +01:00
 
-Fix this by calling tracing_release_file_tr() to correct the refcount
-when single_open() fails.
+clocksource: Remove unnecessary strscpy() size argument
 
-Fixes: 1cc111b9cddc ("tracing: Fix uaf issue when open the hist or hist_debug file")
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-Cc: stable@vger.kernel.org # v6.7+
+The size argument of strscpy() is only required when the destination
+pointer is not a fixed sized array or when the copy needs to be smaller
+than the size of the fixed sized destination array.
+
+For fixed sized destination arrays and full copies, strscpy() automatically
+determines the length of the destination buffer if the size argument is
+omitted.
+
+This makes the explicit sizeof() unnecessary. Remove it.
+
+[ tglx: Massaged change log ]
+
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250311110624.495718-2-thorsten.blum@linux.dev
+
 ---
- kernel/trace/trace_events_hist.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ kernel/time/clocksource.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index ad7419e24055..900b06fa8505 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -5702,8 +5702,10 @@ static int event_hist_open(struct inode *inode, struct file *file)
- 	/* Clear private_data to avoid warning in single_open() */
- 	file->private_data = NULL;
- 	ret = single_open(file, hist_show, hist_file);
--	if (ret)
-+	if (ret) {
- 		kfree(hist_file);
-+		tracing_release_file_tr(inode, file);
-+	}
- 
- 	return ret;
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 2a7802e..e0eeacb 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -1510,7 +1510,7 @@ static int __init boot_override_clocksource(char* str)
+ {
+ 	mutex_lock(&clocksource_mutex);
+ 	if (str)
+-		strscpy(override_name, str, sizeof(override_name));
++		strscpy(override_name, str);
+ 	mutex_unlock(&clocksource_mutex);
+ 	return 1;
  }
-@@ -5979,7 +5981,10 @@ static int event_hist_debug_open(struct inode *inode, struct file *file)
- 
- 	/* Clear private_data to avoid warning in single_open() */
- 	file->private_data = NULL;
--	return single_open(file, hist_debug_show, file);
-+	ret = single_open(file, hist_debug_show, file);
-+	if (ret)
-+		tracing_release_file_tr(inode, file);
-+	return ret;
- }
- 
- const struct file_operations event_hist_debug_fops = {
--- 
-2.34.1
-
