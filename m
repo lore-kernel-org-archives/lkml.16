@@ -1,109 +1,139 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3417D1FBC99;
-	Thu, 13 Mar 2025 16:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6D8268FDA;
+	Thu, 13 Mar 2025 16:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741882936; cv=none; b=Ryq2rmprZl0JlMGTObpMLuoNcFZuxvSAiVaPPOcth+GN19hDWpplF0aMIKgy/O70xljJT8LzQ7XRhRy4A1RffgcFBRIK2nmSkRQjMpL9E6vMH/o90h9WIuWmHOK9BQu3coyLmlowtCe/OGxQvZJ1MwRkueyuFGUGZ/cxRpzgXn8=
+	t=1741882957; cv=none; b=ih6PwS7QQ0UFAI3ChJCRw1JYac69xCz6zQhT+UEL5fU8mbBoAUq9zxbis3EtzB+tkMrmR6X/ATrQkC23s+cDscRgNju1ZEyYEjX7IhJqTovizeg5zy+rXeMcOpqmoaFGDOu1wwROnIIFsSM1goACIe4CuWm76RJ7nVc/x3EpQFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741882936; c=relaxed/simple;
-	bh=g/ziCSYU/t5mOcyQ9jChz5L500++nNSbX0kxdW3nRAE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P8nx1CPahECljI8BjxVftwexDGRsVtPC3G3nEEVKb5Cite41fyNCGEHf1qUqd7otDTbVeAjZK4R+sJ8wa60E8Nkj862HnhOY4kc/OrFfUkOxme6f+esr7QEhZ10silHAy5GY205qnWndJ6B5gh1Nc4I/hwmMtfMcFZH0pmJAdmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MWc/Jp1w; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741882957; c=relaxed/simple;
+	bh=fhQlgeM7080CJWOaBZsIZyVJ5TKnwevZMcoSC2ybdZQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aG5sPi4UV66fbASFeqc4fGxgFT5flDzs7PuoN9LAQa29C1WuZF7+6NwEE1+S+KO+oWyu3Go4LFxrh/iEls9ZD1tWFgpMS1XambgyvxIWwH6wTaYmMSjxZMj2PE/DoQvVA6LTr/+hpySd4Q89Q1Nmuqus5M3RoodKoAXNZ2qPt1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdoaeJP0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWc/Jp1w"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e241443e8dso2134006d6.0;
-        Thu, 13 Mar 2025 09:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741882934; x=1742487734; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UfIHfaRWNP9xRngkABo8R5/139+Bl09qwSrP6E5fMS4=;
-        b=MWc/Jp1wR/UrVUqdkIkhxi0LCBU4bwbZy8UYG26naRq/TjSK2Fhe36ZLlsvhCUNn47
-         cpzrxaZk5GcKGMcwanLLN4It51C74FVXQARXK4/WhXhRcga3glVsnb+aR6funiR37YeU
-         r1QSII3KoTOjSRphB8vu4TQmVwSZn4dNLtPPqlkcA0UIvG0JkjfDSAb8RfuLPonhyYTC
-         Z348xwTNnXDYxsMLxuWjo5QmlpqP9mfCQqcJd6qxynEu4vXIdZ1JRfhq1H6gfkY6qXDh
-         FATEynaj1KnhW7j+9ItXpOdI2NwMKmMMW8sz8cYuRuv2qdl3uv4LzjfWPMrUKlDd2SEE
-         9uLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741882934; x=1742487734;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UfIHfaRWNP9xRngkABo8R5/139+Bl09qwSrP6E5fMS4=;
-        b=T00oqXZ7I4WIp4VSQWrXhPi1Dls7+LB1aA33SFTmFRjPu+3CssOKlW8NnQIogjFLrJ
-         TPNYOims1y0cYktkQb4ZYSYT6wzEorcX2ju3jGFHtomBv5MIecfECyQQprE8MbbScsb2
-         NEVQqlNMXbipanv/thqlmi0Le98BJAQDwZ35taw6qPCYDYuFV0fSFbnCAHnI09xPJ+78
-         otNtMcVPjUfQqOH/1q6rs/TZTKhEf8QhdZjXZ4hvHrkR1oAV5nqKrqvgM72BQrJbF5Mb
-         v5tePbS30iSpl2JNlVk6C6tNcMWruXYcBoCkROswR+z1/s6b2Vqi0tJRhK3+vqHiZ7cN
-         ykzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKRcVQtmGDl0qMUyeS5piYqWITfDasJCOIUOYN4iQLEtqyrEAuZbmRqnPC0tAzzIi+lMz/5v2RWmEJOC4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs0zR5O8UIv1VTMdLyzOHvjXNLKs5LnWQ8LC8BM76IMcEPag/8
-	W4er29DWRsOeAzcGLYIbliSfWWznVRwy1ImbnvUJ7VSJj6RCGF8=
-X-Gm-Gg: ASbGncs8EhsY5OzvqjKXmhyDpEzJ+LISFLBv8EYYrxtoGLMpZaf8Y2D/5jf2i0tdkEj
-	Ca+OGY0oQ7vGwuTxMejrPhfY91j3h+Lk37aWTYVuAK6MLprM9RN6bvmTWTy4jgAMq3FlUAgfrz3
-	w25MEHtbNUjffpE3d7KEQsZXe8k4BwM5IIhVUsuto/HV4GBvFVtPS/4AUyKuCdlJl8Whq7hrE4k
-	wOksttiu/MU3Qi9ykGhJW5DPyE0qdfFwRG7XKwUf01F9UCL9DVCFsuXsmJ4/Lk3eWCmKDybPHBt
-	LVcKbUBLz01SAT6HgH912FEJuPyEPT8HNTwKMlDCbJs5y3QWnMwd
-X-Google-Smtp-Source: AGHT+IFmv2d+8t/XrIOjXJPJhGj6EnNZatKe6KLSHcmC8CbdVIZNMlpFeQ1NwzNXZDpDFrW8TtWxzQ==
-X-Received: by 2002:ad4:5c6e:0:b0:6e6:5cad:5ce8 with SMTP id 6a1803df08f44-6e908d5cd3fmr120573996d6.6.1741882934043;
-        Thu, 13 Mar 2025 09:22:14 -0700 (PDT)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade330cb6sm11153606d6.88.2025.03.13.09.22.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 09:22:13 -0700 (PDT)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: heikki.krogerus@linux.intel.com,
-	gregkh@linuxfoundation.org,
-	lk@c--e.de,
-	dmitry.baryshkov@linaro.org,
-	u.kleine-koenig@baylibre.com,
-	diogo.ivo@tecnico.ulisboa.pt,
-	saranya.gopal@intel.com
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] usb: typec: ucsi: acpi: Add Null check for adev
-Date: Thu, 13 Mar 2025 11:22:11 -0500
-Message-Id: <20250313162211.3650958-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdoaeJP0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 49AF6C4CEEB;
+	Thu, 13 Mar 2025 16:22:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741882957;
+	bh=fhQlgeM7080CJWOaBZsIZyVJ5TKnwevZMcoSC2ybdZQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=mdoaeJP0nqabI+BeT8YIonLfd0f5QB5YbO+dreqyDa7iJVKxcwEuMVcIr746ViIYG
+	 Ig7M0JFTw+X1tMsdk0ewpzDEB0CHz4bEF+Upic9KiIJnMa2gPjsdjiFwhDtOGkxx7w
+	 n/AiZMKGlEdAtqctsZqwGSYVO8NpkDSlVxKq3Ghtr12o7OM7wEE7UL/aXzT3Mx/pr9
+	 NwTdFhdZ5zsdalBQZvQzjMJ7BKXPD1lQ6aKDiRvWdxZUY9Z3ffl2ftw4ILcolIYMlh
+	 iTM9SgSZnvWzXtufYsbnWVC+gSbNg+Xr8oLb3bLekZ6pEMR+aJ2M+pV/w24LvK+pYb
+	 fudHRJME/gkNw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D93C35FF4;
+	Thu, 13 Mar 2025 16:22:37 +0000 (UTC)
+From: Joel Granados <joel.granados@kernel.org>
+Date: Thu, 13 Mar 2025 17:22:24 +0100
+Subject: [PATCH v3 2/5] signal: Move signal ctl tables into signal.c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250313-jag-mv_ctltables-v3-2-91f3bb434d27@kernel.org>
+References: <20250313-jag-mv_ctltables-v3-0-91f3bb434d27@kernel.org>
+In-Reply-To: <20250313-jag-mv_ctltables-v3-0-91f3bb434d27@kernel.org>
+To: Kees Cook <kees@kernel.org>, Joel Granados <joel.granados@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1894;
+ i=joel.granados@kernel.org; h=from:subject:message-id;
+ bh=fhQlgeM7080CJWOaBZsIZyVJ5TKnwevZMcoSC2ybdZQ=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGfTBkkHnWszfEhy1e1lBTDKXa5AVaVkp4UmM
+ Mf3INLp/NWLE4kBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJn0wZJAAoJELqXzVK3
+ lkFPeKgMAI2vXzhLEtEoUGaLnXiuYrqG/XYoXCD+SLcm00pOPFPqons9QovrJlAapqzvcqCQzFA
+ HNlFrhEfHgB7xls52RQjy6TWlfE0J4Y0nTA6GzJUbfkSrwdeAGoF3U/w1Oit2JhyYvd23Lh9tE1
+ jrlgCCI/EoDZPLNP8I+CFLudtZAK0E6jqnCnhShWMj+/77np2jK3vtemPnQfMVTuUsDKFPIURnk
+ KyRDBivTYPucZ2xF8jaEo1dju1lURmq7e+zGY3HwBJCyB/3ANZnhxGN/ysxDcCK6gL+CmoOZLiF
+ ufex5uNJkfxo3nVyrhjYWcU0ag6H+SRnScwf9si9hRfaedc1+BTyW643ctz6W9zlK8wMgNhWiTi
+ Wzq7RUPf7ghdguR9pvBLk8KPiBe5rqFCTHIvWa3plO2D0PrBCVq1dXw0ev+ze+cccljLResrI2g
+ ltEqwYGXWc/syYoM1LLVj/cZDDP63E0fX8ExFlA+PEbQGu0vvZQa/gtNwNctjtpwSyxCFG+NId6
+ 9o=
+X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
+ auth_id=239
 
-Not all devices have an ACPI companion fwnode, so adev might be NULL.
-This is similar to the commit cd2fd6eab480
-("platform/x86: int3472: Check for adev == NULL").
+Move print-fatal-signals into its own const ctl table array in
+kernel/signal.c. This is part of a greater effort to move ctl tables
+into their respective subsystems which will reduce the merge conflicts
+in kerenel/sysctl.c.
 
-Add a check for adev not being set and return -ENODEV in that case to
-avoid a possible NULL pointer deref in ucsi_acpi_probe().
-
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Signed-off-by: Joel Granados <joel.granados@kernel.org>
 ---
- drivers/usb/typec/ucsi/ucsi_acpi.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/signal.c | 11 +++++++++++
+ kernel/sysctl.c |  8 --------
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/typec/ucsi/ucsi_acpi.c b/drivers/usb/typec/ucsi/ucsi_acpi.c
-index ac1ebb5d9527..d517914c6439 100644
---- a/drivers/usb/typec/ucsi/ucsi_acpi.c
-+++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
-@@ -189,6 +189,9 @@ static int ucsi_acpi_probe(struct platform_device *pdev)
- 	acpi_status status;
- 	int ret;
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 875e97f6205a2c9daecf5bece5d53ed09667f747..347b74800f927f70a1912457f96e833cd03c642d 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -4962,9 +4962,20 @@ static const struct ctl_table signal_debug_table[] = {
+ #endif
+ };
  
-+	if (!adev)
-+		return -ENODEV;
++static const struct ctl_table signal_table[] = {
++	{
++		.procname	= "print-fatal-signals",
++		.data		= &print_fatal_signals,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++	},
++};
 +
- 	if (adev->dep_unmet)
- 		return -EPROBE_DEFER;
- 
+ static int __init init_signal_sysctls(void)
+ {
+ 	register_sysctl_init("debug", signal_debug_table);
++	register_sysctl_init("kernel", signal_table);
+ 	return 0;
+ }
+ early_initcall(init_signal_sysctls);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 7759b1ed7221f588f49ec3d81b19aeb4d2fdf2f7..6514c13800a453dd970ce60040ca8a791f831e17 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -25,7 +25,6 @@
+ #include <linux/slab.h>
+ #include <linux/sysctl.h>
+ #include <linux/bitmap.h>
+-#include <linux/signal.h>
+ #include <linux/printk.h>
+ #include <linux/proc_fs.h>
+ #include <linux/security.h>
+@@ -1626,13 +1625,6 @@ static const struct ctl_table kern_table[] = {
+ 		.extra2		= SYSCTL_ONE,
+ 	},
+ #endif
+-	{
+-		.procname	= "print-fatal-signals",
+-		.data		= &print_fatal_signals,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
+-	},
+ #ifdef CONFIG_SPARC
+ 	{
+ 		.procname	= "reboot-cmd",
+
 -- 
-2.34.1
+2.47.2
+
 
