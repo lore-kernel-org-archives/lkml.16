@@ -1,100 +1,79 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93B72620EA
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E59526281A;
+	Thu, 13 Mar 2025 08:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741855765; cv=none; b=tN1bfCy8+B2QCPZuc7FSGtnIBMR71XjNDJGaOkGG4U3HzTsNmFVJCJls3mKQyu3cEEtQF/Yy3a2vPieRa/5CdFBwRykLzqhv/zOpGJnDVLRg15WIHXC/i670QiK2akJT2DhWEKt17VAeol8AWRFoOQWKfNfZ+n8s06ii/HXFPDQ=
+	t=1741855798; cv=none; b=PiBjl6dtaqfFyZ4slAFfbcb8YouApku61gNLKKLvK+r6pXPsmKkowtpS9JirL+LQZ4iYDdXK9A5N0QHm6xMhDRmO4gujkabmtiTkZPtrQJAo5YbtwShKjTgPovVWeTseMGkjwSG73IfesxsjvUmL3b7C6gkJIQ1htASQXz92TnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741855765; c=relaxed/simple;
-	bh=wDdfhJhBThiZUn+0LbZ9lmE9r4DbYfHvlI21cG6BxoI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WCregkuOTJFcXwU6LpTIE8lmHKeTKW7yfQSZ4faPLecBq4zegO33J6KsoaD3FmQB0aCMcIuMlSP8HcQROMCV9begL5K/d93q1UBkmKOtnY7A2hT16DT1OlMYdTdHaHVV6X10EOXxXythVTon6xOBrsTwF+4K5RZQB09ocWbYM8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OW6BStxA; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741855798; c=relaxed/simple;
+	bh=Z9bhnmQuVTK3KlaOUmQ71atR3CCNcpznsgNzTr7cStk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=bCSCD66Cboxv+HmDYY3XFec5gjKhKnPxcgj8GD6E5sXF3MI+Sq4ECHr9Sc96rd5npcuXHMkknxn+tJEjhcj9j5HdMmZqVEwcLREX8JfcKyq9vsDjd3vNu7XDBysAWQwdZwXE6gFTFyMl6PCJRPMWY+HvoqGqLnT0bRCM+P67j8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+9tQIfj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OW6BStxA"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so711330e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:49:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741855760; x=1742460560; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cH0/G8dnIsLEQps0a+QRu5yJlelIyIdUnSqN98914W0=;
-        b=OW6BStxADydn6/Me4yfuO+9rgVQfirts/pkGEyYF0ptTOMt07HdwFDTRQuO/qMZooS
-         GPNVWOzl6Rgxixx1N+PYswTtC9M/1QGmrT7ByJdLA48Pd2om1+cEPZpHy7ZPoW9YNLDa
-         KZPiyujMvbF93BcPEEvfo4HOCLp4Lv6obU2e4HqVsQNRRhQWBe6DaHbdTcfEt7pyDefR
-         BxU+YKMuWP3o6Fq1Wcyi4IynV1wIf3lQ5FIQsQDnVUJvd2GtNxZxMeboQ/MHoA/bTchR
-         dGQ09hgM/gDx0ZEo9SQR0HPofVyVzdi1CtPKsm2jh04dxURCVmMcKQqYEnKsXL0L8WCA
-         K8ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741855760; x=1742460560;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cH0/G8dnIsLEQps0a+QRu5yJlelIyIdUnSqN98914W0=;
-        b=ghuYakBPWtbnq+xEUrIxP8DUxYb7qmryUwwIlPjQKChYeG5RVxYtJw3N0cS1/gJqlm
-         Tqf4nyUpfdZinw5dMaucaqrzBCBrv8t9nimNH/dIe2BExymSivpvK2hunRUX4zY6Cr2R
-         cpfh0JnVaI/abzR+Be7so47+YwADF2cmpcoOKn2+hQkG8VGGlf9FRyjrIGm7LRZ3R7BS
-         jScKYyWI8zkfBCmse5Sp79VMjfyFO7dsXMXcrXNFJ2ozd5du3CzJOxRx19Csl+gm9Z/8
-         ZeCEtgW+L8uuzf5eS8vBhwSavINxYz4GW46uf4T7yLoKGoUeV5d7Ti4AM1vBSaE8mWNQ
-         x6jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUO8PHZmDpbLkzXt0w77pF7Swlj6aCFBuqQ/xZNR7uD7ke3Nxy1QWDworMxwEjBiQUdvK6gKtCdh9XDqn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE5oVGzggIMyurZZUug2MQkoWJ6vn7erhS4e9A6Fg3RSSR/Lfg
-	7WjaFQd4S0FACdul8Z33tGk2D9jdp2CSLD+O3A+NVe8q2sCUWxLoPU+Qs77FdRJvUih7z9Oecnz
-	vRikCULQGDIEEYQGk6vA9XWWwORid+Q+KEgPIKg==
-X-Gm-Gg: ASbGncv6QF1eABj9zB1P/8uz59jCVamACP/2sVaNwNdfQue4f6VrTlByp1MMz1ZeBio
-	8zNV5oL7l8F13IDf//kNup2VltcE68J6XOZIF1j9LWyi/4IjHwZbNlhoqlkujI/2H8izS13r0mo
-	fYIdGdfwFcYDwbIQcak2VcP4tFxQ==
-X-Google-Smtp-Source: AGHT+IHZkAfEyI5h1xNp9EscwBtm7RYtlJrFqFkZLqQeebsL2P20q1EFV/vAiiJ7hbwVCtlIBk24ytpLzUux5mvsmjw=
-X-Received: by 2002:a05:6512:ba6:b0:549:5b54:2c6c with SMTP id
- 2adb3069b0e04-54990e673f2mr9060936e87.23.1741855759797; Thu, 13 Mar 2025
- 01:49:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+9tQIfj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92595C4CEDD;
+	Thu, 13 Mar 2025 08:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741855797;
+	bh=Z9bhnmQuVTK3KlaOUmQ71atR3CCNcpznsgNzTr7cStk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=G+9tQIfjeJErLON2J/nToFA2RBUmgwbQxm+0CYZjQjXaYAz1xuuwv0oBNxKwzXQjz
+	 cEKVukEuVIWDw8azuwTDidseHqEU/I4c5hbrK0bxqYIwwFg8ZRBHeQyUz8BB590FMA
+	 99O3TeIzuMcZ5c5gj0A9iCgI/1eIupk4OvlsLChq5RkBZT/8wqGcT9CpmLKYVbNVV7
+	 b9cOTqT7gcayjn03OseokgQivAx8Y6ZqSpaw/e1e93HjqEiS+cJ/fI39LoprugcUM8
+	 a0F5g1CSpOiX+nhCdwjlGKs5yA/BIfY/ePEaUu/hd8vi2WrU1WNvYJvpuwW5fozQ4M
+	 3CE1CdBnudnwA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D8D3806651;
+	Thu, 13 Mar 2025 08:50:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311-arm-fix-vectors-with-linker-dce-v1-0-ec4c382e3bfd@kernel.org>
- <20250311-arm-fix-vectors-with-linker-dce-v1-2-ec4c382e3bfd@kernel.org>
-In-Reply-To: <20250311-arm-fix-vectors-with-linker-dce-v1-2-ec4c382e3bfd@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 13 Mar 2025 09:49:06 +0100
-X-Gm-Features: AQ5f1Jr7N3AP_OP74JY7L1V0VadIJIbOxnWg4sgQC81ix5N9CYiTFnZob5PuCj4
-Message-ID: <CACRpkdatTYZ9oxSBdjTbs-LjF3ONqcA-9vYojPc-KSGZmoEO=A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: add KEEP() keyword to ARM_VECTORS
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>, Christian Eggers <ceggers@arri.de>, 
-	Arnd Bergmann <arnd@arndb.de>, Yuntao Liu <liuyuntao12@huawei.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: hns3: use string choices helper
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174185583203.1420926.338411681169004091.git-patchwork-notify@kernel.org>
+Date: Thu, 13 Mar 2025 08:50:32 +0000
+References: <20250307113733.819448-1-shaojijie@huawei.com>
+In-Reply-To: <20250307113733.819448-1-shaojijie@huawei.com>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
+ shenjian15@huawei.com, wangpeiyang1@huawei.com, liuyonglong@huawei.com,
+ chenhao418@huawei.com, jonathan.cameron@huawei.com,
+ shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Mar 11, 2025 at 8:44=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
+Hello:
 
-> From: Christian Eggers <ceggers@arri.de>
->
-> Without this, the vectors are removed if LD_DEAD_CODE_DATA_ELIMINATION
-> is enabled.  At startup, the CPU (silently) hangs in the undefined
-> instruction exception as soon as the first timer interrupt arrives.
->
-> On my setup, the system also boots fine without the 2nd and 3rd KEEP()
-> statements, so I cannot tell whether these are actually required.
->
-> Cc: stable@vger.kernel.org
-> Fixes: ed0f94102251 ("ARM: 9404/1: arm32: enable HAVE_LD_DEAD_CODE_DATA_E=
-LIMINATION")
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
-> [nathan: Use OVERLAY_KEEP() to avoid breaking old ld.lld versions]
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Fri, 7 Mar 2025 19:37:33 +0800 you wrote:
+> From: Jian Shen <shenjian15@huawei.com>
+> 
+> Use string choices helper for better readability.
+> 
+> Signed-off-by: Jian Shen <shenjian15@huawei.com>
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+> 
+> [...]
 
-Yours,
-Linus Walleij
+Here is the summary with links:
+  - [net-next] net: hns3: use string choices helper
+    https://git.kernel.org/netdev/net-next/c/9e3285040514
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
