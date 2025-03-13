@@ -1,216 +1,256 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0207526659C;
-	Thu, 13 Mar 2025 12:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741869561; cv=none; b=kin6CL+GW7qXuYr00S/bW04eSdhMN3rkfhNWxyBa0NJ3q3W7qJ1bWkCmYpzY5ZsV3M7mWWCWhAXnRfDttokFlGiruwgcsZFf4dCTVUKEdyHQ54NxXdAxI4oOQKfeHhoRH4SScT+stHukcjMi0cdyjfM/3tKgLTM2vzpZG3YPex4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741869561; c=relaxed/simple;
-	bh=R49ux7GAa6FUdQ6XiRq1pWMwNgAMVVqQ1suhvkWncjQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uoQFBVPDflgLSzmqoU5TzhXLsAWnPME+/Hi4eXCsXvYfG6DSbMRoumWzXIqrjkIOl9ZDXLQER2a5Oer1Z1DgeJD4LoFVqMkv9jhvPPqnSMGwP8CWTWyhzuAIiICLzoTgHxxocQlJ1K1iTafq08g6qeeFUdaTu9zhnm1yOkBFofY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Igh6mdiC; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2040.outbound.protection.outlook.com [40.107.243.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7470E78F59;
+	Thu, 13 Mar 2025 12:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741869679; cv=fail; b=nPpbqGHsuA8m83EITViBj9b+W5dJsDz047tBHxDM839EG+j9HIq8LjS97wpw3doFeDjj7XGqR5C1EeWAvXqHsoyQONsg34gczuMOM70wyzlDHzA23DB3Bfhg/X5YbtYN+WYxx7FLz5WndHbA+H5CLKoKWqkV+5wIU6nTY/Bsn08=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741869679; c=relaxed/simple;
+	bh=OHnFG+L5al8IDck31Niu1rdsUwTD/LhTuNz+XRTFDGA=;
+	h=From:Date:Subject:Content-Type:Message-Id:To:Cc:MIME-Version; b=bE56yqaVwukn4rFcWUqXxGoLDfYxwQ8MgyfUycVFckehqMjcpSoXKahVLSnlDNWXpPOgaGfFNacchLDCzsJuSMpXuFcZYhFkOwHPnAOClDNPr9kXX3u8BX4LLpTtjhDB7Pq3KxWiGrfmPKnlc+Fbp9oLZBF/XulkXDN3rmOWTbc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=i2Tjh75b; arc=fail smtp.client-ip=40.107.243.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Igh6mdiC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=6d9ZK
-	FjuV8GSrxW8OgiOZ8jd/gQ05HIDF0SS4LvlBJU=; b=Igh6mdiCXdySqXS4x2tgO
-	5A3sWqZl6fE+QatLFrL6jL1Z17KVhRDav6OFKUcsWL54GyDj0Hi35VlJBaUCyGR0
-	zFw6D2akRSKFJkc3vmSYCbyOCjntu4xsu9amRDjgiGXdRNueoc3/gpxsapZRtTCv
-	ULUtGFHN8APhQiNizP+8oo=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnEv+60dJnJuINRw--.30448S2;
-	Thu, 13 Mar 2025 20:38:18 +0800 (CST)
-From: oushixiong1025@163.com
-To: Simona Vetter <simona@ffwll.ch>
-Cc: Helge Deller <deller@gmx.de>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Samuel Thibault <samuel.thibault@ens-lyon.org>,
-	Zsolt Kajtar <soci@c64.rulez.org>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: [PATCH] fbcon: Use static attribute groups for sysfs entries
-Date: Thu, 13 Mar 2025 20:38:16 +0800
-Message-Id: <20250313123816.393397-1-oushixiong1025@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="i2Tjh75b"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ysMr2l0CidTThpG8kV8XfceelxEXquQ0GlUqbvYZkJI0EwmJoAnVd+2k30uLS91CYb1bTmJqqmYLoNLnNzfhm2iX1zfYyLKtUPR+IHS8l+6FvF6Bfp2qDWEjUGoOF/ZrZa4Lelihp3Fa1jL4wUgkOYtqb+qL5rRWXPcP5QC3prjxvdTI3q0PNDY1thb08Jcjoja/l1k/B5d7ueUvfHkoO/IT74n89vh6ziyrsoJDdrRx8Qex2Mslh6tMxojtU5AaNAmYP3IfxHvH3y5Jt6+FWobfPEgNoczmeObqCawmyiwcsTPvvb9SnL3UDNa49srf2d+UwQ6r/1oz76CLarQAew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IpGpZWwE6ClOscUad3ws4bxVL5Xn9rIYumTsmKdm3Ws=;
+ b=HxhweIGGVgBDezpmsy2PutCvi9AR2WYc32Ww5pF0ytJIn6CZuKIz+1GjuZ71BUH6Pkey7JZBRE2dpD/kIH63OOXKqmTFiF1cxOPHH+hIaS5iPpj95mWYoi7+BcGgPbldAxFcqKlZl+1jWATYnSWzCk8Dv5VHMymYXWvzLFR4/ENd75sSo7ZpEO4gNQrLVFEObcXr166wYsHgeAxWuszmBNibSgMXTT/On3TufM0ULatsiXVsLXGVbl+vUvufqaEc6WJmsT2MH8FD/fXWuLvJvrrwD43zWXNvPH9FspBR7askEFfOEQdiezSQ5QZt08q0hVTqQonV+K3z35Z/4gxYjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IpGpZWwE6ClOscUad3ws4bxVL5Xn9rIYumTsmKdm3Ws=;
+ b=i2Tjh75bVT4D611MIN+5kvduYx9VS62sIW23ZPx8TpnvQA/ZEFTI14nhDQ25VU6wrKFeKEdE0cdEzUAevItwU18P93iALv2D9BQ+vyT36Gru9uReJrWEqNF5PcAkwNzRJ4zlpF/Nm8hpIBoMJihKLIJZIvWfPMIYnxW+gjhPVcH3ozJlw4cXVxnoz2VHQt6J2+JWmQz+nRXb/8JO8hRjRc89k99M8VBs8NQUDEquD2J+430BXSVZjFlApGB58ajKKR3X6BrmvKYKishWmMazBUQO7sh4s/uVkEwiptIONmJE9HIHwClTIiOkz/QqYZNq3ypqyvnl6IhGqNMIMgqnkA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by IA0PR12MB8086.namprd12.prod.outlook.com (2603:10b6:208:403::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Thu, 13 Mar
+ 2025 12:41:14 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%6]) with mapi id 15.20.8511.026; Thu, 13 Mar 2025
+ 12:41:14 +0000
+From: Alexandre Courbot <acourbot@nvidia.com>
+Date: Thu, 13 Mar 2025 21:40:59 +0900
+Subject: [PATCH] rust/revocable: add try_with() convenience method
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250313-try_with-v1-1-adcae7ed98a9@nvidia.com>
+X-B4-Tracking: v=1; b=H4sIAFrS0mcC/23MSw7CIBSF4a00dyyGW1JTHLkP0xjkIXcgGCBo0
+ 7B3sWOH/8nJt0G2iWyG87BBspUyxdADDwNor8LDMjK9YeTjxAUKVtJ6e1PxTGvpJBoj7icO/f5
+ K1tFnp65Lb0+5xLTucsXf+gepyJBN0vFZ6ZlzNJdQyZA66viEpbX2BRH1fn6hAAAA
+X-Change-ID: 20250313-try_with-cc9f91dd3b60
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Alexandre Courbot <acourbot@nvidia.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: TY2PR06CA0048.apcprd06.prod.outlook.com
+ (2603:1096:404:2e::36) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnEv+60dJnJuINRw--.30448S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGF1fArW3GrykCr18trW3trb_yoWrtrWfpr
-	4Uta4YgF45G3ZxWw45Zw4DZwnxWwn7C34fXr4kKw1SgFykArZaqa48JFyjyayfJrZ7GF1r
-	Aa4qyry8AF4xur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnPEfUUUUU=
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXAoPD2fSzZxRWgAAs5
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|IA0PR12MB8086:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b75059e-e83a-481c-93fd-08dd622c578f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|10070799003|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cy9QbmJldkt1SXN5d1FLeUlGVXRhWVRHUWFCMWRiVks4VFFNNlpyNHgvaFRx?=
+ =?utf-8?B?SkJaV2UvMXNPdnRTWUJQaXVpRCtBTC9VMWVSUjF5YnNyNDVXMllIZnA4ZmtK?=
+ =?utf-8?B?OEY1MjVPbW10UUZxNzZCaW5uamtVNFpyTDE4YlRyc3BITWhGSjJKQmkveWFH?=
+ =?utf-8?B?K1loTXVVWENOMUc4SUxTMisyZmpFc3UvWTNDYlVxMi9FQXI2S2pBTHNBdnYz?=
+ =?utf-8?B?QTUvcUx6ZzlGWjhmaWYrUmFvS2hMa1RjcG9KSHFXQzNXejJvOTZhMzcyelpF?=
+ =?utf-8?B?dVMwZ2ZGY21ZQjhCWTNPVFBvbWtZNlVTMU44emhWNHpEa200MDNoeXBNbEpi?=
+ =?utf-8?B?akg4OWhvZEY5Uk5FaHovVU5JL3k2cjJVWGN6NVQwN1RuTUhBL2I5OG9zUFdv?=
+ =?utf-8?B?U1djb01UQ2p3RkNtZ1RXSkk0Nk1wNjZqbXliVHk4cW9qWHFVanRhTWVKR1pk?=
+ =?utf-8?B?NE1FeFhKYTFGTmN6MVZyZmxKQTdIWVJrR2Rka3hySjVvMnV0VDVDNVdoTGtK?=
+ =?utf-8?B?d3d6emkzZVFlcUgrN1JUNGI1UE1RTzNGL3lxb1JiMFZtdTE2U2pqUjRzcDdH?=
+ =?utf-8?B?dFRHVC8xMW9idGFhMXRwRFdQU3Q1akFTU0E1Y0dncGVuVnJFVW5CcFhldDE1?=
+ =?utf-8?B?M3hWZGdMclJ2MWl1dllTU2w5ck1wR2dUVXF2Mm9Kc0dySWNtMUlQOE9ZZ0l1?=
+ =?utf-8?B?RGxYN1h4TVp2cXJ5Q1hhU3cwc1crL3NwSEtBUjBMdVlaQjdvRFNPUW9RQk9s?=
+ =?utf-8?B?Z3VMN3BtL0VsdzFjN2s2VEpIL05EOG9kQVFpVmwzeTd6Zms3cEg0UDZZeWw4?=
+ =?utf-8?B?WlFWa3pJQnQyeEhNamFQa1FKNDJXd21DUllyU29ud01wQjNNVnBPUUhBSHhi?=
+ =?utf-8?B?VTJZWEVkOU1SbEJxVUlPOFUvcVlEdmdabENqUWlkaXM2WFVLcU5QWDRkL05X?=
+ =?utf-8?B?KzM4SW9PUGFtbVQ2NDVEWUFzdUN6V2crUG1lZERSaFZrdVdvK0ZBQmpQL3k3?=
+ =?utf-8?B?MWJNWnFodTJscGxncW5KRHVoZ0E2eWRqYW5ycDlkb21mTXh3OVNrZjhZbHZY?=
+ =?utf-8?B?YmVxTFhyRFF2SlB4TTlZR2srb1N2ejRVWWE3Z3dQaFoxY0NOdnhIUUpBSFJM?=
+ =?utf-8?B?eVJ2L2xRdzNxVFdNeWxWK0NqTDR4OXdZeW5NVEtXYnJTMiswL08rZC9KUHNv?=
+ =?utf-8?B?WFZ1b3Bla0ltaVFtMC9sK2pyNU5tSmllVVB5ejMvMFQveVVIa2J1bjRRQ3hQ?=
+ =?utf-8?B?MnpHYmhqUFhSdDNzZjdRZitsbDFTOG5ZMlpSa2JJUzVYUnpJWlJLSWlWL0pk?=
+ =?utf-8?B?WEpIRE05eTlyQVVOTEIyOHhuNDNCYzgxTzdRWDFMWTZ3NHVVaks0RlFwek03?=
+ =?utf-8?B?OFYzdEZ6VEMxaFBFWTA5c2JhSk1vTkpZTm1HdStFaTdCVElhYmdZWkVTK041?=
+ =?utf-8?B?ZE9MdmpBM21hU0JUSDU5YzlyQVpzK1QrN1ppWXUvN0s0aFYyclMzVTFWV3BZ?=
+ =?utf-8?B?WDJoQnRWejFNR3ZLY09mZTB4cElscEFWODMzclZ1Zk5aTXlqNTNCR015NmQw?=
+ =?utf-8?B?eXE2V0ZKVmRKN3FPNG8wMERNUSt6VXJILzV6RkIyd3pCbUcvKytRNlJQZXU3?=
+ =?utf-8?B?TkdTU2lheFl1cC9UQkxpVGtqNjVHdVFwYitxTm52enJ0blZzbWRsZ1NpOUM1?=
+ =?utf-8?B?SUl2WUswWXd2WUFicTJQODA0V1JHMlh5cUtrclY4dE4xRVRaazNGUTViYW1O?=
+ =?utf-8?B?cXlYb2FZMm9CMTNEL3I0ZXRTQTdxQU4ya1ZtdWwxWC9abkVzKzRTdU1EZHY2?=
+ =?utf-8?B?Vi9NajN0Wkg4QlduT2xFamJZcXNYb0hJYjlTdDhqcENlRG5tL25sRE5MOHB2?=
+ =?utf-8?B?ZDlwMnhicnFNZzZyUG1zMHVXcUE2NVg5Q2F2ZFFqV2Y1NzlIQWtZRFY4a3BV?=
+ =?utf-8?Q?lAQEF5prIKY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZG9GcFQ1NnNFZndWK3JoTjBoYlFVNGZuWkx1eWt1ZHdxWTJkMHkzUUVlaE1O?=
+ =?utf-8?B?K1FUN0M1YUhkMzZUbGNreHpONFRjTmkyc3liaGl2UEVaNW5jdmxHSTlPbzhM?=
+ =?utf-8?B?OTc1Z0JNMXo3MWgrSHFMbzdLSFVOMEorMTlvcDVoS2JjcEVuaHB4QWgwckpa?=
+ =?utf-8?B?RTBmZ0czOGVkRStvbkMrdnA4b0w1bVNJYW4wM2xOMzVLSGlKTnBPT3NubVJ4?=
+ =?utf-8?B?dWQxUFRodStWK2VRbzhjYmdZRlJHckNNd2dva0RlWGI1ZXJTbHQwZm1tQUk3?=
+ =?utf-8?B?bkNVbFVaeVdkUlpoeHFxdXZFejlmckxvMTFPQ1NhWHZHbmxCcWFXVUdMR3lw?=
+ =?utf-8?B?QnRNaEp0T1I4SDQ5Vi9NdW1UQ0RqY3d3MG1WQjhjWDF6WVNNNDR4amFXTi9q?=
+ =?utf-8?B?anhXUXV5aWc0bEUxZ3k2TmkwSkVubXl1WmU3U2VaMTBiQzVSY0QxQXlCRmIr?=
+ =?utf-8?B?WklyVU1Oa0FneTdRVnVMbm5sOURTVC85V3dDOTJyeXRUTHFZdUtLMHFjdzd5?=
+ =?utf-8?B?S3R0dGtjeFlmUmlxNHcrR3EwTk91bzZEODJqLzQ5NjVIMUFlcEZUZEl6T1d3?=
+ =?utf-8?B?NmpjaTJmMUw3cjlrNmdyeUF4WUF6bGZxRkRlckx4L0dwUVQ3VVVXeW0vajdK?=
+ =?utf-8?B?bDI1RUowMHJCZFR0OW1MQzJoM1NKRXFkUkhIbHloL1ZkeDVXSWc5a0lrZEFE?=
+ =?utf-8?B?djljOFdKK280MXBTT0R2c2UrMWJ6RFpabWVEQnV5Z3FwcXFYVjFwWi9SdEY0?=
+ =?utf-8?B?T2FoclBKZ1RaMk5UYTd0dm14eUR6WWV1SFFLNlYveThoODlJTXdLTWs0U0ls?=
+ =?utf-8?B?aEtzNHlsaU01MlR2QWV1cThTOWFXblgzMEJKMFVRY3YyaXEvWGNvQkM4Uk55?=
+ =?utf-8?B?L01kK1c4L2FPNUUzdG8wT0tjcVRsQTQ2dDFiYVI5U1dvamU0M0JIQkJKUDBE?=
+ =?utf-8?B?ZGdLbHVmSU5NY1lYN2oxbTZLc04vbnI4Y1pVd1hlTHlGak9kcG84TDF5U1pH?=
+ =?utf-8?B?ckhkSXRvNUtzeWYvOWcwOGRiMEkwRi91aHJtYmx6eTJ4UzcvWXMvVFpnRXR3?=
+ =?utf-8?B?djUxcGcrOUZDMFlqaEFjVUJ6RVNmL2ROQlBHd0k5b2VmUE16V2Q5MGZhdWlU?=
+ =?utf-8?B?SnBSUUZnTlpwa2s5VFA1elZlN0h2S0lGeTd3VENUNUtJWHV1QjMvLzl0UGZu?=
+ =?utf-8?B?UU45MUpqejliRk1qNTN2RWNwUVlZTk5keTVob3pzV3lNelAwUzJJT1V0NUFI?=
+ =?utf-8?B?UW9hNjliK1RVeGVaSW5sTTVnVFNiVkhQK3ZhbGtkd1ExL0xreXBsOXVsTG5Z?=
+ =?utf-8?B?U1pXUTEyUlk4UENyS043ZmQzZHZJRVhCbFl5OG5SelNFUXEyMmNITHZzZGtq?=
+ =?utf-8?B?ZDJBSzhnK21aZFRmV2ZTUWt6Y2tUSE8wd1pRTEsyY0JjY1BDcWJ3WlpLS3JK?=
+ =?utf-8?B?bTJzd3liVDB3UExYeDRMWnBSdWFNVmJvZ296RitJTEFtUTJHb2FWNmxLU3Rq?=
+ =?utf-8?B?L3JMRllRMWxlbm9kZmd1RzBMbW55c1ZSR29jUDNMVEcrcFVyUHlYdDlUZG9j?=
+ =?utf-8?B?Z0N0emxWbm9wbEg1RFZhaFpQTEpjS0xEQm92WkIwUjRNdHNKMC9WWEpVcW5z?=
+ =?utf-8?B?QXM5ZGhJTGJVLzlZdUEzTHljU2o2WmJnY1pTN05YWVZBSExHOWw0czRKMGxL?=
+ =?utf-8?B?b1ltdkNSdlAveDhOcTdHWCtEZUdzUmp1QnBCYVlTSUhVaExLMktTUkZmbUpO?=
+ =?utf-8?B?QlFxVXp3dTRad0hOeHZKUW52TWhRY05YcFVRQmk1THFESUFIZWVaOG44QVRw?=
+ =?utf-8?B?R2RQSXVlTzVDSm1tUExZSmxtVUZiUTlEZ1lsdWZnVjhXR29wOWtKS0d2T3pr?=
+ =?utf-8?B?K2hmT3pCRVczVGY5bTIweUNaUVZGb1c5NmUvUUR5RjZDaUYvZURtalN5Q1c0?=
+ =?utf-8?B?bTJjZExQWFp5YUpIMVBnYlJZN2YrVzEvY2RkSTk3cUdjc2k5VU5vVlRoM3JB?=
+ =?utf-8?B?K3BWbVMyeTJxR2RUVVRkcUVZZzZKQXpOek9IRUVNOXVSQUxzWXB0cnVKZmh3?=
+ =?utf-8?B?eE44SUpsK2dJYUxFTjZqZ0FMWVo1YW9vT0wzcFl2dm1wTzYvSkU0Qllpc2lh?=
+ =?utf-8?B?VlpDZmlHZUFHR2FtNzhTdGw3WHNYM3Vpby8yMXpRSzVhWDlkaUVHcnpEUFRk?=
+ =?utf-8?Q?RY6wEo+LH0LKI6thQNQda7NtMDYwGes0vDYDWmtWdhtb?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b75059e-e83a-481c-93fd-08dd622c578f
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 12:41:14.4769
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tIRMMjkm3cdBXLmXzEkbTkDfGDxaaF9iQ/wOtkgGAcod+PJ80QOS5nTic1fAu9uKdp/Zr296lfR+C7BLOczJCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8086
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+Revocable::try_access() returns a guard through which the wrapped object
+can be accessed. Code that can sleep is not allowed while the guard is
+held ; thus, it is common that the caller will explicitly need to drop
+it before running sleepable code, e.g:
 
-Using device_create_with_groups() to simplify creation and removal.
-Same as commit 1083a7be4504 ("tty: Use static attribute groups for
-sysfs entries").
+    let b = bar.try_access()?;
+    let reg = b.readl(...);
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+    // Don't forget this or things could go wrong!
+    drop(b);
+
+    something_that_might_sleep();
+
+    let b = bar.try_access()?;
+    let reg2 = b.readl(...);
+
+This is arguably error-prone. try_with() and try_with_ok() provides an
+arguably safer alternative, by taking a closure that is run while the
+guard is held, and by dropping the guard automatically after the closure
+completes. This way, code can be organized more clearly around the
+critical sections and the risk is forgetting to release the guard when
+needed is considerably reduced:
+
+    let reg = bar.try_with_ok(|b| b.readl(...))?;
+
+    something_that_might_sleep();
+
+    let reg2 = bar.try_with_ok(|b| b.readl(...))?;
+
+Unlike try_access() which returns an Option, try_with() and
+try_with_ok() return Err(ENXIO) if the object cannot be acquired. The
+Option returned by try_access() is typically converted to an error in
+practice, so this saves one step for the caller.
+
+try_with() requires the callback itself to return a Result that is
+passed to the caller. try_with_ok() accepts a callback that never fails.
+
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 ---
- drivers/video/fbdev/core/fbcon.c | 67 +++++++++-----------------------
- 1 file changed, 19 insertions(+), 48 deletions(-)
+This is a feature I found useful to have while writing Nova driver code
+that accessed registers alongside other operations. I would find myself
+quite confused about whether the guard was held or dropped at a given
+point of the code, and it felt like walking through a minefield ; this
+pattern makes things safer and easier to read IMHO.
+---
+ rust/kernel/revocable.rs | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index e8b4e8c119b5..7f96b60c07f5 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -160,7 +160,6 @@ static int info_idx = -1;
+diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+index 1e5a9d25c21b279b01f90b02997492aa4880d84f..0157b20373b5b2892cb618b46958bfe095e428b6 100644
+--- a/rust/kernel/revocable.rs
++++ b/rust/kernel/revocable.rs
+@@ -105,6 +105,28 @@ pub fn try_access(&self) -> Option<RevocableGuard<'_, T>> {
+         }
+     }
  
- /* console rotation */
- static int initial_rotation = -1;
--static int fbcon_has_sysfs;
- static int margin_color;
- 
- static const struct consw fb_con;
-@@ -3157,7 +3156,7 @@ static const struct consw fb_con = {
- 	.con_debug_leave	= fbcon_debug_leave,
- };
- 
--static ssize_t store_rotate(struct device *device,
-+static ssize_t rotate_store(struct device *device,
- 			    struct device_attribute *attr, const char *buf,
- 			    size_t count)
- {
-@@ -3179,7 +3178,7 @@ static ssize_t store_rotate(struct device *device,
- 	return count;
- }
- 
--static ssize_t store_rotate_all(struct device *device,
-+static ssize_t rotate_all_store(struct device *device,
- 				struct device_attribute *attr,const char *buf,
- 				size_t count)
- {
-@@ -3201,7 +3200,7 @@ static ssize_t store_rotate_all(struct device *device,
- 	return count;
- }
- 
--static ssize_t show_rotate(struct device *device,
-+static ssize_t rotate_show(struct device *device,
- 			   struct device_attribute *attr,char *buf)
- {
- 	struct fb_info *info;
-@@ -3220,7 +3219,7 @@ static ssize_t show_rotate(struct device *device,
- 	return sysfs_emit(buf, "%d\n", rotate);
- }
- 
--static ssize_t show_cursor_blink(struct device *device,
-+static ssize_t cursor_blink_show(struct device *device,
- 				 struct device_attribute *attr, char *buf)
- {
- 	struct fb_info *info;
-@@ -3245,7 +3244,7 @@ static ssize_t show_cursor_blink(struct device *device,
- 	return sysfs_emit(buf, "%d\n", blink);
- }
- 
--static ssize_t store_cursor_blink(struct device *device,
-+static ssize_t cursor_blink_store(struct device *device,
- 				  struct device_attribute *attr,
- 				  const char *buf, size_t count)
- {
-@@ -3279,35 +3278,18 @@ static ssize_t store_cursor_blink(struct device *device,
- 	return count;
- }
- 
--static struct device_attribute device_attrs[] = {
--	__ATTR(rotate, S_IRUGO|S_IWUSR, show_rotate, store_rotate),
--	__ATTR(rotate_all, S_IWUSR, NULL, store_rotate_all),
--	__ATTR(cursor_blink, S_IRUGO|S_IWUSR, show_cursor_blink,
--	       store_cursor_blink),
--};
--
--static int fbcon_init_device(void)
--{
--	int i, error = 0;
-+static DEVICE_ATTR_RW(rotate);
-+static DEVICE_ATTR_WO(rotate_all);
-+static DEVICE_ATTR_RW(cursor_blink);
- 
--	fbcon_has_sysfs = 1;
--
--	for (i = 0; i < ARRAY_SIZE(device_attrs); i++) {
--		error = device_create_file(fbcon_device, &device_attrs[i]);
--
--		if (error)
--			break;
--	}
--
--	if (error) {
--		while (--i >= 0)
--			device_remove_file(fbcon_device, &device_attrs[i]);
--
--		fbcon_has_sysfs = 0;
--	}
-+static struct attribute *fbcon_device_attrs[] = {
-+	&dev_attr_rotate.attr,
-+	&dev_attr_rotate_all.attr,
-+	&dev_attr_cursor_blink.attr,
-+	NULL
-+};
- 
--	return 0;
--}
-+ATTRIBUTE_GROUPS(fbcon_device);
- 
- #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
- static void fbcon_register_existing_fbs(struct work_struct *work)
-@@ -3367,14 +3349,16 @@ void __init fb_console_init(void)
- 	console_lock();
- 	fbcon_device = device_create(fb_class, NULL, MKDEV(0, 0), NULL,
- 				     "fbcon");
-+	fbcon_device = device_create_with_groups(fb_class, NULL,
-+						 MKDEV(0, 0), NULL,
-+						 fbcon_device_groups, "fbcon");
- 
- 	if (IS_ERR(fbcon_device)) {
- 		printk(KERN_WARNING "Unable to create device "
- 		       "for fbcon; errno = %ld\n",
- 		       PTR_ERR(fbcon_device));
- 		fbcon_device = NULL;
--	} else
--		fbcon_init_device();
-+	}
- 
- 	for (i = 0; i < MAX_NR_CONSOLES; i++)
- 		con2fb_map[i] = -1;
-@@ -3385,18 +3369,6 @@ void __init fb_console_init(void)
- 
- #ifdef MODULE
- 
--static void __exit fbcon_deinit_device(void)
--{
--	int i;
--
--	if (fbcon_has_sysfs) {
--		for (i = 0; i < ARRAY_SIZE(device_attrs); i++)
--			device_remove_file(fbcon_device, &device_attrs[i]);
--
--		fbcon_has_sysfs = 0;
--	}
--}
--
- void __exit fb_console_exit(void)
- {
- #ifdef CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER
-@@ -3409,7 +3381,6 @@ void __exit fb_console_exit(void)
- #endif
- 
- 	console_lock();
--	fbcon_deinit_device();
- 	device_destroy(fb_class, MKDEV(0, 0));
- 
- 	do_unregister_con_driver(&fb_con);
++    /// Tries to access the wrapped object and run the closure `f` on it with the guard held.
++    ///
++    /// This is a convenience method to run short non-sleepable code blocks while ensuring the
++    /// guard is dropped afterwards. [`Self::try_access`] carries the risk that the caller
++    /// will forget to explicitly drop that returned guard before calling sleepable code ; this
++    /// method adds an extra safety to make sure it doesn't happen.
++    ///
++    /// Returns `Err(ENXIO)` if the wrapped object has been revoked, or the result of `f` after it
++    /// has been run.
++    pub fn try_with<R, F: Fn(&T) -> Result<R>>(&self, f: F) -> Result<R> {
++        self.try_access().ok_or(ENXIO).and_then(|t| f(&*t))
++    }
++
++    /// Tries to access the wrapped object and run the closure `f` on it with the guard held.
++    ///
++    /// This is the same as [`Self::try_with`], with the exception that `f` is expected to
++    /// always succeed and thus does not need to return a `Result`. Thus the only error case is if
++    /// the wrapped object has been revoked.
++    pub fn try_with_ok<R, F: Fn(&T) -> R>(&self, f: F) -> Result<R> {
++        self.try_with(|t| Ok(f(t)))
++    }
++
+     /// Tries to access the revocable wrapped object.
+     ///
+     /// Returns `None` if the object has been revoked and is therefore no longer accessible.
+
+---
+base-commit: 4d872d51bc9d7b899c1f61534e3dbde72613f627
+change-id: 20250313-try_with-cc9f91dd3b60
+
+Best regards,
 -- 
-2.17.1
+Alexandre Courbot <acourbot@nvidia.com>
 
