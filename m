@@ -1,234 +1,105 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D6914F121
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88E5269AE6;
+	Thu, 13 Mar 2025 17:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741885173; cv=none; b=IszJYGedm1iEYKPbUtNn7+qlV5NvpEmIbyH8tTZyBrPRlHWumNvcmdsxVmerAoHigqgqDOuAOJFeRciimffY3UALuW69owB4cacGyvdC1DkX+rRVNk+F0ubKkGuh11dNCNGPzqD1E9Oj8639FRjUZwLTJ0qh+RrTXvmoqYMH9rU=
+	t=1741885203; cv=none; b=sdeUsGbEJDEVsO4zbTS24VAWCgfllVCwSdYLkBS8iO+li325VV71PSaUy17/qQKisosZz+gs7Z4O2M/QjsGWod7Wf3GHTjekd7AYOVBuA7fIDZAAerXJkloZTDm3OLXZ9p8VuHQmfVJBxJReqB8nK8ne2xvo3ECBLZfenfBx5vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741885173; c=relaxed/simple;
-	bh=r78kbKxQagOfA4fTjXUz8rQD0c6w/m7aqX4C3ZCFu1Y=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=d8myhPSe2oa2sF2ymYyn4JBpzcvXorm4CuL5jwYZPZ/bHEP1LPv1YCNvQi5Yb4Lc4uxg6vKTDjgO83Ngnq8TSsdwaqI4HqbnQ3AdTu6kn/joPWSmgorU9j5oj4AfWR1B+1rR8Yiryfon2ieXXU56tFvgN6qELZYtrvoLWoQBR2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85b4ee2e69bso159926139f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:59:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741885170; x=1742489970;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tdpBlpt1qHoogcDEBbY7Tv30XG+ng+gd1D5ipu5ours=;
-        b=IyKUXTmF/oItzd8CuC68cHtBYxa2/TQVyMVkBWNRhYS4FdY+yDUspDo2J6k6DZSrl2
-         cShckkYJDYHes8dHTVSVmDQ6l6ypUCvSO1k0F5QMkH8066bheJD0gKRC+aR0OJndMvQD
-         PadW32nBmpV+FC08lhiiGlAMujrEYhY2bpOSunsTIQd1gJeBVPMeqL97hYTFItjZaLmj
-         qZx8qgLqxSXE2JkzJt+q0ggDk142Se/ugC5Xr+oDLXkTviSr6udxf6e8HqXw1e/vC98J
-         qpdSQB1g6O8axB3SGqyUDQhEWcPvciBQDAtUYw5+384R+7D0Zng/3Dn2gk7odMlxejMY
-         j8dA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZfL1TMwlzjbsaGa2+ruLSQ9to+hQT9U9mmpVEjZBXuWbkRv+vx6ZD8oUJ2PL52ylKst1NGpmkoGzCqzE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnnMXE563fwFxpGJjT3sqsVssGU0vOA25pVP+NGC5Rs7vcATOi
-	Gx2EuLI7r5X+1x/KpPCFZIaBuVCwd5f6xwj5iGuUurm8meP1Pz55XlGRWcdgA4LqOXYFIeUelfG
-	OTWTXRaDw7NRsTcliIlIvl+llQT8n8niJoWpbEcPx2WGYV/nc8kE2xi0=
-X-Google-Smtp-Source: AGHT+IEczvvqGmjagvGQMtEa8Pq8M87g8xXwDIdXCeR2blw2m2+e3dFRH9JVZaM1p69oDP9VprNq9WWirbaRHuT0ORQausSa5xKg
+	s=arc-20240116; t=1741885203; c=relaxed/simple;
+	bh=N/Sk6Qy4oI0JP7HDoZt5ci2IDjFnGW5PCPDjLtT2Uuo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=CpBOoBJn4UxI7gugnVJK9Aoh9aY8G190SoSUeYYrV1KKklnLAZ9jEH0hb8/Yqy2DUdGkY5R+Qv5ercEWL/OrUkoBMZQ7CZWz8p7XBt0wafGVEpkf+SQTLJhXTrHp7OwqaHVx0oIGoAqwDck4kAqG4UXznOEBTpnuGwB9JtnA8uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOMJmpg1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOMJmpg1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 165B0C4CEDD;
+	Thu, 13 Mar 2025 17:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741885203;
+	bh=N/Sk6Qy4oI0JP7HDoZt5ci2IDjFnGW5PCPDjLtT2Uuo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nOMJmpg1BHmbTTxLXiglAg+ddOPshoZfEp9X8pVRJTn+dGBoq7TLFiItX6j1wnSjL
+	 1wzq8E0JrAcJLBIFmxPvuDMIE3cGpVjr73G6ExwhSMmKf6KWFxF9TI+PA15ZpHYY1r
+	 VCnWVKKa81JvsT0ysDJ4xYi2o+qHCypxY9yWWmOTWzWUFRRjde0rVI+ZhdDrLLcVbV
+	 X4v4ROwqE09VbDhNbCYB2i/adQtN3X4E7eDWzmnN2gVPUQFhHPoDfHRM9A9DQrZGIx
+	 +cmIPM3YblbOXbPPyFfqvVJAReWWCxBxiQCD+inq1jw4+qgroOPXJnscqbVee9F6Tu
+	 ZMOXPdj0NUaPg==
+Date: Thu, 13 Mar 2025 12:00:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	mhi@lists.linux.dev, linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org, quic_pyarlaga@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com,
+	quic_mrana@quicinc.com,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 01/10] PCI: update current bus speed as part of
+ pci_bus_add_devices()
+Message-ID: <20250313170001.GA738398@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18cb:b0:3cf:c7d3:e4b with SMTP id
- e9e14a558f8ab-3d4817af930mr5683665ab.21.1741885170615; Thu, 13 Mar 2025
- 09:59:30 -0700 (PDT)
-Date: Thu, 13 Mar 2025 09:59:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67d30ef2.050a0220.14e108.0039.GAE@google.com>
-Subject: [syzbot] [bpf?] KASAN: slab-out-of-bounds Read in atomic_ptr_type_ok
-From: syzbot <syzbot+a5964227adc0f904549c@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, iii@linux.ibm.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yepeilin@google.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313-mhi_bw_up-v2-1-869ca32170bf@oss.qualcomm.com>
 
-Hello,
+[+cc Bartosz since this is related to pwrctrl]
 
-syzbot found the following issue on:
+On Thu, Mar 13, 2025 at 05:10:08PM +0530, Krishna Chaitanya Chundru wrote:
+> If the link is not up till the pwrctl drivers enable power to endpoints
+> then cur_bus_speed will not be updated with correct speed.
+> 
+> As part of rescan, pci_bus_add_devices() will be called and as part of
+> it update the link bus speed.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/bus.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 98910bc0fcc4..994879071d4c 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -432,6 +432,9 @@ void pci_bus_add_devices(const struct pci_bus *bus)
+>  	struct pci_dev *dev;
+>  	struct pci_bus *child;
+>  
+> +	if (bus->self)
+> +		pcie_update_link_speed((struct pci_bus *)bus);
 
-HEAD commit:    f28214603dc6 Merge branch 'selftests-bpf-move-test_lwt_seg..
-git tree:       bpf-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=15f84664580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b7bde34acd8f53b1
-dashboard link: https://syzkaller.appspot.com/bug?extid=a5964227adc0f904549c
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16450ba8580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11f5fa54580000
+Why the cast?  I guess to discard "const"?  I would prefer to avoid
+that if we can.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b6b450916744/disk-f2821460.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f67764ad4712/vmlinux-f2821460.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/42aedcc506e8/bzImage-f2821460.xz
+The only existing callers of pcie_update_link_speed() are from bwctrl,
+where it obviously makes sense because bwctrl manages link speed, and
+from pci_set_bus_speed() in the pci_alloc_child_bus() path.
 
-The issue was bisected to:
+If we call pcie_update_link_speed() here, do we still need the
+pci_set_bus_speed() in pci_alloc_child_bus()?
 
-commit e24bbad29a8de70bb33c1cabc85bb40e6707572a
-Author: Peilin Ye <yepeilin@google.com>
-Date:   Tue Mar 4 01:06:13 2025 +0000
+Bartosz, so you have any suggestions?  Is there a point in pwrctrl
+where it would make sense to do this, similar to what bwctrl does?
 
-    bpf: Introduce load-acquire and store-release instructions
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=154f5074580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=174f5074580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=134f5074580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a5964227adc0f904549c@syzkaller.appspotmail.com
-Fixes: e24bbad29a8d ("bpf: Introduce load-acquire and store-release instructions")
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in is_ctx_reg kernel/bpf/verifier.c:6185 [inline]
-BUG: KASAN: slab-out-of-bounds in atomic_ptr_type_ok+0x3d7/0x550 kernel/bpf/verifier.c:6223
-Read of size 4 at addr ffff888141b0d690 by task syz-executor143/5842
-
-CPU: 1 UID: 0 PID: 5842 Comm: syz-executor143 Not tainted 6.14.0-rc3-syzkaller-gf28214603dc6 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0x16e/0x5b0 mm/kasan/report.c:521
- kasan_report+0x143/0x180 mm/kasan/report.c:634
- is_ctx_reg kernel/bpf/verifier.c:6185 [inline]
- atomic_ptr_type_ok+0x3d7/0x550 kernel/bpf/verifier.c:6223
- check_atomic_store kernel/bpf/verifier.c:7804 [inline]
- check_atomic kernel/bpf/verifier.c:7841 [inline]
- do_check+0x89dd/0xedd0 kernel/bpf/verifier.c:19334
- do_check_common+0x1678/0x2080 kernel/bpf/verifier.c:22600
- do_check_main kernel/bpf/verifier.c:22691 [inline]
- bpf_check+0x165c8/0x1cca0 kernel/bpf/verifier.c:23821
- bpf_prog_load+0x1664/0x20e0 kernel/bpf/syscall.c:2967
- __sys_bpf+0x4ea/0x820 kernel/bpf/syscall.c:5811
- __do_sys_bpf kernel/bpf/syscall.c:5918 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5916 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5916
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa3ac86bab9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe50fff5f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fa3ac86bab9
-RDX: 0000000000000094 RSI: 00004000000009c0 RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000006
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-Allocated by task 5842:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __kmalloc_cache_noprof+0x243/0x390 mm/slub.c:4325
- kmalloc_noprof include/linux/slab.h:901 [inline]
- kzalloc_noprof include/linux/slab.h:1037 [inline]
- do_check_common+0x1ec/0x2080 kernel/bpf/verifier.c:22499
- do_check_main kernel/bpf/verifier.c:22691 [inline]
- bpf_check+0x165c8/0x1cca0 kernel/bpf/verifier.c:23821
- bpf_prog_load+0x1664/0x20e0 kernel/bpf/syscall.c:2967
- __sys_bpf+0x4ea/0x820 kernel/bpf/syscall.c:5811
- __do_sys_bpf kernel/bpf/syscall.c:5918 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5916 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5916
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888141b0d000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 312 bytes to the right of
- allocated 1368-byte region [ffff888141b0d000, ffff888141b0d558)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x141b08
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0x57ff00000000040(head|node=1|zone=2|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 057ff00000000040 ffff88801b042000 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000080080008 00000000f5000000 0000000000000000
-head: 057ff00000000040 ffff88801b042000 dead000000000100 dead000000000122
-head: 0000000000000000 0000000080080008 00000000f5000000 0000000000000000
-head: 057ff00000000003 ffffea000506c201 ffffffffffffffff 0000000000000000
-head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 1, tgid 1 (swapper/0), ts 8909973200, free_ts 0
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1585
- prep_new_page mm/page_alloc.c:1593 [inline]
- get_page_from_freelist+0x3a8c/0x3c20 mm/page_alloc.c:3538
- __alloc_frozen_pages_noprof+0x264/0x580 mm/page_alloc.c:4805
- alloc_pages_mpol+0x311/0x660 mm/mempolicy.c:2270
- alloc_slab_page mm/slub.c:2423 [inline]
- allocate_slab+0x8f/0x3a0 mm/slub.c:2587
- new_slab mm/slub.c:2640 [inline]
- ___slab_alloc+0xc27/0x14a0 mm/slub.c:3826
- __slab_alloc+0x58/0xa0 mm/slub.c:3916
- __slab_alloc_node mm/slub.c:3991 [inline]
- slab_alloc_node mm/slub.c:4152 [inline]
- __kmalloc_cache_noprof+0x27b/0x390 mm/slub.c:4320
- kmalloc_noprof include/linux/slab.h:901 [inline]
- kzalloc_noprof include/linux/slab.h:1037 [inline]
- virtio_pci_probe+0x54/0x340 drivers/virtio/virtio_pci_common.c:689
- local_pci_probe drivers/pci/pci-driver.c:324 [inline]
- pci_call_probe drivers/pci/pci-driver.c:392 [inline]
- __pci_device_probe drivers/pci/pci-driver.c:417 [inline]
- pci_device_probe+0x6c5/0xa10 drivers/pci/pci-driver.c:451
- really_probe+0x2b9/0xad0 drivers/base/dd.c:658
- __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:800
- driver_probe_device+0x50/0x430 drivers/base/dd.c:830
- __driver_attach+0x45f/0x710 drivers/base/dd.c:1216
- bus_for_each_dev+0x239/0x2b0 drivers/base/bus.c:370
- bus_add_driver+0x346/0x670 drivers/base/bus.c:678
-page_owner free stack trace missing
-
-Memory state around the buggy address:
- ffff888141b0d580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888141b0d600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff888141b0d680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                         ^
- ffff888141b0d700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888141b0d780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>  	list_for_each_entry(dev, &bus->devices, bus_list) {
+>  		/* Skip already-added devices */
+>  		if (pci_dev_is_added(dev))
+> 
+> -- 
+> 2.34.1
+> 
