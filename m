@@ -1,124 +1,113 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560662673BA;
-	Thu, 13 Mar 2025 12:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5CC1EE7A8;
+	Thu, 13 Mar 2025 12:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741868128; cv=none; b=O7MuGaByShHcstPOeUeLptEoSH26kaY6+WhvD7RujzWxzXlVJfqT/Gh3kim4Z2tQqc5EH1GAH6pOJqT9uLN0QRHO1Q97UnsmtLAmYMoVr60FYO/nBcOZfL27zAkxS2AZrZqNhRTK5R4JgWVd3ZjfAhyBp8RWt57nvvdDJnE9URw=
+	t=1741868160; cv=none; b=e4j4w08C/KP7SJUR9Y5M/ngK+7DhxfO4aOCIM00UvxEkjH4PP6xC9MayT9mb7sRfDBwdxl+vncE+y+uWSzusKXWeU0x6S1nHjn1L+ZEufXV4Abhj+l7p/fMwYsjzkZWK2mgy8ep8oe1mreiEwnCLrp49ssKyN5e64YdfehGoJkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741868128; c=relaxed/simple;
-	bh=msRQvskLF0OZgyr0Nn2gFUtgHE+JQ1Q+SpkaJxkauws=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HW6EIMKVOTFTXT4d+XcRr11H4hfPpvTMiVxa/8LJkvvXEdiZ1j4NVVmIDdnNWrBFuFCX49ofNTcsojB++AERz3Bn2U5ChPtHbBACwmv67C2vVGmwcXropBjdfEVR7WWrIavZHgiLSdxbhkXfHxgYho6aJC8ZbGZCNz/s/if0c8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VJRY1Rxo; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741868160; c=relaxed/simple;
+	bh=kaAou0aCgzlU0oUfOlYrlysp520v5XX91y8STuDaS4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sO7RDuTMre2vKkuLmHiUM0djQ+qHw16K3l7vDPqodzKxgJugD3LPTvcgxDIUg9xWx+GzYq1LflsRYZQHV5NPyzBsKH54YOJgNfqv6tPNg70ppb4UllTmXA3cjNdnT5rLEaM4v6f0G7w6hxfpelCMZnNMv90mjH7gmfd3I0nc2vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BGKGsC+a; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VJRY1Rxo"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-549644ae382so1008884e87.1;
-        Thu, 13 Mar 2025 05:15:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741868124; x=1742472924; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EX8q9UrYqVDJV0DCL4gk761qzs/ghU5IMPiNSIbYdrU=;
-        b=VJRY1Rxomem9o7mHI16uMgqpPHedNYFmkWItA7uP2rf+J94QnVcUiybc5Td/E2wHyf
-         DYrh/7GLuHBGFNpbncFzwWeoxSVVFSiIbXZMZhw7Mp7cXM5GY7P+XbpHXfQv5IgaS0Ch
-         8mGndV+bG9rY1JF7otXbMZCeBr9ggw/q08xEKfrNJph8ageLoxVfpYpoc77eApEcW8NU
-         afdw44AGbz8hfZidsrYIz99i1OD37GJTUYtxHRY0qJxclaK4tjw+T6vPHc6mOjhjjYZZ
-         0UYsJxkKct1oMdhTXzcyPKHtmlFvJTqRVHVeRWyu8OBjALd1ZFXVl7ZX+KcbJ+VVzMP5
-         PanA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741868124; x=1742472924;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EX8q9UrYqVDJV0DCL4gk761qzs/ghU5IMPiNSIbYdrU=;
-        b=U2sB3HavkJ6Uh3jORwNJpGpgdiPrQHEdizXYWZjn7id3C4S5csT/oDkxLhF4h1Ajtq
-         l9zBBZnzlxjnTDF63pubD0FUs68fZE79zvGuCy3PyhNBNnUzYy3R3Ww+wV2MzVUTScNc
-         jFQvODtTG9rT7DjPDyuPC8XIMqBEdzkt1ZZX0WMyzr0cAQRSuOEQbI5QYqc+Vk7CcJbz
-         yjWX53vJjjk/i52QZX0ifVOo/wKHfLiPkldugBFsOqwIr+kAzrH/EIyPmO6X07JLdumT
-         BMB6wnuvnpgYMvhDqR4gRk7Z/Mh99he51FwwhzHVxc/BucCCj78avIK5vkE0q8V03TaC
-         AfxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBNdmCWnOn2xjmGrEMsr0FtkagqYB9lSsZa1SE/AoLf+Eqv0DRSnbVc4pRO4xNDY5T4IyMnIaQwAmR0tQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQp6dSA8SPIuXPQtdnpixtmw70MOHDQeGRqqGlY8Cyzvaxjt+9
-	j914Qr1wZnbUyK8NtRJ7Fz5bjMCAfbpCcMs0iIza7ldMm8mR5Q4/
-X-Gm-Gg: ASbGncsrylzDh4UQP9dE5Cod9wjh5UwPU09xN5FbVhq7nWegNNCUcdveXWa0ZNn0byP
-	IKUp+o3TVtnA36wYLYFcCWT5U7eXD6xxPuKqhUF1w4jzKlZinEBteDZX7lEUD0ffIlwiz31wtaG
-	Bbw3ZZmyuw5tnnPBO+x5Ic0RZFjvYd35t7zk/Gpjw6Z/W2YqPSW29ApdwIBmVeIatkONt+JRxWw
-	Hz0coYY4pCU5/zT3AZJ5WDECfXaGflYloNOrCVe3vEIMyKuYs0qGfhe/xG0l62uphRWn7aRsLgy
-	EYQnhDromxC0f/j7TuJY5WQf0Wtgfmfa8jPTV2CuKwmxxUW87SYwVe5/tkXetsE90ZpgOO6bAl3
-	VAmVFkQA0ZnEM7satsAzD6Gs=
-X-Google-Smtp-Source: AGHT+IHMRtNCp83Y5VfziuGToqqqNP58sFYcJkuPp1RzeIUqXPMosvv/GKK4Fe03sF47GiIrlqbP7Q==
-X-Received: by 2002:a05:6512:1242:b0:545:2837:17d0 with SMTP id 2adb3069b0e04-54990e5d3fcmr9433873e87.12.1741868124206;
-        Thu, 13 Mar 2025 05:15:24 -0700 (PDT)
-Received: from [192.168.1.11] (83-233-6-197.cust.bredband2.com. [83.233.6.197])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba7c192bsm192851e87.89.2025.03.13.05.15.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 05:15:23 -0700 (PDT)
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Date: Thu, 13 Mar 2025 13:14:44 +0100
-Subject: [PATCH 4/4] watchdog: da9052_wdt: respect TWDMIN
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BGKGsC+a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741868158; x=1773404158;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kaAou0aCgzlU0oUfOlYrlysp520v5XX91y8STuDaS4w=;
+  b=BGKGsC+aTNDz8s3H7Uatw7AzNydq7Q/eBHRKMXyFcag8Kv7lvJL8bNbd
+   7Jfl2CAh7e+ZSyT/cnJx3zaKIeUTXilVjFQDy4QPD8HayPlv1TwQ77qeu
+   8CHLZHIBQpSzxOQAox0A/enhzEcvRLZebT63wIhySPzw6phyoIf7Y0R9z
+   zAj23/JIrq1DymzpbqgKoYAsXtutYiI0LKcETbYMxZjAYvEpVzo04/dHU
+   7Rrd3eMhu86qowhmSUAYjXt2hc9DUVtYsylh5d8y+wNLxQ86Ij+roqdbh
+   uTOzAGGTeAo5i+khJAAbxjQrchISVOe1RwRaCwZaXohg7WuqpHPnQyfo1
+   Q==;
+X-CSE-ConnectionGUID: ICs70ZJwTE6V10V5OJ6tzQ==
+X-CSE-MsgGUID: OJEVOFguS0mjzVWjK6j0mQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="43181045"
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="43181045"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 05:15:57 -0700
+X-CSE-ConnectionGUID: RNQkYJ4BQiWZX4u2f7QQFA==
+X-CSE-MsgGUID: MbZIX0BrROucfQ4ERBpTHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="120655368"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 05:15:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tshTY-00000002AQF-3GON;
+	Thu, 13 Mar 2025 14:15:48 +0200
+Date: Thu, 13 Mar 2025 14:15:48 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v7 02/10] property: Add functions to iterate named child
+Message-ID: <Z9LMdDKNLT57RdIL@smile.fi.intel.com>
+References: <cover.1741849323.git.mazziesaccount@gmail.com>
+ <f613b5f120a4dde63d28b0a2e0186dcb8dbf57ae.1741849323.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-da9052-fixes-v1-4-379dc87af953@gmail.com>
-References: <20250313-da9052-fixes-v1-0-379dc87af953@gmail.com>
-In-Reply-To: <20250313-da9052-fixes-v1-0-379dc87af953@gmail.com>
-To: Support Opensource <support.opensource@diasemi.com>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>
-Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Marcus Folkesson <marcus.folkesson@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=945;
- i=marcus.folkesson@gmail.com; h=from:subject:message-id;
- bh=msRQvskLF0OZgyr0Nn2gFUtgHE+JQ1Q+SpkaJxkauws=;
- b=owEBbQKS/ZANAwAIAYiATm9ZXVIyAcsmYgBn0sxNyp/FjToxW9L13vbZBkc33m+xJJc7q48ql
- mVpKIkU0s+JAjMEAAEIAB0WIQQFUaLotmy1TWTBLGWIgE5vWV1SMgUCZ9LMTQAKCRCIgE5vWV1S
- MsckD/9h1UydeVp6qsi+uKW5zBfGDCsGW5VxuZlyfzEph8LSo7bvEZ7zza+keb/Zr++SzDK/swb
- VIKvjFQX7w/0RQ78pJ9tdLPnbF2lj8JarD0SOSgo6pyxNLLUTKEa1WOQaBntXjY3oyQpBTqrob+
- 29lgnNKYd7O7Pf0i0ROt2qHnmqJlOOXtQMh8AsfycyvPr7t/aX7V6uNm8O+VXsQUWdlQdLfSgKT
- AYZdu7bh0UOkjsXCNWwM0aRNpNsbjMhW0+vKWAdBlMOqLqR9Uum4jkPSQ1e52mzVwwrkur5ZBr6
- u5whBqWQTzsmvjYYbKVzFkSHQB5/Brm8h08qeajZPyYL+0VGXUBs0fqZGYvixMPIFmnRLCTOC+N
- g/OZTAF0rnRsQKw9rq3n4tBQzLoVc3Td6nuSQ+1U4m7pdULCVNltq+HLLIDe0REaogi9nM8s5uT
- SEy0jyEK3vszBAdzpu8ix9FOhqQrhcZFOzh9Rp8BTkBU5kpgy4VZdetORrFZT2AoXzfFneDbJwp
- D3TYzzvLXdPlDpG0h21w5PMTel/o1V5Atf8dU0ENPTw+AKFGwuJBygw5EP6VYNqiC2yOFvPJyQj
- FaJfdQeRPmcMqFTJp/T6dEWvXuDZYOpuOJRtAJEmeO+pifmHuZfDDe/xQ5UZNazkwEqLkCU6DSu
- DnPwqg/N2zb0AUw==
-X-Developer-Key: i=marcus.folkesson@gmail.com; a=openpgp;
- fpr=AB91D46C7E0F6E6FB2AB640EC0FE25D598F6C127
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f613b5f120a4dde63d28b0a2e0186dcb8dbf57ae.1741849323.git.mazziesaccount@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-We have to wait at least the minimium time for the watchdog window
-(TWDMIN) before writings to the wdt register after the
-watchdog is activated.
-Otherwise the chip will assert TWD_ERROR and power down to reset mode.
+On Thu, Mar 13, 2025 at 09:18:00AM +0200, Matti Vaittinen wrote:
+> There are a few use-cases where child nodes with a specific name need to
+> be parsed. Code like:
+> 
+> fwnode_for_each_child_node()
+> 	if (fwnode_name_eq())
+> 		...
+> 
+> can be found from a various drivers/subsystems. Adding a macro for this
+> can simplify things a bit.
+> 
+> In a few cases the data from the found nodes is later added to an array,
+> which is allocated based on the number of found nodes. One example of
+> such use is the IIO subsystem's ADC channel nodes, where the relevant
+> nodes are named as channel[@N].
+> 
+> Add helpers for iterating and counting device's sub-nodes with certain
+> name instead of open-coding this in every user.
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
----
- drivers/watchdog/da9052_wdt.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/watchdog/da9052_wdt.c b/drivers/watchdog/da9052_wdt.c
-index 90b620b11b5fb634372e18ce4c40568cd946f284..b46338061e7d269adec691f8e88e650e1e2fbfc9 100644
---- a/drivers/watchdog/da9052_wdt.c
-+++ b/drivers/watchdog/da9052_wdt.c
-@@ -180,6 +180,7 @@ static int da9052_wdt_probe(struct platform_device *pdev)
- 	da9052_wdt = &driver_data->wdt;
- 
- 	da9052_wdt->timeout = DA9052_DEF_TIMEOUT;
-+	da9052_wdt->min_hw_heartbeat_ms = DA9052_TWDMIN;
- 	da9052_wdt->info = &da9052_wdt_info;
- 	da9052_wdt->ops = &da9052_wdt_ops;
- 	da9052_wdt->parent = dev;
+LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I haven't checked the rendered kernel-doc, though.
 
 -- 
-2.48.1
+With Best Regards,
+Andy Shevchenko
+
 
