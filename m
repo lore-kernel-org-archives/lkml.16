@@ -1,117 +1,143 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115C525776;
-	Thu, 13 Mar 2025 01:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D801C683
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741828579; cv=none; b=R8LY6YLEhluDf8qjfm6uXfIP3FaA0CEW//u6+EyvzQkpgySguhaojwSLDlt9MloVoy2mLkgJcVGabur59r5LT0zZYeVcKsne4ssfWePg79g2TOBLAo1CBYJZk784pe7Y8duJfn1JBhoIW5EwxNqDmE7qf4SYOojlYMckwotQXt8=
+	t=1741828578; cv=none; b=kZ7sLkg88gTNl9PJXWwdfrQe1THqTNTF1TbVaY758jc7hJAKDrPkKXOh0+I6jJP5vx+b5XFw78dns0itL9q4xyyCAu89YKvKMOedvg2jHsnHu/1OBxVA3jTcxcj1woHhLin8yHG/EpzhGdWZUAzdhkcRZiv+QHDJnurrB7/hxUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741828579; c=relaxed/simple;
-	bh=3PNhqqyRaFF5l4naAmFz5YjA11fh/EFAPuwXokt4+Rs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XcMbvCwwS43gVKNrUQIws9acydAkdHbWC223ZJPk9f66iQdrdGk6zQlyrNpJ41QWVshhBd1Qz33Tj9CJDsKV4oCZaZNqeSsxsT039wP7n39w9V8tIkp0Ej/QUR+XcvsT2CbWNXK2+94D24qBv4u41ou+8SNtgsFAjYeKXosqoQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZCqG93ZBcz1f0b3;
-	Thu, 13 Mar 2025 09:11:45 +0800 (CST)
-Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 67FD21A016C;
-	Thu, 13 Mar 2025 09:16:08 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemg200005.china.huawei.com
- (7.202.181.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Mar
- 2025 09:16:07 +0800
-From: Wang Liang <wangliang74@huawei.com>
-To: <dsahern@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>, <fw@strlen.de>,
-	<daniel@iogearbox.net>
-CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<wangliang74@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH net] net: fix NULL pointer dereference in l3mdev_l3_rcv
-Date: Thu, 13 Mar 2025 09:27:13 +0800
-Message-ID: <20250313012713.748006-1-wangliang74@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1741828578; c=relaxed/simple;
+	bh=xZHcGGygz8rLb2jKnacJRSX2NoW/pbcS9hwvQWXE9dI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=EP4UeCVpD2rjostAHvawyjGQ/GRpcmh55noGiQNjOzJlNXXRWFOMmBEGS1xA8ENSq+NoC0uoQeiJozEEHEQF3rebgTlmrmZx+7yCOjAia6OC+OAcSUs6LxHCT1ymRnj2IQNm9Y6uEndu/68I0dROyt5Djz5ziV0pY8+aJ91kdHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qB99r5xO; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qB99r5xO"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7271239d89fso130233a34.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 18:16:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741828576; x=1742433376; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bn6syc6wh8t9UYBPXOdzHhnfpFN2bWgwC2EMK9hX77c=;
+        b=qB99r5xOzcOAYUWu46n7Ox0hAC6ROLLSW+NXSF5tQOxfG+/5JfhJP3WrQEuvn/LX7Q
+         Jm/CpFsezQYeiPf2/bU+MFS9c+eVn4eZpkGvrrWrgG2hVJ8Kjvx5SQEONjvup2MseHA6
+         EztbpC1yukmvfC+RArhhkS52Su2/MlE8AHT3cV2OhoK6AUgyDj9ueuu5M4eIR+2urYRL
+         kzqbQERYUL6IhXGuVQEBubj4YfW3wHdQ69Xk+MQ6j6faSzY7rqK0380mZOk6hzs7jMRT
+         Kv/s9i+/vsDYHgmyY8LZR/AmqLxqYRO8yrenYW4xKkfiIT4McGYF0hVn6CpoUcU5H6Ng
+         rMbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741828576; x=1742433376;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bn6syc6wh8t9UYBPXOdzHhnfpFN2bWgwC2EMK9hX77c=;
+        b=LGwa221lK1XPX8UG0QEbx2AQlrkMKz0zSvD6kqtmmkAi5nAfJvFFadIWaoU1459TwP
+         qwLKXUpIyytvqVcmsV8eMFmG3lx2TYEn/HoIFbToHjIdGL9HdA5Yun/ssZC/Y3DBWwbZ
+         +Nzqog0N45CEkFCCI/OtvWwnWCbI+II9p8s+PwNEfFAQdpumo5+t81BJf7893V/3z1zo
+         UJDKuwsbl1+fZm77kGalwqXt3jEzOzHJfE+1Iu+bbOBvAQDCE8DR7z2f8bxVN3P/Eu6+
+         KjuF4zXZvIpWO03WqryuGYnmp5Sdjh78EPB/PvRhCCgQVvgqbi8HixNEZ0OUbOdGTE4m
+         31Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCXaYpkYXn+owbEC6mFVK6ifcCTJZ51chktBueGatxQq56Ae+EZL/bqyES9t89J2HTPccquUto2M5adeRN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB1dCdZfILs1N4Jxx3TKpiTQm/geikTWBBaqslRA/iK2m2wiex
+	2zo2jL0FQyKK2gXAZ9CBVmMNW6bo7YouvlwP+Cbm4382RjntYPXNob+p6KHGg1Q=
+X-Gm-Gg: ASbGncsLkrZ1UT5XAAmr9i3SELuZzw0wP+RbU6LNjQp6rNWRGx0uu6VYNIiO49bW0K7
+	SjtVEni95SyBXJPngOGxB3/NA93eXFFfxg49cluxycoxOlz4TTwU/u3mBsEAAlT4wFYgueTu22/
+	WTJkhV0oVer2ZHWR8lHoC1eymIbxj7jIPWZSXM4CkRl7sQGwdZcE9vRxoHF4fPzlbbGh0Q3n67R
+	fmx456PJ94X2P0B55u/2svVrSerBHxs2gPoRRWRPmWDkr+S+Y5t9fzjJwozlm4UabFfePzSGjbh
+	Kkm3UDtzlZFEH4PBhGIdLT+D6+0GZfcRvOdEgSsrdh/ccLBOmQMVOfqjNcfKOlGIfpSoED2RJVy
+	8cUchDsBkTZ4=
+X-Google-Smtp-Source: AGHT+IFqI99xnlFy4vifJ2ohpC02lCYpxCA0dEsc1Wso3XCVcaj9+mlk9yGOjVOWn1sqikxx0nYmpQ==
+X-Received: by 2002:a05:6830:6201:b0:727:4356:9f07 with SMTP id 46e09a7af769-72a37ba072amr12944875a34.14.1741828575757;
+        Wed, 12 Mar 2025 18:16:15 -0700 (PDT)
+Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-601db659ad8sm39865eaf.8.2025.03.12.18.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 18:16:15 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Wed, 12 Mar 2025 20:15:40 -0500
+Subject: [PATCH 02/11] iio: adc: ad7606: check for NULL before calling
+ sw_mode_config()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemg200005.china.huawei.com (7.202.181.32)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250312-iio-adc-ad7606-improvements-v1-2-d1ec04847aea@baylibre.com>
+References: <20250312-iio-adc-ad7606-improvements-v1-0-d1ec04847aea@baylibre.com>
+In-Reply-To: <20250312-iio-adc-ad7606-improvements-v1-0-d1ec04847aea@baylibre.com>
+To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Angelo Dureghello <adureghello@baylibre.com>, 
+ Alexandru Ardelean <aardelean@baylibre.com>, 
+ Beniamin Bia <beniamin.bia@analog.com>, 
+ Stefan Popa <stefan.popa@analog.com>, linux-kernel@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1399; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=xZHcGGygz8rLb2jKnacJRSX2NoW/pbcS9hwvQWXE9dI=;
+ b=owEBgwJ8/ZANAwAKAR+K+IyC93wDAcsmYgBn0jHa3XB7NLH6KlhxCimyly37UP6OgW+jgn4ji
+ O1EenmhXI2JAkkEAAEKADMWIQSKc9gqah9QmQfzc4gfiviMgvd8AwUCZ9Ix2hUcZGF2aWRAbGVj
+ aG5vbG9neS5jb20ACgkQH4r4jIL3fAMCcQ/7BfJcfeY3IbXeqBUQzMYAqUbr5OxwuJ6SRo4Y7Ky
+ +n152MA7Xi1730p+i94R8ssYBgq0ZG3ukWTbMiU9EGmaRILr4Ou8fm1tsq1CxGE2OJGYJM27r62
+ VPHpBhc6BTwNbEbn3SSnLuFUEwDNd/COcz9byTJ8kw1EnmktcM/VsynUnL4Yfpv42qtnF9sJkQo
+ x9U1dVTYPWpKqfK1m+ER27D06DNtaz36G0rP9S73i2NE9zJKqoDbO73teee/mohAQa7MOE/jswv
+ GqEkpgHnFUvtOXvcAchjdN/lIztILIKao7QH4NI9Mfzkyh9gnEaj9k5fv0k8tWrYDx56VS7UZ8Y
+ O6YWni56Bus4UVJXm9pTRoUC+6zfie0rjinrukkganorAu11xVt9zYYyt5G0T01A3ULhypT67Bu
+ CvTlkTh+/E4nKQv7pz5wqea+At+SfESe9MoMc7MC9jyMXT552hi/uINWmCWnRMLue7rXEbnouj3
+ kMOpKfymNovEAcaDo9rjfNIU5lvpTEBesf//+ZDwLo5m01By/YsCmal2XtYeVn0TQNvmhBVPwVo
+ aY9QVcpRpMw2DlylcAY+QbGHV/obMrSmEMZYQ8JPScnkpk0aqhuoH0C7+6KtKLPVpcSgIljfeL0
+ VaGfi8BuoRO0gPJr+pitKe/A7x1DrHd7BspgJjMhRDh0=
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-When delete l3s ipvlan:
+Check that the sw_mode_config function pointer is not NULL before
+calling it. Not all buses define this callback, which resulted in a NULL
+pointer dereference.
 
-    ip link del link eth0 ipvlan1 type ipvlan mode l3s
-
-This may cause a null pointer dereference:
-
-    Call trace:
-     ip_rcv_finish+0x48/0xd0
-     ip_rcv+0x5c/0x100
-     __netif_receive_skb_one_core+0x64/0xb0
-     __netif_receive_skb+0x20/0x80
-     process_backlog+0xb4/0x204
-     napi_poll+0xe8/0x294
-     net_rx_action+0xd8/0x22c
-     __do_softirq+0x12c/0x354
-
-This is because l3mdev_l3_rcv() visit dev->l3mdev_ops after
-ipvlan_l3s_unregister() assign the dev->l3mdev_ops to NULL. The process
-like this:
-
-    (CPU1)                     | (CPU2)
-    l3mdev_l3_rcv()            |
-      check dev->priv_flags:   |
-        master = skb->dev;     |
-                               |
-                               | ipvlan_l3s_unregister()
-                               |   set dev->priv_flags
-                               |   dev->l3mdev_ops = NULL;
-                               |
-      visit master->l3mdev_ops |
-
-Add lock for dev->priv_flags and dev->l3mdev_ops is too expensive. Resolve
-this issue by add check for master->l3mdev_ops.
-
-Fixes: c675e06a98a4 ("ipvlan: decouple l3s mode dependencies from other modes")
-Signed-off-by: Wang Liang <wangliang74@huawei.com>
+Fixes: e571c1902116 ("iio: adc: ad7606: move scale_setup as function pointer on chip-info")
+Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- include/net/l3mdev.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/iio/adc/ad7606.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/l3mdev.h b/include/net/l3mdev.h
-index f7fe796e8429..b5af87a35a9f 100644
---- a/include/net/l3mdev.h
-+++ b/include/net/l3mdev.h
-@@ -165,6 +165,7 @@ static inline
- struct sk_buff *l3mdev_l3_rcv(struct sk_buff *skb, u16 proto)
- {
- 	struct net_device *master = NULL;
-+	const struct l3mdev_ops *l3mdev_ops;
+diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+index 631e837171679ad95e71cef2ce6c55c2c756881a..ec444aba25e89ced7b84b723aded3c9dbf2c738b 100644
+--- a/drivers/iio/adc/ad7606.c
++++ b/drivers/iio/adc/ad7606.c
+@@ -1236,9 +1236,11 @@ static int ad7616_sw_mode_setup(struct iio_dev *indio_dev)
+ 	st->write_scale = ad7616_write_scale_sw;
+ 	st->write_os = &ad7616_write_os_sw;
  
- 	if (netif_is_l3_slave(skb->dev))
- 		master = netdev_master_upper_dev_get_rcu(skb->dev);
-@@ -172,8 +173,12 @@ struct sk_buff *l3mdev_l3_rcv(struct sk_buff *skb, u16 proto)
- 		 netif_has_l3_rx_handler(skb->dev))
- 		master = skb->dev;
+-	ret = st->bops->sw_mode_config(indio_dev);
+-	if (ret)
+-		return ret;
++	if (st->bops->sw_mode_config) {
++		ret = st->bops->sw_mode_config(indio_dev);
++		if (ret)
++			return ret;
++	}
  
--	if (master && master->l3mdev_ops->l3mdev_l3_rcv)
--		skb = master->l3mdev_ops->l3mdev_l3_rcv(master, skb, proto);
-+	if (!master)
-+		return skb;
+ 	/* Activate Burst mode and SEQEN MODE */
+ 	return ad7606_write_mask(st, AD7616_CONFIGURATION_REGISTER,
+@@ -1268,6 +1270,9 @@ static int ad7606b_sw_mode_setup(struct iio_dev *indio_dev)
+ 	st->write_scale = ad7606_write_scale_sw;
+ 	st->write_os = &ad7606_write_os_sw;
+ 
++	if (!st->bops->sw_mode_config)
++		return 0;
 +
-+	l3mdev_ops = master->l3mdev_ops;
-+	if (l3mdev_ops && l3mdev_ops->l3mdev_l3_rcv)
-+		skb = l3mdev_ops->l3mdev_l3_rcv(master, skb, proto);
- 
- 	return skb;
+ 	return st->bops->sw_mode_config(indio_dev);
  }
+ 
+
 -- 
-2.34.1
+2.43.0
 
