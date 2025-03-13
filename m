@@ -1,184 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980751FBCAE;
-	Thu, 13 Mar 2025 09:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE26E1EFF95
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741859448; cv=none; b=ebE95CtvNr1p7ttnq68mvmr/oOg8qmVoPKBxGL1X6tFEZFXLcHQHsQf9DMHgwoOMO3ty8jApmaItELMHoGmKeSRZYUhJmcKst4bhE9a7JRDnfkpu/jA1IUuZIAanNHAdDFP9pOER7Gfz8AMkDcXTrOx/hk+P/qHPV4qKXY/ku7U=
+	t=1741859504; cv=none; b=IW/ulZ5HELvsUcFO2GKWUPXk38R7wdFXqFq2BjM6KdKYOYC50jUDsNg36z2pUT+QPBPGvdtKJGbwPcuUiHQCp7wMPR3XAO3dQ0y00xsSxgHfy8yLIl9b79OLaNdk1SIEqb6zBxs1Zx/bFmwUvv/h2CZHMAtBpJFKZs1D4XxMD6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741859448; c=relaxed/simple;
-	bh=kQra7Uax2xjWGj1Bg2SDrSkgORCccpcYXbO386VNAo0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MEPWtoq0fNP974oIMROmktB8YLU2ePDYJ8G0u2pWPXADCKM/L5+I4JxLuLEBtypo7hk6iVSnQDlxgcZb4SdwRBjE8LtxWn5lVhbZRpgqNMv5V2xgBjUooCGbSkWGgusmB87IdSYEsuw1IjFJ5N4AEo+Q9ytlbHrLkQ2zkQIk1KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cUEiE9cd; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741859504; c=relaxed/simple;
+	bh=QgYfWBbjniwPDhzWoyGsOU37LL+wBsYx4FA84RaPSfo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=scwaAuOfgbVbXzG4AzyJNDi6F4A05rk5UWDovtTc1PhudIOloA4bhGA02V5ZB+w/HtV/3CbLFdf6kgClcOMuCNV3qIyTDduhI16ySzAx1TqtL8Mx9wb9bN6c6WS5765mvzpj6x5A63icSAVqMbfoGtNMqYIo7c28DgCFbfnF7Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LtRo/dIf; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cUEiE9cd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741859447; x=1773395447;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=kQra7Uax2xjWGj1Bg2SDrSkgORCccpcYXbO386VNAo0=;
-  b=cUEiE9cdXDy9WFli5Hqejedb27tKGjliyF/oCVPb5bR62/QSlz+HFtrc
-   4eGqm8ikp/0blpHfw46kZOq9O4l+M+8pSDjLPgthtoM2tC5o8oDkqQNZB
-   1dcMybxrr0MrCyIcHQtQLQFLLDBaDhQtrbmZgJgyOwjxBVw4s9RwtYPE8
-   DuLwzXVCB6KaO2sfkahkyqg1GF4w6udgohPI9THH//4YHVUoZuGVhZgdV
-   9Ly6s5fNrKOllUSuEJux6M/KjRQ3ofx8ZpJqm4fnJCobAC22fhGRwRrpP
-   EAaTU6jxfw84o1xaOFst355WDlEhETTKbQXfwBVjaXL3zkzQqgZ+uGD9f
-   Q==;
-X-CSE-ConnectionGUID: 72gRccuqTD+Eajwciae+vg==
-X-CSE-MsgGUID: jv3OWKjDSvOF6kei3ex+tw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="54348230"
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="54348230"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:50:46 -0700
-X-CSE-ConnectionGUID: csq7WghwQo6RD1sHs7pLvw==
-X-CSE-MsgGUID: xjhmYOwJRd67+TeGwsLPVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="120894564"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.195])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:50:41 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Mar 2025 11:50:37 +0200 (EET)
-To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v5 1/6] PCI/IOV: Restore VF resizable BAR state after
- reset
-In-Reply-To: <d6e026ad-4dd4-2e03-6f8b-a10980fa0ce7@linux.intel.com>
-Message-ID: <f99f1533-2dd7-7ba8-3a5c-f68e45b1e8b6@linux.intel.com>
-References: <20250312225949.969716-1-michal.winiarski@intel.com> <20250312225949.969716-2-michal.winiarski@intel.com> <d6e026ad-4dd4-2e03-6f8b-a10980fa0ce7@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LtRo/dIf"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-549a4a4400aso857422e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 02:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741859500; x=1742464300; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QgYfWBbjniwPDhzWoyGsOU37LL+wBsYx4FA84RaPSfo=;
+        b=LtRo/dIfsWYMJQT5ln6pwRHdVIumv/esAbki/zje09+sexV5+Zd+0X5G+KDC54LkKz
+         9DdB7GPwGQHccIIITH1Y3aTJo4a3j8Q0Q94K8YVWvJXC14MFJej9k1eub0mI+S1hjRzO
+         1xUoazG10QyOd38pBrwwmL3gH8WPBlCij3JhHU0yqVebBSBBPnTnOsSViO7EQJ+0Eu+P
+         xb3AOHDuTMQBWRNlT2HkVWh7qy1vEI+Nc5KQBbAHF4CZ7S5zZIXlZKHR2vs4zU+shi92
+         RK4gvf9Q+lBwFRcDiyt7AEhzwESD1t/vN5L1izWilDTgV5whON7PS+7svi1AHew8wGzl
+         HJ+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741859500; x=1742464300;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QgYfWBbjniwPDhzWoyGsOU37LL+wBsYx4FA84RaPSfo=;
+        b=B1nNvJFPq4gQHh98G1PGjxJyudGpHtY2znYNW9sIVT84e/MmZepD0vAnlGYcSXzoim
+         HjPitasuQqA0Jbc0l9/ZnHkinKwRjKQsaqSdhsx/xu5VBNq0VksNcej3KEu8CoSHbHLM
+         sbOX+FyZWE8tcoM66IsjR1frtkgw+suRVw6+OSpc+FP3ywR/9OiyfCMGubXTy+hJ3TYf
+         plnZKDOlUZW0LBV/4/yAHVsBBy5WKiaRrgVXU3LoEXc4cQCtyi976cp7aq4vyqSR54AO
+         cULtUFWPMZdWtBp4s1EIU9SESW7BaBHybt6NvXgJsY7EG7R2mOMk/kjqWdsaG9YjvsK0
+         GOQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVL5P+Ro7KXWWcM6I1TNT6Es3ArKZhBS+GuJ+aqSzWCeYwg5VWo0ILQB6nPxMcyp2Wu0iHimMlGw+hExG8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwBZr1r0yhCv74GVvlhmNfx5lh1NLibMfPgQdMZiIYN0kUpZAB
+	BZ57COjivWTsqkzAdmBcUsMME36Z3cf4pNQOsikKDcAMohN/SO+h0f9cpzF7yPV13tUBqOl8Gub
+	ZnDecTDiqI1qodrtmpbAxnlInHL+LsLWD0Zuq7g==
+X-Gm-Gg: ASbGncs6nbuXXBIqaQr9qmMCYlO9P12+DSSJHeHewsRg1aXBdgr6eWiDrnVyrxG2zdk
+	4ChFG16cEo1h8fDgO02TtuF0lAQB0LIIiRhfG8OW2Aap8thr7Z+KlbzySz5I4fHj/482KN6JPqi
+	fxMqSF8V9QeJcUrORoKPGDNVxAWTNF1yg=
+X-Google-Smtp-Source: AGHT+IG3yO5UKX7BvX8TOnQpocO31aqeIzqAIGkMVMg/xWmE6h9YKu7EryZASHPYLGHFC2RM9d53W/G30tx+Snpz0hA=
+X-Received: by 2002:a19:f810:0:b0:549:91bc:67a9 with SMTP id
+ 2adb3069b0e04-549abaacaaamr3300696e87.9.1741859499720; Thu, 13 Mar 2025
+ 02:51:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-873385725-1741859437=:1742"
+References: <20250313051953.4064532-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20250313051953.4064532-1-baolu.lu@linux.intel.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Thu, 13 Mar 2025 17:51:28 +0800
+X-Gm-Features: AQ5f1Jqrdmo7VWV6PyLD1e4rhSBwqyKwJOXS2K4j0MErxoy_ssJnjuYFCbVU2qM
+Message-ID: <CABQgh9HKaDyDQXGB5ZEGg5q4a9ak_8OB9XQ+TpUNcZd_ZMeCAQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/8] iommu: Remove IOMMU_DEV_FEAT_SVA/_IOPF
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
+	Fenghua Yu <fenghuay@nvidia.com>, Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi, Baolu
 
---8323328-873385725-1741859437=:1742
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Thu, 13 Mar 2025 at 13:19, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>
+> The new method for driver fault reporting support relies on the domain
+> to specify a iopf_handler. The driver should detect this and setup the
+> HW when fault capable domains are attached.
+>
+> Move SMMUv3 to use this method and have VT-D validate support during
+> attach so that all three fault capable drivers have a no-op FEAT_SVA and
+> _IOPF. Then remove them.
+>
+> This was initiated by Jason. I'm following up to remove FEAT_IOPF and
+> further clean up.
+>
+> The whole series is also available at github:
+> https://github.com/LuBaolu/intel-iommu/commits/iommu_no_feat-v4
 
-On Thu, 13 Mar 2025, Ilpo J=C3=A4rvinen wrote:
+I got an issue on this branch.
 
-> On Wed, 12 Mar 2025, Micha=C5=82 Winiarski wrote:
->=20
-> > Similar to regular resizable BAR, VF BAR can also be resized, e.g. by
-> > the system firmware or the PCI subsystem itself.
-> >=20
-> > Add the capability ID and restore it as a part of IOV state.
-> >=20
-> > See PCIe r4.0, sec 9.3.7.4.
-> >=20
-> > Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
-> > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > ---
-> >  drivers/pci/iov.c             | 29 ++++++++++++++++++++++++++++-
-> >  include/uapi/linux/pci_regs.h |  1 +
-> >  2 files changed, 29 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > index 121540f57d4bf..eb4d33eacacb8 100644
-> > --- a/drivers/pci/iov.c
-> > +++ b/drivers/pci/iov.c
-> > @@ -7,6 +7,7 @@
-> >   * Copyright (C) 2009 Intel Corporation, Yu Zhao <yu.zhao@intel.com>
-> >   */
-> > =20
-> > +#include <linux/bitfield.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/export.h>
-> > @@ -868,6 +869,30 @@ static void sriov_release(struct pci_dev *dev)
-> >  =09dev->sriov =3D NULL;
-> >  }
-> > =20
-> > +static void sriov_restore_vf_rebar_state(struct pci_dev *dev)
-> > +{
-> > +=09unsigned int pos, nbars, i;
-> > +=09u32 ctrl;
-> > +
-> > +=09pos =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_VF_REBAR);
-> > +=09if (!pos)
-> > +=09=09return;
->=20
-> FYI, the commit f7c9bb759161 ("PCI: Cache offset of Resizable BAR=20
-> capability") which is currently in pci/enumeration makes this simpler.
+Linux 6.14-rc4 + iommu_no_feat-v2
+drivers/pci/quirks.c
+quirk_huawei_pcie_sva will set dma-can-stall first
+arm_smmu_probe_device will check dma-can-stall and set stall_enabled
+accordingly.
 
-I'm sorry, I realized it's not the same capability but you should do=20
-similar thing for VF rebar capability as caching the value of=20
-pci_find_ext_capability() avoids some slowness during save/restore.
+This branch
+arm_smmu_probe_device happens first, when dma-can-stall = 0, so
+stall_enabled =0.
+Then drivers/pci/quirks.c: quirk_xxx happens
 
---=20
- i.
+Still in checking.
 
-> > +=09pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
-> > +=09nbars =3D FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
-> > +
-> > +=09for (i =3D 0; i < nbars; i++, pos +=3D 8) {
-> > +=09=09int bar_idx, size;
-> > +
-> > +=09=09pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
-> > +=09=09bar_idx =3D FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, ctrl);
-> > +=09=09size =3D pci_rebar_bytes_to_size(dev->sriov->barsz[bar_idx]);
-> > +=09=09ctrl &=3D ~PCI_REBAR_CTRL_BAR_SIZE;
-> > +=09=09ctrl |=3D FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-> > +=09=09pci_write_config_dword(dev, pos + PCI_REBAR_CTRL, ctrl);
-> > +=09}
-> > +}
-> > +
-> >  static void sriov_restore_state(struct pci_dev *dev)
-> >  {
-> >  =09int i;
-> > @@ -1027,8 +1052,10 @@ resource_size_t pci_sriov_resource_alignment(str=
-uct pci_dev *dev, int resno)
-> >   */
-> >  void pci_restore_iov_state(struct pci_dev *dev)
-> >  {
-> > -=09if (dev->is_physfn)
-> > +=09if (dev->is_physfn) {
-> > +=09=09sriov_restore_vf_rebar_state(dev);
-> >  =09=09sriov_restore_state(dev);
-> > +=09}
-> >  }
-> > =20
-> >  /**
-> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_reg=
-s.h
-> > index 3c2558b98d225..aadd483c47d6f 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -744,6 +744,7 @@
-> >  #define PCI_EXT_CAP_ID_L1SS=090x1E=09/* L1 PM Substates */
-> >  #define PCI_EXT_CAP_ID_PTM=090x1F=09/* Precision Time Measurement */
-> >  #define PCI_EXT_CAP_ID_DVSEC=090x23=09/* Designated Vendor-Specific */
-> > +#define PCI_EXT_CAP_ID_VF_REBAR 0x24=09/* VF Resizable BAR */
-> >  #define PCI_EXT_CAP_ID_DLF=090x25=09/* Data Link Feature */
-> >  #define PCI_EXT_CAP_ID_PL_16GT=090x26=09/* Physical Layer 16.0 GT/s */
-> >  #define PCI_EXT_CAP_ID_NPEM=090x29=09/* Native PCIe Enclosure Manageme=
-nt */
-> >=20
->=20
->=20
---8323328-873385725-1741859437=:1742--
+And this branch does not need these two patches, right?
+c7b1397bef3c iommu/arm-smmu-v3: Implement arm_smmu_get_msi_mapping_domain
+5cd34634a73e iommu/dma: Support MSIs through nested domains
+
+Thanks
