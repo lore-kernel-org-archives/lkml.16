@@ -1,121 +1,79 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955D61FDA86
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5C91FECD7;
+	Thu, 13 Mar 2025 07:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741850537; cv=none; b=obBYPLM2yZJUpz7DFmxGSUoR94OXaEMkcAPd50p8pRuno8B5jGotdz/UZzVqRY5wgwIuzzOTOaKeqEMZmxufp4YKfzuqj+teV7vKe3iEtI2ytgdVKQw2Td/1/bo/pCR82eAIHa+x6UFEfCSmC/dvQ7WbMyE4E/16d8Ep6+Uwt3A=
+	t=1741850541; cv=none; b=a6IdwFRLPyKFRu76eT3vfl5OxUUVLvq3jLOho2NyFHGfU5kfoaStNIxY78qL19Pio5d58n965s+XFW4sJblkLiu3rGmrJo2ZvoVIIVwwW/FK6VilGPbPp+fMNlwIhEY/a4q6ku8JpL6dYnjiDrceE+XAAHHrSgcP/Wz0ZX+MaJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741850537; c=relaxed/simple;
-	bh=AE5A2NiuhhYdM1sWAknuDe5X1OFs+sj0hwKEzFeDmoU=;
-	h=Mime-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qr46QaKZDScUZVfLxYlRC10xsa4f/detuqhIA30zV9CAs8fsSAOYxzqtTrp+FMjNYFM6XMAVy7P+DK1x+t2jSIm995zZrVbJ8GUwy8/oM/czpytriVuxqBLiXAJ7dZ/UYBoBabdKw1b89MdZ7zEUBWsFq2eppkDacE0fJIlgJPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hZH9EzLM; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hZH9EzLM"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaeec07b705so100378666b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 00:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1741850534; x=1742455334; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vpEzXfsqBkoX4MatYvv/s6fQuJuNm6IXmUv71NmaMxI=;
-        b=hZH9EzLMG1zuEgH0KFLAGmFJ/cotpjsWT/Ssy91D2uwi8hwyAefuARJ+0HjrcRbniW
-         ZOAT+wR15Akbeo6yh7jdBxYrVM45yHtAZjd4/B5E7luifn/p8EXJu5WuPBDB/t4Jxp3v
-         4zIiU9KydcW1s1x75BvASN8Herg3uRixS9DMQB87IjcxEGy1nRXYbqetZdyORHDQp9Zf
-         eqdpoUqiaQqYOKgIDY4EReUgFQT+5Iqih6GgbCySbjUeJK1OcO7fCbDUGLnJpLgMr7Bd
-         PyTtFqI7XS2ozavRf//w0qW6bZEfFwjfOOhBV9qJSuYZgNPPvz3i008m1BjPBrLmaI3e
-         hsmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741850534; x=1742455334;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vpEzXfsqBkoX4MatYvv/s6fQuJuNm6IXmUv71NmaMxI=;
-        b=Dlr3qChzUoO+lxTcwzhAW8HqMbFW7/noibd+/XawDFgq7yq/oZYCH3Chu+g01opRb8
-         8MCGm67EY0lnG61E/mPcnTOWdSCaOlofRZ73a9MBCgGsJcKDMziUHSnjdLUPOqnO4lYa
-         41x1jlJuK9tv8C+OILKC/moPbyxQk75ozDZhA1P8zi1+hFIeqKA7x4F12FQIOP0NY4gV
-         Y4vDXwS46lOL0A5v1c55aXVWddSFByYdxIc+Q/OfIrRHnW+3FE3GT4P68fJ2siJgxgYB
-         j+b3PflmklDPJyLJ4CwLTx7RED6ZcHAIy/k0sX9cjL0ZJdzc/jmFDsbD7VOtonLNYK4O
-         OHHQ==
-X-Gm-Message-State: AOJu0YzR7zAHMsSRpxMd5CDg4LlyHRxl4Q1rUGGGlK49k8Gc6dlnaENJ
-	lgvb6wIXwT91ZBOYvi0m2IZxnnLkMHP0JXS6gLtB9qEGBGIPvGLNwiDNSWztHH4S4R47tnoIAtI
-	F1YbHKhn0GzWbNwbCvdTb8fVImgHFp6ozJOI7
-X-Gm-Gg: ASbGncvAPjLiD/+XVs5PJE8rDImV4abikgNHgvk+lyMNRPzhMVwFdjRm2YECjs99de3
-	losuC44EKLlowqOMruncfJWyGDfuZU6SyCim3jQRSkdROXzvb2WMtd7zNrvvNwoRFqDqONgvz3E
-	ZCj3sx+yhB9WhcuK4P4jpHXZ6FzKE=
-X-Google-Smtp-Source: AGHT+IHhlNrNpiMA7L0JPZsP3KNrZZ1fOZ0mF1oPxXrCVJMx5bfO95h7bBq14Q+DG2+I0K7s3DVDmcJBTCJXGgDAuEw=
-X-Received: by 2002:a17:907:1c15:b0:abf:7406:a5c3 with SMTP id
- a640c23a62f3a-ac2b9ee8733mr1323584666b.51.1741850534007; Thu, 13 Mar 2025
- 00:22:14 -0700 (PDT)
-Received: from 44278815321 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 13 Mar 2025 00:22:13 -0700
+	s=arc-20240116; t=1741850541; c=relaxed/simple;
+	bh=MqzMTHnTEu1FeISjKQCA39NUQveXJOzahMu81/JGy6Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g1mKAY3F9jGIt3P7fDG0rAMBaXYSgocg5Wj4qbtV0IlWhkn/bLd3pULn9YWlQDLrzTsse85ptbbfXe6zT2rpfjp3zaieEoZwbLRe7PMY71WyD5C7gTA1vPZuat8xvKI7ghDf2+FehzEt/2X5HlCM7Y8sjPKpeK08faAtiC32kCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZCzTc0WfSzyRrT;
+	Thu, 13 Mar 2025 15:22:12 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id C239F1402CC;
+	Thu, 13 Mar 2025 15:22:17 +0800 (CST)
+Received: from huawei.com (10.50.165.33) by kwepemg500006.china.huawei.com
+ (7.202.181.43) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Mar
+ 2025 15:22:17 +0800
+From: Longfang Liu <liulongfang@huawei.com>
+To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
+Subject: [PATCH v5 4/5] hisi_acc_vfio_pci: bugfix the problem of uninstalling driver
+Date: Thu, 13 Mar 2025 15:20:09 +0800
+Message-ID: <20250313072010.57199-5-liulongfang@huawei.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20250313072010.57199-1-liulongfang@huawei.com>
+References: <20250313072010.57199-1-liulongfang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250313072030.1032893-1-ziqianlu@bytedance.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250313072030.1032893-1-ziqianlu@bytedance.com>
-From: Aaron Lu <ziqianlu@bytedance.com>
-X-Original-From: Aaron Lu <ziqianlu@bytedance.com>
-Date: Thu, 13 Mar 2025 00:22:13 -0700
-X-Gm-Features: AQ5f1JqvOOWc7Eu5kkoNljS6MLk_wH52rWSn_S_LjFzatT5ufD9JuvWltz5Q9LA
-Message-ID: <CANCG0Gf2ZbnffwNVoBSu_+y4sq0MoMYPwwgsnfg53Pf2enwJZw@mail.gmail.com>
-Subject: [RFC PATCH 7/7] sched/fair: Make sure cfs_rq has enough
- runtime_remaining on unthrottle path
-To: Valentin Schneider <vschneid@redhat.com>, Ben Segall <bsegall@google.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mel Gorman <mgorman@suse.de>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Chuyi Zhou <zhouchuyi@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-It's possible unthrottle_cfs_rq() is called with !runtime_remaining
-due to things like user changed quota setting(see tg_set_cfs_bandwidth())
-or async unthrottled us with a positive runtime_remaining but other still
-running entities consumed those runtime before we reach there.
+In a live migration scenario. If the number of VFs at the
+destination is greater than the source, the recovery operation
+will fail and qemu will not be able to complete the process and
+exit after shutting down the device FD.
 
-Anyway, we can't unthrottle this cfs_rq without any runtime remaining
-because task enqueue during unthrottle can immediately trigger a throttle
-by check_enqueue_throttle(), which should never happen.
+This will cause the driver to be unable to be unloaded normally due
+to abnormal reference counting of the live migration driver caused
+by the abnormal closing operation of fd.
 
-Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+Fixes: b0eed085903e ("hisi_acc_vfio_pci: Add support for VFIO live migration")
+Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+Reviewed-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
 ---
- kernel/sched/fair.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index be96f7d32998c..d646451d617c1 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6058,6 +6058,19 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
- 	struct sched_entity *se = cfs_rq->tg->se[cpu_of(rq)];
-
-+	/*
-+	 * It's possible we are called with !runtime_remaining due to things
-+	 * like user changed quota setting(see tg_set_cfs_bandwidth()) or async
-+	 * unthrottled us with a positive runtime_remaining but other still
-+	 * running entities consumed those runtime before we reach here.
-+	 *
-+	 * Anyway, we can't unthrottle this cfs_rq without any runtime remaining
-+	 * because any enqueue below will immediately trigger a throttle, which
-+	 * is not supposed to happen on unthrottle path.
-+	 */
-+	if (cfs_rq->runtime_enabled && !cfs_rq->runtime_remaining)
-+		return;
-+
- 	cfs_rq->throttled = 0;
-
- 	update_rq_clock(rq);
+diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+index d96446f499ed..cadc82419dca 100644
+--- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
++++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+@@ -1508,6 +1508,7 @@ static void hisi_acc_vfio_pci_close_device(struct vfio_device *core_vdev)
+ 	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
+ 	struct hisi_qm *vf_qm = &hisi_acc_vdev->vf_qm;
+ 
++	hisi_acc_vf_disable_fds(hisi_acc_vdev);
+ 	mutex_lock(&hisi_acc_vdev->open_mutex);
+ 	hisi_acc_vdev->dev_opened = false;
+ 	iounmap(vf_qm->io_base);
 -- 
-2.39.5
+2.24.0
+
