@@ -1,149 +1,167 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60751266F1C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954061EF09A
 	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866055; cv=none; b=kqK+VaHYAG1E4DGF1VWb+9pZJR5Uvn3KzRXH4/0ddcncgo/RoiX27/kz9U5GWBgz+7wCKiUSIp+4e/207TcOwOJzCl6YRKirEuPmlNo/l4VOTS7Z1p4OUQZL7gvtf9zlphio65vbMgypKjtpJPIVGnfzLjiZYQEkskH0C7shWUY=
+	t=1741866055; cv=none; b=p1rXx1MhpkHD04endZDCVfDyQJbQv94byt+Nmzk/V5YItIA4rQVQppJSeAun8c3K2qyMSw0slX76fqc8+QssspPLq/Op4Vl/F3ZgD9VkdHIpgFA6VSe3ZP6bTTAryAPv5k0hNxaUV7Vsg65c7FFb0FO/seDol7NrGhBJGzgVcUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741866055; c=relaxed/simple;
-	bh=kC8jbRyoGWHcr5F6bMdpdYEPmSroHXkD/t16CewXuhA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WnssjIZMWPI1gPAminl2etIkOXM4IbwWCk6nN1Sio1l6dZRicDNAvP0JJI4wkNyvzEYZHhpOcZVghHSlaS3hF1KHe1AIid2mRxQNgefx1pvTv6M/SZaanBO0WL0Hco8gBGcoi+Z8ao42+MWNdyP3RwcknDzXOjiWiANy/+88VPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HmXvMXzU; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	bh=WxD7H79bfqHbk248m4tbUoiXB5nNdhMAZv90fFI+hdA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=r6chhIw+P1I5/RVqEDOzaDzNfADmmghd5BFls+oFBiNWmQuSSBMsYKgpU34DRxFJI1qxlBdrpSEbqaPmGejwSGG7w56RJw5cQKKPEbQ9N3AQURPJ15IaYmT9d584yfWRJ2ItY1w7KxytCR9GDr1XRyCPT0aVZp+1S58eyvMvme8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ntmROK0/; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HmXvMXzU"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D7CKtd019923
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:40:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FDJhVDK2s1wMdCivo+PnGOHqGOzFfulqMDQxzsMg+uQ=; b=HmXvMXzUoTP8Q8hI
-	I3LttVypEv90ARIUfTW+7FEwKadDufSkIiWfgbb/CQwlr1WPnWZPczd92TM1LSIJ
-	NRyLQZxKmth2DPuaCpl4bCWFN/LRvbjystJkWPKpYwpC1MYL9UHnw3uXy+IOzcvh
-	11myRbTGdnhRs9kzgNl58CdZC7o7DNbELWlEbQMUFiPtzXB0xFNo/nJqpkqOGVcR
-	QsaXNNPXbTas55XxnNlXuWnlTqk1Ox92eMJjj6h4Xq82VE8KeL2uK2NlHRyBnLtR
-	Asl+hJ3aF5S2twK2tlEk/cW3noS8QR0P+ceF8rEKVX6fb7F4VZu/GBweQhBXYw0/
-	90/HzA==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45bts0grc8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:40:52 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3011cfa31f6so1631428a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:40:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ntmROK0/"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43bc97e6360so4349285e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:40:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741866052; x=1742470852; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NDWqfNf0Ci0kqTl0GDSnxlhwnncAHfDpHJ3DMUVydnk=;
+        b=ntmROK0/HVlp2aO20HkkbkVFMUgPjShSAVxbYMONiFnTkaWIJLnJjXLgSYr2Hhhz0M
+         wtW+N8Sebhk3PKzsU+n6RVvZfLL0wTx8HvfqR3IU+/8pa0qgBZoRq99n5RXOi/fULnlO
+         Lu56uBQQxOqCzfu8EV0UZvUpVfMMH8t/Z1fmBJHzAqHO9UWMZEPLthE8AUvrTkvXiPvy
+         YpObOAiC7n3Xh5wktjVmOijX6uTE8zLh5+HoOQcCCafZAaEHGm/ddB8xRji/Zdhr5K3q
+         kfiLaE47KxhKRbsWY+HiZlc1nPe/IFJAT4aLCvp2C75UVor0hdWDb20YoPRvH69dvNJG
+         gaag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741866051; x=1742470851;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FDJhVDK2s1wMdCivo+PnGOHqGOzFfulqMDQxzsMg+uQ=;
-        b=kKQrHVU2zLxejickGT5kHliVhbfZXmvRNL8T3KlGZhG2GTuOMJUnfahlXLWmqaj8cU
-         7Eyu5CYffYd6xlR70r7nVwhWtoK3Bg6gdBkPlChvWOE5S9NaTpoD0w0vJ+2aSx7A0H0d
-         REjKAnHsNIS9t655tJU6T+NNx5o9EvVbdkQSf41WG8jjSFgZT0yJ/FBf4Up/Krho7R9Z
-         pxU3Ao407p7L0NPGcilD2f+szyDMLMVcPcUytCwptlGRISS+7BLn+A4pQG2g1NPNOCDm
-         6jx9vbBZ5RLckoYQF3KhWpnb4muB2XisNMH+LBAx3f6eyHFnmZ67uMmwqm6mZoo0fbr9
-         KFQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ9Ra4SZ04HA/qrUD6NgNx2vwGfvcq00OKntMI39OavomTuXmWdlp/0NcqpOE4ofFRJNpNJUSXio/LkJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEK9d6/OkO4kBShZyRRekoU8qVmWCbgMJVGm8rC8GmajOrPdiv
-	W5mQKATjeWSPxBoTdWmsx5SUNQPsnPyKSfwFy5mlHmEAjfSfaIR7HGZ7Gx5QF6AfH0xi4zH/1fb
-	KMRqe7dzDTKvaWYUFoNqspkrT4yzXnJ6MjEcIO+CKgNhzYGJjrZbEjlh/wX9imMg=
-X-Gm-Gg: ASbGncuK65eUrFxx+8b9w1UIhrYuCwR3+03jT/A6Vd4XSrbpwp9bhHUrHbankOzOFX0
-	J1D9fHa+/W4uDGnUUJ/vz0EBbuJbKginGXjrLacK6Io5w6jeWRJ/fGNUHYBpEtsXF1KVAQusrZ4
-	eCg2FwPbBqSW0E6Avv/BzSwOl+lJbTBWJzwE4eBSxz7Jpd6rqIiC4ZkS5/33K0jJg1G9mjlFX6u
-	fVo9k33YkyrrMKzOBUvocyU7fgc2LVaP2xvh02aIZSav2ptloDnRaPoAE0pvJXOEMBZZi54BzlC
-	KkJ+DmxLF4p44JgR/rPg0B1tV2ggqXZJfh1oTrjntxVZS65L/YI=
-X-Received: by 2002:a05:6a21:a8a:b0:1f5:535c:82d6 with SMTP id adf61e73a8af0-1f5535c862cmr38690645637.35.1741866050743;
-        Thu, 13 Mar 2025 04:40:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFX0osURi3EPGsBhGonuGqBQDJB5s6R9Ee/fm3sZrU83VNV9iwXDBptbFr6kXXFDh+i9IOGIQ==
-X-Received: by 2002:a05:6a21:a8a:b0:1f5:535c:82d6 with SMTP id adf61e73a8af0-1f5535c862cmr38690595637.35.1741866050366;
-        Thu, 13 Mar 2025 04:40:50 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea964e3sm1063219a12.76.2025.03.13.04.40.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 04:40:50 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Thu, 13 Mar 2025 17:10:08 +0530
-Subject: [PATCH v2 01/10] PCI: update current bus speed as part of
- pci_bus_add_devices()
+        d=1e100.net; s=20230601; t=1741866052; x=1742470852;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NDWqfNf0Ci0kqTl0GDSnxlhwnncAHfDpHJ3DMUVydnk=;
+        b=L3vd3H68gFOts9vbBEZ3Pt6NZHWOeVUa86rO65dKcEKqAVJW0m/O4Jp40W7/8faEJR
+         OhIrkTxpoT91AJrQZFrkaQvjIQKj9V0o5FDg/oPcAmxWjlNYRORZS+b4oAmMK5rRdMp+
+         cd/pyFP73AGRmVveFv2GhcRFWgDJFTAnm5ttpBT+vQYI9N0rhIfeWeLYsKcyOuz+LeTm
+         ctuRs22wN8z3IIoDvYNSpzb+zCkspONOB/toRPDZPZ2bY1zcFkSiYDBvxvIbgE7tcwS4
+         V3VcvtL2FN1fa7Nq2eY1qbRiKOhMy1TbVcGO+QVkeW8nSWAukKdqktnF4j/UzdESzOrh
+         i1pg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgZDWcOhrbhfdl5/YFfeCoVWMCqulVyPvjvzaSQcU7K2S6JWn5Nng9YuX9ssMsM8oJKgIvEyRHCtnIWgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmlcGbTk7qx4L5JwfI2pY7dPjdr2E7jHJtjUM/545vNSPb4lrM
+	cZDmI//vN079HEEaUmiMMfs7vvUIDd0suU4uxs0UEnJyo9Sg5mDfY7MhMOWW2iWred6aZb9gaxR
+	XUtwQjLxcXwbh0GJ9DA==
+X-Google-Smtp-Source: AGHT+IFKKo1u7bMMw5ZxGIjRt9SaBMTtCTn1z/fHmkTMPIsujAZAFsyBOCACwf96nv+XqVJo4hWsVe0aFo0TzDK4
+X-Received: from wmbgz9-n2.prod.google.com ([2002:a05:600c:8889:20b0:43c:fcbd:f2eb])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4f4f:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-43d0d063a25mr31305935e9.20.1741866052022;
+ Thu, 13 Mar 2025 04:40:52 -0700 (PDT)
+Date: Thu, 13 Mar 2025 11:40:37 +0000
+In-Reply-To: <20250313114038.1502357-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-mhi_bw_up-v2-1-869ca32170bf@oss.qualcomm.com>
-References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
-In-Reply-To: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741866038; l=865;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=kC8jbRyoGWHcr5F6bMdpdYEPmSroHXkD/t16CewXuhA=;
- b=ahY6Y0A168tVls7xeIA9KMyOy4DdXUlaSCT4aLtCvCoOwCqtVuPLJB4oihUbL9V6lKzs0jMIr
- YbHNVpW7tlaAw2nG6V5+CebfmNfg9kEZrPSIm76H9fmD5LPSKow5ily
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-ORIG-GUID: 9qMG6Ow24J5tTN3SYd0vJ_HWUVJRkhGM
-X-Authority-Analysis: v=2.4 cv=DNSP4zNb c=1 sm=1 tr=0 ts=67d2c444 cx=c_pps a=RP+M6JBNLl+fLTcSJhASfg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=u3yxjsl3ZikD_R2semEA:9 a=QEXdDO2ut3YA:10
- a=iS9zxrgQBfv6-_F4QbHw:22
-X-Proofpoint-GUID: 9qMG6Ow24J5tTN3SYd0vJ_HWUVJRkhGM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-13_05,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 phishscore=0 malwarescore=0 mlxlogscore=982
- priorityscore=1501 mlxscore=0 spamscore=0 bulkscore=0 impostorscore=0
- suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503130092
+Mime-Version: 1.0
+References: <20250313114038.1502357-1-vdonnefort@google.com>
+X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+Message-ID: <20250313114038.1502357-3-vdonnefort@google.com>
+Subject: [PATCH v4 2/3] KVM: arm64: Distinct pKVM teardown memcache for stage-2
+From: Vincent Donnefort <vdonnefort@google.com>
+To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
+	will@kernel.org
+Cc: qperret@google.com, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-If the link is not up till the pwrctl drivers enable power to endpoints
-then cur_bus_speed will not be updated with correct speed.
+In order to account for memory dedicated to the stage-2 page-tables, use
+a separated memcache when tearing down the VM. Meanwhile rename
+reclaim_guest_pages to reflect the fact it only reclaim page-table
+pages.
 
-As part of rescan, pci_bus_add_devices() will be called and as part of
-it update the link bus speed.
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
----
- drivers/pci/bus.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 98910bc0fcc4..994879071d4c 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -432,6 +432,9 @@ void pci_bus_add_devices(const struct pci_bus *bus)
- 	struct pci_dev *dev;
- 	struct pci_bus *child;
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 12691ae23d4c..ace3969e8106 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -246,6 +246,7 @@ typedef unsigned int pkvm_handle_t;
+ struct kvm_protected_vm {
+ 	pkvm_handle_t handle;
+ 	struct kvm_hyp_memcache teardown_mc;
++	struct kvm_hyp_memcache stage2_teardown_mc;
+ 	bool enabled;
+ };
  
-+	if (bus->self)
-+		pcie_update_link_speed((struct pci_bus *)bus);
-+
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		/* Skip already-added devices */
- 		if (pci_dev_is_added(dev))
-
+diff --git a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
+index 978f38c386ee..ea0a704da9b8 100644
+--- a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
++++ b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
+@@ -56,7 +56,7 @@ void handle_host_mem_abort(struct kvm_cpu_context *host_ctxt);
+ 
+ int hyp_pin_shared_mem(void *from, void *to);
+ void hyp_unpin_shared_mem(void *from, void *to);
+-void reclaim_guest_pages(struct pkvm_hyp_vm *vm, struct kvm_hyp_memcache *mc);
++void reclaim_pgtable_pages(struct pkvm_hyp_vm *vm, struct kvm_hyp_memcache *mc);
+ int refill_memcache(struct kvm_hyp_memcache *mc, unsigned long min_pages,
+ 		    struct kvm_hyp_memcache *host_mc);
+ 
+diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+index 19c3c631708c..f34f11c720d7 100644
+--- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
++++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+@@ -266,7 +266,7 @@ int kvm_guest_prepare_stage2(struct pkvm_hyp_vm *vm, void *pgd)
+ 	return 0;
+ }
+ 
+-void reclaim_guest_pages(struct pkvm_hyp_vm *vm, struct kvm_hyp_memcache *mc)
++void reclaim_pgtable_pages(struct pkvm_hyp_vm *vm, struct kvm_hyp_memcache *mc)
+ {
+ 	struct hyp_page *page;
+ 	void *addr;
+diff --git a/arch/arm64/kvm/hyp/nvhe/pkvm.c b/arch/arm64/kvm/hyp/nvhe/pkvm.c
+index 3927fe52a3dd..ac85bc51b8d3 100644
+--- a/arch/arm64/kvm/hyp/nvhe/pkvm.c
++++ b/arch/arm64/kvm/hyp/nvhe/pkvm.c
+@@ -678,7 +678,7 @@ teardown_donated_memory(struct kvm_hyp_memcache *mc, void *addr, size_t size)
+ 
+ int __pkvm_teardown_vm(pkvm_handle_t handle)
+ {
+-	struct kvm_hyp_memcache *mc;
++	struct kvm_hyp_memcache *mc, *stage2_mc;
+ 	struct pkvm_hyp_vm *hyp_vm;
+ 	struct kvm *host_kvm;
+ 	unsigned int idx;
+@@ -706,10 +706,10 @@ int __pkvm_teardown_vm(pkvm_handle_t handle)
+ 
+ 	/* Reclaim guest pages (including page-table pages) */
+ 	mc = &host_kvm->arch.pkvm.teardown_mc;
+-	reclaim_guest_pages(hyp_vm, mc);
++	stage2_mc = &host_kvm->arch.pkvm.stage2_teardown_mc;
++	reclaim_pgtable_pages(hyp_vm, stage2_mc);
+ 	unpin_host_vcpus(hyp_vm->vcpus, hyp_vm->nr_vcpus);
+ 
+-	/* Push the metadata pages to the teardown memcache */
+ 	for (idx = 0; idx < hyp_vm->nr_vcpus; ++idx) {
+ 		struct pkvm_hyp_vcpu *hyp_vcpu = hyp_vm->vcpus[idx];
+ 		struct kvm_hyp_memcache *vcpu_mc = &hyp_vcpu->vcpu.arch.pkvm_memcache;
+@@ -717,7 +717,7 @@ int __pkvm_teardown_vm(pkvm_handle_t handle)
+ 		while (vcpu_mc->nr_pages) {
+ 			void *addr = pop_hyp_memcache(vcpu_mc, hyp_phys_to_virt);
+ 
+-			push_hyp_memcache(mc, addr, hyp_virt_to_phys);
++			push_hyp_memcache(stage2_mc, addr, hyp_virt_to_phys);
+ 			unmap_donated_memory_noclear(addr, PAGE_SIZE);
+ 		}
+ 
+diff --git a/arch/arm64/kvm/pkvm.c b/arch/arm64/kvm/pkvm.c
+index 930b677eb9b0..19921ca407c6 100644
+--- a/arch/arm64/kvm/pkvm.c
++++ b/arch/arm64/kvm/pkvm.c
+@@ -111,6 +111,7 @@ static void __pkvm_destroy_hyp_vm(struct kvm *host_kvm)
+ 
+ 	host_kvm->arch.pkvm.handle = 0;
+ 	free_hyp_memcache(&host_kvm->arch.pkvm.teardown_mc);
++	free_hyp_memcache(&host_kvm->arch.pkvm.stage2_teardown_mc);
+ }
+ 
+ /*
 -- 
-2.34.1
+2.49.0.rc0.332.g42c0ae87b1-goog
 
