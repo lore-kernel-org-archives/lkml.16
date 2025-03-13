@@ -1,61 +1,96 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7668F15DBC1;
-	Thu, 13 Mar 2025 17:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FD21DC985;
+	Thu, 13 Mar 2025 17:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741888582; cv=none; b=QSlkbepSohYXPLVWUf8td/i8cf7n8v/NO8ib83v/BhQTva/goIZ+qlzpospAPbzCBEO/7LIQXEAk8O6R95byeNbnvNsXqY/+5rj3UrWI5ijpHheNqQJEd1rKurm3qRlWTbP7rVe9y/vanBz/wR04vA5CWLZESdHiV+gVngzZCsg=
+	t=1741888664; cv=none; b=sBQYu5leWmorp1Fol35+eAkSEMjWujTBVkZK9jf3wOt2wVUHgPJjPikO+WPZdmOmIwj9OHiFsPvBx2LCKIezZMVZJzeA5SziJshQIDx0dUHDgCdCECAQNPS4lvoQnms6w8XXCx+BcZbm5WtkRudaf2dIpL5UcVTERPv80p0jXfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741888582; c=relaxed/simple;
-	bh=eKGeJ/7PkvBa4gfMByuavEkwT81cYgPP5CC5AR6prxc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Su9ynNtZm75rqRSiA+3IVkn7JFwFy0XpIuNxlCCHcHBTQmS3COxJ/I+ugDs6TS3bZQE64IpRcm0kkNdz2OVPhbpyKkQbbIEZ+c/6tVLBkMNARLHHon0/hMVTXitUHtbHlGLzw1HeW7pUDaFIQ2uSA4gmDGwKDgEYiOqaMzDKo90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=eI9yPqdT; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1741888664; c=relaxed/simple;
+	bh=9xFIBcjTWv8GRNX3oe1hCJyXa1xOTn0VkkaumuBVgRI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BkcaqrVUmPQ3ZRrndJBV+GxCv3SwIffvOFN1jXV1sxLQ/DzlcEA+6920EjpYNXEE29toYl9N9H1XYgZ307MRSJffTxrxyp7RkWkgqEWssjmYz0uvDI7SUDrsQrfGS9nTHMaJExCZ1ZRZQDy1Fk9Iga+vc9iG9xO/8o2dqNlfsNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=AxKMmKCQ; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="eI9yPqdT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1741888581; x=1773424581;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=H7PC9O0Oe+JtOuUKRMpYKPaCohfXryNIVIN9579z+1U=;
-  b=eI9yPqdTOaw45c7llHzzvA3vd5shN2nhlZqmr+eMLTA0gpOGB7lHzMVR
-   VkRN7sJmAxgTWd/VnaUbasJ19rxI0xJ2+uTLRebhB+5UWeDl76plg2aT+
-   NYEAJ/OFHDf4UPEcGEjlj74R8HqHsgQRMDcCgdCyh8KyJzdsAKbQ3NVJu
-   o=;
-X-IronPort-AV: E=Sophos;i="6.14,245,1736812800"; 
-   d="scan'208";a="470861813"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 17:56:17 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:45090]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.5.243:2525] with esmtp (Farcaster)
- id 4e61084a-f171-486c-b205-4f509d0bffc1; Thu, 13 Mar 2025 17:56:16 +0000 (UTC)
-X-Farcaster-Flow-ID: 4e61084a-f171-486c-b205-4f509d0bffc1
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 13 Mar 2025 17:56:15 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.142.242.222) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 13 Mar 2025 17:56:12 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <sdf@fomichev.me>
-CC: <andrew+netdev@lunn.ch>, <atenart@kernel.org>, <davem@davemloft.net>,
-	<edumazet@google.com>, <enjuk@amazon.com>, <horms@kernel.org>,
-	<jasowang@redhat.com>, <jdamato@fastly.com>, <kory.maincent@bootlin.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>,
-	<willemdebruijn.kernel@gmail.com>
-Subject: Re: [PATCH net-next v2 2/2] net: reorder dev_addr_sem lock
-Date: Thu, 13 Mar 2025 10:56:00 -0700
-Message-ID: <20250313175603.17045-1-kuniyu@amazon.com>
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="AxKMmKCQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1741888660; bh=inXF0fSbPXzIw85fLojKxfeAwoCHVSrQnIcBk6Xmr0w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
+	 Subject;
+	b=AxKMmKCQ/tUIryjmV6bln3IsP87BGHN2B6gCMBY0/d23v1QncY7Fg4tvz9Ply2c2E
+	 EtZ9j5hk/a93x8xbTIDeFfX4xhjnAVkRHkqxR8JXcWkfYBYn7XqIDdRKjBW5K87Ulo
+	 CNJgfqkZkXshsU8mgMnsK14BhABBlO4wuzXR08U5aw0PIYhxgH+zSWNXs1ZU6RpevA
+	 c5zAnwkfBTXgRsb0ihRA3j+8KZaIVNDtvH5S/9CVFPq29NX+vt8ZOFeBQn2HXQM5tN
+	 9k0MxlQGKreHFKOYa/LE6axle2cpz397PbIJD/cx26VfVqozGpfawjRItUXG8S00o0
+	 WqDysq/Kj/HAg==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4ZDFZr3T6Cz8t05;
+	Thu, 13 Mar 2025 18:57:40 +0100 (CET)
+X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3614:2b00:7ee6:68e5:4447:ba92
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3614:2b00:7ee6:68e5:4447:ba92])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX1+HSEbJ8SZ+LQGIWIboOg0KFAeQEvQjoXs=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4ZDFZm2cS5z8svD;
+	Thu, 13 Mar 2025 18:57:36 +0100 (CET)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	Henriette Herzog <henriette.herzog@rub.de>,
+	Cupertino Miranda <cupertino.miranda@oracle.com>,
+	Matan Shachnai <m.shachnai@gmail.com>,
+	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kselftest@vger.kernel.org,
+	George Guo <guodongtai@kylinos.cn>,
+	WANG Xuerui <git@xen0n.name>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Maximilian Ott <ott@cs.fau.de>,
+	Milan Stephan <milan.stephan@fau.de>
+Subject: [PATCH bpf-next 11/11] bpf: Fall back to nospec for spec path verification
+Date: Thu, 13 Mar 2025 18:53:12 +0100
+Message-ID: <20250313175312.1120183-2-luis.gerhorst@fau.de>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250312190513.1252045-3-sdf@fomichev.me>
-References: <20250312190513.1252045-3-sdf@fomichev.me>
+In-Reply-To: <20250313175312.1120183-1-luis.gerhorst@fau.de>
+References: <20250313172127.1098195-1-luis.gerhorst@fau.de>
+ <20250313175312.1120183-1-luis.gerhorst@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,85 +98,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D040UWA004.ant.amazon.com (10.13.139.93) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Stanislav Fomichev <sdf@fomichev.me>
-Date: Wed, 12 Mar 2025 12:05:13 -0700
-> Lockdep complains about circular lock in 1 -> 2 -> 3 (see below).
-> 
-> Change the lock ordering to be:
-> - rtnl_lock
-> - dev_addr_sem
-> - netdev_ops (only for lower devices!)
-> - team_lock (or other per-upper device lock)
-> 
-> 1. rtnl_lock -> netdev_ops -> dev_addr_sem
-> 
-> rtnl_setlink
->   rtnl_lock
->     do_setlink IFLA_ADDRESS on lower
->       netdev_ops
->         dev_addr_sem
-> 
-> 2. rtnl_lock -> team_lock -> netdev_ops
-> 
-> rtnl_newlink
->   rtnl_lock
->     do_setlink IFLA_MASTER on lower
->       do_set_master
->         team_add_slave
->           team_lock
->             team_port_add
-> 	      dev_set_mtu
-> 	        netdev_ops
-> 
-> 3. rtnl_lock -> dev_addr_sem -> team_lock
-> 
-> rtnl_newlink
->   rtnl_lock
->     do_setlink IFLA_ADDRESS on upper
->       dev_addr_sem
->         netif_set_mac_address
->           team_set_mac_address
->             team_lock
-> 
-> 4. rtnl_lock -> netdev_ops -> dev_addr_sem
-> 
-> rtnl_lock
->   dev_ifsioc
->     dev_set_mac_address_user
-> 
-> __tun_chr_ioctl
->   rtnl_lock
->     dev_set_mac_address_user
-> 
-> tap_ioctl
->   rtnl_lock
->     dev_set_mac_address_user
-> 
-> dev_set_mac_address_user
->   netdev_lock_ops
->     netif_set_mac_address_user
->       dev_addr_sem
-> 
-> v2:
-> - move lock reorder to happen after kmalloc (Kuniyuki)
+This trades verification complexity for runtime overheads due to the
+nospec inserted because of the EINVAL.
 
-My intention was move kmalloc() and memcpy() out of both
-netdev_lock and dev_addr_sem like
+With increased limits this allows applying mitigations to large BPF
+progs such as the Parca Continuous Profiler's prog. However, this
+requires a jump-seq limit of 256k. In any case, the same principle
+should apply to smaller programs therefore include it even if the limit
+stays at 8k for now. Most programs in [1] only require a limit of 32k.
 
-  netdev_ops_unlock()
-  kmalloc()
-  memcpy()
-  down_write()
+[1] https://arxiv.org/pdf/2405.00078 ("VeriFence: Lightweight and
+    Precise Spectre Defenses for Untrusted Linux Kernel Extensions")
 
-, but not a big deal :)
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Acked-by: Henriette Herzog <henriette.herzog@rub.de>
+Cc: Maximilian Ott <ott@cs.fau.de>
+Cc: Milan Stephan <milan.stephan@fau.de>
+---
+ kernel/bpf/verifier.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> 
-> Cc: Kohei Enju <enjuk@amazon.com>
-> Fixes: df43d8bf1031 ("net: replace dev_addr_sem with netdev instance lock")
-> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 03af82f52a02..49c7e2608ccd 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -187,6 +187,7 @@ struct bpf_verifier_stack_elem {
+ };
+ 
+ #define BPF_COMPLEXITY_LIMIT_JMP_SEQ	8192
++#define BPF_COMPLEXITY_LIMIT_SPEC_V1_VERIFICATION	(BPF_COMPLEXITY_LIMIT_JMP_SEQ / 2)
+ #define BPF_COMPLEXITY_LIMIT_STATES	64
+ 
+ #define BPF_MAP_KEY_POISON	(1ULL << 63)
+@@ -2010,6 +2011,19 @@ static struct bpf_verifier_state *push_stack(struct bpf_verifier_env *env,
+ 	struct bpf_verifier_stack_elem *elem;
+ 	int err;
+ 
++	if (!env->bypass_spec_v1 &&
++	    cur->speculative &&
++	    env->stack_size > BPF_COMPLEXITY_LIMIT_SPEC_V1_VERIFICATION) {
++		/* Avoiding nested speculative path verification because we are
++		 * close to exceeding the jump sequence complexity limit. Will
++		 * instead insert a speculation barrier which will impact
++		 * performace. To improve performance, authors should reduce the
++		 * program's complexity. Barrier will be inserted in
++		 * do_check().
++		 */
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	elem = kzalloc(sizeof(struct bpf_verifier_stack_elem), GFP_KERNEL);
+ 	if (!elem) {
+ 		err = -ENOMEM;
+-- 
+2.48.1
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
