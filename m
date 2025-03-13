@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCF51EA7FC
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73960261563
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741855344; cv=none; b=MDu7gku6503bDdFwLtErcXMkdAoltmmmKCxQb9ySlNMfEqRDEisHfmUwsLPZE3MlSMT4ptLk/BQFgG+t0J/pHIIE8pv+EelvLF6bOoyDS6caqCvXNWL1hYx3SIMGExA4B4wPsDPVc2Dt1f5tgqqqdjb3iwHiMnu1PH5sguODnQM=
+	t=1741855446; cv=none; b=DUMdoGWpCmhQs9vmKPUXNrqDqi023xA6klbNgIIEQERC5o6e5Xs4NWVIwxlDLIKJbhKt9c35ecDK3O8TTaDk2RjDyIXi1ojSaiunRWdRhOwGfhu0pdmS5RmFCfEDDvEAqkPnJGo9MXVn/26ZKgFV63xk7V41J1+HV756b6wWWxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741855344; c=relaxed/simple;
-	bh=vA5wxjoYQ18CfQhj0cxn1zrY/iSsxfanXpxr9W6PPY4=;
+	s=arc-20240116; t=1741855446; c=relaxed/simple;
+	bh=B8xrWGXh47flZMBc4OynPt52HdDVE8wfQf9Ggqdg8nc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XOMMoFA76REOJgOfisEn5+CJk7j5aE6GkjY4+lX892v/u7f4elVcPT5gkLZy2jvOFoHgXi5z/7skYiKRR7BcFb6CATyOMhXr0H35ywiMDvrDmzanRPtgnkUvtLsS+1whNBbTR8KYcw0MpUtwSyVqZlCsebhMSSBXJcBRrFIKdzY=
+	 Content-Type:MIME-Version; b=k3wty4qVTRyzBjivmNVKVhOeYaYJ1a9sOTQvH9r5mxWk7Rimm636WmNQGX4maagryQjIx0dPyqvs9UvkQe0MzIIqvMf0nRE27irtM1tCHq6BJswf7JNBbmwYsw4y4cWkRcKd62dWp62Bch1xrXopn2y3eNnngyx505vcF4ccpHM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,27 +18,31 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tse8t-00007I-JV; Thu, 13 Mar 2025 09:42:15 +0100
+	id 1tseAQ-0000KT-Qn; Thu, 13 Mar 2025 09:43:50 +0100
 Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tse8t-005VQP-19;
-	Thu, 13 Mar 2025 09:42:15 +0100
+	id 1tseAP-005VQo-17;
+	Thu, 13 Mar 2025 09:43:49 +0100
 Received: from pza by lupine with local (Exim 4.96)
 	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tse8t-0003Y4-10;
-	Thu, 13 Mar 2025 09:42:15 +0100
-Message-ID: <dbdbc1f6c30cba1e0e1445de09564864dfdb8b58.camel@pengutronix.de>
-Subject: Re: [PATCH v4] reset: mchp: sparx5: Fix for lan966x
+	id 1tseAP-0003az-0x;
+	Thu, 13 Mar 2025 09:43:49 +0100
+Message-ID: <5824eaa53054cfd9886c6ba745bd5cd8914c26c0.camel@pengutronix.de>
+Subject: Re: [PATCH] dt-bindings: reset: fix double id on rk3562-cru reset
+ ids
 From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
-	UNGLinuxDriver@microchip.com, herve.codina@bootlin.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date: Thu, 13 Mar 2025 09:42:15 +0100
-In-Reply-To: <20250227105502.25125-1-horatiu.vultur@microchip.com>
-References: <20250227105502.25125-1-horatiu.vultur@microchip.com>
+To: Heiko Stuebner <heiko@sntech.de>, sboyd@kernel.org,
+ mturquette@baylibre.com
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	kever.yang@rock-chips.com, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel test robot
+	 <lkp@intel.com>
+Date: Thu, 13 Mar 2025 09:43:49 +0100
+In-Reply-To: <20250312215923.275625-1-heiko@sntech.de>
+References: <20250312215923.275625-1-heiko@sntech.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.4-2 
@@ -53,23 +57,43 @@ X-SA-Exim-Mail-From: p.zabel@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Do, 2025-02-27 at 11:55 +0100, Horatiu Vultur wrote:
-> With the blamed commit it seems that lan966x doesn't seem to boot
-> anymore when the internal CPU is used.
-> The reason seems to be the usage of the devm_of_iomap, if we replace
-> this with devm_ioremap, this seems to fix the issue as we use the same
-> region also for other devices.
+On Mi, 2025-03-12 at 22:59 +0100, Heiko Stuebner wrote:
+> Id 173 was accidentially used two times for SRST_P_DDR_HWLP and
+> SRST_P_DDR_PHY. This makes both resets ambiguous and also causes build
+> warnings like:
 >=20
-> Fixes: 0426a920d6269c ("reset: mchp: sparx5: Map cpu-syscon locally in ca=
-se of LAN966x")
-> Reviewed-by: Herve Codina <herve.codina@bootlin.com>
-> Tested-by: Herve Codina <herve.codina@bootlin.com>
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> drivers/clk/rockchip/rst-rk3562.c:21:57: error: initialized field overwri=
+tten [-Werror=3Doverride-init]
+>    21 | #define RK3562_DDRCRU_RESET_OFFSET(id, reg, bit) [id] =3D (0x2000=
+0*4 + reg * 16 + bit)
+>       |                                                         ^
+> drivers/clk/rockchip/rst-rk3562.c:266:9: note: in expansion of macro 'RK3=
+562_DDRCRU_RESET_OFFSET'
+>   266 |         RK3562_DDRCRU_RESET_OFFSET(SRST_P_DDR_PHY, 0, 8),
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/clk/rockchip/rst-rk3562.c:21:57: note: (near initialization for '=
+rk3562_register_offset[173]')
+>    21 | #define RK3562_DDRCRU_RESET_OFFSET(id, reg, bit) [id] =3D (0x2000=
+0*4 + reg * 16 + bit)
+>       |                                                         ^
+> drivers/clk/rockchip/rst-rk3562.c:266:9: note: in expansion of macro 'RK3=
+562_DDRCRU_RESET_OFFSET'
+>   266 |         RK3562_DDRCRU_RESET_OFFSET(SRST_P_DDR_PHY, 0, 8),
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>=20
+> To fix that issue give SRST_P_DDR_PHY a new and now unique id.
+>=20
+> Reported-by: Stephen Boyd <sboyd@kernel.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202503121743.0zcDf6nE-lkp@i=
+ntel.com/
+> Fixes: dd113c4fefc8 ("dt-bindings: clock: Add RK3562 cru")
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+> The original patch did go with the reset of the clock controller code
+> into the clock tree, so this patch should of course also go that way.
 
-Applied to reset/fixes, thanks!
-
-[1/1] reset: mchp: sparx5: Fix for lan966x
-      https://git.pengutronix.de/cgit/pza/linux/commit/?id=3D0e2268f88bb2
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
 regards
 Philipp
