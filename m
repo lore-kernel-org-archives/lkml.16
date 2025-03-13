@@ -1,157 +1,129 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC48A268691;
-	Thu, 13 Mar 2025 14:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446CE269828
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741876228; cv=none; b=dnjKSDF+HObZV4S1CMmUea0S2Y+yTsu2IrmSEMM/Fp3wXDaIoTZuP3NoALgEvAKz7WPlUgDnp9WLtRQ3wtrgEA4PxVCNUjFpcYPHBCmHTLq3UoMouVMPVxQMvT6T4D8a/l/XsdCEWxmXsZD0FywDZ96qZCcMtxEMf3vZV8blb00=
+	t=1741876230; cv=none; b=mo4glUi1HiBw+rI79RX8rFEiU2vhdbNPhu29ZdDArhAwxmy+SadB+EoGuaC9WgchOLIM0ZU6x/e7CGAlnwMZzB8Jn0v5BGcPTp4XwXXqOaupCOLT6HE4BDYR8xNIqpQyIEOIetEu/gYpSlEsTl7F5zIGDM//XUhyrZOgEe1TiTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741876228; c=relaxed/simple;
-	bh=/RVTDk95xTdgwIURpxctNMV56eIngqQ4/eX5yRQzsK8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mAsxzlwTywIUIGfwuuZoq6mzJ3Og4LKpOjtDk7yvPEPhiQugQ45DoF63j49oQgmwxGL1HjBeQiAdNRjNqDmbsotaZwWtnP+n4i03MP5RJbIAKi6j21N3yzMhmPCIRJd3M6piPJ7MR3kIHhG171Su6sKXvYIUj4FZxVcIcA5pYs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NW/GS4lf; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741876230; c=relaxed/simple;
+	bh=juS07XMDjJAxWXr5mwzvAA1WxJHnGjWPahThOCqacTM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d+FH+WpinTSF5LVa8NymDeV5UlyI42HBqVk3VqHDuLnSJc1QwKYK5WlHoZWAmVPpMZuboCKo/aBwJEM+Ft7hgrmEVbmpJ7MAnR9cbwp3SeM/eh6r7NKlMoyQiVRH6JMT027kUYxgIjLHJVskU9M6OT+qRIu0Y/8PvlSql0y6Igc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IXe5bN+z; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NW/GS4lf"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e6341e4d0b4so1881761276.0;
-        Thu, 13 Mar 2025 07:30:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IXe5bN+z"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3912c09be7dso683962f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:30:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741876225; x=1742481025; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H43dqBGhipBxPHVP+jwxsicROhpGVr1mHnd5dBnGOsU=;
-        b=NW/GS4lfcZP7Eg5sEGsr5yLs7yxLd7AKBrIsjg/tbZ/giC33FJhOAHe6qmc8VB5nd3
-         s/jj+KR0jyXfj7ugaRWnl1kfnI5U8NVHYudEG2CFBHa6GhuwYbBhrrYrBLlfn6mu2pEK
-         wanEprj3469xtr5TiPS9CBjhFGEmQKTqj+QqANurGNd+CJi3QHcAPQdL5uWT9zuDnor2
-         FerKyh8exXiPfNp7PebRPmsm3MOGRBt5i1/xUlWkh6Kt0WYBzzj9+AyQ0dMnBtLq1fmX
-         WeV6et5792RggpWIb0dzmHlsQFnGa35MjzwGrpjthoLAWoCUtmGXtKucMUCSpYxz6Vb1
-         Riiw==
+        d=suse.com; s=google; t=1741876226; x=1742481026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hrGk+0H2Ku6XJRdKx9mhOvfZypDyUlcvla1YtjtXmlo=;
+        b=IXe5bN+zLxkm7J/fSMLyukI796Fj0+3dDQajNX7kgSfLC/HUxwSMcF5RVC9Z7ijLQp
+         HqcRfR5RJD0aRkL0wpBCkCxn/uKqjx8eS5SOAKQ5cGSsCIPNWDMRkSWUZhFPTAyciuow
+         JhGd+TPJj2H3YqVnNcmD/3nAmI6ZWDUSCv0VG1OIV6biejsiCRkHHybttJ08wSdstjdL
+         d14jhOM8VUaPVcvClVdy8G35f3bIhrvSdspXjyIldNpXxRV3qaTDLY5zOLhmSjMkkf8y
+         VWySkES6HI4QVs/ZJeQo+YpeZc+C4EE3P1YUuluORVPzDk31OsrGM7tAZ51fykmLofxR
+         U2kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741876225; x=1742481025;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H43dqBGhipBxPHVP+jwxsicROhpGVr1mHnd5dBnGOsU=;
-        b=iz8uFlS9XgiDwWO9BsvjrF8LRcNw15d23PBSU7GW0e7TdEYKiL760wTRoUQwHJFcRF
-         UKK/PI0D+mSW9SVfgTDLkba5Odyt/ifloUvSLEKkkmdsp7jpRrpFEXzIbL+qrHYxjASu
-         R6ceaDz5Elpo5i2xbf+C4gqHZa3sQuj8Eg3W4+rv+HDYfg26IoKbMXEwuhap+dDFEBSt
-         4gyOhrr+fsOkCQeFJnrGdbOzUcQ0yKgCqccietZt5EtyOBtxrGMJFcKNGpftnWa+U6/C
-         +jVTWNC/OqlPfEqxcqkYHzRbetG/wj7+MTjd59R/wJXIBq+5LkGQp55XsZ/LKZgE4ujR
-         cQUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWkYeE4yDeECsKGKcMRRlATzBE6Vm+tsLiuxehYkdWgg5wcH/FT14jRTAv6/YoOGY3mbgG1Q0/5nKRurak=@vger.kernel.org, AJvYcCXMibftNIRKBBFG6xhcIoC8c5TIQvHYn6QPS/yABnSQQsSNMCVaqufIk3nng2ZcmAIQ5zzMpboMvQBhc02m2UShM3keFw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqOLZtrtaX/b/vPwLtdqnUuEEtHmFmAtdICf+4tY6fFioUk70z
-	uWnpu1Rq4FKAZuMUgY1qFVE1DK1gGBnYLWAl6f2h2BNpEK0yEiuHCFZe1chD
-X-Gm-Gg: ASbGncsUUluYorihifHWzS8vkxbgdnuJ9fHAmMqpT7M7NoaaOjqDHaN43fiEo8DEl3g
-	D+ARFYeAoqGnWx5mkGBy2aUy0Y/waHTH+cD38ob+Vo69LP2D6Y1hSQ0DNX0x1IrWk+Zg/ZfHkyv
-	KA4BkLg0zPCQ4AhlIYXEpf5w9O9rUcPUNMY7nY223kFkI/C2nSjg9Aielvyo2HyZRChfVZoM9db
-	Jb5/XHew2298ZnKOK+W/IlQb84CVu7l+Q2lp5gex51p7HFfcROyyVn+w55e9O2RCwRdMhvMRpVo
-	47NpFNqp3IIxrRI+ADg9UMRbK/lCN06v6TDE2ec3UK5q3A==
-X-Google-Smtp-Source: AGHT+IE9jUrYk/s6U/kpCNubFDXo6NtG8uIjFtuEh+Os6nK3lcMjXqwsXN/pO1r/XmwpzYCtLFnFhg==
-X-Received: by 2002:a05:6902:2289:b0:e63:cfb7:5da5 with SMTP id 3f1490d57ef6-e63e3be255fmr3521660276.9.1741876223341;
-        Thu, 13 Mar 2025 07:30:23 -0700 (PDT)
-Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e63e56718d0sm338938276.50.2025.03.13.07.30.21
+        d=1e100.net; s=20230601; t=1741876226; x=1742481026;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hrGk+0H2Ku6XJRdKx9mhOvfZypDyUlcvla1YtjtXmlo=;
+        b=ms002ol9tNNNNEuJcPsmOzAwJcse5QpZpTSqUTC3e4GETmhMUOa/Kt7wVl+EfLVoY/
+         soiBLFd35l8XBRoZX/oI1+bO8Wtm/MVCn+Hy020MbRIGbR7E/l3jBIYOrogSJSNoXDXM
+         HthDJAU5gwZT+rBwe+7OQRZvUr/BLn90b10kVDFZD65NK9GnTrt5suMA08z8GpTUY2R9
+         l/mCd1I3BlDK1/BTlXd2f0vLDPPjnSQDg69pwBYqmDMmv0jw6gW/zf4UXMHYxAv547dw
+         eqqB23p8MmvmbEdVW2yxNneEtoj93hpsC9JX6xPG5Er4ZvCfdBq9E6gu12yXtYQdjKeG
+         1wEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1P3e67F9jlmkfs4IHv3Q+rYL5X7mZrWBSqQknMNZRotkpbiBhFvSd/r4kdDMTU2Zrb3vJ8yW4B8Ufqlk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm7dLTDq3JdX1/e33lksvYLpMPm4UgRlLnIX/vu5dYxzEnMZMg
+	REHbRqZIuvRViGHFsjz8UwLOzcCv0YPXFF0Xlp/oB8zcdkRCPv079faMJH0IM5w=
+X-Gm-Gg: ASbGncuYQyNgjNXJHDNHYxgGpZO13YCVdjgQ0LwwWMZZvdGfIJqyE0t3vRpgE2QKvF/
+	vMXcU0UsDL0C6hAek71gHszTlfrmEDMBHnFCXHL+rX1m3cHryZ4zijDz+kaiQE5EXJUpfxsX6nz
+	2R2bVo871NDk11pqxXV2NOUH6iYPMMrQ5BEEB6lzLQpcoHAsHUQbY/PBlHZ5BSpiMR5WV2OGxpK
+	tmNLqWi8wi0lYfmCStk59c1wKmtgCQ5r8PPN1l2yxfIH/m7YWHw0hjXgRpAWdA3mEk1LTBGaUKs
+	wQvLZiasRcvg17npxRsDaf9Ac4S0HnOTQmjJwSBVDMjSUqCI
+X-Google-Smtp-Source: AGHT+IEopD2BOlwvkpG1x6M74L7kpnMA958szdTdn2Obv0FJ9/lT9q7aHbu7ZV55PrVSeCNR56WDNg==
+X-Received: by 2002:a5d:64cd:0:b0:390:f2f1:2a17 with SMTP id ffacd0b85a97d-39132da9d2amr21115722f8f.53.1741876226568;
+        Thu, 13 Mar 2025 07:30:26 -0700 (PDT)
+Received: from dhcp161.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b6a32sm2324196f8f.33.2025.03.13.07.30.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 07:30:22 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Thu, 13 Mar 2025 09:30:01 -0500
-Subject: [PATCH v6 06/12] platform/x86: alienware-wmi-wmax: Add support for
- the "custom" thermal profile
+        Thu, 13 Mar 2025 07:30:26 -0700 (PDT)
+From: Petr Pavlu <petr.pavlu@suse.com>
+To: Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>
+Subject: [PATCH] codetag: Avoid unused alloc_tags sections/symbols
+Date: Thu, 13 Mar 2025 15:29:20 +0100
+Message-ID: <20250313143002.9118-1-petr.pavlu@suse.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-hwm-v6-6-17b57f787d77@gmail.com>
-References: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
-In-Reply-To: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
- platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-All models with the "AWCC" WMAX device support a "custom" thermal
-profile. In some models this profile signals user-space that the user
-wants to manually control the fans, which are always unlocked. In other
-models it actually unlocks manual fan control.
+With CONFIG_MEM_ALLOC_PROFILING=n, vmlinux and all modules unnecessarily
+contain the symbols __start_alloc_tags and __stop_alloc_tags, which define
+an empty range. In the case of modules, the presence of these symbols also
+forces the linker to create an empty .codetag.alloc_tags section.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+Update codetag.lds.h to make the data conditional on
+CONFIG_MEM_ALLOC_PROFILING.
+
+Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
 ---
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ include/asm-generic/codetag.lds.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 0530f25b956f73f47c0354f40dac2910448c894e..3b37e4456482bc284b8e867c1c5b6255fc6c8ef2 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -29,8 +29,6 @@
- #define AWCC_METHOD_THERMAL_CONTROL		0x15
- #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
+diff --git a/include/asm-generic/codetag.lds.h b/include/asm-generic/codetag.lds.h
+index 372c320c5043..0ea1fa678405 100644
+--- a/include/asm-generic/codetag.lds.h
++++ b/include/asm-generic/codetag.lds.h
+@@ -2,6 +2,12 @@
+ #ifndef __ASM_GENERIC_CODETAG_LDS_H
+ #define __ASM_GENERIC_CODETAG_LDS_H
  
--#define AWCC_THERMAL_MODE_GMODE			0xAB
--
- #define AWCC_FAILURE_CODE			0xFFFFFFFF
- #define AWCC_FAILURE_CODE_2			0xFFFFFFFE
- #define AWCC_THERMAL_TABLE_MASK			GENMASK(7, 4)
-@@ -177,6 +175,11 @@ enum AWCC_THERMAL_TABLES {
- 	AWCC_THERMAL_TABLE_USTT			= 0xA,
- };
- 
-+enum AWCC_SPECIAL_THERMAL_CODES {
-+	AWCC_SPECIAL_PROFILE_CUSTOM		= 0x00,
-+	AWCC_SPECIAL_PROFILE_GMODE		= 0xAB,
-+};
++#ifdef CONFIG_MEM_ALLOC_PROFILING
++#define IF_MEM_ALLOC_PROFILING(...) __VA_ARGS__
++#else
++#define IF_MEM_ALLOC_PROFILING(...)
++#endif
 +
- enum awcc_thermal_profile {
- 	AWCC_PROFILE_USTT_BALANCED,
- 	AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
-@@ -589,9 +592,15 @@ static int awcc_platform_profile_get(struct device *dev,
- 	if (ret)
- 		return ret;
+ #define SECTION_WITH_BOUNDARIES(_name)	\
+ 	. = ALIGN(8);			\
+ 	__start_##_name = .;		\
+@@ -9,7 +15,7 @@
+ 	__stop_##_name = .;
  
--	if (out_data == AWCC_THERMAL_MODE_GMODE) {
-+	switch (out_data) {
-+	case AWCC_SPECIAL_PROFILE_CUSTOM:
-+		*profile = PLATFORM_PROFILE_CUSTOM;
-+		return 0;
-+	case AWCC_SPECIAL_PROFILE_GMODE:
- 		*profile = PLATFORM_PROFILE_PERFORMANCE;
- 		return 0;
-+	default:
-+		break;
- 	}
+ #define CODETAG_SECTIONS()		\
+-	SECTION_WITH_BOUNDARIES(alloc_tags)
++	IF_MEM_ALLOC_PROFILING(SECTION_WITH_BOUNDARIES(alloc_tags))
  
- 	if (!is_awcc_thermal_profile_id(out_data))
-@@ -679,11 +688,17 @@ static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
+ /*
+  * Module codetags which aren't used after module unload, therefore have the
+@@ -28,6 +34,6 @@
+  * unload them individually once unused.
+  */
+ #define MOD_SEPARATE_CODETAG_SECTIONS()		\
+-	MOD_SEPARATE_CODETAG_SECTION(alloc_tags)
++	IF_MEM_ALLOC_PROFILING(MOD_SEPARATE_CODETAG_SECTION(alloc_tags))
  
- 	if (awcc->gmode) {
- 		priv->supported_profiles[PLATFORM_PROFILE_PERFORMANCE] =
--			AWCC_THERMAL_MODE_GMODE;
-+			AWCC_SPECIAL_PROFILE_GMODE;
- 
- 		__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
- 	}
- 
-+	/* Every model supports the "custom" profile */
-+	priv->supported_profiles[PLATFORM_PROFILE_CUSTOM] =
-+		AWCC_SPECIAL_PROFILE_CUSTOM;
-+
-+	__set_bit(PLATFORM_PROFILE_CUSTOM, choices);
-+
- 	return 0;
- }
- 
+ #endif /* __ASM_GENERIC_CODETAG_LDS_H */
 
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
 -- 
-2.48.1
+2.43.0
 
