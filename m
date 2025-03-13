@@ -1,38 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6FE1FC0E4;
-	Thu, 13 Mar 2025 10:48:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF92F2E3395;
+	Thu, 13 Mar 2025 10:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741862896; cv=none; b=BhP52Ce7h03XkAsPejZLocoI9EadJG1PlsIvXX0f0Y/VdGhZs2Tp++i3tuJbY7MrQfwzRBkWyNC4i34rX5AEywaSYxUu+e7a+v3mCT6oM6dhKLA59Lpm68vl0v8R1oUI5GsMvjFOw6E0pDn7VLmvfWUyQ8oW28jxDFDuNXa9K8Q=
+	t=1741862897; cv=none; b=LJS1YUXRvZCBx3Bi3UDc3QZM0QXBMNi4QBdkAY7VqNJp3AYoC4Jm/mtsShfrdrqjYvpH5nyb55agJvxE9rcZX4W68BYDOikduBI5ghoCmpdM19mOGv8M+YHseOL8jiiU8QvX0d0aZXU9oF7JIdff7H5pSkGr0IM+yF2ge+KtzOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741862896; c=relaxed/simple;
-	bh=6Lf1troAP9KqYLhWMFdF9HEEcjTeV97lTmAmZqT/Iys=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UMALSHWUqUoEhi1ZHJub3clIbCvaqmDOFjSO4VbuTB19gByQ/DJgJuUf3a1zVt4ank7iSHzJEX+1NhiKtT8IOrKuedyyRjsgBkgEpNY6Ec965P94v+APIsd+6VmvnE5EYw/dX62V2svNEb54741cA1OPcCmgHUn32NGKfEPfgx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=D6XLiGB1; arc=none smtp.client-ip=217.70.183.200
+	s=arc-20240116; t=1741862897; c=relaxed/simple;
+	bh=2BAgdhTG0MyMOE9u/1Mw7bOTtC21diLYJhKhPYbeD2Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=IWNw3UHNmqQyiUw1Yl4AvN+yUoJTAO7tnT4O8SSsUAx9b5YaXFk9gOARHjLvprZ3UwzHKUcO0LEPGM4MqzY9HltcLLzhLRIVwqu8ITq848XmAWYEtNmemzvTMM3BfUb5IgGbGeO9oH0ZGUCQIz8KHsFpyVUb8heivEYv0brRS8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jeeKNE+f; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D6XLiGB1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3BEE543216;
-	Thu, 13 Mar 2025 10:48:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jeeKNE+f"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D329A4419B;
+	Thu, 13 Mar 2025 10:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741862884;
+	t=1741862893;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4hicPeni8A/CBo8QgIdsI2yFoQfcCpiKN+FCEFEiVsQ=;
-	b=D6XLiGB1VOZuDEaDi8XNKYFittsq58spmjvd4JkkvamjA75lQ37rSOwOlCepNAPvL+aNh0
-	Li7+rt/xLYlLQ8NhkrToA1cO08uw9/fqCX5vH7bbdRX2iHLBCwvi8KAEfrGMAEtCdCV5td
-	tuTdjFXXTxfyJXlm/5PuXCuhR3bl5g4nt86dE2gI7XgXgvI8D3D+jryw2ODZ6f2HGxr0sX
-	9ADGjT+Ls6/IxjbEbOrWE3dnjAE5GuYy6AR924ItE0wfLymb7h1JzE86c2EGfXrmt3zPTq
-	lbWzIzxkNvWD5jQMD+9LYyOCU16iWFbiRKVCwui5sKIdQ9ILF3iJFP5JDXe61Q==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RVlTbFyV5N/5xHl61rKIDqd8rD7gE6oj6RfqqWCHsKk=;
+	b=jeeKNE+fRwqsaUC2yMN5elP5M8g6G07RcTZphdmuPzJ36zeyeMAfsWzd1QxdbROpMuff5u
+	WXzl/ARtLzQ1juENVudcaEq71Z58NMVB3vKcxBL494Byyxt9sxwVBT3i8yzmd9ZUQhmC3E
+	E1F1vimcNjgsFQcyvLmm3FeOhqEOLXLOU1/qECABfz+xJKlczfG26adcOtfBWbFWUxIdKA
+	nbJN8DMnYoBO7cEP0Q62wpn63VDDRYmIWAR2OY/2Oz3U+5QYYCkKLWIC92z5MF3i5x+xUF
+	UDnIGpwxDntjzlGrYkxlbrYrcEVRsrabV6wiap1CCT5+w7C+m7Y6op6m4ERElg==
 From: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
-Subject: [PATCH 00/13] selftests/bpf: Integrate test_xsk.c to test_progs
- framework
-Date: Thu, 13 Mar 2025 11:47:58 +0100
-Message-Id: <20250313-xsk-v1-0-7374729a93b9@bootlin.com>
+Date: Thu, 13 Mar 2025 11:48:04 +0100
+Subject: [PATCH 06/13] selftests/bpf: test_xsk: Don't exit immediately when
+ gettimeofday fails
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +42,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAN630mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDI0ML3YribF2D5DRLg1RLc9MUQxMloMqCotS0zAqwKdGxtbUApABBClU
- AAAA=
-X-Change-ID: 20250218-xsk-0cf90e975d14
+Message-Id: <20250313-xsk-v1-6-7374729a93b9@bootlin.com>
+References: <20250313-xsk-v1-0-7374729a93b9@bootlin.com>
+In-Reply-To: <20250313-xsk-v1-0-7374729a93b9@bootlin.com>
 To: =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>, 
  Magnus Karlsson <magnus.karlsson@intel.com>, 
  Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
@@ -67,63 +67,59 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdejjeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepfdeurghsthhivghnucevuhhruhhttghhvghtucdlvgeurffhucfhohhunhgurghtihhonhdmfdcuoegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdekgfettdegkefhudejveefhfdvtefgudduieefvdfhvdfgfeethefhvdevhfenucfkphepvdgrtddumegtsgduleemkedvheefmeguuddttdemfhelvgdumeeftgejudemjeeitdgtmedutggsrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekvdehfeemugdutddtmehflegvudemfegtjedumeejiedttgemudgtsggrpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhrtghpthhto
- hepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhihkhholhgrlhesfhgsrdgtohhmpdhrtghpthhtohephihonhhghhhonhhgrdhsohhngheslhhinhhugidruggvvhdprhgtphhtthhopehmrghgnhhushdrkhgrrhhlshhsohhnsehinhhtvghlrdgtohhmpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepsggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdejjeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepfdeurghsthhivghnucevuhhruhhttghhvghtucdlvgeurffhucfhohhunhgurghtihhonhdmfdcuoegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegfeduhfeutddtieffteffleejffekveeviedutdegjeelfedtjeegtdejtddthfenucfkphepvdgrtddumegtsgduleemkedvheefmeguuddttdemfhelvgdumeeftgejudemjeeitdgtmedutggsrgenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekvdehfeemugdutddtmehflegvudemfegtjedumeejiedttgemudgtsggrpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhrtghpt
+ hhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhihkhholhgrlhesfhgsrdgtohhmpdhrtghpthhtohephihonhhghhhonhhgrdhsohhngheslhhinhhugidruggvvhdprhgtphhtthhopehmrghgnhhushdrkhgrrhhlshhsohhnsehinhhtvghlrdgtohhmpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepsggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomh
 X-GND-Sasl: bastien.curutchet@bootlin.com
 
-Hi all,
+exit_on_error() is called when gettimeofday() fails. This exits the
+program immediately and can lead to memory leaks.
 
-This patch series continues the work to migrate the script tests into
-prog_tests.
-
-The test_xsk.sh script tests lots of AF_XDP use cases. The tests it uses
-are defined in xksxceiver.c. As this script is used to test real
-hardware, the goal here is to keep it as is and only integrate the
-tests on veth peers into the test_progs framework.
-Three tests are flaky on s390 so they won't be integrated to test_progs
-yet (I'm currently trying to make them more robust).
-
-PATCH 1 & 2 fix some small issues xskxceiver.c
-PATCH 3 to 9 rework the xskxceiver to ease the integration in the
-test_progs framework. Two main points are addressed in them :
- - wrap kselftest calls behind macros to ease their replacement later
- - handle all errors to release resources instead of calling exit() when
-   any error occurs.
-PATCH 10 extracts test_xsk[.c/.h] from xskxceiver[.c/.h] to make the
-tests available to test_progs
-PATCH 11 enables kselftest de-activation
-PATCH 12 isolates the flaky tests
-PATCH 13 integrate the non-flaky tests to the test_progs framework
+Return TEST_FAILURE instead of calling exit_on_error()
 
 Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
 ---
-Bastien Curutchet (eBPF Foundation) (13):
-      selftests/bpf: test_xsk: Initialize bitmap before use
-      selftests/bpf: test_xsk: Fix memory leaks
-      selftests/bpf: test_xsk: Wrap ksft_*() behind macros
-      selftests/bpf: test_xsk: Add return value to init_iface()
-      selftests/bpf: test_xsk: Don't exit immediately when xsk_attach fails
-      selftests/bpf: test_xsk: Don't exit immediately when gettimeofday fails
-      selftests/bpf: test_xsk: Don't exit immediately when workers fail
-      selftests/bpf: test_xsk: Don't exit immediately if validate_traffic fails
-      selftests/bpf: test_xsk: Don't exit immediately on allocation failures
-      selftests/bpf: test_xsk: Split xskxceiver
-      selftests/bpf: test_xsk: Make kselftest dependency optional
-      selftests/bpf: test_xsk: Isolate flaky tests
-      selftests/bpf: test_xsk: Integrate test_xsk.c to test_progs framework
+ tools/testing/selftests/bpf/xskxceiver.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- tools/testing/selftests/bpf/Makefile              |   13 +-
- tools/testing/selftests/bpf/prog_tests/test_xsk.c | 2416 ++++++++++++++++++++
- tools/testing/selftests/bpf/prog_tests/test_xsk.h |  299 +++
- tools/testing/selftests/bpf/prog_tests/xsk.c      |  178 ++
- tools/testing/selftests/bpf/xskxceiver.c          | 2543 +--------------------
- tools/testing/selftests/bpf/xskxceiver.h          |  153 --
- 6 files changed, 3021 insertions(+), 2581 deletions(-)
----
-base-commit: 720c696b16a1b1680f64cac9b3bb9e312a23ac47
-change-id: 20250218-xsk-0cf90e975d14
+diff --git a/tools/testing/selftests/bpf/xskxceiver.c b/tools/testing/selftests/bpf/xskxceiver.c
+index e2c136fc23ce40ff485de78dac18a4d8ba73353d..5b96f6860ff98de3c6160a1b94ae865a12121382 100644
+--- a/tools/testing/selftests/bpf/xskxceiver.c
++++ b/tools/testing/selftests/bpf/xskxceiver.c
+@@ -1290,7 +1290,7 @@ static int receive_pkts(struct test_spec *test)
+ 
+ 	ret = gettimeofday(&tv_now, NULL);
+ 	if (ret)
+-		exit_with_error(errno);
++		return TEST_FAILURE;
+ 
+ 	timeradd(&tv_now, &tv_timeout, &tv_end);
+ 
+@@ -1306,7 +1306,7 @@ static int receive_pkts(struct test_spec *test)
+ 
+ 		ret = gettimeofday(&tv_now, NULL);
+ 		if (ret)
+-			exit_with_error(errno);
++			return TEST_FAILURE;
+ 
+ 		if (timercmp(&tv_now, &tv_end, >)) {
+ 			print_msg("ERROR: [%s] Receive loop timed out\n", __func__);
+@@ -1449,13 +1449,13 @@ static int wait_for_tx_completion(struct xsk_socket_info *xsk)
+ 
+ 	ret = gettimeofday(&tv_now, NULL);
+ 	if (ret)
+-		exit_with_error(errno);
++		return TEST_FAILURE;
+ 	timeradd(&tv_now, &tv_timeout, &tv_end);
+ 
+ 	while (xsk->outstanding_tx) {
+ 		ret = gettimeofday(&tv_now, NULL);
+ 		if (ret)
+-			exit_with_error(errno);
++			return TEST_FAILURE;
+ 		if (timercmp(&tv_now, &tv_end, >)) {
+ 			print_msg("ERROR: [%s] Transmission loop timed out\n", __func__);
+ 			return TEST_FAILURE;
 
-Best regards,
 -- 
-Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
+2.48.1
 
