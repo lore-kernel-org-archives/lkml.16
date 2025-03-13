@@ -1,72 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEC4263F45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F3A264A7B
 	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741860261; cv=none; b=IekJGCKvbW4wi2JGVVloTxHhKMADaC2SofdtY+nUzzLLzGw3FjmC11h2ss6ihxqvUG7eLb8fxqvTf4/ahS0qM7G6sgGOJX5qUirqxsK6Mn1sQ727O+OQhagXTySyvzZK8gvC7C7z+IoFzcYvMJVFxUXLz6YCmAPK5vyRz1hqjr0=
+	t=1741860264; cv=none; b=Kl4z0J+hZU/PKuCTV0htAdnQ+exTK3Fx65grcuujlNN2OVW8QojvpV+lBBRsA63pp8JlrJLvSQTVp3SvXeD1PzWrXkQ/FHkCehuQhT1NNZTbNHSIHbvTqZoyh7MZSOPinDpM7mEwtXKqL83G9LLY36gI+v46sZRog7TWRXJVrUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741860261; c=relaxed/simple;
-	bh=wzNceDon8J/X3zofZcOallzw6jXI+2u16F6PZKC+o+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E2i5mBWAx0a2mEXr8qN+4xuy5944X1e+BGVphVFA3MDq3PN8bC15DVlat7dpPnTY5rdlMZ3j/JcYeQpkDncq4fd4l5U5c9kI2xVHSI1GnHWdolzScNLSpk01bTixjmF7SE43AMp92v3VCk5aAXFOUVqbrJ2W7n+N3ldTVUYxrwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZn710ZY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741860264; c=relaxed/simple;
+	bh=SNse85hwvTNgWan+jvh77pDCpp4UhKv+YJcqiQ9cRvA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=g5G55YqoBL7pddncdRPC4K7jqW5wtS0VzopAXGfNeYCmYx27KrHTe+P9MxMmyfzbr6mYqHXjTgtsBt2NTntuPydhhwWF4YNLvjzKDLFhJeS4L3vXt7tust+ztZia3F+VNYRqaLQWCPFPaRWyLfUphIX34qYQ2iUSiL4lnTTKIU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GVd+xnki; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZn710ZY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741860258;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zp7hbJOUv8j+ICa1QmH9m0BekOtVujE7tGDQXjIFMhs=;
-	b=GZn710ZY87bZIcB+tvBbkVlulr/D8b3EtQKxuC9KlS19aocjX4olJ+dWvvOOpa5apAptzc
-	V+r300MR3qhbcKzRp2M9QWNNU6T35QtrIeA9UbhDErgMQk0koCAKUxgyq1BWVQB2wK1fWf
-	SEzo4Fw/+0tOFDWnQPrxI44alPZlmB4=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-470-9-yV9NiLNO2oxNVUxd8Kxg-1; Thu, 13 Mar 2025 06:04:17 -0400
-X-MC-Unique: 9-yV9NiLNO2oxNVUxd8Kxg-1
-X-Mimecast-MFC-AGG-ID: 9-yV9NiLNO2oxNVUxd8Kxg_1741860256
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac2840b1ee8so82288866b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 03:04:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741860256; x=1742465056;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zp7hbJOUv8j+ICa1QmH9m0BekOtVujE7tGDQXjIFMhs=;
-        b=p2Fw7y8OGZND/+j3D84i9yD7tGbRLIqc4dFK67gOPSCwOUIH23El9cJHILFnJlUfZI
-         6rIjNHwLBY9UzFDo0Aw38paXmh+S8w0lOXzFIc809Zli0CePWqSwJjwRaUVZkgZrRPTd
-         iirWgMzsDdHq2M+k7mGj/eNXhFYsUrCnlWXMzq/yhN0322mUhaBvgnL7nen0m5/s/7Gq
-         XFhS2V32wCtVYZyvXOLm/yVfW7Bc1CL9wSDpWR0Lpwqq9Jsvs/oOLDNrvpRry3RWPZPP
-         b4zq4hbUZkUl1yc30EaSc2r7RzcK02vQ81ICSBB31c9eHK62xJIKZayPrzDBOoBnJ4VK
-         sDFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGPlMfjInIgZgcWv122zC4m+SVQxG/q4jqs4LRcDxCb0/9YApGjz/nfcB2lHARYb2px7rLJnAoKuQ7rvY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDxkmMv/p4NJeJi4/jQlum/FAFT8PPgvSh7KQGBWL0SaQ2Lhpb
-	sZ52cJKRlZUiJobiWAhNtwVWrTClCeEi4Xr5lUqIyMqFY+1AxcZ+l8zNKGUNplYeneuiMxqjTli
-	UiUpV3AgMkNxH15RK3n+0d5fwZrSsKP19rqnrziXBz5rksh2Pq39AUQwgKU8sOA==
-X-Gm-Gg: ASbGncuYHSB5JvT/7TVBkNPSmMBGpjfYRQVRPlZ97e8JXvsf9e4HbnziiarPmLc2HV+
-	1R8ucA4p7r97bp/kumkiWJDQjfl4mByzik6q+P52phfGnCG0CPp6fz2zfRNFeDQwq7Bn13cQEgp
-	LEFUidFG+UFfbJ/+Ty8IMZQzdvPdKd9feW4meM0GQz7nAugDjvBO+Q/LzKTHUiiC5oyS/V8rKsk
-	4PuFk3rw3NMfqQTZtZJ8eP6miyVrEjOD9VQWLzWMGfacQUmyzEHcrcfv4rsvpR6DMbX26gXOsrA
-	fCzKY6F5Ful6VduOwW4wp6Ft8tflXfPKyBk66Xf7gshqHyqm6AqJYs0pyfrFShWcuW5+QhaEA3w
-	mPjjeylqXBR9iN5Q9lkAwTQP9YYCbQOdn9frn7VMPjk/ak1AY9mo9IU63pZBhBWI9WA==
-X-Received: by 2002:a17:907:1b16:b0:abf:607b:d0d with SMTP id a640c23a62f3a-ac252a884cfmr3339106266b.16.1741860255869;
-        Thu, 13 Mar 2025 03:04:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH2PP7hITPCpcD7bejSrfori1Gcf1IzT/fSj09zWOA3DyhQyDL4CraOrxQAIURoaxeaOxIXCg==
-X-Received: by 2002:a17:907:1b16:b0:abf:607b:d0d with SMTP id a640c23a62f3a-ac252a884cfmr3339101766b.16.1741860255380;
-        Thu, 13 Mar 2025 03:04:15 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147e9bbbsm62889366b.54.2025.03.13.03.04.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Mar 2025 03:04:14 -0700 (PDT)
-Message-ID: <9ac6e1ab-f2af-4bff-9d50-24df68ca1bb9@redhat.com>
-Date: Thu, 13 Mar 2025 11:04:13 +0100
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GVd+xnki"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250313095635euoutp02f253f15f8c6bab8ef5d9035b6a910b0a~sVEFBhWjT0945209452euoutp02U
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:56:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250313095635euoutp02f253f15f8c6bab8ef5d9035b6a910b0a~sVEFBhWjT0945209452euoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741859795;
+	bh=7r/w7U2XT56aa+CytAsw7Ns1CvaaFUfylTEwM6MP9Lo=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=GVd+xnki6izV8NpKyMd0jAQoPZ6/ebpxSOown5qxvT1gDv6cEl1glr9IdntK+B+GF
+	 yvP/Gd0Bo/lSG52bqwIv1mruWSJMYc4CHFGmbn2jzDOWXYscqyhXGSvjU+HzQ82csY
+	 E5sjXB54qMbvqtAZHJ5Qj/g/8yZPN4NSpN0Ne5oU=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250313095634eucas1p1da7a0d632d9b840f4b395a7056b6df3e~sVEEKmZPv1667916679eucas1p1H;
+	Thu, 13 Mar 2025 09:56:34 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id C2.0A.20821.2DBA2D76; Thu, 13
+	Mar 2025 09:56:34 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd~sVEDqsHsm1164611646eucas1p21;
+	Thu, 13 Mar 2025 09:56:33 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250313095633eusmtrp136118e25435f486b85010eeb2dcbf1b5~sVEDpxfNx3259832598eusmtrp1d;
+	Thu, 13 Mar 2025 09:56:33 +0000 (GMT)
+X-AuditID: cbfec7f2-b11c470000005155-ce-67d2abd233ec
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id FD.6E.19654.1DBA2D76; Thu, 13
+	Mar 2025 09:56:33 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250313095631eusmtip2272fadc46d8e4aade8ba7e9684d144ed~sVEBNWsrM0285602856eusmtip2P;
+	Thu, 13 Mar 2025 09:56:30 +0000 (GMT)
+Message-ID: <9b358d68-332e-404e-9a75-740297f7b28d@samsung.com>
+Date: Thu, 13 Mar 2025 10:56:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,154 +59,407 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
- board type") on reboot (but not cold boot)
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Eric <eric.4.debian@grabatoulnz.fr>,
- Salvatore Bonaccorso <carnil@debian.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Christoph Hellwig <hch@infradead.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Damien Le Moal <dlemoal@kernel.org>, Jian-Hong Pan <jhp@endlessos.org>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, linux-ide@vger.kernel.org,
- Dieter Mummenschanz <dmummenschanz@web.de>
-References: <8763ed79-991a-4a19-abb6-599c47a35514@grabatoulnz.fr>
- <Z8VLZERz0FpvpchM@x1-carbon>
- <8b1cbfd4-6877-48ef-b17d-fc10402efbf7@grabatoulnz.fr>
- <Z8l61Kxss0bdvAQt@ryzen> <Z8l7paeRL9szo0C0@ryzen>
- <689f8224-f118-47f0-8ae0-a7377c6ff386@grabatoulnz.fr>
- <Z8rCF39n5GjTwfjP@ryzen> <9c4a635a-ce9f-4ed9-9605-002947490c61@redhat.com>
- <Z88rtGH39C-S8phk@ryzen> <383d5740-7740-4051-b39a-b8c74b035ec2@redhat.com>
- <Z9BFSM059Wj2cYX5@ryzen>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Z9BFSM059Wj2cYX5@ryzen>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+To: Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla
+	<sudeep.holla@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+	<lenb@kernel.org>, Russell King <linux@armlinux.org.uk>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, Stuart
+	Yoder <stuyoder@gmail.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun
+	Gupta <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>, Joerg
+	Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Rob Herring
+	<robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+	<bhelgaas@google.com>
+Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Charan Teja Kalla
+	<quic_charante@quicinc.com>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUxbVRzN7Xt9fW0svnYYrtuErEYSiZZhRrzbABkh8RFnxOxDx9TZjGch
+	lA9bcOoyRmhhUGECkw7KWhrYxixVoOBsJ6NrIXaAIisb1spC2NjccMCgxWRziC1vU/4759xz
+	7vn9bi6JiY3EejI7r5BR5skUEkKAn//xwS8ve9o98s2WSzx0ujQL/am7T6DmgREuUrd2EMhp
+	b+ShhwGEKps6eShQM4wj+9Qsgdr6vgTIenOci8YunCLQz0Y3gVz1FwHSPNLgqMEmRUt3dTjq
+	aM5FhkA9hlZ6bTzkvD/NRVrXcvDaLh+G2oZsONJMxCc/S087jRy6zLNM0BajBdBj41cw2q6/
+	zqNN1iJaMzDLpa3mSoJ2GCw8uvv0UfpOdyOgu+ZsHLq2t5j2WyPTwzIECZmMIvsTRhmb9KEg
+	S3P2BqegL//Ta48q8BIwsk8L+CSktsAzty8BLRCQYuocgCvOQYIlAQBLDP2PiR9A71Q590mk
+	qnqZCGEx1QZgy9DHLF4A0GwvCGEhlQRnymd5IYxTL8Azi1/jrC6Cg43Tq/gZKgpO+hpWPeuo
+	XXBOe2N1jHDKyoW/lv3EDRGMugVg5zXvahtGRUDfdDMnhAkqDmpntas6n9oPTdpeLuuJgurv
+	mrBQGFIGAazvb8XYsVOh7/tBgsXr4Iy7h8fijXD4RBXOBo4BaPp7ksOSmuAL/OEDrGs7nBh5
+	GEyTwYoXYceFWFbeAbX+eiwkQyoMemdF7BBhsO78yceyEFaUi1l3NNS7v/2v1jnqwWqARL/m
+	YfRr1tSvWUf/f68J4GYQwRSpcuWMKi6POSRVyXJVRXly6cH8XCsIfuHhf9yLNmCYWZC6AIcE
+	LgBJTBIubE8clYuFmbLPPmeU+QeURQpG5QIbSFwSIWxxlMnFlFxWyOQwTAGjfHLKIfnrSzgb
+	fES+gZ+Vc6TfUe14ZzFFcaxRvz05POMjcvnwvc1bf1uZwqq7Gyay0yJdhJXf83SZOmWPaqDy
+	8nixYXKT9dabPQrfpnNRyjvlGt0Pdkdf6c5hS3bizrn0vKdei/1g2x5R1IOa9wszTkU7j0dU
+	JB6a14LUN7aJ/Lyv+lIW+t5uqo2cB2b61b1nxwWjruPJsG4s3hP7iinMe9SqfCk9PmOoBIsh
+	uwyZxWlbpqr27j641W5svpqadPev381emFWhvtodLTJfTEnXva7fcaXdf7lFcrtfpw7kvLcU
+	d/jk8xuFSzHRIz2laW89d0Bae+SLhbp7rTffTWjb16lz7+/8JqE2c/66BFdlyeJiMKVK9i9x
+	joX9MQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEKsWRmVeSWpSXmKPExsVy+t/xe7oXV19KN5j5X9FiSVOGxetpH9gs
+	5h85x2rRvHg9m8XBnTPZLX59sbDonL2B3eLLhNMsFjsfvmWzWL6vn9Fi0+NrrBaXd81hszg7
+	7zibxaGpexktWv60sFjM2KFn8fXlNBaL9fNzLeZ+mcps8X/PDnaLgx+esFp0HfoLNHbjLWaL
+	5ad2sFi03DF1kPR4cnAek0frpb9sHmvmrWH0uHztIrPHzll32T0WbCr1aDnyltVj06pONo/9
+	c9ewe2xeUu/xYvNMRo+N73YweUzcU+fxeZNcAF+Unk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6R
+	iaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXkbLskdMBfvyK67+6WBpYDwX2cXIySEhYCLR0/uX
+	rYuRi0NIYCmjxOujHSwQCRmJk9MaWCFsYYk/17qgit4zSiw/28YIkuAVsJN41faWHcRmEVCV
+	WPppJQtEXFDi5MwnYLaogLzE/VszwGqEBYIl3nU9YgQZJCKwjVXi2rydzCAOs8BTRokv55+x
+	QqzoYJRY1/KWGaSFWUBc4taT+UwgNpuAoUTXW5A7ODk4BaIlFnTtYYWoMZPo2trFCGHLSzRv
+	nc08gVFoFpJLZiEZNQtJyywkLQsYWVYxiqSWFuem5xYb6RUn5haX5qXrJefnbmIEJp5tx35u
+	2cG48tVHvUOMTByMhxglOJiVRHhX215IF+JNSaysSi3Kjy8qzUktPsRoCgyOicxSosn5wNSX
+	VxJvaGZgamhiZmlgamlmrCTOy3blfJqQQHpiSWp2ampBahFMHxMHp1QD0+73jwJbDJ5xpG5c
+	qRSStmG+yezgMxn3gm8eM+wNDz2bqdkn//U4O9dxxWmrv8dX3vFglFr8PK1Z9EX5uqR7B0rY
+	dhuHWKw7lDHp4h8mX493cs8dHPMYPjvYRGlHWLn/UJzRpxonwLc3QpilWbM8ec/aAuulGY92
+	Lz206dCKZYJKR34v5OKy/3qt/uaRJSes6gPbf3+Ksi/7Kq++skpeu+mqs76JjqhOwSXVerGk
+	fUc5Cj/NiDX+8Drs0c4P14+/mCJ3+G2d6h/Fbr4jidGSa10VpLUeztqRyDX3WEKj0InL56W6
+	OCV+3zoy2fH9HI8Q5oWzZzOuC8tLLJEU2cU+2dd6Ru+KTQ6clw7rRP0tUGIpzkg01GIuKk4E
+	ACR6U2bFAwAA
+X-CMS-MailID: 20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd
+References: <cover.1740753261.git.robin.murphy@arm.com>
+	<e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+	<CGME20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd@eucas1p2.samsung.com>
 
-Hi Niklas, Eric,
+Hi Robin,
 
-On 11-Mar-25 3:14 PM, Niklas Cassel wrote:
-> Hello Hans, Eric,
-> 
-> On Mon, Mar 10, 2025 at 09:12:13PM +0100, Hans de Goede wrote:
->>
->> I agree with you that this is a BIOS bug of the motherboard in question
->> and/or a bad interaction between the ATI SATA controller and Samsung SSD
->> 870* models. Note that given the age of the motherboard there are likely
->> not going to be any BIOS updates fixing this though.
-> 
-> Looking at the number of quirks for some of the ATI SB7x0/SB8x0/SB9x0 SATA
-> controllers, they really look like something special (not in a good way):
-> https://github.com/torvalds/linux/blob/v6.14-rc6/drivers/ata/ahci.c#L236-L244
-> 
-> -Ignore SError internal
-> -No MSI
-> -Max 255 sectors
-> -Broken 64-bit DMA
-> -Retry SRST (software reset)
-> 
-> And that is even without the weird "disable NCQ but only for Samsung SSD
-> 8xx drives" quirk when using these ATI controllers.
-> 
-> 
-> What does bother me is that we don't know if it is this specific mobo/BIOS:
->      Manufacturer: ASUSTeK COMPUTER INC.
->      Product Name: M5A99X EVO R2.0
->      Version: Rev 1.xx
-> 
->      M5A99X EVO R2.0 BIOS 2501
->      Version 2501
->      3.06 MB
->      2014/05/14
-> 
-> 
-> that should have a NOLPM quirk, like we do for specific BIOSes:
-> https://github.com/torvalds/linux/blob/v6.14-rc6/drivers/ata/ahci.c#L1402-L1439
+On 28.02.2025 16:46, Robin Murphy wrote:
+> In hindsight, there were some crucial subtleties overlooked when moving
+> {of,acpi}_dma_configure() to driver probe time to allow waiting for
+> IOMMU drivers with -EPROBE_DEFER, and these have become an
+> ever-increasing source of problems. The IOMMU API has some fundamental
+> assumptions that iommu_probe_device() is called for every device added
+> to the system, in the order in which they are added. Calling it in a
+> random order or not at all dependent on driver binding leads to
+> malformed groups, a potential lack of isolation for devices with no
+> driver, and all manner of unexpected concurrency and race conditions.
+> We've attempted to mitigate the latter with point-fix bodges like
+> iommu_probe_device_lock, but it's a losing battle and the time has come
+> to bite the bullet and address the true source of the problem instead.
+>
+> The crux of the matter is that the firmware parsing actually serves two
+> distinct purposes; one is identifying the IOMMU instance associated with
+> a device so we can check its availability, the second is actually
+> telling that instance about the relevant firmware-provided data for the
+> device. However the latter also depends on the former, and at the time
+> there was no good place to defer and retry that separately from the
+> availability check we also wanted for client driver probe.
+>
+> Nowadays, though, we have a proper notion of multiple IOMMU instances in
+> the core API itself, and each one gets a chance to probe its own devices
+> upon registration, so we can finally make that work as intended for
+> DT/IORT/VIOT platforms too. All we need is for iommu_probe_device() to
+> be able to run the iommu_fwspec machinery currently buried deep in the
+> wrong end of {of,acpi}_dma_configure(). Luckily it turns out to be
+> surprisingly straightforward to bootstrap this transformation by pretty
+> much just calling the same path twice. At client driver probe time,
+> dev->driver is obviously set; conversely at device_add(), or a
+> subsequent bus_iommu_probe(), any device waiting for an IOMMU really
+> should *not* have a driver already, so we can use that as a condition to
+> disambiguate the two cases, and avoid recursing back into the IOMMU core
+> at the wrong times.
+>
+> Obviously this isn't the nicest thing, but for now it gives us a
+> functional baseline to then unpick the layers in between without many
+> more awkward cross-subsystem patches. There are some minor side-effects
+> like dma_range_map potentially being created earlier, and some debug
+> prints being repeated, but these aren't significantly detrimental. Let's
+> make things work first, then deal with making them nice.
+>
+> With the basic flow finally in the right order again, the next step is
+> probably turning the bus->dma_configure paths inside-out, since all we
+> really need from bus code is its notion of which device and input ID(s)
+> to parse the common firmware properties with...
+>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com> # pci-driver.c
+> Acked-by: Rob Herring (Arm) <robh@kernel.org> # of/device.c
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
-That seems to be a Lenovo only thing though and with Intel chipsets.
+This patch landed in yesterday's linux-next as commit bcb81ac6ae3c 
+("iommu: Get DT/ACPI parsing into the proper probe path"). In my tests I 
+found it breaks booting of ARM64 RK3568-based Odroid-M1 board 
+(arch/arm64/boot/dts/rockchip/rk3568-odroid-m1.dts). Here is the 
+relevant kernel log:
 
-> Or if it this ATI SATA controller that is always broken when it comes
-> to LPM, regardless of the drive, or if it is only Samsung drives.
+Unable to handle kernel NULL pointer dereference at virtual address 
+00000000000003e8
+Mem abort info:
+   ESR = 0x0000000096000004
+   EC = 0x25: DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+   FSC = 0x04: level 0 translation fault
+Data abort info:
+   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[00000000000003e8] user address but active_mm is swapper
+Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc3+ #15533
+Hardware name: Hardkernel ODROID-M1 (DT)
+pstate: 00400009 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : devm_kmalloc+0x2c/0x114
+lr : rk_iommu_of_xlate+0x30/0x90
+...
+Call trace:
+  devm_kmalloc+0x2c/0x114 (P)
+  rk_iommu_of_xlate+0x30/0x90
+  of_iommu_xlate+0x9c/0xc8
+  of_iommu_configure+0x1c4/0x23c
+  of_dma_configure_id+0x244/0x3b8
+  platform_dma_configure+0x74/0xac
+  __iommu_probe_device+0x258/0x49c
+  probe_iommu_group+0x3c/0x64
+  bus_for_each_dev+0x74/0xd4
+  iommu_device_register+0xd4/0x230
+  rk_iommu_probe+0x1f8/0x350
+  platform_probe+0x68/0xdc
+  really_probe+0xbc/0x298
+  __driver_probe_device+0x78/0x12c
+  driver_probe_device+0x40/0x164
+  __driver_attach+0x9c/0x1ac
+  bus_for_each_dev+0x74/0xd4
+  driver_attach+0x24/0x30
+  bus_add_driver+0xe4/0x208
+  driver_register+0x60/0x128
+  __platform_driver_register+0x24/0x30
+  rk_iommu_driver_init+0x1c/0x28
+  do_one_initcall+0x64/0x308
+  kernel_init_freeable+0x288/0x4f0
+  kernel_init+0x20/0x1d8
+  ret_from_fork+0x10/0x20
+Code: d2801017 a90153f3 ab0102e0 aa0103f4 (b943eab8)
+---[ end trace 0000000000000000 ]---
+Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+SMP: stopping secondary CPUs
+Kernel Offset: disabled
+CPU features: 0x100,00000040,00901250,8200720b
+Memory Limit: none
+---[ end Kernel panic - not syncing: Attempted to kill init! 
+exitcode=0x0000000b ]---
 
-I'm pretty sure we can assume this will happen on all ATI SATA
-controllers, the new LPM default is pretty recent and these boards are
-getting old, so likely have not that many users who use distros which
-ship cutting edge kernels.
+Let me know if You want me to test any experimental patch or provide 
+more information.
 
-I do agree with you that it is a question if this is another bad
-interaction with Samsung SATA SSDs, or if it is a general ATI SATA
-controller problem, but see below.
+> ---
+>
+> v2:
+>   - Comment bus driver changes for clarity
+>   - Use dev->iommu as the now-robust replay condition
+>   - Drop the device_iommu_mapped() checks in the firmware paths as they
+>     weren't doing much - we can't replace probe_device_lock just yet...
+>   
+>   drivers/acpi/arm64/dma.c        |  5 +++++
+>   drivers/acpi/scan.c             |  7 -------
+>   drivers/amba/bus.c              |  3 ++-
+>   drivers/base/platform.c         |  3 ++-
+>   drivers/bus/fsl-mc/fsl-mc-bus.c |  3 ++-
+>   drivers/cdx/cdx.c               |  3 ++-
+>   drivers/iommu/iommu.c           | 24 +++++++++++++++++++++---
+>   drivers/iommu/of_iommu.c        |  7 ++++++-
+>   drivers/of/device.c             |  7 ++++++-
+>   drivers/pci/pci-driver.c        |  3 ++-
+>   10 files changed, 48 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/acpi/arm64/dma.c b/drivers/acpi/arm64/dma.c
+> index 52b2abf88689..f30f138352b7 100644
+> --- a/drivers/acpi/arm64/dma.c
+> +++ b/drivers/acpi/arm64/dma.c
+> @@ -26,6 +26,11 @@ void acpi_arch_dma_setup(struct device *dev)
+>   	else
+>   		end = (1ULL << 32) - 1;
+>   
+> +	if (dev->dma_range_map) {
+> +		dev_dbg(dev, "dma_range_map already set\n");
+> +		return;
+> +	}
+> +
+>   	ret = acpi_dma_get_range(dev, &map);
+>   	if (!ret && map) {
+>   		end = dma_range_map_max(map);
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 9f4efa8f75a6..fb1fe9f3b1a3 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1632,13 +1632,6 @@ static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
+>   		err = viot_iommu_configure(dev);
+>   	mutex_unlock(&iommu_probe_device_lock);
+>   
+> -	/*
+> -	 * If we have reason to believe the IOMMU driver missed the initial
+> -	 * iommu_probe_device() call for dev, replay it to get things in order.
+> -	 */
+> -	if (!err && dev->bus)
+> -		err = iommu_probe_device(dev);
+> -
+>   	return err;
+>   }
+>   
+> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+> index 8ef259b4d037..71482d639a6d 100644
+> --- a/drivers/amba/bus.c
+> +++ b/drivers/amba/bus.c
+> @@ -364,7 +364,8 @@ static int amba_dma_configure(struct device *dev)
+>   		ret = acpi_dma_configure(dev, attr);
+>   	}
+>   
+> -	if (!ret && !drv->driver_managed_dma) {
+> +	/* @drv may not be valid when we're called from the IOMMU layer */
+> +	if (!ret && dev->driver && !drv->driver_managed_dma) {
+>   		ret = iommu_device_use_default_domain(dev);
+>   		if (ret)
+>   			arch_teardown_dma_ops(dev);
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 6f2a33722c52..1813cfd0c4bd 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -1451,7 +1451,8 @@ static int platform_dma_configure(struct device *dev)
+>   		attr = acpi_get_dma_attr(to_acpi_device_node(fwnode));
+>   		ret = acpi_dma_configure(dev, attr);
+>   	}
+> -	if (ret || drv->driver_managed_dma)
+> +	/* @drv may not be valid when we're called from the IOMMU layer */
+> +	if (ret || !dev->driver || drv->driver_managed_dma)
+>   		return ret;
+>   
+>   	ret = iommu_device_use_default_domain(dev);
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index d1f3d327ddd1..a8be8cf246fb 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -153,7 +153,8 @@ static int fsl_mc_dma_configure(struct device *dev)
+>   	else
+>   		ret = acpi_dma_configure_id(dev, DEV_DMA_COHERENT, &input_id);
+>   
+> -	if (!ret && !mc_drv->driver_managed_dma) {
+> +	/* @mc_drv may not be valid when we're called from the IOMMU layer */
+> +	if (!ret && dev->driver && !mc_drv->driver_managed_dma) {
+>   		ret = iommu_device_use_default_domain(dev);
+>   		if (ret)
+>   			arch_teardown_dma_ops(dev);
+> diff --git a/drivers/cdx/cdx.c b/drivers/cdx/cdx.c
+> index c573ed2ee71a..780fb0c4adba 100644
+> --- a/drivers/cdx/cdx.c
+> +++ b/drivers/cdx/cdx.c
+> @@ -360,7 +360,8 @@ static int cdx_dma_configure(struct device *dev)
+>   		return ret;
+>   	}
+>   
+> -	if (!ret && !cdx_drv->driver_managed_dma) {
+> +	/* @cdx_drv may not be valid when we're called from the IOMMU layer */
+> +	if (!ret && dev->driver && !cdx_drv->driver_managed_dma) {
+>   		ret = iommu_device_use_default_domain(dev);
+>   		if (ret)
+>   			arch_teardown_dma_ops(dev);
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index a3b45b84f42b..1cec7074367a 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -414,9 +414,21 @@ static int iommu_init_device(struct device *dev)
+>   	if (!dev_iommu_get(dev))
+>   		return -ENOMEM;
+>   	/*
+> -	 * For FDT-based systems and ACPI IORT/VIOT, drivers register IOMMU
+> -	 * instances with non-NULL fwnodes, and client devices should have been
+> -	 * identified with a fwspec by this point. Otherwise, we can currently
+> +	 * For FDT-based systems and ACPI IORT/VIOT, the common firmware parsing
+> +	 * is buried in the bus dma_configure path. Properly unpicking that is
+> +	 * still a big job, so for now just invoke the whole thing. The device
+> +	 * already having a driver bound means dma_configure has already run and
+> +	 * either found no IOMMU to wait for, or we're in its replay call right
+> +	 * now, so either way there's no point calling it again.
+> +	 */
+> +	if (!dev->driver && dev->bus->dma_configure) {
+> +		mutex_unlock(&iommu_probe_device_lock);
+> +		dev->bus->dma_configure(dev);
+> +		mutex_lock(&iommu_probe_device_lock);
+> +	}
+> +	/*
+> +	 * At this point, relevant devices either now have a fwspec which will
+> +	 * match ops registered with a non-NULL fwnode, or we can reasonably
+>   	 * assume that only one of Intel, AMD, s390, PAMU or legacy SMMUv2 can
+>   	 * be present, and that any of their registered instances has suitable
+>   	 * ops for probing, and thus cheekily co-opt the same mechanism.
+> @@ -426,6 +438,12 @@ static int iommu_init_device(struct device *dev)
+>   		ret = -ENODEV;
+>   		goto err_free;
+>   	}
+> +	/*
+> +	 * And if we do now see any replay calls, they would indicate someone
+> +	 * misusing the dma_configure path outside bus code.
+> +	 */
+> +	if (dev->driver)
+> +		dev_WARN(dev, "late IOMMU probe at driver bind, something fishy here!\n");
+>   
+>   	if (!try_module_get(ops->owner)) {
+>   		ret = -EINVAL;
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index e10a68b5ffde..6b989a62def2 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -155,7 +155,12 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
+>   		dev_iommu_free(dev);
+>   	mutex_unlock(&iommu_probe_device_lock);
+>   
+> -	if (!err && dev->bus)
+> +	/*
+> +	 * If we're not on the iommu_probe_device() path (as indicated by the
+> +	 * initial dev->iommu) then try to simulate it. This should no longer
+> +	 * happen unless of_dma_configure() is being misused outside bus code.
+> +	 */
+> +	if (!err && dev->bus && !dev_iommu_present)
+>   		err = iommu_probe_device(dev);
+>   
+>   	if (err && err != -EPROBE_DEFER)
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index edf3be197265..5053e5d532cc 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -99,6 +99,11 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
+>   	bool coherent, set_map = false;
+>   	int ret;
+>   
+> +	if (dev->dma_range_map) {
+> +		dev_dbg(dev, "dma_range_map already set\n");
+> +		goto skip_map;
+> +	}
+> +
+>   	if (np == dev->of_node)
+>   		bus_np = __of_get_dma_parent(np);
+>   	else
+> @@ -119,7 +124,7 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
+>   		end = dma_range_map_max(map);
+>   		set_map = true;
+>   	}
+> -
+> +skip_map:
+>   	/*
+>   	 * If @dev is expected to be DMA-capable then the bus code that created
+>   	 * it should have initialised its dma_mask pointer by this point. For
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index f57ea36d125d..4468b7327cab 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1653,7 +1653,8 @@ static int pci_dma_configure(struct device *dev)
+>   
+>   	pci_put_host_bridge_device(bridge);
+>   
+> -	if (!ret && !driver->driver_managed_dma) {
+> +	/* @driver may not be valid when we're called from the IOMMU layer */
+> +	if (!ret && dev->driver && !driver->driver_managed_dma) {
+>   		ret = iommu_device_use_default_domain(dev);
+>   		if (ret)
+>   			arch_teardown_dma_ops(dev);
 
-> Considering the dmesg comparing cold boot, the Maxtor drive and the
-> ASUS ATAPI device seems to be recognized correctly.
-> 
-> Eric, could you please run:
-> $ sudo hdparm -I /dev/sdX | grep "interface power management"
-> 
-> on both your Samsung and Maxtor drive?
-> (A star to the left of feature means that the feature is enabled)
-> 
-> 
-> 
-> One guess... perhaps it could be Device Initiated PM that is broken with
-> these controllers? (Even though the controller does claim to support it.)
-> 
-> Eric, could you please try this patch:
-> 
-> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-> index f813dbdc2346..ca690fde8842 100644
-> --- a/drivers/ata/ahci.c
-> +++ b/drivers/ata/ahci.c
-> @@ -244,7 +244,7 @@ static const struct ata_port_info ahci_port_info[] = {
->  	},
->  	[board_ahci_sb700] = {	/* for SB700 and SB800 */
->  		AHCI_HFLAGS	(AHCI_HFLAG_IGN_SERR_INTERNAL),
-> -		.flags		= AHCI_FLAG_COMMON,
-> +		.flags		= AHCI_FLAG_COMMON | ATA_FLAG_NO_DIPM,
->  		.pio_mask	= ATA_PIO4,
->  		.udma_mask	= ATA_UDMA6,
->  		.port_ops	= &ahci_pmp_retry_srst_ops,
-> 
-> 
-> 
-> Normally, I do think that we need more reports, to see if it is just
-> this specific BIOS, or all the ATI SB7x0/SB8x0/SB9x0 SATA controllers
-> that are broken...
-> 
-> ...but, considering how many quirks these ATI controllers have already...
-
-Right in the mean time Eric has reported back that the above patch fixes
-this. Thank you for testing this Eric,
-
-One reason why ATA_QUIRK_NO_NCQ_ON_ATI was introduced is because
-disabling NCQ has severe performance impacts for SSDs, so we did not want
-to do this for all ATI controllers; or for all Samsung drives. Given that
-until the recent LPM default change we did not use DIPM on ATI chipsets
-the above fix IMHO is a good fix, which even keeps the rest of the LPM
-power-savings.
-
-> ...and the fact that the one (Dieter) who reported that his Samsung SSD 870
-> QVO could enter deeper sleep states just fine was running an Intel AHCI
-> controller (with the same FW version as Eric), I would be open to a patch
-> that sets ATA_FLAG_NO_LPM for all these ATI controllers.
-
-Right I think it is save to assume that this is not a Samsung drive problem
-it is an ATI controller problem. The only question is if this only impacts
-ATI <-> Samsung SSD combinations or if it is a general issue with ATI
-controllers. But given the combination of DIPM not having been enabled
-on these controllers by default anyways, combined with the age of these
-motherboards (*) I believe that the above patch is a good compromise to
-fix the regression without needing to wait for more data.
-
-Regards,
-
-Hans
-
-*) And there thus being less users making getting more data hard. And
-alo meaning not having DIPM will impact only the relatively few remaining
-users
-
-
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
