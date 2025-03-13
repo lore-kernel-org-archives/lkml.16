@@ -1,113 +1,130 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D78259CB4
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFC41DF26F
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741853972; cv=none; b=KO/EVFK09M4wMuvPgsmKy9JyuJuVLMAK/dhx7uSNdrygaxqyhJ8QkwuY1glT/WsVjksWt6vWgLAJea6nsEpOLLTG8bag1AvrYKxNMmVqou/33T2zRQ6zMNbMQop/1Yoc694/KDy8j2gQVOHeYRObY3pxlsnQfkrQBEVrb31a+Ak=
+	t=1741853992; cv=none; b=bhBZG+fiU/Ih8aQG+4uooSJa+x5fgdn5iVnN0BASU7mCNNpPL0o+TJ7OGp2xAwep4rfhqf9yBbgQn+b7kRhQZ5iNg6NpS4jfHnph2lt9SKrXhX/iv46/zmflUemtv6Ig+Sv0gJ+mc8I1/J9yrZDmcmO13SvgkIR4Sg6EdkF+UBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741853972; c=relaxed/simple;
-	bh=KoEEv/IQr2Nh7rqjmNfTP2da2uHnnyRE8EbB3JuJLT0=;
+	s=arc-20240116; t=1741853992; c=relaxed/simple;
+	bh=ICD6c+vTcPmgCvlPSfErvejItxtLWXfY+HODu9IhgnU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J5ZsOlxutNTXVuUIbhDIZ0dj55p6vYtgg1aSRp0xxqAHiKwF+dyyilKUSn9rdxR99PHIJf69O1zG5sK0q6xvUILppfNRJHnAoDyqIfxHUAHSfnUQ4DEXTy/hjJ2jr3EMXuHOpQbLshYrtoLMwHHDbWOYGp7UhmaWtzCoNl9XIrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=kE5HyMZX; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="kE5HyMZX"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2254e0b4b79so17268285ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1741853970; x=1742458770; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWEt0i+2shFRFdfbZiPgVihU5WzfabKYy6Z4Ak51Ze4=;
-        b=kE5HyMZXx7dXAQGAGkl7HAvH1gsMoLM6R3W0gZpLuut8lxc5hS3f3DJNtAWIXR1fCi
-         j5fqdQouyghvkog/+75mrCDmb4euBa9DTx+yrMPgZdBx5+4m44Z1lfuwhUcQymQGBD5K
-         fPamU0PH22XUL2fT2CUi9fBlzdCq4Dd8jgpivMxAidSyy7wHAeg9lph49AcF5gHNwrTA
-         BLb2m4z9eV1h3i+pgtbGQsPKJTH61ixBWfxG3Kxm6Pznv3nlHdxhNDuzY4Co59CoGvLx
-         SB7p1dIFAjUdWSMOVWEUkY5PnbCyeIRVJKQ/VcsIep9IVeWcI9TfBYtS41yisDCpweUl
-         qZJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741853970; x=1742458770;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZWEt0i+2shFRFdfbZiPgVihU5WzfabKYy6Z4Ak51Ze4=;
-        b=D01PCRZltbInm8zMhWXEPUGGFbbl0+6oVe74kFB3ngCqxa+GzAmK99DnHsrSSns5XY
-         660D8AdoQ19MMlmWql0b8I55EpBgbqdXwwRqM4xFjKrjpt3ESbAZ8djOfHl1KRJvLVV4
-         EqzY7PKAEUiKjEMA7a/GIARkDwFGB4x+KX1vxiQEtxGXJFnjXa0S/aScVZdwoei2Kwpu
-         4HwV9d2BKAn9U3a+vscj/TW9Za2Y19Z4iqujFvfcQAyMmwYjVDRte0GuD8ZJFdq+SAtI
-         spKrvreVJo50BfryFruQqyb/Eyvk/Fv02B+BuriimQyj59VeDTWt8xpga5Jx2nw4iWxZ
-         QIxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdd6pnPckWnsXS9ZgWlSFLysvATjKS/9epOEly1LFFT3naulFQyI+ESvfCvvI7khiPh4tJJLjkJu+/avg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz86p6YLk5jyn3KFdm/hA2tD8rniHtlI3y7K06XnP5p8if31DOB
-	/A6dUVuee+NYqQXkdef3LG6kfCOlXXxlU0mBTpIH/IgoUj64P3xup/6+vSqrOgQ=
-X-Gm-Gg: ASbGnctVhpIyw6jFxCPBJvu5HbvXsasuKNaX1rUcfYpyy7bbe7hb9rtDfSO2R76Ra8m
-	2A8y6zRVINywCKz/cHL011zozE17Opwh6J5c4UbTw9OMI+hMynEBG1sTsUAeJOoZzOb29RnaAHF
-	g1X5/wvYeUvPelBmnoU9+QSX43B6OCqjr5zMSa+zBIYt9vqRWbTMj3uJixMYKa/YA6HEkwoFqcO
-	Wup3feSzyB7XCCSpSRCERYXeVcAI3ls/2XIaGq5i91+weNKUAisXiL1aBVqGYbMMLkNQjz4foDI
-	19uS0dsSK/fUuc83Z4ae2b0s+A==
-X-Google-Smtp-Source: AGHT+IGvY/QZ39O2R90TZNOtRAufIJfxJ4YdpteHqgXktgzR2lShse5uenWthjfQWslvwJsLPVd98A==
-X-Received: by 2002:a17:902:ec92:b0:220:e9ef:ec98 with SMTP id d9443c01a7336-22428896a74mr388719455ad.19.1741853969936;
-        Thu, 13 Mar 2025 01:19:29 -0700 (PDT)
-Received: from x1 ([97.115.231.194])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd3c59sm7843595ad.218.2025.03.13.01.19.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 01:19:29 -0700 (PDT)
-Date: Thu, 13 Mar 2025 01:19:27 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>,
-	Michal Wilczynski <m.wilczynski@samsung.com>, guoren@kernel.org,
-	wefu@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, jszhang@kernel.org,
-	m.szyprowski@samsung.com, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v8 0/5] TH1520 SoC: Add AON firmware & power-domain
- support
-Message-ID: <Z9KVD1GKGKPwMR+9@x1>
-References: <CGME20250311172030eucas1p12dda42760f751174e774b8d1a3d3f4cd@eucas1p1.samsung.com>
- <20250311171900.1549916-1-m.wilczynski@samsung.com>
- <CAPDyKFqeaq5xVNA=0CpMWSt_78qXJsY6+mpE1CSmLrVMQazAjg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HrjUPjlgUvrhKrSjLwHTs6Z/PmULC3AGkZpy+9zsxaw1k8/9dnaedmE1Sft4pVx+A0qYVYXggK1GL1fAwKyqbx0kK31r8tu/0CrX6j/qtkNg+grysIWPRga4D95brBu3z63ZRrjlvCMychVxKlTUPejBWs+h901ldPlOtrJnw4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tsdn3-0005SZ-8X; Thu, 13 Mar 2025 09:19:41 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tsdn1-005VJV-2Z;
+	Thu, 13 Mar 2025 09:19:39 +0100
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 1CD723D9534;
+	Thu, 13 Mar 2025 07:12:07 +0000 (UTC)
+Date: Thu, 13 Mar 2025 08:12:06 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, heiko@sntech.de, 
+	linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] can: rockchip: bail out if skb cannot be allocated
+Message-ID: <20250313-urban-bat-of-cubism-bf5a4a-mkl@pengutronix.de>
+References: <20250313011506.3132295-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hi4c7kylwypwmzkk"
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFqeaq5xVNA=0CpMWSt_78qXJsY6+mpE1CSmLrVMQazAjg@mail.gmail.com>
+In-Reply-To: <20250313011506.3132295-1-chenyuan0y@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, Mar 12, 2025 at 02:40:05PM +0100, Ulf Hansson wrote:
-> On Tue, 11 Mar 2025 at 18:20, Michal Wilczynski
-> <m.wilczynski@samsung.com> wrote:
-> >
-> > This patch series introduces and documents power management (PM) support and
-> > the AON firmware driver for the T-Head TH1520 SoC, as used on the LicheePi 4A
-> > board. While part of a larger effort to enable the Imagination BXM-4-64 GPU
-> > upstream, these patches can merge independently.
-> >
-> > Bigger series cover letter:
-> > https://lore.kernel.org/all/20250219140239.1378758-1-m.wilczynski@samsung.com/
-> >
-> > This series is versioned to maintain continuity with the bigger patchset it is
-> > a subseries of. Please find below a changelog for the AON & power-domain:
-> 
-> I can pick up patch1 -> patch4 via my pmdomain tree, assuming I can
-> get an ack from some of the thead-SoC maintainers.
-> 
-> Patch5 is probably better to be routed through the SoC maintainers
-> tree, but let me know if you prefer me to take this one too.
-> 
-> Kind regards
-> Uffe
 
-Conor - would you be able to take the arch/riscv/Kconfig.socs patch?
+--hi4c7kylwypwmzkk
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] can: rockchip: bail out if skb cannot be allocated
+MIME-Version: 1.0
 
-Thanks,
-Drew
+Hello Chenyuan Yang,
+
+thanks for your contribution.
+
+On 12.03.2025 20:15:05, Chenyuan Yang wrote:
+> Add NULL pointer check in rkcanfd_handle_error_int() to
+> bail out if skb cannot be allocated.
+
+If the skb cannot be allocated, the cf is also NULL.
+
+regards,
+Marc
+
+> This is similar to the commit f7f0adfe64de
+> ("can: rockchip: rkcanfd_handle_rx_fifo_overflow_int(): bail out if skb c=
+annot be allocated").
+>=20
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> ---
+>  drivers/net/can/rockchip/rockchip_canfd-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/can/rockchip/rockchip_canfd-core.c b/drivers/net=
+/can/rockchip/rockchip_canfd-core.c
+> index d9a937ba126c..90395cbdaab9 100644
+> --- a/drivers/net/can/rockchip/rockchip_canfd-core.c
+> +++ b/drivers/net/can/rockchip/rockchip_canfd-core.c
+> @@ -551,7 +551,7 @@ static int rkcanfd_handle_error_int(struct rkcanfd_pr=
+iv *priv)
+> =20
+>  	rkcanfd_handle_error_int_reg_ec(priv, cf, reg_ec);
+> =20
+> -	if (!cf)
+> +	if (!cf || !skb)
+>  		return 0;
+> =20
+>  	err =3D can_rx_offload_queue_timestamp(&priv->offload, skb, timestamp);
+> --=20
+> 2.34.1
+>=20
+>=20
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--hi4c7kylwypwmzkk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfShUIACgkQDHRl3/mQ
+kZw+Vgf+Opaq2kYtMPX9Sc52f+TJg+T4rZBFr2HjmKx59vTMbPeQwECyTkMiZRyG
++KKA5CF5MTLZoS0+mi5Jh2Ju7iUVfH+PON/Yzk7bI1tGkGJ0T1WU5O6q2wrVx1rs
+MXLa/FNPQbCGvJQsIVpylRq3cw2Ny0kXv9vEMrdCa3RWKDEU/jZxgnYiAc49wyZV
+WlJ6RwNXJLO4fwr03+o8l/YUstsQ2vk/SqRB9/r10a2cduWUORBg7TWKPXy7sEoa
+TvrcPdFFKhHB8hScGokd367/9wL2VjPPojL3k1d76maZobHNaYZ9doXv2O4zoAC8
+aAghWiucEJKt71ZqaqKf47d8494AwA==
+=TqR1
+-----END PGP SIGNATURE-----
+
+--hi4c7kylwypwmzkk--
