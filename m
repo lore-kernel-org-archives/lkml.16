@@ -1,175 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474262676EA
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1C71754B
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 13:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741870931; cv=none; b=KwjuYZQFjX8h7K16CSePjkmWek2vv21Ib6A/SRKwZFJwvwNsYClIfjQF12JTNBJH6D+etiL8/rrPMIO0vliOXtuJJKr8FhAOLxw7XHcTQot+lD/5Z4KJg/RB3g4Few79WsaneAXJpo3T37b1Wy0OKvu1IM2V3MMwzzNPuoQo/O4=
+	t=1741870961; cv=none; b=Ch2tJ29+HuCx1OiozZwCn46pCpq4hCqjhN6lDYG6VzUwwm1LYlFsa0ljfwpHbNaY0AbZn+T3SwU1K6zoLyKKTpxHcd2KdtoZJpzfJtKMQbn5LD2ndUm9wasa0nqZ7ba23IlH5nMXW/5zuUlmKaNQv2hEsYPEDQvjCn6XE2tJI9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741870931; c=relaxed/simple;
-	bh=O4pkq9pY+IGrDhCQlHU6mDDfuQ0F6VBwbCN7BFb0QZo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=h3bvY2zbWUzpRdMqiZ7NaEetUCUNWWxi69BZmfCGSPQBNvR8kO50Ln4j8VnucY2k4xxAZ19prH3n77PEKRL82ByG53dEkBku0GKoLkMN1AuFRy29pBnMk+jEP2VyJHZxE6uyXVzZ1Yl0TnxY+otvyn2UNauVq3KQuN1qITfsdzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l5T6Wf2p; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741870961; c=relaxed/simple;
+	bh=o0DclmRwlFXyQgT3v5Tk9sYeNUcxfabNF9fq01Et8hE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jz1oXlyAHyf8SMcQ+IL8vXIxUwSIRWZ8uSKz9c3ZAKbdEf0pcEtrVxE6u9YWAaMZGw/QbAISXbvRE2GNl0ZMCQhmCZsIQy794KAU979KKZDiG8ERK2kSp2gpic9LyZRvHypDHAcvvxvtGQqs+pAOrv3n+DeKV7lpoBRBsB+h3Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uy5yJGUL; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l5T6Wf2p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741870930; x=1773406930;
-  h=date:from:to:cc:subject:message-id;
-  bh=O4pkq9pY+IGrDhCQlHU6mDDfuQ0F6VBwbCN7BFb0QZo=;
-  b=l5T6Wf2p2HpKMyVEsvCDmCvEtoxbxmdF78PqlSscfFrEzLEBE+0T5Zge
-   0hWwEtnoPBP/ZRRJ8AhF57OtoAjNUkRWldox2xpuzzeB8eykBy7rp/hr5
-   5eTS3vyZBAp1xWJZBOnrSDxYH3bJPOevtQyQ8rpPS7atpCG9Jyms4TtV4
-   YxXmgP7aGIIisgNMS7VM+0WrIGbGr+RgIZc15O/ZrJKPK+X5MybzmAp6X
-   Vx3qNmHRZp55IvIFZSkd+/DOtzgEE5AP5KKk7b+5EY66UXnC8joAp8XpN
-   Tx9cJ0ym8a+WiddeDyulYXB8VdvbrweSSwxnch4WrBrCKAvhOxx1FxHLs
-   Q==;
-X-CSE-ConnectionGUID: X4f7TnL1SJ2hrUZbQhjZ7g==
-X-CSE-MsgGUID: wr90yOslSsGwxANNcR7XKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="53621510"
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="53621510"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 06:02:09 -0700
-X-CSE-ConnectionGUID: OZagycMqRCiymjgprb1E8g==
-X-CSE-MsgGUID: p3SCI2sOTDW9RwRv6nYTQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="120941626"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 13 Mar 2025 06:02:07 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tsiCK-0009PY-0V;
-	Thu, 13 Mar 2025 13:02:04 +0000
-Date: Thu, 13 Mar 2025 21:01:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- e6644c967d3c076969336bd8a9b85ffb45f677f7
-Message-ID: <202503132111.IuWGM1Wp-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uy5yJGUL"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2ed007aacso191992766b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 06:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741870958; x=1742475758; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n3LY/SRYvxlV4NEg6utLUEJ9zrccG6OpFAv04Yl9fx4=;
+        b=Uy5yJGULkrGj+Q7eInV6EefsIDCqjjbbiuUji6ORt1Ct3j6VMjXsvLeEiN83jCObZo
+         gN7gTru6UBdtgd3hmlORDIz+sET+yuGfk7mEjgiCyb5fcsymlMOfnKO9ZBGTn8AFiKfn
+         LDVm1wGqjCWoKcVuiyXnHN3IVlMiNMifBTOC9zN4H8+HmfD/vG27xE8j95/cNwY3ckRl
+         6SQB9Y9debDS2Jf0iF14wfnU1t6varcXHSd3OtMGhOS3Ymrh9j1LBZX+seO94GvElCCI
+         YfSSocXDge8v66wSahQ7JGI6iUwNJuA0zDnJG+mANAyzqfh/LQWuszApFu26xkf5MaiU
+         miNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741870958; x=1742475758;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n3LY/SRYvxlV4NEg6utLUEJ9zrccG6OpFAv04Yl9fx4=;
+        b=hk7uUcRwY+j8xGlZXzONshhZA6JobcVzh/7T1JH2kKGB4EdbeATHROZuKcVw97O3XS
+         B+A/lprY/MfMM9NJKYjqmQR0EUB0qOKYVR7K7xoUUyRvyr/i1JCq4FmM94H+ELILhvpL
+         dmHo9VJM/wXresw7KOnpcjl5nBVdZkcZba02qSIxaEcUlT2IPUl85kML43Af/bZDHs6P
+         XwfZ09JrCqrcwlcYggWlX6PgiaWx4tM3xRwE4GBHDwEJeiTDrEEZWKsTyuuwr1a15jQW
+         GwXBX4Q+8fxrCJHZ+wUHFNWYrXAZntnUzNAoX92MTCDhCsA4x0d/HcHLQ0CfcrucCgNp
+         mSKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJD0WcVwpNnvKd8IhHMvle4KDMKI2Q9nKB4jHp8/iCvgHt4RgVcHKOv3v8xlCH1MiZH8JPI1bxBjwPGNM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpc41oDv+ZaGSIcobMMIN3yIyc6XUM237YX0kOaORGZsP9503g
+	cYLrhs+q8vud29KNEgF3ZzzguLz37U5tPg1bQlCi+1MEqhYNB4L8
+X-Gm-Gg: ASbGncsQZ5Xh1eC2XhBplbNIatjjFhBtzYl8jg3j9qlWFZ1e+c2W+JFyOp35I9kI6aW
+	bD6rDoO/zEABpY4tL8fCNGVffi16gRGBmw9qUPwfylmgCW4MqaRgBoBnZWJ4GkyKlKX814YAAXZ
+	d3fhavGKFaMhskTX6fhpW0dY2h3nrUiMnv9TD44xqJl1bpM/kXgRuik9WIAIfIwDVI0x1Y/RF6K
+	UkSxLb4VOdF5mN62aSZ9VEqlf6rCfRwDrBooMKhLYwg5dlfwHHOxk0uzR5cfGwFSBQ4EBBAq6qg
+	tVYxEj6UQheOUtgHw8nh30/um+B+3HWgWiQe
+X-Google-Smtp-Source: AGHT+IEYIgRhvf9h4wG2PQf1gAsvv+5/KkAAYYriEsdqfpLq/LWfDieYAzMMnL5sD5vPAc+uZEP1gw==
+X-Received: by 2002:a17:907:6d25:b0:ac2:2ba5:5471 with SMTP id a640c23a62f3a-ac2b9de98d7mr1551417166b.24.1741870956853;
+        Thu, 13 Mar 2025 06:02:36 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149d0bcdsm79041766b.90.2025.03.13.06.02.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 06:02:36 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] x86/fpu: Use XSAVE{,OPT,C,S} and XRSTOR{,S} mnemonics in xstate.h
+Date: Thu, 13 Mar 2025 14:02:27 +0100
+Message-ID: <20250313130251.383204-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
-branch HEAD: e6644c967d3c076969336bd8a9b85ffb45f677f7  rseq/selftests: Ensure the rseq ABI TLS is actually 1024 bytes
+Current minimum required version of binutils is 2.25, which
+supports XSAVE{,OPT,C,S} and XRSTOR{,S} instruction mnemonics.
 
-elapsed time: 1458m
+Replace the byte-wise specification of XSAVE{,OPT,C,S}
+and XRSTOR{,S} with these proper mnemonics.
 
-configs tested: 98
-configs skipped: 2
+No functional change intended.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/kernel/fpu/xstate.h | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-tested configs:
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250312    gcc-13.2.0
-arc                   randconfig-002-20250312    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250312    clang-19
-arm                   randconfig-002-20250312    clang-21
-arm                   randconfig-003-20250312    clang-19
-arm                   randconfig-004-20250312    clang-21
-arm64                            allmodconfig    clang-18
-arm64                 randconfig-001-20250312    clang-21
-arm64                 randconfig-002-20250312    gcc-14.2.0
-arm64                 randconfig-003-20250312    gcc-14.2.0
-arm64                 randconfig-004-20250312    gcc-14.2.0
-csky                  randconfig-001-20250312    gcc-14.2.0
-csky                  randconfig-002-20250312    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250312    clang-21
-hexagon               randconfig-002-20250312    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250312    clang-19
-i386        buildonly-randconfig-002-20250312    clang-19
-i386        buildonly-randconfig-003-20250312    gcc-12
-i386        buildonly-randconfig-004-20250312    gcc-12
-i386        buildonly-randconfig-005-20250312    gcc-12
-i386        buildonly-randconfig-006-20250312    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch             randconfig-001-20250312    gcc-14.2.0
-loongarch             randconfig-002-20250312    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           ip30_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250312    gcc-14.2.0
-nios2                 randconfig-002-20250312    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250312    gcc-14.2.0
-parisc                randconfig-002-20250312    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc               randconfig-001-20250312    clang-21
-powerpc               randconfig-002-20250312    clang-21
-powerpc               randconfig-003-20250312    clang-21
-powerpc64             randconfig-001-20250312    clang-17
-powerpc64             randconfig-002-20250312    clang-15
-powerpc64             randconfig-003-20250312    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                 randconfig-001-20250312    clang-21
-riscv                 randconfig-002-20250312    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250312    clang-15
-s390                  randconfig-002-20250312    clang-16
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250312    gcc-14.2.0
-sh                    randconfig-002-20250312    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250312    gcc-14.2.0
-sparc                 randconfig-002-20250312    gcc-14.2.0
-sparc64               randconfig-001-20250312    gcc-14.2.0
-sparc64               randconfig-002-20250312    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250312    gcc-12
-um                    randconfig-002-20250312    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250312    clang-19
-x86_64      buildonly-randconfig-002-20250312    clang-19
-x86_64      buildonly-randconfig-003-20250312    gcc-12
-x86_64      buildonly-randconfig-004-20250312    clang-19
-x86_64      buildonly-randconfig-005-20250312    clang-19
-x86_64      buildonly-randconfig-006-20250312    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250312    gcc-14.2.0
-xtensa                randconfig-002-20250312    gcc-14.2.0
+diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
+index aa16f1a1bbcf..1418423bc4c9 100644
+--- a/arch/x86/kernel/fpu/xstate.h
++++ b/arch/x86/kernel/fpu/xstate.h
+@@ -94,18 +94,17 @@ static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u64 ma
+ /* XSAVE/XRSTOR wrapper functions */
+ 
+ #ifdef CONFIG_X86_64
+-#define REX_PREFIX	"0x48, "
++#define REX_SUFFIX	"64"
+ #else
+-#define REX_PREFIX
++#define REX_SUFFIX
+ #endif
+ 
+-/* These macros all use (%edi)/(%rdi) as the single memory argument. */
+-#define XSAVE		".byte " REX_PREFIX "0x0f,0xae,0x27"
+-#define XSAVEOPT	".byte " REX_PREFIX "0x0f,0xae,0x37"
+-#define XSAVEC		".byte " REX_PREFIX "0x0f,0xc7,0x27"
+-#define XSAVES		".byte " REX_PREFIX "0x0f,0xc7,0x2f"
+-#define XRSTOR		".byte " REX_PREFIX "0x0f,0xae,0x2f"
+-#define XRSTORS		".byte " REX_PREFIX "0x0f,0xc7,0x1f"
++#define XSAVE		"xsave" REX_SUFFIX " %[xa]"
++#define XSAVEOPT	"xsaveopt" REX_SUFFIX " %[xa]"
++#define XSAVEC		"xsavec" REX_SUFFIX " %[xa]"
++#define XSAVES		"xsaves" REX_SUFFIX " %[xa]"
++#define XRSTOR		"xrstor" REX_SUFFIX " %[xa]"
++#define XRSTORS		"xrstors" REX_SUFFIX " %[xa]"
+ 
+ /*
+  * After this @err contains 0 on success or the trap number when the
+@@ -114,10 +113,10 @@ static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u64 ma
+ #define XSTATE_OP(op, st, lmask, hmask, err)				\
+ 	asm volatile("1:" op "\n\t"					\
+ 		     "xor %[err], %[err]\n"				\
+-		     "2:\n\t"						\
++		     "2:\n"						\
+ 		     _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_FAULT_MCE_SAFE)	\
+ 		     : [err] "=a" (err)					\
+-		     : "D" (st), "m" (*st), "a" (lmask), "d" (hmask)	\
++		     : [xa] "m" (*(st)), "a" (lmask), "d" (hmask)	\
+ 		     : "memory")
+ 
+ /*
+@@ -137,12 +136,12 @@ static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u64 ma
+ 				   XSAVEOPT, X86_FEATURE_XSAVEOPT,	\
+ 				   XSAVEC,   X86_FEATURE_XSAVEC,	\
+ 				   XSAVES,   X86_FEATURE_XSAVES)	\
+-		     "\n"						\
++		     "\n\t"						\
+ 		     "xor %[err], %[err]\n"				\
+ 		     "3:\n"						\
+ 		     _ASM_EXTABLE_TYPE_REG(1b, 3b, EX_TYPE_EFAULT_REG, %[err]) \
+ 		     : [err] "=r" (err)					\
+-		     : "D" (st), "m" (*st), "a" (lmask), "d" (hmask)	\
++		     : [xa] "m" (*(st)), "a" (lmask), "d" (hmask)	\
+ 		     : "memory")
+ 
+ /*
+@@ -156,7 +155,7 @@ static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u64 ma
+ 		     "3:\n"						\
+ 		     _ASM_EXTABLE_TYPE(1b, 3b, EX_TYPE_FPU_RESTORE)	\
+ 		     :							\
+-		     : "D" (st), "m" (*st), "a" (lmask), "d" (hmask)	\
++		     : [xa] "m" (*(st)), "a" (lmask), "d" (hmask)	\
+ 		     : "memory")
+ 
+ #if defined(CONFIG_X86_64) && defined(CONFIG_X86_DEBUG_FPU)
+-- 
+2.48.1
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
