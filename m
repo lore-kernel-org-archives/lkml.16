@@ -1,118 +1,86 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC90263C8E
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D1D1EA7F4
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741857252; cv=none; b=hQlV1XiMKBm0oj+qOQzquYKksJAOWoXm4L9b1co3QpUOqSN5/lvBkYpMRRMiUdrgLnCJ3OpDArSyFSI7VQul1sQ2lR947T5ecwwtZQEenMA8K+LuRH8zuDrHK260TCQiX17dwk/beLOZelFlWATdVinf1P7Q7el9tk9hg976bew=
+	t=1741857380; cv=none; b=gP9meJ2uMkAxXa2mN9m62hqD+5AwYvNgnQ/lAOnsbg1kavSptowHxafyzQFW/AOf6H/DaAyy2CaX4HUsziXOstaehGL4l2IU/PzMeLhRA5bnKPPApBZ08dnzUFGp/LFzuhkQ1hdNiLBEEWaUchf6sOlF3XVQkdUQhWCyssJ8VzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741857252; c=relaxed/simple;
-	bh=LKuINLvR9AokwKtQ0i0k3u46oD1MBrKVji5Ygd0Sbao=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FK0VuBWs+AANnUEwCMyp6E21vOBz4MP4ppLaef0qAxfBfE844Y/KWP2j25pbHY3WvFofKO4ectN+Zy1Yy/couKJdO+xFMRuJSiR6Z0UFupL0WMhIgtXWp5SNbUrCFRWL2wyjICjiE5p4euRfnHqHf8Bk6FfZqVNd0AXY6lR2vcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CqQpr28b; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CqQpr28b"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab7098af6fdso9493166b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 02:14:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741857248; x=1742462048; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5PkfWYyLQ7CmSIcBpOb+fP0/u9MUfqLHtzcFlzAIW3I=;
-        b=CqQpr28buO5sfcUflDxdAuZB5SHl0BboxR+vgT18PrFpX09ljzkEnnGVFK9fpi3aLU
-         kdsl/1gm7lGLAc9yPAi/uygWY9+m64x2gdmtDBEb6QI50Kpxj+kpdvcMqm8LGqr3ebnt
-         syrsjIYc0SialSMQ5QsCKbfWxqmLN3TXtRvvhv7FKIw006zhsABHVFaXEFYgpiqewLjZ
-         MbJdSJvWd8/T/HXpTqIFqOwsCYsRXE9ZxsoNWxonaRHzzbJMS+l5CkmIdTsAUdG81HiM
-         o2DSuVyz8HOd3YsNbI7OnCvrkA7dYvGa3hs0Ru8tUStm4mEVhLzwfbAVjLAX/I23rOPh
-         yzgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741857248; x=1742462048;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5PkfWYyLQ7CmSIcBpOb+fP0/u9MUfqLHtzcFlzAIW3I=;
-        b=PecjgZBIs7pjDF1Ni/A2d58AEUiqo+BPIrYJVCohDMTpTsiQlKFMNvalrshW17g+LT
-         XX7w4WbIEB6wcTvboyo02kGO384jyD/duvVj/KEQhpJYww7WHQg5xwg0cUbwgR2rhKxK
-         zRrOioq3CfGYRUsv49crKrKkev7An4PF7jDHfBgQ38IOA1Bjn8Pz/5/xwKwaePQIzGUU
-         vPszgnA6ihm6sKjDPsTwcHxanoNNrqjOs5is2/QEwx4NRd/Ahig20cqAk9wycsbk8Q88
-         QNuvcMkKVjQ3AtWcbBLeCvqhZAe6ebfp4VS31YTctgbcUzBOD2KEeXT19XJUOaYE1ycA
-         m8vw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/jEoGy4FOSDEajIo3h3zuZmTn6gGUV2OAk83cKph7oq5COJeXTjiJjmoqUfW09dnf/d7Y4L2NTsX9atQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs+hNWbZBmQ+QAgnL3vRPHOSj8VQ1ce98o0hhPnlI79GNI8MZp
-	R8W41p8lBL6z7Gd4M7MdX8W19Eoy6U5yR3Jdx2MlSDCZA4TBC96tIzT0JKLBFOyVZP3q11OERY6
-	c
-X-Gm-Gg: ASbGncvmM/zrdRfzfNPZqlwHlJRrQB9PtVP5fnYvbefYB8cbLjWSXupikuItAo9ECQJ
-	lMFwg70twHO6q3/DIHf/8SZqfKDGRqP+LJSWRj5MyVox2QzHI/yt0b4vCebTfzHozs36cR7jfV8
-	qlv4raOGs92aQAGs9XB6gr3OSYPvQ42eYLRaSaEtGAqb7mvHhZ7eHULKayWRLylnKQ+Vt+aVsp5
-	NUW0T42wm4As2JcZwd/ADS3zmWUdKzpCvU4iCbz8A52PvdabT/76WspiR4V7//wcE3P0+cVWray
-	4dGJBhR6A94ucWwF69E7fJdPYPa1Y+MC0FzI3C07JYO/XD/NmrLtM4CRsQ==
-X-Google-Smtp-Source: AGHT+IEqYE3xmRAC+FrB/kFJGQaFpMK3ddVVqQK87lG/Lu5OOCAf0iOzDDllrv0hIcMtoiZEWlJkjw==
-X-Received: by 2002:a17:907:60c8:b0:abe:9c69:a7ce with SMTP id a640c23a62f3a-ac271317c2emr869358866b.1.1741857247978;
-        Thu, 13 Mar 2025 02:14:07 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147e9ab1sm57803466b.52.2025.03.13.02.14.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 02:14:07 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Len Brown <lenb@kernel.org>,
-	Len Brown <len.brown@intel.com>
-Subject: [PATCH] PM: MAINTAINERS: Drop Len Brown
-Date: Thu, 13 Mar 2025 10:14:03 +0100
-Message-ID: <20250313091403.50077-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1741857380; c=relaxed/simple;
+	bh=W5QK6QqVcznmQqARidUnOoYQrIFJ04RMSyctJIUJChg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dp2USOJKgw8G7CS80PSZiR1GW1EIbH6yUkA1uK/1yOqLARISzACVcpB/kpoHhDz3HhDZwPVr+xC6scOya1iA72sCztu13JHzpffJ5RcDrhFEKqZIph1ujuifi2m3dOvYAK3/fUeOUxKNxCgn9/grypeU1hr+O7HzV/uJN3kQ5xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZD1vy6Wlyz6J6cn;
+	Thu, 13 Mar 2025 17:11:42 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1F8BF1403A8;
+	Thu, 13 Mar 2025 17:16:14 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 13 Mar
+ 2025 10:16:13 +0100
+Date: Thu, 13 Mar 2025 09:16:11 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Yicong Yang <yangyicong@huawei.com>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <sudeep.holla@arm.com>,
+	<tglx@linutronix.de>, <peterz@infradead.org>, <mpe@ellerman.id.au>,
+	<linux-arm-kernel@lists.infradead.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <pierre.gondois@arm.com>,
+	<dietmar.eggemann@arm.com>, <linuxppc-dev@lists.ozlabs.org>,
+	<x86@kernel.org>, <linux-kernel@vger.kernel.org>, <morten.rasmussen@arm.com>,
+	<msuchanek@suse.de>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+	<prime.zeng@hisilicon.com>, <linuxarm@huawei.com>,
+	<yangyicong@hisilicon.com>, <xuwei5@huawei.com>, <guohanjun@huawei.com>,
+	<sshegde@linux.ibm.com>
+Subject: Re: [PATCH v12 2/4] arch_topology: Support SMT control for OF based
+ system
+Message-ID: <20250313091611.00003ccf@huawei.com>
+In-Reply-To: <20250311075143.61078-3-yangyicong@huawei.com>
+References: <20250311075143.61078-1-yangyicong@huawei.com>
+	<20250311075143.61078-3-yangyicong@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Emails to Len Brown bounce with:
+On Tue, 11 Mar 2025 15:51:41 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
 
-"If it is importnat that I see your e-mail, please let me know via
-instant message."
-
-While I fully sympathize with above statement, I do not have Len's
-instant message details to ask about patches and unfortunately email is
-the preferred form of reviewing contributions to kernel.
-
-Last email from Len was in September 2023.
-
-Cc: Len Brown <lenb@kernel.org>
-Cc: Len Brown <len.brown@intel.com>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
----
-
-Or entry should be changed to @kernel.org? Not sure, I assume it's Len's
-intention to use that one specific email in maintainers file.
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 67bfd9109535..68819df8e398 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23125,7 +23125,6 @@ F:	drivers/sh/
- 
- SUSPEND TO RAM
- M:	"Rafael J. Wysocki" <rafael@kernel.org>
--M:	Len Brown <len.brown@intel.com>
- M:	Pavel Machek <pavel@kernel.org>
- L:	linux-pm@vger.kernel.org
- S:	Supported
--- 
-2.43.0
-
+> From: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> On building the topology from the devicetree, we've already gotten the
+> SMT thread number of each core. Update the largest SMT thread number
+> and enable the SMT control by the end of topology parsing.
+> 
+> The framework's SMT control provides two interface to the users [1]
+> through /sys/devices/system/cpu/smt/control:
+> 1) enable SMT by writing "on" and disable by "off"
+> 2) enable SMT by writing max_thread_number or disable by writing 1
+> 
+> Both method support to completely disable/enable the SMT cores so both
+> work correctly for symmetric SMT platform and asymmetric platform with
+> non-SMT and one type SMT cores like:
+> core A: 1 thread
+> core B: X (X!=1) threads
+> 
+> Note that for a theoretically possible multiple SMT-X (X>1) core
+> platform the SMT control is also supported as expected but only
+> by writing the "on/off" method.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-devices-system-cpu#n542
+> Reviewed-by: Pierre Gondois <pierre.gondois@arm.com>
+> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
