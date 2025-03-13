@@ -1,105 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88E5269AE6;
-	Thu, 13 Mar 2025 17:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5540D1581F8
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741885203; cv=none; b=sdeUsGbEJDEVsO4zbTS24VAWCgfllVCwSdYLkBS8iO+li325VV71PSaUy17/qQKisosZz+gs7Z4O2M/QjsGWod7Wf3GHTjekd7AYOVBuA7fIDZAAerXJkloZTDm3OLXZ9p8VuHQmfVJBxJReqB8nK8ne2xvo3ECBLZfenfBx5vw=
+	t=1741885224; cv=none; b=Bx+V9a6IWTvE/gIWJV+5N2qFrfzyPf7VNI9fVi7gSv1MrFQfuJMzXIhXNzP+A3pyCp6/pQLbyUvA5WCCLWFPhjrCYD0SqZzg/h29OC269//zAZr/1WkRDh7gjqefM3kEgthbPHvfJDZWXahwC73zIkRCfcqbZWQ943rZnPHG6pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741885203; c=relaxed/simple;
-	bh=N/Sk6Qy4oI0JP7HDoZt5ci2IDjFnGW5PCPDjLtT2Uuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=CpBOoBJn4UxI7gugnVJK9Aoh9aY8G190SoSUeYYrV1KKklnLAZ9jEH0hb8/Yqy2DUdGkY5R+Qv5ercEWL/OrUkoBMZQ7CZWz8p7XBt0wafGVEpkf+SQTLJhXTrHp7OwqaHVx0oIGoAqwDck4kAqG4UXznOEBTpnuGwB9JtnA8uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOMJmpg1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741885224; c=relaxed/simple;
+	bh=RYxSqwzI/2EnMBRnPRSSojkRPyxDGmcJUxa+ewzJoU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dR61/7+bSNaDT6c/m9yLVjtbBJQScXjIpFG13f8e1+kMBpMqRYegp/yKZE9yaqL/j0YxbeM2rEMlyLcW9o3v3BvF5torOmTdLHRDXcxCHY2hRceLZj0vw6yU4/VO1/NOnCCERMVEPRGPBwjCo6p80hleYeQS/xHCAXnauuld1Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Q6DWMT4W; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOMJmpg1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 165B0C4CEDD;
-	Thu, 13 Mar 2025 17:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741885203;
-	bh=N/Sk6Qy4oI0JP7HDoZt5ci2IDjFnGW5PCPDjLtT2Uuo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=nOMJmpg1BHmbTTxLXiglAg+ddOPshoZfEp9X8pVRJTn+dGBoq7TLFiItX6j1wnSjL
-	 1wzq8E0JrAcJLBIFmxPvuDMIE3cGpVjr73G6ExwhSMmKf6KWFxF9TI+PA15ZpHYY1r
-	 VCnWVKKa81JvsT0ysDJ4xYi2o+qHCypxY9yWWmOTWzWUFRRjde0rVI+ZhdDrLLcVbV
-	 X4v4ROwqE09VbDhNbCYB2i/adQtN3X4E7eDWzmnN2gVPUQFhHPoDfHRM9A9DQrZGIx
-	 +cmIPM3YblbOXbPPyFfqvVJAReWWCxBxiQCD+inq1jw4+qgroOPXJnscqbVee9F6Tu
-	 ZMOXPdj0NUaPg==
-Date: Thu, 13 Mar 2025 12:00:01 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	mhi@lists.linux.dev, linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org, quic_pyarlaga@quicinc.com,
-	quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com,
-	quic_mrana@quicinc.com,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 01/10] PCI: update current bus speed as part of
- pci_bus_add_devices()
-Message-ID: <20250313170001.GA738398@bhelgaas>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Q6DWMT4W"
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 9DCA53F47C
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1741885217;
+	bh=fUoJ0YlwG+ODRfDs+U2h4d0BcQxrChC2nMxkx+ZtzpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=Q6DWMT4W1QkIXBodh0etMRc2nNllX7OfxpUOhEVNhhScqdjvKGCYrKc0m7VECRDpJ
+	 rr5Nb9xFNtCH4XuYYygmz+ju32dzCka4cKFa6hWjEZaLtlJnEa0y4ZQhvHm+6+9U7n
+	 r3V8TrX7NuqLm5ifibWvocAvL02clmUGWUBCUzIzMNMv0lOEJN91lmlphANQ9W+Ude
+	 DtdYDf6Tq7/Yfyj5450uMKbyHDcvLxhHfjtrLlzitjCWNTGXC4ESGB+DPbr8gRqUzY
+	 HpGIuE0VV/T1/3wnTWQsch5Z0tEPPhtc/K7H7k1dVofRXQtNaOWDJRuiaEsivsrtXQ
+	 6IRcW8kW/rygw==
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff7cf599beso2084096a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:00:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741885216; x=1742490016;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fUoJ0YlwG+ODRfDs+U2h4d0BcQxrChC2nMxkx+ZtzpA=;
+        b=DKDUFbP7Xrc008TaOugRe+S6sHqzP5KLDUN2WBiS3BTE1huM49StqyUIgduxBDzfWW
+         Rec8yH8YZzabrT/q712TQTlqMy+ilr+OCoQbVWqb/bxOJg2bZ5Gk3SsRKQKRwQGiat+R
+         tFIh0E7KIyl9gQ6YIQSnFt499qsGsXPxNzMaFDuleK0pzCl+Dk4pLR+p7lXSP+ezQJPV
+         Qfc9XxAztusGUq33BckAtIRd+MrmnZlL9QhCl6I7pEhB8k7onz82+DqhbqGBOZ30nEIB
+         u55HNRtdxDRYpgKfOcqza16sWoiO+bSgzOcmscHnPke1I8SGov05bf7a15ESrQpOFBrR
+         iH7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUaIR3itR8WCqdR4z+yuanWXxptwp+yIoKFmtOp++jOOwYY57CHW4yO0VZy1PQudBqwTTsMkKsoR194Eow=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+qFTB7WRC4Hqd15qWK+LVd9sDaHQ75HmSb8kqqjZu2dnQAqZW
+	xLhQshjAu5LXEySJ7gFS1RGsLdYpL40iTcYhFabwzx33mh5VtoDjdWNWXaL6kVTlHKuCMcXTWMV
+	bbcDPmUo6x+Kcg/X3sFeYIY9BIb/zbvDP1xraOFAav9ti1tklAiavdP6bpLAg1bAoaKtbU4pl0Z
+	+C5Q==
+X-Gm-Gg: ASbGnctif6F4rCOK1LPiwRMLG0+C9lPBNGnACLrJ7Al3vNeTtAyuf2haPkAR3hmqjxG
+	UU+rgeaGJ6YiGq0A9BqwGx4Mr6GOLO362LNTFIWBArtMPR0KTsCMc3bx43NXOVRtgkQm9J6KCZF
+	D40PuP50MyJguSXEjt7iLsdPjjA1rdIaba/upAjiSPSOj8hrpi+llFAemZ7Q/LAjHTKNiM1tgwg
+	uwWoLKPYH2P9idzaFSZaKGjpbDUOyY18E2sK3Jg4ix0Fd/fxaPhdbhe0yLr/vr6pvhBljw0RKPJ
+	Z5BgL++QRL9AAhMC
+X-Received: by 2002:a05:6a00:a16:b0:736:53ce:a32c with SMTP id d2e1a72fcca58-736eb87c234mr14988260b3a.17.1741885215974;
+        Thu, 13 Mar 2025 10:00:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZKXbfIRDv2S58V3wGzrMBxEA6UOye0xO53GmJmkmtt9ccYnOJCbY4VXHrfLoqoPoutlG3VQ==
+X-Received: by 2002:a05:6a00:a16:b0:736:53ce:a32c with SMTP id d2e1a72fcca58-736eb87c234mr14988216b3a.17.1741885215540;
+        Thu, 13 Mar 2025 10:00:15 -0700 (PDT)
+Received: from localhost ([240f:74:7be:1:4ca:c54c:f4ea:3eea])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73711695ad4sm1607514b3a.132.2025.03.13.10.00.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 10:00:15 -0700 (PDT)
+Date: Fri, 14 Mar 2025 02:00:13 +0900
+From: Koichiro Den <koichiro.den@canonical.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/9] Introduce configfs-based interface for
+ gpio-aggregator
+Message-ID: <4xyrmml7f2urxjjkeurnlus375phzhxfqej5dnzdxlrhx7jn5z@5iizxyft4cht>
+References: <20250224143134.3024598-1-koichiro.den@canonical.com>
+ <CAMRc=Me9_EvVj2U-wGWjoVyH_igZBtUs1ymtE=4_r2EkSBAAcA@mail.gmail.com>
+ <oedikhiegt3iqj7xg4vtfhlqxihicd7bdtaglk73q2m3c42zla@roh336fpkszm>
+ <CAMRc=MeHBYngume_k-tfqEnkrkt3-axWKXKS1xkxkyH-6QFSkQ@mail.gmail.com>
+ <n25f2iho3yn7ahx6isnm55g2cw5ox34rhqukhvgohzmtq22vzl@p5pptw6lw7ln>
+ <CAMRc=MdPLpQTeebDPk0+5ovuFCjcpNdb3BN5c7ADAxStE08JBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250313-mhi_bw_up-v2-1-869ca32170bf@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdPLpQTeebDPk0+5ovuFCjcpNdb3BN5c7ADAxStE08JBQ@mail.gmail.com>
 
-[+cc Bartosz since this is related to pwrctrl]
-
-On Thu, Mar 13, 2025 at 05:10:08PM +0530, Krishna Chaitanya Chundru wrote:
-> If the link is not up till the pwrctl drivers enable power to endpoints
-> then cur_bus_speed will not be updated with correct speed.
+On Mon, Mar 10, 2025 at 06:46:25PM GMT, Bartosz Golaszewski wrote:
+> On Mon, Mar 10, 2025 at 5:28 PM Koichiro Den <koichiro.den@canonical.com> wrote:
+> >
 > 
-> As part of rescan, pci_bus_add_devices() will be called and as part of
-> it update the link bus speed.
+> [snip!]
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/bus.c | 3 +++
->  1 file changed, 3 insertions(+)
+> Please remove unnecessary context from responses. You attached
+> hundreds of lines of stack traces here. :(
+
+Right, this will never happen. Sorry for inconvenience.
+
 > 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 98910bc0fcc4..994879071d4c 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -432,6 +432,9 @@ void pci_bus_add_devices(const struct pci_bus *bus)
->  	struct pci_dev *dev;
->  	struct pci_bus *child;
->  
-> +	if (bus->self)
-> +		pcie_update_link_speed((struct pci_bus *)bus);
-
-Why the cast?  I guess to discard "const"?  I would prefer to avoid
-that if we can.
-
-The only existing callers of pcie_update_link_speed() are from bwctrl,
-where it obviously makes sense because bwctrl manages link speed, and
-from pci_set_bus_speed() in the pci_alloc_child_bus() path.
-
-If we call pcie_update_link_speed() here, do we still need the
-pci_set_bus_speed() in pci_alloc_child_bus()?
-
-Bartosz, so you have any suggestions?  Is there a point in pwrctrl
-where it would make sense to do this, similar to what bwctrl does?
-
->  	list_for_each_entry(dev, &bus->devices, bus_list) {
->  		/* Skip already-added devices */
->  		if (pci_dev_is_added(dev))
+> >
+> > Thanks, I've confirmed it. It seems I overlooked it because somehow
+> > lockdep and kasan were not enabled for a while.
+> >
+> > Assuming the v5 patch series rebased onto the latest gpio/for-next
+> > 21c853ad9309 ("gpio: adnp: use new line value setter callbacks"),
+> > the following follow-up patch should suffice.
+> >
+> > ------------8<--------------8<---------------
+> > diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+> > index df34d8fcb79a..56f0fde8c843 100644
+> > --- a/drivers/gpio/gpio-aggregator.c
+> > +++ b/drivers/gpio/gpio-aggregator.c
+> > @@ -207,7 +207,18 @@ static void aggr_free_lines(struct gpio_aggregator *aggr)
+> >
+> >         list_for_each_entry_safe(line, tmp, &aggr->list_head, entry) {
+> >                 configfs_unregister_group(&line->group);
+> > -               aggr_line_del(aggr, line);
+> > +               /*
+> > +                * Normally, we acquire aggr->lock within the configfs
+> > +                * callback. However, in the legacy sysfs interface case,
+> > +                * calling configfs_(un)register_group while holding
+> > +                * aggr->lock could cause a deadlock. Fortunately, this is
+> > +                * unnecessary because the new_device/delete_device path
+> > +                * and the module unload path are mutually exclusive,
+> > +                * thanks to an explicit try_module_get. That's why this
+> > +                * minimal scoped_guard suffices here.
+> > +                */
+> > +               scoped_guard(mutex, &aggr->lock)
+> > +                       aggr_line_del(aggr, line);
+> >                 kfree(line->key);
+> >                 kfree(line);
+> >         }
+> > @@ -926,8 +937,6 @@ static void gpio_aggr_device_release(struct config_item *item)
+> >  {
+> >         struct gpio_aggregator *aggr = to_gpio_aggregator(item);
+> >
+> > -       guard(mutex)(&aggr->lock);
+> > -
+> >         /*
+> >          * At this point, aggr is neither active nor activating,
+> >          * so calling aggr_deactivate() is always unnecessary.
+> > @@ -1072,7 +1081,8 @@ static int aggr_parse(struct gpio_aggregator *aggr)
+> >                                                         &line->group);
+> >                         if (error)
+> >                                 goto err;
+> > -                       aggr_line_add(aggr, line);
+> > +                       scoped_guard(mutex, &aggr->lock)
+> > +                               aggr_line_add(aggr, line);
+> >
+> >                         error = aggr_add_gpio(aggr, key, U16_MAX, &n);
+> >                         if (error)
+> > @@ -1101,7 +1111,8 @@ static int aggr_parse(struct gpio_aggregator *aggr)
+> >                                                         &line->group);
+> >                         if (error)
+> >                                 goto err;
+> > -                       aggr_line_add(aggr, line);
+> > +                       scoped_guard(mutex, &aggr->lock)
+> > +                               aggr_line_add(aggr, line);
+> >
+> >                         error = aggr_add_gpio(aggr, key, i, &n);
+> >                         if (error)
+> > @@ -1205,8 +1216,10 @@ static DRIVER_ATTR_WO(new_device);
+> >
+> >  static void gpio_aggregator_free(struct gpio_aggregator *aggr)
+> >  {
+> > -       if (aggr_is_activating(aggr) || aggr_is_active(aggr))
+> > -               aggr_deactivate(aggr);
+> > +       scoped_guard(mutex, &aggr->lock) {
+> > +               if (aggr_is_activating(aggr) || aggr_is_active(aggr))
+> > +                       aggr_deactivate(aggr);
+> > +       }
+> >         aggr_free_lines(aggr);
+> >         configfs_unregister_group(&aggr->group);
+> >         kfree(aggr);
+> > ------------8<--------------8<---------------
+> >
+> >
+> > * The second hunk should be squashed into
+> >   [PATCH v5 4/9] gpio: aggregator: introduce basic configfs interface
+> >
+> > * The rest of the hunks should be squashed into
+> >   [PATCH v5 8/9] gpio: aggregator: expose aggregator created via legacy sysfs to configfs
+> >
+> > If you agree with the above approach, I'll send out v6,
+> > while also addressing your feedback here:
+> > https://lore.kernel.org/all/CAMRc=MdoMKdqyzGMFDa3aMz3h=vfZ0OtwARxY7FdsPKcBu9HQA@mail.gmail.com/
+> >
+> > Koichiro
+> >
 > 
-> -- 
-> 2.34.1
+> I won't be testing in-line diff chunks. Please, just fix these issues
+> and send a v6. Also: please do write some sort of a script to automate
+> the testing of this driver if possible. Ideally: add test script to
+> selftests.
+
+Sorry for the delayed response, I've been so tied up with other tasks this
+week. Ok, I'll introduce a kselftest for gpio-aggregator. Actually I've
+wanted that from the beginning.. I believe it should rely on gpio-sim for
+convenience, but please let me know if you don't think so.
+
+Thanks.
+
 > 
+> Bart
