@@ -1,230 +1,82 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26252676E4;
-	Thu, 13 Mar 2025 12:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B7F266EF0;
+	Thu, 13 Mar 2025 12:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741867844; cv=none; b=WnS9h5bnL9iPvgarxVwU5DGbPc0o8mz10U51CvuA6Ot8HpmmBKeocGxE3pAqUqbbhoA4i/7JxB/BmCQwpht4M2yGa7PaL0LrYV3VhkXTHIkvAWIDZX/ueSGcDkn8gtAE7awm/h58hNnZMmisUES0+Hedfq1R09kpeQEnUMQcM5k=
+	t=1741867893; cv=none; b=MWLMyjGGpyDcONFJx8F5RKuW61IeDAER2beB+dKxco14tnfFTjMmFc8ZpQpvLJGsoL74h6+zi67J37ogq4NKPhl5uA6pu6i2sGskM/yXNfNrSDreb/5CeeUbClP/Rl/5vCEI7KvKSK8f28u+C4j456u3nA7FkZmL6Mqv60U5I8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741867844; c=relaxed/simple;
-	bh=9egwuzH1xL76Hz6x87GbA/aHFSCxZ6dXs4aookVRQdw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=P2z+wKmW2yYCNOMf6xBT7whBv1GhoGIHXHgayuoishc9Cu9ZXkEBYwJi+MhIsSrGWkK36+v4Yna5FR48Q9RBmfUbaw30d75q6do+fDuKyxK+9Qukz8kIfYe3O1Tdzux0YhDIjlOtlY/r6bU7/Cx1BtruNAMoxoZLqZpW5lsZj+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KjZHgtMQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741867893; c=relaxed/simple;
+	bh=7nQe31pvC+Nq8CCk92sZBjOybCTcSBoCn6YPHX7VODo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=M1Qd15VoLo20rk+FvD4eTEUkOC3bvmepPdHGCn0U2n0BwEvcAQ8c++vB9t+XhRZbe9fao1Goe7xNghKr/+rS85OA670ZiCE0GSLUBcjI2U48cCQOz3KMUXpd7unbUToz62m36PiFbHWphdy4PSPPPCM93DltXwSVym5mEgpktEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lMCppmO+; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KjZHgtMQ"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D7CAmG019811;
-	Thu, 13 Mar 2025 12:10:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	c7UkRMW05zKg8RDl3mwjjPVBN91r1eiT1QbA7lGZtpA=; b=KjZHgtMQ4FccHN6q
-	cMJ3mkAz/0+eZDAqqFbNquykWNWZuzhDQizsUJPq8sYxzG491d8EBzV0ERnLi+su
-	NZmYf7bDVGjmZGEuZJDP1zathfnmDkP8rcZKXd7Dhd2XVjf2ae2XcH6ApMpT3WG6
-	4vsJUHnK9SKQMQM6FNFTOT3Eruu5bkZWT57lNprYHUPYKHweH5xzVrot+5ayFw6X
-	YYMpRra51u4o5iMe9hpHVPPXlCCjw9zHoKuuvuOTLXNrKYmJ8YbKD9qfqNb+nipL
-	JJ7Gno+rBp66gmXmomgyZrV9lVpo9QbWnPIIFbLi8gFLRN41gERlIsSrEPqVNQ92
-	0wvrzg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45bts0gu45-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 12:10:18 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52DCAHEO015684
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 12:10:17 GMT
-Received: from [10.204.66.137] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 13 Mar
- 2025 05:10:10 -0700
-Message-ID: <d64bf3b3-7c4d-490e-8bd7-1ad889aa7472@quicinc.com>
-Date: Thu, 13 Mar 2025 17:40:07 +0530
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lMCppmO+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=/R4YONW3k4TYaz2Veaayqev9TVAocqD3do1VhSmvPWk=; b=lMCppmO+meSbVHYnYJLkHuHLxj
+	aDiPqi2UT3VirHkj2yvbgT36DKjqOKOt3s4XlTyr1ORkIlNtj6Xp7TVOrCWyR24rSNy47REGUQhmA
+	hrsh0/haPvZSgFavxOTKDXz/v5hTeOU3RYwFmLp6ThjoiFqBAec9zjXErFYjjI00qtVabRdchublS
+	1TevUD+VKPMF4v9qKSzZtMZvyjQmXqIuCJwae+jitZQS1pqEBBMHvoILwkd0KUmiBAl9bAadq1OKS
+	qoXrKf2ZDLYekq52r3XSa22NQ7szHQwFPMfAsNiJeRvOe4KckLs5Wj14D5QbPZImuYVmLxOVHoKZU
+	V57v4AAw==;
+Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tshP4-0087R6-49; Thu, 13 Mar 2025 13:11:15 +0100
+From: Luis Henriques <luis@igalia.com>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Bernd Schubert <bschubert@ddn.com>,  Dave Chinner <david@fromorbit.com>,
+  Matt Harvey <mharvey@jumptrading.com>,  linux-fsdevel@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8] fuse: add more control over cache invalidation
+ behaviour
+In-Reply-To: <CAJfpegtDBR4RMMOotxQC3d-pa38xNNB7ajfHrnpi_oQ0XWcTkA@mail.gmail.com>
+	(Miklos Szeredi's message of "Thu, 13 Mar 2025 12:39:17 +0100")
+References: <20250226091451.11899-1-luis@igalia.com>
+	<87msdwrh72.fsf@igalia.com>
+	<CAJfpegvcEgJtmRkvHm+WuPQgdyeCQZggyExayc5J9bdxWwOm4w@mail.gmail.com>
+	<87v7sfzux8.fsf@igalia.com>
+	<CAJfpegvxp6Ah3Br9XUmnz_E5KwfOTC44JTa_Sjt0WGt8cAZKEg@mail.gmail.com>
+	<875xkdfa0d.fsf@igalia.com>
+	<CAJfpegtDBR4RMMOotxQC3d-pa38xNNB7ajfHrnpi_oQ0XWcTkA@mail.gmail.com>
+Date: Thu, 13 Mar 2025 12:11:15 +0000
+Message-ID: <871pv1f7vg.fsf@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
- to DP bridge nodes
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robdclark@gmail.com>,
-        <dmitry.baryshkov@linaro.org>, <sean@poorly.run>,
-        <marijn.suijten@somainline.org>, <andersson@kernel.org>,
-        <robh@kernel.org>, <robh+dt@kernel.org>, <krzk+dt@kernel.org>,
-        <konradybcio@kernel.org>, <conor+dt@kernel.org>,
-        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
-        <quic_vproddut@quicinc.com>, <quic_jesszhan@quicinc.com>
-References: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
- <20250311122445.3597100-8-quic_amakhija@quicinc.com>
- <20250312-athletic-cockle-of-happiness-e88a3a@krzk-bin>
-Content-Language: en-US
-From: Ayushi Makhija <quic_amakhija@quicinc.com>
-In-Reply-To: <20250312-athletic-cockle-of-happiness-e88a3a@krzk-bin>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6BtJ98pGmkmWzLj0xA-sndcThuicNPoa
-X-Authority-Analysis: v=2.4 cv=DNSP4zNb c=1 sm=1 tr=0 ts=67d2cb2a cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=UXIAUNObAAAA:8 a=COk6AnOGAAAA:8 a=2y1opo3hKBB_uxp-C3oA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=bFq2RbqkfqsA:10 a=a1s67YnXd6TbAZZNj1wK:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 6BtJ98pGmkmWzLj0xA-sndcThuicNPoa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-13_06,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 phishscore=0 malwarescore=0 mlxlogscore=999
- priorityscore=1501 mlxscore=0 spamscore=0 bulkscore=0 impostorscore=0
- suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503130095
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 3/12/2025 5:18 PM, Krzysztof Kozlowski wrote:
-> On Tue, Mar 11, 2025 at 05:54:42PM +0530, Ayushi Makhija wrote:
->> Add anx7625 DSI to DP bridge device nodes.
->>
->> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
->>  1 file changed, 207 insertions(+), 1 deletion(-)
->>
-> 
-> So you just gave up after one comment? Context of every email should be
-> trimmed, so if it is not trimmed means something is still there. I know
-> there are reviewers who respond with huge unrelated context, but that's
-> just disrespectful to our time and don't take it as normal.
-> 
-> <form letter>
-> This is a friendly reminder during the review process.
-> 
-> It seems my or other reviewer's previous comments were not fully
-> addressed. Maybe the feedback got lost between the quotes, maybe you
-> just forgot to apply it. Please go back to the previous discussion and
-> either implement all requested changes or keep discussing them.
-> 
-> Thank you.
-> </form letter>
-> 
+On Thu, Mar 13 2025, Miklos Szeredi wrote:
 
-Hi Krzysztof,
+> On Thu, 13 Mar 2025 at 12:25, Luis Henriques <luis@igalia.com> wrote:
+>
+>> Hmmm... And would you like this to be done in fuse?  Or do you expect th=
+is
+>> to me a more generic mechanism in dcache, available for other filesystems
+>> as well?
+>
+> I don't know if this would be useful for anything else, so initially
+> fuse specific.
+>
+> An list sorted by expiry time (implemented with an rbtree) would work,
+> I think.
 
-Thanks, for the review.
+Great, thanks.  As I said, I've added this to my TODO; once we have this
+patch sorted out, I'll move into that.  Thanks, Miklos.
 
-I apologize for any confusion or oversight regarding the recent review comments.
-Thank you for your patience and understanding. I value your time and feedback and will work to improve the review process.
-
-Below are the comments on the patch 7 and patch 8 of the version 1 of the series, that I have addressed in version 2 of patch 7 of the series.
-Let me know, If I did some mistake or if you have any other suggestions.
-
-Comments from Konard:
-
-comment 1
-
-> -	pinctrl-0 = <&qup_i2c18_default>;
-> +	pinctrl-0 = <&qup_i2c18_default>,
-> +			<&io_expander_intr_active>,
-> +			<&io_expander_reset_active>;
-
-Please align the '<'s
-
-comment 2
-
-> +		interrupt-parent = <&tlmm>;
-> +		interrupts = <98 IRQ_TYPE_EDGE_BOTH>;
-
-use interrupts-extended, here and below
-
-These above two comments were from the konard in patch 7 in version 1 of the series.
-I have addressed both the above comments in the version 2 of patch 7 of the series.
-
-
-
-Comments from Krzysztof:
-
-comment 1
-
-> +
-> +		dsi0_int_pin: gpio2_cfg {
-No underscores, see DTS coding style.
-
-I have corrected the above comment in the version 2 of patch 7 of the series.
-
-comment 2
-
-> +
-> +			anx_bridge_1: anx7625@58 {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-In this I have changed the node name as anx_bridge1 : anx7625@58.
-Let me know, if I did some mistake or you have any other suggestion over the node name.
-
-I have took the reference from below:
-linux/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi at 629c635eafbaf18260c8083360745c71674640d2 · torvalds/linux · GitHub
-
-comment 3
-
-> +				enable-gpios = <&io_expander 1 0>;
-> +				reset-gpios = <&io_expander 0 0>;
-Use proper defines.
-
-For this above comment,  I have changed above lines into below lines in patch 7 of version 2 of the series.
-
-> +				enable-gpios = <&io_expander 1 GPIO_ACTIVE_HIGH>;
-> +				reset-gpios = <&io_expander 0 GPIO_ACTIVE_HIGH>;
-
-comment 4
-
-> +
-> +			anx_bridge_2: anx7625@58 {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-In this I have changed the node name as anx_bridge2 : anx7625@58.
-Let me know, if I did some mistake or you have any other suggestion over the node name.
-
-I have took the reference from below:
-linux/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi at 629c635eafbaf18260c8083360745c71674640d2 · torvalds/linux · GitHub
-
-comment 5
-
-And as Rob's bot pointed out: insufficient testing. :(
-Please be 100% sure everything is tested before you post new version.
-You shouldn't use reviewers for the job of tools, that's quite waste of
-our time.
-
-Fixed the  above warning from DT checker against DT binding in patch 7 of version 2 of the series.
-
-
-Comments from Dmitry:
-
-comment 1
-
-Missing dp-connector devices. Please add them together with the bridges. 
-
-comment 2
-
-Please squash into the previous patch. It doesn't make a lot of sense separately.
-
-These both above commented from Dmitry I have addressed in the version 2 of patch 7 of the series.
-I have squash patch 8 into patch 7 of version 1 into patch 7 of version 2 of the series.
-
-
-Thanks,
-Ayushi
+Cheers,
+--=20
+Lu=C3=ADs
