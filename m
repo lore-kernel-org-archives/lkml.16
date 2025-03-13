@@ -1,185 +1,187 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D83E1581F8
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE86026A0C8
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741885267; cv=none; b=iSiXIO1Ab7tNUsj/gfKNoJDRcIKikI3CUTkgjz2t0t4si1Bwhw/BSSv5cWO1NrvITtfR3a0uWldAaqfwysgMXg3qjSYtLXFYHJCuwe0izAMAKSUJZaoxrerjFson/prbHYuR4yQ5NwexmpRUPjhtChdvpUy0NjGCVRTAyzkbtRU=
+	t=1741885275; cv=none; b=NiJpn0nMJTSHCXn2FAJmCj7JtfCJKh43wqho8AZGgz7OvrdMv5ScKfkrk8gxL5f+pvTKEnR+n5JYwnEs76IA3hG5i0QisZ4hrQWUexweJGbkz9PPx6r3QJEC8vhrbaIjGr0h2PrhptVSu6Rh/eRPauYvFZlQRzxYsg2luuoM1o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741885267; c=relaxed/simple;
-	bh=VHxiw1iOPaehIdCmiB9jD7hA9jp4hpkFvH2VdqlEv7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bd0M1MiHW0X7cKi8YiNi2RAWpoqkM7HhS+U+R5+DIr8MVM3oAoQUVyYArpxk/thrt49vn/2iUj9kpihrTx5qTNnDyCcKL2ZB0fYTq77mosFUOuDFHFRAejVALGNzia9QZ+JOpXUjCUCMf/Z7YXnnwT1zIzMueE+kgmeUl9PWaSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QMx8oSY3; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741885275; c=relaxed/simple;
+	bh=n+zPe90N77goi5Vs/AU7yVAt8EEYh4S4/W38xTvwma0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ssy7l6r3WG8FxOJXc27gd5w09SPVQ5CbWBgObG5RiU6usizlj4LTnM3LpN3/dJ2uv30gq0ZVBNEBcAdx6eR2ejCH7UoF+WGaCkvl3mrcj/ebdeOX0Omen4EmeHQk4f/CRgtU5fCxWK/9A7rFLzZz6OeIFFBXZ7cIvK415uE5nhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gB0nle1/; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QMx8oSY3"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-223594b3c6dso24510945ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:01:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gB0nle1/"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2243803b776so35888165ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741885265; x=1742490065; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ENSH6oEAjz00ZnZknt14hjq4bTe+aXnnbXc59If/D0s=;
-        b=QMx8oSY3t0s4thGL2cm25475tnOfDx/tj4RMrib71I0TkO1jqotrZVoiv5b2o783Db
-         ZCTVGj1O8DGt2XHVf29NbbuXAYqc2JCKsqWL5ztBm/R6dxaT4nlakWdxtDmtPYeE8QPg
-         OZlEvt32gymuXeLYDvIx+UYSnEOf5HA0KTTpmNH77ErvOwTey54v4F/bfj0OiSYggdSv
-         8M40WN/tVTifSnZQbrB7yfkrxHTkWYVPAJATwJge2UKOytRF8izPZPkGM3GJW06upIGr
-         yHseYivuB/6jNUUAmQ3YXBQCGp/YLXT/wJWVPUFFwGX7PknPVhN0wlRN5aQNyVx0OcTW
-         UqEA==
+        d=gmail.com; s=20230601; t=1741885273; x=1742490073; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5P82pdBAFVbDSRi5XIPEAoEtfgv9YXlZdJ7xlxw7MDg=;
+        b=gB0nle1/GZzH+s72iFhSwdJ6IAk13+/+yvckFG6CGjs7e1dsIWRfA5c2ail0RYk9zm
+         0q5C1bkOunMxHv9rP2jY9e3RlHJhTlz2mFXlys4iFYke/yaa/UdvTXLuiyXkfcKUOcKo
+         C7FkLpZ7C8zNpJOqPeFVsj+LvC9YcnG5n1EzkVcBRHaPMAK15oF9qcxQiWnHOGxW2xEZ
+         oFHuVYqVMvQRY04PQWEqZtY8Hdi/4sb+56RU/gr3Cxrrn9tk3Qr0tCNF4doQizxcWil5
+         nY80tyHEY8cWf3bzxE5k+aocyQHMTou9IXhCI/5QfQeumdGrz3jD7/82VMa5j76KHLdG
+         a/KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741885265; x=1742490065;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ENSH6oEAjz00ZnZknt14hjq4bTe+aXnnbXc59If/D0s=;
-        b=vh12s9wkw48yqC9DmRyh1ItEiXehVB8cee4t/z6kBTptmV7c+gAGpMwhbTE5CAKsTx
-         f8NQwjl7xsER0mmkxwQEJxe5TsOpaUejLNWsqg1Tg4CFqUCj02YvloqYARN+1gDh3GQO
-         evaSnoSAt2sz002dX6Ab/Ce83SaYyQjQdYyv+ugQmw+/bARJw79dF2P0jWG6YMFX2by2
-         t0YCH0aQN/O248dXr7zbprNZsWDbfLUbrFKMXZAzowG5idc6rr3w8TYbiMbSv5qmykRF
-         WRK1+qusDY4cKr3VTTvNDnQr4oDiHazmbfuVHLtDqeG66qyJi+w+fDYaTtO8PGcjqDDj
-         8GUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPRUeVFO8tx76YH+9Gg9uP39AjxuNIH47PTWtSLRMVZ+Eq9RV7+FxxYbCiqH+2DukxY2wu7TcYnli8BAw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZzvQh3x9WJ1Bzef9naLBgCAbB7rDnk32S4VI5UpfnvsePXYeD
-	sVRAvzs/bxo6TSNlM1ysVG7ivr4PsMeS4csrNHnUjl5QFArrKPcYejThTe82Jg==
-X-Gm-Gg: ASbGncvgriBA18tl28GewalOZNEJZE/voD7ZbTTcj70JDeTnTxDW2ROYJpMf5skU8XJ
-	uMFkwP8BWRdUqAWO7oQMmlOM8egxDxeNB8Ozbbvl2/9nhRRn4E+cOc9VaWB6yQj40lsJEx1W9ri
-	nBK9h4NT9VqxGkQUorS6j7ag4hNBprw95mL3x6DcCD+b29/0izawHVlGV2J0VlN9qMlNcIdM5Bb
-	C7YOR2c+b619NuLohShyXkzwP1tdZ4XusnoZ0tn5oiGeC21cROQaO9Y54fiHk3SLu+a8O4aA3XZ
-	Rvg6IK5KMKect1qXHimtozqyNyFdkE61o9FPz9Fxzniz9+zYusdm1Q==
-X-Google-Smtp-Source: AGHT+IHQMTcJPPra4QR4Z982bc4UAA16JNaqY6kNLE7y6s4ubR1yWd0wLKsyohPsCDtXtyVOiDNePg==
-X-Received: by 2002:a17:903:2347:b0:21f:988d:5756 with SMTP id d9443c01a7336-225dd8cb8ffmr2797435ad.42.1741885265127;
-        Thu, 13 Mar 2025 10:01:05 -0700 (PDT)
-Received: from thinkpad ([120.60.60.84])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167def8sm1616117b3a.90.2025.03.13.10.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 10:01:04 -0700 (PDT)
-Date: Thu, 13 Mar 2025 22:30:58 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Krzysztof Wilczynski <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Shuah Khan <shuah@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v4 5/6] misc: pci_endpoint_test: Remove global 'irq_type'
- and 'no_msi'
-Message-ID: <20250313170058.ncixyafsse5ry7xh@thinkpad>
-References: <20250225110252.28866-1-hayashi.kunihiko@socionext.com>
- <20250225110252.28866-6-hayashi.kunihiko@socionext.com>
+        d=1e100.net; s=20230601; t=1741885273; x=1742490073;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5P82pdBAFVbDSRi5XIPEAoEtfgv9YXlZdJ7xlxw7MDg=;
+        b=CklDXPa7saLwX0nE0wL5y9hM0l41ltT8XTQWTmRHxHNZR12OeAU6MEsvOJfzHLy18H
+         Qn/DJgei8ZkqvyEjiXWjjWPTnWqzrKg/8tSh4MB1wIKkRP2zewoCUfMUbKSVkuOMj28Q
+         HZHs+soQfNYErdQmLjLoU7HXT1cJYVhbB8MOaOmipg4oaHf8NAYHJI3pG5aHC3Izdi6q
+         d0xSrJ1e7tmqoe0lnoIbqWvbbHvMWyHnpt3FDcXdfKfJYGBa9ka1YCDksxRIcFV6Pgc+
+         b5yY3hGa2GpUG862IrYme9CM78pHFHIgAbwybiO7UdQis3KvuDAxsu+b9yCbMLUVfVfW
+         TMgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnaeuShotBKt+NGsnG222c2kWFqDGnjdbON+lQw411753JKV6S4vQVuZVgO211rPaGdt/k74M3pF8qCLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycdKcexdq6KcGyYJ1VL3Iy0nIX9HeFlmiqxFjZsw8nSO8PABuc
+	EPRMtJqYULa5hIOVuB1mxsSRN7JWj0ZLUetSh7Ao/WNyyXerTrSm
+X-Gm-Gg: ASbGnctuBaBFPCVtB+bFBFKZGp14u8J26Tym4SFskrqu/hPCL28OuKJWrV2bjsCyrVW
+	VjwKTgVuLHUlpGFJYhoLvYocCx2e3tgEXdQPaTbizR4KQgbZfg1M76CcJJaLZRGZsVZU930M7+w
+	cHqMgEUMcGl7wZb0WCS2AwIg1H28eQBD5FFggA0iAFjY4v1Jj4t+yCBwUp4gqegvBZR/pdYoMa5
+	coC8GCwWs/Bc5vTfG2f4y8B/NVDWB8pALiYuWWimRgMzXg63/KOn0BL9StGsK9S3GBtPUnSGw3v
+	Z/neZ6PGJXN4dlN9H8/C6kkGCOdtxVPTnU0bQjikwo9DOPkRm4aEEXFCNHk9s/Z5Z5po2kXIAW2
+	K
+X-Google-Smtp-Source: AGHT+IFtZYssUMBc4VlC36k5H0KjOuFJKyZR5Lu6B6Wylds+EzqaCHgNjSLG+/KFod08Js6ZDt8GXA==
+X-Received: by 2002:a05:6a00:3c8d:b0:736:52d7:daca with SMTP id d2e1a72fcca58-7371f172930mr352757b3a.18.1741885272638;
+        Thu, 13 Mar 2025 10:01:12 -0700 (PDT)
+Received: from KASONG-MC4.tencent.com ([106.37.123.220])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167df0esm1613529b3a.93.2025.03.13.10.01.06
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 13 Mar 2025 10:01:12 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Chris Li <chrisl@kernel.org>,
+	Barry Song <v-songbaohua@oppo.com>,
+	Hugh Dickins <hughd@google.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Baoquan He <bhe@redhat.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH v3 0/7] mm, swap: remove swap slot cache
+Date: Fri, 14 Mar 2025 00:59:28 +0800
+Message-ID: <20250313165935.63303-1-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.48.1
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250225110252.28866-6-hayashi.kunihiko@socionext.com>
 
-On Tue, Feb 25, 2025 at 08:02:51PM +0900, Kunihiko Hayashi wrote:
-> The global variable "irq_type" preserves the current value of
-> ioctl(GET_IRQTYPE).
-> 
-> However, all tests that use interrupts first call ioctl(SET_IRQTYPE)
-> to set test->irq_type, then write the value of test->irq_type into the
-> register pointed by test_reg_bar, and request the interrupt to the
-> endpoint. The endpoint function driver, pci-epf-test, refers to the
-> register, and determine which type of interrupt to raise.
-> 
-> The global variable "irq_type" is never used in the actual test,
-> so remove the variable and replace it with test->irq_type.
-> 
-> And also for the same reason, the variable "no_msi" can be removed.
-> 
-> Initially, test->irq_type has IRQ_TYPE_UNDEFINED, and the
-> ioctl(GET_IRQTYPE) before calling ioctl(SET_IRQTYPE) will return an error.
-> 
-> Suggested-by: Niklas Cassel <cassel@kernel.org>
-> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Kairui Song <kasong@tencent.com>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Slot cache was initially introduced by commit 67afa38e012e ("mm/swap:
+add cache for swap slots allocation") to reduce the lock contention
+of si->lock.
 
-- Mani
+Previous series "mm, swap: rework of swap allocator locks" [1] removed
+swap slot cache for freeing path as freeing path no longer touches
+si->lock in most cased. Allocation path also have slight to none
+contention on si->lock since that series, but slot cache still helps
+to reduce other overheads, like counters and the plist.
 
-> ---
->  drivers/misc/pci_endpoint_test.c | 18 +++---------------
->  1 file changed, 3 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 896392c428de..326e8e467c42 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -96,14 +96,6 @@ static DEFINE_IDA(pci_endpoint_test_ida);
->  #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
->  					    miscdev)
->  
-> -static bool no_msi;
-> -module_param(no_msi, bool, 0444);
-> -MODULE_PARM_DESC(no_msi, "Disable MSI interrupt in pci_endpoint_test");
-> -
-> -static int irq_type = IRQ_TYPE_MSI;
-> -module_param(irq_type, int, 0444);
-> -MODULE_PARM_DESC(irq_type, "IRQ mode selection in pci_endpoint_test (0 - Legacy, 1 - MSI, 2 - MSI-X)");
-> -
->  enum pci_barno {
->  	BAR_0,
->  	BAR_1,
-> @@ -833,7 +825,6 @@ static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
->  		return ret;
->  	}
->  
-> -	irq_type = test->irq_type;
->  	return 0;
->  }
->  
-> @@ -882,7 +873,7 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
->  		ret = pci_endpoint_test_set_irq(test, arg);
->  		break;
->  	case PCITEST_GET_IRQTYPE:
-> -		ret = irq_type;
-> +		ret = test->irq_type;
->  		break;
->  	case PCITEST_CLEAR_IRQ:
->  		ret = pci_endpoint_test_clear_irq(test);
-> @@ -939,15 +930,12 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
->  	test->pdev = pdev;
->  	test->irq_type = IRQ_TYPE_UNDEFINED;
->  
-> -	if (no_msi)
-> -		irq_type = IRQ_TYPE_INTX;
-> -
->  	data = (struct pci_endpoint_test_data *)ent->driver_data;
->  	if (data) {
->  		test_reg_bar = data->test_reg_bar;
->  		test->test_reg_bar = test_reg_bar;
->  		test->alignment = data->alignment;
-> -		irq_type = data->irq_type;
-> +		test->irq_type = data->irq_type;
->  	}
->  
->  	init_completion(&test->irq_raised);
-> @@ -969,7 +957,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
->  
->  	pci_set_master(pdev);
->  
-> -	ret = pci_endpoint_test_alloc_irq_vectors(test, irq_type);
-> +	ret = pci_endpoint_test_alloc_irq_vectors(test, test->irq_type);
->  	if (ret)
->  		goto err_disable_irq;
->  
-> -- 
-> 2.25.1
-> 
+This series removes the slot cache from allocation path too, by using
+the cluster as allocation fast path and also reduce other overheads.
+
+Now slot cache is completely gone, the code is much simplified without
+obvious feature or performance change, also clean up related workaround.
+Also this should avoid other potential issues, e.g. the long pinning
+of swap slots: swap slot cache pins swap slots with HAS_CACHE, causing
+reclaim or allocation fail to use these slots on scanning.
+
+The only behavior change is the swap device allocation rotation
+mechanism, as explained in the patch "mm, swap: use percpu cluster
+as allocation fast path".
+
+Test results are looking good after deleting the swap slot cache:
+
+- vm-scalability with: `usemem --init-time -O -y -x -R -31 1G`,
+12G memory cgroup using simulated pmem as SWAP (32G pmem, 32 CPUs),
+16 test runs for each case, measuring the total throughput:
+
+                      Before (KB/s) (stdev)  After (KB/s) (stdev)
+Random (4K):          424907.60 (24410.78)   414745.92  (34554.78)
+Random (64K):         163308.82 (11635.72)   167314.50  (18434.99)
+Sequential (4K, !-R): 6150056.79 (103205.90) 6321469.06 (115878.16)
+
+- Build linux kernel with make -j96, using 4K folio with 1.5G memory
+cgroup limit and 64K folio with 2G memory cgroup limit, on top of tmpfs,
+12 test runs, measuring the system time:
+
+                  Before (s) (stdev)  After (s) (stdev)
+make -j96 (4K):   6445.69 (61.95)     6408.80 (69.46)
+make -j96 (64K):  6841.71 (409.04)    6437.99 (435.55)
+
+The performance is unchanged, slightly better in some cases.
+
+[1] https://lore.kernel.org/linux-mm/20250113175732.48099-1-ryncsn@gmail.com/
+
+---
+
+V2: https://lore.kernel.org/linux-mm/20250224180212.22802-1-ryncsn@gmail.com/
+Updates from V2:
+- Make folio_alloc_swap() inline to fix build error [Stephen Rothwell]
+- Flush the global percpu cluster cache on swapoff to prevent new swapon
+  devices using the old invalid values. Based on:
+  https://lore.kernel.org/linux-mm/CAMgjq7AkRmb5ote-VZErM_2UdEC575j9WcrstcQOypEb+T-DLA@mail.gmail.com/
+- Minor update for patch 5/7: in slow path also try the local cluster
+  first to avoid fragmentation. It's a intermediate patch change for easier
+  testing if someone run into a bisect, the final code after the whole
+  series applies is not changed.
+- Need to call mem_cgroup_try_charge_swap even if swap allocation failed
+  for cgroup events.
+- Collect reviews and minor improvements [Baoquan He].
+
+V1: https://lore.kernel.org/linux-mm/20250214175709.76029-1-ryncsn@gmail.com/
+Updates from V1:
+- Check the cluster with cluster_is_usable and cluster_is_empty in
+  fast path too, improve performance and avoid fragmentation.
+- Fix a build warning and error for !SWAP build reported by test bot.
+- Global cluster array also record device for each order [Baoquan He]
+- Adjust of comments and function name [Baoquan He]
+- Collect Review-by [Baoquan He]
+- Minor function style improvement [Matthew Wilcox]
+
+Kairui Song (7):
+  mm, swap: avoid reclaiming irrelevant swap cache
+  mm, swap: drop the flag TTRS_DIRECT
+  mm, swap: avoid redundant swap device pinning
+  mm, swap: don't update the counter up-front
+  mm, swap: use percpu cluster as allocation fast path
+  mm, swap: remove swap slot cache
+  mm, swap: simplify folio swap allocation
+
+ include/linux/swap.h       |  22 +--
+ include/linux/swap_slots.h |  28 ---
+ mm/Makefile                |   2 +-
+ mm/shmem.c                 |  21 +--
+ mm/swap.h                  |   6 -
+ mm/swap_slots.c            | 295 ------------------------------
+ mm/swap_state.c            |  79 +--------
+ mm/swapfile.c              | 355 ++++++++++++++++++++-----------------
+ mm/vmscan.c                |  16 +-
+ mm/zswap.c                 |   6 +
+ 10 files changed, 232 insertions(+), 598 deletions(-)
+ delete mode 100644 include/linux/swap_slots.h
+ delete mode 100644 mm/swap_slots.c
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.48.1
+
