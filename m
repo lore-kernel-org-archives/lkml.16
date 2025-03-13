@@ -1,45 +1,45 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AD52690F2
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 15:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB8926A0A7
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 15:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881587; cv=none; b=hSUBBGz5kwfu9DNvqZ3kYcZGhgV3fz6GUmBskF8AIwA4xWvyFrK54wYSZSqiArKRFJPIPXw0pp4gOm6iUDHPR2SHMvhiej2VxLMuFVcvg7MfLzdHLQdRCUqal9UGJ9w5uFrft/UhltidCHiB6wgoQDtlnFUTJvDRbJbIpZY5nXo=
+	t=1741881590; cv=none; b=T7tQEeAiMxppSJD6/8PyhgvrLy3YKKIXoQJlciFq0LeNan5Nt1qedxyQnp0XfRbnFpN6oQrI/4ljS8QBTbiOfa707/T5w5aqRjZTc7mOe2+jnWM0n4kygdNg1/iT6bjRg+dM4n2QPJwNnHam5Qg/d59rxmtseo40FNW+BMfhxFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741881587; c=relaxed/simple;
-	bh=46A3UhnYd7qHpQVGclqJIBmLNsxJAxIKhYFDvz9/UgE=;
+	s=arc-20240116; t=1741881590; c=relaxed/simple;
+	bh=bU3D3wueHKoa5YCZCU6TXnzyYTdb0pCfbkU5jkkZ3Ek=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=Dz1Z+LFSmRxOTcJH++WLQIfLhJ3d5z7aPjpvfoG7lkIyZVazYcLI7RO3Ul7hxxXNXPKelhgApmeIFrd833WSHYmuGHFyTM0Hglu6g7PaSaY7w/kcpVwpo6c6OjFIGLKtAYDi+DkegamPm8lm5cAUAwGyGYWcU9DihD1F3GhOsQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=twDVoK7c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y9dib2Su; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=Vrwpib7TflW891qN2PLzsEAskU2UBnzXtjbTxYrzCOvppZxmzxe7Lk9LxW3SgP2U+DuPBQD5mtLIYjx8TnfPQghhkiAQGTWKRtQGOP48MpjioI32OtsI3Nqcdtoku6KDHzGkCwOvSJZ2kc6sjU7YvYtSKgqvdA8dXk2lgRuXUEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sAsCqzrn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TIC+Ig0/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="twDVoK7c";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y9dib2Su"
-Message-ID: <20250313155913.943406435@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sAsCqzrn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TIC+Ig0/"
+Message-ID: <20250313155914.075759643@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741881583;
+	s=2020; t=1741881586;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=Ock9hFbrCX/0jm57e6t3l2AeBjWICriMwni1mvhD8xw=;
-	b=twDVoK7cubkvuOfqM+NtrWLAbzsXjgV1BIeS87rMK5S3lDDPDnsN4TXmH8wzRJtx6koQK/
-	tgkwqP3P/JECsazRSoJ/4ukDtNM2VDlg5qFVsUg087XXf6b1NAfGtbbIIx5+4HKx60gVFB
-	7mJ6/kwPhxMrf5P5pEj5RWonwSgf9iMZ6vAXbCFcmmZ7oECcU0l09AMfAG7tT9uYKVZ09w
-	cICVNkSSquDf1yuWS8Nii5GKjLnq2dF61Z/IMVu9jbt5heJ+HLg6uQ0AxIud2XjRdKgX54
-	uNNFqdvgI04HRU9WU145AGS2qyg5brr93x3NxvBhItlzXtK95gY5PXvbiw9T5w==
+	 references:references; bh=MzACv4gnMoRysCOuFSlNKThBLFwRas/s/LdFd8yEeYc=;
+	b=sAsCqzrnY/JDCInUnIfuRZKlIApZ5BHXy0R3jfbN1I/CHJR1Arp6WQnGL8nqwDN3kfegCD
+	RY2w4UrhU27ziNU0Fl3OpcHS5k6EyoeRqCO6w/XXxKpBouTf7jf4CX3k2MTHcRzqfabF/4
+	cpuoOoCp86guk9lY8/fanahKaz/y6tGe/2REmlJyizuDEnHi/s4wCAFVtG4vHHtw1LNx9M
+	PizOLYUP4CFExWSHyT7X71QiwOF1YyIaiGDdxlv3THDn1dC0a7HSlNQe12c9A38kv+CpmQ
+	ATDLQE3k3PKcR/Z6T9dwHXH3QB7Sopt5BLijbXL03CMjJEWV7ptOOfEssQivQQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741881583;
+	s=2020e; t=1741881586;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=Ock9hFbrCX/0jm57e6t3l2AeBjWICriMwni1mvhD8xw=;
-	b=Y9dib2Su5PG2HJXoaxY3SuUyTvpJzEAC+M/0eYFuJBNnZu3pIPMMfpkk+2ddELimWCVTMT
-	cNqPVzLOBj1tXIAQ==
+	 references:references; bh=MzACv4gnMoRysCOuFSlNKThBLFwRas/s/LdFd8yEeYc=;
+	b=TIC+Ig0/YzlcNTZqDg8IsV83B5Ss/jI+Ys+wm9UC6+QSkLFI6P66NZDWK4SDsQ9zq95B8C
+	Vozzs+pVA8zhfEBA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>,
  Jiri Slaby <jirislaby@kernel.org>
-Subject: [patch 01/46] genirq: Provide conditional lock guards
+Subject: [patch 03/46] genirq/autoprobe: Switch to lock guards
 References: <20250313154615.860723120@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,79 +48,111 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 13 Mar 2025 16:59:42 +0100 (CET)
+Date: Thu, 13 Mar 2025 16:59:46 +0100 (CET)
 
-The interrupt core code has an ever repeating pattern:
+Convert all lock/unlock pairs to guards.
 
-    unsigned long flags;
-    struct irq_desc *desc = irq_get_desc_[bus]lock(irq, &flags, mode);
-
-    if (!desc)
-       return -EINVAL;
-    ....
-    irq_put_desc_[bus]unlock(desc, flags);
-
-That requires gotos in failure paths and just creates visual clutter.
-
-Provide lock guards, which allow to simplify the code.
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Slaby <jirislaby@kernel.org>
 ---
- kernel/irq/internals.h |   35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
+ kernel/irq/autoprobe.c |   26 +++++++++-----------------
+ 1 file changed, 9 insertions(+), 17 deletions(-)
 
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -150,6 +150,10 @@ extern int irq_setup_affinity(struct irq
- static inline int irq_setup_affinity(struct irq_desc *desc) { return 0; }
- #endif
+--- a/kernel/irq/autoprobe.c
++++ b/kernel/irq/autoprobe.c
+@@ -43,18 +43,16 @@ unsigned long probe_irq_on(void)
+ 	 * flush such a longstanding irq before considering it as spurious.
+ 	 */
+ 	for_each_irq_desc_reverse(i, desc) {
+-		raw_spin_lock_irq(&desc->lock);
++		guard(raw_spinlock_irq)(&desc->lock);
+ 		if (!desc->action && irq_settings_can_probe(desc)) {
+ 			/*
+ 			 * Some chips need to know about probing in
+ 			 * progress:
+ 			 */
+ 			if (desc->irq_data.chip->irq_set_type)
+-				desc->irq_data.chip->irq_set_type(&desc->irq_data,
+-							 IRQ_TYPE_PROBE);
++				desc->irq_data.chip->irq_set_type(&desc->irq_data, IRQ_TYPE_PROBE);
+ 			irq_activate_and_startup(desc, IRQ_NORESEND);
+ 		}
+-		raw_spin_unlock_irq(&desc->lock);
+ 	}
  
-+
-+#define for_each_action_of_desc(desc, act)			\
-+	for (act = desc->action; act; act = act->next)
-+
- /* Inline functions for support of irq chips on slow busses */
- static inline void chip_bus_lock(struct irq_desc *desc)
- {
-@@ -169,14 +173,33 @@ static inline void chip_bus_sync_unlock(
- #define IRQ_GET_DESC_CHECK_GLOBAL	(_IRQ_DESC_CHECK)
- #define IRQ_GET_DESC_CHECK_PERCPU	(_IRQ_DESC_CHECK | _IRQ_DESC_PERCPU)
+ 	/* Wait for longstanding interrupts to trigger. */
+@@ -66,13 +64,12 @@ unsigned long probe_irq_on(void)
+ 	 * happened in the previous stage, it may have masked itself)
+ 	 */
+ 	for_each_irq_desc_reverse(i, desc) {
+-		raw_spin_lock_irq(&desc->lock);
++		guard(raw_spinlock_irq)(&desc->lock);
+ 		if (!desc->action && irq_settings_can_probe(desc)) {
+ 			desc->istate |= IRQS_AUTODETECT | IRQS_WAITING;
+ 			if (irq_activate_and_startup(desc, IRQ_NORESEND))
+ 				desc->istate |= IRQS_PENDING;
+ 		}
+-		raw_spin_unlock_irq(&desc->lock);
+ 	}
  
--#define for_each_action_of_desc(desc, act)			\
--	for (act = desc->action; act; act = act->next)
+ 	/*
+@@ -84,18 +81,16 @@ unsigned long probe_irq_on(void)
+ 	 * Now filter out any obviously spurious interrupts
+ 	 */
+ 	for_each_irq_desc(i, desc) {
+-		raw_spin_lock_irq(&desc->lock);
 -
--struct irq_desc *
--__irq_get_desc_lock(unsigned int irq, unsigned long *flags, bool bus,
--		    unsigned int check);
-+struct irq_desc *__irq_get_desc_lock(unsigned int irq, unsigned long *flags, bool bus,
-+				     unsigned int check);
- void __irq_put_desc_unlock(struct irq_desc *desc, unsigned long flags, bool bus);
++		guard(raw_spinlock_irq)(&desc->lock);
+ 		if (desc->istate & IRQS_AUTODETECT) {
+ 			/* It triggered already - consider it spurious. */
+ 			if (!(desc->istate & IRQS_WAITING)) {
+ 				desc->istate &= ~IRQS_AUTODETECT;
+ 				irq_shutdown_and_deactivate(desc);
+-			} else
+-				if (i < 32)
+-					mask |= 1 << i;
++			} else if (i < 32) {
++				mask |= 1 << i;
++			}
+ 		}
+-		raw_spin_unlock_irq(&desc->lock);
+ 	}
  
-+__DEFINE_CLASS_IS_CONDITIONAL(irqdesc_lock, true);
-+__DEFINE_UNLOCK_GUARD(irqdesc_lock, struct irq_desc,
-+		      __irq_put_desc_unlock(_T->lock, _T->flags, _T->bus),
-+		      unsigned long flags; bool bus);
-+
-+static inline class_irqdesc_lock_t class_irqdesc_lock_constructor(unsigned int irq, bool bus,
-+								  unsigned int check)
-+{
-+	class_irqdesc_lock_t _t = {
-+		.bus	= bus,
-+		.lock	= __irq_get_desc_lock(irq, &_t.flags, bus, check),
-+	};
-+	return _t;
-+}
-+
-+#define scoped_irqdesc_get_and_lock(_irq, _check)		\
-+	scoped_guard(irqdesc_lock, _irq, false, _check)
-+
-+#define scoped_irqdesc_get_and_buslock(_irq, _check)		\
-+	scoped_guard(irqdesc_lock, _irq, true, _check)
-+
-+#define scoped_irqdesc		((struct irq_desc *)(__guard_ptr(irqdesc_lock)(&scope)))
-+
- static inline struct irq_desc *
- irq_get_desc_buslock(unsigned int irq, unsigned long *flags, unsigned int check)
- {
+ 	return mask;
+@@ -121,7 +116,7 @@ unsigned int probe_irq_mask(unsigned lon
+ 	int i;
+ 
+ 	for_each_irq_desc(i, desc) {
+-		raw_spin_lock_irq(&desc->lock);
++		guard(raw_spinlock_irq)(&desc->lock);
+ 		if (desc->istate & IRQS_AUTODETECT) {
+ 			if (i < 16 && !(desc->istate & IRQS_WAITING))
+ 				mask |= 1 << i;
+@@ -129,7 +124,6 @@ unsigned int probe_irq_mask(unsigned lon
+ 			desc->istate &= ~IRQS_AUTODETECT;
+ 			irq_shutdown_and_deactivate(desc);
+ 		}
+-		raw_spin_unlock_irq(&desc->lock);
+ 	}
+ 	mutex_unlock(&probing_active);
+ 
+@@ -160,8 +154,7 @@ int probe_irq_off(unsigned long val)
+ 	struct irq_desc *desc;
+ 
+ 	for_each_irq_desc(i, desc) {
+-		raw_spin_lock_irq(&desc->lock);
+-
++		guard(raw_spinlock_irq)(&desc->lock);
+ 		if (desc->istate & IRQS_AUTODETECT) {
+ 			if (!(desc->istate & IRQS_WAITING)) {
+ 				if (!nr_of_irqs)
+@@ -171,7 +164,6 @@ int probe_irq_off(unsigned long val)
+ 			desc->istate &= ~IRQS_AUTODETECT;
+ 			irq_shutdown_and_deactivate(desc);
+ 		}
+-		raw_spin_unlock_irq(&desc->lock);
+ 	}
+ 	mutex_unlock(&probing_active);
+ 
 
