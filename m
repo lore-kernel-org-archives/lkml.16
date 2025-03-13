@@ -1,89 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A90026A0D0;
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABFD626A0C7;
 	Thu, 13 Mar 2025 15:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741879767; cv=none; b=t52dB/Yuvp1PaziCY+dhJ1N93Bz1N7hNHKKek7PUzPcAHs+q4m5yfZmZRvAZevZnNq4VagpmaTuIZ6jXj8e0KFPLkR0Ufv+RWn2vHvpSgf4icCeodd8D9bGKRFPNYnxBDC6eXZGfm3xmN7bpkdJz3yFKN/uuiSmVuJlrOq79Zk4=
+	t=1741879768; cv=none; b=JuoJ/t2tVgfAJYs8wDDjYY5NXS2pN0vjpK86MB2b0R25bFB9T7eb9lXHLp3fIUSqKZjOx8i3oFDCZa9UtB8UyBHjYqUuF3mSaJxKXpZdbn2aBnz0P6yf+n4H8vf1Hf6GoZSR6+yr52FRMKQxE/baNOSErTRF5JTEQKffz6K9XRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741879767; c=relaxed/simple;
-	bh=z1F/N+uyen+sKYPadxbDvEvh55FfdtiKufmg7gfJL8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tppDc4vvED6+eQgTPDfmvLhFVpY5Zy9DN701rS1HWxem0ivc+eV7S9EXlXmMZtj3Duqd1wn0Kfh6KTS9LzhLja1+IAWuUGtcjs1KR3orE/H5ZA0XKmKQn84sEyQmSuJs06/lr2z0+f+NmWKIW0WxpSv9yYlP42w6E+WAzB67rMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smpKKLRw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smpKKLRw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7179C4CEDD;
-	Thu, 13 Mar 2025 15:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741879766;
-	bh=z1F/N+uyen+sKYPadxbDvEvh55FfdtiKufmg7gfJL8g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=smpKKLRwdX+gAfBcRd2DR093HqdYCRagRFXKRMiEUQhQQW6yEfyq0+zNf21V/HcOF
-	 QoZ15W3A/eGWCWrseJNV8gFs6rLyRzSSlhFgtLszBMmaI6uMbJ0oF2jIfpADOLmPyG
-	 2XlJK8Z7zeVjkZex0RSJ9owzaoqSWysX7sjj/PJ+z0QJ3R6CR+45xkGS0khu0jo5he
-	 y7vUe5Md/b9+aaL6nw0Ybq8N22z+NmDDc0k+S+RUTyrp7brnEdQquCVsJcUdsnZty9
-	 ouJJ+cHesTccyWAYSUNnavpORIBS/MRGFZ2Bbfm714dgtkSckdY6ITmn0BIU1PSwCn
-	 7PdOUts+as7+g==
-Date: Thu, 13 Mar 2025 15:29:21 +0000
-From: Lee Jones <lee@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Keerthy <j-keerthy@ti.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: (subset) [PATCH v2 01/15] leds: aw200xx: don't use return with
- gpiod_set_value() variants
-Message-ID: <20250313152921.GB3645863@google.com>
-References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
- <20250220-gpio-set-retval-v2-1-bc4cfd38dae3@linaro.org>
- <174130146134.987559.8662566490718210141.b4-ty@kernel.org>
- <CAMRc=MdQcxtXMUCt00=JbGY47cMMWcW8=r3-ZrMKjQkViqnxvA@mail.gmail.com>
+	s=arc-20240116; t=1741879768; c=relaxed/simple;
+	bh=MfSTY+8Javma4iMKIMRIP5AOm3S32ksYO4b7JbopmcE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gryJjGWJOgyefA9oF3uzbr6imU3Q7+Sj8EHSIjQt+HEuKYrcgjfyMdQsEUAgHsDnpeeCg1t3Ch96uzmXMm89qvKlg7p9Q9LPj9DtdwmsoJtdThulWMLnW0TcqU+/JKPNThZY5E78xnPKUvYFhqtYT0dzTQX5EYaiwvleT/ozFpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9E8D1F91;
+	Thu, 13 Mar 2025 08:29:36 -0700 (PDT)
+Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CCFA3F694;
+	Thu, 13 Mar 2025 08:29:24 -0700 (PDT)
+From: Sudeep Holla <sudeep.holla@arm.com>
+Date: Thu, 13 Mar 2025 15:28:56 +0000
+Subject: [PATCH v3 10/13] i2c: xgene-slimpro: Simplify PCC shared memory
+ region handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdQcxtXMUCt00=JbGY47cMMWcW8=r3-ZrMKjQkViqnxvA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250313-pcc_fixes_updates-v3-10-019a4aa74d0f@arm.com>
+References: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
+In-Reply-To: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
+To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, 
+ Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>, 
+ Adam Young <admiyo@os.amperecomputing.com>, 
+ Robbie King <robbiek@xsightlabs.com>, Andi Shyti <andi.shyti@kernel.org>, 
+ linux-i2c@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3735; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=MfSTY+8Javma4iMKIMRIP5AOm3S32ksYO4b7JbopmcE=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBn0vnECAkFm0g4ggECz10cy8pN/4x3dJjvyoS7c
+ BFd5gCqqs2JAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ9L5xAAKCRAAQbq8MX7i
+ mFhoEADJhHjPfVYHP9j+YNYHDWqa0U5K8kY635HEcqa4mvxMeAnBw/ydgkzg4z1Cwva4cXyzzBM
+ 23yiRRTCageAHMmCDBkSv+x9zkhWf8+nh4uO/CqLvSgZ3tBIu2b2IdxwB8vTHrzmF3T+VgE4l0g
+ cM34CUpZIdfl0pzLa11fA3OYNraMLmBJbXjm60NMLdt72pXElQXNGAedPvwWw5hldDkJKDwVq8u
+ 8RRZc9s+KIryyFp3D8oP4IB3u7I2xTltQarhynLNwrbGEPQarP86KXE4esmWCSS9m3ARATTfce1
+ 45pjxzX3O8cQH7SKi5PUNW76kQPlrJkdqxE0ywwDPaW0zVW3i4NAZbOKgXIA/DLzyo0UDcbcltH
+ OvprmFjfF+UGCauYnkdhU4oOp1WnDwwEsrLX596CS5Y5umOIWPaLZkVGOxX9uVSL/7HLaHeO+hg
+ e/fOQA8eXJXaSAHEyABHOesdontefLkjeCUscxgjfuXSnmn1uV7HtjW7ZmManoDvEssZSNMDQjY
+ MG21LXdkYS2anzppHcwYedtZeHOhX+kQb2FQ7mrytqVZWPFRrFFi5n+BCV/APUl9KzgAR6BLt/b
+ sGv91/0T1XR1QCmvDm9MqD8nNe4os7TurEMF7sWjq0RiP22G+yCmhTz9Erzt5viMdFbpE1K4rSh
+ pJJCQl/GV38e1Kg==
+X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
+ fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
-On Fri, 07 Mar 2025, Bartosz Golaszewski wrote:
+The PCC driver now handles mapping and unmapping of shared memory
+areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+this xgene-slimpro I2C driver did handling of those mappings like several
+other PCC mailbox client drivers.
 
-> On Thu, Mar 6, 2025 at 11:51 PM Lee Jones <lee@kernel.org> wrote:
-> >
-> > On Thu, 20 Feb 2025 10:56:58 +0100, Bartosz Golaszewski wrote:
-> > > While gpiod_set_value() currently returns void, it will soon be converted
-> > > to return an integer instead. Don't do `return gpiod_set...`.
-> > >
-> > >
-> >
-> > Applied, thanks!
-> >
-> > [01/15] leds: aw200xx: don't use return with gpiod_set_value() variants
-> >         commit: 5d5e2a6f15a6c5e0c431c1388fd90e14b448da1e
-> >
-> 
-> Hi Lee!
-> 
-> Can you please drop it from your tree? You acked v1 of this patch
-> after I had already sent v2 (this patch remained unchanged) folded
-> into a respin of the bigger GPIO series that had triggered build bots
-> to point this issue out in the first place. I picked the entire series
-> up and this commit is already in next as
-> 129fdfe25ac513018d5fe85b0c493025193ef19f.
+There were redundant operations, leading to unnecessary code. Maintaining
+the consistency across these driver was harder due to scattered handling
+of shmem.
 
-Unapplied, thanks.
+Just use the mapped shmem and remove all redundant operations from this
+driver.
+
+Cc: Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c@vger.kernel.org
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/i2c/busses/i2c-xgene-slimpro.c | 39 ++++------------------------------
+ 1 file changed, 4 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-xgene-slimpro.c b/drivers/i2c/busses/i2c-xgene-slimpro.c
+index 663fe5604dd64b80e57f906e1f7430dcf6d5e95b..a0880f4a056d2b8abbac9f58416215a7fc9b130e 100644
+--- a/drivers/i2c/busses/i2c-xgene-slimpro.c
++++ b/drivers/i2c/busses/i2c-xgene-slimpro.c
+@@ -101,8 +101,6 @@ struct slimpro_i2c_dev {
+ 	struct completion rd_complete;
+ 	u8 dma_buffer[I2C_SMBUS_BLOCK_MAX + 1]; /* dma_buffer[0] is used for length */
+ 	u32 *resp_msg;
+-	phys_addr_t comm_base_addr;
+-	void *pcc_comm_addr;
+ };
+ 
+ #define to_slimpro_i2c_dev(cl)	\
+@@ -148,7 +146,8 @@ static void slimpro_i2c_rx_cb(struct mbox_client *cl, void *mssg)
+ static void slimpro_i2c_pcc_rx_cb(struct mbox_client *cl, void *msg)
+ {
+ 	struct slimpro_i2c_dev *ctx = to_slimpro_i2c_dev(cl);
+-	struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
++	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
++							ctx->pcc_chan->shmem;
+ 
+ 	/* Check if platform sends interrupt */
+ 	if (!xgene_word_tst_and_clr(&generic_comm_base->status,
+@@ -169,7 +168,8 @@ static void slimpro_i2c_pcc_rx_cb(struct mbox_client *cl, void *msg)
+ 
+ static void slimpro_i2c_pcc_tx_prepare(struct slimpro_i2c_dev *ctx, u32 *msg)
+ {
+-	struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
++	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
++							ctx->pcc_chan->shmem;
+ 	u32 *ptr = (void *)(generic_comm_base + 1);
+ 	u16 status;
+ 	int i;
+@@ -464,15 +464,12 @@ static int xgene_slimpro_i2c_probe(struct platform_device *pdev)
+ 	} else {
+ 		struct pcc_mbox_chan *pcc_chan;
+ 		const struct acpi_device_id *acpi_id;
+-		int version = XGENE_SLIMPRO_I2C_V1;
+ 
+ 		acpi_id = acpi_match_device(pdev->dev.driver->acpi_match_table,
+ 					    &pdev->dev);
+ 		if (!acpi_id)
+ 			return -EINVAL;
+ 
+-		version = (int)acpi_id->driver_data;
+-
+ 		if (device_property_read_u32(&pdev->dev, "pcc-channel",
+ 					     &ctx->mbox_idx))
+ 			ctx->mbox_idx = MAILBOX_I2C_INDEX;
+@@ -494,34 +491,6 @@ static int xgene_slimpro_i2c_probe(struct platform_device *pdev)
+ 			goto mbox_err;
+ 		}
+ 
+-		/*
+-		 * This is the shared communication region
+-		 * for the OS and Platform to communicate over.
+-		 */
+-		ctx->comm_base_addr = pcc_chan->shmem_base_addr;
+-		if (ctx->comm_base_addr) {
+-			if (version == XGENE_SLIMPRO_I2C_V2)
+-				ctx->pcc_comm_addr = memremap(
+-							ctx->comm_base_addr,
+-							pcc_chan->shmem_size,
+-							MEMREMAP_WT);
+-			else
+-				ctx->pcc_comm_addr = memremap(
+-							ctx->comm_base_addr,
+-							pcc_chan->shmem_size,
+-							MEMREMAP_WB);
+-		} else {
+-			dev_err(&pdev->dev, "Failed to get PCC comm region\n");
+-			rc = -ENOENT;
+-			goto mbox_err;
+-		}
+-
+-		if (!ctx->pcc_comm_addr) {
+-			dev_err(&pdev->dev,
+-				"Failed to ioremap PCC comm region\n");
+-			rc = -ENOMEM;
+-			goto mbox_err;
+-		}
+ 	}
+ 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+ 	if (rc)
 
 -- 
-Lee Jones [李琼斯]
+2.34.1
+
