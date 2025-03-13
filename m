@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B811F267F4F;
-	Thu, 13 Mar 2025 15:29:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2D8E269808;
+	Thu, 13 Mar 2025 15:29:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741879756; cv=none; b=hbILuYgE/+W9jCDCufVGb3GblSX3MJJWP/Ki+MOLH3ACe9Jk3zb72xeIQd/VeJKYTo9YNtLOz/TJq1d8/LsrV9jp0ciFHjGzQllxav544NB14nKNkGFA1IRlXngFYptI5JO8UyW5hsZlicq/4eCfuRM71o0x6VyENaftnaCm24g=
+	t=1741879759; cv=none; b=Qi7mzKfLl9kVpHtBlXJXK4QewWAGGFQY7aqm1NuU+r9xeUpURKCXwUqZ8MVpLTW3b71nRuXnMApq59nZtni50/QVZhfKsektclVv2AaBHBIcEQ2af2sC3GQkbvA+K7sAYTFmR/yyxx33TvyrIv/yOt5s+t4m6U1QAe4AwlTu/6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741879756; c=relaxed/simple;
-	bh=NQbyptRwAeP3RHevwuUTs6vCxAkaqegjdsMRF6siQF4=;
+	s=arc-20240116; t=1741879759; c=relaxed/simple;
+	bh=UCfoq5iv8gZQgWR9g+UiHw55YgFlpcDqEVY1HoIkIzs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lRCe9D6jbNGdLuAQuHk3sMzGlaEr5LZsyDpXg4/Nk8DP/PdrGux0g54ptvWaXxrhW4dRp/Vf5eNsLk8giN6VGdBAYBs+goLgFGhReUxZ11S48t4Vj4YRFYjlO546RbQD8GAR8VZtsWVsegEWT/HGiTJrhEngwVY+6574gt3vGeg=
+	 In-Reply-To:To:Cc; b=eTbV4gPFcINTshxFpZAt1+av3Gk0XGIeYYbqIcErG94ZbWfO8Xzf8DUzeuCnpCYvADIVzIHaE/0NM0Gi2kc3Z10YcHg+Wm6/2GP5jkdmNqtktY1wTXeiaNPNXwB6y5IwpfAZJRl5CPa2e5Ca0vx2888kzU17PAFqryvFT56vCbc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AC271516;
-	Thu, 13 Mar 2025 08:29:23 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C29E201B;
+	Thu, 13 Mar 2025 08:29:26 -0700 (PDT)
 Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C94933F694;
-	Thu, 13 Mar 2025 08:29:11 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAC1F3F694;
+	Thu, 13 Mar 2025 08:29:14 -0700 (PDT)
 From: Sudeep Holla <sudeep.holla@arm.com>
-Date: Thu, 13 Mar 2025 15:28:47 +0000
-Subject: [PATCH v3 01/13] mailbox: pcc: Fix the possible race in updation
- of chan_in_use flag
+Date: Thu, 13 Mar 2025 15:28:49 +0000
+Subject: [PATCH v3 03/13] mailbox: pcc: Drop unnecessary endianness
+ conversion of pcc_hdr.flags
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,7 +30,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-pcc_fixes_updates-v3-1-019a4aa74d0f@arm.com>
+Message-Id: <20250313-pcc_fixes_updates-v3-3-019a4aa74d0f@arm.com>
 References: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
 In-Reply-To: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
 To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -39,108 +39,77 @@ Cc: Sudeep Holla <sudeep.holla@arm.com>,
  Adam Young <admiyo@os.amperecomputing.com>, 
  Robbie King <robbiek@xsightlabs.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3240; i=sudeep.holla@arm.com;
- h=from:subject:message-id; bh=dxK+XKYYiFPaimo8uMWpmsf+NJk31atPdAwkPEBgDVs=;
- b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBn0vnDRyhuZxpA6nNUZalpyyOa820Eh0x8ALXzJ
- mKyysNuSHSJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ9L5wwAKCRAAQbq8MX7i
- mO6/EACeOvjYrH8qLAi4BZJSChAtzS4xIC4AXnqsVPKQvn3qUgURiSsnwbZzkOFjDgFNcEvTP/6
- SYxWQDT3hcdyzPE4lznS8yKCvRomC4FJ7CjHuRf1KrqQ00LgVBMCBcRMEk8RxuVZK5z0jWFiLW8
- Clnpka5WCG32x0Amlpd99A6kjnma4pxPLl+mJ7FMvhF6Kn1hDk2xQkvPXogLBr7bnquJNw9dVX1
- 4vAnjEPzUiiQur6nAPeibz5FNWDDW1aO3p9s1J5fDDHdcHdywfaVwHF66NORu8b0StijVqVRdQP
- iVmrXi8duvDzdVss7w7eiL18TXpC3Zkw8fVC6Z666v+tiDT4sKGgLjQM6jyEv8q5XvnDmyjwD8M
- OcuS1zpQP8GMda6nCgmbZBjmkK/WeyHHj2x57sj4/Io+Elsd/UNc3Ft9pWWzaoM+rG6mriqPw3L
- 15xSajaRMYzPj1qyq/lyZc05RgK6idonM7y8Vgf/QD+VyvffxVC948FohTRApel5OI+UX9luL/F
- W5QXhVE3vFU/NV1FcoO76FlX1V4csSlu3QJuA7Q5ag/K6TwdRRuU2GLzfR72aW760M3E1Mm6TYN
- ngKjhMJYa7R+v3XnjDAvuY5+IwVoyWeyDHnFaHbBOUW6G4pG+0XEqz/cBCb9O6utDTFy5dgZpbK
- qxNa+WvkuLAM78A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2141; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=UCfoq5iv8gZQgWR9g+UiHw55YgFlpcDqEVY1HoIkIzs=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBn0vnESUxQx6rqi4Q0YSvDGMvX2KJJ+P4dmoQm4
+ knxotCnrqOJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ9L5xAAKCRAAQbq8MX7i
+ mFcNEACxVrjtPjXpBrEX4HVnmPkyaozacS2YdnDAtATsCmJJH2+5LDQNqHnMecgrqJEANJwRme0
+ hLu1ZsDgYlr/KJWA2Y/sG76wuOesNLtAFdj+5lVgtHjed0VlNlcSP0utcVQFKVyB/svHm8E4FXV
+ lf8xoD72n9kgSiGXOupWk0dH/MvcX5l2DXMCz8WiUbpuljps5T7OPmxWDGZS9Oqgq77KL418COI
+ TIZNwZ+DU+8vAYpGRPi1wR2vwc1ZFpRaxBtwaW8zojjOwtXs5qLpGcX6IE2NFDOwdxvem44+ask
+ R17UOwRmP56W/S/8T1fG8se/XdkYr7AyZkUKFbuJBs4nghj+dANbAmhUsimWp/3cHIr2duqwzK9
+ FFHYrt9peo82QB4+g4wSflJ7QZbX/lFB5F1FzJXN3BSA6i5/1OF9pxCLK0wXOAJrhqu0datP06+
+ WUQe2JVMGHZ4Sd1Vd6RnHyQ/LDKuBlwCaBw98Op53Ai1xovRz1hjYrnzKzpJLb8lEfH4v1hiOEj
+ +dUE2atz0HcH8+w1PmEQ8OxB+j/HUwzwO4tw3o2Pjo/QxiA+GB/HoNLy2Epq/DChudtsN6YdfGU
+ B6H1yvDq1fIPJyycStOuGZQs0f/IammcpqIbzMLXh6LJ9knE0c4bzpYRhUNtiHvfAOm1ZvrMnnk
+ eMgt3Deld7vGQKA==
 X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
  fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
-From: Huisong Li <lihuisong@huawei.com>
+The Sparse static checker flags a type mismatch warning related to
+endianness conversion:
 
-The function mbox_chan_received_data() calls the Rx callback of the
-mailbox client driver. The callback might set chan_in_use flag from
-pcc_send_data(). This flag's status determines whether the PCC channel
-is in use.
+  |  warning: incorrect type in argument 1 (different base types)
+  |     expected restricted __le32 const [usertype] *p
+  |     got unsigned int *
 
-However, there is a potential race condition where chan_in_use is
-updated incorrectly due to concurrency between the interrupt handler
-(pcc_mbox_irq()) and the command sender(pcc_send_data()).
+This is because an explicit endianness conversion (le32_to_cpu()) was
+applied unnecessarily to a pcc_hdr.flags field that is already in
+little-endian format.
 
-The 'chan_in_use' flag of a channel is set to true after sending a
-command. And the flag of the new command may be cleared erroneous by
-the interrupt handler afer mbox_chan_received_data() returns,
+The PCC driver is only enabled on little-endian kernels due to its
+dependency on ACPI and EFI, making the explicit conversion unnecessary.
 
-As a result, the interrupt being level triggered can't be cleared in
-pcc_mbox_irq() and it will be disabled after the number of handled times
-exceeds the specified value. The error log is as follows:
+The redundant conversion occurs in pcc_chan_check_and_ack() for the
+pcc_hdr.flags field. Drop this unnecessary endianness conversion of
+pcc_hdr.flags.
 
-  |  kunpeng_hccs HISI04B2:00: PCC command executed timeout!
-  |  kunpeng_hccs HISI04B2:00: get port link status info failed, ret = -110
-  |  irq 13: nobody cared (try booting with the "irqpoll" option)
-  |  Call trace:
-  |   dump_backtrace+0x0/0x210
-  |   show_stack+0x1c/0x2c
-  |   dump_stack+0xec/0x130
-  |   __report_bad_irq+0x50/0x190
-  |   note_interrupt+0x1e4/0x260
-  |   handle_irq_event+0x144/0x17c
-  |   handle_fasteoi_irq+0xd0/0x240
-  |   __handle_domain_irq+0x80/0xf0
-  |   gic_handle_irq+0x74/0x2d0
-  |   el1_irq+0xbc/0x140
-  |   mnt_clone_write+0x0/0x70
-  |   file_update_time+0xcc/0x160
-  |   fault_dirty_shared_page+0xe8/0x150
-  |   do_shared_fault+0x80/0x1d0
-  |   do_fault+0x118/0x1a4
-  |   handle_pte_fault+0x154/0x230
-  |   __handle_mm_fault+0x1ac/0x390
-  |   handle_mm_fault+0xf0/0x250
-  |   do_page_fault+0x184/0x454
-  |   do_translation_fault+0xac/0xd4
-  |   do_mem_abort+0x44/0xb4
-  |   el0_da+0x40/0x74
-  |   el0_sync_handler+0x60/0xb4
-  |   el0_sync+0x168/0x180
-  |  handlers:
-  |   pcc_mbox_irq
-  |  Disabling IRQ #13
+Also drop the redundant PCC_ACK_FLAG_MASK definition and use the
+more appropriate and already defined PCC_CMD_COMPLETION_NOTIFY.
 
-To solve this issue, pcc_mbox_irq() must clear 'chan_in_use' flag before
-the call to mbox_chan_received_data().
-
+Acked-by: Huisong Li <lihuisong@huawei.com>
 Tested-by: Adam Young <admiyo@os.amperecomputing.com>
-Tested-by: Robbie King <robbiek@xsightlabs.com>
-Signed-off-by: Huisong Li <lihuisong@huawei.com>
-(sudeep.holla: Minor updates to the subject, commit message and comment)
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/mailbox/pcc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/mailbox/pcc.c | 2 +-
+ include/acpi/pcc.h    | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
-index 82102a4c5d68839170238540a6fed61afa5185a0..8fd4d0f79b090eeea1c7779061841ef507083687 100644
+index f8215a8f656a460b38806d4c002470c3fe1e3c9c..9cf0ca772c1adb73ceb91d25a2abd1d12c678d90 100644
 --- a/drivers/mailbox/pcc.c
 +++ b/drivers/mailbox/pcc.c
-@@ -333,10 +333,16 @@ static irqreturn_t pcc_mbox_irq(int irq, void *p)
- 	if (pcc_chan_reg_read_modify_write(&pchan->plat_irq_ack))
- 		return IRQ_NONE;
+@@ -292,7 +292,7 @@ static void check_and_ack(struct pcc_chan_info *pchan, struct mbox_chan *chan)
+ 	 *
+ 	 * The PCC master subspace channel clears chan_in_use to free channel.
+ 	 */
+-	if (le32_to_cpup(&pcc_hdr.flags) & PCC_ACK_FLAG_MASK)
++	if (pcc_hdr.flags & PCC_CMD_COMPLETION_NOTIFY)
+ 		pcc_send_data(chan, NULL);
+ 	else
+ 		pcc_chan_reg_read_modify_write(&pchan->cmd_update);
+diff --git a/include/acpi/pcc.h b/include/acpi/pcc.h
+index 699c1a37b8e7846362bae35477eb5736be15d79e..d1e506f041c5a80857d4a025fa3c1803746ba4b9 100644
+--- a/include/acpi/pcc.h
++++ b/include/acpi/pcc.h
+@@ -32,7 +32,6 @@ struct pcc_mbox_chan {
+ #define PCC_CMD_COMPLETION_NOTIFY	BIT(0)
  
-+	/*
-+	 * Clear this flag after updating interrupt ack register and just
-+	 * before mbox_chan_received_data() which might call pcc_send_data()
-+	 * where the flag is set again to start new transfer. This is
-+	 * required to avoid any possible race in updatation of this flag.
-+	 */
-+	pchan->chan_in_use = false;
- 	mbox_chan_received_data(chan, NULL);
+ #define MAX_PCC_SUBSPACES	256
+-#define PCC_ACK_FLAG_MASK	0x1
  
- 	check_and_ack(pchan, chan);
--	pchan->chan_in_use = false;
- 
- 	return IRQ_HANDLED;
- }
+ #ifdef CONFIG_PCC
+ extern struct pcc_mbox_chan *
 
 -- 
 2.34.1
