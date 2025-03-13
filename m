@@ -1,131 +1,82 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9153C17E
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 00:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C4417E;
+	Thu, 13 Mar 2025 00:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741824395; cv=none; b=IuTwJDI40eveBEr7/MnOuNYu6LiyUtGh46uXZ+sO636DgLhFEn6a/ezvjsrtVnHLHxPt7B+AlAqnuc1gjNncJ00POlnd5C5dNC0hLqZYPUuQxwcf0gnx6MxT3ar/qbj/FZgOV9ErYq/ilU7LPakUWgHT1GpsAaXm36AfSTiu/FA=
+	t=1741824627; cv=none; b=Taz5P67+3cmwxehino1nJqcNyO3ApepKLmu3zlBiuSkZl0hoNtL0gXe2ENhAOb2xVzOMOATSY8l+Q4uikGTW8MQTHzosxiaCdduQU8jIRXqW22XZgFOhtgEgkDs822U/bZn3xwsqNF7oYCCCBiWrK3O+NyvpSZ9XNtFHmkhLZc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741824395; c=relaxed/simple;
-	bh=23GDT0Rk8r3jrPpap9e9b1IjBBxLwjDYfdQD/VF0D2Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jbwp2T0ZG9tjuMaZEBUh552RCW8dAiwyp95tRh8Jp21izuiOzSafDXklHX45gy5pH0O1qVrWfp/XshU0ev+Ylqe/j6YwvgUfWUPM16mjp9UJALEkYjuTN9BSRajgWjIyp6T8SHY407rK/jt1aTxikASAJc5eB+93m+UyZCCifXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mkHn3aH3; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741824627; c=relaxed/simple;
+	bh=8soeqXNN5au4hvLPUpIInyAV09m1jrjYWHYC7wip3jI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RIC36/G081J+qcaWhJuzBQvRKcGGSYt83fKei33hhH4y/ek6OIVPa3Plql8DY01+ikCEnOpdh1dfD6xki+E61NEqcnISmxM7AzHyBxolCC1VmdpgwvR31oSD6bUZCjq+qWqguqtYJtjrfRev/wNZs2mdnjQUcTcQcs/0MlNJogI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8YYd/W1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mkHn3aH3"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5dbf5fb2c39so52046a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 17:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741824392; x=1742429192; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LTBXSAZcTlB0kyn5reMeVRSItQEZmzd639cfqrTnQ5g=;
-        b=mkHn3aH3M2uC5/LU/AWh63mq41v8aULFRTIVrLUTUEToY/ze5BbQ9FEDQoMBFHjpUZ
-         rEep7UJNXq4Jx7VpmKxPxw4HsWZrl59n1gicz4mdWuprgLTsib/L+0UOpTlSMj9j3onY
-         FpYkUdId5fIiIbe4o/QUG91/C39BRcSazrFH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741824392; x=1742429192;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LTBXSAZcTlB0kyn5reMeVRSItQEZmzd639cfqrTnQ5g=;
-        b=WNXKe/vUAiWVq0fKloh/9qYLh6vzRR6YRwYoe/qGPBE63Zl8H40gqF9PNuWm4TLEiQ
-         ZbEFE/M8hNdJM0clFIljkS4EGiZjquED26t6ilciSDk4/Td+Lp7EXylzupA6Dmg1cpP7
-         1jbtzbvWC6wzvQ/zi42q61LOpRpu/+4Flm9VdbDkHhVCczUu6lxAPvsU269RqquV7Fas
-         0ukngF9/C6RvrLZyxITgXzfFaJ+R1QPCfVDr2gAtW/XHRJ+2FGexDFlOFaLoIeXlxoAn
-         uyzN6ZzBHMekJbZV4ItlsNgXDGPp9A2AiPQ8+vx7dTFm6fNPFFz/gMDOYqgRmCZRo5YS
-         g8Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGpddDNhz+kG+t0VR7Yf8f/FzRCfoA0yCggav3SeeA74+hR82B1IWWMvK+2iclKrdZCSWZ/wK03BYhgSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqxJvYCFBx0sLLg25A30+ceDFB0tHTlVg9oszbGrurH1H+ZT+z
-	njAEjK+8wQPtuXPpop2vZkoX98BLPPO8n369UAsPxlVTRU0Gp9QRvRwRZe1/tA==
-X-Gm-Gg: ASbGncuXaod04+sf6k5FgGsSWJv/W6Epe5S19Xbyem/D91WlFDLtncOs4d4XKa7D1Ig
-	DM8K0NomHrwtB5Q+AmV4iQmF751CwLVOpAYL041DaHT0xIVq6hXIOpoGZXccSviHnOWE5UElnDF
-	RMjoBrdBPkVc8FG9LoaKkUtu1/CiBff2zVzfrCNvUTkgy2NTc3vGEzyt1MOYf0LDuObiy0Y2cBE
-	J73ZSqLpaV0AFZKEBP5QAM7pkXRcJ14umDFo2s6V333igUqRhe+4uXMnz6K4JGc/Am2lsgJvfk3
-	uEZkvZZFJ9JBvoBRGMtcjKwEWirWFFyMN59IuafMxDSNTFSRNroKr6aaXYPcMNiom1aV/22cJPu
-	d
-X-Google-Smtp-Source: AGHT+IF2hsLGbRFexw4cBQVMbT4+nYhN0RM3ql6SWU6N3Q/kqXvpffne9qXzzhEiJHBV/0VVycU7Sw==
-X-Received: by 2002:a17:907:3e8f:b0:abf:7a26:c489 with SMTP id a640c23a62f3a-ac2b9ea164cmr368075466b.9.1741824391899;
-        Wed, 12 Mar 2025 17:06:31 -0700 (PDT)
-Received: from cfish.c.googlers.com.com (40.162.204.35.bc.googleusercontent.com. [35.204.162.40])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac314a3fc7asm7404766b.135.2025.03.12.17.06.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 17:06:31 -0700 (PDT)
-From: jeffxu@chromium.org
-To: jeffxu@chromium.org,
-	akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com,
-	agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com,
-	gor@linux.ibm.com,
-	hca@linux.ibm.com,
-	kees@kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lorenzo.stoakes@oracle.com,
-	svens@linux.ibm.com,
-	thomas.weissschuh@linutronix.de
-Subject: [PATCH] mseal sysmap: add arch-support txt
-Date: Thu, 13 Mar 2025 00:06:23 +0000
-Message-ID: <20250313000623.3192896-1-jeffxu@google.com>
-X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8YYd/W1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC902C4CEDD;
+	Thu, 13 Mar 2025 00:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741824626;
+	bh=8soeqXNN5au4hvLPUpIInyAV09m1jrjYWHYC7wip3jI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j8YYd/W1Va4DqX+vWN/hqTBRjVKF52OQw9S5xTtXKNEZEaKCZKKvvpARrh7h4KA37
+	 NdGwZajanvod9BZutuW0zg316W5OPu8BLBYfMIv7Al3se+N/DZz8E+aHXldMkdViXA
+	 dC9SjaKMbmCPHdlEoRGQEVM9RJ/M4ajF27khsvyzXlUYikoFPBfL3CHLsenxxQdlzG
+	 DVMHdVSBT4kBJnNgzRb+GG6O4n34K0EcgF3oflK3Pw9HQpTydjHL0eY+g8CPNOjI1X
+	 QwNIevz66YQRxs9YN761dVFpdo6raXh+t+9q1Y7gurd3sd7F7zOYppaGe8O0S52gI8
+	 5EQZGS3NJ8cJA==
+Date: Thu, 13 Mar 2025 01:10:11 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Alex Elder <elder@riscstar.com>
+Cc: Troy Mitchell <troymitchell988@gmail.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, linux-riscv@lists.infradead.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	spacemit@lists.linux.dev, Guodong Xu <guodong@riscstar.com>
+Subject: Re: [PATCH v6 2/2] i2c: spacemit: add support for SpacemiT K1 SoC
+Message-ID: <nrmoj7gookedlz2e3fgu3hvn3s5fc6vrxgjueynyp5orj63k4b@cqlhflioxv7h>
+References: <20250307-k1-i2c-master-v6-0-34f17d2dae1c@gmail.com>
+ <20250307-k1-i2c-master-v6-2-34f17d2dae1c@gmail.com>
+ <7d9e90ba-8c23-44dc-b64f-80213216faf7@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7d9e90ba-8c23-44dc-b64f-80213216faf7@riscstar.com>
 
-From: Jeff Xu <jeffxu@chromium.org>
+Hi,
 
-Add Documentation/features/core/mseal_sys_mappings/arch-support.txt
+On Tue, Mar 11, 2025 at 08:46:31PM -0500, Alex Elder wrote:
+> On 3/7/25 7:13 AM, Troy Mitchell wrote:
+> > This patch introduces basic I2C support for the SpacemiT K1 SoC,
+> > utilizing interrupts for transfers.
+> > 
+> > The driver has been tested using i2c-tools on a Bananapi-F3 board,
+> > and basic I2C read/write operations have been confirmed to work.
+> > 
+> > Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
+> 
+> I have a bunch of really small suggestions.  Please consider
+> them, but whatever you choose to do this looks good to me.
+> 
+> Reviewed-by: Alex Elder <elder@riscstar.com>
 
-Signed-off-by: Jeff Xu <jeffxu@chromium.org>
----
- .../core/mseal_sys_mappings/arch-support.txt  | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/features/core/mseal_sys_mappings/arch-support.txt
+thanks Alex for reviewing, I will wait for a v7 with your
+suggestions.
 
-diff --git a/Documentation/features/core/mseal_sys_mappings/arch-support.txt b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-new file mode 100644
-index 000000000000..8db637254de9
---- /dev/null
-+++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-@@ -0,0 +1,30 @@
-+#
-+# Feature name:          mseal-system-mappings
-+#         Kconfig:       ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
-+#         description:   arch supports mseal system mappings
-+#
-+    -----------------------
-+    |         arch |status|
-+    -----------------------
-+    |       alpha: | TODO |
-+    |         arc: | TODO |
-+    |         arm: |  N/A |
-+    |       arm64: |  ok  |
-+    |        csky: | TODO |
-+    |     hexagon: | TODO |
-+    |   loongarch: | TODO |
-+    |        m68k: | TODO |
-+    |  microblaze: | TODO |
-+    |        mips: | TODO |
-+    |       nios2: | TODO |
-+    |    openrisc: | TODO |
-+    |      parisc: | TODO |
-+    |     powerpc: | TODO |
-+    |       riscv: | TODO |
-+    |        s390: |  ok  |
-+    |          sh: | TODO |
-+    |       sparc: | TODO |
-+    |          um: | TODO |
-+    |         x86: |  ok  |
-+    |      xtensa: | TODO |
-+    -----------------------
--- 
-2.49.0.rc0.332.g42c0ae87b1-goog
+Overall the patch looks good to me, as well, even though I have
+to give some credit to Wolfram's previous comments about the
+i2c-pxa similarities.
 
+I checked the two drivers last night and I can see some
+similarities, on the other hand I also understand that it might
+require some extra effort.
+
+I want to check it again, though, before applying.
+
+Andi
