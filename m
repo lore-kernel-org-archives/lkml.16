@@ -1,144 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4590514386D;
-	Thu, 13 Mar 2025 17:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801BE16DC28
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741887290; cv=none; b=GJErdFHPvtD4HSGVNIDl0olPMVlTvVnspaz/MnC25+L2fASURAGn9+Jamq9viDw82U+Xr05FxjuYMYmqyO7SSssL7vSyU1fDsRkYU4J4wz5c5hyiPJU5WqQ++HapcDStNkWWH2oKFaxpDAaG0vLVpA5k2hRHD4RVWZsXdmXNrHg=
+	t=1741887293; cv=none; b=n2Anmsb1Fv0KU25YLTTpVUZggG16A4TW9k59XzR+EItrbiETCWVDBF306YNItIcYHjaOZNzbngqMPsek4dc8+pzV/NdUZQnyKtbPCqJO1DY1bTZsgnG6lK24ikrMrH/BzvEANyxAviF9Lvf4njzLCPu9FCboPI51DUA83s195Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741887290; c=relaxed/simple;
-	bh=OoAvfSAO5M3PHg1qgT00ibdT5WETqpo45KH3DuoIfjE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jwQrJOBkl4kLo9sPaxrhgdY/8Dbo39d7uSvcXl5HwHIXt6fSF7pTIOBLNfduuaK/29XckIuN9uDHW//8/UyacH6YaMDqOW67rUIP2DGixdwC4ECHzTs99koMhjoP5ynO4JiPcSmK3Fu4mH3tv5yHRfgKbqnYXrrvIxybWr9+J9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVQyU8mB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741887293; c=relaxed/simple;
+	bh=X9jGp/lGksz3grpthwFKZ40t1B2yEAFWn9jNtB3eNUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jHawmBwIwSlDVhuDJvW/T8eU4ISauF/BpZqCb3qxTt3AGdzZNpmgBU3RTuTC9UnJBei0PcpMr90BH5enuwGl4TxPm8uul+y1zVPL9mDh2/s9PlnlUMu92xykLCn+BUS3EJYGKv95Si1GqMkYAUnXUiOscqIF9HoOE8Nfibt0PYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NF5oSxYh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fNE+eAsM; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NF5oSxYh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fNE+eAsM; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVQyU8mB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B6BC4CEEA;
-	Thu, 13 Mar 2025 17:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741887289;
-	bh=OoAvfSAO5M3PHg1qgT00ibdT5WETqpo45KH3DuoIfjE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VVQyU8mBAHNp06f4PUy8OQ441a3jzB0w7cdr7DECxbtEliMh01cQUWRWvFYU3Jez5
-	 RkdnI1LCoaG7yppGd9vje1fEdUoHzs3A5HH0zBqE+yFMcbOswaG7PGNAVDbtVbGQuG
-	 rHqqNwL2pbQFRBc4kq3PgxHk6Gd6btpLtWNO3AMV9bD1DfPOaerkp3DgRE1PuAxdTW
-	 18+vvZB5PhAsHJrLYHTMEzzeCEOV2/D+wJby5pXwes6nzXzoOmetd5UFctZLD4jsNu
-	 0SiX1C1WDorGyJZy5/32/g2HlM+ZisCfcYi5uy3ilNb6Go6TvGn3h39aDHO31lyI43
-	 8eQsG2/A/ZsFw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tsmSE-00DJ4E-TQ;
-	Thu, 13 Mar 2025 17:34:47 +0000
-Date: Thu, 13 Mar 2025 17:34:46 +0000
-Message-ID: <86ikocomvd.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: =?UTF-8?B?TWlrb8WCYWo=?= Lenczewski <miko.lenczewski@arm.com>
-Cc: ryan.roberts@arm.com,
-	suzuki.poulose@arm.com,
-	yang@os.amperecomputing.com,
-	corbet@lwn.net,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	jean-philippe@linaro.org,
-	robin.murphy@arm.com,
-	joro@8bytes.org,
-	akpm@linux-foundation.org,
-	mark.rutland@arm.com,
-	joey.gouly@arm.com,
-	james.morse@arm.com,
-	broonie@kernel.org,
-	anshuman.khandual@arm.com,
-	oliver.upton@linux.dev,
-	ioworker0@gmail.com,
-	baohua@kernel.org,
-	david@redhat.com,
-	jgg@ziepe.ca,
-	shameerali.kolothum.thodi@huawei.com,
-	nicolinc@nvidia.com,
-	mshavit@google.com,
-	jsnitsel@redhat.com,
-	smostafa@google.com,
-	linux-doc@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NF5oSxYh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fNE+eAsM";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NF5oSxYh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fNE+eAsM"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9E0F821175;
+	Thu, 13 Mar 2025 17:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741887288; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=X5teZExJXtoF+96+S6qe8NpWsv7WJatzt6RrVYXYHBQ=;
+	b=NF5oSxYhGFyGwdpf6IL4tASTw/cWbZJWcliXVLkrXdHg+4JujDlXEBaO3f2HSSRRdc5iIo
+	2IVyA53IZGnKA2dYZ8LFRJISNXNlUP7KwGeyTtpbJChPUI0WZgVxtXuzuKsipUQ6tnMOKH
+	yOXnNN47Wv8HmGvK1NZTkrjCZ8fyikI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741887288;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=X5teZExJXtoF+96+S6qe8NpWsv7WJatzt6RrVYXYHBQ=;
+	b=fNE+eAsMXQ+H2dbtYrNx0j1oKMhJk7ek+S8DnKDluUJQL9OLWR8bvMhaQIWV9x95rccIWy
+	OrGBMjqB4UVi9cDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741887288; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=X5teZExJXtoF+96+S6qe8NpWsv7WJatzt6RrVYXYHBQ=;
+	b=NF5oSxYhGFyGwdpf6IL4tASTw/cWbZJWcliXVLkrXdHg+4JujDlXEBaO3f2HSSRRdc5iIo
+	2IVyA53IZGnKA2dYZ8LFRJISNXNlUP7KwGeyTtpbJChPUI0WZgVxtXuzuKsipUQ6tnMOKH
+	yOXnNN47Wv8HmGvK1NZTkrjCZ8fyikI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741887288;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=X5teZExJXtoF+96+S6qe8NpWsv7WJatzt6RrVYXYHBQ=;
+	b=fNE+eAsMXQ+H2dbtYrNx0j1oKMhJk7ek+S8DnKDluUJQL9OLWR8bvMhaQIWV9x95rccIWy
+	OrGBMjqB4UVi9cDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8BF8D137BA;
+	Thu, 13 Mar 2025 17:34:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Gor7IDgX02f3QgAAD6G6ig
+	(envelope-from <nstange@suse.de>); Thu, 13 Mar 2025 17:34:48 +0000
+From: Nicolai Stange <nstange@suse.de>
+To: Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: Eric Snowberg <eric.snowberg@oracle.com>,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev
-Subject: Re: [PATCH v3 1/3] arm64: Add BBM Level 2 cpu feature
-In-Reply-To: <20250313104111.24196-3-miko.lenczewski@arm.com>
-References: <20250313104111.24196-2-miko.lenczewski@arm.com>
-	<20250313104111.24196-3-miko.lenczewski@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	Nicolai Stange <nstange@suse.de>
+Subject: [RFC PATCH v1 0/7] ima: get rid of hard dependency on SHA-1
+Date: Thu, 13 Mar 2025 18:33:32 +0100
+Message-ID: <20250313173339.3815589-1-nstange@suse.de>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: miko.lenczewski@arm.com, ryan.roberts@arm.com, suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org, robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org, mark.rutland@arm.com, joey.gouly@arm.com, james.morse@arm.com, broonie@kernel.org, anshuman.khandual@arm.com, oliver.upton@linux.dev, ioworker0@gmail.com, baohua@kernel.org, david@redhat.com, jgg@ziepe.ca, shameerali.kolothum.thodi@huawei.com, nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com, smostafa@google.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -1.30
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[linux.ibm.com,huawei.com,gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nist.gov:url,imap1.dmz-prg2.suse.org:helo];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, 13 Mar 2025 10:41:10 +0000,
-Miko=C5=82aj Lenczewski <miko.lenczewski@arm.com> wrote:
->=20
-> diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi=
-/idreg-override.c
-> index c6b185b885f7..9728faa10390 100644
-> --- a/arch/arm64/kernel/pi/idreg-override.c
-> +++ b/arch/arm64/kernel/pi/idreg-override.c
-> @@ -209,6 +209,7 @@ static const struct ftr_set_desc sw_features __prel64=
-_initconst =3D {
->  		FIELD("nokaslr", ARM64_SW_FEATURE_OVERRIDE_NOKASLR, NULL),
->  		FIELD("hvhe", ARM64_SW_FEATURE_OVERRIDE_HVHE, hvhe_filter),
->  		FIELD("rodataoff", ARM64_SW_FEATURE_OVERRIDE_RODATA_OFF, NULL),
-> +		FIELD("nobbml2", ARM64_SW_FEATURE_OVERRIDE_NOBBML2, NULL),
->  		{}
->  	},
->  };
-> @@ -246,6 +247,7 @@ static const struct {
->  	{ "rodata=3Doff",			"arm64_sw.rodataoff=3D1" },
->  	{ "arm64.nolva",		"id_aa64mmfr2.varange=3D0" },
->  	{ "arm64.no32bit_el0",		"id_aa64pfr0.el0=3D1" },
-> +	{ "arm64.nobbml2",		"arm64_sw.nobbml2=3D1" },
+Hi all,
 
-Why is that a SW feature? This looks very much like a HW feature to
-me, and you should instead mask out ID_AA64MMFR2_EL1.BBM, and be done
-with it. Something like:
+if no SHA-1 implementation was available to the kernel, IMA init would
+currently fail, rendering the whole subsystem unusable.
 
-diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi/i=
-dreg-override.c
-index c6b185b885f70..803a0c99f7b46 100644
---- a/arch/arm64/kernel/pi/idreg-override.c
-+++ b/arch/arm64/kernel/pi/idreg-override.c
-@@ -102,6 +102,7 @@ static const struct ftr_set_desc mmfr2 __prel64_initcon=
-st =3D {
- 	.override	=3D &id_aa64mmfr2_override,
- 	.fields		=3D {
- 		FIELD("varange", ID_AA64MMFR2_EL1_VARange_SHIFT, mmfr2_varange_filter),
-+		FIELD("bbm", ID_AA64MMFR2_EL1_BBM_SHIFT, NULL),
- 		{}
- 	},
- };
-@@ -246,6 +247,7 @@ static const struct {
- 	{ "rodata=3Doff",			"arm64_sw.rodataoff=3D1" },
- 	{ "arm64.nolva",		"id_aa64mmfr2.varange=3D0" },
- 	{ "arm64.no32bit_el0",		"id_aa64pfr0.el0=3D1" },
-+	{ "arm64.nobbml2",		"id_aa64mmfr2.bbm=3D0" },
- };
-=20
- static int __init parse_hexdigit(const char *p, u64 *v)
+This patch series is an attempt to make SHA-1 availability non-mandatory
+for IMA. The main motivation is that NIST announced to sunset SHA-1 by
+2030 ([1]), whereby any attempt to instantiate it when booted in FIPS mode
+would have to be made to fail with -ENOENT. As this does potentially have
+an impact on lifetimes for FIPS certifications issued today, distros might
+be interested in disabling SHA-1 downstream soon already.
 
+Anyway, making IMA to work without a SHA-1 implementation available is not
+so straightforward, mainly due to that established scheme to substitute
+padded SHA-1 template hashes for PCR banks with unmapped/unavailable algos.
+There is some userspace around expecting that existing behavior, e.g. the
+ima_measurement command from ([2]), and breaking that in certain scenarios
+is inevitable.
 
-Thanks,
+I tried to make it the least painful possible, and I think I arrived at
+a not completely unreasonable solution in the end, but wouldn't be too
+surprised if you had a different stance on that. So I would be curious
+about your feedback on whether this is a route worth pursuing any further.
+FWIW, the most controversial parts are probably
+ - [1/7] ima: don't expose runtime_measurements for unsupported hashes
+ - [6/7] ima: invalidate unsupported PCR banks once at first use
 
-	M.
+Note that I haven't tested this series thoroughly yet -- for the time being
+I only ran a couple of brief smoke tests in a VM w/o a TPM  (w/ and w/o
+SHA-1 disabled of course).
 
---=20
-Without deviation from the norm, progress is not possible.
+Many thanks!
+
+Nicolai
+
+[1] https://www.nist.gov/news-events/news/2022/12/nist-retires-sha-1-cryptographic-algorithm
+[2] https://github.com/linux-integrity/ima-evm-utils.git
+
+Nicolai Stange (7):
+  ima: don't expose runtime_measurements for unsupported hashes
+  ima: always create runtime_measurements sysfs file for ima_hash
+  ima: move INVALID_PCR() to ima.h
+  ima: track the set of PCRs ever extended
+  tpm: enable bank selection for PCR extend
+  ima: invalidate unsupported PCR banks once at first use
+  ima: make SHA1 non-mandatory
+
+ drivers/char/tpm/tpm-interface.c      | 29 +++++++++-
+ drivers/char/tpm/tpm.h                |  3 +-
+ drivers/char/tpm/tpm2-cmd.c           | 29 +++++++++-
+ include/linux/tpm.h                   |  3 +
+ security/integrity/ima/Kconfig        | 14 +++++
+ security/integrity/ima/ima.h          |  9 +++
+ security/integrity/ima/ima_crypto.c   | 83 ++++++++++++++++-----------
+ security/integrity/ima/ima_fs.c       | 41 +++++++------
+ security/integrity/ima/ima_policy.c   |  5 +-
+ security/integrity/ima/ima_queue.c    | 26 ++++++++-
+ security/integrity/ima/ima_template.c |  7 +++
+ 11 files changed, 190 insertions(+), 59 deletions(-)
+
+-- 
+2.47.1
+
