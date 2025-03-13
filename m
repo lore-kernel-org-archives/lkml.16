@@ -1,43 +1,43 @@
-Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
+Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8AE264629;
-	Thu, 13 Mar 2025 11:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0782A1F12F2
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741865987; cv=none; b=FDXLOXZQ8uIoauMeG1diYw1L5Xu0UgMqHXnF6rSi5FCMpo+QAqTMoWBT0HAtDSQ4CUUI3L3UP5B4XfwPIvAah0UhkNF1aOXLZl3Ji17G6Fc64VmPptDOFgkdSEDhlfXK9IkPXEwtEeTpwW03Jb29A3wRThtCJawCFN3l9USA8aw=
+	t=1741866047; cv=none; b=aaPE+OVcSwL2iTMs7a7kCfFc86xGIxxdwvgWKUDLTby5tvWNRRWRQKHMCoXtUdF6GwXP/2gjSgBSCbThpaX20ogz5auhVIq3nRV832smS8jnMlwq+ePyl50DO6qRi12r7DgVyQFXoLbOcKg9lQ/f3LdN6D5XyfcAqKZ79o86yzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741865987; c=relaxed/simple;
-	bh=kjPQTH3jmGE1bdx3XzKZIHD6CJvQt9dlm3QSLxEzwNY=;
+	s=arc-20240116; t=1741866047; c=relaxed/simple;
+	bh=dADYmb8K9GgDNXQ67bqleLeuvIh2tnN2E1VMVQi0ipQ=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OebRKDxUpAO2zxL9BBxxW5xUE1YJjLAJU3vAZrPo5/npwy+F6cQNk4g5/qKHe89xDw1dee2WQORvawFdzVx7OJsJZQ4aYockzThJJuvswredqS0rpcmqyyTAZbqne3x7/D9X6BtpeFOG8KOlYeG2PNJaULAfekfP4Glu7naSuVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=eGWykFwb; arc=none smtp.client-ip=79.135.106.28
+	 MIME-Version:Content-Type; b=BNZPrIUFnhbllli/7KONmAtmPIHF5wEDjKtMkzsPskR0A2BRRQqjxBcl9iODSy5HbA1UPJg1Gae+FjWC4FaFx9y3za1z9u9JAFoXetsNpDNq2GmIFbnrMgA4nxV+FDrlyr0W99EtPvr8FCLhIwA57rn776m+Q68s5ijPY2fzQyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=W2uSraNg; arc=none smtp.client-ip=79.135.106.29
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="eGWykFwb"
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="W2uSraNg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=a3ddv3s2hbg63kxaoeus6owxju.protonmail; t=1741865980; x=1742125180;
-	bh=x73ydIXTpd2BoKW5LA0pRFgZnl6GVbYuK58EoMI/guA=;
+	s=protonmail; t=1741866042; x=1742125242;
+	bh=5GnIOlqHCM0sUxmxAzlqwN2j3skyVfL4xNHDIOjyddM=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=eGWykFwbfanaWdwAD94DLH0p/7ZdTkLXGZ94O0AiF67jqi5v0l3veGwW2kaITN/6L
-	 PSXQSIjxybYdz8gJwLW2nAQKYofZ0FZpZPdxOsLlldGz+DyM+VdGj4v2sOlQk8SB/5
-	 9ISeVgKxttE7obbAs0A5GAypsDfdd3laMdz3jY49V0xzmCRJGkp55lWtlxFnSLt1yQ
-	 tgIQBXzJWoAqcWBILpJu2YgkEZRjL+hlabBapRBeMdNIJK2Vqaq0n1jOyvZjc3aexs
-	 rR56sUyDHlHs20OhD/omn9zsb9FSiUrsr7XSip/gEagoqum99+66q3kHTRqxE+Xytl
-	 8Z2k8a1ctwKLA==
-Date: Thu, 13 Mar 2025 11:39:34 +0000
+	b=W2uSraNgBIieSuO6/GlKw/pmpX7M/dfqpiMhk95SMcT4yESAA1nRCLeaWlXhv/3DM
+	 itsXBS92ev8jn7IDnRHqnUSAfThZ4YLKWf1hNzIpM4zVkauWCW8BELF2IKVoj1xOVW
+	 OhBE4b1BOv2zTE0xby5PWOF5Qcs/y0lOyYZIvL1twsPr/E7TOH8TDHkVe8bc62f1UY
+	 +/XYNP3/wIE8I9lpDJrhH9I9Q5A1f0CLDQF4iQWUeB5Od6tx56G9J6bhCuVqudsnMl
+	 j8mw01o/KDl99mWCwi0ROwz/eLRKunE57mnrXFxNi41T7yx9YYIF7LkgCJQWrd0Vlu
+	 0rkipZSFel1Qg==
+Date: Thu, 13 Mar 2025 11:40:34 +0000
 To: Antonio Hickey <contact@antoniohickey.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
 From: Benno Lossin <benno.lossin@proton.me>
 Cc: Benno Lossin <y86-dev@protonmai.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 1/3] rust: enable `raw_ref_op` feature
-Message-ID: <D8F3YBA8CJKP.1JGZ1QAD3SBY4@proton.me>
+Message-ID: <D8F3Z37118Y6.QO0BF41MVCU2@proton.me>
 In-Reply-To: <010001958dfeacb5-9039aaab-6114-494a-9f1d-f13982091169-000000@email.amazonses.com>
 References: <20250313053340.405979-1-contact@antoniohickey.com> <010001958dfeacb5-9039aaab-6114-494a-9f1d-f13982091169-000000@email.amazonses.com>
 Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 09d5d277dd7a2d14de514290a2a51e3276738f91
+X-Pm-Message-ID: 4f6bdb05c03d50b522e9bc0f97bda7718c72ac8a
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,23 +55,21 @@ On Thu Mar 13, 2025 at 6:33 AM CET, Antonio Hickey wrote:
 >
 > This will allow us to reduce macro complexity, and improve consistency
 > with existing reference syntax as `&raw`, `&raw mut` is very similar to
-> `&`, `&mut` making it fit more naturally with other existing code.
->
-> Suggested-by: Benno Lossin <y86-dev@protonmai.com>
 
-Please use this email instead: <benno.lossin@proton.me>.
+One more thing, it has to be `&raw const` instead of `&raw`, I missed
+that in the original issue, sorry!
 
-Thanks!
-
-> Link: https://github.com/Rust-for-Linux/linux/issues/1148
-> Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
-
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+This also needs to be fixed in the other two patches.
 
 ---
 Cheers,
 Benno
 
+> `&`, `&mut` making it fit more naturally with other existing code.
+>
+> Suggested-by: Benno Lossin <y86-dev@protonmai.com>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1148
+> Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
 > ---
 >  rust/kernel/lib.rs | 2 ++
 >  1 file changed, 2 insertions(+)
