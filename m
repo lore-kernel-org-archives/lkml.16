@@ -1,266 +1,91 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218DA2673A1
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 12:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E8C264FBC;
+	Thu, 13 Mar 2025 12:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741870385; cv=none; b=Pg+AGQOz4pMC9xZokFIGi365RROokBZQ1rL2UtuWnKdY1Gdgj9EdW9R/zHcZSPtQ36KYaGJs+DaxCyAftVYwCKIpbcSSfpo7Jbp0aY5v/ER+ckAbqkPvovqxCS8M1lWcbl7X2yvBAyiG53QuFkVkpNRP5eRh6JcWA7a3fSvKolc=
+	t=1741870508; cv=none; b=LtTkTUQcQGGTg7TIUJo2m4Afk2WKAyMou+4BtsW9oWKytN6lrTReSXElChBRyh6/Q9uPCh9S/fOkX3hmITnJfH6XpAe5/TMEZExwmYmscxiuqNctloLwsX6v7M8PFjMpzwlIbdxtmhH4u2DmaGfO0+5jI39y+o9NLAHliZGwHEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741870385; c=relaxed/simple;
-	bh=QIdobgZYkzVhdo1szioagjPNujhQnAnv7YIiKfgqlo0=;
+	s=arc-20240116; t=1741870508; c=relaxed/simple;
+	bh=CCEtVfnsZrC2J46tRuWCShcdrEwGwGkKg9nBPiglXjA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nem2Sen3JuvKy9weHBLAXq9yfQwPUMLthyIvGFQaccA1cooeCGZmEDWRftUxYTCISY1cdFZt6ENp6D8FghvRO2Ezk5SDZ+Yvd+6cyj93J+tpvAstaw1WlXpYds4qiSSwR1UQdObM1JDMHRjjzBk4ltByrSKApVJZdLf/2hAAjIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=O6aGSotP; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0siEfsSF5WvSBiW1NFK5I7zbesiy+F96rZlABrZNxUmOpnghgmyUZ39GcaW8CmdfejRhl1yiURYOp5tNOUJEC1WAS+4yZ2U/rJWEbNm235hOz48wJofE7lpK4jFAVQZyKz3LFGchop/FTN1pmgj9fMxW5ppvOhi132tNoUk9IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=gK+NIxjH; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="O6aGSotP"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43690d4605dso6052515e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 05:53:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1741870380; x=1742475180; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=whJ5WLOnqJqIdekbdowFNyLodSkqgwLzZprjEG6v7KA=;
-        b=O6aGSotPsgOgbS+mhD1ujIONFDWI0Q4Jk7kwb5koFRhss9CEK69UVF4IG/e30xM3Ss
-         ogQqyX1N2/Bah4ztzYxglKLF0n4warGzTQQDd4iogzddoorSSFD4Am15ZyBlZ3igRb5S
-         74kpxZuvadR6yE35UZPvvd8V/hTy3eBafZDlvp2pZCpPtcy7Aa3mul9cJjQL1/tHQnXT
-         ovqWLHACX57VidxJmqZe6t+k5mmV349/7EgA35MwcKdeyuhc25PWoBoibzqxF+DMPxeN
-         /4QOU7h3WVjMKoxT8+7qCbdicqBW7434HLWRjKfWlULV5v2JIuw+fQlHnOTbTpQjRzzG
-         QbkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741870380; x=1742475180;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=whJ5WLOnqJqIdekbdowFNyLodSkqgwLzZprjEG6v7KA=;
-        b=TGYUDvpWuQvnbw4mqRdIfDuZmOAq74YjgBbFbhrOg9UtieXoQ9G8pvyGn4nUL+ohcb
-         gRf8Iz/R8HKhU+3XURfpIzkYk8jlaHi+CwrQ6VXRihuu+DEUtEdS+OxAgo6wS25Ewtnc
-         QG9qXNPz0Tl80uzhDQqFIumWB4t88Fv2pllEZlYP4e8l7oy0fMV0YlU80v67VXeJqK/t
-         WEyaHyy0sdoL+4XT23BgKCufPaqi2FYcUfvB5iPjNGaZsIZ+sJOrjh2zgePztqBcQMyK
-         azeW60lpChikcL7MN9fvRTO20UDFFydej41sIOcOkRKGUxWUhLf+4u5OHwhn6H/pqC/R
-         ASMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNsbta2Uqq1qWEtu4psZORVVrCPXbxHfnEof6u152vatSesDYw1zvXsA7kh2IIOwEvxuGY83ODByxWLxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsHfUfmy4MbCs4ZOigz1VIknI1mIvoHTYtvRqY9jmHNRqDrcGZ
-	pVrBMIUeiUrtrR278hXhWqoUZUG1IF2YbYywAjyrW1p04urZedAP3Kr3z4Aa2QQ=
-X-Gm-Gg: ASbGncsvy2nQPWHy70ZA6jrmVsNuVKQ8hSyM0JD8z4B0LsSKmZ+dME/ulN4Ft7ztn09
-	0Bk3N0AprlGyoe909IpDInuAYHVreB3xJp4nmYMXx3pIJzT8QBdw3hF6JyPCb4+/liuhd7oincb
-	paO+4ynPMO4HVbjDfpEaJC+BZsJ/6QPQxzpGuvNptsgJ4cfZ3J5niBLaPSxF/AwDMIUBugsnCkF
-	f8kbGtaxeBuGWKr5YDZRnjutw96MFrOUimnVnA2Gt90ebrsdS73wbXZOTHBaSYWLf0AipRunRYA
-	d42Yzl3NN7vX65X5E/7956Z7v5Hk0htk
-X-Google-Smtp-Source: AGHT+IG41qlHvVlMBTz+EBNgOBL90SoyA5MRu9vVFfQYuH5YBZLTfvMhSZKO57zcnXjrEIFxRRHKsw==
-X-Received: by 2002:a05:600c:3ba4:b0:43c:fabf:9146 with SMTP id 5b1f17b1804b1-43cfabf940emr138350995e9.17.1741870380371;
-        Thu, 13 Mar 2025 05:53:00 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::59a5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d186e9639sm20720865e9.0.2025.03.13.05.52.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 05:52:59 -0700 (PDT)
-Date: Thu, 13 Mar 2025 13:52:58 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH v3 04/17] riscv: misaligned: request misaligned exception
- from SBI
-Message-ID: <20250313-28a56381a2c44ebeff100f91@orel>
-References: <20250310151229.2365992-1-cleger@rivosinc.com>
- <20250310151229.2365992-5-cleger@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gK+NIxjH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=JAmSBShQ4Oo+DzVgXCfJRH9EvtD5cdq+eGj0LwrBrMM=; b=gK+NIxjHhbJg9QA80guaisWjV1
+	fhUZPcPh+lhz0p7UJTieeyzosK7n9tQkzGdJk2ay7IGt3CC+SZZpGCTEa4UmM9ulRFkHDQxhmeAVD
+	eIA3rR10nj78pdnZ89dyF5tZi00KtN/v81EUUJvn2GYYnPDCbHzVk7m2zpP1XD7SGWJo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tsi5R-004zY7-Lz; Thu, 13 Mar 2025 13:54:57 +0100
+Date: Thu, 13 Mar 2025 13:54:57 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Gupta, Suraj" <Suraj.Gupta2@amd.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+	"Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"Simek, Michal" <michal.simek@amd.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"git (AMD-Xilinx)" <git@amd.com>,
+	"Katakam, Harini" <harini.katakam@amd.com>
+Subject: Re: [PATCH net-next V2 2/2] net: axienet: Add support for 2500base-X
+ only configuration.
+Message-ID: <468deb47-1837-4709-84e5-b14bf0e8c2a5@lunn.ch>
+References: <ad1e81b5-1596-4d94-a0fa-1828d667b7a2@lunn.ch>
+ <Z9GWokRDzEYwJmBz@shell.armlinux.org.uk>
+ <BL3PR12MB6571795DA783FD05189AD74BC9D02@BL3PR12MB6571.namprd12.prod.outlook.com>
+ <34ed11e7-b287-45c6-8ff4-4a5506b79d17@lunn.ch>
+ <BL3PR12MB6571540090EE54AC9743E17EC9D02@BL3PR12MB6571.namprd12.prod.outlook.com>
+ <fd686050-e794-4b2f-bfb8-3a0769abb506@lunn.ch>
+ <BL3PR12MB6571959081FC8DDC5D509560C9D02@BL3PR12MB6571.namprd12.prod.outlook.com>
+ <Z9HjOAnpNkmZcoeo@shell.armlinux.org.uk>
+ <186bf47a-04af-4bfb-a6d3-118b844c9ba8@lunn.ch>
+ <BL3PR12MB6571E707DC09A31A553CB1BCC9D32@BL3PR12MB6571.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250310151229.2365992-5-cleger@rivosinc.com>
+In-Reply-To: <BL3PR12MB6571E707DC09A31A553CB1BCC9D32@BL3PR12MB6571.namprd12.prod.outlook.com>
 
-On Mon, Mar 10, 2025 at 04:12:11PM +0100, Clément Léger wrote:
-> Now that the kernel can handle misaligned accesses in S-mode, request
-> misaligned access exception delegation from SBI. This uses the FWFT SBI
-> extension defined in SBI version 3.0.
+> Synthesis options I mentioned in comment might sound confusing, let me clear it up.
+> Actual synthesis options (as seen from configuration UI) IP provides are (1) and (2). When a user selects (2), IP comes with default 2.5G but also contains 1G capabilities which can be enabled and work with by adding switching FPGA logic (that makes it (3)).
 > 
-> Signed-off-by: Clément Léger <cleger@rivosinc.com>
-> ---
->  arch/riscv/include/asm/cpufeature.h        |  3 +-
->  arch/riscv/kernel/traps_misaligned.c       | 77 +++++++++++++++++++++-
->  arch/riscv/kernel/unaligned_access_speed.c | 11 +++-
->  3 files changed, 86 insertions(+), 5 deletions(-)
+> So, in short  if a user selects (1): It's <=1G only.
+> If it selects (2): It's 2.5G only but can be made (3) by FPGA logic changes. So whatever existing systems for (3) would be working at default (2).
 > 
-> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
-> index 569140d6e639..ad7d26788e6a 100644
-> --- a/arch/riscv/include/asm/cpufeature.h
-> +++ b/arch/riscv/include/asm/cpufeature.h
-> @@ -64,8 +64,9 @@ void __init riscv_user_isa_enable(void);
->  	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts), _validate)
->  
->  bool check_unaligned_access_emulated_all_cpus(void);
-> +void unaligned_access_init(void);
-> +int cpu_online_unaligned_access_init(unsigned int cpu);
->  #if defined(CONFIG_RISCV_SCALAR_MISALIGNED)
-> -void check_unaligned_access_emulated(struct work_struct *work __always_unused);
->  void unaligned_emulation_finish(void);
->  bool unaligned_ctl_available(void);
->  DECLARE_PER_CPU(long, misaligned_access_speed);
-> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-> index 7cc108aed74e..90ac74191357 100644
-> --- a/arch/riscv/kernel/traps_misaligned.c
-> +++ b/arch/riscv/kernel/traps_misaligned.c
-> @@ -16,6 +16,7 @@
->  #include <asm/entry-common.h>
->  #include <asm/hwprobe.h>
->  #include <asm/cpufeature.h>
-> +#include <asm/sbi.h>
->  #include <asm/vector.h>
->  
->  #define INSN_MATCH_LB			0x3
-> @@ -635,7 +636,7 @@ bool check_vector_unaligned_access_emulated_all_cpus(void)
->  
->  static bool unaligned_ctl __read_mostly;
->  
-> -void check_unaligned_access_emulated(struct work_struct *work __always_unused)
-> +static void check_unaligned_access_emulated(struct work_struct *work __always_unused)
->  {
->  	int cpu = smp_processor_id();
->  	long *mas_ptr = per_cpu_ptr(&misaligned_access_speed, cpu);
-> @@ -646,6 +647,13 @@ void check_unaligned_access_emulated(struct work_struct *work __always_unused)
->  	__asm__ __volatile__ (
->  		"       "REG_L" %[tmp], 1(%[ptr])\n"
->  		: [tmp] "=r" (tmp_val) : [ptr] "r" (&tmp_var) : "memory");
-> +}
-> +
-> +static int cpu_online_check_unaligned_access_emulated(unsigned int cpu)
-> +{
-> +	long *mas_ptr = per_cpu_ptr(&misaligned_access_speed, cpu);
-> +
-> +	check_unaligned_access_emulated(NULL);
->  
->  	/*
->  	 * If unaligned_ctl is already set, this means that we detected that all
-> @@ -654,9 +662,10 @@ void check_unaligned_access_emulated(struct work_struct *work __always_unused)
->  	 */
->  	if (unlikely(unaligned_ctl && (*mas_ptr != RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED))) {
->  		pr_crit("CPU misaligned accesses non homogeneous (expected all emulated)\n");
-> -		while (true)
-> -			cpu_relax();
-> +		return -EINVAL;
->  	}
-> +
-> +	return 0;
->  }
->  
->  bool check_unaligned_access_emulated_all_cpus(void)
-> @@ -688,4 +697,66 @@ bool check_unaligned_access_emulated_all_cpus(void)
->  {
->  	return false;
->  }
-> +static int cpu_online_check_unaligned_access_emulated(unsigned int cpu)
-> +{
-> +	return 0;
-> +}
->  #endif
-> +
-> +#ifdef CONFIG_RISCV_SBI
-> +
-> +static bool misaligned_traps_delegated;
-> +
-> +static int cpu_online_sbi_unaligned_setup(unsigned int cpu)
-> +{
-> +	if (sbi_fwft_set(SBI_FWFT_MISALIGNED_EXC_DELEG, 1, 0) &&
-> +	    misaligned_traps_delegated) {
-> +		pr_crit("Misaligned trap delegation non homogeneous (expected delegated)");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void unaligned_sbi_request_delegation(void)
-> +{
-> +	int ret;
-> +
-> +	ret = sbi_fwft_all_cpus_set(SBI_FWFT_MISALIGNED_EXC_DELEG, 1, 0, 0);
-> +	if (ret)
-> +		return;
-> +
-> +	misaligned_traps_delegated = true;
-> +	pr_info("SBI misaligned access exception delegation ok\n");
-> +	/*
-> +	 * Note that we don't have to take any specific action here, if
-> +	 * the delegation is successful, then
-> +	 * check_unaligned_access_emulated() will verify that indeed the
-> +	 * platform traps on misaligned accesses.
-> +	 */
-> +}
-> +
-> +void unaligned_access_init(void)
-> +{
-> +	if (sbi_probe_extension(SBI_EXT_FWFT) > 0)
-> +		unaligned_sbi_request_delegation();
-> +}
-> +#else
-> +void unaligned_access_init(void) {}
-> +
-> +static int cpu_online_sbi_unaligned_setup(unsigned int cpu __always_unused)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
-> +int cpu_online_unaligned_access_init(unsigned int cpu)
-> +{
-> +	int ret;
-> +
-> +	ret = cpu_online_sbi_unaligned_setup(cpu);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return cpu_online_check_unaligned_access_emulated(cpu);
-> +}
-> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
-> index 91f189cf1611..2f3aba073297 100644
-> --- a/arch/riscv/kernel/unaligned_access_speed.c
-> +++ b/arch/riscv/kernel/unaligned_access_speed.c
-> @@ -188,13 +188,20 @@ arch_initcall_sync(lock_and_set_unaligned_access_static_branch);
->  
->  static int riscv_online_cpu(unsigned int cpu)
->  {
-> +	int ret;
->  	static struct page *buf;
->  
->  	/* We are already set since the last check */
->  	if (per_cpu(misaligned_access_speed, cpu) != RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN)
->  		goto exit;
->  
-> -	check_unaligned_access_emulated(NULL);
-> +	ret = cpu_online_unaligned_access_init(cpu);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (per_cpu(misaligned_access_speed, cpu) == RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED)
-> +		goto exit;
-> +
->  	buf = alloc_pages(GFP_KERNEL, MISALIGNED_BUFFER_ORDER);
->  	if (!buf) {
->  		pr_warn("Allocation failure, not measuring misaligned performance\n");
-> @@ -403,6 +410,8 @@ static int check_unaligned_access_all_cpus(void)
->  {
->  	bool all_cpus_emulated, all_cpus_vec_unsupported;
->  
-> +	unaligned_access_init();
-> +
->  	all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
->  	all_cpus_vec_unsupported = check_vector_unaligned_access_emulated_all_cpus();
->  
-> -- 
-> 2.47.2
->
+> This is the reason we didn't described (3) in V1 series as that is not provided by IP but can be synthesized after FPGA changes.
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+This whole discussion would of been much easier and wasted a lot less
+time if you had given us accurate information right from the start....
+
+So 3) does not exist at the moment, because if it did, the customer
+doing it would need to make proprietary changes, both to the licensed
+IP and the driver. We have not seen such driver patch submissions...
+
+    Andrew
+
+---
+pw-bot: cr
