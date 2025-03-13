@@ -1,186 +1,84 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773971BC5C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533EE264F8C;
+	Thu, 13 Mar 2025 10:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741860598; cv=none; b=I1Abm2z2A2TCulZNh9e59eCVqe6WrxKg+6sFd8cA0QwTyOW7eaWNb0CA9r9+i5L6tq398AbZWkSYLa9FErf3J2pGXipUOeO5PMzUNh+ok78b7ZaWPg7WZZSo5OIJgAw+BsIo+UpdvmlpZtHHAFLorfmuDc14vLK58qFfH9Nn3qE=
+	t=1741860599; cv=none; b=DfWd9el/1KZqleaPw3RCU1iUFfxiHZcjQSGrUkwxM+efPlDiqAkpJAK0IKFWVq01Vwbuxb9ItxVZOcZFyiG+V4B5Y1AX6/XDHF+zsXRWLos+x5arGMqA6HR+4J1oDBrTM/0Ft1w8N91L/4hsDAlxRcZ3hgtEubdytdkv1EZLIAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741860598; c=relaxed/simple;
-	bh=2n2JWRZkQ6HjWVLWCICIL5JKa4BIkWjiwytLOc8ZcmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iNp/z31nFSZIX4GXCCDCnI7Gu4IYIWGMv2a85u7g3YU+yeSjf4XQM0Zb4hhRLoyqRuDuR+QbwGNmyfP5rj6eVI3jvfVHHIQefrOYvELSlK23LUlzqlRkNW8F37hqGptk8vU9szh1qTFYSPi7Rvx2vUimyidt0b7o9TjVyUFvHJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ORHszdw8; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741860599; c=relaxed/simple;
+	bh=3ia4Sn6jj2l6liyurFbn7ply3ehwt3UFgJmXXXgNixs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=BAeCIi0C/aW4z+Cc4sZWOsZhrYzKiWZa0ygDyMa7kJZWKWCLVDA+NJGvl4juuHtoEjTSp1VuVTj8054OINDMDecsDxyCg/XwJ5XX3dSG6BW8LD3557ldPtC6zqT3RbwEVD9lu66mKeEyU2nkt8+Ge+nLHzHMwR/ZpJ4HOyAY/AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNtyegOu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ORHszdw8"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C0D6E441FE;
-	Thu, 13 Mar 2025 10:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741860588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nHKf+FrIWyyMbY6E5gPIzrY6CJ467svl00OxGCD4cvw=;
-	b=ORHszdw8DzNsFfh2eJlXKvCtI12+dhaGWa4XNvq6dLo7mQjOiHSvqGry/UtTYkthCdPIkg
-	pGyCf0iExCLm7e9GZcGTzN6XC05ywIIrvTox2tC/QQ9MyF5XDBUI3UW2PbjtlqCZ8QiRuI
-	5+rs5+KL7DqeauvxebaXmS4drTRBGnp+680onwTtS+ghg3hBJmTvfVzlOadv3hx1B50H1/
-	OEqDdBFnhhY7aR2A+0/hefGzO4PHb2vTyJkx4xQ+bb61F6sa4s2rRkIzdGWL/KIx8zTs/P
-	bnJZPqWI/iSbyH8aoCurTRNhnHua8chUV28AEJ7NO50HB3F5UiOzb6kO7rpS1g==
-Date: Thu, 13 Mar 2025 11:09:44 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/2] drm/panel: Add new helpers for refcounted panel
- allocatons
-Message-ID: <20250313110944.1c1f7e4e@booty>
-In-Reply-To: <20250312-drm-panel-v1-1-e99cd69f6136@redhat.com>
-References: <20250312-drm-panel-v1-0-e99cd69f6136@redhat.com>
-	<20250312-drm-panel-v1-1-e99cd69f6136@redhat.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNtyegOu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D0FC4CEEA;
+	Thu, 13 Mar 2025 10:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741860598;
+	bh=3ia4Sn6jj2l6liyurFbn7ply3ehwt3UFgJmXXXgNixs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LNtyegOucLPnqQ38sjFfRNvvezBFC4y9FCkZcmFH2kWyqiF9R/iS7BkNuRtP3S1u8
+	 KiHhdWl+mGBJJgaazt2AOesNpi9zIdIn6Y2kNzPavbAbR/mhddZP+hfwrbL/MyJD0M
+	 B5K+82CiclQzGCs5NcG5cmWHeT9EaK7aT6tuJMY0wROiolOBKIfPuYbNIVacqCkbA9
+	 10oEzXg6zG2/IklQ50xj9u9uu8wnkuJuZh363iPIHrTVHmuSEtSc2OQkojILJLibqZ
+	 +yWBS6dIDSs65QEkQMUVTmw6PadG440vJqMvbAJklNP2QyciSbI8g7DWPZ2zpIdJFB
+	 h9C7azPak9Qcg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BD63806651;
+	Thu, 13 Mar 2025 10:10:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdejieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeljeejuddvudetffdtudelfedugfduledtueffuedufefgudegkeegtdeihedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegrtddtvdemudgsrgejmeegkehfjeemudeltgehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegrtddtvdemudgsrgejmeegkehfjeemudeltgehpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegrshhrihhvrghtshesrhgvughhrghtrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehquhhit
- ggpjhgvshhsiihhrghnsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 0/3] net: stmmac: dwmac-rk: Validate GRF and peripheral GRF
+ during probe
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174186063226.1446759.12026198009173732573.git-patchwork-notify@kernel.org>
+Date: Thu, 13 Mar 2025 10:10:32 +0000
+References: <20250308213720.2517944-1-jonas@kwiboo.se>
+In-Reply-To: <20250308213720.2517944-1-jonas@kwiboo.se>
+To: Jonas Karlman <jonas@kwiboo.se>
+Cc: heiko@sntech.de, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hello Anusha,
+Hello:
 
-On Wed, 12 Mar 2025 20:54:42 -0400
-Anusha Srivatsa <asrivats@redhat.com> wrote:
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-> Introduce reference counted allocations for panels to avoid
-> use-after-free. The patch adds the macro devm_drm_bridge_alloc()
-> to allocate a new refcounted panel. Followed the documentation for
-> drmm_encoder_alloc() and devm_drm_dev_alloc and other similar
-> implementations for this purpose.
+On Sat,  8 Mar 2025 21:37:12 +0000 you wrote:
+> All Rockchip GMAC variants typically write to GRF regs to control e.g.
+> interface mode, speed and MAC rx/tx delay. Newer SoCs such as RK3576 and
+> RK3588 use a mix of GRF and peripheral GRF regs. These syscon regmaps is
+> located with help of a rockchip,grf and rockchip,php-grf phandle.
 > 
-> Also adding drm_panel_get() and drm_panel_put() to suitably
-> increment and decrement the refcount
+> However, validating the rockchip,grf and rockchip,php-grf syscon regmap
+> is deferred until e.g. interface mode or speed is configured.
 > 
-> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> [...]
 
-I'm very happy to see the very first step of the panel rework mentioned
-by Maxime see the light! :-)
+Here is the summary with links:
+  - [v2,1/3] dt-bindings: net: rockchip-dwmac: Require rockchip,grf and rockchip,php-grf
+    https://git.kernel.org/netdev/net-next/c/313cf06ef4de
+  - [v2,2/3] net: stmmac: dwmac-rk: Validate GRF and peripheral GRF during probe
+    https://git.kernel.org/netdev/net-next/c/247e84f66a3d
+  - [v2,3/3] net: stmmac: dwmac-rk: Remove unneeded GRF and peripheral GRF checks
+    https://git.kernel.org/netdev/net-next/c/41f35564cb71
 
-This patch looks mostly good to me, and the similarity with my bridge
-refcounting work is by itself reassuring.
-
-I have a few notes, one is relevant and the others are minor details,
-see below.
-
-In the Subject line: s/allocatons/allocations/
-
-[...]
-
-> +void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t offset,
-> +			     const struct drm_panel_funcs *funcs)
-> +{
-> +	void *container;
-> +	struct drm_panel *panel;
-> +	int err;
-> +
-> +	if (!funcs) {
-> +		dev_warn(dev, "Missing funcs pointer\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	container = kzalloc(size, GFP_KERNEL);
-> +	if (!container)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	panel = container + offset;
-> +	panel->container_offset = offset;
-> +	panel->funcs = funcs;
-> +	kref_init(&panel->refcount);
-> +
-> +	err = devm_add_action_or_reset(dev, drm_panel_put_void, panel);
-> +	if (err)
-> +		return ERR_PTR(err);
-> +
-> +	drm_panel_init(panel, dev, funcs, panel->connector_type);
-
-panel->connector_type here is uninitialized. You are passing
-panel->connector_type to drm_panel_init(), which will then copy it into
-panel->connector_type itself.
-
-> +
-> +	/**
-> +	 * @container_offset: Offset of this struct within the container
-> +	 * struct embedding it. Used for refcounted panels to free the
-> +	 * embeddeing struct when the refcount drops to zero.
-> +	 */
-> +	size_t container_offset;
-
-While storing the offset obviously works, and that's what I had
-implemented in my latest bridge refcounting series, after some
-discussion with Maxime we agreed storing a container pointer instead of
-the offset is cleaner. I think it would be good here as well.
-
-See: https://lore.kernel.org/lkml/20250227-macho-convivial-tody-cea7dc@houat/
-
-> +/**
-> + * drm_panel_get - Acquire a panel reference
-> + * @panel: DRM panel
-> + *
-> + * This function increments the panel's refcount.
-> + *
-> + */
-> +static inline void drm_panel_get(struct drm_panel *panel)
-> +{
-> +
-
-Remove empty line.
-
-> +void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t offset,
-> +			     const struct drm_panel_funcs *funcs);
-> +
-> +/**
-> + * devm_drm_panel_alloc - Allocate and initialize an refcounted panel
-
-s/an/a/ -- same typo as in my bridge series so I'm fixing it in my
-series as well :)
-
-> + * @dev: struct device of the panel device
-> + * @type: the type of the struct which contains struct &drm_panel
-> + * @member: the name of the &drm_panel within @type
-> + * @funcs: callbacks for this panel
-> + *
-> + * The returned refcount is initialised to 1
-
-In my opinion it is important to clarify that the caller does not have
-to explicitly call drm_panel_put() on the returned pointer, because
-devm will do it. Without clarifying, a user might think they need to,
-and that would result in an extra put, which would be a bug.
-
-Adapting from [0], that would be:
-
- * The returned refcount is initialized to 1. This reference will be
- * automatically dropped via devm (by calling drm_panel_put()) when @dev
- * is removed.
-
-[0] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com/
-
-Luca
-
+You are awesome, thank you!
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
