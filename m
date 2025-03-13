@@ -1,170 +1,121 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2043.outbound.protection.outlook.com [40.107.223.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BC9261398
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741858712; cv=fail; b=lXpMkP+H3esSDMk7mvuEvRwiS1mHjzj1uYJKiO3DJwSdsROInXtu1dKBGKKF8LbbjxhIK6+ghtCTjTPakoPzCJ+EH9vF3JTif/ZI2HfRJYWOVzR1xF+CE+Xp8s5kbJ5qbftlXrN04tRYJNgcwosrlsLPUJA7Svc+X0MOKiQJyNI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741858712; c=relaxed/simple;
-	bh=hMracf4IVfkIta8/vH3i+2iTox5gMxK6J6BsYLu1hPA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h35bUicDM5YPLi6+YGsfJ/lmxPY1Nzj4hLMQjawHjCrwWFR5cR32KICHAVQBH9tD2ra5rRozS7hLgA05XIzskHlb4ywgocXR43Y57onExeGogDSDCzp/Tbw2fzCDk0RJ4J3k4D/LPJ417NvA/+kXfYo3kk6EiiM+HCY8cqXFEvA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PieYz8Ry; arc=fail smtp.client-ip=40.107.223.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D2F25FA0D;
+	Thu, 13 Mar 2025 09:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741858723; cv=none; b=CDxAIVwb3wfgrdPCItX9ZyC5t9kYqGXMziB75TkVpSk/VEU+UpXb2P3edbzejCE7zi3oDqPNJvaeFBSYjgJCxb1wIdw/W4uTcdKLAlO7k3VrVURzvixLry7Y4YoHJmWwmLBQCSccrGkYCo2JNCoEANisF+UXJhD2Mf5ORxZNBCo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741858723; c=relaxed/simple;
+	bh=GHsyvUrd0wQ1kRjiqzh1FJOGqKa1mgmnz4BUxH2iJ64=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IGNh1bP7C6Sj8Z7YGf+O44qEY+qZ5o0HwF9/5+G+fDxQKYRO3S7pj0A708Omw+82Zvs21wMxPgJEAOG6awYmncRsXF8zlPdn0bB+McFnFOpgKEYZfbAWxuDIAj9tn+cMoS1hC977f0t23kodyLhdASZMmo4+bb0msSjDLmbvpm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W+4jLLm6; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PieYz8Ry"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w1syEnKUfF6RIdYrGdc4TckxN/IxgTi9zP0ZUkPDtKGEisuPolb1rIZLFINssKWoy/rOfmo+rwPXBK5dwhlVPcPLZ/tkBSIAV4e6UpXaykZtWLViW+3wWAC7PzzzdnVZoUJ9Cbgn070nsmMjvOvtkdrYrfYqJRi0MsfODTSoPXMVbexbTTRLaMZ8Yfn7RBRPKePeGThOStWIajyjOIrhn6c1uR1TyCpneMn3RJ/hCqTMDdPx5j1aEvcCFzwoOnGpfVP3qw6SsRGkN7TQqB9Hidmx3b60G2W8WFTru6OMaiojHSM+g2uTl6ObJIhOMsP7X8I/4sS3bTTKCOI8giBOwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vPbogZ8WRr8yFGfyNLdX3Jm1z7KxNTmPs3zOkHDfaXA=;
- b=kS2FSJ8dQ2+xMuBrrt1mblE/MEUuBPXfU/Jfkzj4jHR/Rxsbq8GXD7Uta1kSWLFwmwueJYwgG2Kl4y1MyB/xK+NMa8Oi0KBmlpov4Jk1BLm1G4jZX8pTDgNdYSwV/pTAo3JtDgBJfVT0rYAXPyNLZurcuybzyWCm+Wpzkc45KK6TLSD6nvUENfmIrjuht87twPmUwNXpEtkk+4/2in/Tyw1GyzWtTM+DwNIOR6ipVdZf3LZEx4Psn6l0WvrYsD6jZuoL75oTYxiHoCeV/VwOXiw3IuLVvxK/dB1Xxgok1weQbBKiXMiblaV9c7LXEYmH/Q8lvoSV0VsA3EOOIlIr+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vPbogZ8WRr8yFGfyNLdX3Jm1z7KxNTmPs3zOkHDfaXA=;
- b=PieYz8RyMliYcU6qcOCDvv20wp745rGaI3KsZEJ1ryzyeLZdF0ie5eVfXoBnC1hhIN7kcx1VO75nNu82BGn1vZ/xC4gC9+VYnqMM3WjxnFJb4f6ifuf9dQzj0EIInmncfbmYKXaIM5d2bk5xd/+NWWuDzaRhhzyNW+Dah0UVldk=
-Received: from CY5PR15CA0236.namprd15.prod.outlook.com (2603:10b6:930:66::8)
- by CH2PR12MB4054.namprd12.prod.outlook.com (2603:10b6:610:a6::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Thu, 13 Mar
- 2025 09:38:25 +0000
-Received: from CY4PEPF0000E9D6.namprd05.prod.outlook.com
- (2603:10b6:930:66:cafe::24) by CY5PR15CA0236.outlook.office365.com
- (2603:10b6:930:66::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.26 via Frontend Transport; Thu,
- 13 Mar 2025 09:38:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9D6.mail.protection.outlook.com (10.167.241.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Thu, 13 Mar 2025 09:38:25 +0000
-Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Mar
- 2025 04:38:20 -0500
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Chen Yu <yu.c.chen@intel.com>,
-	<linux-kernel@vger.kernel.org>
-CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, David Vernet
-	<void@manifault.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, "Swapnil
- Sapkal" <swapnil.sapkal@amd.com>, Shrikanth Hegde <sshegde@linux.ibm.com>, "K
- Prateek Nayak" <kprateek.nayak@amd.com>
-Subject: [RFC PATCH 1/8] sched/topology: Assign sd_share for all non NUMA sched domains
-Date: Thu, 13 Mar 2025 09:37:39 +0000
-Message-ID: <20250313093746.6760-2-kprateek.nayak@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250313093746.6760-1-kprateek.nayak@amd.com>
-References: <20250313093746.6760-1-kprateek.nayak@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+4jLLm6"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0782d787so6392705e9.0;
+        Thu, 13 Mar 2025 02:38:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741858720; x=1742463520; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KLT02uxYGs6ZED4UE1FxVdbvpn40AYxBT7QBiZ2e2Lw=;
+        b=W+4jLLm6WoVPMqW2Ew+OCe4fe5TeZq4xYR+xYkWeAbI7pPe4MbIHUAzr2GHCfzqhdM
+         28p/KfB75zZ4U7RfDGKSzoBbM0v6Vc3eFV2S/GtW2ehacOXe23/maIV/C9tP9JhfK43P
+         IZXaJGSS7fbppSz8qtbWSsKkWNMSE5gufaAL3F1Jw5DVbPHrzOLT7lNU7SpPzml6V3L3
+         psSLXr2CiSnistFosW/CKcLGCfo8I/wq/6ANcIIBCK418pBCaLPhKMcfqK+p2Fnf0X9l
+         VCtMDYvP/iAAmrh5oXKcOw+9c6Qw1d9CIE/2enu7wOxMq1Qoz57YclMc3GPajyaV1QsP
+         bSfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741858720; x=1742463520;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KLT02uxYGs6ZED4UE1FxVdbvpn40AYxBT7QBiZ2e2Lw=;
+        b=xIJK01krUAEUvK+Rs1DbEz1LXWITXPwen+hr6xGJbHJTT3IWcwYJjXPPxBppPbEaFP
+         gYkfeGC35AG/d4+GdnepIeEJZ7NLqd/TWs12R3M7hUld8UFcyfnbyik3DIQgpuerhE4p
+         7AL9UAAFyiqmPpTmzk2geHsTpYvEzubM9SJ0wh/iJNP1sBeMktAQdnIDaXxk2cNOFWMK
+         NSkuVZOJ9PDeBqbB2WCiCDv4l1KGx7L6DcCF3xNwQau5bce7osHrovQfMKu871RZTMkm
+         H111l4jUcZ5Kw+NIhz6k0QIZj1bFSCObHL9YreNSrahaw5cyEkB183QE9lRRManOtOXX
+         HnzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzlzVo8tuR2tIG9dCAuzoBE6ZIyFBdoUsxgsahV34/5Ao2MEoRLVoX/ELekyNpbeZTFO1BgadAjYdxuYg=@vger.kernel.org, AJvYcCXCFG3VctVnmqyXiD6amw2Yz3x4rroBYiZfoHo9Y3cnTVtMPGmHJot7vkmrLb+hSFmmaMgKE3IrWjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPOD+I/RBX/dd74Tj2vpxRj4vayRK+l92CamWojucta+LphfhS
+	P7e3cyvy+6J7h5b3b3w1Do27tpa6nBxN3wB2FDa57w6iHrCvYAf2
+X-Gm-Gg: ASbGnctkSbQpUiN0/+z8qhCD0i79F4stnXnFJMlxvhd2zFeJWw0WhQQFSGVFU+gNh06
+	11kO4U5EyNnMZot5YX3k3IKqk1W+OT5u1uYTRqrFvkBmAytyXWEAaTfhgHsN69Kd960AyfO1peX
+	nPQ6LDDtfaPRHDkQH4idI4qrErCPj49FPpQNWs0r9T5u2fnKiRud1PK18d07rkoTHwmJaNu/J4L
+	+5Gb6r493kVE0JREjSlqvftMlVqGQIKHwPtbyr74iXDJCA/cSS68pZ5zqRmcVXSOj4QwZugroxw
+	A3FB0tcJlp5LIDPJqJCE1hEF66qfpygKWVXRmNwMijanPe+tvKG+dk8ljDgEgXHLNN1jJOjfbWJ
+	XxVUVD58=
+X-Google-Smtp-Source: AGHT+IH7AXjc76BgsJI/jdBjV7ovqJeF72QTMgXMNVgHVzPMh2K8NYbPAJZYstDicKtX5ZnYGSL0Qg==
+X-Received: by 2002:a5d:6d8a:0:b0:38d:d371:e04d with SMTP id ffacd0b85a97d-39132dacb85mr19161436f8f.34.1741858720176;
+        Thu, 13 Mar 2025 02:38:40 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c82c23ffsm1498503f8f.22.2025.03.13.02.38.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 02:38:39 -0700 (PDT)
+Date: Thu, 13 Mar 2025 09:38:38 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>, John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>, Artur Rojek <contact@artur-rojek.eu>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "D .
+ Jeff Dionne" <jeff@coresemi.io>, Rob Landley <rob@landley.net>,
+ linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sh: align .bss section padding to 8-byte boundary
+Message-ID: <20250313093838.10749599@pumpkin>
+In-Reply-To: <CAMuHMdXaw117mimN_7UgwbfbG9grVg09WfjKa2Lz4eGqM24EvA@mail.gmail.com>
+References: <20250216175545.35079-1-contact@artur-rojek.eu>
+	<20250216175545.35079-2-contact@artur-rojek.eu>
+	<5365422a9715376c76a89e255c978fc39064e243.camel@physik.fu-berlin.de>
+	<433bc8a0732bf8a63c64c4bf0e6ad4a7@artur-rojek.eu>
+	<967e29681c8bc39edfdd9c645d943f17d341c2ae.camel@physik.fu-berlin.de>
+	<CAFULd4b8+HsmJC2XkW50pxtw=fHNrL9gH1_WM90jh+rfLCbSHw@mail.gmail.com>
+	<CAMuHMdXaw117mimN_7UgwbfbG9grVg09WfjKa2Lz4eGqM24EvA@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D6:EE_|CH2PR12MB4054:EE_
-X-MS-Office365-Filtering-Correlation-Id: 481d6b76-08f8-4747-b896-08dd6212cdab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ahfu0gDLAu29zi8PscIcvi1BeNiiEqHxfxG1BAlpZTZ+kYMe3Oh1BzivMV4Y?=
- =?us-ascii?Q?70cgs6ScvzgUejCvKOR8PRtHvBtv1JR0nd7rOwYUmkPKYLBuqAAm30j7vRyQ?=
- =?us-ascii?Q?ajfBrlXS6JXvm6n1sSm7tI3OZu1BefoIqbLwE5RMQRlnFoZNgmL1zxalo7Gb?=
- =?us-ascii?Q?58veaj8tiGyOBUJon2gFRLX4XAKMLZHNn9qvfOtx7T9OUV/plQ9If78Qa+14?=
- =?us-ascii?Q?GmsKkz+qDWAbpAQ9JsNastYWCcoQ9Of0aWFNLcKrPDJ1GKNyy/42kjM5b0pq?=
- =?us-ascii?Q?gi1AE2GIj2xwLk7t9Ui+FVuEGVwMF1kZDsZDrW8mlycnIINqDaFDaU63E8JB?=
- =?us-ascii?Q?6STLezTA3kMoTkvEOgXmq6Jq7clfjeIQ1rFRIM1kqubktSp2Vo5i7kNavikb?=
- =?us-ascii?Q?wjrRgXidhrTCkTZTsJlhnWfWDpqOUkw5HJlp5W7iGPdXktPiBDF/mICtTcOv?=
- =?us-ascii?Q?b8kVEENe/C1kJRf6WKetbjyJBP5Iv2+XhkP2X5ltYU5cLVFcWRGlgCsjBFAd?=
- =?us-ascii?Q?edpQeqfWQwfhBwIQGv7tqKOfA1ZeG2HB+LB1uFLNBD1D4iXowIYCxOSNWkZv?=
- =?us-ascii?Q?Zym+CGfekHzKIuM4Kv7jfQLJ1V3+IOwieq6Tgx7xeeKEZLdiVbQeIuhR2tK5?=
- =?us-ascii?Q?o8IHkxaIradN3dq/KpPmnwNJopJDMywzxvIEDMO7rg34+IpvjvYbQkY2kaDB?=
- =?us-ascii?Q?brRkfqfF8StBYC7Jq08uKrl82JY2rH4jBqYBFmvhsGG3vhRzVWmq+RKkIF1u?=
- =?us-ascii?Q?GOJdPRKfiju2L9eKRlzaLa98ZGa8hYRfJHRjScautL9gaLPV0Q2DZ7uNSGrE?=
- =?us-ascii?Q?pfXN5f8k5BUAQwVQ6d15aqq0rpSgFQZw+NBLZEHs2wn9GPDjqvwxjBilbn0z?=
- =?us-ascii?Q?6NJwXjoZFvrzkIPuLBuai9DK6ABKc9MaZbRpfQIEpjyMiSy7yPg+TBpoqEc2?=
- =?us-ascii?Q?wba34zl75OpkQnAoIgZhU3+/ZvS0CJqVNm0WrAzr2Ca/w3cSgZSCS56Y+7oq?=
- =?us-ascii?Q?mpgnuWfLy0AIxkROPwstQbNSEWwraujJRgLPq51kxNMOit8TS5CCsvRbgO8j?=
- =?us-ascii?Q?FNniNh5N7z/5YlpF1Ru65BE+jcBTjp9Hzc5kFNUx7r13EEhWYL2ysuuKCwzi?=
- =?us-ascii?Q?IXJYHy5cY8CNgC1/FkK/PkGeCOKBlyFke/Pz7ANNPmo+h7OVy5wR725zX8sq?=
- =?us-ascii?Q?ckb7GexiE6pXX5UE++eTp/B/Q+BrVWtni44hdcLrA4htjPotoYdEe/RxZ9hq?=
- =?us-ascii?Q?Wr7qwlxM08tZG9K64TGT8NNhveIjW2qO8Z64bOj8U8ttZ7AaNshEQIQQrSUg?=
- =?us-ascii?Q?bSGS3fTCgU+Q6xa8DEdMxNYFoEBemhPfBHVbZD0V1nJzEX2ctLPYrr6MK+g0?=
- =?us-ascii?Q?t8Z2owJj3Udr4WE0vTklilMTFRS462ONRvb7uiFO1I3zG+H30HLxBHo+WQry?=
- =?us-ascii?Q?Du1k18Q45qB0zwlmgw1CCh+Tw9JnmHdXQceoOOC00OU6im8vheWr0A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 09:38:25.4432
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 481d6b76-08f8-4747-b896-08dd6212cdab
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D6.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4054
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Chen Yu <yu.c.chen@intel.com>
+On Wed, 12 Mar 2025 10:47:00 +0100
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-Currently, only the domain with SD_SHARE_PKG_RESOURCES flag
-would share 1 sd_share for every CPU in this domain. Remove this
-restriction and extend it for other sched domains under NUMA
-domain.
+> Hi Uros,
+>=20
+> On Wed, 12 Mar 2025 at 09:32, Uros Bizjak <ubizjak@gmail.com> wrote:
+> > On Wed, Mar 12, 2025 at 9:22=E2=80=AFAM John Paul Adrian Glaubitz
+> > <glaubitz@physik.fu-berlin.de> wrote: =20
+....
+> > > OK. FWIW, do you understand what SBSS is for? I couldn't find any exp=
+lanation
+> > > for it. =20
+> >
+> > Small BSS section. The compiler can put data objects under a certain
+> > size threshold to the .sbss section. Looking at GCC sh config, sh does
+> > not use this section. =20
 
-This shared field will be used by a later patch which optimizes
-newidle balancing.
+The .sbss (and .sdata) sections are used by some architectures (eg Nios2)
+for data that can be accessed using a 16bit offset from a fixed register.
+(Although using the register as global register variable generates better c=
+ode.)
+Historically they may have been used for data at the top/bottom of the
+addresses space (for the same reason).
 
-Suggested-by: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
----
- kernel/sched/topology.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+There is no reason to just use it for 'small' (eg 8 bytes or less)
+data, that is just some empirical default.
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index c49aea8c1025..815474823b3f 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1680,10 +1680,10 @@ sd_init(struct sched_domain_topology_level *tl,
- 	}
- 
- 	/*
--	 * For all levels sharing cache; connect a sched_domain_shared
-+	 * For all levels except for NUMA; connect a sched_domain_shared
- 	 * instance.
- 	 */
--	if (sd->flags & SD_SHARE_LLC) {
-+	if (!(sd->flags & SD_NUMA)) {
- 		sd->shared = *per_cpu_ptr(sdd->sds, sd_id);
- 		atomic_inc(&sd->shared->ref);
- 		atomic_set(&sd->shared->nr_busy_cpus, sd_weight);
--- 
-2.43.0
+I guess they could also be used on cpu like the strongarm for memory
+that used the 'small data cache' (useful for screen buffer memory!).
 
+	David
