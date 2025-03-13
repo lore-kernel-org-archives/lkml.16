@@ -1,106 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA68824E010;
-	Thu, 13 Mar 2025 13:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF52724E010;
+	Thu, 13 Mar 2025 13:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741871608; cv=none; b=Uus+LFOIVFrtUOpTPVBh1SqqKI4VtgMQzmBB/HtKvhPQwQS6xCjVJyypC86ztnn7i0KHQr5Gq/RClTBOToUNbsG/2SMRj3mOlJmxXHkI2LKkb69S38E65+dueEJUP+5w1dmfM7a0Z0+fo0ne44EwmwxHVij2P77LOns2cVt4ssw=
+	t=1741871700; cv=none; b=DkpPqkU3rrXIuHHtO+NrFyZHtPHZzaOjkv/daQ4oqPLj4kdJ+qNk3kjB8kjkYTXsuBrYUUG8bfX+aXU+aUhFRbD10S9uz0qCpQyv8zc2GwXBHeOI6P/KgV3lKWtLR73U3xJcMGviPdr9HYDhhpd1u+xE5bXk2YhZPV3+Fl6607c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741871608; c=relaxed/simple;
-	bh=J+z1n7Bxb6o8wTtsy7p3X4ZDKg+uInjMhyvc0Z6LT7s=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dTRALuzsyxda9Z78h5m1xbDI8y+HctJConxISpYVBGkuz8tbA0RFb3fvZ1p3thkv2jd+AgEwibFt+6HwwFSmXOZ47IE2Ii6QqYjbTK4STzSmZ0oc2QrwB5adm/VuwnBB6nK8KfbG0J4DzdJIfBbGhYeK5r/b1xasU8+HHGB5DGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGDMr1yt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741871700; c=relaxed/simple;
+	bh=VLJNg6lVMoooVVl1DScIpAPZZeM78jzK1vkciFNTLM8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TFfObx1D0V6ZUFfKOfABiF+erw8zQRfc+spfBpV2f9I3lilfIfFOsEh+0iCi49c4EKBRjD+RyOtQSBzZb1yJ7XR/z1J7z/8QfI20HcMBttwbwIebpWW9vHTS2UiUv4l7e80b76IYFE1rrOjJEfthnXXZS1Y+cE5QTrHJYWjlSvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NkfmqRF0; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGDMr1yt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D896C4CEDD;
-	Thu, 13 Mar 2025 13:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741871607;
-	bh=J+z1n7Bxb6o8wTtsy7p3X4ZDKg+uInjMhyvc0Z6LT7s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iGDMr1yt56hT38AnU7QgtDJVRAQ4z/El7xyRR254R19Mw9lHbuxc5KNyYJxOLR2N3
-	 1ss3vY7timc0KPyaVXnWTlDkHQGwykniSSjeIpwa8N7TDwcC6TWuCfQr7/rt2xy6ni
-	 sEvEAsdaqQ45HXAtcNHgImRIzPfXBt03m2nVl4q9mV2drYlZUbmN+gingSHtEyCJnQ
-	 nDK9oJ5njude0QOmAW+Baj39uitmDi5sEQQEjRU2/sZaz9jREYRBhKl0CZ/wb1nXKa
-	 feM34oAR3rC1yE+h0La2SlFBRYrZwnLaPvgWK9kbnkwLiDu45v8fEd90ArwFXsWlQm
-	 B8LAozVr/324g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tsiNJ-00DDNZ-3d;
-	Thu, 13 Mar 2025 13:13:25 +0000
-Date: Thu, 13 Mar 2025 13:13:24 +0000
-Message-ID: <86jz8tnkej.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	qperret@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v4 0/3] Count pKVM stage-2 usage in secondary pagetable stat
-In-Reply-To: <20250313114038.1502357-1-vdonnefort@google.com>
-References: <20250313114038.1502357-1-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkfmqRF0"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so1658148a12.0;
+        Thu, 13 Mar 2025 06:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741871697; x=1742476497; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pDzKsxJKNgXSp+dU7QY1JBhVYKMUfmTAqfRS6qsK4MU=;
+        b=NkfmqRF0ir4f8I0+PeVl/o4Mb0lyZA3YLhd15S4vXmPbmzlcnQuvC17mHj5EDFzfny
+         be9vgo4DqdninqrR+6/Y1eY063tdalrI/FgAp/wvcEzWzuiY7MsAN7ttlB5khDxowonX
+         RBwWJzWGlNOeAJZly2OAGty+IxjhreqlQDZa4W3uFl9uDOafo7A431qkdUsSgb9M4NRL
+         KrSVp66zLX3MbZx/Yl62+SHpKoa8B3xKXs3hYT1NwbuMhmXCli+mmq4DkYXh8/oEwT8Y
+         n9O4tUd3dr5aWqBpeC7R1Vh86CYGEtHUZWRwiI6udSOFwd/81UC2QA0kmVXBo+PVmdDj
+         0ftg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741871697; x=1742476497;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pDzKsxJKNgXSp+dU7QY1JBhVYKMUfmTAqfRS6qsK4MU=;
+        b=K/M/6Aj0qAUQPsmKM1TiXphL8oQDcNbEOCY1bKHmcIiDG2C4MSUiumZQ1MT3ovB6qV
+         xNZyfev1nN4QhxKduHO2Iz9fLmu/SSBjVK1sNSE4Zp4HfPY2OD4VFDKAKQ/BjpZzwrrI
+         l3stPblmZ/JBcI65Vf9fX8+5oQta+WH/kiEXhbPnKcTribUCj3cuFVv+pYLFOS16lhCC
+         1k3U84vHsH4mt+76P+rZaihMeh9WM0G3nEKkpmgpPQJwsIj5U6FR0T0dU8dG89wEqOT3
+         Swatknnbb9+Gndg6RDjFZMEas2SxBaDUatIXSSSUoMzQCwLCGGMrHJ39CG/pReoY/WNb
+         oM3w==
+X-Forwarded-Encrypted: i=1; AJvYcCV5s55UytItDzx0H36nSyg2h4WBClGV9ruB2cXUZhNWnDL+ntRkJEQRbhye3SojYuF08qjVllmYzEtkD95T@vger.kernel.org, AJvYcCVaoJOwHLhYh6H1ax1V1Ws5eQg/bElu5XmyoER/WB93QtxOYDgHcmJwPdpeKthiMY4FSoFF6klvlA==@vger.kernel.org, AJvYcCXeSmTHFEpEgRxpIel72QZNsQ7vUIt1JL1kvCtw7RApHXKabZT/ecnxAhxq04RBYh+b6VCNXt6UMAWDttY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRpyQ46f8gNI0yx4PgvQyu04q1QZGehmdj/ZjTXFCoUEP+rr3o
+	QMxMpU6GPJMhEUragVApX2VhNqHUJvxBTGG9zSD/pjQnVGKEIb3Y
+X-Gm-Gg: ASbGncvnTY8P9MAkF+Iqci9i4vS9Et+hgmKDIgzaT+wqNGPtSmV2ixFhhUnXxWb/EdW
+	kK1YHu9duZ16NxopjyMUY8q8VXG3bv3akLyaEViNm378qz0wcvtGaK9ewZUqQEJd6v2udf0XpfC
+	RJGsO3Rf+i7QH5CaD0aBRoP0IUXjN+9Tpc5jVc0SUo2GI4p1cH7qcjSR8yTpGnR4Vp+sSsFoa6t
+	JS/fOIbtO7aUoqqp+ObmFmO/36lCvpGXuY+/mh6zCbIJ075OJBH9buLw86H4TBWqJYu344k3+us
+	n8OEpBltEuldV+N8kicJa4heIdA5uFlunhABZ+KqqijItJar824Wpt4AIg==
+X-Google-Smtp-Source: AGHT+IGloPfMpVcyvSI4gSYAfTMqQJN5Evc9ByhQ/i5dxx727NH40uiKtBLFMDYVKpT1JPovCIn/FA==
+X-Received: by 2002:a05:6402:5248:b0:5e7:b081:d6e0 with SMTP id 4fb4d7f45d1cf-5e7b081d955mr9681473a12.19.1741871696725;
+        Thu, 13 Mar 2025 06:14:56 -0700 (PDT)
+Received: from [192.168.116.141] ([148.252.146.254])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e81692e534sm746639a12.1.2025.03.13.06.14.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Mar 2025 06:14:55 -0700 (PDT)
+Message-ID: <95529e8f-ac4d-4530-94fa-488372489100@gmail.com>
+Date: Thu, 13 Mar 2025 13:15:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 0/2] introduce io_uring_cmd_import_fixed_vec
+To: Sidong Yang <sidong.yang@furiosa.ai>
+Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ Jens Axboe <axboe@kernel.dk>, linux-btrfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <20250312142326.11660-1-sidong.yang@furiosa.ai>
+ <7a4217ce-1251-452c-8570-fb36e811b234@gmail.com>
+ <Z9K2-mU3lrlRiV6s@sidongui-MacBookPro.local>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <Z9K2-mU3lrlRiV6s@sidongui-MacBookPro.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Mar 2025 11:40:35 +0000,
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On 3/13/25 10:44, Sidong Yang wrote:
+> On Thu, Mar 13, 2025 at 08:57:45AM +0000, Pavel Begunkov wrote:
+>> On 3/12/25 14:23, Sidong Yang wrote:
+>>> This patche series introduce io_uring_cmd_import_vec. With this function,
+>>> Multiple fixed buffer could be used in uring cmd. It's vectored version
+>>> for io_uring_cmd_import_fixed(). Also this patch series includes a usage
+>>> for new api for encoded read in btrfs by using uring cmd.
+>>
+>> Pretty much same thing, we're still left with 2 allocations in the
+>> hot path. What I think we can do here is to add caching on the
+>> io_uring side as we do with rw / net, but that would be invisible
+>> for cmd drivers. And that cache can be reused for normal iovec imports.
+>>
+>> https://github.com/isilence/linux.git regvec-import-cmd
+>> (link for convenience)
+>> https://github.com/isilence/linux/tree/regvec-import-cmd
+>>
+>> Not really target tested, no btrfs, not any other user, just an idea.
+>> There are 4 patches, but the top 3 are of interest.
 > 
-> This series allows to count stage-2 related memory when using pKVM. The
-> value can be found in the /proc/meminfo field SecPageTables.
-> 
-> Changes since v3: https://lore.kernel.org/all/20250307113411.469018-1-vdonnefort@google.com/
->   - Remove unnecessary void * cast (Marc)
->   - Rename reclaim_guest_pages() -> reclaim_pgtable_pages() (Marc)
->   - Remove unnecessary PAGE_ALIGN(pgd_sz)
-> 
-> Changes since v2: https://lore.kernel.org/all/20250304134347.369854-1-vdonnefort@google.com/
->   - Pass a pointer to kvm_hyp_memcache instead of just the flags
->     (Oliver)
-> 
-> Changes since v1: https://lore.kernel.org/all/20250228121355.1377891-1-vdonnefort@google.com/
->   - Flags to kvm_hyp_memcache
->   - Separate stage-2 memcache
->   - Account for PGD
-> 
-> Vincent Donnefort (3):
->   KVM: arm64: Add flags to kvm_hyp_memcache
->   KVM: arm64: Distinct pKVM teardown memcache for stage-2
->   KVM: arm64: Count pKVM stage-2 usage in secondary pagetable stats
-> 
->  arch/arm64/include/asm/kvm_host.h             |  4 ++++
->  arch/arm64/kvm/hyp/include/nvhe/mem_protect.h |  2 +-
->  arch/arm64/kvm/hyp/nvhe/mem_protect.c         |  2 +-
->  arch/arm64/kvm/hyp/nvhe/pkvm.c                |  8 +++----
->  arch/arm64/kvm/mmu.c                          | 22 ++++++++++++++-----
->  arch/arm64/kvm/pkvm.c                         |  5 +++++
->  6 files changed, 32 insertions(+), 11 deletions(-)
+> Thanks, I justed checked the commits now. I think cache is good to resolve
+> this without allocation if cache hit. Let me reimpl this idea and test it
+> for btrfs.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
-
-	M.
+Sure, you can just base on top of that branch, hashes might be
+different but it's identical to the base it should be on. Your
+v2 didn't have some more recent merged patches.
 
 -- 
-Without deviation from the norm, progress is not possible.
+Pavel Begunkov
+
