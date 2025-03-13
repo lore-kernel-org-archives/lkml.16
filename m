@@ -1,583 +1,245 @@
-Received: from mx-rz-3.rrze.uni-erlangen.de (mx-rz-3.rrze.uni-erlangen.de [131.188.11.22])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2053.outbound.protection.outlook.com [40.107.94.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD2B78F4C;
-	Thu, 13 Mar 2025 17:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.22
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741886611; cv=none; b=HvBpc/wZbZFEcNoCLmaTP1xWeszbR5dbAaRj8sIqeH/76Ec/WXXuhLSV5XrjtEHA9XUhBtCnOcwz6mOcQq7MrnNf2Lu0T6IfafrccEi5SHDaGMiF8/IjaGSt7TIwkReDYSVRA6KX5eS0pN77Q1//G2C4k9Jl/7nF+NW5g9nhj9M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741886611; c=relaxed/simple;
-	bh=g/Y+Sc0MqfiA/Ow2j26Xv2W+0nUvUThPru5UN0qU0WM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NWPSQ8GdUuNcj5ab3ZDJuU4U1xxJv/Ovepv0/GCMHwDHBENzTlwEkcVdq0znsTn12lhnDMvSztQxqp2dMy9ML1CJs+GjtJf1cK3RjHv15Onxj5vNfK5M3ZyBIJxZh+Ak/3ydBRZit+JARSa1GmuShWn4CAIhi0DnPzhsP/+IRLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=rUhEz7Bm; arc=none smtp.client-ip=131.188.11.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AF81386DA
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 17:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741886654; cv=fail; b=S4dwW0VXSOW3FJStwJlEL94cJGvQHK5TVmDSG4O7/55uz+E6JuKvCx/CwZp5sX5jV20tSZP6ITxS2oIIsi6iCVRH/GvsqTSPHSjbc4N/wudXWbdbYm6NuzoFJA+vO5LgfcA7/8Jhq1Kl1+2m4wOFnKYF8Nz1tAbeqW6a7qvWvPw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741886654; c=relaxed/simple;
+	bh=K5zJ7qNUhn+JHL4QFLllJ9r5mgb/LOFcIaFkRK9JP3I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kNg1vo0h4dqCwDpBcnAp5tPWyOzmICbf8FFWJ4EATTAbQ4VzeNd02hXeXoKmOnQG9v+U5rm4FPLxjsEQc6PGft+KmtzBkM/t7aZ0sXTWR3jS4wH3LMZgsVLSc40nAlnUlTKf9SedI9YkUC4Sez8wOxz3kzyJImEZC/ZdKSuXuLI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=argKukpz; arc=fail smtp.client-ip=40.107.94.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="rUhEz7Bm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1741886605; bh=SV8sRFTXbQd7ZNvQw3kmVQGVSTtmmbNulqrI7fg5+QA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
-	 Subject;
-	b=rUhEz7BmWcvoROXorkTWqSzHZeViwvht7GXdx7xS61Wupj2LvPOvLPpKNkZLTgtPx
-	 +s0fkHHM5i+3zAQraITIptzTmjh9dNN1UAdmviZFJWdZGDDDyZ+MCM9clQS/MQHP7I
-	 dVzc1IT58dSH8mCPYUxSu9gx7eA7sFCV8N9McQp/dEfrOb2V/o/oLkOyj6k6m1kdjO
-	 J5IotMOrkl47LIODyBzesvWBkXafLHQ51mUGETPnYrnzPQgdythdLEsRbNWYVWz50b
-	 6sNTjRzW5M2XaIh5gcGVV0yGaM+ydFHAp1rL6oyWfxjdq+ESLqgudVQEZvB9dFb+Kx
-	 GNxuuuCdO8j2w==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-3.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4ZDDqK0y3Dz1yN1;
-	Thu, 13 Mar 2025 18:23:25 +0100 (CET)
-X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3614:2b00:7ee6:68e5:4447:ba92
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3614:2b00:7ee6:68e5:4447:ba92])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX18W4GGBm+r81qR3pm/1UhdthI/9Lk9Kmh4=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4ZDDqF1Wy6z1xsl;
-	Thu, 13 Mar 2025 18:23:21 +0100 (CET)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Cupertino Miranda <cupertino.miranda@oracle.com>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>,
-	WANG Xuerui <git@xen0n.name>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Maximilian Ott <ott@cs.fau.de>,
-	Milan Stephan <milan.stephan@fau.de>
-Subject: [PATCH bpf-next 01/11] bpf: Move insn if/else into do_check_insn()
-Date: Thu, 13 Mar 2025 18:21:17 +0100
-Message-ID: <20250313172127.1098195-2-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250313172127.1098195-1-luis.gerhorst@fau.de>
-References: <20250313172127.1098195-1-luis.gerhorst@fau.de>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="argKukpz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h/GD5jaYLHKdavge9ovBlgVqHbatZKGCn4W+WmLh5DkBf4duJdaGSV/444N3x0cbl0qPyCaGc4CEb4Ecwai+GsdBY5W3Q6bMoa2fJFHB81k8U881KNABBWS3wXGWvjldVA8YsIRtWmjgz7Ir9iU/ClnzMUz4oUVINnapJtGj/ZKHO1dVIXdBxtsZ1/FhFYJSA7LAFipaJnUELp60HqUdvfD4FVnBIlIpBRopiWz4RxEgARZH1cG1M/8g62/Q+jR+jjX8QhJc5KyLFKMRXEejG7hXpBftup6MgEU8dXofKNA6izLVCxZ5p+2TIhNly9PakknY9ZmYu07Tqfi1NXYXkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ApttnL9PYxbXmx0lXo4xpzQY2/bugS8HpnUo3QwD4ks=;
+ b=YYszT+WPUqG3uhsDhrrQsgOBjMb/XWPC5lL+K4F6nbu6xAnN7gtYX3v5TZPrObb32/MVbgPGEHftqtxTzNtmA9zlMyKj8egcZfBo57KpHHGjQGuwuGG5FYe1OQ5qHKo6EoQQ9106bJhyRWJ9bfifG30wZhthKDKQBRVVotbSaAKyoKQg/7PRJgZHSm+Vw6EuCL2iKqmdCLDFjN819fluf6FJILwqv7467euYWJC+EgLhRGllUoFUgeRVIynXD5ij8t2VfScJBUHXWGEEv1oJ69a9y4nXHvk0/OgodzoI/xGeGmuepEgGiLtXhQSpiXsRV53cD0j+dTIwfy0QbBdLuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ApttnL9PYxbXmx0lXo4xpzQY2/bugS8HpnUo3QwD4ks=;
+ b=argKukpztQP7J7mpM5R8BkVLxsPttWRR6AIjp6C650/K7a2zI4LHCa/zyooQPVK7VGnVS9N4LAFReATNRr9PmGQ3jurH/EDOQ1JLVPWJ21PYsJddo/ld35E2hzKaALMUlRaz5XAHp5V5iDzkqtVV26Dt4yWGKCWhhViMWyNoaN0=
+Received: from BL1PR13CA0154.namprd13.prod.outlook.com (2603:10b6:208:2bd::9)
+ by PH7PR12MB6956.namprd12.prod.outlook.com (2603:10b6:510:1b9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Thu, 13 Mar
+ 2025 17:24:10 +0000
+Received: from BN1PEPF00006000.namprd05.prod.outlook.com
+ (2603:10b6:208:2bd:cafe::8c) by BL1PR13CA0154.outlook.office365.com
+ (2603:10b6:208:2bd::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.28 via Frontend Transport; Thu,
+ 13 Mar 2025 17:24:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF00006000.mail.protection.outlook.com (10.167.243.232) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Thu, 13 Mar 2025 17:24:09 +0000
+Received: from [172.31.188.187] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Mar
+ 2025 12:24:03 -0500
+Message-ID: <dddcd352-d3f3-4578-9f3a-1bf58d8fdb63@amd.com>
+Date: Thu, 13 Mar 2025 22:54:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v15 4/7] sched: Fix runtime accounting w/ split exec &
+ sched contexts
+To: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>
+CC: Joel Fernandes <joelagnelf@nvidia.com>, Qais Yousef <qyousef@layalina.io>,
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
+ Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Valentin Schneider
+	<vschneid@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
+	<bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman
+	<mgorman@suse.de>, Will Deacon <will@kernel.org>, Waiman Long
+	<longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney"
+	<paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, Xuewen Yan
+	<xuewen.yan94@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>, Suleiman Souhlal <suleiman@google.com>,
+	<kernel-team@android.com>
+References: <20250312221147.1865364-1-jstultz@google.com>
+ <20250312221147.1865364-5-jstultz@google.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250312221147.1865364-5-jstultz@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00006000:EE_|PH7PR12MB6956:EE_
+X-MS-Office365-Filtering-Correlation-Id: de3fb585-f02b-4cb2-b415-08dd6253ddcf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|82310400026|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Um96TkMrWXJxcFo3d1R4Q0k4UThYL3VPTjBaTFpMalBJTWNWQnBHOCtZakND?=
+ =?utf-8?B?OVIrOERwWTk0QmFtSHlDbkpaTy9sU3RZZ3lWalhndCtTVExOaXBUd3dJYlZH?=
+ =?utf-8?B?SEVsQUJKRWNueHRLdGZjR3lGUVRHaitXWm1LWkxyWkUwNnVuUUNlMVRlUjdK?=
+ =?utf-8?B?T0U5SzFZQUJhUGxoMWhmVVVPQ3hWKzUvVmREVTFadTVSS2VHOGFEN3k3RjN5?=
+ =?utf-8?B?dVJiYmhWUEtiaXU1SFdlejFhVWNLdW0rOG5iR3RoT0pYQ1N5M3VzbzIxUmJj?=
+ =?utf-8?B?anZPVjB0KzN6c1dKTGRSWmV1R0t1ZkpLSndjUnlJaHdPU1NINFBqeEJXMGlN?=
+ =?utf-8?B?aUd5NkR2Z1pnQno4SnI2NmZHcDQwZEZDZ1JjejRYNHR3QjJkZExjajRnYjd4?=
+ =?utf-8?B?ZWxueGJMS3RvVGZhRWhLeC9aZmY3KzNoSjZMRi83aml1Y0Q3WSsrbnA0Zkk3?=
+ =?utf-8?B?bWNqS3Rua3NFbGZPZDJPWmwzc2JvM004S3VyQXRQbHgrV0RiL1dmeFVienZr?=
+ =?utf-8?B?MDJzN1QyYXhhSU1hRHBKMmFDOHRVTFBPYWlCbXpTeUF2RmpLMnB6VGFoWFlp?=
+ =?utf-8?B?NzNweVlPdFVwNURUeGZTTjc4dGZCYUZVVDJWTWgrRE1jVmxpWGd2UkdYU05B?=
+ =?utf-8?B?ejc1Q3lwOWY2VUVTa2tWa21vVHFXengvNmliN1ZOKzZJa0M0MzRJOVpQcEdD?=
+ =?utf-8?B?UUZhWlZ2NGg5T2pMUjROeS9GZkhrNzhYVWdFOGZJT1JnOUZoUnc4eXRxckQw?=
+ =?utf-8?B?b3A1T1NOUTNkdEswcTJWUW13NHZwWjMvcXNmbElHTkdoYTlpSjVtUE9OY3Bv?=
+ =?utf-8?B?ZnREY0F4OFM5cTc4TWpwVUY0OUJSR1luVnlJQ1hhVUJRVEsyWTcrbk1uQnkr?=
+ =?utf-8?B?MHpzMi9TMytudXU2ZVZOVlB5WEpPNFc0MEI5QjJrWlB6c1lneWpmam82dERs?=
+ =?utf-8?B?M0hHVWdyMnJ0NkVlZ2xCUjdkaWxGWDdVL2FwVUdJUU9GMFNsejZQTHM1ZkM0?=
+ =?utf-8?B?K1dzejlhUjZFUXYyUnNGVG41VlNFaUl4RnkwTmszL3dicmtsMnhCYjFIRkVt?=
+ =?utf-8?B?akVPdExPVXVYNUY3em9zajJka3ZtODZ1L29ZLzU3T1JRRkhteEZ1Y25JQVM5?=
+ =?utf-8?B?U3c5MzNibGFwSzFVZDgwWHlDWFpuUXdaQWZDd25lR3krUGlNazh0NEFYWSsz?=
+ =?utf-8?B?STdpUGszYzZMcE9RWllMSjd3L3JBWWkvNkxtMjJkTmp3MkJ4Z2dtVmxlT2ZJ?=
+ =?utf-8?B?akx0UzlnMlBia01SRGRheGpRRmNWYXZnVDgxQ2JnSTZSQnRnY3JtdWhGNWh0?=
+ =?utf-8?B?cHNKT1lKZW9UazBpUXNKUVJKOEl1SkFMMjFRNXBDb0VBWDRBbmxOeTZkaDlG?=
+ =?utf-8?B?NmdMTWFzZFlzTmRoZDBhOEsxc2tHWHRRNmw1N3poUHRSdVJ5VmNoWmxJOWpx?=
+ =?utf-8?B?enNLQmNoeDd5OHNXWGN6dkdIYWhtZXRnckFwb3drbUZTSnladU5lU2RTVXc0?=
+ =?utf-8?B?WnNwMUxCU3VIVG1vV2JLOFcxL1ZqQVQ0a1BwQTJna0svK04vOXNBSmRUY2E4?=
+ =?utf-8?B?VFlmL0NFYWpZcTNQZ0lFanM1aEZIbDZtT2d6N1RCZC9yTEdwdEh1Lzl3R3F0?=
+ =?utf-8?B?ejFiaHJNajMxcmFOaTFwTExLazVlODJKemExM3lXRXpvc21oZ2FicXhWS3NE?=
+ =?utf-8?B?YzZDVlRjZmttSDJneVZuMGJBa1pIdVNJbjRrei8yWWFvRnpiVXY0bHlPSUpt?=
+ =?utf-8?B?OTRDOEVxbEVuVnJ2bTM0cmhOOE0rUTZmWHI5cEJIQnhtVUhaVnRqeFJqMCt4?=
+ =?utf-8?B?dVRWVVNCMzg1UjB3MGxjcGwxMXpGdnVGeEFvNVBQZE5YMk5uYkZWdVgybXRp?=
+ =?utf-8?B?WDBnR3JtVjVlN0NpM294bnU2aWt0T252Q0g1emNabUFqY1FqMkVFa29KZkx0?=
+ =?utf-8?B?VkNpQ2ljZ29QWXBYYWJiV3Q2RHpnOGdCS3AzTHV0UUZ4dW4weWU3Qkt6OXRH?=
+ =?utf-8?B?NGx6cVBtUVpBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(82310400026)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 17:24:09.9194
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: de3fb585-f02b-4cb2-b415-08dd6253ddcf
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00006000.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6956
 
-This is required to catch the errors later and fall back to a nospec if
-on a speculative path.
+Hello John,
 
-Move code into do_check_insn(), replace
-* "continue" with "return INSN_IDX_MODIFIED"
-* "goto process_bpf_exit" with "return PROCESS_BPF_EXIT"
-* "do_print_state = " with "*do_print_state = "
+On 3/13/2025 3:41 AM, John Stultz wrote:
+> The idea here is we want to charge the scheduler-context task's
+> vruntime but charge the execution-context task's sum_exec_runtime.
+> 
+> This way cputime accounting goes against the task actually running
+> but vruntime accounting goes against the rq->donor task so we get
+> proper fairness.
+> 
+> Cc: Joel Fernandes <joelagnelf@nvidia.com>
+> Cc: Qais Yousef <qyousef@layalina.io>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Zimuzo Ezeozue <zezeozue@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Metin Kaya <Metin.Kaya@arm.com>
+> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
+> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Suleiman Souhlal <suleiman@google.com>
+> Cc: kernel-team@android.com
+> Signed-off-by: John Stultz <jstultz@google.com>
+> ---
+>   kernel/sched/fair.c | 21 ++++++++++++++++-----
+>   1 file changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index c798d27952431..f8ad3a44b3771 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1129,22 +1129,33 @@ static void update_tg_load_avg(struct cfs_rq *cfs_rq)
+>   }
+>   #endif /* CONFIG_SMP */
+>   
+> -static s64 update_curr_se(struct rq *rq, struct sched_entity *curr)
+> +static s64 update_curr_se(struct rq *rq, struct sched_entity *se)
+>   {
+>   	u64 now = rq_clock_task(rq);
+>   	s64 delta_exec;
+>   
+> -	delta_exec = now - curr->exec_start;
+> +	delta_exec = now - se->exec_start;
+>   	if (unlikely(delta_exec <= 0))
+>   		return delta_exec;
+>   
+> -	curr->exec_start = now;
+> -	curr->sum_exec_runtime += delta_exec;
+> +	se->exec_start = now;
+> +	if (entity_is_task(se)) {
+> +		struct task_struct *running = rq->curr;
+> +		/*
+> +		 * If se is a task, we account the time against the running
+> +		 * task, as w/ proxy-exec they may not be the same.
+> +		 */
+> +		running->se.exec_start = now;
+> +		running->se.sum_exec_runtime += delta_exec;
+> +	} else {
+> +		/* If not task, account the time against se */
+> +		se->sum_exec_runtime += delta_exec;
+> +	}
+>   
+>   	if (schedstat_enabled()) {
+>   		struct sched_statistics *stats;
+>   
+> -		stats = __schedstats_from_se(curr);
+> +		stats = __schedstats_from_se(se);
+>   		__schedstat_set(stats->exec_max,
+>   				max(delta_exec, stats->exec_max));
 
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-Acked-by: Henriette Herzog <henriette.herzog@rub.de>
-Cc: Maximilian Ott <ott@cs.fau.de>
-Cc: Milan Stephan <milan.stephan@fau.de>
----
- kernel/bpf/verifier.c | 426 ++++++++++++++++++++++--------------------
- 1 file changed, 224 insertions(+), 202 deletions(-)
+So I'm slightly confused here - For the case of proxy where
+entity_is_task(), we charge the delta_exec to the running task's se but
+then we go ahead and update the exec_max against the stats of the
+donor's se? That seems odd.
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 3303a3605ee8..199a6341ac82 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -19213,6 +19213,209 @@ static int save_aux_ptr_type(struct bpf_verifier_env *env, enum bpf_reg_type typ
- 	return 0;
- }
- 
-+enum {
-+	PROCESS_BPF_EXIT = 1,
-+	INSN_IDX_MODIFIED
-+};
-+
-+static int do_check_insn(struct bpf_verifier_env *env, struct bpf_insn *insn,
-+			 bool pop_log, bool *do_print_state,
-+			 struct bpf_reg_state *regs,
-+			 struct bpf_verifier_state *state, int *prev_insn_idx)
-+{
-+	int err;
-+	u8 class = BPF_CLASS(insn->code);
-+	bool exception_exit = false;
-+
-+	if (class == BPF_ALU || class == BPF_ALU64) {
-+		err = check_alu_op(env, insn);
-+		if (err)
-+			return err;
-+
-+	} else if (class == BPF_LDX) {
-+		bool is_ldsx = BPF_MODE(insn->code) == BPF_MEMSX;
-+
-+		/* Check for reserved fields is already done in
-+		 * resolve_pseudo_ldimm64().
-+		 */
-+		err = check_load_mem(env, insn, false, is_ldsx, true, "ldx");
-+		if (err)
-+			return err;
-+	} else if (class == BPF_STX) {
-+		if (BPF_MODE(insn->code) == BPF_ATOMIC) {
-+			err = check_atomic(env, insn);
-+			if (err)
-+				return err;
-+			env->insn_idx++;
-+			return INSN_IDX_MODIFIED;
-+		}
-+
-+		if (BPF_MODE(insn->code) != BPF_MEM || insn->imm != 0) {
-+			verbose(env, "BPF_STX uses reserved fields\n");
-+			return -EINVAL;
-+		}
-+
-+		err = check_store_reg(env, insn, false);
-+		if (err)
-+			return err;
-+	} else if (class == BPF_ST) {
-+		enum bpf_reg_type dst_reg_type;
-+
-+		if (BPF_MODE(insn->code) != BPF_MEM ||
-+		    insn->src_reg != BPF_REG_0) {
-+			verbose(env, "BPF_ST uses reserved fields\n");
-+			return -EINVAL;
-+		}
-+		/* check src operand */
-+		err = check_reg_arg(env, insn->dst_reg, SRC_OP);
-+		if (err)
-+			return err;
-+
-+		dst_reg_type = regs[insn->dst_reg].type;
-+
-+		/* check that memory (dst_reg + off) is writeable */
-+		err = check_mem_access(env, env->insn_idx, insn->dst_reg,
-+				       insn->off, BPF_SIZE(insn->code),
-+				       BPF_WRITE, -1, false, false);
-+		if (err)
-+			return err;
-+
-+		err = save_aux_ptr_type(env, dst_reg_type, false);
-+		if (err)
-+			return err;
-+	} else if (class == BPF_JMP || class == BPF_JMP32) {
-+		u8 opcode = BPF_OP(insn->code);
-+
-+		env->jmps_processed++;
-+		if (opcode == BPF_CALL) {
-+			if (BPF_SRC(insn->code) != BPF_K ||
-+			    (insn->src_reg != BPF_PSEUDO_KFUNC_CALL &&
-+			     insn->off != 0) ||
-+			    (insn->src_reg != BPF_REG_0 &&
-+			     insn->src_reg != BPF_PSEUDO_CALL &&
-+			     insn->src_reg != BPF_PSEUDO_KFUNC_CALL) ||
-+			    insn->dst_reg != BPF_REG_0 || class == BPF_JMP32) {
-+				verbose(env, "BPF_CALL uses reserved fields\n");
-+				return -EINVAL;
-+			}
-+
-+			if (env->cur_state->active_locks) {
-+				if ((insn->src_reg == BPF_REG_0 && insn->imm != BPF_FUNC_spin_unlock) ||
-+				    (insn->src_reg == BPF_PSEUDO_KFUNC_CALL &&
-+				     (insn->off != 0 || !kfunc_spin_allowed(insn->imm)))) {
-+					verbose(env,
-+						"function calls are not allowed while holding a lock\n");
-+					return -EINVAL;
-+				}
-+			}
-+			if (insn->src_reg == BPF_PSEUDO_CALL) {
-+				err = check_func_call(env, insn, &env->insn_idx);
-+			} else if (insn->src_reg == BPF_PSEUDO_KFUNC_CALL) {
-+				err = check_kfunc_call(env, insn, &env->insn_idx);
-+				if (!err && is_bpf_throw_kfunc(insn)) {
-+					exception_exit = true;
-+					goto process_bpf_exit_full;
-+				}
-+			} else {
-+				err = check_helper_call(env, insn, &env->insn_idx);
-+			}
-+			if (err)
-+				return err;
-+
-+			mark_reg_scratched(env, BPF_REG_0);
-+		} else if (opcode == BPF_JA) {
-+			if (BPF_SRC(insn->code) != BPF_K ||
-+			    insn->src_reg != BPF_REG_0 ||
-+			    insn->dst_reg != BPF_REG_0 ||
-+			    (class == BPF_JMP && insn->imm != 0) ||
-+			    (class == BPF_JMP32 && insn->off != 0)) {
-+				verbose(env, "BPF_JA uses reserved fields\n");
-+				return -EINVAL;
-+			}
-+
-+			if (class == BPF_JMP)
-+				env->insn_idx += insn->off + 1;
-+			else
-+				env->insn_idx += insn->imm + 1;
-+			return INSN_IDX_MODIFIED;
-+		} else if (opcode == BPF_EXIT) {
-+			if (BPF_SRC(insn->code) != BPF_K ||
-+			    insn->imm != 0 ||
-+			    insn->src_reg != BPF_REG_0 ||
-+			    insn->dst_reg != BPF_REG_0 ||
-+			    class == BPF_JMP32) {
-+				verbose(env, "BPF_EXIT uses reserved fields\n");
-+				return -EINVAL;
-+			}
-+process_bpf_exit_full:
-+			/* We must do check_reference_leak here before
-+			 * prepare_func_exit to handle the case when
-+			 * state->curframe > 0, it may be a callback function,
-+			 * for which reference_state must match caller reference
-+			 * state when it exits.
-+			 */
-+			err = check_resource_leak(env, exception_exit, !env->cur_state->curframe,
-+						  "BPF_EXIT instruction in main prog");
-+			if (err)
-+				return err;
-+
-+			/* The side effect of the prepare_func_exit which is
-+			 * being skipped is that it frees bpf_func_state.
-+			 * Typically, process_bpf_exit will only be hit with
-+			 * outermost exit. copy_verifier_state in pop_stack will
-+			 * handle freeing of any extra bpf_func_state left over
-+			 * from not processing all nested function exits. We
-+			 * also skip return code checks as they are not needed
-+			 * for exceptional exits.
-+			 */
-+			if (exception_exit)
-+				return PROCESS_BPF_EXIT;
-+
-+			if (state->curframe) {
-+				/* exit from nested function */
-+				err = prepare_func_exit(env, &env->insn_idx);
-+				if (err)
-+					return err;
-+				*do_print_state = true;
-+				return INSN_IDX_MODIFIED;
-+			}
-+
-+			err = check_return_code(env, BPF_REG_0, "R0");
-+			if (err)
-+				return err;
-+			return PROCESS_BPF_EXIT;
-+		} else {
-+			err = check_cond_jmp_op(env, insn, &env->insn_idx);
-+			if (err)
-+				return err;
-+		}
-+	} else if (class == BPF_LD) {
-+		u8 mode = BPF_MODE(insn->code);
-+
-+		if (mode == BPF_ABS || mode == BPF_IND) {
-+			err = check_ld_abs(env, insn);
-+			if (err)
-+				return err;
-+
-+		} else if (mode == BPF_IMM) {
-+			err = check_ld_imm(env, insn);
-+			if (err)
-+				return err;
-+
-+			env->insn_idx++;
-+			sanitize_mark_insn_seen(env);
-+		} else {
-+			verbose(env, "invalid BPF_LD mode\n");
-+			return -EINVAL;
-+		}
-+	} else {
-+		verbose(env, "unknown insn class %d\n", class);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int do_check(struct bpf_verifier_env *env)
- {
- 	bool pop_log = !(env->log.level & BPF_LOG_LEVEL2);
-@@ -19224,9 +19427,7 @@ static int do_check(struct bpf_verifier_env *env)
- 	int prev_insn_idx = -1;
- 
- 	for (;;) {
--		bool exception_exit = false;
- 		struct bpf_insn *insn;
--		u8 class;
- 		int err;
- 
- 		/* reset current history entry on each new instruction */
-@@ -19240,7 +19441,6 @@ static int do_check(struct bpf_verifier_env *env)
- 		}
- 
- 		insn = &insns[env->insn_idx];
--		class = BPF_CLASS(insn->code);
- 
- 		if (++env->insn_processed > BPF_COMPLEXITY_LIMIT_INSNS) {
- 			verbose(env,
-@@ -19314,210 +19514,32 @@ static int do_check(struct bpf_verifier_env *env)
- 		sanitize_mark_insn_seen(env);
- 		prev_insn_idx = env->insn_idx;
- 
--		if (class == BPF_ALU || class == BPF_ALU64) {
--			err = check_alu_op(env, insn);
--			if (err)
--				return err;
--
--		} else if (class == BPF_LDX) {
--			bool is_ldsx = BPF_MODE(insn->code) == BPF_MEMSX;
--
--			/* Check for reserved fields is already done in
--			 * resolve_pseudo_ldimm64().
--			 */
--			err = check_load_mem(env, insn, false, is_ldsx, true,
--					     "ldx");
--			if (err)
--				return err;
--		} else if (class == BPF_STX) {
--			if (BPF_MODE(insn->code) == BPF_ATOMIC) {
--				err = check_atomic(env, insn);
--				if (err)
--					return err;
--				env->insn_idx++;
--				continue;
--			}
--
--			if (BPF_MODE(insn->code) != BPF_MEM || insn->imm != 0) {
--				verbose(env, "BPF_STX uses reserved fields\n");
--				return -EINVAL;
--			}
--
--			err = check_store_reg(env, insn, false);
--			if (err)
--				return err;
--		} else if (class == BPF_ST) {
--			enum bpf_reg_type dst_reg_type;
--
--			if (BPF_MODE(insn->code) != BPF_MEM ||
--			    insn->src_reg != BPF_REG_0) {
--				verbose(env, "BPF_ST uses reserved fields\n");
--				return -EINVAL;
--			}
--			/* check src operand */
--			err = check_reg_arg(env, insn->dst_reg, SRC_OP);
--			if (err)
--				return err;
--
--			dst_reg_type = regs[insn->dst_reg].type;
--
--			/* check that memory (dst_reg + off) is writeable */
--			err = check_mem_access(env, env->insn_idx, insn->dst_reg,
--					       insn->off, BPF_SIZE(insn->code),
--					       BPF_WRITE, -1, false, false);
--			if (err)
--				return err;
--
--			err = save_aux_ptr_type(env, dst_reg_type, false);
--			if (err)
--				return err;
--		} else if (class == BPF_JMP || class == BPF_JMP32) {
--			u8 opcode = BPF_OP(insn->code);
--
--			env->jmps_processed++;
--			if (opcode == BPF_CALL) {
--				if (BPF_SRC(insn->code) != BPF_K ||
--				    (insn->src_reg != BPF_PSEUDO_KFUNC_CALL
--				     && insn->off != 0) ||
--				    (insn->src_reg != BPF_REG_0 &&
--				     insn->src_reg != BPF_PSEUDO_CALL &&
--				     insn->src_reg != BPF_PSEUDO_KFUNC_CALL) ||
--				    insn->dst_reg != BPF_REG_0 ||
--				    class == BPF_JMP32) {
--					verbose(env, "BPF_CALL uses reserved fields\n");
--					return -EINVAL;
--				}
--
--				if (env->cur_state->active_locks) {
--					if ((insn->src_reg == BPF_REG_0 && insn->imm != BPF_FUNC_spin_unlock) ||
--					    (insn->src_reg == BPF_PSEUDO_KFUNC_CALL &&
--					     (insn->off != 0 || !kfunc_spin_allowed(insn->imm)))) {
--						verbose(env, "function calls are not allowed while holding a lock\n");
--						return -EINVAL;
--					}
--				}
--				if (insn->src_reg == BPF_PSEUDO_CALL) {
--					err = check_func_call(env, insn, &env->insn_idx);
--				} else if (insn->src_reg == BPF_PSEUDO_KFUNC_CALL) {
--					err = check_kfunc_call(env, insn, &env->insn_idx);
--					if (!err && is_bpf_throw_kfunc(insn)) {
--						exception_exit = true;
--						goto process_bpf_exit_full;
--					}
--				} else {
--					err = check_helper_call(env, insn, &env->insn_idx);
--				}
--				if (err)
--					return err;
--
--				mark_reg_scratched(env, BPF_REG_0);
--			} else if (opcode == BPF_JA) {
--				if (BPF_SRC(insn->code) != BPF_K ||
--				    insn->src_reg != BPF_REG_0 ||
--				    insn->dst_reg != BPF_REG_0 ||
--				    (class == BPF_JMP && insn->imm != 0) ||
--				    (class == BPF_JMP32 && insn->off != 0)) {
--					verbose(env, "BPF_JA uses reserved fields\n");
--					return -EINVAL;
--				}
--
--				if (class == BPF_JMP)
--					env->insn_idx += insn->off + 1;
--				else
--					env->insn_idx += insn->imm + 1;
--				continue;
--
--			} else if (opcode == BPF_EXIT) {
--				if (BPF_SRC(insn->code) != BPF_K ||
--				    insn->imm != 0 ||
--				    insn->src_reg != BPF_REG_0 ||
--				    insn->dst_reg != BPF_REG_0 ||
--				    class == BPF_JMP32) {
--					verbose(env, "BPF_EXIT uses reserved fields\n");
--					return -EINVAL;
--				}
--process_bpf_exit_full:
--				/* We must do check_reference_leak here before
--				 * prepare_func_exit to handle the case when
--				 * state->curframe > 0, it may be a callback
--				 * function, for which reference_state must
--				 * match caller reference state when it exits.
--				 */
--				err = check_resource_leak(env, exception_exit, !env->cur_state->curframe,
--							  "BPF_EXIT instruction in main prog");
--				if (err)
--					return err;
--
--				/* The side effect of the prepare_func_exit
--				 * which is being skipped is that it frees
--				 * bpf_func_state. Typically, process_bpf_exit
--				 * will only be hit with outermost exit.
--				 * copy_verifier_state in pop_stack will handle
--				 * freeing of any extra bpf_func_state left over
--				 * from not processing all nested function
--				 * exits. We also skip return code checks as
--				 * they are not needed for exceptional exits.
--				 */
--				if (exception_exit)
--					goto process_bpf_exit;
--
--				if (state->curframe) {
--					/* exit from nested function */
--					err = prepare_func_exit(env, &env->insn_idx);
--					if (err)
--						return err;
--					do_print_state = true;
--					continue;
--				}
--
--				err = check_return_code(env, BPF_REG_0, "R0");
--				if (err)
--					return err;
-+		err = do_check_insn(env, insn, pop_log, &do_print_state, regs, state,
-+				    &prev_insn_idx);
-+		if (err < 0) {
-+			return err;
-+		} else if (err == INSN_IDX_MODIFIED) {
-+			continue;
-+		} else if (err == PROCESS_BPF_EXIT) {
- process_bpf_exit:
--				mark_verifier_state_scratched(env);
--				update_branch_counts(env, env->cur_state);
--				err = pop_stack(env, &prev_insn_idx,
--						&env->insn_idx, pop_log);
--				if (err < 0) {
--					if (err != -ENOENT)
--						return err;
--					break;
--				} else {
--					if (WARN_ON_ONCE(env->cur_state->loop_entry)) {
--						verbose(env, "verifier bug: env->cur_state->loop_entry != NULL\n");
--						return -EFAULT;
--					}
--					do_print_state = true;
--					continue;
--				}
--			} else {
--				err = check_cond_jmp_op(env, insn, &env->insn_idx);
--				if (err)
--					return err;
--			}
--		} else if (class == BPF_LD) {
--			u8 mode = BPF_MODE(insn->code);
--
--			if (mode == BPF_ABS || mode == BPF_IND) {
--				err = check_ld_abs(env, insn);
--				if (err)
--					return err;
--
--			} else if (mode == BPF_IMM) {
--				err = check_ld_imm(env, insn);
--				if (err)
-+			mark_verifier_state_scratched(env);
-+			update_branch_counts(env, env->cur_state);
-+			err = pop_stack(env, &prev_insn_idx, &env->insn_idx,
-+					pop_log);
-+			if (err < 0) {
-+				if (err != -ENOENT)
- 					return err;
--
--				env->insn_idx++;
--				sanitize_mark_insn_seen(env);
-+				break;
- 			} else {
--				verbose(env, "invalid BPF_LD mode\n");
--				return -EINVAL;
-+				if (WARN_ON_ONCE(env->cur_state->loop_entry)) {
-+					verbose(env, "verifier bug: env->cur_state->loop_entry != NULL\n");
-+					return -EFAULT;
-+				}
-+				do_print_state = true;
-+				continue;
- 			}
--		} else {
--			verbose(env, "unknown insn class %d\n", class);
--			return -EINVAL;
- 		}
-+		WARN_ON_ONCE(err);
- 
- 		env->insn_idx++;
- 	}
+Could we just replace the se with &rq->curr->se if entity_is_task()
+returns true and keep the rest as is? The calculations will be same as
+what it is above (except for the stats bit) and you'll not require
+updating "exec_start" for both current task and proxy's se. Thoughts?
+
+
+>   	}
+
 -- 
-2.48.1
+Thanks and Regards,
+Prateek
 
