@@ -1,219 +1,301 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A041FBE80;
-	Thu, 13 Mar 2025 07:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190521F9F64;
+	Thu, 13 Mar 2025 07:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741849215; cv=none; b=a0W/nv9kXbWJvWmTliY0g5XfRakrRfWSBA29Y8c75JulMC5eCE2g5t1iIlXwr09E07BM4uRDfxh99D3bTqrz/SNSNhKJNxTlCoFW7YXndoRohWhOUb3IRtz0NF64hX/mQZRQw2yLb14aVFnlo1InPELuMj9eqcDn4Pgu7b18Blg=
+	t=1741849222; cv=none; b=ZIwJQ7W5AzfBrZbV6NyknGgF5v+8xggQD1zOTJwtcOxXZc1yHmLwah7Xg/9cSTU7w6z14o7N2W/jlaGIBThqp2RY3NheKvSnj+n4BVuNB1BfJFeU4qRGa0KwtX61dHv20q/TW/n33QWiP7ouJrC0Fh2Wx656oLwlKi7hKfmxKGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741849215; c=relaxed/simple;
-	bh=jnFn2vcB5VWw0rZqsKmCyDWaFtK3hja6aZdpBwbKEy8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W0fte6QM/EAUqyXUfvK9jMyxlSiQOI2JzjRYxZKe4lfq42E2dOEdxuYV1bUWaezBwXylZ4TqopcRcxL5mJ1BdCVmukreavGjqKRQvz2KjV2WFDkXKhS8d2A+chP389WH4AuFEOUYgXeZZhUyZH9lgAnoCq4r0lTiNbKw32zsbXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=b9nxJkr1; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1741849222; c=relaxed/simple;
+	bh=KUKqqdLbYYz+YQxACtiTVdx8IQKImEqAZ44w0hhKWZs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=LlV3KDmT/8n2VMfUatrJnxAUTvPFZrLddYT3W8MKSijdebQDob/UNwbTTI7M+lxtZ4a53tqy6eqWXSc1jon14kimobmx58GkvpD8yw/Bm5HTN4gvopRONl0cO2DzVtJAb3B9WRIwOhuTQxx9TVrIAzl63/inqQ6xGOMEtmTdybk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jHwgkxXK; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="b9nxJkr1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1741849209; x=1742108409;
-	bh=4HsT2cKX2K3tPRqJkqJjiIIHXeC79sujqS8iGVYQ9sM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=b9nxJkr13l05aFWMpb3tTCfcYbNT+6fhQTjr4GrlGPy/dGQdO1HyiPX6KrZ0Z9b5x
-	 Q4drN5cBwqeLq0MwKhsgu4QOo3fsiy19riACcEbgpotxp690GlNZcT4dbmnR2qlU7/
-	 aXZEMRP6lRPWzME9VN2nhYdZ6pMgClG6tRmgKXOYA0HaPbIeecZNYuqTy1yi9BA7qI
-	 mjipRadvqfcr9oD/iCgUYmKImp/a0odncDDHW5ctyc1w1Dpjy6p6cuvSAoLjYYQX0E
-	 zd7WeCgsgsUAeIhHUJwYNG8zNM2cBUDJEv7C2TwQgozw5tqgP91TRdtT3iWS6fg32y
-	 Hs3sZpUzGw7KQ==
-Date: Thu, 13 Mar 2025 07:00:04 +0000
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>
-From: Oliver Mangold <oliver.mangold@pm.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
-Subject: [PATCH v8 1/4] rust: types: Add Ownable/Owned types
-Message-ID: <20250313-unique-ref-v8-1-3082ffc67a31@pm.me>
-In-Reply-To: <20250313-unique-ref-v8-0-3082ffc67a31@pm.me>
-References: <20250313-unique-ref-v8-0-3082ffc67a31@pm.me>
-Feedback-ID: 31808448:user:proton
-X-Pm-Message-ID: 6a764f87ee32e6c517908ae92f0b857b918e3080
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jHwgkxXK"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CKb5cR012319;
+	Thu, 13 Mar 2025 06:59:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jVcnyrDqDVr1hNL05XJ3Q17WEb2JRVl/jFwHQ0FQgSM=; b=jHwgkxXKmZoW/Lti
+	CZ67jrf5dVXB+uXXpp/inuM/ywswb/anlESV80hNJQJQrJCNmiaQrSt/6MkYuiW3
+	8nGCIptNm6FyjYrrpOJHUzJuJD2o2rGx9YpPMMfWPxTi9CA3SprX3qCVvw8MRDVK
+	u7frvj6RGqflkgBoOz/qR9yq+D3n1cV91q64v/4Pew4qOMYpMHODqOwaxHqCZ4aQ
+	ZRrND9ETF1tGU9ct/lKQzh3Pd8bv2x8bcsYMqVsgMgtKa+TT4AQVpe2NxxPcOsNk
+	k04HwyJwywVdX26Rhn1dVwpT6ArShfjb8zB14InvDHmXoEFf+BukR5wSLyEo3BUc
+	M5WqCQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2nmxkp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 06:59:59 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52D6xwFS009751
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 06:59:58 GMT
+Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 12 Mar 2025 23:59:53 -0700
+From: Taniya Das <quic_tdas@quicinc.com>
+Date: Thu, 13 Mar 2025 12:29:38 +0530
+Subject: [PATCH v6 01/10] clk: qcom: clk-alpha-pll: Add support for dynamic
+ update for slewing PLLs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250313-qcs615-v5-mm-cc-v6-1-ebf4b9a5e916@quicinc.com>
+References: <20250313-qcs615-v5-mm-cc-v6-0-ebf4b9a5e916@quicinc.com>
+In-Reply-To: <20250313-qcs615-v5-mm-cc-v6-0-ebf4b9a5e916@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon
+	<will@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Taniya Das <quic_tdas@quicinc.com>
+X-Mailer: b4 0.15-dev-aa3f6
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=M6hNKzws c=1 sm=1 tr=0 ts=67d2826f cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=mqrKFzemJvgpN0bEk_AA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: SzcFw0ytnZIOU-BqodjTQYE5QN3llw45
+X-Proofpoint-GUID: SzcFw0ytnZIOU-BqodjTQYE5QN3llw45
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-13_03,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 clxscore=1015
+ phishscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503130054
 
-From: Asahi Lina <lina@asahilina.net>
+The alpha PLLs which slew to a new frequency at runtime would require
+the PLL to calibrate at the mid point of the VCO. Add the new PLL ops
+which can support the slewing of the PLL to a new frequency.
 
-By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
-C FFI) type that *may* be owned by Rust, but need not be. Unlike
-AlwaysRefCounted, this mechanism expects the reference to be unique
-within Rust, and does not allow cloning.
-
-Conceptually, this is similar to a KBox<T>, except that it delegates
-resource management to the T instead of using a generic allocator.
-
-Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asah=
-ilina.net/
-Signed-off-by: Asahi Lina <lina@asahilina.net>
-[ om: make from_raw() and into_raw() public, small fixes to documentation ]
-Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+Reviewed-by: Imran Shaik <quic_imrashai@quicinc.com>
+Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
 ---
- rust/kernel/types.rs | 109 +++++++++++++++++++++++++++++++++++++++++++++++=
-++++
- 1 file changed, 109 insertions(+)
+ drivers/clk/qcom/clk-alpha-pll.c | 170 +++++++++++++++++++++++++++++++++++++++
+ drivers/clk/qcom/clk-alpha-pll.h |   1 +
+ 2 files changed, 171 insertions(+)
 
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index 55ddd50e8aaa075ac33d5f1088a7f72df05f74f4..65f6d0721f5f23c8db79c6735dc=
-7d5e1ac984ea7 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -551,6 +551,115 @@ fn drop(&mut self) {
-     }
- }
-=20
-+/// Types that may be owned by Rust code or borrowed, but have a lifetime =
-managed by C code.
-+///
-+/// It allows such types to define their own custom destructor function to=
- be called when
-+/// a Rust-owned reference is dropped.
-+///
-+/// This is usually implemented by wrappers to existing structures on the =
-C side of the code.
-+///
-+/// # Safety
-+///
-+/// Implementers must ensure that any objects borrowed directly as `&T` st=
-ay alive for the duration
-+/// of the lifetime, and that any objects owned by Rust as [`Owned<T>`] st=
-ay alive while that owned
-+/// reference exists, until the [`Ownable::release()`] trait method is cal=
-led.
-+pub unsafe trait Ownable {
-+    /// Releases the object (frees it or returns it to foreign ownership).
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that the object is no longer referenced after =
-this call.
-+    unsafe fn release(this: NonNull<Self>);
+diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+index cec0afea8e446010f0d4140d4ef63121706dde47..7d784db8b7441e886d94ded1d3e3258dda46674c 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.c
++++ b/drivers/clk/qcom/clk-alpha-pll.c
+@@ -2960,3 +2960,173 @@ const struct clk_ops clk_alpha_pll_regera_ops = {
+ 	.set_rate = clk_zonda_pll_set_rate,
+ };
+ EXPORT_SYMBOL_GPL(clk_alpha_pll_regera_ops);
++
++static int clk_alpha_pll_slew_update(struct clk_alpha_pll *pll)
++{
++	int ret;
++	u32 val;
++
++	regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll), PLL_UPDATE, PLL_UPDATE);
++	regmap_read(pll->clkr.regmap, PLL_MODE(pll), &val);
++
++	ret = wait_for_pll_update(pll);
++	if (ret)
++		return ret;
++	/*
++	 * Hardware programming mandates a wait of at least 570ns before polling the LOCK
++	 * detect bit. Have a delay of 1us just to be safe.
++	 */
++	mb();
++	udelay(1);
++
++	return wait_for_pll_enable_lock(pll);
 +}
 +
-+/// A subtrait of Ownable that asserts that an [`Owned<T>`] Rust reference=
- is not only unique
-+/// within Rust and keeps the `T` alive, but also guarantees that the C co=
-de follows the
-+/// usual mutable reference requirements. That is, the kernel will never m=
-utate the
-+/// `T` (excluding internal mutability that follows the usual rules) while=
- Rust owns it.
-+///
-+/// When this type is implemented for an [`Ownable`] type, it allows [`Own=
-ed<T>`] to be
-+/// dereferenced into a &mut T.
-+///
-+/// # Safety
-+///
-+/// Implementers must ensure that the kernel never mutates the underlying =
-type while
-+/// Rust owns it.
-+pub unsafe trait OwnableMut: Ownable {}
++static int clk_alpha_pll_slew_set_rate(struct clk_hw *hw, unsigned long rate,
++					unsigned long parent_rate)
++{
++	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
++	unsigned long freq_hz;
++	const struct pll_vco *curr_vco, *vco;
++	u32 l, alpha_width = pll_alpha_width(pll);
++	u64 a;
 +
-+/// An owned reference to an ownable kernel object.
-+///
-+/// The object is automatically freed or released when an instance of [`Ow=
-ned`] is
-+/// dropped.
-+///
-+/// # Invariants
-+///
-+/// The pointer stored in `ptr` is non-null and valid for the lifetime of =
-the [`Owned`] instance.
-+pub struct Owned<T: Ownable> {
-+    ptr: NonNull<T>,
-+    _p: PhantomData<T>,
++	freq_hz =  alpha_pll_round_rate(rate, parent_rate, &l, &a, alpha_width);
++	if (freq_hz != rate) {
++		pr_err("alpha_pll: Call clk_set_rate with rounded rates!\n");
++		return -EINVAL;
++	}
++
++	curr_vco = alpha_pll_find_vco(pll, clk_hw_get_rate(hw));
++	if (!curr_vco) {
++		pr_err("alpha pll: not in a valid vco range\n");
++		return -EINVAL;
++	}
++
++	vco = alpha_pll_find_vco(pll, freq_hz);
++	if (!vco) {
++		pr_err("alpha pll: not in a valid vco range\n");
++		return -EINVAL;
++	}
++
++	/*
++	 * Dynamic pll update will not support switching frequencies across
++	 * vco ranges. In those cases fall back to normal alpha set rate.
++	 */
++	if (curr_vco->val != vco->val)
++		return clk_alpha_pll_set_rate(hw, rate, parent_rate);
++
++	a = a << (ALPHA_REG_BITWIDTH - ALPHA_BITWIDTH);
++
++	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
++	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
++	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL_U(pll), a >> 32);
++
++	/* Ensure that the write above goes through before proceeding. */
++	mb();
++
++	if (clk_hw_is_enabled(hw))
++		return clk_alpha_pll_slew_update(pll);
++
++	return 0;
 +}
 +
-+// SAFETY: It is safe to send `Owned<T>` to another thread when the underl=
-ying `T` is `Send` because
-+// it effectively means sending a unique `&mut T` pointer (which is safe b=
-ecause `T` is `Send`).
-+unsafe impl<T: Ownable + Send> Send for Owned<T> {}
++/*
++ * Slewing plls should be bought up at frequency which is in the middle of the
++ * desired VCO range. So after bringing up the pll at calibration freq, set it
++ * back to desired frequency(that was set by previous clk_set_rate).
++ */
++static int clk_alpha_pll_calibrate(struct clk_hw *hw)
++{
++	unsigned long calibration_freq, freq_hz;
++	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
++	struct clk_hw *parent;
++	const struct pll_vco *vco;
++	u32 l, alpha_width = pll_alpha_width(pll);
++	int rc;
++	u64 a;
 +
-+// SAFETY: It is safe to send `&Owned<T>` to another thread when the under=
-lying `T` is `Sync`
-+// because it effectively means sharing `&T` (which is safe because `T` is=
- `Sync`).
-+unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
++	parent = clk_hw_get_parent(hw);
++	if (!parent) {
++		pr_err("alpha pll: no valid parent found\n");
++		return -EINVAL;
++	}
 +
-+impl<T: Ownable> Owned<T> {
-+    /// Creates a new instance of [`Owned`].
-+    ///
-+    /// It takes over ownership of the underlying object.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that the underlying object is acquired and can=
- be considered owned by
-+    /// Rust.
-+    pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
-+        // INVARIANT: The safety requirements guarantee that the new insta=
-nce now owns the
-+        // reference.
-+        Self {
-+            ptr,
-+            _p: PhantomData,
-+        }
-+    }
++	vco = alpha_pll_find_vco(pll, clk_hw_get_rate(hw));
++	if (!vco) {
++		pr_err("alpha pll: not in a valid vco range\n");
++		return -EINVAL;
++	}
 +
-+    /// Consumes the [`Owned`], returning a raw pointer.
-+    ///
-+    /// This function does not actually relinquish ownership of the object=
-.
-+    /// After calling this function, the caller is responsible for ownersh=
-ip previously managed
-+    /// by the [`Owned`].
-+    pub fn into_raw(me: Self) -> NonNull<T> {
-+        ManuallyDrop::new(me).ptr
-+    }
++	/*
++	 * As during slewing plls vco_sel won't be allowed to change, vco table
++	 * should have only one entry table, i.e. index = 0, find the
++	 * calibration frequency.
++	 */
++	calibration_freq = (pll->vco_table[0].min_freq + pll->vco_table[0].max_freq) / 2;
++
++	freq_hz = alpha_pll_round_rate(calibration_freq, clk_hw_get_rate(parent),
++					&l, &a, alpha_width);
++	if (freq_hz != calibration_freq) {
++		pr_err("alpha_pll: call clk_set_rate with rounded rates!\n");
++		return -EINVAL;
++	}
++
++	/* Setup PLL for calibration frequency */
++	a <<= (ALPHA_REG_BITWIDTH - ALPHA_BITWIDTH);
++
++	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
++	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
++	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL_U(pll), a >> 32);
++
++	regmap_update_bits(pll->clkr.regmap, PLL_USER_CTL(pll), PLL_VCO_MASK << PLL_VCO_SHIFT,
++				vco->val << PLL_VCO_SHIFT);
++
++	/* Bringup the pll at calibration frequency */
++	rc = clk_alpha_pll_enable(hw);
++	if (rc) {
++		pr_err("alpha pll calibration failed\n");
++		return rc;
++	}
++
++	/*
++	 * PLL is already running at calibration frequency.
++	 * So slew pll to the previously set frequency.
++	 */
++	freq_hz = alpha_pll_round_rate(clk_hw_get_rate(hw),
++			clk_hw_get_rate(parent), &l, &a, alpha_width);
++
++	pr_debug("pll %s: setting back to required rate %lu, freq_hz %ld\n",
++		clk_hw_get_name(hw), clk_hw_get_rate(hw), freq_hz);
++
++	/* Setup the PLL for the new frequency */
++	a <<= (ALPHA_REG_BITWIDTH - ALPHA_BITWIDTH);
++
++	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
++	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
++	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL_U(pll), a >> 32);
++
++	regmap_update_bits(pll->clkr.regmap, PLL_USER_CTL(pll), PLL_ALPHA_EN, PLL_ALPHA_EN);
++
++	return clk_alpha_pll_slew_update(pll);
 +}
 +
-+impl<T: Ownable> Deref for Owned<T> {
-+    type Target =3D T;
++static int clk_alpha_pll_slew_enable(struct clk_hw *hw)
++{
++	int rc;
 +
-+    fn deref(&self) -> &Self::Target {
-+        // SAFETY: The type invariants guarantee that the object is valid.
-+        unsafe { self.ptr.as_ref() }
-+    }
++	rc = clk_alpha_pll_calibrate(hw);
++	if (rc)
++		return rc;
++
++	return clk_alpha_pll_enable(hw);
 +}
 +
-+impl<T: OwnableMut> DerefMut for Owned<T> {
-+    fn deref_mut(&mut self) -> &mut Self::Target {
-+        // SAFETY: The type invariants guarantee that the object is valid,
-+        // and that we can safely return a mutable reference to it.
-+        unsafe { self.ptr.as_mut() }
-+    }
-+}
-+
-+impl<T: Ownable> Drop for Owned<T> {
-+    fn drop(&mut self) {
-+        // SAFETY: The type invariants guarantee that the `Owned` owns the=
- object we're about to
-+        // release.
-+        unsafe { T::release(self.ptr) };
-+    }
-+}
-+
- /// A sum type that always holds either a value of type `L` or `R`.
- ///
- /// # Examples
++const struct clk_ops clk_alpha_pll_slew_ops = {
++	.enable = clk_alpha_pll_slew_enable,
++	.disable = clk_alpha_pll_disable,
++	.recalc_rate = clk_alpha_pll_recalc_rate,
++	.round_rate = clk_alpha_pll_round_rate,
++	.set_rate = clk_alpha_pll_slew_set_rate,
++};
++EXPORT_SYMBOL(clk_alpha_pll_slew_ops);
+diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
+index 79aca8525262211ae5295245427d4540abf1e09a..1d19001605eb10fd8ae8041c56d951e928cbbe9f 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.h
++++ b/drivers/clk/qcom/clk-alpha-pll.h
+@@ -204,6 +204,7 @@ extern const struct clk_ops clk_alpha_pll_rivian_evo_ops;
+ #define clk_alpha_pll_postdiv_rivian_evo_ops clk_alpha_pll_postdiv_fabia_ops
+ 
+ extern const struct clk_ops clk_alpha_pll_regera_ops;
++extern const struct clk_ops clk_alpha_pll_slew_ops;
+ 
+ void clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+ 			     const struct alpha_pll_config *config);
 
---=20
+-- 
 2.48.1
-
 
