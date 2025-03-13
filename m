@@ -1,98 +1,65 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA721EF37D;
-	Thu, 13 Mar 2025 09:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0961EF37D;
+	Thu, 13 Mar 2025 09:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741859121; cv=none; b=bcc5E+YckDYVikwK6VQRubcYuy3aGaF4LtrQvSwt68ThtQpBNeKMzVCvKqYAoyg8sI+Wwx4bxcWwVvqgWa7IfEwXyaAxEzfFoPgekxE2x3EUBaF8zdWY+8cYbjtBDJO1oFkJ+CJOryyzDKmq18uYmds0Og8qHl1Kb6jKIlN8GOM=
+	t=1741859167; cv=none; b=NPpY/fFFcW9/lrYBtT/WcWP9Akw80nocIuGRaSw9iP9fClLSQnVi3lpT1W9uOmWZIF0ugIeqbi/pQVOZ82pzSWydY0z2pzqTlbn898ng5R2W939XIxdEFLqjMuSfcSQMRr8tJiwFq1Zd5dz01zgGKM24uEs9RjbcM2yS0DKQqMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741859121; c=relaxed/simple;
-	bh=cmvhZ61KuCH6EtGoYseDt8GjbPbuKre81gGxvuEtC3w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NYJDDuJAKeLO73P8uUsIZAUbLPS9stAeuA9xeUiU9KFHEcR/PV3AgY3dlgtLReVBpZTxevq6oxDCdv59RjLjgLNHs96jTJfkwtMQ3wjZu+rfTK9ASmsjFs79E+AehP/UD5J15obXawibReB1mOX/XQ7j/yULVi30VbNdyQL2AjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bbZLkgWp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bbZLkgWp"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D9A5DI018566;
-	Thu, 13 Mar 2025 09:45:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	cmvhZ61KuCH6EtGoYseDt8GjbPbuKre81gGxvuEtC3w=; b=bbZLkgWp0RM2P9bz
-	wbHiVUO7Z8sHTU5gLF9H27Ixd5zDKFg5/0lyWQkFp8kzTzWd+aJ/7FCvY6eyCsWf
-	UfljoXThpTVFkR2BCiEvDxQIBy1Iwp2lbKWx8//nLOejAr/Wa5AnLY/vWDskIXB/
-	KfQmXJrbEs4xjk8c3SssoLnYEkUDHaYK48pbSHiKWFpZ1XN2JmH6iCSEJF3GUVkq
-	dxSww+BPwj8d7r0+zRzH5qbMXfWnuEAI3SVsSUz5fkNU/OaqZN4XGS+2dhI+hINR
-	45zW8zqlmkYpWfBxIPOrVa7b0c20PUZD+QUaMTWx6GrhHsTZYjB6rjO1IvsprFO1
-	U6JhhQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2nwdhr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 09:45:12 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52D9jBpr002714
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 09:45:11 GMT
-Received: from [10.152.204.0] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 13 Mar
- 2025 02:45:08 -0700
-Message-ID: <a44f064f-19fd-16ea-222f-058486698951@quicinc.com>
-Date: Thu, 13 Mar 2025 15:15:05 +0530
+	s=arc-20240116; t=1741859167; c=relaxed/simple;
+	bh=9d9wAfOUMfoaERAIQSQRCKDjXPwxnJSisde/CtpcAFo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YPywSYEvk8DwqHM4uD85N5WUhf/6iG6ce8S0jQTk1OhvkkvjJ/MeRSmq5igzAhnLDQBB1eD8bnCnZw2Ov0m7sefHemrfNG5Gq0Nes4s1+Ae8sp229sgoHzGwpQNSsTh3lK54MQd7qgB+RIV4mN+yRCcAj3Wnp/yeZ7+wD4VxC60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZD2ZP0d4Sz6J6qB;
+	Thu, 13 Mar 2025 17:41:33 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6BDE91403A8;
+	Thu, 13 Mar 2025 17:46:04 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 13 Mar
+ 2025 10:46:03 +0100
+Date: Thu, 13 Mar 2025 09:46:02 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
+	<dan.j.williams@intel.com>, <Benjamin.Cheatham@amd.com>,
+	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
+	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
+	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+Subject: Re: [PATCH v4 7/9] ACPI: APEI: EINJ: Add debugfs files for EINJv2
+ support
+Message-ID: <20250313094602.00002281@huawei.com>
+In-Reply-To: <20250306234810.75511-8-zaidal@os.amperecomputing.com>
+References: <20250306234810.75511-1-zaidal@os.amperecomputing.com>
+	<20250306234810.75511-8-zaidal@os.amperecomputing.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH ath-next] wifi: ath12k: limit WMI_SCAN_CHAN_LIST_CMDID
- argument size
-Content-Language: en-US
-To: Mantas Pucka <mantas@8devices.com>, <ath12k@lists.infradead.org>
-CC: Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson
-	<jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250310-limit-wmi-chanlist-v1-1-8f0fb45459a7@8devices.com>
-From: Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>
-In-Reply-To: <20250310-limit-wmi-chanlist-v1-1-8f0fb45459a7@8devices.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KnHX6KE_wvA54Rygmqn7yKA4oBbVvE17
-X-Authority-Analysis: v=2.4 cv=Q4XS452a c=1 sm=1 tr=0 ts=67d2a928 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=HwlXlOyzY4lq39rnBK0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: KnHX6KE_wvA54Rygmqn7yKA4oBbVvE17
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-13_04,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- lowpriorityscore=0 mlxscore=0 clxscore=1015 phishscore=0 malwarescore=0
- spamscore=0 impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503130076
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Thu,  6 Mar 2025 15:48:08 -0800
+Zaid Alali <zaidal@os.amperecomputing.com> wrote:
 
-
-On 3/10/2025 6:58 PM, Mantas Pucka wrote:
-> When using BDF with both 5GHz and 6GHz bands enabled on QCN9274, interface
-> fails to start. It happens because FW fails to process
-> WMI_SCAN_CHAN_LIST_CMDID with argument size >2048, resulting in a command
-> timeout. The current code allows splitting channel list across multiple WMI
-> commands but uses WMI max_msg_len (4096) as chunk size, which is still too
-
-Did you have any private changes to increase the message_len from current
-2048 ot 4096 bytes? As mentioned in a reply for your other patch, multi-band
-in qcn9274 requires additional changes in driver, only scan mode is supported
-even with those changes.
-
-Vasanth
+> Create a debugfs blob file to be used for reading the user
+> input for the component array. EINJv2 enables users to inject
+> errors to multiple components/devices at the same time using
+> component array.
+> 
+> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
+LGTM
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
