@@ -1,97 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8532690CB;
-	Thu, 13 Mar 2025 16:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EB8268C48;
+	Thu, 13 Mar 2025 16:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881737; cv=none; b=eLDGztnWdxymSgxHVjmQ3j6UAR6p5alCB3i6ikItYsXAit0uTvmZuoTj3Iu3SrIIWkvFI9gcMzbm2cLO8HHRZ1J56LsfqAn3VCmh0ZBd0PekBjd/OdGqorUjetAQ5lvksdALOnnsKhtaNOaizBahESIJFYBHCitFMxE/ToNUoaU=
+	t=1741881774; cv=none; b=haNQTBSNMjz83jBe+o3VCbJlhIDrWJXK3OjUZpFqvPhUuOBrZAyrSY1tWpjSlaSUIECAOgCbC25EUrGz39nVJz/n4vhPyhvMLOZ6HtbykevApaWW2oP4UdiSEzpuivxELbm5HyTMxCeRJIp7tijezkGffIiwC3v5YDlfzxfLtPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741881737; c=relaxed/simple;
-	bh=yeXHcZgjUGF7P1GdENNOH+WMNLvGwDA1Vl+O4Y03fFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SA7SGCNIcKK/7Zhk86Ks4cN9juiNcdflNlEUpj/tvxsyvpb776JS+3MriO+p26hdu9o7y/a88eqZoU09q2CC2eMLUfS9QblwDKTESu5AX63z34EHm/T2ngy3/fr+zgMfHBgi/PYdF3IbzDfzpAjlUFbaNxgYlbGux/mp59/5wnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5w9qBku; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741881774; c=relaxed/simple;
+	bh=3MxODXhUyDWZ/m6JfPXzUJhXPAMmYaBGPrDeg7AXWGs=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SqljzvA7dvyI+KlWJd4JHsBPbMkk84K0r5P4iO/NX6pLitEz065QW49xOoxedEjhSknSOhjp4ooY/BZXhxpIrIqAMHgGVHmcZ7+YwRva4aJkTksh/sd/35ERrWMAHxkTiA6xpZD4/HtXHfkJdJqmuQFIvIwyBxybkVrDNqrvZ14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=PaAlGdPr; arc=none smtp.client-ip=79.135.106.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5w9qBku"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ACE5C4CEEA;
-	Thu, 13 Mar 2025 16:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741881737;
-	bh=yeXHcZgjUGF7P1GdENNOH+WMNLvGwDA1Vl+O4Y03fFM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=m5w9qBkuDQVNB4YeKXrBEztJzAJGHkUy75sZhJ+lyGei4s3zeKWOv0SZtQO31Gsa9
-	 9zA5dwPqruTyKckVPVI3Sc2CPa9gE2fbKxs/DYBZvmfvZmjuHwYebhNnapwDXYjgiV
-	 +Ru2nP7dQP72CsjCRT8/D0/0G9JAKdUV1QsxuEZEfiAJ85SAHNurCgF+sSUsWpdVo3
-	 zhPn+Jxbv3jJ+xe+TaIpsptYh5bWhvbEA+03S0nIV0ZGEoNybkj3kpr3aGaPNTBxsR
-	 kLyPJeq8zLyfGsv/w3L4UI8oyVPmLWleh4wEsuh06Ft+FLVf9nk7CsKy1c7lySb3X+
-	 2njSxjG5yuz0Q==
-Date: Thu, 13 Mar 2025 11:02:15 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, vigneshr@ti.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, rogerq@kernel.org, linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	srk@ti.com
-Subject: Re: [PATCH] PCI: j721e: Fix the value of linkdown_irq_regfield for
- J784S4
-Message-ID: <20250313160215.GA736346@bhelgaas>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="PaAlGdPr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1741881769; x=1742140969;
+	bh=BQ4wJAhy2dpyN+MuSRLCyVk3VO5GKkBoc4sLhOsLk04=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=PaAlGdPrUf+jO4kxjZ9r/b4CZUlb/UQh4hV1S0yyF0gUCa35LP7a8l0Gu1ge7NIxb
+	 wE1Z4RQfH7jTDB1OcwTPSGX7y7jB1aCAtiFcBl/vuAheunyDuhuwDPE8ILJ2sXH6/2
+	 Bzc8puAaD16tm+/IBqdS4oq4Qv7i01P0X5//93ZrQ1cS0aOFHGFLhL4v5KrmOnMOPW
+	 yErOquFahSGV+y98+WsoGciOjkEkSOEWduxCqrqJVjR6/TM7dMy/G4dx57xtbeh2Ez
+	 TVzNHcgsyLOEqUsNJbbi0oyQAQ2m0pNoF/wCBAcw4E7SIR+VMpSski8ea+igP2cZri
+	 HIfmjBbnHUsTg==
+Date: Thu, 13 Mar 2025 16:02:45 +0000
+To: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org
+From: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Rahul Rameshbabu <sergeantsagara@protonmail.com>
+Subject: [PATCH RFC 0/3] Initial work for Rust abstraction for HID device driver development
+Message-ID: <20250313160220.6410-2-sergeantsagara@protonmail.com>
+Feedback-ID: 26003777:user:proton
+X-Pm-Message-ID: 7b970764ee6dc7211652295f774311d67daa40a7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313055519.j3bpvsm6govd5ytk@uda0492258>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 13, 2025 at 11:25:19AM +0530, Siddharth Vadapalli wrote:
-> On Wed, Mar 12, 2025 at 11:16:00AM -0500, Bjorn Helgaas wrote:
-> > On Wed, Mar 05, 2025 at 06:50:18PM +0530, Siddharth Vadapalli wrote:
-> > > Commit under Fixes assigned the value of 'linkdown_irq_regfield' for the
-> > > J784S4 SoC as 'LINK_DOWN' which corresponds to BIT(1). However, according
-> > > to the Technical Reference Manual and Register Documentation for the J784S4
-> > > SoC [0], BIT(1) corresponds to "ENABLE_SYS_EN_PCIE_DPA_1" which is __NOT__
-> > > the field for the link-state interrupt. Instead, it is BIT(10) of the
-> > > "PCIE_INTD_ENABLE_REG_SYS_2" register that corresponds to the link-state
-> > > field named as "ENABLE_SYS_EN_PCIE_LINK_STATE".
-> > 
-> > I guess the reason we want this is that on J784S4, we ignore actual
-> > link-down interrupts (and we don't write STATUS_CLR_REG_SYS_2 to clear
-> > the interrupt indication, so maybe there's an interrupt storm), and we
-> > think some other interrupt (DPA_1, whatever that is) is actually a
-> > link-down interrupt?
-> 
-> While it is true that actual link-down interrupts are ignored, it is not
-> the case that there's an interrupt storm because the same incorrect macro
-> is used to enable the interrupt line. Since the enables an interrupt for
-> DPA_1 which never fires, we don't run into the situation where we are not
-> clearing the interrupt (the interrupt handler will look for the same
-> incorrect field to clear the interrupt if it does fire for DPA_1, but that
-> doesn't happen). The 'linkdown_irq_regfield' corresponds to the
-> "link-state" field not just in the J784S4 SoC, but in all SoCs supported by
-> the pci-j721e.c driver. It is only in J721E that it is BIT(1)
-> [LINK_DOWN macro], while in all other SoCs (J784S4 included), it is BIT(10)
-> [J7200_LINK_DOWN macro since it was first added for J7200 SoC]. Matt
-> probably referred to J721E's Technical Reference Manual and ended up
-> incorrectly assigning "LINK_DOWN", due to which the driver is enabling
-> the DPA_1 interrupt and the interrupt handler is also going to look for
-> the field corresponding to receiving an interrupt for DPA_1.
+Hello,
 
-So I guess without this patch, we incorrectly ignore link-down
-interrupts on J784S4.  It's good to have a one-sentence motivation
-like that somewhere in the commit log that we can pull out and include
-in the merge commit log and the pull request.
+I am a hobbyist developer who has been working on a project to create a new=
+ Rust
+HID device driver and the needed core abstractions for writing more HID dev=
+ice
+drivers in Rust. My goal is to support the USB Monitor Control Class needed=
+ for
+functionality such as backlight control for monitors like the Apple Studio
+Display and Apple Pro Display XDR. A new backlight API will be required to
+support multiple backlight instances and will be mapped per DRM connector. =
+The
+current backlight API is designed around the assumption of only a single
+internal panel being present. I am currently working on making this new API=
+ for
+DRM in parallel to my work on the HID side of the stack for supporting thes=
+e
+displays.
 
-> I can only hope that the URL will redirect to the latest version of
-> the User Guide if at all it becomes invalid.
+  https://binary-eater.github.io/tags/usb-monitor-control/
 
-OK, thanks, I guess there's nothing more to do ;)  I guess that manual
-is not really designed for collaborative development.
+Julius Zint had attempted to do so a year ago with a C HID driver but was g=
+ated
+by the lack of an appropriate backlight API for external displays. I asked =
+him
+for permission to do the work need in Rust and plan to accredit him for the=
+ HID
+report handling for backlight in the USB Monitor Control Class standard.
 
-Thanks for the patient hand holding!
+  https://lore.kernel.org/lkml/f95da7ff-06dd-2c0e-d563-7e5ad61c3bcc@redhat.=
+com/
 
-Bjorn
+I was hoping to get initial feedback on this work to make sure I am on the =
+right
+path for making a Rust HID abstraction that would be acceptable upstream. T=
+he
+patches compile with WERROR being disabled. This is necessary since Rust tr=
+eats
+missing documentation comments as warnings (which is a good thing). I also =
+need
+to go in and add more SAFETY comments.
+
+Thanks,
+Rahul Rameshbabu
+
+Rahul Rameshbabu (3):
+  rust: core abstractions for HID drivers
+  rust: hid: USB Monitor Control Class driver
+  rust: hid: demo the core abstractions for probe and remove
+
+ drivers/hid/Kconfig                |  16 ++
+ drivers/hid/Makefile               |   1 +
+ drivers/hid/hid_monitor_control.rs |  42 +++++
+ rust/bindings/bindings_helper.h    |   1 +
+ rust/kernel/hid.rs                 | 245 +++++++++++++++++++++++++++++
+ rust/kernel/lib.rs                 |   2 +
+ 6 files changed, 307 insertions(+)
+ create mode 100644 drivers/hid/hid_monitor_control.rs
+ create mode 100644 rust/kernel/hid.rs
+
+--=20
+2.47.2
+
+
