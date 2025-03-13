@@ -1,75 +1,63 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D961F462C;
-	Thu, 13 Mar 2025 19:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936C01EEA51;
+	Thu, 13 Mar 2025 19:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741892617; cv=none; b=cnLBLkmJZMPd7B/blQEfBD1vN4jfAPUIJb8RMjiu1odvGbOaCfzJMzbUHs24mVGGEDLMj9QFhdDc0aOJ76yMTm9vvenlwCyjn8iurhTTMlEMjin94B07nQy0AC+1gpWkiRSjwdlQ2fYCroYiRoh6aiPjPCI1JRsa/5+HZdenpl8=
+	t=1741892647; cv=none; b=UrC205Hf8A6pZJC/x9cYRO3VZLx/ZzehuXXaxGQKb18V9C6XgNvCDx2DuSpO3hFcx40c+Ep53SyhhF/8pu7byoGy6ORpVFIr76HV3n6WuEIZpLWCqlSr/xpsXB+lC3dJ3SUextr5rDMVdnRsqap0/NspjSBYs1jo3/ypEOEqGRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741892617; c=relaxed/simple;
-	bh=zbiRm6nvzjjJNmZae/fA2d/LFL/98Z98f2fhvHp8QAg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ow8ybgo6xVlNu/3NKP7o7+ha+Cr0S1e0C5b5BQni1hmSet+kj54m6x7pxQAAXxgLu5V/AU/RBYm975oNE+cZkp61ALgEoqK2+DmwbVsf0hfstw15ndHPnsQ3Vta9+D8qfAiJjav4xh4mONpRAGPoI7kK9lqq0V6Z6GBYLC95/X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=zjw9b1/W; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1741892647; c=relaxed/simple;
+	bh=Ztf9vNFif09y/RfyC9fgjzGbnK1TescTBIegpKTDVgM=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=q/EjR1ChBuJq9O7Bbc113Bug5Kf7vLDPSjAoz+C5LHkd7OnhYZZVL0d8fiakmjF+kKv7Ny0fCZL3uIyinmkgs2ftiXCsYM3IhA5SihrfDhHUnNUjX+JNR1KANKgNx3+x76DSnnvvOyBckdNJU0Ix78C6xnSAjT0gBMnd6rXAHMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=us1SZumw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="zjw9b1/W"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=H5mdS2EnE4cpGSwW2dj+33eKcmSk0c9tKXjXQcM25/Y=; b=zjw9b1/WQHf2OAGZlzSVLoknvh
-	L1RzSpSTzDaBy2/7e0enIt/0atwWM1R3t4p6z7c+Lnp9Kqve3jzidGIU2liFppchMDCJ/55q3o81w
-	wBmcrUYreJ14Nl+B7ENvo7tK0OH1ZmtsY8/c0UnHNNz+gu04WenM0+w7HgetKI5XlUgGYuG8mkSh8
-	lEllzjETEAnNXmGdbyWXjj8MMiE5V/9s4fo/aMhSSXgEKAcJ+5X+VSiqLyqWVn4FiuW1RLhqOw8vz
-	LcCcK+pI1jy9CJy2gEJbZyAZvLAOZ/0xnSZkRtjgcKlUAZG/vq038NnSC1FWFqmSfZQZvM8XjDBvC
-	fwApDVeg==;
-Received: from ip-185-104-138-79.ptr.icomera.net ([185.104.138.79] helo=phil..)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tsnq2-0001sH-Jr; Thu, 13 Mar 2025 20:03:26 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: linux-rockchip@lists.infradead.org,
-	Jianfeng Liu <liujianfeng1994@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Enable HDMI audio output for ArmSoM Sige7
-Date: Thu, 13 Mar 2025 20:03:13 +0100
-Message-ID: <174189257844.294070.2578524540715601524.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250312164056.3998224-1-liujianfeng1994@gmail.com>
-References: <20250312164056.3998224-1-liujianfeng1994@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="us1SZumw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74BA1C4CEDD;
+	Thu, 13 Mar 2025 19:04:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741892647;
+	bh=Ztf9vNFif09y/RfyC9fgjzGbnK1TescTBIegpKTDVgM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=us1SZumwkQaYCLZiWAKftOKj5oKO8Q5mOymG//NEIH1alNbE5NwDYxp/aVcv/O3y4
+	 wr9v6bYJ1ojE85MCYB5ELiT3TagSEvuXUP/I2wjEtNLPB43Ck1mMEKqp3RIotr431g
+	 J4ogZeOstmoHPYNKhzlqAv2Zy8ceh9lrmb8N/dM1zRjlkPJlqykFgVO1Jo+l4pfyiz
+	 yk0WupDG7Z1T43vV3FJIGM2yvqTBuusmLnQLt7DJQc35XyQPStWAuFQLNkm++RNlwO
+	 vupnrjCGhdc+nLJumL+XtO8tPghWORL6gnuPokOQIHrBFXVYjcjC4boXcuSVCHk+8k
+	 VchFX2ze+Z26A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3421F3806651;
+	Thu, 13 Mar 2025 19:04:43 +0000 (UTC)
+Subject: Re: [GIT PULL] vfs fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250313-vfs-fixes-a0e878b9a930@brauner>
+References: <20250313-vfs-fixes-a0e878b9a930@brauner>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250313-vfs-fixes-a0e878b9a930@brauner>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.14-rc7.fixes
+X-PR-Tracked-Commit-Id: 986a6f5eacb900ea0f6036ef724b26e76be40f65
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8f7617f4500900f39b604ca724a34a9cfd1fa63a
+Message-Id: <174189268180.1632354.8919916520085745154.pr-tracker-bot@kernel.org>
+Date: Thu, 13 Mar 2025 19:04:41 +0000
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
+The pull request you sent on Thu, 13 Mar 2025 10:13:15 +0100:
 
-On Thu, 13 Mar 2025 00:40:49 +0800, Jianfeng Liu wrote:
-> HDMI audio is available on the ArmSoM Sige7 HDMI TX port.
-> Enable it for HDMI0 port.
-> 
-> 
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.14-rc7.fixes
 
-Applied, thanks!
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8f7617f4500900f39b604ca724a34a9cfd1fa63a
 
-[1/1] arm64: dts: rockchip: Enable HDMI audio output for ArmSoM Sige7
-      commit: e2759a8d452bcc1b64ecd4e819411fa26b6ed72e
+Thank you!
 
-Best regards,
 -- 
-Heiko Stuebner <heiko@sntech.de>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
