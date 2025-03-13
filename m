@@ -1,66 +1,66 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09415268C4B;
-	Thu, 13 Mar 2025 14:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00C9268FDC;
+	Thu, 13 Mar 2025 14:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741876220; cv=none; b=AEI8EEQj6B/vfCA1Nd6VxZc7ymYSK/IAf4KpaH9wix5Xz8PR9BEzLGDutA7eyoekrjLCm6qzgdWAdYbXLzWX56MxKELQPhxby44UUI+cblZ1dhLrP59D+ExPyPocKlGv58yjUdJ+m7eg6m0m9dnJ9zcoqetmRrUUy+QzxAbatVg=
+	t=1741876224; cv=none; b=Jk0lwG2+2Un69XAlaPGt+UoEkkyBA/AVCz9B6UapfWHRr+eMHhOkC1oXfeVv4UCdj5ZmJO/7Gih7OmGRSBLZE2noomcx9zsIYEW4SD/skDp5b2kBZMk7M94scvANp1bLocb3oZ0SVI1kDkqNWz/ZRBIFZFiZlauF5WmRIfTx9QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741876220; c=relaxed/simple;
-	bh=W3245L2StKIvemIozL1BX/WJzgLB3uNjsg77Bwf+aQc=;
+	s=arc-20240116; t=1741876224; c=relaxed/simple;
+	bh=cPKPG5Vxh6Z/Se8zjhuifeo9I8dN5wM+mN+9d222mtM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J1IDf4MwaHIerm7+g5Z3VigDo0K/lUBdUJPM6WNL/g0mf96m9ljutdRO17IQlFHiGG9IwG3vny3YiH3cWXQnqrTIny4eeM8jCk2Gou0ZbcDFd43QydE4ooCVHvY5muWPJ+SQCsUUTli/YkC3ef2MzfK2oUPMi72fpH4a1cV/glY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sg0Wo1WZ; arc=none smtp.client-ip=209.85.128.179
+	 In-Reply-To:To:Cc; b=IBD7zbkAXKMMeS5sKaptpHop1p5GDEIRNLoI8zhwGRFQ48J3wIqFy59CU74bJepkoATFA0m51khFvBF4t/TtdmMFVP5wR13ogJomkDabARLRL6L+fcFCUdpjOtfbqoe+1DzubG5pZTYR1wMCQYTJeHTerTNKzecTA4Sw/E44rFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EBI8Yxpk; arc=none smtp.client-ip=209.85.219.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sg0Wo1WZ"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6ef60e500d7so9211177b3.0;
-        Thu, 13 Mar 2025 07:30:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EBI8Yxpk"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e549b0f8d57so1016117276.3;
+        Thu, 13 Mar 2025 07:30:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741876214; x=1742481014; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741876222; x=1742481022; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3Iwv9GoGUQi5x68b8OratsnyLt/cCmcP1mUBYKH22PI=;
-        b=Sg0Wo1WZWb3LuHFAepH8uL31hpqbMb4A2md8WJaIlDzTdihBGuktnV8YlrbY3i5z8g
-         CNBS31imSGJKw0lEb4HTjcEh+3EjQdH/RneWNRV0+W0n3MUQ8P+Wd3UT03dXX3sJodIp
-         gRofwWbctMuzAT8oz2tLeS6s9BKVJH/yVsuVcbykmTIFwk7jMChk3NcK2DV3uXO1Gmq5
-         EpQFbXn3cCFm6/G388cMGFibyPQFtJMjtBdHiW4XJwHYc98gue1n8DB2xnAJfiLoso7D
-         DIcy76X3HFeuOMm24tCh/H3jjJR4TW5Q3kHYUe+5auDSDyxGQEHGYem+7L5Eom0W4z7T
-         vbEw==
+        bh=KJz42pw5OoHFXvVMA6liTx4M4GaMhFeDvsfN2Iym2Zk=;
+        b=EBI8YxpkiO+azdMa9AadVVaoaNY7myGXO1ffSbcHPEnnAXk4yBJbK5gg6OIIDXJMVv
+         mjasIlQSNxpJnctZifYy9B6hL52lmBoQHMsNxcv7s/tordGbYAks1ibzKcCvmPPtvJ8T
+         YlSal4Y9I71JCa3dmH+yvT9oKLzrpl/BOh/FqG84Y37QaoN7zcPR0c4tSBogT9jAlJLG
+         AJcRSmxqZOWU2ZUhzft4xYj5t7MnAZeZ9PfjogQkmf+HniTWOgBFfoX2xfTV020O5bWb
+         H7H0eFzcPaGCkCQmbaJdCmm9AkPr0dCesbfo2u9W9P2FfoSxaOYYyV3+AbRFnlLHux61
+         JdcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741876214; x=1742481014;
+        d=1e100.net; s=20230601; t=1741876222; x=1742481022;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3Iwv9GoGUQi5x68b8OratsnyLt/cCmcP1mUBYKH22PI=;
-        b=WW94V4ob9CFqJltLnjUH0EY9ghasCEfnvNGdEAyuDrbjKeQLlm31egMQEl3T4Zig55
-         BYqMJJu8mhgl05YzQcj0AS0X0MFRXbNCG/ZiRjos8PAdC1AhqSu+x4N/9RMDxzRyt6R2
-         Dbq5EBp16emXAmTLSMMs2mwK7tmPpIhLAzN50fAY2qYDoZWwmsy/q0B7+VkVsbpwSn7r
-         4+rsOoJkiDtU5vPHe5WGzUT9TFl813nBISQJv+daoHVgPj5tmbR9MMq3PT1kNC9+jBrR
-         7NS0vgvKrwHfFnVVqxedEDC587olGsvmLTG3ONE742wx7cT/4qpbf++3efaJMlLjSf5p
-         xwPg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8zcqm/ZSwrE2+LBMMvd21QANFCIqKEh8QqrtYYq1YNp+2MumIwN6uECEdREV2nOPjm15itTOcCcp9yK6SxyEp8J6GRQ==@vger.kernel.org, AJvYcCUCDwis2GGF8jIr1+OJ59LHNNfr94CsZmiHZNIaLe5RxUEOab5G3CIMIU+x+bdJPUcq5rx4dRDYjPkA+o8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLZA/1mbgrhR8stSiBWwZxRwCfYZaTX4EKajqebjFUlpmyn9Uq
-	XnA5IGpYvIXavjHcS+sdvOhnTdipDKz+Ac8oG0wKJgGxOvnMcFCyuK8OnmT2
-X-Gm-Gg: ASbGnctUySVuKnrU+zSeU8uZDRQoQp0IESKx0XYUGY14fzWqknZugVhc5/a/Yfizp2w
-	9WGflc2rd+w5758/yyWAwTb9u2QVpdPolXdBbwgChRGw7yeYiwepYo420jQniTVOxj83qtrB31L
-	yYOhOUYMgQBrceQAGz3I3UaA3B9cJUVr8L1mDooR8j+1IaHbNjy0lQj3inbNDxpO83BY+2I/8Io
-	Oied1KVgn+md4DWNaDpdqeBhTOcOnXYpaRHW0vGVL/9K+kTbEm+vIVdnmPcvdZyp1whPumBCnT/
-	GLJt3sCeOv0GCGllQJgm6jlIOubiVGwE/5XummufV5Y8ug==
-X-Google-Smtp-Source: AGHT+IG9DOxtvMZjpc2ltg4cqDkbnmfrf9htT/NdI9q0ABW9VcK1Bmyrr0vwn6or0GIVJolHQQZvDQ==
-X-Received: by 2002:a05:6902:218c:b0:e60:9fd4:bdb9 with SMTP id 3f1490d57ef6-e63b5233a43mr15883903276.44.1741876213635;
-        Thu, 13 Mar 2025 07:30:13 -0700 (PDT)
+        bh=KJz42pw5OoHFXvVMA6liTx4M4GaMhFeDvsfN2Iym2Zk=;
+        b=wCv8FEZoQahcpCkqkmB/zVx8BJIiIWXfETxPQ1lcOTXbvjJy7cpSqa9e5QgdkH2p93
+         WU6D11k56nuEXCnhOQyUBNly2DnN6iM988SV1k2I7G/4jG071kLQ4SzxwQxnnXA0YOzf
+         NLIehUKIrOgC7S5e1+FzcsB+eZfDaXr/AYrI+e2UvIRcPYNNeGFZuexgPcOVUUZwcJR5
+         ioHeSbmfQPsxqjAyb+t2NTsgRayaUEz5/bnLUdxGXd0ZNQ70baeu2KmPtNOpBCmQ+Hh/
+         5z3ria/TpMeRPpMnLjl7h2eDXvcBzTkUckzlpKYQzo90f99mp3Wh8t3SMZ4uVvXjooJq
+         YK3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWNamyxyQ+hT1eHqzlXIMmX6STYeHtG01Ri7s24xVZ7GObbn2JMo2y5BQPX56/jXEyrRFZiNpyW75lNbsS9SaVAJvCFWA==@vger.kernel.org, AJvYcCXL2Oks6Dfnf2u7tvh2WO12Wp4MlZ8nnoPkrd+3+MrSCwaSDGqh3i3OzmZyiW4Pq4C4vlIrRw/CZXqLtpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza2Il0asT54R0DM3zWPgCLwuj1eQf8W9RlysnGh5BKQKa4E25U
+	QB4CWGjo4Pk61RaECYb7LWD10wNxHOXt4P+yZD7L4oo4i4UVOfeNSJ/Th8MX
+X-Gm-Gg: ASbGnctEWqWnKL5PkWZk/nMKilmEc7ZAU1kwgzjfqKPNpRUFTQe3vTG661Btvzl1yCU
+	06cpPK9ZkFzBAPKm69lLmocRFgPKsxikGCiPzBCUvkwvqHaC5hUBnSn2LzhkpXHhqG5TzsEYtXi
+	gmSAVAie4rU+WQwddGUkFzs2hkfgIgGdpkbMD+aXhPaQDDr8kEpD5oDZRcx2puE2n5CxLzOK5Gg
+	VtbqgoIhIzqi6dfNSoewPSj2zT0QnpgcsNi+X5s+JFOgCKD8rgwGDc4un5j09PRwWlAy8kOHEBs
+	L3p0tWmYIPv8N7VZ0dXonPYF5pHLKaLlTkESFo3pFVGSwA==
+X-Google-Smtp-Source: AGHT+IFdD7/NASvI+q+boLup6Uv9f/S3WpBzZOueGmFiLHw3B1Uf/oDFB2V/GQdA5nFYhRfEEzbItw==
+X-Received: by 2002:a05:6902:2192:b0:e63:f0ac:4801 with SMTP id 3f1490d57ef6-e63f0ac4b9cmr1024421276.38.1741876221660;
+        Thu, 13 Mar 2025 07:30:21 -0700 (PDT)
 Received: from [192.168.100.70] ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e63e56718d0sm338938276.50.2025.03.13.07.30.12
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e63e56718d0sm338938276.50.2025.03.13.07.30.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 07:30:13 -0700 (PDT)
+        Thu, 13 Mar 2025 07:30:21 -0700 (PDT)
 From: Kurt Borja <kuurtb@gmail.com>
-Date: Thu, 13 Mar 2025 09:29:56 -0500
-Subject: [PATCH v6 01/12] platform/x86: alienware-wmi-wmax: Rename thermal
- related symbols
+Date: Thu, 13 Mar 2025 09:30:00 -0500
+Subject: [PATCH v6 05/12] platform/x86: alienware-wmi-wmax: Improve
+ platform profile probe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-hwm-v6-1-17b57f787d77@gmail.com>
+Message-Id: <20250313-hwm-v6-5-17b57f787d77@gmail.com>
 References: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
 In-Reply-To: <20250313-hwm-v6-0-17b57f787d77@gmail.com>
 To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
@@ -79,381 +79,136 @@ Cc: Kurt Borja <kuurtb@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
 
-The "thermal" features of the WMAX WMI device are only present on the
-host device if the ACPI _UID is "AWCC". Replace WMAX prefixes with
-"AWCC" to reflect this relationship.
+Get and store the AWCC system description in alienware_awcc_setup()
+instead of awcc_platform_profile_probe() and add a check for integer
+overflows to avoid misbehaviors.
 
-Thermal profiles with WMAX_PROFILE_BASIC prefix are also renamed to
-WMAX_PROFILE_LEGACY because they are only supported in older versions
-of this WMI device.
+While at it, replace set_bit() with it's non-atomic version __set_bit()
+because `choices` belong to this thread only.
 
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 173 +++++++++++++------------
- 1 file changed, 87 insertions(+), 86 deletions(-)
+ drivers/platform/x86/dell/alienware-wmi-wmax.c | 61 +++++++++++++++++++-------
+ 1 file changed, 46 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 3d3014b5adf046c94c1ebf39a0e28a92622b40d6..ed70e12d73d7fe5d89f3364c5367820bf47e3c1e 100644
+index a8a13779793abbcc8d1263474cac6227d524a6f5..0530f25b956f73f47c0354f40dac2910448c894e 100644
 --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
 +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -24,16 +24,17 @@
- #define WMAX_METHOD_DEEP_SLEEP_STATUS		0x0C
- #define WMAX_METHOD_BRIGHTNESS			0x3
- #define WMAX_METHOD_ZONE_CONTROL		0x4
--#define WMAX_METHOD_THERMAL_INFORMATION		0x14
--#define WMAX_METHOD_THERMAL_CONTROL		0x15
--#define WMAX_METHOD_GAME_SHIFT_STATUS		0x25
+@@ -38,6 +38,9 @@
+ /* Some IDs have a BIT(8) flag that we ignore */
+ #define AWCC_RESOURCE_ID_MASK			GENMASK(7, 0)
  
--#define WMAX_THERMAL_MODE_GMODE			0xAB
-+#define AWCC_METHOD_THERMAL_INFORMATION		0x14
-+#define AWCC_METHOD_THERMAL_CONTROL		0x15
-+#define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
- 
--#define WMAX_FAILURE_CODE			0xFFFFFFFF
--#define WMAX_THERMAL_TABLE_MASK			GENMASK(7, 4)
--#define WMAX_THERMAL_MODE_MASK			GENMASK(3, 0)
--#define WMAX_SENSOR_ID_MASK			BIT(8)
-+#define AWCC_THERMAL_MODE_GMODE			0xAB
++/* Arbitrary limit based on supported models */
++#define AWCC_MAX_RES_COUNT			16
 +
-+#define AWCC_FAILURE_CODE			0xFFFFFFFF
-+#define AWCC_THERMAL_TABLE_MASK			GENMASK(7, 4)
-+#define AWCC_THERMAL_MODE_MASK			GENMASK(3, 0)
-+#define AWCC_SENSOR_ID_MASK			BIT(8)
- 
  static bool force_platform_profile;
  module_param_unsafe(force_platform_profile, bool, 0);
-@@ -151,38 +152,38 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
- 	},
- };
+ MODULE_PARM_DESC(force_platform_profile, "Forces auto-detecting thermal profiles without checking if WMI thermal backend is available");
+@@ -212,6 +215,17 @@ struct wmax_u32_args {
  
--enum WMAX_THERMAL_INFORMATION_OPERATIONS {
--	WMAX_OPERATION_SYS_DESCRIPTION		= 0x02,
--	WMAX_OPERATION_LIST_IDS			= 0x03,
--	WMAX_OPERATION_CURRENT_PROFILE		= 0x0B,
-+enum AWCC_THERMAL_INFORMATION_OPERATIONS {
-+	AWCC_OP_GET_SYSTEM_DESCRIPTION		= 0x02,
-+	AWCC_OP_GET_RESOURCE_ID			= 0x03,
-+	AWCC_OP_GET_CURRENT_PROFILE		= 0x0B,
- };
- 
--enum WMAX_THERMAL_CONTROL_OPERATIONS {
--	WMAX_OPERATION_ACTIVATE_PROFILE		= 0x01,
-+enum AWCC_THERMAL_CONTROL_OPERATIONS {
-+	AWCC_OP_ACTIVATE_PROFILE		= 0x01,
- };
- 
--enum WMAX_GAME_SHIFT_STATUS_OPERATIONS {
--	WMAX_OPERATION_TOGGLE_GAME_SHIFT	= 0x01,
--	WMAX_OPERATION_GET_GAME_SHIFT_STATUS	= 0x02,
-+enum AWCC_GAME_SHIFT_STATUS_OPERATIONS {
-+	AWCC_OP_TOGGLE_GAME_SHIFT		= 0x01,
-+	AWCC_OP_GET_GAME_SHIFT_STATUS		= 0x02,
- };
- 
--enum WMAX_THERMAL_TABLES {
--	WMAX_THERMAL_TABLE_BASIC		= 0x90,
--	WMAX_THERMAL_TABLE_USTT			= 0xA0,
-+enum AWCC_THERMAL_TABLES {
-+	AWCC_THERMAL_TABLE_LEGACY		= 0x90,
-+	AWCC_THERMAL_TABLE_USTT			= 0xA0,
- };
- 
--enum wmax_thermal_mode {
--	THERMAL_MODE_USTT_BALANCED,
--	THERMAL_MODE_USTT_BALANCED_PERFORMANCE,
--	THERMAL_MODE_USTT_COOL,
--	THERMAL_MODE_USTT_QUIET,
--	THERMAL_MODE_USTT_PERFORMANCE,
--	THERMAL_MODE_USTT_LOW_POWER,
--	THERMAL_MODE_BASIC_QUIET,
--	THERMAL_MODE_BASIC_BALANCED,
--	THERMAL_MODE_BASIC_BALANCED_PERFORMANCE,
--	THERMAL_MODE_BASIC_PERFORMANCE,
--	THERMAL_MODE_LAST,
-+enum awcc_thermal_profile {
-+	AWCC_PROFILE_USTT_BALANCED,
-+	AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
-+	AWCC_PROFILE_USTT_COOL,
-+	AWCC_PROFILE_USTT_QUIET,
-+	AWCC_PROFILE_USTT_PERFORMANCE,
-+	AWCC_PROFILE_USTT_LOW_POWER,
-+	AWCC_PROFILE_LEGACY_QUIET,
-+	AWCC_PROFILE_LEGACY_BALANCED,
-+	AWCC_PROFILE_LEGACY_BALANCED_PERFORMANCE,
-+	AWCC_PROFILE_LEGACY_PERFORMANCE,
-+	AWCC_PROFILE_LAST,
- };
- 
- struct wmax_led_args {
-@@ -210,20 +211,20 @@ struct wmax_u32_args {
  struct awcc_priv {
  	struct wmi_device *wdev;
++	union {
++		u32 system_description;
++		struct {
++			u8 fan_count;
++			u8 temp_count;
++			u8 unknown_count;
++			u8 profile_count;
++		};
++		u8 res_count[4];
++	};
++
  	struct device *ppdev;
--	enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
-+	enum awcc_thermal_profile supported_thermal_profiles[PLATFORM_PROFILE_LAST];
+ 	u8 supported_profiles[PLATFORM_PROFILE_LAST];
  };
- 
--static const enum platform_profile_option wmax_mode_to_platform_profile[THERMAL_MODE_LAST] = {
--	[THERMAL_MODE_USTT_BALANCED]			= PLATFORM_PROFILE_BALANCED,
--	[THERMAL_MODE_USTT_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
--	[THERMAL_MODE_USTT_COOL]			= PLATFORM_PROFILE_COOL,
--	[THERMAL_MODE_USTT_QUIET]			= PLATFORM_PROFILE_QUIET,
--	[THERMAL_MODE_USTT_PERFORMANCE]			= PLATFORM_PROFILE_PERFORMANCE,
--	[THERMAL_MODE_USTT_LOW_POWER]			= PLATFORM_PROFILE_LOW_POWER,
--	[THERMAL_MODE_BASIC_QUIET]			= PLATFORM_PROFILE_QUIET,
--	[THERMAL_MODE_BASIC_BALANCED]			= PLATFORM_PROFILE_BALANCED,
--	[THERMAL_MODE_BASIC_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
--	[THERMAL_MODE_BASIC_PERFORMANCE]		= PLATFORM_PROFILE_PERFORMANCE,
-+static const enum platform_profile_option awcc_mode_to_platform_profile[AWCC_PROFILE_LAST] = {
-+	[AWCC_PROFILE_USTT_BALANCED]			= PLATFORM_PROFILE_BALANCED,
-+	[AWCC_PROFILE_USTT_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-+	[AWCC_PROFILE_USTT_COOL]			= PLATFORM_PROFILE_COOL,
-+	[AWCC_PROFILE_USTT_QUIET]			= PLATFORM_PROFILE_QUIET,
-+	[AWCC_PROFILE_USTT_PERFORMANCE]			= PLATFORM_PROFILE_PERFORMANCE,
-+	[AWCC_PROFILE_USTT_LOW_POWER]			= PLATFORM_PROFILE_LOW_POWER,
-+	[AWCC_PROFILE_LEGACY_QUIET]			= PLATFORM_PROFILE_QUIET,
-+	[AWCC_PROFILE_LEGACY_BALANCED]			= PLATFORM_PROFILE_BALANCED,
-+	[AWCC_PROFILE_LEGACY_BALANCED_PERFORMANCE]	= PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-+	[AWCC_PROFILE_LEGACY_PERFORMANCE]		= PLATFORM_PROFILE_PERFORMANCE,
- };
- 
- static struct awcc_quirks *awcc;
-@@ -444,26 +445,26 @@ const struct attribute_group wmax_deepsleep_attribute_group = {
-  * Thermal Profile control
-  *  - Provides thermal profile control through the Platform Profile API
-  */
--static bool is_wmax_thermal_code(u32 code)
-+static bool is_awcc_thermal_mode(u32 code)
- {
--	if (code & WMAX_SENSOR_ID_MASK)
-+	if (code & AWCC_SENSOR_ID_MASK)
- 		return false;
- 
--	if ((code & WMAX_THERMAL_MODE_MASK) >= THERMAL_MODE_LAST)
-+	if ((code & AWCC_THERMAL_MODE_MASK) >= AWCC_PROFILE_LAST)
- 		return false;
- 
--	if ((code & WMAX_THERMAL_TABLE_MASK) == WMAX_THERMAL_TABLE_BASIC &&
--	    (code & WMAX_THERMAL_MODE_MASK) >= THERMAL_MODE_BASIC_QUIET)
-+	if ((code & AWCC_THERMAL_TABLE_MASK) == AWCC_THERMAL_TABLE_LEGACY &&
-+	    (code & AWCC_THERMAL_MODE_MASK) >= AWCC_PROFILE_LEGACY_QUIET)
- 		return true;
- 
--	if ((code & WMAX_THERMAL_TABLE_MASK) == WMAX_THERMAL_TABLE_USTT &&
--	    (code & WMAX_THERMAL_MODE_MASK) <= THERMAL_MODE_USTT_LOW_POWER)
-+	if ((code & AWCC_THERMAL_TABLE_MASK) == AWCC_THERMAL_TABLE_USTT &&
-+	    (code & AWCC_THERMAL_MODE_MASK) <= AWCC_PROFILE_USTT_LOW_POWER)
- 		return true;
- 
- 	return false;
- }
- 
--static int wmax_thermal_information(struct wmi_device *wdev, u8 operation,
-+static int awcc_thermal_information(struct wmi_device *wdev, u8 operation,
- 				    u8 arg, u32 *out_data)
- {
- 	struct wmax_u32_args in_args = {
-@@ -474,21 +475,21 @@ static int wmax_thermal_information(struct wmi_device *wdev, u8 operation,
- 	};
- 	int ret;
- 
--	ret = alienware_wmi_command(wdev, WMAX_METHOD_THERMAL_INFORMATION,
-+	ret = alienware_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION,
- 				    &in_args, sizeof(in_args), out_data);
- 	if (ret < 0)
- 		return ret;
- 
--	if (*out_data == WMAX_FAILURE_CODE)
-+	if (*out_data == AWCC_FAILURE_CODE)
- 		return -EBADRQC;
- 
- 	return 0;
- }
- 
--static int wmax_thermal_control(struct wmi_device *wdev, u8 profile)
-+static int awcc_thermal_control(struct wmi_device *wdev, u8 profile)
- {
- 	struct wmax_u32_args in_args = {
--		.operation = WMAX_OPERATION_ACTIVATE_PROFILE,
-+		.operation = AWCC_OP_ACTIVATE_PROFILE,
- 		.arg1 = profile,
- 		.arg2 = 0,
- 		.arg3 = 0,
-@@ -496,18 +497,18 @@ static int wmax_thermal_control(struct wmi_device *wdev, u8 profile)
- 	u32 out_data;
- 	int ret;
- 
--	ret = alienware_wmi_command(wdev, WMAX_METHOD_THERMAL_CONTROL,
-+	ret = alienware_wmi_command(wdev, AWCC_METHOD_THERMAL_CONTROL,
- 				    &in_args, sizeof(in_args), &out_data);
- 	if (ret)
- 		return ret;
- 
--	if (out_data == WMAX_FAILURE_CODE)
-+	if (out_data == AWCC_FAILURE_CODE)
- 		return -EBADRQC;
- 
- 	return 0;
- }
- 
--static int wmax_game_shift_status(struct wmi_device *wdev, u8 operation,
-+static int awcc_game_shift_status(struct wmi_device *wdev, u8 operation,
- 				  u32 *out_data)
- {
- 	struct wmax_u32_args in_args = {
-@@ -518,46 +519,46 @@ static int wmax_game_shift_status(struct wmi_device *wdev, u8 operation,
- 	};
- 	int ret;
- 
--	ret = alienware_wmi_command(wdev, WMAX_METHOD_GAME_SHIFT_STATUS,
-+	ret = alienware_wmi_command(wdev, AWCC_METHOD_GAME_SHIFT_STATUS,
- 				    &in_args, sizeof(in_args), out_data);
- 	if (ret < 0)
- 		return ret;
- 
--	if (*out_data == WMAX_FAILURE_CODE)
-+	if (*out_data == AWCC_FAILURE_CODE)
- 		return -EOPNOTSUPP;
- 
- 	return 0;
- }
- 
--static int thermal_profile_get(struct device *dev,
--			       enum platform_profile_option *profile)
-+static int awcc_platform_profile_get(struct device *dev,
-+				     enum platform_profile_option *profile)
- {
- 	struct awcc_priv *priv = dev_get_drvdata(dev);
- 	u32 out_data;
- 	int ret;
- 
--	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_CURRENT_PROFILE,
-+	ret = awcc_thermal_information(priv->wdev, AWCC_OP_GET_CURRENT_PROFILE,
- 				       0, &out_data);
- 
- 	if (ret < 0)
- 		return ret;
- 
--	if (out_data == WMAX_THERMAL_MODE_GMODE) {
-+	if (out_data == AWCC_THERMAL_MODE_GMODE) {
- 		*profile = PLATFORM_PROFILE_PERFORMANCE;
- 		return 0;
- 	}
- 
--	if (!is_wmax_thermal_code(out_data))
-+	if (!is_awcc_thermal_mode(out_data))
- 		return -ENODATA;
- 
--	out_data &= WMAX_THERMAL_MODE_MASK;
--	*profile = wmax_mode_to_platform_profile[out_data];
-+	out_data &= AWCC_THERMAL_MODE_MASK;
-+	*profile = awcc_mode_to_platform_profile[out_data];
- 
- 	return 0;
- }
- 
--static int thermal_profile_set(struct device *dev,
--			       enum platform_profile_option profile)
-+static int awcc_platform_profile_set(struct device *dev,
-+				     enum platform_profile_option profile)
- {
- 	struct awcc_priv *priv = dev_get_drvdata(dev);
- 
-@@ -565,8 +566,8 @@ static int thermal_profile_set(struct device *dev,
- 		u32 gmode_status;
- 		int ret;
- 
--		ret = wmax_game_shift_status(priv->wdev,
--					     WMAX_OPERATION_GET_GAME_SHIFT_STATUS,
-+		ret = awcc_game_shift_status(priv->wdev,
-+					     AWCC_OP_GET_GAME_SHIFT_STATUS,
- 					     &gmode_status);
- 
- 		if (ret < 0)
-@@ -574,8 +575,8 @@ static int thermal_profile_set(struct device *dev,
- 
- 		if ((profile == PLATFORM_PROFILE_PERFORMANCE && !gmode_status) ||
- 		    (profile != PLATFORM_PROFILE_PERFORMANCE && gmode_status)) {
--			ret = wmax_game_shift_status(priv->wdev,
--						     WMAX_OPERATION_TOGGLE_GAME_SHIFT,
-+			ret = awcc_game_shift_status(priv->wdev,
-+						     AWCC_OP_TOGGLE_GAME_SHIFT,
- 						     &gmode_status);
- 
- 			if (ret < 0)
-@@ -583,21 +584,21 @@ static int thermal_profile_set(struct device *dev,
- 		}
- 	}
- 
--	return wmax_thermal_control(priv->wdev,
-+	return awcc_thermal_control(priv->wdev,
- 				    priv->supported_thermal_profiles[profile]);
- }
- 
--static int thermal_profile_probe(void *drvdata, unsigned long *choices)
-+static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
- {
+@@ -624,37 +638,40 @@ static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
  	enum platform_profile_option profile;
  	struct awcc_priv *priv = drvdata;
--	enum wmax_thermal_mode mode;
-+	enum awcc_thermal_profile mode;
- 	u8 sys_desc[4];
- 	u32 first_mode;
+ 	enum awcc_thermal_profile mode;
+-	u8 sys_desc[4];
+-	u32 first_mode;
++	u8 id, offset = 0;
  	u32 out_data;
  	int ret;
+-	u8 id;
  
--	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_SYS_DESCRIPTION,
-+	ret = awcc_thermal_information(priv->wdev, AWCC_OP_GET_SYSTEM_DESCRIPTION,
- 				       0, (u32 *) &sys_desc);
- 	if (ret < 0)
- 		return ret;
-@@ -605,7 +606,7 @@ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
- 	first_mode = sys_desc[0] + sys_desc[1];
+-	ret = awcc_thermal_information(priv->wdev, AWCC_OP_GET_SYSTEM_DESCRIPTION,
+-				       0, (u32 *) &sys_desc);
+-	if (ret < 0)
+-		return ret;
+-
+-	first_mode = sys_desc[0] + sys_desc[1];
+-
+-	for (u32 i = 0; i < sys_desc[3]; i++) {
+-		ret = awcc_op_get_resource_id(priv->wdev, i + first_mode, &out_data);
++	/*
++	 * Thermal profile IDs are listed last at offset
++	 *	fan_count + temp_count + unknown_count
++	 */
++	for (unsigned int i = 0; i < ARRAY_SIZE(priv->res_count) - 1; i++)
++		offset += priv->res_count[i];
  
- 	for (u32 i = 0; i < sys_desc[3]; i++) {
--		ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_LIST_IDS,
-+		ret = awcc_thermal_information(priv->wdev, AWCC_OP_GET_RESOURCE_ID,
- 					       i + first_mode, &out_data);
- 
++	for (unsigned int i = 0; i < priv->profile_count; i++) {
++		ret = awcc_op_get_resource_id(priv->wdev, i + offset, &out_data);
  		if (ret == -EIO)
-@@ -614,11 +615,11 @@ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
+ 			return ret;
+ 
++		/*
++		 * Some devices report an incorrect number of thermal profiles
++		 * so the resource ID list may end prematurely
++		 */
  		if (ret == -EBADRQC)
  			break;
  
--		if (!is_wmax_thermal_code(out_data))
-+		if (!is_awcc_thermal_mode(out_data))
+ 		id = FIELD_GET(AWCC_RESOURCE_ID_MASK, out_data);
+-		if (!is_awcc_thermal_profile_id(id))
++		if (!is_awcc_thermal_profile_id(id)) {
++			dev_dbg(&priv->wdev->dev, "Unmapped thermal profile ID 0x%02x\n", id);
  			continue;
++		}
  
--		mode = out_data & WMAX_THERMAL_MODE_MASK;
--		profile = wmax_mode_to_platform_profile[mode];
-+		mode = out_data & AWCC_THERMAL_MODE_MASK;
-+		profile = awcc_mode_to_platform_profile[mode];
- 		priv->supported_thermal_profiles[profile] = out_data;
+ 		mode = FIELD_GET(AWCC_THERMAL_MODE_MASK, id);
+ 		profile = awcc_mode_to_platform_profile[mode];
+ 		priv->supported_profiles[profile] = id;
  
- 		set_bit(profile, choices);
-@@ -629,7 +630,7 @@ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
- 
- 	if (awcc->gmode) {
- 		priv->supported_thermal_profiles[PLATFORM_PROFILE_PERFORMANCE] =
--			WMAX_THERMAL_MODE_GMODE;
-+			AWCC_THERMAL_MODE_GMODE;
- 
- 		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+-		set_bit(profile, choices);
++		__set_bit(profile, choices);
  	}
-@@ -638,9 +639,9 @@ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
- }
  
- static const struct platform_profile_ops awcc_platform_profile_ops = {
--	.probe = thermal_profile_probe,
--	.profile_get = thermal_profile_get,
--	.profile_set = thermal_profile_set,
-+	.probe = awcc_platform_profile_probe,
-+	.profile_get = awcc_platform_profile_get,
-+	.profile_set = awcc_platform_profile_set,
- };
+ 	if (bitmap_empty(choices, PLATFORM_PROFILE_LAST))
+@@ -664,7 +681,7 @@ static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
+ 		priv->supported_profiles[PLATFORM_PROFILE_PERFORMANCE] =
+ 			AWCC_THERMAL_MODE_GMODE;
  
- static int awcc_platform_profile_init(struct wmi_device *wdev)
+-		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
++		__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+ 	}
+ 
+ 	return 0;
+@@ -695,6 +712,20 @@ static int alienware_awcc_setup(struct wmi_device *wdev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
++	ret = awcc_thermal_information(wdev, AWCC_OP_GET_SYSTEM_DESCRIPTION,
++				       0, &priv->system_description);
++	if (ret < 0)
++		return ret;
++
++	/* Sanity check */
++	for (unsigned int i = 0; i < ARRAY_SIZE(priv->res_count); i++) {
++		if (priv->res_count[i] > AWCC_MAX_RES_COUNT) {
++			dev_err(&wdev->dev, "Malformed system description: 0x%08x\n",
++				priv->system_description);
++			return -ENXIO;
++		}
++	}
++
+ 	priv->wdev = wdev;
+ 	dev_set_drvdata(&wdev->dev, priv);
+ 
 
 -- 
 2.48.1
