@@ -1,67 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBC71FA14E;
-	Thu, 13 Mar 2025 09:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E922C80;
+	Thu, 13 Mar 2025 09:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741857492; cv=none; b=LX4wy+Se2EjnVpWtoSCAVVN4OeBEj+zwuPyXJT0+H1qoXIyndJYVK8imyRP3sgmkACBcfZ/lVMsOOlhx7/kp+AN2llTpjDyPvpOXjLDLVSJkDXo/eAqb0iPGG7Re6I0NZmsp/6tzkkuxqzAQMmQAwU88XY+x5EjtKf7WzNJCBjY=
+	t=1741857576; cv=none; b=cdxvLuC+uxgrjuXw5i9PKbRJa/mpFAFKiTFJJGIUd+T9gZMR93NoY4w9CMN8daEXDbnWyOar/hrZNLOT3+BFeMLEdWaBvz2AU35vDd1fAAHDf8MWpa+j5cpdOmfFITCTVZmjecftc0zhgF9fHreMgw49teE8ieP/lBINrTNIZuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741857492; c=relaxed/simple;
-	bh=jVDomjMBnInaKjiE+S8O3q0/G9g8FyXhVtfxKw22KpQ=;
+	s=arc-20240116; t=1741857576; c=relaxed/simple;
+	bh=5buOl5HRVkX0rlEUW5blnF61KqXtRuzagl4PFP8Z7lg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cx6uCSg50cMcnUE3bCxyUv7iyJjDv7A1caj43kjYfBF+GpMN/NGGl8PR3bOQg/0hTyR88frMC5WYBgLLvBKmjCHPW7MzsWmP4qJjxNpDmZ+wENFKAf9k6QZ59M0xCb/rJ8GcPd5KzrGnJBNQDdZPtc/Nq/hMzU6hkyMlZm0mpHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OpT60Q5v; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GpFgDMhe/N/F7bwNaesYQu24ZRd6eU4oIkuwZ05qa8XzU938Yxgy48xDqzGFuUCpZHxqFa5spr8ttkaIsA/gqPIjsYMwiRcQyQGlL/KmsY9hwqf1BhxUfrWhrYocKQ7OGC5IfHG5BUYdd03/P7pCw9L2vorS74hleCRna0nC8+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fm+FYXMG; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OpT60Q5v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B24C4CEDD;
-	Thu, 13 Mar 2025 09:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741857490;
-	bh=jVDomjMBnInaKjiE+S8O3q0/G9g8FyXhVtfxKw22KpQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OpT60Q5vqAO47nrGiXqfBtPRoVds+J4VyaWDOFbWjnZVPe8UZrvVS49M2oWEt8t1x
-	 i8Fin+P3gCNGvjRS776K0LoKaDCuSolR1vJwRNL7af30bETjPZnbgZMlwicAElAN+S
-	 B+qtMgGKRFH4x5Ro47870EV96wPER696f/BiemG41tPbuHiw/g1sFMi4hIEtZHGgAr
-	 UQuaGqpWtVhUHbrC2DNuNInJDcLCW+j4h6YYufhb7F8huHFy5wDnuB57Im0dQbxS9n
-	 x1HfyZwLbyrpY19PdUlEHWRsOOJdQbRrCCuDj85fdInp+nzltMxYKsfBf3pCCIF9qx
-	 zaRcCEwOAzHEA==
-Date: Thu, 13 Mar 2025 10:18:06 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Imran Shaik <quic_imrashai@quicinc.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>, 
-	Taniya Das <quic_tdas@quicinc.com>, Jagadeesh Kona <quic_jkona@quicinc.com>, 
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: cpufreq-qcom-hw: Add QCS8300
- compatible
-Message-ID: <20250313-sticky-glorious-dormouse-9dcfae@krzk-bin>
-References: <20250313-qcs8300-cpufreq-scaling-v1-0-d4cd3bd9c018@quicinc.com>
- <20250313-qcs8300-cpufreq-scaling-v1-1-d4cd3bd9c018@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fm+FYXMG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741857574; x=1773393574;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5buOl5HRVkX0rlEUW5blnF61KqXtRuzagl4PFP8Z7lg=;
+  b=fm+FYXMGwv7c4b3BPRdg0ugym8ih/IHO7VtNHNLatguDh32AQG17P8Ps
+   FMu+8DWJ0yOIoSLFc8t0yW4O78aSXm3fyK3oy34PfogfZo1aq0wYN2Llm
+   hU8S2m1mTi1oeGgcLs2OfkgE1iQ3qEHOLPr9dQv7u8JHDStg3ek5cG5/x
+   m+BC2Kxfl5npMVoMB1hNU2WC3vcZ5pMXGdgUidhcSr5IkPRct3Te+CSuF
+   3nSe3DRlylb5hOfqZJchWEd70VyVYPZGwm4iebOmQ/XBNCQQuwLtGPBIh
+   OEWKrnd9su5IZpeFeIocuzsl/z+l2JsWm5h/p91wn9sQz4AD32o8tL2uS
+   Q==;
+X-CSE-ConnectionGUID: DZL3+Zq+Rn2qPS94PHY5zA==
+X-CSE-MsgGUID: 6eOrnNxDSv6A85u7cx5PmQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42843965"
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="42843965"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:19:33 -0700
+X-CSE-ConnectionGUID: /McIbDYgRE2AHQ6LGYM7bA==
+X-CSE-MsgGUID: tBR3Hcn+QQiQesms5Vxg+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="125061786"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:19:31 -0700
+Date: Thu, 13 Mar 2025 11:19:28 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
+	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] gpio: elkhartlake: depend on
+ MFD_INTEL_EHL_PSE_GPIO
+Message-ID: <Z9KjIAMfRIegA2vI@black.fi.intel.com>
+References: <20250307052231.551737-1-raag.jadav@intel.com>
+ <20250307052231.551737-3-raag.jadav@intel.com>
+ <Z8_aJqNKK9AgBnK8@black.fi.intel.com>
+ <Z9FpU0Ik_4yCU9XB@smile.fi.intel.com>
+ <Z9G-RSfcRmALtgJe@black.fi.intel.com>
+ <Z9HTU2BlXIa95S0V@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250313-qcs8300-cpufreq-scaling-v1-1-d4cd3bd9c018@quicinc.com>
+In-Reply-To: <Z9HTU2BlXIa95S0V@smile.fi.intel.com>
 
-On Thu, Mar 13, 2025 at 11:33:39AM +0530, Imran Shaik wrote:
-> Document compatible for cpufreq hardware on Qualcomm QCS8300 platform.
+On Wed, Mar 12, 2025 at 08:32:51PM +0200, Andy Shevchenko wrote:
+> On Wed, Mar 12, 2025 at 07:03:01PM +0200, Raag Jadav wrote:
+> > On Wed, Mar 12, 2025 at 01:00:35PM +0200, Andy Shevchenko wrote:
+> > > On Tue, Mar 11, 2025 at 08:37:26AM +0200, Raag Jadav wrote:
+> > > > On Fri, Mar 07, 2025 at 10:52:28AM +0530, Raag Jadav wrote:
+> > > > > Now that we have Intel MFD driver for PSE GPIO, depend on it.
+> > > 
+> > > > Andy, any guidance on GPIO?
+> > > 
+> > > I'm not sure what we are waiting here from me. Hadn't I reviewed your GPIO
+> > > part already?
+> > 
+> > Ah, I added MFD dependency for leaf drivers after your v1 review.
+> > So this one seems missing the tag. Can I add it?
 > 
-> Signed-off-by: Imran Shaik <quic_imrashai@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> I see, but this can be added later on.
+> And on the second thought, do we accept the configurations
+> when user wants to have GPIO on EHL, and doesn't care about TIO?
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Yes, here we're making the leaf driver (GPIO) depend on MFD regardless
+of what TIO config is.
 
-Best regards,
-Krzysztof
+> Maybe this patch is not needed after all?
 
+My understanding is that GPIO should depend on MFD. Not much point in
+adding a standalone leaf driver right?
+
+Raag
