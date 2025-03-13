@@ -1,141 +1,106 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B05267B16;
-	Thu, 13 Mar 2025 13:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA68824E010;
+	Thu, 13 Mar 2025 13:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741871533; cv=none; b=gVK7WjiL/uqUOcwTiKrfUJMRIlSmyTYZleFvEIGUupucBvjtatF0ATx0HQVVZTBgHl3f8swVA+nejm6Lmf8nuIqlcDWIe6UCmBKCtTwwmKVYgrEP9OYHMakNqgptPJU+LFG23x3r3423oSN2XbgYdWVtb+Kzl0YN6OuuDJWpzJU=
+	t=1741871608; cv=none; b=Uus+LFOIVFrtUOpTPVBh1SqqKI4VtgMQzmBB/HtKvhPQwQS6xCjVJyypC86ztnn7i0KHQr5Gq/RClTBOToUNbsG/2SMRj3mOlJmxXHkI2LKkb69S38E65+dueEJUP+5w1dmfM7a0Z0+fo0ne44EwmwxHVij2P77LOns2cVt4ssw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741871533; c=relaxed/simple;
-	bh=9w1ScaeSlWhq6L0g6c/1U2BXB6YORXYaIQ7F9hz9/qY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OjnuUEsEYjBSw2eQUyYokU6DmYPQ37F8EfGPb0rWJrzCmiIaGYP+kOtnkS4Cb4WpYYjmSkfmH5enZUP5n7ptEJaPAu+Kg/uDD7eD3pp1Cjnc7dYLA3pUCkWlLmnBql407JI85XXWFLI7QQqjvZjGjM8uxw4rSl2ZR9+cqPPjACM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HB9Wajep; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741871608; c=relaxed/simple;
+	bh=J+z1n7Bxb6o8wTtsy7p3X4ZDKg+uInjMhyvc0Z6LT7s=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dTRALuzsyxda9Z78h5m1xbDI8y+HctJConxISpYVBGkuz8tbA0RFb3fvZ1p3thkv2jd+AgEwibFt+6HwwFSmXOZ47IE2Ii6QqYjbTK4STzSmZ0oc2QrwB5adm/VuwnBB6nK8KfbG0J4DzdJIfBbGhYeK5r/b1xasU8+HHGB5DGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGDMr1yt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HB9Wajep"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so3683198a91.1;
-        Thu, 13 Mar 2025 06:12:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741871531; x=1742476331; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VwYK1vtIGu8AKr7d5DZZujGnya4yaossipP8/xTscq4=;
-        b=HB9WajepFATDdmUJw8koTd6cHjVTCR/yBl7vdrLrfWZMaSqi0MTQL2GRfJoCELGuFA
-         6bskLXCWdwI3GjOTaPG2US9ykhLiUXlFj6CErvkEr3zxdZ+U+xeYV5WzqZufvWP43eQT
-         JqNyUgR7Fp0lPB64LYRKRwKD0zUETDeKiB/eZUdexSGYvQaulMHRuCiIGkexugTWGJpk
-         i7Y9N0P3aoSJ0abSpN2SZMftJr/2w9S9WiVU7dJrI31h6vSE7wyzAjBuamhMau//rik9
-         GpItUg4HuvM4CZdcdSdZoKsBfoclqJCmb54uFoGaTfpdeC9WOhXncIVF8WH70Y4UNUd8
-         KAWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741871531; x=1742476331;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VwYK1vtIGu8AKr7d5DZZujGnya4yaossipP8/xTscq4=;
-        b=A8sSGLJhKMJiBbXWHng4/6A04NfAk8qACJ+25B0h4RaucOx71ATn/zS9GD8Bx5IOIC
-         2fX0RQEI/GW0Gcd7FQZ0JLlaz0kvdSVIaNDWKjyqqTZKfT2ASEMW2kmtDCPQGbtqpihH
-         M7oY0kdeqEKLSN5DkK2jd/Es5RdwO7MJrwF3eDTwOmGRLXEE3rVVudvkB11y4P//50v4
-         ZwmVFZ9CsH3UU1PorXYd/40MrHBX7h/1teLIRWv7MqQexyGKuXdc1TwZFUIXE6PC2FsA
-         RPDkjZUiWko8QMHW0yOpDbnW3M0rEuaQV+lq+fKGgaJHsPQA0nlv6p74+rzuWZPWIpYL
-         tA4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW3g0YzBM17xTWN1YClQ+FR1uc7/oXKyyIeuA/VVLW0nEZhVIUdbbb+CX8oCghTzwjU7m5jB0MI2/lMvxk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6IsbgQZtMOeraA6/fbCvu4NM9nfVBgV3Yo0Hpgpyb6kXcEcaE
-	FX6zh0EHCmT9nnLoorJr/B6uDKUIyA/YEK5F6Zm4p6AS6OWdjxAq
-X-Gm-Gg: ASbGncuG4j5lGqTrp2BkjNqxCag1aVUTaorDmjU3YXjy6wlaDpGYzLISZqCs9Fw2bia
-	qsaCh3ywQCQNWc+rirkICyHM28vnvqLamwkoUfq6UxENKdvyEZWcd+uioseDNM4t+31e0DvA9Um
-	4rRq3Wt4FpZleLEmdbE/ZD49FZL/NhvOcNAnVhsbtfAhPATi7KoGgb74FCp5Ak/BvTDqrK0BU9L
-	Nk9vs8uXp4yPCIJaG/ahwaU508v6nLbY2SfXVFCd47H0mTHVMoMu/UPIvYznpvvBHWpctfQACZq
-	O7DZfH9z/jC4M8CpUzmt7qloBNs790qAiC8=
-X-Google-Smtp-Source: AGHT+IEgH0CG5aSgef06SzCJvmgMptc8klfdSuHRJlwjKBRgnlA8cLsLiRUzsG4uJ77t6uFQlEZL9Q==
-X-Received: by 2002:a17:90b:4c48:b0:2fa:603e:905c with SMTP id 98e67ed59e1d1-30135e7dd3bmr3491447a91.2.1741871530193;
-        Thu, 13 Mar 2025 06:12:10 -0700 (PDT)
-Received: from [198.18.0.9] ([2a0f:7803:fac5:a7b6::1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6d52sm12539615ad.116.2025.03.13.06.12.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 06:12:09 -0700 (PDT)
-From: Zixian Zeng <sycamoremoon376@gmail.com>
-Date: Thu, 13 Mar 2025 21:11:50 +0800
-Subject: [PATCH v3 2/2] riscv: sophgo: dts: Add spi controller for SG2042
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGDMr1yt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D896C4CEDD;
+	Thu, 13 Mar 2025 13:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741871607;
+	bh=J+z1n7Bxb6o8wTtsy7p3X4ZDKg+uInjMhyvc0Z6LT7s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iGDMr1yt56hT38AnU7QgtDJVRAQ4z/El7xyRR254R19Mw9lHbuxc5KNyYJxOLR2N3
+	 1ss3vY7timc0KPyaVXnWTlDkHQGwykniSSjeIpwa8N7TDwcC6TWuCfQr7/rt2xy6ni
+	 sEvEAsdaqQ45HXAtcNHgImRIzPfXBt03m2nVl4q9mV2drYlZUbmN+gingSHtEyCJnQ
+	 nDK9oJ5njude0QOmAW+Baj39uitmDi5sEQQEjRU2/sZaz9jREYRBhKl0CZ/wb1nXKa
+	 feM34oAR3rC1yE+h0La2SlFBRYrZwnLaPvgWK9kbnkwLiDu45v8fEd90ArwFXsWlQm
+	 B8LAozVr/324g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tsiNJ-00DDNZ-3d;
+	Thu, 13 Mar 2025 13:13:25 +0000
+Date: Thu, 13 Mar 2025 13:13:24 +0000
+Message-ID: <86jz8tnkej.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	qperret@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v4 0/3] Count pKVM stage-2 usage in secondary pagetable stat
+In-Reply-To: <20250313114038.1502357-1-vdonnefort@google.com>
+References: <20250313114038.1502357-1-vdonnefort@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-sfg-spi-v3-2-e686427314b2@gmail.com>
-References: <20250313-sfg-spi-v3-0-e686427314b2@gmail.com>
-In-Reply-To: <20250313-sfg-spi-v3-0-e686427314b2@gmail.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@outlook.com>, 
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, sophgo@lists.linux.dev, chao.wei@sophgo.com, 
- xiaoguang.xing@sophgo.com, dlan@gentoo.org, 
- Zixian Zeng <sycamoremoon376@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741871512; l=1436;
- i=sycamoremoon376@gmail.com; s=20250113; h=from:subject:message-id;
- bh=9w1ScaeSlWhq6L0g6c/1U2BXB6YORXYaIQ7F9hz9/qY=;
- b=y6IxyvvuwFXWUchI1WelHOu7+mju3xNDsy3WvdI9VAq511ux6fzKK48wfDsf6hrr+pVYC/vJ3
- fD4fM4zDZdgAqOqp0ypkHLmYA1Iz+IPORpPRGe7/8lHkv6KavaPjD+5
-X-Developer-Key: i=sycamoremoon376@gmail.com; a=ed25519;
- pk=OYfH6Z2Nx3aU1r0UZdvhskmddV6KC6V1nyFjsQQt4J8=
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Add spi controllers for SG2042.
+On Thu, 13 Mar 2025 11:40:35 +0000,
+Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> This series allows to count stage-2 related memory when using pKVM. The
+> value can be found in the /proc/meminfo field SecPageTables.
+> 
+> Changes since v3: https://lore.kernel.org/all/20250307113411.469018-1-vdonnefort@google.com/
+>   - Remove unnecessary void * cast (Marc)
+>   - Rename reclaim_guest_pages() -> reclaim_pgtable_pages() (Marc)
+>   - Remove unnecessary PAGE_ALIGN(pgd_sz)
+> 
+> Changes since v2: https://lore.kernel.org/all/20250304134347.369854-1-vdonnefort@google.com/
+>   - Pass a pointer to kvm_hyp_memcache instead of just the flags
+>     (Oliver)
+> 
+> Changes since v1: https://lore.kernel.org/all/20250228121355.1377891-1-vdonnefort@google.com/
+>   - Flags to kvm_hyp_memcache
+>   - Separate stage-2 memcache
+>   - Account for PGD
+> 
+> Vincent Donnefort (3):
+>   KVM: arm64: Add flags to kvm_hyp_memcache
+>   KVM: arm64: Distinct pKVM teardown memcache for stage-2
+>   KVM: arm64: Count pKVM stage-2 usage in secondary pagetable stats
+> 
+>  arch/arm64/include/asm/kvm_host.h             |  4 ++++
+>  arch/arm64/kvm/hyp/include/nvhe/mem_protect.h |  2 +-
+>  arch/arm64/kvm/hyp/nvhe/mem_protect.c         |  2 +-
+>  arch/arm64/kvm/hyp/nvhe/pkvm.c                |  8 +++----
+>  arch/arm64/kvm/mmu.c                          | 22 ++++++++++++++-----
+>  arch/arm64/kvm/pkvm.c                         |  5 +++++
+>  6 files changed, 32 insertions(+), 11 deletions(-)
 
-SG2042 uses the upstreamed Synopsys DW SPI IP.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
----
- arch/riscv/boot/dts/sophgo/sg2042.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-index e62ac51ac55abd922b5ef796ba8c2196383850c4..9e0ec64e91a2330698aea202c8f0a2ca1f7e0919 100644
---- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-+++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-@@ -545,5 +545,31 @@ sd: mmc@704002b000 {
- 				      "timer";
- 			status = "disabled";
- 		};
-+
-+		spi0: spi@7040004000 {
-+			compatible = "sophgo,sg2042-spi", "snps,dw-apb-ssi";
-+			reg = <0x70 0x40004000 0x00 0x1000>;
-+			clocks = <&clkgen GATE_CLK_APB_SPI>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <110 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			num-cs = <2>;
-+			resets = <&rstgen RST_SPI0>;
-+			status = "disabled";
-+		};
-+
-+		spi1: spi@7040005000 {
-+			compatible = "sophgo,sg2042-spi", "snps,dw-apb-ssi";
-+			reg = <0x70 0x40005000 0x00 0x1000>;
-+			clocks = <&clkgen GATE_CLK_APB_SPI>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <111 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			num-cs = <2>;
-+			resets = <&rstgen RST_SPI1>;
-+			status = "disabled";
-+		};
- 	};
- };
+	M.
 
 -- 
-2.48.1
-
+Without deviation from the norm, progress is not possible.
