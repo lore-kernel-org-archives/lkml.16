@@ -1,152 +1,200 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2052.outbound.protection.outlook.com [40.107.247.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAE413BC3F;
-	Thu, 13 Mar 2025 07:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741851310; cv=none; b=LyaGzSaFaHVj2eW3rMak5nL0zkR/dLRJN24JZudoZx9DUx7kbbVMMOxS16Zf4wNnKPTp8xyys19dXTPGFIAY0gh6G06X7VEI1VwECtCNE4PC9ZGz5s5cRbiQR57XFPN9IoAbMNlKuaVLwXhihdjnxgRYqSWXz42QkAVwjhAS3CU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741851310; c=relaxed/simple;
-	bh=EdxGxN+VRDwhAkSIvCST7YEsLLAsc4WQBymWR5igh5U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E+Bzq0heDFLEQl94852tNB76BLnXjSDAbcM6duFNqL+MOWFPijhG7lUkEgGTM1JmVxNO6k1ktNC2325KEhCbtJnl5OTOGJQ4MQvADzxc5tDbJac6qcrEE1I4v36O1r6KzqJo16SYdKxw6NgwuWk5tCItihWP+prC4S6FOzDqjo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aRjHhLxI; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7404F13BC3F;
+	Thu, 13 Mar 2025 07:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741851417; cv=fail; b=TnmoRFJZbkeqz09YXJ0OrBVvuYXiT5tKy2upF0gR4ypQel35U++Yoyw+10vytPM3ZUVWbmhY5QRIVGoaGZioYAiLahWKkg/wmq4CicKaZsJypngwRXLJajzlnduQdqnJeXLpV+9Y/Wq31WLM2B5K0stFcHY2w+356nLy6vFSBcU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741851417; c=relaxed/simple;
+	bh=NSFOtVIUC6BTn9ziAAVIEP9CzsMEam+5Q4tPmieDVxo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bvPmw3iH48CHZhdoXEDHupzSsVwyQ9llY/5vwYRgxgnb3ZrHSAOZ/uT6VhNDm4kGAu2xK8TQwwTU3jFmwIrDwEnTPUJ65Xi2d9daNH07yOEFm0l1F5moKXrBwkldOCDg30mb4nDpcDTN8lGCRn9JmWTLDjBzLOZZ7h4JbOH1zoc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de; spf=pass smtp.mailfrom=arri.de; dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b=IUK/glcJ; arc=fail smtp.client-ip=40.107.247.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arri.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aRjHhLxI"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e614da8615so1283047a12.1;
-        Thu, 13 Mar 2025 00:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741851307; x=1742456107; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YUsrUN0Sa3eMBis7ScutQ4swK59H4nn7rnZNJQLZ63Y=;
-        b=aRjHhLxIyJf/6HTj4bJrNEPoxP+KrM9Vtd90FIA8N1OINusUEJRklZuMueLAJnBj2j
-         /v06sI7x0T4jt8RIs9EALuWpIPfspg85Ev1racAvLlW7r5YwsHJS65nrsckpdX5mRJk8
-         PK6/OII/01fp0O94ci2Iq5gAjIU0aQMsB1noXn7V6KKUNigob5c+/LSbHrn6Kw5g2+cs
-         41fu5H7pu400cYcHqpsC1081HghYBn2OvxLErES5UN0QAZ3epiiJ3D3SrSRctFvlL3eN
-         43ioQjnkZPD3S/I3gIKvhWAh3pZiNGCD7AVzoyY8hF0wbdI+qjPHYW1R3HytZmFuXRIR
-         1Feg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741851307; x=1742456107;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YUsrUN0Sa3eMBis7ScutQ4swK59H4nn7rnZNJQLZ63Y=;
-        b=tUgkei0m8aTf7cikGISMv3R9Z/SkNdB8am+ZAwd4/6fp4qRQCoosEwPMj49pLK3Lw8
-         u2UBA4HRS6moFVzeU4KiUaONOB/5hhA+noXZOvTHZhTbbI+6qsVYKojBePQ6KzvYuTqY
-         k96BjSeotHkqyERul4tRrOstQlCwU9GQWoc3OXToS22C5GXqb5wOrClhgRrWzLYNHTF1
-         OwUAsP4FLPyx73Iva7FtOhfiZ7MuyTkrhfShH/oH6lnYPtHXxew9n3Bk7oP8AuqaN32z
-         mKmvZynZHEnNdCSuI9JX3HDkHedIsOXgp4waxSRWKl89gRa9p3s1Os8hCRztJI4pcQn7
-         G9QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFlU6/P726+E3MXCbIsB0xiT2H7LGhVoIKcLgI3zEfPJs+kIkQpe3fLkDPnowLgcj/NjY1BuWug4QQiQ==@vger.kernel.org, AJvYcCV/+3uEQ2/pIHGnDdi+od93T50CKMM3E792Lg5HjxLjLoAynmd9m8X5EM9EoJ4n6xzm50YObqJQDbftS6lX@vger.kernel.org, AJvYcCVHgbvJHnnFWzfIdSyYHIIqlDktsqeIL7gENTZwc9gjcK9SGn183Tg5Um6wyouba+YT6WMB2jxGGX0y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzK31OG/tpUD/M+i80W22/C0lsEKzXO3jbxraaQvOAFI2YVUu6q
-	tnowNeONr3djZkzmgpHyjPE6JoGs9S8OaGJE4aXf4mSY+n1on3RNc3wzEJ95gGARMui4egY0tmG
-	74zy/9JObzfHzvfdklA7TvyBEeP/joZ5exVsCwQ==
-X-Gm-Gg: ASbGncsN+wpYnzlHvkBbvEkGIFCQ0DFGsYgSVwnc1+mYkmbPOsQKcCyFNrQ5k/6hyJm
-	tN+M+h7Ww1ULmlGhLe+aMNG2h+JwahfcznlL2vuzN/IBtp0wUJLrMhkZAHzrfvwRa80deY9hh4e
-	Ij76pd2iQqGTJsYUar6iMuuvI66mMGSs8Zr0qUOshPDER6
-X-Google-Smtp-Source: AGHT+IG0AbFafmJCSVXuCn9+d9aJ6rWGv0lewSciVuUOX99LLiYxCavfe+aGJvWGZ3Z6k5yceyGSjWwk/zr0TjlaX0g=
-X-Received: by 2002:a05:6402:2550:b0:5e5:9c04:777 with SMTP id
- 4fb4d7f45d1cf-5e814d805b7mr1311903a12.6.1741851306525; Thu, 13 Mar 2025
- 00:35:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b="IUK/glcJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=s0spTgP66bHLwK+ylu+3kbYHYc0ENWgOcT76r9ACA73xKas5R6I9Oo28hTYcyt4R1lwVHx/cVWnDaVis3e1bKetwdyt/mRIsPWMWE0s1zLOercQiQ+4M0tAuLprCng1ZCioggUL8YsxMJuK6+cf57xfQhN4ZbZ1uYR/lHHQngyl+Z5LIOaWOFWzZ/3oJc5vyTbvoEYO0qySGmT/zm9YF+uuqEnKzx+vcNaMnBcGGaRj1qQVbQXjsXAJkYBVz/wTeFPoBdAlfGETNW3F40Ty77VKJoxcq2p09rTZbFrNbNELgMS+g0fG7dkj/Zpr3z60AvPqVaWcDKkfdlFXL24/5qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/wxyyEMOC83t3aXL3UnOiqtjK8mWbCIgQAHULQv9clE=;
+ b=OCbUAByAoD8j/lrfYTZylv1+vkJOD1yuimfsAYLcJMJtyvPQIxTvMz7xeEb1JGdrQV49HBQWJcp1jJM1cjcynzZxcUQqHDa1LYDpI8bZzCed7Tx6VOktGgg3avCP/3m31ZuiXYjUNWfHa8Dry/LryUXEsq9+tk4ov7iZhAFm3NYTQO4hXFwNJnA1oxfcioO9HgpGrqANtpuItjRrzz0yhzkAQXkso1/Qx8a7f762IR2Rxa4uixLheZbMdDaUMlBFVZyN2FLeWPQmefokIa/vr5/iJmVp6iFYsqxBI7KOz3ZFwe5u7vm04L2vMAjssrvm4Oq9/H48ugEV44TEsM+8TQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 217.111.95.7) smtp.rcpttodomain=chromium.org smtp.mailfrom=arri.de;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=arri.de;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arri.de; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/wxyyEMOC83t3aXL3UnOiqtjK8mWbCIgQAHULQv9clE=;
+ b=IUK/glcJfSEUwr/gtkgg6k4CDcl4WLGOPoEI9AKrRkfOy7Nh7grdEYqrQunYPKQzVucxFLDdrrApM5AGYHNY6aS81btHWP58oyMm30P6kVN+NoQVEjormW6CXCr3B8jgc+4gFfWj+8c/zFZ37yF7UY0U1vHiRFLGn+wjtXR1PZc=
+Received: from DU7P195CA0019.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:54d::32)
+ by DU0PR03MB8669.eurprd03.prod.outlook.com (2603:10a6:10:3e9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.28; Thu, 13 Mar
+ 2025 07:36:46 +0000
+Received: from DB1PEPF000509FA.eurprd03.prod.outlook.com
+ (2603:10a6:10:54d:cafe::5f) by DU7P195CA0019.outlook.office365.com
+ (2603:10a6:10:54d::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.26 via Frontend Transport; Thu,
+ 13 Mar 2025 07:36:46 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 217.111.95.7)
+ smtp.mailfrom=arri.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=arri.de;
+Received-SPF: Fail (protection.outlook.com: domain of arri.de does not
+ designate 217.111.95.7 as permitted sender) receiver=protection.outlook.com;
+ client-ip=217.111.95.7; helo=mta.arri.de;
+Received: from mta.arri.de (217.111.95.7) by
+ DB1PEPF000509FA.mail.protection.outlook.com (10.167.242.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.15 via Frontend Transport; Thu, 13 Mar 2025 07:36:46 +0000
+Received: from n9w6sw14.localnet (10.30.5.19) by mta.arri.de (10.10.18.5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.38; Thu, 13 Mar
+ 2025 08:36:45 +0100
+From: Christian Eggers <ceggers@arri.de>
+To: Doug Anderson <dianders@chromium.org>
+CC: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] regulator: dummy: force synchronous probing
+Date: Thu, 13 Mar 2025 08:36:45 +0100
+Message-ID: <4942246.OV4Wx5bFTl@n9w6sw14>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <CAD=FV=UBUN+DERvSdZn67FUvyT+U_CNJs0HUdHooSZSK2F6Nsw@mail.gmail.com>
+References: <20250311091803.31026-1-ceggers@arri.de>
+ <CAD=FV=UBUN+DERvSdZn67FUvyT+U_CNJs0HUdHooSZSK2F6Nsw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-8-git-send-email-nunodasneves@linux.microsoft.com>
- <CAMvTesAW-9Mo0oY6UUh2anp6DQCSsVCUhBiV2-bKp2VD_N0DYw@mail.gmail.com> <5e3e8c30-912c-4fe3-bfac-1ae21242473b@linux.microsoft.com>
-In-Reply-To: <5e3e8c30-912c-4fe3-bfac-1ae21242473b@linux.microsoft.com>
-From: Tianyu Lan <ltykernel@gmail.com>
-Date: Thu, 13 Mar 2025 15:34:28 +0800
-X-Gm-Features: AQ5f1JpFmeyU-ZXvz0ptwRLZ-nTkXcfB_mlOTr3vDPCyoNGFdLAtzHdNo9-Hw44
-Message-ID: <CAMvTesAPeLBfYVa5TGx-o6p+0g_Q1bn6s+nZK5i7NK8QGyfbTA@mail.gmail.com>
-Subject: Re: [PATCH v5 07/10] Drivers: hv: Introduce per-cpu event ring tail
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com, 
-	haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com, 
-	decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org, 
-	joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de, 
-	jinankjain@linux.microsoft.com, muminulrussell@gmail.com, 
-	skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com, 
-	ssengar@linux.microsoft.com, apais@linux.microsoft.com, 
-	Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com, 
-	gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com, 
-	muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org, 
-	lenb@kernel.org, corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509FA:EE_|DU0PR03MB8669:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd8ada07-4572-4b30-21e1-08dd6201cef3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dWhEVlBSbnBHSDJUeW1EeVQzMyttUnBnRE8xUEpiVk9SZDM1R3Q3WGQvblVY?=
+ =?utf-8?B?VlVJYWd3VUhTTEdiOXFxMUs1UXlGTEZDck16UmcrRDFGWVlNVm1iZmgyODM2?=
+ =?utf-8?B?dGJQVm9jVTdwd2l1LzFVYWdBNnFzdU5uNlJPNllPMmp4Zk1CQUdTaTNvQThP?=
+ =?utf-8?B?UTFVOXFMY1RpblpXZ0RZZ3BQUkJaMU9MMEtMblYxUlQ3VUdSeEs5d3NBMHBC?=
+ =?utf-8?B?aFRlR1ZmbWdnOEFqN1VYUVF1aWxscFBrU01LVW5HVUluWDFjQmlUOEoySlUz?=
+ =?utf-8?B?UVJnY2hHZkJSVzIxT2VUUi83bUZpSEhEaDNqVm1tclVHUUI2ZzFSZFp1aHJp?=
+ =?utf-8?B?M3E5UDBqZFQ5MGVmU2ZCZG5la1NTTERNcjRKY1RGL3o1eXVBWXpFbEZDbzRr?=
+ =?utf-8?B?Z3M1TFEvay9vaVZnbXlxYzJnY3lZa091amNWRmtOc3ZUaFFFNW9KQ3RKdWpR?=
+ =?utf-8?B?TWxXY2c4R3lPME8xZkQwaDg1NUhzRWRueWJuR2o2Z0lNVDVqMVM3MXptVmRq?=
+ =?utf-8?B?bU5aa0NjWDF6eGhVcmlUV2dmUk4zbXNGMjdHOGtmZkZSTEJpVys2cVZwc2JV?=
+ =?utf-8?B?a3BsSXNkditDYjRqdDZkQlZGdDhLc3YvbnNINnh4a2REQyttQ25WNVV0TUlj?=
+ =?utf-8?B?NjZzSGpjV2dOaksyaWJUbGtaQVVqb01mTytkWGpwalBJV3pLTWVVVTdraVhs?=
+ =?utf-8?B?UWlwZ09CVjFqMTVXYklPSE5Ca2lEQlhyODZ4UGcva0hrQ2dGaCtyd3U3NjF1?=
+ =?utf-8?B?Y1I1eDBYdmtveFQ3NTUwZFFsaFk3Y0NpWTVydGZZbFE0QkFYb0JGRUhMZGtB?=
+ =?utf-8?B?UUdzeGtnQ2ROZW13ZExqUnI2eC83UDU2RXZnVGF3aGN0RURlQ0ZZMlR3WmtW?=
+ =?utf-8?B?Z1p6bVhmd3JQcVlVNjV3azE5VEUwWVE5WUp6U1JReVF2Z1RXVkJrL1laOXdJ?=
+ =?utf-8?B?cXVFU1JsNk5EcGpGSm5YTTVsOStqdFR2cGRZck53M2I1Vk5kZERNZERkblIy?=
+ =?utf-8?B?b0ZFb2lOR0ZQbmtwQkFScm1sbnp3eldLM0d6TXl0anM2TlpXQ0wvS28zNENy?=
+ =?utf-8?B?c3ZUYS85OGk3SVpBb0FndTl3enpVWWsrWGYxRFVxUjhpcXBNSXhLWE00WUVu?=
+ =?utf-8?B?VS9paDN6ZUJoZWZZRmptem4zK2REdTM3Ykhva2NFZEJnTzdjNkorYmJrRUhD?=
+ =?utf-8?B?OWlaRXlGQ2NHQlcvbHc5T3Btb1RPZkR1eVFtMjlpT2VNWVlHZjlIWWtGa3lJ?=
+ =?utf-8?B?WW5IOUo5eFp3cWxhYVg4MTd2ejh0djU3Y1pVay9XV0dHbGR5SEJ6N2dLeFpy?=
+ =?utf-8?B?NnhnVzNCVS9vREJ1MjJnM3Exc0R5U1BJT0dRUmNiMzViZXhlVmp0NkNXdGhr?=
+ =?utf-8?B?d3JmdTFiT1paMFJRblRvYytJM21BYW4vbGNMcThNTjRBOXJvbzRPK0RQMVZG?=
+ =?utf-8?B?QTFlbEliRE5aSmc4WkNUQ08xbkVKeENHaTBRV01LTTlhKzcyTlJ0cTY2em1j?=
+ =?utf-8?B?WVdpajZRWFNGeVZIa2U1Z1VQMTkrcjBBQVBTKzlpZTN3alJ5VUxPa2JyOEho?=
+ =?utf-8?B?czRRUXJTVTFSUEkybXJ3VWU2dGNLR2cvK0d3REl6VmEzOUgyd0ZUcThwc0tz?=
+ =?utf-8?B?eEpJcWpsNGwzd2MxN0Y4d01BbTdkQmsyNUhzdGdtY0tSU1ZmUWRVNkFyTkhP?=
+ =?utf-8?B?WXRZSzFVcTlvNjlFYVo5MzgyQ0orMXZGeTJ1dnlKYmlQL3FxandBVWROVzND?=
+ =?utf-8?B?UEpZdFF1ZVZpbURxdWoxdDZlOHdxYllWMzR1a1R4WmJpcDJldE1xbUNmcFJH?=
+ =?utf-8?B?YXRzRmUwWjdaeUZncHBrcStMc3VBUDBDazZIODBKUExIbVRBODBYV3NqZXFK?=
+ =?utf-8?B?QUd2SWdMNFpNNWI2VEZFMGJlWEdwa1duZ21qNXk4ZHRuMFlZL3NoYzVXOWtZ?=
+ =?utf-8?B?alorMUVUNWIyTmpsUzZQYzkycXV5UXJPTHhmQXgraGs4VnVRbUtXUmlnUkgz?=
+ =?utf-8?B?aTM3TC9TdDV3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:217.111.95.7;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mta.arri.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arri.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 07:36:46.2383
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd8ada07-4572-4b30-21e1-08dd6201cef3
+X-MS-Exchange-CrossTenant-Id: e6a73a5a-614d-4c51-b3e3-53b660a9433a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e6a73a5a-614d-4c51-b3e3-53b660a9433a;Ip=[217.111.95.7];Helo=[mta.arri.de]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509FA.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR03MB8669
 
-On Thu, Mar 13, 2025 at 3:45=E2=80=AFAM Nuno Das Neves
-<nunodasneves@linux.microsoft.com> wrote:
->
-> On 3/10/2025 6:01 AM, Tianyu Lan wrote:
-> > On Thu, Feb 27, 2025 at 7:09=E2=80=AFAM Nuno Das Neves
-> > <nunodasneves@linux.microsoft.com> wrote:
-> >>
-> >> Add a pointer hv_synic_eventring_tail to track the tail pointer for th=
-e
-> >> SynIC event ring buffer for each SINT.
-> >>
-> >> This will be used by the mshv driver, but must be tracked independentl=
-y
-> >> since the driver module could be removed and re-inserted.
-> >>
-> >> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> >> Reviewed-by: Wei Liu <wei.liu@kernel.org>
+Hi Doug,
+
+On Thursday, 13 March 2025, 01:42:14 CET, Doug Anderson wrote:
+> Hi,
+>=20
+> On Tue, Mar 11, 2025 at 2:18=E2=80=AFAM Christian Eggers <ceggers@arri.de=
+> wrote:
 > >
-> > It's better to expose a function to check the tail instead of exposing
-> > hv_synic_eventring_tail directly.
+> > Sometimes I get a NULL pointer dereference at boot time in kobject_get()
+> > with the following call stack:
 > >
-> What is the advantage of using a function for this? We need to both set
-> and get the tail.
-
-We may add lock or check to avoid race conditions and this depends on the
-user case. This is why I want to see how mshv driver uses it.
-
->
-> > BTW, how does mshv driver use hv_synic_eventring_tail? Which patch
-> > uses it in this series?
+> > anatop_regulator_probe()
+> >  devm_regulator_register()
+> >   regulator_register()
+> >    regulator_resolve_supply()
+> >     kobject_get()
 > >
-> This variable stores indices into the synic eventring page (one for each
-> SINT, and per-cpu). Each SINT has a ringbuffer of u32 messages. The tail
-> index points to the latest one.
->
-> This is only used for doorbell messages today. The message in this case i=
-s
-> a port number which is used to lookup and invoke a callback, which signal=
-s
-> ioeventfd(s), to notify the VMM of a guest MMIO write.
->
-> It is used in patch 10.
+> > By placing some extra BUG_ON() statements I could verify that this is
+> > raised because probing of the 'dummy' regulator driver is not completed
+> > ('dummy_regulator_rdev' is still NULL).
+> >
+> > In the JTAG debugger I can see that dummy_regulator_probe() and
+> > anatop_regulator_probe() can be run by different kernel threads
+> > (kworker/u4:*).  I haven't further investigated whether this can be
+> > changed or if there are other possibilities to force synchronization
+> > between these two probe routines.  On the other hand I don't expect much
+> > boot time penalty by probing the 'dummy' regulator synchronously.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: 259b93b21a9f ("regulator: Set PROBE_PREFER_ASYNCHRONOUS for driv=
+ers that existed in 4.14")
+> > Signed-off-by: Christian Eggers <ceggers@arri.de>
+> > ---
+> > v2:
+> > - no changes
+> >
+> >  drivers/regulator/dummy.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> Not that it should really hurt, but do we need both commit
+> cfaf53cb472e ("regulator: check that dummy regulator has been probed
+> before using it") and this one? It seems like commit cfaf53cb472e
+> ("regulator: check that dummy regulator has been probed before using
+> it") would be sufficient and we don't really need to force the
+> regulator to synchronous probing.
 
-I found "extern u8 __percpu **hv_synic_eventring_tail;" in the
-drivers/hv/mshv_root.h of patch 10.
-I seem to miss the code to use it.
+actually I also tested successfully without synchronous probing (only with =
+checking
+that the dummy regulator has been probed) and this also worked fine (just to
+be sure, I also added a temporary delay in the dummy's probe routine).  But=
+ as
+the dummy regulator doesn't rely on slow I/O, I felt that synchronous probi=
+ng
+makes more sense than "busy-waiting" for it.
 
-+int hv_call_unmap_stat_page(enum hv_stats_object_type type,
-+                           const union hv_stats_object_identity *identity)=
-;
-+int hv_call_modify_spa_host_access(u64 partition_id, struct page **pages,
-+                                  u64 page_struct_count, u32 host_access,
-+                                  u32 flags, u8 acquire);
-+
-+extern struct mshv_root mshv_root;
-+extern enum hv_scheduler_type hv_scheduler_type;
-+extern u8 __percpu **hv_synic_eventring_tail;
-+
-+#endif /* _MSHV_ROOT_H_ */
+>=20
+> ...not that I expect the dummy probing synchronously to be a big deal,
+> I just want to make sure I understand.
+>=20
+> -Doug
+>=20
 
---=20
-Thanks
-Tianyu Lan
+regards,
+Christian
+
+
+
