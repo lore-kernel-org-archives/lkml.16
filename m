@@ -1,97 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D209518FDBD;
-	Thu, 13 Mar 2025 19:24:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FF61F0E44;
+	Thu, 13 Mar 2025 19:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741893867; cv=none; b=SPr7txCQZCBSwyJL7f9ModCMTavo4sMcGqLkRH9iL5nUNuEAnN10Z6sDEVtJ3mytVbNAI2iHM/2s8yD7cDCYDs2pMz5O1pwvzvf+4QqPE3V5wwyNb31PzDxBmdxvXMVJDjG/18fzulArWdDpWTFQOBYMeRKYsI3o05QDIKkWRs8=
+	t=1741893929; cv=none; b=Z1IaYOCzdgDx8ZuuzD1ow2itLvSBSNKfjUCq5K7LG369DqsXkEgiFJf087DhUZSwaGfKEu9JpDU4b6MT5o55dqunTMDjBLi8+WU1hGYMk8xyysEtqYZDqzxUc7cgTWuNu4HeJabzwJYrL8GqQ4JfkCgGHtlXNXrAXiE1kiF3Mfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741893867; c=relaxed/simple;
-	bh=Oi+QSQY/o+WOAGwbP4uzzDLoZ12NQRz2LrSANng7vaI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cwKliizfAmFJvejSb/ivR2lLKe8ySUuDT6JE/x3Lk6hbQt7nLm9qJaz5auh0TEbOavvZfC70QsKvaO6HinJgjirzjZChrTnW7tmMqoJVVDj3T0PAeAeAo3PRNrdeV6Q5YuhuqPBL1KjSPC/TN4jYbbpCLBGEX66JgNKK4Sl113Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIzT7BHa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741893929; c=relaxed/simple;
+	bh=yxiAMWFPSVAofz831CA+K4Hh79wA9YHNplBeSyna3TM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jMJLntX9mj6WMqgb6UCORWkABJPS9lsx7TJKQHciCy+56CSZltykU8GBO0XjDQeH7LRng7cHS1XPAhlppy+N0lKc50usuafYzDDwCs/Q/2DtQrrif9TnzNtDQkMR8/h53g6VkZUoMCxAKbI3mKlCTa1ovJFKC0zdMbje0SORyio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPJgOpe9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIzT7BHa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 560A9C4CEE3;
-	Thu, 13 Mar 2025 19:24:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPJgOpe9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12817C4CEDD;
+	Thu, 13 Mar 2025 19:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741893867;
-	bh=Oi+QSQY/o+WOAGwbP4uzzDLoZ12NQRz2LrSANng7vaI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=HIzT7BHaAS0ftCR5OHDlgxGf7JQc5Gu96B6mp0Lv8he6Wg2ngPt6uJsbvgGB5m/7H
-	 o59bq5gj+fv8wqQ7VOicb2ctBHwIv0PBPzfwgB1KdlZs5lSH9pZ1RzDHNb+5dJpo+I
-	 29GAk9H1v6ADqhNs1eKSkJWppcDwmw7k+rYpiiQOpGmKKCVQo+BV2MTcb7pG7qH3D3
-	 EtpXebbKpVjpf+fe/9+zDYhuUR23dSgntI4+ePjw5OcyxkyuzeUgXUQ9KkYFFaBlKJ
-	 q4SyheRYfJ9gJr/iA4kMAPqptz7x8ny3EYxdI0fDqlOE5qKonzC42XSr09r4cs1IlK
-	 MHNWaRgpC6LaA==
-From: Mark Brown <broonie@kernel.org>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, 
- Daniel Baluta <daniel.baluta@nxp.com>, 
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-In-Reply-To: <20250312160516.3864295-1-andriy.shevchenko@linux.intel.com>
-References: <20250312160516.3864295-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] ASoC: SOF: ipc4-topology: Allocate ref_params
- on stack
-Message-Id: <174189386404.702483.10429797398965893983.b4-ty@kernel.org>
-Date: Thu, 13 Mar 2025 19:24:24 +0000
+	s=k20201202; t=1741893929;
+	bh=yxiAMWFPSVAofz831CA+K4Hh79wA9YHNplBeSyna3TM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KPJgOpe93pLPceyqMGiheFfbp+8h9RCPRT1sy0A6eTFck7MJM8YVW/dm47Vt7LJ7D
+	 o61fnfxLahhuA2lQ6XEn1+/j+htEcIE6ogBd+oFTra2i3a3yVMV04qU5uF0a27F+8c
+	 QYe0CwLtEiUzZk3CTt6GxYHpnF0x7AR0DFtyELubR45UH2l9jAStPp0gTCZYzZX9w5
+	 2h8UeX2LA/gLbbw9GGqtHbp2rILwgOR6ahamIxjJC/X5j8GNJo48izljnAjRV6fVJ+
+	 ocxCAbtlieMNXdUGuHLawvqLOEN7Z02MYk0s06+znzM7IbdJSTpB5APzJVkiVC3KEz
+	 xO0hpFWh2Z0zQ==
+Date: Thu, 13 Mar 2025 20:25:23 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
+Subject: Re: [PATCH RFC 1/3] rust: core abstractions for HID drivers
+Message-ID: <Z9MxI0u2yCfSzTvD@cassiopeiae>
+References: <20250313160220.6410-2-sergeantsagara@protonmail.com>
+ <20250313160220.6410-4-sergeantsagara@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313160220.6410-4-sergeantsagara@protonmail.com>
 
-On Wed, 12 Mar 2025 18:05:16 +0200, Andy Shevchenko wrote:
-> Currently the compiler (clang 19.1.7) is not happy about the size of
-> the stack frame in sof_ipc4_prepare_copier_module:
+On Thu, Mar 13, 2025 at 04:03:35PM +0000, Rahul Rameshbabu wrote:
+> These abstractions enable the development of HID drivers in Rust by binding
+> with the HID core C API. They provide Rust types that map to the
+> equivalents in C. In this initial draft, only hid_device and hid_device_id
+> are provided direct Rust type equivalents. hid_driver is specially wrapped
+> with a custom Driver type. The module_hid_driver! macro provides analogous
+> functionality to its C equivalent.
 > 
-> sound/soc/sof/ipc4-topology.c:1800:1: error: stack frame size (1288) exceeds limit (1024) in 'sof_ipc4_prepare_copier_module' [-Werror,-Wframe-larger-than]
->  1800 | sof_ipc4_prepare_copier_module(struct snd_sof_widget *swidget,
->       | ^
+> Future work for these abstractions would include more bindings for common
+> HID-related types, such as hid_field, hid_report_enum, and hid_report.
+> Providing Rust equivalents to useful core HID functions will also be
+> necessary for HID driver development in Rust.
 > 
-> [...]
+> Some concerns with this initial draft
+>   - The need for a DeviceId and DeviceIdShallow type.
+>     + DeviceIdShallow is used to guarantee the safety requirement for the
+>       Sync trait.
+>   - The create_hid_driver call in the module_hid_driver! macro does not use
+>     Pin semantics for passing the ID_TABLE. I could not get Pin semantics
+>     to work in a const fn. I get a feeling this might be safe but need help
+>     reviewing this.
 
-Applied to
+For a lot of things in this patch we have common infrastructure, please see
+rust/kernel/{device.rs, driver.rs, device_id.rs}. I think you should make use of
+the common infrastructure that solves the corresponding problems already.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+It provides generic infrastructure for handling device IDs, a generalized
+Registration type, based on InPlaceModule with a common module_driver!
+implementation for busses to implement their corresponding module macro, etc.
 
-Thanks!
+There are two busses upstream, which are based on this infrastructure:
+rust/kernel/{pci.rs, platform.rs}.
 
-[1/1] ASoC: SOF: ipc4-topology: Allocate ref_params on stack
-      commit: a935b3f981809272d2649ad9c27a751685137846
+There is a patch series that improves soundness of those two bus abstractions
+[1], which should be taken into consideration too. Even though your
+implementation isn't prone to the addressed issue, it would be good to align
+things accordingly.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+There is a third bus abstraction (auxiliary) on the mailing list [2], which
+already implements the mentioned improvements, which you can use as canonical
+example too.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+[1] https://lore.kernel.org/rust-for-linux/20250313021550.133041-1-dakr@kernel.org/
+[2] https://lore.kernel.org/rust-for-linux/20250313022454.147118-1-dakr@kernel.org/
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+> Signed-off-by: Rahul Rameshbabu <sergeantsagara@protonmail.com>
+> ---
+>  drivers/hid/Kconfig             |   8 ++
+>  rust/bindings/bindings_helper.h |   1 +
+>  rust/kernel/hid.rs              | 245 ++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs              |   2 +
+>  4 files changed, 256 insertions(+)
+>  create mode 100644 rust/kernel/hid.rs
