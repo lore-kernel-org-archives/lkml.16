@@ -1,304 +1,324 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B1E1F4629;
-	Thu, 13 Mar 2025 20:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464D542AA9;
+	Thu, 13 Mar 2025 20:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741898134; cv=none; b=aDvQcspjsUkEWF1CLFS1MogqZkbOZmO3o9XoC7wZN1qTIlCFE9qsnibOWjBXsEP+2MvzT4TzG4xOXtxYygGjyqeKZhoHrzX13iLgCipwg8XhMb4rKDm/zAiHbamjGcV1XA91zMK3tzCZABdTQ8roH/zEb8SR4rjrIaRgorN3+Jk=
+	t=1741898200; cv=none; b=cJl6zq787hWP6YNa1/mj4WIbMldNrImbAbYP+ZiSZK3+fMrhox1x5oPcyRED/t04BKK1ZS0/nYNulEn6dBoJB8Sl8rOz7n5TbHZad7119VXc8z6Hp1UI5B7rZ8WOU4O+OD7Z3k0b5wGoUg6owAKzh/9xYdZIxEjF8lKBQhypTN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741898134; c=relaxed/simple;
-	bh=07RaQwLG1ZQ6iEnzoTxQiO05Gm8Rsfct4gDJ9ijKynk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lQgmT0mrgWsMY5vNy958c2i4xDd2Vvo4WqGReGia1w4HOsBJshaoPjZecsNK6ih5xAb3ldfjujA51iqUvx8oEE6uD4gHrQaDcj4a7e7oS3QAX19mH9CmAm/BPkN7pu3R+PsnKXy24Ct8OnGqtukmuZ8X5QApI+nEetb9OdwR1WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=dHcKMIjJ; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1741898200; c=relaxed/simple;
+	bh=mLAlCqYCbYi8Tz7gyZwo2pmMdHDEESJWMN8CkQrRVgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SPnW1kBpZHZhXmxbBcpiX/fDy1Qmcx1u0Qc/4ug/TRUlTJqVAzfkwpgJeNG8VELB00S2mI73MJaotnW6LzPTQ6YijGwvEtMcTuaF047vArkhEQgjqlT8TJFnN7CJ48sNWRptWDgofCh9iglmtDFW2WpEMRbg8gxRif2Ewbmy7DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B2CxPUzz; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="dHcKMIjJ"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
- id 4e3b9c4d6bbf6f51; Thu, 13 Mar 2025 21:35:29 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id CB0528E4517;
-	Thu, 13 Mar 2025 21:35:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1741898129;
-	bh=07RaQwLG1ZQ6iEnzoTxQiO05Gm8Rsfct4gDJ9ijKynk=;
-	h=From:Subject:Date;
-	b=dHcKMIjJH+m6f8Fvu0PmcfDLp8rEq2GL4wx0H0Z0jjY9CmxRLkNCJNeM9QH6mzZu1
-	 4H8tVzyQsuzIZ0KPbimyRORIUtk97YiImnKP8i79uO/wLKfwtZ8tFSiCOa9zAoAYvU
-	 0g2a1/dXHTBZkU+U6J7TlPYg3afB1Gr3H4gM3OEy00Kw2feo8QWKWDNV1kuehAUubb
-	 gzbtOU9vRUlNswzm+HZ3/mwaiq7Kw90JdXv7hAwXYV4vYF2K2DwoeB6AefPc729LH2
-	 6cW6VJZvVgM7vc5l9g+MN0wc88DJYuy5fBHg79pJ2Ld4uL5LDK2WDrt1iAkvU0qBNL
-	 To8PLmLpB4xwA==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>,
- Johan Hovold <johan@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jon Hunter <jonathanh@nvidia.com>, Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v2 1/3] PM: sleep: Resume children after resuming the parent
-Date: Thu, 13 Mar 2025 21:26:53 +0100
-Message-ID: <3346996.44csPzL39Z@rjwysocki.net>
-In-Reply-To: <1915694.tdWV9SEqCh@rjwysocki.net>
-References: <1915694.tdWV9SEqCh@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B2CxPUzz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741898198; x=1773434198;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mLAlCqYCbYi8Tz7gyZwo2pmMdHDEESJWMN8CkQrRVgI=;
+  b=B2CxPUzzwIA7Or/79hbGlhMwhVMhH0DIc8hYFWtzZ5ygvpSoVVxyhgSR
+   9XR3DSTNpUm6VB2C52QB7iJIUtuAj7j7fnvJao2M3PaVjJWxRdzjMQQEX
+   xS1qCkM78OKpdfwVz7JxVcVShvy3n1EzUHTtHVUonVWLwRer0UWhAmhiK
+   QM6wyYl8mbXT/6PNLsghHHn5G1xI5J964Blqtez/kY1M56iZaYDAs7bmJ
+   crqpv+BVPYww7hUyiKtlDdmhXzXJ/XutjGYKsbA7zgiTxt8IqMltgtBEJ
+   IJsAiaxi2uXCnhElQMiPJ7uZOd18s56QybNe4E+Yadwe+XRZ7ihe7BBj8
+   A==;
+X-CSE-ConnectionGUID: X1tI+qqqRBa9pXHNyXGtcQ==
+X-CSE-MsgGUID: iQP0V+wySqqOtLhhWdHz1g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="42945407"
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="42945407"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 13:36:37 -0700
+X-CSE-ConnectionGUID: vjmZss9dQii/lO6d73MReA==
+X-CSE-MsgGUID: zXm1khAJSWaao1/Zy1PU3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="122000600"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 13:36:37 -0700
+Date: Thu, 13 Mar 2025 13:36:35 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: "Moger, Babu" <babu.moger@amd.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	"Moger, Babu" <bmoger@amd.com>,
+	Peter Newman <peternewman@google.com>,
+	Dave Martin <Dave.Martin@arm.com>, corbet@lwn.net,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	paulmck@kernel.org, akpm@linux-foundation.org, thuth@redhat.com,
+	rostedt@goodmis.org, xiongwei.song@windriver.com,
+	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com,
+	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com,
+	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com,
+	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com,
+	mario.limonciello@amd.com, james.morse@arm.com,
+	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
+	eranian@google.com
+Subject: Re: [PATCH v11 00/23] x86/resctrl : Support AMD Assignable Bandwidth
+ Monitoring Counters (ABMC)
+Message-ID: <Z9NB0wd8ZewLjNAd@agluck-desk3>
+References: <Z890Q2GoP6GecwW4@agluck-desk3>
+ <04e47d0e-6447-451e-98e4-7ea65187d370@amd.com>
+ <6508cf67-3263-432e-892c-9b502b3c6cd4@intel.com>
+ <f8a20ed8-6e30-4cff-a96b-8df89a605081@amd.com>
+ <d07a70f5-b1ca-4766-a1d9-53988dd9164f@intel.com>
+ <14c14b11-5b45-4810-8e46-019c8a67fc90@amd.com>
+ <1db8ad73-5194-4821-844a-8fd7cac72ad4@intel.com>
+ <9b8653a3-c6fd-4748-a4b5-94d5598d180f@amd.com>
+ <20ec195a-c4dd-48d9-89f6-4d48fd438fe8@intel.com>
+ <be6d23c8-3e93-4bdc-8b33-d3af7df7cc94@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvdekledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepfeduudeutdeugfelffduieegiedtueefledvjeegffdttefhhffhtefhleejgfetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtvghrnhesrhhofihlrghnugdrhhgrrhhvrghrugdrvgguuhdprhgtphhtthhopehulhhfrdhhrghnshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopeh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be6d23c8-3e93-4bdc-8b33-d3af7df7cc94@amd.com>
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Mar 13, 2025 at 03:13:32PM -0500, Moger, Babu wrote:
+> Hi Reinette,
+> 
+> On 3/13/25 11:08, Reinette Chatre wrote:
+> > Hi Babu,
+> > 
+> > On 3/12/25 11:14 AM, Moger, Babu wrote:
+> >> Hi Reinette,
+> >>
+> >> On 3/12/25 12:14, Reinette Chatre wrote:
+> >>> Hi Babu,
+> >>>
+> >>> On 3/12/25 9:03 AM, Moger, Babu wrote:
+> >>>> Hi Reinette,
+> >>>>
+> >>>> On 3/12/25 10:07, Reinette Chatre wrote:
+> >>>>> Hi Babu,
+> >>>>>
+> ..
+> 
+> >>>>>> We can add the mkdir support later. That way we can provide basic ABMC
+> >>>>>> support without too much code complexity with mkdir support.
+> >>>>>
+> >>>>> This is not clear to me how you envision the "first phase". Is it what you
+> >>>>> proposed above, for example:
+> >>>>>       #echo "LclFill, LclNTWr, RmtFill" >
+> >>>>>          /sys/fs/resctrl/info/L3_MON/counter_configs/mbm_local_bytes
+> >>>>>
+> >>>>> In above the counter configuration name is a file. 
+> >>>>
+> >>>> Yes. That is correct.
+> >>>>
+> >>>> There will be two configuration files by default when resctrl is mounted
+> >>>> when ABMC is enabled.
+> >>>> /sys/fs/resctrl/info/L3_MON/counter_configs/mbm_total_bytes
+> >>>> /sys/fs/resctrl/info/L3_MON/counter_configs/mbm_local_bytes
+> >>>>
+> >>>>>
+> >>>>> How could mkdir support be added to this later if there are already files present?
+> >>>>
+> >>>> We already have these directories when resctrl is mounted.
+> >>>> /sys/fs/resctrl/test/mon_data/mon_L3_00/mbm_total_bytes
+> >>>> /sys/fs/resctrl/test/mon_data/mon_L3_00/mbm_local_bytes
+> >>>> /sys/fs/resctrl/test/mon_data/mon_L3_01/mbm_total_bytes
+> >>>> /sys/fs/resctrl/test/mon_data/mon_L3_01/mbm_local_bytes
+> >>>>
+> >>>> We dont need "mkdir" support for default  configurations.
+> >>>
+> >>> I was referring to the "mkdir" support for additional configurations that
+> >>> I understood you are thinking about adding later. For example,
+> >>> (copied from Peter's message
+> >>> https://lore.kernel.org/lkml/CALPaoCiii0vXOF06mfV=kVLBzhfNo0SFqt4kQGwGSGVUqvr2Dg@mail.gmail.com/):
+> >>>
+> >>>
+> >>>  # mkdir info/L3_MON/counter_configs/mbm_local_bytes
+> >>>  # echo LclFill > info/L3_MON/counter_configs/mbm_local_bytes/event_filter
+> >>>  # echo LclNTWr > info/L3_MON/counter_configs/mbm_local_bytes/event_filter
+> >>>  # echo LclSlowFill > info/L3_MON/counter_configs/mbm_local_bytes/event_filter
+> >>>  # cat info/L3_MON/counter_configs/mbm_local_bytes/event_filter
+> >>> LclFill
+> >>> LclNTWr
+> >>> LclSlowFill
+> >>>
+> >>> Any "later" work needs to be backward compatible with the first phase.
+> >>
+> >> Actually, we dont need extra file "event_filter".
+> >> This was discussed here.
+> >> https://lore.kernel.org/lkml/CALPaoChLL8p49eANYgQ0dJiFs7G=223fGae+LJyx3DwEhNeR8A@mail.gmail.com/
+> > 
+> > I undestand from that exchange that it is possible to read/write from
+> > an *existing* kernfs file but it is not obvious to me how that file is
+> > planned to be created.
+> 
+> My bad.. I misspoke here. We need "event_filter" file under each
+> configuration.
+> 
+> 
+> > 
+> > My understanding of the motivation behind support for "mkdir" is to enable
+> > user space to create custom counter configurations.
+> > 
+> 
+> That is correct.
+> 
+> > I understand that ABMC support aims to start with existing mbm_total_bytes/mbm_local_bytes
+> > configurations but I believe the consensus is that custom configurations need
+> > to be supported in the future.
+> > If resctrl starts with support where counter configuration as
+> > managed with a *file*, for example:
+> > /sys/fs/resctrl/info/L3_MON/counter_configs/mbm_total_bytes
+> > how will user space create future custom configurations?
+> > As I understand that is only possible with mkdir.
+> > 
+> >>
+> >> # echo LclFill > info/L3_MON/counter_configs/mbm_local_bytes
+> >> # echo LclNTWr > info/L3_MON/counter_configs/mbm_local_bytes
+> >> # echo LclSlowFill > info/L3_MON/counter_configs/mbm_local_bytes
+> >> # cat info/L3_MON/counter_configs/mbm_local_bytes
+> >>  LclFill
+> >>  LclNTWr
+> >>  LclSlowFill
+> >>
+> >> In the future, we can add mkdir support.
+> >>
+> >> # mkdir info/L3_MON/counter_configs/mbm_read_only
+> > 
+> > This is exactly my concern. resctrl should not start with a user space where
+> > a counter configuration is a file (mbm_local_bytes/mbm_total_bytes) and then
+> > switch user space interface to have counter configuration be done with
+> > directories.
+> > 
+> >> # echo LclFill > info/L3_MON/counter_configs/mbm_read_only
+> >> # cat info/L3_MON/counter_configs/mbm_read_only
+> >>   LclFill
+> > 
+> > ... wait ... user space writes to the directory?
+> > 
+> 
+> My bad. This is wrong. Let me rewrite the steps below.
+> 
+> > 
+> > 
+> >>
+> >> #echo mbm_read_only > test/mon_data/mon_L3_00/assign_exclusive
+> >>
+> >> Which would result in the creation of test/mon_data/mon_L3_*/mbm_read_only
+> >>
+> >> So, there is not breakage of backword compatibility.
+> > 
+> > The way I understand it I am seeing many incompatibilities. Perhaps I am missing
+> > something. Could you please provide detailed steps of how first phase and
+> > second phase would look?
+> 
+> No. You didn't miss anything. I misspoke on few steps.
+> 
+> Here are the steps. Just copying steps from Peters proposal.
+> https://lore.kernel.org/lkml/CALPaoCiii0vXOF06mfV=kVLBzhfNo0SFqt4kQGwGSGVUqvr2Dg@mail.gmail.com/
+> 
+> 
+> 1. Mount the resctrl
+>    mount -t resctrl resctrl /sys/fs/resctrl
+> 
+> 2. When ABMC is supported two default configurations will be created.
+> 
+>   a. info/L3_MON/counter_configs/mbm_total_bytes/event_filter
+>   b. info/L3_MON/counter_configs/mbm_local_bytes/event_filter
+> 
+>   These files will be populated with default total and local events
+>   # cat info/L3_MON/counter_configs/mbm_total_bytes/event_filter
+>     VictimBW
+>     RmtSlowFill
+>     RmtNTWr
+>     RmtFill
+>     LclFill
+>     LclNTWr
+>     LclSlowFill
+> 
+>   # cat info/L3_MON/counter_configs/mbm_local_bytes/event_filter
+>    LclFill,
+>    LclNTWr
+>    LclSlowFill
+> 
+> 3. Users will have options to update the event configuration.
+>    echo LclFill > info/L3_MON/counter_configs/mbm_local_bytes/event_filter
 
-According to [1], the handling of device suspend and resume, and
-particularly the latter, involves unnecessary overhead related to
-starting new async work items for devices that cannot make progress
-right away because they have to wait for other devices.
+Once the "mkdir" support described below is implemented users will not
+need to redefine these legacy event file names. That makes me happy.
 
-To reduce this problem in the resume path, use the observation that
-starting the async resume of the children of a device after resuming
-the parent is likely to produce less scheduling and memory management
-noise than starting it upfront while at the same time it should not
-increase the resume duration substantially.
+> 
+> 4. As usual the events can be read from the mon_data directories.
+>    #mkdir /sys/fs/resctrl/test
+>    #cd   /sys/fs/resctr/test
+>    #cat  test/mon_data/mon_data/mon_L3_00/mbm_tota_bytes
+>    101010
+>    #cat   test/mon_data/mon_data/mon_L3_00/mbm_local_bytes
+>    32323
+> 
+> 5. There will be 3 files created in each group's mon_data directory when
+> ABMC is supported.
+> 
+>    a. test/mon_data/mon_L3_00/assign_exclusive
+>    b. test/mon_data/mon_L3_00/assign_shared
+>    c. test/mon_data/mon_L3_00/unassign
+> 
+> 
+> 6. Events can be assigned/unassigned by these commands
+> 
+>  # echo mbm_total_bytes > test/mon_data/mon_L3_00/assign_exclusive
+>  # echo mbm_local_bytes > test/mon_data/mon_L3_01/assign_exclusive
+>  # echo mbm_local_bytes > test/mon_data/mon_L3_01/unassign
+> 
+> 
+> Note:
+> I feel 3 files are excessive here. We can probably achieve everything in
+> just one file.
 
-Accordingly, modify the code to start the async resume of the device's
-children when the processing of the parent has been completed in each
-stage of device resume and only start async resume upfront for devices
-without parents.
+Maybe the one file could look like:
 
-Also make it check if a given device can be resumed asynchronously
-before starting the synchronous resume of it in case it will have to
-wait for another that is already resuming asynchronously.
+# cat mon_L3_assignments
+mbm_total_bytes: exclusive
+mbm_local_bytes: shared
+mbm_read_only: unassigned
 
-In addition to making the async resume of devices more friendly to
-systems with relatively less computing resources, this change is also
-preliminary for analogous changes in the suspend path.
+with new lines appearing when mkdir creates new events, and the obvious
+write semantics:
 
-On the systems where it has been tested, this change by itself does
-not affect the overall system resume duration in a significant way.
+# echo "mbm_total_bytes: unassigned" > mon_L3_assignments
 
-Link: https://lore.kernel.org/linux-pm/20241114220921.2529905-1-saravanak@google.com/ [1]
-Suggested-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
+to make updates.
 
-v1 -> v2:
-   Use a separate lock for power.work_in_progress protection which should
-   reduce lock contention on dpm_list_mtx.
+> Not sure about mbm_assign_control interface as there are concerns with
+> group listing holding the lock for long.
+> 
+> -----------------------------------------------------------------------
+> Second phase, we can add support for "mkdir"
+> 
+> 1. mkdir info/L3_MON/counter_configs/mbm_read_only
+> 
+> 2. mkdir option will create "event_filter" file.
+>    info/L3_MON/counter_configs/mbm_read_only/event_filter
+> 
+> 3. Users can modify event configuration.
+>    echo LclFill > info/L3_MON/counter_configs/mbm_read_only/event_filter
+> 
+> 4. Users can assign the events
+> 
+>   echo mbm_read_only > test/mon_data/mon_L3_00/assign_exclusive
+> 
+> 5. Events can be read in
+> 
+>    test/mon_data/mon_data/mon_L3_00/mbm_read_only
 
----
- drivers/base/power/main.c |   80 +++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 61 insertions(+), 19 deletions(-)
+Is there a matching "rmdir" to make this go away again?
 
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -63,6 +63,7 @@
- static DEFINE_MUTEX(dpm_list_mtx);
- static pm_message_t pm_transition;
- 
-+static DEFINE_MUTEX(async_wip_mtx);
- static int async_error;
- 
- static const char *pm_verb(int event)
-@@ -597,8 +598,11 @@
- 		&& !pm_trace_is_enabled();
- }
- 
--static bool dpm_async_fn(struct device *dev, async_func_t func)
-+static bool __dpm_async(struct device *dev, async_func_t func)
- {
-+	if (dev->power.work_in_progress)
-+		return true;
-+
- 	if (!is_async(dev))
- 		return false;
- 
-@@ -611,14 +615,37 @@
- 
- 	put_device(dev);
- 
-+	return false;
-+}
-+
-+static bool dpm_async_fn(struct device *dev, async_func_t func)
-+{
-+	guard(mutex)(&async_wip_mtx);
-+
-+	return __dpm_async(dev, func);
-+}
-+
-+static int dpm_async_with_cleanup(struct device *dev, void *fn)
-+{
-+	guard(mutex)(&async_wip_mtx);
-+
-+	if (!__dpm_async(dev, fn))
-+		dev->power.work_in_progress = false;
-+
-+	return 0;
-+}
-+
-+static void dpm_async_resume_children(struct device *dev, async_func_t func)
-+{
- 	/*
--	 * async_schedule_dev_nocall() above has returned false, so func() is
--	 * not running and it is safe to update power.work_in_progress without
--	 * extra synchronization.
-+	 * Start processing "async" children of the device unless it's been
-+	 * started already for them.
-+	 *
-+	 * This could have been done for the device's "async" consumers too, but
-+	 * they either need to wait for their parents or the processing has
-+	 * already started for them after their parents were processed.
- 	 */
--	dev->power.work_in_progress = false;
--
--	return false;
-+	device_for_each_child(dev, func, dpm_async_with_cleanup);
- }
- 
- static void dpm_clear_async_state(struct device *dev)
-@@ -627,6 +654,8 @@
- 	dev->power.work_in_progress = false;
- }
- 
-+static void async_resume_noirq(void *data, async_cookie_t cookie);
-+
- /**
-  * device_resume_noirq - Execute a "noirq resume" callback for given device.
-  * @dev: Device to handle.
-@@ -710,6 +739,8 @@
- 		dpm_save_failed_dev(dev_name(dev));
- 		pm_dev_err(dev, state, async ? " async noirq" : " noirq", error);
- 	}
-+
-+	dpm_async_resume_children(dev, async_resume_noirq);
- }
- 
- static void async_resume_noirq(void *data, async_cookie_t cookie)
-@@ -733,19 +764,20 @@
- 	mutex_lock(&dpm_list_mtx);
- 
- 	/*
--	 * Trigger the resume of "async" devices upfront so they don't have to
--	 * wait for the "non-async" ones they don't depend on.
-+	 * Start processing "async" devices without parents upfront so they
-+	 * don't wait for the "sync" devices they don't depend on.
- 	 */
- 	list_for_each_entry(dev, &dpm_noirq_list, power.entry) {
- 		dpm_clear_async_state(dev);
--		dpm_async_fn(dev, async_resume_noirq);
-+		if (!dev->parent)
-+			dpm_async_with_cleanup(dev, async_resume_noirq);
- 	}
- 
- 	while (!list_empty(&dpm_noirq_list)) {
- 		dev = to_device(dpm_noirq_list.next);
- 		list_move_tail(&dev->power.entry, &dpm_late_early_list);
- 
--		if (!dev->power.work_in_progress) {
-+		if (!dpm_async_fn(dev, async_resume_noirq)) {
- 			get_device(dev);
- 
- 			mutex_unlock(&dpm_list_mtx);
-@@ -781,6 +813,8 @@
- 	device_wakeup_disarm_wake_irqs();
- }
- 
-+static void async_resume_early(void *data, async_cookie_t cookie);
-+
- /**
-  * device_resume_early - Execute an "early resume" callback for given device.
-  * @dev: Device to handle.
-@@ -848,6 +882,8 @@
- 		dpm_save_failed_dev(dev_name(dev));
- 		pm_dev_err(dev, state, async ? " async early" : " early", error);
- 	}
-+
-+	dpm_async_resume_children(dev, async_resume_early);
- }
- 
- static void async_resume_early(void *data, async_cookie_t cookie)
-@@ -875,19 +911,20 @@
- 	mutex_lock(&dpm_list_mtx);
- 
- 	/*
--	 * Trigger the resume of "async" devices upfront so they don't have to
--	 * wait for the "non-async" ones they don't depend on.
-+	 * Start processing "async" devices without parents upfront so they
-+	 * don't wait for the "sync" devices they don't depend on.
- 	 */
- 	list_for_each_entry(dev, &dpm_late_early_list, power.entry) {
- 		dpm_clear_async_state(dev);
--		dpm_async_fn(dev, async_resume_early);
-+		if (!dev->parent)
-+			dpm_async_with_cleanup(dev, async_resume_early);
- 	}
- 
- 	while (!list_empty(&dpm_late_early_list)) {
- 		dev = to_device(dpm_late_early_list.next);
- 		list_move_tail(&dev->power.entry, &dpm_suspended_list);
- 
--		if (!dev->power.work_in_progress) {
-+		if (!dpm_async_fn(dev, async_resume_early)) {
- 			get_device(dev);
- 
- 			mutex_unlock(&dpm_list_mtx);
-@@ -919,6 +956,8 @@
- }
- EXPORT_SYMBOL_GPL(dpm_resume_start);
- 
-+static void async_resume(void *data, async_cookie_t cookie);
-+
- /**
-  * device_resume - Execute "resume" callbacks for given device.
-  * @dev: Device to handle.
-@@ -1018,6 +1057,8 @@
- 		dpm_save_failed_dev(dev_name(dev));
- 		pm_dev_err(dev, state, async ? " async" : "", error);
- 	}
-+
-+	dpm_async_resume_children(dev, async_resume);
- }
- 
- static void async_resume(void *data, async_cookie_t cookie)
-@@ -1049,19 +1090,20 @@
- 	mutex_lock(&dpm_list_mtx);
- 
- 	/*
--	 * Trigger the resume of "async" devices upfront so they don't have to
--	 * wait for the "non-async" ones they don't depend on.
-+	 * Start processing "async" devices without parents upfront so they
-+	 * don't wait for the "sync" devices they don't depend on.
- 	 */
- 	list_for_each_entry(dev, &dpm_suspended_list, power.entry) {
- 		dpm_clear_async_state(dev);
--		dpm_async_fn(dev, async_resume);
-+		if (!dev->parent)
-+			dpm_async_with_cleanup(dev, async_resume);
- 	}
- 
- 	while (!list_empty(&dpm_suspended_list)) {
- 		dev = to_device(dpm_suspended_list.next);
- 		list_move_tail(&dev->power.entry, &dpm_prepared_list);
- 
--		if (!dev->power.work_in_progress) {
-+		if (!dpm_async_fn(dev, async_resume)) {
- 			get_device(dev);
- 
- 			mutex_unlock(&dpm_list_mtx);
-
-
-
+> -- 
+> Thanks
+> Babu Moger
