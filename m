@@ -1,179 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2068.outbound.protection.outlook.com [40.107.220.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3086826A1CC
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866300; cv=none; b=N+ME4xTPcGCTaPTO/znOkI04hRmFEzlHMBuWBJymm9N/ZDxtKbzsH3NZxBSwtF9wHoktZBicDjKcT5XpnSpWvv+EOIfCLQrwh7cl9WgI7WRiIL2twpbsd1s4vgXgqhpt2sTGTPdmet2YoILhzSkXTJw3XaszhXL7/TPYuz+l46M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741866300; c=relaxed/simple;
-	bh=LkqKUNYGs/ePGkjxR4/GakhMBC+dOQkDGsyg7Jru2eY=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1816D26AA82;
+	Thu, 13 Mar 2025 11:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741866303; cv=fail; b=gGLvJaCwU1B1YdF8q4IJAS7SA4TUk2X/hrwGnuzV4VcOhO4jZUS+bvlNubvu91SmjjOeo4TvJZGdMrM00MwHQAoawPlfb862XA1C+KhwNcNx9ktFE2ho+FIZ6XD9OMKkD4L8Banq9dOp9NgpTo+otUfKAlwiHLue1sE3mTniim0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741866303; c=relaxed/simple;
+	bh=P3+YM0f5ETW+4xiTeUlwUe1IFK+sgSIn9CRh9WK/06A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-type; b=kiyGrmJXcUaS7mIFQ8kUZV+suR/v5U41mAbuOc7tt2UHVn+haElBZWGZ+QdQHbudiK5SSO+mkxbfhIVU+xnCH9SqAeBheQrRdMg35zoJ5ma+DWco9tG3HwBhgxRJakq+WT9XUGukDOZkAl1nrkAouckRB4Cl87DUGE8/CVfCKgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KMQ9dFVA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version:Content-Type; b=DHN68p0aOqubKcejxDiUiqBiELrt7GCItU3oYsPm8PjvGgUfNYFpfAAzslPZkcDe6NN1WeYRnNZivv7ca+jtvF7boal0WmDwL5uieNpHN6VPC/MUA/IDetfrTA5gaJJhgCNd3D9Xnc+b+pUHQU2WYfQVlhBiiVEwGdPR5X9shag=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=Auek6UZb; arc=fail smtp.client-ip=40.107.220.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KMQ9dFVA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741866298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Td98jnkcLGUCy3vrjbMOv35ZA5bivtUA493Q3YOVPt4=;
-	b=KMQ9dFVAw0PY8UoGH2ZnQtv2EV1wkdO5uMIhmgRIISCHv2e6UOaDaVi7LvbwZbNh7n7E4v
-	rpZttcOhxtu+k3vFQyVx1b9bXyRJvVjAlEWjpsuJ4piW3btDMboUi+UlsJ7nfie3PM21rl
-	iSt6HWBX/qir8+M8pUGYWT8Z2x0h6lo=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-502-Vn0p1R1ZOou3i-R39klHOg-1; Thu, 13 Mar 2025 07:44:57 -0400
-X-MC-Unique: Vn0p1R1ZOou3i-R39klHOg-1
-X-Mimecast-MFC-AGG-ID: Vn0p1R1ZOou3i-R39klHOg_1741866296
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-391425471d6so306873f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:44:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741866296; x=1742471096;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Td98jnkcLGUCy3vrjbMOv35ZA5bivtUA493Q3YOVPt4=;
-        b=Tng2Ef36r1mNGdRm5c1VUwhVmoX5Yv4rrWmclbaEqnB3HSCJGA+VYr+owZyHfIyvIA
-         IPcmKrXZeUArmHRaBoXeImdlXqqApcud3oAODKMY9lQEYn8GEx5OIfnRza0188cRns6F
-         U5X8W7+q65oW+gJbB7jTFW5LXP4rhXz7VVBkiGFV/2iLkvtz9p5MnXMEddsb/ys14qs8
-         /5cDSV3C0O2EumIlTepIipvw1fZz99wYFEm0F835hApgXeT1ZTrMKIXYSU0uZet1s7Y6
-         VXCIh9lYP8Tam9+clbjuM3+8apHQfSX8JBeUhFUtZCRgE5Rt8FxXEOO0p8emVnQgwv6K
-         hbvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtTcIziuV3TPIXC+9/RVTWohx7+MuAwUN5ffMAJBWvJu/dlx9ao3tnYt608nbCYXqAOlak0OPTy0eixSM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo4TQIly2A84PAJ46R1fcjhWTBJFRhc8MQz2B1Fjk5Zh28sKss
-	a8ZzM02UTkHrps5vFV7RxZ4lkvDTiXp18Qb3wY1N+2tDga08HWuxawvCiHjiioUU8NxtzpUZTiX
-	pfdMXiYXOvkwy+cyaWDXYQ4Gs98HKzmNwQ+PtaXo+asbHpGBBVwJd8izcBozgmA==
-X-Gm-Gg: ASbGncudNXdA4iqP9YQO4aWbJ5j5NTiQE+PDobQkGe12yhTfHz94za0zZYcj5bKROPL
-	BZolEM0Du5yDBI+plhEvxKDiUR7G2IshYdVIKaG/ykpsnf0qb7avpjEUDqIYCme+2a3Jrmgnnbo
-	TyNov4ibkX5/lMvPAbG9DaAYSH2fRVLv09Dp7NDuVI7L7UlmseJMEg3JW0akCD0yF9zAzA9ZYSX
-	/Y5fG4LVKVZGmZ/GkvWqyiSAZz45oYe1HJYi5gLtOvtnpRblhF0/NAMajXBVPRsrEAHKdVcighK
-	PYvcWXEX8NqmyF6HbMTb
-X-Received: by 2002:a5d:64a8:0:b0:391:23e7:968d with SMTP id ffacd0b85a97d-39132db703cmr17836131f8f.47.1741866296135;
-        Thu, 13 Mar 2025 04:44:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEyU2ePtAFWyqCZMakOsiK4/iIhrDziNVQawXJEAak4gPJli8tipIq38M0q9zksW0XKC08fAA==
-X-Received: by 2002:a5d:64a8:0:b0:391:23e7:968d with SMTP id ffacd0b85a97d-39132db703cmr17836093f8f.47.1741866295677;
-        Thu, 13 Mar 2025 04:44:55 -0700 (PDT)
-Received: from lab.hqhome163.com ([81.57.75.210])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d188b754asm17844115e9.14.2025.03.13.04.44.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 04:44:54 -0700 (PDT)
-From: Alessandro Carminati <acarmina@redhat.com>
-To: linux-kselftest@vger.kernel.org
-Cc: David Airlie <airlied@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <keescook@chromium.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Alessandro Carminati <alessandro.carminati@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	dri-devel@lists.freedesktop.org,
-	kunit-dev@googlegroups.com,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	x86@kernel.org,
-	Simon Horman <horms@kernel.org>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Alessandro Carminati <acarmina@redhat.com>
-Subject: [PATCH v4 12/14] sh: Move defines needed for suppressing warning backtraces
-Date: Thu, 13 Mar 2025 11:43:27 +0000
-Message-Id: <20250313114329.284104-13-acarmina@redhat.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250313114329.284104-1-acarmina@redhat.com>
-References: <20250313114329.284104-1-acarmina@redhat.com>
+	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="Auek6UZb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h4KLjt9BtQXIAcb5/nAPUicXzylGaToD41Yy3khS2XGdqgj5zUD4ndD2S51RYKDOg92qIIWNPkaxePdRoLzczqv8qcYupDrvOpR7vkOr/ykvQ1CUyt0l0ScT5tppbhhpdV897bFH88obJQQwUgMutx3R5xB3jtoPovMNEY8ya+ZOkqDhLWnMqJEs2uE/R79fMN48iloAbM98AED4ezRuuHgccA7W4n3c6fIeVUQts4lzBHw0Ga9JW9tXmEKNBteZ2iqV0pKe9TAEhMqcAy1uKtdW5SioT7bnWeQ1XBAWVgNQx7xqQhehdAljwxY3yM2k7ueQm1mDNyVilrMykG/YuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1b4HawMqfhQNkyfgtNHV837DrRzk6LbbGUhuiAJ/8OU=;
+ b=DhcD+C5Pj+fJ1FQWzLpZKJhbTnLaFPyDwfpFMJJfgPR9BeJuUKOG4MdmVR5RpHNHXUrJZv5q66nLE+d2FfdtkfRLc8SBfpfluHgA2a/g7+f6mrbhnEYyP717HidyaZfSievC2EEuHocWNBLErYz3AlGAhZc8K8lwN3rrQ7vil11sCoghGxeQR5QHkeAtpXPLaOdYglWeBLU1DSCgo4cdHgWvHCOf68rHLlGxasuH+e0wwMcROzRLy+WcH9pi9QWo5c9bBa5dg2CucVnzSjOO8hDW8h0bHQIRx7CGTFQW7UFVx1JpfbfomyX0HkxLbWf0BZj8IZPPDD9KmlBMCSakNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 165.85.157.49) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=gehealthcare.com; dmarc=fail (p=quarantine sp=quarantine
+ pct=100) action=quarantine header.from=gehealthcare.com; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gehealthcare.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1b4HawMqfhQNkyfgtNHV837DrRzk6LbbGUhuiAJ/8OU=;
+ b=Auek6UZbftM1gzEEh3Nc1a6YF+wtKLXNj6SNoDnyLdJF0bzBfLqBZ8JgpgzzkRHrklbQ+nfaUO3PtvbDZSRpFRwoDkscyQH+7VK/vXWofI3KN6VyHeGOcRS60WJ9K5H8Tsc+PoPjqeAQUjB/SG6qJLUwdGyUhblKjqHHKgrudo/rO+3MZMx1IeTiMVXS0p5va7Yo1BNaQFBDflzlnyzMJE4FdtHq2VtIhbuxosZsEnT9N9ybZiIfffgOyFM8KUig61rRFdGGpXvWvgZZmxHYFuVGw4/KfdEAlctRK1LDgA+A6zufYS7oARTsKtUzlKOZT+cZa2hAShQwLsJOdrhWKw==
+Received: from PH0PR07CA0106.namprd07.prod.outlook.com (2603:10b6:510:4::21)
+ by BY1PR22MB5559.namprd22.prod.outlook.com (2603:10b6:a03:4ac::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.25; Thu, 13 Mar
+ 2025 11:44:58 +0000
+Received: from SN1PEPF0002BA52.namprd03.prod.outlook.com
+ (2603:10b6:510:4:cafe::71) by PH0PR07CA0106.outlook.office365.com
+ (2603:10b6:510:4::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.24 via Frontend Transport; Thu,
+ 13 Mar 2025 11:44:58 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 165.85.157.49)
+ smtp.mailfrom=gehealthcare.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=gehealthcare.com;
+Received-SPF: Fail (protection.outlook.com: domain of gehealthcare.com does
+ not designate 165.85.157.49 as permitted sender)
+ receiver=protection.outlook.com; client-ip=165.85.157.49;
+ helo=atlrelay1.compute.ge-healthcare.net;
+Received: from atlrelay1.compute.ge-healthcare.net (165.85.157.49) by
+ SN1PEPF0002BA52.mail.protection.outlook.com (10.167.242.75) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Thu, 13 Mar 2025 11:44:57 +0000
+Received: from 67fd243a5d78.fihel.lab.ge-healthcare.net (zoo13.fihel.lab.ge-healthcare.net [10.168.174.111])
+	by builder1.fihel.lab.ge-healthcare.net (Postfix) with ESMTP id 2894BCFB79;
+	Thu, 13 Mar 2025 13:44:55 +0200 (EET)
+From: Ian Ray <ian.ray@gehealthcare.com>
+To: dmitry.torokhov@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: ian.ray@gehealthcare.com,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: crypto: fsl,sec-v4.0-mon: add optional force shutdown time property
+Date: Thu, 13 Mar 2025 13:44:52 +0200
+Message-Id: <20250313114453.702-2-ian.ray@gehealthcare.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250313114453.702-1-ian.ray@gehealthcare.com>
+References: <20250313114453.702-1-ian.ray@gehealthcare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
 Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA52:EE_|BY1PR22MB5559:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 3baf8c1d-c89d-4862-3182-08dd62247b1e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?TPZbJJwkC2Dk9iLEZ7JOcBsVRpaPlEVH0iCXDu0FK95g06by2w5Ar3aIPde4?=
+ =?us-ascii?Q?zQZLN5Im2xBwOMTxhWd/eZ+VE7yQuRnPqysmeWGI9ScjAI/FidkWJjALKo+P?=
+ =?us-ascii?Q?b7Ev2/ChMaXp9iK9bhKlN0m1nkRuttZ/PPv0zIvVa/1liVYZABy0wxZKKiz+?=
+ =?us-ascii?Q?AmLa5CejSEMNgtL+eYmWQ9tZGU5tnX69qrQnboVqWueQEYklAI2DjgunLxlH?=
+ =?us-ascii?Q?yoXWHJ1nHwAq4XW92UBo71uTe3EnPnylsPlT0sGVY7J42/HZ+nX4/vV3LuHi?=
+ =?us-ascii?Q?AK+TELJjQBoSSsrH43XlAwzYiC9Nvzm36Xd77shjM/Usor7J6v5sOPi0F+n/?=
+ =?us-ascii?Q?FOrnx/0oOYXqJmMTcvyX2199BSZSzKcOfnZKgZjkvkVm4pu9i12QLU6fRCU1?=
+ =?us-ascii?Q?3oTNE19ydcYwVCiyXiNRD4UyUjEhwIqsMLmyNW6lNp+nXQH12e6YJrRkkjO4?=
+ =?us-ascii?Q?fC/wgl1fqpha7oYbU+WuqorPOHKzIobI7CG9MWrpXJE7JnpKdMY/7cuXF13z?=
+ =?us-ascii?Q?FVCrV7h4+6LwAbAfsSKpCDIwmi60+vdkhsZ0uPStELa3A6NJ4e68X7AfbAXJ?=
+ =?us-ascii?Q?udoQjveBQe0CXD7yXEhV7LH2cdcar/skGPCNk/M3/CiSSrGcezzlK/nOMy4v?=
+ =?us-ascii?Q?oJGk8Is89NdmTODGt3kJFii5V6o19pT4wnYIu4zN7DKLFi2SPwdHSkNfto+x?=
+ =?us-ascii?Q?qldb2e6U7OvhYI8AjbmB3vMSUBL6Sn88HCnEdAC7FzUuZzW/C7mzMib7wldd?=
+ =?us-ascii?Q?vtmOWPAI5kxEW56+uvXM9KGqRozTcuyfiqOHV9oxg376DGuRUVpkgtaInxDo?=
+ =?us-ascii?Q?GGyiTHiJrE3vkVJfMa3EzbTVfp35GcFnpNYt7f3ccO9USUz7oPtgd16Uo1yb?=
+ =?us-ascii?Q?x4d9eRH5ZoXObONrUPXMXOrDl7lDm5sU38lNsaLh3a1w3K4pnZQaa4/TOBH+?=
+ =?us-ascii?Q?Ck2U6swyDzxw6CU9Bsjt0OXZ31s5XkGU38wuZpWz6xlG8nzEiP46s3FHbh9H?=
+ =?us-ascii?Q?pXLigwn7VfwnnhNOvbnRWp5Ie6iTxdBlg+d0a9lMo4PPXMOGa79P0f6iY1Bo?=
+ =?us-ascii?Q?MHJLEZS+pD15s9XRvSIgrl7F/ORwcwl+ODAzrWgR9Q5YVWDR4G/ay4IOyzgB?=
+ =?us-ascii?Q?ZNzlS4eSXjX6P7Of80gHcD5KXcmynuTtgB3p0oc+Yz4EIZbZrzuZSosSr2SE?=
+ =?us-ascii?Q?RxAPI12byXDyym2rVoA85kfNiXTdVwtDuwY4OivS8pJ93j0vwhGf/UV2Eqf6?=
+ =?us-ascii?Q?Uiz57oG946VMLcybhELA/LM3X+mlQCC/gM9eQPBmvhCf/gR6pbQRDYjGol5W?=
+ =?us-ascii?Q?0vnQH9lSlOmsIQWVtf/gplHmBPMzVVwpJ4VC3qS8HX70jNTJdc4ofEtlwfWk?=
+ =?us-ascii?Q?XptpyELlmMc40TmGjZey0cVoSC5NpBP+n4Y84Ifvht9jei2D8UGluhEY9VaK?=
+ =?us-ascii?Q?LAVJiHovZ7scPrhMxpao94lB1p68S3a6p3ze3FBHKkuchHcBzvcMew=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.85.157.49;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:atlrelay1.compute.ge-healthcare.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: gehealthcare.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 11:44:57.6024
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3baf8c1d-c89d-4862-3182-08dd62247b1e
+X-MS-Exchange-CrossTenant-Id: 9a309606-d6ec-4188-a28a-298812b4bbbf
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=9a309606-d6ec-4188-a28a-298812b4bbbf;Ip=[165.85.157.49];Helo=[atlrelay1.compute.ge-healthcare.net]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SN1PEPF0002BA52.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR22MB5559
 
-From: Guenter Roeck <linux@roeck-us.net>
+Add an optional property to configure the force shutdown time.
 
-Declaring the defines needed for suppressing warning inside
-'#ifdef CONFIG_DEBUG_BUGVERBOSE' results in a kerneldoc warning.
-
-.../bug.h:29: warning: expecting prototype for _EMIT_BUG_ENTRY().
-	Prototype was for HAVE_BUG_FUNCTION() instead
-
-Move the defines above the kerneldoc entry for _EMIT_BUG_ENTRY
-to make kerneldoc happy.
-
-Reported-by: Simon Horman <horms@kernel.org>
-Cc: Simon Horman <horms@kernel.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Alessandro Carminati <acarmina@redhat.com>
+Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
 ---
- arch/sh/include/asm/bug.h | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/crypto/fsl,sec-v4.0-mon.yaml      | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
-index 470ce6567d20..bf4947d51d69 100644
---- a/arch/sh/include/asm/bug.h
-+++ b/arch/sh/include/asm/bug.h
-@@ -11,6 +11,15 @@
- #define HAVE_ARCH_BUG
- #define HAVE_ARCH_WARN_ON
+diff --git a/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0-mon.yaml b/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0-mon.yaml
+index e879bc0be8e2..ee282c352535 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0-mon.yaml
++++ b/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0-mon.yaml
+@@ -111,6 +111,14 @@ properties:
+         maxItems: 1
+         default: 116
  
-+#ifdef CONFIG_DEBUG_BUGVERBOSE
-+#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
-+# define HAVE_BUG_FUNCTION
-+# define __BUG_FUNC_PTR	"\t.long %O2\n"
-+#else
-+# define __BUG_FUNC_PTR
-+#endif /* CONFIG_KUNIT_SUPPRESS_BACKTRACE */
-+#endif /* CONFIG_DEBUG_BUGVERBOSE */
++      force-shutdown-time:
++        description: |
++          Configure the long-press force shutdown time.
++          Setting this value to zero disables the long-press detection.
++        $ref: /schemas/types.yaml#/definitions/uint32
++        enum: [0, 5, 10, 15]
++        default: 5
 +
- /**
-  * _EMIT_BUG_ENTRY
-  * %1 - __FILE__
-@@ -25,13 +34,6 @@
-  */
- #ifdef CONFIG_DEBUG_BUGVERBOSE
- 
--#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
--# define HAVE_BUG_FUNCTION
--# define __BUG_FUNC_PTR	"\t.long %O2\n"
--#else
--# define __BUG_FUNC_PTR
--#endif /* CONFIG_KUNIT_SUPPRESS_BACKTRACE */
--
- #define _EMIT_BUG_ENTRY				\
- 	"\t.pushsection __bug_table,\"aw\"\n"	\
- 	"2:\t.long 1b, %O1\n"			\
+     required:
+       - compatible
+       - interrupts
 -- 
-2.34.1
+2.39.5
 
