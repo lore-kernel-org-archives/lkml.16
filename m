@@ -1,61 +1,62 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A129545948
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 21:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F431F4C98
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 21:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741900020; cv=none; b=twqPaoq/DVsrYY/baB+E2EuEhkfRAR33YVowqRvNT9npX0vnj7xuDGBge9MMsWR2dwm5PjlHCcRoaXEMn0WBcn2w15J2MovQEXogLJAwB8wG15eaa5UbMzLdgGs5cm+JjzRMKf8vhZ61RQpb1uzQlfcvLnlHsCLqjdoaxc7wSTc=
+	t=1741900024; cv=none; b=lJZKNPT/enYkId4SCIvjmf3ESXdR2mL8x9keQv8WbGaGptxovD9nQe3DxSJERoZKs+a1QgoXHCYObdKb0RBFAQ9RIIme5lWNpVMuAoeQb59coIRMKMURMjkxinhbI7hAwJ2kafzNPp3CvtFhHAgFuGmMSyv4IL0OAr3wyptwTWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741900020; c=relaxed/simple;
-	bh=7zeuJ/gANn4pOQ7bDcZjWIQQLSbI9al+2RepJvI1+kg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YrU/AicdbIpMgp7ALnxe4U94qR9g7z8evv2PeyZQeD/1P1W6no6WlBicGWjsrk4ax6EFOTVuLfgOw10KHpTnTydmfbBMpDTldGn6OdTp+HqkSRh22LP42ffmACJWHj7oDpsNE+F9WbZydMgXb+RY6+LolMfYZErMzm+ivKyHhf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=sTwR3LqO; arc=none smtp.client-ip=209.85.219.45
+	s=arc-20240116; t=1741900024; c=relaxed/simple;
+	bh=N5ZPnD9eg87YeBGPF64tK0I+Kg3TFtErGSzVYhPtzeI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=spt8tB645wG3QOwDZ04Art98DXF7N79rUABtViHzbQdAO9BqYySZ4wtQZvRPNoWsdHaR8nPOMYf5L4ix0AkChQts/Bq9A7fzdtVEiVVlFETyUGRgXVXXsKl4LhOV2mxYuvoPVtLlpZSscOD+TDUWc6mu9SuQcojvJlTNqOV/v4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=cTYK3L2m; arc=none smtp.client-ip=209.85.222.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="sTwR3LqO"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e8f916e75fso29379396d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:06:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="cTYK3L2m"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7be6fdeee35so239369485a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:07:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1741900015; x=1742504815; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=acnkGczaHoZ7Fx3rgT5jbvpZ1dgElb8rpj0kySNqzQc=;
-        b=sTwR3LqO/bF/KeLDyg9IPgirAf0/oONsbbfj2GF1vg9jm0/bjt14OyBgl/qdkS2zQT
-         ZroBM0EO4hxgbeskdU5Aqn0m4lWcYp80vM6xtEiUTyuIn8/fXGYnN52CfMyDy1m302jC
-         MLOgEs/F1tVkFBVe05MemPpXIuxyWJ2cB4aJtAhc8qSCZSA1OBQxhHms2zSHS+/CpQQW
-         +KWLk5UDxzMWdVlzK3xzEBcudtUW2mXoucYw9bzCAzN2VIQJOVlRyFtZnHYf9R2KVQYE
-         UNLbo+zQpfm36rnynX8FQtscf8zocRuhwVW7YTCL7SEzF4zHlPNnhQCkNXMA8SIW8TbE
-         +x8w==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1741900021; x=1742504821; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2esPX4cdQSzTzPsUwG+c+ZkpjEsRNEpWoM7zt95z5xg=;
+        b=cTYK3L2maOz/3G3S7z0B0NYaoKGoWhMHNOGQ5jblhMRdYZC3bZhFr/bOZmBnznNrLz
+         xUNk45+DVQpNX0U0wUeikxoMibSVY2IsmBN0iHqAiJKSGUrh+xAwA/duW48XVhIzJOuW
+         /bHzygS7sESZ1MV9RMe0SNFIBzLbTmvMwIsutSXtUboMekUkyizB417EKHQPPrIkS6sl
+         mWyggddvAJ+FZVqpe8Mp+p12sBMQKXjmGmNk5ahVJ1gPVHyeFV6sAdsOVQLkQl3kpHsO
+         0Aggh9Sh4yAm1r5v+N0iIcYC77cBLluiiRPbWEupDlngOlUZ00MCt03o5OHlalJ+rxfm
+         r5Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741900015; x=1742504815;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=acnkGczaHoZ7Fx3rgT5jbvpZ1dgElb8rpj0kySNqzQc=;
-        b=vyeThfeYncpUANn5PUMNvJaOcTXlXWGpFjOicNw2LjwskZLBlZwEOzSxyucJqkaY1t
-         mMlCuARaVj/+REPaKwkUPd/iZUpv9xcNKy8m+UT1k/cq3h90ojk9YU8aATYJWWM4U/tT
-         xBxdyO2+mNtHXFM63KzGSJemFWM+B+2BytWB6pQlFWbiuKCNGhzX7gXwIKU0BTFcrD7z
-         mbo5b7B4UlkRgMX6IFXyp8RFQiSKfXeCc0T0gU7MMBBIgUwrjOlUChQ/y9sRHGEFYC9s
-         926kmY+dBni7rhYZZJBlVKn6FjkScke+O5JPwVHYKUGDu/HWdqcWTC7FhlQ1pdjXIKoQ
-         JGjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVlsSAD8mtL5fl//5AI0MkpLq2cn4zoBRjnBeO80TFdRrPk0Wf5zt+HSNiNiQDJ/S9QhqsHdbWuUcCzqCs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6k8RZ0B9WE06DIu1VTxuq80L84wx21e7fgtg+dzbDYs+F6UND
-	o04/wfdisAYf1jMoa++iWnBZ2QS1MMA03wxbQW6vm4uyGaRz7Sxnj3KWDO8ZGkn2KGUf5h0HQI8
-	L
-X-Gm-Gg: ASbGncs+T3DYeBcveqqUzU3uVh22j4S/ybbJhkqOU0ixlT3E9OsTAe01rZ+u4Tw9O+5
-	9fS2W2LRh9JjxFoERxy6kpCQ9TeFx1sTaN5UwE6kQ0bEYbCeUSU3CID5doGyuQqFwSOQqVft0B6
-	NDGXhIWKwlVF58i+xFfMlHhf6KM6JGYiMD6a+5toOvU4edGI7P8Oc0YdrUe1yZGfZQfsGCvv87Q
-	9nF4tE2ZXY6o3wwEe5/bb0xvUYuYHU9b6DTO4POEVWQw8OSh4yU+O5myqB29yiWwKP/nhgQsN/8
-	JsJXhnYphDyxg2Cy9Y9h7CR5h/1c7+0SL5hGX/kxFTA=
-X-Google-Smtp-Source: AGHT+IHhJKfY1xzK0yGlgacwgxvBIof6ldTsBteC55oukFeS9CLgsFgifOVwTo6sprjF60jwNuwHrg==
-X-Received: by 2002:a05:6214:3007:b0:6e2:485d:fddd with SMTP id 6a1803df08f44-6eaddee6d07mr71984676d6.1.1741900015290;
-        Thu, 13 Mar 2025 14:06:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741900021; x=1742504821;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2esPX4cdQSzTzPsUwG+c+ZkpjEsRNEpWoM7zt95z5xg=;
+        b=tWcThbL23yaeDE2yKSgRjlATnLxxRkk85/HbSs4BngFqqUXtSfoAOifDiVFC6tUWs2
+         7UffsDC9TH4oblcxBQm2RshPw+3JfeAmWbu0oMk7hnWjQqATLnatMV/pTeMungRS7uC0
+         G8HgVOy8lgo5T2arh3XkkmGAstSVB3KZSuxbilXe84RpV7QNthejzITg8gMxwPOcAZDI
+         X2b3QG0dhR0WIwCrvwr4AyqLgPeQM9NRFP3nutnSoTQmSWrQ2W6GcRfd0df65OSz2x42
+         FVLYwppLootdv9r3f04VV7pIICC9ZBqs6+6xbeTK9jEhpjgoYTNghkIq89+E60dXfL04
+         MFog==
+X-Forwarded-Encrypted: i=1; AJvYcCV8D4QXGwZKF9+zI4KCHHsJzbvMAGwRP1yx4+1RhonXgTB0rY/sXy+33DQVpsXZPp8OoZQgMBKoCYb0rBI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU/pdgZEEGins687YTszP3twsiZxfr49HPJnz8LfTJhlCJqgte
+	KF3kbQu5p72V0unkyfi8CIpMTO7u++GoKNy/X84wfVHg7vmtCSUHb9BRlDORii4=
+X-Gm-Gg: ASbGncsSksZOSkVj2UtY/s+XXZXcT16ho0EEUdjU3IcXQqOr6cEXngBZCKhi/0QNIQA
+	MG/gZHSBZl90DwC7z3y7iE9frjcaNCDTQfRsouO7TQjjVWzt+LNqvCjshyJQaCvyXO++3MzOIyS
+	IfNW99EBPnxIWh+8grgMWWQL3LHRdXvAoL7NtanK55lh2/gAU8WEIZ/bQ+2HiI6Lzh9vr+2IWsx
+	atxK7cKE5CC0AIOuXzs9RXI7PXQXk1AREmt2/KvQ/nuztff9+lu8nAw74sESohxW9LYFHxMfLxT
+	eywlNJmsI+kuNeG+ZOfU9PP4u0gaX6LvUjs+Cv65enM=
+X-Google-Smtp-Source: AGHT+IEDki5koJiqxSP81S0xIyeu1/cjXxLH4CEnBdYSjdRM2zBmEa/+ycr0rjzgyK/cpuSXIx1wnA==
+X-Received: by 2002:a05:620a:24e:b0:7c5:4194:bbd3 with SMTP id af79cd13be357-7c579f96ff8mr167000285a.44.1741900021237;
+        Thu, 13 Mar 2025 14:07:01 -0700 (PDT)
 Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eade2097f3sm13863406d6.17.2025.03.13.14.06.53
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c573d6fb1fsm142597585a.80.2025.03.13.14.06.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 14:06:54 -0700 (PDT)
+        Thu, 13 Mar 2025 14:06:59 -0700 (PDT)
 From: Johannes Weiner <hannes@cmpxchg.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>,
@@ -63,10 +64,12 @@ Cc: Vlastimil Babka <vbabka@suse.cz>,
 	Zi Yan <ziy@nvidia.com>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] mm: reliable huge page allocator
-Date: Thu, 13 Mar 2025 17:05:31 -0400
-Message-ID: <20250313210647.1314586-1-hannes@cmpxchg.org>
+Subject: [PATCH 2/5] mm: page_alloc: trace type pollution from compaction capturing
+Date: Thu, 13 Mar 2025 17:05:33 -0400
+Message-ID: <20250313210647.1314586-3-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250313210647.1314586-1-hannes@cmpxchg.org>
+References: <20250313210647.1314586-1-hannes@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,100 +78,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series makes changes to the allocator and reclaim/compaction code
-to try harder to avoid fragmentation. As a result, this makes huge
-page allocations cheaper, more reliable and more sustainable.
+When the page allocator places pages of a certain migratetype into
+blocks of another type, it has lasting effects on the ability to
+compact and defragment down the line. For improving placement and
+compaction, visibility into such events is crucial.
 
-It's a subset of the huge page allocator RFC initially proposed here:
+The most common case, allocator fallbacks, is already annotated, but
+compaction capturing is also allowed to grab pages of a different
+type. Extend the tracepoint to cover this case.
 
-  https://lore.kernel.org/lkml/20230418191313.268131-1-hannes@cmpxchg.org/
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/page_alloc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The following results are from a kernel build test, with additional
-concurrent bursts of THP allocations on a memory-constrained system.
-Comparing before and after the changes over 15 runs:
-
-                                                     before                   after
-    Hugealloc Time mean               52739.45 (    +0.00%)   28904.00 (   -45.19%)
-    Hugealloc Time stddev             56541.26 (    +0.00%)   33464.37 (   -40.81%)
-    Kbuild Real time                    197.47 (    +0.00%)     196.59 (    -0.44%)
-    Kbuild User time                   1240.49 (    +0.00%)    1231.67 (    -0.71%)
-    Kbuild System time                   70.08 (    +0.00%)      59.10 (   -15.45%)
-    THP fault alloc                   46727.07 (    +0.00%)   63223.67 (   +35.30%)
-    THP fault fallback                21910.60 (    +0.00%)    5412.47 (   -75.29%)
-    Direct compact fail                 195.80 (    +0.00%)      59.07 (   -69.48%)
-    Direct compact success                7.93 (    +0.00%)       2.80 (   -57.46%)
-    Direct compact success rate %         3.51 (    +0.00%)       3.99 (   +10.49%)
-    Compact daemon scanned migrate  3369601.27 (    +0.00%) 2267500.33 (   -32.71%)
-    Compact daemon scanned free     5075474.47 (    +0.00%) 2339773.00 (   -53.90%)
-    Compact direct scanned migrate   161787.27 (    +0.00%)   47659.93 (   -70.54%)
-    Compact direct scanned free      163467.53 (    +0.00%)   40729.67 (   -75.08%)
-    Compact total migrate scanned   3531388.53 (    +0.00%) 2315160.27 (   -34.44%)
-    Compact total free scanned      5238942.00 (    +0.00%) 2380502.67 (   -54.56%)
-    Alloc stall                        2371.07 (    +0.00%)     638.87 (   -73.02%)
-    Pages kswapd scanned            2160926.73 (    +0.00%) 4002186.33 (   +85.21%)
-    Pages kswapd reclaimed           533191.07 (    +0.00%)  718577.80 (   +34.77%)
-    Pages direct scanned             400450.33 (    +0.00%)  355172.73 (   -11.31%)
-    Pages direct reclaimed            94441.73 (    +0.00%)   31162.80 (   -67.00%)
-    Pages total scanned             2561377.07 (    +0.00%) 4357359.07 (   +70.12%)
-    Pages total reclaimed            627632.80 (    +0.00%)  749740.60 (   +19.46%)
-    Swap out                          47959.53 (    +0.00%)  110084.33 (  +129.53%)
-    Swap in                            7276.00 (    +0.00%)   24457.00 (  +236.10%)
-    File refaults                    138043.00 (    +0.00%)  188226.93 (   +36.35%)
-
-THP latencies are cut in half, and failure rates are cut by 75%. These
-metrics also hold up over time, while the vanilla kernel sees a steady
-downward trend in success rates with each subsequent run, owed to the
-cumulative effects of fragmentation.
-
-A more detailed discussion of results is in the patch changelogs.
-
-The patches first introduce a vm.defrag_mode sysctl, which enforces
-the existing ALLOC_NOFRAGMENT alloc flag until after reclaim and
-compaction have run. They then change kswapd and kcompactd to target
-pageblocks, which boosts success in the ALLOC_NOFRAGMENT hotpaths.
-
-Main differences to the RFC:
-
-- The freelist hygiene patches have since been upstreamed separately.
-
-- The RFC version would prohibit fallbacks entirely, and make
-  pageblock reclaim and compaction mandatory for all allocation
-  contexts. This opens up a large dependency graph for compaction,
-  possibly remaining sources of pollution, and the handling of
-  low-memory situations, OOMs and deadlocks.
-
-  This version uses only kswapd & kcompactd to pre-produce pageblocks,
-  while still allowing last-ditch fallbacks to avoid memory deadlocks.
-
-  The long-term goal remains converging on the version proposed in the
-  RFC and its ~100% THP success rate. But this is reserved for future
-  iterations that can build on the changes proposed here.
-
-- The RFC version proposed a new MIGRATE_FREE type as well as
-  per-migratetype counters. This allowed making compaction more
-  efficient, and the pre-compaction gap checks more precise, but again
-  at the cost of complex changes in an already invasive series.
-
-  This series simply uses a new vmstat counter to track the number of
-  free pages in whole blocks to base reclaim/compaction goals on.
-
-- The behavior is opt-in and can be toggled at runtime. The risk for
-  regressions with any allocator change is sizable, and while many
-  users care about huge pages, obviously not all do. A runtime knob is
-  warranted to make the behavior optional and provide an escape hatch.
-
-Based on today's akpm/mm-unstable.
-
-Patches #1 and #2 are somewhat unrelated cleanups, but touch the same
-code and so included here to avoid conflicts from re-ordering.
-
- Documentation/admin-guide/sysctl/vm.rst |  9 ++++
- include/linux/compaction.h              |  5 +-
- include/linux/mmzone.h                  |  1 +
- mm/compaction.c                         | 87 ++++++++++++++++++++-----------
- mm/internal.h                           |  1 +
- mm/page_alloc.c                         | 72 +++++++++++++++++++++----
- mm/vmscan.c                             | 41 ++++++++++-----
- mm/vmstat.c                             |  1 +
- 8 files changed, 161 insertions(+), 56 deletions(-)
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 9b4a5e6dfee9..6f0404941886 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -614,6 +614,10 @@ compaction_capture(struct capture_control *capc, struct page *page,
+ 	    capc->cc->migratetype != MIGRATE_MOVABLE)
+ 		return false;
+ 
++	if (migratetype != capc->cc->migratetype)
++		trace_mm_page_alloc_extfrag(page, capc->cc->order, order,
++					    capc->cc->migratetype, migratetype);
++
+ 	capc->page = page;
+ 	return true;
+ }
+-- 
+2.48.1
 
