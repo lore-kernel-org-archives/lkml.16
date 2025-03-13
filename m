@@ -1,46 +1,46 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2046.outbound.protection.outlook.com [40.107.236.46])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2058.outbound.protection.outlook.com [40.107.237.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAAD264A7C
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B502641DF
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741858764; cv=fail; b=VezVFZSbVbAz9kYb4uThCFVpdmRfkhmHnDs2Ss6KqsVB6qq7Gdh50qxJKY0fIc+IGjJcs4KnrZ8FNjEhjQViSO661aCtFqYhxKho3djx2YbVH90mvDOeTat9aEfnp/YmxIGUQ69NxveRkMkGB+aZr9Jswdm73ZM+i7qav2q9vJc=
+	t=1741858783; cv=fail; b=gTjGcpOQM5vN0pBXk9wZo2D27OemjhMVwh9D5bRRnOtxQEvwoS7MWL+TuxKmjR+/o/q/MgHFzQVPbuCTzMOKtXM2sNuUFReBQYL5Q33y3guL4TRnYbQ6DnDOGPa2GDA3I9EztYxxQgmy1vOmEw5dxFu+OBjYEirFX2GFBisfBOI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741858764; c=relaxed/simple;
-	bh=azqloHhRipsP/t/aybbzJgRwh4C2dDTEMfbmpHJ4mBc=;
+	s=arc-20240116; t=1741858783; c=relaxed/simple;
+	bh=ZX9E5u5YFODE1Da8tR5uU8WdJFzIBtlsolxhNQBUCPQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k9ZXRD8w58EIQkoQ6JFMOuYH0GJxu11axcP9yiL+o26xZwnySVESgM3XL4QgncHuuVpD27Hi5qponDDSHHuc2ASaxnt3M/ZrX+4weN/8pCieuzZvvp6ylMXD+3LeLPRdvkvaPWx31WEnptoPSATXuXGoEUEOmZEQZAGEGXl5EnQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JOQgdK3r; arc=fail smtp.client-ip=40.107.236.46
+	 MIME-Version:Content-Type; b=iX0ITj0Uj9USmxVT9CjBXYqJmeHckTPfH54LAvM3bR498ueiefrU5qRQ9WN1GCqjrcc33qpKU3ZLdLI2jg3PcttUKCRK2u6EHYE8FTG2oXN4nGXb85gGvH5T0vONzBAOwY9IXAqLTV+QT7kAOWzKBPAMm0ZZxnGj0WOhTvA62go=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DVHINQW7; arc=fail smtp.client-ip=40.107.237.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JOQgdK3r"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DVHINQW7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jlhMSwn82EKiPBoly6BfJPYt70uZZYcoDOInUOKVNpZN4moojw+3thIavPOX0EEVX8pbdzgQ1cc0qqjpdvKdgCZPFqNagg1E9mwz8DxMMuVKd1legZHr86a3OO2SVnIiAnhNLqsJmUXX+mmXdmXjALGKpSEpsstjAuUNCmICisd5OGujPsCG44md526Qqyajni66BUnce0NIZ81rNTPk1T8dD8PoFF6UMMnt7688Wod8EdSpyVxox61aUOS9paZwC71JnF0EUmxkoDiKaQGBR7g7YTjMpbS0A+jIs9tVm5YmBd85QJJ0blupDbfnCOy93R5voJfbpc3ffyRGQJ4TRw==
+ b=QnYXo0YtZUWsMvYobagCz8EH2YoVq82JnA/2BR8lIQkvNa3Qn7OM4iLVXlcFAv52YlCWvGIyvmbFYhnAY/P6ug4ekjxO/97VSXCRsnKMtBvnVqTmIIMZEvLFyMk5zK+2U0Xn5cAaZ4hjMNEHn7ZZ0qoP1SwtvI6Xk6oWyhRcqy47P3Mb6+640oyp3Xi8MkvZRc59sRGhDHg8tH9GNUJAAXJn8+HPBo7Cd+7HxXgQhJR4oR0atj0r+CsFykqsyLLVCm7s+8Nw4kEfPgMTV+ldXIOGJal35FWkWaFTLu5gpaYNEi2er2w8xsy5J4ETFBT5sIplCbf9LpKMc8TAaHzy/w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zQga1b8EBcWCeOnkEzr9HFTRrZrpSoTZQOooNme1C4w=;
- b=TevpHQtmQiKTTlMTEEVI2iZzZJEGpJPf/zGfeEWTyyPv5icF5VCnBkxa2LCWHoDqlsM58EFeiUkfaqJvB5+OOiSU4DB0G7eYUI989O9s69g3egfFGb2ZcJ2xSbDLpt6kUEwGzLBqRNVyTXPGQYZkNUfzEhiVKqYgwsvFy8NZsvoxU7qUOl6aABZVVOpclI/8SbsyedF053wWaNH0UHFlunh3rirGLtXGxgf1L0EWVBBe5l4/F9tOygfEt3tv4pEGCCdb+DJLPuG9ZJxVwkWUlsf+eRIGWmb/XV8294RRBlRfLmLJf9SkkZRvYb4JamhWLSPMcs/LKw46QTSYbpHvXw==
+ bh=q5MEss81ikQ4a1yPc7QlAkM9Ap7hvJpIRshYb2zErUk=;
+ b=UGTI387h6qGGg+70y7gXzafjm1WmSYsbEtVlDYMvOjtzjIRU6KtXh41IHXpZu2KR3m2q9nFS0Svp86H/K8lhdl+c6fajzoLXOoi35NXy/bS7HSbrLMjgY8GdOzkCx62TmDRSLFoLi5O6Y94ZbruNrYFLIKOB+RSBnztE0aqD0Z+v23bZLB6pBS27q/UpsORt0zRa2RgVgMw+3vJ2ObQHLfG1BEzmh0keC8o1rXgwcAZJUa4bLVOYIa1jFTthA9e8eGlMlC99v4RvVeLP5tSC6Ks+DpgzIDJ6ZcvIWu1FrEEdDEGllUdBExRiFAVo0KFKP9cXIe/WKbVQYckyLvpoMw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zQga1b8EBcWCeOnkEzr9HFTRrZrpSoTZQOooNme1C4w=;
- b=JOQgdK3r6N+zMO1mvIxF4HVCpMAB3ZleDl6q9z9ZRXzmpA7KvJdHOEP4+I054r5TXzzGDPWrCmOJQIeKbVP7EdfcjF8guYNqI7UZw0j6+VAsfGg1ggc4VJ8EqaS5EzCTUREINJZd7BS5pl4H2H71AByvKwcLrSXwjDs1neaUoF8=
-Received: from CY5PR15CA0114.namprd15.prod.outlook.com (2603:10b6:930:7::28)
- by LV2PR12MB5918.namprd12.prod.outlook.com (2603:10b6:408:174::21) with
+ bh=q5MEss81ikQ4a1yPc7QlAkM9Ap7hvJpIRshYb2zErUk=;
+ b=DVHINQW7XUGXy+SEkGdrTzDTVYKIs4b/7brmTtWhIxYJeNGjId5jBhSuEqD/LqZHjUHugxjSW1MxsBrma1zD35nmucM8yMpDq+SrCQQXMsHlv0MFq+MtuCTe8KapgOOZKFurhCtQSKqgnvfRuGCTpmRUlKQ9FB2fuA+wrjPZm2c=
+Received: from DM6PR02CA0150.namprd02.prod.outlook.com (2603:10b6:5:332::17)
+ by CY8PR12MB7217.namprd12.prod.outlook.com (2603:10b6:930:5b::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Thu, 13 Mar
- 2025 09:39:18 +0000
-Received: from CY4PEPF0000E9DB.namprd05.prod.outlook.com
- (2603:10b6:930:7:cafe::af) by CY5PR15CA0114.outlook.office365.com
- (2603:10b6:930:7::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.28; Thu, 13 Mar
+ 2025 09:39:36 +0000
+Received: from CY4PEPF0000E9DA.namprd05.prod.outlook.com
+ (2603:10b6:5:332:cafe::3c) by DM6PR02CA0150.outlook.office365.com
+ (2603:10b6:5:332::17) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.24 via Frontend Transport; Thu,
- 13 Mar 2025 09:39:18 +0000
+ 13 Mar 2025 09:39:36 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9DB.mail.protection.outlook.com (10.167.241.74) with Microsoft
+ CY4PEPF0000E9DA.mail.protection.outlook.com (10.167.241.73) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Thu, 13 Mar 2025 09:39:18 +0000
+ 15.20.8534.20 via Frontend Transport; Thu, 13 Mar 2025 09:39:35 +0000
 Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Mar
- 2025 04:39:13 -0500
+ 2025 04:39:30 -0500
 From: K Prateek Nayak <kprateek.nayak@amd.com>
 To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
 	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
@@ -66,9 +66,9 @@ CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
 	<void@manifault.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, "Swapnil
  Sapkal" <swapnil.sapkal@amd.com>, Shrikanth Hegde <sshegde@linux.ibm.com>, "K
  Prateek Nayak" <kprateek.nayak@amd.com>
-Subject: [RFC PATCH 4/8] sched/fair: Move sg_{overloaded,overutilized} calculation to sg_lb_stats
-Date: Thu, 13 Mar 2025 09:37:42 +0000
-Message-ID: <20250313093746.6760-5-kprateek.nayak@amd.com>
+Subject: [RFC PATCH 5/8] sched/topology: Define sg_lb_stats_prop and embed it inside sched_domain_shared
+Date: Thu, 13 Mar 2025 09:37:43 +0000
+Message-ID: <20250313093746.6760-6-kprateek.nayak@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250313093746.6760-1-kprateek.nayak@amd.com>
 References: <20250313093746.6760-1-kprateek.nayak@amd.com>
@@ -84,142 +84,174 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DB:EE_|LV2PR12MB5918:EE_
-X-MS-Office365-Filtering-Correlation-Id: c9ca330a-d571-4774-08e7-08dd6212ed2a
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DA:EE_|CY8PR12MB7217:EE_
+X-MS-Office365-Filtering-Correlation-Id: e16bfeeb-ed39-4cea-49fa-08dd6212f7a9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|82310400026|36860700013;
+	BCL:0;ARA:13230040|376014|82310400026|7416014|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?09dvs2dKthOE9EQTxUXh4C8ZcsSejKNK7QimJz/PS52O+qkyagtXWmWrQBul?=
- =?us-ascii?Q?Z7z9KfKbMgfWfMiDyAiHHIXcF+4YE0pvCyY8ai9y208ZfeEeAF+gOFhiswSH?=
- =?us-ascii?Q?DZmcOXAFL8KXXCyvbJXYg9qSibv+IPtf3D5BGpcRkzL1POpeshu1Zte/GG33?=
- =?us-ascii?Q?Ir7diBjH3b/sZz8M4NpTAfQ6eNsGBV5jyvE4t59xUZd/4o6oovZRkGFYhs1V?=
- =?us-ascii?Q?457p+f+9wSVdz7A8bsRo6QFg3JrE5Bch20UR4juz3QObVhYXAhQgkKoxqtZN?=
- =?us-ascii?Q?d6a9ctJewnWRLzCNGFtUy6h2y3IW68cQgtHROwA9AqsnhCY03H9/SwQKeNNe?=
- =?us-ascii?Q?ihUUy25AUfLyWl6PVCk8OWqKHuqdNdFdTsSaXp3cVz6+boUxNJqhx5IygcWD?=
- =?us-ascii?Q?VMZPz5v2MuQok6O5EClSS7brRqYFbT5xmffJJO9tQ1UxQMhaPpngdZ9fMRez?=
- =?us-ascii?Q?RktiS9tfElSKNInyho9aLtMpmwZ17OsxXiqwUp5ypOEOBgqOGNw/vQItjL/y?=
- =?us-ascii?Q?/4dUd2749ubebYzdlFB5m7d0+80JZ6P4W28GT75O2lUIutTeGx2YI88HDviB?=
- =?us-ascii?Q?X3bEZMnI1xumSQuBK8GJh24gokeX98h2i/3D8aWFOKU4wJPx4SondyVdmnF8?=
- =?us-ascii?Q?KUyADVBHol4Fn6LZrrp8udHnx1NOo91sCxWACVmPNlgk9ujXKcvfDlNKVsTW?=
- =?us-ascii?Q?AsLSdLwqcKF77TJF3J2Gdj5VEnPdJBut0eslW5zkwLPlIkmlmGUmJA6A8vIL?=
- =?us-ascii?Q?McK9tZdOoqof2Z+uJWwIFQ07N/2Euw2eEOXJSQTf8/zKumUUpNYvj4bKdLsU?=
- =?us-ascii?Q?YlvDDpW8nOzad4mftU9XAQchq0lHDvL1rS7B5SWPmTo+IlNbYfo1Pdjp8vb1?=
- =?us-ascii?Q?hFNoGcFYdcCXycvNRYZLBJrN+DgiRCP3pX060iwkQFuMpbq+XFOQG1z6lh4g?=
- =?us-ascii?Q?GpvZ1s7+igmUV8qpV2iMaFPVtLtjDyObHxKqksPn4rYJiJP8/ihiX2ObF6H7?=
- =?us-ascii?Q?dKLoMecgvbKY6DRAqHBod+87hP3sdVwpL1gBwNNNYMbbLA8ncRxXXwTPcOad?=
- =?us-ascii?Q?xhGXj0ib+fBkzKruH99DriFSfcXmdGT53WH+Sa7d2K5URUB8EkLAdOtGlcJ4?=
- =?us-ascii?Q?CnEJCVQHVs/PjmRoAg9gVxneYBaz72otaphrd6sTC+hhEuM8NRU9y/rrwvdw?=
- =?us-ascii?Q?M/gQ1csJY5qWZKAfrKqeTosnMgMibWR4GkkvDJOEVlZ2bw6cp/6HVmLHq91W?=
- =?us-ascii?Q?+jyO3UR9l1zPg36aXHp3uHOMI+GPncphDZFp1ybl8OyK+OKsTFoq2Zf/f6Kp?=
- =?us-ascii?Q?Hkt2PEqDS6DcpJVff9fVx5rIaoY5auKJMvZIDEJ5Wm0qmwHYwbsfyoqYB0ka?=
- =?us-ascii?Q?as6UQBz9oWe8lIjui1FCQx3N5k7zqVr8UGmXrT+AI46daV+4AjZSzFg1xlbR?=
- =?us-ascii?Q?UN8AGrQyWcNXASvPcRXjFZUzX6MuBBGeDSLDbRIFqT5g6i5O+/vXyg=3D=3D?=
+	=?us-ascii?Q?6mUrQkYBH9wIDr3O4+VYBu4Y1ZHpoYft+YUrOKL2QzSTVggUfEsWHJqUXzqs?=
+ =?us-ascii?Q?WhsLuD8ln1uaGIn5FyDhqXvaG/UiMzwJnn6IqNDcHWNvxSXbStFLxdkfseHT?=
+ =?us-ascii?Q?lPZefx3rqDXxlLOWRnqX+snjqilQxipzRbGAohMQrKBnHW6aLL8t8kdWgPJ2?=
+ =?us-ascii?Q?OihTmj4i743IoYXeArBi4uswkE4q7lh3YVNpH3OBIs5rb14qYLzW+1kJyWx9?=
+ =?us-ascii?Q?SbR5fqOIrVzKNBk3c8jVhtF7xrY5o0VJ62P8RwRUmkXsxAT5RXsqRWWOggK1?=
+ =?us-ascii?Q?Ku27EYphV6uQnEzCxY1trLV9hkGCniHePTzvdrRvABY/DI8diCPDAdo3G9WS?=
+ =?us-ascii?Q?6SvKVfofcH9NrB65oiAicCIC+2uZ2z7nsqvIgEzsU0JTuQWI9dqN7m/CxruW?=
+ =?us-ascii?Q?S1lciqxfOAV7Tp1LcW2JVOZgUDe5Zqq04vGXl4c3oHj5mJJNvmnQLrQFMu9k?=
+ =?us-ascii?Q?awQAKCg9kQK1U6UjVuhRB/c6ut4d//37J0wDZyNSxxrQKxpEjj/RITkgrdD7?=
+ =?us-ascii?Q?g+aObAms7Q4W9jBqOg/CbcqlqRDmcQbSP5+YhCXln1UFRfY+H4wSqNSEQ1Wc?=
+ =?us-ascii?Q?7k53gHzf+yDQdgefFF1v33B8aQu++x/Ia42WwUk8C25cUz9ecfQpglBc8p6w?=
+ =?us-ascii?Q?uBXlMCMo9WKnBduQFT7uVeasJXO8JaH81kRQt6pqqHgWoj036/txE+Iq+nXq?=
+ =?us-ascii?Q?h5058lbEDQ1akuTeeZrQfXY/92bgWOprz2dZyxQ77NFVwFC6cUl4bT0JxiUm?=
+ =?us-ascii?Q?oMMmXIkZqGKxLKK8HroZ3S0gAj9bcLT04GVaIO4283kocIrqUNbJwZtc93S6?=
+ =?us-ascii?Q?comJzFY99Oy/f0lPQcDKsAdViZ9gecHSXbXK2eFyEvC9HDNj4axXbMPbrYIZ?=
+ =?us-ascii?Q?gcVmzJsdS+mW2SgYceRafkOh8IcvPtsbr1oVTT8eZNmyCr2jTlBdaUQcRvO1?=
+ =?us-ascii?Q?b5MH7whTE5Lg2Swn3esOHbr8dbZnQMyPUxNjAPodzE9aow9ajXzGP3BZp/u7?=
+ =?us-ascii?Q?ByudwIqEeL1yowVdft4GRFo0e4WGRkqlBnrhJBhtbZPcSI5DBcRXUYUPgl8v?=
+ =?us-ascii?Q?pIWT1XwyZfX5JeqPO2yMRWMMr8IjUVU9K5mFX4UQ24ASa4ZtzoNoHtQ53+B9?=
+ =?us-ascii?Q?FUdBoyCPO3uJXDu9JDrlQYEgi31I6kmftM6bP95paFyk5K2U6tPeBvOhSQia?=
+ =?us-ascii?Q?UsYb/OqhT0v5/Hf4XgnsKCb+ssE+y0kkMHTWHomls1/Q87Gb+CJN5w0icB6N?=
+ =?us-ascii?Q?FWRs24G8bZO84kxbSdZiQRSs4xMtqveFHcHyh42TKiVAZ3JJp+naKkV+4600?=
+ =?us-ascii?Q?7oenwr971zWy/y8G8mO/UuwJI1lyfGBi7PNl7JBYiY8lhNFNJeWQBbeO72AF?=
+ =?us-ascii?Q?wu834rhqaqIuHb4qktSd5pcbgIsFrC1W7dsiqNmeoCuW8gfWkdm5ArzKmwlE?=
+ =?us-ascii?Q?1uEz8vRxhqxsE0Zbd1HN6GjS7N6Htpq2KgOg4sQNqLu7wqS7BIPrpA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 09:39:18.3116
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 09:39:35.9228
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9ca330a-d571-4774-08e7-08dd6212ed2a
+X-MS-Exchange-CrossTenant-Network-Message-Id: e16bfeeb-ed39-4cea-49fa-08dd6212f7a9
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9DB.namprd05.prod.outlook.com
+	CY4PEPF0000E9DA.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5918
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7217
 
-update_sg_lb_stats() used a pointer to update the group overloaded and
-overutilized status to propagate to root domain. Discard the pointer
-passing and use a flag in sg_lb_stats struct to indicate the overloaded
-and overutilized status. This will be used in subsequent commits to
-propagate the overloaded and overutilized status up the sched domain
-hierarchy and set these status at highest domain.
+"struct sg_lb_stats_prop" is a container around "sg_lb_stats" to help
+propagate the load balancing stats up the sched domain hierarchy. Embed
+the same in "sched_domain_shared" for concurrent load balancing
+instances to reuse the statistics collected for domains below.
 
 Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 ---
- kernel/sched/fair.c  | 14 +++++++-------
- kernel/sched/sched.h |  6 ++++--
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ include/linux/sched/topology.h |  9 +++++----
+ kernel/sched/sched.h           | 11 +++++++++++
+ kernel/sched/topology.c        | 26 +++++++++++++++++++++++---
+ 3 files changed, 39 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 39bee40dde27..3b1ed14e4b5e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10287,9 +10287,7 @@ sched_reduced_capacity(struct rq *rq, struct sched_domain *sd)
- static inline void update_sg_lb_stats(struct lb_env *env,
- 				      struct sd_lb_stats *sds,
- 				      struct sched_group *group,
--				      struct sg_lb_stats *sgs,
--				      bool *sg_overloaded,
--				      bool *sg_overutilized)
-+				      struct sg_lb_stats *sgs)
- {
- 	int i, nr_running, local_group, sd_flags = env->sd->flags;
- 	bool balancing_at_rd = !env->sd->parent;
-@@ -10311,7 +10309,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 		sgs->sum_nr_running += nr_running;
+diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+index 7f3dbafe1817..a16d7d9dd9d3 100644
+--- a/include/linux/sched/topology.h
++++ b/include/linux/sched/topology.h
+@@ -78,10 +78,11 @@ extern int sched_domain_level_max;
+ struct sched_group;
  
- 		if (cpu_overutilized(i))
--			*sg_overutilized = 1;
-+			sgs->overutilized = 1;
+ struct sched_domain_shared {
+-	atomic_t	ref;
+-	atomic_t	nr_busy_cpus;
+-	int		has_idle_cores;
+-	int		nr_idle_scan;
++	atomic_t		ref;
++	atomic_t		nr_busy_cpus;
++	int			has_idle_cores;
++	int			nr_idle_scan;
++	void			*private;	/* lb stats propagation field */
+ };
  
- 		/*
- 		 * No need to call idle_cpu() if nr_running is not 0
-@@ -10324,7 +10322,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 
- 		/* Overload indicator is only updated at root domain */
- 		if (balancing_at_rd && nr_running > 1)
--			*sg_overloaded = 1;
-+			sgs->overloaded = 1;
- 
- #ifdef CONFIG_NUMA_BALANCING
- 		/* Only fbq_classify_group() uses this to classify NUMA groups */
-@@ -10340,7 +10338,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 			/* Check for a misfit task on the cpu */
- 			if (sgs->group_misfit_task_load < rq->misfit_task_load) {
- 				sgs->group_misfit_task_load = rq->misfit_task_load;
--				*sg_overloaded = 1;
-+				sgs->overloaded = 1;
- 			}
- 		} else if (env->idle && sched_reduced_capacity(rq, env->sd)) {
- 			/* Check for a task running on a CPU with reduced capacity */
-@@ -10982,7 +10980,7 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
- 				update_group_capacity(env->sd, env->dst_cpu);
- 		}
- 
--		update_sg_lb_stats(env, sds, sg, sgs, &sg_overloaded, &sg_overutilized);
-+		update_sg_lb_stats(env, sds, sg, sgs);
- 
- 		if (!local_group && update_sd_pick_busiest(env, sds, sg, sgs)) {
- 			sds->busiest = sg;
-@@ -10992,6 +10990,8 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
- 		/* Now, start updating sd_lb_stats */
- 		sds->total_load += sgs->group_load;
- 		sds->total_capacity += sgs->group_capacity;
-+		sg_overloaded |= sgs->overloaded;
-+		sg_overutilized |= sgs->overutlizied;
- 
- 		sum_util += sgs->group_util;
- 		sg = sg->next;
+ struct sched_domain {
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index dc9d6e4c704b..9372a75ab3cf 100644
+index 9372a75ab3cf..391c4180eeb3 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -2159,8 +2159,10 @@ struct sg_lb_stats {
- 	unsigned int idle_cpus;                 /* Nr of idle CPUs         in the group */
- 	unsigned int group_weight;
- 	enum group_type group_type;
--	unsigned int group_asym_packing;	/* Tasks should be moved to preferred CPU */
--	unsigned int group_smt_balance;		/* Task on busy SMT be moved */
-+	unsigned char group_asym_packing;	/* Tasks should be moved to preferred CPU */
-+	unsigned char group_smt_balance;	/* Task on busy SMT be moved */
-+	unsigned char overloaded;		/* Contains at least one overloaded CPU */
-+	unsigned char overutilized;		/* Contains at least one overutilized CPU */
- 	unsigned long group_misfit_task_load;	/* A CPU has a task too big for its capacity */
- #ifdef CONFIG_NUMA_BALANCING
- 	unsigned int nr_numa_running;
+@@ -2170,6 +2170,17 @@ struct sg_lb_stats {
+ #endif
+ };
+ 
++/*
++ * sg_lb_stats_prop - Load balancer stats propagation container.
++ * This is embedded in sg->shared->private and is used to propagate
++ * sched_domain load balancing statistics up the hierarchy.
++ */
++struct sg_lb_stats_prop {
++	raw_spinlock_t          stats_lock;	/* Lock for updating the cached stats */
++	unsigned long		last_update;	/* Time when stats was last updated (jiffies) */
++	struct sg_lb_stats	sg_stats;	/* Cached sched_group stats */
++};
++
+ static inline struct cpumask *sched_group_span(struct sched_group *sg)
+ {
+ 	return to_cpumask(sg->cpumask);
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 508ee8aa492b..aeb55f66e8d6 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -621,10 +621,19 @@ static void link_sg_shared(struct sched_group *sg, struct sched_domain_shared *s
+ 	atomic_inc(&sds->ref);
+ }
+ 
++static void free_sched_domain_shared(struct sched_domain_shared *sd_shared)
++{
++	if (!sd_shared)
++		return;
++
++	kfree(sd_shared->private);
++	kfree(sd_shared);
++}
++
+ static void free_sg_shared(struct sched_group *sg)
+ {
+ 	if (sg->shared && atomic_dec_and_test(&sg->shared->ref))
+-		kfree(sg->shared);
++		free_sched_domain_shared(sg->shared);
+ 
+ 	sg->shared = NULL;
+ }
+@@ -661,7 +670,7 @@ static void destroy_sched_domain(struct sched_domain *sd)
+ 	free_sched_groups(sd->groups, 1);
+ 
+ 	if (sd->shared && atomic_dec_and_test(&sd->shared->ref))
+-		kfree(sd->shared);
++		free_sched_domain_shared(sd->shared);
+ 	kfree(sd);
+ }
+ 
+@@ -2273,6 +2282,7 @@ static int __sdt_alloc(const struct cpumask *cpu_map)
+ 			struct sched_domain_shared *sds;
+ 			struct sched_group *sg;
+ 			struct sched_group_capacity *sgc;
++			struct sg_lb_stats_prop *sg_stats;
+ 
+ 			sd = kzalloc_node(sizeof(struct sched_domain) + cpumask_size(),
+ 					GFP_KERNEL, cpu_to_node(j));
+@@ -2288,6 +2298,16 @@ static int __sdt_alloc(const struct cpumask *cpu_map)
+ 
+ 			*per_cpu_ptr(sdd->sds, j) = sds;
+ 
++			sg_stats = kzalloc_node(sizeof(struct sg_lb_stats_prop),
++					GFP_KERNEL, cpu_to_node(j));
++
++			if (!sg_stats)
++				return -ENOMEM;
++
++			raw_spin_lock_init(&sg_stats->stats_lock);
++			sg_stats->last_update = 0;
++			sds->private = (void *)sg_stats;
++
+ 			sg = kzalloc_node(sizeof(struct sched_group) + cpumask_size(),
+ 					GFP_KERNEL, cpu_to_node(j));
+ 			if (!sg)
+@@ -2332,7 +2352,7 @@ static void __sdt_free(const struct cpumask *cpu_map)
+ 			}
+ 
+ 			if (sdd->sds)
+-				kfree(*per_cpu_ptr(sdd->sds, j));
++				free_sched_domain_shared(*per_cpu_ptr(sdd->sds, j));
+ 			if (sdd->sg)
+ 				kfree(*per_cpu_ptr(sdd->sg, j));
+ 			if (sdd->sgc)
 -- 
 2.43.0
 
