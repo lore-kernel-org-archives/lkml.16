@@ -1,302 +1,217 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011039.outbound.protection.outlook.com [52.103.68.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18992263887
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741855980; cv=none; b=WYX52x3B3/7BSWUmNbL6epC9IUn35b8JtypRF01w7glh5yebxsl2JR2B9tjJD5Ef7znG3OenY9s9FDWy2yOgI1r/sYU1GHfMARMChijauSaW88lWBW9RiaWtRN9hjCKGPrlu9bCnAC0FJ0Kqs8MlLXYHEQRSKgiITim48yUjG7o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741855980; c=relaxed/simple;
-	bh=B60cmvatsBTV+TadNyiteqdRIJr0Vh6J8NTfO7bcc3c=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=OU1VnmIEb5VSR/hNReUV4V+UZE9xhrWrc+lZsX/lgJxGVwMuGejZZV/Z8E+uv0W1haQHTmznsQvJggMCqtjy34XkQwwG5YWPr2XAukMrOegECJxElxUKuicO5VuzPrGQhwJTLz5f5sHdV1pr80GNfK5rVk1NFyEurrHaPoXdB60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=svniIdmr; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E3826157B;
+	Thu, 13 Mar 2025 08:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741856019; cv=fail; b=E4BsRayHnvsH8kgRn0NFkhvGYvwf0EJFUkmjGPBo0UQ6TvWTlh8+rxFp3Ygu26CrYzEvfO3xwENB3FRHSeegfRVakyuzS/lCRALLraj1QsUOTs4Lwx5BKPZ8fh4XHITWzcwxfOF6WyFN9v98lfshR8VhdcWkGQvqXeBmRTIjm7M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741856019; c=relaxed/simple;
+	bh=RTXTXzsMYn25r70r3h2lKgQNud6UVWiN8GVRYfcfjqo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Wqc0yps2AvPYG6gx0owMmfFv+dujg/vp6GbIuF9YC3/eQQ3PNTz0Rha44UBzqsQMU0yqRQrtW7XpIPbW7dg1d+Ym/Ei1u0SI/oic4ropEyN0spb0weKFnuCY9OQInJ2kKD6VvLkvj0qMGV7binVnweyuZ9AKRZ+Z+UeYVN2hJas=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=UsKMJ9rC; arc=fail smtp.client-ip=52.103.68.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="svniIdmr"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43bd8fd03a2so3182235e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741855976; x=1742460776; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oGmBak50vxMWviTu0tMlQwgGYOz3feUzTuxbm0LlmKU=;
-        b=svniIdmrZsB1xNRtpIJlNT72vjNWhPSR97nvpg4yN3S8QVyFrp6L121yWUkRer7tGK
-         lFAYWcdmaUCf4xq6b7TnKAJme39FEPEq04kh3ZHVpW/LuWSm5rueUh86kxLW3MSROP7k
-         8xJ4kFh2RZwUvQcgL6KUVo+4tz201M6PfVRa5saOCNC/uwAYU3aawvxwfFpzgM5K3GNa
-         7SaxCRabi4IVkyIuvHMXHLc1XBGqndSqtYpSeLxfxFO9e1YBITQov47RbPx6QkvpYLzU
-         baoM17Uu5mrY0zxtIc62MIKquazCZkcYKBQqUa9QxG/C7S+xnLnQDFBkGm+gxfC4jV5N
-         U6Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741855976; x=1742460776;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oGmBak50vxMWviTu0tMlQwgGYOz3feUzTuxbm0LlmKU=;
-        b=N2xgEhIQB9TSRYoBJnpMhZvx3SGjFc2iruihL6k9MUDs+/VRwlK99dUagKwjEVGPX+
-         kZY6GUiRmktBP/k14hlucgir8KYbVPoFgkhC549/ucNBlqNu9++2DTXwmkFjiZI3uVYH
-         b6fxhaMSU3V8TG2s56kKk71VLa1lQDaVKxb9wxFn8klGRrfI8UqW+sb3/FQ/2LIFyD3+
-         /MQ0Nhi170AHxHOZiwPdWeluRydvRMaTfTBAMnJ8Q+Sp2sjmqCX7bh1MCxcUcjmEE5UB
-         qI3MC+2jeoOX8oeaCK4WD97MoQ2rXD3bYAKWLK2V+DRwgHk8EEnl8orehYFiN/cmW0jW
-         8eKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmqbeWV95RptYxZVJ7G53R0VKBbWmWS8Nxza4jC3/HxcAD31daEIsHOj19wKY0nhrbpJGQqNI2OGATVqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB30+8/mpg9N6xIbnnhT4GztOUObT4bSzna0TW7bGAZz/6fl+3
-	H+oWMb/QJozSS4mfD6by7JPQUzDgnMHC+MhBNJ0+ze5gBrpslCG1LFzHfC5x0ynsLroWi9SMwc2
-	U+PZPgV2uWQmaBQ==
-X-Google-Smtp-Source: AGHT+IFMlxgAbcZlB8BaJfKWUuaxRImNIAzPdA+jl808PsvZy09gOtzLzfDaycyQqQF3tBUSrM+uadh9GZE1ffg=
-X-Received: from wmbgx9.prod.google.com ([2002:a05:600c:8589:b0:43d:10b:2c42])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3155:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-43d017258e1mr100973925e9.29.1741855976230;
- Thu, 13 Mar 2025 01:52:56 -0700 (PDT)
-Date: Thu, 13 Mar 2025 08:52:44 +0000
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="UsKMJ9rC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v7ZuiH/mVBTRMtEKTaQDogy794JQKW37GTSvoBBdcDITOu6/5utL3s6HZ3iP59eL2zfu85N+0Cqmp8F0VLPa3Z23Di3Q5kEu2xaLsnwnZ2418GxPWPGbHnL7IBTQVDxsbpBwjq5dvU2vIm4fmAiaJNWqdua8tnPpRY6+RtTGQoxjJO37L8rL5Ni8gKE+/SbRtmgzOrs2KHeipirwxPQLkc7dB5KTrlIu7XVvFsbwpjMLK6ag60bAXYSnVbWOFgKrZm/zKi+wQGcCm/s6WGu+lTgCoCtejWYiqz9c7byI+9S+y9XqHRKxMghPBTqDbnfy46/GQeLJjQdn//59zIy70Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RTXTXzsMYn25r70r3h2lKgQNud6UVWiN8GVRYfcfjqo=;
+ b=MLq8Tdq+FhE/G36MxOSt0jhIKGaEhtgPAwpeQ/9TA0Aa5fa9jxAWxYXOcdjA9JZqHB1AXkcR+dRp2IEbrIfiGinCoTg8UY0fAbXfG59YAZkPnj4QVlfviKKwv7VJtKzpZ2gXuozZ6RjAzbFz32H+2ryOmNRP53FK5jMBekON87qWiWFKvs7QaC0wP/IgFD3Cl0A/TpM9I6Rf/W8JyqUMMQz4eQCnACzQwpgQWcEp2mrDOO+vrxwku9aN9uLxMiWJKSM5IZ9QcFZcTYLwTU+YFtruEGPJZDfsJMI1Z4K7zEMFqf4TjW0yUzcfxOEhKRNQupWXEPHC6JteB98q5iV2sg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RTXTXzsMYn25r70r3h2lKgQNud6UVWiN8GVRYfcfjqo=;
+ b=UsKMJ9rCn13/N3H0FYlUFal2HMEQq2unElg/t2afkA9BWN4i0r5Pu1+b1MzcwIA+LCQ265wwbnSBCmU9OlnCnCD5LYmz1McRspJn9mP/zclIXZXavY+v6koP/TAJKgyCM4Ix5wjsaKo4ht8dqrwZ4Z2p5PNfSXq6ngU7cqBPSiM2OM5yka0AXi9yJVJeTfhPyC8ddSTBdqTaZJ3UtzBI/q4ngZEW9U60n4jeJQFW67BTLntrKCwqZU1s0PWnfYuFNII0cSrwudOxVrAeE1RoNfUqwi1c0GUEzfeMRxgoNXOAkO9hP033sZfgX0n/ycGTnj7e/d5r1xeu5EAB56Jmaw==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by MAZPR01MB8246.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:a5::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.25; Thu, 13 Mar
+ 2025 08:53:29 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8534.025; Thu, 13 Mar 2025
+ 08:53:29 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Sven Peter <sven@svenpeter.dev>, Thomas Zimmermann <tzimmermann@suse.de>,
+	Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>,
+	"airlied@redhat.com" <airlied@redhat.com>, Simona Vetter <simona@ffwll.ch>,
+	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky
+	<senozhatsky@chromium.org>, Jonathan Corbet <corbet@lwn.net>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "apw@canonical.com"
+	<apw@canonical.com>, "joe@perches.com" <joe@perches.com>,
+	"dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
+	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, Hector Martin <marcan@marcan.st>,
+	"asahi@lists.linux.dev" <asahi@lists.linux.dev>
+Subject: Re: [PATCH 1/2] lib/vsprintf: Add support for generic FourCCs by
+ extending %p4cc
+Thread-Topic: [PATCH 1/2] lib/vsprintf: Add support for generic FourCCs by
+ extending %p4cc
+Thread-Index:
+ AQHbky3sGKkFjHx1MkmFN9rVUAvYHLNvYl0AgAAA5jqAAAKdAIAAAT1vgAA66ACAAD2b+IAAA9kAgADIeYCAABcugIAAAUrB
+Date: Thu, 13 Mar 2025 08:53:28 +0000
+Message-ID:
+ <PN3PR01MB959780176C0B16C36FBD59C3B8D32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+References: <ABAEA9D0-97CB-4ADD-9606-A12D5815335A@live.com>
+ <376C9BD3-2F41-4511-BE52-1B8468FE2CB3@live.com>
+ <b74df4b5-ecda-45ba-a98a-c84b0a29e380@suse.de>
+ <PN3PR01MB9597AC6A02B0BF873920D94CB8D02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <9092a9ed-aecf-40bd-9d15-b53d60d035b5@suse.de>
+ <PN3PR01MB959715C19BCEA54426D24934B8D02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <ff3a9c58-5c7a-4c48-8a9e-cc828a43baed@app.fastmail.com>
+ <PN3PR01MB9597E5C609290DB1A967263CB8D02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <Z9HgVn-XELC065w0@smile.fi.intel.com>
+ <47AE7FCD-0F30-4379-ADE9-090A15ACD58F@live.com>
+ <Z9Kb8zMJgmSP-rgD@smile.fi.intel.com>
+In-Reply-To: <Z9Kb8zMJgmSP-rgD@smile.fi.intel.com>
+Accept-Language: en-IN, en-US
+Content-Language: en-IN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3PR01MB9597:EE_|MAZPR01MB8246:EE_
+x-ms-office365-filtering-correlation-id: 86de093a-9282-40ef-cd10-08dd620c8655
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799003|461199028|6072599003|15080799006|8060799006|7092599003|8062599003|3412199025|440099028|102099032;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?elhiRnpFai9RLzJKamFUWFRFa1V6NFp5N1FxTWRsNTJrM1JlNkhFZHlJQUZv?=
+ =?utf-8?B?ZEttanRhUU5HSEpGaEVxZWNMWWlVWFBYT2t3RVBEZU1ZYmQ3dVZJaHhYQ3R4?=
+ =?utf-8?B?R3d4SVV3bFJXYWZhQ2lCR1lwMUJGVmZiTURGV2owbXJCQThkeVdRblNYQkQ4?=
+ =?utf-8?B?UnVyb1A2VkRoR21zdnR4TERzK0lXS1JSc2Vqb1pYSEUzd2F6VHhFTkxtMXdK?=
+ =?utf-8?B?eENuaml3UngwaGFWNkFENkltNGpDNWtWNnNsaThIa3JqV0haRCtYWXB0SjZu?=
+ =?utf-8?B?K0IvVklRT1orQTZ5WndqZVZ4akF1SldSb2F6dWN0WE9HWXBVR1c2WksyUDZa?=
+ =?utf-8?B?M0t6V1pyVG1OMjRmR1dybFdMT2p2VFZDTms4OHUrK0RPajhPTkhXSDZyUFZn?=
+ =?utf-8?B?UzhOWjNNZkNvSUZwNFVxQ0RFVVU1ck9xbHBCaXMxdTRtVGZUVzFhZ2YzRmRE?=
+ =?utf-8?B?blJwZjVzbWFtY3E4TVZtU2JQUHFWY0loTDg4bFFNZFNkWUFBMjBCM1Z2WlRL?=
+ =?utf-8?B?Nm8xRHhGSUNTT29KYnBSRVJyV2J0bS9CWDZOakJLZVovWVZsMFp5OUZhNzNN?=
+ =?utf-8?B?TDZnRTh6cGFnd25PRmdYQ0xZZXFjUW9hM3RPVVhJVUdMRUlRb3JzUG51c2RZ?=
+ =?utf-8?B?WWEyeGxjckRlcC9tYmxjcW1CKzkzY29kc0ZtREV5dnFXcDRIY0hKaXdramla?=
+ =?utf-8?B?akhKWFg2ZHE4ZmwybG84YkRCOURuL2NDUUhxZGZ0NTRMRHhsL3kzL3dYMzVX?=
+ =?utf-8?B?ZHlxbzNZNXpYUlV3b0dyd3ZqbmY1UDAvWEZIeGFvNThQZExoaEVIY0hLa1Zp?=
+ =?utf-8?B?Y3pEY0pVMHN0cUJlWFhlVUZUR3dlczFRNVRIOGY2NlRVRkxsMk5YNTIwNmVt?=
+ =?utf-8?B?R1lvYTRIQ0ZCSlZGTVN2QS9nMVhUcXp0UXFPSDJKWWZTZjRpRXQyaXl0RU41?=
+ =?utf-8?B?cjFRK3FNZWNNbm5hNkJzZHE1dW5ZWENyeHFGL21wSXBZQWtUQmUyVVd0eXVP?=
+ =?utf-8?B?c0JPWHIxQUlQZjd0SGYxTW9UQXloRkY4UE1iTmVqU0htcU1KUlFiSnhBeGxQ?=
+ =?utf-8?B?a3pDdXZZcUphVEtuVW4zQ3lWQWNKMHZxN3QrcEVqWVIzTllpVmRuVUpUa2Ew?=
+ =?utf-8?B?YXpyYzJWUCtEaG9XLzMyUU5jMmdhVTJDb3dpcnA5YThTSEtCck9mYjNtdEl1?=
+ =?utf-8?B?RHE0dDlLUjZsbWVOazMzVW5MYzZxWmI5YUx3Q1Z5aGppUWdtbGZGZU5YM0Jq?=
+ =?utf-8?B?cHN6Z1ZMdXJFSExFeHpUZnpiQkI0c3lRd3VlM1VJODBBR3VZcFVJRUFIeVhh?=
+ =?utf-8?B?UlZBeTNQaFVxTXFkeWtZRzcwWXUxdFNzdDcyUklreTh1U3ErQi9zZ0FTK29k?=
+ =?utf-8?B?MU1ROElUbURRWlppcDk4WHl1bHlmVElZTUp5U0pQMjJGUDIxdk5GSnVYV2Ry?=
+ =?utf-8?B?c1B6OUYvZC81UjVuZVhYdDJHVjZ3bGtYbXoxWENWcUJKdDRpMElJRTZ3ZDd6?=
+ =?utf-8?Q?C+2NKk=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?UU9MYm9jeXU3Nk9yeHpoSjJNTDRZdGtzb0kwQWN4NStLaUYxbGJDNGlJcHNJ?=
+ =?utf-8?B?NVJqUGFGSzhVSy9sTWlOM3FGVTczVEt0K0N2YmtCVzJjOElIUENrQU05QU1i?=
+ =?utf-8?B?RDVidXRDNVUrNmFKOEJLUmxWL0M4Zi9vcjFRTzlYZXEvUUM2K3Y5TEJ6U2ho?=
+ =?utf-8?B?Y1N6MTFnMTZQZnZKWVBTQjlnMUd1cklzMS83OFRkblNYajZJalRPbXlsOWx4?=
+ =?utf-8?B?dGFVQVVJYmk1RW4rVk1mUGJVdFhscVY4U29CSE5yQklZcHg5aHNUTmZZOGFN?=
+ =?utf-8?B?YTd4dVZjUVludTY1Z0JzY2lvL0g5QlErZWQ5RjhsR0liTFdZVzVEVTlBVXpH?=
+ =?utf-8?B?NzQzZ0F1OEVaMkJvdU9FWDA2MFFtTHg1MWp6cHRKTEF0ZHp6a29ybjJYdDhP?=
+ =?utf-8?B?Q09qMG4xNU1qK0ErVWdxZ2diTnhPNmhkZXZ2b0NKTXdlYzlIZ3lXNHY4OWF2?=
+ =?utf-8?B?anpROGcwTW83TTNkVXo1R3JSTGpHVkRNaWltcklYY3RPZk9QLzJIam9rRlV5?=
+ =?utf-8?B?VjFSaDFTbG5CYXNwVDYxRTRNaVVNVFE0VDVOdzZ3a1F1SGs0a1BiYkl2b0Nw?=
+ =?utf-8?B?RG9JalozR0tpUUJNNWNTWWl4clZFNk53SUE4aGV5UXAwdFZuRFVCZVQ4Q3Ji?=
+ =?utf-8?B?NWVMYlNDdkg1R0x5dXdFdDN4WDBqU0Z6TUluUWVBNkhHRHRqM2FMaHZMYUxw?=
+ =?utf-8?B?K3NsZmhrK0UvZjdMOEt4S3QwdEJETG5DOHJYallHZzJVSWpvTHNPU3JHMUNl?=
+ =?utf-8?B?eXpueFQzeDJDUGhZM2t1bXFwcjUrZW9IcHg0Y0xQS3BXN0RNWGZsNTF0M2dH?=
+ =?utf-8?B?S1BLcVpPZ1NGS3Rub0ZnMTBPaEtBRDB1QTgwSW85aDdFTTd2WGVxN2MzLzVH?=
+ =?utf-8?B?T1VTSXA3Kzh4SUI3TitRa011Qjk2dlZ3MTBsTndLa0JNT3E2aDgyYVAxc3Y2?=
+ =?utf-8?B?K1g0MFlLanA1cUZXOVJURExWTFlGanlxbHJrdVNqWU5CZ1A5a05PM2QvN0NB?=
+ =?utf-8?B?VGNQclFqWFZyV3F0bk5MM1lwSXVCSnhuMWNNSEMvK2wzQ2VsS3BZTVVPbVYw?=
+ =?utf-8?B?a0c0dW51Vm9BY3QwL1hwemtwejVQVGZnT05UR0dIb3pwQmNnOGVMWGFwVkU4?=
+ =?utf-8?B?MVVncGo0UDJMVk1WUXpNREFOK1ZYYjR3eC96VXl2R1dEL1ZoaGFZTHFXZWRG?=
+ =?utf-8?B?WkpVSzBaRm5Hejk0RC9nR0pwUFJvN0RQNGNhQnlId0hadTJ3TU95dTBVWStr?=
+ =?utf-8?B?UzlWS0xBeGhmQ0VZaWVKZWg1aTZPdkNVT2Z6blN3cytpVmtJNlk3bnpqVFJV?=
+ =?utf-8?B?NW94ek1ST29pT0MyYWVJQkRqR1JaM0FaZm56TE8yRjlXY0l1cFNQOVl5L3ZU?=
+ =?utf-8?B?bk9vZUxqMnFERG04WEZHRnJoQUE2VFI1dmdWRWVoMUJzK3VRdGtQSUtsd1F2?=
+ =?utf-8?B?SHVPZ25aKzM1WmMySWNuNkdJQlBsZkZCVk9ZM3g4YlR4dC8rYVM3UTQrZEM3?=
+ =?utf-8?B?QmFKM2RvUGhXSU9jU0NqbVYvQ0RmcUZUVUc0VnN4MFYrajBNUEJQQnliYy9a?=
+ =?utf-8?B?T21lVWo5ZUJtVkh3cG9sTjIyQnMrQkFEWFpYNDBUUVUwcWJmclVtUjBPbktG?=
+ =?utf-8?Q?+swPhbtxXqHGQD3mns1qsXwa4X3v6pKGS+N19OTwfS/M=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIANyc0mcC/x2M0QpAMBRAf0X32WobRn5FWtoubjHaRUr+3fJ46
- pzzAGMkZGizByJexLSFBCrPwM1DmFCQTwxa6koWSot48mFXYmd90h3aY/GiqCtfusagkQZSukc c6f63Xf++H30S//pmAAAA
-X-Change-Id: 20250312-rust_misc_device_tld-375d4c86e606
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6510; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=B60cmvatsBTV+TadNyiteqdRIJr0Vh6J8NTfO7bcc3c=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBn0pzdpia0z/18cRRU/hozqzA1OFwdC0vtxoTVP
- ITCWBI05U6JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ9Kc3QAKCRAEWL7uWMY5
- RgK2D/48SEVoR7kp7wF5nyJozyctYc3vIiigedhKo7Ouu0T+m2tJz2lLL2kOQ199Vk0aN0kbMfX
- OQ3lwtt1XMbJo2YbWwcbMD5sro48UWPNtXFKn1CBUgMlYDeEYgpWqyHfZEPwmJfycq1vCbpFkHm
- j/VrOxJIUK9r7DcHkS8m6TV7lQ4xqrZx893kC1T5n+gnlI9gk9CR5VcwFCi713AiHH1kqHiUej/
- By5CW2BHGQegzYkK4XPP2tHsoCUUlGSxVUO4RSGaocLKjFhrK2wHdHM8v94wlTyRi3hgUic1Ygr
- 8ZbiP3DJUij+4i84x2tfK01Z0uk6+9v5ab13NFKLAgtBeWvS3JTGJ++O1aefd3AMS3IXRgHVrk5
- igczULn5RNiKGZ+WrjiSdPew0eysw3iaB5rbamc/+sf+LsDCjRd+QgUTYeEdj4wvGfQPy0TQbhS
- dHhB9SbwX2MYyKkAigO2mMnB5dO0TCaOJPqseVYZSL8/GAwlr+O0SwPHkA3jB/7saKiPmYkcuWR
- sI0F4L5QxxckcL2eOPx1Aavf7wqUUrEsJ+uRdQhSN56Gi2Ds8ltSc4dKgU8QvFtqY1gjLtzaXIK
- roPzt8fYLgDCoN2GlglJJOyn25T7JU7D1DmbM7vhUzXEKlMulCLbxPCkQTraFFzh/7rUJL6hiJ1 URm5vPBj+TU3zzA==
-X-Mailer: b4 0.14.2
-Message-ID: <20250313-rust_misc_device_tld-v1-1-a519bced9a6d@google.com>
-Subject: [PATCH] samples: rust_misc_device: fix markup in top-level docs
-From: Alice Ryhl <aliceryhl@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Miguel Ojeda <ojeda@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Lee Jones <lee@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86de093a-9282-40ef-cd10-08dd620c8655
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2025 08:53:28.8828
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB8246
 
-The meaning of /// is to document the thing that comes after it, so
-currently the example is documentation for the `use core::pin::Pin;`
-statement. To write top-level docs (and have them rendered as such in
-the html by rustdoc), use //! instead.
-
-This does not change the contents of the docs at all. The only change is
-changing /// to //!.
-
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- samples/rust/rust_misc_device.rs | 181 ++++++++++++++++++++-------------------
- 1 file changed, 91 insertions(+), 90 deletions(-)
-
-diff --git a/samples/rust/rust_misc_device.rs b/samples/rust/rust_misc_device.rs
-index 40ad7266c2252e5c0b4e91e501ef9ada2eda3b16..17ae59979dd05d3e240966e598e5ce0cbf10ef18 100644
---- a/samples/rust/rust_misc_device.rs
-+++ b/samples/rust/rust_misc_device.rs
-@@ -3,97 +3,98 @@
- // Copyright (C) 2024 Google LLC.
- 
- //! Rust misc device sample.
-+//!
-+//! Below is an example userspace C program that exercises this sample's functionality.
-+//!
-+//! ```c
-+//! #include <stdio.h>
-+//! #include <stdlib.h>
-+//! #include <errno.h>
-+//! #include <fcntl.h>
-+//! #include <unistd.h>
-+//! #include <sys/ioctl.h>
-+//!
-+//! #define RUST_MISC_DEV_FAIL _IO('|', 0)
-+//! #define RUST_MISC_DEV_HELLO _IO('|', 0x80)
-+//! #define RUST_MISC_DEV_GET_VALUE _IOR('|', 0x81, int)
-+//! #define RUST_MISC_DEV_SET_VALUE _IOW('|', 0x82, int)
-+//!
-+//! int main() {
-+//!   int value, new_value;
-+//!   int fd, ret;
-+//!
-+//!   // Open the device file
-+//!   printf("Opening /dev/rust-misc-device for reading and writing\n");
-+//!   fd = open("/dev/rust-misc-device", O_RDWR);
-+//!   if (fd < 0) {
-+//!     perror("open");
-+//!     return errno;
-+//!   }
-+//!
-+//!   // Make call into driver to say "hello"
-+//!   printf("Calling Hello\n");
-+//!   ret = ioctl(fd, RUST_MISC_DEV_HELLO, NULL);
-+//!   if (ret < 0) {
-+//!     perror("ioctl: Failed to call into Hello");
-+//!     close(fd);
-+//!     return errno;
-+//!   }
-+//!
-+//!   // Get initial value
-+//!   printf("Fetching initial value\n");
-+//!   ret = ioctl(fd, RUST_MISC_DEV_GET_VALUE, &value);
-+//!   if (ret < 0) {
-+//!     perror("ioctl: Failed to fetch the initial value");
-+//!     close(fd);
-+//!     return errno;
-+//!   }
-+//!
-+//!   value++;
-+//!
-+//!   // Set value to something different
-+//!   printf("Submitting new value (%d)\n", value);
-+//!   ret = ioctl(fd, RUST_MISC_DEV_SET_VALUE, &value);
-+//!   if (ret < 0) {
-+//!     perror("ioctl: Failed to submit new value");
-+//!     close(fd);
-+//!     return errno;
-+//!   }
-+//!
-+//!   // Ensure new value was applied
-+//!   printf("Fetching new value\n");
-+//!   ret = ioctl(fd, RUST_MISC_DEV_GET_VALUE, &new_value);
-+//!   if (ret < 0) {
-+//!     perror("ioctl: Failed to fetch the new value");
-+//!     close(fd);
-+//!     return errno;
-+//!   }
-+//!
-+//!   if (value != new_value) {
-+//!     printf("Failed: Committed and retrieved values are different (%d - %d)\n", value, new_value);
-+//!     close(fd);
-+//!     return -1;
-+//!   }
-+//!
-+//!   // Call the unsuccessful ioctl
-+//!   printf("Attempting to call in to an non-existent IOCTL\n");
-+//!   ret = ioctl(fd, RUST_MISC_DEV_FAIL, NULL);
-+//!   if (ret < 0) {
-+//!     perror("ioctl: Succeeded to fail - this was expected");
-+//!   } else {
-+//!     printf("ioctl: Failed to fail\n");
-+//!     close(fd);
-+//!     return -1;
-+//!   }
-+//!
-+//!   // Close the device file
-+//!   printf("Closing /dev/rust-misc-device\n");
-+//!   close(fd);
-+//!
-+//!   printf("Success\n");
-+//!   return 0;
-+//! }
-+//! ```
- 
--/// Below is an example userspace C program that exercises this sample's functionality.
--///
--/// ```c
--/// #include <stdio.h>
--/// #include <stdlib.h>
--/// #include <errno.h>
--/// #include <fcntl.h>
--/// #include <unistd.h>
--/// #include <sys/ioctl.h>
--///
--/// #define RUST_MISC_DEV_FAIL _IO('|', 0)
--/// #define RUST_MISC_DEV_HELLO _IO('|', 0x80)
--/// #define RUST_MISC_DEV_GET_VALUE _IOR('|', 0x81, int)
--/// #define RUST_MISC_DEV_SET_VALUE _IOW('|', 0x82, int)
--///
--/// int main() {
--///   int value, new_value;
--///   int fd, ret;
--///
--///   // Open the device file
--///   printf("Opening /dev/rust-misc-device for reading and writing\n");
--///   fd = open("/dev/rust-misc-device", O_RDWR);
--///   if (fd < 0) {
--///     perror("open");
--///     return errno;
--///   }
--///
--///   // Make call into driver to say "hello"
--///   printf("Calling Hello\n");
--///   ret = ioctl(fd, RUST_MISC_DEV_HELLO, NULL);
--///   if (ret < 0) {
--///     perror("ioctl: Failed to call into Hello");
--///     close(fd);
--///     return errno;
--///   }
--///
--///   // Get initial value
--///   printf("Fetching initial value\n");
--///   ret = ioctl(fd, RUST_MISC_DEV_GET_VALUE, &value);
--///   if (ret < 0) {
--///     perror("ioctl: Failed to fetch the initial value");
--///     close(fd);
--///     return errno;
--///   }
--///
--///   value++;
--///
--///   // Set value to something different
--///   printf("Submitting new value (%d)\n", value);
--///   ret = ioctl(fd, RUST_MISC_DEV_SET_VALUE, &value);
--///   if (ret < 0) {
--///     perror("ioctl: Failed to submit new value");
--///     close(fd);
--///     return errno;
--///   }
--///
--///   // Ensure new value was applied
--///   printf("Fetching new value\n");
--///   ret = ioctl(fd, RUST_MISC_DEV_GET_VALUE, &new_value);
--///   if (ret < 0) {
--///     perror("ioctl: Failed to fetch the new value");
--///     close(fd);
--///     return errno;
--///   }
--///
--///   if (value != new_value) {
--///     printf("Failed: Committed and retrieved values are different (%d - %d)\n", value, new_value);
--///     close(fd);
--///     return -1;
--///   }
--///
--///   // Call the unsuccessful ioctl
--///   printf("Attempting to call in to an non-existent IOCTL\n");
--///   ret = ioctl(fd, RUST_MISC_DEV_FAIL, NULL);
--///   if (ret < 0) {
--///     perror("ioctl: Succeeded to fail - this was expected");
--///   } else {
--///     printf("ioctl: Failed to fail\n");
--///     close(fd);
--///     return -1;
--///   }
--///
--///   // Close the device file
--///   printf("Closing /dev/rust-misc-device\n");
--///   close(fd);
--///
--///   printf("Success\n");
--///   return 0;
--/// }
--/// ```
- use core::pin::Pin;
- 
- use kernel::{
-
----
-base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
-change-id: 20250312-rust_misc_device_tld-375d4c86e606
-
-Best regards,
--- 
-Alice Ryhl <aliceryhl@google.com>
-
+DQoNCj4gT24gMTMgTWFyIDIwMjUsIGF0IDI6MTnigK9QTSwgQW5keSBTaGV2Y2hlbmtvIDxhbmRy
+aXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20+IHdyb3RlOg0KPiANCj4g77u/T24gVGh1LCBN
+YXIgMTMsIDIwMjUgYXQgMDc6MjY6MDVBTSArMDAwMCwgQWRpdHlhIEdhcmcgd3JvdGU6DQo+Pj4+
+IE9uIDEzIE1hciAyMDI1LCBhdCAxMjo1OOKAr0FNLCBBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5z
+aGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT4gd3JvdGU6DQo+Pj4gT24gV2VkLCBNYXIgMTIsIDIw
+MjUgYXQgMDc6MTQ6MzZQTSArMDAwMCwgQWRpdHlhIEdhcmcgd3JvdGU6DQo+Pj4+PiBPbiAxMiBN
+YXIgMjAyNSwgYXQgOTowNeKAr1BNLCBTdmVuIFBldGVyIDxzdmVuQHN2ZW5wZXRlci5kZXY+IHdy
+b3RlOg0KPj4+Pj4gT24gV2VkLCBNYXIgMTIsIDIwMjUsIGF0IDEzOjAzLCBBZGl0eWEgR2FyZyB3
+cm90ZToNCj4gDQo+IC4uLg0KPiANCj4+Pj4+IEkgZG9uJ3QgaGF2ZSBhIHN0cm9uZyBvcGluaW9u
+IGVpdGhlciB3YXk6IGZvciBTTUMgSSBqdXN0IG5lZWQgdG8gcHJpbnQNCj4+Pj4+IEZvdXJDQyBr
+ZXlzIGZvciBkZWJ1Z2dpbmcgLyBpbmZvcm1hdGlvbiBpbiBhIGZldyBwbGFjZXMuDQo+Pj4+PiAN
+Cj4+Pj4+IEknbSBwcmVwYXJpbmcgdGhlIFNNQyBkcml2ZXIgZm9yIHVwc3RyZWFtaW5nIGFnYWlu
+IChhZnRlciBhIHR3byB5ZWFyIGRlbGF5IDotKCkNCj4+Pj4+IGFuZCB3YXMganVzdCBnb2luZyB0
+byB1c2UgbWFjcm9zIHRvIHByaW50IHRoZSBTTUMgRm91ckNDIGtleXMgc2ltaWxhciB0bw0KPj4+
+Pj4gRFJNX01PREVfRk1UL0RSTV9NT0RFX0FSRyBmb3Igbm93IHRvIGtlZXAgdGhlIHNlcmllcyBz
+bWFsbGVyIGFuZCByZXZpc2l0DQo+Pj4+PiB0aGUgdG9waWMgbGF0ZXIuDQo+Pj4+PiANCj4+Pj4+
+IFJpZ2h0IG5vdyBJIGhhdmUgdGhlc2UgaW4gbXkgbG9jYWwgdHJlZSAob25seSBjb21waWxlIHRl
+c3RlZCBzbyBmYXIpOg0KPj4+Pj4gDQo+Pj4+PiAjZGVmaW5lIFNNQ19LRVlfRk1UICIlYyVjJWMl
+YyAoMHglMDh4KSINCj4+Pj4+ICNkZWZpbmUgU01DX0tFWV9BUkcoaykgKGspPj4yNCwgKGspPj4x
+NiwgKGspPj44LCAoayksIChrKQ0KPj4+PiANCj4+Pj4gVGhhdCBzZWVtcyB0byBiZSBhIG5pY2Ug
+YWx0ZXJuYXRpdmUsIHdoaWNoIEkgZ3Vlc3MgVGhvbWFzIHdhcyBhbHNvIHN1Z2dlc3RpbmcuDQo+
+Pj4gDQo+Pj4gSSBkb24ndCB0aGluayBpdCdzICJuaWNlIi4gRWFjaCBvZiB0aGUgYXBwcm9hY2hl
+cyBoYXMgcHJvcyBhbmQgY29ucy4NCj4+PiBZb3UgY2FuIHN0YXJ0IGZyb20gYmxvYXQtby1tZXRl
+ciBoZXJlIGFuZCBjb21wYXJlIGl0IHdpdGggeW91ciAlcCBleHRlbnNpb24uDQo+Pj4gDQo+Pj4g
+QWxzbywgY2FuIHlvdSBzaG93IHRoZSBibG9hdC1vLW1ldGVyIG91dHB1dCBmb3IgdGhlIHZzcHJp
+bnRmLmM/DQo+PiANCj4+IEhlcmUgYXJlIHlvdXIgb3V0cHV0czoNCj4gDQo+IFRoYW5rIHlvdSEN
+Cj4gDQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IEZvciBhcHBsZXRiZHJtOg0KPj4gDQo+PiBhZGl0eWFA
+TWFjQm9vazp+L2xpbnV4JCAuL3NjcmlwdHMvYmxvYXQtby1tZXRlciAkUDQgJE1BQ1JPDQo+PiBh
+ZGQvcmVtb3ZlOiAwLzAgZ3Jvdy9zaHJpbms6IDEvMSB1cC9kb3duOiA2NC8tMTkgKDQ1KQ0KPj4g
+RnVuY3Rpb24gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb2xkICAgICBuZXcg
+ICBkZWx0YQ0KPj4gYXBwbGV0YmRybV9yZWFkX3Jlc3BvbnNlICAgICAgICAgICAgICAgICAgICAg
+Mzk1ICAgICA0NTkgICAgICs2NA0KPj4gYXBwbGV0YmRybV9wcm9iZSAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAxNzg2ICAgIDE3NjcgICAgIC0xOQ0KPj4gVG90YWw6IEJlZm9yZT0xMzQxOCwg
+QWZ0ZXI9MTM0NjMsIGNoZyArMC4zNCUNCj4gDQo+IFRoaXMgaXMgZW5vdWdoLCBubyBuZWVkIHRv
+IHJlcGVhdCB0aGlzIGZvciBldmVyeSBwYXJhbWV0ZXIuDQo+IA0KPj4gLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+
+PiBGb3IgdnNwcmludGY6DQo+PiANCj4+IGFkaXR5YUBNYWNCb29rOn4vbGludXgkIC4vc2NyaXB0
+cy9ibG9hdC1vLW1ldGVyICRPTEQgJE5FVw0KPj4gYWRkL3JlbW92ZTogMC8wIGdyb3cvc2hyaW5r
+OiAxLzAgdXAvZG93bjogMjIwLzAgKDIyMCkNCj4+IEZ1bmN0aW9uICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIG9sZCAgICAgbmV3ICAgZGVsdGENCj4+IGZvdXJjY19zdHJpbmcg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDQ3OSAgICAgNjk5ICAgICsyMjANCj4+IFRv
+dGFsOiBCZWZvcmU9MjY0NTQsIEFmdGVyPTI2Njc0LCBjaGcgKzAuODMlDQo+IA0KPiBTbywgd2Ug
+Z2V0ICsyMjAgYnl0ZXMgdnMgKzQzIGJ5dGVzLiBJdCBtZWFucyBpZiB3ZSBmb3VuZCA1KyB1c2Vy
+cywgaXQgd29ydGgNCj4gZG9pbmcuDQo+IA0KDQpXaWxsIGl0IGFsc28gZGVwZW5kIHVwb24gdGhl
+IG51bWJlciBvZiB0aW1lcyBpdCdzIGJlaW5nIHVzZWQ/IEluIGFwcGxldGJkcm0sIGl0IGlzIGJl
+aW5nIHVzZWQgMyB0aW1lcy4gUHJvYmFibHkgbW9yZSBpbiBBc2FoaSBTTUMuDQo+Pj4+PiB3aGlj
+aCBhcmUgdGhlbiB1c2VkIGxpa2UgdGhpczoNCj4+Pj4+IA0KPj4+Pj4gZGV2X2luZm8oZGV2LA0K
+Pj4+Pj4gICAgICJJbml0aWFsaXplZCAoJWQga2V5cyAiIFNNQ19LRVlfRk1UICIgLi4gIiBTTUNf
+S0VZX0ZNVCAiKVxuIiwNCj4+Pj4+ICAgICAgc21jLT5rZXlfY291bnQsIFNNQ19LRVlfQVJHKHNt
+Yy0+Zmlyc3Rfa2V5KSwNCj4+Pj4+ICAgICAgU01DX0tFWV9BUkcoc21jLT5sYXN0X2tleSkpOw0K
+PiANCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0KPiANCj4g
+DQo=
