@@ -1,46 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7A425FA1A;
-	Thu, 13 Mar 2025 07:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2FDF9E6
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741852443; cv=none; b=FQGMi1IvnqRY7MSSTJgjZPL9ZsdGq2C2NEH63VTpAqzI6OoWyqWRs6kX4cdGQHss3GJxb55TZhFsJPd+daCXvmhHtzzfyUcHJWYhboU2lxbbYmyZae/u//C0JKbjxrvu9BVCkejeCoY2/zPabVBmDKcrd9oWgSrmwg09PwOGj94=
+	t=1741852543; cv=none; b=aWIgZaErl/+dh9/4Aq9KlvgME0SBfd37RmVaaLUFFOQEgSSwAjJAZrW0xBYXWrQlB83AetvXuieNfEtNXIhUpKsxgy9irLlsJul2o8UI98r7uGujaOzVqAO2js81bi7li6N9w3lz+cwPnLhwsip8nM1W0z7kaXVKiK2lhozZZfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741852443; c=relaxed/simple;
-	bh=Oy727npOYrvDbZWrxWnM9zWO+qFg0rFlevRSA+NrZME=;
+	s=arc-20240116; t=1741852543; c=relaxed/simple;
+	bh=o13F7q7RQvbxTzix5u7hz522leiCwUWhw4VMqQG5wwM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a7redYTHeEUlFFZm9BMH7dXzSzL11yLp2VmS71rg9eKSD9iqliMXSkDtVwjLM/nxdxT7vDnGXdUcpReBKQus8spUQItb9yzNVv3e3rgjj5q4cHe/95ZQS0sGEXPLdfRDJgpDiwu9+Gch6LiLsOJdVi81oeZRnRPWZO6pPjvJ8Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxpC1gHL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kgpOB1NumjlkuPJyW9zIsdx4xiZLfAdLD7PjYeaGfaszyw8IrGciNFFj4VXdSnLXW8XRLQNrWjYOw3k/965ppqRWSBHSIs/BBRIiyah0vlUpzONJRkFTdsZztwU6gdJOcGDk4bj1oGG2XUaIPoY7rFSP8p+30XX8Uo9vPsI4GWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OeDWk/LT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dRU53w2u; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxpC1gHL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC868C4CEEA;
-	Thu, 13 Mar 2025 07:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741852442;
-	bh=Oy727npOYrvDbZWrxWnM9zWO+qFg0rFlevRSA+NrZME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SxpC1gHLTs+PecJ+hInrBRCCE9ad6XT6umULdnQR6nEsT7gW1hsq/BfMqI2JKiMQp
-	 EyqfK8Bi0Dixqyk9PM5o1EcaalTWMaDw+82hX9azT/zfTo8PPRKU6bVZza0H2zMush
-	 lhSiwKUpeYJ3UJ1RjN7jC6kC7YVIKSeHjiMQ1VY/hljnwEuFikzd7Hc8lMkMFz+bzS
-	 i3/TO82rZmgJU2oRMsHZDu9ALXvQMhUgUYoaJws4OMitVwXA4wdv8AGYOVljeQsiBf
-	 fC57gOfe3yxRqhUZmElgauWRVyCFX/Zrb3vMBfhJrzqa6FRkykAjHv/xiyCJt8LWE0
-	 L6Q+99qAXpocA==
-Date: Thu, 13 Mar 2025 08:53:58 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Taniya Das <quic_tdas@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Ajit Pandey <quic_ajipan@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>, 
-	Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 04/10] dt-bindings: clock: Add Qualcomm QCS615 Display
- clock controller
-Message-ID: <20250313-noisy-hopping-poodle-c51ccb@krzk-bin>
-References: <20250313-qcs615-v5-mm-cc-v6-0-ebf4b9a5e916@quicinc.com>
- <20250313-qcs615-v5-mm-cc-v6-4-ebf4b9a5e916@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OeDWk/LT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dRU53w2u"
+Date: Thu, 13 Mar 2025 08:55:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741852539;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a9Fvg7N8yjcDwbghNVTSm1qmeclhYy7BL90/Gxu+5nU=;
+	b=OeDWk/LTuUbjcoBO6ydFLwxAo3DdJpIAug/yMrMSn9fvJ1R8tnhxHndya+C26WG1zQrZE7
+	+dWxE/ks+5Lcxf8BA8iV8cVekuGVd+pZMfQkuYSP1i9hsKhvF3hECq8kWul1Ei1LfvKSqV
+	U8JcBQ4RKyDe0uqN9yLF5V91xOXRTcWxRz1owh8u2B3k5DyWyotk0W7Uv5+a4FBwjE4fxj
+	S8eF6W+943GlArwJDDYyP6CM3bUaLhoGeRQts3qQ21Xc3b3/Ii/0K/KQzJDmg4NDwCukve
+	JxQsFMYzGCFt3r/Ti/RtbRieErRm/lL0ap84tc9uqbG1ToMuM+Kjdt/sVTiUhA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741852539;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a9Fvg7N8yjcDwbghNVTSm1qmeclhYy7BL90/Gxu+5nU=;
+	b=dRU53w2ubyKzQ03QAMgnIRiu0Fi9G4lVwcxblnU/71FPHF9W9DUzcl6rDC5lmegrB5m8Dk
+	ur/q2sEWuy6fJgBA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v10 01/21] rcuref: Provide rcuref_is_dead().
+Message-ID: <20250313075537.NxNhKauR@linutronix.de>
+References: <20250312151634.2183278-1-bigeasy@linutronix.de>
+ <20250312151634.2183278-2-bigeasy@linutronix.de>
+ <20250313042311.GA1395318@joelnvbox>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,20 +61,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250313-qcs615-v5-mm-cc-v6-4-ebf4b9a5e916@quicinc.com>
+In-Reply-To: <20250313042311.GA1395318@joelnvbox>
 
-On Thu, Mar 13, 2025 at 12:29:41PM +0530, Taniya Das wrote:
-> Add DT bindings for the Display clock on QCS615 platforms. Add the
-> relevant DT include definitions as well.
+On 2025-03-13 00:23:11 [-0400], Joel Fernandes wrote:
+> This makes sense to me, another way I guess to determine if it is dead is
+> actually to do a get() and see if it fails? Though that would be more
+> expensive and silly.
+
+good :)
+
+> FWIW for this patch,
+> Reviewed-by: Joel Fernandes <joelagnelf@nvidia.com>
 > 
-> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
-> ---
->  .../bindings/clock/qcom,qcs615-dispcc.yaml         | 73 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,qcs615-dispcc.h     | 52 +++++++++++++++
->  2 files changed, 125 insertions(+)
+> thanks,
+> 
+>  - Joel
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+Sebastian
