@@ -1,174 +1,84 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64234264F9A;
-	Thu, 13 Mar 2025 09:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711041D5175;
+	Thu, 13 Mar 2025 10:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741859961; cv=none; b=hTnw6YiGocEYotwVc41fE5rUwOJ5zfhybFoBOxZmmMtCioc6fmPtvYUl8A72Jmb7Eh6yts/2iHraa0ngtJaXBDgOP6SiFADve7RSeekSjad6omIcBTprjmIqH1XA9/3W0Igi05i9Q0bpZkRtZ7kQ+FoIXSkU6cSM/8TIaqaQVa4=
+	t=1741860069; cv=none; b=Mt4zTKRCysWS/2FLAXesLEA+QuFz06FwzCswTtqCZ/EenU2xKXO9VlINE8Ol0SaIP6j4kaKGW6wUigrqZ/wofIBOhrl7hi5wBJpJ9CSSmaAkgMjRO88191QWn7sB58E8IBSdW84rKF08NMaN4IXwi1F7OGY2Gl347+6XMUmVuJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741859961; c=relaxed/simple;
-	bh=pyKfBjqDAN4P+9rSQW/SVJRyKIFw6ExLmm2iZO2gyuA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PpF4TQRg5Y1+aNdsRzX9sFWic6lS1MGqv4vOuaRJAA4TXLaK8ophALDPngDaapcDrcuwkaGEMA6tNjd6+2CoY0qMZgAVi+EqtpnzFZu5Ff7LKMfPHUtsRdnZixyw1AaZJlp3GGO9noAfRoYLrDD6I9c8Va6sZhGU8TZP54qfzgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZD2vC6gdJz6H8fC;
-	Thu, 13 Mar 2025 17:56:07 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7BF471403A2;
-	Thu, 13 Mar 2025 17:59:17 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 13 Mar
- 2025 10:59:16 +0100
-Date: Thu, 13 Mar 2025 09:59:15 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
-	<dan.j.williams@intel.com>, <Benjamin.Cheatham@amd.com>,
-	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
-	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
-	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
-Subject: Re: [PATCH v4 9/9] ACPI: APEI: EINJ: Update the documentation for
- EINJv2 support
-Message-ID: <20250313095915.00000847@huawei.com>
-In-Reply-To: <20250306234810.75511-10-zaidal@os.amperecomputing.com>
-References: <20250306234810.75511-1-zaidal@os.amperecomputing.com>
-	<20250306234810.75511-10-zaidal@os.amperecomputing.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741860069; c=relaxed/simple;
+	bh=16WhtlFUHkoIkrsFEIZFleNHV7u2hxufNBAPqiGf4+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TDLTZdAkYR1Tp4zFBjWueojZGBuWlrkRpjglFSZgspH/PQAC1HPbUG7kgwfp91KAFPBd/NCZ5FRvgcpRo2lNyV06hNZHB0NmTqADeNqAfzC0SM8mGL7+t4RGo7furdCOsN6qsXJaraY9Rewww9ta2RqxfgpSnXnEZ92ZXoq8Kgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FXB3tNTA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FXB3tNTA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C5FC4CEDD;
+	Thu, 13 Mar 2025 10:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741860068;
+	bh=16WhtlFUHkoIkrsFEIZFleNHV7u2hxufNBAPqiGf4+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FXB3tNTA4HeQ6FgVgsaZwb2fBUweUu3n7bpy37g+AXPGInkeyEicYrYgk4V/ivmVN
+	 iMSqdh73i1Gr/lr4AXk2OZbiSRWRLaOltt4riPiRSx3Nw35BmCZkhrgUb6b1w3ZS2K
+	 6Yxp4LqfLqjrg+UtU0M+g6CO9x+c1FsvsSL5e32E=
+Date: Thu, 13 Mar 2025 11:01:05 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: dmitry.torokhov@gmail.com, bentiss@kernel.org, jeff@labundy.com,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, stable@vger.kernel.org
+Subject: Re: [PATCH] Input: fix error handling in input_register_device()
+Message-ID: <2025031350-nutty-gatherer-3e69@gregkh>
+References: <20250313083803.307646-1-make24@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313083803.307646-1-make24@iscas.ac.cn>
 
-On Thu,  6 Mar 2025 15:48:10 -0800
-Zaid Alali <zaidal@os.amperecomputing.com> wrote:
-
-> Add documentation for the updated ACPI specs for EINJv2(1)(2)
+On Thu, Mar 13, 2025 at 04:38:03PM +0800, Ma Ke wrote:
+> Once device_add() failed, we should call put_device() to decrement
+> reference count for cleanup. Or it could cause memory leak.
 > 
-> (1)https://bugzilla.tianocore.org/show_bug.cgi?id=4615
-> (2)https://bugzilla.tianocore.org/attachment.cgi?id=1446
+> As comment of device_add() says, 'if device_add() succeeds, you should
+> call device_del() when you want to get rid of it. If device_add() has
+> not succeeded, use only put_device() to drop the reference count'.
 > 
-> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
+> Found by code review.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 0cd587735205 ("Input: preallocate memory to hold event values")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 > ---
->  .../firmware-guide/acpi/apei/einj.rst         | 41 ++++++++++++++++++-
->  1 file changed, 39 insertions(+), 2 deletions(-)
+>  drivers/input/input.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/firmware-guide/acpi/apei/einj.rst b/Documentation/firmware-guide/acpi/apei/einj.rst
-> index c52b9da08fa9..31c848183af0 100644
-> --- a/Documentation/firmware-guide/acpi/apei/einj.rst
-> +++ b/Documentation/firmware-guide/acpi/apei/einj.rst
-> @@ -59,6 +59,9 @@ The following files belong to it:
->    0x00000200        Platform Correctable
->    0x00000400        Platform Uncorrectable non-fatal
->    0x00000800        Platform Uncorrectable fatal
-> +  V2_0x00000001     EINJV2 Processor Error
-> +  V2_0x00000002     EINJV2 Memory Error
-> +  V2_0x00000004     EINJV2 PCI Express Error
->    ================  ===================================
->  
->    The format of the file contents are as above, except present are only
-> @@ -85,9 +88,11 @@ The following files belong to it:
->      Bit 0
->        Processor APIC field valid (see param3 below).
->      Bit 1
-> -      Memory address and mask valid (param1 and param2).
-> +      Memory address and range valid (param1 and param2).
+> diff --git a/drivers/input/input.c b/drivers/input/input.c
+> index c9e3ac64bcd0..2e70f346dadc 100644
+> --- a/drivers/input/input.c
+> +++ b/drivers/input/input.c
+> @@ -2424,6 +2424,7 @@ int input_register_device(struct input_dev *dev)
+>  err_device_del:
+>  	device_del(&dev->dev);
+>  err_devres_free:
+> +	put_device(&dev->dev);
 
-So was this a bug technically before?  If it was maybe separate
-patch.
+Did you test this?  This is not going to work properly for all places
+that call this label.
 
+While these types of fixes are nice to have, PLEASE TEST THEM!!!!
 
->      Bit 2
->        PCIe (seg,bus,dev,fn) valid (see param4 below).
-> +    Bit 3
-> +      EINJv2 extension structure is valid
->  
->    If set to zero, legacy behavior is mimicked where the type of
->    injection specifies just one bit set, and param1 is multiplexed.
-> @@ -110,6 +115,7 @@ The following files belong to it:
->    Used when the 0x1 bit is set in "flags" to specify the APIC id
->  
->  - param4
-> +
-This also shouldn't really be in a patch adding new stuff.
-We should treat docs in similar fashion to code - if it is just whitespace
-separate patch.
+Stop doing these and verify, by actual tests, that they do what you
+think they are doing before sending any more of them.  As it is, this
+stream of "fixes" is just too full of bugs for any of us to trust them
+at all.
 
->    Used when the 0x4 bit is set in "flags" to specify target PCIe device
->  
->  - notrigger
-> @@ -122,6 +128,18 @@ The following files belong to it:
->    this actually works depends on what operations the BIOS actually
->    includes in the trigger phase.
->  
-> +- einjv2_component_count
-> +
-> +  The value from this file is used to set the "Component Array Count"
-> +  field of EINJv2 Extension Structure.
+thanks,
 
-Can we not parse this from the provided component array?  Why is separate
-parameter useful?  You don't seem to write it below in the example.
-
-
-> +
-> +- einjv2_component_array
-> +
-> +  The contents of this file are used to set the "Component Array" field
-> +  of the EINJv2 Extension Structure. The expected format is hex values
-> +  for component id and syndrome separated by space, and multiple
-> +  components are separated by new line.
-> +
->  CXL error types are supported from ACPI 6.5 onwards (given a CXL port
->  is present). The EINJ user interface for CXL error types is at
->  <debugfs mount point>/cxl. The following files belong to it:
-> @@ -139,7 +157,6 @@ is present). The EINJ user interface for CXL error types is at
->    under <debugfs mount point>/apei/einj, while CXL 1.1/1.0 port injections
->    must use this file.
->  
-> -
-
-Another white space change that shouldn't be in this patch in my view.
-
->  BIOS versions based on the ACPI 4.0 specification have limited options
->  in controlling where the errors are injected. Your BIOS may support an
->  extension (enabled with the param_extension=1 module parameter, or boot
-> @@ -194,6 +211,26 @@ An error injection example::
->    # echo 0x8 > error_type			# Choose correctable memory error
->    # echo 1 > error_inject			# Inject now
->  
-> +An EINJv2 error injection example::
-> +
-> +  # cd /sys/kernel/debug/apei/einj
-> +  # cat available_error_type			# See which errors can be injected
-> +  0x00000002	Processor Uncorrectable non-fatal
-> +  0x00000008	Memory Correctable
-> +  0x00000010	Memory Uncorrectable non-fatal
-> +  0x00000001	EINJV2 Processor Error
-> +  0x00000002	EINJV2 Memory Error
-> +
-> +  # echo 0x12345000 > param1			# Set memory address for injection
-> +  # echo 0xfffffffffffff000 > param2		# Range - anywhere in this page
-> +  # comp_arr="0x1 0x2				# Fill in the component array
-> +    >0x1 0x4
-> +    >0x2 0x4"
-> +  # echo "$comp_arr" > einjv2_component_array
-> +  # echo V2_0x2 > error_type			# Choose EINJv2 memory error
-> +  # echo 0xa > flags				# set flags to indicate EINJv2
-> +  # echo 1 > error_inject			# Inject now
-> +
->  You should see something like this in dmesg::
->  
->    [22715.830801] EDAC sbridge MC3: HANDLING MCE MEMORY ERROR
-
+greg k-h
