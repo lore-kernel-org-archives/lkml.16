@@ -1,159 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD3226A0CC;
-	Thu, 13 Mar 2025 16:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC13E269AF2
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 16:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741882490; cv=none; b=knJlTnMQd6EwDUWaekMdMrzhcoGBicLtd7CrYJHBA6cTUl5cMwo2IgLNx3Y6ulQ2KiA2/I2DxHoI6jTj1z4PmyMuJ+iQhQdNLmQ1hIG4kruhghLPkdNj56XMRf5zjkBTpPxN4agle7mXXrF3sonGcybCtHEfqCsv9orcWZh18Qg=
+	t=1741882514; cv=none; b=sbk08y7UTjfYn3jRTj92Ui03BBRTjV0p/fLT5fiCu0ad2VNibWC8F2J8NMWItQnxz5ll37tFpq+W51qhXcsXGA2vn3wPBFLGmqNxpL+7YNd4o6sFE7Au/E+GxluKjhoF+b+54bBhRYegZZptum8wcbjRXIdQDupoUltbmDLoEaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741882490; c=relaxed/simple;
-	bh=Y8/MDMfs1bwprrJrMnPBGIZtYhcw/F6xhmmiWJV6T6s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j2edEuezkQ2lelZtHhD0r1DEWQfcKvEQQn6aGuG8hxyk7k0vnNnd1t3C+7ZliWTdVfKr2iPZKXekesoOxKxOhT1BwBQZAXXdTuxls+j0nJrH6tq+C+YjQFWg5RvxZdZDkjFZg1rnnuOh6vIOtlbRjyf0qtFDPgDbOhS1fXvw3d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uBas+Xyr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741882514; c=relaxed/simple;
+	bh=zmD7MNim/3VQcYsraUusSjJsXZ6QwmA46ppNX6yBUok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bZx90PVSQSs+0AeyeFP4MQevrPYURPMIIzR7/neSqeKU8Nib20wTLLttNsJnUmGcrvkoSuRA2IIYki8VVYQoYGmi05HrRNZtvBhRCfGdaCy4HSymFKH8Tep8L6qCXwD1uUDAWIvaLtlDn+aIrN5Oo1k/HowQG33kjWl3RB4KyRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YzbL2TXj; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uBas+Xyr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E409AC4CEEE;
-	Thu, 13 Mar 2025 16:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741882490;
-	bh=Y8/MDMfs1bwprrJrMnPBGIZtYhcw/F6xhmmiWJV6T6s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uBas+XyrOTNPJWUphlmNLX688HmEaBK54fr41BRraE1SYejqEdjCHI5FyhBDUmbHS
-	 QEW7Zd152Yog4KahsAuOQr1/cObt7WrS8l+QlIP2V1EZ8PgzVej5M7qFkTnkb94yK0
-	 FxGByoDLRv8wP3ZnFTGJ/Xci8ME6FV6zfuTOBs0nOmch9y/GSL5ERjZMrtYkmH2kqg
-	 MGSfQD0h2KDectZHJbrOfkdD63TvY280mDfoU+YACl7lUBWDlCVRuuxPkjyWVl3lso
-	 L/+e/MUGjZtiqIAE1ciFeA/Biayk2qyxOMHqxma08amizDszWbFq/04OUCKEUZt42w
-	 RrxdH/yMlOpKw==
-From: Philipp Stanner <phasta@kernel.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Philipp Stanner <pstanner@redhat.com>
-Cc: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Andrew Lunn <andrew@lunn.ch>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Henry Chen <chenx97@aosc.io>
-Subject: [PATCH net-next 3/3] stmmac: Replace deprecated PCI functions
-Date: Thu, 13 Mar 2025 17:14:23 +0100
-Message-ID: <20250313161422.97174-5-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250313161422.97174-2-phasta@kernel.org>
-References: <20250313161422.97174-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YzbL2TXj"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso11077325e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741882510; x=1742487310; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zmD7MNim/3VQcYsraUusSjJsXZ6QwmA46ppNX6yBUok=;
+        b=YzbL2TXjNxPC1MpOJKPZbWgVRSsHHkX7SjRF8BsSFzNDRw7TIP6B+xE8/UbkRBObNF
+         OR4t8OkADAf2zWYNZAfw3lQslpr0/Axkabj7znVOCem3qAAViw4IpuXylXXOgxFh2xI0
+         HIQziRZCP9RVPCiintT97RjXKhTC7+Kvwc5kvbC/mf+6qEBojh0dylkWH+nvuc0iZBJ4
+         NMkkVSnDTt6l4MEBRz3t7gXsWzoANAEQB9WgNKEGcPax7WXdXv8X1Clbzsg6Z+hzZRdK
+         o0vrM3UR26YE43kVQOdBzkjE7T9+4o41BLpuq9xDzEbqtUfU77c2DdkaguVPc5qDzzNJ
+         FjeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741882510; x=1742487310;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zmD7MNim/3VQcYsraUusSjJsXZ6QwmA46ppNX6yBUok=;
+        b=WjS44ApN9gmPMdTH5AuatOCdmIhbEn5zWohzsmbtHl0rcABET7jNfB/mnkFCiCiVsN
+         8k6hh3hY1MbchjBhzy6emxKW/xIU0o0r4Og7E5QA8App52VUS3FAHHoQcBIFgfsHuJ0i
+         R92hI6/HtG1En5X3M2G+q7SvR2N0YLDXu4AD2Jr1CoY7/bD8l70hqqUM6M3t6aJqqbTs
+         bMLN0yzkFKMnlWTwzyqzXi/FmQQ6eUmqmiZWao0pFrC/WMNGVM/POSFaSwmNBAmxRLKh
+         Ouevgve/s8pDdOfctv6+ZLbqfxTzpWgbWefkKxaL5t9/qPArdLRqkT9hNKKnvGGa3z49
+         mUrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgkXNvVQtONQwomcsClSoj/rYhG0XI+Y+OJ9JXUENbgpiUTZBdN6JHWX35U8qWKMKVSrqJWQeNd8JNWZs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4plSU3GmteVTK8NT2QZEy526YiJZWOmx6bL58ccyv3u/LgEpk
+	kjn4LnO9eo4efDGmbbQVRTRMzqZwXVxixuT5uUrGm6k53YR80ejd3berjmIS8M4=
+X-Gm-Gg: ASbGncsLja+AcB0EkEZ2FZnMTg2x+uW+TI+1nYylPpIfCTKpl3+OnRlNIiJ8LKFpjjW
+	mGvtLTLtdZqbmFpLfPZbv8b6MLRwnIQi2jJTYlJh1lQ+/tJTdiJX5CDc6LcL+JBPsjqw12k2jQv
+	T9ngvuVk2vWLHZcMPMQuBF/6zfOGtEB2nlNo+ZN8yQYt3btMqsSp7k0ZUz4fo7a1bmeKH7g06j5
+	mPTZ2vMd8ngUHwLTj/h61cR3r3uboOzLK8t3kZhW9VbE/soN+8J4uqevVkb3zmYZOOY11tQTgD1
+	JXmOLdK9XGjtvBRh+TqSlv5n/L3WAAxPA/MtMySWF055OFg=
+X-Google-Smtp-Source: AGHT+IFjIwacJKCHP0dnkNtlm25kdYN3UhdeehaflwmpbcpOVEH+KkVK3wJpO9PY4hmEX1fJPFgkvw==
+X-Received: by 2002:a05:600c:3146:b0:43c:fd72:f039 with SMTP id 5b1f17b1804b1-43d1d8afa48mr3000805e9.11.1741882510053;
+        Thu, 13 Mar 2025 09:15:10 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d188b0cc7sm25704255e9.3.2025.03.13.09.15.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 09:15:09 -0700 (PDT)
+Date: Thu, 13 Mar 2025 17:15:07 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Tamir Duberstein <tamird@gmail.com>, Kees Cook <kees@kernel.org>
+Cc: Arpitha Raghunandan <98.arpi@gmail.com>,
+	David Gow <davidgow@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linuxppc-dev@lists.ozlabs.org, workflows@vger.kernel.org
+Subject: Re: [PATCH v6 0/3] printf: convert self-test to KUnit
+Message-ID: <Z9MEi-hWiGf9W4gi@pathway.suse.cz>
+References: <20250307-printf-kunit-convert-v6-0-4d85c361c241@gmail.com>
+ <202503072046.34DAF614E6@keescook>
+ <CAJ-ks9kTO-u+Wqp0K-vdMLAs08fBeoovSeb_pGkMjSHFnBKysA@mail.gmail.com>
+ <CAJ-ks9=zHBmOApsqa=UZcKtg1cH0tp34Kt9_5AEJ7vzwt2QeOA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ-ks9=zHBmOApsqa=UZcKtg1cH0tp34Kt9_5AEJ7vzwt2QeOA@mail.gmail.com>
 
-From: Philipp Stanner <pstanner@redhat.com>
+On Sat 2025-03-08 07:52:49, Tamir Duberstein wrote:
+> On Sat, Mar 8, 2025 at 7:51 AM Tamir Duberstein <tamird@gmail.com> wrote:
+> >
+> > On Fri, Mar 7, 2025 at 11:49 PM Kees Cook <kees@kernel.org> wrote:
+> > >
+> > > On Fri, Mar 07, 2025 at 05:08:55PM -0500, Tamir Duberstein wrote:
+> > > > This is one of just 3 remaining "Test Module" kselftests (the others
+> > > > being bitmap and scanf), the rest having been converted to KUnit.
+> > > >
+> > > > I tested this using:
+> > > >
+> > > > $ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 printf
+> > > >
+> > > > I have also sent out a series converting scanf[0].
+> > > >
+> > > > Link: https://lore.kernel.org/all/20250204-scanf-kunit-convert-v3-0-386d7c3ee714@gmail.com/T/#u [0]
+> > > >
+> > > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > > > ---
+> > > > Changes in v6:
+> > > > - Use __printf correctly on `__test`. (Petr Mladek)
+> > > > - Rebase on linux-next.
+> > >
+> > > Thanks for doing this!
+> > >
+> > > If Petr, Rasmus, Andy, and/or others Ack this I can carry it in my
+> > > "lib/ kunit tests move to lib/tests/" tree, as that's where all the
+> > > infrastructure in lib/tests/ exists.
+> >
+> > I think the plan is to take it through the printk tree.
 
-The PCI functions
-  - pcim_iomap_regions() and
-  - pcim_iomap_table()
-have been deprecated.
+It would be much easier when Kees takes it together with the move
+to lib/texts. It causes several conflicts...
 
-Replace them with their successor function, pcim_iomap_region().
+Kees, could you take it, please?
 
-Make variable declaration order at closeby places comply with reverse
-christmas tree order.
+Note that %pGg test currently fails in linux-next. It is a regression caused
+by a change in tracing code and should be fixed in the tracing code,
+see https://lore.kernel.org/all/Z9L5HsVzQ0bVZtjp@pathway.suse.cz/
 
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Tested-by: Henry Chen <chenx97@aosc.io>
----
- .../net/ethernet/stmicro/stmmac/dwmac-loongson.c   |  8 +++-----
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   | 14 ++++++--------
- 2 files changed, 9 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index 5d7746d787ac..25ef7b9c5dce 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -521,8 +521,8 @@ static int loongson_dwmac_acpi_config(struct pci_dev *pdev,
- static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct plat_stmmacenet_data *plat;
-+	struct stmmac_resources res = {};
- 	struct stmmac_pci_info *info;
--	struct stmmac_resources res;
- 	struct loongson_data *ld;
- 	int ret;
- 
-@@ -554,13 +554,11 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
- 	pci_set_master(pdev);
- 
- 	/* Get the base address of device */
--	ret = pcim_iomap_regions(pdev, BIT(0), DRIVER_NAME);
-+	res.addr = pcim_iomap_region(pdev, 0, DRIVER_NAME);
-+	ret = PTR_ERR_OR_ZERO(res.addr);
- 	if (ret)
- 		goto err_disable_device;
- 
--	memset(&res, 0, sizeof(res));
--	res.addr = pcim_iomap_table(pdev)[0];
--
- 	plat->bsp_priv = ld;
- 	plat->setup = loongson_dwmac_setup;
- 	ld->dev = &pdev->dev;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 1637c8139b9d..b7adda35b7b7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -155,9 +155,9 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- {
- 	struct stmmac_pci_info *info = (struct stmmac_pci_info *)id->driver_data;
- 	struct plat_stmmacenet_data *plat;
--	struct stmmac_resources res;
--	int i;
-+	struct stmmac_resources res = {};
- 	int ret;
-+	int i;
- 
- 	plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
- 	if (!plat)
-@@ -188,13 +188,13 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- 		return ret;
- 	}
- 
--	/* Get the base address of device */
-+	/* The first BAR > 0 is the base IO addr of our device. */
- 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (pci_resource_len(pdev, i) == 0)
- 			continue;
--		ret = pcim_iomap_regions(pdev, BIT(i), pci_name(pdev));
--		if (ret)
--			return ret;
-+		res.addr = pcim_iomap_region(pdev, i, STMMAC_RESOURCE_NAME);
-+		if (IS_ERR(res.addr))
-+			return PTR_ERR(res.addr);
- 		break;
- 	}
- 
-@@ -204,8 +204,6 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- 	if (ret)
- 		return ret;
- 
--	memset(&res, 0, sizeof(res));
--	res.addr = pcim_iomap_table(pdev)[i];
- 	res.wol_irq = pdev->irq;
- 	res.irq = pdev->irq;
- 
--- 
-2.48.1
-
+Best Regards,
+Petr
