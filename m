@@ -1,246 +1,453 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32EF71FC7E1;
-	Thu, 13 Mar 2025 07:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4124A1FBE9F
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 07:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741849224; cv=none; b=SPlXgP+IRv5MmaNaS1nn0JmsUqg56oNQyNtfQDsHh4/20zRH7Qvq81taMapFlCdgrOlmc7z0GsAQ+ImnwFfcFdOEp754gi/YlMDIKrQ9axPCf6d5zbFV0oJtzfU3XxjomMR2q5V7nUg4RFfc4nNPjirmtIj0rQfjnHwRTDLIh00=
+	t=1741849223; cv=none; b=tuJVGhx1q1KjRb/YH7vem8FyiHdnZT+hywlH6HqVmGJPA6TCXYQMm3R9gMoS8WNO0xtAExd+cUQfuI8UjF6zCNFfrPIN4m2CcO5BsZqAm5T6KhMPN/k5SEskn8uv1RpuxuhE1p+PMgSCEeK4tjaSqiYVdpkUlc909edq/EZNqss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741849224; c=relaxed/simple;
-	bh=VHcGYwoZl5nD6Sz4kaW71eoBU92YqFKdy6l/jGh99eA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=fBY4pXVWMp5SCLwhSnmvRr3lesKBQli1laP7gzT/fAFYqnbVdE+4ZOlqKHZczc7xF1OMrSjUGTZ1yzRz8i6wWjtU1RJmwMKGyga3cnajyCZUU9IqrgwhKzZnPAKQoTS+59iDYt7pAqGgsF1zylHmKbWBo/hjkZ2X/qusyyXuly4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E3UhhjWa; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741849223; c=relaxed/simple;
+	bh=dk7AMO9oIR8CFQc34svZTxZ5I8eefeRKr4XW3mwB/6E=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eSmIlVrohGDe5m7nIxBAfmOs7bUGqjLiyHog0TMG1C7jnPyL6Cm6fT2ls7+HpoQZTFb3ZGQMUm7N+ZnwNYs1A2PqTaiNkIZLoZy5+ha9NVy377AUEe9sbiZxHSKkk2zuVCIin2LgRUb5D5KB6GRbjv3NZSAd4bV16y7Do+uXS+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=RAqmNaJF; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E3UhhjWa"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CLnhdI014938;
-	Thu, 13 Mar 2025 07:00:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DcslPBkRtUs1g6yxHv7nNhU851NkU2PRk6xWOGCJ47U=; b=E3UhhjWaNGcvHNjK
-	wJPzyx63PaEuemA/BNIt/IzHEsCRKHwhcMBSpx2NL3hfpKkaLxftTNJUtssZ4Ccd
-	8cYVceXI0fX7JgFPnFDAeUg4NndwDsVhrrw3K5MMn8Aur9ExEK6ifrDT1xprVxCa
-	q+Z+LRCXu90S9RY2+mEE15FqsXEF3DKCTLVahn6LMH22VlZ0R4K9UwDJwAWSdA/T
-	TG/ygarQ4qqyJ9QWWvB7sBmXRUCq46FEYGgUxT8vGnO1LW1NBgKy6RvTskKMpvNE
-	FQrrf3oPl5yPVAYYZjA7ZmT3YCVn1wXRZZ7LZvjDsJJ7q1XvXUd+XsShYShu+sIg
-	UpjxRA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2p4xj8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 07:00:14 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52D70E7k010961
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 07:00:14 GMT
-Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 13 Mar 2025 00:00:08 -0700
-From: Taniya Das <quic_tdas@quicinc.com>
-Date: Thu, 13 Mar 2025 12:29:41 +0530
-Subject: [PATCH v6 04/10] dt-bindings: clock: Add Qualcomm QCS615 Display
- clock controller
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="RAqmNaJF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1741849217; x=1742108417;
+	bh=vqZOUI0uIJQqOUZswErqE/h7LVQ2GwK0pRozTFCtn40=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=RAqmNaJF7PXVzJzONkodrx5w0JBH68beEuK6QDvrDYC6Uxa0eaQUTqrJk2dPc4zFp
+	 pym1tnH9A4sDId8tNGZVOoifUzHrWxUAzPWoBtbk3kf7ZNN2GF2HJnXOshR72zN5GU
+	 wdY7UEayBW3/83dSrB//SZsKZYG5rCHEBoa0lBgzi+sKvaBfupKDJ+/eGoV9do/O+5
+	 4XwMmaoBk6d3I1BoTsdOzWYbRRuttsYZzUFMiMS0hB7QMDOH4lYvi5Yw0FQCIsCucg
+	 hjDeCpSc3F8CoIOvyLT3bUcAhgrvmCD9l/bHDRqadqZjPXlSYqnT3WEn1t8jsa+5GH
+	 Ex2Nw2HFuTVoA==
+Date: Thu, 13 Mar 2025 07:00:11 +0000
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
+Subject: [PATCH v8 2/4] rust: rename AlwaysRefCounted to RefCounted
+Message-ID: <20250313-unique-ref-v8-2-3082ffc67a31@pm.me>
+In-Reply-To: <20250313-unique-ref-v8-0-3082ffc67a31@pm.me>
+References: <20250313-unique-ref-v8-0-3082ffc67a31@pm.me>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: c81ad50af0220b2b1df18ed26153cd679952a449
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250313-qcs615-v5-mm-cc-v6-4-ebf4b9a5e916@quicinc.com>
-References: <20250313-qcs615-v5-mm-cc-v6-0-ebf4b9a5e916@quicinc.com>
-In-Reply-To: <20250313-qcs615-v5-mm-cc-v6-0-ebf4b9a5e916@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon
-	<will@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Taniya Das <quic_tdas@quicinc.com>
-X-Mailer: b4 0.15-dev-aa3f6
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=ePkTjGp1 c=1 sm=1 tr=0 ts=67d2827e cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=vHYOu0EEr4IEsFCh_qoA:9
- a=QEXdDO2ut3YA:10 a=RVmHIydaz68A:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: zBWldY_Z5fiwI9sQ03kKk_Ca505f-dpb
-X-Proofpoint-GUID: zBWldY_Z5fiwI9sQ03kKk_Ca505f-dpb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-13_03,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 impostorscore=0 bulkscore=0
- clxscore=1015 lowpriorityscore=0 spamscore=0 priorityscore=1501
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503130054
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add DT bindings for the Display clock on QCS615 platforms. Add the
-relevant DT include definitions as well.
+AlwaysRefCounted will become a marker trait to indicate that it is allowed
+to obtain an ARef from a `&`, which cannot be allowed for types which are
+also Ownable.
 
-Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+Suggested-by: Alice Ryhl <aliceryhl@google.com>
 ---
- .../bindings/clock/qcom,qcs615-dispcc.yaml         | 73 ++++++++++++++++++++++
- include/dt-bindings/clock/qcom,qcs615-dispcc.h     | 52 +++++++++++++++
- 2 files changed, 125 insertions(+)
+ rust/kernel/block/mq/request.rs | 10 ++++++---
+ rust/kernel/cred.rs             |  8 ++++++--
+ rust/kernel/device.rs           |  8 ++++++--
+ rust/kernel/fs/file.rs          | 10 ++++++---
+ rust/kernel/pid_namespace.rs    |  8 ++++++--
+ rust/kernel/task.rs             |  6 +++++-
+ rust/kernel/types.rs            | 45 ++++++++++++++++++++++++-------------=
+----
+ 7 files changed, 64 insertions(+), 31 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,qcs615-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,qcs615-dispcc.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..43346ae7e56ef88bc57e450f6f6fe428c649215e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,qcs615-dispcc.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,qcs615-dispcc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request=
+.rs
+index 2f2bb5a04709cc90ae8971da166fc83bb53fb86b..f6bee0932499e554f8890786199=
+7f8b9d1ffd51a 100644
+--- a/rust/kernel/block/mq/request.rs
++++ b/rust/kernel/block/mq/request.rs
+@@ -9,7 +9,7 @@
+     block::mq::Operations,
+     error::Result,
+     sync::Refcount,
+-    types::{ARef, AlwaysRefCounted, Opaque},
++    types::{ARef, AlwaysRefCounted, Opaque, RefCounted},
+ };
+ use core::{
+     marker::PhantomData,
+@@ -209,10 +209,10 @@ unsafe impl<T: Operations> Send for Request<T> {}
+ unsafe impl<T: Operations> Sync for Request<T> {}
+=20
+ // SAFETY: All instances of `Request<T>` are reference counted. This
+-// implementation of `AlwaysRefCounted` ensure that increments to the ref =
+count
++// implementation of `RefCounted` ensure that increments to the ref count
+ // keeps the object alive in memory at least until a matching reference co=
+unt
+ // decrement is executed.
+-unsafe impl<T: Operations> AlwaysRefCounted for Request<T> {
++unsafe impl<T: Operations> RefCounted for Request<T> {
+     fn inc_ref(&self) {
+         self.wrapper_ref().refcount().inc();
+     }
+@@ -234,3 +234,7 @@ unsafe fn dec_ref(obj: core::ptr::NonNull<Self>) {
+         }
+     }
+ }
 +
-+title: Qualcomm Display Clock & Reset Controller on QCS615
++// SAFETY: we currently do not implement `Ownable`, thus it is okay to can=
+ obtain an `ARef<Request>`
++// from a `&Request` (but this will change in the future).
++unsafe impl<T: Operations> AlwaysRefCounted for Request<T> {}
+diff --git a/rust/kernel/cred.rs b/rust/kernel/cred.rs
+index 81d67789b16f243e7832ff3b2e5e479a1ab2bf9e..e04d1021130eb1ec46fe48feb08=
+8959da7656d66 100644
+--- a/rust/kernel/cred.rs
++++ b/rust/kernel/cred.rs
+@@ -11,7 +11,7 @@
+ use crate::{
+     bindings,
+     task::Kuid,
+-    types::{AlwaysRefCounted, Opaque},
++    types::{AlwaysRefCounted, Opaque, RefCounted},
+ };
+=20
+ /// Wraps the kernel's `struct cred`.
+@@ -71,7 +71,7 @@ pub fn euid(&self) -> Kuid {
+ }
+=20
+ // SAFETY: The type invariants guarantee that `Credential` is always ref-c=
+ounted.
+-unsafe impl AlwaysRefCounted for Credential {
++unsafe impl RefCounted for Credential {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refc=
+ount is nonzero.
+         unsafe { bindings::get_cred(self.0.get()) };
+@@ -83,3 +83,7 @@ unsafe fn dec_ref(obj: core::ptr::NonNull<Credential>) {
+         unsafe { bindings::put_cred(obj.cast().as_ptr()) };
+     }
+ }
 +
-+maintainers:
-+  - Ajit Pandey <quic_ajipan@quicinc.com>
-+  - Taniya Das <quic_tdas@quicinc.com>
++// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an=
+ `ARef<Credential>` from a
++// `&Credential`.
++unsafe impl AlwaysRefCounted for Credential {}
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index db2d9658ba47d9c492bc813ce3eb2ff29703ca31..189298518dc184405b1d62404b1=
+90d4c0b08b7ad 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -7,7 +7,7 @@
+ use crate::{
+     bindings,
+     str::CStr,
+-    types::{ARef, Opaque},
++    types::{ARef, AlwaysRefCounted, Opaque, RefCounted},
+ };
+ use core::{fmt, ptr};
+=20
+@@ -190,7 +190,7 @@ pub fn property_present(&self, name: &CStr) -> bool {
+ }
+=20
+ // SAFETY: Instances of `Device` are always reference-counted.
+-unsafe impl crate::types::AlwaysRefCounted for Device {
++unsafe impl RefCounted for Device {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the=
+ refcount is non-zero.
+         unsafe { bindings::get_device(self.as_raw()) };
+@@ -202,6 +202,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+     }
+ }
+=20
++// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an=
+ `Device<Task>` from a
++// `&Device`.
++unsafe impl AlwaysRefCounted for Device {}
 +
-+description: |
-+  Qualcomm display clock control module provides the clocks, resets and power
-+  domains on QCS615
+ // SAFETY: As by the type invariant `Device` can be sent to any thread.
+ unsafe impl Send for Device {}
+=20
+diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
+index e03dbe14d62a566349c4100f2f78b17d4c79aab5..a7836cc754e7927b6addc3bd06c=
+fe8c8119f1d9f 100644
+--- a/rust/kernel/fs/file.rs
++++ b/rust/kernel/fs/file.rs
+@@ -11,7 +11,7 @@
+     bindings,
+     cred::Credential,
+     error::{code::*, Error, Result},
+-    types::{ARef, AlwaysRefCounted, NotThreadSafe, Opaque},
++    types::{ARef, AlwaysRefCounted, NotThreadSafe, Opaque, RefCounted},
+ };
+ use core::ptr;
+=20
+@@ -190,7 +190,7 @@ unsafe impl Sync for File {}
+=20
+ // SAFETY: The type invariants guarantee that `File` is always ref-counted=
+. This implementation
+ // makes `ARef<File>` own a normal refcount.
+-unsafe impl AlwaysRefCounted for File {
++unsafe impl RefCounted for File {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refc=
+ount is nonzero.
+@@ -205,6 +205,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<File>) {
+     }
+ }
+=20
++// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an=
+ `ARef<File>` from a
++/// `&File`.
++unsafe impl AlwaysRefCounted for File {}
 +
-+  See also: include/dt-bindings/clock/qcom,qcs615-dispcc.h
+ /// Wraps the kernel's `struct file`. Not thread safe.
+ ///
+ /// This type represents a file that is not known to be safe to transfer a=
+cross thread boundaries.
+@@ -225,7 +229,7 @@ pub struct LocalFile {
+=20
+ // SAFETY: The type invariants guarantee that `LocalFile` is always ref-co=
+unted. This implementation
+ // makes `ARef<File>` own a normal refcount.
+-unsafe impl AlwaysRefCounted for LocalFile {
++unsafe impl RefCounted for LocalFile {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refc=
+ount is nonzero.
+diff --git a/rust/kernel/pid_namespace.rs b/rust/kernel/pid_namespace.rs
+index 0e93808e4639b37dd77add5d79f64058dac7cb87..3e45e945b7509b9607266b2e0e6=
+ef130e7a1ed39 100644
+--- a/rust/kernel/pid_namespace.rs
++++ b/rust/kernel/pid_namespace.rs
+@@ -9,7 +9,7 @@
+=20
+ use crate::{
+     bindings,
+-    types::{AlwaysRefCounted, Opaque},
++    types::{AlwaysRefCounted, RefCounted, Opaque},
+ };
+ use core::ptr;
+=20
+@@ -44,7 +44,7 @@ pub unsafe fn from_ptr<'a>(ptr: *const bindings::pid_name=
+space) -> &'a Self {
+ }
+=20
+ // SAFETY: Instances of `PidNamespace` are always reference-counted.
+-unsafe impl AlwaysRefCounted for PidNamespace {
++unsafe impl RefCounted for PidNamespace {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refc=
+ount is nonzero.
+@@ -58,6 +58,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<PidNamespace>) {
+     }
+ }
+=20
++// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an=
+ `ARef<PidNamespace>`
++// from a `&PidNamespace`.
++unsafe impl AlwaysRefCounted for PidNamespace {}
 +
-+properties:
-+  compatible:
-+    const: qcom,qcs615-dispcc
+ // SAFETY:
+ // - `PidNamespace::dec_ref` can be called from any thread.
+ // - It is okay to send ownership of `PidNamespace` across thread boundari=
+es.
+diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+index 07bc22a7645c0c7d792a0a163dd55b8ff0fe5f92..1cc1b02cb7fada6703da8cad775=
+49dee578fc08d 100644
+--- a/rust/kernel/task.rs
++++ b/rust/kernel/task.rs
+@@ -327,7 +327,7 @@ pub fn wake_up(&self) {
+ }
+=20
+ // SAFETY: The type invariants guarantee that `Task` is always refcounted.
+-unsafe impl crate::types::AlwaysRefCounted for Task {
++unsafe impl crate::types::RefCounted for Task {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refc=
+ount is nonzero.
+         unsafe { bindings::get_task_struct(self.as_ptr()) };
+@@ -339,6 +339,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+     }
+ }
+=20
++// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an=
+ `ARef<Task>` from a
++// `&Task`.
++unsafe impl crate::types::AlwaysRefCounted for Task {}
 +
-+  reg:
-+    maxItems: 1
+ impl Kuid {
+     /// Get the current euid.
+     #[inline]
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index 65f6d0721f5f23c8db79c6735dc7d5e1ac984ea7..5a96da714348cc2369969200e60=
+70972226c00fe 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -402,11 +402,9 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+     }
+ }
+=20
+-/// Types that are _always_ reference counted.
++/// Types that are internally reference counted.
+ ///
+ /// It allows such types to define their own custom ref increment and decr=
+ement functions.
+-/// Additionally, it allows users to convert from a shared reference `&T` =
+to an owned reference
+-/// [`ARef<T>`].
+ ///
+ /// This is usually implemented by wrappers to existing structures on the =
+C side of the code. For
+ /// Rust code, the recommendation is to use [`Arc`](crate::sync::Arc) to c=
+reate reference-counted
+@@ -418,9 +416,9 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+ /// at least until matching decrements are performed.
+ ///
+ /// Implementers must also ensure that all instances are reference-counted=
+. (Otherwise they
+-/// won't be able to honour the requirement that [`AlwaysRefCounted::inc_r=
+ef`] keep the object
++/// won't be able to honour the requirement that [`RefCounted::inc_ref`] k=
+eep the object
+ /// alive.)
+-pub unsafe trait AlwaysRefCounted {
++pub unsafe trait RefCounted {
+     /// Increments the reference count on the object.
+     fn inc_ref(&self);
+=20
+@@ -433,11 +431,22 @@ pub unsafe trait AlwaysRefCounted {
+     /// Callers must ensure that there was a previous matching increment t=
+o the reference count,
+     /// and that the object is no longer used after its reference count is=
+ decremented (as it may
+     /// result in the object being freed), unless the caller owns another =
+increment on the refcount
+-    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then calls
+-    /// [`AlwaysRefCounted::dec_ref`] once).
++    /// (e.g., it calls [`RefCounted::inc_ref`] twice, then calls
++    /// [`RefCounted::dec_ref`] once).
+     unsafe fn dec_ref(obj: NonNull<Self>);
+ }
+=20
++/// An extension to RefCounted, which declares that it is allowed to conve=
+rt
++/// from a shared reference `&T` to an owned reference [`ARef<T>`].
++///
++/// # Safety
++///
++/// Implementers must ensure that no safety invariants are violated by upg=
+rading an `&T`
++/// to an [`ARef<T>`]. In particular that implies [`AlwaysRefCounted`] and=
+ [`Ownable`]
++/// cannot be implemented for the same type, as this would allow to violat=
+e the uniqueness
++/// guarantee of [`Owned<T>`] by derefencing it into an `&T` and obtaining=
+ an [`ARef`] from that.
++pub unsafe trait AlwaysRefCounted: RefCounted {}
 +
-+  clocks:
-+    items:
-+      - description: Board XO source
-+      - description: GPLL0 clock source from GCC
-+      - description: Byte clock from DSI PHY0
-+      - description: Pixel clock from DSI PHY0
-+      - description: Pixel clock from DSI PHY1
-+      - description: Display port PLL link clock
-+      - description: Display port PLL VCO DIV clock
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#clock-cells'
-+  - '#reset-cells'
-+  - '#power-domain-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/clock/qcom,qcs615-gcc.h>
-+    clock-controller@af00000 {
-+      compatible = "qcom,qcs615-dispcc";
-+      reg = <0x0af00000 0x20000>;
-+      clocks = <&rpmhcc RPMH_CXO_CLK>,
-+               <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>,
-+               <&mdss_dsi0_phy 0>,
-+               <&mdss_dsi0_phy 1>,
-+               <&mdss_dsi1_phy 0>,
-+               <&mdss_dp_phy   0>,
-+               <&mdss_dp_vco   0>;
-+      #clock-cells = <1>;
-+      #reset-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+...
-diff --git a/include/dt-bindings/clock/qcom,qcs615-dispcc.h b/include/dt-bindings/clock/qcom,qcs615-dispcc.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..9a29945c5762ce06285a2f4e6a55c13bfaadc5c2
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,qcs615-dispcc.h
-@@ -0,0 +1,52 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_QCOM_DISP_CC_QCS615_H
-+#define _DT_BINDINGS_CLK_QCOM_DISP_CC_QCS615_H
-+
-+/* DISP_CC clocks */
-+#define DISP_CC_MDSS_AHB_CLK					0
-+#define DISP_CC_MDSS_AHB_CLK_SRC				1
-+#define DISP_CC_MDSS_BYTE0_CLK					2
-+#define DISP_CC_MDSS_BYTE0_CLK_SRC				3
-+#define DISP_CC_MDSS_BYTE0_DIV_CLK_SRC				4
-+#define DISP_CC_MDSS_BYTE0_INTF_CLK				5
-+#define DISP_CC_MDSS_DP_AUX_CLK					6
-+#define DISP_CC_MDSS_DP_AUX_CLK_SRC				7
-+#define DISP_CC_MDSS_DP_CRYPTO_CLK				8
-+#define DISP_CC_MDSS_DP_CRYPTO_CLK_SRC				9
-+#define DISP_CC_MDSS_DP_LINK_CLK				10
-+#define DISP_CC_MDSS_DP_LINK_CLK_SRC				11
-+#define DISP_CC_MDSS_DP_LINK_DIV_CLK_SRC			12
-+#define DISP_CC_MDSS_DP_LINK_INTF_CLK				13
-+#define DISP_CC_MDSS_DP_PIXEL1_CLK				14
-+#define DISP_CC_MDSS_DP_PIXEL1_CLK_SRC				15
-+#define DISP_CC_MDSS_DP_PIXEL_CLK				16
-+#define DISP_CC_MDSS_DP_PIXEL_CLK_SRC				17
-+#define DISP_CC_MDSS_ESC0_CLK					18
-+#define DISP_CC_MDSS_ESC0_CLK_SRC				19
-+#define DISP_CC_MDSS_MDP_CLK					20
-+#define DISP_CC_MDSS_MDP_CLK_SRC				21
-+#define DISP_CC_MDSS_MDP_LUT_CLK				22
-+#define DISP_CC_MDSS_NON_GDSC_AHB_CLK				23
-+#define DISP_CC_MDSS_PCLK0_CLK					24
-+#define DISP_CC_MDSS_PCLK0_CLK_SRC				25
-+#define DISP_CC_MDSS_ROT_CLK					26
-+#define DISP_CC_MDSS_ROT_CLK_SRC				27
-+#define DISP_CC_MDSS_RSCC_AHB_CLK				28
-+#define DISP_CC_MDSS_RSCC_VSYNC_CLK				29
-+#define DISP_CC_MDSS_VSYNC_CLK					30
-+#define DISP_CC_MDSS_VSYNC_CLK_SRC				31
-+#define DISP_CC_PLL0						32
-+#define DISP_CC_XO_CLK						33
-+
-+/* DISP_CC power domains */
-+#define MDSS_CORE_GDSC						0
-+
-+/* DISP_CC resets */
-+#define DISP_CC_MDSS_CORE_BCR					0
-+#define DISP_CC_MDSS_RSCC_BCR					1
-+
-+#endif
+ /// An owned reference to an always-reference-counted object.
+ ///
+ /// The object's reference count is automatically decremented when an inst=
+ance of [`ARef`] is
+@@ -448,7 +457,7 @@ pub unsafe trait AlwaysRefCounted {
+ ///
+ /// The pointer stored in `ptr` is non-null and valid for the lifetime of =
+the [`ARef`] instance. In
+ /// particular, the [`ARef`] instance owns an increment on the underlying =
+object's reference count.
+-pub struct ARef<T: AlwaysRefCounted> {
++pub struct ARef<T: RefCounted> {
+     ptr: NonNull<T>,
+     _p: PhantomData<T>,
+ }
+@@ -457,16 +466,16 @@ pub struct ARef<T: AlwaysRefCounted> {
+ // it effectively means sharing `&T` (which is safe because `T` is `Sync`)=
+; additionally, it needs
+ // `T` to be `Send` because any thread that has an `ARef<T>` may ultimatel=
+y access `T` using a
+ // mutable reference, for example, when the reference count reaches zero a=
+nd `T` is dropped.
+-unsafe impl<T: AlwaysRefCounted + Sync + Send> Send for ARef<T> {}
++unsafe impl<T: RefCounted + Sync + Send> Send for ARef<T> {}
+=20
+ // SAFETY: It is safe to send `&ARef<T>` to another thread when the underl=
+ying `T` is `Sync`
+ // because it effectively means sharing `&T` (which is safe because `T` is=
+ `Sync`); additionally,
+ // it needs `T` to be `Send` because any thread that has a `&ARef<T>` may =
+clone it and get an
+ // `ARef<T>` on that thread, so the thread may ultimately access `T` using=
+ a mutable reference, for
+ // example, when the reference count reaches zero and `T` is dropped.
+-unsafe impl<T: AlwaysRefCounted + Sync + Send> Sync for ARef<T> {}
++unsafe impl<T: RefCounted + Sync + Send> Sync for ARef<T> {}
+=20
+-impl<T: AlwaysRefCounted> ARef<T> {
++impl<T: RefCounted> ARef<T> {
+     /// Creates a new instance of [`ARef`].
+     ///
+     /// It takes over an increment of the reference count on the underlyin=
+g object.
+@@ -495,12 +504,12 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
+     ///
+     /// ```
+     /// use core::ptr::NonNull;
+-    /// use kernel::types::{ARef, AlwaysRefCounted};
++    /// use kernel::types::{ARef, RefCounted};
+     ///
+     /// struct Empty {}
+     ///
+     /// # // SAFETY: TODO.
+-    /// unsafe impl AlwaysRefCounted for Empty {
++    /// unsafe impl RefCounted for Empty {
+     ///     fn inc_ref(&self) {}
+     ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
+     /// }
+@@ -518,7 +527,7 @@ pub fn into_raw(me: Self) -> NonNull<T> {
+     }
+ }
+=20
+-impl<T: AlwaysRefCounted> Clone for ARef<T> {
++impl<T: RefCounted> Clone for ARef<T> {
+     fn clone(&self) -> Self {
+         self.inc_ref();
+         // SAFETY: We just incremented the refcount above.
+@@ -526,7 +535,7 @@ fn clone(&self) -> Self {
+     }
+ }
+=20
+-impl<T: AlwaysRefCounted> Deref for ARef<T> {
++impl<T: RefCounted> Deref for ARef<T> {
+     type Target =3D T;
+=20
+     fn deref(&self) -> &Self::Target {
+@@ -543,10 +552,10 @@ fn from(b: &T) -> Self {
+     }
+ }
+=20
+-impl<T: AlwaysRefCounted> Drop for ARef<T> {
++impl<T: RefCounted> Drop for ARef<T> {
+     fn drop(&mut self) {
+-        // SAFETY: The type invariants guarantee that the `ARef` owns the =
+reference we're about to
+-        // decrement.
++        // SAFETY: The type invariants guarantee that the `ARef` owns the =
+reference
++        // we're about to decrement.
+         unsafe { T::dec_ref(self.ptr) };
+     }
+ }
 
--- 
+--=20
 2.48.1
+
 
