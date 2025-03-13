@@ -1,114 +1,140 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320A1267F4E;
-	Thu, 13 Mar 2025 14:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E6D267F4D
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741876472; cv=none; b=ddtEY/YT4eiEHf6IpZXrKEtsVGsXUN19uAn6VnuICeC8g79l+XG/BX/fZHonnwtBTpCgeBElL1HLjorYES/AJ2ed6W2T3XUfgTY9efGjRIn+dZKxQ+uEQBWKNkxlvbpqCinHs+tWB5TixrXT8GSkctNqoD7ANLTqPOwz8lKC1tw=
+	t=1741876487; cv=none; b=QDBDRdbC+MqvZV2RFzuudtncIVD6mTlx2vRPpYtUub3Rmoiu/WGHLX4/f5oWJrUgqO0Z2OSg/j6WdiUdnPIz32IjKPUAzDsYIQklGAgi07K4nFCC0tR8dXR4e+HahB61862BVw6ow8P80oi7TvxOQx0yPwOqpIZLYMb+cGnoSK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741876472; c=relaxed/simple;
-	bh=UazzsAUWI6GAw0njs5UkMNVIT1Mhmutw/miu7AFOpo8=;
+	s=arc-20240116; t=1741876487; c=relaxed/simple;
+	bh=4K9tzoTtsP7BAI3B6cdLbG/K3RYZzOAO85EJfhQyad8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=El5g6mVBnAi0hvE8PlksOG+PtKoXuTUzG1FeYl6EWxMZadaHwzwjBGtDHJRtIpOVs1SkbJ32rhbpGKDOx69l6OoanQP96MNH/0Dabhx32uVAig40laUWlhHs5HLI9qqSaWMm+WbS7s/1twLguAKu1ksziDlQv7wYOTrcRHhfzd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OzFHCdW1; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KzBBINOtuIbj1IcDSOcNgbERw6XaJ2fxMZN/eAOMqKuSEmdv7dXsYGwVDcUs/JVjB4eHnGNoQByUiuO55nRdS2SS2QltCgup/bi/HffpeLNVcEO/vj+wZOwoINIKfR7ZrXqW/I1Zx0Q0USz3Ae61VuyvUIwZAiRdxQ310XeC6tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTfRH0T6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzFHCdW1"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff799d99dcso2193635a91.1;
-        Thu, 13 Mar 2025 07:34:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741876470; x=1742481270; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GICFi0VoA04wMmuC8eF7tQ0MeFnd48JKTtPTlIjvHiI=;
-        b=OzFHCdW1mKqbPs0aqvYt18o7IaM+Lh5Hg/8OKucIOWJMgQSBrXKd2hV35tUNUiZ9ak
-         CBOlj3ZdxMtmx6D9yd9l2Y9uH7S7pb48TQGLUtpluiPFvt5iDI8i0Onj3u+TLYWpNyZP
-         pIT4iSmiA/ZRxhggHkI041QYrGrqA+EE8oIO9OdWa/8TCviv87cwNfe2kniolMFG7ptz
-         PQni3Xw8cILMJx9iKfwujohpbfGNuODnnMi7iNwTOoCr6V8S7v2wN37D1Lsz5P1T9ms6
-         DE64ni3ZaZWm0rdQwhFR4dHj6o+cr+UAbIgqw4GiDX98ZHJlI5Gtmai8mnR5Yw1QIRN/
-         S9wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741876470; x=1742481270;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GICFi0VoA04wMmuC8eF7tQ0MeFnd48JKTtPTlIjvHiI=;
-        b=KUEBHTPj/BYM+eVnBYGT2YZ0Woeob3M/nlqIflGtTD8n/MkIgbT+LYsEGFi+LHsT7Y
-         6FKCRDnhPTl9E69+6qE2FdLYINSKVll8ek0ORTHmFsfahqFRF9c2B4Ocv/0sfCqhUCRu
-         RsgoE/8aPgf8AcMc6vMnwcYxc/Wc6+3jF0uvCinANKHJd15V/tc60LNBcHlOLsuuJX55
-         tOCPYaoKlVyVj4kRHLa6+gcCVLZciQ0FtnLJkyrlEC14PloPaiKn+bOI1ijpbiu1x8Rg
-         RWJk6SjiBlf4aP32aSueTr1ukJNn3UWbKy6VPOLqQih3g9awx9jEEKgdo//ke6/NzH9p
-         EtWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFxQ/NCMtCKXE/QaKVghw/I9+zL7L+vy16NikZ0/VsN0BuyA36+23DVqWArpsPEMOzkGdy3caypI8jJ6JK@vger.kernel.org, AJvYcCXynmT7km+zC156V8fpYhRBYZDDuovWda8dUGSRt3hmoRI0kM0TXxUwCvrprXExTLvuE9V0EAVuyeYL@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSde3ayM0UHYt+Ja86tU7He0/cqsZOn+IzXZLUCCmq7lx5ft30
-	TIhmHbON3ekqkkvqDXbm78/2IamDaJ6tfo0c6KhYkRFxgKihjG7T
-X-Gm-Gg: ASbGnctcCSOZsqXbAtrfD/bnJzkX1NncB02EcBZDn2UOJT1tIC+Yd8elG1ZKUj3Lr3p
-	Yc/HMSfywIoNQ+sABONIMYm2HbpzX88chQmRj2FjUNUtdVGkETgsp7oKqlQ+4M9BT6oBod6Yv+l
-	J+pTa4lS9GsBbLo0cMkhnSbuVyDV+TV88OxW71flKKTVTMI5idKO4YujW4yd0xrjnJn2DAB1s7e
-	oOzsSOdKfuaJ4Ym6NYkfzqYtr0NfaUPJ64l+Mzoxow2KI59zIzOG5ejCqREv9Iv9Hwsym9hnDIb
-	nmtinFbahGykj4UMNiiD8BeCYMW9n+U=
-X-Google-Smtp-Source: AGHT+IGfaVAk+c9RAVXj/AWvec/u2Em3Jena5j9eOn/cnAaGId16whELS7F/FD8YOMC2w8PrpvsyVA==
-X-Received: by 2002:a17:90b:380e:b0:2f2:a664:df1a with SMTP id 98e67ed59e1d1-2ff7ce594ccmr39877404a91.2.1741876469920;
-        Thu, 13 Mar 2025 07:34:29 -0700 (PDT)
-Received: from localhost ([2a0f:7803:fac5:a7b6::1])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30119265943sm3891865a91.36.2025.03.13.07.34.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 07:34:29 -0700 (PDT)
-Date: Thu, 13 Mar 2025 22:34:25 +0800
-From: Zixian Zeng <sycamoremoon376@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@outlook.com>, Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sophgo@lists.linux.dev, 
-	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, dlan@gentoo.org
-Subject: Re: [PATCH v3 2/2] riscv: sophgo: dts: Add spi controller for SG2042
-Message-ID: <ujqeq5do2xqf5jvepxaynaxridccalbjows7gid4ehyj7jduyk@2axt2thtet6z>
-References: <20250313-sfg-spi-v3-0-e686427314b2@gmail.com>
- <20250313-sfg-spi-v3-2-e686427314b2@gmail.com>
- <6262dfd2-9e0b-402e-bb03-a2174d544923@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTfRH0T6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE564C4CEEB;
+	Thu, 13 Mar 2025 14:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741876487;
+	bh=4K9tzoTtsP7BAI3B6cdLbG/K3RYZzOAO85EJfhQyad8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pTfRH0T6OKHomu6IanaWZ2qglSzsYxgg0HiLa/4qRR/pbRm/XaQH5zuz+HTko7gLq
+	 LsKRSjwgd2cGbV35vsUNH790ot/mSKFyDw5M9oBEVX2l5AMKtBvHduvs+qg80Pu2+7
+	 RPvn6e+PczMCDUTBkdC6AOmlBoiSWSkbwefhzFwG0iv27I/w5eMiU1h27RVfx6UXAJ
+	 ru6b/vvdiK8Lgez9/kWStynD+bPOHbMQ4+otxApA2rsXOYmUhNXzJuK5jWFE6U2aeH
+	 3lLnwMg+c5g0Zythzmmh3zxyttYBWWhpjdCbOxe6e6LclCqfnELafCb7VWv5QfjSpp
+	 4y71Z2nLB4/lA==
+Date: Thu, 13 Mar 2025 15:34:44 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/2] drm/panel: Add new helpers for refcounted panel
+ allocatons
+Message-ID: <20250313-enlightened-shrewd-skunk-b6ed72@houat>
+References: <20250312-drm-panel-v1-0-e99cd69f6136@redhat.com>
+ <20250312-drm-panel-v1-1-e99cd69f6136@redhat.com>
+ <20250313110944.1c1f7e4e@booty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2ate5ne4iejyiwlh"
 Content-Disposition: inline
-In-Reply-To: <6262dfd2-9e0b-402e-bb03-a2174d544923@kernel.org>
+In-Reply-To: <20250313110944.1c1f7e4e@booty>
 
-On 25/03/13 02:43PM, Krzysztof Kozlowski wrote:
-> On 13/03/2025 14:11, Zixian Zeng wrote:
-> > Add spi controllers for SG2042.
-> > 
-> > SG2042 uses the upstreamed Synopsys DW SPI IP.
-> > 
-> > Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
-> > ---
-> >  arch/riscv/boot/dts/sophgo/sg2042.dtsi | 26 ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> > 
-> > diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> > index e62ac51ac55abd922b5ef796ba8c2196383850c4..9e0ec64e91a2330698aea202c8f0a2ca1f7e0919 100644
-> > --- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> > +++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> > @@ -545,5 +545,31 @@ sd: mmc@704002b000 {
-> >  				      "timer";
-> >  			status = "disabled";
-> >  		};
+
+--2ate5ne4iejyiwlh
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RFC 1/2] drm/panel: Add new helpers for refcounted panel
+ allocatons
+MIME-Version: 1.0
+
+On Thu, Mar 13, 2025 at 11:09:44AM +0100, Luca Ceresoli wrote:
+> Hello Anusha,
+>=20
+> On Wed, 12 Mar 2025 20:54:42 -0400
+> Anusha Srivatsa <asrivats@redhat.com> wrote:
+>=20
+> > Introduce reference counted allocations for panels to avoid
+> > use-after-free. The patch adds the macro devm_drm_bridge_alloc()
+> > to allocate a new refcounted panel. Followed the documentation for
+> > drmm_encoder_alloc() and devm_drm_dev_alloc and other similar
+> > implementations for this purpose.
+> >=20
+> > Also adding drm_panel_get() and drm_panel_put() to suitably
+> > increment and decrement the refcount
+> >=20
+> > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+>=20
+> I'm very happy to see the very first step of the panel rework mentioned
+> by Maxime see the light! :-)
+>=20
+> This patch looks mostly good to me, and the similarity with my bridge
+> refcounting work is by itself reassuring.
+>=20
+> I have a few notes, one is relevant and the others are minor details,
+> see below.
+>=20
+> In the Subject line: s/allocatons/allocations/
+>=20
+> [...]
+>=20
+> > +void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t o=
+ffset,
+> > +			     const struct drm_panel_funcs *funcs)
+> > +{
+> > +	void *container;
+> > +	struct drm_panel *panel;
+> > +	int err;
 > > +
-> > +		spi0: spi@7040004000 {
-> 
-> Does not look like you keep order by unit address (see DTS coding style).
-> 
-Thanks for reminding, I will read it more carefully.
-> 
-> Best regards,
-> Krzysztof
+> > +	if (!funcs) {
+> > +		dev_warn(dev, "Missing funcs pointer\n");
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +
+> > +	container =3D kzalloc(size, GFP_KERNEL);
+> > +	if (!container)
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> > +	panel =3D container + offset;
+> > +	panel->container_offset =3D offset;
+> > +	panel->funcs =3D funcs;
+> > +	kref_init(&panel->refcount);
+> > +
+> > +	err =3D devm_add_action_or_reset(dev, drm_panel_put_void, panel);
+> > +	if (err)
+> > +		return ERR_PTR(err);
+> > +
+> > +	drm_panel_init(panel, dev, funcs, panel->connector_type);
+>=20
+> panel->connector_type here is uninitialized. You are passing
+> panel->connector_type to drm_panel_init(), which will then copy it into
+> panel->connector_type itself.
 
-Best regards,
-Zixian Zeng
+Yeah, we need to have the connector type as a parameter.
+
+Maxime
+
+--2ate5ne4iejyiwlh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ9LtBAAKCRDj7w1vZxhR
+xYMCAQCVGbMderUCo19/lZEwItzpHYd9ffnbQ7OXbu9onz68zwEAhS/0Ln7m5ePp
+bVFGwvzvZZ65R983T9RMp3zR8bo9sws=
+=nzmg
+-----END PGP SIGNATURE-----
+
+--2ate5ne4iejyiwlh--
