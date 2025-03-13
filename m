@@ -1,182 +1,179 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01B7266B51
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0D3266B46;
+	Thu, 13 Mar 2025 11:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866066; cv=none; b=n6pBZUyDVB6lh6VMiOIno1LVWA/5xVYGpcznWmTwE2jiyyEmiEn6h5s+AJqlCLNv2a63wymXkhNC6B8MGl2RDCOXlbr2WF1AEhnq9C2DDQQNFhL6c5GP3IUv1o7qHRXvwxaVQRzfU/ePmCc5Pz72GqesTBPDQHbBx6BBwlAdZdo=
+	t=1741866067; cv=none; b=WDMlSTt1+bCMjyPxjJvMudLAaGbcObRI9qIW1xRb3C0/yVtLWWZ6QaXqTWxrFx1e5TG6DK430GZ1qXIoG+sifw+5oQiA/dJPqyrKn0X1wR3Xrqbuj12kQG6gFR3apNkht9dmmt0anPXZ7DXWmH1KXbvdIRzxHzhJDBJIHnNLI+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741866066; c=relaxed/simple;
-	bh=PmKuDjh7TYnL36BsL4uFK3e2cvQCdB+O1CmCQrAD7C4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Xvvrutz/SI0q+IDv7FTAwaBREId8APApHLr+JCe8e3oGyMEv2to+B+MRr2s9/+mGGM76/21mAQ+/r7Q7oDK+usUzG6mUVZjj0Lx0dvkacEl2JcKr/tibDMz76FD8Z/1l7u7e3hv3n1FzIQzOPwe3+V2oA/LJ6nw3ZZu77o02upc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LJdpXMm1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1741866067; c=relaxed/simple;
+	bh=GplLPwTK9dUCVkJNtN05NSTyHk7TJv3f61TrBFXIMyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CfXz+skphBVI3WlcDtL4sl1KKEMnfcPSGbVP/4+gaigDpPPhyDwpiyIFGeRbEoo2ckzHswf8EDHUFJE9jUWB2KRnyh94yvTIq94NGT5tRcnAAPgV/UrvABA2qKmgnaLrIWl/Gbzgo0d3bBqExyrilT8CrmHSN/n2J7Y85TAqWYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LK3VPH6X; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LJdpXMm1"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D7Rad7022572
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9igTd27vOSt75Vx+/a3cETdMPX96Kxrxr1+ntLhQKa0=; b=LJdpXMm1EP47TTkE
-	dCKCnyi9uSNuDrjG6kCvT1m0N04PDA+pLITKhF5ob+irswRvHAWAahJ41OoESqM2
-	pkvxkCxhZjb/jRCn01OLtWtekBZms7TBbH8dEhXjI+jeUmxymdWSKcRcmU1d/ss3
-	sfQoyyplCiN3SCCjY3ugZQYTnOlLqBvSZ1ePbOXC87DQ9naQgXCxuIYMAmpZgbyr
-	zAAbdQLwiYlzOWzyRLnKjJz+XOqeSvBPZDbVdIGYs0AolySNYv67GPA9hlGXEv31
-	WYPVdyTDjBkNxCe1U59aZuKbbqpBXZ5MoKYQa9my4N5OCte9tGxmIFuevK+g/1jW
-	v7S2uQ==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45bu07gq57-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:03 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso2496454a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:41:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LK3VPH6X"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so889249e87.1;
+        Thu, 13 Mar 2025 04:41:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741866064; x=1742470864; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BaFyzl0YFrML3OmytUU12qD6QrH8ZAERBPK4xvEEj5w=;
+        b=LK3VPH6Xh0x/ZWuhIxY0g0dsAzyGlhYQw4yyKL7yplphWcScXvowvQkPmaEWBHGOqg
+         Gl8QJ4Pyeh+VmyL+lHqeDGU4P8wy9l9l+MmVoIKa2CkoVIJ0nhgUiWYE9bfLIVljzMxt
+         wW5GvvUo3VG2qakkrrZl1HJwE+mCoIlwN3tE0n3uweE7O/yCdzElTOTTd2wr4YLT5m7B
+         6YUOtIt354y7RijAtUt4l5QhSN+ur0fvkLojWWvEnVsC1QfDTpWbjtGF3PXm9oPFImDF
+         m5X6f0o3EMjCVqrVkedjD175YbcHc5NPMZbEiQ9YbDh41SzXBC1A6Cael1FtAuHgkM17
+         Rclw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741866062; x=1742470862;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9igTd27vOSt75Vx+/a3cETdMPX96Kxrxr1+ntLhQKa0=;
-        b=htoCCGeAwZT08YkDClgQIeklfskNTNgpTTd4ZqQ7RJ3OtGtJWP0idOVhqP9poD0DMj
-         BuECOlSwJI0cadPpKzYE5b+dR0q6kZE2MwnnwvWcg2CL6lelnXr/++JGnAm05OUjy/w5
-         7Lh0vh2tRrFwJ2FO419O2SuiJ0b3Tj6TETGi2raSoLPJtH5arPv1DSR5aDzoOBEfVboF
-         JoSRhYXmHgRsdH6xJ2VOArs3PwLIs2rue6jp9ajgRTvKfSOxiwEvpyhdI6O7cXOc5W6J
-         HEC5IHsNjR5yqxfCzqw0bWs0UXWGBNrrVu5uziEHXpWUfEeRTa7d7wzaZ1ATslaXQ0gt
-         LZfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvv0gjlG2HXK2mxKwA33ztzUVSDDpCHRiF2optWN56+Lcew1KVuRmgMLeG1SXd4PfObH0srOv+01oMhpI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwQedKjlrC/OsNZAlbM9EoTIFem6e9N6dqqcuXgrebzECg0fGG
-	8Yne+3pmznqCSaiqexJaKH4eLSuA8LxoQMESO1MX1UcaSmWlsey791Fkw5OzO4rswC1eQychAPB
-	M+Q0ahhEiwho+C8c77cXAmn6vb4nQFfFx3EwkQjB5w9nRXdIRi3kBp2mEScCHIFo=
-X-Gm-Gg: ASbGncvlFOJYSV/xvYTmq02dvnsQ22PaZWEKLh/psJMi9FnVntpOPqLItunqtZWC1RH
-	fkp2qVCF+f0Qm7Tx/Vm7pux2iv62EIpoQ59nAknXJkUZT7DoKYvUp4VU3cXbVgmGoy6QTwICQ/L
-	nvlnG1JTPy9ByaKbE2iL6MiO658xt4T5pzjQnWwpvWmYtANPXXCgUN4QlH8dd6aKvWLZUmm8ncj
-	RXvQI0d90SUk1eWK3wjjwRY0WWp01O4YIKBHb6GoU0BbnB8VePaQ06BAMZ8iEPHMFiUJ7QNzhnZ
-	FvCuDUZZr1bEuyQllslDR0Ff7itC79+8LR8UznL3Odx4WnVYfmQ=
-X-Received: by 2002:a05:6a21:6e91:b0:1f5:7eb5:72d1 with SMTP id adf61e73a8af0-1f57eb5751amr22690503637.28.1741866062273;
-        Thu, 13 Mar 2025 04:41:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHlL/GCRjzts+GtMG3DvPuELC8MTIBXKCPb9dz3VzWgArb8MlHvCY5x4YkSJvM9UW4P6sKDeA==
-X-Received: by 2002:a05:6a21:6e91:b0:1f5:7eb5:72d1 with SMTP id adf61e73a8af0-1f57eb5751amr22690452637.28.1741866061945;
-        Thu, 13 Mar 2025 04:41:01 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea964e3sm1063219a12.76.2025.03.13.04.40.56
+        d=1e100.net; s=20230601; t=1741866064; x=1742470864;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BaFyzl0YFrML3OmytUU12qD6QrH8ZAERBPK4xvEEj5w=;
+        b=Tp+B/0oQmP53RyNC38ExBj60KkgIBdwIsPFd8EEV9FOAoCcHo0Q1N240SUznJMt/qo
+         HVoFLBcLp0nTzJlbKnypEv7Da/zO7u3hCaL3pQidverht2z5Y393UXY9Gj9krGBbqxZa
+         vHSN4jJaGiyq80XpFPYexo/jsxhVQX8aULhOTy6+YCHRZX2kFZ4ExHgjmV6+AZ3M1C7X
+         h+celUqMeTSDaI8swbc81283qIM2I8nzDAl6ERsjKpxQbriG4cyzPoUX5g+cZSpFXgCh
+         rDeWxmy3uCckdxb0gxYWGknRr2LDmPMv5tKwBy28tprH+Ad0xell/MF2MY35RwPpPcMm
+         myMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmtX7Tab2Bg6hOZE4UKYdja4hf0wY7yHwc7jsBhZkU3zxcO8rLRts+faX3+GKJ32xjAeGeOhKMoEIIgKZ1@vger.kernel.org, AJvYcCW4aE/u3GGvcHVXY0DMeQ3Az6JlH0mOloEXqSdhMAtFDUkiy3LQFxsBQGzXhOmw8erUWSWbW8X3BhPs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjwzkFiOs0rLu3x47I4mT5yo8bZkfMmDjXEX+GP8f1NB8petCL
+	8ZKFozF1MnaIZ6i8dE4LVxFZJeM1hyOxutJBhQWkcVQLkUH3Y4Gw
+X-Gm-Gg: ASbGnctW9JIDM2BOrfiXmoqGlGCy2QqTen09AVLVUpD9MRPrKJOBKEKK8NImhW8cfhj
+	pCofqvXV6msz9CCppxX2MWNSbxzclwssUwz/6oB26k8MFQ1Txi6TVL2R34eeMCYius5vmckdrCb
+	s1tQCQV+1pa9LcjKoylIJjGEpKHohwZkgRdtQeLhWlA4Y8Qn/8f6h31TJBX2OzVbhZ42OW4BrR9
+	eHAi3mmYfJcMUqGMbzSJuzmM8IbqoLD7bx3OIr3piWYlGqp/d7XUCoaZZu8P7NF8XWHO7UO+Xdh
+	+yPWtcH85O6cd+wZ73vVHszo6igH3RXgcnjFZCH/25/4dZ8venF3JB3V6K2aSg==
+X-Google-Smtp-Source: AGHT+IG3MDbF1eCbxjtJyEQMKpiK2fHB+pBZVRFPvTPpNXX4w7096GwYJ/QPJOWPmhLvGnEzG+iIHw==
+X-Received: by 2002:a05:6512:3993:b0:545:c7d:1784 with SMTP id 2adb3069b0e04-54990ec824amr9498561e87.43.1741866063854;
+        Thu, 13 Mar 2025 04:41:03 -0700 (PDT)
+Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba8a702asm182306e87.212.2025.03.13.04.41.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 13 Mar 2025 04:41:01 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Thu, 13 Mar 2025 17:10:10 +0530
-Subject: [PATCH v2 03/10] PCI: dwc: Implement .pre_scale_bus_bw() &
- .post_scale_bus_bw hook
+Date: Thu, 13 Mar 2025 13:40:57 +0200
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/14] dt-bindings: regulator: Add ROHM BD96802 PMIC
+Message-ID: <93b7b5ba885328301242b8ef708db92c24e50132.1741864404.git.mazziesaccount@gmail.com>
+References: <cover.1741864404.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-mhi_bw_up-v2-3-869ca32170bf@oss.qualcomm.com>
-References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
-In-Reply-To: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741866038; l=2235;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=PmKuDjh7TYnL36BsL4uFK3e2cvQCdB+O1CmCQrAD7C4=;
- b=VI/8VNWycXRlPi0pSYk0Fr6aifEQor01L8qOLpfV49fEVzw8N9gQDJummotBMBPqY31zZA7TF
- 8B8Qv21rWMtAW2YvmJKRYqNsOmy9HioTo1b4j7eqVXVCjt88vTUB69Y
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-GUID: -CRx_Df6LOIXH1d_r3e8omAC3HL8khFz
-X-Authority-Analysis: v=2.4 cv=V+F90fni c=1 sm=1 tr=0 ts=67d2c44f cx=c_pps a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=kXhGf0cxdCgfIYue-YsA:9 a=QEXdDO2ut3YA:10
- a=uKXjsCUrEbL0IQVhDsJ9:22
-X-Proofpoint-ORIG-GUID: -CRx_Df6LOIXH1d_r3e8omAC3HL8khFz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-13_05,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- impostorscore=0 spamscore=0 priorityscore=1501 phishscore=0 mlxscore=0
- lowpriorityscore=0 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503130092
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="OlLCymbnSnZA6bsA"
+Content-Disposition: inline
+In-Reply-To: <cover.1741864404.git.mazziesaccount@gmail.com>
 
-Add support for pre_scale_bus_bw() & post_scale_bus_bw() function op's.
-Add support for DWC glue drivers to register for these ops.
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+--OlLCymbnSnZA6bsA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+BD96802Qxx-C is an automotive grade configurable Power Management
+Integrated Circuit supporting Functional Safety features for application
+processors, SoCs and FPGAs. BD96802 is controlled via I2C, provides two
+interrupt lines and has two controllable buck regulators.
+
+The BD96802 belongs to the family of ROHM Scalable PMICs and is intended
+to be used as a companion PMIC for the BD96801.
+
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 21 +++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h      |  2 ++
- 2 files changed, 23 insertions(+)
+ .../regulator/rohm,bd96802-regulator.yaml     | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd9680=
+2-regulator.yaml
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index ffaded8f2df7..4da4df62c3f8 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -697,10 +697,31 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
- }
- EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
- 
-+static int dw_pcie_pre_scale_bus_bw(struct pci_bus *bus, int target_speed)
-+{
-+	struct dw_pcie_rp *pp = bus->sysdata;
-+	int ret = 0;
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd96802-regul=
+ator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd96802-regula=
+tor.yaml
+new file mode 100644
+index 000000000000..671eaf1096d3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd96802-regulator.ya=
+ml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/rohm,bd96802-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (pp->ops->pre_scale_bus_bw)
-+		ret = pp->ops->pre_scale_bus_bw(pp, target_speed);
++title: ROHM BD96802 Power Management Integrated Circuit regulators
 +
-+	return ret;
-+}
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 +
-+static void dw_pcie_post_scale_bus_bw(struct pci_bus *bus, int current_speed)
-+{
-+	struct dw_pcie_rp *pp = bus->sysdata;
++description:
++  This module is part of the ROHM BD96802 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml.
 +
-+	if (pp->ops->pre_scale_bus_bw)
-+		pp->ops->post_scale_bus_bw(pp, current_speed);
-+}
++  The regulator controller is represented as a sub-node of the PMIC node
++  on the device tree.
 +
- static struct pci_ops dw_pcie_ops = {
- 	.map_bus = dw_pcie_own_conf_map_bus,
- 	.read = pci_generic_config_read,
- 	.write = pci_generic_config_write,
-+	.pre_scale_bus_bw = dw_pcie_pre_scale_bus_bw,
-+	.post_scale_bus_bw = dw_pcie_post_scale_bus_bw,
- };
- 
- static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 501d9ddfea16..16e02646a8b4 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -354,6 +354,8 @@ struct dw_pcie_host_ops {
- 	void (*post_init)(struct dw_pcie_rp *pp);
- 	int (*msi_init)(struct dw_pcie_rp *pp);
- 	void (*pme_turn_off)(struct dw_pcie_rp *pp);
-+	int (*pre_scale_bus_bw)(struct dw_pcie_rp *pp, int target_speed);
-+	void (*post_scale_bus_bw)(struct dw_pcie_rp *pp, int current_speed);
- };
- 
- struct dw_pcie_rp {
++  Regulator nodes should be named to buck1 and buck2.
++
++patternProperties:
++  "^buck[1-2]$":
++    type: object
++    description:
++      Properties for single BUCK regulator.
++    $ref: regulator.yaml#
++
++    properties:
++      rohm,initial-voltage-microvolt:
++        description:
++          Initial voltage for regulator. Voltage can be tuned +/-150 mV fr=
+om
++          this value. NOTE, This can be modified via I2C only when PMIC is=
+ in
++          STBY state.
++        minimum: 500000
++        maximum: 3300000
++
++      rohm,keep-on-stby:
++        description:
++          Keep the regulator powered when PMIC transitions to STBY state.
++        type: boolean
++
++    unevaluatedProperties: false
++
++additionalProperties: false
+--=20
+2.48.1
 
--- 
-2.34.1
 
+--OlLCymbnSnZA6bsA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfSxEkACgkQeFA3/03a
+ocV9eAf/YTGOqr0nkHr0qsRRN434dd/2sFINmLhSvGMVVdZB01nhPsod1b6aYBJN
+kQb/p7xUWp60jitnFYmRExBdu8JJH4kZiLsST7PYD6Goin777QPEwZLMLH0LCZrp
+nOTHbA7aYlZE//fhrg2cMADGjSLaID6ySF+vYdKbq6hsj7YXKd+bjEtpHcG8dBQi
+8k7XzCK6OqTNErbZNIfmt8H6+UtF4Yi1hzgBFd2NQD2fZpeFQKGk7Fp/UuHh7BNP
+GNK3E3mxUuAdziwKgpgFZ4rm+U2PwpAxblmPYIhKUqUbE4tXuzP11kYPEMCE9AUD
+7wqWt7lNMZHwyPlDulzgFyxNJWzvYA==
+=+NW0
+-----END PGP SIGNATURE-----
+
+--OlLCymbnSnZA6bsA--
