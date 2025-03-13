@@ -1,36 +1,39 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A46F146585
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 12:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08CB1EF084
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 12:09:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741867769; cv=none; b=qr1aGr6XHydFRuOuX5Xzi/Nmt8nOka31+uA0SUxjkhIHg9t5S9ZPBTQ0dJddayi0lXO5C9VtjYxMX2f9umDmjT4ZM20KK6+IjqYjHnN0LpESLK0dX/YVKpi8rl7CvhrApYMeWxsam3sfFXoVDnmjt0vD2gNJ7g3zbOdkmi7hFWs=
+	t=1741867769; cv=none; b=Yv/PMz70nTDwnPflq9AMuq3tJgtFscOf79xJ6X7NVNzWye884WpvEE+dWUmw61xOdZJdtnMWd+3QMmXfakF3YiM2mltsecbWqZRouiOwXjWbFWDfB/5BV1slcivuyO+WrxAif5jhvs0anCb+5crUGxhzgzh0gUi1lv24K/dJjQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741867769; c=relaxed/simple;
-	bh=Toe05CGuFIzZSAtZ+R/jLB87y//iL+v6NXBc4JHjgL4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=alCGIipOqq+m2a3ae/oSqDx65VKNISboZLAnHmQ9sApX5fWp11ASeuavubzgC2858NkGstkmeGYuynKQN6+tLirS3zBGGf/I7EXE/7dSpCi/gMz1t9KBY7dNazxXToh9kbMObJr1boF3uLfySItB14T8jdr2/vF0SJf/5DXkF1M=
+	bh=Watlu32mQEUr0EHeSbFRfUzpvuA9/fTueq606bQNYaI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=K3KZLPXWTSr1G2d8xQbgSUc+85hzWvOPwh76+SXIrk7RLOwPK4WTD578h74HGoNu6i210jTsRN7YuA2I8sBHW4B/zA/hqr8ni4UI/t1bJkdnOz42DbS7HzF2isFCXKsN4DyVzUv0tSaExx1tFIuN9Fu5rtjHM2RaX+dJo7nam/8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZD5rX2XGrz4f3mHV
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZD5rX677Tz4f3mHb
 	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:09:00 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 407631A1195
+	by mail.maildlp.com (Postfix) with ESMTP id BA97D1A1614
 	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:09:24 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP2 (Coremail) with SMTP id Syh0CgCnsGPyytJnTaZeGQ--.9643S2;
+	by APP2 (Coremail) with SMTP id Syh0CgCnsGPyytJnTaZeGQ--.9643S4;
 	Thu, 13 Mar 2025 20:09:24 +0800 (CST)
 From: Kemeng Shi <shikemeng@huaweicloud.com>
 To: akpm@linux-foundation.org
 Cc: kasong@tencent.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/9] Minor cleanups and improvements to swap freeing code
-Date: Fri, 14 Mar 2025 05:05:06 +0800
-Message-Id: <20250313210515.9920-1-shikemeng@huaweicloud.com>
+Subject: [PATCH 2/9] mm: swap: factor out the actual swap entry freeing logic to new helper
+Date: Fri, 14 Mar 2025 05:05:08 +0800
+Message-Id: <20250313210515.9920-3-shikemeng@huaweicloud.com>
 X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20250313210515.9920-1-shikemeng@huaweicloud.com>
+References: <20250313210515.9920-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,65 +41,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCnsGPyytJnTaZeGQ--.9643S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZF43AF1DZw1fWF45Xw48tFb_yoW8ZF1fpF
-	W3uwnxGF18JrnaywsxAw10qryrX3yrKF47G3W7ur18Zw43uF18XryjyrZ5ZFyDA395JrWq
-	qF48K34UuF4YvrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+X-CM-TRANSID:Syh0CgCnsGPyytJnTaZeGQ--.9643S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF13JF4UXrykCF4DJF17GFg_yoW8Zry5pF
+	nIgrn8Ga1xJr93GFZxAFn8Z34akw4Fg3W8WF9rGwnayas3JryIqFnrArWYkry5Ja4ku34a
+	9Fs8Kr17uF4YyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_
-	tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
-	xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
-	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
-	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28I
-	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
-	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-	aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUsBMNUUUUU
+	8IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK
+	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4
+	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
+	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsmiiDUUUU
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Hi All,
-This series contains some cleanups and improvements which are made
-during learning swapfile. Here is a summary of the changes:
-1. Function nameing improvments.
--Use "put" instead of "free" to name functions which only do actual free
-when count drops to zero.
--Use "entry" to name function only frees one swap slot. Use "entries" to
-name function could may free multi swap slots within one cluster. Use
-"_nr" suffix to name function which could free multi swap slots spanning
-cross multi clusters.
-2. Eliminate the need to set swap slot to intermediate SWAP_HAS_CACHE
-value before do actual free by using swap_entry_range_free()
-3. Add helpers swap_entries_put_map() and swap_entries_put_cache() as a
-general-purpose routine to free swap entries within a single cluster
-which will try batch-remove first and fallback to put eatch entry
-indvidually with cluster lock acquired/released only once. By using 
-these helpers, we could remove repeated code, levarage batch-remove in
-more cases and aoivd to acquire/release cluster lock for each single
-swap entry.
+Factor out the actual swap entry freeing logic to new helper
+__swap_entries_free().
+This allow us to futher simplify other swap entry freeing code by
+leveraging __swap_entries_free() helper function.
 
-Kemeng Shi (9):
-  mm: swap: rename __swap_[entry/entries]_free[_locked] to
-    swap_[entry/entries]_put[_locked]
-  mm: swap: factor out the actual swap entry freeing logic to new helper
-  mm: swap: use __swap_entry_free() to free swap entry in
-    swap_entry_put_locked()
-  mm: swap: remove unneeded VM_BUG_ON(*map != SWAP_HAS_CACHE) in
-    swap_entry_range_free()
-  mm: swap: use swap_entries_free() drop last 1 flag in
-    swap_entries_put_nr()
-  mm: swap: drop last SWAP_MAP_SHMEM flag in batch in
-    swap_entries_put_nr()
-  mm: swap: free each cluster individually in swap_entries_put_map_nr()
-  mm: swap: factor out helper to drop cache of entries within a single
-    cluster
-  mm: swap: replace cluster_swap_free_nr() with
-    swap_entries_put_[map/cache]()
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+---
+ mm/swapfile.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
- mm/swapfile.c | 173 +++++++++++++++++++++++++-------------------------
- 1 file changed, 86 insertions(+), 87 deletions(-)
-
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 5a775456e26c..7c886f9dd6f9 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1347,6 +1347,25 @@ static struct swap_info_struct *_swap_info_get(swp_entry_t entry)
+ 	return NULL;
+ }
+ 
++static inline void __swap_entries_free(struct swap_info_struct *si,
++				       struct swap_cluster_info *ci,
++				       swp_entry_t entry, unsigned int nr_pages)
++{
++	unsigned long offset = swp_offset(entry);
++
++	VM_BUG_ON(cluster_is_empty(ci));
++	VM_BUG_ON(ci->count < nr_pages);
++
++	ci->count -= nr_pages;
++	mem_cgroup_uncharge_swap(entry, nr_pages);
++	swap_range_free(si, offset, nr_pages);
++
++	if (!ci->count)
++		free_cluster(si, ci);
++	else
++		partial_free_cluster(si, ci);
++}
++
+ static unsigned char swap_entry_put_locked(struct swap_info_struct *si,
+ 					   unsigned long offset,
+ 					   unsigned char usage)
+@@ -1525,22 +1544,13 @@ static void swap_entry_range_free(struct swap_info_struct *si,
+ 
+ 	/* It should never free entries across different clusters */
+ 	VM_BUG_ON(ci != offset_to_cluster(si, offset + nr_pages - 1));
+-	VM_BUG_ON(cluster_is_empty(ci));
+-	VM_BUG_ON(ci->count < nr_pages);
+ 
+-	ci->count -= nr_pages;
+ 	do {
+ 		VM_BUG_ON(*map != SWAP_HAS_CACHE);
+ 		*map = 0;
+ 	} while (++map < map_end);
+ 
+-	mem_cgroup_uncharge_swap(entry, nr_pages);
+-	swap_range_free(si, offset, nr_pages);
+-
+-	if (!ci->count)
+-		free_cluster(si, ci);
+-	else
+-		partial_free_cluster(si, ci);
++	__swap_entries_free(si, ci, entry, nr_pages);
+ }
+ 
+ static void cluster_swap_free_nr(struct swap_info_struct *si,
 -- 
 2.30.0
 
