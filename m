@@ -1,171 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4154D8C8;
-	Thu, 13 Mar 2025 02:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9891EEC4;
+	Thu, 13 Mar 2025 02:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741831745; cv=none; b=ZLyAOwZI8iqyvWRmBsfFxYh9AkHpIkGqsjqMEeXtbzxJEwHWmE5YNt25pCBm5nKsd93byi0/hlWWlqJopr0/S5Ox1oFi/0QkNDB3XGh4bVsDI7HWUycSqoes4onGlpN+3SArbNZGgqnNwOy85KSI1t6AxUl+hEQ8cSNnyhC3ugc=
+	t=1741831890; cv=none; b=bbTK54SVYLDQPq387vWqmWs0w+y896UrxePm+Qru3UksFx1ZeobvbevhK/H0ZbvWJ25fijwOGKqvxFqC2MJ2tbBCy9qu7vkD3wgjlpl8FUNLO7Mk/2BdLDpJOn9VywK4nddTd3tK4ynVOe2NyTaufWJMd42nNCdOLom5YP7D3rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741831745; c=relaxed/simple;
-	bh=GngvFBixUC4blVwet87fsiyD246acHkjhZlmbgI45iY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X8TsOkgYDKjjXAWi+0rAWzqHonEc/SQaXgDIpYtBMaH6xerRSm6rqxnhhhvNu0Hs6QBavk+gvaW0AQFHpYy1ta6PG6ahDjxVw8/Fo8zm3yv35ryytufwOHvNg3KE9gpt7gk1Jjcp/MsQ8c1IinBUEK8nyUesiO5WsguSerCvfSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pakt/yVy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741831890; c=relaxed/simple;
+	bh=FpC/vTuwIK5xIUgyQayYXS0BC2eQhbdB7objGTLAYV0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uUYuNHWMuVahEmGD5zdx5DHanpfHt3h3cFcgwobAPaMHusEvCIYM+4Xcj2goCRG2HDU1WW5/kSv5i3b9N+Z68lZTt1z4lf63iu4R9PWO8aY/SUiuRRI6hRd31ATNhjoH6d/ALMDw5n1vmck4IOPct+fBddCFiaRquaWgCYZptoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=K96VwPv+; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pakt/yVy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F16BBC4CEDD;
-	Thu, 13 Mar 2025 02:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741831745;
-	bh=GngvFBixUC4blVwet87fsiyD246acHkjhZlmbgI45iY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pakt/yVyOntTMO64+noyo0RfpzkTor1fq/f1K2nuE2gnj3T1nIS+2lGwhyf/6eX94
-	 JRGhmAU4k2zY5c8yga4lIfbpi7agWosgVbwxv5nSF704AUw2KDkevMVt3AnBVNbxHV
-	 eMRmu9Ly9xYM07MTwUhuPv31BZH0FMhKGHNdSIPGk467StAi1Bp5/CB93O6KsdSdC9
-	 p3OOxTiU6SyiB/ivg9FJCIMnDXzfl1zzQaCtBCLO7glpW2lAqPMqYLaFnZCnmie0xW
-	 vJvfBCpQ0tDndS/M5tmbDipfWviqXKeOzTe+h1oEFQw5/but1eweSslC2dqmo0tbzq
-	 Ds4y1gUwDHbIw==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54996d30bfbso383273e87.2;
-        Wed, 12 Mar 2025 19:09:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWfs83MwdoEcJcZ5Ym0oL3zu9znUlZB0zGTPwftQSesmr/2SZmnl0W/y/BOgnCDuThrujY8efJ80STh7dw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIx2qjbcLD4Skh5/c3X3djwsIPlrC91RC1ei2rdSWthc2UsnVP
-	mGA7fd5PZpi3xaAvVVtEExRKwGKLjt+WTNOKNDF/pkg6J7Qxo9OxdZ3/GTIvjuxZHVq8W6CoNMj
-	5EPuQB6dqqGIK+yl2KP3jqJ1/t0A=
-X-Google-Smtp-Source: AGHT+IFnp+hSv28hh0jo5RO6feHO0dn8GCX7fME6ezbp/fN64DK7Ijlw7+v6mzJ9xFU+XXy/l/7Fn+eJUdqbeCvZLvE=
-X-Received: by 2002:a05:6512:a93:b0:545:2fa9:8cf5 with SMTP id
- 2adb3069b0e04-549910b7c6fmr10035130e87.49.1741831743668; Wed, 12 Mar 2025
- 19:09:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="K96VwPv+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741831881;
+	bh=FpC/vTuwIK5xIUgyQayYXS0BC2eQhbdB7objGTLAYV0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=K96VwPv+aIwjbtzVY9PiUbxOZEX7YVvF3CNB/wJzqT34HrNwMBSIY6172lqADQjVk
+	 xqGE8H7jqxTScepZPCRIBTlOI5eIVnZ55BOhvUHMMux8yRR2FSSlxtpg1Hnr4h1nHG
+	 7rR+Fpdjnn7k3GVKPKhZ52mYWzfQiaXAHNlMjfrDrx9Lab6deu+lD980tlczpHtm+J
+	 dBhB2uksMY+FsynP2gf+lom+DEzd6bsBwHZcGP9gCUrNLgqKYV2ZUaoxCYjmDRPsyF
+	 MAThuelWlIXJzj6Z3OR1ZGvcbN4pH5xamSzylh6Ca/BK7fBiF63S1OR5/Bb01Xm5oq
+	 YcxJQwdEchJVg==
+Received: from [192.168.50.250] (unknown [171.76.87.92])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5D09C17E1134;
+	Thu, 13 Mar 2025 03:11:18 +0100 (CET)
+Message-ID: <cc9501d1-c779-4728-a609-ce83a73f46f6@collabora.com>
+Date: Thu, 13 Mar 2025 07:40:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311110616.148682-6-ardb+git@google.com> <20250311110616.148682-10-ardb+git@google.com>
-In-Reply-To: <20250311110616.148682-10-ardb+git@google.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 13 Mar 2025 11:08:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASxNhDnCmpuf7yEW4Lcz-vRtitx8HPeoZnGNWdb-6pEsA@mail.gmail.com>
-X-Gm-Features: AQ5f1JoS42g00b7qlbesqtGBrGFfhZQ6QifIEYnappwB45I2PgST6Tm8BEsgSzI
-Message-ID: <CAK7LNASxNhDnCmpuf7yEW4Lcz-vRtitx8HPeoZnGNWdb-6pEsA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] x86: Get rid of Makefile.postlink
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, x86@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drm/ci: add kms_cursor_legacy@torture-bo to apq8016
+ flakes
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Rob Clark
+ <robdclark@gmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
+ Helen Koike <helen.koike@collabora.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ lumag@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+References: <20241204-cursor_tor_skip-v2-1-f03bcbc4b455@quicinc.com>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <20241204-cursor_tor_skip-v2-1-f03bcbc4b455@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 11, 2025 at 8:06=E2=80=AFPM Ard Biesheuvel <ardb+git@google.com=
-> wrote:
->
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> Instead of generating the vmlinux.relocs file (needed by the
-> decompressor build to construct the KASLR relocation tables) as a
-> vmlinux postlink step, which is dubious because it depends on data that
-> is stripped from vmlinux before the build completes, generate it from
-> vmlinux.unstripped, which has been introduced specifically for this
-> purpose.
->
-> This ensures that each artifact is rebuilt as needed, rather than as a
-> side effect of another build rule.
->
-> This effectively reverts commit
->
->   9d9173e9ceb6 ("x86/build: Avoid relocation information in final vmlinux=
-")
->
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Hi Abhinav,
+
+On 05/12/24 01:29, Abhinav Kumar wrote:
+>  From the jobs [1] and [2] of pipeline [3], its clear that
+> kms_cursor_legacy@torture-bo is most certainly a flake and
+> not a fail for apq8016. Mark the test accordingly to match the results.
+> 
+> [1] : https://gitlab.freedesktop.org/drm/msm/-/jobs/67676481
+> [2] : https://gitlab.freedesktop.org/drm/msm/-/jobs/67677430
+> [3]: https://gitlab.freedesktop.org/drm/msm/-/pipelines/1322770
+> 
+> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 > ---
->  arch/x86/Makefile.postlink        | 38 --------------------
->  arch/x86/boot/compressed/Makefile |  9 +++--
->  2 files changed, 6 insertions(+), 41 deletions(-)
->
-> diff --git a/arch/x86/Makefile.postlink b/arch/x86/Makefile.postlink
-> deleted file mode 100644
-> index 445fce66630f..000000000000
-> --- a/arch/x86/Makefile.postlink
-> +++ /dev/null
-> @@ -1,38 +0,0 @@
-> -# SPDX-License-Identifier: GPL-2.0
-> -# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> -# Post-link x86 pass
-> -# =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> -#
-> -# 1. Separate relocations from vmlinux into vmlinux.relocs.
-> -# 2. Strip relocations from vmlinux.
-> -
-> -PHONY :=3D __archpost
-> -__archpost:
-> -
-> --include include/config/auto.conf
-> -include $(srctree)/scripts/Kbuild.include
-> -
-> -CMD_RELOCS =3D arch/x86/tools/relocs
-> -OUT_RELOCS =3D arch/x86/boot/compressed
-> -quiet_cmd_relocs =3D RELOCS  $(OUT_RELOCS)/vmlinux.relocs
-> -      cmd_relocs =3D \
-> -       mkdir -p $(OUT_RELOCS); \
-> -       $(CMD_RELOCS) $@ > $(OUT_RELOCS)/vmlinux.relocs; \
-> -       $(CMD_RELOCS) --abs-relocs $@
-> -
-> -# `@true` prevents complaint when there is nothing to be done
-> -
-> -vmlinux vmlinux.unstripped: FORCE
-> -       @true
-> -ifeq ($(CONFIG_X86_NEED_RELOCS),y)
-> -       $(call cmd,relocs)
-> -endif
-> -
-> -clean:
-> -       @rm -f $(OUT_RELOCS)/vmlinux.relocs
-> -
-> -PHONY +=3D FORCE clean
-> -
-> -FORCE:
-> -
-> -.PHONY: $(PHONY)
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed=
-/Makefile
-> index 606c74f27459..5edee7a9786c 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -117,9 +117,12 @@ $(obj)/vmlinux.bin: vmlinux FORCE
->
->  targets +=3D $(patsubst $(obj)/%,%,$(vmlinux-objs-y)) vmlinux.bin.all vm=
-linux.relocs
->
-> -# vmlinux.relocs is created by the vmlinux postlink step.
-> -$(obj)/vmlinux.relocs: vmlinux
-> -       @true
-> +CMD_RELOCS =3D arch/x86/tools/relocs
-> +quiet_cmd_relocs =3D RELOCS  $@
-> +      cmd_relocs =3D $(CMD_RELOCS) $< > $@;$(CMD_RELOCS) --abs-relocs $<
-> +
-> +$(obj)/vmlinux.relocs: vmlinux.unstripped FORCE
-> +       $(call if_changed,relocs)
+> Changes in v2:
+> - Fix the failure rate from 100 to 33 as thats the accurate one
+> - Link to v1: https://lore.kernel.org/r/20241204-cursor_tor_skip-v1-1-f5f0bba5df7b@quicinc.com
+> ---
+>   drivers/gpu/drm/ci/xfails/msm-apq8016-flakes.txt | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/ci/xfails/msm-apq8016-flakes.txt b/drivers/gpu/drm/ci/xfails/msm-apq8016-flakes.txt
+> new file mode 100644
+> index 000000000000..2fb192c92559
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ci/xfails/msm-apq8016-flakes.txt
+> @@ -0,0 +1,5 @@
+> +# Board Name: msm-apq8016-db410c
+> +# Failure Rate: 33
+> +# IGT Version: 1.28-ga73311079
+> +# Linux Version: 6.12.0-rc2
+> +kms_cursor_legacy@torture-bo
 
-Perhaps, it may make sense to rebuild vmlinux.relocs
-when arch/x86/tools/relocs is changed, but
-I do not see such dependency in the other
-arch/x86/realmode/rm/Makefile.
+Reviewed-by: Vignesh Raman <vignesh.raman@collabora.com>
 
-https://github.com/torvalds/linux/blob/v6.14-rc5/arch/x86/realmode/rm/Makef=
-ile#L61
+Regards,
+Vignesh
 
+> 
+> ---
+> base-commit: 798bb342e0416d846cf67f4725a3428f39bfb96b
+> change-id: 20241204-cursor_tor_skip-9d128dd62c4f
+> 
+> Best regards,
 
-So, I decided it is ok.
-If you mind, you can send v3.
-
-
-
---=20
-Best Regards
-Masahiro Yamada
