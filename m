@@ -1,76 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bsdbackstore.eu (128-116-240-228.dyn.eolo.it [128.116.240.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BDF155C96
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 09:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B368262D1C;
+	Thu, 13 Mar 2025 09:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.116.240.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741856462; cv=none; b=pevSZhJK5BO25r/nb2E3bd8FoYiBDj4J/qZOIWvDeV5s6H9sP/dBbNs02xjrWldpvoTmC49uP5b6q15gctFEx45r2LgcSYWQgO13bMa2jn1ldkv96uc3u3AConHKRV5eHxxjX6E2bYCK8MYHTj9AMdqwZ/c5WZ2NloBzYJjd8hU=
+	t=1741856482; cv=none; b=RPS6yGGEO/7CeT8MRdHUE1nJyAdTgHAG1jtdD/lLQWG3bmZ+whhzRssqtVfAUoCzw1ot5v2GBjh8TWGIJLMR4tQ9LHPAUR91aoPz84TEepDlAW8rS4JomzaVaj+tnXkSMditlvQldiJt6k2EVOBrE0bk1B1xx+sUIl7o/YgznPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741856462; c=relaxed/simple;
-	bh=2NVIlOXjOqN6H2t3XTMFYhxsI9xrRSifYJsUYEBiDaM=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=c7x/eOaaJH9UqOuRFEqfYaV0pu7fgERNUDKFPahxBm8VsIKlEMgEpdrry8jF9R43RhwFSUbR0nKDV7yqVuOWgNBSvqbXvYq9ZL0fqxFKiFl2R6og2DpBMjTXSJPSsfdnWswiaFZQ1NDX2PCYL54GEfk1kB8sH9QsCwX7rrWjeU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gteJGi8w; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gteJGi8w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741856459;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HWX+NY4k6HSsnkBzV4RnRPKYxMVxCP2ZIMbCALpTIGg=;
-	b=gteJGi8wkysSgTvSO34JGSr0wWP7Uz/dRMLkIk3a2nGL1GvOvU5qWFhKHmSx7Q0pOngSoe
-	UL4He+63hefDaYQkVnJlG350JmSs5GLIkgiT7V3jVlQ7uENgVHsEkI4DRxBGWqsLvlnQ60
-	j78+Sh6CK+zKuV6GkSEqvAxpw7eOhXI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-140-_jZveJSVOR-CqeIuwQAaWQ-1; Thu,
- 13 Mar 2025 05:00:55 -0400
-X-MC-Unique: _jZveJSVOR-CqeIuwQAaWQ-1
-X-Mimecast-MFC-AGG-ID: _jZveJSVOR-CqeIuwQAaWQ_1741856454
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D3DE1800258;
-	Thu, 13 Mar 2025 09:00:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.61])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C02981828A99;
-	Thu, 13 Mar 2025 09:00:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <458de992be8760c387f7a4e55a1e42a021090a02.camel@ibm.com>
-References: <458de992be8760c387f7a4e55a1e42a021090a02.camel@ibm.com> <1243044.1741776431@warthog.procyon.org.uk>
-To: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
-Cc: dhowells@redhat.com, "slava@dubeyko.com" <slava@dubeyko.com>,
-    "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-    Alex Markuze <amarkuze@redhat.com>, Xiubo Li <xiubli@redhat.com>,
-    "brauner@kernel.org" <brauner@kernel.org>,
-    "idryomov@gmail.com" <idryomov@gmail.com>,
-    "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ceph: Fix incorrect flush end position calculation
+	s=arc-20240116; t=1741856482; c=relaxed/simple;
+	bh=6dKxJ9dsiOX0QPDvCIPj7hxyJrK+VLs58cYZ78OfvA0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=qNiJ+qVnQ67cfAGk558pe3ki6do5MiOye9rdvIo+M3rsHwqsEMO5J0cfGc7Rweu76k/BYmOkrhs1076T7hgqicakNh8jB9cl+YcB74QCrWxG9EQVcFLxKGkrejyatjnEJZU6w6+j8UUDBD28jNh1k4+mC8c+7/P75RE8gSGflUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu; spf=pass smtp.mailfrom=bsdbackstore.eu; arc=none smtp.client-ip=128.116.240.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsdbackstore.eu
+Received: from localhost (25.205.forpsi.net [80.211.205.25])
+	by bsdbackstore.eu (OpenSMTPD) with ESMTPSA id fd0d5281 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 13 Mar 2025 10:01:09 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1330414.1741856450.1@warthog.procyon.org.uk>
-Date: Thu, 13 Mar 2025 09:00:50 +0000
-Message-ID: <1330415.1741856450@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 13 Mar 2025 10:01:07 +0100
+Message-Id: <D8F0L25A8NP6.MR1S5ORJC9XE@bsdbackstore.eu>
+Subject: =?utf-8?q?Re:_nvme-tcp:_fix_a_possible_UAF_when_failing_to_send_request?= =?utf-8?q?=E3=80=90=E8=AF=B7=E6=B3=A8=E6=84=8F=EF=BC=8C=E9=82=AE=E4=BB=B6?= =?utf-8?q?=E7=94=B1sagigrim@gmail.com=E4=BB=A3=E5=8F=91=E3=80=91?=
+From: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>
+To: "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>, "Hannes Reinecke"
+ <hare@suse.de>, "sagi" <sagi@grimberg.me>, "mgurtovoy"
+ <mgurtovoy@nvidia.com>, "kbusch" <kbusch@kernel.org>, "sashal"
+ <sashal@kernel.org>, "chunguang.xu" <chunguang.xu@shopee.com>
+Cc: "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-nvme"
+ <linux-nvme@lists.infradead.org>, "linux-block"
+ <linux-block@vger.kernel.org>
+X-Mailer: aerc
+References: <2025021015413817916143@cestc.cn>
+ <aed9dde7-3271-4b97-9632-8380d37505d9@grimberg.me>
+ <202503071810452687957@cestc.cn>
+ <D8DDP6LIPOKB.2ACTHLE9FPI2A@bsdbackstore.eu>
+ <2025031309485746586710@cestc.cn>
+ <deb1584c-67b8-4543-9017-9ca18a9ee7d8@suse.de>
+ <2025031316185747646815@cestc.cn> <2025031316313196627826@cestc.cn>
+In-Reply-To: <2025031316313196627826@cestc.cn>
 
-Shall I ask Christian to stick this in the vfs tree?  Or did you want to take
-it through the ceph tree?
+On Thu Mar 13, 2025 at 9:31 AM CET, zhang.guanghui@cestc.cn wrote:
+> Hi,
+>   in fact, the nvme_tcp_try_send() failure, the target may send C2HTermRe=
+q immediately. while the host receives the C2HTermReq and still starting er=
+ror recovery. =20
+>  so when queue->rd_enabled is false,  can avoid starting error recovery a=
+gagin.
 
-David
 
+Not all targets send C2HTermReq (for example, the Linux target doesn't
+at the moment) so you can't rely on that.
+In any case, calling nvme_tcp_error_recovery() twice is harmless;
+the first call moves the controller to the resetting state, the second
+call is ignored.
+
+Maurizio
