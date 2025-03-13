@@ -1,143 +1,117 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2110B2E3391
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115C525776;
+	Thu, 13 Mar 2025 01:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741828577; cv=none; b=lTaO4OcYr6W3tHV4RD0NeSsaOKLueYaCTYbLQta1TYr8kqAhdmzL8WpWzHrOGwz3is35fWXbQCc/8O6n1EMS8mhvNPyH1Ip6Z4wan1LGGkKKQbsxXQoyWbnUgvc3T2k8VrO8HPmVmrcOjoPu3sHXoSHTRAZGmOE/3JpxEq6rLaU=
+	t=1741828579; cv=none; b=R8LY6YLEhluDf8qjfm6uXfIP3FaA0CEW//u6+EyvzQkpgySguhaojwSLDlt9MloVoy2mLkgJcVGabur59r5LT0zZYeVcKsne4ssfWePg79g2TOBLAo1CBYJZk784pe7Y8duJfn1JBhoIW5EwxNqDmE7qf4SYOojlYMckwotQXt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741828577; c=relaxed/simple;
-	bh=eSDJa0J3f/28ZDWAk7VEZPtKxr9YtAv6+UKKVOJdVaA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tfJ2+R37EwdCOc+pyObRcJhE9l/um7tRPLVh8UupH+EDK2h64UXqZ+SJbR37EK21iT5N1XMSb7Z9XN7mED34Wmj6OCMIIwtAjv8M43hF6vXW2hwQ+UMH9oLQ8f54UyhXRQo96kn5MrmRVOkbDKxuz1ZO0TvsE1T9TxgYHbrBckE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=p5miBOzg; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="p5miBOzg"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7273b0d4409so130776a34.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Mar 2025 18:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741828573; x=1742433373; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rJ934ZvEElWehjNAUMIc/nP+ftV711ek8hldYYhR81o=;
-        b=p5miBOzgK2gvVRvOqwUpraIwF0Q8G2rWtTwBT5I5gyTX/xtVgqmHc7JNdGhiH5j98n
-         ZVAums+ljUDX58zndqJNnyEQhQUPUta86gMv+EnlJfzTFsTxToEt4UABA1ncBPvf0By+
-         f+nk9RF7rx3VzpFzfFppJ6GVc5SWsxyQYNy/Lat03dKI1GfoILbOqveIN04x2TKafGc7
-         8yKYWDZwYQS0LxCwQ93FyQfDjJYGIjApz+wE+IgK9M+sNVhyrVVYnfgVn+LNTd5H4iJs
-         rNkvOm1tsnStFIr/V5qTodwuvDoxDsOq0DkA/KZ46pBtRsF6voRP2b6sj9EhGWy9IJ82
-         dPlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741828573; x=1742433373;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rJ934ZvEElWehjNAUMIc/nP+ftV711ek8hldYYhR81o=;
-        b=FKTeBDEmuRQYjV6bTvYP+A/rL8YjIb9JOkXQ67V+AXFwQMrFaBBOmYL1i/DSEBVDxn
-         lIlNAqosbJ9073N4/XQimf/acuc65yiYASF1W56C1wJZm454I5cr6QZ/LcZvbul7mqKi
-         /dqHnQnC9WBTd2xIyRJsZvdZSARlBdgGkoDDwcyVloNb6k9CQEz9XV8FArbKzaWuCdLt
-         WT6VH4KsD9v+IJrkzrBIyMg9zWptkupf63Tyafjgzd0GvWTbr44WYYkhGcnHWqL+LMvr
-         eZwWQugYxTfec2EG4YbuccuWK20n41VcluPU/o8b+vOniLrPTu1XeUuunoOsKP6OvKaW
-         pIbw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9aQhVzuSstVGVb1G7eUAeWRjSZAAFUuvvEo+/G22lGb5dClV65brT9wpzl9i2A6hVt2XT+dBwPZnj5bE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiI9SniMAF7oQl5PBAk5/FE2zEgeEMkN/Zcw8bsLDXxZkYtcFi
-	TKpjTmIcwCzzYIA+uvQ5InPFANXMcjY1lsFXdkuMI7DyiJKFLJPCdbWQdBPVTrU=
-X-Gm-Gg: ASbGnctR2Jb9CTAiHZ5OpvnNbcBMPAfj8DdIwRu9ID0ZSjhCVqrkN4SD8PjhesPnEg/
-	sz0ANs5xUnv9RymWghd6vn9yUxFn4840RA8n6rGO9u+6g8qspFeVE7DDvTfQizapVm+t5fgQsvc
-	ZWeUnXlpOdntS9/LM7nu2MBAcaeYdaSndiJRM4zPLmGrdJT34bDrUk3hRGp9ElMqM1q4QXwpqQP
-	zaiBJdh+fT7ZX33nfK1KAHLtzl71UtgLaS9wDbWpXxgfLR0O5Mar929l5RA6RYg6lHYNGFJJN5Q
-	2XiMTgYbm9pWt/ctki3GYi3JItCTDd+vumSZQ2P3CN3aQnZBHQWFQKTSnH12KpTN2P2yKrHMatH
-	o
-X-Google-Smtp-Source: AGHT+IGyd3POHMXsoid9kuJ3cLMAmofPcBo1X3qB8GLAB/6v3cfNghSUhP+eQGeHnWo0kF9Z3uykQQ==
-X-Received: by 2002:a05:6830:3690:b0:72b:9e3b:82bc with SMTP id 46e09a7af769-72b9e3b83e5mr4912042a34.11.1741828573169;
-        Wed, 12 Mar 2025 18:16:13 -0700 (PDT)
-Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-601db659ad8sm39865eaf.8.2025.03.12.18.16.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 18:16:12 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Subject: [PATCH 00/11] iio: adc: ad7606: improvements and ad7606c parallel
- interface support
-Date: Wed, 12 Mar 2025 20:15:38 -0500
-Message-Id: <20250312-iio-adc-ad7606-improvements-v1-0-d1ec04847aea@baylibre.com>
+	s=arc-20240116; t=1741828579; c=relaxed/simple;
+	bh=3PNhqqyRaFF5l4naAmFz5YjA11fh/EFAPuwXokt4+Rs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XcMbvCwwS43gVKNrUQIws9acydAkdHbWC223ZJPk9f66iQdrdGk6zQlyrNpJ41QWVshhBd1Qz33Tj9CJDsKV4oCZaZNqeSsxsT039wP7n39w9V8tIkp0Ej/QUR+XcvsT2CbWNXK2+94D24qBv4u41ou+8SNtgsFAjYeKXosqoQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZCqG93ZBcz1f0b3;
+	Thu, 13 Mar 2025 09:11:45 +0800 (CST)
+Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 67FD21A016C;
+	Thu, 13 Mar 2025 09:16:08 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemg200005.china.huawei.com
+ (7.202.181.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 13 Mar
+ 2025 09:16:07 +0800
+From: Wang Liang <wangliang74@huawei.com>
+To: <dsahern@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>, <fw@strlen.de>,
+	<daniel@iogearbox.net>
+CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<wangliang74@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH net] net: fix NULL pointer dereference in l3mdev_l3_rcv
+Date: Thu, 13 Mar 2025 09:27:13 +0800
+Message-ID: <20250313012713.748006-1-wangliang74@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALox0mcC/x3MTQqAIBBA4avErBvwh7S6SrSQHGsWaWhEEN09a
- fEW3+Y9UCgzFRibBzJdXDjFCtk2sGwuroTsq0EJ1QktJTIndH6pWSMM8n7kdNFO8Sw4DNZbF5T
- sSUM9HJkC3/99mt/3Aw5IFyNtAAAA
-X-Change-ID: 20250311-iio-adc-ad7606-improvements-997d7af218e3
-To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
- Angelo Dureghello <adureghello@baylibre.com>, 
- Alexandru Ardelean <aardelean@baylibre.com>, 
- Beniamin Bia <beniamin.bia@analog.com>, 
- Stefan Popa <stefan.popa@analog.com>, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1919; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=eSDJa0J3f/28ZDWAk7VEZPtKxr9YtAv6+UKKVOJdVaA=;
- b=owEBgwJ8/ZANAwAKAR+K+IyC93wDAcsmYgBn0jHaQEdQwjhfPwRhzeaRMjjGEDzPEi1Wb1dRY
- 5qiHP84Jv2JAkkEAAEKADMWIQSKc9gqah9QmQfzc4gfiviMgvd8AwUCZ9Ix2hUcZGF2aWRAbGVj
- aG5vbG9neS5jb20ACgkQH4r4jIL3fANXJRAAuvB8qcfKXcRTeXa0BVkZcPO61TYbUaSH2z6Pj7f
- Z9sh9uDYy1eqpqQhHw9XOQ6xc7qZbNPdfpuA3NSopArynbJ+02Eu6i/q5Y79Cfy++mPZyS4XXRI
- O10MAKM20YkyzM43jZkPyMSoMQU/UKcAdG340PIY/QP+a/Z03cxap3RPCXGjhnNBUWtcu6f3NmM
- GBIdURQFdq9xkMxByXHvX7MQ4DE1N6HPgGAxAO0lO5p/kYLZ3MrOygPk52dIks5YoEKIziIq94k
- tHL1u00QgsMLc9lIYOXdTtgSgfe4O4y7VUbGm5Ur4qQ8oCNYOKqTE7G7qw1kzjDSQkIgAjANyiG
- fwIPdZd6ipQHW94LqV8QjZPDflTzbPV2GuEXZ0YUeMfCgvgMTc7L9mgsPzxhwLHPnEckc40hpf5
- K7OQkeKKlfUpC7cs+yOb/dwToUDpHS0mcM5vxZVgwcmovj6FYIIiabubBxnU/54lPOJiSdJ1ubU
- RbdJBgtEZAJV449H9mVvdJ0nGfXcLEV+EE5KQG/B+VXXIMWTLuQRFRAHUGMChg9jliyG1P0SJgx
- UZ7zFtn7pVqJC+17HSVuextQ0TPapwg7Yb/zyx4sVdWhGjQhXzIV5kN6DoRQ1KHcf2juAGFRk2y
- LLZriUIhNIT/r/xayv1aNMg4pTOiqCtxU6gN3Du1ZljE=
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemg200005.china.huawei.com (7.202.181.32)
 
-The main purpose of this series is to add support for the AD7606C chips
-using a parallel interface. Along the way quite a few improvements were
-made to the driver which in the end made adding the additional chips
-trivial.
+When delete l3s ipvlan:
 
-The first 3 patches are fixes. The next 6 are some minor cleanups. The
-2nd to last patch is the big one. As explained in the respective commit
-message, the channel data structures were getting out of hand and only
-going to get worse with the addition of SPI offload support. Instead, we
-are opting to dynamically allocate the channel data structures to avoid
-a bunch of the existing complexity in the driver.
+    ip link del link eth0 ipvlan1 type ipvlan mode l3s
 
-I have limited access to hardware, so I was only able to test this with
-ad7606c-18.
+This may cause a null pointer dereference:
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
+    Call trace:
+     ip_rcv_finish+0x48/0xd0
+     ip_rcv+0x5c/0x100
+     __netif_receive_skb_one_core+0x64/0xb0
+     __netif_receive_skb+0x20/0x80
+     process_backlog+0xb4/0x204
+     napi_poll+0xe8/0x294
+     net_rx_action+0xd8/0x22c
+     __do_softirq+0x12c/0x354
+
+This is because l3mdev_l3_rcv() visit dev->l3mdev_ops after
+ipvlan_l3s_unregister() assign the dev->l3mdev_ops to NULL. The process
+like this:
+
+    (CPU1)                     | (CPU2)
+    l3mdev_l3_rcv()            |
+      check dev->priv_flags:   |
+        master = skb->dev;     |
+                               |
+                               | ipvlan_l3s_unregister()
+                               |   set dev->priv_flags
+                               |   dev->l3mdev_ops = NULL;
+                               |
+      visit master->l3mdev_ops |
+
+Add lock for dev->priv_flags and dev->l3mdev_ops is too expensive. Resolve
+this issue by add check for master->l3mdev_ops.
+
+Fixes: c675e06a98a4 ("ipvlan: decouple l3s mode dependencies from other modes")
+Signed-off-by: Wang Liang <wangliang74@huawei.com>
 ---
-David Lechner (11):
-      iio: adc: ad7606_spi: check error in ad7606B_sw_mode_config()
-      iio: adc: ad7606: check for NULL before calling sw_mode_config()
-      iio: adc: ad7606: fix scales_available attributes
-      iio: adc: ad7606: add missing max sample rates
-      iio: adc: ad7606: use devm_mutex_init()
-      iio: adc: ad7606: fix kernel-doc comments
-      iio: adc: ad7606: use kernel identifier name style
-      iio: adc: ad7606: don't use address field
-      iio: adc: ad7606: drop ch param from ad7606_scale_setup_cb_t
-      iio: adc: ad7606: dynamically allocate channel info
-      iio: adc: ad7606_par: add ad7606c chips
+ include/net/l3mdev.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
- drivers/iio/adc/ad7606.c     | 313 ++++++++++++++++++++-----------------------
- drivers/iio/adc/ad7606.h     | 171 +++++++----------------
- drivers/iio/adc/ad7606_par.c |  37 +----
- drivers/iio/adc/ad7606_spi.c |  98 ++------------
- 4 files changed, 211 insertions(+), 408 deletions(-)
----
-base-commit: 97fe5f8a4299e4b8601ecb62c9672c27f2d2ccce
-change-id: 20250311-iio-adc-ad7606-improvements-997d7af218e3
-
-Best regards,
+diff --git a/include/net/l3mdev.h b/include/net/l3mdev.h
+index f7fe796e8429..b5af87a35a9f 100644
+--- a/include/net/l3mdev.h
++++ b/include/net/l3mdev.h
+@@ -165,6 +165,7 @@ static inline
+ struct sk_buff *l3mdev_l3_rcv(struct sk_buff *skb, u16 proto)
+ {
+ 	struct net_device *master = NULL;
++	const struct l3mdev_ops *l3mdev_ops;
+ 
+ 	if (netif_is_l3_slave(skb->dev))
+ 		master = netdev_master_upper_dev_get_rcu(skb->dev);
+@@ -172,8 +173,12 @@ struct sk_buff *l3mdev_l3_rcv(struct sk_buff *skb, u16 proto)
+ 		 netif_has_l3_rx_handler(skb->dev))
+ 		master = skb->dev;
+ 
+-	if (master && master->l3mdev_ops->l3mdev_l3_rcv)
+-		skb = master->l3mdev_ops->l3mdev_l3_rcv(master, skb, proto);
++	if (!master)
++		return skb;
++
++	l3mdev_ops = master->l3mdev_ops;
++	if (l3mdev_ops && l3mdev_ops->l3mdev_l3_rcv)
++		skb = l3mdev_ops->l3mdev_l3_rcv(master, skb, proto);
+ 
+ 	return skb;
+ }
 -- 
-David Lechner <dlechner@baylibre.com>
+2.34.1
 
