@@ -1,169 +1,241 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2080.outbound.protection.outlook.com [40.107.93.80])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B70264FB8
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 10:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741863191; cv=fail; b=hJ7d1IhUAnfGcbKcKkY3tvOtQH4DrQ31tzvZ1n1naXzn5Wlpr3r8B2n5eEpKiNoc/WLeB5BH2TAXvFu1Q07yOTsJMtmhtZ1Nhn4ezV+6rNRSY/nHL8HlEEBK6RasVJUfNeS+ZL3VTLj4UU8uIoDncSms6le2Tpd/EP3VBzbgMyc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741863191; c=relaxed/simple;
-	bh=J6Zk5kZjRTVZiNvAnWxmtqlv2sk/T3ypWGEq1tzS1U0=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tr0svpCri9SlPt+NBrG3xVZVB7RWWPp8zZc59qmfOgmxEl3G661CLKsGsns6Dypd1AvQ+V3I03owVavPfm5yrm2KPVI5862G0rd6PYKMTrVYkIcBnn//106zIB5m4jttIpQD3scG3ZTdVXCOznL2NbxI2oLLsut4NGtLryPcavw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DOP7hUTJ; arc=fail smtp.client-ip=40.107.93.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8760F13C689;
+	Thu, 13 Mar 2025 10:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741863227; cv=none; b=XCAEvosuW44L7cHfvacifxPAZH6pkQlP0gycMP2rF6+TSpDODQMa72dSNU/CwRzwbrPLXKOJwDQ/IkJtvbDgaH5ikZxOZB+9q8J4pDViicFgHpyVgZEORuoC0uSnXsXH/t4PJBZFJ3bu8eqjJdzzAi4+LZgReMnr6zqX+glxj1w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741863227; c=relaxed/simple;
+	bh=VBvW1Cz+KeMZ6s39Dpsv+cM8XoNO1COwFwQZUAeoqtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BaMlJbbVZ2wNUo/yyKOTTxbwSGiWiza6qRvmUiAJwGqZLbEXpHQLTdoem1BHL4LWaXhAwEVzKyTjv4mVZi4crUF7DhrvPgmO6xlKl09iCWLJcdXj/0J/u1qzTQeNNjVdf1ykhGZwNNVZpaOKfRXmzc/+508X9xFqd1FqmKs+/Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YlNziZZ/; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DOP7hUTJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JqLVFo28krZO2UWLfD8vbbs86KH/qGS+pdmIKp6wNpAnDfnqbyqERN1zk4Ug5jJh+UCBkUteWBfiIdm2vw/4fg26e4P9vPzbAXqjplnFzDHSsSwhYEOi2sADVOnR//05i+JbnAbbWZFZ7P5yVKpW3XE69lps1J3Ilz586WhDWTO6cCKdfogRa8LCbvrt9vdL2jPxYAkQutF8unLY+gXNenZBzHyiLz7rwxdrSf6yjk+f9u4MPRoQkmcdF3b2u1YAXQMKU995RLo4a9Ulu7MC7TBaVGvg3lTfEfDAJ+JKNXSBDI4pPTHBmrL04tX7KHLjWbSC85L7p/zR1+25uEcTxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J6Zk5kZjRTVZiNvAnWxmtqlv2sk/T3ypWGEq1tzS1U0=;
- b=ymrT4AWSYEF4JgN2XzjTXKrN6SLJfwp9MQt4De39lLx2X4crT852dfBVBufDmAU6zYEtDYKY+TDXWeiFpIgC/WLOi6/x6Wnu8yeH0zYXHx1GAUKT9MdEIr5jbIycUYJuU86gsUHqLAMQuI5MDyC2Xv4KOs3XYBrLbSs6AHHYOpqAxEZlGs1vpg1adqHLHzpPDOZiGfbJWsjKqpUWIjVrs207aYjBv4WOJnkatV1gc4nCAsHUlNlJ1Vl/UbEKJIso0VMqasAMUKtNT+2ZXqZvwYxQ2v+ti8jiiFImKrUjFF8VpIcNY6Ygux8GFnOdJCjFMQfKyptm9WPKo+xtkBnNOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J6Zk5kZjRTVZiNvAnWxmtqlv2sk/T3ypWGEq1tzS1U0=;
- b=DOP7hUTJC/g94AJPL3AHSMtLC0I3pbtNBmS51pdzr0tf7wmbxVtPwoWEjUHGbip0PfnRxO3nDtPqS5cROZviggS0IdiXrlPa+sJSA/xM/4v4ZyLQk4Uf0qT5I1LE63DqXjxNa6ofbaQdUap9k8HJKawaqGcFMUii6gKrlI7a5+Q=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
- PH7PR12MB7425.namprd12.prod.outlook.com (2603:10b6:510:200::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.27; Thu, 13 Mar 2025 10:53:06 +0000
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5%4]) with mapi id 15.20.8534.028; Thu, 13 Mar 2025
- 10:53:06 +0000
-Message-ID: <5c48b79d-6b94-4e7c-a78f-bb170b01a9c2@amd.com>
-Date: Thu, 13 Mar 2025 16:22:58 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/8] iommu/amd: Add support for device id user input
-To: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>,
- joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
- robin.murphy@arm.com, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
-References: <20250206060003.685-1-dheerajkumar.srivastava@amd.com>
- <20250206060003.685-6-dheerajkumar.srivastava@amd.com>
-Content-Language: en-US
-From: Vasant Hegde <vasant.hegde@amd.com>
-In-Reply-To: <20250206060003.685-6-dheerajkumar.srivastava@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0184.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e8::8) To IA1PR12MB6043.namprd12.prod.outlook.com
- (2603:10b6:208:3d5::20)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YlNziZZ/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741863225; x=1773399225;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VBvW1Cz+KeMZ6s39Dpsv+cM8XoNO1COwFwQZUAeoqtw=;
+  b=YlNziZZ//HslBbIEW7jtKD+u+m0uTd1Kv+1+G82GH0QMNzmGnUeeR3bt
+   wM3v9o6hBMuBx/XF+0yLrQ+6We1IXKFoYelUoJ5THuy2Cc1M97ccbvZo7
+   3I7QfGGL4qN+fNzHMF3k6HBXKgGZFWCDTlKZdn1dWb+uMT/tw1Itqo/2o
+   ZXO5EtDqBvp+nMVYHcX1/xAzehXRhDVIP9Q9VSgIu8oEVAeWk2HIPvgk9
+   uei21bwWcTczrbw/Nu8UPlBX0o3ieb7W4+m06nq7pjWj1PLMfg6tajmJ2
+   OjgGHs8BZ8GFXxBCgvXhdpBvMBrRut8lNoVdTQpJ0y1vnLsxvv9Kq0hZA
+   w==;
+X-CSE-ConnectionGUID: M7gTLczWQ2OgL+mtvwiGvQ==
+X-CSE-MsgGUID: XHNgq/l/SSCDs1spgfXS2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="53609980"
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="53609980"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 03:53:44 -0700
+X-CSE-ConnectionGUID: vVJ7n8MASNq97fLfPeLeoA==
+X-CSE-MsgGUID: cy6aRTCTR+WdC67qth86jQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="144101340"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 03:53:42 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 2A4711202E6;
+	Thu, 13 Mar 2025 12:53:40 +0200 (EET)
+Date: Thu, 13 Mar 2025 10:53:40 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] media: subdev: Add v4l2_get_frame_desc_passthrough
+ helper
+Message-ID: <Z9K5ND3PYwitjuAg@kekkonen.localdomain>
+References: <20250218-frame-desc-passthrough-v1-0-a32458f53714@ideasonboard.com>
+ <20250218-frame-desc-passthrough-v1-1-a32458f53714@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|PH7PR12MB7425:EE_
-X-MS-Office365-Filtering-Correlation-Id: bbaf5641-7f99-4342-ee30-08dd621d3bb3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RmFiMTFhTFVlU25IMDB1S2YvU2dDajN1dmlRMG40b2V4NVRpdi9GL2tSQUtQ?=
- =?utf-8?B?cXlKVCtFNlJlSWNpcFN1L1BVUHFkMFR2VUxiaHNTSk5MS1lRUUd4ZE5YNkR0?=
- =?utf-8?B?NzRoOHdLR1NmU1FDZ0srK1UyaDd3MTJhTXBFUzVrbHBPZDVNNG5QTHRKSk0r?=
- =?utf-8?B?MG82c2pWRklkbUhxQ0RYRDVGN0kvL3dkRDA3UDhSK0NKTDV0czhBUFZsYVNv?=
- =?utf-8?B?TjgrRW56THRENVZUL21tQzVUVXJVVWxwSkV0UFlBc1RsNG9SWWhVdDQrK3JZ?=
- =?utf-8?B?ckN5OVZHMHRid1ArQkRBMWllK0JXdDFZWU43QVlKanNad1AzTjNGV1pZQWZP?=
- =?utf-8?B?N2dLWjBlTTZ0RGxCVVNOV1FDTGN0MFczUDVqTXN4UVdvMDBBMkNVYmtLTS91?=
- =?utf-8?B?MVFPZ0U3SDdlWnEzYTVhUzFucFA0dTJlZEVIOEpuUEdUdlRrQk9pd0Rjd21F?=
- =?utf-8?B?SUVxTTQ5djFyS2FXd3ZiTjFkUVg0SUJzZzUrVUhyQmRnRk0vdklER2wxSGFZ?=
- =?utf-8?B?cTB2aG9vN2JZdGFBV2RuVGUrY2xlakhDV3Bzc3laQnhReXVaOElQalM0YW9I?=
- =?utf-8?B?bXJDeXdDL29ubHZZbTJzNmxFdTJ3TmVmcE9UYlJvc1VVL3g4SDkyckIxWnY3?=
- =?utf-8?B?YklYTHBGSDJ0YW1EYzZweWtXY1Y2OUlpdDU2bjZ6d1ZQRWJTY1d2d0gwR1R2?=
- =?utf-8?B?K1hVQUNBQ0tuVER1cXIrZVhIdEZkVG5DSjliSlhZWmgzdXFLSWVFa1FpYy9F?=
- =?utf-8?B?REJObzJGaklCbzVtK3MwTWs5eTVvdjNoWk83Y3RWNzI5NjlVT01HL0hUMUJ3?=
- =?utf-8?B?NXhOdS9Sc00wekZSQmNOSlk5Z3E1YTVTOGRROENiZ01Ocmk5elI1OWpITm5l?=
- =?utf-8?B?YzMvT1NvQis5TFc2ajJiQmZmbllsRkg4ci9EbVluUFp6M0JuV1pGZG9TZlJS?=
- =?utf-8?B?cHZkeUF2R3NlNWwvRkxxOXZtcVovMjArN3owMVNlckxMQVo0OXF4elY1Vldo?=
- =?utf-8?B?a0xraDdlbkh1azVXYmNKUkEvSmNFSHoxRlJvSis5UW5ENk4zSkVlNEdUU04x?=
- =?utf-8?B?aEJvT0MvcWNpaHU1dCsxUVdRK09IU3lZOEZadWJYcERZSzV0S0d0MndyQ0Za?=
- =?utf-8?B?eHg4VzY2QXlrRFFOWnRDbFVlSjZRK1NXblhiU2J6M0FERkdVZzZXdTFvL0VG?=
- =?utf-8?B?V01DbHkzQnRjMFJvVVlqdnRwT1lYVUIzS0ErSWhWTHpFaUVwNWY0bWpsaUZC?=
- =?utf-8?B?cWVaRWdtTnJtV3dkZE5sU3czeTJ2UXBCdTRIWURFNkdsOHhpcFVlU21KRk81?=
- =?utf-8?B?ZVNqKzZWRlN2SzBhRlk0cVdSQzRSU3Vya01HS1loMUQ3ZzN6TzAwZ3YyN25j?=
- =?utf-8?B?eDNUTGpaVnYrMUR5RFdmb0hUSG5oZWhzNERtS3ZKUkZRcEJlSWVITHlLWUcr?=
- =?utf-8?B?NlJWaXMwNnlQY3RaODZ4QldvcitiQkVtZmtmemZYczlaUXhPaXE0UlhlSEJs?=
- =?utf-8?B?b0x5SVB6UWVJMlMxRHFoWWkxQ3dWbmpuOWE2Q1UxVW5tc21GVkVhOCsvem9K?=
- =?utf-8?B?TmpNdWMrWVpUcDA3U1I2TGRoN0Q3YVg3d3pHeVZSZVdWNmxYTXVKbzRkL0tP?=
- =?utf-8?B?dWJjZVdqV002Rko5Nk1xamQwYVIyWkc5cnRZZ1NjY1lBK0EvWnhYZGhkNGh3?=
- =?utf-8?B?VS93cG5BdEhGdVVjcHVaQUhnaVNOQk4rdkRqeG5XN2tCZElpQVd1c3pzQnRO?=
- =?utf-8?B?RkNoK3BNWWxMZjlJZE43Wkc0OHEyejJET0ltTjNwMzZiQ3dOT1FQNHFCZzdJ?=
- =?utf-8?B?TUdxT243dFVkQlpzTzlyS1d4bk11dDdYOWZra3FxZ1JsWi9CYnQ3UkNwYURq?=
- =?utf-8?Q?K1DoXULwbTmXg?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cDZjQ3RTL0RRSmZhelNVaHN6UUNScm9pdXg1Q3laL0lKcEk2NmgwTTVXYldL?=
- =?utf-8?B?eEVDalE3b1dyb3JNTlhBbC9yaGMvbjNobnJVS0M5WkpOMnNUeWJUdFoxcmZy?=
- =?utf-8?B?eXNHS1NGOUU0L1RQYW9LVkpqaUZiSHRIQ0wrbWFxZTBSR0RzR1M4L2JUQzlC?=
- =?utf-8?B?dnJ2UHd4LzFnRTEraTdLd2FyaWs4ZVB6Z0h5NzIxb2lxOUl1bitUb1JzZjR2?=
- =?utf-8?B?RDVCKzFOVm1XbzVlTmFMN3RUMTM1WnVoT3FCcHBvWWt6dXhIVHRicmhIV001?=
- =?utf-8?B?aEN4UzNERGVSU2Y0cEViU0syQmVBdlVoS2owbzlvMXNkdWJ2QWdMMVU2aXRF?=
- =?utf-8?B?VzFsNlBzai9DZ2RRbXE2SXJ0bFV2RXVNK3UyZUtQZVFkUGFQaUM5MHUxWG8v?=
- =?utf-8?B?K3MwQ0ljNFlMa1p4Y041WnFaVkFOODE2UVVlRDFUSVR1RFE2dE53QnplczlU?=
- =?utf-8?B?Um55V3QvRllQdUprZ0Rnb3ltNmdNclE5YUZVWEJzQ0h0eDdRN3BkZTdjb2dB?=
- =?utf-8?B?eDV0MW4rdHlqa1lMNnpKbW1yRjhXdmc3cGFoeTgveDdOaE9HUFJRTjNLa2J3?=
- =?utf-8?B?OVRkdDh6UERhZ2dhU21hKzhuQTBXODlHS0tad0s2c0pYWjlZS25rN1RmbWZj?=
- =?utf-8?B?RUJMS2JiUVNPTm1LcVpqSkZ3LzdoVW5KcWdPUHNWQ3cyT2dyZUpSTkxObmxi?=
- =?utf-8?B?RmVtejV1eHA5ZHFhMmZtWjlKbmdnODBIT2FQWnNpVE9HcTA1em0wYnArbmJh?=
- =?utf-8?B?eDg0TnFxemFRZnJhU2hqRmlCN2V6UHZWTlAzSkFETlYzcGNkOXBwRHpiY1A2?=
- =?utf-8?B?cnJpd3EwYVlPelRnOFNuNGNmOTUveG5uL0JKcGRtajNqUVhTMGh5SXNLYTlp?=
- =?utf-8?B?a25IY1NFenFqMmVFMjV6eWcvWkpNVjdKa3BvV1pVZWVEQjR3ZWtVQnNtSnNK?=
- =?utf-8?B?dnJ1bVE0VGJ2bU5hbXZsYXlMYXFvTytNcUVtK0REZXUrVHZTZW8zM01ZRjha?=
- =?utf-8?B?MXZGdmZ0VENaZGd1RVZ2UEIzSkl0eDMrMk5zbmNsNDNwMmxnSGI3NC94L3lo?=
- =?utf-8?B?cFd5QytkNnFGSFlMS1ZBc2t6dGRZZzhHYWppM3RCd3JPNjJUTG51c0kwWWJB?=
- =?utf-8?B?SDdRbU5QV0VjSFZsMGthNDY2N1AxajRxc1JHUEdjOG1xVDlnMFpodEJUSDYr?=
- =?utf-8?B?UlFkZFdobHJKaFJoTTFYUUVxZXRUdHNPWE9DY1pheks1NVg5NFhWM1dZVEUw?=
- =?utf-8?B?ZmZiMWxIcUdabVBlUHE2RGRlWW1IM1VjMVg4VUtPZ2VuZGsxVGVYQlBpQUVj?=
- =?utf-8?B?UGhZaGdpczJ1ZXREcUxRQWVnUVFXSUlUM2V3VHJJL0duMDBvTFdXa0lmK0ZY?=
- =?utf-8?B?d1NYc0lhZjJjTDZRZDlhb0ZCVGtqRFl3SWpzbHdKVDFYN0w2U280SVhVRkRU?=
- =?utf-8?B?RGxRWEVEekMzTzYrRkxFcjBlUmxxbk9WRHk4RDRRc1FJdndRelgvaTBhT2Fq?=
- =?utf-8?B?clVQcmlTRUQ0ZWVPVmpDT1Q3d1RObXQ1eWVCNXBFanhibWhNaWpNUEN0dm14?=
- =?utf-8?B?by96NVkxSXdacXRiSS9jMzF3MVFHOGcxc1B3K3ExYUFyZytlclpNYXlJSmlQ?=
- =?utf-8?B?VjNMSFIwb1g4K3JwS0pHb3BFNXNKQ0FSZzlPT1JlWXMzQkFmcjZhQTR3RGtG?=
- =?utf-8?B?NURyUkE1WHl6Y0dkL1BZMldMOHNjZjNQbSthM3N2WEtuUFVxTUV0L0JLSGpl?=
- =?utf-8?B?U1l4OFNqbU1zMW5qNlpKblN5UFcrNFJTbXpoRjIyYy9RM3JOT00yRys2SXdS?=
- =?utf-8?B?OGYvYjk5ZmZ3ZTVFbnN4RlY3SE9XSFAwWGJYWktlcGFUN0dYenZTTTN0a2Y0?=
- =?utf-8?B?eUl3MHlUWU8zTGl4ZzJPVEFHVkh6RUh1SlhsbU1DNmt5QjMyV3hhcGxVWUI4?=
- =?utf-8?B?UzgwSENjUUZYbVF4TEZrTUNzek1VdUNYa0xDQTgyYVBCanluakwxMHozL3JL?=
- =?utf-8?B?WEtuVnFOU0xaclZiU080ZFF2ZS9GWFEyQzhiSXMweDJtLzFtK3BsZmNDQW5E?=
- =?utf-8?B?M0VxSHZuV3J3NUxqTkt3TjZjU1QvUVhQdWZiNWVEanI4NjVhTDJZWHBXOEQ0?=
- =?utf-8?Q?ZRBScOPx7+XOTvb/gXYUhBpJu?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbaf5641-7f99-4342-ee30-08dd621d3bb3
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6043.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 10:53:06.0435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HO9XAx09CDC6bCPqsGg0k8gIzde23vZN/YE+ffYJSisvB0cgdrwSR1BeiLFKaSuEjy67AF39HqQb5vUAuEnetw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7425
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218-frame-desc-passthrough-v1-1-a32458f53714@ideasonboard.com>
 
-Dheeraj,
+Moi,
 
-On 2/6/2025 11:30 AM, Dheeraj Kumar Srivastava wrote:
-> Device id user input is needed for dumping IOMMU data structures like
-> device table, IRT etc in AMD IOMMU debugfs.
+Thanks for the set.
 
-You may want to rephrase the description with our approach of printing data per
-device instead of printing everything.
+On Tue, Feb 18, 2025 at 06:15:43PM +0200, Tomi Valkeinen wrote:
+> Add a helper for v4l2_subdev_pad_ops.v4l2_get_frame_desc operation. The
+> helper can be used when the subdevice directly passes through the
+> streams.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-subdev.c | 96 +++++++++++++++++++++++++++++++++++
+>  include/media/v4l2-subdev.h           | 21 ++++++++
+>  2 files changed, 117 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> index cde1774c9098..f04de851d777 100644
+> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> @@ -2500,6 +2500,102 @@ int v4l2_subdev_s_stream_helper(struct v4l2_subdev *sd, int enable)
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_subdev_s_stream_helper);
+>  
+> +int v4l2_get_frame_desc_passthrough(struct v4l2_subdev *sd, unsigned int pad,
 
+Shouldn't this be called v4l2_subdev_get_frame_desc_passthrough? It's long
+but that's unlikely to be a problem still.
 
--Vasant
+> +				    struct v4l2_mbus_frame_desc *fd)
+> +{
+> +	struct v4l2_subdev_route *route;
+> +	struct v4l2_subdev_state *state;
+> +	int ret;
+> +	const struct media_pad *pads = sd->entity.pads;
+> +	struct media_pad *local_sink_pad;
+> +
+> +	if (WARN_ON(!(pads[pad].flags & MEDIA_PAD_FL_SOURCE)))
+> +		return -EINVAL;
+> +
+> +	state = v4l2_subdev_lock_and_get_active_state(sd);
+> +
+> +	/* Iterate over sink pads */
+> +	media_entity_for_each_pad(&sd->entity, local_sink_pad) {
+> +		struct v4l2_mbus_frame_desc source_fd;
+> +		bool have_source_fd = false;
+> +
+> +		if (!(local_sink_pad->flags & MEDIA_PAD_FL_SINK))
+> +			continue;
+> +
+> +		/*
+> +		 * Copy frame desc entries for the streams going from the sink
+> +		 * pad to the requested pad
+> +		 */
+> +		for_each_active_route(&state->routing, route) {
+> +			struct v4l2_mbus_frame_desc_entry *source_entry = NULL;
+> +			unsigned int i;
+> +			struct media_pad *remote_source_pad;
+> +			struct v4l2_subdev *remote_sd;
+> +
+> +			if (route->source_pad != pad ||
+> +			    route->sink_pad != local_sink_pad->index)
+> +				continue;
+> +
+> +			if (!have_source_fd) {
+> +				remote_source_pad = media_pad_remote_pad_unique(local_sink_pad);
+> +				if (!remote_source_pad) {
+> +					ret = -EINVAL;
+> +					goto out_unlock;
+> +				}
+> +
+> +				remote_sd = media_entity_to_v4l2_subdev(remote_source_pad->entity);
+> +				if (!remote_sd) {
+> +					ret = -EINVAL;
 
+Having dev_dbg()'s for all these cases would be nice. Otherwise it'll be
+hard to figure out what went wrong.
 
+> +					goto out_unlock;
+> +				}
+> +
+> +				ret = v4l2_subdev_call(remote_sd, pad,
+> +						       get_frame_desc,
+> +						       remote_source_pad->index,
+> +						       &source_fd);
+> +				if (ret)
+> +					goto out_unlock;
+> +
+> +				have_source_fd = true;
+> +
+> +				if (fd->num_entries == 0) {
+> +					fd->type = source_fd.type;
+> +				} else if (fd->type != source_fd.type) {
+> +					ret = -EPIPE;
+> +					goto out_unlock;
+> +				}
+> +			}
+> +
+> +			for (i = 0; i < source_fd.num_entries; i++) {
+> +				if (source_fd.entry[i].stream == route->sink_stream) {
+> +					source_entry = &source_fd.entry[i];
+> +					break;
+> +				}
+> +			}
+> +
+> +			if (!source_entry) {
+> +				dev_err(sd->dev,
+> +					"Failed to find stream %u from source frame desc\n",
+> +					route->sink_stream);
+> +				ret = -EPIPE;
+> +				goto out_unlock;
+> +			}
+> +
+> +			fd->entry[fd->num_entries] = *source_entry;
+> +
+> +			fd->entry[fd->num_entries].stream = route->source_stream;
+> +
+> +			fd->num_entries++;
+
+Could you check you're not overflowing what's allocated?
+
+> +		}
+> +	}
+> +
+> +out_unlock:
+> +	v4l2_subdev_unlock_state(state);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_get_frame_desc_passthrough);
+> +
+>  #endif /* CONFIG_VIDEO_V4L2_SUBDEV_API */
+>  
+>  #endif /* CONFIG_MEDIA_CONTROLLER */
+> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> index 2f2200875b03..d42fb3f55515 100644
+> --- a/include/media/v4l2-subdev.h
+> +++ b/include/media/v4l2-subdev.h
+> @@ -1746,6 +1746,27 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
+>   */
+>  int v4l2_subdev_s_stream_helper(struct v4l2_subdev *sd, int enable);
+>  
+> +/**
+> + * v4l2_get_frame_desc_passthrough() - Helper to implement the subdev
+> + *	v4l2_get_frame_desc operation in simple passthrough cases
+> + * @sd: The subdevice
+> + * @pad: The source pad index
+> + * @fd: The mbus frame desc
+> + *
+> + * Subdevice drivers that only pass through the streams can use this helper
+> + * to implement the &v4l2_subdev_pad_ops.v4l2_get_frame_desc operation.
+> + *
+> + * The helper will call get_frame_desc on the subdevice's sources, create a new
+> + * frame desc which contains only the streams on the given source pad. The data
+> + * for each frame desc entry is copied directly from the data provided from the
+> + * calls to the subdevice's sources, with the exception of the 'stream' field
+> + * which is set according to the subdevice's routing table.
+> + *
+> + * Return: 0 on success, or a negative error code otherwise.
+> + */
+> +int v4l2_get_frame_desc_passthrough(struct v4l2_subdev *sd, unsigned int pad,
+> +				    struct v4l2_mbus_frame_desc *fd);
+> +
+>  #endif /* CONFIG_VIDEO_V4L2_SUBDEV_API */
+>  
+>  #endif /* CONFIG_MEDIA_CONTROLLER */
+> 
+
+-- 
+Kind regards,
+
+Sakari Ailus
