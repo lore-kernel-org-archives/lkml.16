@@ -1,159 +1,253 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF23267703;
-	Thu, 13 Mar 2025 12:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA4226771F
+	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 12:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741867233; cv=none; b=PMqOONtSritL4HW2MN66gPULQAmTv3oW8ighJDYI8A9mAjnJk3g11AasbJ218bXP2x4gNKgC0XdyuHhaFKyF+7iWTf1FS87B0qteR1hq5VAQyrN/+NylaPcoMrhu5pufCgMHg+BVWNLoYkuQVcEpXXTq35pznryJub9wg9h41Nw=
+	t=1741867233; cv=none; b=VyKukSYbk0AHsQhOeaH3AeRneMFZhlu+R0g2B2F5r1/rqpFvS9XqpVEsnIxW5NCxlm4qvl2PIrXafvl8Sz7pxtGVRc8yZyFou9wm9h175lMUYwn2JD2h0+LhdlYmdQHqQQSvsyvmgiA7aOI/FzS6zaEgFqUwYDwyF2MTL5eYtPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741867233; c=relaxed/simple;
-	bh=J5ZnDyYHqXPQNT8PvS6OPC1GJFY+7ztEdCGme2XVaBY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Sy43QrzBzgiabvoDHOb9P5ugQeO4EmIL5hS+ZwB6l9Ls+EMirYPFANeQHRDVP5023gVMN5VmDQvZI5M1zh2k6xkg57tCuDqPCuZ2wRly3wN6pT/zr9UG9Lpdah0SB8RKr2RjhvuJPVsQDgmU7fdl9i+FFaPQPnqljY9awjVsh+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=aiCSNS6/; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+	bh=eNUkeV7AVLYPrx6JpkksY/XA1qUwL/vhE5SBrSDA1JU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fmgb9TJq25/0pTNci5x4naMSe+F6vTYzjVpUggFlxL/aWT8oD04Cz00tAlIohCi7g0JmuZnZXWKW0ccKvadN3xjJpo9qiI/QgYDJGobJt/iR/HESmyd9KUzjZJ/yWc0PlQMSu+muC84QQVgOSur9LHEuwknEVq2NrLFpKGWB68U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5soXwnC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="aiCSNS6/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:Cc
-	:To:From:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=8ZLxBCJU5+2bbPYm14gJ4+vJIc5p7eAYUKUUoCYfZmk=; b=aiCSNS6/xRj8pUFUH7APA+2zsO
-	D6H1lElRjtZzE6BaWoLJRv46KNDD8Z0Pf15TmkGhCPFCDwBQW94hUXZNqqkAjWvHTSVFR+OtUOndD
-	gie3wYwInOvGWN/NIYuxakRPRRFqT85bpoCtBcxxbIxhqKEE6oyl5x/KfDikjxMt5KzzT5bP5ESso
-	KN6h5nIeWZQJgDfL8YShtVfaWHCYv/p2csAKTQXBAXReCcOct3lQDYQSejdYlBp8hnM817ysb7+mI
-	qEkhOIUOUwexM5Ls+CyInts+wQHf9Hv2kkeLfhT5gSwO28CA6uRCnqfR4+P/p/KOcaCNb5El2RkkR
-	B/QGx1rg==;
-Received: from 89-212-21-243.static.t-2.net ([89.212.21.243]:35000 helo=[192.168.69.52])
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <andrej.picej@norik.com>)
-	id 1tsgzM-0069qp-2C;
-	Thu, 13 Mar 2025 12:44:36 +0100
-Message-ID: <a0d83b69-c84d-4804-abcd-e546be8a2e3d@norik.com>
-Date: Thu, 13 Mar 2025 12:44:33 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5soXwnC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1867C4CEE5;
+	Thu, 13 Mar 2025 12:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741867233;
+	bh=eNUkeV7AVLYPrx6JpkksY/XA1qUwL/vhE5SBrSDA1JU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=a5soXwnCczLmpg4oTe/g5Y5MRlkN3Msj2EGfegDT81/uckcYwgEUaswm/eVhqXYGD
+	 rdHHg+0ihE5Gx95GBuVmiy1TYoVypDk1Pi55HrySNuLRmH6PdFdKOq68gXnqPFt05J
+	 zZryHL87muFVqgFeA0UIg9NqdNeOQMY+Gp5/bXyB10nx5sHKZA2DyKvUpWOXCqb+Lh
+	 I2iW0NP7ebrcJtAJge17b0Nzq+UJkgKTOcWXR/ukkGAIcR5wReK4kyi8aTNKnwvQ5g
+	 5ap2qT7mNYwRY6/GYfv/YUaxnYD8Sk6hLjQzEx5fNwv2eapeuSWDm+HRGOIeZqivMA
+	 ves/Ze/nbD5kA==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 13 Mar 2025 13:00:01 +0100
+Subject: [PATCH v6 07/16] drm/tests: Create tests for drm_atomic
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Upstream] [PATCH v7 3/3] arm64: dts:
- imx8mm-phyboard-polis-peb-av-10: Set lvds-vod-swing
-From: Andrej Picej <andrej.picej@norik.com>
-To: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, airlied@gmail.com, simona@ffwll.ch,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, marex@denx.de
-Cc: devicetree@vger.kernel.org, imx@lists.linux.dev,
- upstream@lists.phytec.de, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
-References: <20241216085410.1968634-1-andrej.picej@norik.com>
- <20241216085410.1968634-4-andrej.picej@norik.com>
-Content-Language: en-US
-Autocrypt: addr=andrej.picej@norik.com; keydata=
- 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
- xtT/8OxBOVSHvA==
-In-Reply-To: <20241216085410.1968634-4-andrej.picej@norik.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: andrej.picej@norik.com
-X-Authenticated-Sender: cpanel.siel.si: andrej.picej@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Message-Id: <20250313-bridge-connector-v6-7-511c54a604fb@kernel.org>
+References: <20250313-bridge-connector-v6-0-511c54a604fb@kernel.org>
+In-Reply-To: <20250313-bridge-connector-v6-0-511c54a604fb@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5633; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=eNUkeV7AVLYPrx6JpkksY/XA1qUwL/vhE5SBrSDA1JU=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOmXThza1tTP/HPWwWUSj9c/Np936Odq/priJJU93hHWL
+ T55xtIaHaUsDGJcDLJiiiwxwuZL4k7Net3JxjcPZg4rE8gQBi5OAZjIsbWMDN/ti7ksvH62LcpO
+ 0/6z9bzY1K+Hmu5OCpXz2p3whnfPxQCG/56f2kyTKtbM06nR7tv+63XXJjsdZ0eRrsXXTjexBaZ
+ OYwMA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-Hi,
+We don't have a set of kunit tests for the functions under drm_atomic.h.
+Let's use the introduction of drm_atomic_get_connector_for_encoder() to
+create some tests for it and thus create that set.
 
-is there anything else I need to do, or can this patch now be applied?
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ drivers/gpu/drm/tests/Makefile          |   1 +
+ drivers/gpu/drm/tests/drm_atomic_test.c | 153 ++++++++++++++++++++++++++++++++
+ 2 files changed, 154 insertions(+)
 
-The initial two patches that introduce property support have already 
-been merged, and the patch series that this patch depends on [1] has 
-also been applied.
+diff --git a/drivers/gpu/drm/tests/Makefile b/drivers/gpu/drm/tests/Makefile
+index 6691c577d2d4581a4185bac2ce89a6b14b339b35..3afd6587df0831a0d10e91ff0a584af6ba1813e4 100644
+--- a/drivers/gpu/drm/tests/Makefile
++++ b/drivers/gpu/drm/tests/Makefile
+@@ -2,10 +2,11 @@
+ 
+ obj-$(CONFIG_DRM_KUNIT_TEST_HELPERS) += \
+ 	drm_kunit_helpers.o
+ 
+ obj-$(CONFIG_DRM_KUNIT_TEST) += \
++	drm_atomic_test.o \
+ 	drm_atomic_state_test.o \
+ 	drm_bridge_test.o \
+ 	drm_buddy_test.o \
+ 	drm_cmdline_parser_test.o \
+ 	drm_connector_test.o \
+diff --git a/drivers/gpu/drm/tests/drm_atomic_test.c b/drivers/gpu/drm/tests/drm_atomic_test.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..ea91bec6569e688ad33149d8ee6ecc3562b61254
+--- /dev/null
++++ b/drivers/gpu/drm/tests/drm_atomic_test.c
+@@ -0,0 +1,153 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Kunit test for drm_atomic functions
++ */
++#include <drm/drm_atomic.h>
++#include <drm/drm_atomic_state_helper.h>
++#include <drm/drm_atomic_uapi.h>
++#include <drm/drm_encoder.h>
++#include <drm/drm_kunit_helpers.h>
++#include <drm/drm_modeset_helper_vtables.h>
++
++#include <kunit/test.h>
++
++struct drm_atomic_test_priv {
++	struct drm_device drm;
++	struct drm_plane *plane;
++	struct drm_crtc *crtc;
++	struct drm_encoder encoder;
++	struct drm_connector connector;
++};
++
++static const struct drm_connector_helper_funcs drm_atomic_init_connector_helper_funcs = {
++};
++
++static const struct drm_connector_funcs drm_atomic_init_connector_funcs = {
++	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
++	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
++	.reset			= drm_atomic_helper_connector_reset,
++};
++
++static struct drm_atomic_test_priv *create_device(struct kunit *test)
++{
++	struct drm_atomic_test_priv *priv;
++	struct drm_connector *connector;
++	struct drm_encoder *enc;
++	struct drm_device *drm;
++	struct drm_plane *plane;
++	struct drm_crtc *crtc;
++	struct device *dev;
++	int ret;
++
++	dev = drm_kunit_helper_alloc_device(test);
++	if (IS_ERR(dev))
++		return ERR_CAST(dev);
++
++	priv = drm_kunit_helper_alloc_drm_device(test, dev,
++						 struct drm_atomic_test_priv, drm,
++						 DRIVER_MODESET | DRIVER_ATOMIC);
++	if (IS_ERR(priv))
++		return ERR_CAST(priv);
++
++	drm = &priv->drm;
++	plane = drm_kunit_helper_create_primary_plane(test, drm,
++						      NULL,
++						      NULL,
++						      NULL, 0,
++						      NULL);
++	if (IS_ERR(plane))
++		return ERR_CAST(plane);
++	priv->plane = plane;
++
++	crtc = drm_kunit_helper_create_crtc(test, drm,
++					    plane, NULL,
++					    NULL,
++					    NULL);
++	if (IS_ERR(crtc))
++		return ERR_CAST(crtc);
++	priv->crtc = crtc;
++
++	enc = &priv->encoder;
++	ret = drmm_encoder_init(drm, enc, NULL, DRM_MODE_ENCODER_TMDS, NULL);
++	if (ret)
++		return ERR_PTR(ret);
++
++	enc->possible_crtcs = drm_crtc_mask(crtc);
++
++	connector = &priv->connector;
++	ret = drmm_connector_init(drm, connector,
++				  &drm_atomic_init_connector_funcs,
++				  DRM_MODE_CONNECTOR_VIRTUAL,
++				  NULL);
++	if (ret)
++		return ERR_PTR(ret);
++
++	drm_connector_helper_add(connector, &drm_atomic_init_connector_helper_funcs);
++
++	drm_connector_attach_encoder(connector, enc);
++
++	drm_mode_config_reset(drm);
++
++	return priv;
++}
++
++static void drm_test_drm_atomic_get_connector_for_encoder(struct kunit *test)
++{
++	struct drm_modeset_acquire_ctx ctx;
++	struct drm_atomic_test_priv *priv;
++	struct drm_display_mode *mode;
++	struct drm_connector *curr_connector;
++	int ret;
++
++	priv = create_device(test);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
++
++	mode = drm_kunit_display_mode_from_cea_vic(test, &priv->drm, 16);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, mode);
++
++	drm_modeset_acquire_init(&ctx, 0);
++
++retry_enable:
++	ret = drm_kunit_helper_enable_crtc_connector(test, &priv->drm,
++						     priv->crtc, &priv->connector,
++						     mode, &ctx);
++	if (ret == -EDEADLK) {
++		drm_modeset_backoff(&ctx);
++		goto retry_enable;
++	}
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	drm_modeset_drop_locks(&ctx);
++	drm_modeset_acquire_fini(&ctx);
++
++	drm_modeset_acquire_init(&ctx, 0);
++
++retry_conn:
++	curr_connector = drm_atomic_get_connector_for_encoder(&priv->encoder,
++							      &ctx);
++	if (PTR_ERR(curr_connector) == -EDEADLK) {
++		drm_modeset_backoff(&ctx);
++		goto retry_conn;
++	}
++	KUNIT_EXPECT_PTR_EQ(test, curr_connector, &priv->connector);
++
++	drm_modeset_drop_locks(&ctx);
++	drm_modeset_acquire_fini(&ctx);
++}
++
++static struct kunit_case drm_atomic_get_connector_for_encoder_tests[] = {
++	KUNIT_CASE(drm_test_drm_atomic_get_connector_for_encoder),
++	{ }
++};
++
++
++static struct kunit_suite drm_atomic_get_connector_for_encoder_test_suite = {
++	.name = "drm_test_atomic_get_connector_for_encoder",
++	.test_cases = drm_atomic_get_connector_for_encoder_tests,
++};
++
++kunit_test_suite(drm_atomic_get_connector_for_encoder_test_suite);
++
++MODULE_AUTHOR("Maxime Ripard <mripard@kernel.org>");
++MODULE_DESCRIPTION("Kunit test for drm_atomic functions");
++MODULE_LICENSE("GPL");
 
-[1] https://lore.kernel.org/all/Z7rZjdXwN2W+Y2Bd@dragon/
+-- 
+2.48.1
 
-Best regards,
-Andrej
-
-On 16. 12. 24 09:54, Andrej Picej wrote:
-> Set custom differential output voltage for LVDS, to fulfill requirements
-> of the connected display. LVDS differential voltage for data-lanes and
-> clock output has to be between 200 mV and 600 mV.
-> Driver sets 200 Ohm near-end termination by default.
-> 
-> Signed-off-by: Andrej Picej <andrej.picej@norik.com>
-> ---
-> Changes in v7:
-> - no change
-> Changes in v6:
-> - no change
-> Changes in v5:
-> - no change
-> Changes in v4:
-> - no change
-> Changes in v3:
-> - no change
-> Changes in v2:
-> - use new properties from previous patches
-> ---
->   .../boot/dts/freescale/imx8mm-phyboard-polis-peb-av-10.dtso     | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-phyboard-polis-peb-av-10.dtso b/arch/arm64/boot/dts/freescale/imx8mm-phyboard-polis-peb-av-10.dtso
-> index a9de42cf14be..8bf9cc553bea 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-phyboard-polis-peb-av-10.dtso
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-phyboard-polis-peb-av-10.dtso
-> @@ -186,6 +186,8 @@ port@2 {
->   			reg = <2>;
->   			bridge_out: endpoint {
->   				remote-endpoint = <&panel_in>;
-> +				ti,lvds-vod-swing-clock-microvolt = <200000 600000>;
-> +				ti,lvds-vod-swing-data-microvolt = <200000 600000>;
->   			};
->   		};
->   	};
