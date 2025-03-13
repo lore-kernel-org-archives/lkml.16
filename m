@@ -1,168 +1,184 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D638266F17
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13E7267385;
+	Thu, 13 Mar 2025 11:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741866101; cv=none; b=qgy3XerldVJr4iu/STl48pPl8GPbLlt7taNz4bXAPIsmYdOSO1FKil9aslhz8o7ae6A2K/zAd9LA/XBA3ERDCNy9dDJJ1Lysl22l5PlLtBAgfwOoNQ+B8C3dGx1zrPm8Z5aIqnka3bP+FphKi7PTjDGAE4KXkcOy/CCllQlgk1w=
+	t=1741866105; cv=none; b=VAGF3QldJMRUKd/IoVI8QFKhaj2qN+utDRWsCIbJUMOrk5FWkveEHMdBCm2me2ZFMrEIcK6qWAehsHGStDYKW2rG7U/AjVb2Ou3AxMvTDoaH/PSbk/F28WE6jqPTPke9uwxCssv9nvN/Hal48ALJpu4WGhpfx3oTtbms8CAYRSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741866101; c=relaxed/simple;
-	bh=8h6iYqT9QgxKQ7chsjPReDkmLMBOz+R1kQyF7lNPqNQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rAuKZn9VU6drq3g7p0jcWvsyS11mFEObngPnlniqB7mW2qRGYZqYGXX0ONn7Kdog0TbgfctvvFAYlT3FsTM6uwfSNERIQb7VW6d3GbIQmE9uDmiOqLlr3HZBPr9eD+iu+1+IZsH1eXp89IRg2zEO97qeacgobcDnt/6sNQtk4ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EVEq33vx; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1741866105; c=relaxed/simple;
+	bh=t2VwkGuSomJ8qenwL1C9A11juJRqs3O4eFcCna2Wkv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p1+UefxxVoDjDrcqXRNiisWOXZIn/wnMYXB7JiH7yAOo+BzBWhRK6viEUb356eWw29wqvTvGpNsYCQB6IOicQPuimjrA1bnWhwcuOqsnAiHWNj7PxWpG/Zyiz1f7aw8MYFihcU0f9cV/gRSj83q4VojV+fd5l8V4MKz5JnMnxw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKo3/S3I; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EVEq33vx"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52D92oFj018573
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6csxGEooemVwhVCZXPAno/xD7GGqltefCOv7rH6G52E=; b=EVEq33vx9yuK88OJ
-	7jNNxLMvNyDzkk86pb2QlSDH9SQcw8BWIchhNFiWLi/cZbGdwPHC3U0+T11I4FeS
-	D0732izuKp3qV41qcrmhIkuP2jGrxpSSdqA8C0w4pV3cdELSeJ+b3tsFuE38fHzy
-	skY0zVfKNn/YjaWg9+5Hb3W0dWinwf4MfinLPONKJsC/WZw6RCxIPA5Xc5JJbX2s
-	iD4n51F4INZhPgBdkeXEgVOVsiIWnnTlFrV/WPn1ag6ZTRDXyxhU/YgzlX5ZK13B
-	otFrH9JgdfJBq7z4Ug7+JIMsog/Lq2w18j1OusVIDTDeQ0yIIEGllen3YUvO3hzL
-	YJBbJw==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2nwr71-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:41:39 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2fec3e38c2dso2507343a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:41:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKo3/S3I"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso9607571fa.0;
+        Thu, 13 Mar 2025 04:41:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741866101; x=1742470901; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eZmwH3CjF4AxxJqxTRCmwxCt3TSXdOVbA/04hf9p0WU=;
+        b=WKo3/S3Irq+Mwpu1p1DyiKqr5GhxPLT526k38De00vh1aqepYXmk1kZq07ClUrx644
+         gXJrLWfsUskY13ImbTmlSfw9uzGGnA5OlIvzWTc6mjIqEuBiTppxiYcJ3EzmvM7UsF9N
+         kiibwbLZxeaF46+W7NRXL/2F3Lq0kWEZWjifaO+ZCoH4O2ChI93QVGTPpngUAb3G5yHu
+         Pc20bc+xad8oBqMDBcLJUnAtpb3uz5N6Dj3DWhJopUwt2Adg3l+j4nefIR2Y3tJjRPEU
+         1ltkGF5nJ6uzmZVthtKTzzJ4V02KutemlxU/BqUQSwJWVjXXAQZ+3JiBIMkccV5cBLT6
+         Kg/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741866097; x=1742470897;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6csxGEooemVwhVCZXPAno/xD7GGqltefCOv7rH6G52E=;
-        b=xVPq2RIsYshOdLnm3q0VtJFuUaHsdIZ5Gn74KfwU8tNHvXfQLulT+H1s9OvcBiSO4O
-         qg+ImeumEaLPmyz5x0sOmTpGZpuGYebe2owQ6sF9EZqgmwch94jWEI4HWDyHhRt0479M
-         a8/hykAiSOIriu+WK7MlBYX4Wt4CIIL46sraKwXyk5UbRsw+xCT7qkcHRyJ1gqshxyuy
-         O1iiV0HVv8MLhz/p/a6NOPBA1tLAT4+WGw2yeWsymqYYzBaNNrp4CjEPOBrdxhOECREw
-         5/CyxbjSmbcLdD1aR+nfN6nvUQzjJomJEgYtGVNnz0w0OVnL6lXm3/OQmbdmAv9hv7oZ
-         +M9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVqVSrA+eYXzDxZ3myMHqol6fflJZkRjl8fGpMaj1M4t3jdTIDuHDy1hTbLA3+21d/VnRoyi42FLtX0YcI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA0hVNLoUNXtJSMVu3bP64NCt8au8RvcSAExJAVdVqmETRJ5wA
-	iFcSxPX5ZjdFBB6UUp6Y+ERIwbPaXMdHmLb+jZe2gHwomiMzRu5ePKpkeWYsKkiixmNtc8xa+WA
-	NsmSZH49aAE79QDq/Kci2LO/B0oJZYMEojGT8w9sLnu7QZfdvWx+23Pk5X+1eQUk=
-X-Gm-Gg: ASbGncu/IH02J2vIjQTa/GEzgTi8j1Gn8zTeq9YYf26nMv60ouxeF9ZEc2Bw8ORzBYe
-	HhT/d9pSD9KXhgfqdhxFQlwA7DdWHm8RPOd3kjvFfsinXypabVp9giwE0yzRkL1R4Z713Z0DCZ0
-	OeeJ3fGza5PgrJmpIhTp/LqLhn6ZQ6vGuqE22mIvKijfDxgnTpdVYBZSLMfPDpD2d/Ez88gg1er
-	PKFo+6+cYaurWbj22v7MlnixgKQIM46x062FGalWDcaxCaEm/YTxDv79dU1ZgyFAmMeJJAZWdJJ
-	ubZVt1gKeoGG3yVkgqpKnFRS5JIvOsCubz6TPp+anVescxjKXKk=
-X-Received: by 2002:a05:6a21:516:b0:1f5:709d:e0c6 with SMTP id adf61e73a8af0-1f5709de3e1mr24106469637.42.1741866097045;
-        Thu, 13 Mar 2025 04:41:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGO+VZsMHm3zLtB84wJpH9RObZO6+qVAnGGVqwEYlnPvnXu3mMtC1TTdcKCjIwnGlhmgp426g==
-X-Received: by 2002:a05:6a21:516:b0:1f5:709d:e0c6 with SMTP id adf61e73a8af0-1f5709de3e1mr24106444637.42.1741866096735;
-        Thu, 13 Mar 2025 04:41:36 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea964e3sm1063219a12.76.2025.03.13.04.41.31
+        d=1e100.net; s=20230601; t=1741866101; x=1742470901;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eZmwH3CjF4AxxJqxTRCmwxCt3TSXdOVbA/04hf9p0WU=;
+        b=V1CoLgpsyzJciyR9sePVtIgCUhtpyB62gPt652hnfMVVwqNOkQjr3E45qOAgu5+EQF
+         uElj7QTVgAUCzuT1Ke7ou3s3VVDO8G4vMEIsSPXW74iyrXkn3X6115SOw5R5vnH0Hv05
+         /KrrUMOnaqTkzdPP3pcHz2SLFfg4eAsdcqMkbqRsAUF+ByWeP0YkFgLgzFeX2hRztFoW
+         HxMca7sDiCbJeEoNjJGq8pvkKbp8DAlawjV6t/4FpLWjGGdGKQDHVpRhDu8V1V9gSDwh
+         zcH2F5vkon2FFbty78CT4ur0x23v/9h/p30nBxGf7betEfKB2v8JAbnaWFQR1ep3QGsq
+         keSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKJoMzFm5zhoEKDeK+gQ/AopsKBE1pVYeoKSlVLnpGcttzG0BSHn1WERIZj+Cjaj2XRyc3C+YPn1qJNCep@vger.kernel.org, AJvYcCW+T82T7tKoWoyH4ducwPYMDGOwtU7wSX51FQKUW+S7ff6Q0s4mv4Q8kub/+ocVFrh9cUuyDiooY80L@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaoEWatCkKk+kQ2Snktc5TKtRTZPhDyWk22NC4dFRf4uJcZiYG
+	HWOVNv4+cbGTNbV3yKD5xuxKpN6uY5fyP30Yr6B4bTRir69vtLJV
+X-Gm-Gg: ASbGncsy/xt0hKR/Ybn96JqiKyCVG2U9Rju+AF0Qf/kxmxlIcQYAOcrqvcAr1Mmj//P
+	Ak8dB5ye0IuV61rmMmUK297odCCbclfPFl2GPGS6QY1u+aoSqZS3jfutW28HgFNAFqkLEiRaA7f
+	TUo2UGLwcP6BdUM7Gr5MWqXMiK0Ks+80pVladc3yHPc3YHRTibui+Err2zMfAEMj5E/8H6nZhWn
+	UH1qbkjS7emPl+GM4IJ0yR4jnTGtT52PN1nEmGlK+uM3q6wsrJ2C2KzZhy8hW4WE4PvaSoyWLRP
+	m9eW/rQxQJWL6b8vhGOpAriaBgq4tyO4FwrGGLRjVht+O7yQewo=
+X-Google-Smtp-Source: AGHT+IGbMTcjaF71gs8UEmllm/cZdGSu9SSF39iyWed21Q+1hKmMPd9h3Z1V8ZGE/nAjslPn95Q19A==
+X-Received: by 2002:a05:6512:3048:b0:549:8d16:7267 with SMTP id 2adb3069b0e04-54990e2bbc2mr8547605e87.10.1741866100410;
+        Thu, 13 Mar 2025 04:41:40 -0700 (PDT)
+Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba864e01sm187376e87.112.2025.03.13.04.41.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 04:41:36 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Thu, 13 Mar 2025 17:10:16 +0530
-Subject: [PATCH v2 09/10] PCI: Add function to convert lnkctl2speed to
- pci_bus_speed
+        Thu, 13 Mar 2025 04:41:39 -0700 (PDT)
+Date: Thu, 13 Mar 2025 13:41:35 +0200
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 04/14] dt-bindings: mfd: bd96802: Add ROHM BD96806
+Message-ID: <40a47b9ab61e9092bc16747b8e92ba0ce44fb1ac.1741864404.git.mazziesaccount@gmail.com>
+References: <cover.1741864404.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-mhi_bw_up-v2-9-869ca32170bf@oss.qualcomm.com>
-References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
-In-Reply-To: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741866038; l=1512;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=8h6iYqT9QgxKQ7chsjPReDkmLMBOz+R1kQyF7lNPqNQ=;
- b=gNFMqlJS4PqDCxPL2OtSQ6eC/PtryQoUwiUm6/NuGn6xNnLkYCte4RpeEygA+SWaLg737Q1XU
- MERgI9pKC7DArMKbUXJJttHUPva7o7L2vUckaXu6sD9dwPouLJ3V5cj
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-GUID: _6VZYd-0W0Z64bvvEKvrR9SEMC4gksYm
-X-Authority-Analysis: v=2.4 cv=Q4XS452a c=1 sm=1 tr=0 ts=67d2c473 cx=c_pps a=RP+M6JBNLl+fLTcSJhASfg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=rcts_Xg4tTJKaDXoMsUA:9 a=QEXdDO2ut3YA:10
- a=iS9zxrgQBfv6-_F4QbHw:22
-X-Proofpoint-ORIG-GUID: _6VZYd-0W0Z64bvvEKvrR9SEMC4gksYm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-13_05,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- lowpriorityscore=0 mlxscore=0 clxscore=1015 phishscore=0 malwarescore=0
- spamscore=0 impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503130092
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lOj8NaVvEWD5XEyi"
+Content-Disposition: inline
+In-Reply-To: <cover.1741864404.git.mazziesaccount@gmail.com>
 
-Add a exported function to convert lnkctl2speed to enum pci_bus_speed,
-so that other kernel drivers can use it.
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+--lOj8NaVvEWD5XEyi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+The ROHM BD96806 is very similar to the BD96802. The differences visible
+to the drivers is different tune voltage ranges.
+
+Add compatible for the ROHM BD96805 PMIC.
+
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 ---
- drivers/pci/pci.c   | 12 ++++++++++++
- include/linux/pci.h |  1 +
- 2 files changed, 13 insertions(+)
+ .../bindings/mfd/rohm,bd96802-pmic.yaml       | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..75505437a9c9 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6011,6 +6011,18 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL(pcie_link_speed_mbps);
- 
-+/**
-+ * pci_lnkctl2_bus_speed - converts lnkctl2 speed to pci_bus_speed
-+ * @speed: LNKCAP2 SLS value
-+ *
-+ * Returns pci_bus_speed
-+ */
-+enum pci_bus_speed pci_lnkctl2_bus_speed(int speed)
-+{
-+	return pcie_link_speed[speed];
-+}
-+EXPORT_SYMBOL(pci_lnkctl2_bus_speed);
-+
- /**
-  * pcie_bandwidth_available - determine minimum link settings of a PCIe
-  *			      device and its bandwidth limitation
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 9ae199c1e698..b84473f228c8 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1653,6 +1653,7 @@ unsigned char pci_bus_max_busnr(struct pci_bus *bus);
- void pci_setup_bridge(struct pci_bus *bus);
- resource_size_t pcibios_window_alignment(struct pci_bus *bus,
- 					 unsigned long type);
-+enum pci_bus_speed pci_lnkctl2_bus_speed(int speed);
- 
- #define PCI_VGA_STATE_CHANGE_BRIDGE (1 << 0)
- #define PCI_VGA_STATE_CHANGE_DECODES (1 << 1)
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml b=
+/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
+index d5d9e69dc0c2..c6e6be4015b2 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
+@@ -4,23 +4,23 @@
+ $id: http://devicetree.org/schemas/mfd/rohm,bd96802-pmic.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+=20
+-title: ROHM BD96802 Scalable Power Management Integrated Circuit
++title: ROHM BD96802 / BD96806Scalable Power Management Integrated Circuit
+=20
+ maintainers:
+   - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+=20
+ description: |
+-  BD96802Qxx-C is an automotive grade configurable Power Management
+-  Integrated Circuit supporting Functional Safety features for application
++  BD96802Qxx-C and BD96806 are automotive grade configurable Power Managem=
+ent
++  Integrated Circuits supporting Functional Safety features for application
+   processors, SoCs and FPGAs
+=20
+ properties:
+   compatible:
+-    const: rohm,bd96802
++    enum:
++      - rohm,bd96802
++      - rohm,bd96806
+=20
+   reg:
+-    description:
+-      I2C slave address.
+     maxItems: 1
+=20
+   interrupts:
+@@ -29,7 +29,8 @@ properties:
+       for fatal IRQs which will cause the PMIC to shut down power outputs.
+       In many systems this will shut down the SoC contolling the PMIC and
+       connecting/handling the errb can be omitted. However, there are cases
+-      where the SoC is not powered by the PMIC. In that case it may be
++      where the SoC is not powered by the PMIC or has a short time backup
++      energy to handle shutdown of critical hardware. In that case it may =
+be
+       useful to connect the errb and handle errb events.
+     minItems: 1
+     maxItems: 2
+@@ -69,7 +70,7 @@ examples:
+             interrupt-names =3D "intb", "errb";
+=20
+             regulators {
+-                buck1: BUCK1 {
++                buck1 {
+                     regulator-name =3D "buck1";
+                     regulator-ramp-delay =3D <1250>;
+                     /* 0.5V min INITIAL - 150 mV tune */
+@@ -84,7 +85,7 @@ examples:
+                     regulator-temp-protection-kelvin =3D <1>;
+                     regulator-temp-warn-kelvin =3D <0>;
+                 };
+-                buck2: BUCK2 {
++                buck2 {
+                     regulator-name =3D "buck2";
+                     regulator-min-microvolt =3D <350000>;
+                     regulator-max-microvolt =3D <3450000>;
+--=20
+2.48.1
 
--- 
-2.34.1
 
+--lOj8NaVvEWD5XEyi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfSxG8ACgkQeFA3/03a
+ocUx8gf+Mb2iVzao1T9FPrIGbDSq9EH6AC0es8g3J5888Li0mQMfjmwz/1pqd20M
+Ev32ChMeUwcjphlHVziqVHyBH5eJR8eLMSr70lhUdGg2F1i4k/uxhk5tikh7HcLo
+3aw/K7L/j3GK+6/M9rViFn6/zqH+W8zNsHT7D5u2t3IoLzeFNlv6jkeFKgw3UTc4
+TgotxFgPK2DcL/lVGCLgPo0SDzjpUpmqd5csRgKi7kLV2VM+E9WHdxbDZyPmCcF+
+v2M2gG6fSh/0p32t/bpY4ihGyplHdEvff5eMZMDlClKA6GB5vHM8zoWyJYA2DMFv
+nO9yjukaN92LtWdc/PLLRZw0gPcNyw==
+=aTet
+-----END PGP SIGNATURE-----
+
+--lOj8NaVvEWD5XEyi--
