@@ -1,78 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBF11FFC4B;
-	Fri, 14 Mar 2025 14:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81B21EB3E;
+	Fri, 14 Mar 2025 14:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741961481; cv=none; b=GwFTZMgfvdoXoAANJ1NZExOZx20UN9W9pLidvj6OD71Ri8URTtbFsKP/zZZITgzhG3IYK3R4o18wxPxt50b87WcQCuy+olWCH+o7wZjNLQMtEso8yeCoXF4tQbyQ8l5xayGEIwSu5e3lu8myrugb1PrJlfs6KI8xMoCuQTL8GZQ=
+	t=1741961481; cv=none; b=qY9n4qWll5SL2KZ00om+x2S83gN8TAWItq5eh9N99fMw4sqMvSLCvLf8QZ6t94npEoUUMHLVg7w7IzffnhhPzozbwmBmiSwSF/7deGdEsHs0k2BwlDOzBbIgXUIVRVvHKOXMx2xC1LGZVu5GfrsL3iLu6Uh26SJ8FFpKr+5OikQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741961481; c=relaxed/simple;
-	bh=bz59DFEQD327qDVN2cGR9TZ8G4JDN8ygzzmv/amSG0A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uojhKZEjufdpDZmQKvS/axLElllMi7tyN3iPBJHeG4eXzwsVHSIDbnRFGOhKu/TVCR2xV2WNvNmXDSzleV38RLx7YOk6u2JjUZ+XeVgcBPa3PnvTp1EQ7zt0FwKAJSNGLa4EicMP14gq6dC5tylSPwB0jYfhFAbYLPlwVGCmQZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1I1ZoXS; arc=none smtp.client-ip=10.30.226.201
+	bh=CPBTHkqPzfVpKzNFgNPoisYMyOv0IqONQ41uCQM5qjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q74cqTtHFXPfMghqZX+4ralYk/FeYq90qUrwBOPUKh+ken+ZNv0MXqpHqMMAvde0trHKQphdCsnGG7Wcxva44MQiSdi6HTTRz0W1+fCvpBmVkSboH8Fl6ftOFBFd6DFviQeabBsOoyaLuzQLsFHcS4amxlmeCzXVRJVUfP5JGvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=xFzPl6eV; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1I1ZoXS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4257C4CEE3;
-	Fri, 14 Mar 2025 14:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741961480;
-	bh=bz59DFEQD327qDVN2cGR9TZ8G4JDN8ygzzmv/amSG0A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A1I1ZoXSJZ/HoftzzNT7OwBrH2CZeWDU9huoWJmrzzf7zdfoY+UfixwevwXk5EgWg
-	 WzfLVYyh2wLc3dF/HWUWkuQEtaxuBP/oV9ee23E7IrNzeEhimQRcQxoqDfYXMT+Ssd
-	 DItuWLpkKDDOtLZ6eEryBen58FZh2V4lPOqtkvbNGGB0KwAhmX+6op/A/iRo4Zc2lJ
-	 YBjKeOqjVrFtW9G6EBxGCSzAploj7M1fHA3R6smKZ5664rLNgomd489DqEoIf/5DnU
-	 fiHArSxJ7stzvdjAoc0oUcAQ18X6FavZ15p8iiKICBrtGSfqyWfPKvVt1hqlZE5cI2
-	 zSFassawFghVg==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH RFC v2 1/2] dt-bindings: remoteproc: Add SM8750 MPSS
-Date: Fri, 14 Mar 2025 07:17:10 -0700
-Message-ID: <174196182746.401258.18204547306747015679.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250221160300.160404-1-krzysztof.kozlowski@linaro.org>
-References: <20250221160300.160404-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="xFzPl6eV"
+Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 8F7DB1F93A;
+	Fri, 14 Mar 2025 15:11:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1741961475;
+	bh=HsRFrggS6kqtvPWhfFvFAXCpmID8ibMboUcQ9J3zcys=;
+	h=Received:From:To:Subject;
+	b=xFzPl6eVh2TOJXz8G8hYw1ipGkmfc9k9ecY9ayNFP84AU6PMy6ywJmyREEhnBp/yE
+	 suRuIDZu0HPv92vmu5BXFsw3NdmOWsZ9sO5PYiNcXG6NvcKMo3zsrFQdsF9oYatdv0
+	 kFhclZyEmj7sLpIYfzk3nifhmk3TcWy1cbPVQVd3cc2CbpIYI10NYJaaLm5ZSTEn5e
+	 /74mxX0rE98cxNtkrnEmiClvvKiATOurlXmrL3x/z8fPpscuR4RrF3KcplHkz8hwV5
+	 QLluNFIlHJCH9ixZ27GfZxkL+A64APTUjX2YXIZP14eJW6LF80ZyAfM6GU4g9sxfAf
+	 Zh+1aUnAoPMAw==
+Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
+	id 3EDA87FA28; Fri, 14 Mar 2025 15:11:15 +0100 (CET)
+Date: Fri, 14 Mar 2025 15:11:15 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Jeff Chen <jeff.chen_1@nxp.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	briannorris@chromium.org, johannes@sipsolutions.net,
+	francesco@dolcini.it, tsung-hsien.hsieh@nxp.com,
+	s.hauer@pengutronix.de
+Subject: Re: [PATCH v3] wifi: mwifiex: Fix HT40 bandwidth issue.
+Message-ID: <Z9Q5Ay9lZPA4OC6n@gaggiata.pivistrello.it>
+References: <20250314094238.2097341-1-jeff.chen_1@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314094238.2097341-1-jeff.chen_1@nxp.com>
+
+Hello Jeff,
+for future patches, please be sure to have a changelog after the ---
+at the end of the commit message.
+
+See
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#commentary
+
+and in general that whole document.
 
 
-On Fri, 21 Feb 2025 17:02:59 +0100, Krzysztof Kozlowski wrote:
-> Add remote processor PAS loader for SM8750 MPSS (modem).  Device looks
-> fully compatible with SM8650, however it lacks fifth memory region for
-> Qlink Logging, according to downstream sources.  This is a bit tricky,
-> because updated downstream sources for newer downstream release dropped
-> that fifth memory region as well.
+On Fri, Mar 14, 2025 at 05:42:38PM +0800, Jeff Chen wrote:
+> This patch addresses an issue where, despite the AP supporting 40MHz
+> bandwidth, the connection was limited to 20MHz. Without this fix,
+> even if the access point supports 40MHz, the bandwidth after
+> connection remains at 20MHz. This issue is not a regression.
 > 
-> There might be other differences against SM8650, because the modem
-> currently crashes after starting.
-> 
-> [...]
+> Signed-off-by: Jeff Chen <jeff.chen_1@nxp.com>
 
-Applied, thanks!
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-[1/2] dt-bindings: remoteproc: Add SM8750 MPSS
-      commit: 89f95f2108de52431bbf0ca432e337fc1f40ee00
-[2/2] remoteproc: qcom: pas: Add SM8750 MPSS
-      commit: 6174206a4b5bebc0b4e01a684672e2bf79df38d8
+Francesco
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
