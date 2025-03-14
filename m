@@ -1,67 +1,67 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E74202F9E
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5D92036F6
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741970407; cv=none; b=KTI9jxAtTqLubLWl7kQfCmzJhi/17ldzgcOZcy2KqhFpZbOGHz9zAr2l2P6qCVmCxSdwCh4agUHAe/5wVSbGOh+v6tnzf207fYUJKTa7UUD8HSCTbayp/O5Xlza0Tm/WWaCYSewMGHjQSHv3TbbA8c8RxRD6IXnPR8h7z4395SE=
+	t=1741970408; cv=none; b=F7XIwsj/BsxVwiX55mZzgfGIoa9EE8fFIJBFk9Oz3XDvKF3ZNIaQFnyt1h1eyN2qmAPSImKk5zBXTg0s1EeiPDoFTcIbzqTvk3uApZng3Y75mQpNgamOdnx6HWcN7t7bc6PSEF4VTreX0V+BCrEgPVmbC3DoX6fBS9VZUATwsWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741970407; c=relaxed/simple;
-	bh=kaiSqcv9xXbQ+flypO0ZL/5TK5gbHyomS/uDIQTFCwo=;
+	s=arc-20240116; t=1741970408; c=relaxed/simple;
+	bh=W7OrtNale60JOsrxsaBAlHsDJ4WH3rrsx+Tnb7U2MME=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NmWkM13rNKSukva0xq8VlaPFstvV3OsV0wLL6DdZJfPLwlv96Ue04Yu19mf44Hyz70mUc9+Aaa3i3DKwszkwMANf+0aujgsi0Ti9jLsKL4bjhBJF8aQ1LSFmfu8z82uAkdyfur0lxLcYQ6hOcNpXaOxEVuB1/r/TS7d/e8BRb2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ynWrFGxX; arc=none smtp.client-ip=209.85.208.46
+	 In-Reply-To:To:Cc; b=gTTDazBG7KlkMfDOgf9udPa4oKk+HL2ypiG1T0l7ydTLpuR1wOFN83PRD4Y5J5MDP82HsaE8FYkYEMbTqo/wmiIfjiA9kwZ5wQ98SVlY4nWfgZsjxbkquoj6Y9WDPR2IvQ4WD+I2wOc7syz/pN2gaeZi/PM0TFJEdm4YI6/pqwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UND6oMNs; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ynWrFGxX"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so4062084a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:40:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UND6oMNs"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e6167d0536so4299540a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:40:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741970403; x=1742575203; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741970404; x=1742575204; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AhIDu7E2Q2Kcazbx0KU6LBkMGAXZzziiTNuKzlBCpUg=;
-        b=ynWrFGxXD0plDUw5jzpcAROIMnP+5r2RLc6ogTYbLVUCLziczreW/JG/2Y3Uxalhqq
-         9vB/KmXDFprj+cjBsj2SFMS5tH8GV+4vfG54q0lNCLp/0P2TjVsH3MkSguuWIVHCeiOM
-         HE+VaVyCDSYmjoMuk6yXItGUML83ul6l/mgHut3a7kthJwYFjz/SChJngCoTChWX15Lf
-         iRHp756TWFlg+5BwSBNDrfJMBW5OoXpPS/tsGcVtH3tQ+iKQkBse2vEgREPpS3I9qxSv
-         AuDdnQhEDqFaJg2W0L6D2f4toLl0YQVUDetiAh6Dh9jxx/dI64rR/xJfQTYGPlz8t7PC
-         NGVA==
+        bh=FqlKsxagPbT76Z6CLNAsMWFx/025f7qb7NuOScguaQY=;
+        b=UND6oMNsPyx969ds3VEUYTRVcHo0xohPWHSOWKyD0LAMM1xJO+h777IilgNxOefsWl
+         qkiPetbmfP3YUrr6nfVezMjIweY97GHkrvNUjLFNPujSx2ucXeOiuhZ3HU9sn+pSWpsf
+         R0Ji6fu0WvFFTg0GCx1hY1Dws3CsaJDSEGw/KZvHDZ/BZMrfL06iDH+BTn9YpCjKdekG
+         866WO/Oo+iMhfYzlyxv3kRA6uq+J7OAYd90WkBqwUESSMtvf0yjxBJeCvRnwFz5JeUUc
+         uyfntCkdEiFIw0RR0fc7cKpnqcaUjXT5dnveLaT10OeG3W4oA51I8N7L1445pq4QvBeW
+         cUwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741970403; x=1742575203;
+        d=1e100.net; s=20230601; t=1741970404; x=1742575204;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AhIDu7E2Q2Kcazbx0KU6LBkMGAXZzziiTNuKzlBCpUg=;
-        b=Ka7uuXWEfnxAzESQzEC2tSjjxihOltbpks85A0eCwkLEbdG7LUt0cpMF3tuHHh3oq7
-         UHkVliLZHtOQm5pBZfEmki8hJbvphTvpSuaYQVlYu+4298UkKBo0ZQa7lz+cVJCDKpOH
-         iBaxlIhs3uyQFB4ln7RsmKsQTA3vFc9gUNeTNnAIhkWECDL9oAgtr6u2gqOFRbERYdwr
-         POYL6UOvLDgnn/VujXYagPpB3gYswgryKg70abkDGmac3PhvHq1Nus1JyMyYBCPZ1gNR
-         L5ZgmN4NME3buf9UC4JLIXGmDLHpOGD8KvZ/HQEx19t4gR9dHHcEtBED5+xSrH2ZeXYm
-         3XaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqTATCItFCSlDBCNHoQR51hkNQMQ6O0tR8NFXxMuK8ZtEtrilaVYOdO20ggDHD8Mxj5gJZ2d78+8zdCqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhRgENa6fIrE37ayczfyyyShFDjSK+9qFHjOMz7WkUrgiL6IS5
-	FoI9sPTb1R1RTR6T7MRgrnUYlgCAsqnw6ktHhjv0YiwHM8qJlilkKHYPOCX4SF+B7g3Jvv/8H3H
-	0XF8=
-X-Gm-Gg: ASbGnctFG1TAJTlcryowMD7ky4ZnsSO0SCYLIQ8nUCbLQXkVwSwa8sVR0nCtdZhUyzn
-	s8RKH45Bjmu9h3rvSZW5HvpJKLlbVWyt94Dra1IiEX1JcKNJm7cwqpQWUjTyr2z5eGKQFq2op0g
-	w8LkP6Wc22Zk53DGIRQKxV3rX+9nWWzVr0cRQjSvxhWjdRoZbsYTCn1wO4ADi79BN4UIgBtxul4
-	7aQU5qKOlT9mukdq/6Nh/8Fgkbi05fT2iGuR1RYPCf78DjT0MKJeyzGzOXQop9F0pKMSJBLg0nj
-	q+Bw2BLc52XYQGXCDsLgYRgOqX1xxDiI1QPaa4ZquVnccWRSbY6euTiZ+54QuOCs2PkdSaTBNBx
-	20obX0nscOJVbCRgAvkc1J4vnL37Y
-X-Google-Smtp-Source: AGHT+IHsoW+BdLyhYz/cgXiDBGGL8Zn1OXVl8nizdj55crxxXTbUykUjSJOPZPoQVfuKYqW9bGrg3A==
-X-Received: by 2002:a05:6402:3546:b0:5e4:95fc:d748 with SMTP id 4fb4d7f45d1cf-5e814d7f805mr8253334a12.5.1741970403405;
-        Fri, 14 Mar 2025 09:40:03 -0700 (PDT)
+        bh=FqlKsxagPbT76Z6CLNAsMWFx/025f7qb7NuOScguaQY=;
+        b=fM+O42O2sfyOnViuljzo/0ftEyRPNp+gQNo9MgbFTQ3fpBohAbksy9cYXbE/DfgY4k
+         qGrKWp9ckfCfYEa+nAW6XQjZBUTR+xC0pM/JIs16On0hwgEcPzEUxykXSJwBorVO3Nba
+         h3N3s0cGt0LXWbABb56dsBw2qFu6zj0boL79VUUU1QNvxfJj0KN9dlNt7XIKlhgLb1+o
+         Uacpeye6gl9Y5AuDGU6PuOmvu5045fkK6lJZOgA/ZYRAYZ8rBhoToKSkZJZDbDAsayme
+         9MAGvGhcI0pvkjMsTOciKlZmX+LNpcxonz+8P1yexe9KBphEJhpGFprGc2v/Xj+VSFyQ
+         ky7A==
+X-Forwarded-Encrypted: i=1; AJvYcCV65O3XXNoEE60oXbJd4wGsFqk7JyBPGJ7d7SXT6yA+c6jy5lRU9DCx4I3UNi3Lij5ULD9biR6NGMGoGIM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsB0qPagXy6lvvmwcuyDiJBqxRjt65fgGegynT7HcLr3c8PGRt
+	LjDjL4rZbFp/ZH0KCVfdeZe5NHcXaeDLR3qnehmfuOJUPHOX+BNFOWGezJoNPNM=
+X-Gm-Gg: ASbGncsqmLAfCBmzGqSOQOT+auNJZt6YDCfhvMBbOz2Y/+/UQ6MGYiTLweeHMheyre3
+	JCGaEM47fVMx8CFrSKVjaTcfwzzFWILLcLfi4Nokscju6eXW24/WALIqWLRoU3szLB0vWedUIn8
+	etd3LaIl86G/c0TzQ70RfqgsEOI59bZO4/EKhoJ1RY3mNwm5LKpX341yjh6BmQhbUtHsmFxVXCF
+	26bOTwdLbN3WhZ5v+cgxTC4Zdd1h1yh8HL+zGmVgcIJ0Qr8cKqlFNKtZoKfISwV7Wk0HzoAXLDk
+	CR+tXZIANlibBzxRWJqnAcDXLFQ2sf2VZUcDIWos6ttdHMZBhT96k8BZK3zBmxPFPjTmWYDqt7o
+	MVHt7RsJ3aOBuRIvGH+EbTyuadV1b
+X-Google-Smtp-Source: AGHT+IHLsxwF/DHZEPhOyEzlgmcKjsoUUujUnQwnbW8+qgc574E5shkDM/HanOkkYGXBGqTnr36IXw==
+X-Received: by 2002:a05:6402:254d:b0:5e6:267c:a6bd with SMTP id 4fb4d7f45d1cf-5e8a051fdf9mr4301988a12.28.1741970404463;
+        Fri, 14 Mar 2025 09:40:04 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e816968cd8sm2115727a12.18.2025.03.14.09.40.02
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e816968cd8sm2115727a12.18.2025.03.14.09.40.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 09:40:03 -0700 (PDT)
+        Fri, 14 Mar 2025 09:40:04 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Fri, 14 Mar 2025 16:40:01 +0000
-Subject: [PATCH 1/3] firmware: exynos-acpm: fix reading longer results
+Date: Fri, 14 Mar 2025 16:40:03 +0000
+Subject: [PATCH 3/3] firmware: exynos-acpm: convert to dev_err_probe() in
+ client API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250314-acpm-fixes-v1-1-ab03ca8e723f@linaro.org>
+Message-Id: <20250314-acpm-fixes-v1-3-ab03ca8e723f@linaro.org>
 References: <20250314-acpm-fixes-v1-0-ab03ca8e723f@linaro.org>
 In-Reply-To: <20250314-acpm-fixes-v1-0-ab03ca8e723f@linaro.org>
 To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
@@ -84,106 +84,40 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-ACPM commands that return more than 8 bytes currently don't work
-correctly, as this driver ignores any such returned bytes.
+dev_err_probe() exists to simplify code and unify error messages by
+using its message template.
 
-This is evident in at least acpm_pmic_bulk_read(), where up to 8
-registers can be read back and those 8 register values are placed
-starting at &xfer->rxd[8].
+Convert the remaining dev_err() in acpm_get_by_phandle() to
+dev_err_probe().
 
-The reason is that xfter->rxlen is initialized with the size of a
-pointer (8 bytes), rather than the size of the byte array that pointer
-points to (16 bytes)
-
-Update the code such that we set the number of bytes expected to be the
-size of the rx buffer.
-
-Note1: While different commands have different lengths rx buffers, we
-have to specify the same length for all rx buffers since acpm_get_rx()
-assumes they're all the same length.
-
-Note2: The different commands also have different lengths tx buffers,
-but before switching the code to use the minimum possible length, some
-more testing would have to be done to ensure this works correctly in
-all situations. It seems wiser to just apply this fix here without
-additional logic changes for now.
-
-Fixes: a88927b534ba ("firmware: add Exynos ACPM protocol driver")
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
-
 ---
-issue is in linux-next only afaics at this stage, as driver is not
-merged into Linus' tree yet
----
- drivers/firmware/samsung/exynos-acpm-pmic.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/firmware/samsung/exynos-acpm.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/samsung/exynos-acpm-pmic.c b/drivers/firmware/samsung/exynos-acpm-pmic.c
-index 85e90d236da21ed76f7adba59caec165138ad313..39b33a356ebd240506b6390163229a70a2d1fe68 100644
---- a/drivers/firmware/samsung/exynos-acpm-pmic.c
-+++ b/drivers/firmware/samsung/exynos-acpm-pmic.c
-@@ -43,13 +43,13 @@ static inline u32 acpm_pmic_get_bulk(u32 data, unsigned int i)
- 	return (data >> (ACPM_PMIC_BULK_SHIFT * i)) & ACPM_PMIC_BULK_MASK;
- }
+diff --git a/drivers/firmware/samsung/exynos-acpm.c b/drivers/firmware/samsung/exynos-acpm.c
+index 48f1e3cacaa709ae703115169df138b659ddae44..03f907a95c6acd66d89cd8af2f52e7c6dadf492a 100644
+--- a/drivers/firmware/samsung/exynos-acpm.c
++++ b/drivers/firmware/samsung/exynos-acpm.c
+@@ -701,12 +701,14 @@ static const struct acpm_handle *acpm_get_by_phandle(struct device *dev,
  
--static void acpm_pmic_set_xfer(struct acpm_xfer *xfer, u32 *cmd,
-+static void acpm_pmic_set_xfer(struct acpm_xfer *xfer, u32 *cmd, size_t cmdlen,
- 			       unsigned int acpm_chan_id)
- {
- 	xfer->txd = cmd;
- 	xfer->rxd = cmd;
--	xfer->txlen = sizeof(cmd);
--	xfer->rxlen = sizeof(cmd);
-+	xfer->txlen = cmdlen;
-+	xfer->rxlen = cmdlen;
- 	xfer->acpm_chan_id = acpm_chan_id;
- }
+ 	link = device_link_add(dev, &pdev->dev, DL_FLAG_AUTOREMOVE_SUPPLIER);
+ 	if (!link) {
+-		dev_err(&pdev->dev,
+-			"Failed to create device link to consumer %s.\n",
+-			dev_name(dev));
++		int ret = -EINVAL;
++
++		dev_err_probe(&pdev->dev, ret,
++			      "Failed to create device link to consumer %s.\n",
++			      dev_name(dev));
+ 		platform_device_put(pdev);
+ 		module_put(pdev->dev.driver->owner);
+-		return ERR_PTR(-EINVAL);
++		return ERR_PTR(ret);
+ 	}
  
-@@ -71,7 +71,7 @@ int acpm_pmic_read_reg(const struct acpm_handle *handle,
- 	int ret;
- 
- 	acpm_pmic_init_read_cmd(cmd, type, reg, chan);
--	acpm_pmic_set_xfer(&xfer, cmd, acpm_chan_id);
-+	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
- 
- 	ret = acpm_do_xfer(handle, &xfer);
- 	if (ret)
-@@ -104,7 +104,7 @@ int acpm_pmic_bulk_read(const struct acpm_handle *handle,
- 		return -EINVAL;
- 
- 	acpm_pmic_init_bulk_read_cmd(cmd, type, reg, chan, count);
--	acpm_pmic_set_xfer(&xfer, cmd, acpm_chan_id);
-+	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
- 
- 	ret = acpm_do_xfer(handle, &xfer);
- 	if (ret)
-@@ -144,7 +144,7 @@ int acpm_pmic_write_reg(const struct acpm_handle *handle,
- 	int ret;
- 
- 	acpm_pmic_init_write_cmd(cmd, type, reg, chan, value);
--	acpm_pmic_set_xfer(&xfer, cmd, acpm_chan_id);
-+	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
- 
- 	ret = acpm_do_xfer(handle, &xfer);
- 	if (ret)
-@@ -184,7 +184,7 @@ int acpm_pmic_bulk_write(const struct acpm_handle *handle,
- 		return -EINVAL;
- 
- 	acpm_pmic_init_bulk_write_cmd(cmd, type, reg, chan, count, buf);
--	acpm_pmic_set_xfer(&xfer, cmd, acpm_chan_id);
-+	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
- 
- 	ret = acpm_do_xfer(handle, &xfer);
- 	if (ret)
-@@ -214,7 +214,7 @@ int acpm_pmic_update_reg(const struct acpm_handle *handle,
- 	int ret;
- 
- 	acpm_pmic_init_update_cmd(cmd, type, reg, chan, value, mask);
--	acpm_pmic_set_xfer(&xfer, cmd, acpm_chan_id);
-+	acpm_pmic_set_xfer(&xfer, cmd, sizeof(cmd), acpm_chan_id);
- 
- 	ret = acpm_do_xfer(handle, &xfer);
- 	if (ret)
+ 	return &acpm->handle;
 
 -- 
 2.49.0.rc1.451.g8f38331e32-goog
