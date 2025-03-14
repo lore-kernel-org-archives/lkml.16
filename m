@@ -1,125 +1,55 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2AE1EBA07
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08591F0E36;
+	Fri, 14 Mar 2025 09:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741945378; cv=none; b=SxQI3bUnnK3Q1X0W0TRjW8+7zcETa0k+gAe8As+OjgCqH+v92hr3wM4hyiimqvrnLXrfMSsx8c3EskPKb8gCSlm7cPB8+hUE7kJ+7EGV6V3esrhBmzveedBtQ9753m09/OLhUNLaRBvUgWc3cKoZq89mwEPpg0WvS+2cTG07kP4=
+	t=1741945380; cv=none; b=ewzjVmZ2L4rFMlxvUmlg/6zngT6Jv0gWzfcifL4q5C58Sx7KLeAi+yFDAzJBMpg0HVlj4AvDWh6tirYRQszudC7zZ2ZbqEhVHkHEueTghE/VocvZ+CqTkWqOZ3PRPm7ArOU1on9rih3Wm/W7jin9PA9j0EZLrJ2+NvQQboNvGZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741945378; c=relaxed/simple;
-	bh=NHWqwcmIAPSaHvvExWsY3PmsamrROfeZKayvsRC2fig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GEPLjRPGin5xx3VhxukmjUF5QzH2h1CsvrsvpY7hTEvFA7zci7XVnmyc/dOTsG37QV0Fs2/JHr5g7f027dGaMjCPLTR1Rj3aJ6OC/n96o+wJWg0wcUtsXfwc4FVau3V03wFhR0QakiTnsQUrmT0eg03KF6D0U32qHFpswayCv+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fumBZq77; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fumBZq77"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-225477548e1so34777555ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 02:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1741945376; x=1742550176; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v/g4jvwbC1O4PrGsUHzAriMTeGEusyCzVstb39RoEBQ=;
-        b=fumBZq772rZRBSskxtpaOXuP0R5VbbfZPTXphGBowmb7uOhiMDrMVKVPJ9HSppCt48
-         z22rYkDP32XXvbkzxE5YwioBxQOPNrrm5u8MlvfXa7ooYnaR12Cpo6S3Ne+n/isnmkTO
-         VTfR7QNAUH2j/xlkKhOqlCin7dBhRzhK0ExjgUzVQOTMnhJkNFomS8Umyb+fzi4netE+
-         yyaujFqFdXo/KGoLQyl6y3PTgrIBQP0rQsu5g6lHetmS5jwijAhzkACpN7JOPOwN+6Mg
-         MuURfGPj1hg1el7/9YOGkVCq/NfK8CcZk59XgNcrGlK695M2kHpHtDDPj5c36iEGxI+R
-         UHSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741945376; x=1742550176;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v/g4jvwbC1O4PrGsUHzAriMTeGEusyCzVstb39RoEBQ=;
-        b=Co+UQb1TDnCZsnKMXm7P4z38VKelJVd9biMkL9aPHtsUhqI9WWsTND6m/fqh1yLt2Z
-         4gwRgUVIjO2xtZgrXZBuyYnp4JfaePxSSAUw1GqqvOoQ56lFt92pWwETNuWkHezMbqTR
-         I/JMUE1ccTtdNsfBp9Mi22cQw+uNWr3AevI4sZ/cGiWM6H3xanMftQJAJ+sPg8AQqFh+
-         hOvdH4+ChOeJNoBgETzChzCJHM/KpG7qxO9FblgS0p561k8u17LI5kMUJ9s42KiN1PPn
-         INrUTQNeEzIFY3+EI0i8rwfifPPo+Q7pxjRqCxE/ynT7xmAAY19yaE6aHjQCKOvWEUDp
-         zSXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDbK73RiQO8DQ3VTuP0VR9pRIeCKigJdpFLJFch//n5Es2yQfbZ2xQW7TcTjFxVrThEVsnMYduEiQwPVA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcMAF9GW162AboerapbNGuDuRPctEYoSq/SPFdxptsmHASTgul
-	FGDC9nYYiXvvUdbsPWQOYPEmNL1H9SVV5e7qdFS3unrFcRDAIHfAjckqzGmdBQ==
-X-Gm-Gg: ASbGncuB67CA2xPUl3EAHiOIAqK3CFJAF+59R+Z3gqvzIkFDysyCU3dPGxspW9/hn1t
-	FdJ++0oplMkZThM+ayL5EGde3fcTUR+Z7rmIOXnoO97CVYjZVAY1CJOVOp1ENKGSnnEb51dPcWw
-	ElW5RId+hjqC8i2kuweoo/fAbS9cfEMpaPuFGSI+g7KdOKwFWpmDw14+9IoITJ6ber5puIETrx8
-	yEhg2WGJ3QnRpzzKwccnt2l7Ef0yewzR32ppdc83UWTtSpiRb5Cjojpce06NV3M0+EyQRYsqhHg
-	9UnaXyHSCVuX4Qk/17pBmskB2A6GgoLszp4qxn+aNCfVUg/eXl55nH0=
-X-Google-Smtp-Source: AGHT+IFginwr94K2rTnjMZOsPty3WsY3qokgFbh0zQNcqDH5+oZsyBDE/AucIHSnwboCC0ZejKNxcQ==
-X-Received: by 2002:a17:90b:2707:b0:2ee:c918:cd60 with SMTP id 98e67ed59e1d1-30151ca0e05mr2548580a91.20.1741945376055;
-        Fri, 14 Mar 2025 02:42:56 -0700 (PDT)
-Received: from bytedance ([115.190.40.15])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30153afee51sm648521a91.28.2025.03.14.02.42.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 02:42:55 -0700 (PDT)
-Date: Fri, 14 Mar 2025 17:42:49 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Chengming Zhou <chengming.zhou@linux.dev>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>
-Subject: Re: [RFC PATCH 2/7] sched/fair: Handle throttle path for task based
- throttle
-Message-ID: <20250314094249.GC1633113@bytedance>
-References: <20250313072030.1032893-1-ziqianlu@bytedance.com>
- <CANCG0GcFF7cnR4rCbU5MmY1Gq3M+r4gPXv39QPXXC=Cdr6sRww@mail.gmail.com>
- <58e0515a-ed67-4d1a-825f-bfc2b31d1d18@linux.dev>
+	s=arc-20240116; t=1741945380; c=relaxed/simple;
+	bh=pbuFAEq3Ui4gAVsdTa4CTZ9yK5iev535hiEefZtJf3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fG6B9aM0OFmKagqtnzzsTGA8drAjjTt8UhrYwtRgnEQsIqHkpITeR5UE0V6vo0LzvRtV2E0NdNi5+bbY4DHzjX/++mQEkiNzKQC79UCsRBvtPWeG1Rt7uhGn7rf7XbGX/tMg+zZhrC/jqLD5jsWCPgNtIgrdMlKbXePrRu+Hgc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64954C4CEE3;
+	Fri, 14 Mar 2025 09:42:59 +0000 (UTC)
+Date: Fri, 14 Mar 2025 05:42:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] tracing: Fix a compilation error without
+ CONFIG_MODULES
+Message-ID: <20250314054257.3218dc35@batman.local.home>
+In-Reply-To: <174188321162.3845006.12665585959241736399.stgit@mhiramat.tok.corp.google.com>
+References: <174188320269.3845006.11920186078507571954.stgit@mhiramat.tok.corp.google.com>
+	<174188321162.3845006.12665585959241736399.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58e0515a-ed67-4d1a-825f-bfc2b31d1d18@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 14, 2025 at 04:39:41PM +0800, Chengming Zhou wrote:
-> On 2025/3/13 15:21, Aaron Lu wrote:
-> > From: Valentin Schneider <vschneid@redhat.com>
-> > 
-> > Once a cfs_rq gets throttled, for all tasks belonging to this cfs_rq,
-> > add a task work to them so that when those tasks return to user, the
-> > actual throttle/dequeue can happen.
-> > 
-> > Note that since the throttle/dequeue always happens on a task basis when
-> > it returns to user, it's no longer necessary for check_cfs_rq_runtime()
-> > to return a value and pick_task_fair() acts differently according to that
-> > return value, so check_cfs_rq_runtime() is changed to not return a
-> > value.
-> 
-> Previously with the per-cfs_rq throttling, we use update_curr() -> put() path
-> to throttle the cfs_rq and dequeue it from the cfs_rq tree.
-> 
-> Now with your per-task throttling, maybe things can become simpler. That we
-> can just throttle_cfs_rq() (cfs_rq subtree) when curr accouting to mark these
-> throttled.
+On Fri, 14 Mar 2025 01:26:51 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Do I understand correctly that now in throttle_cfs_rq(), we just mark
-this hierarchy as throttled, but do not add any throttle work to these
-tasks in this hierarchy and leave the throttle work add job to pick
-time?
+> @@ -6040,9 +6042,10 @@ static void update_last_data(struct trace_array *tr)
+>  		memset(tscratch->entries, 0,
+>  		       flex_array_size(tscratch, entries, tscratch->nr_entries));
+>  		tscratch->nr_entries = 0;
+> -
+> +#ifdef CONFIG_MODULES
+>  		guard(mutex)(&scratch_mutex);
+>  		module_for_each_mod(save_mod, tr);
+> +#endif
+>  	}
 
-> Then then if we pick a task from a throttled cfs_rq subtree, we can setup task work
-> for it, so we don't botter with the delayed_dequeue task case that Prateek mentioned.
+Hmm, I think the real fix for this would be to make
+module_for_each_mod() a nop when modules are not configured.
 
-If we add a check point in pick time, maybe we can also avoid the check
-in enqueue time. One thing I'm thinking is, for a task, it may be picked
-multiple times with only a single enqueue so if we do the check in pick,
-the overhead can be larger?
-
-> WDYT?
-
-Thanks for your suggestion. I'll try this approach and see how it turned
-out.
+-- Steve
