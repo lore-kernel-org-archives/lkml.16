@@ -1,150 +1,123 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E5F1F1312;
-	Fri, 14 Mar 2025 09:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF63B1F3B85
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741945383; cv=none; b=hjiZsAuDTG87Q9rj18XnRdhdXrE3ZGKZQexoc6EdkULYzc0Wazu3leaEmiiLWDqOPZlwRP+eoqkpP0kSt8tV32bbJ+EbaleAUrr/w1DVyV0fbhE+T5zj1KZY8GHIItH5lhUeJjE35/ywY2JiKAfBFOwSl16wgkU4aKVTV88Utuk=
+	t=1741945385; cv=none; b=Wf8Y6JZemvRDGt2ve34Vn/Md6mPHXKL0aqFV/BM9E37ThxE/VpL1rPVXGURbsgDmh3c3cfnSkdRJlS4ba+OmwSD4n/n4ZYVUu77Mz7LiU/AqHou85OBb57jQJPTFOZhWfZ/Z6ZFB3Ckh5A1Oz2tzYSGKfxzYp7PXzJiZlWZUkho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741945383; c=relaxed/simple;
-	bh=R4mT9q2rzMIVE/drUUY0uzpLhqsl0DONcHAw3C4Taeg=;
+	s=arc-20240116; t=1741945385; c=relaxed/simple;
+	bh=Qprz9wpUySPUA48GgPU3RCPs42MHXerLEut3c0IV2cI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=afWgrUsiVkjaKWboiZJIXYczV5Ow6rtPcXNGzbhvkxVDUlTu8FTJaUeUCt9l4WWso3+xCaf1fVHwPVbn/6jKDmFV+pcjwHTDQ/ygV+LnRSIvSpgs+vnVMkyCig3Lwx8DfpfRth2Y0E1PBBQoCkXrOvNOb24RfbqE8gyJla/MNYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SBb+uOdG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SBb+uOdG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cbezX+qBbHUsO5zjEMJT7t6jnT/CGOrWEFqIPazSuTY=; b=SBb+uOdGeuggwnUHr+5j0q0z0c
-	K/HZhYq9r99EMw8McQyqsFapl4Me2BvULr57zR8v8PIq6mwVwCvd3wNPpKmYln8wpVCvcADn8N2gQ
-	1wzft5orDrCCL0UukfFnc1uIV+Nnxvm3I4dyMq7ozNjqmw5OTDkBgJw/hhf3pE4f8dyw2h9kknMNu
-	xYg1LCRvWw8oxTTHYz33rAxHs3WUBHjZw6P3wM2znXKljwa1o5IWcG5vPa+QzuIMGoLmWqfhhCWM3
-	25S/+ocwpe4WjtxfwWQldherP3xlyH6zu9DNPqKFYwFtRC+2Uraha+3Fy8M3woTLMSng6cZIxa0Io
-	5QCSX/5Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tt1Ys-0000000FLob-2ycV;
-	Fri, 14 Mar 2025 09:42:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id AD3E9300599; Fri, 14 Mar 2025 10:42:37 +0100 (CET)
-Date: Fri, 14 Mar 2025 10:42:37 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
-	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V2 05/10] PCI/MSI: Switch to MSI descriptor locking to
- guard()
-Message-ID: <20250314094237.GX5880@noisy.programming.kicks-ass.net>
-References: <20250313130212.450198939@linutronix.de>
- <20250313130321.695027112@linutronix.de>
- <20250313155015.000037f5@huawei.com>
- <87ldt86cjj.ffs@tglx>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KsKJsEBPbwoW0HFdMIiRPWTcvVAca0Ekzn6br8An6vTcQ6JvZTEK0kAenwauInewizAK4VTvNbHtekjXRRPecXRtTUYsuh0u3dQR7qyOSV6W4Jrm6rmILTvrr8VldQcslpv7Rs92wczF3VNiCFegRCPPjDFVVTt8jdMQH9C1iAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tt1ZA-00071c-Tj; Fri, 14 Mar 2025 10:42:56 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tt1ZA-005gDi-1X;
+	Fri, 14 Mar 2025 10:42:56 +0100
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 278AE3DB8E4;
+	Fri, 14 Mar 2025 09:42:56 +0000 (UTC)
+Date: Fri, 14 Mar 2025 10:42:55 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: haibo.chen@nxp.com
+Cc: mailhol.vincent@wanadoo.fr, ciprianmarian.costea@oss.nxp.com, 
+	han.xu@nxp.com, u.kleine-koenig@baylibre.com, linux-can@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH 1/2] can: flexcan: only set CAN_STATE_ERROR_ACTIVE when
+ resume has no issue
+Message-ID: <20250314-married-polar-elephant-b15594-mkl@pengutronix.de>
+References: <20250306065921.2329517-1-haibo.chen@nxp.com>
+ <20250314-invaluable-economic-caterpillar-80541a-mkl@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oogkrhl672fkkr2e"
 Content-Disposition: inline
-In-Reply-To: <87ldt86cjj.ffs@tglx>
+In-Reply-To: <20250314-invaluable-economic-caterpillar-80541a-mkl@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, Mar 13, 2025 at 06:55:12PM +0100, Thomas Gleixner wrote:
-> On Thu, Mar 13 2025 at 15:50, Jonathan Cameron wrote:
-> >> +	guard(msi_descs_lock)(&dev->dev);
-> >> +	int ret = __msix_setup_interrupts(dev, entries, nvec, masks);
-> >> +	if (ret)
-> >> +		pci_free_msi_irqs(dev);
+
+--oogkrhl672fkkr2e
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] can: flexcan: only set CAN_STATE_ERROR_ACTIVE when
+ resume has no issue
+MIME-Version: 1.0
+
+On 14.03.2025 10:13:08, Marc Kleine-Budde wrote:
+> On 06.03.2025 14:59:20, haibo.chen@nxp.com wrote:
+> > From: Haibo Chen <haibo.chen@nxp.com>
 > >
-> > It's not immediately obvious what this is undoing (i.e. where the alloc
-> > is).  I think it is at least mostly the pci_msi_setup_msi_irqs in
-> > __msix_setup_interrupts
-> 
-> It's a universal cleanup for all possible error cases.
-> 
-> > Why not handle the error in __msix_setup_interrupts and make that function
-> > side effect free.  Does require gotos but in a function that isn't
-> > doing any cleanup magic so should be fine.
-> 
-> I had the gotos first and then hated them. But you are right, it's better
-> to have them than having the magic clean up at the call site.
-> 
-> I'll fold the delta patch below.
-> 
-> Thanks,
-> 
->         tglx
-> ---
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -671,19 +671,23 @@ static int __msix_setup_interrupts(struc
->  	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
->  
->  	if (ret)
-> -		return ret;
-> +		goto fail;
->  
->  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
->  	if (ret)
-> -		return ret;
-> +		goto fail;
->  
->  	/* Check if all MSI entries honor device restrictions */
->  	ret = msi_verify_entries(dev);
->  	if (ret)
-> -		return ret;
-> +		goto fail;
->  
->  	msix_update_entries(dev, entries);
->  	return 0;
-> +
-> +fail:
-> +	pci_free_msi_irqs(dev);
-> +	return ret;
->  }
+> > Only set CAN state to CAN_STATE_ERROR_ACTIVE when resume process has
+> > no issue, otherwise keep in CAN_STATE_SLEEPING as suspend did.
+>
+> When looking at the code, it makes no sense to set the can.state to
+> CAN_STATE_ERROR_ACTIVE, if the device isn't up.
+>
+> The suspend function doesn't look correct, either. I'll send a v3.
 
-How about something like:
+After a suspend/resume cycle on a down interface, it will come up as
+ERROR-ACTIVE.
 
-int __msix_setup_interrupts(struct device *_dev,... )
-{
-	struct device *dev __free(msi_irqs) = _dev;
+| $ ip -details -s -s a s dev flexcan0
+| 3: flexcan0: <NOARP,ECHO> mtu 16 qdisc pfifo_fast state DOWN group defaul=
+t qlen 10
+|     link/can  promiscuity 0 allmulti 0 minmtu 0 maxmtu 0
+|     can state STOPPED (berr-counter tx 0 rx 0) restart-ms 1000
+|=20
+| $ sudo systemctl suspend
+|=20
+| $ ip -details -s -s a s dev flexcan0
+| 3: flexcan0: <NOARP,ECHO> mtu 16 qdisc pfifo_fast state DOWN group defaul=
+t qlen 10
+|     link/can  promiscuity 0 allmulti 0 minmtu 0 maxmtu 0
+|     can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 1000
 
-	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
-	if (ret)
-		return ret;
+regards,
+Marc
 
-	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
-	if (ret)
-		return ret;
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-	/* Check if all MSI entries honor device restrictions */
-	ret = msi_verify_entries(dev);
-	if (ret)
-		return ret;
+--oogkrhl672fkkr2e
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	retain_ptr(dev);
-	msix_update_entries(dev, entries);
-	return 0;
-}
+-----BEGIN PGP SIGNATURE-----
 
-?
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfT+hwACgkQDHRl3/mQ
+kZxEeggAmJe/1BSs7Ia4z0JQDnv+yNvTHRHBzW/nu0LIxl8GYJiNvdXrfqaHtyRW
+3KxMQgn2UHGnBwsGHQX0rVoCVZ/n3i5QMNTnXH7o6XFF80UgGnLL32nR/vsOUPs6
+uN7aoJL+U7SChWQvNQOiP2ojt2EVjN8MgV4URjX1nqzV8PrrUuwkX3EcIlvhOlde
+yg9UFKNApmwfqZBfRw0UJz9cfil4+HU1E3LOKN5qNvT1Dn1bd7GvWVGZdaENSxiA
+aVc90fDYdITbp5Z3iK7hfjKhJqB4X+11uP2EBjonEjKFuE4DekHIaNW0TcIeRUrz
+xOIkAVkL0D+/EE8FO6kuAL99RtW6tQ==
+=9m1P
+-----END PGP SIGNATURE-----
+
+--oogkrhl672fkkr2e--
