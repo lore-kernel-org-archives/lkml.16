@@ -1,161 +1,139 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9982B4D8D1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D1C1547FE;
+	Fri, 14 Mar 2025 07:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741937560; cv=none; b=YIBHsqUotH7l/whS9Y6+XO2DC1eBLOAFDhHl+AytO0cgE/PcndwLwn4G1AEc16ettFXFb++VDFguvefuRHwVxxLHbDyDg8vErk202tj8fMpLu3y7kPewudDJQYBjvc54EO0T1XycLwHkJFSLDlJiDgMxz9ASn5D3ST+NvHgn8V0=
+	t=1741937578; cv=none; b=tkFcYTGYABO5ZvVOGsmcP85YJ8g57f+GRbwwc7yb2Y6Lhj6sfZUe60UbQ9AGzmLJHXQ/2+p+b1PTys8T8OMDJrpUzoun8VvN3CB8BnV9VetNZitjDcLWNDUbTB210Jr/WfNPBfscoNeBmkmlc0WaDA7ULGTbHwkFA7S2qQiFPp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741937560; c=relaxed/simple;
-	bh=STElu7lAnQxvQRWUOf9nJsfx2l78aaRDxI3sOUuzwMs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=tq/Pfao3XoIKMrfNf7FpjJJ1RGSGsOlpLDYFeSHmMOY79HU963va7aC0yCyVHlBRMJaeccSlI7xNl7UOuwYtqLbRvVfBUe7gPvD2pHMR5drHeYm/CDOrDoJYk7B18nXSy3f9ttEOjp0RPpI/bVCwWKnEGhEu036koQXcLbrSFWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZDbfd6JQHz4f3m6Z
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:32:09 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BDF051A1AD7
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:32:33 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP1 (Coremail) with SMTP id cCh0CgDXh3iQ29Nnwp5zGQ--.58146S2;
-	Fri, 14 Mar 2025 15:32:33 +0800 (CST)
-Subject: Re: [PATCH 2/9] mm: swap: factor out the actual swap entry freeing
- logic to new helper
-To: Kairui Song <ryncsn@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250313210515.9920-1-shikemeng@huaweicloud.com>
- <20250313210515.9920-3-shikemeng@huaweicloud.com>
- <CAMgjq7Ct8b25zuCEqJ4byU8gmrvz50pUqvyjYN=_RjTk_5U8cA@mail.gmail.com>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <a04c8908-a12a-dab8-f4e4-61f7b85443bf@huaweicloud.com>
-Date: Fri, 14 Mar 2025 15:32:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1741937578; c=relaxed/simple;
+	bh=p0W+aqpnbYoRkToo30fmXao0FrukZ2uA7bJv4ogZQjk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UQhHx/DUzl6x3EfM5qcu28ZGeVIk7Un4TcR8e1CgVLMx1K2sSmg9VsPYL6CmtliD3xEKNoFkt93WMxvpuI8NstF07fAE9RgZVXh7S28cEiefAUuKqRDnTMYhqtgvMuGdqxU54MS8gnWNIm4mPoFXaXrzj5Eq01U/GBxwJdmqm6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oHGmDiMi; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oHGmDiMi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741937577; x=1773473577;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=p0W+aqpnbYoRkToo30fmXao0FrukZ2uA7bJv4ogZQjk=;
+  b=oHGmDiMi0uKSdRtftFvrSbkF67dIocOeix8W0dBKPjwluExf9GYTzPrl
+   xwuZMZUtKYOFknEwBL9E6WPUDgHy2VRn6oHUbmiqHPfHYz13DZ/LyFEi6
+   /XojwWtcZlWB0gTNNQWINFaW9UKVUiQT/Cbi8FqP9rnrXTdjmY9+xYhOe
+   NK6N9IpwW9C70ilaBK0pFnIsqJXUQ+SG1ZoSZTdWDahFXUOzVA/fW7guP
+   +BDnrS7IZF6yZvWim4cJ9ZvKK0bnAW4E2BmDuMoLWMqltXlwpuSBNn4RQ
+   sGb90oyAeudk71XGnx0ucQsApnt5Yd0ylCcCUnlZ0N4e2nDuWPKe+9MY2
+   Q==;
+X-CSE-ConnectionGUID: qUJNufE8RH6tJvheF+vd6A==
+X-CSE-MsgGUID: +b6n1q2NRP6XrhhUMOtPsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="54077741"
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="54077741"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 00:32:56 -0700
+X-CSE-ConnectionGUID: Y4dtWpJeSyaxahfLqbdZLQ==
+X-CSE-MsgGUID: s4I3alGBTHOobUs/wpfwHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="120911440"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 14 Mar 2025 00:32:54 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tszXH-000ACO-2q;
+	Fri, 14 Mar 2025 07:32:51 +0000
+Date: Fri, 14 Mar 2025 15:32:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+	Support Opensource <support.opensource@diasemi.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: Re: [PATCH 3/4] watchdog: da9052_wdt: do not disable wdt during probe
+Message-ID: <202503141558.tHcAG0Q5-lkp@intel.com>
+References: <20250313-da9052-fixes-v1-3-379dc87af953@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMgjq7Ct8b25zuCEqJ4byU8gmrvz50pUqvyjYN=_RjTk_5U8cA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDXh3iQ29Nnwp5zGQ--.58146S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWFW7Zr1xKFy5Xr1rWry5twb_yoW5Ww43pF
-	9aqFs0kF4kJryxGFsxXa1qv3yayw4rKF1kXFnrKwn3AF9xJr92qF1DCrWY9ryDAwn7CFyI
-	va1DK3sruFs0yFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-	7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313-da9052-fixes-v1-3-379dc87af953@gmail.com>
+
+Hi Marcus,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on 0fed89a961ea851945d23cc35beb59d6e56c0964]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Marcus-Folkesson/watchdog-da9052_wdt-add-support-for-nowayout/20250313-202430
+base:   0fed89a961ea851945d23cc35beb59d6e56c0964
+patch link:    https://lore.kernel.org/r/20250313-da9052-fixes-v1-3-379dc87af953%40gmail.com
+patch subject: [PATCH 3/4] watchdog: da9052_wdt: do not disable wdt during probe
+config: riscv-randconfig-001-20250314 (https://download.01.org/0day-ci/archive/20250314/202503141558.tHcAG0Q5-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250314/202503141558.tHcAG0Q5-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503141558.tHcAG0Q5-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/watchdog/da9052_wdt.c:173:6: warning: unused variable 'ret' [-Wunused-variable]
+     173 |         int ret;
+         |             ^~~
+   1 warning generated.
 
 
+vim +/ret +173 drivers/watchdog/da9052_wdt.c
 
-on 3/14/2025 1:42 AM, Kairui Song wrote:
-> On Thu, Mar 13, 2025 at 8:09 PM Kemeng Shi <shikemeng@huaweicloud.com> wrote:
->>
->> Factor out the actual swap entry freeing logic to new helper
->> __swap_entries_free().
->> This allow us to futher simplify other swap entry freeing code by
->> leveraging __swap_entries_free() helper function.
->>
->> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
->> ---
->>  mm/swapfile.c | 30 ++++++++++++++++++++----------
->>  1 file changed, 20 insertions(+), 10 deletions(-)
->>
->> diff --git a/mm/swapfile.c b/mm/swapfile.c
->> index 5a775456e26c..7c886f9dd6f9 100644
->> --- a/mm/swapfile.c
->> +++ b/mm/swapfile.c
->> @@ -1347,6 +1347,25 @@ static struct swap_info_struct *_swap_info_get(swp_entry_t entry)
->>         return NULL;
->>  }
->>
->> +static inline void __swap_entries_free(struct swap_info_struct *si,
->> +                                      struct swap_cluster_info *ci,
->> +                                      swp_entry_t entry, unsigned int nr_pages)
->> +{
->> +       unsigned long offset = swp_offset(entry);
->> +
->> +       VM_BUG_ON(cluster_is_empty(ci));
->> +       VM_BUG_ON(ci->count < nr_pages);
->> +
->> +       ci->count -= nr_pages;
->> +       mem_cgroup_uncharge_swap(entry, nr_pages);
->> +       swap_range_free(si, offset, nr_pages);
->> +
->> +       if (!ci->count)
->> +               free_cluster(si, ci);
->> +       else
->> +               partial_free_cluster(si, ci);
->> +}
->> +
->>  static unsigned char swap_entry_put_locked(struct swap_info_struct *si,
->>                                            unsigned long offset,
->>                                            unsigned char usage)
->> @@ -1525,22 +1544,13 @@ static void swap_entry_range_free(struct swap_info_struct *si,
->>
->>         /* It should never free entries across different clusters */
->>         VM_BUG_ON(ci != offset_to_cluster(si, offset + nr_pages - 1));
->> -       VM_BUG_ON(cluster_is_empty(ci));
->> -       VM_BUG_ON(ci->count < nr_pages);
->>
->> -       ci->count -= nr_pages;
->>         do {
->>                 VM_BUG_ON(*map != SWAP_HAS_CACHE);
->>                 *map = 0;
->>         } while (++map < map_end);
->>
->> -       mem_cgroup_uncharge_swap(entry, nr_pages);
->> -       swap_range_free(si, offset, nr_pages);
->> -
->> -       if (!ci->count)
->> -               free_cluster(si, ci);
->> -       else
->> -               partial_free_cluster(si, ci);
->> +       __swap_entries_free(si, ci, entry, nr_pages);
->>  }
->>
->>  static void cluster_swap_free_nr(struct swap_info_struct *si,
->> --
->> 2.30.0
->>
->>
-> 
-> Hi Kemeng,
-Hello Kairui,
+664a0d7862a6b10 Ashish Jangam    2012-05-24  165  
+664a0d7862a6b10 Ashish Jangam    2012-05-24  166  
+2d991a164a61858 Bill Pemberton   2012-11-19  167  static int da9052_wdt_probe(struct platform_device *pdev)
+664a0d7862a6b10 Ashish Jangam    2012-05-24  168  {
+f7e29623e2678c5 Guenter Roeck    2019-04-08  169  	struct device *dev = &pdev->dev;
+f7e29623e2678c5 Guenter Roeck    2019-04-08  170  	struct da9052 *da9052 = dev_get_drvdata(dev->parent);
+664a0d7862a6b10 Ashish Jangam    2012-05-24  171  	struct da9052_wdt_data *driver_data;
+664a0d7862a6b10 Ashish Jangam    2012-05-24  172  	struct watchdog_device *da9052_wdt;
+664a0d7862a6b10 Ashish Jangam    2012-05-24 @173  	int ret;
+664a0d7862a6b10 Ashish Jangam    2012-05-24  174  
+f7e29623e2678c5 Guenter Roeck    2019-04-08  175  	driver_data = devm_kzalloc(dev, sizeof(*driver_data), GFP_KERNEL);
+189c049a01c2de6 Guenter Roeck    2017-01-10  176  	if (!driver_data)
+189c049a01c2de6 Guenter Roeck    2017-01-10  177  		return -ENOMEM;
+664a0d7862a6b10 Ashish Jangam    2012-05-24  178  	driver_data->da9052 = da9052;
+664a0d7862a6b10 Ashish Jangam    2012-05-24  179  
+664a0d7862a6b10 Ashish Jangam    2012-05-24  180  	da9052_wdt = &driver_data->wdt;
+664a0d7862a6b10 Ashish Jangam    2012-05-24  181  
+664a0d7862a6b10 Ashish Jangam    2012-05-24  182  	da9052_wdt->timeout = DA9052_DEF_TIMEOUT;
+664a0d7862a6b10 Ashish Jangam    2012-05-24  183  	da9052_wdt->info = &da9052_wdt_info;
+664a0d7862a6b10 Ashish Jangam    2012-05-24  184  	da9052_wdt->ops = &da9052_wdt_ops;
+f7e29623e2678c5 Guenter Roeck    2019-04-08  185  	da9052_wdt->parent = dev;
+664a0d7862a6b10 Ashish Jangam    2012-05-24  186  	watchdog_set_drvdata(da9052_wdt, driver_data);
+ebed370e19c893f Marcus Folkesson 2025-03-13  187  	watchdog_init_timeout(da9052_wdt, timeout, dev);
+950a7a3375b3d8e Marcus Folkesson 2025-03-13  188  	watchdog_set_nowayout(da9052_wdt, nowayout);
+664a0d7862a6b10 Ashish Jangam    2012-05-24  189  
+651b5fde35d67a2 Marcus Folkesson 2024-12-10  190  	if (da9052->fault_log & DA9052_FAULTLOG_TWDERROR)
+651b5fde35d67a2 Marcus Folkesson 2024-12-10  191  		da9052_wdt->bootstatus |= WDIOF_CARDRESET;
+651b5fde35d67a2 Marcus Folkesson 2024-12-10  192  	if (da9052->fault_log & DA9052_FAULTLOG_TEMPOVER)
+651b5fde35d67a2 Marcus Folkesson 2024-12-10  193  		da9052_wdt->bootstatus |= WDIOF_OVERHEAT;
+651b5fde35d67a2 Marcus Folkesson 2024-12-10  194  	if (da9052->fault_log & DA9052_FAULTLOG_VDDFAULT)
+651b5fde35d67a2 Marcus Folkesson 2024-12-10  195  		da9052_wdt->bootstatus |= WDIOF_POWERUNDER;
+651b5fde35d67a2 Marcus Folkesson 2024-12-10  196  
+60415f701fce001 Wolfram Sang     2019-05-18  197  	return devm_watchdog_register_device(dev, &driver_data->wdt);
+664a0d7862a6b10 Ashish Jangam    2012-05-24  198  }
+664a0d7862a6b10 Ashish Jangam    2012-05-24  199  
 
-Thanks for feedback.
-> 
-> This patch is a bit too trivial to be a standalone one, you can fold
-> it with the later one easily. Also you may want to carry the
-> VM_BUG_ON(ci != offset_to_cluster(si, offset + nr_pages - 1)); check
-> as well.
-Sure, I will do this in next version.
-> 
-> But, that is basically just renaming swap_entry_range_free, you may
-> just remove the HAS_CACHE check as you rename it, that way the changes
-> should be cleaner.
-> 
-Sorry, I don't quite follow. Are you suggesting that should fold this
-patch to later one which removes the HAS_CACHE check and renmae the
-swap_entry_range_free.
-
-Thanks,
-Kemeng
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
