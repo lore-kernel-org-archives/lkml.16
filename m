@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD331FE450;
-	Fri, 14 Mar 2025 15:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAE01FDE2B;
+	Fri, 14 Mar 2025 15:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741967415; cv=none; b=LJVkeqKqjfWKpuC+as5wD+IV7yDwGdUJA3srzZx/wx1gScwb2LjGil7Y4E74i+nm5/LfiObyBVmWocC0+9iMpre7tAIs4JpXlTKd96ccdU+Ea5i+r5dNd60l8KvSM4+q5SRJFiajv2wmcastD43CSK/5V9mXneatJJI+dSwut40=
+	t=1741967457; cv=none; b=Qn06Dc6bTFolbCW6OZhLmvMEdorb71rHVBZU1zzDH7FZNym+ClAcKS/EWsoXyMF6WKIIw2JN2c5pymdpmNKy32fBgfWM7Si0Y6/55E0F3nca3QD9pgi5NDn2MjmYQVfw/h/yZDeUmgws/q/57dj7941aiqJrlr1K7In6aONmU/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741967415; c=relaxed/simple;
-	bh=yd6hd/BIcy+u7PxvBdVNuloLY1tbTq52bYWAIn5DalA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IwKZtIhdr+nF+OWivSOsd4VA+Rov38PZKaKTHW9I6eOiHrNVudBXWecvGXDs4T1Vdia4sh7JD/i/1Fixmk1sXZa6837If+sBsoEr5JGbfmk21Vt+PX5/USrFSwrbnZgBWlQXncllltO85HjZjmg8qNbd4ZhyZHuCKamPneNbnrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RcyzSwVf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741967457; c=relaxed/simple;
+	bh=AKNeT7I9L8uYDztJZF47bgZZU5WqdSoQ6VPicq2vYtg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aAk7xvJOsZd3rgSUNzMTV4G6gB2LskEfTSzgdWvKREuuFbvs1iEJQcsWDqLiy1Kc+mFXYV6TqslSzEH8+HoQAQvzELLyMhhwDpas1bdP2MNc8PjdZlM0QeB4+dHAUCtVTEo2DIP8DZ0CbV+sHfM2+TAiDWjMiGvz2Yc48FAlD04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcYq5A0O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RcyzSwVf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99CDFC4CEE3;
-	Fri, 14 Mar 2025 15:50:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcYq5A0O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6F5C4CEE3;
+	Fri, 14 Mar 2025 15:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741967415;
-	bh=yd6hd/BIcy+u7PxvBdVNuloLY1tbTq52bYWAIn5DalA=;
+	s=k20201202; t=1741967457;
+	bh=AKNeT7I9L8uYDztJZF47bgZZU5WqdSoQ6VPicq2vYtg=;
 	h=From:To:Cc:Subject:Date:From;
-	b=RcyzSwVfNUARNiBeEW1oLINmdQnOb3bKeLpd+DiRptcO3R8BSB2uMDYYrxqcBdSEz
-	 9hSbhEUg2dCFoKOQPs3NXhS2EJAfQMxXZcMgKGWCi8MtSEP0cNpi4HUN7jCLYRggNj
-	 xVr5Vz6GH995FIValA497TwC9j1ZpcLqH7Ud0tZhK35Ysa+zIHMp4yE8FCzaWVBDwf
-	 o4qBSg2eQdF4HxTGUhGqPumQQpU7mf4np2DK9Qf6aoot/HTyhihVga1isV4UdKQCWe
-	 sJsqzB67HopEghFtRaFz2C3mBJnqqxdZqB5XDEYlm6d5gRTbrwU/mDrfZ0Q1fDQh4w
-	 FG19YajDekBdg==
+	b=IcYq5A0O4zwSX0dY32dildB5YMgA3Le31v0uy4ihF6T8Yr7Qy7+9GNqRyhViXI3It
+	 TC5yJyCJq9mjay+sgZ77jSpVCrN7lC6dSWu8nGq1LaFWjhN9GnIysuD9LNVza0XN41
+	 8GQ0GPhQaoT7/kMdi4kBP0B9Z3PfmO4wdDI8L9HCb3qBYhXUZVCM6IIJSP2LOQ9R5D
+	 96a3ucRwRFK1E8mDKaS8BPK7gmDnf51n34aOMDxbV3/pnkdtajVCOs91lrRWu8pGCy
+	 ZtQmiQRpfsAp97053Z24az+2c7c1L8MzKvUZvsxDfsDs+v6ZZE2c0RVUl1ZGoBabmI
+	 lLSuISDX78msQ==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Simon Horman <horms@kernel.org>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] net: airoha: fix CONFIG_DEBUG_FS check
-Date: Fri, 14 Mar 2025 16:49:59 +0100
-Message-Id: <20250314155009.4114308-1-arnd@kernel.org>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Huang Yiwei <quic_hyiwei@quicinc.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: fix build without CONFIG_MODULES
+Date: Fri, 14 Mar 2025 16:50:49 +0100
+Message-Id: <20250314155052.4170214-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,35 +48,54 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The #if check causes a build failure when CONFIG_DEBUG_FS is turned
-off:
+The tracing code fails to build when CONFIG_MODULES is disabled:
 
-In file included from drivers/net/ethernet/airoha/airoha_eth.c:17:
-drivers/net/ethernet/airoha/airoha_eth.h:543:5: error: "CONFIG_DEBUG_FS" is not defined, evaluates to 0 [-Werror=undef]
-  543 | #if CONFIG_DEBUG_FS
-      |     ^~~~~~~~~~~~~~~
+kernel/trace/trace.c: In function 'save_mod':
+kernel/trace/trace.c:6041:45: error: invalid use of undefined type 'struct module'
+ 6041 |         entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
+      |                                             ^~
 
-Replace it with the correct #ifdef.
+The problem here is that 'struct module' is not defined in this configuration.
 
-Fixes: 3fe15c640f38 ("net: airoha: Introduce PPE debugfs support")
+Enclose the functions in another #ifdef, just like other parts of this file
+already are.
+
+Fixes: dca91c1c5468 ("tracing: Have persistent trace instances save module addresses")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/ethernet/airoha/airoha_eth.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/airoha/airoha_eth.h b/drivers/net/ethernet/airoha/airoha_eth.h
-index f66b9b736b94..60690b685710 100644
---- a/drivers/net/ethernet/airoha/airoha_eth.h
-+++ b/drivers/net/ethernet/airoha/airoha_eth.h
-@@ -540,7 +540,7 @@ void airoha_ppe_deinit(struct airoha_eth *eth);
- struct airoha_foe_entry *airoha_ppe_foe_get_entry(struct airoha_ppe *ppe,
- 						  u32 hash);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index a6105b6dcc2b..51c030b9887e 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6019,6 +6019,7 @@ struct trace_scratch {
  
--#if CONFIG_DEBUG_FS
-+#ifdef CONFIG_DEBUG_FS
- int airoha_ppe_debugfs_init(struct airoha_ppe *ppe);
- #else
- static inline int airoha_ppe_debugfs_init(struct airoha_ppe *ppe)
+ static DEFINE_MUTEX(scratch_mutex);
+ 
++#ifdef CONFIG_MODULES
+ static int save_mod(struct module *mod, void *data)
+ {
+ 	struct trace_array *tr = data;
+@@ -6043,6 +6044,7 @@ static int save_mod(struct module *mod, void *data)
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static void update_last_data(struct trace_array *tr)
+ {
+@@ -6060,7 +6062,9 @@ static void update_last_data(struct trace_array *tr)
+ 		tscratch->nr_entries = 0;
+ 
+ 		guard(mutex)(&scratch_mutex);
++#ifdef CONFIG_MODULES
+ 		module_for_each_mod(save_mod, tr);
++#endif
+ 	}
+ 
+ 	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
 -- 
 2.39.5
 
