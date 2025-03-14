@@ -1,125 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAFA1FECBA;
-	Fri, 14 Mar 2025 11:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888061FCFFC;
+	Fri, 14 Mar 2025 11:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741953461; cv=none; b=Avrhn3vfhmmajenPqPBVFc0gSVYhEdczzcvBhdJHTTzZ5auaGQpiq3M1kipncxp3T0NGlqnvfs+R00LAYNiwz+CTUHdOOoq1Pl4J6bS8JFEr7iqcURelDT36fL40fyE5Go1ChJu2GHzMGx0n3jc0I7VzyNg/GA9P6FJew6DfVMQ=
+	t=1741953471; cv=none; b=nY8Z4xYpBD9bT+mxxc9m8Fs2IfOHLd86dLxib+DRhcnvZNxIvaGdB0tH9Eg6rHLXZwOZ/DFuaVm6iH1P9oWpwG6wCJGhTSl+sXe3E4PhQQzsdqdSinx5B3gqzlMyLMdMebHgfAjPXapi44nV03wowdWdaWBP0iCrUAstOq0FOtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741953461; c=relaxed/simple;
-	bh=h9R5v8KHjf73KOzZC4dBCiwt0HBHwsI7o5SeTDlR0lg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NVHxrcllaMeTNUy18ucV14C3EFMkjDaW+5g9AuDrkmS30ibyKOclTkgQjwQO+8qvwrevHAFCsuazkfaVP9hyqQcc0yMkh45aMqUbDCoT0mCkGodsZiW8pulClL8w+R+FntOkOeYNQi+c9P1JmKPmsxUsyaw+syz8BptSYwb9jBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6n6Iu/T; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6n6Iu/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81A03C4CEF1;
-	Fri, 14 Mar 2025 11:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741953461;
-	bh=h9R5v8KHjf73KOzZC4dBCiwt0HBHwsI7o5SeTDlR0lg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L6n6Iu/T2FVs4V4AqCqmYWvXoki5xhpHCAGGGOeLTGAVa7VWe4WKdZzsNFlPt8pYz
-	 dhvDJHdZNqLemX1eQ4adk+vKXEHogIhp6pvk/ny4XCRS80Dl1qdhrN986gaaWK82gn
-	 d7hAzO+jp47CGgDOl1wYI7+JonubTojPlJ0C81ASChdp7x0thmpkFSDf+czcmv9KWK
-	 7afjQdUOB4GCjlxi2YPKuX6+pGVkZWSOCIItW1oqj4LaIL1Ygz3NQOpi0J08A4CHCZ
-	 zrJGwhK4m5U9mdGwbeYEWpE1vmoKUDvIEtVe40U38x3qwW4nariAflWwaOF68pN0rS
-	 uPm+FQUxRsLwQ==
-From: Alexey Gladkov <legion@kernel.org>
-To: x86@kernel.org
-Cc: "Alexey Gladkov (Intel)" <legion@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-coco@lists.linux.dev,
-	Alexey Gladkov <alexey.gladkov@intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Joerg Roedel <jroedel@suse.de>,
-	Juergen Gross <jgross@suse.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Larry.Dewey@amd.com,
-	Nikunj A Dadhania <nikunj@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [RFC PATCH v1 3/3] docs: ABI: testing: Add documentation about TDX
-Date: Fri, 14 Mar 2025 12:56:28 +0100
-Message-ID: <9e3c8a309ea558e8783c2bd346f536ce8417f406.1741952958.git.legion@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1741952958.git.legion@kernel.org>
-References: <cover.1741952958.git.legion@kernel.org>
+	s=arc-20240116; t=1741953471; c=relaxed/simple;
+	bh=UfCfTas+IK7+xkJrASy6gnygHRZDQSaRR3jZQ2Q8c68=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ny6HiZo5YBcJjDl03IDEd3MQV+ACvnRdyMhv7GVB6aHKNsBOcAHvD+ncLLhjJm/j4TBIYllrPNa5xgfNEqvae0BsaqA8TcAjyW+qLENBkF10cO9rV6GCtQK1VWd2w2a0LPh9HKocY0dp1fl9s/5hcRa6o1w9hFFlaL9sKbCobAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from [192.168.2.19] (51b6855d.dsl.pool.telekom.hu [::ffff:81.182.133.93])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000087004.0000000067D41888.0002BE31; Fri, 14 Mar 2025 12:52:40 +0100
+Message-ID: <f581c3d25a270801de35b7d0380cbd13c4c4a131.camel@irl.hu>
+Subject: Re: [PATCH] Fixed ideapad-laptop driver to support Yoga 9 2 in 1
+ 14imh9 unknown keys
+From: Gergo Koteles <soyer@irl.hu>
+To: Ike Panhc <ike.pan@canonical.com>,
+  =?UTF-8?Q?Ga=C5=A1per?= Nemgar <gasper.nemgar@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Date: Fri, 14 Mar 2025 12:52:39 +0100
+In-Reply-To: <4f1d9817-60b1-433d-b7a8-f37057e0980a@canonical.com>
+References: <20250313151744.34010-1-gasper.nemgar@gmail.com>
+	 <4f1d9817-60b1-433d-b7a8-f37057e0980a@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: "Alexey Gladkov (Intel)" <legion@kernel.org>
+Hi Ga=C5=A1per,
 
-Document the new testing ABI of TDX module. Currently, there is no
-reliable user interface within the guest as well as on the host system.
+On 3/13/25 23:17, Ga=C5=A1per Nemgar wrote:
+>  	/* Specific to some newer models */
+>  	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+>  	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
+> +	/*Star- (User Asignable Key)*/
 
-Signed-off-by: Alexey Gladkov (Intel) <legion@kernel.org>
----
- .../ABI/testing/sysfs-hypervisor-tdx          | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-hypervisor-tdx
+Asignable -> Assignable?
+Could you please add a space before/after the body of the comment?
 
-diff --git a/Documentation/ABI/testing/sysfs-hypervisor-tdx b/Documentation/ABI/testing/sysfs-hypervisor-tdx
-new file mode 100644
-index 000000000000..5ee33cdc59ef
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-hypervisor-tdx
-@@ -0,0 +1,50 @@
-+What:		/sys/hypervisor/tdx/version/major
-+Date:		March 2025
-+KernelVersion:	v6.15
-+Contact:	linux-coco@lists.linux.dev
-+Description:	(RO) Report the major version of the loaded TDX module.
-+
-+What:		/sys/hypervisor/tdx/version/minor
-+Date:		March 2025
-+KernelVersion:	v6.15
-+Contact:	linux-coco@lists.linux.dev
-+Description:	(RO) Report the major version of the loaded TDX module.
-+
-+What:		/sys/hypervisor/tdx/version/update
-+Date:		March 2025
-+KernelVersion:	v6.15
-+Contact:	linux-coco@lists.linux.dev
-+Description:	(RO) Report the update version of the loaded TDX module.
-+		Not available on the guest side.
-+
-+What:		/sys/hypervisor/tdx/properties/build_num
-+Date:		March 2025
-+KernelVersion:	v6.15
-+Contact:	linux-coco@lists.linux.dev
-+Description:	(RO) Reports the build number of the loaded TDX module.
-+		Not available on the guest side.
-+
-+What:		/sys/hypervisor/tdx/properties/build_date
-+Date:		March 2025
-+KernelVersion:	v6.15
-+Contact:	linux-coco@lists.linux.dev
-+Description:	(RO) Reports the build data of loaded TDX module in yyyymmdd
-+		BCD format (each digit occupies 4 bits).
-+		Not available on the guest side.
-+
-+What:		/sys/hypervisor/tdx/properties/features0
-+Date:		March 2025
-+KernelVersion:	v6.15
-+Contact:	linux-coco@lists.linux.dev
-+Description:	(RO) Reports the features supported by the loaded TDX module in
-+		hex format. Enumerates TDX features:
-+
-+			=========   ===================================
-+			Bit 0       TD Migration
-+			Bit 1       TD Preserving
-+			Bit 2       Service TD
-+			Bit 3       TDG.VP.RD/WR
-+			Bit 4       Relaxed mem management concurrency
-+			Bits 63:5   Reserved, set to 0
-+			=========   ===================================
-+
--- 
-2.48.1
+> +	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+
+Other Ideapads map this star key to KEY_FAVORITES, for consistency I
+think it would be better if this one mapped there too.
+
+Thanks,
+Gergo
+
 
