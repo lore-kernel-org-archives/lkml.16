@@ -1,104 +1,86 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D3F1F957;
-	Fri, 14 Mar 2025 17:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEAE1F957;
+	Fri, 14 Mar 2025 17:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741972701; cv=none; b=MooGpjA3vWaXmWWjNDmP1+JVuU9R7oRHo+8elmCrj8HDKJFF3SYKn5zmmJ6siNJPF76KxtLaKyhZbkf1xHJUwmREN9tPnPhwTZFXmKznuuzzBPg3W9vez5B0rALLBKcBjcR5hR4jU+7aq1Ak9vT39NQllyJX9bOpou2zlIRjWfk=
+	t=1741972733; cv=none; b=glxzpyBiQdNpUBANa72jpe8rG/LIwcQZSQaPh/3C//pl3ex7049zl1wO/+KIhDbKebdZC0/lUJyaH5qhRWNX8GPezNzx60ZkUkzpITHqckzdzrwffa+tVwmiTUs4mfjVh5fg23CmncXxtwmXZwN8CXfgnPmCXfr8clDYbNLp5WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741972701; c=relaxed/simple;
-	bh=+RX0bOfB5Qz+vXOyHXihEQwKeBSuvgq5jV37rXdBC3I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pGywFh70bVZd2zohQypDViXVe/aUD5vYbkxB2YY9hs/XszfiCUCJnK95MdjWJty+MYQThKd9Xte2HH3Wpj/pjx8+8wvVXPtcW5er7DeICYKa/mDQ1hipAiq31uUybXQ7TZA44Xe0RNCptWEQ+91F3+4umR/Zl6SXaEZofpFBZEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=wSXERhUB; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1741972733; c=relaxed/simple;
+	bh=jwQ64MtOlfFBI+IjDiKt86Qngy4C9Fb/Ty8mzXTGGQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nNOVjnRdnGE376SE2x21v+oZN0uzaJOYotqZsOKomphuGMGTH/j2p9cqax69hEj96KXmI0gem77/EdqUa0HOyX73xnaDevSIXOw2V3NP9t7onudvBjrBOSI0G5PlJDw2ckVFSmkrreIXh345hcZOeuR078r6233PIjFwaczsyT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ug36oap8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="wSXERhUB"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EF5B59008213;
-	Fri, 14 Mar 2025 13:17:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=itgvC/ZWz2LcGv939LwDGD3Mr24
-	JIPo7vS7Eob/K9/o=; b=wSXERhUBNUxJALFMyN2UZK7s/+QnUVcW4/+qZTehCDH
-	YZ0b7sDEvqwF6EO/0l5yb7mLUvFnWADxbfGr7SND0zFhnJArPKmF9/FISysjCjhF
-	oC3xpAJVlZ8y95yxFnRzQHs9M/1+Y+qZa1+C4y2ze2fRlqd2xhg2tEOYFE2P0qxX
-	78XthnNUw5tH4xdjRVAoaJQy3ruXJMySlzOXtwmRwSf0ObgXgMFm6Mzmz7OM2hbb
-	aY1Vl8Fdofd8KkwfFb7f9SVsvKBBfLPoyJLg4FvAdPHbSJGMh5oMk7iSJ0h0X2+f
-	PTHDMFctY4MDlq2CYgu0j0OXr/5etjDJ5aEC/E2ITmQ==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45cpsq0gh2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 13:17:50 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 52EHHnsu018752
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 14 Mar 2025 13:17:49 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 14 Mar
- 2025 13:17:49 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 14 Mar 2025 13:17:49 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 52EHHUwA004983;
-	Fri, 14 Mar 2025 13:17:33 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <corbet@lwn.net>, <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v1 0/4] iio: adc: ad4000: Add SPI offload support
-Date: Fri, 14 Mar 2025 14:17:26 -0300
-Message-ID: <cover.1741970538.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ug36oap8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 118D8C4CEE3;
+	Fri, 14 Mar 2025 17:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741972732;
+	bh=jwQ64MtOlfFBI+IjDiKt86Qngy4C9Fb/Ty8mzXTGGQA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ug36oap8ubQfJ1sGvi+JdyPFDXeHZykDoiXdoZ60VmVEYs4r0XIATWkgIjzI5olIO
+	 Y/4+g+4kLqUPb2BDrsvcQKLyhBUMM8qi5KF0pDLcAS7mWz7fd5+INlySDsfni6cW18
+	 /Dw2o8FQDnEiAhFh8Wbp3x23JoXAzj5p6O5bYHnUetNJg4W1GFwas3F2t/NRuO4Vpt
+	 yFflMQbkZY7ju2gnQR1CXJaOlBYaHvD3qJACwQc2iGa8Tlm0bCvANPcplAvH7RmN58
+	 WC0HnYrzmi2LM4rub6xLgcmrqKdW/valTcn8tI4/E+ao04eZxYTQH2/fgioyhSuz4r
+	 +02t5soX7BzPg==
+Date: Fri, 14 Mar 2025 14:18:49 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Howard Chu <howardchu95@gmail.com>, Andi Kleen <ak@linux.intel.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Anne Macedo <retpolanne@posteo.net>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf machine: Factor creating a "live" machine
+ out of dwarf-unwind
+Message-ID: <Z9Rk-YdoK-fK_62d@x1>
+References: <20250313052952.871958-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: qiFi1hf3DUiEoMes5Fh_ORWzUr5Y2TiN
-X-Authority-Analysis: v=2.4 cv=HawUTjE8 c=1 sm=1 tr=0 ts=67d464be cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=Vs1iUdzkB0EA:10 a=LW6Ksy-oGqye9MjSVIYA:9
-X-Proofpoint-ORIG-GUID: qiFi1hf3DUiEoMes5Fh_ORWzUr5Y2TiN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_06,2025-03-14_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- clxscore=1015 adultscore=0 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 mlxscore=0 malwarescore=0 phishscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503140135
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313052952.871958-1-irogers@google.com>
 
-This patch series extends the ad4000 driver to support SPI offloading.
-In addition to that, ad4000 IIO documentation is expanded to:
-- list PulSAR parts supported by the ad4000 driver.
-- describe some characteristics of AD4000 IIO device.
-- describe changes when SPI offload is being used.
+On Wed, Mar 12, 2025 at 10:29:51PM -0700, Ian Rogers wrote:
+> Factor out for use in places other than the dwarf unwinding tests for
+> libunwind.
 
-The proposed changes were tested with AD7687 and ADAQ4003 on CoraZ7 setup
-running Linux built from IIO testing branch.
+Testing with another patchset being reviewed/tested, seems to work, if
+it showed the line number would be even better!
 
-Marcelo Schmitt (4):
-  iio: adc: ad4000: Add support for SPI offload
-  Documentation: iio: ad4000: Add new supported parts
-  Documentation: iio: ad4000: Add IIO Device characteristics section
-  Documentation: iio: ad4000: Describe offload support
+I'll continue working on that other case with this applied just before
+that series and finally will give my Tested-by.
 
- Documentation/iio/ad4000.rst |  81 +++++-
- drivers/iio/adc/Kconfig      |   7 +-
- drivers/iio/adc/ad4000.c     | 519 +++++++++++++++++++++++++++++------
- 3 files changed, 517 insertions(+), 90 deletions(-)
+- Arnaldo
 
-
-base-commit: af94f401e26f686f7391ce79b38a6129417c22dc
-prerequisite-patch-id: 3d517eef53a799adba5922815fe684b913e36773
--- 
-2.47.2
-
+root@number:~# perf trace -e landlock_add_rule perf test -w landlock
+perf: Segmentation fault
+    #0 0x5be81d in dump_stack perf[5be81d]
+    #1 0x5be879 in sighandler_dump_stack perf[5be879]
+    #2 0x7f313d24efd0 in __restore_rt libc.so.6[40fd0]
+    #3 0x491bc1 in cmd_trace perf[491bc1]
+    #4 0x497090 in run_builtin perf.c:0
+    #5 0x4973ab in handle_internal_command perf.c:0
+    #6 0x413483 in main perf[413483]
+    #7 0x7f313d238088 in __libc_start_call_main libc.so.6[2a088]
+    #8 0x7f313d23814b in __libc_start_main@@GLIBC_2.34 libc.so.6[2a14b]
+    #9 0x413ad5 in _start perf[413ad5]
+Segmentation fault (core dumped)
+root@number:~#
