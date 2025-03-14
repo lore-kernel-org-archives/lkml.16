@@ -1,162 +1,214 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADF41DF963
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F2B1E5B95;
+	Fri, 14 Mar 2025 11:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741952651; cv=none; b=PS9RXiNEtfrW1/7ZVDytPZOQlW2K5HYi6Fi12azkoQRNYX7UcmIaQfnlcrqOHrHoEpkvsf2lFhOiEYz5RhaVsjqLBK99XBM26q2dyhz7NsFuQaRe1JFT2FFALyghE+A4NrjuTvjfc7c83wzlW8bXDkS8aD/8ZYtxgSuHcMEihso=
+	t=1741952680; cv=none; b=Y4ZPP+y2EC7g51w/Ssz2i4yE8vHSQj/wHZpfFFWpsmjsCo5+/avn3T2HsK/3XvQBT3gO34MCiyTDqcjXitRblEyKmgL5qMd9vhTAXI0tYjfLOrYwLyxzjDQ0llQ6ygNhaxQQK8DdcWJyqLwiFVtpVTdPiuab3SaRatu4HzffZrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741952651; c=relaxed/simple;
-	bh=k3VquhwGBzj/qmce5+dPovhxa6xW5DKGhqNFIz459Pw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HIq4skcIWvE+8ckNYDtGrPF27BdMH97fYmwCG2pQfJlUWIMePaZmnrWPGYaATbTb+wMgn5o1l3MsOR9xtDZivbqNIHV3WO6g0Ams7nVWUbDW8WkIkzwoGr7lySwCMk7o+UHT+iutdIDHHuCBWNaIchRLg4vEY2ou8ZSjP8aYPNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=fKRJZn8O; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1741952680; c=relaxed/simple;
+	bh=si/W3rEWH897DB0tuptSznUTonegIlQbTQX/UsPHkw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A0c1RkJHHD9WmxSU6DYRERSIAXstqrIzK1S7uND/5Ob+2XiEgtzr07TjRFdVRGvDmFe2MwcwZRJeNTtgvmyGZHbQgjnSS7q7V2GYeOzRynANCeu2upSSBkp2lgEBzmK4LkRk40QNSfTIf4D813Qn/5G3Qc09dOYXWahCZisp5Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XAOPpJvC; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="fKRJZn8O"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3912c09be7dso1331102f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 04:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1741952647; x=1742557447; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yNXP4301/EYAJtyOh9G36QhlKo8rLTXV/iJ66ebNv0k=;
-        b=fKRJZn8O5LWILPL61QJWy9PcxsKvfPy7Vy3XP94utIj0okxdSdAuFC/A/Gu54GYAIT
-         W+MWYhJdrxU88ULgbjBEfyDOigvxGPg5J3GFoNCpValNaUjLNun4tXjmOUfuTN0dzvxH
-         7by+9njDjWaSLHhi0I1q5vm4Y13ziVqzdU8LbKSJc1dtoB2Y53oxOvz38z59sLyBnwJM
-         AQKfPNUirYs4PBoeCWd9uffKuQPegE3TJnL8RDzDOzmf/9hDWAO2XwUGco6+ySHK9vGb
-         WDylJrV4EqjG1qDQQ3lRLDguRb+wR7PB4i8Wzf4s+RBDERDY71Cc6KGc5Gdp/WbitUvG
-         EApw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741952647; x=1742557447;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yNXP4301/EYAJtyOh9G36QhlKo8rLTXV/iJ66ebNv0k=;
-        b=omZ/ERJ2F5rBe/Vs6keA6OzrGjgCFtjz3ljz9GEfbfJTwha0p0Ho4jrdTJPsERCqMl
-         I6PtJRctDOtBnKNB1ud0OT4Dggf/7mwJGS92tw4jDtNMjGGTC2jfiiIq1YTOIl++iG3A
-         mGnPPjRVNZWDKjcixfkE612Ht/0K/Nyey232g3wZ8jf7aSCxRtwUFIC8FjirsD0wmus8
-         avKVU35cTUOQU5CB6aox5YvCCNObrZi/FzWVS4zYD4vfKuszoh4esji5n/2+LmPUzdnX
-         dAe4nAm0zIqfgCGWyvFRecmi8VXqlPqvZh6l1UVmF0kqLGqEs6Ug/hXq8aMZWHVlGnI6
-         gagQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3Lneq4eQWmZQ+1sE2vl9EpZJPtikwHHvJ9vpIGoYQrKkFsGau8V4bid+gaApVNXz1KIueEQ9CyrG3OAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2o0TWF3qSPpjeoZzEaX15uwD7WJfJYxKHgC+qpCmKuhSkxttz
-	FIAK6nEA+TEuM1jHlSBIoWpbQTzddTISp21LpfF1uNVJicxIoHVDXHkCv0HfvXE=
-X-Gm-Gg: ASbGncvN2x0NogEE75XlZ69xGZVv5L3Lh62iWF9U/vWwC8+iTW7UcqNx7Y+9RNlfSkM
-	l/oopUrLoqjHmAuR4bE2PbBYXfP2OIzDSrs2zFRdpFFMHnRQ6oHu728a5KFkC3Uy5j2Wa47ZGRN
-	fnNhNx3v7dzMIUhOT1WYdCCW9c0GxOrsTU9C/BPTIT8IVU1/McHMZKUa0Y+iHtS62N0h5Odd4E6
-	axtofguGs/ijoI1LjjTqKKSzj7i7Orzeb4AiZmb4R6AKYiT/6eFFwb7cSYO8uy+AtTnk/loJlkR
-	KOzzMTbUrt31RrFfKYLZquI00osIZ5akGbVM8ZthvWbjpous3sMpk+cin32Q10QASrA/GBx2U+8
-	jh37ypJoSuHVsjA==
-X-Google-Smtp-Source: AGHT+IF+PcMLniUgUw+7z04HFQAwTiKLbHivzVvB0Zh2bIees9zyWsKr40uUY0pHyf5dEv8vx5Q9WQ==
-X-Received: by 2002:a5d:5f49:0:b0:390:fb37:1bd with SMTP id ffacd0b85a97d-3971f7f8fccmr2700791f8f.46.1741952647046;
-        Fri, 14 Mar 2025 04:44:07 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b6a32sm5420094f8f.33.2025.03.14.04.44.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Mar 2025 04:44:06 -0700 (PDT)
-Message-ID: <1942580f-cd67-4ddd-b489-0532f95c1ef2@rivosinc.com>
-Date: Fri, 14 Mar 2025 12:44:05 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XAOPpJvC"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EBXdVR032452;
+	Fri, 14 Mar 2025 11:44:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=f7wJvJUszs66a4IwCFK7QQJA6hcRmp
+	s5Qbe3WXt582Q=; b=XAOPpJvC1AKJ26b3rRPk6oj/LHdxmrRdJYetuJn9IvSgNh
+	oWeGSTwabCmQlVZ1pl4S+yPPcAlPD7udo9sRajJ2nuB5lLM6+easRfuRVio/sC3K
+	3bSenkCiNvD4gDcoTdDdkIzttlspLvm6ILUygoCge4lKDa5mAQ8Y3KBQrNVoEOBE
+	SV6dWuIuGGSiZEjc3YnGnXLAbF8cFq/QCe8DByLqllV2437DO4PCom8HuQE0yuEI
+	8g0GHPI2iHN9mw/UW/pYihQzUqQXb0DdvcxRozyw7BLUAa6YkYVA0nph/X4fgf8W
+	q59GP/6+HqFsmlxE9qoOO2dLmW9ijb7jloknFBkQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45c6hpudfe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 11:44:27 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52EBiRqY016764;
+	Fri, 14 Mar 2025 11:44:27 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45c6hpudfc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 11:44:27 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52E8VUXf015380;
+	Fri, 14 Mar 2025 11:44:26 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45atsppq4c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 11:44:26 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52EBiOhL45809980
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Mar 2025 11:44:24 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A857A20043;
+	Fri, 14 Mar 2025 11:44:24 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AD69C20040;
+	Fri, 14 Mar 2025 11:44:22 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.39.24.194])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 14 Mar 2025 11:44:22 +0000 (GMT)
+Date: Fri, 14 Mar 2025 17:14:20 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>,
+        Baokun Li <libaokun1@huawei.com>,
+        Ritesh Harjani <ritesh.list@gmail.com>, linux-kernel@vger.kernel.org,
+        Mahesh Kumar <maheshkumar657g@gmail.com>
+Subject: Re: [PATCH v3 2/3] ext4: avoid journaling sb update on error if
+ journal is destroying
+Message-ID: <Z9QWlMFQl9oL9Zen@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <cover.1741938027.git.ojaswin@linux.ibm.com>
+ <b8e529f340a9c25c270a77733c79ffc590a9935c.1741938027.git.ojaswin@linux.ibm.com>
+ <2ptbzrdbw2ttnd2ik5y4qq5py7ho7kusescdhtfzwg4ft7ldgs@qnkbcdoxvpfs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/17] riscv: misaligned: use on_each_cpu() for scalar
- misaligned access probing
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kselftest@vger.kernel.org, Samuel Holland <samuel.holland@sifive.com>
-References: <20250310151229.2365992-1-cleger@rivosinc.com>
- <20250310151229.2365992-6-cleger@rivosinc.com>
- <20250313-311b94f9bafe73bcd41158a1@orel>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250313-311b94f9bafe73bcd41158a1@orel>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ptbzrdbw2ttnd2ik5y4qq5py7ho7kusescdhtfzwg4ft7ldgs@qnkbcdoxvpfs>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: obPM_2rq86sltTex7_t5ldC1PINA_Oig
+X-Proofpoint-ORIG-GUID: In6SYCBXjhjivbnHEm3vfMAYW1BONzrT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-14_04,2025-03-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 clxscore=1015 spamscore=0
+ phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503140091
 
-
-
-On 13/03/2025 13:57, Andrew Jones wrote:
-> On Mon, Mar 10, 2025 at 04:12:12PM +0100, Clément Léger wrote:
->> schedule_on_each_cpu() was used without any good reason while documented
->> as very slow. This call was in the boot path, so better use
->> on_each_cpu() for scalar misaligned checking. Vector misaligned check
->> still needs to use schedule_on_each_cpu() since it requires irqs to be
->> enabled but that's less of a problem since this code is ran in a kthread.
->> Add a comment to explicit that.
->>
->> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->> ---
->>  arch/riscv/kernel/traps_misaligned.c | 9 +++++++--
->>  1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
->> index 90ac74191357..ffac424faa88 100644
->> --- a/arch/riscv/kernel/traps_misaligned.c
->> +++ b/arch/riscv/kernel/traps_misaligned.c
->> @@ -616,6 +616,11 @@ bool check_vector_unaligned_access_emulated_all_cpus(void)
->>  		return false;
->>  	}
->>  
->> +	/*
->> +	 * While being documented as very slow, schedule_on_each_cpu() is used
->> +	 * since kernel_vector_begin() expects irqs to be enabled or it will panic().
+On Fri, Mar 14, 2025 at 11:10:40AM +0100, Jan Kara wrote:
+> On Fri 14-03-25 13:14:10, Ojaswin Mujoo wrote:
+> > Presently we always BUG_ON if trying to start a transaction on a journal marked
+> > with JBD2_UNMOUNT, since this should never happen. However, while ltp running
+> > stress tests, it was observed that in case of some error handling paths, it is
+> > possible for update_super_work to start a transaction after the journal is
+> > destroyed eg:
+> > 
+> > (umount)
+> > ext4_kill_sb
+> >   kill_block_super
+> >     generic_shutdown_super
+> >       sync_filesystem /* commits all txns */
+> >       evict_inodes
+> >         /* might start a new txn */
+> >       ext4_put_super
+> > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
+> >         jbd2_journal_destroy
+> >           journal_kill_thread
+> >             journal->j_flags |= JBD2_UNMOUNT;
+> >           jbd2_journal_commit_transaction
+> >             jbd2_journal_get_descriptor_buffer
+> >               jbd2_journal_bmap
+> >                 ext4_journal_bmap
+> >                   ext4_map_blocks
+> >                     ...
+> >                     ext4_inode_error
+> >                       ext4_handle_error
+> >                         schedule_work(&sbi->s_sb_upd_work)
+> > 
+> >                                                /* work queue kicks in */
+> >                                                update_super_work
+> >                                                  jbd2_journal_start
+> >                                                    start_this_handle
+> >                                                      BUG_ON(journal->j_flags &
+> >                                                             JBD2_UNMOUNT)
+> > 
+> > Hence, introduce a new mount flag to indicate journal is destroying and only do
+> > a journaled (and deferred) update of sb if this flag is not set. Otherwise, just
+> > fallback to an un-journaled commit.
+> > 
+> > Further, in the journal destroy path, we have the following sequence:
+> > 
+> >   1. Set mount flag indicating journal is destroying
+> >   2. force a commit and wait for it
+> >   3. flush pending sb updates
+> > 
+> > This sequence is important as it ensures that, after this point, there is no sb
+> > update that might be journaled so it is safe to update the sb outside the
+> > journal. (To avoid race discussed in 2d01ddc86606)
+> > 
+> > Also, we don't need a similar check in ext4_grp_locked_error since it is only
+> > called from mballoc and AFAICT it would be always valid to schedule work here.
+> > 
+> > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
+> > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
+> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
 > 
-> which expects
-
-Hum that would yield the following:
-
-"schedule_on_each_cpu() is used since kernel_vector_begin() that is
-called inside the vector code 'which' expects irqs to be enabled or it
-will panic()." which seems wrong as well.
-
-I guess something like this would be better:
-
-"While being documented as very slow, schedule_on_each_cpu() is used
-since kernel_vector_begin() expects irqs to be enabled or it will panic()"
-
-Thanks,
-
-Clément
-
+> Mostly looks good. Couple of small comments below:
 > 
->> +	 */
->>  	schedule_on_each_cpu(check_vector_unaligned_access_emulated);
->>  
->>  	for_each_online_cpu(cpu)
->> @@ -636,7 +641,7 @@ bool check_vector_unaligned_access_emulated_all_cpus(void)
->>  
->>  static bool unaligned_ctl __read_mostly;
->>  
->> -static void check_unaligned_access_emulated(struct work_struct *work __always_unused)
->> +static void check_unaligned_access_emulated(void *arg __always_unused)
->>  {
->>  	int cpu = smp_processor_id();
->>  	long *mas_ptr = per_cpu_ptr(&misaligned_access_speed, cpu);
->> @@ -677,7 +682,7 @@ bool check_unaligned_access_emulated_all_cpus(void)
->>  	 * accesses emulated since tasks requesting such control can run on any
->>  	 * CPU.
->>  	 */
->> -	schedule_on_each_cpu(check_unaligned_access_emulated);
->> +	on_each_cpu(check_unaligned_access_emulated, NULL, 1);
->>  
->>  	for_each_online_cpu(cpu)
->>  		if (per_cpu(misaligned_access_speed, cpu)
->> -- 
->> 2.47.2
->>
+> > --- a/fs/ext4/ext4.h
+> > +++ b/fs/ext4/ext4.h
+> > @@ -1179,6 +1179,7 @@ struct ext4_inode_info {
+> >  #define	EXT4_ERROR_FS			0x0002	/* Errors detected */
+> >  #define	EXT4_ORPHAN_FS			0x0004	/* Orphans being recovered */
+> >  #define EXT4_FC_REPLAY			0x0020	/* Fast commit replay ongoing */
+> > +#define EXT4_JOURNAL_DESTORY		0x0040	/* Journal is in process of destroying */
 > 
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> This should be defined as part of the following enum:
+> 
+> /*
+>  * run-time mount flags
+>  */
+> enum {
+>         EXT4_MF_MNTDIR_SAMPLED,
+>         EXT4_MF_FC_INELIGIBLE   /* Fast commit ineligible */
+> };
 
+Right, I'll fix that
+> 
+> Also you have a typo in the flag name. I guess it should be
+> EXT4_MF_JOURNAL_DESTROY.
+
+I ended up making the same typo as before :) 
+> 
+> > @@ -4957,8 +4961,6 @@ static int ext4_load_and_init_journal(struct super_block *sb,
+> >  	return 0;
+> >  
+> >  out:
+> > -	/* flush s_sb_upd_work before destroying the journal. */
+> > -	flush_work(&sbi->s_sb_upd_work);
+> >  	ext4_journal_destroy(sbi, sbi->s_journal);
+> >  	return -EINVAL;
+> >  }
+> > @@ -5648,8 +5650,6 @@ failed_mount8: __maybe_unused
+> >  	sbi->s_ea_block_cache = NULL;
+> >  
+> >  	if (sbi->s_journal) {
+> > -		/* flush s_sb_upd_work before journal destroy. */
+> > -		flush_work(&sbi->s_sb_upd_work);
+> >  		ext4_journal_destroy(sbi, sbi->s_journal);
+> >  	}
+> >  failed_mount3a:
+> 
+> These are good. I would also move the flush_work() in ext4_put_super()
+> into else branch of:
+> 
+> 	if (sbi->s_journal)
+
+Right I thought of that but then let it be for simplicity. But sure I'll
+add this in the next revision.
+
+Thanks for the review Jan.
+> 
+> 								Honza
+> 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
