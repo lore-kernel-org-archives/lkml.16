@@ -1,112 +1,54 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9EB1624D5;
-	Fri, 14 Mar 2025 07:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833E119D06A;
+	Fri, 14 Mar 2025 07:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741938641; cv=none; b=gkWkzsuEbn4c5HVgTy0sakw2qeX3PGxzlxFIf8h2u5c8zARAqr0g5yuHt5n/761BNvgLS53OXxrpzGsyaBfMj8ckxxu7NzWroF2vMsMkxjMKL6dEUy9q8qssc30AL6h3J4VSb2MMNvFJP+kf8bto7i6KnW6wODEHQdIQejcW5RQ=
+	t=1741938642; cv=none; b=CSF1gsXPqUqWrC2Dn0rRCC7gHYIogdO5hScW2Htj9XdDybYdvWvthYMXRYS0jg65o8W/Q9VkDBGMDT2fXlYjOuJaRY3Mp/gC624n3IxY3GvbL3+3QvBwSQIZqrdztcdTJI1DoM+DQSsaL8zB1F97H8WGb8vaVEV0RV6BRbDQNEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741938641; c=relaxed/simple;
-	bh=aQjXEQ8xTAoz6zWYVXh6uFmAGtClnkdA6dbM3mcyPy8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ugdq3DVc2KPOsk8/lLxPqTHw1gpEmY0nCN++uEIY9l5L8MiMTe0XZuLJeTqBY82UmcTNHzP6Zu4tGKjLJOu+DlwESuRCH89a7Lc1jOZlJOFgig6PPAJ2lQb2+JZ75+TS6jscdTDwk16Wlb1yD5nRmFFyRmsu/yOfWZWbIrKALzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=ENDL1+us; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1741938642; c=relaxed/simple;
+	bh=My0VdKrSEOPLa4gBGlIMgdJzO1L3iy3brX9NlIYPvC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KDwGxV4/W84jWwVwoWMdfk4xqw/SCBec4c0tPaTo7+K0pf7lL4Qn6XifCklnNVRmCbVrBIrKcSwcTknSN1fm3+0snQLHPArmjrJt/WA3PEz3zzwz2USKdgcantPJla1did6RFMYPeSy4S8Cvx7blRl6MdftJNXfoRY8Sr+/URGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=r/rCDGnp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="ENDL1+us"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 52E7oLnY52715804, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1741938622; bh=aQjXEQ8xTAoz6zWYVXh6uFmAGtClnkdA6dbM3mcyPy8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type;
-	b=ENDL1+usaXRcc+/bPZQxCa0swY6Jt79PI4VEuFY0U0bm1idnCuZOa149iy2ujr76d
-	 BDgSSU4uKIpZ3gRvF1tcNU8Y9B6SeZA3XjiY8dfzbzU8f8IJ4GWpS7lEnbUnIBYIhJ
-	 aaH1QHORFvXbJm+Sv0n/iUHc5JV7deulp5Y2HWOF14kWaiy1j5p0zyx2ikhtS85AvR
-	 tPazZ6Lwrn5m3fc1Edx2v545aU2IBxIiqkbA6J8NaQKGJaTEyVG//ML1cZNkX0MBFn
-	 Sg2NM/gjrGPdfmCuaP9lic4lpuYQY0iWRs3KywDMWLJ8zPAUHVYm+//pzaGh3UmIGw
-	 M1JZhiLKS2mLg==
-Received: from RS-EX-MBS2.realsil.com.cn ([172.29.17.102])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 52E7oLnY52715804
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 14 Mar 2025 15:50:21 +0800
-Received: from RSEXDAG02.realsil.com.cn (172.29.17.196) by
- RS-EX-MBS2.realsil.com.cn (172.29.17.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.11; Fri, 14 Mar 2025 15:50:21 +0800
-Received: from RSEXH36502.realsil.com.cn (172.29.17.3) by
- RSEXDAG02.realsil.com.cn (172.29.17.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 14 Mar 2025 15:50:21 +0800
-Received: from 172.29.32.27 (172.29.32.27) by RSEXH36502.realsil.com.cn
- (172.29.17.3) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Fri, 14 Mar 2025 15:50:20 +0800
-From: ChunHao Lin <hau@realtek.com>
-To: <hkallweit1@gmail.com>, <nic_swsd@realtek.com>, <andrew+netdev@lunn.ch>,
-        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        ChunHao Lin
-	<hau@realtek.com>
-Subject: [PATCH net-next 2/2] r8169: disable RTL8126 ZRX-DC timeout
-Date: Fri, 14 Mar 2025 15:50:13 +0800
-Message-ID: <20250314075013.3391-3-hau@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250314075013.3391-1-hau@realtek.com>
-References: <20250314075013.3391-1-hau@realtek.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="r/rCDGnp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A685AC4CEEC;
+	Fri, 14 Mar 2025 07:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741938641;
+	bh=My0VdKrSEOPLa4gBGlIMgdJzO1L3iy3brX9NlIYPvC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r/rCDGnpFWMGCUYJqfrvFhcq9lNBr8E0sCuzexykRadyPmhNUIQvJDJu5Pa4RrQEt
+	 K7m3jD3OFj91sbNP44zdT2r7Pos+nDt25JKvPgd2c8kRGZeqmoGpRx8rB5WvVSRCOo
+	 q+EPBeMjNfMKHvyGnDqBPN9DTCUHxoI7FCEIKPFg=
+Date: Fri, 14 Mar 2025 08:44:05 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] USB-serial device ids for 6.14-rc7
+Message-ID: <2025031458-mounted-linguini-264b@gregkh>
+References: <Z9PW5tkuTH6oRG6X@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9PW5tkuTH6oRG6X@hovoldconsulting.com>
 
-Disable it due to it dose not meet ZRX-DC specification. If it is enabled,
-device will exit L1 substate every 100ms. Disable it for saving more power
-in L1 substate.
+On Fri, Mar 14, 2025 at 08:12:38AM +0100, Johan Hovold wrote:
+> The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
+> 
+>   Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git tags/usb-serial-6.14-rc7
 
-Signed-off-by: ChunHao Lin <hau@realtek.com>
----
- drivers/net/ethernet/realtek/r8169_main.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Pulled and pushed out, thanks.
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 3c663fca07d3..dfc96b09b85e 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -2852,6 +2852,21 @@ static u32 rtl_csi_read(struct rtl8169_private *tp, int addr)
- 		RTL_R32(tp, CSIDR) : ~0;
- }
- 
-+static void rtl_disable_zrxdc_timeout(struct rtl8169_private *tp)
-+{
-+	struct pci_dev *pdev = tp->pci_dev;
-+	u8 val;
-+
-+	if (pdev->cfg_size > 0x0890 &&
-+	    pci_read_config_byte(pdev, 0x0890, &val) == PCIBIOS_SUCCESSFUL &&
-+	    pci_write_config_byte(pdev, 0x0890, val & ~BIT(0)) == PCIBIOS_SUCCESSFUL)
-+		return;
-+
-+	netdev_notice_once(tp->dev,
-+		"No native access to PCI extended config space, falling back to CSI\n");
-+	rtl_csi_write(tp, 0x0890, rtl_csi_read(tp, 0x0890) & ~BIT(0));
-+}
-+
- static void rtl_set_aspm_entry_latency(struct rtl8169_private *tp, u8 val)
- {
- 	struct pci_dev *pdev = tp->pci_dev;
-@@ -3824,6 +3839,7 @@ static void rtl_hw_start_8125d(struct rtl8169_private *tp)
- 
- static void rtl_hw_start_8126a(struct rtl8169_private *tp)
- {
-+	rtl_disable_zrxdc_timeout(tp);
- 	rtl_set_def_aspm_entry_latency(tp);
- 	rtl_hw_start_8125_common(tp);
- }
--- 
-2.43.0
-
+greg k-h
