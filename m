@@ -1,89 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DC01E521B;
-	Fri, 14 Mar 2025 08:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F661DAC81;
+	Fri, 14 Mar 2025 08:58:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741942647; cv=none; b=fneD15ZjOMBATEvTyHlTxr8zO6JX4HiQLbI/l99TbJxyKWESY2Kmi3G4dE0DQ8/UeXoVR5YjqXBRhRO2HQglhFPA+GGcfJSufdAnKiQ91csNSFMmz2v+FMagme7+BLcFoMrDJH60fNUhEZy5HYXDKtciw3KGesqpmEYZs4Ujjhc=
+	t=1741942699; cv=none; b=pe8FeN2QqPLwem7mczTiD6yEJqbvcrRbobFpJ6GVojsQ+baBNZ9Plszl74gRniXakna7DfuQ47pn+KWpMAK+ntjEl6BI6Xkc7SItWw2fGrdS9QNJL/IiMW4TgsDMWeVigmKDVWJIP2QKo7u9FFhspbdgZLvplkOlF4+e0v0B7+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741942647; c=relaxed/simple;
-	bh=2kWg8ACuhQH/LEWr57RRJJKXqDK/UHcHdofX5RooQ2M=;
+	s=arc-20240116; t=1741942699; c=relaxed/simple;
+	bh=3mIJSm06YxRGhx1k9fxKkWTTiVXafceuKeP4nRH10+4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BP85SpP/PC7S0K60op3jVfMkum2H6NPZ4nsOLEgPqfUI2hN42IpxF51y9QOmH7WHrQN4NPrxfCnSyEm0tIV52THtcmQnB/bol88fFn8P0Wco22SADDzoCmiMsJwkyLm66FKOItStRAS6jRHFZRBC/1fyiDgC0Lrop/vnkP0AAWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ah133TXp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=sAxYWYiSuNLK2HMcxk9XKQ+QVrwdaS4PfBGhUVDMg2P6F5l5yOUvm5vzdK1Fq+PoLnn/7yKVyXxPBMlkj/jQhZ/m6/SpdBCb/KoJ5c98JuLAywQH9xR/xLAYTnWYnBMNvIUgalR8+6lAQ4+70bDmPYD3S4fEwyxpFmbwmRWyAU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oH2SDzvC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ah133TXp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D86E7C4CEE5;
-	Fri, 14 Mar 2025 08:57:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oH2SDzvC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB311C4CEE5;
+	Fri, 14 Mar 2025 08:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741942646;
-	bh=2kWg8ACuhQH/LEWr57RRJJKXqDK/UHcHdofX5RooQ2M=;
+	s=k20201202; t=1741942699;
+	bh=3mIJSm06YxRGhx1k9fxKkWTTiVXafceuKeP4nRH10+4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ah133TXpFMYw05MybzIuUYMGY86fC3EWq2ZmMtHL4Qu8uMloUHv0Df5nGYRlfVoIF
-	 LsKuz8l836qQ1FoSKi6lwz4BWOZLqb2q2ohy+3KN8gQxSYq0OdX7up/ItLOIbcckgE
-	 vCR2EggZyiRbPSW9GXv+gYIYZ1pbm6xrncgwJJzlOkfPe2gO44RaA+237IbjgASk31
-	 F5LB5Vm/feGYIVQq3o3D6Erzo2sJEgSZ4eLNw+RPgc1PqiRxK4hgCZdX+TMVj5qvf0
-	 qo4anUIEV2WFFQKLz8PqNztWsbF3WvjrKSj5fKhJpCFwlOnJqlIv8SHGHCcg6xfI8T
-	 qw7KaYAJmOwDw==
-Date: Fri, 14 Mar 2025 08:57:22 +0000
-From: Lee Jones <lee@kernel.org>
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [GIT PULL] Immutable branch between MFD and Regulator due for the
- v6.15 merge window
-Message-ID: <20250314085722.GK3645863@google.com>
-References: <20250301-exynos7870-pmic-regulators-v3-0-808d0b47a564@disroot.org>
+	b=oH2SDzvCb26vKBz2jjfDjEUORM/o+zOTu6tdhyp2vSOjmgsv1qaxoUK7CS94utsQf
+	 JDCMZ/2B0RfV9xsoHBETGGm+zCYJERnQZR823z6kpr7y/KlWGUV/qz8UOO4SBxLVsa
+	 XTWQSG2O3c0TD8Pj9G1Tsg44usnZ8wCw+u+R5WhNP18ATlj/+UnHsm8YOo2ehhHjxX
+	 P/3PYzxh8cMHRp9lCClxBKjZODLeridLCryg2lqcr54L+3krFA1ETC2gNRRe11Sr48
+	 6MrSDiET9u0Zz9h1uc795xDyjcNm8GWiTAy+xJ+ZIaNbEd2QbakO06MvoArx2Y6Bbq
+	 1emc8fnLp+pQw==
+Date: Fri, 14 Mar 2025 08:58:15 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>, linux-rtc@vger.kernel.org,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] rtc: Avoid a couple of
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z9Pvp4i4Mm4vAXSA@google.com>
+References: <Z9PpPg06OK8ghNvm@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250301-exynos7870-pmic-regulators-v3-0-808d0b47a564@disroot.org>
+In-Reply-To: <Z9PpPg06OK8ghNvm@kspp>
 
-Enjoy!
+On Fri, Mar 14, 2025 at 07:00:54PM +1030, Gustavo A. R. Silva wrote:
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/rtc/rtc-cros-ec.c:62:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> drivers/rtc/rtc-cros-ec.c:40:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
-
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-regulator-v6.15
-
-for you to fetch changes up to 169cd52fd9445b30379ea6deafa28a260d489699:
-
-  regulator: s2mps11: Add support for S2MPU05 regulators (2025-03-13 12:38:52 +0000)
-
-----------------------------------------------------------------
-Immutable branch between MFD and Regulator due for the v6.15 merge window
-
-----------------------------------------------------------------
-Kaustabh Chakraborty (3):
-      regulator: dt-bindings: add documentation for s2mpu05-pmic regulators
-      mfd: sec: Add support for S2MPU05 PMIC
-      regulator: s2mps11: Add support for S2MPU05 regulators
-
- .../bindings/regulator/samsung,s2mpu05.yaml        |  47 ++++++
- drivers/mfd/sec-core.c                             |  12 ++
- drivers/mfd/sec-irq.c                              |  34 ++++
- drivers/regulator/Kconfig                          |   4 +-
- drivers/regulator/s2mps11.c                        |  92 ++++++++++-
- include/linux/mfd/samsung/core.h                   |   1 +
- include/linux/mfd/samsung/irq.h                    |  44 +++++
- include/linux/mfd/samsung/s2mpu05.h                | 183 +++++++++++++++++++++
- 8 files changed, 414 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/samsung,s2mpu05.yaml
- create mode 100644 include/linux/mfd/samsung/s2mpu05.h
-
--- 
-Lee Jones [李琼斯]
-
+Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
