@@ -1,110 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FF515853B;
-	Fri, 14 Mar 2025 20:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A97F193077;
+	Fri, 14 Mar 2025 20:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741982459; cv=none; b=nbBpXHqopxvmOcKpk8htGTfgviDVKM/1kFcZ3UqfTTwgpHD2XJiLDi5bDuns7zHVg7SJNXvBd2eAHtr1m4vAlO7PwV2jnapdLTemp67qL7wmeCDpGSeX6Mr6hl9/jWV3n7Ay+7lk9OemyvreKtg0zgsoyEj+z+6+6Aup3jgH328=
+	t=1741982485; cv=none; b=qQNlB77eKswnGVH8FLKR85zj5I8lr1Dt6oyIX2uHhCTMRXL+mp6EmqCI6x2JZBnwR4hNdYICzdmwnoNB0gJ2ic9fvWdGlf+pyIRxTKf7z0NzZlLh9W7dUx0ZC/71OVoI/cVZxMe0kFGY9l+DR7jwEh8fCj4j8mgfSbLXox9KdcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741982459; c=relaxed/simple;
-	bh=pHADulFXfIcW9VZiz97dHbF0Kvd8olosf1ztsiboJKU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPEEMYk16/nZNwTi7a5H6W6orFT/geDcgyziSdQuAi+aDANya9ASzSl+3WcHPyaIwdGB2SfgrSoGhIdQFBbhWShn9unvrEKhItLXqV+y+HVJ58+ztZHG16UFaJnNRgZqnULGWsxETbiwbk9X+T/B0AmieKYqdtPAv0WQWslj8fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tU8U7c7o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741982485; c=relaxed/simple;
+	bh=3wZHJtLo5xE0IdV3kasFedRKu0iF2VKw2OoYDYy0390=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EZsff7MpTozyOIcoJSsfinjlGTTMwkeNMz0OaGLjqPHFOf0vMBnBS2J6iNqYUltRw3zUB2LKaVgIkixp/l//88ReqZ2uX28P64BKJaaw8TX8fTEPr6IThx4RSVofGOjIuHSVUcCOufavTDOJh/XfOMqVGbC4FR0a2Ts3vCuw2ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EX4XKH/E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tU8U7c7o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E368BC4CEEC;
-	Fri, 14 Mar 2025 20:00:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EX4XKH/E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368F3C4CEE3;
+	Fri, 14 Mar 2025 20:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741982458;
-	bh=pHADulFXfIcW9VZiz97dHbF0Kvd8olosf1ztsiboJKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tU8U7c7obha1hyRMi/PRTuaGKZVqy2JhOG2HEmAFM5T8fTa5WydDVjVjcsrECSjrO
-	 xN14/AnN6ojdXoWFrWEH8JDpYjMzoq73ZpKBUIlJ+u9t97bwmci5f7XvxIvOxtOyFO
-	 BaLNUXubOKlwdxcqe956r52YaCm9C1O5vhD1DlDXViT6yLiTYZxwzI8R93utotKB8a
-	 XbzNrKsjjzj6jDVfD8MLpAjIN/TX58BKzudw7gQii5Zv3DyW+hBVVcKTXb1yDgbuYo
-	 gp7W/DMA3pw40xxNnFOVidASCSw0P+bJohch/lP6rmcA7cJzun+OFEU5NpkmjrVddI
-	 acxzkP2yMYx6Q==
-Date: Fri, 14 Mar 2025 17:00:55 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Howard Chu <howardchu95@gmail.com>, Andi Kleen <ak@linux.intel.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Anne Macedo <retpolanne@posteo.net>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf machine: Factor creating a "live" machine
- out of dwarf-unwind
-Message-ID: <Z9SK96s4PAp680k6@x1>
-References: <20250313052952.871958-1-irogers@google.com>
- <Z9Rk-YdoK-fK_62d@x1>
+	s=k20201202; t=1741982485;
+	bh=3wZHJtLo5xE0IdV3kasFedRKu0iF2VKw2OoYDYy0390=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EX4XKH/EUe3U5VaBgImsuevSsmJ7wqdRPJJOmwunHYa4WRrgTgSA5jPC8OaH7zWqL
+	 +EKRyU7GMCw3HnkTHXIa9PAkp0FbMKqP6neP9tJoUp5XOT+SCILkGYXBssdKKHzjKu
+	 iCR9pPvLqnH/QxY1grKW7NqOYg1+nAmUic/pzDaAUCBjeLPU62vFcQwg04gkULTgLZ
+	 2cB+b5Ux2DETnal38etVC4RgzpQtm/RxzNzgUo13pcGgfrOpyzYsHpADQ/fIV7/lGi
+	 R7OS63Guf7qIeC8jtBLi3oQv7pTEg8OU9ctqnCxbUAC9JaIVsrmATKFm0rApS8CfPS
+	 DEVk4bNS4lxUQ==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 0/3] arm64: dts: qcom: x1e78100-t14s: Rework devicetree for LCD and OLED SKUs
+Date: Fri, 14 Mar 2025 15:00:41 -0500
+Message-ID: <174198247898.1604753.43826909478233023.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250310141504.3008517-1-abel.vesa@linaro.org>
+References: <20250310141504.3008517-1-abel.vesa@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9Rk-YdoK-fK_62d@x1>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 14, 2025 at 02:18:49PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Mar 12, 2025 at 10:29:51PM -0700, Ian Rogers wrote:
-> > Factor out for use in places other than the dwarf unwinding tests for
-> > libunwind.
-> 
-> Testing with another patchset being reviewed/tested, seems to work, if
-> it showed the line number would be even better!
 
-But it gets the lines, at least in this secoond attempt, after applying
-Namhyungs fix for the previous problem (int16_t):
+On Mon, 10 Mar 2025 16:15:01 +0200, Abel Vesa wrote:
+> The Lenovo Thinkpad T14s Gen6 comes in different SKUs when it comes to
+> panels. The only difference that is important is whether it is an OLED
+> or an LCD. The way that backlight is handled in devicetree between OLED
+> and LCD forces the need of two separate DTBs.
+> 
+> So create a common T14s dtsi that describes everything except the
+> backlight handling, by renaming the existent dts to dtsi. Then make the
+> legacy dts the LCD version, while adding a prepended oled dts. Both
+> include the generic T14s dtsi.
+> 
+> [...]
 
-root@number:~# perf trace -e landlock_add_rule perf test -w landlock
-perf: Segmentation fault
-    #0 0x6698d0 in dump_stack debug.c:355
-    #1 0x66994c in sighandler_dump_stack debug.c:367
-    #2 0x7f784be95fd0 in __restore_rt libc.so.6[40fd0]
-    #3 0x4d0e56 in trace__find_usable_bpf_prog_entry builtin-trace.c:3882
-    #4 0x4cf3de in trace__init_syscalls_bpf_prog_array_maps builtin-trace.c:4040
-    #5 0x4bf626 in trace__run builtin-trace.c:4477
-    #6 0x4bb7a9 in cmd_trace builtin-trace.c:5741
-    #7 0x4d873f in run_builtin perf.c:351
-    #8 0x4d7df3 in handle_internal_command perf.c:404
-    #9 0x4d860f in run_argv perf.c:451
-    #10 0x4d7a4f in main perf.c:558
-    #11 0x7f784be7f088 in __libc_start_call_main libc.so.6[2a088]
-    #12 0x7f784be7f14b in __libc_start_main@@GLIBC_2.34 libc.so.6[2a14b]
-    #13 0x410ff5 in _start perf[410ff5]
-Segmentation fault (core dumped)
-root@number:~# 
- 
-> I'll continue working on that other case with this applied just before
-> that series and finally will give my Tested-by.
-> 
-> - Arnaldo
-> 
-> root@number:~# perf trace -e landlock_add_rule perf test -w landlock
-> perf: Segmentation fault
->     #0 0x5be81d in dump_stack perf[5be81d]
->     #1 0x5be879 in sighandler_dump_stack perf[5be879]
->     #2 0x7f313d24efd0 in __restore_rt libc.so.6[40fd0]
->     #3 0x491bc1 in cmd_trace perf[491bc1]
->     #4 0x497090 in run_builtin perf.c:0
->     #5 0x4973ab in handle_internal_command perf.c:0
->     #6 0x413483 in main perf[413483]
->     #7 0x7f313d238088 in __libc_start_call_main libc.so.6[2a088]
->     #8 0x7f313d23814b in __libc_start_main@@GLIBC_2.34 libc.so.6[2a14b]
->     #9 0x413ad5 in _start perf[413ad5]
-> Segmentation fault (core dumped)
-> root@number:~#
+Applied, thanks!
+
+[1/3] dt-bindings: arm: qcom: Document Lenovo ThinkPad T14s Gen 6 LCD and OLED
+      commit: 26cc0304d1352a4b1db7d2807cd276ab31e4da05
+[2/3] arm64: dts: qcom: x1e78100-t14s: Add LCD variant with backlight support
+      commit: 31eff589d00b1b41376800ff1322dc88d81f6ee1
+[3/3] arm64: dts: qcom: x1e78100-t14s: Add OLED variant
+      commit: ace6b365cf2a49a3600271186455b1b281babe5c
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
