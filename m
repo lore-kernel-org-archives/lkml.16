@@ -1,1018 +1,238 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162261F957;
-	Fri, 14 Mar 2025 17:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D018C2045B2
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741972759; cv=none; b=VzG52Ld7kSjEVAsYtcFX8yagxLm97RYd1YazsVgs5n6yeyYmmsQwwIE+kjenorkNO1m3EHs8HOKE8bVs8VI5DXbYyXWaYQU2jAy+t8aSbb8aOi7AwEZ+pkA0nzRairMoF3U38EPiejCGnRGyYzI0xgXz0MgHs25pDIYdKJTShy8=
+	t=1741972769; cv=none; b=IZWrtmdmy3btwCxnO0mdG6q7kG+AyaoR0QG1ojxz7xHE3nZ9DE+sL3R/3Bzxo244aXwgm87l/j2r1NcHG2nKBEwXGbOK6aOoI+MNNfaaBvJU2FmEDbTvyK+fcqnrbW1qcKTm+Rr2hQXpgcSXxmYFWlL0MCRHqVsFzoqdzdYiu6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741972759; c=relaxed/simple;
-	bh=cEyCxksE5Z2zMAPkWrE7QefUYB1bZygFhQT3TNl+MYE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZbEB7tPHqBHRwhloErPaMxFQs2fa5lANkfPEUCHebSW3Sg5e+0JnSzCyU2KoLXR9ZOZyDYpQs5hGakNGz22bUjTQidtrSXdtkQd+owdjSXeV/9x4zZEkyp8EPcrl7gc1FUsizK7gRXcFUFScRe9yaw4NAA7VBA764jLx23GMj8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=bbsXEPMc; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="bbsXEPMc"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EF5haP008461;
-	Fri, 14 Mar 2025 13:19:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=ud/Wk
-	LMBShqdu4iQwivlAXFiqAbv0VWOFrflORCg5qo=; b=bbsXEPMc7qy69TVhl+w1o
-	pzljXVHyz562ZXwWxpvjHryzDd7UcHU490OsTbBoZWWQwc4z+x+jD9ZLjGYn/Rh4
-	T0+zjeuZe9FihYCE/OGLxOgPn0lCpTM60uWDQD+MQl3c/yQlYPSf3Dyra4s5Cp1O
-	6ubdsbfc3k99J0GS8T95T0+geYCm4gIsorc2Kxheyv6FLVDqYUvqm7fF/CqIMxHo
-	JtvlFTmBEKUCt+6Fd1CT0zG9InRsNIlvxj/QhwjGJKMz7jWI3lbQANqVyWc3VjO4
-	V9OGliWFCI/VqeIw0C54dzgQrKpBOVk4ERM3ycaKW2ukH41OYbqJhS12EfvibfMR
-	w==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45cpsq0gn9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 13:19:00 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 52EHIxW7018779
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 14 Mar 2025 13:18:59 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 14 Mar 2025 13:18:59 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 14 Mar 2025 13:18:58 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 14 Mar 2025 13:18:58 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 52EHIg0i005012;
-	Fri, 14 Mar 2025 13:18:45 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <corbet@lwn.net>, <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v1 1/4] iio: adc: ad4000: Add support for SPI offload
-Date: Fri, 14 Mar 2025 14:18:39 -0300
-Message-ID: <301fc83a961c4a2ef2ac980d0baa83d9d89a88c5.1741970538.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1741970538.git.marcelo.schmitt@analog.com>
-References: <cover.1741970538.git.marcelo.schmitt@analog.com>
+	s=arc-20240116; t=1741972769; c=relaxed/simple;
+	bh=Du9RJGbb9psIVNeI+yAeDVtzDtNrzqDrEl0W/9ZCin0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=BFTyVmWP3RQ4dB1MG5o9FrT9ff9wYz+B0gHBPLTOFYAKR9kD3m4IQ4pnWmm+G+dzWyfnayUkNdsBfsUWvlEBFUBfCwQxEA2jI5Rw/nY/m6yUkX+NQzoBL6WilBHE8Tdb0rt3iUX/5E0aAsKeZtjIcn0xRSsS4x9vVyUMW6Em5AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3cf64584097so28855835ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:19:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741972767; x=1742577567;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6ppgVzZRvU97l1+hVwJtVxXfVprkA8dzBpDh9Oges2c=;
+        b=NjOGRPgRTsYcVZ1YTw04tCIxb71cLsW3oCObXe6vOYaqWil/OVKokVxkFtzqRF4hgf
+         A1aKYHHaXXOx4Eh/p4gH0J4uduuLVoCREkMoMuUIyuFbsWFX/Sg3WsctqnQygZQAuOd4
+         Q1+vnTV5xMnC/DQQwxHAJKXxB3dDzpWmi00FnqJTp3SoacQ5y1516XnWvoCKLNv97ibi
+         w7yM5eT5xqIITZMlmWyxy0XLV9TbxeNtENEQ7yjDQZPMuHOZMCKcFJWYzuPUbtfd8/xy
+         XQZvpY7iM2xvRRaTmWZmPeIjd21c/XX70djTArlJf0ECzpvjcBG/7PRLU8hGY9V8NuZN
+         jRUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZLor7UeXY2JPaEJmv3XsXNSjeI3rVY+AZg27KhjYvwbsDhV/bVZHqsZ1INrGSkkZpPwXivt8J4DsI7KQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDbnqVgy2ik+XLl3IulLkfj7kEXyiUXs6T3v1KoMhuZdrTQ/Hi
+	PY4opBBPc5uGqZfGIXji0LF81hmRtzMru7XWV1BF7AP+PPGvYk+yw3InDktmhowWIrbeDUzWFXT
+	f299kwgLuk+n1CaerBabRjaZlUTxz/SCGCiPgZTzX7jJ1TDf3R4nwsRg=
+X-Google-Smtp-Source: AGHT+IFOiPs3MtkoF63Pl0vbvLWOrvLIX9jwZ+pNkZJVYt+DpVfRZbpCPjjffCobhQyUoQInPy5oY30N4bYc6VDIIZS4SXAkhb90
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: nKHgMXltUvgAWCwXzQjLN6_qy_fDw3UG
-X-Authority-Analysis: v=2.4 cv=HawUTjE8 c=1 sm=1 tr=0 ts=67d46504 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=Vs1iUdzkB0EA:10 a=gAnH3GRIAAAA:8 a=5GZW7ftkjc8CXmqGffQA:9
-X-Proofpoint-ORIG-GUID: nKHgMXltUvgAWCwXzQjLN6_qy_fDw3UG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_06,2025-03-14_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- clxscore=1015 adultscore=0 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 mlxscore=0 malwarescore=0 phishscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503140135
+X-Received: by 2002:a05:6e02:3a0d:b0:3d0:21aa:a752 with SMTP id
+ e9e14a558f8ab-3d4839f442amr32566345ab.2.1741972766860; Fri, 14 Mar 2025
+ 10:19:26 -0700 (PDT)
+Date: Fri, 14 Mar 2025 10:19:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67d4651e.050a0220.14e108.0048.GAE@google.com>
+Subject: [syzbot] [wireless?] possible deadlock in ieee80211_change_mac (3)
+From: syzbot <syzbot+30de9d963fdd95d745f8@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-FPGA HDL projects can include a PWM generator in addition to SPI-Engine.
-The PWM IP is used to trigger SPI-Engine offload modules that in turn set
-SPI-Engine to execute transfers to poll data from the ADC. That allows data
-to be read at the maximum sample rates. Also, it is possible to set a
-specific sample rate by setting the proper PWM duty cycle and related state
-parameters, thus allowing an adjustable ADC sample rate when a PWM (offload
-trigger) is used in combination with SPI-Engine.
+Hello,
 
-Add support for SPI offload.
+syzbot found the following issue on:
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+HEAD commit:    89d75c4c67ac Merge branch 'mlx5-next' of git://git.kernel...
+git tree:       net-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=15941698580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ca99d9d1f4a8ecfa
+dashboard link: https://syzkaller.appspot.com/bug?extid=30de9d963fdd95d745f8
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ebddb0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=115beff8580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/42d0e44c785b/disk-89d75c4c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a15a82bda0f1/vmlinux-89d75c4c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/51341d6e7b24/bzImage-89d75c4c.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+30de9d963fdd95d745f8@syzkaller.appspotmail.com
+
+netlink: 'syz-executor330': attribute type 10 has an invalid length.
+======================================================
+WARNING: possible circular locking dependency detected
+6.14.0-rc5-syzkaller-01215-g89d75c4c67ac #0 Not tainted
+------------------------------------------------------
+syz-executor330/5838 is trying to acquire lock:
+ffff888021b08768 (&rdev->wiphy.mtx){+.+.}-{4:4}, at: class_wiphy_constructor include/net/cfg80211.h:6063 [inline]
+ffff888021b08768 (&rdev->wiphy.mtx){+.+.}-{4:4}, at: ieee80211_change_mac+0xc6/0x1160 net/mac80211/iface.c:307
+
+but task is already holding lock:
+ffff88807a458d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2731 [inline]
+ffff88807a458d28 (&dev->lock){+.+.}-{4:4}, at: dev_set_mac_address+0x2a/0x50 net/core/dev_api.c:302
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&dev->lock){+.+.}-{4:4}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       netdev_lock include/linux/netdevice.h:2731 [inline]
+       register_netdevice+0x12d8/0x1b70 net/core/dev.c:10991
+       cfg80211_register_netdevice+0x149/0x2f0 net/wireless/core.c:1482
+       ieee80211_if_add+0x119d/0x1780 net/mac80211/iface.c:2225
+       ieee80211_register_hw+0x3708/0x42e0 net/mac80211/main.c:1604
+       mac80211_hwsim_new_radio+0x2a89/0x49f0 drivers/net/wireless/virtual/mac80211_hwsim.c:5559
+       init_mac80211_hwsim+0x87a/0xb00 drivers/net/wireless/virtual/mac80211_hwsim.c:6911
+       do_one_initcall+0x248/0x930 init/main.c:1257
+       do_initcall_level+0x157/0x210 init/main.c:1319
+       do_initcalls+0x71/0xd0 init/main.c:1335
+       kernel_init_freeable+0x435/0x5d0 init/main.c:1568
+       kernel_init+0x1d/0x2b0 init/main.c:1457
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+-> #0 (&rdev->wiphy.mtx){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3163 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       class_wiphy_constructor include/net/cfg80211.h:6063 [inline]
+       ieee80211_change_mac+0xc6/0x1160 net/mac80211/iface.c:307
+       netif_set_mac_address+0x327/0x510 net/core/dev.c:9587
+       dev_set_mac_address+0x38/0x50 net/core/dev_api.c:303
+       bond_enslave+0xff3/0x3910 drivers/net/bonding/bond_main.c:2123
+       do_set_master+0x579/0x730 net/core/rtnetlink.c:2943
+       do_setlink+0xfee/0x40f0 net/core/rtnetlink.c:3149
+       rtnl_changelink net/core/rtnetlink.c:3759 [inline]
+       __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
+       rtnl_newlink+0x15a6/0x1d90 net/core/rtnetlink.c:4055
+       rtnetlink_rcv_msg+0x791/0xcf0 net/core/rtnetlink.c:6945
+       netlink_rcv_skb+0x206/0x480 net/netlink/af_netlink.c:2534
+       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+       netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+       netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+       sock_sendmsg_nosec net/socket.c:709 [inline]
+       __sock_sendmsg+0x221/0x270 net/socket.c:724
+       ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+       ___sys_sendmsg net/socket.c:2618 [inline]
+       __sys_sendmsg+0x269/0x350 net/socket.c:2650
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&dev->lock);
+                               lock(&rdev->wiphy.mtx);
+                               lock(&dev->lock);
+  lock(&rdev->wiphy.mtx);
+
+ *** DEADLOCK ***
+
+2 locks held by syz-executor330/5838:
+ #0: ffffffff8fed6908 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
+ #0: ffffffff8fed6908 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:341 [inline]
+ #0: ffffffff8fed6908 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0xc4c/0x1d90 net/core/rtnetlink.c:4054
+ #1: ffff88807a458d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2731 [inline]
+ #1: ffff88807a458d28 (&dev->lock){+.+.}-{4:4}, at: dev_set_mac_address+0x2a/0x50 net/core/dev_api.c:302
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 5838 Comm: syz-executor330 Not tainted 6.14.0-rc5-syzkaller-01215-g89d75c4c67ac #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
+ check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
+ check_prev_add kernel/locking/lockdep.c:3163 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+ validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+ __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+ __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+ class_wiphy_constructor include/net/cfg80211.h:6063 [inline]
+ ieee80211_change_mac+0xc6/0x1160 net/mac80211/iface.c:307
+ netif_set_mac_address+0x327/0x510 net/core/dev.c:9587
+ dev_set_mac_address+0x38/0x50 net/core/dev_api.c:303
+ bond_enslave+0xff3/0x3910 drivers/net/bonding/bond_main.c:2123
+ do_set_master+0x579/0x730 net/core/rtnetlink.c:2943
+ do_setlink+0xfee/0x40f0 net/core/rtnetlink.c:3149
+ rtnl_changelink net/core/rtnetlink.c:3759 [inline]
+ __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
+ rtnl_newlink+0x15a6/0x1d90 net/core/rtnetlink.c:4055
+ rtnetlink_rcv_msg+0x791/0xcf0 net/core/rtnetlink.c:6945
+ netlink_rcv_skb+0x206/0x480 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:709 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:724
+ ____sys_sendmsg+0x53a/0x860 net/socket.c:2564
+ ___sys_sendmsg net/socket.c:2618 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2650
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f76fec11329
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff4bb2f358 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f76fec5e513 RCX: 00007f76fec11329
+RDX: 0000000000000000 RSI: 0000400000000600 RDI: 0000000000000003
+RBP: 00007f76fec5e4e3 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f76fec5e44b
+R13: 0000000000000048 R14: 0000000000050012 R15: 0000000000000003
+ </TASK>
+bond0: (slave wlan1): Enslaving as an active interface with an up link
+
+
 ---
- drivers/iio/adc/Kconfig  |   7 +-
- drivers/iio/adc/ad4000.c | 519 ++++++++++++++++++++++++++++++++-------
- 2 files changed, 437 insertions(+), 89 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index b7ae6e0ae0df..1cfa3a32f3a7 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -25,10 +25,15 @@ config AD4000
- 	tristate "Analog Devices AD4000 ADC Driver"
- 	depends on SPI
- 	select IIO_BUFFER
-+	select IIO_BUFFER_DMAENGINE
- 	select IIO_TRIGGERED_BUFFER
-+	select SPI_OFFLOAD
- 	help
- 	  Say yes here to build support for Analog Devices AD4000 high speed
--	  SPI analog to digital converters (ADC).
-+	  SPI analog to digital converters (ADC). If intended to use with
-+	  SPI offloading support, it is recommended to enable
-+	  CONFIG_SPI_AXI_SPI_ENGINE, CONFIG_PWM_AXI_PWMGEN, and
-+	  CONFIG_SPI_OFFLOAD_TRIGGER_PWM.
- 
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called ad4000.
-diff --git a/drivers/iio/adc/ad4000.c b/drivers/iio/adc/ad4000.c
-index 4fe8dee48da9..6c9b71e7a2fb 100644
---- a/drivers/iio/adc/ad4000.c
-+++ b/drivers/iio/adc/ad4000.c
-@@ -21,9 +21,12 @@
- #include <linux/iio/iio.h>
- 
- #include <linux/iio/buffer.h>
-+#include <linux/iio/buffer-dmaengine.h>
- #include <linux/iio/triggered_buffer.h>
- #include <linux/iio/trigger_consumer.h>
- 
-+#include <linux/spi/offload/consumer.h>
-+
- #define AD4000_READ_COMMAND	0x54
- #define AD4000_WRITE_COMMAND	0x14
- 
-@@ -32,10 +35,15 @@
- /* AD4000 Configuration Register programmable bits */
- #define AD4000_CFG_SPAN_COMP		BIT(3) /* Input span compression  */
- #define AD4000_CFG_HIGHZ		BIT(2) /* High impedance mode  */
-+#define AD4000_CFG_TURBO		BIT(1) /* Turbo mode */
- 
- #define AD4000_SCALE_OPTIONS		2
- 
--#define __AD4000_DIFF_CHANNEL(_sign, _real_bits, _storage_bits, _reg_access)	\
-+#define AD4000_TQUIET1_NS		190
-+#define AD4000_TQUIET2_NS		60
-+#define AD4000_TCONV_NS			320
-+
-+#define __AD4000_DIFF_CHANNEL(_sign, _real_bits, _storage_bits, _reg_access, _offl)\
- {										\
- 	.type = IIO_VOLTAGE,							\
- 	.indexed = 1,								\
-@@ -43,54 +51,59 @@
- 	.channel = 0,								\
- 	.channel2 = 1,								\
- 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |				\
--			      BIT(IIO_CHAN_INFO_SCALE),				\
--	.info_mask_separate_available = _reg_access ? BIT(IIO_CHAN_INFO_SCALE) : 0,\
-+			      BIT(IIO_CHAN_INFO_SCALE) |			\
-+			      (_offl ? BIT(IIO_CHAN_INFO_SAMP_FREQ) : 0),	\
-+	.info_mask_separate_available = (_reg_access ? BIT(IIO_CHAN_INFO_SCALE) : 0),\
- 	.scan_index = 0,							\
- 	.scan_type = {								\
- 		.sign = _sign,							\
- 		.realbits = _real_bits,						\
- 		.storagebits = _storage_bits,					\
--		.shift = _storage_bits - _real_bits,				\
--		.endianness = IIO_BE,						\
-+		.shift = (_offl ? 0 : _storage_bits - _real_bits),		\
-+		.endianness = _offl ? IIO_CPU : IIO_BE				\
- 	},									\
- }
- 
--#define AD4000_DIFF_CHANNEL(_sign, _real_bits, _reg_access)			\
-+#define AD4000_DIFF_CHANNEL(_sign, _real_bits, _reg_access, _offl)		\
- 	__AD4000_DIFF_CHANNEL((_sign), (_real_bits),				\
--				     ((_real_bits) > 16 ? 32 : 16), (_reg_access))
-+			      (((_offl) || ((_real_bits) > 16)) ? 32 : 16),	\
-+			      (_reg_access), (_offl))
- 
--#define AD4000_DIFF_CHANNELS(_sign, _real_bits, _reg_access)			\
-+#define AD4000_DIFF_CHANNELS(_sign, _real_bits, _reg_access, _offl)		\
- {										\
--	AD4000_DIFF_CHANNEL(_sign, _real_bits, _reg_access),			\
-+	AD4000_DIFF_CHANNEL(_sign, _real_bits, _reg_access, _offl),		\
- 	IIO_CHAN_SOFT_TIMESTAMP(1),						\
- }
- 
--#define __AD4000_PSEUDO_DIFF_CHANNEL(_sign, _real_bits, _storage_bits, _reg_access)\
-+#define __AD4000_PSEUDO_DIFF_CHANNEL(_sign, _real_bits, _storage_bits,		\
-+				     _reg_access, _offl)			\
- {										\
- 	.type = IIO_VOLTAGE,							\
- 	.indexed = 1,								\
- 	.channel = 0,								\
- 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |				\
- 			      BIT(IIO_CHAN_INFO_SCALE) |			\
--			      BIT(IIO_CHAN_INFO_OFFSET),			\
--	.info_mask_separate_available = _reg_access ? BIT(IIO_CHAN_INFO_SCALE) : 0,\
-+			      BIT(IIO_CHAN_INFO_OFFSET) |			\
-+			      (_offl ? BIT(IIO_CHAN_INFO_SAMP_FREQ) : 0),	\
-+	.info_mask_separate_available = (_reg_access ? BIT(IIO_CHAN_INFO_SCALE) : 0),\
- 	.scan_index = 0,							\
- 	.scan_type = {								\
- 		.sign = _sign,							\
- 		.realbits = _real_bits,						\
- 		.storagebits = _storage_bits,					\
--		.shift = _storage_bits - _real_bits,				\
--		.endianness = IIO_BE,						\
-+		.shift = (_offl ? 0 : _storage_bits - _real_bits),		\
-+		.endianness = _offl ? IIO_CPU : IIO_BE				\
- 	},									\
- }
- 
--#define AD4000_PSEUDO_DIFF_CHANNEL(_sign, _real_bits, _reg_access)		\
-+#define AD4000_PSEUDO_DIFF_CHANNEL(_sign, _real_bits, _reg_access, _offl)	\
- 	__AD4000_PSEUDO_DIFF_CHANNEL((_sign), (_real_bits),			\
--				     ((_real_bits) > 16 ? 32 : 16), (_reg_access))
-+				     (((_offl) || ((_real_bits) > 16)) ? 32 : 16),\
-+				     (_reg_access), (_offl))
- 
--#define AD4000_PSEUDO_DIFF_CHANNELS(_sign, _real_bits, _reg_access)		\
-+#define AD4000_PSEUDO_DIFF_CHANNELS(_sign, _real_bits, _reg_access, _offl)	\
- {										\
--	AD4000_PSEUDO_DIFF_CHANNEL(_sign, _real_bits, _reg_access),		\
-+	AD4000_PSEUDO_DIFF_CHANNEL(_sign, _real_bits, _reg_access, _offl),	\
- 	IIO_CHAN_SOFT_TIMESTAMP(1),						\
- }
- 
-@@ -184,212 +197,298 @@ struct ad4000_chip_info {
- 	const char *dev_name;
- 	struct iio_chan_spec chan_spec[2];
- 	struct iio_chan_spec reg_access_chan_spec[2];
-+	struct iio_chan_spec offload_chan_spec;
-+	struct iio_chan_spec reg_access_offload_chan_spec;
- 	const struct ad4000_time_spec *time_spec;
- 	bool has_hardware_gain;
-+	int max_rate_hz;
- };
- 
- static const struct ad4000_chip_info ad4000_chip_info = {
- 	.dev_name = "ad4000",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
--	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 1),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
-+	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 1, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 2 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad4001_chip_info = {
- 	.dev_name = "ad4001",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 16, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 16, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 16, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 16, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 2 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad4002_chip_info = {
- 	.dev_name = "ad4002",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 0),
--	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 1),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 0, 0),
-+	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 1, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 18, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 18, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 2 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad4003_chip_info = {
- 	.dev_name = "ad4003",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 18, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 18, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 2 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad4004_chip_info = {
- 	.dev_name = "ad4004",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
--	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 1),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
-+	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 1, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 1 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad4005_chip_info = {
- 	.dev_name = "ad4005",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 16, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 16, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 16, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 16, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 1 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad4006_chip_info = {
- 	.dev_name = "ad4006",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 0),
--	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 1),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 0, 0),
-+	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 1, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 18, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 18, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 1 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad4007_chip_info = {
- 	.dev_name = "ad4007",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 18, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 18, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 1 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad4008_chip_info = {
- 	.dev_name = "ad4008",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
--	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 1),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
-+	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 1, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 500 * KILO,
- };
- 
- static const struct ad4000_chip_info ad4010_chip_info = {
- 	.dev_name = "ad4010",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 0),
--	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 1),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 0, 0),
-+	.reg_access_chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 18, 1, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 18, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 18, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 500 * KILO,
- };
- 
- static const struct ad4000_chip_info ad4011_chip_info = {
- 	.dev_name = "ad4011",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 18, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 18, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 1, 1),
- 	.time_spec = &ad4000_t_spec,
-+	.max_rate_hz = 500 * KILO,
- };
- 
- static const struct ad4000_chip_info ad4020_chip_info = {
- 	.dev_name = "ad4020",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 20, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 20, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 20, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 20, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 20, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 20, 1, 1),
- 	.time_spec = &ad4020_t_spec,
-+	.max_rate_hz = 1800 * KILO,
- };
- 
- static const struct ad4000_chip_info ad4021_chip_info = {
- 	.dev_name = "ad4021",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 20, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 20, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 20, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 20, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 20, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 20, 1, 1),
- 	.time_spec = &ad4020_t_spec,
-+	.max_rate_hz  = 1 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad4022_chip_info = {
- 	.dev_name = "ad4022",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 20, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 20, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 20, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 20, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 20, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 20, 1, 1),
- 	.time_spec = &ad4020_t_spec,
-+	.max_rate_hz  =  500 * KILO,
- };
- 
- static const struct ad4000_chip_info adaq4001_chip_info = {
- 	.dev_name = "adaq4001",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 16, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 16, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 16, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 16, 1, 1),
- 	.time_spec = &ad4000_t_spec,
- 	.has_hardware_gain = true,
-+	.max_rate_hz  = 2 * MEGA,
- };
- 
- static const struct ad4000_chip_info adaq4003_chip_info = {
- 	.dev_name = "adaq4003",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0),
--	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 18, 1),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0, 0),
-+	.reg_access_chan_spec = AD4000_DIFF_CHANNELS('s', 18, 1, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 0, 1),
-+	.reg_access_offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 1, 1),
- 	.time_spec = &ad4000_t_spec,
- 	.has_hardware_gain = true,
-+	.max_rate_hz  = 2 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad7685_chip_info = {
- 	.dev_name = "ad7685",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
- 	.time_spec = &ad7687_t_spec,
-+	.max_rate_hz  = 250 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7686_chip_info = {
- 	.dev_name = "ad7686",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
- 	.time_spec = &ad7686_t_spec,
-+	.max_rate_hz  = 500 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7687_chip_info = {
- 	.dev_name = "ad7687",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 16, 0, 1),
- 	.time_spec = &ad7687_t_spec,
-+	.max_rate_hz  = 250 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7688_chip_info = {
- 	.dev_name = "ad7688",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 16, 0, 1),
- 	.time_spec = &ad7686_t_spec,
-+	.max_rate_hz  = 500 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7690_chip_info = {
- 	.dev_name = "ad7690",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 0, 1),
- 	.time_spec = &ad7690_t_spec,
-+	.max_rate_hz  = 400 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7691_chip_info = {
- 	.dev_name = "ad7691",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 0, 1),
- 	.time_spec = &ad7691_t_spec,
-+	.max_rate_hz  = 250 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7693_chip_info = {
- 	.dev_name = "ad7693",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 16, 0, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 16, 0, 1),
- 	.time_spec = &ad7686_t_spec,
-+	.max_rate_hz  = 500 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7942_chip_info = {
- 	.dev_name = "ad7942",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 14, 0),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 14, 0, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 14, 0, 1),
- 	.time_spec = &ad7687_t_spec,
-+	.max_rate_hz  = 250 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7946_chip_info = {
- 	.dev_name = "ad7946",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 14, 0),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 14, 0, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 14, 0, 1),
- 	.time_spec = &ad7686_t_spec,
-+	.max_rate_hz  = 500 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7980_chip_info = {
- 	.dev_name = "ad7980",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
- 	.time_spec = &ad7980_t_spec,
-+	.max_rate_hz  = 1 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad7982_chip_info = {
- 	.dev_name = "ad7982",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 0, 1),
- 	.time_spec = &ad7980_t_spec,
-+	.max_rate_hz  = 1 * MEGA,
- };
- 
- static const struct ad4000_chip_info ad7983_chip_info = {
- 	.dev_name = "ad7983",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
- 	.time_spec = &ad7983_t_spec,
-+	.max_rate_hz  =  1330 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7984_chip_info = {
- 	.dev_name = "ad7984",
--	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0),
-+	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0, 0),
-+	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 0, 1),
- 	.time_spec = &ad7983_t_spec,
-+	.max_rate_hz  =  1330 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7988_1_chip_info = {
- 	.dev_name = "ad7988-1",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
- 	.time_spec = &ad7988_1_t_spec,
-+	.max_rate_hz  =  100 * KILO,
- };
- 
- static const struct ad4000_chip_info ad7988_5_chip_info = {
- 	.dev_name = "ad7988-5",
--	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
-+	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
-+	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
- 	.time_spec = &ad7686_t_spec,
-+	.max_rate_hz  =  500 * KILO,
-+};
-+
-+static const struct spi_offload_config ad4000_offload_config = {
-+	.capability_flags = SPI_OFFLOAD_CAP_TRIGGER |
-+			    SPI_OFFLOAD_CAP_RX_STREAM_DMA,
- };
- 
- struct ad4000_state {
-@@ -397,6 +496,13 @@ struct ad4000_state {
- 	struct gpio_desc *cnv_gpio;
- 	struct spi_transfer xfers[2];
- 	struct spi_message msg;
-+	struct spi_transfer offload_xfers[2];
-+	struct spi_message offload_msg;
-+	struct spi_offload *offload;
-+	struct spi_offload_trigger *offload_trigger;
-+	bool using_offload;
-+	unsigned long offload_trigger_hz;
-+	int max_rate_hz;
- 	struct mutex lock; /* Protect read modify write cycle */
- 	int vref_mv;
- 	enum ad4000_sdi sdi_pin;
-@@ -411,8 +517,10 @@ struct ad4000_state {
- 	 */
- 	struct {
- 		union {
--			__be16 sample_buf16;
--			__be32 sample_buf32;
-+			__be16 sample_buf16_be;
-+			__be32 sample_buf32_be;
-+			u16 sample_buf16;
-+			u32 sample_buf32;
- 		} data;
- 		aligned_s64 timestamp;
- 	} scan __aligned(IIO_DMA_MINALIGN);
-@@ -487,6 +595,25 @@ static int ad4000_read_reg(struct ad4000_state *st, unsigned int *val)
- 	return ret;
- }
- 
-+static int ad4000_set_sampling_freq(struct ad4000_state *st, int freq)
-+{
-+	struct spi_offload_trigger_config config = {
-+		.type = SPI_OFFLOAD_TRIGGER_PERIODIC,
-+		.periodic = {
-+			.frequency_hz = freq,
-+		},
-+	};
-+	int ret;
-+
-+	ret = spi_offload_trigger_validate(st->offload_trigger, &config);
-+	if (ret)
-+		return ret;
-+
-+	st->offload_trigger_hz = config.periodic.frequency_hz;
-+
-+	return 0;
-+}
-+
- static int ad4000_convert_and_acquire(struct ad4000_state *st)
- {
- 	int ret;
-@@ -515,10 +642,17 @@ static int ad4000_single_conversion(struct iio_dev *indio_dev,
- 	if (ret < 0)
- 		return ret;
- 
--	if (chan->scan_type.storagebits > 16)
--		sample = be32_to_cpu(st->scan.data.sample_buf32);
--	else
--		sample = be16_to_cpu(st->scan.data.sample_buf16);
-+	if (chan->scan_type.endianness == IIO_BE) {
-+		if (chan->scan_type.realbits > 16)
-+			sample = be32_to_cpu(st->scan.data.sample_buf32_be);
-+		else
-+			sample = be16_to_cpu(st->scan.data.sample_buf16_be);
-+	} else {
-+		if (chan->scan_type.realbits > 16)
-+			sample = st->scan.data.sample_buf32;
-+		else
-+			sample = st->scan.data.sample_buf16;
-+	}
- 
- 	sample >>= chan->scan_type.shift;
- 
-@@ -554,6 +688,9 @@ static int ad4000_read_raw(struct iio_dev *indio_dev,
- 		if (st->span_comp)
- 			*val = mult_frac(st->vref_mv, 1, 10);
- 
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		*val = st->offload_trigger_hz;
- 		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
-@@ -620,6 +757,7 @@ static int ad4000_write_raw(struct iio_dev *indio_dev,
- 			    struct iio_chan_spec const *chan,
- 			    int val, int val2, long mask)
- {
-+	struct ad4000_state *st = iio_priv(indio_dev);
- 	int ret;
- 
- 	switch (mask) {
-@@ -629,6 +767,15 @@ static int ad4000_write_raw(struct iio_dev *indio_dev,
- 		ret = __ad4000_write_raw(indio_dev, chan, val2);
- 		iio_device_release_direct(indio_dev);
- 		return ret;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		if (val < 1 || val > st->max_rate_hz)
-+			return -EINVAL;
-+
-+		if (!iio_device_claim_direct(indio_dev))
-+			return -EBUSY;
-+		ret = ad4000_set_sampling_freq(st, val);
-+		iio_device_release_direct(indio_dev);
-+		return ret;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -659,10 +806,149 @@ static const struct iio_info ad4000_reg_access_info = {
- 	.write_raw_get_fmt = &ad4000_write_raw_get_fmt,
- };
- 
-+static const struct iio_info ad4000_offload_info = {
-+	.read_raw = &ad4000_read_raw,
-+	.write_raw = &ad4000_write_raw,
-+	.write_raw_get_fmt = &ad4000_write_raw_get_fmt,
-+};
-+
- static const struct iio_info ad4000_info = {
- 	.read_raw = &ad4000_read_raw,
- };
- 
-+static int ad4000_offload_buffer_postenable(struct iio_dev *indio_dev)
-+{
-+	struct ad4000_state *st = iio_priv(indio_dev);
-+	struct spi_offload_trigger_config config = {
-+		.type = SPI_OFFLOAD_TRIGGER_PERIODIC,
-+		.periodic = {
-+			.frequency_hz = st->offload_trigger_hz,
-+		},
-+	};
-+
-+	return spi_offload_trigger_enable(st->offload, st->offload_trigger,
-+					  &config);
-+}
-+
-+static int ad4000_offload_buffer_postdisable(struct iio_dev *indio_dev)
-+{
-+	struct ad4000_state *st = iio_priv(indio_dev);
-+
-+	spi_offload_trigger_disable(st->offload, st->offload_trigger);
-+	return 0;
-+}
-+
-+static const struct iio_buffer_setup_ops ad4000_offload_buffer_setup_ops = {
-+	.postenable = &ad4000_offload_buffer_postenable,
-+	.postdisable = &ad4000_offload_buffer_postdisable,
-+};
-+
-+static int ad4000_spi_offload_setup(struct iio_dev *indio_dev,
-+				    struct ad4000_state *st)
-+{
-+	struct spi_device *spi = st->spi;
-+	struct device *dev = &spi->dev;
-+	struct dma_chan *rx_dma;
-+	int ret;
-+
-+	st->offload_trigger = devm_spi_offload_trigger_get(dev, st->offload,
-+							   SPI_OFFLOAD_TRIGGER_PERIODIC);
-+	if (IS_ERR(st->offload_trigger))
-+		return dev_err_probe(dev, PTR_ERR(st->offload_trigger),
-+				     "Failed to get offload trigger\n");
-+
-+	ret = ad4000_set_sampling_freq(st, st->max_rate_hz);
-+	if (ret)
-+		return dev_err_probe(dev, PTR_ERR(st->offload_trigger),
-+				     "Failed to set sampling frequency\n");
-+
-+	rx_dma = devm_spi_offload_rx_stream_request_dma_chan(dev, st->offload);
-+	if (IS_ERR(rx_dma))
-+		return dev_err_probe(dev, PTR_ERR(rx_dma),
-+				     "Failed to get offload RX DMA\n");
-+
-+	ret = devm_iio_dmaengine_buffer_setup_with_handle(dev, indio_dev, rx_dma,
-+							  IIO_BUFFER_DIRECTION_IN);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to setup DMA buffer\n");
-+
-+	return 0;
-+}
-+
-+/*
-+ * This executes a data sample transfer when using SPI offloading for when the
-+ * device connections are in "3-wire" mode, selected when the adi,sdi-pin device
-+ * tree property is absent. In this connection mode, the ADC SDI pin is
-+ * connected to MOSI or to VIO and ADC CNV pin is connected to a SPI controller
-+ * CS (it can't be connected to a GPIO).
-+ *
-+ * In order to achieve the maximum sample rate, we only do one transfer per
-+ * SPI offload trigger. This has the effect that the first sample data is not
-+ * valid because it is reading the previous conversion result. We also use
-+ * bits_per_word to ensure the minimum of SCLK cycles are used. And a delay is
-+ * added to make sure we meet the minimum quiet time before releasing the CS
-+ * line. Plus the CS change delay is set to ensure that we meet the minimum
-+ * quiet time before asserting CS again.
-+ *
-+ * This timing is only valid if turbo mode is enabled (reading during conversion).
-+ */
-+static int ad4000_prepare_offload_turbo_message(struct ad4000_state *st,
-+						const struct iio_chan_spec *chan)
-+{
-+	struct spi_transfer *xfers = st->offload_xfers;
-+
-+	/* Have to do a short CS toggle to trigger conversion. */
-+	xfers[0].cs_change = 1;
-+	xfers[0].cs_change_delay.value = AD4000_TQUIET1_NS;
-+	xfers[0].cs_change_delay.unit = SPI_DELAY_UNIT_NSECS;
-+	xfers[0].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-+
-+	xfers[1].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-+	xfers[1].bits_per_word = chan->scan_type.realbits;
-+	xfers[1].len = chan->scan_type.realbits > 16 ? 4 : 2;
-+	xfers[1].delay.value = AD4000_TQUIET2_NS;
-+	xfers[1].delay.unit = SPI_DELAY_UNIT_NSECS;
-+
-+	spi_message_init_with_transfers(&st->offload_msg, xfers, 2);
-+	st->offload_msg.offload = st->offload;
-+
-+	return devm_spi_optimize_message(&st->spi->dev, st->spi, &st->offload_msg);
-+}
-+
-+/*
-+ * This executes a data sample transfer when using SPI offloading for when the
-+ * device connections are in "3-wire" mode, selected when the adi,sdi-pin device
-+ * tree property is set to "high". In this connection mode, the ADC SDI pin is
-+ * connected to VIO and ADC CNV pin is connected to a SPI controller CS (it
-+ * can't be connected to a GPIO).
-+ *
-+ * In order to achieve the maximum sample rate, we only do one transfer per
-+ * SPI offload trigger. This has the effect that the first sample data is not
-+ * valid because it is reading the previous conversion result. We also use
-+ * bits_per_word to ensure the minimum of SCLK cycles are used. And a delay is
-+ * added to make sure we meet the minimum quiet time before releasing the CS
-+ * line. Plus the CS change delay is set to ensure that we meet the minimum
-+ * conversion time before asserting CS again.
-+ *
-+ * This timing is only valid if turbo mode is disabled (reading during acquisition).
-+ */
-+static int ad4000_prepare_offload_message(struct ad4000_state *st,
-+					  const struct iio_chan_spec *chan)
-+{
-+	struct spi_transfer *xfers = st->offload_xfers;
-+
-+	xfers[0].bits_per_word = chan->scan_type.realbits;
-+	xfers[0].len = chan->scan_type.realbits > 16 ? 4 : 2;
-+	xfers[0].delay.value = AD4000_TQUIET2_NS;
-+	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
-+	xfers[0].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-+
-+	spi_message_init_with_transfers(&st->offload_msg, xfers, 1);
-+	st->offload_msg.offload = st->offload;
-+
-+	return devm_spi_optimize_message(&st->spi->dev, st->spi, &st->offload_msg);
-+}
-+
- /*
-  * This executes a data sample transfer for when the device connections are
-  * in "3-wire" mode, selected when the adi,sdi-pin device tree property is
-@@ -689,7 +975,9 @@ static int ad4000_prepare_3wire_mode_message(struct ad4000_state *st,
- 	xfers[0].cs_change_delay.unit = SPI_DELAY_UNIT_NSECS;
- 
- 	xfers[1].rx_buf = &st->scan.data;
--	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-+	xfers[1].len = chan->scan_type.realbits > 16 ? 4 : 2;
-+	if (chan->scan_type.endianness != IIO_BE)
-+		xfers[1].bits_per_word = chan->scan_type.realbits;
- 	xfers[1].delay.value = st->time_spec->t_quiet2_ns;
- 	xfers[1].delay.unit = SPI_DELAY_UNIT_NSECS;
- 
-@@ -719,7 +1007,9 @@ static int ad4000_prepare_4wire_mode_message(struct ad4000_state *st,
- 	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
- 
- 	xfers[1].rx_buf = &st->scan.data;
--	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-+	xfers[1].len = chan->scan_type.realbits > 16 ? 4 : 2;
-+	if (chan->scan_type.endianness != IIO_BE)
-+		xfers[1].bits_per_word = chan->scan_type.realbits;
- 
- 	spi_message_init_with_transfers(&st->msg, st->xfers, 2);
- 
-@@ -733,6 +1023,9 @@ static int ad4000_config(struct ad4000_state *st)
- 	if (device_property_present(&st->spi->dev, "adi,high-z-input"))
- 		reg_val |= FIELD_PREP(AD4000_CFG_HIGHZ, 1);
- 
-+	if (st->using_offload)
-+		reg_val |= FIELD_PREP(AD4000_CFG_TURBO, 1);
-+
- 	return ad4000_write_reg(st, reg_val);
- }
- 
-@@ -755,6 +1048,7 @@ static int ad4000_probe(struct spi_device *spi)
- 	st = iio_priv(indio_dev);
- 	st->spi = spi;
- 	st->time_spec = chip->time_spec;
-+	st->max_rate_hz = chip->max_rate_hz;
- 
- 	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(ad4000_power_supplies),
- 					     ad4000_power_supplies);
-@@ -772,6 +1066,26 @@ static int ad4000_probe(struct spi_device *spi)
- 		return dev_err_probe(dev, PTR_ERR(st->cnv_gpio),
- 				     "Failed to get CNV GPIO");
- 
-+	st->offload = devm_spi_offload_get(dev, spi, &ad4000_offload_config);
-+	ret = PTR_ERR_OR_ZERO(st->offload);
-+	if (ret && ret != -ENODEV)
-+		return dev_err_probe(dev, ret, "Failed to get offload\n");
-+
-+	st->using_offload = !IS_ERR(st->offload);
-+	if (st->using_offload) {
-+		indio_dev->setup_ops = &ad4000_offload_buffer_setup_ops;
-+		ret = ad4000_spi_offload_setup(indio_dev, st);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
-+						      &iio_pollfunc_store_time,
-+						      &ad4000_trigger_handler,
-+						      NULL);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	ret = device_property_match_property_string(dev, "adi,sdi-pin",
- 						    ad4000_sdi_pin,
- 						    ARRAY_SIZE(ad4000_sdi_pin));
-@@ -783,9 +1097,6 @@ static int ad4000_probe(struct spi_device *spi)
- 	st->sdi_pin = ret == -EINVAL ? AD4000_SDI_MOSI : ret;
- 	switch (st->sdi_pin) {
- 	case AD4000_SDI_MOSI:
--		indio_dev->info = &ad4000_reg_access_info;
--		indio_dev->channels = chip->reg_access_chan_spec;
--
- 		/*
- 		 * In "3-wire mode", the ADC SDI line must be kept high when
- 		 * data is not being clocked out of the controller.
-@@ -796,9 +1107,26 @@ static int ad4000_probe(struct spi_device *spi)
- 		if (ret < 0)
- 			return ret;
- 
-+		indio_dev->info = &ad4000_reg_access_info;
-+
-+		if (st->using_offload) {
-+			indio_dev->channels = &chip->reg_access_offload_chan_spec;
-+			ret = ad4000_prepare_offload_turbo_message(st, indio_dev->channels);
-+			if (ret)
-+				return dev_err_probe(dev, ret,
-+						     "Failed to optimize SPI msg\n");
-+		} else {
-+			indio_dev->channels = chip->reg_access_chan_spec;
-+		}
-+
-+		/*
-+		 * Call ad4000_prepare_3wire_mode_message() so single-shot read
-+		 * SPI messages are always initialized.
-+		 */
- 		ret = ad4000_prepare_3wire_mode_message(st, &indio_dev->channels[0]);
- 		if (ret)
--			return ret;
-+			return dev_err_probe(dev, ret,
-+					     "Failed to optimize SPI msg\n");
- 
- 		ret = ad4000_config(st);
- 		if (ret < 0)
-@@ -806,19 +1134,36 @@ static int ad4000_probe(struct spi_device *spi)
- 
- 		break;
- 	case AD4000_SDI_VIO:
--		indio_dev->info = &ad4000_info;
--		indio_dev->channels = chip->chan_spec;
-+		if (st->using_offload) {
-+			indio_dev->info = &ad4000_offload_info;
-+			indio_dev->channels = &chip->offload_chan_spec;
-+
-+			spi->cs_hold.value = AD4000_TCONV_NS;
-+			spi->cs_hold.unit = SPI_DELAY_UNIT_NSECS;
-+			ret = ad4000_prepare_offload_message(st, indio_dev->channels);
-+			if (ret)
-+				return dev_err_probe(dev, ret,
-+						     "Failed to optimize SPI msg\n");
-+		} else {
-+			indio_dev->info = &ad4000_info;
-+			indio_dev->channels = chip->chan_spec;
-+		}
- 		ret = ad4000_prepare_3wire_mode_message(st, &indio_dev->channels[0]);
- 		if (ret)
--			return ret;
-+			return dev_err_probe(dev, ret,
-+					     "Failed to optimize SPI msg\n");
- 
- 		break;
- 	case AD4000_SDI_CS:
-+		if (st->using_offload)
-+			return dev_err_probe(dev, -EPROTONOSUPPORT,
-+					     "Unsupported sdi-pin + offload config\n");
- 		indio_dev->info = &ad4000_info;
- 		indio_dev->channels = chip->chan_spec;
- 		ret = ad4000_prepare_4wire_mode_message(st, &indio_dev->channels[0]);
- 		if (ret)
--			return ret;
-+			return dev_err_probe(dev, ret,
-+					     "Failed to optimize SPI msg\n");
- 
- 		break;
- 	case AD4000_SDI_GND:
-@@ -830,7 +1175,10 @@ static int ad4000_probe(struct spi_device *spi)
- 	}
- 
- 	indio_dev->name = chip->dev_name;
--	indio_dev->num_channels = 2;
-+	if (st->using_offload)
-+		indio_dev->num_channels = 1;
-+	else
-+		indio_dev->num_channels = 2;
- 
- 	ret = devm_mutex_init(dev, &st->lock);
- 	if (ret)
-@@ -853,12 +1201,6 @@ static int ad4000_probe(struct spi_device *spi)
- 
- 	ad4000_fill_scale_tbl(st, &indio_dev->channels[0]);
- 
--	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
--					      &iio_pollfunc_store_time,
--					      &ad4000_trigger_handler, NULL);
--	if (ret)
--		return ret;
--
- 	return devm_iio_device_register(dev, indio_dev);
- }
- 
-@@ -947,3 +1289,4 @@ module_spi_driver(ad4000_driver);
- MODULE_AUTHOR("Marcelo Schmitt <marcelo.schmitt@analog.com>");
- MODULE_DESCRIPTION("Analog Devices AD4000 ADC driver");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("IIO_DMAENGINE_BUFFER");
--- 
-2.47.2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
