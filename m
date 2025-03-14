@@ -1,134 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ED41FECA9;
-	Fri, 14 Mar 2025 11:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418261FECA5
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741952756; cv=none; b=f+ocWGocODwWMF3PnL15eP/XNlwRp0Rg9DxD6hESE4MPQQ2ktO1BVt62rYxhPoOHCsQmIwdMgtKE5BwpfCytkN+f3bQWzX/0Q3AZZ6FIksjF2mXPtof/R8NeTCWbWuNw+U2vmsDS4umCApCxuh9M5+YLvCwpuOrhwLojlRi2QQ0=
+	t=1741952757; cv=none; b=SKiPgTb62CZmaSZW/DQprZ2jNSu4dlXRgY2UEZyMGn7yFfeNzniU130RZ8pfXSMHitfB3MFIDF+4QdSLIMqFOIxofR/SQ1sg6BsQk+KN/2f5rjRy+WZ8ODg08JKQapfyWnWbYfoGxnnWqzRwXiWHdtyRXqhMXZz6+ADtSos38gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741952756; c=relaxed/simple;
-	bh=8lZ8lWqJCnQW3eNRH8N/N9WM42Rsnw/Fz0kc5LE+2gM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=scBCgsU5Z0DDLRahfat1DqIYvghHoCCBULTP9PeUVRmO+1BKIoko5cg6L8kd/ppFkjotQpEk69OfHRhvHxkESD93AoeIaCqj7vuTl9aDxb3doL44h7GE3xEkr3iVL21px+IQ7NHNfUw09ZYMP4e7u3X/I4hecUVdTyFLGacdQDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMOTF1bp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741952757; c=relaxed/simple;
+	bh=Tvv12iTSy9n5LNJOna+hsoiAWlL1kBwqIdQdhXIXbYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XjKdK+7N49G8CidkcidOXuH1tawDZTi+LEbcZUnWAG0Cvbok3MXWr8UMzglMUrhcg9IA9sta26gq9nqmKROTJd9KBUJPlpyMsx8UXbxN37H+ExytTta6fwoNguxuidcntn5PXLbr4AjqwHfuISQCXzzSoy9ZED7IjXaFEig500w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FnwmlJGh; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMOTF1bp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F17EAC4CEE3;
-	Fri, 14 Mar 2025 11:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741952755;
-	bh=8lZ8lWqJCnQW3eNRH8N/N9WM42Rsnw/Fz0kc5LE+2gM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HMOTF1bpsmp5DRtH+qEk3JG15xP5+K0NluCJqWzzZuC1mI8wGwc8RbiZqv3IkseHu
-	 dvcO06ygcGSr3DJYDFqeuwGy79kLHdtHk5OnRTCU+b1oPZFx8zVEVzjtk1/+puYRx3
-	 T2HQLSFyOdwnNRlIsM4z0XWRSmjwzu/1ENR0ow8K+I4ngXgxkeStsIQcvaJ6Tp5Y0S
-	 8qPAxYKvRFVjByuCUC5jPQNV4deVWzPpekprAkw2H5j8dnKH4bUpGIA03U3LuS3ta3
-	 xiRfoKF4rmcdVdIpwfM5rA6b6wQktajXcWZiShk0DbCnOkbzjpDUtatiqEBMGfaoo8
-	 wt8djZ0AqVNiA==
-Date: Fri, 14 Mar 2025 11:45:51 +0000
-From: Lee Jones <lee@kernel.org>
-To: Matthias Fend <matthias.fend@emfend.at>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bsp-development.geo@leica-geosystems.com
-Subject: Re: [PATCH 2/2] leds: tps6131x: add support for Texas Instruments
- TPS6131X flash LED driver
-Message-ID: <20250314114551.GL3890718@google.com>
-References: <20250228-leds-tps6131x-v1-0-d1071d90f9ea@emfend.at>
- <20250228-leds-tps6131x-v1-2-d1071d90f9ea@emfend.at>
- <20250310144946.GH8350@google.com>
- <def0351b-c037-47c8-b395-d64cfca7ae25@emfend.at>
- <20250314105257.GD3890718@google.com>
- <8a16c018-8466-4dea-8f1e-e8a65e3ed950@emfend.at>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FnwmlJGh"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EBN1D6013877;
+	Fri, 14 Mar 2025 11:45:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=WHKm3ExNyDDNq83Qq
+	NAnyUo4+cD7TyY5b8WeyJnoQkA=; b=FnwmlJGh05XY1E7uy1yfmgmMmf4mWYv6E
+	wqZbPXDB5ZR+FqcvkVw7qCdjorKyIvnKztEr9Kl9Xdx40bMjN7pMqa3DceacQF6F
+	rngw1PgGPQ8m65I3F5CfMNy1UuIpOH4m377aLoxXANTrl7QgAZVIP4C/iT3FNilD
+	U4MKl6ciNlYZ4sDLokoow0ebqgpFxtV5GUhvqSmQ9/x1OEPW+0L/M3ayk5YLiNzY
+	9JGOEngvyUXICFzM0PTILzfvV+3rWlwZ0++/5gHXxRbE7+JzMu7s5mfjGR5n1u+f
+	eYg5Glg6W0bmwgNCucKmQXdU+JmkvnZKcXt2t30a5rXl+U5MBZTkg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45c6k03cf0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 11:45:40 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52EBhTWw027336;
+	Fri, 14 Mar 2025 11:45:40 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45c6k03cex-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 11:45:39 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52E8x6BH003131;
+	Fri, 14 Mar 2025 11:45:39 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45atstxqd1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 11:45:39 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52EBjZxF35848936
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Mar 2025 11:45:35 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A84EC20043;
+	Fri, 14 Mar 2025 11:45:35 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4E87820040;
+	Fri, 14 Mar 2025 11:45:32 +0000 (GMT)
+Received: from li-7bb28a4c-2dab-11b2-a85c-887b5c60d769.ibm.com.com (unknown [9.39.22.126])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Mar 2025 11:45:32 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org
+Cc: sshegde@linux.ibm.com, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        mpe@ellerman.id.au, peterz@infradead.org, fbarrat@linux.ibm.com,
+        ajd@linux.ibm.com, mahesh@linux.ibm.com, oohall@gmail.com,
+        hbathini@linux.ibm.com, dhowells@redhat.com, haren@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/6] powerpc: book3s: vas: use lock guard for mutex
+Date: Fri, 14 Mar 2025 17:15:00 +0530
+Message-ID: <20250314114502.2083434-5-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250314114502.2083434-1-sshegde@linux.ibm.com>
+References: <20250314114502.2083434-1-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8a16c018-8466-4dea-8f1e-e8a65e3ed950@emfend.at>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: SGiKbM8qQBl08NH7jKOTAr6hNJKZ6cZB
+X-Proofpoint-ORIG-GUID: j-QpR_LFl5mFR3pqyzQu-3Wgu00abwwB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-14_04,2025-03-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=795 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 adultscore=0 spamscore=0 mlxscore=0
+ suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2503140091
 
-On Fri, 14 Mar 2025, Matthias Fend wrote:
+use lock guards for scope based resource management of mutex.
+This would make the code simpler and easier to maintain.
 
-> Hi Lee,
-> 
-> Am 14.03.2025 um 11:52 schrieb Lee Jones:
-> > On Fri, 14 Mar 2025, Matthias Fend wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > thanks a lot for your feedback!
-> > > 
-> > > Am 10.03.2025 um 15:49 schrieb Lee Jones:
-> > > > On Fri, 28 Feb 2025, Matthias Fend wrote:
-> > > > 
-> > > > > The TPS61310/TPS61311 is a flash LED driver with I2C interface. Its power
-> > > > > stage is capable of supplying a maximum total current of roughly 1500mA.
-> > > > > The TPS6131x provides three constant-current sinks, capable of sinking up
-> > > > > to 2 × 400mA (LED1 and LED3) and 800mA (LED2) in flash mode. In torch mode
-> > > > > each sink (LED1, LED2, LED3) supports currents up to 175mA.
-> > > > > 
-> > > > > Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
-> > > > > ---
-> > > > >    MAINTAINERS                        |   7 +
-> > > > >    drivers/leds/flash/Kconfig         |  11 +
-> > > > >    drivers/leds/flash/Makefile        |   1 +
-> > > > >    drivers/leds/flash/leds-tps6131x.c | 798 +++++++++++++++++++++++++++++++++++++
-> > > > >    4 files changed, 817 insertions(+)
+More details on lock guards can be found at
+https://lore.kernel.org/all/20230612093537.614161713@infradead.org/T/#u
 
-[...]
+This shows the use of both guard and scoped_guard
 
-> > > > > +static int tps6131x_flash_external_strobe_set(struct v4l2_flash *v4l2_flash, bool enable)
-> > > > > +{
-> > > > > +	struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
-> > > > > +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
-> > > > > +
-> > > > > +	guard(mutex)(&tps6131x->lock);
-> > > > > +
-> > > > /> +	return tps6131x_set_mode(tps6131x, enable ? TPS6131X_MODE_FLASH : TPS6131X_MODE_SHUTDOWN,
-> > > > > +				 false);
-> > > > > +}
-> > > > > +
-> > > > > +static const struct v4l2_flash_ops tps6131x_v4l2_flash_ops = {
-> > > > > +	.external_strobe_set = tps6131x_flash_external_strobe_set,
-> > > > > +};
-> > > > > +
-> > > > > +static int tps6131x_v4l2_setup(struct tps6131x *tps6131x)
-> > > > > +{
-> > > > > +	struct v4l2_flash_config v4l2_cfg = { 0 };
-> > > > > +	struct led_flash_setting *intensity = &v4l2_cfg.intensity;
-> > > > > +
-> > > > > +	intensity->min = tps6131x->step_torch_current_ma;
-> > > > > +	intensity->max = tps6131x->max_torch_current_ma;
-> > > > > +	intensity->step = tps6131x->step_torch_current_ma;
-> > > > > +	intensity->val = intensity->min;
-> > > > > +
-> > > > > +	strscpy(v4l2_cfg.dev_name, tps6131x->fled_cdev.led_cdev.dev->kobj.name,
-> > > > 
-> > > > tps6131x->client->dev?
-> > > 
-> > > Do you mean the name should be taken from the I2C device?
-> > > The current name, for example, is 'white:flash-0', while the I2C device name
-> > > would be '4-0033'. So I think the current version is appropriate, don't you
-> > > think?
-> > 
-> > No, I'm implying that:
-> > 
-> >    tps6131x->client->dev == tps6131x->fled_cdev.led_cdev.dev
-> > 
-> > ... and that the former is shorter / neater.
-> 
-> Hmm. That's interesting. I thought these were two different devices, which
-> seems to be actually the case for me. Hence the different names in the kobj.
-> Are the devices really supposed to be identical?
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+---
+ arch/powerpc/platforms/book3s/vas-api.c | 32 ++++++++++---------------
+ 1 file changed, 13 insertions(+), 19 deletions(-)
 
-Interesting.  What are their names?
-
+diff --git a/arch/powerpc/platforms/book3s/vas-api.c b/arch/powerpc/platforms/book3s/vas-api.c
+index 0b6365d85d11..d7462c16d828 100644
+--- a/arch/powerpc/platforms/book3s/vas-api.c
++++ b/arch/powerpc/platforms/book3s/vas-api.c
+@@ -425,23 +425,22 @@ static vm_fault_t vas_mmap_fault(struct vm_fault *vmf)
+ 		return VM_FAULT_SIGBUS;
+ 	}
+ 
+-	mutex_lock(&txwin->task_ref.mmap_mutex);
+ 	/*
+ 	 * The window may be inactive due to lost credit (Ex: core
+ 	 * removal with DLPAR). If the window is active again when
+ 	 * the credit is available, map the new paste address at the
+ 	 * window virtual address.
+ 	 */
+-	if (txwin->status == VAS_WIN_ACTIVE) {
+-		paste_addr = cp_inst->coproc->vops->paste_addr(txwin);
+-		if (paste_addr) {
+-			fault = vmf_insert_pfn(vma, vma->vm_start,
+-					(paste_addr >> PAGE_SHIFT));
+-			mutex_unlock(&txwin->task_ref.mmap_mutex);
+-			return fault;
++	scoped_guard(mutex, &txwin->task_ref.mmap_mutex) {
++		if (txwin->status == VAS_WIN_ACTIVE) {
++			paste_addr = cp_inst->coproc->vops->paste_addr(txwin);
++			if (paste_addr) {
++				fault = vmf_insert_pfn(vma, vma->vm_start,
++						(paste_addr >> PAGE_SHIFT));
++				return fault;
++			}
+ 		}
+ 	}
+-	mutex_unlock(&txwin->task_ref.mmap_mutex);
+ 
+ 	/*
+ 	 * Received this fault due to closing the actual window.
+@@ -494,9 +493,8 @@ static void vas_mmap_close(struct vm_area_struct *vma)
+ 		return;
+ 	}
+ 
+-	mutex_lock(&txwin->task_ref.mmap_mutex);
+-	txwin->task_ref.vma = NULL;
+-	mutex_unlock(&txwin->task_ref.mmap_mutex);
++	scoped_guard(mutex, &txwin->task_ref.mmap_mutex)
++		txwin->task_ref.vma = NULL;
+ }
+ 
+ static const struct vm_operations_struct vas_vm_ops = {
+@@ -543,18 +541,16 @@ static int coproc_mmap(struct file *fp, struct vm_area_struct *vma)
+ 	 * close/open event and allows mmap() only when the window is
+ 	 * active.
+ 	 */
+-	mutex_lock(&txwin->task_ref.mmap_mutex);
++	guard(mutex)(&txwin->task_ref.mmap_mutex);
+ 	if (txwin->status != VAS_WIN_ACTIVE) {
+ 		pr_err("Window is not active\n");
+-		rc = -EACCES;
+-		goto out;
++		return -EACCES;
+ 	}
+ 
+ 	paste_addr = cp_inst->coproc->vops->paste_addr(txwin);
+ 	if (!paste_addr) {
+ 		pr_err("Window paste address failed\n");
+-		rc = -EINVAL;
+-		goto out;
++		return -EINVAL;
+ 	}
+ 
+ 	pfn = paste_addr >> PAGE_SHIFT;
+@@ -574,8 +570,6 @@ static int coproc_mmap(struct file *fp, struct vm_area_struct *vma)
+ 	txwin->task_ref.vma = vma;
+ 	vma->vm_ops = &vas_vm_ops;
+ 
+-out:
+-	mutex_unlock(&txwin->task_ref.mmap_mutex);
+ 	return rc;
+ }
+ 
 -- 
-Lee Jones [李琼斯]
+2.39.3
+
