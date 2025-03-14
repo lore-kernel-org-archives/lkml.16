@@ -1,130 +1,176 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA0F202C3D
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAE1204598
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741978514; cv=none; b=nDDOiyykgXDQLSDcGvW/y/TtP9p75yCt34HCfbCWWWyZf0PGXX8dNj5KGQ+wKt0vLxXWjWWHFcSd5lq8SQFf26JhrcGc1cZKuxhTWwZcSEOiyvNKurx22YY0/zHystB2pTpHHY3C6yZSw75Aty/ROkVl3wPCa0KWbFPCnUeeyV4=
+	t=1741978598; cv=none; b=sqcejKjltOKKpXCVzVm9mOCW3PXASpo9VzBzmD1Tl6h/Vfmk73BVPI+2LoEwDOTmKmQCH1UDa7jSRBJCv3FIutXqU3xkdcpdyQqrOAg3uzJSpd11u23dAggOY9zYAXfz4x1PWSGF0rmBX3j0D3lUmkNYNHT0Tnk5v6sliOuZ9Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741978514; c=relaxed/simple;
-	bh=LNzpERu0WGt1HHgrRI5eUyFwoCLnVZDxJpCWXFwft3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G/dv1ZSEQULCPFCHq50R79f7mCAZ8i7VPG6Z58UjXJqnzawcZp8+L/8n5IopB8dXGUUL/MkPQ8zB3EoSphcwnxAPEoukM3GkM5V6vU3tokrlcWpMFghNpmZ5qr9HumVx2y35JadTmNAzomWjKg0ag2hlCqwidMGjJGMdC1hDh40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=j5MINVdX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1741978598; c=relaxed/simple;
+	bh=d6lRTVD/mtADsxyTCgSv/4oezDiZLFcfLJQEpM2XOWo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AxKXOA2yp9t82oHWAbfgaK7HDu5F0DfTg0KA2DtCOl59zNDeGo0eO+p9gUUUOpQ2zqXDjR1f/bYCyPTGb2snVAXretQfckyFq9QByZYvbkHA8k9M56stlI+xuPKO73cAzizQ63CWW8O6nIa3jNmzoMby6MQ36jLLXSg/HRsUT+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=n7AT3+v4; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="j5MINVdX"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EB0VGR008912
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:55:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=HduUHmuvaB6gfmmV3ws7Fo/V
-	KexaEbdRlx2tI0VvLX4=; b=j5MINVdXVPvVulqxvi7a0/aWKZSLSCpMkIeWCDBr
-	PRGyNUPUaenkKpyOfkTUOIbcR71//Ktj6N++ZVDG9qAP1lVnXhf0vhl0G/S8evGi
-	IuCHK3ROPe5/gWfHHTuxd9MDGbwyt6ukzxVTSmY3Dn8Msz+aYS4xc7TSL39Oey5p
-	ZeXe6D/7rXSFxq+7DU15fbvdTHC3oXi4lK98cMtoeNvs0++3bDCQe1GdOmE/9NCW
-	Z6zPNx5p4qW9za9OC0OPb6Q+mc3l74a5cZq2ep0NBdMaIrMjL86i3R6F6ZVeJy4e
-	T52VqjDUtpx7mnf7VimKcJKDb1K5qt1LLdzeozG8ClwGnA==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2rj6ms-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:55:11 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e91b1ddb51so51461846d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:55:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="n7AT3+v4"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bbead793dso499728a34.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741978595; x=1742583395; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RNVuCuSS97Q/Z+sHOmkjZ2bCuVpW+EMqPl3PUMJe14g=;
+        b=n7AT3+v4ka4YBn1DdB5mWT1Pj1uOtqPnr/3GrDm9+RrFZVNfP83YTmkNBWg7+tLvo6
+         d75XXYGnmFHrwzC+FpvPwRrdFLXLGeUILwIW3xk5/+Z3ihTc9F2OtQq1SPkK258vuFyf
+         O+q3LPr0ilX5zuAwi2A99q4+q1WAsJsp4Q/0S4ZZAW+FEW6N4vPEJntjHQL8HTt4CrgH
+         z1AzHIoMwiQZDYG1zLjNWTZzKy/mDS04kicmooDAcXgBdYJv4d0Djg1EYUx8IRD2u42j
+         6ipEHFVqOJu6MkIJnFpawEtxqSH7p0QDC7nDDFOSQIFo6qFcJnhZx5levirXZGfq0mGp
+         CKiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741978511; x=1742583311;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HduUHmuvaB6gfmmV3ws7Fo/VKexaEbdRlx2tI0VvLX4=;
-        b=MlCr0hfTk6geCDTVTnYqCvtkAyzUQKbA7iR0AFmqhtWokd8rH8tDD9dKg+CRBYAm18
-         dfXh2Ea90MR9LCEPtOx2B1B4UriREqs2aUI2hKDHFEsDsj+toOOKegHZi3/9ao0MSUwL
-         bsQYMDYN/YGkWWs8MqTjF1oK+5CG+zkClyjepGq3VLN73h1OfgQOHzG61KECVw52lGPo
-         EPmBEso5Y4JV6e9kJws9uE7Knpc1M8Y/wChQSqf2bPyzj5bqp9Js9AmfuqqvzeTPDmmX
-         R5AywOOgqYiCkVyFFInhQXU3MKSW9bdtuHZ3EA5pKrD/70p/Xso9bedPwt26/Es4EJza
-         oqYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbxvoKAsPyublnOfDuij8T57JQdr7mK7jCBtCTwtFYYzS65lU1R0Z4fWdUDfWXfRlgLgTuXjghgOYHdsA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdFWtsFuSOfY4w5eqbRasiIwlLwu0uWQnEpK0yGAqednOFgxUz
-	IZTZJGL97TiBO86EQkPJ5x7Hd5YiboPXWA/uPbv41Zj5yu6fXrcC58npJWrMbWkvinOlkHcmCmF
-	snwounmngBvIWeRgbxvMk6ndO+wVd0WAMTO5OGZtRbC1wLUhr/x6ya62kK5jQl63h2Jtbs5I=
-X-Gm-Gg: ASbGnctDyyOC5y5JxJqxqhcJP1zjbI/MbuRVibXCCdpATL9kKpk1eClZD0Pn8+mm/a7
-	ZVaPGBnEKk3IGV1SRtr0uw3rNDjPtSzv6t/XkK6liMUTFS+parqrQU2LSCwAot4cfSB0xJ3Gd9U
-	7IBxxr8SW0QbD6+WNtIb2oSMFrj1Yd42UzMdttbGh4fFjpFOBPtm5J8Anaytvx07gzMTVYeUowx
-	2rBzYbvMUpMXWTMaW3G6ZcMWqrrsZgIIhtTKq+/AvzoMkOesMiwxPHQMB05HYFlrUrzivW5Tpxc
-	D5zy/MLkFg5D9uHeJR7zyisaCkqGNRQrB+ZxYqVvSJCUM8eUhObQ7Sdo9ZzdiK3b95QpP+J/lce
-	dq3w=
-X-Received: by 2002:a05:6214:252e:b0:6e8:ebc6:fd5f with SMTP id 6a1803df08f44-6eaeaa8e3f1mr49273866d6.20.1741978510735;
-        Fri, 14 Mar 2025 11:55:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE257MSzOWoy11FijTGYTY4RP3nDJLcq+KMpo80CBlog1fwjsIU/CJtTndItZwBaXbwOab9dQ==
-X-Received: by 2002:a05:6214:252e:b0:6e8:ebc6:fd5f with SMTP id 6a1803df08f44-6eaeaa8e3f1mr49273396d6.20.1741978510399;
-        Fri, 14 Mar 2025 11:55:10 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba8a92f3sm586420e87.237.2025.03.14.11.55.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 11:55:08 -0700 (PDT)
-Date: Fri, 14 Mar 2025 20:55:05 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        David Airlie <airlied@gmail.com>, Dmitry Baryshkov <lumag@kernel.org>,
-        Hermes Wu <Hermes.wu@ite.com.tw>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Rob Clark <robdclark@gmail.com>, Robert Foss <rfoss@kernel.org>,
-        Sean Paul <sean@poorly.run>, Simona Vetter <simona@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v6 2/4] drm/bridge: add function interface for
- DisplayPort audio implementation
-Message-ID: <otidtln4pjb47azr7zhllxkqmwocdnbdiay6xcg6psphz3436i@fn5hxgaflgv6>
-References: <20250314-dp-hdmi-audio-v6-2-dbd228fa73d7@oss.qualcomm.com>
- <d5b8a7fa506ed3026c19b383edf160d6@kernel.org>
+        d=1e100.net; s=20230601; t=1741978595; x=1742583395;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RNVuCuSS97Q/Z+sHOmkjZ2bCuVpW+EMqPl3PUMJe14g=;
+        b=mO5aqaqkoMCDyHDB+ICZLQ5d2Rq4dKVqILjDOH0O3fGpAzbbJfJAc64uhtAHdP68p8
+         BvL0fxUXKIHLnffgqQENIRjpscZ8imHqd0wVXCc0e0fWdogGKWpuOWYlLmme5JNRX9H9
+         jIDu3+y833L1XRYXArRVcJQx0r80esRghcOBa+wWY8/EHgfoG+K/h0u7yTWagBPOaWFf
+         C5cpIz5Xh5xuhnCAcUJQOJLYmbhbGKXl0Yku2hIFPuOzjFbBrDS+Jp1ptElLsOFv79h4
+         T78tnXo/cmpShoXetEsjBrxVCHQT19l5gvu8myzmiXE7RMqZZLk0eQ6yNuU2I5g4eoaq
+         IPoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXKc3H2+wW2QeI3f2orJHvj/Dxz3MiQOgZHNv+Nl0W/cxfbasMoIrcGMrsmNEqqLfT530xBfweCBw2mFH0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQuz5fGseKMGumovpy58fGozLLrcAUgY9aG0TvquBHMssUlGRf
+	0B1ZLr8asXSVJbVYldl56nEiv7ehio6+vOQGsPrXIjCqBr23HZf2Fsm1fJMaloo=
+X-Gm-Gg: ASbGncupW2I57qZtgbICg3EnCKOO+aGeOpeVCrsR04h9hHX/US60sZgeWCQ6ipoNAKf
+	8KNZbljt9nSchBuYSbs3CbO0V980caUqnzz64P2KyHHC8Q5uCa/TKcd2013GnkM6PI2Jj6AcJaO
+	iUzM6VspHktGOu8+NYa4xKaGxvVdkuErtw06b6qHePEVkr7SP8l5FZKfXcy4IBdbOHNPKYFNUaB
+	FrR0QXsV4Hp62Ew4UkZ2VghoaI8bJ17iKiFwHa5JWGyuxlZ20eSyu4SWciP81Dj5BgbKCWfSxop
+	b3AH9r1hBbiW9foiCDO0T5wnFpUCzjX+Sls1Kxwtnu/nvT7Q1L3JrRNU4mbG5G/2Xq6hJkqzZ9c
+	PIA4GTg==
+X-Google-Smtp-Source: AGHT+IGg20VFuY1ZXtqIODcWgwwkYNtqJaT66K1mKtecrIPYl6dsZdvrnubDwiZydzZ3z/ZBfVrqDw==
+X-Received: by 2002:a05:6808:1528:b0:3f6:ea63:6a6d with SMTP id 5614622812f47-3fdeefecf73mr2090220b6e.22.1741978595347;
+        Fri, 14 Mar 2025 11:56:35 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3fcd5c0007esm798356b6e.37.2025.03.14.11.56.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Mar 2025 11:56:34 -0700 (PDT)
+Message-ID: <05b83988-b7aa-453a-bef7-8e7eda77f53a@baylibre.com>
+Date: Fri, 14 Mar 2025 13:56:32 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d5b8a7fa506ed3026c19b383edf160d6@kernel.org>
-X-Authority-Analysis: v=2.4 cv=D6NHKuRj c=1 sm=1 tr=0 ts=67d47b8f cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=lSd5XUrhw2FdKyVgWKUA:9 a=CjuIK1q_8ugA:10 a=iYH6xdkBrDN1Jqds4HTS:22
-X-Proofpoint-GUID: A-p2P_329Jbe04Wi4MaPpj4sASEBoZqX
-X-Proofpoint-ORIG-GUID: A-p2P_329Jbe04Wi4MaPpj4sASEBoZqX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_07,2025-03-14_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 spamscore=0 lowpriorityscore=0 phishscore=0
- adultscore=0 malwarescore=0 mlxlogscore=839 clxscore=1015 impostorscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503140147
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] docs: iio: new docs for ad4052 driver
+To: Jorge Marques <gastmaier@gmail.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: Jorge Marques <jorge.marques@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250306-iio-driver-ad4052-v1-0-2badad30116c@analog.com>
+ <20250306-iio-driver-ad4052-v1-3-2badad30116c@analog.com>
+ <CAMknhBFiZZUtCkTjQ=AVSgwqe=wCkMnqAmaTqvW_X6fm1OKuYA@mail.gmail.com>
+ <e3p2r2fet2spkrxv7x76gunlivrp3vng22wktz4fkww5nkckt7@jpgne4uerr3c>
+ <20250310195416.6d8c64f2@jic23-huawei>
+ <c62l6jv5vgsxnbipw7jar6tikjavwybdxaurz7hkdowbamc7ic@ak2rva3ujmaa>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <c62l6jv5vgsxnbipw7jar6tikjavwybdxaurz7hkdowbamc7ic@ak2rva3ujmaa>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 14, 2025 at 05:54:14PM +0000, Maxime Ripard wrote:
-> On Fri, 14 Mar 2025 11:36:49 +0200, Dmitry Baryshkov wrote:
-> > It is common for the DisplayPort bridges to implement audio support. In
-> > preparation to providing a generic framework for DP audio, add
-> > corresponding interface to struct drm_bridge. As suggested by Maxime
-> > for now this is mostly c&p of the corresponding HDMI audio API.
-> > 
-> > 
-> > [ ... ]
+On 3/14/25 1:13 PM, Jorge Marques wrote:
+> On Mon, Mar 10, 2025 at 07:54:16PM +0000, Jonathan Cameron wrote:
+>> On Sun, 9 Mar 2025 21:49:24 +0100
+>> Jorge Marques <gastmaier@gmail.com> wrote:
+>>
+>>>>> +.. list-table:: Driver attributes
+>>>>> +   :header-rows: 1
+>>>>> +
+>>>>> +   * - Attribute
+>>>>> +     - Description
+>>>>> +   * - ``in_voltage0_raw``
+>>>>> +     - Raw ADC voltage value
+>>>>> +   * - ``in_voltage0_oversampling_ratio``
+>>>>> +     - Enable the device's burst averaging mode to over sample using
+>>>>> +       the internal sample rate.
+>>>>> +   * - ``in_voltage0_oversampling_ratio_available``
+>>>>> +     - List of available oversampling values. Value 0 disable the burst
+>>>>> +       averaging mode.
+>>>>> +   * - ``sample_rate``
+>>>>> +     - Device internal sample rate used in the burst averaging mode.
+>>>>> +   * - ``sample_rate_available``
+>>>>> +     - List of available sample rates.  
+>>>>
+>>>> Why not using the standard sampling_frequency[_available] attributes?  
+>>> Because sampling_frequency is the sampling frequency for the pwm trigger
+>>> during buffer readings.
+>>> sample_rate is the internal device clock used during monitor and burst
+>>> averaging modes.
+>>
+>> For an ABI that is very vague and the two use cases seem to be logically
+>> quite different.
+>>
+>> Seems that for each trigger we have an oversampling ratio controlled number
+>> of samples at this rate. It is unusual to be able to control oversampling
+>> rate separately from the trigger clock, hence the lack of ABI.  If
+>> we add something new for this it should something relating to oversampling.
+>> oversampling_frequency perhaps.
+>>
+>> For monitor mode, it is tied to the sampling frequency for most devices.
+>> But there are exceptions.  E.g. the max1363. Trick is to make it an event
+>> ABI property and hence under events/ rather than in the root directory.
+>>
+>> In this case you'll have to store two values and write the appropriate
+>> one into the register to suit a given operating mode.
+>>
 > 
-> Reviewed-by: Maxime Ripard <mripard@kernel.org>
+> If doing buffer captures with oversampling enabled, both sampling
+> frequencies have an impact:
+> 
+> e.g.,
+> oversampling: 4
+> sample_rate: 2MHz
+> PWM sampling frequency: 500KHz
+> 
+> PWM trigger out (CNV)   |       |       |       |       |
+> ADC conversion          ++++    ++++    ++++    ++++    ++++
+> ADC data ready  (GP)       *       *       *       *       *
+> 
+> For monitor mode, it will constantly be doing conversion to check for
+> threshold crossings, at the defined sample_rate.
+> 
+> I like the idea of having the device's sample_rate as
+> conversion_frequency.
 
-You've sent two r-b's for patch 2. Is there a chance that one of those
-was for patch 3?
+In addition to what makes sense for this chip, we should also consider what
+makes sense other chips with similar features. For example, I am working on
+ad7606c which has control for the oversampling burst frequency (frequency of
+"+" in the diagram above). So it would make sense to have a standard attribute
+that would work for both chips.
 
--- 
-With best wishes
-Dmitry
+On ad4052, just because we have a single register that controls two different
+functions doesn't mean we have to be limited to a single attribute that controls
+that register.
+
+So I would create the events/sampling_frequency{,_available} attributes like
+Jonathan suggested for controlling the sampling frequency in monitor mode and
+introduce new oversampling_burst_frequency{,_available} attributes for
+controlling the conversion frequency when oversampling. When an attribute is
+written, we can cache the requested value in the state struct instead of
+writing it directly to the register on the ADC if we want the attributes to be
+independent. Then only write the register when we enable monitor mode or when
+we start reading samples with oversampling enabled.
+
+Sure, it is more work to implement it in the driver this way, but that shouldn't
+be an an excuse to do things in a way that isn't compatible with other ADCs.
+
