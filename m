@@ -1,102 +1,211 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA52F1FE470
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 13:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957481FFC4B;
+	Fri, 14 Mar 2025 13:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741958079; cv=none; b=UFKM4Sw7JEENFt9StrttmvjDafadfBa5SzPvMGIBsy4ixxCYYlUfNnBIE5Bm80TO8BzmZqdSbCJzhKAEs7ezdDxzPQgXZXJgOH2iqa4YBDJnD5VzOdtJdfZke5xJadp+/tp3I72qp4HZ6U2Dgxt1dC1t5t0cM4L5Cvta4GURIO4=
+	t=1741958086; cv=none; b=SnesYz5dMdknQU0aJidjJpBhdpyBhJ45CRwAjKFumk3AhA5RWn0GrJM2mTKYzypjE5P6nnbmXZXW7u367kLNZHOoWJfQ9U5uVxs+PEH7P73yqjIHNdARA82iiKLTeITghfi7mKMpoQYnPS8cy9Bm0JEwwRmhbExbzh++oCGoMwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741958079; c=relaxed/simple;
-	bh=LCOwegfYSlyPxTWUkilJBjC5KUTBoSn6ooShxFJ+aZo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=skrSawIRqmGrKQLXVvCAxkzKWSHGxGPhsjqyThCe5FQgw+4BwfaY1N7EICoyMHZa8Ulu6fgCK4Xc2mf7tH3mpHH857gF8plb1SC8F/oaylhAHZq1w2qMQ6adiN+EKeiyFVItS9ByPVivHEIH/uyVjpKuLRG+fGgIRhKkOYBzHtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40CF71424;
-	Fri, 14 Mar 2025 06:14:47 -0700 (PDT)
-Received: from [10.57.40.41] (unknown [10.57.40.41])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B3363F673;
-	Fri, 14 Mar 2025 06:14:34 -0700 (PDT)
-Message-ID: <7dbd7dd3-dbf7-42e0-97c4-c5eb50250947@arm.com>
-Date: Fri, 14 Mar 2025 13:14:33 +0000
+	s=arc-20240116; t=1741958086; c=relaxed/simple;
+	bh=7DMjWm8n/7fLinZzNMznJvbWq1as/rJpVihvFho7YMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3TOLdDKiTyrYTYZqmpiQCF2o1z4VF8WS36X/+Uslc9xR1a8QbMy4UEosSIdLbrnZTGU9mPJGxT2D9S/JiKXHjT8egU4b5M3tAZ/bCcUGzGiTGBbedyzuOSRwFXx9UbAWZdhJZCoLETMzRaEF3nwDdRZXgBTFdSMWvo/kr0MZRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=buQiEUuv; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="buQiEUuv"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 270D340E015E;
+	Fri, 14 Mar 2025 13:14:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id z-pXS9vvo2h3; Fri, 14 Mar 2025 13:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1741958076; bh=rK3jFCPqqItfl6ZwdgpRWuAuoUZAqjm53rLp3ckpUT0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=buQiEUuvGPz5ahlbn9PZtwPr+7vVbnqzon3HVoWjnvJq7YlGd1eCukMFuwc5DbzNq
+	 +BBRyB87TCk0D6ai9KuTHjQxQgVo83ZljRWXRyJ5xCSwl3aEOfYGhGUX3zDZDLnqn+
+	 s2MU7ElEGXfjAV89BWTTnroEzUBIS3Wf3RUT/kV2+7OjClA9DQG/Hvopy2xRaK7Bn8
+	 lmG1GyeoHZ8k5v3BYHWevFZgw8ryzPcmzY7T/A8YyzHsCdFH//sIIUfXajgXZbotnx
+	 IhXKl0/iiNsMHRKO7/uUyXgXoiIaz5gaEaAA8W8VdjBES3RrkRV+0aDAd3j+6kSHUV
+	 6k++mMLZZyAN2jc0Hu6M4sR91Y9zoHt/jS7tc7Bgbr/ypFP1R4MkETlxEvEn8gvWO/
+	 Y7rPYfvUfrnjUTMWCLU9v/5/s2XYAqsS6ftcIib2NBhMmT2R7V3ROm6PNzSbzb3Rvl
+	 9JgDLtLPWisWvlUMzaDaH5Unqhf8eG2wm/sVnKTsR98OQDs/Ooj0UY6GeH6Pu6P1J/
+	 2qAAJ83OLDHUGkfe0hPZzL6plpiHGeQlHlXjJoHhtm8q57frspkNwtX2/53ad6KY0u
+	 S32/I19c9GIX27/+TaNuIc4iI9x2XZe0tre/KLSLBG8Wtyc5d6Fs/HOtJAVxxel8/N
+	 jmLhNS9GU2k3ONwVLl4hBbDw=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1A99F40E023B;
+	Fri, 14 Mar 2025 13:14:25 +0000 (UTC)
+Date: Fri, 14 Mar 2025 14:14:19 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: akpm@linux-foundation.org, dave.hansen@linux.intel.com,
+	yosryahmed@google.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	peterz@infradead.org, seanjc@google.com, tglx@linutronix.de,
+	x86@kernel.org
+Subject: Re: [PATCH RFC v2 03/29] mm: asi: Introduce ASI core API
+Message-ID: <20250314131419.GJZ9Qrq8scAtDyBUcg@fat_crate.local>
+References: <20250227120607.GPZ8BVL2762we1j3uE@fat_crate.local>
+ <20250228084355.2061899-1-jackmanb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] sched/util_est: Do not sub the delayed-task's
- util-est
-To: Xuewen Yan <xuewen.yan@unisoc.com>, dietmar.eggemann@arm.com,
- vincent.guittot@linaro.org, mingo@redhat.com, peterz@infradead.org,
- juri.lelli@redhat.com
-Cc: rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.co, linux-kernel@vger.kernel.org, qyousef@layalina.io,
- ke.wang@unisoc.com, di.shen@unisoc.com, xuewen.yan94@gmail.com
-References: <20250314090909.8404-1-xuewen.yan@unisoc.com>
-Content-Language: en-US
-From: Hongyan Xia <hongyan.xia2@arm.com>
-In-Reply-To: <20250314090909.8404-1-xuewen.yan@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250228084355.2061899-1-jackmanb@google.com>
 
-On 14/03/2025 09:09, Xuewen Yan wrote:
-> In cpu_util_without, When the task is in rq, we should
-> sub the task's util_est, however, the delayed_task->on_rq
-> is true, however, the delayed_task's util had been sub
-> when sleep, so there is no need to sub the delayed task's
-> util-est. So add the checking of delayed-task.
+On Fri, Feb 28, 2025 at 08:43:55AM +0000, Brendan Jackman wrote:
+> Yeah I see what you mean. I think the issues are:
 > 
-> On the other hand, as said in [1], the logic of util_est's
-> enqueue/dequeue could be simplified.
-> So simplify it by aligning with the conditions of uclamp.
+> 1. We're mixing up two different aspects in the API:
 > 
-> [1]https://lore.kernel.org/all/CAB8ipk8pEvOtCm-d0o1rsekwxPWUHk9iBGtt9TLTWW-iWTQKiA@mail.gmail.com/
+>    a. Starting and finishing "critical sections" (i.e. the region
+>       between asi_enter() and asi_relax())
 > 
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> ---
->   kernel/sched/fair.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
+>    b. Actually triggering address space transitions.
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index c798d2795243..bebf40a0fa4e 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6930,7 +6930,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->   	 * Let's add the task's estimated utilization to the cfs_rq's
->   	 * estimated utilization, before we update schedutil.
->   	 */
-> -	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE))))
-> +	if (!p->se.sched_delayed || (flags & ENQUEUE_DELAYED))
->   		util_est_enqueue(&rq->cfs, p);
->   
->   	if (flags & ENQUEUE_DELAYED) {
-> @@ -7168,7 +7168,7 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
->    */
->   static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->   {
-> -	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
-> +	if (!p->se.sched_delayed)
->   		util_est_dequeue(&rq->cfs, p);
->   
->   	util_est_update(&rq->cfs, p, flags & DEQUEUE_SLEEP);
-> @@ -8037,7 +8037,8 @@ cpu_util(int cpu, struct task_struct *p, int dst_cpu, int boost)
->   		 */
->   		if (dst_cpu == cpu)
->   			util_est += _task_util_est(p);
-> -		else if (p && unlikely(task_on_rq_queued(p) || current == p))
-> +		else if (p && unlikely(current == p ||
-> +			 (task_on_rq_queued(p) && !p->se.sched_delayed)))
->   			lsub_positive(&util_est, _task_util_est(p));
->   
->   		util = max(util, util_est);
+> 2. There is a fundamental asymmetry at play here: asi_enter() and
+>    asi_exit() can both be NOPs (when we're already in the relevant
+>    address space), and asi_enter() being a NOP is really the _whole
+>    point of ASI_.
 
-Have you tested the above changes to make sure util_est enqueue dequeue 
-are balanced? util_est was broken for quite a while when merging delayed 
-dequeue because now enqueue_ and dequeue_task() do not always appear in 
-pairs. Since then, I always have a local patch like this (may be a bit 
-out of date now) to make sure util_est is balanced
+I'm guessing you mean this thing in __asi_enter():
 
-https://lore.kernel.org/all/752ae417c02b9277ca3ec18893747c54dd5f277f.1724245193.git.hongyan.xia2@arm.com/
++	if (!target || target == this_cpu_read(curr_asi))
++		return;
+
+The assumption being that curr_asi will be the target most of the time after
+having done the expensive switch once...
+
+>    The ideal world is where asi_exit() is very very rare, so
+>    asi_enter() is almost always a NOP.
+
+... asi_exit() being the actual switch to the unrestricted CR3.
+
+And asi_relax() being the switch of current task's asi target ptr to NULL.
+Comment says
+
+"Domain to enter when returning to process context."
+
+but I'm none-the-wiser.
+
+So, why are we doing that relaxing thing?
+
+I'm guessing the relaxing is marking the end of the region where we're running
+untrusted code. After asi_relax() we are still in the restricted CR3 but we're
+not running untrusted code.
+
+> So we could disentangle part 1 by just rejigging things as you suggest,
+> and I think the naming would be like:
+> 
+> asi_enter
+>   asi_start_critical
+>   asi_end_critical
+> asi_exit
+
+Yap, that's what I was gonna suggest: asi_enter and asi_exit do the actual CR3
+build and switch and start_critical and end_critical do the cheaper tracking
+thing.
+
+> But the issue with that is that asi_start_critical() _must_ imply
+> asi_enter()
+
+What does that mean exactly?
+
+asi_start_critical() must never be called before asi_enter()?
+
+If so, I'm sure there are ways to track and check that and warn if not, right?
+
+> (otherwise if we get an NMI between asi_enter() and
+> asi_start_critical(), and that causes a #PF, we will start the
+> critical section in the wrong address space and ASI won't do its job).
+> So, we are somewhat forced to mix up a. and b. from above.
+
+I don't understand: asi_enter() can be interrupted by an NMI at any random
+point. How is the current, imbalanced interface not vulnerable to this
+scenario?
+
+> BTW, there is another thing complicating this picture a little: ASI
+> "clients" (really just meaning KVM code at this point) are not not
+> really supposed to care at all about the actual address space, the fact
+> that they currently have to call asi_exit() in part 4b is just a
+> temporary thing to simplify the initial implementation. It has a
+> performance cost (not enormous, serious KVM platforms try pretty hard
+
+You mean the switch to the unrestricted_cr3? I can imagine...
+
+> to avoid returning to user space, but it does still matter) so
+> Google's internal version has already got rid of it and that's where I
+> expect this thing to evolve too. But for now it just lets us keep
+> things simple since e.g. we never have to think about context
+> switching in the restricted address space.
+> 
+> With that in mind, what if it looked like this:
+> 
+> ioctl(KVM_RUN) {
+>     enter_from_user_mode()
+>     while !need_userspace_handling()
+> 	// This implies asi_enter(), but this code "doesn't care"
+> 	// about that.
+>         asi_start_critical();
+>         vmenter();
+>         asi_end_critical();
+>     }
+>     // TODO: This is temporary, it should not be needed.
+>     asi_exit();
+>     exit_to_user_mode()
+> }
+> 
+> Once the asi_exit() call disappears, it will be symmetrical from the
+> "client API"'s point of view. And while we still mix up address space
+> switching with critical section boundaries, the address space
+> switching is "just an implementation detail" and not really visible as
+> part of the API.
+
+So I'm still unclear on that whole design here so I'm asking silly questions
+but I know that:
+
+1. you can do empty calls to keep the interface balanced and easy to use
+
+2. once you can remove asi_exit(), you should be able to replace all in-tree
+   users in one atomic change so that they're all switched to the new,
+   simplified interface
+
+But I still have the feeling that we could re-jig what asi_enter/relax/exit do
+and thus have a balanced interface. We'll see...
+
+> I have now setup Mutt.
+
+I did that 20 years ago. Never looked back. I'd say you're on the right track
+:-)
+
+> But, for now I am replying with plan vim + git-send-email, because I also
+> sent this RFC to a ridiculous CC list (I just blindly used the
+> get_maintainers.pl output, I don't know why I thought that was a reasonable
+> approach) and it turns out this is the easiest way to trim it in a reply!
+> Hopefully I can get the headers right...
+
+Yeah, works. On the next version, you could trim it to the couple relevant
+lists and to whoever reviewed this. The others can always get the thread from
+lore and there's really no need anymore to Cc the whole world :)
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
