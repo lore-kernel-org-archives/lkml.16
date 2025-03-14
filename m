@@ -1,286 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BDF1EDA04
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643A41C861D
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741944467; cv=none; b=O64tSuNQBNYgSaLQhmj+6KAOQcrPQ5wgGG9D5WCHuCEO5cH6eGwfA2nihgW9clCQzpQ+AcYzeEczRf07GH9vXVBvazVc/V/dEMOIskd73l1kCqoYmJUnO8nCpzND4v5Ww7C4/EJy07GgRv1Y+g3QwEOPT23/gmH61K7m1U2Ny7c=
+	t=1741944482; cv=none; b=pCURMME4uaZwpTcaIZLulGxXyhjA2PyDlM3NPwatpiEAyqC7CwX04Say1rXExASq8xvRIYWfTM/KDiW87CoBhhIcqUx6ai/dWsk+OJky7wnfpjwUvoLro/J4KT9RCRLkf9R/KCgaLrbBCGbhSSBHNCI5m8F9kUc5HjQ+uL1hBIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741944467; c=relaxed/simple;
-	bh=/t0P6BIjsrspzg8W7rJyW+BbEb9bKSj4FEpCyA6N3Y4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KM4Uvy+t8M6BecYvd0ggetcVM9w6NHsS+dOsbMrhSZBSOHqWbenmHNqC6fCP2mf8XAfNhfPdFcfEHF3CceuKwW4qAf9fjYGD6OlVBQuEPxvOSI5L8aqUdcmf6/icV25YykYzTBGiy8+39K+wrhbHtpW2k5lJYZvIrQg1gIP8c7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X9NNkTFS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741944482; c=relaxed/simple;
+	bh=+aTLYTgONcT4kv53BDyLj2LPzsie3l2WpHbTmLAjiX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VfEu17d0tXLhBG4nrWWxsjn1kmqVppF1V9HbdMYi5tD31rUI60ciTeMY33P+w0Bo1juxalKyXlwh0rpvZrkjaVhHbu87BwuRVXn9Pe4Fmlb7MyH7DNQxyJXHmmIKyjwu5KmxzJH/jGHVtQKCkLEPb1qqYXdBJ8T3dFbiH01wZd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CH1MAkRY; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X9NNkTFS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741944463;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8SWIpivWMiiOzlANWVvS6TOJ0c+yC3px3JHXjQpmv1s=;
-	b=X9NNkTFSCFdEKVdkNSlvyk6eB9YDoZyQ/HUuDq4fNge/OZbzfwbvkd4rZc+jevinEzYHf3
-	mOE6Xht/Sx6u+pTmKJxNVz4gdGz9ToZi1uoWmETkAtlce6U0EnoGxEH6+WpC4cRl0rptnI
-	4tCJIwaoa/u9wRRQpWPHKF5avX5O+Cw=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-310-oVKpbcDfPK-YHbZ1YQg2jA-1; Fri, 14 Mar 2025 05:27:41 -0400
-X-MC-Unique: oVKpbcDfPK-YHbZ1YQg2jA-1
-X-Mimecast-MFC-AGG-ID: oVKpbcDfPK-YHbZ1YQg2jA_1741944461
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39141ffa913so1119105f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 02:27:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CH1MAkRY"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abbb12bea54so364484366b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 02:28:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741944478; x=1742549278; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7r0QX++u7FsRXvjWgiyZ7Brlo7OZ9nFdFPIIQMFJWBY=;
+        b=CH1MAkRY+ev2LTVJoN7cI453ibg1zxvOFJl6xo7ijA+zv2uFyoJBg3gnLN2n6KrBRo
+         hhCPdeQImpCL7Lmw+ZLQJCqRftX3WAo7JF8DijKfV+QFJxbgPmqjutT2HO4PWiV+EdDn
+         bFReCPjxYKwTAii1d0OQdFcg3lRop75gkkbdXRuurdXSO6BmCCqyi4O0t9dr1Y6eJ6Yj
+         YqoYjpqbc/FdypkMnCVbsIU7qUyw+gaLi7H8qdU0ASyvpwOwEJf/6OdmgXUbK4pX15Nh
+         oMA7SITzpmlP4dZ6RhkfiNOBopICYq4tyt3YPpMY8a2RZBQCr4hQQ6qB+e2mp46J3gWs
+         tqxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741944460; x=1742549260;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8SWIpivWMiiOzlANWVvS6TOJ0c+yC3px3JHXjQpmv1s=;
-        b=omNy0QqsXMSdR4MZ6aEb25Kj43eLO5kDEe12zReFM9iQIpnJ0uBH5/T2P0F4f7GZoM
-         nra48NtUNrJYna7rDRlxmcH09r+dsd1dd6TyU5vPqPAivl5onZpF8xNvfY2U1W8nz/ru
-         p0PXJCrsDv5OvMvc+/qnSMWoqot9m7HS0mvA7rSk6TsVNCFDYH+Kl21YqMKFXvZ9RAZN
-         ksgVIe9uJqyzpsmGjmUmEel7ZElrN/AqHuiZe8Y5VX0qCr1ydlaTnPBJ/+YIhquP6DwE
-         uoKxurr2O6mh+wrLvBaCsu3Uy8KK/hsn5vyvMTnpGDoSqigyrDbnymcZC7ZpzqpCa8F2
-         DBzw==
-X-Forwarded-Encrypted: i=1; AJvYcCULLjjZ+lJBZvW5F/XxrH+NwX/YdKlGVmXYXQP+2+ku/1MzEc6KDZ/0vVT/u+IRaujsr7kIK3cNMbbrbQ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSSNFn4H+fbPEh34xxBgPQRkYAR2IusGq9AuORqCdBT9igZCE7
-	DpbyvYfkJxgmHZlsqJ+NAPo2PipB7UVTQapiYiF9Q+mdAYx2pwuZzzFMpoIFera7eairnaN0NZF
-	mQau5Uyn6NkkuZjcEHLF6u85Ce6JBYBPhnyvBLJWZYsLqd1STdKd4ng7JNuUgeA==
-X-Gm-Gg: ASbGnct+bQJnW6d7yEZrWyj614O/R0PjoIEPW+GpFvfB0MEsIXfSR13BAhvKA7DbH4i
-	At+RwJnNKu+mFHGy3/qnwUIQHXuDvuVRklZkl2ggL9JPQTtU4zCLyJ3yNQyoMikHn66PF3nQGxK
-	N/wBKev1cFXsjwz5j+SyuHx8jiIa3O6jUlRiSs1/jx9TIOT9I476YVQ8On61jLlQKrqzrhaIxeV
-	foqiZOB8FFKhUlvuQKeK8ZKlp3Z4P2nOUEYB3wFIqSha6+CC+RcAg2FQl8Wxaa+P9P368P0fPdy
-	acg7e9Jhya50/S/ZjV+Wt6FeAMR1StY+JtBXPViMoe20
-X-Received: by 2002:a5d:6c6c:0:b0:38d:e6b6:508b with SMTP id ffacd0b85a97d-3971d23508dmr2176204f8f.9.1741944460599;
-        Fri, 14 Mar 2025 02:27:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHhOnfd8xQf89hKnxHM2+ss0zqT2fuewR91h/7320v0CwhxN16kbkeKvrNPnSiljEvdGmJmwA==
-X-Received: by 2002:a5d:6c6c:0:b0:38d:e6b6:508b with SMTP id ffacd0b85a97d-3971d23508dmr2176185f8f.9.1741944460162;
-        Fri, 14 Mar 2025 02:27:40 -0700 (PDT)
-Received: from lleonard-thinkpadp16vgen1.rmtit.csb ([151.29.33.62])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c82c255bsm4860356f8f.23.2025.03.14.02.27.39
+        d=1e100.net; s=20230601; t=1741944478; x=1742549278;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7r0QX++u7FsRXvjWgiyZ7Brlo7OZ9nFdFPIIQMFJWBY=;
+        b=OrbTaP2DHukfz3lVLC2iOAhQYsU4zvCRRFsz33HNfgNhC2jYqeHDUVF7nDk9GM0+GN
+         Om9k3i+HuYsLneMaeYoG8ljzoVdHPGpoxcBpQ8st3u0wUlWj3usGT780iFHFsJJjGwPZ
+         eqnIarXnCCODKx61Qd+++HHTaynbY/32xtu4JqC9hrS6TZePcvhjrDc8Qs/hgs/G1ONd
+         Ygx/+MbQVJ8gy56jVQgW/ngNhQqFdXcAcSNX9ZIam3sEPVImEHLtMLa/KvAz5YKB2g14
+         g1z10yUylEtKQgAFOSjA5MZlxtHRlW7bbq1K8j41xRs/A9acWbUCFkRIspNie/9K7y9x
+         z53g==
+X-Forwarded-Encrypted: i=1; AJvYcCWn3wIiA1txHsi8jt4N0ZJAtxTpsWcoxXssFgSsd8M/RSDYruDQZKqtDcFpsVLwqtKONodB72WPLT3ymaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJC4yjxQmymfsQL6DFMS2Np/v1zVrK5HZUEsKokK/83kIAX7s+
+	ULjP5Gfuy5UPSOPsxFon84+gtz1ePHwZP14mLnQmaF4y4TaWJgiaIM1/k2UhSdg=
+X-Gm-Gg: ASbGncuYd/nhJ67UbftFgCfnm3hxy7b/SvGP71TJ0FWuPstm1BIT4Zte3a/E8wfSyuA
+	dF/O/pJ072E+aONqK21PbahC5SVpNk4EtWAW4SaXkNIxuN2gpe5nlqxYpQogMQrWoPDkIweSzk4
+	MJeBUoDlEUfjkcBrijtC4R4DeAlc0jnF4Nl6ljgeGr5Ql8/xgDoWXa5c2TdRfeI5tuPwXfjGP54
+	60WD9UYUlxDhAuTsQlEfG549va8Hyuvpg0FzCTLDG9ArOC4HgelyOAWwUbOMdRNomxAMfc4q79f
+	kCzs4az5LX9tntdYsPDM/KwcXpdQIPi29NE7/gI2xZP0w+8nMSyw2eyctA==
+X-Google-Smtp-Source: AGHT+IEctQzZ0HoxHhORo57vJ0aGVrHIvZsJFWmzQWvSD+s8asx4gnK2dy6Kod28lb6eaB7ZdWhuIw==
+X-Received: by 2002:a17:907:d92:b0:abe:fa18:1fc6 with SMTP id a640c23a62f3a-ac33010b594mr213491366b.10.1741944478527;
+        Fri, 14 Mar 2025 02:27:58 -0700 (PDT)
+Received: from localhost (109-81-85-167.rct.o2.cz. [109.81.85.167])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ac314a4659csm199489766b.131.2025.03.14.02.27.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 02:27:39 -0700 (PDT)
-From: Luigi Leonardi <leonardi@redhat.com>
-Date: Fri, 14 Mar 2025 10:27:33 +0100
-Subject: [PATCH net-next v2] vsock/test: Add test for null ptr deref when
- transport changes
+        Fri, 14 Mar 2025 02:27:58 -0700 (PDT)
+Date: Fri, 14 Mar 2025 10:27:57 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, muchun.song@linux.dev,
+	yosry.ahmed@linux.dev, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] mm: vmscan: skip the file folios in proactive reclaim
+ if swappiness is MAX
+Message-ID: <Z9P2nZ6b75FRMhCp@tiehlicka>
+References: <20250314033350.1156370-1-hezhongkun.hzk@bytedance.com>
+ <Z9PuXMlHycL6Gco0@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250314-test_vsock-v2-1-3c0a1d878a6d@redhat.com>
-X-B4-Tracking: v=1; b=H4sIAIT202cC/22NwQoCIRRFf2V46wxHM5lW/UcMYc6blEjDJzIx+
- O+J65aHwz13B8LkkeAy7JCwePIxNBCHAawz4YnML41BcKG45GeWkfK9ULQvJlFrM1ltxElBG3w
- Srn7rsRsEzCzglmFuxnnKMX37Sxm7/xcsI+OMS8Efyli7TuKacHEmH218w1xr/QEfz40MrwAAA
- A==
-X-Change-ID: 20250306-test_vsock-3e77a9c7a245
-To: Stefano Garzarella <sgarzare@redhat.com>, Michal Luczaj <mhal@rbox.co>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>, 
- Luigi Leonardi <leonardi@redhat.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9PuXMlHycL6Gco0@tiehlicka>
 
-Add a new test to ensure that when the transport changes a null pointer
-dereference does not occur[1].
+On Fri 14-03-25 09:52:45, Michal Hocko wrote:
+> On Fri 14-03-25 11:33:50, Zhongkun He wrote:
+> > With this patch 'commit <68cd9050d871> ("mm: add swappiness= arg to
+> > memory.reclaim")', we can submit an additional swappiness=<val> argument
+> > to memory.reclaim. It is very useful because we can dynamically adjust
+> > the reclamation ratio based on the anonymous folios and file folios of
+> > each cgroup. For example,when swappiness is set to 0, we only reclaim
+> > from file folios.
+> > 
+> > However,we have also encountered a new issue: when swappiness is set to
+> > the MAX_SWAPPINESS, it may still only reclaim file folios. This is due
+> > to the knob of cache_trim_mode, which depends solely on the ratio of
+> > inactive folios, regardless of whether there are a large number of cold
+> > folios in anonymous folio list.
+> > 
+> > So, we hope to add a new control logic where proactive memory reclaim only
+> > reclaims from anonymous folios when swappiness is set to MAX_SWAPPINESS.
+> > For example, something like this:
+> > 
+> > echo "2M swappiness=200" > /sys/fs/cgroup/memory.reclaim
+> > 
+> > will perform reclaim on the rootcg with a swappiness setting of 200 (max
+> > swappiness) regardless of the file folios. Users have a more comprehensive
+> > view of the application's memory distribution because there are many
+> > metrics available. For example, if we find that a certain cgroup has a
+> > large number of inactive anon folios, we can reclaim only those and skip
+> > file folios, because with the zram/zswap, the IO tradeoff that
+> > cache_trim_mode is making doesn't hold - file refaults will cause IO,
+> > whereas anon decompression will not.
+> > 
+> > With this patch, the swappiness argument of memory.reclaim has a more
+> > precise semantics: 0 means reclaiming only from file pages, while 200
+> > means reclaiming just from anonymous pages.
+> 
+> Haven't you said you will try a slightly different approach and always
+> bypass LRU balancing heuristics for pro-active reclaim and swappiness
+> provided? What has happened with that?
 
-Note that this test does not fail, but it may hang on the client side if
-it triggers a kernel oops.
+I have just noticed that you have followed up [1] with a concern that
+using swappiness in the whole min-max range without any heuristics turns
+out to be harder than just relying on the min and max as extremes.
+What seems to be still missing (or maybe it is just me not seeing that)
+is why should we only enforce those extreme ends of the range and still
+preserve under-defined semantic for all other swappiness values in the
+pro-active reclaim.
 
-This works by creating a socket, trying to connect to a server, and then
-executing a second connect operation on the same socket but to a
-different CID (0). This triggers a transport change. If the connect
-operation is interrupted by a signal, this could cause a null-ptr-deref.
-
-Since this bug is non-deterministic, we need to try several times. It
-is safe to assume that the bug will show up within the timeout period.
-
-If there is a G2H transport loaded in the system, the bug is not
-triggered and this test will always pass.
-
-[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
-
-Suggested-by: Hyunwoo Kim <v4bel@theori.io>
-Suggested-by: Michal Luczaj <mhal@rbox.co>
-Signed-off-by: Luigi Leonardi <leonardi@redhat.com>
----
-This series introduces a new test that checks for a null pointer 
-dereference that may happen when there is a transport change[1]. This 
-bug was fixed in [2].
-
-Note that this test *cannot* fail, it hangs if it triggers a kernel
-oops. The intended use-case is to run it and then check if there is any 
-oops in the dmesg.
-
-This test is based on Hyunwoo Kim's[3] and Michal's python 
-reproducers[4].
-
-[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
-[2]https://lore.kernel.org/netdev/20250110083511.30419-1-sgarzare@redhat.com/
-[3]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/#t
-[4]https://lore.kernel.org/netdev/2b3062e3-bdaa-4c94-a3c0-2930595b9670@rbox.co/
----
-Changes in v2:
-- Addressed Stefano's comments:
-    - Timeout is now using current_nsec()
-    - Check for return values
-    - Style issues
-- Added Hyunwoo Kim to Suggested-by
-- Link to v1: https://lore.kernel.org/r/20250306-test_vsock-v1-0-0320b5accf92@redhat.com
----
- tools/testing/vsock/Makefile     |   1 +
- tools/testing/vsock/vsock_test.c | 101 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 102 insertions(+)
-
-diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
-index 6e0b4e95e230500f99bb9c74350701a037ecd198..88211fd132d23ecdfd56ab0815580a237889e7f2 100644
---- a/tools/testing/vsock/Makefile
-+++ b/tools/testing/vsock/Makefile
-@@ -5,6 +5,7 @@ vsock_test: vsock_test.o vsock_test_zerocopy.o timeout.o control.o util.o msg_ze
- vsock_diag_test: vsock_diag_test.o timeout.o control.o util.o
- vsock_perf: vsock_perf.o msg_zerocopy_common.o
- 
-+vsock_test: LDLIBS = -lpthread
- vsock_uring_test: LDLIBS = -luring
- vsock_uring_test: control.o util.o vsock_uring_test.o timeout.o msg_zerocopy_common.o
- 
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index d0f6d253ac72d08a957cb81a3c38fcc72bec5a53..d2820a67403c95bc4a7e7a16113ae2f6137b4c73 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -23,6 +23,7 @@
- #include <sys/ioctl.h>
- #include <linux/sockios.h>
- #include <linux/time64.h>
-+#include <pthread.h>
- 
- #include "vsock_test_zerocopy.h"
- #include "timeout.h"
-@@ -1788,6 +1789,101 @@ static void test_stream_connect_retry_server(const struct test_opts *opts)
- 	close(fd);
- }
- 
-+static void *test_stream_transport_change_thread(void *vargp)
-+{
-+	pid_t *pid = (pid_t *)vargp;
-+
-+	/* We want this thread to terminate as soon as possible */
-+	if (pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL)) {
-+		perror("pthread_setcanceltype");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	while (true) {
-+		if (kill(*pid, SIGUSR1) < 0) {
-+			perror("kill");
-+			exit(EXIT_FAILURE);
-+		}
-+	}
-+	return NULL;
-+}
-+
-+static void test_transport_change_signal_handler(int signal)
-+{
-+	/* We need a custom handler for SIGUSR1 as the default one terminates the process. */
-+}
-+
-+static void test_stream_transport_change_client(const struct test_opts *opts)
-+{
-+	__sighandler_t old_handler;
-+	pid_t pid = getpid();
-+	pthread_t thread_id;
-+	time_t tout;
-+
-+	old_handler = signal(SIGUSR1, test_transport_change_signal_handler);
-+	if (old_handler == SIG_ERR) {
-+		perror("signal");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	if (pthread_create(&thread_id, NULL, test_stream_transport_change_thread, &pid)) {
-+		perror("pthread_create");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	tout = current_nsec() + TIMEOUT * NSEC_PER_SEC;
-+	do {
-+		struct sockaddr_vm sa = {
-+			.svm_family = AF_VSOCK,
-+			.svm_cid = opts->peer_cid,
-+			.svm_port = opts->peer_port,
-+		};
-+		int s;
-+
-+		s = socket(AF_VSOCK, SOCK_STREAM, 0);
-+		if (s < 0) {
-+			perror("socket");
-+			exit(EXIT_FAILURE);
-+		}
-+
-+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
-+
-+		/* Set CID to 0 cause a transport change. */
-+		sa.svm_cid = 0;
-+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
-+
-+		close(s);
-+	} while (current_nsec() < tout);
-+
-+	if (pthread_cancel(thread_id)) {
-+		perror("pthread_cancel");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	/* Wait for the thread to terminate */
-+	if (pthread_join(thread_id, NULL)) {
-+		perror("pthread_join");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	/* Restore the old handler */
-+	if (signal(SIGUSR1, old_handler) == SIG_ERR) {
-+		perror("signal");
-+		exit(EXIT_FAILURE);
-+	}
-+}
-+
-+static void test_stream_transport_change_server(const struct test_opts *opts)
-+{
-+	time_t tout = current_nsec() + TIMEOUT * NSEC_PER_SEC;
-+
-+	do {
-+		int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
-+
-+		close(s);
-+	} while (current_nsec() < tout);
-+}
-+
- static void test_stream_linger_client(const struct test_opts *opts)
- {
- 	struct linger optval = {
-@@ -1984,6 +2080,11 @@ static struct test_case test_cases[] = {
- 		.run_client = test_stream_linger_client,
- 		.run_server = test_stream_linger_server,
- 	},
-+	{
-+		.name = "SOCK_STREAM transport change null-ptr-deref",
-+		.run_client = test_stream_transport_change_client,
-+		.run_server = test_stream_transport_change_server,
-+	},
- 	{},
- };
- 
-
----
-base-commit: 4d872d51bc9d7b899c1f61534e3dbde72613f627
-change-id: 20250306-test_vsock-3e77a9c7a245
-
-Best regards,
+[1] https://lore.kernel.org/all/CACSyD1OHD8oXQcQmi1D9t2f5oeMVDvCQnYZUMQTGbqBz4YYKLQ@mail.gmail.com/T/#u
 -- 
-Luigi Leonardi <leonardi@redhat.com>
-
+Michal Hocko
+SUSE Labs
