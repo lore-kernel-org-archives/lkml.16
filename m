@@ -1,117 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001C318A6DE;
-	Fri, 14 Mar 2025 07:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 337A615CD4A;
+	Fri, 14 Mar 2025 07:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741938994; cv=none; b=ngTEQDDuHGuIUOemxooCFCXfEPBJ88Y0z8s6B2nTT+4hzqXoteX4mTnU4RxsDZXUk1z2NL1xPG6lUNwGJH2Cf3047G2cZoAs05hUGABo699FRW/XxtpxuzP2VfyGXhGVGeLOxdbzBbVGLvcYCBNPmXldcNMazSEIXErmIzF2AtA=
+	t=1741939003; cv=none; b=RgV+O9JQkwgr+/2h/X2RvPXdR3sz1q0gRAvMeVHMBrVadKAW7LOODm9KOswjTtMAnyyfwJ4bFuwZvUcCX8uFinP0TxVT/bhOWMwkca9un7K4DENYdqE7vXh2KCnM7baxIFWbeGpYo5wzRTSdEmGkdtMxKsN2nM389ZHwxQ7PG64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741938994; c=relaxed/simple;
-	bh=S1mPArXyJZeezYVK9tG0rBphuNgLjdFuyDXlCLKPOIk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KMbYHkOH0QwPiLKfIZv/EQSoRfLOJ2SFfbbw3+klvq6GYLAIl4H1KC7eLm0drF9727C6sKjGD7oFd3JJfb+HhVdE7ZvIr0eDWGZljQCdu/bY8DEqhOXCKOzG+YCvC1UzHDRKJw8HUM3PyTPeqf+kmp30Q+pLd8UrvaSDt/6Nj5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4pF+adY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4pF+adY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 875AEC4CEE5;
-	Fri, 14 Mar 2025 07:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741938993;
-	bh=S1mPArXyJZeezYVK9tG0rBphuNgLjdFuyDXlCLKPOIk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H4pF+adYShV+O2whvh3V9qNNNr9t4Alh85Y9+Zxylu08UYoQMfEhgzucA2HYZuq9G
-	 evvSA9ZlbcIO/LdETyc/TUUBUIDv1howO1zZvEO8ruYF3lEtqCuC+X5bCCMlp+zhLs
-	 f274axrOdv6/9sagNj7YlWR1uJPA4C/W4BSz24TqNRKoXABr0gzYv2S6Z0obaH58Gl
-	 eD87BppOA07n1wFgQRsiTatizrKks1/mg5X3FRrIN+diuqp7hTeQR4sQ4st6V8+V2o
-	 WCDp6TWdh+b9xdzaKbb6UwnboKpmnaPRA138hq0WXje9Q0bUgZ1nbYs7JM9muxArmM
-	 DfrtI0FZ/1bBA==
-Message-ID: <d2c41dbd-ca11-4e06-9081-db772f8cdd2c@kernel.org>
-Date: Fri, 14 Mar 2025 08:56:27 +0100
+	s=arc-20240116; t=1741939003; c=relaxed/simple;
+	bh=mAJqODhdppim4+7U2eMnPfMR4EnUZuNUqM2FaRAkv2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ad4EhbVaJW8VVpO1K6c5Qqle6dZv4bbqDuHAp5Mp5/Oe3xJwRLIUft/rdSuw0RyKfrWm7zmp7mEe6p+6Bz2LgkLWkJ3CgD/G986dsGKNMjxe+sLIMtRAjC+lvKOQZJp8ULqzML7FNPQ3XGiffhuqN4JL9nH0Mg4B+FGQs+59IVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwDHza0W4dNnyancCQ--.5043S2;
+	Fri, 14 Mar 2025 15:56:06 +0800 (CST)
+Received: from localhost (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwDn6IQB4dNnnI5IAA--.13879S2;
+	Fri, 14 Mar 2025 15:55:57 +0800 (CST)
+Date: Fri, 14 Mar 2025 15:55:44 +0800
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: rafael@kernel.org, lenb@kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
+	rppt@kernel.org, haibo1.xu@intel.com, chenbaozi@phytium.com.cn,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] ACPI: NUMA: debug invalid unused PXM value for CFMWs
+Message-ID: <Z9PhAKEFj5ugVuow@phytium.com.cn>
+References: <20250313060907.2381416-1-wangyuquan1236@phytium.com.cn>
+ <Z9MHvp6GA_iGwfg0@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: display: tegra: document EPP, ISP,
- MPE and TSEC for Tegra114 and Tegra124
-To: Svyatoslav Ryhel <clamor95@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thierry Reding <treding@nvidia.com>,
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250314074557.16367-1-clamor95@gmail.com>
- <20250314074557.16367-2-clamor95@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250314074557.16367-2-clamor95@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9MHvp6GA_iGwfg0@aschofie-mobl2.lan>
+X-CM-TRANSID:AQAAfwDn6IQB4dNnnI5IAA--.13879S2
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAIAWfR6CAHHgAas1
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW3XrWfZrW5GrW8tr4kCr15Jwb_yoW7CrW5pF
+	WxKFWrtFWxtFWxCan2vr15JFyS9w10yFWUGry7Wr9xZrsrWryfZF4xJayYvFyDA348Cr4S
+	qF4vy3W5ua40vFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On 14/03/2025 08:45, Svyatoslav Ryhel wrote:
-> The current EPP, ISP and MPE schemas are largely compatible with Tegra114
-> and Tegra124, requiring only minor adjustments. Additionally, the TSEC
-> schema for the Security engine, which is available from Tegra114 onwards,
-> is included.
+On Thu, Mar 13, 2025 at 09:28:46AM -0700, Alison Schofield wrote:
+> On Thu, Mar 13, 2025 at 02:09:07PM +0800, Yuquan Wang wrote:
+> > The absence of SRAT would cause the fake_pxm to be -1 and increment
+> > to 0, then send to acpi_parse_cfmws(). If there exists CXL memory
+> > ranges that are defined in the CFMWS and not already defined in the
+> > SRAT, the new node (node0) for the CXL memory would be invalid, as
+> > node0 is already in "used".
+> > 
+> > This utilizes disable_srat() & srat_disabled() to fail CXL init.
 > 
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> Seems like this fixup has drifted from adjusting the fake_pxm to 
+> shutting down CXL parsing. More below -
+> 
+> > 
+> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+> > ---
+> > 
+> > Changes in v2:
+> > - Add disable_srat() when fake_pxm is invalid
+> > - Add srat_disabled() check in cxl_acpi_probe() and acpi_parse_cfmws()
+> > 
+> > 
+> >  drivers/acpi/numa/srat.c | 10 ++++++++++
+> >  drivers/cxl/acpi.c       |  4 ++++
+> >  2 files changed, 14 insertions(+)
+> > 
+> > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> > index 00ac0d7bb8c9..2dac25c9258a 100644
+> > --- a/drivers/acpi/numa/srat.c
+> > +++ b/drivers/acpi/numa/srat.c
+> > @@ -441,6 +441,11 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+> >  	start = cfmws->base_hpa;
+> >  	end = cfmws->base_hpa + cfmws->window_size;
+> >  
+> > +	if (srat_disabled()) {
+> > +		pr_err("SRAT is missing or bad while processing CFMWS.\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> 
+> This goes too far by shutting down cfmws parsing for lack of SRAT.
+>
 
-<form letter>
-This is a friendly reminder during the review process.
+Actually, I thought there need another patch to fix the follow problem
+that the fake node bring when no SRAT.
 
-It seems my or other reviewer's previous comments were not fully
-addressed. Maybe the feedback got lost between the quotes, maybe you
-just forgot to apply it. Please go back to the previous discussion and
-either implement all requested changes or keep discussing them.
+Detailed description below.
 
-Thank you.
-</form letter>
+> >  	/*
+> >  	 * The SRAT may have already described NUMA details for all,
+> >  	 * or a portion of, this CFMWS HPA range. Extend the memblks
+> > @@ -646,6 +651,11 @@ int __init acpi_numa_init(void)
+> >  		if (node_to_pxm_map[i] > fake_pxm)
+> >  			fake_pxm = node_to_pxm_map[i];
+> >  	}
+> > +
+> > +	/* Make sure CFMWs fake nodes start at node[1] */
+> > +	if (fake_pxm < 0)
+> > +		disable_srat();
+> > +
+> 
+> How does the code above make sure fake node starts at node[1]?
+> Would an explicit adjustment like this work?
 
-Best regards,
-Krzysztof
+Thanks for your correction :) Yes, the way I used here is too implicit.
+
+> 
+> -       last_real_pxm = fake_pxm;
+> -       fake_pxm++;
+> +       fake_pxm = max(fake_pxm, 1);
+> +       last_real_pxm = fake_pxm--;
+
+I tried the adjustment below: 
+
+	fake_pxm = max(fake_pxm, 0); // 0 because it will increment to 1  
+	last_real_pxm = fake_pxm++;
+
+This works but it might only control the parameter sent to acpi_parse_cfmws(). 
+According to acpi_map_pxm_to_node(), altough the input fake_pxm is 1 when no
+SRAT, the returned node would still be 0 and the following nodes are aslo
+incorrect.
+
+Hence, I tried add a new line below:
+
+	fake_pxm = max(fake_pxm, 0);
+	last_real_pxm = fake_pxm++;
+        node_set(0, nodes_found_map);
+
+As no matter what situation, node[0] would be found and set. With this
+setting, acpi_map_pxm_to_node() could return the expected node value
+even if no SRAT. :( 
+
+Unfortunately, when we use "cxl create-region" to enable our cxl memory,
+it would still be assigned to node[0], because the "numa_add_memblk()"
+can only add numa_memblk to numa_meminfo list. 
+
+If our SRAT is OK, the numa_memblks_init() would then utilize
+numa_move_tail_memblk() to move the numa_memblk from numa_meminfo to
+numa_reserved_meminfo in CFMWs fake node situation. If SRAT is missing
+or bad, the numa_memblks_init() would fail since init_func() would fail. 
+And it causes that no numa_memblk in numa_reserved_meminfo list and the
+following dax&memory_hotplug drivers could not online the expected fake
+node. 
+
+Based on the above problem, I have a new patch idea that introduce a new
+function in mm/numa_memblks.c: numa_add_reserved_memblk(). It could add
+one numa_memblk to nuam_reserved_meminfo directly. Maybe we could call
+it in acpi_parse_cfmws() if srat is missing.
+
+In mm/numa_memblks.c:
+
+	int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
+	{		
+		return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
+	}
+
+In drivers/acpi/numa/srat.c:
+
+	if (srat_disabled()) {
+		if (numa_add_reserved_memblk(node, start, end) < 0) {
+			pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+			node, start, end);
+		}
+	}
+
+:( But..., the dax_kmem driver will fail because something wrong in
+memory_group_register_static(). The good result is our cxl memory would
+not be assigned to node[0] anymore!
+
+BTW, as papering these things looks like not easily, I chose to aggressively
+fail the acpi_parse_cfmws() in srat.c since it mainly works for building
+cxl fake nodes and also fail the CXL init in cxl_acpi_probe per Jonathan.
+
+Link: https://lists.nongnu.org/archive/html/qemu-devel/2025-03/msg03668.html
+
+Hopes more comments to guide me! I'm a really rookie in kernel community :P
+
+> >  	last_real_pxm = fake_pxm;
+> >  	fake_pxm++;
+> >  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index cb14829bb9be..e75a8ead99f6 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -829,6 +829,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > +	/* CXL must be in a NUMA system */
+> > +	if (srat_disabled())
+> > +		return -EINVAL;
+> > +
+> >  	cxl_res = devm_kzalloc(host, sizeof(*cxl_res), GFP_KERNEL);
+> >  	if (!cxl_res)
+> >  		return -ENOMEM;
+> > -- 
+> > 2.34.1
+> > 
+
