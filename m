@@ -1,140 +1,140 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1221DF757
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB28F1EEA2A
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741944328; cv=none; b=JM1Ir84X+YHq7WY6y+X0Hze6VOga9fR8ob1ttiuuoGBpUYn8DD/2xYTs44495eI55+thKkUf/CcR/6bRoCb5254ZKA5LN/RzxGG1ndQMUt/SfizRPNBki1mBjPSsQ8q8KVKMWZTadqM25BrYbahguYkZvIhN1mV+dYft4lqqYWA=
+	t=1741944339; cv=none; b=BDl+CjrywfDq1y0IwbgvOioU8WNdxmKW6UiNpADlYDmaXQnOcZ+UOETDa4yPGFTByFxdEtlJtsgkOV0O9drEOFE0nPEP47flRF54UZS/VybBYrVx1GjIwpyXNcZXyPbab/P7yONzB/Y81ukOAOyGzs6FX77cHHQ36thObWxyGjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741944328; c=relaxed/simple;
-	bh=0i/TUOGKh5zJ1RuoNnpT3g0OxCdYQqEgi9AErd0ye/k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jA0cdxCcIJlpQiadtrVYWuShQNyTZmO7SkffbCi0/4B44IMXuPxhkej35dIW1Ihy9k8vVpk4u/wnLD5/Qc8Z/JYeSrGWDUkrlVl4L/74J3JHL78RHq6MTdTk74PwGuyj3SIKIcjgUM4SQWTCP3/h5VUImkje+XO1YIK6aW7JDb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fdUkS3dw; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1741944339; c=relaxed/simple;
+	bh=5ZsmaxJhr/V+579363Xlhk2wdnVfWqhybz2vgd3iu+0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Eh5BaxS76KT0ehPQgjRep+JHW81Pl8g/+Fe3CtVrNmDYdrXUlQ5HlhULIZlMv0+EMft8brip/J8eVGfLP72v/O9XF3pDnyNTjP7FXLZS5sNw2bTCPQcC31K9S+0Y8S74bgCDZKcpAoozZPy6rCgU5YDHhMc6yclcf4z4InOOGao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=b9kg9Eou; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t7mxcR2c; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=b9kg9Eou; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t7mxcR2c; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fdUkS3dw"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so19304351fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 02:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1741944324; x=1742549124; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OdpgR/K+jG8H9Mmix9bCdPdwnrgEiVRubiQLwqas2JE=;
-        b=fdUkS3dwQzJ8ujVqPc85pDju9bltqlDJpzF65/Nyoh1KN7aQhBEj9vqb+PNVAB2/mQ
-         +29TsE9bKEGXOP4jZWYy3A/JPEcYkRAoDFlssbVLHxcG9w/GlHg6DhzXbM4mAk0T+lQg
-         TWnsfSw1NGQwnL+OvZSjPqOdzec8+IlhzPRwNmlfkVfaTD1uP/dN2vbv8+NPDNU/7FLK
-         q+Uy8yeQYjPpmJVuIPocDtutSJ0p+G4YPshQCTqlk0vsGzByoOAeb5ZkJPfAc1j5zT2A
-         lXmXd89xA7XKjE5Ejn4nvMDMkHqbsMgBsdBF/KVm0D8yNQBl8Hvft0o/Z94Hsf+kdEkK
-         ZZhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741944324; x=1742549124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OdpgR/K+jG8H9Mmix9bCdPdwnrgEiVRubiQLwqas2JE=;
-        b=MeKg7zs3EFoKJDIW8q7/A9IW7buagnDu6rJNCcNg6swVgzVcgW5kDFywe64x9kUgS9
-         gyE0n+K5yT6HuiRiKYqlqNxV/RtgJN8sx9H8NHaoXuobss203i6fHRix6lGNG8NPL2kh
-         9+zucx4+l9umMlNvW3B8whJeQihH/pwFCOI0dj2vDMoKinNVcrBXIN4q1PuAcGrdRAF4
-         qmhLaly6WP+voB5f7zbAoGMjgy5mmaczYjDN+Mteb3ZIGldVprdj0UChTHxRaykfCsd+
-         PEB7vZl05zElqDJlX0nmqlhsjxHWT7lzLGFJkeLNmfHcjXrHk41BJUim8oaXaH5PgTUM
-         8R1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXoop0yoeeT4tMAY0k+w4ULg5M+k6m2oFAFqIX6LcsvLTREMbRJdHOaRunlxsTHa4PIqCV+Lg4OLvIByn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykMgYjP+ePh6uf1Lk4uED/+OXY1mJo9v/zXDOqYrbkNbzCXBYN
-	dnfzWtC2stIMSdbT1qyGi9ZzbPXPkMQwsOx1UsETQkGs3AXZn1F9+xzVoT0DwazmZP5d75HOHCT
-	h4SyoBMR1/oY/tdZ+FwPMzXTqBOfXGiV42lw0+4rUOYFHFlcNFlCAjg==
-X-Gm-Gg: ASbGncsE6XtTbJ+rUHJLfCKEbE8ote2ZyM5e3PEquDOvmEcP7nuRfoSFWeaq4r+PhGg
-	chtm/QoKoJdeT9caDlpoXLqRqTHIS5ha117GhILBJoWmO0zp7fTVN2rOhxmJ2CqwE9SlbJhx2Zw
-	1cUjNbx/3IKlywWkVnTWi1U4eUZP8w4mjCxYjPXs0=
-X-Google-Smtp-Source: AGHT+IEjVen50YVpwUrK456NvIgY0rwkW0OYrnlQs6iiVW7g/V8zHkeH6055LHMjUjoDNm/N0Eo8uGzNKzgcUV2w3yg=
-X-Received: by 2002:a05:6512:2216:b0:549:38eb:d694 with SMTP id
- 2adb3069b0e04-549c3913c35mr566242e87.26.1741944324144; Fri, 14 Mar 2025
- 02:25:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="b9kg9Eou";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t7mxcR2c";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="b9kg9Eou";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t7mxcR2c"
+Received: from kitsune.suse.cz (unknown [10.100.12.127])
+	by smtp-out2.suse.de (Postfix) with ESMTP id E4D6D1F388;
+	Fri, 14 Mar 2025 09:25:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741944336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tmaj98J/fxkfgoUEV6gT/fCczi5L/Uyg0IXGLFH63V0=;
+	b=b9kg9Eou7sCDQ/zMFDOXv2H8frkSr3cznK8uO1q2nlfJ1MgNxEMIbULLgTEF/eRko5Uvnv
+	OQEF3kV9QxJcUihfWAjzyHHtsgeD7MSdAmF+HPkt9ZMXRHE9J+13AtLPFO8ILNvlbwMAh0
+	gsr2QI9XLrCao3MIBWnUjjX8eV1Ue0E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741944336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tmaj98J/fxkfgoUEV6gT/fCczi5L/Uyg0IXGLFH63V0=;
+	b=t7mxcR2c1iON3DvFhhP1If79mdaLUE48gbYj39tjy2K4g2QGidh1bGc08oHM2aGlOa1EVw
+	j13KQvs+dBPrNlBA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741944336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tmaj98J/fxkfgoUEV6gT/fCczi5L/Uyg0IXGLFH63V0=;
+	b=b9kg9Eou7sCDQ/zMFDOXv2H8frkSr3cznK8uO1q2nlfJ1MgNxEMIbULLgTEF/eRko5Uvnv
+	OQEF3kV9QxJcUihfWAjzyHHtsgeD7MSdAmF+HPkt9ZMXRHE9J+13AtLPFO8ILNvlbwMAh0
+	gsr2QI9XLrCao3MIBWnUjjX8eV1Ue0E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741944336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tmaj98J/fxkfgoUEV6gT/fCczi5L/Uyg0IXGLFH63V0=;
+	b=t7mxcR2c1iON3DvFhhP1If79mdaLUE48gbYj39tjy2K4g2QGidh1bGc08oHM2aGlOa1EVw
+	j13KQvs+dBPrNlBA==
+From: Michal Suchanek <msuchanek@suse.de>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Michal Suchanek <msuchanek@suse.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org,
+	"Nysal Jan K.A." <nysal@linux.ibm.com>
+Subject: [PATCH v2] powerpc/boot: Fix build with gcc 15
+Date: Fri, 14 Mar 2025 10:25:23 +0100
+Message-ID: <20250314092528.15506-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <Z86liwlwP5WvrEkw@kitsune.suse.cz>
+References: <Z86liwlwP5WvrEkw@kitsune.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314033350.1156370-1-hezhongkun.hzk@bytedance.com> <Z9PuXMlHycL6Gco0@tiehlicka>
-In-Reply-To: <Z9PuXMlHycL6Gco0@tiehlicka>
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Date: Fri, 14 Mar 2025 17:24:47 +0800
-X-Gm-Features: AQ5f1JqB7zSyjpT8_t67e_MWnk5d31Q2OfVpYekPNjXCTE9-Bw2QjQJ5WgPleAU
-Message-ID: <CACSyD1NMQp83-38FO-pHXStF=p=R82DqQwNfdx3SBQ-qNuyYUA@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH V2] mm: vmscan: skip the file folios in
- proactive reclaim if swappiness is MAX
-To: Michal Hocko <mhocko@suse.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, muchun.song@linux.dev, 
-	yosry.ahmed@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_COUNT_ZERO(0.00)[0];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,kernel.org,fjasle.eu,google.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-On Fri, Mar 14, 2025 at 4:53=E2=80=AFPM Michal Hocko <mhocko@suse.com> wrot=
-e:
->
-> On Fri 14-03-25 11:33:50, Zhongkun He wrote:
-> > With this patch 'commit <68cd9050d871> ("mm: add swappiness=3D arg to
-> > memory.reclaim")', we can submit an additional swappiness=3D<val> argum=
-ent
-> > to memory.reclaim. It is very useful because we can dynamically adjust
-> > the reclamation ratio based on the anonymous folios and file folios of
-> > each cgroup. For example,when swappiness is set to 0, we only reclaim
-> > from file folios.
-> >
-> > However,we have also encountered a new issue: when swappiness is set to
-> > the MAX_SWAPPINESS, it may still only reclaim file folios. This is due
-> > to the knob of cache_trim_mode, which depends solely on the ratio of
-> > inactive folios, regardless of whether there are a large number of cold
-> > folios in anonymous folio list.
-> >
-> > So, we hope to add a new control logic where proactive memory reclaim o=
-nly
-> > reclaims from anonymous folios when swappiness is set to MAX_SWAPPINESS=
-.
-> > For example, something like this:
-> >
-> > echo "2M swappiness=3D200" > /sys/fs/cgroup/memory.reclaim
-> >
-> > will perform reclaim on the rootcg with a swappiness setting of 200 (ma=
-x
-> > swappiness) regardless of the file folios. Users have a more comprehens=
-ive
-> > view of the application's memory distribution because there are many
-> > metrics available. For example, if we find that a certain cgroup has a
-> > large number of inactive anon folios, we can reclaim only those and ski=
-p
-> > file folios, because with the zram/zswap, the IO tradeoff that
-> > cache_trim_mode is making doesn't hold - file refaults will cause IO,
-> > whereas anon decompression will not.
-> >
-> > With this patch, the swappiness argument of memory.reclaim has a more
-> > precise semantics: 0 means reclaiming only from file pages, while 200
-> > means reclaiming just from anonymous pages.
->
-> Haven't you said you will try a slightly different approach and always
-> bypass LRU balancing heuristics for pro-active reclaim and swappiness
-> provided? What has happened with that?
->
+Similar to x86 the ppc boot code does not build with GCC 15.
 
-Hi Michal
-I'm not sure if we should do that. Because i found a problem that If we
-drop all the heuristics for scanning LRUs, the swappiness value each
-time will accurately represent the ratio of memory to be reclaimed. This
-means that before each pro reclamation operation, we would need to
-have relatively clear information of the current memory ratio and dynamical=
-ly
-changing the swappiness more often because with the pro memory reclaiming,
-the ratio of anon and file is alway changing . Therefore, we should adjust =
-the
-swappiness value more frequently.  The frequency of setting Swappiness to
-200 is relatively much lower.
+Copy the fix from
+commit ee2ab467bddf ("x86/boot: Use '-std=gnu11' to fix build with GCC 15")
 
-Do you have any commits about this concern?
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+v2: Move the fix outside of ifdef to apply to all subarchitectures
+---
+ arch/powerpc/boot/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> --
-> Michal Hocko
-> SUSE Labs
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 1ff6ad4f6cd2..210c60d3d4cc 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -32,6 +32,8 @@ else
+     BOOTAR := $(AR)
+ endif
+ 
++BOOTTARGETFLAGS	+= -std=gnu11
++
+ ifdef CONFIG_PPC64_BOOT_WRAPPER
+ BOOTTARGETFLAGS	+= -m64
+ BOOTTARGETFLAGS	+= -mabi=elfv2
+-- 
+2.47.1
+
