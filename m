@@ -1,132 +1,213 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EAC2045AB
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3B1204683
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741970188; cv=none; b=pLK5ZxBHXiNbLAFVoFsoJ1baBJloVobYREYERCbnDa2Fm06yPdQuyi8lQ35hItIEtGC/JpkvlVKdyFE2fd6ct22QbHuCYnrxxrGqy/szml2Wzajn3BVqvFUW4tmwifajPJYrvVBOlPTiLaX6AbWxnYc8Aat8atiojq79Gko8XYo=
+	t=1741970190; cv=none; b=cS5O60qoIgf0z48hBoxDoaL9975eJ59Gc+MSw5TeANxthMhXAAY4esiwshQ+nDfaOMlyGTANyn18AwJTrvG1y8Pro5ilT/DeyGQasW3XOicAa1Ve30S2Rik1GBReJICfEV/voB8jIUYyyfW15RSea+7S+l34DX9lIUvVbCmiHbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741970188; c=relaxed/simple;
-	bh=HL2qrnqP6m2SJjIgrryOgrdGWPC/DqOKAlmK3yLxVLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2mSMqbsKGx9bj6sRyETvnwjy3T343Uk1qzmhOJOO5iBSiG5YrRa+IXSKQN49e95FmpVIugjiBqUe5eQe37QXdW/d6tT7VN77yYeBv7xOPJCf2APXDafiK0xw1ZOJ4JzDQWP7xLS1PooFQ6uM4wtlnGNvaAK9yl8knOe+NeE1HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dlt1JDhL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1741970190; c=relaxed/simple;
+	bh=lWkbNwnU42/3UeHrOSQyV7bTNoivQuIxQ1vjh4Mq5ZI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J61uWwMmRW2/gqGEVJDtYNtb3xJlwC3jQR+zYkogwjEoaob67qzoQfd9KkCCPCIZlVbKQL56qcTo2u6uanfShDqgmG/8DpCEhsnZ9edYcOtNOT5BXpTGP/POoy6UJ32q+gdbqMpOC2d+VlU2Hhe4UXF5bPOpNIX0s+l9KRLzbfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xGdU/cef; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dlt1JDhL"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EDu5os024812
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=dwRYAMlQoWB7Kdu76G96hqJd
-	qDT3vaRt4pY8/dRjDDw=; b=dlt1JDhLB3SF5k1enjXmPQ+CY5/Jc0SXLOy8zj/j
-	uDBrJIPmf0wDjctB15xSX7YkTsOAEhjm0YhizvjywwKAs4AeMsK1gMAyCkdz/hmv
-	7Gx8Jjj/I1GpU+piLuO5mmC/PhDsKVo+aOXmNgMUIiMTxkaAvlxPrVUuKeCUlotS
-	9ZgUHJFml/qIAql8oo2MoFD6bI5mJnbPgvqUKja4pggtsfo90ih0h7d7my/1gt7/
-	BLU1b+Gnq7pHHvjpPloiDRspdQGFhl7IcE+odoH3OogqNSLq4x2aCNz4sgz/qo2W
-	1q28TTeMZ3aVBxfgQoZZqrCr+2PYYNSohu9ghO3HSf4RdA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45cnscrdyh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:25 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-476664bffbeso40584751cf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:36:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741970184; x=1742574984;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xGdU/cef"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-388cae9eb9fso1307615f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741970186; x=1742574986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dwRYAMlQoWB7Kdu76G96hqJdqDT3vaRt4pY8/dRjDDw=;
-        b=A1CS2Xa8mAqy76JXYxL8+bFiyTvxRJ0pF7xC/usy4d1rtEw8ihw7bCXkTW2b6iurQc
-         70UameLHBzlaUcKLNWucMI6wedITyIq/acw59tchkIU/2abqW2Ejg4gXxuvyaS7ak9PP
-         zJfasR5m+5dxvUsy8UPDjLCJradvIsJKicDOI/26Hb2mQban9rROxn9dg2MyUvpES+y0
-         LbD9s6vp4wSNPpubsheLOOT6TKM01PXJMW71uRfSWAEzQUCW7RLwd1ka7/ydE3jDgF39
-         hBhmUeWolpA26h3/pMi1ebLHILz7dRNYeF4Zgyl1Yntv3SjzJLAMG4aUFz6pSrUt6tJJ
-         bFig==
-X-Forwarded-Encrypted: i=1; AJvYcCVjvzrzjfrzXkKbFD6qzae9XpTnBxkpap0uupERr/42sqK1FfeGdPo+rxCovxMamY/9LUbzevE7dnfSXnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywkqz36WZkOeE9SKMBuapk9BfBipfrArHFWlzl0iyVL3+sOdARc
-	JOZZtFCUeegyHoKYhZvAxIOwuTtYTtZe3D7jnNo7qhXM6hZSRKynNFu4b3rtOZpFA9x/n+GX8St
-	IIaZqybP1SWEND6qv5dQqhWqQjcjE9tWQXHL22sOyXf2FRNnHHTwFfQws7OXkdP8=
-X-Gm-Gg: ASbGncswmSNWNUt0vBCyLcel560cokxnYSAB/T7MszYiGxa6gdY/Fg4MG9EA+7vSSOu
-	vhMW8ICbV9HC8E1EWNOzv6FdLpA15SudPc9iQYSYp806EhzRJKL1oLhDVAzWqwnEvCErxgNFnJE
-	TDtAb97rtbla+Ow925UoyJ7xIs/+MMzVaIL1N2DsHW13uZcqwlmIPvl3U5cWwwkiuW0yJ9rzuNq
-	31tH9RxZ5qZroNOdXrjWfKL3zpU7349ueCK4FInqLN+kvWH0w23AmXQD+pj1vafIbykN9PVJ7OL
-	Dc1yov40MPiiHNsPlJkBmfIfhHmpgekDwVIa/T9cta8izbqSFyJRMaXqBB7035jPsNLC/Sz6yg8
-	hI90=
-X-Received: by 2002:a05:6214:5097:b0:6e8:ddaf:6422 with SMTP id 6a1803df08f44-6eaeab00312mr28706726d6.43.1741970184415;
-        Fri, 14 Mar 2025 09:36:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJb4x2fMIyGfk5ixR2DwoFRga6e8xcjQATKUUg0Rfaz32txxfwF6NxY3A0ZD5xbJ0//+/kjw==
-X-Received: by 2002:a05:6214:5097:b0:6e8:ddaf:6422 with SMTP id 6a1803df08f44-6eaeab00312mr28706456d6.43.1741970184127;
-        Fri, 14 Mar 2025 09:36:24 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba88598dsm562471e87.188.2025.03.14.09.36.20
+        bh=HssPI0cKmc3x85MzrxtPJaiP5XP5Yw7gWJ7O5ruEo5I=;
+        b=xGdU/ceflSxWPuMrWc8VKWaeDHspRWExWxfqP0o7eDVQIXZUzfPx+UdUrgTXZd8iDv
+         Zsn6ZBuP2IJOerCa7TpJXrSDw39gzLn26TI6ai/fXrBn78glRmMszBDdJ8lYTSMSrVGv
+         /E+2bXhy8dKyep+uoet4FKPuPLErgm22efqTvHweypAXtOnqiQTL+RW3966AqMBhE+tH
+         4cvm1q9RysD+jbG07kBufkNYQfQqS5LRWqwMPlgQk3fx/h63RHd6/B+jf2shFk2izLnn
+         wrD4s+yTiw2so6Kn4FvFtwr2vvqisSjK61+3IYhsO+QaFbWTN4j30EBi2mlYVRD46SpS
+         rWxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741970186; x=1742574986;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HssPI0cKmc3x85MzrxtPJaiP5XP5Yw7gWJ7O5ruEo5I=;
+        b=TJVPzNBZZMofycZWKnunaGBm91Q3BlPEwEIbgp966ZhiHbBntd9l/VG04P7sDgsY4z
+         2yiUAzgVFbHQf7u5dN2+TbqsAMYR/nRIcAFUrXEybapB+4MvvuA4DuPB+SvuFy1mln6P
+         lrFn5OhCiE7O/qbokzluJMJi0SjhXJlQt4Lysum7OnZrMplSZn7WJGI0nticSdy4njT2
+         arMUqsIa6BlYVcDvdy2k729TUzxfdevTqjFincs9a/JPcYMnxDUoMp/TgqIt7uuB1AEL
+         l6PE7WEJcTAbklST9kTrrZHau0fR05/TndXFiwVuuP1EcXN0qNeY3Fg1Oh/fozsdppL3
+         HKNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVchhRROc2ZcYkFRcBDDRhjzemaGey81f2i+MUmJS1eayn+VfeD5nZfRMqwVeE9syq8wIOaf7hU4ytKZ4I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOes2pK7Rv4KLOLrm2nXXfUjxt4PZf0BHQYIfE01JemjNBnSV8
+	Bzs7WSnBYd5WC5Bj59GQ/lTYS6D+emi8yA/zuwA2BtF0y58UbkLEITjLrOcZUEQ=
+X-Gm-Gg: ASbGnctwtbwvkK4h4GXuriX+6CpgotCUnssucXb0YL+XDa1oNMSdbNc1Mcy1RPZ86p0
+	cFsaTrCKLxllgXSDpYB7ykgbJsT6FmHn3YZTl+6PGA0g1+LbTc76Ag8wiAdmdky5L5PcSy73aTQ
+	f6uS3fvHhfkNP3hiQrT4rjG4PUyBd8S8jtXTUjvsSpRW7BRJI1AVLntUoUrF3tWuvYQ1wtRYjGk
+	TcmA4ReLtr8kneS7CtwniTWWv0FtXQjtfxfF/YA41xPUtKQ82VB773+5O652jaF25vKdUhA+uGq
+	QV2TkoehSCHdCYJUrdngPLZ83Fp1TAcS5Sjf7z2OAN6+CxS/cOWo4+3BHaF61m0=
+X-Google-Smtp-Source: AGHT+IEfcbaC7/dP12XC4RIyye8JyqalwZZXx4m/QKC8CumMgy5dhoxCd5fKQUNt5trjL+7P/A45EA==
+X-Received: by 2002:a05:6000:1a87:b0:390:f0ff:2c1c with SMTP id ffacd0b85a97d-3971e96b183mr3622548f8f.18.1741970185902;
+        Fri, 14 Mar 2025 09:36:25 -0700 (PDT)
+Received: from vingu-cube.. ([2a01:e0a:f:6020:329b:9a6:20f4:3754])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb40cd78sm6072925f8f.78.2025.03.14.09.36.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 09:36:22 -0700 (PDT)
-Date: Fri, 14 Mar 2025 18:36:19 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>,
-        Rajendra Nayak <quic_rjendra@quicinc.com>,
-        Sibi Sankar <quic_sibis@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2 1/8] arm64: dts: qcom: x1e80100-crd: mark l12b and
- l15b always-on
-Message-ID: <zhiunl3doj3d5rc2m3w2isnwloyyvtbbgiiuzbg3dxy342vnhy@n27ioyo2mhvm>
-References: <20250314145440.11371-1-johan+linaro@kernel.org>
- <20250314145440.11371-2-johan+linaro@kernel.org>
+        Fri, 14 Mar 2025 09:36:24 -0700 (PDT)
+From: Vincent Guittot <vincent.guittot@linaro.org>
+To: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	lukasz.luba@arm.com,
+	rafael.j.wysocki@intel.com,
+	pierre.gondois@arm.com,
+	linux-kernel@vger.kernel.org
+Cc: qyousef@layalina.io,
+	hongyan.xia2@arm.com,
+	christian.loehle@arm.com,
+	luis.machado@arm.com,
+	qperret@google.com,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH 6/7 v6] sched/fair: Add misfit case to push task mecanism for EAS
+Date: Fri, 14 Mar 2025 17:36:13 +0100
+Message-ID: <20250314163614.1356125-7-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250314163614.1356125-1-vincent.guittot@linaro.org>
+References: <20250314163614.1356125-1-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250314145440.11371-2-johan+linaro@kernel.org>
-X-Authority-Analysis: v=2.4 cv=Qbxmvtbv c=1 sm=1 tr=0 ts=67d45b09 cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=z4ldfGPc2qRxCRB1vwoA:9
- a=CjuIK1q_8ugA:10 a=dawVfQjAaf238kedN5IG:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Or-c6V_FzEeuW2XcVDr-UXVtSaOduUA_
-X-Proofpoint-GUID: Or-c6V_FzEeuW2XcVDr-UXVtSaOduUA_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_06,2025-03-14_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 adultscore=0 mlxlogscore=517 mlxscore=0 phishscore=0
- impostorscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503140130
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 14, 2025 at 03:54:33PM +0100, Johan Hovold wrote:
-> The l12b and l15b supplies are used by components that are not (fully)
-> described (and some never will be) and must never be disabled.
+Some task misfit cases can be handled directly by the push mecanism
+instead of triggering an idle load balance to pull the task on a better
+CPU.
 
-Which components?
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/fair.c | 38 +++++++++++++++++++++++++-------------
+ 1 file changed, 25 insertions(+), 13 deletions(-)
 
-> 
-> Mark the regulators as always-on to prevent them from being disabled,
-> for example, when consumers probe defer or suspend.
-> 
-> Fixes: bd50b1f5b6f3 ("arm64: dts: qcom: x1e80100: Add Compute Reference Device")
-> Cc: stable@vger.kernel.org	# 6.8
-> Cc: Abel Vesa <abel.vesa@linaro.org>
-> Cc: Rajendra Nayak <quic_rjendra@quicinc.com>
-> Cc: Sibi Sankar <quic_sibis@quicinc.com>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/x1-crd.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 9a95d2eb168e..81b4d09c6c5b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8510,6 +8510,8 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ 			target_stat.runnable = cpu_runnable(cpu_rq(cpu));
+ 			target_stat.capa = capacity_of(cpu);
+ 			target_stat.nr_running = cpu_rq(cpu)->cfs.h_nr_runnable;
++			if ((p->on_rq) && (!p->se.sched_delayed) && (cpu == prev_cpu))
++				target_stat.nr_running--;
+ 
+ 			/* If the target needs a lower OPP, then look up for
+ 			 * the corresponding OPP and its associated cost.
+@@ -8615,6 +8617,9 @@ static inline bool sched_energy_push_task(struct task_struct *p, struct rq *rq)
+ 	if (p->nr_cpus_allowed == 1)
+ 		return false;
+ 
++	if (!task_fits_cpu(p, cpu_of(rq)))
++		return true;
++
+ 	if (is_rd_overutilized(rq->rd))
+ 		return false;
+ 
+@@ -8626,33 +8631,33 @@ static inline bool sched_energy_push_task(struct task_struct *p, struct rq *rq)
+ 
+ static int active_load_balance_cpu_stop(void *data);
+ 
+-static inline void check_pushable_task(struct task_struct *p, struct rq *rq)
++static inline bool check_pushable_task(struct task_struct *p, struct rq *rq)
+ {
+ 	int new_cpu, cpu = cpu_of(rq);
+ 
+ 	if (!sched_energy_enabled())
+-		return;
++		return false;
+ 
+ 	if (WARN_ON(!p))
+-		return;
++		return false;
+ 
+ 	if (WARN_ON(!task_current(rq, p)))
+-		return;
++		return false;
+ 
+ 	if (is_migration_disabled(p))
+-		return;
++		return false;
+ 
+ 	/* If there are several task, wait for being put back */
+ 	if (rq->nr_running > 1)
+-		return;
++		return false;
+ 
+ 	if (!sched_energy_push_task(p, rq))
+-		return;
++		return false;
+ 
+ 	new_cpu = find_energy_efficient_cpu(p, cpu);
+ 
+ 	if (new_cpu == cpu)
+-		return;
++		return false;
+ 
+ 	/*
+ 	 * ->active_balance synchronizes accesses to
+@@ -8663,13 +8668,15 @@ static inline void check_pushable_task(struct task_struct *p, struct rq *rq)
+ 		rq->active_balance = 1;
+ 		rq->push_cpu = new_cpu;
+ 	} else
+-		return;
++		return false;
+ 
+ 	raw_spin_rq_unlock(rq);
+ 	stop_one_cpu_nowait(cpu,
+ 		active_load_balance_cpu_stop, rq,
+ 		&rq->active_balance_work);
+ 	raw_spin_rq_lock(rq);
++
++	return true;
+ }
+ 
+ static inline int has_pushable_tasks(struct rq *rq)
+@@ -8954,7 +8961,11 @@ balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	return sched_balance_newidle(rq, rf) != 0;
+ }
+ #else
+-static inline void check_pushable_task(struct task_struct *p, struct rq *rq) {}
++static inline bool check_pushable_task(struct task_struct *p, struct rq *rq)
++{
++	return false;
++}
++
+ static inline void fair_queue_pushable_tasks(struct rq *rq) {}
+ static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p) {}
+ static inline void fair_add_pushable_task(struct rq *rq, struct task_struct *p) {}
+@@ -13362,9 +13373,10 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+ 	if (static_branch_unlikely(&sched_numa_balancing))
+ 		task_tick_numa(rq, curr);
+ 
+-	check_pushable_task(curr, rq);
+-	update_misfit_status(curr, rq);
+-	check_update_overutilized_status(task_rq(curr));
++	if (!check_pushable_task(curr, rq)) {
++		update_misfit_status(curr, rq);
++		check_update_overutilized_status(task_rq(curr));
++	}
+ 
+ 	task_tick_core(rq, curr);
+ }
 -- 
-With best wishes
-Dmitry
+2.43.0
+
