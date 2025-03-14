@@ -1,147 +1,90 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852081DE2C1;
-	Fri, 14 Mar 2025 09:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9101D1A2C06
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741943032; cv=none; b=I75emS5PAopMq3t3RECdbvNcivNAa7VGV5ALFE1sMEkzunIyQpPFsouehwibqhNKFFFRkHU8tD6ry24RLGbJ0NkFscxr90d2mS+Sie5xuMHWV7Q/l+US6GKYW03yyxlfdYDqr4RKz6Mb2+TLFuAhtq/f7i7GmnDWa37zhoi+FgU=
+	t=1741943054; cv=none; b=WoI2hbjxgxHZySD00E4bgGJNQ2ZGupCMFeAP/mK8y+23HZn0Px2pteZVgkROz++yCXhvQhAXoXZs4Qi9MG+JALvodZt6szuwmxOwxnLHTkR7QFZ9NNvGuUXYHPnnrJqZjTJ8VrP6sgN15bCnPOj98KtUkwLvTWdF9dz7MQD93/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741943032; c=relaxed/simple;
-	bh=ZErZMC+QOWToIegQ2iKmCvjBmUNPIrj83qIYnRryRRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FnT6hK09j2f3H+fVn7df2FNJvsRViQhCNdrnKZAPqX7xKXyR4ZTUCkxayIBVyjOqyeWlQi9JfDr9kFKD/G49v+V/wzZ+baacydUVWh69JsvPK5wV0ZEn0oxWgGulwbfgkS/+DGUdjflhE9qcTEmo/21ptEir+ngcu6eCN5Pnlbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=deepin.org; spf=pass smtp.mailfrom=deepin.org; dkim=pass (1024-bit key) header.d=deepin.org header.i=@deepin.org header.b=jXa4I/G3; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=deepin.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deepin.org
+	s=arc-20240116; t=1741943054; c=relaxed/simple;
+	bh=KKMWbVYyFWu7ZUXpQokMSScMpsc3NzLjId8s4PaNsxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WIIYmZSBX6MFQrPF8DAcEUVxREcLYFqR5YtpsMeQ3CV8B3QUGy+/XhBgN3XfPfT3apEvfxKzHZV2OXrNHqzvwxnO2pVqLLYj1o0PqIyzeFAT/wjwjjp0rLuvi6D/drPvykADKadp5Al+POECnsaM3n3DKqP1zudE/y09ATl13aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m7Ok8/Zs; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=deepin.org header.i=@deepin.org header.b="jXa4I/G3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=deepin.org;
-	s=ukjg2408; t=1741943015;
-	bh=F3Mr2gHjrrQbbfObvuHIpoye6jVxjDNGFB92bMbmjnM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=jXa4I/G3uyCQg1WD0syZm8bEx4u8LV2xsCI9VQgC9WQoQDLXp+t7lMNZG3sHxwV+J
-	 3LmW5qqn/zc6zbIAphiW27/D8bXgkoMkmRLwN/PwiR9UhtAVotwmjHHicvnMonA6Fg
-	 hqwLVLhX58srmwO6KfZReoYIPEXbOEXQuVJGkolM=
-X-QQ-mid: bizesmtpsz6t1741943012t48o76y
-X-QQ-Originating-IP: yWt2CxAOtvx3l3yIbs0QqGFaTolnx3VFoOEH3BYpPD8=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 14 Mar 2025 17:03:30 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 4056344661151254047
-From: Chen Linxuan <chenlinxuan@deepin.org>
-To: Andrii Nakryiko <andrii@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Chen Linxuan <chenlinxuan@deepin.org>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Yi Lai <yi1.lai@intel.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH stable 6.1] lib/buildid: Handle memfd_secret() files in build_id_parse()
-Date: Fri, 14 Mar 2025 17:02:47 +0800
-Message-ID: <5602B4F2D8F73293+20250314090247.31170-2-chenlinxuan@deepin.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m7Ok8/Zs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=h4ZI+8mmk43LoBz/MUUTTtjwLu4Cz6gytp4/uNJFbhQ=; b=m7Ok8/Zs6czLmcw/idlsz+MW9Z
+	DRabhkKiAij/zJuq2ocv0si5iVz7TcNrgNmP1fq/2WcH+k/GDi4yoQU/XjZfoWQ1oKd2W+cyy1azf
+	z+Le2A1TFbEO2+OgV0yCsxWvxC9MxU7TWVCOwtja8fd50X+qrxxcETPbSPrUpwPFe2NT5Wh4WpTRH
+	ce5LqB8ep9PPTgqe7TRKAfgSBd0MdU/+0cj34or70icyj8TBhlU8PUeeKhqTkFJPwBNI7GmHWn+3n
+	AkTnuXj0RHLhl/gr5zYCoD2kTnymRoLtQ7qwFY3fvnimftTJYkFSROKAM1XTiMAO5kzTn+/7Ks6wn
+	wkEzIm9A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tt0xe-00000002rqW-2toP;
+	Fri, 14 Mar 2025 09:04:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A4C5E300599; Fri, 14 Mar 2025 10:04:09 +0100 (CET)
+Date: Fri, 14 Mar 2025 10:04:09 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [patch 00/46] genirq: Cleanups and conversion to lock guards
+Message-ID: <20250314090409.GV5880@noisy.programming.kicks-ass.net>
+References: <20250313154615.860723120@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:deepin.org:qybglogicsvrgz:qybglogicsvrgz7a-0
-X-QQ-XMAILINFO: N2uXtyrSU4Fu3wpACaovTJUP+GajuhxUR6pKBTRzKenMG8bkFVtrUdaj
-	9VnFEzRe2Jt6/MXQKV8lL0pBqDz0Bqlti5oI1KxwfRNShTixDnkT1CZ90u1uktmxkRd6WSS
-	j4natsBdxEjDIWDyeVb3HV4LjRl50Q3hpiErT1gJ2bDBFxc7C+ubitiJWcpfFc1dNYUAt65
-	QK2QIYmN5ETM3pe5mwlu+3AwzZ7mp8gonYreBmCoRf7HRnktpniGTLbhD41yk2rFrBE5RL2
-	Iol3qTwdyk03GE0Rz7iNn+1It46+j27m/4b8IJacOemhyFaQmyvNm/553jnbWfo5aensg41
-	fDrfYAFPGMaRd2+GwIZ01V7sgFd6ScOXGVcfda5n6Mxo5rwYMdolzyyU8XgHTh5SgA56MCz
-	jHfCHJx8kCbGUrV6IlHKnj77rCBxVeQIQxBVUlEwQKbo5/hT5IuNvWGE+kU5utjKv8l+dnj
-	xVVay8U2OoBidcowcZlBv0aVI3Br87EojcPYemUy0iZiAzbqI69xA+3xYx1jEjDb0SVo/Jj
-	VzVSbn1imw5YupfqkenibARcEWV7BQvtrFWtPAoZXJygPiloiwiYLHnAFe6fGTaBqrsVo+N
-	IGCA5d6FFC5DSjRnCIJgmIiv6zHfoPIpUhv8zBbW4hOO7nEj2NuNGbw6CBDOcR0mnPyqj/y
-	K2dMOk/Me3evuLKxYyj4CSjhQkAQhNI0YZrxKsJ6uJCaj2gHA8Qv50P1hJvRtnopHOGcrsI
-	Vp0dwU9CPAG0qrSXYI0mAEtRdGOs90toD0ZY+GqYG7mnxMMR/XYIHrR/mEgVui2kw8D8jHi
-	AF8aRuREqbsiMJb+zAk+1gU78NSrBAY4RtvnLvUIp1b48Co+6kcEvc8CeU5VT5G+QByyjEh
-	X46gKDrOqd7rUjzNC2PYUwljm1NbbCmnM8PzKg1RkWiG8a6ieJkPcSV0FdGPhfIvK/r0N6F
-	E4YYj9FrTBKy1L4Nw/zye35xUwcXrJn/mUbbDZLZvSn3Ke8jAONqiVD+hZo5Y/SPJkbNYpa
-	o/3xs0dkXc0n6GTVNF6orP2ppZRoyu1PxXtSxTNv+zuySJ8L3WyfdtU7WPuuJ7bSbWUPaMx
-	w==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313154615.860723120@linutronix.de>
 
-[ Upstream commit 5ac9b4e935dfc6af41eee2ddc21deb5c36507a9f ]
+On Thu, Mar 13, 2025 at 04:59:41PM +0100, Thomas Gleixner wrote:
+> The generic interrupt core code has accumulated quite some inconsistencies
+> over time and a common pattern in various API functions is:
+> 
+>     unsigned long flags;
+>     struct irq_desc *desc = irq_get_desc_[bus]lock(irq, &flags, mode);
+> 
+>     if (!desc)
+>        return -EINVAL;
+>     ....
+>     irq_put_desc_[bus]unlock(desc, flags);
+> 
+> That's awkward and requires gotos in failure paths.
+> 
+> This series provides conditional lock guards and converts the core code
+> over to use those guards. Along with that it converts the other open coded
+> lock/unlock pairs and fixes up coding and kernel doc formatting.  The
+> conversions were partially done with Coccinelle where possible.
 
->From memfd_secret(2) manpage:
+I see you've chosen for the scoped_guard() variant here, as opposed to
+the scoped_cond_guard() one :-)
 
-  The memory areas backing the file created with memfd_secret(2) are
-  visible only to the processes that have access to the file descriptor.
-  The memory region is removed from the kernel page tables and only the
-  page tables of the processes holding the file descriptor map the
-  corresponding physical memory. (Thus, the pages in the region can't be
-  accessed by the kernel itself, so that, for example, pointers to the
-  region can't be passed to system calls.)
+Anyway, cursory reading of the patches show no obvious weirdness.
 
-We need to handle this special case gracefully in build ID fetching
-code. Return -EFAULT whenever secretmem file is passed to build_id_parse()
-family of APIs. Original report and repro can be found in [0].
+>  include/linux/irq.h     |    2 
+>  kernel/irq/autoprobe.c  |   26 -
+>  kernel/irq/chip.c       |  640 ++++++++++----------------
+>  kernel/irq/cpuhotplug.c |   10 
+>  kernel/irq/debugfs.c    |    3 
+>  kernel/irq/internals.h  |   47 -
+>  kernel/irq/irqdesc.c    |  136 +----
+>  kernel/irq/manage.c     | 1154 ++++++++++++++++++++----------------------------
+>  kernel/irq/pm.c         |   38 -
+>  kernel/irq/proc.c       |   65 --
+>  kernel/irq/resend.c     |   50 --
+>  kernel/irq/spurious.c   |  104 +---
+>  12 files changed, 920 insertions(+), 1355 deletions(-)
 
-  [0] https://lore.kernel.org/bpf/ZwyG8Uro%2FSyTXAni@ly-workstation/
-
-Fixes: de3ec364c3c3 ("lib/buildid: add single folio-based file reader abstraction")
-Reported-by: Yi Lai <yi1.lai@intel.com>
-Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-Link: https://lore.kernel.org/bpf/20241017175431.6183-A-hca@linux.ibm.com
-Link: https://lore.kernel.org/bpf/20241017174713.2157873-1-andrii@kernel.org
-[ Linxuan: perform an equivalent direct check without folio-based changes ]
-Cc: stable@vger.kernel.org
-Fixes: 88a16a130933 ("perf: Add build id data in mmap2 event")
-Signed-off-by: Chen Linxuan <chenlinxuan@deepin.org>
----
-
-Some previous discussions can be found in the following links:
-https://lore.kernel.org/stable/05D0A9F7DE394601+20250311100555.310788-2-chenlinxuan@deepin.org/
-
----
- lib/buildid.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/lib/buildid.c b/lib/buildid.c
-index 9fc46366597e..6249bd47fb0b 100644
---- a/lib/buildid.c
-+++ b/lib/buildid.c
-@@ -5,6 +5,7 @@
- #include <linux/elf.h>
- #include <linux/kernel.h>
- #include <linux/pagemap.h>
-+#include <linux/secretmem.h>
- 
- #define BUILD_ID 3
- 
-@@ -157,6 +158,12 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
- 	if (!vma->vm_file)
- 		return -EINVAL;
- 
-+#ifdef CONFIG_SECRETMEM
-+       /* reject secretmem folios created with memfd_secret() */
-+       if (vma->vm_file->f_mapping->a_ops == &secretmem_aops)
-+               return -EFAULT;
-+#endif
-+
- 	page = find_get_page(vma->vm_file->f_mapping, 0);
- 	if (!page)
- 		return -EFAULT;	/* page not mapped */
--- 
-2.48.1
-
+Nice!
