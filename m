@@ -1,205 +1,122 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A8C1FF5EB
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 14:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A061FF1A8
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 14:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741962261; cv=none; b=ttSUCk+inW51lpA6CRYf9ou9HabuFSPmLSb5SQPxuHRiAM28nrFxKSm7vupA6xwzYHYrvMfbeuY4ZTB2nDxzkZzd7j3X9x3S8c1N351POTouO1o6oxT3hhTgYiHRCLB8pyn6dwRxLi2iik4CNdNKoBADSUZRwDQqpE84sWCyuBo=
+	t=1741962467; cv=none; b=dxel6e4sVsFNv1Qg/AjgPzWEjv0XsxvNZt4wjgs8UsnlehU2rrrgUwL59QGZ76crXXFNcTGKNUMEF5QLhRxlnx2og4nbx7B9wvXsPbzvsaXyXLwcQoJe7l3JhJOA34DXE+eQHCyvd84CpNl6uALYAE7doOAuwbT5RVZJGZ506Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741962261; c=relaxed/simple;
-	bh=kYyJLmSymRZAmh2EhKWsFiv6RQFJTIzx/aENnxg8Zgw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eP/bK65P0Vw+zkyQUVRJuOWsvNXjZfkmaeuHwTLtbJIMTBF+vpbF6e3JKmADLxIpylvYZnOa7as3RLeOEXFHJ8j1Y8f8TSZiX7PFEqloRElnIyk21DQqC0m24dgDJTn2hFy6/q68ZF+Nzg7+yVsOnU63sxQT3B2+4AujEpGiJZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZDml235Zjz6J9YF;
-	Fri, 14 Mar 2025 22:21:34 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8B9D9140155;
-	Fri, 14 Mar 2025 22:24:15 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Mar
- 2025 15:24:13 +0100
-Date: Fri, 14 Mar 2025 14:24:12 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Huang, Ying" <ying.huang@linux.alibaba.com>
-CC: Raghavendra K T <raghavendra.kt@amd.com>, <linux-mm@kvack.org>,
-	<akpm@linux-foundation.org>, <lsf-pc@lists.linux-foundation.org>,
-	<bharata@amd.com>, <gourry@gourry.net>, <nehagholkar@meta.com>,
-	<abhishekd@meta.com>, <nphamcs@gmail.com>, <hannes@cmpxchg.org>,
-	<feng.tang@intel.com>, <kbusch@meta.com>, <Hasan.Maruf@amd.com>,
-	<sj@kernel.org>, <david@redhat.com>, <willy@infradead.org>,
-	<k.shutemov@gmail.com>, <mgorman@techsingularity.net>, <vbabka@suse.cz>,
-	<hughd@google.com>, <rientjes@google.com>, <shy828301@gmail.com>,
-	<liam.howlett@oracle.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<nadav.amit@gmail.com>, <shivankg@amd.com>, <ziy@nvidia.com>,
-	<jhubbard@nvidia.com>, <AneeshKumar.KizhakeVeetil@arm.com>,
-	<linux-kernel@vger.kernel.org>, <jon.grimm@amd.com>,
-	<santosh.shukla@amd.com>, <Michael.Day@amd.com>, <riel@surriel.com>,
-	<weixugc@google.com>, <leesuyeon0506@gmail.com>, <honggyu.kim@sk.com>,
-	<leillc@google.com>, <kmanaouil.dev@gmail.com>, <rppt@kernel.org>,
-	<dave.hansen@intel.com>
-Subject: Re: [LSF/MM/BPF TOPIC] Unifying sources of page temperature
- information - what info is actually wanted?
-Message-ID: <20250314142412.00001689@huawei.com>
-In-Reply-To: <87h64u2xkh.fsf@DESKTOP-5N7EMDA>
-References: <20250123105721.424117-1-raghavendra.kt@amd.com>
-	<20250131122803.000031aa@huawei.com>
-	<20250131130901.00000dd1@huawei.com>
-	<87h64u2xkh.fsf@DESKTOP-5N7EMDA>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741962467; c=relaxed/simple;
+	bh=RgeUtdIlm0fketWl8KYbwWGkxUv/Xxwz0EpGdR/2drQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hD6W46+mi5qYLmJIMOGZjMl5FiT8sapWCMrOP4HQA47VJJHSGUV0fAumdHNnA741Aes59UeX5LOVU/W7ZCtb4i6IwQg93qR8SyoP70wLva6qGm0lrm+H5BlR87qYVARxMvW00vH2YqwRSGfiy+Co0cFWTnzUwNHwr005AqYpbxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=A7XGH+OT; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="A7XGH+OT"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39133f709f5so1342319f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741962463; x=1742567263; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J8JeOtl31HdzN6jUKW4y8ELJUCSs3v6y5I2ghd0PFtM=;
+        b=A7XGH+OTKgko44xQs/WAAOGA3JqNFZ5pE+3t6ADSjZa7UDXY+isgRQJK7XE2ZO9VPr
+         Z3e64fALODY1aojQ++lj9FOKs6t0IsMW+/WHYorZwKZKLt/6/V0eNh3Hp0Ali5jO4ACy
+         rolvLn3h5vJ8Uu0m10jLsvMmFKUKW//rP4PgSNLEMSjqRr1dChZ6AqAVxDgNadw1zSzX
+         7FzGK/G7H3ajxrnwumdCH4I9XpddTRdLKOUVJQysK2N648HtaFRchUtge+dklKwI9uc1
+         UxQV8SoBShMDKJDJNUBllnkCjqHizJfY8H8jtBpYOMRNaUoLVDY0hvyQLOGiwixrVP1w
+         Orsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741962463; x=1742567263;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J8JeOtl31HdzN6jUKW4y8ELJUCSs3v6y5I2ghd0PFtM=;
+        b=FJZJCFLJG7diDISEaNAaju2hOgtNiioiQPIYnffQJAXOT/V7vWrfa2R2jpgSF/3whg
+         qsHL61Kax6D8GY0G4TyL7/o+2OgDyTMtXHOkl0Fk2/nnhjsp7BFzEplcD7ay6UCfmBuy
+         no83sUKT3PU23niF4xb9/JhSmZ1VujqI464nFEVpgiDRZr+YyUBiMdliDa6cmIBT+hoh
+         dcF1A5CDz8lIaymL4boM3QAs/Ia8nk85wis6xyeoMwpyFPn/SosqWbO4HrJrvv8y+jd3
+         spqX5CW38Oij3ypYyq8HsXilEz2eoISAgTABinh9qk+0W1akdSaCO9aNEUdq4qkcwfHy
+         ig4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUT5cG1aeM9pbPJRqSAA/U1PulQ4ocS3RppNXMO9VV3LI/GsMR+Vo35m4m43V4ngOhsatwCBnoNQ28BAo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaWv4QnhbqjzsF/iBY44cB7XbBYhgE3ld0XFy/IYJl6I06rCSp
+	WeEFSa/LGt2gyC2qDdG7QJZBk1gjvWCyrWbOADdh4romXtiMyfk5YEXoQbz2Z+KRnaqamQIuiac
+	S
+X-Gm-Gg: ASbGncsPLf7PygClCvuDN07xg+y+rv/Hb+P7ZvBF3MDu1ZHt3jWlFEZMkwh94jAJ/RP
+	qfkewGLXcvll+uPhbvscbwChLQ+CPUCUo75kDTRoXiPkTvBO32SHVHh/fO88wmRNetcJJeEEZsT
+	5yM40kR0EUz097TBEg2yUmPONQeWDWkE3Lhn/sm+30tq/y7CFSlZIZO6X87NDn6fD0F+L8K0sUG
+	JGP0dAjvbSjsj49y5hnKuANsi67ih/HjFLZI9bl7Tc+ZH6NsyQyyyoBRxFPy9VDfLOsFFImQS7f
+	RxotddwZ6vtb5wHY+/6gKUn7kUh7LLfgKqrIxwLS9sTG
+X-Google-Smtp-Source: AGHT+IFGdOiD0vYJvINPeEbn5Eoy6ZXFfBenb+Y5x7v2pMRpV/unueJpQBMKaZe/bTflQ+DPn5T8FQ==
+X-Received: by 2002:a5d:6d06:0:b0:391:3261:ff48 with SMTP id ffacd0b85a97d-3971f9e496fmr4415505f8f.35.1741962463132;
+        Fri, 14 Mar 2025 07:27:43 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:5dd0:723b:f16a:8ac4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975afesm5623081f8f.47.2025.03.14.07.27.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 07:27:42 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.14-rc7
+Date: Fri, 14 Mar 2025 15:27:40 +0100
+Message-ID: <20250314142740.49129-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Sun, 16 Feb 2025 14:49:50 +0800
-"Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> Hi, Jonathan,
-> 
-> Sorry for late reply.
+Linus,
 
-Sorry for even later reply!
+Please pull the following GPIO core fixes for the next RC.
 
-> 
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
-> 
-> > On Fri, 31 Jan 2025 12:28:03 +0000
-> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> >  
-> >> > Here is the list of potential discussion points:    
-> >> ...
-> >>   
-> >> > 2. Possibility of maintaining single source of truth for page hotness that would
-> >> > maintain hot page information from multiple sources and let other sub-systems
-> >> > use that info.    
-> >> Hi,
-> >> 
-> >> I was thinking of proposing a separate topic on a single source of hotness,
-> >> but this question covers it so I'll add some thoughts here instead.
-> >> I think we are very early, but sharing some experience and thoughts in a
-> >> session may be useful.  
-> >
-> > Thinking more on this over lunch, I think it is worth calling this out as a
-> > potential session topic in it's own right rather than trying to find
-> > time within other sessions.  Hence the title change.
-> >
-> > I think a session would start with a brief listing of the temperature sources
-> > we have and those on the horizon to motivate what we are unifying, then
-> > discussion to focus on need for such a unification + requirements 
-> > (maybe with a straw man).
-> >  
-> >> 
-> >> What do the other subsystems that want to use a single source of page hotness
-> >> want to be able to find out? (subject to filters like memory range, process etc)
-> >> 
-> >> A) How hot is page X?  
-> >> - Is this useful, or too much data? What would use it?
-> >>   * Application optimization maybe. Very handy for developing algorithms
-> >>     to do the rest of the options here as an Oracle!
-> >> - Provides both the cold and hot end of the scale, but maybe measurement
-> >>   techniques vary and can not be easily combined. Hard in general to combine
-> >>   multiple sources of truth if aiming for an absolute number.
-> >> 
-> >> B) Which pages are super hot?
-> >> - Probably these that make the most difference if they are in a slower memory tier.
-> >> 
-> >> C) Some pages are hot enough to consider moving?
-> >> - This may be good enough to get the key data into the fast memory over time.
-> >> - Can combine sources of info as being able to compare precise numbers doesn't matter.
-> >> 
-> >> D) Which pages are fairly cold?
-> >> - Likewise maybe good enough over time.
-> >> 
-> >> E) Which pages are very cold?
-> >> - Ideal case for tiering. Swap these with the super hot ones.
-> >> - Maybe extra signal for swap / zswap etc
-> >> 
-> >> F) Did these hot pages remain hot (and same for cold)
-> >> - This is needed to know when to back off doing things as we have unstable
-> >>   hotness (two phase applications are a pain for this), sampling a few
-> >>   pages may be fine.
-> >> 
-> >> Messy corners:
-> >> 
-> >> Temporal aspects.
-> >> - If only providing lists of hottest / coldest in last second, very hard
-> >>   to find those that are of a stable temperature. We end up moving
-> >>   very hot data (which is disruptive) and it doesn't stay hot.
-> >> - Can reduce that affect by long sampling windows on some measurement approaches
-> >>   (on hardware trackers that can trash accuracy due to resource exhaustion
-> >>    and other subtle effects).
-> >> - bistable / phase based applications are a pain but perhaps up to higher
-> >>   levels to back off.
-> >> 
-> >> My main interest is migrating in tiered systems but good to look at what
-> >> else would use a common layer.
-> >> 
-> >> Mostly I want to know something that is useful to move, and assume convergence
-> >> over the long term with the best things to move so to me the ideal layer has
-> >> following interface (strawman so shoot holes in it!):
-> >> 
-> >> 1) Give me up to X hotish pages from a slow tier (greater than a specific measure
-> >> of temperature)  
-> 
-> Because the hot pages may be available upon page accessing (such PROT_NONE
-> page fault), the interface may be "push" style instead of "pull" style,
-> e.g.,
+The first commit is a backport from my v6.15-rc1 queue that turned out to
+be needed in v6.14 as well but as the former diverged from my fixes branch
+I had to adjust the patch a bit. I will pull in v6.14-rc7 once tagged and
+resolve the conflict between the two.
 
-Absolutely agree that might be the approach, but with some form of back pressure
-as for at least some approaches it is much cheaper to find a find a few hot
-pages than to find lots of them.  More complex if you want a few of the very hottest
-or just hotter than X. 
+The second commit fixes a regression observed in user-space where closing
+a file descriptor associated with a GPIO device results in a ~10ms delay
+due to the atomic notifier calling rcu_synchronize() when unregistering.
 
-> 
-> int register_hot_page_handler(void (*handler)(struct page *hot_page, int temperature));
-> 
-> >> 2) Give me X coldish pages a faster tier.
-> >> 3) I expect to ask again in X seconds so please have some info ready for me!
-> >> 4) (a path to get an idea of 'unhelpful moves' from earlier iterations - this
-> >>     is bleeding the tiering application into a shared interface though).  
-> 
-> In addition to get a list hot/cold pages, it's also useful to get
-> hot/cold statistics of a memory device (NUMA node), e.g., something like
-> below,
-> 
-> Access frequency        percent
->    > 1000 HZ            10%  
->  600-1000 HZ            20%
->  200- 600 HZ            50%
->    1- 200 HZ            15%
->       < 1 HZ             5%
-> 
-> Compared with hot/cold pages list, this may be gotten with lower
-> overhead and can be useful to tune the promotion/demotion alrogithm.  At
-> the same time, a sampled (incomplete) list of hot/cold page list may be
-> available too.
+Please pull,
+Bartosz
 
-I agree it's useful info and 'might' be cheaper to get.  Depends on the
-tracking solution and impacts of sampling approaches.
+The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a:
 
-> 
-> >> If we have multiple subsystems using the data we will need to resolve their
-> >> conflicting demands to generate good enough data with appropriate overhead.
-> >> 
-> >> I'd also like a virtualized solution for case of hardware PA trackers (what
-> >> I have with CXL Hotness Monitoring Units) and classic memory pool / stranding
-> >> avoidance case where the VM is the right entity to make migration decisions.
-> >> Making that interface convey what the kernel is going to use would be an
-> >> efficient option. I'd like to hide how the sausage was made from the VM.  
-> 
-> ---
-> Best Regards,
-> Huang, Ying
+  Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc7
+
+for you to fetch changes up to dcb73cbaaeb39c9fd00bf2e019f911725945e2fe:
+
+  gpio: cdev: use raw notifier for line state events (2025-03-13 09:20:12 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.14-rc7
+
+- use raw notifier for line state events
+- don't check the return value of gpio_chip::get_direction() when
+  registering a GPIO chip
+
+----------------------------------------------------------------
+Bartosz Golaszewski (2):
+      gpiolib: don't check the retval of get_direction() when registering a chip
+      gpio: cdev: use raw notifier for line state events
+
+ drivers/gpio/gpiolib-cdev.c | 15 +++++++++------
+ drivers/gpio/gpiolib.c      | 35 ++++++++++++++++-------------------
+ drivers/gpio/gpiolib.h      |  5 ++++-
+ 3 files changed, 29 insertions(+), 26 deletions(-)
