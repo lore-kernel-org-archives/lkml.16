@@ -1,155 +1,593 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D17218D634;
-	Fri, 14 Mar 2025 07:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095FB193074
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936261; cv=none; b=QfNQ2UNtK8ey7gFuW7PyC9Z3IrKPA9SPiRNFCnIuQwyXCcmeR3Qmlk2JFgtlT6IgJwSEcb7jYvRnCHyXnmR+tva49+sM4WmEtAo+gObi9zEI5pikZOyLZRXYZlrlkv/n9p8i11+8j/eXj9zceRRmqSo4GCsaL7rSGSvkvC7Q7aI=
+	t=1741936264; cv=none; b=J+66JczxEbrhwOgiP07kfkPkosPzJzj3SCXWvCNXBMKtttgZAChb9ci67Ya+fXJOoNOCTVNBYFhdd3sNCLyqi3GUBJFteW3c9TQTXkdlEZpI6ovN6yxDj1rVCSaxKdBuChdEcLRH86GI4eGGj0a1+gA8vJcQuQCk9bQkZXRwKvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741936261; c=relaxed/simple;
-	bh=IKdBA13JupXjDh3Rlpq56k/VtfWKKPwKkrryIgel3M0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nFlPVTtRYFPEe5tcvEZ7SBXB+ikdcxztXgFFnaVOjGk7ETiKZsjOOr+dWfZBnuEI0SzB/9CMbbNLW9KYWeBpqAMYyxNWJN4Xeihr7LJ8MGiyKGmrpsrQ1wsrTsIWym99k0XEXUt1rSK2uqNVOt6r1xqmKZYOPyLCC/TMCI30eYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/6ooFJU; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741936264; c=relaxed/simple;
+	bh=sYx624QuSGg1BuMd0Qn2HQOI1cCjJSShgXoomZ8lNBg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=juaYktrmc69uPvuP7DbgZ3mrQfzkLAwPRKSWBJbU28Zc8rGf4AitO7+ubl2gLcpIOQco58O6RGB/b0YtKZvilepGfrEauMqjaDJJWcwxo7YolPjDCcm69YmwAHCkGDaynPWLaJgacq3oaBJAdCmhHmD/N1fRQFkorRf6DjKgN/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zwd8QJDS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/6ooFJU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741936259; x=1773472259;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IKdBA13JupXjDh3Rlpq56k/VtfWKKPwKkrryIgel3M0=;
-  b=S/6ooFJUq3S8esuLPHi2a3NmhCBHmguXa1GNRAHBQvLoBXg+m363u1a6
-   tcYNcKQTI50iSypl7lPrFVcqZBLPNQetic6279QN3gISqu++MO2JccqH5
-   JIlUoRw3MfaO5R4CCdrcVZvA13ImfjlMXyrdMSc5J93WPNiYCocP9wyFq
-   4F9DS0oSBDqo8oYWtOw0+KWi7DDaeKuXDSFRHaujjjb2/My/Bsjp04Tw3
-   cJs9wlj6udVeoBxmmTetXQao3opnrQDSsuyJVbPwe4Z9hrTTwEptYybBw
-   ACBGgp2gj4tYINcwsyQU69hllaTABL/ksQiaqOvjyuAK39A1triA81LGi
-   w==;
-X-CSE-ConnectionGUID: IuwbHh/HRwGw0KhvTcFYWg==
-X-CSE-MsgGUID: BREprz79SIe8h6RyMRcOhw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="60477872"
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="60477872"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 00:10:58 -0700
-X-CSE-ConnectionGUID: eUsGcmroQlSQOhljXpJKeA==
-X-CSE-MsgGUID: FcXeWHeuQRmvAF80w9bpgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="121390713"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 14 Mar 2025 00:10:52 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tszBy-000ABs-0z;
-	Fri, 14 Mar 2025 07:10:50 +0000
-Date: Fri, 14 Mar 2025 15:10:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Antonio Hickey <contact@antoniohickey.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Antonio Hickey <contact@antoniohickey.com>,
-	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] rust: replace `addr_of[_mut]!` with `&raw [mut]`
-Message-ID: <202503141434.n6oUhRIM-lkp@intel.com>
-References: <010001958dfec447-37d6d276-32f8-4b4e-b7bd-6d7ce2570ee2-000000@email.amazonses.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zwd8QJDS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741936261;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b7cjOjVg2lOMeYAeeJG2p6u0MZuPm1eTCEoNIyjOSV0=;
+	b=Zwd8QJDSgRKaCFABc7i/HbXZ9TExQeOGToQ92eglqBW0Gcg+xUBWfk2wLUPwyd2y6DCZrm
+	l/blc0IGCAwfedylhZyEU1bzv3Z72ZYGj+RbS/jBWbKBpcbxI/QXtzxzL/WPjR1fNmENaV
+	/yM5UAPugfrBZoCPtvx++FBLwWWBDrw=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-655-z9DIsXXRO-WXzDzejg6-MQ-1; Fri,
+ 14 Mar 2025 03:10:57 -0400
+X-MC-Unique: z9DIsXXRO-WXzDzejg6-MQ-1
+X-Mimecast-MFC-AGG-ID: z9DIsXXRO-WXzDzejg6-MQ_1741936256
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2391E1955DCD;
+	Fri, 14 Mar 2025 07:10:56 +0000 (UTC)
+Received: from thuth-p1g4.redhat.com (unknown [10.44.32.82])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1A62D1801747;
+	Fri, 14 Mar 2025 07:10:52 +0000 (UTC)
+From: Thomas Huth <thuth@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org,
+	Thomas Huth <thuth@redhat.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	linux-snps-arc@lists.infradead.org
+Subject: [PATCH 05/41] arc: Replace __ASSEMBLY__ with __ASSEMBLER__ in the non-uapi headers
+Date: Fri, 14 Mar 2025 08:09:36 +0100
+Message-ID: <20250314071013.1575167-6-thuth@redhat.com>
+In-Reply-To: <20250314071013.1575167-1-thuth@redhat.com>
+References: <20250314071013.1575167-1-thuth@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <010001958dfec447-37d6d276-32f8-4b4e-b7bd-6d7ce2570ee2-000000@email.amazonses.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hi Antonio,
+While the GCC and Clang compilers already define __ASSEMBLER__
+automatically when compiling assembly code, __ASSEMBLY__ is a
+macro that only gets defined by the Makefiles in the kernel.
+This can be very confusing when switching between userspace
+and kernelspace coding, or when dealing with uapi headers that
+rather should use __ASSEMBLER__ instead. So let's standardize on
+the __ASSEMBLER__ macro that is provided by the compilers now.
 
-kernel test robot noticed the following build warnings:
+This is a completely mechanical patch (done with a simple "sed -i"
+statement).
 
-[auto build test WARNING on rust/rust-next]
-[also build test WARNING on driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus linus/master v6.14-rc6 next-20250313]
-[cannot apply to shuah-kselftest/kunit shuah-kselftest/kunit-fixes pci/next pci/for-linus rust/rust-block-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Cc: Vineet Gupta <vgupta@kernel.org>
+Cc: linux-snps-arc@lists.infradead.org
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ arch/arc/include/asm/arcregs.h            | 2 +-
+ arch/arc/include/asm/atomic.h             | 4 ++--
+ arch/arc/include/asm/bitops.h             | 4 ++--
+ arch/arc/include/asm/bug.h                | 4 ++--
+ arch/arc/include/asm/cache.h              | 4 ++--
+ arch/arc/include/asm/current.h            | 4 ++--
+ arch/arc/include/asm/dsp-impl.h           | 2 +-
+ arch/arc/include/asm/dsp.h                | 4 ++--
+ arch/arc/include/asm/dwarf.h              | 4 ++--
+ arch/arc/include/asm/entry.h              | 4 ++--
+ arch/arc/include/asm/irqflags-arcv2.h     | 4 ++--
+ arch/arc/include/asm/irqflags-compact.h   | 4 ++--
+ arch/arc/include/asm/jump_label.h         | 4 ++--
+ arch/arc/include/asm/linkage.h            | 6 +++---
+ arch/arc/include/asm/mmu-arcv2.h          | 4 ++--
+ arch/arc/include/asm/mmu.h                | 2 +-
+ arch/arc/include/asm/page.h               | 4 ++--
+ arch/arc/include/asm/pgtable-bits-arcv2.h | 4 ++--
+ arch/arc/include/asm/pgtable-levels.h     | 4 ++--
+ arch/arc/include/asm/pgtable.h            | 4 ++--
+ arch/arc/include/asm/processor.h          | 4 ++--
+ arch/arc/include/asm/ptrace.h             | 4 ++--
+ arch/arc/include/asm/switch_to.h          | 2 +-
+ arch/arc/include/asm/thread_info.h        | 4 ++--
+ 24 files changed, 45 insertions(+), 45 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Antonio-Hickey/rust-clippy-disable-addr_of-and-addr_of_mut-macros/20250313-133646
-base:   https://github.com/Rust-for-Linux/linux rust-next
-patch link:    https://lore.kernel.org/r/010001958dfec447-37d6d276-32f8-4b4e-b7bd-6d7ce2570ee2-000000%40email.amazonses.com
-patch subject: [PATCH 3/3] rust: replace `addr_of[_mut]!` with `&raw [mut]`
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250314/202503141434.n6oUhRIM-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250314/202503141434.n6oUhRIM-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503141434.n6oUhRIM-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> warning: consider removing unnecessary double parentheses
-   --> rust/kernel/faux.rs:48:41
-   |
-   48 |         unsafe { device::Device::as_ref((&raw mut (*self.as_raw()).dev)) }
-   |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   |
-   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#double_parens
-   = note: `-W clippy::double-parens` implied by `-W clippy::all`
-   = help: to override `-W clippy::all` add `#[allow(clippy::double_parens)]`
---
->> warning: unnecessary parentheses around function argument
-   --> rust/kernel/faux.rs:48:41
-   |
-   48 |         unsafe { device::Device::as_ref((&raw mut (*self.as_raw()).dev)) }
-   |                                         ^                             ^
-   |
-   = note: `#[warn(unused_parens)]` on by default
-   help: remove these parentheses
-   |
-   48 -         unsafe { device::Device::as_ref((&raw mut (*self.as_raw()).dev)) }
-   48 +         unsafe { device::Device::as_ref(&raw mut (*self.as_raw()).dev) }
-   |
---
->> warning: immediately dereferencing a reference
-   --> rust/kernel/task.rs:260:28
-   |
-   260 |         let ptr = unsafe { *(&raw const (*self.as_ptr()).group_leader) };
-   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `(*self.as_ptr()).group_leader`
-   |
-   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#deref_addrof
-   = note: `-W clippy::deref-addrof` implied by `-W clippy::all`
-   = help: to override `-W clippy::all` add `#[allow(clippy::deref_addrof)]`
---
->> warning: immediately dereferencing a reference
-   --> rust/kernel/task.rs:272:18
-   |
-   272 |         unsafe { *(&raw const (*self.as_ptr()).pid) }
-   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `(*self.as_ptr()).pid`
-   |
-   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#deref_addrof
-
+diff --git a/arch/arc/include/asm/arcregs.h b/arch/arc/include/asm/arcregs.h
+index 005d9e4d187a0..a31bbf5c8bbc8 100644
+--- a/arch/arc/include/asm/arcregs.h
++++ b/arch/arc/include/asm/arcregs.h
+@@ -144,7 +144,7 @@
+ #define ARC_AUX_AGU_MOD2	0x5E2
+ #define ARC_AUX_AGU_MOD3	0x5E3
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <soc/arc/arc_aux.h>
+ 
+diff --git a/arch/arc/include/asm/atomic.h b/arch/arc/include/asm/atomic.h
+index 592d7fffc223c..e615c42b93bab 100644
+--- a/arch/arc/include/asm/atomic.h
++++ b/arch/arc/include/asm/atomic.h
+@@ -6,7 +6,7 @@
+ #ifndef _ASM_ARC_ATOMIC_H
+ #define _ASM_ARC_ATOMIC_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <linux/types.h>
+ #include <linux/compiler.h>
+@@ -31,6 +31,6 @@
+ #include <asm/atomic64-arcv2.h>
+ #endif
+ 
+-#endif	/* !__ASSEMBLY__ */
++#endif	/* !__ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/bitops.h b/arch/arc/include/asm/bitops.h
+index f5a936496f060..5340c28713927 100644
+--- a/arch/arc/include/asm/bitops.h
++++ b/arch/arc/include/asm/bitops.h
+@@ -10,7 +10,7 @@
+ #error only <linux/bitops.h> can be included directly
+ #endif
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <linux/types.h>
+ #include <linux/compiler.h>
+@@ -192,6 +192,6 @@ static inline __attribute__ ((const)) unsigned long __ffs(unsigned long x)
+ #include <asm-generic/bitops/le.h>
+ #include <asm-generic/bitops/ext2-atomic-setbit.h>
+ 
+-#endif /* !__ASSEMBLY__ */
++#endif /* !__ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/bug.h b/arch/arc/include/asm/bug.h
+index 4c453ba96c519..171c16021f709 100644
+--- a/arch/arc/include/asm/bug.h
++++ b/arch/arc/include/asm/bug.h
+@@ -6,7 +6,7 @@
+ #ifndef _ASM_ARC_BUG_H
+ #define _ASM_ARC_BUG_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <asm/ptrace.h>
+ 
+@@ -29,6 +29,6 @@ void die(const char *str, struct pt_regs *regs, unsigned long address);
+ 
+ #include <asm-generic/bug.h>
+ 
+-#endif	/* !__ASSEMBLY__ */
++#endif	/* !__ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/cache.h b/arch/arc/include/asm/cache.h
+index f0f1fc5d62b66..040a97f4dd829 100644
+--- a/arch/arc/include/asm/cache.h
++++ b/arch/arc/include/asm/cache.h
+@@ -23,7 +23,7 @@
+  */
+ #define ARC_UNCACHED_ADDR_SPACE	0xc0000000
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <linux/build_bug.h>
+ 
+@@ -65,7 +65,7 @@
+ extern int ioc_enable;
+ extern unsigned long perip_base, perip_end;
+ 
+-#endif	/* !__ASSEMBLY__ */
++#endif	/* !__ASSEMBLER__ */
+ 
+ /* Instruction cache related Auxiliary registers */
+ #define ARC_REG_IC_BCR		0x77	/* Build Config reg */
+diff --git a/arch/arc/include/asm/current.h b/arch/arc/include/asm/current.h
+index 06be89f6f2f05..03ffd005f3fa6 100644
+--- a/arch/arc/include/asm/current.h
++++ b/arch/arc/include/asm/current.h
+@@ -9,7 +9,7 @@
+ #ifndef _ASM_ARC_CURRENT_H
+ #define _ASM_ARC_CURRENT_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #ifdef CONFIG_ARC_CURR_IN_REG
+ 
+@@ -20,6 +20,6 @@ register struct task_struct *curr_arc asm("gp");
+ #include <asm-generic/current.h>
+ #endif /* ! CONFIG_ARC_CURR_IN_REG */
+ 
+-#endif /* ! __ASSEMBLY__ */
++#endif /* ! __ASSEMBLER__ */
+ 
+ #endif /* _ASM_ARC_CURRENT_H */
+diff --git a/arch/arc/include/asm/dsp-impl.h b/arch/arc/include/asm/dsp-impl.h
+index cd5636dfeb6f4..fd5fdaad90c16 100644
+--- a/arch/arc/include/asm/dsp-impl.h
++++ b/arch/arc/include/asm/dsp-impl.h
+@@ -11,7 +11,7 @@
+ 
+ #define DSP_CTRL_DISABLED_ALL		0
+ 
+-#ifdef __ASSEMBLY__
++#ifdef __ASSEMBLER__
+ 
+ /* clobbers r5 register */
+ .macro DSP_EARLY_INIT
+diff --git a/arch/arc/include/asm/dsp.h b/arch/arc/include/asm/dsp.h
+index f496dbc4640b2..eeaaf4e4eabd3 100644
+--- a/arch/arc/include/asm/dsp.h
++++ b/arch/arc/include/asm/dsp.h
+@@ -7,7 +7,7 @@
+ #ifndef __ASM_ARC_DSP_H
+ #define __ASM_ARC_DSP_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ /*
+  * DSP-related saved registers - need to be saved only when you are
+@@ -24,6 +24,6 @@ struct dsp_callee_regs {
+ #endif
+ };
+ 
+-#endif /* !__ASSEMBLY__ */
++#endif /* !__ASSEMBLER__ */
+ 
+ #endif /* __ASM_ARC_DSP_H */
+diff --git a/arch/arc/include/asm/dwarf.h b/arch/arc/include/asm/dwarf.h
+index a0d5ebe1bc3f5..1524c5cf8b59e 100644
+--- a/arch/arc/include/asm/dwarf.h
++++ b/arch/arc/include/asm/dwarf.h
+@@ -6,7 +6,7 @@
+ #ifndef _ASM_ARC_DWARF_H
+ #define _ASM_ARC_DWARF_H
+ 
+-#ifdef __ASSEMBLY__
++#ifdef __ASSEMBLER__
+ 
+ #ifdef ARC_DW2_UNWIND_AS_CFI
+ 
+@@ -38,6 +38,6 @@
+ 
+ #endif	/* !ARC_DW2_UNWIND_AS_CFI */
+ 
+-#endif	/* __ASSEMBLY__ */
++#endif	/* __ASSEMBLER__ */
+ 
+ #endif	/* _ASM_ARC_DWARF_H */
+diff --git a/arch/arc/include/asm/entry.h b/arch/arc/include/asm/entry.h
+index 38c35722cebf0..f453af251a1a1 100644
+--- a/arch/arc/include/asm/entry.h
++++ b/arch/arc/include/asm/entry.h
+@@ -13,7 +13,7 @@
+ #include <asm/processor.h>	/* For VMALLOC_START */
+ #include <asm/mmu.h>
+ 
+-#ifdef __ASSEMBLY__
++#ifdef __ASSEMBLER__
+ 
+ #ifdef CONFIG_ISA_ARCOMPACT
+ #include <asm/entry-compact.h>	/* ISA specific bits */
+@@ -146,7 +146,7 @@
+ 
+ #endif	/* CONFIG_ARC_CURR_IN_REG */
+ 
+-#else	/* !__ASSEMBLY__ */
++#else	/* !__ASSEMBLER__ */
+ 
+ extern void do_signal(struct pt_regs *);
+ extern void do_notify_resume(struct pt_regs *);
+diff --git a/arch/arc/include/asm/irqflags-arcv2.h b/arch/arc/include/asm/irqflags-arcv2.h
+index fb3c21f1a2383..30aea562f8aa6 100644
+--- a/arch/arc/include/asm/irqflags-arcv2.h
++++ b/arch/arc/include/asm/irqflags-arcv2.h
+@@ -50,7 +50,7 @@
+ #define ISA_INIT_STATUS_BITS	(STATUS_IE_MASK | __AD_ENB | \
+ 					(ARCV2_IRQ_DEF_PRIO << 1))
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ /*
+  * Save IRQ state and disable IRQs
+@@ -170,6 +170,6 @@ static inline void arc_softirq_clear(int irq)
+ 	seti
+ .endm
+ 
+-#endif	/* __ASSEMBLY__ */
++#endif	/* __ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/irqflags-compact.h b/arch/arc/include/asm/irqflags-compact.h
+index 936a2f21f315e..85c2f6bcde0c1 100644
+--- a/arch/arc/include/asm/irqflags-compact.h
++++ b/arch/arc/include/asm/irqflags-compact.h
+@@ -40,7 +40,7 @@
+ 
+ #define ISA_INIT_STATUS_BITS	STATUS_IE_MASK
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ /******************************************************************
+  * IRQ Control Macros
+@@ -196,6 +196,6 @@ static inline int arch_irqs_disabled(void)
+ 	flag	\scratch
+ .endm
+ 
+-#endif	/* __ASSEMBLY__ */
++#endif	/* __ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/jump_label.h b/arch/arc/include/asm/jump_label.h
+index a339223d9e052..66ead75784d97 100644
+--- a/arch/arc/include/asm/jump_label.h
++++ b/arch/arc/include/asm/jump_label.h
+@@ -2,7 +2,7 @@
+ #ifndef _ASM_ARC_JUMP_LABEL_H
+ #define _ASM_ARC_JUMP_LABEL_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <linux/stringify.h>
+ #include <linux/types.h>
+@@ -68,5 +68,5 @@ struct jump_entry {
+ 	jump_label_t key;
+ };
+ 
+-#endif  /* __ASSEMBLY__ */
++#endif  /* __ASSEMBLER__ */
+ #endif
+diff --git a/arch/arc/include/asm/linkage.h b/arch/arc/include/asm/linkage.h
+index 8a3fb71e9cfad..ba3cb65b5eaa4 100644
+--- a/arch/arc/include/asm/linkage.h
++++ b/arch/arc/include/asm/linkage.h
+@@ -12,7 +12,7 @@
+ #define __ALIGN		.align 4
+ #define __ALIGN_STR	__stringify(__ALIGN)
+ 
+-#ifdef __ASSEMBLY__
++#ifdef __ASSEMBLER__
+ 
+ .macro ST2 e, o, off
+ #ifdef CONFIG_ARC_HAS_LL64
+@@ -61,7 +61,7 @@
+ 	CFI_ENDPROC ASM_NL	\
+ 	.size name, .-name
+ 
+-#else	/* !__ASSEMBLY__ */
++#else	/* !__ASSEMBLER__ */
+ 
+ #ifdef CONFIG_ARC_HAS_ICCM
+ #define __arcfp_code __section(".text.arcfp")
+@@ -75,6 +75,6 @@
+ #define __arcfp_data __section(".data")
+ #endif
+ 
+-#endif /* __ASSEMBLY__ */
++#endif /* __ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/mmu-arcv2.h b/arch/arc/include/asm/mmu-arcv2.h
+index 41412642f2796..5e5482026ac90 100644
+--- a/arch/arc/include/asm/mmu-arcv2.h
++++ b/arch/arc/include/asm/mmu-arcv2.h
+@@ -69,7 +69,7 @@
+ 
+ #define PTE_BITS_NON_RWX_IN_PD1	(PAGE_MASK_PHYS | _PAGE_CACHEABLE)
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ struct mm_struct;
+ extern int pae40_exist_but_not_enab(void);
+@@ -100,6 +100,6 @@ static inline void mmu_setup_pgd(struct mm_struct *mm, void *pgd)
+ 	sr \reg, [ARC_REG_PID]
+ .endm
+ 
+-#endif /* !__ASSEMBLY__ */
++#endif /* !__ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/mmu.h b/arch/arc/include/asm/mmu.h
+index 4ae2db59d494c..e3b35ceab582b 100644
+--- a/arch/arc/include/asm/mmu.h
++++ b/arch/arc/include/asm/mmu.h
+@@ -6,7 +6,7 @@
+ #ifndef _ASM_ARC_MMU_H
+ #define _ASM_ARC_MMU_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <linux/threads.h>	/* NR_CPUS */
+ 
+diff --git a/arch/arc/include/asm/page.h b/arch/arc/include/asm/page.h
+index def0dfb95b436..9720fe6b2c245 100644
+--- a/arch/arc/include/asm/page.h
++++ b/arch/arc/include/asm/page.h
+@@ -19,7 +19,7 @@
+ 
+ #endif /* CONFIG_ARC_HAS_PAE40 */
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #define clear_page(paddr)		memset((paddr), 0, PAGE_SIZE)
+ #define copy_user_page(to, from, vaddr, pg)	copy_page(to, from)
+@@ -136,6 +136,6 @@ static inline unsigned long virt_to_pfn(const void *kaddr)
+ #include <asm-generic/memory_model.h>   /* page_to_pfn, pfn_to_page */
+ #include <asm-generic/getorder.h>
+ 
+-#endif /* !__ASSEMBLY__ */
++#endif /* !__ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/pgtable-bits-arcv2.h b/arch/arc/include/asm/pgtable-bits-arcv2.h
+index 8ebec1b21d246..a8fdb4fe1fbd6 100644
+--- a/arch/arc/include/asm/pgtable-bits-arcv2.h
++++ b/arch/arc/include/asm/pgtable-bits-arcv2.h
+@@ -75,7 +75,7 @@
+  *     This is to enable COW mechanism
+  */
+ 	/* xwr */
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #define pte_write(pte)		(pte_val(pte) & _PAGE_WRITE)
+ #define pte_dirty(pte)		(pte_val(pte) & _PAGE_DIRTY)
+@@ -142,6 +142,6 @@ PTE_BIT_FUNC(swp_clear_exclusive, &= ~(_PAGE_SWP_EXCLUSIVE));
+ #include <asm/hugepage.h>
+ #endif
+ 
+-#endif /* __ASSEMBLY__ */
++#endif /* __ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/pgtable-levels.h b/arch/arc/include/asm/pgtable-levels.h
+index 86e1482264630..e7680b74e2c68 100644
+--- a/arch/arc/include/asm/pgtable-levels.h
++++ b/arch/arc/include/asm/pgtable-levels.h
+@@ -85,7 +85,7 @@
+ 
+ #define PTRS_PER_PTE		BIT(PMD_SHIFT - PAGE_SHIFT)
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #if CONFIG_PGTABLE_LEVELS > 3
+ #include <asm-generic/pgtable-nop4d.h>
+@@ -183,6 +183,6 @@
+ #define pmd_leaf(x)		(pmd_val(x) & _PAGE_HW_SZ)
+ #endif
+ 
+-#endif	/* !__ASSEMBLY__ */
++#endif	/* !__ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/pgtable.h b/arch/arc/include/asm/pgtable.h
+index 4cf45a99fd792..bd580e2b62d7c 100644
+--- a/arch/arc/include/asm/pgtable.h
++++ b/arch/arc/include/asm/pgtable.h
+@@ -19,7 +19,7 @@
+  */
+ #define	USER_PTRS_PER_PGD	(TASK_SIZE / PGDIR_SIZE)
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ extern char empty_zero_page[PAGE_SIZE];
+ #define ZERO_PAGE(vaddr)	(virt_to_page(empty_zero_page))
+@@ -29,6 +29,6 @@ extern pgd_t swapper_pg_dir[] __aligned(PAGE_SIZE);
+ /* to cope with aliasing VIPT cache */
+ #define HAVE_ARCH_UNMAPPED_AREA
+ 
+-#endif /* __ASSEMBLY__ */
++#endif /* __ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/arc/include/asm/processor.h b/arch/arc/include/asm/processor.h
+index d606658e2fe73..7f7901ac6643c 100644
+--- a/arch/arc/include/asm/processor.h
++++ b/arch/arc/include/asm/processor.h
+@@ -11,7 +11,7 @@
+ #ifndef __ASM_ARC_PROCESSOR_H
+ #define __ASM_ARC_PROCESSOR_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <asm/ptrace.h>
+ #include <asm/dsp.h>
+@@ -66,7 +66,7 @@ extern void start_thread(struct pt_regs * regs, unsigned long pc,
+ 
+ extern unsigned int __get_wchan(struct task_struct *p);
+ 
+-#endif /* !__ASSEMBLY__ */
++#endif /* !__ASSEMBLER__ */
+ 
+ /*
+  * Default System Memory Map on ARC
+diff --git a/arch/arc/include/asm/ptrace.h b/arch/arc/include/asm/ptrace.h
+index cf79df0b25705..f6c052af8f4d3 100644
+--- a/arch/arc/include/asm/ptrace.h
++++ b/arch/arc/include/asm/ptrace.h
+@@ -10,7 +10,7 @@
+ #include <uapi/asm/ptrace.h>
+ #include <linux/compiler.h>
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ typedef union {
+ 	struct {
+@@ -172,6 +172,6 @@ static inline unsigned long regs_get_register(struct pt_regs *regs,
+ extern int syscall_trace_enter(struct pt_regs *);
+ extern void syscall_trace_exit(struct pt_regs *);
+ 
+-#endif /* !__ASSEMBLY__ */
++#endif /* !__ASSEMBLER__ */
+ 
+ #endif /* __ASM_PTRACE_H */
+diff --git a/arch/arc/include/asm/switch_to.h b/arch/arc/include/asm/switch_to.h
+index 1f85de8288b17..5806106a65f90 100644
+--- a/arch/arc/include/asm/switch_to.h
++++ b/arch/arc/include/asm/switch_to.h
+@@ -6,7 +6,7 @@
+ #ifndef _ASM_ARC_SWITCH_TO_H
+ #define _ASM_ARC_SWITCH_TO_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <linux/sched.h>
+ #include <asm/dsp-impl.h>
+diff --git a/arch/arc/include/asm/thread_info.h b/arch/arc/include/asm/thread_info.h
+index 12daaf3a61eaf..255d2c7742190 100644
+--- a/arch/arc/include/asm/thread_info.h
++++ b/arch/arc/include/asm/thread_info.h
+@@ -24,7 +24,7 @@
+ #define THREAD_SIZE     (PAGE_SIZE << THREAD_SIZE_ORDER)
+ #define THREAD_SHIFT	(PAGE_SHIFT << THREAD_SIZE_ORDER)
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <linux/thread_info.h>
+ 
+@@ -62,7 +62,7 @@ static inline __attribute_const__ struct thread_info *current_thread_info(void)
+ 	return (struct thread_info *)(sp & ~(THREAD_SIZE - 1));
+ }
+ 
+-#endif /* !__ASSEMBLY__ */
++#endif /* !__ASSEMBLER__ */
+ 
+ /*
+  * thread information flags
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
