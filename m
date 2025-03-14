@@ -1,190 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4AC79F5;
-	Fri, 14 Mar 2025 00:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D29A802;
+	Fri, 14 Mar 2025 00:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741910669; cv=none; b=ZIh4SGyEF1+lLRpxcELOqlNvijaebs/81FOXNcEUJ6kMJ+wGuKDfr3MqkID7KmWwXWGMFYOIKM2nLXfBc73bDVYTqlH7GTZOHU49xKfgmoiGCpTTGRrVw9t2S02Of9Im8pKi9hf85waZe3PtV7I3WBkBDLPKA70znEz2mRFCAzI=
+	t=1741910711; cv=none; b=HrZgfkw0PRWKLctuXbQ5dgyOg/ulbLtYlHiJoGgKcwmiu92xku19r2kb6t1XubBzoXWEt+hehhs4PtpvVvaZL0zO5oY47kSP1Ln2o1WeyVCgFxO6q8OeBzwvng6YAzYobC32PJHgjsmHKIkBcPb6MHraEt0BO/pTmNWP9v292h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741910669; c=relaxed/simple;
-	bh=iy+/mlqotFK2+b4LNmaNTDTHCIY1kqn2/OKiI6vljG4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Wfv2qxqcmQSwglNitYlDpNlqUkJIb4Kis94ieL35TBU/IA0/8unWQe+n9qA9J7ozytNRwlc/JkS0UyVLCzaIkl1XxJAot+QqAqnawf0hQUT0MnTN5Kcl9db6Cj7jMAG9YJWkKn1C1574jLpx4PnZloMdDkk38yAkno5zOzV7PFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=taviz52E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741910711; c=relaxed/simple;
+	bh=1W8CEFUb9RzbLkyucd9jGuKFCaNamj/pyFF/1tmggBU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mV/MhSZs22Y36rmt5dkr8seA7mqre4JJ+DEAXuVnv4HPJeIXoyhVz0XbR2ljXfWXkjD7quiZmksuP9NyzxHZShxS77ejlHFvxMrZd4hzYb5q2uMT9z+Cz7hQltLhU9RhdWDThC4k0WokjtF74CkL9VZPerHto7Piu0RqZYmhW7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nTC4fHFj; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="taviz52E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB50C4CEEE;
-	Fri, 14 Mar 2025 00:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741910668;
-	bh=iy+/mlqotFK2+b4LNmaNTDTHCIY1kqn2/OKiI6vljG4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=taviz52EpSNtJVagcI+yCCzKxm6FB4u4RfEbyIqy1BLal+gFZD2oMKObljY1aoCPx
-	 IBPkTHn2SC6TmJZgZmH0s/gXFH9PINYlc7Aq9beg6qTsRUp0z1jnHGyJjyNrZKYSJo
-	 wCGiHFon2jtd4tS+c+aBCufo5qPL7FB1zut4Zn3yuwxbuz2sE8seUrVRwXuxJIpknO
-	 c3Jahtu2V758ParqSaNmFILHgs4wGwPMjiVrkFzfW9bbjTm1GIhimQ2NPAOvTIw0ky
-	 ZZSJOwcTg1qyIFL1Bsr3foy05TYgfJABQshAlOFIp+eVaITP5YXeuLtISG++vm6zmu
-	 h57x+8LIv8AWQ==
-Date: Thu, 13 Mar 2025 17:04:24 -0700
-From: Kees Cook <kees@kernel.org>
-To: Marco Elver <elver@google.com>
-CC: Justin Stitt <justinstitt@google.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Andrey Konovalov <andreyknvl@gmail.com>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
- Miguel Ojeda <ojeda@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
- Hao Luo <haoluo@google.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- linux-hardening@vger.kernel.org, kasan-dev@googlegroups.com,
- linux-kbuild@vger.kernel.org, Bill Wendling <morbo@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Tony Ambardar <tony.ambardar@gmail.com>,
- Alexander Potapenko <glider@google.com>, Jan Hendrik Farr <kernel@jfarr.cc>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_1/3=5D_ubsan/overflow=3A_Rework_integer_?=
- =?US-ASCII?Q?overflow_sanitizer_option_to_turn_on_everything?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CANpmjNOHSanxX7EyXhia4AuVd+6q5v1mXQMTM_k0Rj20P_ASAA@mail.gmail.com>
-References: <20250307040948.work.791-kees@kernel.org> <20250307041914.937329-1-kees@kernel.org> <CANpmjNOHSanxX7EyXhia4AuVd+6q5v1mXQMTM_k0Rj20P_ASAA@mail.gmail.com>
-Message-ID: <2AACDA6E-F7EF-4962-937A-C9511E4E2930@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nTC4fHFj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=seOIK6F8Ri3Z9b2uMtd13H97RuBbTuOVKW2NN8PKcbE=; b=nTC4fHFjIabjCnWjjCjmk0MIQJ
+	f2NNa6pI2kO1Dr/6UnJtfkox9yuU09sGCsA6IpNyEZHSFGau37rI5E8FjtXNBNI2u795pYpNzgS16
+	OInbooV2qvy7vGF3ivg243fzGpLvkkIt/ULvTL364/bhyWEt2LxiqKqoYDu1YCmW7CQL0+ZVX01Zz
+	t9ypTs5lhFpuRgoOiyWhO3WSsbNWQkl9rxeqDpncc+SIXWkiFGbQrC7WZ95e60roMjk8JxHXMm0wl
+	uWOFh6fBFERn/x0IjqXj/E2F/dOZ2YsVFJNUf7SxeGgt/rB5kjzqM2ej59lS2akfwWVPfFYcXUo7I
+	jkxB/i2w==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tssXm-00000002oSr-47Yu;
+	Fri, 14 Mar 2025 00:04:55 +0000
+Message-ID: <60067986-ce08-45da-85ba-a9ea8fedfe06@infradead.org>
+Date: Thu, 13 Mar 2025 17:04:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/early_printk: add MMIO-based UARTs
+To: dmukhin@ford.com, Jonathan Corbet <corbet@lwn.net>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250313-earlyprintk-v1-1-8f818d77a8dd@ford.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250313-earlyprintk-v1-1-8f818d77a8dd@ford.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+On 3/13/25 4:45 PM, Denis Mukhin via B4 Relay wrote:
+> From: Denis Mukhin <dmukhin@ford.com>
+> 
+> During the bring-up of an x86 board, the kernel was crashing before
+> reaching the platform's console driver because of a bug in the firmware,
+> leaving no trace of the boot progress.
+> 
+> It was discovered that the only available method to debug the kernel
+> boot process was via the platform's MMIO-based UART, as the board lacked
+> an I/O port-based UART, PCI UART, or functional video output.
+> 
+> Then it turned out that earlyprintk= does not have a knob to configure
+> the MMIO-mapped UART.
+> 
+> Extend the early printk facility to support platform MMIO-based UARTs
+> on x86 systems, enabling debugging during the system bring-up phase.
+> 
+> The command line syntax to enable platform MMIO-based UART is:
+>   earlyprintk=mmio,membase[,{nocfg|baudrate}][,keep]
+> 
+> Note, the change does not integrate MMIO-based UART support to:
+>   arch/x86/boot/early_serial_console.c
+> 
+> Signed-off-by: Denis Mukhin <dmukhin@ford.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  4 +++
+>  arch/x86/kernel/early_printk.c                  | 45 ++++++++++++++++++++++++-
+>  2 files changed, 48 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index fb8752b42ec8582b8750d7e014c4d76166fa2fc1..bee9ee18a506d019dc3d330268e3e1c83434ebba 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1414,11 +1414,15 @@
+>  			earlyprintk=pciserial[,force],bus:device.function[,baudrate]
+>  			earlyprintk=xdbc[xhciController#]
+>  			earlyprintk=bios
+> +			earlyprintk=mmio,membase[,{nocfg|baudrate}][,keep]
+>  
+>  			earlyprintk is useful when the kernel crashes before
+>  			the normal console is initialized. It is not enabled by
+>  			default because it has some cosmetic problems.
+>  
+> +			Use "nocfg" to skip UART configuration, assume
+> +			BIOS/firmware has configured UART correctly.
+> +
+>  			Append ",keep" to not disable it when the real console
+>  			takes over.
+>  
+> diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_printk.c
+> index 44f937015e1e25bf41532eb7e1031a6be32a6523..19248c73b5b0950e9edf1a60ba67829f1cd3279e 100644
+> --- a/arch/x86/kernel/early_printk.c
+> +++ b/arch/x86/kernel/early_printk.c
+> @@ -191,7 +191,6 @@ static __init void early_serial_init(char *s)
+>  	early_serial_hw_init(divisor);
+>  }
+>  
+> -#ifdef CONFIG_PCI
+>  static void mem32_serial_out(unsigned long addr, int offset, int value)
+>  {
+>  	u32 __iomem *vaddr = (u32 __iomem *)addr;
+> @@ -206,6 +205,45 @@ static unsigned int mem32_serial_in(unsigned long addr, int offset)
+>  	return readl(vaddr + offset);
+>  }
+>  
+> +/*
+> + * early_mmio_serial_init() - Initialize MMIO-based early serial console.
+> + * @membase: UART base address.
+> + * @nocfg: Skip configuration, assume BIOS has configured UART correctly.
+> + * @baudrate (int): Baud rate.
+
+Looks like unsigned long to me.
+
+> + * @keep: Keep after the real driver is available.
+
+These 4 "parameters" are not the function arguments.
+@s is the function argument.
+
+You could say in a comment that @s is scanned to obtain
+these 4 parameters or something like that.
+
+> + */
+> +static __init void early_mmio_serial_init(char *s)
+> +{
+> +	unsigned long baudrate;
+> +	unsigned long membase;
+> +	char *e;
+> +
+> +	if (*s == ',')
+> +		s++;
+> +
+> +	if (!strncmp(s, "0x", 2)) {
+> +		membase = simple_strtoul(s, &e, 16);
+> +		early_serial_base = (unsigned long)early_ioremap(membase, PAGE_SIZE);
+> +		serial_in = mem32_serial_in;
+> +		serial_out = mem32_serial_out;
+> +
+> +		s += strcspn(s, ",");
+> +		if (*s == ',')
+> +			s++;
+> +	}
+> +
+> +	if (!strncmp(s, "nocfg", 5))
+> +		baudrate = 0;
+> +	else {
+> +		baudrate = simple_strtoul(s, &e, 0);
+> +		if (baudrate == 0 || s == e)
+> +			baudrate = DEFAULT_BAUD;
+> +	}
+> +	if (baudrate)
+> +		early_serial_hw_init(115200 / baudrate);
+> +}
+> +
+> +#ifdef CONFIG_PCI
+>  /*
+>   * early_pci_serial_init()
+>   *
+> @@ -352,6 +390,11 @@ static int __init setup_early_printk(char *buf)
+>  	keep = (strstr(buf, "keep") != NULL);
+>  
+>  	while (*buf != '\0') {
+> +		if (!strncmp(buf, "mmio", 4)) {
+> +			early_mmio_serial_init(buf + 4);
+> +			early_console_register(&early_serial_console, keep);
+> +			buf += 4;
+> +		}
+>  		if (!strncmp(buf, "serial", 6)) {
+>  			buf += 6;
+>  			early_serial_init(buf);
+> 
+> ---
 
 
+-- 
+~Randy
 
-On March 13, 2025 8:29:29 AM PDT, Marco Elver <elver@google=2Ecom> wrote:
->On Thu, 6 Mar 2025 at 23:19, Kees Cook <kees@kernel=2Eorg> wrote:
->>
->> Since we're going to approach integer overflow mitigation a type at a
->> time, we need to enable all of the associated sanitizers, and then opt
->> into types one at a time=2E
->>
->> Rename the existing "signed wrap" sanitizer to just the entire topic ar=
-ea:
->> "integer wrap"=2E Enable the implicit integer truncation sanitizers, wi=
-th
->> required callbacks and tests=2E
->>
->> Notably, this requires features (currently) only available in Clang,
->> so we can depend on the cc-option tests to determine availability
->> instead of doing version tests=2E
->>
->> Signed-off-by: Kees Cook <kees@kernel=2Eorg>
->> ---
->> Cc: Justin Stitt <justinstitt@google=2Ecom>
->> Cc: "Gustavo A=2E R=2E Silva" <gustavoars@kernel=2Eorg>
->> Cc: Andrew Morton <akpm@linux-foundation=2Eorg>
->> Cc: Marco Elver <elver@google=2Ecom>
->> Cc: Andrey Konovalov <andreyknvl@gmail=2Ecom>
->> Cc: Andrey Ryabinin <ryabinin=2Ea=2Ea@gmail=2Ecom>
->> Cc: Masahiro Yamada <masahiroy@kernel=2Eorg>
->> Cc: Nathan Chancellor <nathan@kernel=2Eorg>
->> Cc: Nicolas Schier <nicolas@fjasle=2Eeu>
->> Cc: Miguel Ojeda <ojeda@kernel=2Eorg>
->> Cc: Nick Desaulniers <ndesaulniers@google=2Ecom>
->> Cc: Hao Luo <haoluo@google=2Ecom>
->> Cc: Przemek Kitszel <przemyslaw=2Ekitszel@intel=2Ecom>
->> Cc: linux-hardening@vger=2Ekernel=2Eorg
->> Cc: kasan-dev@googlegroups=2Ecom
->> Cc: linux-kbuild@vger=2Ekernel=2Eorg
->> ---
->>  include/linux/compiler_types=2Eh  |  2 +-
->>  kernel/configs/hardening=2Econfig |  2 +-
->>  lib/Kconfig=2Eubsan               | 23 +++++++++++------------
->>  lib/test_ubsan=2Ec                | 18 ++++++++++++++----
->>  lib/ubsan=2Ec                     | 28 ++++++++++++++++++++++++++--
->>  lib/ubsan=2Eh                     |  8 ++++++++
->>  scripts/Makefile=2Elib            |  4 ++--
->>  scripts/Makefile=2Eubsan          |  8 ++++++--
->>  8 files changed, 69 insertions(+), 24 deletions(-)
->>
->> diff --git a/include/linux/compiler_types=2Eh b/include/linux/compiler_=
-types=2Eh
->> index f59393464ea7=2E=2E4ad3e900bc3d 100644
->> --- a/include/linux/compiler_types=2Eh
->> +++ b/include/linux/compiler_types=2Eh
->> @@ -360,7 +360,7 @@ struct ftrace_likely_data {
->>  #endif
->>
->>  /* Do not trap wrapping arithmetic within an annotated function=2E */
->> -#ifdef CONFIG_UBSAN_SIGNED_WRAP
->> +#ifdef CONFIG_UBSAN_INTEGER_WRAP
->>  # define __signed_wrap __attribute__((no_sanitize("signed-integer-over=
-flow")))
->>  #else
->>  # define __signed_wrap
->> diff --git a/kernel/configs/hardening=2Econfig b/kernel/configs/hardeni=
-ng=2Econfig
->> index 3fabb8f55ef6=2E=2Edd7c32fb5ac1 100644
->> --- a/kernel/configs/hardening=2Econfig
->> +++ b/kernel/configs/hardening=2Econfig
->> @@ -46,7 +46,7 @@ CONFIG_UBSAN_BOUNDS=3Dy
->>  # CONFIG_UBSAN_SHIFT is not set
->>  # CONFIG_UBSAN_DIV_ZERO is not set
->>  # CONFIG_UBSAN_UNREACHABLE is not set
->> -# CONFIG_UBSAN_SIGNED_WRAP is not set
->> +# CONFIG_UBSAN_INTEGER_WRAP is not set
->>  # CONFIG_UBSAN_BOOL is not set
->>  # CONFIG_UBSAN_ENUM is not set
->>  # CONFIG_UBSAN_ALIGNMENT is not set
->> diff --git a/lib/Kconfig=2Eubsan b/lib/Kconfig=2Eubsan
->> index 1d4aa7a83b3a=2E=2E63e5622010e0 100644
->> --- a/lib/Kconfig=2Eubsan
->> +++ b/lib/Kconfig=2Eubsan
->> @@ -116,21 +116,20 @@ config UBSAN_UNREACHABLE
->>           This option enables -fsanitize=3Dunreachable which checks for=
- control
->>           flow reaching an expected-to-be-unreachable position=2E
->>
->> -config UBSAN_SIGNED_WRAP
->> -       bool "Perform checking for signed arithmetic wrap-around"
->> +config UBSAN_INTEGER_WRAP
->> +       bool "Perform checking for integer arithmetic wrap-around"
->>         default UBSAN
->>         depends on !COMPILE_TEST
->> -       # The no_sanitize attribute was introduced in GCC with version =
-8=2E
->> -       depends on !CC_IS_GCC || GCC_VERSION >=3D 80000
->>         depends on $(cc-option,-fsanitize=3Dsigned-integer-overflow)
->> -       help
->> -         This option enables -fsanitize=3Dsigned-integer-overflow whic=
-h checks
->> -         for wrap-around of any arithmetic operations with signed inte=
-gers=2E
->> -         This currently performs nearly no instrumentation due to the
->> -         kernel's use of -fno-strict-overflow which converts all would=
--be
->> -         arithmetic undefined behavior into wrap-around arithmetic=2E =
-Future
->> -         sanitizer versions will allow for wrap-around checking (rathe=
-r than
->> -         exclusively undefined behavior)=2E
->> +       depends on $(cc-option,-fsanitize=3Dunsigned-integer-overflow)
->> +       depends on $(cc-option,-fsanitize=3Dimplicit-signed-integer-tru=
-ncation)
->> +       depends on $(cc-option,-fsanitize=3Dimplicit-unsigned-integer-t=
-runcation)
->
->Can these be in 1 cc-option? I know it might look slightly more ugly,
->but having 3 different ones will shell out to the compiler 3 times,
->which is a little less efficient=2E At some point it might noticeably
->increase the build initialization latency=2E
-
-Yeah, good point=2E I could probably just test the most recently added opt=
-ion, as it implies all the rest, too=2E I'll send an update!
-
--Kees
-
-
---=20
-Kees Cook
