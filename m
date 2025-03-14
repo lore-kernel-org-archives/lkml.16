@@ -1,32 +1,32 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBDA18C039
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976BD18CBEC
 	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 06:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741932949; cv=none; b=qUPQGmTKskSUhIPImbYKFgowIJ4ry1EXYPh4Lqy9UfvNQ/fDDpZvSxSTic93U05GA8Z2wtfNPRnGXvy8jkPPEqRZ9XgXtLyylmxVGm7uuMeNyr9EVlpg5OEJz6eibrwkSrAT+2r5c7Wmoj1SPu8flO5AE0cGq2qxkMVEcQTu7Rw=
+	t=1741932948; cv=none; b=BMmhyrmZyf5NkxikUzU59rXIA6ORBZl1lUzUJ6ftn0USkHA3E1aG5AFCRJt+G6iH3XZqKlHgfI8I/PWOD/thqJeIAz01dxuB+U00KLMqypkuQgbpGmwmujlkMa7xZHRWtDATw3XenONuulKUvvvRQrHDiSsaLEtNDVeeSImp614=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741932949; c=relaxed/simple;
-	bh=zuchniEhDmUBC9X7u8R4xdltILbNO0cwprPM/OBuxLE=;
+	s=arc-20240116; t=1741932948; c=relaxed/simple;
+	bh=LloJnKkIR/QdFvsz1WTvP10su9GsOgJ3e0RXRBD9G0s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RanDjRvGw51KYWIoYnyS6eXVEenmBxvIozj8tf054tf1T4E/OT+0kctpuTig/2AnSrkgH/VLZ5H+5aEojBm31DGFXJ6aLyD+cxZHfq+hj7q38bX5Xgiu2Fn1mrAmR9hJdKOREXZHF4cYEODMX48dgbxcoQBNI5pe0I3eaVQf+aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K7191N8V; arc=none smtp.client-ip=95.215.58.189
+	 MIME-Version; b=tE1LwWZbkfEAqmyJzLo7RdRwrs2yusVGXtRQEiL5PaYXzrk2E2T4oR2ezlOV/QGH1IibTYjVB5Qj36k01M0qMXz1TT78rAjSpf7Nj7PWismyW4/A/cVtiqFHpRlVuYBhaQW6sS5J7Cqr6lkv0Ib0t2ikbpHDH8sGb6vdi4aBDnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V274faEo; arc=none smtp.client-ip=95.215.58.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K7191N8V"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V274faEo"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741932935;
+	t=1741932944;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Nc+pYdC/xOdelwTJP89jkCPlJBy7KhpTV1fBT5yIKFQ=;
-	b=K7191N8VG4pwJwKAtbd57HzRApbLYVKRwODKb5dG+bBi82YQH9CObHi+r08ica5eqBu7tJ
-	xD77JPOtkH2IbGmEsx+h8XqYr/yBfI8NF7nycM1cLg4A2nsTvABOYTPnxQkKGJENlzd59V
-	yqtmNKe3bpW0fqRXy5bQUx64hkyFLiY=
+	bh=tHvct7NUO2otKVtcPkikbwH9IxeqmMsC6tyfV+hMsCI=;
+	b=V274faEovU31wH6hmPF8Pl1ql5SCdkECGFNsM9aIg8fqkshlyZQjJkHlOiibZ5eK8EBIaF
+	mzT2xavCrHmwrG2e71ysA2lRB0K2dCx5x92LDIJjzGPXTyyBhrFDUktB4v80nkwy47GVhp
+	OIu/u1LFsSewxNzC4GuEWlmMp1zITI8=
 From: Shakeel Butt <shakeel.butt@linux.dev>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>,
@@ -39,9 +39,9 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,
 	cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Meta kernel team <kernel-team@meta.com>
-Subject: [RFC PATCH 03/10] memcg: introduce memcg_uncharge
-Date: Thu, 13 Mar 2025 23:15:04 -0700
-Message-ID: <20250314061511.1308152-4-shakeel.butt@linux.dev>
+Subject: [RFC PATCH 06/10] memcg: do obj_cgroup_put inside drain_obj_stock
+Date: Thu, 13 Mar 2025 23:15:07 -0700
+Message-ID: <20250314061511.1308152-7-shakeel.butt@linux.dev>
 In-Reply-To: <20250314061511.1308152-1-shakeel.butt@linux.dev>
 References: <20250314061511.1308152-1-shakeel.butt@linux.dev>
 Precedence: bulk
@@ -53,82 +53,170 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-At multiple places in memcontrol.c, the memory and memsw page counters
-are being uncharged. This is error-prone. Let's move the functionality
-to a newly introduced memcg_uncharge and call it from all those places.
+Previously we could not call obj_cgroup_put() inside the local lock
+because on the put on the last reference, the release function
+obj_cgroup_release() may try to re-acquire the local lock. However that
+chain has been broken. Now simply do obj_cgroup_put() inside
+drain_obj_stock() instead of returning the old objcg.
 
 Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 ---
- mm/memcontrol.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ mm/memcontrol.c | 37 +++++++++++--------------------------
+ 1 file changed, 11 insertions(+), 26 deletions(-)
 
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 28cb75b5bc66..b54e3a1d23bd 100644
+index 83db180455a1..3c4de384b5a0 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -1816,6 +1816,13 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages,
+@@ -1778,7 +1778,7 @@ static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock) = {
+ };
+ static DEFINE_MUTEX(percpu_charge_mutex);
+ 
+-static struct obj_cgroup *drain_obj_stock(struct memcg_stock_pcp *stock);
++static void drain_obj_stock(struct memcg_stock_pcp *stock);
+ static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
+ 				     struct mem_cgroup *root_memcg);
+ 
+@@ -1853,7 +1853,6 @@ static void drain_stock(struct memcg_stock_pcp *stock)
+ static void drain_local_stock(struct work_struct *dummy)
+ {
+ 	struct memcg_stock_pcp *stock;
+-	struct obj_cgroup *old = NULL;
+ 	unsigned long flags;
+ 
+ 	/*
+@@ -1864,12 +1863,11 @@ static void drain_local_stock(struct work_struct *dummy)
+ 	localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
+ 
+ 	stock = this_cpu_ptr(&memcg_stock);
+-	old = drain_obj_stock(stock);
++	drain_obj_stock(stock);
+ 	drain_stock(stock);
+ 	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
+ 
+ 	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+-	obj_cgroup_put(old);
+ }
+ 
+ /* Should never be called with root_mem_cgroup. */
+@@ -1951,18 +1949,16 @@ void drain_all_stock(struct mem_cgroup *root_memcg)
+ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ {
+ 	struct memcg_stock_pcp *stock;
+-	struct obj_cgroup *old;
+ 	unsigned long flags;
+ 
+ 	stock = &per_cpu(memcg_stock, cpu);
+ 
+ 	/* drain_obj_stock requires stock_lock */
+ 	localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
+-	old = drain_obj_stock(stock);
++	drain_obj_stock(stock);
+ 	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+ 
+ 	drain_stock(stock);
+-	obj_cgroup_put(old);
+ 
+ 	return 0;
+ }
+@@ -2745,24 +2741,20 @@ void __memcg_kmem_uncharge_page(struct page *page, int order)
+ }
+ 
+ /* Replace the stock objcg with objcg, return the old objcg */
+-static struct obj_cgroup *replace_stock_objcg(struct memcg_stock_pcp *stock,
+-					     struct obj_cgroup *objcg)
++static void replace_stock_objcg(struct memcg_stock_pcp *stock,
++				struct obj_cgroup *objcg)
+ {
+-	struct obj_cgroup *old = NULL;
+-
+-	old = drain_obj_stock(stock);
++	drain_obj_stock(stock);
+ 	obj_cgroup_get(objcg);
+ 	stock->nr_bytes = atomic_read(&objcg->nr_charged_bytes)
+ 			? atomic_xchg(&objcg->nr_charged_bytes, 0) : 0;
+ 	WRITE_ONCE(stock->cached_objcg, objcg);
+-	return old;
+ }
+ 
+ static void mod_objcg_state(struct obj_cgroup *objcg, struct pglist_data *pgdat,
+ 		     enum node_stat_item idx, int nr)
+ {
+ 	struct memcg_stock_pcp *stock;
+-	struct obj_cgroup *old = NULL;
+ 	unsigned long flags;
+ 	int *bytes;
+ 
+@@ -2775,7 +2767,7 @@ static void mod_objcg_state(struct obj_cgroup *objcg, struct pglist_data *pgdat,
+ 	 * changes.
+ 	 */
+ 	if (READ_ONCE(stock->cached_objcg) != objcg) {
+-		old = replace_stock_objcg(stock, objcg);
++		replace_stock_objcg(stock, objcg);
+ 		stock->cached_pgdat = pgdat;
+ 	} else if (stock->cached_pgdat != pgdat) {
+ 		/* Flush the existing cached vmstat data */
+@@ -2816,7 +2808,6 @@ static void mod_objcg_state(struct obj_cgroup *objcg, struct pglist_data *pgdat,
+ 		__mod_objcg_mlstate(objcg, pgdat, idx, nr);
+ 
+ 	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+-	obj_cgroup_put(old);
+ }
+ 
+ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes)
+@@ -2838,12 +2829,12 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes)
  	return ret;
  }
  
-+static void memcg_uncharge(struct mem_cgroup *memcg, unsigned int nr_pages)
-+{
-+	page_counter_uncharge(&memcg->memory, nr_pages);
-+	if (do_memsw_account())
-+		page_counter_uncharge(&memcg->memsw, nr_pages);
-+}
-+
- /*
-  * Returns stocks cached in percpu and reset cached information.
-  */
-@@ -1828,10 +1835,7 @@ static void drain_stock(struct memcg_stock_pcp *stock)
- 		return;
- 
- 	if (stock_pages) {
--		page_counter_uncharge(&old->memory, stock_pages);
--		if (do_memsw_account())
--			page_counter_uncharge(&old->memsw, stock_pages);
--
-+		memcg_uncharge(old, stock_pages);
- 		WRITE_ONCE(stock->nr_pages, 0);
- 	}
- 
-@@ -1893,9 +1897,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
- 		 * In case of unlikely failure to lock percpu stock_lock
- 		 * uncharge memcg directly.
- 		 */
--		page_counter_uncharge(&memcg->memory, nr_pages);
--		if (do_memsw_account())
--			page_counter_uncharge(&memcg->memsw, nr_pages);
-+		memcg_uncharge(memcg, nr_pages);
- 		return;
- 	}
- 	__refill_stock(memcg, nr_pages);
-@@ -2855,12 +2857,8 @@ static struct obj_cgroup *drain_obj_stock(struct memcg_stock_pcp *stock)
- 
- 			mod_memcg_state(memcg, MEMCG_KMEM, -nr_pages);
- 			memcg1_account_kmem(memcg, -nr_pages);
--			if (!mem_cgroup_is_root(memcg)) {
--				page_counter_uncharge(&memcg->memory, nr_pages);
--				if (do_memsw_account())
--					page_counter_uncharge(&memcg->memsw,
--							      nr_pages);
--			}
-+			if (!mem_cgroup_is_root(memcg))
-+				memcg_uncharge(memcg, nr_pages);
- 
- 			css_put(&memcg->css);
- 		}
-@@ -4689,9 +4687,7 @@ static inline void uncharge_gather_clear(struct uncharge_gather *ug)
- static void uncharge_batch(const struct uncharge_gather *ug)
+-static struct obj_cgroup *drain_obj_stock(struct memcg_stock_pcp *stock)
++static void drain_obj_stock(struct memcg_stock_pcp *stock)
  {
- 	if (ug->nr_memory) {
--		page_counter_uncharge(&ug->memcg->memory, ug->nr_memory);
--		if (do_memsw_account())
--			page_counter_uncharge(&ug->memcg->memsw, ug->nr_memory);
-+		memcg_uncharge(ug->memcg, ug->nr_memory);
- 		if (ug->nr_kmem) {
- 			mod_memcg_state(ug->memcg, MEMCG_KMEM, -ug->nr_kmem);
- 			memcg1_account_kmem(ug->memcg, -ug->nr_kmem);
+ 	struct obj_cgroup *old = READ_ONCE(stock->cached_objcg);
+ 
+ 	if (!old)
+-		return NULL;
++		return;
+ 
+ 	if (stock->nr_bytes) {
+ 		unsigned int nr_pages = stock->nr_bytes >> PAGE_SHIFT;
+@@ -2896,11 +2887,7 @@ static struct obj_cgroup *drain_obj_stock(struct memcg_stock_pcp *stock)
+ 	}
+ 
+ 	WRITE_ONCE(stock->cached_objcg, NULL);
+-	/*
+-	 * The `old' objects needs to be released by the caller via
+-	 * obj_cgroup_put() outside of memcg_stock_pcp::stock_lock.
+-	 */
+-	return old;
++	obj_cgroup_put(old);
+ }
+ 
+ static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
+@@ -2922,7 +2909,6 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 			     bool allow_uncharge)
+ {
+ 	struct memcg_stock_pcp *stock;
+-	struct obj_cgroup *old = NULL;
+ 	unsigned long flags;
+ 	unsigned int nr_pages = 0;
+ 
+@@ -2930,7 +2916,7 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 
+ 	stock = this_cpu_ptr(&memcg_stock);
+ 	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
+-		old = replace_stock_objcg(stock, objcg);
++		replace_stock_objcg(stock, objcg);
+ 		allow_uncharge = true;	/* Allow uncharge when objcg changes */
+ 	}
+ 	stock->nr_bytes += nr_bytes;
+@@ -2941,7 +2927,6 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 	}
+ 
+ 	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+-	obj_cgroup_put(old);
+ 
+ 	if (nr_pages)
+ 		obj_cgroup_uncharge_pages(objcg, nr_pages);
 -- 
 2.47.1
 
