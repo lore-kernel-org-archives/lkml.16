@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0621FDE1A
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C88918A6C5
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741988305; cv=none; b=mISvijqWqywKpGaHVHR+L0qhACcSZxQl0z70ZnGZYM+mkVFNyzYQmYTzlwLFsSF0nDvvgKI4lfXuvmYexi2R8j6bsl79Idsj6SdgbJe29XFCb4Of/yLCZjK2lrQS6fCgtPZci45FGhjj+ieZ6QPVdIdiezAipcIw4I8YVZehQqk=
+	t=1741988315; cv=none; b=UcGNA7OL9aIVIQC65KBQZ8EQ+FMqddAINRe4DVpm6vJE7YrRgv1j7lfAREnsbf2T94JWbKmRBn2N9FlWfnHv2bQpIc9LfEmM20Xv51q2rvXEoBSqvGz0uc6dBaeS8b6YKOmR8Pqbatw8BiDZmSpnFeWdS6tScIQjhOMHi/mv+yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741988305; c=relaxed/simple;
-	bh=KR7Rgigui5nMqE+lqkr212HsL5acvMFEx4PkGQEmMBE=;
+	s=arc-20240116; t=1741988315; c=relaxed/simple;
+	bh=AzqFum6Agw13RjN3Fu1tKvuI6gP3XBpPLw2tmwLYzUE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UDV+dDElBqPP1/NjM3geG8IEMaJJn46OoI4l3rlvMazBcqG4MtzIXrWAPCvd1Ngh7o7Anr8XDgTVneZcAieS9lkE3leFxezbWCEEsPaiTLsNjdjJIgNGfvKHeSngBBamJmqq3Cp3C9xH9PfenWcFPlfzCSdR/HE6a3UMMrICl8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KhyOWeGk; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=FlwY6nG9K/kwTKDvxQfP8P/pGcQ6xFlFQrXuCx5qdKP3idl1SdNJawqpZdpy5YmmQGmooLqVaRAZBsJthfAtLYxEr9KaLerJN6/UELJN0SOP1bbJdUnuqLn1ysGUdS/PcBQ7dKks1t3sF9s8oXJMX/S7+hfOWj5b/AZDglyps/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AGI3rzV/; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KhyOWeGk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AGI3rzV/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741988302;
+	s=mimecast20190719; t=1741988313;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Syhhy4ulIUlWqTYydvlvGA6nZmvGM1l/r4DiZeh/SB8=;
-	b=KhyOWeGkfPVROf2IyQ9sxI/mNtzHDzW1I1J0der5AKPyTMb6oEYAjqDYe89GaXZvi/zmHP
-	YahiX9kCPM3fFBbFq/731x8Bw0HNgV26S5YQ5fRIaX0dkmQhz9tFuJTTaoMilju29PVMhA
-	Hb3vE1UGIDCwhMeaHSPuoDnQJ8oWxkM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=vPsYu1/Zt9JxInUUfAbvJhaRjTUPwV0c8VAQrmxs/V8=;
+	b=AGI3rzV/y9Pjccue7SZAqO0enUG/mnvGUgeSghsKkQUWIGYz22v2CPQoz8R+U6uUL4olMs
+	rTyiYX+V10RIkj98DuVTrk8DMovr+qiI9Squ5PMlW/uCcUk4jHisTB2SizIGxU7KFQ126u
+	37PG7YJtIW8UoRP4mcyzI5pVPJgcU3o=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-116-ltqb4lcePE69hcWXSe8vYA-1; Fri,
- 14 Mar 2025 17:38:21 -0400
-X-MC-Unique: ltqb4lcePE69hcWXSe8vYA-1
-X-Mimecast-MFC-AGG-ID: ltqb4lcePE69hcWXSe8vYA_1741988298
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-511-Q0pkQj-lPNqdUoh8sMEMxQ-1; Fri,
+ 14 Mar 2025 17:38:31 -0400
+X-MC-Unique: Q0pkQj-lPNqdUoh8sMEMxQ-1
+X-Mimecast-MFC-AGG-ID: Q0pkQj-lPNqdUoh8sMEMxQ_1741988308
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 28885180034D;
-	Fri, 14 Mar 2025 21:38:17 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5CFF81955E95;
+	Fri, 14 Mar 2025 21:38:28 +0000 (UTC)
 Received: from h1.redhat.com (unknown [10.22.80.88])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B05D41944DC5;
-	Fri, 14 Mar 2025 21:38:11 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CD5E61943582;
+	Fri, 14 Mar 2025 21:38:22 +0000 (UTC)
 From: Nico Pache <npache@redhat.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc: alexander.atanasov@virtuozzo.com,
 	kanchana.p.sridhar@intel.com,
 	llong@redhat.com,
 	shakeel.butt@linux.dev
-Subject: [PATCH v2 1/4] meminfo: add a per node counter for balloon drivers
-Date: Fri, 14 Mar 2025 15:37:54 -0600
-Message-ID: <20250314213757.244258-2-npache@redhat.com>
+Subject: [PATCH v2 3/4] hv_balloon: update the NR_BALLOON_PAGES state
+Date: Fri, 14 Mar 2025 15:37:56 -0600
+Message-ID: <20250314213757.244258-4-npache@redhat.com>
 In-Reply-To: <20250314213757.244258-1-npache@redhat.com>
 References: <20250314213757.244258-1-npache@redhat.com>
 Precedence: bulk
@@ -84,76 +84,34 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Add NR_BALLOON_PAGES counter to track memory used by balloon drivers and
-expose it through /proc/meminfo and other memory reporting interfaces.
+Update the NR_BALLOON_PAGES counter when pages are added to or
+removed from the Hyper-V balloon.
 
 Signed-off-by: Nico Pache <npache@redhat.com>
 ---
- fs/proc/meminfo.c      | 2 ++
- include/linux/mmzone.h | 1 +
- mm/show_mem.c          | 4 +++-
- mm/vmstat.c            | 1 +
- 4 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/hv/hv_balloon.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-index 8ba9b1472390..83be312159c9 100644
---- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -162,6 +162,8 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
- 	show_val_kb(m, "Unaccepted:     ",
- 		    global_zone_page_state(NR_UNACCEPTED));
- #endif
-+	show_val_kb(m, "Balloon:        ",
-+		    global_node_page_state(NR_BALLOON_PAGES));
- 
- 	hugetlb_report_meminfo(m);
- 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 9540b41894da..71d3ff19267a 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -223,6 +223,7 @@ enum node_stat_item {
- #ifdef CONFIG_HUGETLB_PAGE
- 	NR_HUGETLB,
- #endif
-+	NR_BALLOON_PAGES,
- 	NR_VM_NODE_STAT_ITEMS
- };
- 
-diff --git a/mm/show_mem.c b/mm/show_mem.c
-index 43afb56abbd3..6af13bcd2ab3 100644
---- a/mm/show_mem.c
-+++ b/mm/show_mem.c
-@@ -260,6 +260,7 @@ static void show_free_areas(unsigned int filter, nodemask_t *nodemask, int max_z
- 			" pagetables:%lukB"
- 			" sec_pagetables:%lukB"
- 			" all_unreclaimable? %s"
-+			" Balloon:%lukB"
- 			"\n",
- 			pgdat->node_id,
- 			K(node_page_state(pgdat, NR_ACTIVE_ANON)),
-@@ -285,7 +286,8 @@ static void show_free_areas(unsigned int filter, nodemask_t *nodemask, int max_z
- #endif
- 			K(node_page_state(pgdat, NR_PAGETABLE)),
- 			K(node_page_state(pgdat, NR_SECONDARY_PAGETABLE)),
--			str_yes_no(pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES));
-+			str_yes_no(pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES),
-+			K(node_page_state(pgdat, NR_BALLOON_PAGES)));
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index fec2f18679e3..2b4080e51f97 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1192,6 +1192,7 @@ static void free_balloon_pages(struct hv_dynmem_device *dm,
+ 		__ClearPageOffline(pg);
+ 		__free_page(pg);
+ 		dm->num_pages_ballooned--;
++		mod_node_page_state(page_pgdat(pg), NR_BALLOON_PAGES, -1);
+ 		adjust_managed_page_count(pg, 1);
  	}
+ }
+@@ -1221,6 +1222,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+ 			return i * alloc_unit;
  
- 	for_each_populated_zone(zone) {
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 16bfe1c694dd..d3b11891a942 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1276,6 +1276,7 @@ const char * const vmstat_text[] = {
- #ifdef CONFIG_HUGETLB_PAGE
- 	"nr_hugetlb",
- #endif
-+	"nr_balloon_pages",
- 	/* system-wide enum vm_stat_item counters */
- 	"nr_dirty_threshold",
- 	"nr_dirty_background_threshold",
+ 		dm->num_pages_ballooned += alloc_unit;
++		mod_node_page_state(page_pgdat(pg), NR_BALLOON_PAGES, alloc_unit);
+ 
+ 		/*
+ 		 * If we allocatted 2M pages; split them so we
 -- 
 2.48.1
 
