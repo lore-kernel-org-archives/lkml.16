@@ -1,258 +1,178 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2086.outbound.protection.outlook.com [40.107.20.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2534C92
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741965373; cv=none; b=kF0Frp+EXATJ7wRbktwEt5XTuALYn+kaFdOAFOmGvbiyDH3IJFujah5hsSmOQ+hWiP9Fx9LthkbY9FqnrEsrhBPZV3OrHHL3IGeQZ9A6FQjFN00Abh31FNGP8N1A/ckYifK9zB8z7FErNed174UE4duuEMbL7r4lwOwVhMDWphY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040801C878E;
+	Fri, 14 Mar 2025 15:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741965373; cv=fail; b=Q6iZ7RufabY3ylsp6cJM9cMqfuy/KjwCDsLY5WNlE62F4Mmtk/sZHSCvHYZTs4tHZgsNdDoAvKx4+0qqZx01B32D06qSr4pfGl+CciOUCuSZC2fJPlCbF11ZZdlwwkXG2OUAwpjy/0/bFXNKjrphPswmo9XXXtSyqiLydechH1g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741965373; c=relaxed/simple;
-	bh=uLYZpEMF0580yq+ZdNBaDvrwNrSkD7YPO6rpmZnPa8E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tD8rM0itmsOT8zK3sjv66Fk28nmiuf5laJRiQ9OOiY6mtwBcIS30a0HqNse+8vhVL22RTE9+qToyCpSiWW67s3+UpTp4DHQXtno+dKK4rG3ryUj3vHBkAwcKlu/ym38J2OQSQILzDLL2d5S1GMjLG9R/Iis6UOrSZ9ilIvNl8KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=JpPXRnNJ; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=JpPXRnNJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	bh=Av52XJNNnq8JnPPyO4vLycUvcC/aU1le9s4ac3zuPRA=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Z1WjpLjruFCQgnEq4ohX/Z2dCCKOqRr8E9vhyKcVB2JoEd/ieBJISp7MqTFIa5r1IQw451pL8kWnnW2tYpquQ/+yg9B5mlJKa33vcW6wgNmR9GRGItzorSoxoPTGqMyjKYwdDip5NGhO3GimfKA6sc7nQ1ykwKGgkyKeM6fhsVI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GkSQBTuu; arc=fail smtp.client-ip=40.107.20.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="JpPXRnNJ";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="JpPXRnNJ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4A96721174;
-	Fri, 14 Mar 2025 15:16:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1741965369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uLYZpEMF0580yq+ZdNBaDvrwNrSkD7YPO6rpmZnPa8E=;
-	b=JpPXRnNJFhie5rnUzxwMpLyp3iRmgI/IQk9/McP2VDes6T3j25lhXmkNTYP/IiyusUvPGq
-	z5B4c83KXm3I7H8piTnMDDvnrNT5qu/zg86HQxNbu7+CVMqeFZLrbZmFngW13s7upmtGVa
-	uh3w16tPzcX3prNUeXbk3zaok0AYKM8=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=JpPXRnNJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1741965369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uLYZpEMF0580yq+ZdNBaDvrwNrSkD7YPO6rpmZnPa8E=;
-	b=JpPXRnNJFhie5rnUzxwMpLyp3iRmgI/IQk9/McP2VDes6T3j25lhXmkNTYP/IiyusUvPGq
-	z5B4c83KXm3I7H8piTnMDDvnrNT5qu/zg86HQxNbu7+CVMqeFZLrbZmFngW13s7upmtGVa
-	uh3w16tPzcX3prNUeXbk3zaok0AYKM8=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 070B9132DD;
-	Fri, 14 Mar 2025 15:16:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Gvw7ADlI1GcORgAAD6G6ig
-	(envelope-from <jgross@suse.com>); Fri, 14 Mar 2025 15:16:09 +0000
-Message-ID: <68b8ddd0-de64-45d0-9fc4-391260f596e0@suse.com>
-Date: Fri, 14 Mar 2025 16:16:08 +0100
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GkSQBTuu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xh9KoCPS+QCDPzGYfDP7oQI+qSnb9TwOBxWN1HXzpMBqnRcnEXOhLjRwq8uAU2oA0xY5fjWPUgMDyyvnMjSc7sdN+iPwoMhp6mMVVElHObf1KyjAZ9uDd/hSzsvvskoIweaj/0QqWE9oJSokLMw+jHYhb598ANt4/cFEsIxpN3Dqi551WIqpqVIyKIG0NtOOJQ93ec2wKfKfbrEeksev/G+yVBMHVfRb2/ez73aaTSteLj+eFsskls3tywallEm0sJW1X3jdEy91h9wbMip1ZF/4GJ1JpGPFTu+6LEpIs9ncBLr5fwfZcbPYkQSRTbjQRNVI1FWfFDDMoRQQ5fGhKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gyxDfd+rbtOPqY6kpqjDngzuTHHrmBTxdzDNK/Ud37g=;
+ b=OWdQJ/XXNCAMqzHdp9H07ZkyQlsJTXUyPKA1zc5Byz4fIFrF7GfLAEA5O/Vt+pHn34DXLcjimUcOyCqB6xQK8m+vqrZ1x/qP2Lx20fT58+XentsoxscgkHQrtzVKBbD4yz4mGhxKNTX4ol2tQ1u/e5IjHOk7EoBM2aHUiUSndta8ip1Kj2MqJxPobLCdERrTEC2wjv4ng3tdv40ZqqbDO9oV5N/i7PKQKZBaa2v/yLBm06x8UbwM/Uy/h72bPzi3V2xVKllJdUIdzLiWQygZlbSpPN9zw0mzUM35f2EELlcTj6wM4Dsf/R5ozd5RXc+XSOXqRR8zmx7PrY5QNQYYew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gyxDfd+rbtOPqY6kpqjDngzuTHHrmBTxdzDNK/Ud37g=;
+ b=GkSQBTuu0dhgiy4hwI27fUmrBoLuP06zLdnnbzbmfjF3yE48MQe2LWZwegAHrsWY3lL/kbx48In+V4lobAILHsR0l5roGBYgh+7jhqFNlhq9hAY5OwTx6Fi0qASfx+9titR+GEwKdtZJu0V83SXdhEH21wFH/aRoC19r/+Nc1dNoCpIGKw+x+oHipvc+hlo7LdrTTRRpWOp0n1Oyv6H3Bu1SHSB9RmTjOuc0Hxv/Q6oTSqGSPnHwZ7h/oeS/pmkdHcSbMb+SFyo8G7IV6hGNjSFA0zLEElWeJNwmI0Tsf7Ib3jTi05uA29XZa8HzRnECGYakGEr1VDalCHc0/tDaHg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8247.eurprd04.prod.outlook.com (2603:10a6:20b:3f2::13)
+ by VI2PR04MB11099.eurprd04.prod.outlook.com (2603:10a6:800:298::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.25; Fri, 14 Mar
+ 2025 15:16:07 +0000
+Received: from AS8PR04MB8247.eurprd04.prod.outlook.com
+ ([fe80::84f7:e2c3:ceed:c0a6]) by AS8PR04MB8247.eurprd04.prod.outlook.com
+ ([fe80::84f7:e2c3:ceed:c0a6%5]) with mapi id 15.20.8534.024; Fri, 14 Mar 2025
+ 15:16:07 +0000
+From: Daniel Baluta <daniel.baluta@nxp.com>
+To: mathieu.poirier@linaro.org
+Cc: andersson@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	daniel.baluta@nxp.com,
+	Frank.Li@nxp.com,
+	p.zabel@pengutronix.de,
+	peng.fan@nxp.com,
+	linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] remoteproc: imx_dsp_rproc: Document run_stall struct member
+Date: Fri, 14 Mar 2025 17:17:19 +0200
+Message-ID: <20250314151720.1793719-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AM0P190CA0030.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:208:190::40) To AS8PR04MB8247.eurprd04.prod.outlook.com
+ (2603:10a6:20b:3f2::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] x86/xen: Move Xen upcall handler
-To: Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Andy Lutomirski <luto@kernel.org>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20250314151220.862768-1-brgerst@gmail.com>
- <20250314151220.862768-2-brgerst@gmail.com>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <20250314151220.862768-2-brgerst@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------ve600CoZstixlRJ0utGBfgqx"
-X-Rspamd-Queue-Id: 4A96721174
-X-Spam-Score: -5.41
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.41 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SIGNED_PGP(-2.00)[];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-0.996];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	MIME_BASE64_TEXT(0.10)[];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org,kernel.org];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	HAS_ATTACHMENT(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,oracle.com:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8247:EE_|VI2PR04MB11099:EE_
+X-MS-Office365-Filtering-Correlation-Id: 648363a6-7d93-4352-8fbb-08dd630b24b2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?OWnkJvk9X8Cs8gNJA+iHdh+npKS9nsRgzUowMKn1j2pXI/5R1dgq5985NviC?=
+ =?us-ascii?Q?JDNM5S4aAUHC54JaRUuOZl4LwEhLp2ECbF9iJapj08YGDMdmp57DxDhOmiOz?=
+ =?us-ascii?Q?kWahrtOBWxGoBpeUF1rmJaOMQVMZ4el3fwZWU1R87qodcn/XZVKd45MNr2Es?=
+ =?us-ascii?Q?TM5JWlRu9Sy3rREqnGZMewHC9rE9v9hSuf1lZJ7F2ykNhveDSb/E9GVyCzWF?=
+ =?us-ascii?Q?vosPFfiIfjmXrjnoVhRbbXAoTjLVYCu9j3uXP46x68X3YvvObkbslCKge/P6?=
+ =?us-ascii?Q?VnRvC92tmmaL1FyWExBAHTDH6b3L2HplAfTtNf9tzpfaxG0lm++ODwFkZK/7?=
+ =?us-ascii?Q?7gfJ5qOBz67DF0B99qkcnNYVRo/bfjNEMuGv11/q7jj9jmiUBKQAv4b0/9Yf?=
+ =?us-ascii?Q?/prtAdSCnlj3EH5ged1yznOWKyDtdIjmo3HaRPCSai5bqjcwTTa/xGlTrgbx?=
+ =?us-ascii?Q?l8+oN4oVFRqUqVKr0V2zhbSYPWRIrTmDUUquQpB8A9UMXo35JnPGFTVcDMVc?=
+ =?us-ascii?Q?4w1/yqJruJjfGV0i09XUZPfE7zwvGeaFmF5oMjAxgZxia7+WCzYClhA7AA3B?=
+ =?us-ascii?Q?ObHapBxnwUQa3saWWBinXTrqLDDHxbwxb+w0ogLN6803pZlMJ9EuvbeYMYwL?=
+ =?us-ascii?Q?MOwAtDsOdjUWmJcmBnHZCQRP2Biiu9QE3nlVqyGHTJOQJEYmctvWVGgblUof?=
+ =?us-ascii?Q?Qv7TWVVHGQcSMq0OLbblZuHlkim3lVZqvti/lj6vO2SuG5u6xqjmNMv7fmr+?=
+ =?us-ascii?Q?iUUw8L+x6DH+kqQ1F+HkNpFn87MBgvw71IL4EznHmAcY0sYcCLH/TTs6usyu?=
+ =?us-ascii?Q?T53TfsyTVtWuCxm36Ayv45jvqqbWCxK4KVHKImkvqUIObE1Lj5nhfXY+AsQC?=
+ =?us-ascii?Q?QgwcKgN8noKj8HO9AI1dSXMr7Lzb5wQ3IabO4zknqLQLG3jyAm88Y3CrgFPl?=
+ =?us-ascii?Q?P8AZ2NetwyndlMg0tCOZ8A8H76ySAvanIJr7//wT9s/MlgWIgXeT+iFkENEF?=
+ =?us-ascii?Q?424ZmmqYS9Ur0bj6TvYNifQ8prLzjFIxsiGY9zQ1NLeuS8/mbk2bpqkWQnRB?=
+ =?us-ascii?Q?Hku2/QsHbPIF92zCNGJnJrupPxCbuW95DiQIkgnpHQI+dhXfAlwiLK8hS62V?=
+ =?us-ascii?Q?gZ/waNkfQoXxTqPXyBxu09ttrdinJ8RHEknWUiVNG7tklupKU64B08/0dq8L?=
+ =?us-ascii?Q?VlilEqEdOQ7wJuf43fI6UwVZ3wjST/lFhS2aPM75Td8DwtaFfGj9DGDDQ+Xa?=
+ =?us-ascii?Q?sEzH5iwnZ51XtBDlWYYi+0ur3LxJArs7wN6CQzkfZoV4pdwGaeQo/HwJ+Mzn?=
+ =?us-ascii?Q?BOKskpxm2zWQeV7Anq7N/4twJ8+tGio+bOdXelmOZ5FBZ5wO9YT5WFmoOIqz?=
+ =?us-ascii?Q?DbwXd7mwn27jo5rYG7ieXdpZ7EFV2pvQYQ6tSJSpC5MIqya2fv5q0jj+iKZC?=
+ =?us-ascii?Q?nhTmQYFZrqKRCjaZP9EknaMA2g5/8oUV?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8247.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?pA7hQhk0keFuMRunR1QyuEPv6NCsT36UjyGZ0alPBOj/AwqIcED0OCiULJ5Q?=
+ =?us-ascii?Q?xl9BvMaYuQvw4Jeb612mzFi9EuCbYZbWVb5T1V6sn3p/wzCrWGTuHCuXvCtc?=
+ =?us-ascii?Q?vwtRYRSNqhZHam4gEG6yp296dMqt0QbNp1HCT1TjRGSECjGCcuAN8FAv9J61?=
+ =?us-ascii?Q?lFae4PUHMK2PdyLhaoAee5dYxgMBEvNVGDZax5iFb/xpmwvfzIaaWqlfUpZ9?=
+ =?us-ascii?Q?goZFkzbby+k601A3zYmUSijfyrDHLaMQqKqkegdAPY+BPwaPVuoYdDCyz9KT?=
+ =?us-ascii?Q?bEUg4FiRPhRkJ+M7emDhGtCpO0KFQLDvoLBRBOXcNEkQl86hLN2sB8W7xdD4?=
+ =?us-ascii?Q?T1+7bi2HmQO5OdwcelN0/Vx2W5AOb3fMZP6uFwyIb10Op84j5TIyWkx/y/ll?=
+ =?us-ascii?Q?gqJ5K29pCZhf2GObewcGq3Pm0SBBLPybp+pPevGXjQKgsiTpR1WMZJIeMWeV?=
+ =?us-ascii?Q?L6IULUHFtnTEDW7LeeWyJGWk23KZl+Wb503H+7QBoTulnLYHK6HLpSkICQXM?=
+ =?us-ascii?Q?oZnczxI5d2nl2vRUsAiRRaOr70bMjqUKTdKojVS+iIy6jLBv1Mi2Ers//0Tm?=
+ =?us-ascii?Q?DIz7Ufq5s7gKn1HBq8OE4vlsv4SvPXvA6vwoR6Uzxz/1RCav+Jem9knhvyBq?=
+ =?us-ascii?Q?Y+Ez2AD4xNoeUR8eduoJYgkTsUOIWS05IfKrxwn8pf4cbfZib8hSCbiWJQ8G?=
+ =?us-ascii?Q?6xSqD0qXnFnLzFUu0c/gvvQkPHm4maoUzQw/nkLHGdhPQh8Fdc6bPzTNsQCk?=
+ =?us-ascii?Q?MSPkzbD0zS6Ja3+1ihtm48UVfzcSGrGYK1y2p8+avB5TzRMexDC3gz10bK4p?=
+ =?us-ascii?Q?FakRDeQoCJKrqbxN7D3Dx5Vv2k2gIb/FiMnRPFwhdQZe+ga0p/UXlHuhXF80?=
+ =?us-ascii?Q?4r3K0E1mH0NvfFyo2qT9J6tOmO+Rxc8LRb6Xz3GhhqkBxUJvz2O2+fouQmS8?=
+ =?us-ascii?Q?FTuaFJ/xF4LddbS+CmlsRluIUDNMR13CxjAeX0o/I7qNoU92t/OBJMCjXmg/?=
+ =?us-ascii?Q?M3PQVOUPhHTojUuR/d8fPhTPHa2KDb0L0ZGZ9k+xrEpbiNITRSoFqeag9SY8?=
+ =?us-ascii?Q?ws2SGnH+4X42M35SIGhZfqY48F9D+NyqppDZGLvrXfaRDPSFwhSs5j0UGrDs?=
+ =?us-ascii?Q?lyi5J3Y+ch41lXHFfoZm90/CyKYNO/m6ctScGOuyM162Y9BF1tzqUQfh4kZk?=
+ =?us-ascii?Q?6Wl6qiHIRRUpve/a/OyRn0arnlwIwI9cPQv+2wVHi1IEq1IUCgdrDDfflBmK?=
+ =?us-ascii?Q?OSdD5lqh15kSZ1NqSpmQmlidpRu+VopnTBZsFILcWlBIfY127uS/Ldx+UZiy?=
+ =?us-ascii?Q?pO+USaAArKgZEFDfqg9D9eNRebSxgHWq71SgS0sgFlVIanr3Lr2LJhG4S3M/?=
+ =?us-ascii?Q?/ehZaAjIebWPHIAyNaGc7dj86btjJatmr675qUJwu30SCwzC8wPMrjno9maX?=
+ =?us-ascii?Q?gr58CwLchMwFfem4jPayK6oPTkL6GS2bF4pHC6V/b0kKrfDiavJ8RVXDIIvT?=
+ =?us-ascii?Q?BCMswy95AqfXoMH5d1mrheykKI/mgBkjqpGJpzWDDsYrYxhrG7zE5KYniF52?=
+ =?us-ascii?Q?0f7mRdt07EFZCrAHWajhYtxl9jsuJ46LxeGqTOsl?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 648363a6-7d93-4352-8fbb-08dd630b24b2
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8247.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2025 15:16:07.0518
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WglZIdwiQfUmlRuwlCInVLVL6TbArQSYRd4H8eH/o5bv4ExW1kuUplcVnRIE/Run+xIry1BEy7aN2m7cq5rLfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB11099
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------ve600CoZstixlRJ0utGBfgqx
-Content-Type: multipart/mixed; boundary="------------NCzCbToN4U3fg0w3GW0Faifw";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Andy Lutomirski <luto@kernel.org>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Message-ID: <68b8ddd0-de64-45d0-9fc4-391260f596e0@suse.com>
-Subject: Re: [PATCH v2 1/7] x86/xen: Move Xen upcall handler
-References: <20250314151220.862768-1-brgerst@gmail.com>
- <20250314151220.862768-2-brgerst@gmail.com>
-In-Reply-To: <20250314151220.862768-2-brgerst@gmail.com>
+Add documentation for 'run_stall' imx_dsp_rproc struct member.
+This also fixes the following warning:
 
---------------NCzCbToN4U3fg0w3GW0Faifw
-Content-Type: multipart/mixed; boundary="------------EH1YWinatiCwoCyjqUjluUdj"
+warning: Function parameter or struct member 'run_stall'
+not described in 'imx_dsp_rproc'
 
---------------EH1YWinatiCwoCyjqUjluUdj
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Fixes: 0184b4fdbad1 ("imx_dsp_rproc: Use reset controller API to control the DSP")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202503142125.IE33sCto-lkp@intel.com/
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ drivers/remoteproc/imx_dsp_rproc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-T24gMTQuMDMuMjUgMTY6MTIsIEJyaWFuIEdlcnN0IHdyb3RlOg0KPiBNb3ZlIHRoZSB1cGNh
-bGwgaGFuZGxlciB0byBYZW4tc3BlY2lmaWMgZmlsZXMuDQo+IA0KPiBObyBmdW5jdGlvbmFs
-IGNoYW5nZXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCcmlhbiBHZXJzdCA8YnJnZXJzdEBn
-bWFpbC5jb20+DQo+IENjOiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQo+IENj
-OiBCb3JpcyBPc3Ryb3Zza3kgPGJvcmlzLm9zdHJvdnNreUBvcmFjbGUuY29tPg0KDQpSZXZp
-ZXdlZC1ieTogSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuY29tPg0KDQoNCkp1ZXJnZW4N
-Cg==
---------------EH1YWinatiCwoCyjqUjluUdj
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/imx_dsp_rproc.c
+index bc60edcdd661..90cb1fc13e71 100644
+--- a/drivers/remoteproc/imx_dsp_rproc.c
++++ b/drivers/remoteproc/imx_dsp_rproc.c
+@@ -96,6 +96,7 @@ enum imx_dsp_rp_mbox_messages {
+ /**
+  * struct imx_dsp_rproc - DSP remote processor state
+  * @regmap: regmap handler
++ * @run_stall: reset control handle used for Run/Stall operation
+  * @rproc: rproc handler
+  * @dsp_dcfg: device configuration pointer
+  * @clks: clocks needed by this device
+-- 
+2.43.0
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
-
---------------EH1YWinatiCwoCyjqUjluUdj--
-
---------------NCzCbToN4U3fg0w3GW0Faifw--
-
---------------ve600CoZstixlRJ0utGBfgqx
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmfUSDgFAwAAAAAACgkQsN6d1ii/Ey/B
-kwgAh0ZSRhGS8jnOPezLoHvw9sEgLvYffMSg63jRJ22LxocRQY3YN5Z0WcxW56lSPxD8Ogb7RJ8r
-MFNdQJUvmb0oRuCN7lg5H/lNFdKeMQNUAtYeAl6hwloDvr8A8fFXs/aTjvw0GxmXHwnVV6dtKM93
-r7MIUcsINUyusXpL90eK8Fignjb3/dh+eXj2yWbYSdp50UspTmYN+lzO+y3xVArsR5Ka7uu7ITpc
-xaguVHdb4EHyTO3leaW5Tu2hEMW5RCEcIogVUllV6gYJCYPsefOIOIRdQ235BgfVRMJtf3Ua2GwF
-ObATMcrfKL8HJBWzHm2Fvbo/DkF7Qo0Nq7JKGT+FDw==
-=rVqC
------END PGP SIGNATURE-----
-
---------------ve600CoZstixlRJ0utGBfgqx--
