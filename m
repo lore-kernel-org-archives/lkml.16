@@ -1,77 +1,41 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68D22E3374;
-	Fri, 14 Mar 2025 01:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBAE1BC3C;
+	Fri, 14 Mar 2025 01:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741914611; cv=none; b=vCZv766VS/K8CigW/YABGiwUANdZw1Za85O2bohxr4dT8rpIhMSIEIQWDReae2uoj4Hy1DY/pxkMzgCRGTgKVdLAtswo5GtQgz7e/AeyZsVWeyNydQ/Ns0Ds7lsl/0qz9SaGT0rXJ45f2s60uilrKD3x7EiDrpVodhatNytfI7E=
+	t=1741914618; cv=none; b=IOhX7uePlPJkThzYGlN/VjPz7HB7BupmvuX+lG99owSk4sW76Esty56+y8AKB1/snIY4EATDGBVtTyrXKKn3m/0sqmVcNkeYUJxBeDe/ce0VuwvtMoq2+8GSdmDoNw6yBnifjjP0REmz5W0pibbjO/wvYO+T5pxM9Kx9r7WlhU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741914611; c=relaxed/simple;
-	bh=CabPLOjFSc4Wpz1g5wSRcJa0dQvWkPwfqjYNijt/M3w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u7vB6Vi4tqSSVSmvA5g53pSkEXqxWcHIi+iY+6AXh6amng9562YhrQi04nlDBB1be2KZWidj/KtAg4dIT3eLV4Aq5aGq+XmMNeaYtgql8NarsuznHpamXVtWNd1A2uTzjPmJGOgQCjv2T49+Fa1YcVW1ELKcmpMSvjBOPHw18cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eUnwudUF; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eUnwudUF"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8a1a92bb3so2746566d6.3;
-        Thu, 13 Mar 2025 18:10:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741914608; x=1742519408; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hkSnH1tD+VyGeZC4CDJd4I/+pbRt7UbVDuyaiJJ96IA=;
-        b=eUnwudUF7+mDRVWoaxUPXT4b6ibdMma0nvy2j7Pszj9M7zqOj8w7PltqGMiUvQrU/5
-         EoRk8RO2Lh19dog9Wrc44RAhyHI/ZpdZfuVDaWrmIJgbVl0Cbar3dogBsWfgzSwzIJ9c
-         uxUwGmSz/xWQtk4k/CxRbC5ahNCbq7o4Jq1b5stVDutsTu3urKExRFKwvVUW0ErdGsQd
-         VEMGe73iedlJo2kTPGOx+qAwR6+xhuWi8WCWSrBERwlf7NveVETzkvvFjHZ+aItgY0pK
-         z+CttTIDZI616MBAXtZPatFlPFGyHnBcXguiblrnS9L+xE6ubrVRnWNnWTLPVRTl6zoB
-         vTJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741914608; x=1742519408;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hkSnH1tD+VyGeZC4CDJd4I/+pbRt7UbVDuyaiJJ96IA=;
-        b=GwaKeWA3704zCVv8YSwzH2QihYlXf3C16ogikId9rbUHzYiwynJqQ9+RTmg0BHnO3i
-         a4utabwKLSxV4PR1VIX2cu8f1lqNYPPKflsjcKc0ytJdczIfb3k6OhHNrm9EKV+VqRXk
-         u75saOvI6Qd/+KCiz2FoTWAnSABr70qquCTRjDGn+6/tUlq/bW7bMB8CK0Qe+8NHOSth
-         YxEdzmnILAAdlugjxNCUwPEMGWuX+8SWcyPF7lNSGOhTHA+ObMyLAco4VyVMSang/poE
-         qLQf1isBXoUJ0ZtSW73qBKPOv8U6JenPN7mmf2EOlFfDZsQZH9+iEXuGRokGE6dgyTYF
-         T5PA==
-X-Forwarded-Encrypted: i=1; AJvYcCU34acdxA9VButuJ9tsB6gpBDXUWvY/JvdF+3+YTza4kMGYSB9IuNQkR52UE8vmbmWK1ScrmBO2HxDi3TA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5kGKBBNC1i/Q75wcu9p3ra3moA2jWVxNfKzBxcERni7tuzFRN
-	XRvLR51vP9eZn8wlmzywPdNUu5zi0YwNYW4RBaOgxLIkUqhnFI+u1cO0pfE=
-X-Gm-Gg: ASbGncuFlnXDX67pdH6N1ib1m743eJ3x0FEW/dNssL+4zva8F6minNnSwx6KQTjt9Qk
-	AMp0sXhTLGXCVL/R9UmVOK5obhCUBqxu7YOMCQidfZjnGfa5hHW3cnyEaN+neY1VM8lM/l/MfFq
-	H6PAYbIm7aFQgT2YgTQ2+5z9Yn6Arq91b8chDI9idbeyrRYJpfXt2HcSGIAz8+uBSaP1Zw/lr5u
-	uz8o9KgFR6cha7PoCgBYztgSGL+dAoLG4ITKAWa1BohcKirUhrX7bE1AETov3yf1zu8rOqRw0hi
-	ooT0s+Xmdz3AtqRThMiOHzJdi0Pm7M3fTVnC7cUx2A==
-X-Google-Smtp-Source: AGHT+IFmmZuJNS0zeaQVv7pfgVsxK7bio9LYQnBmmIvV0hbV2M/RWT5yx48Yln8G5HTdRHoKXlcTYQ==
-X-Received: by 2002:a05:6214:e8d:b0:6e6:5cad:5ce8 with SMTP id 6a1803df08f44-6eaeaaa0ca1mr2938166d6.6.1741914608576;
-        Thu, 13 Mar 2025 18:10:08 -0700 (PDT)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade34beb0sm16214436d6.105.2025.03.13.18.10.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 18:10:07 -0700 (PDT)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: robdclark@gmail.com,
-	quic_abhinavk@quicinc.com,
-	dmitry.baryshkov@linaro.org,
-	sean@poorly.run,
-	marijn.suijten@somainline.org,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] drm/msm/dpu: Fix error pointers in dpu_plane_virtual_atomic_check
-Date: Thu, 13 Mar 2025 20:10:04 -0500
-Message-Id: <20250314011004.663804-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1741914618; c=relaxed/simple;
+	bh=FA/bM8YrOrG7YN0tT8yx9kjvDbFL54SCRb8IgSF5WC4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qzWOt5+bNZkVa5txm7q0c31TxeqVA5ANvXgXCJwIxjR6GaCO0JRATkija0LUV/BBJvpPu4BB9BicONNnsOaxNKwgfo+x6tlbiIgm0cqZLjce8d1hTgahaE19/a3h0wx0Fx1HAnnuj5lDgzpYSSYUtilQCjwO2l+GWujLnWftE60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZDR4s5dNfz1ltZt;
+	Fri, 14 Mar 2025 09:05:49 +0800 (CST)
+Received: from dggpemf500016.china.huawei.com (unknown [7.185.36.197])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3D99A180069;
+	Fri, 14 Mar 2025 09:10:13 +0800 (CST)
+Received: from localhost.localdomain (10.175.101.6) by
+ dggpemf500016.china.huawei.com (7.185.36.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 14 Mar 2025 09:10:12 +0800
+From: JiangJianJun <jiangjianjun3@huawei.com>
+To: <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+	<linux-scsi@vger.kernel.org>
+CC: <hare@suse.de>, <linux-kernel@vger.kernel.org>, <lixiaokeng@huawei.com>,
+	<jiangjianjun3@huawei.com>, <hewenliang4@huawei.com>,
+	<yangkunlin7@huawei.com>
+Subject: [RFC PATCH v3 02/19] scsi: scsi_error: Move complete variable eh_action from shost to sdevice
+Date: Fri, 14 Mar 2025 09:29:10 +0800
+Message-ID: <20250314012927.150860-3-jiangjianjun3@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250314012927.150860-1-jiangjianjun3@huawei.com>
+References: <20250314012927.150860-1-jiangjianjun3@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,37 +43,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemf500016.china.huawei.com (7.185.36.197)
 
-The function dpu_plane_virtual_atomic_check was dereferencing pointers
-returned by drm_atomic_get_plane_state without checking for errors. This
-could lead to undefined behavior if the function returns an error pointer.
+From: Wenchao Hao <haowenchao2@huawei.com>
 
-This commit adds checks using IS_ERR to ensure that plane_state is
-valid before dereferencing them.
+eh_action is used to wait for error handle command's completion if scsi
+command is send in error handle. Now the error handler might based on
+scsi_device, so move it to scsi_device.
 
-Similar to commit da29abe71e16
-("drm/amd/display: Fix error pointers in amdgpu_dm_crtc_mem_type_changed").
+This is preparation for a genernal LUN/target based error handle
+strategy.
 
-Fixes: 774bcfb73176 ("drm/msm/dpu: add support for virtual planes")
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/scsi_error.c  | 6 +++---
+ include/scsi/scsi_device.h | 2 ++
+ include/scsi/scsi_host.h   | 2 --
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index af3e541f60c3..b19193b02ab3 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -1059,6 +1059,9 @@ static int dpu_plane_virtual_atomic_check(struct drm_plane *plane,
- 	struct drm_crtc_state *crtc_state;
- 	int ret;
+diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+index f89de23a6807..4f37af9e20b6 100644
+--- a/drivers/scsi/scsi_error.c
++++ b/drivers/scsi/scsi_error.c
+@@ -916,7 +916,7 @@ void scsi_eh_done(struct scsi_cmnd *scmd)
+ 	SCSI_LOG_ERROR_RECOVERY(3, scmd_printk(KERN_INFO, scmd,
+ 			"%s result: %x\n", __func__, scmd->result));
  
-+	if (IS_ERR(plane_state))
-+		return PTR_ERR(plane_state);
-+
- 	if (plane_state->crtc)
- 		crtc_state = drm_atomic_get_new_crtc_state(state,
- 							   plane_state->crtc);
+-	eh_action = scmd->device->host->eh_action;
++	eh_action = scmd->device->eh_action;
+ 	if (eh_action)
+ 		complete(eh_action);
+ }
+@@ -1205,7 +1205,7 @@ static enum scsi_disposition scsi_send_eh_cmnd(struct scsi_cmnd *scmd,
+ 
+ retry:
+ 	scsi_eh_prep_cmnd(scmd, &ses, cmnd, cmnd_size, sense_bytes);
+-	shost->eh_action = &done;
++	sdev->eh_action = &done;
+ 
+ 	scsi_log_send(scmd);
+ 	scmd->submitter = SUBMITTED_BY_SCSI_ERROR_HANDLER;
+@@ -1249,7 +1249,7 @@ static enum scsi_disposition scsi_send_eh_cmnd(struct scsi_cmnd *scmd,
+ 		rtn = SUCCESS;
+ 	}
+ 
+-	shost->eh_action = NULL;
++	sdev->eh_action = NULL;
+ 
+ 	scsi_log_completion(scmd, rtn);
+ 
+diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+index 5911c82ca435..6388abb6c0d4 100644
+--- a/include/scsi/scsi_device.h
++++ b/include/scsi/scsi_device.h
+@@ -347,6 +347,8 @@ struct scsi_device {
+ 	enum scsi_device_state sdev_state;
+ 	struct task_struct	*quiesced_by;
+ 	struct scsi_device_eh	*eh;
++	struct completion	*eh_action;	/* Wait for specific actions */
++						/* on the device. */
+ 	unsigned long		sdev_data[];
+ } __attribute__((aligned(sizeof(unsigned long))));
+ 
+diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
+index 26bc23419cfd..de014c60746c 100644
+--- a/include/scsi/scsi_host.h
++++ b/include/scsi/scsi_host.h
+@@ -558,8 +558,6 @@ struct Scsi_Host {
+ 	struct list_head	eh_abort_list;
+ 	struct list_head	eh_cmd_q;
+ 	struct task_struct    * ehandler;  /* Error recovery thread. */
+-	struct completion     * eh_action; /* Wait for specific actions on the
+-					      host. */
+ 	wait_queue_head_t       host_wait;
+ 	const struct scsi_host_template *hostt;
+ 	struct scsi_transport_template *transportt;
 -- 
-2.34.1
+2.33.0
 
