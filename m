@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76392192D6B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F198A1DC988;
 	Fri, 14 Mar 2025 08:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741942205; cv=none; b=hhQYwltgMyLdhvBtMB2kLKLv+JVofR4Vz9QpU26SO29TP59VQyr7aq3/ahlmcvzcW+3Cpcim4D1Mdu1oraBcgCP+tUT5X2yW87W3FtOs/ZHSvEp+Imjf5QK9n/WJJLTd70Qzf3oZdnx+F+94Mo1r/iNgHs5EBK7ZSgEyjZ1yt38=
+	t=1741942206; cv=none; b=ApVuZJN0WYoOncDw/m+qDA8d3G2mUufI1V+KSel2Ix38SYBzeKGr1+jWlctfkksb/sc3+hq5dhwyXjojhlWE3NtRk8KTsT6c2PDUsfEEkZF6bXsU2yR764+wQgwklvoE5CW2HyBB4b/QuaHX291+mqBPFtnyodtNHQefu5nrEpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741942205; c=relaxed/simple;
-	bh=LVdkx1HHnCgF9PxdCqbpp0HAodzXvbi8+XOQgquqxWI=;
+	s=arc-20240116; t=1741942206; c=relaxed/simple;
+	bh=XEA7eOKnFQPnS5jigwSOQXrETAAO0hBpVmtM8cu5xnQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PFDUNGeLUpWISnYxntoUudKopQEDOI4IC6Vw068QKnnRN9u57Gpr1DPh0wQAymvAgPPSRyCUJeDdpdkIGXn7Kq47IUm4gAz+FIjcEHCPQNoDu6LSZq0XeVvQXgqgYJnz3sPI3gDvT0fjvaZreWaa5BsonfmSVXoXLPYqvwYteh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c2TFpzEW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=agyURClo17LwCg3uy3peGA/7q61FK43Occ4QHgtRF3X0YykYWAw6vbZUxi2cWojosYKtcK/fC8gWb+vg4q5eWkzPYvle+iNQGRpuxtHmYRvcObnzaYCTMYJxwNi3AhVl8c7nNaTz3vNnZEcdeT4vINkAHeT5BI1d2AYvbi4Fm7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VVBUYMpt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c2TFpzEW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2CF7FC4CEEC;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VVBUYMpt"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 93B59C4CEEB;
 	Fri, 14 Mar 2025 08:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux.dev; s=korg;
-	t=1741942205; bh=LVdkx1HHnCgF9PxdCqbpp0HAodzXvbi8+XOQgquqxWI=;
+	t=1741942205; bh=XEA7eOKnFQPnS5jigwSOQXrETAAO0hBpVmtM8cu5xnQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=c2TFpzEWgV8S/3f05pw7yugAlBsi7Rv43PYboTGk/KZ0zpYBNFIlPGm+mnN4soim/
-	 kguSMs538tuAMdfmizPkxtu9MVLNhAwBv7Nd+v4Izn1lA1gIFCB33XhithA6k94iL6
-	 CNI8bNBeqy/rw9QTG9lycR/3UG6fmTgz8hcWB/mM=
+	b=VVBUYMpt5s8GEwvk0DnS0uiM3Lp1rhpRxIIKPz9ZnONyXvQtta3iuZ8/W+rhzfRpD
+	 LfOuRFLUrzPxb6yxYPBcS/Dl2rKzUXodKMhfv5mrZcCBFzh/X4zU/vyHZZRBIGi1bo
+	 Jw9+tGSiC5XiiA2ZXZgFXxfFG4TflAssJLUd4RFI=
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20975C282EC;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B203C28B2F;
 	Fri, 14 Mar 2025 08:50:05 +0000 (UTC)
 From: Richard Leitner <richard.leitner@linux.dev>
-Date: Fri, 14 Mar 2025 09:49:56 +0100
-Subject: [PATCH v2 2/8] media: v4l2-flash: add support for flash/stobe
- duration
+Date: Fri, 14 Mar 2025 09:50:02 +0100
+Subject: [PATCH v2 8/8] media: i2c: ov9282: add strobe_source v4l2 control
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +36,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250314-ov9282-flash-strobe-v2-2-14d7a281342d@linux.dev>
+Message-Id: <20250314-ov9282-flash-strobe-v2-8-14d7a281342d@linux.dev>
 References: <20250314-ov9282-flash-strobe-v2-0-14d7a281342d@linux.dev>
 In-Reply-To: <20250314-ov9282-flash-strobe-v2-0-14d7a281342d@linux.dev>
 To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
@@ -48,122 +47,51 @@ To: Sakari Ailus <sakari.ailus@linux.intel.com>,
 Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-leds@vger.kernel.org, Richard Leitner <richard.leitner@linux.dev>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741942203; l=4241;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741942203; l=1520;
  i=richard.leitner@linux.dev; s=20250225; h=from:subject:message-id;
- bh=LVdkx1HHnCgF9PxdCqbpp0HAodzXvbi8+XOQgquqxWI=;
- b=T1N5UmGtWggEUhkBBhtxOf4UrOFcr+ii4LAMLTErvZNeQNiORQpROhK5RQ3cEdsBBUMhe747v
- KEdPSOnnljvCi26vO01sRUdQVDkVNPTuf7ehSGa+OGdlM0bq25ye3+K
+ bh=XEA7eOKnFQPnS5jigwSOQXrETAAO0hBpVmtM8cu5xnQ=;
+ b=YKAovdSG7xyrxaD5Lcmaq5kxWRhcXg06FWd4Q4S0qFjVtu9cbN9aX1l4Iv9fXAZrTLiMRHe6O
+ PAwSH+3BanZA2Z6cLMIBpo+AjSxsyEXl8mvanmiprO5/W0u1mTfYya2
 X-Developer-Key: i=richard.leitner@linux.dev; a=ed25519;
  pk=8hZNyyyQFqZ5ruVJsSGBSPIrmJpfDm5HwHU4QVOP1Pk=
 X-Endpoint-Received: by B4 Relay for richard.leitner@linux.dev/20250225
  with auth_id=350
 
-Add support for the new V4L2_CID_FLASH_DURATION control to the v4l2
-led flash class.
+Add read-only V4L2_CID_FLASH_STROBE_SOURCE control. Its value is fixed
+to V4L2_FLASH_STROBE_SOURCE_EXTERNAL as the camera sensor triggers the
+strobe based on its register settings.
 
 Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
 ---
- drivers/leds/led-class-flash.c                 | 15 +++++++++++++++
- drivers/media/v4l2-core/v4l2-flash-led-class.c | 13 +++++++++++++
- include/linux/led-class-flash.h                | 16 ++++++++++++++++
- 3 files changed, 44 insertions(+)
+ drivers/media/i2c/ov9282.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/leds/led-class-flash.c b/drivers/leds/led-class-flash.c
-index f4e26ce84862c05092a9598e63ed301967852f13..165035a8826ca7d44a5cd265a5130a76c6e94347 100644
---- a/drivers/leds/led-class-flash.c
-+++ b/drivers/leds/led-class-flash.c
-@@ -440,6 +440,21 @@ int led_update_flash_brightness(struct led_classdev_flash *fled_cdev)
- }
- EXPORT_SYMBOL_GPL(led_update_flash_brightness);
+diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+index 5ddbfc51586111fbd2e17b739fb3d28bfb0aee1e..34ea903a18dadeeebd497a4a8858abf12b598717 100644
+--- a/drivers/media/i2c/ov9282.c
++++ b/drivers/media/i2c/ov9282.c
+@@ -1367,6 +1367,7 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+ 	struct v4l2_ctrl_handler *ctrl_hdlr = &ov9282->ctrl_handler;
+ 	const struct ov9282_mode *mode = ov9282->cur_mode;
+ 	struct v4l2_fwnode_device_properties props;
++	struct v4l2_ctrl *ctrl;
+ 	u32 hblank_min;
+ 	u32 lpfr;
+ 	int ret;
+@@ -1446,6 +1447,13 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+ 	v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_ctrl_ops, V4L2_CID_FLASH_DURATION,
+ 			  0, 13900, 1, 8);
  
-+int led_set_flash_duration(struct led_classdev_flash *fled_cdev, u32 duration)
-+{
-+	struct led_classdev *led_cdev = &fled_cdev->led_cdev;
-+	struct led_flash_setting *s = &fled_cdev->duration;
++	ctrl = v4l2_ctrl_new_std_menu(ctrl_hdlr, &ov9282_ctrl_ops,
++				      V4L2_CID_FLASH_STROBE_SOURCE,
++				      V4L2_FLASH_STROBE_SOURCE_EXTERNAL,
++				      ~(1 << V4L2_FLASH_STROBE_SOURCE_EXTERNAL),
++				      V4L2_FLASH_STROBE_SOURCE_EXTERNAL);
++	ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 +
-+	s->val = duration;
-+	led_clamp_align(s);
-+
-+	if (!(led_cdev->flags & LED_SUSPENDED))
-+		return call_flash_op(fled_cdev, duration_set, s->val);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(led_set_flash_duration);
-+
- MODULE_AUTHOR("Jacek Anaszewski <j.anaszewski@samsung.com>");
- MODULE_DESCRIPTION("LED Flash class interface");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/media/v4l2-core/v4l2-flash-led-class.c b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-index 355595a0fefac72c2f6941a30fa430d37dbdccfe..963b549480f6eb3b9eb0d80696a764de7ffcc1a2 100644
---- a/drivers/media/v4l2-core/v4l2-flash-led-class.c
-+++ b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-@@ -298,6 +298,12 @@ static int v4l2_flash_s_ctrl(struct v4l2_ctrl *c)
- 		 * microamperes for flash intensity units.
- 		 */
- 		return led_set_flash_brightness(fled_cdev, c->val);
-+	case V4L2_CID_FLASH_DURATION:
-+		/*
-+		 * No conversion is needed as LED Flash class also uses
-+		 * microseconds for flash duration units.
-+		 */
-+		return led_set_flash_duration(fled_cdev, c->val);
- 	}
- 
- 	return -EINVAL;
-@@ -424,6 +430,13 @@ static void __fill_ctrl_init_data(struct v4l2_flash *v4l2_flash,
- 		ctrl_cfg->flags = V4L2_CTRL_FLAG_VOLATILE |
- 				  V4L2_CTRL_FLAG_EXECUTE_ON_WRITE;
- 	}
-+
-+	/* Init FLASH_DURATION ctrl data */
-+	if (has_flash_op(fled_cdev, timeout_set)) {
-+		ctrl_init_data[FLASH_DURATION].cid = V4L2_CID_FLASH_DURATION;
-+		ctrl_cfg = &ctrl_init_data[FLASH_DURATION].config;
-+		__lfs_to_v4l2_ctrl_config(&fled_cdev->duration, ctrl_cfg);
-+		ctrl_cfg->id = V4L2_CID_FLASH_DURATION;
- }
- 
- static int v4l2_flash_init_controls(struct v4l2_flash *v4l2_flash,
-diff --git a/include/linux/led-class-flash.h b/include/linux/led-class-flash.h
-index 36df927ec4b7dcaf9074c6ef32ac8ce83a87a79d..21ec856c36bc67decda46aa8ff1c040ffdcf1181 100644
---- a/include/linux/led-class-flash.h
-+++ b/include/linux/led-class-flash.h
-@@ -45,6 +45,8 @@ struct led_flash_ops {
- 	int (*timeout_set)(struct led_classdev_flash *fled_cdev, u32 timeout);
- 	/* get the flash LED fault */
- 	int (*fault_get)(struct led_classdev_flash *fled_cdev, u32 *fault);
-+	/* set flash duration */
-+	int (*duration_set)(struct led_classdev_flash *fled_cdev, u32 duration);
- };
- 
- /*
-@@ -75,6 +77,9 @@ struct led_classdev_flash {
- 	/* flash timeout value in microseconds along with its constraints */
- 	struct led_flash_setting timeout;
- 
-+	/* flash timeout value in microseconds along with its constraints */
-+	struct led_flash_setting duration;
-+
- 	/* LED Flash class sysfs groups */
- 	const struct attribute_group *sysfs_groups[LED_FLASH_SYSFS_GROUPS_SIZE];
- };
-@@ -209,4 +214,15 @@ int led_set_flash_timeout(struct led_classdev_flash *fled_cdev, u32 timeout);
-  */
- int led_get_flash_fault(struct led_classdev_flash *fled_cdev, u32 *fault);
- 
-+/**
-+ * led_set_flash_duration - set flash LED duration
-+ * @fled_cdev: the flash LED to set
-+ * @timeout: the flash duration to set it to
-+ *
-+ * Set the flash strobe duration.
-+ *
-+ * Returns: 0 on success or negative error value on failure
-+ */
-+int led_set_flash_duration(struct led_classdev_flash *fled_cdev, u32 duration);
-+
- #endif	/* __LINUX_FLASH_LEDS_H_INCLUDED */
+ 	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
+ 	if (!ret) {
+ 		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
 
 -- 
 2.47.2
