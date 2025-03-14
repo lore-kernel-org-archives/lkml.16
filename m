@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F85206F21
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:41:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EF12236FF
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741988518; cv=none; b=nOHkGmbXsrbHBj6fWBIRKqwGNHj4NDl5u7qKTuiowaNX4a2A3WYHN1GdT+P1GwXg+ur3he5i4oSvO0fpNZefMY0iY7nOm7fuMGhXawOK0UTIRxdmQNRQv/hi4mL4Q/FeOiXZLDHFxfu95Kdw5M41VywtnSO0y+Pg56Z4gBaKq6w=
+	t=1741988519; cv=none; b=uek8HmHVjRfYpcYjAWbfFzTG1YpF0l0xP9sBE4jUzRueISRpyzSZPmiBGc3K59MekGI0oLvYIIsc9yWgDRYH33KbXXrqHjRHgm3TlBQ/eJta2kl4wvOa57wBemB3nHgp+CCEnDgtYEBAjSZ7FTu0J+oyz3xmxPZeZ5Ic9RCvBMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741988518; c=relaxed/simple;
-	bh=yOdRu7Fcxv19X60rh949WLYqt0bzYdV5JlS82PVB8vo=;
+	s=arc-20240116; t=1741988519; c=relaxed/simple;
+	bh=aH0rkUHCdMTzerOSvwPo+McsPGNQiwPk8iR1J5A1GLU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vEqn0zd5JDtra5vyog3VGKHKmgksnvGI2sBv9TmTdC4zRFsCve2KXJJOMLNZ+zol2CyCVPGIq4o6napRQIasVNxia+r/BX4UL1T/dHTGTIma2cYdK1YjUaPrv4Mxs0f1+4YmBGl+xKRwwvtS1rT9dmCCMQEuujJK2vudp34a27Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQm6Iw24; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=L6+iYuZrOt18tgIPJ09F5aQ5V3QrV+WogC0ZwLvR+Zkx5xbJPrfHEaS7udjRlYGItn6l1110o5yDeeKDzMyWrBFe5j28brgNWHTWoKlaEVQx/NxbAA9Em4msFlT6KdvODDVQES52Dp6EExuzkE+ZRrKihv5gzq46ET+tt7+U8eA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPiLjhuX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQm6Iw24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E386C4CEED;
-	Fri, 14 Mar 2025 21:41:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPiLjhuX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F91C4CEEE;
+	Fri, 14 Mar 2025 21:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741988518;
-	bh=yOdRu7Fcxv19X60rh949WLYqt0bzYdV5JlS82PVB8vo=;
+	s=k20201202; t=1741988519;
+	bh=aH0rkUHCdMTzerOSvwPo+McsPGNQiwPk8iR1J5A1GLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LQm6Iw24PHbIExUGvoTW+2mLwJGDJoJlxHjmW6cZU8Kd0ZnHNbAbcSJ+2wmkRQP7Q
-	 iiPSLokbVJ/fM+mjFhF7eRkcS9Meor05L3LBy+xyVv90SjedQK8nde+7foBLGjU8U9
-	 S7thg/Pn4zMs3xYOZiRDzFmwlRuXK212czSe9Igh5UNrm4crsSANR+vTZnYekyAVhu
-	 Lvu1Ay6yOXH0GrbGx7DJ50SZP+geLdkfb2yuLqc+BFi4EL0SCerVECcm+GOyGIgFbo
-	 FNJ+x5KZh+WM6hIYoZy4vdJKrLsuj8Cpf9hpb7DloVx9uD8zfUJH5uB1ze5iJWMAts
-	 HHQ4qeAB80/Vw==
+	b=mPiLjhuXgIQqEI4VteXg13KpBAwFY3uLetHjDNAgNzwibFsOlcnIAsDexqYpt8QQO
+	 /+Dn5NWcTbfqfg/yFwUDZOi7hj1vPnaheJKIX9fXVkdvp5Udczb8Btt1RVWZzsF9ym
+	 qwVm7mvMx9Borf3aeXbOusdhxf3wrCjsewQJwKS0spU8xyU64VkODM9DmmP1jTId3Q
+	 uaRLDbHIzIr0l6aK8U8bysTPcIDTFYLTigIM8lUbhmVog7vn703yBKmgV3Z0Qf5RtI
+	 nzpqw+uN2YWP2lrL64RpA8cgQ79qdBad/q732ws3+L7u/z26L9H7JKERcA9whqhmMq
+	 CFmIuDEFm0Y2w==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Uros Bizjak <ubizjak@gmail.com>,
 	Andrew Cooper <andrew.cooper3@citrix.com>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 07/20] x86/alternative: Remove operand numbering restrictions
-Date: Fri, 14 Mar 2025 14:41:20 -0700
-Message-ID: <3a2c1e24ebc72d6c32294b094fc3fefd9c2afdc2.1741988314.git.jpoimboe@kernel.org>
+Subject: [PATCH 09/20] x86/alternative: Simplify alternative_io() interface
+Date: Fri, 14 Mar 2025 14:41:22 -0700
+Message-ID: <ede5fcf72e26fc0a6f443d7393c804e39d51c029.1741988314.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1741988314.git.jpoimboe@kernel.org>
 References: <cover.1741988314.git.jpoimboe@kernel.org>
@@ -50,39 +50,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-alternative_input() and alternative_io() arbitrarily require input
-constraint operand numbering to start at index 1.  No more callers rely
-on that.  Simplify the interfaces by removing that restriction.
+Similar to alternative_call(), change alternative_io() to allow outputs,
+inputs, and clobbers to be specified individually.
+
+Also add in the "memory" clobber for consistent behavior with the other
+alternative macros.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/include/asm/alternative.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/alternative.h   | 15 +++++++++++----
+ arch/x86/include/asm/apic.h          |  3 ++-
+ arch/x86/include/asm/special_insns.h |  3 ++-
+ 3 files changed, 15 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 484dfea35aaa..3804b82cb03c 100644
+index 3804b82cb03c..870b1633e1e0 100644
 --- a/arch/x86/include/asm/alternative.h
 +++ b/arch/x86/include/asm/alternative.h
-@@ -214,17 +214,15 @@ static inline int alternatives_text_reserved(void *start, void *end)
-  *
-  * Peculiarities:
-  * No memory clobber here.
-- * Argument numbers start with 1.
-- * Leaving an unused argument 0 to keep API compatibility.
-  */
- #define alternative_input(oldinstr, newinstr, ft_flags, input...)	\
+@@ -219,10 +219,17 @@ static inline int alternatives_text_reserved(void *start, void *end)
  	asm_inline volatile(ALTERNATIVE(oldinstr, newinstr, ft_flags) \
--		: : "i" (0), ## input)
-+		: : input)
+ 		: : input)
  
- /* Like alternative_input, but with a single output argument */
- #define alternative_io(oldinstr, newinstr, ft_flags, output, input...)	\
- 	asm_inline volatile(ALTERNATIVE(oldinstr, newinstr, ft_flags)	\
--		: output : "i" (0), ## input)
-+		: output : input)
+-/* Like alternative_input, but with a single output argument */
+-#define alternative_io(oldinstr, newinstr, ft_flags, output, input...)	\
+-	asm_inline volatile(ALTERNATIVE(oldinstr, newinstr, ft_flags)	\
+-		: output : input)
++/*
++ * Alternative inline assembly with input, output and clobbers.
++ *
++ * All @output, @input, and @clobbers should be wrapped with ARG() for both
++ * functionality and readability reasons.
++ */
++#define alternative_io(oldinstr, newinstr, ft_flags, output, input, clobbers...)	\
++	asm_inline volatile(ALTERNATIVE(oldinstr, newinstr, ft_flags)			\
++			    : output							\
++			    : input							\
++			    : "memory", ## clobbers)
  
  /*
   * Like alternative_io, but for replacing a direct call with another one.
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 6526bad6ec81..8b0c2a392f8b 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -100,7 +100,8 @@ static inline void native_apic_mem_write(u32 reg, u32 v)
+ 
+ 	alternative_io("movl %[val], %[mem]",
+ 		       "xchgl %[val], %[mem]", X86_BUG_11AP,
+-		       ARG([val] "+r" (v), [mem] "+m" (*addr)));
++		       ARG([val] "+r" (v), [mem] "+m" (*addr)),
++		       ARG());
+ }
+ 
+ static inline u32 native_apic_mem_read(u32 reg)
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index a6a3f4c95f03..16fb2bc09059 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -178,7 +178,8 @@ static inline void clflushopt(volatile void *__p)
+ {
+ 	alternative_io(".byte 0x3e; clflush %[val]",
+ 		       ".byte 0x66; clflush %[val]", X86_FEATURE_CLFLUSHOPT,
+-		       ARG([val] "+m" (*(volatile char __force *)__p)));
++		       ARG([val] "+m" (*(volatile char __force *)__p)),
++		       ARG());
+ }
+ 
+ static inline void clwb(volatile void *__p)
 -- 
 2.48.1
 
