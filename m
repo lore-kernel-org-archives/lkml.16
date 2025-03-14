@@ -1,93 +1,138 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8581F3BA5
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A3126AFC
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741946908; cv=none; b=Z21KdaJ01CWvL5B+pk19kkDckdYB5lPf8mDbRAARd4REfKhmIuFI1WBbvSV3YrNe9F8GNZ5pwwYGDx5S1AjdSd9Dtt6SN4TUBznyvkuCOvxW1tf3RGPDkuRGG9D0k6r6MIU3fZJVhRu5aJmgikkl3oXg5PTlbSD06HV9vdA641E=
+	t=1741946952; cv=none; b=UohXchYD+rK62KQ536RSD0A+d3KwxbTWz/e7jWWci1Y1BDsG7E9P1noXMUH1eEqaYxb4/+CtzsFe+IxvFVGgNO9uo2H+vWHQ5/3CBPKxOcE/9dHEbW3NqEEkCPn3h1Neka/I64iHT0e+d/ZgGJFPNkwwdqP2D0RnDir+Qje+gY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741946908; c=relaxed/simple;
-	bh=Gt/9/LzPfx6RB2Ri4REYVqp1qcpJjg1U1nS59zQ5wMY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E0bjHm+RyjzOTCwsVvuicRlxR0dQBquvU/DIzx+cBWeO0FhGdNTA6obT9wchEpiDzpCCDcVy4UVKoNdvt4klGmzWCov9Zhe2+c5vcIRyr+2CmtgFxxDUkyQR8iCByKeU9QWQUBakqoX139X828g5kU4AgW174W1byLcYsuYHFX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u+Nj03o9; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741946952; c=relaxed/simple;
+	bh=MdhCjsSoBBo+hlrfuVURtMqfPH5ZX1hqPqPqrEjcg7c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=o75bdE9A4f35RrPC9FIcHR1c1wDACur4oE3PmGJea7M3CufhIpr8SfD+/gbK2dTI9aHBQuKbMbzhD2Lhl40S9XwWplULrbAOWyXthwz/GzrQCncCGQwD1wT3cqyawECQ1zG0rPMkRQkhVhx3k8CcOhIPu90Fzo7bq6vKmxRybjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rFynGN1y; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u+Nj03o9"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-548430564d9so2154745e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 03:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741946905; x=1742551705; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gt/9/LzPfx6RB2Ri4REYVqp1qcpJjg1U1nS59zQ5wMY=;
-        b=u+Nj03o9/G6Q5npypn/X5zXy0HE3LmSGtyjbWd8mdYRJwrtUgqLSPkec4dEGk/ACXL
-         ooVyGaQLstHEUyYoMlCEPiIbwqiJkc7qzgG3rjA8vZ/YnO7kXSmmoJLtP6r7G0dcX3OO
-         v74t5vheXTEpJbyLqpCBGk6j8eW7cgRBxv8xqQPL5KP83OqMDNpJf38npIpc63XVfEkQ
-         z+HWsgdDwvT+plIZ55k7EoNcEEaq44AUxIYeiJ+O5/wU9MdyGNrStIe5r1okuenYV9OS
-         tXZE/87lJTJ1IOoO2ra12tfpLsx3CbJWp2p9PrMwF1Grv3lF93Kgm3kzaitBHGnjzFit
-         2d9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741946905; x=1742551705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gt/9/LzPfx6RB2Ri4REYVqp1qcpJjg1U1nS59zQ5wMY=;
-        b=RohH2TVxf7fSooDD/3dcmJUWzEtN0LVUxY65iFKg2s8Leq7MH8wN1WDe1WxgfzfkgF
-         /ZCXMrhiohsDLr0aTyi3NAAVWafC9ds2Gtpa5WcTr21TVQhN+37wfbfPoasgDWje9mnz
-         gdaOO3QmgCKwcq22H/qfyxDun28EDnlfuMl34HqstaQ3t+BXLM8LoCiJhimNs6gH2rJv
-         pJ+WYw2EQvtt9piUmKkiIClJTt6sOknASKeJ1m1Qi9v7wvRrOUy67kBETkxAN3rAzZjL
-         CcW1JU53LW8XzTQLO+8ug2DhxdrTDDPhUrfoqn99VawmQZx3bfiCwqEymoSBHGqMb9WM
-         a8Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWcupmHcjHP7yCDL0DLRCqZ4O/d+jOUSrSTUacaRdd2CxLbqola3asMZxWo52vXOnugbmr1KZITVlOVp4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+uO8RDt8PfOpHmFYGnv0w8RL4sfzu5VhzCfiutjngGMZBOlMu
-	XWDHRyTu0r7znGOeSpv3nDI7sOuZTBEwHShQ6/XpXun/+WHRoqhHqXElqfuZ0Eb6PkhHqaHKgZP
-	oevnDRtR1tzYF9p9bgv2MrhmeU6wploIW6pI6gg==
-X-Gm-Gg: ASbGncuGM9AlBKnJWsxtI3QtRM0aOMXsXtYK/qUsCiINX6xuCy6QirmzM4HlbdpE+rd
-	2KAXatrOJtsu2tOZuUVdEhaxQ3YrlZ6f2/ypPRqhJXkexrI8PjFzkWPDW7nK3KVdMVZAsPJa9BP
-	RdZIOWZF8+5uLfMp3eGoDSRgY=
-X-Google-Smtp-Source: AGHT+IHJo15rlSs7Va08NHOofodKMD1H1XNIRjRaa5BY0in+MTDIERdp60qoDZO21fZpfDmKsEUFpvdk8Y2VP5vuLUk=
-X-Received: by 2002:a05:6512:b94:b0:545:c1e:65fb with SMTP id
- 2adb3069b0e04-549c38fbccdmr671564e87.18.1741946904682; Fri, 14 Mar 2025
- 03:08:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rFynGN1y"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741946939; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=GXpuf2zCQBIft9x2gUmG/KFcbS1j8hexE39eKg82HKw=;
+	b=rFynGN1ygrp1WqcAh/MbYjT29N9xT4rY3hOS4C8iNVOZuVwJz0i6ZlkqtyMZXFFIjBWxCiXUZ6jaAzAbQisBJ6MwZsdUG2WxPUba/uvXodJrW0qS66OnXpsahwgkyNFz8QaDuTLblujfXZxRIUTDWNNSyXVUP4modDEpHKKDY6o=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WRKiii9_1741946917 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 14 Mar 2025 18:08:58 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: lsf-pc@lists.linux-foundation.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  gourry@gourry.net,  hyeonggon.yoo@sk.com,
+  honggyu.kim@sk.com,  kernel-team@meta.com
+Subject: Re: [LSF/MM/BPF TOPIC] Weighted interleave auto-tuning
+In-Reply-To: <20250313155705.1943522-1-joshua.hahnjy@gmail.com> (Joshua Hahn's
+	message of "Thu, 13 Mar 2025 08:57:04 -0700")
+References: <20250313155705.1943522-1-joshua.hahnjy@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Date: Fri, 14 Mar 2025 18:08:35 +0800
+Message-ID: <87frjfx6u4.fsf@DESKTOP-5N7EMDA>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1736522006.git.Ryan.Wanner@microchip.com> <821255840c09d8d9cebbb1f2daaedd8a7c138875.1736522006.git.Ryan.Wanner@microchip.com>
-In-Reply-To: <821255840c09d8d9cebbb1f2daaedd8a7c138875.1736522006.git.Ryan.Wanner@microchip.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 14 Mar 2025 11:08:13 +0100
-X-Gm-Features: AQ5f1JqSOmT4FHz5UOAsw4lJg3-dP8L_NWpCJ5kNHWtjrkJLgD54yy-3c3bbVqU
-Message-ID: <CACRpkdYYeC+2G0u0LYSUjAX_ex7MjWLhEcu7QdNXudj8BEO4PQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v6 2/3] dt-bindings: pinctrl: at91-pio4: add microchip,sama7d65-pinctrl
-To: Ryan.Wanner@microchip.com
-Cc: lee@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Dharma Balasubiramani <dharma.b@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=ascii
 
-On Thu, Mar 6, 2025 at 5:03=E2=80=AFPM <Ryan.Wanner@microchip.com> wrote:
+Joshua Hahn <joshua.hahnjy@gmail.com> writes:
 
-> From: Dharma Balasubiramani <dharma.b@microchip.com>
+> On Thu,  9 Jan 2025 13:50:48 -0500 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
 >
-> Add pinctrl bindings for microchip sama7d65 SoC.
+>> Hello everyone, I hope everyone has had a great start to 2025!
+>> 
+>> Recently, I have been working on a patch series [1] with
+>> Gregory Price <gourry@gourry.net> that provides new default interleave
+>> weights, along with dynamic re-weighting on hotplug events and a series
+>> of UAPIs that allow users to configure how they want the defaults to behave.
+>> 
+>> In introducing these new defaults, discussions have opened up in the
+>> community regarding how best to create a UAPI that can provide
+>> coherent and transparent interactions for the user. In particular, consider
+>> this scenario: when a hotplug event happens and a node comes online
+>> with new bandwidth information (and therefore changing the bandwidth
+>> distributions across the system), should user-set weights be overwritten
+>> to reflect the new distributions? If so, how can we justify overwriting
+>> user-set values in a sysfs interface? If not, how will users manually
+>> adjust the node weights to the optimal weight?
+>> 
+>> I would like to revisit some of the design choices made for this patch,
+>> including how the defaults were derived, and open the conversation to
+>> hear what the community believes is a reasonable way to allow users to
+>> tune weighted interleave weights. More broadly, I hope to get gather
+>> community insight on how they use weighted interleave, and do my best to
+>> reflect those workflows in the patch.
 >
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> Weighted interleave has since moved onto v7 [1], and a v8 is currently being
+> drafted. Through feedback from reviewers, we have landed on a coherent UAPI
+> that gives users two options: auto mode, which leaves all weight calculation
+> decisions to the system, and manual mode, which leaves weighted interleave
+> the same as it is without the patch.
+>
+> Given that the patch's functionality is mostly concrete and that the questions
+> I hoped to raise during this slot were answered via patch feedback, I hope to
+> ask another question during the talk:
+>
+> Should the system dynamically change what metrics it uses to weight the nodes,
+> based on what bottlenecks the system is currently facing?
+>
+> In the patch, min(read_bandwidth, write_bandwidth) is used as the heuristic
+> to determine what a node's weight should be. However, what if the system is
+> not bottlenecked by bandwidth, but by latency? A system could also be
+> bottlenecked by read bandwidth, but not by write bandwidth.
+>
+> Consider a scenario where a system has many memory nodes with varying
+> latencies and bandwidths. When the system is not bottlenecked by bandwidth,
+> it might prefer to allocate memory from nodes with lower latency. Once the
+> system starts feeling pressured by bandwidth, the weights for high bandwidth
+> (but also high latency) nodes would slowly increase to alleviate pressure
+> from the system. Once the system is back in a manageable state, weights for
+> low latency nodes would start increasing again. Users would not have to be
+> aware of any of this -- they would just see the system take control of the
+> weight changes as the system's needs continue to change.
 
-This patch applied to the pinctrl tree.
+IIUC, this assumes the capacity of all kinds of memory is large enough.
+However, this may be not true in some cases.  So, another possibility is
+that, for a system with DRAM and CXL memory nodes.
 
-Yours,
-Linus Walleij
+- There is free space on DRAM node, the bandwidth of DRAM node isn't
+  saturated, memory is allocated on DRAM node.
+
+- There is no free space on DRAM node, the bandwidth of DRAM node isn't
+  saturated, cold pages are migrated to CXL memory nodes, while hot
+  pages are migrated to DRAM memory nodes.
+
+- The bandwidth of DRAM node is saturated, hot pages are migrated to CXL
+  memory nodes.
+
+In general, I think that the real situation is complex and this makes it
+hard to implement a good policy in kernel.  So, I suspect that it's
+better to start with the experiments in user space.
+
+> This proposal also has some concerns that need to be addressed:
+> - How reactive should the system be, and how aggressively should it tune the
+>   weights? We don't want the system to overreact to short spikes in pressure.
+> - Does dynamic weight adjusting lead to pages being "misplaced"? Should those
+>   "misplaced" pages be migrated? (probably not)
+> - Does this need to be in the kernel? A userspace daemon that monitors kernel
+>   metrics has the ability to make the changes (via the nodeN interfaces).
+>
+> Thoughts & comments are appreciated! Thank you, and have a great day!
+> Joshua
+>
+> [1] https://lore.kernel.org/all/20250305200506.2529583-1-joshua.hahnjy@gmail.com/
+>
+> Sent using hkml (https://github.com/sjp38/hackermail)
+
+---
+Best Regards,
+Huang, Ying
