@@ -1,90 +1,90 @@
-Received: from mx18lb.world4you.com (mx18lb.world4you.com [81.19.149.128])
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5272054FC;
-	Fri, 14 Mar 2025 20:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9331632D3;
+	Fri, 14 Mar 2025 20:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.235.159.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741984640; cv=none; b=dzBQX9LyqV9wAPjiUwu1A6MAAJBV52SYufyrK6hCGDEVSYni7SkpuS1BxPe+7768zySEyPM8Np39U7HJwhXKnfJxtwuSysB/doWeZmgbRl70LAy1ivU8APT8Fwn5wpYBgE6CGftX+hXboQwH0e8AtoRUGCrP6LdIF/Xt/rdnjRI=
+	t=1741985072; cv=none; b=TPERX7cxCGnvKdDDdeRpgl+fTabCqgffCfOEPA/G5CnVdojH/T4bseTrYjSX5Ud9X0qZ9dtCidkSqStgs2+rWYtGzJmVbl1RQcjIorwKi5GGRc0+3fYkrWjCdo5QQx1lWbSP4sAE8PwcGRRpdctVJlICULZGaHMle8R1MWZpBZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741984640; c=relaxed/simple;
-	bh=KabjsIbP8v1YZwE6BURVO+TQJ3+JP+XqmY0a/eOV2Wc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mNACWKFuYczObpY7pE992sGubRUrmePEGqbLJ2FkIq7Qd1Vy4iYPP7uxgVwYkK3z8jpjcSG5uqp7v9NZXuVERsL1jrxydCaJ+fC3SRQZ+XrRsYNoROGP8b/EUQZ2Rt0asKGSJRbZ4N7JE6gCbNwMu8u6zlxAaNel8X/pj5WN+ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=PBVGTM3+; arc=none smtp.client-ip=81.19.149.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
+	s=arc-20240116; t=1741985072; c=relaxed/simple;
+	bh=JyG22rQanR20rroHpv7WbHnkxDMN0Sl/fGM84V0PFu8=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=sQzDN4wsSlWyaPYCEt8NceUmt8KNtUpfs6p16PAQqfdDKb5mF57/fq2Ew8105wod6JJLjHIdq6NQt70NuWWOyZC4wzvvnb+03faY6y+uvPAOY4CQ2DIzpe02i8GqKqN2gzR8454t/YwmVMI6ffMY9J3LG+FLOZVBWGpuV8J5Urw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=tFIgDYdA; arc=none smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="PBVGTM3+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=nBdrFtqWTipZkEC62GCjdyqRKr/ukOzwzEe19sVot/k=; b=PBVGTM3+7gWcKIKD+ZStBBfNrs
-	p/5+op1wpt30ZhKuvFO5N0kwLKxXb+brjHw4X9QuRSaqQJ1yX5bVSZ0gHGwdHmypLe2U7Kx/B1H38
-	zwqJK547yN9VXigAVrtLy09NX2HgKAJTfmNiQ9XdUFs57HIOJNWP9x83AC5Ysavu5Dko=;
-Received: from [80.121.79.4] (helo=[10.0.0.160])
-	by mx18lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <gerhard@engleder-embedded.com>)
-	id 1ttBmD-000000008Ge-22Dc;
-	Fri, 14 Mar 2025 21:37:05 +0100
-Message-ID: <806eed8e-0695-450f-a16b-66b602db01dd@engleder-embedded.com>
-Date: Fri, 14 Mar 2025 21:37:03 +0100
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="tFIgDYdA"
+Message-ID: <9a3639ed95490e40b62d364c09c24e3b@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1741985062;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6lOZkNdUaYMusY2QeOlezuCxMiABAc9kVpuc6FXYat0=;
+	b=tFIgDYdAsoNcnjS3dkr1KhlaZYrnBfwnB7kuLEFjpk6j5sw9hEBSMUs9U4HXMXoAnVO2Pc
+	THVyUetr1klfBZwTEld/u6PkRVmXHG2uA1ta6CejWl2n4dv/7hguOB2Prjm8i1d/C5NfGo
+	O0VfMw0v9AiBr4ZfcdlLjtmYFNEdV4u6HWnxH7l+02PcbXGkl4TExaRB1lvDSbENQbm4Lx
+	wWyj2hTvFuP/5tl4s/jeDPkckHkp7CJgaN3gC5Za/vCg/22KRPBhOpW0IKr0TBmxI4KmjR
+	UhYLmFRhZ9oZYSMIng6M0dfvUp+IRfLOISjgOjApm/JWdprEJ+h+rTL/JT/2SA==
+From: Paulo Alcantara <pc@manguebit.com>
+To: David Howells <dhowells@redhat.com>, Christian Brauner
+ <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>, Max Kellermann
+ <max.kellermann@ionos.com>, Jeff Layton <jlayton@kernel.org>,
+ netfs@lists.linux.dev, linux-afs@lists.infradead.org,
+ linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] netfs: Miscellaneous fixes
+In-Reply-To: <20250314164201.1993231-1-dhowells@redhat.com>
+References: <20250314164201.1993231-1-dhowells@redhat.com>
+Date: Fri, 14 Mar 2025 17:44:17 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net: ethernet: microchip: lan743x: Fix memory
- allocation failure
-To: Thangaraj Samynathan <thangaraj.s@microchip.com>
-Cc: bryan.whitehead@microchip.com, UNGLinuxDriver@microchip.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20250314070227.24423-1-thangaraj.s@microchip.com>
-Content-Language: en-US
-From: Gerhard Engleder <gerhard@engleder-embedded.com>
-In-Reply-To: <20250314070227.24423-1-thangaraj.s@microchip.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AV-Do-Run: Yes
+Content-Type: text/plain
 
-On 14.03.25 08:02, Thangaraj Samynathan wrote:
-> The driver allocates ring elements using GFP_ATOMIC and GFP_DMA
-> flags. The allocation is not done in atomic context and there is
-> no dependency from LAN743x hardware on memory allocation should be
-> in DMA_ZONE. Hence modifying the flags to use only GFP_KERNEL.
-> 
-> Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
-> ---
->   drivers/net/ethernet/microchip/lan743x_main.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-> index 23760b613d3e..c10b0131d5fb 100644
-> --- a/drivers/net/ethernet/microchip/lan743x_main.c
-> +++ b/drivers/net/ethernet/microchip/lan743x_main.c
-> @@ -2495,8 +2495,7 @@ static int lan743x_rx_process_buffer(struct lan743x_rx *rx)
->   
->   	/* save existing skb, allocate new skb and map to dma */
->   	skb = buffer_info->skb;
-> -	if (lan743x_rx_init_ring_element(rx, rx->last_head,
-> -					 GFP_ATOMIC | GFP_DMA)) {
-> +	if (lan743x_rx_init_ring_element(rx, rx->last_head, GFP_KERNEL)) {
+David Howells <dhowells@redhat.com> writes:
 
-I agree with removing GFP_DMA. If it would be needed, then everywhere
-and not only here in NAPI context as it is intended for hardware
-limitations.
+> Hi Christian,
+>
+> Here are some miscellaneous fixes and changes for netfslib, if you could
+> pull them:
+>
+>  (1) Fix the collection of results during a pause in transmission.
+>
+>  (2) Call ->invalidate_cache() only if provided.
+>
+>  (3) Fix the rolling buffer to not hammer atomic bit clears when loading
+>      from readahead.
+>
+>  (4) Fix netfs_unbuffered_read() to return ssize_t.
+>
+> The patches can also be found here:
+>
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
+>
+> Thanks,
+> David
+>
+> David Howells (3):
+>   netfs: Fix collection of results during pause when collection
+>     offloaded
+>   netfs: Fix rolling_buffer_load_from_ra() to not clear mark bits
+>   netfs: Fix netfs_unbuffered_read() to return ssize_t rather than int
+>
+> Max Kellermann (1):
+>   netfs: Call `invalidate_cache` only if implemented
+>
+>  fs/netfs/direct_read.c    |  6 +++---
+>  fs/netfs/read_collect.c   | 18 ++++++++++--------
+>  fs/netfs/rolling_buffer.c |  4 ----
+>  fs/netfs/write_collect.c  |  3 ++-
+>  4 files changed, 15 insertions(+), 16 deletions(-)
 
-I'm not sure if GFP_ATOMIC can be removed. Isn't NAPI an atomic context?
-For example napi_alloc_skb() and page_pool_dev_alloc_pages() use
-GFP_ATOMIC.
-
-Gerhard
-
+Acked-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
