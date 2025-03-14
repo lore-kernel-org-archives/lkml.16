@@ -1,118 +1,153 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6561FF613;
-	Fri, 14 Mar 2025 12:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166401FF1A8;
+	Fri, 14 Mar 2025 12:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741955886; cv=none; b=SBhIWwR/oJNhDIvwcWh/LkpbqEiGrUENxe5P9Ntw00hr9a+4Ppl4oU7qax25mWoBVhaq6lKIEVfCfOTMD1kxdeo9PQRD5gxvk4YwKC2namDFkLTXk45UOE1HJa6B1HL9Oe50Ny7Aj1TH0kKSnhUL8jEU4CxlKXUDveq4nqK+2Uw=
+	t=1741955920; cv=none; b=RKUDFgInYuz7co+S+Wy1r8gMGhzy5BAX4fn2szGZ2R4TapsgQgEE90RVELjLTXC+dsGsPYbTLAzWaQci0dru9WZ3SxI0T2Z6A4WPG74EFZXvD7m6tA0F+s9UYmUNv00BqeuzZwE8vl5HU6W+Epp/hrGzr9AK57T0sJZEW1uBqgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741955886; c=relaxed/simple;
-	bh=p9mM05uTuuSxp/itWQ1aYr7D/Kek2qjOInkizONDbWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QxIVw0mOjzlndXMK6hNiB5WuueZ2lIsdmInqjKIh9Bq3Tt7wn7zjJLim7AYDc4iQdr6R+ruN3JQUyS2RgOKNKvQ35xJFb3mvNyY/hBfyWUNcZePZ4VB5NoJtpDak7imQfLwVHlG8U6cHkjYsqCS6ahcPPOtnSznz/HfqxkRB7Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=KOe75BT5; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=GSRWPm72; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	s=arc-20240116; t=1741955920; c=relaxed/simple;
+	bh=vOgy0s3Ijmkeasy12zLFJKxY8z4lZdIGDJQACKfdfX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HZykxO9kpFk4v8YQqGxTiMPMv2/0YJW0QngalPAExT1m8gYRxmlNlmCFWcnOlbh22jqOCNkpA3Q2mjlsYnYRSbCkLPrxgCR7kr9dLboyzUBL05P2OMMvPFdU6/e8PjRuXd4U65VgfyIttb3Vcb7FSm4HbOSNr3mWUFSCTspaDNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=ZJy+PQr6; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="KOe75BT5";
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="GSRWPm72"
-Received: by mail.netfilter.org (Postfix, from userid 109)
-	id 30568603C7; Fri, 14 Mar 2025 13:37:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1741955872;
-	bh=rPmJhpBheVqSUhPhE5IrqXg0aOCdmG4JQWmir+xGcw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KOe75BT5fdnVHqcLuHnE+/zbg0SqDkpt1vfmqUe9yn1VV6HS8oANUox2ECks/ogIY
-	 EeLVs1iaZfaFreMKCYahqzFQX6UgjLAZf2QfbWhtfEDUXQBt8hE3ir6e3Xh6BHGjIw
-	 ChuJ1sV/aHOMZvjZvfmxgfW53YS1rPIdOZOnF5YVPpsvOlVZR5xyFVZh4Olt2gNTKF
-	 gE09asYyfShSEwkMudB9qoX4KPV7wsRRTxn/QPiBDLlG1uXVAAeZEjr+2VO9u+rmP3
-	 QpuagjteSJVQj35cv33ria3JWbJbntOyQKoF+sDIr1CXVS0dN8PBmF26uGX05XoQ5P
-	 xqgrOCHGtAykg==
-X-Spam-Level: 
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with ESMTPSA id 94C35603BE;
-	Fri, 14 Mar 2025 13:37:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1741955866;
-	bh=rPmJhpBheVqSUhPhE5IrqXg0aOCdmG4JQWmir+xGcw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GSRWPm72uFyqXTyUIJzzcpsMAUkh40VOnAyEcDD7VyG9eADghYPABLGJQdrSQUmwp
-	 ADzLKsqM/OgNyItHC69MGJkQMY9vFkOIUWclF/hPBeKglTj3RXqIqewOnLmq+PRo5T
-	 wjdPi1wutXLVs+jy6NHGkOQEk4SHS/ftJBZporkZBy527X5e0XMXYM6LO/tD+9fKvu
-	 F8vQ+5giSRhYXullElHg/Tqy98titObJDDwX9UcKwlJBqw8xzb4xomAVpVz7rskQ7K
-	 C+YlaTlzzdrM+cysMJNyirwtjrLw3dDIGKi0pAraMhKV0pHJ70SUuYzFCESM0rIWNj
-	 MBwY2wueKzqNQ==
-Date: Fri, 14 Mar 2025 13:37:43 +0100
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Roopa Prabhu <roopa@nvidia.com>, Ivan Vecera <ivecera@redhat.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Simon Horman <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [PATCH v9 nf 00/15] bridge-fastpath and related improvements
-Message-ID: <Z9QjF5LhavodVA4Y@calendula>
-References: <20250305102949.16370-1-ericwouds@gmail.com>
- <897ade0e-a4d0-47d0-8bf7-e5888ef45a61@gmail.com>
- <Z9DKxOnxr1fSv0On@calendula>
- <58cbe875-80e7-4a44-950b-b836b97f3259@gmail.com>
- <Z9IUrL0IHTKQMUvC@calendula>
- <02b97708-1214-4fa4-a011-70388cff8f79@gmail.com>
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="ZJy+PQr6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References
+	:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=mIxQ1dxQxp6C/TV6htutkor/iBB33VBzcKLVVA9Ia8U=; b=ZJy+PQr6ba0IlYAnto0gpfyZRG
+	jwetHAksMo+PqxkAHS4uSxggSZxQ3H2Z4KFM8v3kXQ+2+aaoy0pKkVqayfX4Ld1F/BsaRsKU579f3
+	GtqBWDpypW0g/QIZKjYo/fOk0bjBXO6RkCfc46Mscshtsqbb9mHWcOONTZpLiGXqBov0=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:49180 helo=[192.168.0.218])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1tt4J7-00EQNW-5B; Fri, 14 Mar 2025 13:38:33 +0100
+Message-ID: <7f9b920f-1851-4ebe-9054-d32de79d3678@emfend.at>
+Date: Fri, 14 Mar 2025 13:38:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <02b97708-1214-4fa4-a011-70388cff8f79@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] leds: tps6131x: add support for Texas Instruments
+ TPS6131X flash LED driver
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-leds@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bsp-development.geo@leica-geosystems.com
+References: <20250228-leds-tps6131x-v1-0-d1071d90f9ea@emfend.at>
+ <20250228-leds-tps6131x-v1-2-d1071d90f9ea@emfend.at>
+ <20250310144946.GH8350@google.com>
+ <def0351b-c037-47c8-b395-d64cfca7ae25@emfend.at>
+ <20250314105257.GD3890718@google.com>
+ <8a16c018-8466-4dea-8f1e-e8a65e3ed950@emfend.at>
+ <20250314114551.GL3890718@google.com>
+Content-Language: de-DE
+From: Matthias Fend <matthias.fend@emfend.at>
+In-Reply-To: <20250314114551.GL3890718@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: 
+X-Spam-Bar: 
+X-Spam-Report: 
 
-On Thu, Mar 13, 2025 at 07:01:38PM +0100, Eric Woudstra wrote:
+Hi Lee,
+
+Am 14.03.2025 um 12:45 schrieb Lee Jones:
+> On Fri, 14 Mar 2025, Matthias Fend wrote:
 > 
+>> Hi Lee,
+>>
+>> Am 14.03.2025 um 11:52 schrieb Lee Jones:
+>>> On Fri, 14 Mar 2025, Matthias Fend wrote:
+>>>
+>>>> Hi Lee,
+>>>>
+>>>> thanks a lot for your feedback!
+>>>>
+>>>> Am 10.03.2025 um 15:49 schrieb Lee Jones:
+>>>>> On Fri, 28 Feb 2025, Matthias Fend wrote:
+>>>>>
+>>>>>> The TPS61310/TPS61311 is a flash LED driver with I2C interface. Its power
+>>>>>> stage is capable of supplying a maximum total current of roughly 1500mA.
+>>>>>> The TPS6131x provides three constant-current sinks, capable of sinking up
+>>>>>> to 2 × 400mA (LED1 and LED3) and 800mA (LED2) in flash mode. In torch mode
+>>>>>> each sink (LED1, LED2, LED3) supports currents up to 175mA.
+>>>>>>
+>>>>>> Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+>>>>>> ---
+>>>>>>     MAINTAINERS                        |   7 +
+>>>>>>     drivers/leds/flash/Kconfig         |  11 +
+>>>>>>     drivers/leds/flash/Makefile        |   1 +
+>>>>>>     drivers/leds/flash/leds-tps6131x.c | 798 +++++++++++++++++++++++++++++++++++++
+>>>>>>     4 files changed, 817 insertions(+)
 > 
-> On 3/13/25 12:11 AM, Pablo Neira Ayuso wrote:
+> [...]
 > 
-> >> What do you suggest?
-> > 
-> > Probably I can collect 4/15 and 5/15 from this series to be included
-> > in the next pull request, let me take a look. But it would be good to
-> > have tests for these two patches.
-> > 
+>>>>>> +static int tps6131x_flash_external_strobe_set(struct v4l2_flash *v4l2_flash, bool enable)
+>>>>>> +{
+>>>>>> +	struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
+>>>>>> +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
+>>>>>> +
+>>>>>> +	guard(mutex)(&tps6131x->lock);
+>>>>>> +
+>>>>> /> +	return tps6131x_set_mode(tps6131x, enable ? TPS6131X_MODE_FLASH : TPS6131X_MODE_SHUTDOWN,
+>>>>>> +				 false);
+>>>>>> +}
+>>>>>> +
+>>>>>> +static const struct v4l2_flash_ops tps6131x_v4l2_flash_ops = {
+>>>>>> +	.external_strobe_set = tps6131x_flash_external_strobe_set,
+>>>>>> +};
+>>>>>> +
+>>>>>> +static int tps6131x_v4l2_setup(struct tps6131x *tps6131x)
+>>>>>> +{
+>>>>>> +	struct v4l2_flash_config v4l2_cfg = { 0 };
+>>>>>> +	struct led_flash_setting *intensity = &v4l2_cfg.intensity;
+>>>>>> +
+>>>>>> +	intensity->min = tps6131x->step_torch_current_ma;
+>>>>>> +	intensity->max = tps6131x->max_torch_current_ma;
+>>>>>> +	intensity->step = tps6131x->step_torch_current_ma;
+>>>>>> +	intensity->val = intensity->min;
+>>>>>> +
+>>>>>> +	strscpy(v4l2_cfg.dev_name, tps6131x->fled_cdev.led_cdev.dev->kobj.name,
+>>>>>
+>>>>> tps6131x->client->dev?
+>>>>
+>>>> Do you mean the name should be taken from the I2C device?
+>>>> The current name, for example, is 'white:flash-0', while the I2C device name
+>>>> would be '4-0033'. So I think the current version is appropriate, don't you
+>>>> think?
+>>>
+>>> No, I'm implying that:
+>>>
+>>>     tps6131x->client->dev == tps6131x->fled_cdev.led_cdev.dev
+>>>
+>>> ... and that the former is shorter / neater.
+>>
+>> Hmm. That's interesting. I thought these were two different devices, which
+>> seems to be actually the case for me. Hence the different names in the kobj.
+>> Are the devices really supposed to be identical?
 > 
-> These are not most important to bridge-fastpath, but it gives extra
-> possibilities. How about concentrating first on patch 2/15 (with 1/15
-> removing a warning and 3/15 cleaning up), adding nf_flow_encap_push()
-> for xmit direct? It is a vital patch for the bridge-fastpath.
+> Interesting.  What are their names?
 
-I see cleanup patch 3/15 is a consequence of 2/15, let me take a look.
+tps6131x->fled_cdev.led_cdev.dev: 'white:flash-0'
+tps6131x->client->dev: '4-0033'
 
-> Anyway, I will look into writing selftests for conntrack-bridge setup,
-> including various vlan setups. This will take me some time, which I
-> do not have in abundance, so for that I do not know if I get it done
-> before the merge window.
+Best regards
+  ~Matthias
 
-There is tools/testing/selftests/net/netfilter/nft_flowtable.sh that
-can possibly be extended to improve coverage.
 
-Thanks.
+> 
+
