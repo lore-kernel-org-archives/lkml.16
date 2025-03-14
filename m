@@ -1,82 +1,191 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645CBF510;
-	Fri, 14 Mar 2025 16:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7427CF510
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741968074; cv=none; b=UJ4s2H0MTaWzLpHZXlzTjrLsny39VHhVguDKtpHl4QWySexQilBwJlC1WysYVmY+pM9am7d4Dryeut9ka7Pf4JpeOUfkQqSm0Wsafsoj/N3DSqTwfAEYoBQYMGd/bgda56NPzbgEhCANL99HETy9rUNEMLqbuiG2jRMWDB8PmVU=
+	t=1741968149; cv=none; b=a6bAViL0i1qJTwS6bOCPehj80p44hzs5Y7dnWpWWA868/1Li6eG5UqG1K4ChlZmn/jz5CEbDAqsFnbVQ7c8Y+ZRDLYoffYruJhLq3aMv2FsySbESJlbiqu4ry4yriaKNxdhaVivKROh4f2kTc1NCqS+MpJ/ixDKGAI5uBCVJYfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741968074; c=relaxed/simple;
-	bh=rXJyhLZM0wQnuMA6BY86fx7l1XvsG57/1opLs9TF2k0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bNsLtgZX6Kzv89+MXbw72OQ4px54dNfHAACjxGGwujvw451kLh0gSnJNRqpIE4AJH9gTipb9zLj3mvYXL9oDFY4WP077kbBl/1EvuLAP4FS2PbJ28rwAZ1fmeCGnoBBTdzL0LMiwfVFJea5UcPOnOI7q4WblHb164r9/dR98jN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=aEo7PzKD; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="aEo7PzKD"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZDpxw2lf2zlxdd0;
-	Fri, 14 Mar 2025 16:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1741968065; x=1744560066; bh=rXJyhLZM0wQnuMA6BY86fx7l
-	1XvsG57/1opLs9TF2k0=; b=aEo7PzKDFvqEu1SpnvxvHFFD23HwXN7o7B14pn+T
-	nkwZ6O9nOQH4aWdeR8HCx33d5yIF/mdttl6f8EPzQkHK89SXd4Aho16S0ZythcsP
-	cA55cJMCbIm1djaeOSyu/7qaO7aeA1833OZRGaX9DadZ5HxBo1TI1cr9soH9bfHD
-	wnaUbzJ0XHfIC70bsVsj8EiPqpvZcUoYWhej0mi5Gfl2aT+H6gq9VNVScFj+5d+n
-	lzoAfEyyK0aWgBiIJ0MXXoOJ/s9zttde3/k41PbTePU2bK2JJoKHnHnf5CLeSXOU
-	60V4UHspkVUPt/ftllQT+ZYtSTbT+s52m5FjnGxjdmKcPw==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id DP3PM_usb6m4; Fri, 14 Mar 2025 16:01:05 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZDpxW0567zlfdj2;
-	Fri, 14 Mar 2025 16:00:46 +0000 (UTC)
-Message-ID: <0d7a8cad-adfc-4cac-bcc6-65d1f9c86b43@acm.org>
-Date: Fri, 14 Mar 2025 09:00:45 -0700
+	s=arc-20240116; t=1741968149; c=relaxed/simple;
+	bh=FWBaRSt0hd7lbAWNjIRmROwnetmpEzTA89iIHte9/+M=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=D0l88/vAJUnIKJq6DxaTrj6JZgWg1We94ssBBfct5YxqHRMvrdavY0VcogyoxtY0NJmFOAyl1KaxNg/r/yL/VptW9Ce5xcquILlG5sQxjC6jicZ9UjGTrCz6WJpIRCZMO8R0zixqejB7dyAMxS7fgp/leWzZmTUj5DZibHine9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d434c328dbso40071865ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:02:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741968146; x=1742572946;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a01yNwfg+tsRWKVEaYSOGrK7UdIqa0u1nRwFTRBxZm4=;
+        b=b5SgaYz2/09egf9J6VhryYC0LzMQMFtbFOfMlubcF2h7HgLajAZJ7+Y8ib30p9rNMQ
+         mD6yBW6BTaS0Ikx6N6kFMpn3G7Zi5PipdkZ6tfEoAwJ1BoGYmnmbCSKFBUcnObh5ewGL
+         BsdU0/gm+3To/gl1qNcxbt1a2NChiwYha0/3Cf7XUC/OB07toB52ZL6nVA/s3RalUDbt
+         0qt8c5qLBadOrytAJmLUQy2V00i8T1FjreHIXdoV0jpdAbP6hufSflCdwvwAJVqI+C/t
+         u0hgAVXreXjSFVor969HWp643nA2aZS5Z0I4yHr9QkuHPx1dOcQhY8a/fLyKY7NpgPIg
+         GWNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXa7q7LZLGvHLoOk08B0rsNjxFZsFy+vBGqaN9U4xqkheKeQx08RvfiEEWAQXS1I3nk9nROZkQ55msaD40=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzybsQbek4bFa0RAmUMm+et5PGBK0CDlzI77IIFrF0NczmOTfTi
+	AfVYPcyTVC3ICFaaLLAM8kkzSzmdRvkgjb2zc5fcYixOrpGrvyOvVTwNDTQAe801qPD6ddA060v
+	ZCKCbBiQNUOZ7TGyLZUrlGV9ZnhXNOUJjjU+v5wpAqOQuzSHzJ2yU8Yk=
+X-Google-Smtp-Source: AGHT+IHIFRG/TL3NB9OUxwcR4Bibk/UVp1EYQ8cFlNPbBojSzROSkPTqJUvIzuWEz0JspLXm5dFNhJ2v+idvdcdt2ik7Gt6jcXoa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Add dma-coherent for gs101 UFS dt node
-To: Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Avri Altman <avri.altman@wdc.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, kernel-team@android.com,
- willmcvicker@google.com, stable@vger.kernel.org
-References: <20250314-ufs-dma-coherent-v1-0-bdf9f9be2919@linaro.org>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250314-ufs-dma-coherent-v1-0-bdf9f9be2919@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:20cc:b0:3d3:dfc2:912f with SMTP id
+ e9e14a558f8ab-3d483a0f58fmr28219165ab.7.1741968146422; Fri, 14 Mar 2025
+ 09:02:26 -0700 (PDT)
+Date: Fri, 14 Mar 2025 09:02:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67d45312.050a0220.14e108.0046.GAE@google.com>
+Subject: [syzbot] [block?] WARNING in bioset_exit
+From: syzbot <syzbot+4b6dfa650582fe3f8827@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/14/25 8:38 AM, Peter Griffin wrote:
-> ufs-exynos driver enables the shareability option for gs101 which
-> means the descriptors need to be allocated as cacheable.
+Hello,
 
-Shouldn't that code be modified such that the shareability option is
-only set if the dma-coherent property is present in the device tree?
+syzbot found the following issue on:
 
-Thanks,
+HEAD commit:    80e54e84911a Linux 6.14-rc6
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11221478580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=31c94a07ddad0b00
+dashboard link: https://syzkaller.appspot.com/bug?extid=4b6dfa650582fe3f8827
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Bart.
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-80e54e84.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3bc20f88b58a/vmlinux-80e54e84.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/fad1b751c2d1/bzImage-80e54e84.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4b6dfa650582fe3f8827@syzkaller.appspotmail.com
+
+bucket 0:20 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:20 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:21 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:21 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:22 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:22 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:23 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:23 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:24 gen 0 has wrong data_type: got free, should be journal, fixing
+bucket 0:24 gen 0 data type journal has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:26 gen 0 has wrong data_type: got free, should be btree, fixing
+bucket 0:26 gen 0 data type btree has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:28 gen 0 has wrong data_type: got free, should be btree, fixing
+bucket 0:28 gen 0 data type btree has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:29 gen 0 has wrong data_type: got free, should be btree, fixing
+bucket 0:29 gen 0 data type btree has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:31 gen 0 has wrong data_type: got btree, should be need_discard, fixing
+bucket 0:31 gen 0 data type need_discard has wrong dirty_sectors: got 256, should be 0, fixing
+bucket 0:32 gen 0 has wrong data_type: got sb, should be btree, fixing
+bucket 0:35 gen 0 has wrong data_type: got free, should be btree, fixing
+bucket 0:35 gen 0 data type btree has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:38 gen 0 has wrong data_type: got free, should be btree, fixing
+bucket 0:38 gen 0 data type btree has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:41 gen 0 has wrong data_type: got free, should be btree, fixing
+bucket 0:41 gen 0 data type btree has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:120 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:120 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:121 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:121 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:122 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:122 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:123 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:123 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:124 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:124 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:125 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:125 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:126 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:126 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+bucket 0:127 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:127 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+ done
+bcachefs (loop0): going read-write
+bcachefs (loop0): journal_replay...
+bcachefs (loop0): bch2_journal_replay(): error erofs_journal_err
+bcachefs (loop0): bch2_fs_recovery(): error erofs_journal_err
+bcachefs (loop0): bch2_fs_start(): error starting filesystem erofs_journal_err
+bcachefs (loop0): shutting down
+bcachefs (loop0): shutdown complete
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5325 at block/bio.c:146 bio_put_slab block/bio.c:146 [inline]
+WARNING: CPU: 0 PID: 5325 at block/bio.c:146 bioset_exit+0x5ba/0x650 block/bio.c:1662
+Modules linked in:
+CPU: 0 UID: 0 PID: 5325 Comm: syz.0.0 Not tainted 6.14.0-rc6-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:bio_put_slab block/bio.c:146 [inline]
+RIP: 0010:bioset_exit+0x5ba/0x650 block/bio.c:1662
+Code: cc e8 ca 38 ef fc e9 75 fd ff ff e8 c0 38 ef fc 90 48 c7 c7 60 f9 7e 8c e8 63 f5 ae fc 90 0f 0b 90 90 eb a2 e8 a7 38 ef fc 90 <0f> 0b 90 e9 d8 fe ff ff e8 99 38 ef fc 90 0f 0b 90 e9 05 ff ff ff
+RSP: 0018:ffffc9000d4df880 EFLAGS: 00010287
+RAX: ffffffff84d2a669 RBX: ffff88801285a9c0 RCX: 0000000000100000
+RDX: ffffc9000ef1a000 RSI: 00000000000e287c RDI: 00000000000e287d
+RBP: ffff888053149418 R08: ffffffff903cf777 R09: 1ffffffff2079eee
+R10: dffffc0000000000 R11: fffffbfff2079eef R12: 00000000000004b0
+R13: 1ffff1100a629283 R14: 0000000000000000 R15: ffff88801285a9c0
+FS:  00007f8a423e96c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000559b14e3d028 CR3: 0000000033de6000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ bch2_fs_fs_io_direct_exit+0x19/0x30 fs/bcachefs/fs-io-direct.c:676
+ __bch2_fs_free fs/bcachefs/super.c:558 [inline]
+ bch2_fs_release+0x1a9/0x7b0 fs/bcachefs/super.c:624
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x22f/0x480 lib/kobject.c:737
+ bch2_fs_get_tree+0xdee/0x17a0 fs/bcachefs/fs.c:2299
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1814
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3560
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f8a4158e90a
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f8a423e8e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f8a423e8ef0 RCX: 00007f8a4158e90a
+RDX: 00004000000058c0 RSI: 0000400000005900 RDI: 00007f8a423e8eb0
+RBP: 00004000000058c0 R08: 00007f8a423e8ef0 R09: 0000000000010000
+R10: 0000000000010000 R11: 0000000000000246 R12: 0000400000005900
+R13: 00007f8a423e8eb0 R14: 0000000000005912 R15: 0000400000000080
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
