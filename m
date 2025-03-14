@@ -1,102 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83392170A2C
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D17218D634;
+	Fri, 14 Mar 2025 07:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936260; cv=none; b=mMdEkc/Q0gDPkfkRTnR06G5z3unnHFz4lhOgTy8Pl6OI7xIcQuZyxrWh3uLIUCF0ebvJgMVpd935EIu4lcbJwlrXcbhHIXqIK/2lW/T0KVOsIk0xcuoWu64dpUuCeB7RQnLqGz4xr0fBPIZhOfS4Dy2px1PV2LeErMuGl8PC7lY=
+	t=1741936261; cv=none; b=QfNQ2UNtK8ey7gFuW7PyC9Z3IrKPA9SPiRNFCnIuQwyXCcmeR3Qmlk2JFgtlT6IgJwSEcb7jYvRnCHyXnmR+tva49+sM4WmEtAo+gObi9zEI5pikZOyLZRXYZlrlkv/n9p8i11+8j/eXj9zceRRmqSo4GCsaL7rSGSvkvC7Q7aI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741936260; c=relaxed/simple;
-	bh=nh8Y/2X/KVLRY755ZBLqq4CBUtbI/ai14s3of9+XGTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bLFIJLUci+aU7A9+ai9va3WT36k0zpxr7vac6Utblqhck5iPZ7YIzwzANVpBCwGJCfOQnGSkXscZd8fVjuPxE9NyQxcRijQBrHE8QxWKgOGzJYiC3faFIcqv4dOXtvXjg/rc7thReWhLzvNEmrubACgqkU+tIxpnXQTBG0GlwJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=guY7TGjo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741936261; c=relaxed/simple;
+	bh=IKdBA13JupXjDh3Rlpq56k/VtfWKKPwKkrryIgel3M0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFlPVTtRYFPEe5tcvEZ7SBXB+ikdcxztXgFFnaVOjGk7ETiKZsjOOr+dWfZBnuEI0SzB/9CMbbNLW9KYWeBpqAMYyxNWJN4Xeihr7LJ8MGiyKGmrpsrQ1wsrTsIWym99k0XEXUt1rSK2uqNVOt6r1xqmKZYOPyLCC/TMCI30eYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/6ooFJU; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guY7TGjo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741936257;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9DH5r5nUiV9oMJ9t9HWO/gI/Ze20kxPCau4i0GakJus=;
-	b=guY7TGjoGnoSwSD/E5qEbH77lLiM1G6/Cp6vvuSshkYzy9lx3vaccDL9D6vX79X9CqOv+L
-	v+YzlcjIvEi4YOYlDJPlAX8kgnyOHQADm1uqc6EG+/o9SdU5NRbYDLJZ3Ud71DhHyTjpC+
-	GQOnRv4HmlAlpGcibrI2uO+OAgt4EII=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-155-ih_sP1kiOGC6BEcYPTApIg-1; Fri,
- 14 Mar 2025 03:10:53 -0400
-X-MC-Unique: ih_sP1kiOGC6BEcYPTApIg-1
-X-Mimecast-MFC-AGG-ID: ih_sP1kiOGC6BEcYPTApIg_1741936252
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87AE919560B4;
-	Fri, 14 Mar 2025 07:10:52 +0000 (UTC)
-Received: from thuth-p1g4.redhat.com (unknown [10.44.32.82])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B783B18001D4;
-	Fri, 14 Mar 2025 07:10:48 +0000 (UTC)
-From: Thomas Huth <thuth@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-arch@vger.kernel.org,
-	Thomas Huth <thuth@redhat.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	linux-snps-arc@lists.infradead.org
-Subject: [PATCH 04/41] arc: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
-Date: Fri, 14 Mar 2025 08:09:35 +0100
-Message-ID: <20250314071013.1575167-5-thuth@redhat.com>
-In-Reply-To: <20250314071013.1575167-1-thuth@redhat.com>
-References: <20250314071013.1575167-1-thuth@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/6ooFJU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741936259; x=1773472259;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IKdBA13JupXjDh3Rlpq56k/VtfWKKPwKkrryIgel3M0=;
+  b=S/6ooFJUq3S8esuLPHi2a3NmhCBHmguXa1GNRAHBQvLoBXg+m363u1a6
+   tcYNcKQTI50iSypl7lPrFVcqZBLPNQetic6279QN3gISqu++MO2JccqH5
+   JIlUoRw3MfaO5R4CCdrcVZvA13ImfjlMXyrdMSc5J93WPNiYCocP9wyFq
+   4F9DS0oSBDqo8oYWtOw0+KWi7DDaeKuXDSFRHaujjjb2/My/Bsjp04Tw3
+   cJs9wlj6udVeoBxmmTetXQao3opnrQDSsuyJVbPwe4Z9hrTTwEptYybBw
+   ACBGgp2gj4tYINcwsyQU69hllaTABL/ksQiaqOvjyuAK39A1triA81LGi
+   w==;
+X-CSE-ConnectionGUID: IuwbHh/HRwGw0KhvTcFYWg==
+X-CSE-MsgGUID: BREprz79SIe8h6RyMRcOhw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="60477872"
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="60477872"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 00:10:58 -0700
+X-CSE-ConnectionGUID: eUsGcmroQlSQOhljXpJKeA==
+X-CSE-MsgGUID: FcXeWHeuQRmvAF80w9bpgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="121390713"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 14 Mar 2025 00:10:52 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tszBy-000ABs-0z;
+	Fri, 14 Mar 2025 07:10:50 +0000
+Date: Fri, 14 Mar 2025 15:10:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Antonio Hickey <contact@antoniohickey.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Antonio Hickey <contact@antoniohickey.com>,
+	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/3] rust: replace `addr_of[_mut]!` with `&raw [mut]`
+Message-ID: <202503141434.n6oUhRIM-lkp@intel.com>
+References: <010001958dfec447-37d6d276-32f8-4b4e-b7bd-6d7ce2570ee2-000000@email.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <010001958dfec447-37d6d276-32f8-4b4e-b7bd-6d7ce2570ee2-000000@email.amazonses.com>
 
-__ASSEMBLY__ is only defined by the Makefile of the kernel, so
-this is not really useful for uapi headers (unless the userspace
-Makefile defines it, too). Let's switch to __ASSEMBLER__ which
-gets set automatically by the compiler when compiling assembly
-code.
+Hi Antonio,
 
-Cc: Vineet Gupta <vgupta@kernel.org>
-Cc: linux-snps-arc@lists.infradead.org
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- arch/arc/include/uapi/asm/ptrace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/arch/arc/include/uapi/asm/ptrace.h b/arch/arc/include/uapi/asm/ptrace.h
-index 2a6eff57f6dd8..3ae832db278cd 100644
---- a/arch/arc/include/uapi/asm/ptrace.h
-+++ b/arch/arc/include/uapi/asm/ptrace.h
-@@ -14,7 +14,7 @@
- 
- #define PTRACE_GET_THREAD_AREA	25
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- /*
-  * Userspace ABI: Register state needed by
-  *  -ptrace (gdbserver)
-@@ -53,6 +53,6 @@ struct user_regs_arcv2 {
- 	unsigned long r30, r58, r59;
- };
- 
--#endif /* !__ASSEMBLY__ */
-+#endif /* !__ASSEMBLER__ */
- 
- #endif /* _UAPI__ASM_ARC_PTRACE_H */
+[auto build test WARNING on rust/rust-next]
+[also build test WARNING on driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus linus/master v6.14-rc6 next-20250313]
+[cannot apply to shuah-kselftest/kunit shuah-kselftest/kunit-fixes pci/next pci/for-linus rust/rust-block-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Antonio-Hickey/rust-clippy-disable-addr_of-and-addr_of_mut-macros/20250313-133646
+base:   https://github.com/Rust-for-Linux/linux rust-next
+patch link:    https://lore.kernel.org/r/010001958dfec447-37d6d276-32f8-4b4e-b7bd-6d7ce2570ee2-000000%40email.amazonses.com
+patch subject: [PATCH 3/3] rust: replace `addr_of[_mut]!` with `&raw [mut]`
+config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250314/202503141434.n6oUhRIM-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250314/202503141434.n6oUhRIM-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503141434.n6oUhRIM-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> warning: consider removing unnecessary double parentheses
+   --> rust/kernel/faux.rs:48:41
+   |
+   48 |         unsafe { device::Device::as_ref((&raw mut (*self.as_raw()).dev)) }
+   |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#double_parens
+   = note: `-W clippy::double-parens` implied by `-W clippy::all`
+   = help: to override `-W clippy::all` add `#[allow(clippy::double_parens)]`
+--
+>> warning: unnecessary parentheses around function argument
+   --> rust/kernel/faux.rs:48:41
+   |
+   48 |         unsafe { device::Device::as_ref((&raw mut (*self.as_raw()).dev)) }
+   |                                         ^                             ^
+   |
+   = note: `#[warn(unused_parens)]` on by default
+   help: remove these parentheses
+   |
+   48 -         unsafe { device::Device::as_ref((&raw mut (*self.as_raw()).dev)) }
+   48 +         unsafe { device::Device::as_ref(&raw mut (*self.as_raw()).dev) }
+   |
+--
+>> warning: immediately dereferencing a reference
+   --> rust/kernel/task.rs:260:28
+   |
+   260 |         let ptr = unsafe { *(&raw const (*self.as_ptr()).group_leader) };
+   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `(*self.as_ptr()).group_leader`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#deref_addrof
+   = note: `-W clippy::deref-addrof` implied by `-W clippy::all`
+   = help: to override `-W clippy::all` add `#[allow(clippy::deref_addrof)]`
+--
+>> warning: immediately dereferencing a reference
+   --> rust/kernel/task.rs:272:18
+   |
+   272 |         unsafe { *(&raw const (*self.as_ptr()).pid) }
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `(*self.as_ptr()).pid`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#deref_addrof
+
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
