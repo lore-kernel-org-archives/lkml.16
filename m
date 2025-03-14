@@ -1,123 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from hutie.ust.cz (hutie.ust.cz [185.8.165.127])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B042E3372;
-	Fri, 14 Mar 2025 13:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DADF4ED;
+	Fri, 14 Mar 2025 13:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.8.165.127
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741959079; cv=none; b=R3bufR/K59Ln6Rm8aqmuL4sz7Fo95KWOMJcY22IDafCD+naY9si5QcT7Yf0K73a5O9asOABTI4F42G/zbR+a3Rb76tbs/IWopFymkeCXMkjvbFyuR3hfOSiEaGOxHS7lDqwBpiHFcvyMkUgbiGHFN9TYzZewsvmrZmnoYp05Fwg=
+	t=1741959087; cv=none; b=UKxbZ9R8SCtvvUm66zgA5+SpwTNAP21LFoTQUp2t7UW0XsaB6lkNy4HRZ1OisueIKxdY6XSRHV3x9ZBGg3eMqucskbbtbmxJK3r+vKJrl8hgpE5hrI5oIsKpW5vURS9Nd9BUcyD5nlKIqy+DwBjhmn45Qn2w13ApmG5gg3dbRmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741959079; c=relaxed/simple;
-	bh=mC9X5wHeLWgi2jQT/EqiLwWxn9S7NLyyuFOfO3+rr6M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g9AmXr0ey7VSded7R1g0/cEToMGT35+2wl6wJys8iefvowdWwd7XGCROT584zz2ulFaEFeDfQtFZzaYkNGj1at8zZObp3mtJWvSQ+VnlOZB7Yxz3luVdwIognJDI2AsYsTWP2l8ht9r+nxrRJo9/fQ40oa58WeodmosxxFMQ52g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qXdZXLh3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741959087; c=relaxed/simple;
+	bh=UATdpA7cgBWM5CfhL0BSNAFRMNZeQJf0RDSodrMiFm8=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=mw+qAguWniGKgaO/P5t64d3VaaJrzpmw4QXo3UerUHUgm1djM+CYJO1yANxxvSSStLC4XFB10m2lDyTXBJitmxYalMhXGeYCNk0oeNTShywG5uk3z4NOqILjx7pVBxx7TEo9345sN8Sa+8w1osfevO9u4BFSa8Ce4+wDyz6+8So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cutebit.org; spf=pass smtp.mailfrom=cutebit.org; dkim=pass (1024-bit key) header.d=cutebit.org header.i=@cutebit.org header.b=jKqTWJyd; arc=none smtp.client-ip=185.8.165.127
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cutebit.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cutebit.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXdZXLh3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DF32C4CEE3;
-	Fri, 14 Mar 2025 13:31:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741959078;
-	bh=mC9X5wHeLWgi2jQT/EqiLwWxn9S7NLyyuFOfO3+rr6M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qXdZXLh3cjSoDympksyMN5qy03vbKNK9/po8U2LcaSTKuJJ9fUZsPkx2MD1ZXycOk
-	 t/hOSouf3xcRJ4s5y797UyCqn7SSkr05pUHnjOIJ5GCQWzs49jcn/pPCJMfifpGx3F
-	 ACiBCnHLHD+TGh1oSM4/Zg6GXmM1Oo+n6GtzEVQ+WhFnyOgk1mj7LAPnUP+alqBCaj
-	 Z/WEolvMT4Ya2vgpY5UtIm0ckJmbUV+LfANeHd039m1UQowLp0dgfx/LGRkI7zSN0V
-	 Pa/gnMR+Y3Zc0rsS6FNQjMyHhb0Yr4mJxoDz1O/VbbUWtlo0GwOflAWElchsYaPrhM
-	 wCMjOPSKEXuqQ==
-Message-ID: <e58f5851-9988-463b-824e-ad3da1137c33@kernel.org>
-Date: Fri, 14 Mar 2025 14:31:12 +0100
+	dkim=pass (1024-bit key) header.d=cutebit.org header.i=@cutebit.org header.b="jKqTWJyd"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cutebit.org; s=mail;
+	t=1741958603; bh=ZHlFpUcnqM8kwtMsWbJUG26ffc8HSmguvMRTzaq18qo=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=jKqTWJydfegfYVUU3CI43+xEXTTX0q0K+BAe7HdFbCdxYFM7FE9x0XVzalHsIuBd2
+	 ryokhFgSViug4ZiAremjxKHXTgDkao/2LXpqjFPGSzxRaEZ8iN/88ISYnRpLtnt3jt
+	 k3XKi7vuXCj9nqxTQIzpAAq5CyutQ4yrSJrz1SU0=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] Input: snvs_pwrkey - support power-off-time-sec
-To: Ian Ray <ian.ray@gehealthcare.com>
-Cc: dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linux-input@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250314094213.902-1-ian.ray@gehealthcare.com>
- <20250314094213.902-2-ian.ray@gehealthcare.com>
- <aa893df6-fe40-49a8-920d-7d7240bb18b8@kernel.org>
- <Z9QuC7tZoXj3DRZs@9e5302bffcb7>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Z9QuC7tZoXj3DRZs@9e5302bffcb7>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: [PATCH v3 17/20] ASoC: dt-bindings: tas2770: add flags for SDOUT
+ pulldown and zero-fill
+From: =?utf-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
+In-Reply-To: <20250312125832.GA359842-robh@kernel.org>
+Date: Fri, 14 Mar 2025 14:23:11 +0100
+Cc: James Calligeros <jcalligeros99@gmail.com>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>,
+ Shenghao Ding <shenghao-ding@ti.com>,
+ Kevin Lu <kevin-lu@ti.com>,
+ Baojun Xu <baojun.xu@ti.com>,
+ Dan Murphy <dmurphy@ti.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Shi Fu <shifu0704@thundersoft.com>,
+ Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Hector Martin <marcan@marcan.st>,
+ linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ asahi@lists.linux.dev,
+ linux-hwmon@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BDE96592-9DE8-407C-8FB9-B84B492D7951@cutebit.org>
+References: <20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com>
+ <CAHgNfTxS1Q4PPsw520-J4Yn6xg+QZOYFkYhg5yv-uZFu5waN_g@mail.gmail.com>
+ <20250307205156.GA583954-robh@kernel.org> <5996925.DvuYhMxLoT@setsuna>
+ <20250312125832.GA359842-robh@kernel.org>
+To: Rob Herring <robh@kernel.org>
 
-On 14/03/2025 14:24, Ian Ray wrote:
-> On Fri, Mar 14, 2025 at 01:55:47PM +0100, Krzysztof Kozlowski wrote:
->> On 14/03/2025 10:42, Ian Ray wrote:
->>>
->>>       /* Get SNVS register Page */
->>> @@ -148,6 +152,24 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->>>       if (pdata->irq < 0)
->>>               return -EINVAL;
->>>
->>> +     if (!of_property_read_u32(np, "power-off-time-sec", &val)) {
->>
->> And when you test your DTS against binding what do you see? I suspect
->> new warning.
-> 
-> I checked the build logs (from a clean workarea), plus run-time dmesg,
-> both with the DTS change -- and without it.  There are no new warnings
-> (specifically nothing mentioning snvs-pwrkey or dts or power-off-time).
-> 
-> If an invalid value (such as "42") is chosen then the probe fails with
-> -EINVAL as expected.
-> 
-> Is there something else that I should have checked?
+Hi Rob, James,
 
-I don't know what your build logs process has. I meant dtbs_check
-against the bindings.
+> On 12. 3. 2025, at 13:58, Rob Herring <robh@kernel.org> wrote:
+>=20
+> On Mon, Mar 10, 2025 at 07:30:07PM +1000, James Calligeros wrote:
+>> On Sat, Mar 8, 2025 at 6:51=E2=80=AFAM Rob Herring <robh@kernel.org> =
+wrote:
+>>> How would it work when you need a mask? "dai-tdm-slot-tx-mask" is
+>>> enough?
+>>=20
+>> The existing TX/RX slot masks are used to control which slots the =
+codec
+>> is operating on, AIUI. I don't know if it makes sense to alter how =
+codecs
+>> deal with this. Could we combine the suggested dai-tdm-slot-tx-idle
+>> with an optional dai-tdm-slot-tx-idle-mask property? =46rom the =
+machine
+>> driver's perspective, the API would then be similar to the existing
+>> set_tdm_slot ops. The current downstream macaudio machine driver =
+builds
+>> its links by allowing multiple codecs and CPUs to be linked to a DAI,
+>> like so:
+>=20
+> Wouldn't the NOT of dai-tdm-slot-tx-mask be the idle mask?
+>=20
+> Don't think about the Linux APIs here. The DT is separate. So think in=20=
 
-Best regards,
-Krzysztof
+> terms of what you need to describe the TDM timing/waveform.
+>=20
+>>=20
+>> dai-link@0 {
+>> cpu {
+>> sound-dai =3D <&cpu0>, <&cpu1>;
+>> };
+>> codec {
+>> sound-dai =3D <&speaker0>,
+>>  ...,
+>>  <&speaker6>;
+>> };
+>> };
+>>=20
+>> In this case, the codec-specific mask property was added so that a =
+mask
+>> could be applied to a specific codec rather than the whole dai, =
+however
+>> from upstream drivers tt looks like the way this should be handled is =
+to
+>> have "dai-tdm-slot-tx-idle-mask-n" properties at the dai level, then =
+have
+>> the machine driver set the mask for the appropriate codec during =
+setup. So
+>> for macaudio, assuming speaker5 requires this zerofill mask, we would
+>> have something like this:
+>=20
+> I'm now confused why you need n masks and what does n represent?
+
+For this setup there are 6 codecs on the same bus but 3 of those are on =
+one
+data line and the other 3 are on another data line. Within the SoC these =
+two
+data lines (both for codec->SoC direction) are ORed together in front of =
+the
+receiver peripheral.
+
+This means we need at least one codec within each group of the three to =
+zero
+out the bus for the duration of the slots used by the other group of =
+three.
+
+I solved this by attaching
+
+ ti,sdout-force-zero-mask =3D <0xf0f0f0>;
+
+on one codec from the first group, and
+
+ ti,sdout-force-zero-mask =3D <0x0f0f0f>;
+
+on one from the other group.
+
+FWIW the right form of these masks is not an implementation detail of =
+the
+machine driver spilling into the device tree (so that the mask would =
+need
+to be different if the machine driver was implemented differently). This =
+is
+because the slots used by each codec are specified via a DT property =
+too, e.g.
+
+  ti,imon-slot-no =3D <8>;
+  ti,vmon-slot-no =3D <10>;
+
+Martin
+
+> Rob
+>=20
+
