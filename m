@@ -1,277 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A36204F72
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A145204694;
+	Fri, 14 Mar 2025 17:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741973217; cv=none; b=iPQhZptP9awSUhGV3Z8AUlNjB+ACIOAEIziO4rGpOwVk0Mp1Zuok1dGcS8RPFSizW3A2gAiVl4Fy/GFtgO82sL7/ipI6AvakPMSpm4t7okV8CUbI34lF1HJIsqIxIJ1d0R9UCtiBIYI868qNa+7G+gjgbI9emJtcxov1gLDAT2o=
+	t=1741973298; cv=none; b=sLZvrf0osTrAup9J+itHTl4vA4mRYZMggpygYm6Et2RupKqptvVm8vgWyds8v/giHhT2FojcK+Uhmn/eFEZVNSzA25WdPMGMJENGrxf2xLFiGKmw4IOLFspG3XmNxAsYCwMf/Q5aAICkjxyzYW5NZAkj5/7RnYEAqZ1WiX9QQUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741973217; c=relaxed/simple;
-	bh=bGogLz3N653maS3jZp3WJ6CASqFwglP+GLUbaNFpvAA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CoKx9uSEhdx61M1jGyuAzd40uStX6yNuKu68sjeUUXc6ezT5zM4jR6OVglqv3WbTv2IA6B2lwjK13l1x2dNmjfR+Ww+ZkGcM7k2OP1wTskV26cn49fIw4TmrvMjcPHzqHEKwcf/n9Aq5L77d9eXwHR3gmQHirGNICT7FTIHgrMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xrt+ej9y; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741973298; c=relaxed/simple;
+	bh=mRc6Qzp+fDySnwvcYJlAcal8yjcDJzBh4K2OKc81DgM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PTIeFkaVq+ltlVRQF3e3zSyw3BDaBFQyPvPz8s0w4Sr1yCD6BtXE9qY9G4+diRoc/+skcDnqGZe1vxhzBDhLfIaCjlGE7/6rpz1HTlKsqGfbidQT7LpC7eVawPUd4HhsYTDZ83hAT9HtfE0im1LQFqGWUR/aGTkZi7XnLw+xC1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+mVsdSe; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xrt+ej9y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741973216; x=1773509216;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=bGogLz3N653maS3jZp3WJ6CASqFwglP+GLUbaNFpvAA=;
-  b=Xrt+ej9yyqk5qFUfYZwlCYAsYxaMG7nk+9dOn3LuWZPQlstDxqHREh9K
-   XgGB0i0X+kswsoY6Xiok0kAdmu8HL83s9BHa1XO2lIPo2WV4dBG2Rdjde
-   9P42viBphR87ySrL2v7GJRV/C96tJ44sSF5aKA74mc5KHAkqskB0lwMI4
-   spvdoS2xFhXRubcIF6ZinQI2xDKRKQ1a6qZTzoqcu/E7CXx8RysmSIZXP
-   kVMw0aDDj4BrT2epIpOd30sO5JZ+PY2+gmtdJgbZd3tHglShO5+o19ybL
-   qaQ7leecD2ce2fkxI3Ir6KnLmwfKKpgIzCOthnO8JjW7E6YSBCWHc7Uij
-   Q==;
-X-CSE-ConnectionGUID: 1kxr7oHXQj2pjspaA8JNcQ==
-X-CSE-MsgGUID: Yo4Z4uvaSn2tPtG9lSuhRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="54516575"
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="54516575"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 10:26:50 -0700
-X-CSE-ConnectionGUID: tq9Y4l1fQT6Z9yFBuWgI+w==
-X-CSE-MsgGUID: 57XbPHdWQ/W9To5dn0GmAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="152231815"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa002.jf.intel.com with ESMTP; 14 Mar 2025 10:26:49 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	linux-kernel@vger.kernel.org
-Cc: ak@linux.intel.com,
-	eranian@google.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V10 7/7] perf: Clean up pmu specific data
-Date: Fri, 14 Mar 2025 10:27:00 -0700
-Message-Id: <20250314172700.438923-7-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250314172700.438923-1-kan.liang@linux.intel.com>
-References: <20250314172700.438923-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+mVsdSe"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4767e969b94so36910151cf.2;
+        Fri, 14 Mar 2025 10:28:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741973294; x=1742578094; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KJghd27vPBEu/LGbRtV6LiK050yXADXaFFga3GAq6fg=;
+        b=Y+mVsdSeMacyBLhsWHNekr21R4AqDWskzSPb9c+YnmYW/4EEdZ8t0dBm0N4zPFQQXC
+         NDpQWjxoDR82PW+SWormp7+d0N2BIgONMJzs2Z4+ENfmrxuB3bRTdsSU+XMD9DJTNRxQ
+         2WZFadrb/wkGMFIh2EMkLcUY63yKNfIt0x4gS6Y6pQLpYZ/Jtzrl4jTAdOzQHeXP2ecG
+         YDVshHlMhAxt18rJrMGEg6vbb7/804sP8HJD3Un30f8a+xMLpW8tNdg+6nSMIT02X0MU
+         CoCaTJJaslRAXatJabKcoZ0H/CKekIJL0xbC2twyClJkceXWD7Z61/pL1jGsKsGdJA37
+         aGoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741973294; x=1742578094;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KJghd27vPBEu/LGbRtV6LiK050yXADXaFFga3GAq6fg=;
+        b=ONazWLH7+ukpOTCnCnPjONw9UkFT0j3lK3BQF797HkbcACkCnfNQvu2FN7svGS1FrJ
+         /KHYWwiNCJHmEiA14FmigzOHeNy2rFLUV9aQWKx1xHaqzAHhhVC1lge7ltp8dpz5kNvT
+         /1qgsomOwlAqxx5fmAL4/ttDcihAqXhF1ay4RC+7r20efk+oJ4y+nluJdSfrw4lJZPCo
+         /AwGqOSrVpMP9YvuW0PIqKBowpFfhHwvnx3acsHycIHgQ6ljPHpnwaAzfWQjFbzJszHl
+         7rtJS25sipA2cGZQsnQYryVN532tTxXOUTf5KnivaF4N6fU3xQB01iFa4krAee1ApVoE
+         CZgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUv4X+7wuEMDuqKEEul4hbaYrFZtD2IQv8pBXKlIFbF4GszuEb6f1VE6KCrwwoGKBXLNXwuSbPhp+5ABJE=@vger.kernel.org, AJvYcCV49PDrHCJbDz9GM+mP2LwoNCoINmJub+E8n/f2cE24d1IByYe/8C1EpmEYCHesj6G/H5U2YDs493T1ki98OCQ=@vger.kernel.org, AJvYcCVshgStkbiPQypWRFrz1PuYtUQEdqGhkuqK0KokElVyYGhkHc20dHez1vlw0Ys9SzC7TvHL2i82v8xx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZb7IxrU27cNcbKhjPyM1NWBZ5UixIzDoLEnsBzQrcRz3tHhb+
+	EG7i8Dl6DcqSczQWQAEPXuPogTGTc7Sejcd263Ld6N58fnXFLiI/
+X-Gm-Gg: ASbGncvT93Z83lTFzwc1uloXOQ5pqjH7uZhT3wVhZNJb4Y+b1yTHAh9Ai3ZYKXVJxab
+	ZOSLgbZDCB7UtoSvQDfL2dFJnAoa+95mvcN63eRpD4NcO41B1jhNTEBe0qUCWYBwCw2e8XZ5oQn
+	VihmdMoILht44hUeX4rnyFNoTaPNLPIxx8+tVDAoSe2lIVhs6StaIMDapNIi1RitsaACivbbS+q
+	aiPPiJFMZxuWY4OHntZKQBXfGFOwtNcIOygF663HQgxHczNUJmlEtyp0Cy0jTMaddWl11jvjqMf
+	lCi2EBiyBsqDc8u1ZrtPm4OaBOlNmJzTx1L+DVo6Y4rdiEp8ia3iocgOmtLeXKXzc81fcjga8GT
+	D9+jBPL1fN7+Z6Se2uKK3xgLI8J1hm82F/0g=
+X-Google-Smtp-Source: AGHT+IFYWh9NNAwSznb00n2bz+DizWEr9n7C6oGg7LjQgfQkMSaO5pJuBPli7Iv5c8DcDoF88oq7Rg==
+X-Received: by 2002:a05:622a:180d:b0:476:6215:eaf7 with SMTP id d75a77b69052e-476c813f762mr51629721cf.19.1741973294000;
+        Fri, 14 Mar 2025 10:28:14 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb63cb1csm25507461cf.19.2025.03.14.10.28.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 10:28:13 -0700 (PDT)
+Message-ID: <67d4672d.c80a0220.68408.902a@mx.google.com>
+X-Google-Original-Message-ID: <Z9RnKWBz92zhhAUc@winterfell.>
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 03E18120007F;
+	Fri, 14 Mar 2025 13:28:13 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Fri, 14 Mar 2025 13:28:13 -0400
+X-ME-Sender: <xms:LGfUZ3JSA28Qxtl7xetqlKDJhjjl6PMMIOGMkPEkIai3uM7cQjslKA>
+    <xme:LGfUZ7KiimWhf9Br8rB0f8oLFStG7KPOhURRCVFwUFnxoJzn3XZWixoYBcUMIQEAI
+    _hYkxfw626mRD-bTQ>
+X-ME-Received: <xmr:LGfUZ_uJqxn_PdhwEwlCyW1g9i2aCtfjpi_dc6yF34Yfa_thOGQniwDwyA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedugedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedv
+    teehuddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhi
+    nhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdp
+    rhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgi
+    drghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihg
+    uhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrd
+    gtohhmpdhrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgv
+X-ME-Proxy: <xmx:LGfUZwauSC5jiRC3mPD-sOuRoIfdLg7bgzSsyL9IVgIEpnUHNIxdxQ>
+    <xmx:LGfUZ-ZAF99Zrt_TgZFrXaeZzMki3pZ9naa2fQ8rKBofBajlnG2jDQ>
+    <xmx:LGfUZ0DiI6pz7GVQFQiJv8-HSnoh-5tMf6P4CKYeDDHbJMa7Ky-3jg>
+    <xmx:LGfUZ8ZmKjTZAA2robFGRsly6-MJoJ7IJvY8t2FEvXQG8WAcEUV7dA>
+    <xmx:LGfUZypznMllDmytb7hJL-pn2gjxQNSYoPy2SwmjU66xUGeUN3QoIzWW>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 14 Mar 2025 13:28:12 -0400 (EDT)
+Date: Fri, 14 Mar 2025 10:28:09 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Improve soundness of bus device abstractions
+References: <20250314160932.100165-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314160932.100165-1-dakr@kernel.org>
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Fri, Mar 14, 2025 at 05:09:03PM +0100, Danilo Krummrich wrote:
+> Currently, when sharing references of bus devices (e.g. ARef<pci::Device>), we
+> do not have a way to restrict which functions of a bus device can be called.
+> 
+> Consequently, it is possible to call all bus device functions concurrently from
+> any context. This includes functions, which access fields of the (bus) device,
+> which are not protected against concurrent access.
+> 
+> This is improved by applying an execution context to the bus device in form of a
+> generic type.
+> 
+> For instance, the PCI device reference that is passed to probe() has the type
+> pci::Device<Core>, which implements all functions that are only allowed to be
+> called from bus callbacks.
+> 
+> The implementation for the default context (pci::Device) contains all functions
+> that are safe to call from any context concurrently.
+> 
+> The context types can be extended as required, e.g. to limit availability  of
+> certain (bus) device functions to probe().
+> 
+> A branch containing the patches can be found in [1].
+> 
+> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/device
+> 
 
-The pmu specific data is saved in task_struct now. Remove it from event
-context structure.
+Again,
 
-Remove swap_task_ctx() as well.
+Acked-by: Boqun Feng <boqun.feng@gmail.com>
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
+Regards,
+Boqun
 
-No changes since V9
-
- include/linux/perf_event.h | 12 ------
- kernel/events/core.c       | 76 ++------------------------------------
- 2 files changed, 3 insertions(+), 85 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 2625e370c334..e694c6f5642f 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -501,16 +501,6 @@ struct pmu {
- 	 */
- 	struct kmem_cache		*task_ctx_cache;
- 
--	/*
--	 * PMU specific parts of task perf event context (i.e. ctx->task_ctx_data)
--	 * can be synchronized using this function. See Intel LBR callstack support
--	 * implementation and Perf core context switch handling callbacks for usage
--	 * examples.
--	 */
--	void (*swap_task_ctx)		(struct perf_event_pmu_context *prev_epc,
--					 struct perf_event_pmu_context *next_epc);
--					/* optional */
--
- 	/*
- 	 * Set up pmu-private data structures for an AUX area
- 	 */
-@@ -932,7 +922,6 @@ struct perf_event_pmu_context {
- 	atomic_t			refcount; /* event <-> epc */
- 	struct rcu_head			rcu_head;
- 
--	void				*task_ctx_data; /* pmu specific data */
- 	/*
- 	 * Set when one or more (plausibly active) event can't be scheduled
- 	 * due to pmu overcommit or pmu constraints, except tolerant to
-@@ -980,7 +969,6 @@ struct perf_event_context {
- 	int				nr_user;
- 	int				is_active;
- 
--	int				nr_task_data;
- 	int				nr_stat;
- 	int				nr_freq;
- 	int				rotate_disable;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index cbaf5420c902..8cf346faae6a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1254,20 +1254,6 @@ static void get_ctx(struct perf_event_context *ctx)
- 	refcount_inc(&ctx->refcount);
- }
- 
--static void *alloc_task_ctx_data(struct pmu *pmu)
--{
--	if (pmu->task_ctx_cache)
--		return kmem_cache_zalloc(pmu->task_ctx_cache, GFP_KERNEL);
--
--	return NULL;
--}
--
--static void free_task_ctx_data(struct pmu *pmu, void *task_ctx_data)
--{
--	if (pmu->task_ctx_cache && task_ctx_data)
--		kmem_cache_free(pmu->task_ctx_cache, task_ctx_data);
--}
--
- static void free_ctx(struct rcu_head *head)
- {
- 	struct perf_event_context *ctx;
-@@ -3577,42 +3563,6 @@ static void perf_event_sync_stat(struct perf_event_context *ctx,
- 	}
- }
- 
--#define double_list_for_each_entry(pos1, pos2, head1, head2, member)	\
--	for (pos1 = list_first_entry(head1, typeof(*pos1), member),	\
--	     pos2 = list_first_entry(head2, typeof(*pos2), member);	\
--	     !list_entry_is_head(pos1, head1, member) &&		\
--	     !list_entry_is_head(pos2, head2, member);			\
--	     pos1 = list_next_entry(pos1, member),			\
--	     pos2 = list_next_entry(pos2, member))
--
--static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
--					  struct perf_event_context *next_ctx)
--{
--	struct perf_event_pmu_context *prev_epc, *next_epc;
--
--	if (!prev_ctx->nr_task_data)
--		return;
--
--	double_list_for_each_entry(prev_epc, next_epc,
--				   &prev_ctx->pmu_ctx_list, &next_ctx->pmu_ctx_list,
--				   pmu_ctx_entry) {
--
--		if (WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu))
--			continue;
--
--		/*
--		 * PMU specific parts of task perf context can require
--		 * additional synchronization. As an example of such
--		 * synchronization see implementation details of Intel
--		 * LBR call stack data profiling;
--		 */
--		if (prev_epc->pmu->swap_task_ctx)
--			prev_epc->pmu->swap_task_ctx(prev_epc, next_epc);
--		else
--			swap(prev_epc->task_ctx_data, next_epc->task_ctx_data);
--	}
--}
--
- static void perf_ctx_sched_task_cb(struct perf_event_context *ctx,
- 				   struct task_struct *task, bool sched_in)
- {
-@@ -3687,16 +3637,15 @@ perf_event_context_sched_out(struct task_struct *task, struct task_struct *next)
- 			WRITE_ONCE(next_ctx->task, task);
- 
- 			perf_ctx_sched_task_cb(ctx, task, false);
--			perf_event_swap_task_ctx_data(ctx, next_ctx);
- 
- 			perf_ctx_enable(ctx, false);
- 
- 			/*
- 			 * RCU_INIT_POINTER here is safe because we've not
- 			 * modified the ctx and the above modification of
--			 * ctx->task and ctx->task_ctx_data are immaterial
--			 * since those values are always verified under
--			 * ctx->lock which we're now holding.
-+			 * ctx->task is immaterial since this value is
-+			 * always verified under ctx->lock which we're now
-+			 * holding.
- 			 */
- 			RCU_INIT_POINTER(task->perf_event_ctxp, next_ctx);
- 			RCU_INIT_POINTER(next->perf_event_ctxp, ctx);
-@@ -5000,7 +4949,6 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 		     struct perf_event *event)
- {
- 	struct perf_event_pmu_context *new = NULL, *pos = NULL, *epc;
--	void *task_ctx_data = NULL;
- 
- 	if (!ctx->task) {
- 		/*
-@@ -5033,14 +4981,6 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 	if (!new)
- 		return ERR_PTR(-ENOMEM);
- 
--	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
--		task_ctx_data = alloc_task_ctx_data(pmu);
--		if (!task_ctx_data) {
--			kfree(new);
--			return ERR_PTR(-ENOMEM);
--		}
--	}
--
- 	__perf_init_event_pmu_context(new, pmu);
- 
- 	/*
-@@ -5075,14 +5015,7 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 	epc->ctx = ctx;
- 
- found_epc:
--	if (task_ctx_data && !epc->task_ctx_data) {
--		epc->task_ctx_data = task_ctx_data;
--		task_ctx_data = NULL;
--		ctx->nr_task_data++;
--	}
- 	raw_spin_unlock_irq(&ctx->lock);
--
--	free_task_ctx_data(pmu, task_ctx_data);
- 	kfree(new);
- 
- 	return epc;
-@@ -5098,7 +5031,6 @@ static void free_cpc_rcu(struct rcu_head *head)
- 	struct perf_cpu_pmu_context *cpc =
- 		container_of(head, typeof(*cpc), epc.rcu_head);
- 
--	kfree(cpc->epc.task_ctx_data);
- 	kfree(cpc);
- }
- 
-@@ -5106,7 +5038,6 @@ static void free_epc_rcu(struct rcu_head *head)
- {
- 	struct perf_event_pmu_context *epc = container_of(head, typeof(*epc), rcu_head);
- 
--	kfree(epc->task_ctx_data);
- 	kfree(epc);
- }
- 
-@@ -14088,7 +14019,6 @@ inherit_event(struct perf_event *parent_event,
- 	if (is_orphaned_event(parent_event) ||
- 	    !atomic_long_inc_not_zero(&parent_event->refcount)) {
- 		mutex_unlock(&parent_event->child_mutex);
--		/* task_ctx_data is freed with child_ctx */
- 		free_event(child_event);
- 		return NULL;
- 	}
--- 
-2.38.1
-
+> Changes in v2:
+>   - make `DeviceContext` trait sealed
+>   - impl From<&pci::Device<device::Core>> for ARef<pci::Device>
+>   - impl From<&platform::Device<device::Core>> for ARef<platform::Device>
+>   - rebase onto v6.14-rc6
+>   - apply RBs
+> 
+> Danilo Krummrich (4):
+>   rust: pci: use to_result() in enable_device_mem()
+>   rust: device: implement device context marker
+>   rust: pci: fix unrestricted &mut pci::Device
+>   rust: platform: fix unrestricted &mut platform::Device
+> 
+>  rust/kernel/device.rs                |  26 +++++
+>  rust/kernel/pci.rs                   | 137 +++++++++++++++++----------
+>  rust/kernel/platform.rs              |  95 +++++++++++++------
+>  samples/rust/rust_driver_pci.rs      |   8 +-
+>  samples/rust/rust_driver_platform.rs |  11 ++-
+>  5 files changed, 187 insertions(+), 90 deletions(-)
+> 
+> 
+> base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+> -- 
+> 2.48.1
+> 
