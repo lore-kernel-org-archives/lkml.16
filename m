@@ -1,448 +1,1061 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12681946B8
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269081A5BB0;
+	Fri, 14 Mar 2025 08:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741940772; cv=none; b=Ci0rFvJKFpZI0Vy0vrP5UBD/H65cL/otxdr64eVHESO7KAae0ARFbTentgWs03JnNqCpDY6i01+rSh38VD0vPHqbyia3plC51koJz6EMLZc5eATXl81exX8EgwtwaBV8cr6PlUzbDPKZkPKFskTdsf9croOHjGft3elaYmW9uvQ=
+	t=1741940778; cv=none; b=apoDKOAzn0vQH+K+WT+9r14QEq+Lee/dGR/25Dc7q2DYGaAnHLSPhW9pUbXWrfVjmzASLQ54brpLxXDTgHLcUqevlYt6lyfVOUbQCDAUif7AEBTHhsaR92OWEI1D9CJqd3fgiS/HXNCrsCi7hBCesUO1DvIumLHaYE6HS9QEPtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741940772; c=relaxed/simple;
-	bh=BImU62aPrPj4pLX2GWuGbB5M1kn+CRgvRsXxyzcuPyk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fvST6RBXTYG0mpp9hGHOQsmZI8dO2C4H39ySVNk1wJQhscLhFqLp1hBvP26fE+9/Tl3JaN0M12zIgmm7u9qxdNL3GB7twgsUa2dpxSRvadRG4x0vRRrMomrMyl916K6G4wMew8KjUovpnGVg48pwgKZ7W9vsjewzhRwIeaGTPrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=gytbqIqv; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="gytbqIqv"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-85b4277d03fso53878539f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 01:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1741940770; x=1742545570; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MFBqxcyHmYrKZ5CeeWDkGHLMtgfSG5xm6fdVTs4Uk9M=;
-        b=gytbqIqv3OjA7KnYFAbWg8zNtrmjhhZOadXpYc6Yc0WausxHt+fiOuwa0F/9pzi9rY
-         X+X7OMm2KZlKLbpsr1/1qVj4WZgL6+MH4frrYIqUc3hYp5GFvakkJMRD461Eul+ecvQH
-         Kn2WZ+Bm704z1vMehn+t/VLYAiSTeyI71Cedx/TqEEKJLIwYXsczRJK7xNe1cqDKgJd8
-         45SdApJsjaYQ5KuNdDcBDemUChF7SAY36hy9cBJvYns2V7H5dIte/pgmYH9n7plE0eFj
-         siUq6ZFGdReyLEB3iI30EKfi+TsL/bZQrH+f1w37Nqm5+h5DttfIRP6+a/RjUIHzaqPf
-         HtpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741940770; x=1742545570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MFBqxcyHmYrKZ5CeeWDkGHLMtgfSG5xm6fdVTs4Uk9M=;
-        b=DGBz/jcGIo/fxO8FFuoBo5Gc4RjZIlUxQIYAprt83AJTHnxBUS2Zi9ejPDwsRTQy4y
-         u4rsVRAChqt5CjcUmHVvTMZdtpw95MKyngb+bwbzseZaJJhVcf5hSsjAVPM3FSIsCaGb
-         olN6M0Z+s1yZ73naeDuaKz9UF/KZ1Kt0kyrOyb2sco92Rh9O703kLfX1JlpbVQZ+dnTS
-         gBs5l5Fkvw11AaXjPZDcWkK1Y+MvAfcEYyvgYi1tEAbydI6y+fTOA4+ycIpO+3heRpPr
-         pcV9Enjrb9CCzG8JDPJc6PL0BC/OYRMzzvz/ImXk4ZfO8Y5K3Y6nhvyeZQdhRePs8ePX
-         C+iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXV1POmR5GXegA2Yg9PBlelSHjBxAr79WRWdmhutWZTvwNWv8oG4pNwiD1JkNosiSDHLZd0Z9ucxULwuV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvVqxXVhc5aH6KxtDhp9pEK8+rqdwH+6XLZuT3ADMZEecCERv0
-	BnpYD1hMurv8YZJ79vitubjwoTEvxjeVmkh8YtAkSx0K3qppAIDHBNofKO4qIelx8e2O2FwExh9
-	UJ5JeX2fJtdqOPqtkrMnCI8RNV/NR3Sy6dFjFzQ==
-X-Gm-Gg: ASbGncsXik4oqE7Lqv9z2d6JAskZn35HdX2ky8hpPxTfCfFOpoNefgY6tiMBazRlAfK
-	7/ZmYyJvEGXf8zivSoM47E6yAVs905I/czvt1Ii6uwWGbt4tYfWMddo1lIeZPBh6PjDVD5+KQyO
-	r4yzl5dFU1Lld0YaeJlm2tZJ84RRgP2/3YbNScSw==
-X-Google-Smtp-Source: AGHT+IHmSCGAzZxmTnBk7MXVzTw1qzESoE4LhRvbcrXSorktNy4ZRhz+uxQ6Mf+uq1bo4tboFsnErwawS40GnQpS2RM=
-X-Received: by 2002:a05:6e02:170d:b0:3d3:eeec:8a0b with SMTP id
- e9e14a558f8ab-3d483a25083mr11623635ab.10.1741940769881; Fri, 14 Mar 2025
- 01:26:09 -0700 (PDT)
+	s=arc-20240116; t=1741940778; c=relaxed/simple;
+	bh=bTHkDdG1/ll+vAWoQvMLtvN4uKwaToI7IsZcR0gjJZs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TInpw0Pt5kn+Jc+US0eovLOdO24t/Ne3+jKn+XmU8GY2tKGgWzZVXssDI+BKXU7fSU+DGrd6pBS6TSzrxEPeO9c9987U2H2euho9flNYXgJTyztTih9uFDyPqfL+YHVpiXxBGD21keFhdN+9DsCCEHjG3uDPbvIoFt1u9h4yT4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZDcq06Lzvz1R6Zp;
+	Fri, 14 Mar 2025 16:24:28 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id DD7641A016C;
+	Fri, 14 Mar 2025 16:26:10 +0800 (CST)
+Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 14 Mar 2025 16:26:10 +0800
+Received: from localhost.localdomain (10.90.30.45) by
+ kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 14 Mar 2025 16:26:10 +0800
+From: Huisong Li <lihuisong@huawei.com>
+To: <linux@roeck-us.net>, <jdelvare@suse.com>
+CC: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<zhanjie9@hisilicon.com>, <zhenglifeng1@huawei.com>,
+	<liuyonglong@huawei.com>, <lihuisong@huawei.com>
+Subject: [PATCH v2] hwmon: (acpi_power_meter) Replace the deprecated hwmon_device_register
+Date: Fri, 14 Mar 2025 16:18:34 +0800
+Message-ID: <20250314081834.3243243-1-lihuisong@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310-v5_user_cfi_series-v11-0-86b36cbfb910@rivosinc.com> <20250310-v5_user_cfi_series-v11-13-86b36cbfb910@rivosinc.com>
-In-Reply-To: <20250310-v5_user_cfi_series-v11-13-86b36cbfb910@rivosinc.com>
-From: Zong Li <zong.li@sifive.com>
-Date: Fri, 14 Mar 2025 16:25:59 +0800
-X-Gm-Features: AQ5f1JrgyyKY0dBFW7yldm9HxW3CrPyd2-B_tuI2-7Cjq10tI4uDUrJdMcVX0K4
-Message-ID: <CANXhq0r1dd2jCtCbinD4iy9rx+oQ+VDMWjATf1GqxEmuvFzyWw@mail.gmail.com>
-Subject: Re: [PATCH v11 13/27] prctl: arch-agnostic prctl for indirect branch tracking
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Brauner <brauner@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, Jann Horn <jannh@google.com>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, alistair.francis@wdc.com, 
-	richard.henderson@linaro.org, jim.shu@sifive.com, andybnac@gmail.com, 
-	kito.cheng@sifive.com, charlie@rivosinc.com, atishp@rivosinc.com, 
-	evan@rivosinc.com, cleger@rivosinc.com, alexghiti@rivosinc.com, 
-	samitolvanen@google.com, broonie@kernel.org, rick.p.edgecombe@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemn100009.china.huawei.com (7.202.194.112)
 
-On Mon, Mar 10, 2025 at 11:42=E2=80=AFPM Deepak Gupta <debug@rivosinc.com> =
-wrote:
->
-> Three architectures (x86, aarch64, riscv) have support for indirect branc=
-h
-> tracking feature in a very similar fashion. On a very high level, indirec=
-t
-> branch tracking is a CPU feature where CPU tracks branches which uses
-> memory operand to perform control transfer in program. As part of this
-> tracking on indirect branches, CPU goes in a state where it expects a
-> landing pad instr on target and if not found then CPU raises some fault
-> (architecture dependent)
->
-> x86 landing pad instr - `ENDBRANCH`
-> aarch64 landing pad instr - `BTI`
-> riscv landing instr - `lpad`
->
-> Given that three major arches have support for indirect branch tracking,
-> This patch makes `prctl` for indirect branch tracking arch agnostic.
->
-> To allow userspace to enable this feature for itself, following prtcls ar=
-e
-> defined:
->  - PR_GET_INDIR_BR_LP_STATUS: Gets current configured status for indirect
->    branch tracking.
->  - PR_SET_INDIR_BR_LP_STATUS: Sets a configuration for indirect branch
->    tracking.
->    Following status options are allowed
->        - PR_INDIR_BR_LP_ENABLE: Enables indirect branch tracking on user
->          thread.
->        - PR_INDIR_BR_LP_DISABLE; Disables indirect branch tracking on use=
-r
->          thread.
->  - PR_LOCK_INDIR_BR_LP_STATUS: Locks configured status for indirect branc=
-h
->    tracking for user thread.
->
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> Reviewed-by: Mark Brown <broonie@kernel.org>
-> ---
->  arch/riscv/include/asm/usercfi.h | 16 ++++++++-
->  arch/riscv/kernel/entry.S        |  2 +-
->  arch/riscv/kernel/process.c      |  5 +++
->  arch/riscv/kernel/usercfi.c      | 76 ++++++++++++++++++++++++++++++++++=
-++++++
->  include/linux/cpu.h              |  4 +++
->  include/uapi/linux/prctl.h       | 27 ++++++++++++++
->  kernel/sys.c                     | 30 ++++++++++++++++
->  7 files changed, 158 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/us=
-ercfi.h
-> index c4dcd256f19a..a8cec7c14d1d 100644
-> --- a/arch/riscv/include/asm/usercfi.h
-> +++ b/arch/riscv/include/asm/usercfi.h
-> @@ -16,7 +16,9 @@ struct kernel_clone_args;
->  struct cfi_status {
->         unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
->         unsigned long ubcfi_locked : 1;
-> -       unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);
-> +       unsigned long ufcfi_en : 1; /* Enable for forward cfi. Note that =
-ELP goes in sstatus */
-> +       unsigned long ufcfi_locked : 1;
-> +       unsigned long rsvd : ((sizeof(unsigned long) * 8) - 4);
->         unsigned long user_shdw_stk; /* Current user shadow stack pointer=
- */
->         unsigned long shdw_stk_base; /* Base address of shadow stack */
->         unsigned long shdw_stk_size; /* size of shadow stack */
-> @@ -33,6 +35,10 @@ bool is_shstk_locked(struct task_struct *task);
->  bool is_shstk_allocated(struct task_struct *task);
->  void set_shstk_lock(struct task_struct *task);
->  void set_shstk_status(struct task_struct *task, bool enable);
-> +bool is_indir_lp_enabled(struct task_struct *task);
-> +bool is_indir_lp_locked(struct task_struct *task);
-> +void set_indir_lp_status(struct task_struct *task, bool enable);
-> +void set_indir_lp_lock(struct task_struct *task);
->
->  #define PR_SHADOW_STACK_SUPPORTED_STATUS_MASK (PR_SHADOW_STACK_ENABLE)
->
-> @@ -58,6 +64,14 @@ void set_shstk_status(struct task_struct *task, bool e=
-nable);
->
->  #define set_shstk_status(task, enable)
->
-> +#define is_indir_lp_enabled(task) false
-> +
-> +#define is_indir_lp_locked(task) false
-> +
-> +#define set_indir_lp_status(task, enable)
-> +
-> +#define set_indir_lp_lock(task)
-> +
->  #endif /* CONFIG_RISCV_USER_CFI */
->
->  #endif /* __ASSEMBLY__ */
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> index 68c99124ea55..00494b54ff4a 100644
-> --- a/arch/riscv/kernel/entry.S
-> +++ b/arch/riscv/kernel/entry.S
-> @@ -143,7 +143,7 @@ SYM_CODE_START(handle_exception)
->          * Disable the FPU/Vector to detect illegal usage of floating poi=
-nt
->          * or vector in kernel space.
->          */
-> -       li t0, SR_SUM | SR_FS_VS
-> +       li t0, SR_SUM | SR_FS_VS | SR_ELP
->
->         REG_L s0, TASK_TI_USER_SP(tp)
->         csrrc s1, CSR_STATUS, t0
-> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-> index cd11667593fe..4587201dd81d 100644
-> --- a/arch/riscv/kernel/process.c
-> +++ b/arch/riscv/kernel/process.c
-> @@ -160,6 +160,11 @@ void start_thread(struct pt_regs *regs, unsigned lon=
-g pc,
->         set_shstk_status(current, false);
->         set_shstk_base(current, 0, 0);
->         set_active_shstk(current, 0);
-> +       /*
-> +        * disable indirect branch tracking on exec.
-> +        * libc will enable it later via prctl.
-> +        */
-> +       set_indir_lp_status(current, false);
+When load this mode, we can see the following log:
+"power_meter ACPI000D:00: hwmon_device_register() is deprecated. Please
+ convert the driver to use hwmon_device_register_with_info()."
 
-In set_indir_lp_status and set_shstk_status, the $senvcfg.LPE and
-$senvcfg.SSE fields are set. However, if the CPU does not support this
-CSR, writing to it will trigger an illegal instruction exception.
-Should we add sanity checks to handle this situation? Thanks
->
->  #ifdef CONFIG_64BIT
->         regs->status &=3D ~SR_UXL;
-> diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
-> index 37d6fb8144e7..3a66f149a4ef 100644
-> --- a/arch/riscv/kernel/usercfi.c
-> +++ b/arch/riscv/kernel/usercfi.c
-> @@ -69,6 +69,32 @@ void set_shstk_lock(struct task_struct *task)
->         task->thread_info.user_cfi_state.ubcfi_locked =3D 1;
->  }
->
-> +bool is_indir_lp_enabled(struct task_struct *task)
-> +{
-> +       return task->thread_info.user_cfi_state.ufcfi_en ? true : false;
-> +}
-> +
-> +bool is_indir_lp_locked(struct task_struct *task)
-> +{
-> +       return task->thread_info.user_cfi_state.ufcfi_locked ? true : fal=
-se;
-> +}
-> +
-> +void set_indir_lp_status(struct task_struct *task, bool enable)
-> +{
-> +       task->thread_info.user_cfi_state.ufcfi_en =3D enable ? 1 : 0;
-> +
-> +       if (enable)
-> +               task->thread.envcfg |=3D ENVCFG_LPE;
-> +       else
-> +               task->thread.envcfg &=3D ~ENVCFG_LPE;
-> +
-> +       csr_write(CSR_ENVCFG, task->thread.envcfg);
-> +}
-> +
-> +void set_indir_lp_lock(struct task_struct *task)
-> +{
-> +       task->thread_info.user_cfi_state.ufcfi_locked =3D 1;
-> +}
->  /*
->   * If size is 0, then to be compatible with regular stack we want it to =
-be as big as
->   * regular stack. Else PAGE_ALIGN it and return back
-> @@ -369,3 +395,53 @@ int arch_lock_shadow_stack_status(struct task_struct=
- *task,
->
->         return 0;
->  }
-> +
-> +int arch_get_indir_br_lp_status(struct task_struct *t, unsigned long __u=
-ser *status)
-> +{
-> +       unsigned long fcfi_status =3D 0;
-> +
-> +       if (!cpu_supports_indirect_br_lp_instr())
-> +               return -EINVAL;
-> +
-> +       /* indirect branch tracking is enabled on the task or not */
-> +       fcfi_status |=3D (is_indir_lp_enabled(t) ? PR_INDIR_BR_LP_ENABLE =
-: 0);
-> +
-> +       return copy_to_user(status, &fcfi_status, sizeof(fcfi_status)) ? =
--EFAULT : 0;
-> +}
-> +
-> +int arch_set_indir_br_lp_status(struct task_struct *t, unsigned long sta=
-tus)
-> +{
-> +       bool enable_indir_lp =3D false;
-> +
-> +       if (!cpu_supports_indirect_br_lp_instr())
-> +               return -EINVAL;
-> +
-> +       /* indirect branch tracking is locked and further can't be modifi=
-ed by user */
-> +       if (is_indir_lp_locked(t))
-> +               return -EINVAL;
-> +
-> +       /* Reject unknown flags */
-> +       if (status & ~PR_INDIR_BR_LP_ENABLE)
-> +               return -EINVAL;
-> +
-> +       enable_indir_lp =3D (status & PR_INDIR_BR_LP_ENABLE) ? true : fal=
-se;
-> +       set_indir_lp_status(t, enable_indir_lp);
-> +
-> +       return 0;
-> +}
-> +
-> +int arch_lock_indir_br_lp_status(struct task_struct *task,
-> +                                unsigned long arg)
-> +{
-> +       /*
-> +        * If indirect branch tracking is not supported or not enabled on=
- task,
-> +        * nothing to lock here
-> +        */
-> +       if (!cpu_supports_indirect_br_lp_instr() ||
-> +           !is_indir_lp_enabled(task) || arg !=3D 0)
-> +               return -EINVAL;
-> +
-> +       set_indir_lp_lock(task);
-> +
-> +       return 0;
-> +}
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index 6a0a8f1c7c90..fb0c394430c6 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -204,4 +204,8 @@ static inline bool cpu_mitigations_auto_nosmt(void)
->  }
->  #endif
->
-> +int arch_get_indir_br_lp_status(struct task_struct *t, unsigned long __u=
-ser *status);
-> +int arch_set_indir_br_lp_status(struct task_struct *t, unsigned long sta=
-tus);
-> +int arch_lock_indir_br_lp_status(struct task_struct *t, unsigned long st=
-atus);
-> +
->  #endif /* _LINUX_CPU_H_ */
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> index 5c6080680cb2..6cd90460cbad 100644
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -353,4 +353,31 @@ struct prctl_mm_map {
->   */
->  #define PR_LOCK_SHADOW_STACK_STATUS      76
->
-> +/*
-> + * Get the current indirect branch tracking configuration for the curren=
-t
-> + * thread, this will be the value configured via PR_SET_INDIR_BR_LP_STAT=
-US.
-> + */
-> +#define PR_GET_INDIR_BR_LP_STATUS      77
-> +
-> +/*
-> + * Set the indirect branch tracking configuration. PR_INDIR_BR_LP_ENABLE=
- will
-> + * enable cpu feature for user thread, to track all indirect branches an=
-d ensure
-> + * they land on arch defined landing pad instruction.
-> + * x86 - If enabled, an indirect branch must land on `ENDBRANCH` instruc=
-tion.
-> + * arch64 - If enabled, an indirect branch must land on `BTI` instructio=
-n.
-> + * riscv - If enabled, an indirect branch must land on `lpad` instructio=
-n.
-> + * PR_INDIR_BR_LP_DISABLE will disable feature for user thread and indir=
-ect
-> + * branches will no more be tracked by cpu to land on arch defined landi=
-ng pad
-> + * instruction.
-> + */
-> +#define PR_SET_INDIR_BR_LP_STATUS      78
-> +# define PR_INDIR_BR_LP_ENABLE            (1UL << 0)
-> +
-> +/*
-> + * Prevent further changes to the specified indirect branch tracking
-> + * configuration.  All bits may be locked via this call, including
-> + * undefined bits.
-> + */
-> +#define PR_LOCK_INDIR_BR_LP_STATUS      79
-> +
->  #endif /* _LINUX_PRCTL_H */
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index cb366ff8703a..f347f3518d0b 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -2336,6 +2336,21 @@ int __weak arch_lock_shadow_stack_status(struct ta=
-sk_struct *t, unsigned long st
->         return -EINVAL;
->  }
->
-> +int __weak arch_get_indir_br_lp_status(struct task_struct *t, unsigned l=
-ong __user *status)
-> +{
-> +       return -EINVAL;
-> +}
-> +
-> +int __weak arch_set_indir_br_lp_status(struct task_struct *t, unsigned l=
-ong status)
-> +{
-> +       return -EINVAL;
-> +}
-> +
-> +int __weak arch_lock_indir_br_lp_status(struct task_struct *t, unsigned =
-long status)
-> +{
-> +       return -EINVAL;
-> +}
-> +
->  #define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LOCAL_THROTTLE)
->
->  #ifdef CONFIG_ANON_VMA_NAME
-> @@ -2811,6 +2826,21 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long,=
- arg2, unsigned long, arg3,
->                         return -EINVAL;
->                 error =3D arch_lock_shadow_stack_status(me, arg2);
->                 break;
-> +       case PR_GET_INDIR_BR_LP_STATUS:
-> +               if (arg3 || arg4 || arg5)
-> +                       return -EINVAL;
-> +               error =3D arch_get_indir_br_lp_status(me, (unsigned long =
-__user *)arg2);
-> +               break;
-> +       case PR_SET_INDIR_BR_LP_STATUS:
-> +               if (arg3 || arg4 || arg5)
-> +                       return -EINVAL;
-> +               error =3D arch_set_indir_br_lp_status(me, arg2);
-> +               break;
-> +       case PR_LOCK_INDIR_BR_LP_STATUS:
-> +               if (arg3 || arg4 || arg5)
-> +                       return -EINVAL;
-> +               error =3D arch_lock_indir_br_lp_status(me, arg2);
-> +               break;
->         default:
->                 trace_task_prctl_unknown(option, arg2, arg3, arg4, arg5);
->                 error =3D -EINVAL;
->
-> --
-> 2.34.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+So replace hwmon_device_register with hwmon_device_register_with_info.
+
+These attributes, 'power_accuracy', 'power_cap_hyst', 'power_average_min'
+and 'power_average_max', should have been placed in hwmon_chip_info as
+power data type. But these attributes are displayed as string format on
+the following case:
+a) power1_accuracy  --> display like '90.0%'
+b) power1_cap_hyst  --> display 'unknown' when its value is 0xFFFFFFFF
+c) power1_average_min/max --> display 'unknown' when its value is
+			      negative.
+To avoid any changes in the display of these sysfs interfaces, we can't
+modifiy the type of these attributes in hwmon core and have to put them
+to extra_groups.
+
+Please note that the path of these sysfs interfaces are modified
+accordingly if use hwmon_device_register_with_info():
+old: all sysfs interfaces are under acpi device, namely,
+     /sys/class/hwmon/hwmonX/device/
+now: all sysfs interfaces are under hwmon device, namely,
+     /sys/class/hwmon/hwmonX/
+The new ABI does not guarantee that the underlying path remains the same.
+But we have to accept this change so as to replace the deprecated API.
+Fortunately, some userspace application, like libsensors, would scan
+the two path and handles this automatically. So to drop the deprecated
+message, we can accept this change.
+
+Signed-off-by: Huisong Li <lihuisong@huawei.com>
+---
+ drivers/hwmon/acpi_power_meter.c | 861 +++++++++++++++----------------
+ 1 file changed, 427 insertions(+), 434 deletions(-)
+
+diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+index f05986e4f379..46e8a0b6b210 100644
+--- a/drivers/hwmon/acpi_power_meter.c
++++ b/drivers/hwmon/acpi_power_meter.c
+@@ -87,25 +87,14 @@ struct acpi_power_meter_resource {
+ 	bool		power_alarm;
+ 	int			sensors_valid;
+ 	unsigned long		sensors_last_updated;
+-	struct sensor_device_attribute	sensors[NUM_SENSORS];
+-	int			num_sensors;
++#define POWER_METER_TRIP_AVERAGE_MIN_IDX	0
++#define POWER_METER_TRIP_AVERAGE_MAX_IDX	1
+ 	s64			trip[2];
+ 	int			num_domain_devices;
+ 	struct acpi_device	**domain_devices;
+ 	struct kobject		*holders_dir;
+ };
+ 
+-struct sensor_template {
+-	char *label;
+-	ssize_t (*show)(struct device *dev,
+-			struct device_attribute *devattr,
+-			char *buf);
+-	ssize_t (*set)(struct device *dev,
+-		       struct device_attribute *devattr,
+-		       const char *buf, size_t count);
+-	int index;
+-};
+-
+ /* Averaging interval */
+ static int update_avg_interval(struct acpi_power_meter_resource *resource)
+ {
+@@ -124,62 +113,6 @@ static int update_avg_interval(struct acpi_power_meter_resource *resource)
+ 	return 0;
+ }
+ 
+-static ssize_t show_avg_interval(struct device *dev,
+-				 struct device_attribute *devattr,
+-				 char *buf)
+-{
+-	struct acpi_device *acpi_dev = to_acpi_device(dev);
+-	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
+-
+-	mutex_lock(&resource->lock);
+-	update_avg_interval(resource);
+-	mutex_unlock(&resource->lock);
+-
+-	return sprintf(buf, "%llu\n", resource->avg_interval);
+-}
+-
+-static ssize_t set_avg_interval(struct device *dev,
+-				struct device_attribute *devattr,
+-				const char *buf, size_t count)
+-{
+-	struct acpi_device *acpi_dev = to_acpi_device(dev);
+-	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
+-	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+-	struct acpi_object_list args = { 1, &arg0 };
+-	int res;
+-	unsigned long temp;
+-	unsigned long long data;
+-	acpi_status status;
+-
+-	res = kstrtoul(buf, 10, &temp);
+-	if (res)
+-		return res;
+-
+-	if (temp > resource->caps.max_avg_interval ||
+-	    temp < resource->caps.min_avg_interval)
+-		return -EINVAL;
+-	arg0.integer.value = temp;
+-
+-	mutex_lock(&resource->lock);
+-	status = acpi_evaluate_integer(resource->acpi_dev->handle, "_PAI",
+-				       &args, &data);
+-	if (ACPI_SUCCESS(status))
+-		resource->avg_interval = temp;
+-	mutex_unlock(&resource->lock);
+-
+-	if (ACPI_FAILURE(status)) {
+-		acpi_evaluation_failure_warn(resource->acpi_dev->handle, "_PAI",
+-					     status);
+-		return -EINVAL;
+-	}
+-
+-	/* _PAI returns 0 on success, nonzero otherwise */
+-	if (data)
+-		return -EINVAL;
+-
+-	return count;
+-}
+-
+ /* Cap functions */
+ static int update_cap(struct acpi_power_meter_resource *resource)
+ {
+@@ -198,61 +131,6 @@ static int update_cap(struct acpi_power_meter_resource *resource)
+ 	return 0;
+ }
+ 
+-static ssize_t show_cap(struct device *dev,
+-			struct device_attribute *devattr,
+-			char *buf)
+-{
+-	struct acpi_device *acpi_dev = to_acpi_device(dev);
+-	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
+-
+-	mutex_lock(&resource->lock);
+-	update_cap(resource);
+-	mutex_unlock(&resource->lock);
+-
+-	return sprintf(buf, "%llu\n", resource->cap * 1000);
+-}
+-
+-static ssize_t set_cap(struct device *dev, struct device_attribute *devattr,
+-		       const char *buf, size_t count)
+-{
+-	struct acpi_device *acpi_dev = to_acpi_device(dev);
+-	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
+-	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
+-	struct acpi_object_list args = { 1, &arg0 };
+-	int res;
+-	unsigned long temp;
+-	unsigned long long data;
+-	acpi_status status;
+-
+-	res = kstrtoul(buf, 10, &temp);
+-	if (res)
+-		return res;
+-
+-	temp = DIV_ROUND_CLOSEST(temp, 1000);
+-	if (temp > resource->caps.max_cap || temp < resource->caps.min_cap)
+-		return -EINVAL;
+-	arg0.integer.value = temp;
+-
+-	mutex_lock(&resource->lock);
+-	status = acpi_evaluate_integer(resource->acpi_dev->handle, "_SHL",
+-				       &args, &data);
+-	if (ACPI_SUCCESS(status))
+-		resource->cap = temp;
+-	mutex_unlock(&resource->lock);
+-
+-	if (ACPI_FAILURE(status)) {
+-		acpi_evaluation_failure_warn(resource->acpi_dev->handle, "_SHL",
+-					     status);
+-		return -EINVAL;
+-	}
+-
+-	/* _SHL returns 0 on success, nonzero otherwise */
+-	if (data)
+-		return -EINVAL;
+-
+-	return count;
+-}
+-
+ /* Power meter trip points */
+ static int set_acpi_trip(struct acpi_power_meter_resource *resource)
+ {
+@@ -287,34 +165,6 @@ static int set_acpi_trip(struct acpi_power_meter_resource *resource)
+ 	return 0;
+ }
+ 
+-static ssize_t set_trip(struct device *dev, struct device_attribute *devattr,
+-			const char *buf, size_t count)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+-	struct acpi_device *acpi_dev = to_acpi_device(dev);
+-	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
+-	unsigned long temp, trip_bk;
+-	int res;
+-
+-	res = kstrtoul(buf, 10, &temp);
+-	if (res)
+-		return res;
+-
+-	temp = DIV_ROUND_CLOSEST(temp, 1000);
+-
+-	guard(mutex)(&resource->lock);
+-
+-	trip_bk = resource->trip[attr->index - 7];
+-	resource->trip[attr->index - 7] = temp;
+-	res = set_acpi_trip(resource);
+-	if (res) {
+-		resource->trip[attr->index - 7] = trip_bk;
+-		return res;
+-	}
+-
+-	return count;
+-}
+-
+ /* Power meter */
+ static int update_meter(struct acpi_power_meter_resource *resource)
+ {
+@@ -341,206 +191,6 @@ static int update_meter(struct acpi_power_meter_resource *resource)
+ 	return 0;
+ }
+ 
+-static ssize_t show_power(struct device *dev,
+-			  struct device_attribute *devattr,
+-			  char *buf)
+-{
+-	struct acpi_device *acpi_dev = to_acpi_device(dev);
+-	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
+-
+-	mutex_lock(&resource->lock);
+-	update_meter(resource);
+-	mutex_unlock(&resource->lock);
+-
+-	if (resource->power == UNKNOWN_POWER)
+-		return -ENODATA;
+-
+-	return sprintf(buf, "%llu\n", resource->power * 1000);
+-}
+-
+-/* Miscellaneous */
+-static ssize_t show_str(struct device *dev,
+-			struct device_attribute *devattr,
+-			char *buf)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+-	struct acpi_device *acpi_dev = to_acpi_device(dev);
+-	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
+-	acpi_string val;
+-	int ret;
+-
+-	mutex_lock(&resource->lock);
+-	switch (attr->index) {
+-	case 0:
+-		val = resource->model_number;
+-		break;
+-	case 1:
+-		val = resource->serial_number;
+-		break;
+-	case 2:
+-		val = resource->oem_info;
+-		break;
+-	default:
+-		WARN(1, "Implementation error: unexpected attribute index %d\n",
+-		     attr->index);
+-		val = "";
+-		break;
+-	}
+-	ret = sprintf(buf, "%s\n", val);
+-	mutex_unlock(&resource->lock);
+-	return ret;
+-}
+-
+-static ssize_t show_val(struct device *dev,
+-			struct device_attribute *devattr,
+-			char *buf)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+-	struct acpi_device *acpi_dev = to_acpi_device(dev);
+-	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
+-	u64 val = 0;
+-	int ret;
+-
+-	guard(mutex)(&resource->lock);
+-
+-	switch (attr->index) {
+-	case 0:
+-		val = resource->caps.min_avg_interval;
+-		break;
+-	case 1:
+-		val = resource->caps.max_avg_interval;
+-		break;
+-	case 2:
+-		val = resource->caps.min_cap * 1000;
+-		break;
+-	case 3:
+-		val = resource->caps.max_cap * 1000;
+-		break;
+-	case 4:
+-		if (resource->caps.hysteresis == UNKNOWN_HYSTERESIS)
+-			return sprintf(buf, "unknown\n");
+-
+-		val = resource->caps.hysteresis * 1000;
+-		break;
+-	case 5:
+-		if (resource->caps.flags & POWER_METER_IS_BATTERY)
+-			val = 1;
+-		else
+-			val = 0;
+-		break;
+-	case 6:
+-		ret = update_meter(resource);
+-		if (ret)
+-			return ret;
+-		/* need to update cap if not to support the notification. */
+-		if (!(resource->caps.flags & POWER_METER_CAN_NOTIFY)) {
+-			ret = update_cap(resource);
+-			if (ret)
+-				return ret;
+-			resource->power_alarm = resource->power > resource->cap;
+-			val = resource->power_alarm;
+-		} else {
+-			val = resource->power_alarm ||
+-				 resource->power > resource->cap;
+-			resource->power_alarm = resource->power > resource->cap;
+-		}
+-		break;
+-	case 7:
+-	case 8:
+-		if (resource->trip[attr->index - 7] < 0)
+-			return sprintf(buf, "unknown\n");
+-
+-		val = resource->trip[attr->index - 7] * 1000;
+-		break;
+-	default:
+-		WARN(1, "Implementation error: unexpected attribute index %d\n",
+-		     attr->index);
+-		break;
+-	}
+-
+-	return sprintf(buf, "%llu\n", val);
+-}
+-
+-static ssize_t show_accuracy(struct device *dev,
+-			     struct device_attribute *devattr,
+-			     char *buf)
+-{
+-	struct acpi_device *acpi_dev = to_acpi_device(dev);
+-	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
+-	unsigned int acc = resource->caps.accuracy;
+-
+-	return sprintf(buf, "%u.%u%%\n", acc / 1000, acc % 1000);
+-}
+-
+-static ssize_t show_name(struct device *dev,
+-			 struct device_attribute *devattr,
+-			 char *buf)
+-{
+-	return sprintf(buf, "%s\n", ACPI_POWER_METER_NAME);
+-}
+-
+-#define RO_SENSOR_TEMPLATE(_label, _show, _index)	\
+-	{						\
+-		.label = _label,			\
+-		.show  = _show,				\
+-		.index = _index,			\
+-	}
+-
+-#define RW_SENSOR_TEMPLATE(_label, _show, _set, _index)	\
+-	{						\
+-		.label = _label,			\
+-		.show  = _show,				\
+-		.set   = _set,				\
+-		.index = _index,			\
+-	}
+-
+-/* Sensor descriptions.  If you add a sensor, update NUM_SENSORS above! */
+-static struct sensor_template meter_attrs[] = {
+-	RO_SENSOR_TEMPLATE(POWER_AVERAGE_NAME, show_power, 0),
+-	RO_SENSOR_TEMPLATE("power1_accuracy", show_accuracy, 0),
+-	RO_SENSOR_TEMPLATE("power1_average_interval_min", show_val, 0),
+-	RO_SENSOR_TEMPLATE("power1_average_interval_max", show_val, 1),
+-	RO_SENSOR_TEMPLATE("power1_is_battery", show_val, 5),
+-	RW_SENSOR_TEMPLATE(POWER_AVG_INTERVAL_NAME, show_avg_interval,
+-			   set_avg_interval, 0),
+-	{},
+-};
+-
+-static struct sensor_template misc_cap_attrs[] = {
+-	RO_SENSOR_TEMPLATE("power1_cap_min", show_val, 2),
+-	RO_SENSOR_TEMPLATE("power1_cap_max", show_val, 3),
+-	RO_SENSOR_TEMPLATE("power1_cap_hyst", show_val, 4),
+-	RO_SENSOR_TEMPLATE(POWER_ALARM_NAME, show_val, 6),
+-	{},
+-};
+-
+-static struct sensor_template ro_cap_attrs[] = {
+-	RO_SENSOR_TEMPLATE(POWER_CAP_NAME, show_cap, 0),
+-	{},
+-};
+-
+-static struct sensor_template rw_cap_attrs[] = {
+-	RW_SENSOR_TEMPLATE(POWER_CAP_NAME, show_cap, set_cap, 0),
+-	{},
+-};
+-
+-static struct sensor_template trip_attrs[] = {
+-	RW_SENSOR_TEMPLATE("power1_average_min", show_val, set_trip, 7),
+-	RW_SENSOR_TEMPLATE("power1_average_max", show_val, set_trip, 8),
+-	{},
+-};
+-
+-static struct sensor_template misc_attrs[] = {
+-	RO_SENSOR_TEMPLATE("name", show_name, 0),
+-	RO_SENSOR_TEMPLATE("power1_model_number", show_str, 0),
+-	RO_SENSOR_TEMPLATE("power1_oem_info", show_str, 2),
+-	RO_SENSOR_TEMPLATE("power1_serial_number", show_str, 1),
+-	{},
+-};
+-
+-#undef RO_SENSOR_TEMPLATE
+-#undef RW_SENSOR_TEMPLATE
+-
+ /* Read power domain data */
+ static void remove_domain_devices(struct acpi_power_meter_resource *resource)
+ {
+@@ -642,107 +292,433 @@ static int read_domain_devices(struct acpi_power_meter_resource *resource)
+ 	return res;
+ }
+ 
+-/* Registration and deregistration */
+-static int register_attrs(struct acpi_power_meter_resource *resource,
+-			  struct sensor_template *attrs)
++static int set_trip(struct acpi_power_meter_resource *resource, u16 trip_idx,
++		    unsigned long trip)
+ {
+-	struct device *dev = &resource->acpi_dev->dev;
+-	struct sensor_device_attribute *sensors =
+-		&resource->sensors[resource->num_sensors];
+-	int res = 0;
++	unsigned long trip_bk;
++	int ret;
+ 
+-	while (attrs->label) {
+-		sensors->dev_attr.attr.name = attrs->label;
+-		sensors->dev_attr.attr.mode = 0444;
+-		sensors->dev_attr.show = attrs->show;
+-		sensors->index = attrs->index;
++	trip = DIV_ROUND_CLOSEST(trip, 1000);
++	trip_bk = resource->trip[trip_idx];
+ 
+-		if (attrs->set) {
+-			sensors->dev_attr.attr.mode |= 0200;
+-			sensors->dev_attr.store = attrs->set;
+-		}
++	resource->trip[trip_idx] = trip;
++	ret = set_acpi_trip(resource);
++	if (ret) {
++		dev_err(&resource->acpi_dev->dev, "set %s failed.\n",
++			(trip_idx == POWER_METER_TRIP_AVERAGE_MIN_IDX) ?
++			 "power1_average_min" : "power1_average_max");
++		resource->trip[trip_idx] = trip_bk;
++	}
+ 
+-		sysfs_attr_init(&sensors->dev_attr.attr);
+-		res = device_create_file(dev, &sensors->dev_attr);
+-		if (res) {
+-			sensors->dev_attr.attr.name = NULL;
+-			goto error;
+-		}
+-		sensors++;
+-		resource->num_sensors++;
+-		attrs++;
++	return ret;
++}
++
++static int set_cap(struct acpi_power_meter_resource *resource,
++		   unsigned long cap)
++{
++	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
++	struct acpi_object_list args = { 1, &arg0 };
++	unsigned long long data;
++	acpi_status status;
++
++	cap = DIV_ROUND_CLOSEST(cap, 1000);
++	if (cap > resource->caps.max_cap || cap < resource->caps.min_cap)
++		return -EINVAL;
++
++	arg0.integer.value = cap;
++	status = acpi_evaluate_integer(resource->acpi_dev->handle, "_SHL",
++				       &args, &data);
++	if (ACPI_FAILURE(status)) {
++		acpi_evaluation_failure_warn(resource->acpi_dev->handle, "_SHL",
++					     status);
++		return -EINVAL;
+ 	}
++	resource->cap = cap;
+ 
+-error:
+-	return res;
++	/* _SHL returns 0 on success, nonzero otherwise */
++	if (data)
++		return -EINVAL;
++
++	return 0;
+ }
+ 
+-static void remove_attrs(struct acpi_power_meter_resource *resource)
++static int set_avg_interval(struct acpi_power_meter_resource *resource,
++			    unsigned long val)
+ {
+-	int i;
++	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
++	struct acpi_object_list args = { 1, &arg0 };
++	unsigned long long data;
++	acpi_status status;
+ 
+-	for (i = 0; i < resource->num_sensors; i++) {
+-		if (!resource->sensors[i].dev_attr.attr.name)
+-			continue;
+-		device_remove_file(&resource->acpi_dev->dev,
+-				   &resource->sensors[i].dev_attr);
++	if (val > resource->caps.max_avg_interval ||
++	    val < resource->caps.min_avg_interval)
++		return -EINVAL;
++
++	arg0.integer.value = val;
++	status = acpi_evaluate_integer(resource->acpi_dev->handle, "_PAI",
++				       &args, &data);
++	if (ACPI_FAILURE(status)) {
++		acpi_evaluation_failure_warn(resource->acpi_dev->handle, "_PAI",
++					     status);
++		return -EINVAL;
+ 	}
++	resource->avg_interval = val;
+ 
+-	remove_domain_devices(resource);
++	/* _PAI returns 0 on success, nonzero otherwise */
++	if (data)
++		return -EINVAL;
+ 
+-	resource->num_sensors = 0;
++	return 0;
+ }
+ 
+-static int setup_attrs(struct acpi_power_meter_resource *resource)
++static int get_power_alarm_state(struct acpi_power_meter_resource *resource,
++				 long *val)
+ {
+-	int res = 0;
++	int ret;
+ 
+-	/* _PMD method is optional. */
+-	res = read_domain_devices(resource);
+-	if (res && res != -ENODEV)
+-		return res;
++	ret = update_meter(resource);
++	if (ret)
++		return ret;
+ 
+-	if (resource->caps.flags & POWER_METER_CAN_MEASURE) {
+-		res = register_attrs(resource, meter_attrs);
+-		if (res)
+-			goto error;
++	/* need to update cap if not to support the notification. */
++	if (!(resource->caps.flags & POWER_METER_CAN_NOTIFY)) {
++		ret = update_cap(resource);
++		if (ret)
++			return ret;
++		resource->power_alarm = resource->power > resource->cap;
++		*val = resource->power_alarm;
++	} else {
++		*val = resource->power_alarm || resource->power > resource->cap;
++		resource->power_alarm = resource->power > resource->cap;
+ 	}
+ 
+-	if (resource->caps.flags & POWER_METER_CAN_CAP) {
+-		if (!can_cap_in_hardware()) {
+-			dev_warn(&resource->acpi_dev->dev,
+-				 "Ignoring unsafe software power cap!\n");
+-			goto skip_unsafe_cap;
++	return 0;
++}
++
++static umode_t power_meter_is_visible(const void *data,
++				      enum hwmon_sensor_types type,
++				      u32 attr, int channel)
++{
++	const struct acpi_power_meter_resource *res = data;
++
++	if (type != hwmon_power)
++		return -EINVAL;
++
++	switch (attr) {
++	case hwmon_power_average:
++	case hwmon_power_average_interval_min:
++	case hwmon_power_average_interval_max:
++		if (res->caps.flags & POWER_METER_CAN_MEASURE)
++			return 0444;
++		break;
++	case hwmon_power_average_interval:
++		if (res->caps.flags & POWER_METER_CAN_MEASURE)
++			return 0644;
++		break;
++	case hwmon_power_cap_min:
++	case hwmon_power_cap_max:
++	case hwmon_power_alarm:
++		if (res->caps.flags & POWER_METER_CAN_CAP && can_cap_in_hardware())
++			return 0444;
++		break;
++	case hwmon_power_cap:
++		if (res->caps.flags & POWER_METER_CAN_CAP && can_cap_in_hardware()) {
++			if (res->caps.configurable_cap)
++				return 0644;
++			else
++				return 0444;
+ 		}
++		break;
++	default:
++		break;
++	}
+ 
+-		if (resource->caps.configurable_cap)
+-			res = register_attrs(resource, rw_cap_attrs);
+-		else
+-			res = register_attrs(resource, ro_cap_attrs);
++	return 0;
++}
+ 
+-		if (res)
+-			goto error;
++static int power_meter_read(struct device *dev, enum hwmon_sensor_types type,
++			    u32 attr, int channel, long *val)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++	int ret = 0;
+ 
+-		res = register_attrs(resource, misc_cap_attrs);
+-		if (res)
+-			goto error;
++	if (type != hwmon_power)
++		return -EINVAL;
++
++	guard(mutex)(&res->lock);
++
++	switch (attr) {
++	case hwmon_power_average:
++		ret = update_meter(res);
++		if (ret)
++			return ret;
++		if (res->power == UNKNOWN_POWER)
++			return -ENODATA;
++		*val = res->power * 1000;
++		break;
++	case hwmon_power_average_interval_min:
++		*val = res->caps.min_avg_interval;
++		break;
++	case hwmon_power_average_interval_max:
++		*val = res->caps.max_avg_interval;
++		break;
++	case hwmon_power_average_interval:
++		ret = update_avg_interval(res);
++		if (ret)
++			return ret;
++		*val = (res)->avg_interval;
++		break;
++	case hwmon_power_cap_min:
++		*val = res->caps.min_cap * 1000;
++		break;
++	case hwmon_power_cap_max:
++		*val = res->caps.max_cap * 1000;
++		break;
++	case hwmon_power_alarm:
++		ret = get_power_alarm_state(res, val);
++		if (ret)
++			return ret;
++		break;
++	case hwmon_power_cap:
++		ret = update_cap(res);
++		if (ret)
++			return ret;
++		*val = res->cap * 1000;
++		break;
++	default:
++		break;
+ 	}
+ 
+-skip_unsafe_cap:
+-	if (resource->caps.flags & POWER_METER_CAN_TRIP) {
+-		res = register_attrs(resource, trip_attrs);
+-		if (res)
+-			goto error;
++	return 0;
++}
++
++static int power_meter_write(struct device *dev, enum hwmon_sensor_types type,
++			     u32 attr, int channel, long val)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++	int ret;
++
++	if (type != hwmon_power)
++		return -EINVAL;
++
++	guard(mutex)(&res->lock);
++	switch (attr) {
++	case hwmon_power_cap:
++		ret = set_cap(res, val);
++		break;
++	case hwmon_power_average_interval:
++		ret = set_avg_interval(res, val);
++		break;
++	default:
++		ret = -EOPNOTSUPP;
+ 	}
+ 
+-	res = register_attrs(resource, misc_attrs);
+-	if (res)
+-		goto error;
++	return ret;
++}
+ 
+-	return res;
+-error:
+-	remove_attrs(resource);
+-	return res;
++static const struct hwmon_channel_info * const power_meter_info[] = {
++	HWMON_CHANNEL_INFO(power, HWMON_P_AVERAGE |
++		HWMON_P_AVERAGE_INTERVAL | HWMON_P_AVERAGE_INTERVAL_MIN |
++		HWMON_P_AVERAGE_INTERVAL_MAX | HWMON_P_CAP | HWMON_P_CAP_MIN |
++		HWMON_P_CAP_MAX | HWMON_P_ALARM),
++	NULL
++};
++
++static const struct hwmon_ops power_meter_ops = {
++	.is_visible = power_meter_is_visible,
++	.read = power_meter_read,
++	.write = power_meter_write,
++};
++
++static const struct hwmon_chip_info power_meter_chip_info = {
++	.ops = &power_meter_ops,
++	.info = power_meter_info,
++};
++
++static ssize_t power1_average_max_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t count)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++	unsigned long trip;
++	int ret;
++
++	ret = kstrtoul(buf, 10, &trip);
++	if (ret)
++		return ret;
++
++	mutex_lock(&res->lock);
++	ret = set_trip(res, POWER_METER_TRIP_AVERAGE_MAX_IDX, trip);
++	mutex_unlock(&res->lock);
++
++	return ret == 0 ? count : ret;
++}
++
++static ssize_t power1_average_min_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t count)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++	unsigned long trip;
++	int ret;
++
++	ret = kstrtoul(buf, 10, &trip);
++	if (ret)
++		return ret;
++
++	mutex_lock(&res->lock);
++	ret = set_trip(res, POWER_METER_TRIP_AVERAGE_MIN_IDX, trip);
++	mutex_unlock(&res->lock);
++
++	return ret == 0 ? count : ret;
++}
++
++static ssize_t power1_average_min_show(struct device *dev,
++				       struct device_attribute *attr, char *buf)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++
++	if (res->trip[POWER_METER_TRIP_AVERAGE_MIN_IDX] < 0)
++		return sysfs_emit(buf, "unknown\n");
++
++	return sysfs_emit(buf, "%lld\n",
++			  res->trip[POWER_METER_TRIP_AVERAGE_MIN_IDX] * 1000);
++}
++
++static ssize_t power1_average_max_show(struct device *dev,
++				       struct device_attribute *attr, char *buf)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++
++	if (res->trip[POWER_METER_TRIP_AVERAGE_MAX_IDX] < 0)
++		return sysfs_emit(buf, "unknown\n");
++
++	return sysfs_emit(buf, "%lld\n",
++			  res->trip[POWER_METER_TRIP_AVERAGE_MAX_IDX] * 1000);
++}
++
++static ssize_t power1_cap_hyst_show(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++
++	if (res->caps.hysteresis == UNKNOWN_HYSTERESIS)
++		return sysfs_emit(buf, "unknown\n");
++
++	return sysfs_emit(buf, "%llu\n", res->caps.hysteresis * 1000);
++}
++
++static ssize_t power1_accuracy_show(struct device *dev,
++				    struct device_attribute *attr,
++				    char *buf)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%llu.%llu%%\n",
++			  res->caps.accuracy / 1000, res->caps.accuracy % 1000);
++}
++
++static ssize_t power1_is_battery_show(struct device *dev,
++				      struct device_attribute *attr,
++				      char *buf)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%u\n",
++			  res->caps.flags & POWER_METER_IS_BATTERY ? 1 : 0);
++}
++
++static ssize_t power1_model_number_show(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%s\n", res->model_number);
++}
++
++static ssize_t power1_oem_info_show(struct device *dev,
++				    struct device_attribute *attr,
++				    char *buf)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%s\n", res->oem_info);
++}
++
++static ssize_t power1_serial_number_show(struct device *dev,
++					 struct device_attribute *attr,
++					 char *buf)
++{
++	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%s\n", res->serial_number);
++}
++
++// depend on POWER_METER_CAN_TRIP
++static DEVICE_ATTR_RW(power1_average_max);
++static DEVICE_ATTR_RW(power1_average_min);
++
++// depend on POWER_METER_CAN_CAP
++static DEVICE_ATTR_RO(power1_cap_hyst);
++
++// depend on POWER_METER_CAN_MEASURE
++static DEVICE_ATTR_RO(power1_accuracy);
++static DEVICE_ATTR_RO(power1_is_battery);
++
++static DEVICE_ATTR_RO(power1_model_number);
++static DEVICE_ATTR_RO(power1_oem_info);
++static DEVICE_ATTR_RO(power1_serial_number);
++
++#define EXTRA_FIRST_DYNAMIC_ATTR_ID	3
++#define EXTRA_ATTR_MAX	10
++
++static struct attribute *power_extra_attrs[EXTRA_ATTR_MAX] = {
++	&dev_attr_power1_model_number.attr,
++	&dev_attr_power1_oem_info.attr,
++	&dev_attr_power1_serial_number.attr,
++	NULL
++};
++
++ATTRIBUTE_GROUPS(power_extra);
++
++static void fill_extra_dynamic_attr(struct attribute *attr)
++{
++	int idx = EXTRA_FIRST_DYNAMIC_ATTR_ID;
++
++	for (idx = EXTRA_FIRST_DYNAMIC_ATTR_ID; idx < EXTRA_ATTR_MAX; idx++) {
++		if (!power_extra_attrs[idx])
++			break;
++	}
++
++	power_extra_attrs[idx] = attr;
++}
++
++static void update_power_extra_groups(struct acpi_power_meter_resource *res)
++{
++	int idx;
++
++	for (idx = EXTRA_FIRST_DYNAMIC_ATTR_ID; idx < EXTRA_ATTR_MAX; idx++)
++		power_extra_attrs[idx] = NULL;
++
++	if (res->caps.flags & POWER_METER_CAN_MEASURE) {
++		fill_extra_dynamic_attr(&dev_attr_power1_is_battery.attr);
++		fill_extra_dynamic_attr(&dev_attr_power1_accuracy.attr);
++	}
++
++	if (res->caps.flags & POWER_METER_CAN_CAP) {
++		if (!can_cap_in_hardware()) {
++			dev_warn(&res->acpi_dev->dev,
++				 "Ignoring unsafe software power cap!\n");
++		} else {
++			fill_extra_dynamic_attr(&dev_attr_power1_cap_hyst.attr);
++		}
++	}
++
++	if (res->caps.flags & POWER_METER_CAN_TRIP) {
++		fill_extra_dynamic_attr(&dev_attr_power1_average_max.attr);
++		fill_extra_dynamic_attr(&dev_attr_power1_average_min.attr);
++	}
+ }
+ 
+ static void free_capabilities(struct acpi_power_meter_resource *resource)
+@@ -852,13 +828,24 @@ static void acpi_power_meter_notify(struct acpi_device *device, u32 event)
+ 	case METER_NOTIFY_CONFIG:
+ 		mutex_lock(&resource->lock);
+ 		free_capabilities(resource);
++		remove_domain_devices(resource);
++		hwmon_device_unregister(resource->hwmon_dev);
+ 		res = read_capabilities(resource);
+-		mutex_unlock(&resource->lock);
+ 		if (res)
+-			break;
+-
+-		remove_attrs(resource);
+-		setup_attrs(resource);
++			dev_err_once(&device->dev, "read capabilities failed.\n");
++		res = read_domain_devices(resource);
++		if (res && res != -ENODEV)
++			dev_err_once(&device->dev, "read domain devices failed.\n");
++		update_power_extra_groups(resource);
++		resource->hwmon_dev =
++			hwmon_device_register_with_info(&device->dev,
++							ACPI_POWER_METER_NAME,
++							resource,
++							&power_meter_chip_info,
++							power_extra_groups);
++		if (IS_ERR(resource->hwmon_dev))
++			dev_err_once(&device->dev, "register hwmon device failed.\n");
++		mutex_unlock(&resource->lock);
+ 		break;
+ 	case METER_NOTIFY_TRIP:
+ 		sysfs_notify(&device->dev.kobj, NULL, POWER_AVERAGE_NAME);
+@@ -932,11 +919,17 @@ static int acpi_power_meter_add(struct acpi_device *device)
+ 	resource->trip[0] = -1;
+ 	resource->trip[1] = -1;
+ 
+-	res = setup_attrs(resource);
+-	if (res)
++	/* _PMD method is optional. */
++	res = read_domain_devices(resource);
++	if (res && res != -ENODEV)
+ 		goto exit_free_capability;
+ 
+-	resource->hwmon_dev = hwmon_device_register(&device->dev);
++	update_power_extra_groups(resource);
++	resource->hwmon_dev =
++		hwmon_device_register_with_info(&device->dev,
++						ACPI_POWER_METER_NAME, resource,
++						&power_meter_chip_info,
++						power_extra_groups);
+ 	if (IS_ERR(resource->hwmon_dev)) {
+ 		res = PTR_ERR(resource->hwmon_dev);
+ 		goto exit_remove;
+@@ -946,7 +939,7 @@ static int acpi_power_meter_add(struct acpi_device *device)
+ 	goto exit;
+ 
+ exit_remove:
+-	remove_attrs(resource);
++	remove_domain_devices(resource);
+ exit_free_capability:
+ 	free_capabilities(resource);
+ exit_free:
+@@ -965,7 +958,7 @@ static void acpi_power_meter_remove(struct acpi_device *device)
+ 	resource = acpi_driver_data(device);
+ 	hwmon_device_unregister(resource->hwmon_dev);
+ 
+-	remove_attrs(resource);
++	remove_domain_devices(resource);
+ 	free_capabilities(resource);
+ 
+ 	kfree(resource);
+-- 
+2.33.0
+
