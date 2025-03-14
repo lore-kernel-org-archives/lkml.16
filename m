@@ -1,142 +1,95 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99AE1C861D;
-	Fri, 14 Mar 2025 09:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F131C07D9
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741944430; cv=none; b=dIhz7GSeoJ9fWJPYCXSzAS9eEB6xZuDBhClLag+YhqYQ0hDZBqwk0N9moUgD2PIZEzFNZj1gEq9c7LScZUQ598vM7DXPuhcXUJsIrU9a9uHSbtmHuwyGgTcXc1dZA4ZbHtpEw1n98Wig8CqzbRn4bKTH5g2EUmtlF+TIMCW+7QM=
+	t=1741944457; cv=none; b=ix3pIOXHZSmXGF5st4GJGtDevQoDkbQ67GlOv0dWG4M3pq4UwYm10dKRFOAru3lvuCv/9DIE14B5ngjX3emODDQrW6W46bTFrNHw2qq93CstExdvvofkVtjIjbBaMXPkwyM7yU3O6TchZDp4OUTJ1vsY8o1QviJ6VuPHyltsr7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741944430; c=relaxed/simple;
-	bh=PqUbDXVDaiUum+Dew0MC5ziN5yYPu9hhy423HzIFiWY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CpH3ng9OjSGhIUyBVPk4RrPwi3/dFN01eRzl/X9FisMb/vlhrgz2yeiewhcoQuveBQkqN1qzZnf/MQ1oPdkmuojTWlPRR03KqiwvBRP7W5daBdCsfbW2cH0AlpjkiVIWMkfoTz5tZk4vEezlz1LQ5foFCh37hTHBsLvfnqoNZpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZDf7b3c1Yz6J7qr;
-	Fri, 14 Mar 2025 17:23:55 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7F87C1400CD;
-	Fri, 14 Mar 2025 17:27:06 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Mar
- 2025 10:27:05 +0100
-Date: Fri, 14 Mar 2025 09:27:04 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
-	<dan.j.williams@intel.com>, <Benjamin.Cheatham@amd.com>,
-	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
-	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
-	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
-Subject: Re: [PATCH v4 6/9] ACPI: APEI: EINJ: Add einjv2 extension struct
-Message-ID: <20250314092704.00006ffe@huawei.com>
-In-Reply-To: <Z9M6ryapTGlBWA3Q@zaid-VirtualBox>
-References: <20250306234810.75511-1-zaidal@os.amperecomputing.com>
-	<20250306234810.75511-7-zaidal@os.amperecomputing.com>
-	<20250313094230.00004696@huawei.com>
-	<Z9M6ryapTGlBWA3Q@zaid-VirtualBox>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741944457; c=relaxed/simple;
+	bh=yU5cXCgArd4W+i42dPtsvZlrXMdhCG7rxzuaU2Hu3e4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ByfjnXWGaE1+8gEXoZVbVoTUVR31UHjtrhIlP6MXs8FyCELXcGF9kNc0lq5uBxOELSDbfW1TEfhpjblNBtFHSqsE2GqriwhmxL7vHyQT3Oy0Mlw3BiRAWTCNcvtOB03wBZpRANHMj1eEXkyJULsHOZUO8SJc5ZO2pQex2QW1WEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/41ClYs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/41ClYs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD82AC4CEE3;
+	Fri, 14 Mar 2025 09:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741944457;
+	bh=yU5cXCgArd4W+i42dPtsvZlrXMdhCG7rxzuaU2Hu3e4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c/41ClYs49ypIfSGA+QHfi5Ml3BeXPwm6erPeoKo6fkMgrwV2PNJpNbP4qYu4puoi
+	 KA2tiyP7KcaMo6Q3XKT+Qso6Y75BZa+MjrjHRqKXnZOWJY7irSvycU9xydi0v0ONzh
+	 O9XDSbcHn4Y6DgPEaJhM+i/3CkhOZXkAqGcr1j9/j1eXZQUPwwsvGVywfmiqT35b/T
+	 Y1uO+SH4v9fqx6ZrKxAQGceg9e4jduBsHiCnhvl8haHJxcFcTpHS+zuXMF4warfqw0
+	 iusf+yXxobuF62WYez0btUo2mXzuJsZx3+/FPqkrzx6ViRmpCi2rsaguagep4o/Bs0
+	 GyvwO1Y7JcdeQ==
+Date: Fri, 14 Mar 2025 10:27:32 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Brian Gerst <brgerst@gmail.com>
+Cc: Sohil Mehta <sohil.mehta@intel.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: Re: [PATCH 2/5] x86/syscall/32: Move 32-bit syscall dispatch code
+Message-ID: <Z9P2hDXjZdHYupiv@gmail.com>
+References: <20250313182236.655724-1-brgerst@gmail.com>
+ <20250313182236.655724-3-brgerst@gmail.com>
+ <5ac97442-78b1-40ce-9282-06cd62d97a67@intel.com>
+ <CAMzpN2iu5NRe2PE-TYS9beJp7Ze439C9k8AWHjfcibXi_mGuug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMzpN2iu5NRe2PE-TYS9beJp7Ze439C9k8AWHjfcibXi_mGuug@mail.gmail.com>
 
-On Thu, 13 Mar 2025 13:06:07 -0700
-Zaid Alali <zaidal@os.amperecomputing.com> wrote:
 
-> On Thu, Mar 13, 2025 at 09:42:30AM +0000, Jonathan Cameron wrote:
-> > On Thu,  6 Mar 2025 15:48:07 -0800
-> > Zaid Alali <zaidal@os.amperecomputing.com> wrote:
-> >   
-> > > Add einjv2 extension struct and EINJv2 error types to prepare
-> > > the driver for EINJv2 support. ACPI specifications(1) enables
-> > > EINJv2 by extending set_error_type_with_address struct.
-> > > 
-> > > (1) https://bugzilla.tianocore.org/show_bug.cgi?id=4615  
-> > Still seems to be down.
-> > Also, we have tag for this.  
-> > > 
-> > > Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>  
-> > 
-> > Link: https://bugzilla.tianocore.org/show_bug.cgi?id=4615 # [1]
-> > 
-> > 
-> > One additional request inline.
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
-> > > ---
-> > >  drivers/acpi/apei/einj-core.c | 23 +++++++++++++++++++++++
-> > >  1 file changed, 23 insertions(+)
-> > > 
-> > > diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
-> > > index aee9a7b17313..32b8d102f399 100644
-> > > --- a/drivers/acpi/apei/einj-core.c
-> > > +++ b/drivers/acpi/apei/einj-core.c
-> > > @@ -50,6 +50,28 @@
-> > >   */
-> > >  static int acpi5;
-> > >  
-> > > +struct syndrome_array {
-> > > +	union {
-> > > +		u32	acpi_id;
-> > > +		u32	device_id;
-> > > +		u32	pcie_sbdf;
-> > > +		u8	vendor_id[16];
-> > > +	} comp_id;
-> > > +	union {
-> > > +		u32	proc_synd;
-> > > +		u32	mem_synd;
-> > > +		u32	pcie_synd;
-> > > +		u8	vendor_synd[16];
-> > > +	} comp_synd;
-> > > +};
-> > > +
-> > > +struct einjv2_extension_struct {
-> > > +	u32 length;
-> > > +	u16 revision;
-> > > +	u16 component_arr_count;
-> > > +	struct syndrome_array component_arr[];  
-> > 
-> > __counted_by(component_arr_count);
-> > should be fine and marking these is always good to do in
-> > new code (and old code if you have time!)  
+* Brian Gerst <brgerst@gmail.com> wrote:
+
+> On Thu, Mar 13, 2025 at 7:45 PM Sohil Mehta <sohil.mehta@intel.com> wrote:
+> >
+> > On 3/13/2025 11:22 AM, Brian Gerst wrote:
+> >
+> > >  SYSCALL_DEFINE0(ni_syscall)
+> > >  {
+> > >       return -ENOSYS;
+> > > diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
+> > > index 8cc9950d7104..7c286e89fd04 100644
+> > > --- a/arch/x86/entry/syscall_32.c
+> > > +++ b/arch/x86/entry/syscall_32.c
+> > > @@ -1,10 +1,23 @@
+> > > -// SPDX-License-Identifier: GPL-2.0
+> > > -/* System call table for i386. */
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * 32-bit system call dispatch
+> > > + *
+> > > + * Copyright (c) 2015 Andrew Lutomirski
+> > > + *
+> > > + * Based on asm and ptrace code by many authors.  The code here originated
+> > > + * in ptrace.c and signal.c.
+> >
+> > Wondering if we can skip copying over some of these old comments? As the
+> > file grows, it's hard to discerne what specific code originated where.
+> > For example, the FRED code is all new.
 > 
-> I am not sure if __counted_by is appropriate here. Please note that component_arr_count
-> is set by the user and does NOT represent the size of the component_arr[].
+> I wasn't sure what the appropriate thing would be so I just copied it
+> over.  The git history is probably a better way to attribute this
+> though.
 
-Does it represent the length that should ever be accessed (which is what
-the __counted_by() stuff will help us find bugs around).
+I suppose we could trim some of the old comments in followup patches, 
+as they'll be preserved in the Git log and often aren't really accurate 
+or particularly informative in the current code context.
 
-If not that wins an award for misleading naming :)
+Thanks,
 
-Jonathan
-
-
-> > 
-> >   
-> > > +};
-> > > +
-> > >  struct set_error_type_with_address {
-> > >  	u32	type;
-> > >  	u32	vendor_extension;
-> > > @@ -58,6 +80,7 @@ struct set_error_type_with_address {
-> > >  	u64	memory_address;
-> > >  	u64	memory_address_range;
-> > >  	u32	pcie_sbdf;
-> > > +	struct	einjv2_extension_struct einjv2_struct;
-> > >  };
-> > >  enum {
-> > >  	SETWA_FLAGS_APICID = 1,  
-> >   
-
+	Ingo
