@@ -1,100 +1,102 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53DA204C14
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974053; cv=pass; b=sxQA3bInRZn6xepwMVXIPdiVnBv6hGu54/Pa/7gI04/y0prN6SGmcv+I3oaeWfQaj272GpLZhtRxWfrlZZzKNjX8XDVL79daWrREVsB2un8RETJxCCxKwYnvy0LArysML9KSCIRtGGrpwImuH2pkTnCzgCl6KFiQWe2kaTKsSMc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741974053; c=relaxed/simple;
-	bh=1BwIRZC40VMZEZSyJIll031+muDxKnQdexYIW1265us=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EpvZvC17RoelcgnmP694vctaIcU/LKvlMg38MK8cGWUmY5h+PVJA+fV92T9vlczb2skdukpgk1xtBu920K+KURJhidrz3YZsjsCkBPRETMSMKJOrB7ygUJmNTYJH3QJyjsheKTI6qruwXOzuCWlqDh9dIrMuzN5pOQ1Hqrw6hC0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=AMkNsEAW; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9162D14375C;
+	Fri, 14 Mar 2025 17:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741974118; cv=none; b=nytsQXcDqiy7PT1kSI1NDZ3eJuoaCqO7dZ3hzgRl43K5HflmkjMXD7oDWDGnEURd37/CwO1J2/HyDRK6xbr/TSi/MXY3BRMVTTDEGphx/ate77f/kQsFT5eA15CBP6Qn0yI1EsEk0DUJ1FKnKyMgQctsmHONrHEnn2+LIX+GGTI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741974118; c=relaxed/simple;
+	bh=nPIQa2zqNUwoVtbHR8A/I61uNaClpZ9/aE7Xl1KoV9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XrEncjH0ES88NlRjkzJWoozLKzQADR/d5YEHtCPQbh/MBWsFJzkIJTDB5E6IKtXGKjx5p4c1qS7hZ6/l8NZ+9ZYhXEaXkppiQZ8st9c4VUvMFIaY7EQIGsmhz5kWh8r+gCklVgMRjdTIySTOb9nGaV6aA1/2gVZb+9pdNsqz06k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6pv0Qui; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="AMkNsEAW"
-ARC-Seal: i=1; a=rsa-sha256; t=1741974029; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RNfoLYrPcM5k+wBec+Ms/i559bYXoXcUmmz1PNU5mjFxjHmbsphVyTukDQBetPUpXWTT0v5mAc1q63mq3RFdn92Yd4JRiOkJKmVQWhzSy6pd4zSmew00j14JVbxBzawC6fQtNIm0cQ7Erg2fL0QT6nqh+gU+SejTVgxLPqK09Dg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741974029; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8buXX1p3SURBMsTZcHdbZSaeDVkNSZ0ppj4rFscaaHQ=; 
-	b=DOCwy5MrXkFSoLugFoUydcHQU/JPbVHOe9XWTSkRq8PkBpogPYe8CREedZJz5HYRmNWQ12q4New14Si8IZLRWpV5ASsPPdFcnrY8vkVA7AuE4yy8W0QqE6nwYZtdRKjGjZIGTik3H2/zBW+PlQYpR/AOGFy+idQyYGPs6iChwBY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
-	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741974029;
-	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=8buXX1p3SURBMsTZcHdbZSaeDVkNSZ0ppj4rFscaaHQ=;
-	b=AMkNsEAWcF7JhcLYqecczRzn9fdLEf+3Eo0YksMngnTWgXanMox8HPLGbV7w0No4
-	zzqcH5J2U/s5DYzDQqBEdtbYgkdIIkk1LSdOKeaTh5DHUpt1F7TyZBJHbZPF2RLikjQ
-	TvAfwEpwQpeuxVzOtUlMCjBieFNpUCHnHLMYTnas=
-Received: by mx.zohomail.com with SMTPS id 1741974027158733.9448801872073;
-	Fri, 14 Mar 2025 10:40:27 -0700 (PDT)
-From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-To: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: boris.brezillon@collabora.com,
-	robh@kernel.org,
-	steven.price@arm.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	kernel@collabora.com,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	sjoerd@collabora.com,
-	angelogioacchino.delregno@collabora.com,
-	Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-Subject: [PATCH v2 6/6] drm/panfrost: Force AARCH64_4K page table format on MediaTek MT8192
-Date: Fri, 14 Mar 2025 14:38:58 -0300
-Message-ID: <20250314173858.212264-7-ariel.dalessandro@collabora.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250314173858.212264-1-ariel.dalessandro@collabora.com>
-References: <20250314173858.212264-1-ariel.dalessandro@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6pv0Qui"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C51CFC4CEE9;
+	Fri, 14 Mar 2025 17:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741974118;
+	bh=nPIQa2zqNUwoVtbHR8A/I61uNaClpZ9/aE7Xl1KoV9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c6pv0QuiHYPrup6eHKszrLbHgWXLDutEIIZ2foZpIllM11XGA9B0l6nxEHDmXpinT
+	 C8t1I7QFNkOSypjwZXptYBMFk1V/mYFqpuXyxRNBaueKqNQ1poVjdFviw9wVaZv/86
+	 R7Reh/SPAXraeKZWHtrMJpFUxvhREQFmScRtxzMONBtpKIDWUZHc5889QJ8m4aq7UD
+	 cedM6YS6ZYI0Y+O9XJk9sbCwIU8d/EuVulQ2W/5MFRKZZ5x1IsPy3b5iRbDDd7XmI6
+	 7OnMy9Ts6tkgwq4BxkM3O5WTBiNvvEdr3M8Su/VbZaE96RCiNvtnCxcWRu6SZWQ46u
+	 +uBxWspqOPccA==
+Date: Fri, 14 Mar 2025 17:41:56 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Tianyu Lan <ltykernel@gmail.com>
+Cc: Michael Kelley <mhklinux@outlook.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	Tianyu Lan <tiala@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] x86/Hyperv: Fix check of return value from snp_set_vmsa()
+Message-ID: <Z9RqZPc2nMs-R-RZ@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <20250313085217.45483-1-ltykernel@gmail.com>
+ <SN6PR02MB41577FAB4DD56699D48B8106D4D32@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <CAMvTesChp_kSNrJA6oCu8iZ6xFQReckRQU-_EGO7jjBPD_FUJQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+In-Reply-To: <CAMvTesChp_kSNrJA6oCu8iZ6xFQReckRQU-_EGO7jjBPD_FUJQ@mail.gmail.com>
 
-MediaTek MT8192 SoC has an ARM Mali-G57 MC5 GPU (Valhall-JM). Now that
-Panfrost supports AARCH64_4K page table format, let's enable it on this
-SoC.
+On Fri, Mar 14, 2025 at 09:41:30AM +0800, Tianyu Lan wrote:
+> On Fri, Mar 14, 2025 at 4:20 AM Michael Kelley <mhklinux@outlook.com> wrote:
+> >
+> > From: Tianyu Lan <ltykernel@gmail.com> Sent: Thursday, March 13, 2025 1:52 AM
+> > >
+> > > snp_set_vmsa() returns 0 as success result and so fix it.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
+> > > Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> > > ---
+> > >  arch/x86/hyperv/ivm.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+> > > index ec7880271cf9..77bf05f06b9e 100644
+> > > --- a/arch/x86/hyperv/ivm.c
+> > > +++ b/arch/x86/hyperv/ivm.c
+> > > @@ -338,7 +338,7 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
+> > >       vmsa->sev_features = sev_status >> 2;
+> > >
+> > >       ret = snp_set_vmsa(vmsa, true);
+> > > -     if (!ret) {
+> > > +     if (ret) {
+> > >               pr_err("RMPADJUST(%llx) failed: %llx\n", (u64)vmsa, ret);
+> > >               free_page((u64)vmsa);
+> > >               return ret;
+> > > --
+> > > 2.25.1
+> > >
+> >
+> > Yes, with this change the code is now consistent with other call sites for
+> > snp_set_vmsa() and for direct invocation of rmpadjust().
+> >
+> > Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> 
+> Thank you for your review, Michael!
 
-Running glmark2-es2-drm [0] benchmark, reported the same performance
-score on both modes Mali LPAE (LEGACY) vs. AARCH64_4K, before and after
-this commit. Tested on a Mediatek (MT8395) Genio 1200 EVK board.
+Applied to hyperv-next. Thanks.
 
-[0] https://github.com/glmark2/glmark2
-
-Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
----
- drivers/gpu/drm/panfrost/panfrost_drv.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index e854f290858f9..ef30d314b2281 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -836,6 +836,7 @@ static const struct panfrost_compatible mediatek_mt8192_data = {
- 	.num_pm_domains = ARRAY_SIZE(mediatek_mt8192_pm_domains),
- 	.pm_domain_names = mediatek_mt8192_pm_domains,
- 	.pm_features = BIT(GPU_PM_CLK_DIS) | BIT(GPU_PM_VREG_OFF),
-+	.gpu_quirks = BIT(GPU_QUIRK_FORCE_AARCH64_PGTABLE),
- };
- 
- static const struct of_device_id dt_match[] = {
--- 
-2.47.2
-
+Wei.
