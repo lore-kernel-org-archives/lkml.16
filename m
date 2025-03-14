@@ -1,284 +1,194 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2042B204F65
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB0C204F65
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741975292; cv=none; b=spFWoKeGAJi/jQuzxGd4a766eroNwLgIKw7QLZAD+GP3Z+dB/RaOvMWvRSCf4bnvn29faTlWU90+2eN6nvaVL5wgrYwrfhprsz+yFbNnolOOy5oymL8y5mBdKwkt31oHULIgkqnCSPnONCwrOTeLJx+gCNyOak6Tu844w1fx/H4=
+	t=1741975314; cv=none; b=OeZAH2AMbN6KdI5OZkWLlcumW3EBSJ7953hyeQwZoMRDM9fxIbvKtOryo7+Y/q/vt+50+cAzgGjoMRAJT40XTkDb50jXW1Mxmx02aRwJF9BNymLHp05j7dcPfk6cU+ernp1IuWvJe2+xQMJvcfKFMzTHeBeFFMZZ6vlM+WGQLT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741975292; c=relaxed/simple;
-	bh=UE+LmjO480ai/cmQ99LQCl4ggioFj0kzH6oMEeEgxyM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=s1jcJv4BQDey14cEz7OC4CEU5YhxZDwYD/FkRlw192STA2Yx3fGaWMTBzhX/9ZPjeU+gzk0BAvBHuIQgmt2Oik7T0pPXGDBaEo+z+SbPoFg6UflMYsQFCnrjxj9076QCbu0w9LiQzR2iTmIRU0WjQu4/+nhoAURAJs1nTA3LOzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bdgHikAv; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
+	s=arc-20240116; t=1741975314; c=relaxed/simple;
+	bh=EEYxWwY8kCTLySnOVtwdYcS5zBb5IL6//3e/jf2TqxM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=atXI6K4c/4eQ0/ofwgPuIjj2Y63npc6QL7aKmSkiA6Y5p/5s4kNtllhxW7XDJDhyDFA35ROmpwXJ6AGphiMhtss9RGNjWMSYLoSqBE5cAQZqoz4vBy6LFUaVzsJdQWLM9tvuuH4ghUyFholggG8aUpwlTYzNrh1xwpkeKvcP2no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FaVPpnln; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bdgHikAv"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff798e8c3bso4114416a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741975290; x=1742580090; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+x3RNoBeSKNY3yav309Zb69x4l02RtRyyB7W/znFf1I=;
-        b=bdgHikAvpoPs8GlzFP2T+v8KEDRA8xGZipH5v7Sxxdv1ds2Jt5mj4E2+hVQPozWqO/
-         BLoh3UmS+d4KpZFCsnORJ1F3TQnGaNlJAgczhokjUh6SMdh0ntlvWQ2qrOuPMit11NBd
-         Rn0qbYXq6+FYzl2qilfrIbu47H924SoYGRI7nq25r3xvwTbFaIYazhQpz7nR7Egt+bRX
-         OLd0RLyeiCUAWO5+qP7MEnQp8xqt790KuhNmWOGNGkkJMKWVDOSUmxCjBwF8ZGqwPgWT
-         Ux6bRr6Fq4UFXGA2ezlwFH22kooOirTJLkdPtSPtTHzcpVy1kbKDphkFV/+ntIvUSPn9
-         GCFw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FaVPpnln"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741975311;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sdKP65qdr3ROgUgJg8MYQwM2EODCLBcK6u+sVD8ojXA=;
+	b=FaVPpnlnRBtlTBtEC+Q2DGmlB4IdX1L7im2i3eCe2e0+0Rcmkbk/UqnGAWJa0gEsz8eVNA
+	PmyRFKzlZmKBEt16+VJQO4Gab7kr4heaWJNh2TldErh750ghbhrzuvIsFUrrVDThGxkOj2
+	OWNhsefFDjvAj7SqTizUHvU0QX+jlWc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-465-0bquKPSJNI-FZIh3iKkRRw-1; Fri, 14 Mar 2025 14:01:49 -0400
+X-MC-Unique: 0bquKPSJNI-FZIh3iKkRRw-1
+X-Mimecast-MFC-AGG-ID: 0bquKPSJNI-FZIh3iKkRRw_1741975309
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d01024089so22255e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:01:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741975290; x=1742580090;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+x3RNoBeSKNY3yav309Zb69x4l02RtRyyB7W/znFf1I=;
-        b=Cn58lwZlg9XvxjfGDct+sTINCMWoS7+IGyeiKxYDIAVnGeOVzz4/p9DgIVQg7TWLZC
-         3oYgCMjReFb4fJyvIqQHn7LikCYl6mW6s9bBqNbro1FXs3FlK97BK1XE45/Ooo1n9ReV
-         j0pObD2ZAKg3J7+22HNpkXYrzC3cwA3cKLK5i39I/S+SJ8xy+V44AM2ctPHDtOVhu9e3
-         dlaOLo3lNozblZxjMMndaLneSAxOofJ/f6V/DCIHT2X5eACkTAz51vDr7Z1UYaMzA7g2
-         ECuhmcsznpZ8HiNSTApWRYOlefAS5ocpCTFCAOEHC369xzbrnFQt1xZ0mZD/5K85Rjq1
-         wmbg==
-X-Gm-Message-State: AOJu0YwdiXbGO7Ee25+LwjLNDjyKS5jnnu3UFB3HEsHS6C8q4ADz/muN
-	4GE8+RSpB8CYVmaFYUL8ydV5o+vBg/3pYl4VHbz91JEwZZbgnE7fI+dCp5XeLZsoIoyPmKXOFAs
-	51b7q6bWqUBCHA1eN4eVF/6YsRVGiDh3IJT1oiCwYyWER5sSVKeB1QSUHX4gVREbECgQDyDyHxC
-	RUdIgeOEtk5jD4+n3tY1KLoAwcPkCIGCTV3nIurfBAX+Gsyd8WppE=
-X-Google-Smtp-Source: AGHT+IGnPwDJCFasbxcqKssxJ30WYzbEPvF36jFByGyIEEosCbyc4Xg81KCKRSj0uBP83xyu6IUyrDc9GsVWGA==
-X-Received: from pjboi16.prod.google.com ([2002:a17:90b:3a10:b0:2e9:ee22:8881])
- (user=jmattson job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4d04:b0:2fe:b8ba:62e1 with SMTP id 98e67ed59e1d1-30151d3d6f9mr4305208a91.28.1741975290319;
- Fri, 14 Mar 2025 11:01:30 -0700 (PDT)
-Date: Fri, 14 Mar 2025 11:00:23 -0700
+        d=1e100.net; s=20230601; t=1741975309; x=1742580109;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sdKP65qdr3ROgUgJg8MYQwM2EODCLBcK6u+sVD8ojXA=;
+        b=iiMFVbzvsqLDN9yhfpYpog7rhq+T/qkHkt25x2lu7ixtUfLV4vv+8QPggDYcUPnAe+
+         JZk2cNPmnrYPHT/tMPYpzdua3kcbvYONX4Jq9poWOpoSJ5Y3ZQPb43by2T/AIIHygnUY
+         jUkhPAJt7eSBDjadOTwZ84Xs4OiUDTpAV0ttl0QYW+oNivB7V7O6OntkGQCOzJB+D1i/
+         Fl5XoAisMYpD3T7KQpFOTtfxRh/NcC28Bso8Zng8Jb3lp/4/Sayay6c3PhpVtNHUbeWl
+         UIVLP1m1dhlYAsrcZx4LNoSy2VP4IVU/9cSKycl/9PJRPlwUgjXWjXSwmskD4DrY0KDb
+         D0gw==
+X-Gm-Message-State: AOJu0YyCx/HwzJzJbVbafpEPfasBWdltMXtTfN4dbZ5uFTEIwTIIPhGG
+	U8S31iWsT+BxAMmKdPzX+AuQw6BVLNfCXxOzCiDFF6fWTIj29dc5pzmlPh9JzFx3snYB81Pm/A1
+	wxCW+WvKlT6wfTd+GBrBbJK+uqdArUUt9CN1zMU3sOaTjK6b2AxNoZtN0RjhmRw==
+X-Gm-Gg: ASbGncuyt5JO9uOuLXt50EbUCCM1zADQ2PByt536Ak0yp1x7/i2F8ivgq2O6njaQdFr
+	9ZfJyR479H/GiThb+VcKd8W/redegYwTqj4R+ysIf4ikWpUgbF6VXZfw+ELF++F2mPPMl3jHWvx
+	npGrbMh4j4GvAMmOzY35boi+DFiPFaWGnDStf5NYsZgfcsMMfDDei3YGuR7jTmNFul2ey6KZeGw
+	mjAInkaDxx2e6nKB9AlVglDGzIZptaojjBVtmW3XKAdFgFZNRoLBLAOyf2+M6dcD0PVyBpjqUns
+	iMyNavD8d1CEr1NA59e70N1kVyN0b034I80MJxCFczb1OoA=
+X-Received: by 2002:a05:600c:198e:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-43d1ecd8631mr43492625e9.20.1741975308659;
+        Fri, 14 Mar 2025 11:01:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHVfqZ0VtjIa24aKX7T579NwZ9Rq/vt8mIPi/r8NwfDGe5UQOF2w13UZuRKaiVNkmwC8wV0kA==
+X-Received: by 2002:a05:600c:198e:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-43d1ecd8631mr43491465e9.20.1741975307549;
+        Fri, 14 Mar 2025 11:01:47 -0700 (PDT)
+Received: from [192.168.0.7] (ip-109-42-51-207.web.vodafone.de. [109.42.51.207])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1ffbcf12sm23837335e9.12.2025.03.14.11.01.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Mar 2025 11:01:47 -0700 (PDT)
+Message-ID: <71188823-2a9e-4565-8ace-03a682d8d0da@redhat.com>
+Date: Fri, 14 Mar 2025 19:01:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Message-ID: <20250314180117.740591-1-jmattson@google.com>
-Subject: [PATCH v2] KVM: x86: Provide a capability to disable APERF/MPERF read intercepts
-From: Jim Mattson <jmattson@google.com>
-To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/41] arm64: Replace __ASSEMBLY__ with __ASSEMBLER__ in
+ uapi headers
+To: Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>
+References: <20250314071013.1575167-1-thuth@redhat.com>
+ <20250314071013.1575167-9-thuth@redhat.com>
+ <20250314115554.GA8986@willie-the-truck>
+ <df30d093-c173-495a-8ed9-874857df7dee@app.fastmail.com>
+ <20250314134215.GA9171@willie-the-truck>
+Content-Language: en-US
+From: Thomas Huth <thuth@redhat.com>
+Autocrypt: addr=thuth@redhat.com; keydata=
+ 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
+In-Reply-To: <20250314134215.GA9171@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Allow a guest to read the physical IA32_APERF and IA32_MPERF MSRs
-without interception.
+On 14/03/2025 14.42, Will Deacon wrote:
+> On Fri, Mar 14, 2025 at 01:05:15PM +0100, Arnd Bergmann wrote:
+>> On Fri, Mar 14, 2025, at 12:55, Will Deacon wrote:
+>>> On Fri, Mar 14, 2025 at 08:09:39AM +0100, Thomas Huth wrote:
+>>>> __ASSEMBLY__ is only defined by the Makefile of the kernel, so
+>>>> this is not really useful for uapi headers (unless the userspace
+>>>> Makefile defines it, too). Let's switch to __ASSEMBLER__ which
+>>>> gets set automatically by the compiler when compiling assembly
+>>>> code.
+>>>>
+>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>> Cc: Will Deacon <will@kernel.org>
+>>>> Signed-off-by: Thomas Huth <thuth@redhat.com>
+>>>> ---
+>>>>   arch/arm64/include/uapi/asm/kvm.h        | 2 +-
+>>>>   arch/arm64/include/uapi/asm/ptrace.h     | 4 ++--
+>>>>   arch/arm64/include/uapi/asm/sigcontext.h | 4 ++--
+>>>>   3 files changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> Is there a risk of breaking userspace with this? I wonder if it would
+>>> be more conservative to do something like:
+>>>
+>>> #if !defined(__ASSEMBLY__) && !defined(__ASSEMBLER__)
+>>>
+>>> so that if somebody is doing '#define __ASSEMBLY__' then they get the
+>>> same behaviour as today.
+>>>
+>>> Or maybe we don't care?
+>>
+>> I think the main risk we would have is user applications relying
+>> on the __ASSEMBLER__ checks in new kernel headers and not defining
+>> __ASSEMBLY__. This would result in the application not building
+>> against old kernel headers that only check against __ASSEMBLY__.
+> 
+> Hmm. I hadn't thought about the case of old headers :/
+> 
+> A quick Debian codesearch shows that glibc might #define __ASSEMBLY__
+> for some arch-specific headers:
+> 
+> https://codesearch.debian.net/search?q=%23define+__ASSEMBLY__&literal=1
+> 
+> which is what I was more worried about.
 
-The IA32_APERF and IA32_MPERF MSRs are not virtualized. Writes are not
-handled at all. The MSR values are not zeroed on vCPU creation, saved
-on suspend, or restored on resume. No accommodation is made for
-processor migration or for sharing a logical processor with other
-tasks. No adjustments are made for non-unit TSC multipliers. The MSRs
-do not account for time the same way as the comparable PMU events,
-whether the PMU is virtualized by the traditional emulation method or
-the new mediated pass-through approach.
+Since both, GCC and Clang, define __ASSEMBLER__ since a long time (Arnd 
+checked GCC 2.95, and I checked that at least Clang 7.0 still has it), I 
+think the only problem might be other compiler toolchains that might not set 
+__ASSEMBLER__ automatically. I just checked Tiny-C 0.9.27, and that also 
+sets __ASSEMBLER__ already. And according to 
+https://github.com/IanHarvey/pcc/blob/master/cc/cc/cc.1#L405 it is also set 
+in PCC.
 
-Nonetheless, in a properly constrained environment, this capability
-can be combined with a guest CPUID table that advertises support for
-CPUID.6:ECX.APERFMPERF[bit 0] to induce a Linux guest to report the
-effective physical CPU frequency in /proc/cpuinfo. Moreover, there is
-no performance cost for this capability.
+I haven't spotted it in LCC though (which seems to be an old C89 compiler if 
+I got it right). So if we are worried about such exotic old compilers, it's 
+maybe better to check both, __ASSEMBLY__ and __ASSEMBLER__ in the uapi 
+files? Or would it be ok to force those few people to set __ASSEMBLER__ 
+manually in their Makefiles (just like they had to do before with 
+__ASSEMBLY__) in case they want to compile assembler code with such exotic 
+compilers and new kernel headers?
 
-Signed-off-by: Jim Mattson <jmattson@google.com>
----
-v1 -> v2: Add {IA32_APERF,IA32_MPERF} to vmx_possible_passthrough_msrs[]
-
-          Check HW support for APERFMPERF before reporting the new
-	  capability bit in kvm_get_allowed_disable_exits() [Paolo]
----
- Documentation/virt/kvm/api.rst  | 1 +
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/svm/svm.c          | 7 +++++++
- arch/x86/kvm/svm/svm.h          | 2 +-
- arch/x86/kvm/vmx/vmx.c          | 6 ++++++
- arch/x86/kvm/vmx/vmx.h          | 2 +-
- arch/x86/kvm/x86.c              | 8 +++++++-
- arch/x86/kvm/x86.h              | 5 +++++
- include/uapi/linux/kvm.h        | 1 +
- tools/include/uapi/linux/kvm.h  | 4 +++-
- 10 files changed, 33 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 2b52eb77e29c..6431cd33f06a 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -7684,6 +7684,7 @@ Valid bits in args[0] are::
-   #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
-   #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
-   #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
-+  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
- 
- Enabling this capability on a VM provides userspace with a way to no
- longer intercept some instructions for improved latency in some
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 0b7af5902ff7..53de91fccc20 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1380,6 +1380,7 @@ struct kvm_arch {
- 	bool hlt_in_guest;
- 	bool pause_in_guest;
- 	bool cstate_in_guest;
-+	bool aperfmperf_in_guest;
- 
- 	unsigned long irq_sources_bitmap;
- 	s64 kvmclock_offset;
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index a713c803a3a3..5ebcbff341bc 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -111,6 +111,8 @@ static const struct svm_direct_access_msrs {
- 	{ .index = MSR_IA32_CR_PAT,			.always = false },
- 	{ .index = MSR_AMD64_SEV_ES_GHCB,		.always = true  },
- 	{ .index = MSR_TSC_AUX,				.always = false },
-+	{ .index = MSR_IA32_APERF,			.always = false },
-+	{ .index = MSR_IA32_MPERF,			.always = false },
- 	{ .index = X2APIC_MSR(APIC_ID),			.always = false },
- 	{ .index = X2APIC_MSR(APIC_LVR),		.always = false },
- 	{ .index = X2APIC_MSR(APIC_TASKPRI),		.always = false },
-@@ -1359,6 +1361,11 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
- 	if (boot_cpu_has(X86_FEATURE_V_SPEC_CTRL))
- 		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL, 1, 1);
- 
-+	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
-+		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_APERF, 1, 0);
-+		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_MPERF, 1, 0);
-+	}
-+
- 	if (kvm_vcpu_apicv_active(vcpu))
- 		avic_init_vmcb(svm, vmcb);
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 9d7cdb8fbf87..3ee2b7e07395 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -44,7 +44,7 @@ static inline struct page *__sme_pa_to_page(unsigned long pa)
- #define	IOPM_SIZE PAGE_SIZE * 3
- #define	MSRPM_SIZE PAGE_SIZE * 2
- 
--#define MAX_DIRECT_ACCESS_MSRS	48
-+#define MAX_DIRECT_ACCESS_MSRS	50
- #define MSRPM_OFFSETS	32
- extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
- extern bool npt_enabled;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6c56d5235f0f..ce89881d75f7 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -186,6 +186,8 @@ static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
- 	MSR_CORE_C3_RESIDENCY,
- 	MSR_CORE_C6_RESIDENCY,
- 	MSR_CORE_C7_RESIDENCY,
-+	MSR_IA32_APERF,
-+	MSR_IA32_MPERF,
- };
- 
- /*
-@@ -7597,6 +7599,10 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
- 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
- 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
- 	}
-+	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
-+		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_APERF, MSR_TYPE_R);
-+		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_MPERF, MSR_TYPE_R);
-+	}
- 
- 	vmx->loaded_vmcs = &vmx->vmcs01;
- 
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 8b111ce1087c..abc574ceacfe 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -358,7 +358,7 @@ struct vcpu_vmx {
- 	struct lbr_desc lbr_desc;
- 
- 	/* Save desired MSR intercept (read: pass-through) state */
--#define MAX_POSSIBLE_PASSTHROUGH_MSRS	16
-+#define MAX_POSSIBLE_PASSTHROUGH_MSRS	18
- 	struct {
- 		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
- 		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 02159c967d29..8f3d317d2f93 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4535,6 +4535,9 @@ static u64 kvm_get_allowed_disable_exits(void)
- {
- 	u64 r = KVM_X86_DISABLE_EXITS_PAUSE;
- 
-+	if (boot_cpu_has(X86_FEATURE_APERFMPERF))
-+		r |= KVM_X86_DISABLE_EXITS_APERFMPERF;
-+
- 	if (!mitigate_smt_rsb) {
- 		r |= KVM_X86_DISABLE_EXITS_HLT |
- 			KVM_X86_DISABLE_EXITS_CSTATE;
-@@ -6543,7 +6546,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 
- 		if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
- 		    cpu_smt_possible() &&
--		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
-+		    (cap->args[0] & ~(KVM_X86_DISABLE_EXITS_PAUSE |
-+				      KVM_X86_DISABLE_EXITS_APERFMPERF)))
- 			pr_warn_once(SMT_RSB_MSG);
- 
- 		if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
-@@ -6554,6 +6558,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 			kvm->arch.hlt_in_guest = true;
- 		if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
- 			kvm->arch.cstate_in_guest = true;
-+		if (cap->args[0] & KVM_X86_DISABLE_EXITS_APERFMPERF)
-+			kvm->arch.aperfmperf_in_guest = true;
- 		r = 0;
- disable_exits_unlock:
- 		mutex_unlock(&kvm->lock);
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 91e50a513100..0c3ac99454e5 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -488,6 +488,11 @@ static inline bool kvm_cstate_in_guest(struct kvm *kvm)
- 	return kvm->arch.cstate_in_guest;
- }
- 
-+static inline bool kvm_aperfmperf_in_guest(struct kvm *kvm)
-+{
-+	return kvm->arch.aperfmperf_in_guest;
-+}
-+
- static inline bool kvm_notify_vmexit_enabled(struct kvm *kvm)
- {
- 	return kvm->arch.notify_vmexit_flags & KVM_X86_NOTIFY_VMEXIT_ENABLED;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 45e6d8fca9b9..b4a4eb52f6df 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -617,6 +617,7 @@ struct kvm_ioeventfd {
- #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
- #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
- #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
-+#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
- 
- /* for KVM_ENABLE_CAP */
- struct kvm_enable_cap {
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 502ea63b5d2e..9b60f0509cdc 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -617,10 +617,12 @@ struct kvm_ioeventfd {
- #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
- #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
- #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
-+#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
- #define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
-                                               KVM_X86_DISABLE_EXITS_HLT | \
-                                               KVM_X86_DISABLE_EXITS_PAUSE | \
--                                              KVM_X86_DISABLE_EXITS_CSTATE)
-+					      KVM_X86_DISABLE_EXITS_CSTATE | \
-+					      KVM_X86_DISABLE_EXITS_APERFMPERF)
- 
- /* for KVM_ENABLE_CAP */
- struct kvm_enable_cap {
--- 
-2.49.0.rc1.451.g8f38331e32-goog
+  Thomas
 
