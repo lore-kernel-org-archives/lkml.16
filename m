@@ -1,150 +1,98 @@
-Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662AD1FF7D7
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 14:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11941FDE0E;
+	Fri, 14 Mar 2025 14:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741961842; cv=none; b=YVsbjboq7zbMgtCW+RurHF28R6CbgmkO6uXu/j/j3vgnUQ9beCGifthHfUyBQtD/aTTgORcANJqgJfisx2aG/lGbVIER7ZJMhAt+PDORl72MSHQqtap4DXh8erXE9UCgeLxxCqaSBoVwyQdCdZjYwc+xw29f1WOn2ASgLJsX5yA=
+	t=1741961883; cv=none; b=nDCtSi2frDyeXIttFNSYJ9e/F4/Vlpou4GPzwYfD3A0A7hBhey3q3TxG4DrdXv0m1IHQdEoS68Xeq05IVywwhf/uU4ZYQjD/Hi+bJYh1iFzNNQT0zmIbXxI+HJED50uOHGRbQU1Nr6DyzMoyHeCh7F8G5C7IZ1EhsFCUTR/Yb10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741961842; c=relaxed/simple;
-	bh=ct4TTvaRx+bolwbvqBUFkdTE2mM6ZyMZv2IBxFNKGSw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oHKebZL4SuavYQAyRYWjT8hy28Lrd7SskBJ0TrDC8BWH9oGMuAbZc1A1e3nH0+MD3odRCv6npWs26jxJpr+JKLKKgQZVMVP7eaXaNiKuysTDG1dKXjQu7ktzOQOe8dlhuyPYsJFf0UwcBzUDK3bjg4gEXl93togohzOjx9YMQZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=dvYvFpA8; arc=none smtp.client-ip=78.40.148.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
+	s=arc-20240116; t=1741961883; c=relaxed/simple;
+	bh=SsvEq/YsvXN3Wc677Hy5Aoe9CP9mi6fqsBUTe8h/RzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jcOcfUuXqaM7mxY2Q3KkAMUVK9u1Q+cUwyrRQK9oT+iUsc0IS0+zhvmWDB0r+uYm+vklRP3eiO0WxQyklsOxWxNim4iVa9j/1AU02j+oYivXLmpa70jKQF7eaZjhxMqD+quN18URXMUip46qidwSQDe2oD93oSzTMldjxWFaI9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z2Nc/II7; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="dvYvFpA8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1zBOojnIvZ6+0aG++WWMyXS/rfcD8EpeSnNyagPabZA=; b=dvYvFpA8UnpGdxdYqfIk3Hn2bq
-	kRfEwDRz/JVd5J/I5aE1/4/1mDwoXNE1uilin4Ik4A3Nlhpr92dl0AZQiixjRwC3qhHOUrsKeJn/3
-	id9gl1xSGrtWPPb35b1sblc3+39OU4liSavBrca919M/5YhkZEo6hDAJStd+EPgKkEdJqzCKJAfoJ
-	+nBNeY6Cid7WbG0M/hq92LeKtqBnaqq+PHNKICKm58sBpcuQpDA8mP6Ceukm6AE8AtQx0iMtMEGn3
-	cUqgYAEyy3GAhh/uMmWDvgrv55CVPJ9xsBmI/jpr2uyWriZGymPIbrlSQTY+yHcda3pRBSmSDtcw5
-	da55XW1g==;
-Received: from [167.98.27.226] (helo=[10.35.6.194])
-	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1tt5Pe-00FJws-Mx; Fri, 14 Mar 2025 13:49:22 +0000
-Message-ID: <5a81a72d-550d-42b4-8549-176f2b27ffc9@codethink.co.uk>
-Date: Fri, 14 Mar 2025 13:49:22 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z2Nc/II7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741961881; x=1773497881;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SsvEq/YsvXN3Wc677Hy5Aoe9CP9mi6fqsBUTe8h/RzE=;
+  b=Z2Nc/II7DDh8tqOJALOsJzT+PKcR+5H8UEdlSG5I0S0gZllieGqyw4Ws
+   /pU7RqvdXT+XHtfC/NgeSO3koJmcn00TzbBlZ2CMJFWaQgetZykTSNJ7r
+   xpfygtr0SZES24EJFM+vqs3l2I6A7b6FwnkDSy1Otmz3On4npb6JF6XtG
+   y/A0YbOnfu8RH3BVea6GzCRb/JVlBCcgZdZboAtklsAUnfVP6nGoCDnoN
+   FMyPxbh9bXjKe8h01S93DaYu0JsDov7xWamImK95pWb1C2h6CeIWSmDS9
+   e0MyAviZEpVW8XnUYWBkqVxzLOwj1khBbs0YVn3gM0Nzq18C+zvIqF1fT
+   Q==;
+X-CSE-ConnectionGUID: zuhmgVQWQ6Gfa+o7xK7qjw==
+X-CSE-MsgGUID: tHhjn+XmQdmN6VzTE4rlRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="65574404"
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="65574404"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:18:00 -0700
+X-CSE-ConnectionGUID: ifiKrKLrTvGrfL1SJD7L5g==
+X-CSE-MsgGUID: vduzCV4jQk2Vhea+YU+RvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="122006738"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.54])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:18:00 -0700
+Date: Thu, 13 Mar 2025 17:39:33 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Isaku Yamahata <isaku.yamahata@intel.com>, kvm@vger.kernel.org,
+	Sean Christopherson <seanjc@google.com>, chao.gao@intel.com,
+	rick.p.edgecombe@intel.com, yan.y.zhao@intel.com,
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH 2/2] KVM: x86: Don't allow tsc_offset, tsc_scaling_ratio
+ to change
+Message-ID: <Z9N6xWQV6e5Tufy4@ls.amr.corp.intel.com>
+References: <cover.1728719037.git.isaku.yamahata@intel.com>
+ <3a7444aec08042fe205666864b6858910e86aa98.1728719037.git.isaku.yamahata@intel.com>
+ <510e0391-410b-40be-b556-f91554b8d3a1@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] riscv: uaccess: optimizations
-To: Alexandre Ghiti <alex@ghiti.fr>, Cyril Bur <cyrilbur@tenstorrent.com>,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
- charlie@rivosinc.com, jrtc27@jrtc27.com
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- jszhang@kernel.org
-References: <20250221000924.734006-1-cyrilbur@tenstorrent.com>
- <4f6c83c0-39f6-467d-83c6-13d37440fb20@ghiti.fr>
-Content-Language: en-GB
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <4f6c83c0-39f6-467d-83c6-13d37440fb20@ghiti.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Sender: ben.dooks@codethink.co.uk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <510e0391-410b-40be-b556-f91554b8d3a1@redhat.com>
 
-On 14/03/2025 13:28, Alexandre Ghiti wrote:
-> Hi Cyril,
-> 
-> On 21/02/2025 01:09, Cyril Bur wrote:
->> This series tries to optimize riscv uaccess by allowing the use of
->> user_access_begin() and user_access_end() which permits grouping user 
->> accesses
->> and avoiding the CSR write penalty for each access.
->>
->> The error path can also be optimised using asm goto which patches 3 and 4
->> achieve. This will speed up jumping to labels by avoiding the need of an
->> intermediary error type variable within the uaccess macros
->>
->> I did read the discussion this series generated. It isn't clear to me
->> which direction to take the patches, if any.
->>
->> V2:
->> I've taken on this series as there isn't any response from Jisheng. No
->> significant changes other than build fixes.
->> - Fixes build breakage in patch 3 to do with not having used 'goto' 
->> keyword.
->> - Fixes build breakage in patch 4 on 32bit not having delcared __ptr 
->> in the
->>    macro.
->>
->> V3:
->> Significant commit message rewrites.
->>   - Corrected the justification for patch 2
->>   - Better explained/justified patches 3 and 4
->> Minor code changes for legibility and more comments.
->>
->> Jisheng Zhang (4):
->>    riscv: implement user_access_begin() and families
->>    riscv: uaccess: use input constraints for ptr of __put_user()
->>    riscv: uaccess: use 'asm goto' for put_user()
->>    riscv: uaccess: use 'asm_goto_output' for get_user()
->>
->>   arch/riscv/include/asm/uaccess.h | 205 +++++++++++++++++++++++--------
->>   1 file changed, 152 insertions(+), 53 deletions(-)
->>
-> Following up on Ben's comment here https://lore.kernel.org/linux-riscv/ 
-> b45aab1e-6d37-4027-9a15-4fa917d806b9@codethink.co.uk/
-> 
-> The problem that Ben mentions is caused by the use of *macros* which 
-> used to make the evaluation of the parameter inside the user-accessible 
-> section, and since this parameter could be a sleeping function, we could 
-> schedule another process with the SUM bit set, which could be cleared by 
-> this process, which would make the first process fault when trying to 
-> access user memory. I did not find any macro using unsafe_XXX() 
-> functions which could cause a problem right now, but I may have missed 
-> one and new could come up later, so we have multiple solutions here:
-> 
-> - suppose that a macro using unsafe_get/put_user() and passing a 
-> sleeping function as argument won't happen and then do nothing
-> - or save/restore CSR sstatus when switching processes
-> - or simply check that SUM is not set when switching processes
-> 
-> Let me know what you think.
+On Wed, Mar 12, 2025 at 01:24:32PM +0100,
+Paolo Bonzini <pbonzini@redhat.com> wrote:
 
-I'm on the save the flag side, for these reasons:
-
-#1 sleeping functions can happen more often when various checks
-    get enabled in the kernel (this was why the original fault
-    was found).  Adding larger sections is just going to make
-    the fault pop up again at some point in the future.
-
-#2 the save/restore is a small addition to the swap registers
-
-#3 saving SUM over a regs swap is always going to make sure we
-    never see this gremlin turn up again
-
-FYI, I think I may have posted our original test thread at some
-point, but I could do so again.
-
+> On 10/12/24 09:55, Isaku Yamahata wrote:
+> > Add guest_tsc_protected member to struct kvm_arch_vcpu and prohibit
+> > changing TSC offset/multiplier when guest_tsc_protected is true.
 > 
-> Thanks,
+> Thanks Isaku!  To match the behavior of the SEV-SNP patches, this is
+> also needed, which I have added to kvm-coco-queue:
 > 
-> Alex
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index dc2f14a6d8a1..ccde7c2b2248 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3919,7 +3925,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	case MSR_IA32_TSC:
+>  		if (msr_info->host_initiated) {
+>  			kvm_synchronize_tsc(vcpu, &data);
+> -		} else {
+> +		} else if (!vcpu->arch.guest_tsc_protected) {
+>  			u64 adj = kvm_compute_l1_tsc_offset(vcpu, data) - vcpu->arch.l1_tsc_offset;
+>  			adjust_tsc_offset_guest(vcpu, adj);
+>  			vcpu->arch.ia32_tsc_adjust_msr += adj;
 
-
+Thank you for catching this. This looks good.
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
-https://www.codethink.co.uk/privacy.html
+Isaku Yamahata <isaku.yamahata@intel.com>
