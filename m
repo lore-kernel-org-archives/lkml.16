@@ -1,100 +1,104 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BD11FF7B9;
-	Fri, 14 Mar 2025 13:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5711FFC46
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 13:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741958897; cv=none; b=qc54hoTIEDybL6opqErFU53IQ93Nxq2Lm+HjiFmzPRB1MctdXdSn57q+Nx/14hl30hCdmM1s2d0CYgEo8RLkxNg87leDXixyKDFkw8/nUshvmeNjZiRTVbRtvhX9KdBmi96gJfJpQ31EvRCC07CqxU0DuGwmyMDkS7/r5cv1Blg=
+	t=1741958925; cv=none; b=nYFSnz9x9teUpOfDqfsD1iauVYcl1vfcmgdjEuIbE+RsYZrSz2wXCsSi+I2TDJdni/HSFqKWw8xBvz2Hfs378uk7hkqgkqzhTRtxNpAtaNxq9zK2oRZ4Se1pXTEzVLMjho3fe0ibWDgsOee4ymwlZhJBg5mV04Dbms+ypMHKJwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741958897; c=relaxed/simple;
-	bh=hJkhck9eKlAqu//oCzwubFpPFr//TVf9JxlStCkTKLA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b/95fOUH2wInB5J7cNCcz+83Yl1lTC91BDzQLIpJMHJSIAMldocJOQq6HSzkQ+tvjRdMp1ZGuHLLn5Mh+MBTzJmz6i5loaZnc5h29Q9feWTXUEvLe359ee1oEhF54z4bjO+FXjDhhsaFKbDtPBFEEf+EYeLX70yNZ+rE+m+Ylt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CAdegEdJ; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAdegEdJ"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bfed67e08so22793691fa.2;
-        Fri, 14 Mar 2025 06:28:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741958894; x=1742563694; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hJkhck9eKlAqu//oCzwubFpPFr//TVf9JxlStCkTKLA=;
-        b=CAdegEdJ6UqH67x/f/dbIRvWY1m8WlmtO1f94glsQiTN97icbB8w/GXxHwVnOv5npD
-         Hd0tmBlDJ0/cqUTExSVjue8tBZMAj4gEVWddXfRV4l5h5/P5AKcW4dhTn3/fIXx6A4a7
-         bDtB7lnBhdBhphpYD2Af1M9Qy5CnxnZLbbrxA0DbM0ayefssM126jV959vZdAhy5jjCg
-         OM6F2ZAq7BRGMGxEGWW5/AOoXcjBTzyQqDnaEX822728cUERVt9ircFPu9iaHGW4r64v
-         i31CSzKBvTDUu16zv63pyP1ykU5a86D+FExmByiwKCZ83mUnZwj0cdrBZhops/gqgEAt
-         2Agg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741958894; x=1742563694;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hJkhck9eKlAqu//oCzwubFpPFr//TVf9JxlStCkTKLA=;
-        b=X/kb0PC8llCsZTXM0WJuzUxjnMpH5VcYoFuGwJFkWYVYWn/ib9aXiUyL9AWQap6F+p
-         2X423lwMws6fy2gtiNyEfcpo/hvNKd06AZ6U3FFsFBTm13W8+D/hkTIKNP6FdKDRVkuz
-         dZ6PNHgIGXnor8g0VXAqEaa0RuMTNdPmmXkXrwljcG6Jv68Nre/v8xmftXLytsePNTmo
-         L7CwsTPSMOyE7VpKcGaVydyYk8jDfsKoqHp9Ii8ACIpFaO/X41QDGPCvtmhVDDy7wxH6
-         VfqJPy/oI+zg0515Ah/EL9Vm3nSD3PLgJ/5I+UkCAbf7UP6zhk/qRRh1cZOmn44sKRh0
-         K+zA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMNyD6N2rPaK4GhwzcsIPAwWbroetgZmTEGc2vAMngP6u4Aptn1n+wloKXyBo4ugUDsP/a8sSBUPYB8pU=@vger.kernel.org, AJvYcCWAGrMfE9+9Eye/0gSJaYZpD08Wq4PrjNgu7/w9E5I9xa+9KGvE4KOicdEztIvgLrTuvjQvR5Xkw8pUnWQi457s@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO15rDzLktCcKUqKXWhR+2r07YF9QhsPYJ+GmOzsO4j4Gm3hPD
-	ZOYshPz6ytlEwS7lGg4O2OZ8Vl2RYOoK9MY2ggkKJOl/jvdM1Z8CHWIAqf65cf640edgfiNAE7b
-	ulb+ApQXm4HOcMBLAMqMcbh9PxVU=
-X-Gm-Gg: ASbGncvytmaH2+NpqY6y+T+v8Ggl5WL7jA/JFgsWKvRpVLur45nM7O/sZGhTLwosdci
-	8GrknwQyborRVTXndIfnorYCUinyW/QE8+exhmY0MAX2zggTjtgHTAwie9tOo2ArtDUfofz6xNC
-	pJwUWkN5f+2Wu+fSJ/7+FDGVN4EUJ3zqWC1dQu5DPzZki7fM6HHv7hUOcNB6uq
-X-Google-Smtp-Source: AGHT+IGltqnNzbbPxyZjh48Kw9hUyFNMEZtHX9cS6jzJwICDTiMlr8xsSK+RT4ckRDikKMa+S7IUHdkAJDHqKy8YI8Y=
-X-Received: by 2002:a05:651c:a0b:b0:30b:b132:43e5 with SMTP id
- 38308e7fff4ca-30c4a876b4fmr9290251fa.19.1741958893645; Fri, 14 Mar 2025
- 06:28:13 -0700 (PDT)
+	s=arc-20240116; t=1741958925; c=relaxed/simple;
+	bh=8uDIjj7n3Y2XMNmO7hPZ5YbenfmMmfvy/g7Rjg8/egg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Txk3QnpI+9iuR8q0ccOogFiaN2mTKUO7roYpL/MjAmBFn4d6Eb8R3J4D7yDnh00YxLXtwd+Oi5rG8pVfVQ66pVTWmDel38uUXcbB7nloPFDohtKYm0Zwj7xYqYbV8dkHXHI82CpxdcTo1dF/pAN5/Da57jxfy36qhs2sHt3ReL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BA90D42FF4;
+	Fri, 14 Mar 2025 13:28:38 +0000 (UTC)
+Message-ID: <4f6c83c0-39f6-467d-83c6-13d37440fb20@ghiti.fr>
+Date: Fri, 14 Mar 2025 14:28:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-scanf-kunit-convert-v9-0-b98820fa39ff@gmail.com>
- <20250307-scanf-kunit-convert-v9-6-b98820fa39ff@gmail.com> <Z9QtUoFdCoTXnkzE@pathway.suse.cz>
-In-Reply-To: <Z9QtUoFdCoTXnkzE@pathway.suse.cz>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 14 Mar 2025 09:27:37 -0400
-X-Gm-Features: AQ5f1Jrt6C1V2agp8ifeW-hCbBYKoJwEJUU1PdkbNliBXgvyfjTA2ixJ8FIOf_8
-Message-ID: <CAJ-ks9nFV-jh5wiBFzabXaE_nx13s+4R4wVZ+uqP7zm0-KGfAw@mail.gmail.com>
-Subject: Re: [PATCH v9 6/6] scanf: further break kunit into test cases
-To: Petr Mladek <pmladek@suse.com>, Kees Cook <kees@kernel.org>
-Cc: David Gow <davidgow@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/4] riscv: uaccess: optimizations
+Content-Language: en-US
+To: Cyril Bur <cyrilbur@tenstorrent.com>, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, paul.walmsley@sifive.com, charlie@rivosinc.com,
+ jrtc27@jrtc27.com, ben.dooks@codethink.co.uk
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ jszhang@kernel.org
+References: <20250221000924.734006-1-cyrilbur@tenstorrent.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250221000924.734006-1-cyrilbur@tenstorrent.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedtleehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpefhhfdutdevgeelgeegfeeltdduhfduledvteduhfegffffiefggfektefhjedujeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemugehrgefmeehsgeisgemuggvfhekmeeltdguvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemugehrgefmeehsgeisgemuggvfhekmeeltdguvgdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemugehrgefmeehsgeisgemuggvfhekmeeltdguvggnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheptgihrhhilhgsuhhrsehtvghnshhtohhrrhgvnhhtrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtohepr
+ ghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopegthhgrrhhlihgvsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehjrhhttgdvjeesjhhrthgtvdejrdgtohhmpdhrtghpthhtohepsggvnhdrughoohhkshestghouggvthhhihhnkhdrtghordhukhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
+X-GND-Sasl: alex@ghiti.fr
 
-On Fri, Mar 14, 2025 at 9:21=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
-e:
->
-> Thanks for trying this. But I personally do not find this as a big win.
-> It causes that the test log is longer than one screen and thus harder
-> to review.
->
-> It might be fine when running only this test and running it only once.
-> But I think that it is quite common to run more tests and then
-> it is easy to get lost.
->
-> I guess that there are tools for handling the KTAP format which might
-> make this easier but...
->
-> So, I would prefer to avoid this patch.
->
-> Best Regards,
-> Petr
+Hi Cyril,
 
-Fine with me, and thanks for having a look! I've rebased this on Kees'
-for-next/move-kunit-tests, shall I send v10 with this patch dropped?
+On 21/02/2025 01:09, Cyril Bur wrote:
+> This series tries to optimize riscv uaccess by allowing the use of
+> user_access_begin() and user_access_end() which permits grouping user accesses
+> and avoiding the CSR write penalty for each access.
+>
+> The error path can also be optimised using asm goto which patches 3 and 4
+> achieve. This will speed up jumping to labels by avoiding the need of an
+> intermediary error type variable within the uaccess macros
+>
+> I did read the discussion this series generated. It isn't clear to me
+> which direction to take the patches, if any.
+>
+> V2:
+> I've taken on this series as there isn't any response from Jisheng. No
+> significant changes other than build fixes.
+> - Fixes build breakage in patch 3 to do with not having used 'goto' keyword.
+> - Fixes build breakage in patch 4 on 32bit not having delcared __ptr in the
+>    macro.
+>
+> V3:
+> Significant commit message rewrites.
+>   - Corrected the justification for patch 2
+>   - Better explained/justified patches 3 and 4
+> Minor code changes for legibility and more comments.
+>
+> Jisheng Zhang (4):
+>    riscv: implement user_access_begin() and families
+>    riscv: uaccess: use input constraints for ptr of __put_user()
+>    riscv: uaccess: use 'asm goto' for put_user()
+>    riscv: uaccess: use 'asm_goto_output' for get_user()
+>
+>   arch/riscv/include/asm/uaccess.h | 205 +++++++++++++++++++++++--------
+>   1 file changed, 152 insertions(+), 53 deletions(-)
+>
+Following up on Ben's comment here 
+https://lore.kernel.org/linux-riscv/b45aab1e-6d37-4027-9a15-4fa917d806b9@codethink.co.uk/
+
+The problem that Ben mentions is caused by the use of *macros* which 
+used to make the evaluation of the parameter inside the user-accessible 
+section, and since this parameter could be a sleeping function, we could 
+schedule another process with the SUM bit set, which could be cleared by 
+this process, which would make the first process fault when trying to 
+access user memory. I did not find any macro using unsafe_XXX() 
+functions which could cause a problem right now, but I may have missed 
+one and new could come up later, so we have multiple solutions here:
+
+- suppose that a macro using unsafe_get/put_user() and passing a 
+sleeping function as argument won't happen and then do nothing
+- or save/restore CSR sstatus when switching processes
+- or simply check that SUM is not set when switching processes
+
+Let me know what you think.
+
+Thanks,
+
+Alex
+
