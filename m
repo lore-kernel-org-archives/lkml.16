@@ -1,141 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36DF194137
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5408B194137
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741940038; cv=none; b=G376hKwxN3jDBKP8x1RG0wkXzSffbZmpTiL0jDvZjbACQ4dywDDt63Mg4uM477mmOEBD9kT4LAXiD0iUoMxsNEtvCx8HDoBC6hXDh6hZ8kJVkE2JAjFWIi6J7YBxX/04rUyfVNmSFd3HiOIl52777yQaaIcBNHsq29K5JtP0I+4=
+	t=1741940082; cv=none; b=m4s2S1kWvbEVv8Wk8O1u4hiBZKfmHbx+ZxDOB0kh0I1uziXL1ogUFVyw+c/+L3YBPHFS/Wc3W6nyR/xfC2xB3BBig+NM9R1PhibPxuKUbHTW93UhJ+fMUEwQ+yuha0Nz39APi/9ewuf9K/lckRH2GgM4Z1bfVz5AMDcKJdgyv2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741940038; c=relaxed/simple;
-	bh=seuKXhHZYUd/bOYJs3Ge/7ExXVxxWS0G9fYTItKU0us=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EhLl22wiqafzAgz7b8+RAf4ThdJvbWstk2zrDaipFMI+IVLgQLiSUSfJGfTTwiZsSYCjV+4trnmnKzrEI3bHvhHrq0TCVvyGRVk6t3f0CXtKSFZg2pH1rXnUb5PXoAf33xyClIMqFNYisVZxmCtBK1Aydxl0N0HafnlKu6czowg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RxM5DLHL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741940082; c=relaxed/simple;
+	bh=O9LQG/lpPnOhkT+jYoKuvDbee+y6Sz3wefUhFAgS2yY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AHPUqMnFClm3Oh5pIYTGZOm+b8Jq9IO6P2hSLSBpnKa1PzZzB0wVCx6rSddoY3pJkwtV0d+hbTa1q/ayElkqVPXKA4CFq2RWpV4cxnXQnjnvlAcRJlwSNsKOZAm+CnCGOL01axDnHgLuwHW/N1qhnHcCiSHFG/rk16fLBDV01Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VPezrNba; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RxM5DLHL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FC9CC4CEE3;
-	Fri, 14 Mar 2025 08:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741940038;
-	bh=seuKXhHZYUd/bOYJs3Ge/7ExXVxxWS0G9fYTItKU0us=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RxM5DLHLPAU3fzVvKAULE492oYzs1GB4NvP+zUr0ofQ28hs4KyL9mUWwpY+h2xK4g
-	 N30ejhrcJ4/0iC5ZOn55QvGqdwKea33Tsqpf+LN2eklZDHjS1GhVJl5g1qYmPDLxeC
-	 h3ru4Q/ayhb42EaAov+BiPwJihivgjptYbUJcCxA2fpnBog2llP+IelP7RavxDMex1
-	 hVWwKvxaiaubSaXTKoJe5DmiqACik2eP86+lZHMQG535e9i7HC/NdHdQeSORhjF0OT
-	 36/EmD2z1nyqbNZ2Ymt4vK2/aUM39DfnQkfQaOB88ftPy80G7NRIKtP7L3uk2eRJM9
-	 jTwm4RZojS/QA==
-Message-ID: <d0d82010-e311-4a41-a6c4-027626e408ba@kernel.org>
-Date: Fri, 14 Mar 2025 09:13:52 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPezrNba"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e4d50ed90aso2306124a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 01:14:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741940079; x=1742544879; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4jL5xAzxvHMCk7fi6TBU/sDX0DbhcH+sqMw7FTW5ldM=;
+        b=VPezrNbaU/S1mOE6z1Ihr/mpoULdSL9kpiY0hkF8dW1GNZ8Gt/4r8Rz4ImjOTmHf2F
+         AD3YuMzzinlkKGmdU12+PtFX4U6x330X9XE0uIloVHeb/9HkUECUaJK/OYcZw+xYkukz
+         JS/btE/jkwpt3hDeUfWQD3JuzffKv78EJgJLekTHtGx1GQUZwzV8CjOAUMWxVYNS1o4w
+         2Spqb0/+i2xnQ7uRnjCTjaQdrWfYDdFzzP1/XFGVDcY8yM2PLnKcNo/V8VD3axYhZ65L
+         5lZtFel+CfV+BvxFpG6WoXydGXsKBVdL23vWhogmLcky/+b1LKrJSXFVAwD9cB3JFfKz
+         ALnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741940079; x=1742544879;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4jL5xAzxvHMCk7fi6TBU/sDX0DbhcH+sqMw7FTW5ldM=;
+        b=qioUclEm6dmztm7paH/yHdNvsP+Do2AhX0ZxMRP66HPC2NFidwNdSlV+0rQrnoGlVU
+         bFrvXHWk6DhLY7jwwQ8LFZCE7oHUM6caqB3FMnvnpSxyt7mG750+z9JGM8HQyqAf6QYJ
+         I5aXV4vcTv+Mp/wk16oc4xylpx2PMy1Kfvj4r8kyI5YlCjsnFh3RpyKekXbr8p0/yEg2
+         Zbr+4XUUo9Sgrf22BTzj42Bwev7XCDcezVPguJfViEtrly9p0cLdlqmGiMYcm/kTHRzt
+         WYMv8zkEu4mGOryRocedN8NcgtDw4K/as4x0/1Mwo7G2CTrtHwcSej0EEu9p2xC0Hx18
+         ha9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUt6GjKF1xWq2r3/kyPJI5hWXlM5O6o2OrPHn0cWeGfYdLOxfIOc2ErlIS5cTc2pK5yrlYSrNa3Hc1KzEw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3OyRKge/uUDbqFjhHooIs4vnLm6RiM6wFN1UUYxhwcoWgXp8c
+	tYTDt73DUVFFXqppRNBrDt5qOaz+aocbHpM87BBD3Hz7IA3+dn2pTor0VXGe
+X-Gm-Gg: ASbGncv4wTiI5EUvWuVWa4oZryC1gJOajG4iasnIeVkeFSyp5kZkxg1ELcSojEPEI1Q
+	b2+WzCDK+0/QO+9iVEk2b0SmDh5MbRapwHiuPzkQ6a1+OmLXOQfcHcOzG6vZiSIgx3DT5MqKb+S
+	8tfqyPlXXtP0MuZfX+zayRoazdwQTpxHD5IQ0A5QRGzqCRZrdi7r3avg4KXZr7OcrupfaGd5p4V
+	XzU8K1WrzTq7V8z1n3T179QEi1xCV62AXIAnsa0bvmLmLG0EWmZQQl/kDBKw6kjsrke2Q1Qlnqm
+	GwlUmTMlaxam05DV9lI1Kh07mgUQ0srx4VAdKqL+SakX3gE=
+X-Google-Smtp-Source: AGHT+IH2uHvvaFjRLgPzz/axbDjRTaASMSL04mCeERLdmEA2nw9uAOEg7/99W5lF+t00yYVFiSpFOQ==
+X-Received: by 2002:a05:6402:1ed3:b0:5e7:f707:d7c4 with SMTP id 4fb4d7f45d1cf-5e8a0c0d331mr1485652a12.31.1741940078358;
+        Fri, 14 Mar 2025 01:14:38 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e816afe26bsm1651871a12.72.2025.03.14.01.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 01:14:37 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] x86/asm: Use alternative_input() in amd_clear_divider()
+Date: Fri, 14 Mar 2025 09:14:38 +0100
+Message-ID: <20250314081453.565859-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: mailbox: cix: add device tree binding
- documentation.
-To: Guomin chen <guomin.chen@cixtech.com>,
- Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- Peter Chen <peter.chen@cixtech.com>, Lihua Liu <Lihua.Liu@cixtech.com>
-References: <20250313132405.742360-1-guomin.chen@cixtech.com>
- <27cf6dab-da29-458a-b376-4013c05434ab@kernel.org> <Z9PkUxlQ1t5zZxuf@gchen>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Z9PkUxlQ1t5zZxuf@gchen>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 14/03/2025 09:09, Guomin chen wrote:
->>
->>> +
->>> +      This controller supports three types of unidirectional channels, they are
->>> +      1 register based channel, 1 fifo based channel and 8 fast channels.
->>> +      A total of 10 channels for each controller. Following types are
->>> +      supported:
->>> +      channel 0_7 - Fast channel with 32bit transmit register and IRQ support.
->>> +      channel 8   - Reg based channel with 32*32bit transsmit register and
->>> +                    Doorbell+transmit acknowledgment IRQ support
->>> +      channel 9   - Fifo based channel with 32*32bit depth fifo and IRQ support.
->>> +    const: 1
->>> +
->>> +  cix,mbox-dir:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    description: Direction of the mailbox (0:TX or 1:RX)
->>> +    enum: [0, 1]
->>
->> I don't understand why do you need it. By not sending us driver patch,
->> you are not making it easier. Why would provider care how consumers use
->> the mbox channel? Maybe consumer should choose the direction?
->>
-> 
-> As for the mbox-dir property, my driver code has already been submitted. 
+Use higher-level API to declare assembly with alternatives.
 
-There is no thing in this thread, so next time be sure you use standard
-submitting process, so your work will be threaded.
+bloat-o-meter reports no code size changes.
 
-> On the Cixtech Soc platform, although each mbox is unidirectional, 
-> there are multiple mboxes—some for reading and some for writing. 
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/include/asm/processor.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-So all mboxes in a controller have the same direction or not? Do you
-configure it or is it defined by hardware?
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 5d2f7e5aff26..b4b5aa46f68b 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -707,8 +707,9 @@ static inline u32 per_cpu_l2c_id(unsigned int cpu)
+  */
+ static __always_inline void amd_clear_divider(void)
+ {
+-	asm volatile(ALTERNATIVE("", "div %2\n\t", X86_BUG_DIV0)
+-		     :: "a" (0), "d" (0), "r" (1));
++	alternative_input("", "div %[den]",
++			  X86_BUG_DIV0,
++			  "a" (0), "d" (0), [den] "r" (1));
+ }
+ 
+ extern void amd_check_microcode(void);
+-- 
+2.48.1
 
-> Therefore, the mbox controller has added the mbox-dir property. 
-> 
-> Consumers only need to reference the corresponding mbox controller node, 
-> and whether it is for reading or writing is already determined by the mbox controller, 
-> without needing to further understand the mbox-dir property.
-
-Don't explain how DT works, I know. Why this property is needed in DT in
-the first place?
-
-
-Best regards,
-Krzysztof
