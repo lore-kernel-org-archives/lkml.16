@@ -1,108 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxout37.expurgate.net (mxout37.expurgate.net [91.198.224.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D502E336A
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 13:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA6D1DFD9A;
+	Fri, 14 Mar 2025 13:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741960366; cv=none; b=V8m/pdNc1lcWlgolwuFzz3v/owv0BnPQSNpIydZOHX+oDM00fJbBiTZ23j82pzhi1YDRfkIiuDoyzTkH22frS2MDOE+bnwJcgke04Yr47az5mXLKlqzbQ/dwebPugAf+QpC2L9t2N92DLXMmAeecfnnALH7msqMNF2HojHSmUHg=
+	t=1741960423; cv=none; b=r1mmrvmLRoGuursGAJwsSGSd+yBJEp7E38s7A2XUhwmo71jwo+rpbuH/H+JKQiY+ZDvsqtFST1H+GvccNpD1S/md2SnRRi+QPtCc44trsYn6r5X8zZs3fJVY+n8i9rvv+vmED4TmlrtvGFWjsnFzXl5Kuc/BWLw3gg2cTUtHhpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741960366; c=relaxed/simple;
-	bh=CaPV8/DUO42Un9C1VboHhkm+TZPcBTQ9zJaqy+mFrgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEbkw9SJxH36pctihl1IvQf2V9USsOGKthvDm1l+pdsnnk3tg38Xc+o6x5/xlR1XxJ7AT/DEHj40sxu2PNSPXMPjYKj13mlx7ESisckvdnzer4e6xhB/sFldk7+zEBc8qpTyU/aKVMMbZXs05zuLYeSnEwt1wmQlyt7ctwwgKAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJ3Yqk4/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJ3Yqk4/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E679C4CEE3;
-	Fri, 14 Mar 2025 13:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741960364;
-	bh=CaPV8/DUO42Un9C1VboHhkm+TZPcBTQ9zJaqy+mFrgk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mJ3Yqk4/wMoEP3MlA8qq5PtLHzCiq/rJpOJNLC/IeypEotMw4qQQgEc3a62+5Zv2d
-	 5O7bCvxRSI2xwSPj7CnrVSbwy0sZMX8s/Pqr3b6LBUzNpEFruA13Fq1yydUL8MnrTl
-	 Y7oKt9/mREVzVTypBLJg3xwzuR3RhD5rcB+WpFPTKzjUsuH/JM/xRuNaIfC9NWnLsM
-	 kuny6X7eyKsp6nrKeCanSadCcHPQd/AA4keKxO0/z4pGPe67sAkFXiV27UCG0fc3cJ
-	 ZGjzkpZ8gZD/1yjfYXy6u8m+5TBkyBb2SuPxaMG0MqanEzfC4u2VpRFGCJ8RWcbSfz
-	 R6SEsNYmHVXlw==
-Date: Fri, 14 Mar 2025 14:52:42 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+	s=arc-20240116; t=1741960423; c=relaxed/simple;
+	bh=QIqZq36mZ1fXNil9RPKcst3POABFpIjHwANElr2HuQs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uN11CWPhqfSn6diYlbQ8L5qSyV0UfxaoVac1FegrNxeKcj6JtcHjkdql/JPCmp+SPoLwgiz3CpdVN6tqooACqA+Rl7XIcboRD7FxH/n/8A1olCD1yr3gpY555qlL61ln3Ajti8VSihyyusxMmfJC9fRamDSfunYTGyX7E25nTG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de; spf=pass smtp.mailfrom=brueckmann-gmbh.de; arc=none smtp.client-ip=91.198.224.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brueckmann-gmbh.de
+Received: from [194.37.255.9] (helo=mxout.expurgate.net)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <thomas.gessler@brueckmann-gmbh.de>)
+	id 1tt5Nu-003bqT-Vn; Fri, 14 Mar 2025 14:47:35 +0100
+Received: from [217.239.223.202] (helo=zimbra.brueckmann-gmbh.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <thomas.gessler@brueckmann-gmbh.de>)
+	id 1tt5Nt-003e41-4V; Fri, 14 Mar 2025 14:47:33 +0100
+Received: from zimbra.brueckmann-gmbh.de (localhost [127.0.0.1])
+	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPS id E9E4FCAF156;
+	Fri, 14 Mar 2025 14:47:31 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTP id E5E97CAF150;
+	Fri, 14 Mar 2025 14:47:31 +0100 (CET)
+Received: from zimbra.brueckmann-gmbh.de ([127.0.0.1])
+ by localhost (zimbra.brueckmann-gmbh.de [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id EnYx8uQXloXr; Fri, 14 Mar 2025 14:47:31 +0100 (CET)
+Received: from ew-linux.ew (unknown [10.0.11.14])
+	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPSA id CE686CAF131;
+	Fri, 14 Mar 2025 14:47:31 +0100 (CET)
+From: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
+To: dmaengine@vger.kernel.org
+Cc: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>,
+	Vinod Koul <vkoul@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Marek Vasut <marex@denx.de>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] drm/tests: hdmi: Add limited range tests for
- YUV420 mode
-Message-ID: <20250314-didactic-bandicoot-of-perspective-e077ae@houat>
-References: <20250311-hdmi-conn-yuv-v2-0-fbdb94f02562@collabora.com>
- <20250311-hdmi-conn-yuv-v2-6-fbdb94f02562@collabora.com>
- <20250311-burgundy-cat-of-diversity-b89681@houat>
- <dca413e0-bad5-485d-9c77-402d806e97a5@collabora.com>
+Subject: [PATCH] dmaengine: xilinx_dma: Set max segment size
+Date: Fri, 14 Mar 2025 14:47:15 +0100
+Message-ID: <20250314134717.703287-1-thomas.gessler@brueckmann-gmbh.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="3qcnnqf3voxkluic"
-Content-Disposition: inline
-In-Reply-To: <dca413e0-bad5-485d-9c77-402d806e97a5@collabora.com>
-
-
---3qcnnqf3voxkluic
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 6/7] drm/tests: hdmi: Add limited range tests for
- YUV420 mode
-MIME-Version: 1.0
+X-purgate-ID: 151534::1741960053-ADFAB3DC-1FE738A5/0/0
+X-purgate-type: clean
+X-purgate: clean
 
-On Wed, Mar 12, 2025 at 12:54:51AM +0200, Cristian Ciocaltea wrote:
-> On 3/11/25 6:17 PM, Maxime Ripard wrote:
-> > On Tue, Mar 11, 2025 at 12:57:38PM +0200, Cristian Ciocaltea wrote:
-> >> Provide tests to verify that drm_atomic_helper_connector_hdmi_check()
-> >> helper behaviour when using YUV420 output format is to always set the
-> >> limited RGB quantization range to 'limited', no matter what the value =
-of
-> >> Broadcast RGB property is.
->=20
-> [...]
->=20
-> > We need more tests than that to test the various combinations, whether
-> > the fallback to YUV420 should work or not depending on the EDID, the
-> > driver capabilities, YUV420-only vs YUV420-also, etc.
->=20
-> Some fallback tests were provided in the next patch, including checks lik=
-e:
->=20
->   KUNIT_ASSERT_TRUE(test, drm_mode_is_420_only(info, yuv420_only_mode));
->   KUNIT_ASSERT_TRUE(test, drm_mode_is_420_also(info, preferred));
->=20
-> I'll try to further extend the test coverage.
+Set the maximumg DMA segment size from the actual core configuration
+value. Without this setting, the default value of 64 KiB is reported,
+and larger sizes cannot be used for IIO DMAEngine buffers.
 
-Yeah, sorry, I saw them after reviewing this patch. Still, I think we'll
-need more, especially to deal with the fallback cases. IIRC, you were
-testing the cases where you're forced to take YUV420 because of the
-monitors (or drivers) limit, but we should also try the tests where
-you're forced to take YUV420 but the driver implements HDMI 1.4 only for
-example, and thus we can't.
+Signed-off-by: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
+---
+ drivers/dma/xilinx/xilinx_dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Maxime
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_=
+dma.c
+index 108a7287f4cd..4b4a299e3807 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -3114,6 +3114,8 @@ static int xilinx_dma_probe(struct platform_device =
+*pdev)
+ 		}
+ 	}
+=20
++	dma_set_max_seg_size(xdev->dev, xdev->max_buffer_len);
++
+ 	if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIDMA) {
+ 		xdev->has_axistream_connected =3D
+ 			of_property_read_bool(node, "xlnx,axistream-connected");
+--=20
+2.43.0
 
---3qcnnqf3voxkluic
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ9Q0qQAKCRAnX84Zoj2+
-djFTAYCuCBkdca3mDmyZr8j1d6GofqJ5n0Bb8bJklVbWIbH7K+7imNbVo3T+A9mB
-K/vjC3oBf35IdeIrLSQ8RShZCAynMcSLfo2Oi2WrGtjbVt8aT2fKukV1hGlkB1eu
-eI6OqsWeHg==
-=qXNN
------END PGP SIGNATURE-----
-
---3qcnnqf3voxkluic--
