@@ -1,71 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D4B17557C;
-	Fri, 14 Mar 2025 08:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CD732C85
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741940118; cv=none; b=LpaVxtcWeqvN9Q71d8HzvuDP6cAfK3CMTMTJC2SoooOUwdv+J/CkCk/D3YuhAGRv5GYE28QOY9/YuYUDEYEujRTPWiDHfXy7opYjEq+P+pReLMFRilULdHeNirYPUY8FwxEiPJ763dzhB6bzpcsnCzMZiobmu4rlloqXGUz97ow=
+	t=1741940146; cv=none; b=bnTTl+YIyi/HtT6V69n6GkVFuXgLft7HnE6ujoWyTIkYGwDNz+LiJpTB455cn9xXz2wdnYXEEdW4C1+UCIbav8cbAHk4isoytzSkM2dw5ztzlUT+JUcB/Chc0TgrDazCV+dk+yNWgpECqHikqf3/4mUvBoujvZ3KPg+Go1zd7dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741940118; c=relaxed/simple;
-	bh=c7ABCEaXzhXf2ga+O2xCrbFV5cHGA14uEMNM19s30iE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5zf24LOMnVyvzOttrVzab9/GrE/FI1MWNfkPhfwx/K4OILNyenSJV9LhfvohuXn5nJ77NFxWtMmxhV8xdr0z7nnBAMgGzP7b7ZAcbgbAXY6n9zgulhaED6PtHe795xnsJ/MW6XPt/r2+hafCtjRGYfF5ojl3/t1277Nf2oFAX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGVfFVhK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGVfFVhK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D543C4CEE3;
-	Fri, 14 Mar 2025 08:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741940117;
-	bh=c7ABCEaXzhXf2ga+O2xCrbFV5cHGA14uEMNM19s30iE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iGVfFVhK+WLUZG7BUB+ebQBe+trOCgECkGqgrujM2C+YvwxVLrLF4iKC64cNVEkjw
-	 +zzYnJPAs8XrBuAlpNZpk2uQAs0Tlfnlj+vGSbhqM/Z7qhN1aSX9O4jHhyiQFqHHbl
-	 3fAOL9wV2m/Kojtgb0nFkodCOCtkwGiuXfTBHjCpVlf/yWn2b46IHF8BVUiQGHxad4
-	 EcIq7BnVz9ZjrmiWEgG4AB/Lx+7+qcn9v7VD8KKaqbZPuEMIt5g8dh4rVMzl2cHae+
-	 hYmD9/pjVlCDuIJqc4X6FjAT+qtKG5AqyGsnBIvK6y2QUFHZgoLJFiI8Fbgv4lAM/6
-	 NiNH0xzDFzcvw==
-Date: Fri, 14 Mar 2025 09:15:13 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: George Moussalem <george.moussalem@outlook.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, andersson@kernel.org, 
-	bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org, 
-	lumag@kernel.org, kishon@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org, 
-	kw@linux.com, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, 
-	p.zabel@pengutronix.de, quic_nsekar@quicinc.com, robh@kernel.org, robimarko@gmail.com, 
-	vkoul@kernel.org, quic_srichara@quicinc.com
-Subject: Re: [PATCH v4 1/6] dt-bindings: phy: qcom: uniphy-pcie: Add ipq5018
- compatible
-Message-ID: <20250314-hypersonic-starfish-of-sunshine-75f8fb@krzk-bin>
-References: <DS7PR19MB8883F2538AA7D047E13C102B9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
- <DS7PR19MB88835F541CBC60C97A818B3A9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
+	s=arc-20240116; t=1741940146; c=relaxed/simple;
+	bh=Phim3QMX2arQqUJumjGiDsAj5I+AJWKE1SRlMfzlBYE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G7K9IbWQS1FSuWuCUu4hvl3kXf2b9p+o9dbolELqiSV2+lwdaThBuMob+pGHbTcIGAswM8qdX4hM62W0tDx1hJNCBF0vMRzca0wBWFjNcZ0nBQO5LQEkZhic9CtXGADUQ25yIWD7H3FZqTJbJq1MZyIQ9CNH406Sk7U8Yb0K9V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 57970cea-00ac-11f0-8da8-005056bdfda7;
+	Fri, 14 Mar 2025 10:14:25 +0200 (EET)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 14 Mar 2025 10:14:25 +0200
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 07/10] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <Z9PlYSZDviGOCV7X@surfacebook.localdomain>
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-7-8a35c6dbb966@bootlin.com>
+ <Z69oa8_LKFxUacbj@smile.fi.intel.com>
+ <D8FAX4E29LZK.3VUK90WB04MV2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DS7PR19MB88835F541CBC60C97A818B3A9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
+In-Reply-To: <D8FAX4E29LZK.3VUK90WB04MV2@bootlin.com>
 
-On Fri, Mar 14, 2025 at 09:56:39AM +0400, George Moussalem wrote:
-> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+Thu, Mar 13, 2025 at 06:07:03PM +0100, Mathieu Dubois-Briand kirjoitti:
+> On Fri Feb 14, 2025 at 4:59 PM CET, Andy Shevchenko wrote:
+> > On Fri, Feb 14, 2025 at 12:49:57PM +0100, Mathieu Dubois-Briand wrote:
+> > > Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
+
+...
+
+> > > +	/*
+> > > +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad debounce
+> > > +	 * timings and gpos/keypad columns repartition. Only the later is
+> > > +	 * modified here.
+> > > +	 */
+> > > +	val = FIELD_PREP(MAX7360_PORTS, ngpios);
+> > > +	ret = regmap_write_bits(regmap, MAX7360_REG_DEBOUNCE, MAX7360_PORTS, val);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to write max7360 columns/gpos configuration");
+> > > +		return ret;
+> > > +	}
+> >
+> > Shouldn't this be configured via ->set_config() callback?
 > 
-> The IPQ5018 SoC contains a Gen2 1 and 2-lane PCIe UNIPHY which is the
-> same as the one found in IPQ5332. As such, add IPQ5018 compatible.
+> I believe this comment has been a bit outdated by our discussion on
+> using GPIO valid mask, but I believe we could not use the ->set_config()
+> callback here: this callback is made to configure a single pin while the
+> gpos/keypad columns repartition is global.
+
+Yeah, we have similar desing in Intel Bay Trail (see pinctrl-baytrail.c) and it
+requires some software driven heuristics on how individual setting may affect
+the global one. But the Q here is is the debounce affects only keypad? Then it
+should be configured via keypad matrix driver. Btw, have you checked
+drivers/input/keyboard/matrix_keypad.c? Is there anything that can be useful
+here?
+
+...
+
+> > > +		if (irq < 0)
+> > > +			return dev_err_probe(dev, irq, "Failed to get IRQ\n");
+> > > +
+> > > +		irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
+> > > +		if (!irq_chip)
+> > > +			return -ENOMEM;
+> > > +
+> > > +		irq_chip->name = dev_name(dev);
+> > > +		irq_chip->status_base = MAX7360_REG_GPIOIN;
+> > > +		irq_chip->num_regs = 1;
+> > > +		irq_chip->num_irqs = MAX7360_MAX_GPIO;
+> > > +		irq_chip->irqs = max7360_regmap_irqs;
+> > > +		irq_chip->handle_mask_sync = max7360_handle_mask_sync;
+> > > +		irq_chip->status_is_level = true;
+> > > +		irq_chip->irq_drv_data = regmap;
+> > > +
+> > > +		for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
+> > > +			regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
+> > > +					  MAX7360_PORT_CFG_INTERRUPT_EDGES,
+> > > +					  MAX7360_PORT_CFG_INTERRUPT_EDGES);
+> > > +		}
+> > > +
+> > > +		flags = IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED;
+> > > +		ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev), regmap, irq, flags, 0,
+> > > +						      irq_chip, &irq_chip_data);
+> >
+> > Right.
+> >
+> > What I mean in previous discussion is to update gpio-regmap to call this from inside.
+> > You need to add irq_chip pointer and irq_chip_data pointer to the regmap configuration
+> > and if they are set (or the first one, I dunno if this is supported by IRQ chip core)
+> > call this function and assign domain. This should be called after GPIO chip is
+> > added, but before IRQ domain attachment.
+> >
 > 
-> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
->  .../devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml  | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Ok, this is a bit more clear to me now. So I came up with something, it
+> will be part of the next iteration, probably during the next week.
+> 
+> This required to add a few additional fields to the gpio_regmap_config
+> structure, specifying the IRQ configuration:
+> 
+> + * @regmap_irq_chip:   (Optional) Pointer on an regmap_irq_chip structure. If
+> + *                     set, a regmap-irq device will be created and the IRQ
+> + *                     domain will be set accordingly.
+> + * @regmap_irq_chip_data: (Optional) Pointer on an regmap_irq_chip_data
+> + *                      structure pointer. If set, it will be populated with a
+> + *                      pointer on allocated regmap_irq data.
+> + * @regmap_irq_irqno   (Optional) The IRQ the device uses to signal interrupts.
+> + * @regmap_irq_flags   (Optional) The IRQF_ flags to use for the interrupt.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Okay, just make sure it's guarded by the same ifdeffery as the similar in the
+GPIO:
 
-Best regards,
-Krzysztof
+#ifdef CONFIG_GPIOLIB_IRQCHIP
+
+...
+
+> > > +
+> > > +		regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
+> > > +	}
+> > > +
+> > > +	/* Add gpio device. */
+> > > +	gpio_config.parent = dev;
+> > > +	gpio_config.regmap = regmap;
+> >
+> > > +	if (gpio_function == MAX7360_GPIO_PORT) {
+> > > +		gpio_config.ngpio = MAX7360_MAX_GPIO;
+> >
+> > Why this case can't be managed also via ngpios property? Maybe at the end of
+> > the day you rather need to have another property to tell where the split is?
+> >
+> > This will help a lot and removes unneeded sharing of ngpios here and there.
+> >
+> > What I read from this code is like you are trying to put _two_in_one_ semantics
+> > on the shoulders of "ngpios".
+> 
+> So as I reworked the keypad columns GPIOs, PORT GPIOs and the COL GPIOs
+> are a bit more similar on this point. So far I now use a constant value
+> assigned in the driver for both, as I believe there is no way the number
+> of GPIOs could be a different. Yet I can easily switch back to a value
+> provided by a device property.
+
+Sounds good as long as ngpios is not overloaded with the additional meanings.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
