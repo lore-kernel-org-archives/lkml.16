@@ -1,63 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7018209F53
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 20:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B992045A0
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 20:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741983209; cv=none; b=RtQTQk4Am+zZ7viAC0BBkrhQa755qu2IdTHA9dw1TfgDg0ncJqABZmf/NWhpglY9K1EI+iL+6lE7VB0679d2ruEmi6/h/wrHPG3GWa6Jq9kzVGZ7saLBy6yWaedUo/SFN8+zPb7ddFdehhtat+B0UAO/sB5W9kFTh+gJzxPqsFk=
+	t=1741983505; cv=none; b=BnmdSxTJlrSQyUyvCAM1xVJMnqcG9l6u4YBwfrPFcbIXn7hoguWrGSIfb69Bm82v4aAGrgHsb3qrSa7+TBMAknHtw32rFlr3GN331uKYLRX/pWVZYoh9EmhNRtXVJC7puGhswYz7eTvJbpa71BxTu9KnRrh+dNqz1bGLQmL5yvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741983209; c=relaxed/simple;
-	bh=LL1yJzzp6EWZX7AJe+yY32kcTMRCKtpCdn+IdMKtU78=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=UDZiZIs5EblNIqynH7QW838XToH92S7t8cAa4uXNeVir8lmUjMPHsHxXHOc+aa7wcXNXyOoS6FnA855dgxVtdezTHEMQoLEshl2IaSYztbjIkMlYSLvLuXZYK2rzt6W0Z/B5HJXLkQgqEuzoELpsKCoKf82gbiptz/z2belMCM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BOQbUew+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741983505; c=relaxed/simple;
+	bh=4ESTlD1VAk2LRhm46kGze9fKTdLnaNIw02AlFjlKnqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K1dL8Cs+Q+fZJSXOQ5eehzLNia6gR9kylnlHczdkvMEYMeO8FYfvvgIdjjFaM9OivT2Y0DoG1lBCuQNUkm6pRsZU4ec0hCiRL1eRWx9BUSqYddMv168/gprLIa1Y69wPJoaRAwmPkDmQaue3mNxaS/gllvBZMjOE7yGh6EkNgGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gaE90lqw; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BOQbUew+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C63C4CEE3;
-	Fri, 14 Mar 2025 20:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741983209;
-	bh=LL1yJzzp6EWZX7AJe+yY32kcTMRCKtpCdn+IdMKtU78=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=BOQbUew+M7navHJQ1RwtqqPjo79OD1p00fAszWDXr8jFeuWJ4HDioAqq6829IzRqo
-	 Ti6jAlA/clgKKcHFCI9lxyEet6kmpxh+ifc3Lgg3M/TVToea0+ET5C5s4FIZqqxi4r
-	 +puRBUV3JOHjRZ1ApYAJ9+SR/YSBZH62bEJIDDUMuKOl4cUuoTMz0R6B+TJW7/fI0J
-	 1tnxjKdzbiHZGUGcVQ27jUAUmw9XeOiVkbkBZ4GOA8dFVM4/TSJf26ARgtFDqcNsDs
-	 3twPS4e5gozG7qEqkSP3bZeLuMsjMTj/+5Knm8fdb53l2ULtatK0Yxm4KsCsFwJO+X
-	 yGac5ZU/nLj3Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF52380CEE2;
-	Fri, 14 Mar 2025 20:14:05 +0000 (UTC)
-Subject: Re: [GIT PULL] x86 fix
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Z9PzZnXjnMnWFym9@gmail.com>
-References: <Z9PzZnXjnMnWFym9@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Z9PzZnXjnMnWFym9@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-03-14
-X-PR-Tracked-Commit-Id: a2ab25529bbcea51b5e01dded79f45aeb94f644a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2eaca8a09e55a30e8f2df8d13d4071f8f856b716
-Message-Id: <174198324421.2369576.16407837220528009556.pr-tracker-bot@kernel.org>
-Date: Fri, 14 Mar 2025 20:14:04 +0000
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gaE90lqw"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2240b4de12bso68091505ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 13:18:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741983503; x=1742588303; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kVE/X+1dvBgKywWxxHtjJI1otue6/+H9v0hJ6Relc5w=;
+        b=gaE90lqwdHRBkcSKO1r498yMZ0+muDLisUgXeSbpwuR2wxtLmj1MTwe9dtTWls0kFr
+         5ZR0l2iJuV+vJKa9OmAMruWQFwkiVpZKZEVKkHtuLof4o0oKW/a5+2Et6fEfu6Gfc8s2
+         YdZfwYakYj7fhGIhBO8zmVcNdAfcFN96jvMnPtK/iRZj6kPgwllyB5XAQPAdIMt3/DsC
+         Xc1iMSaNMMxfBlUAc/9x7iZnYVxd819zxc4REQZkXLmgkceQmZj3xkMxEvm8E7NvJ8ND
+         mW/bAGHd79DgVW0v0SW5aqfQb6Vd3h89v+v51txyXALSPqktqrVd7WPPNR0obH6cHYL4
+         MINg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741983503; x=1742588303;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kVE/X+1dvBgKywWxxHtjJI1otue6/+H9v0hJ6Relc5w=;
+        b=pvlmylgqjlc3aeMmOfu2Wbk/oroN7l6K+JFZjFfvFAv1+zlefUfKAJBA/WdL+xTBSl
+         uVLrKsjCPSZywwy8EM+qTytzKywn0ULef36vMg02G2Vw9OSnPGmGVi530fpMN4F5P0g9
+         wr7fXThBXoYTmk/6hYGC3Gan4xrHz204elhzaLw+GEYV/mS4M5srbHeBfnLnGfGjDhj7
+         pXHs8gDTiFyWDQzVBW2BrYV83Wx143Y7/wHxptYgBZmv9xWVnVlP5owj1QseqaojKhAP
+         DspXU2NE001F57BGbKbtXlz7vUAvhKe3YfqJAXLivIA382cZoZq74PBp7lVNwx9l4jre
+         DtLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCySm5CEPW+2PY7mHw4i3bp93gRRIwOp/mQtBkgLQ+6vZMVLztHL3B7uwWMMlkbnqCcO8xy+fssUZv7SU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXVQnmUCXAF/AHTotpW+E5DPx++XGKMg6QFgTpA55YHr3wxI3s
+	+YiUBpB748FfGd2hSJcfg6CKUJ26lhX+1EcmbdsgK/B/AAy9pmh0gBnhW6/JJCg=
+X-Gm-Gg: ASbGncsTL+vh81bgYdHGB0TAeu/uXQ8iX2f+nfnb3J/7KW52utE0j34F0P3EtEqf+3R
+	ye327QQUVsFuFJ6CHHbHLxwe8kc3WmvnORD/dBJIbIv+2xqaSks6obwMl36ylchP3uXkFrnPk10
+	uJ/3uh+diIGmej+ft1zMpzhKFaDJ1hSIJboXkAnH0kXr/B069UUlbYgaf9RaWHZQt3Q2Cx9OoEs
+	TyxCUq7v+mlZdfJalA+FkQ59JUClwmxwCq85Uj4N5P/kzXeBeXWDTGkkzBGYqmk9UX8VwX6JQJn
+	H84+UVq8M+uQCeSPOFsSCsqTPC4Fw+rxl7CnF8W7emveylc=
+X-Google-Smtp-Source: AGHT+IHXBdYKz+0nlSrPK7TcM2iKiILeG/wu7hs+o6yF94fn14To6hkfN4AHSD2DhQ5uyimEFEKDcQ==
+X-Received: by 2002:a17:902:e843:b0:224:1acc:14db with SMTP id d9443c01a7336-225e0ac3830mr51638205ad.29.1741983502703;
+        Fri, 14 Mar 2025 13:18:22 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:edf2:f43:33df:904c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd5a7dsm32535845ad.251.2025.03.14.13.18.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 13:18:22 -0700 (PDT)
+Date: Fri, 14 Mar 2025 14:18:19 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: andersson@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com, Frank.Li@nxp.com,
+	p.zabel@pengutronix.de, peng.fan@nxp.com,
+	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] remoteproc: imx_dsp_rproc: Document run_stall struct
+ member
+Message-ID: <Z9SPC1Rl28NKjFTV@p14s>
+References: <20250314151720.1793719-1-daniel.baluta@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314151720.1793719-1-daniel.baluta@nxp.com>
 
-The pull request you sent on Fri, 14 Mar 2025 10:14:14 +0100:
+On Fri, Mar 14, 2025 at 05:17:19PM +0200, Daniel Baluta wrote:
+> Add documentation for 'run_stall' imx_dsp_rproc struct member.
+> This also fixes the following warning:
+> 
+> warning: Function parameter or struct member 'run_stall'
+> not described in 'imx_dsp_rproc'
+> 
+> Fixes: 0184b4fdbad1 ("imx_dsp_rproc: Use reset controller API to control the DSP")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202503142125.IE33sCto-lkp@intel.com/
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  drivers/remoteproc/imx_dsp_rproc.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-03-14
+Applied.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2eaca8a09e55a30e8f2df8d13d4071f8f856b716
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/imx_dsp_rproc.c
+> index bc60edcdd661..90cb1fc13e71 100644
+> --- a/drivers/remoteproc/imx_dsp_rproc.c
+> +++ b/drivers/remoteproc/imx_dsp_rproc.c
+> @@ -96,6 +96,7 @@ enum imx_dsp_rp_mbox_messages {
+>  /**
+>   * struct imx_dsp_rproc - DSP remote processor state
+>   * @regmap: regmap handler
+> + * @run_stall: reset control handle used for Run/Stall operation
+>   * @rproc: rproc handler
+>   * @dsp_dcfg: device configuration pointer
+>   * @clks: clocks needed by this device
+> -- 
+> 2.43.0
+> 
