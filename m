@@ -1,121 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1225217F55
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 20:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6542222DF;
+	Fri, 14 Mar 2025 20:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741982523; cv=none; b=nPH5cXJUEibjgA0KwyNB6XtZL2BV/7vfRDZJaJVk5ov0t4Qss8qxcF9yJQtnXsu5sNNj+DViU4DTn8iIR+iDHStsxRdevwoL6pem13njD6wShq+kUwIOgS8z8EhJenMj1Rxt4qWbd8vGShQ7vUilL5QlEslkHI8gwE6A6rAVG4Y=
+	t=1741982524; cv=none; b=n2jr9k9ZxS3i9jcTugsYVI+QEuhHl9OKP1MbprXr1CB+LlafGF+eTNry6yN71OLHLeFLV5I+hUi+cZF5eaQDZD+eFMClzB5UpwViz56KvnjICHEmujvXQpzlscFLHwKLfdwMJYcehQFbppqWMuYT/2zjoUfWTAfXzj5SU04CMoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741982523; c=relaxed/simple;
-	bh=IOnoKm30i2gTvyFK+uUTrGFu6CKL9+fAN1uynEfTKNU=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=s8YfbeMOtN7KFzE5Ac9FmcBi9V2RsAPV+MGteqynIOPYnVDlHvV56ynA8ZcAhkhLK7V6d9amdLI/yeZ28AkD+GLrp9NMCOKkyv3u70BeoBSlW6+5lGxiSldiNVDWumvZ1j2dqZA4JQ7Sq8DuxSVcrBw9iJUSX2r1P5uA0kHWP1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d9+Gda3K; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741982524; c=relaxed/simple;
+	bh=B0I2UR5bJ0bUy2B2afwpeun+oIu3OfPx0zK4mQ0Ca30=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CWREvdHM0w/1ox3WvXvFO26HVK1Idb1CT7RQM5kQuecPzEucGxfhQ7p+oKK4fLh3vd1up2Joe/Bn76Hr0Havl2XF03fIFSAUEfdRLFcnI845MVbMDo5CN0Hk/MPC1m3RH6E+akPqt111NWcJzofitPpDxU9FM+2p7YiTvcooK3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AczZUTwE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d9+Gda3K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741982520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sP7bsciAed3mv4rlNhBPKL9uchv7k0Ev3qtjfqaxmQQ=;
-	b=d9+Gda3Ka3sLWxtBDE0EHo43hbAGqyz8UwfKzzUdiWt+Rw/Y58B7PCT1BfNzgOgT6s/v0d
-	mHiqQUyLfkuUggkr3xO5284J7VDZPgmC8+gsFT7IXyLCsUpBfkHYQSy/QIOLhlVl6zTFFw
-	J1R7uyPoI0CVZZuubMIbMnEYxXJZtRY=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-468-oQaF7_6DNZScfQClf4zY5A-1; Fri,
- 14 Mar 2025 16:01:57 -0400
-X-MC-Unique: oQaF7_6DNZScfQClf4zY5A-1
-X-Mimecast-MFC-AGG-ID: oQaF7_6DNZScfQClf4zY5A_1741982515
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 52E94195608A;
-	Fri, 14 Mar 2025 20:01:55 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.61])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A5CC73003902;
-	Fri, 14 Mar 2025 20:01:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <f6be2823c1bfd37cb7629feb40a1a579bb9378d6.camel@ibm.com>
-References: <f6be2823c1bfd37cb7629feb40a1a579bb9378d6.camel@ibm.com> <20250313233341.1675324-1-dhowells@redhat.com> <20250313233341.1675324-3-dhowells@redhat.com>
-To: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
-Cc: dhowells@redhat.com, Alex Markuze <amarkuze@redhat.com>,
-    "slava@dubeyko.com" <slava@dubeyko.com>,
-    "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-    "idryomov@gmail.com" <idryomov@gmail.com>,
-    "jlayton@kernel.org" <jlayton@kernel.org>,
-    "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-    "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-    "dongsheng.yang@easystack.cn" <dongsheng.yang@easystack.cn>,
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 02/35] libceph: Rename alignment to offset
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AczZUTwE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81648C4CEF1;
+	Fri, 14 Mar 2025 20:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741982524;
+	bh=B0I2UR5bJ0bUy2B2afwpeun+oIu3OfPx0zK4mQ0Ca30=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AczZUTwEy96SbkOAHiE6HM0IJK/8h3UftlQEkVPJEABLvKmRP8b71MdXCw9EZS4Pu
+	 gKObCETMziXLTqUJjzv+aAtstoggmXPm9HaqSJuqabrmAYn/hojziv9dY+c1qFx0mX
+	 IfWvm7ULhl04Hs42sIuuqOQbER9u/+M4IrSH6Fm3po89wgB6eL4+oMbJ9XTLB9SGnJ
+	 yZYatI5orMFl5SsVE7XmITvCyf20vVF0wycJGPJatd7VUOV/H4n3J10AKRkK2qXs30
+	 7/ylJIsJhU6K6zCj/7ygwIMvvqw4OJw+UTWs76nerV9jg01e65zKbK4Q06G6Id5Dk6
+	 7kTuC1LkQHqEg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: cros-qcom-dts-watchers@chromium.org,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vikash Garodia <quic_vgarodia@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc7280: drop video decoder and encoder nodes
+Date: Fri, 14 Mar 2025 15:01:16 -0500
+Message-ID: <174198247887.1604753.2110662446344009711.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250303-b4-media-v2-1-893651a4b1c7@quicinc.com>
+References: <20250303-b4-media-v2-1-893651a4b1c7@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1998183.1741982510.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 14 Mar 2025 20:01:50 +0000
-Message-ID: <1998185.1741982510@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Viacheslav Dubeyko <Slava.Dubeyko@ibm.com> wrote:
 
-> >  		struct {
-> >  			struct page	**pages;
-> =
+On Mon, 03 Mar 2025 18:07:01 +0530, Vikash Garodia wrote:
+> Decoder and encoder nodes are already deprecated from bindings. Update
+> the venus node to align with bindings. The nodes were deprecated with
+> commit 459997e8990d9 ("media: dt-bindings: qcom-venus: Deprecate
+> video-decoder and video-encoder where applicable") and is part of
+> v6.14-rc1 and onwards.
+> 
+> 
+> [...]
 
-> Do we still operate by pages here? It looks like we need to rework it so=
-mehow.
+Applied, thanks!
 
-One of the points of these patches is to rework this, working towards redu=
-cing
-everything to just an iterator where possible, using a segmented list as t=
-he
-actual buffers.
+[1/1] arm64: dts: qcom: sc7280: drop video decoder and encoder nodes
+      commit: 37bd695c16b1b443e357eb37c09ef30b401f8b83
 
-One of the things hopefully to be discussed at LSF/MM is how we might comb=
-ine
-struct folio_queue, struct bvec[] and struct scatterlist into something th=
-at
-can hold references to more general pieces of memory and not just folios -=
- and
-that might be something we can use here for handing buffers about.
-
-Anyway, my aim is to get all references to pages and folios (as far as
-possible) out of 9p, afs, cifs and ceph - delegating all of that to netfsl=
-ib
-for ceph (rbd is slightly different - but I've completed the transformatio=
-n
-there).
-
-Netfslib will pass an iterator to each subrequest describing the buffer, a=
-nd
-we might need to go from there to another iterator describing a bounce buf=
-fer
-for transport encryption, but from there, we should pass the iterator dire=
-ctly
-to the socket.
-
-Further, I would like to make it so that we can link these buffers togethe=
-r
-such that we can fabricate an entire message within a single iterator - an=
-d
-then we no longer need to cork the TCP socket.
-
-David
-
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
