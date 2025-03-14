@@ -1,260 +1,167 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AF315350B
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485AE1519B0;
+	Fri, 14 Mar 2025 07:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741938223; cv=none; b=jA2mbu5tL2Ki+E5P5z3h6ysJYKRqfdaM8w+Rp6/rZ7iNmSv9jSuaaodwE1tLqMBB2wkFTtNcepDg9DlVYKJZ/9NA3PsAElVwlQAWiTc6RYZVdb484liDqIC7XAsPKYUWwpuvZ3ixrM+6YpK73ZTNgrQ63brBqnSNms3Dh4t4vbM=
+	t=1741938271; cv=none; b=U745TA8c5E/lBM5ps4OZgrlifoLhoxRyPjVAFBA0GOA01CFFvBRgMScVON4jZxqncMGMbYzf9foYmDE+qGDoDbUZZYbvcQ1sNqiFllEhT1+ajVuL2Tl2BSOsPuX9FVKSa1OSa6YHZAk2XWGTAZ2thVOksYuuHIP8uRGRYo4jSLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741938223; c=relaxed/simple;
-	bh=QfaJfR5fam5Ll5KEH6V95SRm+HQ09xtyXajwCt5xxxs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uiWP//JajIgbdrSBcVezG55gq2IkfPlOgyboZPZifnhmbxuVVnNBduhocNnFkVirbI8K4zvxtzjKUO73yxTpXJr8fP9E9FfHTAkB/xsDhKFdI6J3HPA0da5VCJYgkpPE4dpKxM98DKpYzyJQIHLQfSPGCWzJCwICX7BTpxShWDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=CNqzMX0q; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=jhWq9Cs7; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1741938271; c=relaxed/simple;
+	bh=ooHUoONViwjALhK7TTEzLsHuhdBwS3irxKXBmrs1Suc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BL9fKmZuWIZRLVymNuZPIKBu7WzWwvdEeFirvRrA02FznREgvHV+T18VHukzmTVJ4UAMXXzCRo8j0qJgfQBoxkya8+5b2goQFDnTvUELtVJC+6gloD7ZEqMyJ55KuHaxWgFxVVCQI2PrHllUOiZP5d3X+B1onx4/eyQWp7tVVYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pnalck5E; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="CNqzMX0q";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="jhWq9Cs7"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D2E5121182;
-	Fri, 14 Mar 2025 07:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1741938220; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=QfaJfR5fam5Ll5KEH6V95SRm+HQ09xtyXajwCt5xxxs=;
-	b=CNqzMX0qw9PO/xdBHTPlorE3oeucUgl0NISLqgE/400PsX9/o8ITwNnP+tHmgWjq89RlPg
-	J9ziu+0l6Fjq3qq1XtfjQPBVWbwldYxCbUrIumJ0OxwnBkTn56r0AngvbDLSNY+1w0Ra8i
-	dIlHLg5FxoOtBHGiOA69ef+R6CMrF0w=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=jhWq9Cs7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1741938219; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=QfaJfR5fam5Ll5KEH6V95SRm+HQ09xtyXajwCt5xxxs=;
-	b=jhWq9Cs7tbn0I/5vdMphpNHxpIoF6hRcypbKUjRNnUwcVbWmSgz2TnwYUyqbdJsjwpe2H+
-	K6CcHIS1/uAYgNj2u731V9O+2l5KB5GxhQ6HaHsmbnzMpSUBp3RXTrQhp5YSyINGnF4ZCv
-	HU9zoEVhvk04qpNW/GsPgg9ZWNbtulw=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 825ED13A31;
-	Fri, 14 Mar 2025 07:43:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id PSUyHive02f9LgAAD6G6ig
-	(envelope-from <jgross@suse.com>); Fri, 14 Mar 2025 07:43:39 +0000
-Message-ID: <9528bca2-0670-447a-93ea-4e492660bbb7@suse.com>
-Date: Fri, 14 Mar 2025 08:43:38 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pnalck5E"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DNOvp9005804;
+	Fri, 14 Mar 2025 07:44:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=VtwWPZ/8cWLpdDiAsOSfE05JgPrDC3BlrS+qQK2vO
+	iA=; b=pnalck5E8IE7LGTotDIIbl+bzNhVNZmD8slR6D5BIyeUPpuulLBQQw9OX
+	PfXtPl3Q/P/UnwG8KVltGFjAPThR5TERLurshcBweRNJMgIFL/292c1SEN8bje4m
+	0GN7fSVRalxJ8zHe9xuUvqUY35vPnRBH6KBnOrRPneT+CSc5FwAIJQV59Jdgn9Kw
+	DAhIxhSAY8Qjml1lKH619YqDwOx0KgmLY0w9AZlCpuJGQovRR011BRk6cAKXZufc
+	osPg2k2lQbK9W64eNkfPYFzeK3NdSTYP2ldPgU7bcAcxTmK5RijZ0huYfXWNZgW/
+	sijbObstOjfqJ2LNcup8v5rfUoJaw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45c6s5a7ah-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 07:44:19 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52E7gkwA031784;
+	Fri, 14 Mar 2025 07:44:19 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45c6s5a7ad-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 07:44:19 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52E40Psc026029;
+	Fri, 14 Mar 2025 07:44:18 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45atspnvsr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Mar 2025 07:44:18 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52E7iHtm20971814
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Mar 2025 07:44:17 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 06AEF20040;
+	Fri, 14 Mar 2025 07:44:17 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 149992004B;
+	Fri, 14 Mar 2025 07:44:13 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.39.24.194])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Mar 2025 07:44:12 +0000 (GMT)
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>,
+        Ritesh Harjani <ritesh.list@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] Fix a BUG_ON crashing the kernel in start_this_handle
+Date: Fri, 14 Mar 2025 13:14:08 +0530
+Message-ID: <cover.1741938027.git.ojaswin@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] xen: Add support for XenServer 6.1 platform device
-To: Frediano Ziglio <frediano.ziglio@cloud.com>,
- =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <20250225140400.23992-1-frediano.ziglio@cloud.com>
- <20250227145016.25350-1-frediano.ziglio@cloud.com>
- <a14c6897-075c-4b2c-8906-75eb96d5c430@citrix.com>
- <Z8GuItUuhbF1UZ9V@macbook.local>
- <CACHz=ZjurD-dvVOnOCJv4q02UV4iy78J5hJ8rMh1UPAZBbfaXQ@mail.gmail.com>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <CACHz=ZjurD-dvVOnOCJv4q02UV4iy78J5hJ8rMh1UPAZBbfaXQ@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------CR80lQXlTp6UuD4PrR3RnmrS"
-X-Rspamd-Queue-Id: D2E5121182
-X-Spam-Score: -5.41
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.41 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SIGNED_PGP(-2.00)[];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	MIME_BASE64_TEXT(0.10)[];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	HAS_ATTACHMENT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: KlivapcQYvv_b0mdJedZY9plCj2600L9
+X-Proofpoint-ORIG-GUID: jLeofE6NJsvpRSafjHtPdvQ85MphY4y9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-14_03,2025-03-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=902 clxscore=1015 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 spamscore=0
+ adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2503140058
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------CR80lQXlTp6UuD4PrR3RnmrS
-Content-Type: multipart/mixed; boundary="------------03RXS1WCgBm02Y9usbx0gtz0";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Frediano Ziglio <frediano.ziglio@cloud.com>,
- =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-Message-ID: <9528bca2-0670-447a-93ea-4e492660bbb7@suse.com>
-Subject: Re: [PATCH v2] xen: Add support for XenServer 6.1 platform device
-References: <20250225140400.23992-1-frediano.ziglio@cloud.com>
- <20250227145016.25350-1-frediano.ziglio@cloud.com>
- <a14c6897-075c-4b2c-8906-75eb96d5c430@citrix.com>
- <Z8GuItUuhbF1UZ9V@macbook.local>
- <CACHz=ZjurD-dvVOnOCJv4q02UV4iy78J5hJ8rMh1UPAZBbfaXQ@mail.gmail.com>
-In-Reply-To: <CACHz=ZjurD-dvVOnOCJv4q02UV4iy78J5hJ8rMh1UPAZBbfaXQ@mail.gmail.com>
+** Changes in v3 [3] **
 
---------------03RXS1WCgBm02Y9usbx0gtz0
-Content-Type: multipart/mixed; boundary="------------0JYqVD0aJwIZ30I2iar3lrWT"
+ * Picked RVBs from Jan and Baokun
+ * In patch 2/3 we now do the following:
+   set flag -> force commit -> flush wq
+ * use sbi->s_mount_flags instead of an
+   sbi field for journal destroy flag
 
---------------0JYqVD0aJwIZ30I2iar3lrWT
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+[3] https://lore.kernel.org/linux-ext4/Z86b0c_qTURBBkOW@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com/T/#m3a6c2e9205381d86460267e7be37ae0db688b800
 
-T24gMDcuMDMuMjUgMTI6MTQsIEZyZWRpYW5vIFppZ2xpbyB3cm90ZToNCj4gSGksDQo+ICAg
-ICBhZnRlciBhbGwgZGlzY3Vzc2lvbnMgb24gdGhpcyB0aHJlYWQgYW5kIFhlbi1kZXZlbCwg
-Y2FuIHdlIGFncmVlDQo+IHRoYXQgdGhpcyBwYXRjaCBpcyBnb29kIGFzIGl0IGlzIGFuZCBj
-YW4gYmUgbWVyZ2VkIHVwc3RyZWFtPw0KPiBKdXN0IHRvIG1ha2UgaXQgY2xlYXIsIGl0IHdh
-cyBhbHJlYWR5IGFja2VkLg0KDQpXaWxsIGFkZCBpdCBmb3IgNi4xNS4NCg0KDQpKdWVyZ2Vu
-DQo=
---------------0JYqVD0aJwIZ30I2iar3lrWT
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+** Changes in v2 [1] **
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+ * Picked up RVBs from Jan and Ritesh
+ * In patch 2/3, we now use a flag in sbi instead of SB_ACITVE
+   to determine when to journal sb vs when to commit directly.
+ * Added a prep patch 1/3
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+[1] https://lore.kernel.org/linux-ext4/cover.1740212945.git.ojaswin@linux.ibm.com/T/#m5e659425b8c8fe2ac01e7242b77fed315ff89db4
 
---------------0JYqVD0aJwIZ30I2iar3lrWT--
+@Baokun, I didn't get a chance to look into the journal_inode
+modifications we were discussing in [2]. I'll try to spend some time and
+send that as a separate patch. Hope that's okay
 
---------------03RXS1WCgBm02Y9usbx0gtz0--
+[2] https://lore.kernel.org/linux-ext4/cover.1740212945.git.ojaswin@linux.ibm.com/T/#mad8feb44d9b6ddadf87830b92caa7b78d902dc05
+ 
+** Original Cover **
 
---------------CR80lQXlTp6UuD4PrR3RnmrS
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+When running LTP stress tests on ext4, after a multiday run we seemed to
+have hit the following BUG_ON:
 
------BEGIN PGP SIGNATURE-----
+ [NIP  : start_this_handle+268]
+ #3 [c000001067c27a40] start_this_handle at c008000004d40f74 [jbd2]  (unreliable)
+ #4 [c000001067c27b60] jbd2__journal_start at c008000004d415cc [jbd2]
+ #5 [c000001067c27be0] update_super_work at c0080000053f9758 [ext4]
+ #6 [c000001067c27c70] process_one_work at c000000000188790
+ #7 [c000001067c27d20] worker_thread at c00000000018973c
+ #8 [c000001067c27dc0] kthread at c000000000196c84
+ #9 [c000001067c27e10] ret_from_kernel_thread at c00000000000cd64
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmfT3ioFAwAAAAAACgkQsN6d1ii/Ey/6
-pAf9H4xKth5rfgvu8CaAjCgdye7npnzjjNz6VP9FjPf3IdRWYQyEa9yo/YCrs1SjbJIxuZW2JVli
-3zdXnOMUdkBdw3wVtxVFiPzzxX7JOZlIb9Bbpj+zIfCJTX7iGpreYFIMMQgBhVuvy7LvDeIxv4NC
-OUMRw5kmwj4ue4YVu0XqpbBheE4qQSNQFgA81ZuAXHyV0wDehk+T7XNTr58htJz/TA6h5UGnHnTG
-Ya9qy7GX6k7uOvjQfL4JT1ZQLAgn8SlxbiR3iJBufHqmXiJQAxPdEgPkRwYGOQRyVhSvJd+5FmK4
-jorQQ6UmiriXh36yhrZem92QIww8PQeTKOCOSFE4UQ==
-=xUy7
------END PGP SIGNATURE-----
+Which comes out to
 
---------------CR80lQXlTp6UuD4PrR3RnmrS--
+  382   repeat:
+  383           read_lock(&journal->j_state_lock);
+* 384           BUG_ON(journal->j_flags & JBD2_UNMOUNT);
+  385           if (is_journal_aborted(journal) ||
+  386               (journal->j_errno != 0 && !(journal->j_flags & JBD2_ACK_ERR))) {
+  387                   read_unlock(&journal->j_state_lock);
+
+
+Initially this seemed like it should never happen but upon crash
+analysis it seems like it could indeed be hit as described in patch 1/2.
+
+I would like to add that through the logs we only knew that:
+
+- ext4_journal_bmap -> ext4_map_blocks is failing with EFSCORRUPTED.
+- update_super_work had hit the BUG_ON
+
+I was not able to hit this bug again (without modifying the kernel to
+inject errors) but the above backtrace seems to be one possible paths
+where this BUG_ON can be hit. Rest of the analysis and fix is in patch
+2/3. Patch 3 is just a small tweak that i found helpful while debugging.
+
+That being said, journalling is something I'm not very familiar with and
+there might be gaps in my understanding so thoughts and suggestions are
+welcome.
+
+Ojaswin Mujoo (3):
+  ext4: define ext4_journal_destroy wrapper
+  ext4: avoid journaling sb update on error if journal is destroying
+  ext4: Make sb update interval tunable
+
+ fs/ext4/ext4.h      | 10 ++++++++++
+ fs/ext4/ext4_jbd2.h | 29 +++++++++++++++++++++++++++++
+ fs/ext4/super.c     | 43 ++++++++++++++++++++-----------------------
+ fs/ext4/sysfs.c     |  4 ++++
+ 4 files changed, 63 insertions(+), 23 deletions(-)
+
+-- 
+2.48.1
+
