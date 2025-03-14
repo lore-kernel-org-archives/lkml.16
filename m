@@ -1,294 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEA51FBC94;
-	Fri, 14 Mar 2025 14:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AEEE200BB5
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 14:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741962803; cv=none; b=OfX43w3TTdO1pXBfmrMUsKK9j5kVBJ9DuBX08rJuiSeZequu9EbDAyMTm4PJrauwMcb1e7oQCXqgY2TzHMuSaH17bAGFMiUTSFPhK1UhNru/gkx/UMeelnFpVo3XeoVpvyWWbvovQoMcu+qukoBYQhCLQhW+IGvF4aB51DROV+U=
+	t=1741962807; cv=none; b=UFjYz8Si9mgrIS/ao1isKhlSUc5pmqKtkQmg0Kldfp1WWN04BR4BFwl767GdMTicz6zeK46bp/AbrmNFMv5+XHpZrHlUQKxswb+GeHlG/4IRXi0HGruMKVOwdqVWhwP4BzucTfovvbGHe30mRpHcZXNV8asR2VEnZi9cGHMA7fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741962803; c=relaxed/simple;
-	bh=2l2M+Ak4AlHIp5/GSw9fFLag+cjooSbg7obGOnvCbSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TpzZK1xOvBs6wRFKSc0w71UBD+vzRxmVylZECAzhQd2ia28D5p5p0+k8qNwtZaIM21iA9kqmkScp4DIM2nPxAHAhI/qtWNgH4Zj1XtKUgZpOjflXsGK7TPb/99Cwc5cZDjCsWKpVWJh8UY18JVesm97dk30sga3nNddiAWdE1jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNekU5Gp; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741962807; c=relaxed/simple;
+	bh=fV6t0EBtW1B2j37NCyDxPKTtjpES7eWc33aab4NlE1k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rm61m1qROUNgnIyA4UOuXRlcHBpGtX49VPqxUQ6mx/Nh+EoIpECZHJmtu2VciaUKllz75v7yZ7MDygulzUhrebAEERy14OWv2cvGdauT7O7NUsReJIu/qTSlJKK+z0sXs1l15VOZJSN3DUcO40D64XLVHMlF9qlBFc5BLpA1DQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X+CyNF3q; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNekU5Gp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741962802; x=1773498802;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2l2M+Ak4AlHIp5/GSw9fFLag+cjooSbg7obGOnvCbSw=;
-  b=SNekU5GpZvLtxyNuCBg6OnQW1OAIHdV1HrAzNlJ/FwZRDbZYrLcrLGYZ
-   bAUHbyoWEGEvv/5aX5GEtzbbIMPMZDvrPMfxdFVD9+1LDRf9RJIZLgZUk
-   REo8MLxQxTNNg4lfz4n8/gUcPKWYrhcWTXis6TWEl0EO9OST0sG7q5lzL
-   A31HnhFl8Z/D780zXj2iCeIj1gyFZpWxSfpC01sO3AOcQcimE2hnyT0rY
-   OaUoyvc5p30KvgkbSuF8y8YgbkfA+sP+mnGbUcMJPAPlHNP2PvIKsDmsU
-   QbLy5aN66z9d2OSuLJ+R3SiWZv9e1izEqAB0GWwSUXMMgME3B8hhcHVl6
-   Q==;
-X-CSE-ConnectionGUID: 1/CcTZjyQoiiF56oT1HB4A==
-X-CSE-MsgGUID: Q66CSkMJTQWCl/lou6LyIg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="60514134"
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="60514134"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:33:21 -0700
-X-CSE-ConnectionGUID: xos2mf6kQQ6CDfJYe8pDaw==
-X-CSE-MsgGUID: rLYeVOueQGu4ZNuK6jIhbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="126346282"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:33:17 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tt665-00000002U7G-3ymC;
-	Fri, 14 Mar 2025 16:33:13 +0200
-Date: Fri, 14 Mar 2025 16:33:13 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Guillaume Stols <gstols@baylibre.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v7 06/10] iio: adc: Support ROHM BD79124 ADC
-Message-ID: <Z9Q-KcadLHdDLxVc@smile.fi.intel.com>
-References: <cover.1741849323.git.mazziesaccount@gmail.com>
- <b6c02a5d75a20bbbf8c3370ccee615d269620117.1741849323.git.mazziesaccount@gmail.com>
- <Z9LbT1BvPEIp7U2N@smile.fi.intel.com>
- <bb403ddb-5c6f-4286-8d80-3ede40f94dc2@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X+CyNF3q"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38f2f391864so1272936f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741962802; x=1742567602; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5gqYv2Yv6I6A8Xg36oF3GXiMSJjKsROFpNr6KE/A4Xs=;
+        b=X+CyNF3qP27Q158oafvSnmQ0W2xP9ONV6CZtSSzbZafSESo1PKPWa4jS+P7lR8Fbe1
+         /3JPTJzjcItdw6sTKO4Et5U/MADrZ0yBJtZWiA7olrX9Zxa0jd79qArHSJFqHS/6YVvT
+         KAdFqz/5XwbH9rXCeZIHf/DyIt9YV2cDK/qUgkZ3y4OlF0WIzFWpiACPadmjhub3H8pG
+         l3sxq3BQbMc3IUwF28lbzuNvUmZs2BGEwcgH8V4H0HNp7MwbYAlbw4SHQ72Og26dzDU3
+         7Se07p7KFE9ltQpqIhijO4VvtKHfSKOGnmjKqnVm2N4wCBd5xRGoePw0sQe/N3ywBl11
+         A9kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741962802; x=1742567602;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5gqYv2Yv6I6A8Xg36oF3GXiMSJjKsROFpNr6KE/A4Xs=;
+        b=Q5f5qPQw3yFHzibA98QcANBKgjWaT4sKhbkYbAYBms9kw5Rl8TQs6sNqZ0AhM4Prxy
+         pBajM/q145g6wL4g9UT98DA9etWfBnwkoBHwNow9Ym3GEul/cJXe+8vSPeBea5mYEAw1
+         wlGrBMGhnLz3v6AuYrR95ZCEC3q/sJdu5cn6cD+OymD7bsIHr4ofpqB/MS/2OnG3pqRW
+         D9BczIvof5e/JPRXwfXM5/ReUD36GhUfrK1b+9hDrVz1vyu/hdax6Vce+RPxMEQ26otU
+         mEoMFIVLz7HPMHvmRgaCwTHxt1zAvi3g7U1sOMgDO+ioxKbpZQDAgvhoM+7lcoOOq7/0
+         0TiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1RJnB/9FRb7qZqq8yMLr4bctK/0K2ZYBjOBtEBUaUD8em2CZ+Ris/5ZqQiRtzgmuiBcR59Q48uhH4+B8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPevceIznWQvJTTAS40X/nCRKHG20rDd79GIfuuQyBZIIuXOoa
+	ZZcMqRVkncqmBH2ILFYajtx4O6HapeYNrbUki6VinrUWSu6sTFXpDAbb8ejwWmw=
+X-Gm-Gg: ASbGnctr1WI4bhhVU8oRT/7O+MyZrv6+Sr2vrXduCA+zwK6AAJWpfRhvclIzrnT4Hz/
+	81jsXcxjnylNWaCofoN1UYpdopruexR9VGVzjb+ouy1hebijv3frGTchr8HS4KWGXNl/g8+n0Uw
+	UQv4torwJsjaqpKb5JF2JbqMcOqg7+UpXxqvNxZxU1S7Xz6K57J2I+ZxCC7o/5IsRfNSM5qxo8S
+	nKZ6+oGfSa+BXFmI0AkMLcJg0tGm+XyqTwcouBnNm1xSTpKNxzUFBQVedFqc3fKc111R3BlycgA
+	ep/tXXQ4LWY1VChsn4AyK9vbqgfwR+frDFk6jFC7idlpadCtYgF/tH9CUWD+InkbUMDdUg==
+X-Google-Smtp-Source: AGHT+IFo3GTKnNz6sDnWrSOXevuP49Y8TVcCWPh2ADI6rNCwCYfYVfD/saldxqETFwjSljt8qsUnFQ==
+X-Received: by 2002:a5d:6da7:0:b0:391:487f:27e4 with SMTP id ffacd0b85a97d-3971ded0dd2mr3465432f8f.27.1741962802213;
+        Fri, 14 Mar 2025 07:33:22 -0700 (PDT)
+Received: from localhost.localdomain ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c82c2690sm5699168f8f.25.2025.03.14.07.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 07:33:21 -0700 (PDT)
+From: srinivas.kandagatla@linaro.org
+To: broonie@kernel.org
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	krzysztof.kozlowski@linaro.org,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dmitry.baryshkov@linaro.org,
+	johan+linaro@kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v4 0/5] ASoC: q6apm: fix under runs and fragment sizes
+Date: Fri, 14 Mar 2025 14:32:15 +0000
+Message-Id: <20250314143220.6215-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb403ddb-5c6f-4286-8d80-3ede40f94dc2@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 14, 2025 at 09:31:58AM +0200, Matti Vaittinen wrote:
-> On 13/03/2025 15:19, Andy Shevchenko wrote:
-> > On Thu, Mar 13, 2025 at 09:19:03AM +0200, Matti Vaittinen wrote:
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-...
+On Qualcomm Audioreach setup, some of the audio artifacts are seen in
+both recording and playback. These patches fix issues by
+1. Adjusting the fragment size that dsp can service.
+2. schedule available playback buffers in time for dsp to not hit under runs 
+3. remove some of the manual calculations done to get hardware pointer.
 
-> > > +#define BD79124_MASK_HYSTERESIS GENMASK(3, 0)
-> > > +#define BD79124_LOW_LIMIT_MIN 0
-> > > +#define BD79124_HIGH_LIMIT_MAX GENMASK(11, 0)
-> > 
-> > These masks are not named after registers (or I don't see it clearly),
-> 
-> Naming is hard. I usually try to make a balance between:
-> 
-> 1) using names which explain the purpose when seen in the code (at call
-> site)
-> 2) keeping names short enough
-> 3) following the naming convention in the data sheet
-> 4) maintain relation to the register.
-> 
-> I put most emphasis to the 1, while 2 is important to me as well. 3 is
-> _very_ nice to have, but it is often somehow contradicting with 1 and 2. 4
-> is IMO just nice to have. The register is usually clearly visible at call
-> site, and if someone adds new functionality (or checks the correctness of
-> the masks/registers), then 3 is way more important.
-> 
-> I am open to any concrete suggestions though.
+With these patches, am able to see significant Audio quality improvements.
+I have few more patches to optimize the dsp drivers, but for now am
+keeping this series simple to address the underruns and overruns issues
+noticed in pipewire setup.
 
-From my point of view the starting point is 3, then one may apply 2 and 4,
-the 1 may mangle the name so much that register data field name becomes quite
-abstract.
+Any testing would be appreciated.
 
-> > it's
-> > hard to understand which one relates to which register. Also, why not using
-> > bitfield.h?
-> 
-> I saw no need for it?
+Please note that on pipewire min-latency has to be set to 512 which
+reflects the DSP latency requirements of 10ms. You might see audio
+artifacts like glitches if you try to play audio below 256 latency.
 
-Hmm... Okay, I think Jonathan will ask that if really needed.
+thanks,
+Srini
 
-...
+Changes since v3:
+	- updated period size aligment patch with 10ms period size
+	  contstriants.
 
-> > > + * These macros return the address of the 1.st reg for the given channel
-> > 
-> > first
-> 
-> Huh?
+Changes since v2:
+	- dropped patch which is causing regression with pluseaudio.
+	- setup period sizes only for capture path
+	- fix underruns/overruns in dsp pipelines.
+	- add fixes tag
+	- add patch to fix buffer alignment
 
-Replace "1.st" (which seems not a standard representation of it) by "first".
+Changes since v1:
+	- added new patches to fix the fragment size, pointer
+	  calculations
+	- updated to schedule only available buffers.
 
-> > (and missing period at the end).
-> 
-> Ok.
 
-...
+Srinivas Kandagatla (5):
+  ASoC: q6apm-dai: schedule all available frames to avoid dsp under-runs
+  ASoC: q6apm: add q6apm_get_hw_pointer helper
+  ASoC: q6apm-dai: make use of q6apm_get_hw_pointer
+  ASoC: qdsp6: q6apm-dai: set 10 ms period and buffer alignment.
+  ASoC: qdsp6: q6apm-dai: fix capture pipeline overruns.
 
-> > > +#define BD79124_GET_HIGH_LIMIT_REG(ch) (BD79124_REG_HYSTERESIS_CH0 + (ch) * 4)
-> > > +#define BD79124_GET_LOW_LIMIT_REG(ch) (BD79124_REG_EVENTCOUNT_CH0 + (ch) * 4)
-> > > +#define BD79124_GET_LIMIT_REG(ch, dir) ((dir) == IIO_EV_DIR_RISING ?		\
-> > > +		BD79124_GET_HIGH_LIMIT_REG(ch) : BD79124_GET_LOW_LIMIT_REG(ch))
-> > > +#define BD79124_GET_RECENT_RES_REG(ch) (BD79124_REG_RECENT_CH0_LSB + (ch) * 2)
-> > 
-> > Don't we want to have something in bitfield.h for arrays in the register, i.e.
-> > when register(s) is(are) split to 2+ bits per an element in an array of the
-> > same semantics. Would be nice to eliminate such a boilerplate here and in many
-> > other drivers.
-> 
-> Not necessarily a bad idea. Still, I am not willing to expand this series
-> any more - currently there is 10 patches, 2 of which are directly related to
-> the BD79124. I don't want to delay this driver for another cycle due to
-> added helpers.
-
-It was just a side note. Consider as a poll for opinions.
-
-...
-
-> > > +static void bd79124gpo_set(struct gpio_chip *gc, unsigned int offset, int value)
-> > 
-> > You should use .set_rv()
-
-...
-
-> > > +static void bd79124gpo_set_multiple(struct gpio_chip *gc, unsigned long *mask,
-> > > +				    unsigned long *bits)
-> > 
-> > Ditto, .set_multiple_rv().
-> 
-> As you know, this started at v6.14 cycle which is still ongoing. I don't
-> think .set_rv() and .set_multiple_rv() are available?
-
-You mean that you are still hope to have this series to be squeezed for
-v6.15-rc1? That's not me who decides, but if not, those APIs will be part of
-the v6.15-rc1 (at least they are pending in GPIO subsystem).
-
-...
-
-> > > +struct bd79124_raw {
-> > > +	u8 bit0_3; /* Is set in high bits of the byte */
-> > > +	u8 bit4_11;
-> > > +};
-> > > +#define BD79124_RAW_TO_INT(r) ((r.bit4_11 << 4) | (r.bit0_3 >> 4))
-> > 
-> > And how this is different from treating it as __le16? Needs a good comment
-> > about bit layout.
-> 
-> You don't think:
-> >> +struct bd79124_raw {
-> >> +	u8 bit0_3; /* Is set in high bits of the byte */
-> >> +	u8 bit4_11;
-> >> +};
-> suffices? It's hard for me to think how to explain bit layout more
-> explicitly.
-
-I do not think it suffices. It's hard to decode what you meant by the naming
-and the comment. Actually it even confuses me.
-
-> This was discussed during the RFC review. I explained the rationale why I
-> rather represent this as two 8 bit variables than le16 with (mysterious to
-> me) shift. As a result, Jonathan told me he's not feeling (too) strong about
-> this (but also warned we may see follow-up patches converting this to le and
-> shift - which, by the way, is harder for me to understand).
-
-If you want to leave them, the good comment needs to be added for both
-1) explaining bit layouts;
-2) why __le16 is not being used.
-
-...
-
-> > > +static int bd79124_write_int_to_reg(struct bd79124_data *data, int reg,
-> > > +				    unsigned int val)
-> > > +{
-> > > +	struct bd79124_raw raw;
-> > > +	int ret, tmp;
-> > 
-> > > +	raw.bit4_11 = (u8)(val >> 4);
-> > > +	raw.bit0_3 = (u8)(val << 4);
-> > 
-> > Why casting?
-> 
-> To make it clear storing unsigned int to u8 is considered to be Ok. I can
-> drop it though if you feel strong about it.
-
-In C (not C++) explicit casting is a point to stumble over and check if there
-is any problems or call for asking the question "Whu?!"
-
-...
-
-> > > +	ret = regmap_read(data->map, reg, &tmp);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	raw.bit0_3 |= (0xf & tmp);
-> > 
-> > GENMASK() ?
-> 
-> For me 0xf is both shorter and clearer. (For me 0xf - or, 0x0f if you like,
-> 0xf0 and 0xff are clear by a glance).
-> 
-> I can go for GENMASK() if it is absolutely required, but for me it is in
-> this case just making this harder to read. I like GENMASK() for something
-> like 0xe or 0x60 though.
-
-It makes code inconsistent and one letter is not so visible. Ideally it should
-be a definition with self-explanatory name.
-
-> > > +	return regmap_bulk_write(data->map, reg, &raw, sizeof(raw));
-> > > +}
-
-...
-
-> > > +	case IIO_EV_INFO_HYSTERESIS:
-> > > +		reg = BD79124_GET_HYSTERESIS_REG(chan->channel);
-> > > +		val >>= 3;
-> > 
-> > Second time I see this. Perhaps you need a macro to explain this right shift?
-> 
-> Not really sure about this. I think it's kind of obvious why this is shifted
-> - and in case it's not, there is a comment explaining it.
-> 
-> I could have a macro like REGVAL2HYSTERESIS() - but I don't think it is a
-> great idea, because then anyone interested in understanding the value read
-> from register would need to dig out the macro to find how value needs to be
-> converted. Doing the shift here shows the register format to a reader right
-> away - and honestly, it should be pretty obvious to the reader that this
-> shift converts register value to proper format.
-
-These shifts are not a big issue, so whatever you choose / chose.
-
-> > > +		return regmap_update_bits(data->map, reg, BD79124_MASK_HYSTERESIS,
-> > > +					  val);
-> > 
-> > Can be one line.
-> 
-> I still prefer to have lines < 80 to make them fit my terminal.
-> I think we have discussed this before. I don't think we will agree on this
-> as I have a very real reason for short lines. It does directly impact on my
-> daily work. I don't think you're going to like it no matter how I explain
-> this.
-
-IIRC this takes 82 characters.
-
-Yes, we discussed and I see no issues to avoid uglifying / adding unnecessary
-lines to the code. We can continue arguing, but this what I think and I don't
-know what argument may change my opinion. Apparently this is on maintainer's
-field now to decide.
+ sound/soc/qcom/qdsp6/q6apm-dai.c | 61 +++++++++++++++++---------------
+ sound/soc/qcom/qdsp6/q6apm.c     | 18 +++++++++-
+ sound/soc/qcom/qdsp6/q6apm.h     |  3 ++
+ 3 files changed, 52 insertions(+), 30 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.2
 
