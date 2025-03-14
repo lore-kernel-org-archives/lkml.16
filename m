@@ -1,274 +1,234 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4528E1C7014
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977821C84D7
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936291; cv=none; b=QMC6m5Vzm7ch1lVJTXXBu/KtUpmXtQKOrHwnbjvCBmi5DOaE7IYAHli7MnEqyRjIfvk0TDxpdvCGnYv/8cL1QgVH3inN0Snpq7Ema9fQeOZv6j+h67zBj/8HelJ8Q/0CyxKtK5BT1GBqKuWNGwunZjKyg826Q7ebZvfl6GCELOA=
+	t=1741936292; cv=none; b=EjUDOuimWMwWvVGtZAiGj0ABy4J0+8tdm2RFSPfUyESJjLbUYjF/Y154J7Cu0Ds17T9LKaUa8FINEn6+c9cT1JH0IeOz+/2UDuqI9SQJLSVtFo+gYnnqzrL8AIOXv41/84hYZwaqio9XIPeVir2TQ2+eWOmDX4R99vwCjwSgE2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741936291; c=relaxed/simple;
-	bh=our2k2a5BscNyCmTNxIK+vKJJVKwet/jhJRgx2A6KVM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qXxL0Xgy/zoJT0sNRjIYFZqKu9Ls6B7M9EPMeatZiXn8+dM3nhAvVkfNWLWgwHY/kcswum8ikFsI7n1QXTGTEG/wieYXJ/uIbG4otQ+8IVc9b2qjLQcMNZkf+temakAN8dG2wmEja7BzVkAPYNYCOV8JVKWNShFOFpSRaUHx+/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=keUZC/a6; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741936292; c=relaxed/simple;
+	bh=0yeI7KPM3DrA74pKr4To6izu2he9Dnih0eusBEOCKtQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JbGVSpExUizSazm58vhjVFfjdXsLVpxrAGdc6Z5E+TT09m62fl95rGG5VgfDYnkebiWauG8uKj6kkcbNEOIA9Gm/3S7LnJNtu90Iw32r/8sRJqC9H6tJUeKRXYdCjKgx2tz9by+o927nSA6Q3479EG9RwjKWM8oF+f/Zb5eIUZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ReLt0Y72; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="keUZC/a6"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2bfcd2a66so305114766b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 00:11:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741936287; x=1742541087; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FcxWgeBT29Hzcr2wTHpxcmqt2hkmYJcn5TysUSsXiZk=;
-        b=keUZC/a602iSEfoiAiFNa05cFxbvkPpTqOVAwc1A6dKeTh+Sv6H42iZZoTc2tmGhE3
-         URmgHLPAMB/IzWvTvoaZ4GMZIKu9qNlrjVTxWAfLu8A9QkZiOztUu/rESEVtXCyukuWp
-         3ptMB1BmMjoEbAAsh23wql9+wnww/bjx2VtWTle9z8Os2FyekTlvXBK8tuLyruewByrW
-         oKca8q1XPx5iRad80j1uItbnuMxxErH9l6qpa3R50Xm09KaQDb6Ed0002CabyDhu3BTT
-         CCHOx+WUADLAsV0SsbZAfgT7+/YLGhVbCj5AepzxDiONeHDFQ4O4H/+w0SV4AUrgkpg2
-         QFTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741936287; x=1742541087;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FcxWgeBT29Hzcr2wTHpxcmqt2hkmYJcn5TysUSsXiZk=;
-        b=i3jZVuyLglMhrPmn39/P1tbA4muduyG+q27wHy/pUMXndx9zKdplh4wCNHYICWSOMz
-         VOsVs/uHOm7vV0d9R3+HZRLMJexACyn1OCVUE5hjOJVTTfXEwIhpmJBtX08DLNiyz5TL
-         QUDyIL/65seD3Cg49aT/UXd0EIzdtjBfUWsPheR4Z1e95O04WbFmzPUdUIz2w71Hw5yk
-         xGltywp3tCrlocSrKHw15K/z05OXCzh2V4fI0Sew4V8LZeZvFjSzouco/92JC4A7jxe+
-         Lw2RAZSN4gMuSDu9l8LJPz/anCioLIghSYk2nFr246Q8C9J2wGWt34oxZ5Z1IWPeqHdh
-         LKgA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7qPmrJ3vPElUvMr9T17UE3a09EsQNaGG197i8UiCn2Brbu/8P5uRinulg0jVsIkVef5radiMR2ed8Xm0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8PMyOrwSRPRGq1EnTF2KUlGgeujfawoc25axTuIFKgsGCeKMf
-	Xo8ChjZskpg18St3SVsGDmK+cQ86+NNwZxL6uje9EOM2sW9bzCmH5mbArmHoMRhBaIJUUSM62O5
-	bMYQVf90IGJim0JcN54EQQFYPymc=
-X-Gm-Gg: ASbGncs3EDy4WMbdVxGLwzMotk+vataY9n085Jxs7aYhxebM76Qw7zIIytaWnG3qNwn
-	PXI8WxAdGwIP4V9HScRuSMC9JwMoghDH1kLIpYsjoqMmORUojUCtAmUxWdA4z+xUZSty/MGhkjF
-	HgWy1QjS53L7trd4v0PgfmHtI3
-X-Google-Smtp-Source: AGHT+IG3lY5hWLZzc16ljHigKpjOmO3jNH0WK5YKf2sclutnlRHi1cZqp5Fgy5zy7sMtopTMFUOUZNG2+8Y+cdYmPkA=
-X-Received: by 2002:a17:907:7241:b0:ac1:e332:b1f5 with SMTP id
- a640c23a62f3a-ac330371508mr151302166b.37.1741936287039; Fri, 14 Mar 2025
- 00:11:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ReLt0Y72"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741936289;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4JbwPTO4YfmvIeYNcqcXZBs/DWcx3nbAj8kVBIj11/k=;
+	b=ReLt0Y72uSheGB7CyeHa3T0hlYll8Jlwz3yJ3xZQERuXto+FbTKsPczs539/t5JN0YV6gF
+	JbJKepzsfpQp0xe3paJAzGkZSnNIlYQ+AsPt107++1wFLN7KAlArAnicVMzD35urjdQ0uk
+	aJMfFc58a7LD4tKVumzjS7fO2Qpkp3M=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-688-S0oHB4pJNmyawCZrkiKdvw-1; Fri,
+ 14 Mar 2025 03:11:26 -0400
+X-MC-Unique: S0oHB4pJNmyawCZrkiKdvw-1
+X-Mimecast-MFC-AGG-ID: S0oHB4pJNmyawCZrkiKdvw_1741936284
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C79D71956048;
+	Fri, 14 Mar 2025 07:11:24 +0000 (UTC)
+Received: from thuth-p1g4.redhat.com (unknown [10.44.32.82])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4F24418001D4;
+	Fri, 14 Mar 2025 07:11:22 +0000 (UTC)
+From: Thomas Huth <thuth@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org,
+	Thomas Huth <thuth@redhat.com>,
+	Brian Cain <brian.cain@oss.qualcomm.com>,
+	linux-hexagon@vger.kernel.org
+Subject: [PATCH 13/41] hexagon: Replace __ASSEMBLY__ with __ASSEMBLER__ in non-uapi headers
+Date: Fri, 14 Mar 2025 08:09:44 +0100
+Message-ID: <20250314071013.1575167-14-thuth@redhat.com>
+In-Reply-To: <20250314071013.1575167-1-thuth@redhat.com>
+References: <20250314071013.1575167-1-thuth@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Fri, 14 Mar 2025 17:11:16 +1000
-X-Gm-Features: AQ5f1JpfP3TmFF1lLfHcd-9pOehlmSFSUNN5ec8WIpMFS18OAW1wdWLVoWLg888
-Message-ID: <CAPM=9tynNkAv1s70kbsCVHj31sGTXL1AQ0Dv6n0kwr7kw1rhkA@mail.gmail.com>
-Subject: [git pull] drm fixes for 6.14-rc7
-To: Linus Torvalds <torvalds@linux-foundation.org>, Sima Vetter <sima@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Maxime Ripard <mripard@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hi Linus,
+While the GCC and Clang compilers already define __ASSEMBLER__
+automatically when compiling assembly code, __ASSEMBLY__ is a
+macro that only gets defined by the Makefiles in the kernel.
+This can be very confusing when switching between userspace
+and kernelspace coding, or when dealing with uapi headers that
+rather should use __ASSEMBLER__ instead. So let's standardize on
+the __ASSEMBLER__ macro that is provided by the compilers now.
 
-Regular weekly fixes pull, the usual leaders in amdgpu/xe, a couple of
-i915, and some scattered misc fixes.
+This is a completely mechanical patch (done with a simple "sed -i"
+statement).
 
-Next week the gitlab.freedesktop.org infrastructure will be down for
-migration, so I've no idea whether I will have any fixes for final, I
-can send an MR via github if needed, but I'm not sure if the
-downstreams will have anything to get to me, but if anything urgents
-pops up we will make sure it gets there.
+Cc: Brian Cain <brian.cain@oss.qualcomm.com>
+Cc: linux-hexagon@vger.kernel.org
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ arch/hexagon/include/asm/hexagon_vm.h  |  4 ++--
+ arch/hexagon/include/asm/mem-layout.h  |  6 +++---
+ arch/hexagon/include/asm/page.h        |  4 ++--
+ arch/hexagon/include/asm/processor.h   |  4 ++--
+ arch/hexagon/include/asm/thread_info.h | 12 ++++++------
+ 5 files changed, 15 insertions(+), 15 deletions(-)
 
-Dave.
+diff --git a/arch/hexagon/include/asm/hexagon_vm.h b/arch/hexagon/include/asm/hexagon_vm.h
+index 9aa2493fe7863..e1e702eb9e12a 100644
+--- a/arch/hexagon/include/asm/hexagon_vm.h
++++ b/arch/hexagon/include/asm/hexagon_vm.h
+@@ -39,7 +39,7 @@
+ #define HVM_TRAP1_VMGETREGS		22
+ #define HVM_TRAP1_VMTIMEROP		24
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ enum VM_CACHE_OPS {
+ 	hvmc_ickill,
+@@ -178,7 +178,7 @@ static inline long __vmintop_clear(long i)
+ 
+ #else /* Only assembly code should reference these */
+ 
+-#endif /* __ASSEMBLY__ */
++#endif /* __ASSEMBLER__ */
+ 
+ /*
+  * Constants for virtual instruction parameters and return values
+diff --git a/arch/hexagon/include/asm/mem-layout.h b/arch/hexagon/include/asm/mem-layout.h
+index e2f99413fe56e..8bad920d8928a 100644
+--- a/arch/hexagon/include/asm/mem-layout.h
++++ b/arch/hexagon/include/asm/mem-layout.h
+@@ -25,7 +25,7 @@
+  */
+ 
+ #ifdef CONFIG_HEXAGON_PHYS_OFFSET
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ extern unsigned long	__phys_offset;
+ #endif
+ #define PHYS_OFFSET	__phys_offset
+@@ -44,7 +44,7 @@ extern unsigned long	__phys_offset;
+ #define STACK_TOP			TASK_SIZE
+ #define STACK_TOP_MAX			TASK_SIZE
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ enum fixed_addresses {
+ 	FIX_KMAP_BEGIN,
+ 	FIX_KMAP_END,  /*  check for per-cpuism  */
+@@ -101,7 +101,7 @@ extern int max_kernel_seg;
+  * and pkmap_base begins.
+  */
+ #define VMALLOC_END (PKMAP_BASE-PAGE_SIZE*2)
+-#endif /*  !__ASSEMBLY__  */
++#endif /*  !__ASSEMBLER__  */
+ 
+ 
+ #endif /* _ASM_HEXAGON_MEM_LAYOUT_H */
+diff --git a/arch/hexagon/include/asm/page.h b/arch/hexagon/include/asm/page.h
+index 137ba7c5de481..7e651428a08c0 100644
+--- a/arch/hexagon/include/asm/page.h
++++ b/arch/hexagon/include/asm/page.h
+@@ -48,7 +48,7 @@
+ #include <vdso/page.h>
+ 
+ #ifdef __KERNEL__
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ /*
+  * This is for PFN_DOWN, which mm.h needs.  Seems the right place to pull it in.
+@@ -128,7 +128,7 @@ static inline unsigned long virt_to_pfn(const void *kaddr)
+ /* XXX Todo: implement assembly-optimized version of getorder. */
+ #include <asm-generic/getorder.h>
+ 
+-#endif /* ifdef __ASSEMBLY__ */
++#endif /* ifdef __ASSEMBLER__ */
+ #endif /* ifdef __KERNEL__ */
+ 
+ #endif
+diff --git a/arch/hexagon/include/asm/processor.h b/arch/hexagon/include/asm/processor.h
+index 0cd39c2cdf8f7..b93c2cc4be22e 100644
+--- a/arch/hexagon/include/asm/processor.h
++++ b/arch/hexagon/include/asm/processor.h
+@@ -8,7 +8,7 @@
+ #ifndef _ASM_PROCESSOR_H
+ #define _ASM_PROCESSOR_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <asm/mem-layout.h>
+ #include <asm/registers.h>
+@@ -124,6 +124,6 @@ struct hexagon_switch_stack {
+ 	unsigned long		lr;
+ };
+ 
+-#endif /* !__ASSEMBLY__ */
++#endif /* !__ASSEMBLER__ */
+ 
+ #endif
+diff --git a/arch/hexagon/include/asm/thread_info.h b/arch/hexagon/include/asm/thread_info.h
+index e90f280b9ce3e..a0da6c694c87b 100644
+--- a/arch/hexagon/include/asm/thread_info.h
++++ b/arch/hexagon/include/asm/thread_info.h
+@@ -10,7 +10,7 @@
+ 
+ #ifdef __KERNEL__
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ #include <asm/processor.h>
+ #include <asm/registers.h>
+ #include <asm/page.h>
+@@ -20,7 +20,7 @@
+ #define THREAD_SIZE		(1<<THREAD_SHIFT)
+ #define THREAD_SIZE_ORDER	(THREAD_SHIFT - PAGE_SHIFT)
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ /*
+  * This is union'd with the "bottom" of the kernel stack.
+@@ -47,13 +47,13 @@ struct thread_info {
+ 	unsigned long		sp;
+ };
+ 
+-#else /* !__ASSEMBLY__ */
++#else /* !__ASSEMBLER__ */
+ 
+ #include <asm/asm-offsets.h>
+ 
+-#endif  /* __ASSEMBLY__  */
++#endif  /* __ASSEMBLER__  */
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #define INIT_THREAD_INFO(tsk)                   \
+ {                                               \
+@@ -73,7 +73,7 @@ struct thread_info {
+ register struct thread_info *__current_thread_info asm(QUOTED_THREADINFO_REG);
+ #define current_thread_info()  __current_thread_info
+ 
+-#endif /* __ASSEMBLY__ */
++#endif /* __ASSEMBLER__ */
+ 
+ /*
+  * thread information flags
+-- 
+2.48.1
 
-drm-fixes-2025-03-14:
-drm fixes for 6.14-rc7
-
-panic:
-- two clippy fixes
-
-dp_mst
-- locking fix
-
-atomic:
-- fix redundant DPMS calls
-
-i915:
-- Do cdclk post plane programming later
-- Bump MMAP_GTT_VERSION: missing indication of partial mmaps support
-
-xe:
-- Release guc ids before cancelling work
-- Fix new warnings around userptr
-- Temporaritly disable D3Cold on BMG
-- Retry and wait longer for GuC PC to start
-- Remove redundant check in xe_vm_create_ioctl
-
-amdgpu:
-- GC 12.x DCC fix
-- DC DCE 6.x fix
-- Hibernation fix
-- HPD fix
-- Backlight fixes
-- Color depth fix
-- UAF fix in hdcp_work
-- VCE 2.x fix
-- GC 12.x PTE fix
-
-amdkfd:
-- Queue eviction fix
-
-gma500:
-- fix NULL pointer check
-The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a=
-:
-
-  Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
-
-are available in the Git repository at:
-
-  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-03-14
-
-for you to fetch changes up to d1d77326f585ccf1fb388e1bcc18a630e044577f:
-
-  Merge tag 'drm-xe-fixes-2025-03-13' of
-https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
-(2025-03-14 13:42:17 +1000)
-
-----------------------------------------------------------------
-drm fixes for 6.14-rc7
-
-panic:
-- two clippy fixes
-
-dp_mst
-- locking fix
-
-atomic:
-- fix redundant DPMS calls
-
-i915:
-- Do cdclk post plane programming later
-- Bump MMAP_GTT_VERSION: missing indication of partial mmaps support
-
-xe:
-- Release guc ids before cancelling work
-- Fix new warnings around userptr
-- Temporaritly disable D3Cold on BMG
-- Retry and wait longer for GuC PC to start
-- Remove redundant check in xe_vm_create_ioctl
-
-amdgpu:
-- GC 12.x DCC fix
-- DC DCE 6.x fix
-- Hibernation fix
-- HPD fix
-- Backlight fixes
-- Color depth fix
-- UAF fix in hdcp_work
-- VCE 2.x fix
-- GC 12.x PTE fix
-
-amdkfd:
-- Queue eviction fix
-
-gma500:
-- fix NULL pointer check
-
-----------------------------------------------------------------
-Alex Deucher (1):
-      drm/amdgpu/vce2: fix ip block reference
-
-Alex Hung (1):
-      drm/amd/display: Assign normalized_pix_clk when color depth =3D 14
-
-Aliaksei Urbanski (1):
-      drm/amd/display: fix missing .is_two_pixels_per_container
-
-Dave Airlie (4):
-      Merge tag 'amd-drm-fixes-6.14-2025-03-12' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
-      Merge tag 'drm-misc-fixes-2025-03-13' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-      Merge tag 'drm-intel-fixes-2025-03-13' of
-https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
-      Merge tag 'drm-xe-fixes-2025-03-13' of
-https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
-
-David Rosca (1):
-      drm/amdgpu/display: Allow DCC for video formats on GFX12
-
-Imre Deak (1):
-      drm/dp_mst: Fix locking when skipping CSN before topology probing
-
-Ivan Abramov (1):
-      drm/gma500: Add NULL check for pci_gfx_root in mid_get_vbt_data()
-
-Jos=C3=A9 Roberto de Souza (1):
-      drm/i915: Increase I915_PARAM_MMAP_GTT_VERSION version to
-indicate support for partial mmaps
-
-Leo Li (1):
-      drm/amd/display: Disable unneeded hpd interrupts during dm_init
-
-Mario Limonciello (4):
-      drm/amd: Keep display off while going into S4
-      drm/amd/display: fix default brightness
-      drm/amd/display: Restore correct backlight brightness after a GPU res=
-et
-      drm/amd/display: Fix slab-use-after-free on hdcp_work
-
-Miguel Ojeda (2):
-      drm/panic: use `div_ceil` to clean Clippy warning
-      drm/panic: fix overindented list items in documentation
-
-Natalie Vock (1):
-      drm/amdgpu: NULL-check BO's backing store when determining GFX12 PTE =
-flags
-
-Rodrigo Vivi (2):
-      drm/xe/pm: Temporarily disable D3Cold on BMG
-      drm/xe/guc_pc: Retry and wait longer for GuC PC start
-
-Tejas Upadhyay (1):
-      drm/xe: Release guc ids before cancelling work
-
-Thomas Hellstr=C3=B6m (1):
-      drm/xe/userptr: Fix an incorrect assert
-
-Ville Syrj=C3=A4l=C3=A4 (2):
-      drm/i915/cdclk: Do cdclk post plane programming later
-      drm/atomic: Filter out redundant DPMS calls
-
-Xin Wang (1):
-      drm/xe: remove redundant check in xe_vm_create_ioctl()
-
-Yifan Zha (1):
-      drm/amd/amdkfd: Evict all queues even HWS remove queue failed
-
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            | 11 +++-
- drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c             |  5 +-
- drivers/gpu/drm/amd/amdgpu/vce_v2_0.c              |  2 +-
- .../gpu/drm/amd/amdkfd/kfd_device_queue_manager.c  |  8 ++-
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  | 17 +++++-
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c |  1 +
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c  | 64 +++++++++++++++---=
-----
- .../drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c    |  7 ++-
- drivers/gpu/drm/amd/display/dc/core/dc_resource.c  |  7 ++-
- .../amd/display/dc/dce60/dce60_timing_generator.c  |  1 +
- drivers/gpu/drm/display/drm_dp_mst_topology.c      | 40 ++++++++------
- drivers/gpu/drm/drm_atomic_uapi.c                  |  4 ++
- drivers/gpu/drm/drm_connector.c                    |  4 ++
- drivers/gpu/drm/drm_panic_qr.rs                    | 16 +++---
- drivers/gpu/drm/gma500/mid_bios.c                  |  5 ++
- drivers/gpu/drm/i915/display/intel_display.c       |  5 +-
- drivers/gpu/drm/i915/gem/i915_gem_mman.c           |  5 +-
- drivers/gpu/drm/xe/xe_guc_pc.c                     | 53 +++++++++++++-----
- drivers/gpu/drm/xe/xe_guc_submit.c                 |  2 +-
- drivers/gpu/drm/xe/xe_hmm.c                        |  6 +-
- drivers/gpu/drm/xe/xe_pm.c                         | 13 ++++-
- drivers/gpu/drm/xe/xe_vm.c                         |  3 -
- 22 files changed, 200 insertions(+), 79 deletions(-)
