@@ -1,136 +1,148 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6552D51C
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 13:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEC2D51C;
+	Fri, 14 Mar 2025 13:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741958606; cv=none; b=MMh+VgorUClDkz6Qlk29CM7aUTb0FVWbO0qDQH5SwDYdeNx5a64P4dglFSYcywdNiKLUPMOCctuo3SYPi5adEFaX681ImzrTOiycY3I4iB/duLYdD5tpj1zbZWcRFkBztfTwPTM9nZZocL7L+eFeU0Jj0sVy1htpuSA74k+DuyY=
+	t=1741958664; cv=none; b=rw38FoJN8ztbCoUqBBQs1pMbr3jjkISeXG35LOuOwaL6MhbV8T4Kr+eLT50ZGdusPlsb0sWuse/pT9ToGvMFkxOw+PzvJN7D4UJT7MOqexNHLjd2dg+Vr1jFZY9xJD0us/VR3HvB5YLqQkvgxVVQleMfEZCCPFgVA6VRvEMD7y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741958606; c=relaxed/simple;
-	bh=zIMf8hEasItX0KL+emYCw1f/rwjDy39YKJwVFryXaGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CiIiedeszNvG0Ijtt+cM82yx3RxF/nQGckL4kXvdD8OLGX8MpnE2S+NdVp5zw7KiGIQL+x1yQ+d0154ZwNwY8ljdOnhAtG0yBK+leP5FIF+caysDvhXiLmBFWtyjkIpe8hI0cGrBTMbOtJxkY/LujTU7PT0V6HsBdoNsm7D7bfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=divOTzGa; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741958664; c=relaxed/simple;
+	bh=IJZOrH14Gv7J87ZBvruGqnZzR0ux19/e4YrU9nV0ePU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z+C0S4dec23ag3FjrBwkx6loP7KJy8ydvvz9q/C/MLdAZr0guwOJtr4X4nlyGfqH8G+/fBfTkW3BB5NhEH/ZyH4CnbipoeBBe3uqeyTGsvbDJxRA2ezTlR2joYQTO3ydsGiw4DjKaUVRNb2AvkjbQVlJ2yk7j8x5gm4MCm9zqBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=rvdawaI4; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="divOTzGa"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7C38740E023D;
-	Fri, 14 Mar 2025 13:23:21 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 5rnWq24mPXLg; Fri, 14 Mar 2025 13:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741958597; bh=YPXFYtsnxKno/jhWzXm5NHZxiFRGdIHQ2//rr2SaDok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=divOTzGaoU5vz3SnF2U849sNUe7dLkIxmrQUixmxS0uPZEtCMfOytQNJzEEk76Hz/
-	 4AxYT/Zz8cCI6q472k+R8OTBGfMMEMTvJET+BPdSpsh4AEZO4ve4THRQEZC/sMK9no
-	 0uX1CfXaAdFo2v3NaM9gKthCWF0pb69sT1BoESKAYWiB0fp9pWnbmnWuAlURHdpRB5
-	 TQdC0xvoz5DklqKZdDw/Hhawxf1yC6VHxmGAsM3h8ub5grTuPUyGAKUjlADdzemz5J
-	 EEEAJJAtvpYN5hW00EnqJd+AIE7ReOewd7mmXCOdXuaUx0eRezmRt/FyLHwKb+82Dv
-	 Jq8FFWCfHrQIai6y0y9RKjsiEoId0P+PdIx6V1Zem3sHw/UX3WjxlkHsrPx3c8wLih
-	 K0krBsWPKAPcI4//eVDA8fHfAjr19GA6tf4Ls0cnjxkxUT2dyPx6JneZnq/gHLbuBA
-	 l+k3vYZyTNCTJgcuT8a4P6GCHbrcvHMjbhFWNNTAEn3w82zDWKNabVWHVutJnMdZPN
-	 GXpq26XuPt8IaXRoAQOSvPsVwkO0IcJgpyyKBqytXQ6d1HkDsyy3RngPmSmILiOD46
-	 SXWtiV6pQ5ZQ3AWZrMnHjnojc18r+hyNbrLPaUH9a+wG3SE7AzI/ivciJp9WWmsr0n
-	 FvmbmQQLMAZbxUI+8OdVe8KE=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="rvdawaI4"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
+ id 3e2503f7a1427452; Fri, 14 Mar 2025 14:24:20 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9AFFB40E015E;
-	Fri, 14 Mar 2025 13:23:07 +0000 (UTC)
-Date: Fri, 14 Mar 2025 14:23:06 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] x86/asm: Use asm_inline() instead of asm() in
- amd_clear_divider()
-Message-ID: <20250314132306.GDZ9QtukcVVtDmW1V1@fat_crate.local>
-References: <20250313191828.83855-1-ubizjak@gmail.com>
- <96E2026E-CEF1-4A4C-B107-7FCE2CD9121F@alien8.de>
- <CAFULd4ZTkBwFo3nWXNZKXSKiy4dgPoZ8i95nj3UdtQPApKdj3g@mail.gmail.com>
- <B7AB40CF-165D-448C-963C-787D74BB9042@alien8.de>
- <Z9QB0nP6Mb3ri3mj@gmail.com>
- <Z9QCRydO2yiCq_YR@gmail.com>
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 22C6F912CFB;
+	Fri, 14 Mar 2025 14:24:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1741958660;
+	bh=IJZOrH14Gv7J87ZBvruGqnZzR0ux19/e4YrU9nV0ePU=;
+	h=From:Subject:Date;
+	b=rvdawaI4TH8bLGvzNXdZWmyPb307L6b+UCUF4hBNhDdYKwKfnN31ATHOCcdca6Uvc
+	 igE2SslaSjftGK46uHAK2z/ixxSmat4VQA0Nva1vWrMph7bb6+Lr0PGRtVMm2Ql2CZ
+	 DLQYmuY1vOIJU3u4rV97d2454aoE0sKI6VQ76T8Zx8qpPRaDUOXZaYORzY2ydr5i3m
+	 R6mtQejOKUBb0KLK7+tPGQYQ8RQhvytHk0hQmkybr0kjnMqLnIulRZQZTdX0HfsDG+
+	 5WYJsUhtFq5gZyO8V1qI6kxq2kwKSjFI4w/4EaL0oZpdwib6Eu5s2hak/1nzEOHhRG
+	 QWUConOjd4Zaw==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Johan Hovold <johan@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Jon Hunter <jonathanh@nvidia.com>, Saravana Kannan <saravanak@google.com>
+Subject:
+ [PATCH v3 0/5] PM: sleep: Improvements of async suspend and resume of devices
+Date: Fri, 14 Mar 2025 13:46:59 +0100
+Message-ID: <10629535.nUPlyArG6x@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z9QCRydO2yiCq_YR@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: spam:low
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedtleehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucfuphgrmhfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtvghrnhesrhhofihlrghnugdrhhgrrhhvrghrugdrvgguuhdprhgtphh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=40 Fuz1=40 Fuz2=40
 
-On Fri, Mar 14, 2025 at 11:17:43AM +0100, Ingo Molnar wrote:
-> Here's a link for those who'd like to view this via the web:
-> 
->   https://lore.kernel.org/all/174188884263.14745.1542926632284353047.tip-bot2@tip-bot2/
+Hi Everyone,
 
-This is a perf measuring method I got from you, actually, from a long time
-ago:
+This is a new iteration of the async suspend/resume improvements work:
 
-:-)
+https://lore.kernel.org/linux-pm/1915694.tdWV9SEqCh@rjwysocki.net/
 
-./tools/perf/perf stat -a --repeat 5 --sync --pre ~/bin/pre-build-kernel.sh -- make -s -j33 bzImage
+which includes some rework and fixes of the patches in the series linked
+above.  The most significant differences are splitting the second patch
+into two patches and adding a change to treat consumers like children
+during resume.
 
-* tip/master fdebf9c0efe4 ("Merge branch into tip/master: 'x86/sev'")
+This new iteration is based on linux-pm.git/linux-next and on the recent
+fix related to direct-complete:
 
- Performance counter stats for 'system wide' (5 runs):
+https://lore.kernel.org/linux-pm/12627587.O9o76ZdvQC@rjwysocki.net/
 
-      4,144,101.54 msec cpu-clock                        #   32.000 CPUs utilized               ( +-  0.10% )
-           812,478      context-switches                 #  196.056 /sec                        ( +-  0.15% )
-            67,201      cpu-migrations                   #   16.216 /sec                        ( +-  0.22% )
-        48,228,560      page-faults                      #   11.638 K/sec                       ( +-  0.01% )
- 9,473,229,339,058      instructions                     #    1.12  insn per cycle            
-                                                  #    0.21  stalled cycles per insn     ( +-  0.00% )
- 8,476,070,185,458      cycles                           #    2.045 GHz                         ( +-  0.12% )
- 1,988,775,653,131      stalled-cycles-frontend          #   23.46% frontend cycles idle        ( +-  0.14% )
- 2,128,585,400,027      branches                         #  513.642 M/sec                       ( +-  0.00% )
-    66,681,861,375      branch-misses                    #    3.13% of all branches             ( +-  0.03% )
+The overall idea is still to start async processing for devices that have
+at least some dependencies met, but not necessarily all of them, to avoid
+overhead related to queuing too many async work items that will have to
+wait for the processing of other devices before they can make progress.
 
-           129.504 +- 0.127 seconds time elapsed  ( +-  0.10% )
+Patch [1/5] does this in all resume phases, but it just takes children
+into account (that is, async processing is started upfront for devices
+without parents and then, after resuming each device, it is started for
+the device's children).
 
-* tip/master with 9628d19e91f1 reverted
+Patches [2/5] does this in the suspend phase of system suspend and only
+takes parents into account (that is, async processing is started upfront
+for devices without any children and then, after suspending each device,
+it is started for the device's parent).
 
- Performance counter stats for 'system wide' (5 runs):
+Patch [3/5] extends it to the "late" and "noirq" suspend phases.
 
-      4,141,057.45 msec cpu-clock                        #   32.000 CPUs utilized               ( +-  0.15% )
-           811,299      context-switches                 #  195.916 /sec                        ( +-  0.08% )
-            67,644      cpu-migrations                   #   16.335 /sec                        ( +-  0.24% )
-        48,209,829      page-faults                      #   11.642 K/sec                       ( +-  0.00% )
- 9,465,299,000,193      instructions                     #    1.12  insn per cycle            
-                                                  #    0.21  stalled cycles per insn     ( +-  0.00% )
- 8,487,239,564,102      cycles                           #    2.050 GHz                         ( +-  0.21% )
- 1,992,414,836,889      stalled-cycles-frontend          #   23.48% frontend cycles idle        ( +-  0.08% )
- 2,127,019,426,911      branches                         #  513.642 M/sec                       ( +-  0.00% )
-    66,698,031,504      branch-misses                    #    3.14% of all branches             ( +-  0.02% )
+Patch [4/5] adds changes to treat suppliers like parents during suspend.
+That is, async processing is started upfront for devices without any
+children or consumers and then, after suspending each device, it is
+started for the device's parent and suppliers.
 
-           129.408 +- 0.195 seconds time elapsed  ( +-  0.15% )
+Patch [5/5] adds changes to treat consumers like children during resume.
+That is, async processing is started upfront for devices without a parent
+or any suppliers and then, after resuming each device, it is started for
+the device's children and consumers.
 
-This is all within the noise.
+Preliminary test results from one sample system are below.
 
-Or maybe building the kernel even with those "optimized" inlining decisions
-due the asm being of length 1 for atomic locking insns simply doesn't matter.
+"Baseline" is the linux-pm.git/testing branch, "Parent/child"
+is that branch with patches [1-3/5] applied and "Device links"
+is that branch with patches [1-5/5] applied.
 
-Or maybe I need a different benchmark.
+"s/r" means "regular" suspend/resume, noRPM is "late" suspend
+and "early" resume, and noIRQ means the "noirq" phases of
+suspend and resume, respectively.  The numbers are suspend
+and resume times for each phase, in milliseconds.
 
-At least it ain't breaking anything...
+         Baseline       Parent/child    Device links
 
--- 
-Regards/Gruss,
-    Boris.
+       Suspend Resume  Suspend Resume  Suspend Resume
 
-https://people.kernel.org/tglx/notes-about-netiquette
+s/r    427     449     298     450     294     442
+noRPM  13      1       13      1       13      1
+noIRQ  31      25      28      24      28      26
+
+s/r    408     442     298     443     301     447
+noRPM  13      1       13      1       13      1
+noIRQ  32      25      30      25      28      25
+
+s/r    408     444     310     450     298     439
+noRPM  13      1       13      1       13      1
+noIRQ  31      24      31      26      31      24
+
+It clearly shows an improvement in the suspend path after
+applying patches [1-3/5], easily attributable to patch [2/5],
+and clear difference after updating the async processing of
+suppliers and consumers.
+
+Note that there are systems where resume times are shorter after
+patches [1-3/5] too, but more testing is necessary.
+
+I do realize that this code can be optimized further, but it is not
+particularly clear to me that any further optimizations would make
+a significant difference and the changes in this series are deep
+enough to do in one go.
+
+Thanks!
+
+
+
