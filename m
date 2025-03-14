@@ -1,297 +1,164 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2059.outbound.protection.outlook.com [40.107.102.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087CB770FE
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 03:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741922906; cv=fail; b=mzYOpoFtVoC+4g5B/JbVgBBW8SXJ8nCUSJxSLd1tT2L7Ho7uVdIZ+SIm96wnkKe/p0aQ6M0yRcoSHlT1wntgOPwlMAkilMbEvAXEhaI4bZqmRhFFXEkLoNXC4t9/icvCObhSOcaBm76bXvmM6n8BoaTIy/T5nUO5K+2Zr16Pe7Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741922906; c=relaxed/simple;
-	bh=QEPRW2UVTb2YaO7O/3cr2mEyUEUNGPsLJYbSoDQEIC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Jhzwk5yoBZN+X8W+L0gzxDCRc+5kAkb6XPjr6eYtGo0LReKlzKqZK2eye/4uAMoaWvm858ZC9PQ2Yqdf2xG6JoYA2evkxP6E/zTtfpiJrac5yqU5CCDWnAdeQ5SWg15DMeh0hpgFsbn59k7dylCztA9t8fpeiOw73pLPCA0vvVk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JAfyB4LU; arc=fail smtp.client-ip=40.107.102.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB662AEE1
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 03:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741923243; cv=none; b=pv/3ZQr9vLOP9beuf6F6I94SQG4rbRIUhBpnNh3nN2H+pYn86fYt9P0q7ReDtV/Dqcd0rzO9JfOXiEn+31EzdVi3zSgf4iILypDzD/hFR+KX7VJNF14CHjReDr8JPD5C+5HmtQ8TVBc6f2ySl4RBb9fCwbG50taK94Q0B4kvL4A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741923243; c=relaxed/simple;
+	bh=EivQpi2O8pIN6Now3MfuLg4d7RWNWyh6CXbS/W4t9P0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ff4a4PJXp5e25r6uuoEwHz9lvvFpyPUzxTNx0ts+9b2dNbMwepD5Ue6z6bQiILdfA3WFW/zjW2kc5c6jZ0ymz284KSg5Zb49tr+MGQq7KeV+rKuIfx+oUkasIS8BB0tr3xlhE1dlfuQ74eG7shwcOdfKRdLwF3qF5qNtcudxln8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=awf1xZiU; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JAfyB4LU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HaeRdJuTyM21ApQVXEkDG8gjzJB81DCmRwqe8SxgoWausgJaAta4rLku1Ze5xjADpbyZXosOGi+5Av837n7OVNiz4lciv75UzbiEo1+TsyUp4MYfptt3SvaiYQiK/7zKO+P+WO7KJhR5XUqm7Lh8GzN5BTR30VqfEl2B+Qv/wdWy6PmQPV45unl2eSLVs72lq1hUltXnW/F0pDTu7psJY+Z6a9srhRjCPgAhz61ijbgX2NOtLmtKLeRV3fcfYBdsw5y5LJQatk8yvrpjyfheHt6SuvEF+bhXDKhpi/GdHS4AlCcnLZ65V+uz0WWMsMH+iMt/jFCsSJ+0aK2Ij4FJTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OaelWoVQH78yhxVbbNFN79ZUotJsDoF9WOJ9I7jDTnY=;
- b=nRgEmq0x3UQg6BYAZxHXb5aAEcTvXF4XdJ6wc/Bidj87gbxJJwZ0Io1M4NV7VoOfA+l51FJKSoXi2SnkwvMpzSQo8dlz4W1ihHgA+AIwkBy6hMkkFVn3w7nQXrWP1t3DwKETjkK4OJ79rdISznWY4Q5n47yJFuaNp99dcy7UQuhKHDuYx4phgPumtWtQLujyH+o/Idn/VSAvxosIkgtIrStH8e+T3XI3gqlaKGhNx6VrJv1Ze3m1GMqLfrSUN/xNcqMAuYWeKbzt4VVXE7Zlm88pgS7Sv3tsJVIiQDBotQO4OdIGlYdcj4sjk27LQTz4+i7rJf+PM1MLtvkKQkD58g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=bytedance.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OaelWoVQH78yhxVbbNFN79ZUotJsDoF9WOJ9I7jDTnY=;
- b=JAfyB4LUq2Rmz9YPLq7MRqDACfZb9iHpOi/6iM0ZRAcIsxg4YmGuxB6EL/NcwK8/3VqJeVdfuLM24f7w0p1wJ14pruX57vp2vluoXqX2WDbq7HYG9gvQ7G5hBzEAwQhjaV5DXAEEyZfuc7WxMq8bgGlWEcyaAxUkvdpC1vionjg=
-Received: from BY5PR17CA0030.namprd17.prod.outlook.com (2603:10b6:a03:1b8::43)
- by IA0PR12MB7530.namprd12.prod.outlook.com (2603:10b6:208:440::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.28; Fri, 14 Mar
- 2025 03:28:21 +0000
-Received: from SJ5PEPF000001F7.namprd05.prod.outlook.com
- (2603:10b6:a03:1b8:cafe::bc) by BY5PR17CA0030.outlook.office365.com
- (2603:10b6:a03:1b8::43) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.24 via Frontend Transport; Fri,
- 14 Mar 2025 03:28:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001F7.mail.protection.outlook.com (10.167.242.75) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Fri, 14 Mar 2025 03:28:20 +0000
-Received: from [10.136.37.23] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Mar
- 2025 22:28:16 -0500
-Message-ID: <ddd839a6-916b-4a23-a998-0d44486588ab@amd.com>
-Date: Fri, 14 Mar 2025 08:58:14 +0530
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="awf1xZiU"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2255003f4c6so30334735ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1741923240; x=1742528040; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IzLcC8Eyie0MxthBF09QbNl/508C79rEY+M+4zhfqEc=;
+        b=awf1xZiUE2vqPOgVIKOeKqFvjzOHYp18OLJs/B6/fnvCnZZzXB4/jMmxPvckAuC7KN
+         qmaC8/0sOKV7zRkZFp01FXiXPhwXbPQz3xfz7jN8iyIeC2j4F1FxHmd3JWntcayNc4nx
+         VHCJyMCy6866NoskRoDtW6GOrMDoSQ9BFtuylCetcFaTRMsI0458ZPwmGAZd13YIaLyz
+         hS0gnZat3X2qas17z6EXkdUOUa9jM5OOJ8KQFdVFXkUrwFUWOqwTf2I8msRXP5kDtbLV
+         Gv91707csUCXZo+WgLiiNIEVSkNA896k1riIBH9XAkapoig39NMkJHi04KVGjc48uWim
+         oMYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741923240; x=1742528040;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IzLcC8Eyie0MxthBF09QbNl/508C79rEY+M+4zhfqEc=;
+        b=hwqtqayo6exWuSFRwaY4C3tkRhTXFXdG+GZvkOGKKl21tBsgPu4O93km6XrZAj8oYE
+         KqGlr7WCsF6k6eQDKZlYI6z89jGAoaySmqqP+tGYy1XcnXlDXx8Wqusdlmao2z+83KTA
+         OnJhZZlRY2GQ3KPegdCipn2M/7q0P/pgYJ+3VXl616EQkne8NGN3e7tTr6YSnducN2VY
+         jhkUQzhV6iGA5YCjUiEtireFHLCEE+V3sHYuKKEhuTYjOoV/DM7xt4Oo5alUl7ija2sl
+         I69kII3fsyPMSjycAV/aZG7C/crkYfwK1Ee/yycPba6Xjr8ZjAx2o7HTTY3HFr08tu3R
+         VfHg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8oAgYMIXT5vnhRueJfYKwTYWjIHewi/7cOV8xGvqyWK79gQtj3CVQoNOad5QzqbvxWHwR+oaCenHL1fw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2foX2zH/ueuxHXLhWrceJq9qe5IjnZ+nwRifLSVsfYavuyh5U
+	qZTZKMdjQYvA8givS2r6CfFyV3rbBmBL5yT45SZ4WoHYGVJiD5hU0WPY+7s4hzk=
+X-Gm-Gg: ASbGncseQv9MjCMsO19aNsPs8sAeJjZU+pG9nstU2Vzns74X6PefkfsR44PxxijTFHk
+	KFyapbdor7O+oEwYmapmi8CnamC41u/6LixckAxvSvtiP1g1mc8yB81//MQqM4qzD+OB12ZNjda
+	DNJNr1dcaKZ5lltcBrRF1Lr6/E7BepLSmO1Hn7YG6Eksmu6xLe+uSEg76hyA2on2+N7Tzlm/8z7
+	vfoK1MQu8WQu1vqlJ4coZ5r5p9bpqBZeBR/XQ06NuRsmdg+feWCIMy5titf4t7HQJbq86B4E05a
+	e4h4RelLzNn/aZSvc/ExwuMCYzs/etQJRJUjo44ZBDYOKwkRN0WTumtzAbXXTBPpMldufw==
+X-Google-Smtp-Source: AGHT+IHkTtLpiPRh154rWR23c7s/Wqh+tHJT7UX/rACxgzWzyRfgJ2LXZqS2mjILyRieWR053xia7g==
+X-Received: by 2002:a17:902:e802:b0:216:3466:7414 with SMTP id d9443c01a7336-225e0b094dcmr14270625ad.44.1741923240169;
+        Thu, 13 Mar 2025 20:34:00 -0700 (PDT)
+Received: from n37-069-081.byted.org ([115.190.40.12])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbed72sm21295845ad.197.2025.03.13.20.33.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 20:33:59 -0700 (PDT)
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+To: akpm@linux-foundation.org
+Cc: mhocko@suse.com,
+	hannes@cmpxchg.org,
+	muchun.song@linux.dev,
+	yosry.ahmed@linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Zhongkun He <hezhongkun.hzk@bytedance.com>
+Subject: [PATCH V2] mm: vmscan: skip the file folios in proactive reclaim if swappiness is MAX
+Date: Fri, 14 Mar 2025 11:33:50 +0800
+Message-Id: <20250314033350.1156370-1-hezhongkun.hzk@bytedance.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/7] sched/fair: Handle throttle path for task based
- throttle
-To: Aaron Lu <ziqianlu@bytedance.com>, Valentin Schneider
-	<vschneid@redhat.com>, Ben Segall <bsegall@google.com>, Peter Zijlstra
-	<peterz@infradead.org>, Josh Don <joshdon@google.com>, Ingo Molnar
-	<mingo@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>, Chengming Zhou
-	<chengming.zhou@linux.dev>, Chuyi Zhou <zhouchuyi@bytedance.com>
-References: <20250313072030.1032893-1-ziqianlu@bytedance.com>
- <CANCG0GcFF7cnR4rCbU5MmY1Gq3M+r4gPXv39QPXXC=Cdr6sRww@mail.gmail.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <CANCG0GcFF7cnR4rCbU5MmY1Gq3M+r4gPXv39QPXXC=Cdr6sRww@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F7:EE_|IA0PR12MB7530:EE_
-X-MS-Office365-Filtering-Correlation-Id: 027aeca2-9baf-4fcf-ff98-08dd62a844fd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WmsyZmFlL2UzRW9FNUgrWFpKOSthTGtvRUZJYm84cUxvQVZFYnBUaDl0RENB?=
- =?utf-8?B?ME5aWkNvM0xNdWRNQ1FhTXdMaXVidnc1SGtYUlRLNGpScjlKd2FBSVRxOXVw?=
- =?utf-8?B?a3pLbDZWMzE3dHB6b2Z6b0t3b2ZwUzJ2dWN3TG1ucnVhanprTDhUQ1NNbDIv?=
- =?utf-8?B?eG5EYlNZT09tMlVoaFZDcVpvbTJjQTVQV1JVeGIzbCtweEpuYkdFdCt1UGZk?=
- =?utf-8?B?TE0wcVN3TFc1SVBnclFuZVptRHVhcmRlcHI3bGI5UGpnZGlBTUlnUTN5SjdK?=
- =?utf-8?B?TkNZcWxCQldZc0JnQm1qdUM3TW9rU3A0clAvMURRT0FPY25wdUV6MUcxTDhB?=
- =?utf-8?B?cEFQSUJjZkV5QmhBditPSXM4ampFaHN2OVYrekFtdHRIWGhlc0ZYMU1pZVli?=
- =?utf-8?B?b1JPZkZrSERXU1ZNRGNmVnJhOUNLVmUwc3FvUzJScEJUZ0JVTEJoUThpaE8x?=
- =?utf-8?B?QnBNV05qVlorUE1rbGV4SDRpcWM2NHRYTVNYNHNyTHk1MlY0c2lic0xtaXU3?=
- =?utf-8?B?MndQb1Bna0tJTjNyT1pCYXpyZU90bHk3Zzl0MFY1MlQ3amc0L0ZrVXd0MXM4?=
- =?utf-8?B?R2l4Z2hXMGpvLy9weDVpcDRxRzZvZGE1QTRFZEJTYW9rMjVzci8zZFhVSWhu?=
- =?utf-8?B?TzRVcURVUlBMSTBneUNFK1g0QzRJckVDYUpGWEx2WWhweVVPOWdXaTA4THh4?=
- =?utf-8?B?RHFjQ090SXRGdHFsb29CQ21qYitnSnVLR0hucEg0WDR1VExFbEExNjBFaStN?=
- =?utf-8?B?OWxWMzZGR2t1d0RQRVpWZmZIKzEyTkxFM1gwelg1ekZWcWNoS1hzaDN3Z0tU?=
- =?utf-8?B?V3UxOUxhYjhBQTA2dnYvZ2F0am9WcnlUZHJ2b1h4ZnR1OTAxeUlJSnFYZkl3?=
- =?utf-8?B?WXBvYjhpNHI4cncyeUdzbG5uOTdieEZLbGpSYytUd2x2ZHN0eU9TTlBhVlZH?=
- =?utf-8?B?R3FBWVNFc3FvVXdJS2pBTXk4SzBCcUJEbW9pcFBsb2NodkMwcDZwMUxPQjFm?=
- =?utf-8?B?Y0xXb2NlNFEwcU83WGFjbHRlTzVVcVpZY2pUTGEvRmhwK2NYSmx5WlQ3Nm5k?=
- =?utf-8?B?eURDNzNkc0dTVW1HZWllTUdLYUNjYWVEeGxUb3ZrNlFFY3FCcG1qTmgzQmhZ?=
- =?utf-8?B?K0dBWW9xSXdFMElnYVZXNWUwQ1lOSVQxQ3dYOGFUbGI1N2NyMGFuQU1paE41?=
- =?utf-8?B?Z1F4Q1FHNFR2QVgwMGVyUGxlR1lZWDdvWHJnUWcwQWV6NndMREkxSUNDcVNN?=
- =?utf-8?B?OGlpUTltNFMxYXh4bU4veFZSSUhDT283WEVFTVkyZWQ4NURVeU9xZUYyclph?=
- =?utf-8?B?VkZ2cnRJNkt0c3lhcHpMMGllNitUTzV3ek91bzlmUVVDbmgxTzdUcEtndWg5?=
- =?utf-8?B?NmdxdWRXRS9Gdk1reURqakdPT28wWm1hQy84Z0hkcHpRNDhkSkVyaWkzSU13?=
- =?utf-8?B?UmsxTkJSZll0UnRpT25UT1BvZFNBc3htUkpmZjJoRDZXdE1rSlc3eGJoRGVS?=
- =?utf-8?B?MENWVDhTbHpNSWsxWWZWZUpMbVRDTm1mUjhEWmorMU1ReEtJSUVJbndFaS91?=
- =?utf-8?B?OWlhN0FyQ1VpQjBia05vWlZ0cFphMmVNWjhDZXVGRjNqbFZzN3ZQeVlYbU0w?=
- =?utf-8?B?SzFxd3JnZ29ocUNRQWYwN0xUV0NsRDNHZlhxNDJ2NmRtREpYZUNadG54d1dx?=
- =?utf-8?B?dnVUOWtxTFFxVjgyM1UwVGdpOVBBZzVxT1p4RTRsWExhdHBkRHJ1d1pDYkFI?=
- =?utf-8?B?OUcvUTcxY0VzRU0wSlg2enhWQWZIMXpwY0p4KzNXZi9hbzRnbGw1QkIxKzU2?=
- =?utf-8?B?U3diOVU0aUxVNzNnVGQxRmpmZUU4elg2SjdyLy9hY1pvM1V5UXdCV0FYdDlw?=
- =?utf-8?B?dVBiRUZ3VXk2ZlNyY2hVNkRaT0JXNTNNTTluMlVhL0tCK1hyeWRmMlh0S0lC?=
- =?utf-8?B?dmt4VTcra2hpUEZmZDJPUmk4SUFxTnVZSGlUdFV2M2l2R2N0UXpvd2ZhSXcv?=
- =?utf-8?B?QldrZzhHTmRnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2025 03:28:20.6596
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 027aeca2-9baf-4fcf-ff98-08dd62a844fd
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001F7.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7530
+Content-Transfer-Encoding: 8bit
 
-Hello Aaron,
+With this patch 'commit <68cd9050d871> ("mm: add swappiness= arg to
+memory.reclaim")', we can submit an additional swappiness=<val> argument
+to memory.reclaim. It is very useful because we can dynamically adjust
+the reclamation ratio based on the anonymous folios and file folios of
+each cgroup. For example,when swappiness is set to 0, we only reclaim
+from file folios.
 
-On 3/13/2025 12:51 PM, Aaron Lu wrote:
+However,we have also encountered a new issue: when swappiness is set to
+the MAX_SWAPPINESS, it may still only reclaim file folios. This is due
+to the knob of cache_trim_mode, which depends solely on the ratio of
+inactive folios, regardless of whether there are a large number of cold
+folios in anonymous folio list.
 
-[..snip..]
+So, we hope to add a new control logic where proactive memory reclaim only
+reclaims from anonymous folios when swappiness is set to MAX_SWAPPINESS.
+For example, something like this:
 
-> 
-> +static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags);
->   static void throttle_cfs_rq_work(struct callback_head *work)
->   {
-> +	struct task_struct *p = container_of(work, struct task_struct,
-> sched_throttle_work);
-> +	struct sched_entity *se;
-> +	struct cfs_rq *cfs_rq;
-> +	struct rq *rq;
-> +	struct rq_flags rf;
-> +
-> +	WARN_ON_ONCE(p != current);
-> +	p->sched_throttle_work.next = &p->sched_throttle_work;
-> +
-> +	/*
-> +	 * If task is exiting, then there won't be a return to userspace, so we
-> +	 * don't have to bother with any of this.
-> +	 */
-> +	if ((p->flags & PF_EXITING))
-> +		return;
-> +
-> +	rq = task_rq_lock(p, &rf);
+echo "2M swappiness=200" > /sys/fs/cgroup/memory.reclaim
 
-nit. With CLASS(task_rq_lock, rq_guard)(p), you can fetch the rq with
-"rq_gurad.rq" and the "goto out_unlock" can be replaced with simple
-return.
+will perform reclaim on the rootcg with a swappiness setting of 200 (max
+swappiness) regardless of the file folios. Users have a more comprehensive
+view of the application's memory distribution because there are many
+metrics available. For example, if we find that a certain cgroup has a
+large number of inactive anon folios, we can reclaim only those and skip
+file folios, because with the zram/zswap, the IO tradeoff that
+cache_trim_mode is making doesn't hold - file refaults will cause IO,
+whereas anon decompression will not.
 
-> +
-> +	se = &p->se;
-> +	cfs_rq = cfs_rq_of(se);
-> +
-> +	/* Raced, forget */
-> +	if (p->sched_class != &fair_sched_class)
-> +		goto out_unlock;
-> +
-> +	/*
-> +	 * If not in limbo, then either replenish has happened or this task got
-> +	 * migrated out of the throttled cfs_rq, move along
-> +	 */
-> +	if (!cfs_rq->throttle_count)
-> +		goto out_unlock;
-> +
-> +	update_rq_clock(rq);
-> +	WARN_ON_ONCE(!list_empty(&p->throttle_node));
-> +	list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
-> +	dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);> +	resched_curr(rq);
-> +
-> +out_unlock:
-> +	task_rq_unlock(rq, p, &rf);
->   }
-> 
->   void init_cfs_throttle_work(struct task_struct *p)
-> @@ -5873,32 +5914,81 @@ static int tg_unthrottle_up(struct task_group
-> *tg, void *data)
->   	return 0;
->   }
-> 
-> +static inline bool task_has_throttle_work(struct task_struct *p)
-> +{
-> +	return p->sched_throttle_work.next != &p->sched_throttle_work;
-> +}
-> +
-> +static inline void task_throttle_setup_work(struct task_struct *p)
-> +{
-> +	/*
-> +	 * Kthreads and exiting tasks don't return to userspace, so adding the
-> +	 * work is pointless
-> +	 */
-> +	if ((p->flags & (PF_EXITING | PF_KTHREAD)))
-> +		return;
-> +
-> +	if (task_has_throttle_work(p))
-> +		return;
-> +
-> +	task_work_add(p, &p->sched_throttle_work, TWA_RESUME);
-> +}
-> +
->   static int tg_throttle_down(struct task_group *tg, void *data)
->   {
->   	struct rq *rq = data;
->   	struct cfs_rq *cfs_rq = tg->cfs_rq[cpu_of(rq)];
-> +	struct task_struct *p;
-> +	struct rb_node *node;
-> +
-> +	cfs_rq->throttle_count++;
-> +	if (cfs_rq->throttle_count > 1)
-> +		return 0;
+With this patch, the swappiness argument of memory.reclaim has a more
+precise semantics: 0 means reclaiming only from file pages, while 200
+means reclaiming just from anonymous pages.
 
-General question: Do we need the throttled_lb_pair() check in
-can_migrate_task() with the per-task throttle? Moving a throttled task
-to another CPU can ensures that the task can run quicker and exit to
-user space as quickly as possible and once the task dequeues, it will
-remove itself from the list of fair tasks making it unreachable for
-the load balancer. Thoughts?
+V1:
+  Update Documentation/admin-guide/cgroup-v2.rst --from Andrew Morton
+  Add more descriptions in the comment.   --from Johannes Weiner
 
-> 
->   	/* group is entering throttled state, stop time */
-> -	if (!cfs_rq->throttle_count) {
-> -		cfs_rq->throttled_clock_pelt = rq_clock_pelt(rq);
-> -		list_del_leaf_cfs_rq(cfs_rq);
-> +	cfs_rq->throttled_clock_pelt = rq_clock_pelt(rq);
-> +	list_del_leaf_cfs_rq(cfs_rq);
-> 
-> -		SCHED_WARN_ON(cfs_rq->throttled_clock_self);
-> -		if (cfs_rq->nr_queued)
-> -			cfs_rq->throttled_clock_self = rq_clock(rq);
-> +	SCHED_WARN_ON(cfs_rq->throttled_clock_self);
-> +	if (cfs_rq->nr_queued)
-> +		cfs_rq->throttled_clock_self = rq_clock(rq);
-> +
-> +	WARN_ON_ONCE(!list_empty(&cfs_rq->throttled_limbo_list));
-> +	/*
-> +	 * rq_lock is held, current is (obviously) executing this in kernelspace.
-> +	 *
-> +	 * All other tasks enqueued on this rq have their saved PC at the
-> +	 * context switch, so they will go through the kernel before returning
-> +	 * to userspace. Thus, there are no tasks-in-userspace to handle, just
-> +	 * install the task_work on all of them.
-> +	 */
-> +	node = rb_first(&cfs_rq->tasks_timeline.rb_root);
-> +	while (node) {
-> +		struct sched_entity *se = __node_2_se(node);
-> +
-> +		if (!entity_is_task(se))
-> +			goto next;
-> +
-> +		p = task_of(se);
-> +		task_throttle_setup_work(p);
-> +next:
-> +		node = rb_next(node);
-> +	}
-> +
-> +	/* curr is not in the timeline tree */
-> +	if (cfs_rq->curr && entity_is_task(cfs_rq->curr)) {
-> +		p = task_of(cfs_rq->curr);
-> +		task_throttle_setup_work(p);
->   	}
-> -	cfs_rq->throttle_count++;
-> 
->   	return 0;
->   }
-> 
+V2:
+  Add reviewed from Yosry Ahmed.
 
-[..snip..]
+Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ Documentation/admin-guide/cgroup-v2.rst |  4 ++++
+ mm/vmscan.c                             | 10 ++++++++++
+ 2 files changed, 14 insertions(+)
 
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index cb1b4e759b7e..6a4487ead7e0 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -1343,6 +1343,10 @@ The following nested keys are defined.
+ 	same semantics as vm.swappiness applied to memcg reclaim with
+ 	all the existing limitations and potential future extensions.
+ 
++	The swappiness have the range [0, 200], 0 means reclaiming only
++	from file folios, 200 (MAX_SWAPPINESS) means reclaiming just from
++	anonymous folios.
++
+   memory.peak
+ 	A read-write single value file which exists on non-root cgroups.
+ 
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index c767d71c43d7..f4312b41e0e0 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2438,6 +2438,16 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+ 		goto out;
+ 	}
+ 
++	/*
++	 * Do not bother scanning file folios if the memory reclaim
++	 * invoked by userspace through memory.reclaim and the
++	 * swappiness is MAX_SWAPPINESS.
++	 */
++	if (sc->proactive && (swappiness == MAX_SWAPPINESS)) {
++		scan_balance = SCAN_ANON;
++		goto out;
++	}
++
+ 	/*
+ 	 * Do not apply any pressure balancing cleverness when the
+ 	 * system is close to OOM, scan both anon and file equally
 -- 
-Thanks and Regards,
-Prateek
+2.39.5
 
