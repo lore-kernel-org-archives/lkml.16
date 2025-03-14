@@ -1,1061 +1,721 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269081A5BB0;
-	Fri, 14 Mar 2025 08:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C12B19B5A7
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741940778; cv=none; b=apoDKOAzn0vQH+K+WT+9r14QEq+Lee/dGR/25Dc7q2DYGaAnHLSPhW9pUbXWrfVjmzASLQ54brpLxXDTgHLcUqevlYt6lyfVOUbQCDAUif7AEBTHhsaR92OWEI1D9CJqd3fgiS/HXNCrsCi7hBCesUO1DvIumLHaYE6HS9QEPtE=
+	t=1741940804; cv=none; b=Fa7+vxGlgkmI9d6bomjjWc5PH/keBhj23yfR0oHwiUA4JpSkdDeP1G1j3GNc6O2u5cnZsyAmctYYSNIMEADCUFk3bbL1ubH+oF9cjnSbzxn2n37L94a7Tr+EWDkjWp8oMGr410uVp4P43aBc0GlBd6wssC8nCucT/pX+ib8upB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741940778; c=relaxed/simple;
-	bh=bTHkDdG1/ll+vAWoQvMLtvN4uKwaToI7IsZcR0gjJZs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TInpw0Pt5kn+Jc+US0eovLOdO24t/Ne3+jKn+XmU8GY2tKGgWzZVXssDI+BKXU7fSU+DGrd6pBS6TSzrxEPeO9c9987U2H2euho9flNYXgJTyztTih9uFDyPqfL+YHVpiXxBGD21keFhdN+9DsCCEHjG3uDPbvIoFt1u9h4yT4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZDcq06Lzvz1R6Zp;
-	Fri, 14 Mar 2025 16:24:28 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id DD7641A016C;
-	Fri, 14 Mar 2025 16:26:10 +0800 (CST)
-Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 14 Mar 2025 16:26:10 +0800
-Received: from localhost.localdomain (10.90.30.45) by
- kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 14 Mar 2025 16:26:10 +0800
-From: Huisong Li <lihuisong@huawei.com>
-To: <linux@roeck-us.net>, <jdelvare@suse.com>
-CC: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<zhanjie9@hisilicon.com>, <zhenglifeng1@huawei.com>,
-	<liuyonglong@huawei.com>, <lihuisong@huawei.com>
-Subject: [PATCH v2] hwmon: (acpi_power_meter) Replace the deprecated hwmon_device_register
-Date: Fri, 14 Mar 2025 16:18:34 +0800
-Message-ID: <20250314081834.3243243-1-lihuisong@huawei.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1741940804; c=relaxed/simple;
+	bh=vQzVtIwK1dCKEMQMMIc1H4RoKQWZk70n7XIZfG9jj90=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=efEBjkndzqnLnjSN+imwANmWEbDKv/0ih6M25JKB6VfqL1KCFXXbFa7wyDFEZwzKWY/RLVwZhvHikAB2P1ixTs1KM3GC+hznwJbe31jsLDTm19ZXU5PRHm0eIiOHj5jhv4KDdaDW1oCSqBKyweBXK1Ij/afxOo9s3ucZyknOY6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ckw31UHx; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ckw31UHx"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30c44a87b9cso10198431fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 01:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1741940799; x=1742545599; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OnvxGuWLwbsMGDx+dnr65e/zpVFA0sGZSJfUiswNflE=;
+        b=Ckw31UHxTAqhDE0+UnieIKsx2Z+sPyVQ93EbDOM+GnxcaJSeTg5awk9rTREMWNAOIu
+         DuGSkbDDQr5OVKPjk1y+0/GsDv12CCrY8kX8Pf6vkdV181fED4JY7hKMmRBuiSC/Hlpf
+         +g9xg8AhyAtY1eNW0I8+xmBw2UP2kLzRNU6a8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741940799; x=1742545599;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OnvxGuWLwbsMGDx+dnr65e/zpVFA0sGZSJfUiswNflE=;
+        b=RG/MFOdBBzz873UFMVJhkb30E719lRKoba7BF8i4bUJA68fTb1+iun9caRVsqhJ4zM
+         HRRBYzrIm/xQaJA2ilxaILhgPqI7xdkTxE8kn/O/69wrEGzNmDUa96EnPzqUt6hqpQiX
+         fEql5qoVo8MjckYKvp9rYw4V6fq1u5Wz5MY3vgNPdF/wTOwyIBQhHF8nyyXyxj1vLTQZ
+         ALDEwc+ZPyox+LAM//4X2J6f18QWDU6NQ2GoFffK+5/C9iAcvSfEJlDPPkcDEj7yDlY1
+         APlB+aHgOlFbPxXsp63Bl47RH1KULNhASz5z5HQ5dkk65CQ++DfVkhl/F2Kn99har6yu
+         xroQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvSq9VTfpbXWYxuMcs/l4Zal/4iarJXpgHeXMN/wgtmlhREsLsVz3+Q80dQC4RWZWCPpK/w4GE6AaKK74=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdI/2RFIbUy9QhDFkvux6zJdW1FrB8RMdRQnwi6PyiCu6hApR2
+	FcaZW6n2XzA4U19jXkr/V5QlFWCJoFw1ldikc2Pt1AN9Mb6PL9VcksJSmEUBT8cda94OQGhhdqz
+	CCZXPXF+Gu1TBbedcIQ/YHmMo22uFajQhRKqA
+X-Gm-Gg: ASbGncsLMUhOkqiiUMgVZvIfpBNkanLJJuExB+XwiVIi15iOzU62ontH0adWJe+JaFd
+	JZIZ5pROsloLk9U7tJqXsGUt7ImQeVFH8IaZ5t+kEpRWQZhivWe5B2Fzf7cWSK1nF29WpuRvmVg
+	YQIouBobo0e3c4/W3HKxNU3aobkbCE4ztXeN2hxFBX9nljKmyw2X4Y
+X-Google-Smtp-Source: AGHT+IGhGekMc4WNzl4bX/a7xx8QwbG9qEqQGafoM6+ZmPbzyfrg7VUUE+RgQdSUqTpLaqiQqjrSmQApdPtRAeOIkr0=
+X-Received: by 2002:a05:6512:2245:b0:549:4d73:641b with SMTP id
+ 2adb3069b0e04-549c398d3bdmr566692e87.52.1741940798475; Fri, 14 Mar 2025
+ 01:26:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemn100009.china.huawei.com (7.202.194.112)
+References: <20250314073307.25092-1-Lu.Tang@mediatek.com> <20250314073307.25092-3-Lu.Tang@mediatek.com>
+In-Reply-To: <20250314073307.25092-3-Lu.Tang@mediatek.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Fri, 14 Mar 2025 16:26:27 +0800
+X-Gm-Features: AQ5f1JoUxxaW4R1DHW8NvTP3v8QIgiu0MnuEYNVzwemC1viyE2X19Q5KKrrECK4
+Message-ID: <CAGXv+5FKLz2sK5UOwtj33xZEh6kKznSAdeHhc6d0oSxbQqpEmA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] pmic: mediatek: Add pmic regulator driver
+To: "Lu.Tang" <Lu.Tang@mediatek.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Chen Zhong <chen.zhong@mediatek.com>, Sen Chu <shen.chu@mediatek.com>, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, Project_Global_Chrome_Upstream_Group@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When load this mode, we can see the following log:
-"power_meter ACPI000D:00: hwmon_device_register() is deprecated. Please
- convert the driver to use hwmon_device_register_with_info()."
+On Fri, Mar 14, 2025 at 3:58=E2=80=AFPM Lu.Tang <Lu.Tang@mediatek.com> wrot=
+e:
+>
+> From: "Lu.Tang" <lu.tang@mediatek.com>
+>
+> Add pmic mt6316/mt6373/mt6363 regulator driver
 
-So replace hwmon_device_register with hwmon_device_register_with_info.
+Please split this into one patch per PMIC. That will make the patch
+size much more manageable. And the patch subject should just say what
+PMIC is added.
 
-These attributes, 'power_accuracy', 'power_cap_hyst', 'power_average_min'
-and 'power_average_max', should have been placed in hwmon_chip_info as
-power data type. But these attributes are displayed as string format on
-the following case:
-a) power1_accuracy  --> display like '90.0%'
-b) power1_cap_hyst  --> display 'unknown' when its value is 0xFFFFFFFF
-c) power1_average_min/max --> display 'unknown' when its value is
-			      negative.
-To avoid any changes in the display of these sysfs interfaces, we can't
-modifiy the type of these attributes in hwmon core and have to put them
-to extra_groups.
+> Signed-off-by: Lu Tang <lu.tang@mediatek.com>
+> ---
+>  drivers/regulator/Kconfig                  |   34 +
+>  drivers/regulator/Makefile                 |    3 +
+>  drivers/regulator/mt6316-regulator.c       |  381 +++++++
 
-Please note that the path of these sysfs interfaces are modified
-accordingly if use hwmon_device_register_with_info():
-old: all sysfs interfaces are under acpi device, namely,
-     /sys/class/hwmon/hwmonX/device/
-now: all sysfs interfaces are under hwmon device, namely,
-     /sys/class/hwmon/hwmonX/
-The new ABI does not guarantee that the underlying path remains the same.
-But we have to accept this change so as to replace the deprecated API.
-Fortunately, some userspace application, like libsensors, would scan
-the two path and handles this automatically. So to drop the deprecated
-message, we can accept this change.
+How much of the MT6316 driver is the same or similar to MT6315?
+AFAICT they are both 4 buck regulators where some of the outputs
+can be combined into a polyphase output.
 
-Signed-off-by: Huisong Li <lihuisong@huawei.com>
----
- drivers/hwmon/acpi_power_meter.c | 861 +++++++++++++++----------------
- 1 file changed, 427 insertions(+), 434 deletions(-)
+>  drivers/regulator/mt6363-regulator.c       | 1106 ++++++++++++++++++++
+>  drivers/regulator/mt6373-regulator.c       |  826 +++++++++++++++
+>  include/linux/regulator/mt6316-regulator.h |   48 +
+>  include/linux/regulator/mt6363-regulator.h |  424 ++++++++
+>  include/linux/regulator/mt6373-regulator.h |  318 ++++++
+>  8 files changed, 3140 insertions(+)
+>  create mode 100644 drivers/regulator/mt6316-regulator.c
+>  create mode 100644 drivers/regulator/mt6363-regulator.c
+>  create mode 100644 drivers/regulator/mt6373-regulator.c
+>  create mode 100644 include/linux/regulator/mt6316-regulator.h
+>  create mode 100644 include/linux/regulator/mt6363-regulator.h
+>  create mode 100644 include/linux/regulator/mt6373-regulator.h
+>
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 39297f7d8177..7b2d47fee535 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -853,6 +853,16 @@ config REGULATOR_MT6315
+>           This driver supports the control of different power rails of de=
+vice
+>           through regulator interface.
+>
+> +config REGULATOR_MT6316
+> +       tristate "MediaTek MT6316 PMIC"
+> +       depends on SPMI
+> +       select REGMAP_SPMI
+> +       help
+> +         Say y here to select this option to enable the power regulator =
+of
+> +         MediaTek MT6316 PMIC.
+> +         This driver supports the control of different power rails of de=
+vice
+> +         through regulator interface.
+> +
+>  config REGULATOR_MT6323
+>         tristate "MediaTek MT6323 PMIC"
+>         depends on MFD_MT6397
+> @@ -916,6 +926,18 @@ config REGULATOR_MT6360
+>           2-channel buck with Thermal Shutdown and Overload Protection
+>           6-channel High PSRR and Low Dropout LDO.
+>
+> +config REGULATOR_MT6363
+> +       tristate "MT6363 SPMI Regulator driver"
+> +       depends on MFD_MTK_SPMI_PMIC
+> +       help
+> +         Say y here to select this option to enable the power regulator =
+of
+> +         MediaTek MT6363 PMIC.
+> +         This driver supports the control of different power rails of de=
+vice
+> +         through regulator interface.
+> +
+> +         The driver can also be build as a module.
+> +         If so, the module will be called mt6363_regulator
+> +
+>  config REGULATOR_MT6370
+>         tristate "MT6370 SubPMIC Regulator"
+>         depends on MFD_MT6370
+> @@ -924,6 +946,18 @@ config REGULATOR_MT6370
+>           This driver supports the control for DisplayBias voltages and o=
+ne
+>           general purpose LDO which is commonly used to drive the vibrato=
+r.
+>
+> +config REGULATOR_MT6373
+> +       tristate "MT6373 SPMI Regulator driver"
+> +       depends on MFD_MTK_SPMI_PMIC
+> +       help
+> +         Say y here to select this option to enable the power regulator =
+of
+> +         MediaTek MT6373 PMIC.
+> +         This driver supports the control of different power rails of de=
+vice
+> +         through regulator interface.
+> +
+> +         The driver can also be build as a module.
+> +         If so, the module will be called mt6373_regulator
+> +
+>  config REGULATOR_MT6380
+>         tristate "MediaTek MT6380 PMIC"
+>         depends on MTK_PMIC_WRAP
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index 3d5a803dce8a..b54a64522499 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -102,6 +102,7 @@ obj-$(CONFIG_REGULATOR_MP886X) +=3D mp886x.o
+>  obj-$(CONFIG_REGULATOR_MPQ7920) +=3D mpq7920.o
+>  obj-$(CONFIG_REGULATOR_MT6311) +=3D mt6311-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6315) +=3D mt6315-regulator.o
+> +obj-$(CONFIG_REGULATOR_MT6316) +=3D mt6316-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6323) +=3D mt6323-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6331) +=3D mt6331-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6332) +=3D mt6332-regulator.o
+> @@ -109,7 +110,9 @@ obj-$(CONFIG_REGULATOR_MT6357)      +=3D mt6357-regul=
+ator.o
+>  obj-$(CONFIG_REGULATOR_MT6358) +=3D mt6358-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6359) +=3D mt6359-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6360) +=3D mt6360-regulator.o
+> +obj-$(CONFIG_REGULATOR_MT6363) +=3D mt6363-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6370) +=3D mt6370-regulator.o
+> +obj-$(CONFIG_REGULATOR_MT6373) +=3D mt6373-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6380) +=3D mt6380-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6397) +=3D mt6397-regulator.o
+>  obj-$(CONFIG_REGULATOR_MTK_DVFSRC) +=3D mtk-dvfsrc-regulator.o
+> diff --git a/drivers/regulator/mt6316-regulator.c b/drivers/regulator/mt6=
+316-regulator.c
+> new file mode 100644
+> index 000000000000..1c069a0d4cff
+> --- /dev/null
+> +++ b/drivers/regulator/mt6316-regulator.c
+> @@ -0,0 +1,381 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2024 MediaTek Inc.
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/regulator/mt6316-regulator.h>
+> +#include <linux/regulator/of_regulator.h>
+> +
+> +#define SET_OFFSET     0x1
+> +#define CLR_OFFSET     0x2
+> +
+> +#define MT6316_REG_WIDTH       8
+> +
+> +#define MT6316_BUCK_MODE_AUTO          0
+> +#define MT6316_BUCK_MODE_FORCE_PWM     1
+> +#define MT6316_BUCK_MODE_NORMAL                0
+> +#define MT6316_BUCK_MODE_LP            2
+> +
+> +#define BUCK_PHASE_3                   3
+> +#define BUCK_PHASE_4                   4
+> +
+> +struct mt6316_regulator_info {
+> +       struct regulator_desc desc;
+> +       u32 da_reg;
+> +       u32 qi;
+> +       u32 modeset_reg;
+> +       u32 modeset_mask;
+> +       u32 lp_mode_reg;
+> +       u32 lp_mode_mask;
+> +       u32 lp_mode_shift;
+> +};
+> +
+> +struct mt6316_init_data {
+> +       u32 id;
+> +       u32 size;
+> +};
+> +
+> +struct mt6316_chip {
+> +       struct device *dev;
+> +       struct regmap *regmap;
+> +       u32 slave_id;
+> +};
+> +
+> +#define MT_BUCK(match, _name, volt_ranges, _bid, _vsel)        \
+> +[MT6316_ID_##_name] =3D {                                        \
+> +       .desc =3D {                                       \
+> +               .name =3D #_name,                         \
+> +               .of_match =3D of_match_ptr(match),        \
+> +               .ops =3D &mt6316_volt_range_ops,          \
+> +               .type =3D REGULATOR_VOLTAGE,              \
+> +               .id =3D MT6316_ID_##_name,                \
+> +               .owner =3D THIS_MODULE,                   \
+> +               .n_voltages =3D 0x1ff,                    \
+> +               .linear_ranges =3D volt_ranges,           \
+> +               .n_linear_ranges =3D ARRAY_SIZE(volt_ranges),\
+> +               .vsel_reg =3D _vsel,                      \
+> +               .vsel_mask =3D 0xff,                      \
+> +               .enable_reg =3D MT6316_BUCK_TOP_CON0,     \
+> +               .enable_mask =3D BIT(_bid - 1),           \
+> +               .of_map_mode =3D mt6316_map_mode,         \
+> +       },                                              \
+> +       .da_reg =3D MT6316_VBUCK##_bid##_DBG8,            \
+> +       .qi =3D BIT(0),                                   \
+> +       .lp_mode_reg =3D MT6316_BUCK_TOP_CON1,            \
+> +       .lp_mode_mask =3D BIT(_bid - 1),                  \
+> +       .lp_mode_shift =3D _bid - 1,                      \
+> +       .modeset_reg =3D MT6316_BUCK_TOP_4PHASE_TOP_ANA_CON0,\
+> +       .modeset_mask =3D BIT(_bid - 1),                  \
+> +}
+> +
+> +static const struct linear_range mt_volt_range1[] =3D {
+> +       REGULATOR_LINEAR_RANGE(0, 0, 0x1fe, 2500),
+> +};
+> +
+> +static int mt6316_regulator_enable(struct regulator_dev *rdev)
+> +{
+> +       return regmap_write(rdev->regmap, rdev->desc->enable_reg + SET_OF=
+FSET,
+> +                           rdev->desc->enable_mask);
+> +}
+> +
+> +static int mt6316_regulator_disable(struct regulator_dev *rdev)
+> +{
+> +       return regmap_write(rdev->regmap, rdev->desc->enable_reg + CLR_OF=
+FSET,
+> +                           rdev->desc->enable_mask);
+> +}
+> +
+> +static unsigned int mt6316_map_mode(u32 mode)
+> +{
+> +       switch (mode) {
+> +       case MT6316_BUCK_MODE_AUTO:
+> +               return REGULATOR_MODE_NORMAL;
+> +       case MT6316_BUCK_MODE_FORCE_PWM:
+> +               return REGULATOR_MODE_FAST;
+> +       case MT6316_BUCK_MODE_LP:
+> +               return REGULATOR_MODE_IDLE;
+> +       default:
+> +               return REGULATOR_MODE_INVALID;
+> +       }
+> +}
+> +
+> +static int mt6316_regulator_set_voltage_sel(struct regulator_dev *rdev, =
+unsigned int selector)
+> +{
+> +       unsigned short reg_val =3D 0;
+> +       int ret =3D 0;
+> +
+> +       reg_val =3D ((selector & 0x1) << 8) | (selector >> 1);
+> +       ret =3D regmap_bulk_write(rdev->regmap, rdev->desc->vsel_reg, (u8=
+ *) &reg_val, 2);
+> +
+> +       return ret;
+> +}
+> +
+> +static int mt6316_regulator_get_voltage_sel(struct regulator_dev *rdev)
+> +{
+> +       int ret =3D 0;
+> +       unsigned int reg_val =3D 0;
+> +
+> +       ret =3D regmap_bulk_read(rdev->regmap, rdev->desc->vsel_reg, (u8 =
+*) &reg_val, 2);
+> +       if (ret !=3D 0) {
+> +               dev_err(&rdev->dev, "Failed to get mt6316 regulator volta=
+ge: %d\n", ret);
+> +               return ret;
+> +       }
+> +       ret =3D ((reg_val >> 8) & 0x1) + ((reg_val & rdev->desc->vsel_mas=
+k) << 1);
+> +
+> +       return ret;
+> +}
+> +
+> +static unsigned int mt6316_regulator_get_mode(struct regulator_dev *rdev=
+)
+> +{
+> +       struct mt6316_regulator_info *info;
+> +       int ret =3D 0, regval =3D 0;
+> +       u32 modeset_mask;
+> +
+> +       info =3D container_of(rdev->desc, struct mt6316_regulator_info, d=
+esc);
+> +       ret =3D regmap_read(rdev->regmap, info->modeset_reg, &regval);
+> +       if (ret !=3D 0) {
+> +               dev_err(&rdev->dev, "Failed to get mt6316 buck mode: %d\n=
+", ret);
+> +               return ret;
+> +       }
+> +
+> +       modeset_mask =3D info->modeset_mask;
+> +
+> +       if ((regval & modeset_mask) =3D=3D modeset_mask)
+> +               return REGULATOR_MODE_FAST;
+> +
+> +       ret =3D regmap_read(rdev->regmap, info->lp_mode_reg, &regval);
+> +       if (ret !=3D 0) {
+> +               dev_err(&rdev->dev, "Failed to get mt6316 buck lp mode: %=
+d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       if (regval & info->lp_mode_mask)
+> +               return REGULATOR_MODE_IDLE;
+> +       else
+> +               return REGULATOR_MODE_NORMAL;
+> +}
+> +
+> +static int mt6316_regulator_set_mode(struct regulator_dev *rdev, u32 mod=
+e)
+> +{
+> +       struct mt6316_regulator_info *info;
+> +       int ret =3D 0, val, curr_mode;
+> +       u32 modeset_mask;
+> +
+> +       info =3D container_of(rdev->desc, struct mt6316_regulator_info, d=
+esc);
+> +       modeset_mask =3D info->modeset_mask;
+> +
+> +       curr_mode =3D mt6316_regulator_get_mode(rdev);
+> +       switch (mode) {
+> +       case REGULATOR_MODE_FAST:
+> +               ret =3D regmap_update_bits(rdev->regmap, info->modeset_re=
+g,
+> +                                        modeset_mask, modeset_mask);
+> +               break;
+> +       case REGULATOR_MODE_NORMAL:
+> +               if (curr_mode =3D=3D REGULATOR_MODE_FAST) {
+> +                       ret =3D regmap_update_bits(rdev->regmap, info->mo=
+deset_reg,
+> +                                                modeset_mask, 0);
+> +               } else if (curr_mode =3D=3D REGULATOR_MODE_IDLE) {
+> +                       ret =3D regmap_update_bits(rdev->regmap, info->lp=
+_mode_reg,
+> +                                                info->lp_mode_mask, 0);
+> +                       usleep_range(100, 110);
+> +               }
+> +               break;
+> +       case REGULATOR_MODE_IDLE:
+> +               val =3D MT6316_BUCK_MODE_LP >> 1;
+> +               val <<=3D info->lp_mode_shift;
+> +               ret =3D regmap_update_bits(rdev->regmap, info->lp_mode_re=
+g, info->lp_mode_mask, val);
+> +               break;
+> +       default:
+> +               ret =3D -EINVAL;
+> +               goto err_mode;
+> +       }
+> +
+> +err_mode:
+> +       if (ret !=3D 0) {
+> +               dev_err(&rdev->dev, "Failed to set mt6316 buck mode: %d\n=
+", ret);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int mt6316_get_status(struct regulator_dev *rdev)
+> +{
+> +       int ret =3D 0;
+> +       u32 regval =3D 0;
+> +       struct mt6316_regulator_info *info;
+> +
+> +       info =3D container_of(rdev->desc, struct mt6316_regulator_info, d=
+esc);
+> +       ret =3D regmap_read(rdev->regmap, info->da_reg, &regval);
+> +       if (ret !=3D 0) {
+> +               dev_notice(&rdev->dev, "Failed to get enable reg: %d\n", =
+ret);
+> +               return ret;
+> +       }
+> +
+> +       return (regval & info->qi) ? REGULATOR_STATUS_ON : REGULATOR_STAT=
+US_OFF;
+> +}
+> +
+> +static void mt6316_buck_phase_init(struct mt6316_chip *chip, unsigned in=
+t *s6_buck_phase)
+> +{
+> +       int ret =3D 0;
+> +       u32 val =3D 0;
+> +
+> +       ret =3D regmap_read(chip->regmap, MT6316_BUCK_TOP_4PHASE_TOP_ELR_=
+0, &val);
+> +       if (ret) {
+> +               dev_err(chip->dev, "Failed to get mt6316 buck phase: %d\n=
+", ret);
+> +               return;
+> +       }
+> +
+> +       dev_info(chip->dev, "S%d RG_4PH_CONFIG:%d\n", chip->slave_id, val=
+);
+> +       if (chip->slave_id =3D=3D MT6316_SLAVE_ID_6)
+> +               *s6_buck_phase =3D val;
+> +}
+> +
+> +static const struct regulator_ops mt6316_volt_range_ops =3D {
+> +       .list_voltage =3D regulator_list_voltage_linear_range,
+> +       .map_voltage =3D regulator_map_voltage_linear_range,
+> +       .set_voltage_sel =3D mt6316_regulator_set_voltage_sel,
+> +       .get_voltage_sel =3D mt6316_regulator_get_voltage_sel,
+> +       .set_voltage_time_sel =3D regulator_set_voltage_time_sel,
+> +       .enable =3D mt6316_regulator_enable,
+> +       .disable =3D mt6316_regulator_disable,
+> +       .is_enabled =3D regulator_is_enabled_regmap,
+> +       .get_status =3D mt6316_get_status,
+> +       .set_mode =3D mt6316_regulator_set_mode,
+> +       .get_mode =3D mt6316_regulator_get_mode,
+> +};
+> +
+> +static struct mt6316_regulator_info mt6316_regulators[] =3D {
+> +       MT_BUCK("vbuck1", VBUCK1, mt_volt_range1, 1, MT6316_BUCK_TOP_ELR0=
+),
+> +       MT_BUCK("vbuck2", VBUCK2, mt_volt_range1, 2, MT6316_BUCK_TOP_ELR2=
+),
+> +       MT_BUCK("vbuck3", VBUCK3, mt_volt_range1, 3, MT6316_BUCK_TOP_ELR4=
+),
+> +       MT_BUCK("vbuck4", VBUCK4, mt_volt_range1, 4, MT6316_BUCK_TOP_ELR6=
+),
+> +};
+> +
+> +static struct mt6316_init_data mt6316_3_init_data =3D {
+> +       .id =3D MT6316_SLAVE_ID_3,
+> +       .size =3D MT6316_ID_3_MAX,
+> +};
+> +
+> +static struct mt6316_init_data mt6316_6_init_data =3D {
+> +       .id =3D MT6316_SLAVE_ID_6,
+> +       .size =3D MT6316_ID_6_MAX,
+> +};
+> +
+> +static struct mt6316_init_data mt6316_7_init_data =3D {
+> +       .id =3D MT6316_SLAVE_ID_7,
+> +       .size =3D MT6316_ID_7_MAX,
+> +};
+> +
+> +static struct mt6316_init_data mt6316_8_init_data =3D {
+> +       .id =3D MT6316_SLAVE_ID_8,
+> +       .size =3D MT6316_ID_8_MAX,
+> +};
+> +
+> +static struct mt6316_init_data mt6316_15_init_data =3D {
+> +       .id =3D MT6316_SLAVE_ID_15,
+> +       .size =3D MT6316_ID_15_MAX,
+> +};
+> +
+> +static const struct of_device_id mt6316_of_match[] =3D {
+> +       {
+> +               .compatible =3D "mediatek,mt6316-3-regulator",
+> +               .data =3D &mt6316_3_init_data,
+> +       }, {
+> +               .compatible =3D "mediatek,mt6316-6-regulator",
+> +               .data =3D &mt6316_6_init_data,
+> +       }, {
+> +               .compatible =3D "mediatek,mt6316-7-regulator",
+> +               .data =3D &mt6316_7_init_data,
+> +       }, {
+> +               .compatible =3D "mediatek,mt6316-8-regulator",
+> +               .data =3D &mt6316_8_init_data,
+> +       }, {
+> +               .compatible =3D "mediatek,mt6316-15-regulator",
+> +               .data =3D &mt6316_15_init_data,
+> +       }, {
+> +               /* sentinel */
+> +       },
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6316_of_match);
+> +
+> +static int mt6316_regulator_probe(struct platform_device *pdev)
+> +{
+> +       const struct of_device_id *of_id;
+> +       struct device *dev =3D &pdev->dev;
+> +       struct regmap *regmap;
+> +       struct mt6316_init_data *pdata;
+> +       struct mt6316_chip *chip;
+> +       struct regulator_config config =3D {};
+> +       struct regulator_dev *rdev;
+> +       struct device_node *node =3D pdev->dev.of_node;
+> +       u32 val =3D 0;
+> +       int i;
+> +       unsigned int s6_buck_phase;
+> +
+> +       regmap =3D dev_get_regmap(dev->parent, NULL);
+> +       if (!regmap)
+> +               return -ENODEV;
+> +
+> +       chip =3D devm_kzalloc(dev, sizeof(struct mt6316_chip), GFP_KERNEL=
+);
+> +       if (!chip)
+> +               return -ENOMEM;
 
-diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
-index f05986e4f379..46e8a0b6b210 100644
---- a/drivers/hwmon/acpi_power_meter.c
-+++ b/drivers/hwmon/acpi_power_meter.c
-@@ -87,25 +87,14 @@ struct acpi_power_meter_resource {
- 	bool		power_alarm;
- 	int			sensors_valid;
- 	unsigned long		sensors_last_updated;
--	struct sensor_device_attribute	sensors[NUM_SENSORS];
--	int			num_sensors;
-+#define POWER_METER_TRIP_AVERAGE_MIN_IDX	0
-+#define POWER_METER_TRIP_AVERAGE_MAX_IDX	1
- 	s64			trip[2];
- 	int			num_domain_devices;
- 	struct acpi_device	**domain_devices;
- 	struct kobject		*holders_dir;
- };
- 
--struct sensor_template {
--	char *label;
--	ssize_t (*show)(struct device *dev,
--			struct device_attribute *devattr,
--			char *buf);
--	ssize_t (*set)(struct device *dev,
--		       struct device_attribute *devattr,
--		       const char *buf, size_t count);
--	int index;
--};
--
- /* Averaging interval */
- static int update_avg_interval(struct acpi_power_meter_resource *resource)
- {
-@@ -124,62 +113,6 @@ static int update_avg_interval(struct acpi_power_meter_resource *resource)
- 	return 0;
- }
- 
--static ssize_t show_avg_interval(struct device *dev,
--				 struct device_attribute *devattr,
--				 char *buf)
--{
--	struct acpi_device *acpi_dev = to_acpi_device(dev);
--	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
--
--	mutex_lock(&resource->lock);
--	update_avg_interval(resource);
--	mutex_unlock(&resource->lock);
--
--	return sprintf(buf, "%llu\n", resource->avg_interval);
--}
--
--static ssize_t set_avg_interval(struct device *dev,
--				struct device_attribute *devattr,
--				const char *buf, size_t count)
--{
--	struct acpi_device *acpi_dev = to_acpi_device(dev);
--	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
--	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
--	struct acpi_object_list args = { 1, &arg0 };
--	int res;
--	unsigned long temp;
--	unsigned long long data;
--	acpi_status status;
--
--	res = kstrtoul(buf, 10, &temp);
--	if (res)
--		return res;
--
--	if (temp > resource->caps.max_avg_interval ||
--	    temp < resource->caps.min_avg_interval)
--		return -EINVAL;
--	arg0.integer.value = temp;
--
--	mutex_lock(&resource->lock);
--	status = acpi_evaluate_integer(resource->acpi_dev->handle, "_PAI",
--				       &args, &data);
--	if (ACPI_SUCCESS(status))
--		resource->avg_interval = temp;
--	mutex_unlock(&resource->lock);
--
--	if (ACPI_FAILURE(status)) {
--		acpi_evaluation_failure_warn(resource->acpi_dev->handle, "_PAI",
--					     status);
--		return -EINVAL;
--	}
--
--	/* _PAI returns 0 on success, nonzero otherwise */
--	if (data)
--		return -EINVAL;
--
--	return count;
--}
--
- /* Cap functions */
- static int update_cap(struct acpi_power_meter_resource *resource)
- {
-@@ -198,61 +131,6 @@ static int update_cap(struct acpi_power_meter_resource *resource)
- 	return 0;
- }
- 
--static ssize_t show_cap(struct device *dev,
--			struct device_attribute *devattr,
--			char *buf)
--{
--	struct acpi_device *acpi_dev = to_acpi_device(dev);
--	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
--
--	mutex_lock(&resource->lock);
--	update_cap(resource);
--	mutex_unlock(&resource->lock);
--
--	return sprintf(buf, "%llu\n", resource->cap * 1000);
--}
--
--static ssize_t set_cap(struct device *dev, struct device_attribute *devattr,
--		       const char *buf, size_t count)
--{
--	struct acpi_device *acpi_dev = to_acpi_device(dev);
--	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
--	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
--	struct acpi_object_list args = { 1, &arg0 };
--	int res;
--	unsigned long temp;
--	unsigned long long data;
--	acpi_status status;
--
--	res = kstrtoul(buf, 10, &temp);
--	if (res)
--		return res;
--
--	temp = DIV_ROUND_CLOSEST(temp, 1000);
--	if (temp > resource->caps.max_cap || temp < resource->caps.min_cap)
--		return -EINVAL;
--	arg0.integer.value = temp;
--
--	mutex_lock(&resource->lock);
--	status = acpi_evaluate_integer(resource->acpi_dev->handle, "_SHL",
--				       &args, &data);
--	if (ACPI_SUCCESS(status))
--		resource->cap = temp;
--	mutex_unlock(&resource->lock);
--
--	if (ACPI_FAILURE(status)) {
--		acpi_evaluation_failure_warn(resource->acpi_dev->handle, "_SHL",
--					     status);
--		return -EINVAL;
--	}
--
--	/* _SHL returns 0 on success, nonzero otherwise */
--	if (data)
--		return -EINVAL;
--
--	return count;
--}
--
- /* Power meter trip points */
- static int set_acpi_trip(struct acpi_power_meter_resource *resource)
- {
-@@ -287,34 +165,6 @@ static int set_acpi_trip(struct acpi_power_meter_resource *resource)
- 	return 0;
- }
- 
--static ssize_t set_trip(struct device *dev, struct device_attribute *devattr,
--			const char *buf, size_t count)
--{
--	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
--	struct acpi_device *acpi_dev = to_acpi_device(dev);
--	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
--	unsigned long temp, trip_bk;
--	int res;
--
--	res = kstrtoul(buf, 10, &temp);
--	if (res)
--		return res;
--
--	temp = DIV_ROUND_CLOSEST(temp, 1000);
--
--	guard(mutex)(&resource->lock);
--
--	trip_bk = resource->trip[attr->index - 7];
--	resource->trip[attr->index - 7] = temp;
--	res = set_acpi_trip(resource);
--	if (res) {
--		resource->trip[attr->index - 7] = trip_bk;
--		return res;
--	}
--
--	return count;
--}
--
- /* Power meter */
- static int update_meter(struct acpi_power_meter_resource *resource)
- {
-@@ -341,206 +191,6 @@ static int update_meter(struct acpi_power_meter_resource *resource)
- 	return 0;
- }
- 
--static ssize_t show_power(struct device *dev,
--			  struct device_attribute *devattr,
--			  char *buf)
--{
--	struct acpi_device *acpi_dev = to_acpi_device(dev);
--	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
--
--	mutex_lock(&resource->lock);
--	update_meter(resource);
--	mutex_unlock(&resource->lock);
--
--	if (resource->power == UNKNOWN_POWER)
--		return -ENODATA;
--
--	return sprintf(buf, "%llu\n", resource->power * 1000);
--}
--
--/* Miscellaneous */
--static ssize_t show_str(struct device *dev,
--			struct device_attribute *devattr,
--			char *buf)
--{
--	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
--	struct acpi_device *acpi_dev = to_acpi_device(dev);
--	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
--	acpi_string val;
--	int ret;
--
--	mutex_lock(&resource->lock);
--	switch (attr->index) {
--	case 0:
--		val = resource->model_number;
--		break;
--	case 1:
--		val = resource->serial_number;
--		break;
--	case 2:
--		val = resource->oem_info;
--		break;
--	default:
--		WARN(1, "Implementation error: unexpected attribute index %d\n",
--		     attr->index);
--		val = "";
--		break;
--	}
--	ret = sprintf(buf, "%s\n", val);
--	mutex_unlock(&resource->lock);
--	return ret;
--}
--
--static ssize_t show_val(struct device *dev,
--			struct device_attribute *devattr,
--			char *buf)
--{
--	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
--	struct acpi_device *acpi_dev = to_acpi_device(dev);
--	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
--	u64 val = 0;
--	int ret;
--
--	guard(mutex)(&resource->lock);
--
--	switch (attr->index) {
--	case 0:
--		val = resource->caps.min_avg_interval;
--		break;
--	case 1:
--		val = resource->caps.max_avg_interval;
--		break;
--	case 2:
--		val = resource->caps.min_cap * 1000;
--		break;
--	case 3:
--		val = resource->caps.max_cap * 1000;
--		break;
--	case 4:
--		if (resource->caps.hysteresis == UNKNOWN_HYSTERESIS)
--			return sprintf(buf, "unknown\n");
--
--		val = resource->caps.hysteresis * 1000;
--		break;
--	case 5:
--		if (resource->caps.flags & POWER_METER_IS_BATTERY)
--			val = 1;
--		else
--			val = 0;
--		break;
--	case 6:
--		ret = update_meter(resource);
--		if (ret)
--			return ret;
--		/* need to update cap if not to support the notification. */
--		if (!(resource->caps.flags & POWER_METER_CAN_NOTIFY)) {
--			ret = update_cap(resource);
--			if (ret)
--				return ret;
--			resource->power_alarm = resource->power > resource->cap;
--			val = resource->power_alarm;
--		} else {
--			val = resource->power_alarm ||
--				 resource->power > resource->cap;
--			resource->power_alarm = resource->power > resource->cap;
--		}
--		break;
--	case 7:
--	case 8:
--		if (resource->trip[attr->index - 7] < 0)
--			return sprintf(buf, "unknown\n");
--
--		val = resource->trip[attr->index - 7] * 1000;
--		break;
--	default:
--		WARN(1, "Implementation error: unexpected attribute index %d\n",
--		     attr->index);
--		break;
--	}
--
--	return sprintf(buf, "%llu\n", val);
--}
--
--static ssize_t show_accuracy(struct device *dev,
--			     struct device_attribute *devattr,
--			     char *buf)
--{
--	struct acpi_device *acpi_dev = to_acpi_device(dev);
--	struct acpi_power_meter_resource *resource = acpi_dev->driver_data;
--	unsigned int acc = resource->caps.accuracy;
--
--	return sprintf(buf, "%u.%u%%\n", acc / 1000, acc % 1000);
--}
--
--static ssize_t show_name(struct device *dev,
--			 struct device_attribute *devattr,
--			 char *buf)
--{
--	return sprintf(buf, "%s\n", ACPI_POWER_METER_NAME);
--}
--
--#define RO_SENSOR_TEMPLATE(_label, _show, _index)	\
--	{						\
--		.label = _label,			\
--		.show  = _show,				\
--		.index = _index,			\
--	}
--
--#define RW_SENSOR_TEMPLATE(_label, _show, _set, _index)	\
--	{						\
--		.label = _label,			\
--		.show  = _show,				\
--		.set   = _set,				\
--		.index = _index,			\
--	}
--
--/* Sensor descriptions.  If you add a sensor, update NUM_SENSORS above! */
--static struct sensor_template meter_attrs[] = {
--	RO_SENSOR_TEMPLATE(POWER_AVERAGE_NAME, show_power, 0),
--	RO_SENSOR_TEMPLATE("power1_accuracy", show_accuracy, 0),
--	RO_SENSOR_TEMPLATE("power1_average_interval_min", show_val, 0),
--	RO_SENSOR_TEMPLATE("power1_average_interval_max", show_val, 1),
--	RO_SENSOR_TEMPLATE("power1_is_battery", show_val, 5),
--	RW_SENSOR_TEMPLATE(POWER_AVG_INTERVAL_NAME, show_avg_interval,
--			   set_avg_interval, 0),
--	{},
--};
--
--static struct sensor_template misc_cap_attrs[] = {
--	RO_SENSOR_TEMPLATE("power1_cap_min", show_val, 2),
--	RO_SENSOR_TEMPLATE("power1_cap_max", show_val, 3),
--	RO_SENSOR_TEMPLATE("power1_cap_hyst", show_val, 4),
--	RO_SENSOR_TEMPLATE(POWER_ALARM_NAME, show_val, 6),
--	{},
--};
--
--static struct sensor_template ro_cap_attrs[] = {
--	RO_SENSOR_TEMPLATE(POWER_CAP_NAME, show_cap, 0),
--	{},
--};
--
--static struct sensor_template rw_cap_attrs[] = {
--	RW_SENSOR_TEMPLATE(POWER_CAP_NAME, show_cap, set_cap, 0),
--	{},
--};
--
--static struct sensor_template trip_attrs[] = {
--	RW_SENSOR_TEMPLATE("power1_average_min", show_val, set_trip, 7),
--	RW_SENSOR_TEMPLATE("power1_average_max", show_val, set_trip, 8),
--	{},
--};
--
--static struct sensor_template misc_attrs[] = {
--	RO_SENSOR_TEMPLATE("name", show_name, 0),
--	RO_SENSOR_TEMPLATE("power1_model_number", show_str, 0),
--	RO_SENSOR_TEMPLATE("power1_oem_info", show_str, 2),
--	RO_SENSOR_TEMPLATE("power1_serial_number", show_str, 1),
--	{},
--};
--
--#undef RO_SENSOR_TEMPLATE
--#undef RW_SENSOR_TEMPLATE
--
- /* Read power domain data */
- static void remove_domain_devices(struct acpi_power_meter_resource *resource)
- {
-@@ -642,107 +292,433 @@ static int read_domain_devices(struct acpi_power_meter_resource *resource)
- 	return res;
- }
- 
--/* Registration and deregistration */
--static int register_attrs(struct acpi_power_meter_resource *resource,
--			  struct sensor_template *attrs)
-+static int set_trip(struct acpi_power_meter_resource *resource, u16 trip_idx,
-+		    unsigned long trip)
- {
--	struct device *dev = &resource->acpi_dev->dev;
--	struct sensor_device_attribute *sensors =
--		&resource->sensors[resource->num_sensors];
--	int res = 0;
-+	unsigned long trip_bk;
-+	int ret;
- 
--	while (attrs->label) {
--		sensors->dev_attr.attr.name = attrs->label;
--		sensors->dev_attr.attr.mode = 0444;
--		sensors->dev_attr.show = attrs->show;
--		sensors->index = attrs->index;
-+	trip = DIV_ROUND_CLOSEST(trip, 1000);
-+	trip_bk = resource->trip[trip_idx];
- 
--		if (attrs->set) {
--			sensors->dev_attr.attr.mode |= 0200;
--			sensors->dev_attr.store = attrs->set;
--		}
-+	resource->trip[trip_idx] = trip;
-+	ret = set_acpi_trip(resource);
-+	if (ret) {
-+		dev_err(&resource->acpi_dev->dev, "set %s failed.\n",
-+			(trip_idx == POWER_METER_TRIP_AVERAGE_MIN_IDX) ?
-+			 "power1_average_min" : "power1_average_max");
-+		resource->trip[trip_idx] = trip_bk;
-+	}
- 
--		sysfs_attr_init(&sensors->dev_attr.attr);
--		res = device_create_file(dev, &sensors->dev_attr);
--		if (res) {
--			sensors->dev_attr.attr.name = NULL;
--			goto error;
--		}
--		sensors++;
--		resource->num_sensors++;
--		attrs++;
-+	return ret;
-+}
-+
-+static int set_cap(struct acpi_power_meter_resource *resource,
-+		   unsigned long cap)
-+{
-+	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-+	struct acpi_object_list args = { 1, &arg0 };
-+	unsigned long long data;
-+	acpi_status status;
-+
-+	cap = DIV_ROUND_CLOSEST(cap, 1000);
-+	if (cap > resource->caps.max_cap || cap < resource->caps.min_cap)
-+		return -EINVAL;
-+
-+	arg0.integer.value = cap;
-+	status = acpi_evaluate_integer(resource->acpi_dev->handle, "_SHL",
-+				       &args, &data);
-+	if (ACPI_FAILURE(status)) {
-+		acpi_evaluation_failure_warn(resource->acpi_dev->handle, "_SHL",
-+					     status);
-+		return -EINVAL;
- 	}
-+	resource->cap = cap;
- 
--error:
--	return res;
-+	/* _SHL returns 0 on success, nonzero otherwise */
-+	if (data)
-+		return -EINVAL;
-+
-+	return 0;
- }
- 
--static void remove_attrs(struct acpi_power_meter_resource *resource)
-+static int set_avg_interval(struct acpi_power_meter_resource *resource,
-+			    unsigned long val)
- {
--	int i;
-+	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-+	struct acpi_object_list args = { 1, &arg0 };
-+	unsigned long long data;
-+	acpi_status status;
- 
--	for (i = 0; i < resource->num_sensors; i++) {
--		if (!resource->sensors[i].dev_attr.attr.name)
--			continue;
--		device_remove_file(&resource->acpi_dev->dev,
--				   &resource->sensors[i].dev_attr);
-+	if (val > resource->caps.max_avg_interval ||
-+	    val < resource->caps.min_avg_interval)
-+		return -EINVAL;
-+
-+	arg0.integer.value = val;
-+	status = acpi_evaluate_integer(resource->acpi_dev->handle, "_PAI",
-+				       &args, &data);
-+	if (ACPI_FAILURE(status)) {
-+		acpi_evaluation_failure_warn(resource->acpi_dev->handle, "_PAI",
-+					     status);
-+		return -EINVAL;
- 	}
-+	resource->avg_interval = val;
- 
--	remove_domain_devices(resource);
-+	/* _PAI returns 0 on success, nonzero otherwise */
-+	if (data)
-+		return -EINVAL;
- 
--	resource->num_sensors = 0;
-+	return 0;
- }
- 
--static int setup_attrs(struct acpi_power_meter_resource *resource)
-+static int get_power_alarm_state(struct acpi_power_meter_resource *resource,
-+				 long *val)
- {
--	int res = 0;
-+	int ret;
- 
--	/* _PMD method is optional. */
--	res = read_domain_devices(resource);
--	if (res && res != -ENODEV)
--		return res;
-+	ret = update_meter(resource);
-+	if (ret)
-+		return ret;
- 
--	if (resource->caps.flags & POWER_METER_CAN_MEASURE) {
--		res = register_attrs(resource, meter_attrs);
--		if (res)
--			goto error;
-+	/* need to update cap if not to support the notification. */
-+	if (!(resource->caps.flags & POWER_METER_CAN_NOTIFY)) {
-+		ret = update_cap(resource);
-+		if (ret)
-+			return ret;
-+		resource->power_alarm = resource->power > resource->cap;
-+		*val = resource->power_alarm;
-+	} else {
-+		*val = resource->power_alarm || resource->power > resource->cap;
-+		resource->power_alarm = resource->power > resource->cap;
- 	}
- 
--	if (resource->caps.flags & POWER_METER_CAN_CAP) {
--		if (!can_cap_in_hardware()) {
--			dev_warn(&resource->acpi_dev->dev,
--				 "Ignoring unsafe software power cap!\n");
--			goto skip_unsafe_cap;
-+	return 0;
-+}
-+
-+static umode_t power_meter_is_visible(const void *data,
-+				      enum hwmon_sensor_types type,
-+				      u32 attr, int channel)
-+{
-+	const struct acpi_power_meter_resource *res = data;
-+
-+	if (type != hwmon_power)
-+		return -EINVAL;
-+
-+	switch (attr) {
-+	case hwmon_power_average:
-+	case hwmon_power_average_interval_min:
-+	case hwmon_power_average_interval_max:
-+		if (res->caps.flags & POWER_METER_CAN_MEASURE)
-+			return 0444;
-+		break;
-+	case hwmon_power_average_interval:
-+		if (res->caps.flags & POWER_METER_CAN_MEASURE)
-+			return 0644;
-+		break;
-+	case hwmon_power_cap_min:
-+	case hwmon_power_cap_max:
-+	case hwmon_power_alarm:
-+		if (res->caps.flags & POWER_METER_CAN_CAP && can_cap_in_hardware())
-+			return 0444;
-+		break;
-+	case hwmon_power_cap:
-+		if (res->caps.flags & POWER_METER_CAN_CAP && can_cap_in_hardware()) {
-+			if (res->caps.configurable_cap)
-+				return 0644;
-+			else
-+				return 0444;
- 		}
-+		break;
-+	default:
-+		break;
-+	}
- 
--		if (resource->caps.configurable_cap)
--			res = register_attrs(resource, rw_cap_attrs);
--		else
--			res = register_attrs(resource, ro_cap_attrs);
-+	return 0;
-+}
- 
--		if (res)
--			goto error;
-+static int power_meter_read(struct device *dev, enum hwmon_sensor_types type,
-+			    u32 attr, int channel, long *val)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+	int ret = 0;
- 
--		res = register_attrs(resource, misc_cap_attrs);
--		if (res)
--			goto error;
-+	if (type != hwmon_power)
-+		return -EINVAL;
-+
-+	guard(mutex)(&res->lock);
-+
-+	switch (attr) {
-+	case hwmon_power_average:
-+		ret = update_meter(res);
-+		if (ret)
-+			return ret;
-+		if (res->power == UNKNOWN_POWER)
-+			return -ENODATA;
-+		*val = res->power * 1000;
-+		break;
-+	case hwmon_power_average_interval_min:
-+		*val = res->caps.min_avg_interval;
-+		break;
-+	case hwmon_power_average_interval_max:
-+		*val = res->caps.max_avg_interval;
-+		break;
-+	case hwmon_power_average_interval:
-+		ret = update_avg_interval(res);
-+		if (ret)
-+			return ret;
-+		*val = (res)->avg_interval;
-+		break;
-+	case hwmon_power_cap_min:
-+		*val = res->caps.min_cap * 1000;
-+		break;
-+	case hwmon_power_cap_max:
-+		*val = res->caps.max_cap * 1000;
-+		break;
-+	case hwmon_power_alarm:
-+		ret = get_power_alarm_state(res, val);
-+		if (ret)
-+			return ret;
-+		break;
-+	case hwmon_power_cap:
-+		ret = update_cap(res);
-+		if (ret)
-+			return ret;
-+		*val = res->cap * 1000;
-+		break;
-+	default:
-+		break;
- 	}
- 
--skip_unsafe_cap:
--	if (resource->caps.flags & POWER_METER_CAN_TRIP) {
--		res = register_attrs(resource, trip_attrs);
--		if (res)
--			goto error;
-+	return 0;
-+}
-+
-+static int power_meter_write(struct device *dev, enum hwmon_sensor_types type,
-+			     u32 attr, int channel, long val)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+	int ret;
-+
-+	if (type != hwmon_power)
-+		return -EINVAL;
-+
-+	guard(mutex)(&res->lock);
-+	switch (attr) {
-+	case hwmon_power_cap:
-+		ret = set_cap(res, val);
-+		break;
-+	case hwmon_power_average_interval:
-+		ret = set_avg_interval(res, val);
-+		break;
-+	default:
-+		ret = -EOPNOTSUPP;
- 	}
- 
--	res = register_attrs(resource, misc_attrs);
--	if (res)
--		goto error;
-+	return ret;
-+}
- 
--	return res;
--error:
--	remove_attrs(resource);
--	return res;
-+static const struct hwmon_channel_info * const power_meter_info[] = {
-+	HWMON_CHANNEL_INFO(power, HWMON_P_AVERAGE |
-+		HWMON_P_AVERAGE_INTERVAL | HWMON_P_AVERAGE_INTERVAL_MIN |
-+		HWMON_P_AVERAGE_INTERVAL_MAX | HWMON_P_CAP | HWMON_P_CAP_MIN |
-+		HWMON_P_CAP_MAX | HWMON_P_ALARM),
-+	NULL
-+};
-+
-+static const struct hwmon_ops power_meter_ops = {
-+	.is_visible = power_meter_is_visible,
-+	.read = power_meter_read,
-+	.write = power_meter_write,
-+};
-+
-+static const struct hwmon_chip_info power_meter_chip_info = {
-+	.ops = &power_meter_ops,
-+	.info = power_meter_info,
-+};
-+
-+static ssize_t power1_average_max_store(struct device *dev,
-+					struct device_attribute *attr,
-+					const char *buf, size_t count)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+	unsigned long trip;
-+	int ret;
-+
-+	ret = kstrtoul(buf, 10, &trip);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&res->lock);
-+	ret = set_trip(res, POWER_METER_TRIP_AVERAGE_MAX_IDX, trip);
-+	mutex_unlock(&res->lock);
-+
-+	return ret == 0 ? count : ret;
-+}
-+
-+static ssize_t power1_average_min_store(struct device *dev,
-+					struct device_attribute *attr,
-+					const char *buf, size_t count)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+	unsigned long trip;
-+	int ret;
-+
-+	ret = kstrtoul(buf, 10, &trip);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&res->lock);
-+	ret = set_trip(res, POWER_METER_TRIP_AVERAGE_MIN_IDX, trip);
-+	mutex_unlock(&res->lock);
-+
-+	return ret == 0 ? count : ret;
-+}
-+
-+static ssize_t power1_average_min_show(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+
-+	if (res->trip[POWER_METER_TRIP_AVERAGE_MIN_IDX] < 0)
-+		return sysfs_emit(buf, "unknown\n");
-+
-+	return sysfs_emit(buf, "%lld\n",
-+			  res->trip[POWER_METER_TRIP_AVERAGE_MIN_IDX] * 1000);
-+}
-+
-+static ssize_t power1_average_max_show(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+
-+	if (res->trip[POWER_METER_TRIP_AVERAGE_MAX_IDX] < 0)
-+		return sysfs_emit(buf, "unknown\n");
-+
-+	return sysfs_emit(buf, "%lld\n",
-+			  res->trip[POWER_METER_TRIP_AVERAGE_MAX_IDX] * 1000);
-+}
-+
-+static ssize_t power1_cap_hyst_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+
-+	if (res->caps.hysteresis == UNKNOWN_HYSTERESIS)
-+		return sysfs_emit(buf, "unknown\n");
-+
-+	return sysfs_emit(buf, "%llu\n", res->caps.hysteresis * 1000);
-+}
-+
-+static ssize_t power1_accuracy_show(struct device *dev,
-+				    struct device_attribute *attr,
-+				    char *buf)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%llu.%llu%%\n",
-+			  res->caps.accuracy / 1000, res->caps.accuracy % 1000);
-+}
-+
-+static ssize_t power1_is_battery_show(struct device *dev,
-+				      struct device_attribute *attr,
-+				      char *buf)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%u\n",
-+			  res->caps.flags & POWER_METER_IS_BATTERY ? 1 : 0);
-+}
-+
-+static ssize_t power1_model_number_show(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%s\n", res->model_number);
-+}
-+
-+static ssize_t power1_oem_info_show(struct device *dev,
-+				    struct device_attribute *attr,
-+				    char *buf)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%s\n", res->oem_info);
-+}
-+
-+static ssize_t power1_serial_number_show(struct device *dev,
-+					 struct device_attribute *attr,
-+					 char *buf)
-+{
-+	struct acpi_power_meter_resource *res = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%s\n", res->serial_number);
-+}
-+
-+// depend on POWER_METER_CAN_TRIP
-+static DEVICE_ATTR_RW(power1_average_max);
-+static DEVICE_ATTR_RW(power1_average_min);
-+
-+// depend on POWER_METER_CAN_CAP
-+static DEVICE_ATTR_RO(power1_cap_hyst);
-+
-+// depend on POWER_METER_CAN_MEASURE
-+static DEVICE_ATTR_RO(power1_accuracy);
-+static DEVICE_ATTR_RO(power1_is_battery);
-+
-+static DEVICE_ATTR_RO(power1_model_number);
-+static DEVICE_ATTR_RO(power1_oem_info);
-+static DEVICE_ATTR_RO(power1_serial_number);
-+
-+#define EXTRA_FIRST_DYNAMIC_ATTR_ID	3
-+#define EXTRA_ATTR_MAX	10
-+
-+static struct attribute *power_extra_attrs[EXTRA_ATTR_MAX] = {
-+	&dev_attr_power1_model_number.attr,
-+	&dev_attr_power1_oem_info.attr,
-+	&dev_attr_power1_serial_number.attr,
-+	NULL
-+};
-+
-+ATTRIBUTE_GROUPS(power_extra);
-+
-+static void fill_extra_dynamic_attr(struct attribute *attr)
-+{
-+	int idx = EXTRA_FIRST_DYNAMIC_ATTR_ID;
-+
-+	for (idx = EXTRA_FIRST_DYNAMIC_ATTR_ID; idx < EXTRA_ATTR_MAX; idx++) {
-+		if (!power_extra_attrs[idx])
-+			break;
-+	}
-+
-+	power_extra_attrs[idx] = attr;
-+}
-+
-+static void update_power_extra_groups(struct acpi_power_meter_resource *res)
-+{
-+	int idx;
-+
-+	for (idx = EXTRA_FIRST_DYNAMIC_ATTR_ID; idx < EXTRA_ATTR_MAX; idx++)
-+		power_extra_attrs[idx] = NULL;
-+
-+	if (res->caps.flags & POWER_METER_CAN_MEASURE) {
-+		fill_extra_dynamic_attr(&dev_attr_power1_is_battery.attr);
-+		fill_extra_dynamic_attr(&dev_attr_power1_accuracy.attr);
-+	}
-+
-+	if (res->caps.flags & POWER_METER_CAN_CAP) {
-+		if (!can_cap_in_hardware()) {
-+			dev_warn(&res->acpi_dev->dev,
-+				 "Ignoring unsafe software power cap!\n");
-+		} else {
-+			fill_extra_dynamic_attr(&dev_attr_power1_cap_hyst.attr);
-+		}
-+	}
-+
-+	if (res->caps.flags & POWER_METER_CAN_TRIP) {
-+		fill_extra_dynamic_attr(&dev_attr_power1_average_max.attr);
-+		fill_extra_dynamic_attr(&dev_attr_power1_average_min.attr);
-+	}
- }
- 
- static void free_capabilities(struct acpi_power_meter_resource *resource)
-@@ -852,13 +828,24 @@ static void acpi_power_meter_notify(struct acpi_device *device, u32 event)
- 	case METER_NOTIFY_CONFIG:
- 		mutex_lock(&resource->lock);
- 		free_capabilities(resource);
-+		remove_domain_devices(resource);
-+		hwmon_device_unregister(resource->hwmon_dev);
- 		res = read_capabilities(resource);
--		mutex_unlock(&resource->lock);
- 		if (res)
--			break;
--
--		remove_attrs(resource);
--		setup_attrs(resource);
-+			dev_err_once(&device->dev, "read capabilities failed.\n");
-+		res = read_domain_devices(resource);
-+		if (res && res != -ENODEV)
-+			dev_err_once(&device->dev, "read domain devices failed.\n");
-+		update_power_extra_groups(resource);
-+		resource->hwmon_dev =
-+			hwmon_device_register_with_info(&device->dev,
-+							ACPI_POWER_METER_NAME,
-+							resource,
-+							&power_meter_chip_info,
-+							power_extra_groups);
-+		if (IS_ERR(resource->hwmon_dev))
-+			dev_err_once(&device->dev, "register hwmon device failed.\n");
-+		mutex_unlock(&resource->lock);
- 		break;
- 	case METER_NOTIFY_TRIP:
- 		sysfs_notify(&device->dev.kobj, NULL, POWER_AVERAGE_NAME);
-@@ -932,11 +919,17 @@ static int acpi_power_meter_add(struct acpi_device *device)
- 	resource->trip[0] = -1;
- 	resource->trip[1] = -1;
- 
--	res = setup_attrs(resource);
--	if (res)
-+	/* _PMD method is optional. */
-+	res = read_domain_devices(resource);
-+	if (res && res != -ENODEV)
- 		goto exit_free_capability;
- 
--	resource->hwmon_dev = hwmon_device_register(&device->dev);
-+	update_power_extra_groups(resource);
-+	resource->hwmon_dev =
-+		hwmon_device_register_with_info(&device->dev,
-+						ACPI_POWER_METER_NAME, resource,
-+						&power_meter_chip_info,
-+						power_extra_groups);
- 	if (IS_ERR(resource->hwmon_dev)) {
- 		res = PTR_ERR(resource->hwmon_dev);
- 		goto exit_remove;
-@@ -946,7 +939,7 @@ static int acpi_power_meter_add(struct acpi_device *device)
- 	goto exit;
- 
- exit_remove:
--	remove_attrs(resource);
-+	remove_domain_devices(resource);
- exit_free_capability:
- 	free_capabilities(resource);
- exit_free:
-@@ -965,7 +958,7 @@ static void acpi_power_meter_remove(struct acpi_device *device)
- 	resource = acpi_driver_data(device);
- 	hwmon_device_unregister(resource->hwmon_dev);
- 
--	remove_attrs(resource);
-+	remove_domain_devices(resource);
- 	free_capabilities(resource);
- 
- 	kfree(resource);
--- 
-2.33.0
+Replace the following block:
 
+> +       of_id =3D of_match_device(mt6316_of_match, dev);
+> +       if (!of_id || !of_id->data)
+> +               return -ENODEV;
+> +
+> +       pdata =3D (struct mt6316_init_data *)of_id->data;
+
+with
+
+    pdata =3D of_device_get_match_data(dev);
+
+pdata should never be NULL since the driver is probed only when an
+OF match happens, and all the entries in mt6316_of_match[] have .data
+set.
+
+> +       chip->slave_id =3D pdata->id;
+
+If the ID is supposed to be the SPMI ID, then there should be no
+reason to tie it to the compatible string. Simply get the ID from
+the device tree.
+
+> +       if (!of_property_read_u32(node, "buck-size", &val))
+> +               pdata->size =3D val;
+
+As mentioned in downstream review, the chip has 4 buck regulators,
+regardless of whether they are being used or not. This is not the
+right way to describe unused regulators.
+
+> +       chip->dev =3D dev;
+> +       chip->regmap =3D regmap;
+> +       dev_set_drvdata(dev, chip);
+> +
+> +       dev->fwnode =3D &(dev->of_node->fwnode);
+> +       if (dev->fwnode && !dev->fwnode->dev)
+> +               dev->fwnode->dev =3D dev;
+> +
+> +       config.dev =3D dev;
+> +       config.driver_data =3D pdata;
+> +       config.regmap =3D regmap;
+> +
+> +       mt6316_buck_phase_init(chip, &s6_buck_phase);
+> +       for (i =3D 0; i < pdata->size; i++) {
+> +               if (pdata->id =3D=3D MT6316_SLAVE_ID_6 &&
+> +                   s6_buck_phase =3D=3D BUCK_PHASE_4 &&
+> +                   (mt6316_regulators + i)->desc.id =3D=3D MT6316_ID_VBU=
+CK3) {
+> +                       dev_info(dev, "skip registering %s.\n", (mt6316_r=
+egulators + i)->desc.name);
+> +                       continue;
+> +               }
+> +
+> +               rdev =3D devm_regulator_register(dev, &(mt6316_regulators=
+ + i)->desc, &config);
+> +               if (IS_ERR(rdev)) {
+> +                       dev_err(dev, "failed to register %s\n", (mt6316_r=
+egulators + i)->desc.name);
+> +                       continue;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver mt6316_regulator_driver =3D {
+
+The MT6316 only has regulators. Why does it need to go through another
+layer, instead of this driver being the SPMI driver?
+
+> +       .driver         =3D {
+> +               .name   =3D "mt6316-regulator",
+> +               .of_match_table =3D mt6316_of_match,
+> +       },
+> +       .probe =3D mt6316_regulator_probe,
+> +};
+> +
+> +module_platform_driver(mt6316_regulator_driver);
+> +
+> +MODULE_AUTHOR("Lu Tang <lu.tang@mediatek.com>");
+> +MODULE_DESCRIPTION("Regulator Driver for MediaTek MT6316 PMIC");
+> +MODULE_LICENSE("GPL");
+
+[...]
+
+Skipping the other two PMICs for now.
+
+> diff --git a/include/linux/regulator/mt6316-regulator.h b/include/linux/r=
+egulator/mt6316-regulator.h
+> new file mode 100644
+> index 000000000000..dd11b3d856fd
+> --- /dev/null
+> +++ b/include/linux/regulator/mt6316-regulator.h
+> @@ -0,0 +1,48 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2024 MediaTek Inc.
+> + */
+> +
+> +#ifndef __LINUX_REGULATOR_MT6316_H
+> +#define __LINUX_REGULATOR_MT6316_H
+> +
+> +#define MT6316_SLAVE_ID_3      3
+> +#define MT6316_SLAVE_ID_6      6
+> +#define MT6316_SLAVE_ID_7      7
+> +#define MT6316_SLAVE_ID_8      8
+> +#define MT6316_SLAVE_ID_15     15
+> +
+> +#define MT6316_ID_3_MAX                3
+> +#define MT6316_ID_6_MAX                3
+> +#define MT6316_ID_7_MAX                3
+> +#define MT6316_ID_8_MAX                3
+> +#define MT6316_ID_15_MAX       2
+> +
+> +enum {
+> +       MT6316_ID_VBUCK1 =3D 0,
+> +       MT6316_ID_VBUCK2,
+> +       MT6316_ID_VBUCK3,
+> +       MT6316_ID_VBUCK4,
+> +       MT6316_ID_MAX,
+> +};
+> +
+> +/* Register */
+> +#define MT6316_TOP_CFG_ELR4                    0x143
+> +#define MT6316_BUCK_TOP_CON0                   0x1440
+> +#define MT6316_BUCK_TOP_CON1                   0x1443
+> +#define MT6316_BUCK_TOP_ELR0                   0x1448
+> +#define MT6316_BUCK_TOP_ELR2                   0x144A
+> +#define MT6316_BUCK_TOP_ELR4                   0x144C
+> +#define MT6316_BUCK_TOP_ELR6                   0x144E
+> +#define MT6316_VBUCK1_DBG4                     0x14A4
+> +#define MT6316_VBUCK1_DBG8                     0x14A8
+> +#define MT6316_VBUCK2_DBG4                     0x1524
+> +#define MT6316_VBUCK2_DBG8                     0x1528
+> +#define MT6316_VBUCK3_DBG4                     0x15A4
+> +#define MT6316_VBUCK3_DBG8                     0x15A8
+> +#define MT6316_VBUCK4_DBG4                     0x1624
+> +#define MT6316_VBUCK4_DBG8                     0x1628
+> +#define MT6316_BUCK_TOP_4PHASE_TOP_ANA_CON0     0x1688
+> +#define MT6316_BUCK_TOP_4PHASE_TOP_ELR_0       0x1690
+> +
+> +#endif /* __LINUX_REGULATOR_MT6316_H */
+
+AFAICT, no part of this file is used by other parts of the kernel. It
+can be moved under drivers/regulator/, or even recombined with the
+.c file.
+
+
+Thanks
+ChenYu
