@@ -1,63 +1,62 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CA2205AB3;
-	Fri, 14 Mar 2025 15:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0191E205E06;
+	Fri, 14 Mar 2025 15:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741966213; cv=none; b=oI4S7D1vLPwNzpxVbhp4G5BLtVxSeqAOY2aybJJ+y+ylg/UwTwOG0kEq/a4tJo4j5ZZLMzZoSfSwnaS9/BVXhZAhlvG0HEMjvrr0x4cwsUu0k5oufH8u8INnhm/FMVJ46+YC0VIIHu74upO2tBxsWXfqMlSjKXBL95p5CIoHNr4=
+	t=1741966215; cv=none; b=Zj9zEVxZ6f7ae4kWwabBR4uBZ2c71xLuw6MygxRmXHEEcPb04KT2niAxko4QLO+XMaTOujr2qd0I1oqKMQVlOdo1uiUEHigXaCEtVuKlnBr7YQXS34Cu5OmnC3lmApQoEXe69Lj0SMZal5PZ1uYPzT+rs7s3eqsrSLi8/Pc3ab0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741966213; c=relaxed/simple;
-	bh=+Ee55UAKk5zrbEA8ErCkGjdHBczjoD5DmzPAU62qWQM=;
+	s=arc-20240116; t=1741966215; c=relaxed/simple;
+	bh=zT/zsO6S/pvuNe7KF+I9+O2nxoGs4TW9kijvWr6XPRg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YMKf7lp0lcmSlvadDsqgcsumB47uzU7MG3ev2nY7PEEDOYeSZbQBMMBT0pIbEdAeotn/2J3EX//tZaqXsU4+nFc66uMPxysrLTn+MwkEex/NyJfaGg/WzJG0zTOrfUQsNVuo5R1/UUtMSsrcouGstLFTpZv2vSzVkbCDeUyqCrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+6VWQBe; arc=none smtp.client-ip=209.85.208.172
+	 MIME-Version; b=WEdj7z4YqgdSNb2uloiBzOFMNihBJ0/3qUrLiwv831QkWtK7VpAFffwqndRh4CPnKOXBDHsRS2dLyf0etiZMrFtjXmLVDvkakjXUMmMyK2oZMB/6CEpusm9ymgCdcIIWJY5hLzkxomcJdX+oXu7VgDla09a3DMkeVgEvtF6zLIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hc4OwL9i; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+6VWQBe"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-307325f2436so21483591fa.0;
-        Fri, 14 Mar 2025 08:30:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hc4OwL9i"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30613802a04so24230881fa.2;
+        Fri, 14 Mar 2025 08:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741966209; x=1742571009; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741966212; x=1742571012; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4ce7ZcVdU8F9ZhytWxVKTsWW21I89t3dHhwkZN9/rME=;
-        b=Y+6VWQBeIbNLbdtoc/cnQbRFWIgaTQ6/qnC1D9eCYskJJcee7u7N/Ye+jen//YMn3J
-         ryU9vDSjbnO5ZukWNtD3gw6jzeZeT//S0xWok/hxw/caVWv+RDJSClvdvJTCLd7isJd5
-         fUfBPj0aizxLA1VZy8h24yEotTltE6DzBHEEFECqVB2K3NQmnPdfxB1YIPhP+opOQuzV
-         RXgUQDMVwmvMcKoGqk0EGoDwVMhau0xGlqtYbW7S14RMqLp1xnFUBp6w9OUqnxS2QjSv
-         /9JpbNT5x6mIu0X3aH3cxjQIDgrmDcHa5IOPbYk40rnoku2U0EYWvtGggvLm0Jp9MO4W
-         GCPA==
+        bh=aus8alVfcXgy3DqFGnPFZeSY7UCOW1F3b7m6nzhuG6w=;
+        b=Hc4OwL9i3zF0/xt/N0SZqn3IOFDMYzvBblnLw1Q6k6cWDuk5V0jFK7ydi1u3zjgAT/
+         Y3DJnTFwMzF3q3ru7vrESCAiIK8QDk0md3th/NPtZstVMmEZyvP8/ZU4ClXQ6YMhKFzD
+         Ny9CkLPGJ4cEzlNI6ZsHjnOVimIAqXLZqTg86cYVqnC42HoNrL+mosKmSQApdkIHbqRu
+         EUew/dzGJmvin4SIVIdcCu/wKoZutftwpEza57J7nxL8UJpGgeavkfLjQdnYalfpJihf
+         7MzBOZ7coJTVeERNHDw+DR604sfvmUpmLu9MM9B5EBwX4EGgZ5zI04U0xsAyOqn2eGVR
+         dFww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741966209; x=1742571009;
+        d=1e100.net; s=20230601; t=1741966212; x=1742571012;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4ce7ZcVdU8F9ZhytWxVKTsWW21I89t3dHhwkZN9/rME=;
-        b=onbCnRpagcA6CrXIVnvGrUvMjbVJIgKDMTLRJn8CAs8Yax1nXVa/mnoZPeOTid8hS2
-         7GbJ5dnTJNnYdTUyO+TUI7VfLS/aZIkpaInGS+oVIxncxd3j0+dxuCo+wt9dieDW8Coo
-         oaiFWsjtrCJmaGJx0PWDsPuCkb8hw+7vW7VsNBghlG76zhOsarR4xYVSZMbAkatjaK65
-         K//DurBPGpmxSWN4wrTntXFphaaiWnqoPyPcywrIMAaegpq4eMEDh5Tt9eJiWgQ1f5Ed
-         JLHFODB4pqfR8TSE9O/BEla9mLypIqoEZqFPjXynGtnKaD9/TCd8W53poxeaDWFqkn1p
-         Qefw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtNl+iEqlVuBIO3MH9bh445yT56JtyXJWeaQL7F6swv27Ry65gcBKPvdcMLusqSRTr7enuYCwFqZ0Tr6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7eO4yy7HiZ6RFJuuliV+WWS6lH9ibERsMZtH0BFowJ58V74Ad
-	/WTjMMyvLEM/53h18RatHwRfYX9lxNrXf3Ort6dbMtenQyDKLof58ILXneJZ4nI=
-X-Gm-Gg: ASbGncsXlzanx9zKbH30oI9LgqePs0BR6XY1Qj7tR1a1abMoUmxX/0XrgXPZ05dYv6P
-	UtvkA8YSAgSPMjOw7ytyrHIafRCiqzUh9LJn7ZCZj1Wsu47x1vkUKwZDgJGll7G8n+S7ud77Bzl
-	Hlqm32lM2Ywu6FCrODGMTzWMvRa4LNjCz/ljERV0U7MFV3KuPOE1ZdoQi4z0aclrM6fVi2HvFfc
-	0YicjZwYMFi6ddTbRDPTr9uR+pMPMbF6LFKKDixqsQMEV6n1CrHqdOUbH+BOWTk1HSrboggGQZa
-	k0ApQi3rfuwNB0mXt9Bdn5CjqjRDMywytkS8WzBhj0rCmSnTkafh9FKIB/dSHSYW9YwTF3FOJ5X
-	p0MU=
-X-Google-Smtp-Source: AGHT+IG2WaIUdbtUdDQlPOnd8dCw6Gy5P/QgElJCsSHT3I1U1RAJxRriknPgx2mG3XMb86XbYMCEpg==
-X-Received: by 2002:a05:651c:198c:b0:30c:1441:9e84 with SMTP id 38308e7fff4ca-30c4a860201mr11330141fa.13.1741966208483;
-        Fri, 14 Mar 2025 08:30:08 -0700 (PDT)
+        bh=aus8alVfcXgy3DqFGnPFZeSY7UCOW1F3b7m6nzhuG6w=;
+        b=D231zGmRf5X3/V9jbERQyQmHbZ7N4JCoRGPY9hEZtpKTWkYOR/s02PaDZ9+OVIj/hO
+         OkMfc/FvJfus8+mFnWFMtUc8nxMSOGIWVCZnxVlodctg/Iiyyaz9C+4b7YaQYhJ/j4u7
+         kDGeY1PSi40fTnIzlB55qMdukTsu21R1TbnbxGDe+Ryu6RC03rE12A/hdtet1mSqj5D+
+         de5v2ncoh4dmQXUrppVhMVZ4T8bDCC/4X2d91UA+l8gwBhbva6OedBgSA2pkL7/ImzAH
+         2ibIf0OMPph65XAo3CkdqgFyKCaDReqhr8U9TvbKxaM78u7a4EOk/aBJs/j/i/yLUxGq
+         NYaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhYaGCdfyU/ABRvvdHXKUqfgIYF7XBPNQ/UCBkwKFp1ce1J++o4KtAO6fTx1dkgKrZwdHY2JBfpG2+EPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxxkSND83K0ICRaShTe7AgQMB5PouplYtFNnUixl9qYNT6QEU1
+	52LMM/IunTT9yRA+KghcdK8qPOihkCXsFHJLmn7b4xJCQQhJo8o+tB0S8gg2+EI=
+X-Gm-Gg: ASbGncv4abFAcq16Yq+tOD2IRJdS7tmK1dLXWomCM27TyFjBQp85hdBe14h6RL/6vvg
+	Jswd3QGw4SN/YiUe4ARG/cs4cm0ha/U7xi8DMLsJHQqpAf+VSz8nOzQWe4nBQ1sP2gbJHynO5LO
+	QYiBMfOKhUe1jw/0dOugdf027XwhHmbnNqTK1gwUXjDbaC9+jPIb5/5mBX9wp3p8luVftAlSXfK
+	hz3ne0mp5MZik5Q9qFFju4iyOmJ/OTNojmPjvKPyPglmbFtXqYAUbrEDllPKnQavEwvVOnEOGgP
+	Z7l8mJ0ldU7/JZZLJHsqabHinLCeX/FSCJm6lGeua3w+Po96BchP1JrKn1lPCroLjZM+
+X-Google-Smtp-Source: AGHT+IHDGA1iRf5cQswq6YP0aTuAv3KX4SeuG85fRkdGYV/K/6Lw+81yDy76NoPUfIAlDDyp9hZarA==
+X-Received: by 2002:a2e:be8c:0:b0:30b:b9e4:13c5 with SMTP id 38308e7fff4ca-30c4a754748mr11155011fa.4.1741966211563;
+        Fri, 14 Mar 2025 08:30:11 -0700 (PDT)
 Received: from skhimich.dev.yadro.com (avpn02.yadro.com. [89.207.88.245])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c3f0e99f6sm6253581fa.37.2025.03.14.08.30.06
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c3f0e99f6sm6253581fa.37.2025.03.14.08.30.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 08:30:06 -0700 (PDT)
+        Fri, 14 Mar 2025 08:30:11 -0700 (PDT)
 From: Sergey Khimich <serghox@gmail.com>
 To: linux-media@vger.kernel.org
 Cc: Philipp Zabel <p.zabel@pengutronix.de>,
@@ -65,9 +64,9 @@ Cc: Philipp Zabel <p.zabel@pengutronix.de>,
 	linux-kernel@vger.kernel.org,
 	Vladimir Yakovlev <vovchkir@gmail.com>,
 	Maksim Turok <turok.m7@gmail.com>
-Subject: [PATCH 14/18] media: coda: Fix handling wrong format in coda_try_fmt
-Date: Fri, 14 Mar 2025 18:29:35 +0300
-Message-Id: <20250314152939.2759573-15-serghox@gmail.com>
+Subject: [PATCH 16/18] media: coda: Update default velues of QP for mpeg4 I/P
+Date: Fri, 14 Mar 2025 18:29:37 +0300
+Message-Id: <20250314152939.2759573-17-serghox@gmail.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20250314152939.2759573-1-serghox@gmail.com>
 References: <20250314152939.2759573-1-serghox@gmail.com>
@@ -81,31 +80,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Vladimir Yakovlev <vovchkir@gmail.com>
 
-No need to print BUG() report when received wrong format
-in coda_try_fmt. It's enough to print log and return an error.
+Use average values of QP range for mpeg4 I/P frames.
+In such case we get smaller size of output buffer
+and average quality of image.
 
 Co-developed-by: Sergey Khimich <serghox@gmail.com>
 Signed-off-by: Sergey Khimich <serghox@gmail.com>
 Signed-off-by: Vladimir Yakovlev <vovchkir@gmail.com>
 ---
- drivers/media/platform/chips-media/coda/coda-common.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/platform/chips-media/coda/coda-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/chips-media/coda/coda-common.c b/drivers/media/platform/chips-media/coda/coda-common.c
-index 29b01ade8829..9b443ddabeab 100644
+index 9ca459793050..3782219c8a2b 100644
 --- a/drivers/media/platform/chips-media/coda/coda-common.c
 +++ b/drivers/media/platform/chips-media/coda/coda-common.c
-@@ -644,7 +644,9 @@ static int coda_try_fmt(struct coda_ctx *ctx, const struct coda_codec *codec,
- 							f->fmt.pix.height);
- 		break;
- 	default:
--		BUG();
-+		v4l2_warn(&dev->v4l2_dev, "Warning: wrong format=0x%04X",
-+			  f->fmt.pix.pixelformat);
-+		return -EINVAL;
+@@ -2379,9 +2379,9 @@ static void coda_encode_ctrls(struct coda_ctx *ctx)
+ 			V4L2_MPEG_VIDEO_H264_LEVEL_4_0);
  	}
- 
- 	return 0;
+ 	v4l2_ctrl_new_std(&ctx->ctrls, &coda_ctrl_ops,
+-		V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP, 1, 31, 1, 2);
++		V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP, 1, 31, 1, 15);
+ 	v4l2_ctrl_new_std(&ctx->ctrls, &coda_ctrl_ops,
+-		V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP, 1, 31, 1, 2);
++		V4L2_CID_MPEG_VIDEO_MPEG4_P_FRAME_QP, 1, 31, 1, 15);
+ 	v4l2_ctrl_new_std_menu(&ctx->ctrls, &coda_ctrl_ops,
+ 		V4L2_CID_MPEG_VIDEO_MPEG4_PROFILE,
+ 		V4L2_MPEG_VIDEO_MPEG4_PROFILE_SIMPLE, 0x0,
 -- 
 2.30.2
 
