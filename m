@@ -1,138 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF7A1FF7B7;
-	Fri, 14 Mar 2025 14:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83351FF7C9
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 14:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741963102; cv=none; b=fhOX3pQiQC/e2heqMUsuhESQw5soorN1ktuN2wsHii18PZmRBhQ0Myw+/4BMCvVDsbvrGGkvFtBnf6uQnSi5FPP57ZpTF5+/uKjEJE21ocbs8nvA9Neh7k5ldw8pYdH6TphGEeyfiY4V8JT8MDJVSRTalJuyHTjfhk0JW4VPedE=
+	t=1741963114; cv=none; b=ZIf0dM2rtKtCHaw2tE3Ro2Jfp5AqrgnMpJ/acZakg1Nh+900QwkSfEQBLmyM56Pb7CUsMwgxybMFCwj6BF1mTwLtu59JmplO2OKbOw4J8qFnu0EkGYA9w6Hs6thXF1+7GuyssNkfyf5pO4lurTK7IdRZqm7638+XpBHOPvhZB9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741963102; c=relaxed/simple;
-	bh=7Xy5Hrkgm3Yk0S+DRubh13I7X1BUmB6WJ7puEzumslM=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=GemspcLS+JBiALPfAcRTJkziSo2O6TfGssheN8F6vs6Nm4G0v5W5uj1ntZ3Gz7KkS0mSU8FWpifxjths2tLmQRF5yDAlYOJ8alDj7eBBmNmVSU1txPSkh+SGre07MyeV/QWG16FoQ6zXjX2gB4f9Oq79RF6YAsy8OdmbWeAiCuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJS9ch9R; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1741963114; c=relaxed/simple;
+	bh=jTH9XdFtdO1Z0KkNHGhEi16y2vvmFS1zRIAktZ9HF8w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=JSiJlR2wJZ2HscPSGy6y4iy30GVve+xMwputdlYXODRKQdd9nC6quNwqrX5ayGembspLz5DYyZL8mw3UONOX0Wl3zGR/4yV5VKMBtUjYXfjLMD/XZj9QJASTsdE/YR/oXu6P0nnqlLg47Gz93nkR1StQ6OCwYIvc7S5tjqt2daU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KAnnbfQm; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJS9ch9R"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KAnnbfQm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741963101; x=1773499101;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7Xy5Hrkgm3Yk0S+DRubh13I7X1BUmB6WJ7puEzumslM=;
-  b=fJS9ch9RYKC2LT1QTq6uDLvUZc/aJfqHbU1Eq1zl2WF8zWEbO/drP9cx
-   6QJ/BBqHWMmZB+NJ6j9+r8jUWa+syyP6aBa9QdEjjJ8dzsQ/XqWEfu8eW
-   SE4uqvuuzMrOTwHyR4CWw7R23daiqQjQmZPPwm0J82DL43g/afx035ed6
-   paIsA36i+z6VHWcd0y80sXv/oYotAZOE7+VOP0/fk617/VGjFF3U5nJiW
-   4V9Vers436qADSsF/2SZOqKV/UnCmuoAvSWWbAvhuI6fdOKuZ4COzrBt2
-   3QjmSL2LwlezDmfzZPpE64mS4PDdIzZjbwg3pwhcyfao0YmyBAcDg1wC3
-   g==;
-X-CSE-ConnectionGUID: Rj6teqEuRQ2cM7+kWMx9kA==
-X-CSE-MsgGUID: UHzFvp0+QD+s+9/oEo5mCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42980508"
+  t=1741963113; x=1773499113;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=jTH9XdFtdO1Z0KkNHGhEi16y2vvmFS1zRIAktZ9HF8w=;
+  b=KAnnbfQm4AJqWsaFODHAdU3uD7TWikr2FPVBLsOH+83by2UUOe9fiXdH
+   JMUAuGsYMv2XM+dTeliBG8fliys4rrfSoR8GNIwbVO9vedjPLaU+G7B/C
+   WZsGZCk/JfDY/4yrWO5bysAwCWQvdZL6qdLOeG4Lp3N7jvLn3IugxrjcF
+   PbqFYTUwzxVNzkr8V+rtGNgiSgkmnnHXpoS9nzXSMIuTBXJPZ4dP87UQf
+   eZtaMY23wtBhL1Z2V/4nl+ev5VuynFS546poFrC1Mw7DJEwsusfJ9P/xI
+   qevBi5FjuBci3fIm2px0eRMQy4ReLS1Zn/B0VrENurtiOMaSsJNBlisCt
+   A==;
+X-CSE-ConnectionGUID: INShEdSMRMm5st+NXIOZ9A==
+X-CSE-MsgGUID: FGaP9QL1TwiR86hguRRQPA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="43291439"
 X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="42980508"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:20 -0700
-X-CSE-ConnectionGUID: QXKqHijXRziQIz0eVCl4Yw==
-X-CSE-MsgGUID: gWbHpttISvivz6SwXBTeZA==
+   d="scan'208";a="43291439"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:33 -0700
+X-CSE-ConnectionGUID: 3pwVWW/zR3eqIzDXpUo30g==
+X-CSE-MsgGUID: lvR22TT7TBWk6dR4W1t6dg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="158451756"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:18 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Fri, 14 Mar 2025 16:27:43 +0200
-Subject: [GIT PULL] platform-drivers-x86 for v6.14-5
-Message-ID: <pdx86-pr-20250314162743-238386141@linux.intel.com>
+   d="scan'208";a="121341037"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:31 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 3E68720B5736;
+	Fri, 14 Mar 2025 07:38:30 -0700 (PDT)
+Message-ID: <1ec56e83-be22-480c-be60-5b898fc5f5b7@linux.intel.com>
+Date: Fri, 14 Mar 2025 10:38:29 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V9 3/7] perf: attach/detach PMU specific data
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, tglx@linutronix.de, bp@alien8.de, acme@kernel.org,
+ namhyung@kernel.org, irogers@google.com, linux-kernel@vger.kernel.org,
+ ak@linux.intel.com, eranian@google.com
+References: <20250314000242.323199-1-kan.liang@linux.intel.com>
+ <20250314000242.323199-3-kan.liang@linux.intel.com>
+ <20250314125958.GC36322@noisy.programming.kicks-ass.net>
+ <a619615f-3313-4e55-a780-f280fbb643dc@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <a619615f-3313-4e55-a780-f280fbb643dc@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Hi Linus,
-
-Here is a platform-drivers-x86 fixes PR for v6.14. The diff is a bit
-larger than I'd prefer at this point due to unwinding the amd/pmf
-driver's error handling properly instead of calling a deinit function
-that was a can full of worms.
+Content-Transfer-Encoding: 7bit
 
 
-Fixes and new HW support:
 
- - amd/pmf:
+On 2025-03-14 9:50 a.m., Liang, Kan wrote:
+> 
+> 
+> On 2025-03-14 8:59 a.m., Peter Zijlstra wrote:
+>> On Thu, Mar 13, 2025 at 05:02:38PM -0700, kan.liang@linux.intel.com wrote:
+>>
+>>> @@ -12551,6 +12813,14 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>>>  	if (err)
+>>>  		return ERR_PTR(err);
+>>>  
+>>> +	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
+>>> +		err = attach_perf_ctx_data(event);
+>>> +		if (err) {
+>>> +			security_perf_event_free(event);
+>>> +			return ERR_PTR(err);
+>>> +		}
+>>> +	}
+>>> +
+>>>  	/* symmetric to unaccount_event() in _free_event() */
+>>>  	account_event(event);
+>>>  
+>>
+>> This seems weird. We just pushed all the error handling into
+>> __free_event(), and now you're adding one special case back.
+>>
+>> Also, you've placed it after security_perf_event_alloc(), which I
+>> _think_ wants to be last.
+> 
+> Right, I will send a new series to fix it.
+> 
 
-    - Fix error handling in amd_pmf_init_smart_pc()
+I think the attach_perf_ctx_data() should be moved even earlier, right
+after the perf_init_event(). Because the PERF_ATTACH_TASK_DATA is set in
+the event_init()->hw_config(), rather than after perf attach the data.
 
-    - Fix missing hidden options for Smart PC
+So any errors between perf_init_event() and attach_perf_ctx_data(event)
+would cause the detach_perf_ctx_data() mistakenly invoked.
 
- - surface: aggregator_registry: Add Support for Surface Pro 11
+@@ -5393,6 +5607,9 @@ static void __free_event(struct perf_event *event)
+ 	if (is_cgroup_event(event))
+ 		perf_detach_cgroup(event);
 
-Regards, i.
++	if (event->attach_state & PERF_ATTACH_TASK_DATA)
++		detach_perf_ctx_data(event);
++
+ 	if (event->destroy)
+ 		event->destroy(event);
+@@ -12481,6 +12746,18 @@ perf_event_alloc(struct perf_event_attr *attr,
+int cpu,
+ 	if (IS_ERR(pmu))
+ 		return (void*)pmu;
+
++	/*
++	 * The PERF_ATTACH_TASK_DATA is set in the event_init()->hw_config().
++	 * The attach should be right after the perf_init_event().
++	 * Otherwise, the __free_event() would mistakenly detach the non-exist
++	 * perf_ctx_data because of the other errors between them.
++	 */
++	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
++		err = attach_perf_ctx_data(event);
++ 		if (err)
++			return ERR_PTR(err);
++	}
++
+ 	/*
+ 	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
+ 	 * events (they don't make sense as the cgroup will be different
 
 
-The following changes since commit 376a8c2a144397d9cf2a67d403dd64f4a7ff9104:
+Thanks,
+Kan
 
-  platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA (2025-03-05 13:33:42 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-5
-
-for you to fetch changes up to 03fc0a2dc9f8c292fad8a1bcfb6d1f0dec1824be:
-
-  MAINTAINERS: Update Ike Panhc's email address (2025-03-14 16:03:45 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.14-5
-
-Fixes and new HW support:
-
- - amd/pmf:
-
-    - Fix error handling in amd_pmf_init_smart_pc()
-
-    - Fix missing hidden options for Smart PC
-
- - surface: aggregator_registry: Add Support for Surface Pro 11
-
-The following is an automated shortlog grouped by driver:
-
-amd/pmf:
- -  fix cleanup in amd_pmf_init_smart_pc()
-
-amd: pmf:
- -  Fix missing hidden options for Smart PC
-
-MAINTAINERS:
- -  Update Ike Panhc's email address
-
-surface: aggregator_registry:
- -  Add Support for Surface Pro 11
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()
-
-Ike Panhc (1):
-      MAINTAINERS: Update Ike Panhc's email address
-
-Lukas Hetzenecker (1):
-      platform/surface: aggregator_registry: Add Support for Surface Pro 11
-
-Mario Limonciello (1):
-      platform/x86/amd: pmf: Fix missing hidden options for Smart PC
-
- .mailmap                                           |  1 +
- MAINTAINERS                                        |  2 +-
- .../platform/surface/surface_aggregator_registry.c |  5 ++-
- drivers/platform/x86/amd/pmf/spc.c                 |  2 ++
- drivers/platform/x86/amd/pmf/tee-if.c              | 36 +++++++++++++++-------
- 5 files changed, 33 insertions(+), 13 deletions(-)
