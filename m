@@ -1,58 +1,59 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1981FAC25
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419E41FAC58
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:13:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936378; cv=none; b=oX9r3jAKyicM01gQJSbnvwaSXzF/l92e8mWs2mo+r7mazIlE+axSTVVg8MYMBXhOvdRpLw3Ma0J9AN5CR0t1TzogVggrqzeUYHY62AFveK15HA32zCIkxe1p+D/R2FPeS9E6wjz7yO7dPYcSMvp/93KFeEN1DHFPR5xbbjJ5dQA=
+	t=1741936385; cv=none; b=U45ym7hxGMssATXOV1WvsYJOMxb5R0tYho6AwnVzC5tw/L0GOrmNIto9WkJtcUeZQ6DPtT3lzoAgV7jC+iA9of54vk0r/Iw0b2yAeb3yEEuMAfvOaWYpD87a/tSWg81jMcI3u2k61Coa5QOLMn4iCg8XTJHWsAUNJvSl2LA1W/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741936378; c=relaxed/simple;
-	bh=9xQL9gUZtsTa1+i31s/L1XOaSXuleBbD/ohPxCzyXvs=;
+	s=arc-20240116; t=1741936385; c=relaxed/simple;
+	bh=hR0Qu2XVH3GET5RJ8j99I8+PZIjMwhX3oYEnnSmP1DI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BO/nfEg6woorVx8sVIn/3uevpA9cO1mimwAq1aiIDURYWLBKmLNZwBHIQb1144qt7rvgpGiZcDSf/QMZJCrJyOnqZ7udgQyBYgN/lQ3D0btfr96DoqEWLm/6c3k6QxNlOEWrK0hzXgxRm55iah15KQo86EXmBbPoWi9ziY6mPb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dtPh1HSQ; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=CsRv8hH7zhG6qy4tf3IzwF3lOACVJJ9Pd8iKwgEI1NIsxh+LcNxgPAOXGhORabNQZl7sX6bV6IPEEPbYWX5Y2YNxqDh+jFymxhcTc1Jlp5VFkLQkRNob0KkVLpk5EvXN/fahv3FycuPWhqOKW6uVRCFEQIgAbs9ZDai3hwgq12g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fPsCjNMf; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dtPh1HSQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fPsCjNMf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741936376;
+	s=mimecast20190719; t=1741936383;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Iay0CrVptBuvnGbejO4YL8azX+712wm3IP76Ts/cWEE=;
-	b=dtPh1HSQmwgiYDEc1lnN3izrlCnCDIcKlBdRsbc19XVfKHeZ9Nh3dKdEtAyrkPibQ57lzJ
-	CrCz3uXNAyz1dVLUP3/SmV8UHksXw4OJPgHppLuQ2QjmtdqilXa6p18/GJAzQLqXeuMv5B
-	TYZ0XfqdbCHrc9HtD8k2r9c+yBSUNUw=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=XgJ3xmVB8Q+Qlov1OOwzrPoA5VYL2CgjG+ZWo4y/fRM=;
+	b=fPsCjNMfF2J0+9vVJ863KbduA9HiNYE8z5kyyE5955CFBo1tiuR8Q0bezS7ZxVXsWKRjZj
+	jShRCE6vzFg+1WLDfzFD7v4ozHqv7ZSg+rGyzpN7gMDIHXkkJnNX0AnjG0x0fW/LOI489L
+	E3phcMzQCtV2CCIQnOuI9CgNhfR8eiM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-121-4bUaToxWMbWRtxG3JC4W2Q-1; Fri,
- 14 Mar 2025 03:12:51 -0400
-X-MC-Unique: 4bUaToxWMbWRtxG3JC4W2Q-1
-X-Mimecast-MFC-AGG-ID: 4bUaToxWMbWRtxG3JC4W2Q_1741936370
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-PKxp5eKfMNKY2P031irecA-1; Fri,
+ 14 Mar 2025 03:12:59 -0400
+X-MC-Unique: PKxp5eKfMNKY2P031irecA-1
+X-Mimecast-MFC-AGG-ID: PKxp5eKfMNKY2P031irecA_1741936378
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C861119560B4;
-	Fri, 14 Mar 2025 07:12:49 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 94D53195608B;
+	Fri, 14 Mar 2025 07:12:58 +0000 (UTC)
 Received: from thuth-p1g4.redhat.com (unknown [10.44.32.82])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6F7EE1801747;
-	Fri, 14 Mar 2025 07:12:45 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A6F9A18001DE;
+	Fri, 14 Mar 2025 07:12:54 +0000 (UTC)
 From: Thomas Huth <thuth@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: Arnd Bergmann <arnd@arndb.de>,
 	linux-arch@vger.kernel.org,
 	Thomas Huth <thuth@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	sparclinux@vger.kernel.org
-Subject: [PATCH 33/41] sparc: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
-Date: Fri, 14 Mar 2025 08:10:04 +0100
-Message-ID: <20250314071013.1575167-34-thuth@redhat.com>
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	linux-um@lists.infradead.org
+Subject: [PATCH 35/41] um: Replace __ASSEMBLY__ with __ASSEMBLER__ in the usermode headers
+Date: Fri, 14 Mar 2025 08:10:06 +0100
+Message-ID: <20250314071013.1575167-36-thuth@redhat.com>
 In-Reply-To: <20250314071013.1575167-1-thuth@redhat.com>
 References: <20250314071013.1575167-1-thuth@redhat.com>
 Precedence: bulk
@@ -64,169 +65,132 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-__ASSEMBLY__ is only defined by the Makefile of the kernel, so
-this is not really useful for uapi headers (unless the userspace
-Makefile defines it, too). Let's switch to __ASSEMBLER__ which
-gets set automatically by the compiler when compiling assembly
-code.
+While the GCC and Clang compilers already define __ASSEMBLER__
+automatically when compiling assembly code, __ASSEMBLY__ is a
+macro that only gets defined by the Makefiles in the kernel.
+This can be very confusing when switching between userspace
+and kernelspace coding, so let's standardize on the __ASSEMBLER__
+macro that is provided by the compilers now.
 
 This is a completely mechanical patch (done with a simple "sed -i"
 statement).
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Andreas Larsson <andreas@gaisler.com>
-Cc: sparclinux@vger.kernel.org
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-um@lists.infradead.org
 Signed-off-by: Thomas Huth <thuth@redhat.com>
 ---
- arch/sparc/include/uapi/asm/ptrace.h | 24 ++++++++++++------------
- arch/sparc/include/uapi/asm/signal.h |  4 ++--
- arch/sparc/include/uapi/asm/traps.h  |  4 ++--
- arch/sparc/include/uapi/asm/utrap.h  |  4 ++--
- 4 files changed, 18 insertions(+), 18 deletions(-)
+ arch/um/include/asm/cpufeature.h     | 4 ++--
+ arch/um/include/asm/current.h        | 4 ++--
+ arch/um/include/asm/page.h           | 4 ++--
+ arch/um/include/asm/ptrace-generic.h | 2 +-
+ arch/um/include/asm/thread_info.h    | 2 +-
+ arch/um/include/shared/as-layout.h   | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/sparc/include/uapi/asm/ptrace.h b/arch/sparc/include/uapi/asm/ptrace.h
-index abe640037a55d..2eb677f4eb6ab 100644
---- a/arch/sparc/include/uapi/asm/ptrace.h
-+++ b/arch/sparc/include/uapi/asm/ptrace.h
-@@ -15,7 +15,7 @@
-  */
- #define PT_REGS_MAGIC 0x57ac6c00
+diff --git a/arch/um/include/asm/cpufeature.h b/arch/um/include/asm/cpufeature.h
+index 1eb8b834fbec3..4354f6984271c 100644
+--- a/arch/um/include/asm/cpufeature.h
++++ b/arch/um/include/asm/cpufeature.h
+@@ -4,7 +4,7 @@
+ 
+ #include <asm/processor.h>
+ 
+-#if defined(__KERNEL__) && !defined(__ASSEMBLY__)
++#if defined(__KERNEL__) && !defined(__ASSEMBLER__)
+ 
+ #include <asm/asm.h>
+ #include <linux/bitops.h>
+@@ -137,5 +137,5 @@ static __always_inline bool _static_cpu_has(u16 bit)
+ #define CPU_FEATURE_TYPEVAL		boot_cpu_data.x86_vendor, boot_cpu_data.x86, \
+ 					boot_cpu_data.x86_model
+ 
+-#endif /* defined(__KERNEL__) && !defined(__ASSEMBLY__) */
++#endif /* defined(__KERNEL__) && !defined(__ASSEMBLER__) */
+ #endif /* _ASM_UM_CPUFEATURE_H */
+diff --git a/arch/um/include/asm/current.h b/arch/um/include/asm/current.h
+index de64e032d66c1..8accc6d6f5026 100644
+--- a/arch/um/include/asm/current.h
++++ b/arch/um/include/asm/current.h
+@@ -5,7 +5,7 @@
+ #include <linux/compiler.h>
+ #include <linux/threads.h>
  
 -#ifndef __ASSEMBLY__
 +#ifndef __ASSEMBLER__
  
- #include <linux/types.h>
+ struct task_struct;
+ extern struct task_struct *cpu_tasks[NR_CPUS];
+@@ -18,6 +18,6 @@ static __always_inline struct task_struct *get_current(void)
  
-@@ -88,7 +88,7 @@ struct sparc_trapf {
- 	unsigned long _unused;
- 	struct pt_regs *regs;
- };
--#endif /* (!__ASSEMBLY__) */
-+#endif /* (!__ASSEMBLER__) */
- #else
- /* 32 bit sparc */
+ #define current get_current()
  
-@@ -97,7 +97,7 @@ struct sparc_trapf {
- /* This struct defines the way the registers are stored on the
-  * stack during a system call and basically all traps.
-  */
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <linux/types.h>
- 
-@@ -125,11 +125,11 @@ struct sparc_stackf {
- 	unsigned long xargs[6];
- 	unsigned long xxargs[1];
- };
--#endif /* (!__ASSEMBLY__) */
-+#endif /* (!__ASSEMBLER__) */
- 
- #endif /* (defined(__sparc__) && defined(__arch64__))*/
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #define TRACEREG_SZ	sizeof(struct pt_regs)
- #define STACKFRAME_SZ	sizeof(struct sparc_stackf)
-@@ -137,7 +137,7 @@ struct sparc_stackf {
- #define TRACEREG32_SZ	sizeof(struct pt_regs32)
- #define STACKFRAME32_SZ	sizeof(struct sparc_stackf32)
- 
--#endif /* (!__ASSEMBLY__) */
-+#endif /* (!__ASSEMBLER__) */
- 
- #define UREG_G0        0
- #define UREG_G1        1
-@@ -161,30 +161,30 @@ struct sparc_stackf {
- #if defined(__sparc__) && defined(__arch64__)
- /* 64 bit sparc */
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- 
--#else /* __ASSEMBLY__ */
-+#else /* __ASSEMBLER__ */
- /* For assembly code. */
- #define TRACEREG_SZ		0xa0
- #define STACKFRAME_SZ		0xc0
- 
- #define TRACEREG32_SZ		0x50
- #define STACKFRAME32_SZ		0x60
 -#endif /* __ASSEMBLY__ */
 +#endif /* __ASSEMBLER__ */
  
- #else /* (defined(__sparc__) && defined(__arch64__)) */
+ #endif /* __ASM_CURRENT_H */
+diff --git a/arch/um/include/asm/page.h b/arch/um/include/asm/page.h
+index 3d516f3ca9c74..6f54254aaf443 100644
+--- a/arch/um/include/asm/page.h
++++ b/arch/um/include/asm/page.h
+@@ -11,7 +11,7 @@
  
- /* 32 bit sparc */
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- 
--#else /* (!__ASSEMBLY__) */
-+#else /* (!__ASSEMBLER__) */
- /* For assembly code. */
- #define TRACEREG_SZ       0x50
- #define STACKFRAME_SZ     0x60
--#endif /* (!__ASSEMBLY__) */
-+#endif /* (!__ASSEMBLER__) */
- 
- #endif /* (defined(__sparc__) && defined(__arch64__)) */
- 
-diff --git a/arch/sparc/include/uapi/asm/signal.h b/arch/sparc/include/uapi/asm/signal.h
-index b613829247250..9c64d7cb85c2a 100644
---- a/arch/sparc/include/uapi/asm/signal.h
-+++ b/arch/sparc/include/uapi/asm/signal.h
-@@ -105,7 +105,7 @@
- #define __old_sigaction32	sigaction32
- #endif
+ #include <vdso/page.h>
  
 -#ifndef __ASSEMBLY__
 +#ifndef __ASSEMBLER__
  
- typedef unsigned long __old_sigset_t;            /* at least 32 bits */
+ struct page;
  
-@@ -176,6 +176,6 @@ typedef struct sigaltstack {
- } stack_t;
+@@ -94,7 +94,7 @@ extern unsigned long uml_physmem;
+ #include <asm-generic/memory_model.h>
+ #include <asm-generic/getorder.h>
  
+-#endif	/* __ASSEMBLY__ */
++#endif	/* __ASSEMBLER__ */
  
--#endif /* !(__ASSEMBLY__) */
-+#endif /* !(__ASSEMBLER__) */
- 
- #endif /* _UAPI__SPARC_SIGNAL_H */
-diff --git a/arch/sparc/include/uapi/asm/traps.h b/arch/sparc/include/uapi/asm/traps.h
-index 930db746f8bd7..43fe5b8fe8be1 100644
---- a/arch/sparc/include/uapi/asm/traps.h
-+++ b/arch/sparc/include/uapi/asm/traps.h
-@@ -10,8 +10,8 @@
- 
- #define NUM_SPARC_TRAPS  255
- 
--#ifndef __ASSEMBLY__
--#endif /* !(__ASSEMBLY__) */
-+#ifndef __ASSEMBLER__
-+#endif /* !(__ASSEMBLER__) */
- 
- /* For patching the trap table at boot time, we need to know how to
-  * form various common Sparc instructions.  Thus these macros...
-diff --git a/arch/sparc/include/uapi/asm/utrap.h b/arch/sparc/include/uapi/asm/utrap.h
-index d890b7fc6e835..a489b08b6a33d 100644
---- a/arch/sparc/include/uapi/asm/utrap.h
-+++ b/arch/sparc/include/uapi/asm/utrap.h
-@@ -44,9 +44,9 @@
- 
- #define	UTH_NOCHANGE				(-1)
+ #ifdef CONFIG_X86_32
+ #define __HAVE_ARCH_GATE_AREA 1
+diff --git a/arch/um/include/asm/ptrace-generic.h b/arch/um/include/asm/ptrace-generic.h
+index 4696f24d14920..86d74f9d33cf2 100644
+--- a/arch/um/include/asm/ptrace-generic.h
++++ b/arch/um/include/asm/ptrace-generic.h
+@@ -6,7 +6,7 @@
+ #ifndef __UM_PTRACE_GENERIC_H
+ #define __UM_PTRACE_GENERIC_H
  
 -#ifndef __ASSEMBLY__
 +#ifndef __ASSEMBLER__
- typedef int utrap_entry_t;
- typedef void *utrap_handler_t;
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
  
- #endif /* !(__ASM_SPARC64_PROCESSOR_H) */
+ #include <sysdep/ptrace.h>
+ 
+diff --git a/arch/um/include/asm/thread_info.h b/arch/um/include/asm/thread_info.h
+index f9ad06fcc991a..398e86fe3d051 100644
+--- a/arch/um/include/asm/thread_info.h
++++ b/arch/um/include/asm/thread_info.h
+@@ -9,7 +9,7 @@
+ #define THREAD_SIZE_ORDER CONFIG_KERNEL_STACK_ORDER
+ #define THREAD_SIZE ((1 << CONFIG_KERNEL_STACK_ORDER) * PAGE_SIZE)
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <asm/types.h>
+ #include <asm/page.h>
+diff --git a/arch/um/include/shared/as-layout.h b/arch/um/include/shared/as-layout.h
+index ea65f151bf484..07721d7210b1f 100644
+--- a/arch/um/include/shared/as-layout.h
++++ b/arch/um/include/shared/as-layout.h
+@@ -26,7 +26,7 @@
+ #define STUB_DATA_PAGES 2 /* must be a power of two */
+ #define STUB_END (STUB_DATA + STUB_DATA_PAGES * UM_KERN_PAGE_SIZE)
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ #include <sysdep/ptrace.h>
+ 
 -- 
 2.48.1
 
