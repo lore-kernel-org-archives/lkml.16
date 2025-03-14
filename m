@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5082066C1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5682066C2
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:41:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741988517; cv=none; b=JRlnm87KdMe2nIhhCbT0uJWvL3/r2kJn/yFT8epRsOHKtomgVwWHdFyBp4imh+37kwnszcbi5ByxBA+2JZtA9ZpBs6Wg92sC/+30/2s7c3nMBjMrtz0Ip8hFLelJIyaYx8Uc4Qv6GgCGaylb49EzoSvgKQw6HNxDePX1QdSIl9Y=
+	t=1741988517; cv=none; b=qChsBf3JPlQ61ntGk6dkDgcSImyGMN2DHIICyg3p5AyoBu2DKffLjdS82ZcEQ9SwOehQ1Ik0hkc9PUClHfCsFRCTr5ldxG1yS5RlROqhwdDpaZAxMkqACYyPGGO2Ugr9kkPnb37Wpffup4jWDnK4u0CIA0saxexb/xIki5fkWpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741988517; c=relaxed/simple;
-	bh=E3hR7r2iMC1tiZQQhuyNJ1KYebMDQRIzygmPhbaGeWU=;
+	bh=9bFRJxqvYNWVyNVhYDN2ROid6vXuKvJ2yw7P62LLCcA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ucrUcwO9wWlb8HrLoGag35hV7U8LNJdsL2nDzW/awit3XlVUsRi6LhKQ8nKlaKH+orrlkYM1jamOxyxlEjyc/e/IDEvIFSGW5yaEoBkd4UGY7ejNPuSH34n7zHWUvXY8mP1e7b/gC6oNJw/k9vAux5FEne4iDVdpDa9f8JPqPVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhC3Jete; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Xr3p0p5UfFf5fc/XWQymvhS9bigsYCESq9zaeHal3PNf1qu70uCc/RKApOJoX9DpG8KSFpURelwcoNPhCQBa0vOs5NWEeDcB4wi2vsMybpGfkn/Ia5lle08B/GL3NtfRMKBP3GpYW3hHIPdwg//bnF+tsXNmzakVXH+LYMiybtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUp7OH/3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhC3Jete"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75398C4AF0C;
-	Fri, 14 Mar 2025 21:41:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUp7OH/3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88F30C4CEF7;
+	Fri, 14 Mar 2025 21:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741988515;
-	bh=E3hR7r2iMC1tiZQQhuyNJ1KYebMDQRIzygmPhbaGeWU=;
+	s=k20201202; t=1741988516;
+	bh=9bFRJxqvYNWVyNVhYDN2ROid6vXuKvJ2yw7P62LLCcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LhC3Jete99t0ASSDJup2YypbIYeuAb+kqyfnsbHhjXi0ch51+7yyrwegnzK0k3u8H
-	 zM/FPwVvU9qQUz1I4GiWRQC183J+SQV6J0te2wjsaRbB3wBFK5HrHkWITBlDzrZGdV
-	 0xs52uPxR3i+T9DZKb7BmL8o9yckvnvp7i6c7BKbKyL5i4ovNqWPrrtolAeej3ZKgb
-	 dOk7JGejsm1kbbRF+LMKHkIoZGV3dbOuAK/Y6kKsibwJxkuTtHfE5yO5btIDpf1BP6
-	 R+zzWujRfYo2RMViZfD/tYcOdydiCZwC+3vzp6nbUcGbJVsKvDnV/b4EYhzo0Fvnpj
-	 eklJ/7ic33Dyg==
+	b=kUp7OH/39b6sNPnYwE4gpkcHGGW9Tfhh3jWiBFOG61hF8PW+liIFkZhRjq9Hucrz7
+	 RjS+4ZISBZz6JtGxpobwJNxhthALCDeZv3k3TPbY9JGieRsmcYh6MVC5x0DZUssbJV
+	 ww1N/lOughfmuevn48V/bTXyVty27fdbaCl08mdns23bRAvbdLDbQAf7jXprcltNLI
+	 RiSMi1dYR6mhqgoXGLHVGZ5LYSGgiwp/FYTFN5K2DkStrBZKAfb6TA/tlpEMYjVgZD
+	 PLRT19y/k+QzgTDexDuKQR71Ua8NgPVKMYmcLk5z1EJjJBIkh6FUs6PEP1FLkQZady
+	 yeYOXE9veAnvg==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Uros Bizjak <ubizjak@gmail.com>,
 	Andrew Cooper <andrew.cooper3@citrix.com>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 03/20] x86/mm: Use named asm operands in task_size_max()
-Date: Fri, 14 Mar 2025 14:41:16 -0700
-Message-ID: <1dfdda41e63f0eefe39ab3982e917d9c3ef3a499.1741988314.git.jpoimboe@kernel.org>
+Subject: [PATCH 05/20] x86/asm: Always use flag output operands
+Date: Fri, 14 Mar 2025 14:41:18 -0700
+Message-ID: <9bd607a5a8b79f1349f09b4e92270aeb8acd6b43.1741988314.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1741988314.git.jpoimboe@kernel.org>
 References: <cover.1741988314.git.jpoimboe@kernel.org>
@@ -50,31 +50,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use named operands in preparation for removing the operand numbering
-restrictions in alternative_io().
+On x86, __GCC_ASM_FLAG_OUTPUTS__ is supported starting with GCC 6.0 and
+Clang 9.
+
+Now that the GCC minimum version on x86 has been bumped to 8.1 with the
+following commit:
+
+  commit a3e8fe814ad1 ("x86/build: Raise the minimum GCC version to 8.1")
+
+the flag output operand support can be assumed everywhere.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/include/asm/page_64.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/asm.h        |  9 ++-------
+ arch/x86/include/asm/rmwcc.h      | 22 ----------------------
+ tools/arch/x86/include/asm/asm.h  |  5 -----
+ tools/perf/bench/find-bit-bench.c |  4 ----
+ 4 files changed, 2 insertions(+), 38 deletions(-)
 
-diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
-index b5279f5d5601..db3003acd41e 100644
---- a/arch/x86/include/asm/page_64.h
-+++ b/arch/x86/include/asm/page_64.h
-@@ -85,9 +85,9 @@ static __always_inline unsigned long task_size_max(void)
+diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+index 975ae7a9397e..fdebd4356860 100644
+--- a/arch/x86/include/asm/asm.h
++++ b/arch/x86/include/asm/asm.h
+@@ -131,13 +131,8 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
+  * Macros to generate condition code outputs from inline assembly,
+  * The output operand must be type "bool".
+  */
+-#ifdef __GCC_ASM_FLAG_OUTPUTS__
+-# define CC_SET(c) "\n\t/* output condition code " #c "*/\n"
+-# define CC_OUT(c) "=@cc" #c
+-#else
+-# define CC_SET(c) "\n\tset" #c " %[_cc_" #c "]\n"
+-# define CC_OUT(c) [_cc_ ## c] "=qm"
+-#endif
++#define CC_SET(c) "\n\t/* output condition code " #c "*/\n"
++#define CC_OUT(c) "=@cc" #c
+ 
+ #ifdef __KERNEL__
+ 
+diff --git a/arch/x86/include/asm/rmwcc.h b/arch/x86/include/asm/rmwcc.h
+index 363266cbcada..a54303e3dfa1 100644
+--- a/arch/x86/include/asm/rmwcc.h
++++ b/arch/x86/include/asm/rmwcc.h
+@@ -6,26 +6,6 @@
+ 
+ #define __CLOBBERS_MEM(clb...)	"memory", ## clb
+ 
+-#ifndef __GCC_ASM_FLAG_OUTPUTS__
+-
+-/* Use asm goto */
+-
+-#define __GEN_RMWcc(fullop, _var, cc, clobbers, ...)			\
+-({									\
+-	bool c = false;							\
+-	asm goto (fullop "; j" #cc " %l[cc_label]"		\
+-			: : [var] "m" (_var), ## __VA_ARGS__		\
+-			: clobbers : cc_label);				\
+-	if (0) {							\
+-cc_label:	c = true;						\
+-	}								\
+-	c;								\
+-})
+-
+-#else /* defined(__GCC_ASM_FLAG_OUTPUTS__) */
+-
+-/* Use flags output or a set instruction */
+-
+ #define __GEN_RMWcc(fullop, _var, cc, clobbers, ...)			\
+ ({									\
+ 	bool c;								\
+@@ -35,8 +15,6 @@ cc_label:	c = true;						\
+ 	c;								\
+ })
+ 
+-#endif /* defined(__GCC_ASM_FLAG_OUTPUTS__) */
+-
+ #define GEN_UNARY_RMWcc_4(op, var, cc, arg0)				\
+ 	__GEN_RMWcc(op " " arg0, var, cc, __CLOBBERS_MEM())
+ 
+diff --git a/tools/arch/x86/include/asm/asm.h b/tools/arch/x86/include/asm/asm.h
+index 3ad3da9a7d97..f66cf34f6197 100644
+--- a/tools/arch/x86/include/asm/asm.h
++++ b/tools/arch/x86/include/asm/asm.h
+@@ -112,13 +112,8 @@
+  * Macros to generate condition code outputs from inline assembly,
+  * The output operand must be type "bool".
+  */
+-#ifdef __GCC_ASM_FLAG_OUTPUTS__
+ # define CC_SET(c) "\n\t/* output condition code " #c "*/\n"
+ # define CC_OUT(c) "=@cc" #c
+-#else
+-# define CC_SET(c) "\n\tset" #c " %[_cc_" #c "]\n"
+-# define CC_OUT(c) [_cc_ ## c] "=qm"
+-#endif
+ 
+ #ifdef __KERNEL__
+ 
+diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
+index 7e25b0e413f6..99d36dff9d86 100644
+--- a/tools/perf/bench/find-bit-bench.c
++++ b/tools/perf/bench/find-bit-bench.c
+@@ -37,7 +37,6 @@ static noinline void workload(int val)
+ 	accumulator++;
+ }
+ 
+-#if (defined(__i386__) || defined(__x86_64__)) && defined(__GCC_ASM_FLAG_OUTPUTS__)
+ static bool asm_test_bit(long nr, const unsigned long *addr)
  {
- 	unsigned long ret;
+ 	bool oldbit;
+@@ -48,9 +47,6 @@ static bool asm_test_bit(long nr, const unsigned long *addr)
  
--	alternative_io("movq %[small],%0","movq %[large],%0",
--			X86_FEATURE_LA57,
--			"=r" (ret),
-+	alternative_io("movq %[small], %[ret]",
-+		       "movq %[large], %[ret]", X86_FEATURE_LA57,
-+			[ret] "=r" (ret),
- 			[small] "i" ((1ul << 47)-PAGE_SIZE),
- 			[large] "i" ((1ul << 56)-PAGE_SIZE));
+ 	return oldbit;
+ }
+-#else
+-#define asm_test_bit test_bit
+-#endif
  
+ static int do_for_each_set_bit(unsigned int num_bits)
+ {
 -- 
 2.48.1
 
