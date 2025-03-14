@@ -1,110 +1,171 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D561F236B
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6D11F3FF1
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741947064; cv=none; b=iwxLPXWAUIfC0F5jhNjk4Ey7j6+dsYDyuOqrWtaaUgwP6zr/9gsLSfcJs+dvqBDjQEiAYTDhnZnQ3CPM8KzMTu0Am17iv5Od6Omno9h+iGDExc+Pw0isYxfm8xE0pIz+W/3+DouChK9+WPUxylW0D9BJKvQjFw6aYzmpEcwqXwA=
+	t=1741947065; cv=none; b=lzThcYLP2CdXRMhdtZ7ktCAfCX2N4rtJK9j8FvTYPy5PWA3F0MPi6HrZpCg0ZonlXeHzFv2e+Ka74/LCedNrEC4Ym9GldzDzTWyz/x35OP6XALW0KSMKLRC7DcfZRBR9yNv7occ05FsAT01mwD3Cl6YlC90SN35fOsGkJFz+9So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741947064; c=relaxed/simple;
-	bh=Ha/KS+ElT7WtLbHsW5QrAN3KE92/i3cgTDDDhR21CLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ScsgP44Us6OadogCiApsaAi+yS5OVqY/6SSLiu8vH89hDyiv644kR4UkfDPLL0k71BigSt3KoaIuBad/P3XUZNmMHJpZlWidLhj9ZXCcsu23e06J4wKkQbd1131OF5cgDTMIbLqYx34CB0AwNfBTwNLtcCIY+f7aX1vPIAN47w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KwvWjLAk; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741947065; c=relaxed/simple;
+	bh=o9ZTDiWOwXVSnaEoWbLhRGBffUva+c1LJjT5za8v/Tw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DcXvwxstSFMnn1S2N2SCuS7LT6KnjK8vDImFJB/sn5lq/wInH0JBtEyUkZbCMGzU3OEYyz2eNFK8DwVy1krQkve8C8rk6FANY8L9UJ2eeSlwjGq9PDRpqQtMmRHhOdSS7oTy34WUGJPNrp5NddW8P3Wi1zg9bdABY5sfLExPu7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZEsz4Hm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KwvWjLAk"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43d0a5cfd7dso12723345e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 03:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741947061; x=1742551861; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fgud6hXh4dOzT1nJ8XNwGdjcgEPK4Gm9tj6MEJh365U=;
-        b=KwvWjLAkJF2owAbDh6RxStqsWNxAWm4zXCtDa/+eAte1WJWGZ0wWbzWh0IZNw9gADV
-         X9V3ykoqf/7sVGAidnQtRcDcYQJ2Yp9YR4utvqaR/6gXQyX+FlunGGbYluf/uG+/ejOr
-         h1hF8P7C5YSz0x52hVeJf45czACkFuINm103b9LyJo75GOeKW1Z9eU7cpyRrpQMbRSFh
-         Mi0g3kTdGDZSISHFawFuhqBXy4l1yyXgcHx3X5dZjYxpeefbHIz2NQq898Q30OjSBlkG
-         0V1zNCXDPH3yxJpjnGI4B+J+1Au1+Q97BnEL5dKgJ+IqtkmvcgwGgDaSD21pxF9jNSY/
-         DeuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741947061; x=1742551861;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgud6hXh4dOzT1nJ8XNwGdjcgEPK4Gm9tj6MEJh365U=;
-        b=XpsEqiKMpyqPfQ7JIV807d0WwqICtmukKdB1geH5WVJ4NwrCB2ON0xY+ODIuIpzqtL
-         BbrFCqvCotXueRIxXxq16y0a8bt1JMdXepjv3Eg3ohWmXrFgGAVVzvpT1rCnbG8lZfZD
-         CM8tJrdPfupCz/wX84sgJRGaSDl/ED3QSBin3IR7Rupl8QaVqgVqZEjNK3MrnHXulOPH
-         AbkEE1PdU4UIIexhhtgnRrbnLJjM2/zQWS6AXFYgQ6278U/rbpGkwCmkNa+I5XYTa0+i
-         KUIbw0qtsb2pxcJjlSz3A1NxtAMRi/bz0SnHXadaJzhZmscJlVjqq8Zh7qdLuU1/wf88
-         3UaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMgoOoBja4jG12/O9cza5od1+u3LHYp0ZaCVdfO+9eqfR6sYf5N3ejAU2F2zcXF34qBFXDzeN7SCTxcOY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUNKqh5SP/CplIebHgYO4hBqAhRFKwO8jTILgjWNoeqQnf8jo6
-	vCTnpHuPOoTgAnLv2LD2Y+0ttXwoN00a1kxALTTnKD3CXCPGTFPBflA6/oVyHQQ=
-X-Gm-Gg: ASbGncvZFVMBWN/V4tcAU2C5hGs3ftlwaxi0Au97KHqbJEDN1/nJKrovbTg8YO/DNdw
-	1+MSij8sRJy6hbxZ9cHNDcoCzSzBQ6KAhs49DWZ4ga3LX3zN8kyO+V/7LklMruVw6PIqgGfJ/BB
-	zpuogGP9LbpgKlOzl8BgyVfSbMHNhcgK1ChS8FMVbAaDZ6YErYMOBYjDZgS6lZpbvHF2BNokJlb
-	cDpHLo3loC0Li7VoWvoXC31JJRnULzBRF850fuKlUArR53WHnN5ApQpy6JNLX7zHhTquwEVFBc0
-	CFwRiVuWrEahafd91cJnpA7teBhIkzSpUoQHHenjr18ru/x9kQ==
-X-Google-Smtp-Source: AGHT+IGrqsA9/IFFX+VNcSF8RCUcUm/rFalF5L0nX24Ys1wiCIc0uaBlGoiwZeDMhGOrmCUK6wBs1A==
-X-Received: by 2002:a05:600c:4fcc:b0:43c:fab3:4fad with SMTP id 5b1f17b1804b1-43d1ec80ebcmr26365605e9.16.1741947061151;
-        Fri, 14 Mar 2025 03:11:01 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d200fae4asm12118455e9.27.2025.03.14.03.11.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 03:11:00 -0700 (PDT)
-Date: Fri, 14 Mar 2025 13:10:57 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Simon Horman <horms@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH net] net: atm: fix use after free in lec_send()
-Message-ID: <c751531d-4af4-42fe-affe-6104b34b791d@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZEsz4Hm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADC3C4CEE3;
+	Fri, 14 Mar 2025 10:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741947064;
+	bh=o9ZTDiWOwXVSnaEoWbLhRGBffUva+c1LJjT5za8v/Tw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NZEsz4HmIi/nKDi5l2KzxRWHXfO03OXg7v8xmix2ljScqv0XXM9nkawcvvIuvLhzY
+	 r2OOunq90yggnANXyvmhmaAQ37LvnnxlW4INpAFg9Sbd0m3NnrpcoAhIXTyvcyZ05F
+	 yd1Lghq1o+rNHdh/93Of1wUc0FWzR9S46Tuhwh3VOA7hVJO2tK+61kKfciGS4XzWPP
+	 jTapPzb95rXFcAuJc2hpB8n1xGyq3J/RGPdP+Jov9l8W5gqJE5hJsPkNqqKbDdyPrD
+	 cVxntuV7RUHMDTtteQlPddl8OY6IREprYnezpTPvAmzd9KKYJs1BbyIdlxrUioKAMh
+	 rJjijHrZLJEsg==
+From: Philipp Stanner <phasta@kernel.org>
+To: Matthew Brost <matthew.brost@intel.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+Subject: [PATCH v3 1/2] drm/sched: Fix outdated comments referencing thread
+Date: Fri, 14 Mar 2025 11:10:23 +0100
+Message-ID: <20250314101023.111248-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
 
-The ->send() operation frees skb so save the length before calling
-->send() to avoid a use after free.
+The GPU scheduler's comments refer to a "thread" at various places.
+Those are leftovers from commit a6149f039369 ("drm/sched: Convert drm
+scheduler to use a work queue rather than kthread").
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Replace all references to kthreads.
+
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
 ---
- net/atm/lec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Changes in v3:
+  - Turns out I had to rebase for drm-misc-next because we changed the
+    docu for timedout_job() there. I simply dropped the redundant docu
+    change from this patch.
+    Sending v3 for transparency.
+---
+ drivers/gpu/drm/scheduler/sched_entity.c |  8 ++++----
+ drivers/gpu/drm/scheduler/sched_main.c   | 24 +++++++++++++-----------
+ include/drm/gpu_scheduler.h              |  2 +-
+ 3 files changed, 18 insertions(+), 16 deletions(-)
 
-diff --git a/net/atm/lec.c b/net/atm/lec.c
-index ffef658862db..a948dd47c3f3 100644
---- a/net/atm/lec.c
-+++ b/net/atm/lec.c
-@@ -181,6 +181,7 @@ static void
- lec_send(struct atm_vcc *vcc, struct sk_buff *skb)
+diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
+index a6d2a4722d82..74a72c0a9c0a 100644
+--- a/drivers/gpu/drm/scheduler/sched_entity.c
++++ b/drivers/gpu/drm/scheduler/sched_entity.c
+@@ -538,10 +538,10 @@ void drm_sched_entity_select_rq(struct drm_sched_entity *entity)
+ 		return;
+ 
+ 	/*
+-	 * Only when the queue is empty are we guaranteed that the scheduler
+-	 * thread cannot change ->last_scheduled. To enforce ordering we need
+-	 * a read barrier here. See drm_sched_entity_pop_job() for the other
+-	 * side.
++	 * Only when the queue is empty are we guaranteed that
++	 * drm_sched_run_job_work() cannot change entity->last_scheduled. To
++	 * enforce ordering we need a read barrier here. See
++	 * drm_sched_entity_pop_job() for the other side.
+ 	 */
+ 	smp_rmb();
+ 
+diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+index 829579c41c6b..f7118497e47a 100644
+--- a/drivers/gpu/drm/scheduler/sched_main.c
++++ b/drivers/gpu/drm/scheduler/sched_main.c
+@@ -391,7 +391,7 @@ static void drm_sched_run_free_queue(struct drm_gpu_scheduler *sched)
+  * drm_sched_job_done - complete a job
+  * @s_job: pointer to the job which is done
+  *
+- * Finish the job's fence and wake up the worker thread.
++ * Finish the job's fence and resubmit the work items.
+  */
+ static void drm_sched_job_done(struct drm_sched_job *s_job, int result)
  {
- 	struct net_device *dev = skb->dev;
-+	unsigned int len = skb->len;
+@@ -551,9 +551,10 @@ static void drm_sched_job_timedout(struct work_struct *work)
  
- 	ATM_SKB(skb)->vcc = vcc;
- 	atm_account_tx(vcc, skb);
-@@ -191,7 +192,7 @@ lec_send(struct atm_vcc *vcc, struct sk_buff *skb)
- 	}
+ 	if (job) {
+ 		/*
+-		 * Remove the bad job so it cannot be freed by concurrent
+-		 * drm_sched_cleanup_jobs. It will be reinserted back after sched->thread
+-		 * is parked at which point it's safe.
++		 * Remove the bad job so it cannot be freed by a concurrent
++		 * &struct drm_sched_backend_ops.free_job. It will be
++		 * reinserted after the scheduler's work items have been
++		 * cancelled, at which point it's safe.
+ 		 */
+ 		list_del_init(&job->list);
+ 		spin_unlock(&sched->job_list_lock);
+@@ -599,10 +600,10 @@ void drm_sched_stop(struct drm_gpu_scheduler *sched, struct drm_sched_job *bad)
  
- 	dev->stats.tx_packets++;
--	dev->stats.tx_bytes += skb->len;
-+	dev->stats.tx_bytes += len;
- }
+ 	/*
+ 	 * Reinsert back the bad job here - now it's safe as
+-	 * drm_sched_get_finished_job cannot race against us and release the
++	 * drm_sched_get_finished_job() cannot race against us and release the
+ 	 * bad job at this point - we parked (waited for) any in progress
+-	 * (earlier) cleanups and drm_sched_get_finished_job will not be called
+-	 * now until the scheduler thread is unparked.
++	 * (earlier) cleanups and drm_sched_get_finished_job() will not be
++	 * called now until the scheduler's work items are submitted again.
+ 	 */
+ 	if (bad && bad->sched == sched)
+ 		/*
+@@ -615,7 +616,8 @@ void drm_sched_stop(struct drm_gpu_scheduler *sched, struct drm_sched_job *bad)
+ 	 * Iterate the job list from later to  earlier one and either deactive
+ 	 * their HW callbacks or remove them from pending list if they already
+ 	 * signaled.
+-	 * This iteration is thread safe as sched thread is stopped.
++	 * This iteration is thread safe as the scheduler's work items have been
++	 * cancelled.
+ 	 */
+ 	list_for_each_entry_safe_reverse(s_job, tmp, &sched->pending_list,
+ 					 list) {
+@@ -680,9 +682,9 @@ void drm_sched_start(struct drm_gpu_scheduler *sched, int errno)
+ 	struct drm_sched_job *s_job, *tmp;
  
- static void lec_tx_timeout(struct net_device *dev, unsigned int txqueue)
+ 	/*
+-	 * Locking the list is not required here as the sched thread is parked
+-	 * so no new jobs are being inserted or removed. Also concurrent
+-	 * GPU recovers can't run in parallel.
++	 * Locking the list is not required here as the scheduler's work items
++	 * are currently not running, so no new jobs are being inserted or
++	 * removed. Also concurrent GPU recovers can't run in parallel.
+ 	 */
+ 	list_for_each_entry_safe(s_job, tmp, &sched->pending_list, list) {
+ 		struct dma_fence *fence = s_job->s_fence->parent;
+diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+index 1a7e377d4cbb..d860db087ea5 100644
+--- a/include/drm/gpu_scheduler.h
++++ b/include/drm/gpu_scheduler.h
+@@ -192,7 +192,7 @@ struct drm_sched_entity {
+ 	 * @last_scheduled:
+ 	 *
+ 	 * Points to the finished fence of the last scheduled job. Only written
+-	 * by the scheduler thread, can be accessed locklessly from
++	 * by drm_sched_entity_pop_job(). Can be accessed locklessly from
+ 	 * drm_sched_job_arm() if the queue is empty.
+ 	 */
+ 	struct dma_fence __rcu		*last_scheduled;
 -- 
-2.47.2
+2.48.1
 
