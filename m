@@ -1,68 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F301E204C0D;
-	Fri, 14 Mar 2025 17:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236A71FFC60
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741973515; cv=none; b=khhhi9EFFnlsOlgt+artCFBDS9DNnHIYN+lQJ8WiIT2eD1dAvI7kkTvxMSjKqmmNaE3Al3b1XJBma6Rt0a0gjz5RpErp+cUHSj1iiHG9TZ9HCo57WU13GzFUsHPqQ7znnZpeVcp+58sncHxOuAbImT6bjyOOQ+zj0jm3v4MZjWQ=
+	t=1741973563; cv=none; b=NZpCGNbllHkR/fX2Q+b9EPbYNsAi88NNypNuOckEWe14ilS1YOVsQUeHpRnsmmZxwijoGPnZVc2q+xmNma9YKA0vLuvqDPI/NSwZvKYcBTTA48FdlqXm/veIO58weZOXEZhDqTZR3FiJoF9SIegjLHu1cCKH0IM3yd5TZLy/olU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741973515; c=relaxed/simple;
-	bh=og9U6wqzCSAWLnFEe2nPzBgfKbgmyVXzWTGq8RgpJ3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xk804//F7wjHpORcW2zs9Yud0Dcd2Rw7c0hiWsPh4vumsP0aCsdn3AMeW8EYuD8jpEXuFYcMhP/VfXw4In5PNFymOozj1+wy07DvZ/Q2Nvk4lLez60Yq+51Ft4ukeEuWdwMdLq26krz7/P6KeLpdvcQqxPB59YSkPW3dwKsLI54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q0qOFIXU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741973563; c=relaxed/simple;
+	bh=KcZmg1zIUwYl+d2uu76ow2WhOsy6u7gEqnTVmBZKyz8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HyXmhopg8bvGcvY4xRAR6nd6PZGhdsVkEzNIoS8usgQ+wMaXjMoj5CxDLJ51NvUm5qE4lFE574fA9/NyRhJym7Gyxp+epZITzUjoLiJii4Aqml4N9PfFDjwYUWOvFqz0zJrHIydOfpwZkLfHAJZC7T7y6njZ8x76DxjYRr3ZSsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CaR08mpK; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q0qOFIXU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED740C4CEE3;
-	Fri, 14 Mar 2025 17:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741973514;
-	bh=og9U6wqzCSAWLnFEe2nPzBgfKbgmyVXzWTGq8RgpJ3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q0qOFIXUg4JWpcibNwNfoiloucbBlOp2T4yt/hKYOPM+pS750X/psWtyJPGNFuOU6
-	 /8nugG9iTLcRDDBU+zmlzD7Gky7yArNZ9bx1Ql55PcP+6nzlAkJXJfovL0kPBEOp8m
-	 E4xeWNCHNEkh/QtI3txE8ddIZKcoG6C+Dq+AsVdiwRXp7IDS4+OlDMq8HxAp4QzeTc
-	 Riz1I96lBvMXpeseaRg9YwyTW/LnlzF39Z9arD1Gwt9YOapvOVe4vRn2GhKLvlXWHa
-	 AQT2UlqEwekfEIXdvjN+Qg/aDe8cF0X81u7GrkqPVbcGmLp7X+vjrWHCXcdMLY3znV
-	 Hr1gujy+GhEXQ==
-Date: Fri, 14 Mar 2025 18:31:48 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] rust: device: implement device context marker
-Message-ID: <Z9RoBMXWsrjg6jjg@cassiopeiae>
-References: <20250314160932.100165-1-dakr@kernel.org>
- <20250314160932.100165-3-dakr@kernel.org>
- <67d465bb.050a0220.d2e19.8fc9@mx.google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CaR08mpK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=I5Awq6moaztxY22uQpLVPuBkTzBbIxEtYFjSbRAN49Y=; b=CaR08mpK+sw0slWVjMplYOL9ou
+	8OaStTEcVYPeMmXoOSQ/y4t41ZXejoGL40x32rlJ0ltjUw56aQmTN/JaSd+NloQNKQ5Yu6JYSfMPv
+	tn3exLJQlbxB+sJrb8hLhaqkGute3MV3eG2vrQ2HCCJANlAQ4WS2/pj5ehW0b2MXTFRE0Khjaisyp
+	4hYUfM0+cjyIkVU4ouKmHo/FXmq3sQAhMUQjepR4nrTWKm5M4kGs/cxOBmE5vdQHGKchsfUBLm4md
+	QraBeazfY3zr9/M+msg5KTr7knguUpW/LR3z+KA9oKD+Lxbmk97QE8kmdv5Y8zOB4mCNLMucnn4o4
+	Oono+19A==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tt8tb-00000002vUC-3fT3;
+	Fri, 14 Mar 2025 17:32:32 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tt8tY-0000000CsVj-3Mn6;
+	Fri, 14 Mar 2025 17:32:28 +0000
+From: David Woodhouse <dwmw2@infradead.org>
+To: kexec@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-kernel@vger.kernel.org,
+	Simon Horman <horms@kernel.org>,
+	Dave Young <dyoung@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	jpoimboe@kernel.org,
+	bsz@amazon.de
+Subject: [PATCH v8 1/7] x86/kexec: Debugging support: Load an IDT and basic exception entry points
+Date: Fri, 14 Mar 2025 17:27:33 +0000
+Message-ID: <20250314173226.3062535-2-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250314173226.3062535-1-dwmw2@infradead.org>
+References: <20250314173226.3062535-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67d465bb.050a0220.d2e19.8fc9@mx.google.com>
+Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Mar 14, 2025 at 10:21:58AM -0700, Boqun Feng wrote:
-> On Fri, Mar 14, 2025 at 05:09:05PM +0100, Danilo Krummrich wrote:
-> > Some bus device functions should only be called from bus callbacks,
-> > such as probe(), remove(), resume(), suspend(), etc.
-> > 
-> > To ensure this add device context marker structs, that can be used as
-> > generics for bus device implementations.
-> > 
-> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> > Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> 
-> Try chronological order for the tags? It was suggested first and then
-> reviewed.
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-Is that a thing? When I apply patches I usully keep ACKs, RBs and SOBs together
-at the bottom.
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ arch/x86/include/asm/kexec.h         |  5 ++
+ arch/x86/kernel/machine_kexec_64.c   | 21 ++++++++
+ arch/x86/kernel/relocate_kernel_64.S | 77 ++++++++++++++++++++++++++++
+ 3 files changed, 103 insertions(+)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 8ad187462b68..ec7636f4f86a 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -8,6 +8,9 @@
+ # define PA_PGD			2
+ # define PA_SWAP_PAGE		3
+ # define PAGES_NR		4
++#else
++/* Size of each exception handler referenced by the IDT */
++# define KEXEC_DEBUG_EXC_HANDLER_SIZE	6 /* pushi, pushi, 2-byte jmp */
+ #endif
+ 
+ # define KEXEC_CONTROL_PAGE_SIZE	4096
+@@ -58,6 +61,8 @@ struct kimage;
+ extern unsigned long kexec_va_control_page;
+ extern unsigned long kexec_pa_table_page;
+ extern unsigned long kexec_pa_swap_page;
++extern gate_desc kexec_debug_idt[];
++extern unsigned char kexec_debug_exc_vectors[];
+ #endif
+ 
+ /*
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index a68f5a0a9f37..faf2fb1cd9f6 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -304,6 +304,24 @@ static void load_segments(void)
+ 		);
+ }
+ 
++static void prepare_debug_idt(unsigned long control_page, unsigned long vec_ofs)
++{
++	gate_desc idtentry = { 0 };
++	int i;
++
++	idtentry.bits.p = 1;
++	idtentry.bits.type = GATE_TRAP;
++	idtentry.segment = __KERNEL_CS;
++	idtentry.offset_low = (control_page & 0xFFFF) + vec_ofs;
++	idtentry.offset_middle = (control_page >> 16) & 0xFFFF;
++	idtentry.offset_high = control_page >> 32;
++
++	for (i = 0; i < 16; i++) {
++		kexec_debug_idt[i] = idtentry;
++		idtentry.offset_low += KEXEC_DEBUG_EXC_HANDLER_SIZE;
++	}
++}
++
+ int machine_kexec_prepare(struct kimage *image)
+ {
+ 	void *control_page = page_address(image->control_code_page);
+@@ -321,6 +339,9 @@ int machine_kexec_prepare(struct kimage *image)
+ 	if (image->type == KEXEC_TYPE_DEFAULT)
+ 		kexec_pa_swap_page = page_to_pfn(image->swap_page) << PAGE_SHIFT;
+ 
++	prepare_debug_idt((unsigned long)__pa(control_page),
++			  (unsigned long)kexec_debug_exc_vectors - reloc_start);
++
+ 	__memcpy(control_page, __relocate_kernel_start, reloc_end - reloc_start);
+ 
+ 	set_memory_rox((unsigned long)control_page, 1);
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index ac058971a382..b07c55019ce5 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -50,6 +50,11 @@ SYM_DATA_START_LOCAL(kexec_debug_gdt)
+ 	.quad   0x00cf92000000ffff      /* __KERNEL_DS */
+ SYM_DATA_END_LABEL(kexec_debug_gdt, SYM_L_LOCAL, kexec_debug_gdt_end)
+ 
++	.balign 8
++SYM_DATA_START(kexec_debug_idt)
++	.skip 0x100, 0x00
++SYM_DATA_END(kexec_debug_idt)
++
+ 	.section .text..relocate_kernel,"ax";
+ 	.code64
+ SYM_CODE_START_NOALIGN(relocate_kernel)
+@@ -139,6 +144,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	movq	%ds, %rax
+ 	movq	%rax, %ds
+ 
++	/* Now an IDTR on the stack to load the IDT the kernel created */
++	leaq	kexec_debug_idt(%rip), %rsi
++	pushq	%rsi
++	pushw	$0xff
++	lidt	(%rsp)
++	addq	$10, %rsp
++
++	//int3
++
+ 	/*
+ 	 * Clear X86_CR4_CET (if it was set) such that we can clear CR0_WP
+ 	 * below.
+@@ -364,3 +378,66 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	ret
+ 	int3
+ SYM_CODE_END(swap_pages)
++
++SYM_CODE_START_NOALIGN(kexec_debug_exc_vectors)
++	/* Each of these is 6 bytes. */
++.macro vec_err exc
++	UNWIND_HINT_ENTRY
++	. = kexec_debug_exc_vectors + (\exc * KEXEC_DEBUG_EXC_HANDLER_SIZE)
++	nop
++	nop
++	pushq	$\exc
++	jmp	exc_handler
++.endm
++
++.macro vec_noerr exc
++	UNWIND_HINT_ENTRY
++	. = kexec_debug_exc_vectors + (\exc * KEXEC_DEBUG_EXC_HANDLER_SIZE)
++	pushq	$0
++	pushq	$\exc
++	jmp	exc_handler
++.endm
++
++	ANNOTATE_NOENDBR
++	vec_noerr 0 // #DE
++	vec_noerr 1 // #DB
++	vec_noerr 2 // #NMI
++	vec_noerr 3 // #BP
++	vec_noerr 4 // #OF
++	vec_noerr 5 // #BR
++	vec_noerr 6 // #UD
++	vec_noerr 7 // #NM
++	vec_err 8   // #DF
++	vec_noerr 9
++	vec_err 10 // #TS
++	vec_err 11 // #NP
++	vec_err 12 // #SS
++	vec_err 13 // #GP
++	vec_err 14 // #PF
++	vec_noerr 15
++SYM_CODE_END(kexec_debug_exc_vectors)
++
++SYM_CODE_START_LOCAL_NOALIGN(exc_handler)
++	/* No need for ret mitigations during kexec */
++	VALIDATE_UNRET_END
++
++	pushq	%rax
++	pushq	%rdx
++	movw	$0x3f8, %dx
++	movb	$'A', %al
++	outb	%al, %dx
++	popq	%rdx
++	popq	%rax
++
++	/* Only return from int3 */
++	cmpq	$3, (%rsp)
++	jne	.Ldie
++
++	addq	$16, %rsp
++	iretq
++
++.Ldie:
++	hlt
++	jmp	.Ldie
++
++SYM_CODE_END(exc_handler)
+-- 
+2.48.1
+
