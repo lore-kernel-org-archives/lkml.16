@@ -1,102 +1,97 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EA3202988;
-	Fri, 14 Mar 2025 14:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A0C201006;
+	Fri, 14 Mar 2025 14:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741963133; cv=none; b=dKmPOAUuMZkdjjQSLcYnWgempyKqWymnyVwZga7H82WziovPr7jFz89vi6aarrM1bACu15o3z7oiTCs+Zb5ktmF3adXo2/aNkijNdRzIRr6KpEgMytmU5pfvVK4cc13SxxuAbSPA+kgy+AEcZ17l4+UhYHzjGh44U7PT0s9v++I=
+	t=1741963148; cv=none; b=iCHW64y76NA3yiDQrlJeCxzoqtz6UpxKk79r6q8Qc0mcat8rcwWpJWSefMJy0H5p9x82nEWR9xKtHR9luVmZnC353ChEOeFYaWcW1VpI4s9NIdzkfi2nz8jmR/+gDEhSMWDdPTI+Wu2jrIvDftMu3eXfvKFTrgKt98LYBuYGiUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741963133; c=relaxed/simple;
-	bh=omVwGwH+tvai1xWEI2/VPAx6grba7+WPfxfB6hPpCok=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gH3/pYe7k4hT9kdKrNm00vKKlyQaLT1lNAhwLoxCJh4ImCzORxiqTC8wZcyJCqKGVRg8eSWgg1W0pzFA9Xtm4HwTihjn2JFu3zYNvqM1TqLwzg3mrOUIs2jImoLEhpzFIajMImyUjrTBHfkaFMG1klcVX9/BrUHJA7zEKTHaBdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=kT3EnxgA; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1741963148; c=relaxed/simple;
+	bh=+rOCS4ANpOhQrkXaIKAqHuNZwcp5/PpEXC53lEgGM7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IQzI1PMh9p70WfbSGhlFK3+eRysbapz4W0mc/TASvU3StS3fpDoBbjTAGX2Mu1niTtaPHPxirtvPO8F05wTTQ6lSNmtLBAw2ohuniWYFj11V0Xv9F52IrL4Spg2t6/rnuUVX9CvHPHtwvdlXKmAAGT4jiLT66eQ33Wu8f8wU3gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=loCBhxEB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="kT3EnxgA"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZDn6n4VbXz9scL;
-	Fri, 14 Mar 2025 15:38:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1741963121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yl6oKjE2VPFEN1ImI40/0DFO/bK2RZZ4SFwIfhRzkX8=;
-	b=kT3EnxgAy4hGUd0isbaVaSLESqzhlDddxebZVLD3LohYQFxAKISB9nG/6sAyN4zX6EQ9NZ
-	tth7TJSjLyUifn1mXad59IzLDdcxonQue1b5TsMYqgU/nvX1p6yeitsd4KCazP1awugRPT
-	i4ibzHgLO0hMl0LDKW5C6iM6x/SlzyRikqfL7xdVNiXG+2MPRrwQ1rd+ojUSB3Hf/FpL18
-	xjEqoMBe3yaEqCK3LwhlMKPbWGJCgKvETfJAVAImdAkMOxorDVbnrC84+xka5da/Gzs+Eg
-	SHsxlfCq4KSTfAtyQabMwHC8u3OtCBUsE/qKDZz5lipULYRF9OwQHF7qJ9ADVQ==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Fri, 14 Mar 2025 10:38:23 -0400
-Subject: [PATCH 3/4] ASoC: Intel: max98373: move devm_kzalloc(..., size *
- n, ...) to devm_kcalloc
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="loCBhxEB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4938EC4CEE9;
+	Fri, 14 Mar 2025 14:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741963147;
+	bh=+rOCS4ANpOhQrkXaIKAqHuNZwcp5/PpEXC53lEgGM7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=loCBhxEBErKK3ZIht8R39+ptBlFC2S1QBIaARm2aLPojkPkaPZiUl/F+SVqutA0ac
+	 NX2lEwH4CexIWMDqGzyv17BXtlUwYB+szhZLa+fJGJMQd/04J64JyhCWiksYSSDHZU
+	 4Cw0l5C71+PpzLn4kYMj0m70dVGjf0gXQIpn2T/w8b/oKTCr/HaaRuMGMeLQQUvVJo
+	 MQ80z+4JEmZKB1hHaj2PqI6fpbrGlaW0viu9UwzxJpVsXs8Ra5RcaRlWX+tpq4vW4L
+	 vt2wM7lpkf2uPKIhCzk72o/e00wyCpOdIOgaEGLImdi0Ga84XrD6FXdIeHx2khLtrg
+	 UhKQbRMW/U+OQ==
+Date: Fri, 14 Mar 2025 15:39:05 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>
+Subject: Re: [PATCH 3/3] rcu/exp: Remove needless CPU up quiescent state
+ report
+Message-ID: <Z9Q_iWaLfGb9fzA4@localhost.localdomain>
+References: <20250213232559.34163-1-frederic@kernel.org>
+ <20250213232559.34163-4-frederic@kernel.org>
+ <332cc3da-55fa-4729-81bf-625afa5290bd@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250314-sound-avs-kcalloc-v1-3-985f2734c020@ethancedwards.com>
-References: <20250314-sound-avs-kcalloc-v1-0-985f2734c020@ethancedwards.com>
-In-Reply-To: <20250314-sound-avs-kcalloc-v1-0-985f2734c020@ethancedwards.com>
-To: Cezary Rojewski <cezary.rojewski@intel.com>, 
- Liam Girdwood <liam.r.girdwood@linux.intel.com>, 
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>
-Cc: gustavoars@kernel.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1203;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=omVwGwH+tvai1xWEI2/VPAx6grba7+WPfxfB6hPpCok=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBGK3hUNWpFWW1UMGlIMy8zQTl6ODhKQ1huS3pYK3QrCkh2cythZHVDd3duaXBlb3k2
- MDA3U2xrWXhMZ1laTVVVV2Y3bktLYzkxSnloc1BPdlN4UE1IRllta0NFTVhKd0MKTUJFbFBvYi9
- 1ZXpwR3h5RmY4MjF0TnJ2M25yckd1TzlIZkUxU1o0MzVwYW1QZiswYkFhbkN5TkRqLzYyM0sxeQ
- p2N2I4eUZzUzdzelllWHhoZDR6djB0M1h1aVkzemRkN1VxUERBUURldDB4dgo9S2hCSwotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <332cc3da-55fa-4729-81bf-625afa5290bd@paulmck-laptop>
 
-Open coded arithmetic in allocator arguments is discouraged. Helper
-functions like kcalloc or, in this case, devm_kcalloc are preferred.
+Le Mon, Mar 03, 2025 at 12:10:50PM -0800, Paul E. McKenney a écrit :
+> On Fri, Feb 14, 2025 at 12:25:59AM +0100, Frederic Weisbecker wrote:
+> > A CPU coming online checks for an ongoing grace period and reports
+> > a quiescent state accordingly if needed. This special treatment that
+> > shortcuts the expedited IPI finds its origin as an optimization purpose
+> > on the following commit:
+> > 
+> > 	338b0f760e84 (rcu: Better hotplug handling for synchronize_sched_expedited()
+> > 
+> > The point is to avoid an IPI while waiting for a CPU to become online
+> > or failing to become offline.
+> > 
+> > However this is pointless and even error prone for several reasons:
+> > 
+> > * If the CPU has been seen offline in the first round scanning offline
+> >   and idle CPUs, no IPI is even tried and the quiescent state is
+> >   reported on behalf of the CPU.
+> > 
+> > * This means that if the IPI fails, the CPU just became offline. So
+> >   it's unlikely to become online right away, unless the cpu hotplug
+> >   operation failed and rolled back, which is a rare event that can
+> >   wait a jiffy for a new IPI to be issued.
+> > 
+> > * But then the "optimization" applying on failing CPU hotplug down only
+> >   applies to !PREEMPT_RCU.
+> > 
+> > * This force reports a quiescent state even if ->cpu_no_qs.b.exp is not
+> >   set. As a result it can race with remote QS reports on the same rdp.
+> >   Fortunately it happens to be OK but an accident is waiting to happen.
+> > 
+> > For all those reasons, remove this optimization that doesn't look worthy
+> > to keep around.
+> > 
+> > Reported-by: Paul E. McKenney <paulmck@kernel.org>
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> 
+> Based on discussions:
+> 
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> If it was still just me doing RCU, I would skip this one, just out of an
+> abundance of caution.  But you break it, you buy it!  ;-)
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- sound/soc/intel/avs/boards/max98373.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/intel/avs/boards/max98373.c b/sound/soc/intel/avs/boards/max98373.c
-index 6f25e66344b7a4b46d6598619b6b1362cad8c39e..970f82bf4ce8920b1965a0b81e8623ab5bf91ef1 100644
---- a/sound/soc/intel/avs/boards/max98373.c
-+++ b/sound/soc/intel/avs/boards/max98373.c
-@@ -111,7 +111,7 @@ static int avs_create_dai_link(struct device *dev, const char *platform_name, in
- 	dl->name = devm_kasprintf(dev, GFP_KERNEL,
- 				  AVS_STRING_FMT("SSP", "-Codec", ssp_port, tdm_slot));
- 	dl->cpus = devm_kzalloc(dev, sizeof(*dl->cpus), GFP_KERNEL);
--	dl->codecs = devm_kzalloc(dev, sizeof(*dl->codecs) * 2, GFP_KERNEL);
-+	dl->codecs = devm_kcalloc(dev, 2, sizeof(*dl->codecs), GFP_KERNEL);
- 	if (!dl->name || !dl->cpus || !dl->codecs)
- 		return -ENOMEM;
- 
-
--- 
-2.48.1
-
+I'm trying to be optimistic... ;-))
