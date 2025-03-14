@@ -1,115 +1,239 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA131FDA78
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB4B1FCFD3
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741949826; cv=none; b=dpW7Ee4QIlQCzL17Ckyx9KxDcBhaiG1Wn7mRGRElROOzHopRY4Ea78SggLt+9D+n+0P7LjMgzQd86eT7FGTSmkDHLMx93bLh/4rtM4DzBkL9osadPCIAD5qfMtwQNAYJqYhWt1c7t2RdiztSdWR0++N7/pEil+EysCz9412sq4c=
+	t=1741949848; cv=none; b=fJlYu2IkUFJL8KSvByWQBMTPZp/mQjpAFc2AOQghDF0IE12m7zh5dTFd1U7KzkF4q6H9EDIKlMliD3dvUS9Vq7hDj/D4z/+KXM953+6rFQAflMbwIMJw8uAMYZNb884ddlq3zeaz44OVz2csvLM6yO7jEuyr4BF7DObtdjDakpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741949826; c=relaxed/simple;
-	bh=96miNLq7hjmZ1DWvw2RWqPE8vNM1MzuLA2VCBM8nKeU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Oz0e9PTQPVrvMsp7VXkTxbTC+xgGLr1FT9MuX+A+W1jFIcXw/NGmp1nfwwM8J6uSTl8I4gzWh1nIaPFV7aT/dqUiSrGbWXSEflOC8ebCjWcvTIgKCbifT0K9jJjLgv36Zk4nwnQi/Ye4JB1ZSwWZGNvmcJwqj2qCY7x1oLmhSzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pi8MVHLl; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741949848; c=relaxed/simple;
+	bh=VDMVz0ygP2KxN7rJB74IuIxcRwkE7FZ1RL/MHtWeBcE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d/TX2g1Jmh6ckZhggQh4xP6ui6YGCZ2XxWMz6HAtesnkXq/9WRp45oovyyYuk9Ah4zAjTaJIePJEdPB/rOTcwkMhViISbUA8Z06iDCVTW1eDrEFaP05WxABlsR2QIu0845fDvFGAiSZrOrudFFFFDf5tkYtEw+J7FBrdDQ5aSQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KuzodXDN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pi8MVHLl"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5498c742661so2169758e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 03:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741949823; x=1742554623; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=96miNLq7hjmZ1DWvw2RWqPE8vNM1MzuLA2VCBM8nKeU=;
-        b=Pi8MVHLlipWSdjRAu0KR1I7EaMI4E5f1hJKZVKWtIwYUkKW7XhPYP9VeFgJRTjLqqf
-         5bcQQ6IEUHmHu0bpOWgoiQFhUAVe+P5D8vBdlS0DTJ3CS3b/MrpvLoVh2JrhGPN7YRD5
-         ZUZ5h+66AiqzdpAMkdtr8W5Ss4v3QtI8aGkHzrsHuNzjAyhfrK73eihEgMHsH3YXRK5r
-         9asbjPMd86h9sZWbAGpqSDur7CCFFqOLV9gVqt8+JKw7fR9QmW4QNHrSRB/+aihq++h9
-         pvFdQxR1iaLwaorU3B8pTUOmh+zToW/bg3UahfzD7W6peIlgQOmSUJPuHhC0ZKNjN2qa
-         YF+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741949823; x=1742554623;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=96miNLq7hjmZ1DWvw2RWqPE8vNM1MzuLA2VCBM8nKeU=;
-        b=GlJLhLHwYWDQXSbWtzDK/2hYGysqq1ivBrwFznZrvV4PaMf5Uuh1Y8khC58Qaf+7qD
-         voNbxHG5XoCjgCVdvUIDYH7rbfD3XTkZm7SPI9Jw7TJxRw5ccEiJI0Bd0ML5LWNv5mYZ
-         MjvB/tUsmASS5w3yFKxjlTHoJgtXzIPgtELmLF26eiJkZBuIu7AQUmvQBkUz6UhNlXLL
-         FXpQ0b8H0NMZ+jP4eFo4ps0yPLPsWYlujgEYOCBDT82ayrWI5HAWYTSxu6pngSxLBQBN
-         wwq5cVvno1M8uZAQuEQZsKx5CvthidlZSZU8g7AGA2bfkTiOOxF/hxtv20WIQYlfjm9I
-         GrpA==
-X-Gm-Message-State: AOJu0YzLOCjsK2bL2e8ey4Gc7Ish5znKKkv5Fphdd38ZwgxBZkhqLgzw
-	ByeQz4HkQUzblPkF/VpswAREQd5cRV5Ghxdd21kW8mYIQ9HeKcesRjTB68Kpm6CxDcIr2F1wYhx
-	aDJrgwOGyN6wt0wLxwFPgEXQCYSjAxBx7LFIxyw==
-X-Gm-Gg: ASbGnct9VIUhT9Hmy6FMsqrlARNugYJh62BCIdDXGArvrDBgTRi/RZf7PLtLg3Fx0BD
-	9BkB3HvgPDoIHoaNthX616iy8DLBojTNPjd5RIASmUacoPLZYPa3RybwxWNNUiNpI0T5dBnEn6T
-	lB09nHzde2+D/zsOb8LExORyk=
-X-Google-Smtp-Source: AGHT+IFBUfIyEDOuJTN62TSknKdeCzQe/LcEGx11Lhh+Rd6KnxH9lfyrYhlZLPk9+k1t8FjAQaeRWWJZNCwHOYSl0Sw=
-X-Received: by 2002:a05:6512:1386:b0:549:66d8:a1f3 with SMTP id
- 2adb3069b0e04-549c39610d3mr563884e87.40.1741949823389; Fri, 14 Mar 2025
- 03:57:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KuzodXDN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF2D0C4CEE3;
+	Fri, 14 Mar 2025 10:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741949847;
+	bh=VDMVz0ygP2KxN7rJB74IuIxcRwkE7FZ1RL/MHtWeBcE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KuzodXDNGxII0Gh6/oiQ9CtoH/OllxVlWSbX8dueZKKQTiTcVqrwIZMFYiIUkftb1
+	 HGdB8wMyr2n/P7L/dh9zg5DEnV3VTEe+YOGQw8fAjthXcGd1vK/uCO7fUu/6q+VgrI
+	 CKhh5f/TRzXf06e2VnaMFkasXy5OH/F9BpNx7ihJgD73sEQrq4m0GhuoUsBVK/KUZg
+	 4S+gRF9W/Rqo1Y9cZn1u1lc+TG2NkhvNFxiTGxnTvZeane2KFnHg8VF1RcWf5yuDpG
+	 D12p26i3l3XGoag0TWJ58uI1VNAtvlHtoU5LX+CSnOf99aAPhJuQ9fTwUsCqBAmAIV
+	 Y0WdNy6XFm26A==
+Message-ID: <1e1ffb3a-3354-4c35-b73f-787da014f758@kernel.org>
+Date: Fri, 14 Mar 2025 11:57:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313142404.896902416@linutronix.de> <20250313142524.325627746@linutronix.de>
-In-Reply-To: <20250313142524.325627746@linutronix.de>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 14 Mar 2025 11:56:52 +0100
-X-Gm-Features: AQ5f1JpCR7cVKXr0DimAAw6tMnp4Yn9xX72fQe7CHhF_GYUjU8nxmVAU7sY5xbE
-Message-ID: <CACRpkdYzi=MsXf2fzTiMZgtdF=5pxDCS1jJnB1JYKi4bxB4UXQ@mail.gmail.com>
-Subject: Re: [patch 6/7] irqchip: Convert generic irqchip locking to guards
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Talel Shenhar <talel@amazon.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Guo Ren <guoren@kernel.org>, 
-	Herve Codina <herve.codina@bootlin.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-	Gregory Clement <gregory.clement@bootlin.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [patch 02/46] genirq/irqdesc: Switch to lock guards
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+References: <20250313154615.860723120@linutronix.de>
+ <20250313155914.010145118@linutronix.de>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250313155914.010145118@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 13, 2025 at 3:31=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
-
-> Conversion was done with Coccinelle and a few manual fixups.
->
-> In a few interrupt chip callbacks this changes replaces
-> raw_spin_lock_irqsave() with a guard(raw_spinlock). That's intended and
-> correct because those interrupt chip callbacks are invoked with the
-> interrupt descriptor lock held and interrupts disabled. No point in using
-> the irqsave variant.
->
+On 13. 03. 25, 16:59, Thomas Gleixner wrote:
+> Replace all lock/unlock pairs with lock guards and simplify the code flow.
+> 
 > No functional change.
->
+> 
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Talel Shenhar <talel@amazon.com>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> Cc: Florian Fainelli <florian.fainelli@broadcom.com>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: Herve Codina <herve.codina@bootlin.com>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-> Cc: Samuel Holland <samuel@sholland.org>
+> ---
+>   kernel/irq/irqdesc.c |  136 +++++++++++++++------------------------------------
+>   1 file changed, 42 insertions(+), 94 deletions(-)
+> 
+> --- a/kernel/irq/irqdesc.c
+> +++ b/kernel/irq/irqdesc.c
+> @@ -266,104 +266,68 @@ static ssize_t per_cpu_count_show(struct
+>   }
+>   IRQ_ATTR_RO(per_cpu_count);
+>   
+> -static ssize_t chip_name_show(struct kobject *kobj,
+> -			      struct kobj_attribute *attr, char *buf)
+> +static ssize_t chip_name_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+>   {
+>   	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+> -	ssize_t ret = 0;
+> -
+> -	raw_spin_lock_irq(&desc->lock);
+> -	if (desc->irq_data.chip && desc->irq_data.chip->name) {
+> -		ret = scnprintf(buf, PAGE_SIZE, "%s\n",
+> -				desc->irq_data.chip->name);
+> -	}
+> -	raw_spin_unlock_irq(&desc->lock);
+>   
+> -	return ret;
+> +	guard(raw_spinlock_irq)(&desc->lock);
+> +	if (desc->irq_data.chip && desc->irq_data.chip->name)
+> +		return scnprintf(buf, PAGE_SIZE, "%s\n", desc->irq_data.chip->name);
+> +	return 0;
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+FWIW I consider this ^^^ ...
 
-Yours,
-Linus Walleij
+>   }
+>   IRQ_ATTR_RO(chip_name);
+>   
+> -static ssize_t hwirq_show(struct kobject *kobj,
+> -			  struct kobj_attribute *attr, char *buf)
+> +static ssize_t hwirq_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+>   {
+>   	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+> -	ssize_t ret = 0;
+> -
+> -	raw_spin_lock_irq(&desc->lock);
+> -	if (desc->irq_data.domain)
+> -		ret = sprintf(buf, "%lu\n", desc->irq_data.hwirq);
+> -	raw_spin_unlock_irq(&desc->lock);
+>   
+> -	return ret;
+> +	guard(raw_spinlock_irq)(&desc->lock);
+> +	return desc->irq_data.domain ? sprintf(buf, "%lu\n", desc->irq_data.hwirq) : 0;
+
+... more readable than this ^^^. (Ie. I would preserve the 'if'. Even 
+though here is only a simple condition.)
+
+>   }
+>   IRQ_ATTR_RO(hwirq);
+
+> -static ssize_t name_show(struct kobject *kobj,
+> -			 struct kobj_attribute *attr, char *buf)
+> +static ssize_t name_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+>   {
+>   	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+> -	ssize_t ret = 0;
+>   
+> -	raw_spin_lock_irq(&desc->lock);
+> -	if (desc->name)
+> -		ret = scnprintf(buf, PAGE_SIZE, "%s\n", desc->name);
+> -	raw_spin_unlock_irq(&desc->lock);
+> -
+> -	return ret;
+> +	guard(raw_spinlock_irq)(&desc->lock);
+
+You do guard() ...
+
+> +	return desc->name ? scnprintf(buf, PAGE_SIZE, "%s\n", desc->name) : 0;
+>   }
+>   IRQ_ATTR_RO(name);
+>   
+> -static ssize_t actions_show(struct kobject *kobj,
+> -			    struct kobj_attribute *attr, char *buf)
+> +static ssize_t actions_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+>   {
+>   	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+>   	struct irqaction *action;
+>   	ssize_t ret = 0;
+>   	char *p = "";
+>   
+> -	raw_spin_lock_irq(&desc->lock);
+> -	for_each_action_of_desc(desc, action) {
+> -		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "%s%s",
+> -				 p, action->name);
+> -		p = ",";
+> +	scoped_guard (raw_spinlock_irq, &desc->lock) {
+
+... but scoped_guard<space>(). Unlike in internals.h where you do 
+scoped_guard(). Any reason for that?
+
+> +		for_each_action_of_desc(desc, action) {
+> +			ret += scnprintf(buf + ret, PAGE_SIZE - ret, "%s%s", p, action->name);
+> +			p = ",";
+> +		}
+>   	}
+> -	raw_spin_unlock_irq(&desc->lock);
+> -
+> -	if (ret)
+> -		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
+>   
+> -	return ret;
+> +	return ret ? ret + scnprintf(buf + ret, PAGE_SIZE - ret, "\n") : 0;
+>   }
+>   IRQ_ATTR_RO(actions);
+...
+> @@ -573,12 +532,12 @@ static int alloc_descs(unsigned int star
+>   	return -ENOMEM;
+>   }
+>   
+> -static int irq_expand_nr_irqs(unsigned int nr)
+> +static bool irq_expand_nr_irqs(unsigned int nr)
+>   {
+>   	if (nr > MAX_SPARSE_IRQS)
+> -		return -ENOMEM;
+> +		return false;
+>   	nr_irqs = nr;
+> -	return 0;
+> +	return true;
+
+This is sort of unrelated to $SUBJ ^^^. In any case:
+
+> @@ -681,14 +638,13 @@ static inline int alloc_descs(unsigned i
+>   
+>   static int irq_expand_nr_irqs(unsigned int nr)
+
+s/int/bool/ here too.
+
+>   {
+> -	return -ENOMEM;
+> +	return false;
+>   }
+
+thanks,
+-- 
+js
+suse labs
