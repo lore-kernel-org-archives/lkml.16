@@ -1,78 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F034C1FC7CD;
-	Fri, 14 Mar 2025 11:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A3B1FDE00;
+	Fri, 14 Mar 2025 11:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741952606; cv=none; b=bFqN23fnunXroPvOzlY00hNIjgnAtbZRPwBXh0L+Tm3TJGbH8fJai6V6f4TVKCRjwtpnkI7oZSU1Za2/C73LQyDN4w1tJmORNb7R9ZfZkCLC//nzjLLjOavYmB0t29Tk/c8k8iI6D4C/B/esBNv3CmOnASQ56/YVf4zwJpic6yY=
+	t=1741952650; cv=none; b=eVdeaK8wyC+j3Db2Z2zkOiv/u34clTKqCM5jXq2fzAvJnj+mha/ckQPIYpV9rhtUlFQ6c38tCJWMi8avxG3aeu9UQuaTJ2EbnsegYHZD6Wxbg/3GGXPjPshYFNmlKKjoOz124XAUwRqVvZPXoXEFVrJgBY2E4/9aZH8+pHD7NWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741952606; c=relaxed/simple;
-	bh=HhnRgeIRMl8/ytxbRB5L7HJeFXLaGEfrKsFgITuJCvI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sMyDhzxCsi80pPeluV4fMN1Eim9fmCV3iA/Rgn6l4AICqZNUqGt05CkxXrgGANqPiEz3U0k9kD7O9v5fh0cbYITlSSPBukhpfM713t1HaTh4zblEgx6TE8CIgPGkQBx4vjwQ5zn4O9nUl2jXt47dk2hr2r9YbrKIlJfg4Q1A4kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rUqIMvDk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741952650; c=relaxed/simple;
+	bh=WMXbgEmWPTPcZc2ne24plB+Q65lf9UBI1rkU47oyPZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l9GreKlkSKod5Q5Vd4EMchv/+JRSv2hQ/ZtztbrDpxdUxVXXAXb/Obrflw4NBF/xPV4nxHWG9iA14p2uTjKUUvgC20HHG3Q1J4JzGxZ0Nv6u/Lv6E5X14hvM1qAU4n/al78JbkvgEU1Mhv7k3OvibQ0InM4XBt+z4BlEA4Te09Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r43ox+5y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+GRAJ06p; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rUqIMvDk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9191EC4CEE3;
-	Fri, 14 Mar 2025 11:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741952605;
-	bh=HhnRgeIRMl8/ytxbRB5L7HJeFXLaGEfrKsFgITuJCvI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rUqIMvDkJPFPCIq8jp3YHiYV3Gkj0ISBfNfEhyGb/UYdeNZ9wvPqnfLIeTOkKFmYV
-	 dFNxLMNyjlpZZgoLlmVRwNAvDXLl+UYC1i5hq6DBp6/Im/fXKy+DukkMRx5nJmMupM
-	 LjNMv+Y0nvOFd9gjlJidoByXiu2ub1uT5UW/KW5Xvvama+/3ffoD72FyGdBom6UsQY
-	 h6h3ReIQtoB/BqwnOgT4gfBoUp0sTLFs7JlDIhBses8n7h+fsiqHNHPgbqAK+e6L0h
-	 CaX0FIPH5AWPOKRsb+OOJxnXh+HkCy4HvK+lWQz4dKqVe6gt7eCFW+fNvtTWh3H6RH
-	 I1lEigMyHyA+g==
-From: Lee Jones <lee@kernel.org>
-To: arnd@arndb.de, lee@kernel.org, dmitry.torokhov@gmail.com, 
- sre@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, 
- alexandre.belloni@bootlin.com, danielt@kernel.org, jingoohan1@gmail.com, 
- deller@gmx.de, linus.walleij@linaro.org, brgl@bgdev.pl, 
- tsbogend@alpha.franken.de, linux@treblig.org
-Cc: linux-mips@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250311014959.743322-1-linux@treblig.org>
-References: <20250311014959.743322-1-linux@treblig.org>
-Subject: Re: (subset) [PATCH v2 0/9] Remove pcf50633
-Message-Id: <174195260130.4016186.12257329269298391220.b4-ty@kernel.org>
-Date: Fri, 14 Mar 2025 11:43:21 +0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r43ox+5y";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+GRAJ06p"
+Date: Fri, 14 Mar 2025 12:44:05 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741952647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m3SFScDyttEY9US8ubeRIrvuSvpvEfTK2KFVStD/P3k=;
+	b=r43ox+5yxWxW0pcpayTd7dSW8e3o5/EoCe1cI+2FFKxf2EqW5JQUdaS2pVVxSRuzK4ZhcV
+	K+cL2ltSWsgKHeJ9P6KVEGFnN+Uwrjs/ykxbL3ahjhoKddsJlZSeELQByMK2zIlGEE0M7a
+	0LPDcqVp94/opumCJL+RySyWgpvK2zoNXRyEm3+jizdyp/XvmWLhzPKASoN1QDKQ8SUmPL
+	Qv9kTeqvYyGVX0qkSgzYy1J4PgpAjqafZPyysWYVvLB5xv8YjKedU+tp3lDNI/GO5oqczL
+	C+CrMJhdtyckSczRJhmbSzTB0V0+q0VAqdMljJyKID7A25Xi3caf9zyAq7U32g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741952647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m3SFScDyttEY9US8ubeRIrvuSvpvEfTK2KFVStD/P3k=;
+	b=+GRAJ06pNMGb19/QXxJwxJTeaTS8JcSgCno6lJCaFovNgikauelmaFZoVxGaZ1VhO7dawM
+	iM3nbJTtA8vrQ/AA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [RFC PATCH 07/10] memcg: use __mod_memcg_state in drain_obj_stock
+Message-ID: <20250314114405.4x6EuYYW@linutronix.de>
+References: <20250314061511.1308152-1-shakeel.butt@linux.dev>
+ <20250314061511.1308152-8-shakeel.butt@linux.dev>
+ <c88739b4-1fe3-47dc-8ed6-22adf0aadcb4@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-510f9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c88739b4-1fe3-47dc-8ed6-22adf0aadcb4@suse.cz>
 
-On Tue, 11 Mar 2025 01:49:50 +0000, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On 2025-03-14 11:27:40 [+0100], Vlastimil Babka wrote:
+> On 3/14/25 07:15, Shakeel Butt wrote:
+> > For non-PREEMPT_RT kernels, drain_obj_stock() is always called with irq
+> > disabled, so we can use __mod_memcg_state() instead of
+> > mod_memcg_state(). For PREEMPT_RT, we need to add memcg_stats_[un]lock
+> > in __mod_memcg_state().
+> > 
+> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 > 
-> The pcf50633 was used as part of the OpenMoko devices but
-> the support for its main chip was recently removed in:
-> commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
-> 
-> See https://lore.kernel.org/all/Z8z236h4B5A6Ki3D@gallifrey/
-> 
-> [...]
+> Maybe it'll make sense later but as of this patch itself it begs a question
+> why put memcg_stats_lock()/unlock() in __mod_memcg_state itself and not just
+> around the call in drain_obj_stock()?
 
-Applied, thanks!
+The memcg_stats_lock() were introduce to protect the per-CPU counters
+(vmstats_percpu) on PREEMPT_RT which are protected on !PREEMPT_RT by
+disabling interrupts. Other modifier have this already except for
+__mod_memcg_state() because mod_memcg_state() was the only user and
+already disables interrupt for the operation.
 
-[1/9] mfd: pcf50633-adc: Remove
-      commit: 0d0e54953805af76f0022df39602f5668145f747
-[3/9] mfd: pcF50633-gpio: Remove
-      commit: 8559602247d0d054451c7a755942588d2c0de85d
-[8/9] mfd: pcf50633: Remove irq code
-      commit: 786ad21f4350601c9d118ddbd19b7b830c04ece6
-[9/9] mfd: pcf50633: Remove remains
-      commit: 44356090d59efd8db152e9eecb8e7f843be319f0
-
---
-Lee Jones [李琼斯]
-
+Sebastian
