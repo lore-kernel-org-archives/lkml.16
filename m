@@ -1,70 +1,68 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0251F236B
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00ED1F30C3
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741947022; cv=none; b=NSHjxchyt+aJUpag3VMS2v/bjvAuIU1VStrdBQpglw4+mTZKm70ln6rEvu8rduJ6aks5ZVukTDejgKdjveqbb4du1FD3rKkO/Vyr6zH2ndQUuwkteNY0w+x4uzTYHeIFtQbptAoqZMQB9iUbhUgHSRiGp7mjAj+O420swtGk1Ys=
+	t=1741947033; cv=none; b=Xpb1hRP6UTa1/KySaaDcgZAfLyDEMZszy+E0qZ/3alfFGF5QNRm66Hz5tn0Sl4ZuQLT5rnmdSz/uhOHu2iw/jCD3MJPmlxmB/aMcubFJ/1reT2IC0QrnS94WuERvZUnbml9p/RAmKh2Tj4o4K4U5Ec6Yw2LDpgBV6oHdh4Ev20A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741947022; c=relaxed/simple;
-	bh=npAfM/D95DLWrhMgnpbK79dbd/8CwbndFi8Um7n00Z8=;
+	s=arc-20240116; t=1741947033; c=relaxed/simple;
+	bh=BcXDWjNDH9NxBSFwCKcCR4CNXdHbwnkXYntrn0DgUxs=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tVOEj7lE7FF1cU/A7lq9MVr92lIV6x38s4OP6oA/ZC34qYIOxBN/6YD6JJPEI9JIZxVk//3RwTx1Vk1bY0INh8pJRetzg+I97iAa58kyJ1nEGBwuv2BC4MxGLU4aisB3G9OpLNRm/6K4puQ4njUoRCMTQPIH9ZaY9CRtkmDf9sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IYSZJ0Gc; arc=none smtp.client-ip=209.85.221.49
+	 Content-Disposition:In-Reply-To; b=u0H4xDCVvT+KC2trmHcdfB9iWnG31uqRMWEmywu247JiOceDrfv5bKObGbYNltn5RlEpsHTXxBhhkiU6U97A1fQnPs9L8O7xlguD6FuQpeNLLaUGjNgiX8dGkFpq6MmRu4yOZG0Ds8FRInj1YLZ71DXqssHkoHF0sibaiJh1W1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yeQh5Txs; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYSZJ0Gc"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39130ee05b0so1891759f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 03:10:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yeQh5Txs"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4394036c0efso12647455e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 03:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741947019; x=1742551819; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741947030; x=1742551830; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
          :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EHBf1AZS6BuzpUz3+oCl4k1y+Tt83Lx+NAGAApql9uw=;
-        b=IYSZJ0GcC4Tt/T1mE/KQCrBINIPgH6b0TK15f9SvL+ESzUoL1DBQUBKtE3DawSce3R
-         IRscePDvLL90NWvTbDJiMcCrzHNbsoiMN69NkIcfrVNNW0av2UdoxyxMrlJ+yueI3Aws
-         L4n0PivRAzaMA/bI1ozolp8JFstkefxob8li+i7o4fjKcGyJ+eAQmCay6lq5joofcbKh
-         Ay2xGuXglzd6ijL4wdb3fQa6O6dRJpDa3uVAbGWYFGl8l1y1kVtijREm5GJMX64cNqIg
-         bXkqJfYvCrM7IcuWXd/n7QdwZd2ly6YJayLFnaZ84h4AJwXm/59NuyjWAF0VWzjrxOtc
-         LqRQ==
+        bh=/yH/A8g/K36DzReQ5QPIAfNlm2z6G0ua2f9/UOEVNfA=;
+        b=yeQh5TxsE/Zn0ovKKnABzxT5d1YlflNH1uxPrW5qwwFMmW4lZUo3rUxfBqKgJYv4t+
+         kFajJBom1SGitl2Bd9/FajND4CGfl6da9G9zctTlWtt7Os221Cck0uDNmecv2/FQBpYH
+         5qwYpmcUX0NRHkOcuvTazjjjnGO/d4gq7dUwUOMoAa4f+Ka7q8f/DpB4aGHHOu+DH0nb
+         Q9EV0lq2Kt9rtaONO+3yLY3RVjrlfok1J6eT0volhFE8cJETATN/KymTCEje9HZuPqud
+         9UpxMGL8ONEkyV8p7cp3Lp5/hAiExbgcpsbOrZYl9cXznnC1vSlaRYxMyZLoXI83t7YY
+         x0jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741947019; x=1742551819;
+        d=1e100.net; s=20230601; t=1741947030; x=1742551830;
         h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
          :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EHBf1AZS6BuzpUz3+oCl4k1y+Tt83Lx+NAGAApql9uw=;
-        b=nD1nHhPXTkGt0gApTbW88nEgFbCex0S6nt2Css7K5xtn60R4la9kJ7R4OUQjERW/BB
-         ++Le9OR4gf0H+YqnTr0WTBejwZmAX0Y3N+crvadiKvWxHr+YAa8qJw18M7QvqMrvaYOB
-         Y9bl5NzzDUVDpEw/PgeOEmrP04R9B+XVrqOpHgbaVMa8Fl/QPo2b0SJ6sqOBVtmBiH/j
-         38kDfebc3qBSWbrZ876SJO/fQg0Mg9FilfxakH0uZB/pOm7DTJzLZfroPOZd5cLaY0hd
-         wVY7BU4GGWltwJe6EBosbNDiQmxDGz2EzwsxYivMmDcsrFCBws/jom4nZdFf+g+HCKC7
-         xzfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUS6NT7K+U2QIkUInL0eYRHfOVBlf3uttqJ02P+UyzI3wpmxmzvlAdhQbJmJLPYfSUscQQxDtGevSRj6sw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1g9eh3Kl/8i0JfDd3PoC0K8i5wYaxRkXC83Tg04wP6i2R2l9T
-	67UOvxJo8RupyajTow/iCJPEf0MOVUP/L5+5CM8cZikISb1c0dqx8R1qfZbKUytObA+JsBvvYng
-	a
-X-Gm-Gg: ASbGncvwNVBnKmCU3+nqDS2hsYu+17O5HC+Wfk0GuiqHqYehxEeGyjuHmc9Y/EUJ4FI
-	ALXc3Nune7oDbXP7+lQd9R6FCj/BZtNTcyhLV9TBoNGKXal68h+bBkQSEKEabvyYoj3k1zRRuEq
-	j0kO9t7wxe3dhlJHxdflw9prSxH9JZmdbXI3DJzrNB9PzkcMWkc1tGQC75wGPcGaUpA557Cj4FM
-	eZtQAaJdW6C2GdcHx0pWHHjiqVtT8SBX6gbZhfdIX8j+U2063D4w+D1il526zl2DEr/PgERzjWA
-	VLcUhMZI+dplz73Q3/sWsZ/8dOL13da3zK3FbIAIk4jQtALFiMVZvk7CvqcD
-X-Google-Smtp-Source: AGHT+IG1sxTE6WTNjzIQp91HxiQTObGusic65wZslfKY6Ot3KoscqKikKk9/AjhiDq2kcsqvmeb41A==
-X-Received: by 2002:a05:6000:2a7:b0:391:13ef:1af5 with SMTP id ffacd0b85a97d-3971fadbdb5mr2747764f8f.48.1741947019105;
-        Fri, 14 Mar 2025 03:10:19 -0700 (PDT)
+        bh=/yH/A8g/K36DzReQ5QPIAfNlm2z6G0ua2f9/UOEVNfA=;
+        b=L+WtmoA9vyZ5mKfS0vl/iL9VsikvichmorHZ0PK8t6+ExXDCE6ltH3QYknrRcH1zjv
+         dISlDKufNz82vDcOgUasU7MjxnDVWsB8i3/wBYboOtMoQ1oQifi2nlDBQt7WN8lr6ANU
+         uuxXdDQXIOABtTltHorgc0K+qwQVpg5AMjMiP2WDq0STBVEhPRbxv1dUzDWCWxYmGKqU
+         YE5MNaN7yT1Av0NopIzcyuRALawGgPvyiMC/ipgZuCh3URptCU1jTIWhhbcwmHQLT4rW
+         W6gOaDdO4T9317u2JneeDgJPZxMmFfpMLrVWCXAkrv+J/Jk5AwabKqfr2rDvHn9TwswN
+         rLxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUk+HJc5APDwuE/IfYRE6HgPrRGaT/z5WRHdlJsI0s6sZP1KqyPMDWbTU8eCV3c8rStY3XETKml7WkP2Ac=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3fMpS3fnEIHK1yvlCNXKARyUCptY3pUjhgt3WKWYvuax6J6us
+	2LAPgpZ09O4k6xOhZ49Yz0S/3n7Y1j7nXiNUELkidZkktyQgF4QGq8oblBmjz8g=
+X-Gm-Gg: ASbGncswE8VU3zSbWWCwaMCDs/BQGWGkbMYpX3K6BiMRdDz9Lm5yHYLOwMtfJZ/F/C/
+	StM/Nr57lP6Eye4Xn0Z0GGM2eo1L+3TptYb7SKBdFdgj/IKRub4WJuAOzOjvVjhDTEBp2K5TctG
+	AevxGm0kCZd6D3rajpPo7UxUsvNR7ZAp+ByydEVQ7xnRdXgxAfWOBaVZ0f56se9VDOMDf18REFn
+	2pWEJLB/Xh4zTdgc7E5ZN6gXDthtC/kaCdXQWkxSqo6jgy31a88LVbPnHn1zD5w2ZfIICnqnT6T
+	DYKeIk/i7vW6b5nlAe4xyBHYW1VCLVQ7niB2liJ7RcZ4s/OdMw==
+X-Google-Smtp-Source: AGHT+IEECOLyJp5NIeQvulNAkbhsGSs7V93hbdXM58mYrb+Q+2KYj17/lCT2jxHZ53RSu/8bRhtopA==
+X-Received: by 2002:a05:600c:3592:b0:43c:f44c:72b7 with SMTP id 5b1f17b1804b1-43d1ec86200mr26793325e9.14.1741947030009;
+        Fri, 14 Mar 2025 03:10:30 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-395cb318a80sm5127616f8f.61.2025.03.14.03.10.18
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-395c8975d65sm5143965f8f.56.2025.03.14.03.10.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 03:10:18 -0700 (PDT)
-Date: Fri, 14 Mar 2025 13:10:15 +0300
+        Fri, 14 Mar 2025 03:10:29 -0700 (PDT)
+Date: Fri, 14 Mar 2025 13:10:26 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Longbin Li <looong.bin@gmail.com>
 Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] spi: sg2044-nor: fix signedness bug in
- sg2044_spifmc_write()
-Message-ID: <4e16e1bf-e5fb-4771-bc92-c5cba9aac473@stanley.mountain>
+Subject: [PATCH 2/2] spi: sg2044-nor: fix uninitialized variable in probe
+Message-ID: <d343921b-16b8-429b-888a-f51bb6f2edc8@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,29 +73,38 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <79c71b81-73a9-407d-be6f-481da27180bc@stanley.mountain>
 
-The "ret" variable needs to be signed for the error handling to work.
-It should be type int, since it only holds zero and negative error
-codes.
+The "base" pointer is uninitialized.  It should be "spifmc->io_base"
+instead.
 
 Fixes: de16c322eefb ("spi: sophgo: add SG2044 SPI NOR controller driver")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/spi/spi-sg2044-nor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-sg2044-nor.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/spi/spi-sg2044-nor.c b/drivers/spi/spi-sg2044-nor.c
-index 454153a63b42..baa4cf677663 100644
+index baa4cf677663..97d6b3a21d54 100644
 --- a/drivers/spi/spi-sg2044-nor.c
 +++ b/drivers/spi/spi-sg2044-nor.c
-@@ -216,7 +216,7 @@ static ssize_t sg2044_spifmc_write(struct sg2044_spifmc *spifmc,
- 	size_t xfer_size;
- 	const u8 *dout = op->data.buf.out;
- 	int i, offset;
--	size_t ret;
-+	int ret;
- 	u32 reg;
+@@ -427,7 +427,6 @@ static int sg2044_spifmc_probe(struct platform_device *pdev)
+ {
+ 	struct spi_controller *ctrl;
+ 	struct sg2044_spifmc *spifmc;
+-	void __iomem *base;
+ 	int ret;
  
- 	reg = sg2044_spifmc_init_reg(spifmc);
+ 	ctrl = devm_spi_alloc_host(&pdev->dev, sizeof(*spifmc));
+@@ -447,8 +446,8 @@ static int sg2044_spifmc_probe(struct platform_device *pdev)
+ 	spifmc->ctrl = ctrl;
+ 
+ 	spifmc->io_base = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(base))
+-		return PTR_ERR(base);
++	if (IS_ERR(spifmc->io_base))
++		return PTR_ERR(spifmc->io_base);
+ 
+ 	ctrl->num_chipselect = 1;
+ 	ctrl->dev.of_node = pdev->dev.of_node;
 -- 
 2.47.2
 
