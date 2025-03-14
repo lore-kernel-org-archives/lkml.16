@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4772206F34
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 19:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F36209671
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 19:29:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741980570; cv=none; b=k0lax1Jw5hCm19hMjvUm6nza+b8+1szYyBJv3pzvN6whNJYjF8jSVkEBVpnQ+MN54LqGboKJipVe2zNBc/yEEgd64XlxQvAOhVwwiBcYyBl0B2J0/1cnX1relj9MOcT8cjnFzWDQA6lvyv4WOvITFjqmXjVNJR7LeCUVwLzhI2o=
+	t=1741980572; cv=none; b=VsAkRe5w8o7F9r1TisEoWHIzkV74kyO/qt/NCHsR3zNj1/qv1JpnVnwkO6WHJgBaADGOwzfD2o9lQMEA00kch1BUNhOCcaERv61FfruhzJp/X9LoZkToqI+W5s8zDIntGMZw1Zq81Rv3BdQdKNLNa6+eY0/SoTfPaO+DTQW8+TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741980570; c=relaxed/simple;
-	bh=VEoiTYp1V7L0ENmhPyAnmcO45S5Fd8ceq65oHR8RUF0=;
+	s=arc-20240116; t=1741980572; c=relaxed/simple;
+	bh=2RPx1BxZaiNmZR7J25T6h9oAjTbEay4C0cyWTnIeJzE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YHb/slDUZDQoRIHgJl3Gr5RFmJ7TeXUX2YHzc3xwcFcM5tw7IxThVspW5/xDHUHiW5nV9dQiDO/BjM+JtOWtNPogRBnqRHxF+9LWgV13zXQL05x/DTvwtSpTMhIflgWzQc/8VhHeJtHzHbUPt15mg3F9Ndp+VUXB7E2mLD6p350=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGMp10cn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VS9g3IQh1+kk/By2Sx0Em9wrR7XFr6JXlZoyzSxuBoGxyWFDdRfTZpFOBshySPHqcfP7vb/cPS5d9styuDlKOgRY6T7v+RET0KWOs2FJ0jfUhvFa7LAkpCh+Aoi6k5zqJhkRNCFl7r1NCg6ScLy29vsYaUwE466368kX6Njk0GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQXwKpl7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGMp10cn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AACEC4CEE9;
-	Fri, 14 Mar 2025 19:29:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQXwKpl7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B08AC4CEEC;
+	Fri, 14 Mar 2025 19:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741980570;
-	bh=VEoiTYp1V7L0ENmhPyAnmcO45S5Fd8ceq65oHR8RUF0=;
+	s=k20201202; t=1741980571;
+	bh=2RPx1BxZaiNmZR7J25T6h9oAjTbEay4C0cyWTnIeJzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NGMp10cnlNa/SDBtl1tX/DQi6Nsi1HB7fKbEX2xrMkdviSBVn7+fpDpMaJ64fzkxa
-	 xgf6akMD5I7MBOUmgOF2W8TaSE0oYpkey9ai9Z9fKhFtzsMh1dSndXQQjes+9ascug
-	 M+7EtmwwJ/Sr1I4bkbbtv7Xi4vA3EaVl8r3rSmNFOiwzs9aYSwX7XQRkn5O4ao9uJh
-	 wJMkd1kuypJWtO7N/YRDBoXnDkNwi9h65eE8awqlss6IvxC6X0FVGrJeWJc+bo2vGp
-	 E3gcYaGMGaI+Yljp7l/OQyktNwjO9s6gvpOv3xYH7BAEhgL86m1ik36zD6q+wkYhpp
-	 CsC/EAvm8/OiA==
+	b=kQXwKpl7eMhqK2cO7O+skTbnPEESf+u9HNIPgPyIzU1j/9SEP/viGHf0D8TCvz/Ue
+	 xdfqDfLy8oWMy6yNIx+xrKUmj6FLQeFjukTfYfWPXO8X8Pe5VOl6XM99APVLGEq9on
+	 AsBixYpPvxIOhmQ3JwITqW8aJHhXmQVvo4H+tIATy6Da5fkE8FGzWRQKXaPCIf3yID
+	 AuZNK9mh/U5k2Geyx4/IW0q91SYSFtn082AEnFyvRCZxe7lbEYYlTi29yPJu8r5I5t
+	 5eWyexav763x6xyw0OTXcIUctaPwTo+xxy7ycK2nyLaXOpLcDItOGNxcr29rgABCNO
+	 oPsqqaOJa9zJQ==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
 	Brendan Jackman <jackmanb@google.com>,
 	Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH 05/13] objtool: Increase per-function WARN_FUNC() rate limit
-Date: Fri, 14 Mar 2025 12:29:03 -0700
-Message-ID: <aec318d66c037a51c9f376d6fb0e8ff32812a037.1741975349.git.jpoimboe@kernel.org>
+Subject: [PATCH 08/13] objtool: Upgrade "Linked object detected" warning to error
+Date: Fri, 14 Mar 2025 12:29:06 -0700
+Message-ID: <8380bbf3a0fa86e03fd63f60568ae06a48146bc1.1741975349.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1741975349.git.jpoimboe@kernel.org>
 References: <cover.1741975349.git.jpoimboe@kernel.org>
@@ -46,77 +46,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Increase the per-function WARN_FUNC() rate limit from 1 to 2.  If the
-number of warnings for a given function goes beyond 2, print "skipping
-duplicate warning(s)".  This helps root out additional warnings in a
-function that might be hiding behind the first one.
+Force the user to fix their cmdline if they forget the '--link' option.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/check.c                |  2 +-
- tools/objtool/include/objtool/elf.h  |  2 +-
- tools/objtool/include/objtool/warn.h | 14 +++++++++++---
- 3 files changed, 13 insertions(+), 5 deletions(-)
+ tools/objtool/builtin-check.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 6b9ad3afe389..3ddaefe97f55 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -4528,7 +4528,7 @@ static int disas_warned_funcs(struct objtool_file *file)
- 	char *funcs = NULL, *tmp;
+diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
+index 36d81a455b01..79843512a51b 100644
+--- a/tools/objtool/builtin-check.c
++++ b/tools/objtool/builtin-check.c
+@@ -198,8 +198,8 @@ int objtool_run(int argc, const char **argv)
+ 		return 1;
  
- 	for_each_sym(file, sym) {
--		if (sym->warned) {
-+		if (sym->warnings) {
- 			if (!funcs) {
- 				funcs = malloc(strlen(sym->name) + 1);
- 				strcpy(funcs, sym->name);
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index d7e815c2fd15..223ac1c24b90 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -65,10 +65,10 @@ struct symbol {
- 	u8 return_thunk      : 1;
- 	u8 fentry            : 1;
- 	u8 profiling_func    : 1;
--	u8 warned	     : 1;
- 	u8 embedded_insn     : 1;
- 	u8 local_label       : 1;
- 	u8 frame_pointer     : 1;
-+	u8 warnings	     : 2;
- 	struct list_head pv_target;
- 	struct reloc *relocs;
- };
-diff --git a/tools/objtool/include/objtool/warn.h b/tools/objtool/include/objtool/warn.h
-index ac04d3fe4dd9..6180288927fd 100644
---- a/tools/objtool/include/objtool/warn.h
-+++ b/tools/objtool/include/objtool/warn.h
-@@ -53,14 +53,22 @@ static inline char *offstr(struct section *sec, unsigned long offset)
- 	free(_str);					\
- })
+ 	if (!opts.link && has_multiple_files(file->elf)) {
+-		ERROR("Linked object detected, forcing --link");
+-		opts.link = true;
++		ERROR("Linked object requires --link");
++		goto err;
+ 	}
  
-+#define WARN_LIMIT 2
-+
- #define WARN_INSN(insn, format, ...)					\
- ({									\
- 	struct instruction *_insn = (insn);				\
--	if (!_insn->sym || !_insn->sym->warned)				\
-+	BUILD_BUG_ON(WARN_LIMIT > 2);					\
-+	if (!_insn->sym || _insn->sym->warnings < WARN_LIMIT) {		\
- 		WARN_FUNC(format, _insn->sec, _insn->offset,		\
- 			  ##__VA_ARGS__);				\
--	if (_insn->sym)							\
--		_insn->sym->warned = 1;					\
-+		if (_insn->sym)						\
-+			_insn->sym->warnings++;				\
-+	} else if (_insn->sym && _insn->sym->warnings == WARN_LIMIT) {	\
-+		WARN_FUNC("skipping duplicate warning(s)",		\
-+			  _insn->sec, _insn->offset);			\
-+		_insn->sym->warnings++;					\
-+	}								\
- })
- 
- #define BT_INSN(insn, format, ...)				\
+ 	ret = check(file);
 -- 
 2.48.1
 
