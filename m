@@ -1,177 +1,138 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EF92629F
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2F02629F
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974443; cv=none; b=B5I/9eCmBoetRnzhR1/axEjySuU44A/N9GB5q8ZN40phFIhK6HP5Cnx0YkxSXbZbr/duEeO1CBwIMJYjLQ6XcFYVHBrtUWJa+esMR22cM3aZO84drlXtbNsPH7UqQ5qCI2b05Tj9O2bcBpE2vRASrhF5SfYcyMLk9rHCst4eg60=
+	t=1741974516; cv=none; b=k/2riqChJhDKv2FvDB/KwtEEs+/DAnpw2NdPmmxPgKpW8pOf5NcNHIlua+6A86MWrLbL09v9qxFEOAkawckOvhsgfkkthkG2jeh1OmI1m/cYcG46SZi0Ro8T+KXWLB2cojOnIGNFmdfJczFxtBmans+kQx2qilmovtHgP2d4TLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741974443; c=relaxed/simple;
-	bh=wt1lH51hTnTeeT5fjQGT+ik3ISJ6o9LFL6rizue55As=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a+jUz/E0htQtkepb7w/VT/Kr6pRLLmHe2OqnQRkkzZcMxukM5d9LoVNs9hCHVla5y6joI0xYP8ZVaKh5Is+OhfIbKlDcTgtOSwbVTv5k2jiQpz2Zv5JcgWy902lzS55dgWTPMyS5h4WOmdEmMpUjVm3bucdNxHSW0ocyzlDuPdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HwHuEeno; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741974516; c=relaxed/simple;
+	bh=IzDAV+gYsb3R0IxhRne4fUzRoURlhC9ZqkgzyiKPOxM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YJJDjkUNpS3ZaDNge17z6N8wwbOuLNDZBItdu/N7SKkHiMqBWC5bzQtJr5Lc530yEndKXVxheFOlZ6KQU/ulSsC3gMcA3hfHxNXp9ZOzeg7F1T5nnWMLodOBTpFFaGXQ4ZkXiINqcUetEAhJ3evFeMR6+DjeQ304S46w4AF/nKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xx9xDPw7; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HwHuEeno"
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::222])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id 5C983585AC9
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:20:32 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C3D3B441AC;
-	Fri, 14 Mar 2025 17:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741972825;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dz92ensrpxVSM7fMt32cCZh0aTsUrjUlVQb3SuJK0yE=;
-	b=HwHuEenoCD61eyekb80GlroGhyN/wbbTc4gh9v40p/qBZn/b0zhas+dCwxqKXbSi6s1Awq
-	UZo9SIa2dSFpG9iQmZfkiI50MqdV9kAe1yYOsbvZgPfcvWpudHS1GcZsusKOCq/+b8Zgid
-	hzpLtDWcocFrK272qxwgitqOsItoD8A6UAqnb0gbIQxJdH/xEXAwaczp7o//NafETm3tnW
-	q+xZogSH57JrNCJtgNStsOiSuIDefCcUn70bMWytHOPqi3mU92sB1baYR+Z0eyvudU/9va
-	bXC2HT5mb3nN3cqppP4iY1UA+3xLlpwcxPifs3bIFj9aigFgmBgZyDJKv27Oyg==
-Date: Fri, 14 Mar 2025 18:20:21 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
- Talel Shenhar <talel@amazon.com>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Guo Ren
- <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>, Gregory Clement
- <gregory.clement@bootlin.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>
-Subject: Re: [patch 6/7] irqchip: Convert generic irqchip locking to guards
-Message-ID: <20250314182021.3f6024c5@bootlin.com>
-In-Reply-To: <20250313142524.325627746@linutronix.de>
-References: <20250313142404.896902416@linutronix.de>
-	<20250313142524.325627746@linutronix.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xx9xDPw7"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3913958ebf2so1874725f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:48:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741974512; x=1742579312; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SVmcC1q9onxkQ8qIPslGo0PmndpeWfhIGHdL4vH7f4Q=;
+        b=Xx9xDPw7WDyjbUVQC3nLmAlFTw7+sfEfXixX+CnjGl1SuJHfK6zhSHJrbkQRiz2j7j
+         kUFL+n9K0RXdVsRNys3ziRPE1r3Kcy5AXlP/Z+PYWZ0TD/za/SWTmoCfsxpEMgQmkgjm
+         eFpCWWqRbdX1MkIfz1cqB/iDm6CyLC39LiSBaI3R1CWzptrHqgHymdIF0Fw4bq/w5ZrQ
+         vXw4lW8QLZFtasGqeLPrSWrkJafvjIx+VQCjBaSg2Gvl8NqiymlhB/kJP2ZRSWytNSBx
+         /CLZMf8cEQ2J03ej8xNsagcFm+DhXH3AEEY5WpEwQHMzrpu1NJrYuovUbRp1bxASiYeF
+         lxRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741974512; x=1742579312;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SVmcC1q9onxkQ8qIPslGo0PmndpeWfhIGHdL4vH7f4Q=;
+        b=NUL94xGJDa7//wcq7XteToSuMztgD9xo4MZofcRZGSyFve46+RRrMOHJfAlXt1Pt82
+         1WgIpwAv9wRvRl0m5fsQVUQ4cALYYSmOXQNi3weMIm8PihrqigQfchdxuV2CrueXogxI
+         eUnsZjyd4tg9qeWi+cyfM9ExqqvA4XCDexPVE2yJIZPu8T7GH+rGZrZmkjAE9okfUXkA
+         ij08qrG1IEuxuwI+bJVGhi4N9mKCpOe82hyF/UmaG+SE8hdPTlmToTDWIqOsemloYqbc
+         kWTp1bp788EnDJ0NeJ8g6HVn8r0wHQ0+nmyDAhLoao8mKaL25XX4nuuqoEfBztGE7oNp
+         pcXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7w8p8jW4HYQ8ThD9gaAOE7pxaoZQQiC84Cl33mE7x5zDGv64vngfQ2MBdqZ8u1oVPL6zCx6ciQyA9bBw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxKY4PP3DIEHxgBSiGx78SmvCnhTAUUqhlYUo8FrRFkFNXPq9M
+	4v0q30+VGuyfITjLxPEEU/00I38pDIxgD7fUApEqINY3M+a5VGBsUYIdq3IGBQA=
+X-Gm-Gg: ASbGncsZgVFZy1PjAjn12AAYGHZ+pvmTigtosjHEMt0Reu3YLqZzYn4gYUIupWXaipq
+	DLG/Gbf2cdAMrKDXWXyviy99rnlSoU76Yl30RBAsqZ6+kGzK9GnWZEqIvseH2SQW/NP7h0/uL5D
+	dpgmsY+Lg2yA/nGdQ9hvKQ86qJLUWNWcl97mqxFBlbVUNp2oMdRGPrYKreyf+N2WpB2TC2dLZaK
+	C/7lmw6t/kKmzecQdFfGIGNK1UuYU2qYwbhgiW/rM+4QIpU7rALzXB97G6Vk22ds4L/Ht381LWS
+	Mm9Hh44gQrWLsqV3WeS8xq0/1+WjitWO+Z4ixLr5ibTtF7yRq8L4dkkG8fD8ZmCeDZgYQg==
+X-Google-Smtp-Source: AGHT+IGtBBkrjkuMMQ03zRppDLDBvMmrjEbEft6rrg1dNIsffYzTsNabU1xGBiuZXms8ctgtipDYpg==
+X-Received: by 2002:a05:6000:4022:b0:391:30b9:556c with SMTP id ffacd0b85a97d-3971d237e13mr5115917f8f.21.1741974511674;
+        Fri, 14 Mar 2025 10:48:31 -0700 (PDT)
+Received: from localhost.localdomain ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975afesm6117243f8f.47.2025.03.14.10.48.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 10:48:30 -0700 (PDT)
+From: srinivas.kandagatla@linaro.org
+To: broonie@kernel.org
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	krzysztof.kozlowski@linaro.org,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dmitry.baryshkov@linaro.org,
+	johan+linaro@kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v5 0/5] ASoC: q6apm: fix under runs and fragment sizes
+Date: Fri, 14 Mar 2025 17:47:55 +0000
+Message-Id: <20250314174800.10142-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedugeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjihhrihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtrghlvghlsegrmhgriihonhdrtghomhdprhgtphhtthhopehnihgtohhlrghsrdhfvghrrhgvsehmihgtrhhotghhihhprdgtohhmpdhrt
- ghpthhtoheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvhdprhgtphhtthhopehflhhorhhirghnrdhfrghinhgvlhhlihessghrohgruggtohhmrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Thomas,
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-On Thu, 13 Mar 2025 15:31:27 +0100 (CET)
-Thomas Gleixner <tglx@linutronix.de> wrote:
+On Qualcomm Audioreach setup, some of the audio artifacts are seen in
+both recording and playback. These patches fix issues by
+1. Adjusting the fragment size that dsp can service.
+2. schedule available playback buffers in time for dsp to not hit under runs 
+3. remove some of the manual calculations done to get hardware pointer.
 
-> Conversion was done with Coccinelle and a few manual fixups.
-> 
-> In a few interrupt chip callbacks this changes replaces
-> raw_spin_lock_irqsave() with a guard(raw_spinlock). That's intended and
-> correct because those interrupt chip callbacks are invoked with the
-> interrupt descriptor lock held and interrupts disabled. No point in using
-> the irqsave variant.
-> 
-> No functional change.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Talel Shenhar <talel@amazon.com>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> Cc: Florian Fainelli <florian.fainelli@broadcom.com>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: Herve Codina <herve.codina@bootlin.com>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-> Cc: Samuel Holland <samuel@sholland.org>
-> ---
->  drivers/irqchip/irq-al-fic.c           |   18 +++++-------------
->  drivers/irqchip/irq-atmel-aic.c        |   19 ++++++-------------
->  drivers/irqchip/irq-atmel-aic5.c       |   28 ++++++++--------------------
->  drivers/irqchip/irq-bcm7120-l2.c       |   22 +++++++++-------------
->  drivers/irqchip/irq-brcmstb-l2.c       |    8 ++------
->  drivers/irqchip/irq-csky-apb-intc.c    |    3 +--
->  drivers/irqchip/irq-dw-apb-ictl.c      |    3 +--
->  drivers/irqchip/irq-ingenic-tcu.c      |    9 +++------
->  drivers/irqchip/irq-lan966x-oic.c      |   18 +++++++-----------
->  drivers/irqchip/irq-loongson-liointc.c |    9 ++-------
->  drivers/irqchip/irq-mscc-ocelot.c      |    3 +--
->  drivers/irqchip/irq-stm32-exti.c       |   21 ++++++---------------
->  drivers/irqchip/irq-sunxi-nmi.c        |    9 ++-------
->  drivers/irqchip/irq-tb10x.c            |   13 +++----------
->  14 files changed, 56 insertions(+), 127 deletions(-)
-> 
+With these patches, am able to see significant Audio quality improvements.
+I have few more patches to optimize the dsp drivers, but for now am
+keeping this series simple to address the underruns and overruns issues
+noticed in pipewire setup.
 
-...
+Any testing would be appreciated.
 
-> --- a/drivers/irqchip/irq-lan966x-oic.c
-> +++ b/drivers/irqchip/irq-lan966x-oic.c
-> @@ -71,14 +71,12 @@ static unsigned int lan966x_oic_irq_star
->  	struct lan966x_oic_chip_regs *chip_regs = gc->private;
->  	u32 map;
->  
-> -	irq_gc_lock(gc);
-> -
-> -	/* Map the source interrupt to the destination */
-> -	map = irq_reg_readl(gc, chip_regs->reg_off_map);
-> -	map |= data->mask;
-> -	irq_reg_writel(gc, map, chip_regs->reg_off_map);
-> -
-> -	irq_gc_unlock(gc);
-> +	scoped_guard (raw_spinlock, &gc->lock) {
-> +		/* Map the source interrupt to the destination */
-> +		map = irq_reg_readl(gc, chip_regs->reg_off_map);
-> +		map |= data->mask;
-> +		irq_reg_writel(gc, map, chip_regs->reg_off_map);
-> +	}
->  
->  	ct->chip.irq_ack(data);
->  	ct->chip.irq_unmask(data);
-> @@ -95,14 +93,12 @@ static void lan966x_oic_irq_shutdown(str
->  
->  	ct->chip.irq_mask(data);
->  
-> -	irq_gc_lock(gc);
-> +	guard(raw_spinlock)(&gc->lock);
->  
->  	/* Unmap the interrupt */
->  	map = irq_reg_readl(gc, chip_regs->reg_off_map);
->  	map &= ~data->mask;
->  	irq_reg_writel(gc, map, chip_regs->reg_off_map);
-> -
-> -	irq_gc_unlock(gc);
->  }
+Please note that on pipewire min-latency has to be set to 512 which
+reflects the DSP latency requirements of 10ms. You might see audio
+artifacts like glitches if you try to play audio below 256 latency.
 
-Here, I would really prefer a scoped_guard() to clearly identify what is
-protected such as:
+thanks,
+Srini
 
-	scoped_guard (raw_spinlock, &gc->lock) {
-		/* Unmap the interrupt */
-		map = irq_reg_readl(gc, chip_regs->reg_off_map);
-		map &= ~data->mask;
- 		irq_reg_writel(gc, map, chip_regs->reg_off_map);
-	}
+Change since v4:
+	- added tested-by tags, including cc: stable
+	- removed a line delete.
 
-IMHO, guard() is nice when it protects an entire function but it can be
-missed when it is present in a middle of code (looks too much like a
-simple C function call).
+Changes since v3:
+	- updated period size aligment patch with 10ms period size
+	  contstriants.
 
-Best regards,
-Hervé
+Changes since v2:
+	- dropped patch which is causing regression with pluseaudio.
+	- setup period sizes only for capture path
+	- fix underruns/overruns in dsp pipelines.
+	- add fixes tag
+	- add patch to fix buffer alignment
+
+Changes since v1:
+	- added new patches to fix the fragment size, pointer
+	  calculations
+	- updated to schedule only available buffers.
+
+
+Srinivas Kandagatla (5):
+  ASoC: q6apm-dai: schedule all available frames to avoid dsp under-runs
+  ASoC: q6apm: add q6apm_get_hw_pointer helper
+  ASoC: q6apm-dai: make use of q6apm_get_hw_pointer
+  ASoC: qdsp6: q6apm-dai: set 10 ms period and buffer alignment.
+  ASoC: qdsp6: q6apm-dai: fix capture pipeline overruns.
+
+ sound/soc/qcom/qdsp6/q6apm-dai.c | 60 +++++++++++++++++---------------
+ sound/soc/qcom/qdsp6/q6apm.c     | 18 +++++++++-
+ sound/soc/qcom/qdsp6/q6apm.h     |  3 ++
+ 3 files changed, 52 insertions(+), 29 deletions(-)
+
+-- 
+2.39.5
+
