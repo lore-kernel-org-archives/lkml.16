@@ -1,65 +1,67 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0568156C79
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E472036ED
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741970406; cv=none; b=n8QQ1V50rI4unGCs+7/03vPW971ydnfqQOHYWG+P1S2RpHGZOeBFcJ/2npS2PaOGa4/Sx8WGvXnxz9GhPvg6Hat4Ub6TLRtzc/DY+ZYFImzyScRPOu9bvf7JorECmfmFvhKafgiI63d7dYX1UL1IpyPQeAjxjTZ4MiNODuibR4o=
+	t=1741970407; cv=none; b=lGlTvzLlVxvC3YnowgteS2OD44ys8ut4u23AUXaPSukA+6yInNi1VYkbQwVkA3O5SMruFb8Mi04H/5T79HQhezNV/z/2QlqTNhU079YOUfZNSzAtSpCHoLEl5IGPp4MYftXGaCW8PfHCUGm6zNF+RS9Lj9SPqt5+wLbom7mus3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741970406; c=relaxed/simple;
-	bh=VajMfayeKQOz3VOYSjkIp/5rQbCz+OcLxQOVHfXWSdc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MVMLbPZkUJN9KmEaCMA+nunHNwtnd/ErBhWnsxYLFNzwHQyCkwBBHpOpULq32UhX7r8+F0su/vp2MiB3/64Y8OUaP9p3vZT1yWXGSdLzSvSi7gW8fXDU7lrMkohzJRq7KKpImKgRDy3XN6L/n7vv27lt+hAmOgiI/IeGgBFIFjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yEk4w/wW; arc=none smtp.client-ip=209.85.208.50
+	s=arc-20240116; t=1741970407; c=relaxed/simple;
+	bh=EMglvuwJCM4I+POaB0pzqrwXSchddeRXR/kp58h7CKE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WA4F5Z9gWSAkmRGLniqI2qD9RPa03DOfEf/qA4J/QFGOnNtlaSIIks2pW2F4CNs90pp1vllA4c03bQdZcz13tg0igV0Zm3A2R+iNrQlcR5193kDqh3UvfE98t3PRx2i3mVRr1m8BiBlk2FUGhgqPGrosD20RKcC/A5GdLPZHVoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NJ5jXlQZ; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yEk4w/wW"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so4025296a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:40:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJ5jXlQZ"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5e63162a0so3346712a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741970403; x=1742575203; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KhvzLiY857SGZEqzmins+PvzyIr/NTQcyLXE/tMCnFQ=;
-        b=yEk4w/wWrrsAK0EdJyl66u1ASaF8V83cVATbkJ3lE4t5ihOkDvYuCqdNZHnWoRB8SA
-         7kCu/4ePthXgdaa6nCe4IQN5TPxSTz/3/DQvI8U4eQW8mUKUCCpJcFeKogfHbDvw4KAQ
-         EYik9M/CxhaKeoGpS3OdpTAhIbcIHeKh6LzagYcRWUE/r74xiAhniPw27IqlTcI/KqGo
-         CKGe11yCTYb+z8KtdUz+zrx18n8nJSfRZfBf8CSEfcn4TmRPReuu1ltMJvguEA3UPLqW
-         cLUlS1ctxERXRjbT9s//+tnDlGZqZZrU5LUKuznZmXYX1UmWoZZMsmzjIAEaZ+oDsIbW
-         Nclw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741970403; x=1742575203;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1741970404; x=1742575204; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KhvzLiY857SGZEqzmins+PvzyIr/NTQcyLXE/tMCnFQ=;
-        b=H1PjWrDqlwKw2weLSqrABDTXmL2MhxY7vZuovfjkrHaxKouYD3gCZucrH6tmTFqrX2
-         mvMpm2D+8y6RUo+Oyo51W6e6CJbFrMRwOPoREF9ikMtjXaawOpuXNqZZNeqLMRECvkVM
-         aMQRkTSi21a1NONuuD6Nf6kx9l/JbQ+3Jw3uAodYmKiP8PtAf+9JxNEajDWBk3CY0f2f
-         fkpIJ9lJw8Exqqb6hoPeC6XBDUlcIPj6h4+D9iD7RD2pd2PtiIXtZtO23gFcLpzhYlG3
-         AYtxY9F8vZeA+Dzt6wBdBDvKTeNZ5wMxKtwS+RutHSJsm6BmTgKfZlVw7HkNP8RioWR7
-         LohQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUERzYu48pysIT2yBj5uT7kkMtlEO50d7DxEgYVD+daXoV8BA/PSSBQrz5NVS5ZF5o2N4JDnWKkQ3jUwtI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4BZZzM2zoshdagS3ZPTo4s3+gOyTG/Zj8Q/qI5xNSi5Xk+1c3
-	qpcFnlCY1CAsDSbLDuTFP0KYb6JXE4gyYGB//nwWBPgYF1IdIg7KBpvH8O4U3hM=
-X-Gm-Gg: ASbGnctcCMmtkbWbb7jZisY97swLDW/+oBZagM/drtI4Cs/v7gao8IflD480dLpiSPy
-	0q9RxIrnAGVDx4YtsSc7lVSF316CqoEMI3Oot+PW9zsZIffQDPawKrtbOT3T1Yl2+yEfYKamGne
-	xvKWwNK+O9Lm9i+4VgDlZ6hx6/byNSQ4/i9c4BJ5LJRkKR/2lIPShdZmLIuyz91wFa26Ofvdr+d
-	LcvfgbFfGUiLnm3VXvTU54+gWsFc8Hq6wfcGkmP7ZKIBx1B49wl0i4Mg/oyuvViinvSsagNu2lG
-	p1bIHQHI0vTzmGHglQcm4iM057jjDaTJ4thI/9OV6RxxOOmjC6EUWo0YAwvPs2XuLfESoxXCrua
-	a4zMITN32x2r0AsHkOTl8cH4wpDnn
-X-Google-Smtp-Source: AGHT+IFGfvz33USapJBinW272gepivtVA3O/20eKJ/+H17ddACPCm8qjeCgFc9bP4W9ixUKFcXUt8A==
-X-Received: by 2002:a05:6402:4301:b0:5e5:bcd6:4ad8 with SMTP id 4fb4d7f45d1cf-5e89f24c63fmr3817601a12.9.1741970402855;
-        Fri, 14 Mar 2025 09:40:02 -0700 (PDT)
+        bh=5EHw6xE0g+7qki2CSo1YJpVOxoekKA/7CSCBUCVC664=;
+        b=NJ5jXlQZ/hwOScFX95HnPdPZdRXXVjjSgVkMwG7ssFH1eqkLQIRUbgc0nMuS87m1oS
+         g3Cn4lBDh2LPa7M1joLd+XqeCyi9QalVuRvyg0l58HoDf4mdZM4uoqc2iyAWaxyDlQ8F
+         dvaKx1yAYkI+l5RfCToIcZPH+PrqXT5JGxYyVOivCrts7R/bHe7PT95ddKaN2YuuyeBC
+         tLU+yP+1Mbb2x1E2W4G3i23n5j8Sk8+vGjF7GtQ4owmeEX9VUHnmnOuoNe5yH9OvO4rI
+         J4ZGpHxj6oXg0M3oMhorFGLDbLHMUABpDllL3fCFdsDT7rXvk1pOIOTIy88iD8ddGL55
+         Te8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741970404; x=1742575204;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5EHw6xE0g+7qki2CSo1YJpVOxoekKA/7CSCBUCVC664=;
+        b=t6IQ805kO3ie015Nbwpyu+4JYpX/iHB4mc2oRSDxGv4JTmAV0+i9zISkWL3jwEfz3z
+         N+8mzU0JcltKrxuPbrxcvCH0f/Jv2j4qAlCvMHbvm/mqhmsOFSMjRCV8C6h50uASg344
+         v7KaZdyRE0urk6Y3nkzY4Iv135cnuAEGJSKuBTPdxMTjkTTVxq8j5iaThldGxz6Oy6Q6
+         s5GKVLboUCBx0A8SuXf5VsmwBojwGDtHuEJHFTmcfflVAkUbLldHkwJUwvjFcVpEA1hL
+         SlcMvhu5TwmEn7Os9I9vXAVC0Xq6TtNOxkRAEJCGSl1luHR7WKTQPpu0h3iVBeRcRJZz
+         O9Lg==
+X-Forwarded-Encrypted: i=1; AJvYcCWxmtbvCroQz6z67VlHKvQcUFyqHjlm8mKw/du6Cn3QYFOVdhjHNt3vLXoxU2czEYEdzkvIPb6Fhbx1m14=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxrv/Wk+uvcMUjzmTMiC/Avj9QWwJAhT4jwdjgTUfz5YNZByEQs
+	EU9gDOKqIU7LO6wdkt5tkJkzD2VNLRd3Xt6wLimUwmzaDuyCTjNlzxOm2ELW9Qo=
+X-Gm-Gg: ASbGncu/JuR1Gp5Qn5mdFjKmL0WH6RlHgcrxfsSW6zQpuOzqIFC/gVf5cU1h9Oz7WS3
+	QNuAN39BeNwll+pfr4xFGN7bBVK6VDWf0amPAK6FDZAw5CQLW7EmTsnk0LjXdekCbSEzwAXkz2l
+	WsKcvOgzWT8S2eG4WluRrAqOm4iMsLCVafHYMqM4xzTDTRCiR4qOo+cyhhT7Vxje0aXGgGVdziU
+	hWsEFJtwcgPwY8/QPxabkO7b9JX2VDyeWrC6QgkAzHzs+qmmldVqeEEi2eBnt58NbcKQSvx8hxO
+	U1TVj1eDQ81Qx/oWjQhHuumApeomNhrwEvo26CB4hwN5uFmHHLX9yjkINlDX6nVgqWUAEcQwv7h
+	CXtwWw/kLhcmZJ6fJDGDrleRZrwfZXTpRFp6nRXk=
+X-Google-Smtp-Source: AGHT+IFm72MRO+sabSmFs08xZRpk0IIZks2PIM2q02CRV+JCE7zgfN2FDEwb9GyApg/KaKdRxs7krQ==
+X-Received: by 2002:a05:6402:3550:b0:5e7:aeb9:d0cc with SMTP id 4fb4d7f45d1cf-5e89e6afc19mr3874499a12.3.1741970403936;
+        Fri, 14 Mar 2025 09:40:03 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e816968cd8sm2115727a12.18.2025.03.14.09.40.02
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e816968cd8sm2115727a12.18.2025.03.14.09.40.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 09:40:02 -0700 (PDT)
+        Fri, 14 Mar 2025 09:40:03 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Subject: [PATCH 0/3] firmware: exynos-acpm: read fix & reduce log verbosity
-Date: Fri, 14 Mar 2025 16:40:00 +0000
-Message-Id: <20250314-acpm-fixes-v1-0-ab03ca8e723f@linaro.org>
+Date: Fri, 14 Mar 2025 16:40:02 +0000
+Subject: [PATCH 2/3] firmware: exynos-acpm: silence EPROBE_DEFER error on
+ boot
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,10 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAOBb1GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDY0MT3cTkglzdtMyK1GJdYxOLZANTCxNzs0RzJaCGgqJUsARQfXRsbS0
- AgKKOcFwAAAA=
-X-Change-ID: 20250314-acpm-fixes-348c058476a7
+Message-Id: <20250314-acpm-fixes-v1-2-ab03ca8e723f@linaro.org>
+References: <20250314-acpm-fixes-v1-0-ab03ca8e723f@linaro.org>
+In-Reply-To: <20250314-acpm-fixes-v1-0-ab03ca8e723f@linaro.org>
 To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
  Krzysztof Kozlowski <krzk@kernel.org>, 
  Alim Akhtar <alim.akhtar@samsung.com>
@@ -83,33 +84,43 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-While trying to use the ACPM driver, I stubmbled across two issues:
+This driver emits error messages when client drivers are trying to get
+an interface handle to this driver here before this driver has
+completed _probe().
 
-    * acpm_pmic_bulk_read() doesn't return the correct register values
-    * superfluous log messages during boot
+Given this driver returns -EPROBE_DEFER in that case, this is not an
+error and shouldn't be emitted to the log, so just remove them.
 
-The patches attached are the result and hopefully self-explanatory.
-
-This driver only exists in linux-next at the moment.
-
-Cheers,
-Andre'
-
+Fixes: a88927b534ba ("firmware: add Exynos ACPM protocol driver")
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
-André Draszik (3):
-      firmware: exynos-acpm: fix reading longer results
-      firmware: exynos-acpm: silence EPROBE_DEFER error on boot
-      firmware: exynos-acpm: convert to dev_err_probe() in client API
 
- drivers/firmware/samsung/exynos-acpm-pmic.c | 16 ++++++++--------
- drivers/firmware/samsung/exynos-acpm.c      | 13 ++++++-------
- 2 files changed, 14 insertions(+), 15 deletions(-)
 ---
-base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
-change-id: 20250314-acpm-fixes-348c058476a7
+issue is in linux-next only afaics at this stage, as driver is not
+merged into Linus' tree yet
+---
+ drivers/firmware/samsung/exynos-acpm.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Best regards,
+diff --git a/drivers/firmware/samsung/exynos-acpm.c b/drivers/firmware/samsung/exynos-acpm.c
+index a85b2dbdd9f0d7b1f327f54a0a283e4f32587a98..48f1e3cacaa709ae703115169df138b659ddae44 100644
+--- a/drivers/firmware/samsung/exynos-acpm.c
++++ b/drivers/firmware/samsung/exynos-acpm.c
+@@ -690,14 +690,11 @@ static const struct acpm_handle *acpm_get_by_phandle(struct device *dev,
+ 
+ 	acpm = platform_get_drvdata(pdev);
+ 	if (!acpm) {
+-		dev_err(dev, "Cannot get drvdata from %s\n",
+-			dev_name(&pdev->dev));
+ 		platform_device_put(pdev);
+ 		return ERR_PTR(-EPROBE_DEFER);
+ 	}
+ 
+ 	if (!try_module_get(pdev->dev.driver->owner)) {
+-		dev_err(dev, "Cannot get module reference.\n");
+ 		platform_device_put(pdev);
+ 		return ERR_PTR(-EPROBE_DEFER);
+ 	}
+
 -- 
-André Draszik <andre.draszik@linaro.org>
+2.49.0.rc1.451.g8f38331e32-goog
 
