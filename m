@@ -1,32 +1,32 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD82B566A
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 06:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA72153808
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 06:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741932935; cv=none; b=WNuKP3Eca3T/CqS5XbpmFMJlemLujXlNMaYlMGJYbpJvQ7PWS6YByEHLxqVow6RYWUaB7NNU1ifbrHns5VeyGlH04SQEqb9tlZ5/T44XKRFHCb8I9D0Q69Berhkggqil0T8j8ILRPZkZpb3leEmD6gFW2NuBXwbp5voyCZMAZio=
+	t=1741932941; cv=none; b=ZmFS8ricgKgFYDJyU3PmKZllMlAM2yEpv6ok7nKGWTalSPuaHHMAqQCJHXQgroa80m7ia57OLP/q+WxQZjo/hARQD81+ADhh9O0CM+rGP99QwaaloDNklku0KrdvvdhmbazAyFw3CT3fikSVRZEs9vgX4YBSSgCQS7pb4t4bAi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741932935; c=relaxed/simple;
-	bh=W/+dT0JeMfCNVWYLzWA9JLxOlfjfaJDgqzXPPWZp9qA=;
+	s=arc-20240116; t=1741932941; c=relaxed/simple;
+	bh=q7a/l+3dxZyatbmA+x05mtthRfHxYV4Q69VBf6eryFQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qc6q4i1XwfBkIjE+RnMwy0uzhw6jy3tyRqUrjLgE7Genp8/p+ZZq3eqWK4xnijrVncErniPvOqR9/cd5UG6GTURaVy23N6hUiMKVk4+ufcnCRDl1k/anBs9Iqt2VP/gA0Ad3vOq0buUtV/XQa8C0pRcS0K6hQD7/FYaDrm29L+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FeQvgZ0y; arc=none smtp.client-ip=91.218.175.182
+	 MIME-Version; b=XDvyygzNjhgEt7aL9WNf+rXc6+Z26AlyVhC8njs95STFLQWFcI7YBiBLTezmS+sTqkikbY+1Dz7O8A7N7BFjOCs1Nxs7ygY//7dBBtanP4/JblpEZUdafWq5EbdrnFadAwiP1TNQ1MHUHQdRmJhOZaeVb1CWjGwq6u3qyJYRcUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lW53X41+; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FeQvgZ0y"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lW53X41+"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741932932;
+	t=1741932938;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4gcQPtwIR/hVm1yRr4cRacE1bGrzLqevTybXQMDqJ14=;
-	b=FeQvgZ0yXEZ1YmVQs936nWoNHKfUiPJcFKFvpqK16/CwDxmnMaVmA7QENZTzMSIQbHs7WV
-	BdIx05IJWLFoRUTmqjG0ITtgCcDG/oQDslGjV7+zAa+Ar1pyCIytzoVik0svc/mmlR+U1G
-	xzLDhIBey5JN/Ok/Tv5oW3YZhsF2aIA=
+	bh=GHfMqiybfg/wadzE/r4pC5kSUqcreJExX0T8UoeIBCE=;
+	b=lW53X41+bXtE/Pccr68GzJy8M1OGwPSERF3WpfrSeM1+eRyR6ZO5RUE+LGGoKkOl7MQME4
+	6FhWXE8Ek04ZXXxR8nAGVb7rCa4kXqwDs+rNp9NJ0Yia1I8mVy/nQvi2NZZY0xRfeuZimx
+	iF9NPX2PD5aazVpGSYv6Fk0c5u38YjU=
 From: Shakeel Butt <shakeel.butt@linux.dev>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>,
@@ -39,9 +39,9 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,
 	cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Meta kernel team <kernel-team@meta.com>
-Subject: [RFC PATCH 02/10] memcg: decouple drain_obj_stock from local stock
-Date: Thu, 13 Mar 2025 23:15:03 -0700
-Message-ID: <20250314061511.1308152-3-shakeel.butt@linux.dev>
+Subject: [RFC PATCH 04/10] memcg: manually inline __refill_stock
+Date: Thu, 13 Mar 2025 23:15:05 -0700
+Message-ID: <20250314061511.1308152-5-shakeel.butt@linux.dev>
 In-Reply-To: <20250314061511.1308152-1-shakeel.butt@linux.dev>
 References: <20250314061511.1308152-1-shakeel.butt@linux.dev>
 Precedence: bulk
@@ -53,45 +53,68 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Currently drain_obj_stock() can potentially call __refill_stock which
-accesses local cpu stock and thus requires memcg stock's local_lock.
-However if we look at the code paths leading to drain_obj_stock(), there
-is never a good reason to refill the memcg stock at all from it.
-
-At the moment, drain_obj_stock can be called from reclaim, hotplug cpu
-teardown, mod_objcg_state() and refill_obj_stock(). For reclaim and
-hotplug there is no need to refill. For the other two paths, most
-probably the newly switched objcg would be used in near future and thus
-no need to refill stock with the older objcg.
-
-In addition, __refill_stock() from drain_obj_stock() happens on rare
-cases, so performance is not really an issue. Let's just uncharge
-directly instead of refill which will also decouple drain_obj_stock from
-local cpu stock and local_lock requirements.
+There are no more multiple callers of __refill_stock(), so simply inline
+it to refill_stock().
 
 Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 ---
- mm/memcontrol.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ mm/memcontrol.c | 32 ++++++++++++--------------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c09a32e93d39..28cb75b5bc66 100644
+index b54e3a1d23bd..7054b0ebd207 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -2855,7 +2855,12 @@ static struct obj_cgroup *drain_obj_stock(struct memcg_stock_pcp *stock)
+@@ -1865,14 +1865,21 @@ static void drain_local_stock(struct work_struct *dummy)
+ 	obj_cgroup_put(old);
+ }
  
- 			mod_memcg_state(memcg, MEMCG_KMEM, -nr_pages);
- 			memcg1_account_kmem(memcg, -nr_pages);
--			__refill_stock(memcg, nr_pages);
-+			if (!mem_cgroup_is_root(memcg)) {
-+				page_counter_uncharge(&memcg->memory, nr_pages);
-+				if (do_memsw_account())
-+					page_counter_uncharge(&memcg->memsw,
-+							      nr_pages);
-+			}
+-/*
+- * Cache charges(val) to local per_cpu area.
+- * This will be consumed by consume_stock() function, later.
+- */
+-static void __refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
++/* Should never be called with root_mem_cgroup. */
++static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ {
+ 	struct memcg_stock_pcp *stock;
+ 	unsigned int stock_pages;
++	unsigned long flags;
++
++	if (!localtry_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
++		/*
++		 * In case of unlikely failure to lock percpu stock_lock
++		 * uncharge memcg directly.
++		 */
++		memcg_uncharge(memcg, nr_pages);
++		return;
++	}
  
- 			css_put(&memcg->css);
- 		}
+ 	stock = this_cpu_ptr(&memcg_stock);
+ 	if (READ_ONCE(stock->cached) != memcg) { /* reset if necessary */
+@@ -1885,22 +1892,7 @@ static void __refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ 
+ 	if (stock_pages > MEMCG_CHARGE_BATCH)
+ 		drain_stock(stock);
+-}
+ 
+-/* Should never be called with root_mem_cgroup. */
+-static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+-{
+-	unsigned long flags;
+-
+-	if (!localtry_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
+-		/*
+-		 * In case of unlikely failure to lock percpu stock_lock
+-		 * uncharge memcg directly.
+-		 */
+-		memcg_uncharge(memcg, nr_pages);
+-		return;
+-	}
+-	__refill_stock(memcg, nr_pages);
+ 	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+ }
+ 
 -- 
 2.47.1
 
