@@ -1,39 +1,45 @@
-Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85F35202994;
-	Fri, 14 Mar 2025 15:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F002010E3;
+	Fri, 14 Mar 2025 15:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741967605; cv=none; b=tOwywzhWEamS/tIP/Oubmh6k9uTyZKySg9X3/wn+cJe1n6aRIM67CmDHL1G78NSz1Az1pGCg32MritC39fLSGb8Cg5ZxESiBh27SDH5O2SklA8D4w9nmKQ8YTYti86jbEjin8nyAbFxLxVy5zNsuB+NZzi2MRGfsvviGlWQosNY=
+	t=1741967692; cv=none; b=NNG5CutTJB9pwEt7umjNAH8Ou56bxZPMdyz9wOVPHP2/2ijKI1fOg/jzarEH+YXbvGK8UG29bycBCzgm6XYpjrpDaP/PJ9+NuQ79xTEVwFKuxv0V93M/ZT6ILBNsEqOuZhSYCVv/iQ660fiRqQRoj8TZKNdpOQk5X98McpvfuCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741967605; c=relaxed/simple;
-	bh=fvneh1mx/Xz9eGv7D2eQ3GuC3fZef5sZPQDOo870RWU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ir26Y9C7CZ1hz+n//AonUsIxVfuiNIJtU+cgqJmtzkBfZsAVP2aJssngznflcmaAvXuYFKVl6SKuO0UuFzDxUMuhngYw8NM7h6cFYQ9+eZYgGk7U0ShWFdWPW0jQ9/p8MnL74pgvDP5Qb/DvFvJ9IjD8mNM7BT7LAaDShNLi5pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=206.189.79.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from zju.edu.cn (unknown [10.193.170.58])
-	by mtasvr (Coremail) with SMTP id _____wCXIgzRUNRnXP4dAA--.4062S3;
-	Fri, 14 Mar 2025 23:52:50 +0800 (CST)
-Received: from localhost (unknown [10.193.170.58])
-	by mail-app3 (Coremail) with SMTP id zS_KCgAXw3XQUNRng8sbAA--.17349S2;
-	Fri, 14 Mar 2025 23:52:48 +0800 (CST)
-From: Lin Ma <linma@zju.edu.cn>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	kuniyu@amazon.com,
-	gnaaman@drivenets.com,
-	joel.granados@kernel.org,
-	lizetao1@huawei.com,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1741967692; c=relaxed/simple;
+	bh=1ATMb0vulPx/wb7OMAj9EUf9MVvm6vgVhO1DyiqMZt4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oR7nfrnqM75NrWxYNCsetHY9DCYWsZgMOdK9cdEOZUjS1Jx04hxgXbEYamWnSu2HUBRm6tQb9yq3aLY1qTCyDarTrLB6qAQrf5Emnp6yV1mnmLoR4wPylKi88POvVHNRElAB7Fk3/iAw/obP9F2s9fLBTmehW7s4tUfADwMI+Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vw4oB1ti; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vw4oB1ti"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A2CCC4CEE3;
+	Fri, 14 Mar 2025 15:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741967692;
+	bh=1ATMb0vulPx/wb7OMAj9EUf9MVvm6vgVhO1DyiqMZt4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Vw4oB1tiojbOFEprYeglzHmEbyOmCWAevEsufmEehM+qGVA8YBzywyB+zqeNsPFKJ
+	 SnOzuC2kO71Ekxj74cyp1wht2EWVYFMQoslCt0kNl96AvVPXJLClWRZ0IQLQo+G+v0
+	 JmYgDtDPz0eUBuTUPuFE9wDx4v6ssRYxayBNv8pcu4f1EEEUHNp45MYTuwbtLWB+SQ
+	 YvUDjb6Tm/rMbEMyH8M5NHbKVwwKakUBJnVTOK3M7atXuRNJBlPtv7RjFqOTDvPakx
+	 zaC/53tJGVx8wW/hGj6nNOeRM0TLogGFIby+gMPVSzqzaOJ8MqtnFlAquyNf22Pi01
+	 94iyegMPoDVUA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	Qu Wenruo <wqu@suse.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Filipe Manana <fdmanana@suse.com>,
+	Li Zetao <lizetao1@huawei.com>,
+	linux-btrfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Lin Ma <linma@zju.edu.cn>
-Subject: [PATCH net] net/neighbor: add missing policy for NDTPA_QUEUE_LENBYTES
-Date: Fri, 14 Mar 2025 23:52:37 +0800
-Message-Id: <20250314155237.81071-1-linma@zju.edu.cn>
-X-Mailer: git-send-email 2.39.0
+Subject: [PATCH] btrfs: fix signedness issue in min()
+Date: Fri, 14 Mar 2025 16:54:41 +0100
+Message-Id: <20250314155447.124842-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,53 +47,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zS_KCgAXw3XQUNRng8sbAA--.17349S2
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
-X-CM-DELIVERINFO: =?B?GMRYGQXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
-	APHkyPSxI2Xdeyd3ul0ToYuuZO1uQ+Mstj4wZgJ07zDHSgsNdaMO3dDVqVxik8BiDZC3sl
-	TXsMkWY9Kjq6shOMukuVKUjJTMQVRzgKF9lnMIMw
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZFyftr17GF1xWFy5CF4rWFX_yoWkGFXEgw
-	13ZFnak3W5GF1I93WrZwsayFn5Xw18Ka4rAFyIgF9rAa4DJw1Svr18XFZrGFZrCr4UWFn8
-	Ar1xWF1UCFs8tosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbTkYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjcxG0xvY0x0EwI
-	xGrVCF72vEw4AK0wACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2Iq
-	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
-	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
-	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jj7KsUUUUU=
 
-Previous commit 8b5c171bb3dc ("neigh: new unresolved queue limits")
-introduces new netlink attribute NDTPA_QUEUE_LENBYTES to represent
-approximative value for deprecated QUEUE_LEN. However, it forgot to add
-the associated nla_policy in nl_ntbl_parm_policy array. Fix it with one
-simple NLA_U32 type policy.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Fixes: 8b5c171bb3dc ("neigh: new unresolved queue limits")
-Signed-off-by: Lin Ma <linma@zju.edu.cn>
+Comparing a u64 to an loff_t causes a warning in min()
+
+fs/btrfs/extent_io.c: In function 'extent_write_locked_range':
+include/linux/compiler_types.h:557:45: error: call to '__compiletime_assert_588' declared with attribute error: min(folio_pos(folio) + folio_size(folio) - 1, end) signedness error
+fs/btrfs/extent_io.c:2472:27: note: in expansion of macro 'min'
+ 2472 |                 cur_end = min(folio_pos(folio) + folio_size(folio) - 1, end);
+      |                           ^~~
+
+Use min_t() instead.
+
+Fixes: f286b1c72175 ("btrfs: prepare extent_io.c for future larger folio support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- net/core/neighbour.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/extent_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index bd0251bd74a1..b4f89fbb59df 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -2250,6 +2250,7 @@ static const struct nla_policy nl_neightbl_policy[NDTA_MAX+1] = {
- static const struct nla_policy nl_ntbl_parm_policy[NDTPA_MAX+1] = {
- 	[NDTPA_IFINDEX]			= { .type = NLA_U32 },
- 	[NDTPA_QUEUE_LEN]		= { .type = NLA_U32 },
-+	[NDTPA_QUEUE_LENBYTES]	= { .type = NLA_U32 },
- 	[NDTPA_PROXY_QLEN]		= { .type = NLA_U32 },
- 	[NDTPA_APP_PROBES]		= { .type = NLA_U32 },
- 	[NDTPA_UCAST_PROBES]		= { .type = NLA_U32 },
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index c2451194be66..88bced0bfa51 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -2468,7 +2468,7 @@ void extent_write_locked_range(struct inode *inode, const struct folio *locked_f
+ 			continue;
+ 		}
+ 
+-		cur_end = min(folio_pos(folio) + folio_size(folio) - 1, end);
++		cur_end = min_t(u64, folio_pos(folio) + folio_size(folio) - 1, end);
+ 		cur_len = cur_end + 1 - cur;
+ 
+ 		ASSERT(folio_test_locked(folio));
 -- 
-2.39.0
+2.39.5
 
