@@ -1,38 +1,38 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CC715573F;
-	Fri, 14 Mar 2025 01:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24EB816F0FE;
+	Fri, 14 Mar 2025 01:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741914626; cv=none; b=tuuI2i8ZjwAwd6wc0XCdy/Zi/tGsyygPzb+rGXr/skWNu4kVWafn7AsSPxP1b4MZ8vlED8ld2V7CZ/1c9z8Lwy9c7y+BStqH4/DgAklGcORwwUA+G1FYkp+u1W/m440JWpveMpjU4wBJR3KWvQ4I4ad0anxi2qGBQ8J5mk3XU1M=
+	t=1741914627; cv=none; b=qTDZK5lOQFrdTnGXi5Xv8/b53+DKuV254C+C+LbqkKA3iV+GY9WT0qK4hwrmCLwyXpZ3m8SoxBPf5oqRvV3coFRnk6T5X028+53NxNF5KNNtRvp25wXSRWb+Dm2kk80fPwjG6mhNSNKBDJ/ONwY18rkDM2Mv77iDZ2CEYpNY9XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741914626; c=relaxed/simple;
-	bh=d9ajH5E4b3zFqyrtsSlhkb6bpRYiRJD79v2eaonvz/w=;
+	s=arc-20240116; t=1741914627; c=relaxed/simple;
+	bh=GyJuYWKI/YW8xAyJzIpy80EXHqTTzIovG+xm9SLaNbQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S1SmTlow6D5epJbwh8bb5IZcaseiQjoCXSPtra82h6csZvU9Ly0rPW2KWZU3dLX50OWGrmEpi+Rbh6XXLfO2UeBgxXDRU0vtG8m2rcG+LAFyUtsHVTKGbgc3Wsh0LbUr/QNxuTc/ohnoCO1oHCu5FxtIRwtODYcDM0uKmEL0XyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=bdg+EaSMJ9QRUFIYTUiNid1gccA2wxIZdbH3Wv7J0LUi3sd4ZKuV7bEO7l8mBe1QgPkwJYd4nsz4w6W/RsSZvYI1Ark1nKyJsPL8HQcVW0w7dG5qUL+K+5pjGGfmaURACZBjVV+k3TWSL4i3TdalCF3Uc/fsyF871kgu2ZEMXa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZDR5X6JHYzvWpq;
-	Fri, 14 Mar 2025 09:06:24 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZDR6K4jklzph0L;
+	Fri, 14 Mar 2025 09:07:05 +0800 (CST)
 Received: from dggpemf500016.china.huawei.com (unknown [7.185.36.197])
-	by mail.maildlp.com (Postfix) with ESMTPS id 363B7180102;
-	Fri, 14 Mar 2025 09:10:16 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 324DA1A016C;
+	Fri, 14 Mar 2025 09:10:17 +0800 (CST)
 Received: from localhost.localdomain (10.175.101.6) by
  dggpemf500016.china.huawei.com (7.185.36.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 14 Mar 2025 09:10:15 +0800
+ 15.2.1544.11; Fri, 14 Mar 2025 09:10:16 +0800
 From: JiangJianJun <jiangjianjun3@huawei.com>
 To: <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
 	<linux-scsi@vger.kernel.org>
 CC: <hare@suse.de>, <linux-kernel@vger.kernel.org>, <lixiaokeng@huawei.com>,
 	<jiangjianjun3@huawei.com>, <hewenliang4@huawei.com>,
 	<yangkunlin7@huawei.com>
-Subject: [RFC PATCH v3 08/19] scsi: scsi_error: Add a general LUN based error handler
-Date: Fri, 14 Mar 2025 09:29:16 +0800
-Message-ID: <20250314012927.150860-9-jiangjianjun3@huawei.com>
+Subject: [RFC PATCH v3 10/19] scsi: scsi_error: Add helper to handle scsi target's error command list
+Date: Fri, 14 Mar 2025 09:29:18 +0800
+Message-ID: <20250314012927.150860-11-jiangjianjun3@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20250314012927.150860-1-jiangjianjun3@huawei.com>
 References: <20250314012927.150860-1-jiangjianjun3@huawei.com>
@@ -49,219 +49,169 @@ X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
 
 From: Wenchao Hao <haowenchao2@huawei.com>
 
-Add a general LUN based error handler which can be used by drivers
-directly. This error handler implements an scsi_device_eh, when handling
-error commands, it would call helper function scsi_sdev_eh() added before
-to try recover error commands.
-
-The behavior if scsi_sdev_eh() can not recover all error commands
-depends on fallback flag, which is initialized when scsi_device is
-allocated. If fallback is set, it would fallback to further error
-recover strategy like old host based error handle; else it would
-mark this scsi device offline and flush all error commands.
-
-To using this error handler, drivers should call scsi_device_setup_eh()
-in its slave_alloc() to setup it's LUN based error handler;
-call scsi_device_clear_eh() in its slave_destroy() to clear LUN based
-error handler.
+Add helper scsi_starget_eh() to handle scsi target's error command list,
+it would perform some steps which can be done with target's IO blocked,
+including check sense, start unit, reset lun and reset target.
 
 Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
 ---
- drivers/scsi/scsi_error.c | 170 ++++++++++++++++++++++++++++++++++++++
+ drivers/scsi/scsi_error.c | 129 ++++++++++++++++++++++++++++++++++++++
  include/scsi/scsi_eh.h    |   2 +
- 2 files changed, 172 insertions(+)
+ 2 files changed, 131 insertions(+)
 
 diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-index 21f72c075531..7302536ba62a 100644
+index 7302536ba62a..46415db951ed 100644
 --- a/drivers/scsi/scsi_error.c
 +++ b/drivers/scsi/scsi_error.c
-@@ -2766,3 +2766,173 @@ bool scsi_get_sense_info_fld(const u8 *sense_buffer, int sb_len,
- 	}
+@@ -2553,6 +2553,135 @@ int scsi_sdev_eh(struct scsi_device *sdev,
  }
- EXPORT_SYMBOL(scsi_get_sense_info_fld);
-+
-+struct scsi_lun_eh {
-+	spinlock_t		eh_lock;
-+	unsigned int		eh_num;
-+	struct list_head	eh_cmd_q;
-+	struct scsi_device	*sdev;
-+	struct work_struct	eh_handle_work;
-+	unsigned int		fallback:1;	/* If fallback to further */
-+						/* recovery on failure  */
-+};
-+
-+/*
-+ * error handle strategy based on LUN, following steps
-+ * is applied to recovery error commands in list:
-+ *    check sense data
-+ *    send start unit
-+ *    reset lun
-+ * if there are still error commands, it would fallback to
-+ * target based or host based error handle for further recovery.
-+ */
-+static void sdev_eh_work(struct work_struct *work)
+ EXPORT_SYMBOL_GPL(scsi_sdev_eh);
+ 
++static int starget_eh_stu(struct scsi_target *starget,
++			  struct list_head *work_q,
++			  struct list_head *done_q)
 +{
-+	unsigned long flags;
-+	struct scsi_lun_eh *luneh =
-+			container_of(work, struct scsi_lun_eh, eh_handle_work);
-+	struct scsi_device *sdev = luneh->sdev;
-+	struct scsi_device_eh *eh = sdev->eh;
-+	struct Scsi_Host *shost = sdev->host;
-+	struct scsi_cmnd *scmd, *next;
-+	LIST_HEAD(eh_work_q);
-+	LIST_HEAD(eh_done_q);
++	struct scsi_device *sdev;
++	struct scsi_cmnd *scmd, *stu_scmd;
 +
-+	spin_lock_irqsave(&luneh->eh_lock, flags);
-+	list_splice_init(&luneh->eh_cmd_q, &eh_work_q);
-+	spin_unlock_irqrestore(&luneh->eh_lock, flags);
++	list_for_each_entry(sdev, &starget->devices, same_target_siblings) {
++		if (sdev_stu_done(sdev))
++			continue;
 +
-+	if (scsi_sdev_eh(sdev, &eh_work_q, &eh_done_q))
-+		goto out_flush_done;
++		stu_scmd = NULL;
++		list_for_each_entry(scmd, work_q, eh_entry)
++			if (scmd->device == sdev && SCSI_SENSE_VALID(scmd) &&
++			    scsi_check_sense(scmd) == FAILED) {
++				stu_scmd = scmd;
++				break;
++			}
++		if (!stu_scmd)
++			continue;
 +
-+	if (!luneh->fallback) {
-+		list_for_each_entry_safe(scmd, next, &eh_work_q, eh_entry)
-+			scsi_eh_finish_cmd(scmd, &eh_done_q);
-+
-+		sdev_printk(KERN_INFO, sdev, "%s:luneh: Device offlined - "
-+			    "not ready after error recovery\n", current->comm);
-+
-+		mutex_lock(&sdev->state_mutex);
-+		scsi_device_set_state(sdev, SDEV_OFFLINE);
-+		mutex_unlock(&sdev->state_mutex);
-+
-+		goto out_flush_done;
++		if (scsi_eh_sdev_stu(stu_scmd, work_q, done_q))
++			return 1;
 +	}
-+
-+	/*
-+	 * fallback to target or host based error handle
-+	 */
-+	SCSI_LOG_ERROR_RECOVERY(2, sdev_printk(KERN_INFO, sdev,
-+		"%s:luneh fallback to further recovery\n", current->comm));
-+	list_for_each_entry_safe(scmd, next, &eh_work_q, eh_entry) {
-+		list_del_init(&scmd->eh_entry);
-+
-+		if (scsi_host_in_recovery(shost) ||
-+		    __scsi_eh_scmd_add_starget(scmd))
-+			__scsi_eh_scmd_add(scmd);
-+	}
-+
-+	eh->get_sense_done = 1;
-+	eh->stu_done = 1;
-+	eh->reset_done = 1;
-+
-+out_flush_done:
-+	scsi_eh_flush_done_q(&eh_done_q);
-+	spin_lock_irqsave(&luneh->eh_lock, flags);
-+	luneh->eh_num = 0;
-+	spin_unlock_irqrestore(&luneh->eh_lock, flags);
-+}
-+static void sdev_eh_add_cmnd(struct scsi_cmnd *scmd)
-+{
-+	unsigned long flags;
-+	struct scsi_lun_eh *luneh;
-+	struct scsi_device *sdev = scmd->device;
-+
-+	luneh = (struct scsi_lun_eh *)sdev->eh->driver_data;
-+
-+	spin_lock_irqsave(&luneh->eh_lock, flags);
-+	list_add_tail(&scmd->eh_entry, &luneh->eh_cmd_q);
-+	luneh->eh_num++;
-+	spin_unlock_irqrestore(&luneh->eh_lock, flags);
-+}
-+static int sdev_eh_is_busy(struct scsi_device *sdev)
-+{
-+	int ret = 0;
-+	unsigned long flags;
-+	struct scsi_lun_eh *luneh;
-+
-+	if (!sdev->eh)
-+		return 0;
-+
-+	luneh = (struct scsi_lun_eh *)sdev->eh->driver_data;
-+
-+	spin_lock_irqsave(&luneh->eh_lock, flags);
-+	ret = luneh->eh_num;
-+	spin_unlock_irqrestore(&luneh->eh_lock, flags);
-+
-+	return ret;
-+}
-+static int sdev_eh_wakeup(struct scsi_device *sdev)
-+{
-+	unsigned long flags;
-+	unsigned int nr_error;
-+	unsigned int nr_busy;
-+	struct scsi_lun_eh *luneh;
-+
-+	luneh = (struct scsi_lun_eh *)sdev->eh->driver_data;
-+
-+	spin_lock_irqsave(&luneh->eh_lock, flags);
-+	nr_error = luneh->eh_num;
-+	spin_unlock_irqrestore(&luneh->eh_lock, flags);
-+
-+	nr_busy = scsi_device_busy(sdev);
-+
-+	if (!nr_error || nr_busy != nr_error) {
-+		SCSI_LOG_ERROR_RECOVERY(5, sdev_printk(KERN_INFO, sdev,
-+			"%s:luneh: do not wake up, busy/error: %d/%d\n",
-+			current->comm, nr_busy, nr_error));
-+		return 0;
-+	}
-+
-+	SCSI_LOG_ERROR_RECOVERY(2, sdev_printk(KERN_INFO, sdev,
-+		"%s:luneh: waking up, busy/error: %d/%d\n",
-+		current->comm, nr_busy, nr_error));
-+
-+	return schedule_work(&luneh->eh_handle_work);
-+}
-+
-+int scsi_device_setup_eh(struct scsi_device *sdev, int fallback)
-+{
-+	struct scsi_device_eh *eh;
-+	struct scsi_lun_eh *luneh;
-+
-+	eh = kzalloc(sizeof(struct scsi_device_eh) + sizeof(struct scsi_lun_eh),
-+		GFP_KERNEL);
-+	if (!eh) {
-+		sdev_printk(KERN_ERR, sdev, "failed to setup error handle\n");
-+		return -ENOMEM;
-+	}
-+	luneh = (struct scsi_lun_eh *)eh->driver_data;
-+
-+	eh->add_cmnd = sdev_eh_add_cmnd;
-+	eh->is_busy  = sdev_eh_is_busy;
-+	eh->wakeup   = sdev_eh_wakeup;
-+
-+	luneh->fallback = fallback;
-+	luneh->sdev  = sdev;
-+	spin_lock_init(&luneh->eh_lock);
-+	INIT_LIST_HEAD(&luneh->eh_cmd_q);
-+	INIT_WORK(&luneh->eh_handle_work, sdev_eh_work);
-+
-+	sdev->eh = eh;
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(scsi_device_setup_eh);
 +
-+void scsi_device_clear_eh(struct scsi_device *sdev)
++static int starget_eh_reset_lun(struct scsi_target *starget,
++				struct list_head *work_q,
++				struct list_head *done_q)
 +{
-+	kfree(sdev->eh);
-+	sdev->eh = NULL;
++	struct scsi_device *sdev;
++	struct scsi_cmnd *scmd, *bdr_scmd;
++
++	list_for_each_entry(sdev, &starget->devices, same_target_siblings) {
++		if (sdev_reset_done(sdev))
++			continue;
++
++		bdr_scmd = NULL;
++		list_for_each_entry(scmd, work_q, eh_entry)
++			if (scmd->device) {
++				bdr_scmd = scmd;
++				break;
++			}
++		if (!bdr_scmd)
++			continue;
++
++		if (scsi_eh_sdev_reset(bdr_scmd, work_q, done_q))
++			return 1;
++	}
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(scsi_device_clear_eh);
++
++static int starget_eh_reset_target(struct scsi_target *starget,
++				    struct list_head *work_q,
++				    struct list_head *done_q)
++{
++	enum scsi_disposition rtn;
++	struct scsi_cmnd *scmd, *next;
++	LIST_HEAD(check_list);
++
++	scmd = list_first_entry(work_q, struct scsi_cmnd, eh_entry);
++
++	SCSI_LOG_ERROR_RECOVERY(3, starget_printk(KERN_INFO, starget,
++			     "%s: Sending target reset\n", current->comm));
++
++	rtn = scsi_try_target_reset(scmd);
++	if (rtn != SUCCESS && rtn != FAST_IO_FAIL) {
++		SCSI_LOG_ERROR_RECOVERY(3, starget_printk(KERN_INFO, starget,
++				     "%s: Target reset failed\n",
++				     current->comm));
++		return 0;
++	}
++
++	SCSI_LOG_ERROR_RECOVERY(3, starget_printk(KERN_INFO, starget,
++			     "%s: Target reset success\n", current->comm));
++
++	list_for_each_entry_safe(scmd, next, work_q, eh_entry) {
++		if (rtn == SUCCESS)
++			list_move_tail(&scmd->eh_entry, &check_list);
++		else if (rtn == FAST_IO_FAIL)
++			scsi_eh_finish_cmd(scmd, done_q);
++	}
++
++	return scsi_eh_test_devices(&check_list, work_q, done_q, 0);
++}
++
++/*
++ * Target based error handle
++ *
++ * @work_q: list of scsi commands need to recovery
++ * @done_q: list of scsi commands handled
++ *
++ * return: return 1 if all commands in work_q is recoveryed, else 0 is returned
++ */
++int scsi_starget_eh(struct scsi_target *starget,
++		    struct list_head *work_q,
++		    struct list_head *done_q)
++{
++	int ret = 0;
++
++	SCSI_LOG_ERROR_RECOVERY(2, starget_printk(KERN_INFO, starget,
++		"%s:targeteh: checking sense\n", current->comm));
++	ret = scsi_eh_get_sense(work_q, done_q);
++	if (ret)
++		return ret;
++
++	SCSI_LOG_ERROR_RECOVERY(2, starget_printk(KERN_INFO, starget,
++		"%s:targeteh: start unit\n", current->comm));
++	ret = starget_eh_stu(starget, work_q, done_q);
++	if (ret)
++		return ret;
++
++	SCSI_LOG_ERROR_RECOVERY(2, starget_printk(KERN_INFO, starget,
++		"%s:targeteh reset LUN\n", current->comm));
++	ret = starget_eh_reset_lun(starget, work_q, done_q);
++	if (ret)
++		return ret;
++
++	SCSI_LOG_ERROR_RECOVERY(2, starget_printk(KERN_INFO, starget,
++		"%s:targeteh reset target\n", current->comm));
++	ret = starget_eh_reset_target(starget, work_q, done_q);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(scsi_starget_eh);
++
+ /**
+  * scsi_report_bus_reset() - report bus reset observed
+  *
 diff --git a/include/scsi/scsi_eh.h b/include/scsi/scsi_eh.h
-index 5ce791063baf..89b471aa484f 100644
+index 89b471aa484f..80e2f130e884 100644
 --- a/include/scsi/scsi_eh.h
 +++ b/include/scsi/scsi_eh.h
 @@ -20,6 +20,8 @@ extern bool scsi_command_normalize_sense(const struct scsi_cmnd *cmd,
  extern enum scsi_disposition scsi_check_sense(struct scsi_cmnd *);
  extern int scsi_sdev_eh(struct scsi_device *sdev, struct list_head *workq,
  			struct list_head *doneq);
-+extern int scsi_device_setup_eh(struct scsi_device *sdev, int fallback);
-+extern void scsi_device_clear_eh(struct scsi_device *sdev);
++extern int scsi_starget_eh(struct scsi_target *starget,
++			struct list_head *workq, struct list_head *doneq);
+ extern int scsi_device_setup_eh(struct scsi_device *sdev, int fallback);
+ extern void scsi_device_clear_eh(struct scsi_device *sdev);
  
- static inline bool scsi_sense_is_deferred(const struct scsi_sense_hdr *sshdr)
- {
 -- 
 2.33.0
 
