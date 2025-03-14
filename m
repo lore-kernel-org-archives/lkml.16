@@ -1,139 +1,78 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4A21EB3E
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 14:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBF11FFC4B;
+	Fri, 14 Mar 2025 14:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741961439; cv=none; b=rFIX7DmbxSlVsgRynJJ1J2yjjoHU7ni31j+jsLxYIUul8g4cmvwVxk5zL+1mR/0R9811j+l9+bpVNMDN+dfaZ1QTEKswhj0MIlDXbFh0HyMzba3lEAX46kQMJ2jewiJcJT1HauKagXvemO6jPTxL1Sydh+JE0xlgEmE9xLw4RS0=
+	t=1741961481; cv=none; b=GwFTZMgfvdoXoAANJ1NZExOZx20UN9W9pLidvj6OD71Ri8URTtbFsKP/zZZITgzhG3IYK3R4o18wxPxt50b87WcQCuy+olWCH+o7wZjNLQMtEso8yeCoXF4tQbyQ8l5xayGEIwSu5e3lu8myrugb1PrJlfs6KI8xMoCuQTL8GZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741961439; c=relaxed/simple;
-	bh=C5toxvwiwwhMhsd9e2XE4L4Jrk1EIjC5qUAeyoJngFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2eFD7I86rcQoVGAgUUeOEXDrvloIWz3dudsKQ6SOM3ezBGSGPp2W6E+AY8uJ/My4kFJm0PC/uKG8XYFaY2iv72ZNgYOBkEQM8vn++QFYCMrh8V5q3BbmIShB/rHF9HH9Iqt+gfwGR1c/Ogj6AVC9fUiE74W0yd64UaRd1ICUso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tt5k1-0000lP-74; Fri, 14 Mar 2025 15:10:25 +0100
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tt5jz-005iXB-2e;
-	Fri, 14 Mar 2025 15:10:23 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tt5jz-00DBIm-2G;
-	Fri, 14 Mar 2025 15:10:23 +0100
-Date: Fri, 14 Mar 2025 15:10:23 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org,
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>,
-	Guenter Roeck <groeck@chromium.org>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v6 7/7] Documentation: Add sysfs documentation for PSCRR
- reboot reason tracking
-Message-ID: <Z9Q4z2dPdpqVcu6u@pengutronix.de>
-References: <20250314113604.1776201-1-o.rempel@pengutronix.de>
- <20250314113604.1776201-8-o.rempel@pengutronix.de>
- <a8f76dd0-56be-46a5-9cc1-2d17d013127d@gmail.com>
+	s=arc-20240116; t=1741961481; c=relaxed/simple;
+	bh=bz59DFEQD327qDVN2cGR9TZ8G4JDN8ygzzmv/amSG0A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uojhKZEjufdpDZmQKvS/axLElllMi7tyN3iPBJHeG4eXzwsVHSIDbnRFGOhKu/TVCR2xV2WNvNmXDSzleV38RLx7YOk6u2JjUZ+XeVgcBPa3PnvTp1EQ7zt0FwKAJSNGLa4EicMP14gq6dC5tylSPwB0jYfhFAbYLPlwVGCmQZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1I1ZoXS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1I1ZoXS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4257C4CEE3;
+	Fri, 14 Mar 2025 14:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741961480;
+	bh=bz59DFEQD327qDVN2cGR9TZ8G4JDN8ygzzmv/amSG0A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=A1I1ZoXSJZ/HoftzzNT7OwBrH2CZeWDU9huoWJmrzzf7zdfoY+UfixwevwXk5EgWg
+	 WzfLVYyh2wLc3dF/HWUWkuQEtaxuBP/oV9ee23E7IrNzeEhimQRcQxoqDfYXMT+Ssd
+	 DItuWLpkKDDOtLZ6eEryBen58FZh2V4lPOqtkvbNGGB0KwAhmX+6op/A/iRo4Zc2lJ
+	 YBjKeOqjVrFtW9G6EBxGCSzAploj7M1fHA3R6smKZ5664rLNgomd489DqEoIf/5DnU
+	 fiHArSxJ7stzvdjAoc0oUcAQ18X6FavZ15p8iiKICBrtGSfqyWfPKvVt1hqlZE5cI2
+	 zSFassawFghVg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH RFC v2 1/2] dt-bindings: remoteproc: Add SM8750 MPSS
+Date: Fri, 14 Mar 2025 07:17:10 -0700
+Message-ID: <174196182746.401258.18204547306747015679.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250221160300.160404-1-krzysztof.kozlowski@linaro.org>
+References: <20250221160300.160404-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a8f76dd0-56be-46a5-9cc1-2d17d013127d@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 14, 2025 at 03:38:55PM +0200, Matti Vaittinen wrote:
-> On 14/03/2025 13:36, Oleksij Rempel wrote:
-> > Add documentation for the Power State Change Reason Recorder (PSCRR)
-> > sysfs interface, which allows tracking of system shutdown and reboot
-> > reasons. The documentation provides details on available sysfs entries
-> > under `/sys/kernel/pscrr/`, explaining their functionality, example usage,
-> > and how they interact with different backend storage options (e.g., NVMEM).
-> > 
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >   .../ABI/testing/sysfs-kernel-reboot-pscrr     | 46 +++++++++++++++++++
-> >   1 file changed, 46 insertions(+)
-> >   create mode 100644 Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-kernel-reboot-pscrr b/Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
-> > new file mode 100644
-> > index 000000000000..7cc643f89675
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
-> > @@ -0,0 +1,46 @@
-> > +What:		/sys/kernel/pscrr/reason
-> > +Date:		April 2025
-> > +KernelVersion:  6.15
-> > +Contact:	Oleksij Rempel <o.rempel@pengutronix.de>
-> > +Description:
-> > +		This file provides access to the last recorded power state
-> > +		change reason. The storage backend is configurable and, if
-> > +		supported, the reason may be stored persistently in an
-> > +		NVMEM cell or another backend.
-> > +
-> > +		Reading this file returns an integer representing the last
-> > +		recorded shutdown or reboot cause.
-> > +
-> > +		Writing an integer value to this file sets the reason to be
-> > +		stored and recorded for system analysis.
-> > +
-> > +		Example usage (values are for illustration and may not reflect
-> > +		actual reasons used in a given system):
-> > +		  Read:
-> > +			$ cat /sys/kernel/pscrr/reason
-> > +			3   # (Example: Power loss event, may differ per system)
-> > +
-> > +		  Write:
-> > +			$ echo 5 > /sys/kernel/pscrr/reason
-> > +			# Sets the reason to 5 (Example: User-triggered reboot,
-> > +			# this may not be a real value in your system)
-> > +
-> > +		Values are defined in:
-> > +		  - `include/linux/reboot.h` (enum psc_reason)
-> 
-> Is it possible to provide the reason (also) as string?
-> 
-> I believe we should fix the meaning of the numbers so the ABI is not
-> changing for the users. Hence we could as well document the meaning of the
-> values(?) If I read the suggestion right, we will in any case have
-> predefined set of reasons in the kernel side.
-> 
-> Or, am I missing something?
 
-Yes, it is correct, the values should be fixed for user space. Should
-they be documented in this documentation too?
+On Fri, 21 Feb 2025 17:02:59 +0100, Krzysztof Kozlowski wrote:
+> Add remote processor PAS loader for SM8750 MPSS (modem).  Device looks
+> fully compatible with SM8650, however it lacks fifth memory region for
+> Qlink Logging, according to downstream sources.  This is a bit tricky,
+> because updated downstream sources for newer downstream release dropped
+> that fifth memory region as well.
+> 
+> There might be other differences against SM8650, because the modem
+> currently crashes after starting.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/2] dt-bindings: remoteproc: Add SM8750 MPSS
+      commit: 89f95f2108de52431bbf0ca432e337fc1f40ee00
+[2/2] remoteproc: qcom: pas: Add SM8750 MPSS
+      commit: 6174206a4b5bebc0b4e01a684672e2bf79df38d8
+
+Best regards,
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Bjorn Andersson <andersson@kernel.org>
