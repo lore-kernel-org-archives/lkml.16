@@ -1,130 +1,126 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1456202C55
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974012; cv=none; b=ZXTRsXLny1fDMo1wU6vcDLN8ID2QthYwOAH8Dz/CyqdNQONFkW4Cn7EMMbCAIvOFURgtnZOnlFt7rfb+4TSHrY/I7Lb5ol5351gOQCAj69bN8r6vAHAWyRq+O6cJQfkdiup2LI6rN/ErTbPup8/XbA0dvHPCzyiSi1Cy1M1bWOA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741974012; c=relaxed/simple;
-	bh=+y5PhC4XzO/VnRIwG5rJiSt/p4JA+JB3Z4/wrDzAWAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=djoz3FS15Li8osfIZr6h2M4aNE0KGJtKxhJCBnVbm/XIva8P6pEXqgXR1Ng9a0ymSDGN14aWllaJm1iJxdmV1L5s+nM1oH0JgCIvVD0qnTkKvN6rq9JHqN+A/ODDLHFF55INmlXDa88+5kZAraRJfed0sOpqUYGEnveue+2IhuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xoLqgRv4; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5982046A8
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741974014; cv=pass; b=b9DHYGSYgekMh98C+1+zqsJegcp58rHssotGuDQOGj6ilXofkOUilfmMWarnrtXrkxw0Ypt7+BTv+IXdLcBbVZzwupWtPaoQufTJv0Z31Nh5qR/YzM8gjx1rGHghFKIHgvMZ7eVkqUX4boI4IfSOawflsiIYT1xQZ1BcY2/C5oQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741974014; c=relaxed/simple;
+	bh=ZEVkdYrZwuWDGFv0lxYx4H3FofUcP30vDBDEBlAeG+Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=trIfg9PRBiqqmRgjfcnLUKZTrs3dQbJs33xjPaqMUAyDj4bbs3swTzQndBA32N94bCgfJ99PZTDhOEjVyzxz8gQm35Cui8HnijG7fLg6jEHj4oc/cFEA0nRad1rPAPxZLq8IifscOc1URUjdNldQmv3IZS/20HZ9bQupZQxJaV8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=GwW191Fk; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xoLqgRv4"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-391342fc148so1572859f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741974008; x=1742578808; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=68pP/H0ssSIUIb0wMm11zyV+DWPe8FTOSDazoy8xF8o=;
-        b=xoLqgRv43DEFE8NTmiEA/MhNCCgK6xJqIZ3RbqVbOWKDrcK55lgBeXNbDFV186sd8a
-         ooWc/jhZWUmFCkdixADFP2aN+qS7JhtkepiKIgBFFVLEuvMVvmksWIo8wjaJ6Y+vV8t/
-         PqDafPH/8ACk3gP3HYiHUzfHhDI3RKd2wDPfvfcTxZeEA4pGGDPkAI1KaqV1MLdHGKRd
-         N4PvT7Js1m7EH0Q+zVa7PniE045AdMPY2LWA/DIjpsrzbPzjaQsuzD1af1Qk0Gmk02DO
-         N07gsTE9JyqTJDPH8ErRsJXbYuW8aBEbWBTmyZZCod1c74M0ggMLHXg11DezBikId/g8
-         x0Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741974008; x=1742578808;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=68pP/H0ssSIUIb0wMm11zyV+DWPe8FTOSDazoy8xF8o=;
-        b=JK7jZ8VFErQzuZRSyiCSDxad/l47P7vI1HFaQMkaXpHb1bdp0VHLstr6wNdN1/bQHr
-         xGv6tt6GdJG3lCET/pTNyRSAY1Z7OI1nQ17lFsGFM4+eEtgkjvtzWuUVBCqR8l9Y1WK9
-         xd0xjmudfzN+FPZDYBznk8HlJUQrFuo0A7+aTvmOg6w8SQ7LG63WBb3h8HPSsLdHrj8j
-         FjTb/eXROgUX+M7Dpf5GMwhvl2mfoilim6j+HadVGviUSkjY9tSeXi1pqZTRUlXIlCvd
-         oiYzO7Goer33/gFOTJguu+eISgG4+VA6CvUJG6o4kM5xnN11hYbVh2Cymu474QWHSZ7Y
-         xS6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVJmwUiSXT/YRZ8lERBWfaIq2EIDl7mYPnYO4wMttuFb4EA95hMI6AZIyH10TYf1bvaPfgJsW0XNo4H9Sc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjE+bUBXkh/S2ASfsZIr2xiHV+B4O6VBzwc4EV4+fl1mzPPN6n
-	qVygs4KoBho415WeRc6yfZ7C0qurMAlbFWi44IvYMLHNxhmQa+HqTifHnJo7O6k=
-X-Gm-Gg: ASbGnctZ26U14NoJwv8wiqJGA7MElHI3SQdX6v7MF9wCToiSboJX2BQJVYP32VKNSul
-	NSbAhjhVn4su+n2ixbcxs7ocAyE3VYr8rbhdZqI9vBKxXRBALvZW8ynml4MrOq3fIUK7nVPUfz2
-	zWdqeRySpxHqRfWLkNv0Ge0M5TbNMgwvVOYuHoMxb/EaPyKm0uo8yrTB/VQ5ogJzXIJKnoCMVLs
-	EcfM4TkS+g5jabvFLiVS8GltkXPv7Icx0hKua1mMV01tuv/849lZNPMf6f0Jf/SfrJe2fZit7FN
-	1hRnc4QmxSHdfKrS2EfhhT0rqmLP+55dxGYFF7JSgi4v7gppMJDRq2Fiah5TZDI=
-X-Google-Smtp-Source: AGHT+IH78OxZy3COSxNQ/R2QpNx/WSsG5NmsZ858z5YdVxy8Zi13E8ydSZy8fnTU59kmbAhJ0dXxlQ==
-X-Received: by 2002:adf:a39b:0:b0:397:5de8:6937 with SMTP id ffacd0b85a97d-3975de869d5mr3233289f8f.41.1741974007940;
-        Fri, 14 Mar 2025 10:40:07 -0700 (PDT)
-Received: from [192.168.68.117] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-395c8e43244sm6339791f8f.60.2025.03.14.10.40.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Mar 2025 10:40:07 -0700 (PDT)
-Message-ID: <9e42378b-b9b6-47f9-a7f5-0e003afc3ebb@linaro.org>
-Date: Fri, 14 Mar 2025 17:40:05 +0000
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="GwW191Fk"
+ARC-Seal: i=1; a=rsa-sha256; t=1741973991; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=STn2tLoFAdxKHSniACbfPt88Ezw71Kcqv5Cn28jOMxbLErTGx0ec0YFqqSZbTMiGVkV8e9qgqOY8MOF+p0lL79vBZ0+jbLFs8Q9VSthG2CjXOQeo45LfR5TyvXjaHFPRIy9f8u8ayx0xe+dOX+DNAEZOrHUXHm7ZCRso8wx1qcU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1741973991; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=sQDIjMkW0zXePkXBZSAjC5u5Y+90v6jS96tmTnVEAJ8=; 
+	b=IioC4ycvst7nqIW3iD3Q8ec/vur57V8l+baRxNtoDQFVs2FRZ1QLxmd6CJcipe9pT1BrotaFVVlDt8N1sGfmzCK3+Sxioz/hCbAayMDRPUnKKmwP3rIbejysNqCUmMOBICbSLf9gQnPkD1xTXXskQVOKSQa1JbqW9ExTKAsT4F4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
+	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741973991;
+	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=sQDIjMkW0zXePkXBZSAjC5u5Y+90v6jS96tmTnVEAJ8=;
+	b=GwW191FkLl0RTBQBdFngMyoWExCYnpTyigYl7VPQyBSKciqWmX08BEiU4ZQ7Ggmn
+	utAxfcs6UtYu64NIUS1ds7pkTZxFigl/igbWmvZ+6s+xnw+txI6+2FBzvZYtY5+WXlG
+	Zkt4VhObOfq9CV/kCMZJzODwhsAk2ByCrFTITgds=
+Received: by mx.zohomail.com with SMTPS id 1741973988175634.4562131256724;
+	Fri, 14 Mar 2025 10:39:48 -0700 (PDT)
+From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+To: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: boris.brezillon@collabora.com,
+	robh@kernel.org,
+	steven.price@arm.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	kernel@collabora.com,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	sjoerd@collabora.com,
+	angelogioacchino.delregno@collabora.com,
+	Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+Subject: [PATCH v2 0/6] drm/panfrost: Add support for AARCH64_4K page table format
+Date: Fri, 14 Mar 2025 14:38:52 -0300
+Message-ID: <20250314173858.212264-1-ariel.dalessandro@collabora.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/5] ASoC: qdsp6: q6apm-dai: set 10 ms period and
- buffer alignment.
-To: Johan Hovold <johan@kernel.org>
-Cc: broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
- krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmitry.baryshkov@linaro.org, johan+linaro@kernel.org
-References: <20250314143220.6215-1-srinivas.kandagatla@linaro.org>
- <20250314143220.6215-5-srinivas.kandagatla@linaro.org>
- <Z9Rdc-EWhEH8IQPu@hovoldconsulting.com>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <Z9Rdc-EWhEH8IQPu@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
+Hi all,
 
+This is a new iteration on Panfrost support for AARCH64_4K page table
+format. The main reason behind this patchset is that MediaTek MT8188 SoC
+(ARM Mali-G57 MC3 GPU) constantly faults due to the actual Panfrost cache
+configuration.
 
-On 14/03/2025 16:46, Johan Hovold wrote:
-> On Fri, Mar 14, 2025 at 02:32:19PM +0000, Srinivas Kandagatla wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> DSP expects the periods to be aligned to fragment sizes, currently
->> setting up to hw constriants on periods bytes is not going to work
->> correctly as we can endup with periods sizes aligned to 32 bytes however
->> not aligned to fragment size.
->>
->> Update the constriants to use fragment size, and also set at step of
->> 10ms for period size to accommodate DSP requirements of 10ms latency.
->>
->> Fixes: 9b4fe0f1cd79 ("ASoC: qdsp6: audioreach: add q6apm-dai support")
-> 
-> For all of the patches, if the intention is that they should be
-> backported to stable they should have a CC stable tag here.
+Currently, Panfrost only supports MMU configuration in "LEGACY" (as Bifrost
+calls it) mode, a (modified) version of LPAE "Large Physical Address
+Extension", which in Linux we've called "mali_lpae".
 
-Ideally yes. It would nice to get these back ported to stable.
-> 
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   sound/soc/qcom/qdsp6/q6apm-dai.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/sound/soc/qcom/qdsp6/q6apm-dai.c b/sound/soc/qcom/qdsp6/q6apm-dai.c
->> index 90cb24947f31..a636f9280645 100644
->> --- a/sound/soc/qcom/qdsp6/q6apm-dai.c
->> +++ b/sound/soc/qcom/qdsp6/q6apm-dai.c
->> @@ -231,7 +231,6 @@ static int q6apm_dai_prepare(struct snd_soc_component *component,
->>   	cfg.bit_width = prtd->bits_per_sample;
->>   	cfg.fmt = SND_AUDIOCODEC_PCM;
->>   	audioreach_set_default_channel_mapping(cfg.channel_map, runtime->channels);
->> -
-> 
-> nit: unrelated change
-Fixed in v5.
+This patchset adds support for conditionally enabling AARCH64_4K page table
+format. To achieve that, a "GPU optional quirks" field was added to
+`struct panfrost_features` with the related flag.
 
---srini
-> 
->>   	if (prtd->state) {
->>   		/* clear the previous setup if any  */
->>   		q6apm_graph_stop(prtd->graph);
-> 
-> Johan
+Note that, in order to enable AARCH64_4K mode, the GPU variant must have
+the HW_FEATURE_AARCH64_MMU feature flag present.
+
+The patchset only enables the new format on Mediatek MT8188 and MT8192,
+which have been tested on a Mediatek Genio 700 EVK (MT8390) and Mediatek
+Genio 1200 EVK (MT8395) boards respectively.
+
+Thanks!
+
+Changes in v2:
+* Dropped panfrost_mmu_enable/disable unification.
+* Rename gpu_configs as gpu_quirks.
+* Added error handling on page table not properly aligned.
+* Enabled AARCH64_4K format on MediaTek MT8192 as well.
+* Minor fixes.
+
+Changes in v1:
+* Added "Set IOMMU_CACHE flag" patch.
+* Replaced `panfrost_mmu->enable()` function pointer by `cfg` struct
+prepared during init time.
+* Made mali_lpae/aarch64_4k name more clear.
+* Added GPU_CONFIG_AARCH64_4K flag to enable AARCH64_4K page table
+  format.
+* Enabled AARCH64_4K mode only on mediatek-mt8188.
+
+Ariel D'Alessandro (6):
+  drm/panfrost: Set IOMMU_CACHE flag
+  drm/panfrost: Use GPU_MMU_FEATURES_VA_BITS/PA_BITS macros
+  drm/panfrost: Set HW_FEATURE_AARCH64_MMU feature flag on Bifrost
+    models
+  drm/panfrost: Add support for AARCH64_4K page table format
+  drm/panfrost: Force AARCH64_4K page table format on MediaTek MT8188
+  drm/panfrost: Force AARCH64_4K page table format on MediaTek MT8192
+
+ drivers/gpu/drm/panfrost/panfrost_device.h   |  16 ++
+ drivers/gpu/drm/panfrost/panfrost_drv.c      |   2 +
+ drivers/gpu/drm/panfrost/panfrost_features.h |   3 +
+ drivers/gpu/drm/panfrost/panfrost_mmu.c      | 146 +++++++++++++++++--
+ drivers/gpu/drm/panfrost/panfrost_regs.h     |  36 +++++
+ 5 files changed, 190 insertions(+), 13 deletions(-)
+
+-- 
+2.47.2
+
