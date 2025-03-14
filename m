@@ -1,108 +1,105 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A21202C3B
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3251202C36
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741967771; cv=none; b=fE4X2lyU1z8Vj3vc3b7Z7JDYIC1VAahtJdZD8VqShDAnB/xtTbT/Juqen7zH2Q9SXidcmmPIKWjflBZjlzR8b5GRGYasUd8QNKg94HfAUQSxcHvviixl/YgzVZqw6g6R0aCKdOnblCzkQ8vRD13FOSb1QYOWbyKD6lbmvndHz1o=
+	t=1741967789; cv=none; b=SCMjqTzmQDemtPsPkycdLk/Ln2swCAiQ9E0hQ+IM4BR+kcaMk0gZGmdltN5RicOXVRjhuHDfzUkGSXF2Grh6/Eu7W1m+Ih3fRd+YNrRGIFNpxq0bgbta6BjCRb/jGyUuSjA0sZ1nrRr17/AZ3JG1rSx+sJsTEm8VmViA0KuPKD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741967771; c=relaxed/simple;
-	bh=zJKdUaepvKQjz1Gi8JCnJmHUgSX8/2RO3BJTXjTYnYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GznoH3oDZ/pYxdI9bRnSRIkry7AooaDFUUfyI+Crrq6kseNugqKhX1mRSPVo1JgXIZQU2Iw9/iyWGoQWT532Km9+Ru6WMK0WS14wtRMOWljqx9ZL4GRaIDtKwomrXt6VQlOwq0tbcn25WBj1OJOV2ZONF2i07lonu1FuKt3NA1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SYsDYedX; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741967789; c=relaxed/simple;
+	bh=I7WfoJdrMa7iiui5bCs39L2nw3ehuuL7qs8ypQidpC4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WMGuqgg0XkFpL7Vrn3rmL6M9zOCDSbrdwIecKIRInYNCwFuIgsQAzqFzpwE7yog1zT5nf+j3P0NDvgQtgj5F8Qf0T9BDm7OI6HCV2SIoP1LsU73u7MeAd9MMkBhZWQAS9Q0G94owhtKlsjlCWl9mcoJg3mUM9VjzyQw7VPaeNxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DQhFt/v9; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SYsDYedX"
-Date: Fri, 14 Mar 2025 08:55:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741967758;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6/90O0V+OacosFxzAPbv1bKZqaK+9Vyy7YEsU/KBtck=;
-	b=SYsDYedXLXq+vuA8ZPxhgob8cxepEESL3mycHq3vy/1mlX0dGbJSeLeGQCv8jAQU9eisUY
-	HJEK1V3hF/0J/NpGdOOaHTKJ3UONKP8cjEh7ozwN2hsqAPHQOaoE0sCTK6CEsjJ2cFHrfu
-	ztoumi4fcxvM5sxwkuUCNwn2umxAdmE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [RFC PATCH 10/10] memcg: no more irq disabling for stock locks
-Message-ID: <2c62mvfo4726x3ci3sze7u55encoycbbzbaatzslkbhur2dkvd@wlli7wrcjlik>
-References: <20250314061511.1308152-1-shakeel.butt@linux.dev>
- <20250314061511.1308152-11-shakeel.butt@linux.dev>
- <9e1e3877-55ae-4546-a5c1-08ea730ea638@suse.cz>
- <20250314115802.DESa-C1z@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DQhFt/v9"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso15431175e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741967786; x=1742572586; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=I7WfoJdrMa7iiui5bCs39L2nw3ehuuL7qs8ypQidpC4=;
+        b=DQhFt/v9nfss5saXPC3XavcuxWFTs4+kZPx2c6sMgZkJcT5H1QyDCwtx7KfdHdWlw4
+         7qQGuMQZgaBFbOCq2rKep2nZXV4jVkdhzAMei0ciuvz5tj9fDVWocl29IQ5N0HVrtoxi
+         qZoORn1Upqt4+iAu2iKRBh6rZxAIShrGJhidZC6nKs4+eYBChyJAANDqmDy2i8e+mmlU
+         aIeeZP5GQR8SDlhuM80Xd6jvshkKE3kgLExTbc0zSbBUZVkXxInQW4WCzayYI03RAXmY
+         71cLUcY7kYAXNLd5nXtNINmE+UDyQzVZvkH/8xkOVhBbjKkm0FSmczHgk65WUzsUnYhA
+         zMxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741967786; x=1742572586;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I7WfoJdrMa7iiui5bCs39L2nw3ehuuL7qs8ypQidpC4=;
+        b=Cj39cw+LGJ5JukhdO+1yQpllwLYIUIRSdnq7u9hB1vlhLepxCHUynuoPgViN6ET3xn
+         /Vmoy1bY5ZDtFRpMN8GqRkSqM9P8JMcw1oq6BxhyFLUCg4i1OvkUGkVySmGppch+Fvst
+         3SbOoTppYg+gsp0KEphfzFf/nS2DgVjfTi6Jg9B1z4E+g/hgI17lwbYfXcNjvj7dMhbZ
+         n5JgHrpYCkG+PQt+kpmIJ72P3paQrZwfL5TP0pweCfXbxYFjGzbLOuoHonPDv1KtCOaY
+         du8u6nH+U78PB8XomYqK9TRHUuisL+1Yqh9XQLB9K/rBlHu1m18pqiwLodfEFMMG1wrQ
+         TFxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxl36SEj1O+mKHBGh5Dw5ofYjy3Z8sfIvN5K0qmWAOvz9LPldjTVxWru715EWL65zX/a5dQdoq2KqD4iA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9dXvLQ2wntH8eBVh/tUw9R/Jgs0fELi/syt3J++jZxXC2w07e
+	tmQlEtCZAe2C/SsiVHQgCDkvVGa4/zI2eXzHxNyyJ0VTpG4ry7LK/6hlFRlgObc=
+X-Gm-Gg: ASbGnctOz/8fTHNY2uokl7auACX+HNFCDZAvGhxr7Zn9lG0M5Gt2j4YsiYqJu+xPtAs
+	Uxf8OXJz5jfkMN2LvVuLY5k+4SD2LZ/jV5RfvIkTpMd9s/cj8KUr27rzHn25VCkiL6THeBEah1u
+	bwBezOt236m+088yO0BNaMEroTrvJ9U6YT0seGqlFUSRAWMYnAIVM7PnrecpBnxz4sqPUaAVCn7
+	R9LFYBunInCvGPHNEYWDRH3wtJzE6O4MFJ/iKyYmszxEc9jvDcpd6QqHZPKfR35CQCqkB3qe+X7
+	69UpZt0h47lRPuO4fb86uSfTNdD4c+ytPTO/PTVRnxiUCkan+hMdEU7gmT0=
+X-Google-Smtp-Source: AGHT+IHCF3yVkeabT3o+pvpbobh6GwFZochyn0C61kckJRZQkd4Gy9mZ0YDU7EMFdvPBpYowc1DQVw==
+X-Received: by 2002:a05:600c:4f87:b0:43b:c6a7:ac60 with SMTP id 5b1f17b1804b1-43d1f235e45mr40033045e9.10.1741967785964;
+        Fri, 14 Mar 2025 08:56:25 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1fe60b91sm21467905e9.31.2025.03.14.08.56.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 08:56:25 -0700 (PDT)
+Message-ID: <8ccfdccefaf0cd651a3f085aa78227907f03a478.camel@linaro.org>
+Subject: Re: [PATCH 1/2] arm64: dts: exynos: gs101: ufs: add dma-coherent
+ property
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus	
+ <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Alim
+ Akhtar	 <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Bart
+ Van Assche	 <bvanassche@acm.org>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, kernel-team@android.com,
+ willmcvicker@google.com, 	stable@vger.kernel.org
+Date: Fri, 14 Mar 2025 15:56:24 +0000
+In-Reply-To: <20250314-ufs-dma-coherent-v1-1-bdf9f9be2919@linaro.org>
+References: <20250314-ufs-dma-coherent-v1-0-bdf9f9be2919@linaro.org>
+	 <20250314-ufs-dma-coherent-v1-1-bdf9f9be2919@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.53.2-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250314115802.DESa-C1z@linutronix.de>
-X-Migadu-Flow: FLOW_OUT
 
-On Fri, Mar 14, 2025 at 12:58:02PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-03-14 11:54:34 [+0100], Vlastimil Babka wrote:
-> > On 3/14/25 07:15, Shakeel Butt wrote:
-> > > Let's switch all memcg_stock locks acquire and release places to not
-> > > disable and enable irqs. There are two still functions (i.e.
-> > > mod_objcg_state() and drain_obj_stock) which needs to disable irqs to
-> > > update the stats on non-RT kernels. For now add a simple wrapper for
-> > > that functionality.
-> > 
-> > BTW, which part of __mod_objcg_mlstate() really needs disabled irqs and not
-> > just preemption? I see it does rcu_read_lock() anyway, which disables
-> > preemption. Then in __mod_memcg_lruvec_state() we do some __this_cpu_add()
-> > updates. I think these also are fine with just disabled preemption as they
-> > are atomic vs irqs (but don't need LOCK prefix to be atomic vs other cpus
-> > updates).
-> 
-> __this_cpu_add() is not safe if also used in interrupt context. Some
-> architectures (not x86) implemented as read, add, write.
-> this_cpu_add()() does the same but disables interrupts during the
-> operation.
-> So __this_cpu_add() should not be used if interrupts are not disabled
-> and a modification can happen from interrupt context.
+On Fri, 2025-03-14 at 15:38 +0000, Peter Griffin wrote:
+> ufs-exynos driver configures the sysreg shareability as
+> cacheable for gs101 so we need to set the dma-coherent
+> property so the descriptors are also allocated cacheable.
+>=20
+> This fixes the UFS stability issues we have seen with
+> the upstream UFS driver on gs101.
+>=20
+> Fixes: 4c65d7054b4c ("arm64: dts: exynos: gs101: Add ufs and ufs-phy dt n=
+odes")
+> Cc: stable@vger.kernel.org
+> Suggested-by: Will McVicker <willmcvicker@google.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 
-So, if I use this_cpu_add() instead of __this_cpu_add() in
-__mod_memcg_state(), __mod_memcg_lruvec_state(), __count_memcg_events()
-then I can call these functions without disabling interrupts. Also
-this_cpu_add() does not disable interrupts for x86 and arm64, correct?
-For x86 and arm64, can I assume that the cost of this_cpu_add() is the
-same as __this_cpu_add()?
+Tested-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+Reviewed-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
 
-> 
-> > Is it just memcg_rstat_updated() which does READ_ONCE/WRITE_ONCE? Could we
-> > perhaps just change it to operations where disabled preemption is enough?
-
-Yes, I will look into it.
-
-> > 
-> > > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> …
-> > > @@ -2757,6 +2745,28 @@ static void replace_stock_objcg(struct memcg_stock_pcp *stock,
-> > >  	WRITE_ONCE(stock->cached_objcg, objcg);
-> > >  }
-> > >  
-> > > +static unsigned long rt_lock(void)
-> > > +{
-> 
-> No, we don't name it rt_lock(). We have local_lock() for this exact
-> reason. And migrate_disable() does not protect vs re-enter of the
-> function on the CPU while local_irq_save() does.
-
-Thanks for clarification. Here do nothing for RT kernel and disable
-interrupts for non-RT kernels. (Let'e see how the other conversation
-goes, maybe we can remove the interrupt disabling requirement)
