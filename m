@@ -1,34 +1,35 @@
 Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 2E85C192B90;
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 571B8192B65;
 	Fri, 14 Mar 2025 07:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936514; cv=none; b=tZf8uG+rp0OVhxpqnZ/LdH+2KEXA7Z/+dYpsEwXvAniRGdFXOCw4dCAStDKpzma6/EUWbFMm6yXudnUJkPbcIYyv9UOkJuo0y633+rIZE1d7ZSKdXsDb7CmhXqG/PJRNk+IP+2R++KsPhMu3ncoy3jMQZ9YmZS1oFtX3pkqCzQU=
+	t=1741936514; cv=none; b=u0lo2koyAwNoK0/TgBqEBRNfFapEDJtlyB4sKfICuxMJGsyQ+qrDU+MP4yftfgwnrbEqwpzdAuAaTF5R6KSF3ckXijY2Kk/iyFiHmWUQn6EsP/a2K5KneT+w98Jp9xAJvqc1V7Llb5Dgd6QuONAp5nCUs19ikPRDiBe9tbwkSsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741936514; c=relaxed/simple;
-	bh=nr//3ymoIr2kXu5Wal9VqeaXpouWjvTZB3gAxPELClc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=a84quFMNNZDMoRz5058lgSL2qfmYwQD9m4rcbgai2Kz+M8CjvCwf+FSUz9MXCBsR+7KqddT8b+/btzWw2G9s5vjJDYHWpdxsRTbmRNWGvgvB4u2Am173kOxOsx2B/K+b0uFwnx5Ybxz4lOx8b6MR+cOlZ5SS0ZdLK4Dwda3Wypw=
+	bh=2/4BHfz5ze4ticFIca7ZvvexEMkbfV6F2Gd0lB90Jn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WT1L26ER8ugdGxOLTb+UEcDa5lPAvXQZZAnZQdSL818l8YVGrsUU4FC0fpDEGwxYTxdltoza7hd4Qp9bQAD1CNGo/aorv7tTL+Mmpzw/gUywK2U9qAGH3NCNBnE+2VJEDajXPeKkGNMICPzY8VLWX5aBziQFp8jMwkEWR4gDJM0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
 Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 35C206068097C;
-	Fri, 14 Mar 2025 15:15:09 +0800 (CST)
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id EEA2660680979;
+	Fri, 14 Mar 2025 15:15:07 +0800 (CST)
 X-MD-Sfrom: suhui@nfschina.com
 X-MD-SrcIP: 180.167.10.98
 From: Su Hui <suhui@nfschina.com>
 To: zfigura@codeweavers.com,
+	corbet@lwn.net,
 	shuah@kernel.org
 Cc: Su Hui <suhui@nfschina.com>,
 	wine-devel@winehq.org,
-	linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
 	kernel-janitors@vger.kernel.org
-Subject: [PATCH 2/4] selftests: ntsync: avoid possible overflow in 32-bit machine
-Date: Fri, 14 Mar 2025 15:14:52 +0800
-Message-Id: <20250314071454.201697-3-suhui@nfschina.com>
+Subject: [PATCH 0/4] ntsync: some small fixes for doc and selftests
+Date: Fri, 14 Mar 2025 15:14:50 +0800
+Message-Id: <20250314071454.201697-1-suhui@nfschina.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20250314071454.201697-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,46 +38,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When using '-m32' flag  to compile this test with gcc, there are some
-errors when running test:
+There are four small fixes for ntsync test and doc. I divided these into
+four different patches due to different types of errors. If one patch is
+better, I can do it too.
 
- ntsync.c:785:wake_any:Expected ETIMEDOUT (110) == ret (0)
- ntsync.c:823:wake_any:Expected (1) (1) == __count (0)
- ...
- FAILED: 7 / 11 tests passed.
- Totals: pass:7 fail:4 xfail:0 xpass:0 skip:0 error:0
+Su Hui (4):
+  selftests: ntsync: fix the wrong condition in wake_all
+  selftests: ntsync: avoid possible overflow in 32-bit machine
+  selftests: ntsync: update config
+  docs: ntsync: update NTSYNC_IOC_*
 
-There is an overflow about 'timeout'. 'timespec->tv_sec' is 4 bytes in
-32-bit machine. And 'timeout.tv_sec * 1000000000' causing the overflow
-problem, adding a cast to avoid this problem.
+ Documentation/userspace-api/ntsync.rst         | 18 +++++++++---------
+ tools/testing/selftests/drivers/ntsync/config  |  2 +-
+ .../testing/selftests/drivers/ntsync/ntsync.c  |  6 +++---
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-Signed-off-by: Su Hui <suhui@nfschina.com>
----
- tools/testing/selftests/drivers/ntsync/ntsync.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/drivers/ntsync/ntsync.c b/tools/testing/selftests/drivers/ntsync/ntsync.c
-index bfb6fad653d0..ded83dc58e6b 100644
---- a/tools/testing/selftests/drivers/ntsync/ntsync.c
-+++ b/tools/testing/selftests/drivers/ntsync/ntsync.c
-@@ -103,7 +103,7 @@ static int wait_objs(int fd, unsigned long request, __u32 count,
- 
- 	clock_gettime(CLOCK_MONOTONIC, &timeout);
- 
--	args.timeout = timeout.tv_sec * 1000000000 + timeout.tv_nsec;
-+	args.timeout = (__u64)timeout.tv_sec * 1000000000 + timeout.tv_nsec;
- 	args.count = count;
- 	args.objs = (uintptr_t)objs;
- 	args.owner = owner;
-@@ -729,7 +729,7 @@ static __u64 get_abs_timeout(unsigned int ms)
- {
- 	struct timespec timeout;
- 	clock_gettime(CLOCK_MONOTONIC, &timeout);
--	return (timeout.tv_sec * 1000000000) + timeout.tv_nsec + (ms * 1000000);
-+	return ((__u64)timeout.tv_sec * 1000000000) + timeout.tv_nsec + (ms * 1000000);
- }
- 
- static int wait_for_thread(pthread_t thread, unsigned int ms)
 -- 
 2.30.2
 
