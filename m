@@ -1,124 +1,107 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175591A5B93
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5401953A2;
+	Fri, 14 Mar 2025 08:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741941456; cv=none; b=Ecw/qX4iojRc1711fV4cHA928eNITTomA1MDH0OKefMDoJ2S82RUnkVNG5rNHcmNdnQfWzTAnJblGJM49LCXLFMBkKgk/HNtcHXRCj4MtaoqYwfJveRq3a4OwHG1uxKWdoRiMUXnJc8aVi/3dZB4D++Ef8i44zsycD1r0TwqgMA=
+	t=1741941546; cv=none; b=Hh32QyN6rQC7eXedhSYaDRO2mRcAET5oANRCrAxRQXIlCWVJUDVqQ3Q9yZt1ZM6RYBypM1+kB8h/gos/tBlyUVDbS1i6QTLr/s3NHKx1AWLvb/pZ3ygkxxkAZle/1G8svX4i5WRemRBZ7DDHck+wNA7kRsPBik9kZ3p/DRm0lBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741941456; c=relaxed/simple;
-	bh=dk+ejBCS3NH9te+aXnCnqbhIl0UgK8PkFWM4qXXJ5TY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W/Z7B/G52qvM5K8/Jt/O6ERALBKR6Wtb3cK3Z9pEh6Pk4WAjwzcg0wAoOOGWOFJycEK0L+GAQQTl7/dn6+b0iaWxgvHFTcIZ7j61Hom6zO0+g7pj4fcCeVkRBljRRMnkprYCPl2F6gmAJVDS4oHmjifT1W0FdxJlICVHQGPpVlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UpEVmwjc; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741941546; c=relaxed/simple;
+	bh=JiGYGlFRMjz25k0U6B4LZbec1CkLkM/Na0aVV6Dtx3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rlzR+X5ABR2cCA9Nxa8Y0y/9TI2nh1pBnx7jv2IoHqyJkWX/UgI31x3APFg8tiHdGCQfch3Krt91hZgvZvggDvdjh4bgmxuWGL++z5DfLvznvsEgqR6LYB2KPC7JontS4gBxRSKc3vHdhzXtDQ2uYK31xu5WpIISBD/I+DYPUtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oemqRxxL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UpEVmwjc"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaeec07b705so292694966b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 01:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741941451; x=1742546251; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tdW92HTTZmGzjR6ChSxqLyGpU5fNUkYFaVmkq1y4xX4=;
-        b=UpEVmwjchAI6nFe3+Vz4Cydv+26qouM/cxZsaP3CA171bf+Di/cVfMWDk4e4QbU6Ed
-         umOIE/IBkq6glc2lBrDbEqBlwGEblFZqYTBNsEfphtDFIZFMMRH9UsesKeEgdY6fgNQN
-         uCfxvoOIoOghh0T8gUtGR5gt98T+ej+y/AHKNxn3SVvFv/l+UjnzuC72BNyZM7PUPdVc
-         lvtRzRHu/zplQ0Cpt1fCKAyV9emZOXBcAJ8xxgiDfHyojo8pqeLk0ewMDYT+qWj0AGmO
-         1BKyqtIBLlruMzaqr3STVFgcVIVBblGSFJoEUPng8C8VWp6KM2YCqlc/EhlkPDtB0klx
-         56og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741941451; x=1742546251;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tdW92HTTZmGzjR6ChSxqLyGpU5fNUkYFaVmkq1y4xX4=;
-        b=YqPm9NNi08gEb3RZffMbn4AJEBegpRaEZ27zQMa2STjzC/sjbBhXW3X7VFyRzQugfD
-         qb/7p0F8IOjJCR8Ltabn8Thd4c8vYeuskwGULYjw8PqXptSJsBLj0qEHjqs8nOxbPHlA
-         DSaVhXh5hNhgDhWe/Web9eBqmtGx8WdRefT8HmBGO1Vee9t9j0aRNrQk9hy5dFFl3P6P
-         EhbEsq2WNB6G0aoj6LBwd1ejDCc/WrcvoR+BiN+AkGc4gxQdPWsB5xgj/0M4UU111TWE
-         3881MFJM6eXcEXUCj952HUuHdCK+j/AL34srRzpQa3+NTdscgurM+rsq8KT6R4Piw638
-         mmFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXaqp9/BgxvpV7BXvu3sF7rjOOWqtlGIthUv6rqtu2WCTnQL0tCgc+mV0hcG8EdArk0kp0etM02Be/iAXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaIUoH0SNxb1av6yEvgjGFdxByzZ6inWrTQb2R9jUJgVa9zcs8
-	V43KdBtUYyLzjkmyZSZFUoPBu0yzxi7G5MNJkwMiYXV3qecbjzw58C6Zcy34neU=
-X-Gm-Gg: ASbGncuqqeovSrbhrw7mHIASVKYkrMqkRRhw04+GMNre+OlA8RYe4TDLQto9rklwJM1
-	1vGk1WY9IEOsIvMdlBor4c/69zOkr/OksoWREZ2k3v1VYpyVxIEnSdWcolKqrESIZID2xuD+4QZ
-	CJ6MEDGkqRNTNFpbLEQYlM92gjF6u4LYgagXE13zUvdyLpjrh0xxGVKz35MEeWl3TBJAPz41EJb
-	CYliagKdFKF4hSDVgXUDnV3hhOZPVDfK4xKqHoFxniFk8HgGOJloWB3qCWvKIFLVbY0pX58ownJ
-	gmXBfnSs7O22ULN8G6xV/iuvBbl9cujEldas2UYwOCch1vwQuJWkkFyu+zl/IeuY/AxkD5Le4by
-	M9u9eBeAjfc4OOYFFg+QZ+oPKWjWHjgJMHTlh9NXjL6oXq237xOz0a5AdnfyMskhMdiO7g8bKb4
-	NvXfX38HkLRwMQv/Xnv9JWSWBxyHrxYWg=
-X-Google-Smtp-Source: AGHT+IFUOlHrTuzko/qUKZDoHX5T+vqpZFWSBwlhEPozEDwkhttO5RnwU44O1wIX8uDl5bdWFAV2Vg==
-X-Received: by 2002:a17:907:6ea9:b0:ac2:64eb:d4e8 with SMTP id a640c23a62f3a-ac32fa44234mr197432866b.0.1741941451312;
-        Fri, 14 Mar 2025 01:37:31 -0700 (PDT)
-Received: from ?IPV6:2001:1c06:2302:5600:7555:cca3:bbc4:648b? (2001-1c06-2302-5600-7555-cca3-bbc4-648b.cable.dynamic.v6.ziggo.nl. [2001:1c06:2302:5600:7555:cca3:bbc4:648b])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149cfbb3sm194289566b.101.2025.03.14.01.37.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Mar 2025 01:37:30 -0700 (PDT)
-Message-ID: <9089c8e7-d38e-4c36-9b97-0f4a3039a29b@linaro.org>
-Date: Fri, 14 Mar 2025 08:37:28 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oemqRxxL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC8DBC4CEE3;
+	Fri, 14 Mar 2025 08:39:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741941546;
+	bh=JiGYGlFRMjz25k0U6B4LZbec1CkLkM/Na0aVV6Dtx3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oemqRxxLwaMf+VZr4HX0s9mVGFYBEaelPDtxNN2uuLxdIOZaxTP3SPKQz010uKWrR
+	 Oxu1pHNvmkdMqvgT74GIMe6Fu5FxWihsYT0MZ6i0i6wIo2iRa2aj4qU2g231c4Eyfl
+	 TZyQzhdQVpWxEzpvuRbOp7nDSOFMSDopiAtRn0D0ipYO2GbN8GLIWpRtqkyOgLjY9A
+	 pk3NzpA9wzaLpJeGw8EcnSQyoh/4OLMetSpI3oneP0e9YRcFmNWacKuIREV8EgPQpj
+	 OO+BMRH/VxyCTltELcCPatLND7ESBnhtt8TFEF3Bl9O4h4UlQF98rurYKDxP9JftUK
+	 EyTA7UQ9eOilQ==
+Date: Fri, 14 Mar 2025 09:39:00 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Tao Chen <chen.dylane@linux.dev>, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH linux-next] perf/ring_buffer: Add EPOLLRDNORM flag for
+ poll
+Message-ID: <Z9PrJGbBYcMrvLWY@gmail.com>
+References: <20250313051047.2436098-1-chen.dylane@linux.dev>
+ <Z9Kt57aAC7XET7Na@gmail.com>
+ <87b67a79-d97e-4f81-9bf2-aa34d613b5bf@linux.dev>
+ <Z9MRWT5PWtPaY-pl@gmail.com>
+ <Z9OVBCryv9Che8zJ@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/5] dt-bindings: clock: qcom,x1e80100-camcc: Fix the
- list of required-opps
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-References: <20250313-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v5-0-846c9a6493a8@linaro.org>
- <20250313-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v5-1-846c9a6493a8@linaro.org>
- <20250314-nimble-exuberant-ermine-8ceb43@krzk-bin>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250314-nimble-exuberant-ermine-8ceb43@krzk-bin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9OVBCryv9Che8zJ@google.com>
 
-On 14/03/2025 07:51, Krzysztof Kozlowski wrote:
-> On Thu, Mar 13, 2025 at 09:43:13PM +0000, Bryan O'Donoghue wrote:
->> From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
->>
->> The switch to multiple power domains implies that the required-opps
->> property shall be updated accordingly, a record in one property
->> corresponds to a record in another one.
->>
->> Fixes: 7ec95ff9abf4 ("dt-bindings: clock: move qcom,x1e80100-camcc to its own file")
->> Signed-off-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
->> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> 
-> I do not see improvements:
-> 
-> https://lore.kernel.org/all/20250305-little-frigatebird-of-calibration-244f79@krzk-bin/
-> 
-> I expect both comments to be addressed in the file.
-> 
-> Best regards,
-> Krzysztof
-> 
 
-Pardon me,
+* Namhyung Kim <namhyung@kernel.org> wrote:
 
-I missed you had left additional comments.
+> Hello,
+> 
+> On Thu, Mar 13, 2025 at 06:09:45PM +0100, Ingo Molnar wrote:
+> > 
+> > * Tao Chen <chen.dylane@linux.dev> wrote:
+> > 
+> > > 在 2025/3/13 18:05, Ingo Molnar 写道:
+> > > > 
+> > > > * Tao Chen <chen.dylane@linux.dev> wrote:
+> > > > 
+> > > > > The poll man page says POLLRDNORM is equivalent to POLLIN,
+> > > > > so add EPOLLRDNORM here.
+> > > > > 
+> > > > > Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> > > > > ---
+> > > > >   kernel/events/ring_buffer.c | 2 +-
+> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> > > > > index 59a52b1a1..5130b119d 100644
+> > > > > --- a/kernel/events/ring_buffer.c
+> > > > > +++ b/kernel/events/ring_buffer.c
+> > > > > @@ -19,7 +19,7 @@
+> > > > >   static void perf_output_wakeup(struct perf_output_handle *handle)
+> > > > >   {
+> > > > > -	atomic_set(&handle->rb->poll, EPOLLIN);
+> > > > > +	atomic_set(&handle->rb->poll, EPOLLIN | EPOLLRDNORM);
+> > > > 
+> > > > So what does EPOLLRDNORM mean to begin with? There doesn't seem to be
+> > > > separate/specific handling of it anywhere in the kernel that I can
+> > > > see...
+> > > > 
+> > > 
+> > > It seems that if user set pollfd with POLLRDNORM, perf_poll will not return
+> > > until timeout even if perf_output_wakeup called, whereas POLLIN returns.
+> > 
+> > Mind adding this to the changelog, and explain that this patch fixes 
+> > this particular poll() functionality and semantics for userspace?
+> 
+> Off topic, but I think it should return something (either POLLHUP or
+> POLLERR) when the event goes to an error state like pinned events are
+> not scheduled.
 
-I will fix this up.
+Mind sending a patch for that?
 
----
-bod
+Thanks,
+
+	Ingo
