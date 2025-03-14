@@ -1,95 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38421F3FF1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 10:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FE41F4261;
+	Fri, 14 Mar 2025 10:11:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741947068; cv=none; b=Ib4iuCI4WTFct7uYYdOMD9ePIsZSoktr0vRX01nCxSMCR4x7PmWgnlYYC7/OMyTU8N5EuUhp8jGE1h7E5VgFM/r0sBBBtI1JvtShsgYKS0MjwJHXY23vhlsG4/cHQZh77dVA5tzyyQYn8SlZdNKBXifjhVLcJX4JhBHJqh8ZYuc=
+	t=1741947072; cv=none; b=EEBteKwUujqHPkuD0bsIGqN8nFak9lQLyIi9oiwdQcrpIDdc2kubKPXeWAteeIcZx9V64wj0wPwvB55yVmUaVdsbkv3AeMBuZF8+wmXzjUVkluZrXpgCUuPBEU0GG1m9TEKHgqzL9DeJf9WDdpMunxStkszV896NhP2/AtrWhOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741947068; c=relaxed/simple;
-	bh=U98yKqR09pci6Dos0Xkhum9zeW7dWjBPjiKDCl11NQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FLLYFUIoB1I4f/KpNGsNdogJZBtoN+IXD95Cm0Nrjvwwh+JYRFnzaKvxdo6nvyj0aTctLo4XBZJ/d3cQ3WrhDfpMZLbAddDqkM5XtrN4GLeV2qe4kgigHg60xSd5ud7a9p2ygD1zOWmh71+0ywkHUTMLEeyuIoV2hm9mdP7FbCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DII7biZc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741947072; c=relaxed/simple;
+	bh=tDstaa/o6sUBQipm+8mIlCkuic6AshHp3d0i/s0EITM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RIKG5yKLTyVU4HV8zMYNNAGKrlAh12S3X1Eq0SoJuC1ZwOufyAzi7ILDHfK+rFNR7B2ThhI6tQh/AhuoScF36dJZDk/mMeagDeUHgQQAXZMZ2C62qs1uwpkaeFSItYlzAIV/h/w4TGbhpmNZEJP6PLsN9Nyfanojw0dWkVgN7OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M74ckQG0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DII7biZc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B88BC4CEE9;
-	Fri, 14 Mar 2025 10:11:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M74ckQG0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F422DC4CEE3;
+	Fri, 14 Mar 2025 10:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741947068;
-	bh=U98yKqR09pci6Dos0Xkhum9zeW7dWjBPjiKDCl11NQ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DII7biZchvhnRhdU3rKFzW0yo5dl9ZwMpZtayi1CfTmdqFN+PQIv22aSNvg7oYTgR
-	 lHPvJ0NBG3rgGW+XT/294GuK1Rp4csTkCJ2/ZWG+0Aan+NNYMvU1iDLBA/k4P01gQ4
-	 zEzhLccNyDWZijIG1GqSe5Mu+bUhBUIrTeqR//Lf0Q4FZOTFQnbWVF/Ma9L3KxI4Rz
-	 wGhiZGDF+jjbsfq1TSBWNRGNHJ/Gx299k4XLQLIBF7PDWp0OY9/CpLP62uScflhU45
-	 OYIX6wtQ0LxYR7HcZ0auXmVKqQ2i2hdH2o9BDa0QxWH9v5jlm1j5ZVauJTyaTDS7Ih
-	 quMNxGTIOqHYQ==
-From: Philipp Stanner <phasta@kernel.org>
-To: Matthew Brost <matthew.brost@intel.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Subject: [PATCH v3 2/2] drm/sched: Remove kthread header
-Date: Fri, 14 Mar 2025 11:10:24 +0100
-Message-ID: <20250314101023.111248-3-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250314101023.111248-2-phasta@kernel.org>
-References: <20250314101023.111248-2-phasta@kernel.org>
+	s=k20201202; t=1741947072;
+	bh=tDstaa/o6sUBQipm+8mIlCkuic6AshHp3d0i/s0EITM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M74ckQG0sfvECxcaXf8Tl8WoWWhi4VT0YPYkXgn/QrpSQ5sg/X2u5ixhpCg99qZ92
+	 yJYOHdeJao8AqwcLwQCD4g0MlEnSjubhKT9LCyazptQa/koISoX3njO/nrKiQB4W5G
+	 X13YnXU0g5T9erpPZhALc3PWY7OlKct8dJCXG8XAXiLLSBhb1fvezOKgJ5+Wgm0maO
+	 PsxXQuZA7FB6TBsHmnHIRhKa+IYLhCIB/04KlUd3ALJxUcayMa2+9HfPyGBMWpfV1+
+	 XtQae7eE0BBFynLsY29h7JG092I7A2tuVFXm9wj/tGtN6dAykI3tODuqQeo3eBrdFY
+	 SRvU1zcD2guQg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tt20T-00DVK5-Fo;
+	Fri, 14 Mar 2025 10:11:09 +0000
+Date: Fri, 14 Mar 2025 10:11:08 +0000
+Message-ID: <86ecyzorb7.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: =?UTF-8?B?TWlrb8WCYWo=?= Lenczewski <miko.lenczewski@arm.com>,
+	suzuki.poulose@arm.com,	yang@os.amperecomputing.com,	corbet@lwn.net,
+	catalin.marinas@arm.com,	will@kernel.org,	jean-philippe@linaro.org,
+	robin.murphy@arm.com,	joro@8bytes.org,	akpm@linux-foundation.org,
+	mark.rutland@arm.com,	joey.gouly@arm.com,	james.morse@arm.com,
+	broonie@kernel.org,	anshuman.khandual@arm.com,	oliver.upton@linux.dev,
+	ioworker0@gmail.com,	baohua@kernel.org,	david@redhat.com,	jgg@ziepe.ca,
+	shameerali.kolothum.thodi@huawei.com,	nicolinc@nvidia.com,
+	mshavit@google.com,	jsnitsel@redhat.com,	smostafa@google.com,
+	linux-doc@vger.kernel.org,	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,	iommu@lists.linux.dev
+Subject: Re: [PATCH v3 1/3] arm64: Add BBM Level 2 cpu feature
+In-Reply-To: <4998dd9b-106d-4ca7-be88-5330429dcfe8@arm.com>
+References: <20250313104111.24196-2-miko.lenczewski@arm.com>
+	<20250313104111.24196-3-miko.lenczewski@arm.com>
+	<86ikocomvd.wl-maz@kernel.org>
+	<f244c20e-e11c-477b-9487-cb6738c028ca@arm.com>
+	<86h63wok11.wl-maz@kernel.org>
+	<4998dd9b-106d-4ca7-be88-5330429dcfe8@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: ryan.roberts@arm.com, miko.lenczewski@arm.com, suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org, robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org, mark.rutland@arm.com, joey.gouly@arm.com, james.morse@arm.com, broonie@kernel.org, anshuman.khandual@arm.com, oliver.upton@linux.dev, ioworker0@gmail.com, baohua@kernel.org, david@redhat.com, jgg@ziepe.ca, shameerali.kolothum.thodi@huawei.com, nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com, smostafa@google.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-The kthread header doesn't need to be included anymore. It's a relict
-from commit a6149f039369 ("drm/sched: Convert drm scheduler to use a
-work queue rather than kthread").
+On Fri, 14 Mar 2025 09:18:43 +0000,
+Ryan Roberts <ryan.roberts@arm.com> wrote:
+>=20
+> On 13/03/2025 18:36, Marc Zyngier wrote:
+> > On Thu, 13 Mar 2025 18:22:00 +0000,
+> > Ryan Roberts <ryan.roberts@arm.com> wrote:
+> >>
+> >> On 13/03/2025 17:34, Marc Zyngier wrote:
+> >>> On Thu, 13 Mar 2025 10:41:10 +0000,
+> >>> Miko=C5=82aj Lenczewski <miko.lenczewski@arm.com> wrote:
+> >>>>
+> >>>> diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kern=
+el/pi/idreg-override.c
+> >>>> index c6b185b885f7..9728faa10390 100644
+> >>>> --- a/arch/arm64/kernel/pi/idreg-override.c
+> >>>> +++ b/arch/arm64/kernel/pi/idreg-override.c
+> >>>> @@ -209,6 +209,7 @@ static const struct ftr_set_desc sw_features __p=
+rel64_initconst =3D {
+> >>>>  		FIELD("nokaslr", ARM64_SW_FEATURE_OVERRIDE_NOKASLR, NULL),
+> >>>>  		FIELD("hvhe", ARM64_SW_FEATURE_OVERRIDE_HVHE, hvhe_filter),
+> >>>>  		FIELD("rodataoff", ARM64_SW_FEATURE_OVERRIDE_RODATA_OFF, NULL),
+> >>>> +		FIELD("nobbml2", ARM64_SW_FEATURE_OVERRIDE_NOBBML2, NULL),
+> >>>>  		{}
+> >>>>  	},
+> >>>>  };
+> >>>> @@ -246,6 +247,7 @@ static const struct {
+> >>>>  	{ "rodata=3Doff",			"arm64_sw.rodataoff=3D1" },
+> >>>>  	{ "arm64.nolva",		"id_aa64mmfr2.varange=3D0" },
+> >>>>  	{ "arm64.no32bit_el0",		"id_aa64pfr0.el0=3D1" },
+> >>>> +	{ "arm64.nobbml2",		"arm64_sw.nobbml2=3D1" },
+> >>>
+> >>> Why is that a SW feature? This looks very much like a HW feature to
+> >>> me, and you should instead mask out ID_AA64MMFR2_EL1.BBM, and be done
+> >>> with it. Something like:
+> >>
+> >> I think this implies that we would expect the BBM field to be advertis=
+ing BBML2
+> >> support normally and we would check for that as part of the cpufeature
+> >> detection. That's how Miko was doing it in v2, but Yang pointed out th=
+at
+> >> AmpereOne, which supports BBML2+NOABORT semantics, doesn't actually ad=
+vertise
+> >> BBML2 in its MMFR2. So we don't want to check that field, and instead =
+rely
+> >> solely on the MIDR allow-list + a command line override. It was me that
+> >> suggested putting that in the SW feature register, and I think that st=
+ill sounds
+> >> like the right solution for this situation?
+> >=20
+> > I think this is mixing two different things:
+> >=20
+> > - preventing BBM-L2 from being visible to the kernel: this is what my
+> >   suggestion is doing by nuking an architectural feature in the
+> >   relevant register
+> >=20
+> > - random HW not correctly advertising what they are doing: this is an
+> >   erratum workaround
+> >=20
+> > I'd rather we don't conflate the two things, and make them very
+> > explicitly distinct.
+>=20
+> It all sounds so obvious when you put it like that! :)
+>=20
+> I'm guessing there is a layer where the workaround can be applied to the
+> sanitised feature registers on a per-cpu basis and that won't affect this=
+ global
+> override which will remain as an overlay on top? If so then that sounds p=
+erfect
+> (you can probably tell I find the whole feature management framework rath=
+er
+> inpeneterable).
 
-Remove the unneeded includes.
+You and I, brother... The only person who actually understands what's
+in that file is Suzuki.
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
----
- drivers/gpu/drm/scheduler/sched_entity.c | 1 -
- drivers/gpu/drm/scheduler/sched_fence.c  | 1 -
- 2 files changed, 2 deletions(-)
+> That workaround would be added as part of Yang's series anyway.
 
-diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
-index 74a72c0a9c0a..8551892aca12 100644
---- a/drivers/gpu/drm/scheduler/sched_entity.c
-+++ b/drivers/gpu/drm/scheduler/sched_entity.c
-@@ -21,7 +21,6 @@
-  *
-  */
- 
--#include <linux/kthread.h>
- #include <linux/slab.h>
- #include <linux/completion.h>
- 
-diff --git a/drivers/gpu/drm/scheduler/sched_fence.c b/drivers/gpu/drm/scheduler/sched_fence.c
-index e971528504a5..d6239e015b66 100644
---- a/drivers/gpu/drm/scheduler/sched_fence.c
-+++ b/drivers/gpu/drm/scheduler/sched_fence.c
-@@ -21,7 +21,6 @@
-  *
-  */
- 
--#include <linux/kthread.h>
- #include <linux/module.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
--- 
-2.48.1
+Yup, that's what I'd expect. Ideally tied to an erratum number so that
+we have an actual promise from the vendor that their implementation is
+actually BBM-L2 compliant despite the idreg breakage.
 
+Thanks,
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
