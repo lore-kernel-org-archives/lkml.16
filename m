@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F912066D8
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65BC20765E
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741988517; cv=none; b=GtiZDDINIYcoNqQoYaDGeyg3yzyBLGicWK3Bg9IcIDdC+fTnQiO0HoXnryfgpktviZcieLk7RiHEc8vDQ6WAnZc44o9fjyCg7NlYd8kuJ6QIYeKwAoBJXcI+CAVwRPT0Qetwu+nZ8C2kO6nOgBwXwowwuyoOjH4J7kL/ftTwlxw=
+	t=1741988518; cv=none; b=SuVsvEhMj9e0lj7F/EAcwqP512xUp1WXZEaLfLlLaYSFmm7U1c8zXtTFCy/rEWmI5VLew8geJmBzh3CVrfWBSoB8fv9P7eJZNqo+Rquv0dgsPtHmowT+6e3swkGue9a7JESe4QiSSxQm8DWk8Fs4xksI9LqoFznhpSU0gve3dB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741988517; c=relaxed/simple;
-	bh=PorFgzHa3n8AH+cjYhe35ak5zLtn6Ejf+tmiPWhyFTQ=;
+	s=arc-20240116; t=1741988518; c=relaxed/simple;
+	bh=izdT47cZGsStDFz27dBAXEaLTeKotz3eSdtzETaRuKY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PRAPUbCwdVe9EDRY3sYxlNRtX1Lq6TCphxBLXdr6pbyeCM5l6ujBWu3Lm7t0okyJYWDEvPp3twi3j6HpH7NehQyyBtV64lFxff6oKT0g8Au6O4Leg76CNvSozL/ZAz7g8XIpBuGn8cpKSS9Ky43PKSt0dwDBzNh7tM03w95vVX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgdR6p1T; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Jjoa/oVOnCb5x06LmZiqWww8OYZWxI3m3Xkgq9uJKFFCZvtdlisAH/qPPLaN8C1h7c0ShB2lZ14vxetOEtlYqCUGo4qnPbSxyXmnjX2M+FbFCmDalbGFqaOwud19Bz6pUCq32zQ7p23M7FvuaH8ko931auR66iHgTqFWqp2TKG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYPnGvmj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgdR6p1T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B804C4CEEC;
-	Fri, 14 Mar 2025 21:41:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYPnGvmj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B1B6C4CEE9;
+	Fri, 14 Mar 2025 21:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741988517;
-	bh=PorFgzHa3n8AH+cjYhe35ak5zLtn6Ejf+tmiPWhyFTQ=;
+	s=k20201202; t=1741988518;
+	bh=izdT47cZGsStDFz27dBAXEaLTeKotz3eSdtzETaRuKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dgdR6p1TECz+YGqfj6v6YyPW5STgoCoI0XNknQCI0U5rHtSeMZU2lI3BXvGvfX5aX
-	 p+p7iyMcsc80jcrLxLYYYFNSZcyJZEhBpN7GN9O7djjfHoqG9uv1q6eq3rXMDjjHJd
-	 ght+1RyjIIcttfB+kkHzY2UbrrnJWjYlqoTs2IgYu+0ofn201iPD2xq0IkulUbUZSB
-	 tcz0FMOwAzJk6Jt8ErrpJjBq5g3gTGdzDXuBor+492w5JA3mKTA5dptnrDSb58ONT8
-	 ucqTPd/DYs5DVQpiVSk0MK/TQnxxF93yBR8eb/Zmvy6sX1jyUwPKPidcAe8QsO/rhr
-	 QhbwxnFltrUUA==
+	b=QYPnGvmjb1rKr7Dtg8cvuU76mgwa8M1cFRvcXuIMc6n/yCzSU9oMDeIhwCJzEwHx9
+	 pvLD/v7sMr5qynP5SFDusl2tT1B6lVNdd+kKcmekcAQgY84fIh6lDhg2OjUSqs4QTR
+	 xo8+NRYavXegAO/OEBvJ6xlRI8DRM2vJTuJ2/dwNAD3zhKvoWs0oeTJkTvO8Ez8s3F
+	 Ba/02Piuw4pwXJJtkx70WuljDJWlKw3b78X1HmaG6blxScj9PqVY/6bwTNdvEFUFaT
+	 M88I5h4pLh4+XTCoeHwTF4U/32vFyyna0wscwlx7kOtiVshownnwgbUjZLFukB6PoT
+	 dKjaMS4134JRw==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Uros Bizjak <ubizjak@gmail.com>,
 	Andrew Cooper <andrew.cooper3@citrix.com>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 06/20] x86/asm: Remove CC_SET()
-Date: Fri, 14 Mar 2025 14:41:19 -0700
-Message-ID: <fc92a93060fe0f17bbc9fcb2d447463fd3f9296c.1741988314.git.jpoimboe@kernel.org>
+Subject: [PATCH 08/20] x86/asm: Replace ASM_{OUTPUT,INPUT}() with ARG()
+Date: Fri, 14 Mar 2025 14:41:21 -0700
+Message-ID: <6a9e1c01f21ba64aefc7082f660615508c3df8f3.1741988314.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1741988314.git.jpoimboe@kernel.org>
 References: <cover.1741988314.git.jpoimboe@kernel.org>
@@ -50,348 +50,319 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that flag output operands are unconditionally supported, CC_SET() is
-just a comment.  Remove it.
+Replace ASM_OUTPUT() and ASM_INPUT() with ARG().  It provides more
+visual separation and vertical alignment, making it easy to distinguish
+the outputs, inputs and clobbers.  It will also come in handy for other
+inline asm wrappers.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/boot/bitops.h               | 2 +-
- arch/x86/boot/boot.h                 | 4 ++--
- arch/x86/boot/string.c               | 2 +-
- arch/x86/include/asm/archrandom.h    | 2 --
- arch/x86/include/asm/asm.h           | 3 +--
- arch/x86/include/asm/bitops.h        | 6 ------
- arch/x86/include/asm/cmpxchg.h       | 4 ----
- arch/x86/include/asm/cmpxchg_32.h    | 2 --
- arch/x86/include/asm/cmpxchg_64.h    | 1 -
- arch/x86/include/asm/percpu.h        | 4 ----
- arch/x86/include/asm/rmwcc.h         | 2 +-
- arch/x86/include/asm/sev.h           | 1 -
- arch/x86/include/asm/signal.h        | 2 +-
- arch/x86/include/asm/special_insns.h | 1 -
- arch/x86/include/asm/uaccess.h       | 1 -
- tools/arch/x86/include/asm/asm.h     | 5 ++---
- 16 files changed, 9 insertions(+), 33 deletions(-)
+ arch/x86/include/asm/apic.h          |  2 +-
+ arch/x86/include/asm/asm.h           | 11 ++--
+ arch/x86/include/asm/atomic64_32.h   | 93 +++++++++++++++-------------
+ arch/x86/include/asm/page_64.h       | 12 ++--
+ arch/x86/include/asm/segment.h       |  5 +-
+ arch/x86/include/asm/special_insns.h |  2 +-
+ 6 files changed, 67 insertions(+), 58 deletions(-)
 
-diff --git a/arch/x86/boot/bitops.h b/arch/x86/boot/bitops.h
-index 8518ae214c9b..4f773e0957b0 100644
---- a/arch/x86/boot/bitops.h
-+++ b/arch/x86/boot/bitops.h
-@@ -27,7 +27,7 @@ static inline bool variable_test_bit(int nr, const void *addr)
- 	bool v;
- 	const u32 *p = addr;
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index ecf1b229f09b..6526bad6ec81 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -100,7 +100,7 @@ static inline void native_apic_mem_write(u32 reg, u32 v)
  
--	asm("btl %2,%1" CC_SET(c) : CC_OUT(c) (v) : "m" (*p), "Ir" (nr));
-+	asm("btl %2,%1" : CC_OUT(c) (v) : "m" (*p), "Ir" (nr));
- 	return v;
+ 	alternative_io("movl %[val], %[mem]",
+ 		       "xchgl %[val], %[mem]", X86_BUG_11AP,
+-		       ASM_OUTPUT([val] "+r" (v), [mem] "+m" (*addr)));
++		       ARG([val] "+r" (v), [mem] "+m" (*addr)));
  }
  
-diff --git a/arch/x86/boot/boot.h b/arch/x86/boot/boot.h
-index 0f24f7ebec9b..a35823039847 100644
---- a/arch/x86/boot/boot.h
-+++ b/arch/x86/boot/boot.h
-@@ -155,14 +155,14 @@ static inline void wrgs32(u32 v, addr_t addr)
- static inline bool memcmp_fs(const void *s1, addr_t s2, size_t len)
- {
- 	bool diff;
--	asm volatile("fs; repe; cmpsb" CC_SET(nz)
-+	asm volatile("fs; repe; cmpsb"
- 		     : CC_OUT(nz) (diff), "+D" (s1), "+S" (s2), "+c" (len));
- 	return diff;
- }
- static inline bool memcmp_gs(const void *s1, addr_t s2, size_t len)
- {
- 	bool diff;
--	asm volatile("gs; repe; cmpsb" CC_SET(nz)
-+	asm volatile("gs; repe; cmpsb"
- 		     : CC_OUT(nz) (diff), "+D" (s1), "+S" (s2), "+c" (len));
- 	return diff;
- }
-diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
-index 84f7a883ce1e..c0cc6d1a7030 100644
---- a/arch/x86/boot/string.c
-+++ b/arch/x86/boot/string.c
-@@ -32,7 +32,7 @@
- int memcmp(const void *s1, const void *s2, size_t len)
- {
- 	bool diff;
--	asm("repe; cmpsb" CC_SET(nz)
-+	asm("repe; cmpsb"
- 	    : CC_OUT(nz) (diff), "+D" (s1), "+S" (s2), "+c" (len));
- 	return diff;
- }
-diff --git a/arch/x86/include/asm/archrandom.h b/arch/x86/include/asm/archrandom.h
-index 02bae8e0758b..813a99b6ec7b 100644
---- a/arch/x86/include/asm/archrandom.h
-+++ b/arch/x86/include/asm/archrandom.h
-@@ -23,7 +23,6 @@ static inline bool __must_check rdrand_long(unsigned long *v)
- 	unsigned int retry = RDRAND_RETRY_LOOPS;
- 	do {
- 		asm volatile("rdrand %[out]"
--			     CC_SET(c)
- 			     : CC_OUT(c) (ok), [out] "=r" (*v));
- 		if (ok)
- 			return true;
-@@ -35,7 +34,6 @@ static inline bool __must_check rdseed_long(unsigned long *v)
- {
- 	bool ok;
- 	asm volatile("rdseed %[out]"
--		     CC_SET(c)
- 		     : CC_OUT(c) (ok), [out] "=r" (*v));
- 	return ok;
- }
+ static inline u32 native_apic_mem_read(u32 reg)
 diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index fdebd4356860..619817841f4c 100644
+index 619817841f4c..9f0f830628f9 100644
 --- a/arch/x86/include/asm/asm.h
 +++ b/arch/x86/include/asm/asm.h
-@@ -128,10 +128,9 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
- #endif
+@@ -212,11 +212,14 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
+ #define __COMMA(...)		, ##__VA_ARGS__
  
  /*
-- * Macros to generate condition code outputs from inline assembly,
-+ * Generate condition code outputs from inline assembly.
-  * The output operand must be type "bool".
+- * Combine multiple asm inline constraint args into a single arg for passing to
+- * another macro.
++ * ARG() can be used to bundle multiple arguments into a single argument for
++ * passing to a macro.
++ *
++ * For inline asm constraint operands, this is recommended even for single
++ * operands as it provides visual separation and vertical alignment similar to
++ * the ':' characters in an inline asm statement.
   */
--#define CC_SET(c) "\n\t/* output condition code " #c "*/\n"
- #define CC_OUT(c) "=@cc" #c
+-#define ASM_OUTPUT(x...)	x
+-#define ASM_INPUT(x...)		x
++#define ARG(x...) x
  
- #ifdef __KERNEL__
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index b96d45944c59..67b86e7c1ea3 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -99,7 +99,6 @@ static __always_inline bool arch_xor_unlock_is_negative_byte(unsigned long mask,
+ /*
+  * This output constraint should be used for any inline asm which has a "call"
+diff --git a/arch/x86/include/asm/atomic64_32.h b/arch/x86/include/asm/atomic64_32.h
+index ab838205c1c6..8775f84222e6 100644
+--- a/arch/x86/include/asm/atomic64_32.h
++++ b/arch/x86/include/asm/atomic64_32.h
+@@ -59,9 +59,11 @@ static __always_inline s64 arch_atomic64_read_nonatomic(const atomic64_t *v)
+ #define ATOMIC64_DECL(sym) ATOMIC64_DECL_ONE(sym##_cx8)
+ #else
+ #define __alternative_atomic64(f, g, out, in, clobbers...)		\
+-	alternative_call(atomic64_##f##_386, atomic64_##g##_cx8,	\
+-			 X86_FEATURE_CX8, ASM_OUTPUT(out),		\
+-			 ASM_INPUT(in), clobbers)
++	alternative_call(atomic64_##f##_386,				\
++			 atomic64_##g##_cx8, X86_FEATURE_CX8,		\
++			 ARG(out),					\
++			 ARG(in),					\
++			 ARG(clobbers))
+ 
+ #define ATOMIC64_DECL(sym) ATOMIC64_DECL_ONE(sym##_cx8); \
+ 	ATOMIC64_DECL_ONE(sym##_386)
+@@ -73,7 +75,7 @@ ATOMIC64_DECL_ONE(dec_386);
+ #endif
+ 
+ #define alternative_atomic64(f, out, in, clobbers...) \
+-	__alternative_atomic64(f, f, ASM_OUTPUT(out), ASM_INPUT(in), clobbers)
++	__alternative_atomic64(f, f, ARG(out), ARG(in), ARG(clobbers))
+ 
+ ATOMIC64_DECL(read);
+ ATOMIC64_DECL(set);
+@@ -109,9 +111,9 @@ static __always_inline s64 arch_atomic64_xchg(atomic64_t *v, s64 n)
+ 	unsigned high = (unsigned)(n >> 32);
+ 	unsigned low = (unsigned)n;
+ 	alternative_atomic64(xchg,
+-			     "=&A" (o),
+-			     ASM_INPUT("S" (v), "b" (low), "c" (high)),
+-			     "memory");
++			     ARG("=&A" (o)),
++			     ARG("S" (v), "b" (low), "c" (high)),
++			     ARG("memory"));
+ 	return o;
+ }
+ #define arch_atomic64_xchg arch_atomic64_xchg
+@@ -121,24 +123,27 @@ static __always_inline void arch_atomic64_set(atomic64_t *v, s64 i)
+ 	unsigned high = (unsigned)(i >> 32);
+ 	unsigned low = (unsigned)i;
+ 	alternative_atomic64(set,
+-			     /* no output */,
+-			     ASM_INPUT("S" (v), "b" (low), "c" (high)),
+-			     "eax", "edx", "memory");
++			     ARG(),
++			     ARG("S" (v), "b" (low), "c" (high)),
++			     ARG("eax", "edx", "memory"));
+ }
+ 
+ static __always_inline s64 arch_atomic64_read(const atomic64_t *v)
  {
- 	bool negative;
- 	asm volatile(LOCK_PREFIX "xorb %2,%1"
--		CC_SET(s)
- 		: CC_OUT(s) (negative), WBYTE_ADDR(addr)
- 		: "iq" ((char)mask) : "memory");
- 	return negative;
-@@ -149,7 +148,6 @@ arch___test_and_set_bit(unsigned long nr, volatile unsigned long *addr)
- 	bool oldbit;
+ 	s64 r;
+-	alternative_atomic64(read, "=&A" (r), "c" (v), "memory");
++	alternative_atomic64(read,
++			     ARG("=&A" (r)),
++			     ARG("c" (v)),
++			     ARG("memory"));
+ 	return r;
+ }
  
- 	asm(__ASM_SIZE(bts) " %2,%1"
--	    CC_SET(c)
- 	    : CC_OUT(c) (oldbit)
- 	    : ADDR, "Ir" (nr) : "memory");
- 	return oldbit;
-@@ -175,7 +173,6 @@ arch___test_and_clear_bit(unsigned long nr, volatile unsigned long *addr)
- 	bool oldbit;
- 
- 	asm volatile(__ASM_SIZE(btr) " %2,%1"
--		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit)
- 		     : ADDR, "Ir" (nr) : "memory");
- 	return oldbit;
-@@ -187,7 +184,6 @@ arch___test_and_change_bit(unsigned long nr, volatile unsigned long *addr)
- 	bool oldbit;
- 
- 	asm volatile(__ASM_SIZE(btc) " %2,%1"
--		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit)
- 		     : ADDR, "Ir" (nr) : "memory");
- 
-@@ -211,7 +207,6 @@ static __always_inline bool constant_test_bit_acquire(long nr, const volatile un
- 	bool oldbit;
- 
- 	asm volatile("testb %2,%1"
--		     CC_SET(nz)
- 		     : CC_OUT(nz) (oldbit)
- 		     : "m" (((unsigned char *)addr)[nr >> 3]),
- 		       "i" (1 << (nr & 7))
-@@ -225,7 +220,6 @@ static __always_inline bool variable_test_bit(long nr, volatile const unsigned l
- 	bool oldbit;
- 
- 	asm volatile(__ASM_SIZE(bt) " %2,%1"
--		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit)
- 		     : "m" (*(unsigned long *)addr), "Ir" (nr) : "memory");
- 
-diff --git a/arch/x86/include/asm/cmpxchg.h b/arch/x86/include/asm/cmpxchg.h
-index fd8afc1f5f6b..e801dc982a64 100644
---- a/arch/x86/include/asm/cmpxchg.h
-+++ b/arch/x86/include/asm/cmpxchg.h
-@@ -166,7 +166,6 @@ extern void __add_wrong_size(void)
- 	{								\
- 		volatile u8 *__ptr = (volatile u8 *)(_ptr);		\
- 		asm volatile(lock "cmpxchgb %[new], %[ptr]"		\
--			     CC_SET(z)					\
- 			     : CC_OUT(z) (success),			\
- 			       [ptr] "+m" (*__ptr),			\
- 			       [old] "+a" (__old)			\
-@@ -178,7 +177,6 @@ extern void __add_wrong_size(void)
- 	{								\
- 		volatile u16 *__ptr = (volatile u16 *)(_ptr);		\
- 		asm volatile(lock "cmpxchgw %[new], %[ptr]"		\
--			     CC_SET(z)					\
- 			     : CC_OUT(z) (success),			\
- 			       [ptr] "+m" (*__ptr),			\
- 			       [old] "+a" (__old)			\
-@@ -190,7 +188,6 @@ extern void __add_wrong_size(void)
- 	{								\
- 		volatile u32 *__ptr = (volatile u32 *)(_ptr);		\
- 		asm volatile(lock "cmpxchgl %[new], %[ptr]"		\
--			     CC_SET(z)					\
- 			     : CC_OUT(z) (success),			\
- 			       [ptr] "+m" (*__ptr),			\
- 			       [old] "+a" (__old)			\
-@@ -202,7 +199,6 @@ extern void __add_wrong_size(void)
- 	{								\
- 		volatile u64 *__ptr = (volatile u64 *)(_ptr);		\
- 		asm volatile(lock "cmpxchgq %[new], %[ptr]"		\
--			     CC_SET(z)					\
- 			     : CC_OUT(z) (success),			\
- 			       [ptr] "+m" (*__ptr),			\
- 			       [old] "+a" (__old)			\
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index 6d7afee2fa07..50f973ca635d 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -46,7 +46,6 @@ static __always_inline u64 __cmpxchg64_local(volatile u64 *ptr, u64 old, u64 new
- 	bool ret;							\
- 									\
- 	asm volatile(_lock "cmpxchg8b %[ptr]"				\
--		     CC_SET(e)						\
- 		     : CC_OUT(e) (ret),					\
- 		       [ptr] "+m" (*(_ptr)),				\
- 		       "+a" (o.low), "+d" (o.high)			\
-@@ -125,7 +124,6 @@ static __always_inline u64 arch_cmpxchg64_local(volatile u64 *ptr, u64 old, u64
- 		ALTERNATIVE(_lock_loc					\
- 			    "call cmpxchg8b_emu",			\
- 			    _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
--		CC_SET(e)						\
- 		: ALT_OUTPUT_SP(CC_OUT(e) (ret),			\
- 				"+a" (o.low), "+d" (o.high))		\
- 		: "b" (n.low), "c" (n.high),				\
-diff --git a/arch/x86/include/asm/cmpxchg_64.h b/arch/x86/include/asm/cmpxchg_64.h
-index 5e241306db26..03ab7699648c 100644
---- a/arch/x86/include/asm/cmpxchg_64.h
-+++ b/arch/x86/include/asm/cmpxchg_64.h
-@@ -66,7 +66,6 @@ static __always_inline u128 arch_cmpxchg128_local(volatile u128 *ptr, u128 old,
- 	bool ret;							\
- 									\
- 	asm volatile(_lock "cmpxchg16b %[ptr]"				\
--		     CC_SET(e)						\
- 		     : CC_OUT(e) (ret),					\
- 		       [ptr] "+m" (*(_ptr)),				\
- 		       "+a" (o.low), "+d" (o.high)			\
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 462d071c87d4..9c95f2576df1 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -294,7 +294,6 @@ do {									\
- 									\
- 	asm qual (__pcpu_op_##size("cmpxchg") "%[nval], "		\
- 		  __percpu_arg([var])					\
--		  CC_SET(z)						\
- 		  : CC_OUT(z) (success),				\
- 		    [oval] "+a" (pco_old__),				\
- 		    [var] "+m" (__my_cpu_var(_var))			\
-@@ -352,7 +351,6 @@ do {									\
- 	asm_inline qual (						\
- 		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
- 			    "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
--		CC_SET(z)						\
- 		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
- 				[var] "+m" (__my_cpu_var(_var)),	\
- 				"+a" (old__.low), "+d" (old__.high))	\
-@@ -421,7 +419,6 @@ do {									\
- 	asm_inline qual (						\
- 		ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
- 			    "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
--		CC_SET(z)						\
- 		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
- 				[var] "+m" (__my_cpu_var(_var)),	\
- 				"+a" (old__.low), "+d" (old__.high))	\
-@@ -570,7 +567,6 @@ do {									\
- 	bool oldbit;							\
- 									\
- 	asm volatile("btl %[nr], " __percpu_arg([var])			\
--		     CC_SET(c)						\
- 		     : CC_OUT(c) (oldbit)				\
- 		     : [var] "m" (__my_cpu_var(_var)),			\
- 		       [nr] "rI" (_nr));				\
-diff --git a/arch/x86/include/asm/rmwcc.h b/arch/x86/include/asm/rmwcc.h
-index a54303e3dfa1..081311e22438 100644
---- a/arch/x86/include/asm/rmwcc.h
-+++ b/arch/x86/include/asm/rmwcc.h
-@@ -9,7 +9,7 @@
- #define __GEN_RMWcc(fullop, _var, cc, clobbers, ...)			\
- ({									\
- 	bool c;								\
--	asm volatile (fullop CC_SET(cc)					\
-+	asm volatile (fullop						\
- 			: [var] "+m" (_var), CC_OUT(cc) (c)		\
- 			: __VA_ARGS__ : clobbers);			\
- 	c;								\
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index ba7999f66abe..5bd058d3e133 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -440,7 +440,6 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
- 
- 	/* "pvalidate" mnemonic support in binutils 2.36 and newer */
- 	asm volatile(".byte 0xF2, 0x0F, 0x01, 0xFF\n\t"
--		     CC_SET(c)
- 		     : CC_OUT(c) (no_rmpupdate), "=a"(rc)
- 		     : "a"(vaddr), "c"(rmp_psize), "d"(validate)
- 		     : "memory", "cc");
-diff --git a/arch/x86/include/asm/signal.h b/arch/x86/include/asm/signal.h
-index 4a4043ca6493..e0d37bf00f27 100644
---- a/arch/x86/include/asm/signal.h
-+++ b/arch/x86/include/asm/signal.h
-@@ -83,7 +83,7 @@ static inline int __const_sigismember(sigset_t *set, int _sig)
- static inline int __gen_sigismember(sigset_t *set, int _sig)
+ static __always_inline s64 arch_atomic64_add_return(s64 i, atomic64_t *v)
  {
- 	bool ret;
--	asm("btl %2,%1" CC_SET(c)
-+	asm("btl %2,%1"
- 	    : CC_OUT(c) (ret) : "m"(*set), "Ir"(_sig-1));
+ 	alternative_atomic64(add_return,
+-			     ASM_OUTPUT("+A" (i), "+c" (v)),
+-			     /* no input */,
+-			     "memory");
++			     ARG("+A" (i), "+c" (v)),
++			     ARG(),
++			     ARG("memory"));
+ 	return i;
+ }
+ #define arch_atomic64_add_return arch_atomic64_add_return
+@@ -146,9 +151,9 @@ static __always_inline s64 arch_atomic64_add_return(s64 i, atomic64_t *v)
+ static __always_inline s64 arch_atomic64_sub_return(s64 i, atomic64_t *v)
+ {
+ 	alternative_atomic64(sub_return,
+-			     ASM_OUTPUT("+A" (i), "+c" (v)),
+-			     /* no input */,
+-			     "memory");
++			     ARG("+A" (i), "+c" (v)),
++			     ARG(),
++			     ARG("memory"));
+ 	return i;
+ }
+ #define arch_atomic64_sub_return arch_atomic64_sub_return
+@@ -157,9 +162,9 @@ static __always_inline s64 arch_atomic64_inc_return(atomic64_t *v)
+ {
+ 	s64 a;
+ 	alternative_atomic64(inc_return,
+-			     "=&A" (a),
+-			     "S" (v),
+-			     "memory", "ecx");
++			     ARG("=&A" (a)),
++			     ARG("S" (v)),
++			     ARG("memory", "ecx"));
+ 	return a;
+ }
+ #define arch_atomic64_inc_return arch_atomic64_inc_return
+@@ -168,9 +173,9 @@ static __always_inline s64 arch_atomic64_dec_return(atomic64_t *v)
+ {
+ 	s64 a;
+ 	alternative_atomic64(dec_return,
+-			     "=&A" (a),
+-			     "S" (v),
+-			     "memory", "ecx");
++			     ARG("=&A" (a)),
++			     ARG("S" (v)),
++			     ARG("memory", "ecx"));
+ 	return a;
+ }
+ #define arch_atomic64_dec_return arch_atomic64_dec_return
+@@ -178,34 +183,34 @@ static __always_inline s64 arch_atomic64_dec_return(atomic64_t *v)
+ static __always_inline void arch_atomic64_add(s64 i, atomic64_t *v)
+ {
+ 	__alternative_atomic64(add, add_return,
+-			       ASM_OUTPUT("+A" (i), "+c" (v)),
+-			       /* no input */,
+-			       "memory");
++			       ARG("+A" (i), "+c" (v)),
++			       ARG(),
++			       ARG("memory"));
+ }
+ 
+ static __always_inline void arch_atomic64_sub(s64 i, atomic64_t *v)
+ {
+ 	__alternative_atomic64(sub, sub_return,
+-			       ASM_OUTPUT("+A" (i), "+c" (v)),
+-			       /* no input */,
+-			       "memory");
++			       ARG("+A" (i), "+c" (v)),
++			       ARG(),
++			       ARG("memory"));
+ }
+ 
+ static __always_inline void arch_atomic64_inc(atomic64_t *v)
+ {
+ 	__alternative_atomic64(inc, inc_return,
+-			       /* no output */,
+-			       "S" (v),
+-			       "memory", "eax", "ecx", "edx");
++			       ARG(),
++			       ARG("S" (v)),
++			       ARG("memory", "eax", "ecx", "edx"));
+ }
+ #define arch_atomic64_inc arch_atomic64_inc
+ 
+ static __always_inline void arch_atomic64_dec(atomic64_t *v)
+ {
+ 	__alternative_atomic64(dec, dec_return,
+-			       /* no output */,
+-			       "S" (v),
+-			       "memory", "eax", "ecx", "edx");
++			       ARG(),
++			       ARG("S" (v)),
++			       ARG("memory", "eax", "ecx", "edx"));
+ }
+ #define arch_atomic64_dec arch_atomic64_dec
+ 
+@@ -214,9 +219,9 @@ static __always_inline int arch_atomic64_add_unless(atomic64_t *v, s64 a, s64 u)
+ 	unsigned low = (unsigned)u;
+ 	unsigned high = (unsigned)(u >> 32);
+ 	alternative_atomic64(add_unless,
+-			     ASM_OUTPUT("+A" (a), "+c" (low), "+D" (high)),
+-			     "S" (v),
+-			     "memory");
++			     ARG("+A" (a), "+c" (low), "+D" (high)),
++			     ARG("S" (v)),
++			     ARG("memory"));
+ 	return (int)a;
+ }
+ #define arch_atomic64_add_unless arch_atomic64_add_unless
+@@ -225,9 +230,9 @@ static __always_inline int arch_atomic64_inc_not_zero(atomic64_t *v)
+ {
+ 	int r;
+ 	alternative_atomic64(inc_not_zero,
+-			     "=&a" (r),
+-			     "S" (v),
+-			     "ecx", "edx", "memory");
++			     ARG("=&a" (r)),
++			     ARG("S" (v)),
++			     ARG("ecx", "edx", "memory"));
+ 	return r;
+ }
+ #define arch_atomic64_inc_not_zero arch_atomic64_inc_not_zero
+@@ -236,9 +241,9 @@ static __always_inline s64 arch_atomic64_dec_if_positive(atomic64_t *v)
+ {
+ 	s64 r;
+ 	alternative_atomic64(dec_if_positive,
+-			     "=&A" (r),
+-			     "S" (v),
+-			     "ecx", "memory");
++			     ARG("=&A" (r)),
++			     ARG("S" (v)),
++			     ARG("ecx", "memory"));
+ 	return r;
+ }
+ #define arch_atomic64_dec_if_positive arch_atomic64_dec_if_positive
+diff --git a/arch/x86/include/asm/page_64.h b/arch/x86/include/asm/page_64.h
+index db3003acd41e..0604e9d49221 100644
+--- a/arch/x86/include/asm/page_64.h
++++ b/arch/x86/include/asm/page_64.h
+@@ -54,9 +54,9 @@ static inline void clear_page(void *page)
+ 	alternative_call_2(clear_page_orig,
+ 			   clear_page_rep, X86_FEATURE_REP_GOOD,
+ 			   clear_page_erms, X86_FEATURE_ERMS,
+-			   "=D" (page),
+-			   "D" (page),
+-			   "cc", "memory", "rax", "rcx");
++			   ARG("=D" (page)),
++			   ARG("D" (page)),
++			   ARG("cc", "memory", "rax", "rcx"));
+ }
+ 
+ void copy_page(void *to, void *from);
+@@ -87,9 +87,9 @@ static __always_inline unsigned long task_size_max(void)
+ 
+ 	alternative_io("movq %[small], %[ret]",
+ 		       "movq %[large], %[ret]", X86_FEATURE_LA57,
+-			[ret] "=r" (ret),
+-			[small] "i" ((1ul << 47)-PAGE_SIZE),
+-			[large] "i" ((1ul << 56)-PAGE_SIZE));
++			ARG([ret] "=r" (ret)),
++			ARG([small] "i" ((1ul << 47)-PAGE_SIZE),
++			    [large] "i" ((1ul << 56)-PAGE_SIZE)));
+ 
  	return ret;
  }
+diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
+index 9d6411c65920..32b1aa9f721b 100644
+--- a/arch/x86/include/asm/segment.h
++++ b/arch/x86/include/asm/segment.h
+@@ -254,10 +254,11 @@ static inline void vdso_read_cpunode(unsigned *cpu, unsigned *node)
+ 	 *
+ 	 * If RDPID is available, use it.
+ 	 */
+-	alternative_io ("lsl %[seg],%[p]",
++	alternative_io("lsl %[seg],%[p]",
+ 			".byte 0xf3,0x0f,0xc7,0xf8", /* RDPID %eax/rax */
+ 			X86_FEATURE_RDPID,
+-			[p] "=a" (p), [seg] "r" (__CPUNODE_SEG));
++			ARG([p] "=a" (p)),
++			ARG([seg] "r" (__CPUNODE_SEG)));
+ 
+ 	if (cpu)
+ 		*cpu = (p & VDSO_CPUNODE_MASK);
 diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index b905076cf7f6..9c1cc0ef8f3c 100644
+index 9c1cc0ef8f3c..a6a3f4c95f03 100644
 --- a/arch/x86/include/asm/special_insns.h
 +++ b/arch/x86/include/asm/special_insns.h
-@@ -274,7 +274,6 @@ static inline int enqcmds(void __iomem *dst, const void *src)
- 	 * See movdir64b()'s comment on operand specification.
- 	 */
- 	asm volatile(".byte 0xf3, 0x0f, 0x38, 0xf8, 0x02, 0x66, 0x90"
--		     CC_SET(z)
- 		     : CC_OUT(z) (zf), "+m" (*__dst)
- 		     : "m" (*__src), "a" (__dst), "d" (__src));
+@@ -178,7 +178,7 @@ static inline void clflushopt(volatile void *__p)
+ {
+ 	alternative_io(".byte 0x3e; clflush %[val]",
+ 		       ".byte 0x66; clflush %[val]", X86_FEATURE_CLFLUSHOPT,
+-		       [val] "+m" (*(volatile char __force *)__p));
++		       ARG([val] "+m" (*(volatile char __force *)__p)));
+ }
  
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 3a7755c1a441..c37063121aaa 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -417,7 +417,6 @@ do {									\
- 	__typeof__(*(_ptr)) __new = (_new);				\
- 	asm volatile("\n"						\
- 		     "1: " LOCK_PREFIX "cmpxchg"itype" %[new], %[ptr]\n"\
--		     CC_SET(z)						\
- 		     "2:\n"						\
- 		     _ASM_EXTABLE_TYPE_REG(1b, 2b, EX_TYPE_EFAULT_REG,	\
- 					   %[errout])			\
-diff --git a/tools/arch/x86/include/asm/asm.h b/tools/arch/x86/include/asm/asm.h
-index f66cf34f6197..b97b3b53045f 100644
---- a/tools/arch/x86/include/asm/asm.h
-+++ b/tools/arch/x86/include/asm/asm.h
-@@ -109,11 +109,10 @@
- #endif
- 
- /*
-- * Macros to generate condition code outputs from inline assembly,
-+ * Generate condition code outputs from inline assembly.
-  * The output operand must be type "bool".
-  */
--# define CC_SET(c) "\n\t/* output condition code " #c "*/\n"
--# define CC_OUT(c) "=@cc" #c
-+#define CC_OUT(c) "=@cc" #c
- 
- #ifdef __KERNEL__
- 
+ static inline void clwb(volatile void *__p)
 -- 
 2.48.1
 
