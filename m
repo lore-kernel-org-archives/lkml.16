@@ -1,109 +1,119 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340E52036E0
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAD614375C;
+	Fri, 14 Mar 2025 17:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741973949; cv=none; b=Ntz/Uo1CHhWRiNyUJ+G0ZY+nA3PRyjZgNtUzxkAP4jjN2B1gddh2muZMaBGQL3Qwar2bUkUs01kosZalfTj6wAfhUFiAO1hnxOwpbsU+iUQsbbkNl2KauN5Cj+Xg7hoyXA3WAdrzWFJqNzE3VN1asVwwvPMSBuyrjYZwKI7PsFo=
+	t=1741973992; cv=none; b=oDaW0CkgoDEaeeoELQ0sMzocizw5MnxW5QpfvMjRbWJM9tz/n2FYGwMdg+D6+p98h6qP/kWD43fgcVtMTXE6al27T3bvnqJOuQ6/18K5rqHJ+psh5M4nsegE6Smt7dpIYsi3zoRLfMT905rLXoFPdNtIs+cVYTwx0LAjRJr7vDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741973949; c=relaxed/simple;
-	bh=PHdZRWeQ7ylwH9rabg+HUAzgax49mGzBpenAMxiNdf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OslZmvG1VIWKWmhDtt744zjfpKTYIRhUpodlX8nV3QMO7tBSK6VPThkoX13me675/XVq+wH8tE7UBTo4/LmsojVS1GvhQYWA0Sxb7Igdh9daFYF7hPQJxTrop+0DLFZw8OtbngBfR2/VfmkVtJQG08i5Xm5EcNTfFhgin+HgzrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=M0dV2jm6; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741973992; c=relaxed/simple;
+	bh=vBWuUB5Jw4eDAej2/Yv6HHL10/QEJgGXLaT+W3wBRhs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=cSjvx5vzgvg1uTlxkxbnaVZ1/KGw1xO/UmP1JQFbOn+p/23szCvQwJRs+7UXbTWNXYunH0pkobJh0ohxTRRb3kHxCmMb8Pogv/QN2eidfKreMgVyg9F0N0hTMfXyQGKUD7P9NMeKZ9OsIazlOrLcjZMGZJkSwk93zWFgRGIk3hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Qr8eTlcI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Pn6W0vyz; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="M0dV2jm6"
-Date: Fri, 14 Mar 2025 10:38:35 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741973933;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zWi7wol7URKv7PqbpC5ssfeF0V5pQ7aeDMBGL83Sy1M=;
-	b=M0dV2jm6zRqcXo2yTvwRlrFd66kFmp3T1EBe0FPhfuk266Yh4xxe3+UXMJ4J8eHGWI6y5j
-	jFWv/LCWTuN3IrOTymNDtnKtrVx3Mfuv7nd1B/yKRn4FgoPAz1hiPT1PdwH/5xl0zqBe5R
-	Sm/sbn6H0xD/tOn8l4cYWTQe1HCTRJs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Tejun Heo <tj@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [RFC PATCH 10/10] memcg: no more irq disabling for stock locks
-Message-ID: <3uyrvm2vvpyplehpbhiroyiebrrpv7hgrv37fuq2vx7yiinfbs@exjiwtjavn52>
-References: <20250314061511.1308152-1-shakeel.butt@linux.dev>
- <20250314061511.1308152-11-shakeel.butt@linux.dev>
- <9e1e3877-55ae-4546-a5c1-08ea730ea638@suse.cz>
- <20250314115802.DESa-C1z@linutronix.de>
- <2c62mvfo4726x3ci3sze7u55encoycbbzbaatzslkbhur2dkvd@wlli7wrcjlik>
- <20250314164234.KHdt_CWt@linutronix.de>
- <t6gqzrhipj3zxmev7pdmxbbbkx76eyscvkn4m66ifwcq3kfqtx@7jmqtzu5bs54>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Qr8eTlcI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pn6W0vyz"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id C545711401C7;
+	Fri, 14 Mar 2025 13:39:48 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-07.internal (MEProxy); Fri, 14 Mar 2025 13:39:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1741973988;
+	 x=1742060388; bh=V654k5pAF6D8HBfTFnPa0CB2pEJli9tIg/z2exl4uXI=; b=
+	Qr8eTlcIyalonhqSe3CMMnShEhk64haYwLN+WFQBNNmIpPTFpm5AvPSeySuFnbu4
+	06DjpP1vn00N+a4wSG9pJwAsmsazhEIPnu/azKhy6j30oUhpxBALpwyuHE8B5kPT
+	/rnittt3L7j8lTJFQkIGI5vAjcVEIYAnwZ1wSZgPsuQeusW96EkEwgfvm7JpTFwL
+	lX5GZiqPj8vSKO87yNCtGhbtSCU9xQ82s8MljLTXlfC2ntkKmXkrsW56Y4Rry8fo
+	5KpajimJCD5b+yxQ38BjLSVVllKoq9TyTmxegvF5nHVgd41eHApaCNcloN2mAHAa
+	jQ/8iMIVpcEmyyUqs2b4ww==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741973988; x=
+	1742060388; bh=V654k5pAF6D8HBfTFnPa0CB2pEJli9tIg/z2exl4uXI=; b=P
+	n6W0vyzr7uqXgdLHioKInC9skDEvsGv9sz0cdE9SbSZafPZg1OJOGOOUlo/ROvQr
+	Z3R5Qx6N5EoYdl/0VfVuvuWQEVRETtEG+rUH7T4GZq9UMS9aeHWzOniKO1dnfjS5
+	ybj4TokSf93pddhbJygqBuM0CI9Y5FQVHbxprBTKTaE9vkAYx0aeXeORHvdf6MUN
+	1IsFibD3ZQzI1c5T3xgbx9WrlvniZU7F7Wq/8htMOtXhRt8fQVXiaHlQyG8ad2Mg
+	JvSMCiAmSqJxIkwbQvYOmdr1G8LJhc20jIdfYi9GDM74Yy6zmAYr/IrRAUdI55jt
+	67hHqX6RXfrOKacg7jcWg==
+X-ME-Sender: <xms:4mnUZ2lrmvRoitLLGC7J7zFoy0_UjShHEUECn0srorIY6utafG-1Vg>
+    <xme:4mnUZ90tAj0nRHqsU70IO71IUU9EUzVNHtR5rx9oC4i4BrAMSEvTw-4FlHvBGKijC
+    qfMZHWTfUBiYffkEdY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedugeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    uddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegthhhinhdqthhinhhgpghkuh
+    hosegrshhpvggvughtvggthhdrtghomhdprhgtphhtthhopegrnhgurhgvfiestghouggv
+    tghonhhsthhruhgtthdrtghomhdrrghupdhrtghpthhtohepjhhovghlsehjmhhsrdhiug
+    drrghupdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopeif
+    ihhmsehlihhnuhigqdifrghttghhughoghdrohhrghdprhgtphhtthhopehlihhnuhigqd
+    grrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphht
+    thhopehlihhnuhigqdgrshhpvggvugeslhhishhtshdrohiilhgrsghsrdhorhhgpdhrtg
+    hpthhtoheplhhinhhugiesrhhovggtkhdquhhsrdhnvghtpdhrtghpthhtoheplhhinhhu
+    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:4mnUZ0ptPtSAVK1mCgpsk0UTZ9p1VWhNSw27vSVwy-mk6G1v3gYdIg>
+    <xmx:4mnUZ6lw4KXvrER1UjC36CTwtAgNfBBxvG7bZIhcGpn6-Hks-m9PBA>
+    <xmx:4mnUZ02S1-ucRISkk0NH8BJ30_Ve143dMVMW1FZgPTP74EeqWmXBkg>
+    <xmx:4mnUZxsVHT5G6bxA-tZ6iUZoAr5Tm3H1zOONT4JsO6ABbnDW3v_ZDQ>
+    <xmx:5GnUZ6wNh2imRHzh5dAn9BBBmxi2uzGZTtr2T3f9wYYhUMbc6zHlQw0Q>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5145F2220073; Fri, 14 Mar 2025 13:39:46 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <t6gqzrhipj3zxmev7pdmxbbbkx76eyscvkn4m66ifwcq3kfqtx@7jmqtzu5bs54>
-X-Migadu-Flow: FLOW_OUT
+Date: Fri, 14 Mar 2025 18:39:25 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Guenter Roeck" <linux@roeck-us.net>, "Arnd Bergmann" <arnd@kernel.org>,
+ "Wim Van Sebroeck" <wim@linux-watchdog.org>, "Joel Stanley" <joel@jms.id.au>,
+ "Andrew Jeffery" <andrew@codeconstruct.com.au>,
+ "Chin-Ting Kuo" <chin-ting_kuo@aspeedtech.com>
+Cc: linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Message-Id: <71b81647-aa39-4c33-b92f-2c9e6d1e606d@app.fastmail.com>
+In-Reply-To: <9ff3ba59-be59-4a2e-ac1a-5ce23b1b3fba@roeck-us.net>
+References: <20250314160248.502324-1-arnd@kernel.org>
+ <9ff3ba59-be59-4a2e-ac1a-5ce23b1b3fba@roeck-us.net>
+Subject: Re: [PATCH] watchdog: aspeed: fix 64-bit division
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 14, 2025 at 10:02:47AM -0700, Shakeel Butt wrote:
-> On Fri, Mar 14, 2025 at 05:42:34PM +0100, Sebastian Andrzej Siewior wrote:
-> > On 2025-03-14 08:55:51 [-0700], Shakeel Butt wrote:
-> > > On Fri, Mar 14, 2025 at 12:58:02PM +0100, Sebastian Andrzej Siewior wrote:
-> > > > On 2025-03-14 11:54:34 [+0100], Vlastimil Babka wrote:
-> > > > > On 3/14/25 07:15, Shakeel Butt wrote:
-> > > > > > Let's switch all memcg_stock locks acquire and release places to not
-> > > > > > disable and enable irqs. There are two still functions (i.e.
-> > > > > > mod_objcg_state() and drain_obj_stock) which needs to disable irqs to
-> > > > > > update the stats on non-RT kernels. For now add a simple wrapper for
-> > > > > > that functionality.
-> > > > > 
-> > > > > BTW, which part of __mod_objcg_mlstate() really needs disabled irqs and not
-> > > > > just preemption? I see it does rcu_read_lock() anyway, which disables
-> > > > > preemption. Then in __mod_memcg_lruvec_state() we do some __this_cpu_add()
-> > > > > updates. I think these also are fine with just disabled preemption as they
-> > > > > are atomic vs irqs (but don't need LOCK prefix to be atomic vs other cpus
-> > > > > updates).
-> > > > 
-> > > > __this_cpu_add() is not safe if also used in interrupt context. Some
-> > > > architectures (not x86) implemented as read, add, write.
-> > > > this_cpu_add()() does the same but disables interrupts during the
-> > > > operation.
-> > > > So __this_cpu_add() should not be used if interrupts are not disabled
-> > > > and a modification can happen from interrupt context.
-> > > 
-> > > So, if I use this_cpu_add() instead of __this_cpu_add() in
-> > > __mod_memcg_state(), __mod_memcg_lruvec_state(), __count_memcg_events()
-> > > then I can call these functions without disabling interrupts. Also
-> > > this_cpu_add() does not disable interrupts for x86 and arm64, correct?
-> > > For x86 and arm64, can I assume that the cost of this_cpu_add() is the
-> > > same as __this_cpu_add()?
-> > 
-> > on arm64, __this_cpu_add will "load, add, store". preemptible.
-> > this_cpu_add() will "disable preemption, atomic-load, add, atomic-store or
-> > start over with atomic-load. if succeeded enable preemption and move an"
-> 
-> So, this_cpu_add() on arm64 is not protected against interrupts but is
-> protected against preemption. We have a following comment in
-> include/linux/percpu-defs.h. Is this not true anymore?
-> 
-> /*
->  * Operations with implied preemption/interrupt protection.  These
->  * operations can be used without worrying about preemption or interrupt.
->  */
-> ...
-> #define this_cpu_add(pcp, val)          __pcpu_size_call(this_cpu_add_, pcp, val)
-> 
+On Fri, Mar 14, 2025, at 18:37, Guenter Roeck wrote:
+> On 3/14/25 09:02, Arnd Bergmann wrote:
+>>   
+>>   	if (!of_device_is_compatible(pdev->dev.of_node, "aspeed,ast2400-wdt")) {
+>>   		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -		idx = ((intptr_t)wdt->base & 0x00000fff) / resource_size(res);
+>> +		idx = ((intptr_t)wdt->base & 0x00000fff) / (uintptr_t)resource_size(res);
+>>   	}
+>>   
+>>   	scu_base = syscon_regmap_lookup_by_compatible(scu.compatible);
+> Does that help if the pointers are 64-bit on a 32-bit platform 
+> (multi_v7_lpae_defconfig) ?
 
-Just got clarification from Johannes & Tejun that this_cpu_add() is
-indeed safe against irqs on arm64 as well. Basically arm64 uses loop of
-Load Exclusive and Store Exclusive instruction to protect against irqs.
-Defined in __PERCPU_OP_CASE() macro in arch/arm64/include/asm/percpu.h.
+Yes, that is the problem: resource_size() returns a resource_size_t,
+so this is a 32-bit by 64-bit division.
+
+Pointers are always 32-bit, CONFIG_LPAE only changes phys_addr_t
+and resource_size_t.
+
+     Arnd
