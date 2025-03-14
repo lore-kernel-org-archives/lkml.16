@@ -1,180 +1,230 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B5D17579
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2219B3B7A8;
+	Fri, 14 Mar 2025 15:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741964424; cv=none; b=NkXWROyd8ajSPhomhwHjOGEM02kHh6h9ScSQ8sUB14pj1W/ga3sLCkqfHgin7vYl+4lhGAdxeXOhc3hqCfNooi9zfKN57wDMaztJdRBeTBhh+WT+3sqRF87ZLKyUmLyjFH5w1yfdVBiOcAF14Tn0OcPkRPgeDUhh0m6VOIiHmhM=
+	t=1741964476; cv=none; b=SIznYn4QB8dddAiD2dE9PDnmdJLdJyjFH/B+gad5KGp+8H6pvUhKLDMgD4Jpi+lTBjrBJ+YMeZ/iBNTPfSdKx21JhT/Ca9ODH7IuVIgPQtiyR2Gm8XX1R/68IVK5tx68tYUaol0L6LxqBpBQBy8XrZy8VFjrNiOWUe9nvRaSpAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741964424; c=relaxed/simple;
-	bh=x1PLoyIRwWCrKRdFyzASe67Wyr+y7IAO/4CM0PBgJCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PkP37RzMFCC6iX3SK4X/J0LW7VbAHmMjuBjc7aTTlgITVrb7tsHULOtjLT7s4cR3CrS+1JDWR3cJuGl/9L5mQ1XSqBx5rqSGs5k+kxWwQu4VQ9VsA3yKdGVvHPbzeqHr5dhchIrN0ba3tYyEwLhHEIn1Rc26u7UMKvtCqXPugSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Bq0JgtMY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1741964476; c=relaxed/simple;
+	bh=GaRu5ERVoPZsrgYIAIhEjraG/SaBYRHYbSm2zGpJ9qw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EWdQIS/mLax9IOF2Y0DAPm6Im2dFcFtnujWoJoQakNWAJiYFIoYQbn9JtTy16jhkTUj9b6n9+PKHyQhmtOuGlUuc7lUfOmh+MX97ef7+yP97jidx3H3AS1dFUEn8jVB7IuaMUoriwtCNi5unLwHFNFWopWZdmYExoxZdi+W1YJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OA7htbUY; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Bq0JgtMY"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EA4Hm3027567
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:00:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=5Q1/t28eBE47VhslKnKzc2xe
-	LvFBD34uadwrGYmHEs8=; b=Bq0JgtMYKQTYFkthrwll6D6i7x2kHLEY1SZZOluH
-	Jpbxvynhgc2jljLcuBhAY2pJ28v1sMxcrSpBzPZo0DciI/4ER1SjszylH4fcFtT4
-	PXOuhysQ8iauOg2KD3qJjakXZSZwltWLuriHyqSgpK8Zt2r5Hq7Kp8wMCYZ0A8er
-	VrEsbkiCqk/f3Rwh4HlefbfpW0GwY7++kN2sx3QfFc5m2Lfd2W827042ws7w22j+
-	zDqgb/jJIF6mGTCrI3uEHDzbVTHu6UKq8d9uQrMytyKiVIVMErJu0IXx2HRPB6qx
-	Izs/yCSnpCVS6VyuNyq4fnA0bsDLuGFyOZ2R3F9N3/mAgA==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45c6732hvd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:00:22 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e91054ea4eso37901546d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:00:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OA7htbUY"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2235189adaeso39858955ad.0;
+        Fri, 14 Mar 2025 08:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741964473; x=1742569273; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=dkqIt0dAm4flood+lEBFlTOVHHH/M15qiTxF9ROPp+o=;
+        b=OA7htbUYVwuoblnYieeAnJtXiq9LwQA1lfb+J4dklY4odkzi8BV8OVvKQLtkCTD9oz
+         LwVK3tP6PkoIpQLDjRgvJ93O4g24TgQGzJSHV11n88DOh93LWOw09eGW5SJZT5uwuTle
+         lS62mFWIq1RzZh8sl5duM54jsXxw5u5mN0SoE4jHf4/SVf9SJ+o+tkCTREh/iiq7QnbZ
+         X6WERgReG2svBMYD6ijHXDkAkf5cEElyb3oquh3KinbtokKZfHZ+LV2r/NDL8i4wRrGY
+         B5PgAtovoUAuXKvEBHJrwXLV3AJdK77HSwrphqukpG632z2qk3UZBriJTVU6M5Qzc8x8
+         TKeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741964420; x=1742569220;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1741964473; x=1742569273;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5Q1/t28eBE47VhslKnKzc2xeLvFBD34uadwrGYmHEs8=;
-        b=O3At3mw+dB8YGdhd1o7IJrAM5a/xjUE8ApI5NgCSpzZ+TuBcwWvFuBtscbZw1IooYi
-         RN2bvjFieskxAAli6ezFutZv9Hf3sXOBUFTTrv+huchZNgtXotRFvo1JnfrS2eZf0X+g
-         WuwK78YmZb2nNC+h4xQnJ4FQC6EvNHyfn2bqwlB2UtPUE8G+AHuiZ/RL9yVICDlzO5Ts
-         q42YJM1YCmQPGODt7w2BgWGcgnGLzfgOOs9WybGzBOf5WgUrSxY7vbACdaPTO0F/sjCs
-         Lu5BOfdr2wmnbZXuwNqtCfstqLJus792Wq+2YO+Zd/H3m3nh2yAUK537f5eTeYyCWBYc
-         byqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV78drMZLYaOhtpJziBC4u34GZDaycHyA3NQy+e6rF2C2dZZgil70HUYQFzqEPuI1gM1pCugV/DgzudIkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXxz7jUkIlw7Ou8hyI/oM3MJlFrcUH4YlZnJUCMnNbDSu+lFK9
-	lh0pP6qoW8ZdCarmzPXhcfOn0mVGiVm1jW+krkIq3FSs65lOXW24UBCvNC0jdGOPYKYl8CvJE5o
-	R8aQXO0ydpilpZexiKVjM94WngTVWChKEsRCeJxjIoCyrwIai0Sk6NQZtnjUrpb969SBpiuQ=
-X-Gm-Gg: ASbGnctk4JG1VrN8MEDFZy81d7xPcD7QMrcXILnGwjOM/JQy39D0YF6iA2z+M9+8TfC
-	kYQvs+zEKOyx4O4Zq5Gui1XJNwXvcit/nrmq7FTJbEYqXBTEYmLJSFJCc7yDF8vTcKCC8Culylf
-	2Um5FgOny5+LqbaIsf7Ik+gWuN8/oRWYE3uSrAYBbe/vahL4Gjjbl7Ilpz0VAwgl87HixyGZYeK
-	10vjmn7spSjl0707UfdjnJVmhdhwDqozVaeQqoNwMqp9Prp4qN2r+6X0Qe8ZSyrexh97jUDjCDR
-	ouQfq9z8ZibyUkfN4POZ8oa+Tx9N+DUGUzweB9BSrPviBtZfnK66+rfo9kH6DFILqSrfkpCxtN4
-	Mzw0=
-X-Received: by 2002:a05:6214:c47:b0:6e6:5f08:e77d with SMTP id 6a1803df08f44-6eaeaa64726mr38922716d6.19.1741964418942;
-        Fri, 14 Mar 2025 08:00:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IElOf5VcuP4Qfeqk7k77duSbY0HMHuiCaGOzAq7nuu0v/lm1rSxjObW30d/t+f4KOijDX3OSg==
-X-Received: by 2002:a05:6214:c47:b0:6e6:5f08:e77d with SMTP id 6a1803df08f44-6eaeaa64726mr38922006d6.19.1741964418512;
-        Fri, 14 Mar 2025 08:00:18 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba88536csm537756e87.177.2025.03.14.08.00.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 08:00:16 -0700 (PDT)
-Date: Fri, 14 Mar 2025 17:00:14 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Dmitry Baryshkov <lumag@kernel.org>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, kernel@collabora.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/7] drm/connector: hdmi: Use YUV420 output format as
- an RGB fallback
-Message-ID: <zfbamnotz4smuswgzhtp7maqw5o7d5boi5urvqfrqylszbbyok@jtwqtjmji4qr>
-References: <20250311-hdmi-conn-yuv-v2-0-fbdb94f02562@collabora.com>
- <20250311-hdmi-conn-yuv-v2-4-fbdb94f02562@collabora.com>
- <20250311-hypersonic-mature-leopard-d3afdc@houat>
- <g25hgb2mocl4sjny26k4nzn2hwpwhlodenqganzcqfzzg6itms@herenniualnw>
- <20250314-airborne-magenta-corgi-afd52c@houat>
+        bh=dkqIt0dAm4flood+lEBFlTOVHHH/M15qiTxF9ROPp+o=;
+        b=FUc5SAZ9QCq1cabrNDBeocjTCDjaAexJeP22NV+0z8mHUtEvM9DGdsgE4bykVkINgh
+         DvroKAF6yU4Z//QGCqVjTmik85ilElQuNiWWjpEhBjJUx3gtmXKaWfH14gOwfypm4ilW
+         Goo2X5Zab9RbqakR1Ovc035IyS2nXm0WZP4PWgukp/2nUpjWyryGP56gMzYaNkZu8s4i
+         Hma7aD2dwPF1yWNbTk9csS79rBedNvi1DWK0p1Qa3HLSTRjTeh8qcYURpowiK2LJF1tf
+         nEBvqpKSsSJxp3D3uMFdFxDY7mPzR13bB/kONB1Nz4AbCzo/yP/Qwppv9pBtjl6SRt3L
+         jNXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdEHc6uMnH+zP/Bu76n95LZvxK9p+iozrL+C2ESCW/ZVLn4gMtlOSladh/THAyKTxZY8iWciHoK54jlQg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwubHT8EDvcEpa0hmsVZsEqom891WxFNGssdEzW6MoeR/4Ufkws
+	kCifkMOYnDq5dv2IpDXmt6j7g7CcT1A1pU4jscxvKOQUVFGNt+ur
+X-Gm-Gg: ASbGnctSrCZBNbuTe7AY2XqvyWPVxXBugFDJuBRivZb7PHkeq3saJB0Qqh1wwHu2dt/
+	UO+eD5ly5R+9OufbXq3Vt1CdoZ0mz1qG3tIsLdH2CFHcTamvIDSTAQIUm6DINOtYgE6m4YkaWu0
+	vq9/Yylw+252gZWoyUTQ0Bre6dGJWSdTXT/QWFFVQP20koidIaztDmbvfEnalOAe3six4V27015
+	U8I5qMKGUN+rBkZw/6l5vZKE8ZpVpa6lsl0lq5HzS8tIwV2oIvH5bs+bNQIdzd10sG3tQ7X4RAx
+	h5l28Jn8o7gsWYXWJxv92Z2uO1e7g7XOWUgfO6p+q0GRUDG643sLqEOQjzua/ZV/H95IY466QFm
+	Buo7+hZkTxAzjKBfWLw==
+X-Google-Smtp-Source: AGHT+IHiTPxk83WFDew56WptLQbTVNUkpAFnbJkjARem9rmckTJEQH7ZKDnJfEiI9D/tmOSaAnxRlw==
+X-Received: by 2002:a17:902:cec4:b0:223:4d5e:7592 with SMTP id d9443c01a7336-225c66cbf5emr89034945ad.21.1741964471781;
+        Fri, 14 Mar 2025 08:01:11 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6888653sm29611615ad.22.2025.03.14.08.01.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Mar 2025 08:01:10 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <899edff7-eba1-49fb-9626-576798452f30@roeck-us.net>
+Date: Fri, 14 Mar 2025 08:01:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250314-airborne-magenta-corgi-afd52c@houat>
-X-Authority-Analysis: v=2.4 cv=a5Iw9VSF c=1 sm=1 tr=0 ts=67d44486 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=QX4gbG5DAAAA:8 a=JkxHsKVaOhtT2WVG5y0A:9 a=CjuIK1q_8ugA:10 a=1HOtulTD9v-eNWfpl4qZ:22
- a=AbAUZ8qAyYyZVLSsDulk:22
-X-Proofpoint-GUID: YKBwKv1RkEUZWITGoJnJiVca8Lmirxyf
-X-Proofpoint-ORIG-GUID: YKBwKv1RkEUZWITGoJnJiVca8Lmirxyf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_05,2025-03-14_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 clxscore=1015 spamscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503140118
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] hwmon: (acpi_power_meter) Replace the deprecated
+ hwmon_device_register
+To: Huisong Li <lihuisong@huawei.com>, jdelvare@suse.com
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ zhanjie9@hisilicon.com, zhenglifeng1@huawei.com, liuyonglong@huawei.com
+References: <20250314081834.3243243-1-lihuisong@huawei.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250314081834.3243243-1-lihuisong@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 14, 2025 at 02:47:53PM +0100, Maxime Ripard wrote:
-> On Tue, Mar 11, 2025 at 09:46:39PM +0200, Dmitry Baryshkov wrote:
-> > On Tue, Mar 11, 2025 at 04:55:17PM +0100, Maxime Ripard wrote:
-> > > Hi,
-> > > 
-> > > I think the first thing we need to address is that we will need to
-> > > differentiate between HDMI 1.4 devices and HDMI 2.0.
-> > > 
-> > > It applies to YUV420, which is HDMI 2.0-only, and I guess your patches
-> > > are good enough if you consider YUV420 support only, but scrambler setup
-> > > for example is a thing we want to support in that infrastructure
-> > > eventually, and is conditioned on HDMI 2.0 as well.
-> > > 
-> > > On Tue, Mar 11, 2025 at 12:57:36PM +0200, Cristian Ciocaltea wrote:
-> > > > Try to make use of YUV420 when computing the best output format and
-> > > > RGB cannot be supported for any of the available color depths.
-> > > > 
-> > > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> > > > ---
-> > > >  drivers/gpu/drm/display/drm_hdmi_state_helper.c | 69 +++++++++++++------------
-> > > >  1 file changed, 35 insertions(+), 34 deletions(-)
-> > > > 
-> > 
-> > [...]
-> > 
-> > > >  	return -EINVAL;
-> > > >  }
-> > > >  
-> > > > +static int
-> > > > +hdmi_compute_config(const struct drm_connector *connector,
-> > > > +		    struct drm_connector_state *conn_state,
-> > > > +		    const struct drm_display_mode *mode)
-> > > > +{
-> > > > +	unsigned int max_bpc = clamp_t(unsigned int,
-> > > > +				       conn_state->max_bpc,
-> > > > +				       8, connector->max_bpc);
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = hdmi_try_format(connector, conn_state, mode, max_bpc,
-> > > > +			      HDMI_COLORSPACE_RGB);
-> > > > +	if (!ret)
-> > > > +		return 0;
-> > > > +
-> > > > +	if (connector->ycbcr_420_allowed)
-> > > > +		ret = hdmi_try_format(connector, conn_state, mode, max_bpc,
-> > > > +				      HDMI_COLORSPACE_YUV420);
-> > > 
-> > > I think that's conditioned on a few more things:
-> > >   - That the driver supports HDMI 2.0
-> > 
-> > Isn't that included into connector->ycbcr_420_allowed? I'd expect that
-> > HDMI 1.4-only drivers don't set that flag.
+On 3/14/25 01:18, Huisong Li wrote:
+> When load this mode, we can see the following log:
+> "power_meter ACPI000D:00: hwmon_device_register() is deprecated. Please
+>   convert the driver to use hwmon_device_register_with_info()."
 > 
-> Yeah, I guess that's one way to do it, but we don't have any way to
-> express it at the moment
+> So replace hwmon_device_register with hwmon_device_register_with_info.
+> 
+> These attributes, 'power_accuracy', 'power_cap_hyst', 'power_average_min'
+> and 'power_average_max', should have been placed in hwmon_chip_info as
+> power data type. But these attributes are displayed as string format on
+> the following case:
+> a) power1_accuracy  --> display like '90.0%'
+> b) power1_cap_hyst  --> display 'unknown' when its value is 0xFFFFFFFF
+> c) power1_average_min/max --> display 'unknown' when its value is
+> 			      negative.
+> To avoid any changes in the display of these sysfs interfaces, we can't
+> modifiy the type of these attributes in hwmon core and have to put them
+> to extra_groups.
+> 
+> Please note that the path of these sysfs interfaces are modified
+> accordingly if use hwmon_device_register_with_info():
+> old: all sysfs interfaces are under acpi device, namely,
+>       /sys/class/hwmon/hwmonX/device/
+> now: all sysfs interfaces are under hwmon device, namely,
+>       /sys/class/hwmon/hwmonX/
+> The new ABI does not guarantee that the underlying path remains the same.
+> But we have to accept this change so as to replace the deprecated API.
+> Fortunately, some userspace application, like libsensors, would scan
+> the two path and handles this automatically. So to drop the deprecated
+> message, we can accept this change.
+> 
+> Signed-off-by: Huisong Li <lihuisong@huawei.com>
+> ---
+>   drivers/hwmon/acpi_power_meter.c | 861 +++++++++++++++----------------
+>   1 file changed, 427 insertions(+), 434 deletions(-)
+> 
+> diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+> index f05986e4f379..46e8a0b6b210 100644
+> --- a/drivers/hwmon/acpi_power_meter.c
+> +++ b/drivers/hwmon/acpi_power_meter.c
+...
+> +
+> +// depend on POWER_METER_CAN_TRIP
 
-Yes, we do not have a way to specify that the connector is HDMI 1.x or
-2.0. However I think the code that we currently have ensures that the
-flag is set if and only if the HDMI Host and all the chain after it
-actually supports YUV 420, which would imply HDMI 2.0.
+Please di not intermix C++ comments with a driver using C comments.
 
-I know that drm_bridge_connector has one deficiency wrt. YCbCr 420 flag:
-it is impossible to "inject" YUV420 in the middle of the chain (e.g. DSI
-host outputs RGB data, but then comes DSI2HDMI bridge which can convert
-RGB data to YUV). I kept that in mind, but I'd like to see an actual
-usecase first. And anyway, this currently limits YUV support rather than
-enabing it in the unwanted cases.
+> +static DEVICE_ATTR_RW(power1_average_max);
+> +static DEVICE_ATTR_RW(power1_average_min);
+> +
+> +// depend on POWER_METER_CAN_CAP
+> +static DEVICE_ATTR_RO(power1_cap_hyst);
+> +
+> +// depend on POWER_METER_CAN_MEASURE
+> +static DEVICE_ATTR_RO(power1_accuracy);
+> +static DEVICE_ATTR_RO(power1_is_battery);
+> +
+> +static DEVICE_ATTR_RO(power1_model_number);
+> +static DEVICE_ATTR_RO(power1_oem_info);
+> +static DEVICE_ATTR_RO(power1_serial_number);
+> +
+> +#define EXTRA_FIRST_DYNAMIC_ATTR_ID	3
+> +#define EXTRA_ATTR_MAX	10
+> +
+> +static struct attribute *power_extra_attrs[EXTRA_ATTR_MAX] = {
+> +	&dev_attr_power1_model_number.attr,
+> +	&dev_attr_power1_oem_info.attr,
+> +	&dev_attr_power1_serial_number.attr,
+> +	NULL
+> +};
+> +
+> +ATTRIBUTE_GROUPS(power_extra);
+> +
+> +static void fill_extra_dynamic_attr(struct attribute *attr)
+> +{
+> +	int idx = EXTRA_FIRST_DYNAMIC_ATTR_ID;
+> +
+> +	for (idx = EXTRA_FIRST_DYNAMIC_ATTR_ID; idx < EXTRA_ATTR_MAX; idx++) {
+> +		if (!power_extra_attrs[idx])
+> +			break;
+> +	}
+> +
+> +	power_extra_attrs[idx] = attr;
+> +}
+> +
 
--- 
-With best wishes
-Dmitry
+Please use the .is_visible() callback in attribute_group to determine
+attribute visibility.
+
+That means you'll have to code attribute_group manually, but that is
+still better than re-implementing the is_visible() callback.
+Something like
+
+static const struct attribute_group power_extra_group = {
+	.attrs = power_extra_attrs,
+	.is_visible = power_extra_is_visible;
+};
+
+__ATTRIBUTE_GROUPS(power_extra);
+
+should do.
+
+Thanks,
+Guenter
+
