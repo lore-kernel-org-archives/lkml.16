@@ -1,118 +1,80 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2484B2F4A
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 06:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B462B1547E1
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741935489; cv=none; b=E9SgEszJSrVKQ971NJ2u3zMuEpfvBnlFAMJ4+55vGbGwHmWK5lc3GuPf3aNGh9TINqv+tIEChXzXFJ1skzB6TnMZjnhafLyIGvGix7OWFZXuYfnQhuyByPb8Y2FT6HRwyKL26141FBs1E33rGfKq7J8Y3RkW9lHKDS9LDT9wEPw=
+	t=1741935616; cv=none; b=XomeqknOvIzaPBUGqJzD37gcn2fL4krrpb7hJJ50T9lwR7/4gggvMrBgymfAN2oVJEH+qmMv17uMOrH54g530oxcJ3spPPMP5A0Mk6gJIK2Y1k3I8Y8quhE3wVG8DC3D+AC4AxzONciiuL6XYiKVToFnBN3xH8GnehzUNYLvGKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741935489; c=relaxed/simple;
-	bh=GQwC3l1968VpQ0A+POkC4aUcgZujoXYv9oiquHzoTyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PQrOfbNxRAY4mjk4CM1GfSY7AY3UDnQJc32idgONhrvIcldQbKOCgNXBi/CXIBKN84cY67jrNWqORM15SS/3rVTnz6HSeapbXfAEAwWwJqbehlgCmWbSxfxdpYAbn8kxTw9qBK8badyUbQn9Ub/WH9UdORoYt07NX6RykNWm06A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SCDAkLZ3; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SCDAkLZ3"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DNQ5aq015394;
-	Fri, 14 Mar 2025 06:57:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=93rADN
-	1l4leHkQdDKQol30WlkU++J8cD8JYZk+aER8Y=; b=SCDAkLZ3+c3c3Z6R/xLZku
-	hcDQhgrw/18knPUJ3r0b4SEx0jP+gMJDsG3V2/C1tfuBd9l3NpzXQ6vOgO81YDpc
-	5evttTJMokQy5zW5NdZBmR9+bHJiTHuHjyvk4ZJwzj8p8tFNgq/dHZQNBvD5KzQT
-	/HHx2v6GHGnlOME14ESIE13EmsrTw0ySd0kM0FuO2W1mj5W/KDtSO4+eGbwO6PO4
-	P7qSjmL/H2fa7rqYpCH/9NDoJAPOtklP/hYjX5wZALiYRD0uO3SYgdAxjMH05P9D
-	1tBW7vPfSieMF3ssuffNDp5ZFsVpSKYyXpg0o73087elSW+DFwhLnM0T4SxIVejQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45c6k02397-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 06:57:49 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52E6sAH1020818;
-	Fri, 14 Mar 2025 06:57:49 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45c6k02394-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 06:57:49 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52E512Qn012259;
-	Fri, 14 Mar 2025 06:57:48 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45atsrnnbv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 06:57:48 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52E6vitF23265552
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Mar 2025 06:57:44 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8CB132004B;
-	Fri, 14 Mar 2025 06:57:44 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A2C3720043;
-	Fri, 14 Mar 2025 06:57:41 +0000 (GMT)
-Received: from [9.39.22.126] (unknown [9.39.22.126])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 14 Mar 2025 06:57:41 +0000 (GMT)
-Message-ID: <62356be0-a319-4ec8-88d6-08bed4c04945@linux.ibm.com>
-Date: Fri, 14 Mar 2025 12:27:40 +0530
+	s=arc-20240116; t=1741935616; c=relaxed/simple;
+	bh=1bbpBCM8izED4ho1GRqfmW+se0PWB24MxbQ99B+S7vA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bKCtnIve506upijGNYX03UP8pMx2ZTJIQMZEHpOghXPuh/+7xqpHbZNWUWHAG5MFEfVUQ7Vpdc133gHm8IlJoLvEQ1EDHuO65DtwCFPtBOADTDjXmKz8SFgEeaMV9yeM0LPEaeHr9Ohc/5UMQjlUQoncYhU/dfeO13SA0q6jOY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZDZsw0zqTzCtQ9;
+	Fri, 14 Mar 2025 14:56:52 +0800 (CST)
+Received: from kwepemh200013.china.huawei.com (unknown [7.202.181.122])
+	by mail.maildlp.com (Postfix) with ESMTPS id 03221180102;
+	Fri, 14 Mar 2025 15:00:04 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.175.36) by
+ kwepemh200013.china.huawei.com (7.202.181.122) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 14 Mar 2025 15:00:03 +0800
+From: Xiaomeng Zhang <zhangxiaomeng13@huawei.com>
+To: Carlos Llamas <cmllamas@google.com>
+CC: Andrew Morton <akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, "J. R. Okajima" <hooanon05g@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>, Waiman Long <longman@redhat.com>, Ingo
+ Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH] lockdep: Fix upper limit for LOCKDEP_BITS configs
+Date: Fri, 14 Mar 2025 06:47:29 +0000
+Message-ID: <20250314064729.163602-1-zhangxiaomeng13@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] powerpc: powenv: oxcl: use lock guard for mutex
-To: Andrew Donnellan <ajd@linux.ibm.com>, maddy@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, mpe@ellerman.id.au,
-        peterz@infradead.org, fbarrat@linux.ibm.com, mahesh@linux.ibm.com,
-        oohall@gmail.com, hbathini@linux.ibm.com, dhowells@redhat.com,
-        haren@linux.ibm.com, linux-kernel@vger.kernel.org
-References: <20250314054544.1998928-1-sshegde@linux.ibm.com>
- <20250314054544.1998928-6-sshegde@linux.ibm.com>
- <af15fbf507dee3d96249bdfbb1a7419a26985f9b.camel@linux.ibm.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <af15fbf507dee3d96249bdfbb1a7419a26985f9b.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: KmZZO4VnmgZGcKkFmOx0OgjFyLhNuX_w
-X-Proofpoint-ORIG-GUID: n3QZFdmW8An65Vpl2vFqfy-V7FeP4Rjy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_02,2025-03-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=601 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 adultscore=0 spamscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2503140054
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemh200013.china.huawei.com (7.202.181.122)
 
+The upper limit that was initially setup for LOCKDEP_BITS configs
+is too high (24 bit shift), which causes the kernel image size to exceed
+KERNEL_IMAGE_SIZE (1024MB) limit. When LOCKDEP_BITS is set to 24,
+the kernel image size grows to 1562.19MB.
 
+Adjust LOCKDEP_BITS to 22, which results in a kernel image size of
+888.19MB, keeping it under the KERNEL_IMAGE_SIZE limit while still
+maintaining adequate debug information capacity.
 
-On 3/14/25 11:36, Andrew Donnellan wrote:
-> On Fri, 2025-03-14 at 11:15 +0530, Shrikanth Hegde wrote:
->> use guard(mutex) for scope based resource management of mutex.
->> This would make the code simpler and easier to maintain.
->>
->> More details on lock guards can be found at
->> https://lore.kernel.org/all/20230612093537.614161713@infradead.org/T/#u
->>
->> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-> 
-> The subject line of this patch misspells powernv and ocxl.
+This change prevents the linker error:
+  ld: kernel image bigger than KERNEL_IMAGE_SIZE
 
-Ah. my bad. will correct it.
+Fixes: e638072e6172 ("lockdep: Fix upper limit for LOCKDEP_*_BITS configs")
+Signed-off-by: Xiaomeng Zhang <zhangxiaomeng13@huawei.com>
+---
+ lib/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Otherwise this looks like a nice cleanup.
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 35796c290ca3..6faba965a349 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1504,7 +1504,7 @@ config LOCKDEP_SMALL
+ config LOCKDEP_BITS
+ 	int "Size for MAX_LOCKDEP_ENTRIES (as Nth power of 2)"
+ 	depends on LOCKDEP && !LOCKDEP_SMALL
+-	range 10 24
++	range 10 22
+ 	default 15
+ 	help
+ 	  Try increasing this value if you hit "BUG: MAX_LOCKDEP_ENTRIES too low!" message.
+-- 
+2.34.1
 
-Thanks.
