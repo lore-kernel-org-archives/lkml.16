@@ -1,170 +1,114 @@
-Received: from e3i103.smtp2go.com (e3i103.smtp2go.com [158.120.84.103])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F7A1FDA63
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46D51F5420;
+	Fri, 14 Mar 2025 11:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741951555; cv=none; b=VelAAPLn55b9lyNuYsMps+seXU98qUOfVngH+31mWkZK4Hh2Y731nJc34KvrAYsppyUv5zuEsShjXxDRGDNiHOSC+tWeI1hgk0lsh0hffy6yRzIagnMVY7/ARldCwsndddwHCbhPB0/YxZjzn7fp5OOKPkFuC3NCy6RrQ7aJmsU=
+	t=1741951594; cv=none; b=W2UEa4lK0slQMfX5Zxk3pqFJreZLFJib0nPq1HQUyjK4moGvhKfe1w3dYcdqaYScLOPttuyoUMgnffLrdaWHFVRs3+U41d3hPEiVYTqN0r9rBS/nwDjWt+GNLUpCRwV5Z4LqA0FF7pcnUvf5ZNvLV1/NL10J/G/v/IqmpYtwlig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741951555; c=relaxed/simple;
-	bh=bui+sgPyzR2G8LRYmNaQRxDDZhKG5Gh4x3fA0txGOy0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s0iBTkZ2gL9B1UBU+4RA+Rf5TeXC8AQY7FqacG0kRgVCKy7/CxRu/iHEfACRwrs2cznSpu5X0dPPwpp6jfPcySL30ioM5RuNgV71NApr8bG1HIYd6uvQh7Oygn4cnHKshorjitdQHLvFCgIMQTYWzUjSBFnWzGBHycWUg01sszQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt; spf=pass smtp.mailfrom=em510616.triplefau.lt; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=f6auMja0; dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b=WSO+vn28; arc=none smtp.client-ip=158.120.84.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em510616.triplefau.lt
+	s=arc-20240116; t=1741951594; c=relaxed/simple;
+	bh=jy65FiPTJOdJJVXh5B7913Du6P29GcNh3wf++fmmB5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N384TlrKGF5Ng3QoL4HacIkaX8FHxKn2Dj8FLX4ILvUmsbo1Ocsau2B0Lo2fz/B7qxxDV/+x9V4Qdg09Afmwm2k8C607B+eb1HLyqXNnMFI6zgbBl1bMCjam8LmiK6ViNQu859xZ5DgVb3gD5ie1EQsH95aA1ZZ0RUeA+2EMYnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RymfN2vu; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="f6auMja0";
-	dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b="WSO+vn28"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
- i=@smtpservice.net; q=dns/txt; s=a1-4; t=1741950642; h=feedback-id :
- x-smtpcorp-track : date : message-id : to : subject : from : reply-to
- : sender : list-unsubscribe : list-unsubscribe-post;
- bh=Tf4BrW1vWLMedPyDJ2iLarCXnf06nMp0xpM83vTGV/w=;
- b=f6auMja0CgrSBMqZowVTTB0RHXLifRKeJttN2O1hnoN3N1pW8f6FAud60rN6u6lqmVDw+
- Hg2s/jvWAqwGdXFlylRgX1jx8CEdXiZra1HSthgwtpxayGuVxI3NDbJ4RnJw9viU1HbEzC/
- waIKyWT9dtQsiNu7a26yPOF7tVPSbTMxfWyfIpEPVitQ79tzVuIuy94PJSpPT1QDumNqinq
- Vy63RrcVzQIIqFbxDbLJk0wWA7es0/UBOELh5tc7t1GdDoBY6YD/3dXQEj0uXOWPnbzCqLB
- S8S/MIxI+M9EQfwF0UlQOEWIDlZefSa5+gts69rX0M05V/QUu44SgQ7UtHJw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=triplefau.lt;
- i=@triplefau.lt; q=dns/txt; s=s510616; t=1741950642; h=from : subject
- : to : message-id : date;
- bh=Tf4BrW1vWLMedPyDJ2iLarCXnf06nMp0xpM83vTGV/w=;
- b=WSO+vn28IrGg+dPA75yvrgBHDjGby29HcSB32lknZD6cm7TQY1qaHU4FwPD5+1ub/gLqh
- O0NGY5g3RbfTR6JRGWHO5QxpOjWJZw+aP2RZjemiPETbxvALPhLx4Kh/sWz3A3FM8b3dYAe
- BBb1VBfot6qprp04orU5sfNMovk6p+Qfar2+M3/N+tPaPBTG6+xLW5VK8vSKGMKAx/ySxkg
- VuMHXXxKekyV5QRN73dQUUjcZptQitq8bmOhr9V62GrzTx4EgEXMtIdCKE6J27KsWwybqO6
- hh5OLxv1Rs4suO/6DUuWOrpeGwSyP21grKm7hbWNCk020VXHxuZGnGH7G+FQ==
-Received: from [10.12.239.196] (helo=localhost)
-	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97.1-S2G)
-	(envelope-from <repk@triplefau.lt>)
-	id 1tt2w0-FnQW0hPoaKZ-lQRB;
-	Fri, 14 Mar 2025 11:10:36 +0000
-From: Remi Pommarel <repk@triplefau.lt>
-To: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Johannes Berg <johannes@sipsolutions.net>,
-	Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH 2/2] wifi: mac80211: Purge vif txq in ieee80211_do_stop()
-Date: Fri, 14 Mar 2025 12:04:25 +0100
-Message-Id: <54c3c83ea8f58af89d275d410682d73cc6289dc8.1741950009.git.repk@triplefau.lt>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <cover.1741950009.git.repk@triplefau.lt>
-References: <cover.1741950009.git.repk@triplefau.lt>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RymfN2vu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741951592; x=1773487592;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jy65FiPTJOdJJVXh5B7913Du6P29GcNh3wf++fmmB5E=;
+  b=RymfN2vuaj2v0xrLZ6ykWe41ysGV7FODFMetSN075XXlDaR5/LeXbp6K
+   CohcjFIB9vcOfGk6q1u1rLU157xBVv52ND3p0NA5FWxtRAwXP1fU7aZms
+   lWfHixIq/0Hnzkr3W8bw2qH3QypTG9ArBmhH0N4DTH6DBnTnOAaGi2Yt1
+   es7Ja1108hn/QrDiBQepidNeAs2k9kHA/nndyBmb2+4CBBGQRYVEiOXCx
+   6agMvmJXD1OuH8LfgqULNIwoFEKZOHcDcy2IV3RxEqP8Gq/+6LmqDu0vg
+   r96wZeodun6Pqss9YbLU1oCP4RwKyc5y1NGZnFJa90hsgVv2X6iFS3Pyy
+   g==;
+X-CSE-ConnectionGUID: 3VP5ji0VQxqRy9E9tMUdGA==
+X-CSE-MsgGUID: cj101le2SiGT9cXktGhR8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="42964518"
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="42964518"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 04:26:31 -0700
+X-CSE-ConnectionGUID: 8TH9kjZeTO21QaxlKXpkxQ==
+X-CSE-MsgGUID: VxkCBXuTTy6ibvK7RjHfdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="126120517"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 14 Mar 2025 04:26:29 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tt3BH-000ANc-0x;
+	Fri, 14 Mar 2025 11:26:24 +0000
+Date: Fri, 14 Mar 2025 19:25:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sung-Chi Li <lschyi@chromium.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@weissschuh.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Benson Leung <bleung@chromium.org>
+Cc: oe-kbuild-all@lists.linux.dev, chrome-platform@lists.linux.dev,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sung-Chi Li <lschyi@chromium.org>
+Subject: Re: [PATCH 2/3] hwmon: (cros_ec) Add reading target fan RPM function
+Message-ID: <202503141908.rieksBce-lkp@intel.com>
+References: <20250313-extend_ec_hwmon_fan-v1-2-5c566776f2c4@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
-Feedback-ID: 510616m:510616apGKSTK:510616s0w53aj45L
-X-smtpcorp-track: 1rbwuQsAEFkw.R_M73qoQTkhb.ukuHNQC7DFB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313-extend_ec_hwmon_fan-v1-2-5c566776f2c4@chromium.org>
 
-After ieee80211_do_stop() SKB from vif's txq could still be processed.
-Indeed another concurrent vif schedule_and_wake_txq call could cause
-those packets to be dequeued (see ieee80211_handle_wake_tx_queue())
-without checking the sdata current state.
+Hi Sung-Chi,
 
-Because vif.drv_priv is now cleared in this function, this could lead to
-driver crash.
+kernel test robot noticed the following build warnings:
 
-For example in ath12k, ahvif is store in vif.drv_priv. Thus if
-ath12k_mac_op_tx() is called after ieee80211_do_stop(), ahvif->ah can be
-NULL, leading the ath12k_warn(ahvif->ah,...) call in this function to
-trigger the NULL deref below.
+[auto build test WARNING on 9fbcd7b32bf7c0a5bda0f22c25df29d00a872017]
 
-  Unable to handle kernel paging request at virtual address dfffffc000000001
-  KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-  batman_adv: bat0: Interface deactivated: brbh1337
-  Mem abort info:
-    ESR = 0x0000000096000004
-    EC = 0x25: DABT (current EL), IL = 32 bits
-    SET = 0, FnV = 0
-    EA = 0, S1PTW = 0
-    FSC = 0x04: level 0 translation fault
-  Data abort info:
-    ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-    CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-    GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-  [dfffffc000000001] address between user and kernel address ranges
-  Internal error: Oops: 0000000096000004 [#1] SMP
-  CPU: 1 UID: 0 PID: 978 Comm: lbd Not tainted 6.13.0-g633f875b8f1e #114
-  Hardware name: HW (DT)
-  pstate: 10000005 (nzcV daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-  pc : ath12k_mac_op_tx+0x6cc/0x29b8 [ath12k]
-  lr : ath12k_mac_op_tx+0x174/0x29b8 [ath12k]
-  sp : ffffffc086ace450
-  x29: ffffffc086ace450 x28: 0000000000000000 x27: 1ffffff810d59ca4
-  x26: ffffff801d05f7c0 x25: 0000000000000000 x24: 000000004000001e
-  x23: ffffff8009ce4926 x22: ffffff801f9c0800 x21: ffffff801d05f7f0
-  x20: ffffff8034a19f40 x19: 0000000000000000 x18: ffffff801f9c0958
-  x17: ffffff800bc0a504 x16: dfffffc000000000 x15: ffffffc086ace4f8
-  x14: ffffff801d05f83c x13: 0000000000000000 x12: ffffffb003a0bf03
-  x11: 0000000000000000 x10: ffffffb003a0bf02 x9 : ffffff8034a19f40
-  x8 : ffffff801d05f818 x7 : 1ffffff0069433dc x6 : ffffff8034a19ee0
-  x5 : ffffff801d05f7f0 x4 : 0000000000000000 x3 : 0000000000000001
-  x2 : 0000000000000000 x1 : dfffffc000000000 x0 : 0000000000000008
-  Call trace:
-   ath12k_mac_op_tx+0x6cc/0x29b8 [ath12k] (P)
-   ieee80211_handle_wake_tx_queue+0x16c/0x260
-   ieee80211_queue_skb+0xeec/0x1d20
-   ieee80211_tx+0x200/0x2c8
-   ieee80211_xmit+0x22c/0x338
-   __ieee80211_subif_start_xmit+0x7e8/0xc60
-   ieee80211_subif_start_xmit+0xc4/0xee0
-   __ieee80211_subif_start_xmit_8023.isra.0+0x854/0x17a0
-   ieee80211_subif_start_xmit_8023+0x124/0x488
-   dev_hard_start_xmit+0x160/0x5a8
-   __dev_queue_xmit+0x6f8/0x3120
-   br_dev_queue_push_xmit+0x120/0x4a8
-   __br_forward+0xe4/0x2b0
-   deliver_clone+0x5c/0xd0
-   br_flood+0x398/0x580
-   br_dev_xmit+0x454/0x9f8
-   dev_hard_start_xmit+0x160/0x5a8
-   __dev_queue_xmit+0x6f8/0x3120
-   ip6_finish_output2+0xc28/0x1b60
-   __ip6_finish_output+0x38c/0x638
-   ip6_output+0x1b4/0x338
-   ip6_local_out+0x7c/0xa8
-   ip6_send_skb+0x7c/0x1b0
-   ip6_push_pending_frames+0x94/0xd0
-   rawv6_sendmsg+0x1a98/0x2898
-   inet_sendmsg+0x94/0xe0
-   __sys_sendto+0x1e4/0x308
-   __arm64_sys_sendto+0xc4/0x140
-   do_el0_svc+0x110/0x280
-   el0_svc+0x20/0x60
-   el0t_64_sync_handler+0x104/0x138
-   el0t_64_sync+0x154/0x158
+url:    https://github.com/intel-lab-lkp/linux/commits/Sung-Chi-Li/hwmon-cros_ec-Add-setting-target-fan-RPM-function/20250313-125018
+base:   9fbcd7b32bf7c0a5bda0f22c25df29d00a872017
+patch link:    https://lore.kernel.org/r/20250313-extend_ec_hwmon_fan-v1-2-5c566776f2c4%40chromium.org
+patch subject: [PATCH 2/3] hwmon: (cros_ec) Add reading target fan RPM function
+config: x86_64-randconfig-121-20250314 (https://download.01.org/0day-ci/archive/20250314/202503141908.rieksBce-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250314/202503141908.rieksBce-lkp@intel.com/reproduce)
 
-To avoid that, empty vif's txq at ieee80211_do_stop() so no packet could
-be dequeued after ieee80211_do_stop() (new packets cannot be queued
-because SDATA_STATE_RUNNING is cleared at this point).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503141908.rieksBce-lkp@intel.com/
 
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
----
- net/mac80211/iface.c | 3 +++
- 1 file changed, 3 insertions(+)
+sparse warnings: (new ones prefixed by >>)
+>> drivers/hwmon/cros_ec_hwmon.c:48:18: sparse: sparse: cast to restricted __le32
 
-diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
-index 738de269e13f..e60c1ffebaea 100644
---- a/net/mac80211/iface.c
-+++ b/net/mac80211/iface.c
-@@ -660,6 +660,9 @@ static void ieee80211_do_stop(struct ieee80211_sub_if_data *sdata, bool going_do
- 	if (sdata->vif.type == NL80211_IFTYPE_AP_VLAN)
- 		ieee80211_txq_remove_vlan(local, sdata);
- 
-+	if (sdata->vif.txq)
-+		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
-+
- 	sdata->bss = NULL;
- 
- 	if (local->open_count == 0)
+vim +48 drivers/hwmon/cros_ec_hwmon.c
+
+    38	
+    39	static int cros_ec_hwmon_read_fan_target(struct cros_ec_device *cros_ec, u8 index, int32_t *speed)
+    40	{
+    41		int ret;
+    42		struct ec_response_pwm_get_fan_rpm r;
+    43	
+    44		ret = cros_ec_cmd(cros_ec, 0, EC_CMD_PWM_GET_FAN_TARGET_RPM, NULL, 0, &r, sizeof(r));
+    45		if (ret < 0)
+    46			return ret;
+    47	
+  > 48		*speed = le32_to_cpu(r.rpm);
+    49		return 0;
+    50	}
+    51	
+
 -- 
-2.40.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
