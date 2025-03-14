@@ -1,112 +1,106 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCEE1E04AC
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA0B13D8B2
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741946265; cv=none; b=oImPlMRic14FGBZq+VHPO3DKigsPnacU1HbUN7iH7En5DZIlP0X3hL4SXl6bgrkwjCbvGy1Xi/zhecFjw6TGLdjFHMJQRHA8PeHBYtGGQDK7PbCiDGe8WoYgiWMEOyMxBJg0n4lMt4vw/WNvcglqIk+N7GYxLis42c53HRYcp9c=
+	t=1741946325; cv=none; b=VTYN4yxNdgUHzgXWG6jQB/MO476GLYqWJ8MvUGUxUg5879UIhyfyb5N2onD00CDA57GYheuO20EnaZxjIGgHgH9B6egdvQjSaLRqQOUikjaMM6Lrfkb9GfNiu9+qdTXtn2MjnA03EOXUFDceEBtN3WcQ1B+phj6lqTd8DnjZWxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741946265; c=relaxed/simple;
-	bh=LWKYNIbfHrf2dIs2Gr9oQspYlrFLbqyZwnqfyCC9sp4=;
+	s=arc-20240116; t=1741946325; c=relaxed/simple;
+	bh=3R/xMW1KRHZ8whxH1MaliizhE8y6irqdOv62B/5CbE0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JDrpSLsURqJ3mn3LS4kYdqVVOYlG0NoTwrfLkA7AjrEdikz58iMZfwko2CHbjUInoog0cycddUmqKJhD/KeQnrcw/Mx2hoO3lPb6atk/sLBEnX5IH7U0M3bLJ0xDqBUdOdDlHCQ8XU+xAgZMpVYn8OC84t9EfB+3UXXIYCV04s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xScv5mFy; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	 To:Cc:Content-Type; b=S6KbmmlZuWSk9Z7/x3Ppmlk7+SO14BTlnXX8Cn2w3su+/HxNAi+AMmdqEQQCgXPfV/kMvxnctoUO1EN0hTHEvzzWiBLg9zG8IMCJqztGP+rH6OXJ5zh6xU2sTn++8k1LM7t4s3Mr226Zs7Sp2zOMsdodP+TiYOM5GaL0IFpWaE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VCz/9UVU; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xScv5mFy"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30c091b54aaso17772531fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 02:57:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VCz/9UVU"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30762598511so19862411fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 02:58:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741946262; x=1742551062; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741946321; x=1742551121; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+7B97j7QW4aEhOEY12AmZMGHsvdqRoWdmKy6CRQeoK0=;
-        b=xScv5mFyLQIY1tnTmmxQ7RVBkIH62/5zrfBLn3QFqfc/X0c0wqTl1Nu7YsPc1tXe4u
-         zJoa4CBUAQVhvF/r+yb/OJ+gP1A0F/DGXLiItVbLOfQ1uwVETI0PTqJyEOfeCyjQxWaf
-         4kHSX41yjOeiPF7UT8bn+ABo/P9TU/5228fIr6tSstkWPJ7GmJr8B1JUK7+/lfv7+y74
-         KXidsliQiDmlg0OFpXLPM01ukg0MaZAjFNiujZM1Kr7slvxg5ZWWRVW9iyZqRDSK2sN/
-         zwCg3z5mcBTXAPHEpBU3dlKa6NtmwCCyMNCNeR3EwzqWBxksQ7IN8wnIXWf/ImVArDTJ
-         E6RA==
+        bh=3R/xMW1KRHZ8whxH1MaliizhE8y6irqdOv62B/5CbE0=;
+        b=VCz/9UVU8euvRsY4USKad1OhraYKdrg7ZCH96O1CN8US0gsvQ5SFy75d5yyeM2JypN
+         BvFl4yq3gAdgVCOrWPyd2YHBCkdGamHFl4+fq8l3MjQSjyQYjn7nmiBtJvpba4Kq3OHY
+         DMCEG7Vm/cbYmlV31Cszs239PvK/cuk8d+hV0WbJX36YWQroAoL2k7GeJc7R3smHSD3B
+         6mVR3TJBWMPB0F5tbciCwnxuhKggb8vY/Kp9nO4d57X5MmuQUblcJvevnSP88Ukj1BaA
+         EKbBH7+GirkZYXIXHu7RYz3t0uW1fX1IuRpkaW1Dx3XZ8wt5Jl/dvSH9XYgrZPL7Lj3p
+         fdWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741946262; x=1742551062;
+        d=1e100.net; s=20230601; t=1741946321; x=1742551121;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+7B97j7QW4aEhOEY12AmZMGHsvdqRoWdmKy6CRQeoK0=;
-        b=G8hssN0FC5ysO6V2V8LD6HlA6ylbr9CZcH27PBupI1epZB2F7wrZUwtDfNlXGTeNe/
-         wKMxm+1M02Ic8rG6tOnh54JbER0SZeVr5f68TpCN7BDO7KOLZ0vo9r+7O0rUhogbcNb3
-         3Mzmnb+LPoIZfnF26xV1ijISsTshGGutQ9J5OO2cYyU9YpA+EQnGINbVHuPkJLp4d3is
-         bZoABF2ilel3wywozOQNBX8C8UA3nfjolJA6QVB0VkjPGrxDMO2BLiTo3NIIe7fSzOBM
-         TR6LxA/7UIq995lFPwdplejE+byezJuCK3ZUyISXbz7ef4C+p6paOjvXjGGSTtLrlCaP
-         sE9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUcwgCfKZcEU0SYdorRtSaHp0+ujQpv8u5zdtFKRmMViDAR+ft/gzM6nuZfdwd9WFUk7Cabk9hojXav7KM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVSZaIwPRnfTd5Nz1Qn88BH02A8LgTJ1Js7gKiHxVeNNxDacxE
-	nm4+oOlw6Keahmw9AgrSTOd6S+9bEyUwf6UertLOj5qt6EafGV9EteH1Ual9l/MyIyyIksVjbGD
-	5H5fEHPWHl1EMC3Dcx6H0CrzhyNcCJ2RnfyZmuQ==
-X-Gm-Gg: ASbGncsiOKv6xpRx3Yv9oRl2poqCLe54LSKDwEKa1yqErvTfcV3I+HoEMToLI+DTmZH
-	xLV7Kj/sTREA5JpvTkk5o5WDPhYuBOgQjO7MvL/bdEpScppYVhgGcPOUJN7GVYzyAKHxFm0xKvS
-	//I5shc2HVebD4og7WNLnIniSUNhKSooF7cVHRXexL5QyYF0ImKaP2V59p5oPZHYE4uBF7
-X-Google-Smtp-Source: AGHT+IHUkL22puzejCWdSfcyfhQgtgP41R6mY2yr83XR0Bby6654IFiYrZrKZL88lqND0syAtI3FL3xbo6lkvTl7yC4=
-X-Received: by 2002:a2e:a582:0:b0:30b:b9e4:13cd with SMTP id
- 38308e7fff4ca-30c4a74d14amr5326571fa.2.1741946261461; Fri, 14 Mar 2025
- 02:57:41 -0700 (PDT)
+        bh=3R/xMW1KRHZ8whxH1MaliizhE8y6irqdOv62B/5CbE0=;
+        b=FNIFh7eaOxE0KUN5P/OcxGeyrMSWYzuIP9+UrIn6pR2/OanKhts41cZx+hr4QRWtp3
+         qBcJ0ou0DkjmMm/hnVtZYYH3vSDHf8yII5FfscinwAIvkoC5h2k49E5uMS8BHRd0qpoq
+         J1jLO1OUcoHuuI9zsXiQDgHBn47ZbafvNvQyKPzAazAgKpuWg7eYF/xlXjkaY2eiFltc
+         djMBPEQqI/dXCLcGAI38bnlJmsKaSI3KO4I7+x/YaVxmDK4vQJoONJYyZ/6GQmNYsu7b
+         sM2YtsDUdsnFPrXoMfItLyE/wy361D4LnFHaZC3L/9FvTdODhfnuElQ2GB41IAFpUupd
+         zkHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPXmhdsgA+AE5A5K3NmLeHVoBIHe/JSKRjNd13sWSYPdlyZfDA7YJZdv6veG8XrmOT51wKnvxxL4opH0w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywUhrebBASvEhnSvGIOI5O1Uc5a7b4loklW26mRkqEAH2Vku61
+	+0qlk0dzFeLjAsocsL5NKQAxjVclDPGA4nhCnLWH4S+miBCZUxWY8B0Q6+TZh4139Qe0QGdMZJx
+	naxVrIb6D0IDKPI9b+9tPfj91rAf6hBpWiWd1+A==
+X-Gm-Gg: ASbGncszU/PY9v23O0O9lex39Dblm84gNmbL1riibdJRfaHXS87z2GWkclzTjZ8hpSN
+	aci5lspu9bWalyRZp1XuVSt4al4cTgTs9U3QSPE6UhmAioX6tWM/ixUORZnaFDtlraPY8fgCogi
+	pU4nK47Fv3RIA9E44CplMMrM8=
+X-Google-Smtp-Source: AGHT+IGc3omYZ/PigNb3EELyzJBtPU76XiDZ8/lpHySnqIua+3ffxwK9HjrgiuZD5ypFcw6v7zL4wYHXWwqXE5nGVqQ=
+X-Received: by 2002:a05:6512:158a:b0:549:8f21:bc07 with SMTP id
+ 2adb3069b0e04-549c38f1fbemr588651e87.26.1741946321224; Fri, 14 Mar 2025
+ 02:58:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314160641.75afdc79@canb.auug.org.au>
-In-Reply-To: <20250314160641.75afdc79@canb.auug.org.au>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 14 Mar 2025 10:57:29 +0100
-X-Gm-Features: AQ5f1JoIA53xACAJX3Z1UhX3wGqrZSlKJbDOiiubrXipf4lApJl9HrhvdnbqVQA
-Message-ID: <CAMRc=MdcjeP24n=Mo9bisBw+qjz+jmv2NK0WtSCqYa6FHJgSUQ@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the gpio-brgl tree with the
- gpio-brgl-fixes tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250225140732.21557-1-ot_chhao.chang@mediatek.com>
+In-Reply-To: <20250225140732.21557-1-ot_chhao.chang@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 14 Mar 2025 10:58:29 +0100
+X-Gm-Features: AQ5f1JoobXwU1DJzGtfpxiI6KI8sg3dxeI7nlvijJlOYjKzE2Ra7o1u5ZIyffXY
+Message-ID: <CACRpkdYSNMV2jymbHaxRp-PmzbbkEJ_eUcT20whYw3gdhEGOGg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Add EINT support for multiple addresses
+To: Hao Chang <ot_chhao.chang@mediatek.com>
+Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Wenbin Mei <wenbin.mei@mediatek.com>, Axe Yang <axe.yang@mediatek.com>, 
+	Qingliang Li <qingliang.li@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>, 
+	Chunhui Li <chunhui.li@mediatek.com>, linux-mediatek@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 14, 2025 at 6:06=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> Hi all,
->
-> Today's linux-next merge of the gpio-brgl tree got a conflict in:
->
->   drivers/gpio/gpiolib.c
->
-> between commit:
->
->   0102fbf52b93 ("gpiolib: don't check the retval of get_direction() when =
-registering a chip")
->
-> from the gpio-brgl-fixes tree and commit:
->
->   9becde08f1bc ("gpiolib: don't use gpiochip_get_direction() when registe=
-ring a chip")
->
-> from the gpio-brgl tree.
->
-> I fixed it up (I used the latter as the conflict was just in a comment)
-> and can carry the fix as necessary. This is now fixed as far as linux-nex=
-t
-> is concerned, but any non trivial conflicts should be mentioned to your
-> upstream maintainer when your tree is submitted for merging.  You may
-> also want to consider cooperating with the maintainer of the conflicting
-> tree to minimise any particularly complex conflicts.
->
+Hi Hao,
 
-Thanks,
+thanks for your patches!
 
-I will pull v6.14-rc7 into my for-next branch once it's tagged and
-resolve the conflict before the merge window.
+On Tue, Feb 25, 2025 at 3:07=E2=80=AFPM Hao Chang <ot_chhao.chang@mediatek.=
+com> wrote:
 
-Bartosz
+> This patch depends on
+> [v3,2/2] pinctrl: mediatek: add mt8196 driver
+> [v3,1/2] dt-bindings: pinctrl: mediatek: add support for mt8196
+>
+> Please also accept this patch together with [1]
+> to avoid build and dt binding check error.
+> [1]https://patchwork.kernel.org/project/linux-mediatek/list/?series=3D&su=
+bmitter=3D215008&state=3D&q=3Dv3&archive=3D&delegate=3D
+
+Since the dependence series is not finished I can't apply these
+patches either, do you want to send an independent version of these
+patches so we merge them *first* since they seem finished?
+
+Then the mt8196 series can rebase on your patches in v6.15-rc1
+instead.
+
+Just send a version based on v6.14-rc1 and I will apply it.
+
+Yours,
+Linus Walleij
