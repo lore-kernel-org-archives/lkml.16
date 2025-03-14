@@ -1,121 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92893202C55
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456851FDA76;
+	Fri, 14 Mar 2025 17:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974806; cv=none; b=dxlgQQitGFdW1OgZZ8OotR7oeFMMNyq0ZwyPV4xqBMtOKBsmiSzNEJuyel2X9q/x+zjDWO64GMD5R8rtQFqf/KIDGJGBRz9N/0Hlfs1TzAFoeaZqsFiC8KCv+Msd1uCJy2VPf3EIYrvH2YcljUrjhaUOV5vY1LDI0qm/LHhQUsA=
+	t=1741974827; cv=none; b=GF8Rxr7/qI15KA74bYphbTsvdfDlBu3htIt/nKaWQAFZH3ZZoycVcXWX4dx5whpoSJsawFf2yKCj5n64ndKHivwHsJl3unCEyh+EKakmDWw+qZo1d+Y2fFoR4UiEMI7jcSr/7GismFWElaNDKOg/RI/Ku2qkzGGgw40xZkBft6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741974806; c=relaxed/simple;
-	bh=upqKoVusoCUr5x6/idcI9vYY8Ge9PfhUUDmqNXfdh8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nAA7asoZJrMEhLs2N+3FS6wBdxOSC2BMOtfjWcmvxDNVg1Wtn7vmdK4GQJ7Wowy2bOiDEFOrT1JW+rEa+Jks1ovxMc682WrSIxPViYZL5+sjwSLhJZj5KTTX1X2gbw5GJtn9Ac1cOYcaOtPQcwfSzECJsvnLTpNBH6TTGG1wLLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=atPE9HXj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741974827; c=relaxed/simple;
+	bh=s5sHm7/QnN7CVS7K9YFNqIidGfIhRwMnWMvEDWIzRJE=;
+	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=ny4bGGKBir2vtIczGyngxNpD3elVVFJ2heMNyJow4RcYQnISbToZSW44as07FMpVbrySYZp9nGBaGO7CSb7oUYY0WcRDK/2yb1w22+tpx5NHP2cZ61VAh8/P8B0GkH4Vm2E7OonI0qAdG/44HdxOcOsoSnJN5cNrK9vVZ17nh3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjTAUCj1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="atPE9HXj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741974803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bB6YFM9MmhDasWEynGvfo3R/5ogFVYWGX5dYTaSRdAk=;
-	b=atPE9HXjhfXywcyXiydkf7CiMa8Og6HKYp8bXqybF2gxyveHHM4Fh0glF4HZOy7jBOyD0d
-	O239BJF6/0U63vx1SpdSTfSu8vHVJp2L6rNeYvGYn44olWvGNc4EdKbvRxRQ79TyahYGLX
-	zHinVMJtQeJODDunwosfSehGVR84Wco=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-QT7vdptgNIm5uDV61YbtIA-1; Fri,
- 14 Mar 2025 13:53:18 -0400
-X-MC-Unique: QT7vdptgNIm5uDV61YbtIA-1
-X-Mimecast-MFC-AGG-ID: QT7vdptgNIm5uDV61YbtIA_1741974795
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C240187B6AB;
-	Fri, 14 Mar 2025 17:53:12 +0000 (UTC)
-Received: from redhat.com (unknown [10.96.134.26])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EA1341828A9F;
-	Fri, 14 Mar 2025 17:53:10 +0000 (UTC)
-From: "Herton R. Krzesinski" <herton@redhat.com>
-To: x86@kernel.org
-Cc: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	olichtne@redhat.com,
-	atomasov@redhat.com,
-	aokuliar@redhat.com
-Subject: Performance issues in copy_user_generic() in x86_64
-Date: Fri, 14 Mar 2025 14:53:08 -0300
-Message-ID: <20250314175309.2263997-1-herton@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjTAUCj1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38E7CC4CEE3;
+	Fri, 14 Mar 2025 17:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741974826;
+	bh=s5sHm7/QnN7CVS7K9YFNqIidGfIhRwMnWMvEDWIzRJE=;
+	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
+	b=AjTAUCj1AqyVFILuqDf1htnLC/n62fgzlyWA5H1BD+dsyXp0Bezik4MJ2zfCreNrZ
+	 7zIvkQhkDFUaZwkGqBp6VmKVjpoSZ9LAnHumSkaVJ4OTJDkvtzHqgCiI3zOUZDk0tV
+	 qL9kilD6gIdHzzJaOa64ZMi3yC6LLdmJWPf/sHqLUQnYqEMEtv6d62fWnlu8AFHtg5
+	 5T2CXO9P3RQkQgz6k4fc87k/ByPD3g4qe4bq+1viJ4Ay72N7eqgpBIALy3hssFL+PJ
+	 T8UvGgGHwMdOqHpT/I9iAOwjpWMrtFfp+n8dKcdv3Jw4jRFgGGfvQDICdC7ke9ic9Q
+	 3DdsLkLSb8kJA==
+Message-ID: <26194ac041ad313a9e48ec1c7ef21cfc@kernel.org>
+Date: Fri, 14 Mar 2025 17:53:44 +0000
+From: "Maxime Ripard" <mripard@kernel.org>
+To: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v6 2/4] drm/bridge: add function interface for
+ DisplayPort audio implementation
+In-Reply-To: <20250314-dp-hdmi-audio-v6-2-dbd228fa73d7@oss.qualcomm.com>
+References: <20250314-dp-hdmi-audio-v6-2-dbd228fa73d7@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>, "Andrzej Hajda" <andrzej.hajda@intel.com>, "David
+ Airlie" <airlied@gmail.com>, "Dmitry Baryshkov" <lumag@kernel.org>, "Hermes
+ Wu" <Hermes.wu@ite.com.tw>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jonas
+ Karlman" <jonas@kwiboo.se>, "Laurent Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>, "Marijn Suijten" <marijn.suijten@somainline.org>, "Maxime
+ Ripard" <mripard@kernel.org>, "Neil Armstrong" <neil.armstrong@linaro.org>, "Rob
+ Clark" <robdclark@gmail.com>, "Robert Foss" <rfoss@kernel.org>, "Sean Paul" <sean@poorly.run>, "Simona
+ Vetter" <simona@ffwll.ch>, "Thomas Zimmermann" <tzimmermann@suse.de>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hello,
+On Fri, 14 Mar 2025 11:36:49 +0200, Dmitry Baryshkov wrote:
+> It is common for the DisplayPort bridges to implement audio support. In
+> preparation to providing a generic framework for DP audio, add
+> corresponding interface to struct drm_bridge. As suggested by Maxime
+> for now this is mostly c&p of the corresponding HDMI audio API.
+> 
+> 
+> [ ... ]
 
-recently I have got two reports of performance loss in copy_user_generic()
-after updates in user copy functions in x86_64, when benchmarking with iperf3.
-I believe the write alignment to 8 bytes that was done through the old
-ALIGN_DESTINATION macro was helping in some cases, and when it was removed the
-performance drop can be noticed. Looks like this theory is corroborated by some
-performance testing I did.
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-Please take a look at the following email with the patch if everything is sane.
-I already did some testing as explained in the changelog of the patch. I used
-the following scripts to run the testing, I just wrote them to get the job done
-and get some results, so there is nothing fancy about them.
-
----- bench.sh
-#!/bin/bash
-
-dir=$1
-mkdir -p $dir
-
-for cpu in 19 21 23 none; do
-	sync
-	echo 3 > /proc/sys/vm/drop_caches
-	cpu_opt=""
-	if [ "$cpu" != "none" ]; then
-		cpu_opt="taskset -c $cpu"
-	fi
-	$cpu_opt iperf3 -D -s -B 127.0.0.1 -p 12000
-	perf stat -o $dir/stat.$cpu.txt taskset -c 17 iperf3 -c 127.0.0.1 -b 0/1000 -V -n 50G --repeating-payload -l 16384 -p 12000 --cport 12001 2>&1 > $dir/stat-$cpu.txt
-	cat $dir/stat.$cpu.txt >> $dir/stat-$cpu.txt
-	rm -f $dir/stat.$cpu.txt
-	killall iperf3
-done
-----
-
----- stat.sh
-#!/bin/bash
-
-dir=$1
-printf "            %4s  %13s %12s %12s %11s\n" "CPU" "RATE     " "SYS     " "TIME    " "sender-receiver"
-
-for cpu in 19 21 23 none; do
-	time=$(grep 'seconds time elapsed' $dir/stat-$cpu.txt | awk '{ print $1 }')
-	sys=$(grep 'seconds sys' $dir/stat-$cpu.txt | awk '{ print $1 }')
-	rate=$(grep ' sender' $dir/stat-$cpu.txt | awk '{ print $7 $8 }')
-	cpuu=$(grep 'CPU Utilization' $dir/stat-$cpu.txt | awk '{ printf "%s-%s\n", $4, $7 }')
-
-	printf "Server bind %4s: $rate $sys $time %s\n" $cpu $cpuu
-done
-----
-
-Example of a test run:
-nice -n -20 ./bench.sh align
-./stat.sh align
-
+Thanks!
+Maxime
