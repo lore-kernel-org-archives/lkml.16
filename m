@@ -1,191 +1,168 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E4B126BF9
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E147C197A68
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741944643; cv=none; b=Ci682MRBBcZOyS0f4F30PeujkzXFQRF/JnSWWlMBGmS/zKmYttwNp/T5UA1dH2+wlkOC8CjcMj73KOkyobYT5O53wz2rBlvLFTrh1BShES1VTTRKxbgq50n4kWBvM4yNDZiJjtk+0Puebc31glzCDgwd+ODD/DCKc1byu1OcwhE=
+	t=1741944660; cv=none; b=RBp25ORCEQMtgrqHRLzY3iq9mfWt62Ewoz3FfNUzW7puvd/oWFNqwHY7e4KjnuoSS3zFd/A722g3BiSM1TJJaZ1amTM3BXYJYcwJuByY8hDObMNwPQFp+bFXb92PwnDPoD4bMnN01HrTA5B6vTF2LR3Q/bXwmv6hr4+zduSVtKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741944643; c=relaxed/simple;
-	bh=CpCHinGXPXa+xJsSfA/4BlUzu7FAdnL8SVZ+x2ezFHo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Eb8+FEvq1MLbaihDNXXeNcVcCmN182mF0jCtCKR/L7E6OvRyE8w6iL3leum24zlza2bNO98C7gB/u+YecvPkN6JrPUFUqNe+YPAKekmldDRxevkCA8ypS6cgytxxKqKdDzeALtWxNn4vEqV8yyyRE2tHB+b3GM2mFAXZQwHJjVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lczH0/RB; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741944660; c=relaxed/simple;
+	bh=e93eE40n9bUFNxE5voxoWM330uqXG0CNIr05Q7FIhps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=guMJ10XzuBsIZtXPFDNA5m2EJzQ4583kxmjmlDSXC2RF5HwC9/aRWuyxm1aBwxv8dFAnujhEzAPb9Hd/o+ZtebWTmz02OVIYmRcwIIa/cbrZWvBdup2VFpYJZXuZi0Tl/X2LC3aIKsaULwjJrxFtkD4OStj3wrIiuPVX/AM1yn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Adu0nhLN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lczH0/RB"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52E3joJe019686;
-	Fri, 14 Mar 2025 09:30:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=0z9Fz6
-	11KVkxjRCjoMRWDKqzm00u/P597760U7VRVFc=; b=lczH0/RBAoP3ow5/eGx7Wh
-	vFl6rjx/VeV2hLnBTUzXiksLl6Eqb7hsX1IgnYKxTzU3JWnKEl8Wvt7RM+YSbxhM
-	D3E/9B4xFNwcMs/7SYhcGEvZE1k5DeW5sZc4TpOP/Qpnzv0VwgsoIvcAklzRGmZI
-	PYV3DbgcdbNn81rbE6utg0twiX8/c1iIGkCyMQkYaLB6PQBw7VKVjA9maeDE5bAH
-	H2M7ZgV1C+Bg/Bnj6LLY/2RM/8Y+uvxUJ39g9c/IKTxP3hN56b6+6cv6GmLQmU60
-	lsa3d1LCoH8Ec6MKiV5ybEIbAQSlh2bmvQj2FVKXf2xmYmE7jNh4ECK0xl67fJkA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45ccu99d8e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 09:30:26 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52E9R3KJ021389;
-	Fri, 14 Mar 2025 09:30:25 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45ccu99d89-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 09:30:25 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52E8F9at026047;
-	Fri, 14 Mar 2025 09:30:24 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45atspp9g5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 09:30:24 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52E9UKuu33882844
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Mar 2025 09:30:20 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ADB372004E;
-	Fri, 14 Mar 2025 09:30:20 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DB27C2004B;
-	Fri, 14 Mar 2025 09:30:17 +0000 (GMT)
-Received: from [9.39.22.126] (unknown [9.39.22.126])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 14 Mar 2025 09:30:17 +0000 (GMT)
-Message-ID: <d6999d74-45f6-413a-8881-90473b322dfa@linux.ibm.com>
-Date: Fri, 14 Mar 2025 15:00:17 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Adu0nhLN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741944657;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R+uw1Q3X470tWmgPcYoi9tjQ2jSl9Kq26p5f4ZluhfM=;
+	b=Adu0nhLNwIGj7yKZi0gstjfB9P2GaeMCv9nQ8fFWVnrYILqzUV+FrVKwx9i9l0TGtR1PQn
+	7arbXaVQxwwWlmfaA3+YK33SLd/LuDgBSW0CyoE07ygqbyQELOGUhHBpdcJPSfMmJ5FsFM
+	K2qXTWAcFoZcJEWpXes6Sb0RGgTz4uc=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-501-KEr8ooGYO4eeXOsWnOPaxA-1; Fri, 14 Mar 2025 05:30:56 -0400
+X-MC-Unique: KEr8ooGYO4eeXOsWnOPaxA-1
+X-Mimecast-MFC-AGG-ID: KEr8ooGYO4eeXOsWnOPaxA_1741944655
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d01024089so14162445e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 02:30:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741944655; x=1742549455;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R+uw1Q3X470tWmgPcYoi9tjQ2jSl9Kq26p5f4ZluhfM=;
+        b=CF/73PSpXdDA0Uv2WEF1hu0nXiAG46d68SWpDzXOGVVwfiMqkugj6oiZuVhzRGxOJl
+         nJNXKPNllIyrhVGoEaopmszj+nrhpUj6M2ruYOA8iE6N4BrMWyR+54SJKjoaQTLTHqhb
+         oqh+6Lc3h+N5olVkV8ViFW1WvHY6uCz6a757jbxFVQPRdJ9I2tVKfJULHVG96/cWbj46
+         UmSl4jRULQZvYro0sUH25b5YivQLvNWzpoSsLXmc/HO13Ee814YVl7CI+iy08iku6M82
+         WV/KwhkFBgVqGFa3eOzLXnqeLH7ctzMT8j6s30xomM+W6mkmzFTuYr/2LCdl5JO1b6Hz
+         wGPg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/A7B6pOwG3UYCxVxvqd+itsBMemfLj/og2/VmifVgTWM/XiGBTpnJ1/P8hazevqQKnzzZQ3eniUZOKi8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuUJcy95TuN5r4G5BIZpyEa985LYej3GXNy8UBYMI2XNG/KiXb
+	ZIfFIjqaKTr/f6/1oEbMA10u8LyX87Mo1p72s4HXO0Euit3THwLJa+w1jDnBCORDQCncB1x48PO
+	Bq0rGc7wX6bqyk6qO8AR3AtkKBT7C2WRwG4tf5YcmSDf/xiauJNK9eaF2hS2C5w==
+X-Gm-Gg: ASbGnctLQZwH4TPM6CRtSPvx7u8eu6eQ4i02CJLXOihYdQYGpxLe+wBRzz1qwxrppRr
+	XtQBTvaLA+hwMb3qUEjLPfTwy4JlsRJ3xLGG5c7r2FkzDY6Z29hEN0M4xST+zI5npDqZJDLtyfO
+	Q1Vzmg3w/UuAGR9Ye40GN2lfyR+6qOnssYFUF12peQaVjBrzbOGRzthJpZTxl9JsniyOd5eiate
+	j/2yhGEQly0eLJE9DU0wmeP8FHZsM9652VWVbazuMEQiKN2Yc6pYJOfiomZ1EfDpkTyElASt2F8
+	nfzCXG4R81R1JkSjkVdD/JtEReicm94sX5GoN+ohXV8=
+X-Received: by 2002:a5d:64c9:0:b0:391:2c67:7999 with SMTP id ffacd0b85a97d-39720779405mr2492408f8f.48.1741944654797;
+        Fri, 14 Mar 2025 02:30:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEVyKsCgKPTZlOlR372qt56ZtOxfikpuBkcvr2h0zJSg+sZGyxVB7bK/X4XNDrN1LVrxoUbwA==
+X-Received: by 2002:a5d:64c9:0:b0:391:2c67:7999 with SMTP id ffacd0b85a97d-39720779405mr2492368f8f.48.1741944654341;
+        Fri, 14 Mar 2025 02:30:54 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.49.7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b69eesm5049255f8f.34.2025.03.14.02.30.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 02:30:53 -0700 (PDT)
+Date: Fri, 14 Mar 2025 10:30:51 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Harshit Agarwal <harshit@nutanix.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] sched/deadline: Fix race in push_dl_task
+Message-ID: <Z9P3S_GjAQPSedbI@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250307204255.60640-1-harshit@nutanix.com>
+ <Z9FXC7NMaGxJ6ai6@jlelli-thinkpadt14gen4.remote.csb>
+ <8B627F86-EF5F-4EA2-96F4-E47B0B3CAD38@nutanix.com>
+ <Z9Lb496DoMcu9hk_@jlelli-thinkpadt14gen4.remote.csb>
+ <59E10428-6359-4E0A-BBB2-C98DF01F79BA@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] powerpc: powenv: oxcl: use lock guard for mutex
-To: ajd@linux.ibm.com
-Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, mpe@ellerman.id.au,
-        peterz@infradead.org, fbarrat@linux.ibm.com, mahesh@linux.ibm.com,
-        oohall@gmail.com, hbathini@linux.ibm.com, dhowells@redhat.com,
-        haren@linux.ibm.com, linux-kernel@vger.kernel.org, maddy@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-References: <20250314054544.1998928-1-sshegde@linux.ibm.com>
- <20250314054544.1998928-6-sshegde@linux.ibm.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250314054544.1998928-6-sshegde@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: h0Cja2C6vajM78wzlm82GdfRq8oqmFfd
-X-Proofpoint-GUID: ZvhqgWL-NRe9f7ZJNClqRDnR7vkRLAgP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_03,2025-03-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- mlxlogscore=852 mlxscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
- suspectscore=0 spamscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503140071
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <59E10428-6359-4E0A-BBB2-C98DF01F79BA@nutanix.com>
 
-
-
-On 3/14/25 11:15, Shrikanth Hegde wrote:
-> use guard(mutex) for scope based resource management of mutex.
-> This would make the code simpler and easier to maintain.
+On 13/03/25 19:38, Harshit Agarwal wrote:
 > 
-> More details on lock guards can be found at
-> https://lore.kernel.org/all/20230612093537.614161713@infradead.org/T/#u
 > 
-> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-> ---
->   arch/powerpc/platforms/powernv/ocxl.c | 12 +++---------
->   1 file changed, 3 insertions(+), 9 deletions(-)
+> >>> 
+> >>> Maybe to discern between find_lock_later_rq() callers we can use
+> >>> dl_throttled flag in dl_se and still implement the fix in find_lock_
+> >>> later_rq()? I.e., fix similar to the rt.c patch in case the task is not
+> >>> throttled (so caller is push_dl_task()) and not rely on pick_next_
+> >>> pushable_dl_task() if the task is throttled.
+> >>> 
+> >> 
+> >> Sure I can do this as well but like I mentioned above I don’t think
+> >> it will be any different than this patch unless we want to
+> >> handle the race for offline migration case or if you prefer
+> >> this in find_lock_later_rq just to keep it more inline with the rt
+> >> patch. I just found the current approach to be less risky :)
+> > 
+> > What you mean with "handle the race for offline migration case"?
 > 
-> diff --git a/arch/powerpc/platforms/powernv/ocxl.c b/arch/powerpc/platforms/powernv/ocxl.c
-> index 64a9c7125c29..f8139948348e 100644
-> --- a/arch/powerpc/platforms/powernv/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/ocxl.c
-> @@ -172,12 +172,11 @@ static void pnv_ocxl_fixup_actag(struct pci_dev *dev)
->   	if (phb->type != PNV_PHB_NPU_OCAPI)
->   		return;
->   
-> -	mutex_lock(&links_list_lock);
-> +	guard(mutex)(&links_list_lock);
->   
->   	link = find_link(dev);
->   	if (!link) {
->   		dev_warn(&dev->dev, "couldn't update actag information\n");
-> -		mutex_unlock(&links_list_lock);
->   		return;
->   	}
->   
-> @@ -206,7 +205,6 @@ static void pnv_ocxl_fixup_actag(struct pci_dev *dev)
->   	dev_dbg(&dev->dev, "total actags for function: %d\n",
->   		link->fn_desired_actags[PCI_FUNC(dev->devfn)]);
->   
-> -	mutex_unlock(&links_list_lock);
->   }
->   DECLARE_PCI_FIXUP_HEADER(PCI_ANY_ID, PCI_ANY_ID, pnv_ocxl_fixup_actag);
->   
-> @@ -253,12 +251,11 @@ int pnv_ocxl_get_actag(struct pci_dev *dev, u16 *base, u16 *enabled,
->   {
->   	struct npu_link *link;
->   
-> -	mutex_lock(&links_list_lock);
-> +	guard(mutex)(&links_list_lock);
->   
->   	link = find_link(dev);
->   	if (!link) {
->   		dev_err(&dev->dev, "actag information not found\n");
-> -		mutex_unlock(&links_list_lock);
->   		return -ENODEV;
->   	}
->   	/*
-> @@ -274,7 +271,6 @@ int pnv_ocxl_get_actag(struct pci_dev *dev, u16 *base, u16 *enabled,
->   	*enabled   = link->fn_actags[PCI_FUNC(dev->devfn)].count;
->   	*supported = link->fn_desired_actags[PCI_FUNC(dev->devfn)];
->   
-> -	mutex_unlock(&links_list_lock);
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(pnv_ocxl_get_actag);
-> @@ -293,12 +289,11 @@ int pnv_ocxl_get_pasid_count(struct pci_dev *dev, int *count)
->   	 *
->   	 * We only support one AFU-carrying function for now.
->   	 */
-> -	mutex_lock(&links_list_lock);
-> +	guard(mutex)(&links_list_lock);
->   
->   	link = find_link(dev);
->   	if (!link) {
->   		dev_err(&dev->dev, "actag information not found\n");
-> -		mutex_unlock(&links_list_lock);
->   		return -ENODEV;
->   	}
->   
-> @@ -309,7 +304,6 @@ int pnv_ocxl_get_pasid_count(struct pci_dev *dev, int *count)
->   			break;
->   		}
->   
-> -	mutex_unlock(&links_list_lock);
+> By offline migration I meant dl_task_offline_migration path which
+> calls find_lock_later_rq. So unless we think the same race that this
+> fix is trying to address for push_dl_task can happen for
+> dl_task_offline_migration, there is one less reason to encapsulate
+> this in find_lock_later_rq.
+> 
+> > 
+> > And I am honestly conflicted. I think I like the encapsulation better if
+> > we can find a solution inside find_lock_later_rq(), as it also aligns
+> > better with rt.c, but you fear it's more fragile?
+> > 
+> 
+> Yes I agree that encapsulation in find_lock_later_rq will be ideal
+> but by keeping it limited to push_dl_task I wanted to keep the change
+> more targeted to avoid any possible side effect on
+> dl_task_offline_migration call path.
+> 
+> Let’s say if we go ahead with making the change in find_lock_later_rq
+> itself then we will have to fallback to current checks for throttled case
+> and for remaining we will use the task != pick_next_pushable_dl_task(rq)
+> check. Below is the diff of how it will be:
+> 
+>                 /* Retry if something changed. */
+>                 if (double_lock_balance(rq, later_rq)) {
+> -                       if (unlikely(task_rq(task) != rq ||
+> +                       if (unlikely(is_migration_disabled(task) ||
+>                                      !cpumask_test_cpu(later_rq->cpu, &task->cpus_mask) ||
+> -                                    task_on_cpu(rq, task) ||
+> -                                    !dl_task(task) ||
+> -                                    is_migration_disabled(task) ||
+> -                                    !task_on_rq_queued(task))) {
+> +                                    (task->dl.dl_throttled &&
+> +                                      (task_rq(task) != rq ||
+> +                                       task_on_cpu(rq, task) ||
+> +                                       !dl_task(task)
+> +                                       !task_on_rq_queued(task))) ||
+> +                                    (!task->dl.dl_throttled &&
+> +                                      task != pick_next_pushable_dl_task(rq)))) {
+>                                 double_unlock_balance(rq, later_rq);
+>                                 later_rq = NULL;
+>                                 break;
+>  
+> Let me know your thoughts and I can send v2 patch accordingly.
 
-Hi. Andrew,
+So, it looks definitely more complicated (and fragile?), but I think I
+still like it better. Maybe you could add a comment in the code
+documenting the two different paths and the associated checks, so that we
+don't forget. :)
 
-After this change below dev_dbg will be called with mutex held still. Is 
-that a concern? I don't see the mutex being used in that path.
+What do others think?
 
-Since using scoped_guard cause more code churn here, I would prefer not 
-use it.
-
->   	dev_dbg(&dev->dev, "%d PASIDs available for function\n",
->   		rc ? 0 : *count);
->   	return rc;
+Thanks!
+Juri
 
