@@ -1,61 +1,61 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4462F20110F
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4274720126B
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 15:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741965153; cv=none; b=hnwo7v7ZEIo14mLP9kUis9oALP44kMsJsracyBO9UX3M4Sk1XMfdZvpHF0xyGwfEuZ3exh8jkN9KRlvkRuh5D1A2ZfB7mJn3VnmotKyvDdlif+9sYjq3hgPgzjcKXb5c9ELqDVQj7hXHKh885K+uCg2nHl23exfDyMUNWWRc0uQ=
+	t=1741965161; cv=none; b=U1qtmSRGHZbJr3rKrJGBt7LY6EZxEZgZ9hjzLf6PE4DfiRrFUfD6RNggBrqzMPYn58oQgqsNQ0e0UNxNckcNKW3dpr8K8ixgEfGmRavsRc2+TjNzAiwBuT3QD/hEe+lH1s3kZpf7KE26heHYV4bBWUXtSts8I5l9gTWD3pegGkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741965153; c=relaxed/simple;
-	bh=o4SMd5DBp/WKmz7RRjvN3ujNoeYVVFavfZxIfkWgWTc=;
+	s=arc-20240116; t=1741965161; c=relaxed/simple;
+	bh=UcPYSY91IwtgOB4ai8MToI7AlvlP3dEP0pcPPdj1U+I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g7iFQ8hZXx/Mr0XIgnaVYmM768Jc5OS4uCg2pciKOCecsU93gEkxmfLFkPyQ3VqfZTueKaem7PYe+f3aZAITWnTeRUzWazu3WpgYRfN/Z2XNEP9ZyqlwpofRq5fWPgdMgftKWZUJhFqwTxnMvfhgNkbaY+5qKWXvv6CD0XmPPpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e733EA1K; arc=none smtp.client-ip=209.85.160.46
+	 MIME-Version; b=F1kagQfOzxtUyYZdIoXTXkWSf6BN7mENTJgWhXbbcPRqnqKKQ1dafLlUnQ9H9zR7J5fQZuvEpcpCf3uqoHoIyx433eGnPM/dELAKh70G0ex4QbppDomX2s5dNG0V8Utu9yyByA2uXUBnd6yNolbFOF9KTlRYXoqEvTsG6dXr5yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j8NKbJJR; arc=none smtp.client-ip=209.85.160.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e733EA1K"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2bcc5c887efso1829952fac.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:12:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8NKbJJR"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2bcbd92d5dbso1187530fac.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:12:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741965151; x=1742569951; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741965157; x=1742569957; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mc/o/a5y2MySh4AIfJv4w5SkZzpsu4/WCrhprAfAfKQ=;
-        b=e733EA1KofV87OwznowCs/OT17I/bPIrnNp+0LiPMXLvzGUtOTYh07D4NksZmJ8aJ8
-         s7yGfYXXSS34Pktr0BzI43t+GOQuPsns5ovDxOUQupc94sElxJKZNJFvZSVqf0NdxYLa
-         lnKuRtzRZsWSUfSBNKX4HgFz5R1zj9Mo0A7Yfs7VBJZCotYNq1qM0y1TUNvXHrRDDWpW
-         7CVx9jylXqHhpC52ttAl60yOtgx1se5sx6lRbUK73kW/WZnM6vHlD0t8c9UTgpAoexi0
-         rVN4KsXIbUsjxK2hJvPBbgSXBUEvfGHj9QKdTs7blw2B0/3dqhSg2NAHGmL5Pdz4Q2Lf
-         5oNQ==
+        bh=d6+HafW/MGgyXYgn6+okE7Xm8nys/EIGKCy6LM/Z9VQ=;
+        b=j8NKbJJR1hs6VX8+4iG1/dFCqzY+pCO5xiWZHV/WMdYjp9EPI1YMSOCxmTZrPuzXwY
+         rXQTlNPRUdTwb3JC+FKSshHbTf0AS5rYyhxaMbdv+q4KdUqKZxvR9dq7jY8ENk/btaga
+         /G4GNUIJncqPvTqOy6Zg6wgIrvTCwpHKWlMDABI5SDTMOppZpOlLbEhH7nN7B8iQVyZl
+         pI8H1XoUJzBwVlUtETwQb1cMpG//wpkyqwGq1cha8uOhX7kYXIGmJyEF2eUr4FK9f5kz
+         CdJNGPp2umbXiVLWljaN6TJrSmoDkyoxJknFmClPJAxvFYIDpO9IS6cW78YeHzeKoudo
+         8MDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741965151; x=1742569951;
+        d=1e100.net; s=20230601; t=1741965157; x=1742569957;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mc/o/a5y2MySh4AIfJv4w5SkZzpsu4/WCrhprAfAfKQ=;
-        b=RGQ/8okpVFTx9UDKICoxs4YN8BczJDyw8AHBXJfEfw+v8AguDW8UtzFsJZg2Zj93ff
-         zzxnT1E8G9nGhJZFO+umT2t6rzEaYa+n5f9fIB8YqQiNO8GLUd1poxyf1kqnzw0UJqWp
-         zjmh3eJ3fGsQbSRaRwDChJV8N4U+bmDUpxghDf0g4CN+zk0x0pFGMpRAYuthClyd2a7R
-         /dgejic1yiN9xeoSkG++jDz0843ab7seV20SGLNGzzA2/zTIWivy5IDccVfDRtHITtXy
-         6bGKWLRCVR01UzygpJN9daHi9W0srlgJSmAEIDFkv70yMRdv8nO/SS3Ht6o2SdONnCpz
-         2cZw==
-X-Gm-Message-State: AOJu0YwZ19I6eyfvqdNXJDjwO11XGtJO+idprPQHOq0KwUwcrVte/pk6
-	k06bAgYWTLEgv9FMUBHXl6A+qUTrkGgFNGnQYHlrERy/j+qZcRkQOgux
-X-Gm-Gg: ASbGncsaLhK4wOMw1pe1GPg/rp+1XgohlyyUDQObhdjo9/PmBTnzFdIyH3qLAoLX0zN
-	je+u3Kl8ZUr5N0sxHjwGTMiaV/xYO6Z0fTpVeAtc+j1lkAc+MCXT/oGwpPp0GfhArUcpSd5kzGA
-	Jr3xrusSY9bSMZQ9bKl42/H89AyWTEdnbX/x8dREnuneCCty2cf77jXxsFICu4Z33F2VincM4rQ
-	UdE2eqqaz1SntTtWECLnKf9tBEZyFr0HBma/L+5fAERbsu3cgI3kITDpJ/TVJhPH3SnMjxcNYF1
-	q3jUHeKmXa5237iBn0gBcU8L2lzbwM/WvAVr
-X-Google-Smtp-Source: AGHT+IGBB78gG3em3xoLp1wgCCtotC7e6TlZsRJanEmpJivJYIALtItcKk+dInrhVkfjBGfwegNMdg==
-X-Received: by 2002:a05:6870:1ce:b0:2c1:6735:4abb with SMTP id 586e51a60fabf-2c690ecfcb2mr1700461fac.5.1741965150960;
-        Fri, 14 Mar 2025 08:12:30 -0700 (PDT)
+        bh=d6+HafW/MGgyXYgn6+okE7Xm8nys/EIGKCy6LM/Z9VQ=;
+        b=lbRQEKkse0toVvLulTARcpOjFpFj5JieKjnX+XlTnGAse6QjXqJ8V1aIHtjakW2V8+
+         1B5lBr+bWK/UEPen5g+iO1ZVraIHpi1LTop0xpMFaP/4Dr6jAbXBxSMIsbVdAPGjUaDj
+         J/UOD7Jg8QIb52VTexNKcYHYi7bOi9u6tQW/lBZxFSiNEhHkYAxZ17hrzqJZCljzFRMU
+         DAUlU08qFyCB9/TAUFOQUD41MQdpyZHmPGzoaE8e8cw5m4LI+N33VAElfVkXTEM+ljrd
+         85RE/agL+iqQY0sMHd4YGYwLSc7S8eDtUJyZoETdWHRs7gS4/O4jCiLmTvemgt7G+oxa
+         7Csw==
+X-Gm-Message-State: AOJu0YzECx8nE4ZOjwtUoYeLyN1GE5wqczmRUo7C8+SBf1uLLapVf02P
+	YDPaOiSXv5DCQG8d1Fm/GwBtMG/wFFpRmr2hDsNHB9lFILzWNJw9DSsr
+X-Gm-Gg: ASbGncuDzQ4cikl+l7i14aMZ0CNySmkWaobU+nYe4aigvqo3jXWrvCGpRROG93mfqp1
+	2Gy9n/RvFEIe4KhK8Hi5skWaBSoSTuMxZzHEf4blENqEIUTY/DA4oxWMAJiZGi93yyoVGUxRIi6
+	jM2KyNWAYNtOPUNlobbL5C7Lv2hcEqgDp26DFCuIo+v8nvVjePX1my1kXgYA8b03kiEXPz9RrVI
+	eiDKGjZtBtX7iKQGW0U5b9fPncDzQIJ8xOcyALD520yuCA1fiM1uUdanZ99bDjVh1cdguuq6os6
+	rzr8BHnnVhDoe3CzVXw+OnC1aA==
+X-Google-Smtp-Source: AGHT+IFD1CaGE2RpgNu5GsbuoCgB4ZtYsC59fwHSOWQMUaE0J9WqCjkeGqQqVqVEV6GTJt5HFWIjwQ==
+X-Received: by 2002:a05:6871:6017:b0:261:16da:decb with SMTP id 586e51a60fabf-2c690f3c1c4mr1465210fac.11.1741965157525;
+        Fri, 14 Mar 2025 08:12:37 -0700 (PDT)
 Received: from citadel.lan ([2600:6c4a:4d3f:6d5c::1019])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c6710f21efsm883026fac.30.2025.03.14.08.12.28
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c6710f21efsm883026fac.30.2025.03.14.08.12.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 08:12:30 -0700 (PDT)
+        Fri, 14 Mar 2025 08:12:36 -0700 (PDT)
 From: Brian Gerst <brgerst@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org
@@ -67,9 +67,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Juergen Gross <jgross@suse.com>,
 	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
 	Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH v2 1/7] x86/xen: Move Xen upcall handler
-Date: Fri, 14 Mar 2025 11:12:14 -0400
-Message-ID: <20250314151220.862768-2-brgerst@gmail.com>
+Subject: [PATCH v2 3/7] x86/syscall/64: Move 64-bit syscall dispatch code
+Date: Fri, 14 Mar 2025 11:12:16 -0400
+Message-ID: <20250314151220.862768-4-brgerst@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250314151220.862768-1-brgerst@gmail.com>
 References: <20250314151220.862768-1-brgerst@gmail.com>
@@ -81,199 +81,250 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the upcall handler to Xen-specific files.
+Move the 64-bit syscall dispatch code to syscall_64.c.
 
 No functional changes.
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 ---
- arch/x86/entry/common.c     | 72 -------------------------------------
- arch/x86/xen/enlighten_pv.c | 69 +++++++++++++++++++++++++++++++++++
- 2 files changed, 69 insertions(+), 72 deletions(-)
+ arch/x86/entry/Makefile     |  2 +
+ arch/x86/entry/common.c     | 93 -----------------------------------
+ arch/x86/entry/syscall_64.c | 96 ++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 96 insertions(+), 95 deletions(-)
 
+diff --git a/arch/x86/entry/Makefile b/arch/x86/entry/Makefile
+index 96a6b86e0a8b..5fd28abfd5a0 100644
+--- a/arch/x86/entry/Makefile
++++ b/arch/x86/entry/Makefile
+@@ -9,9 +9,11 @@ KCOV_INSTRUMENT := n
+ 
+ CFLAGS_REMOVE_common.o		= $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_syscall_32.o	= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_syscall_64.o	= $(CC_FLAGS_FTRACE)
+ 
+ CFLAGS_common.o			+= -fno-stack-protector
+ CFLAGS_syscall_32.o		+= -fno-stack-protector
++CFLAGS_syscall_64.o		+= -fno-stack-protector
+ 
+ obj-y				:= entry.o entry_$(BITS).o syscall_$(BITS).o
+ obj-y				+= common.o
 diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 3514bf2978ee..ce4d88eda693 100644
+index 183efabefe57..5bd448c0664f 100644
 --- a/arch/x86/entry/common.c
 +++ b/arch/x86/entry/common.c
-@@ -21,11 +21,6 @@
- #include <linux/uaccess.h>
- #include <linux/init.h>
+@@ -32,99 +32,6 @@
+ #include <asm/syscall.h>
+ #include <asm/irq_stack.h>
  
--#ifdef CONFIG_XEN_PV
--#include <xen/xen-ops.h>
--#include <xen/events.h>
--#endif
+-#ifdef CONFIG_X86_64
 -
- #include <asm/apic.h>
- #include <asm/desc.h>
- #include <asm/traps.h>
-@@ -455,70 +450,3 @@ SYSCALL_DEFINE0(ni_syscall)
- {
- 	return -ENOSYS;
- }
--
--#ifdef CONFIG_XEN_PV
--#ifndef CONFIG_PREEMPTION
--/*
-- * Some hypercalls issued by the toolstack can take many 10s of
-- * seconds. Allow tasks running hypercalls via the privcmd driver to
-- * be voluntarily preempted even if full kernel preemption is
-- * disabled.
-- *
-- * Such preemptible hypercalls are bracketed by
-- * xen_preemptible_hcall_begin() and xen_preemptible_hcall_end()
-- * calls.
-- */
--DEFINE_PER_CPU(bool, xen_in_preemptible_hcall);
--EXPORT_SYMBOL_GPL(xen_in_preemptible_hcall);
--
--/*
-- * In case of scheduling the flag must be cleared and restored after
-- * returning from schedule as the task might move to a different CPU.
-- */
--static __always_inline bool get_and_clear_inhcall(void)
+-static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
 -{
--	bool inhcall = __this_cpu_read(xen_in_preemptible_hcall);
+-	/*
+-	 * Convert negative numbers to very high and thus out of range
+-	 * numbers for comparisons.
+-	 */
+-	unsigned int unr = nr;
 -
--	__this_cpu_write(xen_in_preemptible_hcall, false);
--	return inhcall;
+-	if (likely(unr < NR_syscalls)) {
+-		unr = array_index_nospec(unr, NR_syscalls);
+-		regs->ax = x64_sys_call(regs, unr);
+-		return true;
+-	}
+-	return false;
 -}
 -
--static __always_inline void restore_inhcall(bool inhcall)
+-static __always_inline bool do_syscall_x32(struct pt_regs *regs, int nr)
 -{
--	__this_cpu_write(xen_in_preemptible_hcall, inhcall);
--}
--#else
--static __always_inline bool get_and_clear_inhcall(void) { return false; }
--static __always_inline void restore_inhcall(bool inhcall) { }
--#endif
+-	/*
+-	 * Adjust the starting offset of the table, and convert numbers
+-	 * < __X32_SYSCALL_BIT to very high and thus out of range
+-	 * numbers for comparisons.
+-	 */
+-	unsigned int xnr = nr - __X32_SYSCALL_BIT;
 -
--static void __xen_pv_evtchn_do_upcall(struct pt_regs *regs)
--{
--	struct pt_regs *old_regs = set_irq_regs(regs);
--
--	inc_irq_stat(irq_hv_callback_count);
--
--	xen_evtchn_do_upcall();
--
--	set_irq_regs(old_regs);
+-	if (IS_ENABLED(CONFIG_X86_X32_ABI) && likely(xnr < X32_NR_syscalls)) {
+-		xnr = array_index_nospec(xnr, X32_NR_syscalls);
+-		regs->ax = x32_sys_call(regs, xnr);
+-		return true;
+-	}
+-	return false;
 -}
 -
--__visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
+-/* Returns true to return using SYSRET, or false to use IRET */
+-__visible noinstr bool do_syscall_64(struct pt_regs *regs, int nr)
 -{
--	irqentry_state_t state = irqentry_enter(regs);
--	bool inhcall;
+-	add_random_kstack_offset();
+-	nr = syscall_enter_from_user_mode(regs, nr);
 -
 -	instrumentation_begin();
--	run_sysvec_on_irqstack_cond(__xen_pv_evtchn_do_upcall, regs);
 -
--	inhcall = get_and_clear_inhcall();
--	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
--		irqentry_exit_cond_resched();
--		instrumentation_end();
--		restore_inhcall(inhcall);
--	} else {
--		instrumentation_end();
--		irqentry_exit(regs, state);
+-	if (!do_syscall_x64(regs, nr) && !do_syscall_x32(regs, nr) && nr != -1) {
+-		/* Invalid system call, but still a system call. */
+-		regs->ax = __x64_sys_ni_syscall(regs);
 -	}
+-
+-	instrumentation_end();
+-	syscall_exit_to_user_mode(regs);
+-
+-	/*
+-	 * Check that the register state is valid for using SYSRET to exit
+-	 * to userspace.  Otherwise use the slower but fully capable IRET
+-	 * exit path.
+-	 */
+-
+-	/* XEN PV guests always use the IRET path */
+-	if (cpu_feature_enabled(X86_FEATURE_XENPV))
+-		return false;
+-
+-	/* SYSRET requires RCX == RIP and R11 == EFLAGS */
+-	if (unlikely(regs->cx != regs->ip || regs->r11 != regs->flags))
+-		return false;
+-
+-	/* CS and SS must match the values set in MSR_STAR */
+-	if (unlikely(regs->cs != __USER_CS || regs->ss != __USER_DS))
+-		return false;
+-
+-	/*
+-	 * On Intel CPUs, SYSRET with non-canonical RCX/RIP will #GP
+-	 * in kernel space.  This essentially lets the user take over
+-	 * the kernel, since userspace controls RSP.
+-	 *
+-	 * TASK_SIZE_MAX covers all user-accessible addresses other than
+-	 * the deprecated vsyscall page.
+-	 */
+-	if (unlikely(regs->ip >= TASK_SIZE_MAX))
+-		return false;
+-
+-	/*
+-	 * SYSRET cannot restore RF.  It can restore TF, but unlike IRET,
+-	 * restoring TF results in a trap from userspace immediately after
+-	 * SYSRET.
+-	 */
+-	if (unlikely(regs->flags & (X86_EFLAGS_RF | X86_EFLAGS_TF)))
+-		return false;
+-
+-	/* Use SYSRET to exit to userspace */
+-	return true;
 -}
--#endif /* CONFIG_XEN_PV */
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 5e57835e999d..dcc2041f8e61 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -73,6 +73,7 @@
- #include <asm/mwait.h>
- #include <asm/pci_x86.h>
- #include <asm/cpu.h>
-+#include <asm/irq_stack.h>
- #ifdef CONFIG_X86_IOPL_IOPERM
- #include <asm/io_bitmap.h>
- #endif
-@@ -94,6 +95,44 @@ void *xen_initial_gdt;
- static int xen_cpu_up_prepare_pv(unsigned int cpu);
- static int xen_cpu_dead_pv(unsigned int cpu);
+-#endif
+-
+ SYSCALL_DEFINE0(ni_syscall)
+ {
+ 	return -ENOSYS;
+diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
+index ba8354424860..e0c62d5a397c 100644
+--- a/arch/x86/entry/syscall_64.c
++++ b/arch/x86/entry/syscall_64.c
+@@ -1,10 +1,12 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/* System call table for x86-64. */
++// SPDX-License-Identifier: GPL-2.0-only
++/* 64-bit system call dispatch */
  
-+#ifndef CONFIG_PREEMPTION
-+/*
-+ * Some hypercalls issued by the toolstack can take many 10s of
-+ * seconds. Allow tasks running hypercalls via the privcmd driver to
-+ * be voluntarily preempted even if full kernel preemption is
-+ * disabled.
-+ *
-+ * Such preemptible hypercalls are bracketed by
-+ * xen_preemptible_hcall_begin() and xen_preemptible_hcall_end()
-+ * calls.
-+ */
-+DEFINE_PER_CPU(bool, xen_in_preemptible_hcall);
-+EXPORT_SYMBOL_GPL(xen_in_preemptible_hcall);
-+
-+/*
-+ * In case of scheduling the flag must be cleared and restored after
-+ * returning from schedule as the task might move to a different CPU.
-+ */
-+static __always_inline bool get_and_clear_inhcall(void)
-+{
-+	bool inhcall = __this_cpu_read(xen_in_preemptible_hcall);
-+
-+	__this_cpu_write(xen_in_preemptible_hcall, false);
-+	return inhcall;
-+}
-+
-+static __always_inline void restore_inhcall(bool inhcall)
-+{
-+	__this_cpu_write(xen_in_preemptible_hcall, inhcall);
-+}
-+
-+#else
-+
-+static __always_inline bool get_and_clear_inhcall(void) { return false; }
-+static __always_inline void restore_inhcall(bool inhcall) { }
-+
-+#endif
-+
- struct tls_descs {
- 	struct desc_struct desc[3];
+ #include <linux/linkage.h>
+ #include <linux/sys.h>
+ #include <linux/cache.h>
+ #include <linux/syscalls.h>
++#include <linux/entry-common.h>
++#include <linux/nospec.h>
+ #include <asm/syscall.h>
+ 
+ #define __SYSCALL(nr, sym) extern long __x64_##sym(const struct pt_regs *);
+@@ -34,3 +36,93 @@ long x64_sys_call(const struct pt_regs *regs, unsigned int nr)
+ 	default: return __x64_sys_ni_syscall(regs);
+ 	}
  };
-@@ -687,6 +726,36 @@ DEFINE_IDTENTRY_RAW(xenpv_exc_machine_check)
- }
- #endif
- 
-+static void __xen_pv_evtchn_do_upcall(struct pt_regs *regs)
++
++static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
 +{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
++	/*
++	 * Convert negative numbers to very high and thus out of range
++	 * numbers for comparisons.
++	 */
++	unsigned int unr = nr;
 +
-+	inc_irq_stat(irq_hv_callback_count);
-+
-+	xen_evtchn_do_upcall();
-+
-+	set_irq_regs(old_regs);
++	if (likely(unr < NR_syscalls)) {
++		unr = array_index_nospec(unr, NR_syscalls);
++		regs->ax = x64_sys_call(regs, unr);
++		return true;
++	}
++	return false;
 +}
 +
-+__visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
++static __always_inline bool do_syscall_x32(struct pt_regs *regs, int nr)
 +{
-+	irqentry_state_t state = irqentry_enter(regs);
-+	bool inhcall;
++	/*
++	 * Adjust the starting offset of the table, and convert numbers
++	 * < __X32_SYSCALL_BIT to very high and thus out of range
++	 * numbers for comparisons.
++	 */
++	unsigned int xnr = nr - __X32_SYSCALL_BIT;
++
++	if (IS_ENABLED(CONFIG_X86_X32_ABI) && likely(xnr < X32_NR_syscalls)) {
++		xnr = array_index_nospec(xnr, X32_NR_syscalls);
++		regs->ax = x32_sys_call(regs, xnr);
++		return true;
++	}
++	return false;
++}
++
++/* Returns true to return using SYSRET, or false to use IRET */
++__visible noinstr bool do_syscall_64(struct pt_regs *regs, int nr)
++{
++	add_random_kstack_offset();
++	nr = syscall_enter_from_user_mode(regs, nr);
 +
 +	instrumentation_begin();
-+	run_sysvec_on_irqstack_cond(__xen_pv_evtchn_do_upcall, regs);
 +
-+	inhcall = get_and_clear_inhcall();
-+	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
-+		irqentry_exit_cond_resched();
-+		instrumentation_end();
-+		restore_inhcall(inhcall);
-+	} else {
-+		instrumentation_end();
-+		irqentry_exit(regs, state);
++	if (!do_syscall_x64(regs, nr) && !do_syscall_x32(regs, nr) && nr != -1) {
++		/* Invalid system call, but still a system call. */
++		regs->ax = __x64_sys_ni_syscall(regs);
 +	}
-+}
 +
- struct trap_array_entry {
- 	void (*orig)(void);
- 	void (*xen)(void);
++	instrumentation_end();
++	syscall_exit_to_user_mode(regs);
++
++	/*
++	 * Check that the register state is valid for using SYSRET to exit
++	 * to userspace.  Otherwise use the slower but fully capable IRET
++	 * exit path.
++	 */
++
++	/* XEN PV guests always use the IRET path */
++	if (cpu_feature_enabled(X86_FEATURE_XENPV))
++		return false;
++
++	/* SYSRET requires RCX == RIP and R11 == EFLAGS */
++	if (unlikely(regs->cx != regs->ip || regs->r11 != regs->flags))
++		return false;
++
++	/* CS and SS must match the values set in MSR_STAR */
++	if (unlikely(regs->cs != __USER_CS || regs->ss != __USER_DS))
++		return false;
++
++	/*
++	 * On Intel CPUs, SYSRET with non-canonical RCX/RIP will #GP
++	 * in kernel space.  This essentially lets the user take over
++	 * the kernel, since userspace controls RSP.
++	 *
++	 * TASK_SIZE_MAX covers all user-accessible addresses other than
++	 * the deprecated vsyscall page.
++	 */
++	if (unlikely(regs->ip >= TASK_SIZE_MAX))
++		return false;
++
++	/*
++	 * SYSRET cannot restore RF.  It can restore TF, but unlike IRET,
++	 * restoring TF results in a trap from userspace immediately after
++	 * SYSRET.
++	 */
++	if (unlikely(regs->flags & (X86_EFLAGS_RF | X86_EFLAGS_TF)))
++		return false;
++
++	/* Use SYSRET to exit to userspace */
++	return true;
++}
 -- 
 2.48.1
 
