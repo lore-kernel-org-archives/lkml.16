@@ -1,119 +1,246 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A351F4275;
-	Fri, 14 Mar 2025 11:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B421FDE1E;
+	Fri, 14 Mar 2025 11:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741952262; cv=none; b=LJFLDNxPl4TfWrNFAxyrOErJ6L14NT0noOOCF/aJ7QBuE3U6PwLRAdKF+/FkKYgLdwdB+keIjoOPxH1+ZEDeLiakY4NR3Ye3SovHa8T2gN4DtC1v/8qdlg6dd7zATLZ0b5m07GuNgpv0LZRKyRF5kdb9L+RbWKcJ9YvB+rBYmpM=
+	t=1741952261; cv=none; b=JsY3XdSjDaFMpOqib56dMP87USnro2qWx8n8vH1rpiWiNqyuX0F8cDDqthv8IVi8UlMSuhGP2Gazf/+vbP8BOEgTkETwrC2Ge+LcsJ570HvNc3pU8Y1rEks4ty4bvQiazo+J8lrzvQs8213e6JAQMfqwgNVq8WctKwChX/Lb2Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741952262; c=relaxed/simple;
-	bh=/ducklgq3qbSOMbklVlJ6IhWYbVozO9MW5vXqgwzMz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=brlUdpqvpvAnBlJ3IDVlSmggrrthlZMujP2EdNbI0X1cV6iWX5fpGU02RxE/WxWKqCFTBLymvwNM6P//+OuDAI6ktwM5Vo7cpOOeSWKm84d0IHiuRXgG99o4etIIfPTxi0mfvPJiCCQl4iajUbXjUnQo+yX/n8Yk6rMtNQV6oVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdrlzM/K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741952261; c=relaxed/simple;
+	bh=AAolH3eVvDN1fp3/Izn+Wkxmg1SmgxnM6q/6Ix3GxjU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cIBdzTprP3oJms5OXuqFrTG0R3Rh8EWAGG7PApE1ZYWT29EtdtD15fRFetEfV7YKeHkQupPDNiNxDpX9P7UYq2hqnysnFT5eenmr9hPOHOv4lJkKJdUoBQlrgBw413i9mMD5S0yqTOrX1aF9Ok2VfYNx6aHNUSOhp4xCRXBs7/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UM0bpX4X; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdrlzM/K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D1AC4CEEB;
-	Fri, 14 Mar 2025 11:37:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741952261;
-	bh=/ducklgq3qbSOMbklVlJ6IhWYbVozO9MW5vXqgwzMz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cdrlzM/KyasdCQ1zX4PQ2FgwFqa/9SAz4YDqQ4dQe6ZAPufzBE7OwknbsqhB62YUs
-	 J5myiyorEy8FraM1qP86aosDXhhH2crWP+DDN21vvXBkuwARlw8+u42FB/AnyiyA7f
-	 NjIYnjuGkrkGF/a99wrZjCrdFMaWcFUGWw7KYDjv14kQa4HNBv0kfk9/K2mL5sOyJg
-	 EF27jhioS2M+d8lfruZlytqR1RgppsVi13MgQfhxAFV5lNbEr8RBLaDyiVyqAkXZFg
-	 Kjmmb62JmiqxOsjxz6Skq0y9c+hwcLkKTkgVOZapogydbuvYCAURiRP/3XGPUpxoL7
-	 xcIVkJrFfNjjg==
-Date: Fri, 14 Mar 2025 12:37:38 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Lyude Paul <lyude@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org, 
-	Danilo Krummrich <dakr@kernel.org>, mcanal@igalia.com, Alice Ryhl <aliceryhl@google.com>, 
-	Simona Vetter <sima@ffwll.ch>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Asahi Lina <lina@asahilina.net>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v3 05/33] rust: drm/kms: Add drm_plane bindings
-Message-ID: <20250314-tunneling-brown-hornet-a6c584@houat>
-References: <20250305230406.567126-1-lyude@redhat.com>
- <20250305230406.567126-6-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UM0bpX4X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741952260; x=1773488260;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=AAolH3eVvDN1fp3/Izn+Wkxmg1SmgxnM6q/6Ix3GxjU=;
+  b=UM0bpX4XIm/QheDbSeU1IA5UX/1MId8fzZJ0EU3Vx/poGJz3VDVkcYlT
+   R8JM1dq0+YzrjXG0G4Q9W7t3U+oWGM38w4r7RNAyakXI+kbsFnS6j/9L2
+   D74/vNL75P7p3cT7mm6zNHUFbDMR4Pvl2Gx3YzyIz7Cm1D6f4AHqokULm
+   lk8NEcpS/MuH8HgzdjpkEDDDTULl4RjOcPU55xnu9d2LK6eN8PS6SdzdX
+   TCH2Tc/CyfHc8opoGtH3C3AFQQfVYjXgzQ9eBlT6qyJhCx1SjvK4VNyTP
+   EQs+sCIRt8GeZNUtP+mCZcN9v/eWIyWcjIO9svZ29WHdDjwQl9HBO28Hd
+   A==;
+X-CSE-ConnectionGUID: geelo6IjTgSksA74vnTJWQ==
+X-CSE-MsgGUID: 4gA7diRTRfmM58YH4debGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="60497553"
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="60497553"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 04:37:40 -0700
+X-CSE-ConnectionGUID: T+aokh08Rha7dGFGLp7JwA==
+X-CSE-MsgGUID: /swWRN2qQMyVmmhXiLRz+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="121751440"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.211])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 04:37:37 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: Robert Richter <rrichter@amd.com>,
+	ming.li@zohomail.com,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH 4/4 v3] cxl/test: Simulate an x86 Low Memory Hole for tests
+Date: Fri, 14 Mar 2025 12:36:33 +0100
+Message-ID: <20250314113708.759808-5-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+References: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="duvbmloyjxh2mbgy"
-Content-Disposition: inline
-In-Reply-To: <20250305230406.567126-6-lyude@redhat.com>
+Content-Transfer-Encoding: 8bit
 
+Simulate an x86 Low Memory Hole for the CXL tests by changing the first
+mock CFMWS range size to 768MB and the CXL Endpoint Decoder HPA range sizes
+to 1GB.
 
---duvbmloyjxh2mbgy
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RFC v3 05/33] rust: drm/kms: Add drm_plane bindings
-MIME-Version: 1.0
+Since the auto-created region of cxl-test uses mock_cfmws[0], whose range
+base address is typically different from the one published by the BIOS on
+real hardware, the driver would fail to create and attach CXL Regions if
+it was run on the mock environment created by cxl-tests.
 
-On Wed, Mar 05, 2025 at 05:59:21PM -0500, Lyude Paul wrote:
-> The next step is adding a set of basic bindings to create a plane, which
-> has to happen before we can create a CRTC (since we need to be able to at
-> least specify a primary plane for a CRTC upon creation). This mostly
-> follows the same general pattern as connectors (AsRawPlane,
-> AsRawPlaneState, etc.).
->=20
-> There is one major difference with planes vs. other types of atomic mode
-> objects: drm_plane_state isn't the only base plane struct used in DRM
-> drivers, as some drivers will use helpers like drm_shadow_plane_state whi=
-ch
-> have a drm_plane_state embedded within them.
+Therefore, save the mock_cfmsw[0] range base_hpa and reuse it to match CXL
+Root Decoders and Regions with Endpoint Decoders when the driver is run on
+mock devices.
 
-It's one of the things where I also think you could have broken down the
-patch some more. drm_shadow_plane_state, while useful, is not central
-and could be handled later on. Both would ease the review, and we could
-merge the "central" plane support without it if we disagree only on that
-part for example.
+Since the auto-created region of cxl-test uses mock_cfmws[0], the
+LMH path in the CXL Driver will be exercised every time the cxl-test
+module is loaded. Executing unit test: cxl-topology.sh, confirms the
+region created successfully with a LMH.
 
+Cc: Alison Schofield <alison.schofield@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+---
+ drivers/cxl/core/lmh.c               | 35 ++++++++++++++++++++++++----
+ drivers/cxl/core/lmh.h               |  2 ++
+ tools/testing/cxl/cxl_core_exports.c |  2 ++
+ tools/testing/cxl/test/cxl.c         | 10 ++++++++
+ 4 files changed, 45 insertions(+), 4 deletions(-)
 
-> Since we'll eventually be adding bindings for shadow planes, we introduce=
- a
-> PlaneStateHelper trait - which represents any data type which can be used
-> as the main wrapping structure around a drm_plane_state - and we implement
-> this trait for PlaneState<T>. This trait can be used in our C callbacks to
-> allow for drivers to use different wrapping structures without needing to
-> implement a separate set of FFI callbacks for each type. Currently planes
-> are the only type I'm aware of which do this.
+diff --git a/drivers/cxl/core/lmh.c b/drivers/cxl/core/lmh.c
+index 2e32f867eb94..9c55670c1c84 100644
+--- a/drivers/cxl/core/lmh.c
++++ b/drivers/cxl/core/lmh.c
+@@ -1,11 +1,28 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ 
+ #include <linux/range.h>
++#include <linux/pci.h>
++
+ #include "lmh.h"
+ 
+ /* Start of CFMWS range that end before x86 Low Memory Holes */
+ #define LMH_CFMWS_RANGE_START 0x0ULL
+ 
++static u64 mock_cfmws0_range_start = ULLONG_MAX;
++
++void set_mock_cfmws0_range_start(const u64 start)
++{
++	mock_cfmws0_range_start = start;
++}
++
++static u64 get_cfmws_range_start(const struct device *dev)
++{
++	if (dev_is_pci(dev))
++		return LMH_CFMWS_RANGE_START;
++
++	return mock_cfmws0_range_start;
++}
++
+ /*
+  * Match CXL Root and Endpoint Decoders by comparing SPA and HPA ranges.
+  *
+@@ -19,14 +36,19 @@ bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
+ 		    const struct cxl_endpoint_decoder *cxled)
+ {
+ 	const struct range *r1, *r2;
++	u64 cfmws_range_start;
+ 	int niw;
+ 
++	cfmws_range_start = get_cfmws_range_start(&cxled->cxld.dev);
++	if (cfmws_range_start == ULLONG_MAX)
++		return false;
++
+ 	r1 = &cxlrd->cxlsd.cxld.hpa_range;
+ 	r2 = &cxled->cxld.hpa_range;
+ 	niw = cxled->cxld.interleave_ways;
+ 
+-	if (r1->start == LMH_CFMWS_RANGE_START && r1->start == r2->start &&
+-	    r1->end < (LMH_CFMWS_RANGE_START + SZ_4G) && r1->end < r2->end &&
++	if (r1->start == cfmws_range_start && r1->start == r2->start &&
++	    r1->end < (cfmws_range_start + SZ_4G) && r1->end < r2->end &&
+ 	    IS_ALIGNED(range_len(r2), niw * SZ_256M))
+ 		return true;
+ 
+@@ -40,9 +62,14 @@ bool arch_match_region(const struct cxl_region_params *p,
+ 	const struct range *r = &cxld->hpa_range;
+ 	const struct resource *res = p->res;
+ 	int niw = cxld->interleave_ways;
++	u64 cfmws_range_start;
++
++	cfmws_range_start = get_cfmws_range_start(&cxld->dev);
++	if (cfmws_range_start == ULLONG_MAX)
++		return false;
+ 
+-	if (res->start == LMH_CFMWS_RANGE_START && res->start == r->start &&
+-	    res->end < (LMH_CFMWS_RANGE_START + SZ_4G) && res->end < r->end &&
++	if (res->start == cfmws_range_start && res->start == r->start &&
++	    res->end < (cfmws_range_start + SZ_4G) && res->end < r->end &&
+ 	    IS_ALIGNED(range_len(r), niw * SZ_256M))
+ 		return true;
+ 
+diff --git a/drivers/cxl/core/lmh.h b/drivers/cxl/core/lmh.h
+index 16746ceac1ed..b6337120ee17 100644
+--- a/drivers/cxl/core/lmh.h
++++ b/drivers/cxl/core/lmh.h
+@@ -2,6 +2,8 @@
+ 
+ #include "cxl.h"
+ 
++void set_mock_cfmws0_range_start(u64 start);
++
+ #ifdef CONFIG_CXL_ARCH_LOW_MEMORY_HOLE
+ bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
+ 		    const struct cxl_endpoint_decoder *cxled);
+diff --git a/tools/testing/cxl/cxl_core_exports.c b/tools/testing/cxl/cxl_core_exports.c
+index f088792a8925..7b20f9fcf0d7 100644
+--- a/tools/testing/cxl/cxl_core_exports.c
++++ b/tools/testing/cxl/cxl_core_exports.c
+@@ -2,6 +2,8 @@
+ /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+ 
+ #include "cxl.h"
++#include "lmh.h"
+ 
+ /* Exporting of cxl_core symbols that are only used by cxl_test */
+ EXPORT_SYMBOL_NS_GPL(cxl_num_decoders_committed, "CXL");
++EXPORT_SYMBOL_NS_GPL(set_mock_cfmws0_range_start, "CXL");
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 1c3336095923..8c69ce0a272f 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -9,6 +9,7 @@
+ #include <linux/pci.h>
+ #include <linux/mm.h>
+ #include <cxlmem.h>
++#include <core/lmh.h>
+ 
+ #include "../watermark.h"
+ #include "mock.h"
+@@ -212,7 +213,11 @@ static struct {
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
+ 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
+ 			.qtg_id = FAKE_QTG_ID,
++#if defined(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE)
++			.window_size = SZ_256M * 3UL,
++#else
+ 			.window_size = SZ_256M * 4UL,
++#endif
+ 		},
+ 		.target = { 0 },
+ 	},
+@@ -454,6 +459,7 @@ static int populate_cedt(void)
+ 			return -ENOMEM;
+ 		window->base_hpa = res->range.start;
+ 	}
++	set_mock_cfmws0_range_start(mock_cfmws[0]->base_hpa);
+ 
+ 	return 0;
+ }
+@@ -744,7 +750,11 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
+ 	struct cxl_endpoint_decoder *cxled;
+ 	struct cxl_switch_decoder *cxlsd;
+ 	struct cxl_port *port, *iter;
++#if defined(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE)
++	const int size = SZ_1G;
++#else
+ 	const int size = SZ_512M;
++#endif
+ 	struct cxl_memdev *cxlmd;
+ 	struct cxl_dport *dport;
+ 	struct device *dev;
+-- 
+2.48.1
 
-And I don't think it's any different to any other driver structure. It
-looks like most of the users except two don't have any additional data
-so can't we do something like
-
-struct ShadowPlaneState<T: Default> {
-	...,
-
-	data: T,
-}
-
-And just put that into PlaneState just like any other driver?
-
-Maxime
-
---duvbmloyjxh2mbgy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ9QU/QAKCRAnX84Zoj2+
-dpDKAX49Gw6qHl6j7xEXXRSEwjih+jxSiFoh9OJ48hfFg08oCXGyiMh3sDuHbUPp
-Q4QU9lYBgKIW9H+1CKLusAv0dhXRvGYLWEYZnQYF7y9MXRSvwLSONAJsWF2efxZB
-uGElPX8uFw==
-=o7sn
------END PGP SIGNATURE-----
-
---duvbmloyjxh2mbgy--
