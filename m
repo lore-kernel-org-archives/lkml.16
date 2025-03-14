@@ -1,136 +1,294 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E487485;
-	Fri, 14 Mar 2025 14:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEA51FBC94;
+	Fri, 14 Mar 2025 14:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741962691; cv=none; b=kHGgwS7lMGeFAicqHwe3bDY+910cpsJxIoul/n7gmXjdgEnwLGXyXW9C55eCOCM9UTbED2e7LLfYP9OLsZPez34YkUvMl3NqpyJupKtiYfTkDc4GbS8SJNFceiOodTpBSb+zgV/AtxSeIO63l+7zUkOGU4eR6hDGS8oIfRFpjdA=
+	t=1741962803; cv=none; b=OfX43w3TTdO1pXBfmrMUsKK9j5kVBJ9DuBX08rJuiSeZequu9EbDAyMTm4PJrauwMcb1e7oQCXqgY2TzHMuSaH17bAGFMiUTSFPhK1UhNru/gkx/UMeelnFpVo3XeoVpvyWWbvovQoMcu+qukoBYQhCLQhW+IGvF4aB51DROV+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741962691; c=relaxed/simple;
-	bh=ym1t0HhYzi+uNqAzKhYR0HUnH6j3cdUQ68UUxTYpXMQ=;
+	s=arc-20240116; t=1741962803; c=relaxed/simple;
+	bh=2l2M+Ak4AlHIp5/GSw9fFLag+cjooSbg7obGOnvCbSw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SZLIFJr+ARf95vblVH5Dp5ZA1aPtq8ECeQPinwoDaxvur/uj9KTOCqNzMIFgMxYzBrr40Us6kWaiCyQ48U3qAvVBJNbv+bpyWIGwA8iBUoWl/Ppldn0eRhrThIKtKXWEkeLCp5sFYjF7V9Nk6wtiJT/Rj4ChRjWSESPxaG4QlH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/1YYG7t; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=TpzZK1xOvBs6wRFKSc0w71UBD+vzRxmVylZECAzhQd2ia28D5p5p0+k8qNwtZaIM21iA9kqmkScp4DIM2nPxAHAhI/qtWNgH4Zj1XtKUgZpOjflXsGK7TPb/99Cwc5cZDjCsWKpVWJh8UY18JVesm97dk30sga3nNddiAWdE1jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNekU5Gp; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/1YYG7t"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2239c066347so46041535ad.2;
-        Fri, 14 Mar 2025 07:31:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741962689; x=1742567489; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SrjknHmgf65ssRMbGjRwe0QuLHCWzzid6s0x5foLqw0=;
-        b=b/1YYG7ty/XdFz55MEBqKZkNdlazVxy7yy7MgzCoH7yx0F2cnga019fGVRQj3NKzm4
-         5GyuppzjGChhp90qkrahUnZn+3t9H2SJsfJuysGzigMuNlsp3LJEHkYDjRnixslenJbe
-         ZkhuDSSnlXJd62whT59a81QmC0qCpcz6r0urgxBIbCqLokxiLpnJNoXrUGnUHfXYxZ9I
-         VvkDTCe0mPK843EK3Gs0C12FIEpUqhX9TqvlSkUtO26VOERH4h03BfCI7PTayBC8cQni
-         kYFwvgLFA+4xTCZovxYKihZBfiJacU6J43S8bDco1udTgzwPwiz+0J3Rvv3lqH5OhWbo
-         588g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741962689; x=1742567489;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SrjknHmgf65ssRMbGjRwe0QuLHCWzzid6s0x5foLqw0=;
-        b=HowxtV/M31Vf4gEhcphxnJJYj7Cdl6uc2fJsXGAuCYxfKBKB4knGQ4ftjMxtLDtDHa
-         gapMZPx1pFvfpqHe2nrBPkcW2Lu3Vlv2SPvd8Qnc+a4p+l2w4IPAjo9QxMLdxgkd2BZN
-         gSjGFVUYbUHzTgAMStN39xKZuKC+4ZyVkVYqf4NBgU/YTbcerPPITAzpLG2tm+oxo55+
-         BQBAr+q+9vsmDdQdOy3m8Aavf60EbLD0qim6y/CpaFrOK0cNMv2AbynZZ1UYezyYhgXT
-         PaPU+hXvY9NOK34PZVa7nxhw3lesAhgPvzBA7Pc91OpoLXUML4e73hsmTQLFkiR8sc23
-         606Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW1lXmsK6z9pZSXxldB6K2Z75zk2Bv5lXjI+AFj753Cz6s5XEanPRRPMx7UldG4m2SZEOx0zmnkjmE=@vger.kernel.org, AJvYcCWEePq8ru+Ki6qzHTwtNhxSPd9hNDp8fn/WqZ+lOXlVSn5VhQ/GLtkwBdC8SuTjaTbOWLZqgjesYQXycA==@vger.kernel.org, AJvYcCWOGx/z1DmwvXdelVP6I9BOZ6HT/8bBtZDAJfN2uI3/MyG0/x0RH0DFUvnhJhETRQuWJnotQ3dr@vger.kernel.org, AJvYcCWkkoCNAuCh1z2vJv6IedTYb2X/iqwYoitzwKsJFJy6w8BBz2DUoQQybTr8SzPsDV1Z85aoeROqoo8K6dph@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZvKzKMz22n/6+xZOgG7hEMeEQd7bQiovKfkQpXEQmv4UWSTie
-	Sd3tziSKK2J1HXxF7kL+AAKuJV58GIl3PqmOUWp9ChJhJMs0yaY=
-X-Gm-Gg: ASbGncvH960lHcRsPHxVxGrJ2pUuhXmnfmg7Phrk8VQI3tYTptYZOEtYVDYTrtdAHC+
-	agBj6RYcje9n2rC4qIIHGR7Rcl5Oxy7XXuM/kph3wzvysBKAJANqZ5yj+voVGIJmqGsBKlZwcgW
-	bUP4bUvQNr2mUrsLM8ZGuNbRGHkKpqa8W/PNLIeziIid2jxEofGRlsh63OJhiPInSsu2HUmdPum
-	AllTbo0w3NPqz63yZ+5M8qI0bdiCiSB0umWnpiUwaqL+cDg50s+qaU1um7wm7lArXp5evf4/Ke2
-	H54fE4ixRf5TjIb0KtdM0zoTbHFmNxWLDzpzRmGKeWlP
-X-Google-Smtp-Source: AGHT+IFJDqwdI6R+aufvCxuFg6s86CheuRTM4g3HmlZAvyFwPx9dHRbgZdyuUHEYvNKRcVKJeJG2/w==
-X-Received: by 2002:a17:903:2388:b0:21f:4c8b:c514 with SMTP id d9443c01a7336-225e0b14e9fmr36237525ad.45.1741962689271;
-        Fri, 14 Mar 2025 07:31:29 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:2844:3d8f:bf3e:12cc])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-225c68884b6sm29234745ad.3.2025.03.14.07.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 07:31:28 -0700 (PDT)
-Date: Fri, 14 Mar 2025 07:31:28 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Gal Pressman <gal@nvidia.com>,
-	Mark Bloch <mbloch@nvidia.com>, Moshe Shemesh <moshe@nvidia.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yael Chemla <ychemla@nvidia.com>
-Subject: Re: [PATCH net-next 4/4] net/mlx5e: Expose port reset cycle recovery
- counter via ethtool
-Message-ID: <Z9Q9wBuDYHvEc4zY@mini-arch>
-References: <1741893886-188294-1-git-send-email-tariqt@nvidia.com>
- <1741893886-188294-5-git-send-email-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNekU5Gp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741962802; x=1773498802;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2l2M+Ak4AlHIp5/GSw9fFLag+cjooSbg7obGOnvCbSw=;
+  b=SNekU5GpZvLtxyNuCBg6OnQW1OAIHdV1HrAzNlJ/FwZRDbZYrLcrLGYZ
+   bAUHbyoWEGEvv/5aX5GEtzbbIMPMZDvrPMfxdFVD9+1LDRf9RJIZLgZUk
+   REo8MLxQxTNNg4lfz4n8/gUcPKWYrhcWTXis6TWEl0EO9OST0sG7q5lzL
+   A31HnhFl8Z/D780zXj2iCeIj1gyFZpWxSfpC01sO3AOcQcimE2hnyT0rY
+   OaUoyvc5p30KvgkbSuF8y8YgbkfA+sP+mnGbUcMJPAPlHNP2PvIKsDmsU
+   QbLy5aN66z9d2OSuLJ+R3SiWZv9e1izEqAB0GWwSUXMMgME3B8hhcHVl6
+   Q==;
+X-CSE-ConnectionGUID: 1/CcTZjyQoiiF56oT1HB4A==
+X-CSE-MsgGUID: Q66CSkMJTQWCl/lou6LyIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="60514134"
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="60514134"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:33:21 -0700
+X-CSE-ConnectionGUID: xos2mf6kQQ6CDfJYe8pDaw==
+X-CSE-MsgGUID: rLYeVOueQGu4ZNuK6jIhbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="126346282"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:33:17 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tt665-00000002U7G-3ymC;
+	Fri, 14 Mar 2025 16:33:13 +0200
+Date: Fri, 14 Mar 2025 16:33:13 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Guillaume Stols <gstols@baylibre.com>,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Matteo Martelli <matteomartelli3@gmail.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v7 06/10] iio: adc: Support ROHM BD79124 ADC
+Message-ID: <Z9Q-KcadLHdDLxVc@smile.fi.intel.com>
+References: <cover.1741849323.git.mazziesaccount@gmail.com>
+ <b6c02a5d75a20bbbf8c3370ccee615d269620117.1741849323.git.mazziesaccount@gmail.com>
+ <Z9LbT1BvPEIp7U2N@smile.fi.intel.com>
+ <bb403ddb-5c6f-4286-8d80-3ede40f94dc2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1741893886-188294-5-git-send-email-tariqt@nvidia.com>
+In-Reply-To: <bb403ddb-5c6f-4286-8d80-3ede40f94dc2@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 03/13, Tariq Toukan wrote:
-> From: Yael Chemla <ychemla@nvidia.com>
+On Fri, Mar 14, 2025 at 09:31:58AM +0200, Matti Vaittinen wrote:
+> On 13/03/2025 15:19, Andy Shevchenko wrote:
+> > On Thu, Mar 13, 2025 at 09:19:03AM +0200, Matti Vaittinen wrote:
+
+...
+
+> > > +#define BD79124_MASK_HYSTERESIS GENMASK(3, 0)
+> > > +#define BD79124_LOW_LIMIT_MIN 0
+> > > +#define BD79124_HIGH_LIMIT_MAX GENMASK(11, 0)
+> > 
+> > These masks are not named after registers (or I don't see it clearly),
 > 
-> Display recovery event of PPCNT recovery counters group. Counts (per
-> link) the number of total successful recovery events of any recovery
-> types during port reset cycle.
+> Naming is hard. I usually try to make a balance between:
 > 
-> Signed-off-by: Yael Chemla <ychemla@nvidia.com>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> ---
->  .../ethernet/mellanox/mlx5/counters.rst       |  5 +++
->  .../ethernet/mellanox/mlx5/core/en_stats.c    | 44 ++++++++++++++++---
->  .../ethernet/mellanox/mlx5/core/en_stats.h    |  4 ++
->  3 files changed, 48 insertions(+), 5 deletions(-)
+> 1) using names which explain the purpose when seen in the code (at call
+> site)
+> 2) keeping names short enough
+> 3) following the naming convention in the data sheet
+> 4) maintain relation to the register.
 > 
-> diff --git a/Documentation/networking/device_drivers/ethernet/mellanox/mlx5/counters.rst b/Documentation/networking/device_drivers/ethernet/mellanox/mlx5/counters.rst
-> index 99d95be4d159..f9a1cf370b5a 100644
-> --- a/Documentation/networking/device_drivers/ethernet/mellanox/mlx5/counters.rst
-> +++ b/Documentation/networking/device_drivers/ethernet/mellanox/mlx5/counters.rst
-> @@ -1082,6 +1082,11 @@ like flow control, FEC and more.
->         need to replace the cable/transceiver.
->       - Error
->  
-> +  * - `total_success_recovery_phy`
-> +     - The number of total successful recovery events of any type during
-> +       ports reset cycle.
-> +     - Error
-> +
+> I put most emphasis to the 1, while 2 is important to me as well. 3 is
+> _very_ nice to have, but it is often somehow contradicting with 1 and 2. 4
+> is IMO just nice to have. The register is usually clearly visible at call
+> site, and if someone adds new functionality (or checks the correctness of
+> the masks/registers), then 3 is way more important.
+> 
+> I am open to any concrete suggestions though.
 
-html build complains with the following:
-Sphinx parallel build error:
-docutils.utils.SystemMessagePropagation: <system_message level="3" line="896" source="/home/doc-build/testing/Documentation/networking/device_drivers/ethernet/mellanox/mlx5/counters.rst" type="ERROR"><paragraph>Error parsing content block for the "flat-table" directive: exactly one bullet list expected.</paragraph><literal_block xml:space="preserve">.. flat-table:: Physical Port Counter Table
+From my point of view the starting point is 3, then one may apply 2 and 4,
+the 1 may mangle the name so much that register data field name becomes quite
+abstract.
 
-https://netdev-3.bots.linux.dev/doc-build/results/32382/stderr
+> > it's
+> > hard to understand which one relates to which register. Also, why not using
+> > bitfield.h?
+> 
+> I saw no need for it?
 
-The indent is wrong?
+Hmm... Okay, I think Jonathan will ask that if really needed.
 
-* - xx
-  - xx
-  - xx
+...
 
-Vs yours:
+> > > + * These macros return the address of the 1.st reg for the given channel
+> > 
+> > first
+> 
+> Huh?
 
-* - xx
-   - xx
-   - xx
+Replace "1.st" (which seems not a standard representation of it) by "first".
 
----
-pw-bot: cr
+> > (and missing period at the end).
+> 
+> Ok.
+
+...
+
+> > > +#define BD79124_GET_HIGH_LIMIT_REG(ch) (BD79124_REG_HYSTERESIS_CH0 + (ch) * 4)
+> > > +#define BD79124_GET_LOW_LIMIT_REG(ch) (BD79124_REG_EVENTCOUNT_CH0 + (ch) * 4)
+> > > +#define BD79124_GET_LIMIT_REG(ch, dir) ((dir) == IIO_EV_DIR_RISING ?		\
+> > > +		BD79124_GET_HIGH_LIMIT_REG(ch) : BD79124_GET_LOW_LIMIT_REG(ch))
+> > > +#define BD79124_GET_RECENT_RES_REG(ch) (BD79124_REG_RECENT_CH0_LSB + (ch) * 2)
+> > 
+> > Don't we want to have something in bitfield.h for arrays in the register, i.e.
+> > when register(s) is(are) split to 2+ bits per an element in an array of the
+> > same semantics. Would be nice to eliminate such a boilerplate here and in many
+> > other drivers.
+> 
+> Not necessarily a bad idea. Still, I am not willing to expand this series
+> any more - currently there is 10 patches, 2 of which are directly related to
+> the BD79124. I don't want to delay this driver for another cycle due to
+> added helpers.
+
+It was just a side note. Consider as a poll for opinions.
+
+...
+
+> > > +static void bd79124gpo_set(struct gpio_chip *gc, unsigned int offset, int value)
+> > 
+> > You should use .set_rv()
+
+...
+
+> > > +static void bd79124gpo_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+> > > +				    unsigned long *bits)
+> > 
+> > Ditto, .set_multiple_rv().
+> 
+> As you know, this started at v6.14 cycle which is still ongoing. I don't
+> think .set_rv() and .set_multiple_rv() are available?
+
+You mean that you are still hope to have this series to be squeezed for
+v6.15-rc1? That's not me who decides, but if not, those APIs will be part of
+the v6.15-rc1 (at least they are pending in GPIO subsystem).
+
+...
+
+> > > +struct bd79124_raw {
+> > > +	u8 bit0_3; /* Is set in high bits of the byte */
+> > > +	u8 bit4_11;
+> > > +};
+> > > +#define BD79124_RAW_TO_INT(r) ((r.bit4_11 << 4) | (r.bit0_3 >> 4))
+> > 
+> > And how this is different from treating it as __le16? Needs a good comment
+> > about bit layout.
+> 
+> You don't think:
+> >> +struct bd79124_raw {
+> >> +	u8 bit0_3; /* Is set in high bits of the byte */
+> >> +	u8 bit4_11;
+> >> +};
+> suffices? It's hard for me to think how to explain bit layout more
+> explicitly.
+
+I do not think it suffices. It's hard to decode what you meant by the naming
+and the comment. Actually it even confuses me.
+
+> This was discussed during the RFC review. I explained the rationale why I
+> rather represent this as two 8 bit variables than le16 with (mysterious to
+> me) shift. As a result, Jonathan told me he's not feeling (too) strong about
+> this (but also warned we may see follow-up patches converting this to le and
+> shift - which, by the way, is harder for me to understand).
+
+If you want to leave them, the good comment needs to be added for both
+1) explaining bit layouts;
+2) why __le16 is not being used.
+
+...
+
+> > > +static int bd79124_write_int_to_reg(struct bd79124_data *data, int reg,
+> > > +				    unsigned int val)
+> > > +{
+> > > +	struct bd79124_raw raw;
+> > > +	int ret, tmp;
+> > 
+> > > +	raw.bit4_11 = (u8)(val >> 4);
+> > > +	raw.bit0_3 = (u8)(val << 4);
+> > 
+> > Why casting?
+> 
+> To make it clear storing unsigned int to u8 is considered to be Ok. I can
+> drop it though if you feel strong about it.
+
+In C (not C++) explicit casting is a point to stumble over and check if there
+is any problems or call for asking the question "Whu?!"
+
+...
+
+> > > +	ret = regmap_read(data->map, reg, &tmp);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	raw.bit0_3 |= (0xf & tmp);
+> > 
+> > GENMASK() ?
+> 
+> For me 0xf is both shorter and clearer. (For me 0xf - or, 0x0f if you like,
+> 0xf0 and 0xff are clear by a glance).
+> 
+> I can go for GENMASK() if it is absolutely required, but for me it is in
+> this case just making this harder to read. I like GENMASK() for something
+> like 0xe or 0x60 though.
+
+It makes code inconsistent and one letter is not so visible. Ideally it should
+be a definition with self-explanatory name.
+
+> > > +	return regmap_bulk_write(data->map, reg, &raw, sizeof(raw));
+> > > +}
+
+...
+
+> > > +	case IIO_EV_INFO_HYSTERESIS:
+> > > +		reg = BD79124_GET_HYSTERESIS_REG(chan->channel);
+> > > +		val >>= 3;
+> > 
+> > Second time I see this. Perhaps you need a macro to explain this right shift?
+> 
+> Not really sure about this. I think it's kind of obvious why this is shifted
+> - and in case it's not, there is a comment explaining it.
+> 
+> I could have a macro like REGVAL2HYSTERESIS() - but I don't think it is a
+> great idea, because then anyone interested in understanding the value read
+> from register would need to dig out the macro to find how value needs to be
+> converted. Doing the shift here shows the register format to a reader right
+> away - and honestly, it should be pretty obvious to the reader that this
+> shift converts register value to proper format.
+
+These shifts are not a big issue, so whatever you choose / chose.
+
+> > > +		return regmap_update_bits(data->map, reg, BD79124_MASK_HYSTERESIS,
+> > > +					  val);
+> > 
+> > Can be one line.
+> 
+> I still prefer to have lines < 80 to make them fit my terminal.
+> I think we have discussed this before. I don't think we will agree on this
+> as I have a very real reason for short lines. It does directly impact on my
+> daily work. I don't think you're going to like it no matter how I explain
+> this.
+
+IIRC this takes 82 characters.
+
+Yes, we discussed and I see no issues to avoid uglifying / adding unnecessary
+lines to the code. We can continue arguing, but this what I think and I don't
+know what argument may change my opinion. Apparently this is on maintainer's
+field now to decide.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
