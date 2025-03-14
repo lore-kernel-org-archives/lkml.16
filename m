@@ -1,191 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B698632B;
-	Fri, 14 Mar 2025 07:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668B98632B;
+	Fri, 14 Mar 2025 07:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741938817; cv=none; b=M4dTbncikVHDY3jyZBFCmSEgCy1gEdANLBOAj1RLgn0IR7DhFqhCC1Wcb2qg0qa3xwpjBGQ4UaMl2hozr3mCTSwiDZ3D6cX/9ttKi6xuk029e1R+NfyS+klCEHplVlnoPt7NSKspbpFQJTYrMAKLnpe1rlRuMjZ4N9kZdXkr3lM=
+	t=1741938914; cv=none; b=rwMJ5CMjPqvLOJ4ZAtYdBBgEtJhFK3cexXhJT8Cl6aQVUvoI83vnpoPf1K6zH2l/9DddTk1Bv3GQj1Ha4Yo2oycMxRm8CcdQ2NUdUsQFObS7OtmegbK37rW/x9LZrUElMXR4yERuGkkTj/aS8qkViGBHtGzc1Rl7ojjki+oqOuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741938817; c=relaxed/simple;
-	bh=E57EmoFkwByfZ3+/wk75Rb5J/TWgAJzeL4fRLvNge9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aVFZhRxE6ePdtgJhcU6srjg+i3j1bPgaapvywCcH3RY6Q/gl5n3We+kVeuftu6KWdfy72QPjct7G+7ut/p7gWuzVShjx7W+x9JsGqhzmhtwj+H82gGKRDcbm2c5LJiqtJrR06UNYxJDuXe9b/qUBU+Pdsz70U3xMujmwAZtgDR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tRnLHyCO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741938914; c=relaxed/simple;
+	bh=GQ9oEWF3jKsUH3Bk0sYyk/YC7PEh//u90VNBcdbv9xQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tQlfp6ENkp9l5JxxHpXmcmK/2+CA9ttGHXJdGa00udhnepwaUp8u73vN6yZr2rgM4JlMtLLnUminW1EbhE2BDUdA7tfiJX4o/yM4gU5Z6dbv8kaxWf7kjHEazlWGTPPqdKV3uEYC2JONH7vT5Keux8guqD/MJplc6XnQrH0iyZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=hy20dZ12; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tRnLHyCO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71238C4CEE3;
-	Fri, 14 Mar 2025 07:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741938816;
-	bh=E57EmoFkwByfZ3+/wk75Rb5J/TWgAJzeL4fRLvNge9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tRnLHyCONL3aSgwFtn9Jn12yhwLumtCwhA8LxyNyZYzC/R8lRNO953v11ZhB52yMY
-	 /w7eIwJtYVN0l7Oq/woKCtE62elLarU+ihZL+oHJ96Exq8CdcJLhOqN9fY8d1aaBav
-	 AfE3jD+IxMB3T59byaiJQ4DTb/9bx+nPm7GlhD63IRoii0UBYLfbeqBia4dz2sxNYj
-	 MpL7xCZwt49Si4UOpBezHTTseH0SmJZDWDI3pBRvjP8wmohHyr8wIuNJvvajx3hVbj
-	 1+UST4Xfo+ELRmDTQgVXjm+wqIx20hsFhEZiESS7OsBg5No0SY6NltnqL5KBe7r2ZF
-	 rOTK4kJuk0MHQ==
-Date: Fri, 14 Mar 2025 08:53:34 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <lumag@kernel.org>
-Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, Hermes Wu <Hermes.wu@ite.com.tw>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org
-Subject: Re: [PATCH v5 2/2] drm/msm/dp: reuse generic HDMI codec
- implementation
-Message-ID: <20250314-stereotyped-cerise-hare-cafb0e@houat>
-References: <20250307-dp-hdmi-audio-v5-0-f3be215fdb78@linaro.org>
- <20250307-dp-hdmi-audio-v5-2-f3be215fdb78@linaro.org>
- <20250310-daft-bittern-of-foundation-67c657@houat>
- <CALT56yMSs7K_0b5YtkCW5Ypyt9Hu_YLkitFFJwTtBkwUJk-NHA@mail.gmail.com>
- <20250311-vivid-almond-elk-83fda5@houat>
- <ecw5wdvkf2iqwxvigze374q3lb3esqbokv43mkblbnpfmudutu@e75i4lqhuux7>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hy20dZ12"
+X-UUID: a3654fac00a911f08eb9c36241bbb6fb-20250314
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=QB5LQt7bpy+JzNLqAPOMyuAUrCHcw7EYGy1OQwsiSpg=;
+	b=hy20dZ12n6HxyTDC8HNU+Izo+m6Fm3uMa6gjFBmAdBPOgjyXiWR+v/mGLvKcYRrjGMuRKhlzzufy+npPEK/z6ZZ3lGfzjiBPYE6MLBZZOe7rBk6g9yNZ/sw2F8pnHmuTbLMPiHYxpnrmy0qZFQebLukqZcn0Uut0U1f/tQarTiY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:6b762402-57f0-4d3d-8270-952e89173559,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-5
+X-CID-META: VersionHash:0ef645f,CLOUDID:a8be55c6-16da-468a-87f7-8ca8d6b3b9f7,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: a3654fac00a911f08eb9c36241bbb6fb-20250314
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
+	(envelope-from <lu.tang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1887658453; Fri, 14 Mar 2025 15:55:03 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 14 Mar 2025 15:55:02 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Fri, 14 Mar 2025 15:55:01 +0800
+From: Lu.Tang <Lu.Tang@mediatek.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Dmitry Torokhov
+	<dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd
+	<sboyd@kernel.org>, Chen Zhong <chen.zhong@mediatek.com>, Sen Chu
+	<shen.chu@mediatek.com>
+CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<linux-gpio@vger.kernel.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Lu.Tang
+	<Lu.Tang@mediatek.com>
+Subject: [PATCH 0/5] Add PMIC and SPMI driver for mt8196
+Date: Fri, 14 Mar 2025 15:32:26 +0800
+Message-ID: <20250314073307.25092-1-Lu.Tang@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="nv7qm2xacwdttobt"
-Content-Disposition: inline
-In-Reply-To: <ecw5wdvkf2iqwxvigze374q3lb3esqbokv43mkblbnpfmudutu@e75i4lqhuux7>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+This series is based on linux-next.
 
---nv7qm2xacwdttobt
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 2/2] drm/msm/dp: reuse generic HDMI codec
- implementation
-MIME-Version: 1.0
+Changes in v0:
+- Modify SPMI driver for mt8196
+- Add SPMI PMIC mfd driver
+- Add PMIC regulator driver for mt8196
 
-On Tue, Mar 11, 2025 at 05:58:19PM +0200, Dmitry Baryshkov wrote:
-> On Tue, Mar 11, 2025 at 09:41:13AM +0100, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > On Mon, Mar 10, 2025 at 08:53:24PM +0200, Dmitry Baryshkov wrote:
-> > > On Mon, 10 Mar 2025 at 17:08, Maxime Ripard <mripard@kernel.org> wrot=
-e:
-> > > >
-> > > > On Fri, Mar 07, 2025 at 07:55:53AM +0200, Dmitry Baryshkov wrote:
-> > > > > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > >
-> > > > > The MSM DisplayPort driver implements several HDMI codec functions
-> > > > > in the driver, e.g. it manually manages HDMI codec device registr=
-ation,
-> > > > > returning ELD and plugged_cb support. In order to reduce code
-> > > > > duplication reuse drm_hdmi_audio_* helpers and drm_bridge_connect=
-or
-> > > > > integration.
-> > > > >
-> > > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > > ---
-> > > > >  drivers/gpu/drm/msm/Kconfig         |   1 +
-> > > > >  drivers/gpu/drm/msm/dp/dp_audio.c   | 131 ++++------------------=
---------------
-> > > > >  drivers/gpu/drm/msm/dp/dp_audio.h   |  27 ++------
-> > > > >  drivers/gpu/drm/msm/dp/dp_display.c |  28 ++------
-> > > > >  drivers/gpu/drm/msm/dp/dp_display.h |   6 --
-> > > > >  drivers/gpu/drm/msm/dp/dp_drm.c     |   8 +++
-> > > > >  6 files changed, 31 insertions(+), 170 deletions(-)
-> > > > >
->=20
-> [...]
->=20
-> > > > >
-> > > > >  static int msm_edp_bridge_atomic_check(struct drm_bridge *drm_br=
-idge,
-> > > > > @@ -320,9 +324,13 @@ int msm_dp_bridge_init(struct msm_dp *msm_dp=
-_display, struct drm_device *dev,
-> > > > >        */
-> > > > >       if (!msm_dp_display->is_edp) {
-> > > > >               bridge->ops =3D
-> > > > > +                     DRM_BRIDGE_OP_HDMI_AUDIO |
-> > > > >                       DRM_BRIDGE_OP_DETECT |
-> > > > >                       DRM_BRIDGE_OP_HPD |
-> > > > >                       DRM_BRIDGE_OP_MODES;
-> > > > > +             bridge->hdmi_audio_dev =3D &msm_dp_display->pdev->d=
-ev;
-> > > > > +             bridge->hdmi_audio_max_i2s_playback_channels =3D 8;
-> > > > > +             bridge->hdmi_audio_dai_port =3D -1;
-> > > > >       }
-> > > >
-> > > > I think I'd prefer the toggle to be OP_DP_AUDIO, even if the
-> > > > implementation is exactly the same. That way, we'll be able to cond=
-ition
-> > > > it to the DP support when that arrives, and we have the latitude to
-> > > > rework it to accomodate some DP subtleties without affecting the dr=
-ivers
-> > > > later on.
-> > >=20
-> > > I don't think that there is a point in having OP_DP_AUDIO. There is
-> > > not so much difference in the driver. Also currently OP_HDMI_AUDIO
-> > > follows existing approach (which was pointed out by Laurent) - that
-> > > OP_foo should guard a particular set of callbacks. From this
-> > > perspective, OP_HDMI_AUDIO is fine - it guards usage of
-> > > hdmi_audio_foo(). OP_DP_AUDIO would duplicate that.
-> >=20
-> > HDMI and DP are two competing standards, with different governing
-> > bodies. I don't think either have claimed that they will strictly adhere
-> > to what the other is doing, and I don't have the will to cross-check
-> > every given audio feature in both HDMI and DP right now.
->=20
-> Hmm. Currently (or before the first hdmi_audio patchset) everybody has
-> been plumbing hdmi-codec directly from the driver (even for DP audio).
+*** BLURB HERE ***
 
-We also didn't have an infrastructure for that before, so it's to be
-expected.
+Lu.Tang (5):
+  pmic: mediatek: Add pmic auxadc driver
+  pmic: mediatek: Add pmic regulator driver
+  pmic: mediatek: Add spmi pmic mfd driver
+  spmi: mediatek: modify spmi dirver for mt8196
+  dt-bindings: pmic: mediatek: Add pmic documents
 
-> > However, I think we should really have the flexibility to deal with that
-> > situation if it happens, and without having to do any major refactoring.
-> > That means providing an API that is consistent to the drivers, and
-> > provides what the driver needs. Here, it needs DP audio support, not
-> > HDMI's.
->=20
-> Would OP_HDMI_CODEC be a better name for the OP? (we can rename the
-> existing callbacks to be hdmi_codec instead of hdmi_audio too).
+ .../iio/adc/mediatek,spmi-pmic-auxadc.yaml    |   31 +
+ .../bindings/input/mediatek,pmic-keys.yaml    |    1 +
+ .../bindings/mfd/mediatek,mt6685.yaml         |   50 +
+ .../bindings/mfd/mediatek,spmi-pmic.yaml      |  173 +++
+ .../pinctrl/mediatek,mt65xx-pinctrl.yaml      |    1 +
+ drivers/iio/adc/Kconfig                       |   10 +
+ drivers/iio/adc/Makefile                      |    1 +
+ drivers/iio/adc/mtk-spmi-pmic-adc.c           |  576 +++++++++
+ drivers/mfd/Kconfig                           |   26 +
+ drivers/mfd/Makefile                          |    2 +
+ drivers/mfd/mt6685-core.c                     |   83 ++
+ drivers/mfd/mtk-spmi-pmic.c                   |  518 ++++++++
+ drivers/regulator/Kconfig                     |   34 +
+ drivers/regulator/Makefile                    |    3 +
+ drivers/regulator/mt6316-regulator.c          |  381 ++++++
+ drivers/regulator/mt6363-regulator.c          | 1106 +++++++++++++++++
+ drivers/regulator/mt6373-regulator.c          |  826 ++++++++++++
+ drivers/spmi/spmi-mtk-pmif.c                  | 1040 +++++++++++++++-
+ include/linux/mfd/mt6363/core.h               |  134 ++
+ include/linux/mfd/mt6363/registers.h          |  168 +++
+ include/linux/mfd/mt6373/core.h               |   94 ++
+ include/linux/mfd/mt6373/registers.h          |   53 +
+ include/linux/regulator/mt6316-regulator.h    |   48 +
+ include/linux/regulator/mt6363-regulator.h    |  424 +++++++
+ include/linux/regulator/mt6373-regulator.h    |  318 +++++
+ 25 files changed, 6037 insertions(+), 64 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/mediatek,spmi-pmic-auxadc.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/mediatek,mt6685.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/mediatek,spmi-pmic.yaml
+ create mode 100644 drivers/iio/adc/mtk-spmi-pmic-adc.c
+ create mode 100644 drivers/mfd/mt6685-core.c
+ create mode 100644 drivers/mfd/mtk-spmi-pmic.c
+ create mode 100644 drivers/regulator/mt6316-regulator.c
+ create mode 100644 drivers/regulator/mt6363-regulator.c
+ create mode 100644 drivers/regulator/mt6373-regulator.c
+ create mode 100644 include/linux/mfd/mt6363/core.h
+ create mode 100644 include/linux/mfd/mt6363/registers.h
+ create mode 100644 include/linux/mfd/mt6373/core.h
+ create mode 100644 include/linux/mfd/mt6373/registers.h
+ create mode 100644 include/linux/regulator/mt6316-regulator.h
+ create mode 100644 include/linux/regulator/mt6363-regulator.h
+ create mode 100644 include/linux/regulator/mt6373-regulator.h
 
-As said on your first patch, there's more to it than just the codec, so
-no, the current name is fine to me.
+-- 
+2.46.0
 
-> > How we plumb it is an implementation detail, and I do agree we can use
-> > the same functions under the hood right now. But the driver is a DP
-> > driver, it wants DP infrastructure and DP audio support.
->=20
-> Would OP_DP_AUDIO require a different set of callbacks on the bridge
-> level?
-
-Yes.
-
-> I don't want to end up with too much of duplication. Maybe we
-> should the cdns bridges which implement both HDMI and DP functionality
-> IIRC.
-
-We can (and we should) take the same prototype for both though, so
-drivers that have the same implementation can provide the same
-implementation to both.
-
-Maxime
-
---nv7qm2xacwdttobt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ9PgfQAKCRAnX84Zoj2+
-dlg0AX0TLk3raLgdYI+leZ/c22M1sG07wy1DwoF9VD0O7TWGByRbduojj7cpippQ
-V/umvOUBegI5QjgCoTNWCpiYr1txJAAYhEf5VBHroBDcxS1WnXtvCSiXNQ/aI6fO
-3KIjq3U07A==
-=FdgA
------END PGP SIGNATURE-----
-
---nv7qm2xacwdttobt--
