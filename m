@@ -1,152 +1,176 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D08A1A239B;
-	Fri, 14 Mar 2025 08:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0076C1624FC;
+	Fri, 14 Mar 2025 08:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741940397; cv=none; b=terrq1fGEK5saYznYz60C0yn0GvYnCB/XNGQ+nAArUgJyCc3imyctXTc4MBxlCaFD5HNwR8nbaBYRoaaOEEa1AUFQBxFV1iqWpr1/GLdVYsLdTs33Kkf1gykEC1uqjw7uu/HtUmNvUUcxdDPEZlGTR0jg3YceKhhJjsKVAZ5mFw=
+	t=1741940442; cv=none; b=R4/T5nXaOm1YrB/iPHRHbe8uU9FIsbtl3FCnb+5lv1DH7/Mh89XPms9wox8Rveak8KNK5fCaFYfLO3bBdFNpLBQMxWUIJrrOTfbG6Los92qvJ0ZrFf4Z0UF8+EnsOh7E1G4h2XNrOVmus5Wx5xWdK06B09YCvF0Opb1vLDDtecw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741940397; c=relaxed/simple;
-	bh=wHGBWtsMPmuso1Q5fzssqMxIVRQllayaogHToEaf7qw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kNAMWvMiupLympzOSmOf+Q3/X6nuvR+sWThnsdi9KujfxdV9FNQYqqGrc/8vbM8+hDCSO0/wwtYvymRXUO/sYaz8egD33vQnww6Zi2VDMWy63S786SUmA710XB+ovP+zm9zv7eRYs0dzgCJwOP/Myc6GVQgjP7wDWIxqr/NaSX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RjmXgv77; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RjmXgv77"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DNugE7031769;
-	Fri, 14 Mar 2025 08:19:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	dWMYNBNQo3yjPtpzhw+4+UtwxWTkNI2J/wxly3kI7cw=; b=RjmXgv775sM1hOMd
-	6HMJRyboNt7SN/4B9mfZFltdEBrXkTZe7BMCWdXAcU7NERlapv/FEcgWD/+mZ4nw
-	pby5qOtwBKugEg/9cvCL3x5kjPQB1oCAlh0ZFqJ2sQwOsn4YbhzN9J+Yjz/ojy0s
-	SQYFO/mcDIeqwtey381a5UlQN/AIbCoGfeJqqd/9Io/U0utYwBetYiZdZfD2Qpqg
-	nJSUTnzoOiadjkTI9AW8YPe7qUQg9isVsv2Bfnxk/Gci67O7vxz2I27PPZxDMg8l
-	kif9Fu65XtcobnArhhZRMtMLnXtzf1GpKCYDvs4HYb6xuPjEbuGXHZiAFGWULz0D
-	bTDgOA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45bx1jjyhv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 08:19:51 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52E8JoXx009396
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 08:19:50 GMT
-Received: from [10.253.39.117] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 14 Mar
- 2025 01:19:48 -0700
-Message-ID: <9e1fd1ae-e770-44a7-81b8-696b76c71850@quicinc.com>
-Date: Fri, 14 Mar 2025 16:19:45 +0800
+	s=arc-20240116; t=1741940442; c=relaxed/simple;
+	bh=t9juaD9MSFgXqlvz3+rde4oX975yHryy60Tb0U3EBLk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tp12P9n8Ye9oWJv5UpITUzrreTcl0Dr39RUxwFHcN512DiAYT77kdq210Y925dT6VQt+eO/z1vs3jl2OkJgQtFObBhAMwPNJWspE8geD/BftZY1jeUrqURreWZIs//O5qqC7OX9VVkVNOEhO2LKsbu0dZL3P/6wXrngTuf4Tqbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZDchc4gCbz1R6Wc;
+	Fri, 14 Mar 2025 16:18:56 +0800 (CST)
+Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
+	by mail.maildlp.com (Postfix) with ESMTPS id 995EC14022D;
+	Fri, 14 Mar 2025 16:20:38 +0800 (CST)
+Received: from lihuafei.huawei.com (10.90.53.74) by
+ kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 14 Mar 2025 16:20:37 +0800
+From: Li Huafei <lihuafei1@huawei.com>
+To: <namhyung@kernel.org>, <acme@kernel.org>, <leo.yan@linux.dev>,
+	<james.clark@linaro.org>, <mark.rutland@arm.com>, <john.g.garry@oracle.com>,
+	<will@kernel.org>, <irogers@google.com>
+CC: <mike.leach@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<kjain@linux.ibm.com>, <mhiramat@kernel.org>, <atrajeev@linux.vnet.ibm.com>,
+	<sesse@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <lihuafei1@huawei.com>
+Subject: [PATCH 1/7] perf annotate: Handle arm64 load and store instructions
+Date: Sat, 15 Mar 2025 00:21:31 +0800
+Message-ID: <20250314162137.528204-2-lihuafei1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250314162137.528204-1-lihuafei1@huawei.com>
+References: <20250314162137.528204-1-lihuafei1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 ath-next 2/2] wifi: ath11k: fix HTC rx insufficient
- length
-To: Johan Hovold <johan@kernel.org>
-CC: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, <ath11k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <johan+linaro@kernel.org>
-References: <20250310010217.3845141-1-quic_miaoqing@quicinc.com>
- <20250310010217.3845141-3-quic_miaoqing@quicinc.com>
- <Z866cCj8SWyZjCoP@hovoldconsulting.com>
- <7b1c5e40-b11d-421b-8c8b-117a2a53298b@quicinc.com>
- <c0cdcaf2-655b-4d22-a949-1519c552e6a4@oss.qualcomm.com>
- <72d95d77-674e-4ae7-83b0-ab58748b8251@quicinc.com>
- <Z9G5zEOcTdGKm7Ei@hovoldconsulting.com>
- <8ea7fe7c-7b4d-4a6f-ae03-b9ca127c23f8@quicinc.com>
- <Z9METTzUJe9yqVEI@hovoldconsulting.com>
- <b1c79589-4fcd-4630-9551-a620087e0c23@quicinc.com>
- <Z9PjjDFBuSJ7exVj@hovoldconsulting.com>
-Content-Language: en-US
-From: Miaoqing Pan <quic_miaoqing@quicinc.com>
-In-Reply-To: <Z9PjjDFBuSJ7exVj@hovoldconsulting.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CNQqXQrD c=1 sm=1 tr=0 ts=67d3e6a7 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=IgN2TWT-nG-ZWJAHbY8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: o8zj47opkgqqgW2nFBn1kG00Ec9lddI2
-X-Proofpoint-GUID: o8zj47opkgqqgW2nFBn1kG00Ec9lddI2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_03,2025-03-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=746 impostorscore=0 mlxscore=0 priorityscore=1501
- suspectscore=0 phishscore=0 malwarescore=0 clxscore=1015 bulkscore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503140065
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemf500004.china.huawei.com (7.202.181.242)
 
+Add ldst_ops to handle load and store instructions in order to parse
+the data types and offsets associated with PMU events for memory access
+instructions. There are many variants of load and store instructions in
+ARM64, making it difficult to match all of these instruction names
+completely. Therefore, only the instruction prefixes are matched. The
+prefix 'ld|st' covers most of the memory access instructions, 'cas|swp'
+matches atomic instructions, and 'prf' matches memory prefetch
+instructions.
 
+Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+---
+ tools/perf/arch/arm64/annotate/instructions.c | 67 ++++++++++++++++++-
+ 1 file changed, 66 insertions(+), 1 deletion(-)
 
-On 3/14/2025 4:06 PM, Johan Hovold wrote:
-> On Fri, Mar 14, 2025 at 09:01:36AM +0800, Miaoqing Pan wrote:
->> On 3/14/2025 12:14 AM, Johan Hovold wrote:
->>> On Thu, Mar 13, 2025 at 09:31:56PM +0800, Miaoqing Pan wrote:
->>>> On 3/13/2025 12:43 AM, Johan Hovold wrote:
-> 
->>>>> +	/* Make sure descriptor is read after the head pointer. */
->>>>> +	dma_rmb();
->>>>> +
->>>>>     	*nbytes = ath11k_hal_ce_dst_status_get_length(desc);
->>>>>     	if (*nbytes == 0) {
->>>>> +		WARN_ON_ONCE(1);	// FIXME: remove
->>>>>     		ret = -EIO;
->>>>>     		goto err;
->>>>>     	}
->>>>
->>>> This issue can still be reproduced.
->>>>
->>>> [ 3283.687469] WARNING: CPU: 0 PID: 0 at
->>>> /drivers/net/wireless/ath/ath11k/ce.c:405
->>>> ath11k_ce_per_engine_service+0x228/0x3e4 [ath11k]
->>>
->>> Thanks for verifying.
->>>
->>> Which platform are you testing on and which kernel are you using?
->>>
->>> I'm still waiting to hear back from some people testing my patch on the
->>> X13s (sc8280xp).
-> 
->> qcs615-ride, kernel 6.6.65.
-> 
-> Ok, so a downstream vendor kernel?
-> 
+diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
+index d465d093e7eb..c212eb7341bd 100644
+--- a/tools/perf/arch/arm64/annotate/instructions.c
++++ b/tools/perf/arch/arm64/annotate/instructions.c
+@@ -6,7 +6,8 @@
+ 
+ struct arm64_annotate {
+ 	regex_t call_insn,
+-		jump_insn;
++		jump_insn,
++		ldst_insn; /* load and store instruction */
+ };
+ 
+ static int arm64_mov__parse(struct arch *arch __maybe_unused,
+@@ -67,6 +68,57 @@ static struct ins_ops arm64_mov_ops = {
+ 	.scnprintf = mov__scnprintf,
+ };
+ 
++static int arm64_ldst__parse(struct arch *arch __maybe_unused,
++			     struct ins_operands *ops,
++			     struct map_symbol *ms __maybe_unused,
++			     struct disasm_line *dl __maybe_unused)
++{
++	char *s, *target;
++
++	/*
++	 * The part starting from the memory access annotation '[' is parsed
++	 * as 'target', while the part before it is parsed as 'source'.
++	 */
++	target = s = strchr(ops->raw, '[');
++	if (!s)
++		return -1;
++
++	while (s > ops->raw && *s != ',')
++		--s;
++
++	if (s == ops->raw)
++		return -1;
++
++	*s = '\0';
++	ops->source.raw = strdup(ops->raw);
++
++	*s = ',';
++	if (!ops->source.raw)
++		return -1;
++
++	ops->target.raw = strdup(target);
++	if (!ops->target.raw) {
++		zfree(ops->source.raw);
++		return -1;
++	}
++	ops->target.mem_ref = true;
++
++	return 0;
++}
++
++static int ldst__scnprintf(struct ins *ins, char *bf, size_t size,
++			   struct ins_operands *ops, int max_ins_name)
++{
++	return scnprintf(bf, size, "%-*s %s,%s", max_ins_name, ins->name,
++			 ops->source.name ?: ops->source.raw,
++			 ops->target.name ?: ops->target.raw);
++}
++
++static struct ins_ops arm64_ldst_ops = {
++	.parse	   = arm64_ldst__parse,
++	.scnprintf = ldst__scnprintf,
++};
++
+ static struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
+ {
+ 	struct arm64_annotate *arm = arch->priv;
+@@ -77,6 +129,8 @@ static struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const
+ 		ops = &jump_ops;
+ 	else if (!regexec(&arm->call_insn, name, 2, match, 0))
+ 		ops = &call_ops;
++	else if (!regexec(&arm->ldst_insn, name, 2, match, 0))
++		ops = &arm64_ldst_ops;
+ 	else if (!strcmp(name, "ret"))
+ 		ops = &ret_ops;
+ 	else
+@@ -107,6 +161,15 @@ static int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
+ 		      REG_EXTENDED);
+ 	if (err)
+ 		goto out_free_call;
++	/*
++	 * The ARM64 architecture has many variants of load/store instructions.
++	 * It is quite challenging to match all of them completely. Here, we
++	 * only match the prefixes of these instructions.
++	 */
++	err = regcomp(&arm->ldst_insn, "^(ld|st|cas|prf|swp)",
++		      REG_EXTENDED);
++	if (err)
++		goto out_free_jump;
+ 
+ 	arch->initialized = true;
+ 	arch->priv	  = arm;
+@@ -117,6 +180,8 @@ static int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
+ 	arch->e_flags = 0;
+ 	return 0;
+ 
++out_free_jump:
++	regfree(&arm->jump_insn);
+ out_free_call:
+ 	regfree(&arm->call_insn);
+ out_free_arm:
+-- 
+2.25.1
 
-Yes.
-
-> qcs615-ride does not even have PCIe enabled in mainline yet, but I
-> assume that's what you use here?
->   
-
-Yes, also reproduced on qcs8300-ride.
-
->> I think the hardware has already ensured synchronization between
->> descriptor and head pointer, which isn't difficult to achieve. The issue
->> is likely caused by something else and requires further debugging.
-> 
-> Yeah, but you still need memory barriers on the kernel side.
-> 
-> It could be that we are looking at two different causes for those
-> zero-length descriptors.
-> 
-> The error handling for that obviously needs to be fixed either way, but
-> I haven't heard anyone hitting the corruption with the memory barriers
-> in place on the X13s yet (even if we'd need some more time to test
-> this).
-> 
-> Johan
-
-Agreed with you, let's waiting for the feedback.
