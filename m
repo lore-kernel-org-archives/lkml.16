@@ -1,152 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DB913A26D
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 19:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6952045A0;
+	Fri, 14 Mar 2025 19:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741979165; cv=none; b=uOX9zXvr1AMXAaMgE9tkqilDzAHMZrKnl5H5NPVyuzyk2DUart4rNk/R0luNK5pi50vB6KDOpPSdVlVwnukzPJ42N21U0uyPeSC7LgiSBdjXkr3mCo821ANqh7Hl1csq1iE8NxzckOUzpgtuAU9ttIFyplQ2onyTT4palps1K84=
+	t=1741979174; cv=none; b=tpAxo9pujx8mJUp6oQD1LheZuE4/7SZPLrnyOlRljeabY9dv4U4sG9Y2BepZTvyhl5mGIk01+QcjIeymO7npc35objl4KTSwKkN4UbeiRipitNz4FZFzInTKrzRCnkoZMh9ndaM1ZOJ3zTHfsC97enx7qPzdu0lyDqi9KBnEs8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741979165; c=relaxed/simple;
-	bh=BVTMSVCJEOtbhXDRRYx5p27EBsfYi/ZcaWjbmG5NBoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ZIbICDGrQiKFEY4QUw0wqHUC1UDbavPyayJSdNnx027J8zHL0spx6IGKj8uRcbY3Kh+kY6qCe3FPXQkws9RBW2GYt+fDjUl54Xeh+JMk1MVe3f2LJ2OV8yX2C7BNwOW1cjRLlaCxeZKE4PxvXT15RYf/R11LgmAYNuaEaAFasUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hAT37glc; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741979174; c=relaxed/simple;
+	bh=ajFs9F0tAspFsaI2EHxXJ0ngkqO/JuYLnCLOEmhLTss=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I3GG2qKdlro5hEExXi4euScqjyxE2U4da6jrQI8yjR3Co76uaJ1Nn0w0t9Nm8OSw8YjKzywLo1ARtzS5fxxLfbEt25NrtuEqjRDu+X4pYNzVB6gM2BbGSCde0RRMDeGEz7gKC9H1tVG3ztE8a8o31wvPGFiI10pTiTACXtO4ncg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XlLHyDl3; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hAT37glc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741979164; x=1773515164;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=BVTMSVCJEOtbhXDRRYx5p27EBsfYi/ZcaWjbmG5NBoY=;
-  b=hAT37glcRpJMP7bQo4eBmCRwwBihZ7Y1zT8P6kyr3wEjpXgweae0HSyV
-   luqknmgcsI1Kyf4zp18YU1bQ0dhmpOAFM3ePJgjGXtldZ77Dv0OekyVLC
-   v55wl4drtOATtN9Du2YIjbrZCUdDw26jPsANkualpT9lyiqBlQSY8z8Xu
-   tpsIW9I/C9IarKMqDZGiyP6YoUKFrZ4tP/kvYPOVzQDpe3wAOr95kVHn4
-   LuaJp0LcpcXr2Q7aSL6CpnsZyCe62WV8RDHWQz8CyecWvw+lx7UFIi5db
-   VfurBWnCasqRBnZbBSlZ75fppbM6LFwgLXR8UFLyJOqnUHMg6lh4+aaO6
-   Q==;
-X-CSE-ConnectionGUID: yiyLoYjdQjmQJynVXM0LTw==
-X-CSE-MsgGUID: 2yYbw0AkSre7t7q/AkLG0g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="46792882"
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="46792882"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 12:06:03 -0700
-X-CSE-ConnectionGUID: xXEeTz3DS4GuYYdQfgK0Sw==
-X-CSE-MsgGUID: gjQFeXqrQJakLAUx9rXZ0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="126566675"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 14 Mar 2025 12:06:01 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ttAM2-000Aku-2v;
-	Fri, 14 Mar 2025 19:05:58 +0000
-Date: Sat, 15 Mar 2025 03:05:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
-Subject: include/uapi/linux/vbox_vmmdev_types.h:239:4: warning: field u
- within 'struct vmmdev_hgcm_function_parameter32' is less aligned than 'union
- (unnamed union at include/uapi/linux/vbox_vmmdev_types.h:223:2)' and is
- usually due to 'struct vmmdev_hgcm_function...
-Message-ID: <202503150545.aH9KdkEE-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlLHyDl3"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so349795e9.1;
+        Fri, 14 Mar 2025 12:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741979170; x=1742583970; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EIoPbweeHXZ8jSMzIt/eB2E0Gri/NMU0G6vQgDoXF0o=;
+        b=XlLHyDl3eUOprv01lXeEemsM1FgnYwaEs/0b5Chk/DA7ktGFKaVodjN0GQekqwUjhn
+         bqz6dvobhPIgIuMFv5gOlIfNXXKN0CLf8OJSecqtxNgwmsIP+bUm2jQoKr6BJ2SZNIO5
+         ZDZq2+lc1CijfG2ojAokidmCalOIq1KpGLlPxu4iDWNGUBvO426wr3rkxggd2rt3yN/V
+         oLky0o/sk+KNqMAnj8PbkSuaLgr3ioJESog/1jva4X34+7666kT/oAG0PATA5V/Zrfou
+         lV251g8RiGcgqe7+AEBNgFOt9Z/6sz0WI5EAoEK25J0H3Vl7Xu2yFthT1xfC/rZQzMxT
+         M1RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741979170; x=1742583970;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EIoPbweeHXZ8jSMzIt/eB2E0Gri/NMU0G6vQgDoXF0o=;
+        b=AZYhYoQqdW15wamZsdWf7N/sgTikbrxPlqchufXJp2m3HsnFDTTQBHGsY4PHM9SWfB
+         vfUvyM/Rd5rNBIC5QzGCC659s1xZduL5xoAkTG+bhvlgGK9ujIAOC9ceYqAzmzLpCfmI
+         LUgYnY95tly3Z41zZwjYrLiYz0k8enwhnH+xe+Xr+sp104IWh7T5eUNF6h5fh3s3PxH3
+         x7QCZNXydv7ocKbXDu56cUd9FdP+m/32cN/bKJBVmqb2DHi4z/JtN0jzuiuMEUAovP3w
+         S6m06m35T/puFt9XuLH2p6WuITmWZwP5z6blxGPrCOlchFLzPdWWleXKHkasQUDvi4Oz
+         0/xA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0fWx0MiJ96GFzzFC/asOs4Kg3xF8JFEc3LzKNVya/T/yUq60JrBh/1WGtxyVfB26xjNatXVwRVKBAVeY=@vger.kernel.org, AJvYcCUbAqPMXQI1rpULNbBTOsHJTKGcu75EWa00Vc6zLVZqnEDdBxOeZDnoia45E8vOyQ6rH3cyX+YT@vger.kernel.org, AJvYcCV85Wd3hCkA7WpLetwOIja3v5qZHIhDI0oSafly2rEgxqsMuVoItnFNr2nTLz6nwy2P1m5N9FLrPIQt4ImwLGk=@vger.kernel.org, AJvYcCVfgFhj40wxYlDAvV27ROdhViWQAotLjBnqXFuG2nMIpg47ray4DJHvMfqctEiM9tOl6oc=@vger.kernel.org, AJvYcCVoVrdKL5nEQ+u3eCtB2cJrhTXAr1H08c/WQCyZ/RWtY/l+Vy812eWcDETV0PFLe+I03dnFub5JUNfDkmE=@vger.kernel.org, AJvYcCXQfGXFGJDL/LvL5TBugYkV7biGENukGiB7ctrQBS3KIPuOl1e+oeESGDQdUOKqKRkVBS02morkqKff17nY@vger.kernel.org, AJvYcCXq291kN7oM93pqX24EUs31AYIbFltuLCxgORnco4H5fuJrf0qDDk4hHLDKckMATe9zwmg9N91cNUDwe2K+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDBlsu7uUqMD3E0XSTN1hRE2sFm/Xl+1jhObjkdjeIyX6GSPYO
+	1pg4YsvDir5/6r+r4zqQfh0+cPcZWpy+x8qy6y5Y+KgXHEVnRIlq
+X-Gm-Gg: ASbGncsOAgKHb1xE/Fj8LBYRbf46QM2ntS+roMiApYgDNk8SCi3r+beCZWDSVxfzAbb
+	MYAWbY8lJTLJxTo+O096pScQh+UYWf+2ceZca5brwQYvqVl0DTl3XtVCHHGF+KaDjSUtzpscxEL
+	1XqJ+wAKhIalf5otzLe/zQHHB6KugqYHSvz6ebtfh0PyP1Eap/OlDv1SMF8iZQXv2zPrOwZuU0V
+	LKM4SVtERWr/MlHWy0/QxcKo+QJB3qv3kY759O3Du4QdRwrtANYBHkOaSH2DV46zy/7+LWYEoGj
+	nGOh5o+pyF2/mwTFwhjltbqbyfY4Kx/AjDYm6tn+5yMmjvXP+cMFGyeAIOorSLjZE70MHfC/+OH
+	2OK5VTJ0=
+X-Google-Smtp-Source: AGHT+IEjEm1NLGYF77AUJiqADkJJt9c0HAwrROWKW9ldaOHP/gE/432Db9RpHAyqooeI7TNtApdt1Q==
+X-Received: by 2002:a05:600c:4447:b0:43c:eea9:f45a with SMTP id 5b1f17b1804b1-43d1ec646demr47176475e9.4.1741979169941;
+        Fri, 14 Mar 2025 12:06:09 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d200fae32sm25534355e9.31.2025.03.14.12.06.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 12:06:09 -0700 (PDT)
+Date: Fri, 14 Mar 2025 19:06:04 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Jacob Keller <jacob.e.keller@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Yury Norov <yury.norov@gmail.com>,
+ Jiri Slaby <jirislaby@kernel.org>, Ingo Molnar <mingo@kernel.org>, Kuan-Wei
+ Chiu <visitorckw@gmail.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+ <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+ <jk@ozlabs.org>, <joel@jms.id.au>, <eajames@linux.ibm.com>,
+ <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+ <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+ <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+ <dmitry.torokhov@gmail.com>, <mchehab@kernel.org>,
+ <awalls@md.metrocast.net>, <hverkuil@xs4all.nl>,
+ <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+ <louis.peens@corigine.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
+ <edumazet@google.com>, <pabeni@redhat.com>,
+ <parthiban.veerasooran@microchip.com>, <arend.vanspriel@broadcom.com>,
+ <johannes@sipsolutions.net>, <gregkh@linuxfoundation.org>,
+ <akpm@linux-foundation.org>, <alistair@popple.id.au>,
+ <linux@rasmusvillemoes.dk>, <Laurent.pinchart@ideasonboard.com>,
+ <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>, <kuba@kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-fsi@lists.ozlabs.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-input@vger.kernel.org>,
+ <linux-media@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+ <oss-drivers@corigine.com>, <netdev@vger.kernel.org>,
+ <linux-wireless@vger.kernel.org>, <brcm80211@lists.linux.dev>,
+ <brcm80211-dev-list.pdl@broadcom.com>, <linux-serial@vger.kernel.org>,
+ <bpf@vger.kernel.org>, <jserv@ccns.ncku.edu.tw>, Yu-Chun Lin
+ <eleanor15x@gmail.com>
+Subject: Re: [PATCH v3 01/16] bitops: Change parity8() return type to bool
+Message-ID: <20250314190604.53470966@pumpkin>
+In-Reply-To: <b2b632cc-ca69-497f-9cf9-782bd02cac79@intel.com>
+References: <20250306162541.2633025-1-visitorckw@gmail.com>
+	<20250306162541.2633025-2-visitorckw@gmail.com>
+	<9d4b77da-18c5-4551-ae94-a2b9fe78489a@kernel.org>
+	<Z8ra0s9uRoS35brb@gmail.com>
+	<a4040c78-8765-425e-a44e-c374dfc02a9c@kernel.org>
+	<20250307193643.28065d2d@pumpkin>
+	<cbb26a91-807b-4227-be81-8114e9ea72cb@intel.com>
+	<0F794C6F-32A9-4F34-9516-CEE24EA4BC49@zytor.com>
+	<Z9MGxknjluvbX19w@thinkpad>
+	<795281B1-9B8A-477F-8012-DECD14CB53E5@zytor.com>
+	<b2b632cc-ca69-497f-9cf9-782bd02cac79@intel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   695caca9345a160ecd9645abab8e70cfe849e9ff
-commit: c99e1e1d0850ff157f1bc16871acd2dff5a9bcc3 vbox: add HAS_IOPORT dependency
-date:   3 weeks ago
-config: arm-randconfig-002-20250315 (https://download.01.org/0day-ci/archive/20250315/202503150545.aH9KdkEE-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 87916f8c32ebd8e284091db9b70339df57fd1e90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250315/202503150545.aH9KdkEE-lkp@intel.com/reproduce)
+On Thu, 13 Mar 2025 14:09:24 -0700
+Jacob Keller <jacob.e.keller@intel.com> wrote:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503150545.aH9KdkEE-lkp@intel.com/
+> On 3/13/2025 9:36 AM, H. Peter Anvin wrote:
+> > On March 13, 2025 9:24:38 AM PDT, Yury Norov <yury.norov@gmail.com> wrote:  
+> >> On Wed, Mar 12, 2025 at 05:09:16PM -0700, H. Peter Anvin wrote:  
+> >>> On March 12, 2025 4:56:31 PM PDT, Jacob Keller <jacob.e.keller@intel.com> wrote:  
+> >>
+> >> [...]
+> >>  
+> >>>> This is really a question of whether you expect odd or even parity as
+> >>>> the "true" value. I think that would depend on context, and we may not
+> >>>> reach a good consensus.
+> >>>>
+> >>>> I do agree that my brain would jump to "true is even, false is odd".
+> >>>> However, I also agree returning the value as 0 for even and 1 for odd
+> >>>> kind of made sense before, and updating this to be a bool and then
+> >>>> requiring to switch all the callers is a bit obnoxious...  
+> >>>
+> >>> Odd = 1 = true is the only same definition. It is a bitwise XOR, or sum mod 1.  
+> >>
+> >> The x86 implementation will be "popcnt(val) & 1", right? So if we
+> >> choose to go with odd == false, we'll have to add an extra negation.
+> >> So because it's a purely conventional thing, let's just pick a simpler
+> >> one?
+> >>
+> >> Compiler's builtin parity() returns 1 for odd.
+> >>
+> >> Thanks,
+> >> Yury  
+> > 
+> > The x86 implementation, no, but there will be plenty of others having that exact definition.  
+> 
+> Makes sense to stick with that existing convention then. Enough to
+> convince me.
 
-All warnings (new ones prefixed by >>):
+There is the possibility that the compiler will treat the builtin as having
+an 'int' result without the constraint of it being zero or one.
+In which case the conversion to bool will be a compare.
+This doesn't happen on x86-64 (gcc or clang) - but who knows elsewhere.
 
-   In file included from drivers/virt/vboxguest/vboxguest_utils.c:19:
-   In file included from include/linux/vbox_utils.h:8:
->> include/uapi/linux/vbox_vmmdev_types.h:239:4: warning: field u within 'struct vmmdev_hgcm_function_parameter32' is less aligned than 'union (unnamed union at include/uapi/linux/vbox_vmmdev_types.h:223:2)' and is usually due to 'struct vmmdev_hgcm_function_parameter32' being packed, which can lead to unaligned accesses [-Wunaligned-access]
-     239 |         } u;
-         |           ^
->> include/uapi/linux/vbox_vmmdev_types.h:254:6: warning: field u within 'struct vmmdev_hgcm_function_parameter64::(unnamed at include/uapi/linux/vbox_vmmdev_types.h:249:3)' is less aligned than 'union (unnamed union at include/uapi/linux/vbox_vmmdev_types.h:251:4)' and is usually due to 'struct vmmdev_hgcm_function_parameter64::(unnamed at include/uapi/linux/vbox_vmmdev_types.h:249:3)' being packed, which can lead to unaligned accesses [-Wunaligned-access]
-     254 |                         } u;
-         |                           ^
-   2 warnings generated.
+For x86 popcnt(val) & 1 is best (except for parity8) but requires a non-archaic cpu.
+(Probably Nehelem or K10 or later - includes Sandy bridge and all the 'earth movers'.)
+Since performance isn't critical the generic C code is actually ok.
+(The 'parity' flag bit is only set on the low 8 bits.)
+
+	David
 
 
-vim +239 include/uapi/linux/vbox_vmmdev_types.h
-
-f6ddd094f579344 Hans de Goede 2017-11-30  219  
-f6ddd094f579344 Hans de Goede 2017-11-30  220  /** HGCM function parameter, 32-bit client. */
-f6ddd094f579344 Hans de Goede 2017-11-30  221  struct vmmdev_hgcm_function_parameter32 {
-f6ddd094f579344 Hans de Goede 2017-11-30  222  	enum vmmdev_hgcm_function_parameter_type type;
-f6ddd094f579344 Hans de Goede 2017-11-30  223  	union {
-f6ddd094f579344 Hans de Goede 2017-11-30  224  		__u32 value32;
-f6ddd094f579344 Hans de Goede 2017-11-30  225  		__u64 value64;
-f6ddd094f579344 Hans de Goede 2017-11-30  226  		struct {
-f6ddd094f579344 Hans de Goede 2017-11-30  227  			__u32 size;
-f6ddd094f579344 Hans de Goede 2017-11-30  228  			union {
-f6ddd094f579344 Hans de Goede 2017-11-30  229  				__u32 phys_addr;
-f6ddd094f579344 Hans de Goede 2017-11-30  230  				__u32 linear_addr;
-f6ddd094f579344 Hans de Goede 2017-11-30  231  			} u;
-f6ddd094f579344 Hans de Goede 2017-11-30  232  		} pointer;
-f6ddd094f579344 Hans de Goede 2017-11-30  233  		struct {
-f6ddd094f579344 Hans de Goede 2017-11-30  234  			/** Size of the buffer described by the page list. */
-f6ddd094f579344 Hans de Goede 2017-11-30  235  			__u32 size;
-f6ddd094f579344 Hans de Goede 2017-11-30  236  			/** Relative to the request header. */
-f6ddd094f579344 Hans de Goede 2017-11-30  237  			__u32 offset;
-f6ddd094f579344 Hans de Goede 2017-11-30  238  		} page_list;
-f6ddd094f579344 Hans de Goede 2017-11-30 @239  	} u;
-f6ddd094f579344 Hans de Goede 2017-11-30  240  } __packed;
-f6ddd094f579344 Hans de Goede 2017-11-30  241  VMMDEV_ASSERT_SIZE(vmmdev_hgcm_function_parameter32, 4 + 8);
-f6ddd094f579344 Hans de Goede 2017-11-30  242  
-f6ddd094f579344 Hans de Goede 2017-11-30  243  /** HGCM function parameter, 64-bit client. */
-f6ddd094f579344 Hans de Goede 2017-11-30  244  struct vmmdev_hgcm_function_parameter64 {
-f6ddd094f579344 Hans de Goede 2017-11-30  245  	enum vmmdev_hgcm_function_parameter_type type;
-f6ddd094f579344 Hans de Goede 2017-11-30  246  	union {
-f6ddd094f579344 Hans de Goede 2017-11-30  247  		__u32 value32;
-f6ddd094f579344 Hans de Goede 2017-11-30  248  		__u64 value64;
-f6ddd094f579344 Hans de Goede 2017-11-30  249  		struct {
-f6ddd094f579344 Hans de Goede 2017-11-30  250  			__u32 size;
-f6ddd094f579344 Hans de Goede 2017-11-30  251  			union {
-f6ddd094f579344 Hans de Goede 2017-11-30  252  				__u64 phys_addr;
-f6ddd094f579344 Hans de Goede 2017-11-30  253  				__u64 linear_addr;
-f6ddd094f579344 Hans de Goede 2017-11-30 @254  			} u;
-f6ddd094f579344 Hans de Goede 2017-11-30  255  		} __packed pointer;
-f6ddd094f579344 Hans de Goede 2017-11-30  256  		struct {
-f6ddd094f579344 Hans de Goede 2017-11-30  257  			/** Size of the buffer described by the page list. */
-f6ddd094f579344 Hans de Goede 2017-11-30  258  			__u32 size;
-f6ddd094f579344 Hans de Goede 2017-11-30  259  			/** Relative to the request header. */
-f6ddd094f579344 Hans de Goede 2017-11-30  260  			__u32 offset;
-f6ddd094f579344 Hans de Goede 2017-11-30  261  		} page_list;
-f6ddd094f579344 Hans de Goede 2017-11-30  262  	} __packed u;
-f6ddd094f579344 Hans de Goede 2017-11-30  263  } __packed;
-f6ddd094f579344 Hans de Goede 2017-11-30  264  VMMDEV_ASSERT_SIZE(vmmdev_hgcm_function_parameter64, 4 + 12);
-f6ddd094f579344 Hans de Goede 2017-11-30  265  
-
-:::::: The code at line 239 was first introduced by commit
-:::::: f6ddd094f5793447d594aa9f42032a7aba12b4d2 virt: Add vboxguest driver for Virtual Box Guest integration UAPI
-
-:::::: TO: Hans de Goede <hdegoede@redhat.com>
-:::::: CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
