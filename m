@@ -1,219 +1,132 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A442040B9
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EAC2045AB
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741970187; cv=none; b=O72Tak1cyEzWFdY5CMN88PaQP2QtmeHWD0LaNvCwI9Hec2QDxQ6a5g0cdq1glBocK6juw9Ajfvg8+5Q8b/4MRv3PeDNkDucjmRI1PAinNBSN1ajTgaBRhjaYc5v/oN/Uz6S8qoZ3h7z1jbl+pSnmzNU+KzJfHC7sHr2duQSGyig=
+	t=1741970188; cv=none; b=pLK5ZxBHXiNbLAFVoFsoJ1baBJloVobYREYERCbnDa2Fm06yPdQuyi8lQ35hItIEtGC/JpkvlVKdyFE2fd6ct22QbHuCYnrxxrGqy/szml2Wzajn3BVqvFUW4tmwifajPJYrvVBOlPTiLaX6AbWxnYc8Aat8atiojq79Gko8XYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741970187; c=relaxed/simple;
-	bh=V9tDjb3FRXiUNX1G6EF3G2WC8Di0nWlqSJnRURIssMU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LzJnuL1H9DrDHDjn3IT41AZFa+M53WOwWPlqATHhB2vifVGK9KNnx8OU710LnEc+FYKCIKnry5NvbBV+HmVht/wgKWJh0raMtrPAMHks9FZwIqDQVZNgxm52dD7BgpS4wdKSz9BynhBlbzoU2nA5MwLdXGZcljL+fD/Qxb88qAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jpbCqaR+; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741970188; c=relaxed/simple;
+	bh=HL2qrnqP6m2SJjIgrryOgrdGWPC/DqOKAlmK3yLxVLI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S2mSMqbsKGx9bj6sRyETvnwjy3T343Uk1qzmhOJOO5iBSiG5YrRa+IXSKQN49e95FmpVIugjiBqUe5eQe37QXdW/d6tT7VN77yYeBv7xOPJCf2APXDafiK0xw1ZOJ4JzDQWP7xLS1PooFQ6uM4wtlnGNvaAK9yl8knOe+NeE1HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dlt1JDhL; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jpbCqaR+"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394036c0efso15619185e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741970183; x=1742574983; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=77SPkZNldmHxco8GhowPmzvPBBBG99U0AlIpE+I1iiY=;
-        b=jpbCqaR+2n9NR5UloQpSwRAigTmaIzFx92Er6ZF7ITkjCN1AU/u9APUn34TZs/L6KW
-         adWydoYSYOpjPG+zBuIcqzrjVnE35FiGz7DkBq8yb+jwK5zx1qJrOeai29Vxl/SqaTAA
-         /hXjZEtF0g5hK5Fd7IkFs56tzBTff0mDfLrrYm9KMa9kz8L3RH6xa2gpedhd+j3NhjCv
-         N+pw7yIukA6METRSciqguPftEnKSisRv1YH7E5TjnO9i8piFdoW8EifnzRMGXZpoxWdQ
-         D2dLKPShYwDhcF8c3Xzhs+DPVvzsBoz+jx0k7SDvUe50uwA/FXsJWhFgk1aJhUyThZML
-         2HMA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dlt1JDhL"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EDu5os024812
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=dwRYAMlQoWB7Kdu76G96hqJd
+	qDT3vaRt4pY8/dRjDDw=; b=dlt1JDhLB3SF5k1enjXmPQ+CY5/Jc0SXLOy8zj/j
+	uDBrJIPmf0wDjctB15xSX7YkTsOAEhjm0YhizvjywwKAs4AeMsK1gMAyCkdz/hmv
+	7Gx8Jjj/I1GpU+piLuO5mmC/PhDsKVo+aOXmNgMUIiMTxkaAvlxPrVUuKeCUlotS
+	9ZgUHJFml/qIAql8oo2MoFD6bI5mJnbPgvqUKja4pggtsfo90ih0h7d7my/1gt7/
+	BLU1b+Gnq7pHHvjpPloiDRspdQGFhl7IcE+odoH3OogqNSLq4x2aCNz4sgz/qo2W
+	1q28TTeMZ3aVBxfgQoZZqrCr+2PYYNSohu9ghO3HSf4RdA==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45cnscrdyh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:25 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-476664bffbeso40584751cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 09:36:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741970183; x=1742574983;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=77SPkZNldmHxco8GhowPmzvPBBBG99U0AlIpE+I1iiY=;
-        b=YjtmrayzOmrFw+GXkMozYArZ5xwbq7AeD7JYC3Cst42z0/fGSb1IpSpgt46dCBTZqI
-         cl0/b0EOX1VnP8syeYFBQ7++Zh7rAEKUT0yr8QQ3LfNEW9rj1RVs+WGzVqVa2cEPJr82
-         Zt1dG2Ha5w02Jc/V4z2Hr7lu2n7CBI5+PYUtuqRH/jNPTRqCCq1SJGrP/Hr6LAD6hG1g
-         6LXHU5UvAjvUB0LAvSwXAMh4Z+b9eO1RbezJisW5i1PzE2+DZb7ESaZJHD+by9TOIULD
-         sPLESPDes+tngkv8g6so9GwXlN2GpMTZ2pNfm0f1M7IiSyYtLVQV3snV9ySlDqtYvORA
-         RU+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXuMsBeO7x4t5Fqrf3kTzU1qOoIN+BEJFUZc/SJFa0eUV7cNycYJp+LLlqd8mRPsZLBckIgXXzgAC5MxF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxty56Yhkt3UrsiF3eA/5kzEDSxMXk1YijztEHxZRu/9sh9n2vJ
-	n4wcZyknWXglKBkCPlWM55eOsEHDCNB5966f9Wmqnav3Ka24VH5AI8ltsqJvyYQ=
-X-Gm-Gg: ASbGncsbHMdRlhl4M1JqQpu9TAIHtvqGSOljS5RjTFWqzRzOyj3qU8PplbdBoeJnj6T
-	ccLmxlAVqgBTyhUYe5q1LOmUbi78/0KTVa3q3otYxRK6jaQGQoeHGX3HXf2tHMMiwIugjZqtE/5
-	I/0ysL0MRD6UaLWgg5mDZ76lq+LL1FHHtFicJ+UCOQoqk3+vUhZLolkGgqCCyjW7RvooQ60mvqR
-	VC9GXbjvyr1M7V8Nvc2sRnZwzw3nBDUipmbQtv542lMivkdvMIDA+krl6B/nOowMrvMOiKPa+3p
-	YmblZW+itYWpQG0o6YMAFIvIZVgkDJpb3uY0JX4PKEepf+O1Py86
-X-Google-Smtp-Source: AGHT+IGLcB66jFty7SmLoFDrxbGmK12tydtLPNrviGBCwl5ICgT0Zi1i8ozVSW+qz4Fk9UhL6bGBgg==
-X-Received: by 2002:a05:600c:150a:b0:43d:2313:7b4a with SMTP id 5b1f17b1804b1-43d23137bd4mr21196815e9.3.1741970182967;
-        Fri, 14 Mar 2025 09:36:22 -0700 (PDT)
-Received: from vingu-cube.. ([2a01:e0a:f:6020:329b:9a6:20f4:3754])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb40cd78sm6072925f8f.78.2025.03.14.09.36.21
+        d=1e100.net; s=20230601; t=1741970184; x=1742574984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dwRYAMlQoWB7Kdu76G96hqJdqDT3vaRt4pY8/dRjDDw=;
+        b=A1CS2Xa8mAqy76JXYxL8+bFiyTvxRJ0pF7xC/usy4d1rtEw8ihw7bCXkTW2b6iurQc
+         70UameLHBzlaUcKLNWucMI6wedITyIq/acw59tchkIU/2abqW2Ejg4gXxuvyaS7ak9PP
+         zJfasR5m+5dxvUsy8UPDjLCJradvIsJKicDOI/26Hb2mQban9rROxn9dg2MyUvpES+y0
+         LbD9s6vp4wSNPpubsheLOOT6TKM01PXJMW71uRfSWAEzQUCW7RLwd1ka7/ydE3jDgF39
+         hBhmUeWolpA26h3/pMi1ebLHILz7dRNYeF4Zgyl1Yntv3SjzJLAMG4aUFz6pSrUt6tJJ
+         bFig==
+X-Forwarded-Encrypted: i=1; AJvYcCVjvzrzjfrzXkKbFD6qzae9XpTnBxkpap0uupERr/42sqK1FfeGdPo+rxCovxMamY/9LUbzevE7dnfSXnI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywkqz36WZkOeE9SKMBuapk9BfBipfrArHFWlzl0iyVL3+sOdARc
+	JOZZtFCUeegyHoKYhZvAxIOwuTtYTtZe3D7jnNo7qhXM6hZSRKynNFu4b3rtOZpFA9x/n+GX8St
+	IIaZqybP1SWEND6qv5dQqhWqQjcjE9tWQXHL22sOyXf2FRNnHHTwFfQws7OXkdP8=
+X-Gm-Gg: ASbGncswmSNWNUt0vBCyLcel560cokxnYSAB/T7MszYiGxa6gdY/Fg4MG9EA+7vSSOu
+	vhMW8ICbV9HC8E1EWNOzv6FdLpA15SudPc9iQYSYp806EhzRJKL1oLhDVAzWqwnEvCErxgNFnJE
+	TDtAb97rtbla+Ow925UoyJ7xIs/+MMzVaIL1N2DsHW13uZcqwlmIPvl3U5cWwwkiuW0yJ9rzuNq
+	31tH9RxZ5qZroNOdXrjWfKL3zpU7349ueCK4FInqLN+kvWH0w23AmXQD+pj1vafIbykN9PVJ7OL
+	Dc1yov40MPiiHNsPlJkBmfIfhHmpgekDwVIa/T9cta8izbqSFyJRMaXqBB7035jPsNLC/Sz6yg8
+	hI90=
+X-Received: by 2002:a05:6214:5097:b0:6e8:ddaf:6422 with SMTP id 6a1803df08f44-6eaeab00312mr28706726d6.43.1741970184415;
+        Fri, 14 Mar 2025 09:36:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHJb4x2fMIyGfk5ixR2DwoFRga6e8xcjQATKUUg0Rfaz32txxfwF6NxY3A0ZD5xbJ0//+/kjw==
+X-Received: by 2002:a05:6214:5097:b0:6e8:ddaf:6422 with SMTP id 6a1803df08f44-6eaeab00312mr28706456d6.43.1741970184127;
+        Fri, 14 Mar 2025 09:36:24 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba88598dsm562471e87.188.2025.03.14.09.36.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 09:36:21 -0700 (PDT)
-From: Vincent Guittot <vincent.guittot@linaro.org>
-To: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	lukasz.luba@arm.com,
-	rafael.j.wysocki@intel.com,
-	pierre.gondois@arm.com,
-	linux-kernel@vger.kernel.org
-Cc: qyousef@layalina.io,
-	hongyan.xia2@arm.com,
-	christian.loehle@arm.com,
-	luis.machado@arm.com,
-	qperret@google.com,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH 4/7 v6] energy model: Remove unused em_cpu_energy()
-Date: Fri, 14 Mar 2025 17:36:11 +0100
-Message-ID: <20250314163614.1356125-5-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250314163614.1356125-1-vincent.guittot@linaro.org>
-References: <20250314163614.1356125-1-vincent.guittot@linaro.org>
+        Fri, 14 Mar 2025 09:36:22 -0700 (PDT)
+Date: Fri, 14 Mar 2025 18:36:19 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>,
+        Rajendra Nayak <quic_rjendra@quicinc.com>,
+        Sibi Sankar <quic_sibis@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 1/8] arm64: dts: qcom: x1e80100-crd: mark l12b and
+ l15b always-on
+Message-ID: <zhiunl3doj3d5rc2m3w2isnwloyyvtbbgiiuzbg3dxy342vnhy@n27ioyo2mhvm>
+References: <20250314145440.11371-1-johan+linaro@kernel.org>
+ <20250314145440.11371-2-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314145440.11371-2-johan+linaro@kernel.org>
+X-Authority-Analysis: v=2.4 cv=Qbxmvtbv c=1 sm=1 tr=0 ts=67d45b09 cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=z4ldfGPc2qRxCRB1vwoA:9
+ a=CjuIK1q_8ugA:10 a=dawVfQjAaf238kedN5IG:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: Or-c6V_FzEeuW2XcVDr-UXVtSaOduUA_
+X-Proofpoint-GUID: Or-c6V_FzEeuW2XcVDr-UXVtSaOduUA_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-14_06,2025-03-14_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 mlxlogscore=517 mlxscore=0 phishscore=0
+ impostorscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503140130
 
-Remove the unused function em_cpu_energy()
+On Fri, Mar 14, 2025 at 03:54:33PM +0100, Johan Hovold wrote:
+> The l12b and l15b supplies are used by components that are not (fully)
+> described (and some never will be) and must never be disabled.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- include/linux/energy_model.h | 99 ------------------------------------
- 1 file changed, 99 deletions(-)
+Which components?
 
-diff --git a/include/linux/energy_model.h b/include/linux/energy_model.h
-index 551e243b9c43..d0adabba2c56 100644
---- a/include/linux/energy_model.h
-+++ b/include/linux/energy_model.h
-@@ -236,99 +236,6 @@ em_pd_get_previous_state(struct em_perf_state *table,
- 	return -1;
- }
- 
--/**
-- * em_cpu_energy() - Estimates the energy consumed by the CPUs of a
-- *		performance domain
-- * @pd		: performance domain for which energy has to be estimated
-- * @max_util	: highest utilization among CPUs of the domain
-- * @sum_util	: sum of the utilization of all CPUs in the domain
-- * @allowed_cpu_cap	: maximum allowed CPU capacity for the @pd, which
-- *			  might reflect reduced frequency (due to thermal)
-- *
-- * This function must be used only for CPU devices. There is no validation,
-- * i.e. if the EM is a CPU type and has cpumask allocated. It is called from
-- * the scheduler code quite frequently and that is why there is not checks.
-- *
-- * Return: the sum of the energy consumed by the CPUs of the domain assuming
-- * a capacity state satisfying the max utilization of the domain.
-- */
--static inline unsigned long em_cpu_energy(struct em_perf_domain *pd,
--				unsigned long max_util, unsigned long sum_util,
--				unsigned long allowed_cpu_cap)
--{
--	struct em_perf_table *em_table;
--	struct em_perf_state *ps;
--	int i;
--
--#ifdef CONFIG_SCHED_DEBUG
--	WARN_ONCE(!rcu_read_lock_held(), "EM: rcu read lock needed\n");
--#endif
--
--	if (!sum_util)
--		return 0;
--
--	/*
--	 * In order to predict the performance state, map the utilization of
--	 * the most utilized CPU of the performance domain to a requested
--	 * performance, like schedutil. Take also into account that the real
--	 * performance might be set lower (due to thermal capping). Thus, clamp
--	 * max utilization to the allowed CPU capacity before calculating
--	 * effective performance.
--	 */
--	max_util = min(max_util, allowed_cpu_cap);
--
--	/*
--	 * Find the lowest performance state of the Energy Model above the
--	 * requested performance.
--	 */
--	em_table = rcu_dereference(pd->em_table);
--	i = em_pd_get_efficient_state(em_table->state, pd, max_util);
--	ps = &em_table->state[i];
--
--	/*
--	 * The performance (capacity) of a CPU in the domain at the performance
--	 * state (ps) can be computed as:
--	 *
--	 *                     ps->freq * scale_cpu
--	 *   ps->performance = --------------------                  (1)
--	 *                         cpu_max_freq
--	 *
--	 * So, ignoring the costs of idle states (which are not available in
--	 * the EM), the energy consumed by this CPU at that performance state
--	 * is estimated as:
--	 *
--	 *             ps->power * cpu_util
--	 *   cpu_nrg = --------------------                          (2)
--	 *               ps->performance
--	 *
--	 * since 'cpu_util / ps->performance' represents its percentage of busy
--	 * time.
--	 *
--	 *   NOTE: Although the result of this computation actually is in
--	 *         units of power, it can be manipulated as an energy value
--	 *         over a scheduling period, since it is assumed to be
--	 *         constant during that interval.
--	 *
--	 * By injecting (1) in (2), 'cpu_nrg' can be re-expressed as a product
--	 * of two terms:
--	 *
--	 *             ps->power * cpu_max_freq
--	 *   cpu_nrg = ------------------------ * cpu_util           (3)
--	 *               ps->freq * scale_cpu
--	 *
--	 * The first term is static, and is stored in the em_perf_state struct
--	 * as 'ps->cost'.
--	 *
--	 * Since all CPUs of the domain have the same micro-architecture, they
--	 * share the same 'ps->cost', and the same CPU capacity. Hence, the
--	 * total energy of the domain (which is the simple sum of the energy of
--	 * all of its CPUs) can be factorized as:
--	 *
--	 *   pd_nrg = ps->cost * \Sum cpu_util                       (4)
--	 */
--	return ps->cost * sum_util;
--}
--
- /**
-  * em_pd_nr_perf_states() - Get the number of performance states of a perf.
-  *				domain
-@@ -394,12 +301,6 @@ em_pd_get_previous_state(struct em_perf_state *table,
- {
- 	return -1;
- }
--static inline unsigned long em_cpu_energy(struct em_perf_domain *pd,
--			unsigned long max_util, unsigned long sum_util,
--			unsigned long allowed_cpu_cap)
--{
--	return 0;
--}
- static inline int em_pd_nr_perf_states(struct em_perf_domain *pd)
- {
- 	return 0;
+> 
+> Mark the regulators as always-on to prevent them from being disabled,
+> for example, when consumers probe defer or suspend.
+> 
+> Fixes: bd50b1f5b6f3 ("arm64: dts: qcom: x1e80100: Add Compute Reference Device")
+> Cc: stable@vger.kernel.org	# 6.8
+> Cc: Abel Vesa <abel.vesa@linaro.org>
+> Cc: Rajendra Nayak <quic_rjendra@quicinc.com>
+> Cc: Sibi Sankar <quic_sibis@quicinc.com>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/x1-crd.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+
 -- 
-2.43.0
-
+With best wishes
+Dmitry
