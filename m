@@ -1,131 +1,160 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3141F20299F
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 13:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E664933062;
+	Fri, 14 Mar 2025 13:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741958090; cv=none; b=kgGlBCHl2eXdN0CfeFy2cvxtzTjmf+W/JUXuktJoT4nfj1qmyJf9iyADJD2riJB7BNKImlxG9ZuORZVJ1V+WyOSRG/dfD63UqGoy2kRameEty6/LcFGB1zNitLWYsDT5E9lo7NkyCk0ZN0Kl1ISeDC4CL8Zl3XoMM1hd2uO7aVo=
+	t=1741958295; cv=none; b=Qbg2M5y2nGDtZU7MgKBikro6AoZGZqqftK7ZPi2F9m/BCNBijI57x8b6REhx0O/uWYKz0iYf+jWmCMmJ56wYKC8Xe33umUKA23wG0oSpl3kvCoQrcWUkhLwdEIN6UhPZhZK6KuIh3AkPoblMZSHucTpXV+3xuA4N+Y7wNQFd1g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741958090; c=relaxed/simple;
-	bh=i5pgVOZlVnq0y47YV+bp584paVxAqR35NM0VmcVJbdg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=kLxHp2MdT95IPeeJuEdNiIrQfunj1PcOch+LtIIOWruyaHo473w87Vdd/BfqMXbYUYbnCDBGkgUWxRYygIV5XfFxk2ncjNBDQkcudssx428WTM5wCLgMVO+93VVdtgsLheClRlRxxAQ75knNDh5c+Za9sRRzQD/H497SPY207mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=n/IyhA90; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=046hKvlz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=n/IyhA90; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=046hKvlz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1741958295; c=relaxed/simple;
+	bh=blpXADKX8e7JmQIhOP9B/BojEHJX9bhu7Scx5IP2vT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qEVeIYNNar9RnUgqU/yzEQeaApyhxZwMkSb2DWja4ENRp2Qj7ni8V7XhV1Zjt8eHEEHEOTj31QNuztvp7ZEDn97WUbTbv1KHvRSdrnMwLBZtYu6TlTfztNCR5iOD2ALulWTCOicgRvvU0Q8q6ieLneJgQsWrw4izyZyfNu3S2IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=KaM7EbtN; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="n/IyhA90";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="046hKvlz";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="n/IyhA90";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="046hKvlz"
-Received: from pobox.suse.cz (unknown [10.100.2.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="KaM7EbtN"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
+ id 7074daa21ebd8cc8; Fri, 14 Mar 2025 14:18:10 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 452362116E;
-	Fri, 14 Mar 2025 13:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741958087; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1avXQwhwgX4XEF1ZEtVMSZaAo6rnSr1qiGZubxC19HI=;
-	b=n/IyhA90i67l1TV9Wmw/AAAoC09i6VEIyW3oqYoz/ufMi8M80UMHynYNPrdr9T1l3aJkuU
-	mSKm4UlMNAKUUATOhTWzp6fIBkMwGiuBLWZdRKQiVgwkOztvbVBAkd1qrPIMZeCdTWEkkH
-	ObDqUvKR/S2trp9DThBQrQ+yGdUEAdw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741958087;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1avXQwhwgX4XEF1ZEtVMSZaAo6rnSr1qiGZubxC19HI=;
-	b=046hKvlzpKzF6HYX5VwZ4n+XsiebxqUX0uiwyuiUvUAS7p/JSfP+xbtLXKuurjfxiedIKo
-	msUURfaBIYr1AaCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1741958087; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1avXQwhwgX4XEF1ZEtVMSZaAo6rnSr1qiGZubxC19HI=;
-	b=n/IyhA90i67l1TV9Wmw/AAAoC09i6VEIyW3oqYoz/ufMi8M80UMHynYNPrdr9T1l3aJkuU
-	mSKm4UlMNAKUUATOhTWzp6fIBkMwGiuBLWZdRKQiVgwkOztvbVBAkd1qrPIMZeCdTWEkkH
-	ObDqUvKR/S2trp9DThBQrQ+yGdUEAdw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1741958087;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1avXQwhwgX4XEF1ZEtVMSZaAo6rnSr1qiGZubxC19HI=;
-	b=046hKvlzpKzF6HYX5VwZ4n+XsiebxqUX0uiwyuiUvUAS7p/JSfP+xbtLXKuurjfxiedIKo
-	msUURfaBIYr1AaCA==
-Date: Fri, 14 Mar 2025 14:14:47 +0100 (CET)
-From: Miroslav Benes <mbenes@suse.cz>
-To: Filipe Xavier <felipeaggger@gmail.com>
-cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-    Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, 
-    Shuah Khan <shuah@kernel.org>, Marcos Paulo de Souza <mpdesouza@suse.com>, 
-    live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, felipe_life@live.com
-Subject: Re: [PATCH PATCH 2/2] selftests: livepatch: test if ftrace can trace
- a livepatched function
-In-Reply-To: <20250306-ftrace-sftest-livepatch-v1-2-a6f1dfc30e17@gmail.com>
-Message-ID: <alpine.LSU.2.21.2503141411010.4442@pobox.suse.cz>
-References: <20250306-ftrace-sftest-livepatch-v1-0-a6f1dfc30e17@gmail.com> <20250306-ftrace-sftest-livepatch-v1-2-a6f1dfc30e17@gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id F2C72912CFA;
+	Fri, 14 Mar 2025 14:18:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1741958290;
+	bh=blpXADKX8e7JmQIhOP9B/BojEHJX9bhu7Scx5IP2vT0=;
+	h=From:Subject:Date;
+	b=KaM7EbtNkeayM2Ox260zSpqSdOmFz+w/1v6yltjdsJE4ix9ruAWbcbD3b/0mCnWTz
+	 v76Kj0XkfNCeYs3wvWpyKuXoISwmRFNmnm8rhpaOlJHnCZouDFGhGyAVZZ/NNzNgUE
+	 pA4dNaU1CTl84kHaxV487WMV54TvBgXSeOkOEQSjJR1sqTw1RnvtBH/d4TzaayVSYp
+	 2S09+TdkiGIboXHCYkF4W4ztGtYAfGk63bnpbGEYfzd2o8/Z7qvtS52PyGZ+8+jKSq
+	 GZI/6odfCsyqd7nstoGl78Z6S0t73D95stERQe6YKtNeWOcgnDWxoj7MC18P1yJ+c7
+	 hM0kIp78r5ryQ==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Johan Hovold <johan@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Jon Hunter <jonathanh@nvidia.com>, Saravana Kannan <saravanak@google.com>
+Subject:
+ [PATCH v3 5/5] PM: sleep: Make async resume handle consumers like children
+Date: Fri, 14 Mar 2025 14:17:49 +0100
+Message-ID: <2229735.Mh6RI2rZIc@rjwysocki.net>
+In-Reply-To: <10629535.nUPlyArG6x@rjwysocki.net>
+References: <10629535.nUPlyArG6x@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.19)[-0.973];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,suse.com,redhat.com,vger.kernel.org,live.com];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Spam-Score: -4.29
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: spam:low
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedtleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuufhprghmkfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepkedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgvrhhnsehrohiflhgrnhgurdhhrghrvhgrrhgurdgvughupdhrtghpthhtohepuhhlfhdrhhgrnhhsshhonheslhh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
 
-Hi,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> +start_test "trace livepatched function and check that the live patch remains in effect"
-> +
-> +FUNCTION_NAME="livepatch_cmdline_proc_show"
-> +
-> +load_lp $MOD_LIVEPATCH
-> +trace_function "$FUNCTION_NAME"
+Following previous changes, avoid starting "async" resume processing
+upfront for devices that have suppliers and start "async" resume
+processing for the consumers of a device after resuming the device
+itself.
 
-trace_funtion() calls cleanup_ftrace() to prepare the test. Ok.
+Suggested-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-> +if [[ "$(cat /proc/cmdline)" == "$MOD_LIVEPATCH: this has been live patched" ]] ; then
-> +	log "livepatch: ok"
-> +fi
-> +
-> +check_traced_function "$FUNCTION_NAME"
-> +
-> +cleanup_tracing
+New patch in v3.
 
-Here, I suppose, cleanup_tracing() is called to clean up after the check 
-above so that nothing stays and more tests can be added later. Right? 
-Would it make sense then to call cleanup_tracing() in 
-check_traced_function()? I think it would less error prone. 
-If needed, check_traced_function() can always be upgraded so that it 
-checks for more traced functions.
+---
+ drivers/base/power/main.c |   33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-Miroslav
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -635,17 +635,25 @@
+ 	return 0;
+ }
+ 
+-static void dpm_async_resume_children(struct device *dev, async_func_t func)
++static void dpm_async_resume_subordinate(struct device *dev, async_func_t func)
+ {
++	struct device_link *link;
++	int idx;
++
+ 	/*
+ 	 * Start processing "async" children of the device unless it's been
+ 	 * started already for them.
+-	 *
+-	 * This could have been done for the device's "async" consumers too, but
+-	 * they either need to wait for their parents or the processing has
+-	 * already started for them after their parents were processed.
+ 	 */
+ 	device_for_each_child(dev, func, dpm_async_with_cleanup);
++
++	idx = device_links_read_lock();
++
++	/* Start processing the device's "async" consumers. */
++	list_for_each_entry_rcu(link, &dev->links.consumers, s_node)
++		if (READ_ONCE(link->status) != DL_STATE_DORMANT)
++			dpm_async_with_cleanup(link->consumer, func);
++
++	device_links_read_unlock(idx);
+ }
+ 
+ static void dpm_clear_async_state(struct device *dev)
+@@ -656,7 +664,14 @@
+ 
+ static bool dpm_root_device(struct device *dev)
+ {
+-	return !dev->parent;
++	lockdep_assert_held(&dpm_list_mtx);
++
++	/*
++	 * Since this function is required to run under dpm_list_mtx, the
++	 * list_empty() below will only return true if the device's list of
++	 * consumers is actually empty before calling it.
++	 */
++	return !dev->parent && list_empty(&dev->links.suppliers);
+ }
+ 
+ static void async_resume_noirq(void *data, async_cookie_t cookie);
+@@ -745,7 +760,7 @@
+ 		pm_dev_err(dev, state, async ? " async noirq" : " noirq", error);
+ 	}
+ 
+-	dpm_async_resume_children(dev, async_resume_noirq);
++	dpm_async_resume_subordinate(dev, async_resume_noirq);
+ }
+ 
+ static void async_resume_noirq(void *data, async_cookie_t cookie)
+@@ -888,7 +903,7 @@
+ 		pm_dev_err(dev, state, async ? " async early" : " early", error);
+ 	}
+ 
+-	dpm_async_resume_children(dev, async_resume_early);
++	dpm_async_resume_subordinate(dev, async_resume_early);
+ }
+ 
+ static void async_resume_early(void *data, async_cookie_t cookie)
+@@ -1063,7 +1078,7 @@
+ 		pm_dev_err(dev, state, async ? " async" : "", error);
+ 	}
+ 
+-	dpm_async_resume_children(dev, async_resume);
++	dpm_async_resume_subordinate(dev, async_resume);
+ }
+ 
+ static void async_resume(void *data, async_cookie_t cookie)
+
+
+
