@@ -1,73 +1,72 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB662AEE1
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 03:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E726E2AEE1
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 03:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741923243; cv=none; b=pv/3ZQr9vLOP9beuf6F6I94SQG4rbRIUhBpnNh3nN2H+pYn86fYt9P0q7ReDtV/Dqcd0rzO9JfOXiEn+31EzdVi3zSgf4iILypDzD/hFR+KX7VJNF14CHjReDr8JPD5C+5HmtQ8TVBc6f2ySl4RBb9fCwbG50taK94Q0B4kvL4A=
+	t=1741923381; cv=none; b=Z2epBUiPXz9oLuqnEWRyq7kKRL3AhTor2NcxCfGdT3cv247M+FZwQRSf9ClM2YXwH8X11z5dQI9WHU2Dlxf9JADdf4hmtVY3gduChLjn2PIUeJSg9p4EAV7Ml9M27Qe6pYmBP3o6NeeA9LP52rXN59F7CEyaOAVnPqsnddWScNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741923243; c=relaxed/simple;
-	bh=EivQpi2O8pIN6Now3MfuLg4d7RWNWyh6CXbS/W4t9P0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ff4a4PJXp5e25r6uuoEwHz9lvvFpyPUzxTNx0ts+9b2dNbMwepD5Ue6z6bQiILdfA3WFW/zjW2kc5c6jZ0ymz284KSg5Zb49tr+MGQq7KeV+rKuIfx+oUkasIS8BB0tr3xlhE1dlfuQ74eG7shwcOdfKRdLwF3qF5qNtcudxln8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=awf1xZiU; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1741923381; c=relaxed/simple;
+	bh=VG6guJY7C2RS+MEts0vMCLpbug3/g08c4TFm3dc652k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WUJsL6F+UearZV+TE+h5UYsZh9ZPyUfbbEBZBAf6BHCiRsdHvmgc8Baw0BMjwBPcp35i5uypeNkmemmxOcmaWeMByV4+G5+f0Y+g7LXQ7Ox5RmQQVNViS5isC+xB+3yu/pfC3G8O9ZOjN2MemBJqFlLVT18f0NZTOhdGE1ERVfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=WdHMJ4Jt; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="awf1xZiU"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2255003f4c6so30334735ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:34:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="WdHMJ4Jt"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2239aa5da08so33562215ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Mar 2025 20:36:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1741923240; x=1742528040; darn=vger.kernel.org;
+        d=inventec.com; s=google; t=1741923378; x=1742528178; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IzLcC8Eyie0MxthBF09QbNl/508C79rEY+M+4zhfqEc=;
-        b=awf1xZiUE2vqPOgVIKOeKqFvjzOHYp18OLJs/B6/fnvCnZZzXB4/jMmxPvckAuC7KN
-         qmaC8/0sOKV7zRkZFp01FXiXPhwXbPQz3xfz7jN8iyIeC2j4F1FxHmd3JWntcayNc4nx
-         VHCJyMCy6866NoskRoDtW6GOrMDoSQ9BFtuylCetcFaTRMsI0458ZPwmGAZd13YIaLyz
-         hS0gnZat3X2qas17z6EXkdUOUa9jM5OOJ8KQFdVFXkUrwFUWOqwTf2I8msRXP5kDtbLV
-         Gv91707csUCXZo+WgLiiNIEVSkNA896k1riIBH9XAkapoig39NMkJHi04KVGjc48uWim
-         oMYQ==
+        bh=2CKZ17Q4D67al7wDQAN94cc3LiLuJKQZdY3HIsX08mM=;
+        b=WdHMJ4Jth2Q40uYNwj4cqXioVeA9/BQH2INU/GsdYcj+2KAkssHrjb6Ou8+cSwIuuZ
+         DhbvwqA+ZZeY3yHYBKWxV8ZEc9zuZ4Q4jffeYRn1BuVUfY4hYzmc+GpM57bU+KZ8Ot/2
+         opZ+qjC7IqHEGVBwCQaoZ6oa12nLf0CJ/3y6MWw+OYCzQpuSyoNWObkPPEV7GpfjF44l
+         T+bVaQuK/vOEYMUejA5+RtQRbHQryQYXr+W3MJtIrXAMam24B738kHaoLWWnRZS8NIeb
+         eRfMVBS4xe5FurgjHmc+/oP/HTb7KU86PApU3YZ+BskNaSNT++R1eiU/eF4P3XcBsad7
+         Rn1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741923240; x=1742528040;
+        d=1e100.net; s=20230601; t=1741923378; x=1742528178;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IzLcC8Eyie0MxthBF09QbNl/508C79rEY+M+4zhfqEc=;
-        b=hwqtqayo6exWuSFRwaY4C3tkRhTXFXdG+GZvkOGKKl21tBsgPu4O93km6XrZAj8oYE
-         KqGlr7WCsF6k6eQDKZlYI6z89jGAoaySmqqP+tGYy1XcnXlDXx8Wqusdlmao2z+83KTA
-         OnJhZZlRY2GQ3KPegdCipn2M/7q0P/pgYJ+3VXl616EQkne8NGN3e7tTr6YSnducN2VY
-         jhkUQzhV6iGA5YCjUiEtireFHLCEE+V3sHYuKKEhuTYjOoV/DM7xt4Oo5alUl7ija2sl
-         I69kII3fsyPMSjycAV/aZG7C/crkYfwK1Ee/yycPba6Xjr8ZjAx2o7HTTY3HFr08tu3R
-         VfHg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8oAgYMIXT5vnhRueJfYKwTYWjIHewi/7cOV8xGvqyWK79gQtj3CVQoNOad5QzqbvxWHwR+oaCenHL1fw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2foX2zH/ueuxHXLhWrceJq9qe5IjnZ+nwRifLSVsfYavuyh5U
-	qZTZKMdjQYvA8givS2r6CfFyV3rbBmBL5yT45SZ4WoHYGVJiD5hU0WPY+7s4hzk=
-X-Gm-Gg: ASbGncseQv9MjCMsO19aNsPs8sAeJjZU+pG9nstU2Vzns74X6PefkfsR44PxxijTFHk
-	KFyapbdor7O+oEwYmapmi8CnamC41u/6LixckAxvSvtiP1g1mc8yB81//MQqM4qzD+OB12ZNjda
-	DNJNr1dcaKZ5lltcBrRF1Lr6/E7BepLSmO1Hn7YG6Eksmu6xLe+uSEg76hyA2on2+N7Tzlm/8z7
-	vfoK1MQu8WQu1vqlJ4coZ5r5p9bpqBZeBR/XQ06NuRsmdg+feWCIMy5titf4t7HQJbq86B4E05a
-	e4h4RelLzNn/aZSvc/ExwuMCYzs/etQJRJUjo44ZBDYOKwkRN0WTumtzAbXXTBPpMldufw==
-X-Google-Smtp-Source: AGHT+IHkTtLpiPRh154rWR23c7s/Wqh+tHJT7UX/rACxgzWzyRfgJ2LXZqS2mjILyRieWR053xia7g==
-X-Received: by 2002:a17:902:e802:b0:216:3466:7414 with SMTP id d9443c01a7336-225e0b094dcmr14270625ad.44.1741923240169;
-        Thu, 13 Mar 2025 20:34:00 -0700 (PDT)
-Received: from n37-069-081.byted.org ([115.190.40.12])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbed72sm21295845ad.197.2025.03.13.20.33.57
+        bh=2CKZ17Q4D67al7wDQAN94cc3LiLuJKQZdY3HIsX08mM=;
+        b=wjwzMxdwG2srZdJzdArBriCiB93Z20xc1wbc+3AmbgabBNS5AHlnC5oOxwyjYNESUQ
+         IWjHPLwOKgzzTAHI+9jrladASqtjUHFt03/fVUrEoExWGhaKLCAY6/iezeA+kkXUIX+N
+         KCC6eB4NP4YQBfA/cQ/D4yGPkZ+zy7clTOJdC65gSt1dzlbvuVEacCwFycGUgMlNGwWz
+         b51DPJSaeHp9YJ9NniYXGrb4C2r7mdpE4JY2nGxaEk3hpPg5koDRLnsHT/QGh/mw3cvR
+         DRON88gkprHygpAhdv0OR5DKBbNqhFBwPcvnERBjEWzytRo6cuwD85zCm2Jjps29yTLG
+         KmKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXV2V8NVXscMXgiZK8yPiMbA9YeShdenC388NtB/02i6mNDohgu95/EErHaEzrGtdskWd/nzfHsU4WI3pI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXrM2LD5jYWbFB2vIj16Q43TLtM1G705PTx8vzwQqt6WBxJSlr
+	EvG9tXV2ttbgmtosrTQyF7O/EQAnjtPyDd8twTkjhoO/nEPnQ7WKd0B4MSmo3ic=
+X-Gm-Gg: ASbGncuZpBjfI9jp+fZEpyptbqOZylNIwV6aJzrSW3wNfnyYC1YzJz/zXP+IaQMIhZg
+	qHW6Vp6Q7wbcIi8WrbJRDL2CB+Jko32bIu3o2yxTfpdAxbnD/BKIMdQq2TD699Cfqy4YtO7vbDH
+	WoiN0btWxu50rSOoa6FbWsRf85jmHHwI/6wsq52sNTE7q3M3s6fCTlOm8CzWEEvujVKtOrHOyay
+	aqM9S7Dq7vQnI477Kd2r4zvvLnMiSyH/BRfRF6/CczkhavgwI96MtZN+MQ2cZ2/R+lYE0avY34C
+	p3yVkz9AB2yHZldm2Pu01x4dgO1crMXGMXQdr0LnfS3HEVkmSqMSYEpz6etZ2EvnDV8/QwykjO1
+	6Kd/1O0fj5uN6yLUBINlVAviBlQ==
+X-Google-Smtp-Source: AGHT+IF7o+fIRDqv9z47H1qL2o4yIcJDSVooZphsAXczLb9NaTSymeNDBDBJ4uhStmyxIiBcFqgjWQ==
+X-Received: by 2002:a05:6a00:c92:b0:732:5276:4ac9 with SMTP id d2e1a72fcca58-73722357b4dmr1139599b3a.9.1741923378125;
+        Thu, 13 Mar 2025 20:36:18 -0700 (PDT)
+Received: from localhost.localdomain (60-250-242-163.hinet-ip.hinet.net. [60.250.242.163])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371152938csm2210418b3a.12.2025.03.13.20.36.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 20:33:59 -0700 (PDT)
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-To: akpm@linux-foundation.org
-Cc: mhocko@suse.com,
-	hannes@cmpxchg.org,
-	muchun.song@linux.dev,
-	yosry.ahmed@linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Zhongkun He <hezhongkun.hzk@bytedance.com>
-Subject: [PATCH V2] mm: vmscan: skip the file folios in proactive reclaim if swappiness is MAX
-Date: Fri, 14 Mar 2025 11:33:50 +0800
-Message-Id: <20250314033350.1156370-1-hezhongkun.hzk@bytedance.com>
-X-Mailer: git-send-email 2.39.5
+        Thu, 13 Mar 2025 20:36:17 -0700 (PDT)
+From: Chiang Brian <chiang.brian@inventec.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Chiang Brian <chiang.brian@inventec.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dt-bindings: trivial: Document TPS53685
+Date: Fri, 14 Mar 2025 11:28:01 +0800
+Message-Id: <20250314032802.3187097-1-chiang.brian@inventec.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,89 +75,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With this patch 'commit <68cd9050d871> ("mm: add swappiness= arg to
-memory.reclaim")', we can submit an additional swappiness=<val> argument
-to memory.reclaim. It is very useful because we can dynamically adjust
-the reclamation ratio based on the anonymous folios and file folios of
-each cgroup. For example,when swappiness is set to 0, we only reclaim
-from file folios.
+Add undocumented tps53685 into compatible in dt-bindings
 
-However,we have also encountered a new issue: when swappiness is set to
-the MAX_SWAPPINESS, it may still only reclaim file folios. This is due
-to the knob of cache_trim_mode, which depends solely on the ratio of
-inactive folios, regardless of whether there are a large number of cold
-folios in anonymous folio list.
-
-So, we hope to add a new control logic where proactive memory reclaim only
-reclaims from anonymous folios when swappiness is set to MAX_SWAPPINESS.
-For example, something like this:
-
-echo "2M swappiness=200" > /sys/fs/cgroup/memory.reclaim
-
-will perform reclaim on the rootcg with a swappiness setting of 200 (max
-swappiness) regardless of the file folios. Users have a more comprehensive
-view of the application's memory distribution because there are many
-metrics available. For example, if we find that a certain cgroup has a
-large number of inactive anon folios, we can reclaim only those and skip
-file folios, because with the zram/zswap, the IO tradeoff that
-cache_trim_mode is making doesn't hold - file refaults will cause IO,
-whereas anon decompression will not.
-
-With this patch, the swappiness argument of memory.reclaim has a more
-precise semantics: 0 means reclaiming only from file pages, while 200
-means reclaiming just from anonymous pages.
-
-V1:
-  Update Documentation/admin-guide/cgroup-v2.rst --from Andrew Morton
-  Add more descriptions in the comment.   --from Johannes Weiner
-
-V2:
-  Add reviewed from Yosry Ahmed.
-
-Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
 ---
- Documentation/admin-guide/cgroup-v2.rst |  4 ++++
- mm/vmscan.c                             | 10 ++++++++++
- 2 files changed, 14 insertions(+)
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index cb1b4e759b7e..6a4487ead7e0 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1343,6 +1343,10 @@ The following nested keys are defined.
- 	same semantics as vm.swappiness applied to memcg reclaim with
- 	all the existing limitations and potential future extensions.
- 
-+	The swappiness have the range [0, 200], 0 means reclaiming only
-+	from file folios, 200 (MAX_SWAPPINESS) means reclaiming just from
-+	anonymous folios.
-+
-   memory.peak
- 	A read-write single value file which exists on non-root cgroups.
- 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index c767d71c43d7..f4312b41e0e0 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2438,6 +2438,16 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
- 		goto out;
- 	}
- 
-+	/*
-+	 * Do not bother scanning file folios if the memory reclaim
-+	 * invoked by userspace through memory.reclaim and the
-+	 * swappiness is MAX_SWAPPINESS.
-+	 */
-+	if (sc->proactive && (swappiness == MAX_SWAPPINESS)) {
-+		scan_balance = SCAN_ANON;
-+		goto out;
-+	}
-+
- 	/*
- 	 * Do not apply any pressure balancing cleverness when the
- 	 * system is close to OOM, scan both anon and file equally
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index fadbd3c041c8..c98d69facb48 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -380,6 +380,8 @@ properties:
+           - ti,tps53676
+             # TI Dual channel DCAP+ multiphase controller TPS53679
+           - ti,tps53679
++            # TI Dual channel DCAP+ multiphase controller TPS53685 with AMD-SVI3
++          - ti,tps53685
+             # TI Dual channel DCAP+ multiphase controller TPS53688
+           - ti,tps53688
+             # TI DC-DC converters on PMBus
 -- 
-2.39.5
+2.25.1
 
