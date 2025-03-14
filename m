@@ -1,62 +1,133 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888061FCFFC;
-	Fri, 14 Mar 2025 11:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C828635A;
+	Fri, 14 Mar 2025 11:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741953471; cv=none; b=nY8Z4xYpBD9bT+mxxc9m8Fs2IfOHLd86dLxib+DRhcnvZNxIvaGdB0tH9Eg6rHLXZwOZ/DFuaVm6iH1P9oWpwG6wCJGhTSl+sXe3E4PhQQzsdqdSinx5B3gqzlMyLMdMebHgfAjPXapi44nV03wowdWdaWBP0iCrUAstOq0FOtc=
+	t=1741953488; cv=none; b=D3u/IJNU2S/J4flTte33sZY8AJVQW1lxdFsWmd5j1u7+pMMmG1WCPnF0wgQzb+ZpQ2K4/73v8RBbkgzz+7ioY+fXQPTo/b4zzoFZXidzXaybSLNLI64+TNCIzbW6vGks0Jw5R6F3Gc0yPrtzqLQhlabUEfDGzthd2lqCT1ODNL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741953471; c=relaxed/simple;
-	bh=UfCfTas+IK7+xkJrASy6gnygHRZDQSaRR3jZQ2Q8c68=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ny6HiZo5YBcJjDl03IDEd3MQV+ACvnRdyMhv7GVB6aHKNsBOcAHvD+ncLLhjJm/j4TBIYllrPNa5xgfNEqvae0BsaqA8TcAjyW+qLENBkF10cO9rV6GCtQK1VWd2w2a0LPh9HKocY0dp1fl9s/5hcRa6o1w9hFFlaL9sKbCobAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.19] (51b6855d.dsl.pool.telekom.hu [::ffff:81.182.133.93])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000087004.0000000067D41888.0002BE31; Fri, 14 Mar 2025 12:52:40 +0100
-Message-ID: <f581c3d25a270801de35b7d0380cbd13c4c4a131.camel@irl.hu>
-Subject: Re: [PATCH] Fixed ideapad-laptop driver to support Yoga 9 2 in 1
- 14imh9 unknown keys
-From: Gergo Koteles <soyer@irl.hu>
-To: Ike Panhc <ike.pan@canonical.com>,
-  =?UTF-8?Q?Ga=C5=A1per?= Nemgar <gasper.nemgar@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Date: Fri, 14 Mar 2025 12:52:39 +0100
-In-Reply-To: <4f1d9817-60b1-433d-b7a8-f37057e0980a@canonical.com>
-References: <20250313151744.34010-1-gasper.nemgar@gmail.com>
-	 <4f1d9817-60b1-433d-b7a8-f37057e0980a@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1741953488; c=relaxed/simple;
+	bh=alG2VBcqxu4/KeTppLaYTCBjh974VZnVLlGEUyVJ34s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P7zcJqQBwZ01Y7U40ec+ajtZHL1XJFQbXktU17LseKJbhTXqdWmFaKTPrOCX1QUZvN3fub7KSynzjnh+nAZUZ//k1b1XNcQXNx9UoGt9lXrdMxUX8sXdVi+d+IPksW8UXmjc/ZZPugjTz5/Dg12M4lNKDxU9G6XHq9rpaPWF5ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GJHImAf3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XrDfQ8Ms; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GJHImAf3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XrDfQ8Ms"
+Date: Fri, 14 Mar 2025 12:58:02 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741953484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8uewKNoT8JWDI3vksDZ1lfM+BZl6yGTaXxxJLZKOzx0=;
+	b=GJHImAf3Y7UB1RzvBxLOtqJc4jRh/h+gxXQP7hVvQ/uY/ozVfmBAfaT5PfjDbUEAMAEzQf
+	bVUsG69XNEjcbVktmfv5cUUhbUXkOV1kn+I4LergArsjOqTRm7Z0L2FpJdi8y6AhZMLAbU
+	zu9OzdHZShuCHv+RwE7UXK/SIfi8IC3f2a+ZT0zMZfv2mMT53i8AsWG64l8Mh9cvHeCK0i
+	zhb9MIRl9kbT/AVN58rnwvDktH164Oajfi6GVfdriyNWMh8xGFV75Da5ypk6GadFo5nvpc
+	WpCx8iKXJp8hOJ1Fw+l+i8b207JoNIKHeK2ihdkh9rwZPkf0YCcC6M7y/z7ASQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741953484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8uewKNoT8JWDI3vksDZ1lfM+BZl6yGTaXxxJLZKOzx0=;
+	b=XrDfQ8MsdqFP7ajJekANqTpOTS7uitbjh6jCB/v6tJ8WB2HHfVYXFwxVhWlu66lnTyqneO
+	nIYvnaaaA+Xkn7Aw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [RFC PATCH 10/10] memcg: no more irq disabling for stock locks
+Message-ID: <20250314115802.DESa-C1z@linutronix.de>
+References: <20250314061511.1308152-1-shakeel.butt@linux.dev>
+ <20250314061511.1308152-11-shakeel.butt@linux.dev>
+ <9e1e3877-55ae-4546-a5c1-08ea730ea638@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <9e1e3877-55ae-4546-a5c1-08ea730ea638@suse.cz>
 
-Hi Ga=C5=A1per,
+On 2025-03-14 11:54:34 [+0100], Vlastimil Babka wrote:
+> On 3/14/25 07:15, Shakeel Butt wrote:
+> > Let's switch all memcg_stock locks acquire and release places to not
+> > disable and enable irqs. There are two still functions (i.e.
+> > mod_objcg_state() and drain_obj_stock) which needs to disable irqs to
+> > update the stats on non-RT kernels. For now add a simple wrapper for
+> > that functionality.
+>=20
+> BTW, which part of __mod_objcg_mlstate() really needs disabled irqs and n=
+ot
+> just preemption? I see it does rcu_read_lock() anyway, which disables
+> preemption. Then in __mod_memcg_lruvec_state() we do some __this_cpu_add()
+> updates. I think these also are fine with just disabled preemption as they
+> are atomic vs irqs (but don't need LOCK prefix to be atomic vs other cpus
+> updates).
 
-On 3/13/25 23:17, Ga=C5=A1per Nemgar wrote:
->  	/* Specific to some newer models */
->  	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
->  	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-> +	/*Star- (User Asignable Key)*/
+__this_cpu_add() is not safe if also used in interrupt context. Some
+architectures (not x86) implemented as read, add, write.
+this_cpu_add()() does the same but disables interrupts during the
+operation.
+So __this_cpu_add() should not be used if interrupts are not disabled
+and a modification can happen from interrupt context.
 
-Asignable -> Assignable?
-Could you please add a space before/after the body of the comment?
+> Is it just memcg_rstat_updated() which does READ_ONCE/WRITE_ONCE? Could we
+> perhaps just change it to operations where disabled preemption is enough?
+>=20
+> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+=E2=80=A6
+> > @@ -2757,6 +2745,28 @@ static void replace_stock_objcg(struct memcg_sto=
+ck_pcp *stock,
+> >  	WRITE_ONCE(stock->cached_objcg, objcg);
+> >  }
+> > =20
+> > +static unsigned long rt_lock(void)
+> > +{
 
-> +	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+No, we don't name it rt_lock(). We have local_lock() for this exact
+reason. And migrate_disable() does not protect vs re-enter of the
+function on the CPU while local_irq_save() does.
 
-Other Ideapads map this star key to KEY_FAVORITES, for consistency I
-think it would be better if this one mapped there too.
+> > +#ifdef CONFIG_PREEMPT_RT
+> > +	migrate_disable();
+> > +	return 0;
+> > +#else
+> > +	unsigned long flags =3D 0;
+> > +
+> > +	local_irq_save(flags);
+> > +	return flags;
+> > +#endif
+> > +}
+> > +
+> > +static void rt_unlock(unsigned long flags)
+> > +{
+> > +#ifdef CONFIG_PREEMPT_RT
+> > +	migrate_enable();
+> > +#else
+> > +	local_irq_restore(flags);
+> > +#endif
+> > +}
+> > +
+> >  static void mod_objcg_state(struct obj_cgroup *objcg, struct pglist_da=
+ta *pgdat,
+> >  		     enum node_stat_item idx, int nr)
+> >  {
 
-Thanks,
-Gergo
-
-
+Sebastian
