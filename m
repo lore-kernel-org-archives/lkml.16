@@ -1,111 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDCD12CDBE;
-	Fri, 14 Mar 2025 08:06:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F90193436;
+	Fri, 14 Mar 2025 08:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741939599; cv=none; b=fQyq7mrCcs2OIuziUB/pA0SMAwKqorHhffUymEJa7PhRrhXOsUxUL10SVLT7AI8FMC/wch8n2T3vFCmsQR16XNT4aNnnMoNLMZIqYDj60dg94Zcx+TU9V+zRZURpJU3BCElpE4+3zECvbQtIcFrzEgIBGNyZNU7KIi+W7MfN8uQ=
+	t=1741939681; cv=none; b=TZtHVKrepu8C1Wwuqc9aQcYn42PuyHQNmcgDxWu+4vdr8tNG/mlbPel0krH0otVDJj+fWtf1rS6UBzVYm3QbdWUL8kPOGQflNMTyS2Z0qfRiKYnATpzzFWoae8qL+aRFR6ElZNySJjMDEAOps8uRglkkkgChykwNZB7vyxQn2Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741939599; c=relaxed/simple;
-	bh=VyYjw56OkcWtxGlsD1Q0pmAELcgjWDeg6Y0yjbO9MKM=;
+	s=arc-20240116; t=1741939681; c=relaxed/simple;
+	bh=oYH/kGhK7YTdEQ7KFvtJxvjiQApYFDp63+DH/kdptis=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W0aF4kiWLZNDY7gQWOHmUzbVRtsO2BdlKs10783wFJH7TOjs/SndHBjusM2agCl3DhrNBG3+3LZAN6K8LkyZDU337VA1uIRHU/oF+G/K0Z6bBTwWajTN6wrdq/XII85d1ufHLvta/yeo/gjH7l7B4KsS+9gBW/G/rNTuFqwLgtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UuWxy3xg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=k8bEl7M9zL2JIJXYxelHGhY9mAk41S9VflzOyl8ls4wEtuusjkHT3+KEsvezpEsgjUNBm5FD5l20ZvDTpo98Ur8r59XKlvhO2/EVca8y2MxZx6nKMl32MyVd7XSj32n8PNIe+iinQkFb27pBa2wSYvqm2j5obkAcRLbRTszVuNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s6LlxMuw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UuWxy3xg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FD46C4CEE3;
-	Fri, 14 Mar 2025 08:06:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6LlxMuw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDAADC4CEEC;
+	Fri, 14 Mar 2025 08:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741939598;
-	bh=VyYjw56OkcWtxGlsD1Q0pmAELcgjWDeg6Y0yjbO9MKM=;
+	s=k20201202; t=1741939680;
+	bh=oYH/kGhK7YTdEQ7KFvtJxvjiQApYFDp63+DH/kdptis=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UuWxy3xgJeaO5EBV2HlXILrL+kHOV1RsZOepnzBUvYpucbXwS8QguJHxwNUsBQKZ3
-	 0ZhwQG097dpKueC6gfdUH7ByDZBrpnK9XMZQLeTyjsyxKT/9g1QUrXxFzXT0t6Owze
-	 LNZBqxdX6FYyLsazVhYR2UIOtLzdraToYfAjdNbT/IRlbgPHstGIHUZxWzvcCSZiAG
-	 cuaJvOdx25qiAa/Rj0cN370XNrZ+d7TPJqdvGtsMZDTFWQkWAEC3OMY5RlEKEobBO+
-	 hUv7zi+WmdM9cBNO6MjwYxYjGY2wl+XlPkjkXKlINbcn3c/P3zmh1PZ/et1vW9V4Nu
-	 EVVxwb4lZldFg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tt03w-000000002hh-0wbN;
-	Fri, 14 Mar 2025 09:06:36 +0100
-Date: Fri, 14 Mar 2025 09:06:36 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Miaoqing Pan <quic_miaoqing@quicinc.com>
-Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org, johan+linaro@kernel.org
-Subject: Re: [PATCH v2 ath-next 2/2] wifi: ath11k: fix HTC rx insufficient
- length
-Message-ID: <Z9PjjDFBuSJ7exVj@hovoldconsulting.com>
-References: <20250310010217.3845141-1-quic_miaoqing@quicinc.com>
- <20250310010217.3845141-3-quic_miaoqing@quicinc.com>
- <Z866cCj8SWyZjCoP@hovoldconsulting.com>
- <7b1c5e40-b11d-421b-8c8b-117a2a53298b@quicinc.com>
- <c0cdcaf2-655b-4d22-a949-1519c552e6a4@oss.qualcomm.com>
- <72d95d77-674e-4ae7-83b0-ab58748b8251@quicinc.com>
- <Z9G5zEOcTdGKm7Ei@hovoldconsulting.com>
- <8ea7fe7c-7b4d-4a6f-ae03-b9ca127c23f8@quicinc.com>
- <Z9METTzUJe9yqVEI@hovoldconsulting.com>
- <b1c79589-4fcd-4630-9551-a620087e0c23@quicinc.com>
+	b=s6LlxMuwdTaK9kpaCnkV8YbN2DMfAYsdpkdvGy78D9YUpd7Zv548uPiQAn8/F/eEu
+	 YuYLjJ0BRNvKvXTnL34pYJfvTZISlFknAcGLxnJExGUd9h5SlsS0PnvjG8ecJ0FAYC
+	 kYftjoHqQR4QQ3rwPA1P4h8o3UtRiiQI3HmqhXaA/xHNhMF0nnFVwIx4L9FzOyGcm+
+	 HHjmoki6ogkoVBc01Hi4REcuTMNbUf0J/RtIrlI4XslH2CMaK1eIDcX3k/h9tXD8fi
+	 +GBJVJFU2YGUrbaPPui2HhGONh7gofaYkwZFVFGPhreNRu+p3qt0zrrEsXAy9bVAD2
+	 FntX+BFI2Cggg==
+Date: Fri, 14 Mar 2025 09:07:56 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: florin.leotescu@oss.nxp.com
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Michael Shych <michaelsh@nvidia.com>, 
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	viorel.suman@nxp.com, carlos.song@nxp.com, linux-arm-kernel@lists.infradead.org, 
+	imx@lists.linux.dev, festevam@gmail.com, Florin Leotescu <florin.leotescu@nxp.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: hwmon: Add Microchip emc2305 support
+Message-ID: <20250314-encouraging-fabulous-ant-e1f7b0@krzk-bin>
+References: <20250313125746.2901904-1-florin.leotescu@oss.nxp.com>
+ <20250313125746.2901904-2-florin.leotescu@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b1c79589-4fcd-4630-9551-a620087e0c23@quicinc.com>
+In-Reply-To: <20250313125746.2901904-2-florin.leotescu@oss.nxp.com>
 
-On Fri, Mar 14, 2025 at 09:01:36AM +0800, Miaoqing Pan wrote:
-> On 3/14/2025 12:14 AM, Johan Hovold wrote:
-> > On Thu, Mar 13, 2025 at 09:31:56PM +0800, Miaoqing Pan wrote:
-> >> On 3/13/2025 12:43 AM, Johan Hovold wrote:
+On Thu, Mar 13, 2025 at 02:57:44PM +0200, florin.leotescu@oss.nxp.com wrote:
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  '#pwm-cells':
+> +    const: 2
+> +
+> +patternProperties:
+> +  "^fan@[0-4]$":
 
-> >>> +	/* Make sure descriptor is read after the head pointer. */
-> >>> +	dma_rmb();
-> >>> +
-> >>>    	*nbytes = ath11k_hal_ce_dst_status_get_length(desc);
-> >>>    	if (*nbytes == 0) {
-> >>> +		WARN_ON_ONCE(1);	// FIXME: remove
-> >>>    		ret = -EIO;
-> >>>    		goto err;
-> >>>    	}
-> >>
-> >> This issue can still be reproduced.
-> >>
-> >> [ 3283.687469] WARNING: CPU: 0 PID: 0 at
-> >> /drivers/net/wireless/ath/ath11k/ce.c:405
-> >> ath11k_ce_per_engine_service+0x228/0x3e4 [ath11k]
-> > 
-> > Thanks for verifying.
-> > 
-> > Which platform are you testing on and which kernel are you using?
-> > 
-> > I'm still waiting to hear back from some people testing my patch on the
-> > X13s (sc8280xp).
+Keep consistent quotes, either ' or "
 
-> qcs615-ride, kernel 6.6.65.
+> +    $ref: fan-common.yaml#
+> +    unevaluatedProperties: false
+> +    properties:
+> +      reg:
+> +        description:
+> +          The fan number.
+> +
+> +    required:
+> +      - reg
+> +      - pwms
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        fan_controller: fan-controller@2f {
+> +            compatible = "microchip,emc2305";
+> +            reg = <0x2f>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            #pwm-cells = <2>;
+> +
+> +            fan@0 {
+> +                #cooling-cells = <2>;
+> +                reg = <0x0>;
 
-Ok, so a downstream vendor kernel?
+Please follow DTS coding style, so reg is here the first property.
 
-qcs615-ride does not even have PCIe enabled in mainline yet, but I
-assume that's what you use here?
- 
-> I think the hardware has already ensured synchronization between 
-> descriptor and head pointer, which isn't difficult to achieve. The issue 
-> is likely caused by something else and requires further debugging.
+> +                pwms = <&fan_controller 1 1>;
 
-Yeah, but you still need memory barriers on the kernel side.
+It's the same PWM for all fans? So isn't it basically one fan? How do
+you exactly control them independently, if the same PWM channel is used?
 
-It could be that we are looking at two different causes for those
-zero-length descriptors.
+> +            };
+> +
+> +            fan@1 {
+> +                #cooling-cells = <2>;
+> +                reg = <0x1>;
+> +                pwms = <&fan_controller 1 1>;
 
-The error handling for that obviously needs to be fixed either way, but
-I haven't heard anyone hitting the corruption with the memory barriers
-in place on the X13s yet (even if we'd need some more time to test
-this).
 
-Johan
+Best regards,
+Krzysztof
+
