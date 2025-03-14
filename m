@@ -1,84 +1,133 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9FCC1FF1AF;
-	Fri, 14 Mar 2025 19:25:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C28071FF1AF;
+	Fri, 14 Mar 2025 19:29:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741980342; cv=none; b=Dodr5lIvTlw4GXHVN86dEMd6w4TkvVge6wkCMd4expOdrKEYwJOrVZMtfv0T3nRwXdk0RE+oN7C81HGe/UjgoKWkS9Y5VkamTW/YwqM5+qMAMZQwwLWKvY5vufVq8aVF+ZQvs492orTlnDcBHaJ4Lv0ZFOPzEF4KdLirr080AFg=
+	t=1741980566; cv=none; b=PxYxDvMZteADwTmLE5PpgqIlwxEaHnX/cB51hrE8cld5Z/z73BGaJSbIMhorYlWMidJRg8BsCkGqJwmE/uryEMvbgF1HOpZTUd+KTrtOSjwjl7fOxWF01OA127WEtm4hmu12f8ZHC7QWDcuijDujVp+MokEQFJVn1LEChPH+TsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741980342; c=relaxed/simple;
-	bh=NAjBZOcRL9XA+Uu28PqNgr5pcAL0JKdI0XNjmjZA0Jo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IdH6NXv9yp9le3QT5n6rBhwklvL1fL1nQHAM2p/1HWxhl710NQH/RaH4nPjjJyLpp9Oxgna4frbSkBl99XflVtGMiEHelnSazmp4vfaDMRzgJ9exnCJEbKIyrsev4WQUzfc58aSstI84YJMaAzIPfB4AGge2TKMYqySEfvxqIDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lcwAW6o9; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1741980566; c=relaxed/simple;
+	bh=xB8z8s/FLR7dj/y8/AoU0F+w/kxSVGa9ajdx4JskRRM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=N5SaHJAQ7zdOiNuZWMFlPmcxfYI6FokHqRT2NzjZSSbqHmsTLSsKEpfx6uxFJu4mYSIkLM1SqDJjrWhhg5TwMka+wdJykQtZgeyvYl3r1vcLSn8HnDDL4nuk4kOsRJOeGNSNvaxjhXUvTJnxUWik7NZKwOXj9kmVH/y6VuXTGlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hF2Rs62I; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lcwAW6o9"
-Received: from [192.168.0.107] (76-14-231-56.or.wavecable.com [76.14.231.56])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 068C52033454;
-	Fri, 14 Mar 2025 12:25:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 068C52033454
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hF2Rs62I"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2C4F82033457;
+	Fri, 14 Mar 2025 12:29:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2C4F82033457
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741980333;
-	bh=uumL/iMZWLeatJCRzK/5OqmHs1yyifX8CVVlfPUqW88=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lcwAW6o9/himPCT2tEXXsKoXHWO8oRb1H+x24X7ywVm5YDb+pGWilcslz1ctKgD2Q
-	 GFC+AqJBc2u+TzfWQJOXhlLuVrZvFJflC3ZhteSn1bhAyI+98O5uSfCvvTUlOFsxju
-	 DJnw4BKFc9L2OEScqPySBUc6fAC0f5am1INgXf3w=
-Message-ID: <c480e790-0abb-41af-a0cb-e358ff7b671f@linux.microsoft.com>
-Date: Fri, 14 Mar 2025 12:25:32 -0700
+	s=default; t=1741980564;
+	bh=g87Yc4YJdBAnwCUZKSsKpodpokZkAet25OkUYeeBX+E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hF2Rs62InylvP8rtjh/0ZN2Za3ug4zYjoggrSRhQ76on39C8v5TNVqXoUJ58hRCcZ
+	 m4nJ6WeuWWtgOoJC2CSCny1S9+FM7nkWUCqBX0E4AMuZhMIEm4dSiYxEPaBcBTx9OD
+	 oXqSqN7esrWKlvwJHqlewqO9GKBVmTFstXQbQnWE=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	mhklinux@outlook.com,
+	ltykernel@gmail.com,
+	stanislav.kinsburskiy@gmail.com,
+	linux-acpi@vger.kernel.org,
+	eahariha@linux.microsoft.com,
+	jeff.johnson@oss.qualcomm.com
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	daniel.lezcano@linaro.org,
+	joro@8bytes.org,
+	robin.murphy@arm.com,
+	arnd@arndb.de,
+	jinankjain@linux.microsoft.com,
+	muminulrussell@gmail.com,
+	skinsburskii@linux.microsoft.com,
+	mrathor@linux.microsoft.com,
+	ssengar@linux.microsoft.com,
+	apais@linux.microsoft.com,
+	gregkh@linuxfoundation.org,
+	vkuznets@redhat.com,
+	prapal@linux.microsoft.com,
+	anrayabh@linux.microsoft.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	corbet@lwn.net
+Subject: [PATCH v6 02/10] x86/mshyperv: Add support for extended Hyper-V features
+Date: Fri, 14 Mar 2025 12:28:48 -0700
+Message-Id: <1741980536-3865-3-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1741980536-3865-1-git-send-email-nunodasneves@linux.microsoft.com>
+References: <1741980536-3865-1-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/10] Drivers: hv: Introduce mshv_root module to
- expose /dev/mshv to VMMs
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- linux-hyperv@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- mhklinux@outlook.com, decui@microsoft.com, catalin.marinas@arm.com,
- will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org,
- joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de,
- jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
- skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
- ssengar@linux.microsoft.com, apais@linux.microsoft.com,
- Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
- gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
- muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
- lenb@kernel.org, corbet@lwn.net
-References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-11-git-send-email-nunodasneves@linux.microsoft.com>
- <fcd132af-03e4-496d-ba70-0097e90a83cf@oss.qualcomm.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <fcd132af-03e4-496d-ba70-0097e90a83cf@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 3/11/2025 11:01 AM, Jeff Johnson wrote:
-> On 2/26/25 15:08, Nuno Das Neves wrote:
-> ...
->> +
->> +MODULE_AUTHOR("Microsoft");
->> +MODULE_LICENSE("GPL");
->> +
-> 
-> Since commit 1fffe7a34c89 ("script: modpost: emit a warning when the
-> description is missing"), a module without a MODULE_DESCRIPTION() will
-> result in a warning with make W=1. Please add a MODULE_DESCRIPTION()
-> to avoid this warning.
-> 
-> This is a canned review based upon finding a MODULE_LICENSE without a
-> MODULE_DESCRIPTION.
-> 
-> /jeff
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 
-Thanks Jeff. Fixed in v6.
+Extend the "ms_hyperv_info" structure to include a new field,
+"ext_features", for capturing extended Hyper-V features.
+Update the "ms_hyperv_init_platform" function to retrieve these features
+using the cpuid instruction and include them in the informational output.
 
-Nuno
+Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+---
+ arch/x86/kernel/cpu/mshyperv.c | 6 ++++--
+ include/asm-generic/mshyperv.h | 1 +
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 4f01f424ea5b..fd285b18d6b4 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -434,13 +434,15 @@ static void __init ms_hyperv_init_platform(void)
+ 	 */
+ 	ms_hyperv.features = cpuid_eax(HYPERV_CPUID_FEATURES);
+ 	ms_hyperv.priv_high = cpuid_ebx(HYPERV_CPUID_FEATURES);
++	ms_hyperv.ext_features = cpuid_ecx(HYPERV_CPUID_FEATURES);
+ 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+ 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+ 
+ 	hv_max_functions_eax = cpuid_eax(HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS);
+ 
+-	pr_info("Hyper-V: privilege flags low 0x%x, high 0x%x, hints 0x%x, misc 0x%x\n",
+-		ms_hyperv.features, ms_hyperv.priv_high, ms_hyperv.hints,
++	pr_info("Hyper-V: privilege flags low %#x, high %#x, ext %#x, hints %#x, misc %#x\n",
++		ms_hyperv.features, ms_hyperv.priv_high,
++		ms_hyperv.ext_features, ms_hyperv.hints,
+ 		ms_hyperv.misc_features);
+ 
+ 	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index 250c65236919..c8043efabf5a 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -36,6 +36,7 @@ enum hv_partition_type {
+ struct ms_hyperv_info {
+ 	u32 features;
+ 	u32 priv_high;
++	u32 ext_features;
+ 	u32 misc_features;
+ 	u32 hints;
+ 	u32 nested_features;
+-- 
+2.34.1
+
