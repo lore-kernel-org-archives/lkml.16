@@ -1,124 +1,284 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AA320487F;
-	Fri, 14 Mar 2025 18:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2042B204F65
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741975285; cv=none; b=f0AKWrPXlsjsM4PpjscqgTc62AYsu/ioJ2BjHwyu+hTh1DPjj3ujasxpJAQEraE80cqP3M6dkXW2v7/Rd7XuSwuJzdWKXtFpZSJGl1nLM46XWa3tEw+E9Oajil75GyDApYd29Rk9NQCNHViro3zGdOi4Rha2I2NKMkS/0TG8kjI=
+	t=1741975292; cv=none; b=spFWoKeGAJi/jQuzxGd4a766eroNwLgIKw7QLZAD+GP3Z+dB/RaOvMWvRSCf4bnvn29faTlWU90+2eN6nvaVL5wgrYwrfhprsz+yFbNnolOOy5oymL8y5mBdKwkt31oHULIgkqnCSPnONCwrOTeLJx+gCNyOak6Tu844w1fx/H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741975285; c=relaxed/simple;
-	bh=Mj9qUmLdTwKbyk2T4rHE7N4/Kk0Xg4D7AQ1z41AYH1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CumJ31SuSM2Uboi4sruF2bf6X7F71yo8ZEqupA+iGI8c99gY8NfkhT4kxx+B1S+KyTIkHmQ/m/O9Q9tAD1/zdTrQ+ITPTSZzE+SS4PeYdiIw4bChDJ8dpQue45eZNY2qju/rb3qIF96qIQ8iIWhQrMMV90fiPPrVGssbOMYItU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C6BB3a9J; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741975292; c=relaxed/simple;
+	bh=UE+LmjO480ai/cmQ99LQCl4ggioFj0kzH6oMEeEgxyM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=s1jcJv4BQDey14cEz7OC4CEU5YhxZDwYD/FkRlw192STA2Yx3fGaWMTBzhX/9ZPjeU+gzk0BAvBHuIQgmt2Oik7T0pPXGDBaEo+z+SbPoFg6UflMYsQFCnrjxj9076QCbu0w9LiQzR2iTmIRU0WjQu4/+nhoAURAJs1nTA3LOzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bdgHikAv; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6BB3a9J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741975284; x=1773511284;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Mj9qUmLdTwKbyk2T4rHE7N4/Kk0Xg4D7AQ1z41AYH1s=;
-  b=C6BB3a9Jf8M72jFVJF4FRLe3TuS/YCS28h1C1VZCekd6lCHv2ojfLdSi
-   wdgLBbPBKp8VWzNfHuX1rvC+bgJua+HgAHKRoJT+np9XHXsoChTz6TlKR
-   3jeT24Te477jboBovzxRWkiK1prEozQIhByYKyCAlfMVj0skS/LdKgAz6
-   UBDr02NxU63+q0DpA5J6ntcI+FiRj0MSoVBoPeM95LusfmHwcIUzSX2JN
-   y4HBhmubZRWs296bCd47AotI52R97gEoAferX5aVdwAfZSrHp2XX1sMMO
-   kKLAH9s2HBTyy1EsgWVOyvkkSfNIRddlCjKFuKs1eC/vzSuUyA9TpGxJO
-   Q==;
-X-CSE-ConnectionGUID: 8mG20rwFTXK3IBhBZ/c1bw==
-X-CSE-MsgGUID: vOdDbJ1VSWqHc25V8rINow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="46787351"
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="46787351"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 11:01:23 -0700
-X-CSE-ConnectionGUID: vcuAt9B4Q+S37vnK4TIgnA==
-X-CSE-MsgGUID: cTJxXrQ8TUixLi+0VRb14w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="126554866"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 11:01:20 -0700
-Date: Fri, 14 Mar 2025 20:01:17 +0200
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Lee Jones <lee@kernel.org>, giometti@enneenne.com,
-	gregkh@linuxfoundation.org, raymond.tan@intel.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] mfd: intel_ehl_pse_gpio: Introduce Intel Elkhart
- Lake PSE GPIO and TIO
-Message-ID: <Z9Ru7VHP9K7Brod4@black.fi.intel.com>
-References: <20250307052231.551737-1-raag.jadav@intel.com>
- <20250307052231.551737-2-raag.jadav@intel.com>
- <20250314124450.GP3890718@google.com>
- <Z9QxqH3DJvyW3sjo@smile.fi.intel.com>
- <20250314135735.GQ3890718@google.com>
- <Z9Q7M1Cw8X0p9eXP@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bdgHikAv"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff798e8c3bso4114416a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:01:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741975290; x=1742580090; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+x3RNoBeSKNY3yav309Zb69x4l02RtRyyB7W/znFf1I=;
+        b=bdgHikAvpoPs8GlzFP2T+v8KEDRA8xGZipH5v7Sxxdv1ds2Jt5mj4E2+hVQPozWqO/
+         BLoh3UmS+d4KpZFCsnORJ1F3TQnGaNlJAgczhokjUh6SMdh0ntlvWQ2qrOuPMit11NBd
+         Rn0qbYXq6+FYzl2qilfrIbu47H924SoYGRI7nq25r3xvwTbFaIYazhQpz7nR7Egt+bRX
+         OLd0RLyeiCUAWO5+qP7MEnQp8xqt790KuhNmWOGNGkkJMKWVDOSUmxCjBwF8ZGqwPgWT
+         Ux6bRr6Fq4UFXGA2ezlwFH22kooOirTJLkdPtSPtTHzcpVy1kbKDphkFV/+ntIvUSPn9
+         GCFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741975290; x=1742580090;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+x3RNoBeSKNY3yav309Zb69x4l02RtRyyB7W/znFf1I=;
+        b=Cn58lwZlg9XvxjfGDct+sTINCMWoS7+IGyeiKxYDIAVnGeOVzz4/p9DgIVQg7TWLZC
+         3oYgCMjReFb4fJyvIqQHn7LikCYl6mW6s9bBqNbro1FXs3FlK97BK1XE45/Ooo1n9ReV
+         j0pObD2ZAKg3J7+22HNpkXYrzC3cwA3cKLK5i39I/S+SJ8xy+V44AM2ctPHDtOVhu9e3
+         dlaOLo3lNozblZxjMMndaLneSAxOofJ/f6V/DCIHT2X5eACkTAz51vDr7Z1UYaMzA7g2
+         ECuhmcsznpZ8HiNSTApWRYOlefAS5ocpCTFCAOEHC369xzbrnFQt1xZ0mZD/5K85Rjq1
+         wmbg==
+X-Gm-Message-State: AOJu0YwdiXbGO7Ee25+LwjLNDjyKS5jnnu3UFB3HEsHS6C8q4ADz/muN
+	4GE8+RSpB8CYVmaFYUL8ydV5o+vBg/3pYl4VHbz91JEwZZbgnE7fI+dCp5XeLZsoIoyPmKXOFAs
+	51b7q6bWqUBCHA1eN4eVF/6YsRVGiDh3IJT1oiCwYyWER5sSVKeB1QSUHX4gVREbECgQDyDyHxC
+	RUdIgeOEtk5jD4+n3tY1KLoAwcPkCIGCTV3nIurfBAX+Gsyd8WppE=
+X-Google-Smtp-Source: AGHT+IGnPwDJCFasbxcqKssxJ30WYzbEPvF36jFByGyIEEosCbyc4Xg81KCKRSj0uBP83xyu6IUyrDc9GsVWGA==
+X-Received: from pjboi16.prod.google.com ([2002:a17:90b:3a10:b0:2e9:ee22:8881])
+ (user=jmattson job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:4d04:b0:2fe:b8ba:62e1 with SMTP id 98e67ed59e1d1-30151d3d6f9mr4305208a91.28.1741975290319;
+ Fri, 14 Mar 2025 11:01:30 -0700 (PDT)
+Date: Fri, 14 Mar 2025 11:00:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9Q7M1Cw8X0p9eXP@smile.fi.intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
+Message-ID: <20250314180117.740591-1-jmattson@google.com>
+Subject: [PATCH v2] KVM: x86: Provide a capability to disable APERF/MPERF read intercepts
+From: Jim Mattson <jmattson@google.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 14, 2025 at 04:20:35PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 14, 2025 at 01:57:35PM +0000, Lee Jones wrote:
-> > On Fri, 14 Mar 2025, Andy Shevchenko wrote:
-> > > On Fri, Mar 14, 2025 at 12:44:50PM +0000, Lee Jones wrote:
-> > > > On Fri, 07 Mar 2025, Raag Jadav wrote:
-> 
-> ...
-> 
-> > > > > +	ret = pci_alloc_irq_vectors(pci, 2, 2, PCI_IRQ_ALL_TYPES);
-> > > > > +	if (ret < 0)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	ret = mfd_add_devices(&pci->dev, PLATFORM_DEVID_AUTO, ehl_pse_gpio_devs,
-> > > > 
-> > > > dev_*?
-> > > 
-> > > devm_* ?
-> > 
-> > Yes, typo.
-> > 
-> > > > > +			      ARRAY_SIZE(ehl_pse_gpio_devs), pci_resource_n(pci, 0),
-> > > > > +			      pci_irq_vector(pci, 0), NULL);
-> > > > > +	if (ret)
-> > > > > +		pci_free_irq_vectors(pci);
-> > > 
-> > > Anyway, the choice as far as I understood it is motivated by usage of
-> > > pci_*_irq_vector() APIs, which are officially not manageable (however
-> > > in practice they are).
+Allow a guest to read the physical IA32_APERF and IA32_MPERF MSRs
+without interception.
 
-Are you referring to pcim_setup_msi_release()? I saw it but wasn't confident
-it is in the call path, so went with manual release instead.
+The IA32_APERF and IA32_MPERF MSRs are not virtualized. Writes are not
+handled at all. The MSR values are not zeroed on vCPU creation, saved
+on suspend, or restored on resume. No accommodation is made for
+processor migration or for sharing a logical processor with other
+tasks. No adjustments are made for non-unit TSC multipliers. The MSRs
+do not account for time the same way as the comparable PMU events,
+whether the PMU is virtualized by the traditional emulation method or
+the new mediated pass-through approach.
 
-Now that you mentioned it, will update.
+Nonetheless, in a properly constrained environment, this capability
+can be combined with a guest CPUID table that advertises support for
+CPUID.6:ECX.APERFMPERF[bit 0] to induce a Linux guest to report the
+effective physical CPU frequency in /proc/cpuinfo. Moreover, there is
+no performance cost for this capability.
 
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > > +static void ehl_pse_gpio_remove(struct pci_dev *pdev)
-> > > > > +{
-> > > > > +	mfd_remove_devices(&pdev->dev);
-> > > > > +	pci_free_irq_vectors(pdev);
-> > > > > +}
-> > > 
-> > > Same here.
-> > 
-> > Also, Greg has been quite vocal about converting PCI devices to Platform
-> > ones in the past.  We may wish to run this past him before continuing.
-> 
-> What do you refer to? Any links to read?
+Signed-off-by: Jim Mattson <jmattson@google.com>
+---
+v1 -> v2: Add {IA32_APERF,IA32_MPERF} to vmx_possible_passthrough_msrs[]
 
-Could be about faux_device, but I could be wrong since here we do use
-platform resources.
+          Check HW support for APERFMPERF before reporting the new
+	  capability bit in kvm_get_allowed_disable_exits() [Paolo]
+---
+ Documentation/virt/kvm/api.rst  | 1 +
+ arch/x86/include/asm/kvm_host.h | 1 +
+ arch/x86/kvm/svm/svm.c          | 7 +++++++
+ arch/x86/kvm/svm/svm.h          | 2 +-
+ arch/x86/kvm/vmx/vmx.c          | 6 ++++++
+ arch/x86/kvm/vmx/vmx.h          | 2 +-
+ arch/x86/kvm/x86.c              | 8 +++++++-
+ arch/x86/kvm/x86.h              | 5 +++++
+ include/uapi/linux/kvm.h        | 1 +
+ tools/include/uapi/linux/kvm.h  | 4 +++-
+ 10 files changed, 33 insertions(+), 4 deletions(-)
 
-Raag
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 2b52eb77e29c..6431cd33f06a 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -7684,6 +7684,7 @@ Valid bits in args[0] are::
+   #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
+   #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
+   #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
++  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
+ 
+ Enabling this capability on a VM provides userspace with a way to no
+ longer intercept some instructions for improved latency in some
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 0b7af5902ff7..53de91fccc20 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1380,6 +1380,7 @@ struct kvm_arch {
+ 	bool hlt_in_guest;
+ 	bool pause_in_guest;
+ 	bool cstate_in_guest;
++	bool aperfmperf_in_guest;
+ 
+ 	unsigned long irq_sources_bitmap;
+ 	s64 kvmclock_offset;
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index a713c803a3a3..5ebcbff341bc 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -111,6 +111,8 @@ static const struct svm_direct_access_msrs {
+ 	{ .index = MSR_IA32_CR_PAT,			.always = false },
+ 	{ .index = MSR_AMD64_SEV_ES_GHCB,		.always = true  },
+ 	{ .index = MSR_TSC_AUX,				.always = false },
++	{ .index = MSR_IA32_APERF,			.always = false },
++	{ .index = MSR_IA32_MPERF,			.always = false },
+ 	{ .index = X2APIC_MSR(APIC_ID),			.always = false },
+ 	{ .index = X2APIC_MSR(APIC_LVR),		.always = false },
+ 	{ .index = X2APIC_MSR(APIC_TASKPRI),		.always = false },
+@@ -1359,6 +1361,11 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
+ 	if (boot_cpu_has(X86_FEATURE_V_SPEC_CTRL))
+ 		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL, 1, 1);
+ 
++	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
++		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_APERF, 1, 0);
++		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_MPERF, 1, 0);
++	}
++
+ 	if (kvm_vcpu_apicv_active(vcpu))
+ 		avic_init_vmcb(svm, vmcb);
+ 
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 9d7cdb8fbf87..3ee2b7e07395 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -44,7 +44,7 @@ static inline struct page *__sme_pa_to_page(unsigned long pa)
+ #define	IOPM_SIZE PAGE_SIZE * 3
+ #define	MSRPM_SIZE PAGE_SIZE * 2
+ 
+-#define MAX_DIRECT_ACCESS_MSRS	48
++#define MAX_DIRECT_ACCESS_MSRS	50
+ #define MSRPM_OFFSETS	32
+ extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
+ extern bool npt_enabled;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 6c56d5235f0f..ce89881d75f7 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -186,6 +186,8 @@ static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
+ 	MSR_CORE_C3_RESIDENCY,
+ 	MSR_CORE_C6_RESIDENCY,
+ 	MSR_CORE_C7_RESIDENCY,
++	MSR_IA32_APERF,
++	MSR_IA32_MPERF,
+ };
+ 
+ /*
+@@ -7597,6 +7599,10 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
+ 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+ 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+ 	}
++	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
++		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_APERF, MSR_TYPE_R);
++		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_MPERF, MSR_TYPE_R);
++	}
+ 
+ 	vmx->loaded_vmcs = &vmx->vmcs01;
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 8b111ce1087c..abc574ceacfe 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -358,7 +358,7 @@ struct vcpu_vmx {
+ 	struct lbr_desc lbr_desc;
+ 
+ 	/* Save desired MSR intercept (read: pass-through) state */
+-#define MAX_POSSIBLE_PASSTHROUGH_MSRS	16
++#define MAX_POSSIBLE_PASSTHROUGH_MSRS	18
+ 	struct {
+ 		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
+ 		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 02159c967d29..8f3d317d2f93 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4535,6 +4535,9 @@ static u64 kvm_get_allowed_disable_exits(void)
+ {
+ 	u64 r = KVM_X86_DISABLE_EXITS_PAUSE;
+ 
++	if (boot_cpu_has(X86_FEATURE_APERFMPERF))
++		r |= KVM_X86_DISABLE_EXITS_APERFMPERF;
++
+ 	if (!mitigate_smt_rsb) {
+ 		r |= KVM_X86_DISABLE_EXITS_HLT |
+ 			KVM_X86_DISABLE_EXITS_CSTATE;
+@@ -6543,7 +6546,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 
+ 		if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
+ 		    cpu_smt_possible() &&
+-		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
++		    (cap->args[0] & ~(KVM_X86_DISABLE_EXITS_PAUSE |
++				      KVM_X86_DISABLE_EXITS_APERFMPERF)))
+ 			pr_warn_once(SMT_RSB_MSG);
+ 
+ 		if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
+@@ -6554,6 +6558,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 			kvm->arch.hlt_in_guest = true;
+ 		if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
+ 			kvm->arch.cstate_in_guest = true;
++		if (cap->args[0] & KVM_X86_DISABLE_EXITS_APERFMPERF)
++			kvm->arch.aperfmperf_in_guest = true;
+ 		r = 0;
+ disable_exits_unlock:
+ 		mutex_unlock(&kvm->lock);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 91e50a513100..0c3ac99454e5 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -488,6 +488,11 @@ static inline bool kvm_cstate_in_guest(struct kvm *kvm)
+ 	return kvm->arch.cstate_in_guest;
+ }
+ 
++static inline bool kvm_aperfmperf_in_guest(struct kvm *kvm)
++{
++	return kvm->arch.aperfmperf_in_guest;
++}
++
+ static inline bool kvm_notify_vmexit_enabled(struct kvm *kvm)
+ {
+ 	return kvm->arch.notify_vmexit_flags & KVM_X86_NOTIFY_VMEXIT_ENABLED;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 45e6d8fca9b9..b4a4eb52f6df 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -617,6 +617,7 @@ struct kvm_ioeventfd {
+ #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+ #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
+ #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
++#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
+ 
+ /* for KVM_ENABLE_CAP */
+ struct kvm_enable_cap {
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index 502ea63b5d2e..9b60f0509cdc 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -617,10 +617,12 @@ struct kvm_ioeventfd {
+ #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+ #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
+ #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
++#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
+ #define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
+                                               KVM_X86_DISABLE_EXITS_HLT | \
+                                               KVM_X86_DISABLE_EXITS_PAUSE | \
+-                                              KVM_X86_DISABLE_EXITS_CSTATE)
++					      KVM_X86_DISABLE_EXITS_CSTATE | \
++					      KVM_X86_DISABLE_EXITS_APERFMPERF)
+ 
+ /* for KVM_ENABLE_CAP */
+ struct kvm_enable_cap {
+-- 
+2.49.0.rc1.451.g8f38331e32-goog
+
