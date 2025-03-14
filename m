@@ -1,126 +1,125 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19B21DE89E;
-	Fri, 14 Mar 2025 22:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B723E1FECCE
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 22:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741990899; cv=none; b=e6UKPRRLbyBwDu0GB+AMOaVpWPIgiyhKUCbCW38khlswhdElFJBXE5+nbEXgAt826OZO1XDQZIthFPpnFRPVGl+6e5D7Oc+RuzAoRk81rz6h13lhA8SKmhG1HsCbsEuSuNI+RO6jHO6IkuMAVT9LY0EFYBzHPTmlzE0kJ1MYP08=
+	t=1741990903; cv=none; b=bGtkYWrRczgI7GG3lH4t74KJemhQcIYDwAsOWycuvpvcEiZAzVhF1bJXPwJLHu+IqrHl75cTydodUmmEtk9EB6sZsIrrf++R+C4GIfg1+Ossl3tMBOhgTI3mw7otGoy7ylfqAZ5iLRnAwAyJhKu8jA/Ehtowl9Fc1Le1SpmyxPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741990899; c=relaxed/simple;
-	bh=bNHo813I0F32BNqKbJfaolMlVwl7tD0FMX9RWCWB8Vc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mgpSMWcpIv0zUfg6KAhRWYETVOe8eu1DBEF41y339JvTd86lri8mthr0YJdJNvkSD8L75QHW2FwAM92MkwBPNtr0czRjiT3JBvTDBCQXwzIyVh5Ud8GOSkc35Imid0Q6IP4kwg2rYnNrOebCYa5L99VUIzBkKceje8ugYKleNaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nQFlgxAW; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741990903; c=relaxed/simple;
+	bh=yXi4VV69OQ5J9Ch0qeBs+FaNnX2iPv7Ofe2QeSUOJQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b2LW1a0GXVM2hiH6ZRgAgr1uZsbO3toqwcvg6TU7JVkjHhqkDP1l8NiG4CuUnJU4paAMHNJadrtFMss+GdbzZXmhkPDfcxwXuCp0c5iimUPk6bl9SJaI9v4/qCfyrhyjkmvjridfmdrhkrgHm51Zfx30wmkGB5vUtb/kLIoEQjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JPZyqGBd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQFlgxAW"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so22638701fa.2;
-        Fri, 14 Mar 2025 15:21:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741990895; x=1742595695; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bNHo813I0F32BNqKbJfaolMlVwl7tD0FMX9RWCWB8Vc=;
-        b=nQFlgxAWeRyp5XvSJy2I6SI5gWxlRZ9nIwGM8e0QHz2TlNvyKrv6ryAcEve/ZORFyk
-         P/ilmoeKl19f/IKMqVJHqcM5nA8qZUCMF9LfN/VBa0YgdNgk+LqXI+v7sCQGGIz8v1Kl
-         fIVtoIQAti9rB3+9UT43CzD+kvDrTsuhWdVgKsX8lfZORzz+2mhcr+bag8eYogkutnBY
-         /Mm5SIzeVvsSVlfkttqSETNDHqHIV1Sd+PCAwXZQbAzcgz9rP468i07Y075EIeTsG7k5
-         3WDWrsBs+ANjly7Shw93k/kOsOFzDHNFFaT9y4E1fecsdGedpfNy/QKycsD3m9ixtjpM
-         98Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741990895; x=1742595695;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bNHo813I0F32BNqKbJfaolMlVwl7tD0FMX9RWCWB8Vc=;
-        b=ZjMxqquGARzF63VwxzpQaH7b22yJm2nQKW/IJqrGZl9eBjvLBF36YLldkv0MgjzFJw
-         CprHtIKX0ZD2q+Tm/WNW8vDqnsLS5IxdHnfKWBal6Kyj8j3WOAf2+WBr4vCHX0TG7sp+
-         +Otwbbxvn5UVWJ9RHcg0cBoUBDbXLLeEoR4hWt8uGPMsKD2K7r4T57Gl67KJza9ygk/I
-         IdwEQuVdDj62Bd0V/XvgyYXbvl97j3rC2SV/kGV3XUcz3Y5vtPomPW0ivhwnU+ZRgHPZ
-         7FF5c2Z7n3SQvQCpXx48h2GOwqyYk7Ou8j1ZFbyOsMjnAQvaBhjJ9zq2RM+rXM8ol57R
-         BoIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEjAlunbZ6VH1RiZgRSDgiTXSbzZM7IbLRopv1Vso8YDRtoIIOl5x+9MMG2frxC82UIxkWVq895pV8XBY=@vger.kernel.org, AJvYcCUoTJqU2YQ2AL40wGxUFMV0G753y7ILO8o7fIxPRRuJcAs4h6TcXcPZPR2bMShggcOxKFOPUq/c4L9y@vger.kernel.org, AJvYcCUttC/SF0b+KHZ8/jOHpeipn046y22zFKBiTqUm1vUfuvINSZY9S2VAOxFg7La+sH+ObbV29uzrXkbTPhAt@vger.kernel.org, AJvYcCWTZC6OZFsB2iLW8pdedud66Pt82QGwCkahpM8w6R+S/hAbTs+3jMr/wJ01GX84Y/JBkHv0zKXGOCRYyWqbxBQ=@vger.kernel.org, AJvYcCXBKXgNeFSfSo6kFIOdF7XqA+k3AXjH+T9aSlyERoJ/G4RV8c8TMMLfAbPNw5kBgmaGoB4cGc26Y0AzoXjO@vger.kernel.org, AJvYcCXPPHcjmHg1Xw10vUdsrwjlcIBtfaVE3ja+MpuglEMmYVSsDFniBkSR/Ds++1dygyle84JqnRfAaJh5icSIf2MR@vger.kernel.org, AJvYcCXo13tZhrrRBQcMFCzy+2RCRoVqKKPftkDR5PlZ/nWLWt96YlllTD/n2toj6zZzRJHL9n7iPiPKLGTr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNCR48cdAiaMU0gYfxgmmYn79HRsAk/HObcZsWlcQei/cBr34q
-	jXXMXRtInm7JNvUwspxjtnSQb+XNxW7Iq9+S3tsNXcUEh0fIgcrAQZNu3GnSr4sWgcExx/cYODc
-	hgUo+u5Y/aro7qml/stYPT2L6td0=
-X-Gm-Gg: ASbGncudvqn4RzoEjVNw7axKkbecSbvjXSS10Kjq96ZRhLha60z+h0Q7aFFcO0fxcNg
-	oZ0z5byUS3qsURxm9QYajejBrvYzJexecJAlTDeIwqUzKwFrERXn8eFz78oMDrTgkijZP64W+5B
-	UZH82lZ00Fez5FT0bpzgEZgts7qmdfG8taa8u1OLLH4otZP9fGqk3DDWw+SWWa
-X-Google-Smtp-Source: AGHT+IGyBV9m3L4w8t2OrUSMAwxoyxvAW/4fi81XmciRP3/5Az2O5GNUknnICX9axlKWv4h/L/9eWm6e7JTJiZoyVC4=
-X-Received: by 2002:a05:651c:a0b:b0:30b:d562:c154 with SMTP id
- 38308e7fff4ca-30c4a875fe6mr14747691fa.19.1741990895355; Fri, 14 Mar 2025
- 15:21:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JPZyqGBd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDED3C4CEE3;
+	Fri, 14 Mar 2025 22:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741990903;
+	bh=yXi4VV69OQ5J9Ch0qeBs+FaNnX2iPv7Ofe2QeSUOJQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JPZyqGBdCCTlOuxqJOyOY/F0hpQQiyf/XDttYCvQLw/W9A2dB1OJBCexbEKyxnRhb
+	 V9Q5RpWD76b2LnGmJJMcyBdR6o9wxyND4oBSnPADxB5XokeViyyViTk4LgUVfteA2O
+	 tfi4zJdH4WZ1Bw/ZTnx7+ib2S8kxb8Roxgi7EMgKNg2mNQRhGQLUAdY6bXHyRbVyh0
+	 C2IgJkvfxcERKbZNyr/Fwy5qVf+VUboQatcnUpHi97UDaI4dVoCQUytBLCYd/ZA6w8
+	 rtvvHhEC/hICWn7/PsPG6AS2kj1XN9G0pfkLUer+mJKsBjFh/hWovJwyKAl5CH/mM/
+	 YkP6WZZoYMKAQ==
+Date: Fri, 14 Mar 2025 22:21:41 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Yeongjin Gil <youngjin.gil@samsung.com>
+Cc: chao@kernel.org, daehojeong@google.com,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org, sj1557.seo@samsung.com,
+	s_min.jeong@samsung.com
+Subject: Re: [PATCH] f2fs: fix to avoid atomicity corruption of atomic file
+Message-ID: <Z9Sr9cjNGHkOM74n@google.com>
+References: <CGME20250314120658epcas1p2d3ec037c294d4c907ce7fa2fe1c3aa27@epcas1p2.samsung.com>
+ <20250314120651.443184-1-youngjin.gil@samsung.com>
+ <Z9SkqFP93rWQrffm@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314-ptr-as-ptr-v3-0-e7ba61048f4a@gmail.com>
- <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com> <D8G9LZCS7ETL.9UPPQ73CAUQM@proton.me>
- <CANiq72=JCgdmd+h4_2VguOO9kxdx3OuTqUmpLix3mTLLHLKbZw@mail.gmail.com>
-In-Reply-To: <CANiq72=JCgdmd+h4_2VguOO9kxdx3OuTqUmpLix3mTLLHLKbZw@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 14 Mar 2025 18:20:59 -0400
-X-Gm-Features: AQ5f1Jp7KldemuJS7KUxPUxPs7sBfWHcTu3t4bd_hn0YFX45gGFgXjsgYG75HQw
-Message-ID: <CAJ-ks9=Ec0xLg81GUYJ07uDzwtwhFkoEdxaa3kNtV6xSjZ57MQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] rust: use strict provenance APIs
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9SkqFP93rWQrffm@google.com>
 
-On Fri, Mar 14, 2025 at 6:00=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Fri, Mar 14, 2025 at 9:18=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
-> >
-> > I don't know when we'll be bumping the minimum version. IIRC 1.85.0 is
-> > going to be in debian trixie, so eventually we could bump it to that,
-> > but I'm not sure what the time frame will be for that.
-> >
-> > Maybe we can salvage this effort by gating both the lint and the
-> > unstable features on the versions where it works? @Miguel, what's your
-> > opinion?
-> >
-> > We could even make it simple, requiring 1.84 and not bothering with the
-> > older versions.
->
-> Regarding Debian Trixie: unknown, since my understanding is that it
-> does not have a release date yet, but apparently mid May is the Hard
-> Freeze and then it may take e.g. a month or two to the release.
->
-> And when it releases, we may want to wait a while before bumping it,
-> depending on how much time has passed since Rust 1.85.0 and depending
-> on whether we managed to get e.g. Ubuntu LTSs to provide a versioned
-> package etc.
->
-> If something simple works, then let's just go for that -- we do not
-> care too much about older versions for linting purposes, since people
-> should be testing with the latest stable too anyway.
+On 03/14, Jaegeuk Kim wrote:
+> On 03/14, Yeongjin Gil wrote:
+> > In the case of the following call stack for an atomic file,
+> > FI_DIRTY_INODE is set, but FI_ATOMIC_DIRTIED is not subsequently set.
+> > 
+> > f2fs_file_write_iter
+> >   f2fs_map_blocks
+> >     f2fs_reserve_new_blocks
+> >       inc_valid_block_count
+> >         __mark_inode_dirty(dquot)
+> >           f2fs_dirty_inode
+> > 
+> > If FI_ATOMIC_DIRTIED is not set, atomic file can encounter corruption
+> > due to a mismatch between old file size and new data.
+> > 
+> > To resolve this issue, I changed to set FI_ATOMIC_DIRTIED when
+> > FI_DIRTY_INODE is set. This ensures that FI_DIRTY_INODE, which was
+> > previously cleared by the Writeback thread during the commit atomic, is
+> > set and i_size is updated.
+> > 
+> > Fixes: fccaa81de87e ("f2fs: prevent atomic file from being dirtied before commit")
+> > Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+> > Reviewed-by: Sunmin Jeong <s_min.jeong@samsung.com>
+> > Signed-off-by: Yeongjin Gil <youngjin.gil@samsung.com>
+> > ---
+> >  fs/f2fs/inode.c | 4 +---
+> >  fs/f2fs/super.c | 4 ++++
+> >  2 files changed, 5 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+> > index aa2f41696a88..83f862578fc8 100644
+> > --- a/fs/f2fs/inode.c
+> > +++ b/fs/f2fs/inode.c
+> > @@ -34,10 +34,8 @@ void f2fs_mark_inode_dirty_sync(struct inode *inode, bool sync)
+> >  	if (f2fs_inode_dirtied(inode, sync))
+> >  		return;
+> >  
+> > -	if (f2fs_is_atomic_file(inode)) {
+> > -		set_inode_flag(inode, FI_ATOMIC_DIRTIED);
+> > +	if (f2fs_is_atomic_file(inode))
+> >  		return;
+> > -	}
+> >  
+> >  	mark_inode_dirty_sync(inode);
+> >  }
+> > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> > index 397df271885c..c08d52c6467a 100644
+> > --- a/fs/f2fs/super.c
+> > +++ b/fs/f2fs/super.c
+> > @@ -1534,6 +1534,10 @@ int f2fs_inode_dirtied(struct inode *inode, bool sync)
+> >  		inc_page_count(sbi, F2FS_DIRTY_IMETA);
+> >  	}
+> >  	spin_unlock(&sbi->inode_lock[DIRTY_META]);
+> > +
+> > +	if (!ret && f2fs_is_atomic_file(inode))
+> > +		set_inode_flag(inode, FI_ATOMIC_DIRTIED);
+> > +
+> 
+> I'm not sure what's different here.
+> 
+> Before and after this patch, set_inode_flag(inode, FI_ATOMIC_DIRTIED) is called
+> only if f2fs_inode_dirtied() returns zero and f2fs_is_atomic_file(inode).
+> 
+> Note, f2fs_mark_inode_dirty_sync() looks the single caller of f2fs_inode_dirtied.
 
-It's not going to be simple because `rust_common_flags` is defined
-before the config is read, which means I'll have to sprinkle
-conditional logic in even more places to enable the lints.
+Ok, I missed another caller, f2fs_dirty_inode, per discussion with Daeho.
+Let me apply this.
 
-The most minimal version of this patch would drop all the build system
-changes and just have conditionally compiled polyfills for the strict
-provenance APIs. Are folks OK with that?
+> 
+> 
+> >  	return ret;
+> >  }
+> >  
+> > -- 
+> > 2.34.1
