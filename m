@@ -1,91 +1,77 @@
-Received: from mxout37.expurgate.net (mxout37.expurgate.net [91.198.224.37])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AE12E336A;
-	Fri, 14 Mar 2025 13:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC011FF7B5
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 13:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741960188; cv=none; b=OTfNjgYW4k4gtUvAqpZrnuP3WUMC82yJS3ZBu9xYZA1fyqqmnZZ230ACQRBBNJyI40P1JnArsX9PiAPihNU21JUyrfPzdb+V8dW2myojhlZYvMDDsJ+XebMuFJVOo6aL/rIuqPJL4NynaW7elgHNHYtdV70PSvzlkVnkHvMgWnM=
+	t=1741960203; cv=none; b=f09rTF9S7POWPFF72aJkDVNXIdtV8flgIzXl1eIsqsoizNegxZyjWx6W7VC65FHsUF78f+NJzXI0pWD1pCk/NxVQ61SIFWcaNIHrgWvzGP7ZPHMoD3aPGq0BmhwXbCb83ykDOZdXBrLsqbsPGlq3MnEdTFS3MyVvtmIExkqQPaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741960188; c=relaxed/simple;
-	bh=8/wDlzcd0n2jUA0q1fG4qnvCLt5vwQ2AQX60N3ExUgY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FhDwmhKbqdaaokM8WjzDiYfA15PLrM2IyeEQusOj57hpiTYh8Mu8EHd4CAGnNXXJphUwpAfxnZ5eycL9sn/HGf9lhQEjFwk+mjruh60bLpC8rF9eChhsBxSoZv9uVr61CRxmXVNwQH1hEh9A44eaSHoJxp4tgiqE0ITlL/pkPr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de; spf=pass smtp.mailfrom=brueckmann-gmbh.de; arc=none smtp.client-ip=91.198.224.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brueckmann-gmbh.de
-Received: from [194.37.255.9] (helo=mxout.expurgate.net)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <thomas.gessler@brueckmann-gmbh.de>)
-	id 1tt5Pu-005k7L-HR; Fri, 14 Mar 2025 14:49:38 +0100
-Received: from [217.239.223.202] (helo=zimbra.brueckmann-gmbh.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <thomas.gessler@brueckmann-gmbh.de>)
-	id 1tt5Pt-003chE-Oy; Fri, 14 Mar 2025 14:49:37 +0100
-Received: from zimbra.brueckmann-gmbh.de (localhost [127.0.0.1])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPS id 9E367CAF097;
-	Fri, 14 Mar 2025 14:49:36 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTP id 9C677CAF053;
-	Fri, 14 Mar 2025 14:49:36 +0100 (CET)
-Received: from zimbra.brueckmann-gmbh.de ([127.0.0.1])
- by localhost (zimbra.brueckmann-gmbh.de [127.0.0.1]) (amavis, port 10026)
- with ESMTP id WRq9PIR4BSAX; Fri, 14 Mar 2025 14:49:36 +0100 (CET)
-Received: from ew-linux.ew (unknown [10.0.11.14])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPSA id 872CBCAEFB5;
-	Fri, 14 Mar 2025 14:49:36 +0100 (CET)
-From: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
-To: dmaengine@vger.kernel.org
-Cc: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Marek Vasut <marex@denx.de>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: xilinx_dma: Set dma_device directions
-Date: Fri, 14 Mar 2025 14:48:47 +0100
-Message-ID: <20250314134849.703819-1-thomas.gessler@brueckmann-gmbh.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1741960203; c=relaxed/simple;
+	bh=0um3iODhdtSJSPx10NBW3eU/Ie7n0p9Y448asvFzY7k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KVBDF5qaAi3yRU/58SJkJdXvrxwKBaRL+5gP1kBH70Tn9TqelP+ZowBmYnh+TmMaMtTvYXeySMkns8/zVym+GRSxoWueTwt+xLlyt/SpDNGb9cw8OhzQ2JE7Wv+SlHNZe4RIIPrSh0Kye3qxQ4VX+UF5uY6Mo6kRYNkb2Nby8kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=lOsXBqWe; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="lOsXBqWe"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1741960199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U/5knLVWhNBfFd9leGBuomV+x3A+6TFi+unjjwXKU9A=;
+	b=lOsXBqWeOxXWT0gOrCN3WOhGLcXDVZdCKgBO8Q1mGUvv40abQIWsL7ssDOv6qdWGheoAG9
+	ezTredyQIJiwhlwKbxo51HTlHrdI5wW7lz5f6ccBvlsEBS6wOV4upPfOI0lDCKwD3qLrlv
+	4iqOEr36zm0gf+YxEeruohTXmvW36Gmrug5lB/8m5uut7hkEWL9s/YfYNpfVhdtHhmhHrG
+	SpNj/CcSrvhHCRUd+M7IPWRTVjsXFixjl62cP1UrvQIpN7mOFelLDws0e1hGJ9AC7oWEbM
+	NppZ5wfWU00hKS7BKQ333bAqfizMSk+dNjWYANtOqQ1QEl+adFwoeyEOcYscgg==
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ asahi@lists.linux.dev, Faith Ekstrand <faith.ekstrand@collabora.com>, 
+ Sven Peter <sven@svenpeter.dev>
+In-Reply-To: <20250310-apple-twiddled-modifiers-v4-1-1ccac9544808@rosenzweig.io>
+References: <20250310-apple-twiddled-modifiers-v4-1-1ccac9544808@rosenzweig.io>
+Subject: Re: [PATCH v4] drm: add modifiers for Apple GPU layouts
+Message-Id: <174196019716.15076.15894537454426268004.b4-ty@rosenzweig.io>
+Date: Fri, 14 Mar 2025 09:49:57 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-purgate-type: clean
-X-purgate: clean
-X-purgate-ID: 151534::1741960178-6A6E29C1-AE591C42/0/0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Coalesce the direction bits from the enabled TX and/or RX channels into
-the directions bit mask of dma_device. Without this mask set,
-dma_get_slave_caps() in the DMAEngine fails, which prevents the driver
-from being used with an IIO DMAEngine buffer.
 
-Signed-off-by: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
----
- drivers/dma/xilinx/xilinx_dma.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On Mon, 10 Mar 2025 15:28:02 -0400, Alyssa Rosenzweig wrote:
+> Apple GPUs support non-linear "GPU-tiled" image layouts. Add modifiers
+> for these layouts. Mesa requires these modifiers to share non-linear
+> buffers across processes, but no other userspace or kernel support is
+> required/expected.
+> 
+> These layouts are notably not used for interchange across hardware
+> blocks (e.g. with the display controller). There are other layouts for
+> that but we don't support them either in userspace or kernelspace yet
+> (even downstream), so we don't add modifiers here.
+> 
+> [...]
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_=
-dma.c
-index 108a7287f4cd..641aaf0c0f1c 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -3205,6 +3205,10 @@ static int xilinx_dma_probe(struct platform_device=
- *pdev)
- 		}
- 	}
-=20
-+	for (i =3D 0; i < xdev->dma_config->max_channels; i++)
-+		if (xdev->chan[i])
-+			xdev->common.directions |=3D xdev->chan[i]->direction;
-+
- 	if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_VDMA) {
- 		for (i =3D 0; i < xdev->dma_config->max_channels; i++)
- 			if (xdev->chan[i])
---=20
-2.43.0
+Applied, thanks!
+
+[1/1] drm: add modifiers for Apple GPU layouts
+      commit: c8619f5402cbcccfe58151b53421029852473e4c
+
+Best regards,
+-- 
+Alyssa Rosenzweig <alyssa@rosenzweig.io>
 
