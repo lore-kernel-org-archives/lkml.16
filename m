@@ -1,151 +1,97 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8301D1F8ADD
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8960D1F3D56;
+	Fri, 14 Mar 2025 11:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741952768; cv=none; b=Bq99/GyhDGzgUFiM1/f+BRGKGelLwd47c0/En69huTm5SV/Fj3y7k13LSoAopbJwdpk8QqErrtbwbCbxGOcC8d61A46//wvnv3/d/R5oO7GMgGA9eVoxocA+cn+TcfGSwThUphoBzav9b/brBn5HtZ4AtiqVYHszMI+9oVGw/fw=
+	t=1741952825; cv=none; b=m9ZwwWl1tLUCQUSopdmxGMa1sYFIqg6Uu5NiFL5FXvQTSpj0D2816UhX7rhlbhVhpLh0qw3gd5wGFY1WWL1czzxL92I0qhr2VH2oTrGybYPbMidmtysQttpXBT59daYh8dgymCbWR9xWA+WaZgVXhZNPlz0Zk8plucUAxPaWRAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741952768; c=relaxed/simple;
-	bh=1DkS2cn25IZOsOqgB34SeuFVQyVPdVpZ8rt0xOcBNOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UJmcOnaKGXHKNPIysLJWNOtVCaJhB/S4NZ5b16TnI6ZNhT26R3vq9aDocNCGM+DU7bv8EOa+ffFoGrNbsC4Cy6tLfZfvmqkeTOZO85/9o1SUCvY7SVRnaYUpspwO0hMorXFPuMe2alTQlLdCe5crui4Lv0jEo48oPsoNV+VPd7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WT1ElFHM; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741952825; c=relaxed/simple;
+	bh=eMfILifgeot0mSm0mgwERknMrMaxEIKcmKZGnclhy0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ydi28HPMSReOZwjoDKIxIvDTeXP3eq8XzJxEfAQHa9C2595DevLNh2wziM8KQF4whIJklknPYOLWQ51Phm7qsaBQKsgVaZFMi7b/Vn0CYcuPkKzNVTf3ze7/LMdE1+pNB/H5kq6CQQiCso3T3TIhFaPGLqrWS8c+C9jKX50KcGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=brbl5Kzr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J4RAkdwY; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WT1ElFHM"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EALlGJ031989;
-	Fri, 14 Mar 2025 11:45:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=rqd8nApZfIj14eDIu
-	EBmgblnXR/j8d+uZ5j9bQDSyx8=; b=WT1ElFHMDX/7O286czrd6OaiTWHnQsAO0
-	0m5xP3uJRj0YPgkdEVtOSoDm1LtR3RAAWASZwvbTbHZ0gjQl6zYAPy0GYNrf+GGC
-	toQqDNjRnkeizCCxEWFX4gCunQcAGiGv/3rq2rUV3G+kwDNlFTYM5oKYJn+qnFPs
-	TDTSZWQ4BxNIK3A7g/Hgp4CrebfALQiTFPLTuda95PuC5ZpzB6EpSPf+ZgFLPtz3
-	UalrHDvJFA7+eLK3vZ0YUa6coclJJz3LIGlh8buA9qaiUM0pzKX9EZDNc5r08ilU
-	p/2MYEBJMWttRSdZ0AqGq5JNLKdoBhzhevY+gftJUncQ04/OBGQlQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45byd8x1ma-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 11:45:49 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52EBaCqa009227;
-	Fri, 14 Mar 2025 11:45:49 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45byd8x1m8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 11:45:49 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52E8KXtN007406;
-	Fri, 14 Mar 2025 11:45:48 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45atsrepj9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 11:45:48 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52EBjiGK60096996
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Mar 2025 11:45:44 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 54D0820043;
-	Fri, 14 Mar 2025 11:45:44 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0BE3F20040;
-	Fri, 14 Mar 2025 11:45:41 +0000 (GMT)
-Received: from li-7bb28a4c-2dab-11b2-a85c-887b5c60d769.ibm.com.com (unknown [9.39.22.126])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 14 Mar 2025 11:45:40 +0000 (GMT)
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-To: maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org
-Cc: sshegde@linux.ibm.com, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        mpe@ellerman.id.au, peterz@infradead.org, fbarrat@linux.ibm.com,
-        ajd@linux.ibm.com, mahesh@linux.ibm.com, oohall@gmail.com,
-        hbathini@linux.ibm.com, dhowells@redhat.com, haren@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] powerpc: sysdev: use lock guard for mutex
-Date: Fri, 14 Mar 2025 17:15:02 +0530
-Message-ID: <20250314114502.2083434-7-sshegde@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250314114502.2083434-1-sshegde@linux.ibm.com>
-References: <20250314114502.2083434-1-sshegde@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="brbl5Kzr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J4RAkdwY"
+Date: Fri, 14 Mar 2025 12:47:00 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741952821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lPFOTPRd7Z85FnKRS0cTn5GgupBXmDpYhiKtcCMp6o0=;
+	b=brbl5Kzr7FFK1oFrldCAgathJeQCaROFZpRnUkEmMhtX6StBIfjd1rNPYkpBds/CT56svh
+	5ajvsS7TCW1GPm0MNuIiLYhCgU9oH6ykHKudw1YnJKglRQlS6B5KAwH0hOjuK95/CS6T8w
+	I6y2lMWbUviZbhH64Lo4L+jfVcYIkRQ6PsUK4wJwieT65A1hXmD/Kb0IdCQj45Y84wCD68
+	lB1r7Wt3NgRo5am22H+/y9B41fquuJrHEsCW0JJDWiFkQgXGaZHAAyJ+Mtu6fCCuVqeC0I
+	BHr5jc7pJEJ/pbLcZHT4YQhHNjvrbxYCoM0wVbhKOQ6oO/O2BZ4cc0OWN5252Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741952821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lPFOTPRd7Z85FnKRS0cTn5GgupBXmDpYhiKtcCMp6o0=;
+	b=J4RAkdwY9BJI342ztprMtM0GCDZb/4KAR0KYVuXhvmt53e3NZy1k+Hg+Nfy914XBfdRCOS
+	Zyxnl8TAf1gJq3AA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [RFC PATCH 09/10] memcg: trylock stock for objcg
+Message-ID: <20250314114700.TiLB4FH0@linutronix.de>
+References: <20250314061511.1308152-1-shakeel.butt@linux.dev>
+ <20250314061511.1308152-10-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: pyT2PcrcHIbI7Sw-c9Fuwi2J3WaI7oLp
-X-Proofpoint-ORIG-GUID: V3gfsykiNoCverF_y5D3hAhRxSGHxm8T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_04,2025-03-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- malwarescore=0 impostorscore=0 priorityscore=1501 bulkscore=0 phishscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=771 clxscore=1015 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503140091
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250314061511.1308152-10-shakeel.butt@linux.dev>
 
-use guard(mutex) for scope based resource management of mutex
-This would make the code simpler and easier to maintain.
+On 2025-03-13 23:15:10 [-0700], Shakeel Butt wrote:
+> To make objcg stock functions work without disabling irq, we need to
+> convert those function to use localtry_trylock_irqsave() instead of
+> localtry_lock_irqsave(). This patch for now just does the conversion and
+> later patch will eliminate the irq disabling code.
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> ---
+>  mm/memcontrol.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index c803d2f5e322..ba5d004049d3 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2764,7 +2764,11 @@ static void mod_objcg_state(struct obj_cgroup *objcg, struct pglist_data *pgdat,
+>  	unsigned long flags;
+>  	int *bytes;
+>  
+> -	localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
+> +	if (!localtry_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
 
-More details on lock guards can be found at
-https://lore.kernel.org/all/20230612093537.614161713@infradead.org/T/#u
+Don't you need to change the of memcg_stock.stock_lock? Didn't we
+introduce an explicit different type for this trylock feature?
 
-Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
----
- arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+> +		__mod_objcg_mlstate(objcg, pgdat, idx, nr);
+> +		return;
+> +	}
+> +
+>  	stock = this_cpu_ptr(&memcg_stock);
+>  
+>  	/*
 
-diff --git a/arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c b/arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c
-index ce6c739c51e5..bbfc7c39b957 100644
---- a/arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c
-+++ b/arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c
-@@ -75,7 +75,7 @@ static ssize_t fsl_timer_wakeup_store(struct device *dev,
- 	if (kstrtoll(buf, 0, &interval))
- 		return -EINVAL;
- 
--	mutex_lock(&sysfs_lock);
-+	guard(mutex)(&sysfs_lock);
- 
- 	if (fsl_wakeup->timer) {
- 		disable_irq_wake(fsl_wakeup->timer->irq);
-@@ -84,14 +84,12 @@ static ssize_t fsl_timer_wakeup_store(struct device *dev,
- 	}
- 
- 	if (!interval) {
--		mutex_unlock(&sysfs_lock);
- 		return count;
- 	}
- 
- 	fsl_wakeup->timer = mpic_request_timer(fsl_mpic_timer_irq,
- 						fsl_wakeup, interval);
- 	if (!fsl_wakeup->timer) {
--		mutex_unlock(&sysfs_lock);
- 		return -EINVAL;
- 	}
- 
-@@ -99,15 +97,11 @@ static ssize_t fsl_timer_wakeup_store(struct device *dev,
- 	if (ret) {
- 		mpic_free_timer(fsl_wakeup->timer);
- 		fsl_wakeup->timer = NULL;
--		mutex_unlock(&sysfs_lock);
--
- 		return ret;
- 	}
- 
- 	mpic_start_timer(fsl_wakeup->timer);
- 
--	mutex_unlock(&sysfs_lock);
--
- 	return count;
- }
- 
--- 
-2.39.3
-
+Sebastian
