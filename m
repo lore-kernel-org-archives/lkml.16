@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A31BA204582
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D26D078F2E
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:42:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974147; cv=none; b=CUPNyaab0ScyoO3z925G+cou40/AMBNF+y+bft2rXIPBZQA3feM6NEPMyfpilqT80Jn+9JDbCC4nVYxOcoCtWTgyT4osRLGeJnNSJv85Jqm0Lf56eJFH9osRbYgkCksqEzoaEQKx4kw9D7fqg634wECyvov6065inU6PjuOVmA8=
+	t=1741974149; cv=none; b=J/pTdRgTsFVA4R0WLUcvYzIHUEfx5RTi2c3UhkBepEyV9cWTkSRQ8uLM5dplHBIaeRr/gkg89lvtKRRha07ucSz84BTpG+W+IjrC5mE7QtpIhQPsjOt5qeXTh6oJB8JtvhKwTFYYyR7zbmthaFBHVGdYyiNLD7+rli3WbFV8EdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741974147; c=relaxed/simple;
-	bh=DO4ObBTU4MJ4CqUcLrkahUs2weSN5R2EbdcWni1cF9o=;
+	s=arc-20240116; t=1741974149; c=relaxed/simple;
+	bh=SYPAmNIQd2QdVNM9Lk8EyrEN1jmV3AxjZUWF8H+caUo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oedIbtB7Cp4WRNSlVaazJMq/6+y9Jmc5zHInMXP8GUq00LltbjnX5F9P3HgsyG50lAEbCjUB9y6mDXW4B5z8Rx08LEzkR1Tc6rtGDcREG6pWnyyRyf8lXhAUuawyjwhpZpZp/hkptxodoPsY4v2xI43I6Ea/J2HUe3+moWMLlfQ=
+	 In-Reply-To:Content-Type; b=owgm5auE+4jDUSMLL1QJyRizwROJMh/lI36Zrhc5Jps76gy0Do/VZ+5dPx+uBKgfEvIo0Zo0ACMsd/pNkPjYMUmbcgsCX429rvvrD7wPLsf38SF9706rgeS44lUF6SWovIaA3RY+kqsIBy39Jg6gtH6aDfnWSLNXjSEmvCLHzYo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BAC301424;
-	Fri, 14 Mar 2025 10:42:32 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7D3B1596;
+	Fri, 14 Mar 2025 10:42:36 -0700 (PDT)
 Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C96A93F673;
-	Fri, 14 Mar 2025 10:42:18 -0700 (PDT)
-Message-ID: <97aeaf87-b2db-4efb-9d81-43769c6f27b0@arm.com>
-Date: Fri, 14 Mar 2025 17:42:15 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B36C3F673;
+	Fri, 14 Mar 2025 10:42:23 -0700 (PDT)
+Message-ID: <012dfeb5-cb5f-4852-9c70-5a49ca61a754@arm.com>
+Date: Fri, 14 Mar 2025 17:42:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,8 +27,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 45/49] x86,fs/resctrl: Move the resctrl filesystem code
- to live in /fs/resctrl
+Subject: Re: [PATCH v7 46/49] x86,fs/resctrl: Remove duplicated trace header
+ files
 To: Fenghua Yu <fenghuay@nvidia.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 Cc: Reinette Chatre <reinette.chatre@intel.com>,
@@ -45,101 +45,53 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
  Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
  Shanker Donthineni <sdonthineni@nvidia.com>
 References: <20250228195913.24895-1-james.morse@arm.com>
- <20250228195913.24895-46-james.morse@arm.com>
- <901c5cca-9a9b-4c45-b7bd-e7ce48c39282@nvidia.com>
+ <20250228195913.24895-47-james.morse@arm.com>
+ <bea2a7d6-9f94-4e35-a85e-932bac0ec98a@nvidia.com>
 Content-Language: en-GB
 From: James Morse <james.morse@arm.com>
-In-Reply-To: <901c5cca-9a9b-4c45-b7bd-e7ce48c39282@nvidia.com>
+In-Reply-To: <bea2a7d6-9f94-4e35-a85e-932bac0ec98a@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Fenghua,
 
-On 06/03/2025 20:35, Fenghua Yu wrote:
+On 07/03/2025 02:32, Fenghua Yu wrote:
 > On 2/28/25 11:59, James Morse wrote:
->> Resctrl is a filesystem interface to hardware that provides cache
->> allocation policy and bandwidth control for groups of tasks or CPUs.
->>
->> To support more than one architecture, resctrl needs to live in /fs/.
->>
->> Move the code that is concerned with the filesystem interface to
->> /fs/resctrl.
+>> The copy-pasting python script harmlessly creates some empty trace
+>> point header files. Remove them.
 
->>   14 files changed, 7535 insertions(+), 7285 deletions(-)
-
-(this patch is large - please trim it in your reply!)
-
-[...]
-
-
->> diff --git a/arch/x86/kernel/cpu/resctrl/monitor_trace.h b/arch/x86/kernel/cpu/resctrl/
->> monitor_trace.h
->> index ade67daf42c2..b5a142dd0f0e 100644
->> --- a/arch/x86/kernel/cpu/resctrl/monitor_trace.h
->> +++ b/arch/x86/kernel/cpu/resctrl/monitor_trace.h
->> @@ -7,2m5 +7,11 @@
->>     #include <linux/tracepoint.h>
->>   -TRACE_EVENT(mon_llc_occupancy_limbo,
->> -        TP_PROTO(u32 ctrl_hw_id, u32 mon_hw_id, int domain_id, u64 llc_occupancy_bytes),
->> -        TP_ARGS(ctrl_hw_id, mon_hw_id, domain_id, llc_occupancy_bytes),
->> -        TP_STRUCT__entry(__field(u32, ctrl_hw_id)
->> -                 __field(u32, mon_hw_id)
->> -                 __field(int, domain_id)
->> -                 __field(u64, llc_occupancy_bytes)),
->> -        TP_fast_assign(__entry->ctrl_hw_id = ctrl_hw_id;
->> -               __entry->mon_hw_id = mon_hw_id;
->> -               __entry->domain_id = domain_id;
->> -               __entry->llc_occupancy_bytes = llc_occupancy_bytes;),
->> -        TP_printk("ctrl_hw_id=%u mon_hw_id=%u domain_id=%d llc_occupancy_bytes=%llu",
->> -              __entry->ctrl_hw_id, __entry->mon_hw_id, __entry->domain_id,
->> -              __entry->llc_occupancy_bytes)
->> -       );
+>> diff --git a/fs/resctrl/pseudo_lock_trace.h b/fs/resctrl/pseudo_lock_trace.h
+>> deleted file mode 100644
+>> index 7a6a1983953a..000000000000
+>> --- a/fs/resctrl/pseudo_lock_trace.h
+>> +++ /dev/null
+>> @@ -1,17 +0,0 @@
+>> -/* SPDX-License-Identifier: GPL-2.0 */
+>> -#undef TRACE_SYSTEM
+>> -#define TRACE_SYSTEM resctrl
 >> -
->>   #endif /* _FS_RESCTRL_MONITOR_TRACE_H */
->>     #undef TRACE_INCLUDE_PATH
->>   #define TRACE_INCLUDE_PATH .
->> +
->>   #define TRACE_INCLUDE_FILE monitor_trace
->> +
->>   #include <trace/define_trace.h>
-
-> Similarly this file doesn't define any trace event. make W=1 complains it:
+>> -#if !defined(_X86_RESCTRL_PSEUDO_LOCK_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
+>> -#define _X86_RESCTRL_PSEUDO_LOCK_TRACE_H
+>> -
+>> -#include <linux/tracepoint.h>
+>> -
+>> -#endif /* _X86_RESCTRL_PSEUDO_LOCK_TRACE_H */
+>> -
+>> -#undef TRACE_INCLUDE_PATH
+>> -#define TRACE_INCLUDE_PATH .
+>> -
+>> -#define TRACE_INCLUDE_FILE pseudo_lock_trace
+>> -
+>> -#include <trace/define_trace.h>
 > 
->                 from arch/x86/kernel/cpu/resctrl/monitor.c:32:
-> ./include/trace/stages/init.h:2:23: error: ‘str__resctrl__trace_system_name’ defined but
-> not used [-Werror=unused-const-variable=]
->     2 | #define __app__(x, y) str__##x##y
->       |                       ^~~~~
-> ./include/trace/stages/init.h:3:21: note: in expansion of macro ‘__app__’
->     3 | #define __app(x, y) __app__(x, y)
->       |                     ^~~~~~~
-> ./include/trace/stages/init.h:5:29: note: in expansion of macro ‘__app’
->     5 | #define TRACE_SYSTEM_STRING __app(TRACE_SYSTEM_VAR,__trace_system_name)
->       |                             ^~~~~
-> ./include/trace/stages/init.h:8:27: note: in expansion of macro ‘TRACE_SYSTEM_STRING’
->     8 |         static const char TRACE_SYSTEM_STRING[] =       \
->       |                           ^~~~~~~~~~~~~~~~~~~
-> ./include/trace/stages/init.h:11:1: note: in expansion of macro ‘TRACE_MAKE_SYSTEM_STR’
->    11 | TRACE_MAKE_SYSTEM_STR();
->       | ^~~~~~~~~~~~~~~~~~~~~
->   CC      fs/proc/consoles.o
-> cc1: all warnings being treated as errors
-> make[6]: *** [scripts/Makefile.build:207: arch/x86/kernel/cpu/resctrl/monitor.o] Error 1
-> make[6]: *** Waiting for unfinished jobs....
+> This patch may be merged into patch #45 to fix the compilation errors in patch #45?
 
+As a final step before merging it. Otherwise patch 45 is impossible to work with - it
+can't be reviewed, but it can be regenerated. (and the script that does that inspected to
+show I have nothing up my sleeve!).
 
-> The above two compilation errors only happen when first 45 patches are applied. The whole
-> patch set won't have the errors because patch 46 removes these empty trace events.
-> 
-> The fix is simple: just merge this patch and patch 46 together. Then there is no empty
-> trace event in trace.h files and thus no compilation errors.
-
-The intent is that these last few patches are merged together by the person that applies
-them. I thought I'd described that in the cover-letter, but that text got lost.
-
-It's like this because this patch is too large to review - but it is generated by a
-script. If I merge these patches together, then its even harder to have confidence that
-some hunk isn't getting reverted to an older version.
+The alternative is a patch that is "mostly generated, but then lightly messed with", which
+means we would want someone to double check it.
 
 
 Thanks,
