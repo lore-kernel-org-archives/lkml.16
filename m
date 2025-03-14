@@ -1,181 +1,278 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA5F1FAC59;
-	Fri, 14 Mar 2025 11:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741950896; cv=none; b=Aw9zFg+ELXoHhj+yMJk1ztLZ9iEumpQRGLNnqKbmpPB157iY8N8+2FW10YFee7pMt3JC7qMzYk28SNdEPx3bLVo+/hRDB0MiB8zArpop/jQUOMIKZiNU5v2T9ISyoyk3J0/XC4zhpMXT9UBaRFXDl8aUEGyjKOnPs7yOQvEAMvU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741950896; c=relaxed/simple;
-	bh=Yr0hqmbWxrVQ/03SzK+XDshrxrtDOeuslaazuT5dTQs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QYwQ0Yt0Vqo/+LG9/j9qKIeWyY8DqhdzqyqucZCdAqAUOagfBkfvGn5on9jf5PmE/zF4glC6vUCoSaD6BUF5+Eygq6l5klhZxt7M0UGmxb/x0LhbxxMIiAWgpINaUjwo959IQZfRo0G7mzKhJc1x5ljtUcFNIeF6DkFP1EkEFds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZDhWw4xQpz6J7rS;
-	Fri, 14 Mar 2025 19:11:40 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C6460140A70;
-	Fri, 14 Mar 2025 19:14:51 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Mar
- 2025 12:14:51 +0100
-Date: Fri, 14 Mar 2025 11:14:50 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Gregory Price <gourry@gourry.net>
-CC: <lsf-pc@lists.linux-foundation.org>, <linux-mm@kvack.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 0: ACPI and Linux Resources
-Message-ID: <20250314111450.000011f2@huawei.com>
-In-Reply-To: <Z9MWUhHmZ5ND0b_e@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
-	<Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
-	<20250313165539.000001f4@huawei.com>
-	<Z9MWUhHmZ5ND0b_e@gourry-fedora-PF4VCD3F>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F092AF1D;
+	Fri, 14 Mar 2025 11:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.167
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741951008; cv=pass; b=tAuWu3aPKOnOhG3dhWG8lJZ+CIoeGGj3A+YOmy3W5JjYkZtyUckCVF3e73EwBMi6b5/CWtdDKTkFEgHV5VTRevQok4qP7/SC2+AqjHmx8JpBTbt6glsKaNplg+e4Uq8ytcP8eC3JWBCLhn56Hv9RYNQqfVfY+b/GyxjpRU8cv+w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741951008; c=relaxed/simple;
+	bh=Y+P/W072JJIsNKDvE9Rhk/SEbvtNpoIYndiNevJ94Qo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QAPeUb+Sp12MO0Ne+M0R8J33a7HZhk4iOXawWmM/M4iuDDyfWkQ12GrASc1vfU+tcqAo48C/HtJWf7XWbB/XWLilM0kcMuZ6E27ozvG8JegC/SRjzSJSFfCgI40DXL3T0tppGCZVayT666d3+OtqUbXjJEg6IX5CAta9gDope/c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=OaIYWObV; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=PwRuUiXy; arc=pass smtp.client-ip=81.169.146.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="OaIYWObV";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="PwRuUiXy"
+ARC-Seal: i=1; a=rsa-sha256; t=1741951001; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=ool5veCsj6mh0euAIzzgodN/aWwCxcIzqXcFgGxgFR583Z1bSLHR+W57I0e4FobRp/
+    WapLPaUXR7m6j8oT2vNq50j2WSSS4OXeq/qP2rjVDJaUdOhRpafjxcnPnhcellDdLfdT
+    k3oYeNUh9Q/9cuVT1Jg8epo1+4gbpffxK3pv6gfX/Oprre8Ro2tXrQcJ2aZbMbFUh4BH
+    rMZLt4aAorZDEXBhFXKGyRr/T0oju7OUZoY1LMQrYfnLPoHQNxMq6f0kXjyK++Hc+c5C
+    tbEhsayrDv5v4b7RkURlTZr59B/K0L1ULYTy7Tp/g1Mpc5pst1Ouzb62QhQXduJiS+gk
+    RE7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1741951001;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=DB6vKemOe/bk+9eGpBMhPX4GaOKT7vUnTvDqhO8T5mY=;
+    b=X46gtomKaW3hW+DOHc2npBb6d1p+EBwkanRwg/vRC0ZoSroD1pU/kzZYJpE28dl0IX
+    ckjsM/OgH/SKUbNDHAYupP+2WV+9FikXeChHOE8KRX+H5BcRTf4YYWsDcln6MZsYgXle
+    ekxdfj3SGJGjF+bY2biVWpJaXhCrFCJYP02Qo5TUiE8jHoP/VbaxHCuBWVWw8MGeOjPD
+    XWuN4plX8JT2Ae60wHpb21kBqLm/MXhktcyIyRfHO6rlZRMTaj9uV1JY29Iz0TrBYGso
+    7Gy+DVlHi4aSes6Eg2xyWYOICwaykE4XQb3I5W/bY7oCC/CBFK3Hnl3UVn2mtlBg1ggb
+    mfDQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1741951001;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=DB6vKemOe/bk+9eGpBMhPX4GaOKT7vUnTvDqhO8T5mY=;
+    b=OaIYWObV6v8G6JABuOlye+QKOmMO1j6eZafJE2QAdTNVnL2/EPnvbBI0NWKgA9RLAC
+    vIJJNH0Ip4nHfJ1Jou0QEG4vnyy/shqnmqZLwGn2bCl/v8S5aWetuO8vHFOhsL0hX+54
+    jMtsmP7tet6m0OPtdMsiFtJ1VV7A2SYSvihME/iEMKSkFoYgsr5lcXmXini/rymHUonA
+    wzxN/7JvyjOzJ5zbXSoGpWmDsjI+7oKqN/Q1Pg+oVjePZMSKBFl9LJNyMvpi9lt0aBgl
+    aqgBO4tGs7Nc+BoaLUnXPWq6FlF6LNggbaswRSAC4ck7N2ousdbwio1atxdmP0xIEM1p
+    Jwqg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1741951001;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=DB6vKemOe/bk+9eGpBMhPX4GaOKT7vUnTvDqhO8T5mY=;
+    b=PwRuUiXytdzmvE09G/4EVbbpK4bxuBld7/iDgKoXhvuaOu2cjNzfN6WVp8wrTujtOH
+    Z0gM8qkhFAI0yAyofuDQ==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b3512EBGfts6
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Fri, 14 Mar 2025 12:16:41 +0100 (CET)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with smtp (Exim 4.96)
+	(envelope-from <michael@a98shuttle.de>)
+	id 1tt31s-0000Ix-1D;
+	Fri, 14 Mar 2025 12:16:40 +0100
+Received: (nullmailer pid 84477 invoked by uid 502);
+	Fri, 14 Mar 2025 11:16:40 -0000
+From: Michael Klein <michael@fossekall.de>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [net-next,v2,2/2] net: phy: realtek: Add support for PHY LEDs on RTL8211E
+Date: Fri, 14 Mar 2025 12:15:45 +0100
+Message-Id: <20250314111545.84350-3-michael@fossekall.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250314111545.84350-1-michael@fossekall.de>
+References: <20250314111545.84350-1-michael@fossekall.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, 13 Mar 2025 13:30:58 -0400
-Gregory Price <gourry@gourry.net> wrote:
+Like the RTL8211F, the RTL8211E PHY supports up to three LEDs.
+Add netdev trigger support for them, too.
 
-> On Thu, Mar 13, 2025 at 04:55:39PM +0000, Jonathan Cameron wrote:
-> > 
-> > Maybe ignore Generic Initiators for this doc.  They are relevant for
-> > CXL but in the fabric they only matter for type 1 / 2 devices not
-> > memory and only if the BIOS wants to do HMAT for end to end.  Gets
-> > more fun when they are in the host side of the root bridge.
-> >  
-> 
-> Fair, I wanted to reference the proposals but I personally don't have a
-> strong understanding of this yet. Dave Jiang mentioned wanting to write
-> some info on CDAT with some reference to the Generic Port work as well.
-> 
-> Some help understanding this a little better would be very much
-> appreciated, but I like your summary below. Noted for updated version.
-> 
-> > # Generic Port
-> > 
-> > In the scenario where CXL memory devices are not present at boot, or
-> > not configured by the BIOS or he BIOS has not provided full HMAT
-> > descriptions for the configured memory, we may still want to
-> > generate proximity domain configurations for those devices.
-> > The Generic Port structures are intended to fill this gap, so
-> > that performance information can still be utilized when the
-> > devices are available at runtime by combining host information
-> > with that discovered from devices.
-> > 
-> > Or just 
-> > # Generic Ports
-> > 
-> > These are fun ;)
-> >  
-> 
-> > > 
-> > > ====
-> > > HMAT
-> > > ====
-> > > The Heterogeneous Memory Attributes Table contains information such as
-> > > cache attributes and bandwidth and latency details for memory proximity
-> > > domains.  For the purpose of this document, we will only discuss the
-> > > SSLIB entry.  
-> > 
-> > No fun. You miss Intel's extensions to memory-side caches ;)
-> > (which is wise!)
-> >   
-> 
-> Yes yes, but I'm trying to be nice. I'm debating on writing the Section
-> 4 interleave addendum on Zen5 too :P
+Signed-off-by: Michael Klein <michael@fossekall.de>
+---
+ drivers/net/phy/realtek/realtek_main.c | 106 +++++++++++++++++++++++--
+ 1 file changed, 100 insertions(+), 6 deletions(-)
 
-What do they get up to?  I've not seen that one yet!
-
-May be a case of 'Hold my beer' for these crazies.
-
-
-> 
-> > > ==================
-> > > NUMA node creation
-> > > ===================
-> > > NUMA nodes are *NOT* hot-pluggable.  All *POSSIBLE* NUMA nodes are
-> > > identified at `__init` time, more specifically during `mm_init`.
-> > > 
-> > > What this means is that the CEDT and SRAT must contain sufficient
-> > > `proximity domain` information for linux to identify how many NUMA
-> > > nodes are required (and what memory regions to associate with them).  
-> > 
-> > Is it worth talking about what is effectively a constraint of the spec
-> > and what is a Linux current constraint?
-> > 
-> > SRAT is only ACPI defined way of getting Proximity nodes. Linux chooses
-> > to at most map those 1:1 with NUMA nodes. 
-> > CEDT adds on description of SPA ranges where there might be memory that Linux
-> > might want to map to 1 or more NUMA nodes
-> >  
-> 
-> Rather than asking if it's worth talking about, I'll spin that around
-> and ask what value the distinction adds.  The source of the constraint
-> seems less relevant than "All nodes must be defined during mm_init by
-> something - be it ACPI or CXL source data".
-> 
-> Maybe if this turns into a book, it's worth breaking it out for
-> referential purposes (pointing to each point in each spec).
-
-Fair point.  It doesn't add much.
-
-> 
-> > > 
-> > > Basically, the heuristic is as follows:
-> > > 1) Add one NUMA node per Proximity Domain described in SRAT  
-> > 
-> >     if it contains, memory, CPU or generic initiator. 
-> >   
-> 
-> noted
-> 
-> > > 2) If the SRAT describes all memory described by all CFMWS
-> > >    - do not create nodes for CFMWS
-> > > 3) If SRAT does not describe all memory described by CFMWS
-> > >    - create a node for that CFMWS
-> > > 
-> > > Generally speaking, you will see one NUMA node per Host bridge, unless
-> > > inter-host-bridge interleave is in use (see Section 4 - Interleave).  
-> > 
-> > I just love corners: QoS concerns might mean multiple CFMWS and hence
-> > multiple nodes per host bridge (feel free to ignore this one - has
-> > anyone seen this in the wild yet?)  Similar mess for properties such
-> > as persistence, sharing etc.  
-> 
-> This actually come up as a result of me writing this - this does exist
-> in the wild and is causing all kinds of fun on the weighted_interleave
-> functionality.
-> 
-> I plan to come back and add this as an addendum, but probably not until
-> after LSF.
-> 
-> We'll probably want to expand this into a library of case studies that
-> cover these different choices - in hopes of getting some set of
-> *suggested* configurations for platform vendors to help play nice with
-> linux (especially for things that actually consume these blasted nodes).
-
-Agreed.  We'll be looking back on this in a year or so and thinking, wasn't
-life nice an simple back then!
-
-Jonathan
-
-
-> 
-> ~Gregory
-> 
+diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+index abea2291b0f4..ade265cc13f3 100644
+--- a/drivers/net/phy/realtek/realtek_main.c
++++ b/drivers/net/phy/realtek/realtek_main.c
+@@ -37,6 +37,20 @@
+ #define RTL8211E_TX_DELAY			BIT(12)
+ #define RTL8211E_RX_DELAY			BIT(11)
+ 
++#define RTL8211E_LEDCR_EXT_PAGE			0x2c
++
++#define RTL8211E_LEDCR1				0x1a
++#define RTL8211E_LEDCR1_ACT_TXRX		BIT(4)
++#define RTL8211E_LEDCR1_MASK			BIT(4)
++#define RTL8211E_LEDCR1_SHIFT			1
++
++#define RTL8211E_LEDCR2				0x1c
++#define RTL8211E_LEDCR2_LINK_1000		BIT(2)
++#define RTL8211E_LEDCR2_LINK_100		BIT(1)
++#define RTL8211E_LEDCR2_LINK_10			BIT(0)
++#define RTL8211E_LEDCR2_MASK			GENMASK(2, 0)
++#define RTL8211E_LEDCR2_SHIFT			4
++
+ #define RTL8211F_PHYCR1				0x18
+ #define RTL8211F_PHYCR2				0x19
+ #define RTL8211F_INSR				0x1d
+@@ -113,7 +127,8 @@
+ #define RTL_8221B_VN_CG				0x001cc84a
+ #define RTL_8251B				0x001cc862
+ 
+-#define RTL8211F_LED_COUNT			3
++/* RTL8211E and RTL8211F support up to three LEDs */
++#define RTL8211x_LED_COUNT			3
+ 
+ MODULE_DESCRIPTION("Realtek PHY driver");
+ MODULE_AUTHOR("Johnson Leung");
+@@ -534,7 +549,7 @@ static int rtl821x_resume(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
+-static int rtl8211f_led_hw_is_supported(struct phy_device *phydev, u8 index,
++static int rtl8211x_led_hw_is_supported(struct phy_device *phydev, u8 index,
+ 					unsigned long rules)
+ {
+ 	const unsigned long mask = BIT(TRIGGER_NETDEV_LINK_10) |
+@@ -553,9 +568,11 @@ static int rtl8211f_led_hw_is_supported(struct phy_device *phydev, u8 index,
+ 	 *      rates and Active indication always at all three 10+100+1000
+ 	 *      link rates.
+ 	 * This code currently uses mode B only.
++	 *
++	 * RTL8211E PHY LED has one mode, which works like RTL8211F mode B.
+ 	 */
+ 
+-	if (index >= RTL8211F_LED_COUNT)
++	if (index >= RTL8211x_LED_COUNT)
+ 		return -EINVAL;
+ 
+ 	/* Filter out any other unsupported triggers. */
+@@ -574,7 +591,7 @@ static int rtl8211f_led_hw_control_get(struct phy_device *phydev, u8 index,
+ {
+ 	int val;
+ 
+-	if (index >= RTL8211F_LED_COUNT)
++	if (index >= RTL8211x_LED_COUNT)
+ 		return -EINVAL;
+ 
+ 	val = phy_read_paged(phydev, 0xd04, RTL8211F_LEDCR);
+@@ -607,7 +624,7 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
+ 	const u16 mask = RTL8211F_LEDCR_MASK << (RTL8211F_LEDCR_SHIFT * index);
+ 	u16 reg = 0;
+ 
+-	if (index >= RTL8211F_LED_COUNT)
++	if (index >= RTL8211x_LED_COUNT)
+ 		return -EINVAL;
+ 
+ 	if (test_bit(TRIGGER_NETDEV_LINK_10, &rules))
+@@ -630,6 +647,80 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
+ 	return phy_modify_paged(phydev, 0xd04, RTL8211F_LEDCR, mask, reg);
+ }
+ 
++static int rtl8211e_led_hw_control_get(struct phy_device *phydev, u8 index,
++				       unsigned long *rules)
++{
++	int ret;
++	u16 cr1, cr2;
++
++	if (index >= RTL8211x_LED_COUNT)
++		return -EINVAL;
++
++	ret = rtl8211e_read_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE, RTL8211E_LEDCR1);
++	if (ret < 0)
++		return ret;
++
++	cr1 = ret >> RTL8211E_LEDCR1_SHIFT * index;
++	if (cr1 & RTL8211E_LEDCR1_ACT_TXRX) {
++		set_bit(TRIGGER_NETDEV_RX, rules);
++		set_bit(TRIGGER_NETDEV_TX, rules);
++	}
++
++	ret = rtl8211e_read_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE, RTL8211E_LEDCR2);
++	if (ret < 0)
++		return ret;
++
++	cr2 = ret >> RTL8211E_LEDCR2_SHIFT * index;
++	if (cr2 & RTL8211E_LEDCR2_LINK_10)
++		set_bit(TRIGGER_NETDEV_LINK_10, rules);
++
++	if (cr2 & RTL8211E_LEDCR2_LINK_100)
++		set_bit(TRIGGER_NETDEV_LINK_100, rules);
++
++	if (cr2 & RTL8211E_LEDCR2_LINK_1000)
++		set_bit(TRIGGER_NETDEV_LINK_1000, rules);
++
++	return ret;
++}
++
++static int rtl8211e_led_hw_control_set(struct phy_device *phydev, u8 index,
++				       unsigned long rules)
++{
++	const u16 cr1mask = RTL8211E_LEDCR1_MASK << (RTL8211E_LEDCR1_SHIFT * index);
++	const u16 cr2mask = RTL8211E_LEDCR2_MASK << (RTL8211E_LEDCR2_SHIFT * index);
++	u16 cr1 = 0, cr2 = 0;
++	int ret;
++
++	if (index >= RTL8211x_LED_COUNT)
++		return -EINVAL;
++
++	if (test_bit(TRIGGER_NETDEV_RX, &rules) ||
++	    test_bit(TRIGGER_NETDEV_TX, &rules)) {
++		cr1 |= RTL8211E_LEDCR1_ACT_TXRX;
++	}
++
++	cr1 <<= RTL8211E_LEDCR1_SHIFT * index;
++	ret = rtl8211e_modify_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
++				       RTL8211E_LEDCR1, cr1mask, cr1);
++	if (ret < 0)
++		return ret;
++
++	if (test_bit(TRIGGER_NETDEV_LINK_10, &rules))
++		cr2 |= RTL8211E_LEDCR2_LINK_10;
++
++	if (test_bit(TRIGGER_NETDEV_LINK_100, &rules))
++		cr2 |= RTL8211E_LEDCR2_LINK_100;
++
++	if (test_bit(TRIGGER_NETDEV_LINK_1000, &rules))
++		cr2 |= RTL8211E_LEDCR2_LINK_1000;
++
++	cr2 <<= RTL8211E_LEDCR2_SHIFT * index;
++	ret = rtl8211e_modify_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
++				       RTL8211E_LEDCR2, cr2mask, cr2);
++
++	return ret;
++}
++
+ static int rtl8211e_config_init(struct phy_device *phydev)
+ {
+ 	const u16 delay_mask = RTL8211E_CTRL_DELAY |
+@@ -1405,6 +1496,9 @@ static struct phy_driver realtek_drvs[] = {
+ 		.resume		= genphy_resume,
+ 		.read_page	= rtl821x_read_page,
+ 		.write_page	= rtl821x_write_page,
++		.led_hw_is_supported = rtl8211x_led_hw_is_supported,
++		.led_hw_control_get = rtl8211e_led_hw_control_get,
++		.led_hw_control_set = rtl8211e_led_hw_control_set,
+ 	}, {
+ 		PHY_ID_MATCH_EXACT(0x001cc916),
+ 		.name		= "RTL8211F Gigabit Ethernet",
+@@ -1418,7 +1512,7 @@ static struct phy_driver realtek_drvs[] = {
+ 		.read_page	= rtl821x_read_page,
+ 		.write_page	= rtl821x_write_page,
+ 		.flags		= PHY_ALWAYS_CALL_SUSPEND,
+-		.led_hw_is_supported = rtl8211f_led_hw_is_supported,
++		.led_hw_is_supported = rtl8211x_led_hw_is_supported,
+ 		.led_hw_control_get = rtl8211f_led_hw_control_get,
+ 		.led_hw_control_set = rtl8211f_led_hw_control_set,
+ 	}, {
+-- 
+2.39.5
 
