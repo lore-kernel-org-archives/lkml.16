@@ -1,156 +1,71 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15CF1A23AA
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919F11ACEA5
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741940866; cv=none; b=o+7Xmmhqb0Znpy+k27s/hAl0yZrUe51FkgDMZTEDPKS0MuEgPDFv2tjkGY2ga9mEoZTVcPx3d+dk4mfjIUXM0yO7x0aTc8x4S4UEY/aYy/u0SXGpNs6UTi5A5on8NNVsI1kRyC77gkrjswzd6BvI1uE2I1t+hQ0OUlyFjyoONq8=
+	t=1741940872; cv=none; b=fOcGbfQrpopEWuTUtLgjZMsBPBMuSRMzEgCZfMG5C4F0qByGaUMYT0IY54Yxgbc5A+Guy43fXYoIUSJnjwgeEGQpKIo54V/738ih1OdLngP8HDvaBdWhi4G62dwSiZenNc/FHshd5YmvLfnfhKZCLhrwQWjwKdCpmxc+cCBMfNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741940866; c=relaxed/simple;
-	bh=M0qV+T0e9lTbs6LgBpVvFlT54WXYpOStA4hJ0BfvdEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XvLv/1gyj52XJIQoQ+SMWdAl+O9sqg9BHgrhMxFkn+XkD6AYJaJycP0ira2fJOrb2FwVekLIEKkI7qkhIEtB3Zgds9YycpeFcoD4Tw619W43+89sP/SxBs4ylXxwxaXUQOY+LD64nBYZQGhQiV2pE114+PQ/UR1CucMga2SJtFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NIyuv0no; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741940872; c=relaxed/simple;
+	bh=ST0ZYCW8jN149A5ml72oZoOSSrjurqVZ9DLP9wFKBGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dd2D5MHqWhGkYGdqbuD/dk2Vol1CrRhPEonSpoxKBwH2mYf+p1gun2e8jk6BKFyjPH9Op8NgFpGy/M5fFqWbLLQHdXmLVultHQ2+rUiN60QYvBetdf2KkWp+RPOZ3rpIpja1mC+AVfvI+cZRgMhQ7igzwJeo+kHzAfeBzucr1Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkQGGy26; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NIyuv0no"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5499c8fa0f3so2022023e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 01:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741940863; x=1742545663; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AIazsbhGjTnWVs4powPGcBo+ahU9A4azfZMflVf9GOM=;
-        b=NIyuv0noqkjgWjeY3l5wyiGXiv7C/n6qbRj+6jSfWsnAhEiB65CSQ4poXUbQp7JyFA
-         BPH8eESAK4jD3BvDyOfKTFV1R9+dwf642Xu5aty2d44KFVHjWwNpofCkFD0XuXGrsm2Z
-         tM+t8sCdsbUnk3NxkN0AS5uEgu7Wts9EUyHtc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741940863; x=1742545663;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AIazsbhGjTnWVs4powPGcBo+ahU9A4azfZMflVf9GOM=;
-        b=BLPj4gMZa5WpwPoHyebLEU3QN9UfUd3bcXmElw43VG4owesyR41Mg3AoeIhcllqVjK
-         e49DrCwllugSSeS16gFf57wL3tVLyjusF4SmqwQH41YPV6/FTTB3r3PIznl5zIJP3K2l
-         ewtv064K52YhDuTOrJNP6rHWdAICJ9RNFTtlb7XFOcZfxyW1KOOZXQ9PTRk07eZ+HuEQ
-         KYZ9uTnPNHdUzhQUibk4npwyvTK4AgQFWTMII5HOhi7NWTtxbTHpU3JnqVzrxPpHxk3m
-         +hIVB5kFUUrPmg0/r5LYeiZS2wF1BEhcroNvUX/tZYccpv4G1Kzz3yrdB/Hh966GOdku
-         7Nwg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhZPkKv4z1d1ip1qdLivIs2arwYHU2U+0il3P3MjJaUpBgLLoLTEGuMtzq2Eo7t+l0PllqKnkGQJF1TXk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHKzgojh6Jmuoh1pmz61y3Z8Qgt24tsRsJSBXjwid4a0vO7r9r
-	TZ3O6BRPBNLo+EAmWGI8O3K8qAEbOcbhguOfUudzFa5XHukN1Lu0Y09RhhmyCUbDJdsOfYSnS/y
-	62P5xGvddqQfU5adFeNzg/zr92SYhM329lsWo
-X-Gm-Gg: ASbGncuIKZh7nA7reqXRlXhlenI+imm+B5ADTM+90miH4EEfbURReKRVXfrnr+pqgnb
-	B0te8RBQTS8xETmmnCcmWCU3szQ3w7K/HcIjq2b9vZi9+kWQJ1Re+oN15LpRYHaElb2X2hJjVan
-	T/KtYUEBIzGWmpYnTnpW2KCR3yQze4cjLDUvTWH/qvU5amlaHek5G/
-X-Google-Smtp-Source: AGHT+IFNFAiq0DF0mxEisHTLx9G59G5mtBKcvgViPsH0J58VO/6T1UIYLgI9JMkclJbxf4qIJjWLMm8EKW+D8w91aec=
-X-Received: by 2002:a05:6512:2245:b0:549:4d73:641b with SMTP id
- 2adb3069b0e04-549c398d3bdmr568085e87.52.1741940863125; Fri, 14 Mar 2025
- 01:27:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkQGGy26"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A938C4AF0D;
+	Fri, 14 Mar 2025 08:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741940872;
+	bh=ST0ZYCW8jN149A5ml72oZoOSSrjurqVZ9DLP9wFKBGY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=rkQGGy26LO8E2oSDX6DI2l0yMInAdP9mkVisFXYzkT3iwbDL7UGWxCqUkPJGeUIGg
+	 dbMSp98tdj2HxmGH++We58vRJLCtzEBsGNd8LaRMCZsFPkbTtDHRzk2z6XVjWnGmJv
+	 p6WwzCegWG/nPl0EPEpykZaLAGQ0sCo5wvykco5PVw7sb0dbUynr0AWYaVTn0uP8lc
+	 SR8gbCyekuTr32yhhGKD2Ng20zr/fACj6Az2E9+pBxYXKP0A4W9cM/Nnwq7bO6XUIi
+	 YLDdS/MYZyZw3OPxXWTExPa8f0YQLrvK2Ed5BzJrY8aC8Tffm1xThllHf7SVaR8zx5
+	 sX1+iYgWYWTQA==
+Date: Fri, 14 Mar 2025 08:27:48 +0000
+From: Lee Jones <lee@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Pavel Machek <pavel@ucw.cz>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] LEDs fixes for v6.14
+Message-ID: <20250314082748.GI3645863@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314073307.25092-1-Lu.Tang@mediatek.com>
-In-Reply-To: <20250314073307.25092-1-Lu.Tang@mediatek.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Fri, 14 Mar 2025 16:27:32 +0800
-X-Gm-Features: AQ5f1Jpo3FChFigHgYdppgke4q0-o7VP4uIqPhGPsM2p4V783Z7jAOTWY1--PXQ
-Message-ID: <CAGXv+5EzdMtOXotGUNdwdP-cKPwMccH6kGDifpg+WgjX_2z2VQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Add PMIC and SPMI driver for mt8196
-To: "Lu.Tang" <Lu.Tang@mediatek.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Chen Zhong <chen.zhong@mediatek.com>, Sen Chu <shen.chu@mediatek.com>, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, Project_Global_Chrome_Upstream_Group@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 14, 2025 at 3:56=E2=80=AFPM Lu.Tang <Lu.Tang@mediatek.com> wrot=
-e:
->
-> This series is based on linux-next.
->
-> Changes in v0:
-> - Modify SPMI driver for mt8196
-> - Add SPMI PMIC mfd driver
-> - Add PMIC regulator driver for mt8196
->
-> *** BLURB HERE ***
->
-> Lu.Tang (5):
->   pmic: mediatek: Add pmic auxadc driver
->   pmic: mediatek: Add pmic regulator driver
->   pmic: mediatek: Add spmi pmic mfd driver
->   spmi: mediatek: modify spmi dirver for mt8196
->   dt-bindings: pmic: mediatek: Add pmic documents
+Good morning Linus,
 
-You are adding three PMICs at the same time. Please separate each
-patch in this series so that it is one patch per type per PMIC.
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-ChenYu
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
+are available in the Git repository at:
 
->  .../iio/adc/mediatek,spmi-pmic-auxadc.yaml    |   31 +
->  .../bindings/input/mediatek,pmic-keys.yaml    |    1 +
->  .../bindings/mfd/mediatek,mt6685.yaml         |   50 +
->  .../bindings/mfd/mediatek,spmi-pmic.yaml      |  173 +++
->  .../pinctrl/mediatek,mt65xx-pinctrl.yaml      |    1 +
->  drivers/iio/adc/Kconfig                       |   10 +
->  drivers/iio/adc/Makefile                      |    1 +
->  drivers/iio/adc/mtk-spmi-pmic-adc.c           |  576 +++++++++
->  drivers/mfd/Kconfig                           |   26 +
->  drivers/mfd/Makefile                          |    2 +
->  drivers/mfd/mt6685-core.c                     |   83 ++
->  drivers/mfd/mtk-spmi-pmic.c                   |  518 ++++++++
->  drivers/regulator/Kconfig                     |   34 +
->  drivers/regulator/Makefile                    |    3 +
->  drivers/regulator/mt6316-regulator.c          |  381 ++++++
->  drivers/regulator/mt6363-regulator.c          | 1106 +++++++++++++++++
->  drivers/regulator/mt6373-regulator.c          |  826 ++++++++++++
->  drivers/spmi/spmi-mtk-pmif.c                  | 1040 +++++++++++++++-
->  include/linux/mfd/mt6363/core.h               |  134 ++
->  include/linux/mfd/mt6363/registers.h          |  168 +++
->  include/linux/mfd/mt6373/core.h               |   94 ++
->  include/linux/mfd/mt6373/registers.h          |   53 +
->  include/linux/regulator/mt6316-regulator.h    |   48 +
->  include/linux/regulator/mt6363-regulator.h    |  424 +++++++
->  include/linux/regulator/mt6373-regulator.h    |  318 +++++
->  25 files changed, 6037 insertions(+), 64 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/mediatek,sp=
-mi-pmic-auxadc.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/mediatek,mt6685=
-.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/mediatek,spmi-p=
-mic.yaml
->  create mode 100644 drivers/iio/adc/mtk-spmi-pmic-adc.c
->  create mode 100644 drivers/mfd/mt6685-core.c
->  create mode 100644 drivers/mfd/mtk-spmi-pmic.c
->  create mode 100644 drivers/regulator/mt6316-regulator.c
->  create mode 100644 drivers/regulator/mt6363-regulator.c
->  create mode 100644 drivers/regulator/mt6373-regulator.c
->  create mode 100644 include/linux/mfd/mt6363/core.h
->  create mode 100644 include/linux/mfd/mt6363/registers.h
->  create mode 100644 include/linux/mfd/mt6373/core.h
->  create mode 100644 include/linux/mfd/mt6373/registers.h
->  create mode 100644 include/linux/regulator/mt6316-regulator.h
->  create mode 100644 include/linux/regulator/mt6363-regulator.h
->  create mode 100644 include/linux/regulator/mt6373-regulator.h
->
-> --
-> 2.46.0
->
->
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/leds.git tags/leds-fixes-6.14
+
+for you to fetch changes up to c72e455b89f216b43cd0dbb518036ec4c98f5c46:
+
+  leds: leds-st1202: Fix NULL pointer access on race condition (2025-02-28 09:18:37 +0000)
+
+----------------------------------------------------------------
+- Fix NULL pointer in STMicroelectronics LED1202 LED support
+
+----------------------------------------------------------------
+Manuel Fombuena (1):
+      leds: leds-st1202: Fix NULL pointer access on race condition
+
+ drivers/leds/leds-st1202.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+-- 
+Lee Jones [李琼斯]
