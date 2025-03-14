@@ -1,119 +1,180 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66FD1F957;
-	Fri, 14 Mar 2025 17:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF16C1F957;
+	Fri, 14 Mar 2025 17:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741972810; cv=none; b=qOwZi0X9TdWNEhEtw4dFv58S6TnjZS139u9TebIVhiomdnROgORS+aXewZScyESV3myFNzD0MrHK+fMkOHm9Ze2WgqYCsSPb7qGeoBeQw+jwfF0SDi1zc5lsbRujT/xIAXlm1f0UymnyjVbiKOvG3VErd7QAfrUA0EbAOJKpyKo=
+	t=1741972927; cv=none; b=Ae2z6rGniFYBvEs9Ge+UAqRx89GIMTranOPCdI4q6vKKrBpjY9jCSi7TRL8nVFfS5pbtwal2Chw4S6c+CYUSQSENo9SXQJIsdTOmZEyAmy9Q6IQJ5ELLU/yYpZQMimGu+ZBqa1j/WNT/lRUJSsemGR2Bn7j5BA0rcwCzZWrg1oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741972810; c=relaxed/simple;
-	bh=hBCkIy161593SDro4nXEJtezsRYeIUGUIUSdstTYZdU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MFsezXYEwInSD92gRGcjWTggyQm514LTN/kz8MZFWkrz2sXIjpeyuOn/mvL2rVpS1iD1ZVi4akEpzjooyLFq62yezof9k9w9drZroij1qb51e1ocoXT2gFnhnx9rnE7S/YhbnrvbfgLhpEpdj8+ONNiSfSBO1H6j7cYrKGHtfrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=dcCJwOwv; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1741972927; c=relaxed/simple;
+	bh=Qpn+bG8c+G44s5nAxOQUaHI/oGNgdPaCr4Uit8/ENoA=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dX7y8T2GsH4RCBbC56XMsGDq7Vq1UCwM1PvGEPdemoFIIX8ix1lzKE4JEm4Sn6eeH+eESea9jWO99WOKGVjOxD/+iccpZ/7r0KPumE5QVjw6/gUv9//5vPWC+rrOc1WIsIxOnmxLTNIRR4BYF2ZhXYhnHkvSSARVuf6OUSz5MDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J1advImG; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="dcCJwOwv"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EFvxnB016602;
-	Fri, 14 Mar 2025 13:19:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=/44YR
-	xSL9Q8uuoRaHgYdki5Nl3NKnqHtGIMCXJ2oTrg=; b=dcCJwOwvGobsS1uRjnjp+
-	BBm7USoHz1wVvBVyHK/acLrGOoWGvWvb8LZrvaQK9T/wvDxVmOWN3gscOzMy3/1E
-	oJXoK+FCC9O3LQzADjvTRU2xGsa4/vyN7kxvS1igXzB9WRPxLkXJbh+jWzDf3KMF
-	hz++Ht6FOQUPlCM8lrTD6rbg2mpZSYduvNPWKHRsCH+kUS2xLd6khYNerktpZqjx
-	WDXDkkPj7T3ju257Rb/SQHcg3z08ticmygBLrR396lFCDGUhmRsA8lPWfdAkIsj7
-	Gg/WCGkQJQJFI47Qmhqx3wNbwqFcBcrrAUy1v6SQkaEGU6oblHUFHq6g2n0ezEoP
-	Q==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 45cqjg8ac2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 13:19:54 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 52EHJqhf037032
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 14 Mar 2025 13:19:52 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 14 Mar
- 2025 13:19:52 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 14 Mar 2025 13:19:52 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 52EHJaCu005028;
-	Fri, 14 Mar 2025 13:19:39 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <corbet@lwn.net>, <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v1 4/4] Documentation: iio: ad4000: Describe offload support
-Date: Fri, 14 Mar 2025 14:19:33 -0300
-Message-ID: <18df335c2dd4c4db3bf27d68cbf1852425114131.1741970538.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1741970538.git.marcelo.schmitt@analog.com>
-References: <cover.1741970538.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1advImG"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8f7019422so21602636d6.1;
+        Fri, 14 Mar 2025 10:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741972924; x=1742577724; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NDFqyRfHBs3Ib4nK9Y58mYUmJM70ZfAiHj75uNoA7S8=;
+        b=J1advImG/gv5S8RC5gUndJ2ECejJsuydOmjUgOwrkc8d+x9sPjzP7eR0pV+c6PR37m
+         Wi8K5XNL2cgbDk2Y+yqnj5VU6QiSQERB+F2IKx3mXJZSUH/FJUfA0DVsNPgumbnzPJg/
+         nduCVSiAwSCB1MqWTFzEGYtA4KZUmc8JKZIZiFTwHF61TqBN2B484MD0oZ2OamDXHFTK
+         ymMnAJ7rorH4yRAVfYAbvWFsE4URD6HRcv4q1toQCdzCbgzIhib49eTM1d5f7UpTpLSQ
+         KyEtBtFzjTf+GrHzmsfGQG7SjeJFJhtnYepZ4HrJpeTGgepXiIst1LoFTbT2cdk3rcnz
+         HXag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741972924; x=1742577724;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NDFqyRfHBs3Ib4nK9Y58mYUmJM70ZfAiHj75uNoA7S8=;
+        b=kbk/je/0SFttq9vwsbwsNQjnIlhmTDlSEaMp7mNGdMZN5X/+t/nPZNGcCWZ+kh92FM
+         txD6uQ/NwOHl5ahjz3F1rTlXmn3Yphg8gjVfpp3UkMvhTWBvkZ0trcz4tp+jPWXmWjzx
+         2NTKe74/h8ji+g7eZxCSXwBte3Ujh5AU/SEcOf/5hTx0TJV6YOtjJwJhn/OnlbRBmenS
+         5bcegJIXc1v8FlXqxowwCkTvESvwYnbb4oCzd8WR8bay7ZgX5yvMYO0ivDXeGpOeC40Z
+         mf7XTj+KaFRzCDYZGh++KYv5YSU2VEBZe8b43SdbZyKl4687j5Y9sY1uUIV6RywpqVGS
+         BKCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVaNR4F9L0Fc8kmX7Y455PtDG17GDkoRrp0dP43vh9YxDFrTgcFDWXbxtDcojEJtbrTsjfA/h7kK75bI4dVbI=@vger.kernel.org, AJvYcCWplpmMFE3ClyQMoiM4NR9aGEVL4j+yRNA0bX8uSZ1HYmlCDiNoRwDKxf+v72UcHq33Pe74FW7hM+5f@vger.kernel.org, AJvYcCXf4D4EKKaD8iDtDtGuP9U/mXe5LDMmVZtYaEZ8nbGYCQsVabsKIyAF3RJ1jdwAZ+Fhz/JRnPaI7TYEl9k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP7wcXHH6A2hdt0hcN5ilIUP7nNRFqQ1A0HCUOoORUm0Vpjqhj
+	zVrpewuqKPBy5l6VoK2/TsfU5UnJrcyzDjX0/l3vUT7H5EZ2Kq4w
+X-Gm-Gg: ASbGncszfpZlPPyf4onfx6TixPK8F90McIaty8Duq6LMWS1aW1jblUTEOcoAkzCzJwl
+	TXqP34XD9LNlX7kuAf0huDT2Akrf3n+uowAO/vSaQ8n9fDazK77AW3HVl1pTHnL0qqb6NMQzC0o
+	byybtTwkW0RWsjyIRvppiQxcPShGOjf6nkiHPxG1dmbHLvuBMzIdfU/ki9ykRFp948i3VD/DA/h
+	+mS4JixZICutMaY1muUu68wra/QOmyMHQQcwtiE9HrZQr1I2RWGAWTC+vujNHUzG28NLCXiFnlY
+	fimtNLZyc3w454qrbY8kmD2fgNf/8BWDFrrrUFXX51V33yG0BZn4ydXZ7+skFAy5+KW2Nt18T7R
+	vz3SV3LvZY2o1es7HQ/Wo5zk5gRgu6bKgvdE=
+X-Google-Smtp-Source: AGHT+IE8ZpnVMAoh7J89E4hudMbrOTDQrofqBxlvs7WuNYHLhrTqDEL38lotFkF54kgkqxWMDG9fCw==
+X-Received: by 2002:ad4:5d6e:0:b0:6e8:9525:2ac3 with SMTP id 6a1803df08f44-6eaeaae55a0mr57080516d6.34.1741972923714;
+        Fri, 14 Mar 2025 10:22:03 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade35028esm26333146d6.117.2025.03.14.10.22.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 10:22:03 -0700 (PDT)
+Message-ID: <67d465bb.050a0220.d2e19.8fc9@mx.google.com>
+X-Google-Original-Message-ID: <Z9RlthXHWX3QNM-k@winterfell.>
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 747BA1200080;
+	Fri, 14 Mar 2025 13:22:02 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Fri, 14 Mar 2025 13:22:02 -0400
+X-ME-Sender: <xms:umXUZ7oAYI9le-lq3ogI-CaxqVBb05c73XozlSpVwoKo_85dBuXPbw>
+    <xme:umXUZ1qH9YuRENP3KQkhnGQtduHMyDzuqA9Tjx9Gku20WX9txluxls12dj2201Esk
+    QrVBEYcNDquVo-Czg>
+X-ME-Received: <xmr:umXUZ4PVffkgopzQGkIPzOdHUjF3wV26fY5_g06wPRqyKwhxVTrBaG6PoQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedugeduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
+    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudeipdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhr
+    tghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegshhgvlh
+    hgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprh
+    gtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhn
+    fegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhopegsvghnnhhordhloh
+    hsshhinhesphhrohhtohhnrdhmvg
+X-ME-Proxy: <xmx:umXUZ-4GD_w9fHPd3Bb4VRK37LD0oPa6uU6U-8WZzv8nLxwcxo50ug>
+    <xmx:umXUZ66LS9YKI99zwsSV40eJTTZlpi5-g67SFnUkniu6wIlHNdNwqg>
+    <xmx:umXUZ2hp90ZJW0Z7EzzknJnirQn1nJwnQzsJ-KjV63C36MhrhAm25Q>
+    <xmx:umXUZ87iiE5d_5ZtffS5J76rSyb1SeD4bYz1vmH9pnTJuX3_4c61jg>
+    <xmx:umXUZ5Jypi5F55RLUpsa49BNtRPyGzexARzlpvmYzjzrLlf_lQQg_yEO>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 14 Mar 2025 13:22:01 -0400 (EDT)
+Date: Fri, 14 Mar 2025 10:21:58 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] rust: device: implement device context marker
+References: <20250314160932.100165-1-dakr@kernel.org>
+ <20250314160932.100165-3-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: jf96dmMTYiPjuqNVVkkWlC_oR6dCucQW
-X-Proofpoint-ORIG-GUID: jf96dmMTYiPjuqNVVkkWlC_oR6dCucQW
-X-Authority-Analysis: v=2.4 cv=EL0G00ZC c=1 sm=1 tr=0 ts=67d4653a cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=Vs1iUdzkB0EA:10 a=wI1k2SEZAAAA:8 a=gAnH3GRIAAAA:8 a=zhJGIpXlanaEhhhmQREA:9 a=6HWbV-4b7c7AdzY24d_u:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-14_06,2025-03-14_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 mlxlogscore=999
- adultscore=0 spamscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
- malwarescore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503140136
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314160932.100165-3-dakr@kernel.org>
 
-When SPI offloading is supported, the IIO device provides different sysfs
-interfaces to allow using the adjusting the sample rate. Document SPI
-offload support for AD4000 and similar devices.
+On Fri, Mar 14, 2025 at 05:09:05PM +0100, Danilo Krummrich wrote:
+> Some bus device functions should only be called from bus callbacks,
+> such as probe(), remove(), resume(), suspend(), etc.
+> 
+> To ensure this add device context marker structs, that can be used as
+> generics for bus device implementations.
+> 
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> Suggested-by: Benno Lossin <benno.lossin@proton.me>
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
----
- Documentation/iio/ad4000.rst | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Try chronological order for the tags? It was suggested first and then
+reviewed.
 
-diff --git a/Documentation/iio/ad4000.rst b/Documentation/iio/ad4000.rst
-index 468d30dc9214..2d56b0762570 100644
---- a/Documentation/iio/ad4000.rst
-+++ b/Documentation/iio/ad4000.rst
-@@ -191,3 +191,20 @@ Typical voltage channel attributes of a differential AD4000 series device:
- +-------------------------------------------+------------------------------------------+
- | ``in_voltage0-voltage1_scale_available``  | Toggles input span compression           |
- +-------------------------------------------+------------------------------------------+
-+
-+SPI offload support
-+-------------------
-+
-+To be able to achieve the maximum sample rate, the driver can be used with the
-+`AXI SPI Engine`_ to provide SPI offload support.
-+
-+.. _AXI SPI Engine: http://analogdevicesinc.github.io/hdl/projects/pulsar_adc/index.html
-+
-+When set for SPI offload support, the IIO device will provide different
-+interfaces.
-+
-+* Either ``in_voltage0_sampling_frequency`` or
-+  ``in_voltage0-voltage1_sampling_frequency`` file is provided to allow setting
-+  the sample rate.
-+* IIO trigger device is not provided (no ``trigger`` directory).
-+* ``timestamp`` channel is not provided.
--- 
-2.47.2
+Regards,
+Boqun
 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/kernel/device.rs | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> index db2d9658ba47..21b343a1dc4d 100644
+> --- a/rust/kernel/device.rs
+> +++ b/rust/kernel/device.rs
+> @@ -209,6 +209,32 @@ unsafe impl Send for Device {}
+>  // synchronization in `struct device`.
+>  unsafe impl Sync for Device {}
+>  
+> +/// Marker trait for the context of a bus specific device.
+> +///
+> +/// Some functions of a bus specific device should only be called from a certain context, i.e. bus
+> +/// callbacks, such as `probe()`.
+> +///
+> +/// This is the marker trait for structures representing the context of a bus specific device.
+> +pub trait DeviceContext: private::Sealed {}
+> +
+> +/// The [`Normal`] context is the context of a bus specific device when it is not an argument of
+> +/// any bus callback.
+> +pub struct Normal;
+> +
+> +/// The [`Core`] context is the context of a bus specific device when it is supplied as argument of
+> +/// any of the bus callbacks, such as `probe()`.
+> +pub struct Core;
+> +
+> +mod private {
+> +    pub trait Sealed {}
+> +
+> +    impl Sealed for super::Core {}
+> +    impl Sealed for super::Normal {}
+> +}
+> +
+> +impl DeviceContext for Core {}
+> +impl DeviceContext for Normal {}
+> +
+>  #[doc(hidden)]
+>  #[macro_export]
+>  macro_rules! dev_printk {
+> -- 
+> 2.48.1
+> 
