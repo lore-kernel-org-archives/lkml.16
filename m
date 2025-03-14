@@ -1,122 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from 2.mo561.mail-out.ovh.net (2.mo561.mail-out.ovh.net [46.105.75.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CF02F3B
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2052155747
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.75.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741978085; cv=none; b=korv58M12OTKhTAyf/NY61fEHDT5KOvnf004/Fd7qjToGgJe8hMJj59lpf5QuAwp/8mY0MtCcejs8mP3TWMvtnoTI5jGWhBYCKB8aUvfi9iFPtfMybMUsDmm4xsPWkz5uMvfitLRsd3vNmDxEH1TPsK8Eoy/7Q62Av3knlyReqw=
+	t=1741978118; cv=none; b=exXizrbnQ97ps+S5cJmjQJfudV5GjSm01oN/4NU6zPMROxR+OHJI+itHBlhf9A5EqRGIgwm2pDmS9yspOqppnG5eu4fz5PgQG1NrahEjdnrMJ8WMxC51JLMHlAKRGbkbJnuva0x8MZU/CTnZ848ufdKIl2YzFh9Bb8moMnn25Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741978085; c=relaxed/simple;
-	bh=uMMDkGQ6VhesV55oSepUIph7REV8G1+tG7T4C0ivI9w=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=eIgnOsHhzac4Q7pqMOoyFMeHD0R3CaevBGwIU4eGiq6cITRbOew823+c565Q3XRGS5ua4LInYXsRY5XXCNB1Ztzn1vE4AkhhOIuBbtILVJ2QVbcQEIQ/jkndgnt70c6A/XxSgz1CPGR2w6YYcLNBn3Mz2Gw7kjT3g9R5obrXQyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NWjy0RXh; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741978118; c=relaxed/simple;
+	bh=avDv4tK1ONJ/syhJq1AofSk0EdiOHAWN41qKHhjMiEo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=j/nr2YOez61ELY+iVLXL9qgqnK8mdcCrO6Ipr7wavKh09VlXW51nycG1amedosG571+7ruB8s1Y+ayavceszu3cGGkacOgIUnEQ0W9YuGiDhBNlF/4BoVk7f9o+PSJ/lHt05mu41S5Oxhfb5y6mKUEGr1wXn8jnC6kpQ4DVNqqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com; spf=pass smtp.mailfrom=armadeus.com; dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b=mOL+L/T8; arc=none smtp.client-ip=46.105.75.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=armadeus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=armadeus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NWjy0RXh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741978084; x=1773514084;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=uMMDkGQ6VhesV55oSepUIph7REV8G1+tG7T4C0ivI9w=;
-  b=NWjy0RXh8D6GmuWlXk56TrH7QK/XrToGF8SUV3NUot4Aj63lZ5KrKlu2
-   XQ6CkNTRe/vtewux+bZX78p8XZBgiSCtMO2rxukmQAN6TynjQO5/Q0zqe
-   J6ojZY5VxYATYkzj9vqVvhhuSM+pjx+4IszexQyYtYAa9843WuDNKA5fT
-   Y8UPyq5Y4uhbAjuHPyi4yPwlAt2TcHaI4ZN0BDH5Ag15T5tW309of+YKC
-   VQYAaiMBAMiUOGT8vFk7YqvcHC59nMcv7YyRG8fNlH+QQvJoEvktq7XVA
-   qpVySmaQGy5dZvC49BUgWwIOTa0CTIW0R+lPrcaUzTarsWHZUoPBMac6T
-   A==;
-X-CSE-ConnectionGUID: 7sMO9Kf4RSCq7faqa1JHvw==
-X-CSE-MsgGUID: FS5LyT88R7WB9wmlXTxgvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42390695"
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="42390695"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 11:48:03 -0700
-X-CSE-ConnectionGUID: f4IqP3YjTOWZi2qnkPbuVw==
-X-CSE-MsgGUID: rQYjG0V0SuOLO8sAQARJ5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="121395947"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 11:48:02 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 29C2320B5736;
-	Fri, 14 Mar 2025 11:48:01 -0700 (PDT)
-Message-ID: <b69595c9-5240-40ea-89e6-c36331ca245c@linux.intel.com>
-Date: Fri, 14 Mar 2025 14:48:00 -0400
+	dkim=pass (2048-bit key) header.d=armadeus.com header.i=@armadeus.com header.b="mOL+L/T8"
+Received: from director9.ghost.mail-out.ovh.net (unknown [10.108.17.88])
+	by mo561.mail-out.ovh.net (Postfix) with ESMTP id 4ZDqNl0L0mz1Xm8
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:20:54 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-zj8mb (unknown [10.110.96.7])
+	by director9.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 3EFC21FE97;
+	Fri, 14 Mar 2025 16:20:53 +0000 (UTC)
+Received: from armadeus.com ([37.59.142.100])
+	by ghost-submission-5b5ff79f4f-zj8mb with ESMTPSA
+	id ks6EBmVX1GfALgEAEG6nww
+	(envelope-from <sebastien.szymanski@armadeus.com>); Fri, 14 Mar 2025 16:20:53 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-100R003ae709b19-23ae-4007-881d-73b92853cf78,
+                    A221DEE5FCFF6DF9682F22B3F1BEC7AEAAD40A3F) smtp.auth=sebastien.szymanski@armadeus.com
+X-OVh-ClientIp:92.148.253.243
+From: =?utf-8?q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Date: Fri, 14 Mar 2025 17:20:38 +0100
+Subject: [PATCH] ARM: dts: opos6ul: add ksz8081 phy properties
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 3/3] perf/x86/intel: Support auto counter reload
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, ak@linux.intel.com,
- linux-kernel@vger.kernel.org, eranian@google.com, thomas.falcon@intel.com
-References: <20241010192844.1006990-1-kan.liang@linux.intel.com>
- <20241010192844.1006990-4-kan.liang@linux.intel.com>
- <20250314102031.GL19344@noisy.programming.kicks-ass.net>
- <5c6b52ec-e903-42be-aa57-675abc350241@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <5c6b52ec-e903-42be-aa57-675abc350241@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250314-opos6ul-fix-ethernet-v1-1-1c0172949b40@armadeus.com>
+X-B4-Tracking: v=1; b=H4sIAFZX1GcC/x2MWwqAIBAArxL73YJmSnWV6KPHWguhoRZBdPekz
+ 2GYeSBSYIrQFQ8EujiydxlkWcC8jW4l5CUzVKLSQska/eGjOXe0fCOljYKjhFK1YtbaWDU1kNM
+ jUPb/th/e9wObJ8NoZgAAAA==
+X-Change-ID: 20250314-opos6ul-fix-ethernet-1390c556f3b8
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Julien Boibessot <julien.boibessot@armadeus.com>, 
+ =?utf-8?q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+X-Mailer: b4 0.14.2
+X-Ovh-Tracer-Id: 6297721129035754449
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeduvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtkeertdertdejnecuhfhrohhmpefurogsrghsthhivghnucfuiiihmhgrnhhskhhiuceoshgvsggrshhtihgvnhdrshiihihmrghnshhkihesrghrmhgruggvuhhsrdgtohhmqeenucggtffrrghtthgvrhhnpeetudffuedugeffuddvhfefjedufeejleekgefhjeeuuedtvdegheeikefhleehgeenucfkphepuddvjedrtddrtddruddpledvrddugeekrddvheefrddvgeefpdefjedrheelrddugedvrddutddtnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehsvggsrghsthhivghnrdhsiiihmhgrnhhskhhisegrrhhmrgguvghushdrtghomhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeiudgmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=n+IF7ozOuHRbo7rwX765zhLKBt2dCvj0KZ4Df+uvM94=;
+ c=relaxed/relaxed; d=armadeus.com; h=From; s=ovhmo103079-selector1;
+ t=1741969255; v=1;
+ b=mOL+L/T8DYvSoFyvIIJidGZU/d7OjCIh4pn74qmxxp0p7sZf0C2Q9c+hqV7D3DyX8zfJ7Bq2
+ 3j9gY53vF3fK5u927AfbHLuzHomAYz/NEU/iCq/V1cs/mdc2YF8meUS2fYIhTHZVG/YQm+cOrGj
+ d03aQFJpMPALNpC/yiQ/QckiZHS8knJ5+uyiW3kLkHs+Jopc74ge0W9YaUZJTQCbyzX45XvCPxx
+ nMoI1hfrFdWQcme3k3L7mqtRjoKY13mIAWhRuXQ21bNM0UGMnnfoX8HAIhqc8Kvx/1Pjf1pOOZw
+ YO0rJp+Dawi7Oy9OySNxDE2xy8QWqpRDBH7ET8oGPfBug==
 
+Commit c7e73b5051d6 ("ARM: imx: mach-imx6ul: remove 14x14 EVK specific
+PHY fixup") removed a PHY fixup that setted the clock mode and the LED
+mode.
+Make the Ethernet interface work again by doing as advised in the
+commit's log, set clock mode and the LED mode in the device tree.
 
+Fixes: c7e73b5051d6 ("ARM: imx: mach-imx6ul: remove 14x14 EVK specific PHY fixup")
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+---
+ arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6ul.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On 2025-03-14 9:48 a.m., Liang, Kan wrote:
->>> +	}
->>> +}
->>> +
->>> +static int intel_pmu_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
->>> +{
->>> +	struct perf_event *event;
->>> +	int ret = x86_schedule_events(cpuc, n, assign);
->>> +
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	if (cpuc->is_fake)
->>> +		return ret;
->>> +
->>> +	event = cpuc->event_list[n - 1];
->> ISTR seeing this pattern before somewhere and then argued it was all
->> sorts of broken. Why is it sane to look at the last event here?
-> The schedule_events() is invoked for only two cases, a new event or a
-> new group. Since the event_list[] is in enabled order, the last event
-> should be either the new event or the last event of the new group.
-> 
-> The is_acr_event_group() always checks the leader's flag. It doesn't
-> matter which event in the ACR group is used to do the check.
-> 
-> Checking the last event should be good enough to cover both cases.
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6ul.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6ul.dtsi
+index f2386dcb9ff2c0c11e00069b81689c81af7f5446..dda4fa91b2f2cc28ef59e2d6513dc1732982feea 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6ul.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6ul.dtsi
+@@ -40,6 +40,9 @@ ethphy1: ethernet-phy@1 {
+ 			reg = <1>;
+ 			interrupt-parent = <&gpio4>;
+ 			interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
++			micrel,led-mode = <1>;
++			clocks = <&clks IMX6UL_CLK_ENET_REF>;
++			clock-names = "rmii-ref";
+ 			status = "okay";
+ 		};
+ 	};
 
-This is an old implementation. Actually, I once sent a V3 last month
-which move the codes to late_setup(). The late_setup was introduced
-by the counters snapshotting feature. It does a late configuration in
-the x86_pmu_enable() after the counters are assigned.
-https://lore.kernel.org/lkml/173874832555.10177.18398857610370220622.tip-bot2@tip-bot2/
+---
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+change-id: 20250314-opos6ul-fix-ethernet-1390c556f3b8
 
-We don't need to check the last event anymore.
+Best regards,
+-- 
+Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
-The V3 optimize the late_setup() a little bit.
-https://lore.kernel.org/lkml/20250213211718.2406744-3-kan.liang@linux.intel.com/
-
-and extend it for both counters snapshotting and ACR.
-https://lore.kernel.org/lkml/20250213211718.2406744-6-kan.liang@linux.intel.com/
-
-But other comments still stand. I will send a V4 later.
-
-Thanks,
-Kan
