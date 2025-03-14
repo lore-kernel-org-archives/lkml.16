@@ -1,147 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7EA19E965
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6277A1F63C1;
+	Fri, 14 Mar 2025 07:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936357; cv=none; b=ADp98x2dco0Ru5nJzkOrQP8MVwPnv5Npzq0GHr1bNNsYlu7ExVU0ig3mhwPXprgHyToTiBRFf9AUU0wXqVJK5DJsbooiYsZGVvCtan7/KFbMYJrrvnssuBo4bhHefwKuO52KKEmG57l2VwlLgN9pWBNsxSuYpC12GSUr4jwcLMY=
+	t=1741936362; cv=none; b=fFz0TR5mDKTKDG/ZH0GWIelrlxARzj4SOCwONZM/wub/mWOX2solkX9BLrNgkOZxPrfE6HheECLGS6UWwlgKSYUqA6Rz5K9r2vjC+3DtGAov0IakcIXYsK0fr76euSH4xncbqUrR/6Xv4GJbxW/Lyb2C7scmqqT4kJ9eI4exi8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741936357; c=relaxed/simple;
-	bh=EoIx8sxqopmGpa5nePf7SVDDBLygP7qyxd5uiDwF9SI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=liU4+ClVtlnxVTWbefdir67rMCYO58lR+4N3fK8CZiBUMe4aQx0p21kMyIuNIqTVD6TnAQZ0A0p7f5/M8qOK6Jq8GWF9S0xWJom7glwjZm1pzLLmT0UJGY3+WjHC5APKUGLlwEGMoi65BlrzDkrLKiTZridQHyVPYSnHi94XxwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J05kvsp3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741936362; c=relaxed/simple;
+	bh=nS/cziBIvv+b35t6+Auwrud3hAAQAUm55EYNaw5/odE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=V2CsDKP5TNbB3Ok9hOvtLV0PSH68rKugUqNRkWunXnsz/8PEfW9VfYnDoa0aG1atr/AECj+gtv51ii28GnO7MTk6m0bpFSpOBSIr3ZjRWOkpKGwU0gy6tr58SnZCnmMyzLdX9eLzkvXdvDpGrQrVviZWQ80GKul1TBjWKEH/C4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LS/bSaW5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J05kvsp3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741936355;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c1k83YcwFgoq7Y1Cl51ypGRAA8oPhImO51BODSPRGfU=;
-	b=J05kvsp3aJbBQmD8HRe/QbV4Aawnmd28TaBSWD+EGooARfRhPGx9OyKzbU3tExTu3rwGe8
-	jcxONvH20kxpbIgXi0CZkFh3oUURv7y92kf49BSNAWprY0xNMdO/1STbSbL6F+tN+hONcn
-	tAgaLU70oLRpejApH5zOXFQURnai+DY=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-185-X98NAb_QN2WUgg1DR8mzTA-1; Fri,
- 14 Mar 2025 03:12:29 -0400
-X-MC-Unique: X98NAb_QN2WUgg1DR8mzTA-1
-X-Mimecast-MFC-AGG-ID: X98NAb_QN2WUgg1DR8mzTA_1741936347
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D2C9C19560AB;
-	Fri, 14 Mar 2025 07:12:26 +0000 (UTC)
-Received: from thuth-p1g4.redhat.com (unknown [10.44.32.82])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DCD5B18001DE;
-	Fri, 14 Mar 2025 07:12:22 +0000 (UTC)
-From: Thomas Huth <thuth@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-arch@vger.kernel.org,
-	Thomas Huth <thuth@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH 28/41] riscv: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
-Date: Fri, 14 Mar 2025 08:09:59 +0100
-Message-ID: <20250314071013.1575167-29-thuth@redhat.com>
-In-Reply-To: <20250314071013.1575167-1-thuth@redhat.com>
-References: <20250314071013.1575167-1-thuth@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LS/bSaW5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF024C4CEE3;
+	Fri, 14 Mar 2025 07:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741936359;
+	bh=nS/cziBIvv+b35t6+Auwrud3hAAQAUm55EYNaw5/odE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=LS/bSaW5/rXOiR1sLi3fUKjWbJ2VTVEeRS8Wq6yVmsX+CgndTmRBcE0FbLLaChBIV
+	 MgGHgPvI30nwsdAlivTdaChobcr00HpfYtB6+UMJ/i89LcKAZBpiki5zEvGvdWp0T3
+	 2kpkzIWopiUFsVwBVcgqkIhRZ4Jwj0pkUOWLXYzuA3k+Rtsa3vkbmdtJ2KKjFSRN7X
+	 2pKjE8wlF1Rs75kGZk+koyx59s6IWn+xYQNEdx3PuvS9A12SHTRQTbwYvGlkmOWcFl
+	 gx7GLCbdhYb2A2T0gbJu2nUyDWZUyzl4AaP5fZgjwJkuEAbguTPJAZXQCLbnUf5GXC
+	 yClN5szZWT6yg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tszDi-000000001Lq-09ns;
+	Fri, 14 Mar 2025 08:12:38 +0100
+Date: Fri, 14 Mar 2025 08:12:38 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] USB-serial device ids for 6.14-rc7
+Message-ID: <Z9PW5tkuTH6oRG6X@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-__ASSEMBLY__ is only defined by the Makefile of the kernel, so
-this is not really useful for uapi headers (unless the userspace
-Makefile defines it, too). Let's switch to __ASSEMBLER__ which
-gets set automatically by the compiler when compiling assembly
-code.
+The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
 
-This is a completely mechanical patch (done with a simple "sed -i"
-statement).
+  Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
 
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- arch/riscv/include/uapi/asm/kvm.h        | 2 +-
- arch/riscv/include/uapi/asm/ptrace.h     | 4 ++--
- arch/riscv/include/uapi/asm/sigcontext.h | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+are available in the Git repository at:
 
-diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-index f06bc5efcd79a..1b460e8c6263b 100644
---- a/arch/riscv/include/uapi/asm/kvm.h
-+++ b/arch/riscv/include/uapi/asm/kvm.h
-@@ -9,7 +9,7 @@
- #ifndef __LINUX_KVM_RISCV_H
- #define __LINUX_KVM_RISCV_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <linux/types.h>
- #include <asm/bitsperlong.h>
-diff --git a/arch/riscv/include/uapi/asm/ptrace.h b/arch/riscv/include/uapi/asm/ptrace.h
-index a38268b19c3d3..beff8df80ac9c 100644
---- a/arch/riscv/include/uapi/asm/ptrace.h
-+++ b/arch/riscv/include/uapi/asm/ptrace.h
-@@ -6,7 +6,7 @@
- #ifndef _UAPI_ASM_RISCV_PTRACE_H
- #define _UAPI_ASM_RISCV_PTRACE_H
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- #include <linux/types.h>
- 
-@@ -127,6 +127,6 @@ struct __riscv_v_regset_state {
-  */
- #define RISCV_MAX_VLENB (8192)
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- #endif /* _UAPI_ASM_RISCV_PTRACE_H */
-diff --git a/arch/riscv/include/uapi/asm/sigcontext.h b/arch/riscv/include/uapi/asm/sigcontext.h
-index cd4f175dc8376..748dffc9ae194 100644
---- a/arch/riscv/include/uapi/asm/sigcontext.h
-+++ b/arch/riscv/include/uapi/asm/sigcontext.h
-@@ -15,7 +15,7 @@
- /* The size of END signal context header. */
- #define END_HDR_SIZE	0x0
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- struct __sc_riscv_v_state {
- 	struct __riscv_v_ext_state v_state;
-@@ -35,6 +35,6 @@ struct sigcontext {
- 	};
- };
- 
--#endif /*!__ASSEMBLY__*/
-+#endif /*!__ASSEMBLER__*/
- 
- #endif /* _UAPI_ASM_RISCV_SIGCONTEXT_H */
--- 
-2.48.1
+  https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git tags/usb-serial-6.14-rc7
 
+for you to fetch changes up to 18e0885bd2ca738407036434418a26a58394a60e:
+
+  USB: serial: ftdi_sio: add support for Altera USB Blaster 3 (2025-03-12 17:51:16 +0100)
+
+----------------------------------------------------------------
+USB-serial device ids for 6.14-rc7
+
+Here are some new modem device ids and a couple of related fixes, and
+support for Altera USB Blaster 3.
+
+All have been in linux-next with no reported issues.
+
+----------------------------------------------------------------
+Boon Khai Ng (1):
+      USB: serial: ftdi_sio: add support for Altera USB Blaster 3
+
+Fabio Porcedda (2):
+      USB: serial: option: add Telit Cinterion FE990B compositions
+      USB: serial: option: fix Telit Cinterion FE990A name
+
+Johan Hovold (1):
+      USB: serial: option: match on interface class for Telit FN990B
+
+ drivers/usb/serial/ftdi_sio.c     | 14 ++++++++++++
+ drivers/usb/serial/ftdi_sio_ids.h | 13 +++++++++++
+ drivers/usb/serial/option.c       | 48 ++++++++++++++++++++++++++-------------
+ 3 files changed, 59 insertions(+), 16 deletions(-)
