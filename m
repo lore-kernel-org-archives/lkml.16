@@ -1,160 +1,98 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D566619F42D;
-	Fri, 14 Mar 2025 08:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C6C13E02D
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 08:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741939893; cv=none; b=Mg1vyQcBy+Q3tU3/0ts7pZd0yrazbgeRLDsIPCqS1oReDfUg7dcnne2MVY5sMtc6CM+o4q48nQrAJPoquR4B8Ws9ZAGBezukqsWV2MyS7DfOzFSEqmGccxmjjP7YTUlbDKU0Jyn8EXnawxqPx+bjTCEzq1vkYkyhhB4932Nii1g=
+	t=1741939931; cv=none; b=cwyDhgdueoexTjmNWRYK0qLLdyxNgr4hoHC0Br3BnY2YWmCiYtoMmKpW5YjlkOxDKbVqahBqatEN7l9ZMdOBm+ozDKLX9YXnrmVwpDSirWLlVGqSNU9I7bFBTJxh+HlTbKlzQS6JMmgfXIPlVb6z5aEX4YKXA0VtFwVGJHdEybM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741939893; c=relaxed/simple;
-	bh=wLR9kA7YRBMcXE+WRSSPf8qb6kdsUh2P55EgbJ5oQmQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JRPUfXnoxTwpyRI4fsgohpYO4gcVpt74ZBkAmAX+L7Ww9y46NNiWVSmN35/ADW+OLZYl8UELxZDbg0NRi0GiRb50wmXQugXifmu8mIdJg3zK+jrWuXCNvjZYpbxDRSSLySIx+s/V23xrpmSXLndgrASFAG8H9QmGowuY75qe2Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fIoKFoKE; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741939931; c=relaxed/simple;
+	bh=8cylVulYPsuLj2+UhzkDhFzJQRXHh4cjgiNVztEekzg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FiPPNZjcDerZ1LFK5m6AyikB4+GjJIqWeOeASSaKZkuVDuw5csP436aP8cttTBdx6BHsaKRo0C/DVuHVT0mmKu53QfGPfwE18oe0DMxmfhXHwPtXXsBiZAGldG9uZnYzs3Wqnz30tyVT4a0wqGC1bsujP+pNh975swvS/WIIhL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FRyWSnqM; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fIoKFoKE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 39CB844166;
-	Fri, 14 Mar 2025 08:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741939888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=shPwwGXfHVuV1VEQPB00+dQj+dOnHg7agqnzcuOae+g=;
-	b=fIoKFoKELP4821UfIVCOJ7r0oRx+ErLefYKp9XTh7WSH4cEVUWJiedNkCtFuxYms4hSMxu
-	eERv4eaCRm7eD7vTzxbo2Yd5bpPbOXvkc8n7yoNaqR/GDSYlOh3ZY0Mx8ebCY7BAlbndwl
-	nqqshu+8ScypJK0eDaRsnNPkAlXHe+LRax8aMccBkZiJXYcf78fa/sf3HpuSxb/Q36bK43
-	EeepcpWqgGZZL1WGsf5AjGG+Xv2hXIhFvMlEdcdRP8Sb3c9HVSYIJgg7a/dMsNkABQaI8j
-	pNdL7J5N3VFrE0/URRC9+BNzsRU1UslrHOsivGUh+9vbsKwQ8UbRq5kvRIBpeg==
-Date: Fri, 14 Mar 2025 09:11:20 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
- Teki <jagan@amarulasolutions.com>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski
- <contact@paulk.fr>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, =?UTF-8?B?SGVy?=
- =?UTF-8?B?dsOp?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Paul Kocialkowski
- <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
- bridges
-Message-ID: <20250314091120.366b5fd7@booty>
-In-Reply-To: <20250313-flying-crab-of-diversity-fa1db0@houat>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
-	<20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com>
-	<20250207-ingenious-daffodil-dugong-51be57@houat>
-	<20250313125656.70448d09@booty>
-	<20250313-flying-crab-of-diversity-fa1db0@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRyWSnqM"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54954fa61c9so2235675e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 01:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741939927; x=1742544727; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8cylVulYPsuLj2+UhzkDhFzJQRXHh4cjgiNVztEekzg=;
+        b=FRyWSnqMEyPY+gP/jY8GMChTQDD7FoaYmdrauibjYspGsEJpAZpgxaKKfkNUczeEcR
+         n29CanJ+CrsFvqe3vIAr9F8Qp7U5bhf48RtP7aa0+K8H3QHt+oiNYj9TtLMreBp6Tdpz
+         EYT6K365tXBiP6Bw4e6AFYc0BmBKUt0b/fmfMYCq23jKWJ3ApVP0TlxcfzlND+if5VT+
+         I8jBv02KNzzKfjwxHKPhnAxmq61HjUPlqOuD8DOADBABX83NCYk01Jhz74qhknMP9pAY
+         6A+MW3txCTp1F5ev2lOic0gowPqPutxDtIR29OzpIZGZ6o6UZlu/adXHAzaVXAYV9+o9
+         JrQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741939927; x=1742544727;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8cylVulYPsuLj2+UhzkDhFzJQRXHh4cjgiNVztEekzg=;
+        b=dg8MN7E9qCoLx/6q40P0TbNG41M4ohENld1ouqYmiFfH9zj74+nFYPm+iczAB4SciE
+         xplAXzdU0InnQQTkbnkIE22GKW6lgSz3uvGYjMSkrk3fwX/q+LQyPKQvebokX/KUwF+c
+         +4qHmsAJcz8n8tkiYBJKPGFocuy++lyk5vhNY+UyUaE3sGsOMpN3TKtBDt0dKXTnwAGz
+         9wlskuXjg2NZFDBT85DCS6Ok/9PWhbm2N+3kWaUzKIrgLjTwmH1AgqJhzsSHJdl+gMVv
+         Om+PvI5mls5MKhRLU5jVchTiIliV37gq09fEl812zozrlM8NHxalhK4GN5I1mXrglmZ/
+         GXeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUw7AbKTYq3WNQyLq5fyovieFYtmduKI1DsQdyEJan0hn9LBYrCTXGn/u9JXyH/oDC7LV0rWb/a9R1fb4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMi4YrtpBHkxaPNVWrxq5K2cVbNrBYJQgP+r7csMVVocZOOwzw
+	bPRfwwH7Bz+ObTyczvTmZC7JhsjvB4nwLxZdyv7FF/RynKNL/80q8quafsbXX2JOqa6O4bRj9j3
+	PuFq0DxZtgDMXpw270oxcZb9cCwJMeFqdpukgtQ==
+X-Gm-Gg: ASbGncvkrJSB6ar4+Z6tJ0HlGFDuVmChnKRrrB6OlKBn3/z4d3BDtntKdqTSvvN1ldI
+	QpRRJLx4O272F7q15ZNGsN+f7NMOw5JD3TAwZRd9MNe3C+0ywc1pkyFKDY9xLxx0SVY+wHQjGbn
+	kHClA46Ds9e/tk5IGCU4NRw7ihanRx7J8=
+X-Google-Smtp-Source: AGHT+IHGGeVJFh8IQpmki3V8LS3prqRn4mV+TlJsniBWV8GinnRd8uZ8FEwuJhvhNULLOQP3lZKdtvLj/4wJYkEQLZY=
+X-Received: by 2002:a05:6512:10cd:b0:549:4e88:2e6a with SMTP id
+ 2adb3069b0e04-549c38f52b3mr415545e87.6.1741939927425; Fri, 14 Mar 2025
+ 01:12:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedtfedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemrgdttddvmedusggrjeemgeekfhejmedulegtheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemrgdttddvmedusggrjeemgeekfhejmedulegthedphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeejpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehinhhkihdruggrvgesshgrmhhsuhhnghdrtghomhdprhgtphhtt
- hhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehmrdhsiiihphhrohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+References: <20250313051953.4064532-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20250313051953.4064532-1-baolu.lu@linux.intel.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Fri, 14 Mar 2025 16:11:56 +0800
+X-Gm-Features: AQ5f1JoAIzauNjyPIPxiG7nniTwbUahcmK3Y--Iy4ho8pIyBMKTUSfeN7GKy6pY
+Message-ID: <CABQgh9G2kTqWvjDTMupCJ_YNMxTg75PwgooMSsvEuT_hvemvDw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/8] iommu: Remove IOMMU_DEV_FEAT_SVA/_IOPF
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
+	Fenghua Yu <fenghuay@nvidia.com>, Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Maxime,
+Hi, Baolu
 
-On Thu, 13 Mar 2025 19:07:17 +0100
-Maxime Ripard <mripard@kernel.org> wrote:
+On Thu, 13 Mar 2025 at 13:19, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>
+> The new method for driver fault reporting support relies on the domain
+> to specify a iopf_handler. The driver should detect this and setup the
+> HW when fault capable domains are attached.
+>
+> Move SMMUv3 to use this method and have VT-D validate support during
+> attach so that all three fault capable drivers have a no-op FEAT_SVA and
+> _IOPF. Then remove them.
+>
+> This was initiated by Jason. I'm following up to remove FEAT_IOPF and
+> further clean up.
+>
+> The whole series is also available at github:
+> https://github.com/LuBaolu/intel-iommu/commits/iommu_no_feat-v4
 
-> On Thu, Mar 13, 2025 at 12:56:56PM +0100, Luca Ceresoli wrote:
-> > Hello Maxime,
-> > 
-> > On Fri, 7 Feb 2025 12:47:51 +0100
-> > Maxime Ripard <mripard@kernel.org> wrote:  
-> > > On Thu, Feb 06, 2025 at 07:14:29PM +0100, Luca Ceresoli wrote:  
-> > > > DRM bridges are currently considered as a fixed element of a DRM card, and
-> > > > thus their lifetime is assumed to extend for as long as the card
-> > > > exists. New use cases, such as hot-pluggable hardware with video bridges,
-> > > > require DRM bridges to be added and removed to a DRM card without tearing
-> > > > the card down. This is possible for connectors already (used by DP MST), so
-> > > > add this possibility to DRM bridges as well.
-> > > > 
-> > > > Implementation is based on drm_connector_init() as far as it makes sense,
-> > > > and differs when it doesn't. A difference is that bridges are not exposed
-> > > > to userspace, hence struct drm_bridge does not embed a struct
-> > > > drm_mode_object which would provide the refcount. Instead we add to struct
-> > > > drm_bridge a refcount field (we don't need other struct drm_mode_object
-> > > > fields here) and instead of using the drm_mode_object_*() functions we
-> > > > reimplement from those functions the few lines that drm_bridge needs for
-> > > > refcounting.
-> > > > 
-> > > > Also add a new devm_drm_bridge_alloc() macro to allocate a new refcounted
-> > > > bridge.
-> > > > 
-> > > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>    
-> > > 
-> > > So, a couple of general comments:
-> > > 
-> > > - I've said it a couple of times already, but I really think you're
-> > >   making it harder than necessary for you here. This (and only this!)
-> > >   should be the very first series you should be pushing. The rest can
-> > >   only ever work if that work goes through, and it's already hard enough
-> > >   as it is. So, split that patch into a series of its own, get that
-> > >   merged, and then we will be able to deal with panels conversion and
-> > >   whatever. That's even more true with panels since there's ongoing work
-> > >   that will make it easier for you too. So the best thing here is
-> > >   probably to wait.
-> > > 
-> > > - This patch really needs to be split into several patches, something
-> > >   along the lines of:
-> > > 
-> > >   + Creating devm_drm_bridge_alloc()
-> > >   + Adding refcounting
-> > >   + Taking the references in all the needed places
-> > >   + Converting a bunch of drivers  
-> > 
-> > After reading Anusha's "[PATCH RFC 0/2] drm/panel: Refcounted panel
-> > allocation" [0] I think I need a clarification about the 4 steps you had
-> > outlined in the above quoted text. Are you suggesting those are four
-> > _series_, and you'd want to see a series only creating
-> > devm_drm_bridge_alloc() as a first step, similarly to Anusha's work?
-> > 
-> > That was not my understanding so far, and so I've been working on a
-> > series containing all 4 items, and it's growing very long due to item 3
-> > needing to touch many dozen drivers which need to put a bridge (many
-> > are identical oneliner patches though).  
-> 
-> I believe I've clarified it already in Anusha's series, but I think a
+I retested this branch, and it works
 
-Yes, you have...
+https://github.com/Linaro/linux-kernel-uadk/tree/iommu_no_feat-v4
 
-> reasonable series for *early* work would be the bullet points 1, 2, a
-> bit of 3 and a bit of 4.
-
-...but thanks for the extra clarification.
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks
