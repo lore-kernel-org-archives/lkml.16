@@ -1,86 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7821FFC6C;
-	Fri, 14 Mar 2025 14:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F33B2E336A
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 14:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741961885; cv=none; b=b79Cbm6cbrTCqAYfStPUEvhtZZ6pThq9yXAk6bEiyC38pSfr0z4MLoCx0p0VYJ6T6JiY06hcT3J9bvKdb+KMOpTKPcfdnzdW7BfQt5LM0W/fAxMql/iZ//KUCqI5lU8y1t7h7SKjVZ18NQPVdWbfBkREOzizHifW6uO/5Mmz2MU=
+	t=1741961923; cv=none; b=eyJSETI7ZXy0Ivf6eghNeZET/IgHefmKBzc/KDjp8vTr7cmWCRnGq/42siHpr3o+j+A5GeuA63bjppn4T9pevkgIc9gYF23RqdqlqfyN5owIjMhIAvBrUe9SslIuWQL6C34l+mHDLq63IhAkMnskA5J34jHg/LJIb275pn/Y3K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741961885; c=relaxed/simple;
-	bh=ehI+5WGoJFvH581UmEMGS+mVsEWVHHCA1L3bFq4wMaE=;
+	s=arc-20240116; t=1741961923; c=relaxed/simple;
+	bh=lBBP5TqAT8LnzORobHQMDmtz1K3uTro/RaLi3DNhWVg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kmJQYgf45SCVte35n6PbnnARgIL0D7HcLl96Rchinu3lJPROAiB0jktaq9rCYwv8NjjFPntNW3LAVvVbBfPYhPa1lKSgNNtnYtmqZ8n9uLBOlGWxxxHRrfpjAUw0HnSyuau9IMY8I/hOeJXGfn8kjJg/3N5IQy400kSuE+N/lJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l6ZnPTFK; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BUeaGoir3Jwitm6t4E256IFwUOFaXCFR6ReeCrD6kSDzt3jwdVvSRxlMwERo2YA6RRjT5R6l97dOE75ps/YtEMra5ezvasGR7iQpDmHfPGKZx/D+aa2mP3YfYYc8cTfK90js4a1MhCQ0wy6ALftBypGpzYlm/E766v/a6JXTTho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=xCdQdTxd; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l6ZnPTFK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741961883; x=1773497883;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ehI+5WGoJFvH581UmEMGS+mVsEWVHHCA1L3bFq4wMaE=;
-  b=l6ZnPTFKPHGIfKdubKjoc/Kw9WKS0KW0ab8H8zHuptkQM7iecRxkTmWv
-   hahiv0huI0RQp7ElYW5WRTvCGNbYi2u8/wrdWzKgMako0nKYa2i6WSXEi
-   DONZV3Qd0M06eceJKCHYyMBSrS73fs3Wq9cmCsaa05kZL4fI0ocUYO2j9
-   N9r5FcvvJzCBcEgf+7OLI7D1XZh2FR/jenyO2zjLK7Y2dknwv+tZ1p9jA
-   QF3WIyVRFxhrzgLX1EqzTl4lvt1D6EvUF6LfxujV6u24Zodms+3pxP5I0
-   irGqptNsqVpfEs0ija9RSHfmB/O1xenrCL2rK76vEkN9EO1S6NmrrDmyT
-   w==;
-X-CSE-ConnectionGUID: eilAbbtaQiSE7kxHPrFbwg==
-X-CSE-MsgGUID: HBZ+QytOS6+99ciS/nEc6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="65574409"
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="65574409"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:18:00 -0700
-X-CSE-ConnectionGUID: ZE11eKY3Qf6YHGYfEHzQ7g==
-X-CSE-MsgGUID: 9+i+eknqSmmAOmOP3TzZtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="122006741"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.54])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:18:00 -0700
-Date: Thu, 13 Mar 2025 17:43:11 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Marcelo Tosatti <mtosatti@redhat.com>
-Cc: Isaku Yamahata <isaku.yamahata@intel.com>, kvm@vger.kernel.org,
-	pbonzini@redhat.com, Sean Christopherson <seanjc@google.com>,
-	chao.gao@intel.com, rick.p.edgecombe@intel.com,
-	yan.y.zhao@intel.com, linux-kernel@vger.kernel.org,
-	isaku.yamahata@gmail.com, Nikunj A Dadhania <nikunj@amd.com>
-Subject: Re: [PATCH 0/2] KVM: kvm-coco-queue: Support protected TSC
-Message-ID: <Z9N7n903V6Xz/gKj@ls.amr.corp.intel.com>
-References: <cover.1728719037.git.isaku.yamahata@intel.com>
- <Z9DfurM5LwR5fwX4@tpad>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="xCdQdTxd"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4768f90bf36so17876561cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:18:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1741961919; x=1742566719; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IaDYviHzXbMRVdS6PNoP5phPb9zBK8u8E5XEDQrfB7c=;
+        b=xCdQdTxdVkCQNyzuB276+D7tHd5AedJraIRaGOYtzlxRmZe9r9I6mLZ/E3AcZ+2cIh
+         4v9mqOrehdM6OmNlbymrnhdetcbRb72N9IwxOdn8DYDySieXYPfzv9pQPBNEvg5T2Cbe
+         URNHTBKKFY3VClL7wECtspgvxm8yOw4d1bu17AgvFvLveJMn4SkAkbqo6fgJA5bVINqy
+         y50MhblUCzzOxvXD1PGtuEMWI374YeRdF1srXhIpiKQ+uJq8sBjVTcxY6nlGVds1WdUs
+         RYqCWtLNUJkM1NQ+FHtNO9kNaMv/7smvVSrTq7qOtAzFkg6R9p0TmhhUGDG9A/g/ippD
+         cINg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741961919; x=1742566719;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IaDYviHzXbMRVdS6PNoP5phPb9zBK8u8E5XEDQrfB7c=;
+        b=Tqw1NkPYkZ+toRLettEx/j8MiRJkWV/HjSNXEVQy154MEq/duUJ78paMidZyXQjOCv
+         RgZkUk3Qz/PD/oa/YOS8Clyd4pbX3J/cJPqIP4Z7ebLxp7+KvdpiUgEWhtPNs1LRrhwq
+         jTZgrFfh7g10Dn6FmcVj8HaUp1rRH7g6aX88TuUUCBGe/VKS+hUwDTv+sX0KyQQwkBfH
+         xF5BoAgeHoP6oGmqHpg6DIe6CDejZXlAr7YO7GUgL3p8gnhNhgvg0CkBo3LA023+pUVR
+         6XqCOEeWwZOetfoEnS8m4bDONcmeVfIu5/wNC0Xy7F0E6C5xfJSuk7/mftGVBAzqt5/K
+         NZ6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW6Lcls4PeUalFznvA0DoRjJ0cUvZWmSveGIrf092SYH9Yy2tBHFLjJykQI5msK+OpE/EE+KqJzT15bvIs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPvPep9JewJRgMj67mBXUNvYBRhYTNcbH0L67o8w7yfN8zEVR3
+	Iy9S7H8vcvSB9Jjf2u+pUwaac1/D8ImLnqwtdaH3AX7L17tmwcK807ezvXZxHRU=
+X-Gm-Gg: ASbGncuvGgbS+ZxWS2NnuS/b1zAijB5hqsNgdz8ByGTrL2tO2MygGtm5bZShQDX2LLF
+	nVTU0XEYE/nna+UfPZ15cNDcJHgEMaQZAszfTZ3pWFBmxN7GW+vfc/10BPQMTJhZWuDiFGHC4rT
+	XJFba1hl8Efiqk1wFBs0MdkQ6xqvgrj7GcC6WwXJ7iTnacOZZr0jFVCzmMO5wcPAbNzJpJ/3TsZ
+	oYrTOQbwFY+acLj5dMSKGAvtDY43fVHs7NsnIXlUTEyaD3KoXVk2ID0p20kPoHLt6hy6+WtxJRi
+	eKAB8aeDgqyL0fyK6wxAlaWIPIb7d6JFR3ZCmEtUvcI=
+X-Google-Smtp-Source: AGHT+IG7F2ni/878Zv1My77dBoi+suAvL96gvrp6tTD3MWR04MKx7wwf6zLBRFeSQYIOoSvEPfAl0g==
+X-Received: by 2002:a05:622a:250:b0:476:9e28:ce49 with SMTP id d75a77b69052e-476c81e8cc8mr35426001cf.43.1741961918922;
+        Fri, 14 Mar 2025 07:18:38 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-476bb6370aasm23704331cf.20.2025.03.14.07.18.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 07:18:37 -0700 (PDT)
+Date: Fri, 14 Mar 2025 10:18:33 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Michal Hocko <mhocko@suse.com>
+Cc: Zhongkun He <hezhongkun.hzk@bytedance.com>, akpm@linux-foundation.org,
+	muchun.song@linux.dev, yosry.ahmed@linux.dev, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] mm: vmscan: skip the file folios in proactive reclaim
+ if swappiness is MAX
+Message-ID: <20250314141833.GA1316033@cmpxchg.org>
+References: <20250314033350.1156370-1-hezhongkun.hzk@bytedance.com>
+ <Z9PuXMlHycL6Gco0@tiehlicka>
+ <Z9P2nZ6b75FRMhCp@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z9DfurM5LwR5fwX4@tpad>
+In-Reply-To: <Z9P2nZ6b75FRMhCp@tiehlicka>
 
-On Tue, Mar 11, 2025 at 10:13:30PM -0300,
-Marcelo Tosatti <mtosatti@redhat.com> wrote:
-
-> On Sat, Oct 12, 2024 at 12:55:54AM -0700, Isaku Yamahata wrote:
-> > This patch series is for the kvm-coco-queue branch.  The change for TDX KVM is
-> > included at the last.  The test is done by create TDX vCPU and run, get TSC
-> > offset via vCPU device attributes and compare it with the TDX TSC OFFSET
-> > metadata.  Because the test requires the TDX KVM and TDX KVM kselftests, don't
-> > include it in this patch series.
+On Fri, Mar 14, 2025 at 10:27:57AM +0100, Michal Hocko wrote:
+> On Fri 14-03-25 09:52:45, Michal Hocko wrote:
+> > On Fri 14-03-25 11:33:50, Zhongkun He wrote:
+> > > With this patch 'commit <68cd9050d871> ("mm: add swappiness= arg to
+> > > memory.reclaim")', we can submit an additional swappiness=<val> argument
+> > > to memory.reclaim. It is very useful because we can dynamically adjust
+> > > the reclamation ratio based on the anonymous folios and file folios of
+> > > each cgroup. For example,when swappiness is set to 0, we only reclaim
+> > > from file folios.
+> > > 
+> > > However,we have also encountered a new issue: when swappiness is set to
+> > > the MAX_SWAPPINESS, it may still only reclaim file folios. This is due
+> > > to the knob of cache_trim_mode, which depends solely on the ratio of
+> > > inactive folios, regardless of whether there are a large number of cold
+> > > folios in anonymous folio list.
+> > > 
+> > > So, we hope to add a new control logic where proactive memory reclaim only
+> > > reclaims from anonymous folios when swappiness is set to MAX_SWAPPINESS.
+> > > For example, something like this:
+> > > 
+> > > echo "2M swappiness=200" > /sys/fs/cgroup/memory.reclaim
+> > > 
+> > > will perform reclaim on the rootcg with a swappiness setting of 200 (max
+> > > swappiness) regardless of the file folios. Users have a more comprehensive
+> > > view of the application's memory distribution because there are many
+> > > metrics available. For example, if we find that a certain cgroup has a
+> > > large number of inactive anon folios, we can reclaim only those and skip
+> > > file folios, because with the zram/zswap, the IO tradeoff that
+> > > cache_trim_mode is making doesn't hold - file refaults will cause IO,
+> > > whereas anon decompression will not.
+> > > 
+> > > With this patch, the swappiness argument of memory.reclaim has a more
+> > > precise semantics: 0 means reclaiming only from file pages, while 200
+> > > means reclaiming just from anonymous pages.
+> > 
+> > Haven't you said you will try a slightly different approach and always
+> > bypass LRU balancing heuristics for pro-active reclaim and swappiness
+> > provided? What has happened with that?
 > 
-> OK, previous results were incorrect. In fact, this patches (which apply
-> cleanly to current kvm-coco-queue) reduce cyclictest latency from:
+> I have just noticed that you have followed up [1] with a concern that
+> using swappiness in the whole min-max range without any heuristics turns
+> out to be harder than just relying on the min and max as extremes.
+> What seems to be still missing (or maybe it is just me not seeing that)
+> is why should we only enforce those extreme ends of the range and still
+> preserve under-defined semantic for all other swappiness values in the
+> pro-active reclaim.
 
-Thank you for evaluating it.  Does your guest include [1] (or similar fix)?
-The patch would affect the result much.
-
-[1] https://lore.kernel.org/lkml/20250228014416.3925664-1-vannapurve@google.com/
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+I'm guess I'm not seeing the "under-defined" part. cache_trim_mode is
+there to make sure a streaming file access pattern doesn't cause
+swapping. He has a special usecase to override cache_trim_mode when he
+knows a large amount of anon is going cold. There is no way we can
+generally remove it from proactive reclaim.
