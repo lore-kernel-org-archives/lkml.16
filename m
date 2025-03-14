@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166881DEFE0
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6462A1C84C9
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741988316; cv=none; b=ofP+bzpU5JaegBMbVv9tdtDOD5g2CdHnPYeHOuMCnh5ojaPstNpPkIxjeFkToS1A/M7Vkm6oLIwBd9t/2r4afseztgRIGsN5MJYpC3ds1xRDPp5IzTyiDrw6Zy2+cYoLAA9xS1AiGB+Pp3Fqvt5eNMwiLZSTxxhVxcAJ7csMalI=
+	t=1741988323; cv=none; b=jIWIxrI+urnF2p0UJg2Mlsl28eHjFn2AdsKUPul5UWKUVI9Cx8IuWxUq/BGJeCMw25xxKPwI6qauNpuJZT8xy4t1V8RWiMEmIC9G2O/qWCNT7Yt+UslPNA34Yw2U6iTCcbwE4hWCG5lUouka2GAEKr/o8gv/8DQi4qco+BGccYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741988316; c=relaxed/simple;
-	bh=aL6XpG6waIwRsJU0cAQlfQb9j2y/yn0NcY83ozborHw=;
+	s=arc-20240116; t=1741988323; c=relaxed/simple;
+	bh=7JAKR1B2EJs5OMc3kDKDyMYaNnMBEQeVe+0pTH470+w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=smFGRBmOkZxO3BPRf806no4vI4QfWCZnPUdK07xe5iaMmU50anMweUUiYnfHEXcQfkFfRYRQ5gBUmIbTmsJOR+53w7FWQgODRdrhaJq3x+x6rt9WMFY6SGh+IjOll1czy/2Y6iNNoUylCtPjazyhjajoVlaSTag2TEi+MwUH02Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yid/BI6G; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=fOtJZ8dc+7Rf0xhK7dHIfdzVt6E8G7WOA+hvlrHn0lZhutPkA3LsMR3WrkOW9euRGlnRYULaWyKZTqDVUOkJcNncyOWyZTQos0IKsDLpb2EIg2priFjB9yP1M2hKsM415vuV8uXx+xbW0ijIeYOVTBf03rv2n+B64b1L/6eOc64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N1KiB4sC; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yid/BI6G"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1KiB4sC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741988314;
+	s=mimecast20190719; t=1741988320;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3RXL+coJsdtD8dzVN3au7Q2NbBlOYxUwoHTJ/KoQPU4=;
-	b=Yid/BI6G5Z51PR+EjAgOz1CKMB2IGMXXCnah5+meB+JXGzV8X3eqYCd1OdbOWc/fcNw+E2
-	Fku9tJzBLUepyNBNMp9IrvpjZOwOs/ziLIDYZRbFsPt6Dqd3tjJkFEKqWoEmpXKrRYdcJV
-	FqKy2O++o+ZgR1telTQVtqDgdwBVtkw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=dGPxM9RdXtkX+Els8nvXOJm60GkYwZd/fztNUeVaxvI=;
+	b=N1KiB4sC3veL8yihY/K7w70PEUapQvZnYNJOxn00MX4IkqAvvXInzqGpxiFnRN3lT4JJW6
+	IP+fjhE1uNnCkPswfRlQ76q4V50CCDYc1X9QcBQMsxpYb1Ambma43PLZhuFuyvs1qqXvAI
+	SvcAwlSOU9u/3aCDEZS5GAbTZBLmY+g=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-646-0r6UKT9IMtuF-Il_bN2UWQ-1; Fri,
- 14 Mar 2025 17:38:30 -0400
-X-MC-Unique: 0r6UKT9IMtuF-Il_bN2UWQ-1
-X-Mimecast-MFC-AGG-ID: 0r6UKT9IMtuF-Il_bN2UWQ_1741988303
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-171-4j3QuXoCNQOrm0DeJ5-F4Q-1; Fri,
+ 14 Mar 2025 17:38:37 -0400
+X-MC-Unique: 4j3QuXoCNQOrm0DeJ5-F4Q-1
+X-Mimecast-MFC-AGG-ID: 4j3QuXoCNQOrm0DeJ5-F4Q_1741988314
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8BDC195608D;
-	Fri, 14 Mar 2025 21:38:22 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1B7E419560BB;
+	Fri, 14 Mar 2025 21:38:34 +0000 (UTC)
 Received: from h1.redhat.com (unknown [10.22.80.88])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6352D1944E42;
-	Fri, 14 Mar 2025 21:38:17 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A74201944E42;
+	Fri, 14 Mar 2025 21:38:28 +0000 (UTC)
 From: Nico Pache <npache@redhat.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc: alexander.atanasov@virtuozzo.com,
 	kanchana.p.sridhar@intel.com,
 	llong@redhat.com,
 	shakeel.butt@linux.dev
-Subject: [PATCH v2 2/4] balloon_compaction: update the NR_BALLOON_PAGES state
-Date: Fri, 14 Mar 2025 15:37:55 -0600
-Message-ID: <20250314213757.244258-3-npache@redhat.com>
+Subject: [PATCH v2 4/4] xen: balloon: update the NR_BALLOON_PAGES state
+Date: Fri, 14 Mar 2025 15:37:57 -0600
+Message-ID: <20250314213757.244258-5-npache@redhat.com>
 In-Reply-To: <20250314213757.244258-1-npache@redhat.com>
 References: <20250314213757.244258-1-npache@redhat.com>
 Precedence: bulk
@@ -84,38 +84,36 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Update the NR_BALLOON_PAGES counter when pages are added or removed using
-the balloon compaction interface.
-
-The virtio, Vmware, and pseries-cmm balloon drivers utilize the
-balloon_compaction interface to allocate and free balloon pages. Other
-balloon drivers will have to maintain this counter manually.
+Update the NR_BALLOON_PAGES counter when pages are added to or
+removed from the Xen balloon.
 
 Signed-off-by: Nico Pache <npache@redhat.com>
 ---
- mm/balloon_compaction.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/xen/balloon.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-index 6597ebea8ae2..d3e00731e262 100644
---- a/mm/balloon_compaction.c
-+++ b/mm/balloon_compaction.c
-@@ -24,6 +24,7 @@ static void balloon_page_enqueue_one(struct balloon_dev_info *b_dev_info,
- 	balloon_page_insert(b_dev_info, page);
- 	unlock_page(page);
- 	__count_vm_event(BALLOON_INFLATE);
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 163f7f1d70f1..65d4e7fa1eb8 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -157,6 +157,8 @@ static void balloon_append(struct page *page)
+ 		list_add(&page->lru, &ballooned_pages);
+ 		balloon_stats.balloon_low++;
+ 	}
 +	inc_node_page_state(page, NR_BALLOON_PAGES);
++
+ 	wake_up(&balloon_wq);
  }
  
- /**
-@@ -103,6 +104,7 @@ size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
- 		__count_vm_event(BALLOON_DEFLATE);
- 		list_add(&page->lru, pages);
- 		unlock_page(page);
-+		dec_node_page_state(page, NR_BALLOON_PAGES);
- 		n_pages++;
- 	}
- 	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
+@@ -179,6 +181,8 @@ static struct page *balloon_retrieve(bool require_lowmem)
+ 		balloon_stats.balloon_low--;
+ 
+ 	__ClearPageOffline(page);
++	dec_node_page_state(page, NR_BALLOON_PAGES);
++
+ 	return page;
+ }
+ 
 -- 
 2.48.1
 
