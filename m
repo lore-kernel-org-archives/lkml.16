@@ -1,74 +1,63 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C24B178F2E
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028742629D;
+	Fri, 14 Mar 2025 17:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974153; cv=none; b=RRjSFQ9Ceo22s4ydRSs2ejpKhUedahNsteV+uG4tVyQ/LmkkeYewMpR01j5F1bjSm3FRq6ji0R2VrG0ERikseGxt+YDFECPViLP/JvGOAurEIBx7hnR5pzGAvAy355ACF0pLJrHfLgpii5PZBZLrFmsHdszPCRcEyx016MBjmhk=
+	t=1741974222; cv=none; b=kjRvM2EiwhVnUvabC9qmxw5EmctH0SEex4dTEacveL6aQnvUP2rxj1MW1bjP2gX25+68b/jfUmHF5efi20EWWoskv6KSbL9TCu6S2gf4BhDempzRUrgfUP7A4dZevPejA+QNYy2YuW+k0zwHPvlYdRzByqgXtgea3xCksX/hLX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741974153; c=relaxed/simple;
-	bh=33jttg2peo6dNKyXFbBVQDvp4YmSGRXp0c7u3G+t+6M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gR8Ud46R3p4PbmXWZe1k8MOVC+T3jrlTOJ0DxVM7BYd8RmKwGU7KT61ySdo7kiR49KMMrEYq6Ut+qHezA8OWHEZkagElPF14C3CWN2G5SVKkH0sXCpzj4MeP+KeVMZ3YxQ7Qb9iOzEJQTb6ORuJsz3Kd3dBSgMU/KB22XEvCtDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D95541BD0;
-	Fri, 14 Mar 2025 10:42:40 -0700 (PDT)
-Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 660803F673;
-	Fri, 14 Mar 2025 10:42:27 -0700 (PDT)
-Message-ID: <af1a273a-0db5-491b-9fbf-48100e29169b@arm.com>
-Date: Fri, 14 Mar 2025 17:42:16 +0000
+	s=arc-20240116; t=1741974222; c=relaxed/simple;
+	bh=UfJrm2yCFAgVvDAibstSIiqplSzCVgfdGZqcvC0TH/o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Hcf2Ppm1KozZdOFQX5yC/QFx+KUJgXerGgYRCwbxjgoK9C/bAHYa1a7jn//kiuPoB4VTRgZOVWcR7OvQCU3PDQerEm0apEW4u0gS7TPQv95pJg2gMIqtVlKdJ48LzrrFBL8qF1YRZAOdKmo6I7d7EttPQpPnfgWaS/PWilcsxiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MzdiXnLD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MzdiXnLD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E208BC4CEE3;
+	Fri, 14 Mar 2025 17:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741974221;
+	bh=UfJrm2yCFAgVvDAibstSIiqplSzCVgfdGZqcvC0TH/o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=MzdiXnLDnYiyc+IiiZC3WYzF3D4mo6tnnO1kek0ERsAdbr0I63piUX76szP1uEFQv
+	 LQ3atwDzS6mIvsfhNVFwNjJSHdJlJ8drU9ZUbb+uUzptDyvGXqfi2WCWgHJYtM9m0x
+	 Vk2ErzxebJgpJDcfbNdMD4ezLbwigmdt46NMXTk/Cip7PcgbIEwEHkQPQI+bDlgNB5
+	 FaZZ3fTCNVEGaQ2plJXiHa+uVRfpz8g6tmXFN8+4G5J22yxw45hdXRSDKLtQoqTsJd
+	 uKm9zP8mggbQscDuQ5vzyhbh7CWYR/BeGbb3erFFkc8qkqWfW4XMwgUqx9iv3hSLQJ
+	 myOLVRANzrNkQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Yujie Liu <yujie.liu@intel.com>
+Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, 
+ Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
+ Mike Leach <mike.leach@linaro.org>, 
+ Graham Woodward <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com
+In-Reply-To: <20250312075636.429127-1-yujie.liu@intel.com>
+References: <20250312075636.429127-1-yujie.liu@intel.com>
+Subject: Re: [PATCH] perf script: Fix typo in branch event mask
+Message-Id: <174197422088.4059945.167819241578952524.b4-ty@kernel.org>
+Date: Fri, 14 Mar 2025 10:43:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 47/49] fs/resctrl: Remove unnecessary includes
-To: Fenghua Yu <fenghuay@nvidia.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>
-References: <20250228195913.24895-1-james.morse@arm.com>
- <20250228195913.24895-48-james.morse@arm.com>
- <f6f98abb-0d4c-4e41-8c83-a3ab919a8fbe@nvidia.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <f6f98abb-0d4c-4e41-8c83-a3ab919a8fbe@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Hi Fenghua,
+On Wed, 12 Mar 2025 15:56:36 +0800, Yujie Liu wrote:
+> BRACH -> BRANCH
+> 
+> 
+Applied to perf-tools-next, thanks!
 
-On 07/03/2025 02:37, Fenghua Yu wrote:
-> On 2/28/25 11:59, James Morse wrote:
->> When splitting and moving the resctrl code to live in fs/resctrl and
->> arch/x86, some code was duplicated. This was done to keep the parser
->> in the script that does the moving simple. These extra includes are
-
-> As for "parser in the script", my concern is people may forget or don't know the context
-> of the python script in the future and get confused when reading this patch.
-
-> Is it possible to merge this patch into patch 45 which introduces the macros? It simplify
-> the patch set and avoid future confuse?
-
-The plan would be for these patches to get merged together by the person that applies them.
+Best regards,
+Namhyung
 
 
-Thanks,
-
-James
