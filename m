@@ -1,107 +1,70 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CDE1624D5
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228018632B;
+	Fri, 14 Mar 2025 07:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741939048; cv=none; b=OraFOuSitfitNcFImF64LhGnPqHcNd0oz1CtSBe2oauyX7uwA3pFKFH6E9zUA4H3T9/jQKhmF0WkZ6covkYIqyYvX21aYQyws9Cg/Q8wvVxjj7TNW8v3lwM5mGtmqsdZ3JGTM84V3jYX7MFXnVznwPWAy+TweV1MAFVKtQv7Q8w=
+	t=1741939074; cv=none; b=TcYy5alAhNLvWHQy6rx0apDjoPb71LU1bG0D1cy8fowzeJNDt/G9PC6F/aAqBQSmFBn5W0T1VdjVni8wg1Bi05ePbWxKrScuntmcdSRXZYI1eq/py4Xq0QX3ngO1vCzU0lIgKkT9dVyYIwrNp9Oca6XY7+Bw1GrTjBSeSdBYRmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741939048; c=relaxed/simple;
-	bh=BMlElhUzYDL6JB0tvYCxMzpB4MYKpbR6FOEi2tzqO6A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BRdd7RUMhWkOndNlExqINXaKqw64al5KEd5+dPnvHpnYBjHpXdeeZU9oTH9Uw76D+m4RQiXtFGlk3/2cB+KqmHZVptlWqP0Qb5wdOuT8VBTlBTFZOteo2htU/iUhCLjpu8tMvKtg5PptBszNP7SwrHSS5A4wGD5hjt+KxBcjyb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=httOiifW; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741939074; c=relaxed/simple;
+	bh=kLmVLSVYE5l3QJYFELjSs2DqsuxPPf5s9sQcfNt7eAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kxa443IOZqHJ7XshCVCcVs4t0f4JRbXPIejqfvhsJY7RMLl9AQDMzsdV5sShxXT3sCLewPFfFTXHwepEnHvt6G5ml2xTvRr5Jd4EBC+nQswvXFzt+dBnQGGpbLhMFAI2dno05yDNaXb4uR1l3O2IoJjBRRY9QOXD0WTEJxIqOmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Io4iEEbG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="httOiifW"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224171d6826so45040215ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 00:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741939046; x=1742543846; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZGqvrAfhcKrz89VYEJIZSiwWmc+V5sZA3zV6G2zLMIE=;
-        b=httOiifWmruoJUS8NbZxe1mcsj0+wMdUhiGaXPEpIGWcDyGqALl/6th/208u1H+w4L
-         C4y/yo4rO3m/HAGa8a+/iPTI3m6Z04bTU7R1Muk7HKPeOZycShY4CzZ/Z5hJWCGuoiSl
-         D0J0vF7FLaOkR+PaS+ZtMyBw7odZKl30vmOCI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741939046; x=1742543846;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZGqvrAfhcKrz89VYEJIZSiwWmc+V5sZA3zV6G2zLMIE=;
-        b=NdgsaQUDPDQ4QPWn0BdQJKAkqhXLCs2pAnZbYu8LSWcnQu9smBfF0KZJZSF6rhJaig
-         uF+WgrVJ3dY8cfzov9i5o8JQDjaychQPCqHZQdtfqi+PnTpboSRiSLTKa+WDx5Bw+iMT
-         puDLQQmnOGTdVwRcppWRAiOiMyYpaMYHPn/cvlYXdd/bzMeeK/NTkTZ1SfCIeQ8g7vEU
-         awV2OHSIMNa+r7RLi/fLUqq1qJYBXRo764o6H/PBHuR4b6nbyXk7jGbXTOkS4SC0yYm1
-         UPJIuY9CPaRezb5uO0RFIWfh+F7IvoBE12hd4W5VmHZaGe398pbYqlNXcfJXjk+6f849
-         WBgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXis4fmjVcbhhPWqkHonp00HvGdfVnuKJSsbbRVkp5CHBQOOJzvvAQkYW+oUXVtGMso2M6t4MMIHut0EKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzL3JWdEQfZxA4dTIu0EnpVNtAC6Uw4/Jf8sEkaHYqoAXSsKEZ/
-	L4Sq7UNKcGV0TLn14d46d1FiZy9axQ2mj4OcY21Xk16b4Cy3jbaZYLjjOjzjWA==
-X-Gm-Gg: ASbGncv6qLGp0TAm5Nstf0PYayMUDUc8kV0YL+5qQszN3xVk/6n4zmdh7i8baQyTLG7
-	/CWG43ILQFndwSAHz6c8xmQ0dexOwiIQb7FZnAenwkYzJDGWtR5ye1GLn6VZfFyQUvugOZWssOe
-	9MhwHSoeF/MuZ9IDGiIfYgNwMMsOh04FwUPfl6ExKowsjPcnEH3mOXQHhn7/3ICvyamGyG/eqq3
-	gVMeA01HHh5T7bTdyfd++oIEWHYC+K0BiWqXw5z0yw12oyPy8CJYPnDR0cBvMzbg5CrMIJDZYHE
-	loao8NtuJoIfL3lgq57kwHc2dVzm12OKpjmqQgVXYaq3I8IXnrtYDPH8EaY+NWQsJAIH2lgsEBM
-	=
-X-Google-Smtp-Source: AGHT+IGcdiyY6idwVO/6iM9R+Lbkfus0qpbdDrY+BW36asi0U5rIaBOZjp3x3v1YPc7FN9l17L4XaQ==
-X-Received: by 2002:a17:902:ce89:b0:224:1579:5e91 with SMTP id d9443c01a7336-225e0b51498mr21334615ad.47.1741939045771;
-        Fri, 14 Mar 2025 00:57:25 -0700 (PDT)
-Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:ae4f:9361:a038:8207])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c688da81sm24405595ad.43.2025.03.14.00.57.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 00:57:25 -0700 (PDT)
-From: Fei Shao <fshao@chromium.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Fei Shao <fshao@chromium.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Yunfei Dong <yunfei.dong@mediatek.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] media: mediatek: vcodec: Correct vsi_core framebuffer size
-Date: Fri, 14 Mar 2025 15:56:17 +0800
-Message-ID: <20250314075703.4167532-1-fshao@chromium.org>
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Io4iEEbG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A16E7C4CEE3;
+	Fri, 14 Mar 2025 07:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741939073;
+	bh=kLmVLSVYE5l3QJYFELjSs2DqsuxPPf5s9sQcfNt7eAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Io4iEEbGYXxvd6eRGU4X19Vx0Q1/Y7eauxv65W9Ixi/Mysh60rIUlGxzMKYUQgCFu
+	 g5qyDOIJJ5r4q3j6Gx3XuLzXYADzppcIkP4FPZJ5p77BKFy+PXY66PfqpI+9Kf0Wfo
+	 hIb6EMmMtqOWPJNsmd+Dv5x2NTGi5YyO/zkNeULflCZSr0VY7FhkFvvrm627XEk6rS
+	 Du2uo6/uH3BO8kBgjrCThMMr6Qduj+LmqHuipjBjJeYWX/a8NjiyJGQ5CWaDGgvl0z
+	 ii2IICkI2hLw/caelcqp7xoAZ0JBdYMxqigr0y4SDBpsfytXXt9PULW36d66DxhC4N
+	 wtMwr4qcoPRlg==
+Date: Fri, 14 Mar 2025 08:57:50 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	andersson@kernel.org, konradybcio@kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 1/4] dt-bindings: PCI: qcom: Add MHI registers for
+ IPQ9574
+Message-ID: <20250314-resolute-slim-waxbill-eaa9ee@krzk-bin>
+References: <20250313080600.1719505-1-quic_varada@quicinc.com>
+ <20250313080600.1719505-2-quic_varada@quicinc.com>
+ <1c88f01b-4414-4f02-91ed-572a9261543a@kernel.org>
+ <Z9LGti0cdg9Sj6xa@hu-varada-blr.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z9LGti0cdg9Sj6xa@hu-varada-blr.qualcomm.com>
 
-The framebuffer size for decoder instances was being incorrectly set -
-inst->vsi_core->fb.y.size was assigned twice consecutively.
+On Thu, Mar 13, 2025 at 05:21:18PM +0530, Varadarajan Narayanan wrote:
+> On Thu, Mar 13, 2025 at 12:01:54PM +0100, Krzysztof Kozlowski wrote:
+> > On 13/03/2025 09:05, Varadarajan Narayanan wrote:
+> > > Append the MHI register range to IPQ9574. This is an optional range used
+> >
+> > Same question, you still did not answer - does hardware have this range?
+> > Which hardware has it?
+> 
+> Yes. All three (ipq6018, ipq8074, ipq9574) have this range.
 
-Assign the second picinfo framebuffer size to the C framebuffer instead,
-which appears to be the intended target based on the surrounding code.
 
-Fixes: 2674486aac7d ("media: mediatek: vcodec: support stateless hevc decoder")
-Signed-off-by: Fei Shao <fshao@chromium.org>
----
+Then explain in the commit msg that you complete the hardware
+description for these SoCs.
 
- .../mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c       | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c
-index aa721cc43647..2725db882e5b 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c
-@@ -821,7 +821,7 @@ static int vdec_hevc_slice_setup_core_buffer(struct vdec_hevc_slice_inst *inst,
- 	inst->vsi_core->fb.y.dma_addr = y_fb_dma;
- 	inst->vsi_core->fb.y.size = ctx->picinfo.fb_sz[0];
- 	inst->vsi_core->fb.c.dma_addr = c_fb_dma;
--	inst->vsi_core->fb.y.size = ctx->picinfo.fb_sz[1];
-+	inst->vsi_core->fb.c.size = ctx->picinfo.fb_sz[1];
- 
- 	inst->vsi_core->dec.vdec_fb_va = (unsigned long)fb;
- 
--- 
-2.49.0.rc1.451.g8f38331e32-goog
+Best regards,
+Krzysztof
 
