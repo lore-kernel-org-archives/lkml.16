@@ -1,101 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAE01FDE2B;
-	Fri, 14 Mar 2025 15:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8FC78F2E;
+	Fri, 14 Mar 2025 15:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741967457; cv=none; b=Qn06Dc6bTFolbCW6OZhLmvMEdorb71rHVBZU1zzDH7FZNym+ClAcKS/EWsoXyMF6WKIIw2JN2c5pymdpmNKy32fBgfWM7Si0Y6/55E0F3nca3QD9pgi5NDn2MjmYQVfw/h/yZDeUmgws/q/57dj7941aiqJrlr1K7In6aONmU/w=
+	t=1741967568; cv=none; b=FGPPLldsLwMph5HjznJtYS8xAgD8LVytmGg9VkvzxhYse15yuuSBk1jdYwiz84QluLUMrsqoKpppE6Tz8y8JiWQAkS5Pd3LuZMObecFcifH7rzJriWtT6oBoDsoCI38GYkbLaKbf6q+Ny7RfnjoWXqA1KfriaGSqZNcgB5OFdBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741967457; c=relaxed/simple;
-	bh=AKNeT7I9L8uYDztJZF47bgZZU5WqdSoQ6VPicq2vYtg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aAk7xvJOsZd3rgSUNzMTV4G6gB2LskEfTSzgdWvKREuuFbvs1iEJQcsWDqLiy1Kc+mFXYV6TqslSzEH8+HoQAQvzELLyMhhwDpas1bdP2MNc8PjdZlM0QeB4+dHAUCtVTEo2DIP8DZ0CbV+sHfM2+TAiDWjMiGvz2Yc48FAlD04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcYq5A0O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741967568; c=relaxed/simple;
+	bh=/uS4Ng/WL4Jcl0Ypz9LMLA+hr2onBnAyckmY9Xp0WYE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=m0IyQeBQgtBqrNyNKp1BwguHHEPZ1SHWsZOGACsdZLj1XCTv+YjPVRdLBFnBFMcXNbomfzMAlpGpX7erlL4qIJftIt63Ycs7kY2rTnGBTdN7x6ewjOG4y2z2iuchYyiQV/S8We8e5lOoiUY/Xcl0aEy2qWeA/hvxPD51r5pDXUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SPejpvPI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcYq5A0O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6F5C4CEE3;
-	Fri, 14 Mar 2025 15:50:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SPejpvPI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3215C4CEE9;
+	Fri, 14 Mar 2025 15:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741967457;
-	bh=AKNeT7I9L8uYDztJZF47bgZZU5WqdSoQ6VPicq2vYtg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IcYq5A0O4zwSX0dY32dildB5YMgA3Le31v0uy4ihF6T8Yr7Qy7+9GNqRyhViXI3It
-	 TC5yJyCJq9mjay+sgZ77jSpVCrN7lC6dSWu8nGq1LaFWjhN9GnIysuD9LNVza0XN41
-	 8GQ0GPhQaoT7/kMdi4kBP0B9Z3PfmO4wdDI8L9HCb3qBYhXUZVCM6IIJSP2LOQ9R5D
-	 96a3ucRwRFK1E8mDKaS8BPK7gmDnf51n34aOMDxbV3/pnkdtajVCOs91lrRWu8pGCy
-	 ZtQmiQRpfsAp97053Z24az+2c7c1L8MzKvUZvsxDfsDs+v6ZZE2c0RVUl1ZGoBabmI
-	 lLSuISDX78msQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Huang Yiwei <quic_hyiwei@quicinc.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: fix build without CONFIG_MODULES
-Date: Fri, 14 Mar 2025 16:50:49 +0100
-Message-Id: <20250314155052.4170214-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1741967568;
+	bh=/uS4Ng/WL4Jcl0Ypz9LMLA+hr2onBnAyckmY9Xp0WYE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=SPejpvPIxJ3EItLLujVnFxouIcFjY4+owwjJUmcJD+19EVLugbpxI4TkF/eBm0w3J
+	 mTTlsL2Q+IbECocAChsyEtVhMEHSFbx/X2rzanjpN3AAmnnmPLdxzUwPRRhGr0Gakt
+	 QiTWToAQcWp+EgeVYDDHzxM65Jm/b4NWAna+wWSwZJBhpPLHT/HJoBg40BERmFRXBH
+	 cxO2pXqNQlOvkn9yReqYMnokyk1EcUYv1ET09Q+aI43rReDO5O66teSETXQGQZ6VKW
+	 lqUYsmshwNU9k5BevBTe0J9FHzPD8j7Y2NINAsFgilmBNC/DJE6MXS4uHzPz7slHo6
+	 VtWusLum1IuGQ==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Shenghao Ding <shenghao-ding@ti.com>, 
+ Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>, 
+ Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ James Calligeros <jcalligeros99@gmail.com>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+ Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
+ Neal Gompa <neal@gompa.dev>
+In-Reply-To: <20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com>
+References: <20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com>
+Subject: Re: (subset) [PATCH v3 00/20] ASoC: tas27{64,70}: improve support
+ for Apple codec variants
+Message-Id: <174196756357.19728.11723701852037310950.b4-ty@kernel.org>
+Date: Fri, 14 Mar 2025 15:52:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, 27 Feb 2025 22:07:27 +1000, James Calligeros wrote:
+> This series introduces a number of changes to the drivers for
+> the Texas Instruments TAS2764 and TAS2770 amplifiers in order to
+> introduce (and improve in the case of TAS2770) support for the
+> variants of these amps found in Apple Silicon Macs.
+> 
+> Apple's variant of TAS2764 is known as SN012776, and as always with
+> Apple is a subtly incompatible variant with a number of quirks. It
+> is not publicly available. The TAS2770 variant is known as TAS5770L,
+> and does not require incompatible handling.
+> 
+> [...]
 
-The tracing code fails to build when CONFIG_MODULES is disabled:
+Applied to
 
-kernel/trace/trace.c: In function 'save_mod':
-kernel/trace/trace.c:6041:45: error: invalid use of undefined type 'struct module'
- 6041 |         entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
-      |                                             ^~
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-The problem here is that 'struct module' is not defined in this configuration.
+Thanks!
 
-Enclose the functions in another #ifdef, just like other parts of this file
-already are.
+[01/20] ASoC: dt-bindings: tas27xx: add compatible for SN012776
+        commit: 25a83f870b8a25a4b10bf5ba474a017ed5a72e7d
+[02/20] ASoC: dt-bindings: tas2770: add compatible for TAS5770L
+        commit: ce9233937f3233e277ff23395e61ea690c769bef
+[03/20] ASoC: tas2764: Extend driver to SN012776
+        commit: ad18392962df46a858432839cc6bcaf2ede7cc86
+[04/20] ASoC: tas2764: Add control concerning overcurrent events
+        commit: f8d5f28e3f2ece5a1392205022afe30c87107a9b
+[05/20] ASoC: tas2770: Factor out set_ivsense_slots
+        commit: 6553ee024b4452ef861de10605156c9d79e208ab
+[06/20] ASoC: tas2770: Fix and redo I/V sense TDM slot setting logic
+        commit: f0066c8d1d3298e9f9d136a365139bac733e84c5
 
-Fixes: dca91c1c5468 ("tracing: Have persistent trace instances save module addresses")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- kernel/trace/trace.c | 4 ++++
- 1 file changed, 4 insertions(+)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index a6105b6dcc2b..51c030b9887e 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6019,6 +6019,7 @@ struct trace_scratch {
- 
- static DEFINE_MUTEX(scratch_mutex);
- 
-+#ifdef CONFIG_MODULES
- static int save_mod(struct module *mod, void *data)
- {
- 	struct trace_array *tr = data;
-@@ -6043,6 +6044,7 @@ static int save_mod(struct module *mod, void *data)
- 
- 	return 0;
- }
-+#endif
- 
- static void update_last_data(struct trace_array *tr)
- {
-@@ -6060,7 +6062,9 @@ static void update_last_data(struct trace_array *tr)
- 		tscratch->nr_entries = 0;
- 
- 		guard(mutex)(&scratch_mutex);
-+#ifdef CONFIG_MODULES
- 		module_for_each_mod(save_mod, tr);
-+#endif
- 	}
- 
- 	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
--- 
-2.39.5
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
