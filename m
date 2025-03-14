@@ -1,67 +1,68 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7365A1F63F9
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 23:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA3C1F8697
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 23:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741995366; cv=none; b=Qe3o9HTCSzqtBCMYvjse6p7x4yp6zRhPYY1qwc+r4qLEZTUh2svHMb73xgI/qsyw8MVXQLJpa3b29e6pJN0WRLpsJBIuR6u/sy9sOXJkz9D9ckmq0JXFvP61evjDFjTQH5XCAf59bqaJ/bzs/Jfa5E9kqKUY/lVzzpxy92YEqok=
+	t=1741995368; cv=none; b=r2gKF535qPnuPt6+mqW5AuEjYuPVjaIQmLFp8WfuZNhh+EiEOc6/CrWiwe3AA8hU3vDMx6Dk8qXIcbHSOxIVZ/IHxeaGHZHTMXJ0dtaxSbljKhjmek79XXrsV1LDQiatojlz1g6aq1bsgZBP2DJUx6pVXRQ6klDGK6FAuYu2aGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741995366; c=relaxed/simple;
-	bh=od5Z1Svn8BYbFzs98UBOgL0BUpzTDGbd+1gcxYEsBeo=;
+	s=arc-20240116; t=1741995368; c=relaxed/simple;
+	bh=Vq2uKzeOhWg9BzD0uczH19oCawxDFmiCSfyNb/VvQDY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MXHtFVE8ZD2u1mNOjSlbQD4z3ykQg+GCXF+r1iM+LYBcLPLQuj4w7iGdBKvLjFBrFMOHFsvGbf8zlLqLoX/D+ziI3NhCNlfM3STwVnlyHvKx8l9MVUGkAYtjvjFoaz8rz7xv+3pPa3sEFLujD/BXpjSU6aXNtQ85W51AUnrUy5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RBevlPbK; arc=none smtp.client-ip=209.85.218.54
+	 In-Reply-To:To:Cc; b=oDvlo/ZQrqxAvzGLTK5gYf08N5ZjlV+XIVXyFvXjwKi/qo4btMpjCaWdjZukhjRTm50HcfFiODMidTTniHSA3qVIKKNC/D5LWIvs+FMfL+hN2u3yRy2WrHhCA9tSjc7p5ccLY19NEhVSLbdmOrScm/xsHGi+z/qhhVE+dVvnHwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bkz3YxiS; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RBevlPbK"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso538580966b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bkz3YxiS"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac339f53df9so182641866b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741995362; x=1742600162; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741995364; x=1742600164; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=15nxH5caHACIfumG1mxHa3lLrfZBiG2an8ZU5x65FLw=;
-        b=RBevlPbKZKuXxd/13zDWqNLiRjpWIqaAv8Bj/oZjDI0Y6HMRENscNI3i356htz9SMb
-         CAaBsI0aZ63Pe/mC68BV1vv7FGNrKSBoDza+JWVv4y3td/1c7OsfUDDBeCac7hcS7dYB
-         PJNjsX3tsEn2FKrMI3Ve3tSxyZykHPvAdwrg0NtduDbLRFJMyCpI93RkRLAwgb/PE7TN
-         v994fwPo2BjmPPi0yfs/KKey0wFWjM9AQ+nQ/ajVFEmoSShU35+DLBWoDY+ei9zInS9s
-         ibKTHXq+plEU6KpUFdKp7bkO8eXaP3F+mJZqw38VtVhxGyOrjTpg95lBkRweJDtSNzDi
-         py1w==
+        bh=3U+Pt6JpsUTUHyzjN19Q+jXJPU51fOtm+jzvoDFAjpA=;
+        b=Bkz3YxiSsGOA4zxSZLudvhAY6Hnx9WMP+rqX8GZL3bauWr3CCEeI94t5AQ4szfczzz
+         4X3ALE8vP0HLZo1lWz5iqFZItccKMGqdj4x1zmrcwK2CahwDKluMWfS8TMbBwQsi/jTp
+         PY1WElsM5p76WfE4oub9dNFJhOa3NL5fhJCIIn13KOfV352nNKoVKbWq8wJ2i1l2La0N
+         EssyjxLdZFZAJWcQ+YUT7POon5MZ25TEh6JIMXJBbuUnQ3zY502Cs8g++t94lCduSsUk
+         ayKw5OTD2X0+Wr/frW0/Ha83fdl18g45oLd8GuiKT8fV0yUK2QDecaJHEy8lxWnLHx+8
+         TZvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741995362; x=1742600162;
+        d=1e100.net; s=20230601; t=1741995364; x=1742600164;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=15nxH5caHACIfumG1mxHa3lLrfZBiG2an8ZU5x65FLw=;
-        b=TO+7W0dQfUjIfj26b2t6Z1Fsy2t2npFxLLz5AX1tPuHiZJSCFUzdkaaohY30gxL/JI
-         8pD25douqjjynNC+OgaqNPjfPdQRazH2wzXYeI3EE+vi+pj/X+wNk4UNIAPW25MQyjbr
-         zW+a5Gn1Op7oZCcvCuBP0PmSVo6nRJccUpfK1coAMPDrOKz3rxEAdaszytoj43KjlWka
-         C8Hc1vJH7A4svl+ZIrKR3DBJZRhMMo1yxDnI7W6XDk3SszrauJG8nQrxOY12oSi5MniM
-         ixg603izNnYBwDmkwOx80EKyHck+bvHhnQ9gtZcaNkGvQ+SykXvUqF/0Ch49vN1yRLnC
-         avYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ5TNFP8yNZ3Wrf3V/sjCo4gdQt2e8lbYpIiB1MZTg5O4XBeZxi2+NJpJycw3lveCNYlHjFVDmq7zZUoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4to+J4KAuO4/ojVudUO6qi9jv1qqG8vjVZ6n4Vfr7Hu2d+gD3
-	RApJHwEsSXYrlvL4BKakN0gsrDOxuPGDX8U0ET7Pbz1rafidBQgfbRURj2ziBXfYHBqWvBw1py5
-	Jz629uA==
-X-Gm-Gg: ASbGncuuEaVNqcyu3Fj3AyFonXHGTKIrn+hfF4vjUiaWj6ePoPvaDzVhzZbcidSGFjS
-	VMfX/Wo+lTILzJlidxTnwFXvdByshpUngsTFycC9ATRVMF/3a80SdUN7betZbWxekNt3w6F+68O
-	Z+zmwfCeyal/+iOfQ4CenIPGNrDQq9cqocoSgP+W9zkPKctXyZHvsAcKau8ZIgO28S5oHwvslx0
-	+Vb+seRS4mDfcSK1wfkDIS5/SKy12Uw1CbalVgiw8ZkFbCPqJ1oLn7oSJQmLsuUjfreoWFuPmp8
-	GnYJ4xaY0bOqx10snEB6BNmrRh1Q74AWsmGtvgnXrJjmMWVczr4I3YFOUexQLM17q8kcL/vlDwd
-	txIQa0EbO29h194UdWBA0L6X0a4Syw4qsNTwwM3uLr7VDTvBhQxjJSWtWdZ9jxhDZuiPj
-X-Google-Smtp-Source: AGHT+IFZuYsHDqscjjw6U5atHRu/Jm5bPjG92uZ8YJc6NiscNKCBw+NDetW5to9ATMl0/VCBNhOBTQ==
-X-Received: by 2002:a17:907:97d3:b0:ac3:271e:6b1d with SMTP id a640c23a62f3a-ac3303dfca8mr575059966b.51.1741995362431;
-        Fri, 14 Mar 2025 16:36:02 -0700 (PDT)
+        bh=3U+Pt6JpsUTUHyzjN19Q+jXJPU51fOtm+jzvoDFAjpA=;
+        b=q/r6X3yn6ExsUHXF/K7oUDRtVlAtVU9zIl3pGSC+ygYyYaKOTwFZ2/rDvNOKDpKeBe
+         S+7WXO8fr0kNgWWvvVZk6wplpIIYl5VLRdCN2uefRDAfdMdKRXYkSqKIF1lCtP4E8SBf
+         XzqY5jOSaLXLy5ekcimv1efwIzUrPeoQ8Pmo5cleAI7hznYpdx7GY531SstYPnipLSkL
+         bIHlcOa7sSknN7J5mmt65WTlnj+qzKErizAfQguK3jQvNpNJhxpELOKjHkpqHBwpC15/
+         Ty1EBa1DCWjb5+szoCnga+MrVbfkSbhkL2jcOlUezHI7JkKfEUlq3WKTEoc8NuyQz5nd
+         otjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7tMvINbnvWaM2lYU2E5fdj5MKhOWe968MOS/NIKuP6B2H/vit7CkZrOs4dcw9HE6uPwhJX6D64qCNc7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxwfq/0LNgeFE3MYQKjmptMjg7/SKPMYOocqux4jEzuI8/WW51s
+	luXK0aJfKHhPmZJawDn6RpvEN3nfFk8V4GwLjQcr+WakKCurEiryuqCRCGOlzAOn8zEkerW4uQ6
+	DmkMztg==
+X-Gm-Gg: ASbGncve7eJaNJ595yVL79A1/IkeK2ud7R1cPnUR/mYcaEwTHSclgCaIody4er/RGop
+	A/Otku0QEcMz5qyDeW0TBlZ05vCd972GKRLWL/VzEY+yJMEwR4gCsN3/7dD9S9BViS3FHTxobrq
+	OuSVTExZlCe/2FkglDGvP4oz3CWWMGL4EfC/iRz3/0CoQwy+RjuUytwLnachqnRtj/+WJFbBzDw
+	EmBIQJsIN/qXO42SZu90VVeBDy+OeuO9YoijwCF7mP7Qly9JWxvWiNvXe/Jjt8moPqqGdNGW4Ri
+	AG22YsWHvgb6IAo9QbfLx/fiQvVM5xc7bGXQzXEkfNJCx9i2YQvyh39r4S6iFROez7hTXxJtlL6
+	YQlBeQnEo2Xf/PAhE5OF5mtVNUw2J/kR1wl68t00YEg/20jTCR1xKCCrSy9WorPtRU4Gx
+X-Google-Smtp-Source: AGHT+IFhQMOFUycyNl9NAwVjWQ8rMePZypskVYVYNfryZOS2CgGWpOB2ap4X37XJjZsLcNHBbTgMLA==
+X-Received: by 2002:a17:906:c10d:b0:ac2:7cf9:7193 with SMTP id a640c23a62f3a-ac3304195a3mr509150366b.48.1741995364518;
+        Fri, 14 Mar 2025 16:36:04 -0700 (PDT)
 Received: from [192.168.178.107] (2001-1c06-2302-5600-7555-cca3-bbc4-648b.cable.dynamic.v6.ziggo.nl. [2001:1c06:2302:5600:7555:cca3:bbc4:648b])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aeadbsm284246966b.29.2025.03.14.16.36.01
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aeadbsm284246966b.29.2025.03.14.16.36.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 16:36:01 -0700 (PDT)
+        Fri, 14 Mar 2025 16:36:04 -0700 (PDT)
 From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Date: Fri, 14 Mar 2025 23:35:57 +0000
-Subject: [PATCH v2 4/7] media: qcom: camss: Add VFE680 support
+Date: Fri, 14 Mar 2025 23:35:59 +0000
+Subject: [PATCH v2 6/7] media: qcom: camss: csiphy-3ph: Add 4nm CSIPHY 2ph
+ 5Gbps DPHY v2.1.2 init sequence
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +71,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250314-b4-media-comitters-next-25-03-13-x1e80100-camss-driver-v2-4-d163d66fcc0d@linaro.org>
+Message-Id: <20250314-b4-media-comitters-next-25-03-13-x1e80100-camss-driver-v2-6-d163d66fcc0d@linaro.org>
 References: <20250314-b4-media-comitters-next-25-03-13-x1e80100-camss-driver-v2-0-d163d66fcc0d@linaro.org>
 In-Reply-To: <20250314-b4-media-comitters-next-25-03-13-x1e80100-camss-driver-v2-0-d163d66fcc0d@linaro.org>
 To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
@@ -79,292 +80,165 @@ Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 X-Mailer: b4 0.14.2
 
-Add silicon enabling support for VFE680 as found on sm8450, x1e and
-derivatives thereof.
+For various SoC skews at 4nm CSIPHY 2.1.2 is used. Add in the init sequence
+with base control reg offset of 0x1000.
 
-References work from Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+This initial version will support X1E80100. Take the silicon verification
+PHY init parameters as a first/best guess pass.
+
+SKEW_CAL is included as received from the qcom silicon init sequence.
 
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- drivers/media/platform/qcom/camss/Makefile        |   1 +
- drivers/media/platform/qcom/camss/camss-vfe-680.c | 244 ++++++++++++++++++++++
- drivers/media/platform/qcom/camss/camss-vfe.h     |   1 +
- 3 files changed, 246 insertions(+)
+ .../platform/qcom/camss/camss-csiphy-3ph-1-0.c     | 121 +++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/camss/Makefile b/drivers/media/platform/qcom/camss/Makefile
-index 71797745f2f712929f76f6b97f75457bc59e35ab..d26a9c24a430a831e0d865db4d96142da5276653 100644
---- a/drivers/media/platform/qcom/camss/Makefile
-+++ b/drivers/media/platform/qcom/camss/Makefile
-@@ -18,6 +18,7 @@ qcom-camss-objs += \
- 		camss-vfe-4-8.o \
- 		camss-vfe-17x.o \
- 		camss-vfe-480.o \
-+		camss-vfe-680.o \
- 		camss-vfe-780.o \
- 		camss-vfe-gen1.o \
- 		camss-vfe.o \
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-680.c b/drivers/media/platform/qcom/camss/camss-vfe-680.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..8da7a3566076c7ab2024c828f3aa25f1c30edb5c
---- /dev/null
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-680.c
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * camss-vfe-680.c
-+ *
-+ * Qualcomm MSM Camera Subsystem - VFE (Video Front End) Module v680
-+ *
-+ * Copyright (C) 2025 Linaro Ltd.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+
-+#include "camss.h"
-+#include "camss-vfe.h"
-+
-+#define VFE_TOP_IRQn_STATUS(vfe, n)		((vfe_is_lite(vfe) ? 0x1c : 0x44) + (n) * 4)
-+#define VFE_TOP_IRQn_MASK(vfe, n)		((vfe_is_lite(vfe) ? 0x24 : 0x34) + (n) * 4)
-+#define VFE_TOP_IRQn_CLEAR(vfe, n)		((vfe_is_lite(vfe) ? 0x2c : 0x3c) + (n) * 4)
-+#define		VFE_IRQ1_SOF(vfe, rdi)		((vfe_is_lite(vfe) ? BIT(2) : BIT(8)) << ((rdi) * 2))
-+#define		VFE_IRQ1_EOF(vfe, rdi)		((vfe_is_lite(vfe) ? BIT(3) : BIT(9)) << ((rdi) * 2))
-+#define VFE_TOP_IRQ_CMD(vfe)			(vfe_is_lite(vfe) ? 0x38 : 0x30)
-+#define		VFE_TOP_IRQ_CMD_GLOBAL_CLEAR	BIT(0)
-+#define VFE_TOP_DIAG_CONFIG			(vfe_is_lite(vfe) ? 0x40 : 0x50)
-+
-+#define VFE_TOP_DEBUG_11(vfe)			(vfe_is_lite(vfe) ? 0x40 : 0xcc)
-+#define VFE_TOP_DEBUG_12(vfe)			(vfe_is_lite(vfe) ? 0x40 : 0xd0)
-+#define VFE_TOP_DEBUG_13(vfe)			(vfe_is_lite(vfe) ? 0x40 : 0xd4)
-+
-+#define VFE_BUS_IRQn_MASK(vfe, n)		((vfe_is_lite(vfe) ? 0x218 : 0xc18) + (n) * 4)
-+#define VFE_BUS_IRQn_CLEAR(vfe, n)		((vfe_is_lite(vfe) ? 0x220 : 0xc20) + (n) * 4)
-+#define VFE_BUS_IRQn_STATUS(vfe, n)		((vfe_is_lite(vfe) ? 0x228 : 0xc28) + (n) * 4)
-+#define VFE_BUS_IRQ_GLOBAL_CLEAR(vfe)		(vfe_is_lite(vfe) ? 0x230 : 0xc30)
-+#define VFE_BUS_WR_VIOLATION_STATUS(vfe)	(vfe_is_lite(vfe) ? 0x264 : 0xc64)
-+#define VFE_BUS_WR_OVERFLOW_STATUS(vfe)		(vfe_is_lite(vfe) ? 0x268 : 0xc68)
-+#define VFE_BUS_WR_IMAGE_VIOLATION_STATUS(vfe)	(vfe_is_lite(vfe) ? 0x270 : 0xc70)
-+
-+#define VFE_BUS_WRITE_CLIENT_CFG(vfe, c)	((vfe_is_lite(vfe) ? 0x400 : 0xe00) + (c) * 0x100)
-+#define		VFE_BUS_WRITE_CLIENT_CFG_EN	BIT(0)
-+#define VFE_BUS_IMAGE_ADDR(vfe, c)		((vfe_is_lite(vfe) ? 0x404 : 0xe04) + (c) * 0x100)
-+#define VFE_BUS_FRAME_INCR(vfe, c)		((vfe_is_lite(vfe) ? 0x408 : 0xe08) + (c) * 0x100)
-+#define VFE_BUS_IMAGE_CFG0(vfe, c)		((vfe_is_lite(vfe) ? 0x40c : 0xe0c) + (c) * 0x100)
-+#define		VFE_BUS_IMAGE_CFG0_DATA(h, s)	(((h) << 16) | ((s) >> 4))
-+#define WM_IMAGE_CFG_0_DEFAULT_WIDTH		(0xFFFF)
-+
-+#define VFE_BUS_IMAGE_CFG1(vfe, c)		((vfe_is_lite(vfe) ? 0x410 : 0xe10) + (c) * 0x100)
-+#define VFE_BUS_IMAGE_CFG2(vfe, c)		((vfe_is_lite(vfe) ? 0x414 : 0xe14) + (c) * 0x100)
-+#define VFE_BUS_PACKER_CFG(vfe, c)		((vfe_is_lite(vfe) ? 0x418 : 0xe18) + (c) * 0x100)
-+#define VFE_BUS_IRQ_SUBSAMPLE_PERIOD(vfe, c)	((vfe_is_lite(vfe) ? 0x430 : 0xe30) + (c) * 0x100)
-+#define VFE_BUS_IRQ_SUBSAMPLE_PATTERN(vfe, c)	((vfe_is_lite(vfe) ? 0x434 : 0xe34) + (c) * 0x100)
-+#define VFE_BUS_FRAMEDROP_PERIOD(vfe, c)	((vfe_is_lite(vfe) ? 0x438 : 0xe38) + (c) * 0x100)
-+#define VFE_BUS_FRAMEDROP_PATTERN(vfe, c)	((vfe_is_lite(vfe) ? 0x43c : 0xe3c) + (c) * 0x100)
-+#define VFE_BUS_MMU_PREFETCH_CFG(vfe, c)	((vfe_is_lite(vfe) ? 0x460 : 0xe60) + (c) * 0x100)
-+#define		VFE_BUS_MMU_PREFETCH_CFG_EN	BIT(0)
-+#define VFE_BUS_MMU_PREFETCH_MAX_OFFSET(vfe, c)	((vfe_is_lite(vfe) ? 0x464 : 0xe64) + (c) * 0x100)
-+#define VFE_BUS_ADDR_STATUS0(vfe, c)		((vfe_is_lite(vfe) ? 0x470 : 0xe70) + (c) * 0x100)
-+
-+/*
-+ * TODO: differentiate the port id based on requested type of RDI, BHIST etc
-+ *
-+ * IFE write master IDs
-+ *
-+ * VIDEO_FULL_Y		0
-+ * VIDEO_FULL_C		1
-+ * VIDEO_DS_4:1		2
-+ * VIDEO_DS_16:1	3
-+ * DISPLAY_FULL_Y	4
-+ * DISPLAY_FULL_C	5
-+ * DISPLAY_DS_4:1	6
-+ * DISPLAY_DS_16:1	7
-+ * FD_Y			8
-+ * FD_C			9
-+ * PIXEL_RAW		10
-+ * STATS_BE0		11
-+ * STATS_BHIST0		12
-+ * STATS_TINTLESS_BG	13
-+ * STATS_AWB_BG		14
-+ * STATS_AWB_BFW	15
-+ * STATS_BAF		16
-+ * STATS_BHIST		17
-+ * STATS_RS		18
-+ * STATS_IHIST		19
-+ * SPARSE_PD		20
-+ * PDAF_V2.0_PD_DATA	21
-+ * PDAF_V2.0_SAD	22
-+ * LCR			23
-+ * RDI0			24
-+ * RDI1			25
-+ * RDI2			26
-+ * LTM_STATS		27
-+ *
-+ * IFE Lite write master IDs
-+ *
-+ * RDI0			0
-+ * RDI1			1
-+ * RDI2			2
-+ * RDI3			3
-+ * GAMMA		4
-+ * BE			5
-+ */
-+
-+/* TODO: assign an ENUM in resources and use the provided master
-+ *       id directly for RDI, STATS, AWB_BG, BHIST.
-+ *       This macro only works because RDI is all we support right now.
-+ */
-+#define RDI_WM(n)			((vfe_is_lite(vfe) ? 0 : 24) + (n))
-+
-+static void vfe_global_reset(struct vfe_device *vfe)
-+{
-+	/* VFE680 has no global reset, simply report a completion */
-+	complete(&vfe->reset_complete);
-+}
-+
-+/*
-+ * vfe_isr - VFE module interrupt handler
-+ * @irq: Interrupt line
-+ * @dev: VFE device
-+ *
-+ * Return IRQ_HANDLED on success
-+ */
-+static irqreturn_t vfe_isr(int irq, void *dev)
-+{
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * vfe_halt - Trigger halt on VFE module and wait to complete
-+ * @vfe: VFE device
-+ *
-+ * Return 0 on success or a negative error code otherwise
-+ */
-+static int vfe_halt(struct vfe_device *vfe)
-+{
-+	/* rely on vfe_disable_output() to stop the VFE */
-+	return 0;
-+}
-+
-+static void vfe_disable_irq(struct vfe_device *vfe)
-+{
-+	writel(0u, vfe->base + VFE_TOP_IRQn_MASK(vfe, 0));
-+	writel(0u, vfe->base + VFE_TOP_IRQn_MASK(vfe, 1));
-+	writel(0u, vfe->base + VFE_BUS_IRQn_MASK(vfe, 0));
-+	writel(0u, vfe->base + VFE_BUS_IRQn_MASK(vfe, 1));
-+}
-+
-+static void vfe_wm_update(struct vfe_device *vfe, u8 rdi, u32 addr,
-+			  struct vfe_line *line)
-+{
-+	u8 wm = RDI_WM(rdi);
-+
-+	writel(addr, vfe->base + VFE_BUS_IMAGE_ADDR(vfe, wm));
-+}
-+
-+static void vfe_wm_start(struct vfe_device *vfe, u8 rdi, struct vfe_line *line)
-+{
-+	struct v4l2_pix_format_mplane *pix =
-+		&line->video_out.active_fmt.fmt.pix_mp;
-+	u32 stride = pix->plane_fmt[0].bytesperline;
-+	u32 cfg;
-+	u8 wm;
-+
-+	cfg = VFE_BUS_IMAGE_CFG0_DATA(pix->height, stride);
-+	wm = RDI_WM(rdi);
-+
-+	writel(cfg, vfe->base + VFE_BUS_IMAGE_CFG0(vfe, wm));
-+	writel(0, vfe->base + VFE_BUS_IMAGE_CFG1(vfe, wm));
-+	writel(stride, vfe->base + VFE_BUS_IMAGE_CFG2(vfe, wm));
-+	writel(0, vfe->base + VFE_BUS_PACKER_CFG(vfe, wm));
-+
-+	/* Set total frame increment value */
-+	writel(pix->plane_fmt[0].bytesperline * pix->height,
-+	       vfe->base + VFE_BUS_FRAME_INCR(vfe, wm));
-+
-+	/* MMU */
-+	writel(VFE_BUS_MMU_PREFETCH_CFG_EN, vfe->base + VFE_BUS_MMU_PREFETCH_CFG(vfe, wm));
-+	writel(~0u, vfe->base + VFE_BUS_MMU_PREFETCH_MAX_OFFSET(vfe, wm));
-+
-+	/* no dropped frames, one irq per frame */
-+	writel(1, vfe->base + VFE_BUS_FRAMEDROP_PATTERN(vfe, wm));
-+	writel(0, vfe->base + VFE_BUS_FRAMEDROP_PERIOD(vfe, wm));
-+	writel(1, vfe->base + VFE_BUS_IRQ_SUBSAMPLE_PATTERN(vfe, wm));
-+	writel(0, vfe->base + VFE_BUS_IRQ_SUBSAMPLE_PERIOD(vfe, wm));
-+
-+	/* We don't process IRQs for VFE in RDI mode at the moment */
-+	vfe_disable_irq(vfe);
-+
-+	/* Enable WM */
-+	writel(VFE_BUS_WRITE_CLIENT_CFG_EN,
-+	       vfe->base + VFE_BUS_WRITE_CLIENT_CFG(vfe, wm));
-+
-+	dev_dbg(vfe->camss->dev, "RDI%d WM:%d width %d height %d stride %d\n",
-+		rdi, wm, pix->width, pix->height, stride);
-+}
-+
-+static void vfe_wm_stop(struct vfe_device *vfe, u8 rdi)
-+{
-+	u8 wm = RDI_WM(rdi);
-+
-+	writel(0, vfe->base + VFE_BUS_WRITE_CLIENT_CFG(vfe, wm));
-+}
-+
-+static const struct camss_video_ops vfe_video_ops_680 = {
-+	.queue_buffer = vfe_queue_buffer_v2,
-+	.flush_buffers = vfe_flush_buffers,
-+};
-+
-+static void vfe_subdev_init(struct device *dev, struct vfe_device *vfe)
-+{
-+	vfe->video_ops = vfe_video_ops_680;
-+}
-+
-+static void vfe_reg_update(struct vfe_device *vfe, enum vfe_line_id line_id)
-+{
-+	int port_id = line_id;
-+
-+	camss_reg_update(vfe->camss, vfe->id, port_id, false);
-+}
-+
-+static inline void vfe_reg_update_clear(struct vfe_device *vfe,
-+					enum vfe_line_id line_id)
-+{
-+	int port_id = line_id;
-+
-+	camss_reg_update(vfe->camss, vfe->id, port_id, true);
-+}
-+
-+const struct vfe_hw_ops vfe_ops_680 = {
-+	.global_reset = vfe_global_reset,
-+	.hw_version = vfe_hw_version,
-+	.isr = vfe_isr,
-+	.pm_domain_off = vfe_pm_domain_off,
-+	.pm_domain_on = vfe_pm_domain_on,
-+	.subdev_init = vfe_subdev_init,
-+	.vfe_disable = vfe_disable,
-+	.vfe_enable = vfe_enable_v2,
-+	.vfe_halt = vfe_halt,
-+	.vfe_wm_start = vfe_wm_start,
-+	.vfe_wm_stop = vfe_wm_stop,
-+	.vfe_buf_done = vfe_buf_done,
-+	.vfe_wm_update = vfe_wm_update,
-+	.reg_update = vfe_reg_update,
-+	.reg_update_clear = vfe_reg_update_clear,
-+};
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe.h b/drivers/media/platform/qcom/camss/camss-vfe.h
-index 9dec5bc0d1b146fdf6b1ecd47f26b41cfc9e324f..a23f666be7531e0366c73faea44ed245e7a8e30f 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe.h
-+++ b/drivers/media/platform/qcom/camss/camss-vfe.h
-@@ -243,6 +243,7 @@ extern const struct vfe_hw_ops vfe_ops_4_7;
- extern const struct vfe_hw_ops vfe_ops_4_8;
- extern const struct vfe_hw_ops vfe_ops_170;
- extern const struct vfe_hw_ops vfe_ops_480;
-+extern const struct vfe_hw_ops vfe_ops_680;
- extern const struct vfe_hw_ops vfe_ops_780;
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+index b44939686e4bbf400f145368d3ba015b56bfb187..d5f717f6215c45908c4fc5a8650d68c00d544db7 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+@@ -55,6 +55,7 @@
+ #define CSIPHY_DNP_PARAMS		4
+ #define CSIPHY_2PH_REGS			5
+ #define CSIPHY_3PH_REGS			6
++#define CSIPHY_SKEW_CAL			7
  
- int vfe_get(struct vfe_device *vfe);
+ struct csiphy_lane_regs {
+ 	s32 reg_addr;
+@@ -423,6 +424,123 @@ csiphy_lane_regs lane_regs_sm8550[] = {
+ 	{0x0C64, 0x7F, 0x00, CSIPHY_DEFAULT_PARAMS},
+ };
+ 
++/* 4nm 2PH v 2.1.2 2p5Gbps 4 lane DPHY mode */
++static const struct
++csiphy_lane_regs lane_regs_x1e80100[] = {
++	/* Power up lanes 2ph mode */
++	{0x1014, 0xD5, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x101C, 0x7A, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x1018, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++
++	{0x0094, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x00A0, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0090, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0098, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0094, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
++	{0x0030, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0000, 0x8E, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0038, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x002C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0034, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x001C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0014, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x003C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0004, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0020, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0008, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++	{0x0010, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0094, 0xD7, 0x00, CSIPHY_SKEW_CAL},
++	{0x005C, 0x00, 0x00, CSIPHY_SKEW_CAL},
++	{0x0060, 0xBD, 0x00, CSIPHY_SKEW_CAL},
++	{0x0064, 0x7F, 0x00, CSIPHY_SKEW_CAL},
++
++	{0x0E94, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0EA0, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E90, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E98, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E94, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
++	{0x0E30, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E28, 0x04, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E00, 0x80, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E0C, 0xFF, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E38, 0x1F, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E2C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E34, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E1C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E14, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E3C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E04, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E20, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0E08, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++	{0x0E10, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++
++	{0x0494, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x04A0, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0490, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0498, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0494, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
++	{0x0430, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0400, 0x8E, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0438, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x042C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0434, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x041C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0414, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x043C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0404, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0420, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0408, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++	{0x0410, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0494, 0xD7, 0x00, CSIPHY_SKEW_CAL},
++	{0x045C, 0x00, 0x00, CSIPHY_SKEW_CAL},
++	{0x0460, 0xBD, 0x00, CSIPHY_SKEW_CAL},
++	{0x0464, 0x7F, 0x00, CSIPHY_SKEW_CAL},
++
++	{0x0894, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x08A0, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0890, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0898, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0894, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
++	{0x0830, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0800, 0x8E, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0838, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x082C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0834, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x081C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0814, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x083C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0804, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0820, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0808, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++	{0x0810, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0894, 0xD7, 0x00, CSIPHY_SKEW_CAL},
++	{0x085C, 0x00, 0x00, CSIPHY_SKEW_CAL},
++	{0x0860, 0xBD, 0x00, CSIPHY_SKEW_CAL},
++	{0x0864, 0x7F, 0x00, CSIPHY_SKEW_CAL},
++
++	{0x0C94, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0CA0, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C90, 0x0f, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C98, 0x08, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C94, 0x07, 0x01, CSIPHY_DEFAULT_PARAMS},
++	{0x0C30, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C00, 0x8E, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C38, 0xFE, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C2C, 0x01, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C34, 0x0F, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C1C, 0x0A, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C14, 0x60, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C3C, 0xB8, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C04, 0x0C, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C20, 0x00, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C08, 0x10, 0x00, CSIPHY_SETTLE_CNT_LOWER_BYTE},
++	{0x0C10, 0x52, 0x00, CSIPHY_DEFAULT_PARAMS},
++	{0x0C94, 0xD7, 0x00, CSIPHY_SKEW_CAL},
++	{0x0C5C, 0x00, 0x00, CSIPHY_SKEW_CAL},
++	{0x0C60, 0xBD, 0x00, CSIPHY_SKEW_CAL},
++	{0x0C64, 0x7F, 0x00, CSIPHY_SKEW_CAL},
++};
++
+ static void csiphy_hw_version_read(struct csiphy_device *csiphy,
+ 				   struct device *dev)
+ {
+@@ -593,6 +711,9 @@ static void csiphy_gen2_config_lanes(struct csiphy_device *csiphy,
+ 		case CSIPHY_SETTLE_CNT_LOWER_BYTE:
+ 			val = settle_cnt & 0xff;
+ 			break;
++		case CSIPHY_SKEW_CAL:
++			/* TODO: support application of skew from dt flag */
++			continue;
+ 		case CSIPHY_DNP_PARAMS:
+ 			continue;
+ 		default:
 
 -- 
 2.48.1
