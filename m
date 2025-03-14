@@ -1,123 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5261F1818;
-	Fri, 14 Mar 2025 14:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF7A1FF7B7;
+	Fri, 14 Mar 2025 14:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741963044; cv=none; b=f66ixtUMkMtQimbkYaPeP42ywMpmHqc0ikLm7oih+fZ2SRjQEfrmzf+VeQvGWHtPkkVktChIXX+/Tgc4BtjoOIxx3Gm6mC26HZ3Y8r81rM0xp2DQL/L7RcQpqKbKT6Bu5tpIxCaqAWSxXk9ADk70s43G6CbUNoayeRjT9JT4xi0=
+	t=1741963102; cv=none; b=fhOX3pQiQC/e2heqMUsuhESQw5soorN1ktuN2wsHii18PZmRBhQ0Myw+/4BMCvVDsbvrGGkvFtBnf6uQnSi5FPP57ZpTF5+/uKjEJE21ocbs8nvA9Neh7k5ldw8pYdH6TphGEeyfiY4V8JT8MDJVSRTalJuyHTjfhk0JW4VPedE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741963044; c=relaxed/simple;
-	bh=+jWeC/xSDCzP0BWQNTUeRpH28NuICQiZEGJ73gy54F0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VkhxlrQRYtGpPjKZL7NvsQjzThCq1He3Uok8DzjCJvVj84h5kRyQvN3wkZ+DtIgN/TvE/TdSD1ChCIBum8JuQTwgZVTrV0dp1NFAWhFzbmxdda4by+tqGRJ7WsPSvUo0zqEgd0u+veMAwHhl46GEDcERpSgQPnR9goXkUvCjijY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UAvJ9C+5; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1741963102; c=relaxed/simple;
+	bh=7Xy5Hrkgm3Yk0S+DRubh13I7X1BUmB6WJ7puEzumslM=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=GemspcLS+JBiALPfAcRTJkziSo2O6TfGssheN8F6vs6Nm4G0v5W5uj1ntZ3Gz7KkS0mSU8FWpifxjths2tLmQRF5yDAlYOJ8alDj7eBBmNmVSU1txPSkh+SGre07MyeV/QWG16FoQ6zXjX2gB4f9Oq79RF6YAsy8OdmbWeAiCuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJS9ch9R; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UAvJ9C+5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJS9ch9R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741963042; x=1773499042;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+jWeC/xSDCzP0BWQNTUeRpH28NuICQiZEGJ73gy54F0=;
-  b=UAvJ9C+5xTFRloNlQ85VqxKE5mIbihEab0r9cbUEQvvQ6XZwod20ci2M
-   /C+Kq7ej9Emp7tMRp8alX1UIlpH3nV3Vuardl2tW+KVsAKKhz/GIRM18x
-   J5spS9E1h1e1+K8rig0hXQqAUAd3N0VEaABMF7WD71vSoRZUUWsGajhuq
-   ntAHn/voyVsAPOJaeJEMQfOu85PCT7S0cElTXSkTsV5UtfJxW2ptFz+Lp
-   gRcehwTuAKsOBbed43/XFgbVK9+a2piYbHh6GIJ1yi1n7wB3ae7JuZtER
-   ziqMnyWa4tZceUegF3VFZAHtaZCq2dwwOlYQBv/v6f5oDbw9ClwiOH7+3
-   Q==;
-X-CSE-ConnectionGUID: VPYtbaA+QqOzZYox6EaIiA==
-X-CSE-MsgGUID: BNr2AWAnTGGuF0Ydoq2PDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42845261"
+  t=1741963101; x=1773499101;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7Xy5Hrkgm3Yk0S+DRubh13I7X1BUmB6WJ7puEzumslM=;
+  b=fJS9ch9RYKC2LT1QTq6uDLvUZc/aJfqHbU1Eq1zl2WF8zWEbO/drP9cx
+   6QJ/BBqHWMmZB+NJ6j9+r8jUWa+syyP6aBa9QdEjjJ8dzsQ/XqWEfu8eW
+   SE4uqvuuzMrOTwHyR4CWw7R23daiqQjQmZPPwm0J82DL43g/afx035ed6
+   paIsA36i+z6VHWcd0y80sXv/oYotAZOE7+VOP0/fk617/VGjFF3U5nJiW
+   4V9Vers436qADSsF/2SZOqKV/UnCmuoAvSWWbAvhuI6fdOKuZ4COzrBt2
+   3QjmSL2LwlezDmfzZPpE64mS4PDdIzZjbwg3pwhcyfao0YmyBAcDg1wC3
+   g==;
+X-CSE-ConnectionGUID: Rj6teqEuRQ2cM7+kWMx9kA==
+X-CSE-MsgGUID: UHzFvp0+QD+s+9/oEo5mCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42980508"
 X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="42845261"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:37:20 -0700
-X-CSE-ConnectionGUID: MEndl2yRTBebsctmfPOEOQ==
-X-CSE-MsgGUID: OushhPWLRVWYnzPewFG0ZA==
+   d="scan'208";a="42980508"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:20 -0700
+X-CSE-ConnectionGUID: QXKqHijXRziQIz0eVCl4Yw==
+X-CSE-MsgGUID: gWbHpttISvivz6SwXBTeZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="121093838"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:37:16 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tt69x-00000002UAd-0ELI;
-	Fri, 14 Mar 2025 16:37:13 +0200
-Date: Fri, 14 Mar 2025 16:37:12 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Guillaume Stols <gstols@baylibre.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v7 06/10] iio: adc: Support ROHM BD79124 ADC
-Message-ID: <Z9Q_GK0_4J6ga1or@smile.fi.intel.com>
-References: <cover.1741849323.git.mazziesaccount@gmail.com>
- <b6c02a5d75a20bbbf8c3370ccee615d269620117.1741849323.git.mazziesaccount@gmail.com>
- <Z9LbT1BvPEIp7U2N@smile.fi.intel.com>
- <0d7b37fd-be93-42d7-9610-d2184c601981@gmail.com>
+   d="scan'208";a="158451756"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.56])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:38:18 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Fri, 14 Mar 2025 16:27:43 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.14-5
+Message-ID: <pdx86-pr-20250314162743-238386141@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d7b37fd-be93-42d7-9610-d2184c601981@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 14, 2025 at 11:22:37AM +0200, Matti Vaittinen wrote:
-> On 13/03/2025 15:19, Andy Shevchenko wrote:
-> > On Thu, Mar 13, 2025 at 09:19:03AM +0200, Matti Vaittinen wrote:
+Hi Linus,
 
-...
-
-> > > +	ret = regmap_read(data->map, BD79124_REG_EVENT_FLAG_HI, &i_hi);
-> > > +	if (ret)
-> > > +		return IRQ_NONE;
-> > > +
-> > > +	ret = regmap_read(data->map, BD79124_REG_EVENT_FLAG_LO, &i_lo);
-> > > +	if (ret)
-> > > +		return IRQ_NONE;
-> > 
-> > Only I don't get why you can't use bulk read here.
-> > The registers seem to be sequential.
-> 
-> After taking another look - there seems to be undocumented register (0x1b)
-> between the BD79124_REG_EVENT_FLAG_HI (0x1a) and the
-> BD79124_REG_EVENT_FLAG_LO (0x1c).
-> 
-> I won't touch it unless there is a real verified performance problem.
-
-...
-
-> > In the similar way bulk write.
-> 
-> definitely not due to the 0x1b.
-
-Okay, it seems I misinterpreted the values you have in regmap configuration,
-I was under the impression that regmap is 16-bit data, but it is about address.
-
-So, we need to know why the heck HW has sparse registers for what is supposed
-to be sequential. This needs a good comment.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Here is a platform-drivers-x86 fixes PR for v6.14. The diff is a bit
+larger than I'd prefer at this point due to unwinding the amd/pmf
+driver's error handling properly instead of calling a deinit function
+that was a can full of worms.
 
 
+Fixes and new HW support:
+
+ - amd/pmf:
+
+    - Fix error handling in amd_pmf_init_smart_pc()
+
+    - Fix missing hidden options for Smart PC
+
+ - surface: aggregator_registry: Add Support for Surface Pro 11
+
+Regards, i.
+
+
+The following changes since commit 376a8c2a144397d9cf2a67d403dd64f4a7ff9104:
+
+  platform/x86/amd/pmf: Update PMF Driver for Compatibility with new PMF-TA (2025-03-05 13:33:42 +0200)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.14-5
+
+for you to fetch changes up to 03fc0a2dc9f8c292fad8a1bcfb6d1f0dec1824be:
+
+  MAINTAINERS: Update Ike Panhc's email address (2025-03-14 16:03:45 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.14-5
+
+Fixes and new HW support:
+
+ - amd/pmf:
+
+    - Fix error handling in amd_pmf_init_smart_pc()
+
+    - Fix missing hidden options for Smart PC
+
+ - surface: aggregator_registry: Add Support for Surface Pro 11
+
+The following is an automated shortlog grouped by driver:
+
+amd/pmf:
+ -  fix cleanup in amd_pmf_init_smart_pc()
+
+amd: pmf:
+ -  Fix missing hidden options for Smart PC
+
+MAINTAINERS:
+ -  Update Ike Panhc's email address
+
+surface: aggregator_registry:
+ -  Add Support for Surface Pro 11
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      platform/x86/amd/pmf: fix cleanup in amd_pmf_init_smart_pc()
+
+Ike Panhc (1):
+      MAINTAINERS: Update Ike Panhc's email address
+
+Lukas Hetzenecker (1):
+      platform/surface: aggregator_registry: Add Support for Surface Pro 11
+
+Mario Limonciello (1):
+      platform/x86/amd: pmf: Fix missing hidden options for Smart PC
+
+ .mailmap                                           |  1 +
+ MAINTAINERS                                        |  2 +-
+ .../platform/surface/surface_aggregator_registry.c |  5 ++-
+ drivers/platform/x86/amd/pmf/spc.c                 |  2 ++
+ drivers/platform/x86/amd/pmf/tee-if.c              | 36 +++++++++++++++-------
+ 5 files changed, 33 insertions(+), 13 deletions(-)
