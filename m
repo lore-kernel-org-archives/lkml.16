@@ -1,35 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ida.uls.co.za (ida.uls.co.za [154.73.32.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09C41953A9
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 22:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FE31547E2;
+	Fri, 14 Mar 2025 22:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.32.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741991399; cv=none; b=QrYsAZNO+BZmLyLlttrMFdxqgVy8hNiXI/IcsEh1VpSu68sctJdMYm6swYK2UUi6rvmLryMH6CJkwpOEIm80G4cHJQNfeJsrgcW+LICO19zFQtd7lAOdASacFYHpliKKF8XPoBQ+kinE8s8I+u1Rpelrr83LZdyq+Vm8hKr59dU=
+	t=1741991953; cv=none; b=eTsq/rNLkoRqZMkel224Gpvc8BjFd70r/ZvOGjidaA2Pux5vgWcu+MVlewOMYPeMbiN2RVjXLtKGqo3d5jEKYvjtT3fC1kKmfgzG3fXUa/XbfDX54e3HIzSizhsDNmuQJEJBROqcEV4eV00HzmksnFKzP6LaCl6+HHkT8eDHtqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741991399; c=relaxed/simple;
-	bh=ZVN1gXmayXjszbtmz2X55ie4YM/+jBh6LnYxP8usMAk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=DGWY9jBJfI0XwMJS1HCK8jBcew75LU+oQkX9Tch+teR9IfelYoL8wDBZmLERGygRviTec+q/7wg65fPlsl4n6TMUc1aYxrP3xrstJ1CuRXOlO8A5q3ufd1LVcXJcJFoQEfJHG24xFw3uEfPBrgMTHZx2V+ITrqzZwHVURNNm2Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XoJJWhnx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XoJJWhnx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EDA3C4CEE9;
-	Fri, 14 Mar 2025 22:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741991398;
-	bh=ZVN1gXmayXjszbtmz2X55ie4YM/+jBh6LnYxP8usMAk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=XoJJWhnxgbgyUBrWJ+Q0You4CIaneFkMJfxD57iTPu0ZYE4H6jNLvbZUbzoDzTmoN
-	 tc81Nwwj8vA8n3CVuM8ljmX6Ux31/XiPVU9rse7sit70yDydfTlCdM3iOS+04LhdFu
-	 vKPhDhYTvyld1Wg3iGnQw0MMoAw0huMsy6ELDjLHRBDKdhinv8O9P2OYC/PzCV+lAw
-	 PAE3G1WMDLyL0RXO55CL9kkavgZal8n/6L6YehkFkP8XVxBQeUDfkjTtOponGswDBA
-	 AH8jzZpWY7AipGXgsm7QdlKOid5oX/Yoag3erxpmMxzXtphsTGWpAxrFf5ICrZVrCf
-	 YMlvmkWPtV+gg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F22380CFE7;
-	Fri, 14 Mar 2025 22:30:34 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1741991953; c=relaxed/simple;
+	bh=Hy6X7HLlR6nCe05sEMzcsd5zK0Wy9GJRMdXNJcJDoqc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=n9WCVFyf/m+Sls8CbceOlMdDojEEPSsrc6Qx5dakFXdTGdP5F42Z+QZlMNTt4ShGG8rPlVBO/13+fDPWDmZZBh56L6dp4DLnC75YbqcPW58VzY/PPFlRHowPgN4bxILFIOPv7rbXQ2kWFGTP7t3nHCfDvx7UJyGtVaIWpfMlIcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; arc=none smtp.client-ip=154.73.32.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
+Received: from [192.168.1.104] (helo=plastiekpoot)
+	by ida.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <jkroon@uls.co.za>)
+	id 1ttDL0-000000005rc-2CNl;
+	Sat, 15 Mar 2025 00:17:06 +0200
+Received: from jkroon by plastiekpoot with local (Exim 4.97.1)
+	(envelope-from <jkroon@uls.co.za>)
+	id 1ttDKy-000000003ko-0GIh;
+	Sat, 15 Mar 2025 00:17:04 +0200
+From: Jaco Kroon <jaco@uls.co.za>
+To: jaco@uls.co.za
+Cc: bernd.schubert@fastmail.fm,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	miklos@szeredi.hu,
+	rdunlap@infradead.org,
+	trapexit@spawn.link
+Subject: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer size.
+Date: Sat, 15 Mar 2025 00:16:28 +0200
+Message-ID: <20250314221701.12509-3-jaco@uls.co.za>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250314221701.12509-1-jaco@uls.co.za>
+References: <20230727081237.18217-1-jaco@uls.co.za>
+ <20250314221701.12509-1-jaco@uls.co.za>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,44 +46,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to avoid atomicity corruption of
- atomic file
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <174199143325.2405968.380584551658170427.git-patchwork-notify@kernel.org>
-Date: Fri, 14 Mar 2025 22:30:33 +0000
-References: <20250314120651.443184-1-youngjin.gil@samsung.com>
-In-Reply-To: <20250314120651.443184-1-youngjin.gil@samsung.com>
-To: Yeongjin Gil <youngjin.gil@samsung.com>
-Cc: jaegeuk@kernel.org, chao@kernel.org, daehojeong@google.com,
- linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- sj1557.seo@samsung.com
+X-Spam-report: Relay access (ida.uls.co.za).
 
-Hello:
+Clamp to min 1 page (4KB) and max 128 pages (512KB).
 
-This patch was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
+Glusterfs trial using strace ls -l.
 
-On Fri, 14 Mar 2025 21:06:51 +0900 you wrote:
-> In the case of the following call stack for an atomic file,
-> FI_DIRTY_INODE is set, but FI_ATOMIC_DIRTIED is not subsequently set.
-> 
-> f2fs_file_write_iter
->   f2fs_map_blocks
->     f2fs_reserve_new_blocks
->       inc_valid_block_count
->         __mark_inode_dirty(dquot)
->           f2fs_dirty_inode
-> 
-> [...]
+Before:
 
-Here is the summary with links:
-  - [f2fs-dev] f2fs: fix to avoid atomicity corruption of atomic file
-    https://git.kernel.org/jaegeuk/f2fs/c/c60b556bfe0a
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 616
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 624
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 624
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 600
+getdents64(3, 0x7f2d7d7a7040 /* 25 entries */, 131072) = 608
+getdents64(3, 0x7f2d7d7a7040 /* 1 entries */, 131072) = 24
+getdents64(3, 0x7f2d7d7a7040 /* 0 entries */, 131072) = 0
 
-You are awesome, thank you!
+After:
+
+getdents64(3, 0x7ffae8eed040 /* 276 entries */, 131072) = 6696
+getdents64(3, 0x7ffae8eed040 /* 0 entries */, 131072) = 0
+
+Signed-off-by: Jaco Kroon <jaco@uls.co.za>
+---
+ fs/fuse/readdir.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
+index 17ce9636a2b1..a0ccbc84b000 100644
+--- a/fs/fuse/readdir.c
++++ b/fs/fuse/readdir.c
+@@ -337,11 +337,25 @@ static int fuse_readdir_uncached(struct file *file, struct dir_context *ctx)
+ 	struct fuse_mount *fm = get_fuse_mount(inode);
+ 	struct fuse_io_args ia = {};
+ 	struct fuse_args_pages *ap = &ia.ap;
+-	struct fuse_folio_desc desc = { .length = PAGE_SIZE };
++	struct fuse_folio_desc desc = { .length = ctx->count };
+ 	u64 attr_version = 0, evict_ctr = 0;
+ 	bool locked;
++	int order;
+ 
+-	folio = folio_alloc(GFP_KERNEL, 0);
++	if (desc.length < PAGE_SIZE)
++		desc.length = PAGE_SIZE;
++	else if (desc.length > (PAGE_SIZE << 7)) /* 128 pages, typically 512KB */
++		desc.length = PAGE_SIZE << 7;
++
++	order = get_count_order(desc.length >> CONFIG_PAGE_SHIFT);
++
++	do {
++		folio = folio_alloc(GFP_KERNEL, order);
++		if (folio)
++			break;
++		--order;
++		desc.length = PAGE_SIZE << order;
++	} while (order >= 0);
+ 	if (!folio)
+ 		return -ENOMEM;
+ 
+@@ -353,10 +367,10 @@ static int fuse_readdir_uncached(struct file *file, struct dir_context *ctx)
+ 	if (plus) {
+ 		attr_version = fuse_get_attr_version(fm->fc);
+ 		evict_ctr = fuse_get_evict_ctr(fm->fc);
+-		fuse_read_args_fill(&ia, file, ctx->pos, PAGE_SIZE,
++		fuse_read_args_fill(&ia, file, ctx->pos, desc.length,
+ 				    FUSE_READDIRPLUS);
+ 	} else {
+-		fuse_read_args_fill(&ia, file, ctx->pos, PAGE_SIZE,
++		fuse_read_args_fill(&ia, file, ctx->pos, desc.length,
+ 				    FUSE_READDIR);
+ 	}
+ 	locked = fuse_lock_inode(inode);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.48.1
 
