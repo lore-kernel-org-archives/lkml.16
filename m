@@ -1,57 +1,56 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66BC1E04AC
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:11:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3451E521B
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936315; cv=none; b=VB1AUWvSjU2Ep9+88kPxDNCb1n4vtnt8WiCwPgh/cDNIFdAvtmJuaepic/C8upf8UPmY1iRXn8u0ahhfzlqs0SZVPeUC8yIK6AXI1PfhGbNzMzwMGZUW0F5Q9hL9EwmMeWoiDA5H04NiPDfFHr25cTmK2EjxBZdvS0ZcO+NXPLo=
+	t=1741936315; cv=none; b=pdBUfHGIC6Mdb+WWR92NDtC+MmbsAdfW1k28tfM6CZWOJHMc2Z8vD2crNUhmovG1wDS5EQg/hCaMxCb9d6+gLiKu5SXtNDrrOhfUZcTh3JlwnQgTcNvH2J8Zfavr7QRC/QNU+ez7DEw87nvnNWrTYQhC7DQGdAF6WaX9C3TZtxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741936315; c=relaxed/simple;
-	bh=carqj/K7BRYMlmHgCtRn+i/kZk9+307GqgbsoigQqw0=;
+	bh=PoiuYi+UdxZabu4PqUnzQiwnxr1s1h7qshT5USHYTW0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wo673hgrs96QsndxMluCjumS56YMIkimZYcJzQ5QOJ6cJ0GvJ7QCk7dhYVHuP7QtE47/K67rZCUavNwWRRgSvzlZuXnwYbaDxadG24SKKmc1I5dFyV4vE2NpnpV34B2UsFjw9pfP4NX117BlFaGyHRl1kAEpOSGs5wZqFJBWOPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SmN2TPge; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=pBiQlCSTZW4aJxxWx3c2sWlQQZ5h7ucdi7x0ZHG39D5PTh4/Jz8usYAxWaH9N9pRODs2ubwLAXkBhRpEOv82Sn6pNwGTOWxvJ4csqn6EUtvvHfO0Dgf1lsvkNL8uBSumpR861MasThnRDM3Jc9sgLnn7PYR2lZWWDov6bNf96iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NPGK4T5W; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SmN2TPge"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NPGK4T5W"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741936304;
+	s=mimecast20190719; t=1741936313;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Zu7kWQRIHaiQZGQh0A3QzrqgDB6jslhiNlrZVStUqb8=;
-	b=SmN2TPgejFXheVSgFXmu85w0qjtE8cp84uKg7qPyQHCa/ufheJ425fFZ0eodmx54fwzRaz
-	3F1od9PTajhCF92aXbwPM6tJDJ86wWYmob8UKUfgNekEmBTQOU7JC77YOhkihRMoavMdt0
-	mFpexoMxZvuLxclvbmw1SN9jcwEjzOU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=w/icU0rYwhHsmyhqcav7daSw50Oq8EusYXXaJtzC4eA=;
+	b=NPGK4T5WX6v9sdZSZQI9axvGaF8daon8fRFby0NJJS4uGhtWBjeGX5ew7ex9lYZVMugpRh
+	8xt2SSy2wms2ty05Mh6U+RuXxUSlBRghPKB7gJGtcAQ1WZ3raQISaOXUp8L0zZPtlo3Nkw
+	M2SSJUBBxrDB8GljZ5C3Y6IL+OdqbD8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-307-CFh-pJvvNWmIKBlnrEbcPw-1; Fri,
- 14 Mar 2025 03:11:35 -0400
-X-MC-Unique: CFh-pJvvNWmIKBlnrEbcPw-1
-X-Mimecast-MFC-AGG-ID: CFh-pJvvNWmIKBlnrEbcPw_1741936292
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-437-x6CbKFiCP9qx__h2jOT-7w-1; Fri,
+ 14 Mar 2025 03:11:51 -0400
+X-MC-Unique: x6CbKFiCP9qx__h2jOT-7w-1
+X-Mimecast-MFC-AGG-ID: x6CbKFiCP9qx__h2jOT-7w_1741936310
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5A67B180025E;
-	Fri, 14 Mar 2025 07:11:32 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D58A5180AB1C;
+	Fri, 14 Mar 2025 07:11:50 +0000 (UTC)
 Received: from thuth-p1g4.redhat.com (unknown [10.44.32.82])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1462C18001DE;
-	Fri, 14 Mar 2025 07:11:28 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CCC7C18001DE;
+	Fri, 14 Mar 2025 07:11:48 +0000 (UTC)
 From: Thomas Huth <thuth@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: Arnd Bergmann <arnd@arndb.de>,
 	linux-arch@vger.kernel.org,
 	Thomas Huth <thuth@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 15/41] m68k: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
-Date: Fri, 14 Mar 2025 08:09:46 +0100
-Message-ID: <20250314071013.1575167-16-thuth@redhat.com>
+	Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH 20/41] nios2: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
+Date: Fri, 14 Mar 2025 08:09:51 +0100
+Message-ID: <20250314071013.1575167-21-thuth@redhat.com>
 In-Reply-To: <20250314071013.1575167-1-thuth@redhat.com>
 References: <20250314071013.1575167-1-thuth@redhat.com>
 Precedence: bulk
@@ -72,97 +71,32 @@ code.
 This is a completely mechanical patch (done with a simple "sed -i"
 statement).
 
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org
+Cc: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Thomas Huth <thuth@redhat.com>
 ---
- arch/m68k/include/uapi/asm/bootinfo-vme.h | 4 ++--
- arch/m68k/include/uapi/asm/bootinfo.h     | 8 ++++----
- arch/m68k/include/uapi/asm/ptrace.h       | 4 ++--
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ arch/nios2/include/uapi/asm/ptrace.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/m68k/include/uapi/asm/bootinfo-vme.h b/arch/m68k/include/uapi/asm/bootinfo-vme.h
-index f36a09ab5e79b..b8139eb393524 100644
---- a/arch/m68k/include/uapi/asm/bootinfo-vme.h
-+++ b/arch/m68k/include/uapi/asm/bootinfo-vme.h
-@@ -33,7 +33,7 @@
- #define VME_TYPE_BVME6000	0x6000	/* BVM Ltd. BVME6000 */
- 
+diff --git a/arch/nios2/include/uapi/asm/ptrace.h b/arch/nios2/include/uapi/asm/ptrace.h
+index 2b91dbe5bcfee..1298db9f0fc98 100644
+--- a/arch/nios2/include/uapi/asm/ptrace.h
++++ b/arch/nios2/include/uapi/asm/ptrace.h
+@@ -13,7 +13,7 @@
+ #ifndef _UAPI_ASM_NIOS2_PTRACE_H
+ #define _UAPI_ASM_NIOS2_PTRACE_H
  
 -#ifndef __ASSEMBLY__
 +#ifndef __ASSEMBLER__
  
- /*
-  * Board ID data structure - pointer to this retrieved from Bug by head.S
-@@ -56,7 +56,7 @@ typedef struct {
- 	__be32	option2;
- } t_bdid, *p_bdid;
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- 
-     /*
-diff --git a/arch/m68k/include/uapi/asm/bootinfo.h b/arch/m68k/include/uapi/asm/bootinfo.h
-index 024e87d7095f8..28d2d44c08d06 100644
---- a/arch/m68k/include/uapi/asm/bootinfo.h
-+++ b/arch/m68k/include/uapi/asm/bootinfo.h
-@@ -16,7 +16,7 @@
  #include <linux/types.h>
  
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
-     /*
-      *  Bootinfo definitions
-@@ -43,7 +43,7 @@ struct mem_info {
- 	__be32 size;			/* length of memory chunk (in bytes) */
+@@ -80,5 +80,5 @@ struct user_pt_regs {
+ 	__u32		regs[49];
  };
  
 -#endif /* __ASSEMBLY__ */
 +#endif /* __ASSEMBLER__ */
- 
- 
-     /*
-@@ -167,7 +167,7 @@ struct mem_info {
- #define BI_VERSION_MAJOR(v)		(((v) >> 16) & 0xffff)
- #define BI_VERSION_MINOR(v)		((v) & 0xffff)
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- struct bootversion {
- 	__be16 branch;
-@@ -178,7 +178,7 @@ struct bootversion {
- 	} machversions[];
- } __packed;
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- 
- 
- #endif /* _UAPI_ASM_M68K_BOOTINFO_H */
-diff --git a/arch/m68k/include/uapi/asm/ptrace.h b/arch/m68k/include/uapi/asm/ptrace.h
-index ebd9fccb3d11f..d70f771399b40 100644
---- a/arch/m68k/include/uapi/asm/ptrace.h
-+++ b/arch/m68k/include/uapi/asm/ptrace.h
-@@ -22,7 +22,7 @@
- #define PT_SR	   17
- #define PT_PC	   18
- 
--#ifndef __ASSEMBLY__
-+#ifndef __ASSEMBLER__
- 
- /* this struct defines the way the registers are stored on the
-    stack during a system call. */
-@@ -81,5 +81,5 @@ struct switch_stack {
- #define PTRACE_GETFDPIC_EXEC	0
- #define PTRACE_GETFDPIC_INTERP	1
- 
--#endif /* __ASSEMBLY__ */
-+#endif /* __ASSEMBLER__ */
- #endif /* _UAPI_M68K_PTRACE_H */
+ #endif /* _UAPI_ASM_NIOS2_PTRACE_H */
 -- 
 2.48.1
 
