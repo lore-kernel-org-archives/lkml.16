@@ -1,114 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CFB1DB34C;
-	Fri, 14 Mar 2025 07:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3BA1DB924
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 07:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936306; cv=none; b=LX7gcicKdPttZnpBLc0QM41WiZJ0mDyIcyXppIh8n2AJbDFPs3++52G7+dQz3V8OlXAGQQ/11GJZ0pDSJsObPwh1DLMHFWuByGrQ97f63Zqo5aWchMMpTXT0fyR3MFsuv2C7t+Dl4k0NGLR3eV1d5Fm54hsk1pDMFW1npaf+0Qk=
+	t=1741936308; cv=none; b=T4bpY4cYFXrbyhkGOEua5Fae9qaLnpV4GCbP0/WS5iZGuChwkywOl8KB9eKbVE3qL5QkkE+lQq4pkP2L+jP2kvTHjUqUgX9wjLhIPPkvcDlfE9tmtmN1FGO5ReaDTs376J74D2TiF5sNDcxAn6RZ8Tt+SIgkTOTPpFdK1MiqYrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741936306; c=relaxed/simple;
-	bh=ZMP3SsKEx5SugQu1qYOzIz6A+nD7bBaP93OlobzKCEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bcz9/icC94v0E8ubZvZES0IdwRgOBM/KkGCbU7yafkxc0vVyOjFHhQrzleGuDutkussNTZW8I/3LqBjChLWtbLzrLo2UO8VQOPZ8zRc1iLt1VPFNLmqnewkTnNElYyI20/uSvcQ7hnK2ntI+jcpW08vsXc4fm2DE/rW2pXkpJAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/m5Ksgi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741936308; c=relaxed/simple;
+	bh=OKHu3GGhyADerg2IzyWK22rj3U0zoxD9vfMsMAk9g80=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=h4uW2eaYgAECbP5pRXLcuNE+EtH8lAPTDJw09U1AURh/LRnHkRokJW46Fd4uHteQGYi2pqLW55sOzw4UjA8Zco/5hfz1EEhxnRBbvnC/MQSvNAgCvm44yT7kGh+8hz9gsEuX3u5QBFp+jF/7xwU4oHVfkOU+TEnq5fe+7G270Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KI8gPlQ3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/m5Ksgi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9446FC4CEEB;
-	Fri, 14 Mar 2025 07:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741936305;
-	bh=ZMP3SsKEx5SugQu1qYOzIz6A+nD7bBaP93OlobzKCEk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=s/m5KsgiCIIo9zb/IF/BNCnecBOj+foBHoqSEwSaMpdsJPiY0e1EFxTKhmrxsLOjO
-	 d3RJV6j6nuyoGLai0Ohccl457gESrsY4CXNjlkrOSn4XFXR+BTxjjN+PhuPkXTXb3z
-	 uIfQVt+Y+Z97jpKT7E67X1RD3cdv+JmdA6fVXdP1PFIE5uFbFu7akqOx68GktN7TGz
-	 LWypiYH88mV/kzlkenC13stT8OLrkmrSo0bWLlRWW5LAT1j9/GIyrH+SZvmZ9nlK2C
-	 jbcbcIuyJwZIW9eXFpkB+MgGz6D6jVbba8acyZlrfe+bValyXntw6KZOik+q3ex0Tj
-	 VnpusY0r3ul6Q==
-Message-ID: <b9379597-2827-4391-88a9-b2ac23227a35@kernel.org>
-Date: Fri, 14 Mar 2025 08:11:40 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KI8gPlQ3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741936305;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7zuMTpTFPIJgizKsiEcCzfUaR0WNgsZZ61oMOy8ygOw=;
+	b=KI8gPlQ39wmRM63+3ykbtpy719JmhVqYo/nuy82Z8k5GyND6uaEXxC4dT9BIXuarjucRBU
+	s71xkFofdQh7g1yTuSB82RVo2k9jgkbpbtL16pKY1GXCvNTpOzvvNr9tXTZVqhQh5fupLy
+	MKhYxDW6BIkeKj+4DZxNai3b8pf6vmA=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-687---FORp1DOO2KbwzYPW8yjw-1; Fri,
+ 14 Mar 2025 03:11:40 -0400
+X-MC-Unique: --FORp1DOO2KbwzYPW8yjw-1
+X-Mimecast-MFC-AGG-ID: --FORp1DOO2KbwzYPW8yjw_1741936299
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7009B195609E;
+	Fri, 14 Mar 2025 07:11:39 +0000 (UTC)
+Received: from thuth-p1g4.redhat.com (unknown [10.44.32.82])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8E5C31801758;
+	Fri, 14 Mar 2025 07:11:36 +0000 (UTC)
+From: Thomas Huth <thuth@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org,
+	Thomas Huth <thuth@redhat.com>,
+	Michal Simek <monstr@monstr.eu>
+Subject: [PATCH 17/41] microblaze: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
+Date: Fri, 14 Mar 2025 08:09:48 +0100
+Message-ID: <20250314071013.1575167-18-thuth@redhat.com>
+In-Reply-To: <20250314071013.1575167-1-thuth@redhat.com>
+References: <20250314071013.1575167-1-thuth@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] dt-bindings: trivial: Document TPS53685
-To: Chiang Brian <chiang.brian@inventec.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250314032802.3187097-1-chiang.brian@inventec.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250314032802.3187097-1-chiang.brian@inventec.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 14/03/2025 04:28, Chiang Brian wrote:
-> Add undocumented tps53685 into compatible in dt-bindings
-> 
-> Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
-> ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> index fadbd3c041c8..c98d69facb48 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -380,6 +380,8 @@ properties:
->            - ti,tps53676
->              # TI Dual channel DCAP+ multiphase controller TPS53679
->            - ti,tps53679
-> +            # TI Dual channel DCAP+ multiphase controller TPS53685 with AMD-SVI3
-> +          - ti,tps53685
+__ASSEMBLY__ is only defined by the Makefile of the kernel, so
+this is not really useful for uapi headers (unless the userspace
+Makefile defines it, too). Let's switch to __ASSEMBLER__ which
+gets set automatically by the compiler when compiling assembly
+code.
 
-There is no user of such compatible, so how can it be undocumented?
+This is a completely mechanical patch (done with a simple "sed -i"
+statement).
 
-Best regards,
-Krzysztof
+Cc: Michal Simek <monstr@monstr.eu>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ arch/microblaze/include/uapi/asm/ptrace.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/microblaze/include/uapi/asm/ptrace.h b/arch/microblaze/include/uapi/asm/ptrace.h
+index 46dd94cb78021..8039957a1a9cd 100644
+--- a/arch/microblaze/include/uapi/asm/ptrace.h
++++ b/arch/microblaze/include/uapi/asm/ptrace.h
+@@ -10,7 +10,7 @@
+ #ifndef _UAPI_ASM_MICROBLAZE_PTRACE_H
+ #define _UAPI_ASM_MICROBLAZE_PTRACE_H
+ 
+-#ifndef __ASSEMBLY__
++#ifndef __ASSEMBLER__
+ 
+ typedef unsigned long microblaze_reg_t;
+ 
+@@ -68,6 +68,6 @@ struct pt_regs {
+ 
+ #endif /* __KERNEL */
+ 
+-#endif /* __ASSEMBLY__ */
++#endif /* __ASSEMBLER__ */
+ 
+ #endif /* _UAPI_ASM_MICROBLAZE_PTRACE_H */
+-- 
+2.48.1
+
