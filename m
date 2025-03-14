@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB181DE8A3
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95FA1C84C9
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 21:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741988515; cv=none; b=j/oHFY1DINu8QF/MQv9oiN16Sqp0uwJFN5rcsMutVdDGbiGXaMSxBq/OJZDReqSPUH4NRc+/ak7HubYMat2kU7cxgCKH9zChVp9Gc57eNNuZpk3rQ/vjHWhdc7mDjH5HwZGhxwfHzaHU57/Ar85MLmFUkeVcXiGWl+s6z7O12Tc=
+	t=1741988516; cv=none; b=QEFjvU14lRLFS6jVqIxsncq6sueRJ4508zfa4eq6hWg/DBVAm+SuMdrWFiEpRTy0Tmg55c58kryvxI3nw5y7hNoWXDLhdfGlY/KEq7k/qKd49q4nrSl1tlTEq8skA1RDpakGjf3X2YQ41HhvuQ4FIxqNtGboUjkxJFRPNLEJbRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741988515; c=relaxed/simple;
-	bh=uBNtxIShQAc4QePM1z8bdXhYlOosBUvYjbVq/jJ+iq8=;
+	s=arc-20240116; t=1741988516; c=relaxed/simple;
+	bh=QAJqgGLEgB7Uus6Hk6A5Xn5+3cxtjhIC2QgVp51gRuU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OhhjMFoJsd2rGSNZM3etcz9JED0Xva1LnCtsw3B0lBR9ovpQTtKQ2OJ7Ao36EGELwhzJLwfoAnsegSjii+6w4EpZKi1Aco2C+bhZlPfxltgBn9vljyt3gxS3LFak2SLrPDI+Uf8AzacDMvvIWc0cNifjiJsuXAN9xVdqaxLKRt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WwCJdiDD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OmD/2XMISUqh3z926VAxM+7aw7C3HKDAi4R4UpIkn6JFIYCAZ5xvmcXCumEZye6MpedKI5p7DJs19YOD7qdfhZ4YkZoKZtM4/KjDRQbO30BR7XIp9KR3gPOXok7Y6Wg6pgrOCL6iHXSUyRz9JElc7sqN+Xe+4mfx3fdVeyHfuuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdc3W5Ae; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WwCJdiDD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E530CC4CEEF;
-	Fri, 14 Mar 2025 21:41:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdc3W5Ae"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B6DC2BCFA;
+	Fri, 14 Mar 2025 21:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741988515;
-	bh=uBNtxIShQAc4QePM1z8bdXhYlOosBUvYjbVq/jJ+iq8=;
+	s=k20201202; t=1741988516;
+	bh=QAJqgGLEgB7Uus6Hk6A5Xn5+3cxtjhIC2QgVp51gRuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WwCJdiDDUrADDBCaDGpEDz0WWAhTMgx7wEuFzWv+Ds/XGMRPTyi598H4cBQXSqdWe
-	 HA6fYSAAhGhQYwK/n4hFoit6G0r/KgvGP7+qgEKieY3gdLdJvALdqz/7pHQrLtbbCv
-	 n/hBDPpv2A06n+Sfz1cAp6gFf9xnOpeQIMvsuJNei5JN8GTjQ9BbIH6zSCa76LVGUO
-	 4nSgMhm/BKfk4sOxb2gIcNxd1DjlFYjSYKTokcGC7B3oGKG+vbf7joIeQlryNmuSGB
-	 U9x+ozAExF6+fH9F/okZSn+uEVRDMJihLi8bhoKZ4g0pynHMdZ7HHzQcJYhPll+ZIw
-	 /IRLqrOpu626Q==
+	b=kdc3W5AeKZY8S2hbQeBmv4Bu+7hWvFGu3cmFbRwRZoqz1H/GdCTysdmn8QhG4q+Kj
+	 F9vq9zOfSx05bdh2VJwSLfedd0ucU8iiELBfqoHhtQlTOqpEBbpaTfmHPl8QQGSNPr
+	 +evwcNs/3x33FH0cPYSOeh8MsZXlbZCS2WLGDqaCmFlJYQEB4s5NZ9AR5x8+XVk4FA
+	 XGAOKRw49RNiKTT3YvckUc/944uv/8oFx4rdUC2XWmhFMn91amSUBIq/u5onsd982o
+	 /D0N+jzsZ+1oRSsiHu1WvjkqlCaWghWY8Z2qZeVwxYJT0qxGwnlO3kTSABr4hRKRwd
+	 5UPO8aYD/ZZnQ==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Uros Bizjak <ubizjak@gmail.com>,
 	Andrew Cooper <andrew.cooper3@citrix.com>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 02/20] x86/apic: Use named asm operands in native_apic_mem_write()
-Date: Fri, 14 Mar 2025 14:41:15 -0700
-Message-ID: <397c12e48369bc6aa30094fbc8f795c642cee214.1741988314.git.jpoimboe@kernel.org>
+Subject: [PATCH 04/20] x86/cpu: Use named asm operands in clflushopt()
+Date: Fri, 14 Mar 2025 14:41:17 -0700
+Message-ID: <c007f4ddbfdfe92777a7df35bc121cf9bf0d0682.1741988314.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1741988314.git.jpoimboe@kernel.org>
 References: <cover.1741988314.git.jpoimboe@kernel.org>
@@ -53,32 +53,29 @@ Content-Transfer-Encoding: 8bit
 Use named operands in preparation for removing the operand numbering
 restrictions in alternative_io().
 
-Note this includes removing the "0" input constraint and converting its
-corresponding output constraint from "=r" to "+r".  While at it, do the
-same for the memory constraint.
-
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/include/asm/apic.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/special_insns.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index c903d358405d..ecf1b229f09b 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -98,9 +98,9 @@ static inline void native_apic_mem_write(u32 reg, u32 v)
- {
- 	volatile u32 *addr = (volatile u32 *)(APIC_BASE + reg);
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 21ce480658b1..b905076cf7f6 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -176,10 +176,9 @@ static __always_inline void clflush(volatile void *__p)
  
--	alternative_io("movl %0, %1", "xchgl %0, %1", X86_BUG_11AP,
--		       ASM_OUTPUT("=r" (v), "=m" (*addr)),
--		       ASM_INPUT("0" (v), "m" (*addr)));
-+	alternative_io("movl %[val], %[mem]",
-+		       "xchgl %[val], %[mem]", X86_BUG_11AP,
-+		       ASM_OUTPUT([val] "+r" (v), [mem] "+m" (*addr)));
+ static inline void clflushopt(volatile void *__p)
+ {
+-	alternative_io(".byte 0x3e; clflush %0",
+-		       ".byte 0x66; clflush %0",
+-		       X86_FEATURE_CLFLUSHOPT,
+-		       "+m" (*(volatile char __force *)__p));
++	alternative_io(".byte 0x3e; clflush %[val]",
++		       ".byte 0x66; clflush %[val]", X86_FEATURE_CLFLUSHOPT,
++		       [val] "+m" (*(volatile char __force *)__p));
  }
  
- static inline u32 native_apic_mem_read(u32 reg)
+ static inline void clwb(volatile void *__p)
 -- 
 2.48.1
 
