@@ -1,86 +1,89 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from e3i103.smtp2go.com (e3i103.smtp2go.com [158.120.84.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF9F1F30A8
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D111F4717
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 11:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741951521; cv=none; b=kUPinGTUp8SZIUXeKLpSrxte3sd5SgZztlDUAI2rU73qBnjyYMjQifTQxmQDymx8Mm0ocuT0+O6DGmOj1bVCDfxzcdh7Bdn7mG+I/Ao/JGhkydmDhsvfEFcVR27QK/+vZ9opaXEsJo7OhacZeeRajyjkJCbvXmKmJgocWSHoLdo=
+	t=1741951547; cv=none; b=GBz25EpcrCz24rOpWq9YgQmyeJsChJx35qxXUU5h3t5YY3+RAd4qo/+lIM1Ks8wwsFFNlP88awsn3Yrvm1fC/BZUBNTtnKRmiMEaKBZO7YCzv/k49z7ZB9gshPAEOjfLBbEDnNcE5ll4YXHjwnlIGow++HB77X4aVdTzk6MZJCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741951521; c=relaxed/simple;
-	bh=Hd7VsClSjXYQH5mEsOYpQLQhh3q01/eVgjFjBaz26iQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hhZ8s605QMvUxZpMvsHxKagJz7hW8XwvVbi76QVjzc+g7mNGrEIBxqBH81xE+9HkwT/T1TfC4tgPtCShlKDAOqnOhi244Dy4Mxpz+RfzkrD2O4iO0ME4opiFcI10hrUeh54Ter9KOUZZK25hZzCUFvq65MOKOTAY9lfBrjyogCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=L2e/62u/; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741951547; c=relaxed/simple;
+	bh=K/z4t4NOhqkkqSl6CQ+AsBENi23rk6XIpH50FaBpmSI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pUiI+qIHh/SD5Gy2dOwfpYzGIUYE6r+8mDwIedq8aHHMl30ft0rFWzmG5cHysmJ7Bu5eBCGBYWUzteFWAZyGx5WBdEZEUieH3H/11FLtpXu+N2pjbKb413ICd+JvoJUufUqKGhaholInBHt6K0h4Hx6kZ/3S4rMtkV8tf/18q1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt; spf=pass smtp.mailfrom=em510616.triplefau.lt; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=yMfYYLhm; dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b=kIKroe/R; arc=none smtp.client-ip=158.120.84.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em510616.triplefau.lt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="L2e/62u/"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2A9D940E015E;
-	Fri, 14 Mar 2025 11:25:17 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id KVwuMmaLbcP1; Fri, 14 Mar 2025 11:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741951513; bh=dO/lNqZ8eNwLtz2jXK/wa1wYbq5HNRktLopvgijx24Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L2e/62u/gzRShfyYAEKdsTqwuv9r1ON1dwvxlo2J5sQ5I8dH/G7cwKXfTfjceIgnl
-	 Cq/aMs3FoRUFKmUdz/efQKgwDom1Pofx7c5PWbEuw9K6LgBV7LjzPuHMnRkMMMRXQ9
-	 Q9f7qGD0idLNk8Zzle/8As++PnprYtv8226eXePHL4r+sjhQvXVUkSTgWeJ2GA7bUr
-	 BnWX9whw3YLE4HzaCWGqwET7U76MXEvLTz4ysI6lC1QNECBK6UKQBHYzixZ74paw1q
-	 6q54xSQ16VzESGBzxsarRZftqlUIpMAAoqdyUWIarC3qC4sYiE8v/bADFjKRCxzmgW
-	 pG9yz65InQUFp1qbF7hdh6bfwx18Lt6z0e5w0SlO50Zh+E7n9LRTynHUsXEyP9r4uE
-	 X/WvYZnQ1sq/g3rgnly9AUjeKaphYrCoBgyvj7+iCon3Z4ZIuGdjksQUA16JKY4SAV
-	 4OrB/nskCfnYjo6EEynXLznr7pcXUoT9FpZiMZK/TvbHtA7y2kboX0wnPKCpwQ3oZj
-	 tCYYcmIUXW0DBsae23kvhCQ0Pfy5oPBgWsiTYyHT7lR2RJaft9bSZJl+S6+YUDBwC1
-	 9lprf256P3exShv65JpMZBvUuxSv9jiZN2ky/3N/r4UJMgUuXUDAAAIatqLItJt1s1
-	 qaYlW5tINXXGFVXvy9STSsaA=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9868040E023B;
-	Fri, 14 Mar 2025 11:25:06 +0000 (UTC)
-Date: Fri, 14 Mar 2025 12:25:04 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/asm: Use asm_inline() instead of asm() in
- __untagged_addr()
-Message-ID: <20250314112504.GBZ9QSEL1hgjp376ey@fat_crate.local>
-References: <20250314093111.654359-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="yMfYYLhm";
+	dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b="kIKroe/R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
+ i=@smtpservice.net; q=dns/txt; s=a1-4; t=1741950633; h=feedback-id :
+ x-smtpcorp-track : date : message-id : to : subject : from : reply-to
+ : sender : list-unsubscribe : list-unsubscribe-post;
+ bh=Q/0NWtuCGURDovv9ooP86q0n2kOTSTLmQGJcGN0Cr98=;
+ b=yMfYYLhm4Kz9tymhoqvnEs+06fh9z6MQOSp8S1oZ1RM4CiV/SOfqW+BIox8gf5lVLhx/T
+ t9H435R5qA1PMvytzni7ERq5jW2eGYuIE/vPugbgH9QJzd/nZoZNsxhjjeLKOeaZ98tVNa5
+ evyD8Q130+ktHPcaFk3uxj6e2OABy5GuK+oAHgrwARqghY16atfySBMHeBUEmPpQDoCWDYd
+ dhLF+Ta2/O39+UFzn8xnYjmJ7J4nC2TgVxhET1Lq84TVhpNPFMFFL6pLo5xgYWqPltrOHiG
+ CKk6PzDHgcfKozJ8zFhztCNqpK4n9jhqiWocqgn1fw2FyzD/0CCEEaRrPdDg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=triplefau.lt;
+ i=@triplefau.lt; q=dns/txt; s=s510616; t=1741950633; h=from : subject
+ : to : message-id : date;
+ bh=Q/0NWtuCGURDovv9ooP86q0n2kOTSTLmQGJcGN0Cr98=;
+ b=kIKroe/RfzPtPHCN6j8ggncAGOwuMnpKb1tuFLMtfnzuVD5YwczB8q4rkHVt12Yc+EoYI
+ WB86cy4AlSEJ4A4ND8TS/2wYecbdpJCjmpzE/n/MiWL5yLm2iUXhJSWTMA1WapuUvTp8Kth
+ +BUgFv1asb7e8RDeivjgNRp9hmXuCmZJlLMVsM17L0CgDIUcW+uo+WChoc9EID1PA59vK+N
+ 72sM3A8oKGAEguYO8OOkMRWz88NiJuLV9H7kk1QoHcuAsj9LGZ/W3p3jbLR7C4SmYUEEfxb
+ 8tn2gRyGjSjPmtrqbEs8X1bAHYyeJ/y5x8pmRCip51ESrN8JJhEdletkP+cw==
+Received: from [10.12.239.196] (helo=localhost)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97.1-S2G)
+	(envelope-from <repk@triplefau.lt>)
+	id 1tt2vv-4o5NDgroS7Q-rZnl;
+	Fri, 14 Mar 2025 11:10:31 +0000
+From: Remi Pommarel <repk@triplefau.lt>
+To: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH 0/2] Fixes packet processes after vif is stopped
+Date: Fri, 14 Mar 2025 12:04:23 +0100
+Message-Id: <cover.1741950009.git.repk@triplefau.lt>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250314093111.654359-1-ubizjak@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 510616m:510616apGKSTK:510616sFgC3_wmkW
+X-smtpcorp-track: Ic1l3KQJhux6.k1lhbjisfJcB.PP06FQKkFRA
 
-On Fri, Mar 14, 2025 at 10:30:55AM +0100, Uros Bizjak wrote:
-> Use asm_inline() to instruct the compiler that the size of asm()
-> is the minimum size of one instruction, ignoring how many instructions
-> the compiler thinks it is. ALTERNATIVE macro that expands to several
-> pseudo directives causes instruction length estimate to count
-> more than 20 instructions.
-> 
-> bloat-o-meter reports minimal code size increase
+Those are a couple of fixes that prevent crashes due to processing
+packets (especially multicast ones) for TX after vif is stopped (either
+after a mesh interface left the group or interface is put down).
 
-If you see an increase and *no* *other* *palpable* improvement, you don't send
-it. It is that simple.
+The first one ensure the key info passed to drivers through ieee80211
+skb control block is up to date, even after key removal.
+
+The second one ensure no packets get processed after vif driver private
+data is cleared in ieee80211_do_stop().
+
+As I tried to explain in second patch footnote, I can still see a
+theoretical reason that packets get queued after ieee80211_do_stop()
+call. But I was not able to reproduce it, so I may be missing a
+something here; making that more as an open question.
+
+Remi Pommarel (2):
+  wifi: mac80211: Update skb's NULL key in ieee80211_tx_h_select_key()
+  wifi: mac80211: Purge vif txq in ieee80211_do_stop()
+
+ net/mac80211/iface.c | 3 +++
+ net/mac80211/tx.c    | 6 ++++++
+ 2 files changed, 9 insertions(+)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.40.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
