@@ -1,68 +1,68 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58951F03E5
-	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 23:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95711F78F2
+	for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 23:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741995363; cv=none; b=TPFMNvfxjyzy35dySWq7EG/zo4xvuSmNaQX0/N7sQCbbIRRUXRDvPQj4lZD7wRqqtMCiP35rNMcRewtEJWLICjezyMRlR1STQ8g7Mbbpsj3O3/xhJgfe5bIUs9UUCMRix0wBnICdnHi1i9XZbsY4VhFm/jsLzHC11EXmDxzwRfY=
+	t=1741995367; cv=none; b=KzxkGDQIBjLdw036tu/QO84jbK6UUo9oDB9Cqd6mOQ7PrjMpiv91knimChf4d9XlICMLSdQLSGzMC7NHnLzXextgw7AXs2D8502Pm17A4LE2vyNUSTKFikYUGK6PiBBkUZde271UMOK26OAGFVDpeXKmvF5dxBQfD5/RrCPO27A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741995363; c=relaxed/simple;
-	bh=ukK58TSZD1mgx2a2RMEtx4bXeUeR9Zv1iJTR2sL5N+0=;
+	s=arc-20240116; t=1741995367; c=relaxed/simple;
+	bh=XO8C73umzqB3ITQwScvoKWMaYVNcoaJRWUZeDGM5cGA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=r7dhx8rX1nVYBvUQozFrcnbqSQ7QrWtPpYilJ6GHBOFbFKaTTFnhSNmfBIHs6k1iqDDsXfUDUFpXeGo0gSLGoHnhFwxUnV2rVQAG6gmrcvpMAVWk5tGLVfWLbNAe86lv0EK3YhsJGZ7bBWyOE3M7aUfhRhzuYT5Fj1x4gUAH85o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y0HHRgFp; arc=none smtp.client-ip=209.85.218.51
+	 In-Reply-To:To:Cc; b=CZvsu7MhGcNjFZM3B/dxMl9rgUb3GjLQZxixbjTOLqL9CDM1LlUbrmZTQT8QVMgJ36mFGgmmRR2ksQQTo4MuLcDese2kAxd5N0PuVjY3iTlLw+p6TKpFjUWkkozpmjnr1hDFsBmbPRVHWl/iYQLFId/N3UZrozfuaAU0VR1ImPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DDcmBHhS; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y0HHRgFp"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2a089fbbdso477360866b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DDcmBHhS"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso387181466b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 16:36:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741995359; x=1742600159; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741995364; x=1742600164; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fgtbrNjg3RxK7lHji+uLlEjbRwxwoaENC7vutfrY5Ak=;
-        b=y0HHRgFp9ITHESaB4ouBNW8Xfi/ZIiKkYQdNHFArfAXZzr6wL/vt5XlaE5U7Fwgrfu
-         OajSvnTwrqfwDM1hraI4xpRhCW2VR2S6/pmSn8jxIqTSLfN/i3QoASB49Trz+oMlqJLi
-         nftnRdzWrrYnOHYXhSAz4vzrRiKcsZEisPyGTyRT5ExLssmjvAGopMp2FMH+kcwTn+rf
-         tlHvqxUgrPW9Z09JCtbubsqEDE3NUehuJnn5fKs0pnna+4cl+1F+81oT7oNwHpOOX+To
-         VnBOzYmNIT4IEDp1i4CBiGOjUDAJ+6iifmqGGSHHvtmiL6lmXPfRMl+DPjT5+Fc7hACT
-         Ftrw==
+        bh=keDpOrls9Sn/S+3SLtEEautMsDMOcPKZDVim3GD6wto=;
+        b=DDcmBHhSVOsZrbN8iKOndyGIn3Rr/t57Aj6YdDVNjv4/K5Bf4qLG2LrT8V+ey4cO24
+         izAthAgj5Mz2Ke4OaY1RvRO0TJ+xJjFohso8HQybJY4Vq6sWoDxrz/AepfcycfYi8jGw
+         tijyDv2gc8Ywmy2fVHSVRxzkXFyz4OtE47zFlpKERTtAOqDs+3cXuq0mpebT7OjAkfqr
+         HF8fAVqEuXm4fWVYsQo/CMWrsYB4DRJa8PapEbuvvcUg5ad/3wJ4h8Hqi053QcrLQK92
+         xq73EmBzEJxSNQMaCqHnjYwPwivNrk/PFPkmxCc2Kur5bD0Vhj2Da+wA27XVIUJLlcjQ
+         ovkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741995359; x=1742600159;
+        d=1e100.net; s=20230601; t=1741995364; x=1742600164;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fgtbrNjg3RxK7lHji+uLlEjbRwxwoaENC7vutfrY5Ak=;
-        b=J2pJlRhmAE8l4pTA6Y/0dtoP7K7bLuHJd4NDNj+1UVoJh+Rve/C6uMLl0wzgcNqwWz
-         ktK0pfnM14Y5pHdutD8boQbMPrjNXo8odgjCjmOBIk2ztl14hDyQS436GL8TomDnc4TB
-         MMp/j+c7y3lMBto2UT/KSARfO50MKhElHowlqcmXSpdKO9xj5Xla6KgujcMKlbIW9gO5
-         7WwygLb7o7sPly6x/WR+z9XWPNJ0RuHit29UQDydqPsjgm5UgFvGF5vfTtnBJrCJXfYG
-         hFQEx/lB+mEwxJQXR5FdktSCD2ppNoiUMb6EnABffvMLmwfS6UqGoNY6T78VqwVDoojF
-         wiZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWiQOZ25rdxNNq7fT559uzv1MzOU9ry5N8s8AuLv1P0WMlmahhesTcr9hHwpICmWMigiSpssOpyJ1OUHdY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs+UHFBsdXEfmen7/FyGOGt0SFErnWD6fnO2awXhUr7JGA4eQZ
-	FXcb8/QYO8ow3JKTokZjh7DPhO2f2t+l72iaPFwVtfY6sZHaL4aqvGeowhjKEYwAzbZ0Y/Kk0KL
-	Lz9U/ag==
-X-Gm-Gg: ASbGnctm3+JWPZNWV0uDWPMmD7zEwYBn04P2lPmR97DhVtREoa/9l5BliGSvWV1CfZ0
-	/QtT2ci1Cm23Va5b8ROijhYvJGwGPn5a2RwPKlfpI6sSAFmLf8PMy2s1dd9gOwq68tZh2GmDvgK
-	5q7bzDza0/Ckttq5yFQEgqAcIhoBAGqvHp2BdjtmauRvBRmdjbpVfvmw2GcO23VviM2BQTEi78b
-	1hgFMCMvO6tkxWDDtd84KMYmFLz+e5snAfMX2MTwVbCpGZk5gH5QLqBqFtnvbkRIhxSHQVkLzT0
-	cwhhofvHF8k7AMAAuib9Cj7uBRjU8ukvAgGK0Pmgoo0DauqKB+P9tPHrW3PHsWAUnfmbslkDvz7
-	Gj08Ik+jlhcImf/TpVJ8AOJXZoMT9iXNUKzMk/bnwH+CusD7M2k94S65fXLgPFv4weycE
-X-Google-Smtp-Source: AGHT+IFioEfRk4etvKLgUi95Is5Nk227xfOzVnVRdw09cGLrCdUKOtOpJZvahOiRQ8jdUpxMj7pcgw==
-X-Received: by 2002:a17:907:2ce2:b0:ac2:d5d3:2b77 with SMTP id a640c23a62f3a-ac331304749mr433254266b.8.1741995358560;
-        Fri, 14 Mar 2025 16:35:58 -0700 (PDT)
+        bh=keDpOrls9Sn/S+3SLtEEautMsDMOcPKZDVim3GD6wto=;
+        b=TSMIdf9lGX47xauWoVldRcJEQIXHV6FWNBVIRHNto335RuTRZZtysZR7eIg9lJpOFd
+         z7mW/sp8o61ZLzRuchjgNenqPjnJeKdRXWyg4a4kIlfY23dB/w6rIzYc3xcojdl9JyZV
+         McrZX5wb+RlLlqsJnnoN7YrjatDwCfEDAA1KGxaCDWCBQR85pWD8C4G3KIYJjB345ru7
+         rKeyNL6hlCaGlPsoTGrbMAbTb6qHeYOQxSfQvQ1zTJMf1+zb5US+j6IWVXrws0qpdL98
+         T1YzD/JLwjzFso34yFt+RLMq7VCZXYRSzn15aZEjhQWHO7xCZ9udTqatXzQlwxsFGYdQ
+         7Ogg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+1zIecRvVT98Lhu8lw+0Uztne3ROaxRyCLpBur+EjmK4kyKTt1G3IeRIhR5vM8iLu0K2L4Up+GFEfzUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfUSBC3i99W4xcnNvSYYW9F4N/fvuX0eG9LK3hnnwvNUtA6k9F
+	5R7EqMxpY3PsLJMdEm6w8W6JmpzGb+ZpGAwqzG6tutHO9rIiH2CXSqC2xY/6lj6oJAH5GcJfBHW
+	NrwqhwQ==
+X-Gm-Gg: ASbGncswtLZUxRksN7DEMLP2BZkGu3YC8Tm5YeLvqbD2ZFzssNbA2QOKnW60To4p/YK
+	0MGPPdqpeFWOPKawxBM/ZKnVxBchI2gB6BSO7TM1btKGaXeHPUGL+z+QnDfE3kaOVn94X9njEjO
+	k6xhzTv7dlpxOAFYpU2Eg3jsMpe5uuzZWHZs5GtX8mKjBj7qEEQGOIvQzTXSQCp4p/ywcsfbVMH
+	L6tvloCjcdLC4ibI8uUBb7YzhnXffUvDLLqNNQqskNyZaFq+Zruosywme2zQsYGw/agGZUTfGxP
+	xAoaDhCx+YzwAhgb0bS42h4getFOs9Pmnmu8Nbg3l/d9NyRGUDPgQHcWfRmu7aNnXkv8Y3Mrv6Y
+	03gql9+ud/+qfKLKgBH2+gZnlm2rrlmNRGppXtS8Zmt0t/oVdNjZCASYRgnzT1VpFTGzV
+X-Google-Smtp-Source: AGHT+IFAGvopC9aLmriQ1WG4E3B60V6ITUuBD1z/8RVghyGuUFJrHiuxKd9xoYGYLzs30GOUXV5ZOg==
+X-Received: by 2002:a17:907:6ea9:b0:ac2:912d:5a80 with SMTP id a640c23a62f3a-ac3301dfbf9mr540041266b.5.1741995363804;
+        Fri, 14 Mar 2025 16:36:03 -0700 (PDT)
 Received: from [192.168.178.107] (2001-1c06-2302-5600-7555-cca3-bbc4-648b.cable.dynamic.v6.ziggo.nl. [2001:1c06:2302:5600:7555:cca3:bbc4:648b])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aeadbsm284246966b.29.2025.03.14.16.35.57
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aeadbsm284246966b.29.2025.03.14.16.36.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 16:35:57 -0700 (PDT)
+        Fri, 14 Mar 2025 16:36:03 -0700 (PDT)
 From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Date: Fri, 14 Mar 2025 23:35:54 +0000
-Subject: [PATCH v2 1/7] media: qcom: camss: Add an id property to struct
- resources
+Date: Fri, 14 Mar 2025 23:35:58 +0000
+Subject: [PATCH v2 5/7] media: qcom: camss: Add support for 3ph CSIPHY
+ write settle delay
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,7 +71,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250314-b4-media-comitters-next-25-03-13-x1e80100-camss-driver-v2-1-d163d66fcc0d@linaro.org>
+Message-Id: <20250314-b4-media-comitters-next-25-03-13-x1e80100-camss-driver-v2-5-d163d66fcc0d@linaro.org>
 References: <20250314-b4-media-comitters-next-25-03-13-x1e80100-camss-driver-v2-0-d163d66fcc0d@linaro.org>
 In-Reply-To: <20250314-b4-media-comitters-next-25-03-13-x1e80100-camss-driver-v2-0-d163d66fcc0d@linaro.org>
 To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
@@ -81,351 +81,57 @@ Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
 X-Mailer: b4 0.14.2
 
-In various places in CAMSS we assume a linear set of declared devices
-{csiphy0, csiphy1, csiphy2} which currently works for upstream SoCs but for
-upcoming SoCs some of the SoC resources will result in a set such as
-{csiphy0, csiphy2} which will break the naive for() loops we have.
+Currently we have an s32 value called delay which has been inherited from
+the CamX code for PHY init. This unused value relates to a post-write delay
+latching time.
 
-Introduce an identity property which resource declarations can populate
-hence facilitating non-linear resource naming.
+In the silicon test-bench which provides the basis for the CamX code the
+write settle times are specified in nanoseconds.
+
+In the upstream kernel we currently take no notice of the delay value and
+use all zero in any case.
+
+Nanosecond granularity timing from the perspective of the kernel is total
+overkill, however for some PHY init sequences introduction of a settle
+delay has a use.
+
+Add support to the 3ph init sequence for microsecond level delay. A
+readback of written data would probably accomplish the same thing but,
+since the PHY init sequences in the wild provide a delay value - we can
+just add support here for that delay and consume the values given.
+
+Generally these delays are probably not necessary but, they do speak to a
+theoretical delay that silicon test-benches utilise and therefore are
+worthwhile to replicate if the given PHY init sequence has the data.
 
 Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- drivers/media/platform/qcom/camss/camss-csiphy.h |  1 +
- drivers/media/platform/qcom/camss/camss.c        | 41 +++++++++++++++++++++++-
- 2 files changed, 41 insertions(+), 1 deletion(-)
+ drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.h b/drivers/media/platform/qcom/camss/camss-csiphy.h
-index 86b98b37838e11d43d642c3f24e9a66acddabd03..ab91273303b9e3c67c4bcefe1e3a67e1a47bf14f 100644
---- a/drivers/media/platform/qcom/camss/camss-csiphy.h
-+++ b/drivers/media/platform/qcom/camss/camss-csiphy.h
-@@ -81,6 +81,7 @@ struct csiphy_hw_ops {
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+index a6cc957b986e16add9da516c2fcb3201f3a65f35..b44939686e4bbf400f145368d3ba015b56bfb187 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+@@ -59,7 +59,7 @@
+ struct csiphy_lane_regs {
+ 	s32 reg_addr;
+ 	s32 reg_data;
+-	s32 delay;
++	u32 delay_us;
+ 	u32 csiphy_param_type;
  };
  
- struct csiphy_subdev_resources {
-+	u8 id;
- 	const struct csiphy_hw_ops *hw_ops;
- 	const struct csiphy_formats *formats;
- };
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index 6791dfea91b13d584694a26599e24ca088dfc1ab..9da74da679a28070b101df06a8412e85efdcffcc 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -46,6 +46,7 @@ static const struct camss_subdev_resources csiphy_res_8x16[] = {
- 		.reg = { "csiphy0", "csiphy0_clk_mux" },
- 		.interrupt = { "csiphy0" },
- 		.csiphy = {
-+			.id = 0,
- 			.hw_ops = &csiphy_ops_2ph_1_0,
- 			.formats = &csiphy_formats_8x16
+@@ -600,6 +600,8 @@ static void csiphy_gen2_config_lanes(struct csiphy_device *csiphy,
+ 			break;
  		}
-@@ -62,6 +63,7 @@ static const struct camss_subdev_resources csiphy_res_8x16[] = {
- 		.reg = { "csiphy1", "csiphy1_clk_mux" },
- 		.interrupt = { "csiphy1" },
- 		.csiphy = {
-+			.id = 1,
- 			.hw_ops = &csiphy_ops_2ph_1_0,
- 			.formats = &csiphy_formats_8x16
- 		}
-@@ -318,6 +320,7 @@ static const struct camss_subdev_resources csiphy_res_8x96[] = {
- 		.reg = { "csiphy0", "csiphy0_clk_mux" },
- 		.interrupt = { "csiphy0" },
- 		.csiphy = {
-+			.id = 0,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_8x96
- 		}
-@@ -334,6 +337,7 @@ static const struct camss_subdev_resources csiphy_res_8x96[] = {
- 		.reg = { "csiphy1", "csiphy1_clk_mux" },
- 		.interrupt = { "csiphy1" },
- 		.csiphy = {
-+			.id = 1,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_8x96
- 		}
-@@ -350,6 +354,7 @@ static const struct camss_subdev_resources csiphy_res_8x96[] = {
- 		.reg = { "csiphy2", "csiphy2_clk_mux" },
- 		.interrupt = { "csiphy2" },
- 		.csiphy = {
-+			.id = 2,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_8x96
- 		}
-@@ -524,6 +529,7 @@ static const struct camss_subdev_resources csiphy_res_660[] = {
- 		.reg = { "csiphy0", "csiphy0_clk_mux" },
- 		.interrupt = { "csiphy0" },
- 		.csiphy = {
-+			.id = 0,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_8x96
- 		}
-@@ -542,6 +548,7 @@ static const struct camss_subdev_resources csiphy_res_660[] = {
- 		.reg = { "csiphy1", "csiphy1_clk_mux" },
- 		.interrupt = { "csiphy1" },
- 		.csiphy = {
-+			.id = 1,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_8x96
- 		}
-@@ -560,6 +567,7 @@ static const struct camss_subdev_resources csiphy_res_660[] = {
- 		.reg = { "csiphy2", "csiphy2_clk_mux" },
- 		.interrupt = { "csiphy2" },
- 		.csiphy = {
-+			.id = 2,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_8x96
- 		}
-@@ -751,6 +759,7 @@ static const struct camss_subdev_resources csiphy_res_670[] = {
- 		.reg = { "csiphy0" },
- 		.interrupt = { "csiphy0" },
- 		.csiphy = {
-+			.id = 0,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -768,6 +777,7 @@ static const struct camss_subdev_resources csiphy_res_670[] = {
- 		.reg = { "csiphy1" },
- 		.interrupt = { "csiphy1" },
- 		.csiphy = {
-+			.id = 1,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -785,6 +795,7 @@ static const struct camss_subdev_resources csiphy_res_670[] = {
- 		.reg = { "csiphy2" },
- 		.interrupt = { "csiphy2" },
- 		.csiphy = {
-+			.id = 2,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -935,6 +946,7 @@ static const struct camss_subdev_resources csiphy_res_845[] = {
- 		.reg = { "csiphy0" },
- 		.interrupt = { "csiphy0" },
- 		.csiphy = {
-+			.id = 0,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -957,6 +969,7 @@ static const struct camss_subdev_resources csiphy_res_845[] = {
- 		.reg = { "csiphy1" },
- 		.interrupt = { "csiphy1" },
- 		.csiphy = {
-+			.id = 1,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -979,6 +992,7 @@ static const struct camss_subdev_resources csiphy_res_845[] = {
- 		.reg = { "csiphy2" },
- 		.interrupt = { "csiphy2" },
- 		.csiphy = {
-+			.id = 2,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1001,6 +1015,7 @@ static const struct camss_subdev_resources csiphy_res_845[] = {
- 		.reg = { "csiphy3" },
- 		.interrupt = { "csiphy3" },
- 		.csiphy = {
-+			.id = 3,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1179,6 +1194,7 @@ static const struct camss_subdev_resources csiphy_res_8250[] = {
- 		.reg = { "csiphy0" },
- 		.interrupt = { "csiphy0" },
- 		.csiphy = {
-+			.id = 0,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1192,6 +1208,7 @@ static const struct camss_subdev_resources csiphy_res_8250[] = {
- 		.reg = { "csiphy1" },
- 		.interrupt = { "csiphy1" },
- 		.csiphy = {
-+			.id = 1,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1205,6 +1222,7 @@ static const struct camss_subdev_resources csiphy_res_8250[] = {
- 		.reg = { "csiphy2" },
- 		.interrupt = { "csiphy2" },
- 		.csiphy = {
-+			.id = 2,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1218,6 +1236,7 @@ static const struct camss_subdev_resources csiphy_res_8250[] = {
- 		.reg = { "csiphy3" },
- 		.interrupt = { "csiphy3" },
- 		.csiphy = {
-+			.id = 3,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1231,6 +1250,7 @@ static const struct camss_subdev_resources csiphy_res_8250[] = {
- 		.reg = { "csiphy4" },
- 		.interrupt = { "csiphy4" },
- 		.csiphy = {
-+			.id = 4,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1244,6 +1264,7 @@ static const struct camss_subdev_resources csiphy_res_8250[] = {
- 		.reg = { "csiphy5" },
- 		.interrupt = { "csiphy5" },
- 		.csiphy = {
-+			.id = 5,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1458,6 +1479,7 @@ static const struct camss_subdev_resources csiphy_res_7280[] = {
- 		.reg = { "csiphy0" },
- 		.interrupt = { "csiphy0" },
- 		.csiphy = {
-+			.id = 0,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sc7280
- 		}
-@@ -1472,6 +1494,7 @@ static const struct camss_subdev_resources csiphy_res_7280[] = {
- 		.reg = { "csiphy1" },
- 		.interrupt = { "csiphy1" },
- 		.csiphy = {
-+			.id = 1,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sc7280
- 		}
-@@ -1486,6 +1509,7 @@ static const struct camss_subdev_resources csiphy_res_7280[] = {
- 		.reg = { "csiphy2" },
- 		.interrupt = { "csiphy2" },
- 		.csiphy = {
-+			.id = 2,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sc7280
- 		}
-@@ -1500,6 +1524,7 @@ static const struct camss_subdev_resources csiphy_res_7280[] = {
- 		.reg = { "csiphy3" },
- 		.interrupt = { "csiphy3" },
- 		.csiphy = {
-+			.id = 3,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sc7280
- 		}
-@@ -1514,6 +1539,7 @@ static const struct camss_subdev_resources csiphy_res_7280[] = {
- 		.reg = { "csiphy4" },
- 		.interrupt = { "csiphy4" },
- 		.csiphy = {
-+			.id = 4,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sc7280
- 		}
-@@ -1766,6 +1792,7 @@ static const struct camss_subdev_resources csiphy_res_sc8280xp[] = {
- 		.reg = { "csiphy0" },
- 		.interrupt = { "csiphy0" },
- 		.csiphy = {
-+			.id = 0,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1779,6 +1806,7 @@ static const struct camss_subdev_resources csiphy_res_sc8280xp[] = {
- 		.reg = { "csiphy1" },
- 		.interrupt = { "csiphy1" },
- 		.csiphy = {
-+			.id = 1,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1792,6 +1820,7 @@ static const struct camss_subdev_resources csiphy_res_sc8280xp[] = {
- 		.reg = { "csiphy2" },
- 		.interrupt = { "csiphy2" },
- 		.csiphy = {
-+			.id = 2,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -1805,6 +1834,7 @@ static const struct camss_subdev_resources csiphy_res_sc8280xp[] = {
- 		.reg = { "csiphy3" },
- 		.interrupt = { "csiphy3" },
- 		.csiphy = {
-+			.id = 3,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -2134,6 +2164,7 @@ static const struct camss_subdev_resources csiphy_res_8550[] = {
- 		.reg = { "csiphy0" },
- 		.interrupt = { "csiphy0" },
- 		.csiphy = {
-+			.id = 0,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -2147,6 +2178,7 @@ static const struct camss_subdev_resources csiphy_res_8550[] = {
- 		.reg = { "csiphy1" },
- 		.interrupt = { "csiphy1" },
- 		.csiphy = {
-+			.id = 1,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -2160,6 +2192,7 @@ static const struct camss_subdev_resources csiphy_res_8550[] = {
- 		.reg = { "csiphy2" },
- 		.interrupt = { "csiphy2" },
- 		.csiphy = {
-+			.id = 2,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -2173,6 +2206,7 @@ static const struct camss_subdev_resources csiphy_res_8550[] = {
- 		.reg = { "csiphy3" },
- 		.interrupt = { "csiphy3" },
- 		.csiphy = {
-+			.id = 3,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -2186,6 +2220,7 @@ static const struct camss_subdev_resources csiphy_res_8550[] = {
- 		.reg = { "csiphy4" },
- 		.interrupt = { "csiphy4" },
- 		.csiphy = {
-+			.id = 4,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -2199,6 +2234,7 @@ static const struct camss_subdev_resources csiphy_res_8550[] = {
- 		.reg = { "csiphy5" },
- 		.interrupt = { "csiphy5" },
- 		.csiphy = {
-+			.id = 5,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -2212,6 +2248,7 @@ static const struct camss_subdev_resources csiphy_res_8550[] = {
- 		.reg = { "csiphy6" },
- 		.interrupt = { "csiphy6" },
- 		.csiphy = {
-+			.id = 6,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -2225,6 +2262,7 @@ static const struct camss_subdev_resources csiphy_res_8550[] = {
- 		.reg = { "csiphy7" },
- 		.interrupt = { "csiphy7" },
- 		.csiphy = {
-+			.id = 7,
- 			.hw_ops = &csiphy_ops_3ph_1_0,
- 			.formats = &csiphy_formats_sdm845
- 		}
-@@ -2749,7 +2787,8 @@ static int camss_init_subdevices(struct camss *camss)
+ 		writel_relaxed(val, csiphy->base + r->reg_addr);
++		if (r->delay_us)
++			udelay(r->delay_us);
+ 	}
+ }
  
- 	for (i = 0; i < camss->res->csiphy_num; i++) {
- 		ret = msm_csiphy_subdev_init(camss, &camss->csiphy[i],
--					     &res->csiphy_res[i], i);
-+					     &res->csiphy_res[i],
-+					     res->csiphy_res[i].csiphy.id);
- 		if (ret < 0) {
- 			dev_err(camss->dev,
- 				"Failed to init csiphy%d sub-device: %d\n",
 
 -- 
 2.48.1
