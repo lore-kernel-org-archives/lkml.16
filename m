@@ -1,32 +1,32 @@
 Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 260A4193062;
-	Fri, 14 Mar 2025 07:15:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 2EC1117D2;
+	Fri, 14 Mar 2025 07:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936515; cv=none; b=tRK5oSrGfsPaCmOHipCErdW8Voawm4GaaYMn+1uHOQI6hURip5KE/884fpHmK81YPcJQfELN+jBDcQo65Ijn0gV7Ff5IkWNtqFD3dbEfbld/ydPEiZFczvm8Zvyw5hwhUK8hhef/rylT+lJEzR1xwto7BgH3SHc9QiF0DKsqluA=
+	t=1741936520; cv=none; b=HpE9yAbj9RxQt8HKLdLkVppfM1Sihkilz/XTaSpgy7QS10EQj3W89c2Jr81+ibtO6fbh4wbvPmN96emdLbHfmMZLoAz0vXvWDbQFJwLOhvOax406H+OAs9HIwwCIjts9i5/2OowqZTGIGko4M0ZH039IQMCpF6F/S3NTX6X0ahw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741936515; c=relaxed/simple;
-	bh=s0mmNox3jAK5QVrE4AMY1kLiVWM6e6Jd1XDMUyY7jH4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=ALNCwRvd3ZIvq5qF+Z5pNb4FEipTn5t2Bow1E4Lqnx5AA37MrjSaL0MN1Ra5bm54rpvFz1dh+TxbfZwoByirthBJQYgJt93IUr/hvt8/84o46OysYWJFRUINDH3Nl1MXIEec7ZIqMa2IRNADmccErttgG09GMgBs7PI5jLHyg2E=
+	s=arc-20240116; t=1741936520; c=relaxed/simple;
+	bh=nYhJZCbhlaC0rSuAhobyC5FkT87b9GIVB4HH4O/O72o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=fGPbuyf4rPOUySFVKrfutVLfLj941U1PefNXHJPcMINVl30eh+X2qjJFY2Hq3h2bU88n1nD8eTnfdhG7C7o/dLOrDuWv3/DDQ0g4e70wya9re59bSv6AK+CviqZ/H5Ao3Gus3TdpPAnT/MzhFTyaVNXPpOiXHEt3RZ4nxUiqBdk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
 Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 5520860680974;
-	Fri, 14 Mar 2025 15:15:10 +0800 (CST)
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id A2D6960680974;
+	Fri, 14 Mar 2025 15:15:08 +0800 (CST)
 X-MD-Sfrom: suhui@nfschina.com
 X-MD-SrcIP: 180.167.10.98
 From: Su Hui <suhui@nfschina.com>
 To: zfigura@codeweavers.com,
-	corbet@lwn.net
+	shuah@kernel.org
 Cc: Su Hui <suhui@nfschina.com>,
 	wine-devel@winehq.org,
-	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org
-Subject: [PATCH 4/4] docs: ntsync: update NTSYNC_IOC_*
-Date: Fri, 14 Mar 2025 15:14:54 +0800
-Message-Id: <20250314071454.201697-5-suhui@nfschina.com>
+Subject: [PATCH 1/4] selftests: ntsync: fix the wrong condition in wake_all
+Date: Fri, 14 Mar 2025 15:14:51 +0800
+Message-Id: <20250314071454.201697-2-suhui@nfschina.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20250314071454.201697-1-suhui@nfschina.com>
 Precedence: bulk
@@ -37,90 +37,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some macros in the document do not match the code and the header files,
-correct these macros according to the definitions in the code.
+When  'manual=false' and  'signaled=true', then expected value when using
+NTSYNC_IOC_CREATE_EVENT should be greater than zero. Fix this typo error.
 
 Signed-off-by: Su Hui <suhui@nfschina.com>
 ---
- Documentation/userspace-api/ntsync.rst | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ tools/testing/selftests/drivers/ntsync/ntsync.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/userspace-api/ntsync.rst b/Documentation/userspace-api/ntsync.rst
-index 25e7c4aef968..969774bf4c60 100644
---- a/Documentation/userspace-api/ntsync.rst
-+++ b/Documentation/userspace-api/ntsync.rst
-@@ -152,9 +152,9 @@ The ioctls on the device file are as follows:
+diff --git a/tools/testing/selftests/drivers/ntsync/ntsync.c b/tools/testing/selftests/drivers/ntsync/ntsync.c
+index 3aad311574c4..bfb6fad653d0 100644
+--- a/tools/testing/selftests/drivers/ntsync/ntsync.c
++++ b/tools/testing/selftests/drivers/ntsync/ntsync.c
+@@ -968,7 +968,7 @@ TEST(wake_all)
+ 	auto_event_args.manual = false;
+ 	auto_event_args.signaled = true;
+ 	objs[3] = ioctl(fd, NTSYNC_IOC_CREATE_EVENT, &auto_event_args);
+-	EXPECT_EQ(0, objs[3]);
++	EXPECT_LE(0, objs[3]);
  
- The ioctls on the individual objects are as follows:
- 
--.. c:macro:: NTSYNC_IOC_SEM_POST
-+.. c:macro:: NTSYNC_IOC_SEM_RELEASE
- 
--  Post to a semaphore object. Takes a pointer to a 32-bit integer,
-+  Release a semaphore object. Takes a pointer to a 32-bit integer,
-   which on input holds the count to be added to the semaphore, and on
-   output contains its previous count.
- 
-@@ -186,7 +186,7 @@ The ioctls on the individual objects are as follows:
-   unowned and signaled, and eligible threads waiting on it will be
-   woken as appropriate.
- 
--.. c:macro:: NTSYNC_IOC_SET_EVENT
-+.. c:macro:: NTSYNC_IOC_EVENT_SET
- 
-   Signal an event object. Takes a pointer to a 32-bit integer, which on
-   output contains the previous state of the event.
-@@ -194,12 +194,12 @@ The ioctls on the individual objects are as follows:
-   Eligible threads will be woken, and auto-reset events will be
-   designaled appropriately.
- 
--.. c:macro:: NTSYNC_IOC_RESET_EVENT
-+.. c:macro:: NTSYNC_IOC_EVENT_RESET
- 
-   Designal an event object. Takes a pointer to a 32-bit integer, which
-   on output contains the previous state of the event.
- 
--.. c:macro:: NTSYNC_IOC_PULSE_EVENT
-+.. c:macro:: NTSYNC_IOC_EVENT_PULSE
- 
-   Wake threads waiting on an event object while leaving it in an
-   unsignaled state. Takes a pointer to a 32-bit integer, which on
-@@ -213,7 +213,7 @@ The ioctls on the individual objects are as follows:
-   afterwards, and a simultaneous read operation will always report the
-   event as unsignaled.
- 
--.. c:macro:: NTSYNC_IOC_READ_SEM
-+.. c:macro:: NTSYNC_IOC_SEM_READ
- 
-   Read the current state of a semaphore object. Takes a pointer to
-   struct :c:type:`ntsync_sem_args`, which is used as follows:
-@@ -225,7 +225,7 @@ The ioctls on the individual objects are as follows:
-      * - ``max``
-        - On output, contains the maximum count of the semaphore.
- 
--.. c:macro:: NTSYNC_IOC_READ_MUTEX
-+.. c:macro:: NTSYNC_IOC_MUTEX_READ
- 
-   Read the current state of a mutex object. Takes a pointer to struct
-   :c:type:`ntsync_mutex_args`, which is used as follows:
-@@ -242,7 +242,7 @@ The ioctls on the individual objects are as follows:
-   ``EOWNERDEAD``. In this case, ``count`` and ``owner`` are set to
-   zero.
- 
--.. c:macro:: NTSYNC_IOC_READ_EVENT
-+.. c:macro:: NTSYNC_IOC_EVENT_READ
- 
-   Read the current state of an event object. Takes a pointer to struct
-   :c:type:`ntsync_event_args`, which is used as follows:
-@@ -255,7 +255,7 @@ The ioctls on the individual objects are as follows:
-        - On output, contains 1 if the event is a manual-reset event,
-          and 0 otherwise.
- 
--.. c:macro:: NTSYNC_IOC_KILL_OWNER
-+.. c:macro:: NTSYNC_IOC_MUTEX_KILL
- 
-   Mark a mutex as unowned and abandoned if it is owned by the given
-   owner. Takes an input-only pointer to a 32-bit integer denoting the
+ 	wait_args.timeout = get_abs_timeout(1000);
+ 	wait_args.objs = (uintptr_t)objs;
 -- 
 2.30.2
 
