@@ -1,59 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FFC71FF1B5;
-	Fri, 14 Mar 2025 12:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F431DD0F6;
+	Fri, 14 Mar 2025 12:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741957072; cv=none; b=jxWz1t48Rx61ckqPC/BfCBPonwqzOfYR7+ezVhQXA0kGnz14whXiNoNXSCvVcNeLI9ZtPsG56fO+uwIlElI3NKqGPzuooqmcHeQ7nzqz3XB6lTMxOvZIMYxhOZG3d5knSxDQ/8K7UDewYtTdjs5hm1Ps7lpHu1SrOcGW9QavQ/A=
+	t=1741957199; cv=none; b=jq5MGILspW875c+q3O+X0VjZJdipQ7sgp81S8N+1Txiy0zu7TlZwB9iS/CNCaJi684/BkDvYY8gmYN625OQQXMrvBuX/3WqujszhKLmDPJ9V8yTRAMCy2Bh8EaplFvxR8Luod0tNmR21xmr1BAmPSG22PYi9K46theMKi5OgLAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741957072; c=relaxed/simple;
-	bh=RcOkYDUv35MvE/uLyzwk8BISRxmfvXl5ufdaRavJsRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0PH+ekxj9IJ8dxIvPMBqxyaqP59JBpcm+EtGo6//8SApiJkLfkjLeb94ZOlxiL6fUwM/lB2BTVceKjmuO0KNrSHJg26Fix+QSRL86SL6b4oiL78kLbvzm2CXzDzs6fqBBahuYabIEQujZ4uj3nifh/Pi6wAwolIOOTx0pwDlRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 810651424;
-	Fri, 14 Mar 2025 05:57:59 -0700 (PDT)
-Received: from [10.174.36.208] (unknown [10.174.36.208])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9322F3F673;
-	Fri, 14 Mar 2025 05:57:46 -0700 (PDT)
-Message-ID: <acba6a71-4ee8-445a-aae9-822f88079cb3@arm.com>
-Date: Fri, 14 Mar 2025 18:27:43 +0530
+	s=arc-20240116; t=1741957199; c=relaxed/simple;
+	bh=S0HqySVuO5WiYhgCIb/zMBQSPibu+lJKpZPHlZpJH4Q=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=WW4IoQf3CfStxUP1ZNRbcwAAEBkFaxtd+gXR+mkIymXkSChmA3q6mxxoYNdIJAh2sUJOJ03uuUOFfe+hPZFpnySHLjzb5tNQTBRlzRNQZTKIPmgIczEsQC/xVhRe6XF0RY/Najc6cPI8TfXYlCpNWKTKQvzlC08LLJ51ciB1+GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6lEetIp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6lEetIp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A075C4CEEB;
+	Fri, 14 Mar 2025 12:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741957199;
+	bh=S0HqySVuO5WiYhgCIb/zMBQSPibu+lJKpZPHlZpJH4Q=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=c6lEetIpMA8eTmxrerCnwktVrU/72fW9+g8ebVhJMRj44/rdzJY0xGw3BfrkzCUp9
+	 mLh3lbd3p8f+f9ic3FZ4JsRGElug0gRXGDuG+pCSKG/YQCpIqnr9nFGg4p1AVoMs2A
+	 CytBeLuHsUCfVt5h7qEeN8K6TH5mmO1YEc0nXy6NPt9cglsj1nF+1bUc6bJk3QxOiT
+	 RMuGNg/Zf6KOWdzE4Un0OzSdG80TUQ+nEgDT/rnbxj1yRZJQKa24FnDFZC3IssensX
+	 NyKBgGrvOQ/GH6d3CWS1bkHlRfgxOi4hRdhMQfMUV4mHMpUdifQMeyVez45lyCOpTu
+	 vEe3frLUcncwA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 347D6380CEE2;
+	Fri, 14 Mar 2025 13:00:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: Update mask post pxd_clear_bad()
-To: Matthew Wilcox <willy@infradead.org>
-Cc: jroedel@suse.de, akpm@linux-foundation.org, ryan.roberts@arm.com,
- david@redhat.com, hch@lst.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250313181414.78512-1-dev.jain@arm.com>
- <Z9NDkFzSj-vnvGOy@casper.infradead.org>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <Z9NDkFzSj-vnvGOy@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2] net/smc: use the correct ndev to find pnetid by
+ pnetid table
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174195723401.2241450.4794096109279890304.git-patchwork-notify@kernel.org>
+Date: Fri, 14 Mar 2025 13:00:34 +0000
+References: <20250304124304.13732-1-guangguan.wang@linux.alibaba.com>
+In-Reply-To: <20250304124304.13732-1-guangguan.wang@linux.alibaba.com>
+To: Guangguan Wang <guangguan.wang@linux.alibaba.com>
+Cc: wenjia@linux.ibm.com, pasic@linux.ibm.com, jaka@linux.ibm.com,
+ alibuda@linux.alibaba.com, tonylu@linux.alibaba.com, guwen@linux.alibaba.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
+Hello:
 
+This patch was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-On 14/03/25 2:14 am, Matthew Wilcox wrote:
-> On Thu, Mar 13, 2025 at 11:44:14PM +0530, Dev Jain wrote:
->> Since pxd_clear_bad() is an operation changing the state of the page tables,
->> we should call arch_sync_kernel_mappings() post this.
+On Tue,  4 Mar 2025 20:43:04 +0800 you wrote:
+> When using smc_pnet in SMC, it will only search the pnetid in the
+> base_ndev of the netdev hierarchy(both HW PNETID and User-defined
+> sw pnetid). This may not work for some scenarios when using SMC in
+> container on cloud environment.
+> In container, there have choices of different container network,
+> such as directly using host network, virtual network IPVLAN, veth,
+> etc. Different choices of container network have different netdev
+> hierarchy. Examples of netdev hierarchy show below. (eth0 and eth1
+> in host below is the netdev directly related to the physical device).
+>             _______________________________
+>            |   _________________           |
+>            |  |POD              |          |
+>            |  |                 |          |
+>            |  | eth0_________   |          |
+>            |  |____|         |__|          |
+>            |       |         |             |
+>            |       |         |             |
+>            |   eth1|base_ndev| eth0_______ |
+>            |       |         |    | RDMA  ||
+>            | host  |_________|    |_______||
 > 
-> Could you explain why?  What effect does not calling
-> arch_sync_kernel_mappings() have in this case?
+> [...]
 
-Apologies, I again forgot to explain the userspace effect.
-I just found this by code inspection, using the logic the fixes commit 
-uses: we should sync when we change the pxd.
+Here is the summary with links:
+  - [net-next,v2] net/smc: use the correct ndev to find pnetid by pnetid table
+    https://git.kernel.org/netdev/net-next/c/bfc6c67ec2d6
 
-The question I have been pondering on is, what is the use of the 
-pxd_bad() macros, when do we actually hit a bad state, and why don't we 
-just trigger a BUG when we hit pxd_bad()?
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
