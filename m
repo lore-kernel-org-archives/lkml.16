@@ -1,102 +1,66 @@
-Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A8019049B;
-	Sat, 15 Mar 2025 15:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123B717BBF;
+	Sat, 15 Mar 2025 15:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742052579; cv=none; b=C6xZ0v8khAj1Ch8Ha8muqT0TUdkLBGGF3MA/wMYSgaOZiQgeYLTzIi16kNAhJoo3nWPjmAQW1rVahpZAmLuy9QYEG2MOseAAV6Qh4zLAS5SrfVxrioSNxubtYs5EjE14mnrD5OA8Lri9fyIh/u7ViMs16wuz1od1mPCB+vpewhg=
+	t=1742053101; cv=none; b=EiWeiQispzUmtXXuGozdgL0W9jqYtdtqKklT91FhTjaV8ilrmcOCdBm6L8a4QTz2QDCieHboNlLsY9cVPRHfQt4RStP93wlZJCthLjA1WUO1xKBY+svLwf1ubMfQkeUh/1qr7i0zREAMk0faQdDdA6/cVLCovFxS3kFHjzOfO7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742052579; c=relaxed/simple;
-	bh=t3Ud3bOuPundm90xIOsFE9Q5XrJOj0wTImWIRDm5/BA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gmMixTep6SoWyc4kSOSdv9+rMgga3qKrEA6ycp5JDrlS4FQFjCUFU5RE4jsvofi1MIUss8o8xl1KUz+Ptp61XI1kn+LWKLGd3A5ADfs2dWFsypxUFa+QqU44Cp2vxvEWjOLzczxKLFIyODwZi2rrJYbMKH0pymO7PKOJ6Ord6pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=etUPQ6q1; arc=none smtp.client-ip=80.12.242.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1742053101; c=relaxed/simple;
+	bh=a6Ti/Jz0EnyQzOF6ksSQ3WST73zH9uNCX05F4CFxkZs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EfA1Ma+PeaJSBrxxCnOD/pzBdVRP1hsFq11OutccS2ngxdUF4lwUSmIQ1tKvKU8SMmjl1pTK0TCZ0SwBu6EWazz90P9fsIztf6g5jg8rgubMXvKlvXzwawIhnxS1NDY5YEqk7WoUh6/T1XlH4Y8QI3sd4C5AmjqPw3FuzMbY4Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aR8In+pX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="etUPQ6q1"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id tTJNtsJ0HtsZCtTJRtOle1; Sat, 15 Mar 2025 16:20:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1742052035;
-	bh=b3ARRYc1xIjRJmTM2Xw3fYywDOajj6cXs8QeBu+g8Jc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=etUPQ6q1HR8RFWvQI5hugo8wAhN5EBw82VRkpgLbJ9Iu+MQgVouU6jc7g+P0L4pIA
-	 x4owaUciYxrf5ZzY9lfaqmSUXCGSPrt3JizEWlaTOp0nBwFJqeJtyTnRSL15BbE9St
-	 lMsxqODATfmFdl+fSyoUx1j3t420Z2UeOC/aZb5LAvF+ZYHD4ID/vLL6yIfG+250Cw
-	 7YYS+Shc/PnOHJOuKt2p2uyGWr1626LOJ4KIJnI07haWF6fA4WQv8mNih0CzOtwZlU
-	 pav3DOm/pDD7NvO4cEZsQhk+ssWNPO8UdnJ8jt8eOcqKNL50+gHwnjYRVXrqt0g04C
-	 8XEJGg/SldFqg==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 15 Mar 2025 16:20:35 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <d1c6d869-d4ed-41d1-97e2-c73f87864bda@wanadoo.fr>
-Date: Sat, 15 Mar 2025 16:20:29 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aR8In+pX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E06DAC4CEE5;
+	Sat, 15 Mar 2025 15:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742053098;
+	bh=a6Ti/Jz0EnyQzOF6ksSQ3WST73zH9uNCX05F4CFxkZs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aR8In+pXG4VTkQG9o+GBSQqCz4x3YyRMhC7kKsgPyktZ4ZyyxOfaJGvXGG1bAQ9a1
+	 feWr82FQ9gZfnYK6HRIxSkPO3+C6wLvbvo3qcJb61zeBS72eSoJaPdwnc69rdj8hcI
+	 79Uwa8OMIuZXVIdVR37OByMYnNzYJo2So+TYbqPHI76bOYn5eu9GtZuvCffjEf5FTQ
+	 AiCV52nfqj/TqIJNl6z3GvkA42xTvk5PSL3nEFkCgJ8VV1a6PMfB9tsQJffuHKoKvE
+	 s0LeQ8oJZjykwuRn4z3nQvtwb+HhPNINxfuih8JpawN/1uFjjqWpeeUIn65eg/gYqv
+	 xcsrZO2QKxCfA==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Luca Weiss <luca.weiss@fairphone.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht,
+	phone-devel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: qcom: pas: add minidump_id to SC7280 WPSS
+Date: Sat, 15 Mar 2025 10:38:14 -0500
+Message-ID: <174205309197.3372517.2896355070369674479.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250314-sc7280-wpss-minidump-v1-1-d869d53fd432@fairphone.com>
+References: <20250314-sc7280-wpss-minidump-v1-1-d869d53fd432@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: mac80211: check basic rates validity in
- sta_link_apply_parameters
-To: m.lobanov@rosa.ru
-Cc: johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, lvc-project@linuxtesting.org,
- shaul.triebitz@intel.com
-References: <20250315130119.75937-1-m.lobanov@rosa.ru>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250315130119.75937-1-m.lobanov@rosa.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Le 15/03/2025 à 14:01, Mikhail Lobanov a écrit :
-> When userspace sets supported rates for a new station via
-> NL80211_CMD_NEW_STATION, it might send a list that's empty
-> or contains only invalid values. Currently, we process these
-> values in sta_link_apply_parameters() without checking the result of
-> ieee80211_parse_bitrates(), which can lead to an empty rates bitmap.
-> 
-> A similar issue was addressed for NL80211_CMD_SET_BSS in commit
-> ce04abc3fcc6 ("wifi: mac80211: check basic rates validity").
-> This patch applies the same approach in sta_link_apply_parameters()
-> for NL80211_CMD_NEW_STATION, ensuring there is at least one valid
-> rate by inspecting the result of ieee80211_parse_bitrates().
-> 
-> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-> 
-> Fixes: b95eb7f0eee4 ("wifi: cfg80211/mac80211: separate link params from station params")
-> Signed-off-by: Mikhail Lobanov <m.lobanov-kcSV9N6+iMo@public.gmane.org>
-> ---
-> v2: Fixed the patch subject to provide a complete description.
-> 
->   net/mac80211/cfg.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-> index 9351c64608a9..e7c429aef980 100644
-> --- a/net/mac80211/cfg.c
-> +++ b/net/mac80211/cfg.c
-> @@ -1909,10 +1909,11 @@ static int sta_link_apply_parameters(struct ieee80211_local *local,
->   
->   	if (params->supported_rates &&
->   	    params->supported_rates_len) {
-> -		ieee80211_parse_bitrates(link->conf->chanreq.oper.width,
-> +		(!ieee80211_parse_bitrates(link->conf->chanreq.oper.width,
 
-'if" missing?
+On Fri, 14 Mar 2025 09:24:31 +0100, Luca Weiss wrote:
+> Add the minidump ID to the wpss resources, based on msm-5.4 devicetree.
+> 
+> 
 
->   					 sband, params->supported_rates,
->   					 params->supported_rates_len,
-> -					 &link_sta->pub->supp_rates[sband->band]);
-> +					 &link_sta->pub->supp_rates[sband->band]))
-> +		return -EINVAL;
->   	}
->   
->   	if (params->ht_capa)
+Applied, thanks!
 
+[1/1] remoteproc: qcom: pas: add minidump_id to SC7280 WPSS
+      commit: d2909538bff0189d4d038f4e903c70be5f5c2bfc
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
