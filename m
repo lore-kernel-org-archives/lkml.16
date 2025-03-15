@@ -1,83 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49F633DB;
-	Sat, 15 Mar 2025 18:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE76718C930;
+	Sat, 15 Mar 2025 18:31:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742063435; cv=none; b=HcV9IrlJ4bGkrnLWbMM2PZGEnrQO+NQ6Z36QCvl1OZRmW0D6E83Mdl5hReJxYDNU7tEcXxCX7NRKmezhEwUtNXozSfeTeCfJ/tlVbjg0SlMW+mRZmCbgMZz6ysDfyiLtkOovkCpzrdkxdD3oZET5QDLEwjnLNMYKut2BQTOkm4g=
+	t=1742063483; cv=none; b=BaMgO1MANmBtFWyxiaWT2lreJmXBZpVV1h0sWJWcol5T14kX8o+JVTUuY7dgHAZhy7nS5XtYiaJpiSau7G+edFMQPSoYk2hEKQ6BHdax0VNF7h78WAcQHnBLUqxOlAJk2VZgBetNT+vqjdZd50iBlGgrtBpDgeR5UQoDd7qt/tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742063435; c=relaxed/simple;
-	bh=n0VZr42FD5sIJ161uouF9eSw//32TJ5ZIYjRsCS9nkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KDA9+joGf+aCCZAr5gUGmbDH9GLrbwIjqN6KE0eP1TqqCG7uIAi9dVJQYzEBTaEDpOZoNiUplftEtsMiO+23kcoHrIUTw+FlMYHKH8N8Psw81il442eDHsq4WOoudvpDp7wiyunWELxM1zixkxzxjczH7r9vOG1d88+VfOFw5ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEku9Lf7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742063483; c=relaxed/simple;
+	bh=0vfRuOck6enEATJsxwnNJ97w8R1LMXCI2iLptXnQIU0=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=cjKLIF7BmkoRdQXEXHpF+GIk96kje2DKAHyiFtCFW5qUyyrrBbKHpfXhLrXfALzNk2Pdza6Adf8NvmC9z4w++8KnzvexkZfyHEiHFbnbwRWTDdbL6A4FVYdNkK9m3y00Sa4n30Y8d4fSHUeHoLge5lscylOpd5UzZ6jGzgayM08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYHEAY/M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEku9Lf7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A34C4C4CEE5;
-	Sat, 15 Mar 2025 18:30:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYHEAY/M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38DE0C4CEE5;
+	Sat, 15 Mar 2025 18:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742063435;
-	bh=n0VZr42FD5sIJ161uouF9eSw//32TJ5ZIYjRsCS9nkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TEku9Lf7PVEsgamRVNhDlXlC5UHh9MO0CMQUrrt+EFkmqs0kZBpJlXGZctr1qeqap
-	 LMkdSzBNTMNBa3wJOU4Nrx3yofjxOB4iDo9Lg0yQ5sRhE+EM2snVwq00iry6upRHIS
-	 gsez3De5kyhUpdRLOv4HcM/Ml1V59cwMN6w6TqEeUEhGeqHtDNeKNMlWalX2rB3C4t
-	 S3rO7eJObbPZUPfRbjXoEO7dwSGXn5dHEYTZ5J1t//Hjmq8D+HG3j+8yYWtVMRc5rg
-	 x0Chxz7923mXHhIQbcSpIxgbNoqYwkJSlC5wLIB47hwtgl47k1CH4VP0nNdcuadgNd
-	 vYtIkyklbz+pQ==
-Date: Sat, 15 Mar 2025 11:30:35 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: long.yunjian@zte.com.cn
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mou.yi@zte.com.cn, zhang.xianwei8@zte.com.cn,
-	ouyang.maochun@zte.com.cn, jiang.xuexin@zte.com.cn,
-	lv.mengzhao@zte.com.cn, xu.lifeng1@zte.com.cn,
-	yang.yang29@zte.com.cn
-Subject: Re: [PATCH v2] xfs: Fix spelling mistake "drity" -> "dirty"
-Message-ID: <20250315183035.GA2803749@frogsfrogsfrogs>
-References: <20250315143216175uf7xlZ4jkOfP5o3oxuM4z@zte.com.cn>
+	s=k20201202; t=1742063482;
+	bh=0vfRuOck6enEATJsxwnNJ97w8R1LMXCI2iLptXnQIU0=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=NYHEAY/MlCKSqP3IBOlMPfNYkjroro5RKtI3W7/xGpH4ak32s3UztdI7UqFLOEKr5
+	 VYnlEw6gUkiP2DcpIHMgscMlL50A84eTecOIy+sMi3B0NkLhQCzSMfhH5adzm5V64s
+	 in6+RuKSPJ7ATi7kQz9a9WVR7C19T7A6Y+SR+1UNQLLSDXlYrBsxvfbim8P79IRrMy
+	 CSb0iOjc0S0pXBw1fYyjH7oTqSmpgwvF3qiCSjZ7fgORRQeQfsM5zEInfePjpnmjR4
+	 eF3R877fUET0tUeWkysztKsL6DkB/Fdl9GkunMyFo+Gf+GALvu5vQmNesSrjqwcDMV
+	 if4uWd9d4MNKQ==
+Date: Sat, 15 Mar 2025 13:31:21 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250315143216175uf7xlZ4jkOfP5o3oxuM4z@zte.com.cn>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Naveen N Rao <naveen@kernel.org>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Crystal Wood <oss@buserror.net>, 
+ linuxppc-dev@lists.ozlabs.org, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ linux-kernel@vger.kernel.org
+To: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+In-Reply-To: <20250315-fslpmc-yaml-v1-1-10ba354a85c2@posteo.net>
+References: <20250315-fslpmc-yaml-v1-1-10ba354a85c2@posteo.net>
+Message-Id: <174206348097.159805.1044453003821020231.robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: powerpc: Convert fsl/pmc.txt to YAML
 
-On Sat, Mar 15, 2025 at 02:32:16PM +0800, long.yunjian@zte.com.cn wrote:
-> From: Zhang Xianwei <zhang.xianwei8@zte.com.cn>
+
+On Sat, 15 Mar 2025 18:27:05 +0100, J. Neuschäfer wrote:
+> This patch rewrites pmc.txt into YAML format. Descriptive texts are
+> expanded or shortened in a few places to better fit today's conventions.
 > 
-> There is a spelling mistake in fs/xfs/xfs_log.c. Fix it.
+> The list of compatible strings (and combinations of them) is based on
+> existing device trees in arch/powerpc as well as compatible strings
+> already mentioned in the plain-text version of the binding.
 > 
-> Signed-off-by: Zhang Xianwei <zhang.xianwei8@zte.com.cn>
-
-Looks ok,
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-
---D
-
+> One thing I didn't handle are soc-clk@... nodes as seen in
+> Documentation/devicetree/bindings/powerpc/fsl/pmc.yaml.
+> 
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 > ---
-> v1 -> v2
-> fix the format of this patch
->  fs/xfs/xfs_log.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/powerpc/fsl/pmc.txt        |  63 --------
+>  .../devicetree/bindings/powerpc/fsl/pmc.yaml       | 159 +++++++++++++++++++++
+>  2 files changed, 159 insertions(+), 63 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> index f8851ff835de..ba700785759a 100644
-> --- a/fs/xfs/xfs_log.c
-> +++ b/fs/xfs/xfs_log.c
-> @@ -2887,7 +2887,7 @@ xlog_force_and_check_iclog(
->   *
->   *	1. the current iclog is active and has no data; the previous iclog
->   *		is in the active or dirty state.
-> - *	2. the current iclog is drity, and the previous iclog is in the
-> + *	2. the current iclog is dirty, and the previous iclog is in the
->   *		active or dirty state.
->   *
->   * We may sleep if:
-> -- 
-> 2.27.0
-> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/powerpc/fsl/pmc.example.dtb: /example-0/sata@19000: failed to match any schema with compatible: ['fsl,mpc8377-sata', 'fsl,pq-sata']
+Documentation/devicetree/bindings/powerpc/fsl/pmc.example.dtb: /example-0/sata@19000: failed to match any schema with compatible: ['fsl,mpc8377-sata', 'fsl,pq-sata']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250315-fslpmc-yaml-v1-1-10ba354a85c2@posteo.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
