@@ -1,30 +1,30 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33FCB208A0;
-	Sat, 15 Mar 2025 00:19:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 732A512CDBE;
+	Sat, 15 Mar 2025 00:19:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741997978; cv=none; b=cbpEgXHVIqchXLl0t2HEwLH2xrxNoiSPCkDnruupmKVdT7yrXpXvyFT9FcwgF+tmTQtSCJfEf6SBnUaSW9UdDb5aZAvKEgSB/w5OHakGT+acpC0dBFph8yUOAoSXRL7uy8dFyOlyaoNjW75k8pnN+TUjvhRVqF/JtjnwK6tQCCY=
+	t=1741997979; cv=none; b=kIWMuw4VoGMDeatB/FoXIwWhsFg7m/MlbRdhSpXZcuG1dbIHc0RZkP73iFyDaVPnZc9h5fX8cPt6Qq++/QT08tDdxhYGAEQl1JO+d3rmYjEWdmLtH72sm2Nh4KQYrlmMh9k+iXUWbJPslo1n9au5KorZd+KAnyZ0PlvWvixR9ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741997978; c=relaxed/simple;
-	bh=cra/GNuyMQV91GFqsW8dQ9HbAggpcs6Io/tZ112UIh0=;
+	s=arc-20240116; t=1741997979; c=relaxed/simple;
+	bh=yX44WrfuUZtxk+0N9gtrfPkFIDMdYWpKWCjG8Q6KCzE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kD1AS9q68oQ5ddREK3p/lVnKHoGZfhjuRwxsz7b6CboIFAQFw0LuJhQog/xiLqohv1XAxf+EJFhZDM85NEVV/2tAAe2LtiAsyjKmHm3bibMrrbiA0A/iIoa0j5Gw7cjI+UzCyYl2FwJglwV95O1UozPF1Nu5pSUhrn+iuZRK188=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cac0nYhW; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=r5kJV13MU7roW0sFi7E9F5Hg+d5bX5WFpHz3GKb38jM1UqYw68tEYYJ6S6CUkYK4EtZGWiRg1Uu6Q8udmQwfD1LUJ31dM1FDgBlPeIs+GRoWzl5p/HRtGdxpLJwu+g6ezLPrzRhEzlNz4N/08RdTbk4HC1AjXq2yh8hVIuZgVa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CRpjucQl; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cac0nYhW"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CRpjucQl"
 Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9B8D02038A52;
-	Fri, 14 Mar 2025 17:19:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B8D02038A52
+	by linux.microsoft.com (Postfix) with ESMTPSA id C16512045FF3;
+	Fri, 14 Mar 2025 17:19:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C16512045FF3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741997975;
-	bh=NIRoaJMzXhRU+FEOMF0AnLyeJ+Xl1dVpfnO4TXIokQU=;
+	s=default; t=1741997977;
+	bh=iEV0i9gjoYQdRDEzcESB5Yk1oXFGaQu49TFPJNgz1pI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cac0nYhWonKSodrgcm22k2UaS9TFPGH2L0yKUnuRyCzzIt1EGqE45j6m5xxZikYmV
-	 +jClSCydm9Z5xvpZQhb2vydLjRj1mcNwjNPciHvS+6BCTf+fYeG1Hhm/ZQqaLCAKs8
-	 LmtpfXtoSxYjfIiPMlAI1f/38L4NWn5yQ+6QcIqM=
+	b=CRpjucQlujnzj4fO9HR2VtTpO2F6pDhI3KzT+uZh+ukts4B5Dv8JOGNde06bmcAxJ
+	 8pA4tr1XISgv3dz6u12Rfty4FtRjOF4quLxOCnVceBuIP9djzYQloRbXM0+p2kyLcT
+	 GymWMIjMyBfwt6D+UsfHbNTszoFGcVd4uiX9ixuY=
 From: Roman Kisel <romank@linux.microsoft.com>
 To: arnd@arndb.de,
 	bhelgaas@google.com,
@@ -69,9 +69,9 @@ Cc: apais@microsoft.com,
 	benhill@microsoft.com,
 	bperkins@microsoft.com,
 	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v6 07/11] dt-bindings: microsoft,vmbus: Add interrupt and DMA coherence properties
-Date: Fri, 14 Mar 2025 17:19:27 -0700
-Message-ID: <20250315001931.631210-8-romank@linux.microsoft.com>
+Subject: [PATCH hyperv-next v6 10/11] ACPI: irq: Introduce  acpi_get_gsi_dispatcher()
+Date: Fri, 14 Mar 2025 17:19:30 -0700
+Message-ID: <20250315001931.631210-11-romank@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250315001931.631210-1-romank@linux.microsoft.com>
 References: <20250315001931.631210-1-romank@linux.microsoft.com>
@@ -83,70 +83,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To boot in the VTL mode, VMBus on arm64 needs interrupt description
-which the binding documentation lacks. The transactions on the bus are
-DMA coherent which is not mentioned as well.
+Using acpi_irq_create_hierarchy() in the cases where the code
+also handles OF leads to code duplication as the ACPI subsystem
+doesn't provide means to compute the IRQ domain parent whereas
+the OF does.
 
-Add the interrupt property and the DMA coherence property to the VMBus
-binding. Update the example to match that. Fix typos.
+Introduce acpi_get_gsi_dispatcher() so that the drivers relying
+on both ACPI and OF may use irq_domain_create_hierarchy() in the
+common code paths.
+
+No functional changes.
 
 Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 ---
- .../bindings/bus/microsoft,vmbus.yaml           | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/acpi/irq.c   | 15 +++++++++++++--
+ include/linux/acpi.h |  5 ++++-
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-index a8d40c766dcd..ca288ea54b34 100644
---- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-+++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-@@ -10,8 +10,8 @@ maintainers:
-   - Saurabh Sengar <ssengar@linux.microsoft.com>
+diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
+index 1687483ff319..8eb09e45e5c5 100644
+--- a/drivers/acpi/irq.c
++++ b/drivers/acpi/irq.c
+@@ -12,7 +12,7 @@
  
- description:
--  VMBus is a software bus that implement the protocols for communication
--  between the root or host OS and guest OSs (virtual machines).
-+  VMBus is a software bus that implements the protocols for communication
-+  between the root or host OS and guest OS'es (virtual machines).
+ enum acpi_irq_model_id acpi_irq_model;
  
- properties:
-   compatible:
-@@ -25,9 +25,17 @@ properties:
-   '#size-cells':
-     const: 1
+-static struct fwnode_handle *(*acpi_get_gsi_domain_id)(u32 gsi);
++static acpi_gsi_domain_disp_fn acpi_get_gsi_domain_id;
+ static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
  
-+  dma-coherent: true
+ /**
+@@ -307,12 +307,23 @@ EXPORT_SYMBOL_GPL(acpi_irq_get);
+  *	for a given GSI
+  */
+ void __init acpi_set_irq_model(enum acpi_irq_model_id model,
+-			       struct fwnode_handle *(*fn)(u32))
++	acpi_gsi_domain_disp_fn fn)
+ {
+ 	acpi_irq_model = model;
+ 	acpi_get_gsi_domain_id = fn;
+ }
+ 
++/**
++ * acpi_get_gsi_dispatcher - Returns dispatcher function that
++ *                           computes the domain fwnode for a
++ *                           given GSI.
++ */
++acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void)
++{
++	return acpi_get_gsi_domain_id;
++}
++EXPORT_SYMBOL_GPL(acpi_get_gsi_dispatcher);
 +
-+  interrupts:
-+    maxItems: 1
-+    description: |
-+      This interrupt is used to report a message from the host.
+ /**
+  * acpi_set_gsi_to_irq_fallback - Register a GSI transfer
+  * callback to fallback to arch specified implementation.
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 4e495b29c640..abc51288e867 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -336,8 +336,11 @@ int acpi_register_gsi (struct device *dev, u32 gsi, int triggering, int polarity
+ int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
+ int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
+ 
++typedef struct fwnode_handle *(*acpi_gsi_domain_disp_fn)(u32);
 +
- required:
-   - compatible
-   - ranges
-+  - interrupts
-   - '#address-cells'
-   - '#size-cells'
+ void acpi_set_irq_model(enum acpi_irq_model_id model,
+-			struct fwnode_handle *(*)(u32));
++	acpi_gsi_domain_disp_fn fn);
++acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void);
+ void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
  
-@@ -35,6 +43,8 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-     soc {
-         #address-cells = <2>;
-         #size-cells = <1>;
-@@ -49,6 +59,9 @@ examples:
-                 #address-cells = <2>;
-                 #size-cells = <1>;
-                 ranges = <0x0f 0xf0000000 0x0f 0xf0000000 0x10000000>;
-+                dma-coherent;
-+                interrupt-parent = <&gic>;
-+                interrupts = <GIC_PPI 2 IRQ_TYPE_EDGE_RISING>;
-             };
-         };
-     };
+ struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
 -- 
 2.43.0
 
