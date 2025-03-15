@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239AE366
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 00:07:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91E2367
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 00:09:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741997223; cv=none; b=Cuj41u+jV6tYXdCEtGEjVe7P0vBw7l1hMgFAzjFlMmOi+qMdOhferEM1x4invgfSAYlWThE0YsMEUavOlqbYii232ZF2yQu2yWyNaZjdzN/3MHewwi62EkZRCAOB2ysrV4u97W+PknCpA+sgbay6I8uvps9i/A/az9j9QGF8YGQ=
+	t=1741997357; cv=none; b=ORGrZNzGnlSm3VO+UepoZ1yBQ12D5DWjHiTHEU6dhULsU+6NpxXMEmsA14vRfc/8fWjyj/jBc61Q+WF1oLNbhgNRQlx8m8A51N8cUzqpuGhdvwzH6PagYtHrWVph/uQg3mEySMDPQDxFlj+bJygjaVjonSZxVRHrbpv0H/Zl8oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741997223; c=relaxed/simple;
-	bh=bZ7A4wajyX66jPBK03q5XKQr1foQe3MxppwMvG1y+u8=;
+	s=arc-20240116; t=1741997357; c=relaxed/simple;
+	bh=1hzQXG5cAVBTHOofZVU8ev8nYzxsc97HHdljY3+t8BE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uqAjdbTt+sTTvUNigRgzUrL8yqTOcHiteTADrpsQNtWn/ej/OXorJXvG/rTN2MGuTfJHWkTll10Ub4ILVtSkVrpHgc/BQQqpGgqQDXeewxpcrfnInEueOXRGBGhl9iWD2mExygAEcVe9LhjHT8H/JRMPD+5uOnic8uN3G+ju4KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyqmXb9a; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ojqmCvO9NpamEbGGQOz2a3EV/NJVeobpVMa0JF9UumTxTeMEeBmJsz7Im+I0TIyjMZorRkru+TiQpUykW3HsFQsQQq3T11YHitb264pFXL/vVPfmfSQ23FqxV5Cq4PqJpkl2+i3y2gkbSjbPJBInoNTrawpGXAJnHyfG9JQD1y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lw8m3b0L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyqmXb9a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7767C4CEEB;
-	Sat, 15 Mar 2025 00:07:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lw8m3b0L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76706C4CEE3;
+	Sat, 15 Mar 2025 00:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741997222;
-	bh=bZ7A4wajyX66jPBK03q5XKQr1foQe3MxppwMvG1y+u8=;
+	s=k20201202; t=1741997357;
+	bh=1hzQXG5cAVBTHOofZVU8ev8nYzxsc97HHdljY3+t8BE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AyqmXb9aMuZe2m9YoYIMZ975fO4EQ49ALAg9F3zFuF3rf8TT9kEF7bOsOlt4bxyXz
-	 3Cm64kL0bD8h9EKdK2zCLnzhC3HW005PX0sylVfjy956b635pC5yr3+UFaCXAVjDmz
-	 gr7tKVZ0DlDILVqEVCmOnPPwgq+SryXKl7KwJUELM293nfTetH3zqNJ0A6GSvzjsrQ
-	 3KTv0L9moPNSKM377zgOOxvRNrVkhSugk5al59V6zCtx8bYA1NzQwOgR/evBB1qVBq
-	 Lzhdv0wLsaSUs4+fGJQSBTzejT+zUFFT3ow5XbDne1J//IX+Zu9vG+r+souq8kIBUv
-	 Q+X9Zv+GYVrjQ==
-Date: Fri, 14 Mar 2025 17:07:00 -0700
+	b=Lw8m3b0L4PejpOYOOHZFHQw/XP11RU/fABCc2fBve5e1cAX9mK0hFo+IsfRkPY5bz
+	 5e9cRTf34nxigOFZC5swNuQo0CWwWCnFrhMqmYpvkzv7dUngvN4s/MVXwjDVZAwc2+
+	 yjEYLSEDKXWERb3X57vLDnM+Suu6dVTba0yn+5IWyUP0o1wn6+o/250sTvCdDguf+z
+	 bDCJljSs3PBWjZzO87+oBTJZWtDlWOse1xoR6weUqTfCiw39JTwXsuhfEaRiLSs7qE
+	 X/hGLtw9Gk3S/HQsqia7QmPiB0S40RCund9acIdamhuZJ7JP2lqNdbWa4I8w+u6n2t
+	 ZujMcavdGBkZw==
+Date: Fri, 14 Mar 2025 17:09:14 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
 	Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, 
 	Uros Bizjak <ubizjak@gmail.com>, Andrew Cooper <andrew.cooper3@citrix.com>, 
 	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 04/20] x86/cpu: Use named asm operands in clflushopt()
-Message-ID: <gor6hi6lzohdo6hfcffmxdzc4fiqdn2itncxatw4zkhouzmm6l@obz43xcfcl2i>
+Subject: Re: [PATCH 14/20] x86/barrier: Use alternative_io() in 32-bit
+ barrier functions
+Message-ID: <jdcd4zoezsi7beoak43dqzkxnel7hqdhtyqbf4cqr6rvs3qfyf@i2qhxrld5p5l>
 References: <cover.1741988314.git.jpoimboe@kernel.org>
- <c007f4ddbfdfe92777a7df35bc121cf9bf0d0682.1741988314.git.jpoimboe@kernel.org>
- <CAHk-=wjBjq6u+r9KGTHQ5nOA1L2TDhz0JPL_+eE07un9y9Qm-w@mail.gmail.com>
+ <1c2fe7f93c4dd8a87c2e1fa8b780a8a2968be445.1741988314.git.jpoimboe@kernel.org>
+ <CAHk-=wjtvTPERDdrok2kDrSSFBjqHCCNVff95VVxhvP6wCC6jg@mail.gmail.com>
+ <CAHk-=whH5bHRYB12aAcb=nK7erOmOSo6o2FXjHtxObWumFANHA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,21 +48,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjBjq6u+r9KGTHQ5nOA1L2TDhz0JPL_+eE07un9y9Qm-w@mail.gmail.com>
+In-Reply-To: <CAHk-=whH5bHRYB12aAcb=nK7erOmOSo6o2FXjHtxObWumFANHA@mail.gmail.com>
 
-On Fri, Mar 14, 2025 at 01:46:00PM -1000, Linus Torvalds wrote:
-> On Fri, 14 Mar 2025 at 11:42, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+On Fri, Mar 14, 2025 at 01:54:00PM -1000, Linus Torvalds wrote:
+> On Fri, 14 Mar 2025 at 13:49, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
 > >
-> > +       alternative_io(".byte 0x3e; clflush %[val]",
-> > +                      ".byte 0x66; clflush %[val]", X86_FEATURE_CLFLUSHOPT,
-> > +                      [val] "+m" (*(volatile char __force *)__p));
+> > because that ARG(), ARG(), ARGC() pattern looks odd to me.
+> >
+> > Maybe it's just me.
 > 
-> Hmm. I think we could just use 'clflushopt', it looks like it exists
-> in binutils-2.25, which is our minimal version requirement.
+> Oh, and the other thing I reacted to is that I think the
+> "alternative_io()" thing should be renamed.
 > 
-> But maybe that's a separate cleanup.
+> The "io" makes me think "actual I/O". As in PCI or disks or whatever.
+> It always read oddly, but now it's *comletely* pointless, because the
+> new macro model actually takes pretty much arbitrary asm arguments, to
+> the "both input and output arguments" no longer makes any real sense.
+> 
+> So I think it would be better to just call this "alternative_asm()",
+> and make naming simpler. Hmm?
 
-You appear to be correct, I'll add a patch for that.
+Thing is, we still have alternative(), which is also an asm wrapper, but
+it's for when the caller doesn't care about adding any constraints.
+
+So the "_io()" distinguishes from that.
 
 -- 
 Josh
