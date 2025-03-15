@@ -1,57 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2331B1F3FC2;
-	Sat, 15 Mar 2025 09:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862A015098F;
+	Sat, 15 Mar 2025 09:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742031348; cv=none; b=pHxZPdyhye6EC7Q+4CzPdlF3zt8qJVEJcnB2/cD0detNfa8wI6zJxrkHCFKymC9Boprj0EH01rCCCarEPlf+NbN390sZE81vG3VfM89ca4ggtLtT8IXjwJwQWDcNt6Iv54/+hl+9KHu4qmB710OWUPzsCjma4ujaEYNL80e6Mog=
+	t=1742031432; cv=none; b=fUQxOAvOial08twDQF322uQpRmlHJ4YqZYqPdGmmEAXaW3sI624gxogp+ckKuBZZ3HHP2iIwm2goo7c6Ud71ibzGKtmYiE/RLqDeLyRt0GrnP9D4HTvQw6AeKdm6Cdt44uFIPwwwluInxjotZQWGCTtb9iMPiYraDSupn0EvBYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742031348; c=relaxed/simple;
-	bh=ky78TS5sld/MtIdgsOX/Ix4iThb34zSifCYWix80Zd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rpuoHQEqLoLFRl5j1ilZlUeUV4/xxnMadYL6uilweH75Ja1hbEtfq0uQnDLBWZ2yvBwlmfaKUZbpsHXPBSiGuO7rSWLhJchefzTu0VLmQlr/rtp5w7UZhNijDOo0YlX52L/63S6SGSqm6oT1Y0D4x2jcTZpbjSTyDt185VuRzpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rXbfcKdG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742031432; c=relaxed/simple;
+	bh=Podxq94qhfjiTzkhH2OKB2YqQG0X3XIQSOA0CTo8gtU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Jq0H/cf5zWqC5WYbsCMdke24KNUxeQQSIH7VLQexBEkHTEurQrzp7jkLweLjNQx+FPrtlpNIQfgpzMTRLZPrwGed2B6irf41aCPoQhByOZZclGdqkeUYTz7i6XKcMBRk4YJvIjRXbQej33M+ss50RVHBhxsiEqUDn3gHGp76tFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bavpjWqK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hWxYacxE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rXbfcKdG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A464C4CEE5;
-	Sat, 15 Mar 2025 09:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742031347;
-	bh=ky78TS5sld/MtIdgsOX/Ix4iThb34zSifCYWix80Zd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rXbfcKdGerlWztVZPJtMKxS34/VJuZkkdkYZnLAjk/SE3PZnKLlj4SBa47y8lmnmk
-	 tT9i1F2scPccgx8i8cBAqfBSwV61l2SoepS5qE3ggogoSOEan1AGJe4qfqco97gwfL
-	 bBl61103TBQnU7HQJc9IWq7sbFEHPfUnVB9JJXFU=
-Date: Sat, 15 Mar 2025 10:34:29 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: daixin_tkzc <daixin_tkzc@163.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>,
-	matthew dharm <mdharm-usb@one-eyed-alien.net>,
-	linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-	linux-kernel@vger.kernel.org
-Subject: Re: Re: [usb-storage] Re:Re:[PATCH] usb: storage: Fix `us->iobuf`
- size for BOT transmission to prevent memory overflow
-Message-ID: <2025031514-sacred-playback-1dd4@gregkh>
-References: <20250311084111.322351-1-daixin_tkzc@163.com>
- <2b6c4aa7.b165.1958f6b7a3a.Coremail.daixin_tkzc@163.com>
- <814316b6-013b-4735-995d-b6c0c616c71b@rowland.harvard.edu>
- <1681f087.2727.195927b7ccb.Coremail.daixin_tkzc@163.com>
- <516c8f89-45f2-4d3f-b1e7-29aecfc8cd3c@rowland.harvard.edu>
- <6e125c5c.2541.195990d2daa.Coremail.daixin_tkzc@163.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bavpjWqK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hWxYacxE"
+Date: Sat, 15 Mar 2025 09:37:07 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742031428;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G18gL6KLRhYrk77mhZUdT315zzdpIUOlEhlJ+r6Td4M=;
+	b=bavpjWqKeOnESF3XouLWN0ECizGI+cbPjcRLDsAMadiPV6Ve7JVoDgvZi4QZ07FuFrXgNd
+	Uwnmrn5lkUJsTWgcTUVEoPehPukgNcKSzd1fx1II8uvGPHY/dw8rrI5rS6f0OIss8o8DjA
+	xZMwpFIOIok9Fp22sS67hmI8Jhc/X2T7ItjHkmxUg5G0pauemVKRJxMkD6iput4jRFxYIV
+	bQdnTdxuK7Y9ge9AtS6T8IiscbHtJccdgIIp5/tCxg9bmHyNGnudHaM/9C7n3HsHnQJ0j6
+	28rcqWAXJVvb4LugxRjhL4SVHkHpvLpg7AsUInOmnCC+Gjn1N8NC2q3CY6BWug==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742031428;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G18gL6KLRhYrk77mhZUdT315zzdpIUOlEhlJ+r6Td4M=;
+	b=hWxYacxE8iavNoAg0KKH1XXwYx+vPdYC2LVIx2bEGRaOiaOg7g4evIlTkAf+qffZixiJ9z
+	OHq043PmIuBHYFBQ==
+From: "tip-bot2 for Xuewen Yan" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/uclamp: Use the uclamp_is_used() helper
+ instead of open-coding it
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Hongyan Xia <hongyan.xia2@arm.com>,
+ Christian Loehle <christian.loehle@arm.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250219093747.2612-1-xuewen.yan@unisoc.com>
+References: <20250219093747.2612-1-xuewen.yan@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6e125c5c.2541.195990d2daa.Coremail.daixin_tkzc@163.com>
+Message-ID: <174203142782.14745.3072195890652957741.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Sat, Mar 15, 2025 at 05:05:32PM +0800, daixin_tkzc wrote:
-> 
+The following commit has been merged into the sched/core branch of tip:
 
-Again, please do not send html email, it is rejected by the mailing
-lists.
+Commit-ID:     5fca5a4cf97313dd2f5eae29624ceb1dc48f258a
+Gitweb:        https://git.kernel.org/tip/5fca5a4cf97313dd2f5eae29624ceb1dc48f258a
+Author:        Xuewen Yan <xuewen.yan@unisoc.com>
+AuthorDate:    Wed, 19 Feb 2025 17:37:46 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sat, 15 Mar 2025 10:26:37 +01:00
 
+sched/uclamp: Use the uclamp_is_used() helper instead of open-coding it
+
+Don't open-code static_branch_unlikely(&sched_uclamp_used), we have
+the uclamp_is_used() wrapper around it.
+
+[ mingo: Clean up the changelog ]
+
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Hongyan Xia <hongyan.xia2@arm.com>
+Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lore.kernel.org/r/20250219093747.2612-1-xuewen.yan@unisoc.com
+---
+ kernel/sched/core.c  |  4 ++--
+ kernel/sched/sched.h | 28 ++++++++++++++--------------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 621cfc7..45daa41 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1756,7 +1756,7 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ 	 * The condition is constructed such that a NOP is generated when
+ 	 * sched_uclamp_used is disabled.
+ 	 */
+-	if (!static_branch_unlikely(&sched_uclamp_used))
++	if (!uclamp_is_used())
+ 		return;
+ 
+ 	if (unlikely(!p->sched_class->uclamp_enabled))
+@@ -1783,7 +1783,7 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ 	 * The condition is constructed such that a NOP is generated when
+ 	 * sched_uclamp_used is disabled.
+ 	 */
+-	if (!static_branch_unlikely(&sched_uclamp_used))
++	if (!uclamp_is_used())
+ 		return;
+ 
+ 	if (unlikely(!p->sched_class->uclamp_enabled))
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 023b844..8d42d3c 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3394,6 +3394,19 @@ static inline bool update_other_load_avgs(struct rq *rq) { return false; }
+ 
+ unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+ 
++/*
++ * When uclamp is compiled in, the aggregation at rq level is 'turned off'
++ * by default in the fast path and only gets turned on once userspace performs
++ * an operation that requires it.
++ *
++ * Returns true if userspace opted-in to use uclamp and aggregation at rq level
++ * hence is active.
++ */
++static inline bool uclamp_is_used(void)
++{
++	return static_branch_likely(&sched_uclamp_used);
++}
++
+ static inline unsigned long uclamp_rq_get(struct rq *rq,
+ 					  enum uclamp_id clamp_id)
+ {
+@@ -3417,7 +3430,7 @@ static inline bool uclamp_rq_is_capped(struct rq *rq)
+ 	unsigned long rq_util;
+ 	unsigned long max_util;
+ 
+-	if (!static_branch_likely(&sched_uclamp_used))
++	if (!uclamp_is_used())
+ 		return false;
+ 
+ 	rq_util = cpu_util_cfs(cpu_of(rq)) + cpu_util_rt(rq);
+@@ -3426,19 +3439,6 @@ static inline bool uclamp_rq_is_capped(struct rq *rq)
+ 	return max_util != SCHED_CAPACITY_SCALE && rq_util >= max_util;
+ }
+ 
+-/*
+- * When uclamp is compiled in, the aggregation at rq level is 'turned off'
+- * by default in the fast path and only gets turned on once userspace performs
+- * an operation that requires it.
+- *
+- * Returns true if userspace opted-in to use uclamp and aggregation at rq level
+- * hence is active.
+- */
+-static inline bool uclamp_is_used(void)
+-{
+-	return static_branch_likely(&sched_uclamp_used);
+-}
+-
+ #define for_each_clamp_id(clamp_id) \
+ 	for ((clamp_id) = 0; (clamp_id) < UCLAMP_CNT; (clamp_id)++)
+ 
