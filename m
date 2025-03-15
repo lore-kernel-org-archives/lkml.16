@@ -1,222 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BD91B4234;
-	Sat, 15 Mar 2025 14:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C536B1FFC55;
+	Sat, 15 Mar 2025 14:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742050674; cv=none; b=GRB6WmcbF5ox1DJVtVmmlL+2DRUJNcSD+7f+KoX1ULeydmSPF4TcDAb63CRgMs/dNiqtmtd7U+0Ci++p5112dvvfZ+PWWxBqo0Vs1hPx1yImKrH2n746wfHZ4/IMN1dAwHnB7FtDAxdFyztLHKDY1/MhljKnnHJfm94dhGzHyLc=
+	t=1742050697; cv=none; b=i2/5vqPrJSRaXZKpkX+9UrHlng5E9LzVvfD4xNMPGCx0qBfAp7DY5APjwg8Tl5sAF7e1FVNiZtb6p4PW22KbRxI7UACvlTbpWf+wtNvtgCiSSeiKS3g8h3lxDaJ/I/d/8801O2YX4Yek3gOY2MZt2nP74Isu46UZNsITb/TRSVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742050674; c=relaxed/simple;
-	bh=VAGcEkTA21upuXvwr1kQ3PnByIORGCDbW++j3x8AWAs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CtnJ8BCDcm3AEAAW5RqaPvvqL1vktOHOG3aDkd5bK9uJEMRxsH2QwVbzhtXJJeIG8GnStMurkFVNIlcFMsKuMs9+mj9S74pp+zO0CEBja9fvbhi2m4L3QIuVhLiQNuw0J0nPadXP7JkYgHLtnf42Z7dVT45kpGZ3gJHEc1DPVUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/s6USe4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742050697; c=relaxed/simple;
+	bh=9nYzGQvmx6WFgfbqPRmrGyA1FvxrIDEuq6WTjGtHIBE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=R8sOiGVZuWPYF6Lnla3dGqYUwmSN/fItJWmORECBFmAMEQxcrYu9gitON3Zug7eqoE8QhBIQVl5MHb2wOQFnatho/pl7853rD3jQxUyWjqkIjK3FbyIHiI01JTEPUzvKtEUVGCxkvJFlWqfZjkp4VRWDZbBJ6DCHWIaPuoWihEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=fnlhe2CB; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/s6USe4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AED6C4AF09;
-	Sat, 15 Mar 2025 14:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742050673;
-	bh=VAGcEkTA21upuXvwr1kQ3PnByIORGCDbW++j3x8AWAs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=b/s6USe4OK1g6LB5sM8h4Q9/0T0IB568pRk6PYnh1BksfPxI7Gup0YMkIqpL1zr0f
-	 3NFxJx89KTKhl2MkV/tTxDIvHovLc0hKByDQrQRU4AjAI92FvSsBUUkPNZ7xfodOiA
-	 79hZr5h4sz2DXBXy9WKDUDvud0fvGDylDdqBq36zxF0CNeYJ8UMExUqsLxQhNHfAdz
-	 Hnzn2LBxR0f9kj7UPtYpwfIs7T6pDd0ILy2tSp9QlufUO2pGM7AL9vFxnpKyU4QgLK
-	 lT3j8BzxALSOeRT2dQ7n4pEtgWRPcJ2ZzdOi8LtexqwOQbp0cQuuNp0V2igjL+L0mM
-	 M0AXemjOgdOrg==
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3f3f4890596so1707963b6e.2;
-        Sat, 15 Mar 2025 07:57:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWLfWcN6Dx7V+jwGcvxKVmFRgb70EhIMDRMvImnRqE6H5GvnKlANXxemDdAYFJP0KISJs8/hxe8fX5gnCk=@vger.kernel.org, AJvYcCXfjRIbOKnZ2ZuqLP47spoDjhIK+NDuJAmKKfs69u/5nu7i0UL9ezWyCEYr+VfQuvyjPAf+8YQ/ETs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxO5IS/s+5xzixnyARxJQSYOZdrVjVEhWV5vB1AjipTWtGZv8MY
-	WiI6oceJ6QpU7Hho1YYq4doPRUSGTiLU7ydRvAxU1RhezCiswdj2FAe2yjud+puNfvF7kfQzp+g
-	jd1W5HahrMZcnPIvxt3vK6+ggyvo=
-X-Google-Smtp-Source: AGHT+IFtXlaQXRcbAUeBvfSA61J2gCJBOg1KbzrYBRTUvUPkIHmIZSDLtXFewyEXlGxqdUuAtBKd4BcGlUCIQ8LflRc=
-X-Received: by 2002:a05:6808:1828:b0:3fa:53b5:6f87 with SMTP id
- 5614622812f47-3fdf04592c0mr3568765b6e.34.1742050672591; Sat, 15 Mar 2025
- 07:57:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="fnlhe2CB"
+Received: from [192.168.183.162] (254C339A.nat.pool.telekom.hu [37.76.51.154])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 2311EBBAC0;
+	Sat, 15 Mar 2025 14:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1742050687;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FmVx/4AyGD/aMwlNSJd9Y627FtpqEeVAICF+Holg0IU=;
+	b=fnlhe2CBIIfxzBLBDbt3DeYxtaaa9Y18Du5dMDU1Ihuj65nOiJWEqwNq0Gzkx4GYOFc1Ut
+	IZZBBYpeOqn7C0OQRjuiYFfABij97cmMDWYkND9DFW1MX2pUCuTYnfwmB4icMSQUu9i06d
+	YtZwRLZiFD6zuN1x838hKWg/V1OnqBbs9ieU0wfyxblAo8yMIEx9iiJF4PmrkEKB2BQedX
+	Ym+jdsVwZ+1lQzwiEKj0IpCGGiBTCJRyNOreQFe8Fo8WTynkNUYUaI/KBsVkclqqcKC6LT
+	+qnRo1sYoowii16qub41zcNXhXvNebSoWbNFDB7c86jn76RswifhmEccFxQiBQ==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Subject: [PATCH v4 0/6] Initial support of MSM8937 and Xiaomi Redmi 3S
+Date: Sat, 15 Mar 2025 15:57:34 +0100
+Message-Id: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <10629535.nUPlyArG6x@rjwysocki.net> <CAGETcx8VmzU9xy39=_QAQ0pf5fZY=EbGOKrdy0_wLEW1pQ2oKw@mail.gmail.com>
-In-Reply-To: <CAGETcx8VmzU9xy39=_QAQ0pf5fZY=EbGOKrdy0_wLEW1pQ2oKw@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Sat, 15 Mar 2025 15:57:41 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gXG+0CgBZTcxzenxHO-ah3YwFaQm6GHCeuyZT9CR=-zg@mail.gmail.com>
-X-Gm-Features: AQ5f1Jp0w9Tt0hvqJR7f0AX3YESUHYoYmItiba8gNUcvlIrCClt9FmqhkoQwQM0
-Message-ID: <CAJZ5v0gXG+0CgBZTcxzenxHO-ah3YwFaQm6GHCeuyZT9CR=-zg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] PM: sleep: Improvements of async suspend and
- resume of devices
-To: Saravana Kannan <saravanak@google.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Johan Hovold <johan@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jon Hunter <jonathanh@nvidia.com>
-Content-Type: multipart/mixed; boundary="000000000000857917063062c7f4"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAF6V1WcC/23MQQ6CMBCF4auYrq1pp0jBlfcwLqAdYBIppjWNh
+ nB3C4lCoss3me8fWUBPGNhpNzKPkQINLo1sv2Omq1yLnGzaDAQcBUjB+9AXpdIcoMBGWKPQlCx
+ 93z029FxKl2vaHYXH4F9LOMr5+mnIbyNKLri2oNHmutGiOPcVuRs5cu1h8C2bQxE2GNSKIeG6L
+ HU65gqt+ovVFmcrVgnbymojCzDG1D94mqY3ApD/bB0BAAA=
+X-Change-ID: 20250210-msm8937-228ef0dc3ec9
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Dmitry Baryshkov <lumag@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, iommu@lists.linux.dev, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ linux@mainlining.org, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Daniil Titov <daniilt971@gmail.com>, Adam Skladowski <a39.skl@gmail.com>, 
+ Dang Huynh <danct12@riseup.net>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742050684; l=2644;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=9nYzGQvmx6WFgfbqPRmrGyA1FvxrIDEuq6WTjGtHIBE=;
+ b=sM5mQ+PXxva7V8jC6E7KlV8VS02TfuWk836AaRTgvfi10SrkvBAz8iGZBunm6IJ8fCv+BXLjq
+ s8ibCMaPiPyCbCPGrCS6Y6vPrX+ETPOgD6/3eYjJve/2BjjHhkXE0Hw
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
---000000000000857917063062c7f4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This patch series add initial support for MSM8937 SoC
+and Xiaomi Redmi 3S (land).
 
-On Fri, Mar 14, 2025 at 10:06=E2=80=AFPM Saravana Kannan <saravanak@google.=
-com> wrote:
->
-> On Fri, Mar 14, 2025 at 6:24=E2=80=AFAM Rafael J. Wysocki <rjw@rjwysocki.=
-net> wrote:
-> >
-> > Hi Everyone,
-> >
-> > This is a new iteration of the async suspend/resume improvements work:
-> >
-> > https://lore.kernel.org/linux-pm/1915694.tdWV9SEqCh@rjwysocki.net/
-> >
-> > which includes some rework and fixes of the patches in the series linke=
-d
-> > above.  The most significant differences are splitting the second patch
-> > into two patches and adding a change to treat consumers like children
-> > during resume.
-> >
-> > This new iteration is based on linux-pm.git/linux-next and on the recen=
-t
-> > fix related to direct-complete:
-> >
-> > https://lore.kernel.org/linux-pm/12627587.O9o76ZdvQC@rjwysocki.net/
-> >
-> > The overall idea is still to start async processing for devices that ha=
-ve
-> > at least some dependencies met, but not necessarily all of them, to avo=
-id
-> > overhead related to queuing too many async work items that will have to
-> > wait for the processing of other devices before they can make progress.
-> >
-> > Patch [1/5] does this in all resume phases, but it just takes children
-> > into account (that is, async processing is started upfront for devices
-> > without parents and then, after resuming each device, it is started for
-> > the device's children).
-> >
-> > Patches [2/5] does this in the suspend phase of system suspend and only
-> > takes parents into account (that is, async processing is started upfron=
-t
-> > for devices without any children and then, after suspending each device=
-,
-> > it is started for the device's parent).
-> >
-> > Patch [3/5] extends it to the "late" and "noirq" suspend phases.
-> >
-> > Patch [4/5] adds changes to treat suppliers like parents during suspend=
-.
-> > That is, async processing is started upfront for devices without any
-> > children or consumers and then, after suspending each device, it is
-> > started for the device's parent and suppliers.
-> >
-> > Patch [5/5] adds changes to treat consumers like children during resume=
-.
-> > That is, async processing is started upfront for devices without a pare=
-nt
-> > or any suppliers and then, after resuming each device, it is started fo=
-r
-> > the device's children and consumers.
-> >
-> > Preliminary test results from one sample system are below.
-> >
-> > "Baseline" is the linux-pm.git/testing branch, "Parent/child"
-> > is that branch with patches [1-3/5] applied and "Device links"
-> > is that branch with patches [1-5/5] applied.
-> >
-> > "s/r" means "regular" suspend/resume, noRPM is "late" suspend
-> > and "early" resume, and noIRQ means the "noirq" phases of
-> > suspend and resume, respectively.  The numbers are suspend
-> > and resume times for each phase, in milliseconds.
-> >
-> >          Baseline       Parent/child    Device links
-> >
-> >        Suspend Resume  Suspend Resume  Suspend Resume
-> >
-> > s/r    427     449     298     450     294     442
-> > noRPM  13      1       13      1       13      1
-> > noIRQ  31      25      28      24      28      26
-> >
-> > s/r    408     442     298     443     301     447
-> > noRPM  13      1       13      1       13      1
-> > noIRQ  32      25      30      25      28      25
-> >
-> > s/r    408     444     310     450     298     439
-> > noRPM  13      1       13      1       13      1
-> > noIRQ  31      24      31      26      31      24
-> >
-> > It clearly shows an improvement in the suspend path after
-> > applying patches [1-3/5], easily attributable to patch [2/5],
-> > and clear difference after updating the async processing of
-> > suppliers and consumers.
+The series is extending the MSM8917 gcc and pinctrl drivers
+because they are sibling SoCs.
+MSM8937 have 4 more A53 cores and have one more dsi port then
+MSM8917.
+It implements little-big architecture and uses Adreno 505.
 
-A "no" is missing above, it should be "and no clear difference after
-updating ...".
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+Changes in v4:
+- Add missing rpmcc include for qcom,gcc-msm8937 dtbinding exmaple.
+- msm8937: add missing space after s9-p1@230
+- msm8937-xiaomi-land: replace LED_FUNCTION_INDICATOR to LED_FUNCTION_STATUS
+- Remove applied patches
+- Link to v3: https://lore.kernel.org/r/20250224-msm8937-v3-0-dad7c182cccb@mainlining.org
 
-Also, please find attached a text file with sample results from 3
-different systems (including the one above), not for drawing any
-conclusions (the number of samples is too low), but to illustrate what
-can happen.
+Changes in v3:
+- Fix qcom,gcc-msm8937 dtbinding example 
+- Link to v2: https://lore.kernel.org/r/20250223-msm8937-v2-0-b99722363ed3@mainlining.org
 
-While both Dell XPS13 systems show a consistent improvement after
-applying the first three patches, everything else is essentially a
-wash (particularly on the desktop machine that seems to suspend and
-resume as fast as it gets already).
+Changes in v2:
+- drop applied patches
+- drop gcc schema commits infavor of a new schema for gcc-msm8937
+- document always on clock for adreno 505/506/510
+- msm8937:
+  - set cache size
+  - rename cpu labels
+  - fix style issues addressed by review
+- msm8937-xiaom-land:
+  - remove unused serial0 alias
+  - remove regulator-always-on from pm8937_l6
+  - add blue indicator led for aw2013
+- Link to v1: https://lore.kernel.org/r/20250211-msm8937-v1-0-7d27ed67f708@mainlining.org
 
-> >
-> > Note that there are systems where resume times are shorter after
-> > patches [1-3/5] too, but more testing is necessary.
-> >
-> > I do realize that this code can be optimized further, but it is not
-> > particularly clear to me that any further optimizations would make
-> > a significant difference and the changes in this series are deep
-> > enough to do in one go.
->
-> Thanks for adding patches 4 and 5!
+---
+Adam Skladowski (1):
+      dt-bindings: drm/msm/gpu: Document AON clock for A505/A506/A510
 
-No problem.
+Barnabás Czémán (3):
+      dt-bindings: clock: qcom: Add MSM8937 Global Clock Controller
+      dt-bindings: arm: qcom: Add Xiaomi Redmi 3S
+      arm64: dts: qcom: Add Xiaomi Redmi 3S
 
-> Let me try to test them early next week and compare your patches 1-3,
-> 1-5 and my series (which does additional checks to make sure
-> suppliers/consumers are done). I do about 100 suspend/resume runs for
-> each kernel, so please bear with me while I get it.
+Dang Huynh (1):
+      arm64: dts: qcom: Add initial support for MSM8937
 
-Thanks and no worries, please take as much time as needed.  I will be
-traveling next week, so I'll be a bit slow to respond anyway.
+Daniil Titov (1):
+      clk: qcom: gcc: Add support for Global Clock controller found on MSM8937
 
-Since I've got a confirmation from internal testing (carried out on a
-much wider range of machines and much more extensively that I can do
-it myself) that patches [1-3/5] are overall improvement, I'm planning
-to queue them up during the 6.16 cycle and other improvements can be
-done on top of them, including patches [4-5/5].  I also think that
-adding explicit status tracking (if it turns out to make things faster
-measurably with respect to this series) on top of patches [4-5/5]
-would be rather straightforward.
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+ .../bindings/clock/qcom,gcc-msm8937.yaml           |   75 +
+ .../devicetree/bindings/display/msm/gpu.yaml       |    6 +-
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts   |  408 ++++
+ arch/arm64/boot/dts/qcom/msm8937.dtsi              | 2149 ++++++++++++++++++++
+ drivers/clk/qcom/Kconfig                           |    6 +-
+ drivers/clk/qcom/gcc-msm8917.c                     |  617 +++++-
+ include/dt-bindings/clock/qcom,gcc-msm8917.h       |   17 +
+ 9 files changed, 3277 insertions(+), 9 deletions(-)
+---
+base-commit: da920b7df701770e006928053672147075587fb2
+change-id: 20250210-msm8937-228ef0dc3ec9
 
---000000000000857917063062c7f4
-Content-Type: text/plain; charset="US-ASCII"; name="async-suspend-resume.txt"
-Content-Disposition: attachment; filename="async-suspend-resume.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m8abl42g0>
-X-Attachment-Id: f_m8abl42g0
+Best regards,
+-- 
+Barnabás Czémán <barnabas.czeman@mainlining.org>
 
-CUJhc2VsaW5lCQlQYXJlbnRzL2NoaWxkcmVuCURldmljZSBsaW5rcwoKCVN1c3BlbmQJUmVzdW1l
-CQlTdXNwZW5kCVJlc3VtZQkJU3VzcGVuZAlSZXN1bWUKCkRlbGwgWFBTMTMgOTM2MAoKcy9yCTQy
-Nwk0NDkJCTI5OAk0NTAJCTI5NAk0NDIKbm9SUE0JMTMJMQkJMTMJMQkJMTMJMQpub0lSUQkzMQky
-NQkJMjgJMjQJCTI4CTI2CgpzL3IJNDA4CTQ0MgkJMjk4CTQ0MwkJMzAxCTQ0Nwpub1JQTQkxMwkx
-CQkxMwkxCQkxMwkxCm5vSVJRCTMyCTI1CQkzMAkyNQkJMjgJMjUKCnMvcgk0MDgJNDQ0CQkzMTAJ
-NDUwCQkyOTgJNDM5Cm5vUlBNCTEzCTEJCTEzCTEJCTEzCTEKbm9JUlEJMzEJMjQJCTMxCTI2CQkz
-MQkyNAoKRGVsbCBYUFMxMyA5MzgwCgpzL3IJNDM5CTI4MwkJMzE4CTI5MAkJMzE5CTI5MApub1JQ
-TQkxNQkyCQkxNQkxCQkxNQkyCm5vSVJRCTE5OAkxNzY2CQkyMDIJMTc0MwkJMjA0CTE3NjYKCnMv
-cgk0MzkJMjgxCQkzMTgJMjgwCQkzMjAJMjgwCm5vUlBNCTE1CTIJCTE1CTEJCTE1CTEKbm9JUlEJ
-MTk5CTE3ODEJCTIwMwkxNzgzCQkyMDUJMTc3MAoKcy9yCTQ0MAkyNzkJCTMxOQkyODEJCTMyMAky
-ODMKbm9SUE0JMTQJMgkJMTUJMQkJMTUJMQpub0lSUQkxOTcJMTc3NwkJMjAyCTE3NjUJCTIwMwkx
-NzI0CgpDb2ZmZWUgTGFrZSBEZXNrdG9wCgpzL3IJMTM4CTM0NwkJMTMwCTM0NQkJMTMyCTM0NApu
-b1JQTQkxNQkyCQkyMAkyCQkxNQkyCm5vSVJRCTE1CTI1CQkyMwkyNQkJMTYJMjYKCnMvcgkxMzMJ
-MzQ1CQkxMjQJMzQzCQkxMzEJMzQ2Cm5vUlBNCTE0CTEJCTEzCTEJCTEzCTEKbm9JUlEJMTUJMjUJ
-CTE0CTI1CQkxNAkyNQoKcy9yCTEyNAkzNDMJCTEyNgkzNDUJCTEyOAkzNDUKbm9SUE0JMTMJMQkJ
-MTMJMQkJMTMJMQpub0lSUQkxNAkyNQkJMTQJMjUJCTE0CTI2Cg==
---000000000000857917063062c7f4--
