@@ -1,111 +1,178 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1649363CB
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 00:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2401936D;
+	Sat, 15 Mar 2025 00:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741997834; cv=none; b=KJS2rBlFUCdVy6i1JryECSp5Ial3ipMz3I3XwNcfjb5me0Gw1PitDq5Y9jp/ZBtEujiZKa/NhGBi1JcgkklEJUcQxAEFOseVqqcEpK3IKIUQ5ii6/jIGEf44DzxoDYjj399OwYeGpEuXOp8WrP933zYfd2x3Bb/xsakckqPkRFk=
+	t=1741997904; cv=none; b=fdrqUXVU2dUsHSznPaCdV/FpZVyVxpftXfM855D3CwNwNVAk+xy1azntM2rVog9/CNa9HPTpgOURJF/dmgJCqnrYtf3mzKJWYxwnmcetBml2azJMcIqnXuYGr0BkQyzti2rWqN1/KCA5C1Mj5d7qbBjKk3U70rCMUZQkY4X5w/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741997834; c=relaxed/simple;
-	bh=Oucj8mn9SuivoD33tz/S4ru2IxTCjZYbepFQgVU3QYo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Feclvb2b1HlbExcsnCNuH5CRfFtxa8iVuagixltMPIO6ICyrXJRGy47hnoAI0ntI+3RxyekziRS4Ey5Go/hsETjuf7AkL6A0xACk7X6PfyM0BCG8+dpKxXdWyG75TMPInPFAfTDmQdbKElGXK1o2WBphrry7MSxIoZZXiTrr67A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YQrXfnQ8; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1741997904; c=relaxed/simple;
+	bh=g7N0/JCTS6OufAO4Kgybu5W7kXCd+wNIWPPOS/UbXwU=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fm0ceJCHH3ikE/AfVPFboWes51+wBIvJrKnYe5HT0xPI7OudxogMPM+x1pKVO2vJEczqmWDoLTcIhiCmRggn/C9F2u4yZYDImyxWmTwRkp6/Vma7OoQ3deAeicco7cllO65w+D5pkKKfKxvGjRGjp+wv9I+F17+WL05vYLsb10s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GdO7T1Oj; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YQrXfnQ8"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so358113166b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:17:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdO7T1Oj"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c542ffec37so271708685a.2;
+        Fri, 14 Mar 2025 17:18:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1741997830; x=1742602630; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gTXswEN1s8nxLgznB62YLFkIu8PB0+DrF6qSHWwK+Xw=;
-        b=YQrXfnQ8KcN/XOH9lAZtgQ7HBP2xvZSK8aVVJdyrlve16qBxg2DWe5rkMmThHXaZyM
-         Kj5mdwE6T47PuNFMXC7vmvpLeNPHIxjJl16p1Ukpa1BAtL+qOYSZcJZZDWmREjEPStlW
-         /Pv6SJfP4EibdFToJ5iaC1XybyCxbLdBq4bww=
+        d=gmail.com; s=20230601; t=1741997902; x=1742602702; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MW/Q581Re/FQqAaGAz+jf2rOlLwJG+NP8CU6/zqtpc4=;
+        b=GdO7T1OjzsZnCsdfFUtWKvI9/LNYbdF93rZmXqJZpVhrtD9LZ21S+AllwQm/ohuwQS
+         /L0mR40SclPErNtv9SvZNV+F8uwI+MRmqMt2ZDNjY2LNUafTatPRGAiO4cqE0mIW0Ldd
+         DQeEc266WfdGf1N6eJ6UphjgXdaOYfDH36Rjk2vyYUUQnAkDthTBwHQtlXjTwYNlGPSE
+         n/yeesuUzDUFe2KY3iJHgpvMeIkAY8ZPYyQhNlvgDCCGupzSzxe1wx3dtFxPKGF6ByEf
+         QckeGMI5bizYVDNsdlJQyfAX4YggfznMvyl5Jfu9UAm+v10OHbk9NfurdiEInUbMezrj
+         93PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741997830; x=1742602630;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gTXswEN1s8nxLgznB62YLFkIu8PB0+DrF6qSHWwK+Xw=;
-        b=fXBJaBdTyGeID6ubx4elikBASJRTwnfaBW+M9vjeDBawJ4cBpdcMcVog/Xd6nqODfh
-         iCon91CpMxegswK+i4T7BiIY2F6yNwl8YkVkNf3LiMXcouRPhYn09rb/0xDiQM48ih1s
-         AlQQ9aPy/phioyrlwyjEHo7GoxkW2RNcU3FBUw2wpx1VN3hwOn/jFXAl7Q/0Q+ybRw7a
-         C8+RwzRRyIdwkteiFULO5Bp4HrioB6vH7k+ygx9zbBMaQUuymVIXSyyTgtBsyMsUYMvZ
-         BKlI09qXeuNDF25inkqiBbXNvtdG/UhLvj2i8kmHs+j8xrnRh2l+mrav6dyZC7KUEk4l
-         HUjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQigDaK/kkYUXHUnCymeHOb1jrDWNSweDKmzrQ8KnBi1cxM9CB4Uu603WCZw0A74OKmBezAHmsIrRqR0M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDQ8bPUm5Ikcy6dSHa3ZQUIE2iNUoVIf2Jsvdt/xqKbkvqTFJG
-	OI9wsi3uzCA//95Igywuj7h07WCz8vfzxJ91CBFGL4/HqjRFLhrtJp95DNUWXhnNsDT0A3j+JuU
-	gdK8=
-X-Gm-Gg: ASbGncvyLya6zQ/hNHnPWgtMUzZmCa8/aevS2geMHkQw/KsUuZUuUjQZMfBrNFbCkRC
-	vMVr439RLv3P5Z9/qtrrWwa8Qicj6P5bKoqyYYugbU2VjR/VCA7hxD4a99SE1lnzM8tWm+iUurR
-	cqbsb6wvcVvjsE+X00A7GACWxLr+9VfSghnT/4k4fEx4wsw1N7gbuFum/UfsLn8ujivVH74ghq4
-	+TONwjXqZk3qSSbm++XbugXCZdQ8rrUE+x3jUzKzKHcc+LegqepdAkbxj0/+WDFKaicJBM23dfg
-	2v/kWTuZDHUGDkpfh8cTTEFzWGMfXL3tusFlsWoSbztI2wsbM/JcwLD5D15/PKU2MvvCMp5YoX6
-	sy3DLEutK5Fq/tROwLG0=
-X-Google-Smtp-Source: AGHT+IFMp/O5r56QIuyuerUW5y0gKvZRzeFkWz7rKoTBdQqj/zK4r5Y7tGEQmNIr8c6prV3Nlq5gFw==
-X-Received: by 2002:a17:906:7308:b0:ac2:e059:dc03 with SMTP id a640c23a62f3a-ac3303f75d1mr485962266b.38.1741997829946;
-        Fri, 14 Mar 2025 17:17:09 -0700 (PDT)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac314a4a2b3sm291908466b.139.2025.03.14.17.17.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Mar 2025 17:17:08 -0700 (PDT)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2963dc379so453514266b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Mar 2025 17:17:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVblK97WxZsWUiWExjroIfA4vk9QVRQuHxxneSvs7NBg6zO4dODYtNQvNz0JFWp1Q4OMUbjmPuGjLzPMfs=@vger.kernel.org
-X-Received: by 2002:a17:907:d92:b0:ac2:a473:416c with SMTP id
- a640c23a62f3a-ac33044eb28mr541321766b.47.1741997827525; Fri, 14 Mar 2025
- 17:17:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741997902; x=1742602702;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MW/Q581Re/FQqAaGAz+jf2rOlLwJG+NP8CU6/zqtpc4=;
+        b=SFdGp1aIOzpPxbzq688wsECtYat3vM8pdVuedruEfjGodNw5vy0ew+taNgqmIa9guA
+         +2xcIckK221vdYUQ73fBdhAuUFygpUmC157fOEbhyy9bbd6ajS6gGi8Hw8QIftUU7tPW
+         q9woLpGhfOhNSNmnBU4qtWGLm40qi0O3k9HzTAw+FO1bNcrNc443iPHv4edU8O0kJTuo
+         BY5LvmxKzmKrjEu21SUQWllsR743fRC2qI+Eut/R006MRlxnn2Cir9Qu6An8qtNo+l1x
+         GzdYbBCxWeYQymL7ygiJ1oiVyZXveAvdDxkXqguLe5kAIYZteQmNbFcv/xOUWTfsSwM1
+         NFhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEEUsUCcd2Mi/79fWJzl9kX2fXVwjTJONi6J7a1PfvbC5L7aCUbhbaahGhBUoXosHDYcHUpwqExI/RlA==@vger.kernel.org, AJvYcCVsaThx2nfmrGJt7PXJPO5tAytJe6nhVZEDkHthUUkZ/r8baEC0VhJ3vW8ePyLZAOyOmfuIMB6LuCUxCEOmSVk=@vger.kernel.org, AJvYcCWgUkaOQloo9Z7DapYzqdL+jssp3idU8ao+HY4lMwLOQkjJAVw89JeGJBUKfCbOCHQBuiv3aW4L97xs+rnv@vger.kernel.org, AJvYcCXEmOdTK09OwwKsyWmqIs7uF/8QBWALRtJ9yn59+juA5oa2Cv/BQlr3afhTvGWvPm02X5BV3cTq@vger.kernel.org, AJvYcCXc9Gvd+JnCE5EvFqjL9gD8JpSrM+/l/MaAE+caLlP2VRy/T9h0EUHKkiI+nD40Rrh4tAh2KrhGG025ocLpOU92@vger.kernel.org, AJvYcCXr205yrglrgebsJ3Y9iaaT0gQs9Wdpb4b4Q5O8hGx2uFGnKlhpTDczqJ6GNNv0NY5vY14dbjynG64Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP+rP6BA7+aakxNAnP7jBaP8+ZuPabEiGGa1Pz+brlHSN1EzGG
+	NRHe2Z+4JGqXHgdSF7fvsmmszTYZMfpRUb4UO3LyPN8TBuD7hnMB
+X-Gm-Gg: ASbGncvBcYVYUtE011lw8GeEdFTywhl8tO1g7Uhxbtib2Ds64kFio3WGV5hT/eBn1gT
+	b4a3m5soJRTH1HCRII6yZBuwnFsw2PIQg4AUqYXWms5chCS5bDtHcglJLbybQVTXPp0MOx/0Pnn
+	xBfI53j1bF9kvTz/zT3o5P7sw8cRf03v5wBgT85S4re/HPY/KeyKTxvmFGn4Bw0S2Wugql0Ljw7
+	ckbaF7pSvZgE+xwFoZ0DBbPGV3/cs3MhhdHOdBGGFbFUQbqNoYu7v3z8p3600fHjt+Zykm4rmo3
+	VpaVr8ozUOXt2R+HFOiA/i0eYG/Q4nVlaz8RcUqC6uUgy/JgJzdaWufcH82sWwbw7om707e5rdb
+	6gg+KpzwdntL1/my8eyzQEgeZQ2rs55qowpHhn2RSsKcC2Q==
+X-Google-Smtp-Source: AGHT+IEwyke4ZW6L+ZW3RCnZV78prYvLyXaehAEXAI6EbOZkgETy/Y95traqlk8pruRLBhO0X4DyAA==
+X-Received: by 2002:a05:620a:3193:b0:7c5:5cc4:ca61 with SMTP id af79cd13be357-7c57c79bc00mr650619685a.12.1741997901820;
+        Fri, 14 Mar 2025 17:18:21 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c573c4f53csm316677385a.22.2025.03.14.17.18.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 17:18:21 -0700 (PDT)
+Message-ID: <67d4c74d.050a0220.66d0.b23d@mx.google.com>
+X-Google-Original-Message-ID: <Z9THSUE08cLVCy84@winterfell.>
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 692F61200043;
+	Fri, 14 Mar 2025 20:18:20 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Fri, 14 Mar 2025 20:18:20 -0400
+X-ME-Sender: <xms:S8fUZ93vaXJHgA4i2OX5j7lqSUEMZSSO9FqzBdBhtRyWLxXVYVCsmw>
+    <xme:S8fUZ0HLTfLNJiQeMU5I6MqZ8QPxOGPZjEbiLBTc00U_pJoJb74wL9HqKM2Ymoseo
+    QJfsxTfTu-hLA_N2Q>
+X-ME-Received: <xmr:S8fUZ95ICMUGXCYWQXMOcOfyhFgvt-wKrx0HdFdd-gHr2P4k5Sz2PT3dGEs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedvvdehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeelveeftdduudduudekudehtdevheduuedv
+    vedtjefghffhvefgtefggedugeekjeenucffohhmrghinheprghspghpthhrrdhgrhhouh
+    hppdgrshgpphhtrhdrphhiugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhith
+    ihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgr
+    ihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepvdehpdhmohguvg
+    epshhmthhpohhuthdprhgtphhtthhopegtohhnthgrtghtsegrnhhtohhnihhohhhitghk
+    vgihrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgv
+    gidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhi
+    hguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhl
+    rdgtohhmpdhrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpd
+    hrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohep
+    thhmghhrohhsshesuhhmihgthhdrvgguuh
+X-ME-Proxy: <xmx:S8fUZ63miUs8A46sM87ugHi-Oyv5gDGAOeV2jp8WrX9Vhu4cAcu8og>
+    <xmx:S8fUZwFqtvgMWQzw4nkYqCBH9hzZYEAbc02r9W5gKE7rZPxMu08RmA>
+    <xmx:S8fUZ7-kuuBfRqtDRPk1VY26XFfYxB3Y68xUHg_yuDsT9QaXGIpoPA>
+    <xmx:S8fUZ9lQLVRAlJ0sWQuVHZZlUZUZRYhswChrgXCMpPJsig0jRtoopw>
+    <xmx:TMfUZ0Evq0x3ESylammkr00E6rkZlRYT26JN4xhqw84EzOt3FOQMe2uu>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 14 Mar 2025 20:18:18 -0400 (EDT)
+Date: Fri, 14 Mar 2025 17:18:17 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Antonio Hickey <contact@antoniohickey.com>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-block@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] rust: replace `addr_of[_mut]!` with `&raw [mut]`
+References: <20250314234148.599196-1-contact@antoniohickey.com>
+ <0100019597092d67-0da59c6d-9680-413f-bbce-109ef95724cc-000000@email.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1741988314.git.jpoimboe@kernel.org> <1c2fe7f93c4dd8a87c2e1fa8b780a8a2968be445.1741988314.git.jpoimboe@kernel.org>
- <CAHk-=wjtvTPERDdrok2kDrSSFBjqHCCNVff95VVxhvP6wCC6jg@mail.gmail.com>
- <CAHk-=whH5bHRYB12aAcb=nK7erOmOSo6o2FXjHtxObWumFANHA@mail.gmail.com> <jdcd4zoezsi7beoak43dqzkxnel7hqdhtyqbf4cqr6rvs3qfyf@i2qhxrld5p5l>
-In-Reply-To: <jdcd4zoezsi7beoak43dqzkxnel7hqdhtyqbf4cqr6rvs3qfyf@i2qhxrld5p5l>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 14 Mar 2025 14:16:51 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wj_F4_uTMQ2w7M7TRJqn9dx+LEifuvkvqd_ODSbMU-U3g@mail.gmail.com>
-X-Gm-Features: AQ5f1JqcrMKkhGXhj0GNTbnM5UKcEtmyOEtwaMXZOrhR4bfBVAvFdDAyrYEKv3Q
-Message-ID: <CAHk-=wj_F4_uTMQ2w7M7TRJqn9dx+LEifuvkvqd_ODSbMU-U3g@mail.gmail.com>
-Subject: Re: [PATCH 14/20] x86/barrier: Use alternative_io() in 32-bit barrier functions
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Uros Bizjak <ubizjak@gmail.com>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0100019597092d67-0da59c6d-9680-413f-bbce-109ef95724cc-000000@email.amazonses.com>
 
-On Fri, 14 Mar 2025 at 14:09, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
->
-> Thing is, we still have alternative(), which is also an asm wrapper, but
-> it's for when the caller doesn't care about adding any constraints.
->
-> So the "_io()" distinguishes from that.
+On Fri, Mar 14, 2025 at 11:41:55PM +0000, Antonio Hickey wrote:
+[...]
+>      /// Recreates an [`Arc`] instance previously deconstructed via [`Arc::into_raw`].
+> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+> index 49012e711942..b2ac768eed23 100644
+> --- a/rust/kernel/task.rs
+> +++ b/rust/kernel/task.rs
+> @@ -257,7 +257,7 @@ pub fn as_ptr(&self) -> *mut bindings::task_struct {
+>      pub fn group_leader(&self) -> &Task {
+>          // SAFETY: The group leader of a task never changes after initialization, so reading this
+>          // field is not a data race.
+> -        let ptr = unsafe { *ptr::addr_of!((*self.as_ptr()).group_leader) };
+> +        let ptr = unsafe { *(&raw const (*self.as_ptr()).group_leader) };
 
-.. but I think it does so very badly because "io" really means
-something else entirely in absolutely all other contexts.
+This can be a
 
-And it really makes no sense as "io", since it doesn't take inputs and
-outputs, it takes inputs, outputs AND CLOBBERS.
+    let ptr = unsafe { (*self.as_ptr()).group_leader };
 
-So it would make more sense to call it "ioc", but that's just obvious
-nonsense, and "ioc" is already taken as a globally recognized
-shorthand for "corruption in sports".
+>  
+>          // SAFETY: The lifetime of the returned task reference is tied to the lifetime of `self`,
+>          // and given that a task has a reference to its group leader, we know it must be valid for
+> @@ -269,7 +269,7 @@ pub fn group_leader(&self) -> &Task {
+>      pub fn pid(&self) -> Pid {
+>          // SAFETY: The pid of a task never changes after initialization, so reading this field is
+>          // not a data race.
+> -        unsafe { *ptr::addr_of!((*self.as_ptr()).pid) }
+> +        unsafe { *(&raw const (*self.as_ptr()).pid) }
 
-So "ioc" is bad too, but that should make you go "Oh, 'io' is _doubly_
-nonsensical".
+ditto:
 
-Ergo: I think "asm" would be a better distinguishing marker, withg the
-plain "alternative()" being used for particularly simple asms.
+    unsafe { (*self.as_ptr()).pid }
 
-              Linus
+because `*self.as_ptr()` is a place expression and won't create
+temporary references.
+
+There are also a few clippy warnings, you can check them with CLIPPY=1.
+
+
+Besides, it'll be easy to review if you can split the changes into
+multiple patches. Thanks!
+
+Regards,
+Boqun
+	
+>      }
+>  
+>      /// Returns the UID of the given task.
+[...]
