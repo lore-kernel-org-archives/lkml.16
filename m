@@ -1,99 +1,102 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0352045B6;
-	Sat, 15 Mar 2025 15:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A8019049B;
+	Sat, 15 Mar 2025 15:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742052385; cv=none; b=O+wmG1+TR+2DcEF0ARUu286d38SUlV+bYt5IPy3+eF9Kz1XgF0DwqRUTvsYP1xN6DZyvwmiWNRROXXarqPKr4PoIw/zyhYLT9pRRVho9jR0s8qnbGhcoQNBdMuaKUC6XorYIgJE1GfBWDXOvyHRzZBMdlXeKs4BwVlI/WWBQ3CI=
+	t=1742052579; cv=none; b=C6xZ0v8khAj1Ch8Ha8muqT0TUdkLBGGF3MA/wMYSgaOZiQgeYLTzIi16kNAhJoo3nWPjmAQW1rVahpZAmLuy9QYEG2MOseAAV6Qh4zLAS5SrfVxrioSNxubtYs5EjE14mnrD5OA8Lri9fyIh/u7ViMs16wuz1od1mPCB+vpewhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742052385; c=relaxed/simple;
-	bh=6UKcRvLmFGMkYbpnTHWkJsGzoz8DT7K8HX8/BTjnlAc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZRXRaCuNLn6d5Oans1AYgIMQWQVl4GNbxXs4YeKdpGBtsgTcKvZo29TmBUJtn/ZP3wSpFLV+Zg+KJIJVtDW0Ly8UR4yGhP1YkEZ0x5n6O4GtzpdPBNej8R9deNuBQsEwornHXmah+DPIYnH87dUatd3j/sNvuLo8hhRH4OvtHjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=YCK6XBHl; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1742052579; c=relaxed/simple;
+	bh=t3Ud3bOuPundm90xIOsFE9Q5XrJOj0wTImWIRDm5/BA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gmMixTep6SoWyc4kSOSdv9+rMgga3qKrEA6ycp5JDrlS4FQFjCUFU5RE4jsvofi1MIUss8o8xl1KUz+Ptp61XI1kn+LWKLGd3A5ADfs2dWFsypxUFa+QqU44Cp2vxvEWjOLzczxKLFIyODwZi2rrJYbMKH0pymO7PKOJ6Ord6pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=etUPQ6q1; arc=none smtp.client-ip=80.12.242.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="YCK6XBHl"
-Received: from [192.168.183.162] (254C339A.nat.pool.telekom.hu [37.76.51.154])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 69D02BBAF1;
-	Sat, 15 Mar 2025 15:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1742052382;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NwLRg4v+maMgH3qlciCzk8zvUd/Y0FWKjZc0zaS2pGk=;
-	b=YCK6XBHlJIpnHd4ttAinlNfodbrepfDBt1z/2HpzIFDZBUTok6ihBuOlEqSj96NV6bv4PN
-	3TApuAFZ39pBcJH3vo5lSTi61GQnysr3ry40Jx3T5nC4hcjRbzufJC+Yo6OW3d8crekxvB
-	ENLtTiQG8+FORrVf6Yjp0dRlbCm6PHl7zRrINBF+wOOiwVgyHFDySR5FG/BhAjfg4tRZdf
-	Xvai0jmgQbJn9YMcYmyNxKYtaRcA2Mys4VykoCbG2l7cKMwkZ/HaJqYXDW6xjtRY6YwQFG
-	+RiP2QVmWJejPevdEroa+zYi2tXKDHt+Yq5BPpHAGjiZBVJbAhL/0Objc1Y6EQ==
-From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Date: Sat, 15 Mar 2025 16:26:18 +0100
-Subject: [PATCH 2/2] clk: qcom: gcc-msm8953: fix stuck venus0_core0 clock
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="etUPQ6q1"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id tTJNtsJ0HtsZCtTJRtOle1; Sat, 15 Mar 2025 16:20:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1742052035;
+	bh=b3ARRYc1xIjRJmTM2Xw3fYywDOajj6cXs8QeBu+g8Jc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=etUPQ6q1HR8RFWvQI5hugo8wAhN5EBw82VRkpgLbJ9Iu+MQgVouU6jc7g+P0L4pIA
+	 x4owaUciYxrf5ZzY9lfaqmSUXCGSPrt3JizEWlaTOp0nBwFJqeJtyTnRSL15BbE9St
+	 lMsxqODATfmFdl+fSyoUx1j3t420Z2UeOC/aZb5LAvF+ZYHD4ID/vLL6yIfG+250Cw
+	 7YYS+Shc/PnOHJOuKt2p2uyGWr1626LOJ4KIJnI07haWF6fA4WQv8mNih0CzOtwZlU
+	 pav3DOm/pDD7NvO4cEZsQhk+ssWNPO8UdnJ8jt8eOcqKNL50+gHwnjYRVXrqt0g04C
+	 8XEJGg/SldFqg==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 15 Mar 2025 16:20:35 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <d1c6d869-d4ed-41d1-97e2-c73f87864bda@wanadoo.fr>
+Date: Sat, 15 Mar 2025 16:20:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] wifi: mac80211: check basic rates validity in
+ sta_link_apply_parameters
+To: m.lobanov@rosa.ru
+Cc: johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
+ linux-wireless@vger.kernel.org, lvc-project@linuxtesting.org,
+ shaul.triebitz@intel.com
+References: <20250315130119.75937-1-m.lobanov@rosa.ru>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250315130119.75937-1-m.lobanov@rosa.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250315-clock-fix-v1-2-2efdc4920dda@mainlining.org>
-References: <20250315-clock-fix-v1-0-2efdc4920dda@mainlining.org>
-In-Reply-To: <20250315-clock-fix-v1-0-2efdc4920dda@mainlining.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Martin Botka <martin.botka@somainline.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, 
- Adam Skladowski <a_skl39@protonmail.com>, 
- Sireesh Kodali <sireeshkodali@protonmail.com>, 
- Vladimir Lypak <junak.pub@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
- Vladimir Lypak <vladimir.lypak@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742052379; l=1107;
- i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=a0JbqZV9TU0RP2sdIeXFqsOUuGP3rJw2vpMY7/ARc0g=;
- b=IYArTFRkWSVyh0Ns9+AQXaDxHv71e7vx0kcRKqeNDPJd8ahuPYXrRbc42zpCuYExItGEDf3uM
- qkgO+uFiIk9DCTFtKtmbtOWSVau7X9/r64C07tfdZiVFUi8OSGhQHQE
-X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
- pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-From: Vladimir Lypak <vladimir.lypak@gmail.com>
+Le 15/03/2025 à 14:01, Mikhail Lobanov a écrit :
+> When userspace sets supported rates for a new station via
+> NL80211_CMD_NEW_STATION, it might send a list that's empty
+> or contains only invalid values. Currently, we process these
+> values in sta_link_apply_parameters() without checking the result of
+> ieee80211_parse_bitrates(), which can lead to an empty rates bitmap.
+> 
+> A similar issue was addressed for NL80211_CMD_SET_BSS in commit
+> ce04abc3fcc6 ("wifi: mac80211: check basic rates validity").
+> This patch applies the same approach in sta_link_apply_parameters()
+> for NL80211_CMD_NEW_STATION, ensuring there is at least one valid
+> rate by inspecting the result of ieee80211_parse_bitrates().
+> 
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+> 
+> Fixes: b95eb7f0eee4 ("wifi: cfg80211/mac80211: separate link params from station params")
+> Signed-off-by: Mikhail Lobanov <m.lobanov-kcSV9N6+iMo@public.gmane.org>
+> ---
+> v2: Fixed the patch subject to provide a complete description.
+> 
+>   net/mac80211/cfg.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+> index 9351c64608a9..e7c429aef980 100644
+> --- a/net/mac80211/cfg.c
+> +++ b/net/mac80211/cfg.c
+> @@ -1909,10 +1909,11 @@ static int sta_link_apply_parameters(struct ieee80211_local *local,
+>   
+>   	if (params->supported_rates &&
+>   	    params->supported_rates_len) {
+> -		ieee80211_parse_bitrates(link->conf->chanreq.oper.width,
+> +		(!ieee80211_parse_bitrates(link->conf->chanreq.oper.width,
 
-This clock can't be enable with VENUS_CORE0 GDSC turned off. But that
-GDSC is under HW control so it can be turned off at any moment.
-Instead of checking the dependent clock we can just vote for it to
-enable later when GDSC gets turned on.
+'if" missing?
 
-Fixes: 9bb6cfc3c77e6 ("clk: qcom: Add Global Clock Controller driver for MSM8953")
-Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
----
- drivers/clk/qcom/gcc-msm8953.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/qcom/gcc-msm8953.c b/drivers/clk/qcom/gcc-msm8953.c
-index 855a61966f3ef565c48cbc8a7a7fac5e5e66445f..8f29ecc74c50bf50e34e4870b7960b8a0183644b 100644
---- a/drivers/clk/qcom/gcc-msm8953.c
-+++ b/drivers/clk/qcom/gcc-msm8953.c
-@@ -3770,7 +3770,7 @@ static struct clk_branch gcc_venus0_axi_clk = {
- 
- static struct clk_branch gcc_venus0_core0_vcodec0_clk = {
- 	.halt_reg = 0x4c02c,
--	.halt_check = BRANCH_HALT,
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x4c02c,
- 		.enable_mask = BIT(0),
-
--- 
-2.48.1
+>   					 sband, params->supported_rates,
+>   					 params->supported_rates_len,
+> -					 &link_sta->pub->supp_rates[sband->band]);
+> +					 &link_sta->pub->supp_rates[sband->band]))
+> +		return -EINVAL;
+>   	}
+>   
+>   	if (params->ht_capa)
 
