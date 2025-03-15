@@ -1,127 +1,161 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB201F790C;
-	Sat, 15 Mar 2025 15:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7EEA95D;
+	Sat, 15 Mar 2025 16:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742054162; cv=none; b=uAx9wxlJGSwH4dbUa5xQocViNHSYIUOPlYKFnBnjcqHZVA9uYxVzIwCaR5LC4fTMGJ9pDLONUUUMKGssVkcGBODum04Opx/saLsljqtrfygrHXSXeXmFyP+Q/KzInr95qr6TMOLN/VCrGEot0arf7M0OBghfoYSooAvtaBydch8=
+	t=1742054551; cv=none; b=KSrL17l/xHnHXn+KTcF2mR4qj0+0NH38Ns+HjW3vxDOUxHuAa9BelP/bwTEkzLl+xzlmryb/vg1IAgarFW3AQf8+k6YStJ9uABDt/AYc83289Vuw7udaskVZrbb8zTP9e9hOkiggLLStwW+WAvwNgVQHcjsivl+TRUTW4H1cHcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742054162; c=relaxed/simple;
-	bh=MRJjZ5O1bWjVu2eWngnjmrWJQHQGwJx7tix5FKfUILA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fyj87/jR0xW39Vk4RgL0nvSViH8b5RIe6PMZZtROCyJQ3yMQJR/Lj03aejkPBIv0ibKqAaKqui61Nn6zyCiSvICppNi3q44eaKcBwDxXmCAOCLYlFXYKiWJ40v+7wf3di5pc8tMzSEpYjGjLQ/6eXGXh8mb6EQik7BWuo8p8nc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CLdvhzir; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742054551; c=relaxed/simple;
+	bh=qtl5AjnqARyOJj1pkFXL9QYbeb0Yr975nxxzZ6glj0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I8U5FQbolkMnSPTogndTW8FjP1erQO3KtvYTOFP7wmiY4F1MtMRC6bIxEx1z0w/2gGVgLx97508c15usy3mwz5UjO+2+oqEbuMIVXlnaUUyXDN0DLdboaWJuMBbfsHXK+xhMSxWCzf5zLTmj1lRAj7KiI7m2MIA3SUpn0ANreho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXpQBWj4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLdvhzir"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso4846235e9.3;
-        Sat, 15 Mar 2025 08:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742054159; x=1742658959; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qHLhAyyIe2MeT11eZPTmP9X5jZJNkxRaVxiRBPcxsAY=;
-        b=CLdvhzirFJtxuIWyWbf92+Np/Wznl8lkDdCf2dXVabItEGsoFKReWPbyreYzNxbf1A
-         XVlUzitNpZ8LYVFgkyjKjmTLQ9Lxxji7SiOeYzEirqpiQ+kBL513G5nwHpm55+AoUh3r
-         mgTAVxI2VqRkSfixNCODKqvaejjnC+o9ceU7qzflcNrzkeQauDm2ABJmLotBMsaBBJwR
-         geporm2ea6vIWjXhLmW9G78oOeqQpFgSwLcg5f7ojDc/wXoZekdekKLRy/lsmbgxJ0D1
-         0CqqdMv9KlFFWc+uqv2IA/iXjSlRxmnkAt0b6sEdK+W0eCXJcQTKdvgebFJ2KZOqc1x9
-         Bejg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742054159; x=1742658959;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qHLhAyyIe2MeT11eZPTmP9X5jZJNkxRaVxiRBPcxsAY=;
-        b=MKz8c1V4eKco9G7dc+HZWEQUk9mTb9Wz89BNL9Swofi7QloPyjahFZi7eujlMXAxdS
-         VFoOxqe6AaXNg6F3IjD3t2yvGI0ygZoPZDCdlqeM2xsIrS92Pc5T9UKdEBO7hTwwmLNZ
-         WrFBgRugCsm4VeuZG1WRNlvy/icI0ucNgKcLH9UMG25J0pCpAYvNBlKsJJtc4mFUgLXr
-         36SeEBenJxBHV8DW1o37y12+0gQT3PT5qGpjQ11rL05BN6S46WvWD/jiko161oUZXWTN
-         XotmrbROhcnO61rWJ+eiAalluOf8mXe4Ld95dReqx85kguWwLMHuf3uPv1OVgEQHOaXb
-         hnsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvuHQjTeqxuKKwvnDqGAL7KmcmmgGABTm3zPhYeMigaJZvMF3+gNGgTnZUr4oQMblR7V4QpdvPeoui@vger.kernel.org, AJvYcCXoODcsKCa0hrzUklN/Z90eb1oios2tZHwjFpPAHRILM5jEF2tXy/EmtqEhXv++1qkLE+rCSRy15vaW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIgfcuh4X+nqvf5ryvf3Wvp5GXiKeHt4rVsmT/vbFECsQ1vyyt
-	n5+h0f8xSH6Ot4RMGkrRxqDinNoFbPRM8cliR8a8XUbMhb5HuHWsW9tB5w==
-X-Gm-Gg: ASbGncttfSqUL6p+TozzKJRoKNHjGKR43J5v3d9qJhTVbIKwO9Ok3YZPDFUhRSPQjuw
-	KkfdTkuD8kkSXIHYiQNGg5pB7ucIDZVwyczViOL4bw8pkW0PXtCRSckOVrvapBF9kNHColKXvmR
-	05Zjf71gcn9zTYhfkIelSCmaSnENjGHJ8H27idfv6U00vLnNs+EF+vpyHwSkKUFKdfNRZ4ZY+zB
-	lhnokBv5ph3Mgic4vbl1Q2TdWgUdPfdyELAAMf3eTCD3aZAqPvTHoKzzHl7AtHYNATaGwEBpior
-	cHTtgpKJtQFiNdL1v9NeiiN4TS9EH+CkfZbref2Xc3CQ5RXK4+n1p0+h6mCzmdk+70viDgCC
-X-Google-Smtp-Source: AGHT+IHDnn8P0rTvJZGxr/bBa0NVdDYyh7DnEmDOEsVUcOLIyJnBFWm1Zs2TA7EjVueh9oZiZymW1Q==
-X-Received: by 2002:a05:600c:5493:b0:43c:f6c6:578c with SMTP id 5b1f17b1804b1-43d1ecc77f2mr89127045e9.15.1742054158914;
-        Sat, 15 Mar 2025 08:55:58 -0700 (PDT)
-Received: from giga-mm.home ([2a02:1210:861b:6f00:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1fe524ccsm53978805e9.0.2025.03.15.08.55.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Mar 2025 08:55:58 -0700 (PDT)
-Message-ID: <99b7f8181abda40c78bab67cb5a4b00b62851b14.camel@gmail.com>
-Subject: Re: [PATCH v13 2/3] soc: sophgo: cv1800: rtcsys: New driver
- (handling RTC only)
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: Inochi Amaoto <inochiama@gmail.com>, sophgo@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-rtc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Date: Sat, 15 Mar 2025 16:55:57 +0100
-In-Reply-To: <fuc5zzq3izowktmafrhy5vkjddydxg5673ggr64ukh7v5knjmi@r6xozjxcw7r2>
-References: <20250309202629.3516822-1-alexander.sverdlin@gmail.com>
-	 <20250309202629.3516822-3-alexander.sverdlin@gmail.com>
-	 <fuc5zzq3izowktmafrhy5vkjddydxg5673ggr64ukh7v5knjmi@r6xozjxcw7r2>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXpQBWj4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEA9BC4CEE5;
+	Sat, 15 Mar 2025 16:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742054550;
+	bh=qtl5AjnqARyOJj1pkFXL9QYbeb0Yr975nxxzZ6glj0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oXpQBWj48xsce/ksUL3+pGVteTAcFsUGsuif/VCnorTFV9LpdUvaqmKmpif3L8lPz
+	 orVLZ3abz0wTcgN9bor8M+J0w8GO1YLQ6DbXdY8A0PkaSyZjBVFXu2CgNlukKhfvrt
+	 7oJtFk1GFJgMk5hIBDSFI813s0QSKNCrGugU6uEAORxn5wE8DYdtKjGZh44vLYHsNS
+	 FyA4a2SJ52VXKdTATHeZk1lBvZkwIKs24Z1jKaMNzsQFxOux99v6x4xvhP0yxxJs46
+	 sAPOOx5un11Gx8QsWF52yvcbwfuoJZpEcfbi2tSG1DaMJ7jrw0EK/1+4IpkxuB2hx0
+	 kpwViS0OC4mpQ==
+Date: Sat, 15 Mar 2025 17:02:26 +0100
+From: Alejandro Colomar <alx@kernel.org>
+To: Alex Elder <elder@riscstar.com>, Kees Cook <kees@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Azeem Shaikh <azeemshaikh38@gmail.com>, Alex Elder <elder@kernel.org>, 
+	Sumit Garg <sumit.garg@kernel.org>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] EISA: Increase length of device names
+Message-ID: <y5hkfx6tld2khsv2rb7w3k5hlkhfjfn7ndwwj5g75hkdebvjat@mypbmvg5brfi>
+References: <20250310222424.work.107-kees@kernel.org>
+ <3c6bc732-bd90-4a29-bcbc-f545b0ed79ad@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2lmt4x4w65wae6rm"
+Content-Disposition: inline
+In-Reply-To: <3c6bc732-bd90-4a29-bcbc-f545b0ed79ad@riscstar.com>
 
-Hi Inochi!
 
-On Fri, 2025-03-14 at 08:51 +0800, Inochi Amaoto wrote:
-> On Sun, Mar 09, 2025 at 09:26:24PM +0100, Alexander Sverdlin wrote:
-> > Add driver for Sophgo CV1800 series SoC RTC subsystem. The RTC module
-> > comprises a 32kHz oscillator, Power-on-Reset (PoR) sub-module, HW state
-> > machine to control chip power-on, power-off and reset. Furthermore, the
-> > 8051 subsystem is located within RTCSYS including associated SRAM block=
-.
+--2lmt4x4w65wae6rm
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Alex Elder <elder@riscstar.com>, Kees Cook <kees@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Azeem Shaikh <azeemshaikh38@gmail.com>, Alex Elder <elder@kernel.org>, 
+	Sumit Garg <sumit.garg@kernel.org>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] EISA: Increase length of device names
+References: <20250310222424.work.107-kees@kernel.org>
+ <3c6bc732-bd90-4a29-bcbc-f545b0ed79ad@riscstar.com>
+MIME-Version: 1.0
+In-Reply-To: <3c6bc732-bd90-4a29-bcbc-f545b0ed79ad@riscstar.com>
+
+Hi Kees, Alex,
+
+On Sat, Mar 15, 2025 at 09:27:36AM -0500, Alex Elder wrote:
+> On 3/10/25 5:24 PM, Kees Cook wrote:
+> > GCC 15's -Wunterminated-string-initialization warned about truncated
+> > name strings. Instead of marking them with the "nonstring" attribute[1],
+> > increase their length to correctly include enough space for the
+> > terminating NUL character, as they are used with %s format specifiers.
+
+It might be interesting to mention where they are used with %s.
+
+> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > Cc: Alex Elder <elder@kernel.org>
+>=20
+> This was interesting, but based on the bug text I suspect you
+> meant to address this to Alejandro Colomar, <alx@kernel.org>.
+
+Thanks!
+
+> For what it's worth, it looks fine to me.
+
+LGTM too.  Assuming that changing the size of the arrays doesn't break
+something else, it looks good.
+
+
+Have a lovely day!
+Alex
+
+> 					-Alex
+>=20
+> > Cc: Sumit Garg <sumit.garg@kernel.org>
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> >   drivers/eisa/eisa-bus.c | 2 +-
+> >   include/linux/eisa.h    | 4 +++-
+> >   2 files changed, 4 insertions(+), 2 deletions(-)
 > >=20
-> > This patch only populates RTC sub-device.
-> >=20
-> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-
-...
-
-> > +++ b/drivers/soc/sophgo/Kconfig
-> > @@ -0,0 +1,24 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +#
-> > +# Sophgo/Cvitek SoC drivers
-> > +#
+> > diff --git a/drivers/eisa/eisa-bus.c b/drivers/eisa/eisa-bus.c
+> > index cb586a362944..edceea083b98 100644
+> > --- a/drivers/eisa/eisa-bus.c
+> > +++ b/drivers/eisa/eisa-bus.c
+> > @@ -21,7 +21,7 @@
+> >   struct eisa_device_info {
+> >   	struct eisa_device_id id;
+> > -	char name[50];
+> > +	char name[EISA_DEVICE_INFO_NAME_SIZE];
+> >   };
+> >   #ifdef CONFIG_EISA_NAMES
+> > diff --git a/include/linux/eisa.h b/include/linux/eisa.h
+> > index f98200cae637..c73a410bf88f 100644
+> > --- a/include/linux/eisa.h
+> > +++ b/include/linux/eisa.h
+> > @@ -28,6 +28,8 @@
+> >   #define EISA_CONFIG_ENABLED         1
+> >   #define EISA_CONFIG_FORCED          2
+> > +#define EISA_DEVICE_INFO_NAME_SIZE	51
 > > +
-> > +if ARCH_SOPHGO || COMPILE_TEST
+> >   /* There is not much we can say about an EISA device, apart from
+> >    * signature, slot number, and base address. dma_mask is set by
+> >    * default to parent device mask..*/
+> > @@ -41,7 +43,7 @@ struct eisa_device {
+> >   	u64                   dma_mask;
+> >   	struct device         dev; /* generic device */
+> >   #ifdef CONFIG_EISA_NAMES
+> > -	char		      pretty_name[50];
+> > +	char		      pretty_name[EISA_DEVICE_INFO_NAME_SIZE];
+> >   #endif
+> >   };
 >=20
-> > +menu "Sophgo/Cvitek SoC drivers"
->=20
-> No Cvitek, only left Sophgo here.
->=20
-> > +
-> > +config SOPHGO_CV1800_RTCSYS
-> > +	tristate "Sophgo CV1800 RTC MFD"
->=20
-> > +	default y if COMPILE_TEST
->=20
-> I do not think it is necessary.
-
-Maybe it should have been
-
-tristate "Sophgo CV1800 RTC MFD" if COMPILE_TEST
-
-like others do?
 
 --=20
-Alexander Sverdlin.
+<https://www.alejandro-colomar.es/>
 
+--2lmt4x4w65wae6rm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmfVpIsACgkQ64mZXMKQ
+wqnRRQ/+NlEKzkhK5BB+hw4aSas+IA7ih+NEusuImQm7F8R7OAayOYPrFWv6et0n
+ZCW8LC4+qtUOUL6e6kgWXkAFigwlxt+y4/EaX6PI6Gs4zr9NNq/bgA2IgTi2pTo7
+J+UhRAh9nZnPYXcv+ggME4CtfJTuWoikuIrNYOVNbIPYn9Nz4YnKPm+PDQIBa5w6
+h804yhi4rBtV1Mir1TfzYvYfCgaipSJ71nvHcKv/56clnPVUG78LOP+QV/wtWVxc
+e0sW5jQwEqTBOq11GG+YF7f7zpILd5cs1YOOsVpUhV6w74eCOYK0XVmzLtDJGpli
+n4SBPMVXNRju46DAQfTSXtY+uFSBkrS4XrCqjSLHHRtSN0qOuOlUtJCVstAHY+wI
+Bc+s2jzslhmd+XdNbGy4RuoW1x0p68/A7KfBRCpIthaPuPPQHotX1hErfp9cclwG
+yAFQ7Kh+11MJQOo7JGNCPXN6YR/bQuMfqhIVXpMO3Wxy0U3b7PmRqw+/oBLniC1G
+vbUmPD+rKZogVa91v6wEjRu9VCqron8Oci81FX4yfHRU4r8qDSSiYxBK731LGVnc
+MvQfE1t7eE1vF8AKfRXeAWipfY35Tiu3DQ97OhZcg3PU7BVTvG+lBLAdhfyqSNvc
+D7W/er0m+07WL/p1Nyf3PT/B5m5CE25t4jzLzeTb4OUsKG/QwXY=
+=cawG
+-----END PGP SIGNATURE-----
+
+--2lmt4x4w65wae6rm--
