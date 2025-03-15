@@ -1,89 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FA1189916;
-	Sat, 15 Mar 2025 18:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520CD189916;
+	Sat, 15 Mar 2025 18:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742064917; cv=none; b=iZmSVy3BWgbKL+icA4W8oDjay1/Lqdb3mh7f+3twe4C/Jdxsqsu9wmvu+eM+P0sqK/dpJ8zUYxrQn5HDUC/Qo6DJs4d7tYNlxYtnOrWpA4MBkxN55bzcH417PPoybBjUwnJvFJPEy+Suzh3HL7HX8Y0+DWzXw4G5BI4eaPcIbsg=
+	t=1742064999; cv=none; b=HZh/k+3VzQIWac+fZ7WMxdoLWWpzWBPxEYsU39LeWQSYCJDtJWPSjDhvbZhgKrefXQDiE51OTzsB5zuBKzGsmTqB2oGL46KgwxTbI+ulcdFgmRrNdH/DH0jTqeQWqJYkND0Z3z0ZR48Fap/zES3Tq2ZZv+QlHawdpcwtccAfEio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742064917; c=relaxed/simple;
-	bh=5vA8XtN2p8J55g2czLdjKOjsF4zA2c2ijUOq3nZOfLw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DUWYO4nIUKR9JoxzKOcmqe8RZ9GGz8zUVv0SPYtvxOVF2Yr8i4oNLVMubxey/VyRe7ritAmifDTMk8t3lNn+wzAAuEVhMxtWIeY+oDkGuIKm2HOnqzhJ1Ap4xLBjE+gNwziJQsCndIrBY1DzGKuDlQSM9X9j71tWaw0uaPvjTXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eSaINZgb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742064999; c=relaxed/simple;
+	bh=0cVJbATR2qhQxWDKABbizVxbgFKBOKXwQRb4x0P1LuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f76v7a98n5Hb7/xbgNAy5bQsBSRIARTbafg7uh1T3ErQytgvw6fpKLoGxeG4DRQZw7CZC2GHpL6zs0Ga0kDsrcavmB19KkRobzbE1CUxeW6U460J8cg1ziQOTyQtjRoBoKllrpPNYH6IbbCWlxeB+a2DICXYlVPB9VYJd5w+7r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoLBfqcz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSaINZgb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438D2C4CEE5;
-	Sat, 15 Mar 2025 18:55:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoLBfqcz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19EF5C4CEE5;
+	Sat, 15 Mar 2025 18:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742064916;
-	bh=5vA8XtN2p8J55g2czLdjKOjsF4zA2c2ijUOq3nZOfLw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eSaINZgbcmEleoPprA5AuY8V87mGTnB+icLPa7WQPn871whhfhtTlCuGk0+y8hdXf
-	 kWQWtcpo9oQv/V+eXxd82MQ39xk6Z18ZMcnc2fZzYB7AAr7/hOBOXLAQW8xXLPy2R0
-	 0+2loMZ9ILepdnpw4HKQ0t9MXHSMTser1uo60m+FstpedX38/DtrvvXcdVL28Tr31M
-	 9RChewxn/j9jfOy5EKe89Ylwz5dQdE42KR9249NNk91aLdAIHSDLwddrao4Yz42203
-	 2/pJ8ZyeL/qYC+tbep8CLLIfG/z6K2NaKiD+htvehA5BrYSCplQX5LPJNOEotV22or
-	 7umUmF1XAMqlA==
-Date: Sat, 15 Mar 2025 18:55:08 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-iio@vger.kernel.org, Michael Hennerich
- <Michael.Hennerich@analog.com>, Angelo Dureghello
- <adureghello@baylibre.com>, Alexandru Ardelean <aardelean@baylibre.com>,
- Beniamin Bia <beniamin.bia@analog.com>, Stefan Popa
- <stefan.popa@analog.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/11] iio: adc: ad7606: fix kernel-doc comments
-Message-ID: <20250315185508.526cbec6@jic23-huawei>
-In-Reply-To: <20250312-iio-adc-ad7606-improvements-v1-6-d1ec04847aea@baylibre.com>
-References: <20250312-iio-adc-ad7606-improvements-v1-0-d1ec04847aea@baylibre.com>
-	<20250312-iio-adc-ad7606-improvements-v1-6-d1ec04847aea@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1742064999;
+	bh=0cVJbATR2qhQxWDKABbizVxbgFKBOKXwQRb4x0P1LuA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OoLBfqczX8GbTuzhShU9uH41LAx+3ilH+BtIiLpfqkhkV+o4lEIEH48I/aP9dfIfi
+	 kYQfu6IwW0MmnimgscShZs7soXM8mXW4TJRflCP6t2B1MWIAW+5TBQ8ResuiuNjuiG
+	 Caidl8s+1iUpCYFQv8EhUE8L1SZD5Q4p9s3r0jTfHlMQxNM+fqjOm+koEY7e4yrv6o
+	 eTsfKbVs/zsDJcsL9C7gUA8+k7Rn6Ykl/lXfsJ20SyhshPXjkX1nD12n/YeXZ9tPEg
+	 j4SxykaFoSE+iPgJh7SKenYmozEJwcYMHPKkrfA7OAq64DAo/Acaplpe4epTkykv4I
+	 cFEv/78Fd5Hfg==
+Date: Sat, 15 Mar 2025 11:56:35 -0700
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Jann Horn <jannh@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Marco Elver <elver@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jakub Kicinski <kuba@kernel.org>,
+	Yafang Shao <laoar.shao@gmail.com>,
+	Tony Ambardar <tony.ambardar@gmail.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Alexander Potapenko <glider@google.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-doc@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 2/2] slab: Introduce kmalloc_obj() and family
+Message-ID: <202503151141.786736B85B@keescook>
+References: <20250315025852.it.568-kees@kernel.org>
+ <20250315031550.473587-2-kees@kernel.org>
+ <CAHk-=wiFjwOk9knz8i-zAqE=Kc73+3TgkMuj-C_mNB1U=k2W7A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiFjwOk9knz8i-zAqE=Kc73+3TgkMuj-C_mNB1U=k2W7A@mail.gmail.com>
 
-On Wed, 12 Mar 2025 20:15:44 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Sat, Mar 15, 2025 at 08:31:21AM -1000, Linus Torvalds wrote:
+> Alternatively, this might be acceptable if the syntax makes mistakes
+> much harder to do. So for example, if it wasn't just an assignment,
+> but also declared the 'ptr' variable, maybe it would become much safer
+> simply because it would make the compiler warn about mis-uses.
 
-> Fix several issues with kernel-doc comments in ad7606.h:
-> * Add missing ":" to @param names.
-> * Add some missing parameters.
-> * Remove some non-existent parameters.
-> * Fix alignment and wrapping.
-> * Fix some spelling.
+Yeah, this is the real goal (it just so happens that it's fewer
+characters). We need some way to gain both compile-time and run-time
+sanity checking while making the writing of allocations easier.
+
+> Using visual cues (something that makes it look like it's not a
+> regular function call) might also help. The traditional C way is
+> obviously to use ALL_CAPS() names, which is how we visually show "this
+> is a macro that doesn't necessarily work like the normal stuff". Some
+> variation of that might help the fundamental issue with your
+> horrendous thing.
+
+Yeah, I really didn't like using &ptr, etc. It just make it weirder.
+
+> My suggestion would be to look at some bigger pattern, maybe including
+> that declaration. To take a real example matching that kind of
+> pattern, we have
 > 
-> `./scripts/kernel-doc -v -none drivers/iio/adc/ad7606*` is happy now.
+>         struct mod_unload_taint *mod_taint;
+>         ...
+>         mod_taint = kmalloc(sizeof(*mod_taint), GFP_KERNEL);
 > 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  drivers/iio/adc/ad7606.h | 90 ++++++++++++++++++++++++------------------------
->  1 file changed, 45 insertions(+), 45 deletions(-)
+> and maybe those *two* lines could be combined into something saner like
 > 
-> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-> index 71a30525eaab512fa811f28fa79268a1a976bc8c..3da78488c8a247dccbff930023f98717d540081a 100644
-> --- a/drivers/iio/adc/ad7606.h
-> +++ b/drivers/iio/adc/ad7606.h
-> @@ -120,17 +120,17 @@ typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
->  /**
->   * struct ad7606_chip_info - chip specific information
->   * @channels:		channel specification
-> - * @max_samplerate:	maximum supported samplerate
-> - * @name		device name
-> + * @max_samplerate:	maximum supported sample rate
-> + * @name:		device name
->   * @num_channels:	number of channels
-> - * @num_adc_channels	the number of channels the ADC actually inputs.
-> + * @num_adc_channels:	the number of channels the ADC actually inputs.
+>         ALLOC(mod_taint, struct mod_unload_taint, GFP_KERNEL);
 
-What does that mean?  ADCs don't input channels, they have channels which
-are inputs.  Turns out I don't read the docs closely enough whilst reviewing ;)
+Yeah, this covers a fair bit, but there's still an absolute ton of
+"allocating stuff tracked by pointers in another structure", like:
 
+	foo->items = kmalloc_array(sizeof(*foo->items), count, GFP_KERNEL)
 
+There's no declaration there. :(
 
+One thing that I noticed at the tail end of building up the Coccinelle
+script was the pattern of variable-less "return" allocations:
+
+struct foo *something(...)
+{
+	...
+	return kmalloc(sizeof(struct foo), GFP_KERNEL);
+}
+
+And that doesn't fit either my proposal nor the ALLOC() proposal very
+well.
+
+> We allow declarations in the middle of code these days because we
+> needed it for the guarding macros, so this would be a new kind of
+> interface that dos that.
+
+Yeah, that does make part of it easier.
+
+> And no, I'm not married to that disgusting "ALLOC()" thing. I'm
+> throwing it out not as TheSOlution(tm), but as a "this interface
+> absolutely needs clarity and must stand out syntactically both to
+> humans and the compiler".
+
+What about making the redundant information the type/var itself instead
+of just the size info of the existing API? For example:
+
+	ptr = kmalloc_obj(ptr, GFP_KERNEL);
+
+as in, don't pass a size, but pass the variable (or type) that can be
+examined for type, size, alignment, etc info, but still require that the
+assignment happen externally? In other words, at the end of the proposed
+macro, instead of:
+
+	(P) = __obj_ptr;
+
+it just does:
+
+	__obj_ptr;
+
+so that the macro usage can't "drift" towards being used without an
+assignment? And this would work for the "return" case as well:
+
+	return kmalloc_objs(struct foo, count, GFP_KERNEL);
+
+That would be a much smaller shift in the "usage" of the exist API.
+
+Shall I refactor this proposal for that?
+
+-- 
+Kees Cook
