@@ -1,80 +1,87 @@
-Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFA31F5847;
-	Sat, 15 Mar 2025 17:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D8C191F60
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 17:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742060893; cv=none; b=KmJjm1bOW1SoF3/E38JIYYi0dPVL5sPWKmFnUmzjHVuTrKJGlxNOIQQQOWaAHg/FfbAhNodsRhm70XldhbWaq3jONlqrWwZ2W4Bqn6tguRnnS/bGkQTPgILHz8WQF9EzJwQ44FqbNgrG9qT7ahgbok+A/9OokeGfFrxUifRPy0I=
+	t=1742060987; cv=none; b=n9IwW6MSota52JIqXp1Vjpc7GetI+5f7bmglZvPjT4foxqODmptEHNX/D+BmpYblFMuOQDCLRzCDQQ/XN4zmd7/SniUPNEIv9Yh8cp8cLi/pa32u5PydiBsb38nuCEE45JAtlwONMpcg7WQTR6JGh4qGQZZARv/F3tkP6VXeGA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742060893; c=relaxed/simple;
-	bh=RfWdd+iWooQft/JQ8SdLIg0TGNmFGd3defhv4cFGeYc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jULRHH/nJ2kISp7T5VU3mqWQaN2hpIqqgXKxffFZmFyiDfDQ0ouwgn8KBSTMVlA3Ib7t3kLnFIKr6HsE2NWViAFvIwQ/1qR/p330euPU701zYrWCzk52nzgq0keOZ793Sq5em5sY85AyNL8g61OoON6/iHEIymafKdTcDpySbmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=BwEMJi2P; arc=none smtp.client-ip=79.135.106.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1742060987; c=relaxed/simple;
+	bh=rR4VRO/qCn9tibn4IiHZRnKTQxDzvVTiAx2JBG5cZJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MxX2gQMUJRBx2gQWP7v9WehCFgLXjSpYfWXy036Ibt1rrIog1R1m/RahVVbkBRqVxb7Xz3SZxsip6i95UUFXRSizdgJP1J3VP9m+4xhlaRRwfZ4GSutiXIEQxnYDHgO996Gfv4eWnADGM+Ru5gv/XQLegwzGXtH1+UDQncI1tQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LVtOFiDf; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="BwEMJi2P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742060889; x=1742320089;
-	bh=VtOFGapc7Hrt2pxDRBLYPcGygqLzAZFo+RD/jsMgI5k=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=BwEMJi2PL1DFvKgfMGsoGkUljR2PXCB+/15LBqPuAVGcYIEl0IEwJ7E5LuR03qGaH
-	 P9Quh9kdfw0SWeDmrz+SkoV5BfBQI1lJxwgFWVTebuEdf96koZttypj/dRgQAXISAb
-	 KUhmFO6xznZxxCZyaALTfmq4sun2/UpREH8Do0i9eLfLKJtiV+kaPdPT1uRumOPTRx
-	 TzJmMC03p92EUED0Id4iUpj2FH0ume1bhloTuWZIj1WdXRFPPRiioIlfEfNh0Wh1/w
-	 mTYGpUtetGLFIu1GOF2yZ6Xod8zyykE5m/wfRYHmspLihDOfpP4FAYyxg5AELEIEYA
-	 wpg3XwU87NaBw==
-Date: Sat, 15 Mar 2025 17:48:03 +0000
-To: Alexandre Courbot <acourbot@nvidia.com>, Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust/revocable: add try_with() convenience method
-Message-ID: <D8H11HOL93UD.31F853PYJA9U2@proton.me>
-In-Reply-To: <D8GWQXK312SX.2RI3EOHM1QGG3@nvidia.com>
-References: <20250313-try_with-v1-1-adcae7ed98a9@nvidia.com> <D8F7D2RPRVAO.2EF39MZXM6FPR@proton.me> <D8F8E4PBHK7O.399Y83M1L3XK3@nvidia.com> <D8F91L51P2EA.2FBHGJYSV06HY@proton.me> <Z9L-Z4Aw64Hi5Lj8@pollux> <D8FBUHBNPIEL.5A8GOEMPJSEA@proton.me> <D8GWCWYM15WI.3II7R71LIAEI9@nvidia.com> <Z9WL-95sJ0DCpaPa@pollux> <D8GWQXK312SX.2RI3EOHM1QGG3@nvidia.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 3c6b8247cf645c614ea56d9a7e76be0677e8c9d1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LVtOFiDf"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742060984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cmS5hv6xwjGOhhAkz0IaR50zSoZuuoSBRO/S5eqp4mA=;
+	b=LVtOFiDfJTfbraclra86x+fCaQarFRpDuvgbtcbJPyfEGkmeTvyYet4jd9Nwe7MYVclJnn
+	uuJLQQVD62W9ZBqiSKhDpcCrLRrD//QYT9PyfmzobpzgN56PeZJewgqDV+tc22Dfa0cBft
+	3TEADM+PDuzpeOAVrq4zauWky81Tgxs=
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: [PATCH 1/9] memcg: remove root memcg check from refill_stock
+Date: Sat, 15 Mar 2025 10:49:22 -0700
+Message-ID: <20250315174930.1769599-2-shakeel.butt@linux.dev>
+In-Reply-To: <20250315174930.1769599-1-shakeel.butt@linux.dev>
+References: <20250315174930.1769599-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat Mar 15, 2025 at 3:26 PM CET, Alexandre Courbot wrote:
-> On Sat Mar 15, 2025 at 11:17 PM JST, Danilo Krummrich wrote:
->> On Sat, Mar 15, 2025 at 11:07:44PM +0900, Alexandre Courbot wrote:
->>> I suppose drivers could add their own macros to do that automatically
->>> and reduce code verbosity, at the cost of less cohesion across drivers.
->>> Guess I'll go with that if I cannot come with anything better.
->>
->> Maybe we could do something more specific but yet generic on top (for th=
-e
->> use-case above), but we still can't assume the exact error code a driver=
- wants
->> to derive from failing try_access(). So, maybe a driver specific wrapper=
- is
->> indeed what you want on top of what this patch provides.
->
-> So be it! It's not that bad and more flexible in the end.
+refill_stock can not be called with root memcg, so there is no need to
+check it.
 
-You could have the following signature:
-
-    fn try_access_with<R>(&self, on_vacant: Error, f: impl FnOnce(&T) -> Re=
-sult<R>) -> Result<R>;
-
-That will use the `on_vacant` error instead of hard coding ENXIO. But
-maybe it's better to just have such a wrapper in drivers that actually
-need it (ie even with the concrete error specified and not a parameter).
-You'll know better through actually trying to write a driver.
-
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 ---
-Cheers,
-Benno
+ mm/memcontrol.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index b29433eb17fa..c09a32e93d39 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1883,6 +1883,7 @@ static void __refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ 		drain_stock(stock);
+ }
+ 
++/* Should never be called with root_mem_cgroup. */
+ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ {
+ 	unsigned long flags;
+@@ -1892,8 +1893,6 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ 		 * In case of unlikely failure to lock percpu stock_lock
+ 		 * uncharge memcg directly.
+ 		 */
+-		if (mem_cgroup_is_root(memcg))
+-			return;
+ 		page_counter_uncharge(&memcg->memory, nr_pages);
+ 		if (do_memsw_account())
+ 			page_counter_uncharge(&memcg->memsw, nr_pages);
+-- 
+2.47.1
 
