@@ -1,84 +1,74 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AD01DC9BE
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 11:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D587E1E7C0A
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 11:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742039460; cv=none; b=Xcw3MBVV+Fm9pBlD/4kbxWt85qMqJVDzHqW4WMYJnPV73dY0YAIctkFbk0NzjulZrqTKf/JXYcT4tTIlZnDrO2rrv6xrZkEyW1gdF9V3tVgEFu/8bQNvtvxC6EzusxbwU0Cza2MSKQq9Q/j4oWb8rYNsy8AWAqYmbLkc0Kf9TiU=
+	t=1742039593; cv=none; b=jdSAiw9O4ESbkoXaYS6DlHqVxTVR1pv+3D7Ol2B7GRpzKakrwJcaf4magzQzVQNdj8dljJC7b2hYFR/WQGfhS0Ostf0G8D08+F4kpZjjp656Tbpsic4ceylxw8RZ/NL/4g0EbsnU9tontUM2vZj+HvYXOxIQIbCJBA9lCq1K1B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742039460; c=relaxed/simple;
-	bh=1D6lAFNvZkY/dKLEAUoPgWaSMr8SYuIxR3o+zNOwE4k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i6Km/MYQhP557Dp7EyYnbS/aLvoWzDKAFLCXl93tNFym+fGzxP5/KlZrmN3JQfpr28BNGg/znB/t2i3jgkDqApi2zR95FQaXYAwlQbs/cxNJKZGVTmNh/AgIT/SiDA631cFyiF4qkNJxPvdAJ5GOLWjI4VC2QYxeamzuT5R6JM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZFKH05shYzDssM;
-	Sat, 15 Mar 2025 19:47:40 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3CF331401E9;
-	Sat, 15 Mar 2025 19:50:53 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
- (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 15 Mar
- 2025 19:50:52 +0800
-From: Yue Haibing <yuehaibing@huawei.com>
-To: <jani.nikula@linux.intel.com>, <rodrigo.vivi@intel.com>,
-	<joonas.lahtinen@linux.intel.com>, <tursulin@ursulin.net>,
-	<airlied@gmail.com>, <simona@ffwll.ch>, <tzimmermann@suse.de>,
-	<dev@lankhorst.se>
-CC: <intel-gfx@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/i915/display: Fix build error without DRM_FBDEV_EMULATION
-Date: Sat, 15 Mar 2025 20:01:43 +0800
-Message-ID: <20250315120143.2344958-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1742039593; c=relaxed/simple;
+	bh=jCIsUbojM8GGNQ9TWGqtaIdEb+WFr4/YRzN7pMtbxdg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=dFdD2oLfmpkFq8olLZmpLB0xJPluLVR1bgctwfotp4tNCAYEB34iS2UUoLSJWlDrXz6mtxxFioQxEBGV3EDFks6xCY4cDpV49RDulK+NAf8C7MBpFsuVjLBAS2SvCzP5uR0g6Y+5KHpZSGCnuQeNZ0twffgirfHK3FiHkvxokfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=wiogVGvx; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="wiogVGvx"
+Message-ID: <4a061ceb-8504-43ae-b1eb-a5ab43811de7@iencinas.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
+	s=key1; t=1742039581;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u/6DWrZP0BJl7yUQxfX+w5LV75EPaYNOf8tgfikWeYI=;
+	b=wiogVGvxFXYs/yu/9A804lHOYIwktZ4HOs9e6GR5KS1NxCjL8gI0FJson9X7I5CzGQvErB
+	txYqfhYI8b4U7PTE9CIJcK/37pcdDzWHSPSYud1BUyJt4qtaCOBR5su3lNTBhNC6vzMk8G
+	7K0ExtSJ4X1LtIszeCUelaRYN64BqxcksL5A3R3Lz4Vw9WFeJgraoQfUjSkDA1eOVAPn4s
+	v06blf05lX0d0sWLRg5bITO0m40iN8dUhWOhrbZeVIIk+vWr48QyBZY3N+LaGzvKkcDtRs
+	ZB+xKfofzBZ388PuMXOiIOvzFbkvVmMt/WQd80xxV76+FwJuZ3HdcHvrttSvMg==
+Date: Sat, 15 Mar 2025 12:52:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ignacio Encinas Rubio <ignacio@iencinas.com>
+Subject: Re: [syzbot] [mm?] KCSAN: data-race in try_to_migrate_one /
+ zap_page_range_single
+To: syzbot+419c4b42acc36c420ad3@syzkaller.appspotmail.com
+Cc: akpm@linux-foundation.org, hughd@google.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ syzkaller-bugs@googlegroups.com, linux-kernel-mentees@lists.linux.dev,
+ skhan@linuxfoundation.org
+References: <67b44eb7.050a0220.173698.004a.GAE@google.com>
+Content-Language: en-US
+In-Reply-To: <67b44eb7.050a0220.173698.004a.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-In file included from <command-line>:
-./drivers/gpu/drm/i915/display/intel_fbdev.h: In function ‘intel_fbdev_framebuffer’:
-./drivers/gpu/drm/i915/display/intel_fbdev.h:32:16: error: ‘NULL’ undeclared (first use in this function)
-   32 |         return NULL;
-      |                ^~~~
-./drivers/gpu/drm/i915/display/intel_fbdev.h:1:1: note: ‘NULL’ is defined in header ‘<stddef.h>’; did you forget to ‘#include <stddef.h>’?
-  +++ |+#include <stddef.h>
-    1 | /* SPDX-License-Identifier: MIT */
-./drivers/gpu/drm/i915/display/intel_fbdev.h:32:16: note: each undeclared identifier is reported only once for each function it appears in
-   32 |         return NULL;
-      |                ^~~~
+Hello!
 
-Build fails if CONFIG_DRM_FBDEV_EMULATION is n, add missing header file.
+This seems like a recurrent complaint from KCSAN (other examples are
+[1], [2]). 
 
-Fixes: 9fa154f40eb6 ("drm/{i915,xe}: Run DRM default client setup")
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/i915/display/intel_fbdev.h | 2 ++
- 1 file changed, 2 insertions(+)
+From what I understand looking at the source code, imprecise reporting 
+of the maximum resident set size is considered to be acceptable.
 
-diff --git a/drivers/gpu/drm/i915/display/intel_fbdev.h b/drivers/gpu/drm/i915/display/intel_fbdev.h
-index ca2c8c438f02..89bad3a2b01a 100644
---- a/drivers/gpu/drm/i915/display/intel_fbdev.h
-+++ b/drivers/gpu/drm/i915/display/intel_fbdev.h
-@@ -6,6 +6,8 @@
- #ifndef __INTEL_FBDEV_H__
- #define __INTEL_FBDEV_H__
- 
-+#include <linux/types.h>
-+
- struct drm_fb_helper;
- struct drm_fb_helper_surface_size;
- struct drm_i915_private;
--- 
-2.34.1
+Annotating `hiwater_rss` as `__data_racy` [3] should make KCSAN happy. 
+Would this be an acceptable change? Another possibility would be making 
+the update from `update_hiwater_rss` atomic, but it doesn't seem worth 
+the potential slowdown.
 
+Let me know if my proposal works for you.
+
+Thanks!
+
+[1] https://syzkaller.appspot.com/bug?extid=73d65fc86d6338db5990
+[2] https://syzkaller.appspot.com/bug?extid=31cd52ba68feee156393
+[3] https://docs.kernel.org/dev-tools/kcsan.html#selective-analysis
