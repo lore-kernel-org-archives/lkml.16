@@ -1,72 +1,101 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8D7EC2
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 00:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC589184
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 00:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741996987; cv=none; b=X5q1sk0qynuvF7Zta+StFT4XshI1Z9bQj7AAZLi85J7Td42nJ0aKTgtyLjKCHTT9Tr8658DXsQBw+SrFRIDwJqHE223RzUGCjJf+esyXZXlMyDhc5esbukQ3emSZTtj6SC5+LdMsYQWq8JERdSTVnGD6tC6uvtSLW8sgcejLBk0=
+	t=1741997137; cv=none; b=JhgX2ZCiJsapzETgFH8VZ8yRmwjG5vjb1o5hWttjGhyf5oHnXivl5dHjEMA1g82wuEeMggFgYbhQsH9PYad/5Zfprl3RRy8Er7yG/Lzc4E3h+LjW7pqpwZMqI+cW/70PtBw4ev3H5cTeufvZbDFpawhTPXIPL4DX89tmhAlaHko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741996987; c=relaxed/simple;
-	bh=SvOXA2p+/PRAuWrQkjWb/jZQJGKKE9OND9HPQrQ4k1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CjETLxt95NxkqWv18uBC9bTk1oaFab6wQvzT751U9+NFqrKgw2afHkmYgXnVtk+YhrcTfJwH/pxDuYPgBeYPe/Kjimv7a1oyTVO1TRfxWT9yY8wa2Cv/Y0BC1Gu5E3tyRaEFqH7wo80lr5v4OGw4JW6vZ7LJen4daxccWodlcVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uJCfd8Xn; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741997137; c=relaxed/simple;
+	bh=M/snCJZcOTzV0RZogI1SxmL2NWqUOAdHzcd3g7E6NN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gC7fGloVCSsg5upkIji2bSPI5hL8vPrX5aoLaxzorKKJF0U2cf8P6bobnHqNfJGVrkAx/G0VLoSRfb3CwwhHKBNjB59de2mRfo8LyGVLvgVhGI+cctKAEbqoLE0IPa8tEmQQDgP/9ltZLoCfKD5Kch4++jpCl6dIlwKBgxGaoDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qmqtxevp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uJCfd8Xn"
-Date: Fri, 14 Mar 2025 20:02:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741996980;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=ZXAi8mk59ja0n8uFit/KogLV8pXjQxSe60D7nsen6Ow=;
-	b=uJCfd8XnHEiPIZl7AQKo0O1xN7S7T56AVQgFCDcPipgRTbEFy192walRtutZJKvS1QSyoo
-	A8tK5NASML9WMiAcLhs5oTxX4sjl+sz5v6Z8Q3Gc5SpWCZgTfiRqt18x1uPQ0j066IzZDA
-	+QZx8LBRK+xnzV2M8echKqBlrG2IfKc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qmqtxevp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CA9C4CEE3;
+	Sat, 15 Mar 2025 00:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741997137;
+	bh=M/snCJZcOTzV0RZogI1SxmL2NWqUOAdHzcd3g7E6NN0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qmqtxevp4xo6njHI43QoCbEc5bUWxfqZTr1zrHnuO8XRC2I+qeNPj9MdAjAyhcvHe
+	 9e1MRlK1c5rkM1LhfpkUWNt6ouNqFd1RyawqBB+KhXdBIDgxI64l+uXMdv79cEJO1M
+	 TE/FZOm3Vkqsw7S6+SVPQ2CqpN3T81nFqjXthvPbkHe80fIOCdUx48XVaq9xXCv1eL
+	 zPkPNscALE/hvki/SfODm9JTgofrx40uBNwUiFnAwIWrj5BAtefB+qPNqyUsJ9mfTt
+	 AvNy3xrmfDXoA/M+g9Nf/WW87jTojXOXONF8f1yiRZPMgNCpCoRU0rb1Pi31Ok2LES
+	 DbPq7rVdIkj6Q==
+Date: Fri, 14 Mar 2025 17:05:34 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs hotfixes for 6.14-rc7 v2...
-Message-ID: <r6wusnyqqcmnamampwguyscjpvgwrnwhipsglryaltnofmmkf3@7b4fixf5q2qg>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Uros Bizjak <ubizjak@gmail.com>, Andrew Cooper <andrew.cooper3@citrix.com>, 
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 14/20] x86/barrier: Use alternative_io() in 32-bit
+ barrier functions
+Message-ID: <zfabhk7c3fucov7lpfsqf5bj7iie5324ccgn4ingzzakoyhl4u@fzg364keuphn>
+References: <cover.1741988314.git.jpoimboe@kernel.org>
+ <1c2fe7f93c4dd8a87c2e1fa8b780a8a2968be445.1741988314.git.jpoimboe@kernel.org>
+ <CAHk-=wjtvTPERDdrok2kDrSSFBjqHCCNVff95VVxhvP6wCC6jg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <CAHk-=wjtvTPERDdrok2kDrSSFBjqHCCNVff95VVxhvP6wCC6jg@mail.gmail.com>
 
-You'll be wanting this one too...
+On Fri, Mar 14, 2025 at 01:49:48PM -1000, Linus Torvalds wrote:
+> So all of these patches look like good cleanups to me, but I do wonder
+> if we should
+> 
+>  (a) not use some naming *quite* as generic as 'ARG()'
+> 
+>  (b) make the asms use ARG_OUT/ARG_IN/ARG_CLOBBER() to clarify
+> 
+> because that ARG(), ARG(), ARGC() pattern looks odd to me.
+> 
+> Maybe it's just me.
+> 
+> Regardless, I do think the series looks like a nice improvement even
+> in the current form, even if that particular repeated pattern feels
+> strange.
 
-The following changes since commit 9c18ea7ffee090b47afaa7dc41903fb1b436d7bd:
+So originally I had ASM_OUTPUT/ASM_INPUT/ASM_CLOBBER, but I ended up
+going with ARG() due to its nice vertical alignment and conciseness:
 
-  bcachefs: bch2_get_random_u64_below() (2025-03-13 12:40:22 -0400)
 
-are available in the Git repository at:
+	__asm_call(qual,						\
+		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
+			    "cmpxchg8b " __percpu_arg([var]),		\
+			    X86_FEATURE_CX8),				\
+		ARG([var] "+m" (__my_cpu_var(_var)), "+a" (old__.low),	\
+		    "+d" (old__.high)),					\
+		ARG("b" (new__.low), "c" (new__.high), "S" (&(_var))),	\
+		ARG("memory"));						\
 
-  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-03-14.2
 
-for you to fetch changes up to 1a2b74d0a2a46c219b25fdb0efcf9cd7f55cfe5e:
+Though ASM_OUTPUT/ASM_INPUT/ASM_CLOBBER isn't so bad either:
 
-  bcachefs: fix build on 32 bit in get_random_u64_below() (2025-03-14 19:45:54 -0400)
+	__asm_call(qual,						\
+		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
+			    "cmpxchg8b " __percpu_arg([var]),		\
+			    X86_FEATURE_CX8),				\
+		ASM_OUTPUT([var] "+m" (__my_cpu_var(_var)),		\
+			   "+a" (old__.low), "+d" (old__.high)),	\
+		ASM_INPUT("b" (new__.low), "c" (new__.high),		\
+			  "S" (&(_var))),				\
+		ASM_CLOBBER("memory"));					\
 
-----------------------------------------------------------------
-bcachefs hotfixes for 6.14-rc7
 
-- change an assertion to an ERO that a user hit doing the 6.14 upgrade
-- fix 32 bit build breakage
+That has the nice benefit of being more self-documenting, albeit more
+verbose and less vertically aligned.
 
-----------------------------------------------------------------
-Kent Overstreet (2):
-      bcachefs: Change btree wb assert to runtime error
-      bcachefs: fix build on 32 bit in get_random_u64_below()
+So I could go either way, really.
 
- fs/bcachefs/btree_update.h       |  8 ++++++++
- fs/bcachefs/btree_write_buffer.c | 21 ++++++++++++++++++++-
- fs/bcachefs/util.c               |  3 ++-
- 3 files changed, 30 insertions(+), 2 deletions(-)
+-- 
+Josh
