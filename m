@@ -1,62 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29921DAC81;
-	Sat, 15 Mar 2025 09:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D221F55EF;
+	Sat, 15 Mar 2025 09:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742031207; cv=none; b=W/RcllQOKgrmkEihj3HlvLqRkxIILG75DQPxw3+zBJ2nOnvr4T/3poUPEWl6wwEVYmXSc25PTxf1YFYclp+Pc8A8grx0+EVBEnOnNw6h147eOoJOglZKTvextX+qQyyHd/2bGcOIeLqBgvVjBjPUnl7hupG2VC9LJdjfJ20pJ+8=
+	t=1742031297; cv=none; b=VaWPWVEVH1S6IwYH6lKVZ7sG7XxgZPxtNKzPlnJ2JxvyJVbe3TiXYH3m/YKbX7En/k8x9PQM7L5FhqsdZEkQTnDNQT3CuF02iiTW7s88guyQGL/gZYlRbl4d1J+v3kDDn1yKyvcCZYZ5Ra/JrrCm6e582LGDMkA062qbPRFXujE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742031207; c=relaxed/simple;
-	bh=hLe6wa9odyEnA3It722yJ8dVV+PjRiY+JFKH4DQLSBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d6UYrqVvs1vp92E79greEDyd0OYWPlYqZdbGJoAHs7B8duj6PfeQyJLdVBHNUkaEyZkO4sZrFuICOd5hvnhwXgfuiIDFj4CtxTiCWhwddFZ+G01b2cMMr2VTNfVOuN9H4P5/js81ZFr6EOp11ui6SgcDxFWaM6WXP0P4ZM7uHjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SPKjC0wb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742031297; c=relaxed/simple;
+	bh=hNzSGeM9w6XNPYNUplk+W0RxLfc6Ek9uwsXvUt0eEuQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p3RT39zBDVRHx3akc4TVFvGD+lxVd+dDYZE+8kt9n1R7glaPPQq9aqAYQuTwpjyuXRR0/X+YZIZfcGQWnWyE0T1LHpHornn8d8UfxkeModJi1/Zefpq7MPZLzpGGV2HsKd7pWspVqN9WM8PlAM++nlg3cW63wbsp/rqf21o/N4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=lLYkVZ7W; arc=none smtp.client-ip=79.135.106.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SPKjC0wb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7797C4CEE5;
-	Sat, 15 Mar 2025 09:33:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742031207;
-	bh=hLe6wa9odyEnA3It722yJ8dVV+PjRiY+JFKH4DQLSBM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SPKjC0wbTmpKraRwJqd3wvkMsebcccvQfR0nTf1KOtaU7TNHa+sMVOwVrPObPgQo0
-	 7MHBNmljOBX0Vks2HXUZwAp5GWgJ/SAiEuu0uIFpBm2HJvJvRohq1rA4vzrVqjtcIe
-	 nhSRHaBL3+xukaOGXzj1d0HT7eNX2hYDMovC8ZSs=
-Date: Sat, 15 Mar 2025 10:32:08 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Ethan Carter Edwards <ethan@ethancedwards.com>, tytso@mit.edu,
-	ernesto.mnd.fernandez@gmail.com, dan.carpenter@linaro.org,
-	sven@svenpeter.dev, ernesto@corellium.com, gargaditya08@live.com,
-	willy@infradead.org, asahi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [RFC PATCH 0/8] staging: apfs: init APFS module
-Message-ID: <2025031554-agreeing-ammonium-58aa@gregkh>
-References: <20250314-apfs-v1-0-ddfaa6836b5c@ethancedwards.com>
- <2025031529-greedless-jingle-1f3b@gregkh>
- <20250315-gruft-evidenz-d2054ba2f684@brauner>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="lLYkVZ7W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742031287; x=1742290487;
+	bh=2YpOaSrR4hSpqfGZqahP1NQlMMYBu1x+CopCGLc8TCw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=lLYkVZ7WsxbKWWPw215MDyByXyYk2sMT04se/nnfaXXROFTTQ2IrlSeAE0ztiAqqn
+	 OAJMwAJKmCPp7LzaOH3hgyMk2JpZ5qM7ODp9RHPOETqJBtRgGmfxmM6jSPhWW2dBum
+	 QdU/uZrPPrxz19dkDlwNQyB4lOvKT939syCP5SzdMyrqHac41JwAmDEz0W9IsFOj2u
+	 G/OcKTUAbrQ2BBAKsmalD23hOSXZpRBnaHqNPvE2yLBp7VKj9cXBjPwthnAoQecDmX
+	 qSzdOY1s8MdTQOTACXkRtiPRb/ZJv1Viox8Of0hdoBQlaeVTq6grwpXwBwJu9Bl6oM
+	 1Q/HO8GpE0V+A==
+Date: Sat, 15 Mar 2025 09:34:42 +0000
+To: Boqun Feng <boqun.feng@gmail.com>, Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] rust: use strict provenance APIs
+Message-ID: <D8GQJQFGKB8C.DZBUZT4IJIM0@proton.me>
+In-Reply-To: <67d4a57f.c80a0220.16ff45.9cf1@mx.google.com>
+References: <20250314-ptr-as-ptr-v3-0-e7ba61048f4a@gmail.com> <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com> <67d4a57f.c80a0220.16ff45.9cf1@mx.google.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 5e603b89734b66f978da35e7885d24202eac65c5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250315-gruft-evidenz-d2054ba2f684@brauner>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 15, 2025 at 10:18:23AM +0100, Christian Brauner wrote:
-> > But I'll wait for an ACK from the filesystem developers before doing it
-> > as having filesystem code in drivers/staging/ feels odd, and they kind
-> > of need to know what's going on here for when they change api stuff.
-> 
-> Sorry, I don't want new filesystems going through the generic staging
-> tree. Next week during LSFMM we can discuss a filesystem specific
-> staging tree that is directly maintained as part of fs so it's tightly
-> integrated. We're going to talk about two new filesystems anyway.
+On Fri Mar 14, 2025 at 10:54 PM CET, Boqun Feng wrote:
+> On Fri, Mar 14, 2025 at 08:28:10AM -0400, Tamir Duberstein wrote:
+> [...]
+>> --- a/rust/kernel/alloc.rs
+>> +++ b/rust/kernel/alloc.rs
+>> @@ -217,7 +217,7 @@ unsafe fn free(ptr: NonNull<u8>, layout: Layout) {
+>> =20
+>>  /// Returns a properly aligned dangling pointer from the given `layout`=
+.
+>>  pub(crate) fn dangling_from_layout(layout: Layout) -> NonNull<u8> {
+>> -    let ptr =3D layout.align() as *mut u8;
+>> +    let ptr =3D crate::with_exposed_provenance_mut(layout.align());
+>
+> Dangling pointers don't have provenance, neither has its provenance been
+> exposed. I think should use `without_provenance_mut()` here:
+>
+> =09https://doc.rust-lang.org/std/ptr/fn.without_provenance_mut.html
+>
+> see also the source of core::ptr::dangling().
 
-Great, then I'll not worry about this patch series at all, thanks!
+Good catch.
 
-greg k-h
+> The rest Rust code changes look good to me. Although I would suggest you
+> to split this patch into several patches: you can do the conversion from
+> "as" pattern to provenance API one file by one file, and this make it
+> easier for people to review. And after the conversions are done, you can
+> introduce the Makefile changes.
+
+I think it's fine to do several of the `as` conversions in a single
+patch, but splitting off the makefile changes is a good idea.
+
+---
+Cheers,
+Benno
+
