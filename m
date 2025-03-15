@@ -1,115 +1,99 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AE517995E;
-	Sat, 15 Mar 2025 15:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1D917995E;
+	Sat, 15 Mar 2025 15:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742052012; cv=none; b=EzJYA/+vHdaTNJZLSt4UMxwSzhvnic01pQtXmu0sDRQu7vo3j+65qjG6Zuqm1Ev9m0Pc4YpLK3XB5JPldiAyfeACWsXUURjM20CZ+/KRngy78IcbLT1jHVz416hikftxNZwTnKyuYHHwCoZhgWdtoPWH84RY5+rVlcFHVfYzzNI=
+	t=1742052054; cv=none; b=VDH/BjF+sCpWMd/74WeIm8etwG5nrIzDvq1d2cozm4wfnjR6eIuOWJ11P1pWLNuOIckVBQ7jabgabPuw1KwqoASXNXcM7p/Pd/gRLaByaLYew0DN0Y7kfl411gSNUl9iLLsXfJQGOzSXDHH/Uq86BfUL/4Sm26AK3lZP27de5rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742052012; c=relaxed/simple;
-	bh=BLyaZUHseqZRKVrYZFgpsHIaBAuyrPcaGkIm0az2Pfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QcGN8jf86YrtVAImukaP3rxJCKfyHZkXkB1EMcjpBmPhep8Dxjxm0jGHnRsuFEpuoc8o3vf+C7mzkSD2fl3sebl7PG0H8SCcvrAL7aG0OsUULFTkQTYNUCAr9HZcHrkj4PqAobMmA+pFNNa7MNi0ZsjgEIO+ZaMrjiX77blusyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=XljJRAP4; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1742052054; c=relaxed/simple;
+	bh=08eKfAUvxdmkmUvYQ9Z9AT/EYdDCAc7pdtIm2LqpGzA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=D1tYg7RndnSlMX6vvdB13F3a5TIozHsrKXkEsGCRJZw63K2SWfHcMbR3plZVh8S6CuS0GmY22/aijF7o2kbJN9P+ShQyDCrfGiHj3qkxn6VWAGhIdPwvKUSbHhmaPMK1dvL3biI7f6hxwJ7893KObXELZtHp5jALRI40TJIw7OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=mznAtxiI; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="XljJRAP4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1742052007;
-	bh=BLyaZUHseqZRKVrYZFgpsHIaBAuyrPcaGkIm0az2Pfc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XljJRAP47ZCovRdeQRQACh8MrqcP1vXA5w1A40LOg/j0KHCxGuSH4H+9b0IorhTpy
-	 nnaiTCINCl3K8kNnSvueijsluH0bwI0LzGJNT2xAZ4yiENz/vy7blkbCO3lcb2T/25
-	 86U0p6pbicEvQXDg62esKEcQITbRx/hcn7UMpIic=
-Date: Sat, 15 Mar 2025 16:20:06 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Christian Heusel <christian@heusel.eu>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>
-Subject: Re: [PATCH] kbuild: pacman-pkg: hardcode module installation path
-Message-ID: <82730f15-67af-4425-9320-13e8fa286159@t-8ch.de>
-References: <20250315151522.2766939-1-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="mznAtxiI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1742052044; bh=08eKfAUvxdmkmUvYQ9Z9AT/EYdDCAc7pdtIm2LqpGzA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From:To:CC:
+	 Subject;
+	b=mznAtxiI1kJuIBGKAbfrHe6w8x8MA9DVTQPXk3d0my5iXVoXYyYABprKtB8tsWFBP
+	 IkwTRc8+ap+WYBbwmrQWhSV0m9CL4aXTKUwg+EgWYk7H2Q9v6S26SmWQmn3h0tVjKP
+	 PW4Hjph9jWSGlvjfSp3NqEYZMytJJebnCfFwlyQ8ItHpvN4IJwIJDGSJJj5nlIG8oB
+	 f4y7PpcYRkrZFk59ynAPhYK+hN15mdRnsw+QqcsHbs4b5jq0Ljql5F3KPCtWe0TtvX
+	 KOr+N2VQNrjSOSmQLSHS85rICmx9EfETv2j5XneoH+uB+VGhSTk9d7F9MyrYqRj2pR
+	 UEDCDnkIFd04Q==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4ZFQ0q6mX6z8tyl;
+	Sat, 15 Mar 2025 16:20:43 +0100 (CET)
+X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:361f:c600:5210:4b80:a502:1f98
+Received: from localhost (unknown [IPv6:2001:9e8:361f:c600:5210:4b80:a502:1f98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX1/OU7HXrel01HL8JhXs/U6F2fHJ1Gpb/vM=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4ZFQ0m590Xz8sYS;
+	Sat, 15 Mar 2025 16:20:40 +0100 (CET)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Eduard Zingerman <eddyz87@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,  Daniel Borkmann
+ <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>,  Martin
+ KaFai Lau <martin.lau@linux.dev>,  Song Liu <song@kernel.org>,  Yonghong
+ Song <yonghong.song@linux.dev>,  John Fastabend
+ <john.fastabend@gmail.com>,  KP Singh <kpsingh@kernel.org>,  Stanislav
+ Fomichev <sdf@fomichev.me>,  Hao Luo <haoluo@google.com>,  Jiri Olsa
+ <jolsa@kernel.org>,  Puranjay Mohan <puranjay@kernel.org>,  Xu Kuohai
+ <xukuohai@huaweicloud.com>,  Catalin Marinas <catalin.marinas@arm.com>,
+  Will Deacon <will@kernel.org>,  Hari Bathini <hbathini@linux.ibm.com>,
+  Christophe Leroy <christophe.leroy@csgroup.eu>,  Naveen N Rao
+ <naveen@kernel.org>,  Madhavan Srinivasan <maddy@linux.ibm.com>,  Michael
+ Ellerman <mpe@ellerman.id.au>,  Nicholas Piggin <npiggin@gmail.com>,
+  Mykola Lysenko <mykolal@fb.com>,  Shuah Khan <shuah@kernel.org>,
+  Henriette Herzog <henriette.herzog@rub.de>,  Cupertino Miranda
+ <cupertino.miranda@oracle.com>,  Matan Shachnai <m.shachnai@gmail.com>,
+  Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,  Shung-Hsi Yu
+ <shung-hsi.yu@suse.com>,  Daniel Xu <dxu@dxuuu.xyz>,  bpf@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  linuxppc-dev@lists.ozlabs.org,  linux-kselftest@vger.kernel.org,  George
+ Guo <guodongtai@kylinos.cn>,  WANG Xuerui <git@xen0n.name>,  Tiezhu Yang
+ <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH bpf-next 00/11] bpf: Mitigate Spectre v1 using barriers
+In-Reply-To: <f6f08d64c777a6022771ab0adf96cefb6b631d75.camel@gmail.com>
+	(Eduard Zingerman's message of "Fri, 14 Mar 2025 16:40:08 -0700")
+References: <20250313172127.1098195-1-luis.gerhorst@fau.de>
+	<f6f08d64c777a6022771ab0adf96cefb6b631d75.camel@gmail.com>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Sat, 15 Mar 2025 16:20:39 +0100
+Message-ID: <87seneqq0o.fsf@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250315151522.2766939-1-masahiroy@kernel.org>
+Content-Type: text/plain
 
-On 2025-03-16 00:15:20+0900, Masahiro Yamada wrote:
-> 'make pacman-pkg' for architectures with device tree support (i.e., arm,
-> arm64, etc.) shows logs like follows:
-> 
->   Installing dtbs...
->     INSTALL /home/masahiro/linux/pacman/linux-upstream/pkg/linux-upstream/usr//lib/modules/6.14.0-rc6+/dtb/actions/s700-cubieboard7.dtb
->     INSTALL /home/masahiro/linux/pacman/linux-upstream/pkg/linux-upstream/usr//lib/modules/6.14.0-rc6+/dtb/actions/s900-bubblegum-96.dtb
->     INSTALL /home/masahiro/linux/pacman/linux-upstream/pkg/linux-upstream/usr//lib/modules/6.14.0-rc6+/dtb/airoha/en7581-evb.dtb
->       ...
-> 
-> The double slashes ('//') between 'usr' and 'lib' are somewhat ugly.
-> 
-> Let's hardcode the module installation path because the package contents
-> should remain unaffected even if ${MODLIB} is overridden. Please note that
-> scripts/packages/{builddeb,kernel.spec} also hardcode the module
-> installation path.
-> 
-> With this change, the log will look better, as follows:
-> 
->   Installing dtbs...
->     INSTALL /home/masahiro/linux/pacman/linux-upstream/pkg/linux-upstream/usr/lib/modules/6.14.0-rc6+/dtb/actions/s700-cubieboard7.dtb
->     INSTALL /home/masahiro/linux/pacman/linux-upstream/pkg/linux-upstream/usr/lib/modules/6.14.0-rc6+/dtb/actions/s900-bubblegum-96.dtb
->     INSTALL /home/masahiro/linux/pacman/linux-upstream/pkg/linux-upstream/usr/lib/modules/6.14.0-rc6+/dtb/airoha/en7581-evb.dtb
->       ...
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Eduard Zingerman <eddyz87@gmail.com> writes:
+> I think it would be good to have some tests checking that nospec
+> instructions are inserted in expected locations.
+> Could you please take look at use of __xlated tag in e.g.
+> tools/testing/selftests/bpf/progs/verifier_sdiv.c ?
 
-Thanks!
+That looks very promising, I will look into it for v2. Thanks for the
+pointer.
 
-Acked-by: Thomas Weißschuh <linux@weissschuh.net>
+I guess it might be worth it to add __xlated to at least on test per
+nospec-related code path. If there are other rewrites at play that will
+make it harder to adapt the tests when the other rewrite is ever
+changed, but it might also help in catching interactions between the
+other rewrites and the nospec.
 
-> ---
-> 
->  scripts/package/PKGBUILD | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/scripts/package/PKGBUILD b/scripts/package/PKGBUILD
-> index 0cf3a55b05e1..452374d63c24 100644
-> --- a/scripts/package/PKGBUILD
-> +++ b/scripts/package/PKGBUILD
-> @@ -53,7 +53,7 @@ build() {
->  _package() {
->  	pkgdesc="The ${pkgdesc} kernel and modules"
->  
-> -	local modulesdir="${pkgdir}/usr/${MODLIB}"
-> +	local modulesdir="${pkgdir}/usr/lib/modules/${KERNELRELEASE}"
->  
->  	_prologue
->  
-> @@ -81,7 +81,7 @@ _package() {
->  _package-headers() {
->  	pkgdesc="Headers and scripts for building modules for the ${pkgdesc} kernel"
->  
-> -	local builddir="${pkgdir}/usr/${MODLIB}/build"
-> +	local builddir="${pkgdir}/usr/lib/modules/${KERNELRELEASE}/build"
->  
->  	_prologue
->  
-> @@ -114,7 +114,7 @@ _package-debug(){
->  	pkgdesc="Non-stripped vmlinux file for the ${pkgdesc} kernel"
->  
->  	local debugdir="${pkgdir}/usr/src/debug/${pkgbase}"
-> -	local builddir="${pkgdir}/usr/${MODLIB}/build"
-> +	local builddir="${pkgdir}/usr/lib/modules/${KERNELRELEASE}/build"
->  
->  	_prologue
->  
-> -- 
-> 2.43.0
-> 
+Also, thanks for the review of patches 2 and 3.
