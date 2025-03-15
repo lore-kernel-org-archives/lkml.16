@@ -1,30 +1,32 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1F62054FD
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 17:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62CA205516
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 17:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742060992; cv=none; b=H58vKZGi6cD4dGv6Umh3rWgHT46ydQmkxoFNMCO6ryylK9A9UMODWWLYLFcxLB04Hvu0Kbm81OW24klZlIz8MmUGoAL/jvWLVBNuIA5akamYcwRhRCUmEIlZrUUXDc/8Z5g5UJjKR9/EgTQgi9MAOh9Hr7g7LzFHLkYaoTjsEC4=
+	t=1742060993; cv=none; b=Ih7aG/qgua/J0dPdWZfqZDoXkpS3IC6Ft5YUxcFxzBKSKue4peN4SVP0+JkL6yVzusERZxLWvbSRq9oxS4ijnkUnkyFx6l5StXKuYKkmz0h4hXgHIqNDNUNleTVjYjNxa0QUSlSqMtOc4WUTyh1Tqh11iZ40fY9GYHlmoPktVIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742060992; c=relaxed/simple;
-	bh=8cNdWdSYzMhrZrBVVbo1LE44oP+rPuUJujztZ+GXkGI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JiKSs/215u0SpEHao3pfuSgMXoMwXOUULAiDMcLhtVt6ef0QOgcBheINVDUpH7b1qCi2634w2q6PGnrjvJdHlevsxxYCqLUVRV4q1OxrYiySg+D0JlfR5slanxBZtXTHYsGadicavaDVGtKNP9qVlG+udI0SeCwlBZ+LqPZVgy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ed6qPZeI; arc=none smtp.client-ip=91.218.175.174
+	s=arc-20240116; t=1742060993; c=relaxed/simple;
+	bh=0ftGgLW4/MlnZh9Fmz7q/GevfyJlJJyM4N09cbLOa4I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sx7B8pETvAxUYggL2D3ne7uE0W4ci/N33A1TShfb/6DCjTf4Ipxq4Oc1uZcVAsqTiAv8GZtFTLaN20aJe2ynuxTgELIMGsyuId2+cjcBKNIbi1et0NEk0qSPSluYq1fTWIZYSvHUbmCCdbnKN5a72Fe4WgFDW2+9TMPluoUDefc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EsH21tpo; arc=none smtp.client-ip=91.218.175.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ed6qPZeI"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EsH21tpo"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742060978;
+	t=1742060990;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ejPqcS6XBEDW+h9V+Y9XW4HLbyin3ylhe+1eBvNG0us=;
-	b=ed6qPZeIiPSadtsqQbti2BDAvMuGVp+62JrK8640TmWLwWGFfew+bL/75pqV9ke0yiBbXS
-	Fo+ndr5s/72UPECrjGjiTRietDubx7nZAtVIxRb0edimC5YSM1+foZr/mmQBiUBOhuJnV8
-	hkDYkWeeSM59NTfVL3C1eQlUo3DIIEg=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D9SGS5ZGVTJYUs7bi8rBcO4GG6XSRL+h8cbbja/hnd4=;
+	b=EsH21tpoGivxemQBYrsxMd+ru7bHcE8LYPnGChI+hOtYbRl8sO0Czs0Q7Br3PmMb9k9bpa
+	gce6M48m5W+CSQy02N7oSlHbmeiv0YDYjFi2vfK6zdqUHBTGYUDd4M1RiDkREBX83mGRH4
+	YD4a7IZYjimlw7tBXcpiVnolqcmcIyI=
 From: Shakeel Butt <shakeel.butt@linux.dev>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>,
@@ -37,9 +39,11 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,
 	cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH 0/9] memcg: cleanup per-cpu stock
-Date: Sat, 15 Mar 2025 10:49:21 -0700
-Message-ID: <20250315174930.1769599-1-shakeel.butt@linux.dev>
+Subject: [PATCH 3/9] memcg: introduce memcg_uncharge
+Date: Sat, 15 Mar 2025 10:49:24 -0700
+Message-ID: <20250315174930.1769599-4-shakeel.butt@linux.dev>
+In-Reply-To: <20250315174930.1769599-1-shakeel.butt@linux.dev>
+References: <20250315174930.1769599-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,32 +53,83 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-This is a cleanup series which is trying to simplify the memcg per-cpu
-stock code, particularly it tries to remove unnecessary dependencies on
-local_lock of per-cpu memcg stock. The eight patch from Vlastimil
-optimizes the charge path by combining the charging and accounting.
+At multiple places in memcontrol.c, the memory and memsw page counters
+are being uncharged. This is error-prone. Let's move the functionality
+to a newly introduced memcg_uncharge and call it from all those places.
 
-This series is based on next-20250314 plus two following patches:
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/memcontrol.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-Link: https://lore.kernel.org/all/20250312222552.3284173-1-shakeel.butt@linux.dev/
-Link: https://lore.kernel.org/all/20250313054812.2185900-1-shakeel.butt@linux.dev/
-
-Shakeel Butt (8):
-  memcg: remove root memcg check from refill_stock
-  memcg: decouple drain_obj_stock from local stock
-  memcg: introduce memcg_uncharge
-  memcg: manually inline __refill_stock
-  memcg: no refilling stock from obj_cgroup_release
-  memcg: do obj_cgroup_put inside drain_obj_stock
-  memcg: use __mod_memcg_state in drain_obj_stock
-  memcg: manually inline replace_stock_objcg
-
-Vlastimil Babka (1):
-  memcg: combine slab obj stock charging and accounting
-
- mm/memcontrol.c | 195 +++++++++++++++++++++++-------------------------
- 1 file changed, 95 insertions(+), 100 deletions(-)
-
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 28cb75b5bc66..b54e3a1d23bd 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1816,6 +1816,13 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages,
+ 	return ret;
+ }
+ 
++static void memcg_uncharge(struct mem_cgroup *memcg, unsigned int nr_pages)
++{
++	page_counter_uncharge(&memcg->memory, nr_pages);
++	if (do_memsw_account())
++		page_counter_uncharge(&memcg->memsw, nr_pages);
++}
++
+ /*
+  * Returns stocks cached in percpu and reset cached information.
+  */
+@@ -1828,10 +1835,7 @@ static void drain_stock(struct memcg_stock_pcp *stock)
+ 		return;
+ 
+ 	if (stock_pages) {
+-		page_counter_uncharge(&old->memory, stock_pages);
+-		if (do_memsw_account())
+-			page_counter_uncharge(&old->memsw, stock_pages);
+-
++		memcg_uncharge(old, stock_pages);
+ 		WRITE_ONCE(stock->nr_pages, 0);
+ 	}
+ 
+@@ -1893,9 +1897,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ 		 * In case of unlikely failure to lock percpu stock_lock
+ 		 * uncharge memcg directly.
+ 		 */
+-		page_counter_uncharge(&memcg->memory, nr_pages);
+-		if (do_memsw_account())
+-			page_counter_uncharge(&memcg->memsw, nr_pages);
++		memcg_uncharge(memcg, nr_pages);
+ 		return;
+ 	}
+ 	__refill_stock(memcg, nr_pages);
+@@ -2855,12 +2857,8 @@ static struct obj_cgroup *drain_obj_stock(struct memcg_stock_pcp *stock)
+ 
+ 			mod_memcg_state(memcg, MEMCG_KMEM, -nr_pages);
+ 			memcg1_account_kmem(memcg, -nr_pages);
+-			if (!mem_cgroup_is_root(memcg)) {
+-				page_counter_uncharge(&memcg->memory, nr_pages);
+-				if (do_memsw_account())
+-					page_counter_uncharge(&memcg->memsw,
+-							      nr_pages);
+-			}
++			if (!mem_cgroup_is_root(memcg))
++				memcg_uncharge(memcg, nr_pages);
+ 
+ 			css_put(&memcg->css);
+ 		}
+@@ -4689,9 +4687,7 @@ static inline void uncharge_gather_clear(struct uncharge_gather *ug)
+ static void uncharge_batch(const struct uncharge_gather *ug)
+ {
+ 	if (ug->nr_memory) {
+-		page_counter_uncharge(&ug->memcg->memory, ug->nr_memory);
+-		if (do_memsw_account())
+-			page_counter_uncharge(&ug->memcg->memsw, ug->nr_memory);
++		memcg_uncharge(ug->memcg, ug->nr_memory);
+ 		if (ug->nr_kmem) {
+ 			mod_memcg_state(ug->memcg, MEMCG_KMEM, -ug->nr_kmem);
+ 			memcg1_account_kmem(ug->memcg, -ug->nr_kmem);
 -- 
 2.47.1
 
