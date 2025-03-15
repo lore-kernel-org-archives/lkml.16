@@ -1,32 +1,30 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303DA2054E3
-	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 17:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1F62054FD
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 17:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742060991; cv=none; b=Do/qfy73U5VO5UsMQ5wQcbSkOV5jLzSyTiIvpnHSU6S/hFBiIKND5qd/v9KUkPT0/Rj7Uap/PHWfivpR5pUZEohq5cw9Mt4yIw6eDtTaqq5Pn4dpQgt/783ZOSSeHgSDtn2ba4eic+ux+vJg/50rDPn/LAGA+J9pp4Osf+kDxVY=
+	t=1742060992; cv=none; b=H58vKZGi6cD4dGv6Umh3rWgHT46ydQmkxoFNMCO6ryylK9A9UMODWWLYLFcxLB04Hvu0Kbm81OW24klZlIz8MmUGoAL/jvWLVBNuIA5akamYcwRhRCUmEIlZrUUXDc/8Z5g5UJjKR9/EgTQgi9MAOh9Hr7g7LzFHLkYaoTjsEC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742060991; c=relaxed/simple;
-	bh=7GVz3MJvICmIWhsoo81qI+uaCmHIr1hzLPA6oLWv2RY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W+4Dme6vTeIPhQZ52ehy363accltNSVxIfdudxgZTQ8SRydGDUgG+OpUJIAKV40SysUDrG4N6brKC82r+P1gdoEgK2ByZtZK4pE5OXXBzSltlXQpCjC8eOO48cXNGSRoGnYczd4NJG3I6+euYgEzLMagXRlnUOsCw0i0gp/DbrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ejy9vqLu; arc=none smtp.client-ip=91.218.175.184
+	s=arc-20240116; t=1742060992; c=relaxed/simple;
+	bh=8cNdWdSYzMhrZrBVVbo1LE44oP+rPuUJujztZ+GXkGI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JiKSs/215u0SpEHao3pfuSgMXoMwXOUULAiDMcLhtVt6ef0QOgcBheINVDUpH7b1qCi2634w2q6PGnrjvJdHlevsxxYCqLUVRV4q1OxrYiySg+D0JlfR5slanxBZtXTHYsGadicavaDVGtKNP9qVlG+udI0SeCwlBZ+LqPZVgy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ed6qPZeI; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ejy9vqLu"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ed6qPZeI"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742060986;
+	t=1742060978;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oUGjl5IUOeohrue8CflY3qReHtC2T034o0a04sP/4ac=;
-	b=Ejy9vqLuhMtkzwYa4BWZ2IiChp1s5sstyd4OAgBMSkax1T0pVT20KV+VkvWvY5R0mCrrCA
-	CWNQcrKeNlCZoz9SnQEPbL3cjNDbBmqiM/2TtzFlraiYrRnTqDXLQBiBdgjMSa88A7UtW7
-	qGO2/7k9JcdwLvf0v1aCNfGdPeArjgs=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ejPqcS6XBEDW+h9V+Y9XW4HLbyin3ylhe+1eBvNG0us=;
+	b=ed6qPZeIiPSadtsqQbti2BDAvMuGVp+62JrK8640TmWLwWGFfew+bL/75pqV9ke0yiBbXS
+	Fo+ndr5s/72UPECrjGjiTRietDubx7nZAtVIxRb0edimC5YSM1+foZr/mmQBiUBOhuJnV8
+	hkDYkWeeSM59NTfVL3C1eQlUo3DIIEg=
 From: Shakeel Butt <shakeel.butt@linux.dev>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>,
@@ -39,11 +37,9 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,
 	cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH 2/9] memcg: decouple drain_obj_stock from local stock
-Date: Sat, 15 Mar 2025 10:49:23 -0700
-Message-ID: <20250315174930.1769599-3-shakeel.butt@linux.dev>
-In-Reply-To: <20250315174930.1769599-1-shakeel.butt@linux.dev>
-References: <20250315174930.1769599-1-shakeel.butt@linux.dev>
+Subject: [PATCH 0/9] memcg: cleanup per-cpu stock
+Date: Sat, 15 Mar 2025 10:49:21 -0700
+Message-ID: <20250315174930.1769599-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,46 +49,32 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Currently drain_obj_stock() can potentially call __refill_stock which
-accesses local cpu stock and thus requires memcg stock's local_lock.
-However if we look at the code paths leading to drain_obj_stock(), there
-is never a good reason to refill the memcg stock at all from it.
+This is a cleanup series which is trying to simplify the memcg per-cpu
+stock code, particularly it tries to remove unnecessary dependencies on
+local_lock of per-cpu memcg stock. The eight patch from Vlastimil
+optimizes the charge path by combining the charging and accounting.
 
-At the moment, drain_obj_stock can be called from reclaim, hotplug cpu
-teardown, mod_objcg_state() and refill_obj_stock(). For reclaim and
-hotplug there is no need to refill. For the other two paths, most
-probably the newly switched objcg would be used in near future and thus
-no need to refill stock with the older objcg.
+This series is based on next-20250314 plus two following patches:
 
-In addition, __refill_stock() from drain_obj_stock() happens on rare
-cases, so performance is not really an issue. Let's just uncharge
-directly instead of refill which will also decouple drain_obj_stock from
-local cpu stock and local_lock requirements.
+Link: https://lore.kernel.org/all/20250312222552.3284173-1-shakeel.butt@linux.dev/
+Link: https://lore.kernel.org/all/20250313054812.2185900-1-shakeel.butt@linux.dev/
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
----
- mm/memcontrol.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Shakeel Butt (8):
+  memcg: remove root memcg check from refill_stock
+  memcg: decouple drain_obj_stock from local stock
+  memcg: introduce memcg_uncharge
+  memcg: manually inline __refill_stock
+  memcg: no refilling stock from obj_cgroup_release
+  memcg: do obj_cgroup_put inside drain_obj_stock
+  memcg: use __mod_memcg_state in drain_obj_stock
+  memcg: manually inline replace_stock_objcg
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c09a32e93d39..28cb75b5bc66 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2855,7 +2855,12 @@ static struct obj_cgroup *drain_obj_stock(struct memcg_stock_pcp *stock)
- 
- 			mod_memcg_state(memcg, MEMCG_KMEM, -nr_pages);
- 			memcg1_account_kmem(memcg, -nr_pages);
--			__refill_stock(memcg, nr_pages);
-+			if (!mem_cgroup_is_root(memcg)) {
-+				page_counter_uncharge(&memcg->memory, nr_pages);
-+				if (do_memsw_account())
-+					page_counter_uncharge(&memcg->memsw,
-+							      nr_pages);
-+			}
- 
- 			css_put(&memcg->css);
- 		}
+Vlastimil Babka (1):
+  memcg: combine slab obj stock charging and accounting
+
+ mm/memcontrol.c | 195 +++++++++++++++++++++++-------------------------
+ 1 file changed, 95 insertions(+), 100 deletions(-)
+
 -- 
 2.47.1
 
