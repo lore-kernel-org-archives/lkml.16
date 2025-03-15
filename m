@@ -1,140 +1,84 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B90717B401;
-	Sat, 15 Mar 2025 11:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AD01DC9BE
+	for <linux-kernel@vger.kernel.org>; Sat, 15 Mar 2025 11:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742039004; cv=none; b=iMUG1dvPmAPaKxMgqvN0QjrV6mNP9FnOcrTxF0lUcWYVG+rGiKJKxbx2TNCyqezd/b8Z5FazJipGFJFSeeEIMnD+iGQ/WLUfvURQwCD6IpC4UuxDNt/1nPIlJYiPf304teDfSFe1QbUo68kf4eXi+4L28PetN3MJAbaLSntWadI=
+	t=1742039460; cv=none; b=Xcw3MBVV+Fm9pBlD/4kbxWt85qMqJVDzHqW4WMYJnPV73dY0YAIctkFbk0NzjulZrqTKf/JXYcT4tTIlZnDrO2rrv6xrZkEyW1gdF9V3tVgEFu/8bQNvtvxC6EzusxbwU0Cza2MSKQq9Q/j4oWb8rYNsy8AWAqYmbLkc0Kf9TiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742039004; c=relaxed/simple;
-	bh=u+8nz41tlYU+O8V2Nth96DP8B0RudPJweXoeqM7XfQg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tzQ8G7mLHcrqKZYhdOU4jlX8dmnNKG7YkF92e0utuEyM5HtvPB/O2PmgVdfvV9gLQFdMAFbgnM/CaKiAuxyzgNKP2VO+Yozsf1183K3eRgLslExP+flSg0z4jr1WFGBOfj7QabAV5ECMcfAdfYDPCD4279X3kTeiMzysM6vEKUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ULNjWTaV; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULNjWTaV"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2ed007aacso584653666b.0;
-        Sat, 15 Mar 2025 04:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742039001; x=1742643801; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KeZdUQ87/QjVva6B+nN47G0ElGSAcZt31jSmqIfddsY=;
-        b=ULNjWTaVfDmZWVzj5J0fylC3TnoKPe2rFFQjMvEOaIEKxzRVuvgKsUA5RO+Brot8Bi
-         zw+0KzcmkmbaIOOoy7gYPKT8E7LqJ8p8/+cS2Gdna7Xo/ewCqkARi9du76pPq4A5xF12
-         iNQnb/ny+konc5wGfZbfXcEla+F8o+2uXkj9PvgLcQ9BgLGk/3LW/F8av0p0H+fL7qeh
-         RHfoFffLbTr/eNLhm/5Bm0X92Q/7jdXvYxHEAWqP4PheDs5oTYXrHw2IqkLNfBF5/J9l
-         gqhDN9TOF1J/3fO3zTjRtQr9g+kXI+xNquV2QpciYjXGObckTafVX2Btp2xJ1J+TUP2n
-         ljBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742039001; x=1742643801;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KeZdUQ87/QjVva6B+nN47G0ElGSAcZt31jSmqIfddsY=;
-        b=ctMlptnSdhehS8jE1zPxGDNl1mqmCR0kV2T/mzxw4GvU8R4pij42Gvix2wp9FMXshG
-         3TVgk9Za+G7Ms8uEYdl13+1RclS7N9Ve+kRAqfaxW7EvkoxCEPEjx/F2H0sIOJT6mvMt
-         4OdxZyfkLRKn5477oXgL5s6Y6gRVfjEK6yuO9B4cXJznwsUanodedWSjadfhLNo1E0HH
-         x9byT71CnMq2ZME+JOQOzMlJOq8+783nnwGGQH0jo4lzFtIkWC1GwS3JHUHvz0wgQXRg
-         4XLNPhwwqPcF3dRrNk4kuPc1DgNV8DByEMoIIAerRb1Hficqwrmdz0GCShlmyd+gVTbW
-         xs3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUX9oBEZWmKIU5bvqzBJ1D6GKk4/7oRf+6ZbR/QRDlVUsTMjW/wBDey3koAtAsLjdqrD4MjG9zToxGS@vger.kernel.org, AJvYcCUZSCHL1DWH3xSB9gZ8E3uIRWvR/+nyTr4DaYtGdaSLiBYfGNYwhYkg2wCNO4xcT8XRMPspL3PJR9Xl@vger.kernel.org, AJvYcCWTU3o+mlZy0fIfgx0Loe/zSSUR9koyi0EdaLiUivwC4YUxHKBLJ33wTUnVwCsv9mjImnpazxTw4ZG2eHvk@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUfklslDmzKvC23/wyK/jcINURa9qC9LFXjj2ta7XaIpLvgQ6B
-	bUswSgFPbd1/GeQ3sMdN2Eoc35bKVb8j8eDLVvuoNvJvpppdOzri31v6yw==
-X-Gm-Gg: ASbGnctwTfqGV47zaQ9GgqYg0JpLNRBXatZk23HZPJrfe3ziq0nrhyAjpb8Zd2QvjdG
-	3bAwKg2okGXpB0qZYiLXjZallmUdz8CPVCfgHio3AcHDJfzqMp7YuhQc9RNTY3NZe+mu5LuluP8
-	DQQmFZJ57zwsncLVohxAGUJu9RR4J0ZbOZ/bGYM9Y8SpTuIHUu1Xr1srFi/IOALJ1ZrPK4OfbsH
-	XJctD0q6A2KFzS7/TxHgI4MQvAC/EA9q83xgMDZGyQoxPEBlinyntRb/BydkXh9U9kper81MsLJ
-	bhF6AlYBvSK8QNoDkEh5U4Amqcu8I4e/Ptl7X+xDh5x4qtRv+4vkMxy0lch3sw==
-X-Google-Smtp-Source: AGHT+IFaeyv1G/kQsgkk3HcuD0eS+l5qBHWMhAKtgepFyHyO7M9qoxSUruk53n7H1dNPe4H7TK3gQg==
-X-Received: by 2002:a17:907:2cc5:b0:abe:fd0c:68a8 with SMTP id a640c23a62f3a-ac3303e6721mr580478866b.52.1742039000613;
-        Sat, 15 Mar 2025 04:43:20 -0700 (PDT)
-Received: from giga-mm.home ([2a02:1210:861b:6f00:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149ce26fsm358549366b.89.2025.03.15.04.43.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Mar 2025 04:43:20 -0700 (PDT)
-Message-ID: <a824d6b57ce5a9180a45c3ff65b4b9051ecdc1cf.camel@gmail.com>
-Subject: Re: [PATCH v13 2/3] soc: sophgo: cv1800: rtcsys: New driver
- (handling RTC only)
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: Inochi Amaoto <inochiama@gmail.com>, sophgo@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-rtc@vger.kernel.org
-Cc: Chen Wang <unicorn_wang@outlook.com>, Jingbao Qiu
-	 <qiujingbao.dlmu@gmail.com>, Yangyu Chen <cyy@cyyself.name>, 
-	linux-kernel@vger.kernel.org
-Date: Sat, 15 Mar 2025 12:43:19 +0100
-In-Reply-To: <fuc5zzq3izowktmafrhy5vkjddydxg5673ggr64ukh7v5knjmi@r6xozjxcw7r2>
-References: <20250309202629.3516822-1-alexander.sverdlin@gmail.com>
-	 <20250309202629.3516822-3-alexander.sverdlin@gmail.com>
-	 <fuc5zzq3izowktmafrhy5vkjddydxg5673ggr64ukh7v5knjmi@r6xozjxcw7r2>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	s=arc-20240116; t=1742039460; c=relaxed/simple;
+	bh=1D6lAFNvZkY/dKLEAUoPgWaSMr8SYuIxR3o+zNOwE4k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i6Km/MYQhP557Dp7EyYnbS/aLvoWzDKAFLCXl93tNFym+fGzxP5/KlZrmN3JQfpr28BNGg/znB/t2i3jgkDqApi2zR95FQaXYAwlQbs/cxNJKZGVTmNh/AgIT/SiDA631cFyiF4qkNJxPvdAJ5GOLWjI4VC2QYxeamzuT5R6JM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZFKH05shYzDssM;
+	Sat, 15 Mar 2025 19:47:40 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3CF331401E9;
+	Sat, 15 Mar 2025 19:50:53 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
+ (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 15 Mar
+ 2025 19:50:52 +0800
+From: Yue Haibing <yuehaibing@huawei.com>
+To: <jani.nikula@linux.intel.com>, <rodrigo.vivi@intel.com>,
+	<joonas.lahtinen@linux.intel.com>, <tursulin@ursulin.net>,
+	<airlied@gmail.com>, <simona@ffwll.ch>, <tzimmermann@suse.de>,
+	<dev@lankhorst.se>
+CC: <intel-gfx@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	<yuehaibing@huawei.com>
+Subject: [PATCH -next] drm/i915/display: Fix build error without DRM_FBDEV_EMULATION
+Date: Sat, 15 Mar 2025 20:01:43 +0800
+Message-ID: <20250315120143.2344958-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-Hi Inochi!
+In file included from <command-line>:
+./drivers/gpu/drm/i915/display/intel_fbdev.h: In function ‘intel_fbdev_framebuffer’:
+./drivers/gpu/drm/i915/display/intel_fbdev.h:32:16: error: ‘NULL’ undeclared (first use in this function)
+   32 |         return NULL;
+      |                ^~~~
+./drivers/gpu/drm/i915/display/intel_fbdev.h:1:1: note: ‘NULL’ is defined in header ‘<stddef.h>’; did you forget to ‘#include <stddef.h>’?
+  +++ |+#include <stddef.h>
+    1 | /* SPDX-License-Identifier: MIT */
+./drivers/gpu/drm/i915/display/intel_fbdev.h:32:16: note: each undeclared identifier is reported only once for each function it appears in
+   32 |         return NULL;
+      |                ^~~~
 
-On Fri, 2025-03-14 at 08:51 +0800, Inochi Amaoto wrote:
-> On Sun, Mar 09, 2025 at 09:26:24PM +0100, Alexander Sverdlin wrote:
-> > Add driver for Sophgo CV1800 series SoC RTC subsystem. The RTC module
-> > comprises a 32kHz oscillator, Power-on-Reset (PoR) sub-module, HW state
-> > machine to control chip power-on, power-off and reset. Furthermore, the
-> > 8051 subsystem is located within RTCSYS including associated SRAM block=
-.
-> >=20
-> > This patch only populates RTC sub-device.
-> >=20
-> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Build fails if CONFIG_DRM_FBDEV_EMULATION is n, add missing header file.
 
-...
+Fixes: 9fa154f40eb6 ("drm/{i915,xe}: Run DRM default client setup")
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/i915/display/intel_fbdev.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> >=20
-> > =C2=A0 MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0 1 +
-> > =C2=A0 drivers/soc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
-> > =C2=A0 drivers/soc/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
-> > =C2=A0 drivers/soc/sophgo/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 | 24 ++++++++++++
-> > =C2=A0 drivers/soc/sophgo/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0 3 ++
-> > =C2=A0 drivers/soc/sophgo/cv1800-rtcsys.c | 63 ++++++++++++++++++++++++=
-++++++
-> > =C2=A0 6 files changed, 93 insertions(+)
-> > =C2=A0 create mode 100644 drivers/soc/sophgo/Kconfig
-> > =C2=A0 create mode 100644 drivers/soc/sophgo/Makefile
-> > =C2=A0 create mode 100644 drivers/soc/sophgo/cv1800-rtcsys.c
-> >=20
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 3eee238c2ea2..ac15e448fffb 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -22354,6 +22354,7 @@ L:	sophgo@lists.linux.dev
-> > =C2=A0 W:	https://github.com/sophgo/linux/wiki
-> > =C2=A0 T:	git https://github.com/sophgo/linux.git
-> > =C2=A0 S:	Maintained
->=20
-> > +F:	drivers/soc/sophgo/cv1800-rtcsys.c
->=20
-> Please change to the drivers/soc/sophgo/.
-> We should maintain all files under this.
->=20
-> > =C2=A0 N:	sophgo
-
-I suppose my F: entry is actually superfluous because of the above
-N: entry and can be removed altogether?
-
---=20
-Alexander Sverdlin.
+diff --git a/drivers/gpu/drm/i915/display/intel_fbdev.h b/drivers/gpu/drm/i915/display/intel_fbdev.h
+index ca2c8c438f02..89bad3a2b01a 100644
+--- a/drivers/gpu/drm/i915/display/intel_fbdev.h
++++ b/drivers/gpu/drm/i915/display/intel_fbdev.h
+@@ -6,6 +6,8 @@
+ #ifndef __INTEL_FBDEV_H__
+ #define __INTEL_FBDEV_H__
+ 
++#include <linux/types.h>
++
+ struct drm_fb_helper;
+ struct drm_fb_helper_surface_size;
+ struct drm_i915_private;
+-- 
+2.34.1
 
