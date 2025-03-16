@@ -1,81 +1,90 @@
-Received: from b2712.mx.srv.dfn.de (b2712.mx.srv.dfn.de [194.95.235.58])
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9967F2629D;
-	Sun, 16 Mar 2025 19:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.95.235.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928598F5E;
+	Sun, 16 Mar 2025 19:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742153679; cv=none; b=BMB4UNq6u7hrv/lj7aJz0jF7dnkEBT6syXS/WhVJNsU/5fF1QnhWkKS4Q+aCBWyrgPdOMSvMOng39MvvBkF6BwAW5G7BHgMNU9LDpfbjSIY+9lTbeYUOP0wD/q+WmEPpOn/WbMiIHAqrGn/o/l4B+xu+d7137QNoHCBm8pJCv1s=
+	t=1742154138; cv=none; b=BoI8NlERNPdre/Eyflxv3GwMGYf+1FJWK95QY8tnCpAGOdzH55i2gQ/LNqFCLbEsTB4OSY7eR8wRMtS965aIvpnCz3An2xE2N0tYEvAHIbp/D0cpmzUi/fU1+hkAcPZKYpfIrCokgi6yPlFcxCcKtRrU+y4wtrw1brDNk2P6VqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742153679; c=relaxed/simple;
-	bh=hULb9bY+HvY16srEOmds0YHCxINq/V0Rb1Bd20SrQgk=;
-	h=MIME-version:Content-type:Message-id:Date:To:Cc:From:Subject; b=GnMrS58squjsrjn2u3poZTXzYgTP9mShNKPnw0r3QZ5mbo2GsPOnw5lrXTQLrJoa4oR3pCpO5blIul2+lZzCInBQmz89ZmbqH+EZfNWFOuLZdFof71JHLasRUW70TAMAgcfTwmrEuSssG2vJHwmVFD2XfSx7oX1wEVl+jwOkVYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stud.hs-bochum.de; spf=pass smtp.mailfrom=stud.hs-bochum.de; arc=none smtp.client-ip=194.95.235.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stud.hs-bochum.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stud.hs-bochum.de
-Received: from oms0.hs-bochum.de (mail.stud.hs-bochum.de [193.175.85.64])
-	by b2712.mx.srv.dfn.de (Postfix) with ESMTP id 0AE193A00AF;
-	Sun, 16 Mar 2025 20:25:45 +0100 (CET)
+	s=arc-20240116; t=1742154138; c=relaxed/simple;
+	bh=18zHOQIXGAybHcjA06dHs5rydnqcg3S53cn8XNzeJpI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wgf6ABSmPfnXw5qy5dMVzS6TEBUWVKQp1Nn9GpF1cJ8osfpHjpZrAQkgSmmARlz83Z9cainKHjIrmdgN6j+Z5QBz8lavNShFHkLqPEnTpBNCFu7lp8IO1uVzfOAwiq9KLY40irrXOEas8id4o3O6W15tSQyf66CPkqxNg77WEU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Z0iHAaG3; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Z0iHAaG3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1742154137; x=1773690137;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=UWO7ZTm/qXjZpCxF4k5eUGMoYbri6JKoyMc1jHkmoo8=;
+  b=Z0iHAaG3XDoEIBkvTsb9MlqMYxIlX5zKRS6D5e3iBAa/sUfoUtmE/jZr
+   kD3LEhZxt5QEy4Z+RtcdcsauH5d7cN0cNwZX+NM51XyIxaFRMxpT1DJOP
+   rsV4M9NC7IZOag/eCe0ZJboVgC3TMyrwKwYqzOa7SGsxcy/mKZlGMOmj1
+   M=;
+X-IronPort-AV: E=Sophos;i="6.14,252,1736812800"; 
+   d="scan'208";a="705480033"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2025 19:42:13 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:39755]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.22.127:2525] with esmtp (Farcaster)
+ id 8e4d5b63-0a54-4e41-840b-cdc676e69e51; Sun, 16 Mar 2025 19:42:12 +0000 (UTC)
+X-Farcaster-Flow-ID: 8e4d5b63-0a54-4e41-840b-cdc676e69e51
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sun, 16 Mar 2025 19:42:11 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.119.216.189) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sun, 16 Mar 2025 19:42:08 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <stfomichev@gmail.com>
+CC: <aleksander.lobakin@intel.com>, <bigeasy@linutronix.de>,
+	<davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
+	<jdamato@fastly.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <xnxc22xnxc22@qq.com>
+Subject: Re: Linux6.14-rc5:  INFO: task hung in register_netdevice_notifier_net
+Date: Sun, 16 Mar 2025 12:41:51 -0700
+Message-ID: <20250316194201.21195-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <Z9cCQ1huViMjZkvS@mini-arch>
+References: <Z9cCQ1huViMjZkvS@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Content-type: text/plain; CHARSET=US-ASCII; format=flowed
-Received: from [192.168.178.29]
- (ip-095-223-071-235.um35.pools.vodafone-ip.de [95.223.71.235])
- by oms0.hs-bochum.de
- (Oracle Communications Messaging Server 8.1.0.9.20210415 64bit (built Apr 15
- 2021)) with ESMTPSA id <0ST800784DYXJ230@oms0.hs-bochum.de>; Sun,
- 16 Mar 2025 20:25:45 +0100 (CET)
-Sender: sven.grewe@stud.hs-bochum.de
-Message-id: <dad804b1-bfcf-4a72-bcaf-3f1137b3facc@stud.hs-bochum.de>
-Date: Sun, 16 Mar 2025 20:25:44 +0100
-User-Agent: Mozilla Thunderbird
-Content-language: en-US
-To: linux-sound@vger.kernel.org, Mark Brown <broonie@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>
-Cc: linux-kernel@vger.kernel.org
-From: Sven Grewe <sven.grewe@stud.hs-bochum.de>
-Subject: ASoC: dmic: add regulator support
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D042UWA004.ant.amazon.com (10.13.139.16) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Dear Maintainers,
+From: Stanislav Fomichev <stfomichev@gmail.com>
+Date: Sun, 16 Mar 2025 09:54:27 -0700
+> On 03/16, ffhgfv wrote:
+> > Hello, I found a bug titled "   INFO: task hung in register_netdevice_notifier_net  " with modified syzkaller in the Linux6.14-rc5.
+> > If you fix this issue, please add the following tag to the commit:  Reported-by: Jianzhou Zhao <xnxc22xnxc22@qq.com>,    xingwei lee <xrivendell7@gmail.com>, Zhizhuo Tang <strforexctzzchange@foxmail.com>
+> 
+> Haven't looked that deep, but it seems to involve a tunneling device,
+> so I wonder whether it's gonna be fixed by:
+> - https://patchwork.kernel.org/project/netdevbpf/patch/20250312190513.1252045-2-sdf@fomichev.me/
+> - https://patchwork.kernel.org/project/netdevbpf/patch/20250312190513.1252045-3-sdf@fomichev.me/
+> 
+> Do you have a repro? Can you rerun with the above fixes and enable
+> lockdep?
 
-I tested linux-next and a patch in it breaks the audio and delays the 
-shutdown process on my system for a few minutes. Reverting the following 
-patch seems to fix it for me in linux-next 20250314:
+It seems lockdep is enabled but doesn't report any locking bug,
+so I think this report is generated simply because of RTNL storm by
+syzkaller.
 
-Author: Olivier Moysan <olivier.moysan@foss.st.com>
-Date:   Thu Mar 6 18:18:40 2025 +0100
+I have 200+ task hung reports due to RTNL on my syzkaller instances.
 
-     ASoC: dmic: add regulator support
-
-     Allow management of the regulator that may be used to supply the
-     digital microphone.
-
-     Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
-     Link: 
-https://patch.msgid.link/20250306171840.593443-3-olivier.moysan@foss.st.com
-     Signed-off-by: Mark Brown <broonie@kernel.org>
-
-
-
-linux-next 20250307 worked. Later versions had the problem I described 
-above.
-
-For the bisection I used the default .config from Debian's 6.12.x kernel 
-when building. I build and ran them on my Samsung Galaxy Book. This 
-device got a patch recently in linux-next not related to audio. That's 
-why I wanted to test linux-next and found this.
-Linux version 
-6.14.0-rc6-next-20250314-next20250314-revertbrooniesound-grewe 
-(sven@Turbine) (gcc (Debian 14.2.0-17) 14.2.0, GNU ld (GNU Binutils for 
-Debian) 2.44) #1 SMP PREEMPT_DYNAMIC Sun Mar 16 16:06:58 CET 2025
-Operating System: Debian GNU/Linux trixie on x86_64
-Audio Chip: Realtek ALC256
-
-Kind regards,
-Sven J. Grewe
+The tunnel part is ip_tunnel_init_net() that takes RTNL too for
+register_netdevice().
