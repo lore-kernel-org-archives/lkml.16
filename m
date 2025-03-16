@@ -1,122 +1,126 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941871A5BB4;
-	Sun, 16 Mar 2025 12:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D70A19E971;
+	Sun, 16 Mar 2025 12:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742126749; cv=none; b=JmuW+rH/1Dd+6ACGp7L4fiqskFRgQYNJace1330PgD9hIggz2Lx+goXDeBpU3WsK2/SAJ0ta4t0NF5gCwSTcvs12WTFNMccyfHIkMBagAWG7YtPaM9+9cvl1eynEggRciV0QjgBVpNb85LZlkO27MOtHALYVcUwv/Z8nPw15PH4=
+	t=1742126790; cv=none; b=PjevEcmC9RJJJmw4pqWUhrCZQn05JSN9KaQj26ANQUzdKD66G5KLrk/ssWw1UQCWSKGuqyk7zHp91XNTwiMBJyCd5YbgvhVNPnhhWgM0SF1CcfBWUplwskirSo47WT2IQ35IFhKfD4u2MmOPdd2FJsAFlU9aA3IoWh+pcLCdzd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742126749; c=relaxed/simple;
-	bh=KadRx1xoUSmJtq5YD2SOV+EbxxApkt8GHAPj2ECQ2pc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=nWeix1rq5GiNwlZcB3K1osMf1sQC016iBq4Qm7Ngc1EgI3PsOIALJUMEBBrjMATuZfu3v+irS41V5dCK6gNSeM/CA8z7evjBALtcUgef71qrdy1GTq+2R/Qi44o73P0ijJ0Pmc3nFu+FnRuwN9JmoInwdX1/x/9iNRmoB491lYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=SbW2bn/M; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1742126790; c=relaxed/simple;
+	bh=0JRQnEypsEBYBrLBpNDmer7L88pYWOaTFd5X3IG7JHY=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=YsYKAyMqRq5pN2OIUTfptlnz8NFikWMWUkixk8b0ccKABhXAa9J+dkTojv9OpMDB7l8IeArybowoE1znwS18F0CoQjE/pNIdjHXH1kWSebNg2394xGk7nCH1rpAHwox9XxHorgC7l9X8KQJ6wwMNlrmfj9aEGYtMqc6s2+tx0zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jyh/9KqN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LvHRzsjx; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="SbW2bn/M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742126719; x=1742731519; i=markus.elfring@web.de;
-	bh=e9pi42+lpAEfqGuH7ny5kxkJc4GrAO5+Sa0jB/otWFc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=SbW2bn/MzTWxWSdxkUwBl5Or867gbHNZyWHCLnoPbYDlXDqYcw5keEr8jGxSC3z8
-	 udWlAgeCC+OMT4ED7fiN2j2zVLB54QGET1Lr0/sIBokgg4O6HeqhKG+n3g6k+tzB9
-	 2OzdJKRaL2CiatIwDzrWAJpseag2a8geozR6DVlOCaKWN1CO5EJVHRiSXwxkuzRHx
-	 yY4sYVdtfPjTtKQFN3QPrsUsam3YR2iQlyI63p5lJkrQa3qQV7eBn6KTBzLtllTvo
-	 uxophOwCSCkiCTdE9pOjtTBARdMsZMShPJGB8xMIZpD8KuS53RjxEZK36QkG+eeMP
-	 TsuP3vAUH/DGiHn1Vg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.60]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MNwfU-1ta1rT2uMq-00NFqT; Sun, 16
- Mar 2025 13:05:19 +0100
-Message-ID: <d90c0678-d2ed-4e77-901a-fdbab7dfca71@web.de>
-Date: Sun, 16 Mar 2025 13:05:08 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jyh/9KqN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LvHRzsjx"
+Date: Sun, 16 Mar 2025 12:06:23 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742126787;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aHBkBFbyqhKExGSnG3I967hul0QxOts6+lxLyQSSeXk=;
+	b=jyh/9KqNl1rTaSZ5ykD/6V0juJlPE42pOfBjwSAMBTxu5c/+G9S7DTpJ48TWaqP5x4EudT
+	fCjzuYrlQu2ygKSM7d+kbf/+PazE52UuPwKfYFydssOWbjdD436m1OVXrnHsw555Rslz+R
+	5xbGf2Sf3JFOXR6olxZnmPYCrz2vzV47iYwYrdGWc+yby+oWLb1jcIMeBt+WP772OgQPkp
+	0ZIdWKqnYSF+f1dlQe8+NpUgu78Yd2gAmHL5Rfx25GeG05to6IfDqNQfVoBNAr0/ebhnqn
+	nGEmh9pBRu7ecdzC/4m0ipJBlDcYMdz4F4srsWnRP3lukB81klYFiq81KAsd7g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742126787;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aHBkBFbyqhKExGSnG3I967hul0QxOts6+lxLyQSSeXk=;
+	b=LvHRzsjxsCSAgzHW+xT4VHzYp5BJS6LymQL11nBJIbV+nsiq+TSLWvT0WgP2c7AaTtP50J
+	yzn32W3Xajkh/GDw==
+From: "tip-bot2 for XieLudan" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/core: Use sysfs_emit() instead of scnprintf()
+Cc: XieLudan <xie.ludan@zte.com.cn>, Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250315141738452lXIH39UJAXlCmcATCzcBv@zte.com.cn>
+References: <20250315141738452lXIH39UJAXlCmcATCzcBv@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Dan Carpenter <dan.carpenter@linaro.org>, linux-riscv@lists.infradead.org
-Cc: kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Drew Fustini <drew@pdp7.com>, Fu Wei <wefu@redhat.com>,
- Guo Ren <guoren@kernel.org>, Michal Wilczynski <m.wilczynski@samsung.com>,
- Ulf Hansson <ulf.hansson@linaro.org>
-References: <f19be994-d355-48a6-ab45-d0f7e5955daf@stanley.mountain>
-Subject: Re: [PATCH next] firmware: thead,th1520-aon: Fix use after free in
- th1520_aon_init()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <f19be994-d355-48a6-ab45-d0f7e5955daf@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:N8yi/ML/6ATrEIfjSmcR+ncmpOEGOUb80sVSW2Mp4Ay37YbqHO8
- 0dpdF55hEC2gXPezuq6AkCihIiKhPba4HX/9RgMgQXH9bKSCavrpAt2wydYUh/yNBvbswSx
- CUkhQ47nR/vMUouQNwFDVjGT+G0aXehQ4QcKQvEToL6T/+QqsLsEGyVYk3GpYtLFvTaNoYS
- Ktvr2SAzmzBNeEkFee8AQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:zyghqIrusQ0=;argRggwRiP8xq6mCQKaEC5lAM6M
- /6k59Ym3joLa1G20HgkaX5LTH3ed0xBI0SbZxMBc7r1SFwfcITYww1kpT/OI5qKuD8ib4pHEX
- OgWctpRmLfTFj04Z+OdDYKNagZq9AR0nl+oAYgC5kFtDMKqgE6vrQS5rKliYsIRgkeA6z5prN
- /b0p+/Ar6+M5SYIKSqjtlV7Kv5paxREK/8xmwnWK5eOpiituHSbvcbyCgg9CBH2N8T4BVNM4X
- wLyjSVA5lULNQm/D1RYbCqOAqtZvBXFysMwuVsUczzbR7KsB3JhUTyByPodm3smO1oxQRUcPc
- JR/GseSOs84DGGx3IUQhAS6lqXt8J9trpG/GWwUqUg3Lh0cbTGpWVTQbOjrGcsSkHpFbQKJvc
- K1iaY43M+JvoOF1Pv6w3DfCe5cnzql9c1DzMMPshgepVVlOLIKyH0nqB5vTNSMpgs9vZFO193
- KnJP0ydgyL4rC/7eICXLBQFHnMXeRfepHav7UxPOaYBLGdjH/PQaYGmQ9GOugikUjxdwaIX1P
- yI5h8ZOnWMoaHqYambHv9Xj0XyS7FLeXxClHnxf6S0HJPDPl0fX0ZNm5rs2ZNjq7DiqZnuAsl
- jIyg713uK7gnlvp1bMdP/naZ4Tfc8kgbsSqW+1vlbxdgGXElbVC3JUc+PHzU7rNU7KKMuFDl6
- zuSd4HrSg2+DijLZXTk6GjEKoMf3+4qWvCGsTQOoAps0T7mjKd9lzwnnjtGBWOeL+554rzeLY
- ai/kPxbReDGkg0wc8Laioq/C+ktJHhjC55fpesN9kTRRIWEE/7wA12e7lhDJ65lcLCkPawHkS
- Z24X/0C+H80bq/uyfV+hG5tUy6iDBsLE4TsWuNlyMMMmXnc8eMwSDkpYLsHP+QYe+hZOGdCks
- SDU502B3odT4PQ2HGGFSCWogS3MZPuJAoTmBxb5UyQ2v4nC66HfLpbtjAo45YXAyhVp8ekgyo
- 7qojw36hqLRW60WVZx1WNYUgt4UVhvf3rv9oD/OlFBn+ZD/U2zHxYhmE4FZt2nZu9ffusf8EU
- 3fwh+u2nZogefJWoAvXIO1fTN4bhfHJSZHoP9yHQ32vKP0c12zZ+KYnlNO4XcRbDtByrQZxR+
- aQDXjf2xpFNAmVs9QG/dMYcniR9TEE4IC72iqx95OHAd5G+DGXHjP/fMbiBXvajdvn0oLVzm/
- SCZEN40S4h8zfktWnw+ff5cAzbKZJAVEjjOH+5f5uHpI7+MKA1tqHb/JWliyPCrJgDm6H9T9o
- G5dvSi/QrBEXiqFSvbly7Bi6IlH+Hvi73FFY8S7YHruNGDkiw9CCZ+p3GubRXTpShCa3b/0qz
- UJL/aB/8Hhdjro3j7S+tViwv40E9SLkQXp1AB5cdJlu68G0V62U+Prb1qls4NEEyYJx0EYfTJ
- AeCIDNKu5p0zfeepaDjn46Vw98/qru87+/axf4RwDqqkxThjoXIxZR+lpyz52mNgIzXt01sDO
- hnHJUmovW1PTX8x6C5gflbLDdMOzq4DWxr52cDhZlaA63LQ5LMAXjto+cUIUUC1uX1kq31Q==
+Message-ID: <174212678355.14745.11221386085667623478.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-> Record the error code before freeing "aon_chan" to avoid a
-> use after free.
+The following commit has been merged into the perf/core branch of tip:
 
-Would it become helpful to mention which selection of source code
-analysis tools detected such a questionable implementation detail?
+Commit-ID:     b6ecb57f1fec114cfa19b1bf06f25f904ca928f9
+Gitweb:        https://git.kernel.org/tip/b6ecb57f1fec114cfa19b1bf06f25f904ca928f9
+Author:        XieLudan <xie.ludan@zte.com.cn>
+AuthorDate:    Sat, 15 Mar 2025 14:17:38 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 16 Mar 2025 12:38:27 +01:00
 
+perf/core: Use sysfs_emit() instead of scnprintf()
 
-=E2=80=A6
-> +++ b/drivers/firmware/thead,th1520-aon.c
-> @@ -203,6 +203,7 @@ struct th1520_aon_chan *th1520_aon_init(struct devic=
-e *dev)
->  {
->  	struct th1520_aon_chan *aon_chan;
->  	struct mbox_client *cl;
-> +	int ret;
->
->  	aon_chan =3D kzalloc(sizeof(*aon_chan), GFP_KERNEL);
->  	if (!aon_chan)
-> @@ -217,8 +218,9 @@ struct th1520_aon_chan *th1520_aon_init(struct devic=
-e *dev)
->  	aon_chan->ch =3D mbox_request_channel_byname(cl, "aon");
->  	if (IS_ERR(aon_chan->ch)) {
->  		dev_err(dev, "Failed to request aon mbox chan\n");
-> +		ret =3D PTR_ERR(aon_chan->ch);
->  		kfree(aon_chan);
-> -		return ERR_CAST(aon_chan->ch);
-> +		return ERR_PTR(ret);
->  	}
->
->  	mutex_init(&aon_chan->transaction_lock);
+Follow the advice in Documentation/filesystems/sysfs.rst:
 
-May the additional variable (for an information) be defined only for
-the affected if branch?
-Would a smaller scope be more appropriate here?
+  "- show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+     the value to be returned to user space."
 
-Regards,
-Markus
+No change in functionality intended.
+
+[ mingo: Updated the changelog ]
+
+Signed-off-by: XieLudan <xie.ludan@zte.com.cn>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250315141738452lXIH39UJAXlCmcATCzcBv@zte.com.cn
+---
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e7d0b05..2533fc3 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11713,7 +11713,7 @@ static ssize_t nr_addr_filters_show(struct device *dev,
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
++	return sysfs_emit(page, "%d\n", pmu->nr_addr_filters);
+ }
+ DEVICE_ATTR_RO(nr_addr_filters);
+ 
+@@ -11724,7 +11724,7 @@ type_show(struct device *dev, struct device_attribute *attr, char *page)
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->type);
++	return sysfs_emit(page, "%d\n", pmu->type);
+ }
+ static DEVICE_ATTR_RO(type);
+ 
+@@ -11735,7 +11735,7 @@ perf_event_mux_interval_ms_show(struct device *dev,
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->hrtimer_interval_ms);
++	return sysfs_emit(page, "%d\n", pmu->hrtimer_interval_ms);
+ }
+ 
+ static DEFINE_MUTEX(mux_interval_mutex);
