@@ -1,200 +1,93 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602057DA7F;
-	Sun, 16 Mar 2025 12:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742127473; cv=pass; b=SzK4S0WZHeudhuILnG9cch1DJx7qON9q0q3h1lRPP4C/xXzS22yoIGC9GzDXUfgTPKjCukzcMFdCqz7YJIFS6/KTVgfx6Ck/inwd7ktSHN9fM3OyWRJC+HhxxlxQl//f88vXzW3ggOK7OtPUfvP3Z3v7ctFZFjA1e9EXagbxQ7I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742127473; c=relaxed/simple;
-	bh=qUChJ+aBYmQ+npMzTXHcJ03ekKRYC+Suhyhm6YinJTM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tuTDY+hHsAdZGjFyhtujcckKbBq5zPzRB1HUMYtWIrzZ3Gh051k6gVY6c1LZBa+ziagWEZ0I4sj6u3z3LmRFVNNS5s8/zqT5MgfrKx7jQjvdsIzVsRD5n24SEThMKREkTUS0ZjiHTofATPe3gNoB25f0J9feUcFLviIHbCVS0zU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=Q/YIa3or; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=67GA7Hlp; arc=pass smtp.client-ip=81.169.146.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7401718B47C;
+	Sun, 16 Mar 2025 12:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742127550; cv=none; b=onesSbxZ5NlFXQDPdHmafLqe5VEUonVyI4ts0hAD6xUVZm708VLs0VOEdDbvH7alnrJiD/RnXCopy1hywX72MPMNhfHqPha3vYsPHJba3On939wZ84LIluPO8uf/unE1ZZf09G8KSj1n6DBGBgIzf8MTPtq70RFLY0N4+0Epw10=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742127550; c=relaxed/simple;
+	bh=WDOxL/RE2tl9pVb3nTkLv25ewYOD88rCDJFDv51Rt60=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=arIKmrpB6oAte5LL1kBg2rnUTExTRvPrSaqqlnul33ncIn4cJnDDsbKbIefjpwJnL2K+JYlE2/FeF0VCDiLdMyJHG3er+PedTVMM1wolQPpGCny6wYU0TGbzikCkMzBkJqh4CjdzBo8mkrWfy3OgWErvC5E9pBE7gsO0n4UCUcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNVZaGZc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="Q/YIa3or";
-	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="67GA7Hlp"
-ARC-Seal: i=1; a=rsa-sha256; t=1742127286; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=GpO4ADHsO7vTVZiNUUdmEGKGYwvW3DdOQQvkOE+PJY2Ce0tYhqwxXBs9ckcI3cSzeN
-    62Qqt5Q8ql8HtEAwBkgh/kzRIe3iRAfmXyFcOs3PcVIvTF67pQlODFh1VXnQhkAQ0aU0
-    3xfTBIxaZgElNTMrd7fuPEZ9XNE+EIUcSbCpAbQIgcPmLKOLncNJb+ZGHOVyWQx3ydvy
-    NFiPlOy2k+Mi0i5PCeb5YRDl7z096nrGDcs7BFFJNl2nRKptr4q5p6uBVDkYRCNjBM/O
-    oO0PbbefI89VX0KbqumUTcQU1zy9fxilCPsYeP35t1cMT8i6ocSHf52sIVTVU6iilo1O
-    GFPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1742127286;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=KqKMgl4Ov031kF7Dm8975X6DQiD3Jrmf+fsSx/Hz4BQ=;
-    b=Vvszp9FiM8MOGCZ2T9LJJg+MUvTOMY0RY3ijNEUrc2BRF+mgfTwJdAMBaK84uqtoqN
-    iYdzg5AhwwJOMKRk96zamCtQEk791+SLDvL4FAIqzW4ke2i6jI0vIDg8eKJDKLoPJkkX
-    PxwNll0szdA3uCuRDe5L4kBLoBu6Z71kWZD7SP2JcMOH5bCBscITPcbUgeTJ9PNV7vUO
-    JhN5Zu2LDVSRTrWZQqt0AHwzk5YSjWkSB2oQlz9tJxWG20qu9Z051Aa1jcExvf2BGmyp
-    a6KgTVMsdHhOdgHttuDF3CxvYYOLHsHIBoAKlmKajZzGXF/QW5na7angMIGG2/dEppx9
-    R2RA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1742127286;
-    s=strato-dkim-0002; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=KqKMgl4Ov031kF7Dm8975X6DQiD3Jrmf+fsSx/Hz4BQ=;
-    b=Q/YIa3oriZOjRCRe0Jn5Evjl3TBZH7XTsLjpcs6BcF2Bbdi0hLZ26A15lxSVFaqyZk
-    gpPBcrYTvMrde6rIePcJbaK/PTGzIjgcCVoY5yHc4GoqeHowzUdOne6WTfUrxPeyDxl+
-    y+pTW9k3MLnKjkwd/x8f8vsSwXY3PeyysBgsp2KoqoJ9h4A0tAULUr8VpBZEqs4o1c+9
-    KCiIu9enb2Kya8J5T2jjM7aI5sQP9ddbQJ7EMysjB26aBElKze+Dai0GAz1Zf8E2lc1I
-    VDpNJdZM42ng8y/Djmy4JioAI8g+Bw3QmL4g4QzKB0RAdtt/RoZe/nmDKq32VHwKcOqd
-    zn6Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1742127286;
-    s=strato-dkim-0003; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=KqKMgl4Ov031kF7Dm8975X6DQiD3Jrmf+fsSx/Hz4BQ=;
-    b=67GA7Hlpn+qwRC2N1bjQADocumsSea3/C/vjVoTQYQthILKSqFSSg5w1ohjfwLI3+r
-    D3BQ6r3rHtsS20ciz0Bw==
-X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
-Received: from aerfugl
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id f28b3512GCEk8gt
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sun, 16 Mar 2025 13:14:46 +0100 (CET)
-Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
-	by aerfugl with smtp (Exim 4.96)
-	(envelope-from <michael@a98shuttle.de>)
-	id 1ttmtB-00061z-0Y;
-	Sun, 16 Mar 2025 13:14:45 +0100
-Received: (nullmailer pid 82554 invoked by uid 502);
-	Sun, 16 Mar 2025 12:14:45 -0000
-From: Michael Klein <michael@fossekall.de>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [net-next,v3,1/2] net: phy: realtek: Clean up RTL8211E ExtPage access
-Date: Sun, 16 Mar 2025 13:14:22 +0100
-Message-Id: <20250316121424.82511-2-michael@fossekall.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250316121424.82511-1-michael@fossekall.de>
-References: <20250316121424.82511-1-michael@fossekall.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNVZaGZc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADDF0C4CEDD;
+	Sun, 16 Mar 2025 12:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742127549;
+	bh=WDOxL/RE2tl9pVb3nTkLv25ewYOD88rCDJFDv51Rt60=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=lNVZaGZcnDmKWO0/IM62w4eJ9ac/Bx23UxURPi0RwrfgtlIbCL6/iDUqHTbnSKAYa
+	 4oCXzcIqnXy6HCYJV6CQC9jVemEys/C9HDMCXewSTFwFJUYKAzhpGhE+eaGYX3QvPg
+	 OF3JH4JZhnu1DgvevbtrrbAObUjKSRTC8dAXcmkDhZtY0c7Ik5hsujsUWZp9YKlxxk
+	 PEPRNbjARhbpKGeEuAPmR1ZSWzT+EDOCw041838kZmUxHgy2FbES8tQxrKbQM901Xi
+	 HQHnvabhDfd4Iho/oRE5G3sKo+1lIidJl+MLXYPdkoO5xru9pS/fExQbxJ+Uwt0MSf
+	 qG8ZpNqXzL2yA==
+Date: Sun, 16 Mar 2025 07:19:08 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: mazziesaccount@gmail.com, arthur.becker@sentec.com, 
+ subhajit.ghosh@tweaklogic.com, linux-iio@vger.kernel.org, 
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org, 
+ javier.carrasco.cruz@gmail.com, muditsharma.info@gmail.com, 
+ devicetree@vger.kernel.org, ivan.orlov0322@gmail.com, lars@metafoo.de, 
+ jic23@kernel.org, krzk+dt@kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+In-Reply-To: <20250316113131.62884-2-ak@it-klinger.de>
+References: <20250316113131.62884-1-ak@it-klinger.de>
+ <20250316113131.62884-2-ak@it-klinger.de>
+Message-Id: <174212754864.1517319.13796050097130379689.robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: light: veml6046x00: add color
+ sensor
 
-- Factor out RTL8211E extension page access code to
-  rtl8211e_modify_ext_page()/rtl8211e_read_ext_page() and add some
-  related #define:s
-- Group RTL8211E_* and RTL8211F_* #define:s
-- Clean up rtl8211e_config_init()
 
-Signed-off-by: Michael Klein <michael@fossekall.de>
----
- drivers/net/phy/realtek/realtek_main.c | 49 ++++++++++++++------------
- 1 file changed, 27 insertions(+), 22 deletions(-)
+On Sun, 16 Mar 2025 12:31:29 +0100, Andreas Klinger wrote:
+> Add a new compatible for Vishay high accuracy RGBIR color sensor
+> veml6046x00.
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  .../iio/light/vishay,veml6046x00.yaml         | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml
+> 
 
-diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-index 7a0b19d66aca..f4ce6457d0ef 100644
---- a/drivers/net/phy/realtek/realtek_main.c
-+++ b/drivers/net/phy/realtek/realtek_main.c
-@@ -28,13 +28,21 @@
- 
- #define RTL821x_INSR				0x13
- 
--#define RTL821x_EXT_PAGE_SELECT			0x1e
-+#define RTL8211E_EXT_PAGE_SELECT		0x1e
- #define RTL821x_PAGE_SELECT			0x1f
- 
-+#define RTL8211E_SET_EXT_PAGE			0x07
-+
-+#define RTL8211E_CTRL_DELAY			BIT(13)
-+#define RTL8211E_TX_DELAY			BIT(12)
-+#define RTL8211E_RX_DELAY			BIT(11)
-+
- #define RTL8211F_PHYCR1				0x18
- #define RTL8211F_PHYCR2				0x19
- #define RTL8211F_INSR				0x1d
- 
-+#define RTL8211F_CLKOUT_EN			BIT(0)
-+
- #define RTL8211F_LEDCR				0x10
- #define RTL8211F_LEDCR_MODE			BIT(15)
- #define RTL8211F_LEDCR_ACT_TXRX			BIT(4)
-@@ -51,12 +59,6 @@
- #define RTL8211F_ALDPS_ENABLE			BIT(2)
- #define RTL8211F_ALDPS_XTAL_OFF			BIT(12)
- 
--#define RTL8211E_CTRL_DELAY			BIT(13)
--#define RTL8211E_TX_DELAY			BIT(12)
--#define RTL8211E_RX_DELAY			BIT(11)
--
--#define RTL8211F_CLKOUT_EN			BIT(0)
--
- #define RTL8201F_ISR				0x1e
- #define RTL8201F_ISR_ANERR			BIT(15)
- #define RTL8201F_ISR_DUPLEX			BIT(13)
-@@ -134,6 +136,21 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
- 	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
- }
- 
-+static int rtl8211e_modify_ext_page(struct phy_device *phydev, u16 ext_page,
-+				    u32 regnum, u16 mask, u16 set)
-+{
-+	int oldpage, ret = 0;
-+
-+	oldpage = phy_select_page(phydev, RTL8211E_SET_EXT_PAGE);
-+	if (oldpage >= 0) {
-+		ret = __phy_write(phydev, RTL8211E_EXT_PAGE_SELECT, ext_page);
-+		if (!ret)
-+			ret = __phy_modify(phydev, regnum, mask, set);
-+	}
-+
-+	return phy_restore_page(phydev, oldpage, ret);
-+}
-+
- static int rtl821x_probe(struct phy_device *phydev)
- {
- 	struct device *dev = &phydev->mdio.dev;
-@@ -600,7 +617,8 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
- 
- static int rtl8211e_config_init(struct phy_device *phydev)
- {
--	int ret = 0, oldpage;
-+	const u16 delay_mask = RTL8211E_CTRL_DELAY |
-+		RTL8211E_TX_DELAY | RTL8211E_RX_DELAY;
- 	u16 val;
- 
- 	/* enable TX/RX delay for rgmii-* modes, and disable them for rgmii. */
-@@ -630,20 +648,7 @@ static int rtl8211e_config_init(struct phy_device *phydev)
- 	 * 12 = RX Delay, 11 = TX Delay
- 	 * 10:0 = Test && debug settings reserved by realtek
- 	 */
--	oldpage = phy_select_page(phydev, 0x7);
--	if (oldpage < 0)
--		goto err_restore_page;
--
--	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
--	if (ret)
--		goto err_restore_page;
--
--	ret = __phy_modify(phydev, 0x1c, RTL8211E_CTRL_DELAY
--			   | RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
--			   val);
--
--err_restore_page:
--	return phy_restore_page(phydev, oldpage, ret);
-+	return rtl8211e_modify_ext_page(phydev, 0xa4, 0x1c, delay_mask, val);
- }
- 
- static int rtl8211b_suspend(struct phy_device *phydev)
--- 
-2.39.5
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Error: Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.example.dts:33.33-34 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1518: dt_binding_check] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250316113131.62884-2-ak@it-klinger.de
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
