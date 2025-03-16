@@ -1,67 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EE2189905;
-	Sun, 16 Mar 2025 11:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8F910F2;
+	Sun, 16 Mar 2025 11:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742123660; cv=none; b=unFmoghHYMlLmuXONTdWZ4AOeo8JcbE3bmFzdLUm4vniO08JukTvsrc2F9D1RUewmg/Rc4RbJa+iH2u+wx/2EDt2zs7oTyU/CuaP2GZgx47GkNKXpJotQrDc5t/at8jHw20Isu6Ze+O14YzIuLFwxx7i9D6AHJQC309DgUorS40=
+	t=1742123754; cv=none; b=Qdy0rENGMO059o1q8mcqfWID7z/WA6bbeII4rsR1z/rSlC8oXyGxfY+lUO0D3EwMBZEnftXB1plGbHaVr2GYbkrrfuQV+ewGR2ZEPbfPwL4MIa0YJct6sgwjQlEh7KfWaQv6uQYTg65ehQIaE2J2YGBiOqqalonFg45BCfMUdkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742123660; c=relaxed/simple;
-	bh=RSNp3IPSyvgL4V446VwR7VwxIh7ZawfQRi3rGCvs5fU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tv3u4mT4M++znmETvClP7VdJxVpnqva9ehRJm60A7ZnhgurRIxeUp28qpcNxIJzVOVSpa383zmK5zn4q2Hg77HBzanqEK3QelUrtA4i4AXIrndEUS6EtrFaVbRDCjeSmGqB5m/h3uyU9xBV3sMVz3Nhwk8Oki7M0I4XeHPbLMtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=khfaJIo6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742123754; c=relaxed/simple;
+	bh=DFGOfDKZBpLnLmR52adzPCUkz+rQjYgi1LUd8xi8EwA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mN+KhAqrS8JWz4T/nhP+75Vm6jA1x09z069UXNVbJeAh8I9VIyyP6U1+6ntF23qqmfSlenPAyuVupR6upMah5nqfGOmPhSIUlh4o+L/VQDRJFMRfxRHuk4OtYPJRI4ifQjxXhb7wcRO1ZAaTwDpkDHdcFthP1f2nOERwK6NLQcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aqHE0Den; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khfaJIo6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEDA1C4CEDD;
-	Sun, 16 Mar 2025 11:14:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aqHE0Den"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A99D4C4CEDD;
+	Sun, 16 Mar 2025 11:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742123658;
-	bh=RSNp3IPSyvgL4V446VwR7VwxIh7ZawfQRi3rGCvs5fU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=khfaJIo6AD0bGnW9YfzJuo5Eyd1mzJ0hO4Mo7KzVesIhGNyLw1vSjYlj1zQ5sIQPG
-	 reiUGkhMyH1R+tdWYsbwcb/E8pg7isBil2G6UimF+8r3do+k1SuTAMiJBQQzaEDGqg
-	 fLtW9cjQMWnceyuXFDzVUOHXGyr37+6ol4ZvBC9trh2LfBUKSx54vvnpAid2P3UJkQ
-	 fWScaZgmmld0WufReXkDE4rH5+tVygDZlo5LpjSvt1Q9f62bEbsCcoQQFugKRtxMZX
-	 8szJIKiMoo/oKUsJITBMaECN+FqFMBG/DX5rNWrGScoBtQN3tpKnLDkguiyZCAexcA
-	 m1IB6oOEfFOvw==
-Date: Sun, 16 Mar 2025 11:14:09 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v4 04/14] iio: accel: adxl345: introduce
- adxl345_push_event function
-Message-ID: <20250316111401.07da20dc@jic23-huawei>
-In-Reply-To: <20250313165049.48305-5-l.rubusch@gmail.com>
-References: <20250313165049.48305-1-l.rubusch@gmail.com>
-	<20250313165049.48305-5-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1742123754;
+	bh=DFGOfDKZBpLnLmR52adzPCUkz+rQjYgi1LUd8xi8EwA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aqHE0Dentm2A9HEMjm47WSkJ7XOsm1YRgKxFOm5uG+4YCwdy7RqWwQDNMCP1CutoG
+	 1Wh39z4T0be0mYJuQwRW2MHR7EF96Wy6auWegRNQvN3SjDOynvQDA09MVaDJNx+nty
+	 gpGB50scxcBg0T0vovNhLO2Il0xhvETjXSOJw1hCBDuQWHS9z7uQuwB/jrtmjHGE2T
+	 EIFt7dIwl8TtdK/9i68z1drIL7XyFyN7NGWsAM1Zz0u87bdlZMbSB8xBa9+V/NWq2G
+	 1j8p/WhcIOLLHvUnps8ZjiHMrpTszqi6YL/ogXSoo6YnGv4nGeqIT0PXFELjHNK+dw
+	 fOJ4cBDfZL89Q==
+Date: Sun, 16 Mar 2025 12:15:47 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Ben Segall <bsegall@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 1/9] sched: Add a generic function to return the
+ preemption string.
+Message-ID: <Z9ay49NsoC73dKXe@gmail.com>
+References: <20250314160810.2373416-1-bigeasy@linutronix.de>
+ <20250314160810.2373416-2-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314160810.2373416-2-bigeasy@linutronix.de>
 
-On Thu, 13 Mar 2025 16:50:39 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-> Move the fifo handling into a separate function. This is a preparation
-> for a generic handling of the interrupt status register results.
-> 
-> The interrupt status register is read into a variable int_stat. It carries
-> status for various sensor events, handling of which is added in follow up
-> patches. Evaluation of the int_stat variable is common for sensor events,
-> such as tap detection, freefall, activity,... and for fifo events, such as
-> data ready, overrun, watermark,... Also, dealing with in case error
-> returns shall be common to all events. Thus migrate fifo read-out and push
-> fifo content to iio channels into this function to be built up with
-> additional event handling.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-Applied
+* Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+
+> +const char *preempt_modes[] = {
+> +	"none", "voluntary", "full", "lazy", NULL,
+> +};
+
+> +	/* Count entries in NULL terminated preempt_modes */
+> +	for (j = 0; preempt_modes[j]; j++)
+> +		;
+
+I'm pretty sure the build-time ARRAY_SIZE() primitive is superior here. ;-)
+
+Thanks,
+
+	Ingo
