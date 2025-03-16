@@ -1,78 +1,169 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18407BE4A
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 01:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC9B63CF
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 01:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742087598; cv=none; b=sCBbrtrS1bw9jPJz8rWivCRvICKUv3sinz9BJ2IZOrjP1ytuXn2pQXMCAz0adD/6hOuSW8GEzC7RSNqP/GD7xJush8dGJrxC4a1wGtUvvuL8rr7uOEG3GxM7KVenmJOjghlSYy6Aezr7EqFeXK0b/RMeUzXy35eCT4nKf39JvHo=
+	t=1742087821; cv=none; b=FG5dYeB8IFh+x/5qpwskZJD5CACqVW3XhH7Dq4hLvtxDZhkdLMjr0T3W+gmYcWFasd7CQm/dawsn6ZtiMW4OjeI9bY8TeYenM3LZMyDNvB8orr8dGBA+PSF9ejOv4Cn8gOPB/zXB6ImLV7edmWulHpdpz594KkRVUMievF3f2Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742087598; c=relaxed/simple;
-	bh=5vel7QkAMJ8H/7vZiV62pKV9bW+7kfp8qkaCMnq6Ke0=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=u7kaDNmxMLrHOsxQV1AhOH1kJGY2ijVpSIDDmF10VQcp3YjZY2RNhQfvOn4yGMnzIiDw1b3xinOdMS0AN7TR1azv+magIw1KpraiHN0mp8PuuixwEhV4QPMfrKa8yXXtAK90MWdlR14rmEdzgEHpNj8oyjdT96jq5xRKYrRu0PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=DogkCNN2; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1742087821; c=relaxed/simple;
+	bh=SSAZS0Aw8X7I+lmtlf1UTRPtQEiv9h3mzLxk5QChPPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lq6c+KFcAJiowAqgVWGEd0D8qvRsf9NmZ2f6XndK0xISShV1U3braYDKgjx6loI1b3jWxY3C5sBARlock1sQv/99end9VTlmLzztrk7ZVSnxfj8FPIWlTp7zFPWjhK9/O8eH8AtAhq148rgnOU3PP67wnYFQ2p/1GCyEyCz2PxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=huafWbJi; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="DogkCNN2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1742087583; bh=abv/fmhwC2DnOKbWbUPwzuwmHuBj0kicKFQtoJ1EMSc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DogkCNN2iYQwu43RyM+GTQJAbCTFu5m/iIaEGHq3AhyphTiPqQijzuKkRF41yFsIA
-	 zUkD9nJCDiC3t32au3YKnnXJ6+uo5+V+Pzmpf1kcCNXq/pV/mM1pjib1cQQfFILfZU
-	 O1AHwc7bbSxUh3IP+qz+tBYuzs2u+E1pgEh6NHNA=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 12DA0013; Sun, 16 Mar 2025 09:04:45 +0800
-X-QQ-mid: xmsmtpt1742087085tdynzwr5d
-Message-ID: <tencent_FF211B3F4BBA1BCD253BBA0FBB3F33229E08@qq.com>
-X-QQ-XMAILINFO: OYTBn1rNHH7tTgOLIbwc/t3Eq0Jox8WQIcbalGLLiJTJ/0EZMnFoHMFo5bYkle
-	 uGeCW6NGXLRkgQyN9elEyJbjY48izZm65zz48LUQefT8F82bYGDOZE0wwTSxeiYlnIabSFgyLZhB
-	 M6TyF1Ep14v7VI7LDYb+HgpbJxEryCtp2Ca/W4ddm/QyIzhV5b/XjKdr7W0p4G/yh3cqdFjRTHL/
-	 4+NMTgott4azcIMt8e7zHygkOWT/D8dt7Q5FlBDl8potNmoWYVkS+jQNB3ExjHp0YUqRJn4KO+wZ
-	 OgaBFhs41WVrKO9Vb150zQm4bFikJyMYuhxlJSv7X0erCkdXBfHaBJmGRtUvb3HqpKOa53HJN32E
-	 VhA7on89/5fgMJyj5dXK/9vmpUpQ9CZCB/ioYwOQ4ekXQcnf+YiAjzWlj2tPbqOeA/t3nLwabU+A
-	 5wDZh9NV0WV4UP/bw2EJ1oM8LyD8jGy9hB79sBdOoiFWTpUpS43ODb4PkRKBb8/oldEKSaTKfo2D
-	 268Q0qvAzU5eKQBgU37PpJLDYXd8CRuqUYXuBiTih4Wk/xu/RYo/33oaj9yJtXINBNn0Q/vJzcDe
-	 337R5/QA0oKIxTcXNKrjOES5Dwaq+AOrKS1GOEUbjnnjgWCdBwy/1ZxOIzkGhQJW+prqelR7id/3
-	 TKvcuEWt7kIsPItvAo+V6vBlFS5w27i6jzvV84RKfAzXP16aQI6FeXRCd1MSZQIBI3tDYQ9iA3Qq
-	 llPtVR5mdSGVQz8EAUkFD2Q/5mXt12cFyjgFMJsIDgfocr/lRk7QtEW/FQ2BSGE2zpUzdWoC5Iu8
-	 vxdYIxTXssEcKvUvkpt+zU+9qYBbkKl2tjn6Cds7uOL7Z9XxwVDCtiOaSkD8srUr9oIP7fFEJ1Ao
-	 DYJntqj78tm1hlcDIxj6dZQINiv0fcnDQ7Lxtdfon0a7d/jQFajaYeqT21+G/5rnRTOcslGSNJtI
-	 HYoazlf10=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+30de9d963fdd95d745f8@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [wireless?] possible deadlock in ieee80211_change_mac (3)
-Date: Sun, 16 Mar 2025 09:04:45 +0800
-X-OQ-MSGID: <20250316010444.2081611-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67d4651e.050a0220.14e108.0048.GAE@google.com>
-References: <67d4651e.050a0220.14e108.0048.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="huafWbJi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742087819; x=1773623819;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SSAZS0Aw8X7I+lmtlf1UTRPtQEiv9h3mzLxk5QChPPc=;
+  b=huafWbJiIl0MHwUkZG6/VvkXDnDVpE6B2Y1Cew9YszNqIQPCS3H0NLwo
+   3r4eFEikPzZ3rmORK/YXF2okpxBrc+MtO4NLhF/Hl6X6z7muRVRV2t6/i
+   7d8CD6ZFEcNeAKfosfPB3ey/4Bx4dWNjo3xY35N4gDsQSEzKw/nnBLnv9
+   zyOX/3RN1FwsgFWXQeV1hAB+KaacanPXkZ8SEMOJfBytD8prrKUJaBj/2
+   zQK7GmgIoLY/JPuVrAQf8FNRvF3uf5Ue8tfADkZBCUnAnfv+gyqeGltiL
+   82cKy905uRjfob/fwqZbzUUhN5pn8VF60PrFojbCNNZyncPeDMy5dGpo8
+   w==;
+X-CSE-ConnectionGUID: M6CtuvcdRw+wFM1YtPgNFQ==
+X-CSE-MsgGUID: OqtYIlsMQWiUH9zcGNLDTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11374"; a="45977538"
+X-IronPort-AV: E=Sophos;i="6.14,251,1736841600"; 
+   d="scan'208";a="45977538"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2025 18:16:58 -0700
+X-CSE-ConnectionGUID: cWRnzUJ5QriF7b36Uq0b9A==
+X-CSE-MsgGUID: ESDT0N2/SLCTX94sQwGBXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,251,1736841600"; 
+   d="scan'208";a="144792764"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 15 Mar 2025 18:16:56 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ttccX-000Bkh-1F;
+	Sun, 16 Mar 2025 01:16:53 +0000
+Date: Sun, 16 Mar 2025 09:16:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pu Lehui <pulehui@huaweicloud.com>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Pu Lehui <pulehui@huawei.com>
+Subject: Re: [PATCH] riscv: fgraph: Fix stack layout to match
+ __arch_ftrace_regs argument of ftrace_return_to_handler
+Message-ID: <202503160820.dvqMpH0g-lkp@intel.com>
+References: <20250311132243.2178271-1-pulehui@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250311132243.2178271-1-pulehui@huaweicloud.com>
 
-#syz test
+Hi Pu,
 
-diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
-index 738de269e13f..87a970c18e96 100644
---- a/net/mac80211/iface.c
-+++ b/net/mac80211/iface.c
-@@ -301,7 +301,7 @@ static int ieee80211_change_mac(struct net_device *dev, void *addr)
- 	 * active (maybe other cases?) and we must get removed from it.
- 	 * But we really don't care anymore if it's not registered now.
- 	 */
--	if (!dev->ieee80211_ptr->registered)
-+	if (!dev->ieee80211_ptr->registered || dev->ieee80211_ptr->registering)
- 		return 0;
- 
- 	guard(wiphy)(local->hw.wiphy);
+kernel test robot noticed the following build errors:
 
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.14-rc6 next-20250314]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Pu-Lehui/riscv-fgraph-Fix-stack-layout-to-match-__arch_ftrace_regs-argument-of-ftrace_return_to_handler/20250311-212440
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250311132243.2178271-1-pulehui%40huaweicloud.com
+patch subject: [PATCH] riscv: fgraph: Fix stack layout to match __arch_ftrace_regs argument of ftrace_return_to_handler
+config: riscv-randconfig-001-20250316 (https://download.01.org/0day-ci/archive/20250316/202503160820.dvqMpH0g-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 87916f8c32ebd8e284091db9b70339df57fd1e90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250316/202503160820.dvqMpH0g-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503160820.dvqMpH0g-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> <instantiation>:1:14: error: operand must be a symbol with %lo/%pcrel_lo/%tprel_lo modifier or an integer in the range [-2048, 2047]
+   addi sp, sp, -FREGS_SIZE_ON_STACK
+                ^
+   arch/riscv/kernel/mcount.S:73:2: note: while in macro instantiation
+    SAVE_RET_ABI_STATE
+    ^
+>> <instantiation>:2:17: error: unexpected token
+    sw ra, FREGS_RA(sp)
+                   ^
+   arch/riscv/kernel/mcount.S:73:2: note: while in macro instantiation
+    SAVE_RET_ABI_STATE
+    ^
+   <instantiation>:3:17: error: unexpected token
+    sw s0, FREGS_S0(sp)
+                   ^
+   arch/riscv/kernel/mcount.S:73:2: note: while in macro instantiation
+    SAVE_RET_ABI_STATE
+    ^
+   <instantiation>:4:17: error: unexpected token
+    sw a0, FREGS_A0(sp)
+                   ^
+   arch/riscv/kernel/mcount.S:73:2: note: while in macro instantiation
+    SAVE_RET_ABI_STATE
+    ^
+   <instantiation>:5:17: error: unexpected token
+    sw a1, FREGS_A1(sp)
+                   ^
+   arch/riscv/kernel/mcount.S:73:2: note: while in macro instantiation
+    SAVE_RET_ABI_STATE
+    ^
+   <instantiation>:6:15: error: operand must be a symbol with %lo/%pcrel_lo/%tprel_lo modifier or an integer in the range [-2048, 2047]
+    addi s0, sp, FREGS_SIZE_ON_STACK
+                 ^
+   arch/riscv/kernel/mcount.S:73:2: note: while in macro instantiation
+    SAVE_RET_ABI_STATE
+    ^
+   <instantiation>:1:16: error: unexpected token
+   lw ra, FREGS_RA(sp)
+                  ^
+   arch/riscv/kernel/mcount.S:77:2: note: while in macro instantiation
+    RESTORE_RET_ABI_STATE
+    ^
+>> <instantiation>:2:17: error: unexpected token
+    lw s0, FREGS_S0(sp)
+                   ^
+   arch/riscv/kernel/mcount.S:77:2: note: while in macro instantiation
+    RESTORE_RET_ABI_STATE
+    ^
+   <instantiation>:3:17: error: unexpected token
+    lw a0, FREGS_A0(sp)
+                   ^
+   arch/riscv/kernel/mcount.S:77:2: note: while in macro instantiation
+    RESTORE_RET_ABI_STATE
+    ^
+   <instantiation>:4:17: error: unexpected token
+    lw a1, FREGS_A1(sp)
+                   ^
+   arch/riscv/kernel/mcount.S:77:2: note: while in macro instantiation
+    RESTORE_RET_ABI_STATE
+    ^
+   <instantiation>:5:15: error: operand must be a symbol with %lo/%pcrel_lo/%tprel_lo modifier or an integer in the range [-2048, 2047]
+    addi sp, sp, FREGS_SIZE_ON_STACK
+                 ^
+   arch/riscv/kernel/mcount.S:77:2: note: while in macro instantiation
+    RESTORE_RET_ABI_STATE
+    ^
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
