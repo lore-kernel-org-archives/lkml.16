@@ -1,92 +1,240 @@
-Received: from www571.your-server.de (www571.your-server.de [78.46.3.230])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502AE1AF0A7;
-	Sun, 16 Mar 2025 17:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.3.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1021F1993B1;
+	Sun, 16 Mar 2025 17:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742145061; cv=none; b=uqbDpdl7MeqHLkI2jvxtiL14qaKCom2jIqzLQR+rUwvlVLfpozSoGMIxXjPaDA1eL74+xhZ+ERQb4gUW4JZUJwRJh+Zpn9jilE5RgvsGiOsZ40oLK2O9sNUujNXsd6bzh3eWV4i70Rlw2Ziw1P3Vuf+ggKWZr708IHTmwuJwSRQ=
+	t=1742145105; cv=none; b=bgLoCPIDjKLLmvKxjRJqkUuhKr/EfQ6QN8T+HkPjwcLZA5VVljdBBjFwywEUYXOra0yRuR3+fC9A0njPFjNZPKm1ghjHcYsthEzRLVOp0KH6FTj+GjxM21m2HbFumU6WKDNe4C91i5Lv3LXnIh8AKRz3Q5A1etYB20Pu1cqIMP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742145061; c=relaxed/simple;
-	bh=b4tvDPc89cTsia2kLIqz/jAi8ooEZ1PBscruF8dppfI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eZvQhWmU/zZIE+xZJqliLQhtEV6WXtQmjmFKAECytKbu7nCKr9w67/rHkn7sgJQz+27iGIWkxCHa8s/mGjB18CRJjlhmWb//YumNHHBWioy0x2b7YtzVhr48aaYYtvJ4H0MqENzfDaagCiYYufpViEXz8iOAKii8XRnpa8Dl9kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de; spf=pass smtp.mailfrom=it-klinger.de; dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b=EK63qHxD; arc=none smtp.client-ip=78.46.3.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=it-klinger.de
+	s=arc-20240116; t=1742145105; c=relaxed/simple;
+	bh=pBOXP9pYA3O6uFYcjDfSczaFkD/coBq7CLtlKYidPVw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oFWV0pdm6mxACrFBFVeuIkigiR/Z6VIHEDUcIpY87ZJi+gq+/pnhc97VZSwTm0HJYILZLGnKEREi/70ks5FP/htB2Nr3lk/luS4+k0WPmoRXdnBouttXrvXbji2//0XHHpE57LXuGLu+5enKe8Hb49L3p+2wejK1Z6nTyvdxBO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKO6/R2i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b="EK63qHxD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=it-klinger.de; s=default2502; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=Grv1JyKA9rOJDio1cxFrVBgu02WiOXJOj3sho8vZTas=; b=EK63qHxDnhSMHaHRgAtbyMyMn8
-	lFAW/XweTe/jGUemMwbBahgvee+H1zaQ+aOoV7SfievPv3t676GvYf/nHv2/C0SJFyzuyjcIDKs3T
-	8y1r9b7JgwCNAfLtpUs4wNrLVu/Sf+0S+Tby+6OF8LAj+27ZDXpEKpnnGtIOQt4YGQxIVs5h5EekY
-	NjApQ4EnFkLGdB1w/enx2Lm76NHGOl8OCstBJkAnM3A6BQriwyvnUXQgTWTZyHkz/jrtsidzx5m5R
-	pARpEEzuJvu9OC9dWh6ic9M7V/Af+X1qVRpb+hEdorb7Orm2UVpf1h0zUUCMCSJ8fXJ3mUe5XP9N3
-	x1tQSiUQ==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-	by www571.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <ak@it-klinger.de>)
-	id 1ttrAK-0000Cl-0L;
-	Sun, 16 Mar 2025 17:48:44 +0100
-Received: from [2a0f:6480:1:600:fc64:4dfc:9829:9e5f] (helo=anderl.linuxhotel.de)
-	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ak@it-klinger.de>)
-	id 1ttrAK-000MlM-0f;
-	Sun, 16 Mar 2025 17:48:43 +0100
-From: Andreas Klinger <ak@it-klinger.de>
-To: jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: lars@metafoo.de,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	javier.carrasco.cruz@gmail.com,
-	mazziesaccount@gmail.com,
-	subhajit.ghosh@tweaklogic.com,
-	muditsharma.info@gmail.com,
-	arthur.becker@sentec.com,
-	ivan.orlov0322@gmail.com,
-	ak@it-klinger.de
-Subject: [PATCH v2 0/3] iio:light: add driver for veml6046x00 RGBIR color sensor
-Date: Sun, 16 Mar 2025 17:48:10 +0100
-Message-Id: <20250316164813.30291-1-ak@it-klinger.de>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKO6/R2i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2BEFC4CEDD;
+	Sun, 16 Mar 2025 17:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742145104;
+	bh=pBOXP9pYA3O6uFYcjDfSczaFkD/coBq7CLtlKYidPVw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DKO6/R2i+0uPxfrE0bC5bWtqlyhxbR8CXmymQuqkE792tEoYsvT3/txKv4yDFS+l2
+	 qRoFSq5lxjfo2IVYtnfAh3l14MlZyzt01ezdsPYdsSB/dStA3PhtkiWZVHJT1iPlqr
+	 fYWe/uM2E535lbqeyUSgaYPpCcg1YvK4affPjQWk23NBVc9fBfNAPdWGYnoKedzXYu
+	 TQ9d2n19bhYsXsyZOA76xs7eIQLr6cFb38RtAL+V6f8qKeacwwx031y51H7n1sXyCd
+	 OjXLawhoLJZrORq4wADwhuCu9OMLmQgIcMTB9ei5uoeUK15A6+ccy/8j2yhB2wO118
+	 nysbjCSnqAB2w==
+Message-ID: <2a5e25ad-92a6-4e25-a2b7-198b3ad84d2f@kernel.org>
+Date: Sun, 16 Mar 2025 18:11:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: ak@it-klinger.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27579/Sun Mar 16 09:35:38 2025)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/13] dt-bindings: mfd: add Documentation for Airoha
+ EN7581 SCU
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Danzberger <dd@embedd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>,
+ Nikita Shubin <nikita.shubin@maquefel.me>, Guo Ren <guoren@kernel.org>,
+ Yangyu Chen <cyy@cyyself.name>, Ben Hutchings <ben@decadent.org.uk>,
+ Felix Fietkau <nbd@nbd.name>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-usb@vger.kernel.org,
+ upstream@airoha.com
+References: <20250309132959.19045-1-ansuelsmth@gmail.com>
+ <20250309132959.19045-6-ansuelsmth@gmail.com>
+ <c1227083-a4ea-4dac-a9db-d6a5386c0437@kernel.org>
+ <67cec328.170a0220.27ecbc.9c6e@mx.google.com>
+ <026296c8-a460-43ca-a423-0fa38269fbc2@kernel.org>
+ <67d08a4f.7b0a0220.8fe9e.44fd@mx.google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <67d08a4f.7b0a0220.8fe9e.44fd@mx.google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patchset adds an IIO driver for Vishay veml6046x00 RGBIR color sensor
+On 11/03/2025 20:09, Christian Marangi wrote:
+>>
+>> This does not explain that binding said "This node defines the System
+>> Control Unit".
+>>
+>> So what are you adding here if not SCU?
+>>
+> 
+> With "This node defines the System Control Unit" I mean, the entire
+> register space of the IP block is defined and each child specifically
+> define each part of the IP block.
 
-Changes in v2:
-- fix missing include for example in vishay,veml6046x00.yaml
+And the binding said - "this is the SCU". Now you claim that the binding
+which said "this is the SCU" is not the SCU but a part of it.
 
-Andreas Klinger (3):
-  dt-bindings: iio: light: veml6046x00: add color sensor
-  iio: light: add support for veml6046x00 RGBIR color sensor
-  MAINTAINER: add maintainer for veml6046x00
 
- .../iio/light/vishay,veml6046x00.yaml         |  51 +
- MAINTAINERS                                   |   6 +
- drivers/iio/light/Kconfig                     |  13 +
- drivers/iio/light/Makefile                    |   1 +
- drivers/iio/light/veml6046x00.c               | 890 ++++++++++++++++++
- 5 files changed, 961 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml
- create mode 100644 drivers/iio/light/veml6046x00.c
+> 
+>>>
+>>> The driver solution for this is syscon and the simple-mfd node
+>>> structure.
+>>
+>> Let's keep driver entirely separate, we don't talk about them and mixing
+>> arguments won't make it easier.
+>>
+> 
+> Ok.
+> 
+>>>
+>>> Now the main problem is how to modle this in DT. There are lots of case
+>>> where the simple-mfd model is used (like the one proposed) but probably
+>>> this is not accepted anymore. But again this should be clearly stated or
+>>> we have a chicken-egg problem when other devs implement similar thing and
+>>> have to implement simple MFD driver to handle this. (and driver
+>>> maintainers say "Use the simple-mfd model like it was already done)
+>>
+>> simple-mfd has nothing to do here. Describe the hardware - what is the SCU?
+>>
+>>
+> 
+> As I said below, SCU is just the name used in Airoha Documentation for
+> this IP block. In this register space there are multiple things so it's
+> not strictly a clock-controller (as it's currently defined)
+> 
+> It was proposed as clock-controller previously as we weren't aware this
+> IP block was used also for other usage that a strict clock controller.
 
--- 
-2.39.5
 
+I am pretty sure everyone was, just drivers were developed for current
+needs and then binding was adjusted to match drivers.
+
+> 
+>>>
+>>> For this specific case (and to give an answer to the clock patch after
+>>> this) the problem is that this register space was originally used only
+>>> to control the clock and I wasn't aware that it was also used to control
+>>> USB. Now that I'm implementing support for it, the disaster happened.
+>>>
+>>> So In short SCU is lots of thing, both a system-controller, a
+>>> clock-controller and even a reset-controller.
+>>
+>> And you have bindings for that already. Done.
+>>
+> 
+> It's currently defined in DTS as clock-controller, should we change it
+> to system-controller to make it more clear?
+
+It does not matter for this discussion about bindings, it is just a
+name. You can rename it, sure, although also a bit of a churn since this
+device has a "clock controller" as one of its main features. And "system
+controller" is also way generic.
+
+BTW, it is frequent (e.g. all Qcom platforms, many Allwiner and
+Mediatek) that clock controller is also reset or power domain controllers.
+
+
+> 
+>>>
+>>> To make it short, 2 different solution:
+>>> 1. We can keep the current node structure of the node-controller and add a
+>>> child node for the SSR part (with a dedicated compatible).
+>>
+>> No, you do not add child nodes just because you want some drivers.
+>>
+>> What is SSR? How is it a device?
+> 
+> SSR is the name used in Documentation for the register used to configure
+> the Serdes and PCIe port.
+
+Register(s) for configuring something is not a device.
+
+> 
+>>
+>>> 2. Those property need to be be defined in the clock-controller node?
+>>
+>> In the SCU node. Do you have only one SCU or more?
+> 
+> Strictly speaking it's one register space. One clock-controller, one
+> reset-controller and one set of SSR registers, and from what I can
+> understand it's ALWAYS "One device/compatible for Register space"
+
+No, it's not the reason. You define children if they are distinctive. By
+distinction I mean some sort of controllable resources which they need
+independently of parent. No resources here, except address space, which
+seems superficial choice.
+
+
+
+> 
+> The simple-mfd pattern can't really work for case like this where in one
+> register space there are multiple stuff.
+
+We agreed not to talk about simple-mfd, but answering this: yes, but
+because your split is neither necessary nor really accurate.
+
+> 
+> Is everything clear now?
+> 
+> To summarize:
+> - no child nodes
+> - add additional property for SSR in the SCU .yaml
+
+Yes.
+
+Unless I made mistake here in the judgement, but that will be easier to
+spot after seeing entire binding/DTS for this device.
+
+Best regards,
+Krzysztof
