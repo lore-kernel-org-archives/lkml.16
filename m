@@ -1,63 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from b2712.mx.srv.dfn.de (b2712.mx.srv.dfn.de [194.95.235.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BB91EDA19
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 19:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9967F2629D;
+	Sun, 16 Mar 2025 19:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.95.235.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742153299; cv=none; b=jVJLOutOH9+watd19vdAc/boOHfaovHTjLYjRqPoIdN/UOy53/t2ZsLIHfBlqrT1CDPOPl2hBNbQKjFmjoHKbdKwCZBtPh7FQT/3jApsnYgwsqduzAi2RmzfB3i1HZ/UW7Sg3H3NWinBaSnpU3MixomJxABEvMSzhF07QdVXG3k=
+	t=1742153679; cv=none; b=BMB4UNq6u7hrv/lj7aJz0jF7dnkEBT6syXS/WhVJNsU/5fF1QnhWkKS4Q+aCBWyrgPdOMSvMOng39MvvBkF6BwAW5G7BHgMNU9LDpfbjSIY+9lTbeYUOP0wD/q+WmEPpOn/WbMiIHAqrGn/o/l4B+xu+d7137QNoHCBm8pJCv1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742153299; c=relaxed/simple;
-	bh=MUjtwgIZz7j4PRg5R2tkXug63BWHk3d3uNOIpZBuMDw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=oTsgqR6/J9DfER9403Vc944xcS9G/AvXGGX9EoMZ6fJvNdcrDdB6t41vID0xzQCQwh6OcYOU6ljOGviypR1+NwK36RPtOjHwyIbE3ikSRnswUPsnaYQD6cj4pUqUi3drXzKbMSxmsuaY0t7mACmIiES5pfjfNqldbMPyJLR+OK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1GSjW2z; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1GSjW2z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 563ABC4CEEE;
-	Sun, 16 Mar 2025 19:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742153299;
-	bh=MUjtwgIZz7j4PRg5R2tkXug63BWHk3d3uNOIpZBuMDw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=U1GSjW2zJJeR7wTxIXKFi9M6NA1J4A0XyFV0om5AaQp1N28ZdxP+Idsc3rUm8fxwb
-	 aY8V57VqzDzCpNDgw7GV8LZxRfJMaIL6RfL9Z8C+Y4Iuzc1vFJbI+hpmQPyzQqQMAQ
-	 mfhX6xIAfpZWq8JHXvqAsjjtCHzyRwQv6Nyg2zkGQyyfBBh8rFjbHgJLddWXC7HvnI
-	 wR9I8RjCuMSfAOjc5smvQJ6aU3V/KXV2loYoIMQnilwUBhbHwUBvL3E669WOrmcRXv
-	 Z98OSrIxJNg11CkjU65qfqSwkSxoovYI2SI+41HD3D0OdhLIb/YLq9c645zC7gIspM
-	 lWTKAoLrDOzgg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD3F380CFF2;
-	Sun, 16 Mar 2025 19:28:55 +0000 (UTC)
-Subject: Re: [GIT PULL] tracing: Fix for v6.14
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250316131827.4d989e91@batman.local.home>
-References: <20250316131827.4d989e91@batman.local.home>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250316131827.4d989e91@batman.local.home>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-v6.14-rc5
-X-PR-Tracked-Commit-Id: 0b4ffbe4888a2c71185eaf5c1a02dd3586a9bc04
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ad87a8d0c435a97e2bdcf714d7e1a84ab5fda1ad
-Message-Id: <174215333435.2863831.77659748166409051.pr-tracker-bot@kernel.org>
-Date: Sun, 16 Mar 2025 19:28:54 +0000
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Tengda Wu <wutengda@huaweicloud.com>
+	s=arc-20240116; t=1742153679; c=relaxed/simple;
+	bh=hULb9bY+HvY16srEOmds0YHCxINq/V0Rb1Bd20SrQgk=;
+	h=MIME-version:Content-type:Message-id:Date:To:Cc:From:Subject; b=GnMrS58squjsrjn2u3poZTXzYgTP9mShNKPnw0r3QZ5mbo2GsPOnw5lrXTQLrJoa4oR3pCpO5blIul2+lZzCInBQmz89ZmbqH+EZfNWFOuLZdFof71JHLasRUW70TAMAgcfTwmrEuSssG2vJHwmVFD2XfSx7oX1wEVl+jwOkVYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stud.hs-bochum.de; spf=pass smtp.mailfrom=stud.hs-bochum.de; arc=none smtp.client-ip=194.95.235.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stud.hs-bochum.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stud.hs-bochum.de
+Received: from oms0.hs-bochum.de (mail.stud.hs-bochum.de [193.175.85.64])
+	by b2712.mx.srv.dfn.de (Postfix) with ESMTP id 0AE193A00AF;
+	Sun, 16 Mar 2025 20:25:45 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Content-type: text/plain; CHARSET=US-ASCII; format=flowed
+Received: from [192.168.178.29]
+ (ip-095-223-071-235.um35.pools.vodafone-ip.de [95.223.71.235])
+ by oms0.hs-bochum.de
+ (Oracle Communications Messaging Server 8.1.0.9.20210415 64bit (built Apr 15
+ 2021)) with ESMTPSA id <0ST800784DYXJ230@oms0.hs-bochum.de>; Sun,
+ 16 Mar 2025 20:25:45 +0100 (CET)
+Sender: sven.grewe@stud.hs-bochum.de
+Message-id: <dad804b1-bfcf-4a72-bcaf-3f1137b3facc@stud.hs-bochum.de>
+Date: Sun, 16 Mar 2025 20:25:44 +0100
+User-Agent: Mozilla Thunderbird
+Content-language: en-US
+To: linux-sound@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Olivier Moysan <olivier.moysan@foss.st.com>
+Cc: linux-kernel@vger.kernel.org
+From: Sven Grewe <sven.grewe@stud.hs-bochum.de>
+Subject: ASoC: dmic: add regulator support
 
-The pull request you sent on Sun, 16 Mar 2025 13:18:27 -0400:
+Dear Maintainers,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-v6.14-rc5
+I tested linux-next and a patch in it breaks the audio and delays the 
+shutdown process on my system for a few minutes. Reverting the following 
+patch seems to fix it for me in linux-next 20250314:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ad87a8d0c435a97e2bdcf714d7e1a84ab5fda1ad
+Author: Olivier Moysan <olivier.moysan@foss.st.com>
+Date:   Thu Mar 6 18:18:40 2025 +0100
 
-Thank you!
+     ASoC: dmic: add regulator support
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+     Allow management of the regulator that may be used to supply the
+     digital microphone.
+
+     Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+     Link: 
+https://patch.msgid.link/20250306171840.593443-3-olivier.moysan@foss.st.com
+     Signed-off-by: Mark Brown <broonie@kernel.org>
+
+
+
+linux-next 20250307 worked. Later versions had the problem I described 
+above.
+
+For the bisection I used the default .config from Debian's 6.12.x kernel 
+when building. I build and ran them on my Samsung Galaxy Book. This 
+device got a patch recently in linux-next not related to audio. That's 
+why I wanted to test linux-next and found this.
+Linux version 
+6.14.0-rc6-next-20250314-next20250314-revertbrooniesound-grewe 
+(sven@Turbine) (gcc (Debian 14.2.0-17) 14.2.0, GNU ld (GNU Binutils for 
+Debian) 2.44) #1 SMP PREEMPT_DYNAMIC Sun Mar 16 16:06:58 CET 2025
+Operating System: Debian GNU/Linux trixie on x86_64
+Audio Chip: Realtek ALC256
+
+Kind regards,
+Sven J. Grewe
