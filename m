@@ -1,144 +1,327 @@
-Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DB991624D2
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 21:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAB01624D2
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 21:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742161875; cv=none; b=Up1Rf+fhLEGlLCilnLY3u5agfLI/ZF0lAl2bujztRiCmjvfmq7CuW3WbwtXyCp7trWrtupOlvMoMJAgoO1Fq0+miU6qtvywFfjqGquAy56enDqF0kdKmXSZNoF/S8rbTQt3QvNdEBsp3VyAQYBtnq8QQbEFSqzuieQrCgZjQEys=
+	t=1742161936; cv=none; b=GzydfK2QggjYzUivDeBc1yqt/q07+TdDAMOg5XXmmyZC2Q8Od1QFiGIO+5pj83TDY1112qDFvP7p9u51wf1T6Tn1HUn5IzZeTxrczhaqGpElzmt2VfahuVyRNxTGBMzqLQMqPJ6Bj+URUnci/qyxwI1bEiDXeWT5Gzfom6H0/uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742161875; c=relaxed/simple;
-	bh=KwSTIINjek4C6NcWfA3eWqBn2q80cIra1CDyfVwYgYw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ao3FIb7ZDtSLq+aY+HPf1ErJ/wVhQPtvY8wuU/xFbjLkU0J/vqhDZVeL6BDH/KM6I5Y6kiwgOkFvN+PDNq1hSLEQY2uoGoyQQzzp88D5eNICKXxJg7Pegj1ghmbAMJs+s+Lc8edOtPOVUnM5s5x1Mv1t4FIyEFySh/CIOGI3Y3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=M6dsYWQC; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1742161936; c=relaxed/simple;
+	bh=YH8lD/rVyrTNyFmZSb4KjflN68yPPe3RTT56NzBjRAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RdeStkZVSzzmT5BFSH3HmjT6/FX7i+nue7G1KfLS5yoNnGCneu9Z/uZ4c9OpTxutE+92b4P5sjYSClpf7fN9+rjIIqHop80dP4RMe0Uo5H92S6niuLKU+rXd326aVm9gr/u1atRz6s5tn3+g7Bd6+labrZKIuz9DvbhF6jw+C7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=fypAfLWf; arc=none smtp.client-ip=121.127.44.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="M6dsYWQC"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 2D1AA14C2D3;
-	Sun, 16 Mar 2025 22:51:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1742161873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YimY1Bf+igN/ThVHO6TRhNXFBUxdzqU4A52j7oKmUks=;
-	b=M6dsYWQCzMnGfYox5OXAS77HbwB3tTOfKvRRP4JeSdL5KiYgKF5GV0HAiM4IPs1o8ZHNsT
-	OBz0RrRqAWQMzs7+tRbjjsRMKni/yio87VRK9893e54bI848piKWvV99NkGrwH9xXK496o
-	cYotI/Y/PoqJjs8cMZlRS1HUIU32oSxhHmoH1JCyhjepIAW5m6EAPJJrhu0+t6PJtvx1Oq
-	1U+iVhkCfmi+wKhen7xsEA8KoY3k2G99ytGpdKeQI+bhCDIOs17h+G3iWwcQLS4WkgTXOE
-	+WrjXRFP+1KwmrkCeQhZklPjAAK93N7p4P8/9JayC9MJq9mzhYenG7wBJsQfFw==
-Received: from [127.0.0.1] (localhost.lan [::1])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 7b78d06c;
-	Sun, 16 Mar 2025 21:51:09 +0000 (UTC)
-From: Dominique Martinet <asmadeus@codewreck.org>
-Date: Mon, 17 Mar 2025 06:51:06 +0900
-Subject: [PATCH] 9p/net: return error on bogus (longer than requested)
- replies
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="fypAfLWf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1742161933;
+ bh=vmHPFcJZ78hwHnl9SxGCphVe0yu9MYFikge7ywKMkGc=;
+ b=fypAfLWf/ME8dg5noGXNMp/8Wab4XTl193L0LFrXe1LPedPh+IgZy54rLjN3yg7s19P1/x6e2
+ Y9H9b4M1Yd3qdyOeUEYLg/YGkEQEu7XFQQ8HbNs9uRXdL3wW0J9ow5sOOIdxVAL3hchuqFq8rcl
+ CsSg5nwukEg/LduqdZIyDLx49ZQR02wZC+XD0Z7x2dtqjNgTcRK1z/ZC+unJyyreCG38URTI004
+ m3YEaoaMPptqDQI2n/x5iidSUNwn73+8RrQf56fgDgjDoJ/As0dYzX8dG8GrnE0ZEJgBLJZQL/i
+ OGWrnmo6ffHmJ0+dHpNgZ0DQFwAOk6+Nn32mWeVIGEJA==
+X-Forward-Email-ID: 67d7480b615b196bfb50e07f
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.59
+X-Forward-Email-Version: 0.4.40
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <8c697031-9978-40cd-a1e0-f40552db9107@kwiboo.se>
+Date: Sun, 16 Mar 2025 22:52:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] nvmem: rockchip-otp: Add support for rk3568-otp
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org,
+ Finley Xiao <finley.xiao@rock-chips.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+References: <20250227110804.2342976-1-kever.yang@rock-chips.com>
+ <20250227110804.2342976-2-kever.yang@rock-chips.com>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20250227110804.2342976-2-kever.yang@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-p9_bogus_io_error-v1-1-9639f6d1561f@codewreck.org>
-X-B4-Tracking: v=1; b=H4sIAMlH12cC/y3MSwqFMBBE0a1Ijw0kikjcikjwU2pPjHb08UDcu
- 0EdnoK6JwUII1CVnCT4cWC/RJg0oX5ulwmKh2jKdFbo3JRqta7z0xEcewcRL6qANa2xHXLdU/y
- tgpH/T7NuXgu2I6b3b7yuG/XizKB4AAAA
-To: Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>
-Cc: v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Dominique Martinet <asmadeus@codewreck.org>
-X-Mailer: b4 0.14-dev-87f09
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2270;
- i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=KwSTIINjek4C6NcWfA3eWqBn2q80cIra1CDyfVwYgYw=;
- b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBn10fNdo/Q7bqDGxDs238ulpF8UAZ/3Ku9Qxul6
- 3YcWqzDSk2JAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZ9dHzQAKCRCrTpvsapjm
- cO/ND/sFGDsmMG1kXFbFmQ5eUTUm6xQy46PFnGVhfl+5mPw01AtF0guhax0k92+5VefchoWtrF5
- kEykfrXSb+c7suxawLKbbPJGpIb7G2Lk0lBsLKJtBZ7fvqzdaMdoOFbJYKeoo61TUhxs58acTbg
- 8JItcVEzDtAb3YcpD9kStznkG2mhYh2Z8qj48vUlbgZMKuAaLssZ3/Me8oEo61w5XhmEjELWIbg
- yqnmx5gK6HThfDyxS/gD+H1n5eElnW8y2yPTrjFA8IMwOzM9eRBUtpYgnAwq/sBipAV3ySi+FIf
- dkjBoWeXHjteL6zbD67Itlz3PAIc0es+8YRTDek/zUUmnS3kTy3tB5ZmqxYJrBHE2I8Vp9XkR/p
- bUzKl8n2bjRK6y9Jy2zsKuG220wmzFUEFHBLApcND1CChvSIp96jwd3h1SvyqYM5elfPaC8Q7Bb
- 8s4qRCyKBnE/TEP00xWTV5KRGGm5bk6iQuhFok1F017XMOGQiwErXBNCeCRcPYcn9//vrVvEK8I
- cSiqVSxSJ8wCm8HEBCznrOrTHr76/swT5KsPSD1TNhmVS15Ex7kI1hC30WB6NeP378mWTeVR8LC
- JHYXcLDkZyDmGt1exIhXSZjXPwHKxt7fYgPMqJx0IQ1RhE6/XnuMnxk5dT1s0CsUnF6zvOnEQR5
- J6glgeTAuBcQIZA==
-X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
- fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
 
-Up until now we've been considering longer than requested replies as
-acceptable, printing a message and just truncating the data,
-but it makes more sense to consider these an error.
+Hi Kever,
 
-Make these fail with EIO instead.
+On 2025-02-27 12:08, Kever Yang wrote:
+> From: Finley Xiao <finley.xiao@rock-chips.com>
+> 
+> This adds the necessary data for handling efuse on the rk3568.
+> 
+> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+> 
+> Changes in v2: None
+> 
+>  drivers/nvmem/rockchip-otp.c | 82 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+> 
+> diff --git a/drivers/nvmem/rockchip-otp.c b/drivers/nvmem/rockchip-otp.c
+> index ebc3f0b24166..a04bce89ecc8 100644
+> --- a/drivers/nvmem/rockchip-otp.c
+> +++ b/drivers/nvmem/rockchip-otp.c
+> @@ -27,6 +27,7 @@
+>  #define OTPC_USER_CTRL			0x0100
+>  #define OTPC_USER_ADDR			0x0104
+>  #define OTPC_USER_ENABLE		0x0108
+> +#define OTPC_USER_QP			0x0120
+>  #define OTPC_USER_Q			0x0124
+>  #define OTPC_INT_STATUS			0x0304
+>  #define OTPC_SBPI_CMD0_OFFSET		0x1000
+> @@ -53,6 +54,8 @@
+>  #define SBPI_ENABLE_MASK		GENMASK(16, 16)
+>  
+>  #define OTPC_TIMEOUT			10000
+> +#define OTPC_TIMEOUT_PROG		100000
 
-Suggested-by: Christian Schoenebeck <linux_oss@crudebyte.com>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
----
-As suggested in https://lkml.kernel.org/r/4171850.H1WhmIdAfj@silver
+This is not used anywhere in this patch, please drop it.
 
-Not tested as I haven't taken the time to make a bogus server...
-I'm sure syzbot will come bit us on that :|
----
- net/9p/client.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+> +#define RK3568_NBYTES			2
+>  
+>  /* RK3588 Register */
+>  #define RK3588_OTPC_AUTO_CTRL		0x04
+> @@ -184,6 +187,70 @@ static int px30_otp_read(void *context, unsigned int offset,
+>  	return ret;
+>  }
+>  
+> +static int rk3568_otp_read(void *context, unsigned int offset, void *val,
+> +			   size_t bytes)
+> +{
+> +	struct rockchip_otp *otp = context;
+> +	unsigned int addr_start, addr_end, addr_offset, addr_len;
+> +	unsigned int otp_qp;
+> +	u32 out_value;
+> +	u8 *buf;
+> +	int ret = 0, i = 0;
+> +
+> +	addr_start = rounddown(offset, RK3568_NBYTES) / RK3568_NBYTES;
+> +	addr_end = roundup(offset + bytes, RK3568_NBYTES) / RK3568_NBYTES;
+> +	addr_offset = offset % RK3568_NBYTES;
+> +	addr_len = addr_end - addr_start;
+> +
+> +	buf = kzalloc(array3_size(addr_len, RK3568_NBYTES, sizeof(*buf)),
+> +		      GFP_KERNEL);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	ret = rockchip_otp_reset(otp);
+> +	if (ret) {
+> +		dev_err(otp->dev, "failed to reset otp phy\n");
+> +		return ret;
 
-diff --git a/net/9p/client.c b/net/9p/client.c
-index 99e9a55199e8..a2e5ff161562 100644
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -1594,7 +1594,9 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
- 	}
- 	if (rsize < received) {
- 		pr_err("bogus RREAD count (%u > %u)\n", received, rsize);
--		received = rsize;
-+		*err = -EIO;
-+		p9_req_put(clnt, req);
-+		return 0;
+This is leaking the kzalloc memory above.
+
+> +	}
+> +
+> +	ret = rockchip_otp_ecc_enable(otp, true);
+> +	if (ret < 0) {
+> +		dev_err(otp->dev, "rockchip_otp_ecc_enable err\n");
+> +		return ret;
+
+Same here.
+
+> +	}
+> +
+> +	writel(OTPC_USE_USER | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
+> +	udelay(5);
+> +	while (addr_len--) {
+> +		writel(addr_start++ | OTPC_USER_ADDR_MASK,
+> +		       otp->base + OTPC_USER_ADDR);
+> +		writel(OTPC_USER_FSM_ENABLE | OTPC_USER_FSM_ENABLE_MASK,
+> +		       otp->base + OTPC_USER_ENABLE);
+> +		ret = rockchip_otp_wait_status(otp, OTPC_INT_STATUS, OTPC_USER_DONE);
+> +		if (ret < 0) {
+> +			dev_err(otp->dev, "timeout during read setup\n");
+> +			goto read_end;
+> +		}
+> +		otp_qp = readl(otp->base + OTPC_USER_QP);
+> +		if (((otp_qp & 0xc0) == 0xc0) || (otp_qp & 0x20)) {
+> +			ret = -EIO;
+> +			dev_err(otp->dev, "ecc check error during read setup\n");
+> +			goto read_end;
+> +		}
+> +		out_value = readl(otp->base + OTPC_USER_Q);
+> +		memcpy(&buf[i], &out_value, RK3568_NBYTES);
+> +		i += RK3568_NBYTES;
+> +	}
+> +
+> +	memcpy(val, buf + addr_offset, bytes);
+> +
+> +read_end:
+> +	writel(0x0 | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
+> +	kfree(buf);
+> +
+> +	return ret;
+> +}
+
+This can be simplified if this is rebased on top of "nvmem: rockchip-otp:
+Handle internal word_size in main reg_read op" [1].
+
+[1] https://lore.kernel.org/r/20250316191900.1858944-1-jonas@kwiboo.se
+
+Something like following could be squashed in with this:
+
+diff --git a/drivers/nvmem/rockchip-otp.c b/drivers/nvmem/rockchip-otp.c
+index ea48d51bc2ff..0991a4047bec 100644
+--- a/drivers/nvmem/rockchip-otp.c
++++ b/drivers/nvmem/rockchip-otp.c
+@@ -54,8 +54,6 @@
+ #define SBPI_ENABLE_MASK		GENMASK(16, 16)
+ 
+ #define OTPC_TIMEOUT			10000
+-#define OTPC_TIMEOUT_PROG		100000
+-#define RK3568_NBYTES			2
+ 
+ /* RK3588 Register */
+ #define RK3588_OTPC_AUTO_CTRL		0x04
+@@ -188,24 +186,12 @@ static int px30_otp_read(void *context, unsigned int offset,
+ }
+ 
+ static int rk3568_otp_read(void *context, unsigned int offset, void *val,
+-			   size_t bytes)
++			   size_t count)
+ {
+ 	struct rockchip_otp *otp = context;
+-	unsigned int addr_start, addr_end, addr_offset, addr_len;
+-	unsigned int otp_qp;
+-	u32 out_value;
+-	u8 *buf;
+-	int ret = 0, i = 0;
+-
+-	addr_start = rounddown(offset, RK3568_NBYTES) / RK3568_NBYTES;
+-	addr_end = roundup(offset + bytes, RK3568_NBYTES) / RK3568_NBYTES;
+-	addr_offset = offset % RK3568_NBYTES;
+-	addr_len = addr_end - addr_start;
+-
+-	buf = kzalloc(array3_size(addr_len, RK3568_NBYTES, sizeof(*buf)),
+-		      GFP_KERNEL);
+-	if (!buf)
+-		return -ENOMEM;
++	u16 *buf = val;
++	u32 otp_qp;
++	int ret;
+ 
+ 	ret = rockchip_otp_reset(otp);
+ 	if (ret) {
+@@ -214,39 +200,39 @@ static int rk3568_otp_read(void *context, unsigned int offset, void *val,
  	}
  
- 	p9_debug(P9_DEBUG_9P, "<<< RREAD count %u\n", received);
-@@ -1661,7 +1663,10 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
+ 	ret = rockchip_otp_ecc_enable(otp, true);
+-	if (ret < 0) {
++	if (ret) {
+ 		dev_err(otp->dev, "rockchip_otp_ecc_enable err\n");
+ 		return ret;
+ 	}
+ 
+ 	writel(OTPC_USE_USER | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
+ 	udelay(5);
+-	while (addr_len--) {
+-		writel(addr_start++ | OTPC_USER_ADDR_MASK,
++
++	while (count--) {
++		writel(offset++ | OTPC_USER_ADDR_MASK,
+ 		       otp->base + OTPC_USER_ADDR);
+ 		writel(OTPC_USER_FSM_ENABLE | OTPC_USER_FSM_ENABLE_MASK,
+ 		       otp->base + OTPC_USER_ENABLE);
+-		ret = rockchip_otp_wait_status(otp, OTPC_INT_STATUS, OTPC_USER_DONE);
+-		if (ret < 0) {
++
++		ret = rockchip_otp_wait_status(otp, OTPC_INT_STATUS,
++					       OTPC_USER_DONE);
++		if (ret) {
+ 			dev_err(otp->dev, "timeout during read setup\n");
+ 			goto read_end;
  		}
- 		if (rsize < written) {
- 			pr_err("bogus RWRITE count (%u > %u)\n", written, rsize);
--			written = rsize;
-+			*err = -EIO;
-+			iov_iter_revert(from, count - iov_iter_count(from));
-+			p9_req_put(clnt, req);
-+			break;
++
+ 		otp_qp = readl(otp->base + OTPC_USER_QP);
+ 		if (((otp_qp & 0xc0) == 0xc0) || (otp_qp & 0x20)) {
+ 			ret = -EIO;
+ 			dev_err(otp->dev, "ecc check error during read setup\n");
+ 			goto read_end;
  		}
+-		out_value = readl(otp->base + OTPC_USER_Q);
+-		memcpy(&buf[i], &out_value, RK3568_NBYTES);
+-		i += RK3568_NBYTES;
+-	}
  
- 		p9_debug(P9_DEBUG_9P, "<<< RWRITE count %u\n", written);
-@@ -1713,7 +1718,7 @@ p9_client_write_subreq(struct netfs_io_subrequest *subreq)
+-	memcpy(val, buf + addr_offset, bytes);
++		*buf++ = readl(otp->base + OTPC_USER_Q);
++	}
  
- 	if (written > len) {
- 		pr_err("bogus RWRITE count (%d > %u)\n", written, len);
--		written = len;
-+		written = -EIO;
- 	}
+ read_end:
+ 	writel(0x0 | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
+-	kfree(buf);
  
- 	p9_debug(P9_DEBUG_9P, "<<< RWRITE count %d\n", len);
-@@ -2145,7 +2150,8 @@ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
- 	}
- 	if (rsize < count) {
- 		pr_err("bogus RREADDIR count (%u > %u)\n", count, rsize);
--		count = rsize;
-+		err = -EIO;
-+		goto free_and_error;
- 	}
- 
- 	p9_debug(P9_DEBUG_9P, "<<< RREADDIR count %u\n", count);
+ 	return ret;
+ }
 
----
-base-commit: a08cea93bd00497bdf3ff09527d378e2e928ed3a
-change-id: 20250317-p9_bogus_io_error-5e91a19be30c
+> +
+>  static int rk3588_otp_read(void *context, unsigned int offset,
+>  			   void *val, size_t bytes)
+>  {
+> @@ -274,6 +341,17 @@ static const struct rockchip_data px30_data = {
+>  	.reg_read = px30_otp_read,
+>  };
+>  
+> +static const char * const rk3568_otp_clocks[] = {
+> +	"usr", "sbpi", "apb_pclk", "phy",
 
-Best regards,
--- 
-Dominique Martinet | Asmadeus
+Why do we change from using the "otp"-name for the main clock?
+
+I suggest we keep the main clock named "otp" instead of "usr" for
+consistency.
+
+> +};
+> +
+> +static const struct rockchip_data rk3568_data = {
+> +	.size = 0x80,
+
+If this is rebased on top of [1] you should also add:
+
+	.word_size = sizeof(u16),
+
+Above suggested changes can also be found in a FIXUP commit at my
+linux-rockchip tree of pending RK3528 patches [2].
+
+[2] https://github.com/Kwiboo/linux-rockchip/commits/next-20250314-rk3528/
+
+Regards,
+Jonas
+
+> +	.clks = rk3568_otp_clocks,
+> +	.num_clks = ARRAY_SIZE(rk3568_otp_clocks),
+> +	.reg_read = rk3568_otp_read,
+> +};
+> +
+>  static const char * const rk3588_otp_clocks[] = {
+>  	"otp", "apb_pclk", "phy", "arb",
+>  };
+> @@ -294,6 +372,10 @@ static const struct of_device_id rockchip_otp_match[] = {
+>  		.compatible = "rockchip,rk3308-otp",
+>  		.data = &px30_data,
+>  	},
+> +	{
+> +		.compatible = "rockchip,rk3568-otp",
+> +		.data = &rk3568_data,
+> +	},
+>  	{
+>  		.compatible = "rockchip,rk3588-otp",
+>  		.data = &rk3588_data,
 
