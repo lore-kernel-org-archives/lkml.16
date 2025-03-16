@@ -1,327 +1,91 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAB01624D2
-	for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 21:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742161936; cv=none; b=GzydfK2QggjYzUivDeBc1yqt/q07+TdDAMOg5XXmmyZC2Q8Od1QFiGIO+5pj83TDY1112qDFvP7p9u51wf1T6Tn1HUn5IzZeTxrczhaqGpElzmt2VfahuVyRNxTGBMzqLQMqPJ6Bj+URUnci/qyxwI1bEiDXeWT5Gzfom6H0/uw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742161936; c=relaxed/simple;
-	bh=YH8lD/rVyrTNyFmZSb4KjflN68yPPe3RTT56NzBjRAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RdeStkZVSzzmT5BFSH3HmjT6/FX7i+nue7G1KfLS5yoNnGCneu9Z/uZ4c9OpTxutE+92b4P5sjYSClpf7fN9+rjIIqHop80dP4RMe0Uo5H92S6niuLKU+rXd326aVm9gr/u1atRz6s5tn3+g7Bd6+labrZKIuz9DvbhF6jw+C7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=fypAfLWf; arc=none smtp.client-ip=121.127.44.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F6E1922FD
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 21:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742161979; cv=pass; b=Rrzko3+j+ZDpNpjflaIHs+OHcCJ1ruK7aQ016XuCu2CoFqIS10k877zaBPsD6iF5aM14Bln132/7GcC0SjkGLIwt3X2QNca75FHHkoyqs6M/yrZXqVhyfllNQAWpkjwGnE4yahdRibvV2AKxfkhlD6C2W7KmIDosPb8py1MCBws=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742161979; c=relaxed/simple;
+	bh=gOtEsb6HSERcxDboCRZ7luxxDc9oP7IfI+1tCC2E3LI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jG1fqBBKLNQprYmUG43JVoPfMYQeRSBE1k0t7b2in+bGeCLr+fkW82YNr/cXZfUTsEFcRIkmmmrOx9tsO9qoxKASLCfogbeuljX8nmYkFXw7ygaMT8YtU0HrTO5AjgVMlgxsP9FFE8cfE+BsR7kf6OoIfDI8bHM+mw1SKv09M9Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=Gmakg9V2; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="fypAfLWf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1742161933;
- bh=vmHPFcJZ78hwHnl9SxGCphVe0yu9MYFikge7ywKMkGc=;
- b=fypAfLWf/ME8dg5noGXNMp/8Wab4XTl193L0LFrXe1LPedPh+IgZy54rLjN3yg7s19P1/x6e2
- Y9H9b4M1Yd3qdyOeUEYLg/YGkEQEu7XFQQ8HbNs9uRXdL3wW0J9ow5sOOIdxVAL3hchuqFq8rcl
- CsSg5nwukEg/LduqdZIyDLx49ZQR02wZC+XD0Z7x2dtqjNgTcRK1z/ZC+unJyyreCG38URTI004
- m3YEaoaMPptqDQI2n/x5iidSUNwn73+8RrQf56fgDgjDoJ/As0dYzX8dG8GrnE0ZEJgBLJZQL/i
- OGWrnmo6ffHmJ0+dHpNgZ0DQFwAOk6+Nn32mWeVIGEJA==
-X-Forward-Email-ID: 67d7480b615b196bfb50e07f
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.59
-X-Forward-Email-Version: 0.4.40
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <8c697031-9978-40cd-a1e0-f40552db9107@kwiboo.se>
-Date: Sun, 16 Mar 2025 22:52:07 +0100
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="Gmakg9V2"
+ARC-Seal: i=1; a=rsa-sha256; t=1742161946; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=JowPB6SIVkG4fTsYXcWiZOcFNiOP+d/ysK9ktZeLTZN95vLDS7o3MWOByno/J7vWNdhsA/WW5NimYnanClM6nUo/FHbEPM85qkyfZdV5moU4ANkAci7dI4YSnjWLLTw3o6pe3+mpREjnZYuyUtj2+ZlEnd392ylfb/GLuRvB0M0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742161946; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=aAicki8o0dcPGsCDGnk1JMD1P/KiyJERoLKGn0P0zSQ=; 
+	b=JFYv28ixUE6Wb9DiogMSrhR1oNqNgdTXEhYTgPJHsWMXONEyOEECaDP1z+DCeBuDUZCbr3I8iQRCFzGXhXIxApqUH/UQSBG66q2guaJ3tXThRDxzOyAb1pZaauyXqWkkvt1FCmpDk5/ZAf7oOgKTYgjM6hc8jhubNHeVxAM1rEA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742161946;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=aAicki8o0dcPGsCDGnk1JMD1P/KiyJERoLKGn0P0zSQ=;
+	b=Gmakg9V2GZDEiyYvzE35WtJ3yXYfXZ6Xl0ETCPkClguUeSXqooWlRTQcsfcRyJhI
+	teejeRY3XNdH4VoP8kwGhHqOfNSIPZmkztnhY8BiCrF45mr+RcAJMXdLTgBOXSRQLcS
+	kTUy4nPErkA6R0JdmrU/ZjjFye1VajqY06popXzU=
+Received: by mx.zohomail.com with SMTPS id 1742161944404241.90075270214368;
+	Sun, 16 Mar 2025 14:52:24 -0700 (PDT)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] Panthor BO tagging and GEMS debug display
+Date: Sun, 16 Mar 2025 21:51:31 +0000
+Message-ID: <20250316215139.3940623-1-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] nvmem: rockchip-otp: Add support for rk3568-otp
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org,
- Finley Xiao <finley.xiao@rock-chips.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-References: <20250227110804.2342976-1-kever.yang@rock-chips.com>
- <20250227110804.2342976-2-kever.yang@rock-chips.com>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250227110804.2342976-2-kever.yang@rock-chips.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Kever,
+This patch series is aimed at providing UM with detailed memory profiling
+information in debug builds. It is achieved through a device-wide list of
+DRM GEM objects, and also implementing the ability to label BO's from UM
+through a new IOCTL.
 
-On 2025-02-27 12:08, Kever Yang wrote:
-> From: Finley Xiao <finley.xiao@rock-chips.com>
-> 
-> This adds the necessary data for handling efuse on the rk3568.
-> 
-> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> ---
-> 
-> Changes in v2: None
-> 
->  drivers/nvmem/rockchip-otp.c | 82 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 82 insertions(+)
-> 
-> diff --git a/drivers/nvmem/rockchip-otp.c b/drivers/nvmem/rockchip-otp.c
-> index ebc3f0b24166..a04bce89ecc8 100644
-> --- a/drivers/nvmem/rockchip-otp.c
-> +++ b/drivers/nvmem/rockchip-otp.c
-> @@ -27,6 +27,7 @@
->  #define OTPC_USER_CTRL			0x0100
->  #define OTPC_USER_ADDR			0x0104
->  #define OTPC_USER_ENABLE		0x0108
-> +#define OTPC_USER_QP			0x0120
->  #define OTPC_USER_Q			0x0124
->  #define OTPC_INT_STATUS			0x0304
->  #define OTPC_SBPI_CMD0_OFFSET		0x1000
-> @@ -53,6 +54,8 @@
->  #define SBPI_ENABLE_MASK		GENMASK(16, 16)
->  
->  #define OTPC_TIMEOUT			10000
-> +#define OTPC_TIMEOUT_PROG		100000
+The new debugfs file shows a list of driver DRM GEM objects in tabular mode.
+To visualise it, cat sudo cat /sys/kernel/debug/dri/*.gpu/gems.
+To test this functionality from UM, please refer to this Mesa patch series:
 
-This is not used anywhere in this patch, please drop it.
+https://gitlab.collabora.com/alarumbe/mesa/-/commits/bo-tagging-panthor-gl
 
-> +#define RK3568_NBYTES			2
->  
->  /* RK3588 Register */
->  #define RK3588_OTPC_AUTO_CTRL		0x04
-> @@ -184,6 +187,70 @@ static int px30_otp_read(void *context, unsigned int offset,
->  	return ret;
->  }
->  
-> +static int rk3568_otp_read(void *context, unsigned int offset, void *val,
-> +			   size_t bytes)
-> +{
-> +	struct rockchip_otp *otp = context;
-> +	unsigned int addr_start, addr_end, addr_offset, addr_len;
-> +	unsigned int otp_qp;
-> +	u32 out_value;
-> +	u8 *buf;
-> +	int ret = 0, i = 0;
-> +
-> +	addr_start = rounddown(offset, RK3568_NBYTES) / RK3568_NBYTES;
-> +	addr_end = roundup(offset + bytes, RK3568_NBYTES) / RK3568_NBYTES;
-> +	addr_offset = offset % RK3568_NBYTES;
-> +	addr_len = addr_end - addr_start;
-> +
-> +	buf = kzalloc(array3_size(addr_len, RK3568_NBYTES, sizeof(*buf)),
-> +		      GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	ret = rockchip_otp_reset(otp);
-> +	if (ret) {
-> +		dev_err(otp->dev, "failed to reset otp phy\n");
-> +		return ret;
+Adrián Larumbe (4):
+  drm/panthor: Introduce BO labeling
+  drm/panthor: Add driver IOCTL for setting BO labels
+  drm/panthor: show device-wide list of DRM GEM objects over DebugFS
+  drm/panthor: Display heap chunk entries in DebugFS GEMS file
 
-This is leaking the kzalloc memory above.
+ drivers/gpu/drm/panthor/panthor_device.c |   5 +
+ drivers/gpu/drm/panthor/panthor_device.h |   8 ++
+ drivers/gpu/drm/panthor/panthor_drv.c    |  57 +++++++++++
+ drivers/gpu/drm/panthor/panthor_gem.c    | 119 +++++++++++++++++++++++
+ drivers/gpu/drm/panthor/panthor_gem.h    |  34 +++++++
+ drivers/gpu/drm/panthor/panthor_heap.c   |  15 +++
+ include/uapi/drm/panthor_drm.h           |  14 +++
+ 7 files changed, 252 insertions(+)
 
-> +	}
-> +
-> +	ret = rockchip_otp_ecc_enable(otp, true);
-> +	if (ret < 0) {
-> +		dev_err(otp->dev, "rockchip_otp_ecc_enable err\n");
-> +		return ret;
-
-Same here.
-
-> +	}
-> +
-> +	writel(OTPC_USE_USER | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
-> +	udelay(5);
-> +	while (addr_len--) {
-> +		writel(addr_start++ | OTPC_USER_ADDR_MASK,
-> +		       otp->base + OTPC_USER_ADDR);
-> +		writel(OTPC_USER_FSM_ENABLE | OTPC_USER_FSM_ENABLE_MASK,
-> +		       otp->base + OTPC_USER_ENABLE);
-> +		ret = rockchip_otp_wait_status(otp, OTPC_INT_STATUS, OTPC_USER_DONE);
-> +		if (ret < 0) {
-> +			dev_err(otp->dev, "timeout during read setup\n");
-> +			goto read_end;
-> +		}
-> +		otp_qp = readl(otp->base + OTPC_USER_QP);
-> +		if (((otp_qp & 0xc0) == 0xc0) || (otp_qp & 0x20)) {
-> +			ret = -EIO;
-> +			dev_err(otp->dev, "ecc check error during read setup\n");
-> +			goto read_end;
-> +		}
-> +		out_value = readl(otp->base + OTPC_USER_Q);
-> +		memcpy(&buf[i], &out_value, RK3568_NBYTES);
-> +		i += RK3568_NBYTES;
-> +	}
-> +
-> +	memcpy(val, buf + addr_offset, bytes);
-> +
-> +read_end:
-> +	writel(0x0 | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
-> +	kfree(buf);
-> +
-> +	return ret;
-> +}
-
-This can be simplified if this is rebased on top of "nvmem: rockchip-otp:
-Handle internal word_size in main reg_read op" [1].
-
-[1] https://lore.kernel.org/r/20250316191900.1858944-1-jonas@kwiboo.se
-
-Something like following could be squashed in with this:
-
-diff --git a/drivers/nvmem/rockchip-otp.c b/drivers/nvmem/rockchip-otp.c
-index ea48d51bc2ff..0991a4047bec 100644
---- a/drivers/nvmem/rockchip-otp.c
-+++ b/drivers/nvmem/rockchip-otp.c
-@@ -54,8 +54,6 @@
- #define SBPI_ENABLE_MASK		GENMASK(16, 16)
- 
- #define OTPC_TIMEOUT			10000
--#define OTPC_TIMEOUT_PROG		100000
--#define RK3568_NBYTES			2
- 
- /* RK3588 Register */
- #define RK3588_OTPC_AUTO_CTRL		0x04
-@@ -188,24 +186,12 @@ static int px30_otp_read(void *context, unsigned int offset,
- }
- 
- static int rk3568_otp_read(void *context, unsigned int offset, void *val,
--			   size_t bytes)
-+			   size_t count)
- {
- 	struct rockchip_otp *otp = context;
--	unsigned int addr_start, addr_end, addr_offset, addr_len;
--	unsigned int otp_qp;
--	u32 out_value;
--	u8 *buf;
--	int ret = 0, i = 0;
--
--	addr_start = rounddown(offset, RK3568_NBYTES) / RK3568_NBYTES;
--	addr_end = roundup(offset + bytes, RK3568_NBYTES) / RK3568_NBYTES;
--	addr_offset = offset % RK3568_NBYTES;
--	addr_len = addr_end - addr_start;
--
--	buf = kzalloc(array3_size(addr_len, RK3568_NBYTES, sizeof(*buf)),
--		      GFP_KERNEL);
--	if (!buf)
--		return -ENOMEM;
-+	u16 *buf = val;
-+	u32 otp_qp;
-+	int ret;
- 
- 	ret = rockchip_otp_reset(otp);
- 	if (ret) {
-@@ -214,39 +200,39 @@ static int rk3568_otp_read(void *context, unsigned int offset, void *val,
- 	}
- 
- 	ret = rockchip_otp_ecc_enable(otp, true);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(otp->dev, "rockchip_otp_ecc_enable err\n");
- 		return ret;
- 	}
- 
- 	writel(OTPC_USE_USER | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
- 	udelay(5);
--	while (addr_len--) {
--		writel(addr_start++ | OTPC_USER_ADDR_MASK,
-+
-+	while (count--) {
-+		writel(offset++ | OTPC_USER_ADDR_MASK,
- 		       otp->base + OTPC_USER_ADDR);
- 		writel(OTPC_USER_FSM_ENABLE | OTPC_USER_FSM_ENABLE_MASK,
- 		       otp->base + OTPC_USER_ENABLE);
--		ret = rockchip_otp_wait_status(otp, OTPC_INT_STATUS, OTPC_USER_DONE);
--		if (ret < 0) {
-+
-+		ret = rockchip_otp_wait_status(otp, OTPC_INT_STATUS,
-+					       OTPC_USER_DONE);
-+		if (ret) {
- 			dev_err(otp->dev, "timeout during read setup\n");
- 			goto read_end;
- 		}
-+
- 		otp_qp = readl(otp->base + OTPC_USER_QP);
- 		if (((otp_qp & 0xc0) == 0xc0) || (otp_qp & 0x20)) {
- 			ret = -EIO;
- 			dev_err(otp->dev, "ecc check error during read setup\n");
- 			goto read_end;
- 		}
--		out_value = readl(otp->base + OTPC_USER_Q);
--		memcpy(&buf[i], &out_value, RK3568_NBYTES);
--		i += RK3568_NBYTES;
--	}
- 
--	memcpy(val, buf + addr_offset, bytes);
-+		*buf++ = readl(otp->base + OTPC_USER_Q);
-+	}
- 
- read_end:
- 	writel(0x0 | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
--	kfree(buf);
- 
- 	return ret;
- }
-
-> +
->  static int rk3588_otp_read(void *context, unsigned int offset,
->  			   void *val, size_t bytes)
->  {
-> @@ -274,6 +341,17 @@ static const struct rockchip_data px30_data = {
->  	.reg_read = px30_otp_read,
->  };
->  
-> +static const char * const rk3568_otp_clocks[] = {
-> +	"usr", "sbpi", "apb_pclk", "phy",
-
-Why do we change from using the "otp"-name for the main clock?
-
-I suggest we keep the main clock named "otp" instead of "usr" for
-consistency.
-
-> +};
-> +
-> +static const struct rockchip_data rk3568_data = {
-> +	.size = 0x80,
-
-If this is rebased on top of [1] you should also add:
-
-	.word_size = sizeof(u16),
-
-Above suggested changes can also be found in a FIXUP commit at my
-linux-rockchip tree of pending RK3528 patches [2].
-
-[2] https://github.com/Kwiboo/linux-rockchip/commits/next-20250314-rk3528/
-
-Regards,
-Jonas
-
-> +	.clks = rk3568_otp_clocks,
-> +	.num_clks = ARRAY_SIZE(rk3568_otp_clocks),
-> +	.reg_read = rk3568_otp_read,
-> +};
-> +
->  static const char * const rk3588_otp_clocks[] = {
->  	"otp", "apb_pclk", "phy", "arb",
->  };
-> @@ -294,6 +372,10 @@ static const struct of_device_id rockchip_otp_match[] = {
->  		.compatible = "rockchip,rk3308-otp",
->  		.data = &px30_data,
->  	},
-> +	{
-> +		.compatible = "rockchip,rk3568-otp",
-> +		.data = &rk3568_data,
-> +	},
->  	{
->  		.compatible = "rockchip,rk3588-otp",
->  		.data = &rk3588_data,
-
+--
+2.48.1
