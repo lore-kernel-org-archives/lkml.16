@@ -1,138 +1,304 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBD818B47C;
-	Sun, 16 Mar 2025 12:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742127717; cv=none; b=aJNZdi7f1FB2sngK8NmWfp0W6jaMeD6EHlIF0b2rZ8HJsN3mWNzrJtVxyq8tzVBSoiN7km+GxETHM6kPkfPpXHr7wlcCHl9zq4TVYQBCB50jUGTgLTWK9r+t8F0710wiUARwn/XF9ghBUrdo3LkBPImXayQH6QvPFonG+uXLIS0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742127717; c=relaxed/simple;
-	bh=y26tfEd3RrwIby+c9q4PmhmcouiauWQ8HV8iy1l4U3M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mEOfDLUQ4koRgudZSX/BXh+dQjT43OkMAZRkNER4UmxsayWcfAo+UJili18ZBoe5rDzVfflVtYmz4iJLatfoPzhSHJQpWuUUhhQO2w4dq7PnV2RimPXE5uEf8tjihwo4hBckL5+Kc7Rn32Pi5WLycYCA/QucyX3bq6kYyd/U3e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZPActpl; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40E7139B;
+	Sun, 16 Mar 2025 12:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742128382; cv=pass; b=IP8+gHZd4M/rl0mQKdfKee90LDYmpd9o2eggWOxgqDh0F8++w6ReiEvZvDbOd0xySUzBvbHA2R4unOxDCiL/65whFF91h3t2mDGlQkoyzAFXXIpwIK9DNcu12A0n3m95WOCpZvr/5Q1qU0KUYvUJTqDZGSFCvUK0U0ouEZ3Om+k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742128382; c=relaxed/simple;
+	bh=1lx0C0o0Q3p5xR9vdXO6vFBVmVl8HKlVFgqskmGfRec=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IQlCFxwENjd8UVdU4b2Zde7+3OcApAVoCmXlCdbmU+kaua7n3TgazGf2VA/PcAPrdCeQdAq5L6Wir95nf/920pr8AieCimGoP7eJnmE6ivTsEDVIHp8AqOa6Sk8XndjORueYJgcye7Sw0Pa6uq5AkTJHv8V48FkbZE0aVQKLiPs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=A7jl/cK+; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=dUKG0S1k; arc=pass smtp.client-ip=81.169.146.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZPActpl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6641EC4CEDD;
-	Sun, 16 Mar 2025 12:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742127717;
-	bh=y26tfEd3RrwIby+c9q4PmhmcouiauWQ8HV8iy1l4U3M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aZPActplDB7iTUEFZYECTRc5twmgJVus7StJps9Bke4kX5VDlfPir5JuriSqc7gNS
-	 GWgAd2wz+oKPrho5rgWsNYIUIRxZZOcrfCVyKPHYGsWX+rNzcFKyjGqHzlLoTwhC/C
-	 F2UhWrXfod5voQ5hw90+I8rEm4SuLDvTFisUPYZeLzY/MDthNsFfgprdYqAdNHxGvP
-	 LPb5/S5yJx12AcOfRNLMzfTXv8Xnj4MGTqMxamnJALlraBYHSbxW6Rd/qyMXeEtUNI
-	 bNSyXKQa9Am3AA7Aw23XzdjKMokC6BaRyB7rVlnF7CazvLT0zDfdx9gMlnbL8NDo7k
-	 ijXLPyXbg6C6Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 4/4] selftests: tracing: Enable fprobe events before checking enable_functions
-Date: Sun, 16 Mar 2025 21:21:52 +0900
-Message-ID: <174212771234.348872.14455715715729686727.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <174212767109.348872.18231451508464729427.stgit@devnote2>
-References: <174212767109.348872.18231451508464729427.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="A7jl/cK+";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="dUKG0S1k"
+ARC-Seal: i=1; a=rsa-sha256; t=1742127292; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=q1qJqMe8MejSiIwIlHJvbryKO+xzdfeTMYScZaqQ9xkTnp6qEkpQcNTKoVqd723e8z
+    XR15EYUJGRcBAZ+1Nd/3UjfUTkILHIYQumfyrWw7LiHw1pn66kQiLDvtG7dCfZqWExbf
+    pJTwb7fLAif9YWnA4TvqdLgrKpbjq5Dw4PxRk5myuSxfdcLvgEmbkxNOIfIfJ1Se3nzc
+    LiGf/mzJOMTIriPjbgxrbzYtgotb/wjAnj2Va2C63cnm3DsS3CmurYvJumHxn/3nF1gb
+    C7V+I0kmiI9vUzZ1QT6bRWzXCPrzsFiAiuFnE11gKOX/rDpAdO6Pd6k8sIAjVErV3bHy
+    zeEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1742127292;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=Y0fPPefo3VE1rlwdDTsnqrt+0qOpqPytvBs83tQ7kxo=;
+    b=Vb+TSRsTmByh4oOFtDrDdMvyK1mmvr9Muba0pxoIR/evx5/gFaO1EMXah6mn3cVl4A
+    1VRfI9BKZVJxu+8fZO5vSwYu7FANaG78PVJw3MN2yMeAOKMOp2on9Eg86oF9p7msBFEA
+    3KcLAIgykC5Tm36OfgFDeEjbiqQDvKf60SUqZujqT28XCih6vi1bPqx+JxMbDqODu1F8
+    uZ1rStMdi3AfEjyUPZNB1dwg96rS0XrmzcHTmlnfRXLNQtacwoIO8XRLO9wl+KaMTghf
+    SagzrNUdFNNMAKXQwZweAokqPsVhi07gqc41wrVQrDGIhmrqoU3GnbIetTHhdeW18y/k
+    mbUQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1742127292;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=Y0fPPefo3VE1rlwdDTsnqrt+0qOpqPytvBs83tQ7kxo=;
+    b=A7jl/cK+VOvr6vPHt/LOVEl5pGJKMJkzSVxE0PU0V22D9o6PcBmAaDcy5pK8vYqNmw
+    bvcU4IsO+ZrezWUtqPBBLjA3X/6gdiyEyJkYZAbi53d7FwQYbnCgk2ZoyUeSsijbFfHr
+    DNlzb1jkUlEOnO+FXb3Swyb3XEXwCdEXtqrFRrmHr8YJZtmHpdi3PV/sVLJ+e7CqFng/
+    uGz4O/1mTIEe14OKkic5aBZWV2LaxMUthXauvoJGa6HRbWLFKQKC5VqMoEOqAdrMY4Yx
+    M7P2ITiC79BSLtECBhKTzG5F2wGZJ90vrBsCysLHqPmTrumjjUTnHHdjzRm0ZHIzp24d
+    FGHA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1742127292;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=Y0fPPefo3VE1rlwdDTsnqrt+0qOpqPytvBs83tQ7kxo=;
+    b=dUKG0S1kmMX18FaF2TD+4kB1+P0PhDTOk/FrVtkTy90aubabcXA1U2OY3adpPBeZrI
+    U+vqKuYs/2cNAqyDmFCg==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b3512GCEq8gu
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Sun, 16 Mar 2025 13:14:52 +0100 (CET)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with smtp (Exim 4.96)
+	(envelope-from <michael@a98shuttle.de>)
+	id 1ttmtG-00062L-2t;
+	Sun, 16 Mar 2025 13:14:50 +0100
+Received: (nullmailer pid 82569 invoked by uid 502);
+	Sun, 16 Mar 2025 12:14:50 -0000
+From: Michael Klein <michael@fossekall.de>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [net-next,v3,2/2] net: phy: realtek: Add support for PHY LEDs on RTL8211E
+Date: Sun, 16 Mar 2025 13:14:23 +0100
+Message-Id: <20250316121424.82511-3-michael@fossekall.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250316121424.82511-1-michael@fossekall.de>
+References: <20250316121424.82511-1-michael@fossekall.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Like the RTL8211F, the RTL8211E PHY supports up to three LEDs.
+Add netdev trigger support for them, too.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Michael Klein <michael@fossekall.de>
 ---
- .../ftrace/test.d/dynevent/add_remove_fprobe.tc    |   30 +++++++++++++-------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ drivers/net/phy/realtek/realtek_main.c | 125 +++++++++++++++++++++++--
+ 1 file changed, 119 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-index 449f9d8be746..603dad73e7e8 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-@@ -12,6 +12,18 @@ PLACE3="schedule_timeout"
+diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+index f4ce6457d0ef..2abc1c4c8b9f 100644
+--- a/drivers/net/phy/realtek/realtek_main.c
++++ b/drivers/net/phy/realtek/realtek_main.c
+@@ -37,6 +37,20 @@
+ #define RTL8211E_TX_DELAY			BIT(12)
+ #define RTL8211E_RX_DELAY			BIT(11)
  
- echo "f:myevent1 $PLACE" >> dynamic_events
- 
-+echo "f:myevent2 $PLACE%return" >> dynamic_events
++#define RTL8211E_LEDCR_EXT_PAGE			0x2c
 +
-+# add another event
-+echo "f:myevent3 $PLACE2" >> dynamic_events
++#define RTL8211E_LEDCR1				0x1a
++#define RTL8211E_LEDCR1_ACT_TXRX		BIT(4)
++#define RTL8211E_LEDCR1_MASK			BIT(4)
++#define RTL8211E_LEDCR1_SHIFT			1
 +
-+grep -q myevent1 dynamic_events
-+grep -q myevent2 dynamic_events
-+grep -q myevent3 dynamic_events
-+test -d events/fprobes/myevent1
-+test -d events/fprobes/myevent2
++#define RTL8211E_LEDCR2				0x1c
++#define RTL8211E_LEDCR2_LINK_1000		BIT(2)
++#define RTL8211E_LEDCR2_LINK_100		BIT(1)
++#define RTL8211E_LEDCR2_LINK_10			BIT(0)
++#define RTL8211E_LEDCR2_MASK			GENMASK(2, 0)
++#define RTL8211E_LEDCR2_SHIFT			4
 +
-+echo 1 > events/fprobes/myevent1/enable
- # Make sure the event is attached and is the only one
- grep -q $PLACE enabled_functions
- cnt=`cat enabled_functions | wc -l`
-@@ -19,29 +31,22 @@ if [ $cnt -ne 1 ]; then
- 	exit_fail
- fi
+ #define RTL8211F_PHYCR1				0x18
+ #define RTL8211F_PHYCR2				0x19
+ #define RTL8211F_INSR				0x1d
+@@ -113,7 +127,8 @@
+ #define RTL_8221B_VN_CG				0x001cc84a
+ #define RTL_8251B				0x001cc862
  
--echo "f:myevent2 $PLACE%return" >> dynamic_events
--
-+echo 1 > events/fprobes/myevent2/enable
- # It should till be the only attached function
- cnt=`cat enabled_functions | wc -l`
- if [ $cnt -ne 1 ]; then
- 	exit_fail
- fi
+-#define RTL8211F_LED_COUNT			3
++/* RTL8211E and RTL8211F support up to three LEDs */
++#define RTL8211x_LED_COUNT			3
  
--# add another event
--echo "f:myevent3 $PLACE2" >> dynamic_events
--
-+echo 1 > events/fprobes/myevent3/enable
-+# If the function is different, the attached function should be increased
- grep -q $PLACE2 enabled_functions
- cnt=`cat enabled_functions | wc -l`
- if [ $cnt -ne 2 ]; then
- 	exit_fail
- fi
+ MODULE_DESCRIPTION("Realtek PHY driver");
+ MODULE_AUTHOR("Johnson Leung");
+@@ -136,6 +151,21 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
+ 	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
+ }
  
--grep -q myevent1 dynamic_events
--grep -q myevent2 dynamic_events
--grep -q myevent3 dynamic_events
--test -d events/fprobes/myevent1
--test -d events/fprobes/myevent2
--
-+echo 0 > events/fprobes/myevent2/enable
- echo "-:myevent2" >> dynamic_events
++static int rtl8211e_read_ext_page(struct phy_device *phydev, u16 ext_page,
++				  u32 regnum)
++{
++	int oldpage, ret = 0;
++
++	oldpage = phy_select_page(phydev, RTL8211E_SET_EXT_PAGE);
++	if (oldpage >= 0) {
++		ret = __phy_write(phydev, RTL8211E_EXT_PAGE_SELECT, ext_page);
++		if (!ret)
++			ret = __phy_read(phydev, regnum);
++	}
++
++	return phy_restore_page(phydev, oldpage, ret);
++}
++
+ static int rtl8211e_modify_ext_page(struct phy_device *phydev, u16 ext_page,
+ 				    u32 regnum, u16 mask, u16 set)
+ {
+@@ -519,7 +549,7 @@ static int rtl821x_resume(struct phy_device *phydev)
+ 	return 0;
+ }
  
- grep -q myevent1 dynamic_events
-@@ -53,6 +58,7 @@ if [ $cnt -ne 2 ]; then
- 	exit_fail
- fi
+-static int rtl8211f_led_hw_is_supported(struct phy_device *phydev, u8 index,
++static int rtl8211x_led_hw_is_supported(struct phy_device *phydev, u8 index,
+ 					unsigned long rules)
+ {
+ 	const unsigned long mask = BIT(TRIGGER_NETDEV_LINK_10) |
+@@ -538,9 +568,11 @@ static int rtl8211f_led_hw_is_supported(struct phy_device *phydev, u8 index,
+ 	 *      rates and Active indication always at all three 10+100+1000
+ 	 *      link rates.
+ 	 * This code currently uses mode B only.
++	 *
++	 * RTL8211E PHY LED has one mode, which works like RTL8211F mode B.
+ 	 */
  
-+echo 0 > events/fprobes/enable
- echo > dynamic_events
+-	if (index >= RTL8211F_LED_COUNT)
++	if (index >= RTL8211x_LED_COUNT)
+ 		return -EINVAL;
  
- # Should have none left
-@@ -63,12 +69,14 @@ fi
+ 	/* Filter out any other unsupported triggers. */
+@@ -559,7 +591,7 @@ static int rtl8211f_led_hw_control_get(struct phy_device *phydev, u8 index,
+ {
+ 	int val;
  
- echo "f:myevent4 $PLACE" >> dynamic_events
+-	if (index >= RTL8211F_LED_COUNT)
++	if (index >= RTL8211x_LED_COUNT)
+ 		return -EINVAL;
  
-+echo 1 > events/fprobes/myevent4/enable
- # Should only have one enabled
- cnt=`cat enabled_functions | wc -l`
- if [ $cnt -ne 1 ]; then
- 	exit_fail
- fi
+ 	val = phy_read_paged(phydev, 0xd04, RTL8211F_LEDCR);
+@@ -592,7 +624,7 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
+ 	const u16 mask = RTL8211F_LEDCR_MASK << (RTL8211F_LEDCR_SHIFT * index);
+ 	u16 reg = 0;
  
-+echo 0 > events/fprobes/enable
- echo > dynamic_events
+-	if (index >= RTL8211F_LED_COUNT)
++	if (index >= RTL8211x_LED_COUNT)
+ 		return -EINVAL;
  
- # Should have none left
+ 	if (test_bit(TRIGGER_NETDEV_LINK_10, &rules))
+@@ -615,6 +647,84 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
+ 	return phy_modify_paged(phydev, 0xd04, RTL8211F_LEDCR, mask, reg);
+ }
+ 
++static int rtl8211e_led_hw_control_get(struct phy_device *phydev, u8 index,
++				       unsigned long *rules)
++{
++	int ret;
++	u16 cr1, cr2;
++
++	if (index >= RTL8211x_LED_COUNT)
++		return -EINVAL;
++
++	ret = rtl8211e_read_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
++				     RTL8211E_LEDCR1);
++	if (ret < 0)
++		return ret;
++
++	cr1 = ret >> RTL8211E_LEDCR1_SHIFT * index;
++	if (cr1 & RTL8211E_LEDCR1_ACT_TXRX) {
++		set_bit(TRIGGER_NETDEV_RX, rules);
++		set_bit(TRIGGER_NETDEV_TX, rules);
++	}
++
++	ret = rtl8211e_read_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
++				     RTL8211E_LEDCR2);
++	if (ret < 0)
++		return ret;
++
++	cr2 = ret >> RTL8211E_LEDCR2_SHIFT * index;
++	if (cr2 & RTL8211E_LEDCR2_LINK_10)
++		set_bit(TRIGGER_NETDEV_LINK_10, rules);
++
++	if (cr2 & RTL8211E_LEDCR2_LINK_100)
++		set_bit(TRIGGER_NETDEV_LINK_100, rules);
++
++	if (cr2 & RTL8211E_LEDCR2_LINK_1000)
++		set_bit(TRIGGER_NETDEV_LINK_1000, rules);
++
++	return ret;
++}
++
++static int rtl8211e_led_hw_control_set(struct phy_device *phydev, u8 index,
++				       unsigned long rules)
++{
++	const u16 cr1mask =
++		RTL8211E_LEDCR1_MASK << (RTL8211E_LEDCR1_SHIFT * index);
++	const u16 cr2mask =
++		RTL8211E_LEDCR2_MASK << (RTL8211E_LEDCR2_SHIFT * index);
++	u16 cr1 = 0, cr2 = 0;
++	int ret;
++
++	if (index >= RTL8211x_LED_COUNT)
++		return -EINVAL;
++
++	if (test_bit(TRIGGER_NETDEV_RX, &rules) ||
++	    test_bit(TRIGGER_NETDEV_TX, &rules)) {
++		cr1 |= RTL8211E_LEDCR1_ACT_TXRX;
++	}
++
++	cr1 <<= RTL8211E_LEDCR1_SHIFT * index;
++	ret = rtl8211e_modify_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
++				       RTL8211E_LEDCR1, cr1mask, cr1);
++	if (ret < 0)
++		return ret;
++
++	if (test_bit(TRIGGER_NETDEV_LINK_10, &rules))
++		cr2 |= RTL8211E_LEDCR2_LINK_10;
++
++	if (test_bit(TRIGGER_NETDEV_LINK_100, &rules))
++		cr2 |= RTL8211E_LEDCR2_LINK_100;
++
++	if (test_bit(TRIGGER_NETDEV_LINK_1000, &rules))
++		cr2 |= RTL8211E_LEDCR2_LINK_1000;
++
++	cr2 <<= RTL8211E_LEDCR2_SHIFT * index;
++	ret = rtl8211e_modify_ext_page(phydev, RTL8211E_LEDCR_EXT_PAGE,
++				       RTL8211E_LEDCR2, cr2mask, cr2);
++
++	return ret;
++}
++
+ static int rtl8211e_config_init(struct phy_device *phydev)
+ {
+ 	const u16 delay_mask = RTL8211E_CTRL_DELAY |
+@@ -1390,6 +1500,9 @@ static struct phy_driver realtek_drvs[] = {
+ 		.resume		= genphy_resume,
+ 		.read_page	= rtl821x_read_page,
+ 		.write_page	= rtl821x_write_page,
++		.led_hw_is_supported = rtl8211x_led_hw_is_supported,
++		.led_hw_control_get = rtl8211e_led_hw_control_get,
++		.led_hw_control_set = rtl8211e_led_hw_control_set,
+ 	}, {
+ 		PHY_ID_MATCH_EXACT(0x001cc916),
+ 		.name		= "RTL8211F Gigabit Ethernet",
+@@ -1403,7 +1516,7 @@ static struct phy_driver realtek_drvs[] = {
+ 		.read_page	= rtl821x_read_page,
+ 		.write_page	= rtl821x_write_page,
+ 		.flags		= PHY_ALWAYS_CALL_SUSPEND,
+-		.led_hw_is_supported = rtl8211f_led_hw_is_supported,
++		.led_hw_is_supported = rtl8211x_led_hw_is_supported,
+ 		.led_hw_control_get = rtl8211f_led_hw_control_get,
+ 		.led_hw_control_set = rtl8211f_led_hw_control_set,
+ 	}, {
+-- 
+2.39.5
 
