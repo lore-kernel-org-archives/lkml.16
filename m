@@ -1,75 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97711DEFDB;
-	Sun, 16 Mar 2025 17:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C5814293
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 17:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742145599; cv=none; b=aX8omuEnaaGBaUtmCuWpoJo7zWBTnsIYUYuKhC42dXa9YameKEKsv8+daBJyqAveiN4zSPINHG5K71zetxBJprW0QLrajpYBVlLCI+D0ryKVqGzb7OOafMhiK1ScffajVDfTxglMkKms3q/TPkd71PsFo9pJc0NwDMfBMXL7xh4=
+	t=1742145602; cv=none; b=IAryH/Eh7s7ig7T0YXsx+KhOFOHSGJn22hT00pdDy216F4XoggsXJsnETUOhf0i4jjVUQc/arXr+oXQukgPyBQLf0cgIgIGxcZ3WF6YK2C8ehfplbt7d693tOrR7OSMOoSWbDGEfDzPltF4deQ73Eny4TyBtcGciAl31viS6/L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742145599; c=relaxed/simple;
-	bh=eWdR67b6ix179Rxy3aXvjo2umckSWRuMZDSIyOoE/8g=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=TPVxmxJdL0ftW2OLxQ6Aqk22YJ3xQ3ck8G/3vzY2rjBxRdvN5t8eTFeA762YHgh1QbkJJs1cO+N4iHAHtIY1vTgBIE7AYb7uWSd5Qa7DlS0wd6PFAVR3Q15/vhzHC3FO21R8Dz6TOJbp86EMtE+4MkYByZ29JQuvaGC/fNsd58M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jz/bwj84; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742145602; c=relaxed/simple;
+	bh=a4qo5ZogxGReOcwQ6ZEnZwIkT1VrRH1SF3vyf2mH2p0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tg6dssG91gQiVBG3u2hCDEMhl5n1gspQk8deJvRk8vs6Opt+7HFjaYFfaeY9djCCzFtDeJGuLq/I1Y0XNxt7KGoRKQeLp2A2oThDBQi5R2cT/qg3tQDB9Hnb2NnCn4h1W8w3uFkMGmXtUbgnqW0GmtHS2ogeHsw9QNVXyKPXjgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Y7PZUvB0; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jz/bwj84"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E155AC4CEEA;
-	Sun, 16 Mar 2025 17:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742145599;
-	bh=eWdR67b6ix179Rxy3aXvjo2umckSWRuMZDSIyOoE/8g=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Jz/bwj84Ai7VdAGrIP0RsEvCTEDnpDlbIPEzXbk3l9G6eWrFUT2VNqLj8bkwyuKrl
-	 CPTOoy2nilVn4904n9ech4E6c+cgPCL4fcJqlb4VsNzOJNF/9Zc5H3vQTpjX/Td8zY
-	 pccAdyEOOnd/hgyABAyjJOw27sWAxxlghLS2113sHupjxnBxuFaf/XXqmt/CB/+kr8
-	 dUyaaYkQReYDGlvlwrRuGt5viiSE4ig25Kiz9D4ClpkreNFgr7X7ZzjjlTCBxw4/or
-	 Tm3GC+lRDhcZKPUm75BW9ekDhNKlmnf4mSUzK4XKYqBLD8ar2E/9M8wL8/1wv7VIIg
-	 Nojj3jQInFlqQ==
-From: Vinod Koul <vkoul@kernel.org>
-To: kishon@kernel.org, Heiko Stuebner <heiko@sntech.de>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- quentin.schulz@cherry.de, sebastian.reichel@collabora.com, 
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, dse@thaumatec.com
-In-Reply-To: <20250313134035.278133-1-heiko@sntech.de>
-References: <20250313134035.278133-1-heiko@sntech.de>
-Subject: Re: [PATCH v8 0/2] MIPI DSI phy for rk3588
-Message-Id: <174214559552.644495.17738101369641908083.b4-ty@kernel.org>
-Date: Sun, 16 Mar 2025 22:49:55 +0530
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Y7PZUvB0"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1742145590; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=fzOy707LWkwGKF9chjVOZk3NWtrTE4bTaEOfE4ij2iQ=;
+	b=Y7PZUvB0l1/dDTtyghQwwQFABwFMwPTVEQI1RqauPXE62xHqEs59vOTmirGVzIH1p109jJ3vcjavt9y7/n5z8LAfMqScZxCLFViVxs8Iiqsi07VnH/ZOvXUjiRHpI4ctGOaOkk4AF3EtBYf0jC4+kJTokzTiibMXKW6MI0aODoI=
+Received: from 30.134.66.95(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WRVXgmw_1742145589 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 17 Mar 2025 01:19:50 +0800
+Message-ID: <793c8af4-d651-48ff-830d-6a8cfd18d697@linux.alibaba.com>
+Date: Mon, 17 Mar 2025 01:19:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify
+ switches
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: Chao Yu <chao@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Hongzhen Luo <hongzhen@linux.alibaba.com>,
+ linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
+References: <20250210032923.3382136-1-hongzhen@linux.alibaba.com>
+ <511c5fd9-307e-4c56-9d20-796dd06f775c@kernel.org>
+ <489be3d1-a755-4756-ba82-a8f5a0dc9156@linux.alibaba.com>
+In-Reply-To: <489be3d1-a755-4756-ba82-a8f5a0dc9156@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-On Thu, 13 Mar 2025 14:40:30 +0100, Heiko Stuebner wrote:
-> This adds the phy driver need for DSI output on rk3588.
+
+On 2025/3/17 01:17, Gao Xiang wrote:
+> Hi Chao,
 > 
-> The phy itself is used for both DSI output and CSI input, though the
-> CSI part for the whole chain needs a lot more work, so is left out for
-> now and only the DSI part implemented.
-> 
-> This allows the rk3588 with its current VOP support to drive a DSI display
-> using the DSI2 controller driver I'll submit in a next step.
-> 
-> [...]
+> On 2025/3/16 10:36, Chao Yu wrote:
+>> On 2025/2/10 11:29, Hongzhen Luo wrote:
+>>> There's no need to enumerate each type.  No logic changes.
+>>>
+>>> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+>>
+>> Looks good to me, feel free to add:
+>>
+>> Reviewed-by: Chao Yu <chao@kernel.org>
+>>
+>> And one minor comment below.
+>>
+>>> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+>>> index 689437e99a5a..d278ebd60281 100644
+>>> --- a/fs/erofs/zmap.c
+>>> +++ b/fs/erofs/zmap.c
+>>> @@ -265,26 +265,22 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+>>>           if (err)
+>>>               return err;
+>>> -        switch (m->type) {
+>>> -        case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
+>>> +        if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
+>>> +            erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
+>>> +                  m->type, lcn, vi->nid);
+>>> +            DBG_BUGON(1);
+>>> +            return -EOPNOTSUPP;
 
-Applied, thanks!
+`m->type >= Z_EROFS_LCLUSTER_TYPE_MAX` is checked here BTW,
+I think the patch is good.
 
-[1/2] dt-bindings: phy: Add Rockchip MIPI C-/D-PHY schema
-      commit: 301587cf4e771aca8c5ee05a6ba8d7d8f548e478
-[2/2] phy: rockchip: Add Samsung MIPI D-/C-PHY driver
-      commit: b2a1a2ae7818c9d8da12bf7b1983c8b9f5fb712b
-
-Best regards,
--- 
-~Vinod
-
-
+Thanks,
+Gao Xiang
