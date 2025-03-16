@@ -1,62 +1,62 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E14618FDC6;
-	Sun, 16 Mar 2025 04:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE4B197A8F;
+	Sun, 16 Mar 2025 04:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742097963; cv=none; b=E4kXIcLQsFZWwEprvZETuDa4/MfMlQoCdcWgNnwnsW5xralsuvAyfm9N0HD0yg870t575f7Sr0KexOyo/fQUpZjd7jcvqznZhM+uSM9rXz6W7Lu6T7MH1DQFJz+UByAw+8KrYszqo9XvIf0jnUqp+snUI4rhg0B9fkPyQj13nCo=
+	t=1742097968; cv=none; b=ACS1noguW14XanDYaihjT0qjXN55x+65LQeKXtsGjDCwW/PgdvINdgAyKKmKwQwZ1TuNSwsSCdew4eTEW28++pFAt7aZWvm9luPLNGrhZ7t+sepo/kj/wFzhqjkH0WuNJjgH7PXd7WWLiF0LqsAk4Jjxyp8JIPyQ+/DemMvm694=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742097963; c=relaxed/simple;
-	bh=R8rK3hAtLu0/qV+H7D4vZfaR/OW4OI0d017EzOpkC74=;
+	s=arc-20240116; t=1742097968; c=relaxed/simple;
+	bh=Yp6VTxKtpBDQhUgfKGSHMWzJmZu3deRDpy/hLhkjXfk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KcDmIBhtnRvRno2wC7G613kA2S94TlY4zQv2cvnBZpicI5mMZbHlCGGyM1LUBgIFC/WBzvLl8bZS3IijQ4iuPmgZvYG4ASVoeYy634wiv6dLqZL+uu1H7GQafKGGhZuYQ7YPGVnJo0t4ytmf/rztcULJtUT3SKhNSYbLsh6nDDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PyCJ34Al; arc=none smtp.client-ip=209.85.128.67
+	 MIME-Version; b=eZyzhXoWYLfUR5TX7XQQjVqLxQgyizh4CH8k50cOTATYX4WeYJe/+8fH6Dy0JeXFYBMutTv4RNfi/bqHYENIER4LeO4BifuJ+EarOuehmPs9YBp9vsdidG1twn5bTOXtWXDmJQVfEEa/T8/6MX2RWMhFoNVraMkthfbmvA5CI/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q1L9qma+; arc=none smtp.client-ip=209.85.128.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyCJ34Al"
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso3923265e9.3;
-        Sat, 15 Mar 2025 21:06:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q1L9qma+"
+Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso9865675e9.2;
+        Sat, 15 Mar 2025 21:06:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742097959; x=1742702759; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742097964; x=1742702764; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Trt2PZaoDvW1qF5TKGphGKbeL9d09FYulI4YnHalG2E=;
-        b=PyCJ34AlW5TiK4gBQL1GWBt1zi60xEniOCiepyskACjan6ePRoBoTYsSxn6bOkOvhN
-         8SrSdTSKg5gQZATLCuAf4pMs8E4dQ+evFPUx1DZmYNAbi0a5GvHn+mRhFo4oeKJ8eoXr
-         PJdOL8zFcAjpW64vRbcya9EL4S3/eDGXzDKp3Jc6QShvdolsUsPnqL3rkAvB3OzLT2/J
-         V55J+4VRVQ1tVAqx1s7txAdTKugxuBJO/S1GOdrT68Rv8SUKayV22SH/jeGfwxEvUqGI
-         AdCrvOFaFQxsCzHRZUn/OicOuNHiyzfhqMralm6XYgLhIwSIHg22QZVvmiE+dH0cdutI
-         OGdw==
+        bh=lVJp3+JT7y8+ub6buLRsxOUyy8d6vFpxA5yFbRAEMPI=;
+        b=Q1L9qma+XiAWK6JbYpNLupqgch5MmwFPlE/5TssWPKM+iaNVXZvsSDk0aohkPyZNJ8
+         Vge17l+ncR66vgUQ7d1lA04plvsowEKBFaHxeXBJXycRm8DQ6gaTg666XlIduz4//h+q
+         phC6P7xGb7AjW3TAwqw5+vAl9btpiKNWw+TxhMTfRd1bfZCIjO90IH5jVcccWEqXxjK2
+         utSl01mauvq+KaaJcuNaiB8leAFBXBAlkkrBZPuelGzEdebRNjGeuGp3xeCv5PjB40X+
+         IkMgP5M5Fdz7fCswSAoYHf8QHSVubAEHVVdvh2+ZQc55bgO+hHUs4FxLJinArXFRmJhU
+         PZgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742097959; x=1742702759;
+        d=1e100.net; s=20230601; t=1742097964; x=1742702764;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Trt2PZaoDvW1qF5TKGphGKbeL9d09FYulI4YnHalG2E=;
-        b=TpReH+yKpCj2i8A+5idXXQClbUyBvxPtfV9oy9sGfkretvBGktKoQgupH33BAa20tB
-         c/RClu+0QDRlOWH/TIWVJUadZd+s/QvNyvGZb9uWbPbZUJqAY0fnzm8LjSkSfWR9XhCL
-         qiMKZgwrhws9RcjlqRpSaHwcjMEp1yGSaCpHA7A/UzJRP478H4Xr9RA7PGOb5mk5Cuyh
-         TEOKe+yb4lOgU8z3N2X9czgm4BWJ/7cmQbzg2WVN2rLNlUxxFwPgNLFzWLhgnW86fsDH
-         sgz10h5al/zQ9co6HYs2jkUN4iMGma0YzHihpwviOgnwzLxQ+7rDDWnuklNmjfU1VhQO
-         h2HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9oZSR6Qfyx/+MvtCCYLXl1GUwG744ASs5bBtrRSa92LPqx9BV5C70nY//N89IwGJ9B7u1DWyTAzQCl4Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP91T1FI8Md+eGFXBCSX8pAAGMhM5mouNu2XnSAf98GNTwwUAj
-	Y5WNHDsqnTkkBNNZomfWrWP4QvMGCh6HXuHV2XtsLcxd5bJiXWa6DpkFVSgAY6A=
-X-Gm-Gg: ASbGncssYmDGMUzhL98nHABpJDkaRM8YGn+6yZ5ST7n5UJjjWramMCJoFMDkg/vzcM7
-	p+dZlt3qX5fqAgD48AoF1L93jVC0B4xABS79/B63snFvmV5po0KDoWM4dlseTC3jZznDwaSbC5A
-	uDEaaytavz4pX+/ZEk/T6usAcKkmnJugCcLDsCY55TBehQED+8L5BkfJU6L4BegqB4bMIA67JKn
-	MCV+/lqCvPvkG6HsgpCirEbjP73cNXFZnrDIkuw4ZpC5pfb04VxrFldEAtBIplyNhqKhzoNufH6
-	kd9QI9A/yzUGl+KgTYBn0AY2QUq7FQP+j5U=
-X-Google-Smtp-Source: AGHT+IELCRC7Npj53fsWLLPGTTMW2S8mtuRNJw4+tQrj7Ej7EcmIuAdgGibINSTvjMReh3aiCtM8KA==
-X-Received: by 2002:a5d:6da1:0:b0:391:4389:f363 with SMTP id ffacd0b85a97d-3971ee44e17mr9518660f8f.21.1742097958853;
-        Sat, 15 Mar 2025 21:05:58 -0700 (PDT)
-Received: from localhost ([2a03:2880:31ff:72::])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975b90sm11082741f8f.53.2025.03.15.21.05.57
+        bh=lVJp3+JT7y8+ub6buLRsxOUyy8d6vFpxA5yFbRAEMPI=;
+        b=uNwp7z8h7WlWVKe+BdMmRz8naKo9ZvaalIehJuKPaCSQoDDxUizFG2hJZ8UGcHoKIq
+         tly6DJALr8b6UcMfBzKUN2iFQ+XWBNTQDcOG+ES+VaVRUvTxyPNP2Lgec8DlPJw3Sjy7
+         Ic3h7wtCpGfnM4qr2lZMZPRc6d7monrDl94indmHw7gRh0d3ot7l6pEP1BYvPM7ntEj8
+         gVOcDAEQ56FGzD898ZP277iR15JJes9zmhPGAJonkd8kX2Oy5zFpv8T5bvxORkyeOKgH
+         FLImy/HIhMfV6m+9d4r3PAcvALZB24VczqZQSqhYFi51rLVD1sO9pyjz3IcnWjA5zxG1
+         tQdA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+lU8c4PGTZAeeso0sfkOIpxpQUkk0PgXv31o1Zb0+AacMX/Jiw9bkQu8l+LtTrZR9xjoM9XPubSpKmRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGloP3QrbUh8cKk7Daxy/BoHk0PVCucSEj1iuY/WniXJFvvaOQ
+	nYNHRW13YvXDUITYsuUCWRq2PY4935kk5E/IVzbPFYJceTqOFiPlCFt9rf1hx8A=
+X-Gm-Gg: ASbGncu4BLmAaurCHbRilelIpYsCFb8EL6dpb1SGxQcUU1MiuYAqKWNqQBryKzl4V/X
+	hybbpglGav3mHla/ViBlu2IkXh6I78BpfXe11HjJXEmld8ZQnSADDaDH3A/HQxNq4ZshYLH1yxJ
+	RVaJmX7IA/v0lDAldvComJKGluCjGv676Mb9hJtTcpe3go79eEjtWFIe9owBm+3Oomn/pocwQi8
+	Jxijd5DfmKO2qresJnPhS7qkvMxmU4i7bT8c8dZTWTqrs2rI7fOf/rqvYoJgYmtYQH7uS4V5Uae
+	ie6dVKQ1ZkXPHeh8jf8c3XJTQ39ZTpUfOqA=
+X-Google-Smtp-Source: AGHT+IEqbu6eKdKbUR9hLIUzBRTM7W+fO2MaRKuwN5PjghpeobTfOg76MZ+yqvlOP3B3sgZbmvRoKw==
+X-Received: by 2002:a05:600c:3c89:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-43d1ecd7926mr80182815e9.22.1742097964115;
+        Sat, 15 Mar 2025 21:06:04 -0700 (PDT)
+Received: from localhost ([2a03:2880:31ff:70::])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d25593a94sm21073705e9.3.2025.03.15.21.06.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Mar 2025 21:05:57 -0700 (PDT)
+        Sat, 15 Mar 2025 21:06:03 -0700 (PDT)
 From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
 To: bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -77,9 +77,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-arm-kernel@lists.infradead.org,
 	kkd@meta.com,
 	kernel-team@meta.com
-Subject: [PATCH bpf-next v4 12/25] rqspinlock: Add deadlock detection and recovery
-Date: Sat, 15 Mar 2025 21:05:28 -0700
-Message-ID: <20250316040541.108729-13-memxor@gmail.com>
+Subject: [PATCH bpf-next v4 16/25] rqspinlock: Add macros for rqspinlock usage
+Date: Sat, 15 Mar 2025 21:05:32 -0700
+Message-ID: <20250316040541.108729-17-memxor@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250316040541.108729-1-memxor@gmail.com>
 References: <20250316040541.108729-1-memxor@gmail.com>
@@ -89,471 +89,122 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=16807; h=from:subject; bh=R8rK3hAtLu0/qV+H7D4vZfaR/OW4OI0d017EzOpkC74=; b=owEBbQKS/ZANAwAIAUzgyIZIvxHKAcsmYgBn1k3d3cpOPE+JD/6A6QOyXue338yygczvobcBs9p0 t9lKfEyJAjMEAAEIAB0WIQRLvip+Buz51YI8YRFM4MiGSL8RygUCZ9ZN3QAKCRBM4MiGSL8RyulYD/ oCAFAcDJwUGqxq0HokrhAu3NOXVZPUQzrD1Fd/bAV3pkN73meLLVeovkYVI0ve7Kjx2/hcMJyYvJbr jkpwrffoXO8Xr768OKNR4mBc6jrytY5czg/+e0BKRXct/n5IFosZ8+tHgjaY9j5RcQcq7eRwUQnxnn Q7S84XghkBroVcQtWuJM98v/KONhHgJCpGMQAAUU32SNWJkc28V4HIWt9hoQsoIi6CJTX8Uc88a/Qf FVOQlNaBXGiYKMb9K3kOjA41VLmhe565kuFeGvXUnJi+Cn9xac01lMqZRoHRIVKeHgz/mo0i+F7abp eofFVG0gbpmw0Gb+GlDHtD6UztvzXQW6TUTZqpfs9TXc5ti4+Nv12bATZP9jhNTd3dmKxw+z7JScl4 BMgrqxtE/WrA7jZVALBqwJ2kPbQolbz8sbNHH5z0796JP71TrPx7mfKFi2Us1I0Nv+hUkuwarjUzIt VJhlvGVJXd9BRHbCHCSIq+sh7i5y3bcjHmfFhim9zewk0L8xWupkFUohlI78gsDmgMlQl7f9w8VVza 8hOQDu9DZMx4wjyXZL5LKr4XOZiXlowtWpcR++9jgQoihCpQXlPZJouhUpu2Gt9rOQdgIMp/8Ws4U2 ep59HLE49pV/ul4ULzQIO5O665ynyxzgE/f/3H6pSPpftXxAxajnOTA5uYRw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4185; h=from:subject; bh=Yp6VTxKtpBDQhUgfKGSHMWzJmZu3deRDpy/hLhkjXfk=; b=owEBbQKS/ZANAwAIAUzgyIZIvxHKAcsmYgBn1k3d7ne1febSzud04+mu0CKRHqx+H8Jq+gCO2ZsR MN8cyy6JAjMEAAEIAB0WIQRLvip+Buz51YI8YRFM4MiGSL8RygUCZ9ZN3QAKCRBM4MiGSL8RykcmD/ 9gTc/RWOMn5cBBm9fdR7z3Whng8H/b1v47vd75XWWl34N0yLT/YWBxTTQ+sPVZzGGuo6B9xsO7eKc9 SZp8I4okxcB2aM74N8m344h+WeCA3ZDdOAN1PStTNACyJB8JKCSwhxf5/MD4VnGmAAvRd7JcgDsl3T lkua13O2hBIxLJEBPb7jFRav4gDcQhaWZZY8+I8wIj4D2LsynzlcQxPMMg/IOGoojbmx1IZpibvTSS cOab748UkW42TGSTq4cdoSqNEyQkllc5IG3CoplNecSOYw91jN/9/nfpRQLlkeNk4MMkIpW1wkerkH stNypWjI3+zMxxxWOpnatrs1AhcbL9xdZy/yI6HeaBpRLCWE7EP2tyRtxMLNP0xZTzDUbhelU5s2xS ISufWNdpb9hhDr2p7Az4+QCAW0/IGguxT1YSSJ3VIvP0PSGYdPGn7h5UGMmLAsKRteUQPiIinHVfjq jswG4p2GalFrgmjtSAlgCOgfnnBgdFSBZ8KrUhAEDyoSkn3oC7EfkzE4RurRDNaK7Dla53h3swFtN6 ebHJiW8K6xEarRowvHg21BJJhRkrGgUz7TcTos8teOYQ7GScBu5AHx4/hAgO+A+G8EAYCC6p9bLmWT uhQX3Azu8Y8rim3+JoGB/tvJ9vAcTAUH3AyLU5MWGMfUmvqRvuAqdg2eMQjQ==
 X-Developer-Key: i=memxor@gmail.com; a=openpgp; fpr=4BBE2A7E06ECF9D5823C61114CE0C88648BF11CA
 Content-Transfer-Encoding: 8bit
 
-While the timeout logic provides guarantees for the waiter's forward
-progress, the time until a stalling waiter unblocks can still be long.
-The default timeout of 1/4 sec can be excessively long for some use
-cases.  Additionally, custom timeouts may exacerbate recovery time.
+Introduce helper macros that wrap around the rqspinlock slow path and
+provide an interface analogous to the raw_spin_lock API. Note that
+in case of error conditions, preemption and IRQ disabling is
+automatically unrolled before returning the error back to the caller.
 
-Introduce logic to detect common cases of deadlocks and perform quicker
-recovery. This is done by dividing the time from entry into the locking
-slow path until the timeout into intervals of 1 ms. Then, after each
-interval elapses, deadlock detection is performed, while also polling
-the lock word to ensure we can quickly break out of the detection logic
-and proceed with lock acquisition.
+Ensure that in absence of CONFIG_QUEUED_SPINLOCKS support, we fallback
+to the test-and-set implementation.
 
-A 'held_locks' table is maintained per-CPU where the entry at the bottom
-denotes a lock being waited for or already taken. Entries coming before
-it denote locks that are already held. The current CPU's table can thus
-be looked at to detect AA deadlocks. The tables from other CPUs can be
-looked at to discover ABBA situations. Finally, when a matching entry
-for the lock being taken on the current CPU is found on some other CPU,
-a deadlock situation is detected. This function can take a long time,
-therefore the lock word is constantly polled in each loop iteration to
-ensure we can preempt detection and proceed with lock acquisition, using
-the is_lock_released check.
-
-We set 'spin' member of rqspinlock_timeout struct to 0 to trigger
-deadlock checks immediately to perform faster recovery.
-
-Note: Extending lock word size by 4 bytes to record owner CPU can allow
-faster detection for ABBA. It is typically the owner which participates
-in a ABBA situation. However, to keep compatibility with existing lock
-words in the kernel (struct qspinlock), and given deadlocks are a rare
-event triggered by bugs, we choose to favor compatibility over faster
-detection.
-
-The release_held_lock_entry function requires an smp_wmb, while the
-release store on unlock will provide the necessary ordering for us. Add
-comments to document the subtleties of why this is correct. It is
-possible for stores to be reordered still, but in the context of the
-deadlock detection algorithm, a release barrier is sufficient and
-needn't be stronger for unlock's case.
+Add some comments describing the subtle memory ordering logic during
+unlock, and why it's safe.
 
 Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
 ---
- include/asm-generic/rqspinlock.h | 100 +++++++++++++++++
- kernel/bpf/rqspinlock.c          | 187 ++++++++++++++++++++++++++++---
- 2 files changed, 273 insertions(+), 14 deletions(-)
+ include/asm-generic/rqspinlock.h | 87 ++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
 diff --git a/include/asm-generic/rqspinlock.h b/include/asm-generic/rqspinlock.h
-index 9bd11cb7acd6..34c3dcb4299e 100644
+index a837c6b6abd9..23abd0b8d0f9 100644
 --- a/include/asm-generic/rqspinlock.h
 +++ b/include/asm-generic/rqspinlock.h
-@@ -11,6 +11,7 @@
+@@ -153,4 +153,91 @@ static __always_inline void release_held_lock_entry(void)
+ 	this_cpu_dec(rqspinlock_held_locks.cnt);
+ }
  
- #include <linux/types.h>
- #include <vdso/time64.h>
-+#include <linux/percpu.h>
- 
- struct qspinlock;
- typedef struct qspinlock rqspinlock_t;
-@@ -22,4 +23,103 @@ extern int resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val);
-  */
- #define RES_DEF_TIMEOUT (NSEC_PER_SEC / 4)
- 
-+/*
-+ * Choose 31 as it makes rqspinlock_held cacheline-aligned.
++#ifdef CONFIG_QUEUED_SPINLOCKS
++
++/**
++ * res_spin_lock - acquire a queued spinlock
++ * @lock: Pointer to queued spinlock structure
++ *
++ * Return:
++ * * 0		- Lock was acquired successfully.
++ * * -EDEADLK	- Lock acquisition failed because of AA/ABBA deadlock.
++ * * -ETIMEDOUT - Lock acquisition failed because of timeout.
 + */
-+#define RES_NR_HELD 31
-+
-+struct rqspinlock_held {
-+	int cnt;
-+	void *locks[RES_NR_HELD];
-+};
-+
-+DECLARE_PER_CPU_ALIGNED(struct rqspinlock_held, rqspinlock_held_locks);
-+
-+static __always_inline void grab_held_lock_entry(void *lock)
++static __always_inline int res_spin_lock(rqspinlock_t *lock)
 +{
-+	int cnt = this_cpu_inc_return(rqspinlock_held_locks.cnt);
++	int val = 0;
 +
-+	if (unlikely(cnt > RES_NR_HELD)) {
-+		/* Still keep the inc so we decrement later. */
-+		return;
++	if (likely(atomic_try_cmpxchg_acquire(&lock->val, &val, _Q_LOCKED_VAL))) {
++		grab_held_lock_entry(lock);
++		return 0;
 +	}
-+
-+	/*
-+	 * Implied compiler barrier in per-CPU operations; otherwise we can have
-+	 * the compiler reorder inc with write to table, allowing interrupts to
-+	 * overwrite and erase our write to the table (as on interrupt exit it
-+	 * will be reset to NULL).
-+	 *
-+	 * It is fine for cnt inc to be reordered wrt remote readers though,
-+	 * they won't observe our entry until the cnt update is visible, that's
-+	 * all.
-+	 */
-+	this_cpu_write(rqspinlock_held_locks.locks[cnt - 1], lock);
++	return resilient_queued_spin_lock_slowpath(lock, val);
 +}
 +
-+/*
-+ * We simply don't support out-of-order unlocks, and keep the logic simple here.
-+ * The verifier prevents BPF programs from unlocking out-of-order, and the same
-+ * holds for in-kernel users.
-+ *
-+ * It is possible to run into misdetection scenarios of AA deadlocks on the same
-+ * CPU, and missed ABBA deadlocks on remote CPUs if this function pops entries
-+ * out of order (due to lock A, lock B, unlock A, unlock B) pattern. The correct
-+ * logic to preserve right entries in the table would be to walk the array of
-+ * held locks and swap and clear out-of-order entries, but that's too
-+ * complicated and we don't have a compelling use case for out of order unlocking.
-+ */
-+static __always_inline void release_held_lock_entry(void)
++#else
++
++#define res_spin_lock(lock) resilient_tas_spin_lock(lock)
++
++#endif /* CONFIG_QUEUED_SPINLOCKS */
++
++static __always_inline void res_spin_unlock(rqspinlock_t *lock)
 +{
 +	struct rqspinlock_held *rqh = this_cpu_ptr(&rqspinlock_held_locks);
 +
 +	if (unlikely(rqh->cnt > RES_NR_HELD))
-+		goto dec;
++		goto unlock;
 +	WRITE_ONCE(rqh->locks[rqh->cnt - 1], NULL);
-+dec:
++unlock:
 +	/*
-+	 * Reordering of clearing above with inc and its write in
-+	 * grab_held_lock_entry that came before us (in same acquisition
-+	 * attempt) is ok, we either see a valid entry or NULL when it's
-+	 * visible.
++	 * Release barrier, ensures correct ordering. See release_held_lock_entry
++	 * for details.  Perform release store instead of queued_spin_unlock,
++	 * since we use this function for test-and-set fallback as well. When we
++	 * have CONFIG_QUEUED_SPINLOCKS=n, we clear the full 4-byte lockword.
 +	 *
-+	 * But this helper is invoked when we unwind upon failing to acquire the
-+	 * lock. Unlike the unlock path which constitutes a release store after
-+	 * we clear the entry, we need to emit a write barrier here. Otherwise,
-+	 * we may have a situation as follows:
++	 * Like release_held_lock_entry, we can do the release before the dec.
++	 * We simply care about not seeing the 'lock' in our table from a remote
++	 * CPU once the lock has been released, which doesn't rely on the dec.
 +	 *
-+	 * <error> for lock B
-+	 * release_held_lock_entry
-+	 *
-+	 * try_cmpxchg_acquire for lock A
-+	 * grab_held_lock_entry
-+	 *
-+	 * Lack of any ordering means reordering may occur such that dec, inc
-+	 * are done before entry is overwritten. This permits a remote lock
-+	 * holder of lock B (which this CPU failed to acquire) to now observe it
-+	 * as being attempted on this CPU, and may lead to misdetection (if this
-+	 * CPU holds a lock it is attempting to acquire, leading to false ABBA
-+	 * diagnosis).
-+	 *
-+	 * In case of unlock, we will always do a release on the lock word after
-+	 * releasing the entry, ensuring that other CPUs cannot hold the lock
-+	 * (and make conclusions about deadlocks) until the entry has been
-+	 * cleared on the local CPU, preventing any anomalies. Reordering is
-+	 * still possible there, but a remote CPU cannot observe a lock in our
-+	 * table which it is already holding, since visibility entails our
-+	 * release store for the said lock has not retired.
-+	 *
-+	 * In theory we don't have a problem if the dec and WRITE_ONCE above get
-+	 * reordered with each other, we either notice an empty NULL entry on
-+	 * top (if dec succeeds WRITE_ONCE), or a potentially stale entry which
-+	 * cannot be observed (if dec precedes WRITE_ONCE).
-+	 *
-+	 * Emit the write barrier _before_ the dec, this permits dec-inc
-+	 * reordering but that is harmless as we'd have new entry set to NULL
-+	 * already, i.e. they cannot precede the NULL store above.
++	 * Unlike smp_wmb(), release is not a two way fence, hence it is
++	 * possible for a inc to move up and reorder with our clearing of the
++	 * entry. This isn't a problem however, as for a misdiagnosis of ABBA,
++	 * the remote CPU needs to hold this lock, which won't be released until
++	 * the store below is done, which would ensure the entry is overwritten
++	 * to NULL, etc.
 +	 */
-+	smp_wmb();
++	smp_store_release(&lock->locked, 0);
 +	this_cpu_dec(rqspinlock_held_locks.cnt);
 +}
 +
++#ifdef CONFIG_QUEUED_SPINLOCKS
++#define raw_res_spin_lock_init(lock) ({ *(lock) = (rqspinlock_t)__ARCH_SPIN_LOCK_UNLOCKED; })
++#else
++#define raw_res_spin_lock_init(lock) ({ *(lock) = (rqspinlock_t){0}; })
++#endif
++
++#define raw_res_spin_lock(lock)                    \
++	({                                         \
++		int __ret;                         \
++		preempt_disable();                 \
++		__ret = res_spin_lock(lock);	   \
++		if (__ret)                         \
++			preempt_enable();          \
++		__ret;                             \
++	})
++
++#define raw_res_spin_unlock(lock) ({ res_spin_unlock(lock); preempt_enable(); })
++
++#define raw_res_spin_lock_irqsave(lock, flags)    \
++	({                                        \
++		int __ret;                        \
++		local_irq_save(flags);            \
++		__ret = raw_res_spin_lock(lock);  \
++		if (__ret)                        \
++			local_irq_restore(flags); \
++		__ret;                            \
++	})
++
++#define raw_res_spin_unlock_irqrestore(lock, flags) ({ raw_res_spin_unlock(lock); local_irq_restore(flags); })
++
  #endif /* __ASM_GENERIC_RQSPINLOCK_H */
-diff --git a/kernel/bpf/rqspinlock.c b/kernel/bpf/rqspinlock.c
-index 361d452f027c..bddbcc47d38f 100644
---- a/kernel/bpf/rqspinlock.c
-+++ b/kernel/bpf/rqspinlock.c
-@@ -31,6 +31,7 @@
-  */
- #include "../locking/qspinlock.h"
- #include "../locking/lock_events.h"
-+#include "rqspinlock.h"
- 
- /*
-  * The basic principle of a queue-based spinlock can best be understood
-@@ -74,16 +75,147 @@
- struct rqspinlock_timeout {
- 	u64 timeout_end;
- 	u64 duration;
-+	u64 cur;
- 	u16 spin;
- };
- 
- #define RES_TIMEOUT_VAL	2
- 
--static noinline int check_timeout(struct rqspinlock_timeout *ts)
-+DEFINE_PER_CPU_ALIGNED(struct rqspinlock_held, rqspinlock_held_locks);
-+EXPORT_SYMBOL_GPL(rqspinlock_held_locks);
-+
-+static bool is_lock_released(rqspinlock_t *lock, u32 mask, struct rqspinlock_timeout *ts)
-+{
-+	if (!(atomic_read_acquire(&lock->val) & (mask)))
-+		return true;
-+	return false;
-+}
-+
-+static noinline int check_deadlock_AA(rqspinlock_t *lock, u32 mask,
-+				      struct rqspinlock_timeout *ts)
-+{
-+	struct rqspinlock_held *rqh = this_cpu_ptr(&rqspinlock_held_locks);
-+	int cnt = min(RES_NR_HELD, rqh->cnt);
-+
-+	/*
-+	 * Return an error if we hold the lock we are attempting to acquire.
-+	 * We'll iterate over max 32 locks; no need to do is_lock_released.
-+	 */
-+	for (int i = 0; i < cnt - 1; i++) {
-+		if (rqh->locks[i] == lock)
-+			return -EDEADLK;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * This focuses on the most common case of ABBA deadlocks (or ABBA involving
-+ * more locks, which reduce to ABBA). This is not exhaustive, and we rely on
-+ * timeouts as the final line of defense.
-+ */
-+static noinline int check_deadlock_ABBA(rqspinlock_t *lock, u32 mask,
-+					struct rqspinlock_timeout *ts)
-+{
-+	struct rqspinlock_held *rqh = this_cpu_ptr(&rqspinlock_held_locks);
-+	int rqh_cnt = min(RES_NR_HELD, rqh->cnt);
-+	void *remote_lock;
-+	int cpu;
-+
-+	/*
-+	 * Find the CPU holding the lock that we want to acquire. If there is a
-+	 * deadlock scenario, we will read a stable set on the remote CPU and
-+	 * find the target. This would be a constant time operation instead of
-+	 * O(NR_CPUS) if we could determine the owning CPU from a lock value, but
-+	 * that requires increasing the size of the lock word.
-+	 */
-+	for_each_possible_cpu(cpu) {
-+		struct rqspinlock_held *rqh_cpu = per_cpu_ptr(&rqspinlock_held_locks, cpu);
-+		int real_cnt = READ_ONCE(rqh_cpu->cnt);
-+		int cnt = min(RES_NR_HELD, real_cnt);
-+
-+		/*
-+		 * Let's ensure to break out of this loop if the lock is available for
-+		 * us to potentially acquire.
-+		 */
-+		if (is_lock_released(lock, mask, ts))
-+			return 0;
-+
-+		/*
-+		 * Skip ourselves, and CPUs whose count is less than 2, as they need at
-+		 * least one held lock and one acquisition attempt (reflected as top
-+		 * most entry) to participate in an ABBA deadlock.
-+		 *
-+		 * If cnt is more than RES_NR_HELD, it means the current lock being
-+		 * acquired won't appear in the table, and other locks in the table are
-+		 * already held, so we can't determine ABBA.
-+		 */
-+		if (cpu == smp_processor_id() || real_cnt < 2 || real_cnt > RES_NR_HELD)
-+			continue;
-+
-+		/*
-+		 * Obtain the entry at the top, this corresponds to the lock the
-+		 * remote CPU is attempting to acquire in a deadlock situation,
-+		 * and would be one of the locks we hold on the current CPU.
-+		 */
-+		remote_lock = READ_ONCE(rqh_cpu->locks[cnt - 1]);
-+		/*
-+		 * If it is NULL, we've raced and cannot determine a deadlock
-+		 * conclusively, skip this CPU.
-+		 */
-+		if (!remote_lock)
-+			continue;
-+		/*
-+		 * Find if the lock we're attempting to acquire is held by this CPU.
-+		 * Don't consider the topmost entry, as that must be the latest lock
-+		 * being held or acquired.  For a deadlock, the target CPU must also
-+		 * attempt to acquire a lock we hold, so for this search only 'cnt - 1'
-+		 * entries are important.
-+		 */
-+		for (int i = 0; i < cnt - 1; i++) {
-+			if (READ_ONCE(rqh_cpu->locks[i]) != lock)
-+				continue;
-+			/*
-+			 * We found our lock as held on the remote CPU.  Is the
-+			 * acquisition attempt on the remote CPU for a lock held
-+			 * by us?  If so, we have a deadlock situation, and need
-+			 * to recover.
-+			 */
-+			for (int i = 0; i < rqh_cnt - 1; i++) {
-+				if (rqh->locks[i] == remote_lock)
-+					return -EDEADLK;
-+			}
-+			/*
-+			 * Inconclusive; retry again later.
-+			 */
-+			return 0;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static noinline int check_deadlock(rqspinlock_t *lock, u32 mask,
-+				   struct rqspinlock_timeout *ts)
-+{
-+	int ret;
-+
-+	ret = check_deadlock_AA(lock, mask, ts);
-+	if (ret)
-+		return ret;
-+	ret = check_deadlock_ABBA(lock, mask, ts);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static noinline int check_timeout(rqspinlock_t *lock, u32 mask,
-+				  struct rqspinlock_timeout *ts)
- {
- 	u64 time = ktime_get_mono_fast_ns();
-+	u64 prev = ts->cur;
- 
- 	if (!ts->timeout_end) {
-+		ts->cur = time;
- 		ts->timeout_end = time + ts->duration;
- 		return 0;
- 	}
-@@ -91,6 +223,15 @@ static noinline int check_timeout(struct rqspinlock_timeout *ts)
- 	if (time > ts->timeout_end)
- 		return -ETIMEDOUT;
- 
-+	/*
-+	 * A millisecond interval passed from last time? Trigger deadlock
-+	 * checks.
-+	 */
-+	if (prev + NSEC_PER_MSEC < time) {
-+		ts->cur = time;
-+		return check_deadlock(lock, mask, ts);
-+	}
-+
- 	return 0;
- }
- 
-@@ -99,21 +240,22 @@ static noinline int check_timeout(struct rqspinlock_timeout *ts)
-  * as the macro does internal amortization for us.
-  */
- #ifndef res_smp_cond_load_acquire
--#define RES_CHECK_TIMEOUT(ts, ret)                    \
--	({                                            \
--		if (!(ts).spin++)                     \
--			(ret) = check_timeout(&(ts)); \
--		(ret);                                \
-+#define RES_CHECK_TIMEOUT(ts, ret, mask)                              \
-+	({                                                            \
-+		if (!(ts).spin++)                                     \
-+			(ret) = check_timeout((lock), (mask), &(ts)); \
-+		(ret);                                                \
- 	})
- #else
--#define RES_CHECK_TIMEOUT(ts, ret, mask)	      \
-+#define RES_CHECK_TIMEOUT(ts, ret, mask)			      \
- 	({ (ret) = check_timeout(&(ts)); })
- #endif
- 
- /*
-  * Initialize the 'spin' member.
-+ * Set spin member to 0 to trigger AA/ABBA checks immediately.
-  */
--#define RES_INIT_TIMEOUT(ts) ({ (ts).spin = 1; })
-+#define RES_INIT_TIMEOUT(ts) ({ (ts).spin = 0; })
- 
- /*
-  * We only need to reset 'timeout_end', 'spin' will just wrap around as necessary.
-@@ -142,6 +284,7 @@ static DEFINE_PER_CPU_ALIGNED(struct qnode, rqnodes[_Q_MAX_NODES]);
-  *
-  * Return:
-  * * 0		- Lock was acquired successfully.
-+ * * -EDEADLK	- Lock acquisition failed because of AA/ABBA deadlock.
-  * * -ETIMEDOUT - Lock acquisition failed because of timeout.
-  *
-  * (queue tail, pending bit, lock value)
-@@ -212,6 +355,11 @@ int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 		goto queue;
- 	}
- 
-+	/*
-+	 * Grab an entry in the held locks array, to enable deadlock detection.
-+	 */
-+	grab_held_lock_entry(lock);
-+
- 	/*
- 	 * We're pending, wait for the owner to go away.
- 	 *
-@@ -225,7 +373,7 @@ int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 	 */
- 	if (val & _Q_LOCKED_MASK) {
- 		RES_RESET_TIMEOUT(ts, RES_DEF_TIMEOUT);
--		res_smp_cond_load_acquire(&lock->locked, !VAL || RES_CHECK_TIMEOUT(ts, ret));
-+		res_smp_cond_load_acquire(&lock->locked, !VAL || RES_CHECK_TIMEOUT(ts, ret, _Q_LOCKED_MASK));
- 	}
- 
- 	if (ret) {
-@@ -240,7 +388,7 @@ int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 		 */
- 		clear_pending(lock);
- 		lockevent_inc(rqspinlock_lock_timeout);
--		return ret;
-+		goto err_release_entry;
- 	}
- 
- 	/*
-@@ -258,6 +406,11 @@ int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 	 */
- queue:
- 	lockevent_inc(lock_slowpath);
-+	/*
-+	 * Grab deadlock detection entry for the queue path.
-+	 */
-+	grab_held_lock_entry(lock);
-+
- 	node = this_cpu_ptr(&rqnodes[0].mcs);
- 	idx = node->count++;
- 	tail = encode_tail(smp_processor_id(), idx);
-@@ -277,9 +430,9 @@ int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 		lockevent_inc(lock_no_node);
- 		RES_RESET_TIMEOUT(ts, RES_DEF_TIMEOUT);
- 		while (!queued_spin_trylock(lock)) {
--			if (RES_CHECK_TIMEOUT(ts, ret)) {
-+			if (RES_CHECK_TIMEOUT(ts, ret, ~0u)) {
- 				lockevent_inc(rqspinlock_lock_timeout);
--				break;
-+				goto err_release_node;
- 			}
- 			cpu_relax();
- 		}
-@@ -375,7 +528,7 @@ int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 	 */
- 	RES_RESET_TIMEOUT(ts, RES_DEF_TIMEOUT * 2);
- 	val = res_atomic_cond_read_acquire(&lock->val, !(VAL & _Q_LOCKED_PENDING_MASK) ||
--					   RES_CHECK_TIMEOUT(ts, ret));
-+					   RES_CHECK_TIMEOUT(ts, ret, _Q_LOCKED_PENDING_MASK));
- 
- waitq_timeout:
- 	if (ret) {
-@@ -408,7 +561,7 @@ int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 			WRITE_ONCE(next->locked, RES_TIMEOUT_VAL);
- 		}
- 		lockevent_inc(rqspinlock_lock_timeout);
--		goto release;
-+		goto err_release_node;
- 	}
- 
- 	/*
-@@ -455,5 +608,11 @@ int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 	 */
- 	__this_cpu_dec(rqnodes[0].mcs.count);
- 	return ret;
-+err_release_node:
-+	trace_contention_end(lock, ret);
-+	__this_cpu_dec(rqnodes[0].mcs.count);
-+err_release_entry:
-+	release_held_lock_entry();
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(resilient_queued_spin_lock_slowpath);
 -- 
 2.47.1
 
