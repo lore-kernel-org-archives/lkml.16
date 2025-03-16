@@ -1,149 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB7239ACC;
-	Sun, 16 Mar 2025 17:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5526DC8CE
+	for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 17:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742144475; cv=none; b=CgZTA8e5scDm5ne66ccJvlH8RVGQWI5LLOsLOsHvP7inK5B+F33Cc3yBtjtULudg3D/Pv09rYCjgp94I6Z79nXg3aaF3AJeVeHepccUigV2GzcsdzErSGk1j0le9i3s3oY6d43OQa1rTh3vLkF5sAgtt2dPNqpOR4W9gTWLUKBw=
+	t=1742144868; cv=none; b=rpBoHifkfE2RxpLnp3FgrlIQynwC1U70EO7j5BJSQXo+V9LdMEj77ND2tpCZa0F/9Y09B4AWz+NFFt2HBhnfTYbMmh6xa5KnVPxgWcgIUeUpRcOwh8NrA+tqilGjcpYrk27d/9kPPR9WU5XJGRyeUNgDfM5THT5z75OUkVf94C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742144475; c=relaxed/simple;
-	bh=6PfcJBRNV/52O2N067Qc1dkAL6g6RK6AiGmwAbAH68c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cYEm1e1VjiVTiy/9UUz6jtbn9oOtbj7DKKzjx+wnufM6E+vdwTaPLe9qrDtj65FPCWH3kBsAxRJDAxqsFcg4L/SpmYKLNRkqUETtkupu8wZWJPEPRXRYipQeSnUerTZuxg9Rv/xRTI3UrDQLiCzBFKuSdT4VhzROz5IZIjQUBcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQFd3hPe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742144868; c=relaxed/simple;
+	bh=M2C3gCVB1Q/oimX64E5xDDDfYZJgkLpp+ZWgi/M4AIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aZSpfoObVuzkHaqjDntpnXDSf561ebPqU06r/tpN3kdOv/7tZN2H/R46qMv4R5a7Vk7o+fSkq9m2Lar24qrXPf5ccNsymjstcOkyLurbS8nt0hKQMg8EDjKpPPQ9aOJnc/P4FznLtGwpfWTw1Fnsig8umIxa8Xq8cYIhBGirgzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=q0vnJyo3; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQFd3hPe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71B8C4CEDD;
-	Sun, 16 Mar 2025 17:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742144474;
-	bh=6PfcJBRNV/52O2N067Qc1dkAL6g6RK6AiGmwAbAH68c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qQFd3hPeTpDx+jH+Bro2QsnUm9+dxfhPOHdVTYI1JJjYKY7Ha7ozZMMDrb8dnSYPM
-	 x15Pd3uLBOq4kPEm4GgF+NGN5ylbMFJmzVn8D3MGCQk1Ss+bpARjrZqwL34qLeK9oD
-	 t5CJOZ6eVDnHVvORXRN+jSBf0kCQEtr0eAa6O77xU+XDKSEXv5w9+X724ivizupDHy
-	 ZGP7iSzAr5ZomED03ma0S8Vcb+g2BPT+wrXH5meJn+YIkoC97P0zfLRXwXOOrtMWQz
-	 iQnLSrbiQHqJMmf6Cat7TZl5no1MNNPqtlRaC5ogSsLgCt9vPA7YMOyUincL9m584U
-	 +JmBXWV6kJjDA==
-Message-ID: <4a9ac302-dfbe-4d76-a634-a445957c313c@kernel.org>
-Date: Sun, 16 Mar 2025 18:01:02 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="q0vnJyo3"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1742144856; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=JbvRjvasb10wBMPSOSSYH4CCVGrkJLdk21e+NgTFkhc=;
+	b=q0vnJyo3zH9ewFR0bJyieX5rhdtLy5cpp8ZKfNzrB1tXnCNIfDaTokQGhGtkC3L+bpSDnH4DGQuRMvKaftbK5mB9KbeZtYWXQVS1z6Z/ypWdYpD8NI2FGPvBZwfOAqiQ0onBUIqCm34OwaQzu1jLP6rn7Dd+TcuyDe/LrfuyCJk=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WRVZrJJ_1742144850 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 17 Mar 2025 01:07:35 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH v2 06/10] erofs: initialize decompression early
+Date: Mon, 17 Mar 2025 01:07:29 +0800
+Message-ID: <20250316170729.2325406-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250310095459.2620647-7-hsiangkao@linux.alibaba.com>
+References: <20250310095459.2620647-7-hsiangkao@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/13] dt-bindings: phy: Add documentation for Airoha
- AN7581 USB PHY
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Danzberger <dd@embedd.com>,
- Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>,
- Nikita Shubin <nikita.shubin@maquefel.me>, Guo Ren <guoren@kernel.org>,
- Yangyu Chen <cyy@cyyself.name>, Ben Hutchings <ben@decadent.org.uk>,
- Felix Fietkau <nbd@nbd.name>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-usb@vger.kernel.org,
- upstream@airoha.com
-References: <20250309132959.19045-1-ansuelsmth@gmail.com>
- <20250309132959.19045-10-ansuelsmth@gmail.com>
- <4f16d239-f540-45d5-b67a-767b09f1c70c@kernel.org>
- <67d0862f.df0a0220.375bd.6b15@mx.google.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <67d0862f.df0a0220.375bd.6b15@mx.google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/03/2025 19:51, Christian Marangi wrote:
->>
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    enum: [0, 1]
->>
->> I don't understand why do you need index property here (which are
->> usually not allowed).
->>
-> 
-> Eh... As said in the description this is really to differentiate the 2
-> different physical port...
-> 
-> Each port have a dedicated oscillator for calibration and these
-> calibration are identified by an offset (all placed one after another in
-> a separate register space).
+ - Rename erofs_init_managed_cache() to z_erofs_init_super();
+ - Move the initialization of managed_pslots into z_erofs_init_super() too;
+ - Move z_erofs_init_super() and packed inode preparation upwards, before
+   the root inode initialization.
 
-So different oscillators? Then describe the oscillator and its differences.
+Therefore, the root directory can also be compressible.
 
-Different programing model? Different compatible.
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Acked-by: Chao Yu <chao@kernel.org>
+---
+v2:
+ - move iput(packed_inode/managed_cache) into .kill_sb() since
+   they are initialized prior to d_make_root().
 
-Other difference? Depending what is the difference.
+ fs/erofs/internal.h |  4 ++--
+ fs/erofs/super.c    | 40 ++++++++++++++++------------------------
+ fs/erofs/zdata.c    |  4 ++--
+ 3 files changed, 20 insertions(+), 28 deletions(-)
 
-But there is no such thing as "different port ID" based on your
-description above. You just claimed that they are different, but you do
-not put that difference to hardware description. Instead you encode that
-difference in the drivers and it should be opposite. The DTS, so the
-hardware description, should tell you the difference. And I am sorry,
-but in 99% of cases "I am the first phy" and "I am the second" is not
-the actual difference we are interested in.
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 91d0b400459c..b35742cf9431 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -436,6 +436,7 @@ int __init erofs_init_shrinker(void);
+ void erofs_exit_shrinker(void);
+ int __init z_erofs_init_subsystem(void);
+ void z_erofs_exit_subsystem(void);
++int z_erofs_init_super(struct super_block *sb);
+ unsigned long z_erofs_shrink_scan(struct erofs_sb_info *sbi,
+ 				  unsigned long nr_shrink);
+ int z_erofs_map_blocks_iter(struct inode *inode, struct erofs_map_blocks *map,
+@@ -445,7 +446,6 @@ void z_erofs_put_gbuf(void *ptr);
+ int z_erofs_gbuf_growsize(unsigned int nrpages);
+ int __init z_erofs_gbuf_init(void);
+ void z_erofs_gbuf_exit(void);
+-int erofs_init_managed_cache(struct super_block *sb);
+ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb);
+ #else
+ static inline void erofs_shrinker_register(struct super_block *sb) {}
+@@ -454,7 +454,7 @@ static inline int erofs_init_shrinker(void) { return 0; }
+ static inline void erofs_exit_shrinker(void) {}
+ static inline int z_erofs_init_subsystem(void) { return 0; }
+ static inline void z_erofs_exit_subsystem(void) {}
+-static inline int erofs_init_managed_cache(struct super_block *sb) { return 0; }
++static inline int z_erofs_init_super(struct super_block *sb) { return 0; }
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
+ #ifdef CONFIG_EROFS_FS_BACKED_BY_FILE
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 18445dc8597d..ae7005f54c98 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -636,9 +636,16 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	else
+ 		sb->s_flags &= ~SB_POSIXACL;
+ 
+-#ifdef CONFIG_EROFS_FS_ZIP
+-	xa_init(&sbi->managed_pslots);
+-#endif
++	err = z_erofs_init_super(sb);
++	if (err)
++		return err;
++
++	if (erofs_sb_has_fragments(sbi) && sbi->packed_nid) {
++		inode = erofs_iget(sb, sbi->packed_nid);
++		if (IS_ERR(inode))
++			return PTR_ERR(inode);
++		sbi->packed_inode = inode;
++	}
+ 
+ 	inode = erofs_iget(sb, sbi->root_nid);
+ 	if (IS_ERR(inode))
+@@ -650,24 +657,11 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 		iput(inode);
+ 		return -EINVAL;
+ 	}
+-
+ 	sb->s_root = d_make_root(inode);
+ 	if (!sb->s_root)
+ 		return -ENOMEM;
+ 
+ 	erofs_shrinker_register(sb);
+-	if (erofs_sb_has_fragments(sbi) && sbi->packed_nid) {
+-		sbi->packed_inode = erofs_iget(sb, sbi->packed_nid);
+-		if (IS_ERR(sbi->packed_inode)) {
+-			err = PTR_ERR(sbi->packed_inode);
+-			sbi->packed_inode = NULL;
+-			return err;
+-		}
+-	}
+-	err = erofs_init_managed_cache(sb);
+-	if (err)
+-		return err;
+-
+ 	err = erofs_xattr_prefixes_init(sb);
+ 	if (err)
+ 		return err;
+@@ -812,6 +806,12 @@ static void erofs_kill_sb(struct super_block *sb)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
++	iput(sbi->packed_inode);
++	sbi->packed_inode = NULL;
++#ifdef CONFIG_EROFS_FS_ZIP
++	iput(sbi->managed_cache);
++	sbi->managed_cache = NULL;
++#endif
+ 	fs_put_dax(sbi->dif0.dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
+ 	erofs_sb_free(sbi);
+@@ -822,17 +822,9 @@ static void erofs_put_super(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+ 
+-	DBG_BUGON(!sbi);
+-
+ 	erofs_unregister_sysfs(sb);
+ 	erofs_shrinker_unregister(sb);
+ 	erofs_xattr_prefixes_cleanup(sb);
+-#ifdef CONFIG_EROFS_FS_ZIP
+-	iput(sbi->managed_cache);
+-	sbi->managed_cache = NULL;
+-#endif
+-	iput(sbi->packed_inode);
+-	sbi->packed_inode = NULL;
+ 	erofs_free_dev_context(sbi->devs);
+ 	sbi->devs = NULL;
+ 	erofs_fscache_unregister_fs(sb);
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 5e4b65070b86..bc6d6842c5c2 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -644,18 +644,18 @@ static const struct address_space_operations z_erofs_cache_aops = {
+ 	.invalidate_folio = z_erofs_cache_invalidate_folio,
+ };
+ 
+-int erofs_init_managed_cache(struct super_block *sb)
++int z_erofs_init_super(struct super_block *sb)
+ {
+ 	struct inode *const inode = new_inode(sb);
+ 
+ 	if (!inode)
+ 		return -ENOMEM;
+-
+ 	set_nlink(inode, 1);
+ 	inode->i_size = OFFSET_MAX;
+ 	inode->i_mapping->a_ops = &z_erofs_cache_aops;
+ 	mapping_set_gfp_mask(inode->i_mapping, GFP_KERNEL);
+ 	EROFS_SB(sb)->managed_cache = inode;
++	xa_init(&EROFS_SB(sb)->managed_pslots);
+ 	return 0;
+ }
+ 
+-- 
+2.43.5
 
-> 
-> Oscillator 0 for physical port 0
-> Oscillator 1 for physcial port 1
-> 
-> And model this is a bit problematic without an additional property, any
-> hint for this?
-> 
-Best regards,
-Krzysztof
