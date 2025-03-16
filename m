@@ -1,168 +1,114 @@
-Received: from delivery.antispam.mailspamprotection.com (delivery.antispam.mailspamprotection.com [185.56.87.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1B7199E9A;
-	Sun, 16 Mar 2025 22:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.56.87.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742163960; cv=pass; b=rW17pjJJBviV0x847mXSf0a5sdIbzNs03aIdZyYb446ynjBUaCVNMkgJ4133jJ/wPZc7rEvUdaQUNvsJ7fXWfc/SvgavqBPQckQq7uNb05rl1IHJ33/dbQSTmF4fToyWc/I9HZYQVZNGygKRixMeJ+xOWRc3V6OCfdP9+9XqFBQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742163960; c=relaxed/simple;
-	bh=AchUGpGJPCL+V084QppEVLRoXuTVyPDKqmT8Bw7nVho=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hMVO2D0SbJZ3BqbM4XjG4Y4XpfaGBo9+m9/LOHUJ2SkMNaYPBnMWGCuIZwg8NcF0Zbwxl0LtapPTDD9JJFMDu6xiAlwogCYI6TRlCJXqKLm5OwpGY9k6/dQkRiimh3Mp84TdDb+lFoOUqGB2x23tSoVyEfWLYP7Uf3X2AL26Hzs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valla.it; spf=pass smtp.mailfrom=valla.it; dkim=pass (1024-bit key) header.d=valla.it header.i=@valla.it header.b=cSrS1k8M; arc=pass smtp.client-ip=185.56.87.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valla.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valla.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2F6189905;
+	Sun, 16 Mar 2025 22:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742164326; cv=none; b=gnQWFdZayMhOVmtC3v0ANeDK8rXCVpjgoHdikTFYQxIgHUgQzbGI0mmRIUxTd2jjjx5GZYSGFQM6G8r4buWhddjWkFFWkuCEPt4in2NhhFS2P9iyu1NBMg9PXbV0iqewjligwFDMe44aoJMhM8UPbx8MUdgpw8DHwYVYdLiewFs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742164326; c=relaxed/simple;
+	bh=Tb0yhOpUYmEnU5OM8rbuAaIvCXRTDxNcFbF2iGDdIXE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Pqv/xUlox04mChes7aCGrzE4dcB8LIOzjagAGTfRDToVdn+VuFKDjAqJ2w1lL5ziVJsXkwGWDKtwEZH3GS29FFLljZo1s8OB/2jPZADHjydduzAwo6neGYuaEJeuoyJGnkFoBDMDN33F9/CteDz9PxPex4U7HaRaeXDZDhkyL9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RCiwhVQ4; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valla.it header.i=@valla.it header.b="cSrS1k8M"
-ARC-Seal: i=1; cv=none; a=rsa-sha256; d=instance-europe-west4-pdhm.prod.antispam.mailspamprotection.com; s=arckey; t=1742163957;
-	 b=HWx2JE8+N1/0aQ6u4EU/QW0gkiX+NDS7MziKonn/SPetUk1Rl6oKJuOftUhAigP7hK9OE3/0sd
-	  iP1EE7nboAVOp1zQ1M2UPjuEsYf+4j3nJF3d6wC+BDAY3ZxbiWff7yhaMnbudDNhTdvAgpnMC4
-	  g6O/3CtKKWuui/d23/bhHTrDyiJyLMS0fbWI8o3AnMWRIcswpXDhPePCH1Ego6BuhChvnOH0qT
-	  vRRVDsKEoAoj91SOduaG+jxKFciFQHpHFPmPQAZ7Zs/UW+1zYZGtbKJ93wcrlin+PVEWOalqyf
-	  AP5+3SjTKkZjqyIGDkx/1mke/YNDiHnE2ujDyWdoIbBStQ==;
-ARC-Authentication-Results: i=1; instance-europe-west4-pdhm.prod.antispam.mailspamprotection.com; smtp.remote-ip=35.214.173.214;
-	iprev=pass (214.173.214.35.bc.googleusercontent.com) smtp.remote-ip=35.214.173.214;
-	auth=pass (LOGIN) smtp.auth=esm19.siteground.biz;
-	dkim=pass header.d=valla.it header.s=default header.a=rsa-sha256;
-	arc=none
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed; d=instance-europe-west4-pdhm.prod.antispam.mailspamprotection.com; s=arckey; t=1742163957;
-	bh=AchUGpGJPCL+V084QppEVLRoXuTVyPDKqmT8Bw7nVho=;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
-	  DKIM-Signature;
-	b=e3HYoF9/X6lkLKilJo+KqYj7RvTbW2e1syu/8225Vt2WYZz+QXG3UIamhc8zDAUiYLIxwNm1l/
-	  OcEDiYZcqAp5T4Y+G5i2FHFeKTJ8eTFcD9taYiYLug+lXDW582eU5NqLj+RIDdd7xfLCINIqYJ
-	  XjeaD1DX76HkjvFhUg1PW0hqPwDLABBdoX85CB0nbEpToLfjYej1eNhcgN54f9eNberguOjQ78
-	  OopP/Dy4q31HoE1BViS81ci6K1FMioZaDt7tJAGkOFJ88Rt9QXfOdxuwpbv5v0gSjBK0IR08cr
-	  fNPAVyZ3bdRvmfyxLoNyH8m9uuYVmwqAV3tW7Fsnw2vsRQ==;
-Received: from 214.173.214.35.bc.googleusercontent.com ([35.214.173.214] helo=esm19.siteground.biz)
-	by instance-europe-west4-pdhm.prod.antispam.mailspamprotection.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <francesco@valla.it>)
-	id 1ttuwU-00000004iVz-1jw4;
-	Sun, 16 Mar 2025 20:50:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=valla.it;
-	s=default; h=Date:Subject:Cc:To:From:list-help:list-unsubscribe:
-	list-subscribe:list-post:list-owner:list-archive;
-	bh=v7sjfrgq8lZr0nHx77awpfMZaCLKOjn8gKszKsmGIIs=; b=cSrS1k8M8r3e68y4OrUg3ZHKhv
-	Nw8mirVTQ201BvE5OCpD7yO37ne5L/DdZsVcaYAEsYxEKfPBJ07KI+oC4UH69LOqq7ecly6GiHJ89
-	JAuBQuPTP5m418sPwwMrLl/vbHw8EznR9f44y4EUfQ/oBiJEtnxTouEWqrFp3NcB8h1I=;
-Received: from [95.233.219.167] (port=60583 helo=fedora.fritz.box)
-	by esm19.siteground.biz with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <francesco@valla.it>)
-	id 1ttuwQ-00000000GWD-0RVV;
-	Sun, 16 Mar 2025 20:50:38 +0000
-From: Francesco Valla <francesco@valla.it>
-To: linux-kernel@vger.kernel.org,
-	linux-embedded@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Tim Bird <Tim.Bird@sony.com>
-Subject: [PATCH] init/main.c: log initcall level when initcall_debug is used
-Date: Sun, 16 Mar 2025 21:50:15 +0100
-Message-ID: <20250316205014.2830071-2-francesco@valla.it>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RCiwhVQ4"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso24231956d6.2;
+        Sun, 16 Mar 2025 15:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742164323; x=1742769123; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hFDZLy1XjKxI7qBCF7s8eJhiHvjbOuBPad1LYM+cZ18=;
+        b=RCiwhVQ452W5H4475nwZpsN5BjzeRoG5/uCA/B5zuMUrgTkLtMJGuflQR+iMbuEGXW
+         irkbU6isrXH5O453CjHATM5yPYt6kIH+vZCABPRYmHApww/1irfC5AYYjVYly4fQdEpl
+         DUa8mhsRplTBWz5wLpauHNCyJ0ZI/GYxXvUKlYtQCmCcJgtXr/PL/uoEbN+mUBwYgdLg
+         cLILcG/A1r3poth/EN7ixuRt01KI/Rqwh1Y/K5B3IEdEhLQnpcm56XxFDQuUooWrFFz6
+         GzTqQQ/Z6eNdO9l1hs051gCiiy7qtVqTtfu5vfjc5KJtudZH7mobUskhORG7EHCmOTQQ
+         6vFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742164323; x=1742769123;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hFDZLy1XjKxI7qBCF7s8eJhiHvjbOuBPad1LYM+cZ18=;
+        b=AWoBIG9dTEAFjuJqZFPzOpERJmXlLAMT/5qnEzD2raA9v0ILdR17DNvfe9GAr+Nbw6
+         FTSOPi1w8W/ENo9jgminJEHAvzk6BNEVYKy5+fNnGY8Nm/s2RQ6YqdTX06cD7lxbZAES
+         joHtBiL5mT4cmTKbA1S4yCEFJm66o4aeVZLjXt2duZcD4sQLVhwfOCUs/doznyvu8ZD0
+         0stYZpdj6D2pjwqrcG+kb1WHHGKYu8CnDHPGOuPpUS+3Bn2frAGxgHifhaRS3QdFRXx6
+         j0o7S8pgxQuoXSQPkrrZQptmEilENsTyI5dN1O+MxYgUW6Z6auRGTPDPlHUz2QzszA+e
+         znJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjdJO6raQ5zhuKJpGJ1EE3zrdz99uvaNaUtkj5f88bIwKvCKTJtsS+xhaanzfL/sBYf+6fTnLC5cpJ9q0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUvvlIeV7kzi3sSmV7WM/C34r7Prd8sgU6t7tzhzNKznmjPSFb
+	LM1jw2PSfGbyQOY2DrIEmWsj6ZH9F4iwItA21+rTOPYekpLMt/vdpf50LA0cJxo=
+X-Gm-Gg: ASbGnct/0hBSgmqFnKcBgtX7RgEoHnQRpdFkBgwWw0iR6OTo1xU8Zxi5QzyHfjIcicl
+	N1JfmAXot0kTvtZEYGZA+T5FRxoWK2TayrGEIMowS1TGWLdJ9e8GoZMJjmpmWeywNf+Eb1BJHwf
+	mEl2aMifIFaqDPXs/1GN7YTIWtBjn8hjC+nBA8sYqpFMof1aU56RwqLeRGk4YGiUsAQuX1OA7kW
+	zooWGO2MIYN+U59hNoLlyNO23M8I2kobEFwAokgGw8OQrT5miiXFzWsVnjFEyrFWvo2W/HPeAPy
+	T3TZPE39yQFw6v8PPKNSnypdD0/Ind4NM0UObNGfmnR3q0FoNDFZ+9tuP94TtiXKMyJXFuuHo8k
+	sCOM=
+X-Google-Smtp-Source: AGHT+IFvYCqOvd9+EU3zUvfW3hn+WxB7tYCgPpoMVPXdumvj69QndIkBZp5EooM6wsjJAxCl+feKEQ==
+X-Received: by 2002:a05:6214:2422:b0:6e8:fb44:5be2 with SMTP id 6a1803df08f44-6eaeaa9904dmr164944686d6.23.1742164323340;
+        Sun, 16 Mar 2025 15:32:03 -0700 (PDT)
+Received: from tamird-mac.local ([2600:4041:5be7:7c00:ac75:40f2:fdb1:31e5])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade3343b8sm48262146d6.69.2025.03.16.15.32.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Mar 2025 15:32:02 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH 0/2] rust: alloc: split `Vec::set_len` into
+ `Vec::{inc,dec}_len`
+Date: Sun, 16 Mar 2025 18:31:59 -0400
+Message-Id: <20250316-vec-set-len-v1-0-60f98a28723f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - esm19.siteground.biz
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - valla.it
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-SGantispam-id: 3b46fe2c4da7b04bca5cf9745b5c5e2b
-AntiSpam-DLS: false
-AntiSpam-DLSP: 
-AntiSpam-DLSRS: 
-AntiSpam-TS: 1.0
-Authentication-Results: instance-europe-west4-pdhm.prod.antispam.mailspamprotection.com;
-	iprev=pass (214.173.214.35.bc.googleusercontent.com) smtp.remote-ip=35.214.173.214;
-	auth=pass (LOGIN) smtp.auth=esm19.siteground.biz;
-	dkim=pass header.d=valla.it header.s=default header.a=rsa-sha256;
-	arc=none
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAF9R12cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDY0Mz3bLUZN3i1BLdnNQ8XUvLpFSz5GQTC2NzEyWgjoKi1LTMCrBp0bG
+ 1tQALm1b3XQAAAA==
+X-Change-ID: 20250316-vec-set-len-99be6cc48374
+To: Danilo Krummrich <dakr@kernel.org>, 
+ Andrew Ballance <andrewjballance@gmail.com>, 
+ Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-When initcall_debug is specified on the command line, the start and
-return point for each initcall is printed. However, no information on
-the initcall level is reported.
+This series is the product of a discussion[0] on the safety requirements
+of `set_len`.
 
-Add to the initcall_debug infrastructure an additional print that
-informs when a new initcall level is entered. This is particularly
-useful when debugging dependency chains and/or working on boot time
-reduction.
+The patches adding `truncate`[1] and `clear`[2] will need to be updated
+in light of this series.
 
-Signed-off-by: Francesco Valla <francesco@valla.it>
+Link: https://lore.kernel.org/all/20250315154436.65065-1-dakr@kernel.org/ [0]
+Link: https://lore.kernel.org/all/20250316111644.154602-2-andrewjballance@gmail.com/ [1]
+Link: https://lore.kernel.org/all/20250311-iov-iter-v1-4-f6c9134ea824@google.com/ [2]
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- init/main.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+Tamir Duberstein (2):
+      rust: alloc: replace `Vec::set_len` with `inc_len`
+      rust: alloc: add `Vec::dec_len`
 
-diff --git a/init/main.c b/init/main.c
-index 2a1757826397..80a07563036d 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1214,6 +1214,12 @@ trace_initcall_finish_cb(void *data, initcall_t fn, int ret)
- 		 fn, ret, (unsigned long long)ktime_us_delta(rettime, *calltime));
- }
- 
-+static __init_or_module void
-+trace_initcall_level_cb(void *data, const char *level)
-+{
-+	printk(KERN_DEBUG "entering initcall level: %s\n", level);
-+}
-+
- static ktime_t initcall_calltime;
- 
- #ifdef TRACEPOINTS_ENABLED
-@@ -1225,10 +1231,12 @@ static void __init initcall_debug_enable(void)
- 					    &initcall_calltime);
- 	ret |= register_trace_initcall_finish(trace_initcall_finish_cb,
- 					      &initcall_calltime);
-+	ret |= register_trace_initcall_level(trace_initcall_level_cb, NULL);
- 	WARN(ret, "Failed to register initcall tracepoints\n");
- }
- # define do_trace_initcall_start	trace_initcall_start
- # define do_trace_initcall_finish	trace_initcall_finish
-+# define do_trace_initcall_level	trace_initcall_level
- #else
- static inline void do_trace_initcall_start(initcall_t fn)
- {
-@@ -1242,6 +1250,12 @@ static inline void do_trace_initcall_finish(initcall_t fn, int ret)
- 		return;
- 	trace_initcall_finish_cb(&initcall_calltime, fn, ret);
- }
-+static inline void do_trace_initcall_level(const char *level)
-+{
-+	if (!initcall_debug)
-+		return;
-+	trace_initcall_level_cb(NULL, level);
-+}
- #endif /* !TRACEPOINTS_ENABLED */
- 
- int __init_or_module do_one_initcall(initcall_t fn)
-@@ -1314,7 +1328,7 @@ static void __init do_initcall_level(int level, char *command_line)
- 		   level, level,
- 		   NULL, ignore_unknown_bootoption);
- 
--	trace_initcall_level(initcall_level_names[level]);
-+	do_trace_initcall_level(initcall_level_names[level]);
- 	for (fn = initcall_levels[level]; fn < initcall_levels[level+1]; fn++)
- 		do_one_initcall(initcall_from_entry(fn));
- }
-@@ -1358,7 +1372,7 @@ static void __init do_pre_smp_initcalls(void)
- {
- 	initcall_entry_t *fn;
- 
--	trace_initcall_level("early");
-+	do_trace_initcall_level("early");
- 	for (fn = __initcall_start; fn < __initcall0_start; fn++)
- 		do_one_initcall(initcall_from_entry(fn));
- }
+ rust/kernel/alloc/kvec.rs | 34 ++++++++++++++++++++++++----------
+ rust/kernel/str.rs        |  2 +-
+ rust/kernel/uaccess.rs    |  2 +-
+ 3 files changed, 26 insertions(+), 12 deletions(-)
+---
+base-commit: cf25bc61f8aecad9b0c45fe32697e35ea4b13378
+change-id: 20250316-vec-set-len-99be6cc48374
+
+Best regards,
 -- 
-2.48.1
+Tamir Duberstein <tamird@gmail.com>
 
