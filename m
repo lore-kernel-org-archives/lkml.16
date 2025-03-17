@@ -1,147 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75F2233727
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742206594; cv=none; b=BXxK7shOZ8OTRLLMUTSNiGlOtZhOOhpOr4edJqAaEx+k6XupU4KZTOgHKKEyCfHSVBbuymSiKVVmBqNzh8RgEVCPthWWjMGHr9uF8Xon6s1JCvM7coV2hlQuwd55C43pwPUvNTa6/35gFsvYhPcp928ilINoD+CSK6ICIk1vnLE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742206594; c=relaxed/simple;
-	bh=sP4X9ex47Eoc3cg4rQs7gDQnP2lwOT6Ng96xEHp5bpc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SZpQEI8lvNYwvtkObQpzR9P/K0+MmNo1UTDTQrFq6RBN96XzjoCULwpoEPpyLbj8TWx1Bmtyx6W0xFsLJTe5kyqAy/8gUPwY+KzBOk0NPpaR+xqpP5OEhFhXWweDZYcYy7E9teZCfAsVXNlohD+L3Raz8VGvm74P9N1beS3t5ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKssg8TU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKssg8TU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 305E7C4CEE3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248902356B4;
 	Mon, 17 Mar 2025 10:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742206594;
-	bh=sP4X9ex47Eoc3cg4rQs7gDQnP2lwOT6Ng96xEHp5bpc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XKssg8TUZ5+m1VIovlpPgOH6cGDAjiCgJFKBg3GDqN0btvpR3dHJ6TyY+skOWvbtd
-	 KnGPYnXyGykeNE29+ZWjQ09jMghib1rb/SVMTb9hMwzUR9LV1IKDzQvHyBd6JU5I/v
-	 KO43YlLYEqMkP06G0M51sAHs/3wSuBZrb9oGAs0UkBZzS2+0ZUJ50//XqBD+Zoc9zF
-	 cDuUfU9VrSuaoSGQCpl28iPpYEcsABMur2XKSq53tzn3GmdOH5a7MqaDZx5NueROex
-	 AaOdj7CQypr0dewZ5r0T3o06v29t4MErGk4z48cjhGfP6XElp5Kf2LBPFPI6PF4F7Z
-	 Zsc/MHyh70nYQ==
-Received: by venus (Postfix, from userid 1000)
-	id 00B9F18079B; Mon, 17 Mar 2025 11:16:31 +0100 (CET)
-Date: Mon, 17 Mar 2025 11:16:31 +0100
-From: Sebastian Reichel <sre@kernel.org>
-To: Andy Yan <andyshrk@163.com>
-Cc: heiko@sntech.de, cristian.ciocaltea@collabora.com, hjc@rock-chips.com, 
-	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH] drm/rockchip: dw_hdmi_qp: Fix io init for
- dw_hdmi_qp_rockchip_resume
-Message-ID: <p53hbl4vt7vy6srctswjpmlj2rsvnyop4zcszlwrwdd4nogsj3@utqc25oaccfb>
-References: <20250317082047.564404-1-andyshrk@163.com>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742206596; cv=none; b=qI5LNtBLoGyRMU2eOVBGyLL3FZ+unVOcze1yyULUDXKRNYvMBv0B6DuIJtbPfm7CR3ZC2bePICX3NRlPPIg7J4SMGma5igVYWjGMsoTbC89IZmTt7z6tTZgRTujmUGGDmSnkIwdf+mRaDkWD4syyuQo6QMkZ6lrdbWojJF95F7M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742206596; c=relaxed/simple;
+	bh=IUObPNRR4NQzu31kLweJs0iKm+Tw8gF+37su5fyiEFE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ooC75wjjiB+rrfoSmIi+W3jgu1YY4paqyUC6dqEwK93/dm3/mHRhaGGKefcRpq8hZw8kjyrqLIOZfRuJwNccx/H9h3AEUeZN6ros9tOSEFbF3U7ZLK4KIJ73OG4ouF/YlI0MIFrNDca4JE/n3d/tLjbIrrY8NQmGFRGQr3Q+w9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rT/d7l02; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rT/d7l02"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52HAFwoe2248052
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 17 Mar 2025 05:15:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1742206558;
+	bh=CdL/+PjoujWaXbjx9Z6DltuQ+LmtMfq1I7St4x1lKEY=;
+	h=From:To:CC:Subject:Date;
+	b=rT/d7l02DwVXTVZQuvKIJ+3ad/PDz83E7BSa7gcBKo2nU+yI6hfuzsSCmCXOBOHmm
+	 bDtR3pUj15YvCnsyAkveGhBN9+SZihUJzJs7P+p/P0agV9U3MYU35+qnaCGFiwddjx
+	 XXyx9LwyDVSf4SCr3Hx3grzS7ijrmraDOyvt4vSU=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52HAFwEU076244;
+	Mon, 17 Mar 2025 05:15:58 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
+ Mar 2025 05:15:57 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 17 Mar 2025 05:15:57 -0500
+Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52HAFvM6036212;
+	Mon, 17 Mar 2025 05:15:57 -0500
+Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
+	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 52HAFugA019281;
+	Mon, 17 Mar 2025 05:15:57 -0500
+From: Meghana Malladi <m-malladi@ti.com>
+To: <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
+        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
+CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <kory.maincent@bootlin.com>, <javier.carrasco.cruz@gmail.com>,
+        <diogo.ivo@siemens.com>, <horms@kernel.org>,
+        <jacob.e.keller@intel.com>, <m-malladi@ti.com>,
+        <john.fastabend@gmail.com>, <hawk@kernel.org>, <daniel@iogearbox.net>,
+        <ast@kernel.org>, <srk@ti.com>, Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>
+Subject: [PATCH net-next 0/3] Bug fixes from XDP and perout series
+Date: Mon, 17 Mar 2025 15:45:47 +0530
+Message-ID: <20250317101551.1005706-1-m-malladi@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hbprtcna6txu5faw"
-Content-Disposition: inline
-In-Reply-To: <20250317082047.564404-1-andyshrk@163.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+This patch series consists of bug fixes from the features which recently
+got merged into net-next, and haven't been merged to net tree yet.
+
+Patch 2/3 and 3/3 are bug fixes reported by Dan Carpenter
+<dan.carpenter@linaro.org> using Smatch static checker.
+
+Meghana Malladi (3):
+  net: ti: prueth: Fix kernel warning while bringing down network
+    interface
+  net: ti: prueth: Fix possible NULL pointer dereference inside
+    emac_xmit_xdp_frame()
+  net: ti: icss-iep: Fix possible NULL pointer dereference for perout
+    request
+
+ drivers/net/ethernet/ti/icssg/icss_iep.c     | 4 ++++
+ drivers/net/ethernet/ti/icssg/icssg_common.c | 9 ++++-----
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
 
---hbprtcna6txu5faw
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm/rockchip: dw_hdmi_qp: Fix io init for
- dw_hdmi_qp_rockchip_resume
-MIME-Version: 1.0
+base-commit: bfc6c67ec2d64d0ca4e5cc3e1ac84298a10b8d62
+-- 
+2.43.0
 
-Hi,
-
-On Mon, Mar 17, 2025 at 04:20:39PM +0800, Andy Yan wrote:
-> From: Andy Yan <andy.yan@rock-chips.com>
->=20
-> Use cfg->ctrl_ops->io_init callback make it work for all platform.
->=20
-> Fixes: 3f60dbd40d3f ("drm/rockchip: dw_hdmi_qp: Add platform ctrl callbac=
-k")
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> ---
-
-It also gets rid of code duplication :)
-
->=20
->  .../gpu/drm/rockchip/dw_hdmi_qp-rockchip.c    | 23 +++----------------
->  1 file changed, 3 insertions(+), 20 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c b/drivers/gpu=
-/drm/rockchip/dw_hdmi_qp-rockchip.c
-> index 3d1dddb34603..631a7080862b 100644
-> --- a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-> +++ b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-> @@ -600,27 +600,10 @@ static void dw_hdmi_qp_rockchip_remove(struct platf=
-orm_device *pdev)
->  static int __maybe_unused dw_hdmi_qp_rockchip_resume(struct device *dev)
->  {
->  	struct rockchip_hdmi_qp *hdmi =3D dev_get_drvdata(dev);
-> -	u32 val;
-> -
-> -	val =3D HIWORD_UPDATE(RK3588_SCLIN_MASK, RK3588_SCLIN_MASK) |
-> -	      HIWORD_UPDATE(RK3588_SDAIN_MASK, RK3588_SDAIN_MASK) |
-> -	      HIWORD_UPDATE(RK3588_MODE_MASK, RK3588_MODE_MASK) |
-> -	      HIWORD_UPDATE(RK3588_I2S_SEL_MASK, RK3588_I2S_SEL_MASK);
-> -	regmap_write(hdmi->vo_regmap,
-> -		     hdmi->port_id ? RK3588_GRF_VO1_CON6 : RK3588_GRF_VO1_CON3,
-> -		     val);
-> -
-> -	val =3D HIWORD_UPDATE(RK3588_SET_HPD_PATH_MASK,
-> -			    RK3588_SET_HPD_PATH_MASK);
-> -	regmap_write(hdmi->regmap, RK3588_GRF_SOC_CON7, val);
-> +	const struct rockchip_hdmi_qp_cfg *cfg;
-> =20
-> -	if (hdmi->port_id)
-> -		val =3D HIWORD_UPDATE(RK3588_HDMI1_GRANT_SEL,
-> -				    RK3588_HDMI1_GRANT_SEL);
-> -	else
-> -		val =3D HIWORD_UPDATE(RK3588_HDMI0_GRANT_SEL,
-> -				    RK3588_HDMI0_GRANT_SEL);
-> -	regmap_write(hdmi->vo_regmap, RK3588_GRF_VO1_CON9, val);
-> +	cfg =3D of_device_get_match_data(dev);
-> +	cfg->ctrl_ops->io_init(hdmi);
-
-I think it would be better to store the ctrl_ops (or io_init)
-callback in struct rockchip_hdmi_qp during driver probe and avoid
-another lookup of the match_data, which involves string comparisons.
-
-Otherwise:
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
-Greetings,
-
--- Sebastian
-
---hbprtcna6txu5faw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmfX9ngACgkQ2O7X88g7
-+pqM3A/9EYnXD5oDYwTqakdXJIlFb5r0EhLAlJJCWtEYxOxa340HJlmcPAei3QlR
-kV1q1zemGSOd+3SS5fwmb6kARERRKRZKz59f8uRXO9PEuVT9xm+3sR9UqwmTB8iH
-TTaUHR08eYemlbhPVWgPf5AVstz77PN+WmJdAgqORI0URlqBnhIAN1hbYWk1HzMt
-H+8WNlCfESWoVYSGzHsi4gLoL55K5RTkUSxEgpszQBQ4Cs5Tl/GPhNbmVDA29kxi
-QDNMqksGoZ3A4lz9k0dOhO3Qe19FmCFHUjkCOLD/7Eq6TcbMpYVG2xE3Yzz+R11f
-zPUfYxXe+QzM9nuFLUEQ/aV0MuT+gU1VltGg+VtinmoEw6incZI51QNmB24rHpS0
-Wr1v9lsOmIhlB3Kn5N7/eZGhLboe1ukmiRS2kHMCOze/vYg9m4EUG+ZaBP4gt/L9
-3c8ajXV0l+CGyc0SQeo2JDu5CtURVlt1X9LcUJSoM8urpw8lp6R68FJJDEgPgHRR
-p+ruw3C+qrvWGOXeLV3e6xCYGcGCdToZ/r2T9Whq8HRY8RtAdskqFRTg6mqOnmVg
-YSmAv8jbSlVuYfFoLoM4USx7BimM5PxzpqoOoQOFiBghtsquezBs0gscL56mAuqo
-BC+WYm6BkFjM434NHE9x51tIA8UgUKbi01jjHXlHExcXpbtICys=
-=mbY1
------END PGP SIGNATURE-----
-
---hbprtcna6txu5faw--
