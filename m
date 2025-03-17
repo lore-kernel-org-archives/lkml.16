@@ -1,167 +1,83 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B11219A67;
-	Mon, 17 Mar 2025 06:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E15D7E0E4
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 06:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742191465; cv=none; b=spURLh8CMkD1WSVNW86xM/v+i9P0KUHKJ5iR65WerW0kbyWmFPY7NRHfuLyOWOhYxBae5jqJ4gcRRcthgGTM6kW/6gtqiOT68tu/tYxkrxAlQ5GG6lD+u9rWomZUsmiUPkKODQOMZ5AEOdClKMiAJFHwJlsLq/Fdz+TBGLKNWSY=
+	t=1742191509; cv=none; b=ouvJh562ucSP+xlKRLrOXiWtz8T1kZyeRv7xTOGdds5P8YUcnmQ1VP4Dgx+UaqXzO3Rc7SNtxL2w+byHm5qBEH1G8F9NB5lTODM273XxNpxhmkmd2yQIdu5qRwc12uUiWRtHH5nP/9UUAG0aXvh8ZzEoVBuNJRfE8BpW1PkhvPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742191465; c=relaxed/simple;
-	bh=BuLAe+ckD3KglGlKDOe/14ODpCMzOcuTzcAY60aVtB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=folIYRdheouqCW/VMXcyvAhRyzPbkPVHIC85632K4Aq121sVqkv0oaK79C680YqO9b0nSmBT2KY+Kt75uR1/mClQKA5w/UGdGSpSWwDrqMIbJeYW6GzvtmQ1vRAClMUuwFMgu7dEf/ccKGO81zYOTe37ktl9loHr0CiYI6oW1mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N4L9L1zs; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N4L9L1zs"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52GKb4iN020117;
-	Mon, 17 Mar 2025 06:04:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=6QyI19WOzYbsyCFPiTCl6pr1yzidgieZZUfeDkCxa
-	8s=; b=N4L9L1zs4+29PXSiFIBitPHYyAzR+uxH5gTbOKAYFC3Q/7IsW0F9QdS8g
-	BS/mEMfIqCdvBjtFVMlFrqURAePeZhxYnGZ/UxoBzSuPktp7CCLvhPAgHsAi0uTt
-	E3CVbEeIy+/9WKjEb7lpMIgyTA9J+V5loyDB8AbJZD22TLMa1aMIy/5ntiy3GSBR
-	3gLmC6JeHiSbnD4hWZIzTIq8zGjozIB+Ar9XnX92kd3gQdMiQ4cLDIS74razrFyS
-	5icjwlkvsRbkvOZ06ijWlyq/tLQHTtaqcAaZ+TSq605MnliJsjEASksp0BaM+Knp
-	xMNurm2As7t6Ih89NoVsRCEQWtn4Q==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45e5tp9k35-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Mar 2025 06:04:05 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52H3LU65009577;
-	Mon, 17 Mar 2025 06:04:04 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45dm8ymte0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Mar 2025 06:04:04 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52H640k747710690
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Mar 2025 06:04:00 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B95D620043;
-	Mon, 17 Mar 2025 06:04:00 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6210620040;
-	Mon, 17 Mar 2025 06:03:59 +0000 (GMT)
-Received: from li-c18b6acc-24ee-11b2-a85c-81492619bda1.in.ibm.com (unknown [9.109.215.55])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 17 Mar 2025 06:03:59 +0000 (GMT)
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Christian Loehle <christian.loehle@arm.com>,
-        Gautam Menghani <gautam@linux.ibm.com>,
-        Aboorva Devarajan <aboorvad@linux.ibm.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] cpuidle: menu: Prefer polling state for short idle durations
-Date: Mon, 17 Mar 2025 11:33:57 +0530
-Message-ID: <20250317060357.29451-1-aboorvad@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1742191509; c=relaxed/simple;
+	bh=2LWTQNeECopO34E3fIsxYZkJA/bUEgmrPLYqmrPa7Lk=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=h1onuDa5syQPfzIL2UbMhZGEr/9QPOAhrmqvW34t+tna7xLeb1z1BL2yPlvWWjfaDZB6OpCdj1KX1VvzZe605PNwK/j7YLvS/F8+kXzPd/jYYi/fuHd31NEHZHnhNHgt3s20tPncJIPHG4T0MWiwwbBjPk8LnXtxgNntYKAP0RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZGPZk0nj2z5B1Jb;
+	Mon, 17 Mar 2025 14:05:02 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+	by mse-fl1.zte.com.cn with SMTP id 52H64sMZ055367;
+	Mon, 17 Mar 2025 14:04:54 +0800 (+08)
+	(envelope-from zhang.enpei@zte.com.cn)
+Received: from mapi (xaxapp01[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Mon, 17 Mar 2025 14:04:56 +0800 (CST)
+Date: Mon, 17 Mar 2025 14:04:56 +0800 (CST)
+X-Zmail-TransId: 2af967d7bb88223-d96ae
+X-Mailer: Zmail v1.0
+Message-ID: <202503171404563447jAdJlVvoFXDvBoj0sAx6@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: tNbJvwSjnEJAJOzgXClmmcDcd8RXCkkI
-X-Proofpoint-ORIG-GUID: tNbJvwSjnEJAJOzgXClmmcDcd8RXCkkI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-17_01,2025-03-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- spamscore=0 clxscore=1015 mlxscore=0 impostorscore=0 phishscore=0
- adultscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503170042
+Mime-Version: 1.0
+From: <zhang.enpei@zte.com.cn>
+To: <neil.armstrong@linaro.org>
+Cc: <andrzej.hajda@intel.com>, <rfoss@kernel.org>,
+        <laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+        <simona@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?B?W1BBVENIXSBkcm0vYnJpZGdlOiBzaWwtc2lpODYyMDogVXNlIGRldl9lcnJfcHJvYmUoKQ==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 52H64sMZ055367
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67D7BB8E.001/4ZGPZk0nj2z5B1Jb
 
-Avoid selecting deep idle state when the predicted idle duration is
-shorter than its target residency, as this leads to unnecessary state
-transitions without energy savings.
+From: ZhangEnpei <zhang.enpei@zte.com.cn>
 
-On virtualized PowerPC (pseries) systems, where only one polling state
-(Snooze) and one deep state (CEDE) are available, selecting CEDE when
-its target residency exceeds the predicted idle duration hurts
-performance.
+Replace the open-code with dev_err_probe() to simplify the code.
 
-For example, if the predicted idle duration is 15 us and the first
-non-polling state has a target residency of 120 us, selecting it
-would be suboptimal.
-
-Remove the condition introduced in commit 69d25870f20c
-("cpuidle: fix the menu governor to boost IO performance") that
-prioritized non-polling states even when their target residency
-exceeded the predicted idle duration and allow polling states to
-be selected when appropriate.
-
-Performance improvement observed with pgbench on PowerPC (pseries)
-system:
-+---------------------------+------------+------------+------------+
-| Metric                    | Baseline   | Patched    | Change (%) |
-+---------------------------+------------+------------+------------+
-| Transactions/sec (TPS)    | 494,834    | 538,707    | +8.85%     |
-| Avg latency (ms)          | 0.162      | 0.149      | -8.02%     |
-+---------------------------+------------+------------+------------+
-
-CPUIdle state usage:
-+--------------+--------------+-------------+
-| Metric       | Baseline     | Patched     |
-+--------------+--------------+-------------+
-| Total usage  | 12,703,630   | 13,941,966  |
-| Above usage  | 11,388,990   | 1,620,474   |
-| Below usage  | 19,973       | 684,708     |
-+--------------+--------------+-------------+
-
-Above/Total and Below/Total usage percentages:
-+------------------------+-----------+---------+
-| Metric                 | Baseline  | Patched |
-+------------------------+-----------+---------+
-| Above % (Above/Total)  | 89.67%    | 11.63%  |
-| Below % (Below/Total)  | 0.16%     | 4.91%   |
-| Total cpuidle miss (%) | 89.83%    | 16.54%  |
-+------------------------+-----------+---------+
-
-Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-
+Signed-off-by: ZhangEnpei <zhang.enpei@zte.com.cn>
 ---
+ drivers/gpu/drm/bridge/sil-sii8620.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-v1: https://lore.kernel.org/all/20240809073120.250974-1-aboorvad@linux.ibm.com/
+diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
+index 28a2e1ee04b2..1d0ee9c8d5b2 100644
+--- a/drivers/gpu/drm/bridge/sil-sii8620.c
++++ b/drivers/gpu/drm/bridge/sil-sii8620.c
+@@ -2178,12 +2178,9 @@ static int sii8620_extcon_init(struct sii8620 *ctx)
 
-v1 -> v2:
+ 	edev = extcon_find_edev_by_node(muic);
+ 	of_node_put(muic);
+-	if (IS_ERR(edev)) {
+-		if (PTR_ERR(edev) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-		dev_err(ctx->dev, "Invalid or missing extcon\n");
+-		return PTR_ERR(edev);
+-	}
++	if (IS_ERR(edev))
++		return dev_err_probe(ctx->dev, PTR_ERR(edev),
++				     "Invalid or missing extcon\n");
 
-- Drop cover letter and improve commit message.
----
- drivers/cpuidle/governors/menu.c | 11 -----------
- 1 file changed, 11 deletions(-)
-
-diff --git a/drivers/cpuidle/governors/menu.c b/drivers/cpuidle/governors/menu.c
-index 28363bfa3e4c..4b199377e4be 100644
---- a/drivers/cpuidle/governors/menu.c
-+++ b/drivers/cpuidle/governors/menu.c
-@@ -296,17 +296,6 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 			idx = i; /* first enabled state */
- 
- 		if (s->target_residency_ns > predicted_ns) {
--			/*
--			 * Use a physical idle state, not busy polling, unless
--			 * a timer is going to trigger soon enough.
--			 */
--			if ((drv->states[idx].flags & CPUIDLE_FLAG_POLLING) &&
--			    s->exit_latency_ns <= latency_req &&
--			    s->target_residency_ns <= data->next_timer_ns) {
--				predicted_ns = s->target_residency_ns;
--				idx = i;
--				break;
--			}
- 			if (predicted_ns < TICK_NSEC)
- 				break;
- 
+ 	ctx->extcon = edev;
+ 	ctx->extcon_nb.notifier_call = sii8620_extcon_notifier;
 -- 
-2.43.5
-
+2.25.1
