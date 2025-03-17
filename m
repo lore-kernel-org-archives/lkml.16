@@ -1,121 +1,92 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE59230BF2
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C7313B7A3;
+	Mon, 17 Mar 2025 10:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742207319; cv=none; b=C/bHut/nC7IUwlgCT+EKzTj2bOjrIpGpkFP9VjFK9C9Eh3KqOblFzWiIkbq5tFQBgihiTDKGmYfbkZ1Q3SH2kxm5p1nyD/NQd4V1H5j8hNc5yfvmfriaCCS3nSOzgDskBGJHecrfFO1ISuD5E4B2PfemOOPmXYVODZGedR1nDQ8=
+	t=1742207329; cv=none; b=QkysIlZJZjHfv7Mben8gydjhfOnEEeZP89hFVDR2pC5xlMsi7hXpFeu/7LPtn6u33uTtNxeIus4q9prdLd171jd2/3L57QQVLY5czLmHYY70KQKJyxpWdK0b+QK1oqtd3JenF33phWcAFbfc1YQpr8OLWT/9OR9g31UPg8Sk/Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742207319; c=relaxed/simple;
-	bh=ReMwh/o18Yh18qE5xbGn6VTcyYQt9CJChadEXgAXGUo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aA+hR9EpQSko9/o7Mp5OJzZGMmnvmqYE8xvGqwupNDlkMoBAf2MNJ6A0UQnZpOPa2b5TZ2H2RRPIMdGdaY594/c/uALKCDFKHQdllndsinS1E0rDCRzl8tPk6IjFoCBgaMH1NBqtEf1vFn9BjZT5sn0UZqb5f7aDJ6vJOfZTPV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SqekagC7; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1742207329; c=relaxed/simple;
+	bh=D475GWEV9xZkUiRyncrmvUAsUnBc2KaZ13XrCGru9zM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QhjenMTA76+UoCm2sC1trQUXalT46oQoGYJSXx5TPiIBjBK4l2wbvB8k1zWhMOe4Esf5MJHVeRXWpbeC9sCQPqJISBwqtBaSML0+Xa4AG5Ihe4IkhyqLgjQH5BNojNQ1NXNYM2BkMeXqx/HF1coz2dED5szYlMxmYvZHRklZn6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=x+bhBU1o; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SqekagC7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=fmWIS
-	0wLHvOfDdrgbj8ORSE1eJQwOVhMX/zX7anGKW4=; b=SqekagC72tCKT25KHSmS4
-	/+b/w+C575D1N98h4BDUoxjOxnTCMxhJz4/JPOgO//WZqLyL2LezzhFK4lhH9+ng
-	XzK09N4vXHxDZpHOogN3tAa/TN2/mpv3caiedJldEyp/q8pNoY4wuUXTccxfdjKu
-	Ci4hDKUATluwrmqbDmq0dk=
-Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wBnuTwy+ddnhLtwTQ--.47861S2;
-	Mon, 17 Mar 2025 18:28:06 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: cristian.ciocaltea@collabora.com,
-	hjc@rock-chips.com,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH v2] drm/rockchip: dw_hdmi_qp: Fix io init for dw_hdmi_qp_rockchip_resume
-Date: Mon, 17 Mar 2025 18:27:53 +0800
-Message-ID: <20250317102757.565679-1-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="x+bhBU1o"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=tzhM71c7XeDXnGaEMVePBynM75aidEmqvkMrNMTXDQI=; b=x+bhBU1ozAin+2pMbdUoolbzcR
+	1tX9ivxR2w4CSndXSYOkO5+ofjj2hAwRUz84zpzsZ5dsxVJTvAxC+GNIaiSL0zd4wwNDGU+ikEeVu
+	BdbNJDByWGYrQHs3kLGFjSG28wG8ZACc33HVSuG76dToZo1BdiP6DCXR/xzngvWxd+TRtXvf8DQYU
+	0QsVEhG/X1Zl7ryUyFsCX0eItCYNHFksGz58gKP/Cwzrdr0oPiYILhiCEzST1dgGSYFEvQOln5UCN
+	nr6nIs1c1af+w8D1HiWbRDz6EYdj8Q+A82eE7ymRgQRM9MEeyLJxws60pBKLJ9oyE3f3qP+ToYsCh
+	GiOgrpMA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54150)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tu7i0-0003Ll-1n;
+	Mon, 17 Mar 2025 10:28:36 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tu7hx-0003U7-1w;
+	Mon, 17 Mar 2025 10:28:33 +0000
+Date: Mon, 17 Mar 2025 10:28:33 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Cc: Jim Liu <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
+	florian.fainelli@broadcom.com, andrew@lunn.ch, hkallweit1@gmail.com,
+	kuba@kernel.org, edumazet@google.com, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] net: phy: broadcom: Correct BCM5221 PHY model
+ detection failure
+Message-ID: <Z9f5UQPRTPT8lbXm@shell.armlinux.org.uk>
+References: <20250317035005.3064083-1-JJLIU0@nuvoton.com>
+ <Z9fhqbfoQGSm1Njx@mev-dev.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBnuTwy+ddnhLtwTQ--.47861S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFWfXFWrGr45XFWxGrWUtwb_yoW8Kw45pw
-	4UAa4jkrWkGr47Xrn8ZFnrArW2k3W7Jw4SqFWxKa4vv3W0qrn3KF93Wa1rXr43ZF9xuF4a
-	krWvy34fJF4UXFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j7uc_UUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0h4TXmfX95EooAAAsf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9fhqbfoQGSm1Njx@mev-dev.igk.intel.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-From: Andy Yan <andy.yan@rock-chips.com>
+On Mon, Mar 17, 2025 at 09:47:37AM +0100, Michal Swiatkowski wrote:
+> It will be nice to have wider explanation what it is fixing in commit
+> message. Is phydev->phy_id different than phydev->driver->phy_id? Looks
+> like masking isn't crucial as phydev->driver->phy_id is initialized by
+> PHY_ID_BCM5221 which is already masked.
 
-Use cfg->ctrl_ops->io_init callback make it work for all platform.
-And it's also gets rid of code duplication
+The two are very different, and this driver just gets it totally wrong.
 
-Fixes: 3f60dbd40d3f ("drm/rockchip: dw_hdmi_qp: Add platform ctrl callback")
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+phydev->phy_id is the ID read from the PHY. It includes the revision
+field.
 
----
+phydev->drv is one of the phy_driver entries at the bottom of the file.
+These contain whatever the driver author puts there, which in this
+case would be PHY_ID_BCM5221, and PHY_ID_BCM5221 is defined without
+the revision number.
 
-Changes in v2:
-- Store the ctrl_ops in struct rockchip_hdmi_qp
+So doing the masking is entirely redundant if you're comparing the
+drv->phy_id that was initialised with a definition against the same
+definition.
 
- .../gpu/drm/rockchip/dw_hdmi_qp-rockchip.c    | 23 +++----------------
- 1 file changed, 3 insertions(+), 20 deletions(-)
+As pointed out in my review with v2, there's more problems in this
+driver _because_ this has not been understood. In an attempt to get
+rid of some of this stuff, I introduced phydev_id_compare() and
+phy_id_compare() helpers into core phylib code, but didn't get
+around to updating broadcom.c. See my comments against v2.
 
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-index 3d1dddb34603..7d531b6f4c09 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-@@ -94,6 +94,7 @@ struct rockchip_hdmi_qp {
- 	struct gpio_desc *enable_gpio;
- 	struct delayed_work hpd_work;
- 	int port_id;
-+	const struct rockchip_hdmi_qp_ctrl_ops *ctrl_ops;
- };
- 
- struct rockchip_hdmi_qp_ctrl_ops {
-@@ -461,6 +462,7 @@ static int dw_hdmi_qp_rockchip_bind(struct device *dev, struct device *master,
- 		return -ENODEV;
- 	}
- 
-+	hdmi->ctrl_ops = cfg->ctrl_ops;
- 	hdmi->dev = &pdev->dev;
- 	hdmi->port_id = -ENODEV;
- 
-@@ -600,27 +602,8 @@ static void dw_hdmi_qp_rockchip_remove(struct platform_device *pdev)
- static int __maybe_unused dw_hdmi_qp_rockchip_resume(struct device *dev)
- {
- 	struct rockchip_hdmi_qp *hdmi = dev_get_drvdata(dev);
--	u32 val;
- 
--	val = HIWORD_UPDATE(RK3588_SCLIN_MASK, RK3588_SCLIN_MASK) |
--	      HIWORD_UPDATE(RK3588_SDAIN_MASK, RK3588_SDAIN_MASK) |
--	      HIWORD_UPDATE(RK3588_MODE_MASK, RK3588_MODE_MASK) |
--	      HIWORD_UPDATE(RK3588_I2S_SEL_MASK, RK3588_I2S_SEL_MASK);
--	regmap_write(hdmi->vo_regmap,
--		     hdmi->port_id ? RK3588_GRF_VO1_CON6 : RK3588_GRF_VO1_CON3,
--		     val);
--
--	val = HIWORD_UPDATE(RK3588_SET_HPD_PATH_MASK,
--			    RK3588_SET_HPD_PATH_MASK);
--	regmap_write(hdmi->regmap, RK3588_GRF_SOC_CON7, val);
--
--	if (hdmi->port_id)
--		val = HIWORD_UPDATE(RK3588_HDMI1_GRANT_SEL,
--				    RK3588_HDMI1_GRANT_SEL);
--	else
--		val = HIWORD_UPDATE(RK3588_HDMI0_GRANT_SEL,
--				    RK3588_HDMI0_GRANT_SEL);
--	regmap_write(hdmi->vo_regmap, RK3588_GRF_VO1_CON9, val);
-+	hdmi->ctrl_ops->io_init(hdmi);
- 
- 	dw_hdmi_qp_resume(dev, hdmi->hdmi);
- 
 -- 
-2.43.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
