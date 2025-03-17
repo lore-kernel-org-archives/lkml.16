@@ -1,145 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1615F1FDA97;
-	Mon, 17 Mar 2025 16:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4AE18787A;
+	Mon, 17 Mar 2025 16:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742230445; cv=none; b=rFVkaPZUjZ4U/PSBGkXrUhH+DhV00kK3a+x8IPP+ASfNIyjF4mqPPpumUiDJamFnG9HxMpN/bQPFJgU4Z2Up0uupYKi0zgA4v/JCy7TaKqI0VMULMZBjUObylakdbJCVM9CwoSioismkj2R8ED/KQypCZIDV/bZawBqYyn2UXHk=
+	t=1742230506; cv=none; b=bT8Lj09lt9Fs2yzewsGM6dKvodcvEv3InaAqb8Qvfx0Y3/5v85W+ujn2xCz9SazuGWfNmuDCbWP07kZh9WCPS2hFnc8lAFsNwX+EiX/6OHgNFOij0+czYDLhTEo6ZPqncYzDsFtta8RWmWfkOGDRirW2nsR2CxPVcIrTbMhFsuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742230445; c=relaxed/simple;
-	bh=KpU/PnNszW7hE8D8K45gNzAsaAMaaigdwtGIBChY8ds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E9ImK82Fj9SEhiMeCVTiRRed4Q2MuD7fCJvwPZQhFFcE8polwY2J0nQ6/4JE7zJqByD0hv1fkCdg33RgUADmoLe6TvTjKVAaBJ7sC+Q45WexjRUk1HBL5zHSsJjQmnVTec+AqBS6i4ASSEFL+wkxr2xriLAiYCMTrpEuypiKU1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19B6913D5;
-	Mon, 17 Mar 2025 09:54:11 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF99A3F694;
-	Mon, 17 Mar 2025 09:54:00 -0700 (PDT)
-Date: Mon, 17 Mar 2025 16:53:57 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH 2/9] hwrng: arm-smccc-trng - transition to the faux
- device interface
-Message-ID: <Z9hTpRGisJcQknwv@bogus>
-References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
- <20250317-plat2faux_dev-v1-2-5fe67c085ad5@arm.com>
- <2025031748-deface-wasting-b635@gregkh>
- <Z9gwNaUoTmqViPrh@bogus>
- <2025031709-unmoved-carton-c130@gregkh>
- <Z9g1CV6jgea8VpW4@bogus>
- <2025031731-anyhow-askew-5731@gregkh>
+	s=arc-20240116; t=1742230506; c=relaxed/simple;
+	bh=yPx1W23J/P+WYaB0fZ1AaTsK/DO5xoSjvffQi5HyixE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gdv8XkpuG1scF6lcm0PYau4l9HSSaDNO/hiS5Art+yoXdleYggmMq8Ezn0bi7ndnoHNtyX0aejVD+y+7cF6WuOQBOwYsNAz+POAmC1zBM9ZiGHXmtAjhZ8AsPrel1pg8FYK/Lodn8kcrjH5Tgy3RgLN0en269IWP/vwAwDRHuuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YQJ1yd4B; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQJ1yd4B"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3913cf69784so3983398f8f.1;
+        Mon, 17 Mar 2025 09:55:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742230502; x=1742835302; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DYW/myG8S98ZwKXjjtz9d+f0WTJ0Pxhh9RLpDlD6mC4=;
+        b=YQJ1yd4BBzBQkAC+wA51lh5f/LBgIZrCWb1KHhFT+2mp8uwsQj+nwlIZa1NqVQ4gmE
+         A2O8E+u/v/+b4OCyZhogH5qcUGzX9TjEsC2TAQ4B+XCbG55pzoVfQKWQvUYXEGXhNDhT
+         J8CTwKFrH0C8nDcg2ZEeZpFGe13MfqPWOTqJD7SaVnhzDpd/iwe/FDlytV5GgatBQWKH
+         CcRIWU77F3FVUqWNEkOQO9DB8c1tuQYsMIRurjyGcf1HVHzsRMVz8UJpRnZZKl1BKfoC
+         86keBpqgJHGQYKk5h+Hf1FHuFuyWeltoUf6ZU3VfHBOfKpfy/qLAZvKbKXmE/2zpMGcx
+         B2Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742230502; x=1742835302;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DYW/myG8S98ZwKXjjtz9d+f0WTJ0Pxhh9RLpDlD6mC4=;
+        b=txJVZ5o5CqOWY4kQ7cYDCga2e0j8p9ZCweiDBx+XknWmT/t1O6mSL9dJtKyxRp7TP6
+         XmCuBbFiTEkNwuvukyKCkbd7ff/CffQokGnow7ZG33l2+iC2TKQQzNV8oUD6G4InKzQ5
+         8qU9JocQ8nL083hqmeUXhmM0qxw86FhliepkrY1pZYF+FrI89j8GaMqeRgKkVSqrAoF5
+         xWLgdN7F1dKPupOQr5eu8C06G7U2CHlFYft2BTlryJB+cof0GJqcI0/SvadAIBrCMRLS
+         HAXZz8gWi5RJ7JumqODytJvIJH/xvJ3KopTW1Mr1baTncyZdOqKv3yCG2cApSEg2pvOO
+         J5Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCVD0fJXo8BIieXFPh78IGMt9ks0Z/z/asm3GF/Lfut63GPUEG4tW7esJqhlz7gCGnLUxkuShrHaN8Ws3nQb@vger.kernel.org, AJvYcCVPd1IcEvzG42HVHFopJujOKeF0l/fQ92jrzVVXeDA7HGxIj/kwtvWXCeRqMPj9nf2rmFD74YBvLq4Ki9Nlha87@vger.kernel.org, AJvYcCW/5XZgsIwhZnXT2pzfAK4Ith7pRfr5dnYTQ/kLcG7Vuc56k9DqvpDwWoER0gA30ezAbvc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGjSuCKIbfSUbQpa1GeyFbkKTXREP0LFZs8vLnO5KfzxFYN3fp
+	1LkrDjC+4srx5Luk0u6St5tIExVvZyNdACDG1uEw8W7jq+PeXTaB1vwZc1XMcSSSRRl69ExoCFe
+	di5IhfrNMhsXaAcacL+28ti3EMUg=
+X-Gm-Gg: ASbGncswgeJf5hQAxUPXxlppxaKhYgGT+mXA8UKrrxl+3Ld4iPbqemfAUUtuQXF8ReG
+	GLHIhu6/vLgVVMvPYQQt3o8JRW7JkQBvxfWPGhh6ceAZdcEztApAN6DmdmSdNf4cykSwRIZkdPE
+	JZEFmzRGeIG19czE7y6fJOVRfesGY8kFuqNmUM2VmM5z1d8VGOGLlz
+X-Google-Smtp-Source: AGHT+IF1wPrOYCHjRqINKRwXtxeBn3BLYXmj9FYifrDgym32y2IrbSokm4OJwOVPh3gpZxYxxX5kk+ywPzIkeBZaVrg=
+X-Received: by 2002:a5d:47aa:0:b0:391:2c0c:1247 with SMTP id
+ ffacd0b85a97d-3971dce077amr13365769f8f.1.1742230502029; Mon, 17 Mar 2025
+ 09:55:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025031731-anyhow-askew-5731@gregkh>
+References: <20250317154706711RvRh_96VDw-u63cPmkeHk@zte.com.cn>
+In-Reply-To: <20250317154706711RvRh_96VDw-u63cPmkeHk@zte.com.cn>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 17 Mar 2025 09:54:51 -0700
+X-Gm-Features: AQ5f1Jr6SV-PxZAg9lGDwinwyvpNhnElW9xEeeE4utJ577keSk1EQKFPaX2ZkYY
+Message-ID: <CAADnVQKTnS-EH=d58JEWEey5LGEeMx==_UHW6e2-kTbgp+ci5A@mail.gmail.com>
+Subject: Re: [PATCH] selftests/bpf: Replace deprecated strncpy() with strscpy()
+To: feng.wei8@zte.com.cn
+Cc: Andrii Nakryiko <andrii@kernel.org>, Eddy Z <eddyz87@gmail.com>, 
+	Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2025 at 05:46:46PM +0100, Greg Kroah-Hartman wrote:
-> On Mon, Mar 17, 2025 at 02:43:21PM +0000, Sudeep Holla wrote:
-> > On Mon, Mar 17, 2025 at 03:30:15PM +0100, Greg Kroah-Hartman wrote:
-> > > On Mon, Mar 17, 2025 at 02:22:45PM +0000, Sudeep Holla wrote:
-> > > > On Mon, Mar 17, 2025 at 02:04:27PM +0100, Greg Kroah-Hartman wrote:
-> > > > > On Mon, Mar 17, 2025 at 10:13:14AM +0000, Sudeep Holla wrote:
-> > > > > > +MODULE_ALIAS("faux:smccc_trng");
-> > > > > 
-> > > > > Why do you need a branch new alias you just made up?  Please don't add
-> > > > > that for these types of devices, that's not going to work at all (just
-> > > > > like the platform alias really doesn't work well.
-> > > > > 
-> > > > 
-> > > > Sure I will drop all of those alias. One question I have if the idea of
-> > > > creating a macro for this is good or bad ? I need this initial condition
-> > > > flag to make use of such a macro, so I didn't go for it, but it does
-> > > > remove some boiler-plate code.
-> > > > 
-> > > > Let me know what do you think of it ?
-> > > > 
-> > > > Regards,
-> > > > Sudeep
-> > > > 
-> > > > -->8 
-> > > > diff --git i/include/linux/device/faux.h w/include/linux/device/faux.h
-> > > > index 9f43c0e46aa4..8af3eaef281a 100644
-> > > > --- i/include/linux/device/faux.h
-> > > > +++ w/include/linux/device/faux.h
-> > > > @@ -66,4 +66,30 @@ static inline void faux_device_set_drvdata(struct faux_device *faux_dev, void *d
-> > > >  	dev_set_drvdata(&faux_dev->dev, data);
-> > > >  }
-> > > >  
-> > > > +#define module_faux_driver(name, tag, init_cond)			\
-> > > > +static struct faux_device_ops tag##_ops = {				\
-> > > > +	.probe = tag##_probe,						\
-> > > > +	.remove = tag##_remove,						\
-> > > > +};									\
-> > > > +									\
-> > > > +static struct faux_device *tag##_dev;					\
-> > > > +									\
-> > > > +static int __init tag##_init(void)					\
-> > > > +{									\
-> > > > +	if (!(init_cond))						\
-> > > > +		return 0;						\
-> > > > +	tag##_dev = faux_device_create(name, NULL, &tag##_ops);		\
-> > > > +	if (!tag##_dev)							\
-> > > > +		return -ENODEV;						\
-> > > > +									\
-> > > > +	return 0;							\
-> > > > +}									\
-> > > > +module_init(tag##_init);						\
-> > > > +									\
-> > > > +static void __exit tag##_exit(void)					\
-> > > > +{									\
-> > > > +	faux_device_destroy(tag##_dev);					\
-> > > > +}									\
-> > > > +module_exit(tag##_exit);						\
-> > > 
-> > > Yes, I see that some of your changes could be moved to use this, so I
-> > > think it is worth it.
-> > > 
-> > > But why can't you use module_driver() here?  Ah, that init_cond?  And
-> > > the device.  Hm, why not put the init_cond in the probe callback?  That
-> > > should make this macro simpler.
-> > > 
-> > 
-> > I tried to keep the creation of the device itself conditional the way
-> > it is today. Deferring the check to probe means the device gets created
-> > unconditionally but won't be probed which is fine I guess. I was thinking
-> > that device shouldn't show up on the bus if the condition is not met to
-> > match the current scenario. I might be overthinking there.
-> 
-> It will not show up anywhere if the probe call fails.
+On Mon, Mar 17, 2025 at 12:47=E2=80=AFAM <feng.wei8@zte.com.cn> wrote:
+>
+> From: FengWei <feng.wei8@zte.com.cn>
+>
+> strncpy() is deprecated for NUL-terminated destination buffers. Use
+> strscpy() instead and remove the manual NUL-termination.
+>
+> Signed-off-by: FengWei <feng.wei8@zte.com.cn>
+> ---
+>  tools/testing/selftests/bpf/test_verifier.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/=
+selftests/bpf/test_verifier.c
+> index 447b68509d76..dfe64c6d4f87 100644
+> --- a/tools/testing/selftests/bpf/test_verifier.c
+> +++ b/tools/testing/selftests/bpf/test_verifier.c
+> @@ -1320,8 +1320,7 @@ static bool cmp_str_seq(const char *log, const char=
+ *exp)
+>                         printf("FAIL\nTestcase bug\n");
+>                         return false;
+>                 }
+> -               strncpy(needle, exp, len);
+> -               needle[len] =3D 0;
+> +               strscpy(needle, exp, len);
 
-Ah, nice. I somehow didn't realise that. Thanks for that info.
+Pls do not send patches that were not even build tested.
 
-> 
-> > > And don't use "tag", that's an odd term here, just copy what
-> > > module_driver() does instead please.
-> > > 
-> > 
-> > Sure, I will not use it. It was just a name that came to my mind.
-> > 
-> > Also creating the macro builds the dependency. Do you prefer to push the
-> > changes as is and the macro in one release and make use of the macro later.
-> 
-> Let's see a series that adds the macro and uses it and we can figure it
-> out from there.  If the macro is sane, I can just take that now for
-> 6.15-rc1 and then you can send the others to the different subsystems
-> after that shows up.
-> 
+test_verifier.c:1323:3: error: call to undeclared function 'strscpy';
+ISO C99 and later do not support implicit function declarations
+[-Wimplicit-function-declaration]
+1323 | strscpy(needle, exp, len);
+1 error generated.
 
-Sure, thanks again.
-
--- 
-Regards,
-Sudeep
+pw-bot: cr
