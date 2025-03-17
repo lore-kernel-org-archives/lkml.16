@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF6B1DDC22
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AC51D07BA
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742235260; cv=none; b=JywiPWI4Npc+9XtnQNWhxXf5M8+8cuQRBduwDjKLGZ2CS3DhhjKEEtFcn20OVydwaXg3ZzLtrL6xBmfD+3qaE3gbmVxPBQVaPgOv7Ley/PjKD4aBc6rn6qUJXgFE2XUlwCq/8d8z0AE2tLbZ1PkTZdRwu3N7ETbGEPwx36NrOTM=
+	t=1742235260; cv=none; b=jGzJ72mg8h6IPVoCb3avERndZfLR1jcS7jyfRrPz2lOGGBebEWCBmLc2qngqdt8Gyo/bpyWEt0R7m5WzZUkBOEXp6foxe/1KprAVWp35OGXovyi33FpVgsAG/XhSCJPMvk40uzf+djz0mThL/fD9Mw5mHDrbgYvWms4aLorU3NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742235260; c=relaxed/simple;
-	bh=BCS+LAApzPn0VpycoT4cKgO+h8D+U5JWJTPAWhH9ZmU=;
+	bh=auDF8pytR5WTTccWarG/xxoAvGkcFr1uIFpDCwwFW/g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EojospHZU+5NDbg2uSP1OjSmQ3eQe5i7MSzBKFqd+x0fo1Lc8fthJACbyaPMpctGjqVy52D3ygLsO+vViELj3SjeWkWdB6g6tZ9JMBM4BgaN61X2wMTNKpo4qNAuytP0oGvho8y43AtfYX/9PHgKvpYZi4pt35oThgeOi4Y5eos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Om1uRYGy; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=fzXr5KvEmRgZgOt3xxWnuWf1/Ftyh+TCWCJYSYMeYdrW3JROmyJL0vHvdf+8/gXtP/YSmSN0rVtOFH40FYdQR+wdzCV49inyHuxaU5DgWS1//jbxfVjo+YVbJW4TgHhSQ1/PnCYrEuG8488dR+O65oekd63Ts/I6/RTfDhGpGfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kEa+AA6B; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Om1uRYGy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kEa+AA6B"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1742235259; x=1773771259;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BCS+LAApzPn0VpycoT4cKgO+h8D+U5JWJTPAWhH9ZmU=;
-  b=Om1uRYGyFi+yTjplIplq3a2sezHbEedZJMFXj7dUXyPl4FRMHilaxD2d
-   Mt49+AuoCI1Z4iv8CHkVsXBsY/kvhLe+eKSoOs0Cx1isQOQbJZvoAR4Un
-   MOT+IaXbJ4xLgY0aiWhO1wnfFREbJmqVNHYw3oH38g7K59uhoGJmkWAHw
-   wyXyEciVTYfKrJtgTgRlP+bYR8fufvLRdzOLCyg6umK9tg5Fo1coOaQ0C
-   ZvjNp1xZ7gl9HpnebS5oBum6yREyytDYWAz/sJ3C41eqFAWQ5Jvi4fLRW
-   zpQ0ry04Mkx6TO8NoQu5omK0+aubxCZesYJnP11Mh5giBWQRErMloNuuA
-   Q==;
-X-CSE-ConnectionGUID: CsnnmFo/R4mdz3mh1mOVWw==
-X-CSE-MsgGUID: DZnl3SpWRue2HHivnvOojw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="53972040"
+  bh=auDF8pytR5WTTccWarG/xxoAvGkcFr1uIFpDCwwFW/g=;
+  b=kEa+AA6BIsgvL6uQoq5yVoFBXPVAooNf4cxozaMw+dndw5VT7lrAGYaz
+   h974LYljQH9l/fiTz6/irEWeDtmcD6A6N+jlwi/BuHf6iNap59gMIGzqg
+   pr2glHbz9LNLZd4DNXTeaLeYDDf7BIsWNQOIJc+KdGNTlAnHbSrOfiT8H
+   lWsczne6j0rvHO0VH2gToCs+H04Q4bbL9nuaYjfJTchbe2+2vGFRpSdEG
+   90tf72oJ5PSaTzEG3a4tJ5jS3yw5wRBpfxR27EF83p7gInHLkv8nppFA6
+   vnZK+DojcINegG4btzoWcKS12FDA4x0OQjBfuSllSOKTRPOIlbJK7GvGk
+   g==;
+X-CSE-ConnectionGUID: w9KH38/pSuGDwST/MOwZhw==
+X-CSE-MsgGUID: 4qGuZ/uRQH62DzpHyQbRHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43259465"
 X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="53972040"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 11:14:17 -0700
-X-CSE-ConnectionGUID: 8HHXcig6QG6YeotNZx6L/Q==
-X-CSE-MsgGUID: 0YT96iZaSUyIzbxn0Kft5A==
+   d="scan'208";a="43259465"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 11:14:17 -0700
+X-CSE-ConnectionGUID: vdKwKoExSaW+DJ6IR1WWuw==
+X-CSE-MsgGUID: IFett5jdTry55XvzbApmlQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="122512766"
+   d="scan'208";a="153007719"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 17 Mar 2025 11:14:15 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 17 Mar 2025 11:14:15 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 302F64FD; Mon, 17 Mar 2025 20:14:14 +0200 (EET)
+	id 156BFDF; Mon, 17 Mar 2025 20:14:14 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andy@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 3/4] resource: Replace open coded variants of DEFINE_RES_*_NAMED()
-Date: Mon, 17 Mar 2025 20:11:12 +0200
-Message-ID: <20250317181412.1560630-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/4] resource: Split DEFINE_RES_NAMED_DESC() out of DEFINE_RES_NAMED()
+Date: Mon, 17 Mar 2025 20:11:10 +0200
+Message-ID: <20250317181412.1560630-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250317181412.1560630-1-andriy.shevchenko@linux.intel.com>
 References: <20250317181412.1560630-1-andriy.shevchenko@linux.intel.com>
@@ -65,38 +65,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace open coded variants of DEFINE_RES_*_NAMED().
+In some cases it would be useful to supply predefined descriptor
+of the resource. For this, introduce DEFINE_RES_NAMED_DESC() macro.
+
+While at it, provide DEFINE_RES() that takes only start, size,
+and flags.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- kernel/resource.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ include/linux/ioport.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index dc9031267942..a30a32b47e0e 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1728,18 +1728,13 @@ static int __init reserve_setup(char *str)
- 			 * I/O port space; otherwise assume it's memory.
- 			 */
- 			if (io_start < 0x10000) {
--				res->flags = IORESOURCE_IO;
-+				*res = DEFINE_RES_IO_NAMED(io_start, io_num, "reserved");
- 				parent = &ioport_resource;
- 			} else {
--				res->flags = IORESOURCE_MEM;
-+				*res = DEFINE_RES_MEM_NAMED(io_start, io_num, "reserved");
- 				parent = &iomem_resource;
- 			}
--			res->name = "reserved";
--			res->start = io_start;
--			res->end = io_start + io_num - 1;
- 			res->flags |= IORESOURCE_BUSY;
--			res->desc = IORES_DESC_NONE;
--			res->child = NULL;
- 			if (request_resource(parent, res) == 0)
- 				reserved = x+1;
- 		}
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index f437502224cd..a740aebc372d 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -157,15 +157,20 @@ enum {
+ };
+ 
+ /* helpers to define resources */
+-#define DEFINE_RES_NAMED(_start, _size, _name, _flags)			\
++#define DEFINE_RES_NAMED_DESC(_start, _size, _name, _flags, _desc)	\
+ (struct resource) {							\
+ 		.start = (_start),					\
+ 		.end = (_start) + (_size) - 1,				\
+ 		.name = (_name),					\
+ 		.flags = (_flags),					\
+-		.desc = IORES_DESC_NONE,				\
++		.desc = (_desc),					\
+ 	}
+ 
++#define DEFINE_RES_NAMED(_start, _size, _name, _flags)			\
++	DEFINE_RES_NAMED_DESC(_start, _size, _name, _flags, IORES_DESC_NONE)
++#define DEFINE_RES(_start, _size, _flags)				\
++	DEFINE_RES_NAMED(_start, _size, NULL, _flags)
++
+ #define DEFINE_RES_IO_NAMED(_start, _size, _name)			\
+ 	DEFINE_RES_NAMED((_start), (_size), (_name), IORESOURCE_IO)
+ #define DEFINE_RES_IO(_start, _size)					\
 -- 
 2.47.2
 
