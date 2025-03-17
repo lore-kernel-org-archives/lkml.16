@@ -1,124 +1,93 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A191A1E1E1B
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2CC1E833E;
+	Mon, 17 Mar 2025 18:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742235669; cv=none; b=gTtTKdDw0PvzW1PrKuXUy5r30cYTozoM6aGd+L/t49gxMnwCdxGqe0fLs5CQxTP+0OblapFj6ykF8Wz29nUJAJILrsN5JYrdWmZd7bx2ec7Hgf9yX+OW8Br+IeCUFoKoN2Uk/rPsS0J8+7OgZmqcjMuxyN+eV+j54shBSrDjhPY=
+	t=1742235673; cv=none; b=VHqFMD/0sI2UTU7gTgEOOYc70DqTDCFJYoDw7j0GODrceWfYtVSGHnZzaV6VNSNT1Me2apjknJAiDV/YSVs3qkI8ygltOWag5b2qDDkFdnCImGYuj1DCfakf+AREYw82DQix3f4Mn85aqjMmpnisT2s7shEE2fZzrTnEuzuFw3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742235669; c=relaxed/simple;
-	bh=RQz+jE7EdCsn+aZe60lHze1ivwflmoAUB4YJGZZVPIA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:Cc:Content-Type; b=nh+uCvWeIEHbdshzNvZ9mlbctPYUh3eFbc9tB/qHhqSvcYzLkVhVXp1wQ0Plw24GQvULn28kl3nALbzJXq7KqIMj+khWWXrgR6dfrZ30b87omybUwnY8q2CVNGJ+wr9kJY6C2s7yLAIV4GHCyyoWtwzPGJXUqlCDPdNUae+p7m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--czapiga.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lQjdkwZe; arc=none smtp.client-ip=209.85.218.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--czapiga.bounces.google.com
+	s=arc-20240116; t=1742235673; c=relaxed/simple;
+	bh=8F8LChKiyVYE1Z3bO3W71TWsfrI7c0cZayodIbi6dyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aD0O7C5zAVShHSTar/KqUOaE8JKemxrg17LdrAehNA0yoqWsMQvjvawp2KmjbZ+9bQBJDP2pqJ7NUV9YVRcQhyUTOb4kHEke8ib90fPYYDFr4CeLYuAqNIdRmvTsIIeckuBOQ0I/+WpN7QAaIPL6w8oH5mnyvYS7EIHg0vFQ/Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mh/YXCU+; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lQjdkwZe"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ac31990bdfdso416080566b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:21:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mh/YXCU+"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-225b5448519so88342195ad.0;
+        Mon, 17 Mar 2025 11:21:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742235666; x=1742840466; darn=vger.kernel.org;
-        h=cc:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aEJdtqNjODGZ3ZX8sSDy8Zo80L0HCxWOwxmMOMmUXvM=;
-        b=lQjdkwZeMCUxZ6DjW5IJ1rdX2y7crnkZQ9A+Tvj8g6Uddu/9SkdtDhi/RCz5jn2abl
-         luKx+B1uD/xUQsWt1DW120xWqsSioZyfgnkAHJq99XKuHI/UYJD1c+sQSjaLICYauR2S
-         k5wVVImZ5+R2jP4B+qzAkRfW7P5IfHmU/Gj0tSCnt0ubKZNqTGE/kZOe/fyWBY6KCbgg
-         EpgGH1BL8Tu6T0GmLm73XaD0GpeP//1u/Bdat0OkcFzcTkDXkYgVPmMUgj9DWrIgbNNe
-         XeNF7vi0fVVphCsnpEcGSCqO4pKTtQkozNbKcBAJi9Vc3ainuP7lEZrHHiBM0jkHvYm9
-         KPUg==
+        d=gmail.com; s=20230601; t=1742235671; x=1742840471; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R9ZnVsx9YkOYJfj41WMgAcUudWjPt2oH4jU+k7Wr6Zg=;
+        b=mh/YXCU+Zxa0kcvStAF+DafnJ/XaRrA0PuEwLJPjMju7Wd/8lT+zvOtG7iyH5cfPaD
+         4jd6Mk2vcwe3PpPs87XhpnFIAluPVdb+04SIGIKturGjeVJ23UgyUgOwMasSPXj+SU25
+         aV4e3G7D+9eawd9JpD1Vl3FsHAhSz09gKNyojUcIHMWU2RXsl769wgS0XXKtRJlnzKh3
+         o2i3UwN44dtIyShf70+PYmFPBBhtw8IKdLATZ2N4llX0YGWtwJL4pJBzdB/TZEZhLBvA
+         P48CS90t50n8qspvFY9VRqIeBcftvUwojSOX9YB1gFzE0BwE1zPxIPDOfOwvH+ZnBBjJ
+         nr7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742235666; x=1742840466;
-        h=cc:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aEJdtqNjODGZ3ZX8sSDy8Zo80L0HCxWOwxmMOMmUXvM=;
-        b=i5KPLH7n9ec8TVzaEX7sS0bCT7mVXJWs2q0BLOWP4Kr4uuOEGW30VIidJrAE8omyUJ
-         RvtoGvUHQctmjo260iz5hG7BrWDEUKQCAmiPKpzpfwkRPvVvVSD94gkbkM1CLunD5PyM
-         7KLuvLntcXLLdHGDPqB3IVyz/rDJPR78lgEuVPwYOMeB3l8lTGtUK95dDMHgfBi4X5dB
-         Fdq2WLNqdonFVOLzhQ4wbQ6Scr/uFeIYLpZqYK4C2BQsXlwv9lCBH+BQC71hlRkP1tog
-         7t+dS9AkMGCLuK5r9cwn7gWJu7DwOkpXVRYMB0zeALzvomXay6pob81i8nZXQnEx3vOT
-         J32g==
-X-Forwarded-Encrypted: i=1; AJvYcCV3ib+rk9eRBUOUTzNqtTCxRQIzyyzo2Ih0EqvRMtcY/69HyUulWPGjeQfMT8JLvPhz/AsW3fKqtlqgHzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPYgclMzGOTyzrnhRM5b/zG064y0oBR8RhONxz8nx34OPljzSM
-	5LKx8Nytr/hDKzQJfr6O6X7kPNNHsBhy3Tx5VjjtqQnETATLkeeeCQhxdV4wJJjQpkX230ba43z
-	PWY5cEg==
-X-Google-Smtp-Source: AGHT+IG62DU4FaPgOOjSsVcgGi6Fs8/7pGDekBp9Bu2Wa+gKLvgqybFgjFcRqZMrNlNjOBn0Ix90T12g2Uni
-X-Received: from edsq20.prod.google.com ([2002:aa7:da94:0:b0:5d8:476d:1082])
- (user=czapiga job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:e88c:b0:ac3:8794:21c9
- with SMTP id a640c23a62f3a-ac3879427camr170140766b.21.1742235666136; Mon, 17
- Mar 2025 11:21:06 -0700 (PDT)
-Date: Mon, 17 Mar 2025 18:21:01 +0000
+        d=1e100.net; s=20230601; t=1742235671; x=1742840471;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R9ZnVsx9YkOYJfj41WMgAcUudWjPt2oH4jU+k7Wr6Zg=;
+        b=FfDJhuFeA6Tec2mTQxRSsGFnbn2LEyy3e6V1XwIkURnDprszYdrIWm9d1DlYZDmZvT
+         kalTyEWX0EECzY6jmTQQtXLmQnH3dWZRTmakXMI4P4gagRmCTTTtazyQT4hvPW/nSmQr
+         bmO+NR5HnNxoF69htF5zDZ5kflKweHWciNwu8lb/E9eGlaiRx5WECju2chx81XZvWgas
+         r4lAmcB9/bPPQdfgFNqoJZObueRevocKmDmsIvUYuMxAVfVa1A7i4cKfgSNIi44Gqp3d
+         vPA8JnH9JTKlYa8NyTRLGJljcmEjFTWXY75w0cOU8W2nZ0ODtZuAzAOeJ9XUXOarkpDn
+         FhtA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/XrGp9V6RM/64HrB1xQWHCsCjPvt13p+rCClw6T5wKMd8mQ4gEqXEerj1xbsAxzhdmHYP6TIwqVAaG+Xe@vger.kernel.org, AJvYcCX6uDNUv1NoQHJrNWwzbm20vB6rx8s94rlAdOS83ePbVwWxstIR0zScvJEd/uGW4cORTIA5vSyYIlLN@vger.kernel.org, AJvYcCXpNxX8+fM6jMuhTsfI1w4nMIrQYmiaIkRNWXVZPCGcrT0XYGHQDitO/uUz3vqSt0+KbhV83tN5guf2qJU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwI663t+D2n5iws8DsmE9Oj+zf/QJDOf9Y8XgH22CHGOo9iAus
+	eYqo5itaegKwL31fWSbNTacNOXS1wjKC42FCHq8UudXT7v7/DRBY
+X-Gm-Gg: ASbGncvTB/HN4UKwNx0w6ZxAfxo8WHxcYWFKyxfRWLEszUFC5xOCPzgXZKG04hj3wsQ
+	jYkF9MnRq/5zUkzmZX73FwwzPy6eCdyv5qWlfIDOJakGyF0wkje0oAsJofKo5ZLdp5nwlV+Stqz
+	2vv5lAq3puwQFRKGdMOyhMdbbVfLCgUtNQMs8WBEH5rnrRvZu2GaL+1Ks3e2X7M3bV+/9ehAn6V
+	BEBQJPC9GOMTU/AwQJ92BGXxbI6Q5Jlo/9iWqqF2X5x7UF1+yqPRAy974anuVYUYCHViqhejZq6
+	ljAqtRzyIlXC4bb2gGNV7ORcoPAJ4179P7sgqsggUAhW3G1IkxvrEdeKTgM0gCTn+a0C
+X-Google-Smtp-Source: AGHT+IEoaHPO+uONugmjhf404W+32JKPjhhfNhtHtp9p/RUnn3f25J75pLNgT6US4mFkLKVkI89Fuw==
+X-Received: by 2002:a17:902:d4ce:b0:223:64bb:f657 with SMTP id d9443c01a7336-225e0b14f03mr154379155ad.46.1742235671226;
+        Mon, 17 Mar 2025 11:21:11 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c68886a8sm78719735ad.44.2025.03.17.11.21.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 11:21:10 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 17 Mar 2025 11:21:09 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Andrei Lalaev <andrey.lalaev@gmail.com>
+Cc: krzk@kernel.org, robh@kernel.org, christophe.jaillet@wanadoo.fr,
+	jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	conor+dt@kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH RESEND v3 2/2] dt-bindings: hwmon: Add description for
+ sensor HTU31
+Message-ID: <d34d8b80-1ba0-4594-94f8-5afb7a2c22be@roeck-us.net>
+References: <20250217051110.46827-1-andrey.lalaev@gmail.com>
+ <20250217051110.46827-3-andrey.lalaev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Message-ID: <20250317182103.2060524-1-czapiga@google.com>
-Subject: [PATCH] mtd: spi-nor: winbond: fix W25Q256 and W25Q512 chips configuration
-From: Jakub Czapiga <czapiga@google.com>
-Cc: Jakub Czapiga <czapiga@google.com>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217051110.46827-3-andrey.lalaev@gmail.com>
 
-Fill and fix configuration of Winbond chips:
-- W25Q512JVQ (+lock, +tb)
-- W25Q256JW (+lock, +tb)
-- W25Q256JVM (+lock, +tb, +4k, +dual, +quad)
-- W25Q512JWM (+lock, +tb)
+On Mon, Feb 17, 2025 at 06:10:56AM +0100, Andrei Lalaev wrote:
+> Add trivial binding for HTU31 Temperature and Humidity sensor.
+> 
+> Signed-off-by: Andrei Lalaev <andrey.lalaev@gmail.com>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Top-Bottom selection bit is SR(6). All mentioned chips have 4-bit long
-Block-Protection field.
+Applied.
 
-Signed-off-by: Jakub Czapiga <czapiga@google.com>
----
- drivers/mtd/spi-nor/winbond.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
-index 8d0a00d69e12..8ebb1461a4e9 100644
---- a/drivers/mtd/spi-nor/winbond.c
-+++ b/drivers/mtd/spi-nor/winbond.c
-@@ -145,6 +145,7 @@ static const struct flash_info winbond_nor_parts[] = {
- 		.id = SNOR_ID(0xef, 0x40, 0x20),
- 		.name = "w25q512jvq",
- 		.size = SZ_64M,
-+		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB | SPI_NOR_TB_SR_BIT6 | SPI_NOR_4BIT_BP,
- 		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x50, 0x12),
-@@ -190,6 +191,7 @@ static const struct flash_info winbond_nor_parts[] = {
- 		.id = SNOR_ID(0xef, 0x60, 0x19),
- 		.name = "w25q256jw",
- 		.size = SZ_32M,
-+		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB | SPI_NOR_TB_SR_BIT6 | SPI_NOR_4BIT_BP,
- 		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x60, 0x20),
-@@ -221,6 +223,9 @@ static const struct flash_info winbond_nor_parts[] = {
- 	}, {
- 		.id = SNOR_ID(0xef, 0x70, 0x19),
- 		.name = "w25q256jvm",
-+		.size = SZ_32M,
-+		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB | SPI_NOR_TB_SR_BIT6 | SPI_NOR_4BIT_BP,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x71, 0x19),
- 		.name = "w25m512jv",
-@@ -249,7 +254,7 @@ static const struct flash_info winbond_nor_parts[] = {
- 		.id = SNOR_ID(0xef, 0x80, 0x19),
- 		.name = "w25q256jwm",
- 		.size = SZ_32M,
--		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
-+		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB | SPI_NOR_TB_SR_BIT6 | SPI_NOR_4BIT_BP,
- 		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
- 	}, {
- 		.id = SNOR_ID(0xef, 0x80, 0x20),
--- 
-2.49.0.rc1.451.g8f38331e32-goog
-
+Thanks,
+Guenter
