@@ -1,63 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748E223372E;
-	Mon, 17 Mar 2025 10:34:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1E6226CE1;
+	Mon, 17 Mar 2025 10:34:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742207651; cv=none; b=HZu8hAMrS7dnD6ImB4BVsYn2afEn7n/Xr211y1DOtBB+OTOnUfCAz+iN4BMKssJO8mF//t7Z6QL3AjSkbF2ys8sAEIgr9zWkUi/tr+Q6jIX0plzOocIucT2vmyFboe1RajGCfQ/iIOBi8TsFqQ5Gtjf7jiYz5LKT3BL/oZ6DQ4c=
+	t=1742207652; cv=none; b=ilrMO9nKyfdf1fEj+0sqX62ROc3Qww68psxrY5OKKK+WqEDoPmLxi88LGdqp7MBkhzPRqDoYjbWSxtDF8uDssLynoMUNj5xvvE0cTE6QwDgbn/OS26yuuKfIYkyEu7ItWMzCNfpCM7EmKSbC2z4KNECfhzlJLO/d1VLmtoka4RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742207651; c=relaxed/simple;
-	bh=tbiSkS69aCxzFgpL2gATuHXc9q4hYIei8I00mzn6Hy0=;
+	s=arc-20240116; t=1742207652; c=relaxed/simple;
+	bh=S4cTUlJOdMP3rdiOpfmbGih8e8KS4EqCixiznUITXMo=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=PyIFyoTab3Rackq+ErbnOVIpAIUSUFGX/ahxfYGMTQzKYdvfg5z2QQ0IXaMepRFlai5Gd31ycci1ENccmj1NrzdEMSZNDQydLn9z8HX1HIasDK79uHXDSbScRUd53hV5sPT2DDqSOsJfmS1Gb/5bSWbn73uTA5qyjZkWZtiEROw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WR1tQ335; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o4LK5WNZ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ACGv6jvE6GisgI7Xfzqw6l2pJS3EwALsdSOOx68ynD/YI64tZO3dlGczFgZfce8t6qxFLh7CJKFsqqdUYVUPL61XV9rFl4Lm0Q6P6aQ4+E1OHkMJ4IkqcZRtSd9wI96TSlueBLCjZIOQ9s3by1KuO2jzfbXQ21Is8W86DAuYGI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uX0gFqbS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MjsUW+9r; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WR1tQ335";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o4LK5WNZ"
-Date: Mon, 17 Mar 2025 10:34:03 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uX0gFqbS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MjsUW+9r"
+Date: Mon, 17 Mar 2025 10:34:08 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742207647;
+	s=2020; t=1742207649;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=x+6Sy2qsehKOzJXmsCSUfa1j7+taABmNgp/EPqzpitY=;
-	b=WR1tQ335vmhRwaUJKaahoRXLWXym7D5ShDkuod2J9cv4L3ecCxp8IFX2vGoP2KtEkSWTSR
-	j/yApCyfk+H23b5ewTTSTVVYqsaZwUpwnf0eA0yaXUNWGDnfD6q67QjLQCyYIzNhffApVA
-	bK2mp51+Ml6+cnlSGtTYTyQrrb8Cp5B62NeccZxAaaP7gfcrGjt9RFEMe8cSKyNAXhTvqM
-	5qxXR5tyIHDKW01O/vxA5HNAUOiwISTcuCK0HhuISecc1HMy/nCC09RRnsD2LTWAMq6VsN
-	iPLgkutmL/OeYpJZgN4zfeVuU1QKarETGxGeUq1rIQ9/+WzbmGzc+D7Oa7+7kQ==
+	bh=Txr8vJhJnuznKko/E5p0Eb5kklDmzfkiEhlhLEIVSDY=;
+	b=uX0gFqbS9R5bRSR2wjLWojGOrFivuGCalLs96hJeYnkUc+fuYYqmzh26/f0OgOeev1ZClY
+	hphbG5HlCF7RFD6hNRX0oPikzsH8khgEdi99nMaRVjIGPPrUaIdWeAmJo6pn82wYp0KKYD
+	p3/nwh0ubOM83n+7Ps9m+Z6ezbkMTlC0xU3eipbGAACTnSnZ4E/+5hqitqA2YQgbpDe3BG
+	rKyyQtJGym23BoUzV/pGp6mMrK6nIjgtRksBBztx4YAe7UjK/ur5M872kWAFZELAW+lFy0
+	o/mpjSJP83hu1BJMVxz9VXJei5pJA1SAUJ9X5Jiy84Dwz+516YEM/xIdH3gYsg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742207647;
+	s=2020e; t=1742207649;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=x+6Sy2qsehKOzJXmsCSUfa1j7+taABmNgp/EPqzpitY=;
-	b=o4LK5WNZk+ykZI/7FQjboebPbcztfAfEeIaf11coK8U5gGukX/+nZ0IL77oCzCzTVru4Op
-	KhmT2fltF6Dvl8BA==
+	bh=Txr8vJhJnuznKko/E5p0Eb5kklDmzfkiEhlhLEIVSDY=;
+	b=MjsUW+9rc33uUC76K4+yCVNFOkojKISW0b3lMI5uGNCMIsfKVRWdTft3VM7n7o4sktrEXr
+	UkdytNxaXE8qw3Aw==
 From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf: Clean up pmu specific data
-Cc: Kan Liang <kan.liang@linux.intel.com>,
+Subject: [tip: perf/core] perf/x86/lbr: Fix shorter LBRs call stacks for the
+ system-wide mode
+Cc: Andi Kleen <ak@linux.intel.com>,
+ Alexey Budankov <alexey.budankov@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250314172700.438923-7-kan.liang@linux.intel.com>
-References: <20250314172700.438923-7-kan.liang@linux.intel.com>
+In-Reply-To: <20250314172700.438923-5-kan.liang@linux.intel.com>
+References: <20250314172700.438923-5-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174220764346.14745.16608046702217766458.tip-bot2@tip-bot2>
+Message-ID: <174220764858.14745.11451017653270864906.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,212 +70,154 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     bd2da08d9363d191551d79e5b04121348e18af5a
-Gitweb:        https://git.kernel.org/tip/bd2da08d9363d191551d79e5b04121348e18af5a
+Commit-ID:     3cec9fd03543c1e2919f906353e5cba079ae0a7c
+Gitweb:        https://git.kernel.org/tip/3cec9fd03543c1e2919f906353e5cba079ae0a7c
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Fri, 14 Mar 2025 10:27:00 -07:00
+AuthorDate:    Fri, 14 Mar 2025 10:26:58 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 17 Mar 2025 11:23:38 +01:00
+CommitterDate: Mon, 17 Mar 2025 11:23:37 +01:00
 
-perf: Clean up pmu specific data
+perf/x86/lbr: Fix shorter LBRs call stacks for the system-wide mode
 
-The pmu specific data is saved in task_struct now. Remove it from event
-context structure.
+In the system-wide mode, LBR callstacks are shorter in comparison to
+the per-process mode.
 
-Remove swap_task_ctx() as well.
+LBR MSRs are reset during a context switch in the system-wide mode. For
+the LBR call stack, the LBRs should be always saved/restored during a
+context switch.
 
+Use the space in task_struct to save/restore the LBR call stack data.
+
+For a system-wide event, it's unnecessagy to update the
+lbr_callstack_users for each threads. Add a variable in x86_pmu to
+indicate whether the system-wide event is active.
+
+Fixes: 76cb2c617f12 ("perf/x86/intel: Save/restore LBR stack during context switch")
+Reported-by: Andi Kleen <ak@linux.intel.com>
+Reported-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Debugged-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250314172700.438923-7-kan.liang@linux.intel.com
+Link: https://lore.kernel.org/r/20250314172700.438923-5-kan.liang@linux.intel.com
 ---
- include/linux/perf_event.h | 12 +------
- kernel/events/core.c       | 76 +------------------------------------
- 2 files changed, 3 insertions(+), 85 deletions(-)
+ arch/x86/events/intel/lbr.c  | 47 +++++++++++++++++++++++++++++------
+ arch/x86/events/perf_event.h |  1 +-
+ 2 files changed, 40 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 58f40c8..5b8e3aa 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -502,16 +502,6 @@ struct pmu {
- 	struct kmem_cache		*task_ctx_cache;
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index dafeee2..24719ad 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -422,11 +422,17 @@ static __always_inline bool lbr_is_reset_in_cstate(void *ctx)
+ 	return !rdlbr_from(((struct x86_perf_task_context *)ctx)->tos, NULL);
+ }
  
- 	/*
--	 * PMU specific parts of task perf event context (i.e. ctx->task_ctx_data)
--	 * can be synchronized using this function. See Intel LBR callstack support
--	 * implementation and Perf core context switch handling callbacks for usage
--	 * examples.
--	 */
--	void (*swap_task_ctx)		(struct perf_event_pmu_context *prev_epc,
--					 struct perf_event_pmu_context *next_epc);
--					/* optional */
--
--	/*
- 	 * Set up pmu-private data structures for an AUX area
++static inline bool has_lbr_callstack_users(void *ctx)
++{
++	return task_context_opt(ctx)->lbr_callstack_users ||
++	       x86_pmu.lbr_callstack_users;
++}
++
+ static void __intel_pmu_lbr_restore(void *ctx)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+-	if (task_context_opt(ctx)->lbr_callstack_users == 0 ||
++	if (!has_lbr_callstack_users(ctx) ||
+ 	    task_context_opt(ctx)->lbr_stack_state == LBR_NONE) {
+ 		intel_pmu_lbr_reset();
+ 		return;
+@@ -503,7 +509,7 @@ static void __intel_pmu_lbr_save(void *ctx)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+-	if (task_context_opt(ctx)->lbr_callstack_users == 0) {
++	if (!has_lbr_callstack_users(ctx)) {
+ 		task_context_opt(ctx)->lbr_stack_state = LBR_NONE;
+ 		return;
+ 	}
+@@ -543,6 +549,7 @@ void intel_pmu_lbr_sched_task(struct perf_event_pmu_context *pmu_ctx,
+ 			      struct task_struct *task, bool sched_in)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	struct perf_ctx_data *ctx_data;
+ 	void *task_ctx;
+ 
+ 	if (!cpuc->lbr_users)
+@@ -553,14 +560,18 @@ void intel_pmu_lbr_sched_task(struct perf_event_pmu_context *pmu_ctx,
+ 	 * the task was scheduled out, restore the stack. Otherwise flush
+ 	 * the LBR stack.
  	 */
- 	void *(*setup_aux)		(struct perf_event *event, void **pages,
-@@ -933,7 +923,6 @@ struct perf_event_pmu_context {
- 	atomic_t			refcount; /* event <-> epc */
- 	struct rcu_head			rcu_head;
- 
--	void				*task_ctx_data; /* pmu specific data */
- 	/*
- 	 * Set when one or more (plausibly active) event can't be scheduled
- 	 * due to pmu overcommit or pmu constraints, except tolerant to
-@@ -981,7 +970,6 @@ struct perf_event_context {
- 	int				nr_user;
- 	int				is_active;
- 
--	int				nr_task_data;
- 	int				nr_stat;
- 	int				nr_freq;
- 	int				rotate_disable;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 9928292..4ce9795 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1254,20 +1254,6 @@ static void get_ctx(struct perf_event_context *ctx)
- 	refcount_inc(&ctx->refcount);
- }
- 
--static void *alloc_task_ctx_data(struct pmu *pmu)
--{
--	if (pmu->task_ctx_cache)
--		return kmem_cache_zalloc(pmu->task_ctx_cache, GFP_KERNEL);
--
--	return NULL;
--}
--
--static void free_task_ctx_data(struct pmu *pmu, void *task_ctx_data)
--{
--	if (pmu->task_ctx_cache && task_ctx_data)
--		kmem_cache_free(pmu->task_ctx_cache, task_ctx_data);
--}
--
- static void free_ctx(struct rcu_head *head)
- {
- 	struct perf_event_context *ctx;
-@@ -3577,42 +3563,6 @@ static void perf_event_sync_stat(struct perf_event_context *ctx,
+-	task_ctx = pmu_ctx ? pmu_ctx->task_ctx_data : NULL;
++	rcu_read_lock();
++	ctx_data = rcu_dereference(task->perf_ctx_data);
++	task_ctx = ctx_data ? ctx_data->data : NULL;
+ 	if (task_ctx) {
+ 		if (sched_in)
+ 			__intel_pmu_lbr_restore(task_ctx);
+ 		else
+ 			__intel_pmu_lbr_save(task_ctx);
++		rcu_read_unlock();
+ 		return;
  	}
- }
- 
--#define double_list_for_each_entry(pos1, pos2, head1, head2, member)	\
--	for (pos1 = list_first_entry(head1, typeof(*pos1), member),	\
--	     pos2 = list_first_entry(head2, typeof(*pos2), member);	\
--	     !list_entry_is_head(pos1, head1, member) &&		\
--	     !list_entry_is_head(pos2, head2, member);			\
--	     pos1 = list_next_entry(pos1, member),			\
--	     pos2 = list_next_entry(pos2, member))
--
--static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
--					  struct perf_event_context *next_ctx)
--{
--	struct perf_event_pmu_context *prev_epc, *next_epc;
--
--	if (!prev_ctx->nr_task_data)
--		return;
--
--	double_list_for_each_entry(prev_epc, next_epc,
--				   &prev_ctx->pmu_ctx_list, &next_ctx->pmu_ctx_list,
--				   pmu_ctx_entry) {
--
--		if (WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu))
--			continue;
--
--		/*
--		 * PMU specific parts of task perf context can require
--		 * additional synchronization. As an example of such
--		 * synchronization see implementation details of Intel
--		 * LBR call stack data profiling;
--		 */
--		if (prev_epc->pmu->swap_task_ctx)
--			prev_epc->pmu->swap_task_ctx(prev_epc, next_epc);
--		else
--			swap(prev_epc->task_ctx_data, next_epc->task_ctx_data);
--	}
--}
--
- static void perf_ctx_sched_task_cb(struct perf_event_context *ctx,
- 				   struct task_struct *task, bool sched_in)
- {
-@@ -3687,16 +3637,15 @@ perf_event_context_sched_out(struct task_struct *task, struct task_struct *next)
- 			WRITE_ONCE(next_ctx->task, task);
- 
- 			perf_ctx_sched_task_cb(ctx, task, false);
--			perf_event_swap_task_ctx_data(ctx, next_ctx);
- 
- 			perf_ctx_enable(ctx, false);
- 
- 			/*
- 			 * RCU_INIT_POINTER here is safe because we've not
- 			 * modified the ctx and the above modification of
--			 * ctx->task and ctx->task_ctx_data are immaterial
--			 * since those values are always verified under
--			 * ctx->lock which we're now holding.
-+			 * ctx->task is immaterial since this value is
-+			 * always verified under ctx->lock which we're now
-+			 * holding.
- 			 */
- 			RCU_INIT_POINTER(task->perf_event_ctxp, next_ctx);
- 			RCU_INIT_POINTER(next->perf_event_ctxp, ctx);
-@@ -5005,7 +4954,6 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 		     struct perf_event *event)
- {
- 	struct perf_event_pmu_context *new = NULL, *pos = NULL, *epc;
--	void *task_ctx_data = NULL;
- 
- 	if (!ctx->task) {
- 		/*
-@@ -5038,14 +4986,6 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 	if (!new)
- 		return ERR_PTR(-ENOMEM);
- 
--	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
--		task_ctx_data = alloc_task_ctx_data(pmu);
--		if (!task_ctx_data) {
--			kfree(new);
--			return ERR_PTR(-ENOMEM);
--		}
--	}
--
- 	__perf_init_event_pmu_context(new, pmu);
++	rcu_read_unlock();
  
  	/*
-@@ -5080,14 +5020,7 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 	epc->ctx = ctx;
+ 	 * Since a context switch can flip the address space and LBR entries
+@@ -589,9 +600,19 @@ void intel_pmu_lbr_add(struct perf_event *event)
  
- found_epc:
--	if (task_ctx_data && !epc->task_ctx_data) {
--		epc->task_ctx_data = task_ctx_data;
--		task_ctx_data = NULL;
--		ctx->nr_task_data++;
--	}
- 	raw_spin_unlock_irq(&ctx->lock);
--
--	free_task_ctx_data(pmu, task_ctx_data);
- 	kfree(new);
+ 	cpuc->br_sel = event->hw.branch_reg.reg;
  
- 	return epc;
-@@ -5103,7 +5036,6 @@ static void free_cpc_rcu(struct rcu_head *head)
- 	struct perf_cpu_pmu_context *cpc =
- 		container_of(head, typeof(*cpc), epc.rcu_head);
+-	if (branch_user_callstack(cpuc->br_sel) && event->pmu_ctx->task_ctx_data)
+-		task_context_opt(event->pmu_ctx->task_ctx_data)->lbr_callstack_users++;
++	if (branch_user_callstack(cpuc->br_sel)) {
++		if (event->attach_state & PERF_ATTACH_TASK) {
++			struct task_struct *task = event->hw.target;
++			struct perf_ctx_data *ctx_data;
  
--	kfree(cpc->epc.task_ctx_data);
- 	kfree(cpc);
- }
++			rcu_read_lock();
++			ctx_data = rcu_dereference(task->perf_ctx_data);
++			if (ctx_data)
++				task_context_opt(ctx_data->data)->lbr_callstack_users++;
++			rcu_read_unlock();
++		} else
++			x86_pmu.lbr_callstack_users++;
++	}
+ 	/*
+ 	 * Request pmu::sched_task() callback, which will fire inside the
+ 	 * regular perf event scheduling, so that call will:
+@@ -665,9 +686,19 @@ void intel_pmu_lbr_del(struct perf_event *event)
+ 	if (!x86_pmu.lbr_nr)
+ 		return;
  
-@@ -5111,7 +5043,6 @@ static void free_epc_rcu(struct rcu_head *head)
- {
- 	struct perf_event_pmu_context *epc = container_of(head, typeof(*epc), rcu_head);
+-	if (branch_user_callstack(cpuc->br_sel) &&
+-	    event->pmu_ctx->task_ctx_data)
+-		task_context_opt(event->pmu_ctx->task_ctx_data)->lbr_callstack_users--;
++	if (branch_user_callstack(cpuc->br_sel)) {
++		if (event->attach_state & PERF_ATTACH_TASK) {
++			struct task_struct *task = event->hw.target;
++			struct perf_ctx_data *ctx_data;
++
++			rcu_read_lock();
++			ctx_data = rcu_dereference(task->perf_ctx_data);
++			if (ctx_data)
++				task_context_opt(ctx_data->data)->lbr_callstack_users--;
++			rcu_read_unlock();
++		} else
++			x86_pmu.lbr_callstack_users--;
++	}
  
--	kfree(epc->task_ctx_data);
- 	kfree(epc);
- }
+ 	if (event->hw.flags & PERF_X86_EVENT_LBR_SELECT)
+ 		cpuc->lbr_select = 0;
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 0d5019f..67d2d25 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -920,6 +920,7 @@ struct x86_pmu {
+ 		const int	*lbr_sel_map;	   /* lbr_select mappings */
+ 		int		*lbr_ctl_map;	   /* LBR_CTL mappings */
+ 	};
++	u64		lbr_callstack_users;	   /* lbr callstack system wide users */
+ 	bool		lbr_double_abort;	   /* duplicated lbr aborts */
+ 	bool		lbr_pt_coexist;		   /* (LBR|BTS) may coexist with PT */
  
-@@ -14103,7 +14034,6 @@ inherit_event(struct perf_event *parent_event,
- 	if (is_orphaned_event(parent_event) ||
- 	    !atomic_long_inc_not_zero(&parent_event->refcount)) {
- 		mutex_unlock(&parent_event->child_mutex);
--		/* task_ctx_data is freed with child_ctx */
- 		free_event(child_event);
- 		return NULL;
- 	}
