@@ -1,136 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C52124291F;
-	Mon, 17 Mar 2025 14:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D69157E99;
+	Mon, 17 Mar 2025 14:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742221439; cv=none; b=EeaLeqdP2WK6MXZrkxt9VXKq4YpoFKo41s05cjRDZuKdG1c+lDYXI5IZiY2usHgfX/FsgOu1hh0a00uWUtZtJ+QBoJ8oAHGHo0sI6jAXbKadUNRB3/kuHA31+lY0kFWjtr8smmuSZyTgNexTB8jIThFpjJIzqcee2/ApjE2T3U4=
+	t=1742221439; cv=none; b=Ws+oj+/wx6rX6lNp0FwJPLvdVJkeSCP1JOuo1gB4w6UMOzMkdBA8qOX+1+zbngosy7hAMUil3zGpcGqMrFz0KsDcxhpyXNCohZ28Oqiup+IhKSqaX/GMOvLhJz/XD3ofVyOcqDTGDqYp83Kcf/JZa8Z/xUrx+wmBYOBz5AWXXQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742221439; c=relaxed/simple;
-	bh=bGVpXdopmBe2cylHrDEfMEXNLompQYGUMWrvVrieX0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kwxTmVwBiTowIejnRnPATTcoRmLGjsj/3KvKYtQuQ9OFaaTzxeTO+JIDi9BcpAUJfwdqHx0oxItJy8vPEJClI4ftMVRva1etySznh4zgV1+lUijufrj+ubEOxOiGyJTnxQL7FmT4ne8Vv1wART3XGXLrWu4m9aR1gW9jaaQOAPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTkLWRKZ; arc=none smtp.client-ip=10.30.226.201
+	bh=hUqDrxpSwpP9E50itXENwmGSsydhbnNR1/5lsGr8dMg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jqOqE339gQRlISQPCEj/aXFpEFLpBlA35EuzRXS2bKYA4bRnSgpajlNuZFyQWXdmNGz2htTOZeQ+CMwc1s/ScfvaulRNPD71HzNo4yAnuZBkwM7DW2bwYnaUr8gCXQNqD+XHs8p1PGBE2+UnBmD0Exsu3W7oTxMmfyM6MzyDjD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X2rmOgqG; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTkLWRKZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57E5BC4CEE3;
-	Mon, 17 Mar 2025 14:23:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742221438;
-	bh=bGVpXdopmBe2cylHrDEfMEXNLompQYGUMWrvVrieX0k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KTkLWRKZ81fEfBmFQKPqM/O1sLvfmcbuBkWauO0JOZE4V256OeTKzeTu1A4co6wSX
-	 rr5t9A/nbmr9GDHwC7MwymfGJijiyInuq5IJr6T2XUdK5kVYyCDVHspkQTqjGcWzAk
-	 +WhpRoAGmZL/wPxMExPQwsN7VBzPkrBg+7hYKg/5iOlf5FXaozsmNVh98NgSaWuBl7
-	 sZ/crBdNlVbFGtEmIt0UIATp+HWxYBBQEvHGfCRFJKXLBlQgv8WAKKAydOdP3fo1cy
-	 3vlJHX5VgnQ5qZkykonx8VPqVVmmbtPW3pw68KpzAhTe6Yqs+tRaW7lP3zvcwDkqbj
-	 CssJmAJb/F1qg==
-Message-ID: <3a25e4f5-e017-4d30-92cc-62b9ebef1d5a@kernel.org>
-Date: Mon, 17 Mar 2025 15:23:52 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2rmOgqG"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c542ffec37so448289485a.2;
+        Mon, 17 Mar 2025 07:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742221436; x=1742826236; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e0rwCqLo0r32XXWfSsHXFhEq1/YRdQfuRGfOXmpf1Ag=;
+        b=X2rmOgqGL0Qphp1qq9sM+jxRFfOHMlwwRO3I7dxRVOm7JAX8noLr/1iJ4M4H/nuIEP
+         qNCszrRBbELZsOJJEtOITFuRApujoIqepuRHwnsJzXPgZxs2Vkbu0QlVJhpriYbMv78o
+         mufhcI1BrkcKkVKf65lkDZFc98eWcgXKADFEnuLtvRQ438JvpR9iLyDp6O0FxhNI8Bde
+         qwcx9+xMoomI0AyvAEObNV7LEcSYjLSvw9bKwwyHA0OYQhPtrik31ZQ8NzSqIxtVbRpx
+         NXenoJzqWjOXOcQtj8u/HhETqKb7cm18VxxKnXxjdFqYsVpTQSg5wzTiqUwMD/lB6iKY
+         UB2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742221436; x=1742826236;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e0rwCqLo0r32XXWfSsHXFhEq1/YRdQfuRGfOXmpf1Ag=;
+        b=gijjrGJXTWDc35xF29x0eilETFZPBYUhK2rUOYYT58Fy5lVGkadgnuJnXo+vjfKeBz
+         KHOPMce+rjeaqbiOr1KyNsMqRO7/f0yhqiw/IQLAkqSBPPj/QylKJvy6O6A9l5c44tV0
+         SCVE+9tf18l9cVwZ2Dr9goK43BPyNQ04e7jIwBr3m+k1vmvjFnjySJOuigJAZiHUvLiW
+         qtVfT2HItZUuXlDCQZ+MjzMuuChZCUWoXZZ4VHK7g0/UuAPGxCx3gAN407+4Ln/4vkt1
+         NcgOuhUgMaDBh2DrryVHuAsnHzmEU2bQ8nSd0OycGzy44D4cbS1DPS+aAt+OzcRu4n+Q
+         dm8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUpM50zNDMh0jmHTeKr7SIDKUG4geELjTmhPECCvuCHfUk2/Cyf8OWrzpBS3mGzgjZ4HHpyGyfFI1SL@vger.kernel.org, AJvYcCUptc8eezgmMRN3D2qbs+T2NfRIx/0M82s34nGFZAL4v9QbchFYJem6wWRLTrdyMIuH8LhrRa+BD8MtN52OKGoY@vger.kernel.org, AJvYcCVtVrCpfycw2O54H2FpDv6GJ3jclxa8MSyqAga4tQ2xwG6VJ1gNzZ7dBmQqAbw6IuDbOLdAlDqKmkDe@vger.kernel.org, AJvYcCX9JcjSHE7fQsK4216fuuewMYzQ7xlzBbsaCvXefBXHjQEp9UzCuWwvBj/ydymsO3TgqTu4NBB2b2/M+bpm@vger.kernel.org, AJvYcCXOBlwMKkm+natgZ7D7t4QMJb1Srn8GI7aSGCJl7oPkXZIdWJz7IE0Cz2fqeKoSq+dylpdQCjrQgQ4HejfjVe8=@vger.kernel.org, AJvYcCXqtz70nvLuGSBVEOf6CIGa528UVOteZLIR18QjNM9W/9DM9EzIeGqvnCjhS6h08MId+bsltfP1/9YwPSg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZUrf9N9F7ivCng0T+Iyd79+/wWMxuf6rRXE+KajjeVLiml6pu
+	7Wx3FQIvxhQK1hOzlfCr1sF3y0MGZJRaRCNr578+Y3NF2j4atqL3
+X-Gm-Gg: ASbGncv3dZGypXVchC/fqNeMqyGBBCZ9EOXUPT03rIB/EaGSHoLc94++d8KQX44OC4O
+	OoNyOZgwJrCAdAjZ/9P6BeMbQQv/HsmzglQWkIJRVx4HAlZlzrn2qKXpQR6McL55YqX4BPZsK1l
+	KBTdhGT441TnywSJ+GaVOwr2Kh/LHuxsf+U/HQZjcor1ov2eN8XbI9VZqKHUw7XCkF05xDBvEIq
+	p2GJwktdFsz1aap9+L0aGGMG6z3i88P12t+guFkzicFRAphgomvIu66LgTEnhvWr9fo4ox8HWrN
+	3DPmpmFENFrdv4q5m2FVwcGuH9AXdjsdvb4d71t6OVXCo6iKLO6vbbQ6mp5zmbUTqU6Jpl2oUg=
+	=
+X-Google-Smtp-Source: AGHT+IFbwRJE3tF5G5WYrzWKq9JvMgDWQhfQ91Zvfz64Hy339PZNTzQeIy5WWTHghR6VT2wL2+ZrZA==
+X-Received: by 2002:a05:620a:24c9:b0:7c5:431f:f5e6 with SMTP id af79cd13be357-7c57c81205amr1542683985a.33.1742221435870;
+        Mon, 17 Mar 2025 07:23:55 -0700 (PDT)
+Received: from tamird-mac.local ([2600:4041:5be7:7c00:6895:24c6:e898:e320])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb60b13esm54601011cf.6.2025.03.17.07.23.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 07:23:55 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 17 Mar 2025 10:23:51 -0400
+Subject: [PATCH v5 1/6] rust: retain pointer mut-ness in `container_of!`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] firmware: samsung: add ACPM debugfs support
-To: Tudor Ambarus <tudor.ambarus@linaro.org>,
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: andre.draszik@linaro.org, peter.griffin@linaro.org,
- willmcvicker@google.com, kernel-team@android.com,
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250224-acpm-debugfs-v1-0-2418a3ea1b17@linaro.org>
- <20250224-acpm-debugfs-v1-3-2418a3ea1b17@linaro.org>
- <005424c2-7fb7-48db-b38c-c62f9f8b3897@kernel.org>
- <696494b8-14e9-4b9b-bf26-2a94a915b2ec@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <696494b8-14e9-4b9b-bf26-2a94a915b2ec@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250317-ptr-as-ptr-v5-1-5b5f21fa230a@gmail.com>
+References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
+In-Reply-To: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
+To: Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+ Saravana Kannan <saravanak@google.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+ linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On 12/03/2025 08:11, Tudor Ambarus wrote:
-> 
->>> +		dev_info(acpm->dev, "[ACPM_FW] : %llu id:%u, %s, %x\n", time,
->>> +			 log_entry->plugin_id, (char *)&msg, log_entry->data);
->>
->>
->> I don't think these should be printed to dmesg - these are not system
->> logs. You either return the contents to the caller's read() on debugfs
->> entry or, if this is anyhow crashdump related, it goes to
->> pstore/minidump once triggered. Or to ramoops.
->>
->> Depends what these logs are (so please also explain what do you find
->> there in the commit msg).
->>
->> Maybe something like CHROMEOS_PSTORE?
->>
->> IOW, if enabled, this should go to ramoops/pstore unconditionally. For
->> runtime debugging this should be returned somehow to the userspace
->> reading the file. I think usually debugfs and sysfs is not expected to
->> provide more than PAGE_SIZE data, so this second part has to be
->> rethinked still.
->>
-> 
-> This is a logging feature, it's not oops/panic related. These logs are
-> referred to as "block logs". A "block" is the start of a mailbox command
-> to its end, so it logs every ACPM mailbox command issued to the
-> firmware. After each end of a block, we see the state of all regulators,
-> frequencies and devices up/down extracted from the block.
-> 
-> These are indeed system logs, and using the dmesg ring buffer seems fine
-> as we typically care about the recent logs, we don't care if the ring
-> starts all over again.
+Avoid casting the input pointer to `*const _`, allowing the output
+pointer to be `*mut` if the input is `*mut`. This allows a number of
+`*const` to `*mut` conversions to be removed at the cost of slightly
+worse ergonomics when the macro is used with a reference rather than a
+pointer; the only example of this was in the macro's own doctest.
 
-I claim these are not system logs, but firmware logs, thus dmesg ring
-buffer is not suitable for them. Where do the other vendors log remoteprocs?
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+ rust/kernel/lib.rs      |  5 ++---
+ rust/kernel/pci.rs      |  2 +-
+ rust/kernel/platform.rs |  2 +-
+ rust/kernel/rbtree.rs   | 23 ++++++++++-------------
+ 4 files changed, 14 insertions(+), 18 deletions(-)
 
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index c92497c7c655..fc6835cc36a3 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -187,7 +187,7 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+ /// }
+ ///
+ /// let test = Test { a: 10, b: 20 };
+-/// let b_ptr = &test.b;
++/// let b_ptr: *const _ = &test.b;
+ /// // SAFETY: The pointer points at the `b` field of a `Test`, so the resulting pointer will be
+ /// // in-bounds of the same allocation as `b_ptr`.
+ /// let test_alias = unsafe { container_of!(b_ptr, Test, b) };
+@@ -196,9 +196,8 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+ #[macro_export]
+ macro_rules! container_of {
+     ($ptr:expr, $type:ty, $($f:tt)*) => {{
+-        let ptr = $ptr as *const _ as *const u8;
+         let offset: usize = ::core::mem::offset_of!($type, $($f)*);
+-        ptr.sub(offset) as *const $type
++        $ptr.byte_sub(offset).cast::<$type>()
+     }}
+ }
+ 
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index f7b2743828ae..271a7690a9a0 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -364,7 +364,7 @@ pub unsafe fn from_dev(dev: ARef<device::Device>) -> Self {
+     fn as_raw(&self) -> *mut bindings::pci_dev {
+         // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
+         // embedded in `struct pci_dev`.
+-        unsafe { container_of!(self.0.as_raw(), bindings::pci_dev, dev) as _ }
++        unsafe { container_of!(self.0.as_raw(), bindings::pci_dev, dev) }
+     }
+ 
+     /// Returns the PCI vendor ID.
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 1297f5292ba9..84a4ecc642a1 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -189,7 +189,7 @@ unsafe fn from_dev(dev: ARef<device::Device>) -> Self {
+     fn as_raw(&self) -> *mut bindings::platform_device {
+         // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
+         // embedded in `struct platform_device`.
+-        unsafe { container_of!(self.0.as_raw(), bindings::platform_device, dev) }.cast_mut()
++        unsafe { container_of!(self.0.as_raw(), bindings::platform_device, dev) }
+     }
+ }
+ 
+diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+index 1ea25c7092fb..27de954a0889 100644
+--- a/rust/kernel/rbtree.rs
++++ b/rust/kernel/rbtree.rs
+@@ -424,7 +424,7 @@ pub fn cursor_lower_bound(&mut self, key: &K) -> Option<Cursor<'_, K, V>>
+         while !node.is_null() {
+             // SAFETY: By the type invariant of `Self`, all non-null `rb_node` pointers stored in `self`
+             // point to the links field of `Node<K, V>` objects.
+-            let this = unsafe { container_of!(node, Node<K, V>, links) }.cast_mut();
++            let this = unsafe { container_of!(node, Node<K, V>, links) };
+             // SAFETY: `this` is a non-null node so it is valid by the type invariants.
+             let this_key = unsafe { &(*this).key };
+             // SAFETY: `node` is a non-null node so it is valid by the type invariants.
+@@ -496,7 +496,7 @@ fn drop(&mut self) {
+             // but it is not observable. The loop invariant is still maintained.
+ 
+             // SAFETY: `this` is valid per the loop invariant.
+-            unsafe { drop(KBox::from_raw(this.cast_mut())) };
++            unsafe { drop(KBox::from_raw(this)) };
+         }
+     }
+ }
+@@ -761,7 +761,7 @@ pub fn remove_current(self) -> (Option<Self>, RBTreeNode<K, V>) {
+         let next = self.get_neighbor_raw(Direction::Next);
+         // SAFETY: By the type invariant of `Self`, all non-null `rb_node` pointers stored in `self`
+         // point to the links field of `Node<K, V>` objects.
+-        let this = unsafe { container_of!(self.current.as_ptr(), Node<K, V>, links) }.cast_mut();
++        let this = unsafe { container_of!(self.current.as_ptr(), Node<K, V>, links) };
+         // SAFETY: `this` is valid by the type invariants as described above.
+         let node = unsafe { KBox::from_raw(this) };
+         let node = RBTreeNode { node };
+@@ -806,7 +806,7 @@ fn remove_neighbor(&mut self, direction: Direction) -> Option<RBTreeNode<K, V>>
+             unsafe { bindings::rb_erase(neighbor, addr_of_mut!(self.tree.root)) };
+             // SAFETY: By the type invariant of `Self`, all non-null `rb_node` pointers stored in `self`
+             // point to the links field of `Node<K, V>` objects.
+-            let this = unsafe { container_of!(neighbor, Node<K, V>, links) }.cast_mut();
++            let this = unsafe { container_of!(neighbor, Node<K, V>, links) };
+             // SAFETY: `this` is valid by the type invariants as described above.
+             let node = unsafe { KBox::from_raw(this) };
+             return Some(RBTreeNode { node });
+@@ -912,7 +912,7 @@ unsafe fn to_key_value_mut<'b>(node: NonNull<bindings::rb_node>) -> (&'b K, &'b
+     unsafe fn to_key_value_raw<'b>(node: NonNull<bindings::rb_node>) -> (&'b K, *mut V) {
+         // SAFETY: By the type invariant of `Self`, all non-null `rb_node` pointers stored in `self`
+         // point to the links field of `Node<K, V>` objects.
+-        let this = unsafe { container_of!(node.as_ptr(), Node<K, V>, links) }.cast_mut();
++        let this = unsafe { container_of!(node.as_ptr(), Node<K, V>, links) };
+         // SAFETY: The passed `node` is the current node or a non-null neighbor,
+         // thus `this` is valid by the type invariants.
+         let k = unsafe { &(*this).key };
+@@ -1021,7 +1021,7 @@ fn next(&mut self) -> Option<Self::Item> {
+ 
+         // SAFETY: By the type invariant of `IterRaw`, `self.next` is a valid node in an `RBTree`,
+         // and by the type invariant of `RBTree`, all nodes point to the links field of `Node<K, V>` objects.
+-        let cur = unsafe { container_of!(self.next, Node<K, V>, links) }.cast_mut();
++        let cur = unsafe { container_of!(self.next, Node<K, V>, links) };
+ 
+         // SAFETY: `self.next` is a valid tree node by the type invariants.
+         self.next = unsafe { bindings::rb_next(self.next) };
+@@ -1216,7 +1216,7 @@ pub fn get_mut(&mut self) -> &mut V {
+         // SAFETY:
+         // - `self.node_links` is a valid pointer to a node in the tree.
+         // - We have exclusive access to the underlying tree, and can thus give out a mutable reference.
+-        unsafe { &mut (*(container_of!(self.node_links, Node<K, V>, links).cast_mut())).value }
++        unsafe { &mut (*(container_of!(self.node_links, Node<K, V>, links))).value }
+     }
+ 
+     /// Converts the entry into a mutable reference to its value.
+@@ -1226,7 +1226,7 @@ pub fn into_mut(self) -> &'a mut V {
+         // SAFETY:
+         // - `self.node_links` is a valid pointer to a node in the tree.
+         // - This consumes the `&'a mut RBTree<K, V>`, therefore it can give out a mutable reference that lives for `'a`.
+-        unsafe { &mut (*(container_of!(self.node_links, Node<K, V>, links).cast_mut())).value }
++        unsafe { &mut (*(container_of!(self.node_links, Node<K, V>, links))).value }
+     }
+ 
+     /// Remove this entry from the [`RBTree`].
+@@ -1239,9 +1239,7 @@ pub fn remove_node(self) -> RBTreeNode<K, V> {
+         RBTreeNode {
+             // SAFETY: The node was a node in the tree, but we removed it, so we can convert it
+             // back into a box.
+-            node: unsafe {
+-                KBox::from_raw(container_of!(self.node_links, Node<K, V>, links).cast_mut())
+-            },
++            node: unsafe { KBox::from_raw(container_of!(self.node_links, Node<K, V>, links)) },
+         }
+     }
+ 
+@@ -1272,8 +1270,7 @@ fn replace(self, node: RBTreeNode<K, V>) -> RBTreeNode<K, V> {
+         // SAFETY:
+         // - `self.node_ptr` produces a valid pointer to a node in the tree.
+         // - Now that we removed this entry from the tree, we can convert the node to a box.
+-        let old_node =
+-            unsafe { KBox::from_raw(container_of!(self.node_links, Node<K, V>, links).cast_mut()) };
++        let old_node = unsafe { KBox::from_raw(container_of!(self.node_links, Node<K, V>, links)) };
+ 
+         RBTreeNode { node: old_node }
+     }
 
-Best regards,
-Krzysztof
+-- 
+2.48.1
+
