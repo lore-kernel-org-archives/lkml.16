@@ -1,159 +1,200 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.164])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED211DE8A7
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 20:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742241877; cv=none; b=AQR+t/iACDBWJrdfYxLWmz79mlTHYMley6CqEW2U38FTG4u866Hh1MQGdYLe7bXJt0O07pOHA5WcI0J+Z5iOJR3lUyVOq7/1tzQw4KlQ/V+rUPtZqhxO/3bqgAd3bZF1i2ezFymXXogzQO0RVOGBS87GEOEB+upRXp5v+yUDWfc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742241877; c=relaxed/simple;
-	bh=5bDbl7G+5LGMGcfVxcK2EQBWdcwcjSQpiqdMNi9eD/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uwQuagSaqbuwG95o1MMobNuv29FNpurRsbYH47BhvuYIPqSDsTVHoqmq8pA+iwAQxJFeu8sE+ro3StERfQkBMGr40cRNg0ok7lSPW9BjK9T0Jru0/xHEvygtQ5fJTmtmIvYZ41URQwVx/ySNKIbs1QMw8qn2mNWuWEOwuyfphKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IE0uoQvC; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C1579E1;
+	Mon, 17 Mar 2025 20:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.164
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742241944; cv=pass; b=M+JdsfHsgkb4U1sR8EBT2SXpAaX403jttp1VvdJFXB/yHIYuNBo/plLePlW+xE8PzxouEkZBtf1uZ7FhTsiFQ6nX25dczFWlYRnzUarl632ZIbBZH6s9iyrn0ai1MUyu06N3fjAiSPXYd0xUzeML5AUCWaWfV1uQkY/77axfA6o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742241944; c=relaxed/simple;
+	bh=U6GrnPSi2yFmpgTKSdcqG84giw5n2Hxx/Ub9Os6ddrU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tCH5L9mUROQdYhjZL8iY3+twlrww5i1oDMuHdO0Mt0ebxVOlgv85v0ghbgxJGtzXKqaPLZkBht0v6DAuOYu2Qohj0BRoYfo0WpUi278VwV2ChZQL5hxcA/C2QGojMwX4nJaD6VdX/wXLd6qA6D+8+/csHN5R3j1Oza8qluH4eGI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=Cac2+CLl; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=7iLd6Nzb; arc=pass smtp.client-ip=81.169.146.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IE0uoQvC"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso25129695e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 13:04:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742241874; x=1742846674; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I+yftTMxlic2mD1ryKYfkycnPpOKHvoQOGTtzztr5L0=;
-        b=IE0uoQvCcOoDq90i+TnVP1SSFdmJYkJiuXYb7I4go1xX+L9sNtII9syisfQLkVlA38
-         i1rUfuLm0JgNOJxQnKxhlrpkJE3WljCEAH+qrGSEqyQ71vFR85i9BsJSptJVwyVDzhMq
-         LXWCdUiXYItxkqvoBsZZdk6P+dRWCe3qZKdpchJ4Rn4GldtYZmsmzvM2oDb4ajrRu8CC
-         B74753UWNh/6UFSCfMIScKMCVbB0UbzgmYv5aRLbsFsPf+aWzyLLoAA+SyBnOqoTu2pP
-         Pbm0CYqrB2Y3ZwWU3G4FRQwbggG+IIEN8NouC+Aw3JJ/dizePcim4j/f23TWtcM7E6ZG
-         qsZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742241874; x=1742846674;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I+yftTMxlic2mD1ryKYfkycnPpOKHvoQOGTtzztr5L0=;
-        b=sKEVhfhpik3+SbZli3cp89wyYHXqTkDTWXaoQyojmvtCEkX8J3eYkQsxaSL8jjXLZS
-         v3+WUZu7OpeeKM+XW4E3kPEQVsjjz9VX7uprLWzS1cCbwOqWtD9zhhb0rEx+XZnuLWCb
-         Cpsk+U8m4AAfRZ1CuQrsddwEa6nBnMF2iQS/IExKgJ1V4yX9ya1+/N8rE4QbkPrT2o7v
-         hEa4y2OsU6fPDi8ldBzd7hYzhwM9LMWoxf3MPRrHKCyvmNBCKybA4L5apD9pCmNTC0ku
-         keLxjnhHqTXbuiEARP3vx/GUP2Bhyc/EejuJA4ErQ8uwObVLFnJ1Qjzt6VQukGv98Xrz
-         yQow==
-X-Forwarded-Encrypted: i=1; AJvYcCXUaxlNYTTcfPrHqPtYMt3SdLg4xS+bLVTAHDcPdTGmR9aV97agd2KEKfA6RrYarD2lDCxkHxtSL/0Y2CE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw59S28EANSEqZu+O3MOtR/YoSAaGeWwh7Gv/AUruOFiSD48cvF
-	mRDGoqEhD7wv5Q6PUQwkg/iy0HFQeTNFAkgbGkg48fJuuYzChLdV
-X-Gm-Gg: ASbGncuZg/MW0emL0JPvIylk3UQmKLzOteAQKtGLyqbgx1xPJYPVeAccNlJ5Qhu5cEg
-	8xrUVo5b5BJWiOnB5FDWF7nSdwAN8M1mCjB3Xk7sFNDdpEMMIk6rjxViuXMLFDbqWPD+L789uIF
-	P7nwdUXatKKczphn/526cSa5qRp5YoFJYycwSZ7/yDSx+QYFhosk/VZavfS+l/ZHfB0PiKXi3Rw
-	WByUuOZEWoN3yqqRf+U2O5drsQn3bb4O7eXTutQpTVfejHujztOa1xwdrb0OeYp85kqRlKBUqN2
-	dGAC9NtNQLzj7SkaSRSYzrB5Zf3d+cs7MOfhiuxdOMGGr3l8js0UyKeNlQmNWfI1BYsgvisoBsp
-	iPwmJ5epR6hsoO2GpKw==
-X-Google-Smtp-Source: AGHT+IERKA4HXQE/HUQrXsD/N7VST/VXcydaEMCHc/Fsxv9HgpGK2bJ5+FDsxGqZ8At63iwEZsTIbQ==
-X-Received: by 2002:a05:600c:1d2a:b0:43c:efed:732d with SMTP id 5b1f17b1804b1-43d1ec8dd4emr151411765e9.16.1742241874006;
-        Mon, 17 Mar 2025 13:04:34 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b6b37sm16179101f8f.37.2025.03.17.13.04.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 13:04:33 -0700 (PDT)
-Date: Mon, 17 Mar 2025 20:04:32 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Uros
- Bizjak <ubizjak@gmail.com>, Andrew Cooper <andrew.cooper3@citrix.com>, Ingo
- Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 14/20] x86/barrier: Use alternative_io() in 32-bit
- barrier functions
-Message-ID: <20250317200432.1a076d6a@pumpkin>
-In-Reply-To: <zfabhk7c3fucov7lpfsqf5bj7iie5324ccgn4ingzzakoyhl4u@fzg364keuphn>
-References: <cover.1741988314.git.jpoimboe@kernel.org>
-	<1c2fe7f93c4dd8a87c2e1fa8b780a8a2968be445.1741988314.git.jpoimboe@kernel.org>
-	<CAHk-=wjtvTPERDdrok2kDrSSFBjqHCCNVff95VVxhvP6wCC6jg@mail.gmail.com>
-	<zfabhk7c3fucov7lpfsqf5bj7iie5324ccgn4ingzzakoyhl4u@fzg364keuphn>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="Cac2+CLl";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="7iLd6Nzb"
+ARC-Seal: i=1; a=rsa-sha256; t=1742241939; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=iMaN/0r9fiKsQjO4zTbmKe41l7f7uYypplty658bV7ICObCTk765thwPK3NarMsrvU
+    gm+wzAUVxhZqNwcH6R0PQ8F4CuWtnszhSWFyspZ33TShFOCQLsjsTAV23BmCD5g1Jj7m
+    IC31BMIe/orZZ0M7NaVc78AAlDbls78DKb4gnUCtMLCxdK/GzQFQ+3SAtPFNJFtuLI8q
+    /KGPt+sGC20aMHo3KD6FqrsextiVDxKoarGQ+vibDtYArNTjJYs4ercUTHVsE1IObf+x
+    P5k8BdJmHPT1WFJVta0sWWvGmtNP5G0yy4Hk9JKdOHN5ET+umnVhG5GxUO6yOtNa5KZV
+    mpZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1742241939;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=3kkBE2FADa1BSfO/iHOVTvgNaF7Wi7L3lOA9hYb6Sxg=;
+    b=LAmQMt9GD2imJ5RQRFZ6hErwewcLTxQmgc6FYojsj2A/5wmrAuCBfv3H/OIMAzKQRr
+    VpqgSguT9ZgC+GvhoA3Mqn7u36vXOPx0FgGUIGs3HkPMvlTCwkP1OAsoFzPDlEwonDj2
+    o032h/btULbxojf6DxECckCZKVCi7bCGr6gLUqUfJEFRqiJBLdpHjcDzFQL9jTGQmR5R
+    8eF40EcxX8gXdxSOIg/2mawHakCf/9KZR4s9W4Dhqns/4iwFYlAqurzfPKoZ3QEHHG6t
+    h2GXQtpbhpMOz5iG6/ct+REL3EqriJ2s1StzygdFDIpZsHnrotid+tIMxGwUzNOFeSMf
+    tFqg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1742241939;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=3kkBE2FADa1BSfO/iHOVTvgNaF7Wi7L3lOA9hYb6Sxg=;
+    b=Cac2+CLlV+INs33cHUh4EGOzAZyXQgxW5ea5i1pFGu4zsQKM1sVVHb1f7NUimHeoIy
+    UqcbRi0kuzQWjY6/LkrrCE6XorXe6aGfeRFFt19lF5r3//jrzu5yn+3mUk8spZ80lNvc
+    Rg1TIXPptcdDMZQqSMeZKa8Rf6Wz6dAPIwbeSy5ZTdKyBjyoeKgCXxEoDmcwuuQYAbOh
+    VJaIeHyJfJ47wiO9EciALFrocRZ1H5kxOq7SKlTgqJ+Ko7zPonT8t4tf1HefGMHxNIBw
+    naZVP4x2R3AwcgB0o+ANGlBSmftvNT5bPyQzVdZnJk3gC8OFK01t/LG0P15IWvyek4hg
+    wREg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1742241939;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=3kkBE2FADa1BSfO/iHOVTvgNaF7Wi7L3lOA9hYb6Sxg=;
+    b=7iLd6Nzb9gOrTv5iwwKfJoTyI5Lsunwwxt+GZUC6WeHSOv7k6zQPDpUMrjef+IujnL
+    BpVNJIupFdVgYQ5+0/Aw==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b3512HK5cFzz
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 17 Mar 2025 21:05:38 +0100 (CET)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with smtp (Exim 4.96)
+	(envelope-from <michael@a98shuttle.de>)
+	id 1tuGiN-00085O-1C;
+	Mon, 17 Mar 2025 21:05:35 +0100
+Received: (nullmailer pid 93665 invoked by uid 502);
+	Mon, 17 Mar 2025 20:05:35 -0000
+From: Michael Klein <michael@fossekall.de>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [net-next v4 1/3] net: phy: realtek: Clean up RTL8211E ExtPage access
+Date: Mon, 17 Mar 2025 21:05:30 +0100
+Message-Id: <20250317200532.93620-2-michael@fossekall.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250317200532.93620-1-michael@fossekall.de>
+References: <20250317200532.93620-1-michael@fossekall.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, 14 Mar 2025 17:05:34 -0700
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+- Factor out RTL8211E extension page access code to
+  rtl8211e_modify_ext_page()/rtl8211e_read_ext_page() and add some
+  related #define:s
+- Group RTL8211E_* and RTL8211F_* #define:s
+- Clean up rtl8211e_config_init()
 
-> On Fri, Mar 14, 2025 at 01:49:48PM -1000, Linus Torvalds wrote:
-> > So all of these patches look like good cleanups to me, but I do wonder
-> > if we should
-> > 
-> >  (a) not use some naming *quite* as generic as 'ARG()'
-> > 
-> >  (b) make the asms use ARG_OUT/ARG_IN/ARG_CLOBBER() to clarify
-> > 
-> > because that ARG(), ARG(), ARGC() pattern looks odd to me.
-> > 
-> > Maybe it's just me.
-> > 
-> > Regardless, I do think the series looks like a nice improvement even
-> > in the current form, even if that particular repeated pattern feels
-> > strange.  
-> 
-> So originally I had ASM_OUTPUT/ASM_INPUT/ASM_CLOBBER, but I ended up
-> going with ARG() due to its nice vertical alignment and conciseness:
+Signed-off-by: Michael Klein <michael@fossekall.de>
+---
+ drivers/net/phy/realtek/realtek_main.c | 49 ++++++++++++++------------
+ 1 file changed, 27 insertions(+), 22 deletions(-)
 
-But ARG() does look horrid.
-
-Is the ARG() necessary just to handle the comma separated lists?
-If so is it only actually needed if there is more than one item?
-
-Another option is to just require () and add the ARG in the expansion.
-So with:
-#define __asm_call(qual, alt, out, in, clobber) \
-	asm("zzz", ARG out, ARG in, ARG clobber)
-
-__asm_call(qual, ALT(), \
-		([var] "+m" (__my_cpu_var(_var)), "+a" (old__.low),	\
-		    "+d" (old__.high)),					\
-		("b" (new__.low), "c" (new__.high), "S" (&(_var))),	\
-		("memory"));
-
-would get expanded the same as the line below.
-
-	David
-	
-> 
-> 
-> 	__asm_call(qual,						\
-> 		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
-> 			    "cmpxchg8b " __percpu_arg([var]),		\
-> 			    X86_FEATURE_CX8),				\
-> 		ARG([var] "+m" (__my_cpu_var(_var)), "+a" (old__.low),	\
-> 		    "+d" (old__.high)),					\
-> 		ARG("b" (new__.low), "c" (new__.high), "S" (&(_var))),	\
-> 		ARG("memory"));						\
-> 
-> 
-> Though ASM_OUTPUT/ASM_INPUT/ASM_CLOBBER isn't so bad either:
-> 
-> 	__asm_call(qual,						\
-> 		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
-> 			    "cmpxchg8b " __percpu_arg([var]),		\
-> 			    X86_FEATURE_CX8),				\
-> 		ASM_OUTPUT([var] "+m" (__my_cpu_var(_var)),		\
-> 			   "+a" (old__.low), "+d" (old__.high)),	\
-> 		ASM_INPUT("b" (new__.low), "c" (new__.high),		\
-> 			  "S" (&(_var))),				\
-> 		ASM_CLOBBER("memory"));					\
-> 
-> 
-> That has the nice benefit of being more self-documenting, albeit more
-> verbose and less vertically aligned.
-> 
-> So I could go either way, really.
-> 
+diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+index 7a0b19d66aca..58ec16cc8061 100644
+--- a/drivers/net/phy/realtek/realtek_main.c
++++ b/drivers/net/phy/realtek/realtek_main.c
+@@ -28,13 +28,21 @@
+ 
+ #define RTL821x_INSR				0x13
+ 
+-#define RTL821x_EXT_PAGE_SELECT			0x1e
++#define RTL8211E_EXT_PAGE_SELECT		0x1e
+ #define RTL821x_PAGE_SELECT			0x1f
+ 
++#define RTL8211E_SET_EXT_PAGE			0x07
++
++#define RTL8211E_CTRL_DELAY			BIT(13)
++#define RTL8211E_TX_DELAY			BIT(12)
++#define RTL8211E_RX_DELAY			BIT(11)
++
+ #define RTL8211F_PHYCR1				0x18
+ #define RTL8211F_PHYCR2				0x19
+ #define RTL8211F_INSR				0x1d
+ 
++#define RTL8211F_CLKOUT_EN			BIT(0)
++
+ #define RTL8211F_LEDCR				0x10
+ #define RTL8211F_LEDCR_MODE			BIT(15)
+ #define RTL8211F_LEDCR_ACT_TXRX			BIT(4)
+@@ -51,12 +59,6 @@
+ #define RTL8211F_ALDPS_ENABLE			BIT(2)
+ #define RTL8211F_ALDPS_XTAL_OFF			BIT(12)
+ 
+-#define RTL8211E_CTRL_DELAY			BIT(13)
+-#define RTL8211E_TX_DELAY			BIT(12)
+-#define RTL8211E_RX_DELAY			BIT(11)
+-
+-#define RTL8211F_CLKOUT_EN			BIT(0)
+-
+ #define RTL8201F_ISR				0x1e
+ #define RTL8201F_ISR_ANERR			BIT(15)
+ #define RTL8201F_ISR_DUPLEX			BIT(13)
+@@ -134,6 +136,21 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
+ 	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
+ }
+ 
++static int rtl8211e_modify_ext_page(struct phy_device *phydev, u16 ext_page,
++				    u32 regnum, u16 mask, u16 set)
++{
++	int oldpage, ret = 0;
++
++	oldpage = phy_select_page(phydev, RTL8211E_SET_EXT_PAGE);
++	if (oldpage >= 0) {
++		ret = __phy_write(phydev, RTL8211E_EXT_PAGE_SELECT, ext_page);
++		if (ret == 0)
++			ret = __phy_modify(phydev, regnum, mask, set);
++	}
++
++	return phy_restore_page(phydev, oldpage, ret);
++}
++
+ static int rtl821x_probe(struct phy_device *phydev)
+ {
+ 	struct device *dev = &phydev->mdio.dev;
+@@ -600,7 +617,8 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
+ 
+ static int rtl8211e_config_init(struct phy_device *phydev)
+ {
+-	int ret = 0, oldpage;
++	const u16 delay_mask = RTL8211E_CTRL_DELAY |
++		RTL8211E_TX_DELAY | RTL8211E_RX_DELAY;
+ 	u16 val;
+ 
+ 	/* enable TX/RX delay for rgmii-* modes, and disable them for rgmii. */
+@@ -630,20 +648,7 @@ static int rtl8211e_config_init(struct phy_device *phydev)
+ 	 * 12 = RX Delay, 11 = TX Delay
+ 	 * 10:0 = Test && debug settings reserved by realtek
+ 	 */
+-	oldpage = phy_select_page(phydev, 0x7);
+-	if (oldpage < 0)
+-		goto err_restore_page;
+-
+-	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
+-	if (ret)
+-		goto err_restore_page;
+-
+-	ret = __phy_modify(phydev, 0x1c, RTL8211E_CTRL_DELAY
+-			   | RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
+-			   val);
+-
+-err_restore_page:
+-	return phy_restore_page(phydev, oldpage, ret);
++	return rtl8211e_modify_ext_page(phydev, 0xa4, 0x1c, delay_mask, val);
+ }
+ 
+ static int rtl8211b_suspend(struct phy_device *phydev)
+-- 
+2.39.5
 
