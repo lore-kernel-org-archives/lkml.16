@@ -1,211 +1,181 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CE5236A72
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA322199E9A
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742210996; cv=none; b=fyVwWZNga1p758pVJwmTl+Txg33Nu6TMvspm1IGlyHQ1uFezRJKVnfxsjqnvEmMYG+yzNOpS8dkZ8VBw57hgfQ8xGKmKq4GdhPh66IPACQMqL/3z6fTfg2veQpptyLxiEHM7rK0XNMkgvM/h4AQSI+Ny+CSAo5jfJl5rZtlWTbA=
+	t=1742211072; cv=none; b=ZjrLCUjDZn6DqvsYopB55eTRI16Le+Qq8VfRxjk8EPynNpnDjcXl//YkjoC7Ohh8C/dBCdVL+Rx0viu4Pw32ToSNdOzYBwpzR+g7l2IQUwYmu7WmXk/XZ+s4TfBoNWGXnTV3yhWZ7KOLMgabIXEhYMNdBItq2uAgQ7I4mwCzeNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742210996; c=relaxed/simple;
-	bh=yDI2zgyohoL5dWeqF2dFktnEe7P14OSIHv8Y7QW7WiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uVuL8iScd7hxDyjUoX5ML0gRdIjU4BoBmrEQb4lN/05KueY/6z63X5Q6PfQ33aG504fw7yngUqs37B3uF6hm5KHmbzLVi97FFh1MrCJoAaDSsWek9NagBwDyRKSgvypy6pjHJCmIzyNTAgpogl39UqfKMYSTYUWjWfJYrlmbizY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BAf8FKBh; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742211072; c=relaxed/simple;
+	bh=ERBkrBW1jXuLcvdKfLSnqEM6VUWt7tHIo7Mc9TxQWcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=InoGBAUX7jGxsacpbZe/POWGDXk2ILFX3FwrgkaRu+IhO6OwGosUs3at0f0DFIsLAVwU6GBqJ5RLQZ04VMoUE/krzhdD/8z9a8KSC8k7ZpgmdG8EXHEWTaF0zpcmtkTK0x7O0tphltL6bsu4zRgVowuUYeT9p9SY93NioKr7/Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cr9eaoL2; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BAf8FKBh"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2a089fbbdso765216666b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:29:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742210993; x=1742815793; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SvAN/7tOVuJuUA/NQQnQYwNpVL/lQvQw/Vywf7L3EpI=;
-        b=BAf8FKBhw0jRuFaDH9tLelIQsU0KuSoxM+iub+pneGwGBQUlBcg8AjlgT91wnbT7yh
-         +bb1exBUYkGEbjt5ZOc+fiyuag2GcyMxOow44kzJS3r9GO05puq6U1W1ZLt3W07BxIbl
-         6UwwnVcYjVwsnBoQe306nxrjCDBnDeClmeO4wPJ6ySbdpEhr1qsJr14DTCSBu6z2HjUn
-         aYmGYQ5MJE+iyfvI0da3WqdDDrtofOJnTSc+VbdNOBYB4+DfReOtx/jiQliLQIyYyGuK
-         bsxtDLmbH1JWZgP4pnXMzoEzEwqWyk76pHWtNMElkK915mwscPivnSZEpiTXZ/C5p9iA
-         fHxg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cr9eaoL2"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HAEaCG023474
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:31:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=yxyQZODdXLkSP4pKmGvOhty0
+	JHw7brHWE7Qvit2mgQ8=; b=cr9eaoL2JZ2LV2+RNEY6lxhf3RgxDQE7If1mWlce
+	pbuHq5Qi0y2jqduPuQ639ji4N2vShG0+S7OcjBuKy1VOregTrudDo0/hxGCmjUrb
+	ZfQCp84Vg6+U8it08YkWT8DK2PN9ugbS2GFh3g5lcQtT5jWchN0GZLlwbx+68MXL
+	kS+GLBlQ0bHoHNNybJj0yaCYwda7ssZ91jtgfD1F9hl/zWGH99Isr8MhEkaRKc6b
+	fywrUUpdFGpfcKtn0MTcMmFbYeFxj/YR8ydz4neZMbPVfqqfDy7W+8pSCwYl3ckr
+	PGd3HPSAZ8APC1dfjYkmzI+yJqNmTywvemTl4eCS8Z0qqg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d2ahch45-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:31:09 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c3b6450ef0so702366285a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:31:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742210993; x=1742815793;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SvAN/7tOVuJuUA/NQQnQYwNpVL/lQvQw/Vywf7L3EpI=;
-        b=ATI27teRGVeg98KM816xP4LWYHoV+FMwnFkzk0+UsTB4RnCDnXh56ilWQ3p3T/q1X9
-         HJ1VNrbyu4Z5eIMaW7/85rJYN26rHvpQlM8GUjj0vlMcZt8mvI9Shcu4EtiddbB1AZGC
-         /FG6yOD4woYt52eGNo4/dE58uMdyl10G+OsdoU3tOOBxpSpwd49VnMwKU1bNSkesv/Wi
-         AiPnz71jCAV1QWC0RV7qMYFSpX/B/9MD+9lrrIlBHsth6AFz/P4kQd9JoNvnQV0rNyck
-         QxLn3RdqkEYQdpnh9heJkdFE+bq+VIWBIneT4UgWwjOSdpOEI2vaDB6gi0bnjgCwmdzQ
-         lqzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWI6EbXlfZwPIrgB41QgwgKIGn23WL6/AKlxR6FS4k9qZeH2InJOECAbOCI9+rkfIFPQ1PYlTL/WvF0DO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg3EEwsTMvJKye6aFOK0jM8LAN/WyhWmKIlC8mgOEe+kCNkZWd
-	llMLLZC3NmvJeFAxDmxUVf/6S7lNX2bpxulr2VR0YFv/j63PxxRr
-X-Gm-Gg: ASbGncuTf7mCkr+cNJzYfS9YCHuYcueZlAb3crvVY1X0eP+KiJ1ctyIx505AJcTZ8jq
-	ZADtyx6qI9ALAJNYrLEfHpu1sHBlvJTkGFN+StARJvIjPEO/6jtMensG2ag9fatnPlLd5O+ehXV
-	W2p1m9qHHO0U+XTBIflqxhj3cMmKh/fTY+36plhoIFXIaPi399pGrAAD2gdog6a7a4h36NN2SZh
-	fQzOYKAMsxtBQr4ueJcs0FOK1mskzRyJ59khMniDFyKPmLDsTADve8q9V0ltv7Hzy42QQhSoMgy
-	yQMJH8PyzJOyqwkxGu7zvgma+PoQ8cet6bWf0j/X4ulF6hI=
-X-Google-Smtp-Source: AGHT+IG+gI+aMDu5vQUfqySqI96FERHxH3L7FPefQA0AUTNHXYJAOIbk3xJ9TR09F66g/KtvtTNbwA==
-X-Received: by 2002:a17:906:6a0a:b0:ac1:e18d:a738 with SMTP id a640c23a62f3a-ac3311b11d1mr1308948066b.3.1742210992323;
-        Mon, 17 Mar 2025 04:29:52 -0700 (PDT)
-Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149cdec8sm651059766b.112.2025.03.17.04.29.51
+        d=1e100.net; s=20230601; t=1742211068; x=1742815868;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yxyQZODdXLkSP4pKmGvOhty0JHw7brHWE7Qvit2mgQ8=;
+        b=o2q7ak5sv0e26syfdHWDozLVhmWZebKd4HkCJr19YyUCRGUWF8+mhyrkU0/oJ0BpkQ
+         pr0Bbi6yGlg01vItPs9EwhOOupTSNpX4889HMTpFAFsSfAUpQVKjvU+cjJx2n7WPYnzw
+         hrq0c/zMRDL69G+679e+wVQz8UFXyVSUWBUiqegDA5M+wFkkfzn0DoCP4jD9h3Dqpa4p
+         X6BzVqg7IJNilKDBwbdzVQ/uUNSP+Ek2/B541j6V+1O4/ZHHcoYz6RhJUM7eulkQl5rp
+         2Vnar+94GODegY4gD/7gEUAKkq9QVd/OfCLZp8D+NsI/Khx7Gfn7IGkBMa/IYM7K9rBS
+         Jarg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0ypXVH2dOEltdRqwjd3X3WAqN/Ee7evOuEcFfGVcaSB6HMv7JLAGdsgMBPf8n9JneGWAdYAM6674AJLg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLU3OBequgDe5IA4TM2Mu5hXg/QJfs6gp3Pv4oYmsxS9FD+Dmk
+	T8Fr6Sjw6GSEx7cQHBGwe61USUxTQApCIBAlNTQouR8rqdZouVZzwWpl2+82/mYACkUIRC/qtDV
+	FQy2uFkRf6IgC6tM7/5K2fRU6FLObWz3wu6D2Bj89el7p9qijUhZrstJCx/M/f20=
+X-Gm-Gg: ASbGncuiKbWRUzlFJHk53pyOEIXHPmbrIbB/YBpJRrzg1C5u38se3DufA4ucjeXqACA
+	TcgMVqYIZTlTwRYydzUYBlHLvRcnZPbuClbg5Imyca2/vL9mtzxzIr7D0ZgrrYyLWrDKDBdP3LR
+	1ceGTuOS0jmDpg7fdccQ7sF4D1trIWtKCKNfB/tnNERr12tCM6KjwZzxrGekbiEQXn9fAYGQEwJ
+	8pudXmumL/GU8as5iH91vrWCthwni0hhRtDfJP6bJrHVBltGT5qHynaBqVWl0louf1x1ZydV0m6
+	LPckPmH6ZBPy258zf7chB/JqG36evrQcRcccUCZ8GDJqMLm3c10nxFBT1MumlKOu+Oa3c+Tu3cA
+	+2m4=
+X-Received: by 2002:a05:620a:2402:b0:7c0:c332:1cdb with SMTP id af79cd13be357-7c57c8fd7a8mr1408213285a.38.1742211068519;
+        Mon, 17 Mar 2025 04:31:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGyzB4PA4i/ZI1x7x2UAZWqGYU5b/+Y54NT9qN4ljiJY5IlVc9vIREnL/Bl6tJpjNqwt0qkSQ==
+X-Received: by 2002:a05:620a:2402:b0:7c0:c332:1cdb with SMTP id af79cd13be357-7c57c8fd7a8mr1408210185a.38.1742211068190;
+        Mon, 17 Mar 2025 04:31:08 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c3f1da280sm15695621fa.89.2025.03.17.04.31.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 04:29:51 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v2] x86/asm: Use asm_inline() instead of asm() in __untagged_addr()
-Date: Mon, 17 Mar 2025 12:29:48 +0100
-Message-ID: <20250317113013.182359-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.48.1
+        Mon, 17 Mar 2025 04:31:06 -0700 (PDT)
+Date: Mon, 17 Mar 2025 13:31:03 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>
+Cc: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] arm64: dts: qcom: sa8775p: add support for video node
+Message-ID: <awgq7zqeqkp2iwyk7vbn3mugsaq723bisxzhaswmzpt3iyc5rw@2vsarnkjdrjr>
+References: <20250311-dtbinding-v1-0-5c807d33f7ae@quicinc.com>
+ <20250311-dtbinding-v1-3-5c807d33f7ae@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250311-dtbinding-v1-3-5c807d33f7ae@quicinc.com>
+X-Proofpoint-ORIG-GUID: UqW0EJNVmpxdbO2f9qcHZXjHwdgyN1wy
+X-Proofpoint-GUID: UqW0EJNVmpxdbO2f9qcHZXjHwdgyN1wy
+X-Authority-Analysis: v=2.4 cv=R7kDGcRX c=1 sm=1 tr=0 ts=67d807fd cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=vjPId6sXUSytdOGuP0cA:9 a=a5fHTQWifTJYonsY:21 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-17_04,2025-03-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ impostorscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503170084
 
-Use asm_inline() to instruct the compiler that the size of asm()
-is the minimum size of one instruction, ignoring how many instructions
-the compiler thinks it is. ALTERNATIVE macro that expands to several
-pseudo directives causes instruction length estimate to count
-more than 20 instructions.
+On Tue, Mar 11, 2025 at 05:33:55PM +0530, Vikash Garodia wrote:
+> Video node enables video on Qualcomm SA8775P platform.
+> 
+> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 67 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> index 3394ae2d13003417a15e64c9e47833725ec779e6..09db8e2eb578f1cada0f4a15e3f844dc097bd46d 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> @@ -10,6 +10,7 @@
+>  #include <dt-bindings/clock/qcom,sa8775p-dispcc.h>
+>  #include <dt-bindings/clock/qcom,sa8775p-gcc.h>
+>  #include <dt-bindings/clock/qcom,sa8775p-gpucc.h>
+> +#include <dt-bindings/clock/qcom,sa8775p-videocc.h>
+>  #include <dt-bindings/dma/qcom-gpi.h>
+>  #include <dt-bindings/interconnect/qcom,sa8775p-rpmh.h>
+>  #include <dt-bindings/mailbox/qcom-ipcc.h>
+> @@ -3783,6 +3784,72 @@ llcc: system-cache-controller@9200000 {
+>  			interrupts = <GIC_SPI 580 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+>  
+> +		iris: video-codec@aa00000 {
+> +			compatible = "qcom,sa8775p-iris";
+> +
+> +			reg = <0 0x0aa00000 0 0xf0000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
+> +					<&videocc VIDEO_CC_MVS0_GDSC>,
+> +					<&rpmhpd SA8775P_MXC>,
+> +					<&rpmhpd SA8775P_MMCX>;
+> +			power-domain-names = "venus",
+> +					     "vcodec0",
+> +					     "mx",
+> +					     "mmcx";
+> +			operating-points-v2 = <&iris_opp_table>;
+> +
+> +			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
+> +				 <&videocc VIDEO_CC_MVS0C_CLK>,
+> +				 <&videocc VIDEO_CC_MVS0_CLK>;
+> +			clock-names = "iface",
+> +				      "core",
+> +				      "vcodec0_core";
+> +
+> +			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
+> +					&config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ALWAYS>,
+> +					<&mmss_noc MASTER_VIDEO_P0 QCOM_ICC_TAG_ALWAYS
+> +					&mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+> +			interconnect-names = "cpu-cfg",
+> +					     "video-mem";
+> +
+> +			firmware-name = "qcom/vpu/vpu30_p4_s6.mbn";
+> +			memory-region = <&pil_video_mem>;
+> +
+> +			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
+> +			reset-names = "bus";
+> +
+> +			iommus = <&apps_smmu 0x0880 0x0400>,
+> +				 <&apps_smmu 0x0887 0x0400>;
+> +			dma-coherent;
 
-bloat-o-meter reports minimal code size increase
-(x86_64 defconfig with CONFIG_ADDRESS_MASKING, gcc-14.2.1):
+I think almost missed it:
 
-  add/remove: 2/2 grow/shrink: 5/1 up/down: 2365/-1995 (370)
+	status = "disabled";
 
-	Function                          old     new   delta
-	-----------------------------------------------------
-	do_get_mempolicy                    -    1449   +1449
-	copy_nodes_to_user                  -     226    +226
-	__x64_sys_get_mempolicy            35     213    +178
-	syscall_user_dispatch_set_config  157     332    +175
-	__ia32_sys_get_mempolicy           31     206    +175
-	set_syscall_user_dispatch          29     181    +152
-	__do_sys_mremap                  2073    2083     +10
-	sp_insert                         133     117     -16
-	task_set_syscall_user_dispatch    172       -    -172
-	kernel_get_mempolicy             1807       -   -1807
+Don't enable the device by default, there is a chance of the firmware
+being not present.
 
-  Total: Before=21423151, After=21423521, chg +0.00%
-
-The code size increase is due to the compiler inlining
-more functions that inline untagged_addr(), e.g:
-
-task_set_syscall_user_dispatch() is now fully inlined in
-set_syscall_user_dispatch():
-
-	000000000010b7e0 <set_syscall_user_dispatch>:
-	  10b7e0:	f3 0f 1e fa          	endbr64
-	  10b7e4:	49 89 c8             	mov    %rcx,%r8
-	  10b7e7:	48 89 d1             	mov    %rdx,%rcx
-	  10b7ea:	48 89 f2             	mov    %rsi,%rdx
-	  10b7ed:	48 89 fe             	mov    %rdi,%rsi
-	  10b7f0:	65 48 8b 3d 00 00 00 	mov    %gs:0x0(%rip),%rdi
-	  10b7f7:	00
-	  10b7f8:	e9 03 fe ff ff       	jmp    10b600 <task_set_syscall_user_dispatch>
-
-that after inlining becomes:
-
-	000000000010b730 <set_syscall_user_dispatch>:
-	  10b730:	f3 0f 1e fa          	endbr64
-	  10b734:	65 48 8b 05 00 00 00 	mov    %gs:0x0(%rip),%rax
-	  10b73b:	00
-	  10b73c:	48 85 ff             	test   %rdi,%rdi
-	  10b73f:	74 54                	je     10b795 <set_syscall_user_dispatch+0x65>
-	  10b741:	48 83 ff 01          	cmp    $0x1,%rdi
-	  10b745:	74 06                	je     10b74d <set_syscall_user_dispatch+0x1d>
-	  10b747:	b8 ea ff ff ff       	mov    $0xffffffea,%eax
-	  10b74c:	c3                   	ret
-	  10b74d:	48 85 f6             	test   %rsi,%rsi
-	  10b750:	75 7b                	jne    10b7cd <set_syscall_user_dispatch+0x9d>
-	  10b752:	48 85 c9             	test   %rcx,%rcx
-	  10b755:	74 1a                	je     10b771 <set_syscall_user_dispatch+0x41>
-	  10b757:	48 89 cf             	mov    %rcx,%rdi
-	  10b75a:	49 b8 ef cd ab 89 67 	movabs $0x123456789abcdef,%r8
-	  10b761:	45 23 01
-	  10b764:	90                   	nop
-	  10b765:	90                   	nop
-	  10b766:	90                   	nop
-	  10b767:	90                   	nop
-	  10b768:	90                   	nop
-	  10b769:	90                   	nop
-	  10b76a:	90                   	nop
-	  10b76b:	90                   	nop
-	  10b76c:	49 39 f8             	cmp    %rdi,%r8
-	  10b76f:	72 6e                	jb     10b7df <set_syscall_user_dispatch+0xaf>
-	  10b771:	48 89 88 48 08 00 00 	mov    %rcx,0x848(%rax)
-	  10b778:	48 89 b0 50 08 00 00 	mov    %rsi,0x850(%rax)
-	  10b77f:	48 89 90 58 08 00 00 	mov    %rdx,0x858(%rax)
-	  10b786:	c6 80 60 08 00 00 00 	movb   $0x0,0x860(%rax)
-	  10b78d:	f0 80 48 08 20       	lock orb $0x20,0x8(%rax)
-	  10b792:	31 c0                	xor    %eax,%eax
-	  10b794:	c3                   	ret
-	  10b795:	48 09 d1             	or     %rdx,%rcx
-	  10b798:	48 09 f1             	or     %rsi,%rcx
-	  10b79b:	75 aa                	jne    10b747 <set_syscall_user_dispatch+0x17>
-	  10b79d:	48 c7 80 48 08 00 00 	movq   $0x0,0x848(%rax)
-	  10b7a4:	00 00 00 00
-	  10b7a8:	48 c7 80 50 08 00 00 	movq   $0x0,0x850(%rax)
-	  10b7af:	00 00 00 00
-	  10b7b3:	48 c7 80 58 08 00 00 	movq   $0x0,0x858(%rax)
-	  10b7ba:	00 00 00 00
-	  10b7be:	c6 80 60 08 00 00 00 	movb   $0x0,0x860(%rax)
-	  10b7c5:	f0 80 60 08 df       	lock andb $0xdf,0x8(%rax)
-	  10b7ca:	31 c0                	xor    %eax,%eax
-	  10b7cc:	c3                   	ret
-	  10b7cd:	48 8d 3c 16          	lea    (%rsi,%rdx,1),%rdi
-	  10b7d1:	48 39 fe             	cmp    %rdi,%rsi
-	  10b7d4:	0f 82 78 ff ff ff    	jb     10b752 <set_syscall_user_dispatch+0x22>
-	  10b7da:	e9 68 ff ff ff       	jmp    10b747 <set_syscall_user_dispatch+0x17>
-	  10b7df:	b8 f2 ff ff ff       	mov    $0xfffffff2,%eax
-	  10b7e4:	c3                   	ret
-
-Please note a series of NOPs that get replaced with an alternative:
-
-	    11f0:	65 48 23 05 00 00 00 	and    %gs:0x0(%rip),%rax
-	    11f7:	00
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
-v2: Include asm dumps of inlining in the commit message.
----
- arch/x86/include/asm/uaccess_64.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
-index c52f0133425b..3c1bec3a0405 100644
---- a/arch/x86/include/asm/uaccess_64.h
-+++ b/arch/x86/include/asm/uaccess_64.h
-@@ -26,8 +26,8 @@ extern unsigned long USER_PTR_MAX;
-  */
- static inline unsigned long __untagged_addr(unsigned long addr)
- {
--	asm (ALTERNATIVE("",
--			 "and " __percpu_arg([mask]) ", %[addr]", X86_FEATURE_LAM)
-+	asm_inline (ALTERNATIVE("", "and " __percpu_arg([mask]) ", %[addr]",
-+				X86_FEATURE_LAM)
- 	     : [addr] "+r" (addr)
- 	     : [mask] "m" (__my_cpu_var(tlbstate_untag_mask)));
- 
 -- 
-2.48.1
-
+With best wishes
+Dmitry
