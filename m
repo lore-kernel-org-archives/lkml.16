@@ -1,139 +1,109 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4186241C98;
-	Mon, 17 Mar 2025 14:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5823245036;
+	Mon, 17 Mar 2025 14:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222123; cv=none; b=NZXa7OzHI39N4EOy+uylV/f8asVvz6Pm4wzwLcWZfKSYOnT7OcCC97G9lAmLElGasiB+u6ysaDDGajOB+fKml6q/w1Jczy4iwB2J19BXzAkaS9EYOCw0iG+msHKiPQdTRPSFHu8YNBa70eWks/fHeGQ3bcoUWqvx2hSWjEBONPg=
+	t=1742222136; cv=none; b=ujy3XTjQzU/DUKqg7yLPjIqch7bS1+Dx1zB1Yq6UsDSzzRMBXFMJ8rmF1n8VpboF458XJKo7CBtV4iNNfFdQjjCBWgFs6LAu5R/s9+AwNDPAWxQL+es1ZPnfpvootlbDVMriklCewJtl48gy7R0N0m+s8HfC6gwmqnW5kxcVzMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222123; c=relaxed/simple;
-	bh=Yt3WgbrVQo8duGBSP1Jia0wgkU05qIskxVJQhvJpiV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UQspIFHMqRqDn6SdiqFMlXnks1bXVqWPYS7PlhkR/mFasvqfxPuP1fSMY9xwD3HcOFJZq3AlGkGi1ZasyHu0TMYTmky31yXK/wFoVofzhPD23+h2wcF7Q/v7iNyjCsVgRqs7+4L4exrkirt8A6NMrfG32mZqOcp6BXQd8D+omBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=JRXO7sqL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=wjKm4YMp; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1742222136; c=relaxed/simple;
+	bh=Os/3OUI8KCcOIG1iOxmuXB6ZFpAj0XoaeG61qBtx0NA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tQ1TmoAbjMWPxrP11SgiBg+0Uae59+6klbP2ZlY2IgHeoT+Czd9wie0eO8N/vOMlIFcCuBFILWxjIE70CWDYgTHzTKmFvVlxyNEtoQVVtIAcaKIambSi4a/pmyW0fuO0WA36eiHKns3yGXz2+jAjT02OxBX9L+++slzUvnXBQPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X33WEUha; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="JRXO7sqL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wjKm4YMp"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id F14CD1140098;
-	Mon, 17 Mar 2025 10:35:19 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Mon, 17 Mar 2025 10:35:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1742222119;
-	 x=1742308519; bh=2YSB9jrUO3YWPRHJXtZJF6w39S1fmkOod2mob/5TWPA=; b=
-	JRXO7sqLMoiym1IS/rElHi5heyyAdPhFUdkMfejJE+e7/ZI1zIMkWE9I6SWcSev7
-	udrth6sTL5KjMqpwlP7F1nPF0sBdrnfjwmqDbiPRGy8WAr1QjJ+3CEBckwr91GsE
-	3jtubLvlds+blpu7ZjOEojwQlHizgUx3m3YXKQ0RlSKWcgYA3l7hglJsuIoniRNZ
-	sfYVMkZIi0IumCQK8nHVbZbuwiWgbNGlbUASIlDJrl/0mhhVXBQXZ7JigcO7QxCJ
-	t18mZRZbBVyMwFO0c68878iN/ui2DikKiTjJ8+Xm6juP2+m9sFla9oT4WmZGpFrO
-	bGCzROiaaZbzqaaMK6nCxQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742222119; x=
-	1742308519; bh=2YSB9jrUO3YWPRHJXtZJF6w39S1fmkOod2mob/5TWPA=; b=w
-	jKm4YMpNXWUmpNt36OtTm92YSomhtqbQoxFc3H08aXn9aPUBHJH0edyYGRFMznm1
-	bUlwJ+v3BP7hdqD298P97WbvbDob0ntbW+9y9tLuX7CllupDgKh8g/lhcHXJgtb4
-	GLRE+UmFOvEhNHMOe5FnowGw8S39oAcgI0OjiNIkdCc/V1LBJmH+p7f8Cy3cWuBc
-	F4sqf1+3BxP13kBT9HqIhZkfnONAeZgibdG9RI2nsV6OCqt2FknccCycwnn8m5c5
-	J0zO+lNNqLjSpePoxoIEUyAtfqRomnle53Lzpl4bG8Bm+xomgtviZ6lPFapdb9X7
-	0NXvZ640OTV7r1z5XoEZQ==
-X-ME-Sender: <xms:JzPYZ6t029xOpdkopxRg73Jt_RADru25mk86WG2_1ZTVjfqioAh5zQ>
-    <xme:JzPYZ_dq3FN-qFWNIqGCJAXu4IfN4otAoV-V-KTGVcHtZWSbxI6k6Zw9yBnsDwmzv
-    2OifyBFtoQ9Gw>
-X-ME-Received: <xmr:JzPYZ1zNB4J5UB9ZyxJf7uzS012kj-Dmvw0F0Srr690Tg_t6lbMUtNnnxg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeeljeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tddunecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeffveeivedvkeejiedvteeggfeihfejtefghfeltdelledtueeg
-    heduvddvjeevhfenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgt
-    ohhmpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
-    epthhhohhmrghsrdifvghishhsshgthhhuhheslhhinhhuthhrohhnihigrdguvgdprhgt
-    phhtthhopegrgigsohgvsehkvghrnhgvlhdrughkpdhrtghpthhtohepmhgrtghosegrnh
-    gurhhoihgurdgtohhmpdhrtghpthhtohephhhisegrlhihshhsrgdrihhspdhrtghpthht
-    ohepjhhohhhnrdhoghhnvghssheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhope
-    hlihhnuhigqdgslhhotghksehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    lhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    epshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:JzPYZ1OEhr29cuNzu3OSg5YOzlewpUdp4kYwpaNI2gtFjQHCubIRKA>
-    <xmx:JzPYZ6-t8L-c8z_Dloch3rNmEym9Vl0jZ-lP7hreJf_EJ-vUTsr1fQ>
-    <xmx:JzPYZ9XJv1XAUp9rYRpGJFLQcdZqLqCNJN4RJhjveGTouAlAz-eW6A>
-    <xmx:JzPYZzff9wr73gR5j0Q77sS3MMOBTh4E8AD-q4ecbtmJaZrg89wE1w>
-    <xmx:JzPYZ6NncXCqcBum0CCdJVxmXRiH0dvxGNXkFnbMsPqRaQuikOXFRrUq>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 17 Mar 2025 10:35:18 -0400 (EDT)
-Date: Mon, 17 Mar 2025 15:33:55 +0100
-From: Greg KH <greg@kroah.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Martijn Coenen <maco@android.com>,
-	Alyssa Ross <hi@alyssa.is>, John Ogness <john.ogness@linutronix.de>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] loop: Properly send KOBJ_CHANGED uevent for disk device
-Message-ID: <2025031759-unlined-candle-1d91@gregkh>
-References: <20250317-loop-uevent-changed-v1-1-cb29cb91b62d@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X33WEUha"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39133f709f5so2720114f8f.0;
+        Mon, 17 Mar 2025 07:35:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742222133; x=1742826933; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w87Zh3I28Z1+Sqxqq72rJtkODwwHBc+MVhcgl8wWLzQ=;
+        b=X33WEUhab50tJOI/mwwnSQZGmqv1CRhRTg1NjUWfGiQo2MXxiFoqW5PzPMtTihkojd
+         GdOT8QYVCJ+ph/1AG+8r3qW15QNnjiRmJBNyablQfzootPOb76e2iCkjOY8GicP923Af
+         Cy172UBERuS590u56BgiAFD2a7HN0gfq7tAVkDpmzE63AaZ76024RgsDANcC61B8ZxT1
+         cnldEF2OiRnnH8b0nCN3H5N4zstJWV4eD+iGhJBInU4b/T+Nzco3pUCxLlEEK3ai1Xk9
+         Em1tiQcK6AWumBNocYhYyIP/W5dxctsrBJZgaG9RDojB0FqkI4TzGyEbld7aRipNmdPP
+         7PrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742222133; x=1742826933;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w87Zh3I28Z1+Sqxqq72rJtkODwwHBc+MVhcgl8wWLzQ=;
+        b=J6tBfWOVc4OHYwQoC5+q5AcUILZwL5126HtXUkF+yMsBNbD/XBGUjBxhvgEIjJq/2t
+         q5FYbL3VzTBFfTrNL1l5w4hE/OExw+nTPQICy0vHOPy/qdgMZBfDf4+WXnBByUjL/XwG
+         XGmGwKZatDQXEj/Pj+oZDInP+hhhuuRo8CdrxNJ6cPynEBky1iEQ0vkXoRKOIL+4Rn3O
+         832RoFfAUSrv+f95drX6DU7UfFq+HJE/DLmG+SRqXPL3io4BxrVdwVZFh0AJuAOKr6XH
+         +h+q/q0+ocE49sQgAKbPTHJGTkZ98sVlVjqIYEjojwVhv85Z+3Nr4a2I+00M8foz5wsP
+         U+rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUg75F7xYOMdVZJJKHhNrnb0dHLhmkRiTQ4Naqhlelpf6/PztlImjlLzvQdqib59l8Kzr2wQEacurIlONE=@vger.kernel.org, AJvYcCW40msMrNuC89cH2wXUNCMN+fQ7721Uqoak6nNadyDsEOQa4exl24oq5Fz2VsxsjsWzfUjAeoG5VqQ3@vger.kernel.org
+X-Gm-Message-State: AOJu0YySME+JfqiOEtfTurxsX/K0/SQ3nNwDsqsq/87yneAkE15nIgF7
+	5zECWcmNKq6nyJG6bfLTJmt1lc07NQm+Xle0p2N1l6bFxGhiJzo0
+X-Gm-Gg: ASbGncsJeRYWLgs0Aqve/9uO9N8lSNNU7viViW32sFbybMRrmVmNjsBy7PrmvYM6VZo
+	/M/l9geGGg4idyu6u/2YcVQUVmdws9b9Nso9Xy37l1eo+QDDd6MFRX6j1y5phyUQ3T9+RhS9giD
+	EGlx00iZVRghB9PBeoBcStFM3FcF4Lq+3mtPyhom8HTI24vZKiZ/2O20pSSsCybsisXgKgqQX3J
+	Tth0i4HTbltMmQFcI+A6jcxOwCSHmgh3pa2jU7VaEuuaT92SqOMjxWUUB7uHcpPY0ls8CeVYv+L
+	nKEfvyYF2kksxgCUrUBCwmLgErnztSsLS9nb6naefFhEkw==
+X-Google-Smtp-Source: AGHT+IGj2U95C2D/UDRSgWDo1hfyu3+i9z8iABs6gkm9zWiBp79gxMqCjLlCuVAE4sL2PJ8+U38jmA==
+X-Received: by 2002:adf:a348:0:b0:391:401f:bfd8 with SMTP id ffacd0b85a97d-39720584500mr11131524f8f.55.1742222132717;
+        Mon, 17 Mar 2025 07:35:32 -0700 (PDT)
+Received: from localhost ([194.120.133.58])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-395cb40cdd0sm15208107f8f.77.2025.03.17.07.35.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 07:35:32 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] PCI: brcmstb: make const read-only arrays static
+Date: Mon, 17 Mar 2025 14:34:56 +0000
+Message-ID: <20250317143456.477901-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250317-loop-uevent-changed-v1-1-cb29cb91b62d@linutronix.de>
 
-On Mon, Mar 17, 2025 at 03:13:25PM +0100, Thomas Weiﬂschuh wrote:
-> The wording "uncork" in the code comment indicates that it is expected that
-> the suppressed event instances are automatically sent after unsuppressing.
-> This is not the case, they are discarded.
-> In effect this means that no "changed" events are emitted on the device
-> itself by default. On the other hand each discovered partition does trigger
-> a "changed" event on the loop device itself. Therefore no event is emitted for
-> devices without partitions.
-> 
-> This leads to udev missing the device creation and prompting workarounds in
-> userspace, see the linked util-linux/losetup bug.
-> 
-> Explicitly emit the events and drop the confusingly worded comments.
-> 
-> Link: https://github.com/util-linux/util-linux/issues/2434
-> Fixes: 3448914e8cc5 ("loop: Add LOOP_CONFIGURE ioctl")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> ---
->  drivers/block/loop.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index c05fe27a96b64f1f1ea3868510fdd0c7f4937f55..fbc67ff29e07c15f2e3b3e225a4a37df016fe9de 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -654,8 +654,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
->  
->  	error = 0;
->  done:
-> -	/* enable and uncork uevent now that we are done */
->  	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
-> +	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
+Don't populate the const read-only arrays data and regs on the stack at
+run time, instead make them static.
 
-Why not just remove the place where the uevent was suppressed to start
-with?  It feels by manually sending a change event, you are doing
-exactly what the suppress was trying to prevent, which makes me think
-this is wrong.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-thanks,
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 8b2b099e81eb..d258b571f642 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -832,8 +832,8 @@ static int brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
+ 
+ static int brcm_pcie_post_setup_bcm2712(struct brcm_pcie *pcie)
+ {
+-	const u16 data[] = { 0x50b9, 0xbda1, 0x0094, 0x97b4, 0x5030, 0x5030, 0x0007 };
+-	const u8 regs[] = { 0x16, 0x17, 0x18, 0x19, 0x1b, 0x1c, 0x1e };
++	static const u16 data[] = { 0x50b9, 0xbda1, 0x0094, 0x97b4, 0x5030, 0x5030, 0x0007 };
++	static const u8 regs[] = { 0x16, 0x17, 0x18, 0x19, 0x1b, 0x1c, 0x1e };
+ 	int ret, i;
+ 	u32 tmp;
+ 
+-- 
+2.47.2
 
-greg k-h
