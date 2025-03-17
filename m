@@ -1,141 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E371DEFFD;
-	Mon, 17 Mar 2025 16:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828061A0BF3
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742230091; cv=none; b=Wrl1T+CSnDLAAUe4JwdiABbK3JlghXZKqqB19Bsd3lbjUoas1MyQvYSRebCnv01OvkIbJk2L7jvc8odjbnvGzsXBDDUMonTYwf6cf90ZIFDIy0xbRbzwKHv4zN5JGavRURVVMrAmioSAGgELQPUDoZyfLsAZYWTUBKofScBA5D8=
+	t=1742230147; cv=none; b=KeDw6aQebPXAfEjoBS4l+OfFm6sI6Q9JGM5HhSrFKyqB9z684YkXhFumdk9WPXDDZWFA+ghyCKSl6TjeDChuW9Spn35iMbJ6w35MrJLfeu233AkpZJT7IRCiauQrOL9s025MeNyM/ql0pohkkli5S7Ym1AVzQ6vmXt1Tfhk4MKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742230091; c=relaxed/simple;
-	bh=6LRjey91kAKbtfGT1kdcYHXdkjzmNzELr3+IyaNjcS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E0LGuR5c3dRlpA/MhUe7lD4FiVOvrNIjJrfPxHy9duObMzVhXZH25ijbk3UeSKhu+nqLyaxs+qxYpC+BfGHOtres8R/LLmEEgdf2GqsN88C4WGGLvdUzzoNK9J0X/+mjQQEfOcoE2AeBn0awAcRiJ9mgluk+lTlGFv2KnatI3Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yTSNjT/J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742230147; c=relaxed/simple;
+	bh=eM5va7AuXLT0rsHrtPonGC4+dBUXGMAWOPLF0ULzaE8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oLGmLIejfz78dsECKR63Ze+X0ps0SVVq0YBz3yAxgF90Tr5N8JuIBNAuiSkf2P8cGmAYV6T+YsqFlxAocLJFTRGFyYJDnpwrp2YNXycU69PxSf0YW3d6DJ0kbBGVnUnmyGLdx6KACS7Vf1WbqPx9UvbmB8/c3Rp68U/RmNQZsaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=SphrnGmx; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yTSNjT/J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364ABC4CEE3;
-	Mon, 17 Mar 2025 16:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742230091;
-	bh=6LRjey91kAKbtfGT1kdcYHXdkjzmNzELr3+IyaNjcS0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yTSNjT/J5Efwj3gx46L4Ufx0r3DJe6UhGPJayknglFogTlfkykNgDkPmIXSkupWHS
-	 p1wAVNw6B4xvlrEvLvL0GGEW00yuf1bTabAWYWNz0/Vo9HRUE6xxXoEi4lxJ0dCrQl
-	 +OKNVOqflFYIU6/sCQ9HSYROAwq9Mv/c7DQ3Ztn0=
-Date: Mon, 17 Mar 2025 17:46:46 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH 2/9] hwrng: arm-smccc-trng - transition to the faux
- device interface
-Message-ID: <2025031731-anyhow-askew-5731@gregkh>
-References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
- <20250317-plat2faux_dev-v1-2-5fe67c085ad5@arm.com>
- <2025031748-deface-wasting-b635@gregkh>
- <Z9gwNaUoTmqViPrh@bogus>
- <2025031709-unmoved-carton-c130@gregkh>
- <Z9g1CV6jgea8VpW4@bogus>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SphrnGmx"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5fe944a4243so1084187eaf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1742230144; x=1742834944; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=hR+2cdo6mmbMt3HXD2jP5VNCtOJ9m0Gv6fbcgcv/bBU=;
+        b=SphrnGmx4itMCN/ExoJlagg96dOO2GROqAOk5kcZ0CBC0m1fxSmJO1kDeb6MLPPW06
+         kB+NGW1cjPfDCQ56bQrADRBckubZ8uqZ529CRVpA5/c1GEuz+0M6B0nlJHURzm0bET24
+         cXVldmTY5NvTAyszkqxWY51qrbWCt3++YmLm0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742230144; x=1742834944;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hR+2cdo6mmbMt3HXD2jP5VNCtOJ9m0Gv6fbcgcv/bBU=;
+        b=sLhFJfNpSrcCQvBs+bVJ+TYN4DXFUFw2oWEHnvEdLu9hmvfMZ1jSnm51YKkGCrGLRM
+         9H/oh03qPXqmkII1oSSR4w4eJb5vvZXHhPBvctAPJoiwlEDM+VAAZ9BsntwqygYah8DN
+         CG4rjlUzxkNTVtP1SUiA5o6PH46YGf+/jjEHNWt5b9O76j8JVxxxEN2nbc7VACIIYmyg
+         jMt8ZCLTsR3H3U6N3Gi1nYylV3nCdJ9cBRAc1HMK+5prE0qvb6/w+Z46n6sOnSvpYdAX
+         q586vEqXIBHbUxMyNzSsFgoeJvuIQNmf1xfE8oLK7LvvO68yhQo+vly+9qhftGZPcQJF
+         vbhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ3nAq8J1m4oMb1vTzclmxtggeGHwXC7ir9OuadC+B3Tdz3bB/TcJsljv2fgD1re6Qpzz2UuMzqjcY+y4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIorW2MccBDO8B7CSMBSkSFEnr2tfDlwTqqCM/ApTOEpdAwgPw
+	DW0rsp8OfgqyOlL4lbmdKo9tUGiSbNGd6mf9NbwFp73vM2tKcVbnHs7mZjrE0g==
+X-Gm-Gg: ASbGncvB/6OYv0Y+h5uCZ4n4+D/vs85lEx0T9wpHOiXKQtsro115kV6JYbZfiJ/HgAF
+	y9aVHz62JHYWXesKaGLhWfZzGigYi3GIlAeJHXREXB6X2zAcEi867iPmKA20gmfamQpRlxLuTKz
+	OXzKI1/xKImip9ZacePDb0X/7M1MmXyF3ba+cJv3hrrWr/BOf2IID1TewhDXFUSdTfIZoR/llB2
+	aFFGmyXPJpjTrwGO2jir5G+Xv1RVV5dZv0zZJKK4zn8nqB3emP+KL8JwUx6QekoSy9Jhi497+zR
+	svuzjE1+oa3mtfzo6S8YmxH3C706bDGYGOm2q93fyatgQ8sKAzbVGTOgNPRyRRbngj+hC/nWzyQ
+	7Cwxi1EuF
+X-Google-Smtp-Source: AGHT+IEXhCY9xr89eX6tBMG7DkAAspzRtGTTpjNmGgFlbsiwNx2AOKEyzh8EpraAE7G5FQCFX748sA==
+X-Received: by 2002:a05:6820:883:b0:601:b7e1:9233 with SMTP id 006d021491bc7-601e45c8543mr6433144eaf.3.1742230144551;
+        Mon, 17 Mar 2025 09:49:04 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-601db6598aesm1673541eaf.5.2025.03.17.09.49.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 09:49:03 -0700 (PDT)
+Message-ID: <2464508f-864e-4697-8fd5-ffa5c06f64a0@broadcom.com>
+Date: Mon, 17 Mar 2025 09:49:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9g1CV6jgea8VpW4@bogus>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH stable 5.4 0/2] openvswitch port output fixes
+To: stable@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, Pravin B Shelar
+ <pshelar@ovn.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>,
+ Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+ Andrii Nakryiko <andriin@fb.com>, Sasha Levin <sashal@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, Willem de Bruijn <willemb@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, David Ahern <dsahern@kernel.org>,
+ =?UTF-8?Q?Beno=C3=AEt_Monin?= <benoit.monin@gmx.fr>,
+ Xin Long <lucien.xin@gmail.com>, Felix Huettner
+ <felix.huettner@mail.schwarz>,
+ "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:OPENVSWITCH" <dev@openvswitch.org>,
+ "open list:BPF (Safe dynamic programs and tools)" <bpf@vger.kernel.org>
+References: <20250317154023.3470515-1-florian.fainelli@broadcom.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250317154023.3470515-1-florian.fainelli@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 17, 2025 at 02:43:21PM +0000, Sudeep Holla wrote:
-> On Mon, Mar 17, 2025 at 03:30:15PM +0100, Greg Kroah-Hartman wrote:
-> > On Mon, Mar 17, 2025 at 02:22:45PM +0000, Sudeep Holla wrote:
-> > > On Mon, Mar 17, 2025 at 02:04:27PM +0100, Greg Kroah-Hartman wrote:
-> > > > On Mon, Mar 17, 2025 at 10:13:14AM +0000, Sudeep Holla wrote:
-> > > > > +MODULE_ALIAS("faux:smccc_trng");
-> > > > 
-> > > > Why do you need a branch new alias you just made up?  Please don't add
-> > > > that for these types of devices, that's not going to work at all (just
-> > > > like the platform alias really doesn't work well.
-> > > > 
-> > > 
-> > > Sure I will drop all of those alias. One question I have if the idea of
-> > > creating a macro for this is good or bad ? I need this initial condition
-> > > flag to make use of such a macro, so I didn't go for it, but it does
-> > > remove some boiler-plate code.
-> > > 
-> > > Let me know what do you think of it ?
-> > > 
-> > > Regards,
-> > > Sudeep
-> > > 
-> > > -->8 
-> > > diff --git i/include/linux/device/faux.h w/include/linux/device/faux.h
-> > > index 9f43c0e46aa4..8af3eaef281a 100644
-> > > --- i/include/linux/device/faux.h
-> > > +++ w/include/linux/device/faux.h
-> > > @@ -66,4 +66,30 @@ static inline void faux_device_set_drvdata(struct faux_device *faux_dev, void *d
-> > >  	dev_set_drvdata(&faux_dev->dev, data);
-> > >  }
-> > >  
-> > > +#define module_faux_driver(name, tag, init_cond)			\
-> > > +static struct faux_device_ops tag##_ops = {				\
-> > > +	.probe = tag##_probe,						\
-> > > +	.remove = tag##_remove,						\
-> > > +};									\
-> > > +									\
-> > > +static struct faux_device *tag##_dev;					\
-> > > +									\
-> > > +static int __init tag##_init(void)					\
-> > > +{									\
-> > > +	if (!(init_cond))						\
-> > > +		return 0;						\
-> > > +	tag##_dev = faux_device_create(name, NULL, &tag##_ops);		\
-> > > +	if (!tag##_dev)							\
-> > > +		return -ENODEV;						\
-> > > +									\
-> > > +	return 0;							\
-> > > +}									\
-> > > +module_init(tag##_init);						\
-> > > +									\
-> > > +static void __exit tag##_exit(void)					\
-> > > +{									\
-> > > +	faux_device_destroy(tag##_dev);					\
-> > > +}									\
-> > > +module_exit(tag##_exit);						\
-> > 
-> > Yes, I see that some of your changes could be moved to use this, so I
-> > think it is worth it.
-> > 
-> > But why can't you use module_driver() here?  Ah, that init_cond?  And
-> > the device.  Hm, why not put the init_cond in the probe callback?  That
-> > should make this macro simpler.
-> > 
-> 
-> I tried to keep the creation of the device itself conditional the way
-> it is today. Deferring the check to probe means the device gets created
-> unconditionally but won't be probed which is fine I guess. I was thinking
-> that device shouldn't show up on the bus if the condition is not met to
-> match the current scenario. I might be overthinking there.
+On 3/17/25 08:40, Florian Fainelli wrote:
+> This patch series contains some missing openvswitch port output fixes
+> for the stable 5.4 kernel.
 
-It will not show up anywhere if the probe call fails.
-
-> > And don't use "tag", that's an odd term here, just copy what
-> > module_driver() does instead please.
-> > 
-> 
-> Sure, I will not use it. It was just a name that came to my mind.
-> 
-> Also creating the macro builds the dependency. Do you prefer to push the
-> changes as is and the macro in one release and make use of the macro later.
-
-Let's see a series that adds the macro and uses it and we can figure it
-out from there.  If the macro is sane, I can just take that now for
-6.15-rc1 and then you can send the others to the different subsystems
-after that shows up.
-
-thanks,
-
-greg k-h
+Scratch that and the two others targeting 5.10 and 5.15, I missed that 
+DEBUG_NET_WARN_ON_ONCE was not added until later. Will submit a v2 later 
+today. Thanks!
+-- 
+Florian
