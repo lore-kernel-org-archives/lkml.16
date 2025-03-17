@@ -1,128 +1,141 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5981DE2AA;
-	Mon, 17 Mar 2025 16:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E371DEFFD;
+	Mon, 17 Mar 2025 16:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742230060; cv=none; b=kohCGNRo2ITmggEXGXqxkr91kUyFfmwDbTHT7i7bNksAccwN5yrEfnejDDHIObgKCBa7SstZyzho49OVMU0hCwGEtBsipJcBqQ+eX3CzTqHH6POcIgc9w1Mr7elbDurekFix1Q0JHYj2A+JpPtgzwyqGn/mZ2zAVB/Vijv6TYOA=
+	t=1742230091; cv=none; b=Wrl1T+CSnDLAAUe4JwdiABbK3JlghXZKqqB19Bsd3lbjUoas1MyQvYSRebCnv01OvkIbJk2L7jvc8odjbnvGzsXBDDUMonTYwf6cf90ZIFDIy0xbRbzwKHv4zN5JGavRURVVMrAmioSAGgELQPUDoZyfLsAZYWTUBKofScBA5D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742230060; c=relaxed/simple;
-	bh=XgPa90LY/PpieORERDS3+8kRabc2ceRRbQTEUppqSzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NDdozgDxD5LOoCwiVxFko6co36x3QhABLbdL6wqv4TPvkAZSMvkqnIhgkwNU+EmC/44/ofOWAGGM8KzeuW1+1SWcvp/M3Dl3mPHmYxxqZmnpzKnsOrKPCOq7ZdAsUoaeCfcc9kuLklz44s0LKW3kZtaz6tF+olI08dGlTvd3jl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=YP8lt0KR; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1742230091; c=relaxed/simple;
+	bh=6LRjey91kAKbtfGT1kdcYHXdkjzmNzELr3+IyaNjcS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E0LGuR5c3dRlpA/MhUe7lD4FiVOvrNIjJrfPxHy9duObMzVhXZH25ijbk3UeSKhu+nqLyaxs+qxYpC+BfGHOtres8R/LLmEEgdf2GqsN88C4WGGLvdUzzoNK9J0X/+mjQQEfOcoE2AeBn0awAcRiJ9mgluk+lTlGFv2KnatI3Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yTSNjT/J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="YP8lt0KR"
-Received: from [192.168.42.116] (p5b164989.dip0.t-ipconnect.de [91.22.73.137])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 503142FC0048;
-	Mon, 17 Mar 2025 17:47:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1742230054;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0+sqYxrzCaSfYTZoE/oMFfhzV583vx7qY1e1stV6xyk=;
-	b=YP8lt0KRyh83Z3zCJFIFF4kdE65UuW2VlNNvCi+l3K2Sx0TIPWY2usYcnN10O1VhPDQ8QL
-	FtqAt+78lxqQih39z581UtdF3g+k4JUEZzq7iXjcf7PqINu8MS96QJO7i9kAzqtYaogLbX
-	8Hy4M1OBtVZlpwNp6NLrpqIwtjlbm08=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <f742f82e-d533-431f-bf64-01cec4bead09@tuxedocomputers.com>
-Date: Mon, 17 Mar 2025 17:47:34 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yTSNjT/J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364ABC4CEE3;
+	Mon, 17 Mar 2025 16:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742230091;
+	bh=6LRjey91kAKbtfGT1kdcYHXdkjzmNzELr3+IyaNjcS0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yTSNjT/J5Efwj3gx46L4Ufx0r3DJe6UhGPJayknglFogTlfkykNgDkPmIXSkupWHS
+	 p1wAVNw6B4xvlrEvLvL0GGEW00yuf1bTabAWYWNz0/Vo9HRUE6xxXoEi4lxJ0dCrQl
+	 +OKNVOqflFYIU6/sCQ9HSYROAwq9Mv/c7DQ3Ztn0=
+Date: Mon, 17 Mar 2025 17:46:46 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 2/9] hwrng: arm-smccc-trng - transition to the faux
+ device interface
+Message-ID: <2025031731-anyhow-askew-5731@gregkh>
+References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
+ <20250317-plat2faux_dev-v1-2-5fe67c085ad5@arm.com>
+ <2025031748-deface-wasting-b635@gregkh>
+ <Z9gwNaUoTmqViPrh@bogus>
+ <2025031709-unmoved-carton-c130@gregkh>
+ <Z9g1CV6jgea8VpW4@bogus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Input: atkbd - Correctly map F13 - F24
-To: Hans de Goede <hdegoede@redhat.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250311180643.1107430-1-wse@tuxedocomputers.com>
- <20250311180643.1107430-2-wse@tuxedocomputers.com>
- <83ea44f6-c0ad-4cb0-a16e-dd4fa17b63c7@tuxedocomputers.com>
- <45fff318-7925-4328-9dca-999c00e271d2@redhat.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <45fff318-7925-4328-9dca-999c00e271d2@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9g1CV6jgea8VpW4@bogus>
 
-Hi again,
+On Mon, Mar 17, 2025 at 02:43:21PM +0000, Sudeep Holla wrote:
+> On Mon, Mar 17, 2025 at 03:30:15PM +0100, Greg Kroah-Hartman wrote:
+> > On Mon, Mar 17, 2025 at 02:22:45PM +0000, Sudeep Holla wrote:
+> > > On Mon, Mar 17, 2025 at 02:04:27PM +0100, Greg Kroah-Hartman wrote:
+> > > > On Mon, Mar 17, 2025 at 10:13:14AM +0000, Sudeep Holla wrote:
+> > > > > +MODULE_ALIAS("faux:smccc_trng");
+> > > > 
+> > > > Why do you need a branch new alias you just made up?  Please don't add
+> > > > that for these types of devices, that's not going to work at all (just
+> > > > like the platform alias really doesn't work well.
+> > > > 
+> > > 
+> > > Sure I will drop all of those alias. One question I have if the idea of
+> > > creating a macro for this is good or bad ? I need this initial condition
+> > > flag to make use of such a macro, so I didn't go for it, but it does
+> > > remove some boiler-plate code.
+> > > 
+> > > Let me know what do you think of it ?
+> > > 
+> > > Regards,
+> > > Sudeep
+> > > 
+> > > -->8 
+> > > diff --git i/include/linux/device/faux.h w/include/linux/device/faux.h
+> > > index 9f43c0e46aa4..8af3eaef281a 100644
+> > > --- i/include/linux/device/faux.h
+> > > +++ w/include/linux/device/faux.h
+> > > @@ -66,4 +66,30 @@ static inline void faux_device_set_drvdata(struct faux_device *faux_dev, void *d
+> > >  	dev_set_drvdata(&faux_dev->dev, data);
+> > >  }
+> > >  
+> > > +#define module_faux_driver(name, tag, init_cond)			\
+> > > +static struct faux_device_ops tag##_ops = {				\
+> > > +	.probe = tag##_probe,						\
+> > > +	.remove = tag##_remove,						\
+> > > +};									\
+> > > +									\
+> > > +static struct faux_device *tag##_dev;					\
+> > > +									\
+> > > +static int __init tag##_init(void)					\
+> > > +{									\
+> > > +	if (!(init_cond))						\
+> > > +		return 0;						\
+> > > +	tag##_dev = faux_device_create(name, NULL, &tag##_ops);		\
+> > > +	if (!tag##_dev)							\
+> > > +		return -ENODEV;						\
+> > > +									\
+> > > +	return 0;							\
+> > > +}									\
+> > > +module_init(tag##_init);						\
+> > > +									\
+> > > +static void __exit tag##_exit(void)					\
+> > > +{									\
+> > > +	faux_device_destroy(tag##_dev);					\
+> > > +}									\
+> > > +module_exit(tag##_exit);						\
+> > 
+> > Yes, I see that some of your changes could be moved to use this, so I
+> > think it is worth it.
+> > 
+> > But why can't you use module_driver() here?  Ah, that init_cond?  And
+> > the device.  Hm, why not put the init_cond in the probe callback?  That
+> > should make this macro simpler.
+> > 
+> 
+> I tried to keep the creation of the device itself conditional the way
+> it is today. Deferring the check to probe means the device gets created
+> unconditionally but won't be probed which is fine I guess. I was thinking
+> that device shouldn't show up on the bus if the condition is not met to
+> match the current scenario. I might be overthinking there.
 
-Am 17.03.25 um 13:06 schrieb Hans de Goede:
-> Hi,
->
-> On 11-Mar-25 19:10, Werner Sembach wrote:
->> Hi Hans, Hi Dimitry,
->>
->> resending this too on the v2 to not cause confusion:
->>
->> Regarding remapping KEY_ZENKAKUHANKAKU to KEY_TOUCHPAD_TOGGLE:
->>
->> Am 11.03.25 um 19:06 schrieb Werner Sembach:
->>> Currently only F23 is correctly mapped for PS/2 keyboards.
->>>
->>> Following to this table:
->>> https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/translate.pdf
->>>
->>> - F24 and Zenkaku/Hankaku share the same scancode, but since in real world
->>> Zenkaku/Hankaku keys seem to just use the tilde scancode, this patch binds the
->>> scancode to F24. Note that on userspace side the KEY_ZENKAKUHANKAKU keycode is
->>> currently not bound in xkeyboard-config, so it is (mostly*) unused anyway.
->> I think what the firmware vendor actually wanted to do was to send ctrl+super+f24 upon touchpad toggle. This would somewhat fall in line with, for example, the copilot key being implemented as shift+super+f23.
-> I agree that that seems to be the intent.
->
->> Following this, my suggestion is to do this remapping and handle the rest in xkeyboard-config
-> xkeyboard config already contains mappings for F13 - F18 and F20-F23 in
-> /usr/share/X11/xkb/symbols/inet
->
-> So all that needs to happen there is map FK19 -> F19 and FK24 -> F24.
->
-> And then teach KDE + GNOME that ctrl+super+f24 means touchpad-toggle.
+It will not show up anywhere if the probe call fails.
 
-Alternative suggestion, again following how the copilot key is implemented:
+> > And don't use "tag", that's an odd term here, just copy what
+> > module_driver() does instead please.
+> > 
+> 
+> Sure, I will not use it. It was just a name that came to my mind.
+> 
+> Also creating the macro builds the dependency. Do you prefer to push the
+> changes as is and the macro in one release and make use of the macro later.
 
-key <FK19>   {      [ F19 ]       };
-[...]
-key <FK23>   {      [ XF86TouchpadOff, XF86Assistant ], type[Group1] = 
-"PC_SHIFT_SUPER_LEVEL2" };
-key <FK24>   {      [ F24, XF86TouchpadToggle ], type[Group1] = 
-"PC_CONTROL_SUPER_LEVEL2" };
+Let's see a series that adds the macro and uses it and we can figure it
+out from there.  If the macro is sane, I can just take that now for
+6.15-rc1 and then you can send the others to the different subsystems
+after that shows up.
 
-Then only xkb has to be touched again, but not KDE and GNOME.
+thanks,
 
->
-> We could maybe get away with also dropping the weird mappings for FK13 - FK18
-> and map those straight to F13 - F18, but we need the special mappings
-> for F20 - F23 to stay in place to not break stuff.
-
-Good question
-
-XF86Tools launches system settings on KDE.
-
-XF86Launch5-9 do nothing by default afaict.
-
-Looking at the links in the git log of xkeyboard-config (commit 
-1e94d48801bf8cb75741aa308d4cdfb63b03c66c and 
-01d742bc5cd22543d21edb2101fec6558d4075db) these seems to be device specific 
-bindings that got accepted in the default config because the keys where unbound 
-before.
-
-Best regards,
-
-Werner
-
->
-> Regards,
->
-> Hans
->
->
+greg k-h
