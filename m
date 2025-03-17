@@ -1,152 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5116B20468E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10226204597
 	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742230407; cv=none; b=m0g6vxc5X0Yk0CIDY74BwXnitrlgyyMnfoDD1vQmtyEoUClYi1YydQtw+aypvZYVCxMuW5guGugiJkCbOXBt/JY93dWTwFA+1+wu9e5hYPbhJIqcXJ2o+KZ6VNlmnaORWB98zgkSnf/volo88XYSveZZLu3LytwCjLW/ImbMm2Y=
+	t=1742230408; cv=none; b=XsT99Qcsj45tjonq4z2+LI/6YeLmlNDVbD57J11IYmE6ccfVinJhUtD4V1M0mJj/k1XPmXXSXLVJtwsiGZ/z1Z+6jso6ZGHmK6gp/e96fDlQYXAfVH1IrAN6ldfYKafHk1We/32wQ2XPLQUNqd7GAWGKhCLKcVDFUlu4NwVnbgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742230407; c=relaxed/simple;
-	bh=iJrqqXJgUqBoWhlvG19Hd6SiAnGy58C4nmpyNGGoB8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D2A51Au+oaL2y9RGZ8mZqmyYCDE4hpfWdZaewNXbg+9RvvgMz+oL+TAcqaSLpS73ErAuKVJcDdZEm+qmT6qQh30Ve83luzcGhgAumkz1n2OdegoOCZLP7/1YGch9+QtQRxLl/p9FqT7r0RRI1sKOTaG7zKkXavbxRSOBYZTnoCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WEI++gdz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zmIeOjuK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742230408; c=relaxed/simple;
+	bh=qXnVOgqYG1FQiAJ7DrIUcFxKM+SXGAYFBrMi0yRhVLE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VBNzCRvsWlWAxwp0Tb6BVEPjqrdf6X0JXKFbapSwSkbAChpfJCN8gKsCTJsv/BfZma1CEoljmUPtXXZ3UsDNylsVGdR6B98qtuE7/M+msWACdOII9+9RD48LKcjB4LsAuip5pbFzOfceL5GhNF0B3NvPp570193Mxa3wViHue48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G3Y6SovF; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WEI++gdz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zmIeOjuK"
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742230405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EZneOLcyys9a4jDakDRYtIPf3Hs5hi9xTLfvMDJmSfg=;
-	b=WEI++gdzHJ9/HhnG44xEXKQfXyzCqHAScx9NLyzUgBXEK8lDERccJqLK/wnOn3xV5Eo5FL
-	L8auREwD63oCjYg3G8jkqlSnDqmMLSPJAz/YE9n+EqtJIC1qd8eB4IE636P3rytukOvUnT
-	T2vkOfl3fUJ+Cqf8GqiYYKPpBDazdHTv0KoX6SJwcKGZv3TBGOcH1PzYBWa/0QrNU7W/p8
-	IuEM4IqXj8OuuXmHaBy50BGdaqAUswvao7kiIAPu+JVEoxOHjRJBk0nLA//aiLekvVewcw
-	VGCR9R8JveQCM/JoKfmqciLL7PZcdcJ4RwjsygOSIKbwAEKVaKxHBSQjPD2MHg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742230405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EZneOLcyys9a4jDakDRYtIPf3Hs5hi9xTLfvMDJmSfg=;
-	b=zmIeOjuKAAQuzOhJlh73GJMfE52eMUXlAswzD+wIo+iDgUBEQr4vf8Z4A4nMyzxnDDXvTc
-	DywEdELVrEFLkMDw==
-To: Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	x86@kernel.org,
-	x86-cpuid@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v2 18/29] x86/cacheinfo: Use enums for cache descriptor types
-Date: Mon, 17 Mar 2025 17:47:34 +0100
-Message-ID: <20250317164745.4754-19-darwi@linutronix.de>
-In-Reply-To: <20250317164745.4754-1-darwi@linutronix.de>
-References: <20250317164745.4754-1-darwi@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G3Y6SovF"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so6276244a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742230406; x=1742835206; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=v444Ih8Wrl3P9CM41VrD5YikquTct6TP/BZ+x7IqEJw=;
+        b=G3Y6SovF+SS2UXIOsTCgWKScWPrmOHoD9kfv6i5s2qv3KL2EO545T4qI0XeA9mJJlx
+         YlqWGkPuqSMwIkDxFjZUNzKIsj2uiVgsqhDQpeekpXMb5VgOOlCuGblSc7nYGvwAH7uj
+         MzyLDXaeoc4OIZDzMYz2OeArIqOOH1giH87UMAGHQCsKpLSLKpnL0OfOqQDMhg9zrEoH
+         XOdlf28YV1+vZzrPmdbzTJ6S0fEuUQwJLd8p2LVumexoI3FDGkppoBkzveE15BnajrDm
+         wmrgHN5pXLr6RQyFH9D2tbs3LKfYKkoB29mCBBCiw+Rc/0ZAo7wt1lucSTDE3pmx9p5N
+         DPVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742230406; x=1742835206;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v444Ih8Wrl3P9CM41VrD5YikquTct6TP/BZ+x7IqEJw=;
+        b=enSEzLA1uqKlUOoARPmNHZMOOY/agI7YuFdKFqwIHGZl17qxEYN738IvCmHcDM6ncV
+         uybK713XRejrnwFWBT6PaIgEl9oEIYDeomvZO6OaOkIcrnOOEYWdk8/ZfH/2qjDRcmqi
+         NLhmEj2xdLVgwAFGu+PvxBmNP4DYAWLh04dHpFKlGuHp2YexY2aUAqZ3iGL5oq5rAHlt
+         njqFvOj7ydtTd4lQzZr6mfev1JXS7COzkI9MutFy7r+S8MCgKTp9wINK2WyuPmUE7DAs
+         aCQuETGsF7tk77IS0f5KXjAw5KvgtXwKEkYvQnBC3efNVDnM2qq7j0BZi4vq4cN7KDqO
+         Macw==
+X-Forwarded-Encrypted: i=1; AJvYcCUttDhzzm9da3YzfCDCsaS+xT5xlqYUd4yw3bjVMyFvlCocfmzy2wWP2+6Gw1YF7nQEFgk2U17RsW4P9uw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2V5zBIaKWvic7woz8KO3vYtTGE9JNh4pfa0A9RriF3sCN2OGV
+	5uEKT4mysSc/Bg0AqC8hA4jVmuJNpdbmAtc+BK9AfIvDTPWiwgr73KGExgL/DcnZa+XzO+6t0OX
+	PaQ==
+X-Google-Smtp-Source: AGHT+IFOoYATiC/rIu32xRtF+lQHMNYL63/M8Ury4RfsKkWn2hqTxV2zJEn9dcXHvExkZwAcFk/2LTNCnBE=
+X-Received: from pgvo23.prod.google.com ([2002:a65:6157:0:b0:ad5:45a5:644c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3397:b0:1f5:769a:a4b2
+ with SMTP id adf61e73a8af0-1fa4428f019mr428693637.17.1742230406330; Mon, 17
+ Mar 2025 09:53:26 -0700 (PDT)
+Date: Mon, 17 Mar 2025 09:53:24 -0700
+In-Reply-To: <87wmcn4x78.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250315030630.2371712-1-seanjc@google.com> <20250315030630.2371712-3-seanjc@google.com>
+ <87wmcn4x78.ffs@tglx>
+Message-ID: <Z9hThFNFrrbXjkjc@google.com>
+Subject: Re: [PATCH 2/8] x86/irq: Track if IRQ was found in PIR during initial
+ loop (to load PIR vals)
+From: Sean Christopherson <seanjc@google.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Jacob Pan <jacob.jun.pan@linux.intel.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-The leaf 0x2 one-byte cache descriptor types:
+On Mon, Mar 17, 2025, Thomas Gleixner wrote:
+> On Fri, Mar 14 2025 at 20:06, Sean Christopherson wrote:
+> > @@ -409,25 +409,28 @@ static __always_inline bool handle_pending_pir(u64 *pir, struct pt_regs *regs)
+> >  {
+> >  	int i, vec = FIRST_EXTERNAL_VECTOR;
+> >  	unsigned long pir_copy[4];
+> > -	bool handled = false;
+> > +	bool found_irq = false;
+> >  
+> > -	for (i = 0; i < 4; i++)
+> > +	for (i = 0; i < 4; i++) {
+> >  		pir_copy[i] = READ_ONCE(pir[i]);
+> > +		if (pir_copy[i])
+> > +			found_irq = true;
+> > +	}
+> 
+> That's four extra conditional branches. You can avoid them completely. See
+> delta patch below.
 
-	CACHE_L1_INST
-	CACHE_L1_DATA
-	CACHE_L2
-	CACHE_L3
+Huh.  gcc elides the conditional branches when computing found_irq regardless of
+the approach; the JEs in the changelog are from skipping the XCHG.
 
-are just discriminators to be used within the cache_table[] mapping.
-Their specific values are irrelevant.
+But clang-14 does not.  I'll slot this in.
 
-Use enums for such types.
-
-Make the enum packed and static assert that its values remain within a
-single byte so that the cache_table[] array size do not go out of hand.
-
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
----
- arch/x86/include/asm/cpuid/types.h | 13 +++++++++++++
- arch/x86/kernel/cpu/cacheinfo.c    |  9 ++-------
- 2 files changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/include/asm/cpuid/types.h b/arch/x86/include/asm/cpuid/types.h
-index 864047113e37..a66192f9df4c 100644
---- a/arch/x86/include/asm/cpuid/types.h
-+++ b/arch/x86/include/asm/cpuid/types.h
-@@ -2,6 +2,7 @@
- #ifndef _ASM_X86_CPUID_TYPES_H
- #define _ASM_X86_CPUID_TYPES_H
- 
-+#include <linux/build_bug.h>
- #include <linux/types.h>
- 
- /*
-@@ -42,4 +43,16 @@ union leaf_0x2_regs {
- 	u8			desc[16];
- };
- 
-+/*
-+ * Leaf 0x2 1-byte descriptors' cache types
-+ * To be used for their mappings at cache_table[]
-+ */
-+enum _cache_table_type {
-+	CACHE_L1_INST,
-+	CACHE_L1_DATA,
-+	CACHE_L2,
-+	CACHE_L3
-+} __packed;
-+static_assert(sizeof(enum _cache_table_type) == 1);
-+
- #endif /* _ASM_X86_CPUID_TYPES_H */
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index 777f95c86e03..9f5bf57fd4fc 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -23,11 +23,6 @@
- 
- #include "cpu.h"
- 
--#define CACHE_L1_INST	1
--#define CACHE_L1_DATA	2
--#define CACHE_L2	3
--#define CACHE_L3	4
--
- /* Shared last level cache maps */
- DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_llc_shared_map);
- 
-@@ -41,7 +36,7 @@ unsigned int memory_caching_control __ro_after_init;
- 
- struct _cache_table {
- 	unsigned char descriptor;
--	char cache_type;
-+	enum _cache_table_type type;
- 	short size;
- };
- 
-@@ -517,7 +512,7 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
- 			if (!entry)
- 				continue;
- 
--			switch (entry->cache_type) {
-+			switch (entry->type) {
- 			case CACHE_L1_INST:	l1i += entry->size; break;
- 			case CACHE_L1_DATA:	l1d += entry->size; break;
- 			case CACHE_L2:		l2  += entry->size; break;
--- 
-2.48.1
-
+Thanks!
