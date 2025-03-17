@@ -1,190 +1,120 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 784EF23C392;
-	Mon, 17 Mar 2025 12:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0225823C8D1
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 12:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742215990; cv=none; b=Hqro18nnAcAcyuLuEsyI+3/gATrYnx4I63zNAJ3bbdFqpoQ/Dsk4cQjcLS3VoMHwxBdaJ1awcotkFL2ZBXLz88BHYtiAj9w9iWSTqw8aOe17LqCoR0UpOnryWh29s8lfJhVAnHhX8NEBniZdIzVYAbP1Bh8t2vYqGMgM3yheyUo=
+	t=1742215993; cv=none; b=CxMPj5Nw5p1Ve5XVvq2J8TlccjfsNEELxnrc+UNjYXUluF6A+RG2eHWPVOyL+95zTP3MA1kMhny5Sgf3S5nqM6zrjTm5XMwAD+ARPbbDKIusCYqOwm/AKJYc04+pqg9YYT5BJp4Zq38Hz5jHS9eYe5xpKljOomP4DYsHqLiEVPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742215990; c=relaxed/simple;
-	bh=SnG8t4ZHTw/mTzkb8/QHpGoz+pEORF9Ygx+G+xb2i8Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CZngTg9b7LF/Zki2OXSjYmKD53k79pUCKK4fkjkKW9pG0AHc+qPJKkMVfTAYhAN1VWHgXgmgJYh9Natt6qwqDTBHTZL96niFjO3Y1Dzgd3latfqMfNvEx/3eT7Qod5EQCV5ZZYUXJG3T1Z90NAcl3pM9LuNoFnn2ZdyDuhL56q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jB0mvXCk; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1742215993; c=relaxed/simple;
+	bh=3EZAx5nVQbEmbxHxOEIgu+zrRNJbaozapqGR2rf0Kj4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=at0VjLv+/Yg53qvWIaYaEvOV35fYOwQGnyHqAMyP0vEnHgdGgBxiJbaLqsUpNlM27xuQyO2aOwkclHk2FKIxpyOJGIuJVaZDWyHYFA80Y+MaIBx1CUd1b48IS8oRFZRkiY9kGfyFEDbHOgT7aJ1irx0PvMXwIWyeEQo9BcCxsu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dzCdsjVI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IHleJdvg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dzCdsjVI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IHleJdvg; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jB0mvXCk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=oBnaM
-	2tQUy/4jIsYzZe7U/N1BbRaO8mY/ZrPYIqr0qs=; b=jB0mvXCkXpHIE5tE3vO2p
-	paWselfgmfLmJ3raT5tdDgNab4somZOjoYQMXHOfcg3nWy470eD/2JrV17kmKIE9
-	xd9Jthrz5gIQmJBn9vEnfe4qKl3h9eZXaxbHKSP/BpK/bYdrNMzxrlWOb+Z3vFNd
-	+1G8AXf6mcEnpmEUxXXCVY=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wAXas0LG9hnSGoGAA--.1153S4;
-	Mon, 17 Mar 2025 20:52:28 +0800 (CST)
-From: Ran Xiaokai <ranxiaokai627@163.com>
-To: vishalc@linux.ibm.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	ran.xiaokai@zte.com.cn,
-	ranxiaokai627@163.com,
-	rostedt@goodmis.org
-Subject: Re: [PATCH] tracing/osnoise: Fix possible recursive locking for cpus_read_lock()
-Date: Mon, 17 Mar 2025 12:52:26 +0000
-Message-Id: <20250317125226.2720728-1-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <Z8AW2Ny1NrKNh_dZ@linux.ibm.com>
-References: <Z8AW2Ny1NrKNh_dZ@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dzCdsjVI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IHleJdvg";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dzCdsjVI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IHleJdvg"
+Received: from pobox.suse.cz (unknown [10.100.2.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 152EA21C18;
+	Mon, 17 Mar 2025 12:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742215990; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aGsH6QgIA++Fd8yvriC2jCRr27WERveOdOFTS8rRhts=;
+	b=dzCdsjVI8c0DwvbAHOJv2/tCAxZMmaW6qlqXi2bY7wsSvU4vk1gKmn1odkzGL/q723Q8DO
+	EHGmHGmVHxIfszLWrb6Z1DrWP8PSHndV3e8YP2PZEAMsbU99LFKYEcxUqGZCISzOroHVTX
+	wWARUEhwpK/jZJVlUmevPDI9rJB6i9g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742215990;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aGsH6QgIA++Fd8yvriC2jCRr27WERveOdOFTS8rRhts=;
+	b=IHleJdvg4dYI3h+4HJH357WZmM0YgtkJx9IJtOaJPKHFPyiWOGwQoJT+bi0ozv4wpQj4ZI
+	LMya98UQgE1wa+Cg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742215990; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aGsH6QgIA++Fd8yvriC2jCRr27WERveOdOFTS8rRhts=;
+	b=dzCdsjVI8c0DwvbAHOJv2/tCAxZMmaW6qlqXi2bY7wsSvU4vk1gKmn1odkzGL/q723Q8DO
+	EHGmHGmVHxIfszLWrb6Z1DrWP8PSHndV3e8YP2PZEAMsbU99LFKYEcxUqGZCISzOroHVTX
+	wWARUEhwpK/jZJVlUmevPDI9rJB6i9g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742215990;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aGsH6QgIA++Fd8yvriC2jCRr27WERveOdOFTS8rRhts=;
+	b=IHleJdvg4dYI3h+4HJH357WZmM0YgtkJx9IJtOaJPKHFPyiWOGwQoJT+bi0ozv4wpQj4ZI
+	LMya98UQgE1wa+Cg==
+Date: Mon, 17 Mar 2025 13:53:10 +0100 (CET)
+From: Miroslav Benes <mbenes@suse.cz>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Brendan Jackman <jackmanb@google.com>, 
+    Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH 10/13] objtool: Add --Werror option
+In-Reply-To: <e423ea4ec297f510a108aa6c78b52b9fe30fa8c1.1741975349.git.jpoimboe@kernel.org>
+Message-ID: <alpine.LSU.2.21.2503171352150.4236@pobox.suse.cz>
+References: <cover.1741975349.git.jpoimboe@kernel.org> <e423ea4ec297f510a108aa6c78b52b9fe30fa8c1.1741975349.git.jpoimboe@kernel.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAXas0LG9hnSGoGAA--.1153S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuF47Cr1DAF48uw17CrykKrg_yoWrWw13pr
-	Z3KFy7Jw4jkryvv34UZ3W5A340q3yjqF48tryktw1rA3Z8uw4aqr1Yga4Fq345ury8urW2
-	v3WqyFZxuw4DXw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUemhrUUUUU=
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbB0gkTTGfYF4AkXwABsW
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pobox.suse.cz:helo,pobox.suse.cz:mid,suse.cz:email]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
->On Tue, Feb 25, 2025 at 12:31:32PM +0000, Ran Xiaokai wrote:
->> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->> 
->> Lockdep reports this deadlock log:
->> ============================================
->> WARNING: possible recursive locking detected
->> --------------------------------------------
->> sh/31444 is trying to acquire lock:
->> ffffffff82c51af0 (cpu_hotplug_lock){++++}-{0:0}, at:
->> stop_per_cpu_kthreads+0x7/0x60
->> 
->> but task is already holding lock:
->> ffffffff82c51af0 (cpu_hotplug_lock){++++}-{0:0}, at:
->> start_per_cpu_kthreads+0x28/0x140
->> 
->> other info that might help us debug this:
->>  Possible unsafe locking scenario:
->> 
->>        CPU0
->>        ----
->>   lock(cpu_hotplug_lock);
->>   lock(cpu_hotplug_lock);
->> 
->> Call Trace:
->>  <TASK>
->>  __lock_acquire+0x1612/0x29b0
->>  lock_acquire+0xd0/0x2e0
->>  cpus_read_lock+0x49/0x120
->>  stop_per_cpu_kthreads+0x7/0x60
->>  start_kthread+0x105/0x120
->>  start_per_cpu_kthreads+0xdd/0x140
->>  osnoise_workload_start+0x261/0x2f0
->>  osnoise_tracer_start+0x18/0x4
->> 
->> In start_kthread(), when kthread_run_on_cpu() fails,
->> cpus_read_unlock() should be called before stop_per_cpu_kthreads(),
->> but both start_per_cpu_kthreads() and start_kthread() call the error
->> handling routine stop_per_cpu_kthreads(),
->> which is redundant. Only one call is necessary.
->> To fix this, move stop_per_cpu_kthreads() outside of start_kthread(),
->> use the return value of start_kthread() to determine kthread creation
->> error.
->> The same issue exists in osnoise_hotplug_workfn() too.
->> 
->> Reviewed-by: Yang Guang <yang.guang5@zte.com.cn>
->> Reviewed-by: Wang Yong <wang.yong12@zte.com.cn>
->> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->> ---
->>  kernel/trace/trace_osnoise.c | 10 +++++++---
->>  1 file changed, 7 insertions(+), 3 deletions(-)
->> 
->> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
->> index 92e16f03fa4e..38fb0c655f5b 100644
->> --- a/kernel/trace/trace_osnoise.c
->> +++ b/kernel/trace/trace_osnoise.c
->> @@ -2029,7 +2029,6 @@ static int start_kthread(unsigned int cpu)
->>  
->>  	if (IS_ERR(kthread)) {
->>  		pr_err(BANNER "could not start sampling thread\n");
->> -		stop_per_cpu_kthreads();
->>  		return -ENOMEM;
->>  	}
->>  
->> @@ -2097,7 +2096,7 @@ static void osnoise_hotplug_workfn(struct
->> work_struct *dummy)
->>  		return;
->>  
->>  	guard(mutex)(&interface_lock);
->> -	guard(cpus_read_lock)();
->> +	cpus_read_lock();
->>  
->>  	if (!cpu_online(cpu))
->>  		return;
->> @@ -2105,7 +2104,12 @@ static void osnoise_hotplug_workfn(struct
->> work_struct *dummy)
->>  	if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
->>  		return;
->>  
->> -	start_kthread(cpu);
->> +	if (start_kthread(cpu)) {
->> +		cpus_read_unlock();
->> +		stop_per_cpu_kthreads();
->
->Is it right to call stop_per_cpu_kthreads() which stops osnoise kthread
->for every other CPUs in the system if a failure occurs during hotplug of a
->CPU?
+On Fri, 14 Mar 2025, Josh Poimboeuf wrote:
 
-I also suspect that this is not a rational behavior.
+> Any objtool warning has the potential of reflecting (or triggering) a
+> major bug in the kernel or compiler which could result in crashing the
+> kernel or breaking the livepatch consistency model.
+> 
+> In preparation for failing the build on objtool errors/warnings, add a
+> new --Werror option.
+> 
+> [ jpoimboe: commit log, comments, error out on fatal errors too ]
+> 
+> Co-developed-by: Brendan Jackman <jackmanb@google.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 
->On another note, since stop_per_cpu_kthreads() invokes stop_kthread()
->for every online CPU. It's better to remove stop_per_cpu_kthreads() from
->start_kthread() and handle the error in `osnoise_hotplug_workfn` 
+Shouldn't be there also Brendan's SoB? I think these tags should always 
+come in pairs.
 
-Hi, Vishal
-I did this in my first versin, something like this:
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 
-@@ -2097,7 +2096,7 @@ static void osnoise_hotplug_workfn(struct
-work_struct *dummy)
- 		return;
- 
- 	guard(mutex)(&interface_lock);
--	guard(cpus_read_lock)();
-+	cpus_read_lock();
- 
- 	if (!cpu_online(cpu)) {
-+		cpus_read_unlock();
- 		return;
-	}
-
- 	if (!cpumask_test_cpu(cpu, &osnoise_cpumask)) {
-+		cpus_read_unlock();
- 		return;
-	}
--	start_kthread(cpu);
-+	if (start_kthread(cpu)) {
-+		cpus_read_unlock();
-+		stop_per_cpu_kthreads();
-+		return;
-+	}
-+	cpus_read_unlock();
- }
-
-We have to drop the guard() and call unlock() manually,
-this somewhat makes the code redundant.
-
->	Vishal
->> +		return;
->> +	}
->> +	cpus_read_unlock();
->>  }
->>  
->>  static DECLARE_WORK(osnoise_hotplug_work, osnoise_hotplug_workfn);
->> -- 
->> 2.15.2
->> 
-
+M
