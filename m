@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5006F22A4D3;
-	Mon, 17 Mar 2025 07:01:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C37322D4F6;
+	Mon, 17 Mar 2025 07:01:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742194886; cv=none; b=jDDyBhMbFKk5crS/TKNdijWzQDdaUSZ6I10hGou+1YIXrkSX5HIn2RgkDzf6DvHXVd0wjeLSq6grRNGmIG5k+FkwkcFqgjVEjK8pewm6rP/M5AFTSO+L8LSNOMKOc8ZEe7uNT+OVpst4Xa9A+mqfD1m2fr7+nmjPifbbCiINlZ8=
+	t=1742194890; cv=none; b=QvGU8X0oTqWM2sCeH3OKNancm2ASZYb61uFf5Zz/c16qHGiD0B9VwgLBvdIX9K/V5lQEL6LTAhvTwhDGUdwo6YYGAfly/HlY7iXiD7RJLtkoZai5rlWah8D9jB1pq8boBnCaZKysc3N/pC6vvaBXzaxqz7Vn2DHuILVf/8U68VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742194886; c=relaxed/simple;
-	bh=S+XImMzdVUV9r9EFo8L+yAW5p+vSzmK/coEDq0u0j+I=;
+	s=arc-20240116; t=1742194890; c=relaxed/simple;
+	bh=HrxMMX96ZRTa4wo+i3IcrhvmJQTlSR2eUo1YODDfeN0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iAKCv/rhIFbn7ezJyWKEJ638+TvLvczIlS34DHkr83ru/mtU+RwwaOtuUWsD1RQdIPFSoWjntU3AgiYirhXW1L5OleP6GyDQB2T1x0u+yJ/rYAfi+0YQvudfj4QaxEXBxYl1vLPPEfdD7A0E90a+7fH/1IDTpTcO6NVKxRBsueQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsPPor6R; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fn01DtvBatquCGcfwq1cRUmbZ4KJYYIy5VlFgWHdnIdvRUowhI62OXArxOs8d1hIWT/P6Z3z9OhgT1TaoxxOpiBrSJ/jsK40NNp3U1xIWc+9oHFicSV/VRxENqn9G4knTGyZ/26EcgnyeYtlipS+C/SVHHpVCoSw/xDBCMC7SK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOSDBXFZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsPPor6R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 359CFC4CEEE;
-	Mon, 17 Mar 2025 07:01:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOSDBXFZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 952E6C4CEF2;
+	Mon, 17 Mar 2025 07:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742194886;
-	bh=S+XImMzdVUV9r9EFo8L+yAW5p+vSzmK/coEDq0u0j+I=;
+	s=k20201202; t=1742194890;
+	bh=HrxMMX96ZRTa4wo+i3IcrhvmJQTlSR2eUo1YODDfeN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WsPPor6Rey9Jc3MQ+L5KkubgT27WjCCTSfPtPGQZ7mSAdQUew6s6pq3hgHi3/Xjqt
-	 Nx6ner8er3qNkgVduJu220dadEetCULjyXo4TDkxKcHCr0SCUBWq59rF98kri9vSYh
-	 C7EhvDmdIEQXVbye04sLXEtxQPOYhsNuQNebrBvSFO7PgzTk1tadOiJhMs5g3BnigM
-	 vu/91xVoWk+ZaJHgcUEqWFTKO8h5NnR2hDEgam2EI51FUZ2tdYypHi5QtePcH4xDc5
-	 LvUN7PZvTwmjStxTW+NPQ3ly0uZaqw/DUk6lRl4bmZ0OeJPrCRtffR5JoJfNnXqeuT
-	 0V7Po9cO7187A==
+	b=LOSDBXFZ76MVEVMrv7QouOG/Y7ClG8+4SNTregw5s694lmt8JvJQcy48GL69UtKeH
+	 DyGEImpxorygeTyKUpGdmLJLaA7ax4qqeXz0tlRuprTYX06v5+b7bnShnolbJIlL9g
+	 bvFWOokoNLshk4bC2nRAj7gWGRS45RNTZ26/9qVhk5IiAOcuMNBHmzUXCeXzJRrdep
+	 rii7qFz+RFMlOypYq+YkXN04VyzD+aOSUvRwH1IAstDflNKI87ZTjKYTvqjTrFuSWc
+	 edX3I+UL6oGmxm4OgVLFve25yqkS4vLaXDLiV9hpq0q0rdRyG1MZluOPv5BWWTQmqM
+	 37x2BRvnRH5ag==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: gregkh@linuxfoundation.org
 Cc: linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Johan Hovold <johan@kernel.org>,
-	David Lin <dtwlin@gmail.com>,
-	Alex Elder <elder@kernel.org>,
-	greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev
-Subject: [PATCH v2 22/31] tty: staging/greybus: pass tty_driver flags to tty_alloc_driver()
-Date: Mon, 17 Mar 2025 08:00:37 +0100
-Message-ID: <20250317070046.24386-23-jirislaby@kernel.org>
+	"David S. Miller" <davem@davemloft.net>,
+	sparclinux@vger.kernel.org
+Subject: [PATCH v2 24/31] tty: sunsu: remove unused serial_icr_read()
+Date: Mon, 17 Mar 2025 08:00:39 +0100
+Message-ID: <20250317070046.24386-25-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250317070046.24386-1-jirislaby@kernel.org>
 References: <20250317070046.24386-1-jirislaby@kernel.org>
@@ -50,40 +47,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-tty_alloc_driver() is supposed to receive tty driver flags.
+It is commented and never used.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Acked-by: Johan Hovold <johan@kernel.org>
-Cc: David Lin <dtwlin@gmail.com>
-Cc: Alex Elder <elder@kernel.org>
-Cc: greybus-dev@lists.linaro.org
-Cc: linux-staging@lists.linux.dev
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: sparclinux@vger.kernel.org
 ---
- drivers/staging/greybus/uart.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/sunsu.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/drivers/staging/greybus/uart.c b/drivers/staging/greybus/uart.c
-index 8eab94cb06fa..308ed1ca9947 100644
---- a/drivers/staging/greybus/uart.c
-+++ b/drivers/staging/greybus/uart.c
-@@ -948,7 +948,8 @@ static int gb_tty_init(void)
- {
- 	int retval = 0;
+diff --git a/drivers/tty/serial/sunsu.c b/drivers/tty/serial/sunsu.c
+index 2dc68b3201a4..383141fe7ba0 100644
+--- a/drivers/tty/serial/sunsu.c
++++ b/drivers/tty/serial/sunsu.c
+@@ -159,20 +159,6 @@ static void serial_icr_write(struct uart_sunsu_port *up, int offset, int value)
+ 	serial_out(up, UART_ICR, value);
+ }
  
--	gb_tty_driver = tty_alloc_driver(GB_NUM_MINORS, 0);
-+	gb_tty_driver = tty_alloc_driver(GB_NUM_MINORS, TTY_DRIVER_REAL_RAW |
-+					 TTY_DRIVER_DYNAMIC_DEV);
- 	if (IS_ERR(gb_tty_driver)) {
- 		pr_err("Can not allocate tty driver\n");
- 		retval = -ENOMEM;
-@@ -961,7 +962,6 @@ static int gb_tty_init(void)
- 	gb_tty_driver->minor_start = 0;
- 	gb_tty_driver->type = TTY_DRIVER_TYPE_SERIAL;
- 	gb_tty_driver->subtype = SERIAL_TYPE_NORMAL;
--	gb_tty_driver->flags = TTY_DRIVER_REAL_RAW | TTY_DRIVER_DYNAMIC_DEV;
- 	gb_tty_driver->init_termios = tty_std_termios;
- 	gb_tty_driver->init_termios.c_cflag = B9600 | CS8 |
- 		CREAD | HUPCL | CLOCAL;
+-#if 0 /* Unused currently */
+-static unsigned int serial_icr_read(struct uart_sunsu_port *up, int offset)
+-{
+-	unsigned int value;
+-
+-	serial_icr_write(up, UART_ACR, up->acr | UART_ACR_ICRRD);
+-	serial_out(up, UART_SCR, offset);
+-	value = serial_in(up, UART_ICR);
+-	serial_icr_write(up, UART_ACR, up->acr);
+-
+-	return value;
+-}
+-#endif
+-
+ #ifdef CONFIG_SERIAL_8250_RSA
+ /*
+  * Attempts to turn on the RSA FIFO.  Returns zero on failure.
 -- 
 2.49.0
 
