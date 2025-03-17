@@ -1,247 +1,60 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DAE4A1C
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 12:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D5E4A1C;
+	Mon, 17 Mar 2025 12:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742215593; cv=none; b=kVks8HRNsE+ZL3Rf4VpN13iZqJDtyihD18RTtVSKxGybxVQRLVFRwxnmU2aWAKzDExG+SqRgoQfsX7m9sy1hss7zCa1GBnGys2Q6dPzADSXdl60pSQr2p1HfPyYP0ilVuvHRVYkED5biTZEH2GRMaRrHK36REBFkH+clIEPORJI=
+	t=1742215651; cv=none; b=peDCit5dozcp63hE7vWU2bjHlD2TFq0Ucn3Z6IC2ZOZpbyQf2vKZvI/Un4GWm9MiXcTImAk9Q1YIxmHSdJYTcgLjJlafso77kFZwRTwMamV+kJa1B9R7+oU+Kd2w3RVGtZZGkErTNhwvVGjWCCWKl7fYZr7MDM6r30FvbR7rFic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742215593; c=relaxed/simple;
-	bh=gu5tdQie3PXjE9UKnouXcaXft1uLAYhn2LNXTlZeflU=;
+	s=arc-20240116; t=1742215651; c=relaxed/simple;
+	bh=DzH37UfXFhS0qsAr5+Goa4cCUsdvZCYwZL9iIvMydD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cQtpzx3wFcl3/zluBLAiosQhosAJA9EMCNNdCzEO129m6vunj0Q28QnXoc9iJo+1YFiyExHcfE+bcDZ1CBAJIFhS7D20HQh2zsxp9HBX7ogBFrF6+YAm/YzEO2+5jRP6o8cQ3ovvRSUTu6p+Vg0CdNGhBcwmRZ309kZsqCsHsMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tu9ma-0002fR-81; Mon, 17 Mar 2025 13:41:34 +0100
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tu9ls-000Fod-2e;
-	Mon, 17 Mar 2025 13:40:45 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tu9lt-001Blb-0C;
-	Mon, 17 Mar 2025 13:40:45 +0100
-Date: Mon, 17 Mar 2025 13:40:45 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	Kyle Swenson <kyle.swenson@est.tech>,
-	Dent Project <dentproject@linuxfoundation.org>,
-	kernel@pengutronix.de,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 06/12] net: pse-pd: Add support for budget
- evaluation strategies
-Message-ID: <Z9gYTRgH-b1fXJRQ@pengutronix.de>
-References: <20250304-feature_poe_port_prio-v6-0-3dc0c5ebaf32@bootlin.com>
- <20250304-feature_poe_port_prio-v6-6-3dc0c5ebaf32@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=N8eeyxaCEOCrRkV0NdWOAbFgWD89sfXBHXk7mdQhzUI+CsznlVYnKWPCfwQ/USHMrsOhnoBwlmukMOjOoZ/UhWk8YA+DYYCu0JZzKeD6zQ3RS3/lMY29tGkS8Gf/Pnd+Io/SgkEuiyv0dX89gJrtPwnIwfd7eGobH3Ayex8Bldk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Wic+sbb/; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Wic+sbb/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=iNJJvO2bu+Nx0yChJk+GIzP3W85ueiBmXIziZPYbCvI=; b=Wic+sbb/02D7n4JVfpFeqLE3P+
+	pJCxgsOJ6q1oubgXB2N9KrMuybB2/ntIuk9/EJjFchfkwKbMrUbp4KIE0AcSdg2AAdT6RG4KINigM
+	gQ+E6izf3ww2MqXiXoSl3Jk9LjpaF/LKWWSZJp9CQVDESAe0RJ4G1QfFqlIua3aGlPkw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tu9sC-00683V-Of; Mon, 17 Mar 2025 13:47:16 +0100
+Date: Mon, 17 Mar 2025 13:47:16 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+	andrew@codeconstruct.com.au, ratbert@faraday-tech.com,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, BMC-SW@aspeedtech.com
+Subject: Re: [net-next 1/4] ARM: dts: aspeed-g6:add scu to mac for RGMII delay
+Message-ID: <be284777-978d-470a-b38c-2f79a1d76134@lunn.ch>
+References: <20250317025922.1526937-1-jacky_chou@aspeedtech.com>
+ <20250317025922.1526937-2-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304-feature_poe_port_prio-v6-6-3dc0c5ebaf32@bootlin.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20250317025922.1526937-2-jacky_chou@aspeedtech.com>
 
-On Tue, Mar 04, 2025 at 11:18:55AM +0100, Kory Maincent wrote:
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> +/**
-> + * pse_disable_pi_prio - Disable all PIs of a given priority inside a PSE
-> + *			 power domain
-> + * @pcdev: a pointer to the PSE
-> + * @pw_d: a pointer to the PSE power domain
-> + * @prio: priority
-> + *
-> + * Return: 0 on success and failure value on error
-> + */
-> +static int pse_disable_pi_prio(struct pse_controller_dev *pcdev,
-> +			       struct pse_power_domain *pw_d,
-> +			       int prio)
-> +{
-> +	int i;
-> +
+On Mon, Mar 17, 2025 at 10:59:19AM +0800, Jacky Chou wrote:
+> The RGMII delay of AST2600 MAC is configured in SCU
+> register, so add scu regmap into mac node.
 
-Should we lock the pi[] array at some level?
+Don't you need to add the scu to the binding?
 
-> +	for (i = 0; i < pcdev->nr_lines; i++) {
-> +		int ret;
-> +
-> +		if (pcdev->pi[i].prio != prio ||
-> +		    pcdev->pi[i].pw_d != pw_d ||
-> +		    !pcdev->pi[i].admin_state_enabled)
-> +			continue;
-> +
-> +		ret = pse_disable_pi_pol(pcdev, i);
-
-If the PSE has many lower-priority ports, the same set of ports could be
-repeatedly shut down while higher-priority ports keep power
-indefinitely.
-
-This could result in a starvation issue, where lower-priority group of
-ports may never get a chance to stay enabled, even if power briefly
-becomes available.
-
-To fix this, we could:
-- Disallow identical priorities in static mode to ensure a clear
-shutdown order.
-- Modify pse_disable_pi_prio() to track freed power and stop
-disabling once enough power is recovered.
-
-static int pse_disable_pi_prio(struct pse_controller_dev *pcdev,
-                               struct pse_power_domain *pw_d,
-                               int prio, int required_power)
-{
-    int i, ret;
-    int freed_power = 0;
-
-    mutex_lock(&pcdev->lock);
-
-    for (i = 0; i < pcdev->nr_lines; i++) {
-        if (pcdev->pi[i].prio != prio ||
-            pcdev->pi[i].pw_d != pw_d ||
-            !pcdev->pi[i].admin_state_enabled)
-            continue;
-
-        ret = pse_disable_pi_pol(pcdev, i);
-        if (ret == 0)
-            freed_power += pcdev->pi[i].pw_allocated_mW;
-
-        /* Stop once we have freed enough power */
-        if (freed_power >= required_power)
-            break;
-    }
-
-    mutex_unlock(&pcdev->lock);
-    return ret;
-}
-
-The current approach still introduces an implicit priority based on loop
-execution order, but since it's predictable, it can serve as a reasonable
-default.
-
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-
-....
-
-> +/**
-> + * pse_ethtool_set_prio - Set PSE PI priority according to the budget
-> + *			  evaluation strategy
-> + * @psec: PSE control pointer
-> + * @extack: extack for reporting useful error messages
-> + * @prio: priovity value
-> + *
-> + * Return: 0 on success and failure value on error
-> + */
-> +int pse_ethtool_set_prio(struct pse_control *psec,
-> +			 struct netlink_ext_ack *extack,
-> +			 unsigned int prio)
-> +{
-> +	struct pse_controller_dev *pcdev = psec->pcdev;
-> +	const struct pse_controller_ops *ops;
-> +	int ret = 0;
-> +
-> +	if (!pcdev->pi[psec->id].pw_d) {
-> +		NL_SET_ERR_MSG(extack, "no power domain attached");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	/* We don't want priority change in the middle of an
-> +	 * enable/disable call or a priority mode change
-> +	 */
-> +	mutex_lock(&pcdev->lock);
-> +	switch (pcdev->pi[psec->id].pw_d->budget_eval_strategy) {
-> +	case ETHTOOL_PSE_BUDGET_EVAL_STRAT_STATIC:
-> +		if (prio > pcdev->nr_lines) {
-> +			NL_SET_ERR_MSG_FMT(extack,
-> +					   "priority %d exceed priority max %d",
-> +					   prio, pcdev->nr_lines);
-> +			ret = -ERANGE;
-> +			goto out;
-> +		}
-> +
-> +		pcdev->pi[psec->id].prio = prio;
-
-In case we already out of the budget, we will need to re-evaluate the
-prios. New configuration may affect state of ports.
-
-Potentially we may need a bulk interface to assign prios, to speed-up
-reconfiguration. But it is not needed right now.
-
-> +		break;
-> +
-> +	case ETHTOOL_PSE_BUDGET_EVAL_STRAT_DYNAMIC:
-> +		ops = psec->pcdev->ops;
-> +		if (!ops->pi_set_prio) {
-> +			NL_SET_ERR_MSG(extack,
-> +				       "pse driver does not support setting port priority");
-> +			ret = -EOPNOTSUPP;
-> +			goto out;
-> +		}
-> +
-> +		if (prio > pcdev->pis_prio_max) {
-> +			NL_SET_ERR_MSG_FMT(extack,
-> +					   "priority %d exceed priority max %d",
-> +					   prio, pcdev->pis_prio_max);
-> +			ret = -ERANGE;
-> +			goto out;
-> +		}
-> +
-> +		ret = ops->pi_set_prio(pcdev, psec->id, prio);
-
-Here too, but in case of microchip PSE it will happen in the firmware.
-May be add here a comment that currently it is done in firmware and to
-be extended for the kernel based implementation.
-
-> +		break;
-> +
-> +	default:
-> +		ret = -EOPNOTSUPP;
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&pcdev->lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pse_ethtool_set_prio);
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+	Andrew
