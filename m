@@ -1,117 +1,118 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C509B24500E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485092459FE;
+	Mon, 17 Mar 2025 14:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222667; cv=none; b=EkUBpa0x6aH0MpkEr9MlQ1C7Nd/DA+K+QQS9uzCK+O0c28vfkv5dxiQ+IBZcRcaZZAEJYFjy/I4+vLdyfgHk4Rvpf78VMroD+XhKwjo1KpsfJrulSY6HSx55pF8+As06cdEmldX4AlNjMTQWoSEWP/bwfl7ZhC1iA/njNkKeEOg=
+	t=1742222688; cv=none; b=Hmbd14FFQGC1wJz1OPpgWrLEMZZTQ/6CzrUR77BYhN/OafWrToyOXPheU2mWwoz0du2rv/0sSPK/Td8/Wabpdp/HLel+8SeiAJOkB3GPN5EpMQqnLeWHmm86Qb7+mGiVv7gaPkrhj37gjOtIcN962umOu6dUcPqyaS6Ojx35BU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222667; c=relaxed/simple;
-	bh=D67MiZM1OlWyGEYaDHpsix7GTNizwJ+ySW6CALHaVmU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RfenQLmEg/L54dt17+F70j9glloR1sAqcjzzCZz+hVikA/Ino2ifXIbAv/EJarVoFMMIZmh39FtGuUzrW78xFDWnja4taV6UchxRnT4jFFndEIPIWuMYjTHPmaOtHPewjtm6PMRXl/quZs/d5SbVzPyai6o7+SK9R+XqNicRIzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TJo62byc; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742222688; c=relaxed/simple;
+	bh=VkpWTCYEICFBtQwKpzObrfzZpr0tvkzC5CozTqVThw8=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:Mime-Version:
+	 References:In-Reply-To; b=RXW7sfWbt6wSz/8rIPS+EKDigNGESzh44Otn7QqsvKY0FRNtYQ7ZzH0Dr1JMIYf3COnz9rq1xTVSHkx7/tiS6bRARHF0fX/1O4sq7d4Ulwt5tYSoOcCKrSZCTMeBYO7OJb5su3Q8x3R4VTiQj7/F1iJRziq6H+IzQnvaC4+Sdm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=W6M9urUR; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TJo62byc"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5498c742661so4977555e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 07:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742222663; x=1742827463; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dzjKCnFEpJfO2LYKHlFZEmxFc8nJD2d/7SZvtFuh6b4=;
-        b=TJo62byczl9/TbAouXdb5S+oAzJrccfzioHZkX+dDgDBcyBLewjHJqwQbpKk6PAVzI
-         SSuD1nk5Duzz8sswqj0BHziQOd8QrksVdxRrvpl2MctrF+6dQQb02a1zmQYS45xybAki
-         NhH06pbLf+bwq1CLovtmvLoxTVYgdaEDXdu1Pyaoq22ozHgvhhffddcHl7zwSCkrbVGM
-         tLxh4aseO6SXJiOhH0odBQADu4y/jwIekMYyDjVr+JpInK9/BePHDCEvZo1JG7QvycYr
-         MBX/MoA2KDxvLJlnKmLkFa7uSAtcd1sye+TJbVJyle3zEDe93Vfw+Dt8ox9ZmNQrgmXW
-         6Kfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742222663; x=1742827463;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dzjKCnFEpJfO2LYKHlFZEmxFc8nJD2d/7SZvtFuh6b4=;
-        b=wksgdZOvX4ODFYCGrEH+tOp7IYXbJuZgPJLznjeC65/D/vHwWXPDB5jsEBTuqSEGfu
-         GbX0J/7Xo02WvNrUccbWEIyUoPyjOht3bpozZgHtFVnxLrArS6llprNcdOqCotmgcyCS
-         DzXD0WxouXShSoEVHUfQf0qLqCJgTUnAeleVOra01gCuUfzISlCcYmJHQK6nI9q8xYEF
-         IuIpPf9zxcpBJmK3dEpLID7bdJw4Pt8VUAnVKVajkc/Z8F9QdrD9ryWuMV8k8hu+APed
-         GtLqU2ko9tRPlbICVi/Chz+FbK1DXYnnFXVZ/0y6Z5w0caxcd8pAJoiYUJrRQbZIVpdG
-         D8aw==
-X-Gm-Message-State: AOJu0Yy5O/y4Ic1FwtTrhAwsd+/RdbEJYZyvLkQ3FmqHEXBwWA4U8sa7
-	q4sS3axA/a0pU7OCjRO4zFQSHy6MluVyprOuchIgwB5CxD76rjkB37ATFGFY3GQc3R1tobCIWru
-	Ou16un5N1b5yoVZJugp4vUV+sYVwJdFpg1lg=
-X-Gm-Gg: ASbGncsqX/uoGDElmSSvOKIPi9HAhYuctbCqYgD8lrIrDqRP223MKRJv0ivAh7UE/5G
-	SUuyXSPvCYqW266u7UaRREpPN+XV1e2v/x9NnAX/N7nP2hP85fPi7jGOehlf1tXgkd2eQqR73dy
-	c+praprakZ23cpzW8cF8yq7IY=
-X-Google-Smtp-Source: AGHT+IGXmPBxAfzK1vAQqYi5qJGkOzahtFskXNaem/FfxmVKi4cIAUI9hXEGgzm20bHHp6Ho2fBvhrk4YQdGeHndWRE=
-X-Received: by 2002:a05:6512:b01:b0:545:2b24:c711 with SMTP id
- 2adb3069b0e04-54a03b91a85mr20493e87.21.1742222663323; Mon, 17 Mar 2025
- 07:44:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="W6M9urUR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 77F2520580;
+	Mon, 17 Mar 2025 14:44:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742222683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VkpWTCYEICFBtQwKpzObrfzZpr0tvkzC5CozTqVThw8=;
+	b=W6M9urUROw0JcmJwg0uLFTceqVb2aMnrVlkiX3lY1gjOhP/3UxUQJez9m4DyvL06W/4cQV
+	JzvtW9fqe9DBvq5NlabZ/0F3qCE9JhsiE8YLFltJ/gp5r5na7PIK7zP132ukz6DZFkcB7K
+	3nYMgphUPTvJglJGgaK/DAdgMItyxD1MPqvO+AhV8RVOvdLJbcZ2j44gHe0iUkhxZP921h
+	Za/yDv/ouvlzVVchP1dOeTIygGI5KvrJTKo3YvAV/WY/L6alTmzFKEne0GN78BmfHjlj7b
+	iVIZy/ppP8C2qV2xivMwmVFkUha0fAxLWcGqiIfSrwKmwC4BQMXvdryCRszylA==
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 17 Mar 2025 15:44:42 +0100
+Message-Id: <D8IMEB2UP6KS.2GOJ4M6INKKN8@bootlin.com>
+Subject: Re: [PATCH v4 07/10] gpio: max7360: Add MAX7360 gpio support
+Cc: "Andy Shevchenko" <andriy.shevchenko@intel.com>, "Lee Jones"
+ <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andy.shevchenko@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250312221147.1865364-1-jstultz@google.com> <20250312221147.1865364-2-jstultz@google.com>
- <20250317143347.GE36386@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250317143347.GE36386@noisy.programming.kicks-ass.net>
-From: John Stultz <jstultz@google.com>
-Date: Mon, 17 Mar 2025 15:44:11 +0100
-X-Gm-Features: AQ5f1JqqLS47AYHEy7gOQ44yJBo-KqU3S46iXeAXICju9pqhBo32qh7aCOYGSJ8
-Message-ID: <CANDhNCrCmNVQjAy2pHY_K3VYR=f_44fqPRnAP-mr16yUhk8rPw@mail.gmail.com>
-Subject: Re: [RFC PATCH v15 1/7] sched: Add CONFIG_SCHED_PROXY_EXEC & boot
- argument to enable/disable
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
-	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
-	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, 
-	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-7-8a35c6dbb966@bootlin.com>
+ <Z69oa8_LKFxUacbj@smile.fi.intel.com>
+ <D7UOIHL2WOZP.LLGRKMILNJFU@bootlin.com>
+ <Z7OXQqyPjtGgTySf@smile.fi.intel.com>
+ <D8FAEPI26C8F.397VN87KK9VIO@bootlin.com>
+ <Z9PikuvAR-XsYhPF@surfacebook.localdomain>
+In-Reply-To: <Z9PikuvAR-XsYhPF@surfacebook.localdomain>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeeljeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtfffkufevhffvggfgofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhtdeuhfehtdekueeltdejffdtuefgueffhfeiueegleffueevvefgtedtkeegjeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegrnhguhidrshhhvghvtghhvghnkhhosehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihihrdhshhgvvhgth
+ hgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhg
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Mon, Mar 17, 2025 at 3:33=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
-> On Wed, Mar 12, 2025 at 03:11:31PM -0700, John Stultz wrote:
+On Fri Mar 14, 2025 at 9:02 AM CET, Andy Shevchenko wrote:
+> Thu, Mar 13, 2025 at 05:43:00PM +0100, Mathieu Dubois-Briand kirjoitti:
+> > On Mon Feb 17, 2025 at 9:08 PM CET, Andy Shevchenko wrote:
+> > > On Mon, Feb 17, 2025 at 12:20:13PM +0100, Mathieu Dubois-Briand wrote=
+:
 >
-> > diff --git a/init/Kconfig b/init/Kconfig
-> > index d0d021b3fa3b3..b989ddc27444e 100644
-> > --- a/init/Kconfig
-> > +++ b/init/Kconfig
-> > @@ -875,6 +875,16 @@ config UCLAMP_BUCKETS_COUNT
-> >
-> >         If in doubt, use the default value.
-> >
-> > +config SCHED_PROXY_EXEC
-> > +     bool "Proxy Execution"
-> > +     default n
-> > +     # Avoid some build failures w/ PREEMPT_RT until it can be fixed
-> > +     depends on !PREEMPT_RT
->         depends on !SPM && !SCHED_CLASS_EXT
+> ...
 >
-> for now, right?
+> > > But what I have read above sounds to me like the following:
+> > >
+> > > 1) the PORT0-PORT7 should be just a regular pin control with the resp=
+ective
+> > > function being provided (see pinctrl-cy8c95x0.c as an example);
+> >=20
+> > Ok, so I created a pin control driver for the PORT pins. This will
+> > effectively help to prevent concurrent use of pins in place of the
+> > request()/free() callbacks.
+> >=20
+> > My only concern is: as there is no real pin muxing on the chip, my
+> > .set_mux callabck in pinmux_ops structure is not doing anything. It
+> > looks like I'm not the only one
+> > (drivers/pinctrl/pinctrl-microchip-sgpio.c does the same thing), but I
+> > hope this is OK.
+>
+> Hmm... This is strange. The PWM/GPIO block has 3 functions (GPIO/PWM/rota=
+ry),
+> How comes you have no switch between them?
+>
+> As far as I read in the datasheet this is controlled by register 0x40
+> (and seems implicitly by other registers when it's in PWM mode).
+>
 
-Did you mean SMP there?  SMP is supported. Even with same rq proxying,
-it just blocks the task and lets it sleep if the owner is on another
-rq.
+Yes, on pins 6 and 7, we do switch between rotary encoder and other
+modes by writing in the register at 0x40, but that's all. My point was
+more about all other modes. There is no difference between PWM and GPIO,
+at least in output mode: GPIO level is just a PWM with duty cycle either
+to 0% or 100%.
 
-!SCHED_CLASS_EXT might be something to add, but mostly because the
-SCHED_CLASS_EXT code probably doesn't have a way to understand the
-split contexts yet.
 
-I'll dig a bit more there.
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Thanks so much for the feedback! Really appreciate it!
--john
