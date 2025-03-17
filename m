@@ -1,122 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E428F21B9C5;
-	Mon, 17 Mar 2025 08:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5FB199252
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742198413; cv=none; b=BPIwmYXla+mx1C5bpKlrrqg8vAJBObMS1hrHbsE68A66PUM6fgYmhwG0wZG+WIAGXbHl3xp204BX2fY9ndhtxwBHA+8NfVG8HHZezrs8bEIZWVNEThpH4KtaKZiEB5/dHnWgM+rfYwYLyLsSkXb12Zwcnf6ip8bloC9UrL0HrP8=
+	t=1742198501; cv=none; b=IWy8MFAMSe5I/0uWCIHrJkhVpPLuLhu24vXFeh9Gz530IXe37aMxH4wby7/kTPMaLZw3dA2JXu3pxnaNfbWTyn540VzOvrB8+aCBCw31lY+S2TORnqWcRavNCm+KGXOpfF7PEGOlkSWfRmM07alh5eozZ+sZ+I8MNfSWiTFYna0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742198413; c=relaxed/simple;
-	bh=WcJorY7PCd1uLYcrL2Xac0peBqgqcHLr4/yCJRQ9DGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a9xtJCAvBysoyn7akm61Su9Nlhen1n+btkSTJ/GEaaf5OM4dtrMer7X3+LVeR7bz8pR/N2EHXJh5yJUbxyioc7fPSz+NoNdb0jwC1kBWKxl/JrVA6jvxQ6XXPGqUEuEaFujtHV8/6gP/WDrrLSKRHHD2q+J5tPFwJmnHVwz7YGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UoNuZaB6; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742198501; c=relaxed/simple;
+	bh=g1ZDFBHMJhbCn2huwa39URgbhTaTzoxEPanrgFu50HY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LCO3ZE9sKF1aYSX1Nq/ZGbsvdUT+qyuKs3aZnDvYWbPaACvn5ptIh+qEG+z/DQ+c7jMeJEKRS/WWhzzzY8/YYPmM0dBYXf86u0jw4rF/TsvUGrM5euNGEubyUYlXe2nHxe/AgQ46iAymKqnCPqglUfKTD2r88xL+m2NEDoJcvLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=cjVU4suM; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UoNuZaB6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742198412; x=1773734412;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WcJorY7PCd1uLYcrL2Xac0peBqgqcHLr4/yCJRQ9DGw=;
-  b=UoNuZaB6iW8IYBgwdpzCHwtS+Bqj0wEwx+v6xUzdNIKONSixxAMniOsT
-   xJsYwQ5CLf3bFH85zQacBdtAsUnk/upjELg5loOkGe9U8DX5ljDTuS1jb
-   iLSI9q5ImoDOvt43Bzx+Z/LSREEsDMSP4531u17CouP8xxGey4grHA4ID
-   omVYfj0ers0xRQ9FI35Lzcx/GHIPC2zvGnvF0Tg3pCMny5jjfwiy27Iem
-   MksYvvc7SPn9GT86pi0qR0ncU31GNRN0CTD2w3u8OWhSAzkMiXuHbZWYD
-   CrQnuhkfma2LuFG5tqW4/UxMzzT2xpn7BTjeebJBljU8RB2RIhvf4T9sC
-   g==;
-X-CSE-ConnectionGUID: 3/tAbM+tSWqTYQNfqni4VA==
-X-CSE-MsgGUID: YBQ8tqM1Rtu1eQFdU/FgiQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11375"; a="43383613"
-X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
-   d="scan'208";a="43383613"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 01:00:12 -0700
-X-CSE-ConnectionGUID: aE6cL5gsQ3avEEOtd25fgg==
-X-CSE-MsgGUID: U1U/tNhnTbWmIps9Wc5uMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
-   d="scan'208";a="121674712"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 01:00:07 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tu5OG-00000003FIn-2NTM;
-	Mon, 17 Mar 2025 10:00:04 +0200
-Date: Mon, 17 Mar 2025 10:00:04 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, Ryan Chen <ryan_chen@aspeedtech.com>,
-	benh@kernel.crashing.org, joel@jms.id.au, andi.shyti@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	andrew@codeconstruct.com.au, p.zabel@pengutronix.de,
-	linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v16 2/3] i2c: aspeed: support AST2600 i2c new register
- mode driver
-Message-ID: <Z9fWhGDrUbAmGRl0@smile.fi.intel.com>
-References: <20250224055936.1804279-3-ryan_chen@aspeedtech.com>
- <202502280902.U0gLDhve-lkp@intel.com>
- <Z8GuOT5bJL7CdXX6@smile.fi.intel.com>
- <fec0a1c8-251b-491e-893d-11a8186a2128@kernel.org>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="cjVU4suM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1742198498;
+ bh=W5O/hxV8vbhDPZf+MT7E5Xer9GBrYGhbr052JbAP7DU=;
+ b=cjVU4suM240N8aGS6MV6d+doIi5CHJPlomtBuncUhTK8X14Y1dCQeIvzaMfpyQYw92U5NDDIv
+ WgZad8WKK+S9fbWyw26eO49BSTpmhh6KnoVhqRq3+HQ6jJurWQKS7b4JG/1tIVdLhCDF/yieg3n
+ ixS4HHN9MQz2wkgAU/ForNKLbnInSevoDprbBk10LwC5eaZVmtef6zkSwVo7kNHvSondm1xABdF
+ qr8p3WPhEFEvmCEj2pzUcTJajvhl1FJJs1C5ziproDTNJk2rkVUcaS6Pg2qiydbUswNKTy6tMEx
+ Mq4Ten/2637Gj56GOgxePTaNp9tMq8fhgxVWLsleLrRg==
+X-Forward-Email-ID: 67d7d6dac3abe04af7200682
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 0.4.40
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <da550920-bb2e-4032-82a9-1bf02aae9e17@kwiboo.se>
+Date: Mon, 17 Mar 2025 09:01:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fec0a1c8-251b-491e-893d-11a8186a2128@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] pinctrl: rockchip: Add support for RK3528
+To: Chukun Pan <amadeus@jmu.edu.cn>
+Cc: "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "heiko@sntech.de" <heiko@sntech.de>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "ziyao@disroot.org" <ziyao@disroot.org>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+References: <20250228064024.3200000-4-jonas@kwiboo.se>
+ <20250317070002.707674-1-amadeus@jmu.edu.cn>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20250317070002.707674-1-amadeus@jmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 17, 2025 at 08:48:03AM +0100, Krzysztof Kozlowski wrote:
-> On 28/02/2025 13:38, Andy Shevchenko wrote:
-> > On Fri, Feb 28, 2025 at 09:28:59AM +0800, kernel test robot wrote:
-> >> Hi Ryan,
-> >>
-> >> kernel test robot noticed the following build warnings:
-> >>
-> >> [auto build test WARNING on andi-shyti/i2c/i2c-host]
-> >> [also build test WARNING on linus/master v6.14-rc4 next-20250227]
-> >> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> >> And when submitting patch, we suggest to use '--base' as documented in
-> >> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >>
-> >> url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Chen/dt-bindings-i2c-aspeed-support-for-AST2600-i2cv2/20250224-140221
-> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
-> >> patch link:    https://lore.kernel.org/r/20250224055936.1804279-3-ryan_chen%40aspeedtech.com
-> >> patch subject: [PATCH v16 2/3] i2c: aspeed: support AST2600 i2c new register mode driver
-> >> config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20250228/202502280902.U0gLDhve-lkp@intel.com/config)
-> >> compiler: mips-linux-gcc (GCC) 14.2.0
-> >> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250228/202502280902.U0gLDhve-lkp@intel.com/reproduce)
-> >>
-> >> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> >> the same patch/commit), kindly add following tags
-> >> | Reported-by: kernel test robot <lkp@intel.com>
-> >> | Closes: https://lore.kernel.org/oe-kbuild-all/202502280902.U0gLDhve-lkp@intel.com/
-> >>
-> >> All warnings (new ones prefixed by >>):
-> > 
-> > My gosh, this is valid report. But it looks like a preexisted issue.
-> > Can somebody fix this, please?
+Hi Chukun,
+
+On 2025-03-17 08:00, Chukun Pan wrote:
+> Hi,
 > 
+>> Add gpio and pinctrl support for the 5 GPIO banks on RK3528.
 > 
-> That was three weeks ago and still no responses from Aspeed or
-> contributors from here.
+> https://source.denx.de/u-boot/contributors/kwiboo/u-boot/-/blob/rk3528/drivers/pinctrl/rockchip/pinctrl-rk3528.c#L204-L207
 > 
-> I think this tells a lot about aspeedtech.com patchsets on the list.
+> I noticed that there is a little difference between u-boot and kernel
+> pinctrl driver. Does kernel need to sync this changes from u-boot?
 
-Yeah...
+RK3568_SCHMITT_BITS_PER_PIN is defined as 2 and RK3528_SMT_BITS_PER_PIN
+as 1 so I think this code is correct, however I can probably update the
+U-Boot code to use similar pattern as in Linux driver before sending a
+new revision of the U-Boot series (probably after v6.15-rc1-dts).
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Jonas
 
+> 
+> ```
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+> index 930c454e0cec..c77d9a6cd535 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -3070,6 +3070,7 @@ static int rockchip_get_schmitt(struct rockchip_pin_bank *bank, int pin_num)
+>  
+>  	data >>= bit;
+>  	switch (ctrl->type) {
+> +	case RK3528:
+>  	case RK3562:
+>  	case RK3568:
+>  		return data & ((1 << RK3568_SCHMITT_BITS_PER_PIN) - 1);
+> @@ -3100,6 +3101,7 @@ static int rockchip_set_schmitt(struct rockchip_pin_bank *bank,
+>  
+>  	/* enable the write to the equivalent lower bits */
+>  	switch (ctrl->type) {
+> +	case RK3528:
+>  	case RK3562:
+>  	case RK3568:
+>  		data = ((1 << RK3568_SCHMITT_BITS_PER_PIN) - 1) << (bit + 16);
+> ```
+> 
+> Thanks,
+> Chukun
+> 
+> --
+> 2.25.1
+> 
 
