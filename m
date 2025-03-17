@@ -1,115 +1,145 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921441A7249;
-	Mon, 17 Mar 2025 23:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CA1205505;
+	Mon, 17 Mar 2025 23:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742254513; cv=none; b=lANDMxzHN5StjhyP9+eC25p2k7KrjEnT3Oynzmy7K88ACOFu3wvwnH1uGbJE1l+SCdtA7ttujY9kz5MvlHGaqnwH6idNJwGEzct3UsPtLW0z9S8DxUpve1Rhf7VxX4ArBVyP0ytzZB97vWqNag2FvLqv8wX/ZBmGjPEIspWhFjE=
+	t=1742255512; cv=none; b=na7H1+VZHMJ7YHckAgAOo0pkXY2bJSKd99sgH4G1el36O1YrjaovutaKDVo90pto94JZkE6Y5bOQDs0gS5Iwyp0/buInAgrXQUA+RAW5KIj+GoYRLSjJnnzaGcJft6lGk48UmQAuOsBrkVbuuSOKK+mHwtq0RtfWSDi45ApDv7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742254513; c=relaxed/simple;
-	bh=7UoWRwyHzqBBehirgFLNvlLP+45LmrF4dy3eicA0GKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AbApUtxHsMYn5rKNQ9zjgPM5DSawOEwrbWCWkfO8X0XgZLOwe4k8Y6JnXVL7H1oQwhBz0dtf4EaRWzJI3y78FrdgOaD9ZX0ATIhkf47JWPAu2My+Cl1R7BVx6z8xsVBmyL2bOjyO3sBakB/IuEuum+/eDgdlVw5m8B3xDy9ZNTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=apWNZs+A; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1742255512; c=relaxed/simple;
+	bh=XsNjQyivH1Hog8A2iZ+anJbWkZpmM+zPGmHGJX63sTY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t4n/OHjhi2jP49BaWmkLQhAmeRx/yt/+UWcMnjdXww0++Ni680cMkQhu3Ux7dV+Y0ZolKlScJo4cqa3i0qgt7ynh9aWWOwt8mxMyMO3kfzdTN9czmcHITJ1uqYeCZsqjLz4WDOo/5z8MGqu5LQFvOQHif89Ik+QfAALpq8X2HTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XjmkDS/d; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="apWNZs+A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1742254505;
-	bh=D7cfFiiScayhlIqzpWBB2VE4W5qnbzK4TlXB83dimwI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=apWNZs+An410bWexLMvKI1PqEU5bKoqoqgzmjQqlKvLalzSqVo2NIr7isDReItup7
-	 OFbrUBiwXs0NXJRZlw19Mdz7x773fxlnq7u8Al2fUb27zeidh3dzwGdYOMzkJ2XZav
-	 IsbVBbADCeaEOymDQNEJS8anIh760QcaierVykwEc7TOpXyLg6EXzvAslx8zcBF/mG
-	 X1QjEbxGxc0K8qy470rBuMOh+ulBdfHVHWzp6tXHNuYiihxD9pQUB/mtEoXNv9o6lh
-	 dtVynLCqZIDwxw78duupYzYGROJ89CApezEo30CEwA4yQKmandPb9odYfq5jixhwBP
-	 YqctC1X65PPwg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZGrtK0QcRz4wcd;
-	Tue, 18 Mar 2025 10:35:05 +1100 (AEDT)
-Date: Tue, 18 Mar 2025 10:35:04 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rust tree
-Message-ID: <20250318103504.4cbfe7e1@canb.auug.org.au>
-In-Reply-To: <CANiq72n05i322FfpSjFX=Wz3-9AgVRKLkKs1CHa-LxzWQ7-pew@mail.gmail.com>
-References: <20250317215757.2412aef1@canb.auug.org.au>
-	<CANiq72n05i322FfpSjFX=Wz3-9AgVRKLkKs1CHa-LxzWQ7-pew@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XjmkDS/d"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HLuhUO029836;
+	Mon, 17 Mar 2025 23:51:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2023-11-20; bh=2c4Tw6svFVVlMG5F1jrrJOHoil02h
+	jZZOtzQ9FEz1Hc=; b=XjmkDS/degSYOs30P9v6YK8zMDZzuoaBFVKatpuNs34Ex
+	vwCVEEnUF0xK5Aw/3SHHO+AiKKrMSRs5f59rmr/Mvfa8KX812tl9QbMYMlC/lpCz
+	+zmQ77dYUONLOk9ZkIADZtAw+LwrBbao+33/sJfNvuywOhKtARYhwgSxxkpR0fNh
+	hxsTMCjAz+mL2S10CZhRWyz3JVeOZ9ToVCtm/HeCBcdA6leVsRC8Ngy/rVo32xCr
+	0wqG28JCnuMI6G6PHQX+XV3RH6tbbmY3CFdiucUvNVMKW3Gazw561sOS/OXa9W0w
+	+PIU6m6XIlcH0XiK9VDqot7zCVWxPTNgN4r/iZhlw==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45d23rv2yv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Mar 2025 23:51:45 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52HLjXp0022498;
+	Mon, 17 Mar 2025 23:51:45 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45dxeekf77-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Mar 2025 23:51:45 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52HNpi2f016519;
+	Mon, 17 Mar 2025 23:51:44 GMT
+Received: from localhost.localdomain (ca-dev80.us.oracle.com [10.211.9.80])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 45dxeekf68-1;
+	Mon, 17 Mar 2025 23:51:44 +0000
+From: Dongli Zhang <dongli.zhang@oracle.com>
+To: virtualization@lists.linux.dev, kvm@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc: mst@redhat.com, jasowang@redhat.com, michael.christie@oracle.com,
+        pbonzini@redhat.com, stefanha@redhat.com, eperezma@redhat.com,
+        joao.m.martins@oracle.com, joe.jin@oracle.com, si-wei.liu@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/10] vhost-scsi: log write descriptors for live migration (and three bugfix)
+Date: Mon, 17 Mar 2025 16:55:08 -0700
+Message-ID: <20250317235546.4546-1-dongli.zhang@oracle.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/awfpBApde4zvnA23wkvrEX2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-17_10,2025-03-17_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2503170173
+X-Proofpoint-GUID: zpUf-Csj4TO_jCYy7QHMXr_QTfgwFaBB
+X-Proofpoint-ORIG-GUID: zpUf-Csj4TO_jCYy7QHMXr_QTfgwFaBB
 
---Sig_/awfpBApde4zvnA23wkvrEX2
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+The live migration with vhost-scsi has been enabled by QEMU commit
+b3e89c941a85 ("vhost-scsi: Allow user to enable migration"), which
+thoroughly explains the workflow that QEMU collaborates with vhost-scsi on
+the live migration.
 
-Hi Miguel,
+Although it logs dirty data for the used ring, it doesn't log any write
+descriptor (VRING_DESC_F_WRITE).
 
-On Mon, 17 Mar 2025 23:35:54 +0100 Miguel Ojeda <miguel.ojeda.sandonis@gmai=
-l.com> wrote:
->
-> On Mon, Mar 17, 2025 at 11:58=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.=
-org.au> wrote:
-> >
-> > Presumably this is caused by my merge resolutions :-(  Please have a
-> > look and let me know what te resolutions should be. =20
->=20
-> No, it is due to hrtimer-next, which I still have to merge on my side.
-> I have created an example merge of hrtimer-next into rust-next which
-> should solve you mention error above -- but please feel free to drop
-> hrtimer-next today if you prefer, since I will be pushing to rust-next
-> the proper merge if linux-next goes well, so you will get it:
->=20
->     https://github.com/ojeda/linux.git rust-next-merge-hrtimer
->=20
-> For the other things mentioned in the other threads, I have also
-> created two branches, one merging rust-next into Linus, and another
-> into next-20250317 -- not sure which is the one you usually prefer:
->=20
->     https://github.com/ojeda/linux.git linus-merge-rust-next
->     https://github.com/ojeda/linux.git next-merge-rust-next
->=20
-> It is a bit subtle because we have to "redo" a fix from mainline in 2
-> different places since the lines of the fix are moved in rust-next.
->=20
-> I build-tested the branches a bit -- I hope they are all OK.
->=20
-> I didn't modify anything in rust-next today to avoid further issues
-> and get this part over with.
+In comparison, vhost-net logs write descriptors via vhost_log_write(). The
+SPDK (vhost-user-scsi backend) also logs write descriptors via
+vhost_log_req_desc().
 
-Thanks, I will see what I can come up with.
+As a result, there is likely data mismatch between memory and vhost-scsi
+disk during the live migration.
 
---=20
-Cheers,
-Stephen Rothwell
+1. Suppose there is high workload and high memory usage. Suppose some
+systemd userspace pages are swapped out to the swap disk.
 
---Sig_/awfpBApde4zvnA23wkvrEX2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+2. Upon request from systemd, the kernel reads some pages from the swap
+disk to the memory via vhost-scsi.
 
------BEGIN PGP SIGNATURE-----
+3. Although those userspace pages' data are updated, they are not marked as
+dirty by vhost-scsi (this is the bug). They are not going to migrate to the
+target host during memory transfer iterations.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfYsagACgkQAVBC80lX
-0GyFDggAnJI5y/xmdhW+fSnakrNZbJSAtyEClpUNHb+FdbYWROVYKHavH5FdXEDb
-BYTYu/zdelGpYmiWOwIpy9icsC1TiHt0byogLv4f/oPSwr5VNa6G1uJWIq+LhWnf
-c9/pIVUC58gPFkyoSuhDVwKrGnItq1uIFipxuE1xuUp5gDKxtRV+RBIUdcf4nYqf
-/mvDvwkSArp1CpeuN0zBiqNaYzd8fAX7emUSvsqcilf537be74l1LHTpMCh3yant
-a+Q2dLkL59Lp3cllHTA+dQVsPGy9/TDOKk6Z0qC6qx9HPiXQG1s3yH+VmdgO9LVg
-cRqPqLfoGz9mfYed3reM3ya6vUG2QQ==
-=gpVy
------END PGP SIGNATURE-----
+4. Suppose systemd doesn't write to those pages any longer. Those pages
+never get the chance to be dirty or migrated any longer.
 
---Sig_/awfpBApde4zvnA23wkvrEX2--
+5. Once the guest VM is resumed on the target host, because of the lack of
+those dirty pages' data, the systemd may run into abnormal status, i.e.,
+there may be systemd segfault.
+
+Log all write descriptors to fix the issue.
+
+In addition, the patchset also fixes three bugs in vhost-scsi.
+
+Changed since v1:
+  - Rebase on top of most recent vhost changes.
+  - Don't allocate log buffer during initialization. Allocate during
+    VHOST_SET_FEATURES or VHOST_SCSI_SET_ENDPOINT.
+  - Add bugfix for vhost_scsi_send_status().
+
+Dongli Zhang (vhost-scsi bugfix):
+  vhost-scsi: protect vq->log_used with vq->mutex
+  vhost-scsi: Fix vhost_scsi_send_bad_target()
+  vhost-scsi: Fix vhost_scsi_send_status()
+
+Dongli Zhang (log descriptor, suggested by Joao Martins):
+  vhost: modify vhost_log_write() for broader users
+  vhost-scsi: adjust vhost_scsi_get_desc() to log vring descriptors
+  vhost-scsi: cache log buffer in I/O queue vhost_scsi_cmd
+  vhost-scsi: log I/O queue write descriptors
+  vhost-scsi: log control queue write descriptors
+  vhost-scsi: log event queue write descriptors
+  vhost: add WARNING if log_num is more than limit
+
+ drivers/vhost/net.c   |   2 +-
+ drivers/vhost/scsi.c  | 314 ++++++++++++++++++++++++++++++++++++++++-----
+ drivers/vhost/vhost.c |  46 +++++--
+ drivers/vhost/vhost.h |   2 +-
+ 4 files changed, 322 insertions(+), 42 deletions(-)
+
+
+base-commit: 9d8960672d63db4b3b04542f5622748b345c637a
+branch: remotes/origin/linux-next
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git
+
+Thank you very much!
+
+Dongli Zhang
+
