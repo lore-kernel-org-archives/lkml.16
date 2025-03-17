@@ -1,171 +1,175 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DB71553A3;
-	Mon, 17 Mar 2025 17:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742232019; cv=none; b=JFTYu7hDPxJEor1h8jhu0feHAk0qDhNgdgfFJbThb2+hdEEUBI6oYSlasqSWpg1UE4acettrV1/wZx2W5QfRRtfPyiG1o1XrhbxKc6jCZ2oJb9kGbeFDq/vcehz4gcvSrfbWL8aaaFaPO2s+flMY/mTMYeSNf0OFpTtBRwczjHE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742232019; c=relaxed/simple;
-	bh=r8Jjyg4N4bX0jkWi1/kQS+nKK6mUoA5S9Z59aKSMcw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BqFQDEaH2EE9oNhmxNWnga5MAh5V+rmEH3SWbsyZ6Ssg1VuARatmgKzUp/t2G96wQooidgbnWlRZxbs2OkOSudjCv/cI/4QGACOLcShsbF+hPYiOmf84fwRYSNVaQbFvX2WcRlqR/w6mjTD3EX+Zw6Da1CIK75DaoUZjAtHZQvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YmLG4a0J; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC1D17D355;
+	Mon, 17 Mar 2025 17:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742232036; cv=fail; b=B/nUaOFsQkhvqL8nvlE76UiS0bVKio5eRu/gZRW9myk0EZ4UdbZ7ZWheLIBJ419dLJjsBfHPcdsJddGwgrcGeOHY2tYyOORs60+xkDAFH4vQPYrx7A7KuvLjB1CNpPFEedMAzvvTS1bJj7qroRX1U1PmpLKS2AHKxKd+zBG17q8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742232036; c=relaxed/simple;
+	bh=MrA797OUZjv3C2t3Pw+NjfHck/zXJeZS2SpVR/MgZLY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=vBveB/JuGsIJCp2AhVZ0Pc82xpPxoV/c++JSGum3FknHD2bZ3ow3/kZ+e7sf8PuuD0K4KBL1h2QxtXOqr6ToDo6XwAruYKWzM6hz/mGakOjZ1ipnuRa83VqgDCZX47BnAAbXfu8uoGx8hY8BtDG+qS5fcW4pmXKSGc+M1KnCQ7w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=M3Y7p70/; arc=fail smtp.client-ip=40.107.243.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YmLG4a0J"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff799d99dcso3889692a91.1;
-        Mon, 17 Mar 2025 10:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742232017; x=1742836817; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZiIzpFKizdM9xv+6JVtSJnmseZQ1sm302MUd2poCzvo=;
-        b=YmLG4a0JiNua1vfIdxPPzi0VsUW/trevjvQ/i5XQmj1jvFWz5BDuRMfoIZrdfLQAz0
-         LiXifUKo4xMMIHxe4akhFG+rGFFeEhdFgpmXhoEJa3+4YRuZCMARnLcW1WM+rAWNv5br
-         EEsW1XUFZdaoL54FsEBZasj79gA5JR31F9YZI2CK2JWD2uZS8qiHnC3Bv+YwPeqn3RjR
-         ig5/XK+v203dDqm06s+CvCK0gUyTfYGH6JT7QZXOTCv8fSCV2rCcRzI0/EnJCi1Is7BO
-         bknMeF9hC8W+Zhds5ujf5UXfpSWAMOS1G2ODxulQVZqFWtrLQQTAWRw5V70k0fZ+r8YC
-         tATg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742232017; x=1742836817;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZiIzpFKizdM9xv+6JVtSJnmseZQ1sm302MUd2poCzvo=;
-        b=DP/ew8gpz8wiINJYMGOwrOdgU+e9/bSzB293W1zS7i2xAWGjPZcQvUvxV824wAK3BO
-         DGpXxV8vMHSEBtf3rjskSRDJd3j2keRTEd4Ao+hvfcbFcr3lWmnd2wXU1+hcB3ltrKhB
-         t4QG/bDSuzaog64R4I5jh7ynXkZvfLInZ4srn1kzCMLDuffN4kDBpZ24ijpi2gLnX//T
-         BHKfzn+k/p3w5C+udt8bcPpN9sVzglO0QqLpZgNPNb3l/7X29ntYvhA7+wZH5Z49+kyQ
-         RPWC2ZFxlWQdDU3aPWFRWWW5ViPGDhZFaRYOCArsNv9ujDZQLSw/iyNi4TOyy4ne/XVl
-         2unw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5mIkcZJTZIGvHAo1hew0Um66zK/Il55GdPF81ZE5OwIjJNP1N1mTnXvPVHOohA5cOOARI310kzw9dX0QH@vger.kernel.org, AJvYcCUtYTRpmluTKTm8KiMuEiBiNgzSyq22srfP1ZF3T+9dJVtpXVNqJ5buOJOOxujOX7UMLBEJ0cmdsu6C@vger.kernel.org, AJvYcCUyDrMuzL/0s67acANV5+m8vvbV1l0m1GJ7CwetQ4+Gxk6sDTUze4sVAOF1ucYC+nmw0yrTbe7sT58=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3XwMFO+S5G8PmXgO1j/KTX6ASSlYPwbA1qabConr/Sm0K0coY
-	+5ONPIHqxnpbXjhH01waKttiwZXlcLxz0aQYNowIUmNv1OGzdYE8z7pch+6/ejc=
-X-Gm-Gg: ASbGnctP/lQ4EMk0l2lf0hkAm3V+q2+4lIVBbocmMF+u3ZZcaTT7q3VlRKdS95uPCa8
-	6BIKFIemPU8RMbtS6dkiT6DMe85BYlgTtiqFo7eTY0z4L/mdpgYgWkim/1F0g00H4+EZeV9NugF
-	q1OQkF5W7Su9+LeEH/bVgoaVdnSWgovFqvIwh4bK+3gFETyri41GpoyL1xIpeBXrt2zZIsuDuGP
-	0jeeWEIrEinx1ToLoEUCNZ4WncdtRGFGC/ddUqmSq6SH6W79x4r1u45KvKARfKzB8UYmi1T9219
-	KqEUyYweIB+68aGa93KVQz53JZbTkq51bQQWrjTW8MIDisg2Bmb6CA==
-X-Google-Smtp-Source: AGHT+IEOkCuEJ4y6Pz/ka0G+KJKTZOyC+nCXkEkskAiqb7vP1hG++WLS+FAQG98+YjaTGs0pmzRsBg==
-X-Received: by 2002:a17:90b:2dc4:b0:2f2:a664:df1a with SMTP id 98e67ed59e1d1-30151cad150mr17773701a91.2.1742232016547;
-        Mon, 17 Mar 2025 10:20:16 -0700 (PDT)
-Received: from localhost ([2804:30c:b31:2d00:277c:5cbe:7f44:752b])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30153b994cdsm6328475a91.31.2025.03.17.10.20.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 10:20:15 -0700 (PDT)
-Date: Mon, 17 Mar 2025 14:21:13 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, corbet@lwn.net
-Subject: Re: [PATCH v1 1/4] iio: adc: ad4000: Add support for SPI offload
-Message-ID: <Z9haCda4yF2SZ6gb@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1741970538.git.marcelo.schmitt@analog.com>
- <301fc83a961c4a2ef2ac980d0baa83d9d89a88c5.1741970538.git.marcelo.schmitt@analog.com>
- <20250317102751.5702fb82@jic23-huawei>
- <Z9hAUs1wPOIAo2nt@debian-BULLSEYE-live-builder-AMD64>
- <60831e04-52c2-446f-8bc5-b5d3e9e5fd40@baylibre.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M3Y7p70/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nVG1OoUsr2ExdsgBZeG36p7xl2V1RHycr4zu8HrSyzzyCYwYbOVfo9sQORttWCRyLmvh0mn7xlnhGNjdcZuzWuvqzlGWTRSyZMLvzZgZnVqttnFcO0irj8jALIoknkN75u1kyeIb5t574DY2urIT4busRvx96BKJfzsmv4oIfP5SwOxOJXz3neIGcwm7Cdd+QYLZr5qhx8fzv9qc6b1kQlzJtag/vnKAvSdsbqjnl3leN+1iT6d0zlesDnDMQ5VFAduMH2Dq9xaERvii0+8AghFoL/VzWeWnr8qTq0zxhb9bEfqw5D+SSNhuoqUwIvNAGZ4GVHciM+kmujulZr7lag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/WoYq0dumOOiuZ2TiiQ7RQyEl9gLE5ha6rA9qG9gFlg=;
+ b=EiWoKwsrX+o9zC3+8/6aeuygHUqJ2mpA+HsY4MKNc5DUhrpjOu8Suc8Lc8r47Yauavy+bI5fW+w+nMwTOX0li5ubk9yzZucLEmI7fsFlMy++BErjVVwmIue02d/kMvZXJ3igG00EGUczOVZ0of8EnxnOTqb6lO191Cxbe+eRrm2v9DQi9f4NbzR2WeNxBtUm7NcCnuaY01aoeF0vYr4ooILG0nQj5haAB3VxEmpy4aW71bjZK7zQOaqAnfO1J+WKsGRbUyc4p4S0IyyPE299uyBVt0qnf8FCE78LbPBuvoz14nE1up3/GhrRc4QeNORYV50Rtrs1W2jILRsaAPSaqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/WoYq0dumOOiuZ2TiiQ7RQyEl9gLE5ha6rA9qG9gFlg=;
+ b=M3Y7p70/rL9wioqWv78jkz7sjqKuHBX2p5+FCDpYuZ37RHtHRolsGNsoaF9fXZOXN3m2pme64ssvT4H9RspnQ8hzqPwp+h0YQPg1AI36nuVtfN4C2bEtZjM8xV+6QTvfjp8Pp8A9WUdgvtkitttOCpLp4SOIqQIPyCo9CCvZiPs=
+Received: from BYAPR03CA0027.namprd03.prod.outlook.com (2603:10b6:a02:a8::40)
+ by CH2PR12MB4037.namprd12.prod.outlook.com (2603:10b6:610:7a::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
+ 2025 17:20:29 +0000
+Received: from CO1PEPF000066EC.namprd05.prod.outlook.com
+ (2603:10b6:a02:a8:cafe::42) by BYAPR03CA0027.outlook.office365.com
+ (2603:10b6:a02:a8::40) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Mon,
+ 17 Mar 2025 17:20:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000066EC.mail.protection.outlook.com (10.167.249.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Mon, 17 Mar 2025 17:20:29 +0000
+Received: from tlendack-t1.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Mar
+ 2025 12:20:27 -0500
+From: Tom Lendacky <thomas.lendacky@amd.com>
+To: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+CC: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+	<seanjc@google.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
+Subject: [PATCH] KVM: SVM: Fix SNP AP destroy race with VMRUN
+Date: Mon, 17 Mar 2025 12:20:14 -0500
+Message-ID: <6053e8eba1456e4c1bf667f38cc20a0ea05bc72c.1742232014.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60831e04-52c2-446f-8bc5-b5d3e9e5fd40@baylibre.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066EC:EE_|CH2PR12MB4037:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a9a8670-8dc3-4b90-ca54-08dd65780421
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?TasFgzvcK84cOTNlk9y6ee/aCSbmZ/5eFJVT2gosDknYcw/GPRJw4rfFEQq2?=
+ =?us-ascii?Q?pGrusFzZKscRWDrhejrBpy2M2GGWxHHwv11ln1fsIzIIhMrY/yIzSAB4LhNM?=
+ =?us-ascii?Q?MrgB2FhVf/lVS8dUqdgZE4DDbX50rHHOxGkpq5q3Lsc+PDqWWhihkk884ScG?=
+ =?us-ascii?Q?ElBOfS76rxPg/RtbfWvIlWlDb38cmx1KydrLddA5FveAyctF5SR9Cscev5oT?=
+ =?us-ascii?Q?8khSAKgGdyaeEZZnGGU2U+1gvSsWr29tTkuuhJla5Q0p3CcmKvLZBKSyuzgL?=
+ =?us-ascii?Q?EgcEGgDsm0taqHCWPAwggKb1YIBMSU30Wp9X+Nzn0x+yODf/m1btI4mSY6mU?=
+ =?us-ascii?Q?HKUe3qYSnSxyWdUJIz04BGWk8hoqPat4BsyoVr4IGcit2vfHMRe8UcY18IAF?=
+ =?us-ascii?Q?fnZdQ27uHKN4bSwdCB4uhLkh8DxbVlxH0ASWR96FCYMxP9j4tV9CCoNnA5a8?=
+ =?us-ascii?Q?KDBmp4e+HgtAM6OvSYEjvlxiwgJriQ0WY4hp6LdLwst0CLJijLTdWeu7J5xL?=
+ =?us-ascii?Q?8vAK7xSk4ImwOkJ6uc7PxEJA2DAJD/QUCOR81SW8k6hUAfu/iSjXZYkIy0ax?=
+ =?us-ascii?Q?rfZNnztkW7kahjZIGmyMLM00obAXwiLgf2uzlRfwibdfaFIkCvx+E6hqWF3C?=
+ =?us-ascii?Q?nRweIm9icWUIg/+NmqvFfvl+bxIAi0gCzxJfYUhf8kl7y9CS0VFYbZVQZFnf?=
+ =?us-ascii?Q?PiUYXYiFtvf+zpodEB0LD60qxNIeD2FQ7t5I5Y9RCkMG0YZpmSL26XpvTpQN?=
+ =?us-ascii?Q?Lhulev42hTbMyIs2EJ/ZvDWXW0VYrh1JlE/tfaQRAGylUkJQ1j8cxXj0mtjs?=
+ =?us-ascii?Q?wwxdwO1GxcxkB7tLZeYcwDDPVq3v86TnDx91/cPEPnNzMhRS43E82JqKKqFA?=
+ =?us-ascii?Q?IarqSKlPeqItC1APW07aZZ09lWxtEpE7wF0BXMGnPXHgSwBfpQVsFw//9xH8?=
+ =?us-ascii?Q?T1z+7sbHfEPw3s+mli/OoYvWjHvPeHOHN5Vz1yo0uVle9Y9MXZf6q0PCgDgR?=
+ =?us-ascii?Q?ULOd0VXitSGQSpOKvPRrbQTxv9VgbssfAYIBPVR36Qh+nAVVv1+HkIbFitKt?=
+ =?us-ascii?Q?0BeKawiVCbHdUlgmmk+iRq003DiIJG3u0GpdJJP+hNvfR5Icrk9fXv+gckAn?=
+ =?us-ascii?Q?++TMELzOAIs02W57QZO5CfJfM7QrozNlGe8OSy7ViXSYVBL6b7ZnUwboli/y?=
+ =?us-ascii?Q?tpApcEyOfeUSRafZVZvdRsqHjVcmehJiqSrcA5g8BgkyPDHJYWEljV0l3vuc?=
+ =?us-ascii?Q?L38VeG29/ziFlTWW3Ntuyl6ZVlOuLxgXAjQYD+WyfnDKQQayyCSpabQQNT4h?=
+ =?us-ascii?Q?3ek8kkcSmv1PfEG5zYj65KNJQcTaHBqiL238mbGu+V0qRCO6tdZz+UwEhNfP?=
+ =?us-ascii?Q?8QY15pzWcoKTMywJwmSQRJUczv1a8Ke9Z8muyiwq52uTgc3xG5SQBdBfDc05?=
+ =?us-ascii?Q?pL5TWZqWsUQ9R2cO4FSHQkxlqeX23q5LJco494iUGoRuWL07QeK7Gw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 17:20:29.4876
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a9a8670-8dc3-4b90-ca54-08dd65780421
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066EC.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4037
 
-Hi, comments inline.
+An AP destroy request for a target vCPU is typically followed by an
+RMPADJUST to remove the VMSA attribute from the page currently being
+used as the VMSA for the target vCPU. This can result in a vCPU that
+is about to VMRUN to exit with #VMEXIT_INVALID.
 
-On 03/17, David Lechner wrote:
-> On 3/17/25 10:31 AM, Marcelo Schmitt wrote:
-> 
-> 
-> > ...
-> >>> +/*
-> >>> + * This executes a data sample transfer when using SPI offloading for when the
-> >>> + * device connections are in "3-wire" mode, selected when the adi,sdi-pin device
-> >>> + * tree property is set to "high". In this connection mode, the ADC SDI pin is
-> >>> + * connected to VIO and ADC CNV pin is connected to a SPI controller CS (it
-> >>> + * can't be connected to a GPIO).
-> >>> + *
-> >>> + * In order to achieve the maximum sample rate, we only do one transfer per
-> >>> + * SPI offload trigger. This has the effect that the first sample data is not
-> >>> + * valid because it is reading the previous conversion result. We also use
-> >>
-> >> Say what happens to that invalid sample.  Is it dropped or provided to userspace
-> >> as if it were valid?  (I hope dropped!)
-> > 
-> > TL;DR: The invalid sample goes into the buffer as a valid one.
-> > 
-> > In AD4000 '3-wire' mode, data capture has a latency (delay) of one sample.
-> > 
-> > The ADC begins sampling data N at CNV rising edge
-> >           |   +-- CNV (usually SPI CS) is brought low to begin reading the data
-> >           |   |                                +-- Data N + 1 that will be read
-> >           |   |                                |   on the next transfer starts 
-> >           v   v                                v   being sampled at end of transfer N.
-> >            ___                                  ____            
-> > CNV  _____/   \________________________________/    \_____
-> >                     _     _             _
-> > SCLK ______________/ \___/ \_ ...   ___/ \_______________
-> >                    ___   ___           ___
-> > SDO  _____________/___\_/___\ ...   __/___\_______________
-> >                     ^
-> >                     |
-> >              Data from conversion N is output from here on
-> > 
-> > A better drawing can be found in datasheet page 29, Figure 57.
-> > https://www.analog.com/media/en/technical-documentation/data-sheets/ADAQ4003.pdf
-> > 
-> > In sum, we're always reading a conversion that started at the end of the
-> > previous SPI transfer or, in other words, the data comes out with a latency
-> > (delay) of one read.
-> > 
-> > Datasheet somehow mentions that by saying
-> > 	When turbo mode is enabled, the conversion result read on SDO corresponds to
-> > 	the result of the previous conversion.
-> > 
-> > I think I can do a dummy SPI transfer on buffer preenable so at least the
-> > first data is not invalid. Would that be better?
-> 
-> Not really. There will be a relatively long delay between that conversion
-> trigger and when the sample is read. So the data might be slightly less stale
-> in that case, but still not particularly useful, e.g. if you are doing any
-> kind of signal processing that expects equal time between all samples.
-> 
-> On similar chips, like ad7944, we just documented that the first sample does
-> not contain valid data and needs to be discarded.
-> 
-Okay, I'll assume that to be acceptable and do the same for this one.
+This usually does not happen as APs are typically sitting in HLT when
+being destroyed and therefore the vCPU thread is not running at the time.
+However, if HLT is allowed inside the VM, then the vCPU could be about to
+VMRUN when the VMSA attribute is removed from the VMSA page, resulting in
+a #VMEXIT_INVALID when the vCPU actually issues the VMRUN and causing the
+guest to crash. An RMPADJUST against an in-use (already running) VMSA
+results in a #NPF for the vCPU issuing the RMPADJUST, so the VMSA
+attribute cannot be changed until the VMRUN for target vCPU exits. The
+Qemu command line option '-overcommit cpu-pm=on' is an example of allowing
+HLT inside the guest.
 
-...
+Use kvm_test_request() to ensure that the target vCPU sees the AP destroy
+request before returning to the initiating vCPU.
 
-> > I also didn't expect to find out HDL support for 16-bit data width was removed.
-> > We used to have a build parameter for 16-bit precision ADCs.
-> > https://github.com/analogdevicesinc/hdl/commit/b2dc91b30dae891b6319d88e083f26e726f43ba0#diff-1117c2618353232e5f22aa6a12e8ae976757fa897b3425f470a12123cae26535L13
-> 
-> A while back the HDL engineers mentioned to us that they wanted to standardize
-> on 32-bit data words everywhere. While not the most efficient use of memory,
-> having fewer options does make things simpler across the entire software stack.
-> 
-Ack
+Fixes: e366f92ea99e ("KVM: SEV: Support SEV-SNP AP Creation NAE event")
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+---
+ arch/x86/kvm/svm/sev.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> > 
-> > Would something like 'because SPI offloading leads to data being pushed to
-> > memory in CPU endianness' be a reasonable comment?
-> 
-> Another way to say it is that SPI offload reads data in complete words and not
-> in separate 8-bit xfers (bits_per_word = realbits vs. bits_per_word = 8).
-> 
-Ah sure, I recall the effect of setting .bits_per_word now.
-Will add a comment explaining why the difference in endianness.
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 0d898d6b697f..a040f29bb07b 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -4071,6 +4071,16 @@ static int sev_snp_ap_creation(struct vcpu_svm *svm)
+ 	if (kick) {
+ 		kvm_make_request(KVM_REQ_UPDATE_PROTECTED_GUEST_STATE, target_vcpu);
+ 		kvm_vcpu_kick(target_vcpu);
++
++		if (request == SVM_VMGEXIT_AP_DESTROY) {
++			/*
++			 * A destroy is likely to be followed by an RMPADJUST
++			 * that will remove the VMSA flag, so be sure the vCPU
++			 * got the request in case it is on the way to a VMRUN.
++			 */
++			while (kvm_test_request(KVM_REQ_UPDATE_PROTECTED_GUEST_STATE, target_vcpu))
++				cond_resched();
++		}
+ 	}
+ 
+ 	mutex_unlock(&target_svm->sev_es.snp_vmsa_mutex);
 
-Thanks,
-Marcelo
+base-commit: f8d892c137f7448d7b49f5e3ad7aa7b5a48a64ed
+-- 
+2.46.2
+
