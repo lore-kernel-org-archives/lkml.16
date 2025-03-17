@@ -1,121 +1,168 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D387D1DDC2C;
-	Mon, 17 Mar 2025 18:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9A11E5209
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742237650; cv=none; b=VF+MVrTjobLD3ZsMBVe132EGTfdCSX4fdDRRYKoUJZbO9HqO3K1ct9Pw/HjwIgxddYRzrQN6YEgkDrFrJIMvcKSs2nxLeVprJIS/to4wMr6pWVhWyrh/azurbsDDc1uJURmiR6P05K7+d8HTWLYFQfBKfnJopEbrVIhrsNNxgXc=
+	t=1742237651; cv=none; b=uFEu41dLUTRAx3ygic4Ph0iadlkqEMgOGfGXWtwOeOh0KnnPcDB+bj4DzlWEnsM4BjRwkVbaK6ckmpQH6SV5AWf4Q3d+hQBiRirVPac4X2GNLnRqkyk+ZghifDePm8EEz8St60Uy/js7Yc1vwnsOTlf2ng9wrgDmrRjNPqwfvKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742237650; c=relaxed/simple;
-	bh=VNgS0vH2ZlYZUHj7qrVoVvtJKWTOOMEET1wyGgzN1t4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BvGh2W38fdwywoDl8vn+eckPLFpf7CjGd8cTUeMjXT24gvKBmsy2VZf2hWshFIhiTr9TuqXEqQ0pWYAzs0o7KzIPD48NEE4p7tvIq/z+st6uh5GASR8juGUPJzCARtlcwqN+UyG45nW2yZVC1ErF20+JPEjZFpHdjdTHtAsSYpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cc6XuXfW; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742237651; c=relaxed/simple;
+	bh=v3IjjMSp3AskTHbHNGMF6+/6dNnwDoNYU1raEVnTz1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qzTfaM/g6zowt/w+7u7fS+By3NQjpNYEhM9FZfPsN2W5HF3N2IZzrt77ZiWdVB0zmdbuu2IzIYzqw8LFZ1iZ2kDvVQ6fNulUbcypfCHN/ccNh9MmeHPUCYEToqtp6OjA0Qhpy2fGhm4MzFlKNV6ZNtI7Hj5kpEECSHPA2GAoihw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iMSpHCd/; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cc6XuXfW"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so60499581fa.1;
-        Mon, 17 Mar 2025 11:54:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742237647; x=1742842447; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QSlOoVfGuSynT1x7fqBiBqNVP4Dgpx/NS3fcP7oxU0c=;
-        b=Cc6XuXfWU6VJ5dRkVizeZvb7tmojGRX4fq0BCUps3KlJP6kGJ37aAVOw4uXr+5jFqE
-         XVhEVSnEz0w//IWnP2Il1iqwUgAnJ5kv38G9d63G4LGeCM1J7bo2xW42XKnofjJ3VC+q
-         MMgJBposLv2bxw8MtVmM8v6tAVWu8V4a5Gxp8RcpIG89cVKnqIdrYwzFr1W3TLaKRX4i
-         n6t2zodwpZKnV1XZqo6+RysvocJ3N67Lr7WmzXMQBm1yUP99+LyopoXVONiw9UdsU0Gl
-         TXWh0rD1vRnEJfdMqFQ/2gr9o2B3cl1GdZQThaeeZvmmy0tC5hYSb0fZiaRIBWGThiT1
-         HK6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742237647; x=1742842447;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QSlOoVfGuSynT1x7fqBiBqNVP4Dgpx/NS3fcP7oxU0c=;
-        b=xF1RvUTQel6n57mBgniayoPXAkBa5dos0C6dGF4LtbswM1ZZW1t6czAI8cWLy3AkhY
-         vbzkqZcYw9WDCSgvhmfEX0Le5Gce9DDYgmarqTxaNrZ/znS+Q19nAEZXfQ+P977tP9Yr
-         D/HyMglaewk3qNfYDR7QW+BFuf3C1wtlWAAQmICVf89ETEOnWdxJ5re1jairQs1rgi/J
-         gjbvLiNpENc5tysj0xNf7yCsXQP9/zWG7Vz4B2bEJsDwnOPes2oQL3qP8iXhoWWcVG/y
-         klAjpn16a0U4UX1K0PKgAFlGl8vI904gdOA7ij/jpgfqcrtcTeAEFHeIYTr9J2jbrw06
-         7pzw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/FPf6+yU/E3tk2vrhSs3iZ4JLLhr0bzOa9S58pVeuSAInlvztx5Tni8bfRr+yB6ycu1YuJpXH9k9yUO8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjM/j2+s5kuMH+hlq3ACRrIMrpTHHBRpLAwL8peKgeDbQP6MH9
-	gIdynkMz0/hNRghtAQYADH5vmLQukoiyetM5/jRQU0Q78n7Q8sxhVbPRcw==
-X-Gm-Gg: ASbGnctOeyX9Onpy41GEzaOzhdx3I0YUwyKnzMclLDxOvCnipjJwEgvvDcpCZ8zmOPX
-	DL9bJ1ZyLIW0n7b53zGK34ra4LZ8cPj0BarAplaUogfCXT6ZZY8pnX7wnKJNfXKIDmKSX1NTXqj
-	O4A0Ju0kbQhqmSKN1bmc3TfYXQNUcFLQH7ueMyywSc5u0xK7qworPFxmoSPAbWJzyAYZdZhx1oM
-	/vcu7mcY159SxVA4xiysVkt8ULbV7f/tJ3bHJr1BF8VhQPd3SD1hL4zAfgKeJ33GUZg+6RwGBIN
-	bpyu6WpTpigDcbJuqmnPkbg853YzCcBTtDSWY7QN2SSuac0Vm+c7G5jGxhXIsFuSXiL4YlN464x
-	lR26ZqcX1yBa00s+Rg38nBA==
-X-Google-Smtp-Source: AGHT+IHQF2iIfVqplnGsSaUNHSln0qW15Tgb5KGAxJooMIYRxAdePR22i8Oq/R6m75Sr3v82hQrpxw==
-X-Received: by 2002:a05:6512:3048:b0:549:90ac:cca2 with SMTP id 2adb3069b0e04-54a3047117fmr558637e87.1.1742237646739;
-        Mon, 17 Mar 2025 11:54:06 -0700 (PDT)
-Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba865024sm1387506e87.123.2025.03.17.11.54.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 11:54:05 -0700 (PDT)
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-To: rust-for-linux@vger.kernel.org,
-	daniel.almeida@collabora.com,
-	dakr@kernel.org,
-	robin.murphy@arm.com,
-	aliceryhl@google.com
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	linux-kernel@vger.kernel.org (open list),
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	airlied@redhat.com,
-	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Subject: [PATCH v15 01/11] rust: error: Add EOVERFLOW
-Date: Mon, 17 Mar 2025 20:52:08 +0200
-Message-ID: <20250317185345.2608976-2-abdiel.janulgue@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250317185345.2608976-1-abdiel.janulgue@gmail.com>
-References: <20250317185345.2608976-1-abdiel.janulgue@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iMSpHCd/"
+Date: Mon, 17 Mar 2025 18:53:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742237637;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ME6ZP/jpNOt4xywGEx9OKIfYPkygBSiWAxXdnIVIoMM=;
+	b=iMSpHCd/LCOhDHKkQK/9qcAMjlnRhR/ZK12Y16TuHznfyuGTp8/9hR156vEyi/Cb3eMTZe
+	Sj9qRixveSaQZK6wuFj2vWdehyA8l1NZzyA3dqFM2s1zIEUzMNjeTmogeIBPSfsGiXGe+X
+	15/tGLAeTcmptdm0UuCJeYT3D20+eHM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: Add a module param to control and enumerate
+ device posted IRQs
+Message-ID: <Z9hvwW2C-7_ivkPU@google.com>
+References: <20250315025615.2367411-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250315025615.2367411-1-seanjc@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-Trivial addition for missing EOVERFLOW error. This is used by a
-subsequent patch that might require returning EOVERFLOW as a result
-of `checked_mul`.
+On Fri, Mar 14, 2025 at 07:56:15PM -0700, Sean Christopherson wrote:
+> Add a module param to allow disabling device posted interrupts without
+> having to sacrifice all of APICv/AVIC, and to also effectively enumerate
+> to userspace whether or not KVM may be utilizing device posted IRQs.
+> Disabling device posted interrupts is very desirable for testing, and can
+> even be desirable for production environments, e.g. if the host kernel
+> wants to interpose on device interrupts.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 1 +
+>  arch/x86/kvm/svm/avic.c         | 3 +--
+>  arch/x86/kvm/vmx/posted_intr.c  | 7 +++----
+>  arch/x86/kvm/x86.c              | 9 ++++++++-
+>  4 files changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index d881e7d276b1..bf11c5ee50cb 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1922,6 +1922,7 @@ struct kvm_arch_async_pf {
+>  extern u32 __read_mostly kvm_nr_uret_msrs;
+>  extern bool __read_mostly allow_smaller_maxphyaddr;
+>  extern bool __read_mostly enable_apicv;
+> +extern bool __read_mostly enable_device_posted_irqs;
+>  extern struct kvm_x86_ops kvm_x86_ops;
+>  
+>  #define kvm_x86_call(func) static_call(kvm_x86_##func)
+> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+> index 65fd245a9953..e0f519565393 100644
+> --- a/arch/x86/kvm/svm/avic.c
+> +++ b/arch/x86/kvm/svm/avic.c
+> @@ -898,8 +898,7 @@ int avic_pi_update_irte(struct kvm *kvm, unsigned int host_irq,
+>  	struct kvm_irq_routing_table *irq_rt;
+>  	int idx, ret = 0;
+>  
+> -	if (!kvm_arch_has_assigned_device(kvm) ||
+> -	    !irq_remapping_cap(IRQ_POSTING_CAP))
+> +	if (!kvm_arch_has_assigned_device(kvm) || !enable_device_posted_irqs)
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
----
- rust/kernel/error.rs | 1 +
- 1 file changed, 1 insertion(+)
+This function will now also be skipped if enable_apicv is false. Is this
+always the case here for some reason? Sorry if I missed something
+obvious.
 
-diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-index 376f6a6ae5e3..30014d507ed3 100644
---- a/rust/kernel/error.rs
-+++ b/rust/kernel/error.rs
-@@ -64,6 +64,7 @@ macro_rules! declare_err {
-     declare_err!(EPIPE, "Broken pipe.");
-     declare_err!(EDOM, "Math argument out of domain of func.");
-     declare_err!(ERANGE, "Math result not representable.");
-+    declare_err!(EOVERFLOW, "Value too large for defined data type.");
-     declare_err!(ERESTARTSYS, "Restart the system call.");
-     declare_err!(ERESTARTNOINTR, "System call was interrupted by a signal and will be restarted.");
-     declare_err!(ERESTARTNOHAND, "Restart if no handler.");
--- 
-2.43.0
+>  		return 0;
+>  
+>  	pr_debug("SVM: %s: host_irq=%#x, guest_irq=%#x, set=%#x\n",
+> diff --git a/arch/x86/kvm/vmx/posted_intr.c b/arch/x86/kvm/vmx/posted_intr.c
+> index ec08fa3caf43..a03988a138c5 100644
+> --- a/arch/x86/kvm/vmx/posted_intr.c
+> +++ b/arch/x86/kvm/vmx/posted_intr.c
+> @@ -134,9 +134,8 @@ void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
+>  
+>  static bool vmx_can_use_vtd_pi(struct kvm *kvm)
+>  {
+> -	return irqchip_in_kernel(kvm) && enable_apicv &&
+> -		kvm_arch_has_assigned_device(kvm) &&
+> -		irq_remapping_cap(IRQ_POSTING_CAP);
+> +	return irqchip_in_kernel(kvm) && enable_device_posted_irqs &&
+> +	       kvm_arch_has_assigned_device(kvm);
+>  }
+>  
+>  /*
+> @@ -254,7 +253,7 @@ bool pi_has_pending_interrupt(struct kvm_vcpu *vcpu)
+>   */
+>  void vmx_pi_start_assignment(struct kvm *kvm)
+>  {
+> -	if (!irq_remapping_cap(IRQ_POSTING_CAP))
+> +	if (!enable_device_posted_irqs)
 
+Ditto here.
+
+>  		return;
+>  
+>  	kvm_make_all_cpus_request(kvm, KVM_REQ_UNBLOCK);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 69c20a68a3f0..1b14319975b7 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -227,6 +227,10 @@ EXPORT_SYMBOL_GPL(allow_smaller_maxphyaddr);
+>  bool __read_mostly enable_apicv = true;
+>  EXPORT_SYMBOL_GPL(enable_apicv);
+>  
+> +bool __read_mostly enable_device_posted_irqs = true;
+> +module_param(enable_device_posted_irqs, bool, 0444);
+> +EXPORT_SYMBOL_GPL(enable_device_posted_irqs);
+> +
+>  const struct _kvm_stats_desc kvm_vm_stats_desc[] = {
+>  	KVM_GENERIC_VM_STATS(),
+>  	STATS_DESC_COUNTER(VM, mmu_shadow_zapped),
+> @@ -9772,6 +9776,9 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+>  	if (r != 0)
+>  		goto out_mmu_exit;
+>  
+> +	enable_device_posted_irqs = enable_device_posted_irqs && enable_apicv &&
+> +				    irq_remapping_cap(IRQ_POSTING_CAP);
+
+Maybe this is clearer:
+
+	enable_device_posted_irqs &= enable_avivc && irq_remapping_cap(IRQ_POSTING_CAP);
+
+> +
+>  	kvm_ops_update(ops);
+>  
+>  	for_each_online_cpu(cpu) {
+> @@ -13552,7 +13559,7 @@ EXPORT_SYMBOL_GPL(kvm_arch_has_noncoherent_dma);
+>  
+>  bool kvm_arch_has_irq_bypass(void)
+>  {
+> -	return enable_apicv && irq_remapping_cap(IRQ_POSTING_CAP);
+> +	return enable_device_posted_irqs;
+>  }
+>  
+>  int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
+> 
+> base-commit: c9ea48bb6ee6b28bbc956c1e8af98044618fed5e
+> -- 
+> 2.49.0.rc1.451.g8f38331e32-goog
+> 
+> 
