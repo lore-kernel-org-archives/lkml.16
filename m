@@ -1,78 +1,122 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FC021A42C
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD2117D346
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742211877; cv=none; b=nsRo7ioO0Av3NDBY/fZr4/Q9mlBoXuTjLxcqEmMgmjehbA4kQYQuMV6Nl324L65OOcVSPB6DU5zcSuj6MFdZ9Xt46BOKtPtLblSFiDBOqWFM6mdlknAL7S9l9tLTeqRrkJjZPEsMnaGmuLmNlRW7bYGp/DymnCovYatqdbzNknw=
+	t=1742211932; cv=none; b=eorgnAtHJCnAMdAnsTc7RF/ByI+8hKRqgdO4NeqvDGCy5gWsJBls8+SjBdHvVyhwmGZBypRuUdZfnR48eSI1ShsLuggZwrpiNkfjaBCbVTY7ack6QI1R4p6cSEjcWCSdOGw3/Yc/z0WPZkiV+PxoDMjy/C3mMkXSwkUz7eu3EGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742211877; c=relaxed/simple;
-	bh=QyYFRxfvyvi/bupKRx3kX9/G+GyhRz3wyKQ6R52ZjU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FkFHaO88LYIgdpy9/3Wb233YsHWvCr65ZOmERSWypjQLmgxcEIYFVvRIh39AiuZboaMb6SWwVfEjIXc6cpeDCIgIYPbCS/KsTqMiNGezSoCnFikepJTiskr0dkFhQ05Ed5j8qtfP4FSUkSp045EJ3nQvn0Jm8FKUuhDfb2OGNFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=K2poXIRh; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1742211932; c=relaxed/simple;
+	bh=hhnIm6T94gB27SgYf0UY3q16p2S9qisBQ92xnKlNn8A=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=TAaok4yAQy4dMERpqmiE+p4rc3ALjZumKd1KQ84Mky4k1jwgeRSVuOEnWQ0mBh2EAiXipLnAYOUv5ALXozFf3YORRtqdfkhpFJK0Bx/AgiSVwPT85hbnygxDHAOLnQLG6C2wuU78afsh+23pzBLM3fKRfSV/CyYyphzaWUfE/Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=Q8V6s/9x; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K2poXIRh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=D9FtNtoMUf3n11DpseLS4Iblhw8bfIkmo1Ru9I6bARU=; b=K2poXIRheASwJFkLe23w8wnhtf
-	s9rZC83eQOsI5eg6Cfl6/BY0+M/2L1fMek56oTEm8mtJc3StObfrHW5cy/Hz4sGz0VcREttOcc68+
-	pZwWBV8Y+XmD6zCGvOG5ptD8XAJXVZvVSYdIzWb1jmp5EANwr8cDIGtRLj+MaB80PMXVEsapq0Z21
-	pSkqnGIcda+AyQwtdJSCtlNb2xpyju9CoY75j5g9+Xftzo1E+J/fBYUBNj6YFKz74DbgHhcf2DQO+
-	ZT+DggY9YjsSSEiRGT9Dy8kyd9+B3cEK/CJ+ke9xs1Ho6sJVwKCWaMO/Irw82S6uh0nVZA4gN0DrZ
-	3jvQ9a0Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tu8tK-00000008cqo-1UdS;
-	Mon, 17 Mar 2025 11:44:22 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A9D61300783; Mon, 17 Mar 2025 12:44:21 +0100 (CET)
-Date: Mon, 17 Mar 2025 12:44:21 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Metin Kaya <Metin.Kaya@arm.com>,
-	Xuewen Yan <xuewen.yan94@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com,
-	Connor O'Brien <connoro@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC PATCH v15 2/7] locking/mutex: Rework task_struct::blocked_on
-Message-ID: <20250317114421.GB36386@noisy.programming.kicks-ass.net>
-References: <20250312221147.1865364-1-jstultz@google.com>
- <20250312221147.1865364-3-jstultz@google.com>
- <20250313061351.412bc92e@batman.local.home>
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="Q8V6s/9x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
+	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ntI7zWmcsXzPUVWEHAFv4p7510PGp6fVrYmgfrStXsQ=; b=Q8V6s/9xQVK8iRH2NJSa7eJ+Yd
+	UcM9p0hqMirml26qEX3sGZ0Q5z4MMtznx5X/JQsdlIF9/23a3ZgSY+LTMT4t4uvNH38gYAdazyV3w
+	VDvRmqmvw/icKKXg5baNbEQORkQeTp3ZOeWwq65MTJfrzRNBKtONwi0hIVw+/msACGpUbdRB863Ox
+	/CSiJupilRfaiWclt/bvoT3Lrq1GZ5jq1AUjA9ea7emKWT4xmKuHowob+IafQJSzeGELnxvcsZMii
+	qOuM4NOgc/ToFSuFyU7G5aeQDZDUEWoXEz2OS9422B/i5d8T86I5JoTTvqLutz8tbgKAKm/BdMrxJ
+	FBawYabw==;
+Received: from [122.175.9.182] (port=19732 helo=zimbra.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1tu8VL-000000006I9-3mNW;
+	Mon, 17 Mar 2025 16:49:36 +0530
+Received: from zimbra.couthit.local (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTPS id 4A016178245B;
+	Mon, 17 Mar 2025 16:49:31 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTP id 33B3C1783FED;
+	Mon, 17 Mar 2025 16:49:31 +0530 (IST)
+Received: from zimbra.couthit.local ([127.0.0.1])
+	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 3B2FHv0nDjmA; Mon, 17 Mar 2025 16:49:31 +0530 (IST)
+Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
+	by zimbra.couthit.local (Postfix) with ESMTP id 0C121178245B;
+	Mon, 17 Mar 2025 16:49:31 +0530 (IST)
+Date: Mon, 17 Mar 2025 16:49:30 +0530 (IST)
+From: Parvathi Pudi <parvathi@couthit.com>
+To: nm <nm@ti.com>
+Cc: basharath <basharath@couthit.com>, ssantosh <ssantosh@kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, 
+	danishanwar <danishanwar@ti.com>, praneeth <praneeth@ti.com>, 
+	srk <srk@ti.com>, rogerq <rogerq@ti.com>, afd <afd@ti.com>, 
+	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
+	mohan <mohan@couthit.com>, parvathi <parvathi@couthit.com>, 
+	Kevin Hilman <khilman@baylibre.com>
+Message-ID: <1365068627.843903.1742210370862.JavaMail.zimbra@couthit.local>
+In-Reply-To: <20250307210517.5xjfc6wntcbj3s4k@precision>
+References: <20250108125937.10604-1-basharath@couthit.com> <20250108125937.10604-2-basharath@couthit.com> <20250307210517.5xjfc6wntcbj3s4k@precision>
+Subject: Re: [PATCH v2 1/1] soc: ti: PRUSS OCP configuration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313061351.412bc92e@batman.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
+Thread-Topic: PRUSS OCP configuration
+Thread-Index: DvRQZaXzAimB/uZVNUsWawvfCP38Jg==
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Thu, Mar 13, 2025 at 06:13:51AM -0400, Steven Rostedt wrote:
+Hi Nishanth,
+
+> On 18:29-20250108, Basharath Hussain Khaja wrote:
+>> From: Roger Quadros <rogerq@ti.com>
+>> 
+>> Updates OCP master port configuration to enable memory access outside
+>> of the PRU-ICSS subsystem.
+>> 
+>> This set of changes configures PRUSS_SYSCFG.STANDBY_INIT bit either
+>> to enable or disable the OCP master ports (applicable only on SoCs
+>> using OCP interconnect like the OMAP family).
+>> 
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Signed-off-by: Andrew F. Davis <afd@ti.com>
+>> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+>> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
 > 
-> FYI, this is useful for Masami's "hung task" work that will show what
-> tasks a hung task is blocked on in a crash report.
+> On the verge of applying this patch, looking deeper, I noticed
+> drivers/bus/ti-sysc.c managing the sysc controls. infact, I wonder if
+> b2745d92bb015cc4454d4195c4ce6e2852db397e ("bus: ti-sysc: Add support
+> for PRUSS SYSC type") could be merged with this?
+> 
+> 
+> Could you say why drivers/bus/ti-sysc.c would'nt be the right solution?
+> 
+> Ccying Kevin if he has any ideas about this.
+> 
 
-Yeah, but I would really rather not have that interfere.
+Thank you for the feedback.
+
+We will analyze ti-sysc and revert back with an update shortly.
+
+
+Thanks and Regards,
+Parvathi.
