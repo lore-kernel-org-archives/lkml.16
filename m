@@ -1,166 +1,161 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C915119048F;
-	Mon, 17 Mar 2025 18:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DC71DDC16
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742236434; cv=none; b=TVyj3QqAuJU0Z/e0MG7WBa0lYNMfOxgEI/qxIWuLkCeiR3ybmM1DSbS9BgXxw/JWdrDbam8h+s+4F98aHM3yu+zRIW9z/JMDm63YInaSNFVAzOAYUz/R5aVeLGZD+FYdZiFi19AQOCE4FsoWHsGcOdJm2dbNFNZZHSLMH7HWsts=
+	t=1742236481; cv=none; b=Kcsi1NObgI8u6xFo/ybeDD45mxAXODCh4dcnN25/t/mzKMsrl0V3bP2QBhk5UmmHHAD6poflB3Df+vHcNpVDUAMhZzWRl/dOd8+zC8S4NqShR6u8JAD10XBbTv8mP9STx4zHg1UaR8WjdO74pVmplk6I8ZWh9awrT8991MTEgY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742236434; c=relaxed/simple;
-	bh=ehOGcmrGZaJQniQGWoH0A1zU6UMeQK1IbOtzAOin1lY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jf4fHc0KDwqL7fu5m6Z+InUZNofIJOE3hGKU7yTfzrWrwCRPO1dHzhFLcZ0xgrrW6CXJMJ5dSGUgii9zs3e1wLIaUvYdIn7cdE0znFCVcgVsEfebNQo4e5WDQoGVQCs7bChAIbxh0vusdywCN/2zB9UtThbCLTtfc90i7C7gL9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xq7BStlh; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742236481; c=relaxed/simple;
+	bh=WPvFh0iTwaqlqrtPgeJtgbfDX2prTYQSc37gvTNIaFI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Rm8clMrx4iVxCOsE4neXAsvn6eTQ6I4KFYkUEzZjr1FcuE9N3PbZowSdosx+5hcvpZre1G9Fmk/MAZRzANwD3LEWOQWtfaAXDPQ2bMFn5gjNjK7wW8cyGYrDhNg1U3BE6HVrYslS3IpPFzvHjzbZvauZQ+j8b7zXnyhVBynzxj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=oIhIyey4; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xq7BStlh"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3061513d353so59395991fa.2;
-        Mon, 17 Mar 2025 11:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742236431; x=1742841231; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+RgH8a/UTVf+jUM886CjeJ+7fFyfFZ683ptFNfGfQ4E=;
-        b=Xq7BStlhC2uV+7o/89RKvcRLCLmppScbfvZ/eWDMNgkfFlcHKxObU45wkw4xs9VPIp
-         psb9CbihFbBjP3+lWk/gZrYW46q18kB5sfAc2Oj3EGYhh5YpeHQTgsWl+ya4eV3QviYY
-         uTJceN9XW+hrrK9Vddn0bBgwMDDCV/N2ENHHNoj3rRC52F1AhA0LO0NZZgkLYApViZAk
-         1rmEeG/GIVaMvkJwPFfek8IyORFb039hSE46IRKqAQXp0XfmCxMDOAQ9HO1Cr5FeePEI
-         b8EDAmDisPDjNQVtl+NgDeowq08hC6Rm5OAMbRP8pHVXIumyfClpZoJ603rSbTeDAdmI
-         YyiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742236431; x=1742841231;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+RgH8a/UTVf+jUM886CjeJ+7fFyfFZ683ptFNfGfQ4E=;
-        b=d/t1cZiYhgLrJOn27oZPrBeGkZ3FVbyl4KKfho8cm0JlySJGsWVi3d5iuKZwb0cm8F
-         I74cdpL8JeViugwRueUbhuOmfG7ElEtTVFCONw3QglX6H1w0QJdBVRantEQvI7cIFYO2
-         eKmxlIkKomIZoAu+vg+rqojP5pomLVujrKByaCvyHDMaK0BS6DU+7o7i/v9p12rj5rKX
-         tAeY8VIFMAqEEFocpbHX8fhDhx72QK6InZyVQswkHTJne7uHY3zGJwa/UlGooWc8iYoU
-         +hQuwNb2ypRE24aG4TujLcFDIY2OH8RGYe8gPSftmI0cKrUBC0tnxVH1k1nIY9oZqflC
-         7W/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVAqH8Wg5tPAUlnBzExLDCv57Uto2Qd5VHeOgQ1SGsHSavOgW/IVaEHfkTl33zzNp9CvxfR9kx9YA4N1Us8fJXa@vger.kernel.org, AJvYcCVXigdoblaqLcGKpPaF9+fglXfLJCjtH75Si3xTQTcHFgimeIhAjjHP9+eBrOU7elz6dqrHDiHQW4UEBra8@vger.kernel.org, AJvYcCVgYl4jU8aYaF+tfwiHJASxcji5fqNIc0xGgxu0xw0yOQmMzVuziR2q5w+tOk5M/1GbFgcssoOi4CUja/Cg@vger.kernel.org, AJvYcCVr806qnfmtjgfoqScQD+EGxS8myD6Cgz8aXQRv+ECzoTH+6KsW30tIL8RJ2bZlfNDy0D0WLqpHuEQNrmM=@vger.kernel.org, AJvYcCW+pr9F+ww50tK4+d4ccYlVSLQ7k4jL6VAZK8vKyB8ddTPicp0Wf/33+/ngFFLGzakvcRoyz7YvVxLp@vger.kernel.org, AJvYcCWwQagfSD1i7QAx8TPkxgUryOzAcKVW1UdGXLVS3fklxj3PtBPp0YTBW1bsws9dKL8nFX7gWvLF7OW339xJz+o=@vger.kernel.org, AJvYcCXF8Tqmw8leeb27OGdjFKWzzKHswBpBiacxHZZe9ErNp98pmuQLWAXf+TGnJJrCmTn2oQ6DNQJuossj@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPRIWILSn/aEBEg7rxCXkhxjf3E10AehE8fV8V2SWmKv1V+WdS
-	/uE6u6kN4wlg1+RxslDCqhKNL4APFYSPeRh+HVmEu+xDlw58+68tRmkdhAOfgw//1q+udw6vm/T
-	QL7ltdiLg/2tZukCm2bjOyoNY8pg=
-X-Gm-Gg: ASbGnctZ0Dw1vBqU/m66tamo9h8njQdFrW7qlrHrS0Emk6AdQOR61Gf9tCwffTm6pkA
-	uM7t/FsI6wfQzaq4tzHTAVIUwoAObRduagV2nORoKpmjkiUwa4t0JvEpSp9haMbEAH/yQztZIxl
-	S4SpjN2P8SxsfXTSeUgeUmpL1aaSOYgNp5mWXZAQEN/Zw3JHaqjJyZ+DEFmBmR
-X-Google-Smtp-Source: AGHT+IEuOyU1EAIZGNPcU1UQpVvmze5Fv4puhAbwE4i2xu3ParhHBig+KUJCu/9ANLld3Xe0NJ1pTjvfSHUJlGkg4r0=
-X-Received: by 2002:a2e:7819:0:b0:30b:b204:6b98 with SMTP id
- 38308e7fff4ca-30c97543facmr9366801fa.12.1742236430751; Mon, 17 Mar 2025
- 11:33:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="oIhIyey4"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52HIYEpx662912
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 17 Mar 2025 11:34:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52HIYEpx662912
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1742236455;
+	bh=gTyUfoKni7BCQJ49qIT4dxeTpJNfoERL9pZV1Bp47vg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=oIhIyey4n7dEWOgxW9LGIfHeSLP0j6WVRXf/W5+pszTbLpp0p9AlzvAEgyFRjqZqn
+	 WWCQgvKTY1Nm9LeDkUp+MDXUymJwAaURPjLMkAAFqixnD55Ny3bpKweoq5xXkJu0BE
+	 5M2nV0zMcLIBzwbppzczuCpEVaKOMIb2+kKMXlGSz9WIpvsaW9DWV1T/vPrPeSxtkh
+	 yJMnb/fakcpDZ+yVLOnlVTDdZk1NOiwX8O5RVl5sIOeEcQnf9d7xRvjTuym/SNgsZs
+	 CBsttdjKCkaGD+dEHqv5+cW2UuO38dxdHxdtqGTvWcLPqMnfQ9YcYpc+gFanejRKk9
+	 8LAiErH6jukig==
+Date: Mon, 17 Mar 2025 11:34:12 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
+CC: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_x86/asm=3A_Use_asm=5Finline=28=29?=
+ =?US-ASCII?Q?_instead_of_asm=28=29_in_=5F=5Funtagged=5Faddr=28=29?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <Z9fk2NMBRHB9Eu5h@gmail.com>
+References: <20250314093111.654359-1-ubizjak@gmail.com> <20250314112504.GBZ9QSEL1hgjp376ey@fat_crate.local> <Z9fk2NMBRHB9Eu5h@gmail.com>
+Message-ID: <E54655B6-6E91-492E-A4DA-1A6378CC03A1@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
- <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com> <D8IQCJHJWPNJ.1J2UO4OK0D0B3@proton.me>
- <CAJ-ks9=cBEZqPHMWsh7-c16LTg+i+RmDFigwy81o9yOj2J+jFA@mail.gmail.com>
-In-Reply-To: <CAJ-ks9=cBEZqPHMWsh7-c16LTg+i+RmDFigwy81o9yOj2J+jFA@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Mar 2025 14:33:14 -0400
-X-Gm-Features: AQ5f1JrVwUf05ntBkD98vS-EcZTcBLddhaoJo6_SZObmEIDvKFbJY6SKC0TNZzk
-Message-ID: <CAJ-ks9nCdcn7ajG69m+2QTgYxvELd2h7kdBb_bLpTwQbnZ8X_Q@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2025 at 2:31=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
+On March 17, 2025 2:01:12 AM PDT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
 >
-> On Mon, Mar 17, 2025 at 1:50=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
-> >
-> > On Mon Mar 17, 2025 at 3:23 PM CET, Tamir Duberstein wrote:
-> > > Throughout the tree, use the strict provenance APIs stabilized in Rus=
-t
-> > > 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
-> > > functions at the `kernel` crate root along with polyfills for rustc <
-> > > 1.84.0.
-> > >
-> > > Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc =
-<
-> > > 1.84.0 as our MSRV is 1.78.0.
-> > >
-> > > In the `kernel` crate, enable the strict provenance lints on rustc >=
-=3D
-> > > 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introduci=
-ng
-> > > compiler flags that are dependent on the rustc version in use.
-> > >
-> > > Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-p=
-rovenance-apis [1]
-> > > Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> > > Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.m=
-e/
-> > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> >
-> > One comment below, with that fixed:
-> >
-> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> >
-> > > ---
-> > >  init/Kconfig           |   3 ++
-> > >  rust/kernel/alloc.rs   |   2 +-
-> > >  rust/kernel/devres.rs  |   4 +-
-> > >  rust/kernel/io.rs      |  14 +++----
-> > >  rust/kernel/lib.rs     | 108 +++++++++++++++++++++++++++++++++++++++=
-++++++++++
-> > >  rust/kernel/of.rs      |   2 +-
-> > >  rust/kernel/pci.rs     |   4 +-
-> > >  rust/kernel/str.rs     |  16 +++-----
-> > >  rust/kernel/uaccess.rs |  12 ++++--
-> > >  9 files changed, 138 insertions(+), 27 deletions(-)
-> >
-> >
-> > > +#[cfg(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE))]
-> > > +mod strict_provenance {
-> > > +    /// Gets the "address" portion of the pointer.
-> > > +    ///
-> > > +    /// See https://doc.rust-lang.org/stable/core/primitive.pointer.=
-html#method.addr.
-> > > +    #[inline]
-> > > +    pub fn addr<T>(ptr: *const T) -> usize {
-> > > +        // This is core's implementation from
-> > > +        // https://github.com/rust-lang/rust/commit/4291332175d12e79=
-e6061cdc3f5dccac2e28b969 through
-> > > +        // https://github.com/rust-lang/rust/blob/1.84.0/library/cor=
-e/src/ptr/const_ptr.rs#L172
-> > > +        // which is the first version that satisfies `CONFIG_RUSTC_H=
-AS_STABLE_STRICT_PROVENANCE`.
-> > > +        #[allow(clippy::undocumented_unsafe_blocks)]
-> > > +        unsafe {
-> > > +            #[allow(clippy::transmutes_expressible_as_ptr_casts)]
-> > > +            core::mem::transmute(ptr.cast::<()>())
-> > > +        }
-> >
-> > I think we should just use `ptr as usize` here instead. It's going away
-> > at some point and it will only affect optimizations (I don't even know
-> > if they exist at the moment) of old versions.
+>* Borislav Petkov <bp@alien8=2Ede> wrote:
 >
-> Why get cute? I'd rather defer to the standard library.
+>> On Fri, Mar 14, 2025 at 10:30:55AM +0100, Uros Bizjak wrote:
+>> > Use asm_inline() to instruct the compiler that the size of asm()
+>> > is the minimum size of one instruction, ignoring how many instruction=
+s
+>> > the compiler thinks it is=2E ALTERNATIVE macro that expands to severa=
+l
+>> > pseudo directives causes instruction length estimate to count
+>> > more than 20 instructions=2E
+>> >=20
+>> > bloat-o-meter reports minimal code size increase
+>>=20
+>> If you see an increase and *no* *other* *palpable* improvement, you=20
+>> don't send it=2E It is that simple=2E
+>
+>Sorry, but you wouldn't be saying that eliminating function calls is=20
+>not a 'palpable improvement', had you ever profiled a recent kernel on=20
+>a real system, on modern CPUs =2E=2E=2E :-/
+>
+>The sad reality is that the top profile is dominated by function call +=
+=20
+>return overhead due to CPU bug mitigation workarounds that create per=20
+>function call overhead:
+>
+> Overhead  Shared Object               Symbol
+>   4=2E57%  [kernel]                    [k] retbleed_return_thunk <=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D !!!!!!!!
+>   4=2E40%  [kernel]                    [k] unmap_page_range
+>   4=2E31%  [kernel]                    [k] _copy_to_iter
+>   2=2E46%  [kernel]                    [k] memset_orig
+>   2=2E31%  libc=2Eso=2E6                   [=2E] __cxa_finalize
+>
+>That retbleed_return_thunk overhead gets avoided every time we inline a=
+=20
+>simple enough function=2E
+>
+>But GCC cannot always do proper inlining decisions due to our=20
+>complicated ALTERNATIVE macro constructs confusing the GCC inliner:
+>
+>  > > ALTERNATIVE macro that expands to several pseudo directives causes=
+=20
+>  > > instruction length estimate to count more than 20 instructions=2E
+>                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>
+>Note how the asm_inline() compiler feature was added by GCC at the=20
+>kernel community's request to address such issues=2E (!)
+>
+>So for those reasons, in my book, eliminating a function call for=20
+>really simple single instruction inlines is an unconditional=20
+>improvement that doesn't require futile performance measurements - it=20
+>'only' requires assembly level code generation analysis in the=20
+>changelog=2E
+>
+>The reason is that requiring measurable effects for really small=20
+>inlining changes is pretty much impossible in practice=2E I know, because=
+=20
+>I tried, and I'm good at measuring such things and I have the hardware=20
+>to do it=2E Yet the per function call overhead demonstrated above in the=
+=20
+>profile is very much real and should not be handwaved away=2E
+>
+>Note that this policy doesn't apply to other inlining decisions, only=20
+>to single-instruction inline functions=2E
+>
+>Also, having said all that, for this particular patch I'd still like to=
+=20
+>see a bit more GCC code generation analysis in this particular=20
+>changelog: could you please cite a single relevant, representative=20
+>example before/after assembly code section that demonstrates the=20
+>effects of the inlined asm versus function call version, including the=20
+>function that gets called?
+>
+>I'm asking for that because sometimes single instructions can still=20
+>have a halo of half a dozen of instructions that set them up or=20
+>transform their results, so sometimes having a function call is the=20
+>better option=2E Not all single-instruction asm() statements are 'simple'=
+=20
+>in praxis - but looking at the code generation will very much tell us=20
+>whether it is=2E
+>
+>Thanks,
+>
+>	Ingo
 
-Ah, this is gone anyway with Boqun's suggestion - this function exists in 1=
-.78.
+I would like to repeat that I would like to see us at least try to #define=
+ asm __asm__ __inline__ tree-wide (with a possible opt-out) and run a bench=
+mark on it=2E Since this is a central knob, we could even make it a Kconfig=
+ option that architectures can opt in or out of, or be overridden for speci=
+fic compilers should it ever be necessary=2E
+
+It is simply much closer to how we actually use asm() in the Linux kernel,=
+ *and* what performance characteristics we tend to care about=2E More often=
+ than not if we have a large hunk of assembly source it is because of metad=
+ata and/or directives=2E
+
+It doesn't hurt that inline duplicating kernel code can occasionally bring=
+ about huge improvements in terms of branch eliminations because often (but=
+ far from always, of course) the difference in call context allows the comp=
+iler to eliminate dead paths=2E=20
+
+    -hpa
