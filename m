@@ -1,121 +1,300 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB8B241693
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781582417EF;
+	Mon, 17 Mar 2025 10:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742207700; cv=none; b=O+5Uae1dLg+yX/XnQCIFQd+teWcCYzqbViCSk9joH2Cj5pRWDKZUWAcFcWMofRIiFQ93v6X6wTvCg7KZimM+BFlhZdUf3Bd6tg74My205cm9FE4nhEHO02RVgB0/IjJxN7oPRIpUU7/NgZ9IeaSAPD19xeJ56x4B5wNTwCjQiV0=
+	t=1742207701; cv=none; b=AtV5yxhYrkhZPUKYcEPWLEXJci04TGlzNkC1vaTz+Ziz95yINLx5b6lZULbDJTLGsfnNPmVleioReN2dZGALf2lOwsE5x+fpivs5E5X2Hho5bv8oJDQjoWVFUB+7qNCxGj9YhyZr6V8A0W6XBO/OBf+SgQt19ATNHdJp+BeM13k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742207700; c=relaxed/simple;
-	bh=Of5SO/kOuDWzPvH7jgul/ATKgBMz1+uJud1GfXwBsTA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sFoTzstDrXiTsO4ebQ7Vq7Y0CqlwlwYCPno/THB9nk9DpaQdu91OlJciMBviQe0Cs8UYgeLKZdhHpzenSsMYoXOaMr+5haAX8i8/jo4hpmquDdAnwM6bFQPqv4EyfxXWprFufxjf8OnQSMS/H0Vt49ri08t1RFQzzjH3wEpHzBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=M/rT9Yt+; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1742207701; c=relaxed/simple;
+	bh=PQ4m1BRysJtmQ91pV7uLzV57b8MNZUPVEtNJiCG++4o=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=C+YKOmcq24N1r39zpWbYv1qk1ICm4eqi8aKqaoJPZIIHx5ReFcDz4hAuLQBJAYannSRUMopTOgfgzDZcOTEdUNb8ZxtNmua8zJa6bwjZhK3Phf9zDqxvGxitGQ2Ws6rSttEuMoA2nePDDfDfqPSUF1y+YtCec0p31eN11K8DVe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u35b+bsY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ozwUEbWB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="M/rT9Yt+"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39149bccb69so4142441f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 03:34:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742207696; x=1742812496; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=l/OCIBGi+QQKAbbyEwfquW9P06SxRFDLjeq98QTwp5Y=;
-        b=M/rT9Yt+zbFHSBi1gr6bTDp7jlX3+q/GoHoSFsEI3f8d7CkkSm3Qzg2ex6TIrwPbbt
-         L4TtFutxgvrc85StoDbpMjrv7A3q1Li2lLXYSsVrgNK9lm2IeZ8LuvDuWA7kFK+bdWs8
-         CjsP+vJR4X4RHXaUazbN2xPmbUq+eoTZuOD9WDyY1GjQrNd4PcTKzEivBsmUxn7y9nPF
-         /vAsqN/QJ/g3JU8jjDo3t3jgN2wdLp94mJzj3zIF4YXcU6uwGZtarK64KBerIZetg5RW
-         LWsYPb68HeYvN2RhK3Ir1IqvpAqQk7Ck9H7mLaE0VpeDLLwbsgdQ3ORNdaiU+HrqLMKJ
-         lcjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742207696; x=1742812496;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l/OCIBGi+QQKAbbyEwfquW9P06SxRFDLjeq98QTwp5Y=;
-        b=b5yd6fF8ZPSJKE7K5VnAphI3PVQrxGqubvQjLHOzdclfWoxXVW0fAKphkClasI7r8o
-         DLpTD8nyyUNesbY4SOWs0yLkGEnXvIT4336tveccfkbmqPMVy5wQIHl8/DSyyc9Sb/EQ
-         sHfGicFmgo26llt+pWF3mq9dDBDUnju70ViOKdVW5//W6jLGx24qeN8n0oAulFm2FDiA
-         i/NneWTLyNGO+XszRNVMpPgEz52nYg7GgbJdclj6bBLLQjNquE9z6bPbDuweoT2gehnV
-         Rg6nYLavG24yegjpsRBC5x1EpCC4BKl1J42SB1ovRFPwMo6izF8zhcs/XHrnXoa35nXj
-         DMXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxAbsWoqHVwo6Pf0GY5Xj+3z5XnuZNJ9/fBr7UqKY0nY16IX7OWq8ZzCfhB/vhgzrx+Aoo0ffS6Ibtj4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx1ofU0woRnQNdgoiqA4UvgZfWv+sSzwfXBM+KL1aJh9aWWj2W
-	fl1/edygggnqYzaV5+o8h6RJNQYj6IdqwPY2DD3DX30/Qx0yBfbMRRsy0L6jhVU=
-X-Gm-Gg: ASbGnctKAmyrq3umGVrBtAvMVOG6KNgGQyC6H+xgk3J7XABRcOVKsBy+QF0+c/d2A0P
-	yqx9iWhy+za/6QG0YDYMpWvwlesVZlbsWnSA9h7j3/T+6XLfZFZ2lqCIat0TJN4Brr0dfqbihUn
-	Lz5oSOh17fZ3UyNT9/NxFrmjTX1tOzM7etUAzwwQx5ublJ/ml/pmwWG0s8c8j7QyFrM4VSSrmDA
-	E2oWYwLqezGMtyCkSviT1l8y9WP2dJOMY5lgvdkVTWhvN6UQzEz0+0YdQN5ERB3pD7F5Qoj9NYo
-	UntXLYYaIfAFQ9Uyk7ZP3+MWJLmxRs9yOhIKOYII4REIUeY=
-X-Google-Smtp-Source: AGHT+IFUetDwdpPXZ56ZmMu09Y/xpUhEIp8BG5ohNi+1XsYZzAjOYO0qpVFi5I1pgbI1u+vznJxLSA==
-X-Received: by 2002:a5d:64a2:0:b0:391:4231:416 with SMTP id ffacd0b85a97d-3971e9720e5mr13342344f8f.36.1742207696411;
-        Mon, 17 Mar 2025 03:34:56 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c4f9d59dsm14583380f8f.0.2025.03.17.03.34.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 03:34:55 -0700 (PDT)
-Date: Mon, 17 Mar 2025 11:34:54 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, David Gow <davidgow@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v9 0/6] scanf: convert self-test to KUnit
-Message-ID: <Z9f6vYanql2xqbJw@pathway.suse.cz>
-References: <20250307-scanf-kunit-convert-v9-0-b98820fa39ff@gmail.com>
- <Z9QvRJE0Yun5mfsN@pathway.suse.cz>
- <202503141345.0D3FB87E3@keescook>
- <CAJ-ks9=zFuH=4Sm-zqR_kAuv=fmwpCh__fXgxcoRgc5XuQ46Fg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u35b+bsY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ozwUEbWB"
+Date: Mon, 17 Mar 2025 10:34:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742207697;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M+XbdGz1+FVQ/u6Y/RU8bJLvpnpYWbHXZ93xWZzLr/I=;
+	b=u35b+bsYZDFxO82YvRdFGvCCB3wJOwdfInHHFZ+q6Lir09MryFh2Zrrqc31tG03rZIkf9S
+	y2ncWsqYjIlJ5C3djt2vXpWcsFvTbokBxsdgTmXO3EQzpDloiA5TDsVXomppN8ZY6COG6q
+	GwjEMHBaGYAKeKoQzEl8Uo30b0TV3jafOc6JsSwFo3G3UNFiv56EoArimQH0mq2dnIEPvb
+	YbkFWjLCNDX4jC5m2hMmg+6z2FQ3Ez5EYi68rB2nfIy0NYG+ofI7zq+AMke3Uaq4yR5bFE
+	i5Ke4t2Z6iRZ6QRPIG2F9yMI8KF2ZqpU51rnXOElUJRYqDQAJn2f8mBVGGK44g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742207697;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M+XbdGz1+FVQ/u6Y/RU8bJLvpnpYWbHXZ93xWZzLr/I=;
+	b=ozwUEbWBVN4MfhV3jz1vJeKNUhONk1L5SGWkmiyeTa2kA6ZvczOjK9JC88RL/oBngZif/1
+	IJ4P8rg0M/bRuIBg==
+From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched: Add a generic function to return the
+ preemption string
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250314160810.2373416-2-bigeasy@linutronix.de>
+References: <20250314160810.2373416-2-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ-ks9=zFuH=4Sm-zqR_kAuv=fmwpCh__fXgxcoRgc5XuQ46Fg@mail.gmail.com>
+Message-ID: <174220769709.14745.10741655509643439400.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri 2025-03-14 16:50:43, Tamir Duberstein wrote:
-> On Fri, Mar 14, 2025 at 4:45 PM Kees Cook <kees@kernel.org> wrote:
-> >
-> > On Fri, Mar 14, 2025 at 02:29:40PM +0100, Petr Mladek wrote:
-> > > On Fri 2025-03-07 06:27:33, Tamir Duberstein wrote:
-> > > > This is one of just 3 remaining "Test Module" kselftests (the others
-> > > > being bitmap and printf), the rest having been converted to KUnit. In
-> > > > addition to the enclosed patch, please consider this an RFC on the
-> > > > removal of the "Test Module" kselftest machinery.
-> > > >
-> > > > Tamir Duberstein (6):
-> > > >       scanf: implicate test line in failure messages
-> > > >       scanf: remove redundant debug logs
-> > > >       scanf: convert self-test to KUnit
-> > > >       scanf: break kunit into test cases
-> > >
-> > > Kees, could you please take the above 5 patches as well
-> > > via the tree moving the KUNIT tests to lib/tests ?
-> >
-> > I think you mean 4? Sure!
-> 
-> 4 by my count as well :)
-> 
-> Please let me know if you'd like me to respin with conflicts resolved!
+The following commit has been merged into the sched/core branch of tip:
 
-Yes, I meant 4. I am sorry for the confusion.
+Commit-ID:     8bdc5daaa01e3054647d394d354762210ad88f17
+Gitweb:        https://git.kernel.org/tip/8bdc5daaa01e3054647d394d354762210ad=
+88f17
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Fri, 14 Mar 2025 17:08:02 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Mon, 17 Mar 2025 11:23:38 +01:00
 
-And the list of pushed patches in the later reply looks good.
+sched: Add a generic function to return the preemption string
 
-Thanks for help.
+The individual architectures often add the preemption model to the begin
+of the backtrace. This is the case on X86 or ARM64 for the "die" case
+but not for regular warning. With the addition of DYNAMIC_PREEMPT for
+PREEMPT_RT we end up with CONFIG_PREEMPT and CONFIG_PREEMPT_RT set
+simultaneously. That means that everyone who tried to add that piece of
+information gets it wrong for PREEMPT_RT because PREEMPT is checked
+first.
 
-Best Regards,
-Petr
+Provide a generic function which returns the current scheduling model
+considering LAZY preempt and the current state of PREEMPT_DYNAMIC.
+
+The resulting strings are:
+=E2=94=8F=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=B3=E2=94=81=E2=94=81=E2=94=81=E2=94=
+=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
+=E2=94=81=E2=94=81=E2=94=B3=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
+=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=B3=E2=94=81=E2=94=81=
+=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
+=81=E2=94=81=E2=94=B3=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
+=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=93
+=E2=94=83   Model   =E2=94=83  -RT -DYN    =E2=94=83     +RT -DYN      =E2=94=
+=83     -RT +DYN       =E2=94=83     +RT +DYN      =E2=94=83
+=E2=94=A1=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=95=87=E2=94=81=E2=94=81=E2=94=81=E2=94=
+=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
+=E2=94=81=E2=94=81=E2=95=87=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
+=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=95=87=E2=94=81=E2=94=81=
+=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
+=81=E2=94=81=E2=95=87=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
+=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=A9
+=E2=94=82NONE       =E2=94=82 NONE         =E2=94=82 n/a               =E2=94=
+=82 PREEMPT(none)      =E2=94=82 n/a               =E2=94=82
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+=E2=94=82VOLUNTARY  =E2=94=82 VOLUNTARY    =E2=94=82 n/a               =E2=94=
+=82 PREEMPT(voluntary) =E2=94=82 n/a               =E2=94=82
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+=E2=94=82FULL       =E2=94=82 PREEMPT      =E2=94=82 PREEMPT_RT        =E2=94=
+=82 PREEMPT(full)      =E2=94=82 PREEMPT_{RT,full} =E2=94=82
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+=E2=94=82LAZY       =E2=94=82 PREEMPT_LAZY =E2=94=82 PREEMPT_{RT,LAZY} =E2=94=
+=82 PREEMPT(lazy)      =E2=94=82 PREEMPT_{RT,lazy} =E2=94=82
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=B4=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=B4=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98
+
+[ The dynamic building of the string can lead to an empty string if the
+  function is invoked simultaneously on two CPUs. ]
+
+Co-developed-by: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Signed-off-by: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Co-developed-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Signed-off-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+Link: https://lore.kernel.org/r/20250314160810.2373416-2-bigeasy@linutronix.de
+---
+ include/linux/preempt.h |  2 ++-
+ kernel/sched/core.c     | 47 ++++++++++++++++++++++++++++++++++++++++-
+ kernel/sched/debug.c    | 10 +++++----
+ kernel/sched/sched.h    |  1 +-
+ 4 files changed, 56 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+index ca86235..3e9808f 100644
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -515,6 +515,8 @@ static inline bool preempt_model_rt(void)
+ 	return IS_ENABLED(CONFIG_PREEMPT_RT);
+ }
+=20
++extern const char *preempt_model_str(void);
++
+ /*
+  * Does the preemption model allow non-cooperative preemption?
+  *
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 03d7b63..c734724 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7646,10 +7646,57 @@ PREEMPT_MODEL_ACCESSOR(lazy);
+=20
+ #else /* !CONFIG_PREEMPT_DYNAMIC: */
+=20
++#define preempt_dynamic_mode -1
++
+ static inline void preempt_dynamic_init(void) { }
+=20
+ #endif /* CONFIG_PREEMPT_DYNAMIC */
+=20
++const char *preempt_modes[] =3D {
++	"none", "voluntary", "full", "lazy", NULL,
++};
++
++const char *preempt_model_str(void)
++{
++	bool brace =3D IS_ENABLED(CONFIG_PREEMPT_RT) &&
++		(IS_ENABLED(CONFIG_PREEMPT_DYNAMIC) ||
++		 IS_ENABLED(CONFIG_PREEMPT_LAZY));
++	static char buf[128];
++
++	if (IS_ENABLED(CONFIG_PREEMPT_BUILD)) {
++		struct seq_buf s;
++
++		seq_buf_init(&s, buf, sizeof(buf));
++		seq_buf_puts(&s, "PREEMPT");
++
++		if (IS_ENABLED(CONFIG_PREEMPT_RT))
++			seq_buf_printf(&s, "%sRT%s",
++				       brace ? "_{" : "_",
++				       brace ? "," : "");
++
++		if (IS_ENABLED(CONFIG_PREEMPT_DYNAMIC)) {
++			seq_buf_printf(&s, "(%s)%s",
++				       preempt_dynamic_mode > 0 ?
++				       preempt_modes[preempt_dynamic_mode] : "undef",
++				       brace ? "}" : "");
++			return seq_buf_str(&s);
++		}
++
++		if (IS_ENABLED(CONFIG_PREEMPT_LAZY)) {
++			seq_buf_printf(&s, "LAZY%s",
++				       brace ? "}" : "");
++			return seq_buf_str(&s);
++		}
++
++		return seq_buf_str(&s);
++	}
++
++	if (IS_ENABLED(CONFIG_PREEMPT_VOLUNTARY_BUILD))
++		return "VOLUNTARY";
++
++	return "NONE";
++}
++
+ int io_schedule_prepare(void)
+ {
+ 	int old_iowait =3D current->in_iowait;
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index ef047ad..39be739 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -244,11 +244,13 @@ static ssize_t sched_dynamic_write(struct file *filp, c=
+onst char __user *ubuf,
+=20
+ static int sched_dynamic_show(struct seq_file *m, void *v)
+ {
+-	static const char * preempt_modes[] =3D {
+-		"none", "voluntary", "full", "lazy",
+-	};
+-	int j =3D ARRAY_SIZE(preempt_modes) - !IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_L=
+AZY);
+ 	int i =3D IS_ENABLED(CONFIG_PREEMPT_RT) * 2;
++	int j;
++
++	/* Count entries in NULL terminated preempt_modes */
++	for (j =3D 0; preempt_modes[j]; j++)
++		;
++	j -=3D !IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY);
+=20
+ 	for (; i < j; i++) {
+ 		if (preempt_dynamic_mode =3D=3D i)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 0212a0c..e8915ad 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3633,6 +3633,7 @@ extern int preempt_dynamic_mode;
+ extern int sched_dynamic_mode(const char *str);
+ extern void sched_dynamic_update(int mode);
+ #endif
++extern const char *preempt_modes[];
+=20
+ #ifdef CONFIG_SCHED_MM_CID
+=20
