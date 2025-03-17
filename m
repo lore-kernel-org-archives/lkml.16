@@ -1,301 +1,120 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 557E6227BB2;
-	Mon, 17 Mar 2025 10:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFA1231CAE;
+	Mon, 17 Mar 2025 10:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742206112; cv=none; b=EDH+xBSKN7ZcPq6tG/pUDu55TzG2efgGMr3Y9CKq/LF13pF2w1ocQ6kvgctB5rvBTAu/rMa0kyTh6BlIVu5cUzrxvOxRTBdVWvkqZ3MyPJ+tEwM44WvCJLMP9mdDettpRpOVyDV6beoZO1OXn32XKCjfiO889n5ZLRQ+pdHoTuA=
+	t=1742206117; cv=none; b=KOykb2Kr9dCU+HefuI9bllXEhO+L8CvTYOLipHHXC/1sUa1+8MjegfHzR7MWyxG/9mC9tkbHpL2F8gDIkBaZp6ch7/FD8E3e8oUmEV1Ew/pyNT7VPsE+Ve46fDibYrfctqi0FDK5n2X0/f+cOYZgvpdcylAygNZh0x8D+b4/QRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742206112; c=relaxed/simple;
-	bh=EoDMSk/uZoc+aBuMdaL+cawQNKJAp0fZlO0qTZlAZs4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e88pk2OpMjuCr5abFencq70NzV7lK1XB4vv5Bh/z7krQuXTqlCle6dkw+6QgLhiikL0SLfn8SJShA94Xqfe2x+R4aLsNTvnw5Et3KmE8EDytjM4cI5TAzn0cqXLAXqR7+yIy0ngYLa9F+apr2XfyO+mZfu9crm9QIVyS94ROgK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=d/+Ze295; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="d/+Ze295"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=hSrL7
-	2kyJ4w71tnbQx1PoNgGMbMtpK3UhW5whSP5BrY=; b=d/+Ze295qDG4VDuB552Zh
-	DQG7TJiLNxTCwhCpWSIDuqSOmDau00Z3r5tP1aZiyYW82z89cAK4pskY9CQqfstB
-	VMVYppFDGf5opJ4CJdjz/xOqAxdtI0LxZ5QsmXBzyMdhVkYDMGrFAtCNyhVcvYnd
-	GclFigDOB6BBUksS7olRkw=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wBnZkda9NdnI4yRSQ--.7624S2;
-	Mon, 17 Mar 2025 18:07:24 +0800 (CST)
-From: Liu Ye <liuyerd@163.com>
-To: akpm@linux-foundation.org
-Cc: willy@infradead.org,
-	david@redhat.com,
-	ran.xiaokai@zte.com.cn,
-	dan.carpenter@linaro.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Liu Ye <liuyerd@163.com>,
-	Liu Ye <liuye@kylinos.cn>
-Subject: [PATCH v2] fs/proc/page: Refactoring to reduce code duplication.
-Date: Mon, 17 Mar 2025 18:07:19 +0800
-Message-Id: <20250317100719.134558-1-liuyerd@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1742206117; c=relaxed/simple;
+	bh=LYQnVVghqHNBeBZC9M3qcSQzc999kxd9dUjJydn7Zzs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kn7zHJywVDPW8R/n+zcN7GioVgzu22IWME1bMWnlSXJHoCfCsxpDXPF9xvD/52rJ3LrjT5DbGSuCjkQB8f8pwId5bKAQOU+jNxS1Zhoagt00R9ZrsO5oiLdXSjfBvHeW46RT0kSaGgxWkKZFVlNGJicGvYkNCEFf4m4EQ6Q4BJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-523f1b31cf8so1680433e0c.0;
+        Mon, 17 Mar 2025 03:08:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742206113; x=1742810913;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nV0APjSl3A+QsJgQqRhAxvwjeltjb78Ah9QdJdDOGkI=;
+        b=vYIL5iXMs59uI4v1sk9gCg3tRg2VXx1el+RO3A+SauUD/dJMdr+lU268aRGNuXDbQt
+         Y8UZk0ONjmCjt/p/ZkKLYIDPI/jB1MHX0ElW5U9lCaslfWZKXki8wWm7sTRWCoCfo5kP
+         rhxO/n1/81dL0IATbhrhRyP1vw3BThBPtnKdQFanNKat7pnlDe/aLFQlpJmIxx8WiQf7
+         48h7A4d22JVVpVjtEtH2vBdqqRDzkhUnFCoX9sDIpKm/zgap7qDUgCqMzX8QoSMrBM7J
+         T1ftPzLWBebUuOv/ELVAjszk3dQDJHxG0w/4ewjQvz+YKuJ77c7wsI9tRzWSGuJCObWZ
+         1KqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFOsaGquIdxZTDkwavDFhc9BKuo+ER/u4vL7gczo+I6bTS+feGqhPbbm/54+DbDbxS9/TPOp2otEkl@vger.kernel.org, AJvYcCUv/4p3M7YXNbcP1BE4cbu+9GZ8OhBe7HcZC+u8Q9wd5OeAB9YZBuMxbckZfe8Ot0x3p9LsCU2mdnDeNsSu@vger.kernel.org, AJvYcCXXX9UoDbP7UcBk9lrrtvDPAIYO3bPQ8fzrkxdDVI813yLNuAxhTK7uZ/M82CK+nCbeG0ZBHBtA76yzPFdJGr4qPHg=@vger.kernel.org, AJvYcCXjdMlkm3wBLoItMsPl/w0LNHTJXz+Wg0DXvEaycP1t3zDBnOeSbZ4xhJjFvtZflg4KKUQ/lfy7OKjr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3ZmE10ODAD9WlyKNyf7jSGy6kKqYUnZgMOlfOKJ4Sb28am+9+
+	hctv91VJ/rnFpOXhdRcL8PP6InjLzTNSBEkOCZswH9ArncWL3iM3fM7uf6FT
+X-Gm-Gg: ASbGnctlRz4P3J+BgggOQJgxQYL8+XifuK57+dG/+AwH5NbeCDpzlmZl2fRmTFsKjWM
+	Z9QTu98hYqq2wD52ODV8HlXkE+aTzD6QiVMr8sNKr+aZKAzjyYTNxtmBdXqqYgcPN0WIUnmAvao
+	lC+6Hf/0S/8/CST2WZnV3rv58BVuiu0dGDs2wCnaE8W55CB7U//4q0vEkvZHGJbk6BhLigZH9g5
+	zXh4x+qTe3KBS0etDLKc/5DUvoBBZMRp9MqfvqDkXHvl0YymTnE6NH9V2vgpHo2zSvfsBkxHIjN
+	ZrVFr1ktLA/RCRZMEAWlMIC8Hrf1XvMKmoMi1FGbGSBnC6MRjliMVpzW427yQa+G4XnaxnBEQM7
+	wZvFIo80=
+X-Google-Smtp-Source: AGHT+IFN+LqCGUuC3TWRqYuo4aCnCNZO3sAsS8uQsurlmemoSaLoPVKu1He9xV9RB8djRMfvcrG5fA==
+X-Received: by 2002:a05:6122:3d13:b0:520:42d3:91c1 with SMTP id 71dfb90a1353d-52449a48ccdmr5687552e0c.10.1742206112800;
+        Mon, 17 Mar 2025 03:08:32 -0700 (PDT)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5243a581473sm1548661e0c.3.2025.03.17.03.08.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 03:08:32 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86b68e51af4so1603642241.1;
+        Mon, 17 Mar 2025 03:08:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUgCQpKjgdkaV8d1Tl5XwnUwN7p5u979l59bB/HZHDu307NdJGDhA8caLajA79PQiO+U5lx3WQjPEbVEZJ6NVJ/80o=@vger.kernel.org, AJvYcCWSKu3hRUsUi6ygWJEPNjONENakq0aj+P0lnxWNz6g+rylP14J7mEE0dPd+SPUVMeB+oSLYM4HbdpqB7nN4@vger.kernel.org, AJvYcCWT6mVDlOrgURUag2WDpjfrcxeYVFYULTIh3se0sxowgCAvXxM/jFfcZUsW+q8Hq8IkUBMwzS14etvE@vger.kernel.org, AJvYcCX7lGqVcPxfZJ3tXy7S+CtPNE/aKIaGWiMmxv0Fbs35YyqQOMva9C39Fh6u8gNDUbE9qFSA/diE25ad@vger.kernel.org
+X-Received: by 2002:a05:6102:3c96:b0:4b1:1eb5:8ee3 with SMTP id
+ ada2fe7eead31-4c38322a633mr7665016137.22.1742206112108; Mon, 17 Mar 2025
+ 03:08:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBnZkda9NdnI4yRSQ--.7624S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxKr48XF47XFWDWF4xtrWfAFb_yoW7trWrpF
-	s8WF4jyws3W3sYkw1xJ398Zas8G3s3Aa1Yy3y7G34fZa4UJrnIkFySyFnYvFy7G34UZw1U
-	u3909ry3Ca1UtaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07USeHgUUUUU=
-X-CM-SenderInfo: 5olx5vlug6il2tof0z/1tbiKAoTTGfX4r-onwABsm
+References: <20250317083213.371614-1-tommaso.merciai.xr@bp.renesas.com> <20250317083213.371614-2-tommaso.merciai.xr@bp.renesas.com>
+In-Reply-To: <20250317083213.371614-2-tommaso.merciai.xr@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 17 Mar 2025 11:08:19 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV4SyviVU0+WhgFD_vCO43BQ31tx8az-JihWDAB9EJS+g@mail.gmail.com>
+X-Gm-Features: AQ5f1JpGenG55qVJIf1KTw9AQgufZanrRWkQNAtQMcFuCWyLnmEnMBpT-qpGwzw
+Message-ID: <CAMuHMdV4SyviVU0+WhgFD_vCO43BQ31tx8az-JihWDAB9EJS+g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: renesas: Fix description section
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	biju.das.jz@bp.renesas.com, Pavel Machek <pavel@denx.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Liu Ye <liuye@kylinos.cn>
+Hi Tommaso,
 
-The function kpageflags_read and kpagecgroup_read is quite similar
-to kpagecount_read. Consider refactoring common code into a helper
-function to reduce code duplication.
+On Mon, 17 Mar 2025 at 09:32, Tommaso Merciai
+<tommaso.merciai.xr@bp.renesas.com> wrote:
+> Remove not needed "and" into description section.
+>
+> Reported-by: Pavel Machek <pavel@denx.de>
+> Closes: https://lore.kernel.org/cip-dev/Z9P%2F51qOlq2B46FK@duo.ucw.cz/
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
 
-Signed-off-by: Liu Ye <liuye@kylinos.cn>
+Thanks for your patch!
 
----
-V2 : Use an enumeration to indicate the operation to be performed
-to avoid passing functions.
----
----
- fs/proc/page.c | 166 +++++++++++++++++--------------------------------
- 1 file changed, 58 insertions(+), 108 deletions(-)
+> --- a/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
+> +++ b/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
+> @@ -12,7 +12,7 @@ maintainers:
+>  description:
+>    On Renesas RZ/{G3E,V2H(P)} SoCs, the CPG (Clock Pulse Generator) handles
+>    generation and control of clock signals for the IP modules, generation and
+> -  control of resets, and control over booting, low power consumption and power
+> +  control of resets, control over booting, low power consumption and power
+>    supply domains.
+>
+>  properties:
 
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index a55f5acefa97..66f454330a87 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -22,6 +22,14 @@
- #define KPMMASK (KPMSIZE - 1)
- #define KPMBITS (KPMSIZE * BITS_PER_BYTE)
- 
-+enum kpage_operation {
-+	KPAGE_FLAGS,
-+	KPAGE_COUNT,
-+#ifdef CONFIG_MEMCG
-+	KPAGE_CGROUP,
-+#endif
-+};
-+
- static inline unsigned long get_max_dump_pfn(void)
- {
- #ifdef CONFIG_SPARSEMEM
-@@ -37,19 +45,17 @@ static inline unsigned long get_max_dump_pfn(void)
- #endif
- }
- 
--/* /proc/kpagecount - an array exposing page mapcounts
-- *
-- * Each entry is a u64 representing the corresponding
-- * physical page mapcount.
-- */
--static ssize_t kpagecount_read(struct file *file, char __user *buf,
--			     size_t count, loff_t *ppos)
-+static ssize_t kpage_read(struct file *file, char __user *buf,
-+		size_t count, loff_t *ppos,
-+		enum kpage_operation op)
- {
- 	const unsigned long max_dump_pfn = get_max_dump_pfn();
- 	u64 __user *out = (u64 __user *)buf;
-+	struct page *ppage;
- 	unsigned long src = *ppos;
- 	unsigned long pfn;
- 	ssize_t ret = 0;
-+	u64 info;
- 
- 	pfn = src / KPMSIZE;
- 	if (src & KPMMASK || count & KPMMASK)
-@@ -59,19 +65,29 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
- 	count = min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
- 
- 	while (count > 0) {
--		struct page *page;
--		u64 mapcount = 0;
--
--		/*
--		 * TODO: ZONE_DEVICE support requires to identify
--		 * memmaps that were actually initialized.
--		 */
--		page = pfn_to_online_page(pfn);
--		if (page)
--			mapcount = folio_precise_page_mapcount(page_folio(page),
--							       page);
--
--		if (put_user(mapcount, out)) {
-+		ppage = pfn_to_online_page(pfn);
-+
-+		if (ppage) {
-+			switch (op) {
-+			case KPAGE_FLAGS:
-+				info = stable_page_flags(ppage);
-+				break;
-+			case KPAGE_COUNT:
-+				info = folio_precise_page_mapcount(page_folio(ppage), ppage);
-+				break;
-+#ifdef CONFIG_MEMCG
-+			case KPAGE_CGROUP:
-+				info = page_cgroup_ino(ppage);
-+				break;
-+#endif
-+			default:
-+				info = 0;
-+				break;
-+			}
-+		} else
-+			info = 0;
-+
-+		if (put_user(info, out)) {
- 			ret = -EFAULT;
- 			break;
- 		}
-@@ -89,17 +105,23 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
- 	return ret;
- }
- 
-+/* /proc/kpagecount - an array exposing page mapcounts
-+ *
-+ * Each entry is a u64 representing the corresponding
-+ * physical page mapcount.
-+ */
-+static ssize_t kpagecount_read(struct file *file, char __user *buf,
-+		size_t count, loff_t *ppos)
-+{
-+	return kpage_read(file, buf, count, ppos, KPAGE_COUNT);
-+}
-+
- static const struct proc_ops kpagecount_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_lseek	= mem_lseek,
- 	.proc_read	= kpagecount_read,
- };
- 
--/* /proc/kpageflags - an array exposing page flags
-- *
-- * Each entry is a u64 representing the corresponding
-- * physical page flags.
-- */
- 
- static inline u64 kpf_copy_bit(u64 kflags, int ubit, int kbit)
- {
-@@ -220,47 +242,17 @@ u64 stable_page_flags(const struct page *page)
- #endif
- 
- 	return u;
--};
-+}
- 
-+/* /proc/kpageflags - an array exposing page flags
-+ *
-+ * Each entry is a u64 representing the corresponding
-+ * physical page flags.
-+ */
- static ssize_t kpageflags_read(struct file *file, char __user *buf,
--			     size_t count, loff_t *ppos)
-+		size_t count, loff_t *ppos)
- {
--	const unsigned long max_dump_pfn = get_max_dump_pfn();
--	u64 __user *out = (u64 __user *)buf;
--	unsigned long src = *ppos;
--	unsigned long pfn;
--	ssize_t ret = 0;
--
--	pfn = src / KPMSIZE;
--	if (src & KPMMASK || count & KPMMASK)
--		return -EINVAL;
--	if (src >= max_dump_pfn * KPMSIZE)
--		return 0;
--	count = min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
--
--	while (count > 0) {
--		/*
--		 * TODO: ZONE_DEVICE support requires to identify
--		 * memmaps that were actually initialized.
--		 */
--		struct page *page = pfn_to_online_page(pfn);
--
--		if (put_user(stable_page_flags(page), out)) {
--			ret = -EFAULT;
--			break;
--		}
--
--		pfn++;
--		out++;
--		count -= KPMSIZE;
--
--		cond_resched();
--	}
--
--	*ppos += (char __user *)out - buf;
--	if (!ret)
--		ret = (char __user *)out - buf;
--	return ret;
-+	return kpage_read(file, buf, count, ppos, KPAGE_FLAGS);
- }
- 
- static const struct proc_ops kpageflags_proc_ops = {
-@@ -270,54 +262,12 @@ static const struct proc_ops kpageflags_proc_ops = {
- };
- 
- #ifdef CONFIG_MEMCG
-+
- static ssize_t kpagecgroup_read(struct file *file, char __user *buf,
--				size_t count, loff_t *ppos)
-+		size_t count, loff_t *ppos)
- {
--	const unsigned long max_dump_pfn = get_max_dump_pfn();
--	u64 __user *out = (u64 __user *)buf;
--	struct page *ppage;
--	unsigned long src = *ppos;
--	unsigned long pfn;
--	ssize_t ret = 0;
--	u64 ino;
--
--	pfn = src / KPMSIZE;
--	if (src & KPMMASK || count & KPMMASK)
--		return -EINVAL;
--	if (src >= max_dump_pfn * KPMSIZE)
--		return 0;
--	count = min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
--
--	while (count > 0) {
--		/*
--		 * TODO: ZONE_DEVICE support requires to identify
--		 * memmaps that were actually initialized.
--		 */
--		ppage = pfn_to_online_page(pfn);
--
--		if (ppage)
--			ino = page_cgroup_ino(ppage);
--		else
--			ino = 0;
--
--		if (put_user(ino, out)) {
--			ret = -EFAULT;
--			break;
--		}
--
--		pfn++;
--		out++;
--		count -= KPMSIZE;
--
--		cond_resched();
--	}
--
--	*ppos += (char __user *)out - buf;
--	if (!ret)
--		ret = (char __user *)out - buf;
--	return ret;
-+	return kpage_read(file, buf, count, ppos, KPAGE_CGROUP);
- }
--
- static const struct proc_ops kpagecgroup_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_lseek	= mem_lseek,
+I think the original is fine.  When emphasizing the structure:
+
+    The CPG handles:
+      A. generation and control of clock signals for the IP modules,
+      B. generation and control of resets, and
+      C. control over booting, low power consumption and power supply domains.
+
+i.e. the "and" is part of the typical "A, B, and C" construct?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
