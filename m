@@ -1,113 +1,115 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28590233141;
-	Mon, 17 Mar 2025 10:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B24C322257F;
+	Mon, 17 Mar 2025 10:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742206333; cv=none; b=tQFvIe2WJ3FZBQVSBATT+kXui+vbUrI1VMZY/UuaicQdOOtOWDkB0VMjvXF1awO5CWIrUCQMbe6VeSI5bWxBkm8k4vtfVEcdjHj8QuFMf6VNBpEEwCc3lhpriCEwVNKBSkbrHBxmmAvgKxYe5a65ZWCbDXmRuYyndyZpbC/ez3Q=
+	t=1742206434; cv=none; b=sVqPf1uq/1G2DjJ+WAiI5W+Hha/aHzDlzUIX6W7E9doOGNPYn2gE1gZR9+gxM3HbQ1yMdHJ1uBfMJibLs/lqe4fuflvfdenKIDmltnxpeLrNrQkOc2IUfd9juQoQ5ucra3iB+nDuXiH3DBvYWwM2wQRSWamOHd/OtqMi6GJSJR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742206333; c=relaxed/simple;
-	bh=PjaKVOg2Y8r6iet+S5aQqKdHr0u71p6RNjNkKvB4OY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type; b=HILhN9UigLx5ABqxD6ubXml2tRvsGskrXhcbRPtoEubTMy1ZSz2Roi7PDO0S3TTYgvQWHBNkshrZ/AGohsRdatcWppCG3J6dXZF7/+4ldMWOz8QWZQBT4GMRZfXV9uS29GSYZcS0t2HTuDFfgJ1kpniYPlpmE6eTePypobvXP3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cb30YTbn; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cb30YTbn"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-549946c5346so4363738e87.2;
-        Mon, 17 Mar 2025 03:12:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742206329; x=1742811129; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=THV265Z1OacT1jAIgvGzx/DQCeY4a77bNldDa3xTI/o=;
-        b=cb30YTbnpUpEr+Gg68WE/6Bc52WDW2CVTF6KkN+BkxEoeWqIKR0ScSAVCLsLpHP+jt
-         GlxIw7elqXU7OF2yMEGcadgnVbAquvBYAmq1e1F1G3vO+UaGIEqxTjGwUpxhiq46lUGt
-         pKZtVA7wLM+vJIZW6SaYwlpsAlCdQ2lb3pMC8ykzzsUmXVZgm7EACZVPDQwbghgfPuPZ
-         SP8P0kVQhVKbSc7YLr4TX7k//FN9KaUAenYRnKYjZwzSGWo4ZNcTduoyK1cP3h8Ywheb
-         DC6y2jmju0VcodxzOBeyAavrOfV0xYdtrEeQRMjDe1T516Af5x+huYWKZ5E/MWnQakpT
-         x3ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742206329; x=1742811129;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=THV265Z1OacT1jAIgvGzx/DQCeY4a77bNldDa3xTI/o=;
-        b=Bb1CcRe+h1WgEN6JM6NZMcF+YqWJqInai+y2nEQCGxJC3S0rowjfLk//Yz0obdtGRn
-         IUOaNgNVRHQdNNQxgTSLQJTYLrQv13qpXs0BUDCOQHuggl5I/irDwB7D79zjhQkvzUUP
-         TxK4Xcf6+E3PS8UUPpv61Ur2wFvvN7Ek0inLTEzK2or69KQ0jepMIlkzeQZcpbehhc/Y
-         dEgVNhj3wvRrMT02Citeaehl5Iqm1/9fcnV0jpGYsOpNrpd21t4LK5/177S46f//bwSz
-         BQc0gW1oOnnzIgXRBsC+HHw/UYflkyCNkbZZic1WM0tdVAhDB8Uu18Clb73mC8P7R63s
-         GgXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfss+B9H9m0+9MuwMtKNSFAEovelndIHSMpl7UX8qDzVg345GN36kIvvf0NoMyADxHT8B0QwFTD2+D@vger.kernel.org, AJvYcCXWEqddEKn22AQElwykyNl+9OrXKJlGFJexP7WAMI3Qb6AqRE4H0I/N+xUkGa9Kj4gLya04iFh6DtWtigM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypH5flIUGf2fpgUnFfDyP4/IebRwo2Xp4b3uPQwkrbHMh0HH2Y
-	KdH/uzrejrVPzZRpChuMzf61/9flRtFgu9pBKJuGKLhiyKgD5WmPhIaOvg==
-X-Gm-Gg: ASbGncviUIBjBzQxx6ufndfWedAye/ID9t42Mj+lM09yu8VfI1hSt+aChUzwB39S9km
-	KuUxNE5duyaZ+eQAMvV1H+KbtP/ygETXpNqRkVM09jkFguQ7nSftYJmg7kp8Bv+iRGtCIQDEl8H
-	wYk3ZA4ABcxHZbdNevr0Km6JHs7hlSqpHRLH3/aa6OucHFuLcXn44GtW0WOXnGWRgjH21/ESOkq
-	7VG9NJQnQr7MpU4FAQOsyjbfmsD3CzV8O0/zuHEfJuYd+Dh930ixyHOM8ffBN8xhcIaiqnvhocj
-	DZjTzDNFLMy4vyyyjmsC9yEVylClBdxFgo4LeOd9qggk24Mk7PllLKpmYsbgtIIz30JFOQ==
-X-Google-Smtp-Source: AGHT+IHrSVJLp5vqRsImw+UcysL48jk5oSGv3caGjeYp1p+RuIeIgqywcMlQJQyasptXM8deK5Pyqg==
-X-Received: by 2002:ac2:4e04:0:b0:549:39d8:51ef with SMTP id 2adb3069b0e04-549c38cf317mr5454991e87.6.1742206328885;
-        Mon, 17 Mar 2025 03:12:08 -0700 (PDT)
-Received: from foxbook (adqh54.neoplus.adsl.tpnet.pl. [79.185.141.54])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549d6fe3dc0sm6747e87.117.2025.03.17.03.12.07
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 17 Mar 2025 03:12:08 -0700 (PDT)
-Date: Mon, 17 Mar 2025 11:12:03 +0100
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: ki.chiang65@gmail.com
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, mathias.nyman@intel.com
-Subject: Re: [PATCH v4 0/1] xhci: Some improvement for Etron xHCI host
-Message-ID: <20250317111203.03a12ec8@foxbook>
-In-Reply-To: <20250205053750.28251-1-ki.chiang65@gmail.com>
+	s=arc-20240116; t=1742206434; c=relaxed/simple;
+	bh=/Q8Aa9fYv9wbyrx2wObs4CMSJP+hTNYqKzlwyrJhFsM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YN9l0KVFSyecyFL1B7mn2mSxeHeYsdL4XmU6fNVw+mPMuJ9yisgVUGw9yhOg2QXbOZryB/AFq8d1x0POIy9Bw6uk1TEW1L1I4GiHbKMTglIDfGL588XAaIDPqjYkUitMiqHnXCZBuDQafn3RA8RO+FH+naSqTiTUHp37qxmPyfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3E2813D5;
+	Mon, 17 Mar 2025 03:14:00 -0700 (PDT)
+Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B7D03F673;
+	Mon, 17 Mar 2025 03:13:47 -0700 (PDT)
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH 0/9] drivers: Transition to the faux device interface
+Date: Mon, 17 Mar 2025 10:13:12 +0000
+Message-Id: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALv112cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDY0NT3YKcxBKjtMTSiviU1DJdi2QjiyRj06RUS7NEJaCegqLUtMwKsHn
+ RsbW1AJ+HYAdfAAAA
+X-Change-ID: 20250315-plat2faux_dev-8c28b35be96a
+To: linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org, 
+ Andre Przywara <andre.przywara@arm.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>, linux-crypto@vger.kernel.org, 
+ Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ linux-rtc@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+ Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org, 
+ Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+ netdev@vger.kernel.org, Borislav Petkov <bp@alien8.de>, 
+ linux-acpi@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2229; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=/Q8Aa9fYv9wbyrx2wObs4CMSJP+hTNYqKzlwyrJhFsM=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBn1/XaXg/cczfp9LKToTU0Xvg1jjtICG+G14QuE
+ jF8HdVkidyJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ9f12gAKCRAAQbq8MX7i
+ mL+sEACUOKVk2OIBxRBYI5oleTH4ttn1o568PHz46upYDllAy68d3qhxx0E4xnIdB60mEjQBzDu
+ pZD62v90A+KDS4L4tmUprsU7NWILTGj7z8ga03muX133xHYBl3IBUvax/9o/+bum82neHCv1Pba
+ d8H+us51UfUHU9RNZlv0RBm5VVa/c8Uw1HgXOr5pKwbjSb8e3qQCqNIHDnZlch9Nieifbsr/76z
+ gG6mbYz1uW4/b7QLjmoUjKSeUxVj+2GPLep8+YRtNuA1S4RPJK5HAWWzuehomacfsXjmB58nG+q
+ RnT2Myy8yJNRXSJ2M4hQ4q0xSovkDs1Fs3BsAWVhnk34koAzgflqjj2nSvvviGN1NfHBDbkbsIn
+ ICmtLUmPDj6wh+Iuh95Z7TR2a2bxv4ZcvOdEjiSE3ePYG3mtX71NIGCtGLT/U+heYKLFl80Q288
+ NDDOuKCfChTKQnT1TO4A3iHJBUcm2GH5eQfKisbIr0fGMwWJmzfkkbw/JRUDDgsPLZf+gg4zpbg
+ YuDDMuht91nrSsN6M3frGjU78FZxQBTizKPNnlYBi9rEhb+sN0amzbmmQHOiOLtx/CWe71UQuQu
+ xZRpzua8GypLhrf83niYHYJRoY3H6cihvbNg4Yh/mS87pjun48IYIRWWPRW8PyPsuDd+Zfow2uU
+ 2BgXIq8hNqRm+cw==
+X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
+ fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
-Hi again.
+Recently when debugging why one of the scmi platform device was not
+showing up under /sys/devices/platform/firmware:scmi instead was
+appearing directly under /sys/devices/platform, I noticed the new
+faux interface /sys/devices/faux.
 
-> To prevent the xHCI driver from printing a "Transfer event TRB DMA
-> ptr not part of current TD" error message when an error is detected
-> while processing the last TRB of an isoc TD:
->   xhci: Correctly handle last TRB of isoc TD on Etron xHCI host
+Looking through the discussion and the background, I got excited and
+took the opportunity to clear all the platform devices under
+/sys/devices/platform on the Arm Juno/FVP platforms that are really
+faux devices. Only the platform devices created for the device nodes
+from the DT remain under /sys/devices/platform after these changes.
 
-By the way, do you have other problems with your Etrons trying to run
-SuperSpeed isochronous endpoints? Mine doesn't work at altsettings with
-non-power-of-two ESIT payload very well.
+All the patches are independent of each other.
 
-rmmod uvcvideo ; modprobe uvcvideo trace=0x400
-causes the selected altsetting to be printed to dmesg. Choosing some
-video resolutions results in non-power-of-two altsetting which works
-on other HCs, but causes visible image corruption and errors on Etron:
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+Greg Kroah-Hartman (1):
+      regulator: dummy: convert to use the faux device interface
 
-[  +5.514779] usb 7-1: Device requested 7332 B/frame bandwidth
-[  +0.000016] usb 7-1: Selecting alternate setting 8 (12288 B/frame bandwidth)
-[  +0.002647] usb 7-1: Allocated 5 URB buffers of 32x12288 bytes each
-[  +0.148160] xhci_hcd 0000:06:00.0: WARN: bandwidth overrun event for slot 1 ep 2 on endpoint
-[  +0.003382] xhci_hcd 0000:06:00.0: WARN: bandwidth overrun event for slot 1 ep 2 on endpoint
-[  +0.000621] xhci_hcd 0000:06:00.0: WARN: bandwidth overrun event for slot 1 ep 2 on endpoint
-[  +0.003380] xhci_hcd 0000:06:00.0: WARN: bandwidth overrun event for slot 1 ep 2 on endpoint
-[  +0.000614] xhci_hcd 0000:06:00.0: WARN: bandwidth overrun event for slot 1 ep 2 on endpoint
-[  +0.003388] xhci_hcd 0000:06:00.0: WARN: bandwidth overrun event for slot 1 ep 2 on endpoint
-[  +0.000609] xhci_hcd 0000:06:00.0: WARN: bandwidth overrun event for slot 1 ep 2 on endpoint
+Sudeep Holla (8):
+      cpuidle: psci: Transition to the faux device interface
+      hwrng: arm-smccc-trng - transition to the faux device interface
+      efi: Remove redundant creation of the "efivars" platform device
+      rtc: efi: Transition to the faux device interface
+      virt: efi_secret: Transition to the faux device interface
+      ASoC: soc-utils: Transition to the faux device interface
+      net: phy: fixed_phy: transition to the faux device interface
+      ACPI: APEI: EINJ: Transition to the faux device interface
 
-As far as I'm able to tell, the problem is caused by multi-TRB TDs
-completeing with Short Packet on the first TRB. Then it kinda looks
-like the stupid chip assumes that the second TRB is a new TD, adds
-the actual TRB of the next TD to it and finds that the resulting TD
-is too long, so it rejects it with BW Overrun error.
+ drivers/acpi/apei/einj-core.c             | 32 +++++++++---------------
+ drivers/char/hw_random/arm_smccc_trng.c   | 40 +++++++++++++++++++++---------
+ drivers/cpuidle/cpuidle-psci.c            | 26 +++++++-------------
+ drivers/firmware/efi/efi.c                | 10 --------
+ drivers/firmware/smccc/smccc.c            | 21 ----------------
+ drivers/net/phy/fixed_phy.c               | 16 ++++++------
+ drivers/regulator/dummy.c                 | 37 +++++++---------------------
+ drivers/rtc/rtc-efi.c                     | 31 ++++++++++++++++-------
+ drivers/virt/coco/efi_secret/efi_secret.c | 41 ++++++++++++++++++-------------
+ sound/soc/soc-utils.c                     | 34 +++++++++----------------
+ 10 files changed, 124 insertions(+), 164 deletions(-)
+---
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+change-id: 20250315-plat2faux_dev-8c28b35be96a
+-- 
+Regards,
+Sudeep
 
-I wonder if it's something unique to my chip (maybe FW revision?) or
-a general rule with those buggy things.
-
-Thanks,
-Michal
