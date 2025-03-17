@@ -1,152 +1,278 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866BF22F01
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 01:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBF0BA49
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 01:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742174049; cv=none; b=YgYa7F2BWo55TpEiY/gliQ0wxxdTJpGvgBi7vTnNftGP0WRtORvZX/tpBwajOKEDqu8EsBTOIhBNU6cgZ3E8rGTr5alnmQfkVXlp1DnJ+IIAAa+BJQ3JDnz9kH1poGZN3KwKCWZtQIroJsUjqKpK3AxvDt7LU+iymO//ZVuJgRU=
+	t=1742174158; cv=none; b=CvKVZLwokkc/TgAm8dqXRsq2Hyl1ZW+QBFGJaedm2hNqc2wBpluo/WtZzaAmpt3QtYWpoEXThEjwmczVkuIRf5yCg+ME6VdbbKM5tpV2asMDpd3NFL7nwyVg9oo8nwEd3x9vWuf6y3xKDct/UH1R8yijZTwpTf37KMXcSECcPeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742174049; c=relaxed/simple;
-	bh=HBdNRz7NWotgzuk+x/kxszEOIgphn0BH0jzSWHy0fPM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bnLq0oMaf+sm99tLBFp4weLoDfdTIJK2zFq5FQMxvThLIIoWUA+4pjZRfEaSJgeHbm9P1CaDtYYGM+8DB8YPdKGkX97/ATHI0QOIBE/WcyIc35wUmn0f+7boMHpSeu18PwbpYAdJmdspmJZGKtD1vUt2+zWbFrvxwYvmjaXo+RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gEfgKsHk; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742174158; c=relaxed/simple;
+	bh=Q0+PIJ88a4iRAsJs1W5fwyu0AoevhoEEr/zt+lUAKjA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M6GAk/NdW9nX1m5r7wGhu4m3+u7PRh27fcSMbK2cXDx4z+b0vpwgK3VIKuPh8DQp+VHTnZulPdnUxbtx8piyIAj4GTO1FjLwHyaU75YMjC7OxIbSIeWY5m0AvIvnOVJx4DOfqq5OAhs1iB6PnL9K3IxYsLEuWfKGLAaYArxt7cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aSx4eidn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEfgKsHk"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so3034154a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 18:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742174047; x=1742778847; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cXru3TCUuPTakrv/YVRqLX7LKq46qhiQdzkoohXODxU=;
-        b=gEfgKsHkm0Vl86jhUd+X9IigA8hrTG2cdi1ojK5zHhAemtdoXArjAPz+lCq7BnPc3F
-         OwgreBedzUOq8J8g6l4JP2ajaPSrE2RfnIDVEwlN8Sh9yPIy5vWq808YAzCDLOroEC5X
-         OKRgOvfV/mGuHRAK5ODOLvAek/rtxPhXsXC1SGrSxanxZss/NzR6upoXtl73AnXS3oLe
-         k9XCEJDrweoakTRTsZVv1iZYJ3vKiWpCTbrYQfUT1w9nemqHxlGwCG1I7pGgRDGVi/ef
-         7VJ8MtCzni8u/4Mm5nZhNN2JVQkwtpYs1WITuTPsaE5C4jSWqmTO2bJ6LsrbIe+vB7CW
-         J4Hg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aSx4eidn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742174155;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TqiRITvym1c0onqrnYAcV6zc/1khgZbdXRXq4ArYjQA=;
+	b=aSx4eidnJm0TX99TX2t55AeBona4fd3S8VQ+cMiSgBQGx0pV8gcQGytxpSJQH3NiHFTxDT
+	ooq66XCDORA9wl/JHvuNvDhcL8JPI+EB8nzYFGHk1vrPbRehAXWWtDyuC9Z+s9euc6elCT
+	Dd5CGq072bmfJ4SMqq8GY2i6RImxP0Y=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-137-UZjJlpqvMnKgXBpex5cDbA-1; Sun, 16 Mar 2025 21:15:54 -0400
+X-MC-Unique: UZjJlpqvMnKgXBpex5cDbA-1
+X-Mimecast-MFC-AGG-ID: UZjJlpqvMnKgXBpex5cDbA_1742174153
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3011c150130so2077777a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 18:15:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742174047; x=1742778847;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742174153; x=1742778953;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cXru3TCUuPTakrv/YVRqLX7LKq46qhiQdzkoohXODxU=;
-        b=It6cCDv+lcTUHLXT2AN7zn8a08WG9ibKtee5SQX21trqLQkAf6RdECK4DULU6A+H5Y
-         IDxDLo3cYdmSycrcF0R/RJ1okVrVbTsv1HdX9BmpXOnlXWPK9+EIAzQZdpwIyQA7yMmX
-         d+4nMy7L8S8SV70ViXeW7C3MYrHo1IXjT7DgenmBMPOLNW38x2hORX0aAi4w7CVfy5EU
-         BGZeRR8FnH3z0n2aQQ6iLWY+u00R565zQtrVUkBs3hkRCxaC8z/O4olT1RxJmChnWFAY
-         x80o6d61ISbQr4WwyV3d2aUOOnjHFAulXEndZwWJQkLnhX9xrg4PxrMkF74wyiNlQLwh
-         nudQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXffzgXY3n6xwi+hFAH6t4w3nnEZJ1+N56m+lMMfoTqtHD0Y9YnIUECV/snJ3je3FKUxUyDHgnv9ptqbb4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLlA0+44DhdE9HhIXaIskuB6vPjXk3xPUCut6r4C1jhXA/MfK8
-	NcSE9GveUf8Phy4IL203wjHHofQzdzFf3n+7eRCB7/jk6PjfCg2tvRG/eQfB6ac=
-X-Gm-Gg: ASbGncvkwAqYQpjMvHauWj5tMtw7TZDgOmtM/88UF4/7NPbtN3hJO6dAG7FvWL2KQBo
-	GUwGlKU4jhDOGrWO73dijHRELAqeuvcCv6be/xECyWUodoEqfigAkZQBg9csrnKlSK+Fuo36/lk
-	Z4dzSXOXFQHtfu+xj7XlufcAisZxQjEXEadI5vfqX6NGzJgGM9ud4JVJ1RtX7v59a5pQWgO81X+
-	wAXAJ9ChodFRlBuDcjRvleu3POsxLKVrSJWl/qZJH5aYsI8ilp4N2mlGJeksm5q0A7KsRDrT9Of
-	VFjCs54tl+9zIzLFWVM/3XPGCcKPtS8WuVcbowMzRN//EA==
-X-Google-Smtp-Source: AGHT+IGOmbtA4Nm1nxJHb0yeQ9L0e+qEg9pRtI7VVMCpHNpNnF2DyuK2Y2lCTtT06AGryzfhV/6wQw==
-X-Received: by 2002:a17:90b:5201:b0:2ff:5750:7a34 with SMTP id 98e67ed59e1d1-30151d81d60mr10497286a91.34.1742174046713;
-        Sun, 16 Mar 2025 18:14:06 -0700 (PDT)
-Received: from gmail.com ([121.37.54.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30153bb94e2sm4756494a91.45.2025.03.16.18.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Mar 2025 18:14:06 -0700 (PDT)
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Baolu Lu <baolu.lu@linux.intel.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH v3] PCI: Declare quirk_huawei_pcie_sva() as pci_fixup_header
-Date: Mon, 17 Mar 2025 01:13:52 +0000
-Message-Id: <20250317011352.5806-1-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250315101032.5152-1-zhangfei.gao@linaro.org>
-References: <20250315101032.5152-1-zhangfei.gao@linaro.org>
+        bh=TqiRITvym1c0onqrnYAcV6zc/1khgZbdXRXq4ArYjQA=;
+        b=N3I/BDVJ3IxnI/KB0JsVfWovAHYIrTodpdTvUDW8v9vYo6448xhxoyxW0uXysab105
+         kIgM8q9z3WAXOymXgF1iH3Wwg0C5L2Suj+5KjLZfXWpzyKIr2+1CJzR0JU/sxEt+YaG5
+         C3JfFygrj7hd6Wbf7gtJnVYnAmwmIvvBFataKLiNWlsQfGaYGaNMXR2gYs7tr4cxkL7a
+         tp1IIg5usU7t7QCh0/b+HGjKuEsoLRnzLtggnTf0DAKwEeGNMeKzeRX5ZBUZQDdQp6+T
+         0/xakSi+DbgQR1PXLr3iQS/ERcJHGGwBi7krcKFenRgGAlpTS6mGCwjbrVW0lxO3sqAE
+         Z4Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhCfz0ihsKar/dzPyS3AnpYNwJRPwHGdoyAHte+h5VZtwNteeJBGiGF+Du/1KgeB2zZ6rkEp/rUF8kJ+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlXeUb480dp44YNeU4mUOSMrXxtxCmtifTfTGEXYAVWlHqvRwG
+	lWAM/ncHANP3BvAOht9rhuLcgj4hsyEFGN9cZrgUtcnVw0DKdnEu942oOcGT0+juIocvTkdp80F
+	fRQRbGZfYC+2hjpARYJfDJC0pObY/7zkUsLuKxlodIYjGLleT6Sn+0SUkbtBN23gSiqa3tKsIZR
+	pYIy9L196ZKhVYmVcuT+3LGhDVhQoChnuDzVST
+X-Gm-Gg: ASbGncvXxQutJFXFH+vrCIBux+k17OkwAYGdcP8kspueUHakDYyxKHpSupVFY6HNba2
+	+L+KZDfUG0xKyEpWZ4vH94YPrLN5BxWPiFS9ndlfeHujI1RWx8s5MsNJ7u62YLzU4K/XrBhWlaQ
+	==
+X-Received: by 2002:a17:90a:d610:b0:2fe:9581:fbea with SMTP id 98e67ed59e1d1-30151d80d72mr13059898a91.29.1742174152922;
+        Sun, 16 Mar 2025 18:15:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFxpVZEUCtxPZyh7hATJuGyGFLhT6k6detJv2gwkDBKiP/VApC5tJcX/mSZDxnZ+e+OpQEJWcYXL+Lqzu0fpMQ=
+X-Received: by 2002:a17:90a:d610:b0:2fe:9581:fbea with SMTP id
+ 98e67ed59e1d1-30151d80d72mr13059874a91.29.1742174152536; Sun, 16 Mar 2025
+ 18:15:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250307-rss-v9-0-df76624025eb@daynix.com> <20250307-rss-v9-6-df76624025eb@daynix.com>
+ <CACGkMEuccQ6ah-aZ3tcW1VRuetEoPA_NaLxLT+9fb0uAab8Agg@mail.gmail.com>
+ <2e550452-a716-4c3f-9d5a-3882d2c9912a@daynix.com> <CACGkMEu9tynRgTh__3p_vSqOekSirbVgS90rd5dUiJru9oV1eg@mail.gmail.com>
+ <1dd2417a-3246-44b0-b4ba-feadfd6f794e@daynix.com> <CACGkMEthfj0KJvOHhnc_ww7iqtmhHUy9f9EGOoR-n0OwHOBrvQ@mail.gmail.com>
+ <77c21953-b850-4962-8673-6effb593d819@daynix.com>
+In-Reply-To: <77c21953-b850-4962-8673-6effb593d819@daynix.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 17 Mar 2025 09:15:40 +0800
+X-Gm-Features: AQ5f1JpR0mxXkmVnrSX1gXa2p5ktJxpo4uYjioUOGsjKMLFJ1-a0iSEE4BZ4sls
+Message-ID: <CACGkMEtMghoZbMO8c+30vqtOr3daEYrU2gG-QAZjOJev8NnBhQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v9 6/6] vhost/net: Support VIRTIO_NET_F_HASH_REPORT
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+	Yuri Benditovich <yuri.benditovich@daynix.com>, Andrew Melnychenko <andrew@daynix.com>, 
+	Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
-probe path") fixed the iommu_probe_device() flow to correctly initialize
-firmware operations, allowing arm_smmu_probe_device() to be invoked
-earlier. This changes the invocation timing of arm_smmu_probe_device
-from the final fixup phase to the header fixup phase.
+On Wed, Mar 12, 2025 at 1:59=E2=80=AFPM Akihiko Odaki <akihiko.odaki@daynix=
+.com> wrote:
+>
+> On 2025/03/12 12:36, Jason Wang wrote:
+> > On Tue, Mar 11, 2025 at 2:24=E2=80=AFPM Akihiko Odaki <akihiko.odaki@da=
+ynix.com> wrote:
+> >>
+> >> On 2025/03/11 9:42, Jason Wang wrote:
+> >>> On Mon, Mar 10, 2025 at 3:04=E2=80=AFPM Akihiko Odaki <akihiko.odaki@=
+daynix.com> wrote:
+> >>>>
+> >>>> On 2025/03/10 13:43, Jason Wang wrote:
+> >>>>> On Fri, Mar 7, 2025 at 7:02=E2=80=AFPM Akihiko Odaki <akihiko.odaki=
+@daynix.com> wrote:
+> >>>>>>
+> >>>>>> VIRTIO_NET_F_HASH_REPORT allows to report hash values calculated o=
+n the
+> >>>>>> host. When VHOST_NET_F_VIRTIO_NET_HDR is employed, it will report =
+no
+> >>>>>> hash values (i.e., the hash_report member is always set to
+> >>>>>> VIRTIO_NET_HASH_REPORT_NONE). Otherwise, the values reported by th=
+e
+> >>>>>> underlying socket will be reported.
+> >>>>>>
+> >>>>>> VIRTIO_NET_F_HASH_REPORT requires VIRTIO_F_VERSION_1.
+> >>>>>>
+> >>>>>> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> >>>>>> Tested-by: Lei Yang <leiyang@redhat.com>
+> >>>>>> ---
+> >>>>>>     drivers/vhost/net.c | 49 +++++++++++++++++++++++++++++--------=
+------------
+> >>>>>>     1 file changed, 29 insertions(+), 20 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+> >>>>>> index b9b9e9d40951856d881d77ac74331d914473cd56..16b241b44f89820a42=
+c302f3586ea6bb5e0d4289 100644
+> >>>>>> --- a/drivers/vhost/net.c
+> >>>>>> +++ b/drivers/vhost/net.c
+> >>>>>> @@ -73,6 +73,7 @@ enum {
+> >>>>>>            VHOST_NET_FEATURES =3D VHOST_FEATURES |
+> >>>>>>                             (1ULL << VHOST_NET_F_VIRTIO_NET_HDR) |
+> >>>>>>                             (1ULL << VIRTIO_NET_F_MRG_RXBUF) |
+> >>>>>> +                        (1ULL << VIRTIO_NET_F_HASH_REPORT) |
+> >>>>>>                             (1ULL << VIRTIO_F_ACCESS_PLATFORM) |
+> >>>>>>                             (1ULL << VIRTIO_F_RING_RESET)
+> >>>>>>     };
+> >>>>>> @@ -1097,9 +1098,11 @@ static void handle_rx(struct vhost_net *net=
+)
+> >>>>>>                    .msg_controllen =3D 0,
+> >>>>>>                    .msg_flags =3D MSG_DONTWAIT,
+> >>>>>>            };
+> >>>>>> -       struct virtio_net_hdr hdr =3D {
+> >>>>>> -               .flags =3D 0,
+> >>>>>> -               .gso_type =3D VIRTIO_NET_HDR_GSO_NONE
+> >>>>>> +       struct virtio_net_hdr_v1_hash hdr =3D {
+> >>>>>> +               .hdr =3D {
+> >>>>>> +                       .flags =3D 0,
+> >>>>>> +                       .gso_type =3D VIRTIO_NET_HDR_GSO_NONE
+> >>>>>> +               }
+> >>>>>>            };
+> >>>>>>            size_t total_len =3D 0;
+> >>>>>>            int err, mergeable;
+> >>>>>> @@ -1110,7 +1113,6 @@ static void handle_rx(struct vhost_net *net)
+> >>>>>>            bool set_num_buffers;
+> >>>>>>            struct socket *sock;
+> >>>>>>            struct iov_iter fixup;
+> >>>>>> -       __virtio16 num_buffers;
+> >>>>>>            int recv_pkts =3D 0;
+> >>>>>>
+> >>>>>>            mutex_lock_nested(&vq->mutex, VHOST_NET_VQ_RX);
+> >>>>>> @@ -1191,30 +1193,30 @@ static void handle_rx(struct vhost_net *ne=
+t)
+> >>>>>>                            vhost_discard_vq_desc(vq, headcount);
+> >>>>>>                            continue;
+> >>>>>>                    }
+> >>>>>> +               hdr.hdr.num_buffers =3D cpu_to_vhost16(vq, headcou=
+nt);
+> >>>>>>                    /* Supply virtio_net_hdr if VHOST_NET_F_VIRTIO_=
+NET_HDR */
+> >>>>>>                    if (unlikely(vhost_hlen)) {
+> >>>>>> -                       if (copy_to_iter(&hdr, sizeof(hdr),
+> >>>>>> -                                        &fixup) !=3D sizeof(hdr))=
+ {
+> >>>>>> +                       if (copy_to_iter(&hdr, vhost_hlen,
+> >>>>>> +                                        &fixup) !=3D vhost_hlen) =
+{
+> >>>>>>                                    vq_err(vq, "Unable to write vne=
+t_hdr "
+> >>>>>>                                           "at addr %p\n", vq->iov-=
+>iov_base);
+> >>>>>>                                    goto out;
+> >>>>>
+> >>>>> Is this an "issue" specific to RSS/HASH? If it's not, we need a sep=
+arate patch.
+> >>>>>
+> >>>>> Honestly, I'm not sure if it's too late to fix this.
+> >>>>
+> >>>> There is nothing wrong with the current implementation.
+> >>>
+> >>> Note that I meant the vhost_hlen part, and the current code is tricky=
+.
+> >>>
+> >>> The comment said:
+> >>>
+> >>> """
+> >>> /* Supply virtio_net_hdr if VHOST_NET_F_VIRTIO_NET_HDR */
+> >>> """
+> >>>
+> >>> So it tries to only offer virtio_net_hdr even if vhost_hlen is the se=
+t
+> >>> to mrg_rxbuf len.
+> >>>
+> >>> And this patch changes this behaviour.
+> >>
+> >> mrg_rxbuf only adds the num_buffers field, which is always set for
+> >> mrg_rxbuf.
+> >>
+> >> The num_buffers was not set for VIRTIO_F_VERSION_1 in the past, but th=
+is
+> >> was also fixed with commit a3b9c053d82a ("vhost/net: Set num_buffers f=
+or
+> >> virtio 1.0")
+> >>
+> >> So there is no behavioral change for existing features with this patch=
+.
+> >
+> > I meant this part.
+> >
+> >>>>> +                       if (copy_to_iter(&hdr, vhost_hlen,
+> >>>>> +                                        &fixup) !=3D vhost_hlen) {
+> >
+> > We should copy only sizeof(hdr) instead of vhost_hlen.> > Anything I mi=
+ss?
+>
+> sizeof(hdr) will be greater than vhost_hlen when neither
+> VIRTIO_NET_F_MRG_RXBUF or VIRTIO_F_VERSION_1 is negotiated.
 
-pci_iov_add_virtfn
-    pci_device_add
-      pci_fixup_device(pci_fixup_header)      <--
-      device_add
-        bus_notify
-          iommu_bus_notifier
-  +         iommu_probe_device
-  +           arm_smmu_probe_device
-    pci_bus_add_device
-      pci_fixup_device(pci_fixup_final)       <--
-      device_attach
-        driver_probe_device
-          really_probe
-            pci_dma_configure
-              acpi_dma_configure_id
-  -             iommu_probe_device
-  -               arm_smmu_probe_device
+Just to make sure we are on the same page I meant we should only
+advance sizeof(struct virtio_net_hdr) here to make sure we can set the
+num_buffers correctly.
 
-This is the pci_iov_add_virtfn().  The non-SR-IOV case is similar in
-that pci_device_add() is called from pci_scan_single_device() in the
-generic enumeration path, and pci_bus_add_device() is called later,
-after all a host bridge has been enumerated.
+But this is not what the code did here.
 
-Declare the fixup as pci_fixup_header to ensure the configuration
-happens before arm_smmu_probe_device.
+Thanks
 
-Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
-v3: modify commit msg, add Acked-by
-v2: modify commit msg
-
- drivers/pci/quirks.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index f840d611c450..a9759889ff5e 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1991,12 +1991,12 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
- 	    device_create_managed_software_node(&pdev->dev, properties, NULL))
- 		pci_warn(pdev, "could not add stall property");
- }
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
- 
- /*
-  * It's possible for the MSI to get corrupted if SHPC and ACPI are used
--- 
-2.25.1
+>
+> Regards,
+> Akihiko Odaki
+>
+> >
+> > Thanks
+> >
+> >>
+> >> Regards,
+> >> Akihiko Odaki
+> >>
+> >>>
+> >>> Thanks
+> >>>
+> >>>> The current
+> >>>> implementation fills the header with zero except num_buffers, which =
+it
+> >>>> fills some real value. This functionality is working fine with
+> >>>> VIRTIO_NET_F_MRG_RXBUF and VIRTIO_F_VERSION_1, which change the head=
+er size.
+> >>>>
+> >>>> Now I'm adding VIRTIO_NET_F_HASH_REPORT and it adds the hash_report
+> >>>> field, which also needs to be initialized with zero, so I'm making s=
+ure
+> >>>> vhost_net will also initialize it.
+> >>>>
+> >>>> Regards,
+> >>>> Akihiko Odaki
+> >>>>
+> >>>>>
+> >>>>> Others look fine.
+> >>>>>
+> >>>>> Thanks
+> >>>>>
+> >>>>
+> >>>
+> >>
+> >
+>
 
