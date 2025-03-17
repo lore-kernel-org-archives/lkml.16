@@ -1,198 +1,131 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30DE165EFC;
-	Mon, 17 Mar 2025 16:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075711F4706;
+	Mon, 17 Mar 2025 16:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742229494; cv=none; b=MaTHxJXyYRIezN1jlJ70PdYv6/6TJCgO+xquqf7r7veCWLKRL+zarG5kTS9BlWEdB71iGvwqB34J1s+8Ci8JqhwIW8L/JBcxFrGDcwplEe1g2F7sD/CVo2FMKqLIxPj9iNDGRdmPwEtvPODQnsSG07X6jMtLF2ntxs+63R+VDLo=
+	t=1742229498; cv=none; b=QxY6awmYrWnHZ1sLhP6o1wr9Sq5bOQT4I04VhZ7H0Uom5xJvaWzX8Pf6sZnLEb7S6TAY3rUunKwFaEnymZmyqSXbMdSMdgbRazC5H9RV5uv5NhkYabMHN83FETEDHAnouRJwbRt0zuUlrzKHEL3A7Lw59odEFprAWHngie9liGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742229494; c=relaxed/simple;
-	bh=9t1pdawn2FZ7NWIdQ/GARUR55HAqyNj1BWtqrutZTKY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YjosvzjgdcjCjdoOCeTBDS3g1IAoxLF3q+cayxyToYdBp7NCCZEqmAMnYtKLx+nYTVGps3C6oALQruMfhTj20JGy2b0zTDlrcnXp7Ip4v96PU71uDWFenANVTvQtbSttfsu8/xMUST8i3QGf6cXLBFlJnmEE6nwZ/LUPlk0yChs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nckDosPU; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742229498; c=relaxed/simple;
+	bh=cTtWJdgHBaThA0PWeqWg4xK1c4tdQtMTakykwnUudeA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=s+oq3HzYxfzE6fjhdTrzcEgSU0R2Qt+tBPCsVENSFAYW2aV+sGJpubCP/9c9haop6Nd459g50s2d4DnsvnLreWKjuBqhgesc+q3bCAMxPMdEaaK4IUijQwwZeV7gxof9ooFAtsyb2GEL0FZlr1I7cmiM/fmiDft9pjnUKSGKYMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jd4gCWJA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nckDosPU"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-223a7065ff8so48093675ad.0;
-        Mon, 17 Mar 2025 09:38:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742229492; x=1742834292; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aTPbj1b195DRbTb39Xzp9sfX+PKRZYgeC3LAILUOanI=;
-        b=nckDosPUoeq772CsH3bTFbbKBqmGUoShAarXyPMxIEgIGEHPXX7AKy3/9QtCCsX4oR
-         9X58GK16Zp17vb9Im4VYpR7yoeSWRypXPS2vRV0JEkX+j77DZYza4FdMi1lLFStuI+8b
-         Jy73tfCs3gyFBVuWki8PISyuNfAZR4Bbry9u8wgcos0IvrTdGh1oW5DePOcG6i/U/3MJ
-         hPEWpqtjDeG2IsXqGrBe5BBp8O4KYGsEfuJlC3bIbHn4N1RZyREKAObcsvAhZZ6WwlC8
-         aTdnHn5i3N2VdwNtt7TiXChjzyGj65ryX+5tmLqjianZwjxBvPFDJXjaHrDjQBNNjNba
-         0ipA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742229492; x=1742834292;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aTPbj1b195DRbTb39Xzp9sfX+PKRZYgeC3LAILUOanI=;
-        b=dY3zfnYg7Wg1zOvgNeN3CLC0osmLwIK+PYM0b4Lc5k/9dww2b92Y0nRvAuoyT2umVD
-         292C+RaTEyWVZLxV9PIW/Ck7P1dICTOGiRqzX1Q53fVLfSc8NnfgqxcWpsTWE5opyPr9
-         Cm3wzAk85bsrqCbzZxg6bO/DCd8x2d22tzsNdwVcwE5Od0gAbfsURlNbvrZcxdsQ9FMb
-         9S/+7unULgrY9EXIOmuEHq/3jD7vfjyINpvf/kVYAqTQM/doEcWS4/9TIXiVHdBF/tN+
-         DXGQuWHCMhIt+B4Dp2fTgkqPKqP7ZTfx46vF9X1m1kwVkltTaFM1ULjuZmVaVZrbadEi
-         QZfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUAXRnFaXnnUhWsfHNTHFLCLzKJp3cwkHXkiHvQYvnlAM0rqf4v9UfHyAtzSt550TrayVTiooQHr8SlmHc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyszOSY0O4u85uJw8pLQDZrqKje6epIHriGP3tOjrvUcBZcMk3d
-	VFGUYW+/lplpRSTcFCzxdKYftcObDNoe0Dt/eVjuSexmzOHproHR
-X-Gm-Gg: ASbGncvn5XAzxAwA6zerNbGiR+D7KdZkaSA5YkspNgdcpLHSH4UhOw9lGeHWTbUMJt4
-	swVcep+DpSnI6dgW1RgZs2DCbhOARDd6jwKBHRt5cC+6I3i30Rc2feskWaTUpwf5N1TAJ9KrHI2
-	0IePXbcb2vvNZICD64hWaVe960C4o8Ybv5Y2OQGk7JbnQUKKJaefM3t2GtSKH1ao7aNPrzNJVg5
-	xQycqQo0/9lqU3neIdKX1x/RpdbyXVJu07tdIrbI7SxD9/YWd/utekz5I+fmxWycuNspV88GaWl
-	r4T80f2Vb78Q3pm2Al/CvD+yyinKwEZ4aoRjjEBp3eCsqoE8m2tAZi8UluVu5nnzmz3lPvLokR6
-	7If4vQAyv+/UHsqMOpkDAxA==
-X-Google-Smtp-Source: AGHT+IFe3Ho08AMwCSP9qaSJjjg0vymK1Bqccz/fxA/lGP/fvE3RTVLTFzTwPodRuymd1I5f+3DYng==
-X-Received: by 2002:a05:6a00:b91:b0:736:42a8:a742 with SMTP id d2e1a72fcca58-737223b9098mr12931895b3a.11.1742229492005;
-        Mon, 17 Mar 2025 09:38:12 -0700 (PDT)
-Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737116b3de4sm8038387b3a.179.2025.03.17.09.38.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 09:38:11 -0700 (PDT)
-From: Potin Lai <potin.lai.pt@gmail.com>
-Date: Tue, 18 Mar 2025 00:35:48 +0800
-Subject: [PATCH] gpio: pca953x: Add support for level-triggered interrupts
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jd4gCWJA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E680C4CEED;
+	Mon, 17 Mar 2025 16:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742229497;
+	bh=cTtWJdgHBaThA0PWeqWg4xK1c4tdQtMTakykwnUudeA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Jd4gCWJA175gnYmv+UUvuESRvNokhMqroAYNgkrmxGygFK+TMmlNmN+nLxw8zxHvL
+	 /GQVzjlCKm6xAnCmcaa4tFFTQrSNDe6Xhli4VrEZg9iQE/eDk2BY9U6etn7erRszB4
+	 r0v2aKogu2wWo3+tZ7uokPvKZLc4X4e9KJ5fJ46lkGjbkKrNgoZQWpc0eE7TtjpQCU
+	 x/3qjUm1p8xTP6aByvS0ILLITbtdibuqCPm9V/d1805JBpENm1RYXYBILw+2w97985
+	 6l6qlD34j0kaprGERd0GXD+S+OQvt90dgnpPSBYyZhl1Ar01Ddm8fJcIVuPZOb+hoQ
+	 D9mBpZ33ejLIA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Navon John Lukose <navonjohnlukose@gmail.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	Sasha Levin <sashal@kernel.org>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	kailang@realtek.com,
+	sbinding@opensource.cirrus.com,
+	simont@opensource.cirrus.com,
+	josh@joshuagrisham.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 16/16] ALSA: hda/realtek: Add mute LED quirk for HP Pavilion x360 14-dy1xxx
+Date: Mon, 17 Mar 2025 12:37:25 -0400
+Message-Id: <20250317163725.1892824-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250317163725.1892824-1-sashal@kernel.org>
+References: <20250317163725.1892824-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-gpio-pca953x-level-triggered-irq-v1-1-0c4943d92425@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAGNP2GcC/x3NQQqDMBBG4avIrDtglNTWq5QuYvwTB0TjpIgg3
- t3Q5bd576QMFWTqq5MUu2RZlwLzqMhPbolgGYupqRtbt+bFMcnKybu3bQ+esWPmn0qMUIwsurH
- 1oQvGu8E+DZVMUgQ5/ovP97pucduLX3IAAAA=
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Patrick Williams <patrick@stwcx.xyz>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Cosmo Chou <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>, 
- Potin Lai <potin.lai.pt@gmail.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742229490; l=4418;
- i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
- bh=9t1pdawn2FZ7NWIdQ/GARUR55HAqyNj1BWtqrutZTKY=;
- b=NmrpVUZDoBEM42UHCMuoqqpPb/tFVbCVz2Wvy2ehlwCtBlbWqYo0zb/mMFrUsu3MQxg46S7AE
- 9fxvjz5/ak9BL7bUemDpyIeAlincSwb7bQKK7isxpV4m2aVi/rbGID2
-X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
- pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.7
+Content-Transfer-Encoding: 8bit
 
-Adds support for level-triggered interrupts in the PCA953x GPIO
-expander driver. Previously, the driver only supported edge-triggered
-interrupts, which could lead to missed events in scenarios where an
-interrupt condition persists until it is explicitly cleared.
+From: Navon John Lukose <navonjohnlukose@gmail.com>
 
-By enabling level-triggered interrupts, the driver can now detect and
-respond to sustained interrupt conditions more reliably.
+[ Upstream commit b11a74ac4f545626d0dc95a8ca8c41df90532bf3 ]
 
-Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
+Add a fixup to enable the mute LED on HP Pavilion x360 Convertible
+14-dy1xxx with ALC295 codec. The appropriate coefficient index and bits
+were identified through a brute-force method, as detailed in
+https://bbs.archlinux.org/viewtopic.php?pid=2079504#p2079504.
+
+Signed-off-by: Navon John Lukose <navonjohnlukose@gmail.com>
+Link: https://patch.msgid.link/20250307213319.35507-1-navonjohnlukose@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Adds support for level-triggered interrupts in the PCA953x GPIO
-expander driver.
----
- drivers/gpio/gpio-pca953x.c | 31 ++++++++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 5 deletions(-)
+ sound/pci/hda/patch_realtek.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index be4c9981ebc4..2c4034b39aff 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -215,6 +215,8 @@ struct pca953x_chip {
- 	DECLARE_BITMAP(irq_stat, MAX_LINE);
- 	DECLARE_BITMAP(irq_trig_raise, MAX_LINE);
- 	DECLARE_BITMAP(irq_trig_fall, MAX_LINE);
-+	DECLARE_BITMAP(irq_trig_level_high, MAX_LINE);
-+	DECLARE_BITMAP(irq_trig_level_low, MAX_LINE);
- #endif
- 	atomic_t wakeup_path;
- 
-@@ -773,6 +775,8 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
- 
- 	bitmap_or(irq_mask, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
-+	bitmap_or(irq_mask, irq_mask, chip->irq_trig_level_high, gc->ngpio);
-+	bitmap_or(irq_mask, irq_mask, chip->irq_trig_level_low, gc->ngpio);
- 	bitmap_complement(reg_direction, reg_direction, gc->ngpio);
- 	bitmap_and(irq_mask, irq_mask, reg_direction, gc->ngpio);
- 
-@@ -790,13 +794,15 @@ static int pca953x_irq_set_type(struct irq_data *d, unsigned int type)
- 	struct device *dev = &chip->client->dev;
- 	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 
--	if (!(type & IRQ_TYPE_EDGE_BOTH)) {
-+	if (!(type & IRQ_TYPE_SENSE_MASK)) {
- 		dev_err(dev, "irq %d: unsupported type %d\n", d->irq, type);
- 		return -EINVAL;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 10e9ec74104d2..2eabab0da87d0 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -4792,6 +4792,21 @@ static void alc236_fixup_hp_coef_micmute_led(struct hda_codec *codec,
  	}
- 
- 	assign_bit(hwirq, chip->irq_trig_fall, type & IRQ_TYPE_EDGE_FALLING);
- 	assign_bit(hwirq, chip->irq_trig_raise, type & IRQ_TYPE_EDGE_RISING);
-+	assign_bit(hwirq, chip->irq_trig_level_low, type & IRQ_TYPE_LEVEL_LOW);
-+	assign_bit(hwirq, chip->irq_trig_level_high, type & IRQ_TYPE_LEVEL_HIGH);
- 
- 	return 0;
- }
-@@ -809,6 +815,8 @@ static void pca953x_irq_shutdown(struct irq_data *d)
- 
- 	clear_bit(hwirq, chip->irq_trig_raise);
- 	clear_bit(hwirq, chip->irq_trig_fall);
-+	clear_bit(hwirq, chip->irq_trig_level_low);
-+	clear_bit(hwirq, chip->irq_trig_level_high);
  }
  
- static void pca953x_irq_print_chip(struct irq_data *data, struct seq_file *p)
-@@ -839,6 +847,7 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
- 	DECLARE_BITMAP(cur_stat, MAX_LINE);
- 	DECLARE_BITMAP(new_stat, MAX_LINE);
- 	DECLARE_BITMAP(trigger, MAX_LINE);
-+	DECLARE_BITMAP(edges, MAX_LINE);
- 	int ret;
- 
- 	if (chip->driver_data & PCA_PCAL) {
-@@ -875,13 +884,25 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
- 
- 	bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
- 
--	if (bitmap_empty(trigger, gc->ngpio))
--		return false;
-+	if (!chip->irq_trig_level_high && !chip->irq_trig_level_low) {
-+		if (bitmap_empty(trigger, gc->ngpio))
-+			return false;
++static void alc295_fixup_hp_mute_led_coefbit11(struct hda_codec *codec,
++				const struct hda_fixup *fix, int action)
++{
++	struct alc_spec *spec = codec->spec;
++
++	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
++		spec->mute_led_polarity = 0;
++		spec->mute_led_coef.idx = 0xb;
++		spec->mute_led_coef.mask = 3 << 3;
++		spec->mute_led_coef.on = 1 << 3;
++		spec->mute_led_coef.off = 1 << 4;
++		snd_hda_gen_add_mute_led_cdev(codec, coef_mute_led_set);
 +	}
- 
- 	bitmap_and(cur_stat, chip->irq_trig_fall, old_stat, gc->ngpio);
- 	bitmap_and(old_stat, chip->irq_trig_raise, new_stat, gc->ngpio);
--	bitmap_or(new_stat, old_stat, cur_stat, gc->ngpio);
--	bitmap_and(pending, new_stat, trigger, gc->ngpio);
-+	bitmap_or(edges, old_stat, cur_stat, gc->ngpio);
-+	bitmap_and(pending, edges, trigger, gc->ngpio);
++}
 +
-+	bitmap_and(cur_stat, new_stat, chip->irq_trig_level_high, gc->ngpio);
-+	bitmap_and(cur_stat, cur_stat, chip->irq_mask, gc->ngpio);
-+	bitmap_or(pending, pending, cur_stat, gc->ngpio);
-+
-+	bitmap_complement(cur_stat, new_stat, gc->ngpio);
-+	bitmap_and(cur_stat, cur_stat, reg_direction, gc->ngpio);
-+	bitmap_and(old_stat, cur_stat, chip->irq_trig_level_low, gc->ngpio);
-+	bitmap_and(old_stat, old_stat, chip->irq_mask, gc->ngpio);
-+	bitmap_or(pending, pending, old_stat, gc->ngpio);
- 
- 	return !bitmap_empty(pending, gc->ngpio);
- }
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250318-gpio-pca953x-level-triggered-irq-5cf7f1cab561
-
-Best regards,
+ static void alc285_fixup_hp_mute_led(struct hda_codec *codec,
+ 				const struct hda_fixup *fix, int action)
+ {
+@@ -7644,6 +7659,7 @@ enum {
+ 	ALC290_FIXUP_MONO_SPEAKERS_HSJACK,
+ 	ALC290_FIXUP_SUBWOOFER,
+ 	ALC290_FIXUP_SUBWOOFER_HSJACK,
++	ALC295_FIXUP_HP_MUTE_LED_COEFBIT11,
+ 	ALC269_FIXUP_THINKPAD_ACPI,
+ 	ALC269_FIXUP_DMIC_THINKPAD_ACPI,
+ 	ALC269VB_FIXUP_INFINIX_ZERO_BOOK_13,
+@@ -9381,6 +9397,10 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC283_FIXUP_INT_MIC,
+ 	},
++	[ALC295_FIXUP_HP_MUTE_LED_COEFBIT11] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc295_fixup_hp_mute_led_coefbit11,
++	},
+ 	[ALC298_FIXUP_SAMSUNG_AMP] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc298_fixup_samsung_amp,
+@@ -10425,6 +10445,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x103c, 0x8519, "HP Spectre x360 15-df0xxx", ALC285_FIXUP_HP_SPECTRE_X360),
+ 	SND_PCI_QUIRK(0x103c, 0x8537, "HP ProBook 440 G6", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
++	SND_PCI_QUIRK(0x103c, 0x85c6, "HP Pavilion x360 Convertible 14-dy1xxx", ALC295_FIXUP_HP_MUTE_LED_COEFBIT11),
+ 	SND_PCI_QUIRK(0x103c, 0x85de, "HP Envy x360 13-ar0xxx", ALC285_FIXUP_HP_ENVY_X360),
+ 	SND_PCI_QUIRK(0x103c, 0x860f, "HP ZBook 15 G6", ALC285_FIXUP_HP_GPIO_AMP_INIT),
+ 	SND_PCI_QUIRK(0x103c, 0x861f, "HP Elite Dragonfly G1", ALC285_FIXUP_HP_GPIO_AMP_INIT),
 -- 
-Potin Lai <potin.lai.pt@gmail.com>
+2.39.5
 
