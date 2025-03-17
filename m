@@ -1,123 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6889D1922D3
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426601A00F0;
+	Mon, 17 Mar 2025 16:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742229436; cv=none; b=bL09A/O1P8G4Wvbg703+/AV3LRAJBM4UrqRyGJtk5cPOXIaW8tg+W5AU9ktNWL2WQqOc99ESF2w7r3g1SCSi9IJt6YVJe60zX1xJZgO03xleeHsS0LHL0HCoDH669SwWiYsGA8DvqJbaK+Piliu1nqUN9+zINlblyzfdJ+5uGXI=
+	t=1742229449; cv=none; b=cHtZ4/Q/h5jEZVuOCeHLdHsucAbuDPoEKDeb87uTGWxN96y3MPdFO4iLSCTTwQhK9uCCupsDLe14GxoIfJvsSV1+F9wANbalyoPLogY4hH6kBl4cVNZFm8LEGSdqc/QT+JpLjnLzh49kFjkDGqNKoQAFeNN/eF/H5MWGys8YF4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742229436; c=relaxed/simple;
-	bh=S6I2WavCtsoOuWUc2oZMW7mzzqpQSM5n/x+IPgYbHFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=piot4yb9qD0huoHvM8PmmtTa+vm7rnj2QXs2Qtrs7GTkcAdpbCqs2tFKAC3i/QmL0pwzKUZas6v/xoef2KKkC6XpwQQFRkHvrbMjddekhcERG3/NSDVaL+RB8GCg5MXf2OjHuDA/vRTfG3uzEgk27EMxOs5ArxM7FlJkH9GDfDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dN6e5qID; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742229449; c=relaxed/simple;
+	bh=N/aRBNxPho1kgMQVdIQBUk7vp1cyQKJPsr48d15Ncd8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QGNLDq/jyF8XzV48W31OiWkg9Bw+EOUOtPWWKXcyOzgGiFXta4mquc2lQaMkFP5dVHfKF1U6AEjssaN6Ry5+hy/l5KScuM9MovNisQs5FiwNbr1YIopxE5JX+PJnBKT9/Yjjqdjx8+jFf6uSf6Hi6Dj2dZvYxApv1AaDy+KnC3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jUdtDrGp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dN6e5qID"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742229434; x=1773765434;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=S6I2WavCtsoOuWUc2oZMW7mzzqpQSM5n/x+IPgYbHFE=;
-  b=dN6e5qID5fgx94o0b7P/wrDW6vq0UUAb45g6TiJGLgNilFZ29eh51rNx
-   PYU/pf8fy3G0g7z8344nnGlWcTlKTywt4MlEo4pTiWcVfh5NVqIPNPNbp
-   9LoD/dRRN5opMvhAfR5QY73L9YByKx1GKu0EiJiuKN3nS44TbHsOtmMEH
-   aBpkMgpPUct7E4/diftv6tFrCZ0sD+HW8ZzDXKHveEHDV/E2osf56uTJm
-   6Sie1jGjuM6ZyNGrl6SaE/qCJdMeJzHt53yr43nIyE4dW16Ng2p6OL0iH
-   TTa5TyDAderfW7Aw3ElyQwT1YsvJyw3r/pFs4TNzRPoCnov/DejCAzf6z
-   g==;
-X-CSE-ConnectionGUID: 3CM11ndcTwiFP1Ilfcwasw==
-X-CSE-MsgGUID: kYzaWeQpRFmSjfj05vgz8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="30916548"
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="30916548"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 09:37:13 -0700
-X-CSE-ConnectionGUID: A270ThBuSMyycNnywtyPVA==
-X-CSE-MsgGUID: jDdGIhg1QGm8sCV4sXP7Yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="122487177"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 09:37:13 -0700
-Date: Mon, 17 Mar 2025 09:37:12 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: "Moger, Babu" <babu.moger@amd.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH] x86/resctrl: Refactor to make adding extra MBM events
- easy
-Message-ID: <Z9hPuMV5n_FY02MM@agluck-desk3>
-References: <20250314202609.5753-1-tony.luck@intel.com>
- <d4263bf7-9bd1-447f-976c-69fd96d3f204@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jUdtDrGp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 010CAC4CEE3;
+	Mon, 17 Mar 2025 16:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742229448;
+	bh=N/aRBNxPho1kgMQVdIQBUk7vp1cyQKJPsr48d15Ncd8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jUdtDrGpgs/ChDc98BmwBjXLkvgcajah+UEnTjFTd+i+nrJS1xPdHDUg1TYFObOZv
+	 yGNj3X5fl0kVKjfz9gbkQMiqlEv7tMG79KiwDxuVKS08FSBcCq5dXvBLWlq/2hlMAP
+	 N37ly1/tI8Gndvcr3bZtM+Qq0nuhhbYEVw3Y/kuU39pDvj24RhVgew72iEUiTscNlv
+	 pjip3S1PmLu2H84BXVXtwYXFpXf3fqFfWJ2x65Zmg0UWUg8nqi0rUPicG4JmAv5hmv
+	 t2Ofv2m6btpBB2J2crxLF8AF05pvUf/nCtmbQpRSdpJHXEiKKuZl6OQvOl45Ol90M9
+	 OMrlAdpIp13Wg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Naman Jain <namjain@linux.microsoft.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Roman Kisel <romank@linux.microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	kys@microsoft.com,
+	haiyangz@microsoft.com,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 01/16] x86/hyperv/vtl: Stop kernel from probing VTL0 low memory
+Date: Mon, 17 Mar 2025 12:37:10 -0400
+Message-Id: <20250317163725.1892824-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d4263bf7-9bd1-447f-976c-69fd96d3f204@amd.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.7
+Content-Transfer-Encoding: 8bit
 
-Hi Babu,
+From: Naman Jain <namjain@linux.microsoft.com>
 
-Thanks for taking a look.
+[ Upstream commit 59115e2e25f42924181055ed7cc1d123af7598b7 ]
 
-On Mon, Mar 17, 2025 at 09:54:59AM -0500, Moger, Babu wrote:
-> >  static void mbm_update(struct rdt_resource *r, struct rdt_mon_domain *d,
-> >  		       u32 closid, u32 rmid)
-> >  {
-> > +	int evt;
-> > +
-> >  	/*
-> >  	 * This is protected from concurrent reads from user as both
-> >  	 * the user and overflow handler hold the global mutex.
-> >  	 */
-> > -	if (resctrl_arch_is_mbm_total_enabled())
-> > -		mbm_update_one_event(r, d, closid, rmid, QOS_L3_MBM_TOTAL_EVENT_ID);
-> > -
-> > -	if (resctrl_arch_is_mbm_local_enabled())
-> > -		mbm_update_one_event(r, d, closid, rmid, QOS_L3_MBM_LOCAL_EVENT_ID);
-> > +	for_each_set_bit(evt, &rdt_mon_features, sizeof(rdt_mon_features))
-> > +		mbm_update_one_event(r, d, closid, rmid, evt);
-> 
-> You need a check resctrl_arch_is_mbm_event() here.
+For Linux, running in Hyper-V VTL (Virtual Trust Level), kernel in VTL2
+tries to access VTL0 low memory in probe_roms. This memory is not
+described in the e820 map. Initialize probe_roms call to no-ops
+during boot for VTL2 kernel to avoid this. The issue got identified
+in OpenVMM which detects invalid accesses initiated from kernel running
+in VTL2.
 
-Right. This is definitely broken. Needs that check.
+Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+Tested-by: Roman Kisel <romank@linux.microsoft.com>
+Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+Link: https://lore.kernel.org/r/20250116061224.1701-1-namjain@linux.microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Message-ID: <20250116061224.1701-1-namjain@linux.microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/hyperv/hv_vtl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Will that be reason for your hang issue?
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 04775346369c5..d04ccd4b3b4af 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -30,6 +30,7 @@ void __init hv_vtl_init_platform(void)
+ 	x86_platform.realmode_init = x86_init_noop;
+ 	x86_init.irqs.pre_vector_init = x86_init_noop;
+ 	x86_init.timers.timer_init = x86_init_noop;
++	x86_init.resources.probe_roms = x86_init_noop;
+ 
+ 	/* Avoid searching for BIOS MP tables */
+ 	x86_init.mpparse.find_mptable = x86_init_noop;
+-- 
+2.39.5
 
-Might have. But it isn't my only problem. After fixing this my
-kernel dies on a deref NULL.
-
-> > @@ -1075,20 +1062,37 @@ static void dom_data_exit(struct rdt_resource *r)
-> >  	mutex_unlock(&rdtgroup_mutex);
-> >  }
-> >  
-> > -static struct mon_evt llc_occupancy_event = {
-> > -	.name		= "llc_occupancy",
-> > -	.evtid		= QOS_L3_OCCUP_EVENT_ID,
-> > +static struct mon_evt all_events[] = {
-> 
-> There is one empty event here. You may need to make that clear.
-
-Yes. I went with "some wasted space" for code simplicity just
-using the bit numbers in rdt_mon_features to index this array.
-
-Also applies to the mbm_states[] field in rdt_mon_domain and
-the arch_mbm_states[] array in rdt_hw_mon_domain. The wasted
-space could be reclaimed with some macros to convert from
-bit numbers to array indices should this patch ever be
-considered for inclusion.
-
--Tony
