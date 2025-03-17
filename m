@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BE622759C;
-	Mon, 17 Mar 2025 13:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC45F23F404;
+	Mon, 17 Mar 2025 13:29:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742218167; cv=none; b=Q/4w7KjC3vsXBxv+RZAsGynqIW5QLkmpIl41ooksLmjKcStecYK+N76vjLUHN2SAEviTIHp0rpG1u97Iv9VmDH5Uy0JN1M+vTUJiSaGFjtHu2O6tOB05ppWZalKImDGwzkN65sCjH6uU+kkSE27lDHTYfQfjOcuanBU9MAyJrj4=
+	t=1742218168; cv=none; b=CJH5OdICIC6OUmJtZyFvq2lrayoMcLThWmPtPwiO+jDiqjbk7gKSmZlVRghXnL93/uXqlQchVoktEI/i6QPwmncKPpN9xl4LXqH1lsene/UGIJTMkABoBei0uWo2dNUW2ftQBxkFj6x3ep7Mluf7NbkHjGExB8OPjdbkr+P1aOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742218167; c=relaxed/simple;
-	bh=ho8Pzt9rnRzxEycPk61Hi2KRQSUXlk2Hs9Tw9uulgDA=;
+	s=arc-20240116; t=1742218168; c=relaxed/simple;
+	bh=RvJxo5ar40+unPIeF/B/OFE+2jPTP7dHPiKnIeqq5Ws=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=H7d/Eev2HxluH/KiTO7bnDu+kpAwdYDpdD/EUi8h6TruQLdVrBy/JmIpAQqQsipTboMMHDi5SpESWvPrUZjstvKc7pt0LRffIWvmGHVLKD1omYkhYZyCvC4oMiJHXNJ9FYpp9/G4eND/XVgWHYY628DU9AU6/RqnPCX56ztBO2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ikfuYWB2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9YalfP8x; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=oYXww3dhOfTyxTq31oUzaLKOHKdCEywtUd/zcWuKBk9gvnKRXP5ZCvxulxHUxH510dNUghQe5Ay9I8sxpzrNIma0oJf3HBfX601NvTeSXBik9V1W6tXgLFuX/jgWgQ2GYCdhxhrqy7oMEApenJEs5lLraMTOZS7UbmyP6HY0c3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZXgDw2Xg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v5VcbI0Y; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ikfuYWB2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9YalfP8x"
-Message-ID: <20250317092945.764490535@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZXgDw2Xg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v5VcbI0Y"
+Message-ID: <20250317092945.889932275@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742218163;
+	s=2020; t=1742218165;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=dp0eYeKfrNlzvU3/WMfnQjPzD6qavekPLwUv4OZ2OOs=;
-	b=ikfuYWB22wmHGAZ1ZCYxuHRBkfaFcMntu8Y2Xs5ZKHP20JMm5tpDEfW6mSqnqvIO7/Ajcd
-	T6v6qi7q6R4ILWkgkDOA9Euq/2Zb29uV0VXgMO3S6EOiTvIiTE+3fMRc2bW6TgCzStokN0
-	2qNbE69vg0xjvKiRyG8sm76ROcQAiH7DcvK+2xFh2EUbUaH3RmjIZEbbqrki7c8bXpVgqd
-	r29lTkocOA2rivUwQDjCvDUL23d+Y5cLsrbZNqF9pkBjMX/+mz0WWQ4SK1qFQ2nxUnM/Od
-	+UNYZUNZd4i2O78LP2ilCXUXc58YfEFyuX8tC6NzyGzyPdar813GtKp6JAeFXA==
+	 references:references; bh=Au16aChR8IOH+YeFbnBW4TcQleO7ukWx0zDehmMH2S0=;
+	b=ZXgDw2XgxMHj0HftP/VDW1yVeAZ8nzFkaGjuOfO8cRtoswl1ExtC5xQyQxpBoeuijYHOg4
+	MkJ2gghxl3eRl0wdd8jqGVrxSp6sT+lMu8WedWlOiLdXTtiKgorxTw+GbXLiyBcCLMARYw
+	nF0ap//kj5Tw7249Gma2UsXb78dFQV2dkY0jp5Vj7zvnZHF08Hzr/ZpuDwKAfylW2yXOYV
+	iJuDni3zUp2P1ByxoDbNZm8SxUbzmnYexL8SOwPpiDQQFb5YGLft2c11YC5MiMEWh8Xfwx
+	y8zcbqqT+xTcRo1ZAqYVwKE2SDqIIWolGr6AX0vz1IPG2Foeh3ghz+YdMGJ74A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742218163;
+	s=2020e; t=1742218165;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=dp0eYeKfrNlzvU3/WMfnQjPzD6qavekPLwUv4OZ2OOs=;
-	b=9YalfP8xBbKHQiBQ+hYehlm/nMIPvpPeNa78JCueUr9eWpmBcupHLF1l2sIP1/dDDyvv38
-	onqG0szZCKhD09Cg==
+	 references:references; bh=Au16aChR8IOH+YeFbnBW4TcQleO7ukWx0zDehmMH2S0=;
+	b=v5VcbI0YRMhLvO4XpGpSQD8ONn1g2PrWR38hWuuzs7bjf/FDh/7NRXJvvZoI9SJQOU+70x
+	2bK7aLTu3JJmyGAw==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Marc Zyngier <maz@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  Nishanth Menon <nm@ti.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
  Dhruva Gole <d-gole@ti.com>,
  Tero Kristo <kristo@kernel.org>,
  Santosh Shilimkar <ssantosh@kernel.org>,
@@ -61,7 +61,8 @@ Cc: Marc Zyngier <maz@kernel.org>,
  "Martin K. Petersen" <martin.petersen@oracle.com>,
  linux-scsi@vger.kernel.org,
  Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: [patch V3 01/10] cleanup: Provide retain_ptr()
+Subject: [patch V3 03/10] soc: ti: ti_sci_inta_msi: Switch MSI descriptor
+ locking to guard()
 References: <20250317092919.008573387@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -70,75 +71,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 17 Mar 2025 14:29:22 +0100 (CET)
+Date: Mon, 17 Mar 2025 14:29:24 +0100 (CET)
 
-In cases where an allocation is consumed by another function, the
-allocation needs to be retained on success or freed on failure. The code
-pattern is usually:
+Convert the code to use the new guard(msi_descs_lock).
 
-	struct foo *f = kzalloc(sizeof(*f), GFP_KERNEL);
-	struct bar *b;
-
-	,,,
-	// Initialize f
-	...
-	if (ret)
-		goto free;
-        ...
-	bar = bar_create(f);
-	if (!bar) {
-		ret = -ENOMEM;
-	   	goto free;
-	}
-	...
-	return 0;
-free:
-	kfree(f);
-	return ret;
-
-This prevents using __free(kfree) on @f because there is no canonical way
-to tell the cleanup code that the allocation should not be freed.
-
-Abusing no_free_ptr() by force ignoring the return value is not really a
-sensible option either.
-
-Provide an explicit macro retain_ptr(), which NULLs the cleanup
-pointer. That makes it easy to analyze and reason about.
+No functional change intended.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Nishanth Menon <nm@ti.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Cc: Tero Kristo <kristo@kernel.org>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>
 
 ---
- include/linux/cleanup.h |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/soc/ti/ti_sci_inta_msi.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/include/linux/cleanup.h
-+++ b/include/linux/cleanup.h
-@@ -216,6 +216,23 @@ const volatile void * __must_check_fn(co
+--- a/drivers/soc/ti/ti_sci_inta_msi.c
++++ b/drivers/soc/ti/ti_sci_inta_msi.c
+@@ -103,19 +103,15 @@ int ti_sci_inta_msi_domain_alloc_irqs(st
+ 	if (ret)
+ 		return ret;
  
- #define return_ptr(p)	return no_free_ptr(p)
+-	msi_lock_descs(dev);
++	guard(msi_descs_lock)(dev);
+ 	nvec = ti_sci_inta_msi_alloc_descs(dev, res);
+-	if (nvec <= 0) {
+-		ret = nvec;
+-		goto unlock;
+-	}
++	if (nvec <= 0)
++		return nvec;
  
-+/*
-+ * Only for situations where an allocation is handed in to another function
-+ * and consumed by that function on success.
-+ *
-+ *	struct foo *f __free(kfree) = kzalloc(sizeof(*f), GFP_KERNEL);
-+ *
-+ *	setup(f);
-+ *	if (some_condition)
-+ *		return -EINVAL;
-+ *	....
-+ *	ret = bar(f);
-+ *	if (!ret)
-+ *		retain_ptr(f);
-+ *	return ret;
-+ */
-+#define retain_ptr(p)				\
-+	__get_and_null(p, NULL)
- 
- /*
-  * DEFINE_CLASS(name, type, exit, init, init_args...):
+ 	/* Use alloc ALL as it's unclear whether there are gaps in the indices */
+ 	ret = msi_domain_alloc_irqs_all_locked(dev, MSI_DEFAULT_DOMAIN, nvec);
+ 	if (ret)
+ 		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
+-unlock:
+-	msi_unlock_descs(dev);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
+
+
 
 
 
