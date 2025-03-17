@@ -1,252 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C79121ADB9;
-	Mon, 17 Mar 2025 07:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B147A21CFEC
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 07:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742195815; cv=none; b=ZtrT7nxeuerxSaK35PA5FEl/WY2Nr03O5FxumN9YO3IQw+TND9TA+j7ta8/D5TaNrS79VXJlb4EtH2QbZ2h0N4f3t9WO8yCDQ9DOMPMOzNj/Hye3jzVr8/Do3pebd1kBWRGNKtdllIrQP4B8+zUzmBLdd4Cswp/Zx8xf69hsQJY=
+	t=1742195840; cv=none; b=BejhAE4M8lehfibKC6cZSnoXyEQNYYp2JLgsC/iV35VEZ7R6Y1ddzpWgtf21jGbTYywQDhKePjf2ZyDvMnvTX6w4IGkNl1JS9BGFx7e5YO8JNs73z4iVYlr4Iv1Kgz3m2nao/8c0C0F/hWDcnoGqHGSDqw9kubytLZB5zXS1QIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742195815; c=relaxed/simple;
-	bh=+POl+cmFoKPhYkGV3YX5zWEpHLNlNQsomdnoqKxuy2Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qbPVbytYgkCOrqd3vXvEbJCJ5p01/YPuLIpooOYOzQyjpyG/aoaNyIheC9ksE+1+TrnF7ssxrigRpdVhcumlldFCIGfAOknHvWzeqb5N2CLet4/2V1IMLGBMqW78E5VJrS0wVe100kztrsKfiTdQKUPnB2jRA1EKvd2M9Zv4iEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5u+/YZF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5u+/YZF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A110EC4CEF9;
-	Mon, 17 Mar 2025 07:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742195814;
-	bh=+POl+cmFoKPhYkGV3YX5zWEpHLNlNQsomdnoqKxuy2Y=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=K5u+/YZF9ntEnP4rRqgtZm7fn+XobY064azNj1tPFBySkBUhQ91vGq248wh4ps0jG
-	 G41YGrCSXuCvnCo6kG53qZn+yutS5t8Bgn/u4Pesv6BYLRlOm75cXYccB0MyNMIoft
-	 X1UZ0AlnF0H3pKNfgPetz4YsCHSMhd2YQmv8zBQ5NNlYEZ/TvjkxmdWpzQp/ZPAVrF
-	 D2Pt8WzRVqnOPySic5VhOEO7KCOwnJSvuMQBjT6B0f5Rn7c+aAZluvdATJm9P8hsmq
-	 QdNynfVS1yMFET6RehBr+4GEcqopGM2Oe0JjHsCQQpNpw2d1Yvk3PdtsK5rK0KOphB
-	 1jMmJzg0TYybA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 938DFC35FF3;
-	Mon, 17 Mar 2025 07:16:54 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Mon, 17 Mar 2025 15:16:56 +0800
-Subject: [PATCH 5/7] arm64: dts: add support for S6 based Amlogic BL209
+	s=arc-20240116; t=1742195840; c=relaxed/simple;
+	bh=TbdqC6kaY8ADR7bsnfdwIHRhnhOpf1QkzLFQbDHaCOk=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=m5Kk3ZhvsFcI1LH0QiPazms0CV8aBBa9i/waWMjSZ5d5iaeEThHETiql9JUbVWzRvN/xtVOScl2ZmkGbHXkOmHYIY5LKkUKlkw7e00vLQtN/z45e+l14DHFjgjBp7byvchGf78HQDlornhF/KauqhxJUhrPacPbatVpyh86mcjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZGR9z4DFLz501gV;
+	Mon, 17 Mar 2025 15:17:11 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl1.zte.com.cn with SMTP id 52H7GjbN079096;
+	Mon, 17 Mar 2025 15:16:45 +0800 (+08)
+	(envelope-from tang.dongxing@zte.com.cn)
+Received: from mapi (xaxapp01[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Mon, 17 Mar 2025 15:16:48 +0800 (CST)
+Date: Mon, 17 Mar 2025 15:16:48 +0800 (CST)
+X-Zmail-TransId: 2af967d7cc60616-56a25
+X-Mailer: Zmail v1.0
+Message-ID: <20250317151648132Sj7qhbVfKcPYvqCievFUf@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-s6-s7-basic-v1-5-d653384e41f3@amlogic.com>
-References: <20250317-s6-s7-basic-v1-0-d653384e41f3@amlogic.com>
-In-Reply-To: <20250317-s6-s7-basic-v1-0-d653384e41f3@amlogic.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742195812; l=5125;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=oaHHrXYztSUX5H9tDHb6+XL+HhxX9T90X3WIPyLsShA=;
- b=PQ30eNzSbUMN+efF01ZAa0kgUW/jaIejKIkNHePyU3v/mQJmlraWXuZOlUh/cVzVLZYrqgtv8
- o5gEJqKrfESDlIE64d6aW/G2prpBP/V75dMCkVPOkp+MgspZQ+/6pWR
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Mime-Version: 1.0
+From: <tang.dongxing@zte.com.cn>
+To: <jgross@suse.com>
+Cc: <sstabellini@kernel.org>, <oleksandr_tyshchenko@epam.com>,
+        <jiqian.chen@amd.com>, <ray.huang@amd.com>,
+        <jeff.johnson@oss.qualcomm.com>, <minhuadotchen@gmail.com>,
+        <tang.dongxing@zte.com.cn>, <xen-devel@lists.xenproject.org>,
+        <linux-kernel@vger.kernel.org>, <ye.xingchen@zte.com.cn>,
+        <yang.guang5@zte.com.cn>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSB4ZW4vcGNpYmFjazogdXNlIHN5c2ZzX2VtaXRfYXQoKSBpbnN0ZWFkIG9mIHNjbnByaW50Zigp?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 52H7GjbN079096
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67D7CC77.001/4ZGR9z4DFLz501gV
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+From: TangDongxing <tang.dongxing@zte.com.cn>
 
-Amlogic S6 is an advanced application processor designed for
-hybrid OTT/IP Set Top Box and high-end media box applications.
+Follow the advice in Documentation/filesystems/sysfs.rst:
+show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+the value to be returned to user space.
 
-Add basic support for the S6 based Amlogic BL209 board, which describes
-the following components: CPU, GIC, IRQ, Timer and UART.
-These are capable of booting up into the serial console.
-
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Signed-off-by: TangDongxing <tang.dongxing@zte.com.cn>
 ---
- arch/arm64/boot/dts/amlogic/Makefile               |  1 +
- .../boot/dts/amlogic/amlogic-s6-s905x5-bl209.dts   | 42 ++++++++++
- arch/arm64/boot/dts/amlogic/amlogic-s6.dtsi        | 97 ++++++++++++++++++++++
- 3 files changed, 140 insertions(+)
+ drivers/xen/xen-pciback/pci_stub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 2fbda8419c65..a1ad8fa9999f 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_MESON) += amlogic-a4-a113l2-ba400.dtb
- dtb-$(CONFIG_ARCH_MESON) += amlogic-a5-a113x2-av400.dtb
- dtb-$(CONFIG_ARCH_MESON) += amlogic-c3-c302x-aw409.dtb
- dtb-$(CONFIG_ARCH_MESON) += amlogic-c3-c308l-aw419.dtb
-+dtb-$(CONFIG_ARCH_MESON) += amlogic-s6-s905x5-bl209.dtb
- dtb-$(CONFIG_ARCH_MESON) += amlogic-t7-a311d2-an400.dtb
- dtb-$(CONFIG_ARCH_MESON) += amlogic-t7-a311d2-khadas-vim4.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-a1-ad401.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-s6-s905x5-bl209.dts b/arch/arm64/boot/dts/amlogic/amlogic-s6-s905x5-bl209.dts
-new file mode 100644
-index 000000000000..c45b22651798
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-s6-s905x5-bl209.dts
-@@ -0,0 +1,42 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2025 Amlogic, Inc. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include "amlogic-s6.dtsi"
-+/ {
-+	model = "Amlogic S905X5 BL209 Development Board";
-+	compatible = "amlogic,bl209", "amlogic,s6";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	aliases {
-+		serial0 = &uart_b;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x000000 0x0 0xe0000000>,
-+		      <0x1 0x000000 0x0 0x20000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* 27 MiB reserved for ARM Trusted Firmware */
-+		secmon_reserved: secmon@5000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x05000000 0x0 0x1b00000>;
-+			no-map;
-+		};
-+	};
-+};
-+
-+&uart_b {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-s6.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-s6.dtsi
-new file mode 100644
-index 000000000000..a8c90245c42a
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-s6.dtsi
-@@ -0,0 +1,97 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2025 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/gpio/gpio.h>
-+/ {
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a510";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a510";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a510";
-+			reg = <0x0 0x200>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a510";
-+			reg = <0x0 0x300>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	xtal: xtal-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "xtal";
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		gic: interrupt-controller@ff200000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0x0 0xff200000 0 0x10000>,
-+			      <0x0 0xff240000 0 0x80000>;
-+			interrupts = <GIC_PPI 9 0xf04>;
-+		};
-+
-+		apb: bus@fe000000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xfe000000 0x0 0x480000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x480000>;
-+
-+			uart_b: serial@7a000 {
-+				compatible = "amlogic,s6-uart",
-+					     "amlogic,meson-s4-uart";
-+				reg = <0x0 0x7a000 0x0 0x18>;
-+				interrupts = <GIC_SPI 169 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&xtal>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+		};
-+	};
-+};
+diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
+index b616b7768c3b..a0782a74ed34 100644
+--- a/drivers/xen/xen-pciback/pci_stub.c
++++ b/drivers/xen/xen-pciback/pci_stub.c
+@@ -1281,7 +1281,7 @@ static ssize_t slots_show(struct device_driver *drv, char *buf)
+ 		if (count >= PAGE_SIZE)
+ 			break;
 
+-		count += scnprintf(buf + count, PAGE_SIZE - count,
++		count += sysfs_emit_at(buf, count,
+ 				   "%04x:%02x:%02x.%d\n",
+ 				   pci_dev_id->domain, pci_dev_id->bus,
+ 				   PCI_SLOT(pci_dev_id->devfn),
 -- 
-2.37.1
-
-
+2.25.1
