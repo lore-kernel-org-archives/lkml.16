@@ -1,124 +1,124 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48565248891
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742223330; cv=none; b=PlZj6JxpRBL8jjLegZT6SUetjqhcN7aIJ/KyOyYpH3h1tGT9PNd22GH6Whe/kurSaz+tGANm0FgENEOQSIX/LUNNodGNahUj4rhHuwE4qGgx20VaFA1jgRFaArpFUiu9M6qNiPVOb3q6eUALPik5u1XMrtB9j88qBq1xgOfhqEw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742223330; c=relaxed/simple;
-	bh=17UdANjAVTcelMOQ4DNlejZ2Ce9FcJpH2K+ozwWVPTk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tIyRCZvh0sO/01oyUMrjHU7+b/qGxjwo8ioDyIDrhjMRUKbHSwvlOOta/3uT0uCynnTsTImL0ykaS6oWLoSQwMzCY60GbNCN/pbM0MmXwkM+TsgWVym0nYEjxdgDpEimDTnLALrbDg/ybaNO5YZ3ODOMHDXymhvPdWTjQp0Q4JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kKvuc1Dr; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08E02459F8
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742223335; cv=pass; b=WVG+Js3SO5eW7q/jfuh2qJTYKTEUG5g1Un5fXK3h2NJZPa6YppDL74RLkfWZAyDuDK0eRPOhChftAsUAwDrDLoBorEqdtOaeqjCIx5z8zjhp42nmkAZ66MyOdfa9ig4dGJN4yQnDeCemS8Zht7B6ENb3e8+as0CJbyYNaj4whlA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742223335; c=relaxed/simple;
+	bh=/BfLumKFocdvcPhxCskhPjNGo3ZslfA2/N6FaAoc5lg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OMtXQVGBAmxRegthn/Fz8arrCk00BzW+WzS/+v7tmzoNU0uhry/mHFDTN/GopSTEEfIaAdq8/NTwR1xJ/sqXqZYYdbU3f81LH7cfaipFt5R50eaS/HpWrQ2VPjKGrdYdDRsiIXFJ9V3fHFBBgIlDG5hBkmOSQaYXIMl+uxDTzhs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=NTUbiO3e; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kKvuc1Dr"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3f546cbf71cso2030910b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 07:55:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742223327; x=1742828127; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8jNzh4wPsc/2+sERlQmcDT54HRK5zRLKBArFjwQQ8DQ=;
-        b=kKvuc1DryQCbSVaBGLaDhiimzifPA1/+vWy5Oidkrz6z37iZQfnZhJR5IksOTb6bL7
-         toTwPj10SzvDwgmRUHhOlYXCJkfenGjgr61NjdUH4Fft6zEhNIRV4U0NmYNzmA6eptYP
-         ZkbtLa+0hyJEqzZqMM6dhXqfO3CH7gtQqx0lzVhIugTZc7jW+5z/r73CXfNwnmrmOitH
-         dykwAqTiUn6wv1eBlpWafYpH+qeiSlfouu+rQpdIFP4DFC5sXI+k0BhJ+RS3O2LjlhxK
-         oUZGPAL900MWZiRBKBGSFKDeHp1lfq1aHNNvtU7hhj9pSyXVhgHNlj5VMQRUe7UHY0Do
-         0ENg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742223327; x=1742828127;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8jNzh4wPsc/2+sERlQmcDT54HRK5zRLKBArFjwQQ8DQ=;
-        b=gmjP57BWDQUg7vi4xpn/1oNIjy+SfQAa+3hjbWCeMplM9c8vf5TRbDIe4gVewggBPH
-         fOnoarhaDohX2OmtroIWjuz05pb9lvl8esMypgYoyYrvYQa6WbFnZaKbZaNMARVmKlm+
-         SmB4LX9rk124bB2zZNwma5UUMK/XgwMIsvoW2JxcUeRK64ooiOnO5V1BVis337tnl7Mw
-         qEkIl1cQe4Qck9x40f8Z8cR5yJZV/rbSPNIwsA767x5ms27mWU1e1Dx3Ov54JZJt0pqS
-         CzyuJAR8hibcMyGlncy+M1UqlR6fJYU11s08L2qaR5H0Y/JTXqw7TtLxk+CLxqv/+sH5
-         HXbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVN+xSEQ+T02q2gwCRVljqMQcsGSsK9uSgTVcy++jU76xlhOsZItztnSwB03XqhOE/Um3XunOwidwDZSto=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+XFQAkWnKiiNBYlNsUL7eBGrjBFDFcIB0WZ4TZ6H2n/0Ub5ty
-	FGSDlFTONo8jJOqFadO1KnzOueZWY6zfiL/QS+tIHx57gQNG5YnpbJFhyNmVoqzWjD2ypN9pm1C
-	+Tz40kMhu0OrD/Aum5E7IrckOsod9dAmzQsMibA==
-X-Gm-Gg: ASbGncvJtyERnpbFfaS7ROaUlVmQXas9NwzEXDJKeUiFd8jh/EXVM8n3LNa2zpxEttG
-	yGMSLm1eXpweAo9+YzfNFMb+11LFvWT51PRF8r9LrhGBUDt9GFHlVvuwh3QxDMbgEKTOn59w+w6
-	UxEmpNJBwgmcYXBHTY9DbAc8Fv8ccIpsLsDkw4vw4=
-X-Google-Smtp-Source: AGHT+IG7IjY16t5eI+Uq4mhx6crav2fOJBQfWeSG630jb10M49QIM1vSar09EM0x1tUf2BaE+e0vaoly2VXwdW756V0=
-X-Received: by 2002:a05:6808:999:b0:3fa:c549:cfee with SMTP id
- 5614622812f47-3fdee27903emr4770583b6e.6.1742223327241; Mon, 17 Mar 2025
- 07:55:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="NTUbiO3e"
+ARC-Seal: i=1; a=rsa-sha256; t=1742223312; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cjLTeVl8RlyKIZ/QdHUaKerqGeDESqvOkY/+eZ1jwLu9GkcdQf9nAFXSzTcFe5GaouJMnNFfM9MYkeHXTCmyRUvsa97HpaTlrzmNNeno/JPQRPxACTV5pHpouCHIZ9ucj/7X3mRz3h9loSJl7HUC8seOo/VKBAiE1wzt3oTkumE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742223312; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=E+fTK3txOlyskp4W/rEPx48F2NlCVYh8mb8E/EDT8nE=; 
+	b=DLm8UjqD4aE1K0wV4k+f9pNKFe4xCLFycMo456jtCnIjL6d1OaIaNnG3EjrzScQZeqZsWMwyARzy0QWX5hwAdJVHtboPAutcVU4mgNSx2QfVCYgkvcZnUVGzLyj0X+jvo3rsTx6BgMpxocj+uo/1EHpg9Jj+1WHxigoZWKMZ/B8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
+	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742223312;
+	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=E+fTK3txOlyskp4W/rEPx48F2NlCVYh8mb8E/EDT8nE=;
+	b=NTUbiO3eOtOfXcGE3zsM5cHbMgB0FbalMDMywLJpMkWttRCmNSVmwmELrd075NR+
+	d+nhJvM0QIWACW6cmNPfP4ySjCR3mBBQVq4zzRe29hBTcnoykStHDCGe+EBdyrOOMuH
+	OBYnnLizQ64pJ5+CMdSzOMcm8sdpvt/2xCGvLB3A=
+Received: by mx.zohomail.com with SMTPS id 1742223301853895.315747173944;
+	Mon, 17 Mar 2025 07:55:01 -0700 (PDT)
+From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+To: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: boris.brezillon@collabora.com,
+	robh@kernel.org,
+	steven.price@arm.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	kernel@collabora.com,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	sjoerd@collabora.com,
+	angelogioacchino.delregno@collabora.com,
+	Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+Subject: [PATCH v4 5/6] drm/panfrost: Force AARCH64_4K page table format on MediaTek MT8188
+Date: Mon, 17 Mar 2025 11:52:44 -0300
+Message-ID: <20250317145245.910566-6-ariel.dalessandro@collabora.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250317145245.910566-1-ariel.dalessandro@collabora.com>
+References: <20250317145245.910566-1-ariel.dalessandro@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314-ufs-dma-coherent-v1-0-bdf9f9be2919@linaro.org>
- <20250314-ufs-dma-coherent-v1-2-bdf9f9be2919@linaro.org> <931e5e0b07d598912712b091d99a636b796fe19f.camel@linaro.org>
-In-Reply-To: <931e5e0b07d598912712b091d99a636b796fe19f.camel@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Mon, 17 Mar 2025 14:55:15 +0000
-X-Gm-Features: AQ5f1Jq4uxqhD4QuKFFVh-mTPnz4ZIKWFOQ5G2m93FuUYrfiK5B9xukpdzF4pCI
-Message-ID: <CADrjBPoESd7D4H80prCtFXTGaWOg-HV_ovNdwZ4G7Y8n-hFdsQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] scsi: ufs: dt-bindings: exynos: add dma-coherent
- property for gs101
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
-	Bart Van Assche <bvanassche@acm.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	kernel-team@android.com, willmcvicker@google.com, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi Andr=C3=A9
+MediaTek MT8188 SoC has an ARM Mali-G57 MC3 GPU (Valhall-JM), which
+constantly faults with the current panfrost support.
 
-On Fri, 14 Mar 2025 at 15:59, Andr=C3=A9 Draszik <andre.draszik@linaro.org>=
- wrote:
->
-> Hi Pete,
->
-> On Fri, 2025-03-14 at 15:38 +0000, Peter Griffin wrote:
-> > dma-coherent property is required for gs101 as ufs-exynos enables
-> > sharability.
-> >
-> > Fixes: 438e23b61cd4 ("scsi: ufs: dt-bindings: exynos: Add gs101 compati=
-ble")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.y=
-aml b/Documentation/devicetree/bindings/ufs/samsung,exynos-
-> > ufs.yaml
-> > index 720879820f6616a30cae2db3d4d2d22e847666c4..5dbb7f6a8c354b82685c521=
-e70655e106f702a8d 100644
-> > --- a/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
-> > +++ b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
-> > @@ -96,6 +96,8 @@ allOf:
-> >          clock-names:
-> >            minItems: 6
-> >
-> > +        dma-coherent: true
-> > +
->
-> This is allowed globally already in this file. Did you meant to make it '=
-required'?
+For instance, running `glmark2-es2-drm` benchmark test:
+```
+[   79.617461] panfrost 13000000.gpu: js fault, js=1, status=JOB_BUS_FAULT, head=0xaadc380, tail=0xaadc380
+[   80.119811] panfrost 13000000.gpu: gpu sched timeout, js=0, config=0x7300, status=0x58, head=0xaaca180, tail=0xaaca180, sched_job=000000002fd03ccc
+[   80.129083] panfrost 13000000.gpu: Unhandled Page fault in AS0 at VA 0x0000000000000000
+[   80.129083] Reason: TODO
+[   80.129083] raw fault status: 0x1C2
+[   80.129083] decoded fault status: SLAVE FAULT
+[   80.129083] exception type 0xC2: TRANSLATION_FAULT_2
+[   80.129083] access type 0x1: EXECUTE
+[   80.129083] source id 0x0
+```
 
-I hadn't noticed it was already handled further up in the yaml. In
-which case this patch can be dropped entirely.
+Note that current panfrost mode (Mali LPAE - LEGACY) only allows to
+specify write-cache or implementation-defined as the caching policy,
+probably not matching the right configuration. As depicted in the source
+code:
 
-Thanks,
+drivers/iommu/io-pgtable-arm.c:
+```
+* MEMATTR: Mali has no actual notion of a non-cacheable type, so the
+* best we can do is mimic the out-of-tree driver and hope that the
+* "implementation-defined caching policy" is good enough...
+```
 
-Peter
+Now that Panfrost supports AARCH64_4K page table format, let's enable it
+on Mediatek MT8188 and configure the cache/shareability policies
+properly.
+
+Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+---
+ drivers/gpu/drm/panfrost/panfrost_drv.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+index 0f3935556ac76..e854f290858f9 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_drv.c
++++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+@@ -824,6 +824,7 @@ static const struct panfrost_compatible mediatek_mt8188_data = {
+ 	.num_pm_domains = ARRAY_SIZE(mediatek_mt8183_pm_domains),
+ 	.pm_domain_names = mediatek_mt8183_pm_domains,
+ 	.pm_features = BIT(GPU_PM_CLK_DIS) | BIT(GPU_PM_VREG_OFF),
++	.gpu_quirks = BIT(GPU_QUIRK_FORCE_AARCH64_PGTABLE),
+ };
+ 
+ static const char * const mediatek_mt8192_supplies[] = { "mali", NULL };
+-- 
+2.47.2
+
