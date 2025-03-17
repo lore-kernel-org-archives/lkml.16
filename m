@@ -1,264 +1,95 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2200B241C90
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6C52451EE
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222036; cv=none; b=pXr+EZdeQS5o/ijo9r/bLmYb6Q2bEUyTIbcBTUWPgWE8y9LsAoKYZPaHFa6Dw+GyLQpAyxgw8iq+P9s18CF8VMeyIzAgnBqeHV95T7eGJLXI2vbm/iJNmI4JRkmP6jloy20+/gs4xxcbcpJr/O29lmXKGZ46upP12iVOsafcLLM=
+	t=1742222037; cv=none; b=oHabLMsuXUC/Y/9j5xbU7qj8nGaKbjFUCs5OjNsVx0PVzR8HvybjSqX59hZOOPMLtoZmpAuRSV/mlmrZJuyJELcGLZdLGFu/klCVrR9G2qgQP6p5u9w70gf9zQ3KmfYidH58vUdTC8eUVUJ09b3jISloKGSJbGEHQSzJzmKagRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222036; c=relaxed/simple;
-	bh=qUa6SQ3/K8ohFfOKNMBJrs7GgsuyLmWV+TxdT8k3KnU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Xr+T72x42Z+LX+1W7uRiFm5xCUoPqVE9kzdKinEe9E9+HxNu6qkXRla1xAsQ4YSaWcLyZSiwycmARuOU9ZgseuaDdo4WgH3lKY+Vq4SVptHSYIYSFnF0paaSfftl0rcsl49eh2nULsmeGrt9CoynaDCJe9fav80EtycuBmH9v2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 233BA1F823;
-	Mon, 17 Mar 2025 14:33:34 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0ED5313A2C;
-	Mon, 17 Mar 2025 14:33:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qPFTA74y2GcycQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 17 Mar 2025 14:33:34 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Mon, 17 Mar 2025 15:33:07 +0100
-Subject: [PATCH RFC v3 6/8] tools: Add testing support for changes to rcu
- and slab for sheaves
+	s=arc-20240116; t=1742222037; c=relaxed/simple;
+	bh=4l36dhgYBqlpaMgL0Er5cMl92C4EVDVVtd9XEj3CocE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e8DN/SHXJ1W/KXlEiwAEpLbGB5SMSd1Xj7ahQ1c7h38qnPGhkC2DMahuOozA9QojYc2Alqjemry1f7UFCGkoE1WWGljYPYniVwAex1b7hC76K7H+tCjW5mOW7HtWA+Xu9NrrSmWoMCtsfC/GDgJiwSAf6FszNvssuwgT8tMdHKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CdTLDMSy; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CdTLDMSy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=d9tdhsLFx9Y+Ka1QDxT7vBWyBZEyIqUaO+11tLsabUk=; b=CdTLDMSy71yq0pjkXZ577srzPI
+	1IKHmSysgBEN9jZWPrRNOeFwVgXbzZcWcdLcWxOX3QBOw6FwiZvabe4dOZA2M+Rr4DEQ46o0ZJFQD
+	1PfbMq4ANJ/d1Vz5noVp0T6B6W+HR2+8lqF13Tj0vGHRopdGIO2J5qtbt6oe/cKqoadDBQqILqhHY
+	y7fKAix3TWR2zBu6B5v61a640IB6lKB+UqGPi3auqnABCk7JJ7dI+sOJiV8CN+ApJVt+quMqg8VUF
+	/t2Xxa/e78lKw47tVcMoXdvfzJC5OHhQY2Lnqbe27hoaTaHpvITxwlDJowi8P5SOfycEWlli4ipsr
+	FnNSeVRw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tuBXH-00000008tKR-444w;
+	Mon, 17 Mar 2025 14:33:48 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6B573300783; Mon, 17 Mar 2025 15:33:47 +0100 (CET)
+Date: Mon, 17 Mar 2025 15:33:47 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Metin Kaya <Metin.Kaya@arm.com>,
+	Xuewen Yan <xuewen.yan94@gmail.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
+Subject: Re: [RFC PATCH v15 1/7] sched: Add CONFIG_SCHED_PROXY_EXEC & boot
+ argument to enable/disable
+Message-ID: <20250317143347.GE36386@noisy.programming.kicks-ass.net>
+References: <20250312221147.1865364-1-jstultz@google.com>
+ <20250312221147.1865364-2-jstultz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-slub-percpu-caches-v3-6-9d9884d8b643@suse.cz>
-References: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz>
-In-Reply-To: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz>
-To: Suren Baghdasaryan <surenb@google.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, 
- Harry Yoo <harry.yoo@oracle.com>, Uladzislau Rezki <urezki@gmail.com>, 
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
- maple-tree@lists.infradead.org, vbabka@suse.cz, 
- "Liam R. Howlett" <Liam.Howlett@Oracle.com>
-X-Mailer: b4 0.14.2
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 233BA1F823
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250312221147.1865364-2-jstultz@google.com>
 
-From: "Liam R. Howlett" <Liam.Howlett@Oracle.com>
+On Wed, Mar 12, 2025 at 03:11:31PM -0700, John Stultz wrote:
 
-Make testing work for the slab and rcu changes that have come in with
-the sheaves work.
+> diff --git a/init/Kconfig b/init/Kconfig
+> index d0d021b3fa3b3..b989ddc27444e 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -875,6 +875,16 @@ config UCLAMP_BUCKETS_COUNT
+>  
+>  	  If in doubt, use the default value.
+>  
+> +config SCHED_PROXY_EXEC
+> +	bool "Proxy Execution"
+> +	default n
+> +	# Avoid some build failures w/ PREEMPT_RT until it can be fixed
+> +	depends on !PREEMPT_RT
+	depends on !SPM && !SCHED_CLASS_EXT
 
-This only works with one kmem_cache, and only the first one used.
-Subsequent setting of kmem_cache will not update the active kmem_cache
-and will be silently dropped because there are other tests which happen
-after the kmem_cache of interest is set.
+for now, right?
 
-The saved active kmem_cache is used in the rcu callback, which passes
-the object to be freed.
-
-The rcu call takes the rcu_head, which is passed in as the field in the
-struct (in this case rcu in the maple tree node), which is calculated by
-pointer math.  The offset of which is saved (in a global variable) for
-restoring the node pointer on the callback after the rcu grace period
-expires.
-
-Don't use any of this outside of testing, please.
-
-Signed-off-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
----
- tools/include/linux/slab.h            | 41 ++++++++++++++++++++++++++++++++---
- tools/testing/shared/linux.c          | 24 ++++++++++++++++----
- tools/testing/shared/linux/rcupdate.h | 22 +++++++++++++++++++
- 3 files changed, 80 insertions(+), 7 deletions(-)
-
-diff --git a/tools/include/linux/slab.h b/tools/include/linux/slab.h
-index 51b25e9c4ec7b66bdf4c68cc1353c6faf1ca7bb8..a475364cfd9fcdb10db252aab18ea3a620326b6b 100644
---- a/tools/include/linux/slab.h
-+++ b/tools/include/linux/slab.h
-@@ -22,6 +22,12 @@ enum slab_state {
- 	FULL
- };
- 
-+struct kmem_cache_args {
-+	unsigned int align;
-+	unsigned int sheaf_capacity;
-+	void (*ctor)(void *);
-+};
-+
- static inline void *kzalloc(size_t size, gfp_t gfp)
- {
- 	return kmalloc(size, gfp | __GFP_ZERO);
-@@ -36,9 +42,38 @@ static inline void *kmem_cache_alloc(struct kmem_cache *cachep, int flags)
- }
- void kmem_cache_free(struct kmem_cache *cachep, void *objp);
- 
--struct kmem_cache *kmem_cache_create(const char *name, unsigned int size,
--			unsigned int align, unsigned int flags,
--			void (*ctor)(void *));
-+
-+struct kmem_cache *
-+__kmem_cache_create_args(const char *name, unsigned int size,
-+		struct kmem_cache_args *args, unsigned int flags);
-+
-+/* If NULL is passed for @args, use this variant with default arguments. */
-+static inline struct kmem_cache *
-+__kmem_cache_default_args(const char *name, unsigned int size,
-+		struct kmem_cache_args *args, unsigned int flags)
-+{
-+	struct kmem_cache_args kmem_default_args = {};
-+
-+	return __kmem_cache_create_args(name, size, &kmem_default_args, flags);
-+}
-+
-+static inline struct kmem_cache *
-+__kmem_cache_create(const char *name, unsigned int size, unsigned int align,
-+		unsigned int flags, void (*ctor)(void *))
-+{
-+	struct kmem_cache_args kmem_args = {
-+		.align	= align,
-+		.ctor	= ctor,
-+	};
-+
-+	return __kmem_cache_create_args(name, size, &kmem_args, flags);
-+}
-+
-+#define kmem_cache_create(__name, __object_size, __args, ...)           \
-+	_Generic((__args),                                              \
-+		struct kmem_cache_args *: __kmem_cache_create_args,	\
-+		void *: __kmem_cache_default_args,			\
-+		default: __kmem_cache_create)(__name, __object_size, __args, __VA_ARGS__)
- 
- void kmem_cache_free_bulk(struct kmem_cache *cachep, size_t size, void **list);
- int kmem_cache_alloc_bulk(struct kmem_cache *cachep, gfp_t gfp, size_t size,
-diff --git a/tools/testing/shared/linux.c b/tools/testing/shared/linux.c
-index 66dbb362385f3c3d923233448cc591adfe6dc9e7..9f5fd722f27f1d3877be8927be30409cd74ab3c3 100644
---- a/tools/testing/shared/linux.c
-+++ b/tools/testing/shared/linux.c
-@@ -20,6 +20,7 @@ struct kmem_cache {
- 	pthread_mutex_t lock;
- 	unsigned int size;
- 	unsigned int align;
-+	unsigned int sheaf_capacity;
- 	int nr_objs;
- 	void *objs;
- 	void (*ctor)(void *);
-@@ -31,6 +32,8 @@ struct kmem_cache {
- 	void *private;
- };
- 
-+static struct kmem_cache *kmem_active = NULL;
-+
- void kmem_cache_set_callback(struct kmem_cache *cachep, void (*callback)(void *))
- {
- 	cachep->callback = callback;
-@@ -147,6 +150,14 @@ void kmem_cache_free(struct kmem_cache *cachep, void *objp)
- 	pthread_mutex_unlock(&cachep->lock);
- }
- 
-+void kmem_cache_free_active(void *objp)
-+{
-+	if (!kmem_active)
-+		printf("WARNING: No active kmem_cache\n");
-+
-+	kmem_cache_free(kmem_active, objp);
-+}
-+
- void kmem_cache_free_bulk(struct kmem_cache *cachep, size_t size, void **list)
- {
- 	if (kmalloc_verbose)
-@@ -234,23 +245,28 @@ int kmem_cache_alloc_bulk(struct kmem_cache *cachep, gfp_t gfp, size_t size,
- }
- 
- struct kmem_cache *
--kmem_cache_create(const char *name, unsigned int size, unsigned int align,
--		unsigned int flags, void (*ctor)(void *))
-+__kmem_cache_create_args(const char *name, unsigned int size,
-+			  struct kmem_cache_args *args,
-+			  unsigned int flags)
- {
- 	struct kmem_cache *ret = malloc(sizeof(*ret));
- 
- 	pthread_mutex_init(&ret->lock, NULL);
- 	ret->size = size;
--	ret->align = align;
-+	ret->align = args->align;
-+	ret->sheaf_capacity = args->sheaf_capacity;
- 	ret->nr_objs = 0;
- 	ret->nr_allocated = 0;
- 	ret->nr_tallocated = 0;
- 	ret->objs = NULL;
--	ret->ctor = ctor;
-+	ret->ctor = args->ctor;
- 	ret->non_kernel = 0;
- 	ret->exec_callback = false;
- 	ret->callback = NULL;
- 	ret->private = NULL;
-+	if (!kmem_active)
-+		kmem_active = ret;
-+
- 	return ret;
- }
- 
-diff --git a/tools/testing/shared/linux/rcupdate.h b/tools/testing/shared/linux/rcupdate.h
-index fed468fb0c78db6f33fb1900c7110ab5f3c19c65..c95e2f0bbd93798e544d7d34e0823ed68414f924 100644
---- a/tools/testing/shared/linux/rcupdate.h
-+++ b/tools/testing/shared/linux/rcupdate.h
-@@ -9,4 +9,26 @@
- #define rcu_dereference_check(p, cond) rcu_dereference(p)
- #define RCU_INIT_POINTER(p, v)	do { (p) = (v); } while (0)
- 
-+void kmem_cache_free_active(void *objp);
-+static unsigned long kfree_cb_offset = 0;
-+
-+static inline void kfree_rcu_cb(struct rcu_head *head)
-+{
-+	void *objp = (void *) ((unsigned long)head - kfree_cb_offset);
-+
-+	kmem_cache_free_active(objp);
-+}
-+
-+#ifndef offsetof
-+#define offsetof(TYPE, MEMBER)	__builtin_offsetof(TYPE, MEMBER)
-+#endif
-+
-+#define kfree_rcu(ptr, rhv)						\
-+do {									\
-+	if (!kfree_cb_offset)						\
-+		kfree_cb_offset = offsetof(typeof(*(ptr)), rhv);	\
-+									\
-+	call_rcu(&ptr->rhv, kfree_rcu_cb);				\
-+} while (0)
-+
- #endif
-
--- 
-2.48.1
-
+> +	depends on EXPERT
+> +	help
+> +	  This option enables proxy execution, a mechanism for mutex-owning
+> +	  tasks to inherit the scheduling context of higher priority waiters.
+> +
