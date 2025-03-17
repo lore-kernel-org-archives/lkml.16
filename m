@@ -1,991 +1,124 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B21205AA6;
-	Mon, 17 Mar 2025 20:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3279205E36;
+	Mon, 17 Mar 2025 20:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742244484; cv=none; b=f+mZnGJ3vVv6aQ9ZfRlEaMwTRIgkx6JYcBtgB/Mi5gdB75Xa2zac5yeNnomHOr+aANEpjd7ofQNaQyWHetCWdfQL9Zel6z1lf7agnewSkO6toVYw00tsssWIX/sArLCC+Sv2ZXVGQK7cdNwaHJhs1fIES3TQyTCZBcQyD62coWw=
+	t=1742244490; cv=none; b=GfmbfrAHw0681TWJG+Z4jnEYF8NmksWgftIGifA1QmaFVLXW7+xYmmWgMn/sWkenvdbEWIGufz55mtv9vrPwMmPqAfDc3w6qtEmnlsianStjswafU3di8Fb550t8zKmctenkengEWrrH2jTbfKCa8b0zKhaA+/Mn8x5We12e8bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742244484; c=relaxed/simple;
-	bh=7Q25m/ICyJQ6VU6eg8UaaU3JgOt+9TovPnZc+5pHGeE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tdIvCvbJCSvwlWCg3lXuxJg5vCLCGzTu4TTKrpvNSMcEb3MTq0UZ+tVWYygh6vuqU6n2eUyr4tfLqFSsLr/DIdPVg4HUHQUIENQHWG0cL2UR1pALMKZ7qnv5qMqBIUHUhREL2LquzYSc0WzQh41qg6wJihnQxsH1QmUpRbVY9js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jF/9mD5e; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742244490; c=relaxed/simple;
+	bh=8pdTXWSW1pT+VXM+eBfg/U6FahxzWexs17ihcIHPMJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NGWtEcnh/YvEtX7dGBXIYdmWgCzIc0FrZVo3uI/O+CPSQxNX69IkpfaWPP6gXjLyaziQyP76w13/pHTPA7X4mWJ49GrbpfMC61vG1qSIjC7EekDAS8j2b9kTN2/d2yhnYTYN3+Plpl1upotX/zMbD9uX/HSSwvRqTMtNFWOX5gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhM8veCq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jF/9mD5e"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HAPFfg026414;
-	Mon, 17 Mar 2025 20:47:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RHP2zay7ujuQfZIVC7HCJw1FSNTB9poKDIHtBroL5N0=; b=jF/9mD5ewiBUe9TO
-	cmbELmKZ8E+0l2a1FRK66SMHNk4oVMT9MWjj1bMduF36Mec1dMbgHq0aKPCBDKx7
-	VgAq+Fd50jp/QzoF5S5r4X29+7MR5uEqKIH2u78oIDNhlfcv0oOfqRNeC9kAejfk
-	LfnE1sYgk7/LcpH+ihhDXaxzGCEq6Yh2fEKgRIHSY2dxbRUlKbeVO6VAo5tyWOxo
-	ZCQpKm6MaN3sT0L1mk3XZzk98AxiWkG4XO5fE3z0JxVBr4lj6l0ETg7JzCkFcalY
-	nA89VE2TQD5+mS8ALRrvdNXkYY/E40oySZIpWfyGXDtOlAuh0/+Z13eaXag2JNLW
-	TUjQGA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1u8dymx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Mar 2025 20:47:52 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52HKlq5r006813
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Mar 2025 20:47:52 GMT
-Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 17 Mar 2025 13:47:48 -0700
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-To: <ath12k@lists.infradead.org>
-CC: Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        <linux-wireless@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Balamurugan S
-	<quic_bselvara@quicinc.com>,
-        P Praneesh <quic_ppranees@quicinc.com>,
-        "Raj
- Kumar Bhagat" <quic_rajkbhag@quicinc.com>,
-        Vasanthakumar Thiagarajan
-	<vasanthakumar.thiagarajan@oss.qualcomm.com>
-Subject: [PATCH ath-next v11 08/13] wifi: ath12k: add AHB driver support for IPQ5332
-Date: Tue, 18 Mar 2025 02:16:34 +0530
-Message-ID: <20250317204639.1864742-9-quic_rajkbhag@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250317204639.1864742-1-quic_rajkbhag@quicinc.com>
-References: <20250317204639.1864742-1-quic_rajkbhag@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhM8veCq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A50DC4CEED;
+	Mon, 17 Mar 2025 20:48:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742244490;
+	bh=8pdTXWSW1pT+VXM+eBfg/U6FahxzWexs17ihcIHPMJ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EhM8veCqfacvRpt+f0Tvr+Tb69xlnreFzyM3CYm4DK4T3+uPl9ru59UEfXTq0ebK0
+	 CFqn/N9smSOGJjxnJp8Q7S4i7UImh1Net50w71WOgCOAVzz2OpwFsYRLV+agzk6Z1C
+	 3LTvtiRUgukYDcBgUBk5iLbCljivyEw6ZCgak1vig2/flA/wQErtA9Pu1GdpMbJYyz
+	 RElF6rdsfJrE/Kj0PJIhJnwP2Q/Uv03S9bGrKUxd3bkKaSRkFnXF6f1oMA2fvj+RKm
+	 mxOb9rT8SCANLJJFg+gkynqiThXDC7UvCVYwLN6XBKjkV7uOvLG7zGq8p2g2kCvRgV
+	 qUsnEfHJIxt6w==
+Date: Mon, 17 Mar 2025 17:48:07 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 00/11] perf: Support multiple system call tables in
+ the build
+Message-ID: <Z9iKhwoj1GXvH4c9@x1>
+References: <20250308003209.234114-1-irogers@google.com>
+ <Z9KFLGpenwOP32q3@google.com>
+ <Z9M24AJzui9lFbGo@x1>
+ <Z9M9-YhDJg3NgiUy@x1>
+ <Z9NEX3j_1RUvaFI0@x1>
+ <Z9PCjQ8PhOadVGQ8@google.com>
+ <Z9RjHpEJGWtj8PAM@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bIPvZncnlPqiSrskzEPsf9UwF_U02yiP
-X-Authority-Analysis: v=2.4 cv=c42rQQ9l c=1 sm=1 tr=0 ts=67d88a78 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=piuMfSQ_hNHvUAxF-GQA:9 a=RVmHIydaz68A:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: bIPvZncnlPqiSrskzEPsf9UwF_U02yiP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-17_08,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- bulkscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 malwarescore=0
- impostorscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503170150
+In-Reply-To: <Z9RjHpEJGWtj8PAM@x1>
 
-From: Balamurugan S <quic_bselvara@quicinc.com>
+On Fri, Mar 14, 2025 at 02:10:54PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Mar 13, 2025 at 10:45:49PM -0700, Namhyung Kim wrote:
+> > On Thu, Mar 13, 2025 at 05:47:27PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Thu, Mar 13, 2025 at 05:20:09PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > Still building, but noticed this on x86_64:
+> > > > 
+> > > > 105: perf trace enum augmentation tests                              : FAILED!
+> > > > 106: perf trace BTF general tests                                    : FAILED!
+> > > > 107: perf trace exit race                                            : Ok
+> > > > 108: perf trace record and replay                                    : FAILED!
+> > > > 
+> > > > 
+> > > > The first doesn´t help that much with verbose mode, haven't checked if
+> > > > before this series it was failing :-\
+> > > > 
+> > > > root@x1:~# perf test -vvv 105
+> > > > 105: perf trace enum augmentation tests:
+> > > > --- start ---
+> > > > test child forked, pid 19411
+> > > > Checking if vmlinux exists
+> > > > Tracing syscall landlock_add_rule
+> > > > ---- end(-1) ----
+> > > > 105: perf trace enum augmentation tests                              : FAILED!
+> > > > root@x1:~#
 
-Add Initial Ath12k AHB driver support for IPQ5332. IPQ5332 is AHB
-based IEEE802.11be 2 GHz 2x2 WiFi device.
+This one is now ok:
 
-Tested-on: IPQ5332 hw1.0 AHB WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.1.1-00210-QCAHKSWPL_SILICONZ-1
+     0.004 ( 0.000 ms): perf/200342 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffd649bd0d0, flags: 45) = -1 EINVAL (Invalid argument)
+root@number:~# perf test enum
+105: perf trace enum augmentation tests                              : Ok
+root@number:~#
 
-Signed-off-by: Balamurugan S <quic_bselvara@quicinc.com>
-Co-developed-by: P Praneesh <quic_ppranees@quicinc.com>
-Signed-off-by: P Praneesh <quic_ppranees@quicinc.com>
-Co-developed-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
----
- drivers/net/wireless/ath/ath12k/ahb.c  | 781 +++++++++++++++++++++++++
- drivers/net/wireless/ath/ath12k/ahb.h  |  37 ++
- drivers/net/wireless/ath/ath12k/core.h |   3 +
- drivers/net/wireless/ath/ath12k/hal.h  |   1 +
- drivers/net/wireless/ath/ath12k/hw.h   |   1 +
- 5 files changed, 823 insertions(+)
- create mode 100644 drivers/net/wireless/ath/ath12k/ahb.c
- create mode 100644 drivers/net/wireless/ath/ath12k/ahb.h
+now looking at:
 
-diff --git a/drivers/net/wireless/ath/ath12k/ahb.c b/drivers/net/wireless/ath/ath12k/ahb.c
-new file mode 100644
-index 000000000000..597bc522ed01
---- /dev/null
-+++ b/drivers/net/wireless/ath/ath12k/ahb.c
-@@ -0,0 +1,781 @@
-+// SPDX-License-Identifier: BSD-3-Clause-Clear
-+/*
-+ * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#include <linux/dma-mapping.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include "ahb.h"
-+#include "debug.h"
-+#include "hif.h"
-+
-+static const struct of_device_id ath12k_ahb_of_match[] = {
-+	{ .compatible = "qcom,ipq5332-wifi",
-+	  .data = (void *)ATH12K_HW_IPQ5332_HW10,
-+	},
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, ath12k_ahb_of_match);
-+
-+#define ATH12K_IRQ_CE0_OFFSET 4
-+
-+static const char *irq_name[ATH12K_IRQ_NUM_MAX] = {
-+	"misc-pulse1",
-+	"misc-latch",
-+	"sw-exception",
-+	"watchdog",
-+	"ce0",
-+	"ce1",
-+	"ce2",
-+	"ce3",
-+	"ce4",
-+	"ce5",
-+	"ce6",
-+	"ce7",
-+	"ce8",
-+	"ce9",
-+	"ce10",
-+	"ce11",
-+	"host2wbm-desc-feed",
-+	"host2reo-re-injection",
-+	"host2reo-command",
-+	"host2rxdma-monitor-ring3",
-+	"host2rxdma-monitor-ring2",
-+	"host2rxdma-monitor-ring1",
-+	"reo2ost-exception",
-+	"wbm2host-rx-release",
-+	"reo2host-status",
-+	"reo2host-destination-ring4",
-+	"reo2host-destination-ring3",
-+	"reo2host-destination-ring2",
-+	"reo2host-destination-ring1",
-+	"rxdma2host-monitor-destination-mac3",
-+	"rxdma2host-monitor-destination-mac2",
-+	"rxdma2host-monitor-destination-mac1",
-+	"ppdu-end-interrupts-mac3",
-+	"ppdu-end-interrupts-mac2",
-+	"ppdu-end-interrupts-mac1",
-+	"rxdma2host-monitor-status-ring-mac3",
-+	"rxdma2host-monitor-status-ring-mac2",
-+	"rxdma2host-monitor-status-ring-mac1",
-+	"host2rxdma-host-buf-ring-mac3",
-+	"host2rxdma-host-buf-ring-mac2",
-+	"host2rxdma-host-buf-ring-mac1",
-+	"rxdma2host-destination-ring-mac3",
-+	"rxdma2host-destination-ring-mac2",
-+	"rxdma2host-destination-ring-mac1",
-+	"host2tcl-input-ring4",
-+	"host2tcl-input-ring3",
-+	"host2tcl-input-ring2",
-+	"host2tcl-input-ring1",
-+	"wbm2host-tx-completions-ring4",
-+	"wbm2host-tx-completions-ring3",
-+	"wbm2host-tx-completions-ring2",
-+	"wbm2host-tx-completions-ring1",
-+	"tcl2host-status-ring",
-+};
-+
-+enum ext_irq_num {
-+	host2wbm_desc_feed = 16,
-+	host2reo_re_injection,
-+	host2reo_command,
-+	host2rxdma_monitor_ring3,
-+	host2rxdma_monitor_ring2,
-+	host2rxdma_monitor_ring1,
-+	reo2host_exception,
-+	wbm2host_rx_release,
-+	reo2host_status,
-+	reo2host_destination_ring4,
-+	reo2host_destination_ring3,
-+	reo2host_destination_ring2,
-+	reo2host_destination_ring1,
-+	rxdma2host_monitor_destination_mac3,
-+	rxdma2host_monitor_destination_mac2,
-+	rxdma2host_monitor_destination_mac1,
-+	ppdu_end_interrupts_mac3,
-+	ppdu_end_interrupts_mac2,
-+	ppdu_end_interrupts_mac1,
-+	rxdma2host_monitor_status_ring_mac3,
-+	rxdma2host_monitor_status_ring_mac2,
-+	rxdma2host_monitor_status_ring_mac1,
-+	host2rxdma_host_buf_ring_mac3,
-+	host2rxdma_host_buf_ring_mac2,
-+	host2rxdma_host_buf_ring_mac1,
-+	rxdma2host_destination_ring_mac3,
-+	rxdma2host_destination_ring_mac2,
-+	rxdma2host_destination_ring_mac1,
-+	host2tcl_input_ring4,
-+	host2tcl_input_ring3,
-+	host2tcl_input_ring2,
-+	host2tcl_input_ring1,
-+	wbm2host_tx_completions_ring4,
-+	wbm2host_tx_completions_ring3,
-+	wbm2host_tx_completions_ring2,
-+	wbm2host_tx_completions_ring1,
-+	tcl2host_status_ring,
-+};
-+
-+static u32 ath12k_ahb_read32(struct ath12k_base *ab, u32 offset)
-+{
-+	if (ab->ce_remap && offset < HAL_SEQ_WCSS_CMEM_OFFSET)
-+		return ioread32(ab->mem_ce + offset);
-+	return ioread32(ab->mem + offset);
-+}
-+
-+static void ath12k_ahb_write32(struct ath12k_base *ab, u32 offset,
-+			       u32 value)
-+{
-+	if (ab->ce_remap && offset < HAL_SEQ_WCSS_CMEM_OFFSET)
-+		iowrite32(value, ab->mem_ce + offset);
-+	else
-+		iowrite32(value, ab->mem + offset);
-+}
-+
-+static void ath12k_ahb_cancel_workqueue(struct ath12k_base *ab)
-+{
-+	int i;
-+
-+	for (i = 0; i < ab->hw_params->ce_count; i++) {
-+		struct ath12k_ce_pipe *ce_pipe = &ab->ce.ce_pipe[i];
-+
-+		if (ath12k_ce_get_attr_flags(ab, i) & CE_ATTR_DIS_INTR)
-+			continue;
-+
-+		cancel_work_sync(&ce_pipe->intr_wq);
-+	}
-+}
-+
-+static void ath12k_ahb_ext_grp_disable(struct ath12k_ext_irq_grp *irq_grp)
-+{
-+	int i;
-+
-+	for (i = 0; i < irq_grp->num_irq; i++)
-+		disable_irq_nosync(irq_grp->ab->irq_num[irq_grp->irqs[i]]);
-+}
-+
-+static void __ath12k_ahb_ext_irq_disable(struct ath12k_base *ab)
-+{
-+	int i;
-+
-+	for (i = 0; i < ATH12K_EXT_IRQ_GRP_NUM_MAX; i++) {
-+		struct ath12k_ext_irq_grp *irq_grp = &ab->ext_irq_grp[i];
-+
-+		ath12k_ahb_ext_grp_disable(irq_grp);
-+		if (irq_grp->napi_enabled) {
-+			napi_synchronize(&irq_grp->napi);
-+			napi_disable(&irq_grp->napi);
-+			irq_grp->napi_enabled = false;
-+		}
-+	}
-+}
-+
-+static void ath12k_ahb_ext_grp_enable(struct ath12k_ext_irq_grp *irq_grp)
-+{
-+	int i;
-+
-+	for (i = 0; i < irq_grp->num_irq; i++)
-+		enable_irq(irq_grp->ab->irq_num[irq_grp->irqs[i]]);
-+}
-+
-+static void ath12k_ahb_setbit32(struct ath12k_base *ab, u8 bit, u32 offset)
-+{
-+	u32 val;
-+
-+	val = ath12k_ahb_read32(ab, offset);
-+	ath12k_ahb_write32(ab, offset, val | BIT(bit));
-+}
-+
-+static void ath12k_ahb_clearbit32(struct ath12k_base *ab, u8 bit, u32 offset)
-+{
-+	u32 val;
-+
-+	val = ath12k_ahb_read32(ab, offset);
-+	ath12k_ahb_write32(ab, offset, val & ~BIT(bit));
-+}
-+
-+static void ath12k_ahb_ce_irq_enable(struct ath12k_base *ab, u16 ce_id)
-+{
-+	const struct ce_attr *ce_attr;
-+	const struct ce_ie_addr *ce_ie_addr = ab->hw_params->ce_ie_addr;
-+	u32 ie1_reg_addr, ie2_reg_addr, ie3_reg_addr;
-+
-+	ie1_reg_addr = ce_ie_addr->ie1_reg_addr;
-+	ie2_reg_addr = ce_ie_addr->ie2_reg_addr;
-+	ie3_reg_addr = ce_ie_addr->ie3_reg_addr;
-+
-+	ce_attr = &ab->hw_params->host_ce_config[ce_id];
-+	if (ce_attr->src_nentries)
-+		ath12k_ahb_setbit32(ab, ce_id, ie1_reg_addr);
-+
-+	if (ce_attr->dest_nentries) {
-+		ath12k_ahb_setbit32(ab, ce_id, ie2_reg_addr);
-+		ath12k_ahb_setbit32(ab, ce_id + CE_HOST_IE_3_SHIFT,
-+				    ie3_reg_addr);
-+	}
-+}
-+
-+static void ath12k_ahb_ce_irq_disable(struct ath12k_base *ab, u16 ce_id)
-+{
-+	const struct ce_attr *ce_attr;
-+	const struct ce_ie_addr *ce_ie_addr = ab->hw_params->ce_ie_addr;
-+	u32 ie1_reg_addr, ie2_reg_addr, ie3_reg_addr;
-+
-+	ie1_reg_addr = ce_ie_addr->ie1_reg_addr;
-+	ie2_reg_addr = ce_ie_addr->ie2_reg_addr;
-+	ie3_reg_addr = ce_ie_addr->ie3_reg_addr;
-+
-+	ce_attr = &ab->hw_params->host_ce_config[ce_id];
-+	if (ce_attr->src_nentries)
-+		ath12k_ahb_clearbit32(ab, ce_id, ie1_reg_addr);
-+
-+	if (ce_attr->dest_nentries) {
-+		ath12k_ahb_clearbit32(ab, ce_id, ie2_reg_addr);
-+		ath12k_ahb_clearbit32(ab, ce_id + CE_HOST_IE_3_SHIFT,
-+				      ie3_reg_addr);
-+	}
-+}
-+
-+static void ath12k_ahb_sync_ce_irqs(struct ath12k_base *ab)
-+{
-+	int i;
-+	int irq_idx;
-+
-+	for (i = 0; i < ab->hw_params->ce_count; i++) {
-+		if (ath12k_ce_get_attr_flags(ab, i) & CE_ATTR_DIS_INTR)
-+			continue;
-+
-+		irq_idx = ATH12K_IRQ_CE0_OFFSET + i;
-+		synchronize_irq(ab->irq_num[irq_idx]);
-+	}
-+}
-+
-+static void ath12k_ahb_sync_ext_irqs(struct ath12k_base *ab)
-+{
-+	int i, j;
-+	int irq_idx;
-+
-+	for (i = 0; i < ATH12K_EXT_IRQ_GRP_NUM_MAX; i++) {
-+		struct ath12k_ext_irq_grp *irq_grp = &ab->ext_irq_grp[i];
-+
-+		for (j = 0; j < irq_grp->num_irq; j++) {
-+			irq_idx = irq_grp->irqs[j];
-+			synchronize_irq(ab->irq_num[irq_idx]);
-+		}
-+	}
-+}
-+
-+static void ath12k_ahb_ce_irqs_enable(struct ath12k_base *ab)
-+{
-+	int i;
-+
-+	for (i = 0; i < ab->hw_params->ce_count; i++) {
-+		if (ath12k_ce_get_attr_flags(ab, i) & CE_ATTR_DIS_INTR)
-+			continue;
-+		ath12k_ahb_ce_irq_enable(ab, i);
-+	}
-+}
-+
-+static void ath12k_ahb_ce_irqs_disable(struct ath12k_base *ab)
-+{
-+	int i;
-+
-+	for (i = 0; i < ab->hw_params->ce_count; i++) {
-+		if (ath12k_ce_get_attr_flags(ab, i) & CE_ATTR_DIS_INTR)
-+			continue;
-+		ath12k_ahb_ce_irq_disable(ab, i);
-+	}
-+}
-+
-+static int ath12k_ahb_start(struct ath12k_base *ab)
-+{
-+	ath12k_ahb_ce_irqs_enable(ab);
-+	ath12k_ce_rx_post_buf(ab);
-+
-+	return 0;
-+}
-+
-+static void ath12k_ahb_ext_irq_enable(struct ath12k_base *ab)
-+{
-+	struct ath12k_ext_irq_grp *irq_grp;
-+	int i;
-+
-+	for (i = 0; i < ATH12K_EXT_IRQ_GRP_NUM_MAX; i++) {
-+		irq_grp = &ab->ext_irq_grp[i];
-+		if (!irq_grp->napi_enabled) {
-+			napi_enable(&irq_grp->napi);
-+			irq_grp->napi_enabled = true;
-+		}
-+		ath12k_ahb_ext_grp_enable(irq_grp);
-+	}
-+}
-+
-+static void ath12k_ahb_ext_irq_disable(struct ath12k_base *ab)
-+{
-+	__ath12k_ahb_ext_irq_disable(ab);
-+	ath12k_ahb_sync_ext_irqs(ab);
-+}
-+
-+static void ath12k_ahb_stop(struct ath12k_base *ab)
-+{
-+	if (!test_bit(ATH12K_FLAG_CRASH_FLUSH, &ab->dev_flags))
-+		ath12k_ahb_ce_irqs_disable(ab);
-+	ath12k_ahb_sync_ce_irqs(ab);
-+	ath12k_ahb_cancel_workqueue(ab);
-+	del_timer_sync(&ab->rx_replenish_retry);
-+	ath12k_ce_cleanup_pipes(ab);
-+}
-+
-+static void ath12k_ahb_init_qmi_ce_config(struct ath12k_base *ab)
-+{
-+	struct ath12k_qmi_ce_cfg *cfg = &ab->qmi.ce_cfg;
-+
-+	cfg->tgt_ce_len = ab->hw_params->target_ce_count;
-+	cfg->tgt_ce = ab->hw_params->target_ce_config;
-+	cfg->svc_to_ce_map_len = ab->hw_params->svc_to_ce_map_len;
-+	cfg->svc_to_ce_map = ab->hw_params->svc_to_ce_map;
-+	ab->qmi.service_ins_id = ab->hw_params->qmi_service_ins_id;
-+}
-+
-+static void ath12k_ahb_ce_workqueue(struct work_struct *work)
-+{
-+	struct ath12k_ce_pipe *ce_pipe = from_work(ce_pipe, work, intr_wq);
-+
-+	ath12k_ce_per_engine_service(ce_pipe->ab, ce_pipe->pipe_num);
-+
-+	ath12k_ahb_ce_irq_enable(ce_pipe->ab, ce_pipe->pipe_num);
-+}
-+
-+static irqreturn_t ath12k_ahb_ce_interrupt_handler(int irq, void *arg)
-+{
-+	struct ath12k_ce_pipe *ce_pipe = arg;
-+
-+	/* last interrupt received for this CE */
-+	ce_pipe->timestamp = jiffies;
-+
-+	ath12k_ahb_ce_irq_disable(ce_pipe->ab, ce_pipe->pipe_num);
-+
-+	queue_work(system_bh_wq, &ce_pipe->intr_wq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ath12k_ahb_ext_grp_napi_poll(struct napi_struct *napi, int budget)
-+{
-+	struct ath12k_ext_irq_grp *irq_grp = container_of(napi,
-+						struct ath12k_ext_irq_grp,
-+						napi);
-+	struct ath12k_base *ab = irq_grp->ab;
-+	int work_done;
-+
-+	work_done = ath12k_dp_service_srng(ab, irq_grp, budget);
-+	if (work_done < budget) {
-+		napi_complete_done(napi, work_done);
-+		ath12k_ahb_ext_grp_enable(irq_grp);
-+	}
-+
-+	if (work_done > budget)
-+		work_done = budget;
-+
-+	return work_done;
-+}
-+
-+static irqreturn_t ath12k_ahb_ext_interrupt_handler(int irq, void *arg)
-+{
-+	struct ath12k_ext_irq_grp *irq_grp = arg;
-+
-+	/* last interrupt received for this group */
-+	irq_grp->timestamp = jiffies;
-+
-+	ath12k_ahb_ext_grp_disable(irq_grp);
-+
-+	napi_schedule(&irq_grp->napi);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ath12k_ahb_config_ext_irq(struct ath12k_base *ab)
-+{
-+	const struct ath12k_hw_ring_mask *ring_mask;
-+	struct ath12k_ext_irq_grp *irq_grp;
-+	const struct hal_ops *hal_ops;
-+	int i, j, irq, irq_idx, ret;
-+	u32 num_irq;
-+
-+	ring_mask = ab->hw_params->ring_mask;
-+	hal_ops = ab->hw_params->hal_ops;
-+	for (i = 0; i < ATH12K_EXT_IRQ_GRP_NUM_MAX; i++) {
-+		irq_grp = &ab->ext_irq_grp[i];
-+		num_irq = 0;
-+
-+		irq_grp->ab = ab;
-+		irq_grp->grp_id = i;
-+
-+		irq_grp->napi_ndev = alloc_netdev_dummy(0);
-+		if (!irq_grp->napi_ndev)
-+			return -ENOMEM;
-+
-+		netif_napi_add(irq_grp->napi_ndev, &irq_grp->napi,
-+			       ath12k_ahb_ext_grp_napi_poll);
-+
-+		for (j = 0; j < ATH12K_EXT_IRQ_NUM_MAX; j++) {
-+			/* For TX ring, ensure that the ring mask and the
-+			 * tcl_to_wbm_rbm_map point to the same ring number.
-+			 */
-+			if (ring_mask->tx[i] &
-+			    BIT(hal_ops->tcl_to_wbm_rbm_map[j].wbm_ring_num)) {
-+				irq_grp->irqs[num_irq++] =
-+					wbm2host_tx_completions_ring1 - j;
-+			}
-+
-+			if (ring_mask->rx[i] & BIT(j)) {
-+				irq_grp->irqs[num_irq++] =
-+					reo2host_destination_ring1 - j;
-+			}
-+
-+			if (ring_mask->rx_err[i] & BIT(j))
-+				irq_grp->irqs[num_irq++] = reo2host_exception;
-+
-+			if (ring_mask->rx_wbm_rel[i] & BIT(j))
-+				irq_grp->irqs[num_irq++] = wbm2host_rx_release;
-+
-+			if (ring_mask->reo_status[i] & BIT(j))
-+				irq_grp->irqs[num_irq++] = reo2host_status;
-+
-+			if (ring_mask->rx_mon_dest[i] & BIT(j))
-+				irq_grp->irqs[num_irq++] =
-+					rxdma2host_monitor_destination_mac1;
-+		}
-+
-+		irq_grp->num_irq = num_irq;
-+
-+		for (j = 0; j < irq_grp->num_irq; j++) {
-+			irq_idx = irq_grp->irqs[j];
-+
-+			irq = platform_get_irq_byname(ab->pdev,
-+						      irq_name[irq_idx]);
-+			ab->irq_num[irq_idx] = irq;
-+			irq_set_status_flags(irq, IRQ_NOAUTOEN | IRQ_DISABLE_UNLAZY);
-+			ret = devm_request_irq(ab->dev, irq,
-+					       ath12k_ahb_ext_interrupt_handler,
-+					       IRQF_TRIGGER_RISING,
-+					       irq_name[irq_idx], irq_grp);
-+			if (ret)
-+				ath12k_warn(ab, "failed request_irq for %d\n", irq);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int ath12k_ahb_config_irq(struct ath12k_base *ab)
-+{
-+	int irq, irq_idx, i;
-+	int ret;
-+
-+	/* Configure CE irqs */
-+	for (i = 0; i < ab->hw_params->ce_count; i++) {
-+		struct ath12k_ce_pipe *ce_pipe = &ab->ce.ce_pipe[i];
-+
-+		if (ath12k_ce_get_attr_flags(ab, i) & CE_ATTR_DIS_INTR)
-+			continue;
-+
-+		irq_idx = ATH12K_IRQ_CE0_OFFSET + i;
-+
-+		INIT_WORK(&ce_pipe->intr_wq, ath12k_ahb_ce_workqueue);
-+		irq = platform_get_irq_byname(ab->pdev, irq_name[irq_idx]);
-+		ret = devm_request_irq(ab->dev, irq, ath12k_ahb_ce_interrupt_handler,
-+				       IRQF_TRIGGER_RISING, irq_name[irq_idx],
-+				       ce_pipe);
-+		if (ret)
-+			return ret;
-+
-+		ab->irq_num[irq_idx] = irq;
-+	}
-+
-+	/* Configure external interrupts */
-+	ret = ath12k_ahb_config_ext_irq(ab);
-+
-+	return ret;
-+}
-+
-+static int ath12k_ahb_map_service_to_pipe(struct ath12k_base *ab, u16 service_id,
-+					  u8 *ul_pipe, u8 *dl_pipe)
-+{
-+	const struct service_to_pipe *entry;
-+	bool ul_set = false, dl_set = false;
-+	u32 pipedir;
-+	int i;
-+
-+	for (i = 0; i < ab->hw_params->svc_to_ce_map_len; i++) {
-+		entry = &ab->hw_params->svc_to_ce_map[i];
-+
-+		if (__le32_to_cpu(entry->service_id) != service_id)
-+			continue;
-+
-+		pipedir = __le32_to_cpu(entry->pipedir);
-+		if (pipedir == PIPEDIR_IN || pipedir == PIPEDIR_INOUT) {
-+			WARN_ON(dl_set);
-+			*dl_pipe = __le32_to_cpu(entry->pipenum);
-+			dl_set = true;
-+		}
-+
-+		if (pipedir == PIPEDIR_OUT || pipedir == PIPEDIR_INOUT) {
-+			WARN_ON(ul_set);
-+			*ul_pipe = __le32_to_cpu(entry->pipenum);
-+			ul_set = true;
-+		}
-+	}
-+
-+	if (WARN_ON(!ul_set || !dl_set))
-+		return -ENOENT;
-+
-+	return 0;
-+}
-+
-+static const struct ath12k_hif_ops ath12k_ahb_hif_ops_ipq5332 = {
-+	.start = ath12k_ahb_start,
-+	.stop = ath12k_ahb_stop,
-+	.read32 = ath12k_ahb_read32,
-+	.write32 = ath12k_ahb_write32,
-+	.irq_enable = ath12k_ahb_ext_irq_enable,
-+	.irq_disable = ath12k_ahb_ext_irq_disable,
-+	.map_service_to_pipe = ath12k_ahb_map_service_to_pipe,
-+};
-+
-+static int ath12k_ahb_resource_init(struct ath12k_base *ab)
-+{
-+	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
-+	struct platform_device *pdev = ab->pdev;
-+	struct resource *mem_res;
-+	int ret;
-+
-+	ab->mem = devm_platform_get_and_ioremap_resource(pdev, 0, &mem_res);
-+	if (IS_ERR(ab->mem)) {
-+		ret = dev_err_probe(&pdev->dev, PTR_ERR(ab->mem), "ioremap error\n");
-+		goto out;
-+	}
-+
-+	ab->mem_len = resource_size(mem_res);
-+
-+	if (ab->hw_params->ce_remap) {
-+		const struct ce_remap *ce_remap = ab->hw_params->ce_remap;
-+		/* CE register space is moved out of WCSS and the space is not
-+		 * contiguous, hence remapping the CE registers to a new space
-+		 * for accessing them.
-+		 */
-+		ab->mem_ce = ioremap(ce_remap->base, ce_remap->size);
-+		if (IS_ERR(ab->mem_ce)) {
-+			dev_err(&pdev->dev, "ce ioremap error\n");
-+			ret = -ENOMEM;
-+			goto err_mem_unmap;
-+		}
-+		ab->ce_remap = true;
-+		ab->ce_remap_base_addr = HAL_IPQ5332_CE_WFSS_REG_BASE;
-+	}
-+
-+	ab_ahb->xo_clk = devm_clk_get(ab->dev, "xo");
-+	if (IS_ERR(ab_ahb->xo_clk)) {
-+		ret = dev_err_probe(&pdev->dev, PTR_ERR(ab_ahb->xo_clk),
-+				    "failed to get xo clock\n");
-+		goto err_mem_ce_unmap;
-+	}
-+
-+	ret = clk_prepare_enable(ab_ahb->xo_clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable gcc_xo_clk: %d\n", ret);
-+		goto err_clock_deinit;
-+	}
-+
-+	return 0;
-+
-+err_clock_deinit:
-+	devm_clk_put(ab->dev, ab_ahb->xo_clk);
-+
-+err_mem_ce_unmap:
-+	ab_ahb->xo_clk = NULL;
-+	if (ab->hw_params->ce_remap)
-+		iounmap(ab->mem_ce);
-+
-+err_mem_unmap:
-+	ab->mem_ce = NULL;
-+	devm_iounmap(ab->dev, ab->mem);
-+
-+out:
-+	ab->mem = NULL;
-+	return ret;
-+}
-+
-+static void ath12k_ahb_resource_deinit(struct ath12k_base *ab)
-+{
-+	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
-+
-+	if (ab->mem)
-+		devm_iounmap(ab->dev, ab->mem);
-+
-+	if (ab->mem_ce)
-+		iounmap(ab->mem_ce);
-+
-+	ab->mem = NULL;
-+	ab->mem_ce = NULL;
-+
-+	clk_disable_unprepare(ab_ahb->xo_clk);
-+	devm_clk_put(ab->dev, ab_ahb->xo_clk);
-+	ab_ahb->xo_clk = NULL;
-+}
-+
-+static int ath12k_ahb_probe(struct platform_device *pdev)
-+{
-+	struct ath12k_base *ab;
-+	const struct ath12k_hif_ops *hif_ops;
-+	enum ath12k_hw_rev hw_rev;
-+	u32 addr;
-+	int ret;
-+
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to set 32-bit coherent dma\n");
-+		return ret;
-+	}
-+
-+	ab = ath12k_core_alloc(&pdev->dev, sizeof(struct ath12k_ahb),
-+			       ATH12K_BUS_AHB);
-+	if (!ab)
-+		return -ENOMEM;
-+
-+	hw_rev = (enum ath12k_hw_rev)of_device_get_match_data(&pdev->dev);
-+	switch (hw_rev) {
-+	case ATH12K_HW_IPQ5332_HW10:
-+		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
-+		break;
-+	default:
-+		ret = -EOPNOTSUPP;
-+		goto err_core_free;
-+	}
-+
-+	ab->hif.ops = hif_ops;
-+	ab->pdev = pdev;
-+	ab->hw_rev = hw_rev;
-+	platform_set_drvdata(pdev, ab);
-+
-+	/* Set fixed_mem_region to true for platforms that support fixed memory
-+	 * reservation from DT. If memory is reserved from DT for FW, ath12k driver
-+	 * need not to allocate memory.
-+	 */
-+	if (!of_property_read_u32(ab->dev->of_node, "memory-region", &addr))
-+		set_bit(ATH12K_FLAG_FIXED_MEM_REGION, &ab->dev_flags);
-+
-+	ret = ath12k_core_pre_init(ab);
-+	if (ret)
-+		goto err_core_free;
-+
-+	ret = ath12k_ahb_resource_init(ab);
-+	if (ret)
-+		goto err_core_free;
-+
-+	ret = ath12k_hal_srng_init(ab);
-+	if (ret)
-+		goto err_resource_deinit;
-+
-+	ret = ath12k_ce_alloc_pipes(ab);
-+	if (ret) {
-+		ath12k_err(ab, "failed to allocate ce pipes: %d\n", ret);
-+		goto err_hal_srng_deinit;
-+	}
-+
-+	ath12k_ahb_init_qmi_ce_config(ab);
-+
-+	ret = ath12k_ahb_config_irq(ab);
-+	if (ret) {
-+		ath12k_err(ab, "failed to configure irq: %d\n", ret);
-+		goto err_ce_free;
-+	}
-+
-+	ret = ath12k_core_init(ab);
-+	if (ret) {
-+		ath12k_err(ab, "failed to init core: %d\n", ret);
-+		goto err_ce_free;
-+	}
-+
-+	return 0;
-+
-+err_ce_free:
-+	ath12k_ce_free_pipes(ab);
-+
-+err_hal_srng_deinit:
-+	ath12k_hal_srng_deinit(ab);
-+
-+err_resource_deinit:
-+	ath12k_ahb_resource_deinit(ab);
-+
-+err_core_free:
-+	ath12k_core_free(ab);
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return ret;
-+}
-+
-+static void ath12k_ahb_remove_prepare(struct ath12k_base *ab)
-+{
-+	unsigned long left;
-+
-+	if (test_bit(ATH12K_FLAG_RECOVERY, &ab->dev_flags)) {
-+		left = wait_for_completion_timeout(&ab->driver_recovery,
-+						   ATH12K_AHB_RECOVERY_TIMEOUT);
-+		if (!left)
-+			ath12k_warn(ab, "failed to receive recovery response completion\n");
-+	}
-+
-+	set_bit(ATH12K_FLAG_UNREGISTERING, &ab->dev_flags);
-+	cancel_work_sync(&ab->restart_work);
-+	cancel_work_sync(&ab->qmi.event_work);
-+}
-+
-+static void ath12k_ahb_free_resources(struct ath12k_base *ab)
-+{
-+	struct platform_device *pdev = ab->pdev;
-+
-+	ath12k_hal_srng_deinit(ab);
-+	ath12k_ce_free_pipes(ab);
-+	ath12k_ahb_resource_deinit(ab);
-+	ath12k_core_free(ab);
-+	platform_set_drvdata(pdev, NULL);
-+}
-+
-+static void ath12k_ahb_remove(struct platform_device *pdev)
-+{
-+	struct ath12k_base *ab = platform_get_drvdata(pdev);
-+
-+	if (test_bit(ATH12K_FLAG_QMI_FAIL, &ab->dev_flags)) {
-+		ath12k_qmi_deinit_service(ab);
-+		goto qmi_fail;
-+	}
-+
-+	ath12k_ahb_remove_prepare(ab);
-+	ath12k_core_deinit(ab);
-+
-+qmi_fail:
-+	ath12k_ahb_free_resources(ab);
-+}
-+
-+static struct platform_driver ath12k_ahb_driver = {
-+	.driver         = {
-+		.name   = "ath12k_ahb",
-+		.of_match_table = ath12k_ahb_of_match,
-+	},
-+	.probe  = ath12k_ahb_probe,
-+	.remove = ath12k_ahb_remove,
-+};
-+
-+int ath12k_ahb_init(void)
-+{
-+	return platform_driver_register(&ath12k_ahb_driver);
-+}
-+
-+void ath12k_ahb_exit(void)
-+{
-+	platform_driver_unregister(&ath12k_ahb_driver);
-+}
-diff --git a/drivers/net/wireless/ath/ath12k/ahb.h b/drivers/net/wireless/ath/ath12k/ahb.h
-new file mode 100644
-index 000000000000..64f0696588c0
---- /dev/null
-+++ b/drivers/net/wireless/ath/ath12k/ahb.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: BSD-3-Clause-Clear */
-+/*
-+ * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2022-2025, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+#ifndef ATH12K_AHB_H
-+#define ATH12K_AHB_H
-+
-+#include <linux/clk.h>
-+#include "core.h"
-+
-+#define ATH12K_AHB_RECOVERY_TIMEOUT (3 * HZ)
-+
-+#define ATH12K_AHB_SMP2P_SMEM_MSG		GENMASK(15, 0)
-+#define ATH12K_AHB_SMP2P_SMEM_SEQ_NO		GENMASK(31, 16)
-+#define ATH12K_AHB_SMP2P_SMEM_VALUE_MASK	0xFFFFFFFF
-+#define ATH12K_PCI_CE_WAKE_IRQ			2
-+#define ATH12K_PCI_IRQ_CE0_OFFSET		3
-+
-+enum ath12k_ahb_smp2p_msg_id {
-+	ATH12K_AHB_POWER_SAVE_ENTER = 1,
-+	ATH12K_AHB_POWER_SAVE_EXIT,
-+};
-+
-+struct ath12k_base;
-+
-+struct ath12k_ahb {
-+	struct rproc *tgt_rproc;
-+	struct clk *xo_clk;
-+};
-+
-+static inline struct ath12k_ahb *ath12k_ab_to_ahb(struct ath12k_base *ab)
-+{
-+	return (struct ath12k_ahb *)ab->drv_priv;
-+}
-+
-+#endif
-diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
-index 645fc504a1f5..6b6d886c083d 100644
---- a/drivers/net/wireless/ath/ath12k/core.h
-+++ b/drivers/net/wireless/ath/ath12k/core.h
-@@ -162,6 +162,7 @@ enum ath12k_firmware_mode {
- 
- #define ATH12K_IRQ_NUM_MAX 57
- #define ATH12K_EXT_IRQ_NUM_MAX	16
-+#define ATH12K_MAX_TCL_RING_NUM	3
- 
- struct ath12k_ext_irq_grp {
- 	struct ath12k_base *ab;
-@@ -1298,6 +1299,8 @@ static inline const char *ath12k_bus_str(enum ath12k_bus bus)
- 	switch (bus) {
- 	case ATH12K_BUS_PCI:
- 		return "pci";
-+	case ATH12K_BUS_AHB:
-+		return "ahb";
- 	}
- 
- 	return "unknown";
-diff --git a/drivers/net/wireless/ath/ath12k/hal.h b/drivers/net/wireless/ath/ath12k/hal.h
-index 47ff0b1bfdf4..9f12ed84a653 100644
---- a/drivers/net/wireless/ath/ath12k/hal.h
-+++ b/drivers/net/wireless/ath/ath12k/hal.h
-@@ -42,6 +42,7 @@ struct ath12k_base;
- #define HAL_SHADOW_REG(x) (HAL_SHADOW_BASE_ADDR + (4 * (x)))
- 
- /* WCSS Relative address */
-+#define HAL_SEQ_WCSS_CMEM_OFFSET		0x00100000
- #define HAL_SEQ_WCSS_UMAC_OFFSET		0x00a00000
- #define HAL_SEQ_WCSS_UMAC_REO_REG		0x00a38000
- #define HAL_SEQ_WCSS_UMAC_TCL_REG		0x00a44000
-diff --git a/drivers/net/wireless/ath/ath12k/hw.h b/drivers/net/wireless/ath/ath12k/hw.h
-index 5123d2f51865..a4332588b117 100644
---- a/drivers/net/wireless/ath/ath12k/hw.h
-+++ b/drivers/net/wireless/ath/ath12k/hw.h
-@@ -121,6 +121,7 @@ enum ath12k_hw_rate_ofdm {
- 
- enum ath12k_bus {
- 	ATH12K_BUS_PCI,
-+	ATH12K_BUS_AHB,
- };
- 
- #define ATH12K_EXT_IRQ_GRP_NUM_MAX 11
--- 
-2.34.1
+root@number:~# perf test -vvvvvvvvv 106
+106: perf trace BTF general tests:
+--- start ---
+test child forked, pid 200467
+Checking if vmlinux BTF exists
+Testing perf trace's string augmentation
+String augmentation test failed
+---- end(-1) ----
+106: perf trace BTF general tests                                    : FAILED!
+root@number:~#
 
+No clue from the test, reading its source code now to see where it is
+failing to try and reproduce the problem.
+
+- Arnaldo
