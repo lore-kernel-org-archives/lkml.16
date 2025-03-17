@@ -1,278 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBF0BA49
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 01:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE3C84D34;
+	Mon, 17 Mar 2025 01:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742174158; cv=none; b=CvKVZLwokkc/TgAm8dqXRsq2Hyl1ZW+QBFGJaedm2hNqc2wBpluo/WtZzaAmpt3QtYWpoEXThEjwmczVkuIRf5yCg+ME6VdbbKM5tpV2asMDpd3NFL7nwyVg9oo8nwEd3x9vWuf6y3xKDct/UH1R8yijZTwpTf37KMXcSECcPeg=
+	t=1742174166; cv=none; b=CHh+mEM/ao1rTTwsjTqWWutypr9+y+gm3AZBtESAlW/C1mQtBulVGSTXn9hBJCVbIIGigEyLn25KDL9Ew3hB4wMyIkRbqe/WFVoMO1D8hyBocWE/NN83wP3NC3JZAJJb1k4brsDM48GKgO1zqap+J9VI5iP4Gtact5w/GQMfROk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742174158; c=relaxed/simple;
-	bh=Q0+PIJ88a4iRAsJs1W5fwyu0AoevhoEEr/zt+lUAKjA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M6GAk/NdW9nX1m5r7wGhu4m3+u7PRh27fcSMbK2cXDx4z+b0vpwgK3VIKuPh8DQp+VHTnZulPdnUxbtx8piyIAj4GTO1FjLwHyaU75YMjC7OxIbSIeWY5m0AvIvnOVJx4DOfqq5OAhs1iB6PnL9K3IxYsLEuWfKGLAaYArxt7cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aSx4eidn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742174166; c=relaxed/simple;
+	bh=f8ylXnYjAovcWV1hNoHapa560iwl0vQ8IUpRdomoX/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B3J20qEhjzVGecG1hRCCgt91kJJGFlwvp7nbV+yHKGjtXnFhdCfnmUrOeDTtXXB6bu+8NDD9IJdFHMDXVrCw1310cm7XxvSrS2YfgFkzwl/uvvWmFC/TAwtynotOnCN37y7JtrhK6Q7AJrllzBCXuP8xZ+16dWfbKJh+WwV1S0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=deepin.org; spf=pass smtp.mailfrom=deepin.org; dkim=pass (1024-bit key) header.d=deepin.org header.i=@deepin.org header.b=Ab7GDiXT; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=deepin.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deepin.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aSx4eidn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742174155;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TqiRITvym1c0onqrnYAcV6zc/1khgZbdXRXq4ArYjQA=;
-	b=aSx4eidnJm0TX99TX2t55AeBona4fd3S8VQ+cMiSgBQGx0pV8gcQGytxpSJQH3NiHFTxDT
-	ooq66XCDORA9wl/JHvuNvDhcL8JPI+EB8nzYFGHk1vrPbRehAXWWtDyuC9Z+s9euc6elCT
-	Dd5CGq072bmfJ4SMqq8GY2i6RImxP0Y=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-137-UZjJlpqvMnKgXBpex5cDbA-1; Sun, 16 Mar 2025 21:15:54 -0400
-X-MC-Unique: UZjJlpqvMnKgXBpex5cDbA-1
-X-Mimecast-MFC-AGG-ID: UZjJlpqvMnKgXBpex5cDbA_1742174153
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3011c150130so2077777a91.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 18:15:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742174153; x=1742778953;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TqiRITvym1c0onqrnYAcV6zc/1khgZbdXRXq4ArYjQA=;
-        b=N3I/BDVJ3IxnI/KB0JsVfWovAHYIrTodpdTvUDW8v9vYo6448xhxoyxW0uXysab105
-         kIgM8q9z3WAXOymXgF1iH3Wwg0C5L2Suj+5KjLZfXWpzyKIr2+1CJzR0JU/sxEt+YaG5
-         C3JfFygrj7hd6Wbf7gtJnVYnAmwmIvvBFataKLiNWlsQfGaYGaNMXR2gYs7tr4cxkL7a
-         tp1IIg5usU7t7QCh0/b+HGjKuEsoLRnzLtggnTf0DAKwEeGNMeKzeRX5ZBUZQDdQp6+T
-         0/xakSi+DbgQR1PXLr3iQS/ERcJHGGwBi7krcKFenRgGAlpTS6mGCwjbrVW0lxO3sqAE
-         Z4Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhCfz0ihsKar/dzPyS3AnpYNwJRPwHGdoyAHte+h5VZtwNteeJBGiGF+Du/1KgeB2zZ6rkEp/rUF8kJ+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlXeUb480dp44YNeU4mUOSMrXxtxCmtifTfTGEXYAVWlHqvRwG
-	lWAM/ncHANP3BvAOht9rhuLcgj4hsyEFGN9cZrgUtcnVw0DKdnEu942oOcGT0+juIocvTkdp80F
-	fRQRbGZfYC+2hjpARYJfDJC0pObY/7zkUsLuKxlodIYjGLleT6Sn+0SUkbtBN23gSiqa3tKsIZR
-	pYIy9L196ZKhVYmVcuT+3LGhDVhQoChnuDzVST
-X-Gm-Gg: ASbGncvXxQutJFXFH+vrCIBux+k17OkwAYGdcP8kspueUHakDYyxKHpSupVFY6HNba2
-	+L+KZDfUG0xKyEpWZ4vH94YPrLN5BxWPiFS9ndlfeHujI1RWx8s5MsNJ7u62YLzU4K/XrBhWlaQ
-	==
-X-Received: by 2002:a17:90a:d610:b0:2fe:9581:fbea with SMTP id 98e67ed59e1d1-30151d80d72mr13059898a91.29.1742174152922;
-        Sun, 16 Mar 2025 18:15:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFxpVZEUCtxPZyh7hATJuGyGFLhT6k6detJv2gwkDBKiP/VApC5tJcX/mSZDxnZ+e+OpQEJWcYXL+Lqzu0fpMQ=
-X-Received: by 2002:a17:90a:d610:b0:2fe:9581:fbea with SMTP id
- 98e67ed59e1d1-30151d80d72mr13059874a91.29.1742174152536; Sun, 16 Mar 2025
- 18:15:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=deepin.org header.i=@deepin.org header.b="Ab7GDiXT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=deepin.org;
+	s=ukjg2408; t=1742174127;
+	bh=hq7yTqJjEJZI2dh88leRFyAcAEXTLAjjYen6xx/Xhl4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Ab7GDiXT1mD9p2zh1wG2yySVGSDYjIyaBZ5H7iBxG4GGJmScXO5JWvwNLU8M89sPK
+	 STZCzhjiXA0PKN8ymbkz9PEXgpxib4YbPik2F+1FR7nwSXbk0vulEOOVsTTcGVujfB
+	 q6USYSjIOxCb/8nYMk2s3gsKwZCHofXiz0vqAKlw=
+X-QQ-mid: bizesmtp90t1742174118tyldrwni
+X-QQ-Originating-IP: tL/PX2nb+gKddWUQBMRfqZdfZaw04/DM23EMBI9yowI=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 17 Mar 2025 09:15:16 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 17978949113820821780
+From: Chen Linxuan <chenlinxuan@deepin.org>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Chen Linxuan <chenlinxuan@deepin.org>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Yi Lai <yi1.lai@intel.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	stable@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH stable 5.15 v2] lib/buildid: Handle memfd_secret() files in build_id_parse()
+Date: Mon, 17 Mar 2025 09:13:40 +0800
+Message-ID: <C20998946B822F0F+20250317011339.119224-3-chenlinxuan@deepin.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-rss-v9-0-df76624025eb@daynix.com> <20250307-rss-v9-6-df76624025eb@daynix.com>
- <CACGkMEuccQ6ah-aZ3tcW1VRuetEoPA_NaLxLT+9fb0uAab8Agg@mail.gmail.com>
- <2e550452-a716-4c3f-9d5a-3882d2c9912a@daynix.com> <CACGkMEu9tynRgTh__3p_vSqOekSirbVgS90rd5dUiJru9oV1eg@mail.gmail.com>
- <1dd2417a-3246-44b0-b4ba-feadfd6f794e@daynix.com> <CACGkMEthfj0KJvOHhnc_ww7iqtmhHUy9f9EGOoR-n0OwHOBrvQ@mail.gmail.com>
- <77c21953-b850-4962-8673-6effb593d819@daynix.com>
-In-Reply-To: <77c21953-b850-4962-8673-6effb593d819@daynix.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Mon, 17 Mar 2025 09:15:40 +0800
-X-Gm-Features: AQ5f1JpR0mxXkmVnrSX1gXa2p5ktJxpo4uYjioUOGsjKMLFJ1-a0iSEE4BZ4sls
-Message-ID: <CACGkMEtMghoZbMO8c+30vqtOr3daEYrU2gG-QAZjOJev8NnBhQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 6/6] vhost/net: Support VIRTIO_NET_F_HASH_REPORT
-To: Akihiko Odaki <akihiko.odaki@daynix.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
-	Yuri Benditovich <yuri.benditovich@daynix.com>, Andrew Melnychenko <andrew@daynix.com>, 
-	Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
-	Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:deepin.org:qybglogicsvrgz:qybglogicsvrgz7a-0
+X-QQ-XMAILINFO: OHTF91J1Rz8hHy5JQijd6SoVpHeuOYSZow0R5p8dM10iTln+yPA/Hjv7
+	J8zMoBx/5phAmHPvG1WzBNPSLWIu0/PQmgETadlZHLYCWUsCyBm8BgqA7h1xsBag3/fgP6X
+	rBdeROc3WMgw+ckRr319LMvViSynYoCVSXK9S8/qW7cp0DB5lKjmoQWUnO5QuMA+wuvFpnn
+	3JvLKyr63Ly0iSK+cJqnnJxKUcNnsi+VPT8NBjWkgr1nUq0nJdQKWrL3QhuymxZ9BiW4Yhl
+	qE4aoH9m9UyZtodkZGlfma9Dq2f/ZSildpxz5MYGTHDi9V4iYTNyauvBOLMj8rHTKXnGEy/
+	p7CdRIUALhB6Ua6HAc2FCmSDSU4qmoPcZthm7vItMqAiX2liiafU2OlJjCXXsNbiVqTu/EK
+	eR/p3JV8hPxr4kaYYaJKyUESIdkl/y8QDolSrgemonM/ZzUErNd/FaHYDCq6jHPHCGUoLkl
+	jaE7lz0Zn8EYDBlRz3OxZcEtZ7l2JiACNh6uCBuK8onrb/EgCYptdY/utjZYG+H+m+lvEap
+	CmlDoK/ktu5U8+wluw90sNIaMFkce/m9U1iQbB1+QqChS3ipsBoVP38V23W/yq7w8TNYklz
+	TPy8ISmDUIDeh2wnPhvDAe638z4NUdvTpncXOXMl7BLcETm3yd2UtfFWeDIO8zSUphqUXhH
+	25lq8sOIQn4A4hlPRBgFRsqvw780Fp3+N+75CVLdCF28BubqaNqfzDw2LvyJq3FWtSmHEee
+	mH4M+0ITzFe3LlAG0MlEXcME6OsdVvdeLWN7dVIuoDrq6etlB9XXURhL53LsbFznjY5V8x1
+	MPwIGbC9+Ym3LdqH4UBS8PxOEcHs4Q+MVszc8k0jyMoz8k8NRBvfOP+NaBluTvV6SQzs5yH
+	0EcaDbW/QUmecpUfQd2OWWb0r/9SHEh8yqyTHkFEYpVzGNzMFMCSSSyU7JospkiOlH+5/Jd
+	FPCxH78oEqV+JgHXIN01loZU+
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Wed, Mar 12, 2025 at 1:59=E2=80=AFPM Akihiko Odaki <akihiko.odaki@daynix=
-.com> wrote:
->
-> On 2025/03/12 12:36, Jason Wang wrote:
-> > On Tue, Mar 11, 2025 at 2:24=E2=80=AFPM Akihiko Odaki <akihiko.odaki@da=
-ynix.com> wrote:
-> >>
-> >> On 2025/03/11 9:42, Jason Wang wrote:
-> >>> On Mon, Mar 10, 2025 at 3:04=E2=80=AFPM Akihiko Odaki <akihiko.odaki@=
-daynix.com> wrote:
-> >>>>
-> >>>> On 2025/03/10 13:43, Jason Wang wrote:
-> >>>>> On Fri, Mar 7, 2025 at 7:02=E2=80=AFPM Akihiko Odaki <akihiko.odaki=
-@daynix.com> wrote:
-> >>>>>>
-> >>>>>> VIRTIO_NET_F_HASH_REPORT allows to report hash values calculated o=
-n the
-> >>>>>> host. When VHOST_NET_F_VIRTIO_NET_HDR is employed, it will report =
-no
-> >>>>>> hash values (i.e., the hash_report member is always set to
-> >>>>>> VIRTIO_NET_HASH_REPORT_NONE). Otherwise, the values reported by th=
-e
-> >>>>>> underlying socket will be reported.
-> >>>>>>
-> >>>>>> VIRTIO_NET_F_HASH_REPORT requires VIRTIO_F_VERSION_1.
-> >>>>>>
-> >>>>>> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
-> >>>>>> Tested-by: Lei Yang <leiyang@redhat.com>
-> >>>>>> ---
-> >>>>>>     drivers/vhost/net.c | 49 +++++++++++++++++++++++++++++--------=
-------------
-> >>>>>>     1 file changed, 29 insertions(+), 20 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> >>>>>> index b9b9e9d40951856d881d77ac74331d914473cd56..16b241b44f89820a42=
-c302f3586ea6bb5e0d4289 100644
-> >>>>>> --- a/drivers/vhost/net.c
-> >>>>>> +++ b/drivers/vhost/net.c
-> >>>>>> @@ -73,6 +73,7 @@ enum {
-> >>>>>>            VHOST_NET_FEATURES =3D VHOST_FEATURES |
-> >>>>>>                             (1ULL << VHOST_NET_F_VIRTIO_NET_HDR) |
-> >>>>>>                             (1ULL << VIRTIO_NET_F_MRG_RXBUF) |
-> >>>>>> +                        (1ULL << VIRTIO_NET_F_HASH_REPORT) |
-> >>>>>>                             (1ULL << VIRTIO_F_ACCESS_PLATFORM) |
-> >>>>>>                             (1ULL << VIRTIO_F_RING_RESET)
-> >>>>>>     };
-> >>>>>> @@ -1097,9 +1098,11 @@ static void handle_rx(struct vhost_net *net=
-)
-> >>>>>>                    .msg_controllen =3D 0,
-> >>>>>>                    .msg_flags =3D MSG_DONTWAIT,
-> >>>>>>            };
-> >>>>>> -       struct virtio_net_hdr hdr =3D {
-> >>>>>> -               .flags =3D 0,
-> >>>>>> -               .gso_type =3D VIRTIO_NET_HDR_GSO_NONE
-> >>>>>> +       struct virtio_net_hdr_v1_hash hdr =3D {
-> >>>>>> +               .hdr =3D {
-> >>>>>> +                       .flags =3D 0,
-> >>>>>> +                       .gso_type =3D VIRTIO_NET_HDR_GSO_NONE
-> >>>>>> +               }
-> >>>>>>            };
-> >>>>>>            size_t total_len =3D 0;
-> >>>>>>            int err, mergeable;
-> >>>>>> @@ -1110,7 +1113,6 @@ static void handle_rx(struct vhost_net *net)
-> >>>>>>            bool set_num_buffers;
-> >>>>>>            struct socket *sock;
-> >>>>>>            struct iov_iter fixup;
-> >>>>>> -       __virtio16 num_buffers;
-> >>>>>>            int recv_pkts =3D 0;
-> >>>>>>
-> >>>>>>            mutex_lock_nested(&vq->mutex, VHOST_NET_VQ_RX);
-> >>>>>> @@ -1191,30 +1193,30 @@ static void handle_rx(struct vhost_net *ne=
-t)
-> >>>>>>                            vhost_discard_vq_desc(vq, headcount);
-> >>>>>>                            continue;
-> >>>>>>                    }
-> >>>>>> +               hdr.hdr.num_buffers =3D cpu_to_vhost16(vq, headcou=
-nt);
-> >>>>>>                    /* Supply virtio_net_hdr if VHOST_NET_F_VIRTIO_=
-NET_HDR */
-> >>>>>>                    if (unlikely(vhost_hlen)) {
-> >>>>>> -                       if (copy_to_iter(&hdr, sizeof(hdr),
-> >>>>>> -                                        &fixup) !=3D sizeof(hdr))=
- {
-> >>>>>> +                       if (copy_to_iter(&hdr, vhost_hlen,
-> >>>>>> +                                        &fixup) !=3D vhost_hlen) =
-{
-> >>>>>>                                    vq_err(vq, "Unable to write vne=
-t_hdr "
-> >>>>>>                                           "at addr %p\n", vq->iov-=
->iov_base);
-> >>>>>>                                    goto out;
-> >>>>>
-> >>>>> Is this an "issue" specific to RSS/HASH? If it's not, we need a sep=
-arate patch.
-> >>>>>
-> >>>>> Honestly, I'm not sure if it's too late to fix this.
-> >>>>
-> >>>> There is nothing wrong with the current implementation.
-> >>>
-> >>> Note that I meant the vhost_hlen part, and the current code is tricky=
-.
-> >>>
-> >>> The comment said:
-> >>>
-> >>> """
-> >>> /* Supply virtio_net_hdr if VHOST_NET_F_VIRTIO_NET_HDR */
-> >>> """
-> >>>
-> >>> So it tries to only offer virtio_net_hdr even if vhost_hlen is the se=
-t
-> >>> to mrg_rxbuf len.
-> >>>
-> >>> And this patch changes this behaviour.
-> >>
-> >> mrg_rxbuf only adds the num_buffers field, which is always set for
-> >> mrg_rxbuf.
-> >>
-> >> The num_buffers was not set for VIRTIO_F_VERSION_1 in the past, but th=
-is
-> >> was also fixed with commit a3b9c053d82a ("vhost/net: Set num_buffers f=
-or
-> >> virtio 1.0")
-> >>
-> >> So there is no behavioral change for existing features with this patch=
-.
-> >
-> > I meant this part.
-> >
-> >>>>> +                       if (copy_to_iter(&hdr, vhost_hlen,
-> >>>>> +                                        &fixup) !=3D vhost_hlen) {
-> >
-> > We should copy only sizeof(hdr) instead of vhost_hlen.> > Anything I mi=
-ss?
->
-> sizeof(hdr) will be greater than vhost_hlen when neither
-> VIRTIO_NET_F_MRG_RXBUF or VIRTIO_F_VERSION_1 is negotiated.
+[ Upstream commit 5ac9b4e935dfc6af41eee2ddc21deb5c36507a9f ]
 
-Just to make sure we are on the same page I meant we should only
-advance sizeof(struct virtio_net_hdr) here to make sure we can set the
-num_buffers correctly.
+>From memfd_secret(2) manpage:
 
-But this is not what the code did here.
+  The memory areas backing the file created with memfd_secret(2) are
+  visible only to the processes that have access to the file descriptor.
+  The memory region is removed from the kernel page tables and only the
+  page tables of the processes holding the file descriptor map the
+  corresponding physical memory. (Thus, the pages in the region can't be
+  accessed by the kernel itself, so that, for example, pointers to the
+  region can't be passed to system calls.)
 
-Thanks
+We need to handle this special case gracefully in build ID fetching
+code. Return -EFAULT whenever secretmem file is passed to build_id_parse()
+family of APIs. Original report and repro can be found in [0].
 
->
-> Regards,
-> Akihiko Odaki
->
-> >
-> > Thanks
-> >
-> >>
-> >> Regards,
-> >> Akihiko Odaki
-> >>
-> >>>
-> >>> Thanks
-> >>>
-> >>>> The current
-> >>>> implementation fills the header with zero except num_buffers, which =
-it
-> >>>> fills some real value. This functionality is working fine with
-> >>>> VIRTIO_NET_F_MRG_RXBUF and VIRTIO_F_VERSION_1, which change the head=
-er size.
-> >>>>
-> >>>> Now I'm adding VIRTIO_NET_F_HASH_REPORT and it adds the hash_report
-> >>>> field, which also needs to be initialized with zero, so I'm making s=
-ure
-> >>>> vhost_net will also initialize it.
-> >>>>
-> >>>> Regards,
-> >>>> Akihiko Odaki
-> >>>>
-> >>>>>
-> >>>>> Others look fine.
-> >>>>>
-> >>>>> Thanks
-> >>>>>
-> >>>>
-> >>>
-> >>
-> >
->
+  [0] https://lore.kernel.org/bpf/ZwyG8Uro%2FSyTXAni@ly-workstation/
+
+Fixes: de3ec364c3c3 ("lib/buildid: add single folio-based file reader abstraction")
+Reported-by: Yi Lai <yi1.lai@intel.com>
+Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+Link: https://lore.kernel.org/bpf/20241017175431.6183-A-hca@linux.ibm.com
+Link: https://lore.kernel.org/bpf/20241017174713.2157873-1-andrii@kernel.org
+[ Chen Linxuan: backport same logic without folio-based changes ]
+Cc: stable@vger.kernel.org
+Fixes: 88a16a130933 ("perf: Add build id data in mmap2 event")
+Signed-off-by: Chen Linxuan <chenlinxuan@deepin.org>
+---
+v1 -> v2: use vma_is_secretmem() instead of directly checking
+          vma->vm_file->f_op == &secretmem_fops
+---
+ lib/buildid.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/lib/buildid.c b/lib/buildid.c
+index 9fc46366597e..34315d09b544 100644
+--- a/lib/buildid.c
++++ b/lib/buildid.c
+@@ -5,6 +5,7 @@
+ #include <linux/elf.h>
+ #include <linux/kernel.h>
+ #include <linux/pagemap.h>
++#include <linux/secretmem.h>
+ 
+ #define BUILD_ID 3
+ 
+@@ -157,6 +158,10 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
+ 	if (!vma->vm_file)
+ 		return -EINVAL;
+ 
++	/* reject secretmem */
++	if (vma_is_secretmem(vma))
++		return -EFAULT;
++
+ 	page = find_get_page(vma->vm_file->f_mapping, 0);
+ 	if (!page)
+ 		return -EFAULT;	/* page not mapped */
+-- 
+2.48.1
 
