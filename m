@@ -1,131 +1,114 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5931D156F20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE024222594
 	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 12:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742215731; cv=none; b=ZlhSOEX464PnkxfQJ8v+DtZmD6FWMgNMBMmhYPSt0PaTWU0Ei262Eqlx00J2x51xhmgnxANkXiT5hTDMkl+OrSlyP151B8DMcVxUMSJ7zwI688MrtRkXd1pYnT5ilo3SCGYlJlP8clKmx/udJjZcDzTJ45LvOeFSfNxoZEd1hcE=
+	t=1742215730; cv=none; b=H29l7inIED3j0GJ4WtSrzomjASZXs9Q7VEXZ1NV67f2w575+6aYlXRuFp56K5WWG+hlPq6EjhNEgf06B/nEXEy+gCdrOwu79TQPRWhf+4DNHA3Pz/z9zO+7ozjOThDx2bDEZmF/d0h5l0u2tYXTjA74bqLaimWLNO2IbUTckGJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742215731; c=relaxed/simple;
-	bh=TGfuq/mvWmbAkTPeHZHr4vDXUR/V20kicyYAANurWXQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iSnek2Lwf8BR1D+nPA3V1FT4f51LmQUxEJsujflhCjbE5s6Rc/MIVE2WNclCWz0mmS8FsYkw09ilX4RTnlgt3ucFhQ5Bqv+jDAoRlkNihD+fmTWvnZxkncc+mBg5MbqcuQw601lUYK6VG+Yxp906UPWk/hzPCikUMgcAHuLGg1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZGZSr2rM8z2Ccln;
-	Mon, 17 Mar 2025 20:45:32 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id 727A91400FD;
-	Mon, 17 Mar 2025 20:48:45 +0800 (CST)
-Received: from kwepemn500004.china.huawei.com (7.202.194.145) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 17 Mar 2025 20:48:45 +0800
-Received: from localhost.localdomain (10.90.30.45) by
- kwepemn500004.china.huawei.com (7.202.194.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 17 Mar 2025 20:48:44 +0800
-From: Junhao He <hejunhao3@huawei.com>
-To: <suzuki.poulose@arm.com>, <james.clark@arm.com>,
-	<anshuman.khandual@arm.com>
-CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH v2] coresight: Fixes device's owner field for registered using coresight_init_driver()
-Date: Mon, 17 Mar 2025 20:41:06 +0800
-Message-ID: <20250317124106.271374-1-hejunhao3@huawei.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1742215730; c=relaxed/simple;
+	bh=OkMulsM/cx7fBZxAWko6B9e5uWQM+rwz2mkNJEmQ9uQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VWQjszNzTO1Gc8dGvoqNjK3CA91AZOr5fF4hQhDu094LknE3wD8Ps9AuuopydH3rNZYIXsStPiB4j0XSHKiT46C7hAgtAw1NEadrqFJEwX0cDgsqoQ9KO9hMou8f4vdKtLfnkDAwsiHPytJdRFH8Zckrx3yXqxlwq5JEQTbR/a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UNuMep/j; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FBdRfIp+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vhKu5r4c; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=b6gff4vq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UNuMep/j";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FBdRfIp+";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vhKu5r4c";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="b6gff4vq"
+Received: from pobox.suse.cz (unknown [10.100.2.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D86F121209;
+	Mon, 17 Mar 2025 12:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742215727; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jxMRh+HKZycxxIczcxBBPpKquapYaTO+NvLoRdwKnD8=;
+	b=UNuMep/jLh8vTSG5kLKOXYydDAgccHmiyiNdhEiINPUY1yHJHgXeyhqv7qpxtKNh2jHcdE
+	R3rUAOIEH7ctusoZyXEfasWB75BDeNZ9yd9LqJH165DMG2PgzLm8qohhMzOLMFLM0l9cu+
+	xyxpPgMgaZ1YI0r20dfaX2cxclBUOow=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742215727;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jxMRh+HKZycxxIczcxBBPpKquapYaTO+NvLoRdwKnD8=;
+	b=FBdRfIp+qXd7yUVsXzAEIeCDxZWOJkTZhWeS331e+ul3gZyVcOFIbOp0ZXkPW5tZh50r+h
+	YPrT4+BYTkRfXSBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742215726; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jxMRh+HKZycxxIczcxBBPpKquapYaTO+NvLoRdwKnD8=;
+	b=vhKu5r4cE0P8toE4gLQQY5/uACrVnL2x9JLCtVx7W1zkon4aRtmuDHvzJUeEyZ/ENHZPTh
+	rKtiKQnilWGRvCElJ5YB2VBxzIPNHhKVFND1uHVe9awvpVLMeRu9gdPPgoL3KZ2zmAMWvD
+	JYbD4xqVDru336hpnodSKsMw8MrG8ik=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742215726;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jxMRh+HKZycxxIczcxBBPpKquapYaTO+NvLoRdwKnD8=;
+	b=b6gff4vqD8GOKlqObzyLvLwQPziefnjnhqHeScK0ayLbGk3CQrIlaul070MrQ8ForlSjRa
+	RW2G9fDSHhIAALAg==
+Date: Mon, 17 Mar 2025 13:48:47 +0100 (CET)
+From: Miroslav Benes <mbenes@suse.cz>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Brendan Jackman <jackmanb@google.com>, 
+    Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH 09/13] objtool: Add --output option
+In-Reply-To: <0da308d42d82b3bbed16a31a72d6bde52afcd6bd.1741975349.git.jpoimboe@kernel.org>
+Message-ID: <alpine.LSU.2.21.2503171348250.4236@pobox.suse.cz>
+References: <cover.1741975349.git.jpoimboe@kernel.org> <0da308d42d82b3bbed16a31a72d6bde52afcd6bd.1741975349.git.jpoimboe@kernel.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemn500004.china.huawei.com (7.202.194.145)
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-The coresight_init_driver() of the coresight-core module is called from
-the sub coresgiht device (such as tmc/stm/funnle/...) module. It calls
-amba_driver_register() and Platform_driver_register(), which are macro
-functions that use the coresight-core's module to initialize the caller's
-owner field.  Therefore, when the sub coresight device calls
-coresight_init_driver(), an incorrect THIS_MODULE value is captured.
+On Fri, 14 Mar 2025, Josh Poimboeuf wrote:
 
-The sub coesgiht modules can be removed while their callbacks are
-running, resulting in a general protection failure.
+> Add option to allow writing the changed binary to a separate file rather
+> than changing it in place.
+> 
+> Libelf makes this suprisingly hard, so take the easy way out and just
+> copy the file before editing it.
+> 
+> Also steal the -o short option from --orc.  Nobody will notice ;-)
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 
-User a macro to automatically add the THIS_MODULE param to
-coresight_init_driver() to fix this.
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 
-Fixes: 075b7cd7ad7d ("coresight: Add helpers registering/removing both AMBA and platform drivers")
-Signed-off-by: Junhao He <hejunhao3@huawei.com>
----
-Changes in v2:
-- even a macro to automatically add the THIS_MODULE param for coresight_init_driver();
-- Link to v1: https://lore.kernel.org/lkml/c3744062-f7c1-82df-2fa1-591da3b2dc5e@huawei.com/T/
----
- drivers/hwtracing/coresight/coresight-core.c | 11 ++++++-----
- include/linux/coresight.h                    |  7 +++++--
- 2 files changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index 0a9380350fb5..abf2e4fd4de0 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -1486,18 +1486,19 @@ static void __exit coresight_exit(void)
- module_init(coresight_init);
- module_exit(coresight_exit);
- 
--int coresight_init_driver(const char *drv, struct amba_driver *amba_drv,
--			  struct platform_driver *pdev_drv)
-+int coresight_init_driver_owner(const char *drv, struct amba_driver *amba_drv,
-+				struct platform_driver *pdev_drv,
-+				struct module *owner)
- {
- 	int ret;
- 
--	ret = amba_driver_register(amba_drv);
-+	ret = __amba_driver_register(amba_drv, owner);
- 	if (ret) {
- 		pr_err("%s: error registering AMBA driver\n", drv);
- 		return ret;
- 	}
- 
--	ret = platform_driver_register(pdev_drv);
-+	ret = __platform_driver_register(pdev_drv, owner);
- 	if (!ret)
- 		return 0;
- 
-@@ -1505,7 +1506,7 @@ int coresight_init_driver(const char *drv, struct amba_driver *amba_drv,
- 	amba_driver_unregister(amba_drv);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(coresight_init_driver);
-+EXPORT_SYMBOL_GPL(coresight_init_driver_owner);
- 
- void coresight_remove_driver(struct amba_driver *amba_drv,
- 			     struct platform_driver *pdev_drv)
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 17276965ff1d..b07455956f7a 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -689,8 +689,11 @@ coresight_find_output_type(struct coresight_platform_data *pdata,
- 			   enum coresight_dev_type type,
- 			   union coresight_dev_subtype subtype);
- 
--int coresight_init_driver(const char *drv, struct amba_driver *amba_drv,
--			  struct platform_driver *pdev_drv);
-+int coresight_init_driver_owner(const char *drv, struct amba_driver *amba_drv,
-+				struct platform_driver *pdev_drv, struct module *owner);
-+
-+#define coresight_init_driver(name, amba_drv, pdev_drv)	\
-+	coresight_init_driver_owner(name, amba_drv, pdev_drv, THIS_MODULE)
- 
- void coresight_remove_driver(struct amba_driver *amba_drv,
- 			     struct platform_driver *pdev_drv);
--- 
-2.33.0
-
+M
