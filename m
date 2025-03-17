@@ -1,89 +1,96 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E2523372E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C1423E32E;
 	Mon, 17 Mar 2025 13:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742216654; cv=none; b=RTY4quVFi1Ny0tpBvHpgivILf1zB2K93fmgtZL0TuXtDboFzdwkMDreHJcKUhyJrLjT2v4BB5Oc/TkO4Zu212djALFZUqhL3CYFBz4LTRyTgyTIXwZC7KkpHKRZWriqydvYnhXkMno+fV16p4KdWMVKr9f3cqPsxXXdpQRu4Bz8=
+	t=1742216654; cv=none; b=cuAdG3nxId747CgzTdyRE60KWM9ab/ZIFe2FsxVY8etuG98amEizHnToFhLBpB9p5yGMquJljZ72v89lYHQ3P33cb2ZmRTsI0Dc0LYgGCAba573B2qj6VJlKfx7UkiEKe0vhVZF+E6Maji+1+bIGhTXvWm+anygfe0LG3i3LZfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742216654; c=relaxed/simple;
-	bh=EHLMuw/JyYlLvDqU6h58lMcp/uEcpIyU1m8aaA3ufQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p2nocHr+SYn4i/ZAAO4eqf5Qvv8Sckh6M7MZ0CmWCTPRvDIWyvVdeihhMyTBRkS2+N8jYTkBWHnIgXxd32lLYH2QdjE+MvFBtbHIKVcdKW6KTb2OYiop9dTj5E8GvSa8V0zihYDRTQXNphkThg8AckrC9jOXvv0wtdual0FvFDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lYp3UZUY; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	bh=KVUNmQdehuyTOB1NM2ZuDHvypCGHYTpjpC/HxaStcNU=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=eXfdA0dOMLGqPlFNJ507e3uhR8qiDoDEuxb34DIascl6IOn1987hdZObcoOgeTgvB9t+isQD3b7weuV6SAuVdG0OEG5hGOzcyyFDePFu66aCF/rdw91x7NaT9ZZ0Fymam50dx+cAwmYdbhA7vX+eqi5Pk9attWlZt5rDkppngq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q6YGjhvh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AfCWfj63; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lYp3UZUY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=QQDJSZlvsPxdtXrcfxhzYY3pnuTPlN7iObJIZ09ja6k=; b=lYp3UZUYsynZHh9SB8+AUqn7QV
-	AyCwpZ8gMkzuLmEHDZlx0CX1cJWd/yocolMKVYsRv55tey9MEQwUSpi36y3RIBZAPtPPkU3wUiSOx
-	ef+YKgM+xnNz05PyqngL0J8pWFoe17d+g4PUZE99fHXCZppS+aSBCwmUiLyNxV/j14aY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tuA8M-0068KE-SL; Mon, 17 Mar 2025 14:03:58 +0100
-Date: Mon, 17 Mar 2025 14:03:58 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
-	andrew@codeconstruct.com.au, ratbert@faraday-tech.com,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, BMC-SW@aspeedtech.com
-Subject: Re: [net-next 4/4] net: ftgmac100: add RGMII delay for AST2600
-Message-ID: <dc7296b2-e7aa-4cc3-9aa7-44e97ec50fc3@lunn.ch>
-References: <20250317025922.1526937-1-jacky_chou@aspeedtech.com>
- <20250317025922.1526937-5-jacky_chou@aspeedtech.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q6YGjhvh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AfCWfj63"
+Date: Mon, 17 Mar 2025 13:04:07 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742216650;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=6dkw96a023iuOdRzg3FQ8Drz5v8x2QWbz4/l3/X8tU0=;
+	b=Q6YGjhvhvXz0x92A38D5LTV+Yt7B+6wUm1n6PvxCL2XD5k92x/9FsCJ6CkjZRddaJQgTvc
+	z0rQ19S4b9WaKH9JCXjdEXngF48zwUXM5Qoy1/EBS8MOSI+Ndsb5+efbJvS5vFlx+ICjP/
+	m9Twx4Ay7IMyriRUxuL970BFp3utefv91Nvs5dLsaTpsMVFXZGz0IMYtVLjm7WBy/LlnVg
+	dCcXD7Ez4IbzOGKxlY1d5fPjkl3mvoE+0eEWy9RJgfBCMc0wp2L8MfLOfwZSM2IPVoVGS1
+	9+7NXLMG7kTcDkA+2nr75qGMTXmIKalPwvxow79iBOHyOa2QQemMdSErkTqQmA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742216650;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=6dkw96a023iuOdRzg3FQ8Drz5v8x2QWbz4/l3/X8tU0=;
+	b=AfCWfj63fAEfDznDAGoDF8tq3LAYcsqIglMPE3SR6xhAC/E+g6/WlEMNaYX0ppAKD7jhhM
+	0DAWIRcN/52O+1Dw==
+From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fpu] x86/fpu: Clarify the "xa" symbolic name used in the
+ XSTATE* macros
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250317025922.1526937-5-jacky_chou@aspeedtech.com>
+Message-ID: <174221664750.14745.17196771195042757712.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-> +	u32 rgmii_tx_delay, rgmii_rx_delay;
-> +	u32 dly_reg, tx_dly_mask, rx_dly_mask;
-> +	int tx, rx;
-> +
-> +	netdev = platform_get_drvdata(pdev);
-> +	priv = netdev_priv(netdev);
-> +
-> +	tx = of_property_read_u32(np, "tx-internal-delay-ps", &rgmii_tx_delay);
-> +	rx = of_property_read_u32(np, "rx-internal-delay-ps", &rgmii_rx_delay);
+The following commit has been merged into the x86/fpu branch of tip:
 
-> +	if (!tx) {
+Commit-ID:     4348e9177813656d5d8bd18f34b3e611df004032
+Gitweb:        https://git.kernel.org/tip/4348e9177813656d5d8bd18f34b3e611df004032
+Author:        Borislav Petkov (AMD) <bp@alien8.de>
+AuthorDate:    Mon, 17 Mar 2025 13:47:12 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 17 Mar 2025 13:47:12 +01:00
 
-The documentation for of_property_read_u32() says:
+x86/fpu: Clarify the "xa" symbolic name used in the XSTATE* macros
 
- * Return: 0 on success, -EINVAL if the property does not exist,
- * -ENODATA if property does not have a value, and -EOVERFLOW if the
- * property data isn't large enough.
+Tie together the %[xa] in the XSAVE/XRSTOR definitions with the
+respective usage in the asm macros so that it is perfectly clear.
 
-You need to handle EINVAL different to the other errors, which are
-real errors and should fail the probe.
+No functional changes.
 
-The commit message, and probably the binding needs to document what
-happens when the properties are not in the DT blob. This needs to be
-part of the bigger picture of how you are going to sort out the mess
-with existing .dts files listing 'rgmii' when in fact they should be
-'rgmii-id'.
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ arch/x86/kernel/fpu/xstate.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> +		/* Use tx-internal-delay-ps as index to configure tx delay
-> +		 * into scu register.
-> +		 */
-> +		if (rgmii_tx_delay > 64)
-> +			dev_warn(&pdev->dev, "Get invalid tx delay value");
-
-Return EINVAL and fail the probe.
-
-	Andrew
+diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
+index 1418423..0fd34f5 100644
+--- a/arch/x86/kernel/fpu/xstate.h
++++ b/arch/x86/kernel/fpu/xstate.h
+@@ -109,6 +109,10 @@ static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u64 ma
+ /*
+  * After this @err contains 0 on success or the trap number when the
+  * operation raises an exception.
++ *
++ * The [xa] input parameter below represents the struct xregs_state pointer
++ * and the asm symbolic name for the argument used in the XSAVE/XRSTOR insns
++ * above.
+  */
+ #define XSTATE_OP(op, st, lmask, hmask, err)				\
+ 	asm volatile("1:" op "\n\t"					\
