@@ -1,82 +1,132 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0912904
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 15:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620BD18DB1C;
+	Mon, 17 Mar 2025 15:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742226746; cv=none; b=iEnDcUdS8QYI5CzLw4ga/uIGxIJq0GdwB/+PP0tDHlGQZArYfpCg9CzTbmm3GFD0rJA28I7tIWigvGpL1tWnTnP2b+qiym56H0T6YZ2x5KepZNrTDZbV0LB71+2RxhhvRbLWTGica8sn/XHZrzTaqaH/i5pryEJLtkz2Ks/8+Kc=
+	t=1742226755; cv=none; b=ZkxNpCaMyXEtA4ZJlSWboNwy1H7D4IGrgpz4ikICk5H9UAJG+X3EJRk1AYX6uKtG1MQ+7DJyTKd7vzKpXJWVP3HXapq2zOnoButs0YCtLE/UwAHIeE0vrNeqNQTWranOEl+6t1AIkh1TbrIRqoApkZMRfnuUNQq+GHk/+xJ5kno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742226746; c=relaxed/simple;
-	bh=dUfQ96pcjbRz1+/lt2Zy1k/1dLu56V4jXKxvVQyuiOU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EWEZpQWM6uGdv8CE54CJf+2pAFoHSvc3gh2w2ucbAVrUoHI5SyXMGwv8afDocgPRAD6g/zr1QpbMMkofiSit3QaCIJ7Ia/vurjtJOxnNwJlap5guFRioWbnbPVB8WBtq/tLDNdNN/hxsmMPEW2cVtDbkZggR3IViBICB+gIuLIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YF24cflZ; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742226755; c=relaxed/simple;
+	bh=nTORzG9zIpB1tuECSA+WgYve+Q1rlgWbd3htR+1wW5k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OuX/i09+Cin2cyTl/vv7He4LbRcmwlGtUr1YMGsoMF2RZgJJ0e0j129VtFsgdmmALL37gGGwLMhtG89ormUgfLojUX7Kgp0LrV2rkz+tJFUKoi1hecnyJoy4TiB1zFxIS9A6dy5ojd6oDXtYNbcySqWc0Ds6SakwhHFMqveczNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nr3UWXX5; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YF24cflZ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742226739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=RkKSxDUbBmd7YpUH6TyrziTFRfsGpiWyoLKpjKRDRpw=;
-	b=YF24cflZJipA3SARqd2ek+f0zq1pNmk8GFP1qLE1KL+XVvuNoVR1l+nX+xqRilXU1zakXg
-	KrpHWCSkarOMtL4ztI2rPoKIK6IqbInRDdcFxRht9G2qEnekLLwMAjqt+IjB9BqSqr/ioi
-	2egij2u1En08Ar3cP6ukRXqoGhZqLvQ=
-From: Tao Chen <chen.dylane@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	brauner@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next] bpf: Define bpf_token_show_fdinfo with CONFIG_PROC_FS
-Date: Mon, 17 Mar 2025 23:51:47 +0800
-Message-Id: <20250317155147.2933972-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nr3UWXX5"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so8872258a12.2;
+        Mon, 17 Mar 2025 08:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742226752; x=1742831552; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JYzo6yCD6QJcusCjSnO6TtQIIlANc6aE2nAD2UNl8+4=;
+        b=Nr3UWXX5+78hKS2tSkxpjjue0LV6ULVj1cLmdAdBYAOIVfYQ0q738xFgc3lGWOMuF1
+         zvQHQ0WV9U5KwjcRjA4VHETvgXsIBJoQCFh0VJbsWt+Pq08rtySJ8iiFxmdEBj37IIwe
+         cuP/4ua0Z/9tawAeIJxHns8wvB8DNyFOAAux56MYq4MHrgwGze3gSyBlziqouKcyadPL
+         MxVK4wWQN8aL++8pJHd/bxWXuVqha2kH0C/gK+Cm5MTtw8DVqgqZInWw7ZOcH0DdwxBK
+         sLRyGreNdVhENXki9yJvBQ1LobQxt0Tn7yuzfvYmamZTDFTSY9hDrybMVUzOvdaRrcDi
+         pr4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742226752; x=1742831552;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JYzo6yCD6QJcusCjSnO6TtQIIlANc6aE2nAD2UNl8+4=;
+        b=YbrRQCVUrmNABqdD1j9vi/eTCGl9WIA4ucMWSat7lv10NiyfVVMoTubs6Qrr/a4Dv+
+         +tKLTa6A3j4YDqfu8IBsmvUlOE5PiHie5xp6pgD3IypXX6pFGlqMMp331Li3+Wey2/tq
+         BO/C0clCUfomc5lRVC93HpWGFJtLRaVNz6WHo73sxEzxh656ROkR1xn7gIksXHeIlJKx
+         zgStBKMchs0Cfg1CwBpRHrdrgR6pBNTHHsnJSc6RGs+EvccDrTulHdxlwjIPNDCWy//u
+         UYb46WsjhRVwYRsoPM5NXmLmP+Pj92REEB8ngzf19nS9smQW3TxiVdI55ke5NT1Uugaq
+         bM7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVIlaF1W3akouQbz368dovnVcRpsB9QzWuOJB1Bf18aXCFu54ilaNVq+xE5JiVhByA5PFJ1JSJ6nBTjIYoe@vger.kernel.org, AJvYcCX6Vl8yv7tODEAyDqso5ly/rL0kXZtOxO8C3hAnbRyqdTwkqSOuc7d0F72aPBW9ZDRIWcR3Lw2nBAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxg9VZGaEqGmwbYFaMr6McCB7lsi3+UqAaoWMZ9pmaMnRdWqcsv
+	FyJMsyTljDjUFSn4Ye2x4le3kYq9JPDl/nkC7tNuIaKoszYRo6i3Iq3McPWGfQ7IQ2sj1hYeZTD
+	4WeJVnLOEL0Z8KRswD2M2kpmgSHY=
+X-Gm-Gg: ASbGncsoIWL6RFnNQqkzoIQ9Rv3uOdB8QUHnqANB0YMq99wW1mOiaj6r3HV8IsZqidA
+	OkIu6pjz8wAWMR/TUe5UojxWwLnF8AdmcC4RSbhVpaN7NInyDwQzy8IZNkrNvh1x8jz2LdM4++Z
+	F7OpJdDW+hTT1WGtohzOOVd18mjVj5BNkxNejQZKI=
+X-Google-Smtp-Source: AGHT+IEh7DkFsRuAVv2KyN5MtgSxRJ4NQrsA3c47jwlweh18VSkMzy1dJzBk6IMEOnaId3BCHwWsZJR5sXFi+i/1akY=
+X-Received: by 2002:a17:907:d22:b0:abf:607b:d0d with SMTP id
+ a640c23a62f3a-ac38d3fa372mr14844966b.16.1742226751422; Mon, 17 Mar 2025
+ 08:52:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250313165049.48305-1-l.rubusch@gmail.com> <20250313165049.48305-5-l.rubusch@gmail.com>
+ <Z9ctSODRTxI53jAY@surfacebook.localdomain> <20250317105540.4b4a586f@jic23-huawei>
+In-Reply-To: <20250317105540.4b4a586f@jic23-huawei>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 17 Mar 2025 17:51:54 +0200
+X-Gm-Features: AQ5f1Jof8H3EqpVxqJbk3ApXVYR6SEdjKIanV9oN2tFiDkE9bkkagRpS598m2UI
+Message-ID: <CAHp75Vc=c=0yhtaKuiE4mZTTzQdrPywt89E7A1GuHha9=V=GUQ@mail.gmail.com>
+Subject: Re: [PATCH v4 04/14] iio: accel: adxl345: introduce
+ adxl345_push_event function
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Lothar Rubusch <l.rubusch@gmail.com>, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Protect bpf_token_show_fdinfo with CONFIG_PROC_FS check, otherwise
-it will compile error if CONFIG_PROC_FS is not set.
+On Mon, Mar 17, 2025 at 12:56=E2=80=AFPM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+> On Sun, 16 Mar 2025 21:58:00 +0200
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > Thu, Mar 13, 2025 at 04:50:39PM +0000, Lothar Rubusch kirjoitti:
 
-Fixes: 35f96de04127 ("bpf: Introduce BPF token object")
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- kernel/bpf/token.c | 2 ++
- 1 file changed, 2 insertions(+)
+...
 
-diff --git a/kernel/bpf/token.c b/kernel/bpf/token.c
-index 26057aa13..4396eefde 100644
---- a/kernel/bpf/token.c
-+++ b/kernel/bpf/token.c
-@@ -105,7 +105,9 @@ static const struct inode_operations bpf_token_iops = { };
- 
- static const struct file_operations bpf_token_fops = {
- 	.release	= bpf_token_release,
-+#ifdef CONFIG_PROC_FS
- 	.show_fdinfo	= bpf_token_show_fdinfo,
-+#endif
- };
- 
- int bpf_token_create(union bpf_attr *attr)
--- 
-2.43.0
+> > > +static int adxl345_push_event(struct iio_dev *indio_dev, int int_sta=
+t)
+> > > +{
+> > > +   struct adxl345_state *st =3D iio_priv(indio_dev);
+> > > +   int samples;
 
+> > > +   int ret =3D -ENOENT;
+
+Also note, this variable is redundant as far as I can see, just return
+the error code directly.
+
+> > > +
+> > > +   if (FIELD_GET(ADXL345_INT_WATERMARK, int_stat)) {
+> > > +           samples =3D adxl345_get_samples(st);
+> > > +           if (samples < 0)
+> >
+> > > +                   return -EINVAL;
+> >
+> > In the original code it makes no difference, but if you are going to sh=
+are
+> > this, I would expect to see
+> >
+> >                       return samples;
+> >
+> > here. Why the error code is shadowed? If it's trully needed, it has to =
+be
+> > explained in the comment.
+> >
+> >
+> > > +           if (adxl345_fifo_push(indio_dev, samples) < 0)
+> > > +                   return -EINVAL;
+> > > +   }
+> > > +
+> > > +   return ret;
+> > > +}
+
+...
+
+> > Jonathan, I saw that you had applied it, but I guess the above needs
+> > a clarification.
+> Was right at the top of a tree I don't mind rebasing. So dropped
+> this patch (kept 1-3)
+
+Thank you!
+
+--=20
+With Best Regards,
+Andy Shevchenko
