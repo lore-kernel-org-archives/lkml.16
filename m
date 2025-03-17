@@ -1,211 +1,175 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9912F30
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B542F30;
+	Mon, 17 Mar 2025 09:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742204031; cv=none; b=j8z40eogSxMv1anewPKa8k3BAmUZ/EpzJn5N07EG9icsNlg3Z14otDAazLIR7k2vPNASN/Y1v+gCBA2ELfCwoFJjwfqr2hf8JYJ0A1+ceSgU4wXs+0EyGgrptbBQkzNU1mOXrq3TAZTXUzHKV8N76NHCDL0FerIxTRC3DvIKZko=
+	t=1742204046; cv=none; b=M0/jU38aoJp3GgL01zfJ2wmXxduoFARbXIfwzdIvia2u619vUD7T37iMrcsCQFCwb1/7Ow6AaHzQ19g/3/9Ulndx/EstZrqB+b3rN2PVLv0vJOzxSEQ/G+xxu7fHTTuMSaHUtR4Hw5pgCebXZNufPRBKT0NP0goz0gOqaII0zeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742204031; c=relaxed/simple;
-	bh=ZjpX/FK1mAT9V4goVKLc77ntmvHtlB8pcKFoEoKB9e0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jhMEc+j0womsyrOrJb35/z49fhIB2a+jXwu0eP0Z/hogZVnpp9Y0YlViT5wevRp5Y9GoGdSZStiMUFUi2cJhwZ+Gk8R7yb9+I5lUnvsHvoH36PeQfBcZBwABU7UCSabDlEy1XwJ1hwyEyQ9Xn53tWwgniYD5MxLwPAQDQkrK8vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M+sHhfik; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742204046; c=relaxed/simple;
+	bh=ELzfSEZuhr25sXbSFYa8Pvn+Hzk6Nq+k/X6C4475L78=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZEWrwwuRrheSUU3gLm9uzOLueiv1brgxRhRy31pZARYsOnHqre7Zm3Vh/0Xrcbb1stPx5z4Ov6kfVzRJSmihUFGwrfYRBa2JW0H8Mq7ROjjSA+SVREYUPRIh7cI2b8qp+LsOYff+toohRys9RlacdOErz1l5hl4IdOFRKp5eg2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=O6yrVXnX; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M+sHhfik"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so937866166b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 02:33:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742204028; x=1742808828; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YpVmZE136+Zxm0BS8hIPezjxmGrEUv2QEDGs5qKh7PA=;
-        b=M+sHhfikkIAvjr1npQSSRsAE+NmkA3FrtxNu+rxaGs2SgsvfOBabWWRlFGFBNlDEyo
-         fap2mrPm5eIyEG+6cD5ZvgqrYH0p8C9dlCQ3JUBSV65tCQMUEW+2oPKNpE0tTC/T55j+
-         PR74EwKc5OL45+WoXFZ5rLsUml9pRtB3d7VqNV6FyQwYi4maOKrGr/A/60kI94D7T4Ny
-         lNKlddqmO1RUksEjbHnQASgMDWt2ZbGdVt9MN2dvHY26WtVL+xJh+3szB8Iz4yNwQocM
-         +H7d3btMh+KrQHYw0aZn1ahcUmPl+jAWkfqyYrd5HTeswMYTOenUgt3VgPzLhvkbV4jd
-         0Ceg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742204028; x=1742808828;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YpVmZE136+Zxm0BS8hIPezjxmGrEUv2QEDGs5qKh7PA=;
-        b=j2wtOCwIZhi9OXFd7mSNp4Gu5DtBhoHxbUUpRyKnnR74286xK2FhO4LkdNlqhP9kl6
-         ZLMUqx3ORwNBl9calQtd9OU4f77SRGpOO2xcgBullKSVlnHrsT5Y5GHuFND6IikW0WZx
-         HrpMhT5WJLIk9vihG6ybAZVx3Cfd0Xn4Oq9bFto+Ne0g5AgkbPHtkWw1UEweMW+juayo
-         UQOWcH0QePnpRRv3l/PDKC5h4/mVaB+w29PkggEMUuNNl/+w0WxLTFKkyldXCJflDdAo
-         Z/TIlcQ0kE7lJqul/t/v0fwR3srTuVXZOPAe0xCEf2c9OIx1uSHKU8tKk84OZH8pLjpZ
-         8VlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSy9xPQsXDN2TMYjDhDy6P9swbxrR5mdASkFdnFO0p0MyHZPxhWvfqdo7qvvyNkb/L7ljDX8vVE8vrFo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6casraz3/Ip1PkwWBus0cD2fphix7MY3nOv9lyIwdBM2U3bQ8
-	W5U6W1L65R/p8gxhFizrbVvaZLV/llDWqHjqSyYmcInPPJXHgxj7
-X-Gm-Gg: ASbGncu6QCX8cbXFdYPtPUopsDa6hX6WhgyvhsixXa7AfLEV5U6Kw3yckIIA3qGVSrD
-	r9kDgFYF+rv/0c2UjwLSaetsQeW35XoYG7UnRTq0ddydfFsiJYTOBstwJESJp7TCCUXOP9CGyDV
-	abF0FwZMaI9kCyPmWh3kej56ikGgsqpfqJvVrGQwo+NEFSjj9kqlYiC3zaZdV62wFrmASaA+Yw3
-	QmLw104FRIIV5xrGHfO9QLBn22IXZ/BSBcvS/Lgj1ixSjQ4LZ+uTGX2hc591JEU+Bi63EDwtjB1
-	dSnkDZZa9sdrg1nMENMaUcDFkKi6eBiAos8NDIpkXiP8GXI=
-X-Google-Smtp-Source: AGHT+IHYKRx7NHrqTP+ROvZ68L8dJjMyFHgWRrv3ufsMT9kR9F0OUK6XAqMeXz7hIq/Ex7WWVhz//g==
-X-Received: by 2002:a17:906:730b:b0:aa6:b63a:4521 with SMTP id a640c23a62f3a-ac33018ef75mr1171219066b.15.1742204028088;
-        Mon, 17 Mar 2025 02:33:48 -0700 (PDT)
-Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac314aa6083sm627552666b.182.2025.03.17.02.33.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 02:33:47 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH -tip] x86/fpu: Rewrite XSTATE_{XSAVE,XRESTORE} macros as static inline functions
-Date: Mon, 17 Mar 2025 10:28:38 +0100
-Message-ID: <20250317093408.107282-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="O6yrVXnX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742204040; x=1742463240;
+	bh=FMpu9u3oj6vcJmcZvMEZn/YisvXXjcOdgQLecCKsTSY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=O6yrVXnXOA3zGBPsi58FLNfuNpgVmzRiUQVSt6n2RvDFaScYeNrmXm3L1XRnQzrCB
+	 8YlXNeEvc40Q8ELt8iWYb+KxAyvWpjqulvZgkNYKWJO35Cij+vUrsQ0GE7dUOlk+Jc
+	 rzMvfujAWxXxusZkbpaGYypuRMbU0pOLD+IP4MHj08+imTci+wd6XeRMC5LuYndpni
+	 M9/0EHtFyD89TeUGfSMNoe5XXrjHoXufvS4DgXPkj63oNVXQntmnqx4q3dqLr5UZPP
+	 OuNLW59d65h/ntfWzcGZJHsxtH2V6/1dpPJRMXGxgh4h0t6z0VLLIpNrDRSFWnHQPf
+	 hwkSkhYH00J8Q==
+Date: Mon, 17 Mar 2025 09:33:52 +0000
+To: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] rust: use strict provenance APIs
+Message-ID: <D8IFS7175NNQ.3VAP8WA2QC8WF@proton.me>
+In-Reply-To: <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com>
+References: <20250315-ptr-as-ptr-v4-0-b2d72c14dc26@gmail.com> <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: ae828af5ffc8f596a802aaa8ecc51e4ae679d167
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Rewrite XSTATE_{XSAVE,XRESTORE} macros as static inline functions
-in order to use asm goto to optimize exception handling.
+On Sat Mar 15, 2025 at 1:17 PM CET, Tamir Duberstein wrote:
+> Throughout the tree, use the strict provenance APIs stabilized in Rust
+> 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
+> functions at the `kernel` crate root along with polyfills for rustc <
+> 1.84.0.
+>
+> Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc <
+> 1.84.0 as our MSRV is 1.78.0.
 
-The code that used XSTATE_XSAVE improves from:
+This isn't necessary, right?
 
-   3f1fe:	49 0f ae 64 24 40    	xsave64 0x40(%r12)
-   3f204:	31 ed                	xor    %ebp,%ebp
-   3f206:	85 ed                	test   %ebp,%ebp
-   3f208:	75 37                	jne    3f241 <...>
+> In the `kernel` crate, enable the strict provenance lints on rustc >=3D
+> 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introducing
+> compiler flags that are dependent on the rustc version in use.
 
-to just:
+So it won't be enabled in the doctests, right?
 
-   3f201:	48 0f ae 65 40       	xsave64 0x40(%rbp)
+> Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-prove=
+nance-apis [1]
+> Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me/
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  init/Kconfig           |  3 +++
+>  rust/kernel/alloc.rs   |  2 +-
+>  rust/kernel/devres.rs  |  4 ++--
+>  rust/kernel/io.rs      | 14 +++++++-------
+>  rust/kernel/lib.rs     | 52 ++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  rust/kernel/of.rs      |  2 +-
+>  rust/kernel/pci.rs     |  4 ++--
+>  rust/kernel/str.rs     | 16 ++++++----------
+>  rust/kernel/uaccess.rs | 12 ++++++++----
+>  9 files changed, 82 insertions(+), 27 deletions(-)
 
-because there is no need to set and test temporary result
-variable anymore.
 
-bloat-o-meter reports a small code size improvement
-(x86_64 defconfig, gcc-14.2.1):
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 486715528587..84eb2602e79e 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -17,6 +17,9 @@
+>  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized=
+))]
+>  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_=
+dyn))]
+>  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
+> +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, feature(strict_pr=
+ovenance_lints))]
+> +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, deny(fuzzy_proven=
+ance_casts))]
+> +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, deny(lossy_proven=
+ance_casts))]
+>  #![feature(inline_const)]
+>  #![feature(lint_reasons)]
+>  // Stable in Rust 1.83
+> @@ -25,6 +28,55 @@
+>  #![feature(const_ptr_write)]
+>  #![feature(const_refs_to_cell)]
+> =20
+> +#[cfg(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE)]
+> +#[allow(clippy::incompatible_msrv)]
 
-	add/remove: 0/0 grow/shrink: 0/2 up/down: 0/-25 (-25)
+Do we still need this allow?
 
-	Function                             old     new   delta
-	--------------------------------------------------------
-	save_fpregs_to_fpstate               141     135      -6
-	__fpu_restore_sig                   1448    1429     -19
+> +mod strict_provenance {
+> +    #[doc(hidden)]
 
-	Total: Before=22809695, After=22809670, chg -0.00%
+Why make them hidden in docs?
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+> +    pub fn expose_provenance<T>(addr: *const T) -> usize {
+> +        addr.expose_provenance()
+
+Instead of having these stubs here, you can probably just do
+
+    pub use core::ptr::expose_provenance;
+
+> +    }
+> +
+> +    #[doc(hidden)]
+> +    pub fn without_provenance_mut<T>(addr: usize) -> *mut T {
+> +        core::ptr::without_provenance_mut(addr)
+> +    }
+> +
+> +    #[doc(hidden)]
+> +    pub fn with_exposed_provenance<T>(addr: usize) -> *const T {
+> +        core::ptr::with_exposed_provenance(addr)
+> +    }
+> +
+> +    #[doc(hidden)]
+> +    pub fn with_exposed_provenance_mut<T>(addr: usize) -> *mut T {
+> +        core::ptr::with_exposed_provenance_mut(addr)
+> +    }
+> +}
+> +
+> +#[cfg(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE))]
+> +mod strict_provenance {
+> +    #[doc(hidden)]
+
+I think we should document these.
+
 ---
- arch/x86/kernel/fpu/xstate.h | 54 ++++++++++++++++++++----------------
- 1 file changed, 30 insertions(+), 24 deletions(-)
+Cheers,
+Benno
 
-diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
-index 1418423bc4c9..c8e31005567a 100644
---- a/arch/x86/kernel/fpu/xstate.h
-+++ b/arch/x86/kernel/fpu/xstate.h
-@@ -131,32 +131,38 @@ static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u64 ma
-  *
-  * Use XSAVE as a fallback.
-  */
--#define XSTATE_XSAVE(st, lmask, hmask, err)				\
--	asm volatile("1: " ALTERNATIVE_3(XSAVE,				\
--				   XSAVEOPT, X86_FEATURE_XSAVEOPT,	\
--				   XSAVEC,   X86_FEATURE_XSAVEC,	\
--				   XSAVES,   X86_FEATURE_XSAVES)	\
--		     "\n\t"						\
--		     "xor %[err], %[err]\n"				\
--		     "3:\n"						\
--		     _ASM_EXTABLE_TYPE_REG(1b, 3b, EX_TYPE_EFAULT_REG, %[err]) \
--		     : [err] "=r" (err)					\
--		     : [xa] "m" (*(st)), "a" (lmask), "d" (hmask)	\
--		     : "memory")
-+static __always_inline int __xstate_xsave(struct xregs_state *st,
-+					  u32 lmask, u32 hmask)
-+{
-+	asm goto("1: " ALTERNATIVE_3(XSAVE,
-+				     XSAVEOPT, X86_FEATURE_XSAVEOPT,
-+				     XSAVEC,   X86_FEATURE_XSAVEC,
-+				     XSAVES,   X86_FEATURE_XSAVES)
-+		     _ASM_EXTABLE(1b, %l[fault])
-+		     :
-+		     : [xa] "m" (*st), "a" (lmask), "d" (hmask)
-+		     : "memory"
-+		     : fault);
-+	return 0;
-+fault:
-+	return -EFAULT;
-+}
- 
- /*
-  * Use XRSTORS to restore context if it is enabled. XRSTORS supports compact
-  * XSAVE area format.
-  */
--#define XSTATE_XRESTORE(st, lmask, hmask)				\
--	asm volatile("1: " ALTERNATIVE(XRSTOR,				\
--				 XRSTORS, X86_FEATURE_XSAVES)		\
--		     "\n"						\
--		     "3:\n"						\
--		     _ASM_EXTABLE_TYPE(1b, 3b, EX_TYPE_FPU_RESTORE)	\
--		     :							\
--		     : [xa] "m" (*(st)), "a" (lmask), "d" (hmask)	\
--		     : "memory")
-+static __always_inline void __xstate_xrstor(struct xregs_state *st,
-+					    u32 lmask, u32 hmask)
-+{
-+	asm volatile("1: " ALTERNATIVE(XRSTOR,
-+				       XRSTORS, X86_FEATURE_XSAVES)
-+		     "3:\n"
-+		     _ASM_EXTABLE_TYPE(1b, 3b, EX_TYPE_FPU_RESTORE)
-+		     :
-+		     : [xa] "m" (*st), "a" (lmask), "d" (hmask)
-+		     : "memory");
-+}
- 
- #if defined(CONFIG_X86_64) && defined(CONFIG_X86_DEBUG_FPU)
- extern void xfd_validate_state(struct fpstate *fpstate, u64 mask, bool rstor);
-@@ -208,7 +214,7 @@ static inline void os_xsave(struct fpstate *fpstate)
- 	WARN_ON_FPU(!alternatives_patched);
- 	xfd_validate_state(fpstate, mask, false);
- 
--	XSTATE_XSAVE(&fpstate->regs.xsave, lmask, hmask, err);
-+	err = __xstate_xsave(&fpstate->regs.xsave, lmask, hmask);
- 
- 	/* We should never fault when copying to a kernel buffer: */
- 	WARN_ON_FPU(err);
-@@ -225,7 +231,7 @@ static inline void os_xrstor(struct fpstate *fpstate, u64 mask)
- 	u32 hmask = mask >> 32;
- 
- 	xfd_validate_state(fpstate, mask, true);
--	XSTATE_XRESTORE(&fpstate->regs.xsave, lmask, hmask);
-+	__xstate_xrstor(&fpstate->regs.xsave, lmask, hmask);
- }
- 
- /* Restore of supervisor state. Does not require XFD */
-@@ -235,7 +241,7 @@ static inline void os_xrstor_supervisor(struct fpstate *fpstate)
- 	u32 lmask = mask;
- 	u32 hmask = mask >> 32;
- 
--	XSTATE_XRESTORE(&fpstate->regs.xsave, lmask, hmask);
-+	__xstate_xrstor(&fpstate->regs.xsave, lmask, hmask);
- }
- 
- /*
--- 
-2.48.1
+> +    pub fn expose_provenance<T>(addr: *const T) -> usize {
+> +        addr.cast::<()>() as usize
+> +    }
+> +
+> +    #[doc(hidden)]
+> +    pub fn without_provenance_mut<T>(addr: usize) -> *mut T {
+> +        addr as *mut T
+> +    }
+> +
+> +    #[doc(hidden)]
+> +    pub fn with_exposed_provenance<T>(addr: usize) -> *const T {
+> +        addr as *const T
+> +    }
+> +
+> +    #[doc(hidden)]
+> +    pub fn with_exposed_provenance_mut<T>(addr: usize) -> *mut T {
+> +        addr as *mut T
+> +    }
+> +}
+> +
+> +pub use strict_provenance::*;
 
