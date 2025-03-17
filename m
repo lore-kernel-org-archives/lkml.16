@@ -1,109 +1,94 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 691B32E3373
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0CB238142;
+	Mon, 17 Mar 2025 10:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742206806; cv=none; b=kG2zrGT+BCbotdTcUq/UNYnCNKYJ/afVfKEKVrBRx80vDh0Wz4P2YTuOlcPA9EdkcULF2o2nWWWuNWq2a96765ASTuEYyiO9hrYBpTKqJ8ptBRS953keHZFikHP9H6M9y6tUwKudKytf17Cx9C7/DS9ld/ODlW+2WTnBJihKnXU=
+	t=1742206818; cv=none; b=mglo8quGuMBJ+JFuQitMPpL+DGqL2awY3p4qq5oYz+SAGtTCqU0oDLK7lPo3c1l05cLvVoPIg47t3uXXl5kyQyghlEjLHUIIjCfgGb2KtiNTalaH2TdxENw0d10ORTmfHavnasQh8Qr6XDvmrCbwTgQeV/S4HYtwu1fFZ77j69w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742206806; c=relaxed/simple;
-	bh=y7SQyiNMqR2HpYoZOrpm5CIwKXkQ2/gmiiqomrbVWOI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=etcRoJxJeXxSbFvCbtTjJK+4XXl8IjMCpFJAvBhH9LYwf0aqJY579FF+q736oyeSp5yofi59QDu/M9PKXL984ywlZQYNuadaxxG9eQbK/9juBpQLqpWODbFCJ0Hu98OkGKZNTea0mlu2YsgBrcrysglR+j9pPcIkUaz4vNnaKXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ZGVx21Cfmz9sRy;
-	Mon, 17 Mar 2025 11:06:14 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id GY3M6MKxajRN; Mon, 17 Mar 2025 11:06:14 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZGVx20QyPz9sRr;
-	Mon, 17 Mar 2025 11:06:14 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id EF3CF8B765;
-	Mon, 17 Mar 2025 11:06:13 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id Jcpq8BWRW1ng; Mon, 17 Mar 2025 11:06:13 +0100 (CET)
-Received: from [10.25.207.144] (unknown [10.25.207.144])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CAF918B764;
-	Mon, 17 Mar 2025 11:06:13 +0100 (CET)
-Message-ID: <ebc5d8c6-3c5c-4e6a-a218-9dddcdb4f8bc@csgroup.eu>
-Date: Mon, 17 Mar 2025 11:06:13 +0100
+	s=arc-20240116; t=1742206818; c=relaxed/simple;
+	bh=AXL3S+UXmXWsnrdSKH8aIWKMQxs3uIqHHvZfQWxskDk=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=qnNDQGbNii1Dgz2pMmCQgcW5x9oejMa8WMcEuEJSVDXarK5jPUUI0TDopxYl1TIuyOLJG7Fz/Mhp9Gh4+EDt9Q02DIlGTQ1rXL6rSVYHi/AcU4MPBxUHFf8mR/vt1gX0AAIlFURznOC0FB/OJA9j5POJ1XhHTywWmz1dfPY90SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mA9jxrVR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mA9jxrVR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E603C4CEE3;
+	Mon, 17 Mar 2025 10:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742206817;
+	bh=AXL3S+UXmXWsnrdSKH8aIWKMQxs3uIqHHvZfQWxskDk=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=mA9jxrVRoR1MWndHhnSw3bvKK9p6bTvgAoBvai2grcmy2X9VIrYoYPPqEkkJTtAjQ
+	 50SYsqM85E/Ud+17P2Tx93ETXe57vnpCFtdXLvmTpwrMgy2A0YiU61bUcsAvmURMMk
+	 lJH4ItQsVQZcGT5kJSm2Df03ZmLcs/DUROdo9SZGyubjYDDjxzUIF8b1lWk6LzeH1W
+	 AspqOdymfSlsQb+Rmiap/kuO6M9hNX0DDm64QE3cgNiaBklZQ1adMXiTL6GZ4vSvBR
+	 BHkpNg/fbrlOy4o2svb45NEGDKIUtI4zqet9PmpuQWP6j9wfNKmMwKHV0zpqiaSeNV
+	 6cG8JmhL4Qcuw==
+Date: Mon, 17 Mar 2025 05:20:16 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linux-next-20250307] Build Failure
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
- Michael Ellerman <mpe@ellerman.id.au>
-References: <70ba4e80-53c4-4583-82f3-2851e0829aa6@linux.ibm.com>
- <5ab103b4-70f0-454e-bca6-0bfc66d143f5@csgroup.eu>
- <c0a716d0-6811-4b1b-b008-d4e97900cb0e@linux.ibm.com>
- <5c671410-cedd-4854-a3e7-2060607d5c4d@csgroup.eu>
- <25e5d468-6c40-40b7-a010-8c8018b6d228@linux.ibm.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <25e5d468-6c40-40b7-a010-8c8018b6d228@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: conor+dt@kernel.org, linux-kernel@vger.kernel.org, 
+ linux-iio@vger.kernel.org, jic23@kernel.org, devicetree@vger.kernel.org, 
+ oskar.andero@gmail.com, krzk+dt@kernel.org, lars@metafoo.de
+To: marius.cristea@microchip.com
+In-Reply-To: <20250317090803.30003-2-marius.cristea@microchip.com>
+References: <20250317090803.30003-1-marius.cristea@microchip.com>
+ <20250317090803.30003-2-marius.cristea@microchip.com>
+Message-Id: <174220681643.3406351.8233477682051642594.robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: adding support for
+ PAC194X
 
 
-
-Le 17/03/2025 à 08:27, Venkat Rao Bagalkote a écrit :
+On Mon, 17 Mar 2025 11:08:02 +0200, marius.cristea@microchip.com wrote:
+> From: Marius Cristea <marius.cristea@microchip.com>
 > 
-> On 12/03/25 8:49 pm, Christophe Leroy wrote:
->>
->>
->> Le 12/03/2025 à 11:11, Venkat Rao Bagalkote a écrit :
->>>
->>> On 12/03/25 4:20 am, Christophe Leroy wrote:
->>>>
->>>>
->>>> Le 09/03/2025 à 13:38, Venkat Rao Bagalkote a écrit :
->>>>> Greetings!!,
->>>>>
->>>>> I see linux-next-20250307 fails to build on IBM Power9 and Power10 
->>>>> servers.
->>>>>
->>>>>
->>>>> Errors:
->>>>>
->>>>> In file included from ^[[01m^[[K<command-line>^[[m^[[K:
->>>>> ^[[01m^[[K./usr/include/cxl/features.h:11:10:^[[m^[[K 
->>>>> ^[[01;31m^[[Kfatal error: ^[[m^[[Kuuid/uuid.h: No such file or 
->>>>> directory
->>>>>     11 | #include ^[[01;31m^[[K<uuid/uuid.h>^[[m^[[K
->>>>>        |          ^[[01;31m^[[K^~~~~~~~~~~~~^[[m^[[K
->>>>
->>>> This is unreadable. Please avoid fancy colors that add escapes to 
->>>> logs. You can unset LANG environment var before building in order to 
->>>> get pastable stuff.
->>>>
->>
->> Allthought not really readable, it seems to mention that uuid/uuid.h 
->> is missing.
->>
->> Can you confirm that you have installed libuuid package in your 
->> system ? Maybe you also need some libuuid-dev packet to get headers ?
+> This is the device tree schema for iio driver for Microchip PAC194X and
+> PAC195X series of Power Monitors with Accumulator.
+> The PAC194X family supports 9V Full-Scale Range and the PAC195X supports
+> 32V Full-Scale Range.
+> There are two versions of the PAC194X/5X: the PAC194X/5X-1 devices are
+> for high-side current sensing and the PAC194X/5X-2 devices are for
+> low-side current sensing or floating VBUS applications.
+> The PAC194X/5X-1 is named shortly PAC194X/5X.
 > 
+> Signed-off-by: Marius Cristea <marius.cristea@microchip.com>
+> ---
+>  .../bindings/iio/adc/microchip,pac1944.yaml   | 195 ++++++++++++++++++
+>  1 file changed, 195 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/microchip,pac1944.yaml
 > 
-> Yeah uuid package is installed on my system. I am seeing this failure 
-> only with build next-20250307.
-> 
-> Builds with before and after are compiling successfully.
 
-Ok, so I understand from this that the problem is fixed and there is not 
-further investigation required.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Thanks
-Christophe
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/microchip,pac1944.yaml: properties:interrupt-names:items: {'enum': ['alert1', 'alert2']} is not of type 'array'
+	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250317090803.30003-2-marius.cristea@microchip.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
