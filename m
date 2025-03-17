@@ -1,352 +1,160 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E652B23FC4B;
-	Mon, 17 Mar 2025 10:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC9A230BC9;
+	Mon, 17 Mar 2025 10:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742206688; cv=none; b=aJ3ny7c6RJ7WibVmpHt+7A9UuX7nykczqhwu2xE5l2OH1pNZOnqGxdh6wTigsfV+c6/x+IEegiFraWtE8aR6plvOzjZ+An2xnK9Jw4iha5TvjdLKtd+YbNOkez0QRYsfvYW6gPOCt8/DTnhQxf12GHoS+TKVFxjO4f8ywXYu2bU=
+	t=1742206702; cv=none; b=ujP0l1roc70jK7jLIlu7TOTcD0MsTNpGuu5SvTdXVlKLcOSl0FOkcGddd0V0DFN6Ah+3Sc3jF3dFMcEL3XP0lYxZq0hxG1d76NxB02b2skQpgp7n5HuOUJ5DJH7Ko3AViyo/NmlMy6vFsG8jsu0x6rMTqxDw053ObVDw0DBDmLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742206688; c=relaxed/simple;
-	bh=FVZ64VaHCWLjK3snr2V8Wl9AqcuLIXwhgGw6zIXvcKU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l5dApWjVjuakZtUButqvfEdrb8JvClZ8RDDEyuU6o/3k4FgU0agwYUJiXBgn2F/F6PzeQBfA2AU5n3gpjjXdANu0pH/vTfOkycAbn8Cva5Hbw+YonZKOEWYZ3pOwsurTsy/iquxBlD+TbXawoQ8eoHMIzHj8mULOzkmcHjDIn7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=kHFGfe8r; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=QnPyaVPS; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+	s=arc-20240116; t=1742206702; c=relaxed/simple;
+	bh=oetRCrK+6XzcEvbOj37sD62uupHCSGyNHZXJPghenF0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iG3w1dlDBCvQYy5je7+iQMXPwgpDSJmnRATTB8JBTa96Y0kQgHLkbXtHEeJFzUmnAGGYM89nDL3pcZqFWqA+B/fF4yfbLfSZxrMxBSl8O9FrYhKeDUtVJEWeElp6Fg1mT/F2c4YOLU8Ub9OrkkTtbYsknP8igDoRXnurJy8pPt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ewkjNUdu; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="kHFGfe8r";
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="QnPyaVPS"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1742206683;
-	bh=/KwruWy8kFCC0Vy7w8yf1jkvdwlV4EhT5B+RzjYI5XM=; l=9570;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=kHFGfe8rbZE+Rb+w1JL8e7+5xPS9lYQMA1Bwnyvxq6vYLsoAIAlvTtWhcf2sszsSH
-	 a20+FQJOA01L4iKqPod8daFcq9NSbgQYWpZ7ocJ9FZiFqhsszXpeRmPGt68KrfoxlJ
-	 HacO1zPJHmlY73SYqnmRRboDcRYg6OGJIfYCXSYjpOq+dYVfCvZ0VifrNqv0uIfJJC
-	 PnIpISFTqK/38FDEol3QSmEjVM4aDCrSnOQONQThobqX2U4Pxzb5TIeUHSNxK3r5t9
-	 nMrIdch8MEyCQpl2KC38v3T64SgUNgv7ZyVpIHgm4utFunlc9D+2GJ0FCb4mOP/SJl
-	 ci/2gNGun3TXQ==
-Received: from 192.168.8.21
-	by mg.richtek.com with MailGates ESMTP Server V3.0(1128085:0:AUTH_RELAY)
-	(envelope-from <prvs=1170D5C545=cy_huang@richtek.com>); Mon, 17 Mar 2025 18:17:55 +0800 (CST)
-X-MailGates: (compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1742206675;
-	bh=/KwruWy8kFCC0Vy7w8yf1jkvdwlV4EhT5B+RzjYI5XM=; l=9570;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=QnPyaVPSe8VEwNYBvsqsuY/sj0CzQKruu0iJX6nDkzY/FEufBvmNlIk8DL7J3hHCt
-	 vM9TyEuCMeGJwp5k8bxtzlR4CgfuSSy8mb4USKKU6yW2SLZD0xuKQVFokXh/E7Vu9k
-	 qaEbplr8/sPFf1xDIh4ItZi0cendVJVFVsikeMojMTAChDHLqC4tenUb7/MBLs5d6I
-	 J4kbCsA04I8drbRa1f83cUw5tBjza+Ie9WkRN2ikFWnaNjkuNUtf9F7ntyrErl/6IT
-	 hUGJ3zY99CIPTz2ScyF3uBUmmdQ+VXd78yDxtWHOdqW+DokkHIvMtg0XG9xOZX0wOU
-	 /uz/tjXxpJ61Q==
-Received: from 192.168.10.46
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(3810274:0:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Mon, 17 Mar 2025 18:05:18 +0800 (CST)
-Received: from ex4.rt.l (192.168.10.47) by ex3.rt.l (192.168.10.46) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 17 Mar
- 2025 18:05:17 +0800
-Received: from git-send.richtek.com (192.168.10.154) by ex4.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
- Transport; Mon, 17 Mar 2025 18:05:17 +0800
-From: <cy_huang@richtek.com>
-To: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-CC: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	ChiYuan Huang <cy_huang@richtek.com>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: [PATCH 2/3] regulator: rtq2208: Fix the LDO DVS capability
-Date: Mon, 17 Mar 2025 18:06:22 +0800
-Message-ID: <dae0321b710518ce32260336e3cc9caf2ba84215.1742204502.git.cy_huang@richtek.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <cover.1742204502.git.cy_huang@richtek.com>
-References: <cover.1742204502.git.cy_huang@richtek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewkjNUdu"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e56b229d60so9769826a12.0;
+        Mon, 17 Mar 2025 03:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742206699; x=1742811499; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2wKketw2TWgl0iLj5YrKZu6wMKDpK26remsueT408zE=;
+        b=ewkjNUdu6BPfdsXJbosHfUWddyC/YFQ/8BGj6bgCQaQhZcMueJ1ZkYHuoZ2fZbFppl
+         7WJ5KISrMx9yR3xWy9MQ/REZIzRSQcRnGvN1jYr/U/Q/y8EMCYNPdbZvfdT9huOudlf2
+         TcFePM2BziFsltnDOZjkBPPoQs/Fwr8QqNPX178Eas3Lgnlb/cK6Jfy19cxofitw0pJ9
+         QtJnPJTVB62f99ULu9KFeTYSK2NZ6OlxzoAyIzgjV1eDDA0lduFKDcS2/ozuFnLOorQZ
+         wb5U3Bz7fmAEVsaBof++CDd0RjUN6R9wWLd96WsXtG0bAv7ljKk/Q70sash7pgzNuWFk
+         NZGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742206699; x=1742811499;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2wKketw2TWgl0iLj5YrKZu6wMKDpK26remsueT408zE=;
+        b=GbIn08lYbM44tWVq2nM1LJX8sIAn1izxDr47LLYGkZVJ5F+FCZtWqtGnQGa0KIle9X
+         0JgFQjOES11D3/2iGnOrzsfOrUORoL3BKzGVLLGPwtn7yImtvaYLWy7KfOHTbQTHikyD
+         boeEyNsDUbfPO4yc6YaHjKdVOa6Elb0LB2mSIUOneq/wGV2hy9uVdetSRwlQj0qSJqGB
+         IADt3aPT6jzbZ7k6FEtoWBreyyPBq+f1MXgWpczMntbp1fdiKzzX55bnfFIoLocIOQft
+         mdYW4SEG3+j3NKZLLIVd4Ne4h7A9erGo11dWljQKx5Rr4QKVc2tUNzNfWP9ZTfa5HmDZ
+         28yA==
+X-Forwarded-Encrypted: i=1; AJvYcCUTaSs0+UpRcgjahh3g9VEJikO+rIwyUsg0kqZrIdZ2p5SaPTTJ3w8l/JoFmflIjdnJ4kECP3t8+c90CRVP@vger.kernel.org, AJvYcCUaJmED5RKFQgBxDnykwNJUlMT+wC0S0KpZCNuW510qxj01BLWf5ZxluKDwZxOleRl6AVI=@vger.kernel.org, AJvYcCXuK0xNn+TtF31fOU3usNyNbi6bW3KehAmEU6ejR6Aya1odyu6TLbwoM2Oz4CvCHsCOyIY/O55t@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeJznCvgH2XGhlSDOxZiCycMn8fGxhtA0HsQ7ijv+EoJoNpmD+
+	Vw923wAnkDEMmi0S1KjT7m0YomqodOMomsiOR3pMQFQkwzTpD0lb
+X-Gm-Gg: ASbGncuTx7Zzg0gzqF4V4+8pFe6BDVcsyqGu9gomidEgkieFOH9EjXWdUdzRSq14Ri3
+	r2upylvXF+VxQrwClxwA+2NhvCWeXjUL91AyZW1xHKKiARXEqscA/aV2ENfWjCM9/BZy9FyMxwv
+	MCWxgowTBPmkoonOvgnd/LeuZc0B0954f5Lt6zbUeANu5Yu2EvhMDqmZ/kkzBWTGI9NufF5DTyN
+	nrygSpsRNZOeW5nIc/txslPM1NtHzgDVIKG46fZ7RkcucWqkA5LvqJu1ZviJQCD1Yw97tAu19at
+	GisxBiNx8F91SpKVyWUy9InixEDY/AqojTIfX47mQg==
+X-Google-Smtp-Source: AGHT+IFtGdAtfoFs+Th129BAI5C2xeQ+mM3bbalDERGzS37sqYdjQf6O8en7nRVvQgz5hFjKcl3+wg==
+X-Received: by 2002:a17:907:2d89:b0:ac1:e45f:9c71 with SMTP id a640c23a62f3a-ac3311aec0cmr1164507966b.1.1742206698786;
+        Mon, 17 Mar 2025 03:18:18 -0700 (PDT)
+Received: from krava ([173.38.220.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147f0ca7sm651288866b.60.2025.03.17.03.18.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 03:18:18 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 17 Mar 2025 11:18:16 +0100
+To: Chen Linxuan <chenlinxuan@deepin.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Sasha Levin <sashal@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Yi Lai <yi1.lai@intel.com>, Daniel Borkmann <daniel@iogearbox.net>,
+	stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH stable 5.15 v3] lib/buildid: Handle memfd_secret() files
+ in build_id_parse()
+Message-ID: <Z9f26L84ILYCsMv4@krava>
+References: <DC5F0190D52D7B57+20250317052132.23783-2-chenlinxuan@deepin.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DC5F0190D52D7B57+20250317052132.23783-2-chenlinxuan@deepin.org>
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+On Mon, Mar 17, 2025 at 01:21:32PM +0800, Chen Linxuan wrote:
+> [ Upstream commit 5ac9b4e935dfc6af41eee2ddc21deb5c36507a9f ]
+> 
+> >From memfd_secret(2) manpage:
+> 
+>   The memory areas backing the file created with memfd_secret(2) are
+>   visible only to the processes that have access to the file descriptor.
+>   The memory region is removed from the kernel page tables and only the
+>   page tables of the processes holding the file descriptor map the
+>   corresponding physical memory. (Thus, the pages in the region can't be
+>   accessed by the kernel itself, so that, for example, pointers to the
+>   region can't be passed to system calls.)
+> 
+> We need to handle this special case gracefully in build ID fetching
+> code. Return -EFAULT whenever secretmem file is passed to build_id_parse()
+> family of APIs. Original report and repro can be found in [0].
+> 
+>   [0] https://lore.kernel.org/bpf/ZwyG8Uro%2FSyTXAni@ly-workstation/
+> 
+> Fixes: de3ec364c3c3 ("lib/buildid: add single folio-based file reader abstraction")
+> Reported-by: Yi Lai <yi1.lai@intel.com>
+> Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+> Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Link: https://lore.kernel.org/bpf/20241017175431.6183-A-hca@linux.ibm.com
+> Link: https://lore.kernel.org/bpf/20241017174713.2157873-1-andrii@kernel.org
+> [ Chen Linxuan: backport same logic without folio-based changes ]
+> Cc: stable@vger.kernel.org
+> Fixes: 88a16a130933 ("perf: Add build id data in mmap2 event")
+> Signed-off-by: Chen Linxuan <chenlinxuan@deepin.org>
 
-Use the hidden bank register to identify whether the LDO voltage is
-fixed or variable. Remove the read of 'richtek,fixed-microvolt'
-property.
+lgtm
 
-Fixes: af1296d15d89 ("regulator: rtq2208: Add fixed LDO VOUT property and check that matches the constraints")
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
----
-Hi,
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
-From the current design, if LDO node is not declared, this will cause
-driver probe fail (-22) for the check 'desc->ops' in regulator register
-This seems the buggy code. Instead of it, use the hidden RG to check
-whether LDO is fixed or not.
+jirka
 
-Except this, for LDO part, it already used 'of_regulator_match', but the
-regulator_constraint seems allocated twice, one is in 'of_regulator_match',
-another is in 'regulator_register'. This is also tricky.
----
- drivers/regulator/rtq2208-regulator.c | 133 +++++++++++---------------
- 1 file changed, 55 insertions(+), 78 deletions(-)
 
-diff --git a/drivers/regulator/rtq2208-regulator.c b/drivers/regulator/rtq2208-regulator.c
-index 2a2f6a54de11..9cde7181b0f0 100644
---- a/drivers/regulator/rtq2208-regulator.c
-+++ b/drivers/regulator/rtq2208-regulator.c
-@@ -28,6 +28,8 @@
- #define RTQ2208_REG_LDO2_CFG			0xC1
- #define RTQ2208_REG_LDO_DVS_CTRL		0xD0
- #define RTQ2208_REG_HIDDEN_BUCKPH		0x55
-+#define RTQ2208_REG_HIDDEN_LDOCFG0		0x8F
-+#define RTQ2208_REG_HIDDEN_LDOCFG1		0x96
- #define RTQ2208_REG_HIDDEN0			0xFE
- #define RTQ2208_REG_HIDDEN1			0xFF
- 
-@@ -50,6 +52,9 @@
- #define RTQ2208_LDO2_VOSEL_SD_MASK		BIT(7)
- #define RTQ2208_MASK_BUCKPH_GROUP1		GENMASK(6, 4)
- #define RTQ2208_MASK_BUCKPH_GROUP2		GENMASK(2, 0)
-+#define RTQ2208_MASK_LDO2_OPT0			BIT(7)
-+#define RTQ2208_MASK_LDO2_OPT1			BIT(6)
-+#define RTQ2208_MASK_LDO1_FIXED			BIT(6)
- 
- /* Size */
- #define RTQ2208_VOUT_MAXNUM			256
-@@ -250,11 +255,6 @@ static const unsigned int rtq2208_ldo_volt_table[] = {
- 	3300000,
- };
- 
--static struct of_regulator_match rtq2208_ldo_match[] = {
--	{.name = "ldo2", },
--	{.name = "ldo1", },
--};
--
- static unsigned int rtq2208_of_map_mode(unsigned int mode)
- {
- 	switch (mode) {
-@@ -349,59 +349,6 @@ static irqreturn_t rtq2208_irq_handler(int irqno, void *devid)
- 	return IRQ_HANDLED;
- }
- 
--static int rtq2208_of_get_ldo_dvs_ability(struct device *dev)
--{
--	struct device_node *np;
--	struct of_regulator_match *match;
--	struct regulator_desc *desc;
--	struct regulator_init_data *init_data;
--	u32 fixed_uV;
--	int ret, i;
--
--	if (!dev->of_node)
--		return -ENODEV;
--
--	np = of_get_child_by_name(dev->of_node, "regulators");
--	if (!np)
--		np = dev->of_node;
--
--	ret = of_regulator_match(dev, np, rtq2208_ldo_match, ARRAY_SIZE(rtq2208_ldo_match));
--
--	of_node_put(np);
--
--	if (ret < 0)
--		return ret;
--
--	for (i = 0; i < ARRAY_SIZE(rtq2208_ldo_match); i++) {
--		match = rtq2208_ldo_match + i;
--		init_data = match->init_data;
--		desc = (struct regulator_desc *)match->desc;
--
--		if (!init_data || !desc)
--			continue;
--
--		/* specify working fixed voltage if the propery exists */
--		ret = of_property_read_u32(match->of_node, "richtek,fixed-microvolt", &fixed_uV);
--
--		if (!ret) {
--			if (fixed_uV != init_data->constraints.min_uV ||
--				fixed_uV != init_data->constraints.max_uV)
--				return -EINVAL;
--			desc->n_voltages = 1;
--			desc->fixed_uV = fixed_uV;
--			desc->fixed_uV = init_data->constraints.min_uV;
--			desc->ops = &rtq2208_regulator_ldo_fix_ops;
--		} else {
--			desc->n_voltages = ARRAY_SIZE(rtq2208_ldo_volt_table);
--			desc->volt_table = rtq2208_ldo_volt_table;
--			desc->ops = &rtq2208_regulator_ldo_adj_ops;
--		}
--	}
--
--	return 0;
--}
--
--
- #define BUCK_INFO(_name, _id)						\
- {									\
- 	.name = _name,							\
-@@ -429,9 +376,11 @@ static const struct linear_range rtq2208_vout_range[] = {
- 	REGULATOR_LINEAR_RANGE(1310000, 181, 255, 10000),
- };
- 
--static void rtq2208_init_regulator_desc(struct rtq2208_regulator_desc *rdesc, int mtp_sel, int idx)
-+static void rtq2208_init_regulator_desc(struct rtq2208_regulator_desc *rdesc, int mtp_sel, int idx,
-+					unsigned int ldo1_fixed, unsigned int ldo2_fixed)
- {
- 	struct regulator_desc *desc;
-+	unsigned int fixed_uV;
- 	static const struct {
- 		char *name;
- 		int base;
-@@ -467,7 +416,8 @@ static void rtq2208_init_regulator_desc(struct rtq2208_regulator_desc *rdesc, in
- 
- 	rdesc->mode_mask = RTQ2208_BUCK_NRMODE_MASK;
- 
--	if (idx >= RTQ2208_BUCK_B && idx <= RTQ2208_BUCK_E) {
-+	switch (idx) {
-+	case RTQ2208_BUCK_B ... RTQ2208_BUCK_E:
- 		/* init buck desc */
- 		desc->ops = &rtq2208_regulator_buck_ops;
- 		desc->vsel_reg = curr_info->base + VSEL_SHIFT(mtp_sel);
-@@ -485,7 +435,19 @@ static void rtq2208_init_regulator_desc(struct rtq2208_regulator_desc *rdesc, in
- 		rdesc->suspend_config_reg = BUCK_RG_SHIFT(curr_info->base, 4);
- 		rdesc->suspend_enable_mask = RTQ2208_BUCK_EN_STR_MASK;
- 		rdesc->suspend_mode_mask = RTQ2208_BUCK_STRMODE_MASK;
--	} else {
-+		break;
-+	default:
-+		fixed_uV = idx == RTQ2208_LDO2 ? ldo2_fixed : ldo1_fixed;
-+		if (fixed_uV) {
-+			desc->n_voltages = 1;
-+			desc->fixed_uV = fixed_uV;
-+			desc->ops = &rtq2208_regulator_ldo_fix_ops;
-+		} else {
-+			desc->n_voltages = ARRAY_SIZE(rtq2208_ldo_volt_table);
-+			desc->volt_table = rtq2208_ldo_volt_table;
-+			desc->ops = &rtq2208_regulator_ldo_adj_ops;
-+		}
-+
- 		/* init ldo desc */
- 		desc->active_discharge_reg = RTQ2208_REG_LDO_DVS_CTRL;
- 		desc->active_discharge_on = curr_info->dis_on;
-@@ -495,13 +457,15 @@ static void rtq2208_init_regulator_desc(struct rtq2208_regulator_desc *rdesc, in
- 
- 		rdesc->suspend_config_reg = curr_info->base;
- 		rdesc->suspend_enable_mask = RTQ2208_LDO_EN_STR_MASK;
-+		break;
- 	}
- }
- 
- static int rtq2208_parse_regulator_dt_data(int n_regulator, const unsigned int *regulator_idx_table,
--		struct rtq2208_regulator_desc *rdesc[RTQ2208_LDO_MAX], struct device *dev)
-+		struct rtq2208_regulator_desc *rdesc[RTQ2208_LDO_MAX], struct device *dev,
-+		unsigned int ldo1_fixed, unsigned int ldo2_fixed)
- {
--	int mtp_sel, i, idx, ret;
-+	int mtp_sel, i, idx;
- 
- 	/* get mtp_sel0 or mtp_sel1 */
- 	mtp_sel = device_property_read_bool(dev, "richtek,mtp-sel-high");
-@@ -513,29 +477,21 @@ static int rtq2208_parse_regulator_dt_data(int n_regulator, const unsigned int *
- 		if (!rdesc[i])
- 			return -ENOMEM;
- 
--		rtq2208_init_regulator_desc(rdesc[i], mtp_sel, idx);
--
--		/* init ldo dvs ability */
--		if (idx >= RTQ2208_LDO2)
--			rtq2208_ldo_match[idx - RTQ2208_LDO2].desc = &rdesc[i]->desc;
-+		rtq2208_init_regulator_desc(rdesc[i], mtp_sel, idx, ldo1_fixed, ldo2_fixed);
- 	}
- 
--	/* init ldo fixed_uV */
--	ret = rtq2208_of_get_ldo_dvs_ability(dev);
--	if (ret)
--		return dev_err_probe(dev, ret, "Failed to get ldo fixed_uV\n");
--
- 	return 0;
- 
- }
- 
--static int rtq2208_regulator_check(struct device *dev, int *num,
--				int *regulator_idx_table, unsigned int *buck_masks)
-+static int rtq2208_regulator_check(struct device *dev, int *num, int *regulator_idx_table,
-+				   unsigned int *buck_masks, unsigned int *ldo1_fixed_uV,
-+				   unsigned int *ldo2_fixed_uV)
- {
- 	struct regmap *regmap = dev_get_regmap(dev, NULL);
- 	bool rtq2208_used_table[RTQ2208_LDO_MAX] = {0};
- 	u8 entry_key[] = { 0x69, 0x01 };
--	unsigned int buck_phase;
-+	unsigned int buck_phase, ldo_cfg0, ldo_cfg1;
- 	int i, ret;
- 	u8 mask;
- 
-@@ -547,6 +503,14 @@ static int rtq2208_regulator_check(struct device *dev, int *num,
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to read buck phase configuration\n");
- 
-+	ret = regmap_read(regmap, RTQ2208_REG_HIDDEN_LDOCFG0, &ldo_cfg0);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to read ldo cfg0\n");
-+
-+	ret = regmap_read(regmap, RTQ2208_REG_HIDDEN_LDOCFG1, &ldo_cfg1);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to read ldo cfg1\n");
-+
- 	ret = regmap_write(regmap, RTQ2208_REG_HIDDEN1, 0x00);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to exit hidden page\n");
-@@ -593,6 +557,16 @@ static int rtq2208_regulator_check(struct device *dev, int *num,
- 		break;
- 	}
- 
-+	*ldo1_fixed_uV = FIELD_GET(RTQ2208_MASK_LDO1_FIXED, ldo_cfg1) ? 1200000 : 0;
-+
-+	if (!FIELD_GET(RTQ2208_MASK_LDO2_OPT0, ldo_cfg0) &&
-+	    !FIELD_GET(RTQ2208_MASK_LDO2_OPT1, ldo_cfg1))
-+		*ldo2_fixed_uV = 0;
-+	else if (FIELD_GET(RTQ2208_MASK_LDO2_OPT1, ldo_cfg1))
-+		*ldo2_fixed_uV = 900000;
-+	else
-+		*ldo2_fixed_uV = 1200000;
-+
- 	/* By default, LDO1 & LDO2 are always used */
- 	rtq2208_used_table[RTQ2208_LDO1] = rtq2208_used_table[RTQ2208_LDO2] = true;
- 
-@@ -626,6 +600,7 @@ static int rtq2208_probe(struct i2c_client *i2c)
- 	int i, ret = 0, idx, n_regulator = 0;
- 	unsigned int regulator_idx_table[RTQ2208_LDO_MAX],
- 		     buck_masks[RTQ2208_BUCK_NUM_IRQ_REGS] = {0x33, 0x33, 0x33, 0x33, 0x33};
-+	unsigned int ldo1_fixed_uV, ldo2_fixed_uV;
- 
- 	rdev_map = devm_kzalloc(dev, sizeof(struct rtq2208_rdev_map), GFP_KERNEL);
- 	if (!rdev_map)
-@@ -636,7 +611,8 @@ static int rtq2208_probe(struct i2c_client *i2c)
- 		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to allocate regmap\n");
- 
- 	/* get needed regulator */
--	ret = rtq2208_regulator_check(dev, &n_regulator, regulator_idx_table, buck_masks);
-+	ret = rtq2208_regulator_check(dev, &n_regulator, regulator_idx_table, buck_masks,
-+				      &ldo1_fixed_uV, &ldo2_fixed_uV);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to check used regulators\n");
- 
-@@ -646,7 +622,8 @@ static int rtq2208_probe(struct i2c_client *i2c)
- 	cfg.dev = dev;
- 
- 	/* init regulator desc */
--	ret = rtq2208_parse_regulator_dt_data(n_regulator, regulator_idx_table, rdesc, dev);
-+	ret = rtq2208_parse_regulator_dt_data(n_regulator, regulator_idx_table, rdesc, dev,
-+					      ldo1_fixed_uV, ldo2_fixed_uV);
- 	if (ret)
- 		return ret;
- 
--- 
-2.34.1
-
+> ---
+> v1 -> v2: use vma_is_secretmem() instead of directly checking
+>           vma->vm_file->f_op == &secretmem_fops
+> v2 -> v3: keep original comment
+> ---
+>  lib/buildid.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/lib/buildid.c b/lib/buildid.c
+> index 9fc46366597e..8d839ff5548e 100644
+> --- a/lib/buildid.c
+> +++ b/lib/buildid.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/elf.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pagemap.h>
+> +#include <linux/secretmem.h>
+>  
+>  #define BUILD_ID 3
+>  
+> @@ -157,6 +158,10 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
+>  	if (!vma->vm_file)
+>  		return -EINVAL;
+>  
+> +	/* reject secretmem folios created with memfd_secret() */
+> +	if (vma_is_secretmem(vma))
+> +		return -EFAULT;
+> +
+>  	page = find_get_page(vma->vm_file->f_mapping, 0);
+>  	if (!page)
+>  		return -EFAULT;	/* page not mapped */
+> -- 
+> 2.48.1
+> 
+> 
