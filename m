@@ -1,124 +1,153 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08E02459F8
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742223335; cv=pass; b=WVG+Js3SO5eW7q/jfuh2qJTYKTEUG5g1Un5fXK3h2NJZPa6YppDL74RLkfWZAyDuDK0eRPOhChftAsUAwDrDLoBorEqdtOaeqjCIx5z8zjhp42nmkAZ66MyOdfa9ig4dGJN4yQnDeCemS8Zht7B6ENb3e8+as0CJbyYNaj4whlA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742223335; c=relaxed/simple;
-	bh=/BfLumKFocdvcPhxCskhPjNGo3ZslfA2/N6FaAoc5lg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OMtXQVGBAmxRegthn/Fz8arrCk00BzW+WzS/+v7tmzoNU0uhry/mHFDTN/GopSTEEfIaAdq8/NTwR1xJ/sqXqZYYdbU3f81LH7cfaipFt5R50eaS/HpWrQ2VPjKGrdYdDRsiIXFJ9V3fHFBBgIlDG5hBkmOSQaYXIMl+uxDTzhs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=NTUbiO3e; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D03B2451F1;
+	Mon, 17 Mar 2025 14:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742223359; cv=none; b=NKoqAL6aT5twZKmSenExFRPTW86AYqI6aeHL7jlZ2wCbHGx+hWFcFBfMDOSqqGFDllrx4Q+GCd7k/H9K33iwKj3I6WguKsKnit1AAO87x1nPSMZ3AEiT3XlCtLnJGnR63k/faKeV3tdLgk0OPMUtkK1CCiyQixCosW0cetwOjHY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742223359; c=relaxed/simple;
+	bh=dufHt2ZbCtfSlksK/9SNCkEaezP+05PBRfmk1Spyi9M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JzRtQKv3NfTJFcUC4nxtDmqSZV+Sjs/iNBOTfFKU78zFO4a0EvBOcQxn77yfwtJOWNN2/nEJ3EvZodNgkMooVypNCsjrAWs1LzIZJ8zhEsqYd34Aj+5S8jG5xmmiAszxCD5hih1xpcCmhe5O4sPaNITwuHokfXYYwi0a7ie0i3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1zIjvTX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="NTUbiO3e"
-ARC-Seal: i=1; a=rsa-sha256; t=1742223312; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cjLTeVl8RlyKIZ/QdHUaKerqGeDESqvOkY/+eZ1jwLu9GkcdQf9nAFXSzTcFe5GaouJMnNFfM9MYkeHXTCmyRUvsa97HpaTlrzmNNeno/JPQRPxACTV5pHpouCHIZ9ucj/7X3mRz3h9loSJl7HUC8seOo/VKBAiE1wzt3oTkumE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742223312; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=E+fTK3txOlyskp4W/rEPx48F2NlCVYh8mb8E/EDT8nE=; 
-	b=DLm8UjqD4aE1K0wV4k+f9pNKFe4xCLFycMo456jtCnIjL6d1OaIaNnG3EjrzScQZeqZsWMwyARzy0QWX5hwAdJVHtboPAutcVU4mgNSx2QfVCYgkvcZnUVGzLyj0X+jvo3rsTx6BgMpxocj+uo/1EHpg9Jj+1WHxigoZWKMZ/B8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
-	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742223312;
-	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=E+fTK3txOlyskp4W/rEPx48F2NlCVYh8mb8E/EDT8nE=;
-	b=NTUbiO3eOtOfXcGE3zsM5cHbMgB0FbalMDMywLJpMkWttRCmNSVmwmELrd075NR+
-	d+nhJvM0QIWACW6cmNPfP4ySjCR3mBBQVq4zzRe29hBTcnoykStHDCGe+EBdyrOOMuH
-	OBYnnLizQ64pJ5+CMdSzOMcm8sdpvt/2xCGvLB3A=
-Received: by mx.zohomail.com with SMTPS id 1742223301853895.315747173944;
-	Mon, 17 Mar 2025 07:55:01 -0700 (PDT)
-From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-To: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: boris.brezillon@collabora.com,
-	robh@kernel.org,
-	steven.price@arm.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	kernel@collabora.com,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	sjoerd@collabora.com,
-	angelogioacchino.delregno@collabora.com,
-	Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-Subject: [PATCH v4 5/6] drm/panfrost: Force AARCH64_4K page table format on MediaTek MT8188
-Date: Mon, 17 Mar 2025 11:52:44 -0300
-Message-ID: <20250317145245.910566-6-ariel.dalessandro@collabora.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250317145245.910566-1-ariel.dalessandro@collabora.com>
-References: <20250317145245.910566-1-ariel.dalessandro@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1zIjvTX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43128C4CEE9;
+	Mon, 17 Mar 2025 14:55:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742223359;
+	bh=dufHt2ZbCtfSlksK/9SNCkEaezP+05PBRfmk1Spyi9M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y1zIjvTX3LkHV0Wqdi72WtXFqj+qg1TRka/DivNu4W6YzyFR6lnNeaq/sn9yOE9Hf
+	 OS5D2z/ivOJI4ER45vbsyqnAPNBnv/kmLXYxyZ0ZKDu3XO3ERgYMmGB4cDCOvOJySL
+	 bJ9Aa7A3bXWN32No/nk7r7sTuow36H3PUj8zZrr1LA19JBeAaoCeFXnF7Wgw77MMvV
+	 /pt8GEsrCkgRxw9QkBq7C1t/EqrchMSrayHnsXb6s8UmShbBEy4MGIrJwbT5MVerBJ
+	 RYJDVLdrHYNPi3qrBwedKETKtjGV1psa+6E8CwOKcruE4Fi0tV42SxaVdSzNS96VQt
+	 Vy2NgDdTkVFJQ==
+Message-ID: <21de806b-1d25-4feb-bc30-1b5c3adf1bb0@kernel.org>
+Date: Mon, 17 Mar 2025 15:55:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/6] arm64: defconfig: Enable RZ/G3E thermal
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: "geert+renesas@glider.be" <geert+renesas@glider.be>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "robh@kernel.org"
+ <robh@kernel.org>, "rafael@kernel.org" <rafael@kernel.org>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "john.madieu@gmail.com" <john.madieu@gmail.com>,
+ "rui.zhang@intel.com" <rui.zhang@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ "sboyd@kernel.org" <sboyd@kernel.org>, Biju Das
+ <biju.das.jz@bp.renesas.com>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "lukasz.luba@arm.com" <lukasz.luba@arm.com>
+References: <20250315081225.92118-1-john.madieu.xa@bp.renesas.com>
+ <20250315081225.92118-7-john.madieu.xa@bp.renesas.com>
+ <20250317-bipedal-inchworm-of-poetry-b60fc9@krzk-bin>
+ <OSBPR01MB2775B7252468BCE234BFF7D5FFDF2@OSBPR01MB2775.jpnprd01.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <OSBPR01MB2775B7252468BCE234BFF7D5FFDF2@OSBPR01MB2775.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-MediaTek MT8188 SoC has an ARM Mali-G57 MC3 GPU (Valhall-JM), which
-constantly faults with the current panfrost support.
+On 17/03/2025 12:14, John Madieu wrote:
+> Hi Krzysztof,
+> 
+> Thanks for the review!
+> 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: Monday, March 17, 2025 10:29 AM
+>> To: John Madieu <john.madieu.xa@bp.renesas.com>
+>> Subject: Re: [PATCH v3 6/6] arm64: defconfig: Enable RZ/G3E thermal
+>>
+>> On Sat, Mar 15, 2025 at 09:12:16AM +0100, John Madieu wrote:
+>>> Enable the CONFIG_RZG3E_THERMAL flag for the RZ/G3E SoC.
+>>
+>> s/RZ/Renesas RZ/ and which *upstream* board uses it? This is not your
+>> platform defconfig, but all platforms and all users defconfig.
+>>
+> 
+> Noted for the fix.
+> 
+> However, most thermal drivers use SOC-specific config options,
+> as we can see in arm64 defconfig:
+> 
+> [...]
+> CONFIG_IMX8MM_THERMAL=m
+> CONFIG_K3_THERMAL=m
+> CONFIG_QORIQ_THERMAL=m
+> CONFIG_SUN8I_THERMAL=y
+> CONFIG_ROCKCHIP_THERMAL=m
+> CONFIG_RCAR_THERMAL=y
+> CONFIG_RCAR_GEN3_THERMAL=y
+> CONFIG_RZG2L_THERMAL=y
+> CONFIG_ARMADA_THERMAL=y
+> CONFIG_MTK_THERMAL=m
+> CONFIG_MTK_LVTS_THERMAL=m
+> CONFIG_BCM2711_THERMAL=m
+> CONFIG_BCM2835_THERMAL=m
+> CONFIG_BRCMSTB_THERMAL=m
+> [...]
+> 
+> Hence my choice for RZG3E_THERMAL, or did I miss something in your comment?
+Your commit msg must explain why do we want it. I gave you idea, if you
+don't want to use it, sure, come with other.
 
-For instance, running `glmark2-es2-drm` benchmark test:
-```
-[   79.617461] panfrost 13000000.gpu: js fault, js=1, status=JOB_BUS_FAULT, head=0xaadc380, tail=0xaadc380
-[   80.119811] panfrost 13000000.gpu: gpu sched timeout, js=0, config=0x7300, status=0x58, head=0xaaca180, tail=0xaaca180, sched_job=000000002fd03ccc
-[   80.129083] panfrost 13000000.gpu: Unhandled Page fault in AS0 at VA 0x0000000000000000
-[   80.129083] Reason: TODO
-[   80.129083] raw fault status: 0x1C2
-[   80.129083] decoded fault status: SLAVE FAULT
-[   80.129083] exception type 0xC2: TRANSLATION_FAULT_2
-[   80.129083] access type 0x1: EXECUTE
-[   80.129083] source id 0x0
-```
-
-Note that current panfrost mode (Mali LPAE - LEGACY) only allows to
-specify write-cache or implementation-defined as the caching policy,
-probably not matching the right configuration. As depicted in the source
-code:
-
-drivers/iommu/io-pgtable-arm.c:
-```
-* MEMATTR: Mali has no actual notion of a non-cacheable type, so the
-* best we can do is mimic the out-of-tree driver and hope that the
-* "implementation-defined caching policy" is good enough...
-```
-
-Now that Panfrost supports AARCH64_4K page table format, let's enable it
-on Mediatek MT8188 and configure the cache/shareability policies
-properly.
-
-Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
----
- drivers/gpu/drm/panfrost/panfrost_drv.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index 0f3935556ac76..e854f290858f9 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -824,6 +824,7 @@ static const struct panfrost_compatible mediatek_mt8188_data = {
- 	.num_pm_domains = ARRAY_SIZE(mediatek_mt8183_pm_domains),
- 	.pm_domain_names = mediatek_mt8183_pm_domains,
- 	.pm_features = BIT(GPU_PM_CLK_DIS) | BIT(GPU_PM_VREG_OFF),
-+	.gpu_quirks = BIT(GPU_QUIRK_FORCE_AARCH64_PGTABLE),
- };
- 
- static const char * const mediatek_mt8192_supplies[] = { "mali", NULL };
--- 
-2.47.2
-
+Best regards,
+Krzysztof
