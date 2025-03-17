@@ -1,120 +1,86 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 824DA1A83FB;
-	Mon, 17 Mar 2025 18:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400601A83FB
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742235254; cv=none; b=DsanGjejqqsFWgf0Ybo0t3UY6SwU49qHApYwGQQCZQRfhnFg69e8ljvhfYxo8RH7Nv8S3sPuO4zPHdw292baPvMu32w3FK0W4u6uHbIrewvCmVKiA+RUN/nPuqH9L/yh5naoKEXAf3cIGtM/dFebSWSiPEbKvftDqp0LgCho7uk=
+	t=1742235258; cv=none; b=Qj6SeviNStAHoCgP266aQMQAV01DouPvTaecJX8rZdfd9ej9Mbr1hnACD/B3x5DXtDHAP1Fl4boQWq+fj6BZNVmLUEcQrq/9LDjBGMcpvsvb5MkpjkV8cZZLR1Ry7B4OyuEY6iejb/hn8QVhTCox7fZ9D5yZIBQaBJtD9wbDq1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742235254; c=relaxed/simple;
-	bh=zR7F1wCaZgFJ5vBc/vilMOpQNA8DV6k2v1fnEC7BpMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mova/PKZX7xrBhY/JZmkRfvT3v1E+WWorJTOQ7yM/lo8TVFSLmrFy93kzA50b+mIbk3UCSqFCDkIH9Z5aJ7r5XHI6XbarxFkr7vp9McgWPhV9KuVWyGN81OA/OpnK9+EkKZJtjTJ1/sxSjT8LvEoJy4G8W+XQy8FKEbYsTa0pLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 52HIE2eh008577;
-	Mon, 17 Mar 2025 19:14:02 +0100
-Date: Mon, 17 Mar 2025 19:14:02 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Shuah Khan <shuah@kernel.org>, "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH] tools/nolibc: Add support for SPARC
-Message-ID: <20250317181402.GB8377@1wt.eu>
-References: <20250316-nolibc-sparc-v1-1-2e97022d5e2c@weissschuh.net>
- <20250317073746.GB5114@1wt.eu>
- <dacaa712-08a8-4fd6-ad47-2226040f02aa@t-8ch.de>
+	s=arc-20240116; t=1742235258; c=relaxed/simple;
+	bh=QLnVtP21rfwr8XiEIOIdle3aMsixDDTklx+56vqT3Ag=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f33FfBVK6Aey4QSQFMTQfioPcGNvJmMRbSTY+DM64M5JMDsl9qYe8t948UxHUzanVCwgOb2xxwpVDuybceWNiZ8WykT1/TmDvmQm5yLe8sZe4tkU5LD5W8fZvSZIM1bwhDBHcklZcwJW+bQuQKqzBeyPAEdVr65oFTTo2tRsW9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mhMmunDT; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mhMmunDT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742235257; x=1773771257;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QLnVtP21rfwr8XiEIOIdle3aMsixDDTklx+56vqT3Ag=;
+  b=mhMmunDTQABPHHhag+1aBBsf5YaUUemSshLeJJcyBflWc1TCyJ0B/GeE
+   4+CQumXAPXyxJXlRf7m7EUSN9xZTPiPab3fjGmwLr5u4149OsfpUSNdEv
+   8ACq7aj+Ca7oK0ObeYecfBIt6GWXZL0bWFCvrxoq0a29zohWXvTCE863/
+   GlD5/QievmS2jooI3jay0+S4yxEN0APOpX9iRIxutZUpiEEGFdQapGxRU
+   n457CV9iM0G/8nI1iOODyfvDlSW5K6e8Rr0UBbz9xgsMj8KsR+vZKRRyR
+   m5AHQvxmgSpfbbRADFEmXISZHmAqBbOs5SNQzwEL7ihPZYfXwPxzyq4Vf
+   Q==;
+X-CSE-ConnectionGUID: 6ZDLBNdLS4SAwoqHmqjoyg==
+X-CSE-MsgGUID: 7NZzVO1WQR+W2kVsmVxrGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43259462"
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="43259462"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 11:14:17 -0700
+X-CSE-ConnectionGUID: dd0itR3aRa2CFXxLm0jVFw==
+X-CSE-MsgGUID: Vo7bBy4NRVGmfhXVf5CA5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="153007717"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 17 Mar 2025 11:14:15 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 084A1194; Mon, 17 Mar 2025 20:14:13 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2 0/4] resource: Split and use DEFINE_RES*() macros
+Date: Mon, 17 Mar 2025 20:11:09 +0200
+Message-ID: <20250317181412.1560630-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <dacaa712-08a8-4fd6-ad47-2226040f02aa@t-8ch.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Mar 17, 2025 at 06:52:57PM +0100, Thomas Weiﬂschuh wrote:
-> On 2025-03-17 08:37:46+0100, Willy Tarreau wrote:
-> > On Sun, Mar 16, 2025 at 02:55:02PM +0100, Thomas Weiﬂschuh wrote:
-> > > Add support for 32bit and 64bit SPARC to nolibc.
-> > 
-> > Oh nice!
-> > 
-> > > Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
-> > > ---
-> > > This is only tested on QEMU.
-> > > Any tests on real hardware would be very welcome.
-> > 
-> > I still have a working U60 here, but under solaris. Such machines are
-> > not trivial to boot on alternate OSes (and when you find a working
-> > image usually it's based on an old kernel).
-> 
-> An old kernel should be perfectly fine, no?
+Mini-series to replaces open coded variants of DEFINE_RES*() macros.
 
-I don't think so (it depends how old in fact), keep in mind that
-we've removed support for a number of legacy syscalls.
+Note, there are much more possibilities over the kernel and even in
+the reources.c, however the latter contains not so trivial leftovers.
+That's why the examples cover only straightforward conversions.
 
-> > > +/* startup code */
-> > > +void __attribute__((weak, noreturn)) __nolibc_entrypoint __no_stack_protector _start(void)
-> > > +{
-> > > +	__asm__ volatile (
-> > > +		/*
-> > > +		 * Save stack pointer to o0, as arg1 of _start_c.
-> > > +		 * Account for window save area and stack bias.
-> > > +		 */
-> > > +#ifdef __arch64__
-> > > +		"add %sp, 128 + 2047, %o0\n"
-> > 
-> > It's really unclear where this magical 2047 comes from, I think it must
-> > be explained in the comment above so that someone disagreeing with it
-> > later can figure whether it's right or wrong.
-> 
-> 128 is the context window and 2047 is the stack bias.
-> I'll try to make it clearer.
+In v2:
+- added examples of the conversion (Andrew)
 
-OK thanks, but that remains quite strange to me. How can we end up
-here with such an unaligned stack ? At the very minimum I'd expect
-all offsets to be multiple of 8.
+Andy Shevchenko (4):
+  resource: Split DEFINE_RES_NAMED_DESC() out of DEFINE_RES_NAMED()
+  resource: Replace open coded variant of DEFINE_RES_NAMED_DESC()
+  resource: Replace open coded variants of DEFINE_RES_*_NAMED()
+  resource: Replace open coded variant of DEFINE_RES()
 
-> > Also, I could be wrong, but from my old memories of playing with the
-> > stack on SPARC long ago, I seem to remember that the stack is growing
-> > down. Thus I find these "add" suspicious or at least confusing. You
-> > mention "window save area and stack bias" above, I'm not sure what it
-> > refers to, but if we can safely erase parts of the stack because too
-> > much was preserved, maybe some more explanation about the initial and
-> > target layouts is deserved here.
-> 
-> There is a graphic in the psABI [0] under "Process Stack and Registers".
+ include/linux/ioport.h |  9 +++++++--
+ kernel/resource.c      | 18 ++++--------------
+ 2 files changed, 11 insertions(+), 16 deletions(-)
 
-Thanks for the link! Are you sure you can get rid of the window save
-area ? I'm seeing that apparently it's used with save / restore, which
-*if I remember well (30 years ago)* were used along with register bank
-switches. In 3-12 it's written:
+-- 
+2.47.2
 
-  Some registers have assigned roles.
-    %sp or %o6 The stack pointer holds the limit of the current stack frame,
-    %which is the address of the stacks bottommost, valid word. Stack contents
-    %below the stack pointer are undened. At all times the stack pointer must
-    %point to a doubleword aligned, 16- word window save area.
-
-> I'll write something based on that.
-
-Thanks!
-
-> > > +		"b,a _start_c\n"     /* transfer to c runtime */
-> > 
-> > OK great, the delayed slot is covered! (that type of thing can work
-> > by pure luck in one test and fail in another one depending on what
-> > bytes follow the jump).
-> 
-> Yeah, it brings memories to the work on MIPS support.
-
-absolutely!
-
-Thanks,
-Willy
