@@ -1,125 +1,86 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82E3D27E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 13:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B1C23A9BA;
+	Mon, 17 Mar 2025 13:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742218729; cv=none; b=fRfKD8ocALYlBMSFPrCHdCNrCFZ5bUHuwKv2tqQIFkrb8SpbUuykciNpkiDmmCTJRZpRTfOIxv2NJATeKw0pg59uQSzwZXxIG1xVXlq5LUYrDOTOmvE0wIYuonQLHQIilXTPO4p72ksgpvBE5R4CEhrPCyga2jBCJbLN0wEct0U=
+	t=1742218738; cv=none; b=A2cqbK736KljNlSD5SOpUh+5EYUFrFa05Q+gRmBw4cEo99J0Cfc0RZMpUBdox0K0Sz7TFiHVRIyGok9q243JZFxRQfTWyk8r/0BDDYl+fo8aMzjRZS05b6w8Zx9XU1AAOUlv/9pSM7AxSPgXsDLU0cort8kyWM5dzsZuaDsb6wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742218729; c=relaxed/simple;
-	bh=O5LLRL0Ix46XKZVpQxNBMRaa1XxUVDJZAOZfV7jkOMc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oGA1uwAiIUIk1v0uiYB8UpBCJbPvFkvRrQLbdZoxAo67fOxPur2FsuZWL0/Fq/QPw4GUVLLRucwSAKDpbAWIvPRuXdhEai316a5ByzdBcxUbPyNUIrLyg+TvcP6aq9H64MlPnj/wgpVvFDVMzrop4owCE4g/tNU7ZPF7+wGuybY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B7TDVKou; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1742218738; c=relaxed/simple;
+	bh=bAPzg4jZ6yCIFwOyTlpOE28lXMU29xomma+LuF2yFQc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UpgJ/MeTHwu1wBxO4iAy9o0AOb0UMOJZTAupI5bM3beL4K0eHoZeuDYFVNj/YMp3SMMfkJu7xKmf6SCiaZtRZFFSQIfD2J7iAuO5AXx3jpHjvvmIiORutmEy6I4EGsJsi+a81grGw43H42dY/NvDpyOvs2t5iXLqPNDX7KByxfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=VTyYtTNs; arc=none smtp.client-ip=192.19.144.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B7TDVKou"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff6aaa18e8so3210154a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 06:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742218727; x=1742823527; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=excEqqlL1qVse1/2isbt5XTtkZviRpOUJTRb6pKmchA=;
-        b=B7TDVKouoIknXeV8V7oHI3rtVnMI+GOLDyy2LPW/GpI7yH64KAPWHdjQnrDryU9ff7
-         u6TKKxNlGFi2VCLDsec/F67in1B6zwDP1+/7P69cWIT70tR7zMNtRdd0Inc+508P0G5W
-         Lms4m/UPI2ggxNk3MQW3W+XSyGbthuR3Awu7k9AVJ5+LAJNBMN2IFCrBX+b2wj9xnfjb
-         3vW3d6R8LN3eVvsVIqlkyGFdn678xcRhlE1OoLchpeOyr0tIdhEfkmq0zDbNEar+FcMk
-         cZ4IYaQIpVhMz/QiN+a94sSyQHYOxkYea++3lYO0p3WKBr3C1cNV25w4LsTq75MR4KcZ
-         dL8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742218727; x=1742823527;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=excEqqlL1qVse1/2isbt5XTtkZviRpOUJTRb6pKmchA=;
-        b=BQg1y+6tBT41ytp08KcqC6TvRZxEBB7Hmidc3sXbc3hNYR8bCpUG1YibICdDdkvq9m
-         5IrTbtRPAHTNJLHeizXMMa5Tav6bTTndHFHJvIAk3RStod2Onjk2NMFSIu0m4V2ylcJL
-         0LYIOHCJjljwTA3S1zZ0Zi5FeTKJAH7kx2fnAgGtKf3Jw2bSsUqVkXII4/gZ0Y2eASH0
-         ld6IspTh4e3WtxkTbFZQlomkuHnHNteK/mKBcpN2xmiDm32DTR1pfsmGb4oBr4AFTK+q
-         NIzDKLpIqjt54EA85z5Em5dRnJkHIXLEFxZ4EKndCAT7mtGyiw8OyO6TETSK7WQftX0t
-         Cx4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU0uUFgzK4MedDxQuTPnLy26HZke+YR0UP4mvRvCIioOVARjBEsgp1Fm3VznSspTVphrofaGZerD8kVGF0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtnj35/1y1My5dhJPFQRqOiYWjwkOp84A3TdfYlhEoYs8w/W6H
-	VIBc5BfyinL7d/4gJ1GmHGXUnGcYn4n9P87aE1WyVqiZ/C/UhKGxy+bjmqk8rOU4pyT1lY3yTPV
-	wPw==
-X-Google-Smtp-Source: AGHT+IHm1GdirBM0gHNKnUjvp9IiSMJcCOdqjVN7aHrhPCsdY64Jeho8SGXW+VrGvRIvp3h8uBNvfPLiygs=
-X-Received: from pjwx4.prod.google.com ([2002:a17:90a:c2c4:b0:2f5:63a:4513])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3804:b0:2ee:6d08:7936
- with SMTP id 98e67ed59e1d1-30151cfee83mr15293579a91.20.1742218727181; Mon, 17
- Mar 2025 06:38:47 -0700 (PDT)
-Date: Mon, 17 Mar 2025 06:38:45 -0700
-In-Reply-To: <20250317091917.72477-1-liamni-oc@zhaoxin.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VTyYtTNs"
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 9C5A1C00151B;
+	Mon, 17 Mar 2025 06:29:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 9C5A1C00151B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1742218193;
+	bh=bAPzg4jZ6yCIFwOyTlpOE28lXMU29xomma+LuF2yFQc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VTyYtTNsAbfn0v4FGtsHck+XBGa+bf7Vj4qt7NI64d9BWW9TkdmTYzb1UpHrArO5Z
+	 ADSXXSp1nYHIk3sxWXjgKPdI2HT+g0lzFxw1s6N2exu+DD86u6jhszw2PHoIYLjfFU
+	 MUKN/xNQLu7sAc0vVLmCOYFivnXcmumDEsCcclfw=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 0F8E818000520;
+	Mon, 17 Mar 2025 06:29:23 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: bcm-kernel-feedback-list@broadcom.com,
+	Artur Weber <aweber.kernel@gmail.com>,
+	Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	Stanislav Jakubek <stano.jakubek@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v6 03/10] ARM: dts: Drop DTS for BCM59056 PMU
+Date: Mon, 17 Mar 2025 06:29:22 -0700
+Message-ID: <20250317132922.2698513-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250304-bcm59054-v6-3-ae8302358443@gmail.com>
+References: <20250304-bcm59054-v6-0-ae8302358443@gmail.com> <20250304-bcm59054-v6-3-ae8302358443@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250317091917.72477-1-liamni-oc@zhaoxin.com>
-Message-ID: <Z9gl5dbTfZsUCJy-@google.com>
-Subject: Re: [PATCH] KVM: x86:Cancel hrtimer in the process of saving PIT
- state to reduce the performance overhead caused by hrtimer during guest stop.
-From: Sean Christopherson <seanjc@google.com>
-To: Liam Ni <liamni-oc@zhaoxin.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, LiamNi@zhaoxin.com, 
-	CobeChen@zhaoxin.com, LouisQi@zhaoxin.com, EwanHai@zhaoxin.com, 
-	FrankZhu@zhaoxin.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 17, 2025, Liam Ni wrote:
-> When using the dump-guest-memory command in QEMU to dump
-> the virtual machine's memory,the virtual machine will be
-> paused for a period of time.If the guest (i.e., UEFI) uses
-> the PIT as the system clock,it will be observed that the
-> HRTIMER used by the PIT continues to run during the guest
-> stop process, imposing an additional burden on the system.
-> Moreover, during the guest restart process,the previously
-> established HRTIMER will be canceled,and the accumulated
-> timer events will be flushed.However, before the old
-> HRTIMER is canceled,the accumulated timer events
-> will "surreptitiously" inject interrupts into the guest.
+From: Florian Fainelli <f.fainelli@gmail.com>
+
+On Tue, 04 Mar 2025 07:20:34 +0100, Artur Weber <aweber.kernel@gmail.com> wrote:
+> The BCM59056 PMU has its own separate DTSI, meant to be included
+> in a DTS file after defining the pmu node on some I2C bus.
 > 
-> SO during the process of saving the KVM PIT state,
-> the HRTIMER need to be canceled to reduce the performance overhead
-> caused by HRTIMER during the guest stop process.
+> This seems rather unintuitive; drop the DTS in favor of adding the
+> BCM59056 PMU node directly into the device DTS files.
 > 
-> i.e. if guest
+> If the amount of subdevices supported by the BCM590xx grows, and
+> a common device tree turns out to be beneficial, it can be reintroduced
+> in the future.
 > 
-> Signed-off-by: Liam Ni <liamni-oc@zhaoxin.com>
+> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 > ---
->  arch/x86/kvm/x86.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 045c61cc7e54..75355b315aca 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6405,6 +6405,8 @@ static int kvm_vm_ioctl_get_pit(struct kvm *kvm, struct kvm_pit_state *ps)
->  
->  	mutex_lock(&kps->lock);
->  	memcpy(ps, &kps->channels, sizeof(*ps));
-> +	hrtimer_cancel(&kvm->arch.vpit->pit_state.timer);
-> +	kthread_flush_work(&kvm->arch.vpit->expired);
 
-KVM cannot assume userspace wants to stop the PIT when grabbing a snapshot.  It's
-a significant ABI change, and not desirable in all cases.
-
->  	mutex_unlock(&kps->lock);
->  	return 0;
->  }
-> @@ -6428,6 +6430,8 @@ static int kvm_vm_ioctl_get_pit2(struct kvm *kvm, struct kvm_pit_state2 *ps)
->  	memcpy(ps->channels, &kvm->arch.vpit->pit_state.channels,
->  		sizeof(ps->channels));
->  	ps->flags = kvm->arch.vpit->pit_state.flags;
-> +	hrtimer_cancel(&kvm->arch.vpit->pit_state.timer);
-> +	kthread_flush_work(&kvm->arch.vpit->expired);
->  	mutex_unlock(&kvm->arch.vpit->pit_state.lock);
->  	memset(&ps->reserved, 0, sizeof(ps->reserved));
->  	return 0;
-> -- 
-> 2.25.1
-> 
+Applied to https://github.com/Broadcom/stblinux/commits/devicetree/next, thanks!
+--
+Florian
