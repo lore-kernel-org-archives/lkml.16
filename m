@@ -1,124 +1,114 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A05246326;
-	Mon, 17 Mar 2025 15:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060F02459C5;
+	Mon, 17 Mar 2025 15:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742225529; cv=none; b=K0PF/OMrJjgvFGNCktatsej12giMYGXLbYvGI1BPO84CnX+BvkhLEtNknjz7KTi4/mKbGtKychFXcxdIQvaKHl6B04kq8y/hy8JJ5HA3f+FwT4gxbcfY1FCUd08+zOZhmGrDERag2qSGxRf2cGszTQignXSxILt71fyeCf7xAz0=
+	t=1742225540; cv=none; b=n/syBXVvaE8C0D4U1JWeI9BKZgzZDSna8s9Wkp/sZ9zkSm9OYaYM5fjUHFGX4cwCYD+QhFo/GPd6lq0/+ZXcU/Hida36FJpAdloIDksXDM+ZT2avRANjPVCU7sy8BzF7msk1dBSXO1ooJWmtwiOeaEtdfGanihNwSfA/9U+agLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742225529; c=relaxed/simple;
-	bh=kG3UyNjWkxYSO1d4jwmEOZf0a4luiENZknkUpyNY1Jg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QjkqCULnf4WnAP0rMtG40lcZvH2Jnn+BfX2GGfCeOkKKePoSja5SYrezExqFIFCPa2xMu1S0VMACvH7TM7By5IQSHi+VHtExbCGZpN0qeKC/YKxx+zk7ooLLk1hJKJbaNLIEOxESLrpKndbjobuiPZyU+d8iuVwwWgqClDfEtq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=LgtyJd8F; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Uq5zOxs0 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1742225540; c=relaxed/simple;
+	bh=iip3iQxffkmed+5LadgCoqe6dhIIViTG2VDNzNURDlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YpTdaKwQZcsDQ76j0wH1UatY6vQH6RQjI1ZA14ZE43Jbovs68BY904P7WLyOGR1l/+8retl11zITJ0atX2TkS92GEfLEzmOaY8MJe+ZwmJ1tRVpKBsJhx5TDV0RPuj/trB4DVSOuZ0hq+poYNslP5BcKHW1AVlQH2lAzq2T1akY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nEH0WgAa; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="LgtyJd8F";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Uq5zOxs0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEH0WgAa"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22403cbb47fso82183025ad.0;
+        Mon, 17 Mar 2025 08:32:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1742225525; x=1773761525;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KipOP6WZevqOmUSTSh474YO5ixrB7kPV1cCaZGSd0cc=;
-  b=LgtyJd8Fzbt5O1cW1nCE1DAcJTavjGwyWr3MtX/ia5SQ5NDJyn2uw7AT
-   mlNomYf0CqzHJ5AxiWzbt6DIYYpHMM9+5YVbZ8It+vf1MEaklCALm96TC
-   CFKYK8XC54kbarbYtl9Lf5TKGz8UtVHJObKN6BvP+aoSPs2WJ/Mj3AyBx
-   GUGAVG7vO0n/44F3CgNMnnAIUstPGci+9cqPSzZhz4ntwpg3EKBVx9/ek
-   FxOm0Vn4pnOmcxkvJcufS0l2VeuEQPY4+uX22syj+uU82OpvpUVevVyv8
-   XjK/zTOPlo5Q/vm2nDVOgZwSq0empJJH4Z/wJ1+xaVcgvU0W/iFhDMHLB
-   A==;
-X-CSE-ConnectionGUID: 8oKGuws+Tk+2dnMvWspdJQ==
-X-CSE-MsgGUID: ZUbpwkqrR8O5ARb/CW7m0g==
-X-IronPort-AV: E=Sophos;i="6.14,254,1736809200"; 
-   d="scan'208";a="43000310"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 17 Mar 2025 16:30:52 +0100
-X-CheckPoint: {67D8402D-3-903EAEAC-E04C76C8}
-X-MAIL-CPID: D69F11ED0F4E03A24B6BC23DFFFEA6EF_5
-X-Control-Analysis: str=0001.0A006397.67D84023.003C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4B47A1648CF;
-	Mon, 17 Mar 2025 16:30:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1742225448;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KipOP6WZevqOmUSTSh474YO5ixrB7kPV1cCaZGSd0cc=;
-	b=Uq5zOxs0Q2Oh2zzZOxB4inAAzXeHVrTzt2nX709skPbcWUDR9LYBoiUiAYyf52iv2YweG5
-	JkLN6VCZjNG8ALhUIQovwtDil5XYyo96mm4Yxbz1Z/LE9/s1fn6eFgm+MrMDIu+xriBYNn
-	8f6sVJQ3EztaveLY8jMPucGHgQHW8GEmi7SOL/EWp972DQyRggo5MmHRUv/+YE0AEig3Ag
-	BIK+aNKm9A/LxUAabR4O3mapr8jb0kyL3GTWJEgLDYpVURN8x05NjMBX4K72V2duHca+7p
-	a9vaGfhs2e4JvYhdHosyBG4cdHddSLC1Avxty8JerPZw6RCV8C07fcF7zpkZpw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: shawnguo@kernel.org, robh@kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: s.hauer@pengutronix.de, kernel@pengutronix.de, krzk+dt@kernel.org,
- conor+dt@kernel.org, festevam@gmail.com, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, frank.li@nxp.com, aisheng.dong@nxp.com,
- daniel.baluta@gmail.com, laurentiu.mihalcea@nxp.com, shengjiu.wang@nxp.com,
- iuliana.prodan@nxp.com, a.fatoum@pengutronix.de, mathieu.poirier@linaro.org,
- linux-remoteproc@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
- Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH v5 2/5] arm64: dts: imx8mp: Add mu2 root clock
-Date: Mon, 17 Mar 2025 16:30:46 +0100
-Message-ID: <5873285.DvuYhMxLoT@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20250317133306.2003909-3-daniel.baluta@nxp.com>
-References:
- <20250317133306.2003909-1-daniel.baluta@nxp.com>
- <20250317133306.2003909-3-daniel.baluta@nxp.com>
+        d=gmail.com; s=20230601; t=1742225538; x=1742830338; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W8+ECIM4mItWp86Wdlp4PqB1UN6vacB6ZDTSp/phAEI=;
+        b=nEH0WgAaZfnuVZdv8kaHc+nbBFJvR8Ghn4hpqZ5aBO9l8aqeY1NCgVFaYe+EloZEaZ
+         5QvCTpQX6rez+RLu0OtokR535LrNgBgBoiPoqiIBbeGIzl6FvP5vZejWsy2L7yd0EmXh
+         gCV05+IacaYxmqfRfQyP6b5Z1/ApBVDjF+JBchiTcyilWjH9dWT/NB7BjW5JRQ2aTk4a
+         UHLWKmnzTIKATGOlhw6QamaNOdrDvGt1wt561nY9XftgMEVHHZkqA6GAJ101YhswbWTA
+         k26PLB6SSsRMFixoVcK2m77bgKQYWTkW9FFlnyRknh/Z2NmTAQUEd2ioQ2KWxVLHttvr
+         Hr/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742225538; x=1742830338;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W8+ECIM4mItWp86Wdlp4PqB1UN6vacB6ZDTSp/phAEI=;
+        b=C7cXqX5dsUlrBtCP/6qbsY3kYB7WEJhOBN7DrYCAwxZZkBJyeV/YU+I7eaLUWH9WqV
+         c1KuyZKt4zw3N3iQmUDnfu7KLRMYbwoPR6HAMV5S7KUjVMezxbsq6V3nAMopzpMbumim
+         gvmCy7cLH6FRFwDU0L1Y4VQbUFjxUy4aV9Wh+9mLFpR1705lS9APl2KU9AAINobvrFC4
+         7Cdyv1Pr1Auu4PDZkkz4ShZQ/UYkYJQt/GNx+xfZZQqXJPeFb+TkOGfTIhtkw689GBov
+         HWLuv//hkhxBJolStkET09KqcW+s8AAJemMd1747+ZHIhhEqs7u/+/wl+3upW+rCRvt/
+         YHsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULgUVm7KCJuIXYSNkzIkcE96xNBrNj1Dxt7xn8txoMYAArfoeoGHkxWKyY0SySe4VuDkmAotOgDl5t@vger.kernel.org, AJvYcCVC8zDiYGiHxjbTb/BOqwbLINtVVa6R1eOHi2zvG22tgjglIMM359UctFrF0iSaqagWT3UrLvqsctrqQb4n@vger.kernel.org, AJvYcCW9UFVbvUR3o1gpFLtIEptA9bB3AsZ2A83LlheBBzNpMfaoeNmYlpFJ9r6h3rHrPR5G2F4THVuXjtw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJHAPl9BgEId2ig/vLOyUtNFXZCHik95MKhTQInVIpcYB1meOD
+	hrj7dPkdf40CHRODyHSfktyOvagf+lOUoYDO4HTZo0RDJZxqcEO0
+X-Gm-Gg: ASbGncsbGB4PenIRAks4RY49UWV6AID70YL7+cW3JUbABOQAPgu+eT6xbNsmQwz/4cT
+	sOp3ZvItlWIgd6TVohIwU6pHk64l+f+dQu/ZWJLLl+n/dlx2ZEh3G9Hp2ZmcZRUfTEWXowAmyvs
+	jc3QBKqPoSWo2UBoWtE5GjWKkfAGZVZA+dyrMBIeguSPOBcvQ3912L7J55X4vUtLFh3z0JINQqx
+	PrP9XT/wYQOUxGEW/IlEg/K5ZKrAIPgYdUGpKwZAM1CcKr3cSrQFJ4NTvCUmfEPdUIT7ASkNhym
+	cNhWB1M5PdVp5inMekjOZ9QGDNW7ZNizUTNJhnLJtI6C0caULRx5jQ==
+X-Google-Smtp-Source: AGHT+IHV6t35P3yl7wOACXBiuJT67GGIJ7sQKt01gXD0N67ia03V+CPtj5xQqFRrXc/E67wJBv9L5g==
+X-Received: by 2002:a17:902:d4c6:b0:224:249f:9734 with SMTP id d9443c01a7336-225e0a5220emr167540965ad.4.1742225537930;
+        Mon, 17 Mar 2025 08:32:17 -0700 (PDT)
+Received: from localhost ([2804:30c:b31:2d00:277c:5cbe:7f44:752b])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-225c68aa906sm76946935ad.88.2025.03.17.08.32.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 08:32:17 -0700 (PDT)
+Date: Mon, 17 Mar 2025 12:33:14 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, corbet@lwn.net
+Subject: Re: [PATCH v1 4/4] Documentation: iio: ad4000: Describe offload
+ support
+Message-ID: <Z9hAuk7PTMJsRkay@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1741970538.git.marcelo.schmitt@analog.com>
+ <18df335c2dd4c4db3bf27d68cbf1852425114131.1741970538.git.marcelo.schmitt@analog.com>
+ <20250317103012.0053bb42@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317103012.0053bb42@jic23-huawei>
 
-Am Montag, 17. M=E4rz 2025, 14:33:03 CET schrieb Daniel Baluta:
-> Enable MU2 node and add mu2 root clock.
-> MU2 is used to communicate with DSP core.
->=20
-> Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> Reviewed-by: Peng Fan <peng.fan@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8mp.dtsi
-> index 3b725fe442d0..5b443fbeded8 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> @@ -1253,7 +1253,7 @@ mu2: mailbox@30e60000 {
->  				reg =3D <0x30e60000 0x10000>;
->  				interrupts =3D <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
->  				#mbox-cells =3D <2>;
-> -				status =3D "disabled";
+On 03/17, Jonathan Cameron wrote:
+> On Fri, 14 Mar 2025 14:19:33 -0300
+> Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
+> 
+> > When SPI offloading is supported, the IIO device provides different sysfs
+> > interfaces to allow using the adjusting the sample rate. Document SPI
+> > offload support for AD4000 and similar devices.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > ---
+> >  Documentation/iio/ad4000.rst | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> > 
+> > diff --git a/Documentation/iio/ad4000.rst b/Documentation/iio/ad4000.rst
+> > index 468d30dc9214..2d56b0762570 100644
+> > --- a/Documentation/iio/ad4000.rst
+> > +++ b/Documentation/iio/ad4000.rst
+> > @@ -191,3 +191,20 @@ Typical voltage channel attributes of a differential AD4000 series device:
+...
+> > +SPI offload support
+> > +-------------------
+> > +
+> > +To be able to achieve the maximum sample rate, the driver can be used with the
+> > +`AXI SPI Engine`_ to provide SPI offload support.
+> 
+> Can we make this more generic?  
+> "the driver can be used with SPI offload engine, such as the ...
+> 
+> I'm rather hoping we see others in the long run as useful little things!
 
-There is no need to enable MU2 if the DSP is disabled by default, no?
-
-Best regards
-Alexander
-
-> +				clocks =3D <&audio_blk_ctrl IMX8MP_CLK_AUDIOMIX_MU2_ROOT>;
->  			};
-> =20
->  			i2c5: i2c@30ad0000 {
->=20
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
-
+Okay, will do.
+> > +
+> > +.. _AXI SPI Engine: http://analogdevicesinc.github.io/hdl/projects/pulsar_adc/index.html
+> > +
