@@ -1,282 +1,171 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630D0221F0A;
-	Mon, 17 Mar 2025 09:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D99B2248B4;
+	Mon, 17 Mar 2025 09:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742203661; cv=none; b=U3Q6dYEdm1e2rIRH1kMHFbX3Y/YriApzHQ1/hNW0kFw/bAasyD5XOtaJiH0lSwWdGmRD4mck/HDZmXegQY312hXRr1HqoZ81sTBq+wUIJgrmIoCG0USIDSIYXo0fzf8R7RJ15jwxSuF61J4a5Lq/sSTf290LZy1oFH1vKVeNioc=
+	t=1742203668; cv=none; b=OeJJUSMvMtC1/OJtsgnWapEg2y9/zqAiJVjWW+rnIH7yMWdpBRQFiaW3ikfEOk+lIeZ0dC7gaGxVLB44pxelch6cj+rW6QA+nahcI0tXBQaBZsnxvVJgZDQWyqsBY7p4GJJwnrMl5mjhhtQI2QUQFpbVPEW03FAb6p8Fo21c+wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742203661; c=relaxed/simple;
-	bh=lqjMb32KXXql7Al8fDxkiL8SGiu3Zbnzu5x1H9yEezQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tHtX0fsS3Unn9NsnizNsevjVx4XyZ/e8Vt2Ehv2+J9iKfs5IDKfnz2M8I5D2Eguxu5/yKQbHefYAhK4Ay+p/eG6TgErl7O8lk7ezD/os4+5A/d7AK/rgevbdenrZchBsEAztRJcMfV2+vKurlQEZ1UAIeoGrKTQMAA8hclgu9tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VZlcjlWE; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1742203668; c=relaxed/simple;
+	bh=dJoV1yMs920m1r9dWptgBPGSZSrP9BNdmMBKMk1MVp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lOgsDYx0fBhLnzqVzeuARGO2mD/lTFt/k01papK4OWQ/u4nXAX5j2hRhpsYt6OAgmjfHqBp7z66wrACnIWVYjyUtt+lTIXenk2X6OIE6S/sttoNTN01aeSIhdY3lhIeFcV4wcoFzMaHjFQ5o400fQILZjalUdXHZ0BTIBfcO6zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A8Qij+8Q; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VZlcjlWE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=CTLzdgzNn3MAanDyZN8BjXMkbYJDEvPGI3lVbCinBdU=; b=VZlcjlWE9Sipt4dbpDt/7WciGL
-	ouFcpBRZ2PrE6R1JmVSiiPtGkEqAMGe63AXiskgOXqXWOgbfGBsnpk8yVwQhdtgG0nIY6mwRrWlh4
-	6EsP1zEiP8oW8Z8awFWNht1/jgecjw6LfLNj2nYBnmoWdH/u0eNLHOWqhL4cZMM2XfdfqhZeHpuZF
-	AWL0Yp4K6UndPQDJ90e8+0pKjZJ/hj/lrYL3bCB+DF8e9qt2P0a1CHiT74eb4DVDjNOfQfax1D2aS
-	UGu2ihjiUN4xbRc3nfSo8nDfOaMAWsN2KniXUMbOkOtoUsxrG10FRBPwVXKc6mnEpBZSASSlOQdjA
-	oTHPipmw==;
-Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tu6ke-00000003PXn-42Ye;
-	Mon, 17 Mar 2025 09:27:17 +0000
-Message-ID: <f74db2c44ee7ef8ec127b5135ff80885c21c6836.camel@infradead.org>
-Subject: Re: [PATCHv9 05/17] x86/kexec: Keep CR4.MCE set during kexec for
- TDX guest
-From: David Woodhouse <dwmw2@infradead.org>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "Huang, Kai"
-	 <kai.huang@intel.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
-  Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>,  x86@kernel.org, "Rafael J. Wysocki"
- <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Adrian Hunter
- <adrian.hunter@intel.com>, Kuppuswamy Sathyanarayanan
- <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova
- <elena.reshetova@intel.com>, Jun Nakajima <jun.nakajima@intel.com>, Rick
- Edgecombe <rick.p.edgecombe@intel.com>, Tom Lendacky
- <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, Sean
- Christopherson <seanjc@google.com>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org,  linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Date: Mon, 17 Mar 2025 09:27:16 +0000
-In-Reply-To: <cxwixclmgbx3xidn6g6keihampcbzcbosog6r6lyoa4hs3teu2@sqntzeltdajc>
-References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
-	 <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
-	 <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
-	 <dlixf7bld4efdh5goir5nreabkgtcwfbvv2rovjqrvjttplqss@auuqnt4h2llj>
-	 <j4s4n5slt6a234w5o5r4zjmb3xj53odnmwekt6ihotfzotd7ur@ghyvphwcki57>
-	 <8e4e1d80-11ef-472f-befc-f61310281f18@intel.com>
-	 <cxwixclmgbx3xidn6g6keihampcbzcbosog6r6lyoa4hs3teu2@sqntzeltdajc>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-mrd/9ZSVcxnQW81VZ+0H"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A8Qij+8Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742203667; x=1773739667;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dJoV1yMs920m1r9dWptgBPGSZSrP9BNdmMBKMk1MVp0=;
+  b=A8Qij+8QbjYROwmwmC0twC+sgZMWlCtUetQX+AKe9KepChc+PnnT/kjt
+   ANvjI8tOl2MZFU36ymgiNjGggGteM8KlM9udFX592E55Wuxd3hAnYaopH
+   oAFfaYlIkzHjoD0GEPkbgr3vey2K5N20VU5Fh14/CJUaxWIZrZk2X2Z7s
+   kOb94hkWgC9AAbhP0cNiVpLMUgdtfQplIvna0yB62MLL79NYPK2W4lbCh
+   JpvSOCBIozi1bJdZNtDFK4mWQnIDavpfOThndO7p9fWmLpDjTKTqdC9iO
+   /xLPVMReXottD3jHPmTxmwJo1/cv4N2PyFmh+GP12S7lCyn7Ul47UHMr+
+   Q==;
+X-CSE-ConnectionGUID: yTlDwhLNRgCj2gVoQ8CAzg==
+X-CSE-MsgGUID: VsYQg5tYT9+Y/FDIU1O+mw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11375"; a="43157130"
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="43157130"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 02:27:45 -0700
+X-CSE-ConnectionGUID: DNF9w2caToufAA+qjO/N8w==
+X-CSE-MsgGUID: 4w/qxc07Q9GdL3t3sDcjLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="126743831"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 02:27:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tu6kz-00000003GTc-24Ua;
+	Mon, 17 Mar 2025 11:27:37 +0200
+Date: Mon, 17 Mar 2025 11:27:37 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Lars-Peter Clausen <lars@metafoo.de>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>, Nuno Sa <nuno.sa@analog.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Guillaume Stols <gstols@baylibre.com>,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Matteo Martelli <matteomartelli3@gmail.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v7 05/10] iio: adc: sun20i-gpadc: Use adc-helpers
+Message-ID: <Z9frCUqRTD0i1Faq@smile.fi.intel.com>
+References: <cover.1741849323.git.mazziesaccount@gmail.com>
+ <df0b2b53affbef5ccb7219328cc15db3ba843737.1741849323.git.mazziesaccount@gmail.com>
+ <Z9LQ0O34EUM8WZku@smile.fi.intel.com>
+ <20250316094112.6731bd01@jic23-huawei>
+ <50b126c5-248e-4694-9782-4f28d6db5fce@gmail.com>
+ <Z9fUmo5wp3EcNWzm@smile.fi.intel.com>
+ <0db2a42f-d393-4e75-afbf-cf30c0e06cce@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0db2a42f-d393-4e75-afbf-cf30c0e06cce@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Mon, Mar 17, 2025 at 10:42:07AM +0200, Matti Vaittinen wrote:
+> On 17/03/2025 09:51, Andy Shevchenko wrote:
+> > On Mon, Mar 17, 2025 at 09:11:08AM +0200, Matti Vaittinen wrote:
+> > > On 16/03/2025 11:41, Jonathan Cameron wrote:
+> > > > On Thu, 13 Mar 2025 14:34:24 +0200
+> > > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > On Thu, Mar 13, 2025 at 09:18:49AM +0200, Matti Vaittinen wrote:
+
+...
+
+> > > > > > +	num_channels = devm_iio_adc_device_alloc_chaninfo_se(dev,
+> > > > > > +				&sun20i_gpadc_chan_template, -1, &channels);
+> > > > > > +	if (num_channels < 0)
+> > > > > > +		return num_channels;
+> > > > > > +
+> > > > > >    	if (num_channels == 0)
+> > > > > >    		return dev_err_probe(dev, -ENODEV, "no channel children\n");
+> > > > > 
+> > > > > Note, this what I would expected in your helper to see, i.e. separated cases
+> > > > > for < 0 (error code) and == 0, no channels.
+> > > > > 
+> > > > > Also, are all users going to have this check? Usually in other similar APIs
+> > > > > we return -ENOENT. And user won't need to have an additional check in case of
+> > > > > 0 being considered as an error case too.
+> > > > In a few cases we'll need to do the dance the other way in the caller.
+> > > > So specifically check for -ENOENT and not treat it as an error.
+> > > > 
+> > > > That stems from channel nodes being optionally added to drivers after
+> > > > they have been around a while (usually to add more specific configuration)
+> > > > and needing to maintain old behaviour of presenting all channels with default
+> > > > settings.
+> > > > 
+> > > > I agree that returning -ENOENT is a reasonable way to handle this.
+> > > 
+> > > I agree - but I'm going to use -ENODEV instead of -ENOENT because that's
+> > > what the current callers return if they find no channels. That way the
+> > > drivers can return the value directly without converting -ENOENT to -ENODEV.
+> > 
+> > ENODEV can be easily clashed with other irrelevant cases,
+> 
+> Can you please explain what cases?
+
+When it's a code path that returns the same error code for something different.
+
+> > ENOENT is the correct
+> > error code.
+> 
+> I kind of agree if we look this from the fwnode perspective. But, when we
+> look this from the intended user's perspective, I can very well understand
+> the -ENODEV. Returning -ENODEV from ADC driver's probe which can't find any
+> of the channels feels correct to me.
+
+Okay, it seems we have got yet another disagreement as I think this has to
+be ENOENT. Because this is related to the firmware description and not real
+hardware discovery path. If it is the latter, I may fully agree on ENODEV
+choice. But AFAICS it's not the case here.
+
+> > If drivers return this instead of another error code, nothing bad
+> > happen, it's not an ABI path, correct?
+> 
+> I don't know if failure returned from a probe is an ABI. I still feel
+> -ENODEV is correct value,
+
+And I have the opposite opinion. I think ENODEV is _incorrect_ choice
+in this case.
+
+> and I don't want to change it for existing users -
+> and I think also new ADC drivers should use -ENODEV if they find no channels
+> at all.
+
+Again, the problem is that you are trying to apply the error code for HW to the
+information that comes from FW.
+
+> Besides that I think -ENODEV to be right, changing it to -ENOENT for
+> existing callers requires a buy-in from Jonathan (and/or) the driver
+> maintainers.
+
+Yeah, will wait for Jonathan to judge, but I think you can find rationale above.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---=-mrd/9ZSVcxnQW81VZ+0H
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2024-04-04 at 12:32 +0300, Kirill A. Shutemov wrote:
-> On Thu, Apr 04, 2024 at 10:40:34AM +1300, Huang, Kai wrote:
-> >=20
-> >=20
-> > On 3/04/2024 4:42 am, Kirill A. Shutemov wrote:
-> > > On Fri, Mar 29, 2024 at 06:48:21PM +0200, Kirill A. Shutemov wrote:
-> > > > On Fri, Mar 29, 2024 at 11:21:32PM +0800, Xiaoyao Li wrote:
-> > > > > On 3/25/2024 6:38 PM, Kirill A. Shutemov wrote:
-> > > > > > TDX guests are not allowed to clear CR4.MCE. Attempt to clear i=
-t leads
-> > > > > > to #VE.
-> > > > >=20
-> > > > > Will we consider making it more safe and compatible for future to=
- guard
-> > > > > against X86_FEATURE_MCE as well?
-> > > > >=20
-> > > > > If in the future, MCE becomes configurable for TD guest, then CR4=
-.MCE might
-> > > > > not be fixed1.
-> > > >=20
-> > > > Good point.
-> > > >=20
-> > > > I guess we can leave it clear if it was clear. This should be easy
-> > > > enough. But we might want to clear even if was set if clearing is a=
-llowed.
-> > > >=20
-> > > > It would require some kind of indication that clearing MCE is fine.=
- We
-> > > > don't have such indication yet. Not sure we can reasonably future-p=
-roof
-> > > > the code at this point.
-> > > >=20
-> > > > But let me think more.
-> > >=20
-> > > I think I will go with the variant below.
-> > >=20
-> > > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/r=
-elocate_kernel_64.S
-> > > index 56cab1bb25f5..8e2037d78a1f 100644
-> > > --- a/arch/x86/kernel/relocate_kernel_64.S
-> > > +++ b/arch/x86/kernel/relocate_kernel_64.S
-> > > @@ -5,6 +5,8 @@
-> > > =C2=A0=C2=A0 */
-> > > =C2=A0 #include <linux/linkage.h>
-> > > +#include <linux/stringify.h>
-> > > +#include <asm/alternative.h>
-> > > =C2=A0 #include <asm/page_types.h>
-> > > =C2=A0 #include <asm/kexec.h>
-> > > =C2=A0 #include <asm/processor-flags.h>
-> > > @@ -145,11 +147,17 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
-> > > =C2=A0=C2=A0	 * Set cr4 to a known state:
-> > > =C2=A0=C2=A0	 *=C2=A0 - physical address extension enabled
-> > > =C2=A0=C2=A0	 *=C2=A0 - 5-level paging, if it was enabled before
-> > > +	 *=C2=A0 - Machine check exception on TDX guest, if it was enabled =
-before.
-> > > +	 *=C2=A0=C2=A0=C2=A0 Clearing MCE might not allowed in TDX guests, =
-depending on setup.
-> >=20
-> > Nit:=C2=A0 Perhaps we can just call out:
-> >=20
-> > 	Clearing MCE is not allowed if it _was_ enabled before.
-> >=20
-> > Which is always true I suppose.
->=20
-> It is true now. Future TDX will allow to clear CR4.MCE and we don't want
-> to flip it back on in this case.
-
-And yet v12 of the patch which became commit de60613173df does
-precisely that.
-
-It uses the original contents of CR4 which are stored in %r13 (instead
-of building a completely new set of bits for CR4 as before). So it
-would never have *cleared* the CR4.MCE bit now anyway... what it does
-is explicitly *set* the bit even if it wasn't set before?
-
-This is what got committed, and I think we can just drop the
-ALTERNATIVE line completely because it's redundant in the case that
-CR4.MCE was already set, and *wrong* in the case that it wasn't already
-set?
-
-@@ -145,14 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
-         * Set cr4 to a known state:
-         *  - physical address extension enabled
-         *  - 5-level paging, if it was enabled before
-+        *  - Machine check exception on TDX guest, if it was enabled befor=
-e.
-+        *    Clearing MCE might not be allowed in TDX guests, depending on=
- setup.
-+        *
-+        * Use R13 that contains the original CR4 value, read in relocate_k=
-ernel().
-+        * PAE is always set in the original CR4.
-         */
--       movl    $X86_CR4_PAE, %eax
--       testq   $X86_CR4_LA57, %r13
--       jz      .Lno_la57
--       orl     $X86_CR4_LA57, %eax
--.Lno_la57:
--
--       movq    %rax, %cr4
-+       andl    $(X86_CR4_PAE | X86_CR4_LA57), %r13d
-+       ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_T=
-DX_GUEST
-+       movq    %r13, %cr4
-=20
-        /* Flush the TLB (needed?) */
-        movq    %r9, %cr3
-
-
-
---=-mrd/9ZSVcxnQW81VZ+0H
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMxNzA5Mjcx
-NlowLwYJKoZIhvcNAQkEMSIEIM+ZDlARM66Df0GU2I9/SJ+ATBsL+lBhIUfnQBP1R1qpMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAz/QjAKoqQpgI
-hJAZ5WrR8YHKfvPm4N4iodIBoO2molUhB/lts0TtmTdiXhxl0PuLI/f57DZBMqp87U8s0KhWboiC
-CNYTorOrxabmKB0V8TTdBvwALD3SmFxljFSnc00jhSEG4dUEThjeHoRCxvGeU5rf5zFIWrYy0ecA
-25/wKD1pGFVMZFImwovRzz7H2DDENsxpmIaGctyR7yg8mU/WQ7rn5GxJqfm1dzryB6hnLliX4sGD
-/LrtV+U8cbFKk8OgfIsnYWyeaLhE77np4G4am5xXmtaOcPjz4l23q3tuJsYIzmcaPfVgp5IXt63y
-DlTWUi/2/gPEsYIfVl/MlrA+6nsxFB6N2yvDrQy/wBRxOTD16tplkA2rNXJI2mQiSmupP4nkp7m6
-ld1ADkPUGOeDR+ZtUZEOx2w05Ja83EUUxAYce7RBdtE/3WZGsOYyjejMVTgfQDzY/JN5KJTbkZhO
-+YnHtOnT23EfBumdp2ms19HugYbI4w2VTavgp7pYF+JwNdN9cID08OuCFOIUO89+IXQy3B6qpc+J
-Wch4hXvmEpFv1ie4c8HK2c9lec/FnUKyBI+0IrMd+NbEtwGQf8x+uDEpuw7PwVpGRYBDFjh83nTY
-L5oFKyZJwe2+iBbPs24WGn96gTiNCWbqn2c8TW+mY2h+sZx03W3itZ2qe8zoTA8AAAAAAAA=
-
-
---=-mrd/9ZSVcxnQW81VZ+0H--
