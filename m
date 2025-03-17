@@ -1,127 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B50176FB0;
-	Mon, 17 Mar 2025 15:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B7A28EB;
+	Mon, 17 Mar 2025 15:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742226994; cv=none; b=eBkqdeNzdYKcxVKoPaxkXrFAB3xq7mPVhMuP4IKjBn4XZMRK+3JRXp+DFSKvY7AL2vvzUjwkipnBrj240/B1YPp4T2WDA/ZCQ73XS9CqC6hO6Jhtdf5aS7v562JSR82FZ7L/MtMv3X+cU4NNXyFOMUm9g31/Lu6+NEMOKc7hZ0c=
+	t=1742227043; cv=none; b=TaWk2EMGtFEKYu/HSff9p5zNTVADN/AGqx0H60S3sSaSJluc1o7Bz6Of7r8Q73a+dTfepAjEoJvPe1QkbLXgOLTq7rvfXXciO+l1x7sex4W+eliiALTNT5gz84o5dbRyAm2bLzwOPt1fYNhGtXW4nxY1IgAuqMhZy3fvLdFf+3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742226994; c=relaxed/simple;
-	bh=JTYbqx6bfQKuupaoVPJmTVygzfWnX4u/I/x3TxxTXO4=;
+	s=arc-20240116; t=1742227043; c=relaxed/simple;
+	bh=Z393QTCPkGUwqAKXZiX9OYGpork+zYIhwJzOk3f+DR0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DkcpZJzqOLuyDOX+QOAYNkKu0/9QnTZoRpIyX2g1TqZ++PHMfjnGKqR6tCl2T65il8KDJrRFgN+sKtJg5BZkK/z+NHxETJT2c6PLyXxjHsCgnhesrIWxhXTXBS5eOhmheLdC4KhA5FbG0HJCMENFaPKEJcAsf7FT4yOCoDDh2Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: CzZovjXbRCaiOiPHFuTf1w==
-X-CSE-MsgGUID: xrWuP8IQTP2PF4Bar1Ld2g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="47102973"
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="47102973"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 08:56:32 -0700
-X-CSE-ConnectionGUID: EA25EyGGQmuYBW7eHEHuYg==
-X-CSE-MsgGUID: FN4NgrbwT2KvtC80qpTwdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="122157561"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 08:56:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1tuCpE-00000003LsH-1IHs;
-	Mon, 17 Mar 2025 17:56:24 +0200
-Date: Mon, 17 Mar 2025 17:56:24 +0200
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 07/10] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <Z9hGKCdR7NHqfRmC@smile.fi.intel.com>
-References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
- <20250214-mdb-max7360-support-v4-7-8a35c6dbb966@bootlin.com>
- <Z69oa8_LKFxUacbj@smile.fi.intel.com>
- <D8FAX4E29LZK.3VUK90WB04MV2@bootlin.com>
- <Z9PlYSZDviGOCV7X@surfacebook.localdomain>
- <D8ILQ4NT6977.50SD8DM8FIBF@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TIsuqjKqYMO+P0lRRMUW+8WvHTdULLAKCcjtyCNAwMDz5J7HqgmiB0i7n8JNRnnnp8kE0LjmJi18EvxaQTVsl4FyHsnJ9x7jUzMmEANdcdhY6R9OP3xBN5664P1qv05zbnfH+d2PC5VxNA/+q4PDyGIJYJdysKOfvZG9ehRoj98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=talXNKxN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="talXNKxN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5071C4CEE3;
+	Mon, 17 Mar 2025 15:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742227043;
+	bh=Z393QTCPkGUwqAKXZiX9OYGpork+zYIhwJzOk3f+DR0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=talXNKxNZkpqi1mzOE7aP34ZEd17xw0JWO7D6f9DIDg4SG9/v9YBfX3DfmpDQlbwi
+	 YrR00gDIL7RVTiByS0OIUOZ6z0VjrTpd2mvR30aod6LRBReW290Mo7w4wD+WlfUoUl
+	 Si8p8gX2Yzg9ddZt6NdOoaa2pAOIvw30051bUCygczaKtXHTFBtCKgKZQbwBHYHIjB
+	 dH8XoMqJrRLX11G6VHTwdg4EUDJoeZYSBYuOSAwi57HzXGqfT3pztWeWLLP0izXnJC
+	 eoDExaaTfLYu1GonnkmZ5V636kmEyJNoL+O9KCiXAjZic5MxJ3+1SBZHLRbwWy0mqm
+	 cnyJCe+GSlifQ==
+Date: Mon, 17 Mar 2025 08:57:20 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Matteo Rizzo <matteorizzo@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [tip: perf/urgent] perf/x86: Check data address for IBS software
+ filter
+Message-ID: <Z9hGYP76E6dDEppS@google.com>
+References: <20250317081058.1794729-1-namhyung@kernel.org>
+ <174220290574.14745.9132867025462242568.tip-bot2@tip-bot2>
+ <20250317101048.GAZ9f1KEixI3-b0EoR@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <D8ILQ4NT6977.50SD8DM8FIBF@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250317101048.GAZ9f1KEixI3-b0EoR@fat_crate.local>
 
-On Mon, Mar 17, 2025 at 03:13:07PM +0100, Mathieu Dubois-Briand wrote:
-> On Fri Mar 14, 2025 at 9:14 AM CET, Andy Shevchenko wrote:
-> > Thu, Mar 13, 2025 at 06:07:03PM +0100, Mathieu Dubois-Briand kirjoitti:
-> > > On Fri Feb 14, 2025 at 4:59 PM CET, Andy Shevchenko wrote:
-> > > > On Fri, Feb 14, 2025 at 12:49:57PM +0100, Mathieu Dubois-Briand wrote:
-
-...
-
-> > > > > +	/*
-> > > > > +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad debounce
-> > > > > +	 * timings and gpos/keypad columns repartition. Only the later is
-> > > > > +	 * modified here.
-> > > > > +	 */
-> > > > > +	val = FIELD_PREP(MAX7360_PORTS, ngpios);
-> > > > > +	ret = regmap_write_bits(regmap, MAX7360_REG_DEBOUNCE, MAX7360_PORTS, val);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "Failed to write max7360 columns/gpos configuration");
-> > > > > +		return ret;
-> > > > > +	}
-> > > >
-> > > > Shouldn't this be configured via ->set_config() callback?
-> > > 
-> > > I believe this comment has been a bit outdated by our discussion on
-> > > using GPIO valid mask, but I believe we could not use the ->set_config()
-> > > callback here: this callback is made to configure a single pin while the
-> > > gpos/keypad columns repartition is global.
-> >
-> > Yeah, we have similar desing in Intel Bay Trail (see pinctrl-baytrail.c) and it
-> > requires some software driven heuristics on how individual setting may affect
-> > the global one. But the Q here is is the debounce affects only keypad? Then it
-> > should be configured via keypad matrix driver. Btw, have you checked
-> > drivers/input/keyboard/matrix_keypad.c? Is there anything that can be useful
-> > here?
-> >
+On Mon, Mar 17, 2025 at 11:10:48AM +0100, Borislav Petkov wrote:
+> On Mon, Mar 17, 2025 at 09:15:05AM -0000, tip-bot2 for Namhyung Kim wrote:
+> > The following commit has been merged into the perf/urgent branch of tip:
+> > 
+> > Commit-ID:     b0be17d8108bf3448a58be319d085155a128cf3a
+> > Gitweb:        https://git.kernel.org/tip/b0be17d8108bf3448a58be319d085155a128cf3a
+> > Author:        Namhyung Kim <namhyung@kernel.org>
+> > AuthorDate:    Mon, 17 Mar 2025 01:10:58 -07:00
+> > Committer:     Ingo Molnar <mingo@kernel.org>
+> > CommitterDate: Mon, 17 Mar 2025 10:04:31 +01:00
+> > 
+> > perf/x86: Check data address for IBS software filter
+> > 
+> > The IBS software filter is filtering kernel samples for regular users in
+> > PMI handler.  It checks the instruction address in the IBS register to
+> > determine if it was in the kernel mode or not.
+> > 
+> > But it turns out that it's possible to report a kernel data address even
+> > if the instruction address belongs to the user space.  Matteo Rizzo
+> > found that when an instruction raises an exception, IBS can report some
+> > kernel data address like IDT while holding the faulting instruction's
+> > RIP.  To prevent an information leak, it should double check if the data
+> > address in PERF_SAMPLE_DATA is in the kernel space as well.
+> > 
+> > Suggested-by: Matteo Rizzo <matteorizzo@google.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Link: https://lore.kernel.org/r/20250317081058.1794729-1-namhyung@kernel.org
+> > ---
+> >  arch/x86/events/amd/ibs.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> > index e7a8b87..24985c7 100644
+> > --- a/arch/x86/events/amd/ibs.c
+> > +++ b/arch/x86/events/amd/ibs.c
+> > @@ -1147,6 +1147,13 @@ fail:
+> >  	if (perf_ibs == &perf_ibs_op)
+> >  		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
+> >  
+> > +	if ((event->attr.config2 & IBS_SW_FILTER_MASK) &&
+> > +	    (event->attr.sample_type & PERF_SAMPLE_ADDR) &&
+> > +	    event->attr.exclude_kernel && !access_ok(data.addr)) {
+> > +		throttle = perf_event_account_interrupt(event);
+> > +		goto out;
+> > +	}
 > 
-> Hum, maybe the comment is not clear enough? Not sure, but please tell
-> me.
+> Did anyone build this?
 
-I see it now, yes, the comment seems point too much attention on the register
-(and hence its name) then content.
+Oops, sorry about this.  I fixed it locally but sent the one before
+adding the change.  Will send v2.
 
-I would start this comment with something like:
-"Configure which GPIOs will be used for keypad."
-
-> So yes, this register is named "debounce" but controls two different
-> things:
-> - The keypad debounce: we do not touch it here.
-> - The partition between keypad columns and gpos. This is the value we do
->   modify here.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Namhyung
 
 
+> 
+> arch/x86/events/amd/ibs.c: In function ‘perf_ibs_handle_irq’:
+> arch/x86/events/amd/ibs.c:1291:63: error: macro "access_ok" requires 2 arguments, but only 1 given
+>  1291 |             event->attr.exclude_kernel && !access_ok(data.addr)) {
+>       |                                                               ^
+> In file included from ./arch/x86/include/asm/uaccess.h:25,
+>                  from ./include/linux/uaccess.h:12,
+>                  from ./include/linux/sched/task.h:13,
+>                  from ./include/linux/sched/signal.h:9,
+>                  from ./include/linux/ptrace.h:7,
+>                  from ./include/uapi/asm-generic/bpf_perf_event.h:4,
+>                  from ./arch/x86/include/generated/uapi/asm/bpf_perf_event.h:1,
+>                  from ./include/uapi/linux/bpf_perf_event.h:11,
+>                  from ./include/linux/perf_event.h:18,
+>                  from arch/x86/events/amd/ibs.c:9:
+> ./include/asm-generic/access_ok.h:45: note: macro "access_ok" defined here
+>    45 | #define access_ok(addr, size) likely(__access_ok(addr, size))
+>       | 
+> arch/x86/events/amd/ibs.c:1291:44: error: ‘access_ok’ undeclared (first use in this function)
+>  1291 |             event->attr.exclude_kernel && !access_ok(data.addr)) {
+>       |                                            ^~~~~~~~~
+> arch/x86/events/amd/ibs.c:1291:44: note: each undeclared identifier is reported only once for each function it appears in
+> make[5]: *** [scripts/Makefile.build:207: arch/x86/events/amd/ibs.o] Error 1
+> make[4]: *** [scripts/Makefile.build:465: arch/x86/events/amd] Error 2
+> make[4]: *** Waiting for unfinished jobs....
+> make[3]: *** [scripts/Makefile.build:465: arch/x86/events] Error 2
+> make[3]: *** Waiting for unfinished jobs....
+> make[2]: *** [scripts/Makefile.build:465: arch/x86] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [/mnt/kernel/kernel/6th/linux/Makefile:1997: .] Error 2
+> make: *** [Makefile:251: __sub-make] Error 2
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
