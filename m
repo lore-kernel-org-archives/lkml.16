@@ -1,290 +1,159 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2083.outbound.protection.outlook.com [40.107.95.83])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C739523771E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742212739; cv=fail; b=b0OGYzohQyUQvVGTp+rIdSIQ4SiFdnSD3GfxWC1Voxh97k2JAb5UByEpuLgP2+67UPEPVYkrzuQ/pwq5gI1raMlrRyrmYGQbRDBYqt4vFdifUGLz0wT3dNE/5t4VzteWhwvfoXUaXEUAUaOvlr2YSCv1ohGFPF0w87nZnSqHoIQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742212739; c=relaxed/simple;
-	bh=yIMU5AYFnCmoye1F1HyM6wIKmnuRLZFqK0BATeMp+aA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lA220a+E1puYNaNBJ5asAXyRNvY1YWqqf1DE+YG18xePyGzvK7hwNHlEJLWxE1yRTbw3704yBSUmoRioJHyFjOnlYU3PMppB7W1hUTWCaEHr4soUSOAbFQHDsz+/TXa6+21/suHqjC7rMV0kYfw4nKCzpKHHBKXnND9eCYh4GOI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EKnH153f; arc=fail smtp.client-ip=40.107.95.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B620239595
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742212746; cv=none; b=BDBAE8vWlckQsjAOkBrMFKFOiQtLaOjF6JwM5B7x2DJyP4SO4w3JPux8ChVvn47FIKvne1E1wDE12F1uakCejPCujR69kCfKJ3jj1kxnD1YBVeQn1YNJIoUSbL2Xd4nF3uB76jt7XyWpBIWuOw9LkIm7oxCHH/yK+Y4qWpJS4kE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742212746; c=relaxed/simple;
+	bh=kGRTlob9dS4wjrb9wDoE4m44BhOfQUCktnvmrkWM6BQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e81NX4Y8QnUAkP47u4eF8s4VNwL6GIULm5YA36ArBufADUxkOZ6w1bkHe9H0AoMZl+ogwpDYeOTBt6U9bdfO+WAiHgeSp9t1SHeSwcqIEuAr5x+2OIjWhh1CpJVgWqMljuzcYKiQ9DILYUgmL/Q7nxf9eiQ1ddCKyZC+nCmqBJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=higStgvO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EKnH153f"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fcr/yl5XuOvI0wA1gRM+MQGkNZWpY/+AjKgncSdg8QzES763FK5oo9Ez8fBPTcFRzO4cEJoerKi4AnA0EOiqdw8bAFhWISubR5O86Tz1/yMcQXBEOhyIyRjvp8tOPyay2E6oW7s+FeHiCYAQji0BDYzz2HP/tujJ4hnrsJ4ukPuUNQ1RAgFFe1cOTi9wpv/Nb+zBJgKGsR1ib6FsABDi6KqZV/JwD3cBItptVagAwVI2rD8IPdvKQe26Py4fv/RiRG8GbBx6cCkYnhb4oj12eAwQBNJ/YkaeTxp0EHOw+7HYcRTClBykOWcn0b6GTVHFpFdMX/KOJcO0IcLpnlyYcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/YSF+glVIoRrN02XEP35zA53zBsp+VyGmccvn878k10=;
- b=ZOH9xKwkDiH63hcjQ6Px0B7GX+whirKOvWIhXB1eNYl3AAbcN1CdmSmG3uhzx6wRxXKLA8OJPq1mp8D1UQGFo62Z6FRLbR6AnjQrFr7AIbgTqD9ZMZDcQmMT4zGl/JCWuhfmIFfFqyJ+CzhUY66cd3r6kTylwcnJRel6rz5RR5haE5xjGa34jkz07lPWp5IyBA0KDRK6nb9bQyz0TNEsrpMfXm0OB+63A4FmNfQUBPEPLm5SYxLVNuJugcf1TwEeI6FikdXXTFwsVz5jQrJXLlzKXLjSHWb3UqaaOf3I8rwBfvC1zF6fv0zFwTNQQf3F/5Euq4Jq8/p3wvYdlJnaKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=8bytes.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/YSF+glVIoRrN02XEP35zA53zBsp+VyGmccvn878k10=;
- b=EKnH153f7hzXW+wQB7NevRszc583C4H/I3QQG/N+z+nj345IVGHbm+PbeqVVh4tsbvCA1hlyg6yhKTuIkZs7YPu07ENHWxOngI46FqJ8tr88kvX0qeyTwCdP3reIX4I7MiBHSaOld2BnL+jSfeiBZfjs7A55Uu4aOWNjfIz3SRQ=
-Received: from MW2PR2101CA0030.namprd21.prod.outlook.com (2603:10b6:302:1::43)
- by SJ2PR12MB8739.namprd12.prod.outlook.com (2603:10b6:a03:549::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
- 2025 11:58:52 +0000
-Received: from SJ1PEPF000023D7.namprd21.prod.outlook.com
- (2603:10b6:302:1:cafe::1e) by MW2PR2101CA0030.outlook.office365.com
- (2603:10b6:302:1::43) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.24 via Frontend Transport; Mon,
- 17 Mar 2025 11:58:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF000023D7.mail.protection.outlook.com (10.167.244.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8583.3 via Frontend Transport; Mon, 17 Mar 2025 11:58:51 +0000
-Received: from BLRDHSRIVAS.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Mar
- 2025 06:58:46 -0500
-From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-To: <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
-	<linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>
-CC: <suravee.suthikulpanit@amd.com>, <vasant.hegde@amd.com>, "Dheeraj Kumar
- Srivastava" <dheerajkumar.srivastava@amd.com>
-Subject: [PATCH v4 0/8] Introduce debugfs support in IOMMU
-Date: Mon, 17 Mar 2025 17:28:22 +0530
-Message-ID: <20250317115830.3416-1-dheerajkumar.srivastava@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="higStgvO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742212741;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ibbLnhe1qBMBBLBfKU3vYef+bv4kMt41HKPTL4S5OPc=;
+	b=higStgvOLtscvtC0pp/UtA7uFuyMfjr7Z4Js/WFFe06yGZsqU+DYy60GSOA/H6EJgcXQ+A
+	CS3maIdmyZx0JvWosYgyggjyEng1Lwly09Rw7G2qViyhPxM9hIPQsruMI5wQLatjbswnjA
+	5Dms6LNo+scaoUMQq5IDtGgefgdPxys=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-80-VTZgWde2MfuRja9_o8XZMA-1; Mon, 17 Mar 2025 07:59:00 -0400
+X-MC-Unique: VTZgWde2MfuRja9_o8XZMA-1
+X-Mimecast-MFC-AGG-ID: VTZgWde2MfuRja9_o8XZMA_1742212739
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-abb9b2831b7so569950566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:59:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742212739; x=1742817539;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ibbLnhe1qBMBBLBfKU3vYef+bv4kMt41HKPTL4S5OPc=;
+        b=n220VwhUPfCDmqfGT1ar8kLgPRUi6k/bC4TRKDID5DgijyMZMFP4ngM2f29tYiRtzu
+         D9Lp9SF5HihwFgvTQTO6pmZUq4CV4in/CiYYFNWlZLB/cdI3tGzo39hgkUFVqSPnOl4q
+         jrPX2+AT563XoiIVeXoC5YF0d8VX2j6YNyMCIjhMkohemVoGYoIf1BmS5Wsb8W05KvpP
+         ERE51N61mEvjsrxlLjTBK6kttjXTHd97OvApi4RXASe2jzgQiCLMevEyhBeuWKXqvMZx
+         xzfX5+NOoFLfkbPoQH9rNT9169+MNVOYHdXgKKwLPs4POop78uUh+2ooX1yHb0wYTZjO
+         gipg==
+X-Forwarded-Encrypted: i=1; AJvYcCXnKlzd2oEd/dbj1Vve5yOJcLFXNyTTdvOw4NUKOpmTCwF43VktCL8kHyDXxY4zikw67diDXcv2wPK5c/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw33tP2VyxgtCqQxcCvY7/7+xVg75HbS/z9O8E/dtbDBuNiKwzm
+	3wjjIsgvH9eN4VXRcwieoeFM93EkipgJHLEWp0mTm6i1g+nOr6pZARaGe6Xxso7zufaFNzZwCUT
+	k6KVsYC/jtGrgDblD2TYQEPiDXOO4i0TOBHd85RXyBauFseeFf9F4ucn3j8H/vA==
+X-Gm-Gg: ASbGncvfjwiNd7XebNq08oDj5hWHBYu2u9Vz2g7PcF1UDys748qHu1YEQRdlxYHeluq
+	3khx8VagPwU+u7+NRkIRLcjTbUNosqj7zynb34jS47estjNH6egAX9NH3FtxDsN3F0J8A05LfG1
+	JDGJJWUXEuT1Yj5BxLn//EqsJ1NfLJKB+50y8k0B42QopCUaS389ocus/4GYMo75slBnVjQgG8U
+	XDy93nrBnzsJKDW8R7Hv7s/Lzwg4VqXQGStZPv8lzsH83PEnsFf1n7LO6QKRgCX+DdGJEKU6SMw
+	aJsvYiU84EeY6NHfHCI=
+X-Received: by 2002:a17:907:c292:b0:abf:6e30:c24e with SMTP id a640c23a62f3a-ac3124b2162mr1419638466b.22.1742212739128;
+        Mon, 17 Mar 2025 04:58:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHu9L6waIA1+4l5vWezs0/gLYMZtHuW4yfmYTOV7+dgHirrYrXj5zuut4GB6gKN4F/ns2JTjw==
+X-Received: by 2002:a17:907:c292:b0:abf:6e30:c24e with SMTP id a640c23a62f3a-ac3124b2162mr1419637066b.22.1742212738768;
+        Mon, 17 Mar 2025 04:58:58 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147f0bd3sm657279066b.67.2025.03.17.04.58.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 04:58:58 -0700 (PDT)
+Message-ID: <76c57b22-04d3-4331-a10c-b210db5f9055@redhat.com>
+Date: Mon, 17 Mar 2025 12:58:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D7:EE_|SJ2PR12MB8739:EE_
-X-MS-Office365-Filtering-Correlation-Id: 04015201-449b-4884-d950-08dd654b15d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3+K6VGwcd0dPMNoLdUbKvv/VJZtIeqWCzlju5OSsNTzfdmgJM9Vv0h4QvXpA?=
- =?us-ascii?Q?eqb0HPS8c0O72bRas23aZzCMweOP8eK8r4TtN3+wW130/h2troIIC48M6fv2?=
- =?us-ascii?Q?hnXWOu1rHttIhLxxZ3jOSxfhHwjXFv8rJchgnO+ThQ0JYFVkVqQFiQFFTriF?=
- =?us-ascii?Q?MX6ihvvjdBEIzup+/wbPWgsksLcKVT8IwV9pFLwYvw0wN7kQVd5fQbz/WlVG?=
- =?us-ascii?Q?aMaxBGXMVspqsVbxFW7ETu16f0BaXxmBDwCWERhCMjgPehWyHsvGljiPIE9o?=
- =?us-ascii?Q?x/EpevySS2w3gpfh0/5jswmYf3ucpK3AqPmcq36vrVTnnbOVHiuQ6rH0szuo?=
- =?us-ascii?Q?tF55dj8eAaLvG5X2fG0i7xh0lbZHYyuEUGoRiOEVKW6hPm6o1a6eV8lfaQf3?=
- =?us-ascii?Q?yIOgYuzFBfAl34sqONf/mYi3xnhbOgAEAaa8+8Ihz9WsCWN3ULlXoqBeaLDt?=
- =?us-ascii?Q?EabXZ4nr1MViIZrpnllRYfe9sIjdqBLJSFS/YsK5b0BbcI5HkUt6ME1zRu6h?=
- =?us-ascii?Q?hKEB8BZl11lYgXwuXihl1p6CFcUbtHifE3h+3fORPxJOlSoqFFnMSZVW2Fi+?=
- =?us-ascii?Q?Xs+7lOQ1iHslX8siT3td3vhWeSb7qrfzZwo7B7B16GhTXHoopXuD92wq0wBn?=
- =?us-ascii?Q?ObpPY7mj0lUmNu4dG49qP8cswng8fQiffy0uBbjxnfVM0vAqyG58fqDg9Q1O?=
- =?us-ascii?Q?24RIHtRdXzTARsv9cIYVfxaEAjzaTKtVwdkISQTR3j8OPlNmVdCwBQfgSn+v?=
- =?us-ascii?Q?w9OnD+3I8HpbRaDVrxgwnfA8QJsXxapi9RUjg0r9j+QTvRj0xOvH30B6xBY5?=
- =?us-ascii?Q?EKvjqatEQnUSBWaWh+oUsHZNYBnvYwxJ1iJSXYpxjlV6/vFRgjEePlKxlomz?=
- =?us-ascii?Q?3R00mmxglk5cZ+nUZx1/gM+Yx2j6rRmfxljRFZQ++t6Y5mfws3yTpkadg2Ik?=
- =?us-ascii?Q?/G9paV9iih+4njkJTKWRPAlXCzjCc+pIpjxi+IZQlPP2Avo5MVCPBgv1L1xF?=
- =?us-ascii?Q?ME5tFb2VGfZVj80nwHiLCkZFYOdqOZUxl/4JNu4EY1iyg5fuuF4HNZSu8tmB?=
- =?us-ascii?Q?dGraFuEDRZ/locdA2tpN7ntcwhUb9Vjqgoc3y95iJZGF6K+nQ6BKw8j1KV55?=
- =?us-ascii?Q?ZH9ON3VeQX3s02/XjW9KAXr1DtFwAmx/xw/X3SEoTiyK3gh6vo0urZTTrza3?=
- =?us-ascii?Q?apcipSswriDrSFy4Ll3VX/RjpwkcAlWhPNUXXlhir3X0gDczbDfBwZ6BOK5k?=
- =?us-ascii?Q?oMtWMLL2ouK6W5DMrRXGWhEiCFu/3CQP6gjD1RYlsHNFK+XoQNdZOzhD65wL?=
- =?us-ascii?Q?oeXOTHufZK4eZmubmrg0ZobB1gcwkyMnOzQp8lBNdkOG4df+IAuxG9d50/bh?=
- =?us-ascii?Q?qGJzSWYC2KZZsCDfMkKJY8kedrF68psqxvOzH/u00+RUHJTpiOuIQdMSH3xr?=
- =?us-ascii?Q?SPTdgwIHeF0GcbVBpRlJhQ/AwzWcmy3L620WEs8XT4uxl1FiXwY3TbSNFhmp?=
- =?us-ascii?Q?IvfXfM/ua18YorU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 11:58:51.8361
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04015201-449b-4884-d950-08dd654b15d5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D7.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8739
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] Input: atkbd - Correctly map F13 - F24
+To: Werner Sembach <wse@tuxedocomputers.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250311180643.1107430-1-wse@tuxedocomputers.com>
+ <20250311180643.1107430-2-wse@tuxedocomputers.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250311180643.1107430-2-wse@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Introducing debugfs support in AMD/IOMMU driver that will allow
-userspace to dump below IOMMU information
-1) MMIO and Capability register per IOMMU
-2) Command buffer
-3) Device table entry
-4) Interrupt remapping table entry
+Hi Werner,
 
-Analyzing contents of IOMMU data structures helps in understanding IOMMU
-capabilities and behavior and debug issues faster.
+On 11-Mar-25 19:06, Werner Sembach wrote:
+> Currently only F23 is correctly mapped for PS/2 keyboards.
+> 
+> Following to this table:
+> https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/translate.pdf
 
-1. MMIO and Capability registers - Add support to dump MMIO and Capability
-   registers per IOMMU.
+That is a very interesting document, good find!
 
-   Example:
-   a. Write MMIO register offset to dump it
-      $ echo 0x18 > /sys/kernel/debug/iommu/amd/iommu00/mmio
-      $ cat /sys/kernel/debug/iommu/amd/iommu00/mmio
+> - F24 and Zenkaku/Hankaku share the same scancode, but since in real world
+> Zenkaku/Hankaku keys seem to just use the tilde scancode, this patch binds the
+> scancode to F24. Note that on userspace side the KEY_ZENKAKUHANKAKU keycode is
+> currently not bound in xkeyboard-config, so it is (mostly*) unused anyway.
+> 
+> * Qt on Wayland and therefore KDE on Wayland can see the keypress anyway for
+> some reason and it is actually used in a touchpad toggle shortcut, but this is
+> currently being fixed in both KDE and xkeyboard-config to make this less weird,
+> so it could directly be fixed to correctly handle the F24 keypress instead.
+> 
+> - The scancodes for F13-F22 are currently unmapped so there will probably be no
+> harm in mapping them. This would also fix the issue that some of these keys
+> can't be mapped as the target from userspace using the `setkeycodes` command.
+> 
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 
-      Output:
-      $ Offset:0x18 Value:0x000c22000003f48d
+Thanks, patch looks good to me:
 
-    b. Write capability register offset to dump it
-       $ echo 0x10 > /sys/kernel/debug/iommu/amd/iommu00/capability
-       $ cat /sys/kernel/debug/iommu/amd/iommu00/capability
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-       Output:
-       $ Offset:0x10 Value:0x00203040
+It is unfortunate that this changes the scancode 0x5f mapping from 85 to 194
+(from KEY_ZENKAKUHANKAKU to KEY_F24) but as you mention the xkbconfig does
+not even define a keycode-label for 85 + 8 = 93 (xkb shifts all codes up 8) in:
+/usr/share/X11/xkb/keycodes/evdev, 93 is simply not there. So making this changes
+and updating the mapping to match the mappings from the microsoft document from
+above sounds good to me.
 
-2. Command buffer - Add support to dump per IOMMU command buffer.
+Regards,
 
-   Example:
-   a. cat /sys/kernel/debug/iommu/amd/iommu00/cmdbuf
+Hans
 
-   Output:
-   CMD Buffer Head Offset:339 Tail Offset:339
-     0: 00835001 10000001 00009900 00000000
-     1: 00000000 30000005 fffff003 7fffffff
-     2: 00835001 10000001 00009901 00000000
-     3: 00000000 30000005 fffff003 7fffffff
-     4: 00835001 10000001 00009902 00000000
-   ........................................
-   ........................................
-   ........................................
 
-3. Device table - Add support to dump device table per IOMMU.
 
-   Example:
-   a. Write device id to dump device table entry for that device
-      $ echo 0000:01:00.0 > /sys/kernel/debug/iommu/amd/devid
-      $ cat /sys/kernel/debug/iommu/amd/devid
 
-      Output:
-      0000:01:00.0
-
-      Dump the device table entry for the input given
-      $ cat /sys/kernel/debug/iommu/amd/devtbl
-
-      Output:
-      DeviceId             QWORD[3]         QWORD[2]         QWORD[1]         QWORD[0] iommu
-      0000:01:00.0 0000000000000000 20000001373b8013 0000000000000038 6000000114d7b603 iommu3
-
-    b. Write device id to dump device table entry for that device
-      $ echo 01:00.0 > /sys/kernel/debug/iommu/amd/devid
-      $ cat /sys/kernel/debug/iommu/amd/devid
-
-      Output:
-      0000:01:00.0
-
-      Dump the device table entry for the input given
-      $ cat /sys/kernel/debug/iommu/amd/devtbl
-
-      Output:
-      DeviceId             QWORD[3]         QWORD[2]         QWORD[1]         QWORD[0] iommu
-      0000:01:00.0 0000000000000000 20000001373b8013 0000000000000038 6000000114d7b603 iommu3
-
-4. Interrupt remapping table - Add support to dump IRT table valid entries in
-   "iommu_irqtbl" file. This supports user input to dump IRT entry for a
-   specific pci device.
-
-   Example:
-   a. Write device id to dump device table entry for that device
-      $ echo 0000:01:00.0 > /sys/kernel/debug/iommu/amd/devid
-      $ cat /sys/kernel/debug/iommu/amd/devid
-
-      Output:
-      0000:01:00.0
-
-      Dump the device table entry for the input given
-      $ cat /sys/kernel/debug/iommu/amd/irtbl
-
-      Output:
-      DeviceId 0000:01:00.0
-      IRT[0000] 0000000000000020 0000000000000241
-      IRT[0001] 0000000000000020 0000000000000841
-      IRT[0002] 0000000000000020 0000000000002041
-      IRT[0003] 0000000000000020 0000000000008041
-      IRT[0004] 0000000000000020 0000000000020041
-      ..........................................
-      ..........................................
-      ..........................................
-
-   b. Write device id to dump device table entry for that device
-      $ echo 01:00.0 > /sys/kernel/debug/iommu/amd/devid
-      $ cat /sys/kernel/debug/iommu/amd/devid
-
-      Output:
-      0000:01:00.0
-
-      Dump the device table entry for the input given
-      $ cat /sys/kernel/debug/iommu/amd/irttbl
-
-      Output:
-      Device 0000:01:00.0
-      IRT[0000] 0000000000000020 0000000000000241
-      IRT[0001] 0000000000000020 0000000000000841
-      IRT[0002] 0000000000000020 0000000000002041
-      IRT[0003] 0000000000000020 0000000000008041
-      IRT[0004] 0000000000000020 0000000000020041
-      ..........................................
-      ..........................................
-      ..........................................
-
-Open question:[Suggestion from Bjorn Helgaas] Instead of using device_id input support
-              "/sys/kernel/debug/iommu/amd/devid", can we create separate directory
-              "/sys/kernel/debug/iommu/amd/<bdf>/" for per device IOMMU data strcutures
-              dump.
-
-Changes since v3:
--> Patch 2/8: Print 64 bits instead of 32 bits for MMIO registers dump. Since most of
-   the MMIO registers are 64 bits.
--> Patch 5/8: Update commit message with the need to add support for device_id input.
--> Patch 3/8: Throw error message mentioning valid capability offset range if user capability
-   offset's input is not in valid range and input fails.
-
-Changes since v2:
--> Patch 2/8 and 3/8: Use single file mmio and capability for input and output registers
-   offset and register's dump respctively.
--> Patch 8/8: Correct path for files "irqtbl" and "devtbl" in Documentation
-
-Changes since v1:
--> Patch 2/8 and 3/8: Use kstrtou32_from_user() instead of memdup_user_nul() --> kstrtou32()
--> Patch 4/8: Dump command buffer head and tail offset instead of head and tail pointer registers.
--> Patch 8/8: Fix bot reported warning on v1 patch series.
-
-Dheeraj Kumar Srivastava (8):
-  iommu/amd: Refactor AMD IOMMU debugfs initial setup
-  iommu/amd: Add debugfs support to dump IOMMU MMIO registers
-  iommu/amd: Add debugfs support to dump IOMMU Capability registers
-  iommu/amd: Add debugfs support to dump IOMMU command buffer
-  iommu/amd: Add support for device id user input
-  iommu/amd: Add debugfs support to dump device table
-  iommu/amd: Add debugfs support to dump IRT Table
-  iommu/amd: Add documentation for AMD IOMMU debugfs support
-
- Documentation/ABI/testing/debugfs-amd-iommu | 114 +++++++
- drivers/iommu/amd/amd_iommu.h               |   4 +-
- drivers/iommu/amd/amd_iommu_types.h         |   7 +
- drivers/iommu/amd/debugfs.c                 | 354 +++++++++++++++++++-
- drivers/iommu/amd/init.c                    |   5 +-
- drivers/iommu/amd/iommu.c                   |   7 -
- 6 files changed, 470 insertions(+), 21 deletions(-)
- create mode 100644 Documentation/ABI/testing/debugfs-amd-iommu
-
--- 
-2.25.1
+> ---
+>  drivers/input/keyboard/atkbd.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
+> index 3598a21d9d014..4bd6e6ef0715e 100644
+> --- a/drivers/input/keyboard/atkbd.c
+> +++ b/drivers/input/keyboard/atkbd.c
+> @@ -84,12 +84,12 @@ static const unsigned short atkbd_set2_keycode[ATKBD_KEYMAP_SIZE] = {
+>  #include "hpps2atkbd.h"	/* include the keyboard scancodes */
+>  
+>  #else
+> -	  0, 67, 65, 63, 61, 59, 60, 88,  0, 68, 66, 64, 62, 15, 41,117,
+> -	  0, 56, 42, 93, 29, 16,  2,  0,  0,  0, 44, 31, 30, 17,  3,  0,
+> -	  0, 46, 45, 32, 18,  5,  4, 95,  0, 57, 47, 33, 20, 19,  6,183,
+> -	  0, 49, 48, 35, 34, 21,  7,184,  0,  0, 50, 36, 22,  8,  9,185,
+> -	  0, 51, 37, 23, 24, 11, 10,  0,  0, 52, 53, 38, 39, 25, 12,  0,
+> -	  0, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0, 85,
+> +	  0, 67, 65, 63, 61, 59, 60, 88,183, 68, 66, 64, 62, 15, 41,117,
+> +	184, 56, 42, 93, 29, 16,  2,  0,185,  0, 44, 31, 30, 17,  3,  0,
+> +	186, 46, 45, 32, 18,  5,  4, 95,187, 57, 47, 33, 20, 19,  6,183,
+> +	188, 49, 48, 35, 34, 21,  7,184,189,  0, 50, 36, 22,  8,  9,185,
+> +	190, 51, 37, 23, 24, 11, 10,  0,191, 52, 53, 38, 39, 25, 12,  0,
+> +	192, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0,194,
+>  	  0, 86, 91, 90, 92,  0, 14, 94,  0, 79,124, 75, 71,121,  0,  0,
+>  	 82, 83, 80, 76, 77, 72,  1, 69, 87, 78, 81, 74, 55, 73, 70, 99,
+>  
 
