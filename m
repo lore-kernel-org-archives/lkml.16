@@ -1,122 +1,125 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD2117D346
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1154A38DD8;
+	Mon, 17 Mar 2025 11:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742211932; cv=none; b=eorgnAtHJCnAMdAnsTc7RF/ByI+8hKRqgdO4NeqvDGCy5gWsJBls8+SjBdHvVyhwmGZBypRuUdZfnR48eSI1ShsLuggZwrpiNkfjaBCbVTY7ack6QI1R4p6cSEjcWCSdOGw3/Yc/z0WPZkiV+PxoDMjy/C3mMkXSwkUz7eu3EGA=
+	t=1742211968; cv=none; b=rtkubPBo7usOuTWP98u35cxAQzAz4fZMRu0NcWraCRdWBRk9pXpvaOqlsIY9CHxgBSdfQihyj8RHQMD2KVr+htTwR/z7Ooa+fCtflfiFG7SHRsV2u8dmlYrOkxf+vfWqojj08Qf1+t6TES3tIVLCkzEOhPmCTp/50lKk7dWR710=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742211932; c=relaxed/simple;
-	bh=hhnIm6T94gB27SgYf0UY3q16p2S9qisBQ92xnKlNn8A=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=TAaok4yAQy4dMERpqmiE+p4rc3ALjZumKd1KQ84Mky4k1jwgeRSVuOEnWQ0mBh2EAiXipLnAYOUv5ALXozFf3YORRtqdfkhpFJK0Bx/AgiSVwPT85hbnygxDHAOLnQLG6C2wuU78afsh+23pzBLM3fKRfSV/CyYyphzaWUfE/Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=Q8V6s/9x; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1742211968; c=relaxed/simple;
+	bh=IUHSaJFW36Rq/yR/l9vcO9rORQ7Sa11dvwQP2YGMY9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NuXVjKbJqUTebxVVqHOW/coIuIvL6Dehm7Y4ylBi3s87sD/Y7faThmNkrSZ+qPObyrTalGSKeAbdi4rYhZl1aV0fpQHKOQCZ2Wy1HJ+H9mDFELyuvVGPfiY7gh+V5i6t8q65OUFOt/+li8PLjgpz7H41JVXd8qP4/7mEG2ZK/xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7Ua+Tfq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="Q8V6s/9x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=ntI7zWmcsXzPUVWEHAFv4p7510PGp6fVrYmgfrStXsQ=; b=Q8V6s/9xQVK8iRH2NJSa7eJ+Yd
-	UcM9p0hqMirml26qEX3sGZ0Q5z4MMtznx5X/JQsdlIF9/23a3ZgSY+LTMT4t4uvNH38gYAdazyV3w
-	VDvRmqmvw/icKKXg5baNbEQORkQeTp3ZOeWwq65MTJfrzRNBKtONwi0hIVw+/msACGpUbdRB863Ox
-	/CSiJupilRfaiWclt/bvoT3Lrq1GZ5jq1AUjA9ea7emKWT4xmKuHowob+IafQJSzeGELnxvcsZMii
-	qOuM4NOgc/ToFSuFyU7G5aeQDZDUEWoXEz2OS9422B/i5d8T86I5JoTTvqLutz8tbgKAKm/BdMrxJ
-	FBawYabw==;
-Received: from [122.175.9.182] (port=19732 helo=zimbra.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1tu8VL-000000006I9-3mNW;
-	Mon, 17 Mar 2025 16:49:36 +0530
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id 4A016178245B;
-	Mon, 17 Mar 2025 16:49:31 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id 33B3C1783FED;
-	Mon, 17 Mar 2025 16:49:31 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 3B2FHv0nDjmA; Mon, 17 Mar 2025 16:49:31 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id 0C121178245B;
-	Mon, 17 Mar 2025 16:49:31 +0530 (IST)
-Date: Mon, 17 Mar 2025 16:49:30 +0530 (IST)
-From: Parvathi Pudi <parvathi@couthit.com>
-To: nm <nm@ti.com>
-Cc: basharath <basharath@couthit.com>, ssantosh <ssantosh@kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, 
-	danishanwar <danishanwar@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, afd <afd@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	mohan <mohan@couthit.com>, parvathi <parvathi@couthit.com>, 
-	Kevin Hilman <khilman@baylibre.com>
-Message-ID: <1365068627.843903.1742210370862.JavaMail.zimbra@couthit.local>
-In-Reply-To: <20250307210517.5xjfc6wntcbj3s4k@precision>
-References: <20250108125937.10604-1-basharath@couthit.com> <20250108125937.10604-2-basharath@couthit.com> <20250307210517.5xjfc6wntcbj3s4k@precision>
-Subject: Re: [PATCH v2 1/1] soc: ti: PRUSS OCP configuration
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7Ua+Tfq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76328C4CEE3;
+	Mon, 17 Mar 2025 11:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742211967;
+	bh=IUHSaJFW36Rq/yR/l9vcO9rORQ7Sa11dvwQP2YGMY9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W7Ua+TfqVwTcP6xP05u325439tU+a7NmKr9czDj1VF5fEZr5vkmj2pjNlMn130Jxy
+	 ZNYpNX62FDe1+QVea9RLWxFtnqkdFv47HUpKBUgowSHjYtAeHUib3L3HntEGV6nf74
+	 hG4gXusTGb+aMcvT/B1Q0SEO8qzsFN+h/i19TLLAhif/yPDenrBLlwe/jsdJPraed/
+	 J2xZWTWtbng3dNYK6v0pNr+5AUTlD22at8Se6Ch09u32Af7oNBlImxTgJw7WYsYXMP
+	 JuD983eeXnJc3yOY0XkYOUBCg3+tNTPA7HB9tb3d7n3rVKR/wEgOIOMYdkCNQ5Xmzm
+	 ygFO9Otbl4C7w==
+Date: Mon, 17 Mar 2025 12:46:01 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Improve soundness of bus device abstractions
+Message-ID: <Z9gLeaQqZOef0Fqz@pollux>
+References: <20250314160932.100165-1-dakr@kernel.org>
+ <2025031542-starry-finally-1a2c@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
-Thread-Topic: PRUSS OCP configuration
-Thread-Index: DvRQZaXzAimB/uZVNUsWawvfCP38Jg==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025031542-starry-finally-1a2c@gregkh>
 
-Hi Nishanth,
-
-> On 18:29-20250108, Basharath Hussain Khaja wrote:
->> From: Roger Quadros <rogerq@ti.com>
->> 
->> Updates OCP master port configuration to enable memory access outside
->> of the PRU-ICSS subsystem.
->> 
->> This set of changes configures PRUSS_SYSCFG.STANDBY_INIT bit either
->> to enable or disable the OCP master ports (applicable only on SoCs
->> using OCP interconnect like the OMAP family).
->> 
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
->> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+On Sat, Mar 15, 2025 at 09:34:17AM +0100, Greg KH wrote:
+> On Fri, Mar 14, 2025 at 05:09:03PM +0100, Danilo Krummrich wrote:
+> > Currently, when sharing references of bus devices (e.g. ARef<pci::Device>), we
+> > do not have a way to restrict which functions of a bus device can be called.
+> > 
+> > Consequently, it is possible to call all bus device functions concurrently from
+> > any context. This includes functions, which access fields of the (bus) device,
+> > which are not protected against concurrent access.
+> > 
+> > This is improved by applying an execution context to the bus device in form of a
+> > generic type.
+> > 
+> > For instance, the PCI device reference that is passed to probe() has the type
+> > pci::Device<Core>, which implements all functions that are only allowed to be
+> > called from bus callbacks.
+> > 
+> > The implementation for the default context (pci::Device) contains all functions
+> > that are safe to call from any context concurrently.
+> > 
+> > The context types can be extended as required, e.g. to limit availability  of
+> > certain (bus) device functions to probe().
+> > 
+> > A branch containing the patches can be found in [1].
+> > 
+> > [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/device
+> > 
+> > Changes in v2:
+> >   - make `DeviceContext` trait sealed
+> >   - impl From<&pci::Device<device::Core>> for ARef<pci::Device>
+> >   - impl From<&platform::Device<device::Core>> for ARef<platform::Device>
+> >   - rebase onto v6.14-rc6
+> >   - apply RBs
+> > 
+> > Danilo Krummrich (4):
+> >   rust: pci: use to_result() in enable_device_mem()
+> >   rust: device: implement device context marker
+> >   rust: pci: fix unrestricted &mut pci::Device
+> >   rust: platform: fix unrestricted &mut platform::Device
+> > 
+> >  rust/kernel/device.rs                |  26 +++++
+> >  rust/kernel/pci.rs                   | 137 +++++++++++++++++----------
+> >  rust/kernel/platform.rs              |  95 +++++++++++++------
+> >  samples/rust/rust_driver_pci.rs      |   8 +-
+> >  samples/rust/rust_driver_platform.rs |  11 ++-
+> >  5 files changed, 187 insertions(+), 90 deletions(-)
 > 
-> On the verge of applying this patch, looking deeper, I noticed
-> drivers/bus/ti-sysc.c managing the sysc controls. infact, I wonder if
-> b2745d92bb015cc4454d4195c4ce6e2852db397e ("bus: ti-sysc: Add support
-> for PRUSS SYSC type") could be merged with this?
-> 
-> 
-> Could you say why drivers/bus/ti-sysc.c would'nt be the right solution?
-> 
-> Ccying Kevin if he has any ideas about this.
-> 
+> Thanks for doing this work, looks good to me.  Mind if I suck it into
+> the driver-core tree now?  Or do you want it to go through a different
+> tree?
 
-Thank you for the feedback.
+This series has a conflict with nova-core, it will require the following fixup
+in -next and Linus' tree when he pulls things.
 
-We will analyze ti-sysc and revert back with an update shortly.
-
-
-Thanks and Regards,
-Parvathi.
+diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
+index 63c19f140fbd..a08fb6599267 100644
+--- a/drivers/gpu/nova-core/driver.rs
++++ b/drivers/gpu/nova-core/driver.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-use kernel::{bindings, c_str, pci, prelude::*};
++use kernel::{bindings, c_str, device::Core, pci, prelude::*};
+ 
+ use crate::gpu::Gpu;
+ 
+@@ -27,7 +27,7 @@ impl pci::Driver for NovaCore {
+     type IdInfo = ();
+     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+ 
+-    fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
++    fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
+         dev_dbg!(pdev.as_ref(), "Probe Nova Core GPU driver.\n");
+ 
+         pdev.enable_device_mem()?;
