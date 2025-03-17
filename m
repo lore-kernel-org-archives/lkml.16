@@ -1,103 +1,216 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2752621D5A2;
-	Mon, 17 Mar 2025 09:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84376222562;
+	Mon, 17 Mar 2025 09:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742204107; cv=none; b=JT0dlXCoge9FP+xfKEPnrogVZMJBNcXOtC4a+pEcxRgpOnyMG9bt7wGN49nAnFfo97tZj4LCMGut3pY7KMQ9GYSXuoGESqoTbb85YSIWNb1fiRjcg/fRB10hSUhgdoQr2v3HBmY2LdDSt//QSu0AeY2Ue/J1EDGmaoZAeu6m1tI=
+	t=1742204151; cv=none; b=jxEmPaQ+HPC5z04zQ0DFPlebqoBqFxPGpWTHOY9MhLj+U/hNyU/7B8OdaOJk0Y5mnA9uu2yVYiPVJNY/3FeCQdsLMIasvj0C1dvZguep+3vUKTm3ltgOdEKwK+6aQ0NYYjkDTLVifIfUzvIsBqZM5R9gm7KFrqqZBV3Cw3/tC5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742204107; c=relaxed/simple;
-	bh=SdEzEJ2gLHV8h4tgX8aQVVF54sCPHDjOMa8xRrvB/tE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lOsvQODV+EHP+oW7Hk1hYCPDps0g9nIx4zprbjedbpModNTH8/msDDnsa+eULtCi/HLpJhlBEiuNxNKYXGkUs0IPPn2af93s3epPdSTqwgq3owfS7a13QU4VpbZY4HttOSwNPOpXGk5HfyitUXpuXPj4vXwylJTeGFMwtfhoJiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=bw9ir2Fg; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1742204151; c=relaxed/simple;
+	bh=ydKbUy0g0dQk5Pf63CXpSEv9U9PhXU/f5x0kUsp/Q/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ODWUl/xy2YKN3fZTQi5ibmk96KebvOhxXFpvLYnsiZr7dVM+v9Ja7c2hDl11aqvND0SJbYGTkSqJIJ6p8sbAcyp2RCQkH4jMCjk4yYxzaQeCs/J9CojwOp/xEQXCM5FSs2xzB4DL2X6JwLaI0FlXSEiE+ErJ224N1V0MaZqcv+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RL+/zQP+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="bw9ir2Fg"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id BAC59A00A7;
-	Mon, 17 Mar 2025 10:34:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=p9rtY7T/5FbeYUgyuooDTwafPSFIqhxRRsMfKKK+iYw=; b=
-	bw9ir2Fgh04fFvfDrRsG7V1d95pF74h6qNEDoYJvvUhIVj99j7eWFaAUiNQTYUn2
-	TSeUCYPG1V318DVjhhCs2vzT70EUn01MRMkb0LSMZ5qfI56gO0HVSaRHSEA1N/2p
-	kC40GHgH1kfHEWAzeU0UcrBlDfHfHrpdvf/NciXIJ3U1YCbpvV6qkwL+nh1c6D+C
-	tV1DmVcQiWRdszrRdWOLUW/ZVZciRK0CiRfADjPQgmUNaPfVQhfKA3oC1DvslC2N
-	5oLC+lnuU0Kli/L5j8C4V0/hUvv1yaLE+owB47EFQuovJbnxF9wDGJG4S2MSMotI
-	6psW0h7uHQPrzLmDCfv7nVnYRzHdKGEDxudEbGbGFSpRmzgCbNMJt192TWPktU3S
-	Svcof1dY24eRp2ayWY4VmwBb/Fe9V0LV0Nn4csKdbYWdnzcTCHf9NnW50AR/VEBw
-	it+jogzWEeBaHPC4ux0t9JPcKe5LAJEQJexPPSxTwMKdQt8eYV9RdXWmzYoVA349
-	FJyru63cqowMr0lkGOXGMbo4hQ6aBtgJxq8xfu04VGO4KI4/LbeFI8ea51nMl0/h
-	ByXFj4X+6vKRbpayaGspew6NrkV54xQkpyfLvjRH+382PteCnpeGIjbWTF7KmxR8
-	umeoVeC8rLQq1tfWnCNztLlWtAnhP/gwEakE0XbPdQg=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	=?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>, "Varshini
- Rajendran" <varshini.rajendran@microchip.com>, Tudor Ambarus
-	<tudor.ambarus@linaro.org>, Mark Brown <broonie@kernel.org>,
-	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
-	Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>, Alexander Dahl <ada@thorsis.com>,
-	"Nicolas Ferre" <nicolas.ferre@microchip.com>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Subject: [PATCH v5 0/2] Add more devm_ functions to fix PM imbalance in spi/atmel-quadspi.c
-Date: Mon, 17 Mar 2025 10:34:41 +0100
-Message-ID: <20250317093445.361821-1-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RL+/zQP+"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52GMWBiO023396;
+	Mon, 17 Mar 2025 09:35:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qF2h5i7vKFz1+33BAtMihVx4WQ+5fW9K69V9+MemX1U=; b=RL+/zQP+0j2dklnt
+	JqUWFkNg8KWRvCdSJ3T4Yq2Lf/Au5ltK5qnx/S/ZcmlQcvsUV8scogWCJD+G9GG7
+	Wk+9WGYJJXeL2rz0dUmQH/ZzyeySRtog4lYzKDLSjgHEHoRO+v2bisGCIDidtKKM
+	q7h9lCCorh8U8KI5kQaPmTPCpS7KUgvDgSjxkHJFwNuGJULXII1OkCVPGrFASBEX
+	Uvm2Z7EV/Z1qV/jy2m3sSgcgtGmzRp8rI5DZldS1dmdoDeaWB8UkiY4j6lYEaoAE
+	9ZnUfqTZK0PMmAqJN9m0btIpp/pdjRdv5Z+8h0BU8HbyG6SDCYoY3s0sKmTqH5xw
+	zuyKfg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d2ahc4x8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Mar 2025 09:35:28 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52H9ZRS8031973
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Mar 2025 09:35:27 GMT
+Received: from [10.216.37.239] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 17 Mar
+ 2025 02:35:21 -0700
+Message-ID: <6e51e35f-78c3-5d2b-697e-ce4a7da7b15c@quicinc.com>
+Date: Mon, 17 Mar 2025 15:05:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1742204094;VERSION=7986;MC=881707077;ID=162298;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D948526D7462
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v4 02/10] arm64: dts: qcom: qcs6490-rb3gen2: Add TC956x
+ PCIe switch node
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Krishna Chaitanya Chundru
+	<krishna.chundru@oss.qualcomm.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+	<kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Rob Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor Dooley" <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Konrad Dybcio" <konradybcio@kernel.org>,
+        <cros-qcom-dts-watchers@chromium.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        <quic_vbadigan@quicnic.com>, <amitk@kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <jorge.ramirez@oss.qualcomm.com>
+References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
+ <20250225-qps615_v4_1-v4-2-e08633a7bdf8@oss.qualcomm.com>
+ <ciqgmfi4wkvqpvaf4zsqn3k2nrllsaglbx7ve3g2nbecoj35d6@okgcsvfx27z5>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <ciqgmfi4wkvqpvaf4zsqn3k2nrllsaglbx7ve3g2nbecoj35d6@okgcsvfx27z5>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Ronk3wIUBrbfgaMtVsHQGd7xfCAacnwz
+X-Proofpoint-GUID: Ronk3wIUBrbfgaMtVsHQGd7xfCAacnwz
+X-Authority-Analysis: v=2.4 cv=R7kDGcRX c=1 sm=1 tr=0 ts=67d7ece0 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
+ a=bI46KiJKG97eG1GfczgA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-17_03,2025-03-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ impostorscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503170070
 
-The probe() function of the atmel-quadspi driver got quite convoluted,
-especially since the addition of SAMA7G5 support, that was forward-ported
-from an older vendor kernel. During the port, a bug was introduced, where
-the PM get() and put() calls were imbalanced. To alleivate this - and
-similar problems in the future - an effort was made to migrate as many
-functions as possible, to their devm_ managed counterparts. The few
-functions, which did not yet have a devm_ variant, are added in patch 1 of
-this series. Patch 2 then uses these APIs to fix the probe() function.
-
-Change in v4:
-* the DMA cleanup was split out and will be submitted separately for 6.15
-
-Change in v5:
-* rebased to linux-pm/linux-next, will now target 6.15
-
-Links to previous versions:
-pre-series:
-https://lore.kernel.org/linux-kernel/20250114222851.1023194-1-csokas.bence@prolan.hu/
-v1:
-https://lore.kernel.org/linux-kernel/20250115160244.1102881-1-csokas.bence@prolan.hu/
-v2:
-https://lore.kernel.org/linux-kernel/20250124085221.766303-8-csokas.bence@prolan.hu/
-v3:
-https://lore.kernel.org/linux-kernel/20250207124802.165408-1-csokas.bence@prolan.hu/
-v4:
-https://lore.kernel.org/linux-kernel/20250210111008.248929-1-csokas.bence@prolan.hu/
-
-Bence Csókás (2):
-  pm: runtime: Add new devm functions
-  spi: atmel-quadspi: Fix unbalanced pm_runtime by using devm_ API
-
- drivers/base/power/runtime.c | 36 ++++++++++++++++++++++++++++++++++++
- drivers/spi/atmel-quadspi.c  | 18 +++++-------------
- include/linux/pm_runtime.h   |  4 ++++
- 3 files changed, 45 insertions(+), 13 deletions(-)
-
--- 
-2.48.1
 
 
+On 2/25/2025 5:19 PM, Dmitry Baryshkov wrote:
+> On Tue, Feb 25, 2025 at 03:03:59PM +0530, Krishna Chaitanya Chundru wrote:
+>> Add a node for the TC956x PCIe switch, which has three downstream ports.
+>> Two embedded Ethernet devices are present on one of the downstream ports.
+>>
+>> Power to the TC956x is supplied through two LDO regulators, controlled by
+>> two GPIOs, which are added as fixed regulators. Configure the TC956x
+>> through I2C.
+>>
+>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+>> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 116 +++++++++++++++++++++++++++
+>>   arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
+>>   2 files changed, 117 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> index 7a36c90ad4ec..13dbb24a3179 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> @@ -218,6 +218,31 @@ vph_pwr: vph-pwr-regulator {
+>>   		regulator-min-microvolt = <3700000>;
+>>   		regulator-max-microvolt = <3700000>;
+>>   	};
+>> +
+>> +	vdd_ntn_0p9: regulator-vdd-ntn-0p9 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "VDD_NTN_0P9";
+>> +		gpio = <&pm8350c_gpios 2 GPIO_ACTIVE_HIGH>;
+>> +		regulator-min-microvolt = <899400>;
+>> +		regulator-max-microvolt = <899400>;
+>> +		enable-active-high;
+>> +		pinctrl-0 = <&ntn_0p9_en>;
+>> +		pinctrl-names = "default";
+>> +		regulator-enable-ramp-delay = <4300>;
+>> +	};
+>> +
+>> +	vdd_ntn_1p8: regulator-vdd-ntn-1p8 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "VDD_NTN_1P8";
+>> +		gpio = <&pm8350c_gpios 3 GPIO_ACTIVE_HIGH>;
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <1800000>;
+>> +		enable-active-high;
+>> +		pinctrl-0 = <&ntn_1p8_en>;
+>> +		pinctrl-names = "default";
+>> +		regulator-enable-ramp-delay = <10000>;
+>> +	};
+>> +
+>>   };
+>>   
+>>   &apps_rsc {
+>> @@ -735,6 +760,75 @@ &pcie1_phy {
+>>   	status = "okay";
+>>   };
+>>   
+>> +&pcie1_port {
+>> +	pcie@0,0 {
+>> +		compatible = "pci1179,0623", "pciclass,0604";
+>> +		reg = <0x10000 0x0 0x0 0x0 0x0>;
+>> +		#address-cells = <3>;
+>> +		#size-cells = <2>;
+>> +
+>> +		device_type = "pci";
+>> +		ranges;
+>> +		bus-range = <0x2 0xff>;
+>> +
+>> +		vddc-supply = <&vdd_ntn_0p9>;
+>> +		vdd18-supply = <&vdd_ntn_1p8>;
+>> +		vdd09-supply = <&vdd_ntn_0p9>;
+>> +		vddio1-supply = <&vdd_ntn_1p8>;
+>> +		vddio2-supply = <&vdd_ntn_1p8>;
+>> +		vddio18-supply = <&vdd_ntn_1p8>;
+>> +
+>> +		i2c-parent = <&i2c0 0x77>;
+>> +
+>> +		reset-gpios = <&pm8350c_gpios 1 GPIO_ACTIVE_LOW>;
+>> +
+>> +		pcie@1,0 {
+> 
+> PCIe bus can be autodetected. Is there a reason for describing all the
+> ports and a full topology? If so, it should be stated in the commit
+> message.
+> 
+As these ports are fixed we are defining them here, I will mention this
+in the commit message. It is similar to how we added pcieport for all
+the platforms, I tried to add full topology here. And if we want to
+configure any ports like l0s entry delay, l1 entry delay etc in future
+we need these full topology to be present.
+
+- Krishna Chaitanya.
+>> +			reg = <0x20800 0x0 0x0 0x0 0x0>;
+>> +			#address-cells = <3>;
+>> +			#size-cells = <2>;
+>> +
+>> +			device_type = "pci";
+>> +			ranges;
+>> +			bus-range = <0x3 0xff>;
+>> +		};
+>> +
+>> +		pcie@2,0 {
+>> +			reg = <0x21000 0x0 0x0 0x0 0x0>;
+>> +			#address-cells = <3>;
+>> +			#size-cells = <2>;
+>> +
+>> +			device_type = "pci";
+>> +			ranges;
+>> +			bus-range = <0x4 0xff>;
+>> +		};
+>> +
+>> +		pcie@3,0 {
+> 
