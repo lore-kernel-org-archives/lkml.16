@@ -1,105 +1,110 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE921A23BC;
-	Mon, 17 Mar 2025 15:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A9517A30F;
+	Mon, 17 Mar 2025 15:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742227049; cv=none; b=XCfeKzXsUTGl2sQyYXQ8q8Qf6d74yBf+bVyWysx90mqG0FvgOHVCG77gx3NdjjdpLIf/3lpffExojtQbTxpMjerjKEcOeHW9Lh6rHa1ET36AozY3alXx7KRPnnbf9TvODKZqNOn1tl5aAuGIbmz+TwgChn2Q/wu36KGH6/nDLok=
+	t=1742227085; cv=none; b=LAtVdVFj3CDCReVE45Wy2InKo+IiDlsXK/Sl8YDGE4YZ4FCdAq/sLK9bejuElT4meNpo5KSmR5j+QNactNIwZthvtjb7y4ngngnwwE78MEloO8glHV5LqRUik/f9ISiVRy5qv5bs4T+fHIys7/LwiJbcH19fWmw7PNt9xJXTc3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742227049; c=relaxed/simple;
-	bh=laCuTv5F1A6gMhBlXcgyrlzImrJDzVe0buSdo+i4Of0=;
+	s=arc-20240116; t=1742227085; c=relaxed/simple;
+	bh=yMKzmgdAa1GrfN1P1367oG58K7sJ1GR+/2GwB7WGKUc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XsGJF9xBMFLYf6vvuEoMsCZwy0zKVJeeHxURYorSA3ZiQqc76Zu/HNTfNkmcDyDCcUREOwuBpf2tjVLU6QMFEUoMgR512G/D4uAxmAkOaKuPXbeVqCBsWKM22ndwYXlxUBRri808wmObU6QAVsUzcramppROnRFRqtX6almjO2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yi+HyKlc; arc=none smtp.client-ip=209.85.216.43
+	 To:Cc:Content-Type; b=KYsPbjofdtxpjzh1kjY1fqXayKBBvHh2b2dwbLZo3SLxxVEwmttFqES8RI5ZD71kiKDdyPi9c9tt4JCOJSX50WbyFyYl3O0TkMC4+hQHrWsqdZ6AZ2OKi77H7c7ifTkXMaKg3X0dvT5eaqhSu183uASAVn+9MFgcrnT/swG9Vts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMTFTTf7; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yi+HyKlc"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff6b9a7f91so660964a91.3;
-        Mon, 17 Mar 2025 08:57:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMTFTTf7"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-224019ad9edso35539345ad.1;
+        Mon, 17 Mar 2025 08:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742227048; x=1742831848; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742227083; x=1742831883; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=laCuTv5F1A6gMhBlXcgyrlzImrJDzVe0buSdo+i4Of0=;
-        b=Yi+HyKlcnMg/pLC4+1YelgxWAZpDfkAanYNVSlDHWhpboFp85s39TsU+G757OTpCEB
-         1ILRjg36KGNegdFOQ7QDdjGxvnAKdDiY9uy/OpTiq7I6Eir0M/jSGy/QoHs+e5SEBY+k
-         gFXzRu6FCqYUSW1WKaLQtzmwJNOjFTx9hIsM+ZZNygMO4yBzPoJTrIybdnBfkLyDxWXW
-         loGGGAqFctxvp0heNvMzTsD+CT3JADnpjeZP1isIQlBctgT/omNb+mrrUFcKsdb/mbpM
-         l8RAp0YQLd7A4M77LHhoIIuy2asyAOLTr8ayK7aOPaERFzklwx28OAfJV5mXsrGPwXRr
-         dQ4Q==
+        bh=06QGEsbiDHTPlITpRCkSEygiFBtZganqjlJySZAtEPM=;
+        b=SMTFTTf723AxXy4OSnMzTmpSgvMaXDGzYPg/1GVw/WNHcyjPGc373IXAAnmnqmM2FI
+         XwRBMM1VT+/mF3NJJAJgwpFj9iaUPJZ9tMqzV4SDZG9OPd4F6EatvKBEJpMi1YY1+sNf
+         M9Fykb0eveZdjggZ9IyGvTxRUO/YyVKpJVx8pQzN1ZBpfQzIDZVdlifEXiMlVPjoCMVG
+         tXcj+iSnXfPCfjAmrNMrcOQ4iSzrQk6s+9lSJ3bH0xIGeK8zN3bnP+AD7MUdEdzu9eLX
+         25fCr4wbZPBmgwUZozhaSF1xK2vBADLMSm4khNKAq9vaqrkDaU36x/VoCd6uR5bichte
+         fArQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742227048; x=1742831848;
+        d=1e100.net; s=20230601; t=1742227083; x=1742831883;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=laCuTv5F1A6gMhBlXcgyrlzImrJDzVe0buSdo+i4Of0=;
-        b=jLVANgtFvxXmRywzG3CSfetpr9pFm4+udCqbgUDtt6sG4OyRht7GyAbjYeoOW4rQ2q
-         uBVfLFjWunVpxuYYeAEsZhnc18ALtfJ2lTj4s3b+h/K+ApAb2ZV3jkdrwNJBuTSrATuY
-         cqglYfflmUWGiAQYbFDGKprASAN1ZnhzBtFcupHf9+aLoSmzxIJzOLQzWVnGSFxBG6rC
-         cq4MMMWInECAHm7jXfgX6AOB1iX/C5uTG74AUxxRXrueVm0lVc5/xAQCJUp5la0Nh0gX
-         5zvhgPrwJDD3+81KFWAr1ZolkuNyrdtcqXRJuNghof4YNI0gcFY6/ab6LDiVeNRngSwN
-         Ayzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUwzn0AibiyQQiFmMxGN9/8vmx4x4n7cF4bEO5said27d021cfd9TMfMKYWjHpxl1TIDA/gf8PHP+OBug=@vger.kernel.org, AJvYcCWnd2n8t69F9NudLCb7tGRaTswvx99oVxdJH2930RUpXL5FFelBXvCB9EgGiMBatN9Hn9twbW+CnFN03esWAEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys1ozipoh0faS/2S6VIcIE3GSdZkd9u7JQtjk397jgJBlYXscJ
-	FDtgofEEYqJ7i0XHPI5fff3jtyp75pF1eDk5rkzxN/gsePbXpmNe7R38g6+LdSSEqZ0lGZKuZ5m
-	oMHrhRplCHYE8vzkPolIyI4nzOIg=
-X-Gm-Gg: ASbGncs6pBiZE1NuCGKOiAe4zD8E9Md40GOUbxu8L8Kyg3XlWQjTK6U1hRr0lGKb89Z
-	JU4I3kG8dJEwBmG5fvqjgtllw1ltxTNPz1UdypbcEb1gBcuZVYU3Xs/JgoaVv88u6d7OEX0Xcok
-	g250eTrMmu8vrsHpQN0MZ+Rbu+fg==
-X-Google-Smtp-Source: AGHT+IEVYUxwx5E9jnbQsVPneJnZeRgJshiR/gfhI42yfApYsUWLNneAxhc+MmSkVoIX+iFteyviofpyQLBZVNXAaMM=
-X-Received: by 2002:a17:90b:3850:b0:2ff:6941:9b6a with SMTP id
- 98e67ed59e1d1-30151d40343mr6084294a91.3.1742227047825; Mon, 17 Mar 2025
- 08:57:27 -0700 (PDT)
+        bh=06QGEsbiDHTPlITpRCkSEygiFBtZganqjlJySZAtEPM=;
+        b=hSgzOS4Ob5Qsh5HLrKtrLplmztmXzXaS94w1GZQ/e2Nv0Lhy06rUKsl/BCjYDxh8Jf
+         tQmiMZCoKUVuZFU8AUMwFryb8lZXVgt7fqxWibf8aBchOR3z6CeXD4q+Yi6H9gn+w58z
+         pcx0H3b4vKFYMXsr4MaLdFz4v/dyRFF9KSPBScSFgy8L+fGtTZFTx8g4Vz7y22CUO1o5
+         zsSlqots35qtDqnZEMBP54CUKDMu9UAS2LIitfQFDCUWzOZkwbvi/hf/+UGtFt3pYQ6/
+         bUHNQeEAzHzyfTTbZOplPzJ2/VNX0Kxj2idHb04WWzbpoTb6AQLndCJSTOCjHrK215qi
+         vAFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ6yolh3/ky9VItXc8ggMgQTEKOXsIPQECdGUOR2dbQ/pLR9dvJ4qF40U/eeH6ldwnF4swHAI0aAuB@vger.kernel.org, AJvYcCWWMLJtMXm8gI9M/XaopvGQX5akCCPBcPi8hxq/q19smihIDWedTL6W3aYwNCO2aMbPMbGvEJQNoK3+6NK/@vger.kernel.org, AJvYcCXRpVjg4tWC1CdhmV9iGBUDl1DhLVife+XEHDT4yIBCDgxfQnlNJLP+DIH0ygrqfLM/lOhpopQzEFIXP5Op4muPlg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLG0cSuCdCMH9sylCwGFk5HGTsjE7jvm48zpUKGzz1tdrf1j/w
+	hMrRiR1KvJXTBITCyXv3UhJArycQYUztOcxyySTImDVIjIpyvXvl2ZtiN+zpu4JFRULA6/IsZhv
+	eXHf3RZovybzOEepGY8bbW3Pip2A=
+X-Gm-Gg: ASbGnctDIuEd6zeN1s/BCTc4X6REfLebFGb4DIBmHS++9U+1jfKenZScAM0Az9LyG5b
+	HwQD2XJpNGAxV8NEtnaGTDGCCJ8m+cXwZitX8gI7NO7Cqr6vRjx1OPrBifPwNWGD0guEI87Mqi3
+	nWU3dC5IGxMrXcA/TQK5G1jWkT5vU=
+X-Google-Smtp-Source: AGHT+IG3Ayo9k0yRtjHNBCfqhmNJz3asFcvcSqQ3hdNGSq7kkzqBge1sZkHTYixEYa/8f6gTrblik9jUofUotL/jY/U=
+X-Received: by 2002:a17:90b:17c5:b0:2fe:b735:87da with SMTP id
+ 98e67ed59e1d1-3019e7a3ce7mr409937a91.0.1742227082981; Mon, 17 Mar 2025
+ 08:58:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250316-vec-set-len-v1-0-60f98a28723f@gmail.com>
- <20250316-vec-set-len-v1-2-60f98a28723f@gmail.com> <D8IGFTJXS2A1.9JBD1UKGN4PX@proton.me>
- <CAJ-ks9=oq+c_pMg41QgGWsj=phWYfntXQgpSrFmz16Vifofn3g@mail.gmail.com>
- <D8IMA0GUIPTD.34ZEZ3W8QSKTA@proton.me> <CAJ-ks9kXZDO-5utmQb2HLkxmxmQ-bg8jZ4FdvDatTj_79W2dMA@mail.gmail.com>
-In-Reply-To: <CAJ-ks9kXZDO-5utmQb2HLkxmxmQ-bg8jZ4FdvDatTj_79W2dMA@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 17 Mar 2025 16:57:15 +0100
-X-Gm-Features: AQ5f1JqXyKshe8vnYtXANeddPDy0kCXR7B8Tw1pBs_cBlrxTV_PWtFpByDO-91o
-Message-ID: <CANiq72nVPag-9c73rVTpm5A6BOtM0jq9f9n-dobP8QDOoK5EJQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: alloc: add `Vec::dec_len`
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Danilo Krummrich <dakr@kernel.org>, 
-	Andrew Ballance <andrewjballance@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250317133306.2003909-1-daniel.baluta@nxp.com>
+ <20250317133306.2003909-3-daniel.baluta@nxp.com> <5873285.DvuYhMxLoT@steina-w>
+In-Reply-To: <5873285.DvuYhMxLoT@steina-w>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Mon, 17 Mar 2025 17:58:07 +0200
+X-Gm-Features: AQ5f1JrRqDM8p6JEGxBqM22DUaeaV1igcAM-i6by99ARfroWOHqb4YOLD6MREdU
+Message-ID: <CAEnQRZCsCYbQU8uxpFeyLmji65VRoO0rckRcoyc3frd2_B_KqQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] arm64: dts: imx8mp: Add mu2 root clock
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: shawnguo@kernel.org, robh@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	s.hauer@pengutronix.de, kernel@pengutronix.de, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, festevam@gmail.com, devicetree@vger.kernel.org, 
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org, frank.li@nxp.com, 
+	aisheng.dong@nxp.com, laurentiu.mihalcea@nxp.com, shengjiu.wang@nxp.com, 
+	iuliana.prodan@nxp.com, a.fatoum@pengutronix.de, mathieu.poirier@linaro.org, 
+	linux-remoteproc@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>, 
+	Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2025 at 4:38=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
+On Mon, Mar 17, 2025 at 5:30=E2=80=AFPM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
 >
-> It is my understanding that the kernel's policy is in general not to
-> add API surface that doesn't have users. Rust-for-Linux of course
-> often doesn't honor this by necessity, since many abstractions are
-> needed before users (drivers) can be upstream. But in this case we
-> can't even mention a specific use case - so as I mentioned on the
-> previous reply, I am not comfortable putting my name on such an API.
+> Am Montag, 17. M=C3=A4rz 2025, 14:33:03 CET schrieb Daniel Baluta:
+> > Enable MU2 node and add mu2 root clock.
+> > MU2 is used to communicate with DSP core.
+> >
+> > Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+> > Reviewed-by: Peng Fan <peng.fan@nxp.com>
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boo=
+t/dts/freescale/imx8mp.dtsi
+> > index 3b725fe442d0..5b443fbeded8 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > @@ -1253,7 +1253,7 @@ mu2: mailbox@30e60000 {
+> >                               reg =3D <0x30e60000 0x10000>;
+> >                               interrupts =3D <GIC_SPI 136 IRQ_TYPE_LEVE=
+L_HIGH>;
+> >                               #mbox-cells =3D <2>;
+> > -                             status =3D "disabled";
+>
+> There is no need to enable MU2 if the DSP is disabled by default, no?
 
-To clarify: as long as the future user is known and agreed upon, it is
-fine, i.e. what cannot be done, and we do honor it, is to add things
-that have no user in sight at all.
-
-From time to time, but not really often at all, we have added things
-that will obviously get users eventually even if there is currently no
-one. For instance, all the `pr_*` levels, even if we do not have a
-caller yet for some of them (in that case, because it is simpler to
-add all at once instead of asking for reviews several times for
-essentially the same code).
-
-Cheers,
-Miguel
+True, I can enable it only when needed. Will fix in next version.
