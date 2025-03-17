@@ -1,62 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2C42475C2;
-	Mon, 17 Mar 2025 15:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2FA16E863
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 15:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742224868; cv=none; b=ioHon6abxnSY53mngZrHECcTV06Dd0HYokdZhQWoP6wzx/3kz+tgEfZKmcCm6Hi0SEQoNh7IBVVloFtQb6jFXdcfgVRUaTSX/Kp5j8BILju19ZrQi1A4p+PamBwi1d5DfUFpwOOprXubVYxmPmRNhNwmSzPriqKfyZTTXGmStMI=
+	t=1742225070; cv=none; b=bKiZrX2xTvUhE0XVU3+DB3p3OJm4UWD6mihpDc/0HtZn99QzB/X4Av7aFbt4eQ4PDJ4uK9X/b4+RoCm0CR+LNFy9f5SpTS/YShKXrkVuskKW6x2+E9CeiadQliJ4mE6hih6W6/jUe7o+Mvrfnvf6G9G6Rw2ecV3GPY0+UKAcRyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742224868; c=relaxed/simple;
-	bh=Ea0UjlDUrTa7QdhlEmnGtepRWK9bK6m13zCCX0Ct540=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=uYsnIStnyl5re9EKzJRP2M+QTiepx0kKLI0PXUTFunCRRz5EDFEe/+M6g4UQ1vAerazWOPjvzke0cwrZ8ZOLVPu4bACU8g67aBHsG/Xj7cWABNCkIz3DfrSNA0ki08DiAZFJ8YZtBv8fJKLK82vrsNKQG4BfPY89sr9GGKDTLc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95A97C4CEE9;
-	Mon, 17 Mar 2025 15:21:07 +0000 (UTC)
-Received: by venus (Postfix, from userid 1000)
-	id 37269180829; Mon, 17 Mar 2025 16:21:04 +0100 (CET)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Sebastian Reichel <sre@kernel.org>, Artur Weber <aweber.kernel@gmail.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- ~postmarketos/upstreaming@lists.sr.ht
-In-Reply-To: <20250316-max77693-charger-input-threshold-fix-v1-1-2b037d0ac722@gmail.com>
-References: <20250316-max77693-charger-input-threshold-fix-v1-1-2b037d0ac722@gmail.com>
-Subject: Re: [PATCH] power: supply: max77693: Fix wrong conversion of
- charge input threshold value
-Message-Id: <174222486420.175368.1264786366288548105.b4-ty@collabora.com>
-Date: Mon, 17 Mar 2025 16:21:04 +0100
+	s=arc-20240116; t=1742225070; c=relaxed/simple;
+	bh=DEjJ25Es6BM7xj6uskcT/d+9Z4ZClbxmOJw9QyYt10w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=exxGZS4uUDStsQrDXMzKvL/n3aMeYfc0eG9tGjHQ6TbAJwPpT1KA4eLAxcNkPquchWbdyNDF+ifGPJWDAo/DGHw8ACWil4u2irwF+CKr0k1oAVuBzDbpUFKQaCdtRwcnTUEzv62T/NPGY2W/u+6sZoxx8bi0D2q77xmRw8obm00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=rWadFXma; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="rWadFXma"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=8QDwo5kF1JSBFzHwNUnF/K8mjZQ2hop0jQzunjRmUXo=; b=rWadFXma1eVV5kMAZ48rVjbhTT
+	ybNZ5xCy5ttZZ1vW0pDq5cZswJwzZPdjgvOSce4B1xq1CgWHwv+cYg88DCMt0NY00jF8a0uV7XS0/
+	t7Rsi3LE+GAGXrmpdI9q9YuEOYI0cnjKdeDYXm/N1xIVY/QNRQ5DbmqpeClFufjGP+WiqSqWGMNfp
+	HEbBvidDlZwzk2xXC8xbeEYcXm4dzIhchSSL5UNYpDYy2BZ8kKMw75FjQs+0GWnyaRTWJs99ipNsy
+	xx0LR9Xy3A3VZPa39SgAer+meJV4EL5KyXYJALwx+YNRvg/JLsojZBJS+TV7+trg5gZSm2/6YQrhf
+	T6tDgZMQ==;
+Received: from [187.90.172.172] (helo=[192.168.1.60])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1tuCKC-002Hnk-9k; Mon, 17 Mar 2025 16:24:20 +0100
+Message-ID: <cfee20d6-881d-32a2-96f8-2bcac87864a7@igalia.com>
+Date: Mon, 17 Mar 2025 12:24:15 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] x86/tsc: Add debugfs entry to mark TSC as unstable after
+ boot
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+ mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+ kernel@gpiccoli.net, kernel-dev@igalia.com
+References: <20250226132733.58327-1-gpiccoli@igalia.com>
+ <20250317144028.GEZ9g0XPSkOQU7A-nO@fat_crate.local>
+ <eaef4f28-5531-f8b6-1c29-7a225715012f@igalia.com>
+ <20250317151446.GFZ9g8Zi3qmBwOTuz_@fat_crate.local>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20250317151446.GFZ9g8Zi3qmBwOTuz_@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
 
-
-On Sun, 16 Mar 2025 21:11:49 +0100, Artur Weber wrote:
-> The charge input threshold voltage register on the MAX77693 PMIC accepts
-> four values: 0x0 for 4.3v, 0x1 for 4.7v, 0x2 for 4.8v and 0x3 for 4.9v.
-> Due to an oversight, the driver calculated the values for 4.7v and above
-> starting from 0x0, rather than from 0x1 ([(4700000 - 4700000) / 100000]
-> gives 0).
-> 
-> Add 1 to the calculation to ensure that 4.7v is converted to a register
-> value of 0x1 and that the other two voltages are converted correctly as
-> well.
-> 
+On 17/03/2025 12:14, Borislav Petkov wrote:
 > [...]
+>> The same that happens if today someone marks it as unstable via
+>> command-line, right? You will see that on logs, and could simply reply
+>> that the user marked as unstable themselves, so..no bug at all!!
+>>
+>> But let's think the other way around: what if some user marks TSC
+>> unstable via debugfs, later on runtime, and with that, unveils a real
+> 
+> I don't understand what you mean here.
+> 
 
-Applied, thanks!
+Oh, I meant that: since the behavior of other components (like tracing
+clock) is different if TSC is marked as unstable (a) on boot time,
+through command-line, (b) some time after boot, like on watchdog skews
+(or using this debugfs approach), we may as well have some user marking
+it unstable through debugfs and due to that, finding a real bug
+somewhere, that we can fix it!
 
-[1/1] power: supply: max77693: Fix wrong conversion of charge input threshold value
-      commit: 30cc7b0d0e9341d419eb7da15fb5c22406dbe499
 
-Best regards,
--- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
+>> bug as [1] and then, we can then fix it? That would be a win heheh
+> 
+> No, marking the most important clocksource on x86 deliberately as unstable
+> better scream bloody hell in dmesg. But regardless, I'm not convinced this is
+> nearly as needed to have upstream. Just use it locally or cmdline.
+> 
+> Thx.
+> 
 
+OK Boris, thanks for the feedback - if you don't see much value in this
+one, let's forget about that - can always change locally as you said.
+Cheers,
+
+
+Guilherme
