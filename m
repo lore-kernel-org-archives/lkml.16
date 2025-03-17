@@ -1,79 +1,152 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6322417E5
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC34FDDA8;
+	Mon, 17 Mar 2025 14:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222166; cv=none; b=nB8b8VXiKXl/iCyrmtWmbaHm1sBfYdiekUJqO3Y5BMI3c30Lrfg6jUa+3yOjM1eMGbubS92U0JW91cLSD3Ceo6s0+Iy5bSDgMLRYc1g/l7nFnvAJeoAoVkSZ8s6zjhm0IV/m/l3I94WzZcEK0hRvY1TfE5UoWt/oYQ6hjH1bSwM=
+	t=1742222205; cv=none; b=EO1xIYU1kNT138ZUNXIUzNGlXX9H/Z757YBtqYyjGkAmCCCJ25SWYnZs/fGgTPc/S8cERPlIbBHCalMdb+7OHyV9g2Etsv9GgI5SSx9lvRO4WAlGcgENoISbh7B+KzCU3tccNr2uGRdEyVUmvlPUXglhOZAXdcqZFchXz0np+sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222166; c=relaxed/simple;
-	bh=75LOFLkQeS2D990Jln8z6W9YpYFlu6vf8JAndacVpVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KmlbqV/CIZ0xenRjRG2roLSeWBVyI9fthcUsSlqfJgR3wpL6qAfwVnbCMY23s/aNFKgbQkNuWOWXyXCnJ5PEoZsIRWeqI5EnCqEiSJSZ9jOxgSXVdVDT4JW9lDWmpI6iaw1U9CLXYbJP7r8kyt+9K5mKGYYOJBOPn4mXhmLNlmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=JwK3y7t6; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1742222205; c=relaxed/simple;
+	bh=4TX+lSEn5TaZbpa1TO0GRQ1WwTSTQelGfR2LDjLBtKY=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=ZqJlcDpaghFqt/18av8DIu1CL22VgnoUEwiTeBAruRD1w7DlNJx+g0mgLq4FDLLj7sDWbi2M+MD8h1f2/PUzg5wc+tiYu9kPuZroL9+hcMxyPC5VOuFttthZTO7J8yL0h1B9GrxOppO+wQ0ST8xwd1cirw/c1HzR7h3xbW3gHy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jk3hcw8q; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="JwK3y7t6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=COKOBF5Kp6/L59jrNmNEgGlDWvJC3j7petKc4gxeZ0w=; b=JwK3y7t62997PvSrOTPsG0zOxW
-	LHc2KgGu5yt9ZAkii/OyEV2QTaClAzsCAX0pX4hDhTrgx/qa8cimgJzkUfa8Ji5Xl+DDijY4wtqwq
-	I71UUM3zUEBC2ddI/MS9dUy2nQktJJYmZa1nK3jDQZV6CDvCl7tMpVwPPVZ5Rpam8ZaKixxvINhRi
-	C+bM+KN/Rvlfm9APHfw3nMju7dxBsn0zon5g/mCr0tGkSCn7UwoLNtkZYBeZpbcPW9KF6DZT3EsW4
-	V3uqE07hMSHe9A6+SZcqHfZmeaZ39dmo/wX6QehIuTI+7HrrWH+5UNvKuE/YG74lGARe+j4fPW6wV
-	HlUPRmTA==;
-Received: from [187.90.172.172] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tuBZI-002Gaa-CC; Mon, 17 Mar 2025 15:35:52 +0100
-Message-ID: <1238b1d0-275c-9117-a2e3-5e7684404980@igalia.com>
-Date: Mon, 17 Mar 2025 11:35:45 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jk3hcw8q"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2239c066347so90154155ad.2;
+        Mon, 17 Mar 2025 07:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742222202; x=1742827002; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QihfPZn7yT8b0vOjQdUT1guP8CAMaA7FtKVCMbpLNL4=;
+        b=jk3hcw8qZu23sWpaKbe6kIy8RJIRDxC3kGCgr6xxrfcR8fLlVSp0RzfbGhZTyvsoMR
+         mZ9HuGA3UdErxgh3YoxRI+SKZSnPF4L0kdoGWKg4ofmZdk/TDtQKFn4S0a5nKGYypRmG
+         tuJX1HzFf2wB6A9RZZ1kGtXaWBM+QLOxZksTOJDuIKmw0R2o7IbFlteCzS8HywjzrwtE
+         mGbcksXMd9KlqsJL3FiW3xO/cAO0a9meg6LXEow+ycHVrpK48sCZmQMVdrfsk1J2Hg0z
+         rHjJfbhylciPaVuyV6H6EM6oY+zU98JKQqSxsJimTtmackpxjAqsVtDYGbDmrM2WjVKB
+         Q5TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742222202; x=1742827002;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QihfPZn7yT8b0vOjQdUT1guP8CAMaA7FtKVCMbpLNL4=;
+        b=piov/8PAZekscmObymllxUXehxUU7DFGzPaCZXK1WdNWDRgEAHNoM0naRYESvsLbWZ
+         YqCzv89fCRSuBR6BnQdxQAeyryRScVEQ5cHjXbUYGh3toDp/2cl0Nhy2aZcCE2dJJcaJ
+         /CguGD5Ht1vIk0SO9FnQWLATLIOgNoIS9/U6XMp1NLVmSQHHNId7ltXSXNWtabfmoIgl
+         ggT3Dy5ON4nv/AqdUjIbfJOGJOSiST/7VxEikvFZ5Q+zzAK6E3AnKr0l8mPNhVUoVu+u
+         DYu5LvD/1CJ1CX4wkXMbCBNp3NNi8DGNwVDo3hx50NVQfd9siXgkMAbepxUSTUnipUjj
+         kcxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOmNyobRvc2gpROGlraekTPUyLxZNyhqsruCq+emPJgrT8gUAQn3T4whurJ3niNEwcW/QgYfQRphWIHngiyg==@vger.kernel.org, AJvYcCVKnmIA3KEi9UgLKts+G7WZ8kfbLQN7Strvx5ZL6SxekEZL1se8NRYdxsiUSTqNH/K1L8nCW416p2EOTQXh@vger.kernel.org, AJvYcCVOGxXnbGF1/oh9jzFdhoOTz5zwWX/Rjhcn/gl46WGehirgASHKdj4jNJSTmxa//eZjlbB8zTIUqOIr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf0rmz8NcJuYjGBqExy1JNKu1rXic0CmTHFUGGXOPskl6oC0fM
+	1vPWRMkB+o0E3lW5bG97cH2I1yy1V/dFsIX4CGstYHqRmTMeo5audDPqNw==
+X-Gm-Gg: ASbGncu/NiQOIQC0TLHOiNLbmJL2PWHMl1f5jD3LCW3xSwxgIDxsJQ0FfX7BKASjPXd
+	R/SANmFlVNhLtpJshC4Bw80eH0EkrkGgZn76rB9NpSaTX6xLEvcGRmTOTeMq6pKPcIjbLMMzzrV
+	LoIt8vmVhKfIoSLGxvQZRsFwpmr/6KosqvWssYoVE/1JkUri9h/i9ObGerpON7k+Q1T/k4zlBgi
+	MzpW6BCTYlruOMpk+FOZf8LTKRoRI6LU7JMrYxVwWomXYHA5b5TO+ywrwus6ULS6GUJSTMCEKoO
+	fX0QyQDFsCw/AvlTxSe/+9VilIYqrBtbEQ14qA==
+X-Google-Smtp-Source: AGHT+IHAW0CArsr0VInptn5poqQysT00HxenEXl0IjBQeEKz2+8A2xpon7Tdhho4AIV2v7ipEg5Dhg==
+X-Received: by 2002:a05:6a21:394c:b0:1f5:7d57:8309 with SMTP id adf61e73a8af0-1f5c119438dmr17154898637.21.1742222202053;
+        Mon, 17 Mar 2025 07:36:42 -0700 (PDT)
+Received: from dw-tp ([171.76.81.247])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56e9fe51asm7219707a12.36.2025.03.17.07.36.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 07:36:41 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: John Garry <john.g.garry@oracle.com>, brauner@kernel.org, djwong@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com, martin.petersen@oracle.com, tytso@mit.edu, linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v6 10/13] xfs: iomap COW-based atomic write support
+In-Reply-To: <cd05e767-0d30-483a-967f-a92673cdcba8@oracle.com>
+Date: Mon, 17 Mar 2025 19:50:29 +0530
+Message-ID: <87r02vspqq.fsf@gmail.com>
+References: <20250313171310.1886394-1-john.g.garry@oracle.com> <20250313171310.1886394-11-john.g.garry@oracle.com> <8734fd79g1.fsf@gmail.com> <cd05e767-0d30-483a-967f-a92673cdcba8@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] x86/tsc: Add debugfs entry to mark TSC as unstable after
- boot
-Content-Language: en-US
-To: x86@kernel.org, linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, kernel@gpiccoli.net,
- kernel-dev@igalia.com
-References: <20250226132733.58327-1-gpiccoli@igalia.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20250226132733.58327-1-gpiccoli@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 26/02/2025 10:27, Guilherme G. Piccoli wrote:
-> Right now, we can force the TSC to be marked as unstable through
-> boot parameter. There are debug / test cases though in which would
-> be preferable to simulate the clocksource watchdog behavior, i.e.,
-> marking TSC as unstable during the system run. Some paths might
-> change, for example: the tracing clock is auto switched to global
-> if TSC is marked as unstable on boot, but it could remain local if
-> TSC gets marked as unstable after tracing initialization.
-> 
-> Hence, the proposal here is to have a simple debugfs file that
-> gets TSC marked as unstable when written.
-> 
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> ---
->  arch/x86/kernel/tsc.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+John Garry <john.g.garry@oracle.com> writes:
 
-Hi folks, gentle ping about this one - any suggestions?
-Cheers,
+>>> +		}
+>>>   		end_fsb = imap.br_startoff + imap.br_blockcount;
+>>>   		length = XFS_FSB_TO_B(mp, end_fsb) - offset;
+>>>   	}
+>>>   
+>>> -	if (imap_needs_alloc(inode, flags, &imap, nimaps))
+>>> +	needs_alloc = imap_needs_alloc(inode, flags, &imap, nimaps);
+>>> +
+>>> +	if (flags & IOMAP_ATOMIC) {
+>>> +		error = -EAGAIN;
+>>> +		/*
+>>> +		 * If we allocate less than what is required for the write
+>>> +		 * then we may end up with multiple mappings, which means that
+>>> +		 * REQ_ATOMIC-based cannot be used, so avoid this possibility.
+>>> +		 */
+>>> +		if (needs_alloc && orig_end_fsb - offset_fsb > 1)
+>>> +			goto out_unlock;
+>> 
+>> I have a quick question here. Based on above check it looks like
+>> allocation requests on a hole or the 1st time allocation (append writes)
+>> for a given logical range will always be done using CoW fallback
+>> mechanism, isn't it? 
+>
+> Right, but...
+>
+>
+>> So that means HW based multi-fsblock atomic write
+>> request will only happen for over writes (non-discontigous extent),
+>> correct?
+>
+> For an unwritten pre-allocated extent, we can use the REQ_ATOMIC method.
+>
+> fallocate (without ZERO RANGE) would give a pre-allocated unwritten 
+> extent, and a write there would not technically be an overwrite.
+>
+>> 
+>> Now, it's not always necessary that if we try to allocate an extent for
+>> the given range, it results into discontiguous extents. e.g. say, if the
+>> entire range being written to is a hole or append writes, then it might
+>> just allocate a single unwritten extent which is valid for doing an
+>> atomic write using HW/BIOs right?
+>
+> Right
+>
+>> And it is valid to write using unwritten extent as long as we don't have
+>> mixed mappings i.e. the entire range should either be unwritten or
+>> written for the atomic write to be untorned, correct?
+>> 
+>
+> We can't write to discontiguous extents, and a mixed mapping would mean 
+> discontiguous extents.
+>
+> And, as mentioned earlier, it is ok to use REQ_ATOMIC method on an 
+> unwritten extent.
+>
+>> I am guessing this is kept intentional?
+>> 
+> Yes
+
+Thanks, John for addressing the queries. It would be helpful to include
+this information in the commit message as well then right? Otherwise
+IMO, the original commit message looks incomplete.
+
+Maybe we can add this too?
+=========================
+This patch adds CoW based atomic write support which will be used as a
+SW fallback in following scenarios:
+
+- All append write scenarios.
+- Any new writes on the region containing holes.
+- Writes to any misaligned regions
+- Writes to discontiguous extents.
 
 
-Guilherme
+<original commit msg snip>
+=========================
+In cases of an atomic write covering misaligned or discontiguous disk
+blocks, we will use a CoW-based method to issue the atomic write.
+
+-ritesh
