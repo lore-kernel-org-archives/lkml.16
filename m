@@ -1,257 +1,490 @@
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2061.outbound.protection.outlook.com [40.107.94.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55501E1DE6
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 17:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742234303; cv=none; b=CIX3ggMw6vLgNXeM3VUyxAcwCXmxQHaf6you7MnhLosEFkJCw6Z2nMlAIXkC0XDQy1azc1kg/b7AZjFEu09CIFeTWSstHzre1OF7HYWBl8EdjyYfOC2QF0pUI9v9iZ/+6zyREHKfzt/He9uFAkpr/hwldqPpce3CVkl34THfZ5I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742234303; c=relaxed/simple;
-	bh=h84uNUyXFRLMGFkRxHlWBveRiKgBb5DxOOWBRiArUUM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=bhDCZBy84mC5pi7jE3kmVG2bzJJExWa031L+du1gN/cUEsstPWjI6a7w65Vs/smZ8D4zcw+b/DAFpBwEkE0x2HbQYxuNR9D7wOIavV5gUYKcDhJ0FA8BuZR2ZHeLb0Ed4iJmrs5n3BPd+q1STK3CpSu03NILyuzvSCt42XiSCUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=hjjc1uJg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zFGUb18k; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4DB1DE3CB;
+	Mon, 17 Mar 2025 17:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742234308; cv=fail; b=AVSYHdnfb8uAwI8q8i7zQCCKcIEqLADH87Z2vaOA5SoMKEy0ekNHu+/icas7hj8slEh1RYeU9MXmXFqhU3EO4YcosuwpLZutVaah9PlmzizWQBDe900OB2AKToTjOdq/azCcyHT1EG1XdHGIXrzuRN8b7TdxSKUFhc0EQfEZqAI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742234308; c=relaxed/simple;
+	bh=//GU+Q7PBMuQSzr7l+95noi5N2tjn49kWBgwaxJJdRU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VtGYAjW/oRclNgRg7AUThnER21DFZzEwK4wWJjjWPVKkcSyBtBI8gMUwDaDFyvR7Jk5tNnrBCFUvopytIDgKYkpQPxNucSwKEA/TgQtMdlvHAYnYTX8AVMO3ZVqMVH/tRSO+KkyDNEyJGkSlnu7sS0aXJwQav9nrlwIlaDsQzmk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Bc3pb2ol; arc=fail smtp.client-ip=40.107.94.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="hjjc1uJg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zFGUb18k"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id C3ED82540237;
-	Mon, 17 Mar 2025 13:58:18 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Mon, 17 Mar 2025 13:58:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1742234298; x=1742320698; bh=Mz
-	xT2e/1eJk/FLQ+z6SIGo3gYKC2SmKVBiMJMl5+j/U=; b=hjjc1uJg4PhsiEgWQo
-	OMxm2CMBEPIrx/7vOWkwvPEKqHphiLNsP3CnkWd47JEOY7ho+E7ExZOhZLu5lmbf
-	eUOXNYD/eck3CGcXxYwL11jXZMhRhKJ5TFqH+PFB7z5hhJYluq35YjEr2OwJbLdN
-	DwzWZvmuHHwYCJN1gbpPv2AE2Oyahus4g7wgwktg6M79KNPze8r93gPgsP639ZGV
-	nMdsoUTLESP3RzqFI4tnPROJ/q46SXG5AGESIrmwBRQznx2YpEXAi/VV8ktM630v
-	a50yPkNGZ2COsQP6f6Rt5VFSQCVemvQG//FF8MLdRWXduwQ8Yy/Cnk37sCDhVUlu
-	mCQA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1742234298; x=1742320698; bh=MzxT2e/1eJk/FLQ+z6SIGo3gYKC2
-	SmKVBiMJMl5+j/U=; b=zFGUb18klaAUN6qg1l1KJEqdHuyRxcYzBrf0N1mDdwM9
-	17ng2JJU3x1fyE4nXuVaWYEh/iLMNDVSjRxivLX8RfI/F6zVhjZm6k7OJQkiX8lg
-	KZVuGksu3bOC4o4y70AzyyEmz9snpOLVVrrv9tPpuqzk+2myrJ74GmOpdEfKJZ1b
-	MhAbZao9561K8tYffhmR4YnFUJZdOPVy500620tDLVhPiCz/cOAXS1t+oV3HWdJr
-	P2R4nMhdzl9gyKi7kGLiUk97F5BctQ4jVb8HHkd9fiMVx2AYA8LRm+3iWFEQhBfE
-	wvfQ75IY87SqohpWMuHT8XrDldExc9wpeybdT69P4Q==
-X-ME-Sender: <xms:umLYZ_KK0XxyakjqPhEU3Xf0QIZlkwtxDYJSdSwR5z1a7WjlyEjsbw>
-    <xme:umLYZzKxG6NTm7ySlKS_0j40uFUUsBQlQyjEmhvQ4piG3syxXtNW2ylbX_ZL46JtJ
-    EK2V5g-89uoYOY4z5Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedtudekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkffutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhepteetgfejvdfgtdeiteelvedvieduieekteeludet
-    gfdtuedtuddvtefgvdduuedtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpghhith
-    hhuhgsrdgtohhmpdhpvghnghhuthhrohhnihigrdguvgenucevlhhushhtvghrufhiiigv
-    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsg
-    gprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohhrvhgr
-    lhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinh
-    hugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhr
-    tghpthhtohepshhotgeslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlih
-    hnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:umLYZ3u2dQHKYAb_Ye6xaZ7SZAutcFRFp71Ae_2oe6djLi1aNpzDtw>
-    <xmx:umLYZ4agWIkeWprDC-sIYQNgyIfU0YN0mhgf9-IQ9UebcYIii2OSPw>
-    <xmx:umLYZ2aBwIbjvwwKdGbbRKgxUGFL3EpHbnn2B-nWu9n9v3BZzeIp9Q>
-    <xmx:umLYZ8BYJ5PKZ9qb-kDvY2an5H50MC4_MQd2LndvjddwkRFxybT6jw>
-    <xmx:umLYZ2EWmmHjfDiOT7jzCg1f0DWTq8c1OHxnwe699l35U5C9klh-mWPZ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3761A2220072; Mon, 17 Mar 2025 13:58:18 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Bc3pb2ol"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HEvVncOXxiakIGa4bUGKY4i+ndYUY+uqpo/zvZ0HP/Nhc07TFs/nd8n2iQ3XmcwzGSweR0i0FX4jEsSfsAYf12FWQ+aydVpkUn/kx7KEt7XlQSffJHVje0CAobBEKiYQPX3p3fREEKyBQ46R2DZtn1lSHe+tCHNw60+/vJBUu1PCv8xMPJz4BvttP47xM6s8wX4GP68iMUqeKzyjw4ZhZ7QVIzc3cTVzNjuF1fvVpyYe2xZobYriGi00puIIyEX63Op1WD0BKBYl+Is9JcGZlFvZeFryTCJbHrPoZdTDCIyZe7INfe6/DcPsP4X0ZC/lLhNnJK5n+9t1GL0cuqgpSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZTPdVY+xW6m2z4POLwgWDAV5mCoL8t0DAx6Nq/zjj+I=;
+ b=EJmZ/Cvpnxs9vyszep7YeVdgp2OY588Wvc/gs5dl8dgSGTAO6YHak7owzwQxH1b2vzvLlE1Tj5zkERwJk2u/ma55HqbAW2cwtUYGQV76GLW+x7ZCe68iiUtxOPqpZNhXPY1fG8oVZENuEL8yWY9AzJpiKsY4mR++YweWT71Y87yzXYVbUPpkHBYa+7VFaCGJPA7fJG5COLDDoGzdQAmKg06vmU5PNWMnjRFSxW+J3VOdBXTIeP83OlsRLUgL/tYBcatzz4fRlzfGXgyoXyJlNdvTgTL9vVeU7P1jzlz3hTcO3ud/5YMqjqYOku4QbrF0qCPl5RocX4RUQPNEQMg/6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZTPdVY+xW6m2z4POLwgWDAV5mCoL8t0DAx6Nq/zjj+I=;
+ b=Bc3pb2olrmK32Nelad11ZzsMfFOl9T+jy3qxt7/avTXQjc6qPr75UA2j/RyQ2MQDIvH4o3iCzOf7IbyXrUo5vtfcSFG5VRnTTc70dbfmp0aAj3oJqAeFzYecfiIapQDD7hoaVlJH3m8XJtHlVfbLFilPpjeHdf51YG5JF7ADaLbQMyK/Oyyqz7Pk+OJVL6O8AEQ8A5EyQv19HOngM9k4XKPso3rRcuJTtQc3N1HJ1GOj3zHMQyxYIcQEapgxuRfc5rVQDzz7CrUea22MHtwU7DnA8RE8mtKZMTh5XmfS/YZaLA+b72J8gz8joGONjJvLed5+NdbRSMHxtar7cyIlGA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by MW4PR12MB6826.namprd12.prod.outlook.com (2603:10b6:303:20c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.28; Mon, 17 Mar
+ 2025 17:58:21 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
+ 17:58:20 +0000
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>,
+	David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 6/6] sched_ext: idle: Deprecate scx_bpf_select_cpu_dfl()
+Date: Mon, 17 Mar 2025 18:53:29 +0100
+Message-ID: <20250317175717.163267-7-arighi@nvidia.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250317175717.163267-1-arighi@nvidia.com>
+References: <20250317175717.163267-1-arighi@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR16CA0006.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::19) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 17 Mar 2025 18:57:57 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- soc@lists.linux.dev
-Message-Id: <860b2eaa-1aea-45e0-8bf5-3645b3840966@app.fastmail.com>
-Subject: [GIT PULL] soc: fixes for 6.14, part 2
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|MW4PR12MB6826:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a8787cb-eaca-4a78-247e-08dd657d4d69
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Y1HdvHTZZ5ZQJqLAW+q4ttYNnGXnyEH2bWL/0iSb/cwaBT6nmZ8H7b1p318h?=
+ =?us-ascii?Q?tXhSbE1Idj1bzYKUQYsDuz5sspuVQIXzbDSPenytb9viWQJTmFa08G1Q3kYn?=
+ =?us-ascii?Q?6D/Aq/bEZLadfyUWl4HE1fYIHtmbX3HYoOSpp31XKQKojJfGSoXnBxhH/+G9?=
+ =?us-ascii?Q?xHjG5zdX31SEaEPMtHfBRL/m8ilBN4au/n47FK3Y4vmHh8W37C0g6sfm9qnp?=
+ =?us-ascii?Q?kVkWNz6H3LyWArTn71nzbW+kQBhtAV4fuBi93bAU6GZEetILC6d907PL3FVZ?=
+ =?us-ascii?Q?Ne8nBzEegNn3/8QQApNStgrdP+VRo5H9uKGShi2FMPIhrPEg8QJhXWf5eMs5?=
+ =?us-ascii?Q?Sv1TDmSHIY04NTG/tUNZN2/6GBB+eWKh0aFZVWFcXQLPVctvbF8kxKRFve9S?=
+ =?us-ascii?Q?E/q9peSUfgklSTueiJSDSZlFqJ4KiI/LnMHRorXnfkYWwoKqbrWGZRBSntGi?=
+ =?us-ascii?Q?+yURFsMWLSQXBa9ggt4C7xUd3bey78YYdj8H9NzcbW7CZd0W8Nht4gLfAlgL?=
+ =?us-ascii?Q?PgXMSYKRLyG+s77LiHetK6CPOmGsNEjijiao8XjK8TXE4aCkU/l9IhYOvos/?=
+ =?us-ascii?Q?3JFBa2iLCCfyoSWlDLtRNfBW3GHWjFfbpogzLgqIHf+cw89D+wuylGRTOs/g?=
+ =?us-ascii?Q?LFhlEOq3rEwfK7Ytqxo2ms4sdkAzbZ+oYW5LmpkD8Xv3c8jMhXZIRxfDhWDi?=
+ =?us-ascii?Q?ofunVexDeoDOvOUkbq1DgYW/5tbkBlUCfj80QboqZFBM1QysPK6G+KiCVQHv?=
+ =?us-ascii?Q?+mHyOVAmkMRegRVryWDHsrOsA3gxO/+s5fk+qAmX/k1JyUGOUJ1n8FWOB4jm?=
+ =?us-ascii?Q?I7s0p6fzD/8AiFeU6D/HZaNp7l700kzLmQIYYc2eFzf5q/BAE5uk0F9v2haj?=
+ =?us-ascii?Q?yQXgVJPB2Rb66PzNcppJqwimiu6yU1Ycjh5Bwyv4lIcke5yIqWkd2zfA+WLG?=
+ =?us-ascii?Q?cfpAPlHgIInKFvP+CGPj6ZJNDpoecc5jNXP8p0p3Fyj1B5J2cfojvrV/cDZ0?=
+ =?us-ascii?Q?qxj4yYKLHQ+prv6IEz6jVpFWyC6HcY6ene6klDy+dwa2GuIqc3jQl6SeQnCT?=
+ =?us-ascii?Q?oNHFnUbJDJiJHt7JC78aUfdFF3K8C/3U2Qg4rUa31+/FlWyiS4PyQSdhdZsf?=
+ =?us-ascii?Q?O9VC5yALWwg9wXcmEj6HuZtNZAHq+X6DzbBG54WOA/N0XzwlnMDyTPVnxn4e?=
+ =?us-ascii?Q?t3Yy71uz1FcMg0Oa/wdcJJOhBpI3ag4/JyKG48Cn+cnBkHao6UXzN85+lPHA?=
+ =?us-ascii?Q?oQtClQOAYL4dwzC5aDZNidJLStwbwPq0lExBgG/t65ZvxoCc7h9/CF68t/0k?=
+ =?us-ascii?Q?WqSGbkYtOU8I+rklSHdQ5wGHy9rkU7v3nh7Maf0BC0bl8InIVGyDYEl3lZkT?=
+ =?us-ascii?Q?H1sXxCu2kSQBF85OAH8NghJVSqqz?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?puJsmNQP+0zCaB/Kzr3dM34kSS5Mr9wqzvWVSBhjNbzI8728Ojh6aOnRr5ej?=
+ =?us-ascii?Q?leTgw70VTyXSTA/vbRuB5v0eE7uTqjUWxRLQu/1RVlskHfLlw7Ym8wWwRg+k?=
+ =?us-ascii?Q?lhEHsFN4BVz/ADhvDN8vKf+Y250kUM7smfGspn33XB0gN7se5lFoM8An210q?=
+ =?us-ascii?Q?zR/FozRGpV4wEwktzejrjbR/m4hfePC7SkagTR5tajt9CZnbAF0/3YrM3J02?=
+ =?us-ascii?Q?J5r3iIGmZGPBfToQqW/gmR71U0YyEVy/5Z1XRnVbwafVoLvj4+qBCF3AD6KR?=
+ =?us-ascii?Q?HvECH3jyA3XB13wPqOgFXib66PgVKu5M+JIahefY0c3zyL4wnB32XCLIYaC6?=
+ =?us-ascii?Q?T2VVrM3dnjvTMwX7hKeYFJHuoHWENox9UeTKzyJ842vpxVuZoyv46Qc22feu?=
+ =?us-ascii?Q?zSGQq2Ll2RR/2poPqyeUloP1sm/mR6xeJ+/P623imS/U2RnXkMY+liaQsWPB?=
+ =?us-ascii?Q?xKMXRJ5zbgVXbw+4e0OvsEsQB8qLhTZ5lkl6Bjr72q67V4E0bueCvEDjlfLM?=
+ =?us-ascii?Q?nni2WSmPXmXbDpdUA1ZH7L6K8mQxiKb9GsN0B7ED7pmtpnCRz4lHmdlguIfX?=
+ =?us-ascii?Q?EKRCt1D63vDeU+vcvnuaJTDmNWtcdtmmavVkDdKqMCzFDHaJXFMA3grM1t2h?=
+ =?us-ascii?Q?TBKYW6uIcb41R+Su8MKTCBv4T8bX9duiSPzr6HPLT8MPkMuSrOsB2c+CaO6P?=
+ =?us-ascii?Q?y6ojDH4hWHH47U/ItCsY8hj4STrC78CoShfPbIIgwO36P1oZRFQK4My54ZJZ?=
+ =?us-ascii?Q?wz7Gi6fuy+krW9/bpW3HLDypZpiSO36cQK3mFRRqS3+Xvu6mq3iqkirWrWw4?=
+ =?us-ascii?Q?FPlcnNnCmWR5waKyTEirYHYG5Eiz3SI9DBxSo6okw2Hngt8oCLul1GIgMc6p?=
+ =?us-ascii?Q?ucAzE936BzzslfR/Yqyyrl8Um3Idir8QfzbzCO6qJ+AuWtou5A/7fYX4wXWW?=
+ =?us-ascii?Q?0WTaFY3yexRFeEEU+RxEnv0aE7cOgw+qh2397yb4y1B3lcXNpOXDmitJqFip?=
+ =?us-ascii?Q?xaUvaTGJmzVzMExUoY+wXdRef7IvgL0pZwHtBxG+6M4rbzXg9AjPKq+MeZV6?=
+ =?us-ascii?Q?QP14jV6AE8sYKXZgh+6+LrEQIBhVET5n6ve8RUm4rvBHzFNs7PGQHhK3FpRc?=
+ =?us-ascii?Q?VPTMcuvjktPEIClcBka7ZxTtvn6APlLqRk28CsGf9373aStGZC1wwvg3z7d2?=
+ =?us-ascii?Q?Ju/x6GT08G4NzKM099wHQG2nZMgpusYv7P4h858dJ0yyuxq9r6A6cCbt1nsH?=
+ =?us-ascii?Q?Y7++1Kb5SUoDeQeCkUswtL40u0p8n/IgvDceb67TWp6gVylNNYLtcOEpOLa9?=
+ =?us-ascii?Q?xTfsXVmBZAYlL6W8tTBHvbiUaDIXC9el6KPE/Lc+pnsKmphBcmwgg+suekYE?=
+ =?us-ascii?Q?AYNotjLhQ8DZCvCOD+FuiqdkX2QbiQ3SsNluhCeuZnQwdyCP1NMernAkbfJ2?=
+ =?us-ascii?Q?I414rNh+MPe24wqDjd6oBtJVOi8LnetaPqOdF97Vzp046dovZTq+d8cuiNcE?=
+ =?us-ascii?Q?wUJO9+yeJVKe4pQFKmDUHjoo8DMAnmCqdO41q8n4uHzldInN2pTc7jcqj/9W?=
+ =?us-ascii?Q?8Tu7961wvfNRhpOdTuIgSg936ujyWoCouQ5YLu2a?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a8787cb-eaca-4a78-247e-08dd657d4d69
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 17:58:20.3943
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S+e/SK165xQ4zMgOBj1S1hv077GtIoAOyA15L3iohxaxJCetU8zkcuwdZTFoLTjlHBckZO2SA4R7G/cPslJ38Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6826
 
-The following changes since commit 7eb172143d5508b4da468ed59ee857c6e5e01da6:
+With the introduction of scx_bpf_select_cpu_and(), we can deprecate
+scx_bpf_select_cpu_dfl(), as it offers only a subset of features and
+it's also more consistent with other idle-related APIs (returning a
+negative value when no idle CPU is found).
 
-  Linux 6.14-rc5 (2025-03-02 11:48:20 -0800)
+Therefore, mark scx_bpf_select_cpu_dfl() as deprecated (printing a
+warning when it's used), update all the scheduler examples and
+kselftests to adopt the new API, and ensure backward (source and binary)
+compatibility by providing the necessary macros and hooks.
 
-are available in the Git repository at:
+Support for scx_bpf_select_cpu_dfl() can be maintained until v6.17.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-fixes-6.14-2
+Signed-off-by: Andrea Righi <arighi@nvidia.com>
+---
+ Documentation/scheduler/sched-ext.rst         | 11 +++---
+ kernel/sched/ext.c                            |  3 +-
+ kernel/sched/ext_idle.c                       | 18 ++-------
+ tools/sched_ext/include/scx/common.bpf.h      |  3 +-
+ tools/sched_ext/include/scx/compat.bpf.h      | 37 +++++++++++++++++++
+ tools/sched_ext/scx_flatcg.bpf.c              | 12 +++---
+ tools/sched_ext/scx_simple.bpf.c              |  9 +++--
+ .../sched_ext/enq_select_cpu_fails.bpf.c      | 12 +-----
+ .../sched_ext/enq_select_cpu_fails.c          |  2 +-
+ tools/testing/selftests/sched_ext/exit.bpf.c  |  6 ++-
+ .../sched_ext/select_cpu_dfl_nodispatch.bpf.c | 13 +++----
+ .../sched_ext/select_cpu_dfl_nodispatch.c     |  2 +-
+ 12 files changed, 73 insertions(+), 55 deletions(-)
 
-for you to fetch changes up to 45d5fe1c53baaed1fb3043f45d1e15ebb4bbe86a:
+diff --git a/Documentation/scheduler/sched-ext.rst b/Documentation/scheduler/sched-ext.rst
+index 0993e41353db7..7f36f4fcf5f31 100644
+--- a/Documentation/scheduler/sched-ext.rst
++++ b/Documentation/scheduler/sched-ext.rst
+@@ -142,15 +142,14 @@ optional. The following modified excerpt is from
+                        s32 prev_cpu, u64 wake_flags)
+     {
+             s32 cpu;
+-            /* Need to initialize or the BPF verifier will reject the program */
+-            bool direct = false;
+ 
+-            cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &direct);
+-
+-            if (direct)
++            cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
++            if (cpu >= 0)
+                     scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL, SCX_SLICE_DFL, 0);
++                    return cpu;
++            }
+ 
+-            return cpu;
++            return prev_cpu;
+     }
+ 
+     /*
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 343f066c1185d..d82e9d3cbc0dc 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -464,13 +464,12 @@ struct sched_ext_ops {
+ 	 * state. By default, implementing this operation disables the built-in
+ 	 * idle CPU tracking and the following helpers become unavailable:
+ 	 *
+-	 * - scx_bpf_select_cpu_dfl()
+ 	 * - scx_bpf_select_cpu_and()
+ 	 * - scx_bpf_test_and_clear_cpu_idle()
+ 	 * - scx_bpf_pick_idle_cpu()
+ 	 *
+ 	 * The user also must implement ops.select_cpu() as the default
+-	 * implementation relies on scx_bpf_select_cpu_dfl().
++	 * implementation relies on scx_bpf_select_cpu_and().
+ 	 *
+ 	 * Specify the %SCX_OPS_KEEP_BUILTIN_IDLE flag to keep the built-in idle
+ 	 * tracking.
+diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
+index e7aee9aa4841c..4813f1cc8e950 100644
+--- a/kernel/sched/ext_idle.c
++++ b/kernel/sched/ext_idle.c
+@@ -888,26 +888,16 @@ __bpf_kfunc int scx_bpf_cpu_node(s32 cpu)
+ #endif
+ }
+ 
+-/**
+- * scx_bpf_select_cpu_dfl - The default implementation of ops.select_cpu()
+- * @p: task_struct to select a CPU for
+- * @prev_cpu: CPU @p was on previously
+- * @wake_flags: %SCX_WAKE_* flags
+- * @is_idle: out parameter indicating whether the returned CPU is idle
+- *
+- * Can only be called from ops.select_cpu() if the built-in CPU selection is
+- * enabled - ops.update_idle() is missing or %SCX_OPS_KEEP_BUILTIN_IDLE is set.
+- * @p, @prev_cpu and @wake_flags match ops.select_cpu().
+- *
+- * Returns the picked CPU with *@is_idle indicating whether the picked CPU is
+- * currently idle and thus a good candidate for direct dispatching.
+- */
++/* Provided for backward binary compatibility, will be removed in v6.17. */
+ __bpf_kfunc s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu,
+ 				       u64 wake_flags, bool *is_idle)
+ {
+ #ifdef CONFIG_SMP
+ 	s32 cpu;
+ #endif
++	printk_deferred_once(KERN_WARNING
++			"sched_ext: scx_bpf_select_cpu_dfl() deprecated in favor of scx_bpf_select_cpu_and()");
++
+ 	if (!ops_cpu_valid(prev_cpu, NULL))
+ 		goto prev_cpu;
+ 
+diff --git a/tools/sched_ext/include/scx/common.bpf.h b/tools/sched_ext/include/scx/common.bpf.h
+index 6f1da61cf7f17..1eb790eb90d40 100644
+--- a/tools/sched_ext/include/scx/common.bpf.h
++++ b/tools/sched_ext/include/scx/common.bpf.h
+@@ -47,7 +47,8 @@ static inline void ___vmlinux_h_sanity_check___(void)
+ }
+ 
+ s32 scx_bpf_create_dsq(u64 dsq_id, s32 node) __ksym;
+-s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags, bool *is_idle) __ksym;
++s32 scx_bpf_select_cpu_dfl(struct task_struct *p,
++			   s32 prev_cpu, u64 wake_flags, bool *is_idle) __ksym __weak;
+ s32 scx_bpf_select_cpu_and(struct task_struct *p, s32 prev_cpu, u64 wake_flags,
+ 			   const struct cpumask *cpus_allowed, u64 flags) __ksym __weak;
+ void scx_bpf_dsq_insert(struct task_struct *p, u64 dsq_id, u64 slice, u64 enq_flags) __ksym __weak;
+diff --git a/tools/sched_ext/include/scx/compat.bpf.h b/tools/sched_ext/include/scx/compat.bpf.h
+index 9252e1a00556f..f9caa7baf356c 100644
+--- a/tools/sched_ext/include/scx/compat.bpf.h
++++ b/tools/sched_ext/include/scx/compat.bpf.h
+@@ -225,6 +225,43 @@ static inline bool __COMPAT_is_enq_cpu_selected(u64 enq_flags)
+ 	 scx_bpf_pick_any_cpu_node(cpus_allowed, node, flags) :			\
+ 	 scx_bpf_pick_any_cpu(cpus_allowed, flags))
+ 
++/**
++ * scx_bpf_select_cpu_dfl - The default implementation of ops.select_cpu().
++ * We will preserve this compatible helper until v6.17.
++ *
++ * @p: task_struct to select a CPU for
++ * @prev_cpu: CPU @p was on previously
++ * @wake_flags: %SCX_WAKE_* flags
++ * @is_idle: out parameter indicating whether the returned CPU is idle
++ *
++ * Can only be called from ops.select_cpu() if the built-in CPU selection is
++ * enabled - ops.update_idle() is missing or %SCX_OPS_KEEP_BUILTIN_IDLE is set.
++ * @p, @prev_cpu and @wake_flags match ops.select_cpu().
++ *
++ * Returns the picked CPU with *@is_idle indicating whether the picked CPU is
++ * currently idle and thus a good candidate for direct dispatching.
++ */
++#define scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, is_idle)		\
++({										\
++	s32 __cpu;								\
++										\
++	if (bpf_ksym_exists(scx_bpf_select_cpu_and)) {				\
++		__cpu = scx_bpf_select_cpu_and((p), (prev_cpu), (wake_flags),	\
++					       (p)->cpus_ptr, 0);		\
++		if (__cpu >= 0) {						\
++			*(is_idle) = true;					\
++		} else {							\
++			*(is_idle) = false;					\
++			__cpu = (prev_cpu);					\
++		}								\
++	} else {								\
++		__cpu = scx_bpf_select_cpu_dfl((p), (prev_cpu),			\
++					       (wake_flags), (is_idle));	\
++	}									\
++										\
++	__cpu;									\
++})
++
+ /*
+  * Define sched_ext_ops. This may be expanded to define multiple variants for
+  * backward compatibility. See compat.h::SCX_OPS_LOAD/ATTACH().
+diff --git a/tools/sched_ext/scx_flatcg.bpf.c b/tools/sched_ext/scx_flatcg.bpf.c
+index 2c720e3ecad59..0075bff928893 100644
+--- a/tools/sched_ext/scx_flatcg.bpf.c
++++ b/tools/sched_ext/scx_flatcg.bpf.c
+@@ -317,15 +317,12 @@ static void set_bypassed_at(struct task_struct *p, struct fcg_task_ctx *taskc)
+ s32 BPF_STRUCT_OPS(fcg_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)
+ {
+ 	struct fcg_task_ctx *taskc;
+-	bool is_idle = false;
+ 	s32 cpu;
+ 
+-	cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &is_idle);
+-
+ 	taskc = bpf_task_storage_get(&task_ctx, p, 0, 0);
+ 	if (!taskc) {
+ 		scx_bpf_error("task_ctx lookup failed");
+-		return cpu;
++		return prev_cpu;
+ 	}
+ 
+ 	/*
+@@ -333,13 +330,16 @@ s32 BPF_STRUCT_OPS(fcg_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake
+ 	 * idle. Follow it and charge the cgroup later in fcg_stopping() after
+ 	 * the fact.
+ 	 */
+-	if (is_idle) {
++	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
++	if (cpu >= 0) {
+ 		set_bypassed_at(p, taskc);
+ 		stat_inc(FCG_STAT_LOCAL);
+ 		scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL, SCX_SLICE_DFL, 0);
++
++		return cpu;
+ 	}
+ 
+-	return cpu;
++	return prev_cpu;
+ }
+ 
+ void BPF_STRUCT_OPS(fcg_enqueue, struct task_struct *p, u64 enq_flags)
+diff --git a/tools/sched_ext/scx_simple.bpf.c b/tools/sched_ext/scx_simple.bpf.c
+index e6de99dba7db6..0e48b2e46a683 100644
+--- a/tools/sched_ext/scx_simple.bpf.c
++++ b/tools/sched_ext/scx_simple.bpf.c
+@@ -54,16 +54,17 @@ static void stat_inc(u32 idx)
+ 
+ s32 BPF_STRUCT_OPS(simple_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)
+ {
+-	bool is_idle = false;
+ 	s32 cpu;
+ 
+-	cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &is_idle);
+-	if (is_idle) {
++	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
++	if (cpu >= 0) {
+ 		stat_inc(0);	/* count local queueing */
+ 		scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL, SCX_SLICE_DFL, 0);
++
++		return cpu;
+ 	}
+ 
+-	return cpu;
++	return prev_cpu;
+ }
+ 
+ void BPF_STRUCT_OPS(simple_enqueue, struct task_struct *p, u64 enq_flags)
+diff --git a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.bpf.c b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.bpf.c
+index a7cf868d5e311..d3c0716aa79c9 100644
+--- a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.bpf.c
++++ b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.bpf.c
+@@ -9,10 +9,6 @@
+ 
+ char _license[] SEC("license") = "GPL";
+ 
+-/* Manually specify the signature until the kfunc is added to the scx repo. */
+-s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags,
+-			   bool *found) __ksym;
+-
+ s32 BPF_STRUCT_OPS(enq_select_cpu_fails_select_cpu, struct task_struct *p,
+ 		   s32 prev_cpu, u64 wake_flags)
+ {
+@@ -22,14 +18,8 @@ s32 BPF_STRUCT_OPS(enq_select_cpu_fails_select_cpu, struct task_struct *p,
+ void BPF_STRUCT_OPS(enq_select_cpu_fails_enqueue, struct task_struct *p,
+ 		    u64 enq_flags)
+ {
+-	/*
+-	 * Need to initialize the variable or the verifier will fail to load.
+-	 * Improving these semantics is actively being worked on.
+-	 */
+-	bool found = false;
+-
+ 	/* Can only call from ops.select_cpu() */
+-	scx_bpf_select_cpu_dfl(p, 0, 0, &found);
++	scx_bpf_select_cpu_and(p, 0, 0, p->cpus_ptr, 0);
+ 
+ 	scx_bpf_dsq_insert(p, SCX_DSQ_GLOBAL, SCX_SLICE_DFL, enq_flags);
+ }
+diff --git a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
+index a80e3a3b3698c..c964444998667 100644
+--- a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
++++ b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
+@@ -52,7 +52,7 @@ static void cleanup(void *ctx)
+ 
+ struct scx_test enq_select_cpu_fails = {
+ 	.name = "enq_select_cpu_fails",
+-	.description = "Verify we fail to call scx_bpf_select_cpu_dfl() "
++	.description = "Verify we fail to call scx_bpf_select_cpu_and() "
+ 		       "from ops.enqueue()",
+ 	.setup = setup,
+ 	.run = run,
+diff --git a/tools/testing/selftests/sched_ext/exit.bpf.c b/tools/testing/selftests/sched_ext/exit.bpf.c
+index 4bc36182d3ffc..8122421856c1b 100644
+--- a/tools/testing/selftests/sched_ext/exit.bpf.c
++++ b/tools/testing/selftests/sched_ext/exit.bpf.c
+@@ -20,12 +20,14 @@ UEI_DEFINE(uei);
+ s32 BPF_STRUCT_OPS(exit_select_cpu, struct task_struct *p,
+ 		   s32 prev_cpu, u64 wake_flags)
+ {
+-	bool found;
++	s32 cpu;
+ 
+ 	if (exit_point == EXIT_SELECT_CPU)
+ 		EXIT_CLEANLY();
+ 
+-	return scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &found);
++	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
++
++	return cpu >= 0 ? cpu : prev_cpu;
+ }
+ 
+ void BPF_STRUCT_OPS(exit_enqueue, struct task_struct *p, u64 enq_flags)
+diff --git a/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.bpf.c b/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.bpf.c
+index 815f1d5d61ac4..4e1b698f710e7 100644
+--- a/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.bpf.c
++++ b/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.bpf.c
+@@ -27,10 +27,6 @@ struct {
+ 	__type(value, struct task_ctx);
+ } task_ctx_stor SEC(".maps");
+ 
+-/* Manually specify the signature until the kfunc is added to the scx repo. */
+-s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags,
+-			   bool *found) __ksym;
+-
+ s32 BPF_STRUCT_OPS(select_cpu_dfl_nodispatch_select_cpu, struct task_struct *p,
+ 		   s32 prev_cpu, u64 wake_flags)
+ {
+@@ -43,10 +39,13 @@ s32 BPF_STRUCT_OPS(select_cpu_dfl_nodispatch_select_cpu, struct task_struct *p,
+ 		return -ESRCH;
+ 	}
+ 
+-	cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags,
+-				     &tctx->force_local);
++	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
++	if (cpu >= 0) {
++		tctx->force_local = true;
++		return cpu;
++	}
+ 
+-	return cpu;
++	return prev_cpu;
+ }
+ 
+ void BPF_STRUCT_OPS(select_cpu_dfl_nodispatch_enqueue, struct task_struct *p,
+diff --git a/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.c b/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.c
+index 9b5d232efb7f6..2f450bb14e8d9 100644
+--- a/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.c
++++ b/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.c
+@@ -66,7 +66,7 @@ static void cleanup(void *ctx)
+ 
+ struct scx_test select_cpu_dfl_nodispatch = {
+ 	.name = "select_cpu_dfl_nodispatch",
+-	.description = "Verify behavior of scx_bpf_select_cpu_dfl() in "
++	.description = "Verify behavior of scx_bpf_select_cpu_and() in "
+ 		       "ops.select_cpu()",
+ 	.setup = setup,
+ 	.run = run,
+-- 
+2.48.1
 
-  ARM: davinci: da850: fix selecting ARCH_DAVINCI_DA8XX (2025-03-14 18:24:05 +0100)
-
-----------------------------------------------------------------
-soc: fixes for 6.14, part 2
-
-The majority of the last fixes are for devicetree files. This address two
-important regressions for the Qualcomm SMMU and the Raspberry Pi 4 USB
-controller, as well as a larger number of patches fixing minor mistakes
-in board specific files for Rockchips, i.MX, starfive and broadcom.
-
-The non-DT changes are
-
- - A fix for an old boot regression on Renesas shmobile chips
-
- - Another boot time regression for for the Qualcomm PDR SoC driver,
-   among a few other Qualcomm firmware driver fixes for efivars
-   and tzmem.
-
- - Minor Kconfig fixes for davinci and OMAP1
-
- - Minor code fixes for sparx5 reset controllers, OMAP memory controller,
-   i.MX SCU, cpufreq and SoC drivers and a Hisilicon SoC driver.
-
- - One more update to the Asahi maintainers, adding Neal Gompa as a
-   reviewer
-
-----------------------------------------------------------------
-Alexander Stein (1):
-      arm64: dts: freescale: tqma8mpql: Fix vqmmc-supply
-
-Arnd Bergmann (12):
-      Merge tag 'arm-soc/for-6.14/devicetree-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-      Merge tag 'arm-soc/for-6.14/devicetree-arm64-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-      Merge tag 'imx-fixes-6.14' of https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/fixes
-      Merge tag 'riscv-dt-fixes-for-v6.14-rc6' of https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux into arm/fixes
-      ARM: OMAP1: select CONFIG_GENERIC_IRQ_CHIP
-      Merge tag 'arm-soc/for-6.14/devicetree-fixes-part2' of https://github.com/Broadcom/stblinux into arm/fixes
-      Merge tag 'v6.14-rockchip-dtsfixes2' of https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip into arm/fixes
-      Merge tag 'asahi-soc-maintainers-6.14-fixes' of https://github.com/AsahiLinux/linux into arm/fixes
-      Merge tag 'qcom-arm64-fixes-for-6.14' of https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into arm/fixes
-      Merge tag 'qcom-drivers-fixes-for-6.14' of https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into arm/fixes
-      Merge tag 'renesas-fixes-for-v6.14-tag1' of https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel into arm/fixes
-      Merge tag 'reset-fixes-for-v6.14' of git://git.pengutronix.de/pza/linux into arm/fixes
-
-Chester A. Unal (2):
-      ARM: dts: BCM5301X: Fix switch port labels of ASUS RT-AC5300
-      ARM: dts: BCM5301X: Fix switch port labels of ASUS RT-AC3200
-
-Dan Carpenter (1):
-      firmware: qcom: scm: Fix error code in probe()
-
-David Lechner (1):
-      ARM: davinci: da850: fix selecting ARCH_DAVINCI_DA8XX
-
-Dragan Simic (2):
-      arm64: dts: rockchip: Add avdd HDMI supplies to RockPro64 board dtsi
-      arm64: dts: rockchip: Add missing PCIe supplies to RockPro64 board dtsi
-
-E Shattow (1):
-      riscv: dts: starfive: Fix a typo in StarFive JH7110 pin function definitions
-
-Geert Uytterhoeven (1):
-      ARM: shmobile: smp: Enforce shmobile_smp_* alignment
-
-Hector Martin (1):
-      MAINTAINERS: Add apple-spi driver & binding files
-
-Heiko Stuebner (2):
-      arm64: dts: rockchip: remove supports-cqe from rk3588 jaguar
-      arm64: dts: rockchip: remove supports-cqe from rk3588 tiger
-
-Horatiu Vultur (1):
-      reset: mchp: sparx5: Fix for lan966x
-
-Huisong Li (1):
-      soc: hisilicon: kunpeng_hccs: Fix incorrect string assembly
-
-Jianfeng Liu (1):
-      arm64: dts: rockchip: slow down emmc freq for rock 5 itx
-
-Joe Hattori (1):
-      firmware: imx-scu: fix OF node leak in .probe()
-
-Johan Hovold (1):
-      firmware: qcom: uefisecapp: fix efivars registration race
-
-Justin Klaassen (1):
-      arm64: dts: rockchip: fix u2phy1_host status for NanoPi R4S
-
-Konrad Dybcio (1):
-      Revert "arm64: dts: qcom: sdm845: Affirm IDR0.CCTW on apps_smmu"
-
-Krzysztof Kozlowski (1):
-      soc: qcom: pmic_glink: Drop redundant pg assignment before taking lock
-
-Neal Gompa (1):
-      MAINTAINERS: Add myself (Neal Gompa) as a reviewer for ARM Apple support
-
-Peng Fan (1):
-      soc: imx8m: Unregister cpufreq and soc dev in cleanup path
-
-Phil Elwell (3):
-      ARM: dts: bcm2711: PL011 UARTs are actually r1p5
-      arm64: dts: bcm2712: PL011 UARTs are actually r1p5
-      ARM: dts: bcm2711: Don't mark timer regs unconfigured
-
-Quentin Schulz (2):
-      arm64: dts: rockchip: fix pinmux of UART0 for PX30 Ringneck on Haikou
-      arm64: dts: rockchip: fix pinmux of UART5 for PX30 Ringneck on Haikou
-
-Roger Quadros (1):
-      memory: omap-gpmc: drop no compatible check
-
-Saranya R (1):
-      soc: qcom: pdr: Fix the potential deadlock
-
-Stefan Eichenberger (3):
-      ARM: dts: imx6qdl-apalis: Fix poweroff on Apalis iMX6
-      arm64: dts: freescale: imx8mp-verdin-dahlia: add Microphone Jack to sound card
-      arm64: dts: freescale: imx8mm-verdin-dahlia: add Microphone Jack to sound card
-
-Stefan Wahren (1):
-      ARM: dts: bcm2711: Fix xHCI power-domain
-
-Yao Zi (1):
-      arm64: dts: rockchip: Remove undocumented sdmmc property from lubancat-1
-
- MAINTAINERS                                        |  3 +++
- arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi        |  5 -----
- arch/arm/boot/dts/broadcom/bcm2711.dtsi            | 12 +++++-----
- .../boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts   |  8 +++----
- .../boot/dts/broadcom/bcm47094-asus-rt-ac5300.dts  |  8 +++----
- arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi      | 10 ++++-----
- arch/arm/mach-davinci/Kconfig                      |  1 +
- arch/arm/mach-omap1/Kconfig                        |  1 +
- arch/arm/mach-shmobile/headsmp.S                   |  1 +
- arch/arm64/boot/dts/broadcom/bcm2712.dtsi          |  2 +-
- .../boot/dts/freescale/imx8mm-verdin-dahlia.dtsi   |  6 ++---
- .../arm64/boot/dts/freescale/imx8mp-tqma8mpql.dtsi | 16 ++++---------
- .../boot/dts/freescale/imx8mp-verdin-dahlia.dtsi   |  6 ++---
- arch/arm64/boot/dts/qcom/sdm845.dtsi               |  1 -
- .../boot/dts/rockchip/px30-ringneck-haikou.dts     | 12 ++++++++++
- .../arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi |  2 +-
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi | 14 ++++++++++++
- arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts |  1 -
- arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts     |  1 -
- arch/arm64/boot/dts/rockchip/rk3588-rock-5-itx.dts |  3 +--
- arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi     |  1 -
- arch/riscv/boot/dts/starfive/jh7110-pinfunc.h      |  2 +-
- drivers/firmware/imx/imx-scu.c                     |  1 +
- drivers/firmware/qcom/qcom_qseecom_uefisecapp.c    | 18 +++++++--------
- drivers/firmware/qcom/qcom_scm.c                   |  4 ++--
- drivers/memory/omap-gpmc.c                         | 20 -----------------
- drivers/reset/reset-microchip-sparx5.c             | 19 +++++++++++-----
- drivers/soc/hisilicon/kunpeng_hccs.c               |  4 ++--
- drivers/soc/imx/soc-imx8m.c                        | 26 ++++++++++++++++++++--
- drivers/soc/qcom/pdr_interface.c                   |  8 +------
- drivers/soc/qcom/pmic_glink.c                      |  2 +-
- 31 files changed, 119 insertions(+), 99 deletions(-)
