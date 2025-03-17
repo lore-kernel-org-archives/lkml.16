@@ -1,175 +1,125 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B542F30;
-	Mon, 17 Mar 2025 09:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F15D221F1F;
+	Mon, 17 Mar 2025 09:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742204046; cv=none; b=M0/jU38aoJp3GgL01zfJ2wmXxduoFARbXIfwzdIvia2u619vUD7T37iMrcsCQFCwb1/7Ow6AaHzQ19g/3/9Ulndx/EstZrqB+b3rN2PVLv0vJOzxSEQ/G+xxu7fHTTuMSaHUtR4Hw5pgCebXZNufPRBKT0NP0goz0gOqaII0zeI=
+	t=1742204106; cv=none; b=DwWtC3C8LWCyq+YNClyd6pAjAz1lNxbv8FO1iwXlhunIS/ZqNYchK2ChBh/cqaeoMMuICxSZuiycdzgTr0I9bXSqFkEkMGsU1fgo4Bs60wFYlQvnVCBk0NtaGccPuoG1XivjjoinrfFCUN/tqnw+TZs9MR8L0KSMebQadGNQ6g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742204046; c=relaxed/simple;
-	bh=ELzfSEZuhr25sXbSFYa8Pvn+Hzk6Nq+k/X6C4475L78=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZEWrwwuRrheSUU3gLm9uzOLueiv1brgxRhRy31pZARYsOnHqre7Zm3Vh/0Xrcbb1stPx5z4Ov6kfVzRJSmihUFGwrfYRBa2JW0H8Mq7ROjjSA+SVREYUPRIh7cI2b8qp+LsOYff+toohRys9RlacdOErz1l5hl4IdOFRKp5eg2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=O6yrVXnX; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1742204106; c=relaxed/simple;
+	bh=1yNiTnpZq7h2XJs8ppHSxpeBpp33kU7YALQKQVaM5Ko=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ozOD41IPcQIw1qDOnvw2En6lQmBZWhrMWviuLyuod2Qy7lPrH9pfZXlKAK8DpSFAQv9nYCozfTeL+T3al2ET8NBTBBJNHKxN5gAr93FlzIp8tTKiVZJPtEty/1Z/IdFKjdsVnP0+rhYnIZPSguQOW0x9sUWAJ9Grgq8Op2l7ElM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=tFKrITnz; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="O6yrVXnX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742204040; x=1742463240;
-	bh=FMpu9u3oj6vcJmcZvMEZn/YisvXXjcOdgQLecCKsTSY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=O6yrVXnXOA3zGBPsi58FLNfuNpgVmzRiUQVSt6n2RvDFaScYeNrmXm3L1XRnQzrCB
-	 8YlXNeEvc40Q8ELt8iWYb+KxAyvWpjqulvZgkNYKWJO35Cij+vUrsQ0GE7dUOlk+Jc
-	 rzMvfujAWxXxusZkbpaGYypuRMbU0pOLD+IP4MHj08+imTci+wd6XeRMC5LuYndpni
-	 M9/0EHtFyD89TeUGfSMNoe5XXrjHoXufvS4DgXPkj63oNVXQntmnqx4q3dqLr5UZPP
-	 OuNLW59d65h/ntfWzcGZJHsxtH2V6/1dpPJRMXGxgh4h0t6z0VLLIpNrDRSFWnHQPf
-	 hwkSkhYH00J8Q==
-Date: Mon, 17 Mar 2025 09:33:52 +0000
-To: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 6/6] rust: use strict provenance APIs
-Message-ID: <D8IFS7175NNQ.3VAP8WA2QC8WF@proton.me>
-In-Reply-To: <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com>
-References: <20250315-ptr-as-ptr-v4-0-b2d72c14dc26@gmail.com> <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: ae828af5ffc8f596a802aaa8ecc51e4ae679d167
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="tFKrITnz"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 9F7E4A03CE;
+	Mon, 17 Mar 2025 10:34:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=kNhLXI+/riZgGlyun993
+	ceq6nIOh5kKXKpw5hxNT8to=; b=tFKrITnzbpzNEXu4W5eCBaP/V0hPvuMOE7P4
+	RX5s6EqoZIcDfyJovFkfu1oO/Njvf3KkERfUJIxglIB+RMmiiSqNl3GUP/LIWZFV
+	aeLNCdwF0mti8rwQG/P3K50tG4QLg7UJh2jWSw3a0BUCeU0LFyYGaxiTdqlE55aE
+	f3aYazNQg81NyYhNMKcRsgeuYg6cUxns3uDgKm2uRSt4DiQbDVpKNOCG4Vw0eoib
+	AWW5fus1jdLQ3byAvTSx/MZcq9vNn8L/v90h1PSkTKlcsr+wTyChhSuo7A5rh+Hj
+	1L16fZanqMlO7YgCCiWQkaGZBR2QeqVudXuDdK9PQeo90+DwlJj6NfhBXSs6B6te
+	RLX3xU/XMbNYbgZ8g+TG5kUwW6JGuc5GYnHWhjfeY6WiOUt2/2TVkkZFXmdLltwS
+	5Yh/8+gt2Ky2sGujcyd8XQac7rOiuJsrduXlSkzW/DwebIKqMfdooDszIj5LDebb
+	XXQB6TSjV2sfql8dqYXpFSLTRHJXRlHDTZruJifEcONPe/pqjeeti5GkqLUxtxCL
+	oTg48RqS96mXvGRuCnXXn+UAZQXMDF0OM02kC7kQ/JY3kxvqYtH69ha+2BJM/a3+
+	srVxDPvCo9JiMtF6Jwyze6Pqjdpl4mUTzb56IQ8ReJgOmmCvRctMlw6xkJzTTdAm
+	hEO0aVs=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	=?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>, "Varshini
+ Rajendran" <varshini.rajendran@microchip.com>, Tudor Ambarus
+	<tudor.ambarus@linaro.org>, Mark Brown <broonie@kernel.org>,
+	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+	Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>, Alexander Dahl <ada@thorsis.com>,
+	"Nicolas Ferre" <nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: [PATCH v5 2/2] spi: atmel-quadspi: Fix unbalanced pm_runtime by using devm_ API
+Date: Mon, 17 Mar 2025 10:34:43 +0100
+Message-ID: <20250317093445.361821-3-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250317093445.361821-1-csokas.bence@prolan.hu>
+References: <20250317093445.361821-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1742204096;VERSION=7986;MC=3178520588;ID=162301;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D948526D7462
 
-On Sat Mar 15, 2025 at 1:17 PM CET, Tamir Duberstein wrote:
-> Throughout the tree, use the strict provenance APIs stabilized in Rust
-> 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
-> functions at the `kernel` crate root along with polyfills for rustc <
-> 1.84.0.
->
-> Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc <
-> 1.84.0 as our MSRV is 1.78.0.
+Fix unbalanced PM in error path of `atmel_qspi_probe()`
+by using `devm_pm_runtime_*()` functions.
 
-This isn't necessary, right?
-
-> In the `kernel` crate, enable the strict provenance lints on rustc >=3D
-> 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introducing
-> compiler flags that are dependent on the rustc version in use.
-
-So it won't be enabled in the doctests, right?
-
-> Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-prove=
-nance-apis [1]
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me/
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  init/Kconfig           |  3 +++
->  rust/kernel/alloc.rs   |  2 +-
->  rust/kernel/devres.rs  |  4 ++--
->  rust/kernel/io.rs      | 14 +++++++-------
->  rust/kernel/lib.rs     | 52 ++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  rust/kernel/of.rs      |  2 +-
->  rust/kernel/pci.rs     |  4 ++--
->  rust/kernel/str.rs     | 16 ++++++----------
->  rust/kernel/uaccess.rs | 12 ++++++++----
->  9 files changed, 82 insertions(+), 27 deletions(-)
-
-
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 486715528587..84eb2602e79e 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -17,6 +17,9 @@
->  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized=
-))]
->  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_=
-dyn))]
->  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
-> +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, feature(strict_pr=
-ovenance_lints))]
-> +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, deny(fuzzy_proven=
-ance_casts))]
-> +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, deny(lossy_proven=
-ance_casts))]
->  #![feature(inline_const)]
->  #![feature(lint_reasons)]
->  // Stable in Rust 1.83
-> @@ -25,6 +28,55 @@
->  #![feature(const_ptr_write)]
->  #![feature(const_refs_to_cell)]
-> =20
-> +#[cfg(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE)]
-> +#[allow(clippy::incompatible_msrv)]
-
-Do we still need this allow?
-
-> +mod strict_provenance {
-> +    #[doc(hidden)]
-
-Why make them hidden in docs?
-
-> +    pub fn expose_provenance<T>(addr: *const T) -> usize {
-> +        addr.expose_provenance()
-
-Instead of having these stubs here, you can probably just do
-
-    pub use core::ptr::expose_provenance;
-
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn without_provenance_mut<T>(addr: usize) -> *mut T {
-> +        core::ptr::without_provenance_mut(addr)
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn with_exposed_provenance<T>(addr: usize) -> *const T {
-> +        core::ptr::with_exposed_provenance(addr)
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn with_exposed_provenance_mut<T>(addr: usize) -> *mut T {
-> +        core::ptr::with_exposed_provenance_mut(addr)
-> +    }
-> +}
-> +
-> +#[cfg(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE))]
-> +mod strict_provenance {
-> +    #[doc(hidden)]
-
-I think we should document these.
-
+Reported-by: Alexander Dahl <ada@thorsis.com>
+Closes: https://lore.kernel.org/linux-spi/20250110-paycheck-irregular-bcddab1276c7@thorsis.com/
+Fixes: 5af42209a4d2 ("spi: atmel-quadspi: Add support for sama7g5 QSPI")
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
 ---
-Cheers,
-Benno
+ drivers/spi/atmel-quadspi.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
 
-> +    pub fn expose_provenance<T>(addr: *const T) -> usize {
-> +        addr.cast::<()>() as usize
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn without_provenance_mut<T>(addr: usize) -> *mut T {
-> +        addr as *mut T
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn with_exposed_provenance<T>(addr: usize) -> *const T {
-> +        addr as *const T
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn with_exposed_provenance_mut<T>(addr: usize) -> *mut T {
-> +        addr as *mut T
-> +    }
-> +}
-> +
-> +pub use strict_provenance::*;
+diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
+index d8c9be64d006..ddd12600a6f1 100644
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -1439,22 +1439,18 @@ static int atmel_qspi_probe(struct platform_device *pdev)
+ 
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, 500);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+-	pm_runtime_set_active(&pdev->dev);
+-	pm_runtime_enable(&pdev->dev);
+-	pm_runtime_get_noresume(&pdev->dev);
++	devm_pm_runtime_set_active(&pdev->dev);
++	devm_pm_runtime_enable(&pdev->dev);
++	devm_pm_runtime_get_noresume(&pdev->dev);
+ 
+ 	err = atmel_qspi_init(aq);
+ 	if (err)
+ 		goto dma_release;
+ 
+ 	err = spi_register_controller(ctrl);
+-	if (err) {
+-		pm_runtime_put_noidle(&pdev->dev);
+-		pm_runtime_disable(&pdev->dev);
+-		pm_runtime_set_suspended(&pdev->dev);
+-		pm_runtime_dont_use_autosuspend(&pdev->dev);
++	if (err)
+ 		goto dma_release;
+-	}
++
+ 	pm_runtime_mark_last_busy(&pdev->dev);
+ 	pm_runtime_put_autosuspend(&pdev->dev);
+ 
+@@ -1533,10 +1529,6 @@ static void atmel_qspi_remove(struct platform_device *pdev)
+ 		 */
+ 		dev_warn(&pdev->dev, "Failed to resume device on remove\n");
+ 	}
+-
+-	pm_runtime_disable(&pdev->dev);
+-	pm_runtime_dont_use_autosuspend(&pdev->dev);
+-	pm_runtime_put_noidle(&pdev->dev);
+ }
+ 
+ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
+-- 
+2.48.1
+
 
