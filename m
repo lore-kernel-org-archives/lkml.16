@@ -1,130 +1,268 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD443237702
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 12:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C05158DA3;
+	Mon, 17 Mar 2025 12:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742213209; cv=none; b=g3JkL0dJFeybMd+zBjlFjELivCRgz2kUyPDZLuPkmO22FxBLgkl0kh50uGDeg2zAMyZoVTxECmztbcx3koWS7EW8HnfwZupxAWbvXt1qb8ZjvVSpiK2rVTQ0/r3mAQXpCr9sz5/wQxKoUskQZFN8D5nA2fMgrOe8HTdmJn0gmOY=
+	t=1742213216; cv=none; b=F6hXibowoSC9CU5xMxj2yyGPAYuDrP8EE31X4EQzOfhGbvWtlYHIBDkx7oVVfOoQkJyNIwJ1LgF95ufoGoOrazvWaljKoPqXxjSdKkswLyLytnJGC3nVZtSzZyAzB6IFji3T//992Vjao5hImT8Slw81f1BgXjyiD6p2WcinicE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742213209; c=relaxed/simple;
-	bh=OdhP8xqEt2iM7IROoka4dd5M0pkY/P6CneVm+XNjuY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BpJcHd0oaf9oKEW7B57Utdaqvhcb3miBNOt+5pO2U/5S6JX0dkPa96bhkIxmjLL3ejGN7kKzBulkwkcE1oabdJOjOAmsSlW+05VFuUhkS2qLDMNYZ5TY8sfhvJlpuu0fQS6ko62w6JEQeDmcUjYACObOcqaqrOwpHZYgH0QIUVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W1GVNBtK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742213216; c=relaxed/simple;
+	bh=BPeTsao/CI9iFCaJIKL+Je3Pb+9ZJWaiRaaVYcgcfnk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gH3LNxE2/1/A6ck1RzWEVvgE9akuiF8TgHfwyaDOcpnOCw3IfkN8TDeM4+5g0IFDwMgTxpPxilkgi7d+E/eHKNNLn1o6ge0rWRqCjxX+suP/qol/KSc16Lw0SI4mt9tZanHjayvtnb22vtoHmv9ucbPHiP8PsPz3UVBFtESMHlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=afL51ZRq; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W1GVNBtK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742213206;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FsJOBNIkT+IrsuxSgC3fs8kWA8Vn7b/lsGkqVTldQws=;
-	b=W1GVNBtKi6pQ+EuIl1J9Ond2jYeHh4Jw6WEYrz3WjiBsre5XCpydIrySBCNOdll5yjwAD1
-	PkWVQlgt89bvmYC/ZpUBhEW7UXKPcAyC3IEP7fwdwO5rtd9RnoqmPfTlAGYQ+RvJ1/YoMl
-	d8FLxc1Yd/1ivjmif9ndFzWnhwAWquU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-342-J33KV07KMeKaEYBE9re9BQ-1; Mon, 17 Mar 2025 08:06:45 -0400
-X-MC-Unique: J33KV07KMeKaEYBE9re9BQ-1
-X-Mimecast-MFC-AGG-ID: J33KV07KMeKaEYBE9re9BQ_1742213204
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e5c76fd898so3819375a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 05:06:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742213204; x=1742818004;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsJOBNIkT+IrsuxSgC3fs8kWA8Vn7b/lsGkqVTldQws=;
-        b=eCy8Et2k5Ax7mUmAqnCzik/Ii3Bu3d6LUqiP2JdWWlC99SsMu4gTN/ObZ1KKfL+azS
-         TB7N8LrTYu3zgGmrptpQezId8zoyd8DsB/jdHB4IGVg3BqcCe01eZfWA8B3LAuW/zaCy
-         PNhGTcAVtj8etIL5NdbKk4TP4gBnOoPFsI+m6GRiOtNOQS9fvMu6XIo1kWVf8ouyn53f
-         oSr+Me0u6OGV8LMzQ6BoWDjZizlwwTNVcI3Ms8eSfTcJPj3hd2qxZpC8/ZpMCFtDGIOI
-         +zAZM0p/Mxw62aBrIzieNOD0/ykPm105r2ldGaJxxWkVwE86ra7KFjF9y0FqYzJnjB1e
-         CLNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcgMOtnNKLoo4FNXoNbbXPpz0mqDoq1T4d/9DgWlA6yLi4TYSjjjPbwUNOBNXy4WrJW3YnfGfGZrrWklM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/FYpX7gj6kylzeh5+1hagGNxUKrjoEwnX5VRt7ZU/IM2ReO+q
-	0VR7k2cqFL8+dtZrjVELfvDfHlkBoNXBTuTWHKVhNkk5EY+uxnKQroGwXvDoA8B62RLFJziF5LN
-	auDuJQBXSXuXVHQ/kqdsT27r/RuBA38Rjg2Nhuh5MqKZNY8b/shhE1dMInNoj7Q==
-X-Gm-Gg: ASbGncuQds4WkPaGXtFvxHO3UMBIGH4GtTf/4wLkTeSQrTTIWAr07vDbEdw3y/nW2+v
-	MToH2R8kMVKtOBt43tUZazNDFzXvY3cy7makpGXobchzBPL7B5C/F0S8axQQkB2vzAqmsiTZeAz
-	VDmsfVkg6y2a7PiABuOW5SXDDVEB35xZg8A5GSp4gevVZmYSik9493LErXCx4lXkLv57mKz00QP
-	EihXGK9+o01v75pqZHSEvuBlCA51FqluIWRSDqZnf7lMJQZnE6D27GMw3+GFx6QHMoNeATM0UZf
-	E5F6OS0qyzyR6VAlOUo=
-X-Received: by 2002:a05:6402:1e88:b0:5e5:dea5:3eb2 with SMTP id 4fb4d7f45d1cf-5e89fa27ff5mr13019756a12.11.1742213204084;
-        Mon, 17 Mar 2025 05:06:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHmQMtOckCF+PJyW0evnswjVRpHzbUIJWSKU6Yez1QrIPqUxHyXtbiMkkXYeWU68iPbIwfbAA==
-X-Received: by 2002:a05:6402:1e88:b0:5e5:dea5:3eb2 with SMTP id 4fb4d7f45d1cf-5e89fa27ff5mr13019703a12.11.1742213203664;
-        Mon, 17 Mar 2025 05:06:43 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e81692e6d4sm5761290a12.9.2025.03.17.05.06.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Mar 2025 05:06:43 -0700 (PDT)
-Message-ID: <45fff318-7925-4328-9dca-999c00e271d2@redhat.com>
-Date: Mon, 17 Mar 2025 13:06:41 +0100
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="afL51ZRq"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52HC6h352266609
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Mar 2025 07:06:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1742213203;
+	bh=iGimkSxYNA9BThU4h1cp/WR44F+7o3nXZTSdOlQwL5g=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=afL51ZRqdNXbGmLxB/E0ypWZG/FLqsThFRZvEBdBcwjw0mTCn+IUlaFw+HUPPP2xu
+	 fIYp5j8UM5VIL14PUWhEMENvaZrvrUtJzQNIo1unkkMjn2kDhshF6FbYHv4uTF/A90
+	 VtQqLgn77LJQc747SV8yL0jlqPa2u6zrFBqjf+VI=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52HC6hJt032735
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 17 Mar 2025 07:06:43 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
+ Mar 2025 07:06:43 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 17 Mar 2025 07:06:42 -0500
+Received: from uda0510294.dhcp.ti.com (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52HC6MK0060901;
+	Mon, 17 Mar 2025 07:06:39 -0500
+From: Beleswar Padhi <b-padhi@ti.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>
+CC: <afd@ti.com>, <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
+        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
+        <jkangas@redhat.com>, <eballetbo@redhat.com>, <b-padhi@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 03/26] remoteproc: k3-r5: Use k3_r5_rproc_mem_data structure for memory info
+Date: Mon, 17 Mar 2025 17:35:59 +0530
+Message-ID: <20250317120622.1746415-4-b-padhi@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250317120622.1746415-1-b-padhi@ti.com>
+References: <20250317120622.1746415-1-b-padhi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Input: atkbd - Correctly map F13 - F24
-To: Werner Sembach <wse@tuxedocomputers.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250311180643.1107430-1-wse@tuxedocomputers.com>
- <20250311180643.1107430-2-wse@tuxedocomputers.com>
- <83ea44f6-c0ad-4cb0-a16e-dd4fa17b63c7@tuxedocomputers.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <83ea44f6-c0ad-4cb0-a16e-dd4fa17b63c7@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi,
+The ti_k3_r5_remoteproc.c driver previously hardcoded device memory
+region addresses and names. Change this to use the k3_r5_rproc_mem_data
+structure to store memory information. This aligns with K3 DSP and M4
+drivers, and can be refactored out later.
 
-On 11-Mar-25 19:10, Werner Sembach wrote:
-> Hi Hans, Hi Dimitry,
-> 
-> resending this too on the v2 to not cause confusion:
-> 
-> Regarding remapping KEY_ZENKAKUHANKAKU to KEY_TOUCHPAD_TOGGLE:
-> 
-> Am 11.03.25 um 19:06 schrieb Werner Sembach:
->> Currently only F23 is correctly mapped for PS/2 keyboards.
->>
->> Following to this table:
->> https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/translate.pdf
->>
->> - F24 and Zenkaku/Hankaku share the same scancode, but since in real world
->> Zenkaku/Hankaku keys seem to just use the tilde scancode, this patch binds the
->> scancode to F24. Note that on userspace side the KEY_ZENKAKUHANKAKU keycode is
->> currently not bound in xkeyboard-config, so it is (mostly*) unused anyway.
-> 
-> I think what the firmware vendor actually wanted to do was to send ctrl+super+f24 upon touchpad toggle. This would somewhat fall in line with, for example, the copilot key being implemented as shift+super+f23.
+Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+---
+ drivers/remoteproc/ti_k3_r5_remoteproc.c | 65 ++++++++++++++++++++----
+ 1 file changed, 56 insertions(+), 9 deletions(-)
 
-I agree that that seems to be the intent.
-
-> Following this, my suggestion is to do this remapping and handle the rest in xkeyboard-config
-
-xkeyboard config already contains mappings for F13 - F18 and F20-F23 in
-/usr/share/X11/xkb/symbols/inet
-
-So all that needs to happen there is map FK19 -> F19 and FK24 -> F24.
-
-And then teach KDE + GNOME that ctrl+super+f24 means touchpad-toggle.
-
-We could maybe get away with also dropping the weird mappings for FK13 - FK18
-and map those straight to F13 - F18, but we need the special mappings
-for F20 - F23 to stay in place to not break stuff.
-
-Regards,
-
-Hans
-
+diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+index 525f26996b56..29205d9e21af 100644
+--- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
++++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+@@ -84,18 +84,44 @@ enum cluster_mode {
+ 	CLUSTER_MODE_SINGLECORE
+ };
+ 
++/**
++ * struct k3_r5_mem_data - memory definitions for a R5
++ * @name: name for this memory entry
++ * @dev_addr: device address for the memory entry
++ */
++struct k3_r5_mem_data {
++	const char *name;
++	const u32 dev_addr;
++};
++
++/**
++ * struct k3_r5_dev_data - device data structure for a R5
++ * @mems: pointer to memory definitions for a R5
++ * @num_mems: number of memory regions in @mems
++ * @boot_align_addr: boot vector address alignment granularity
++ * @uses_lreset: flag to denote the need for local reset management
++ */
++struct k3_r5_dev_data {
++	const struct k3_r5_mem_data *mems;
++	u32 num_mems;
++	u32 boot_align_addr;
++	bool uses_lreset;
++};
++
+ /**
+  * struct k3_r5_soc_data - match data to handle SoC variations
+  * @tcm_is_double: flag to denote the larger unified TCMs in certain modes
+  * @tcm_ecc_autoinit: flag to denote the auto-initialization of TCMs for ECC
+  * @single_cpu_mode: flag to denote if SoC/IP supports Single-CPU mode
+  * @is_single_core: flag to denote if SoC/IP has only single core R5
++ * @core_data: pointer to R5-core-specific device data
+  */
+ struct k3_r5_soc_data {
+ 	bool tcm_is_double;
+ 	bool tcm_ecc_autoinit;
+ 	bool single_cpu_mode;
+ 	bool is_single_core;
++	const struct k3_r5_dev_data *core_data;
+ };
+ 
+ /**
+@@ -151,6 +177,7 @@ struct k3_r5_core {
+  * @rmem: reserved memory regions data
+  * @num_rmems: number of reserved memory regions
+  * @reset: reset control handle
++ * @data: pointer to R5-core-specific device data
+  * @tsp: TI-SCI processor control handle
+  * @ti_sci: TI-SCI handle
+  * @ti_sci_id: TI-SCI device identifier
+@@ -166,6 +193,7 @@ struct k3_r5_rproc {
+ 	struct k3_r5_mem *rmem;
+ 	int num_rmems;
+ 	struct reset_control *reset;
++	const struct k3_r5_dev_data *data;
+ 	struct ti_sci_proc *tsp;
+ 	const struct ti_sci_handle *ti_sci;
+ 	u32 ti_sci_id;
+@@ -1207,31 +1235,32 @@ static int k3_r5_rproc_configure_mode(struct k3_r5_rproc *kproc)
+ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+ 					       struct k3_r5_rproc *kproc)
+ {
+-	static const char * const mem_names[] = {"atcm", "btcm"};
++	const struct k3_r5_dev_data *data = kproc->data;
+ 	struct device *dev = &pdev->dev;
+ 	struct k3_r5_core *core = kproc->priv;
+ 	struct resource *res;
+ 	int num_mems;
+ 	int i;
+ 
+-	num_mems = ARRAY_SIZE(mem_names);
+-	kproc->mem = devm_kcalloc(dev, num_mems, sizeof(*kproc->mem), GFP_KERNEL);
++	num_mems = kproc->data->num_mems;
++	kproc->mem = devm_kcalloc(kproc->dev, num_mems, sizeof(*kproc->mem),
++				  GFP_KERNEL);
+ 	if (!kproc->mem)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < num_mems; i++) {
+ 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-						   mem_names[i]);
++						   data->mems[i].name);
+ 		if (!res) {
+ 			dev_err(dev, "found no memory resource for %s\n",
+-				mem_names[i]);
++				data->mems[i].name);
+ 			return -EINVAL;
+ 		}
+ 		if (!devm_request_mem_region(dev, res->start,
+ 					     resource_size(res),
+ 					     dev_name(dev))) {
+ 			dev_err(dev, "could not request %s region for resource\n",
+-				mem_names[i]);
++				data->mems[i].name);
+ 			return -EBUSY;
+ 		}
+ 
+@@ -1245,7 +1274,8 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+ 		kproc->mem[i].cpu_addr = devm_ioremap_wc(dev, res->start,
+ 							 resource_size(res));
+ 		if (!kproc->mem[i].cpu_addr) {
+-			dev_err(dev, "failed to map %s memory\n", mem_names[i]);
++			dev_err(dev, "failed to map %s memory\n",
++				data->mems[i].name);
+ 			return -ENOMEM;
+ 		}
+ 		kproc->mem[i].bus_addr = res->start;
+@@ -1258,7 +1288,7 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+ 		 * addresses 0 and 0x41010000 (same as the bus address on AM65x
+ 		 * SoCs) based on loczrama setting
+ 		 */
+-		if (!strcmp(mem_names[i], "atcm")) {
++		if (!strcmp(data->mems[i].name, "atcm")) {
+ 			kproc->mem[i].dev_addr = core->loczrama ?
+ 							0 : K3_R5_TCM_DEV_ADDR;
+ 		} else {
+@@ -1268,7 +1298,7 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+ 		kproc->mem[i].size = resource_size(res);
+ 
+ 		dev_dbg(dev, "memory %5s: bus addr %pa size 0x%zx va %pK da 0x%x\n",
+-			mem_names[i], &kproc->mem[i].bus_addr,
++			data->mems[i].name, &kproc->mem[i].bus_addr,
+ 			kproc->mem[i].size, kproc->mem[i].cpu_addr,
+ 			kproc->mem[i].dev_addr);
+ 	}
+@@ -1323,6 +1353,7 @@ static int k3_r5_cluster_rproc_init(struct platform_device *pdev)
+ 		kproc->priv = core;
+ 		kproc->dev = cdev;
+ 		kproc->rproc = rproc;
++		kproc->data = cluster->soc_data->core_data;
+ 		core->kproc = kproc;
+ 
+ 		kproc->ti_sci = devm_ti_sci_get_by_phandle(cdev, "ti,sci");
+@@ -1764,11 +1795,24 @@ static int k3_r5_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct k3_r5_mem_data r5_mems[] = {
++	{ .name = "atcm", .dev_addr = 0x0 },
++	{ .name = "btcm", .dev_addr = K3_R5_TCM_DEV_ADDR },
++};
++
++static const struct k3_r5_dev_data r5_data = {
++	.mems = r5_mems,
++	.num_mems = ARRAY_SIZE(r5_mems),
++	.boot_align_addr = 0,
++	.uses_lreset = true,
++};
++
+ static const struct k3_r5_soc_data am65_j721e_soc_data = {
+ 	.tcm_is_double = false,
+ 	.tcm_ecc_autoinit = false,
+ 	.single_cpu_mode = false,
+ 	.is_single_core = false,
++	.core_data = &r5_data,
+ };
+ 
+ static const struct k3_r5_soc_data j7200_j721s2_soc_data = {
+@@ -1776,6 +1820,7 @@ static const struct k3_r5_soc_data j7200_j721s2_soc_data = {
+ 	.tcm_ecc_autoinit = true,
+ 	.single_cpu_mode = false,
+ 	.is_single_core = false,
++	.core_data = &r5_data,
+ };
+ 
+ static const struct k3_r5_soc_data am64_soc_data = {
+@@ -1783,6 +1828,7 @@ static const struct k3_r5_soc_data am64_soc_data = {
+ 	.tcm_ecc_autoinit = true,
+ 	.single_cpu_mode = true,
+ 	.is_single_core = false,
++	.core_data = &r5_data,
+ };
+ 
+ static const struct k3_r5_soc_data am62_soc_data = {
+@@ -1790,6 +1836,7 @@ static const struct k3_r5_soc_data am62_soc_data = {
+ 	.tcm_ecc_autoinit = true,
+ 	.single_cpu_mode = false,
+ 	.is_single_core = true,
++	.core_data = &r5_data,
+ };
+ 
+ static const struct of_device_id k3_r5_of_match[] = {
+-- 
+2.34.1
 
