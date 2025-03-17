@@ -1,96 +1,100 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB4B227BB2
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE33243364;
+	Mon, 17 Mar 2025 14:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222264; cv=none; b=fT/rqAFVgYrCZJ/ZC/yzbjp4NI69442iSAz8DXRlD99jubEWmVyYsGxHqxDgg5FdjPsb/YbG43jhuxnSNdlkSIJPZ0HCsPoATPsvs+mhbDrk2qOYqNXb5YMmaZ7pdyRIIaPcNQ84eiRT29+FRJyXpNK3GtBaEc+5/ydLzP4wRZM=
+	t=1742222334; cv=none; b=U6GV3LwRet4ZCuwmX2xexOwfnrtm4sNfa4o8p0QSTb/b32NOxccgoYE/0T+JeoL4z/5hpkfvkbxzj/EWaAFAQkQa4LcEtZn8zDw9f7USQ86DIrcApWsPu0CanL/+Ov4PnujxTvIJFL+Vlc1Pi7sIYz+bn289BiQdlEZs7xaJ7LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222264; c=relaxed/simple;
-	bh=4BhL2Yaks2q5eYLwQGsQ9FtBVskiaGmEN11DByoOu+E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cSlS2/qKiydcbO4J4OgJ1G3G51YLvumV2Wc9JIwy0QSeFh3FT84pZLbd/6YM14OXCeplKETjrfBAmOBxDum53q1KCX3S6+02iLO3tWF3mYHdhLn4pSrqtUcwiEe5d9vJPVzcfIsAfk5CGMK7EpU+J2UOZLdY82kwTgpCfXPZLDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=ck7q2SFl; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="ck7q2SFl"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2243803b776so38561005ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 07:37:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1742222261; x=1742827061; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4BhL2Yaks2q5eYLwQGsQ9FtBVskiaGmEN11DByoOu+E=;
-        b=ck7q2SFlzZKhH72tipLkB131Ac+CWFV3xAnhP6x18aaITVxRA/64XSkiVMnrKsQNv2
-         t5ukTltRESTVb1R1CfYYxaKBlemXfUWrmMP3RaKZ2A3FZ0QtVYiS7JkKllwbpdEG5BYv
-         BA/HXoB8zp5QSAgsv00LlGJgkLTAi+0sAR1a1j9yvqNlg+bz5DOxoRhwq4T8Afs3zi1Y
-         vyiHE5No+jQgbUbnljKWGl1ILhRgkcovD6DjCDBjeoiBmVIAOFRc00bh63j7uLLs0FhD
-         QMOFcSBS9N7ALH8Qr4QMC7sZJoorwk3s/7Ep8jh+eKSe3xbhRTQYc3nL16tTtbQNH/Z1
-         Gt9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742222261; x=1742827061;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4BhL2Yaks2q5eYLwQGsQ9FtBVskiaGmEN11DByoOu+E=;
-        b=gXig+xR06ELmH1aPlSO0sQhcCXgGusen7rH4YC540de7jfogDoOmxmSHiQKOnZJfZ1
-         C38wcfQqmaED6TEZRIpTRUzp2zdzcxrgVPXvXlzm+pME67bylju2IMNtkHtZh8vMJa4p
-         FgUCw8DHZweiTN/xBlx8uzFsPIVaamBf9YsGwtjcDDRMeKLJHro7gwUi7BTTDd/vmX6V
-         YicquNeFq/XJrDUVHc156JW0uS9Kqjy61ccX7FZDd9qfAQ0tO+pIoSMYcVTFGzoCJcVU
-         8yiddqggyIbjLYtLuLLNJQ2TmJfB5cIfMfe5lq/GRV5hl4ggYcz8W6G/TXIKIdUKOOes
-         JXpg==
-X-Forwarded-Encrypted: i=1; AJvYcCVA3yJ0m0GHROggInMu0XSfLX4z3FFbyAhpgwaP+q/39rEVSbaeDjmqzGIL56KbSbNvtyEKfHp4n4JMSa4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPm5pM/fXpSLLuk/Iuy9S6WDSJnBZgGeS3laOsYlqznW5ty8rq
-	nmdWAwZuG9LyJ5FDcK8Q20heErOoIjEIJeQMY41ic/DphyEFA3gU+k6LdUkRr4jK7wdTKZoxFOC
-	Ai4Dr69zQTyxJ9duC/dudbJSYHXOk8b2nPKXMjQ==
-X-Gm-Gg: ASbGncsjdkyPbySi3XipqCOrJKnZJvzRWICvgVf4jESe4TLrWvT2khlZXXeGvh8MQNO
-	c548aCEWsOFp/zcrGMY7VJ/WluPZLVwCJVWCEPGHqtTTOWfTK8ViPzAmkfE0rzvyADMNTZscGlo
-	NJLBs42LZKKZJoB0/4zCdNyY113JjxQkr1KaPpn2PWdCTTdK3yZyBQGnRGxHVnr+rHLXUr
-X-Google-Smtp-Source: AGHT+IGbXl28itf7kvvrqy540KzfJLaX7CDKqwGYMcvVjxyK45BPZ4IUPj0mY8ZSR8GW/D32D7pW6DWKUA8JlPuFlUs=
-X-Received: by 2002:a05:6a00:2309:b0:736:4b08:cc0e with SMTP id
- d2e1a72fcca58-737223ccf1dmr15014447b3a.17.1742222261342; Mon, 17 Mar 2025
- 07:37:41 -0700 (PDT)
+	s=arc-20240116; t=1742222334; c=relaxed/simple;
+	bh=o/Q72SbAFLIeIKcMmBjNv06VKL5qWKFA5ZM4mJnjfDI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=baFiyvduvEinXefzfyXq7yXFqn/eYxG3+F6QavQF/vl6sPkZHesbUNzPLJtlWvq2tWQjjQO7pTJJC8Frq50pM5nHw27aArEJc5J1Xu/TBhi40QRBYTwZ34Ouq/0wzkdQGkXV3i+J+NvtFV0UCzLYwZIezpHk48/Pl1bq+hbwX1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: BW5lC7U3TBatQXyFE42jtA==
+X-CSE-MsgGUID: eoiSUUEzTQaIGzYVX68NoA==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 17 Mar 2025 23:38:49 +0900
+Received: from ubuntu.adwin.renesas.com (unknown [10.226.93.200])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 80B63401A473;
+	Mon, 17 Mar 2025 23:38:44 +0900 (JST)
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: geert+renesas@glider.be,
+	conor+dt@kernel.org,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	rafael@kernel.org,
+	daniel.lezcano@linaro.org
+Cc: magnus.damm@gmail.com,
+	devicetree@vger.kernel.org,
+	john.madieu@gmail.com,
+	rui.zhang@intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	sboyd@kernel.org,
+	biju.das.jz@bp.renesas.com,
+	linux-pm@vger.kernel.org,
+	lukasz.luba@arm.com,
+	John Madieu <john.madieu.xa@bp.renesas.com>
+Subject: [PATCH v4 0/5] thermal: renesas: Add support fot RZ/G3E
+Date: Mon, 17 Mar 2025 15:34:27 +0100
+Message-ID: <20250317143442.100590-1-john.madieu.xa@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250312-vc4_hotplug-v3-0-d75878677de8@raspberrypi.com>
- <20250312-vc4_hotplug-v3-1-d75878677de8@raspberrypi.com> <20250314-armored-tourmaline-lizard-cee8d8@houat>
-In-Reply-To: <20250314-armored-tourmaline-lizard-cee8d8@houat>
-From: David Turner <david.turner@raspberrypi.com>
-Date: Mon, 17 Mar 2025 14:37:03 +0000
-X-Gm-Features: AQ5f1Jpk2qj6wLi6ea6sCKp_tWqRzPOuJWPTh71dRl9BYdVEBR9Y7uhNYp72rwI
-Message-ID: <CACXvZi-3mkusGHkZTz=kDo8WcNQZR1A3bddajh+CFT6tQxJSCQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] drm/vc4: hdmi: Call HDMI hotplug helper on disconnect
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Dave Stevenson <dave.stevenson@raspberrypi.com>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Maxime,
+This series adds support for the temperature sensor unit (TSU) found on the
+Renesas RZ/G3E SoC.
 
-Thanks for the reviews.
+The series consists of 5 patches (one of which is not related to the thermal
+framework) that progressively add TSU support as follows:
+- patch 1/5:    adds syscon/regmap support for accessing system controller
+                registers, enabling access to TSU calibration values
 
-On Fri, 14 Mar 2025 at 13:33, Maxime Ripard <mripard@kernel.org> wrote:
-> I also think that it's wrong, it's not just about audio. It just needs
-> to be called as part of detect no matter what the status is. Audio is
-> one thing that it will possibly handle depending on the driver, but
-> EDIDs, CEC, etc. might also be dealt with. So I don't think it's right
-> to focus on audio there.
+- patches 2-5/5:  add dt-bindings, actual driver, DT node, and config symbol.
 
-Does this wording sound ok?
+Changes:
 
- * This function should be called as a part of the .detect() / .detect_ctx()
- * callbacks for all status changes in order to update the HDMI-specific
- * connector's data.
+v1 -> v2
+ * Fix yaml warnings from dt-binding
+ * Update IRQ names to reflect TSU expectations
 
-Best regards,
-David
+v2 -> v3
+ * Remove useless 'renesas,tsu-operating-mode' property
+
+v3 -> v4
+ * Improve some commit messages
+ * Fix interrupt description in YAML binding file
+
+Regards,
+
+John Madieu (5):
+  soc: renesas: rz-sysc: add syscon/regmap support
+  dt-bindings: thermal: r9a09g047-tsu: Document the TSU unit
+  thermal: renesas: rzg3e: Add thermal driver for the Renesas RZ/G3E SoC
+  arm64: dts: renesas: r9a09g047: Add TSU node
+  arm64: defconfig: Enable the Renesas RZ/G3E thermal driver
+
+ .../thermal/renesas,r9a09g047-tsu.yaml        |  81 ++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/renesas/r9a09g047.dtsi    |  48 ++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/soc/renesas/Kconfig                   |   1 +
+ drivers/soc/renesas/r9a09g047-sys.c           |   1 +
+ drivers/soc/renesas/rz-sysc.c                 |  30 +-
+ drivers/soc/renesas/rz-sysc.h                 |   2 +
+ drivers/thermal/renesas/Kconfig               |   7 +
+ drivers/thermal/renesas/Makefile              |   1 +
+ drivers/thermal/renesas/rzg3e_thermal.c       | 445 ++++++++++++++++++
+ 11 files changed, 623 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
+ create mode 100644 drivers/thermal/renesas/rzg3e_thermal.c
+
+-- 
+2.25.1
+
