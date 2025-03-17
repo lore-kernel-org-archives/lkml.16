@@ -1,181 +1,106 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867E51459F7;
-	Mon, 17 Mar 2025 06:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDFF21506D
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 06:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742191452; cv=none; b=f8ME5K9Updl1yiP8LSGJ+ucFfRyLUSX1uyeIt0HMOh76+i/6KqGVcumpTpJbBgJqmEv6037i/l8pHEL7k8x/ZULvqzhjzAcx2yz/7UUAmVNtf1+QTTzYwXQ5/iNFv0E8025nbo9N/SGfw6P32lbeXCkwmHRaQvNzJ+YPwJd9M90=
+	t=1742191463; cv=none; b=D4P/LEvdSgMS/BIZyqkIjd96yotGsVnBp6l2jrLzz5qY7cGqsQJc5W8N1BzCJj2zgKaElKo/8bAHng5mpJFg9q0ThNLIxlCJn1NxqbWJAcBr5gGgeGTicL2sf0zdYLEJeLLhuAC01qWNXudhYq+oqpuP/0XLXwtPov22jpHwCTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742191452; c=relaxed/simple;
-	bh=MSbgezf+uWKm9OnBadZ4wxifQx2zec1fdEbK61jVGa0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=L1fc0fz6ZkPJ2GmJS5h4CTC46cHCTFV6cd33u9F47Ft97/P70/iB+Lx46G8ptJLOYU23LUJVP1w3DGQWZA8BScoKZqftyEsqcrulL7FTDEfqbXSjRDtSfgT0SPuhJNew4io4VKVuAj8N6JkroGJL9SCxzNiCQcFXgPSuJcv4T/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=SIQygUy1; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1742191463; c=relaxed/simple;
+	bh=ml2pvES1bcDjWG1BADG1sOaAPR0s/wjw2CaSm11wlIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QArdbw8cklUnX5sWd11oOvCOKwhYcPpcljScxq/phq5zq1YsbE1M+MGneHFEsfj2b4XIKEm3g3aCmlMKQPaDlAIVIKpl21Vr3FBIjaOkn7LErfa/5nRp80gl+F6UCThD8fptPC3B+gELNyP+DSIaSt9nuNg9mnvnfQolkLt+yCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tw1G2f7+; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SIQygUy1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1742191446;
-	bh=VRN5xYfpqR4+9fIF8y4DrwFpD1z+sCyIqoqSvaovC/8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=SIQygUy1N3/2BrpBZvuQYtucwAcLw/GugkcDsYSKr8LWsqxuI/3S9rrNENgmxjbif
-	 bvSL6ut4NRc7pja2dQ6OGjlrUgIXHbhRoUpikq3bVEGFFExAFprwJdarx04ZWcf8SY
-	 kOqnbu9fxlRhUrVvHbyCeQwWdPewnPD+55UgLxw7TRj2QkxN88O5UMqhZVbzGNkWwP
-	 VoNa2ITnQ0hTL8qWyd9kI8lMN/SYE/qrPjacP+6456fEYA4IxyA6If/xX9vI+H8R3w
-	 LWU9f9JYfAzOgKWZ58vIIcUg8QdHhSOu+U1qj2pr74okSwXKePZrPo96PfNvgNBJQ5
-	 BoiMBhT2txGdw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZGPYd3rfgz4wcZ;
-	Mon, 17 Mar 2025 17:04:04 +1100 (AEDT)
-Date: Mon, 17 Mar 2025 17:04:04 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Christoffer Dall <cdall@cs.columbia.edu>, Marc Zyngier <maz@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Oliver Upton <oliver.upton@linux.dev>, Shameer
- Kolothum <shameerali.kolothum.thodi@huawei.com>
-Subject: linux-next: manual merge of the kvm-arm tree with the arm64 tree
-Message-ID: <20250317170404.733b119c@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tw1G2f7+"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-223fb0f619dso63027835ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Mar 2025 23:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742191461; x=1742796261; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=v20yzStT9VGAjU5GNTzWqe+zrXLJCLLqnxAXXWJhWaw=;
+        b=Tw1G2f7+LfQv7ktGT03S9FxFTebGzxflYagBecy+MgOBt3Ptmy9JwUCGl/Rt1yWNcj
+         PEjVEo/cUwks097Aqz8dFcz0LenhLe9AMZEAGIDgDnT47JzLQAphYsUtJENLLsGkQvNE
+         cEHXUvQruudAaq6yLO4DhmP4oIVeck6QolhrIFa4uRdhcCFHJZ0b18zitdNXDCEQkfrf
+         uRTKi+zSLsOUwPjwT/dY0vAfJORRbBXxMHpTAvOurSl6jFeIUnOqI47U+EfbdS/CHYXM
+         Zn0iZkAe1MyIr24VTh4qjYwgMgVcrny5Vu380G1S1MvDOsfcY6LFcZUc6cj/yxziER4Y
+         qs8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742191461; x=1742796261;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v20yzStT9VGAjU5GNTzWqe+zrXLJCLLqnxAXXWJhWaw=;
+        b=VnZLxrGF1ABE0rc8f982ISWFIZ0IFIBMs0zr4kB8PMzi7wdmLLMEEN9rpBwglERG2R
+         m4Z/5ypimBDOku2cboazmMT9eTroAOYg4XOx7SNxcfAvZjxQ821ZV84AqflOrB2oF4uT
+         i33cVTsnKfnWgpabgJedch/3HQEc/K7sfBhdKSlJDuGRNA2fjt1cgYWWlkXQUtTLIxl4
+         Kxw1fmFoSiAxK00ALCPb1U0/XeCNCzQhOVfL+MnU8qJCKcGrKQ1j9DGwqlCkhuZ2wmhh
+         88FUS71StpXzLIBhQuW2JrX7oh4mPOSW7uoi3FKC0Zvyba9lWbSXDN/HIlYzfbui9vTA
+         fVkA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcdIe3jBMqHltmiOG+/bWtaHOX4ZRQxrnVZGdH7DoQ04ZkFvUETVeguXHrWYtFulZsnKtbAt18wiLROfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIV++A0basnULLY5MzFkvE2UhJP0I0lN6jB2z47cq6LQk1gAPM
+	gSoeLn9ybOu4dOQuAAU4vm7WOnUmjUczeQvhnEpaCnwm3M1f1r9MWd5gqQKiQuw=
+X-Gm-Gg: ASbGncs3D8Sf2Tepvc2Yd566hX6enLBbMZvB7tj7i4lFvgYYSflRANF3Shdnm5XKM9I
+	Pgv6EDO1zN1eYicnqJMqIqnCOzhd0dD+AUoNn/aY7SlZxWlUa2TZVEuFp5mIIGg/ztAIo3swfa+
+	xrRGkIWk+2hxDJz9AtXrgmzLesX+Gk8OguiOfSRhrtBJlHv8K5ExZ+ANrjooLuvHPtNFFEemIEf
+	Ph//oHSKuY0mqGC6pc70sETGMwoob2iBLYIO4PqXOxLsu8fdV5RuRMvjhEoi4uywP4R+hkoKGRJ
+	2oGAZ7dAIErWU4XB0tegyfejiMF/cLxraGrdTKiIntFVcA==
+X-Google-Smtp-Source: AGHT+IFe6jS1xlWkF22sbp8P4KRa+3Fa3e1mF+gfQI2nbyw2sog0uD5R60+Qr90Q84NCNk2zO7PuVg==
+X-Received: by 2002:a17:902:e785:b0:220:fce7:d3a6 with SMTP id d9443c01a7336-225e0a75becmr156086615ad.23.1742191461318;
+        Sun, 16 Mar 2025 23:04:21 -0700 (PDT)
+Received: from localhost ([122.172.84.15])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371152951bsm6998422b3a.15.2025.03.16.23.04.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Mar 2025 23:04:20 -0700 (PDT)
+Date: Mon, 17 Mar 2025 11:34:18 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Imran Shaik <quic_imrashai@quicinc.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Ajit Pandey <quic_ajipan@quicinc.com>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Jagadeesh Kona <quic_jkona@quicinc.com>,
+	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: cpufreq-qcom-hw: Add QCS8300
+ compatible
+Message-ID: <20250317060418.7vmdznbz2igeppw6@vireshk-i7>
+References: <20250313-qcs8300-cpufreq-scaling-v1-0-d4cd3bd9c018@quicinc.com>
+ <20250313-qcs8300-cpufreq-scaling-v1-1-d4cd3bd9c018@quicinc.com>
+ <20250313-valiant-fine-giraffe-c6acdd@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/w07Lwe91=U2TS+49ppJugyt";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313-valiant-fine-giraffe-c6acdd@krzk-bin>
 
---Sig_/w07Lwe91=U2TS+49ppJugyt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 13-03-25, 09:52, Krzysztof Kozlowski wrote:
+> On Thu, Mar 13, 2025 at 11:33:39AM +0530, Imran Shaik wrote:
+> > Document compatible for cpufreq hardware on Qualcomm QCS8300 platform.
+> > 
+> > Signed-off-by: Imran Shaik <quic_imrashai@quicinc.com>
+> > ---
+> >  Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Hi all,
+Applied [1/2]. Thanks.
 
-Today's linux-next merge of the kvm-arm tree got a conflict in:
-
-  arch/arm64/kernel/cpufeature.c
-
-between commits:
-
-  f4fe70cd8522 ("arm64: cpufeature: factor out cpu_is_meltdown_safe()")
-  837dfd070e94 ("arm64: cpufeature: mitigate CVE-2024-7881")
-
-from the arm64 tree and commit:
-
-  e3121298c7fc ("arm64: Modify _midr_range() functions to read MIDR/REVIDR =
-internally")
-
-from the kvm-arm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/kernel/cpufeature.c
-index f5ca9a535eba,9c4d6d552b25..000000000000
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@@ -1787,63 -1791,15 +1789,63 @@@ static bool cpu_is_meltdown_safe(void
-  		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
-  		{ /* sentinel */ }
-  	};
- +
-- 	if (is_midr_in_range_list(read_cpuid_id(), meltdown_safe_list))
-++	if (is_midr_in_range_list(meltdown_safe_list))
- +		return true;
- +
- +	/*
- +	 * ID_AA64PFR0_EL1.CSV3 > 0 indicates that this CPU is not vulnerable
- +	 * to meltdown.
- +	 */
- +	pfr0 =3D __read_sysreg_by_encoding(SYS_ID_AA64PFR0_EL1);
- +	if (cpuid_feature_extract_unsigned_field(pfr0, ID_AA64PFR0_EL1_CSV3_SHIF=
-T))
- +		return true;
- +
- +	return false;
- +}
- +
- +static bool cpu_has_leaky_prefetcher(void)
- +{
- +	struct arm_smccc_res res;
- +
- +	/* CPUs which are affected by CVE-2024-7881 */
- +	static const struct midr_range leaky_prefetcher_list[] =3D {
- +		MIDR_ALL_VERSIONS(MIDR_CORTEX_X3),
- +		MIDR_ALL_VERSIONS(MIDR_CORTEX_X4),
- +		MIDR_ALL_VERSIONS(MIDR_CORTEX_X925),
- +		MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
- +		MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V3),
- +		{ /* sentinel */ }
- +	};
- +
-- 	if (!is_midr_in_range_list(read_cpuid_id(), leaky_prefetcher_list))
-++	if (!is_midr_in_range_list(leaky_prefetcher_list))
- +		return false;
- +
- +	/*
- +	 * If ARCH_WORKAROUND_4 is implemented, then the firmware mitigation is
- +	 * present. There is no need to call ARCH_WORKAROUND_4 itself.
- +	 */
- +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- +			     ARM_SMCCC_ARCH_WORKAROUND_4, &res);
- +	if (res.a0 =3D=3D SMCCC_RET_SUCCESS)
- +		return false;
- +
- +	return true;
- +}
- +
- +static bool __meltdown_safe =3D true;
- +static bool __leaky_prefetch_safe =3D true;
- +static int __kpti_forced; /* 0: not forced, >0: forced on, <0: forced off=
- */
- +
- +static bool needs_kpti(const struct arm64_cpu_capabilities *entry, int sc=
-ope)
- +{
-  	char const *str =3D "kpti command line option";
-  	bool meltdown_safe;
- +	bool prefetcher_safe;
- =20
- -	meltdown_safe =3D is_midr_in_range_list(kpti_safe_list);
- -
- -	/* Defer to CPU feature registers */
- -	if (has_cpuid_feature(entry, scope))
- -		meltdown_safe =3D true;
- +	WARN_ON(scope !=3D SCOPE_LOCAL_CPU);
- =20
- +	meltdown_safe =3D cpu_is_meltdown_safe();
-  	if (!meltdown_safe)
-  		__meltdown_safe =3D false;
- =20
-
---Sig_/w07Lwe91=U2TS+49ppJugyt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfXu1QACgkQAVBC80lX
-0GzNfgf9GGeB2uQbbkYuvs2ok5le95utX5Xw2Ho6m1zUdLgD9ntlJfmFdVJulWb9
-ljbY0yVADCtSXaYo2kMORPSyfAP50Q4DFnjzT5E2dl68hDXxb4dZSxTzewGirIIy
-J4NwPRgw17Zg3QOaA09vQA9RSRfXj3twBMU9/VEctL/SBp1SulDg/BPcIWWrDc9l
-ZnZra13SbRtBSIBCJv4e6n8foJQDLIE81cofKscB7LaTB/g+a8L3F5LZhaoLSzPq
-kqx4A3wWZXs6Zr3q5iGfbM1J/ClnCzKSpPejG/F83/JpVblZumI+uFvEGZ73cVIj
-YVdnnIwLeXSDNJfhtPuvqg/K4MpApw==
-=Hcez
------END PGP SIGNATURE-----
-
---Sig_/w07Lwe91=U2TS+49ppJugyt--
+-- 
+viresh
