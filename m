@@ -1,102 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C22E719995E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D72D1527B4;
+	Mon, 17 Mar 2025 18:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742234993; cv=none; b=YNQ/PS5qwwDdk+U0xiPuq+XylEoBx453m0pF++OEzrbf7V4X3a4J93t+HCtIN2jKhyhDEv006IcYmCR7zUgTN1aOXTY3KZDJEQieV/vcpcY2iEMgl+SAYjrdVgnBuN1WH7g1PyALYZZM8r1Q3X8TGmMVBZDPBaG0RaVHfzVe1hE=
+	t=1742234999; cv=none; b=d95OJVHh4Ka/2BmJAy4UsIc0F3pSbc36tyWwsOsDG31KZxAr6bjLIOqxoR/sllKhPLkdgIAxBXsmoaY7bgSpAhttADyQY9lh6aefq5YtfO9rPsqw2i/tI0NIISKzGJ6Ek+kx6wtwRlm4hcV4FD4SseZnL+x8N7h4xOgizkn0gLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742234993; c=relaxed/simple;
-	bh=Ou7Utc6DKaTABbNNqNHC8rYJyoB7vEnCz4gdfoDeUHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R6un1leQaQeVdniBpTfq8thwrE+RbDjO2Z5+8m5DvfBs6JBOHymyHwM1c1EBZIZujHV4/QmxOC09vyiApcebIlZRb0W7AorKTrSX+EStLQHfmMRK0sHEdFLAoCQYAIJ0862wui/Mk7fNtwi9oRLNXuBgLW2TlJbo02T1h8gdnxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9974313D5;
-	Mon, 17 Mar 2025 11:09:58 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60AA13F63F;
-	Mon, 17 Mar 2025 11:09:49 -0700 (PDT)
-Date: Mon, 17 Mar 2025 18:09:45 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: lcherian@marvell.com, coresight@lists.linaro.org,
-	Mike Leach <mike.leach@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 5/7] coresight: Clear self hosted claim tag on probe
-Message-ID: <20250317180945.GK2487211@e132581.arm.com>
-References: <20250211103945.967495-1-james.clark@linaro.org>
- <20250211103945.967495-6-james.clark@linaro.org>
- <20250313160409.GS9682@e132581.arm.com>
- <6be400e2-a464-4714-acf4-328dade883a9@linaro.org>
+	s=arc-20240116; t=1742234999; c=relaxed/simple;
+	bh=S61WwX5SYcFVNzBvRGsTiux8cCXQ2421uz6PYqITOes=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=oMcbvyYcPGeUoTdl3+uidfLqZCrCRq27flD12YB8mjU/drLSLSCV/FN9gxPbdlK6dcgNKqEhJ86XDijUmMsG60Do6jm8Gu8dsrrNI25eEb7/PBNXXPww+uh+o2pwIoSq+7bTFn9xL0pJLYHnRAymOPatCJi1XGiRcEwLNngpLQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o67oqCV1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o67oqCV1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE77C4CEED;
+	Mon, 17 Mar 2025 18:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742234999;
+	bh=S61WwX5SYcFVNzBvRGsTiux8cCXQ2421uz6PYqITOes=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=o67oqCV1PP9VCQRXJUZXANOao7HKeO8o0o5AjTmcbmE8hdgnio9qjKkdoKFVQm14e
+	 LVLwssWBSgJuQqOWgWal00dYMnRoGIq21iwXmSNSi2KNdpfqUm9mdMAZPYrww/VG2+
+	 7RYtr9xDi6HwophRftsbMVuZteBtb9urP0rgvpD4g8hcsaJFjUdsRkS/iG46RwEEd3
+	 aEXH3RVQXNBsdsZQRm1sPdLOuBbGEhfrLtJgj4gVwHoDiMgiU1zyOLweUxqi9Uj1r2
+	 76k1RpQF96prgBHSDQkzowyIstoV7FKkB7+QctboOPfJPElphukXCXjQjEicBNE+MS
+	 UZnuHK305vrXA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7108D380CFF7;
+	Mon, 17 Mar 2025 18:10:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6be400e2-a464-4714-acf4-328dade883a9@linaro.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/3] mlx5: Support HWS flow meter/sampler actions in
+ FS core
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174223503427.3862374.13525687285276014271.git-patchwork-notify@kernel.org>
+Date: Mon, 17 Mar 2025 18:10:34 +0000
+References: <1741543663-22123-1-git-send-email-tariqt@nvidia.com>
+In-Reply-To: <1741543663-22123-1-git-send-email-tariqt@nvidia.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, gal@nvidia.com, mbloch@nvidia.com,
+ moshe@nvidia.com, saeedm@nvidia.com, leon@kernel.org, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Mar 17, 2025 at 03:05:41PM +0000, James Clark wrote:
+Hello:
 
-[...]
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-> > >   /*
-> > > - * coresight_disclaim_device_unlocked : Clear the claim tag for the device.
-> > > + * Clear the claim tag for the device.
-> > > + * Returns an error if the device wasn't already claimed.
-> > > + */
-> > > +int coresight_reset_claim(struct csdev_access *csa)
-> > > +{
-> > > +       int ret;
-> > > +
-> > > +       CS_UNLOCK(csa->base);
-> > > +       ret = coresight_reset_claim_unlocked(csa);
-> > > +       CS_LOCK(csa->base);
-> > > +       return ret;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(coresight_reset_claim);
-> > 
-> > Maybe my question is overlapping with Mike's comment.
-> > 
-> > Callers never check the return values from coresight_reset_claim(). I am
+On Sun, 9 Mar 2025 20:07:40 +0200 you wrote:
+> Hi,
 > 
-> I can remove the return value if it's confusing. The thought process was
-> probably that it could be useful somewhere in the future, and
-> coresight_reset_claim_unlocked() returns something anyway so might as well
-> pass it up.
+> This series by Moshe adds support for flow meter and flow sampler HW
+> Steering actions in FS core level. As these actions can be shared by
+> multiple rules, these patches use refcounts to manage the HWS actions
+> sharing in FS core level.
 > 
-> > wandering if coresight_reset_claim() can directly call
-> > coresight_clear_self_claim_tag() for _trying_ to clear self-host tag in
-> > probe phase. Any self claim tag issues will be deferred to detect until
-> > enable the component.
-> > 
-> 
-> Maybe, the spec does a read before setting which I assumed should be done
-> for clearing as well.
+> [...]
 
-If you mean PSCI doc, the flow for claiming tag is a handshake between
-self-host software and external debugger, this is why a read is
-required.
+Here is the summary with links:
+  - [net-next,1/3] net/mlx5: fs, add API for sharing HWS action by refcount
+    https://git.kernel.org/netdev/net-next/c/cc2cc56fc6e6
+  - [net-next,2/3] net/mlx5: fs, add support for flow meters HWS action
+    https://git.kernel.org/netdev/net-next/c/82d3639ef7dc
+  - [net-next,3/3] net/mlx5: fs, add support for dest flow sampler HWS action
+    https://git.kernel.org/netdev/net-next/c/32e658c84b6d
 
-For a cleaning up, it is not about syncing with external debugger.  And
-writing bit 0 to TRCCLAIMCLR will not impact external debugger.  So I
-don't think a read prior to cleaning self claim tag is needed.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> As in to not touch anything if it's in use externally.
-> It doesn't specifically describe any clearing sequence, but if we assume
-> it's ok to blindly clear self hosted flag even when it's in use then yes we
-> can directly call coresight_clear_self_claim_tag().
 
-As a result, directly calling coresight_clear_self_claim_tag() works
-for me.
-
-Thanks,
-Leo
