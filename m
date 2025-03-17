@@ -1,70 +1,70 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50DB1CA81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AD01E8352
 	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 21:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742246203; cv=fail; b=mdyA5EtVT8JI2doxYekLPjsZtAA2HKvawM6s3mpqW98IOmHNJIkiTCtaW9ZXxrWIWRZQgNZaEDvvb8uJCwADVj3maX0StjhMLbwsI75HtLecUdHe6xiBkg+p+xGeaaDAC78Y5ZtJTEW6CiRzbesUgywf6/prp9IQYhFMGGwhDME=
+	t=1742246204; cv=fail; b=kkFCSCEHGr1ovhX3wGQ+JNvC5HTH7U2p3w1GD9Nix5ciFOs9vIYGLXbrHrD/6JXMfZxCWH8wL8M1Bmf2ipXmhYASS3xvjjS5MHU7Li2gYwr+ynVnEl6c90ia+Sadrv1E3u1sUanZw3gOzcLVsQ41VJPmPxBMS2+AwPbWmYgcOT0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742246203; c=relaxed/simple;
-	bh=55ubcT8ttSzRUIuZMe6SFuiKfJAUxN6zwXpwDxtKzao=;
+	s=arc-20240116; t=1742246204; c=relaxed/simple;
+	bh=9pjvceYZrS0wj75LVQjtE7M7clB1OQacHB2Vuh+Z6K0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TnJfi7j28Q1CS4FVyfUZaKoDdxDhgnys53iKFynqFoun0qYtph40Wami1GmZ1kOXPgrcOGVwS23ZjLcXpy+WthFXPawHENONUGjizSMGAf9ix0ZyjKuVd9FHbYBzNPBigypqtkllRa59YVi5pa2CjHvWv7UWlVrvaC5QQXI661A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=GZA9qEw2; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=kb9mnzB5; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Type:MIME-Version; b=NbxE0OmMajCqWukHYrdgNyic9cLVNPHiTClZPhCBH5vcBkl9FFjErP9wW/34fjWy9BaPPS9BDdsbBGUeA4Kj9f5cMH5WiXNAafO6nXj05RuMZPPiEbVamQ/HscB5lh64BVkc/D/fOd+qw6FtCm8QTEa65ZBZzQtaeWCz0Jurjg8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Mj3r0Px9; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZiM0SYdv; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GZA9qEw2";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="kb9mnzB5"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HKxTCT008309;
-	Mon, 17 Mar 2025 21:15:30 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Mj3r0Px9";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZiM0SYdv"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HKxiqY004220;
+	Mon, 17 Mar 2025 21:15:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=ARIetQv6XeaY5idpJw5j2EHsVFHKr5j/kc9YhY8bEj4=; b=
-	GZA9qEw2fzYd+RzUXlQyAp8He+lBffWEnXF6Pj0deBHKEHdI3VbKOQpm/ZoIfHbn
-	W62mSgUXOVlj6SP0CdyovLs/Bw/El2LufF8pvcm2ldaQS3qMnEIma+ViRNhIg+wi
-	sHdSfoAWm/mSssLVDACqa8vdQXjvCXAmBmu9GQWC6TUEZITRHc7mGbR+CrZ7prEh
-	7hUiLb627/ZXiCVFjE/GL1vxzSFwlCYSbZK3HIOYIBtoHjfRp+DMtC7qG5OmDNDJ
-	uDhS8ZAb+Ft4HDJD9eKD2Av1m+4Mo06lfGpfBsVuZpO1Ts0AJ/POPK2V4U8sl22M
-	MAmfAzRdT+SUb6Z+UX1glg==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45d1kb408r-1
+	corp-2023-11-20; bh=9JGaiNeHzko7DLwD5R7fqyVgFCXtQuIIbGMbq1KTEp0=; b=
+	Mj3r0Px9LsVLTYLx01scAclQSqtt3tMAVxhZjN9RSl7nwtr1X94zJqABWwiojdbR
+	2lhFk1T41niWQXwF0QhLQxG4VbAh0EhsB/I+WMEEhsL+ahGGyiTWZj3yHZXhoGHc
+	5hbHW5HCrjwWzB8u0IMH+vxX3VCjngEVA/44czOhF8puMKui+ActMlV0cbUK7fVE
+	l62QTFmjZ328B41BD0z1rYzCYJLI3BfSKJoqGNVJTXy7EppT1OgTeHO8xb30DqSI
+	7t80wkO4G4IV0cK7SXAejy7yKk3VebFNxYILj52SPJTTcwoeoF6DoASClSTNaGoB
+	JaZiNV4K7s+LkJL6K/GyiQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45d23ruwx5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Mar 2025 21:15:29 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52HKbICg027962;
-	Mon, 17 Mar 2025 21:15:29 GMT
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2172.outbound.protection.outlook.com [104.47.73.172])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45dxdcgg8y-1
+	Mon, 17 Mar 2025 21:15:26 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52HJWHce023892;
+	Mon, 17 Mar 2025 21:15:25 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45dxeefmgt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Mar 2025 21:15:29 +0000
+	Mon, 17 Mar 2025 21:15:25 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZL2A3e4MHoyMrygV7NU5RMgpRSETaQuJFBt2ZDt9/tmE8yLehrWOk+ErLJcsOtGU26dQhMDVlNpSrnJl/sXjfP4JaFqmJTRR8n2AHm2iJfWglu4QjRqSKofgKHwyoAsVLr+od2VT1wO4veUkjPlxGrjyi5DKdq5+cMVGOt4JOwc60wTOWXKuS+9h1cvUHg5sUJLE8uLKgUOLv1rZR7Mfv6vwfr1YToMyPB4g9fC+AeTVWCwtSFlp41PU/GdFYrVIvMMKzHFb2pAglblb2dOoRkJH/XGsbHCOudhf/+vllkP/eM/56HeiiQTQ8rLHte/wjDINnMZSd8etXj5ZeXrvqg==
+ b=vO+Av8hcypi4AUGaCDosG3/v8ouhSx1R5Q5VcvgRywNT8pjpRl58LT5YrvJmB1Weslkw98XmyHE/jrF+Y/9+aZhDd7WruYqaAJsWPuiTxt5A0j24trywfEaXTk+EZwfyk2bISjlC68eZkp6WgrFNo4h4NIc38pKxJyODDxam7S/Korbq5360PXnvapwHYKMp19M9wQBNRp+mR7hVyEHTAuVyjqlYQOjkM8wu3ff2GKyjftsqb/lmgu7waJOEw3MTxw0sZlch3PMBeiSmyaN0ocIKZAgQh4xOEboFBh1yzW1yUoIrV/BvM+ZgR8chTABAGaj6CngDNAmgkvLLbCnlAg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ARIetQv6XeaY5idpJw5j2EHsVFHKr5j/kc9YhY8bEj4=;
- b=D0o2WjHtZcYb5ltRIAE9sXCxvhRs9FQ9rPZt9iaJMoC51JkffqSIXyj2PbtG4jw7lkn0WcCufwMOJn/FS6DSa4uA9F7BePgKwuyfImlChaSVI5n0IiS67TJanKR+psHhl3xbpaICJlpVthaYMMFlPr73iHIH/hYug5C0d3cK8IGmSZ5hbVWAS0H+QYKvQEWJOXxBzRIioxMV+BfJBVUaEh6xAb9LJca22EM2MMuPhPtlRmSCj/DHiegWhEZyMDIVu4cUEcYSm5NNkk8tIsweJ+VMrgThr9U0vvQvaIENpQSUd3P1taQoCo0D+1jpkji5EKyLLjzwk2rfTYvR0cOFyA==
+ bh=9JGaiNeHzko7DLwD5R7fqyVgFCXtQuIIbGMbq1KTEp0=;
+ b=VWCNLcebu75eNdDr6XZkJbRe1jLuhjP/6ax5zaNd2VOjsraM/tgkfzdx6X8IwAzIBfaIZCFvddRQwYnzjuNJYB0ei2qmf4kQQeV/4aKWV1CavWrxXX5p+wq/oiCl9ZlHQBUdRVsFdzR1vRhQdMquPN7f4AbhuaNxdC/omuzpZHOPhATNOhVN/0xtGF74pBPpbhLmeFQsxyTTsuLAXU2TsGRui75RTlroz+lpLYkOhLelKgKdyighS4rIHIwQwg/oxzInKlPhBjkFmiwjtQ/7txMmYntUuuV6P6ZRLsH0WhyFmnYb76AwN2EB+pM0JY2ZVb2nxL+uHmpxr5mZF4GHzQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ARIetQv6XeaY5idpJw5j2EHsVFHKr5j/kc9YhY8bEj4=;
- b=kb9mnzB5HQEiGooAuYFAKP8T7f8dgBpvPgHsKdfeBsdrxGn2R7SNgWtMOqEIeWs9lI7baPoLqQ7wiQOE/djQE4DbDgQgv/y4p3L8EzMD5dWH75ohyZa18t62lhAicsBax2VOYcZG1k5Kq6j3HiAC6HOaLR0D542fj/13m7bErFk=
+ bh=9JGaiNeHzko7DLwD5R7fqyVgFCXtQuIIbGMbq1KTEp0=;
+ b=ZiM0SYdv9ZsBGCDYGdq8xLUx5Jw0RAJQ5uUUmg78jGirOWElwDPdA1Cwnqtjen8j6wyOUJujFfDf8igECCjI7uaUqHyrIRGIco7tAOvYXrDul9dEu0TAgeeWH1lAZxxVRuyo7mRsGnAGC18IZUAQ7+9Oqjc8jiElWpTYuGNr9yM=
 Received: from MN2PR10MB4112.namprd10.prod.outlook.com (2603:10b6:208:11e::33)
  by PH7PR10MB7105.namprd10.prod.outlook.com (2603:10b6:510:27f::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
- 2025 21:15:26 +0000
+ 2025 21:15:22 +0000
 Received: from MN2PR10MB4112.namprd10.prod.outlook.com
  ([fe80::3256:3c8c:73a9:5b9c]) by MN2PR10MB4112.namprd10.prod.outlook.com
  ([fe80::3256:3c8c:73a9:5b9c%4]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
- 21:15:26 +0000
+ 21:15:22 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
@@ -73,16 +73,16 @@ Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
         David Hildenbrand <david@redhat.com>,
         Matthew Wilcox <willy@infradead.org>, Rik van Riel <riel@surriel.com>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] tools/testing/selftests: assert that anon merge cases behave as expected
-Date: Mon, 17 Mar 2025 21:15:05 +0000
-Message-ID: <e9e016392b6ceb5c58a868439fd7039e31bfda18.1742245056.git.lorenzo.stoakes@oracle.com>
+Subject: [PATCH 1/3] mm/vma: fix incorrectly disallowed anonymous VMA merges
+Date: Mon, 17 Mar 2025 21:15:03 +0000
+Message-ID: <ab86a655c18cf9feb031a9b08b74812dcb432221.1742245056.git.lorenzo.stoakes@oracle.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1742245056.git.lorenzo.stoakes@oracle.com>
 References: <cover.1742245056.git.lorenzo.stoakes@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: LO4P265CA0118.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c6::8) To MN2PR10MB4112.namprd10.prod.outlook.com
+X-ClientProxiedBy: LO4P265CA0129.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c6::20) To MN2PR10MB4112.namprd10.prod.outlook.com
  (2603:10b6:208:11e::33)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -92,608 +92,611 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: MN2PR10MB4112:EE_|PH7PR10MB7105:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac5109f3-e423-4ad1-268d-08dd6598d657
+X-MS-Office365-Filtering-Correlation-Id: ef0c1a96-7ebc-4704-8454-08dd6598d3dd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QtGOPyeat/62idNLj1kXhUxl8Yh0IQZiBRG91c1sT3ak2h9paP5E4qNHd17u?=
- =?us-ascii?Q?bQSvp0vrxP+Vc4bi3ccfuLgvOPSQ9XVYP0z185PrQFPA+gO4Tq7RDORsaRqA?=
- =?us-ascii?Q?pRUdP1hdUqMOjTqbwP5RI10Xypbw+CNKNsGorRlM84xc8bcAu4qPyVNc9l5v?=
- =?us-ascii?Q?hyfKJgOCuAlPmIKUsFLo/N7DSCF0JFUmLiYjw56P9EepBCkpgggpVTU/3N5V?=
- =?us-ascii?Q?jTKEP7zuHNCNcV3pvSuUJTGjJvkSgB+zb+g5vcPmhcTJU+PwSB4H5iYjjGE1?=
- =?us-ascii?Q?Tk61SxqUhEOINZv9Kiec29/I3FKsIUnFUFuz+ZiW/Fy2a/RibjUPOwuK6ZQd?=
- =?us-ascii?Q?Hbq4noBHDn89xi4RDnBmiHoIRuXm3SMiX42WVfN4Hdrk4N4hjviP19r+8YlK?=
- =?us-ascii?Q?RRIf++0ADpSI1bs46n6aSfeuj8nJ70By2k65d+YTtfDgUFfPv1JPbjUnngWC?=
- =?us-ascii?Q?jZYQliN3JFBKNNyCoOw6DhgqJoBn1x49zKMVKi3BIIARqQ81o6qejwPhMxIy?=
- =?us-ascii?Q?5wbxo9dxu0WeNCFsjwo4AbCmYEIH+tb1/ukppb5Tz0xIKYBg+wz2sYWS9gV3?=
- =?us-ascii?Q?WDsge3Q08PkaBXfZy8IKcezST0hVeU6e6XvTlgsJOKbWVMWQJE71kE0brJj1?=
- =?us-ascii?Q?tTCc3B1kwDM3KR0TnmOW6aE+2RHzvCBtMsrZ5XgNXVXFXDBGmcaTU7u/DWbT?=
- =?us-ascii?Q?E2hAw5Xv+Lm3Ok6PMrP1byiaCkP/j7TfMvf18NJsughbk3g532zPxRaG00YR?=
- =?us-ascii?Q?DRXyZyMgTKGFRFaXw4//uAtb4jj2OxHfCVNx3ueVxOZg7nzDfy7UjcujD50D?=
- =?us-ascii?Q?zZ9v8MBKaI0F90leBNQYoSGfeaLXNcD135ynQcebOq66HW/jNPqi16h5tI1D?=
- =?us-ascii?Q?mhH4/lLeQ4L/y62+hsL5OEWWTnEeQCet0ft8PeIxWWYwOakkdeSQMVUqayXU?=
- =?us-ascii?Q?zWaPXA1QlfXk6YBwa/1JU3DWDt33r7zywojDunNOjJO1Ek7N/8Cp93mCvA5e?=
- =?us-ascii?Q?IrUNO7WlCzgjmgjSClaVnrqbA0ojVN8FRHE+NUJ2R4smtjCsquyHyfwxgT/l?=
- =?us-ascii?Q?ShTLKUdYQeBnIoIC0TskcY4kx/5fkBhiXMNemti5oVmqTK0XlICOKYjKlYa4?=
- =?us-ascii?Q?gkeu7NBk6BPJbneW9f4nJEerff0073XJ0ojJX/LuGYBbZamYWqya7O4nJnx3?=
- =?us-ascii?Q?0WOvhzG/O6gEHHhPeYi3geX2kAaxXvn3zFoYkeD23feztal8jbZdwg5isqP5?=
- =?us-ascii?Q?SrBoGEMquEfvBLXR+PGyzX2nEPR49n8o8HIcFPmilGZiBL/JiCmhqtzjqOyL?=
- =?us-ascii?Q?xQrzJhRfU/eeUrCAfWKdX0MYd1IU78Tsj2lxJ6LulT0V2ZLyx9AsVcagUsOb?=
- =?us-ascii?Q?eqoIo6Iugc6XCA+Q00283/B9dQ1H?=
+	=?us-ascii?Q?zNV429CfdEm+kvyw3rNiZX98+gqLHacDAdPdpwU6OOX5y2XZoINu0yeJvE4a?=
+ =?us-ascii?Q?+GMpQ/P6zvmZg9JeMBqNucAhV9x/Db2M/T1T93Vrs/MlTIjhUzAlWw0doCPe?=
+ =?us-ascii?Q?fvcEYxeizEoUoq3GYPJ6Jx2T9TOJGjqN4Q0pkwllJ/p2KaimR1z6YbNnEDPD?=
+ =?us-ascii?Q?w44HqrlZiptlYKGKSQUxrv2o3C+dR/xd/9/xIT4l0O2jxrAs82DpgV8BB9rs?=
+ =?us-ascii?Q?RmSGohnaLGw2C2EPVq/J6z91Qpxw+snXt3hvd3y/A5GzLK0WKe/TzKvGY8KE?=
+ =?us-ascii?Q?DsOrF5KbAOtzUpck7Bsnn8xyHiFqFFWF9Bl/OC2j3nbPLbyf9heIi6s9gds8?=
+ =?us-ascii?Q?uNwBTwvslzTIbsofjd4eGJvOYVBQ8ZyccrwY8MOwMk9oM3RH+gW6MN6SDdZz?=
+ =?us-ascii?Q?MmH3dBcCfm3UCUvuVWlhoeJlYR+JDLoY/69mVWsiBvsXtwGXjrnCWl1yxp4d?=
+ =?us-ascii?Q?KPNjb/SdIBXpRG6uuToRSCXxnMxOsVEsGV8HDiQrNWzs9hyJWl9BQkd/pGjK?=
+ =?us-ascii?Q?KewJ2l3SA0lw/enN2StyEhxU4qq2WaEH9kegyxdwr0TXY4kGGuasLLCnakxe?=
+ =?us-ascii?Q?cobRKvJUNK+iut3ThuXCRaHGEHIfejC7P5YRTkSpKy5zeBrQnQo1XdcpEoOI?=
+ =?us-ascii?Q?sKz0uVzFHwXtZ8RxBpNZMpU3mShLTIl/8ZmC4w36ejWgJyAoQ1ZZj29JHQfh?=
+ =?us-ascii?Q?5xlyI5795ImIBDECkAtVTVqFZaj8zOI14oecETmzxGDDJ59iPENmCAITo0EI?=
+ =?us-ascii?Q?qiSe5/RNJQ6zCFzYIwjOw8KqQXfpd3MeSaxngSa7uMmGf4Rb29k0Q7Ssxdnt?=
+ =?us-ascii?Q?7ns3wpFYnR2Z7yz6+UrxTsqCM7qMO70OeK5kn0Vc7BT5cLbeT+EvtMvwRbns?=
+ =?us-ascii?Q?dLPCayjWcS2qE1xItg3+WPmNzPB4yVCRyFQw1/oJ18Tn5tMgGkeGtXGkxWR7?=
+ =?us-ascii?Q?o1VQkKRPnzbYKERl1kPStFLdev1K9dxHNMHTkfaCLlbKrGiEEWA0OF88zy8O?=
+ =?us-ascii?Q?naWw/au5dbJbMcSVQw2U2Xw8k4WxFGCxrqqMs64StoMy8EZPARi6mhEFIYcA?=
+ =?us-ascii?Q?326BmXbHT+xmQp0zSl3Q0YtorjZLNJl4tB+sAcYTpTLiSsQlTjCIOITiPsB9?=
+ =?us-ascii?Q?NIX3GYDIIcp6JrD9tGB/UqiMP5HIHTv/UvOfskzaE+fzh2avpzMJIv0eS4Vs?=
+ =?us-ascii?Q?eV8/SJjECGbotXOCi0nQYIj11qht8xhB6JBmHYjlvmXKjNjNfJgFSZ9krqtY?=
+ =?us-ascii?Q?IVfaXkBuVY3p+0GBi0l1cllctV6wB1+v/DzIwOFlBg4YrPcYM8TfWeInslSe?=
+ =?us-ascii?Q?tOt53ssw7T9Kv67v5f8je0Ok9m+Vdjm23mPtmyziwdKDqes498QADNNsNhad?=
+ =?us-ascii?Q?g3nFlYzhjrDIie+mzaCveSfJ8dgN?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4112.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Lnq5V+MS7NIh9dBGDcIcTIIUXmb4OSxJ4v6uJH4DZbC+TPh5Qd25tuUOHhX+?=
- =?us-ascii?Q?hDnukV3BEQV3PqLdoeRICa8MCd5//nARZ0ZsUsfV5hwILSug6o2YoxG5l4W7?=
- =?us-ascii?Q?YAg+5C/AMo+FBdeFpwog/LKIhzLc2tuf/2HwXjl9A27EIACp7lyo6vjBNuqy?=
- =?us-ascii?Q?xcjm8khxMv3/6/gc/fiS54wWnM10qPJPW9TU8jO9CQrb4phT/68zuwbBMbVg?=
- =?us-ascii?Q?Dp8fmOgAnsjILVaGL0wQl6R2/JTWJSqidebit2tNqCw9C7SzaW0ZtkL/mz68?=
- =?us-ascii?Q?+Up1CR9OmU4IQ6TVFq/BrQL0qsxpB+W6KawI7o5ir1EMMAtgNz1OWlR+vRPm?=
- =?us-ascii?Q?/LpbZxg4aI45dXCnWIGUKEZmlSoMHA5ijFKcSITZTeP71jKMGFuh6q5yJPl2?=
- =?us-ascii?Q?wfGD9CR5gXrPYyBvw3X5O+1FU613eKc/MgQ37qartcQexKwlENR55ut/yP+P?=
- =?us-ascii?Q?GRrP/yYSl8EOmJBBihlD9kU2NLU6st6stkyEGnrXbjloTC+67x+77UVIKdPd?=
- =?us-ascii?Q?a6MP8iNKImz3isQgkXGpdiHY9u8W+awEP/5nrZ5qa8lFW2v60bei0iIWP7ia?=
- =?us-ascii?Q?CuOqnHFZ7sLXLt9ZZuCVtJL+902+7pCh8sTDBonRino/e5BOjmDfP2PQQIwC?=
- =?us-ascii?Q?PFzPsH84fgdvr2cwkxNjifC27oG+/26HY76M/YKLtSuFfTBWDyBNmWUsiwaF?=
- =?us-ascii?Q?mxDAVTE0wq4/ofzE5nDMh5U7wHgcRQCvcKFBmiiI3EQeq77Uen7OxnUTVkJb?=
- =?us-ascii?Q?f6HuQlQMbpdcguIazsueGEGlqbW8TR2NPHQxjv4VQNso7tq38sr0L9EZodzB?=
- =?us-ascii?Q?OLPIWp/LUeAJPVwnhfJYXqIkkYSz8mJ4DTIpvM/0TQK28mFEQZrN/Xyu40iL?=
- =?us-ascii?Q?NBXKQfOu8T48FJzZm7S8cWLEW9KajPm49mwy6zXMwBFN6qBq/EhgMgRIPIHd?=
- =?us-ascii?Q?DTDUyd8iT/XXYYOF9OT+g3ryBYg5LbXFiwx7bJL8My4SANl05AoesPt7zgfQ?=
- =?us-ascii?Q?rO0E6KrIlEUooR+wJRJDCYJuwkoNEMoLUHPuYau/LCC3rpa9/MQaZ08b6u1x?=
- =?us-ascii?Q?tFDlomBj3ni1ILeRSH9Ur0pdTPLAu0ULVb15d4vMdFPaI6dJZ+wBdClfOROI?=
- =?us-ascii?Q?Huu3y2pvvr30urXNw2zR5Zeb3b64O9D6JhrfmcMdaYmO27y4NA4xR5trsbdq?=
- =?us-ascii?Q?WEZWGKFIlC65CLS99vHxac/ytqBCvp4OpiONd/xewtCbaMM3cKoFhk+mqwCQ?=
- =?us-ascii?Q?WjBidNBnK6LNJeev7TEmx5NO7I/xgU/gRNpRYy35Gi296CjinZBI0klFwcUx?=
- =?us-ascii?Q?1Ap1Z+bhD8KLyuhYmOaYei/7HiD6fuSFI1E+cVk1xZIhd7yhiOukge/6cp1C?=
- =?us-ascii?Q?ewGrr1RQdOxrKjAUWVaAozfRrH6lhrakJsZCSX2ZW2/RHC5spAFYOwrW99y3?=
- =?us-ascii?Q?O2/j/B2oAZqR93x78e18HUSYD09GqS9P41iVSFEHg3bZCsti6klv7z+SpoL6?=
- =?us-ascii?Q?pcmIbqUO9p32krIMd0qJuzSNjQg6dQBNfGqraWtQkcNAyIRcGNsebhtSzrgT?=
- =?us-ascii?Q?fK/rxdq+M0B4+VmjC7OpZkthlcMxlZ6Ce6gNmfdLYMhhUG/ZdtXKgDaiWSBE?=
+	=?us-ascii?Q?7W8He5CTl4G/1/8S/mtNfPq5YlHS2e3zMsfAbbHVB1xq8p9Kn5w9d8PM+PNb?=
+ =?us-ascii?Q?d8y1cO/yh+m1EtC5xbWqiedZCdc9jDYk4plI0u3sdmKTAFkhf8UyC4yFWiW0?=
+ =?us-ascii?Q?X8uQy18wiO1Nd/4K8Jutw2JqBppX8Q/2ujuRc8RnqsN9g31OA3Tjuc03o2Gm?=
+ =?us-ascii?Q?3mhmM4+TRAxjqm40pN3NUwt/LV2q1KqeJRKOq1KmFLpy38JTnOFTZRn8H5MC?=
+ =?us-ascii?Q?Ryk6bnzy+q4nZAcRLrqvam80BfcUm26cHLEJ1ICUe1QCgL5ypUBk3YJtEKEJ?=
+ =?us-ascii?Q?BW2oUh8xXB1Tv/uMqrqIkNnJDJs6AnGCKBJHFuRlMX/IGLdzskY5uxuIqByA?=
+ =?us-ascii?Q?/mQhHByOuKQAcKessWl0y8e6kUwCi1x8TtLUBAPv64kJRkXKvw1ldenpd/Cn?=
+ =?us-ascii?Q?zxrPEaHTeGWpnbcCLHYEjZLYNRG/gb52PV0Q3Ruz1zKtp3oxombgiTNMARer?=
+ =?us-ascii?Q?tdybKevE8wEqU0JZz9cjuAEMMnfPGCj5CGCKFjivv7TvzpJ2Nm9qBl1Z0u28?=
+ =?us-ascii?Q?o2Oo6h1jFOJVF+HECM3XjeHSFRyMVQJfLmQpY3pHDnaIR4HLU/p1w58LozdA?=
+ =?us-ascii?Q?C2D/kJ8Nd9pXuIU/YwkuxBPd94HaRlDvO1CA9VkUp09d7DGqcwzIkOeCfbIO?=
+ =?us-ascii?Q?2kk12+Ei068HBtdqPBndMb4gG754eL4uth/GPZA6ze2R7dzTQXqrs6zMdRBg?=
+ =?us-ascii?Q?W852SQusYDaiQECoG6KVM0QNxjQw7r5bURsoG1T8OfrOz8SKDhiQ8POXN1gO?=
+ =?us-ascii?Q?iQsWf56Pkm91c0s9JApS49OqDntHGItKbQow9+q0j1EICrlDhZn0VdabV8yW?=
+ =?us-ascii?Q?5TLKvDQFa0CiKTIxCQr9MWv0pyKXUnHD18N0T0Ka9bQg0Azvo8RZZgA1WR04?=
+ =?us-ascii?Q?9V08qWzOpNp5/lY8vDxGuqaeG9/aIGUceMvbWnDT/6reVDcjsN7820YZd26N?=
+ =?us-ascii?Q?0UPnGWSjR21vBqZ5RerOpE2xLyQ8wuGEZ26bpU33FTAssl+JH0PsBRiZidfF?=
+ =?us-ascii?Q?aKfArlo5IuC8S4fMfg1KBUdrDwU4ZUsu5cwxgTEk///1jjTk92ltKf8HK06i?=
+ =?us-ascii?Q?erX+VxUind8V4B3bdCPxtKpWhu6GHVCy1Lr5dXiKsh6uk9/D2hQJzpddLZHD?=
+ =?us-ascii?Q?ja9zALjma6oCT0mtcK1JGv+Xh9fEy3s6quZX+yVAM9aDRv+/8DRvGYg1E0Q3?=
+ =?us-ascii?Q?MICmENnNOMpMtQulq1rKeTOlVzllpiK6feunQQKR+nUBJeohXuhjkIKxltBH?=
+ =?us-ascii?Q?aLqd1GX2K/Ry/dL5rrcyj/uStoA649hZaTHLTxRlYjPNxnUzpUkUPhwNGWQC?=
+ =?us-ascii?Q?uh0pd7oA/i+4P5a7G5X1fazHfypGSpO2ipoWw6uBG71CbYjL6K+fyecOQrMU?=
+ =?us-ascii?Q?Ozs9Kxv0eT8Gy5QtfxQdKpEDaqXzT/DkRJyd803LX2dGZ5xkyHBGawqZJfAI?=
+ =?us-ascii?Q?zhA8F4G/3vE6MNRtuLs777h6K+103RGMZavrSGy7TFEINRAnFfj5sj7hQAPq?=
+ =?us-ascii?Q?WGb7/l0bf2OvcBSMHynhz6xUqM5XTSHjrQP55Azo+XyMgG80PmNMwS58H4f7?=
+ =?us-ascii?Q?a+2VhtEEPERX2/MPeq7WShEJEd2zbQ87vIjhYz+xVR0CdQr4uXzU2OARE5Ga?=
  =?us-ascii?Q?aw=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Y1I/7AJjEamXTXVAQnYqfeOMLbyuEi4/fDblLAHcTbtxFZtdghCm473KoDZm3tC2bmjVS9xroZTLVis/9Uly2fMR2nwoIg6XGAmQ3KbYcLFaaeoipu0Wqbl6ChVH9eN5PIq7FKbeP4lpKK9A1aVyngktHfbRy7nfbWbXXooVoJhonWiYoJy9H1uNAmDyujXP0Y0TRwTh1YMWuDyX2CR+YI8s9JTrSD/uRIdeaXZlDy9mwb60lQm6IGbMxRFlGOaMVLcIH6rgvgvm9vncE9IC0HG4zSJT/x9j9HNeHRvJDC3mugwnHvGQHgW7JC3irpotvbPE3fGINdcaL+o70q9B/II8aTM4HF7aljNnAPHlTh3j3TdnXswQxLQgNKPjbHN1X5befTs0+cTDkSB7vRZ9XTHnFK4xZdzsmq6uSU6UUrX23ZSnhaClifgyFDNLIKyLTLGqw7VNUCV7XEjBe4nRWplueYSS//Fad1wwdrjJUCkEK9GvlBXkT++K20eJgRpqBubRkKDeGeW8pfKr9aBiARnzhTXInIS3QouEPqmay3EN3mgssBI+2UudrIZ9ZkWq60/ECpKvqGcXcWYpPNoGhtx30F9+08tGV1WPp+h9zTw=
+	7qky29zhmI+qs+a2oiwNeUKf4mTTN9Cpt3/a/sGqwqKWnKB2Jp2+tWSmAOGL5G98pab9cya0In+yIez8BiFqpYEpU136+EJjgFteJwjSk1rBEtfzQqrPDJ2Kyqe19BJsKITpWsf+7VgHvrGrv+n0mbzlZWd2kXr0TSQ1xeaqaCn/GDHRE2tgOTRP9fsCbK44lqSBYKoAtTStg3TDhSbnh41Wu5s71seDMHjbBn/rAGqYM3qc5Vm/Ofd39Y4gSuoS8pMfZHChxpfmwyfMHfbzBRrhsSBmEBqwy27odNxkT/WwHr0i5BSARLeek/WF6zkoNDRz21H6ESiuW2dXZux5tRuVVFfeOoDzJ5DuYtGy/L54wcnjY5s89BWgnKCwu73smkSzrVS5m6TxQnOvVxSYD+qh/GbyupjiST/3TT9bJWkZ6TvJzIqFIs8GQJpfxlgKMoK/s4jcZAVrM5S4b6yM1T24d+PQxK390IGS6sJrplsgec2P9J2Hf6gi6Gi980QN78k4WpUylA3jwHA0D0ifJQNrsvD3e8Df8wLgWkkSAB/u6d6NXvV3H3UAXrsvAJHGEdPotHtHTz29l22qsWTqqkwdYZC5DTouCF9wGvYa06s=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac5109f3-e423-4ad1-268d-08dd6598d657
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef0c1a96-7ebc-4704-8454-08dd6598d3dd
 X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4112.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 21:15:26.4079
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 21:15:22.2802
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mpEKXES/kmXHjxwJq8tCt1veYNIWkPnwik8dvi5B/igGXvVBgrN+FU6rDNJYgg3EPSXUEC/nk6yPJpvQR5qeBZQleiHSAh4VwPD0Wnv61js=
+X-MS-Exchange-CrossTenant-UserPrincipalName: VeRONMIeOyUefkxA/ePGXpIooojbd0QYaJqkvNEqnmLIKEpXdmZkghkynLuXKec6IqeC53YszsXiBVYJ6mhBbzQqgLj1VRmD2dj2u/ao2SI=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB7105
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-17_09,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 bulkscore=0
- adultscore=0 malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
  definitions=main-2503170153
-X-Proofpoint-GUID: i5rlVe6OxLCOJcS-vwhO--xTuMkFF9zS
-X-Proofpoint-ORIG-GUID: i5rlVe6OxLCOJcS-vwhO--xTuMkFF9zS
+X-Proofpoint-GUID: RKclHUrvIMeSSv94VMdJbQkRfwOTrHDD
+X-Proofpoint-ORIG-GUID: RKclHUrvIMeSSv94VMdJbQkRfwOTrHDD
 
-Prior to the recently applied commit that permits this merge,
-mprotect()'ing a faulted VMA, adjacent to an unfaulted VMA, such that the
-two share characteristics would fail to merge due to what appear to be
-unintended consequences of commit 965f55dea0e3 ("mmap: avoid merging cloned
-VMAs").
+anon_vma_chain's were introduced by Rik von Riel in commit 5beb49305251 ("mm:
+change anon_vma linking to fix multi-process server scalability issue").
 
-Now we have fixed this bug, assert that we can indeed merge anonymous VMAs
-this way.
+This patch was introduced in March 2010. As part of this change, careful
+attention was made to the instance of mprotect() causing a VMA merge, with one
+faulted (i.e. having anon_vma set) and another not:
 
-Also assert that forked source/target VMAs are equally
-rejected. Previously, all empty target anon merges with one VMA faulted and
-the other unfaulted would be rejected incorrectly, now we ensure that
-unforked merge, but forked do not.
+		/*
+		 * Easily overlooked: when mprotect shifts the boundary,
+		 * make sure the expanding vma has anon_vma set if the
+		 * shrinking vma had, to cover any anon pages imported.
+		 */
 
+In the modern VMA code, this is handled in dup_anon_vma() (and ultimately
+anon_vma_clone()).
+
+This case is one of the three configurations of adjacent VMA anon_vma state
+that we might encounter on merge (where dst is the VMA which will be merged
+into and src the one being merged into dst):
+
+1.  dst->anon_vma,  src->anon_vma - These must be equal, no-op.
+2.  dst->anon_vma, !src->anon_vma - We simply use dst->anon_vma, no-op.
+3. !dst->anon_vma,  src->anon_vma - The case in question here.
+
+In case 3, the instance addressed here - we duplicate the AVC connections
+from src and place into dst.
+
+However, in practice, we very often do NOT do this.
+
+This appears to be due to an inadvertent consequence of the change
+introduced by commit 965f55dea0e3 ("mmap: avoid merging cloned VMAs"),
+introduced in May 2011.
+
+This implies that this merge case was functional only for a little over a
+year, and has since been broken for ~15 years.
+
+Here, lock scalability concerns lead to us restricting anonymous merges
+only to those VMAs with 1 entry in their vma->anon_vma_chain, that is, a
+VMA that is not connected to any parent process's anon_vma.
+
+The mergeability test looks like this:
+
+static inline bool is_mergeable_anon_vma(struct anon_vma *anon_vma1,
+		 struct anon_vma *anon_vma2, struct vm_area_struct *vma)
+{
+	if ((!anon_vma1 || !anon_vma2) && (!vma ||
+		!vma->anon_vma || list_is_singular(&vma->anon_vma_chain)))
+		return true;
+	return anon_vma1 == anon_vma2;
+}
+
+However, we have a problem here - typically the vma passed here is the
+destination VMA.
+
+For instance in vma_merge_existing_range() we invoke:
+
+can_vma_merge_left()
+-> [ check that there is an immediately adjacent prior VMA ]
+-> can_vma_merge_after()
+  -> is_mergeable_vma() for general attribute check
+-> is_mergeable_anon_vma([ proposed anon_vma ], prev->anon_vma, prev)
+
+So if we were considering a target unfaulted 'prev':
+
+	  unfaulted    faulted
+	|-----------|-----------|
+	|    prev   |    vma    |
+	|-----------|-----------|
+
+This would call is_mergeable_anon_vma(NULL, vma->anon_vma, prev).
+
+The list_is_singular() check for vma->anon_vma_chain, an empty list on
+fault, would cause this merge to _fail_ even though all else indicates a
+merge.
+
+Equally a simple merge into a next VMA would hit the same problem:
+
+	   faulted    unfaulted
+	|-----------|-----------|
+	|    vma    |    next   |
+	|-----------|-----------|
+
+can_vma_merge_right()
+-> [ check that there is an immediately adjacent succeeding VMA ]
+-> can_vma_merge_before()
+  -> is_mergeable_vma() for general attribute check
+-> is_mergeable_anon_vma([ proposed anon_vma ], next->anon_vma, next)
+
+For a 3-way merge, we'd also hit the same problem if it was configured like
+this for instance:
+
+	  unfaulted    faulted    unfaulted
+	|-----------|-----------|-----------|
+	|    prev   |    vma    |    next   |
+	|-----------|-----------|-----------|
+
+As we'd call can_vma_merge_left() for prev, and can_vma_merge_right() for
+next, both of which would fail.
+
+vma_merge_new_range() (and relatedly, vma_expand()) are not impacted, as
+the new VMA would never already be faulted (it is a proposed new range).
+
+Because we already handle each of the aforementioned merge cases, and can
+absolutely therefore deal with an existing VMA merge with !dst->anon_vma,
+src->anon_vma, there is absolutely no reason to disallow this kind of
+merge.
+
+It seems that the intention of this patch is to ensure that, in the
+instance of merging unfaulted VMAs with faulted ones, we never wish to do
+so with those with multiple AVCs due to the fact that anon_vma lock's are
+held across both parent and child anon_vma's (actually, the 'root' parent
+anon_vma's lock is used).
+
+In fact, the original commit alludes to this - "find_mergeable_anon_vma()
+already considers this case".
+
+In find_mergeable_anon_vma() however, we check the anon_vma which will be
+merged from, if it is set, then we check
+list_is_singular(vma->anon_vma_chain).
+
+So to match this logic, update is_mergeable_anon_vma() to perform this
+scalability check on the VMA whose anon_vma we ultimately merge into.
+
+This matches existing behaviour with forked VMAs, only we no longer wrongly
+disallow ALL empty target merges.
+
+So we both allow merge cases and ensure the scalability check is correctly
+applied.
+
+We may wish to revisit these lock scalability concerns at a later date and
+ensure they are still valid.
+
+Additionally, correct userland VMA tests which were mistakenly not
+asserting these cases correctly previously to now correctly assert this,
+and to ensure vmg->anon_vma state is always consistent to account for newly
+introduced asserts.
+
+Fixes: 965f55dea0e3 ("mmap: avoid merging cloned VMAs")
 Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 ---
- tools/testing/selftests/mm/.gitignore     |   1 +
- tools/testing/selftests/mm/Makefile       |   1 +
- tools/testing/selftests/mm/merge.c        | 454 ++++++++++++++++++++++
- tools/testing/selftests/mm/run_vmtests.sh |   2 +
- 4 files changed, 458 insertions(+)
- create mode 100644 tools/testing/selftests/mm/merge.c
+ mm/vma.c                |  81 +++++++++++++++++++++++---------
+ tools/testing/vma/vma.c | 100 +++++++++++++++++++++-------------------
+ 2 files changed, 111 insertions(+), 70 deletions(-)
 
-diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
-index c5241b193db8..91db34941a14 100644
---- a/tools/testing/selftests/mm/.gitignore
-+++ b/tools/testing/selftests/mm/.gitignore
-@@ -58,3 +58,4 @@ hugetlb_dio
- pkey_sighandler_tests_32
- pkey_sighandler_tests_64
- guard-regions
-+merge
-diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-index 8270895039d1..ad4d6043a60f 100644
---- a/tools/testing/selftests/mm/Makefile
-+++ b/tools/testing/selftests/mm/Makefile
-@@ -98,6 +98,7 @@ TEST_GEN_FILES += hugetlb_madv_vs_map
- TEST_GEN_FILES += hugetlb_dio
- TEST_GEN_FILES += droppable
- TEST_GEN_FILES += guard-regions
-+TEST_GEN_FILES += merge
+diff --git a/mm/vma.c b/mm/vma.c
+index 5cdc5612bfc1..5418eef3a852 100644
+--- a/mm/vma.c
++++ b/mm/vma.c
+@@ -57,6 +57,22 @@ struct mmap_state {
+ 		.state = VMA_MERGE_START,				\
+ 	}
  
- ifneq ($(ARCH),arm64)
- TEST_GEN_FILES += soft-dirty
-diff --git a/tools/testing/selftests/mm/merge.c b/tools/testing/selftests/mm/merge.c
-new file mode 100644
-index 000000000000..9cc61bdbfba8
---- /dev/null
-+++ b/tools/testing/selftests/mm/merge.c
-@@ -0,0 +1,454 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#define _GNU_SOURCE
-+#include "../kselftest_harness.h"
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <sys/mman.h>
-+#include <sys/wait.h>
-+#include "vm_util.h"
-+
-+FIXTURE(merge)
++/*
++ * If, at any point, the VMA had unCoW'd mappings from parents, it will maintain
++ * more than one anon_vma_chain connecting it to more than one anon_vma. A merge
++ * would mean a wider range of folios sharing the root anon_vma lock, and thus
++ * potential lock contention, we do not wish to encourage merging such that this
++ * scales to a problem.
++ */
++static bool vma_had_uncowed_parents(struct vm_area_struct *vma)
 +{
-+	unsigned int page_size;
-+	char *carveout;
-+	struct procmap_fd procmap;
-+};
-+
-+FIXTURE_SETUP(merge)
-+{
-+	self->page_size = psize();
-+	/* Carve out PROT_NONE region to map over. */
-+	self->carveout = mmap(NULL, 12 * self->page_size, PROT_NONE,
-+			      MAP_ANON | MAP_PRIVATE, -1, 0);
-+	ASSERT_NE(self->carveout, MAP_FAILED);
-+	/* Setup PROCMAP_QUERY interface. */
-+	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
++	/*
++	 * The list_is_singular() test is to avoid merging VMA cloned from
++	 * parents. This can improve scalability caused by anon_vma lock.
++	 */
++	return vma && vma->anon_vma && !list_is_singular(&vma->anon_vma_chain);
 +}
 +
-+FIXTURE_TEARDOWN(merge)
-+{
-+	ASSERT_EQ(munmap(self->carveout, 12 * self->page_size), 0);
-+	ASSERT_EQ(close_procmap(&self->procmap), 0);
-+}
-+
-+TEST_F(merge, mprotect_unfaulted_left)
-+{
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	struct procmap_fd *procmap = &self->procmap;
-+	char *ptr;
-+
-+	/*
-+	 * Map 10 pages of R/W memory within. MAP_NORESERVE so we don't hit
-+	 * merge failure due to lack of VM_ACCOUNT flag by mistake.
-+	 *
-+	 * |-----------------------|
-+	 * |       unfaulted       |
-+	 * |-----------------------|
-+	 */
-+	ptr = mmap(&carveout[page_size], 10 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-+	ASSERT_NE(ptr, MAP_FAILED);
-+	/*
-+	 * Now make the first 5 pages read-only, splitting the VMA:
-+	 *
-+	 *      RO          RW
-+	 * |-----------|-----------|
-+	 * | unfaulted | unfaulted |
-+	 * |-----------|-----------|
-+	 */
-+	ASSERT_EQ(mprotect(ptr, 5 * page_size, PROT_READ), 0);
-+	/*
-+	 * Fault in the first of the last 5 pages so it gets an anon_vma and
-+	 * thus the whole VMA becomes 'faulted':
-+	 *
-+	 *      RO          RW
-+	 * |-----------|-----------|
-+	 * | unfaulted |  faulted  |
-+	 * |-----------|-----------|
-+	 */
-+	ptr[5 * page_size] = 'x';
-+	/*
-+	 * Now mprotect() the RW region read-only, we should merge (though for
-+	 * ~15 years we did not! :):
-+	 *
-+	 *             RO
-+	 * |-----------------------|
-+	 * |        faulted        |
-+	 * |-----------------------|
-+	 */
-+	ASSERT_EQ(mprotect(&ptr[5 * page_size], 5 * page_size, PROT_READ), 0);
-+
-+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
-+}
-+
-+TEST_F(merge, mprotect_unfaulted_right)
-+{
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	struct procmap_fd *procmap = &self->procmap;
-+	char *ptr;
-+
-+	/*
-+	 * |-----------------------|
-+	 * |       unfaulted       |
-+	 * |-----------------------|
-+	 */
-+	ptr = mmap(&carveout[page_size], 10 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-+	ASSERT_NE(ptr, MAP_FAILED);
-+	/*
-+	 * Now make the last 5 pages read-only, splitting the VMA:
-+	 *
-+	 *      RW          RO
-+	 * |-----------|-----------|
-+	 * | unfaulted | unfaulted |
-+	 * |-----------|-----------|
-+	 */
-+	ASSERT_EQ(mprotect(&ptr[5 * page_size], 5 * page_size, PROT_READ), 0);
-+	/*
-+	 * Fault in the first of the first 5 pages so it gets an anon_vma and
-+	 * thus the whole VMA becomes 'faulted':
-+	 *
-+	 *      RW          RO
-+	 * |-----------|-----------|
-+	 * |  faulted  | unfaulted |
-+	 * |-----------|-----------|
-+	 */
-+	ptr[0] = 'x';
-+	/*
-+	 * Now mprotect() the RW region read-only, we should merge:
-+	 *
-+	 *             RO
-+	 * |-----------------------|
-+	 * |        faulted        |
-+	 * |-----------------------|
-+	 */
-+	ASSERT_EQ(mprotect(ptr, 5 * page_size, PROT_READ), 0);
-+
-+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
-+}
-+
-+TEST_F(merge, mprotect_unfaulted_both)
-+{
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	struct procmap_fd *procmap = &self->procmap;
-+	char *ptr;
-+
-+	/*
-+	 * |-----------------------|
-+	 * |       unfaulted       |
-+	 * |-----------------------|
-+	 */
-+	ptr = mmap(&carveout[2 * page_size], 9 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-+	ASSERT_NE(ptr, MAP_FAILED);
-+	/*
-+	 * Now make the first and last 3 pages read-only, splitting the VMA:
-+	 *
-+	 *      RO          RW          RO
-+	 * |-----------|-----------|-----------|
-+	 * | unfaulted | unfaulted | unfaulted |
-+	 * |-----------|-----------|-----------|
-+	 */
-+	ASSERT_EQ(mprotect(ptr, 3 * page_size, PROT_READ), 0);
-+	ASSERT_EQ(mprotect(&ptr[6 * page_size], 3 * page_size, PROT_READ), 0);
-+	/*
-+	 * Fault in the first of the middle 3 pages so it gets an anon_vma and
-+	 * thus the whole VMA becomes 'faulted':
-+	 *
-+	 *      RO          RW          RO
-+	 * |-----------|-----------|-----------|
-+	 * | unfaulted |  faulted  | unfaulted |
-+	 * |-----------|-----------|-----------|
-+	 */
-+	ptr[3 * page_size] = 'x';
-+	/*
-+	 * Now mprotect() the RW region read-only, we should merge:
-+	 *
-+	 *             RO
-+	 * |-----------------------|
-+	 * |        faulted        |
-+	 * |-----------------------|
-+	 */
-+	ASSERT_EQ(mprotect(&ptr[3 * page_size], 3 * page_size, PROT_READ), 0);
-+
-+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 9 * page_size);
-+}
-+
-+TEST_F(merge, mprotect_faulted_left_unfaulted_right)
-+{
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	struct procmap_fd *procmap = &self->procmap;
-+	char *ptr;
-+
-+	/*
-+	 * |-----------------------|
-+	 * |       unfaulted       |
-+	 * |-----------------------|
-+	 */
-+	ptr = mmap(&carveout[2 * page_size], 9 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-+	ASSERT_NE(ptr, MAP_FAILED);
-+	/*
-+	 * Now make the last 3 pages read-only, splitting the VMA:
-+	 *
-+	 *             RW               RO
-+	 * |-----------------------|-----------|
-+	 * |       unfaulted       | unfaulted |
-+	 * |-----------------------|-----------|
-+	 */
-+	ASSERT_EQ(mprotect(&ptr[6 * page_size], 3 * page_size, PROT_READ), 0);
-+	/*
-+	 * Fault in the first of the first 6 pages so it gets an anon_vma and
-+	 * thus the whole VMA becomes 'faulted':
-+	 *
-+	 *             RW               RO
-+	 * |-----------------------|-----------|
-+	 * |       unfaulted       | unfaulted |
-+	 * |-----------------------|-----------|
-+	 */
-+	ptr[0] = 'x';
-+	/*
-+	 * Now make the first 3 pages read-only, splitting the VMA:
-+	 *
-+	 *      RO          RW          RO
-+	 * |-----------|-----------|-----------|
-+	 * |  faulted  |  faulted  | unfaulted |
-+	 * |-----------|-----------|-----------|
-+	 */
-+	ASSERT_EQ(mprotect(ptr, 3 * page_size, PROT_READ), 0);
-+	/*
-+	 * Now mprotect() the RW region read-only, we should merge:
-+	 *
-+	 *             RO
-+	 * |-----------------------|
-+	 * |        faulted        |
-+	 * |-----------------------|
-+	 */
-+	ASSERT_EQ(mprotect(&ptr[3 * page_size], 3 * page_size, PROT_READ), 0);
-+
-+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 9 * page_size);
-+}
-+
-+TEST_F(merge, mprotect_unfaulted_left_faulted_right)
-+{
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	struct procmap_fd *procmap = &self->procmap;
-+	char *ptr;
-+
-+	/*
-+	 * |-----------------------|
-+	 * |       unfaulted       |
-+	 * |-----------------------|
-+	 */
-+	ptr = mmap(&carveout[2 * page_size], 9 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-+	ASSERT_NE(ptr, MAP_FAILED);
-+	/*
-+	 * Now make the first 3 pages read-only, splitting the VMA:
-+	 *
-+	 *      RO                RW
-+	 * |-----------|-----------------------|
-+	 * | unfaulted |       unfaulted       |
-+	 * |-----------|-----------------------|
-+	 */
-+	ASSERT_EQ(mprotect(ptr, 3 * page_size, PROT_READ), 0);
-+	/*
-+	 * FAult in the first of the last 6 pages so it gets an anon_vma and
-+	 * thus the whole VMA becomes 'faulted':
-+	 *
-+	 *      RO                RW
-+	 * |-----------|-----------------------|
-+	 * | unfaulted |        faulted        |
-+	 * |-----------|-----------------------|
-+	 */
-+	ptr[3 * page_size] = 'x';
-+	/*
-+	 * Now make the last 3 pages read-only, splitting the VMA:
-+	 *
-+	 *      RO          RW          RO
-+	 * |-----------|-----------|-----------|
-+	 * | unfaulted |  faulted  |  faulted  |
-+	 * |-----------|-----------|-----------|
-+	 */
-+	ASSERT_EQ(mprotect(&ptr[6 * page_size], 3 * page_size, PROT_READ), 0);
-+	/*
-+	 * Now mprotect() the RW region read-only, we should merge:
-+	 *
-+	 *             RO
-+	 * |-----------------------|
-+	 * |        faulted        |
-+	 * |-----------------------|
-+	 */
-+	ASSERT_EQ(mprotect(&ptr[3 * page_size], 3 * page_size, PROT_READ), 0);
-+
-+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 9 * page_size);
-+}
-+
-+TEST_F(merge, forked_target_vma)
-+{
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	struct procmap_fd *procmap = &self->procmap;
-+	pid_t pid;
-+	char *ptr, *ptr2;
-+	int i;
-+
-+	/*
-+	 * |-----------|
-+	 * | unfaulted |
-+	 * |-----------|
-+	 */
-+	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
-+	ASSERT_NE(ptr, MAP_FAILED);
-+
-+	/*
-+	 * Fault in process.
-+	 *
-+	 * |-----------|
-+	 * |  faulted  |
-+	 * |-----------|
-+	 */
-+	ptr[0] = 'x';
-+
-+	pid = fork();
-+	ASSERT_NE(pid, -1);
-+
-+	if (pid != 0) {
-+		wait(NULL);
-+		return;
-+	}
-+
-+	/* Child process below: */
-+
-+	/* Reopen for child. */
-+	ASSERT_EQ(close_procmap(&self->procmap), 0);
-+	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
-+
-+	/* unCOWing everything does not cause the AVC to go away. */
-+	for (i = 0; i < 5 * page_size; i += page_size)
-+		ptr[i] = 'x';
-+
-+	/*
-+	 * Map in adjacent VMA in child.
-+	 *
-+	 *     forked
-+	 * |-----------|-----------|
-+	 * |  faulted  | unfaulted |
-+	 * |-----------|-----------|
-+	 *      ptr         ptr2
-+	 */
-+	ptr2 = mmap(&ptr[5 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
-+	ASSERT_NE(ptr2, MAP_FAILED);
-+
-+	/* Make sure not merged. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 5 * page_size);
-+}
-+
-+TEST_F(merge, forked_source_vma)
-+{
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	struct procmap_fd *procmap = &self->procmap;
-+	pid_t pid;
-+	char *ptr, *ptr2;
-+	int i;
-+
-+	/*
-+	 * |............|-----------|
-+	 * | <unmapped> | unfaulted |
-+	 * |............|-----------|
-+	 */
-+	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-+	ASSERT_NE(ptr, MAP_FAILED);
-+
-+	/*
-+	 * Fault in process.
-+	 *
-+	 * |............||-----------|
-+	 * | <unmapped> ||  faulted  |
-+	 * |............||-----------|
-+	 */
-+	ptr[0] = 'x';
-+
-+	pid = fork();
-+	ASSERT_NE(pid, -1);
-+
-+	if (pid != 0) {
-+		wait(NULL);
-+		return;
-+	}
-+
-+	/* Child process below: */
-+
-+	/* Reopen for child. */
-+	ASSERT_EQ(close_procmap(&self->procmap), 0);
-+	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
-+
-+	/* unCOWing everything does not cause the AVC to go away. */
-+	for (i = 0; i < 5 * page_size; i += page_size)
-+		ptr[i] = 'x';
-+
-+	/*
-+	 * Map in adjacent VMA in child, ptr2 before ptr, but incompatible.
-+	 *
-+	 *      RWX      forked RW
-+	 * |-----------|-----------|
-+	 * | unfaulted |  faulted  |
-+	 * |-----------|-----------|
-+	 *      ptr2        ptr
-+	 */
-+	ptr2 = mmap(&carveout[6 * page_size], 5 * page_size, PROT_READ | PROT_WRITE | PROT_EXEC,
-+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-+	ASSERT_NE(ptr2, MAP_FAILED);
-+
-+
-+	/* Make sure not merged. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr2));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr2);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 5 * page_size);
-+
-+	/*
-+	 * Now mprotect forked region to RWX so it becomes the source for the
-+	 * merge to unfaulted region:
-+	 *
-+	 *      RWX      forked RWX
-+	 * |-----------|-----------|
-+	 * | unfaulted |  faulted  |
-+	 * |-----------|-----------|
-+	 *      ptr2        ptr
-+	 */
-+	ASSERT_EQ(mprotect(ptr, 5 * page_size, PROT_READ | PROT_WRITE | PROT_EXEC), 0);
-+	/* Again, make sure not merged. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr2));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr2);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 5 * page_size);
-+}
-+
-+TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index 9aff33b10999..0b2f8bb91433 100755
---- a/tools/testing/selftests/mm/run_vmtests.sh
-+++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -421,6 +421,8 @@ CATEGORY="madv_guard" run_test ./guard-regions
- # MADV_POPULATE_READ and MADV_POPULATE_WRITE tests
- CATEGORY="madv_populate" run_test ./madv_populate
+ static inline bool is_mergeable_vma(struct vma_merge_struct *vmg, bool merge_next)
+ {
+ 	struct vm_area_struct *vma = merge_next ? vmg->next : vmg->prev;
+@@ -82,24 +98,28 @@ static inline bool is_mergeable_vma(struct vma_merge_struct *vmg, bool merge_nex
+ 	return true;
+ }
  
-+CATEGORY="vma_merge" run_test ./merge
+-static inline bool is_mergeable_anon_vma(struct anon_vma *anon_vma1,
+-		 struct anon_vma *anon_vma2, struct vm_area_struct *vma)
++static bool is_mergeable_anon_vma(struct vma_merge_struct *vmg, bool merge_next)
+ {
++	struct vm_area_struct *tgt = merge_next ? vmg->next : vmg->prev;
++	struct vm_area_struct *src = vmg->middle; /* exisitng merge case. */
++	struct anon_vma *tgt_anon = tgt->anon_vma;
++	struct anon_vma *src_anon = vmg->anon_vma;
 +
- if [ -x ./memfd_secret ]
- then
- (echo 0 > /proc/sys/kernel/yama/ptrace_scope 2>&1) | tap_prefix
+ 	/*
+-	 * The list_is_singular() test is to avoid merging VMA cloned from
+-	 * parents. This can improve scalability caused by anon_vma lock.
++	 * We _can_ have !src, vmg->anon_vma via copy_vma(). In this instance we
++	 * will remove the existing VMA's anon_vma's so there's no scalability
++	 * concerns.
+ 	 */
+-	if ((!anon_vma1 || !anon_vma2) && (!vma ||
+-		list_is_singular(&vma->anon_vma_chain)))
+-		return true;
+-	return anon_vma1 == anon_vma2;
+-}
++	VM_WARN_ON(src && src_anon != src->anon_vma);
+ 
+-/* Are the anon_vma's belonging to each VMA compatible with one another? */
+-static inline bool are_anon_vmas_compatible(struct vm_area_struct *vma1,
+-					    struct vm_area_struct *vma2)
+-{
+-	return is_mergeable_anon_vma(vma1->anon_vma, vma2->anon_vma, NULL);
++	/* Case 1 - we will dup_anon_vma() from src into tgt. */
++	if (!tgt_anon && src_anon)
++		return !vma_had_uncowed_parents(src);
++	/* Case 2 - we will simply use tgt's anon_vma. */
++	if (tgt_anon && !src_anon)
++		return !vma_had_uncowed_parents(tgt);
++	/* Case 3 - the anon_vma's are already shared. */
++	return src_anon == tgt_anon;
+ }
+ 
+ /*
+@@ -164,7 +184,7 @@ static bool can_vma_merge_before(struct vma_merge_struct *vmg)
+ 	pgoff_t pglen = PHYS_PFN(vmg->end - vmg->start);
+ 
+ 	if (is_mergeable_vma(vmg, /* merge_next = */ true) &&
+-	    is_mergeable_anon_vma(vmg->anon_vma, vmg->next->anon_vma, vmg->next)) {
++	    is_mergeable_anon_vma(vmg, /* merge_next = */ true)) {
+ 		if (vmg->next->vm_pgoff == vmg->pgoff + pglen)
+ 			return true;
+ 	}
+@@ -184,7 +204,7 @@ static bool can_vma_merge_before(struct vma_merge_struct *vmg)
+ static bool can_vma_merge_after(struct vma_merge_struct *vmg)
+ {
+ 	if (is_mergeable_vma(vmg, /* merge_next = */ false) &&
+-	    is_mergeable_anon_vma(vmg->anon_vma, vmg->prev->anon_vma, vmg->prev)) {
++	    is_mergeable_anon_vma(vmg, /* merge_next = */ false)) {
+ 		if (vmg->prev->vm_pgoff + vma_pages(vmg->prev) == vmg->pgoff)
+ 			return true;
+ 	}
+@@ -400,8 +420,10 @@ static bool can_vma_merge_left(struct vma_merge_struct *vmg)
+ static bool can_vma_merge_right(struct vma_merge_struct *vmg,
+ 				bool can_merge_left)
+ {
+-	if (!vmg->next || vmg->end != vmg->next->vm_start ||
+-	    !can_vma_merge_before(vmg))
++	struct vm_area_struct *next = vmg->next;
++	struct vm_area_struct *prev;
++
++	if (!next || vmg->end != next->vm_start || !can_vma_merge_before(vmg))
+ 		return false;
+ 
+ 	if (!can_merge_left)
+@@ -414,7 +436,9 @@ static bool can_vma_merge_right(struct vma_merge_struct *vmg,
+ 	 *
+ 	 * We therefore check this in addition to mergeability to either side.
+ 	 */
+-	return are_anon_vmas_compatible(vmg->prev, vmg->next);
++	prev = vmg->prev;
++	return !prev->anon_vma || !next->anon_vma ||
++		prev->anon_vma == next->anon_vma;
+ }
+ 
+ /*
+@@ -554,7 +578,9 @@ static int split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
+ }
+ 
+ /*
+- * dup_anon_vma() - Helper function to duplicate anon_vma
++ * dup_anon_vma() - Helper function to duplicate anon_vma on VMA merge in the
++ * instance that the destination VMA has no anon_vma but the source does.
++ *
+  * @dst: The destination VMA
+  * @src: The source VMA
+  * @dup: Pointer to the destination VMA when successful.
+@@ -565,9 +591,18 @@ static int dup_anon_vma(struct vm_area_struct *dst,
+ 			struct vm_area_struct *src, struct vm_area_struct **dup)
+ {
+ 	/*
+-	 * Easily overlooked: when mprotect shifts the boundary, make sure the
+-	 * expanding vma has anon_vma set if the shrinking vma had, to cover any
+-	 * anon pages imported.
++	 * There are three cases to consider for correctly propagating
++	 * anon_vma's on merge.
++	 *
++	 * The first is trivial - neither VMA has anon_vma, we need not do
++	 * anything.
++	 *
++	 * The second where both have anon_vma is also a no-op, as they must
++	 * then be the same, so there is simply nothing to copy.
++	 *
++	 * Here we cover the third - if the destination VMA has no anon_vma,
++	 * that is it is unfaulted, we need to ensure that the newly merged
++	 * range is referenced by the anon_vma's of the source.
+ 	 */
+ 	if (src->anon_vma && !dst->anon_vma) {
+ 		int ret;
+diff --git a/tools/testing/vma/vma.c b/tools/testing/vma/vma.c
+index 11f761769b5b..7cfd6e31db10 100644
+--- a/tools/testing/vma/vma.c
++++ b/tools/testing/vma/vma.c
+@@ -185,6 +185,15 @@ static void vmg_set_range(struct vma_merge_struct *vmg, unsigned long start,
+ 	vmg->__adjust_next_start = false;
+ }
+ 
++/* Helper function to set both the VMG range and its anon_vma. */
++static void vmg_set_range_anon_vma(struct vma_merge_struct *vmg, unsigned long start,
++				   unsigned long end, pgoff_t pgoff, vm_flags_t flags,
++				   struct anon_vma *anon_vma)
++{
++	vmg_set_range(vmg, start, end, pgoff, flags);
++	vmg->anon_vma = anon_vma;
++}
++
+ /*
+  * Helper function to try to merge a new VMA.
+  *
+@@ -265,6 +274,22 @@ static void dummy_close(struct vm_area_struct *)
+ {
+ }
+ 
++static void __vma_set_dummy_anon_vma(struct vm_area_struct *vma,
++				     struct anon_vma_chain *avc,
++				     struct anon_vma *anon_vma)
++{
++	vma->anon_vma = anon_vma;
++	INIT_LIST_HEAD(&vma->anon_vma_chain);
++	list_add(&avc->same_vma, &vma->anon_vma_chain);
++	avc->anon_vma = vma->anon_vma;
++}
++
++static void vma_set_dummy_anon_vma(struct vm_area_struct *vma,
++				   struct anon_vma_chain *avc)
++{
++	__vma_set_dummy_anon_vma(vma, avc, &dummy_anon_vma);
++}
++
+ static bool test_simple_merge(void)
+ {
+ 	struct vm_area_struct *vma;
+@@ -953,6 +978,7 @@ static bool test_merge_existing(void)
+ 	const struct vm_operations_struct vm_ops = {
+ 		.close = dummy_close,
+ 	};
++	struct anon_vma_chain avc = {};
+ 
+ 	/*
+ 	 * Merge right case - partial span.
+@@ -968,10 +994,10 @@ static bool test_merge_existing(void)
+ 	vma->vm_ops = &vm_ops; /* This should have no impact. */
+ 	vma_next = alloc_and_link_vma(&mm, 0x6000, 0x9000, 6, flags);
+ 	vma_next->vm_ops = &vm_ops; /* This should have no impact. */
+-	vmg_set_range(&vmg, 0x3000, 0x6000, 3, flags);
++	vmg_set_range_anon_vma(&vmg, 0x3000, 0x6000, 3, flags, &dummy_anon_vma);
+ 	vmg.middle = vma;
+ 	vmg.prev = vma;
+-	vma->anon_vma = &dummy_anon_vma;
++	vma_set_dummy_anon_vma(vma, &avc);
+ 	ASSERT_EQ(merge_existing(&vmg), vma_next);
+ 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
+ 	ASSERT_EQ(vma_next->vm_start, 0x3000);
+@@ -1001,9 +1027,9 @@ static bool test_merge_existing(void)
+ 	vma = alloc_and_link_vma(&mm, 0x2000, 0x6000, 2, flags);
+ 	vma_next = alloc_and_link_vma(&mm, 0x6000, 0x9000, 6, flags);
+ 	vma_next->vm_ops = &vm_ops; /* This should have no impact. */
+-	vmg_set_range(&vmg, 0x2000, 0x6000, 2, flags);
++	vmg_set_range_anon_vma(&vmg, 0x2000, 0x6000, 2, flags, &dummy_anon_vma);
+ 	vmg.middle = vma;
+-	vma->anon_vma = &dummy_anon_vma;
++	vma_set_dummy_anon_vma(vma, &avc);
+ 	ASSERT_EQ(merge_existing(&vmg), vma_next);
+ 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
+ 	ASSERT_EQ(vma_next->vm_start, 0x2000);
+@@ -1030,11 +1056,10 @@ static bool test_merge_existing(void)
+ 	vma_prev->vm_ops = &vm_ops; /* This should have no impact. */
+ 	vma = alloc_and_link_vma(&mm, 0x3000, 0x7000, 3, flags);
+ 	vma->vm_ops = &vm_ops; /* This should have no impact. */
+-	vmg_set_range(&vmg, 0x3000, 0x6000, 3, flags);
++	vmg_set_range_anon_vma(&vmg, 0x3000, 0x6000, 3, flags, &dummy_anon_vma);
+ 	vmg.prev = vma_prev;
+ 	vmg.middle = vma;
+-	vma->anon_vma = &dummy_anon_vma;
+-
++	vma_set_dummy_anon_vma(vma, &avc);
+ 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
+ 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
+ 	ASSERT_EQ(vma_prev->vm_start, 0);
+@@ -1064,10 +1089,10 @@ static bool test_merge_existing(void)
+ 	vma_prev = alloc_and_link_vma(&mm, 0, 0x3000, 0, flags);
+ 	vma_prev->vm_ops = &vm_ops; /* This should have no impact. */
+ 	vma = alloc_and_link_vma(&mm, 0x3000, 0x7000, 3, flags);
+-	vmg_set_range(&vmg, 0x3000, 0x7000, 3, flags);
++	vmg_set_range_anon_vma(&vmg, 0x3000, 0x7000, 3, flags, &dummy_anon_vma);
+ 	vmg.prev = vma_prev;
+ 	vmg.middle = vma;
+-	vma->anon_vma = &dummy_anon_vma;
++	vma_set_dummy_anon_vma(vma, &avc);
+ 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
+ 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
+ 	ASSERT_EQ(vma_prev->vm_start, 0);
+@@ -1094,10 +1119,10 @@ static bool test_merge_existing(void)
+ 	vma_prev->vm_ops = &vm_ops; /* This should have no impact. */
+ 	vma = alloc_and_link_vma(&mm, 0x3000, 0x7000, 3, flags);
+ 	vma_next = alloc_and_link_vma(&mm, 0x7000, 0x9000, 7, flags);
+-	vmg_set_range(&vmg, 0x3000, 0x7000, 3, flags);
++	vmg_set_range_anon_vma(&vmg, 0x3000, 0x7000, 3, flags, &dummy_anon_vma);
+ 	vmg.prev = vma_prev;
+ 	vmg.middle = vma;
+-	vma->anon_vma = &dummy_anon_vma;
++	vma_set_dummy_anon_vma(vma, &avc);
+ 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
+ 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
+ 	ASSERT_EQ(vma_prev->vm_start, 0);
+@@ -1180,12 +1205,9 @@ static bool test_anon_vma_non_mergeable(void)
+ 		.mm = &mm,
+ 		.vmi = &vmi,
+ 	};
+-	struct anon_vma_chain dummy_anon_vma_chain1 = {
+-		.anon_vma = &dummy_anon_vma,
+-	};
+-	struct anon_vma_chain dummy_anon_vma_chain2 = {
+-		.anon_vma = &dummy_anon_vma,
+-	};
++	struct anon_vma_chain dummy_anon_vma_chain_1 = {};
++	struct anon_vma_chain dummy_anon_vma_chain_2 = {};
++	struct anon_vma dummy_anon_vma_2;
+ 
+ 	/*
+ 	 * In the case of modified VMA merge, merging both left and right VMAs
+@@ -1209,24 +1231,11 @@ static bool test_anon_vma_non_mergeable(void)
+ 	 *
+ 	 * However, when prev is compared to next, the merge should fail.
+ 	 */
+-
+-	INIT_LIST_HEAD(&vma_prev->anon_vma_chain);
+-	list_add(&dummy_anon_vma_chain1.same_vma, &vma_prev->anon_vma_chain);
+-	ASSERT_TRUE(list_is_singular(&vma_prev->anon_vma_chain));
+-	vma_prev->anon_vma = &dummy_anon_vma;
+-	ASSERT_TRUE(is_mergeable_anon_vma(NULL, vma_prev->anon_vma, vma_prev));
+-
+-	INIT_LIST_HEAD(&vma_next->anon_vma_chain);
+-	list_add(&dummy_anon_vma_chain2.same_vma, &vma_next->anon_vma_chain);
+-	ASSERT_TRUE(list_is_singular(&vma_next->anon_vma_chain));
+-	vma_next->anon_vma = (struct anon_vma *)2;
+-	ASSERT_TRUE(is_mergeable_anon_vma(NULL, vma_next->anon_vma, vma_next));
+-
+-	ASSERT_FALSE(is_mergeable_anon_vma(vma_prev->anon_vma, vma_next->anon_vma, NULL));
+-
+-	vmg_set_range(&vmg, 0x3000, 0x7000, 3, flags);
++	vmg_set_range_anon_vma(&vmg, 0x3000, 0x7000, 3, flags, NULL);
+ 	vmg.prev = vma_prev;
+ 	vmg.middle = vma;
++	vma_set_dummy_anon_vma(vma_prev, &dummy_anon_vma_chain_1);
++	__vma_set_dummy_anon_vma(vma_next, &dummy_anon_vma_chain_2, &dummy_anon_vma_2);
+ 
+ 	ASSERT_EQ(merge_existing(&vmg), vma_prev);
+ 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
+@@ -1253,17 +1262,12 @@ static bool test_anon_vma_non_mergeable(void)
+ 	vma_prev = alloc_and_link_vma(&mm, 0, 0x3000, 0, flags);
+ 	vma_next = alloc_and_link_vma(&mm, 0x7000, 0x9000, 7, flags);
+ 
+-	INIT_LIST_HEAD(&vma_prev->anon_vma_chain);
+-	list_add(&dummy_anon_vma_chain1.same_vma, &vma_prev->anon_vma_chain);
+-	vma_prev->anon_vma = (struct anon_vma *)1;
+-
+-	INIT_LIST_HEAD(&vma_next->anon_vma_chain);
+-	list_add(&dummy_anon_vma_chain2.same_vma, &vma_next->anon_vma_chain);
+-	vma_next->anon_vma = (struct anon_vma *)2;
+-
+-	vmg_set_range(&vmg, 0x3000, 0x7000, 3, flags);
++	vmg_set_range_anon_vma(&vmg, 0x3000, 0x7000, 3, flags, NULL);
+ 	vmg.prev = vma_prev;
++	vma_set_dummy_anon_vma(vma_prev, &dummy_anon_vma_chain_1);
++	__vma_set_dummy_anon_vma(vma_next, &dummy_anon_vma_chain_2, &dummy_anon_vma_2);
+ 
++	vmg.anon_vma = NULL;
+ 	ASSERT_EQ(merge_new(&vmg), vma_prev);
+ 	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
+ 	ASSERT_EQ(vma_prev->vm_start, 0);
+@@ -1363,8 +1367,8 @@ static bool test_dup_anon_vma(void)
+ 	vma_prev = alloc_and_link_vma(&mm, 0, 0x3000, 0, flags);
+ 	vma = alloc_and_link_vma(&mm, 0x3000, 0x5000, 3, flags);
+ 	vma_next = alloc_and_link_vma(&mm, 0x5000, 0x8000, 5, flags);
+-
+-	vma->anon_vma = &dummy_anon_vma;
++	vmg.anon_vma = &dummy_anon_vma;
++	vma_set_dummy_anon_vma(vma, &dummy_anon_vma_chain);
+ 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
+ 	vmg.prev = vma_prev;
+ 	vmg.middle = vma;
+@@ -1392,7 +1396,7 @@ static bool test_dup_anon_vma(void)
+ 	vma_prev = alloc_and_link_vma(&mm, 0, 0x3000, 0, flags);
+ 	vma = alloc_and_link_vma(&mm, 0x3000, 0x8000, 3, flags);
+ 
+-	vma->anon_vma = &dummy_anon_vma;
++	vma_set_dummy_anon_vma(vma, &dummy_anon_vma_chain);
+ 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
+ 	vmg.prev = vma_prev;
+ 	vmg.middle = vma;
+@@ -1420,7 +1424,7 @@ static bool test_dup_anon_vma(void)
+ 	vma = alloc_and_link_vma(&mm, 0, 0x5000, 0, flags);
+ 	vma_next = alloc_and_link_vma(&mm, 0x5000, 0x8000, 5, flags);
+ 
+-	vma->anon_vma = &dummy_anon_vma;
++	vma_set_dummy_anon_vma(vma, &dummy_anon_vma_chain);
+ 	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
+ 	vmg.prev = vma;
+ 	vmg.middle = vma;
+@@ -1447,6 +1451,7 @@ static bool test_vmi_prealloc_fail(void)
+ 		.mm = &mm,
+ 		.vmi = &vmi,
+ 	};
++	struct anon_vma_chain avc = {};
+ 	struct vm_area_struct *vma_prev, *vma;
+ 
+ 	/*
+@@ -1459,9 +1464,10 @@ static bool test_vmi_prealloc_fail(void)
+ 	vma = alloc_and_link_vma(&mm, 0x3000, 0x5000, 3, flags);
+ 	vma->anon_vma = &dummy_anon_vma;
+ 
+-	vmg_set_range(&vmg, 0x3000, 0x5000, 3, flags);
++	vmg_set_range_anon_vma(&vmg, 0x3000, 0x5000, 3, flags, &dummy_anon_vma);
+ 	vmg.prev = vma_prev;
+ 	vmg.middle = vma;
++	vma_set_dummy_anon_vma(vma, &avc);
+ 
+ 	fail_prealloc = true;
+ 
 -- 
 2.48.1
 
