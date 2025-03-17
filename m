@@ -1,121 +1,139 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C96423717C;
-	Mon, 17 Mar 2025 13:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E178523ED62;
+	Mon, 17 Mar 2025 13:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742219625; cv=none; b=uJvHVyBNGhK0oxadS7wb7ANwv1IiWKQh0OMwRsiiVOy1e1ZSUoN5Svfby+XxsA5JrLYgG/1wT5V9wG1KrVnbswzdTtgFBpJkPhEXNM1nkXVDGmacLx8wmje8T7trz3xOG2ehfzXocKlJfmzLFPuYpuDYp1fGkzS20jpR/+ryCVY=
+	t=1742219636; cv=none; b=hQpJB/pgDVReiFsV+QOSaFBP8GeLbGAvfKPkAKcYHgQ9XcI4XdtuVCDlnEqiWj2t3NND3US9d0MOPqT98g3rvQHCxd8Oy6EhDPP0xkMJz4oYnQRQ+97jW8A60Y/g56Cj8TF13JMwQJA82GiwO0F3oLnRWegEnYKxWvXqck6Axcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742219625; c=relaxed/simple;
-	bh=w894LevxBGGRPh8vYZ4i+pBWMWSqEu93O1T7hzhnmTs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O1mpwG4X+2aS0I1ZV8D3rvMYBck3kXyptPoAtna73DhzTZS4eKFM8Di228BKVaW4Yfyub/Yv1WyMFw/wzC86sK4ARXYqbPHG1xBFru4v+MACJFSWq3UnI5pBr9Uc48XXspQh6SP498KEN0oN9IRz5dWrLJ6fzdWLx6VFnLwUYfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UWJJsANt; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742219636; c=relaxed/simple;
+	bh=8o2FV10LXPS4y7YD+bAR/nC38xtiWW6pVIGBKd15Qgc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ffe1obXIkzq1YkqHzkg3UfzU34pqFB3CY0HdHUcSTTQYbiy/WC+MLpMeK6XCX9fe1qAcjqY/3v8abhYWX8tkOP0zLYt4zKW0ce78McLZVQKzskROdmNPRxU4GSYXSvpUqP1SHeYZxWyvmdpnN4eiFRyio/L1SPUQQ3H9wY/+0LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=FR70WLvu; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWJJsANt"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30795988ebeso46191341fa.3;
-        Mon, 17 Mar 2025 06:53:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742219621; x=1742824421; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w894LevxBGGRPh8vYZ4i+pBWMWSqEu93O1T7hzhnmTs=;
-        b=UWJJsANt9pqjYm1OLVoFmGJEM15DkUHKAy0Y1/l0WomtG2EZbo3f11XtuSbblnscgl
-         jOF4MjEiRhxuQs06sYPJMe2eIBiP5I2h+Au3OZ492BqNgWfUhwQDxmMDvfXaViptqvi4
-         jGAeueqkxno5G/5RZeIrfUW6pr/bGl9R/F4GY1+2U0n/E78CBrn0ycGdtyhQ2t7+nKZ3
-         j4cpgxvuTMfAF/dtMPsJhy2OuDGlbdQCAx+NFxeqNxRJ2K13Rl2lXb81fHYLpHoZ1VsR
-         uQbjPgdz+citjZP++boYJI/tmM4DFOvcUabjbfVsN6ZiOtNM4almygorVhUvAYOo8SsN
-         u41Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742219621; x=1742824421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w894LevxBGGRPh8vYZ4i+pBWMWSqEu93O1T7hzhnmTs=;
-        b=R/sPDnxuuyS+r+ZdqRfgaNYP77sTSioMwJT0IMd5eYptlTcbfCbi/hBqWxDv/WnQAq
-         9ZUxCw/EbSMiOagDKtvz8W4aDo5KFBEXUChZY4zrOsy6DqaOvlE4vydQuWUSU789GPcB
-         karPsXAj82DWreQfvPXabbRAqxCaFioLoGpn3oFlPhJsFQXkJMenHek87jMeXzO8fNl+
-         vwz7DZO8EE7iDghdnhzr38ZHjq3/REEB0eYkxtTw7XvK4bU6/+TQl0RBPOTW4jlfBGcQ
-         64xOEZ3Z9zB1R3YVSn3KN9kfDKheGncz8uH9O4R+Yhg5jL2YfkeyrpbO+qR5Hoj5jQrN
-         3fvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUL3Kl1ca9iUO3qOLlX+EBjReWd3CbGVV+OxrpXQCQHFRxpj/Hp1+QfKVRsCRxLyyiNOOkpxKzwkOoyRaBBWqM=@vger.kernel.org, AJvYcCUL4lW8ZkxdtSSDNu7b99uS47Oz7NecE3Q2tXuFyfDOtsiJuWk1wl7vnb3qZVWfgHZbU9KJujc4X7yy3Bw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy/p6ePhqJjXXWp3gWtMv8OL8Khq5eQfawVuj4RSJe3Tp3cfPU
-	i0LW5O2AniTCiKW48B+eI0sP9LR9QtryIiOHMYCdddECxrme/5q+GiZmBppP5xGt1tW/bXqeIR6
-	gSPGjzK4Zy6G3O6wkzI8+B/2fTss=
-X-Gm-Gg: ASbGnctIC2+ABPxf7KKA0SVmZPkcN3DP9YbV7XpOyI4WufD+AbtCF2ynn2LcNFE/FjT
-	jiEOJAOePVuq0kqhOcVGnTW8AW0Ko84KLkMNBOrLUFwKaDICMoOulpmPOwPkmUsfgSXO4PT1qFJ
-	L9bDpk8jsOzl41oKMAnRlN4zU/0A9QltSB9WvkU+c7XEyx20Go6HPsPKjXDCjM
-X-Google-Smtp-Source: AGHT+IHw7fz93SSva0ywBv3KjPQS46f7I++a9EG+9AJHR+5rthaM2FQDQny+joqvYCGDQzhtUt4vlSxwZkW0C7eR+3s=
-X-Received: by 2002:a2e:a546:0:b0:30c:5c6:91e0 with SMTP id
- 38308e7fff4ca-30c4a74e129mr66902771fa.2.1742219620987; Mon, 17 Mar 2025
- 06:53:40 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="FR70WLvu"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id BEAA7A0467;
+	Mon, 17 Mar 2025 14:53:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=0o1CqcnBoa+erxXQ17CZ
+	+o4z6tIXyZBWdDbU2LmsN1k=; b=FR70WLvufFS1XAW4FDl9sbvqGKaMAd556gTP
+	HHK3QzFWZXQJmhHdrlN7wd6SfDae3q+/TyJXn324oJy+/nEC6WRLPXpHbQgDCu8j
+	jkCsfKwSxSl5L+dA8G4UshCyxMdbjCBf2Hd5CIwI0N3yNF908QdK7sMkwdwVEBRh
+	mBg/KQrJgyJxDKliq80tPPvsF6wLHqiQx6ccVbMIrim3DiKA5sBiVG08NcuY0WLv
+	aEPPrPR5Xs+BL/M0B27hjFk5+lNtZbKe1NSfKTRthkbNzOKHzl434ot8Dk0a0O4I
+	guxQciGRCFDCCrgDQfMQ8c7H7n+SNLkHKQ79OMvp9Wn2vjkipdzqE94zxYCO12HA
+	7Ort2EGIsRtlt0Jh+x1/qF9xyqt1ksAMJ8x1dyoujWAZ3SwDr8338DoPkx9WMoH1
+	53NJbgI4H+3+TSvBWzNfkGR0uhYU2Sw7vCiGBwQnueT7c/VHZB2jdLxePGSuMfGP
+	qLog3rMy8YaEbKwu7Oq/9ScZiOu8qdno4EQQzk2Dkz1MGje9U0rHa+2YTWwbbYv8
+	DqCrfFJlhyjXztE4FV+XoaZ8EzPjPheS7fxHeq+nME+WEhfDT0FgiBjQRHlUrk4k
+	67pRzl1EhR4G09+XTfLjioaQSJ60TWQbtCIHJNkoLGHWFsgnyT6zBLh41q+ClHHb
+	rV4YvZs=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Vinod Koul
+	<vkoul@kernel.org>
+Subject: [PATCH v4 1/2] dma: Add devm_dma_request_chan()
+Date: Mon, 17 Mar 2025 14:53:37 +0100
+Message-ID: <20250317135340.382532-2-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250317135340.382532-1-csokas.bence@prolan.hu>
+References: <20250317135340.382532-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250316-vec-set-len-v1-0-60f98a28723f@gmail.com>
- <20250316-vec-set-len-v1-2-60f98a28723f@gmail.com> <D8IGFTJXS2A1.9JBD1UKGN4PX@proton.me>
- <CAJ-ks9=oq+c_pMg41QgGWsj=phWYfntXQgpSrFmz16Vifofn3g@mail.gmail.com>
- <Z9gL5hQWvCNy5XNH@google.com> <Z9gcqHihXLg6kcZb@google.com>
-In-Reply-To: <Z9gcqHihXLg6kcZb@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Mar 2025 09:53:04 -0400
-X-Gm-Features: AQ5f1JpaMc_6dbAG2d6vWkGKQ2EIKB1GI658lNc9zi7qbVQrJG32wjF6MS84U6E
-Message-ID: <CAJ-ks9n=7fqtNr88co-EU7d9Wo1Dz1Wmp0p3K0b8RQE9mjrbHQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: alloc: add `Vec::dec_len`
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Danilo Krummrich <dakr@kernel.org>, 
-	Andrew Ballance <andrewjballance@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1742219631;VERSION=7985;MC=2159532761;ID=155897;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29ACD948526D7460
 
-On Mon, Mar 17, 2025 at 8:59=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Mon, Mar 17, 2025 at 11:47:50AM +0000, Alice Ryhl wrote:
-> > On Mon, Mar 17, 2025 at 07:34:44AM -0400, Tamir Duberstein wrote:
-> > > On Mon, Mar 17, 2025 at 6:04=E2=80=AFAM Benno Lossin <benno.lossin@pr=
-oton.me> wrote:
-> > > >
-> > > > On Sun Mar 16, 2025 at 11:32 PM CET, Tamir Duberstein wrote:
-> > > > > Add `Vec::dec_len` that reduces the length of the receiver. This =
-method
-> > > > > is intended to be used from methods that remove elements from `Ve=
-c` such
-> > > > > as `truncate`, `pop`, `remove`, and others. This method is intent=
-ionally
-> > > > > not `pub`.
-> > > >
-> > > > I think it should be `pub`. Otherwise we're loosing functionality
-> > > > compared to now. If one decides to give the raw pointer to some C A=
-PI
-> > > > that takes ownership of the pointer, then I want them to be able to=
- call
-> > > > `dec_len` manually.
-> > >
-> > > This is premature. It is trivial to make this function pub when the n=
-eed arises.
-> >
-> > Normally I'd agree with Benno, but in this case I think having it
-> > private is preferable. The function is safe, so it's too easy for
-> > end-users to confuse it with truncate.
->
-> Thinking more about this ... I think we should have `set_len` and
-> `inc_len` instead. That way, both methods are unsafe so people will not
-> accidentally use `set_len` when they meant to use `truncate`.
->
-> Alice
+Expand the arsenal of devm functions for DMA devices, this time for
+requesting channels.
 
-Isn't it fine to keep this function unsafe given that it can break
-invariants in its current form? As expressed earlier, I would prefer
-not to make it safe by using saturating_sub.
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
+ drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h |  7 +++++++
+ 2 files changed, 37 insertions(+)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index c1357d7f3dc6..02c29d26ac85 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
+ }
+ EXPORT_SYMBOL_GPL(dma_release_channel);
+ 
++static void dmaenginem_release_channel(void *chan)
++{
++	dma_release_channel(chan);
++}
++
++/**
++ * devm_dma_request_chan - try to allocate an exclusive slave channel
++ * @dev:	pointer to client device structure
++ * @name:	slave channel name
++ *
++ * Returns pointer to appropriate DMA channel on success or an error pointer.
++ *
++ * The operation is managed and will be undone on driver detach.
++ */
++
++struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++{
++	struct dma_chan *chan = dma_request_chan(dev, name);
++	int ret = 0;
++
++	if (!IS_ERR(chan))
++		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
++
++	if (ret)
++		return ERR_PTR(ret);
++
++	return chan;
++}
++EXPORT_SYMBOL_GPL(devm_dma_request_chan);
++
+ /**
+  * dmaengine_get - register interest in dma_channels
+  */
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 346251bf1026..ffb54b52ef0c 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1528,6 +1528,7 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ 
+ struct dma_chan *dma_request_chan(struct device *dev, const char *name);
+ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
++struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name);
+ 
+ void dma_release_channel(struct dma_chan *chan);
+ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+@@ -1564,6 +1565,12 @@ static inline struct dma_chan *dma_request_chan_by_mask(
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
++
++static inline struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++{
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline void dma_release_channel(struct dma_chan *chan)
+ {
+ }
+-- 
+2.48.1
+
+
