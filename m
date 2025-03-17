@@ -1,118 +1,100 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C54D424A056;
-	Mon, 17 Mar 2025 14:22:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6641D8F4A;
+	Mon, 17 Mar 2025 14:22:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742221343; cv=none; b=FHT62ByKWwXk+42sxXlFcX2TYJyD8P3y3ydQT2nXZKlr8Xw46aeJduJwjFfPFelnCR/n8uIePMOCTnVCvZ2Kh2SnD90VywSUpV+9cRcZ0kc1LyrdqAS3TTL9a4B7xu3UVMyEIclvV0kqMQ6CPU6rSRYxt9fQAU7IIuDG7fNcKWg=
+	t=1742221371; cv=none; b=HRzVCCm1+Kris0KqJfpLivn4WC5UlGss+gogKk3uHi2goOf7pBicpZMGBU+Nmqupazvk6rKRNksdmaCN2qqx2Dtp0ETS9QtNUZM/ORhwyA/XboPGoBHS1CGIZbQAGC4hQ4QH3U0FhuCvCCFGKLxQrpf4XHYfYNpyqE3I5Dr2Abg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742221343; c=relaxed/simple;
-	bh=rQYXNBvmvmZDvgD5WxDZTChFqhlSHr1Rda9SRbyWklA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cohh2WE2ZXLDz2Cdqk/9kwP34tVqXWEMC9vMAhDzvs31h46yJzmYbwL+QaWvTGVS4sXbOfVhTsyTUPE0P/sT9Lqr07SfBxUeCQ4asI0X3HpXP4TIZQujjF1StOZL8ODP+j2ln3hLLoW/VOgLXGGFHWaad44GXJHXEPhpCvZigZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1742221371; c=relaxed/simple;
+	bh=JML17x1ArQHdjXBR7PRwTnBDDRX4qykPz2U6h/tv+xQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWRY/fSPVUmv3ghUdd1ZELweByeVHxw1g5PdMFEK5cWOVcnlUw7NQZs/OnnohoP+Lzxf2U3zsfY/306Avkt4DsSw0zEXRDyaF9FvM8vdZb57gKUuMac4FwFLc65bj8fY2g+H48QIVYQ5KQijRxSx1p/MzSPIrxC6u2CchGfyEs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06A762573;
-	Mon, 17 Mar 2025 07:22:30 -0700 (PDT)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D35C43F63F;
-	Mon, 17 Mar 2025 07:22:16 -0700 (PDT)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Yang Shi <yang@os.amperecomputing.com>,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-openrisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	sparclinux@vger.kernel.org
-Subject: [PATCH 11/11] riscv: mm: Call PUD/P4D ctor in special kernel pgtable alloc
-Date: Mon, 17 Mar 2025 14:17:00 +0000
-Message-ID: <20250317141700.3701581-12-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250317141700.3701581-1-kevin.brodsky@arm.com>
-References: <20250317141700.3701581-1-kevin.brodsky@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB6A313D5;
+	Mon, 17 Mar 2025 07:22:58 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFF0A3F63F;
+	Mon, 17 Mar 2025 07:22:48 -0700 (PDT)
+Date: Mon, 17 Mar 2025 14:22:45 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 2/9] hwrng: arm-smccc-trng - transition to the faux
+ device interface
+Message-ID: <Z9gwNaUoTmqViPrh@bogus>
+References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
+ <20250317-plat2faux_dev-v1-2-5fe67c085ad5@arm.com>
+ <2025031748-deface-wasting-b635@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025031748-deface-wasting-b635@gregkh>
 
-Constructors for PUD/P4D-level pgtables were recently introduced.
-They should be called for all pgtables; make sure they are called
-for special kernel mappings created by create_pgd_mapping() too.
+On Mon, Mar 17, 2025 at 02:04:27PM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Mar 17, 2025 at 10:13:14AM +0000, Sudeep Holla wrote:
+> > +MODULE_ALIAS("faux:smccc_trng");
+> 
+> Why do you need a branch new alias you just made up?  Please don't add
+> that for these types of devices, that's not going to work at all (just
+> like the platform alias really doesn't work well.
+> 
 
-While at it also switch to using pagetable_alloc() like
-in alloc_{pte,pmd}_late().
+Sure I will drop all of those alias. One question I have if the idea of
+creating a macro for this is good or bad ? I need this initial condition
+flag to make use of such a macro, so I didn't go for it, but it does
+remove some boiler-plate code.
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
- arch/riscv/mm/init.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Let me know what do you think of it ?
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index fb18940113f2..dc2715f3fd00 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -557,11 +557,11 @@ static phys_addr_t __init alloc_pud_fixmap(uintptr_t va)
- 
- static phys_addr_t __meminit alloc_pud_late(uintptr_t va)
- {
--	unsigned long vaddr;
-+	struct ptdesc *ptdesc = pagetable_alloc(GFP_KERNEL, 0);
- 
--	vaddr = __get_free_page(GFP_KERNEL);
--	BUG_ON(!vaddr);
--	return __pa(vaddr);
-+	BUG_ON(!ptdesc);
-+	pagetable_pud_ctor(ptdesc);
-+	return __pa((pud_t *)ptdesc_address(ptdesc));
+Regards,
+Sudeep
+
+-->8 
+diff --git i/include/linux/device/faux.h w/include/linux/device/faux.h
+index 9f43c0e46aa4..8af3eaef281a 100644
+--- i/include/linux/device/faux.h
++++ w/include/linux/device/faux.h
+@@ -66,4 +66,30 @@ static inline void faux_device_set_drvdata(struct faux_device *faux_dev, void *d
+ 	dev_set_drvdata(&faux_dev->dev, data);
  }
  
- static p4d_t *__init get_p4d_virt_early(phys_addr_t pa)
-@@ -595,11 +595,11 @@ static phys_addr_t __init alloc_p4d_fixmap(uintptr_t va)
- 
- static phys_addr_t __meminit alloc_p4d_late(uintptr_t va)
- {
--	unsigned long vaddr;
-+	struct ptdesc *ptdesc = pagetable_alloc(GFP_KERNEL, 0);
- 
--	vaddr = __get_free_page(GFP_KERNEL);
--	BUG_ON(!vaddr);
--	return __pa(vaddr);
-+	BUG_ON(!ptdesc);
-+	pagetable_p4d_ctor(ptdesc);
-+	return __pa((p4d_t *)ptdesc_address(ptdesc));
- }
- 
- static void __meminit create_pud_mapping(pud_t *pudp, uintptr_t va, phys_addr_t pa, phys_addr_t sz,
--- 
-2.47.0
++#define module_faux_driver(name, tag, init_cond)			\
++static struct faux_device_ops tag##_ops = {				\
++	.probe = tag##_probe,						\
++	.remove = tag##_remove,						\
++};									\
++									\
++static struct faux_device *tag##_dev;					\
++									\
++static int __init tag##_init(void)					\
++{									\
++	if (!(init_cond))						\
++		return 0;						\
++	tag##_dev = faux_device_create(name, NULL, &tag##_ops);		\
++	if (!tag##_dev)							\
++		return -ENODEV;						\
++									\
++	return 0;							\
++}									\
++module_init(tag##_init);						\
++									\
++static void __exit tag##_exit(void)					\
++{									\
++	faux_device_destroy(tag##_dev);					\
++}									\
++module_exit(tag##_exit);						\
++
+ #endif /* _FAUX_DEVICE_H_ */
 
