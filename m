@@ -1,126 +1,120 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F7A1B042F
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBF3847B
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742199294; cv=none; b=Y7pyK2oDHu6QQxnvbpCPK8vxJJj9034K+Am4exxTFVBjx5TIPJQ+Iuq6X6/ncCL48rccfyl3bo6q8xWFRUefhI4jDOLKeuV+M1WV2K600UCfQvm5ZLe6iXpPf3vcbNfaPw9IPILsfa6wIPT/V+2JpjmgwEPZIos+DdWK8Ah2LBI=
+	t=1742199376; cv=none; b=bS0Zsw+NmnvKRw3+VGmg90JfZwJqBX9MP6/gqNQ3QPoV+nqI6M7Z3Tf3sCBgKbMwAXv+Xq35Aj0uRg3HvmhgMIgcVnSgz39RoXBQpN4+GtJHKm8O5SxNkhDzZaeRpBMkTjwxf4E6bUeJHcZZhU5HlBqowgPSsIQl48NKz6VE8ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742199294; c=relaxed/simple;
-	bh=Ik+juuv3vZG7o9rKpUv3FPBSdYaXCPaTs5wTp0dE0ro=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a/ZeV2GVqXrZ/yq/wxcNwc0xl8Cbsp32zJVD3cn07VcJe6F5lv5nlaIc+dT6FDRukHZeFbtD1K0yLDnQ8/+gSHN0MYAEt6i3aoJ4F5Mc1d5vpCqZNm5c4BgizPI3pp56n1tJ+C2o8JTY6vzFLoLq0IGPQgntdMbRphNdC7+8/nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PdNGLK8I; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742199376; c=relaxed/simple;
+	bh=0aexZ8p/UfBpfkmvdM5J6umkMXuw2qZoDMMfIOS7uNQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eykM2YrdlUDzwTMfSB4rh7u3rNYrkewJ1Y+Jxv4nlWKBc45uZfdNFzPyXB3UocOn/LbepbRIEM1Kc14zufFE4/grK3VIOqEdl/HT8+ngR49X63RaMwAy8FLLnJjjueKbLVMh81gskgltOAs6E1Ef1IwJyro+w2QK5ateO4SPS+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UtK2JJ9T; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PdNGLK8I"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742199289;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UtK2JJ9T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742199373;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=LRqxEhaGGRBnjpe2vKuBwbtSeIwWfJeTVgBc1Z0wJ/4=;
-	b=PdNGLK8ITK14OXWrnSamvqcfkiWYMqi544OKblg8sMlGEo3ZtchjFR/F/EKJ3TZ3RWv7AC
-	Krrd+ft4xu9hbW6/5nNMQStRe3SWE94f1qo8JSlp0Cgsd5nNtC0yo6+22VYcbzroI0vKGs
-	07/uzWV71v1QcjBWFiYjl3pfYDbA7V4=
-From: Kunwu Chan <kunwu.chan@linux.dev>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	morbo@google.com,
-	justinstitt@google.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Kunwu Chan <kunwu.chan@hotmail.com>,
-	Grace Deng <Grace.Deng006@Gmail.com>
-Subject: [PATCH] rust: sync: optimize rust symbol generation for CondVar
-Date: Mon, 17 Mar 2025 16:13:50 +0800
-Message-ID: <20250317081351.2503049-1-kunwu.chan@linux.dev>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Pk3Z6MT/rM/rR8SSxVws+PD86WIVAU1t8UCCgCigTfc=;
+	b=UtK2JJ9TLM82AKKPNvLd7GkqlE1YWknFbSdaeBKvP4dNW+K0+H7pdYdJqthK0HtvNZg5Y+
+	kXmqfKc1pUiEsIpmYh3/o3xEDcubNP8bhTgPJrfD+6B67KnYIxMH/Oll4rNH+XNxlJkIgB
+	C+beglnoHu08pItbXRCW2kYaRtLz/Bw=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-452-oj50330TNiKfKt7uOdn8DA-1; Mon, 17 Mar 2025 04:16:11 -0400
+X-MC-Unique: oj50330TNiKfKt7uOdn8DA-1
+X-Mimecast-MFC-AGG-ID: oj50330TNiKfKt7uOdn8DA_1742199370
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac28f255a36so319129366b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 01:16:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742199370; x=1742804170;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pk3Z6MT/rM/rR8SSxVws+PD86WIVAU1t8UCCgCigTfc=;
+        b=CeAlRz7PE/SKobWrGiMOEbqw0+i8rDGvIGJRWi+EumxKYONnykPB5H9022JghcNben
+         rmE6yMt+3Ln4mAR0mORoUs+upGHmHY0VzhiJUey0tZPiZld/sDSVrp2si4m2a83YWyHA
+         IRQY0Eg0soyY/NpQLZvNi5ZOKJU9oLlOdupEiJrIZle3iCpiJLOKngnthcLllZjLSIZ3
+         D0E3KJFQh5iaaKjYI//usIkqEKj698erGvu3QHdY22/xrEfWnPWTyHHtCMGwX7Sf2kZe
+         3PmKJHaXbWEq9W/obRvhW5ImoOz5CEFb6nCgp4uLq+x4wQzjpMhl/6VQijcvUadzq7AI
+         JIww==
+X-Forwarded-Encrypted: i=1; AJvYcCXoGZHiMhvzWRwhPN+zYel1JFKLPjwrv9WZkBU/Do7OzYst3AQPvHoK4hqbLIxaBa+CMK6b3ZJblBWccJU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4t1OqQgaNpLdY5551ATzsrlppxee4jTlNdWhgcXZXb72ehvki
+	EckcePSNPbnEKhxO31TohRl4C2J0IY3cmwddJ/nMi6cWAq+/0ugLUluqWQ1nypdsbBmutx/l7IC
+	EVX6pcIcfuxiSWKOaYKVx3N6ZKrgTEi/qSbhPDcwjmkRqzYCFloaVCa1u40rx1JBC+wUqxtHbig
+	leouoz9UuIOhT9Dtj+hXwGMx8ub8L/ShNZMWCd
+X-Gm-Gg: ASbGncveNrocSH9vc8zAR+7w31LVfsCSbF6x9iv+M5IjGy047Hr//oxuYGTji7qu3LF
+	uFAUcP62IGLZnSaUJVdrx+t5g3FhrDcG5OzGLAgxAHEaqXKcH6LZplgUTdryhotCn7sGPzGjpFQ
+	==
+X-Received: by 2002:a17:906:c10d:b0:ac2:cae8:e153 with SMTP id a640c23a62f3a-ac3301dd86bmr1393076866b.4.1742199370301;
+        Mon, 17 Mar 2025 01:16:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFZ+ANShCU4w+973f+bO4wSWXHgTROJUNB6d4D2jlOtA47ZbMlXsZlAyMzOugVcO6O70RQMZNgc+7nWLej/uM0=
+X-Received: by 2002:a17:906:c10d:b0:ac2:cae8:e153 with SMTP id
+ a640c23a62f3a-ac3301dd86bmr1393074066b.4.1742199369946; Mon, 17 Mar 2025
+ 01:16:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250312190513.1252045-1-sdf@fomichev.me>
+In-Reply-To: <20250312190513.1252045-1-sdf@fomichev.me>
+From: Lei Yang <leiyang@redhat.com>
+Date: Mon, 17 Mar 2025 16:15:32 +0800
+X-Gm-Features: AQ5f1JrIt2rqvywyLUfYM86c8DkeHlgoLJ6dpuNwUnqQNMtcO8XVVleRuUoD934
+Message-ID: <CAPpAL=z9WgrdYNTbKqus+nknfW00HLLZ1VpdowvTfMDAx-Cdfw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 0/2] net: bring back dev_addr_sem
+To: Stanislav Fomichev <sdf@fomichev.me>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org, 
+	willemdebruijn.kernel@gmail.com, jasowang@redhat.com, andrew+netdev@lunn.ch, 
+	horms@kernel.org, jdamato@fastly.com, kory.maincent@bootlin.com, 
+	kuniyu@amazon.com, atenart@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kunwu Chan <kunwu.chan@hotmail.com>
+QE tested this series of patches with virtio-net regression tests,
+everything works fine.
 
-When build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
-with ARCH=arm64, the following symbols are generated:
+Tested-by: Lei Yang <leiyang@redhat.com>
 
-$nm vmlinux | grep ' _R'.*CondVar | rustfilt
-... T <kernel::sync::condvar::CondVar>::notify_all
-... T <kernel::sync::condvar::CondVar>::notify_one
-... T <kernel::sync::condvar::CondVar>::notify_sync
-... T <kernel::sync::condvar::CondVar>::new::{closure#0}::{closure#0}::panic_cold_explicit
-... T <kernel::sync::condvar::CondVar>::new::{closure#0}::{closure#0}::panic_cold_explicit
-... T <kernel::sync::poll::PollCondVar>::new::{closure#0}::{closure#0}::panic_cold_explicit
-... T <kernel::sync::poll::PollCondVar as core::ops::drop::Drop>::drop
-
-These notify* symbols are trivial wrappers around the C functions
-__wake_up and __wake_up_sync.
-It doesn't make sense to go through a trivial wrapper for these
-functions, so mark them inline.
-
-Link: https://github.com/Rust-for-Linux/linux/issues/1145
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Co-developed-by: Grace Deng <Grace.Deng006@Gmail.com>
-Signed-off-by: Grace Deng <Grace.Deng006@Gmail.com>
-Signed-off-by: Kunwu Chan <kunwu.chan@hotmail.com>
----
- rust/kernel/sync/condvar.rs | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
-index 7df565038d7d..a826896ba3f0 100644
---- a/rust/kernel/sync/condvar.rs
-+++ b/rust/kernel/sync/condvar.rs
-@@ -181,6 +181,7 @@ pub fn wait_interruptible_timeout<T: ?Sized, B: Backend>(
-     }
- 
-     /// Calls the kernel function to notify the appropriate number of threads.
-+    #[inline]
-     fn notify(&self, count: c_int) {
-         // SAFETY: `wait_queue_head` points to valid memory.
-         unsafe {
-@@ -198,6 +199,7 @@ fn notify(&self, count: c_int) {
-     /// This method behaves like `notify_one`, except that it hints to the scheduler that the
-     /// current thread is about to go to sleep, so it should schedule the target thread on the same
-     /// CPU.
-+    #[inline]
-     pub fn notify_sync(&self) {
-         // SAFETY: `wait_queue_head` points to valid memory.
-         unsafe { bindings::__wake_up_sync(self.wait_queue_head.get(), TASK_NORMAL) };
-@@ -207,6 +209,7 @@ pub fn notify_sync(&self) {
-     ///
-     /// This is not 'sticky' in the sense that if no thread is waiting, the notification is lost
-     /// completely (as opposed to automatically waking up the next waiter).
-+    #[inline]
-     pub fn notify_one(&self) {
-         self.notify(1);
-     }
-@@ -215,6 +218,7 @@ pub fn notify_one(&self) {
-     ///
-     /// This is not 'sticky' in the sense that if no thread is waiting, the notification is lost
-     /// completely (as opposed to automatically waking up the next waiter).
-+    #[inline]
-     pub fn notify_all(&self) {
-         self.notify(0);
-     }
--- 
-2.43.0
+On Thu, Mar 13, 2025 at 3:05=E2=80=AFAM Stanislav Fomichev <sdf@fomichev.me=
+> wrote:
+>
+> Kohei reports an issue with dev_addr_sem conversion to netdev instance
+> lock in [0]. Based on the discussion, switching to netdev instance
+> lock to protect the address might not work for the devices that
+> are not using netdev ops lock.
+> Bring dev_addr_sem instance lock back but fix the ordering.
+>
+> 0: https://lore.kernel.org/netdev/20250308203835.60633-2-enjuk@amazon.com
+>
+> Stanislav Fomichev (2):
+>   Revert "net: replace dev_addr_sem with netdev instance lock"
+>   net: reorder dev_addr_sem lock
+>
+>  drivers/net/tap.c         |  2 +-
+>  drivers/net/tun.c         |  2 +-
+>  include/linux/netdevice.h |  4 +++-
+>  net/core/dev.c            | 41 +++++++++++++--------------------------
+>  net/core/dev.h            |  3 ++-
+>  net/core/dev_api.c        | 19 ++++++++++++++++--
+>  net/core/dev_ioctl.c      |  2 +-
+>  net/core/net-sysfs.c      |  7 +++++--
+>  net/core/rtnetlink.c      | 17 +++++++++++-----
+>  9 files changed, 56 insertions(+), 41 deletions(-)
+>
+> --
+> 2.48.1
+>
+>
 
