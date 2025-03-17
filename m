@@ -1,102 +1,95 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DA615573A;
-	Mon, 17 Mar 2025 19:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E698450EE
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 19:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742239378; cv=none; b=FbN25rAefd49eMltOVyjCAef8dZCsur2QXj82/Jy+A/pUJ0lr5cKPRnjCOoZGqU9HXiaHQh7xWjeQPLPg0e/9W094GM+V0AeecTn74prxSLIbhSccpqj28t+fB01ZNO0qdkmNW9+3EijpCEB0d0Pij3Em6tFGh2BGLmOGmhLq8o=
+	t=1742239535; cv=none; b=nZcxshVpRLnuNpjVPxQa4rvkj8/4mnxBDFNoIPPCgkfKXd27NNyhO3bTURXeoJn/IbiB06rHiOM1XM3yus6VFKQwYW5JQj/KERZAtBwJpMRC85D2KTsPRxn0qghgOnwQLF7wgorDn+Y8rO0dltx4K2HSBa8beIPKw9zd2ZBkbyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742239378; c=relaxed/simple;
-	bh=fZNVQMp38R+fm09V4IiqclMsqo4Do1Cn9eVz2bE9FPY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iDYURD3cU2vAcXeSxiJkZnpIDyiAiKF/GtAAezjBYT4S8OxqrX5ZznoUsF3tZ8/nSfDIPdQCQ8kl82S20fNBueFwwK4X1bY5caYekvtiNj1LJWMfEXAehE5/VSwOPEF8uPZljzUe9sHtYFZ4KsMhLscXcz3lPwHSu7VqFgE+6d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Hp7LGUmI; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Hp7LGUmI"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id B684520221;
-	Mon, 17 Mar 2025 20:22:54 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id ExWSxhWLF5ZT; Mon, 17 Mar 2025 20:22:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1742239370; bh=fZNVQMp38R+fm09V4IiqclMsqo4Do1Cn9eVz2bE9FPY=;
-	h=From:Date:Subject:To:Cc;
-	b=Hp7LGUmIsRZ+VC8B4cwU+FNiPEcOEpsmfvyOe16dpxp0eucMs81kHoxKA2Ob7VQy2
-	 /rnIzh6nGp5fiXYcSJXjdzJq/EOW5V7mM26q5et1anqCbo+qG87azjkgXc9OmLWBSB
-	 KlTRw61vVvACDD7uHZyN9/i2Je+2x5WFqQ0qsbmpi7i5dg6ilFPhS2uLpxKizhRuTk
-	 w23A6gb3jz9kiSjhFS6DfK8GhD+kcXprEv2Q1/fy4p2K+58ta6zGsaE1/g4DbkWya8
-	 7fmJ9x5v9S+9DH8Kl2xF2UTcvUg+iNAf2itX+J4I7+3xK0MQpeyzuhyf6kGKIgBQ23
-	 eFFHTTMyM/AIQ==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Tue, 18 Mar 2025 00:51:53 +0530
-Subject: [PATCH RESEND v2] dt-bindings: serial: samsung: add
- exynos7870-uart compatible
+	s=arc-20240116; t=1742239535; c=relaxed/simple;
+	bh=JOUycSmepedZyreMKBcy/aJBF9qR36IXmmYVz6OHokc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YV5FI52CzIzFTwRH/Zq9FfE0MX9SeNwbXUdXwozRecgurdIXPLsAod//0u+eBjQB05TKDTycyeGZJuvpxk9jOZZfnO9IFVf7vOW5PGKxCh/GUNHpP23NlQS4JLM4jf3PrtuTHdQabKpmVeYSF1fUBFVx66vzRb+1WTdUCfourUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tuG0T-000000001DY-1CqJ;
+	Mon, 17 Mar 2025 15:20:13 -0400
+Message-ID: <cb76a32131dd10dee4f6097fd349dd3d5786eee6.camel@surriel.com>
+Subject: Re: [PATCH] mm: Optimize TLB flushes during page reclaim
+From: Rik van Riel <riel@surriel.com>
+To: Vinay Banakar <vny@google.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ akpm@linux-foundation.org, 	willy@infradead.org, mgorman@suse.de, Wei Xu
+ <weixugc@google.com>, Greg Thelen	 <gthelen@google.com>
+Date: Mon, 17 Mar 2025 15:20:13 -0400
+In-Reply-To: <CALf+9YdLB3U7cjY8xi0PQjqPJ_YKformTZFQ4ZxXo_ZzsEwCog@mail.gmail.com>
+References: 
+	<CALf+9Yc3WjbG89uRWiDC_qYshJ5z_9WCrbEJe42Vbv+gJjs26g@mail.gmail.com>
+	 <135b6d6fad6083bfd11a9dc98fad69756b51c59d.camel@surriel.com>
+	 <CALf+9YdLB3U7cjY8xi0PQjqPJ_YKformTZFQ4ZxXo_ZzsEwCog@mail.gmail.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-exynos7870-uart-v2-1-b9dcf145ae87@disroot.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
- Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742239363; l=1559;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=fZNVQMp38R+fm09V4IiqclMsqo4Do1Cn9eVz2bE9FPY=;
- b=2rVCzd5/CHqGb1ChG52Moc7SN+UJOR7KnsnSJzMf3usgccSgb8ohIzSBjAZz0Z+Adgb82phoG
- LZ1aRVpd9SLBMnzz1HXOixpCirufJGURtbTF6F2zhaoFH05IVi2dex6
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+Sender: riel@surriel.com
 
-Document the compatible string for Exynos7870's UART driver. The
-devicetree property samsung,uart-fifosize must be mandatory, as the
-driver enquires about the FIFO sizes. This feature makes it compatible
-with Exynos8895's UART.
+On Thu, 2025-01-23 at 13:16 -0600, Vinay Banakar wrote:
+>=20
+> We have two options:
+> 1. Keep the current logic where TLB flush batching varies by caller
+> 2. Enforce consistent 512-page batching in shrink_folio_list() and
+> also convert to folio_batch as suggested by Matthew
+>=20
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
-This patch series is a part of Exynos7870 upstreaming.
----
-Changes in v2:
-- Modify UART compatible to now fallback Exynos8895 UART.
-- Remove the UART driver patch, no longer needed.
-- Link to v1: https://lore.kernel.org/r/20250204-exynos7870-uart-v1-0-06be6aa96284@disroot.org
----
- Documentation/devicetree/bindings/serial/samsung_uart.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+Given that your code is correct, and only the comment
+was a little misleading, would you be open to resending
+your patch without the comments about "PMD level"
+batching?
 
-diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-index 070eba9f19d3e039090c58a82f93d02eed58ab84..83d9986d8e98a2a55615d15383c9c7fc89f5b52f 100644
---- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-@@ -42,6 +42,10 @@ properties:
-               - samsung,exynosautov9-uart
-               - samsung,exynosautov920-uart
-           - const: samsung,exynos850-uart
-+      - items:
-+          - enum:
-+              - samsung,exynos7870-uart
-+          - const: samsung,exynos8895-uart
- 
-   reg:
-     maxItems: 1
+It would be really nice to get this optimization into
+the kernel.
 
----
-base-commit: e5d3fd687aac5eceb1721fa92b9f49afcf4c3717
-change-id: 20250203-exynos7870-uart-62f64cea2489
+If you don't have the time currently, I would also be
+happy to clean up the patch and get it to Andrew.
+Just let me know.
 
-Best regards,
--- 
-Kaustabh Chakraborty <kauschluss@disroot.org>
+kind regards,
 
+Rik
+--=20
+All Rights Reversed.
