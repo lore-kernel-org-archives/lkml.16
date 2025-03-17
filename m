@@ -1,271 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB5313B7A3;
-	Mon, 17 Mar 2025 10:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1812221CC7B
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742207292; cv=none; b=TrRDOyZgJ3yzEPnj94f9U3qc9UcebuuCBsz2saGef47kBYk8ZfPZvJvu63LLOHvRsKFwTshO+VCBOhph/+OESHD3IvqVschv8opfjYIlCsem4QkbwUaz4miO0czZvNZ2eaFTsNufND8z5o/E5DsnTl6xOgxLXCOlIWHat0rCoXE=
+	t=1742207311; cv=none; b=GPECnAnMTCxR6QqWVST6HMmV2IzxVJt21kWwN/BWyIpX1byTbYYz/q5BBLmNfTmxa4vdXeFveX2+ehCPfPizIqU3R2YMxE9aXjL+s5zai+pE79/Gzns51krawNINSu/Kic2YIz59uNUxTqsbqO/y9TO78u7Fge79bWD1gLGZbIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742207292; c=relaxed/simple;
-	bh=qS18CGlLGP0tpSmU21eSar6JGn73St59+DNZX7wwsqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ppf0cSEf2w6LvDu6UkvzL6T4zJGRQRT+ZF3k7dSTcDK1o1e3nTCjvjjcpwJylhlnQAw08d80W7i1NVtpnAzgvsAbo4Wj74YdMkcLnvfh/XDqjjhujoLEckt5HT6IGyA8zyhvXThAJp5WNZ3dDi3+SoI3eg2KWjBcu9jR7P8Sbbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOfyaZeY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742207311; c=relaxed/simple;
+	bh=UHHo92O52nWRNsisehdFxVI8rIastL0jHugBpGz18lk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lEm517jFPFWJjX5hE7S2ALFSE4G/kps2fjQJVdyOzXlYRtRGV+USoSBeYDzDx2gGVLSIqv9xBOEXxaOoIGIvrjzyk+9tcXC6I35pI5oH2shaoupp59tLZynpf0Oa6Du9efFEY7LbetFIbt0jk37ZKWSo6ePEEbeamJtgAkyySak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EfpOd3Uv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOfyaZeY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B4FC4CEE3;
-	Mon, 17 Mar 2025 10:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742207292;
-	bh=qS18CGlLGP0tpSmU21eSar6JGn73St59+DNZX7wwsqs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QOfyaZeYEI/OA3HfCH4/HVVnTYPCdzNiRnk9t3ntUUPQY4QNK9itk93JiwDD5Puxm
-	 Ok4wa+dXq2E1zhK7g55FYRd5x9E+TcyUVaUX6bHhKzk5z7THPCXGZuj1cacUNfnfWx
-	 5TtW6t7i6ym4G4T71RnJs3BXPyd9QR3FHM8HDze/ahDL7wa9osi1oRvHnuO6TWj7dO
-	 ldu8jLFmd305q+7nk0dXE5oVHYh+kvLjUWJ+IrdTeRtLZeceVqYlOYZGuxmLIbyzCM
-	 WZG8ZNqIMKJQjgJFXO6eEZsDDq+BYh6LIxjHiL7Ncle+hk81/7kLDTQ8ET5+0s9N6v
-	 p7pX9GTZtIeUg==
-Date: Mon, 17 Mar 2025 10:27:51 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Cc: <linux-iio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <lars@metafoo.de>,
- <Michael.Hennerich@analog.com>, <corbet@lwn.net>,
- <marcelo.schmitt1@gmail.com>
-Subject: Re: [PATCH v1 1/4] iio: adc: ad4000: Add support for SPI offload
-Message-ID: <20250317102751.5702fb82@jic23-huawei>
-In-Reply-To: <301fc83a961c4a2ef2ac980d0baa83d9d89a88c5.1741970538.git.marcelo.schmitt@analog.com>
-References: <cover.1741970538.git.marcelo.schmitt@analog.com>
-	<301fc83a961c4a2ef2ac980d0baa83d9d89a88c5.1741970538.git.marcelo.schmitt@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EfpOd3Uv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742207307;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l3ZpCYyD2or8iE1ALBW4gTcZc3gKrNq4HxsVD0AGmAU=;
+	b=EfpOd3UvUtAW6oBkiT/d4yVqk7u8QS7cBa4vS7rPVe6OvUlsN2bPvM42bTyhx78SO2JSQF
+	MEfSEjg1lyxwKtxJ9PWhrFrHKC4GmroObFWmOc0gbVCOQSOleytk0K3F6BFZ6cbaBlM9Mz
+	lSgo89DIzD2l3gtNnXx+T+HCrMqupaY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-302-e4jxckrlM8SWC6JhHT8eNg-1; Mon, 17 Mar 2025 06:28:26 -0400
+X-MC-Unique: e4jxckrlM8SWC6JhHT8eNg-1
+X-Mimecast-MFC-AGG-ID: e4jxckrlM8SWC6JhHT8eNg_1742207305
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so11881105e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 03:28:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742207305; x=1742812105;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l3ZpCYyD2or8iE1ALBW4gTcZc3gKrNq4HxsVD0AGmAU=;
+        b=m6Q3nQXeEdjTNiCnEOae545MbD4KqleuvqW8YVBfIZLlyS9QKZErx2NuSm4UNjqTt0
+         gWDo4+wiuZ8F2NxzDpXI570BbgxKcCvTlqXUDcoMNyUzPZ6YYX4T08N5TTZzk9NXI8LP
+         HdCepWEVSTLHZFSai1X4DwyJ/5xV5mVtxf3vLXXKGkaCAkr+NSSxumbJH5doRB5US1VJ
+         svk9sJJFcRNQ7TlkCsFigb6leUIjo+QD2QfRa3RGfO241aHrg6FqM2bcEovtygjE96Yw
+         r6Nc2/yWbFXOkoyt+CS8crP/eLCZUsFNMfuQhkO8mpQkubdoWoadvQG/DqlGRaSf6Mn7
+         EltA==
+X-Gm-Message-State: AOJu0YyLzqssRneYlF0y+K0d7obSFY5DGOgMQFenHmdZxxQNZPMw5c7r
+	n35VFSj1TtKTM5+jK+9wh0+TWzhsNr/1658b16reRMspIUvL7ELGiDtldvoksAszykTPuqaWBd9
+	1hHhUgzzD+1+0nN8SozWu23m0GJUgPa7EV6TQ6GO3NQrpujU0uFNMXf1uXQCmKg==
+X-Gm-Gg: ASbGncvQaZhCSO9xReI2ztGtF5ck4s744HTHkmsUeRWRFtjXKEiTtEkRzRcGS2Bc+Rm
+	QXKQwFhz1ALmXbTi9jhPeN5ki0gDvtlq+n0Sz0Jcq0z5pjTfx+JkdurALo8xjguF57AXcH7hXx6
+	6NkRLTphgEywkMwGNzUYgMDh1AFLQQE24iaQxAyqgTD9XyDbdJTftVW23CrP9lPOUutaGsqBHnN
+	W/1oxFjt3i3AxPdSfu5l2Gf/pM9R2NNWEW2vRQ5PcZbYHw5qrMc5k1RoLnxTCTzhwnALKEf2WzV
+	1k/esnWsqid4wGTfKMKOGiV5zWqB/fzyZY0X/wr9vNFLUHwjmWTilHftLt5Xd0sq0ZvtBFpG4Ql
+	FeI4RtHkGjz/mb5HOOmHkg3q5LJETxv6l
+X-Received: by 2002:a05:600c:1d05:b0:43c:efed:732c with SMTP id 5b1f17b1804b1-43d1ed0f578mr110241545e9.28.1742207304698;
+        Mon, 17 Mar 2025 03:28:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGLd82s7hmq4XzPKPiYFmG7ancuCXYwwSBwnPVIpiuyKnYj0ig9fIVTt/U5+lWFU0IRQ+PUlw==
+X-Received: by 2002:a05:600c:1d05:b0:43c:efed:732c with SMTP id 5b1f17b1804b1-43d1ed0f578mr110241385e9.28.1742207304369;
+        Mon, 17 Mar 2025 03:28:24 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (106.15.202.62.static.wline.lns.sme.cust.swisscom.ch. [62.202.15.106])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1fe065b0sm100080515e9.14.2025.03.17.03.28.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 03:28:23 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Aaron Lu <ziqianlu@bytedance.com>, Ben Segall <bsegall@google.com>, K
+ Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra
+ <peterz@infradead.org>, Josh Don <joshdon@google.com>, Ingo Molnar
+ <mingo@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>, Chengming Zhou
+ <chengming.zhou@linux.dev>, Chuyi Zhou <zhouchuyi@bytedance.com>
+Subject: Re: [RFC PATCH 1/7] sched/fair: Add related data structure for task
+ based throttle
+In-Reply-To: <CANCG0GcxLJOnNSZgYVYYh_Ug-sVpCOmsf3VATELrKrs_6jovQw@mail.gmail.com>
+References: <20250313072030.1032893-1-ziqianlu@bytedance.com>
+ <CANCG0GcxLJOnNSZgYVYYh_Ug-sVpCOmsf3VATELrKrs_6jovQw@mail.gmail.com>
+Date: Mon, 17 Mar 2025 11:28:23 +0100
+Message-ID: <xhsmh7c4ooss8.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Fri, 14 Mar 2025 14:18:39 -0300
-Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
+Hi, just an FYI, I didn't receive the cover letter (PATCH 0/7) and it can't
+be found on lore either:
 
-> FPGA HDL projects can include a PWM generator in addition to SPI-Engine.
-> The PWM IP is used to trigger SPI-Engine offload modules that in turn set
-> SPI-Engine to execute transfers to poll data from the ADC. That allows data
-> to be read at the maximum sample rates. Also, it is possible to set a
-> specific sample rate by setting the proper PWM duty cycle and related state
-> parameters, thus allowing an adjustable ADC sample rate when a PWM (offload
-> trigger) is used in combination with SPI-Engine.
-> 
-> Add support for SPI offload.
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+  https://lore.kernel.org/lkml/20250313072030.1032893-1-ziqianlu@bytedance.com/
 
-A few minor things inline.  
-
-Jonathan
-
-> diff --git a/drivers/iio/adc/ad4000.c b/drivers/iio/adc/ad4000.c
-> index 4fe8dee48da9..6c9b71e7a2fb 100644
-> --- a/drivers/iio/adc/ad4000.c
-> +++ b/drivers/iio/adc/ad4000.c
-
-> +
-> +static int ad4000_offload_buffer_postdisable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4000_state *st = iio_priv(indio_dev);
-> +
-> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
-
-Trivial. Prefer a blank line before a 'simple return' like this one.
-
-> +	return 0;
-> +}
-
-
-> +
-> +/*
-> + * This executes a data sample transfer when using SPI offloading for when the
-> + * device connections are in "3-wire" mode, selected when the adi,sdi-pin device
-> + * tree property is absent. In this connection mode, the ADC SDI pin is
-> + * connected to MOSI or to VIO and ADC CNV pin is connected to a SPI controller
-> + * CS (it can't be connected to a GPIO).
-> + *
-> + * In order to achieve the maximum sample rate, we only do one transfer per
-> + * SPI offload trigger. This has the effect that the first sample data is not
-> + * valid because it is reading the previous conversion result. We also use
-
-As below. Should mention what happens with that invalid sample.
-
-> + * bits_per_word to ensure the minimum of SCLK cycles are used. And a delay is
-> + * added to make sure we meet the minimum quiet time before releasing the CS
-> + * line. Plus the CS change delay is set to ensure that we meet the minimum
-> + * quiet time before asserting CS again.
-> + *
-> + * This timing is only valid if turbo mode is enabled (reading during conversion).
-> + */
-> +static int ad4000_prepare_offload_turbo_message(struct ad4000_state *st,
-> +						const struct iio_chan_spec *chan)
-> +{
-> +
-> +/*
-> + * This executes a data sample transfer when using SPI offloading for when the
-> + * device connections are in "3-wire" mode, selected when the adi,sdi-pin device
-> + * tree property is set to "high". In this connection mode, the ADC SDI pin is
-> + * connected to VIO and ADC CNV pin is connected to a SPI controller CS (it
-> + * can't be connected to a GPIO).
-> + *
-> + * In order to achieve the maximum sample rate, we only do one transfer per
-> + * SPI offload trigger. This has the effect that the first sample data is not
-> + * valid because it is reading the previous conversion result. We also use
-
-Say what happens to that invalid sample.  Is it dropped or provided to userspace
-as if it were valid?  (I hope dropped!)
-
-> + * bits_per_word to ensure the minimum of SCLK cycles are used. And a delay is
-> + * added to make sure we meet the minimum quiet time before releasing the CS
-> + * line. Plus the CS change delay is set to ensure that we meet the minimum
-> + * conversion time before asserting CS again.
-> + *
-> + * This timing is only valid if turbo mode is disabled (reading during acquisition).
-> + */
-> +static int ad4000_prepare_offload_message(struct ad4000_state *st,
-> +					  const struct iio_chan_spec *chan)
-> +
-
-...
-
->  /*
->   * This executes a data sample transfer for when the device connections are
->   * in "3-wire" mode, selected when the adi,sdi-pin device tree property is
-> @@ -689,7 +975,9 @@ static int ad4000_prepare_3wire_mode_message(struct ad4000_state *st,
->  	xfers[0].cs_change_delay.unit = SPI_DELAY_UNIT_NSECS;
->  
->  	xfers[1].rx_buf = &st->scan.data;
-> -	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-> +	xfers[1].len = chan->scan_type.realbits > 16 ? 4 : 2;
-> +	if (chan->scan_type.endianness != IIO_BE)
-
-As below. Endianness being related to bits_per_word is odd. So needs
-explanation.
-
-> +		xfers[1].bits_per_word = chan->scan_type.realbits;
->  	xfers[1].delay.value = st->time_spec->t_quiet2_ns;
->  	xfers[1].delay.unit = SPI_DELAY_UNIT_NSECS;
->  
-> @@ -719,7 +1007,9 @@ static int ad4000_prepare_4wire_mode_message(struct ad4000_state *st,
->  	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
->  
->  	xfers[1].rx_buf = &st->scan.data;
-> -	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-> +	xfers[1].len = chan->scan_type.realbits > 16 ? 4 : 2;
-> +	if (chan->scan_type.endianness != IIO_BE)
-
-This is odd enough to require a comment.  Why is endianness relevant?
-
-> +		xfers[1].bits_per_word = chan->scan_type.realbits;
-> @@ -733,6 +1023,9 @@ static int ad4000_config(struct ad4000_state *st)
->  	if (device_property_present(&st->spi->dev, "adi,high-z-input"))
->  		reg_val |= FIELD_PREP(AD4000_CFG_HIGHZ, 1);
->  
-> +	if (st->using_offload)
-> +		reg_val |= FIELD_PREP(AD4000_CFG_TURBO, 1);
-> +
->  	return ad4000_write_reg(st, reg_val);
->  }
->  
-
-
-> +		if (st->using_offload) {
-> +			indio_dev->channels = &chip->reg_access_offload_chan_spec;
-Set num_channels here
-> +			ret = ad4000_prepare_offload_turbo_message(st, indio_dev->channels);
-> +			if (ret)
-> +				return dev_err_probe(dev, ret,
-> +						     "Failed to optimize SPI msg\n");
-> +		} else {
-> +			indio_dev->channels = chip->reg_access_chan_spec;
-and here as well. I think you can use ARRAY_SIZE() to make the connection even more
-obvious.
-
-> +		}
-> +
-> +		/*
-> +		 * Call ad4000_prepare_3wire_mode_message() so single-shot read
-> +		 * SPI messages are always initialized.
-> +		 */
->  		ret = ad4000_prepare_3wire_mode_message(st, &indio_dev->channels[0]);
->  		if (ret)
-> -			return ret;
-> +			return dev_err_probe(dev, ret,
-> +					     "Failed to optimize SPI msg\n");
->  
->  		ret = ad4000_config(st);
->  		if (ret < 0)
-> @@ -806,19 +1134,36 @@ static int ad4000_probe(struct spi_device *spi)
->  
->  		break;
->  	case AD4000_SDI_VIO:
-> -		indio_dev->info = &ad4000_info;
-> -		indio_dev->channels = chip->chan_spec;
-> +		if (st->using_offload) {
-> +			indio_dev->info = &ad4000_offload_info;
-> +			indio_dev->channels = &chip->offload_chan_spec;
-
-here as well.
-
-> +
-> +			spi->cs_hold.value = AD4000_TCONV_NS;
-> +			spi->cs_hold.unit = SPI_DELAY_UNIT_NSECS;
-> +			ret = ad4000_prepare_offload_message(st, indio_dev->channels);
-> +			if (ret)
-> +				return dev_err_probe(dev, ret,
-> +						     "Failed to optimize SPI msg\n");
-> +		} else {
-> +			indio_dev->info = &ad4000_info;
-> +			indio_dev->channels = chip->chan_spec;
-
-Also set size here.  Obviously this means a little duplication but still good
-to keep them together.
-
-
-> +		}
-
->  	case AD4000_SDI_GND:
-> @@ -830,7 +1175,10 @@ static int ad4000_probe(struct spi_device *spi)
->  	}
->  
->  	indio_dev->name = chip->dev_name;
-> -	indio_dev->num_channels = 2;
-> +	if (st->using_offload)
-> +		indio_dev->num_channels = 1;
-> +	else
-> +		indio_dev->num_channels = 2;
-
-Move this up to where you set channels so that the array
-and size are set together.
-
->  
->  	ret = devm_mutex_init(dev, &st->lock);
->  	if (ret)
-> @@ -853,12 +1201,6 @@ static int ad4000_probe(struct spi_device *spi)
->  
->  	ad4000_fill_scale_tbl(st, &indio_dev->channels[0]);
->  
-> -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
-> -					      &iio_pollfunc_store_time,
-> -					      &ad4000_trigger_handler, NULL);
-> -	if (ret)
-> -		return ret;
-> -
->  	return devm_iio_device_register(dev, indio_dev);
->  }
->  
-> @@ -947,3 +1289,4 @@ module_spi_driver(ad4000_driver);
->  MODULE_AUTHOR("Marcelo Schmitt <marcelo.schmitt@analog.com>");
->  MODULE_DESCRIPTION("Analog Devices AD4000 ADC driver");
->  MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS("IIO_DMAENGINE_BUFFER");
+Not sure what went wrong there, but could you consider resending that?
+Thanks.
 
