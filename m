@@ -1,229 +1,236 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADAFC1E1E03
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 23:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1519B205E31;
+	Mon, 17 Mar 2025 23:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742255706; cv=none; b=F5DgCmAdG5Kp/G4/F/stnZo7odq0eslg7Viq+z4V97NfXibXM5sYZWSz1O/AC4vZQ+MwVo3flcjbRCnbOU07cG0WPjnHMrDWhzj0rdZW1AapJ530UppiJJK3ZaaEzz82nOOtJYG6fmQA/oV+3geZwQTy4lS9o76ZDbLzC6b7dL4=
+	t=1742255810; cv=none; b=VNR6gv8pKQHEVCDwGvrqA9/Wqttt9bAot5cyeordnCW4VFJwdHbXH5+z1Jw46BLxh6BAYnY3zpo06myNCQBEJXGirgRQhsShS+MHlu+AN/tr2Sy//5nNJHTcbBHBgh21bg4eg3Kh8L4I1mTfjrZ8KH8ceD9xZ12c7C5sew/vhdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742255706; c=relaxed/simple;
-	bh=Bb1xtCjgennkMrbNnKbCzke2aMsPLm65RxApeP/uuHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ne5grjJ/6DUcUxb5OMLR0MKCJOQA7R2cmZsXctUuk2PofoknV19O5DCYCno4s8YLsH2PCjHFxKQNAMeRlvhh/x0/s2OqjKCgq6tHvH3jn1Te2V+WbLSenmJdt1Z+oQ5C2t7o57M8V/atvX3JIZKzbZExkMayieqHGUiSxATz7vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=bNE6HHtH; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
+	s=arc-20240116; t=1742255810; c=relaxed/simple;
+	bh=frsxwETiNtlFdIt0NclDqjhHJKVXXDmkYR4WAjsd2ik=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sC919qKgYrhjQnjfc4YnnuYcMIFfQ61hNUZmIZZ7mKhUUmKAtHxA5xU+vhbuMFXK81oLJVrHtOoRnWxtPGp/pY6rZM8KoP/eM8TaNy/KMIcONnHrlnwPWtxwI/uv8Zyf/wzr5VlpFWNzafYGhjNtbfignVTOarVbLiUwcnYtkKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0DiRt24; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="bNE6HHtH"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-224019ad9edso44682705ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:55:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0DiRt24"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso50564581fa.1;
+        Mon, 17 Mar 2025 16:56:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1742255704; x=1742860504; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2BaEesGZQPxAj4sEFCUyAgXUqotSKFJXiU7Y/LCyccU=;
-        b=bNE6HHtHqTSe/mznDW1Fr6SqY7eN18D7KI/64k2IDubpvMeuE6O1i5l/nY6mpINQyW
-         OR7KHDbWjjWw8H9V9aoHhl1joFfL3fv7Zf8fNpql/RlEUicY31zNTZt2O9xQmd2xJmlq
-         Ihl8oe7eLRh+EQxzgpAj35DbGKpZ99k3XAs5U0X44gcp8tMrhQLNVG5yL4T3cldxr9sg
-         BiHL7HtLYJdJ+y8o+bgnRLeBEzFm165VJoM9KyWH2X9fVjJEQxM+LNh+qQJsW+LO1XiA
-         65cSCZiuENsBVimAO5Tz1Cb/Uj3AMnQE0tc+6fvcAWvNXiuERRgtcDV3uSDnhdnjmYw2
-         Uyzg==
+        d=gmail.com; s=20230601; t=1742255806; x=1742860606; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bDzwwEX0nzK9nfZWfu0iGOntI/KAAMglHEzciFVP+Uk=;
+        b=m0DiRt24srQPx/1HldJj9ZIbf3KkB07k96WCYL72gsg35KVosTow+8cxdgriO65N0s
+         3FnTBKSaf2dKGLkIfFbmAcCnoNltz7+PDEiGXA9xim80aNPG1CnY11Qj+OhrJ0AnfF1V
+         t7qFUkz6D8DU9y5sY7UPxVQ4PgLD3PLT5uNRdtgFEzI5exYpIWcZGIR4pGFla+Fmw5k+
+         AWtg4TU2gvsz1/t82ykpUnLMayLc2pUmE7tnB+r4nKwmHIYh2dpAbrYuUM59mO7YuxDp
+         V0rFQkwYFhVsaxmQ0miPA4b1bIw8b2qxrQObcH3jCKJbLVZ0VQgFQHNsXKPHU3I0keAt
+         3GWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742255704; x=1742860504;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2BaEesGZQPxAj4sEFCUyAgXUqotSKFJXiU7Y/LCyccU=;
-        b=D2v5P7xnN+bV0fo7p7eP+wvrsGmeQNRbfwRY9LcC4InHOKqbeWLBYAPWNK99oPehAl
-         aWmIqLY/zZ8wGKScRPteo9W7OCKtEwG+9ylkwCbLhcTIb2pq8a4LeoxKO8cr3KKF0EC8
-         zha/0YOkUWUcrWzhlptEfHtbfiq6zE14Jb4IRLcgO/UO33eKiQ6LwPaxE4AhCesAZumh
-         LaDtBBOUC0RkjD2VO/BksXEof/BxEGFJHArD2vz8mAc0VNAUW83fYD0EE+CMxpkoWQuH
-         KkL+aq1sU9Es/HkpOQ/I846gW9Wd5IJzGo7hrXPZDGbokU8EJDI8a7rvow7zC994+6tV
-         TFdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGzNh82PVKB3YGfgUAiJTbYmH8AMhXFFaFluRAS9w5yU7r8WkP/tMtBVfWEqaBgqzahHG7UkjkGLFdXS8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrhPsstXdDMWc8zOo0R7B7e+o1LuhqUZY5NlFNEfYP7hOv+TZ+
-	Y0zcbHiMV6sf4/pqPj0oL9Gxtl5Ozg7kiIKWwfZk+K4xuyBI9q7WAU4e+tad0A==
-X-Gm-Gg: ASbGnctZwyTSYdtJC3y4DXFapcu/LbqSo73pRiZpTBcZSZq8B8xR0RZAG8XaPOMxm9Z
-	qZS97n2lgmg3j97ZiWQSqI21B0IUZrJGC1NU4eFV+pW2UU0MdkHeJLLlSe/cOHfTUdb0Eg3wFgK
-	Uxr9sHiKg1VapuoPRo9sHbKtK46mfSajhHuKbd2k/nk5Ko1582U5mm4Q6iK2PyA9mcuv8y0o26i
-	cpURwOnjDnGvX5CJs3ETla39HqropKaaMMeBu2XoJsAoW55i74xKObzJo8Q8kyrPbEd4iXqG7lP
-	kEC57Pc6Kse1qTpCN21sSkujFBOhL9IbhdCT+Xix7fZ+7d3edNa/X26jv4LAiTSkvw==
-X-Google-Smtp-Source: AGHT+IEal8kGqBORazjLpmbhAyMjWbAph9OrXPa4QlNZhh/T7g7iTF+vSLL4w1ItmIz6KJ2LE1skXg==
-X-Received: by 2002:a05:6a00:a01:b0:736:3c2b:c38e with SMTP id d2e1a72fcca58-73757246dfbmr1533920b3a.13.1742255703849;
-        Mon, 17 Mar 2025 16:55:03 -0700 (PDT)
-Received: from [192.168.50.200] ([202.172.96.87])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af594eb973dsm4686757a12.19.2025.03.17.16.55.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Mar 2025 16:55:03 -0700 (PDT)
-Message-ID: <e0075d0c-45ae-437a-b873-e892e4e51dc3@tenstorrent.com>
-Date: Tue, 18 Mar 2025 10:54:59 +1100
+        d=1e100.net; s=20230601; t=1742255806; x=1742860606;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bDzwwEX0nzK9nfZWfu0iGOntI/KAAMglHEzciFVP+Uk=;
+        b=KR4eZqgtzIPuLbJ+cJYcPr8qWGLFGKWU4NNMXQf1cGy6dR/LRnD1zX7EKiKHfERVd3
+         yDHri91jKlR1YG94DGKevrzGgOrLrNKLpLnJ4fZU8DS8L4UmlhOuN8GV/ZPwqfE2r+Xb
+         Z6PcHu4TCBpVTurJ6GVMyl0b+h6QGweyLMAn8xpgZkFLL35GXYTusEJ+b2sQFcWGxhKy
+         6KcRxc97YNeIMV3AlTCr41GUdXEOIXS5eoCwbYvbCFls6YfNBNMRDZwFwoSVDFTPOXqS
+         0RHLnOoyn19fDBqAs4a71mVT/fPCl6H96yxyIUAlZ9Un/vHROUZY/E8OeeXwnvw5t218
+         Firw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJw+r5uvpuMD2cmSCseIrfY6KS8978hyBQEwRTYiPkw0d80Z0ZoOd8GthEfop7BLmilIqhV1HLAOj/0PI=@vger.kernel.org, AJvYcCVuC4Jgj5+FKwRXw9AkvZI+FmiBE+aRkZYkImNmTiDpH3cQZkzAGoSYypDcwwLFeESrjS9WUKhzGDPZiHwjC9E=@vger.kernel.org, AJvYcCWOPrV72DcGSGFDM7nITIwYTX/bywYFXNSuQAeExQkhlTAPOifrAtl66r3D2BOfrwdfUXZ7L4rkdG2AaP+o2qEv@vger.kernel.org, AJvYcCWauygLtOewYOzQmLtmxv3Zv/1YpCTkDHddEBligbtmIX+AgLu5ca6WpAT6DGFvscdG2TWOz7J+Wi0pW5F+@vger.kernel.org, AJvYcCWvyiPPEice4nCWhOvm5+cK7lguoh1lKJOZOGpF3FVnTh++iobh7G86P2QPocOXw8+4G32OnKLQByto@vger.kernel.org, AJvYcCWy0c8TxD8Mn7K2Xb2Wo3sZgYBD4aDafK3uyA0z41vwfGW/4WDlqXNXknKGSW6L2OxOO5Mb0lpcYSMWw34P@vger.kernel.org, AJvYcCXJk9oyJD0KBkh7fjSWJMqcpgy/rXlu2U7Pdv71tIado3vPrP1TyS0pzOQZV+NUBpsIjiyDz+dsWjh+@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTQqCD5c+hIHr1sXSG7LiN+QCnwrGyWJf5aGpGYsShDYeOtm/m
+	rzglB5bJdO81u1UaNZe/KlLWnY376c4N8a0O1YVeUmRco3PZZxHtIhzoUebfmUro3/AO+9f2L00
+	iyiE0n/OH1H33YllgEUTlFv5lnXA=
+X-Gm-Gg: ASbGncsgMx60BHrgxdaaFOfF3y2ojASARNlBqfb2XRNN6qwY0E4Lncm00jwDAAocBg5
+	zldUG3O1ehLMHHw71EbTpVy9fCoCEto3I1G+7IENn8DyrhHpkJCDcilE+PijcJtV9PJ/UwFrp87
+	qjk3RGuCF5+QY63Zp0FI2I0iIF4j1heUANmEr/T4/+szvK+4PDkzyCSHV1+Vri
+X-Google-Smtp-Source: AGHT+IH42/4wrylLmfpOp50lcSYK/BDvlEhWGNv8TfafZeMnLoyPlmyjVCpJCsJYwJn1byhH6egKoQrrVlMd9fomBg4=
+X-Received: by 2002:a2e:9495:0:b0:30b:fc16:d482 with SMTP id
+ 38308e7fff4ca-30cd95874bemr14031351fa.3.1742255805779; Mon, 17 Mar 2025
+ 16:56:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXT] Re: [PATCH v3 1/4] riscv: implement user_access_begin() and
- families
-To: Alexandre Ghiti <alex@ghiti.fr>, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, paul.walmsley@sifive.com, charlie@rivosinc.com,
- jrtc27@jrtc27.com, ben.dooks@codethink.co.uk
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- jszhang@kernel.org
-References: <20250221000924.734006-1-cyrilbur@tenstorrent.com>
- <20250221000924.734006-2-cyrilbur@tenstorrent.com>
- <9a94c74f-4826-479f-aaa0-e87b3bfd30ff@ghiti.fr>
-Content-Language: en-US
-From: Cyril Bur <cyrilbur@tenstorrent.com>
-In-Reply-To: <9a94c74f-4826-479f-aaa0-e87b3bfd30ff@ghiti.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAJ-ks9kBp8zPfaQuZRb0Unms1b13hDb5cRypceO8TWFR0Ty5Ww@mail.gmail.com>
+ <67d864b2.0c0a0220.39fb6f.4df4@mx.google.com> <CAJ-ks9n8mwt5q9unqfkfSHj9=ELJHtqsXM-xQ8jsbXeJX6Uyfg@mail.gmail.com>
+ <67d8671d.050a0220.3305ab.6372@mx.google.com> <CAJ-ks9=uHjJrzM0ruvm4v4wr8LygRMP-1orWBy_9OiNNeQr0ow@mail.gmail.com>
+ <CAJ-ks9=Qcmvbm=YGJ=jrX_+YdMsftk=FAimszYZB1OUuV4diZw@mail.gmail.com>
+ <67d885ff.0c0a0220.111215.5644@mx.google.com> <CAJ-ks9kYB1b4XsQcFb=NScPq+R+13U+Sv-6opi-yp6=ZjuLD_g@mail.gmail.com>
+ <67d88a1d.050a0220.2cdacf.4adf@mx.google.com> <CAJ-ks9kg4Br=56HT7T5sWpoMKhRqT_2x+cpQAWoyrEG3qyqQ6Q@mail.gmail.com>
+ <67d895cc.050a0220.99d33.5adc@mx.google.com>
+In-Reply-To: <67d895cc.050a0220.99d33.5adc@mx.google.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 17 Mar 2025 19:56:09 -0400
+X-Gm-Features: AQ5f1JrrvoV8Sf5x8icfXFWf8pyoMC94sCpioNeEDsUgPhb1ePC4caPuoCMuMpU
+Message-ID: <CAJ-ks9ko3FGtpCnTwhuAb+KHwGczN_H8tM1=SQjRc3M-LgZrqA@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 17, 2025 at 5:36=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Mon, Mar 17, 2025 at 04:53:18PM -0400, Tamir Duberstein wrote:
+> > On Mon, Mar 17, 2025 at 4:46=E2=80=AFPM Boqun Feng <boqun.feng@gmail.co=
+m> wrote:
+> > >
+> > > On Mon, Mar 17, 2025 at 04:35:42PM -0400, Tamir Duberstein wrote:
+> > > > On Mon, Mar 17, 2025 at 4:28=E2=80=AFPM Boqun Feng <boqun.feng@gmai=
+l.com> wrote:
+> > > > >
+> > > > > On Mon, Mar 17, 2025 at 03:05:45PM -0400, Tamir Duberstein wrote:
+> > > > > > On Mon, Mar 17, 2025 at 2:50=E2=80=AFPM Tamir Duberstein <tamir=
+d@gmail.com> wrote:
+> > > > > > >
+> > > > > > > On Mon, Mar 17, 2025 at 2:17=E2=80=AFPM Boqun Feng <boqun.fen=
+g@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > Then we should fix clippy or how we set msrv rather adding =
+the stub.
+> > > > > > > > @Miguel?
+> > > > > > >
+> > > > > > > I filed https://github.com/rust-lang/rust-clippy/issues/14425=
+.
+> > > > > >
+> > > > > > I don't think we can wait for that to be fixed, though. Usually=
+ clippy
+> > > > > > is distributed with rustc via rustup, so even if this is eventu=
+ally
+> > > > > > fixed, all versions between 1.84.0 and the fix will need this
+> > > > > > workaround until MSRV is >=3D 1.84.0.
+> > > > >
+> > > > > We need to take one step back to evalute this "workaround".
+> > > > >
+> > > > > First, expose_provenance() and with_exposed_provenance{,_mut}() A=
+PI are
+> > > > > clearly defined as equavilent to `as` operation [1]. Therefore, t=
+he
+> > > > > changes in this patch doing the conversion with expose_provenance=
+() and
+> > > > > with_exposed_provenance{,_mut}() don't change anything related to
+> > > > > provenance in practice.
+> > > > >
+> > > > > I do agree we want to use the explicit provenance API, but I don'=
+t think
+> > > > > we want to introduce some API that we know we will change them la=
+tter
+> > > > > when we bump the rustc minimal version. So the question is: are t=
+hese
+> > > > > stubs what we want even though in the future our minimal rustc ve=
+rsion
+> > > > > stablizes provenance API? If not, then the cost of this patch can=
+not
+> > > > > justify its benefits IMO.
+> > > > >
+> > > > > Now let's also look into why we choose a msrv for clippy, I would=
+ guess
+> > > > > it's because we need to support all the versions of rustc startin=
+g at
+> > > > > 1.78 and we want clippy to report a problem based on 1.78 even th=
+ough
+> > > > > we're using a higher version of rustc. But for this particular ca=
+se, we
+> > > > > use a feature that has already been stablized in a higher version=
+ of
+> > > > > rustc, which means the problem reported by clippy doesn't help us=
+, nor
+> > > > > does it provide better code. Frankly speaking, I think we have ot=
+her
+> > > > > ways to ensure the support of all rustc versions without a msrv f=
+or
+> > > > > clippy. If I was to choose, I would simply drop the msrv. But may=
+be I'm
+> > > > > missing something.
+> > > > >
+> > > > > The point is tools should help us to write good and maintainable =
+code,
+> > > > > we shouldn't introduce complicated structure of code just because=
+ some
+> > > > > tools fail to do its job.
+> > > > >
+> > > > > [1]: https://doc.rust-lang.org/std/ptr/fn.with_exposed_provenance=
+_mut.html
+> > > >
+> > > > Even if we globally disable this clippy lint, we still need stubs
+> > > > because exposed_provenance was added in 1.79.0. Did your suggestion
+> > > > address this? Perhaps I missed it.
+> > >
+> > > No, I didn't.
+> > >
+> > > That's a separate topic though, because I can see the argument that:
+> > > because with_exposed_provenance() is a function rather than a method,=
+ it
+> > > won't be very benefical to use ptr::with_exposed_provenance() instead=
+ of
+> > > kernel::with_exposed_provenance(), therefor these stubs of
+> > > exposed_provenance make sense to exist. But I don't think the same
+> > > argument works for ptr::{with_,map_,}addr().
+> >
+> > What about `pointer::expose_provenance`? It's a method that was added i=
+n 1.79.0.
+> >
+>
+> We have a few options:
+>
+> 1) we can decide to use funtion-version of expose_provenance() (i.e. the
+>    stub), if we feel the symmetry with with_exposed_provenance() is
+>    a strong rationale. This also means we won't likely use
+>    pointer::expose_provenance() in the future. That is, although kernel
+>    doesn't have stable internal API, but in the foreseeable future, we
+>    decide to use funtion-version of expose_provenance().
 
+I don't think we want these stubs forever.
 
-On 15/3/2025 12:28 am, Alexandre Ghiti wrote:
-> Hi Cyril,
-> 
-> On 21/02/2025 01:09, Cyril Bur wrote:
->> From: Jisheng Zhang<jszhang@kernel.org>
->>
->> Currently, when a function like strncpy_from_user() is called,
->> the userspace access protection is disabled and enabled
->> for every word read.
->>
->> By implementing user_access_begin() and families, the protection
->> is disabled at the beginning of the copy and enabled at the end.
->>
->> The __inttype macro is borrowed from x86 implementation.
->>
->> Signed-off-by: Jisheng Zhang<jszhang@kernel.org>
->> Signed-off-by: Cyril Bur<cyrilbur@tenstorrent.com>
->> ---
->>   arch/riscv/include/asm/uaccess.h | 63 ++++++++++++++++++++++++++++++++
->>   1 file changed, 63 insertions(+)
->>
->> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/ 
->> asm/uaccess.h
->> index fee56b0c8058..43db1d9c2f99 100644
->> --- a/arch/riscv/include/asm/uaccess.h
->> +++ b/arch/riscv/include/asm/uaccess.h
->> @@ -61,6 +61,19 @@ static inline unsigned long 
->> __untagged_addr_remote(struct mm_struct *mm, unsigne
->>   #define __disable_user_access()                            \
->>       __asm__ __volatile__ ("csrc sstatus, %0" : : "r" (SR_SUM) : 
->> "memory")
->> +/*
->> + * This is the smallest unsigned integer type that can fit a value
->> + * (up to 'long long')
->> + */
->> +#define __inttype(x) __typeof__(        \
->> +    __typefits(x,char,            \
->> +      __typefits(x,short,            \
->> +        __typefits(x,int,            \
->> +          __typefits(x,long,0ULL)))))
->> +
->> +#define __typefits(x,type,not) \
->> +    __builtin_choose_expr(sizeof(x)<=sizeof(type),(unsigned type)0,not)
->> +
->>   /*
->>    * The exception table consists of pairs of addresses: the first is the
->>    * address of an instruction that is allowed to fault, and the 
->> second is
->> @@ -368,6 +381,56 @@ do {                                    \
->>           goto err_label;                        \
->>   } while (0)
->> +static __must_check __always_inline bool user_access_begin(const void 
->> __user *ptr, size_t len)
->> +{
->> +    if (unlikely(!access_ok(ptr,len)))
->> +        return 0;
->> +    __enable_user_access();
->> +    return 1;
->> +}
->> +#define user_access_begin(a,b)    user_access_begin(a,b)
-> 
-> 
-> Nit: no need for (a,b) here
-> 
-> 
->> +#define user_access_end()    __disable_user_access()
->> +
->> +static inline unsigned long user_access_save(void) { return 0UL; }
->> +static inline void user_access_restore(unsigned long enabled) { }
->> +
->> +/*
->> + * We want the unsafe accessors to always be inlined and use
->> + * the error labels - thus the macro games.
->> + */
->> +#define unsafe_put_user(x, ptr, label)    do {                \
->> +    long __err = 0;                            \
->> +    __put_user_nocheck(x, (ptr), __err);                \
->> +    if (__err) goto label;                        \
->> +} while (0)
->> +
->> +#define unsafe_get_user(x, ptr, label)    do {                \
->> +    long __err = 0;                            \
->> +    __inttype(*(ptr)) __gu_val;                    \
->> +    __get_user_nocheck(__gu_val, (ptr), __err);            \
->> +    (x) = (__force __typeof__(*(ptr)))__gu_val;            \
->> +    if (__err) goto label;                        \
->> +} while (0)
->> +
->> +#define unsafe_copy_loop(dst, src, len, type, label)                \
->> +    while (len >= sizeof(type)) {                        \
->> +        unsafe_put_user(*(type *)(src),(type __user *)(dst),label);    \
->> +        dst += sizeof(type);                        \
->> +        src += sizeof(type);                        \
->> +        len -= sizeof(type);                        \
->> +    }
->> +
->> +#define unsafe_copy_to_user(_dst,_src,_len,label)            \
->> +do {                                    \
->> +    char __user *__ucu_dst = (_dst);                \
->> +    const char *__ucu_src = (_src);                    \
->> +    size_t __ucu_len = (_len);                    \
->> +    unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u64, label);    \
->> +    unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u32, label);    \
->> +    unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u16, label);    \
->> +    unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u8, label);    \
->> +} while (0)
->> +
->>   #else /* CONFIG_MMU */
->>   #include <asm-generic/uaccess.h>
->>   #endif /* CONFIG_MMU */
-> 
-> There is a bunch of checkpatch errors to fix, see https:// 
-> gist.github.com/linux-riscv-bot/98f23fd1b04d6da7c23c6cb18245a158
-> 
+> 2) we can introduce a PtrExt trait for <1.79
+>
+>    pub trait PtrExt<T> {
+>        fn expose_provenance(self) -> usize;
+>    }
+>
+>    and
+>
+>    impl<T> PtrExt<T> for *const T {
+>         ...
+>    }
+>
+>    and `PtrExt` in kernel::prelude.
+>
+>    (we need to #[allow(unstable_name_collisions)] to make that work)
 
-Oops, yeah will fix.
+I like this idea, but I can't get it to work. When both inherent and
+trait methods are available, the compiler seems to prefer the inherent
+method.
 
-> Why isn't there an implementation for unsafe_copy_from_user()? Let's 
-> take the following example:
-> 
-> user_access_begin()
-> unsafe_copy_from_user()
-> unsafe_get_user() <==== This one will fail since unsafe_copy_from_user() 
-> -> raw_copy_from_user() -> __asm_vector_usercopy() which enables and 
-> disables the SUM bit.
-> user_access_end()
+>    We can also make with_exposed_provenance() use the same *Ext trick,
+>    and remove it when we bump the minimal rustc version.
 
-I'll have to look into that - thanks for the feedback.
+This part I don't understand. What would we impl the Ext on, given
+that `with_exposed_provenance` is a free function?
 
-> 
-> Another thing is that with this patch, we lose the vectorized user 
-> access functions, can you fix that too?
-
-I'll have a look at this also.
-
-> 
-> Thanks,
-> 
-> Alex
-> 
-> 
-> 
-
+Option 3) take this series without the last commit, and revisit when
+MSRV >=3D 1.79.0 or >=3D 1.84.0?
