@@ -1,87 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABABD22FAF8;
-	Mon, 17 Mar 2025 10:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D60A2356D1;
+	Mon, 17 Mar 2025 10:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742206672; cv=none; b=o7gkvJuOGiNH+YNm1FhCAhE8k3ekSV0actuBl6xkDkdlslVHUr/f4T7kaCLxCNDUmDj7ztG/cbFjYc4V+cfHN6gxRrbJ/3kCnKpLXFdCw0bf7X/Hx4hFTaquwN6IAnH2sN+rTdtsDjhn/jei7aGsDXSAO9UP5Kb4+JJ98kSZuR0=
+	t=1742206683; cv=none; b=bAiaMz7ceg3nA+m7M4l3Go366ejplLl8tg0fzIH1spZtYiUe6L53D/n2VsoYIMBSsQSRbMEY0kx35b6oMvW6YOhY8tsil1vBHH3x3kfodBrmE1OW+2JzGCiBJN4ArrnQrgW7pyKg1p4WvtNZwF/Z/KTkr9+R5mGY5BFVujuqSC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742206672; c=relaxed/simple;
-	bh=pmPCvimg6kIk5bQWxxaiUbnm0Bx4tJEcWlswhbjxRRM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=n2Q4J7eAh+omBdpw2tpn87MOz0xVZ5ye2lMYVYba1fJzDRKlC+/HxECYvarsZ9q90eecYi0FB7Nner8janWOfSn9fxHdU6WNVRv9VoSxktRB/9zqojAkO5tVkvzLx1GR00lV9YLpcTwAd3tgUAQxeDJL/ymp8Xwpi+geVJuTPFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QBPyKZeJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742206683; c=relaxed/simple;
+	bh=SC+1xziw5XXd+kvWuj4mIDXmIEY0sRJCuuMxVVRqfok=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pJML7RqTn9T3j6GcE/SvgUNtOtuD1vw932k5dPSVGGSRhYEFWPEAUVvAglsHlPu0ZhI9iUkXro+Mz9wpxDjcCjwKO5VkTuNW5pjcQrPe1i3uBbQGP5BAhWa4Z/aHOv88kFvjOjOPK5jOyn3OndRByCE7x8WniVnfgcYo9VVsjDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=LUPAC3mP; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=mx1B+dMY; arc=none smtp.client-ip=220.130.44.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBPyKZeJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440DDC4CEE9;
-	Mon, 17 Mar 2025 10:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742206672;
-	bh=pmPCvimg6kIk5bQWxxaiUbnm0Bx4tJEcWlswhbjxRRM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=QBPyKZeJ+JopUOzv5v8HMb9dVL2HLdPPZLRBIJdUtwhcrt5bpiT/i9D2gUM3zjKW2
-	 lEDVxx+FqMv6aIdWGSzs7fCEHXLnph6AVNlS13H0ljccTnLdFVht08Ko5c/TlT5F7+
-	 O0Du3auymsRbGujXNteiTXTp5aOwND6lSpOGTNlGWe4/zmkhnEFTpgQWna73coElUC
-	 edICSwkxarhhcewJw23GB7ybQMzRAKx3IFfl/bdtDeTVVjGHPOocvida232pLSsINU
-	 7+c0ZrRh4izACdxEQJ9CJzRQy3Z3sb9T9VosetnMeKef8UOOY0NQlnrhL+qOTGwOPw
-	 DNm1nurmwSP4A==
-From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- quic_mohs@quicinc.com, krzysztof.kozlowski@linaro.org, 
- quic_pkumpatl@quicinc.com, alexey.klimov@linaro.org, 
- andriy.shevchenko@linux.intel.com, Haoxiang Li <haoxiang_li2024@163.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20250226085050.3584898-1-haoxiang_li2024@163.com>
-References: <20250226085050.3584898-1-haoxiang_li2024@163.com>
-Subject: Re: [PATCH] ASoC: codecs: wcd937x: fix a potential memory leak in
- wcd937x_soc_codec_probe()
-Message-Id: <174220666999.86423.7797313057647077449.b4-ty@kernel.org>
-Date: Mon, 17 Mar 2025 10:17:49 +0000
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="LUPAC3mP";
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="mx1B+dMY"
+X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1742206677;
+	bh=i9tyr6WCYRQ+l29hhEBPu5UnDY7L1FYQX3MWucC2VnI=; l=551;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=LUPAC3mPpolEua23b03wca6obMNMhlAQ2Si62cWSUa42hNAY9ACMxEDgqrioqRnJJ
+	 /SzDt6W4CpYJmfPnpLsLcI9pTAFB7v7+x4hxiJrVAz5W2OUbs5zTtEDsxJYubKb/4J
+	 kuzIh//QgxqtIimwzC6lxfH9glJkLNuld5Ph8Qsw6vmxych9ZJxioRTRWTDnUGuT32
+	 m+/kD1NXOOfxkHtq0XNcjz3hRsAEzj8/Lo0WiH+cNksAz+LA49yD3hppnTtUabPsw5
+	 Nm9CWbWhzNcoNSrkNjO5k4ZjF9vYcY8hd48jJk/ESzTDG/AHC5ljmsrFzzLfyHrAe/
+	 lgF6onLixQGMg==
+Received: from 192.168.8.21
+	by mg.richtek.com with MailGates ESMTP Server V3.0(1128085:0:AUTH_RELAY)
+	(envelope-from <prvs=1170D5C545=cy_huang@richtek.com>); Mon, 17 Mar 2025 18:17:55 +0800 (CST)
+X-MailGates: (compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1742206675;
+	bh=i9tyr6WCYRQ+l29hhEBPu5UnDY7L1FYQX3MWucC2VnI=; l=551;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=mx1B+dMYOHtC3NHlOxYfK1Hsg/9a6uDZZcpRklXKq24kpluQMtgld/w5I7BIZ6vFe
+	 UE6ojRWH3mjdC8RT27aZx3akXw5hODZTdgwY+jaU8P74Bjep1UZtySFSZZZDKBv8Ho
+	 rl8QhrnyoF93c+xloByG25mIb8gfqFkgvXVY/R7xF3qFVheUc7szYPiKlpO+yonuIu
+	 7btLC68+hAJXUOZYtxDRktaYoRgbolL0cROxfEq9rYd7rMucmXPhOyltH8chivdX9B
+	 xdWuTD+WzrGexO34oYHG4nA+62SlwR6tZGyHzdqhBimR91RYE1HoZRuLnqQLdOgw0t
+	 6oaIx0VPx5htQ==
+Received: from 192.168.10.46
+	by mg.richtek.com with MailGates ESMTPS Server V6.0(3810286:0:AUTH_RELAY)
+	(envelope-from <cy_huang@richtek.com>)
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Mon, 17 Mar 2025 18:05:17 +0800 (CST)
+Received: from ex4.rt.l (192.168.10.47) by ex3.rt.l (192.168.10.46) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 17 Mar
+ 2025 18:05:17 +0800
+Received: from git-send.richtek.com (192.168.10.154) by ex4.rt.l
+ (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
+ Transport; Mon, 17 Mar 2025 18:05:17 +0800
+From: <cy_huang@richtek.com>
+To: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+CC: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	ChiYuan Huang <cy_huang@richtek.com>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: [PATCH 0/3] regulator: rtq2208: Fix incorrect code section
+Date: Mon, 17 Mar 2025 18:06:20 +0800
+Message-ID: <cover.1742204502.git.cy_huang@richtek.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed, 26 Feb 2025 16:50:50 +0800, Haoxiang Li wrote:
-> When snd_soc_dapm_new_controls() or snd_soc_dapm_add_routes() fails,
-> wcd937x_soc_codec_probe() returns without releasing 'wcd937x->clsh_info',
-> which is allocated by wcd_clsh_ctrl_alloc. Add wcd_clsh_ctrl_free()
-> to prevent potential memory leak.
-> 
-> 
+From: ChiYuan Huang <cy_huang@richtek.com>
 
-Applied to
+This patch series is to fix
+- buck converter phase mapping
+- Correctly get LDO DVS capability
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+ChiYuan Huang (3):
+  regulator: rtq2208: Fix incorrect buck converter phase mapping
+  regulator: rtq2208: Fix the LDO DVS capability
+  regulator: dt-bindings: rtq2208: Remove unnecessary property of fixed
+    LDO VOUT
 
-Thanks!
+ .../bindings/regulator/richtek,rtq2208.yaml   |   8 +-
+ drivers/regulator/rtq2208-regulator.c         | 216 ++++++++++--------
+ 2 files changed, 124 insertions(+), 100 deletions(-)
 
-[1/1] ASoC: codecs: wcd937x: fix a potential memory leak in wcd937x_soc_codec_probe()
-      commit: 3e330acf4efd63876d673c046cd073a1d4ed57a8
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
+2.34.1
 
