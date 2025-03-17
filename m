@@ -1,104 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1B91A0BD6
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BA519DF9A;
+	Mon, 17 Mar 2025 16:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742229476; cv=none; b=rqjRj9VXW1tMURp7f835KR47p1ZRCYXtMHaq4onRivUfyhXD1ZNYCNxHMIo5gTB3+vGUWO0GDiAUtqf8OEVYG/eu/gJIerxJUiQ5hB9i34lFIo5Lnh0G+1DT3O/3Eh+NTUHqJHmoCPmbsmpKWcAvcT4BZ2mFIkKaURPThRB4OBA=
+	t=1742229482; cv=none; b=aABTEWKy5Me5F9QHb/uLNp0IMJ2rDF0tSmN1OXR3YQYkwnA6rbFXacjSAsIfpsVVhEOoTsrRNGDlgBdLmS51z2VMVn72/rmJqXnBV9COJlCstoITJ72SZAZo6fglCHLn+lH6GJ0WL+6MF8QbBw+Lucm+JuCwGHLFY+7oflzubsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742229476; c=relaxed/simple;
-	bh=xJgC0H9lzIM57GZ1j7kOyitOHpUwGjjj7f2RdwSCtO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lDr1m+FyvcsL8xB+aLA8zpVXIw/C1yxlVbXygb6gh5yMwV7jyylnydQOsM/He4TOIrkYWpJ5H+vKqIODOeJ1VIT9AXxW7JGcwPiJSCHchsYC+O2u2gh6l9YNe9rjMlqkuiBP7YADq60+e/OAX8nfrEoTDbR5NYnEgFNPr81J3So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOnK2zFa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742229482; c=relaxed/simple;
+	bh=id79ieMkz1pM0rJ2Gjf3/Q9lJqRt9loQtH5PMtyfNTk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XdCPdfslKP+m3ufaiOdn1kPozvlPWg76Z6jcgiF0frGD1mrxvODc6CIX5CMvJbOdkaa1lZQYUYXkkovCm/pqYXDSML3r+3Q/4S8Z5KQTgCHghY8uOddXUdARV/1DBG+mzjDML69M/GFgYA9ipdqTB+SlvB+thbFeaa0A0vqS+b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cSmCEfB2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOnK2zFa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F38C4CEF1;
-	Mon, 17 Mar 2025 16:37:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cSmCEfB2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ED3BC4CEE3;
+	Mon, 17 Mar 2025 16:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742229476;
-	bh=xJgC0H9lzIM57GZ1j7kOyitOHpUwGjjj7f2RdwSCtO0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QOnK2zFaIXo1k+PFc6R5yMNoKLeDnQBhY+1ZjTWTGut8CDD/Q3glmdwsVdZaY6PHZ
-	 pMIRRd9T7rIeZRtMGe32PE3H1rZDF9PXm3WVaWCQKYndT8XnBMbrPCFEnrLWU1Rv7q
-	 oN1bSEhokQuc+pxPD1hmUwPJ65CAzYAEBame7TM2vQMVU0uj1b7ii4j2JK12n/MPS5
-	 hAb/iLg75Bem4sYl01M7biVwep+X+YSKWI4DuV4CyUVED64kOqDzPY27Z64H7Hy0SV
-	 YmwtuCutPi9mvm3waaG2ipSTsizG1DemjK+fWniXonW9/wSIcMUPjSIZx6S96fx8v2
-	 B+7sD6Rd38isg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Matteo Rizzo <matteorizzo@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: [PATCH v2] perf/x86: Check data address for IBS software filter
-Date: Mon, 17 Mar 2025 09:37:55 -0700
-Message-ID: <20250317163755.1842589-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
+	s=k20201202; t=1742229482;
+	bh=id79ieMkz1pM0rJ2Gjf3/Q9lJqRt9loQtH5PMtyfNTk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cSmCEfB2wz9aMxEDbtWs8DB2VEmnR4Q+XShGrzkBwJFxp5XB+ATb0vr7dfdh1ct8j
+	 9GQW7iFrPsdmNUBPXSXCW6AYGIbUdoXka4ZosH/sv93RM71sh4EhAqA2Y6LIcEFFwe
+	 3gPnGB68Ad9NOhkBPbBj5ZrKxCGAENyEFXkzVUbwTbLdOziTerXwpC6pDGsC9u7/XH
+	 /qwFDPpt7I4ztnL204wPln+MSiYSEzacsvSvtY590p6nj8I7n9Bn3IHm/U0aS+dWuk
+	 gDh1IPGu4QG7w0pfW92JAsbSKL5nyQnSMnnFedNA43hJNFbX31501yu40WCCi0w+Wz
+	 Pi0fKyUn3Ut4w==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Xaver Hugl <xaver.hugl@gmail.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	sunpeng.li@amd.com,
+	lijo.lazar@amd.com,
+	tzimmermann@suse.de,
+	rajneesh.bhardwaj@amd.com,
+	shaoyun.liu@amd.com,
+	Ramesh.Errabolu@amd.com,
+	chiahsuan.chung@amd.com,
+	siqueira@igalia.com,
+	sunil.khatri@amd.com,
+	alex.hung@amd.com,
+	aurabindo.pillai@amd.com,
+	hersenxs.wu@amd.com,
+	mwen@igalia.com,
+	hamzamahfooz@linux.microsoft.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.13 12/16] drm/amd: Keep display off while going into S4
+Date: Mon, 17 Mar 2025 12:37:21 -0400
+Message-Id: <20250317163725.1892824-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250317163725.1892824-1-sashal@kernel.org>
+References: <20250317163725.1892824-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.7
 Content-Transfer-Encoding: 8bit
 
-IBS software filter was to filter kernel samples for regular users in
-PMI handler.  It checks the instruction address in the IBS register to
-determine if it was in the kernel more or not.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-But it turns out that it's possible to report a kernel data address even
-if the instruction address belongs to the user space.  Matteo Rizzo
-found that when an instruction raises an exception, IBS can report some
-kernel data address like IDT while holding the faulting instruction's
-RIP.  To prevent an information leak, it should double check if the data
-address in PERF_SAMPLE_DATA is in the kernel space as well.
+[ Upstream commit 4afacc9948e1f8fdbca401d259ae65ad93d298c0 ]
 
-Suggested-by: Matteo Rizzo <matteorizzo@google.com>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+When userspace invokes S4 the flow is:
+
+1) amdgpu_pmops_prepare()
+2) amdgpu_pmops_freeze()
+3) Create hibernation image
+4) amdgpu_pmops_thaw()
+5) Write out image to disk
+6) Turn off system
+
+Then on resume amdgpu_pmops_restore() is called.
+
+This flow has a problem that because amdgpu_pmops_thaw() is called
+it will call amdgpu_device_resume() which will resume all of the GPU.
+
+This includes turning the display hardware back on and discovering
+connectors again.
+
+This is an unexpected experience for the display to turn back on.
+Adjust the flow so that during the S4 sequence display hardware is
+not turned back on.
+
+Reported-by: Xaver Hugl <xaver.hugl@gmail.com>
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/2038
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Tested-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Link: https://lore.kernel.org/r/20250306185124.44780-1-mario.limonciello@amd.com
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+(cherry picked from commit 68bfdc8dc0a1a7fdd9ab61e69907ae71a6fd3d91)
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-v2)
- * fix a build error  (Boris)
- * use kernel_ip() instead  (Peter)
- * combine sw filter checks  (Ravi)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c           | 11 +++++++++--
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  5 +++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
- arch/x86/events/amd/ibs.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 7b52b8e3a185157f..fbe10b469e8b03d5 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -1267,8 +1267,13 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 		regs.flags |= PERF_EFLAGS_EXACT;
- 	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index 91a874bb0e241..fc953ef4eedd0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -2556,7 +2556,6 @@ static int amdgpu_pmops_freeze(struct device *dev)
  
-+	if (perf_ibs == &perf_ibs_op)
-+		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
+ 	adev->in_s4 = true;
+ 	r = amdgpu_device_suspend(drm_dev, true);
+-	adev->in_s4 = false;
+ 	if (r)
+ 		return r;
+ 
+@@ -2568,8 +2567,13 @@ static int amdgpu_pmops_freeze(struct device *dev)
+ static int amdgpu_pmops_thaw(struct device *dev)
+ {
+ 	struct drm_device *drm_dev = dev_get_drvdata(dev);
++	struct amdgpu_device *adev = drm_to_adev(drm_dev);
++	int r;
+ 
+-	return amdgpu_device_resume(drm_dev, true);
++	r = amdgpu_device_resume(drm_dev, true);
++	adev->in_s4 = false;
 +
- 	if ((event->attr.config2 & IBS_SW_FILTER_MASK) &&
--	    perf_exclude_event(event, &regs)) {
-+	    (perf_exclude_event(event, &regs) ||
-+	     ((data.sample_flags & PERF_SAMPLE_ADDR) &&
-+	      event->attr.exclude_kernel && kernel_ip(data.addr)))) {
- 		throttle = perf_event_account_interrupt(event);
- 		goto out;
- 	}
-@@ -1283,9 +1288,6 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 		perf_sample_save_raw_data(&data, event, &raw);
- 	}
++	return r;
+ }
  
--	if (perf_ibs == &perf_ibs_op)
--		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
--
- 	/*
- 	 * rip recorded by IbsOpRip will not be consistent with rsp and rbp
- 	 * recorded as part of interrupt regs. Thus we need to use rip from
+ static int amdgpu_pmops_poweroff(struct device *dev)
+@@ -2582,6 +2586,9 @@ static int amdgpu_pmops_poweroff(struct device *dev)
+ static int amdgpu_pmops_restore(struct device *dev)
+ {
+ 	struct drm_device *drm_dev = dev_get_drvdata(dev);
++	struct amdgpu_device *adev = drm_to_adev(drm_dev);
++
++	adev->in_s4 = false;
+ 
+ 	return amdgpu_device_resume(drm_dev, true);
+ }
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index ca6b9a585aba9..8652433aff1c6 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -3320,6 +3320,11 @@ static int dm_resume(struct amdgpu_ip_block *ip_block)
+ 
+ 		return 0;
+ 	}
++
++	/* leave display off for S4 sequence */
++	if (adev->in_s4)
++		return 0;
++
+ 	/* Recreate dc_state - DC invalidates it when setting power state to S3. */
+ 	dc_state_release(dm_state->context);
+ 	dm_state->context = dc_state_create(dm->dc, NULL);
 -- 
-2.49.0.rc1.451.g8f38331e32-goog
+2.39.5
 
