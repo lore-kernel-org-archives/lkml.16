@@ -1,243 +1,378 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBE015573A;
-	Mon, 17 Mar 2025 19:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742239765; cv=fail; b=EsiXZKtX3Oq4fxUYk4oZ/TSv/r6wMgIsHaTSp1B/YPWNKRNwJ2/qBDMNX6n1JkL6WD608zO8zSxCB1lJupotGDb5N45u6ZFHcpV33x5PdoCg54wZDTphkPZv9bMRMkMT+MpLTuMc5GCq1oECGKChrT88XAgGOWayKqthN/bMFak=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742239765; c=relaxed/simple;
-	bh=kM03v8St/dPWJRS6rTc0vZEPuc2Y1sI/TY/Xaww12gQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RQaTwbD2CCGxdlD+8VdvmOvqfsaYXk0zJsKtrbbkGJbdTRqLRwRwzdiW0OSlFWWs9O2krjZkle1c5Sa7d6y0JBMva9e3TCN3DetTzgbCP12NYzgR121p/YLqPKtH7v3m2jLLGP/b7cLNHSzLI2k9d9rI32Ckm/NSo0CHe6D0ugE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=sOoy7dsM; arc=fail smtp.client-ip=40.107.223.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5C5F9DA;
+	Mon, 17 Mar 2025 19:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742239946; cv=none; b=fVbmJsL4CCPsOdDSd9yS93PfLN0wVO4iDAAin6uyIJAsVrMXjXCqszhF1yfxK7M5RquUEUmX2j4kcD4xyA4ESaj6lgDQfFny6xV44NFabzwoGX/d3po4XwoAGDyyhGzGnduh+quxKdPh0cp9wiz0PzoElHu/lQcV/jKIYdNIcG0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742239946; c=relaxed/simple;
+	bh=B4jwl0WVdNyiDxiDK2zQ1UII/t747CndkJIkJf5pMZo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=JlQTPCyJD+Teo88T4TZhmP1mXZoTZDV0fG3TOo5Ckd1JKffY/FVDUHcX3YqEQMMWKQl1wYfEGxkC9sXj6dI2w35Ns6audGMXUP7yivzUWQQXyuU54u5v+qOzQMZdjdctJtdivwplV4hMckmg8wMvr6XGtEN8JkeBT7w0dvE187o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=d+lALgQx; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sOoy7dsM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LjJj45pl+t1xQlXwFMgNlMINIpxFkvM+MpwBPEzCVK2RBHBuaedI5tTPrafz4fYDCcjxMrAulhQ4+FXUFIuN3LjOfF7rfx4HJA1Rt3ERLv2ZTteNE2wR2Xd5EmfDwLr1xc8H+dJmXij1YlsCGuOt90apNxHECNeu3qnnqJ7Hh0Uh2hPZWXOjPdf6Snlbbr+8fsx689wfyT6mHMUAPoKd96ynaqIeZSxHXlSBrBCdRrf33tGR9G2oDgZyo8ke/H1SgDXuircRy8QZIBa9S2nZp+WJKz+gl0JJXoxzn4hDJE7wTKHo2AQXf7Ft3gyiFfDsip9AcgDxc6rqUXqc/3+OpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kM03v8St/dPWJRS6rTc0vZEPuc2Y1sI/TY/Xaww12gQ=;
- b=yvi2KzGoOuhcuKGriPCUB8N2+ImYdUpB6X5i9dxK4+94QDVsVm5yolV4vTo9QHyShPS6m7xDZSzjkZ9bcfZRx5PCcW8ttqwwV2YzzlVZIzMtoLOjhqT5zOrzhWcS8eFuXCvqzQAQEGThYxnbH6RSu727WIKqlZA9mr+2N8GuqqDP3tjIfWD4TV/GBD6/2/Ci/9le1eLzzFCeKqNaS4CNZp1EPQDYWlpnoXcc54sJlRAfOLwA6/BMXoeKmmRQzTtGSqNuenUQiw3pMJzaFl4G5ao+4gHcvTsUlN8NLQKpm5cXXYXcrji8/F6gUHVILf/aSsbmw7EjrghlCtjIhNhq2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kM03v8St/dPWJRS6rTc0vZEPuc2Y1sI/TY/Xaww12gQ=;
- b=sOoy7dsMYlkZYdIEnsxaXSMAkuMjxOCfBtbUKTB6B/9nGGhX92+ARhdZp4GZ9ColhB/a+aV+hfEB3fklP1z2Ejq+nVJIa3yVJmewMrfHZD383Mjs/5UyD0QRWqdxyoyY9cgamb5TpB2n63Tnqr2P/XMPX2IABWl21gUVYi+ljpQA2y+HhziXmrFBir9fVkf4jZZF+oMyAx7+neUyuZIvOpJnmpsIMutAFZ5FB2S3YEFOpA0qZOYTIslbGeP6x9IPJgMBxysmpWdKd4z8sqzYmjKV0ZkgNkUWkb9dkUQgPse7a5iy1kJ09ECCLuCrGHhsATEhO7tDOLebA7r4hoUK0A==
-Received: from CY8PR11MB7034.namprd11.prod.outlook.com (2603:10b6:930:52::7)
- by IA1PR11MB6073.namprd11.prod.outlook.com (2603:10b6:208:3d7::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
- 2025 19:29:20 +0000
-Received: from CY8PR11MB7034.namprd11.prod.outlook.com
- ([fe80::b284:ae0b:19ad:6b8a]) by CY8PR11MB7034.namprd11.prod.outlook.com
- ([fe80::b284:ae0b:19ad:6b8a%5]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
- 19:29:20 +0000
-From: <Ryan.Wanner@microchip.com>
-To: <lee@kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<claudiu.beznea@tuxon.dev>, <sre@kernel.org>, <Nicolas.Ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <p.zabel@pengutronix.de>,
-	<linux@armlinux.org.uk>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH v3 00/21] Enable Power Modes Support for SAMA7D65 SoC
-Thread-Topic: [PATCH v3 00/21] Enable Power Modes Support for SAMA7D65 SoC
-Thread-Index: AQHbiS+psTe+QQ7+CkKv+s0dnIZXqrNxW1yAgAZ4BoA=
-Date: Mon, 17 Mar 2025 19:29:19 +0000
-Message-ID: <1600105d-a527-4f2d-a41e-33d6fd227334@microchip.com>
-References: <cover.1740671156.git.Ryan.Wanner@microchip.com>
- <20250313164211.GD3645863@google.com>
-In-Reply-To: <20250313164211.GD3645863@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY8PR11MB7034:EE_|IA1PR11MB6073:EE_
-x-ms-office365-filtering-correlation-id: 93bb3935-467b-4a1c-b72d-08dd658a03c8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?dU9CVFc5bDZmTUIxeU9QKzZ4MlZHajNEaFlZWGxscGM4eFhjRmJNUmxBK09k?=
- =?utf-8?B?QUxvcUNOSkZ4NEl0ZTFaQWhSLzk0MGpDcHhrb2xQcWxpekNCRVFMcCs2emdt?=
- =?utf-8?B?MVNxOXVxc3ZlOGNUbHpxVDlxU0VNK2NWWGl5RUt0R0FHS3pVV2RXdUlack12?=
- =?utf-8?B?UUY3VHdrZTJoSDY3L0d2VVVJYzc5QlUrb0JrS3VqSFkzMGltTjJHMWNhbkU4?=
- =?utf-8?B?OVBOVGdLSWdnWXRSc2VVNVRDRGNZNmNGWElKNWpYRVlPcWRNMUVjdk9KcjMz?=
- =?utf-8?B?MW9OUTJDTU5uTys5UVAxcXdiYkNrcXdnQjh2eW44S0NobU1KTWNJcmlZdVNo?=
- =?utf-8?B?NVBNSitPczlMZ0dtU0cvQUROanJ2Q2dEQ0tnWmJLcW9IVEc1OEkzT29FTlo1?=
- =?utf-8?B?d25LNTh2VlNrTVJzS0Focmg5RTgrRDd6c0FKa1B4dUVldnY4YnRXTUsxQkE4?=
- =?utf-8?B?MUUyeUl0TC9KQ2hURkxLSlUrZDYrM2kydm91TlhYLzRoY3cyOEVlN2RQT0p3?=
- =?utf-8?B?QVNZdlNOQmFGYTl2b1dkZlludU9aZi9JOWphWEJrVHpzckQrRnhXN3FmemJP?=
- =?utf-8?B?QWVjV0Nwa3FsT0pJRTg2enFNanpNSUdQdDQyRmpSVVE2T05tb0hzQm1XLzlC?=
- =?utf-8?B?MkR5bXhsOElvWGFQbzhCRVI5aXBGcFpPWUdWNTNwUlNtcitUZUZpQk1ic1pB?=
- =?utf-8?B?cXZUUzQ3L3Y3SWpGaEtpNERJSDNwRWpGenpLeDBJTkNXTjBlSklnRTA4R2k5?=
- =?utf-8?B?clJ4NjNQVHNzSnpBbTBQOWorNWM2cE9ORW9sdGRPTWd4UW16d3ZYSkZhbjRP?=
- =?utf-8?B?aEVaaFY5Q3REbjZkbVEzazFHV21QRVlhcEZ4bzVBSHBUUTF1MThGNEhpOHR0?=
- =?utf-8?B?cnBjVUxaQ1dCMVVEMTRCUnNXOXh6R1A4bVA0Q0xzcmZ3NEtESHozMTY2Z3Uw?=
- =?utf-8?B?VEozUnVWVTFGYTNMLy80b1dwWWFOWXZqdGVFSkJQc0w2WUtGUHJ3MDhuOGR0?=
- =?utf-8?B?dG5JMjZkRUZtOVg4bUtwZE13dUIvYWtTTVdTWndjbGtnUDVuRlV0K1ZWTWJE?=
- =?utf-8?B?dCtvc1lJQXB5ZmNQR25DNjRMVndPdHhoQWxaVXN3QlkxNzk4dFJvQ0FJK3Fp?=
- =?utf-8?B?a204ckc4STVUZXhwcHNiZW1jQzFNNGtQZmRQazNhTGt0ajI2V2xTTVFIczB5?=
- =?utf-8?B?cDR2QWFNZGNUY0ZHUWZRRmRLVStRU2xvWlM4TkR6bTVsRGNRWkRnNTNNZ0lp?=
- =?utf-8?B?SHhJcDIwbitFcG1SQzAvb2UvWnBFRkw1QUtIM1o5MWtOK29uMDVuMXZ3VlYz?=
- =?utf-8?B?UFlOUVNqWmhhR1N6OWM0dmNpbTlQWjExTW4zT1ZMM1ZkL0tHeVdxY0g1MU51?=
- =?utf-8?B?OXE5NUFUTVRHYkpxK2JJREtpWEpwSlhDSUsrSThLZ1ZTTzJ6TFRrLzkxZ3ZB?=
- =?utf-8?B?ak8yWGhoOEJXNkFSMHd5K2JHdS9ybjRsREV4WkVpMkZIUDNjaUl4b2pxNElN?=
- =?utf-8?B?OFY2NHFPMUpDVUxIbndBbWJJRTQ3b0ZuWnFnNThEaTJWTVJmQ1MvQWduNXph?=
- =?utf-8?B?Ky9Vb002UGd5aWdaZmZNeDJvYmg5cDNhbkVVREpPRS9iTmc0L3lIZVpkM1BN?=
- =?utf-8?B?cjVob1dtZmt0VG5HUDBHNHNUMkxEMUEzU3VseVN5dzM1NWpxM1VVMmVTbURJ?=
- =?utf-8?B?YlB5UFlMamsxK3BlS3ZXYlY3TFNsLzBhQ1VzRWFrQnc0STNaTlBrbU10aDR5?=
- =?utf-8?B?TFdUaFRueTZvbytnc2YyNVVVQyttMWxzNmpkK0hLcnNIN21zOTdqL0NockN0?=
- =?utf-8?B?MGl1VjR1NFptNXk1QThVOElRTmROOVplOGVROVdIQlgzbUpOalZLaW1EWFRI?=
- =?utf-8?B?ZXREa3B3MUNxVEF1M0NVaTYvTTRCRHdZZUFJK1MxWTZySElZT2dsU1Y4VlZ1?=
- =?utf-8?Q?Th8TmeBK47xoBDb37Lmc1d7iDxIrLLJx?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7034.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?TmszaDhZdU84UTdGeEdMRW5pSU92UXdYanE3MHMvTitlYm1xY2Z0NVdGSFhJ?=
- =?utf-8?B?ZTl1Z2ltbXl5SncvSEtMekRyYklsSDlWK2JWSmVyQjkwa3hXNWFrWWxUSDk1?=
- =?utf-8?B?Q2hMYW1KQmxXb0M0MWpaaGxYYjFxNk9kaHZXQ0RXV0lIV2ZDdVNBWnhHVnZG?=
- =?utf-8?B?WS85eVVtdWJMRk90RXNaenBteE9YamQ3STBqdEk4NFdVcnorQ3A2dFZVK0lr?=
- =?utf-8?B?aVE5eVl5OFJBemJrZGZ4ZTZTYi9kMmFOVHZqcERZS1Q2T0I3WXRhaGhFRDVw?=
- =?utf-8?B?aG5haFlTcVA2TVR1ejVibzRFU25PTThSb0FYUHdWSTlEQTc5VFhYU3d4VXFT?=
- =?utf-8?B?N21vRnFmMFdOS2ludGxEa2tKZEZkVjcrSVl4K2ozWE9tc0NaYm1MdzQ0YUxw?=
- =?utf-8?B?NkRUVkpuQkczbktJeUtPYUY3eVRiUzltZU1QY3QvTTU3S1Fmdy9QWDQ0YUR4?=
- =?utf-8?B?QnlCQStseGY2SE9oand0Y3hKN0FCNU5yRUlvbkNvZllqZXRuTFMveHZDRUVx?=
- =?utf-8?B?ZzU5aDY5MzUzVFpRbDhsMENFRmdtSHNKWGdISFozQVIwOGF4UEo4K2owQ3Nu?=
- =?utf-8?B?bDNacW9SQ0tya3B0WndSdVk3OVhNZjJiK0pHdm9STnAxRGRnbHhqRzNjdVU0?=
- =?utf-8?B?TEhSMDNBUm96N1RKRHIrQnNuZEtoenRCZmVvcXl2UTQ0U0RWVW5XK1NQYXpm?=
- =?utf-8?B?SGFqRVc4VUZsbnNONDIxL3o5VGMxWmJ2QmtlcVZUR0ZSc2FNRjZqRGJ3bVdJ?=
- =?utf-8?B?RHBPRHhyMGxvbU9qUjR6WUp3dlYxampSUENmd3U0VmprUTVDMkRxMEFSSGdi?=
- =?utf-8?B?ZVFKQURlSlF0VVV0UDg0OStocFpHeHAwa25YZ0cvbzcrOWFoNUZ6WlpsQzFV?=
- =?utf-8?B?QUVQVmc1OTRLOUJCMGwyYkNvczUxaFJOSkdtbWdhVDRsTlo2dEJhdnhhTWd0?=
- =?utf-8?B?S0xDV052OXQvWnJoMk9SM25UUkZxMDB3NGtoelM4a1VQYkp6bVhMWFRpQXI2?=
- =?utf-8?B?cjBqZ096RnVpS013UFdYdEZZd2ZSeVdSd0xUT2lPZXVEdGJNWDNSTE4rK2NZ?=
- =?utf-8?B?bkRpTk1zWHVRMHNoQ1haU1djaEhvN3ZLcTc0dS9iL0RBTkRNQU9jRTN3Tnp6?=
- =?utf-8?B?TGo3N21TdWtYVEJjRHJsbi9WTFJFV1kzQVZuVTdIM3FvWFlPNjlBMVE0YkZH?=
- =?utf-8?B?Q2JPNHg2a2x6OUZvN25pc1d5R2lmMTJ6ZFlYNlJNQjZaNGVjQVV1UjRJM093?=
- =?utf-8?B?VUpDSk5lTnBOUzZRNTRjU0lrd05BbTZqeHlmOHR2NnNOdU80MUJjQ3FKSXdr?=
- =?utf-8?B?ZXJkWVFTNnAvZnphRitCZXM4MC9QdzFEQUY2NVBHQ2dLVFR2SjBnSTA0amc1?=
- =?utf-8?B?YXlWSUxDN3UwaVFwUCt1MDhBV1d5bnhtd3NERjFZL2wyMDdzazNuMWx3SmJX?=
- =?utf-8?B?L0xjWjdTUEJ2MDNNSU1ERlBBaEN6NnBPU3FnWENTZkFaTWNNWk1Tc1FQTG5o?=
- =?utf-8?B?ZFRLeUl5WldrZy9wU3cvQ0tPK1huWkc3dUJhaFB5SjBYU2ZPWHovZlY0aU1a?=
- =?utf-8?B?U0dPV3RPWmN0Q0hIbnRJV1JSZHhaanRlclR1TDJpaEpyYWJyekFCb04vM3cv?=
- =?utf-8?B?MmQ5a2tZUjdsclRRWEJMbkozVnFrdkJ1NUxJaks2TjQ4K3NKUzJoUG1QNThC?=
- =?utf-8?B?ay91UTBSd293MmpBc3NxNExmQnhkRmNaelVZUnE3YjB5ZkdlaEhvQTA4cXNy?=
- =?utf-8?B?d0NZamJkZkF4MEg0azhhSk95RXMwb0N0TkUyOW1NaldyWGhqN1E4WkNQOE5n?=
- =?utf-8?B?Zno0d2k1VUxIK3d1KzFxVUEvYXVLTlN1dVd5VDBOTWJCeTMyYnl4Q0NKOVN5?=
- =?utf-8?B?eWJVMlhSakVXNWJPRzA4WVIyblFZVWFOR2ZhVlB0c3I5eGw5bVJleGZNQTN4?=
- =?utf-8?B?UFZWZmkwaVdMWVFFYnNXeVNsMS9BNHUvd2UwRnpKd2lGTVRrT0RKWHV1NThn?=
- =?utf-8?B?L2M5dS9WdVhjOEt1a1pJK3FId045L0owaWJXUmFZRk1wVktNRnRGYTRBTHEz?=
- =?utf-8?B?d2VaZ3ZhTVFqS01WbFM2Q3ErdGJPem82WUpraURBdVI3V2ZaTTgyOFgvNG1I?=
- =?utf-8?Q?ePAxRCkMDk19SK2MwvD4nfW2w?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <52C31F584EB9614C9D37BEFE682FDD28@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="d+lALgQx"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id E2D7D20EE2;
+	Mon, 17 Mar 2025 20:32:22 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id Klr-IQrCaiIq; Mon, 17 Mar 2025 20:32:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1742239941; bh=B4jwl0WVdNyiDxiDK2zQ1UII/t747CndkJIkJf5pMZo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=d+lALgQxiwiBjzkXVtX93zc1e7IH0yKSIzJra1oo0VkQQ9UOnKGZGIc0VhT2kcyjV
+	 181EYxP4sjZyT9aa5W4ZtZK05KfuqtO+mTykbSyKgUDNBfJyupB53G0RZkwGByzuCt
+	 67T3zCqzyTIjcB8mPapSIw+oSRd8mVywn61D6kBSuo7rPao8ElnOt8YAHwpPi1BAl6
+	 f04Rwfm1hcfUVHTgktzMmzi2DI5Wm6veWCg1PVco/wwfPFlRX6SzbQAaGE+/81srn3
+	 KSfqtwLndmddnW8Q7Tndl7eDC1oDKVHs5dZ8wpf/cjLGFKJubdVOSWGhzH7F+jrm4d
+	 WL7BR+GXZ1JRA==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Date: Tue, 18 Mar 2025 01:01:41 +0530
+Subject: [PATCH RESEND v2 1/3] phy: exynos5-usbdrd: use GENMASK and
+ FIELD_PREP for Exynos5 PHY registers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microchip.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7034.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93bb3935-467b-4a1c-b72d-08dd658a03c8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2025 19:29:19.9531
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yqF1qIjAXZDn4yhLwxrK+S7m0UnLCvo3iNlRB7C+Lm72MxR2pE5b9Inq3mSi/S/qxmeguvlH87ZXrHhkbxHLffwdyr/d44V1x6/hnMEkjGQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6073
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250318-exynos7870-usbphy-v2-1-551433b1b27c@disroot.org>
+References: <20250318-exynos7870-usbphy-v2-0-551433b1b27c@disroot.org>
+In-Reply-To: <20250318-exynos7870-usbphy-v2-0-551433b1b27c@disroot.org>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742239924; l=12252;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=B4jwl0WVdNyiDxiDK2zQ1UII/t747CndkJIkJf5pMZo=;
+ b=sEiBOi5qgNE89zBCWZNJA0KW79IUjzp2ETCT7Ce8FjYKavaMV+Ag2fL2DaoSFPAGOByQfLPmu
+ fnW8NtYkf+bDXM7UNrVE2Q4MZ4bnrRDk6vzvdr5lboA/Zl2x3SuUfxu
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-T24gMy8xMy8yNSAwOTo0MiwgTGVlIEpvbmVzIHdyb3RlOg0KPiBFWFRFUk5BTCBFTUFJTDogRG8g
-bm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSBrbm93IHRoZSBj
-b250ZW50IGlzIHNhZmUNCj4gDQo+IE9uIFRodSwgMjcgRmViIDIwMjUsIFJ5YW4uV2FubmVyQG1p
-Y3JvY2hpcC5jb20gd3JvdGU6DQo+IA0KPj4gRnJvbTogUnlhbiBXYW5uZXIgPFJ5YW4uV2FubmVy
-QG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gVGhpcyBwYXRjaCBzZXQgYWRkcyBzdXBwb3J0IGZvciBs
-b3cgcG93ZXIgbW9kZXMgZm9yIHRoZSBTQU1BN0Q2NSBTb0MgYW5kDQo+PiB0aGUgcmVxdWlyZWQg
-Y29tcG9uZW50cyBhbmQgY2hhbmdlcyBmb3IgbG93IHBvd2VyIG1vZGVzLg0KPj4NCj4+IFRoZSBz
-ZXJpZXMgaW5jbHVkZXMgY2hhbmdlcyBpbiB0aGUgYXNtIGNvZGUgdG8gYWNjb3VudCBmb3IgdGhl
-IGFkZHRpb25hbA0KPj4gY2xvY2tzIHRoYXQgYXJlIGluIHRoaXMgU29DLg0KPj4NCj4+IFRoZSBE
-ZXZpY2UgdHJlZSBhZGRpdGlvbnMgYXJlIHRvIGVuYWJsZSBhbGwgdGhlIGNvbXBvbmVudHMgbmVl
-ZGVkIHRvDQo+PiBrZWVwIHRoZSBTb0MgaW4gbG93IHBvd2VyIG1vZGUuDQo+Pg0KPj4gVGhlcmUg
-YXJlIHNvbWUgRFRCIGNoZWNrIHdhcm5pbmdzIGJ1dCB0aGF0IGlzIGR1ZSB0byB0aGUgZHQtYmlu
-ZGluZyBub3QNCj4+IGluIHRoZSBjb3JyZWN0IC55YW1sIGZpbGUgZm9ybWF0Lg0KPj4NCj4+IENo
-YW5nZXMgdjEgLT4gdjI6DQo+PiAtIEFkZCBtaXNzaW5nIGNvbXBhdGlibGUgZm9yIGRkcjNwaHks
-IGl0IGlzIG5vdyBpbiBib3RoIHN5c2NvbiBzZXRzLg0KPj4gLSBGaXggYWxwaGFiZXRpY2FsIG9y
-ZGVyaW5nIGZvciBzYW1hN2Q2NS4NCj4+IC0gUmVtb3ZlIHRoZSBpbmNvcnJlY3QgcmVvcmdhbml6
-aW5nIHBhdGNoLg0KPj4gLSBSZW1vdmUgc2FtYTdnNS1ydHQgYXMgYSBjb21wYXRpYmxlIGZvciBz
-YW1hN2Q2NS1ydHQgYW5kIGFkZA0KPj4gICBzYW1hN2Q2NS1ydHQgYXMgYSBjb21wYXRpYmxlIHdh
-a2UgdXAgc291cmNlIGluIHRoZSBwbSBkcml2ZXIuDQo+Pg0KPj4gQ2hhbmdlcyBmcm9tIHYyIC0+
-IHYzOg0KPj4gLSBDb3JyZWN0IG1pc3Rha2UgaW4gdjIgc2ZyYnUgZHQtYmluZGluZyBwYXRjaC4N
-Cj4+IC0gQ29ycmVjdCBpbmNvcnJlY3QgZHQtYmluZGluZyBhZGRpdGlvbiBhbmQgZm9ybWF0dGlu
-ZyBmb3IgcnRjIGFuZCBydHQgYmluZGluZ3MuDQo+PiAtIEFkZCBtaXNzaW5nIFNvQiB0YWcuDQo+
-PiAtIENsZWFuZWQgdXAgY29tbWl0IG1lc3NhZ2UgZm9yIEJhY2t1cCBtb2RlIHRvIGRlc2NyaWJl
-IFNIRFdDIGlzIHN0YXR1cw0KPj4gICByZWdpc3RlciBpcyBjbGVhcmVkIGZvciB0aGlzIFNvQy4N
-Cj4+IC0gQ2xlYW5lZCB1cCB2YXJpYWJsZSBuYW1pbmcgYW5kIHVzYWdlIGZvciBtY2tzLiBDaGFu
-Z2VkIHRoZSBtY2tzIG51bWJlcg0KPj4gICB0byB0aGUgY29ycmVjdCBudW1iZXIgb2YgY2xvY2tz
-IG5lZWRlZCB0byBiZSBzYXZlZCBhbmQgY29ycmVjdGVkIHRoZQ0KPj4gICBBU00gY29kZSBhY2Nv
-cmRpbmdseS4NCj4+IC0gUmVtb3ZlZCB0aGUgU0hEV0MgZnJvbSBVTFAwIHdha2UtdXAgc291cmNl
-IGFzIGl0IGlzIG5vdCBjb25maWd1cmVkIGFzDQo+PiAgIGEgdmFsaWQgd2FrZS11cCBzb3VyY2Ug
-Zm9yIFVMUDAuDQo+PiAtIFNlcGFyYXRlZCBhbGwgdGhlIERUU0kgYW5kIERUUyBjaGFuZ2VzIGlu
-dG8gaW5kaXZpZHVhbCBwYXRjaGVzLg0KPj4NCj4+DQo+PiBMaSBCaW4gKDEpOg0KPj4gICBBUk06
-IGF0OTE6IHBtOiBmaXggYXQ5MV9zdXNwZW5kX2ZpbmlzaCBmb3IgWlEgY2FsaWJyYXRpb24NCj4+
-DQo+PiBSeWFuIFdhbm5lciAoMjApOg0KPj4gICBkdC1iaW5kaW5nczogbWZkOiBzeXNjb246IGFk
-ZCBtaWNyb2NoaXAsc2FtYTdkNjUtZGRyM3BoeQ0KPj4gICBkdC1iaW5kaW5nczogbWZkOiBzeXNj
-b246IGFkZCBtaWNyb2NoaXAsc2FtYTdkNjUtc2ZyYnUNCj4gDQo+IFBpbmcgbWUgd2hlbiB0aGVz
-ZSBhcmUgcmVhZHkgdG8gdGFrZS4NCg0KSSB3b3VsZCBzYXkgdGhleSBhcmUgcmVhZHkgdG8gdGFr
-ZSBzaW5jZSB0aGV5IGhhdmUgYmVlbiBhY2tlZCBhbmQgdGhlDQpTSERXQywgUlRDLCBTRlJCVSwg
-YW5kIFJlc2V0IGNvbnRyb2xsZXIgaGF2ZSBhbGwgYmVlbiBhcHBsaWVkIHRvIHRoZQ0KRFRTSSBm
-aWxlLg0KDQo+IA0KPj4gICBkdC1iaW5kaW5nczogc3JhbTogQWRkIG1pY3JvY2hpcCxzYW1hN2Q2
-NS1zcmFtDQo+PiAgIGR0LWJpbmRpbmdzOiBwb3dlcjogcmVzZXQ6IGF0bWVsLHNhbWE1ZDItc2hk
-d2M6IEFkZA0KPj4gICAgIG1pY3JvY2hpcCxzYW1hN2Q2NS1zaGR3Yw0KPj4gICBkdC1iaW5kaW5n
-czogcmVzZXQ6IGF0bWVsLGF0OTFzYW05MjYwLXJlc2V0OiBhZGQNCj4+ICAgICBtaWNyb2NoaXAs
-c2FtYTdkNjUtcnN0Yw0KPj4gICBkdC1iaW5kaW5nczogcnRjOiBhdDkxcm05MjAwOiBhZGQgbWlj
-cm9jaGlwLHNhbWE3ZDY1LXJ0Yw0KPj4gICBkdC1iaW5kaW5nczogYXQ5MXJtOTI2MC1ydHQ6IGFk
-ZCBtaWNyb2NoaXAsc2FtYTdkNjUtcnR0DQo+PiAgIEFSTTogYXQ5MTogQWRkIFBNIHN1cHBvcnQg
-dG8gc2FtYTdkNjUNCj4+ICAgQVJNOiBhdDkxOiBwbTogYWRkIERUIGNvbXBhdGlibGUgc3VwcG9y
-dCBmb3Igc2FtYTdkNjUNCj4+ICAgQVJNOiBhdDkxOiBQTTogQWRkIEJhY2t1cCBtb2RlIGZvciBT
-QU1BN0Q2NQ0KPj4gICBBUk06IGF0OTE6IHBtOiBFbmFibGUgVUxQMC9VTFAxIGZvciBTQU1BN0Q2
-NQ0KPj4gICBwb3dlcjogcmVzZXQ6IGF0OTEtc2FtYTVkMl9zaGR3YzogQWRkIHNhbWE3ZDY1IFBN
-Qw0KPj4gICBBUk06IGR0czogbWljcm9jaGlwOiBzYW1hN2Q2NTogQWRkIFNSQU0gYW5kIERSQU0g
-Y29tcG9uZW50cyBzdXBwb3J0DQo+PiAgIEFSTTogZHRzOiBtaWNyb2NoaXA6IHNhbWE3ZDY1OiBB
-ZGQgUmVzZXQgQ29udHJvbGxlciB0byBzYW1hN2Q2NSBTb0MNCj4+ICAgQVJNOiBkdHM6IG1pY3Jv
-Y2hpcDogc2FtYTdkNjU6IEFkZCBTaHV0ZG93biBjb250cm9sbGVyIHN1cHBvcnQNCj4+ICAgQVJN
-OiBkdHM6IG1pY3JvY2hpcDogc2FtYTdkNjU6IEFkZCBSVFQgYW5kIEdQQlIgU3VwcG9ydCBmb3Ig
-c2FtYTdkNjUNCj4+ICAgICBTb0MNCj4+ICAgQVJNOiBkdHM6IG1pY3JvY2hpcDogc2FtYTdkNjU6
-IEFkZCBSVEMgc3VwcG9ydCBmb3Igc2FtYTdkNjUNCj4+ICAgQVJNOiBkdHM6IG1pY3JvY2hpcDog
-c2FtYTdkNjU6IEFkZCBTRlJCVSBzdXBwb3J0IHRvIHNhbWE3ZDY1DQo+PiAgIEFSTTogZHRzOiBt
-aWNyb2NoaXA6IHNhbWE3ZDY1OiBFbmFibGUgc2h1dGRvd24gY29udHJvbGxlcg0KPj4gICBBUk06
-IGR0czogbWljcm9jaGlwOiBzYW1hN2Q2NTogQWRkIFJUVCB0aW1lciB0byBjdXJpb3NpdHkgYm9h
-cmQNCj4+DQo+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N5c2Nvbi55YW1sICAgICAg
-IHwgICA0ICsNCj4+ICAuLi4vcG93ZXIvcmVzZXQvYXRtZWwsc2FtYTVkMi1zaGR3Yy55YW1sICAg
-ICAgfCAgIDUgKw0KPj4gIC4uLi9yZXNldC9hdG1lbCxhdDkxc2FtOTI2MC1yZXNldC55YW1sICAg
-ICAgICB8ICAgMyArDQo+PiAgLi4uL2JpbmRpbmdzL3J0Yy9hdG1lbCxhdDkxcm05MjAwLXJ0Yy55
-YW1sICAgIHwgICA0ICstDQo+PiAgLi4uL2JpbmRpbmdzL3J0Yy9hdG1lbCxhdDkxc2FtOTI2MC1y
-dHQueWFtbCAgIHwgICAxICsNCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zcmFtL3NyYW0u
-eWFtbCAgICAgICAgfCAgIDEgKw0KPj4gIC4uLi9kdHMvbWljcm9jaGlwL2F0OTEtc2FtYTdkNjVf
-Y3VyaW9zaXR5LmR0cyB8ICAxMyArKysNCj4+ICBhcmNoL2FybS9ib290L2R0cy9taWNyb2NoaXAv
-c2FtYTdkNjUuZHRzaSAgICAgfCAgNzcgKysrKysrKysrKysrKw0KPj4gIGFyY2gvYXJtL21hY2gt
-YXQ5MS9LY29uZmlnICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQo+PiAgYXJjaC9hcm0vbWFj
-aC1hdDkxL3BtLmMgICAgICAgICAgICAgICAgICAgICAgIHwgIDQ3ICsrKysrLS0tDQo+PiAgYXJj
-aC9hcm0vbWFjaC1hdDkxL3BtLmggICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4+ICBh
-cmNoL2FybS9tYWNoLWF0OTEvcG1fZGF0YS1vZmZzZXRzLmMgICAgICAgICAgfCAgIDIgKw0KPj4g
-IGFyY2gvYXJtL21hY2gtYXQ5MS9wbV9zdXNwZW5kLlMgICAgICAgICAgICAgICB8IDEwMSArKysr
-KysrKysrKysrKysrLS0NCj4+ICBkcml2ZXJzL3Bvd2VyL3Jlc2V0L2F0OTEtc2FtYTVkMl9zaGR3
-Yy5jICAgICAgfCAgIDEgKw0KPj4gIDE0IGZpbGVzIGNoYW5nZWQsIDIzOCBpbnNlcnRpb25zKCsp
-LCAyMyBkZWxldGlvbnMoLSkNCj4+DQo+PiAtLQ0KPj4gMi40My4wDQo+Pg0KPiANCj4gLS0NCj4g
-TGVlIEpvbmVzIFvmnY7nkLzmlq9dDQpSeWFuIFdhbm5lcg0K
+Most Exynos850 and Exynos9 (GS101) DRD PHY registers use GENMASK for masks
+and FIELD_PREP for writing values to registers.
+
+Rewrite the register definitions which don't follow this approach to follow
+it as much as possible. This patch doesn't introduce any fixes or
+functional changes, it's merely an attempt to introduce some uniformity and
+consistency in the driver code.
+
+The CRPORT SuperSpeed control registers have been exempted from this
+change. Since the writing of register values do not require any masking
+operations, implementing it would unnecessarily complicate things.
+
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 147 ++++++++++++++++---------------
+ 1 file changed, 75 insertions(+), 72 deletions(-)
+
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index 817fddee03927c943c3705ec38aba81b9b6a0975..534ccea9379539a1250e192660d169e47a5b193e 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -39,8 +39,7 @@
+ /* Exynos5: USB 3.0 DRD PHY registers */
+ #define EXYNOS5_DRD_LINKSYSTEM			0x04
+ #define LINKSYSTEM_XHCI_VERSION_CONTROL		BIT(27)
+-#define LINKSYSTEM_FLADJ_MASK			(0x3f << 1)
+-#define LINKSYSTEM_FLADJ(_x)			((_x) << 1)
++#define LINKSYSTEM_FLADJ			GENMASK(6, 1)
+ 
+ #define EXYNOS5_DRD_PHYUTMI			0x08
+ #define PHYUTMI_OTGDISABLE			BIT(6)
+@@ -51,30 +50,27 @@
+ 
+ #define EXYNOS5_DRD_PHYCLKRST			0x10
+ #define PHYCLKRST_EN_UTMISUSPEND		BIT(31)
+-#define PHYCLKRST_SSC_REFCLKSEL_MASK		(0xff << 23)
+-#define PHYCLKRST_SSC_REFCLKSEL(_x)		((_x) << 23)
+-#define PHYCLKRST_SSC_RANGE_MASK		(0x03 << 21)
+-#define PHYCLKRST_SSC_RANGE(_x)			((_x) << 21)
++#define PHYCLKRST_SSC_REFCLKSEL			GENMASK(30, 23)
++#define PHYCLKRST_SSC_RANGE			GENMASK(22, 21)
+ #define PHYCLKRST_SSC_EN			BIT(20)
+ #define PHYCLKRST_REF_SSP_EN			BIT(19)
+ #define PHYCLKRST_REF_CLKDIV2			BIT(18)
+-#define PHYCLKRST_MPLL_MULTIPLIER_MASK		(0x7f << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_100MHZ_REF	(0x19 << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_50M_REF	(0x32 << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF	(0x68 << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF	(0x7d << 11)
+-#define PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF	(0x02 << 11)
+-#define PHYCLKRST_FSEL_PIPE_MASK		(0x7 << 8)
+-#define PHYCLKRST_FSEL_UTMI_MASK		(0x7 << 5)
+-#define PHYCLKRST_FSEL(_x)			((_x) << 5)
+-#define PHYCLKRST_FSEL_PAD_100MHZ		(0x27 << 5)
+-#define PHYCLKRST_FSEL_PAD_24MHZ		(0x2a << 5)
+-#define PHYCLKRST_FSEL_PAD_20MHZ		(0x31 << 5)
+-#define PHYCLKRST_FSEL_PAD_19_2MHZ		(0x38 << 5)
++#define PHYCLKRST_MPLL_MULTIPLIER		GENMASK(17, 11)
++#define PHYCLKRST_MPLL_MULTIPLIER_100MHZ_REF	0x19
++#define PHYCLKRST_MPLL_MULTIPLIER_50M_REF	0x32
++#define PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF	0x68
++#define PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF	0x7d
++#define PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF	0x02
++#define PHYCLKRST_FSEL_PIPE			GENMASK(10, 8)
++#define PHYCLKRST_FSEL_UTMI			GENMASK(7, 5)
++#define PHYCLKRST_FSEL_PAD_100MHZ		0x27
++#define PHYCLKRST_FSEL_PAD_24MHZ		0x2a
++#define PHYCLKRST_FSEL_PAD_20MHZ		0x31
++#define PHYCLKRST_FSEL_PAD_19_2MHZ		0x38
+ #define PHYCLKRST_RETENABLEN			BIT(4)
+-#define PHYCLKRST_REFCLKSEL_MASK		(0x03 << 2)
+-#define PHYCLKRST_REFCLKSEL_PAD_REFCLK		(0x2 << 2)
+-#define PHYCLKRST_REFCLKSEL_EXT_REFCLK		(0x3 << 2)
++#define PHYCLKRST_REFCLKSEL			GENMASK(3, 2)
++#define PHYCLKRST_REFCLKSEL_PAD_REFCLK		0x2
++#define PHYCLKRST_REFCLKSEL_EXT_REFCLK		0x3
+ #define PHYCLKRST_PORTRESET			BIT(1)
+ #define PHYCLKRST_COMMONONN			BIT(0)
+ 
+@@ -83,22 +79,22 @@
+ #define PHYREG0_SSC_RANGE			BIT(20)
+ #define PHYREG0_CR_WRITE			BIT(19)
+ #define PHYREG0_CR_READ				BIT(18)
+-#define PHYREG0_CR_DATA_IN(_x)			((_x) << 2)
++#define PHYREG0_CR_DATA_IN			GENMASK(17, 2)
+ #define PHYREG0_CR_CAP_DATA			BIT(1)
+ #define PHYREG0_CR_CAP_ADDR			BIT(0)
+ 
+ #define EXYNOS5_DRD_PHYREG1			0x18
+-#define PHYREG1_CR_DATA_OUT(_x)			((_x) << 1)
++#define PHYREG0_CR_DATA_OUT			GENMASK(16, 1)
+ #define PHYREG1_CR_ACK				BIT(0)
+ 
+ #define EXYNOS5_DRD_PHYPARAM0			0x1c
+ #define PHYPARAM0_REF_USE_PAD			BIT(31)
+-#define PHYPARAM0_REF_LOSLEVEL_MASK		(0x1f << 26)
+-#define PHYPARAM0_REF_LOSLEVEL			(0x9 << 26)
++#define PHYPARAM0_REF_LOSLEVEL			GENMASK(30, 26)
++#define PHYPARAM0_REF_LOSLEVEL_VAL		0x9
+ 
+ #define EXYNOS5_DRD_PHYPARAM1			0x20
+-#define PHYPARAM1_PCS_TXDEEMPH_MASK		(0x1f << 0)
+-#define PHYPARAM1_PCS_TXDEEMPH			(0x1c)
++#define PHYPARAM1_PCS_TXDEEMPH			GENMASK(4, 0)
++#define PHYPARAM1_PCS_TXDEEMPH_VAL		0x1c
+ 
+ #define EXYNOS5_DRD_PHYTERM			0x24
+ 
+@@ -140,7 +136,7 @@
+ #define LINKCTRL_FORCE_PHYSTATUS		BIT(17)
+ #define LINKCTRL_FORCE_PIPE_EN			BIT(16)
+ #define LINKCTRL_FORCE_QACT			BIT(8)
+-#define LINKCTRL_BUS_FILTER_BYPASS(_x)		((_x) << 4)
++#define LINKCTRL_BUS_FILTER_BYPASS		GENMASK(7, 4)
+ 
+ #define EXYNOS850_DRD_LINKPORT			0x08
+ #define LINKPORT_HOST_NUM_U3			GENMASK(19, 16)
+@@ -497,29 +493,34 @@ exynos5_usbdrd_pipe3_set_refclk(struct phy_usb_instance *inst)
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
+ 
+ 	/* Use EXTREFCLK as ref clock */
+-	reg &= ~PHYCLKRST_REFCLKSEL_MASK;
+-	reg |=	PHYCLKRST_REFCLKSEL_EXT_REFCLK;
++	reg &= ~PHYCLKRST_REFCLKSEL;
++	reg |=	FIELD_PREP_CONST(PHYCLKRST_REFCLKSEL,
++				 PHYCLKRST_REFCLKSEL_EXT_REFCLK);
+ 
+ 	/* FSEL settings corresponding to reference clock */
+-	reg &= ~(PHYCLKRST_FSEL_PIPE_MASK |
+-		 PHYCLKRST_MPLL_MULTIPLIER_MASK |
+-		 PHYCLKRST_SSC_REFCLKSEL_MASK);
++	reg &= ~(PHYCLKRST_FSEL_PIPE |
++		 PHYCLKRST_MPLL_MULTIPLIER |
++		 PHYCLKRST_SSC_REFCLKSEL);
+ 	switch (phy_drd->extrefclk) {
+ 	case EXYNOS5_FSEL_50MHZ:
+-		reg |= (PHYCLKRST_MPLL_MULTIPLIER_50M_REF |
+-			PHYCLKRST_SSC_REFCLKSEL(0x00));
++		reg |= (FIELD_PREP_CONST(PHYCLKRST_SSC_REFCLKSEL, 0x00) |
++			FIELD_PREP_CONST(PHYCLKRST_MPLL_MULTIPLIER,
++					 PHYCLKRST_MPLL_MULTIPLIER_50M_REF));
+ 		break;
+ 	case EXYNOS5_FSEL_24MHZ:
+-		reg |= (PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF |
+-			PHYCLKRST_SSC_REFCLKSEL(0x88));
++		reg |= (FIELD_PREP_CONST(PHYCLKRST_SSC_REFCLKSEL, 0x88) |
++			FIELD_PREP_CONST(PHYCLKRST_MPLL_MULTIPLIER,
++					 PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF));
+ 		break;
+ 	case EXYNOS5_FSEL_20MHZ:
+-		reg |= (PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF |
+-			PHYCLKRST_SSC_REFCLKSEL(0x00));
++		reg |= (FIELD_PREP_CONST(PHYCLKRST_SSC_REFCLKSEL, 0x00) |
++			FIELD_PREP_CONST(PHYCLKRST_MPLL_MULTIPLIER,
++					 PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF));
+ 		break;
+ 	case EXYNOS5_FSEL_19MHZ2:
+-		reg |= (PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF |
+-			PHYCLKRST_SSC_REFCLKSEL(0x88));
++		reg |= (FIELD_PREP_CONST(PHYCLKRST_SSC_REFCLKSEL, 0x88) |
++			FIELD_PREP_CONST(PHYCLKRST_MPLL_MULTIPLIER,
++					 PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF));
+ 		break;
+ 	default:
+ 		dev_dbg(phy_drd->dev, "unsupported ref clk\n");
+@@ -542,13 +543,14 @@ exynos5_usbdrd_utmi_set_refclk(struct phy_usb_instance *inst)
+ 	/* restore any previous reference clock settings */
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
+ 
+-	reg &= ~PHYCLKRST_REFCLKSEL_MASK;
+-	reg |=	PHYCLKRST_REFCLKSEL_EXT_REFCLK;
++	reg &= ~PHYCLKRST_REFCLKSEL;
++	reg |=	FIELD_PREP_CONST(PHYCLKRST_REFCLKSEL,
++				 PHYCLKRST_REFCLKSEL_EXT_REFCLK);
+ 
+-	reg &= ~(PHYCLKRST_FSEL_UTMI_MASK |
+-		 PHYCLKRST_MPLL_MULTIPLIER_MASK |
+-		 PHYCLKRST_SSC_REFCLKSEL_MASK);
+-	reg |= PHYCLKRST_FSEL(phy_drd->extrefclk);
++	reg &= ~(PHYCLKRST_FSEL_UTMI |
++		 PHYCLKRST_MPLL_MULTIPLIER |
++		 PHYCLKRST_SSC_REFCLKSEL);
++	reg |= FIELD_PREP(PHYCLKRST_FSEL_UTMI, phy_drd->extrefclk);
+ 
+ 	return reg;
+ }
+@@ -598,8 +600,9 @@ static void exynos5_usbdrd_pipe3_init(struct exynos5_usbdrd_phy *phy_drd)
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
+ 	/* Set Tx De-Emphasis level */
+-	reg &= ~PHYPARAM1_PCS_TXDEEMPH_MASK;
+-	reg |=	PHYPARAM1_PCS_TXDEEMPH;
++	reg &= ~PHYPARAM1_PCS_TXDEEMPH;
++	reg |=	FIELD_PREP_CONST(PHYPARAM1_PCS_TXDEEMPH,
++				 PHYPARAM1_PCS_TXDEEMPH_VAL);
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
+@@ -620,7 +623,7 @@ exynos5_usbdrd_usbdp_g2_v4_ctrl_pma_ready(struct exynos5_usbdrd_phy *phy_drd)
+ 
+ 	reg = readl(regs_base + EXYNOS850_DRD_SECPMACTL);
+ 	reg &= ~SECPMACTL_PMA_REF_FREQ_SEL;
+-	reg |= FIELD_PREP(SECPMACTL_PMA_REF_FREQ_SEL, 1);
++	reg |= FIELD_PREP_CONST(SECPMACTL_PMA_REF_FREQ_SEL, 1);
+ 	/* SFR reset */
+ 	reg |= (SECPMACTL_PMA_LOW_PWR | SECPMACTL_PMA_APB_SW_RST);
+ 	reg &= ~(SECPMACTL_PMA_ROPLL_REF_CLK_SEL |
+@@ -749,14 +752,16 @@ static void exynos5_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
+ 	/* Set Loss-of-Signal Detector sensitivity */
+-	reg &= ~PHYPARAM0_REF_LOSLEVEL_MASK;
+-	reg |=	PHYPARAM0_REF_LOSLEVEL;
++	reg &= ~PHYPARAM0_REF_LOSLEVEL;
++	reg |=	FIELD_PREP_CONST(PHYPARAM0_REF_LOSLEVEL,
++				 PHYPARAM0_REF_LOSLEVEL_VAL);
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
+ 	/* Set Tx De-Emphasis level */
+-	reg &= ~PHYPARAM1_PCS_TXDEEMPH_MASK;
+-	reg |=	PHYPARAM1_PCS_TXDEEMPH;
++	reg &= ~PHYPARAM1_PCS_TXDEEMPH;
++	reg |=	FIELD_PREP_CONST(PHYPARAM1_PCS_TXDEEMPH,
++				 PHYPARAM1_PCS_TXDEEMPH_VAL);
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
+ 
+ 	/* UTMI Power Control */
+@@ -787,7 +792,7 @@ static int exynos5_usbdrd_phy_init(struct phy *phy)
+ 	 * See xHCI 1.0 spec, 5.2.4
+ 	 */
+ 	reg =	LINKSYSTEM_XHCI_VERSION_CONTROL |
+-		LINKSYSTEM_FLADJ(0x20);
++		FIELD_PREP_CONST(LINKSYSTEM_FLADJ, 0x20);
+ 	writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
+ 
+ 	reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
+@@ -946,26 +951,24 @@ static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
+ static int crport_ctrl_write(struct exynos5_usbdrd_phy *phy_drd,
+ 			     u32 addr, u32 data)
+ {
++	u32 val;
+ 	int ret;
+ 
+ 	/* Write Address */
+-	writel(PHYREG0_CR_DATA_IN(addr),
+-	       phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+-	ret = crport_handshake(phy_drd, PHYREG0_CR_DATA_IN(addr),
+-			       PHYREG0_CR_CAP_ADDR);
++	val = FIELD_PREP(PHYREG0_CR_DATA_IN, addr);
++	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
++	ret = crport_handshake(phy_drd, val, PHYREG0_CR_CAP_ADDR);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* Write Data */
+-	writel(PHYREG0_CR_DATA_IN(data),
+-	       phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
+-	ret = crport_handshake(phy_drd, PHYREG0_CR_DATA_IN(data),
+-			       PHYREG0_CR_CAP_DATA);
++	val = FIELD_PREP(PHYREG0_CR_DATA_IN, data);
++	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
++	ret = crport_handshake(phy_drd, val, PHYREG0_CR_CAP_DATA);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = crport_handshake(phy_drd, PHYREG0_CR_DATA_IN(data),
+-			       PHYREG0_CR_WRITE);
++	ret = crport_handshake(phy_drd, val, PHYREG0_CR_WRITE);
+ 
+ 	return ret;
+ }
+@@ -1134,7 +1137,7 @@ static void exynos850_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
+ 
+ 	/* Set VBUS Valid and D+ pull-up control by VBUS pad usage */
+ 	reg = readl(regs_base + EXYNOS850_DRD_LINKCTRL);
+-	reg |= LINKCTRL_BUS_FILTER_BYPASS(0xf);
++	reg |= FIELD_PREP_CONST(LINKCTRL_BUS_FILTER_BYPASS, 0xf);
+ 	writel(reg, regs_base + EXYNOS850_DRD_LINKCTRL);
+ 
+ 	if (!phy_drd->sw) {
+@@ -1151,19 +1154,19 @@ static void exynos850_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
+ 	reg &= ~SSPPLLCTL_FSEL;
+ 	switch (phy_drd->extrefclk) {
+ 	case EXYNOS5_FSEL_50MHZ:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 7);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 7);
+ 		break;
+ 	case EXYNOS5_FSEL_26MHZ:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 6);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 6);
+ 		break;
+ 	case EXYNOS5_FSEL_24MHZ:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 2);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 2);
+ 		break;
+ 	case EXYNOS5_FSEL_20MHZ:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 1);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 1);
+ 		break;
+ 	case EXYNOS5_FSEL_19MHZ2:
+-		reg |= FIELD_PREP(SSPPLLCTL_FSEL, 0);
++		reg |= FIELD_PREP_CONST(SSPPLLCTL_FSEL, 0);
+ 		break;
+ 	default:
+ 		dev_warn(phy_drd->dev, "unsupported ref clk: %#.2x\n",
+
+-- 
+2.48.1
+
