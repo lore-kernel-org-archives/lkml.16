@@ -1,42 +1,75 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B360914C5AA
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74EE1C6FEA
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742235528; cv=none; b=R5F3qS+ZZtB+EZQ6qlEtZpdHPh8wrfgapJws5PUI2686nyXVDLKnJwWEny9vpGgMydOGN/JPqpWMMoGiTSVyFhSIYgFYEJaBg4wRhjXxbOxG4ewfUxrkOSY4KBqi9z0Dmoyz1V3xgSaY+0/TUXMlp28r69O907nO4mxS46nsja4=
+	t=1742235541; cv=none; b=r5wl2tojvlvdcxRbFAF7hiWGDzoYHRQ1dJ8dXtPWh4BlTz5m+GbnjQuw4pd3jKRCwcviMzzqbaGWrMYiohXSBYksuiIu7Ra/u+rtEQjCWWfnkmaMgcxnbH/kFRZx6vgQECp6Ck5trQillZBNK1kEIPGfe08CJsyJtIArrfISxqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742235528; c=relaxed/simple;
-	bh=p3n4HVJD+Jwr/egUeXjJx4oqvPezPTUR8CdjTxPi8JY=;
+	s=arc-20240116; t=1742235541; c=relaxed/simple;
+	bh=XY35LuhQF+cA/uKthhJz6fw6a4pFTwgy5cet0LYLh4g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J65vNqqfdt7ahY3e0jP04uGjFzZQbsdD5rvhIbH3/0zgpQtM+OKXppH41Djof3bojDQE5JXGUxi302+VFaytEIV8FEdQpGl3CPaQXrOY7XbYI9ieJiGKB32MvkXyKYoBJGjeggQaXYh16k93i41+fI5QdfeQYhwVzcPagaE8EyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hVDEO61v; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=iZz5EY8cLDVyONmYpq2vGzGg47r8i6D9GBG3s0oxeLEfSZeJz8+25nm8o9v+rQEUosh0hsgSiVf6NKg9OTxgKKRlyD8hCn8jWD1PfRo4gLJnYaJdudJ0MIVJmsb1sj62uE1oADEz0WmAcakZ+tPMWDOGc4A0Wwvtf1xULocKbGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=yZlwgGe5; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hVDEO61v"
-Date: Mon, 17 Mar 2025 18:18:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742235523;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LzCRo0knkfJ8o8M5oL/sL88fmyKB4M28RkEky5+ZWrI=;
-	b=hVDEO61v7y2gc7S4vBCqSkkkVNYXUx3ECw9zmcBlxnd8cv1Bfna57KycbjgX5l/1m4P87l
-	RlujJH2cqZWkNJVF/sVbY0P9hUwKDSd/9MaFAk4VymW9qJnZMi5LkEMaKG6gsEPuEIIO0n
-	kb6uLH67aiJFdVRQy9MCuSbCQxRAMH8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Chengming Zhou <chengming.zhou@linux.dev>
-Cc: ffhgfv <xnxc22xnxc22@qq.com>, hannes <hannes@cmpxchg.org>,
-	nphamcs <nphamcs@gmail.com>, akpm <akpm@linux-foundation.org>,
-	linux-mm <linux-mm@kvack.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Linux6.14-rc5: KASAN: use-after-free Read in zswap_store
-Message-ID: <Z9hnf0Zv7_1vkh3n@google.com>
-References: <tencent_49DA3E780998A9B96ADC9FF658CC84641808@qq.com>
- <e6039be4-c7dc-4f2b-9ea3-5b16181d5a1a@linux.dev>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="yZlwgGe5"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c04df48a5bso467341785a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1742235536; x=1742840336; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fs5FRMsdqp/BT81c+IUYvUcJpd3cBpM8V6qAiLgpjPs=;
+        b=yZlwgGe5fmZ9wq0fRgXfLtveE+dzXBs8x8G7Eix+lkG3pyfphChQ5u3jD8A3AmFhdr
+         0jRMDt4L7Uc2hhmT2ccehYEY7YaaDvq1mOHh8GK/aJ7roAp9a7e6s/tzV5vhX5UrHo9b
+         yLNOJgAY9mjHGnpWaObyB4yJqjg6AG1w8kkhqVVB8OEGZstpzanouVF9dKAW6SWpfScp
+         CurOLP4Zq5aQp+Q43aYNfLWWJboaAzIFUPp5MMbLK7HyGCV6+5jH+TuEicdbJlMvPkCA
+         z4qDKG9ZcZUlH1Qkubb5jclF4l30QOP/gZDMe0hSf/z08V/cS+swBfGBsSAfOofKu7PT
+         Z2SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742235536; x=1742840336;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fs5FRMsdqp/BT81c+IUYvUcJpd3cBpM8V6qAiLgpjPs=;
+        b=p9adea9FwxJL7X7sh/QNSMJRuoJ7zqlh8Ko6UmNPBuNXRjoItFsVoELTsvn1wikOtm
+         kvKEXkKgK6WWLeMhLFEyz9JzUlpjhnsBTxWXc8HqHRFPudIV7I9p0CLMIAOrorlZCY2Z
+         Vvni5cEj8JV1meqnCW9Ilm+eRvs5Tiir4T1Qwka7masy+LIbjbHhWjdFFwBUeFPN0BPf
+         JvJgJ3YpattsJiasqpdyOwjFmgxdDwg64l0c1yHfHdTNR4frdPLWbg8h2kMpfQ7d+TjX
+         uMT87BbCtr2WknOZFEduqN/iJ1LeQKh19lXNcIiujEs8xYm9Cftdat9QuHriQc5WCIGc
+         jk2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXbGPZj/ffyvhrGB11GSHcP0sBVZkBEYZwImhvndXUPlAZQd8ZT6C7hU1iun5qKt3oR0Snt9LznMzUd++c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH+lkD9M3Xeh8EPXIrDjljjKD+XHnqlPQXrnNdE8Sl1BwrQr7k
+	V7SrHm7enQEDRLIW02BWLUuItIXVXnZUVnNjOFL4x2UFSpwPKP1cHN9s3bzt81s=
+X-Gm-Gg: ASbGncuvCIuvcxjOV4oRn4+QeIUMorOAuR3WRPBIgb0594tKS4pbu48PAvtL0OUIOJV
+	aYF1R0DqeqGhKIi4jDPtdNHz+lNHZm3c7TxreFpNie6PYpkJDgIaLwzecB8pVVRrfz0uHr405Wa
+	N3sW5UdrlqBy4fAQAWp7MTfAcodyc8jO9yrnx2rgnXKv2Hb6yPHGcX1LKe1T+gqia5pc8C5yN3j
+	Y9dKpwEa0a3zhxu+ZS4/JlUS1zbnH9P9ve3f1/1tZME90A8D3a8IcQnnpSWDpFiaVVOA64zgEme
+	p31vcIWwnAgccTw5x36hs6XStyFOncKRFLNplCKAyqwCO6uwwfKhpA==
+X-Google-Smtp-Source: AGHT+IGDO7z/jJycwpThPXWNMRYFlUkK/xin8Ffvpsmfo+RNv6m+nTJPfrYCHQRCo7pCvqqjyD58VQ==
+X-Received: by 2002:a05:6214:1d25:b0:6e8:9086:261 with SMTP id 6a1803df08f44-6eaea996d8dmr195571526d6.3.1742235536659;
+        Mon, 17 Mar 2025 11:18:56 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eade254502sm57587546d6.59.2025.03.17.11.18.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 11:18:55 -0700 (PDT)
+Date: Mon, 17 Mar 2025 14:18:51 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Hugh Dickins <hughd@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@compxchg.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] mm: compaction: push watermark into
+ compaction_suitable() callers
+Message-ID: <20250317181851.GA1694060@cmpxchg.org>
+References: <20250313210647.1314586-1-hannes@cmpxchg.org>
+ <20250313210647.1314586-2-hannes@cmpxchg.org>
+ <005ace8b-07fa-01d4-b54b-394a3e029c07@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,96 +78,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e6039be4-c7dc-4f2b-9ea3-5b16181d5a1a@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <005ace8b-07fa-01d4-b54b-394a3e029c07@google.com>
 
-On Mon, Mar 17, 2025 at 10:33:20AM +0800, Chengming Zhou wrote:
-> On 2025/3/17 08:13, ffhgfv wrote:
-> > Hello, I found a bug titled " KASAN: use-after-free Read in zswap_store " with modified syzkaller in the Linux6.14-rc5.
-> > If you fix this issue, please add the following tag to the commit:  Reported-by: Jianzhou Zhao <xnxc22xnxc22@qq.com>,    xingwei lee <xrivendell7@gmail.com>, Zhizhuo Tang <strforexctzzchange@foxmail.com>
-> > 
-> > I use the same kernel as syzbot instance upstream: 7eb172143d5508b4da468ed59ee857c6e5e01da6
-> > kernel config: https://syzkaller.appspot.com/text?tag=KernelConfig&amp;x=da4b04ae798b7ef6
-> > compiler: gcc version 11.4.0
-> > ------------[ cut here ]-----------------------------------------
-> >   TITLE:   KASAN: use-after-free Read in zswap_store
-> > ==================================================================
-> > ==================================================================
-> > BUG: KASAN: use-after-free in debug_spin_lock_before kernel/locking/spinlock_debug.c:86 [inline]
-> > BUG: KASAN: use-after-free in do_raw_spin_lock+0x285/0x2e0 kernel/locking/spinlock_debug.c:115
-> > Read of size 4 at addr ffff88804e78e014 by task kswapd0/98
-> > 
-> > CPU: 0 UID: 0 PID: 98 Comm: kswapd0 Not tainted 6.14.0-rc5-dirty #11
-> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> > Call Trace:
-> >   <task>
-> >   __dump_stack lib/dump_stack.c:94 [inline]
-> >   dump_stack_lvl+0x116/0x1b0 lib/dump_stack.c:120
-> >   print_address_description mm/kasan/report.c:408 [inline]
-> >   print_report+0xc1/0x630 mm/kasan/report.c:521
-> >   kasan_report+0x93/0xc0 mm/kasan/report.c:634
-> >   debug_spin_lock_before kernel/locking/spinlock_debug.c:86 [inline]
-> >   do_raw_spin_lock+0x285/0x2e0 kernel/locking/spinlock_debug.c:115
-> >   spin_lock include/linux/spinlock.h:351 [inline]
-> >   z3fold_page_lock mm/z3fold.c:223 [inline]
-> >   z3fold_alloc mm/z3fold.c:1060 [inline]
-> >   z3fold_zpool_malloc+0x9b1/0x1410 mm/z3fold.c:1388
-> >   zswap_compress mm/zswap.c:971 [inline]
-> >   zswap_store_page mm/zswap.c:1462 [inline]
-> >   zswap_store+0xe46/0x41e0 mm/zswap.c:1571
-> >   swap_writepage+0x3a7/0x1430 mm/page_io.c:278
-> >   pageout+0x3bf/0xac0 mm/vmscan.c:696
-> >   shrink_folio_list+0x3509/0x4480 mm/vmscan.c:1402
-> >   evict_folios+0x849/0x2100 mm/vmscan.c:4660
-> >   try_to_shrink_lruvec+0x608/0x9b0 mm/vmscan.c:4821
-> >   shrink_one+0x412/0x7d0 mm/vmscan.c:4866
-> >   shrink_many mm/vmscan.c:4929 [inline]
-> >   lru_gen_shrink_node mm/vmscan.c:5007 [inline]
-> >   shrink_node+0x2355/0x3c10 mm/vmscan.c:5978
-> >   kswapd_shrink_node mm/vmscan.c:6807 [inline]
-> >   balance_pgdat+0xa85/0x1740 mm/vmscan.c:6999
-> >   kswapd+0x4c0/0xbe0 mm/vmscan.c:7264
-> >   kthread+0x427/0x880 kernel/kthread.c:464
-> >   ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
-> >   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> >   </task>
-> > 
-> > The buggy address belongs to the physical page:
-> > page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x564c9cd0a pfn:0x4e78e
-> > flags: 0x4fff00000000000(node=1|zone=1|lastcpupid=0x7ff)
-> > raw: 04fff00000000000 ffffea000139e508 ffffea000139e248 0000000000000000
-> > raw: 0000000564c9cd0a 0000000000000000 00000000ffffffff 0000000000000000
-> > page dumped because: kasan: bad access detected
-> > page_owner tracks the page as freed
-> > page last allocated via order 0, migratetype Unmovable, gfp_mask 0x12800(GFP_NOWAIT|__GFP_NORETRY), pid 98, tgid 98 (kswapd0), ts 431124924160, free_ts 431131252025
-> >   set_page_owner include/linux/page_owner.h:32 [inline]
-> >   post_alloc_hook mm/page_alloc.c:1551 [inline]
-> >   prep_new_page+0x1b0/0x1e0 mm/page_alloc.c:1559
-> >   get_page_from_freelist+0x19a2/0x3250 mm/page_alloc.c:3477
-> >   __alloc_frozen_pages_noprof+0x324/0x6b0 mm/page_alloc.c:4739
-> >   alloc_pages_mpol+0x20a/0x550 mm/mempolicy.c:2270
-> >   alloc_pages_noprof+0x1c/0x250 mm/mempolicy.c:2361
-> >   z3fold_alloc mm/z3fold.c:1036 [inline]
-> >   z3fold_zpool_malloc+0x7aa/0x1410 mm/z3fold.c:1388
-> >   zswap_compress mm/zswap.c:971 [inline]
-> >   zswap_store_page mm/zswap.c:1462 [inline]
-> >   zswap_store+0xe46/0x41e0 mm/zswap.c:1571
-> >   swap_writepage+0x3a7/0x1430 mm/page_io.c:278
-> >   pageout+0x3bf/0xac0 mm/vmscan.c:696
-> >   shrink_folio_list+0x3509/0x4480 mm/vmscan.c:1402
-> >   evict_folios+0x849/0x2100 mm/vmscan.c:4660
-> >   try_to_shrink_lruvec+0x608/0x9b0 mm/vmscan.c:4821
-> >   shrink_one+0x412/0x7d0 mm/vmscan.c:4866
-> >   shrink_many mm/vmscan.c:4929 [inline]
-> >   lru_gen_shrink_node mm/vmscan.c:5007 [inline]
-> >   shrink_node+0x2355/0x3c10 mm/vmscan.c:5978
-> >   kswapd_shrink_node mm/vmscan.c:6807 [inline]
-> >   balance_pgdat+0xa85/0x1740 mm/vmscan.c:6999
-> >   kswapd+0x4c0/0xbe0 mm/vmscan.c:7264
-> > page last free pid 38 tgid 38 stack trace:
+On Sat, Mar 15, 2025 at 09:28:16PM -0700, Hugh Dickins wrote:
+> [PATCH] mm: compaction: push watermark into compaction_suitable() callers fix
 > 
-> It looks like the z3fold doesn't handle the migration correctly?
-> But it's suggested that we should use zsmalloc as zswap allocator,
-> and the z3fold/zbud will be deleted.
+> Stop oops on out-of-range highest_zoneidx: compaction_suitable() pass
+> args to __compaction_suitable() in the order which it is expecting.
+> 
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> ---
+>  mm/compaction.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index 4a2ccb82d0b2..b5c9e8fd39f1 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -2433,7 +2433,7 @@ bool compaction_suitable(struct zone *zone, int order, unsigned long watermark,
+>  	enum compact_result compact_result;
+>  	bool suitable;
+>  
+> -	suitable = __compaction_suitable(zone, order, highest_zoneidx, watermark,
+> +	suitable = __compaction_suitable(zone, order, watermark, highest_zoneidx,
+>  					 zone_page_state(zone, NR_FREE_PAGES));
 
-Yeah this code should be gone in v6.15.
+Ouch, thanks for the fix Hugh.
+
+This obviously didn't crash for me, but I re-ran the benchmarks with
+your fix in my test environment.
+
+This affects the direct compaction path, and I indeed see a minor
+uptick in direct compaction, with a larger reduction in daemon work.
+
+Compact daemon scanned migrate        2455570.93 (    +0.00%)   1770142.33 (   -27.91%)
+Compact daemon scanned free           2429309.20 (    +0.00%)   1604744.00 (   -33.94%)
+Compact direct scanned migrate          40136.60 (    +0.00%)     58326.67 (   +45.32%)
+Compact direct scanned free             22127.13 (    +0.00%)     52216.93 (  +135.98%)
+Compact total migrate scanned         2495707.53 (    +0.00%)   1828469.00 (   -26.74%)
+Compact total free scanned            2451436.33 (    +0.00%)   1656960.93 (   -32.41%)
+
+It doesn't change the overall A/B picture between baseline and the
+series, so I'm comfortable keeping the current changelog results.
