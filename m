@@ -1,115 +1,95 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2CB18C03A
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E66D2629D
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742200320; cv=none; b=IkUIj6QEXXQlHteTFCTXRx+QFAGQzAH3/vaHaGgdoCeAnLtJuOHKsV9Vfupzn/tDZtGIrjlPgeiZI0ElPSiEmRxVz0VDfzEPZhDjE/mB6F9RTs/74d7AkPvet3sQYK2iJDIiSi+xho45TbCRLAElBvrqY5gaAz6piyqqqcvWn3s=
+	t=1742200321; cv=none; b=NrwaMM1piDXk3WjpYah1OEbSCcApMPW4CnkksaAYpQ4y3BTcD5WTrtoTM6d4/hjyPYcctEXKZ9IfZkWApR26pGYCccLlK/onZGs1f2AqrodYlJTAa6k3ooxDRjUKaradP48QnKo5n0WQBya8e8jDVmii/KDrS5uIbdA/xnwspEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742200320; c=relaxed/simple;
-	bh=hVufP56gIqL/ekQh0Ds15+CJcC0jnI0bgl9xwOQs8v0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FRzrneIEvH+0oUehW9PfHLTXTqv+1PMuYgn+IK65maB+LFSTKRrYGr/xBcYkZ7aQIguTPG+rb+06twWAKAf1sovgP3FH6wJQ/18SnDQP4zNH+XUL/RJge8YDuKmOGGSpcmRKWk5wOH7JnbfFKu//Lx2xqgtdzg4wMBKPKzYynzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=13281Oum; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RneW/ph2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="13281Oum";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RneW/ph2"
-Date: Mon, 17 Mar 2025 09:31:55 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742200317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UJcBiNdm6rRo1qlHMjH21yTF+yAq1TpHJW2IXXtA4SM=;
-	b=13281OumgzsV2OQ6Ka2kcd9jgAzyXguf91lBZAEw4lDBfljzKhBOuXauByPxgkarfCy1BR
-	iK8CPoGshgTic4DrTgp5hvX6EWYWlYgml5AS4swD2huzCJPXujFnO7VPSFHWuDi1A/3S8D
-	N8u0fzhNzEG92afD0kxOpKwN+SE+zy+DQfkv8rKasNvKAzUZFO4V30D/wytWKHoaFlqoyW
-	K6crErUOk0ERaPlw57zLcWNTRijwFhk1GMtGtE0yfAiS5EQ5VAH7gu4pYXXbPrUh7nrvTy
-	xRSzENnQJr1ThHU/8vLf7oBjQ+t/Eop1FXW3z02oZxzHytwqOL5NWgRlREzZ1Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742200317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UJcBiNdm6rRo1qlHMjH21yTF+yAq1TpHJW2IXXtA4SM=;
-	b=RneW/ph23+saTEgYSWKSiZcsvPosJi2wRWszioBpUgilf2iB+o0KWSsiQ3nkzqA5kvHjD0
-	T7lsH36JL+hUZEDQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Ben Segall <bsegall@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 1/9] sched: Add a generic function to return the
- preemption string.
-Message-ID: <20250317083155.9g9ksofZ@linutronix.de>
-References: <20250314160810.2373416-1-bigeasy@linutronix.de>
- <20250314160810.2373416-2-bigeasy@linutronix.de>
- <Z9ay49NsoC73dKXe@gmail.com>
+	s=arc-20240116; t=1742200321; c=relaxed/simple;
+	bh=0hTlN1XUzNR8sJlUM5E9khwlIeJtFbebJeQTl3tA4ts=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pXsvgwOhIs3J48kUYu/4UP3XrAzo/L0Eb0ec7onr0iJYMM+fRIACacGqjPh8J+gJNNXdSDbivlDFS9CfoLDSGL0x27n6enNvEpl0hjhyq3HDFkwoaw3Hl0cS+aphpN6OMvJQh5ncZTXX9MpFDwHU2ykua7mB37gPcYPJ5derDa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 42bf6580030a11f0a216b1d71e6e1362-20250317
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:c03f0eb4-6149-4105-8cf3-b3466abafae2,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:6493067,CLOUDID:a224ae872dd280008ad123e8ee58416e,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 42bf6580030a11f0a216b1d71e6e1362-20250317
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <zhangxi@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1236381295; Mon, 17 Mar 2025 16:31:45 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 1256716011394;
+	Mon, 17 Mar 2025 16:31:45 +0800 (CST)
+X-ns-mid: postfix-67D7DDF0-9653161327
+Received: from localhost.localdomain (unknown [172.30.80.11])
+	by node4.com.cn (NSMail) with ESMTPA id E08491600052C;
+	Mon, 17 Mar 2025 08:31:44 +0000 (UTC)
+From: zhang Xi <zhangxi@kylinos.cn>
+To: linux-kernel@vger.kernel.org
+Cc: yangtiezhu@loongson.cn,
+	yijiangshan@kylinos.cn,
+	zhangxi <zhangxi@kylinos.cn>
+Subject: [PATCH] selftests/bpf: fix the compilation errors caused by larchintrin.h
+Date: Mon, 17 Mar 2025 16:31:42 +0800
+Message-Id: <20250317083142.561104-1-zhangxi@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <Z9ay49NsoC73dKXe@gmail.com>
 
-On 2025-03-16 12:15:47 [+0100], Ingo Molnar wrote:
->=20
-> * Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
->=20
-> > +const char *preempt_modes[] =3D {
-> > +	"none", "voluntary", "full", "lazy", NULL,
-> > +};
->=20
-> > +	/* Count entries in NULL terminated preempt_modes */
-> > +	for (j =3D 0; preempt_modes[j]; j++)
-> > +		;
->=20
-> I'm pretty sure the build-time ARRAY_SIZE() primitive is superior here. ;=
--)
+From: zhangxi <zhangxi@kylinos.cn>
 
-It would be but it is not an option.
-That array is defined in core.c where it is "always" required while
-debug.c needs it optionally. core.c is its one compile unit while
-debug.c is included by build_utility.c. So I don't see how this can work
-unless we shift things:
+On the Loongson platform, the header file 'larchintrin.h' is provided by
+the package clang-libs, and it is necessary to add CLANG_SYS_INCLUDES to
+the compilation command.
 
-|   CC      kernel/sched/build_utility.o
-| In file included from include/linux/kernel.h:16,
-|                  from include/linux/cpumask.h:11,
-|                  from include/linux/smp.h:13,
-|                  from include/linux/sched/clock.h:5,
-|                  from kernel/sched/build_utility.c:12:
-| kernel/sched/debug.c: In function =E2=80=98sched_dynamic_show=E2=80=99:
-| include/linux/array_size.h:11:32: error: invalid application of =E2=80=98=
-sizeof=E2=80=99 to incomplete type =E2=80=98const char *[]=E2=80=99
-|    11 | #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_=
-be_array(arr))
-|       |                                ^
-| kernel/sched/debug.c:250:13: note: in expansion of macro =E2=80=98ARRAY_S=
-IZE=E2=80=99
-|   250 |         j =3D ARRAY_SIZE(preempt_modes);
-|       |             ^~~~~~~~~~
+Signed-off-by: zhangxi <zhangxi@kylinos.cn>
+---
+ samples/bpf/Makefile | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> Thanks,
->=20
-> 	Ingo
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index dd9944a97b7e..f459360c99bc 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -337,6 +337,10 @@ endef
+=20
+ CLANG_SYS_INCLUDES =3D $(call get_sys_includes,$(CLANG))
+=20
++ifeq ($(ARCH), loongarch)
++CLANG_CFLAGS =3D $(CLANG_SYS_INCLUDES)
++endif
++
+ $(obj)/xdp_router_ipv4.bpf.o: $(obj)/xdp_sample.bpf.o
+=20
+ $(obj)/%.bpf.o: $(src)/%.bpf.c $(obj)/vmlinux.h $(src)/xdp_sample.bpf.h =
+$(src)/xdp_sample_shared.h
+@@ -376,7 +380,7 @@ $(obj)/%.o: $(src)/%.c
+ 	@echo "  CLANG-bpf " $@
+ 	$(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS) \
+ 		-I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
+-		-I$(LIBBPF_INCLUDE) \
++		-I$(LIBBPF_INCLUDE) $(CLANG_CFLAGS)\
+ 		-D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign \
+ 		-D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-types \
+ 		-Wno-gnu-variable-sized-type-not-at-end \
+--=20
+2.25.1
 
-Sebastian
