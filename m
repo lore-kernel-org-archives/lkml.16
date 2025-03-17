@@ -1,219 +1,121 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2048.outbound.protection.outlook.com [40.107.94.48])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB0015687D;
-	Mon, 17 Mar 2025 17:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742232238; cv=fail; b=huIiGL2AuKS9SBq2cOtdvEnz/3GWp9sZMhn+7QHzYFjCwX5923+HYVZ2MoKK/PG57o+uW9EJ9C0B0FnlijorF3haXOLRpIsZAlG6ZyOYkHwLPk16uyVsy5lAhqNlk88rhX7X6NqEcOahT8Lf9CMk4HuWU72/HJrNYx7wQ0AJYxI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742232238; c=relaxed/simple;
-	bh=ho4JZxU1MwjvhaTt+tRr/DneekiwZFqer0ZhgHx2mTY=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=TpU/EdItRfK/Qav1jTThiAMfoVOXvLiHgABX9APhgevw7F55RIqtvpJvUoBg7m+WKfyMP32Qcl4W5gQaR3eCCSpv+p9SRrToylWHmx2M12551ANG8vvKvPoBs/SqjCnPkduPVTd1pc8d8FB8KqPqzdtDsnepbUs1NbwQjSEkWWs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YS3Fv7ev; arc=fail smtp.client-ip=40.107.94.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YS3Fv7ev"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JCgck1tFR//Jr0nIC75EH0aCsPIv2mYWpK7XcM6k+OI/6SmsCSNwYEbQ5p0hwn6pq0Yf3KP5vKaMHve+65icqje7D/gbtmlq0BCLv4xrJCSKpRtoZq7hYenQnmaAG5JzoLFBFnYCBupP4TNvwSS2lx3DbswkHyaStc3OFY6OiIWQgW19pkz57XAY/Vn8x0vnDeJciDCrnhdj9RkHXgi0KuHpOM3nZKrvQrzfV99EKS1GVXw9JsLYw6sa6wqwR2qU+ioY4q7nXgYlTFuOn49lYSVO/y/1yLQ/FnXQs4Ypedfa8nWxOfcHDnp0hafEgkbxSsEONYsGslTCESNYsnlbbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wIbYYfJ9aUN5XgEd5465nfKTKXi4ZwyxRND5eOeCxVw=;
- b=jT533qK8iODQcSGRbZw5erZta+gmwhx4Ldec+TsfbKmm0OMSoVBsJQjNdrT/VFzE6qHNPRFlMzTH5guK69B4Jci0VwyddylRkXkXPP77gz/0AjopSxBefrQfKquIMnJ4apWc4wwjCQk0PLLhMhw4IJ1OE9BtgheqVnuXGSmkkGhozgi6N850qBCMBs+5fQMfqvGG4xJ0PfaKnhccBb9Lu+sWxD4XEYzpCBB46uWx7+tJI1EzSgXAxULGSvHrg/6ojiGirlTLdIVv5k8MRNQqsmGwLmzk6bBQCqiDMKPUzpq+VqY2UdxHC2fq5F0TXGJyfw4IT71n9PBDfisTsSlwFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wIbYYfJ9aUN5XgEd5465nfKTKXi4ZwyxRND5eOeCxVw=;
- b=YS3Fv7evTfZT7+xiYS6iCeAM9TkGT9GyEXsgSQokqrSwnYIQCQe9WxGiPCySUrNaEeoWtz0RlS+w1RL3pM3+pBfKDZPaVu7pTty+WQeIu991lA6SAlGaVY3iRZQjr92shBcYS0s+P1fo7n9CzW8NIJUU7Xoc17I3rl4EY37sxNM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by BY5PR12MB4276.namprd12.prod.outlook.com (2603:10b6:a03:20f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
- 2025 17:23:53 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%4]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
- 17:23:53 +0000
-Message-ID: <48899db8-c506-b4d1-06cd-6ba9041437f7@amd.com>
-Date: Mon, 17 Mar 2025 12:23:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] KVM: SVM: Fix SNP AP destroy race with VMRUN
-Content-Language: en-US
-From: Tom Lendacky <thomas.lendacky@amd.com>
-To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
- Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
-References: <6053e8eba1456e4c1bf667f38cc20a0ea05bc72c.1742232014.git.thomas.lendacky@amd.com>
-In-Reply-To: <6053e8eba1456e4c1bf667f38cc20a0ea05bc72c.1742232014.git.thomas.lendacky@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0053.namprd04.prod.outlook.com
- (2603:10b6:806:120::28) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387FC18A6DB;
+	Mon, 17 Mar 2025 17:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742232270; cv=none; b=KVe8DaDckBDiEvb9L1MO5QjcC0s7R8kR0zrAmpnaN2TGHRlZdKYUC0jAGbnoSAyu8UL/wlNf29SOvvmndjJ+NyLM7tih0tu3G5QxQu8NRsuKNgTIxuKtddP2tFbqE08Kawi7oo3TFI2bMof+lijoDlg61pIZFlcBpN8ZwzjsLfo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742232270; c=relaxed/simple;
+	bh=zbbR6WbFaC4VlMNV/gml+ZSldzu+moegdui9CEsqH7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tJwiby4Q5TakEO9zG5KfzZY+hTzzaEzNPaqJnIo7tpaK4ckLiyAbOEtxsEoFrQ3MTTZ/OynzRULQoaA3kVSJyDiaUmB3cSwPLO6XWCy9A7z9JSWjukWXGI5dr4nx4SZOE+CoI4afhKqh6/dhRzra30qgR3xgsHsDLSPHTnAi0/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5114C4CEE3;
+	Mon, 17 Mar 2025 17:24:27 +0000 (UTC)
+Date: Mon, 17 Mar 2025 17:24:24 +0000
+From: Mark Brown <broonie@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Sowjanya Komatineni <skomatineni@nvidia.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>, linux-tegra@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rmikey@meta.com, kernel-team@meta.com
+Subject: Re: [PATCH 1/3] spi: tegra210-quad: use device_reset_optional()
+ instead of device_reset()
+Message-ID: <f3e47d12-f6be-4bb5-b87b-84aa0037e1ef@sirena.org.uk>
+References: <20250317-tegra-v1-0-78474efc0386@debian.org>
+ <20250317-tegra-v1-1-78474efc0386@debian.org>
+ <22ffa8f5-6590-4602-853d-ceffed580f22@sirena.org.uk>
+ <20250317-solemn-debonair-sambar-f04fa7@leitao>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|BY5PR12MB4276:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf65352e-a581-4c63-b837-08dd65787d56
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ek9ETXd1V3JjTzZBYjhqMnptUjdDdUJiWjV2ek5sUmc3UVd2dVZHelRYeFZN?=
- =?utf-8?B?OU51Z3o1cXF5K0ZrdlhQcGZCZi94NGtaWG8ydDNXSDRqanA3Z1Fldk1pRm5R?=
- =?utf-8?B?VGtUZG9IOHdPWDdDZmlmR2VWc0dLQWVuVHZwL2Y3Vlc1MmVPYjIxUWcrWEpm?=
- =?utf-8?B?TmY0aWMzUXdpUU1zV1BuVkxmY2JwNFVGK0FiQ1BkeEFaSlMxRDJTVWkxOTV6?=
- =?utf-8?B?TkUvNjdKYUNLTFh3OS8rZHVFVGVTY05PRWVxZnJ3dWZnMm1Hc0hJcllMZVNs?=
- =?utf-8?B?WXpHdnI3MmFnRlVYVWlYVitZcy9Hd1orc1pxVnluZE5YTnp3M3RhRm84RWZo?=
- =?utf-8?B?d2ZZVjhwOG1DWXEwMkgrQXdDQlZqbWdQcXZmMCtpVFp0bjZCV0VtdnNvVkhq?=
- =?utf-8?B?UkM5UnJ1TERJbGNBS0VIbUNWQmpuY3BHQm85UGpVbGlWZTk0bVVRSUx1c2x1?=
- =?utf-8?B?MHhNTWZPRjE3QnhieG1FbkRnWURxZzBQNlBsMzhBOXJtT01VaWI4VHhkQlRj?=
- =?utf-8?B?NSt0SFlUQ3d5NTFMQlZvUThxVFYxRE1vWnRCQUJmbk9zdG9wWkxhRllIVEtu?=
- =?utf-8?B?WmlKNFZoakNrTzY1UzdiMGpQKy9YWlA5ZVoxN0YzZXZScEtQV20veFloeXFx?=
- =?utf-8?B?RWhneFBPekRjQUpFeDN2MU45cXZGbWlrQk9vemhwWU14V3RSZDBHYXpQL29G?=
- =?utf-8?B?QnRiMkgvMEpuR1JmUkVNMXdNdFh6OU11bGZhZ2k0TmhMREREU0dudmdUOEl0?=
- =?utf-8?B?V29vaHNIVmFRTVNCTG10ZytIQ0RwcDlIcXZTaEFyd1hta1R0cksrbmxLOG5m?=
- =?utf-8?B?bjZoVWJrZUk3aHd2djZOV2xrQWE1Q09NaWorZUY1R0V3K1dBTzYxYVVYcnln?=
- =?utf-8?B?UkJURWtzeCtjVTFKM3BaazJEYWhPYXVmeldVVlFxeVM5b3pDR2RBd1lvL21Z?=
- =?utf-8?B?WU56ajZWaDZ6SS90NjJEaWphbExiTFIrK0dEb1pRS0p1QW02Z3ZtWjFiazkv?=
- =?utf-8?B?anlVK0orb25lWFZtemZyT3B0RXVuMzRQMGUwNWN3UTc4d2tzeHNmeUloY1J4?=
- =?utf-8?B?VUh2UXhlQWJTMXBTUUxTR1dJVGpQRVRWNGpGQkNBWDd3dkZjWW1YRnY5WVFa?=
- =?utf-8?B?T1A1YyszczlUaXRRdVZGMlZSQU5KWU9zL3g2MkcvaWx3QnJjZWZWZmVGTjZT?=
- =?utf-8?B?R0dvdndmM01GcDJZbm5seUJaY1RoTUJDNDdrTGlHaVVCQ2xuOS9nRHVBK2Z3?=
- =?utf-8?B?cWJ2bzh4K3AydFJNelJYOGVoVk1lc2J5WE1OUXhhNUFLeHp2OTNVbTBHWVhK?=
- =?utf-8?B?ZUlac1U4NTVyUmo5SXNIVHBRMFV0cjF0UzBlOVFremo2Z1V1YUZMdHo3VkdX?=
- =?utf-8?B?UVBubitnZW9NVXA3Qk9SZzEyQmsxd3NzL2wwZWVtTkcyUUtGeUxIOHBYQzMr?=
- =?utf-8?B?UEJFNHNLd0Z5dzI5Q2FrUnltTTVuUitkcmJqWkxBaUFDbTNlcENjdFBSbzNP?=
- =?utf-8?B?ZWZyNEFqMHRMcjJDcTlrdTFRc1NjYVNDbHB2TC96Syt6TGU5WU1MOXVoWTZ4?=
- =?utf-8?B?ci9JcnRoSGxsVHZFOHk3NXA1QllXK2lrZXViRG5nRFozYXZneWNvdXBMSEty?=
- =?utf-8?B?cUxWQ242aUVuTnY4Z2UvRTZFczhhU2tHN3hmRzFQQXp4L28zZVo2NFZOS3R6?=
- =?utf-8?B?bzNQQWYxYXBhN01FVEtmRkl0QS9kcTN5d041amI4ZlNXSE42cDYxcDcwb3Js?=
- =?utf-8?B?RXBHTXBGajdic1FBTkdtUnd3Z3RjdnhRTTZidnY5ck56WEdNL1pTeE9KUzYx?=
- =?utf-8?B?NWNDUHR2Wml1bndwTlJoemtkUDE5TTlEQWk3OWpoN0YvQ2xOUzVuaFpidEEv?=
- =?utf-8?Q?+PiVrH8Zi9yuw?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YzZEWXBaZlBqZkxhUURxWWVJRDdXQitOQnFiTXJEZzc5ejV3bGdyQ1RrZ3Q4?=
- =?utf-8?B?d0dHaG9KRGY1NmkwaTNZeldVQ0JSay9VK053ODQ3OEc5NTNOdU9oYUltY3NG?=
- =?utf-8?B?MmJGalVRY3pNREdIZGhHUlo5K2Q0dVVUOUlrSjgwSWxaalVlRjMzZ003Y283?=
- =?utf-8?B?NUFjamIrZVNPNDFzUTVWcnNsUWRmOERUeFJnMmhMRUdkRW5XVzJpZU1FQnpZ?=
- =?utf-8?B?RlBDMXl6ditHKzRnMnhvdjVnRnpnaE1mRDBGSHVXUGNybzhPanRuWnNMdnd1?=
- =?utf-8?B?bHROOGJpQmVPRVNXWHdZMXVQS1hTU2Z3RFlybXVHdjFiRU1vWVFZdXpaWFd4?=
- =?utf-8?B?VHBXb0k0R1BhOHZTR1RkQURRajVwNHcvWVorZ0tEeTBpWFBudTQ4ZGxRSzJK?=
- =?utf-8?B?bnRabGhVczRBVGYyV0FZNVlTMVU5bVVYZ3hGaHQxZWFJajBqd091eTJidERz?=
- =?utf-8?B?ZmdROUV1SDh0Mm11OHlxOGMzTExwR0dNWHAyWWFtem5qbmNjRmVIWFVpVXNE?=
- =?utf-8?B?OTY4R2M0RlM0Y3E4ekVlL1gwTlNYaVVxaGZlVXpDU2VIYTFlOS85VG5zVC9r?=
- =?utf-8?B?YUVoL0dabFRKQzN3cGxOVmVVV3RLcFFvRVRkY0hmekVVOThPcytiU25PY3RU?=
- =?utf-8?B?SXZQelo4RWxKcDNMVVZtZ0x0WWxuZUNRR2hHMGpNdkpGNWJ5WGhIbFdsa2da?=
- =?utf-8?B?NXFFRWFLVXg0K29WNm9lRUdHY3V5ZGZPTnY3SmhWQWpIOE1OQ3ZRcld0Y045?=
- =?utf-8?B?Q0tGUitrTTRMSU9ySjdYRVhkYTFna3MwL1ZadUdraThZaFdrd1BvdVB6MzRi?=
- =?utf-8?B?S0N3U0tMcDhIK1JRVHBTZlhpM1ltU0xrV0tyUldkTmNLaWhlWlgyTEROZ0c2?=
- =?utf-8?B?VGplcEdDeTcvbWp3TkF1RTgreDdCZHBYOGw4S0ZqcmFJbW9lT0R6Mm5xd2Ir?=
- =?utf-8?B?NlJTZEk5d3JEaFk3MWZsQjVFbHh3UUJQZFlydEt1Wk9YTUNQaVJWblM3Y2FI?=
- =?utf-8?B?dlB6VlFUOC92UFJYTGN5dzl5VkhpV0lIaTU2aVJDb1NWNDNrMHRiM2tBWFo2?=
- =?utf-8?B?cjBXcWlYTDBOcVVXNjBGOTlYa3M5MzE4RzYzRWFTVkJkWDR1MGVQZHU3Z2ZC?=
- =?utf-8?B?L05maVRMR1JKZ1FMZVI3M1F0MS9pYmNOazlESjM3YVoxSUpBbWFLT0VvV05Y?=
- =?utf-8?B?YnhHcDVUWjJUODFKZzBGOUYxSlA2TURGR2RHbGZzQ0MxcVZ0UmpKQ0lZNVpY?=
- =?utf-8?B?MEFjcVdEQ2IwUC9KMUxtTmkzQXlrQXBXRjNFandraHNBNTZEWlRIbHZmL2Jo?=
- =?utf-8?B?MFp2VzlpNDcwS1VTNHNVazRmbU0wdmJpeWJpUkwyeCtkTDRiOUZvOVhSTGdL?=
- =?utf-8?B?YnFSYkJ5Z2Y3VDhGZ3FuTWhBMkRCWXJoaWtqTFRNNlY1NldtVVlkZjVSMHdu?=
- =?utf-8?B?anpVWG1YZG0rbU9hMGhwc1QyWkZBNGdtWm1OQkZFMWZpS2xiTFJ2OENweWRs?=
- =?utf-8?B?S0RMcUFqbjdUQm5vRTRQYW15dHAxSyt3UkpzL2pVMTRsVTJYRE1iWDB0S29o?=
- =?utf-8?B?cXhPREJ5N0VzMXowWUd1bk9aR1RBRjVUb2VBUmlJNlFwVUNMK0ppQnNkNkND?=
- =?utf-8?B?bTBmU01ScDkrSjFNeUZvL25xVXdsU2xKeGsyWjlKdm9GWjV0cmlGd1RzaUta?=
- =?utf-8?B?Y05mMWt5dzVRZTdPWmUzUGJZUTFWK2pSTHU0MmppYVkwRExBanJkdUlzUVhB?=
- =?utf-8?B?OTBYNTNtQUsxT0xCK20xMnhqZ0xVY3QzazZDYzN3eHIzSlRqOXhIV2QraGxt?=
- =?utf-8?B?ekJmTGhaVTJRY0Nvcyt2YmxlcU54TVI3d2dzbWdHUFh0dGVSZjdlZ05yeVZ4?=
- =?utf-8?B?amkyWkxVU3JpVXhEckpkb21UZnU5VTVkMDFrTjUyMnVsM0JLYUdkK3dwdnVx?=
- =?utf-8?B?NUh3Z1hyaTZMbkNoVm9Ha0FGYnNjYW5ObVRHSFNPMXJiVENhb3p5VXZKTWZp?=
- =?utf-8?B?b25mLzk2Z0xNZysxL09ac29BeHcyZ0lWV2F6T2dVOTE4N3V6QUk0dmM5MTJs?=
- =?utf-8?B?SGNkTWdIM2hCMzBMQVFoNjFQVUlBakRmUkw4NTRpbGNHd3IyOW00bEorM3pp?=
- =?utf-8?Q?dN7ZPZM4Z9LeUe/ULuNWcUQ36?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf65352e-a581-4c63-b837-08dd65787d56
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 17:23:53.1472
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eZyQ6hhWVUQqAsfktHWVNzZ0p5LqjAykRiSYiEtlUD4J+ttw9rrr5EMbjhQLrhkTzWe0xemsXjfR0ODL3P4DRA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4276
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mKVuPqVh/OxM585l"
+Content-Disposition: inline
+In-Reply-To: <20250317-solemn-debonair-sambar-f04fa7@leitao>
+X-Cookie: I know how to do SPECIAL EFFECTS!!
 
-On 3/17/25 12:20, Tom Lendacky wrote:
-> An AP destroy request for a target vCPU is typically followed by an
-> RMPADJUST to remove the VMSA attribute from the page currently being
-> used as the VMSA for the target vCPU. This can result in a vCPU that
-> is about to VMRUN to exit with #VMEXIT_INVALID.
-> 
-> This usually does not happen as APs are typically sitting in HLT when
-> being destroyed and therefore the vCPU thread is not running at the time.
-> However, if HLT is allowed inside the VM, then the vCPU could be about to
-> VMRUN when the VMSA attribute is removed from the VMSA page, resulting in
-> a #VMEXIT_INVALID when the vCPU actually issues the VMRUN and causing the
-> guest to crash. An RMPADJUST against an in-use (already running) VMSA
-> results in a #NPF for the vCPU issuing the RMPADJUST, so the VMSA
-> attribute cannot be changed until the VMRUN for target vCPU exits. The
-> Qemu command line option '-overcommit cpu-pm=on' is an example of allowing
-> HLT inside the guest.
-> 
-> Use kvm_test_request() to ensure that the target vCPU sees the AP destroy
-> request before returning to the initiating vCPU.
-> 
-> Fixes: e366f92ea99e ("KVM: SEV: Support SEV-SNP AP Creation NAE event")
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-Sean,
+--mKVuPqVh/OxM585l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If you're ok with this approach for the fix, this patch may need to be
-adjusted given your series around AP creation fixes, unless you want to
-put this as an early patch in your series. Let me know what you'd like
-to do.
+On Mon, Mar 17, 2025 at 09:56:43AM -0700, Breno Leitao wrote:
+> Hello Mark,
+>=20
+> On Mon, Mar 17, 2025 at 04:45:31PM +0000, Mark Brown wrote:
+> > On Mon, Mar 17, 2025 at 08:44:01AM -0700, Breno Leitao wrote:
+> > > My UEFI machines with tegra210-quad consistently report "device reset
+> > > failed". Investigation showed this isn't an actual failure
+> > > - __device_reset() returns -ENOENT because ACPI has no "*_RST" method.
 
-Thanks,
-Tom
+> > That's not the case, it's returning an error because there is no reset
+> > controller discoverable via any mechanism.=20
 
-> ---
->  arch/x86/kvm/svm/sev.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 0d898d6b697f..a040f29bb07b 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -4071,6 +4071,16 @@ static int sev_snp_ap_creation(struct vcpu_svm *svm)
->  	if (kick) {
->  		kvm_make_request(KVM_REQ_UPDATE_PROTECTED_GUEST_STATE, target_vcpu);
->  		kvm_vcpu_kick(target_vcpu);
-> +
-> +		if (request == SVM_VMGEXIT_AP_DESTROY) {
-> +			/*
-> +			 * A destroy is likely to be followed by an RMPADJUST
-> +			 * that will remove the VMSA flag, so be sure the vCPU
-> +			 * got the request in case it is on the way to a VMRUN.
-> +			 */
-> +			while (kvm_test_request(KVM_REQ_UPDATE_PROTECTED_GUEST_STATE, target_vcpu))
-> +				cond_resched();
-> +		}
->  	}
->  
->  	mutex_unlock(&target_svm->sev_es.snp_vmsa_mutex);
-> 
-> base-commit: f8d892c137f7448d7b49f5e3ad7aa7b5a48a64ed
+> Sorry, I was not very familiar with this subsystem, but I chase down
+> __device_reset(), and I found the return was coming from:
+
+> 	int __device_reset(struct device *dev, bool optional)
+> 	{
+> 		acpi_handle handle =3D ACPI_HANDLE(dev);
+> 		if (handle) {
+> 			if (!acpi_has_method(handle, "_RST"))
+> 				return optional ? 0 : -ENOENT;
+
+> > There's no specific handling for ACPI here. =20
+
+> Do you mean no _RST method as stated above?
+
+That's only happening in the case where the device has an ACPI handle,
+the SPI driver has no idea why the reset API failed to look up a reset
+controller.  Your change is to the SPI driver, not the reset framework.
+
+> > It's also not clear that this is a false positive, the
+> > driver did indeed fail to reset the device and especially for the error
+> > handling case that seems like relevant information.
+
+> If the driver failed to reset the device, then device_reset_optional()
+> it will return an error code, but it will not return an error code if
+> the RST method is not found, right?
+
+> Sorry, if I am mis-understading the code here.
+
+Clearly if no reset controller is available then the driver will have
+been unable to reset the hardware.  That seems like something it
+actually wanted to do, especially in the error handling case - it's a
+lot less likely that we'll recover things without the reset happening.
+During probe it's possibly not so urgent but at other times it seems
+more relevant.
+
+> > At the very least the changelog should be clarified.
+
+> What would you add to the changelog to make this clear?
+
+For starters the mention of ACPI is irrelevant to what the SPI driver is
+doing.  This sounds like a change specific to ACPI but it affects all
+users.
+
+--mKVuPqVh/OxM585l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfYWscACgkQJNaLcl1U
+h9CdMwf9HG+W0/aFm8iS2Lnww7hNSddYKsFT9JGqqbd6NHP0gTTAJcjrJmauPW/+
+uRbvYzVP7ps9l53qUJZaYoY2nbrywHmog1aV4bdes+XrWGLOixff+NsV7P3OmleR
+DquV/mN6H1IQ4C8uCPJUE4br/wfqNakpThSRXAAhhYgShwm38WMAjH2fV1XprU4o
+P2FAjBQAWXPq6HdQ96zkNSWhgyLk13F1vHT8YBCaCnpZ+EFwM4gtK0vFxBNzyCzh
+o5v5BV9TlA+U1jJviDltp4BYQ7ZmHcJehbEIxJNJSWO3fDh/IHPp2LodWYDs5GJh
+NtFMyB/t6cj2H0ED1Uq2WXwvDwvA3w==
+=zlnz
+-----END PGP SIGNATURE-----
+
+--mKVuPqVh/OxM585l--
