@@ -1,195 +1,159 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD391714AC;
-	Mon, 17 Mar 2025 16:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF2017A2EA
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742227358; cv=none; b=IsDGFUuf+lE7kGvfcv0RAoYcji1tj8D/WJEGiTNdzDwM4DmAaOl5y5NCmDSndhpp4GPrQ6577jf1vNvJhYnalVkzTnj2b/HYsFZgbUzO+XCtbyYPXeedxSPSGkGWF5ZbimkZb04NS+7dFKwVpk72v66LflJngSK3n2I7NI5397c=
+	t=1742227381; cv=none; b=cdE64ZrPHlMGvuS12cXMQySGG/1ljg3jtCG54VlMfe44a9evhDWKOAfAzPnikGI4Aa+OIsVmXzjKfE8g1UzeioOzjuPGrmfG15P6oy2tkmQpPkwBYeO/9W1EgvkLlDof1CPrwHlwIz6E49l98rcmCy6siEIUX9J1JchXdDVsIyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742227358; c=relaxed/simple;
-	bh=D4NAe2iUldLe4tWzQTlHWH/IOChqKMJQqbOqVgCD8UA=;
+	s=arc-20240116; t=1742227381; c=relaxed/simple;
+	bh=QrGtzvGhJEt+eGpdNr3YvstJ5y6Ln+VWAevcx+CJnH8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O7M+8ibvx4OvjM5VKbhIFM+VGN6yVA/Gv/5bLnmZ10JT/wChlTDedJUtpfSOV0y7/5IKNl6Zo6ABvJ5xBMfJt+p1qsiZga/HA7fte4LiVhGByqR9ir7JGMBLAeAfh/xK2Xi30pVTinMlRdg7tLWKzGC8N6+V1DCY5GmKuqrqzzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=J9vJYFdb; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	 To:Cc:Content-Type; b=mfP2sBnaUrbHonCFx2Y/jQWncZinctXbFbdHA86660DXiV2P8RM+3wDITeV3GdVsz/wtpMGnDdA+w43AadULFLKCveIzYMl3xSwaB2dXQdBxnlHNX6K+1uBONWlG6Za/+Hv6hnYG5IZ3cI7URlHfYN4/aUcNVvBeeQJ6yBYD5AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uRoOhLq4; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="J9vJYFdb"
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 79DF32E09564;
-	Mon, 17 Mar 2025 18:02:32 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742227354;
-	bh=xqwq/Em1fb5FMerjkMCm9F29xL5Dgmo9MCoLm5hsuTI=;
-	h=Received:From:Subject:To;
-	b=J9vJYFdbDUkFtTdJrHn750leNJuSPKRLOyrlsePoc4IXZ7Aeg+L7ANV0j2BLlb/3I
-	 KwTX05/njWnzu8dS+wfh7bWLZhgcM8PbvrjVcnBXwfsr3Ku7jgymNu4Orm/NjGIU/h
-	 jp02v1fUuojgpkHLHy0dCY1Wn0Nq+cobguISHbis=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.167.48) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lf1-f48.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lf1-f48.google.com with SMTP id
- 2adb3069b0e04-5493b5bc6e8so4926574e87.2;
-        Mon, 17 Mar 2025 09:02:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCV16eyUBrMr8h0VgkaWUluFGaVnQAMtn+0f3tHEKRclAid9vtrnHuRtDyB3sm1V5B5weOa4w6vX4kM=@vger.kernel.org,
- AJvYcCVJaPdY00hXonZeXHw5uIN2D8I9SSJnSwm4/VKEI51t7gOSz6cffmars8ibp65La2K856vNTGunH9A=@vger.kernel.org,
- AJvYcCXyPTdPWcAryhkSqsf46ZwKWWhtvYwnZq65sxgGVgdNIGE01ZQNHDafmlJeH8EelzIf+lXRa01TxUuTZi+x@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3ARrQTcFIMiGzbGs5TuV4G+LeVTJw8TLeIoxVzGoOudEidOy1
-	qBcfAcGzi3QDg0b6Av4KY5aWfwEiPgaORpogUyILQ6IsqCjleQ1wy1J3ZR3o7r2fS0+qQo1WTRn
-	DnT58tZybamXDSt2msi+nyOLFL7U=
-X-Google-Smtp-Source: 
- AGHT+IFAz0kgLEC4uOK5AMohsc/jk5E7XXBP21RkpD3X51bWXhdPJnWXixdvWJ4et23gAPlBTH0Rax/SNpXgmxt28Rc=
-X-Received: by 2002:a05:6512:4016:b0:545:291:7ee0 with SMTP id
- 2adb3069b0e04-549c3989bd1mr7520993e87.34.1742227351699; Mon, 17 Mar 2025
- 09:02:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uRoOhLq4"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2242aca53efso32555ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:02:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742227379; x=1742832179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gdNCS/9xpAatRym4N52MXBKwvX2+E0sdkGs47955xoE=;
+        b=uRoOhLq4hF0/yuKozxmP2G++9epq9JGTDr531eO5KOamKibrbt3GgOEIWHP9tGbmJb
+         otuUbYCiwUtTMDJ5WXBGPGcNjZX3wZBiOY9XRdMgMFgTiPnc7aqyvA8wFweVYY44dX8M
+         kBfbZOd17qvaI5M+uUdr8LzoSbSN9jXmV2q/9QQhKwKaWIjD+WoIgK4jQbHI59sEe+8w
+         XVX0qtMAD4PRRzpcRVjiROe6VSFkNq0NWlLo4DFaog1dmrre1CTSE144tVK0XhJiWW12
+         gf+RvyMzbagldEhm2bLw0VamPKbIDWdNU93Bfq0VwRqoeYTVrPCN1m4tKK2+0Evfcqwu
+         k+rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742227379; x=1742832179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gdNCS/9xpAatRym4N52MXBKwvX2+E0sdkGs47955xoE=;
+        b=u3cI13OeKkKYPnXAa+DXQ1l05nfPyBkNnMsiZAY6vd1WP+Yhkq9o26jqn9WUvGDiJj
+         XZ1AAmcqW0A9mpalgP5jeKPHj5gcoUubAkRZ2ioNyZXoI58347mTDSKmDTx8vEqugj+7
+         7gfTHVBNlqWjjLaU/G+6PNnm1WjZ5IwqbOV8y96O/MSL204QIpgHRA8iTYYMOlekR957
+         UDsfxwVj8njIY21ujQjetFBE2sES0mv3wJtfqWzEvV1znKs92anUegdnQGqdzqCp4B5N
+         cP5xeS0LL+Pwax7U7LnvY3/BHppSNaLEWE0ATsnI86DK5mGUuOAS5sx58hCLW4yFm3Lt
+         Co/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUXARMUZVDZsa/TSFgMqo21yKjIHNgGQBzF2fafbdkKWVbRIBzqjd857rmyi7VqVMWng5zb82kl/Sg+l8U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzkz0FmhftDpPxJ2GJKyt2UkMGnm/Cp+bCwbd8cx1AzUmasteoE
+	cfnBpQn4QlJ6UVRPIm7QKyV/zBzuGxrmJMygUI0SgIwEPm6SpIdbi/ePRfQ24EmFjHE/SJwapf7
+	DBg1hchuA2GbBY5asOoQ3kBEePBAruddrzFEIaKlLTmhExTvAFpSb
+X-Gm-Gg: ASbGncuuwCXUUsPJ+POsJ/S/ZmysYMMiueruRahkcFx03762rcZybidQicM19WKQWVt
+	VhVnNaRlQsyWwPgucNvJrkv4CI2W5HDPauN1UUDAtf39vUrvaWEZy8F9hM8npeIgqJVPo5Ewvs+
+	tjCWxzkQkjPBaW4i8PDyOI9QRmFCpXDdSCd+fH81G2cT+kr3jWGNvMyKi91CKG3FOSwA==
+X-Google-Smtp-Source: AGHT+IEAppDzcZL7Ur9e3WhyGOknJuCY0ReRk7mbdSSM7RQwqO4SXSEZA07LmyI7g7KSUW3hkf9jLmbIDMKxl1QjBCo=
+X-Received: by 2002:a17:902:d4cd:b0:215:9ab0:402 with SMTP id
+ d9443c01a7336-225f3eb40e6mr4553645ad.18.1742227378594; Mon, 17 Mar 2025
+ 09:02:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317155349.1236188-1-lkml@antheas.dev>
-In-Reply-To: <20250317155349.1236188-1-lkml@antheas.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 17 Mar 2025 17:02:19 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwFpDT4gyEdjJfw8AGvd=_e-fn7yH-9_POzrPF7bOBQCnQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JqzrAnul1Njdh95_GogWrVQDg12FtNQW814Szv4wMVky15Q9NrjTW90OdQ
-Message-ID: 
- <CAGwozwFpDT4gyEdjJfw8AGvd=_e-fn7yH-9_POzrPF7bOBQCnQ@mail.gmail.com>
-Subject: Re: [PATCH v5 00/13] hwmon: (oxpsensors) Add devices, features, fix
- ABI and move to platform/x86
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
- Derek J Clark <derekjohn.clark@gmail.com>,
-	Kevin Greenberg <kdgreenberg234@protonmail.com>,
- Joshua Tam <csinaction@pm.me>,
-	Parth Menon <parthasarathymenon@gmail.com>, Eileen <eileen@one-netbook.com>,
-	linux-kernel@vger.kernel.org, sre@kernel.org, linux@weissschuh.net,
-	Hans de Goede <hdegoede@redhat.com>, "Limonciello,
- Mario" <Mario.Limonciello@amd.com>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Armin Wolf <W_Armin@gmx.de>
+References: <20250313033121.758978-1-irogers@google.com> <Z9TT3tGq4TJ76Tm9@google.com>
+In-Reply-To: <Z9TT3tGq4TJ76Tm9@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 17 Mar 2025 09:02:47 -0700
+X-Gm-Features: AQ5f1JoehPZ6D2gVoX5jyHNVwuzvDD6lGQqw81zka_NheY0KMJFzGwsbZr_YsSk
+Message-ID: <CAP-5=fVhd7=r+T6iL+ZgLi6YmDUzmDq-FEdZD1XHHYzm7KtBtw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf libunwind: Fixup conversion perf_sample->user_regs
+ to a pointer
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yunseong Kim <yskelg@gmail.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, Andi Kleen <ak@linux.intel.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, John Garry <john.g.garry@oracle.com>, 
+	Leo Yan <leo.yan@linux.dev>, Michael Petlan <mpetlan@redhat.com>, 
+	Tavian Barnes <tavianator@tavianator.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174222735323.27976.11177177396523630123@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: quoted-printable
 
-Forgot to add some ccs. Adding them here. Going very close to my ISPs'
-email limit per hour
+On Fri, Mar 14, 2025 at 6:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, Mar 12, 2025 at 08:31:21PM -0700, Ian Rogers wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >
+> > The dc6d2bc2d893a878 ("perf sample: Make user_regs and intr_regs option=
+al") misses
+> > the changes to a file, resulting in this problem:
+> >
+> >   $ make LIBUNWIND=3D1 -C tools/perf O=3D/tmp/build/perf-tools-next ins=
+tall-bin
+> >   <SNIP>
+> >     CC      /tmp/build/perf-tools-next/util/unwind-libunwind-local.o
+> >     CC      /tmp/build/perf-tools-next/util/unwind-libunwind.o
+> >   <SNIP>
+> >   util/unwind-libunwind-local.c: In function =E2=80=98access_mem=E2=80=
+=99:
+> >   util/unwind-libunwind-local.c:582:56: error: =E2=80=98ui->sample->use=
+r_regs=E2=80=99 is a pointer; did you mean to use =E2=80=98->=E2=80=99?
+> >     582 |         if (__write || !stack || !ui->sample->user_regs.regs)=
+ {
+> >         |                                                        ^
+> >         |                                                        ->
+> >   util/unwind-libunwind-local.c:587:38: error: passing argument 2 of =
+=E2=80=98perf_reg_value=E2=80=99 from incompatible pointer type [-Wincompat=
+ible-pointer-types]
+> >     587 |         ret =3D perf_reg_value(&start, &ui->sample->user_regs=
+,
+> >         |                                      ^~~~~~~~~~~~~~~~~~~~~~
+> >         |                                      |
+> >         |                                      struct regs_dump **
+> > <SNIP>
+> >   =E2=AC=A2 [acme@toolbox perf-tools-next]$ git bisect bad
+> >   dc6d2bc2d893a878e7b58578ff01b4738708deb4 is the first bad commit
+> >   commit dc6d2bc2d893a878e7b58578ff01b4738708deb4 (HEAD)
+> >   Author: Ian Rogers <irogers@google.com>
+> >   Date:   Mon Jan 13 11:43:45 2025 -0800
+> >
+> >       perf sample: Make user_regs and intr_regs optional
+> >
+> > Detected using:
+> >
+> >   make -C tools/perf build-test
+> >
+> > Fixes: dc6d2bc2d893a878 ("perf sample: Make user_regs and intr_regs opt=
+ional")
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Andi Kleen <ak@linux.intel.com>
+> > Cc: Charlie Jenkins <charlie@rivosinc.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: John Garry <john.g.garry@oracle.com>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Leo Yan <leo.yan@linux.dev>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Michael Petlan <mpetlan@redhat.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Tavian Barnes <tavianator@tavianator.com>
+> > Cc: Veronika Molnarova <vmolnaro@redhat.com>
+> > Cc: coresight@lists.linaro.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+>
+> I think you need to add your own Signed-off-by in this case.
+> I'll change it for you, ok?
 
-Antheas
+Sure.
 
-On Mon, 17 Mar 2025 at 16:54, Antheas Kapenekakis <lkml@antheas.dev> wrote:
->
-> This four part series updates the oxpsensors module to bring it in line
-> with its Windows OneXPlayer counterpart. First, it adds support for all
-> 2024, 2025 OneXPlayer handhelds and their special variants. Then, it moves
-> the module to platform/x86 to allow for including more EC features.
->
-> Then, it adds the new charge limiting and bypass features that were first
-> introduced in the X1 and retrofit to older OneXFly variants and for
-> controlling the turbo led found in the X1 models. For Bypass, it adds a new
-> charge_behaviour variant called inhibit-charge-s0.
->
-> Finally, it performs a minor refactor by moving around switch statements
-> into their own functions, in order to allow for fixing the pwm1_enable ABI
-> in the final patch. Currently, pwm1_enable sets the fan to auto with the
-> value 0 and allows manual control with the value 1. This patch makes it
-> so 0 sets the fan to full speed, 1 sets the fan to manual control, and
-> 2 sets the fan to auto. This requires both setting enable and the fan
-> speed when the enable sysfs is written to as 0, hence the refactor.
->
-> As this is a minor ABI break and there is userspace software relying
-> on this previous behavior, the last patch also changes the /name of the
-> hwmon endpoint to "oxp_ec" from "oxpec" (mirroring WMI module conventions)
-> such that userspace software that relied on the previous behavior can be
-> retrofit to the new kernel while enabling correct functionality on old
-> and new kernels. Failing that, software that is not updated will just
-> stop controlling the fans, ensuring no malignant behavior.
->
-> ---
-> V4: https://lore.kernel.org/all/20250311165406.331046-1-lkml@antheas.dev/
-> V3: https://lore.kernel.org/all/20250309112114.1177361-1-lkml@antheas.dev/
->
-> Changes since V4:
->     - Fix nits by Hans
->     - change inhibit-charge-s0 to inhibit-charge-awake
->     - use devm_battery_hook_register and power_supply_unregister_extension
->       (based on cros driver)
->     - move charge behavior patches to the end to make the rest of the series
->       easier to merge
->     - CC platform-x86 and power maintainers
->
-> Changes since V3:
->     - Fix nits by Derek
->     - Remove the hwmon documentation as it is not required for platform
->       drivers (suggested by Guenter)
->     - Add ACPI_BATTERY and HWMON depends to Kconfig
->       (reported by kernel robot)
->     - Homogenize driver into following reverse xmas convention
->
-> Changes since V2:
->     - Add ack by Guenter, move platform move patch to be third (not first
->       to allow for device support backport to lts kernels)
->     - Rework patch text, especially in the refactor patches as per Derek
->     - Change bypass to use charge_behaviour instead of charge_type, as that
->       ABI supports capability detection and is more appropriate
->     - Move battery attach to probe instead of init
->     - Fix bug where reading tt_led would instead use the turbo register
->
-> Changes since V1:
->     - Add X1 Pro, F1 Pro variants
->     - Fix minor typo in initial patches
->     - Convert oxp-sensors into a platform driver, as it is no longer
->       considered a hwmon driver.
->     - Add sysfs documentation and myself to the MAINTAINERS file
->     - Update documentation to state that this is the OneXPlayer/AOKZOE
->       platform driver, and that support for Ayaneo/OPI is provided until
->       they gain their own platform driver.
->
-> Antheas Kapenekakis (13):
->   hwmon: (oxp-sensors) Distinguish the X1 variants
->   hwmon: (oxp-sensors) Add all OneXFly variants
->   platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
->   ABI: testing: add tt_toggle and tt_led entries
->   platform/x86: oxpec: Rename ec group to tt_toggle
->   platform/x86: oxpec: Add turbo led support to X1 devices
->   platform/x86: oxpec: Move pwm_enable read to its own function
->   platform/x86: oxpec: Move pwm value read/write to separate functions
->   platform/x86: oxpec: Move fan speed read to separate function
->   platform/x86: oxpec: Adhere to sysfs-class-hwmon and enable pwm on 2
->   platform/x86: oxpec: Follow reverse xmas convention for tt_toggle
->   power: supply: add inhibit-charge-awake to charge_behaviour
->   platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
->
->  Documentation/ABI/testing/sysfs-class-power   |  11 +-
->  Documentation/ABI/testing/sysfs-platform-oxp  |  26 +
->  Documentation/hwmon/index.rst                 |   2 +-
->  Documentation/hwmon/oxp-sensors.rst           |  89 ---
->  MAINTAINERS                                   |   7 +-
->  drivers/hwmon/Kconfig                         |  11 -
->  drivers/hwmon/Makefile                        |   1 -
->  drivers/platform/x86/Kconfig                  |  13 +
->  drivers/platform/x86/Makefile                 |   3 +
->  .../oxp-sensors.c => platform/x86/oxpec.c}    | 628 ++++++++++++++----
->  drivers/power/supply/power_supply_sysfs.c     |   1 +
->  drivers/power/supply/test_power.c             |   1 +
->  include/linux/power_supply.h                  |   1 +
->  13 files changed, 542 insertions(+), 252 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-oxp
->  delete mode 100644 Documentation/hwmon/oxp-sensors.rst
->  rename drivers/{hwmon/oxp-sensors.c => platform/x86/oxpec.c} (52%)
->
->
-> base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
-> --
-> 2.48.1
->
+Thanks,
+Ian
