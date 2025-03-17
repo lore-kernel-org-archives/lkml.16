@@ -1,251 +1,134 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C4F18BC3D
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 12:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3482221F27;
+	Mon, 17 Mar 2025 12:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742215231; cv=none; b=QHDzNThSdG7H8IhZ+9fy3P8li/Hd25vZACCaTqGWSaeh5WZctrJNqY3Yue56XDJr+wti6PRSilt0qMvDDRPNrpjMChkxdafp0jdI0gvOn2o2xvMc4fbuO5zPk/FnYDs+whXGizj+WyMjEVQFoaSXGjLsvmwLWqtcgAQK3d7G3ac=
+	t=1742215278; cv=none; b=pv0h62TE4MjJYRrS7hGjlwNXAB0QCq9kBrGK9wXu/h20dKUxxE7deV9bRzxZv5hwLD/0Bd92ayZEodrAJypsu6AskFT/1M4yCD7z375QHQDbDlpgThnjmxZ6w8+PeeDCPo2ZMuJsRk7nXaud5A2VOnDwieAjsWdof10fwjbjL9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742215231; c=relaxed/simple;
-	bh=yTcmVowMkA0+6UhAs6VqDz0plbWsIZfyJ40rvK1z5a8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EkctD/smRo116cElKtXVnCAgwYxn01cRK/cqEcmPpTVDRr1me94x8sGDuCsO6h6g0JUF3gRzl9qsvq1w2WVVeZtN44kQuxdztjtR1gabKRBFLStVkmSeTEpPX60sSheVbYR1vpeU0whWKUlIBAJ4HWCVLP0gEMdHoftvmafTJvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WIUAWoUU; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1742215278; c=relaxed/simple;
+	bh=+dvxJm7c94XXe7gws2T+sV1TL7aK3f751i2byBlmSac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NDZf+F7C1XaC/WStjpK+zjCRT8/78CqEI6O9Y+5iTYKdktQoYqkEmx3sPO7KAuhtzqZaq8z1SD1gqZ31UYY5dNg8WQGww515o2uBTOVoCZS5sCSx0zLhPEzjf9pfZlhdNYQeq+PkCczkfaCmXnzK163baP9VICrAIvpMVZnSZ/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cBiN3q9N; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WIUAWoUU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=orPCysawwRPllczDX7Ts+fD7Y7RbEDmQgWfnbJvXvdk=; b=WIUAWoUUBnljhVsYc6y0bn+ux2
-	ZUyrDM1AhQxiqMlQ90gaaToSt7ayP7ThXnoQloqkUjD3ftNm+C8ps+dGuzs2K4WRH/v7LSXqtxj0b
-	/HSKFagVAwPkSA7xYkYOWDQ/wGuERVvqi24YFNfwO66KgVXf/at04RClJPqi9jl452rrpR/9kMq7q
-	nyVOGvUF3mPwiQCiYDcC963OpKiAKXy/k762sHhadHX6jVTrzryCMV38I+ClWZZBLarZUQnOUs2bs
-	qc7PhCRd4JD5EmAEhJ0Yxi9m419/jLukkEM7+j49sHN5xmBzwfVZscKABta+jWOEV0ciaKLzszbfn
-	A3hwDA6g==;
-Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tu9lO-00000003RUT-3lev;
-	Mon, 17 Mar 2025 12:40:15 +0000
-Message-ID: <970a4932cb95bc8934dc2ad15e8e84a2a51d2232.camel@infradead.org>
-Subject: Re: [PATCH v7 8/8] [DO NOT MERGE] x86/kexec: Add CFI type
- information to relocate_kernel()
-From: David Woodhouse <dwmw2@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin"
- <hpa@zytor.com>,  "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>, 
- linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, Dave Young
- <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de
-Date: Mon, 17 Mar 2025 12:40:14 +0000
-In-Reply-To: <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
-References: <20250312144257.2348250-1-dwmw2@infradead.org>
-	 <20250312144257.2348250-9-dwmw2@infradead.org>
-	 <ra6zlx2iz7eks3y4ymoi6mn7o6rvnjc3lnjoaadf3szaocbkae@yg2lyjzlnqdn>
-	 <c2471b0a81ebd183d32e76f995a70b7912c1d4a1.camel@infradead.org>
-	 <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-36S8nfd6cdxuk7ghP8WD"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBiN3q9N"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22435603572so65673925ad.1;
+        Mon, 17 Mar 2025 05:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742215276; x=1742820076; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hKj9/0GKwnk0VVvo6X2TtZsAEzhKejrcmtIHIh8nwMw=;
+        b=cBiN3q9NF4Ko7r2tDoLbk91sPO4gXjC51AfOMvxJ8KZqOQzAf9KnUDRO1ZL5BxXR4a
+         MWaEAGcgLAQ9RPvs6AgxyB928A7j4wtDhIJrt4apmZ36J/FZgWqpSEJySfhugDteltSv
+         Vss9syPLJGLlxfDmFwzlPPbNAyWiJQjfuVrvJfcEnLy6CgPazn4NvxL/Nhh6c4L8EuMD
+         SAa37N2p+QQbM/chqIaxwSSpDVEcMvzROOrhIYmaIkgox/TLa/rJ3d6XanKPAHe9IemJ
+         rBpA2GgM+SvE30XrnnuakJrZ0Sku+hYk8xnwCmMXZsPJYaDaqkEhGz6AlgZwVXEyesTG
+         fZjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742215276; x=1742820076;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hKj9/0GKwnk0VVvo6X2TtZsAEzhKejrcmtIHIh8nwMw=;
+        b=s/z0gGmg0BW4Nw2U7tMwLnjsa066rB+oEt+YhcejH+sejIy7vRBlXOd0ut3Qex32B+
+         6vAokyTmVtZpeC4iVMmzZJ9uOugyMpz2N6XZNgaqacDGa55vekIDchCy4hZk784mGxq4
+         P2WjneBD2BYG8roN52BYnsX+i9uP2ALfpRTyYI8E4ycnPfFguZzEszKHzC+1yrfs2pPU
+         ulJ3maJfBK71T4MnVRPKFb2HOMPYAHmr5mTWerRmt0CboPiVHWjUklmVAEUjlV8sq7TX
+         Ve/2Lt/IbzAn19GJyOX/M413xDahjeoWW00u87u2VJDgo6+H/Ppj4iUiNgkWQwS1aMJr
+         Wn6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWVOdUOBRXPDWDW8XNRG3KOz3eeBSKUyvh26GN5vb3vv1wsY5G3GY6lWrSQwQAENE/mWlOaN+6yy/xCh/s=@vger.kernel.org, AJvYcCXoy/B0ESo0jpPrP/bv2fXb63do8Bs9zsHf/dYvlwBkm8qthZTDkW05IhLh4D6GLwz9F3kzO1RYGA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzAowtR3feQsmXTiVB9yNDzOfBq/Mh8lF+YY4b7UPzkYwNuScp
+	SClocoVvweNZkz3EF9wlvJI5P6+MHc/tNJWH40qnie6M30ZRMAqVAb/K4FoAqAT0NS4vdbEtZ66
+	BOmMqj4RxZ9yqIYoeR85GZ5V26f0AIA==
+X-Gm-Gg: ASbGncu9hFWwNyxZUAs1/hvPB6GYNnxyqYo5pUK8jrciSzstJhBKAJhdqOfAZzDxCQX
+	YmAsdLlj/oQxemiWJ9QsY3LF2AfxTzbRcG1VO/DfcGZArdrKuaGF1Ra0kYecWRoDb/KmE3hYkQt
+	pCvc9i3QNx2wrML4q0Va16J76iRw==
+X-Google-Smtp-Source: AGHT+IEKRUZQ2Hg0C2GO/PmQ2T8SgDZbs29uLgcMhOKnuKBglK0QXvlmIcp/ZMFfvYYtGNMZ82Y7H46+D4Rtn3BOiRY=
+X-Received: by 2002:a05:6a00:893:b0:736:50c4:3e0f with SMTP id
+ d2e1a72fcca58-73722370260mr12612622b3a.10.1742215275932; Mon, 17 Mar 2025
+ 05:41:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
-
-
---=-36S8nfd6cdxuk7ghP8WD
+References: <20250315141209936kL2XHnj3IaE2dYcjQZlnV@zte.com.cn>
+In-Reply-To: <20250315141209936kL2XHnj3IaE2dYcjQZlnV@zte.com.cn>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Mon, 17 Mar 2025 08:41:05 -0400
+X-Gm-Features: AQ5f1Jqpl4bSRGHQyqKji4UYsfjTQtW6qpkUUKmFi0NaXWBW9rleoIZ2xJKG-HE
+Message-ID: <CAEjxPJ73QGRoG8VKV+T+cohz1f05QB5iQ3DhuvHSnSJtEYx0xg@mail.gmail.com>
+Subject: Re: [PATCH linux-next] selinux: avc: use sysfs_emit() instead of scnprintf()
+To: xie.ludan@zte.com.cn
+Cc: paul@paul-moore.com, omosnace@redhat.com, selinux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-03-14 at 10:52 -0700, Josh Poimboeuf wrote:
->=20
-> IIRC, the reasons were the patched alternative, and also you wanted to
-> disassemble (but note that's still possible with gdb).
+On Sat, Mar 15, 2025 at 2:12=E2=80=AFAM <xie.ludan@zte.com.cn> wrote:
+>
+> From: XieLudan <xie.ludan@zte.com.cn>
+>
+>
+> Follow the advice in Documentation/filesystems/sysfs.rst:
+>
+> show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+>
+> the value to be returned to user space.
+>
+>
+> Signed-off-by: XieLudan <xie.ludan@zte.com.cn>
 
-It's meaningful output from 'objdump -S' that I miss. But OK.
+NAK.
+Despite being mounted under /sys, selinuxfs is its own pseudo
+filesystem and thus shouldn't use sysfs functions.
 
-> Here was a patch to make it work:
->=20
-> =C2=A0 https://lore.kernel.org/20241218212326.44qff3i5n6cxuu5d@jpoimboe
-
-I've reworked that and the CR4 filtering, and now it doesn't like me
-using SYM_TYPED_FUNC_START() to add the CFI information for the
-relocate_kernel() function.
-
-  LD      vmlinux.o
-vmlinux.o: warning: objtool: bad call to elf_init_reloc_text_sym() for
-data symbol .data..relocate_kernel
- ...
-
-  SORTTAB vmlinux
-incomplete ORC unwind tables in file: vmlinux
-Failed to sort kernel tables
-
-This happens when I build with (clang and) CONFIG_CFI_CLANG, with and
-updated version of your patch above, and this on top of it. This is at
-https://git.infradead.org/users/dwmw2/linux.git/shortlog/refs/heads/kexec-d=
-ebug
-
-=46rom 0f08a44613764e9b38a1c3332812685b61c99c2e Mon Sep 17 00:00:00 2001
-From: David Woodhouse <dwmw@amazon.co.uk>
-Date: Mon, 16 Dec 2024 10:26:24 +0000
-Subject: [PATCH] x86/kexec: Add CFI type information to relocate_kernel()
-
-A previous commit added __nocfi to machine_kexec() because it makes an
-indirect call to relocate_kernel() which lacked CFI type information,
-and caused the system to crash.
-
-Use SYM_TYPED_FUNC_START() to ensure that the type information is
-present, and remove the __nocfi tag.
-
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/kernel/machine_kexec_64.c   | 2 +-
- arch/x86/kernel/relocate_kernel_64.S | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_k=
-exec_64.c
-index 016862d2b544..e1f5fc858aee 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -396,7 +396,7 @@ void machine_kexec_cleanup(struct kimage *image)
-  * Do not allocate memory (or fail in any way) in machine_kexec().
-  * We are past the point of no return, committed to rebooting now.
-  */
--void __nocfi machine_kexec(struct kimage *image)
-+void machine_kexec(struct kimage *image)
- {
- 	unsigned long reloc_start =3D (unsigned long)__relocate_kernel_start;
- 	relocate_kernel_fn *relocate_kernel_ptr;
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocat=
-e_kernel_64.S
-index 814af7fa6318..c859fbe507e8 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -5,6 +5,7 @@
-  */
-=20
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <linux/stringify.h>
- #include <asm/alternative.h>
- #include <asm/page_types.h>
-@@ -68,7 +69,7 @@ SYM_DATA_END(kexec_debug_idt)
-  * opinions about it.
-  */
- 	.code64
--SYM_CODE_START_NOALIGN(relocate_kernel)
-+SYM_TYPED_FUNC_START(relocate_kernel)
- 	/*
- 	 * %rdi indirection_page
- 	 * %rsi pa_control_page
---=20
-2.48.1
-
-
---=-36S8nfd6cdxuk7ghP8WD
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMxNzEyNDAx
-NFowLwYJKoZIhvcNAQkEMSIEIDeEsHzegrxgjHLbvpIo/1WrbIl614qJFikdRv9Ro6aRMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAuF0NPpCaDBN6
-K/Z7DDtKrsghwxusBMKvFAF4Zx5b9GiF9TaL0CeUjNnnDcXf5CH9+v/6OgVTwEQA+oPcimC4UK+n
-NhFhXe3Pg8FtHHRka7Wwqhbws0JrG+c/o9yhhRwdct2NpUYs092KWPb/1AZE8MtuAFnMnbIqXr68
-Y9+unExHbOcb1qqWauz+13n+ZtBSUeixXg3hkyLQBSYH/cM2GyWXZIC7PpBNPYDmhSpIpcR4/QrR
-jGnxaTFzNhyt1byax0Rj/NU6+RSZLOXkOD8ref65GYNaDQlJ4SSeuOrucpV6w1EZwYP4pU2RxJlG
-gAxtW5q6rGYk321sBP8+lW4Vj0fiZBIN88NZixeq+yp/uXcgENKUojvbrrs1L/wg1RqBiwAKlO/4
-4Sx9fATx/z9kc/VysMvhOZh3Fc0uPy+fSLKc3kAY3hm8m2l6UA7xwSoBZ2wpkUbVx0OEgo59jiUe
-dAJ1pfXfxa9Bz1WUCN8y+k7RxNQUHQSsQ3bHjTl4GgX01hYUDk6E4xfApyopT+eGtr0A0pQtbFM6
-uCbySZ3mBXdSVDJHYQzPvWWJDbTzGNTp9FTRFwwEsjCIXP4jlDDRJiXT+eiFYA7lJx/GrOSLM82P
-zc5tW8XpFGZypw+2O4dg91COIo9VPH3a6WScTSlIqL4Ao1dIk8+8aaVbaKwMBHwAAAAAAAA=
-
-
---=-36S8nfd6cdxuk7ghP8WD--
+>
+> ---
+>
+>  security/selinux/avc.c | 2 +-
+>
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>
+> diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+>
+> index 4b4837a20225..007bd94975c0 100644
+>
+> --- a/security/selinux/avc.c
+>
+> +++ b/security/selinux/avc.c
+>
+> @@ -164,7 +164,7 @@ int avc_get_hash_stats(char *page)
+>
+>
+>
+>   rcu_read_unlock();
+>
+>
+>
+> - return scnprintf(page, PAGE_SIZE, "entries: %d\nbuckets used: %d/%d\n"
+>
+> + return sysfs_emit(page, "entries: %d\nbuckets used: %d/%d\n"
+>
+>   "longest chain: %d\n",
+>
+>   atomic_read(&selinux_avc.avc_cache.active_nodes),
+>
+>   slots_used, AVC_CACHE_SLOTS, max_chain_len);
+>
+> --
+>
+> 2.25.1
+>
+>
+>
+>
+>
