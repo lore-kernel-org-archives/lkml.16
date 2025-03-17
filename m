@@ -1,111 +1,207 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BE04A06;
-	Mon, 17 Mar 2025 19:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D3D15B54A
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 19:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742238133; cv=none; b=q9VRVzfnflt/RXMeaJxxlJDMjrxnKO8IhPXmm0CjXR3qIOABhj50dHBZyrXGBWDCD3S7vhmE733ubjiR3LwYxcnMn+fVLlMTavvM2grS81JdP3SxYw4b5ZeL77Ku6tp4z9qeiuFjYa84pXBBSB/QyBPs1+2N+UhWlkm4e360A7I=
+	t=1742238144; cv=none; b=m0IxfVFhSBOkn4vt+dySWPNdbGSWYMQiO32xsVF74Zs1wVis7T/puIfoYcGwYENJeDFuiJTKViC0JSEJN0DaUEYRfmBTHsPFed3zU7iLdgyAxr8wpFFvdm+Z9q1UArcQ/Wl4JFlExBcm1BHu2jSnFstLKvH/4zn7xmrfPBb+Np0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742238133; c=relaxed/simple;
-	bh=Hvttu3ONsKCVI+zX+/ec6G/+a20ZSKSWdAO/LAA+zDg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jI6qOW/5BEC31YPqyd0j4arh23lU5RHkwSwEx1K+8RlJDA/wRruCQjIV6IsEJyX6iofy2/umnK4wD+R+cAzJLhL3E7D6QhVYETlb1taW7xEhHfG9OiA3LWUom1eQDQy1+HO2yFkVyAd1xIYiPp+kNx+l6ziJ/3plzwdQe4vC/54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FctDCp8N; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742238144; c=relaxed/simple;
+	bh=9e9i9ZGozCVOW+DGfTa7ONycW5gmKaNN01G9YalVMnw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rRD5pwQ1EJ2OLthavVwdGVeIuXMF13/6LVFtOxa5UKe8Mz2iqyointvy/J4nR88++kJbJHAWVVUBhlO0S0wsci6EO4JzHvXddgZhL2WFP+/b4aMN9SQgWcJTr823/cYijRUSm2mC7M8e0/ps+vkKzlD8bgYsY5cle7iGFhzsihg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iuBVtNXu; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FctDCp8N"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fecba90cc3so5569221a91.2;
-        Mon, 17 Mar 2025 12:02:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iuBVtNXu"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72b8028dd8fso445871a34.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 12:02:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742238131; x=1742842931; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gVCXkbbka6K+VZe0MGxgjrGWBkeWob34kqWL102MXy4=;
-        b=FctDCp8NhceW3lJ/wwc4Pu7fviTdnlw0xvoasaOXhoW6z9A0rFrkP6aF4igALkqFRz
-         XKSg1Z2Bp+LbK6Ndf+3Q8nwBo6XTxCqSHwyoQNASaJN9UYfoIDCSSVX2agrzG5R/cczJ
-         eGvgC7IHAZVaa9TMv2FykHCQ6QGUkCjTUQtySpgzmgwUVZjiCpV72Lzl5svCr0u/LF4p
-         +8W9NIlcFq+PWGYvpE3Je+ZJwwb/c/qXv0j5pe2NgBRWj7LQRN7+ZN30Mj+rYwE6BAVc
-         9+dNTCMr5+TIJ8CYieiFfd22XRhVaOtgkG+kVTrcSXzINPnXQtQDcM5DhxhzcHg/OZy4
-         yOUg==
+        d=chromium.org; s=google; t=1742238141; x=1742842941; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OttsjgFbyyagfKT+Kygos3ffwlG792Cw3EFU42D0MO0=;
+        b=iuBVtNXuKGA96zFUix5INJ2s3Ctce0dImws0ayFxPyfQ15L5q6PoVjqodsqSe5T4Bl
+         fmeEBMvJvUB0OPCrEuNFvVCkc7RcPfmtotiqzEz4lDqYW3ddTTB7jQZIWouEslXxzUuy
+         JFTAFFiJR4fVQ0U9MgsTqfxU6ClQVobHtGPuc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742238131; x=1742842931;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gVCXkbbka6K+VZe0MGxgjrGWBkeWob34kqWL102MXy4=;
-        b=hPxWH2X4s4dMw2j0SVJSrZu6+bOCPlpp5vUmJfUl5N4thVLnENwzukND6BZCXWtHu8
-         C/esfW3zUjLU9ekTSynOX61djmq0tZ8Rg5D3cXyYeze5D+bN1x4u5vK5td+6beKmtMRA
-         J3d9dI9MkHLdkgFaDVP1LfXKxXpEu7wpZFxDukKVywEOCpwD2Ya336N6aRxURS12lL61
-         8OPIL/sSQ++GxU1OrGaIrh2ORb43iFLGiR0cVcaZ7X56IAAGZCH7okC2f7IXmqRctGHb
-         HqhlVUO0BmbKarKcvL3lgAXBHpZz8kJ5qzrOlfEuVHVSm+VwlXocJtClx4hOD/u8lhjf
-         jFsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/wv5dF4mNYBqn5vU7/maYxncV3vOn2HIe2THorVLq51O4YYj79HWSbTE8M+zRAKs91Qcxyq198viw@vger.kernel.org, AJvYcCWrStmASUqZ6e0G67lLg2QmJnjn5y6Ds1NyEjlY7c858owgFv6XheR64uD+mewtQH/65e+aaHPo9/8k5o4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgEHO3oEYNis5X2bF8BkR5wchBI1ft7GAgmT1WQXCrFrwi0cZx
-	3w/uTD4C0s7oYvInn/Vy8kOIjOLNL6Pykb6qHiN5uy0Oq4hJtrav
-X-Gm-Gg: ASbGncsxh2iBTn88zC7jH3bxSa0CdgWv70URfUjxzfYXoyrOy7Vh3p5+lMw4rafowAk
-	bzSJ7k2I6LjqPM07PkDCzb3I9t1SiJe8KtAb5r4UPLvh2UglHF0V78T8DY6EgnEy0/0EkoWroKi
-	tTdXldJYX+8ndawIFBrh3NB2Ia5dw/q/7vpf+qJxG7jG1eXLCZyV/ips4efXKDEalSs7Psj+jE5
-	NuxJWJ9K0oYjsIb86Dhwz/YW/mKt7I508ml+QuNZpy/2jUL3RTJYIcTg0raJxQ6wTQPHn5Tvqf0
-	glIDGp0lKiuAARtJ7qu8+sJS5ZxGlggBOCeV9j8gIW2B8QgtLNlTGt+cA221TVJYyQ==
-X-Google-Smtp-Source: AGHT+IGwW94/c+nWHi2B2aO2rPj0vPspA7nN6VmmEbHkP3+uGtj1SqduHMk+oLRnKzvqVpsyVbzStg==
-X-Received: by 2002:a17:90b:1f90:b0:2f8:49ad:4079 with SMTP id 98e67ed59e1d1-30151c5df91mr14364174a91.6.1742238130859;
-        Mon, 17 Mar 2025 12:02:10 -0700 (PDT)
-Received: from localhost.localdomain ([14.139.69.34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301535196e5sm6473747a91.16.2025.03.17.12.02.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 12:02:10 -0700 (PDT)
-From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-To: alexandre.belloni@bootlin.com
-Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
-	linux-rtc@vger.kernel.org,
-	shuah@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH] rtc: fix use of uninit struct in rtc_read_alarm_internal
-Date: Tue, 18 Mar 2025 00:03:43 +0530
-Message-ID: <20250317183349.346399-1-bharadwaj.raju777@gmail.com>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1742238141; x=1742842941;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OttsjgFbyyagfKT+Kygos3ffwlG792Cw3EFU42D0MO0=;
+        b=LXXa7hDYnjVlc45ryXrKGHPou1qIB56oeRTFXJ96XcK4eWkvjebew/zmZmzpd9tYJa
+         OA17/4Pl40SR/3UIEPY49neP399JxFzAV1PrDqCTfbpn7gZJWGEys5GdlD+XNIXuEyir
+         KJ8WQnUWWsH6BQe5hl8HSM6IyAwhnT4dVJWoCPD/pGLNzkehnDkSl6lYmfYSUTBq50Fd
+         Cxtq4VD9gojJ2AuyyeVxqHpXGT5H/oRVYW7GKFJZlqjGES/4LpYkOMy0MOZsnAv3YnAQ
+         1gLrRJ3Vs2AUobaDl00b+Fo0zuhhj0IU53eHsx2EP3o5eVFDjVxPS6+2+xHbXrmG6Lbc
+         HiCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrlNSwOEDCTlV0bv1r0M1LWmlCujoWfSQqPerl7u0QT9XACieEaemHYxhUiYLm9fpeViSicJ0/p6rhps0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLLrdMogQjBdYo1HaIupKF1XJ1FZAyYesndO2bz4rgYjfZtcXw
+	DFRQf2ecI4dlLiwUfehfeB2vg2Gu3vYzwHyoBOegLRqhTEV6YpkuZZURIlo9Y3oygVHcVOUxplQ
+	W63yigeT5aUztFm6IdcWNrVHn9pt8uxOhDp+R
+X-Gm-Gg: ASbGnct8qTrhB1C7YdpmDUbdHOx9+2t7U3/Od2Yqb/4oTBYDcfUEaycdg3sJrhMKnjo
+	nC9kfxTl4aQW3fs0xOgon0b3gqwxI5NYeCQ55hB/+FeymJJnM/bms8H2Ia+9iCINox6I4woOEAH
+	I6RRJ5OgcmyukpuC7mrzsu4YDGPIvyABefeGSa8IJzSyQvIGkuS0YeOiE=
+X-Google-Smtp-Source: AGHT+IFmhELxsEbF5+FGpij6p/0nGDQxLmvLcCOIk3O1Kjoyj75mq8CVjrKZo8Rz/4RdRDTUlZtx2edlKIyzMHgzB8g=
+X-Received: by 2002:a05:6871:d308:b0:297:2582:c66c with SMTP id
+ 586e51a60fabf-2c690b43ca1mr2433846fac.0.1742238141295; Mon, 17 Mar 2025
+ 12:02:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250313000623.3192896-1-jeffxu@google.com> <1bbce89c-1efe-40cf-9085-ec4ec16f7996@lucifer.local>
+ <CABi2SkVKxyX0uDabg+wHiq_vTBFbUST-nRdur7cCPB2myhCWhg@mail.gmail.com>
+ <CAMuHMdWLjX-OavON-rj50kZyvV5+Pf0x34WJbcdKsCgAQA7TwQ@mail.gmail.com> <CABi2SkWU6orm-wBFKVt9rsSpYURHPb7fjHRzkOiPGd=Lh-DdkA@mail.gmail.com>
+In-Reply-To: <CABi2SkWU6orm-wBFKVt9rsSpYURHPb7fjHRzkOiPGd=Lh-DdkA@mail.gmail.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Mon, 17 Mar 2025 12:02:09 -0700
+X-Gm-Features: AQ5f1JoqLcgifoqvsf2X7sr50no49b8qRyd6QqCFaHGdNwMKDBXBaaWgVcGITRs
+Message-ID: <CABi2SkWmxwM-MbfmRCZvBYek8KpmOKPMsFmb=-eZTgKfp3AN6w@mail.gmail.com>
+Subject: Re: [PATCH] mseal sysmap: add arch-support txt
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, akpm@linux-foundation.org, 
+	Liam.Howlett@oracle.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
+	gor@linux.ibm.com, hca@linux.ibm.com, kees@kernel.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, svens@linux.ibm.com, thomas.weissschuh@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The trace call invokes rtc_tm_to_time64 on a
-potentially uninitialized alarm->time. Move the
-trace call to the path where we do successfully
-initialize and read that struct.
+On Mon, Mar 17, 2025 at 11:14=E2=80=AFAM Jeff Xu <jeffxu@chromium.org> wrot=
+e:
+>
+> On Fri, Mar 14, 2025 at 3:41=E2=80=AFAM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> >
+> > Hi Jeff,
+> >
+> > On Thu, 13 Mar 2025 at 23:26, Jeff Xu <jeffxu@chromium.org> wrote:
+> > > On Wed, Mar 12, 2025 at 10:21=E2=80=AFPM Lorenzo Stoakes
+> > > <lorenzo.stoakes@oracle.com> wrote:
+> > > > On Thu, Mar 13, 2025 at 12:06:23AM +0000, jeffxu@chromium.org wrote=
+:
+> > > > > From: Jeff Xu <jeffxu@chromium.org>
+> > > > > Add Documentation/features/core/mseal_sys_mappings/arch-support.t=
+xt
+> > > > >
+> > > > > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> >
+> > Thanks for your patch!
+> >
 
-This fixes a KMSAN warning.
+I used "find * |xargs grep -i  CONFIG_64BIT" to look for CONFIG_64BIT
+under arch/, and together with internet search/wiki page, and below is
+the proposed update.
 
-Fixes: 29a1f599c0cc ("rtc: Add tracepoints for RTC system")
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/features/core/mseal_sys_mappings/arch-support=
+.txt
+> > > > > @@ -0,0 +1,30 @@
+> > > > > +#
+> > > > > +# Feature name:          mseal-system-mappings
+> > > > > +#         Kconfig:       ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+> > > > > +#         description:   arch supports mseal system mappings
+> > > > > +#
+> > > > > +    -----------------------
+> > > > > +    |         arch |status|
+> > > > > +    -----------------------
+> > > > > +    |       alpha: | TODO |
+No CONFIG_64BIT found under arch/alpha, but search results show alpha
+supports 64 bits. Keep as TODO.
 
-Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
----
- drivers/rtc/interface.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > +    |         arc: | TODO |
+> > > > > +    |         arm: |  N/A |
+> > > > > +    |       arm64: |  ok  |
+> > > > > +    |        csky: | TODO |
+(N/A)
 
-diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-index aaf76406cd7d..82ba33bf478b 100644
---- a/drivers/rtc/interface.c
-+++ b/drivers/rtc/interface.c
-@@ -201,11 +201,12 @@ static int rtc_read_alarm_internal(struct rtc_device *rtc,
- 		alarm->time.tm_yday = -1;
- 		alarm->time.tm_isdst = -1;
- 		err = rtc->ops->read_alarm(rtc->dev.parent, alarm);
-+		if (!err)
-+			trace_rtc_read_alarm(rtc_tm_to_time64(&alarm->time), err);
- 	}
- 
- 	mutex_unlock(&rtc->ops_lock);
- 
--	trace_rtc_read_alarm(rtc_tm_to_time64(&alarm->time), err);
- 	return err;
- }
- 
--- 
-2.48.1
+> > > > > +    |     hexagon: | TODO |
+No CONFIG_64BIT found under arch/hexagon, but search results show
+hexagon supports 64 bits. Keep as TODO.
 
+> > > > > +    |   loongarch: | TODO |
+> > > > > +    |        m68k: | TODO |
+(N/A)
+
+> > > > > +    |  microblaze: | TODO |
+No CONFIG_64BIT found under arch/microblaze, but search results show
+microblaze supports both 32 and 64 bits. Keep as TODO.
+
+> > > > > +    |        mips: | TODO |
+> > > > > +    |       nios2: | TODO |
+(N/A)
+
+> > > > > +    |    openrisc: | TODO |
+No CONFIG_64BIT found under arch/openrisc, but search results show
+microblaze supports both 32 and 64 bits. Keep as TODO.
+
+> > > > > +    |      parisc: | TODO |
+> > > > > +    |     powerpc: | TODO |
+> > > > > +    |       riscv: | TODO |
+> > > > > +    |        s390: |  ok  |
+> > > > > +    |          sh: | TODO |
+No CONFIG_64BIT found under arch/openrisc, but wikipedia shows sh-5 is
+a 64 bit, so Keep as TODO.
+
+> > > > > +    |       sparc: | TODO |
+> > > > > +    |          um: | TODO |
+> > > > > +    |         x86: |  ok  |
+> > > > > +    |      xtensa: | TODO |
+N/A
+
+In summary: csky, m68k, nios2, xtensa, arm only have a 32 bit CPU and
+will use "N/A".
+I will leave it open for a while, If no objection , I will send a new
+patch version.
+
+Thanks.
+-Jeff
+
+> > > > > +    -----------------------
+> >
+> > > > Plus I feel this need expansion a bit 'N/A' is because of being non=
+-64 bit
+> > > > right?
+> > > >
+> > > Below is the definition of N/A in Documentation/features/arch-support=
+.txt
+> > >    | N/A|  # feature doesn't apply to the architecture
+> > >
+> > > It fits the arm case because mseal is not supported in 32 bit.
+> >
+> > IIUIC, you can already s@TODO@N/A@ for all other 32-bit architectures,
+> > so we don't accidentally spend time on looking into adding the support?
+> >
+> Sure, my architecture knowledge is limited.
+>
+> I just checked this, it seems to me that csky, m68k, nios2, sh, xtensa
+> doesn't have 64 bits support, the rest have 64 bits. Is this correct ?
+>
+
+
+
+> Thanks
+> -Jeff
+>
+>
+>
+> > Gr{oetje,eeting}s,
+> >
+> >                         Geert
+> >
+> > --
+> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+> >
+> > In personal conversations with technical people, I call myself a hacker=
+. But
+> > when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+> >                                 -- Linus Torvalds
