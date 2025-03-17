@@ -1,93 +1,169 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E790C14C5AA;
-	Mon, 17 Mar 2025 18:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78361AD403
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742235565; cv=none; b=seS6QCnjMLFJHo+azHEMksoiUUaBV1QH3LULtLJkQe1ECDTQu9xmwtCqseXVr5y/QWW6i8htU70+ZZj80110zwIGEx33a9xZxhFY8PFAZaQTrIACCGuJ2VYMVYS34d/uCt8D6zJ9JdbunrtzbMuOwuH7bSrACCjpzJFMxgEtI/Q=
+	t=1742235623; cv=none; b=LqTmxuWO2WwF7fH7AjOFm75MON+N55TeLaji+QDY4hdEYsfyvYPsFtQfCmENq/0fEmC7XoEvMVRMWgC5XHvRjtQprhn2BtgvZJ1OlKgicFcc5S4zNWCGDpj+Hfidm9oOgb2QnjANvFaMy5yaVBRR+mUhNpHds7GgKAUA8qZ+f3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742235565; c=relaxed/simple;
-	bh=Mtvl/jyJUdtL4QFBo7D0YAZhHSay/PjR0/QIolqsMWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ld8kXdxBalqCCUV8WafJtcDphMjBjAPZdBpgseoSWekpBVpMLHfRGNQAPSbt9HpM/TyRyRk2Uv7/rdXq5BO9eOLZUjR7ehlyGRjTN9VbUnuqhqSpV2/etE45oXLdSKqTFWI0oxWcNZYFFbgnid6hlEr+Y2KoeiRBowy2+ldnu3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P7l9KZMB; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742235623; c=relaxed/simple;
+	bh=tlnyXjcJkBX833gIcJu1QtnQCG8uMa8bA5wrM/847KQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:Cc:Content-Type; b=G/qitjAH4w5SF+qTiUYXfsqxuo6cdjmoIpW+qvfxbKQrQH8B4DT7wNWCM96EIFbaUMKZJjy7ZPAkUet8CSyOTjzkAL3TWulx124Bu4D0WM93AoGissmomC86xg6GJz32pEnW/MYSJBm0ZABS1J1OmiiQBzHtVrIOTFF3ou3sW9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--czapiga.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1BF1hVki; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--czapiga.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7l9KZMB"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff615a114bso3260547a91.0;
-        Mon, 17 Mar 2025 11:19:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1BF1hVki"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ac2840b1ee8so493156166b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742235563; x=1742840363; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1p/vJyLOF8KyVZFp2qeYUDBByhHRPvWe2lPITuY8vOw=;
-        b=P7l9KZMB2Ylt0Sz/QjYBy0SKGTasenhVLI5N8s280TjcJfe4WPivnAizyHfR8aVL3D
-         kyyV1NszRlvOBrSXdX2MiA2BqWNuAfn7M/GtQR3HOSO1+Lq/AL5Hdzw7oJXJ7NNOvn4/
-         ceFw2982ybtN8OuTa+LJi25V4hyiZsrHLPJ4xCPG+X/5eW+BR5tpiKVLcTCiSUrj/7yO
-         3Z7NRrtrIHnAWuOgBS0d5mIZI8Fpv2jjblMYXAKtTRcJnCTCZJ0YLgZFaVnsD7kqhB+g
-         3XCqEuK67j+WYHjzPs7ApG+GSEvZ2u/VHa/5mjZdFNPSw/rJDSZiVQajEl6uMJvv8itV
-         ezRQ==
+        d=google.com; s=20230601; t=1742235620; x=1742840420; darn=vger.kernel.org;
+        h=cc:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/7NZ7peIlm0yG+Cn7UyH1yowKXkfRqsYGiOXYDLW9yw=;
+        b=1BF1hVkiSZRrROVQYlJlq3zS1ulDKKQJsLSFYilTSgn6cAIC/OtwKpd5/CGKudGOLk
+         3X+rsuxa60tm8XZe9goRouTGp8J2bEHE1lAWfCiNOHafuI5rSMzNbWYMvhndfZr9oGsQ
+         rugx936xptHCZoDK91o2RAUav6J/qonInJSNlMElzUqylNNOWdrjHqGswxBqPsQzCs2N
+         7Hgxlc2mKRPJQummmSBB6e4gQsDUgrdRoi6RhTJqaZR9SMXg0tIXy1MkF+SIj2g30wpZ
+         ygm9yxeJeyFtZnnzu++Kzkh6H0unZcVT5qAFS0zvAvy7D+I0DQS0LlQdV9+QgYgntc/Q
+         1S4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742235563; x=1742840363;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1p/vJyLOF8KyVZFp2qeYUDBByhHRPvWe2lPITuY8vOw=;
-        b=dBmrTOP6MgNUmRI5yC5oID7q1KKozOGCZ7cHbc5aSI17/6SWtM2foNmQGWUjlAhqIw
-         MRrWMVLRdt0TRWXhO87Ck+6aZXU91RslUXtK1tHOcjKPM0auEiEgOgH15S6rZAnhAbAf
-         c79eP5Rph9cBuCirTxwG8QdCAf+PnvZyZUEvKNF3HpeOx/0jnxwrCyKCIrA+iDmE5rYD
-         T3cew9cAwdcjr7RfXST5xHkb9SzfiaFQtYMGfhnK6ezCvWNw3/hUf5SfglW206Tv9sOK
-         mitxS4Cy9kl1ydb6O76LWTXuQzp0ButS3XpsyUGVCuIonx5/O4+PzgkRPtLsPSTkAIdR
-         lDQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUULUKl/n4vgWsw/gol2eOUFwYOt1pJ5yszb61VglVojbG3BHoyZ/8N0qrnRgP3p9VTjdN02AhHWNmKNZAM@vger.kernel.org, AJvYcCUtIucSHBIJftbsEhsQjBaidfPXGHGweKQSbe7pNooefKXmf3Gd0Lx5yrSRtx3+7z1d5Fc/bIwp7qmY@vger.kernel.org, AJvYcCWWmzkhpGHH70xBGOqP4HefsOhVtYbRoa+4YBIZzpEfh44E4/oiDKOvVLtUYcvYfHffycCb7aVZYEFv@vger.kernel.org, AJvYcCWhZXQUaf5E7h4oY6PQkeMAUfqwjao2vaakSoco37yA4a7AZoghMm+CDEUAZcIZTjeGMUwMYwbUGghoSBo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztMy/L7kPVgj7s3CzvBD1vfZ/y6BjCXvvO/52Mv2yRzhunt6RZ
-	aDOWJL7aME+GbLv/VtdM3YHdgVtQ6LRF6wEwVb6n4ZmYdyEQgBKa
-X-Gm-Gg: ASbGncuoTQ3M11z2Yc3Ts5ubELQXaBrzISyTxHUFd+abc85Y4vf8GjiXUJuJaCYNqBU
-	HdBbO7DPIPtq+VSl1shG3k70djtBJ+Ot5GP6v4G9JA7HD/zOaCWNOfbX+uHo8D1ErWmm8q42yEM
-	MnYAqc2le+8n20wp4XKL3IzZuxsxCC1tKYih3VQltYzRwyXBJ6b+WF1qH870tB5dezFHU0pmQT1
-	tKRbC87u8Vp7hfvutC90i5xLZ2qpVhOPzthncGLPlLmABg9izOJcfdt0fVt7wnYa4fOGD+0QNMR
-	pHnr3k4NA+GpIJYFOe6cEOQg4doApZ5i/PmaGs1TzuoZzaUGErOp7BM9Pw==
-X-Google-Smtp-Source: AGHT+IFGsTOd8uYKRb77bxFuXoZw2j0kYHafi/HpYTv7uH6M/4v9MlJQ5+zFAOZhK4Y8uixkSvjS+A==
-X-Received: by 2002:a17:90b:4c12:b0:2fa:562c:c1cf with SMTP id 98e67ed59e1d1-3019f1f1203mr607059a91.1.1742235563180;
-        Mon, 17 Mar 2025 11:19:23 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3015364d849sm6415219a91.41.2025.03.17.11.19.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 11:19:22 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 17 Mar 2025 11:19:22 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Leo Yang <leo.yang.sy0@gmail.com>
-Cc: jdelvare@suse.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, Leo-Yang@quantatw.com, corbet@lwn.net,
-	Delphine_CC_Chiu@wiwynn.com, linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] hwmon: Add driver for TI INA233 Current and Power
- Monitor
-Message-ID: <acd1c18f-780c-40d6-bd00-fcdfce85789e@roeck-us.net>
-References: <20250116085939.1235598-1-leo.yang.sy0@gmail.com>
- <20250116085939.1235598-3-leo.yang.sy0@gmail.com>
+        d=1e100.net; s=20230601; t=1742235620; x=1742840420;
+        h=cc:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/7NZ7peIlm0yG+Cn7UyH1yowKXkfRqsYGiOXYDLW9yw=;
+        b=ejPXhKUdT1NmHpOOxHsx7D5i/ew25RBedeqLoyf2FBIWsNvVqQV3HlqxTj2RRHd9Dm
+         jaSKJCR15BJd7XkfeAa6w1iqpF8qhfxGSHnu8U5aFTg4RtdjZmcDQI/nlEMwY6Ctgkm7
+         3A352BHSQpm6VEW9pT26wTlQH0CqnhR+DU/QiKh25NfP+HL4VI3ndz5YxGwJ8zVqaL1P
+         4jIUIUlNdMeAD1yTuq6oDRlwMs8BUFKe47xfRwVEs1AKayYlzzwDN8JZB81+bkR8IKHm
+         Cy8crZ5BKyai1pkYGob6n4NNN2NaESUfxb3xNHcm4xejH9AFjkDY2K9wj6hgixF1wNzm
+         CXtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUN4dX0R8AEiTSrOaUvmBolwIr7dqc9IpTJEMoaT0T5oGnXlMWvMBzWBTjrJRUyp9ttGyvyNByKm4jn394=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAvJ+T45Jp/SDEwwDznjLO0bj9PkZrSBZxnmXEOJ87mbfDaiF2
+	L8+1BdGqabaJOdpkAJvn84CPafIxHGPS4dPJKRYcuePVLTk7EsDuHQ5Uhxw1x+DFjrwCsiuNtHM
+	najwERQ==
+X-Google-Smtp-Source: AGHT+IE84F2eM4gDbNKOPL/wvEHNq3+GiqxIQtJuObp+x01KaqbBtyapAgs6XaomjtlNda8x+qKPNMx0IHSC
+X-Received: from ejpl10.prod.google.com ([2002:a17:906:7d4a:b0:ac1:fe6f:8a88])
+ (user=czapiga job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:368a:b0:ac1:f162:fb0d
+ with SMTP id a640c23a62f3a-ac38d514eebmr71247366b.37.1742235620357; Mon, 17
+ Mar 2025 11:20:20 -0700 (PDT)
+Date: Mon, 17 Mar 2025 18:18:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250116085939.1235598-3-leo.yang.sy0@gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
+Message-ID: <20250317181856.2059536-1-czapiga@google.com>
+Subject: [PATCH] mtd: spi-nor: eon: fix lock and non-SFDP flags
+From: Jakub Czapiga <czapiga@google.com>
+Cc: Jakub Czapiga <czapiga@google.com>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 16, 2025 at 04:59:42PM +0800, Leo Yang wrote:
-> Driver for Texas Instruments INA233 Current and Power Monitor
-> With I2C-, SMBus-, and PMBus-Compatible Interface
-> 
-> Signed-off-by: Leo Yang <leo.yang.sy0@gmail.com>
+Set appropriate FLASH lock feature flags for chips that support it.
+Set top-bottom protection bit flag for chips that support it.
+Add no-SFDP flags for chips with missing SFDP or without clear
+SFDP description regarding 4K sectors, dual and quad read support.
+Remove no-SFDP flags for chips which documentation states that this
+information can be extracted from SFDP.
 
-Applied.
+Modified chips:
+- EN25Q32 (+lock)
+- EN25Q64 (+lock)
+- EN25Q32B (+lock, +tb, +4k, +dual, +quad)
+- EN25Q64 (+lock, +tb, +dual, +quad)
+- EN25F32 (+lock, +tb)
+- EN25S64 (+lock, +tb, +4k, +dual, +quad)
+- EN25QH16 (+lock, +tb, -4k, -dual)
+- EN25QH32 (+lock, +tb)
+- EN25QH64 (+lock, +tb, -4k, -dual)
+- EN25QH128 (+lock, +tb)
+- EN25QH256 (+lock, +tb)
 
-Thanks,
-Guenter
+Signed-off-by: Jakub Czapiga <czapiga@google.com>
+---
+ drivers/mtd/spi-nor/eon.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mtd/spi-nor/eon.c b/drivers/mtd/spi-nor/eon.c
+index c1ddf662f782..10ed06022a76 100644
+--- a/drivers/mtd/spi-nor/eon.c
++++ b/drivers/mtd/spi-nor/eon.c
+@@ -13,10 +13,12 @@ static const struct flash_info eon_nor_parts[] = {
+ 		.id = SNOR_ID(0x1c, 0x20, 0x16),
+ 		.name = "en25p32",
+ 		.size = SZ_4M,
++		.flags = SPI_NOR_HAS_LOCK,
+ 	}, {
+ 		.id = SNOR_ID(0x1c, 0x20, 0x17),
+ 		.name = "en25p64",
+ 		.size = SZ_8M,
++		.flags = SPI_NOR_HAS_LOCK,
+ 	}, {
+ 		.id = SNOR_ID(0x1c, 0x30, 0x14),
+ 		.name = "en25q80a",
+@@ -26,42 +28,51 @@ static const struct flash_info eon_nor_parts[] = {
+ 		.id = SNOR_ID(0x1c, 0x30, 0x16),
+ 		.name = "en25q32b",
+ 		.size = SZ_4M,
++		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
++		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+ 	}, {
+ 		.id = SNOR_ID(0x1c, 0x30, 0x17),
+ 		.name = "en25q64",
+ 		.size = SZ_8M,
+-		.no_sfdp_flags = SECT_4K,
++		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
++		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+ 	}, {
+ 		.id = SNOR_ID(0x1c, 0x31, 0x16),
+ 		.name = "en25f32",
+ 		.size = SZ_4M,
+ 		.no_sfdp_flags = SECT_4K,
++		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+ 	}, {
+ 		.name = "en25s64",
+ 		.id = SNOR_ID(0x1c, 0x38, 0x17),
+ 		.size = SZ_8M,
+-		.no_sfdp_flags = SECT_4K,
++		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
++		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+ 	}, {
+ 		.id = SNOR_ID(0x1c, 0x70, 0x15),
+ 		.name = "en25qh16",
+ 		.size = SZ_2M,
+-		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ,
++		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+ 	}, {
+ 		.id = SNOR_ID(0x1c, 0x70, 0x16),
+ 		.name = "en25qh32",
+ 		.size = SZ_4M,
++		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+ 	}, {
+ 		.id = SNOR_ID(0x1c, 0x70, 0x17),
+ 		.name = "en25qh64",
+ 		.size = SZ_8M,
+-		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ,
++		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+ 	}, {
+ 		.id = SNOR_ID(0x1c, 0x70, 0x18),
+ 		.name = "en25qh128",
+ 		.size = SZ_16M,
++		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+ 	}, {
+ 		.id = SNOR_ID(0x1c, 0x70, 0x19),
+ 		.name = "en25qh256",
++		.size = SZ_32M,
++		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
+ 	},
+ };
+ 
+-- 
+2.49.0.rc1.451.g8f38331e32-goog
+
