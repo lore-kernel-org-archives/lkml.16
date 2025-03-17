@@ -1,84 +1,107 @@
-Received: from smtp-42ab.mail.infomaniak.ch (smtp-42ab.mail.infomaniak.ch [84.16.66.171])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED021DE2C8
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 12:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A329C198A08;
+	Mon, 17 Mar 2025 12:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742213720; cv=none; b=U7AJsuyWorxKIV9hijPJcwbimhInWlQns3zXvttbPPTHUOKm4wdSErQTAdq6ciLf1kV/xuczIOCzfZgijBtmIeSlZCOr8LgjFoHin1JRUP210VI+SbFWbg+4DIjbeULVxTnWJT7QkAO2ww5dLtQOOJLnww1+ACcPFETLI3r/CDA=
+	t=1742213769; cv=none; b=ZEbHQhsuV9vmD3MlDiAHhQmpCtI7wZpzRUHNXeHZCc1RyT/Xdf5dw4+jHwA+y//FJRxL7S9k4VhDN4mbav70vcKjulxiG+23GoYvN+pR/6GhFmlu4C3ifPRJNdkp1mMI9R3RqFmW4YT3DDIfmbavaDYhw/B99yo4tTYuMJKD4pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742213720; c=relaxed/simple;
-	bh=/oKMHI9YC9MRdlj5nmGBWbuCG0en5++8+L33Q/IxEDA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VQZMo2vtGd+yeTwA2kq9TrmJKkz/81mAkcgclGZSstIVoDByaZEmG0sVhKz7ixHKl43dDTqpC41cBIM+fNzLsYlN4yiQn+qKNS2+FzVg7opR4JPexfqRtCRpXwNdMBxVAfc1wCLe4Fo186zifTFLSHlwQm14Pm8T2ot+zdSxu4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZGYd93NZQzLqM;
-	Mon, 17 Mar 2025 13:07:41 +0100 (CET)
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZGYd86bNTzKxM;
-	Mon, 17 Mar 2025 13:07:40 +0100 (CET)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Mon, 17 Mar 2025 13:07:27 +0100
-Subject: [PATCH 2/2] arm64: dts: rockchip: Enable HDMI audio output for
- RK3588 Tiger Haikou
+	s=arc-20240116; t=1742213769; c=relaxed/simple;
+	bh=qbpYp2IF2/zO18LSHebvXP1qzB+sbYp7X6zTXraFqFA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=I7pckTbG5qSwZknAnrNeb/h4GXtx+rgtTmCG0DTdi3WCcsHsta1q4GdNKd2G4ndguctbNFVYL3YsGXrwXNtjeb8bZVlYBMJ2S852hXQIxs4EbcW/4sgv5LDqtB+S668XLdhkn9w6rDVtxpbm0KgDEJe32waa+2yydon9G5n6/f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=UFHMKudI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nN/Dembt; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="UFHMKudI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nN/Dembt"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfout.stl.internal (Postfix) with ESMTP id 8A611114015E;
+	Mon, 17 Mar 2025 08:16:06 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-07.internal (MEProxy); Mon, 17 Mar 2025 08:16:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1742213766;
+	 x=1742300166; bh=7zbfZRDSjUREIaZm/zoU8HIsunTmGDJGKaYJ0MgX7WE=; b=
+	UFHMKudIncskhcTAYPVVjW9h2ez0Af9DF6GPq6UpqwZ1dj7hJjYtbp115K7pQftR
+	9eX811EZpg3v1z+jYuiv9GXYcznLTlpWjnwl/AzoByykm8KJcyucWKpCDILqTsVs
+	J/IISj5X51sq2eDKUKy0f4C6dtf0kLZrvvj6VNFOl5x6fMzwlehdrtGOlLFqfzAF
+	Ie3Uez3PGF0QpBF6fAl6iAtGgWimkSqx+XXpeVRBJNunKfUbUTZUrGC/AwMIyrzn
+	wMPjjkVdfUOto36CgaAIewaXy/3pbiUPmXwWZ0thuDvSoH+hDstySEi4t4KHpd7o
+	M7tpd0XyL6FqlGVMVtw2Lg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742213766; x=
+	1742300166; bh=7zbfZRDSjUREIaZm/zoU8HIsunTmGDJGKaYJ0MgX7WE=; b=n
+	N/Dembtr/a3BJth9bspmChYTMFOpkZtcpPHhaCj8VLy1761p2yaRKdDsGlXwkEVP
+	vN/gS/uxC+UEZ1AyC/4nI6hXdQ0azxgw1NE8yDP7wUdcVal+FXMM1NGc81GWWDEE
+	teuX2d1M9TGL49TAB2QyQxiwfbHsNcj1fMG1VpdTP/KKnKwW50bY5nPjxgNlivKK
+	PTLT5zDN7Myh7RF5HLYcJRipCweJ27/uQzkoDm0WP+1cvrM2bg5JmohLLADrT03i
+	lAAMIegY3NGU7gzMIw4fUEeeSjmCmlBilTUcAfyUzXrSeiwWBObpzV8v7fmh6Shm
+	v5u905asuS88xrLb19D4Q==
+X-ME-Sender: <xms:hhLYZ_Iom-niy58z5TaYua0YS3vf0S__JrcXnNO7s-lM3eYFYvMz8Q>
+    <xme:hhLYZzL358AV-jCYTOTLSvhxJuTerYEksn5SMH-qFCgzhHPydWsewL2Lfdpve5mKn
+    WjLSFFH0G6q0mJGsUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeelgeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    jedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhisggrlhgurgestghhrhhomh
+    hiuhhmrdhorhhgpdhrtghpthhtohepshhrohhsvghksehgohhoghhlvgdrtghomhdprhgt
+    phhtthhopegrrhhnugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgvhhgrsg
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvhhgvg
+    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvhgvrhhkuhhilhesgihsgegrlhhl
+    rdhnlh
+X-ME-Proxy: <xmx:hhLYZ3uEU8DCn6c-fHS5cvwgZ6E605LoeCh4OwmYqjK_OT7Ian_mNA>
+    <xmx:hhLYZ4ZW3fwSFqmJTZMDXNJV31Z4kcy1FUIa8QVtddqn5COuRGzbBQ>
+    <xmx:hhLYZ2b_xbk54WcWIpgnAY-rgEiUeluSWfWyKJQYL0vEQw8bej5abw>
+    <xmx:hhLYZ8D-sWNNz-Uo88tKMNqTyGl_fHxhHz0zTUx7SlT3jrWnNfqIgQ>
+    <xmx:hhLYZ7OuzH-pxfMd1mEiD42WIoDDpHM7TylgO7OKcYPU0rntQC6ebCGT>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 094F92220072; Mon, 17 Mar 2025 08:16:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Date: Mon, 17 Mar 2025 13:15:45 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ricardo Ribalda" <ribalda@chromium.org>,
+ "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Hans Verkuil" <hverkuil@xs4all.nl>,
+ "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+ "Slawomir Rosek" <srosek@google.com>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <f2742c8b-0dac-495e-a072-3d136329f116@app.fastmail.com>
+In-Reply-To: 
+ <CANiDSCuqdy2UrhZ8_erFO4kjXwt_bvQgmrqmPZmrw4xaRwJBrA@mail.gmail.com>
+References: <20250314213859.3543936-1-arnd@kernel.org>
+ <CANiDSCuqdy2UrhZ8_erFO4kjXwt_bvQgmrqmPZmrw4xaRwJBrA@mail.gmail.com>
+Subject: Re: [PATCH] media: vivid: fix FB dependency
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-tsd-rk3588-hdmi-audio-v1-2-0b8ceb9597a6@cherry.de>
-References: <20250317-tsd-rk3588-hdmi-audio-v1-0-0b8ceb9597a6@cherry.de>
-In-Reply-To: <20250317-tsd-rk3588-hdmi-audio-v1-0-0b8ceb9597a6@cherry.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Quentin Schulz <quentin.schulz@cherry.de>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
+On Mon, Mar 17, 2025, at 13:08, Ricardo Ribalda wrote:
+> Thanks for the patch!
+>
+> Just out of curiosity, how did you found this? make randconfig?
+>
 
-HDMI audio is available on the RK3588 Tiger Haikou HDMI TX port, so
-let's enable it.
+Yes, I do a lot of randconfig builds.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
- arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou.dts b/arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou.dts
-index a3d8ff647839a900ece2ca9113754c7b20605641..caa43d1abf179365d37a244ea374b0dae39b0433 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou.dts
-@@ -189,6 +189,10 @@ hdmi0_out_con: endpoint {
- 	};
- };
- 
-+&hdmi0_sound {
-+	status = "okay";
-+};
-+
- &hdptxphy0 {
- 	status = "okay";
- };
-@@ -228,6 +232,10 @@ &i2s3_2ch {
- 	status = "okay";
- };
- 
-+&i2s5_8ch {
-+	status = "okay";
-+};
-+
- &pcie30phy {
- 	status = "okay";
- };
-
--- 
-2.48.1
-
+     Arnd
