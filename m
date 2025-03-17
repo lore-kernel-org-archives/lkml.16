@@ -1,125 +1,77 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C5A1DE3CB;
-	Mon, 17 Mar 2025 22:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169031D934D;
+	Mon, 17 Mar 2025 22:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742251726; cv=none; b=QyJ9dK12gPyg4+36dRwvUBvfOXOzk0ikj7ZLH3a9VdDg9JzXMlsslx+Pd5pOb+jKDVACw4T9eioV0Q1DpQW85D4ObjHeMDi7wZQhheHqA4bhCoYf+3FevS2S7MOVTT40p5n4BKU9xncuWtfbvJIlSZFXc5uqbtPMKTrZYmokdTY=
+	t=1742251753; cv=none; b=VzRLtv8DmhbLdq5lIfk+gA4+jKXFYEGhhLHw80m7M9tVp4P/S0cIAgsOOrmu97rmAYRKmYLLJyUnpEvllUUTQ8IyErT62yVHownkqqn8Xrr9XtRAnBy+Y4QEEYfwnAtFvJ0YIKrNUsgTufyaMaRH2TOnw5EUjyKLIS/Qx4S5JBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742251726; c=relaxed/simple;
-	bh=ioTnEAuhr3Pub8Z9EfYIwul2H8ShlzATvu1Td70qjTk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AX6l80AOt+prp0BK6/4ByxTF0hRKsLRDCTopqJa42WZPFyHWuO5UbJ5xdIoq8fXg5C7YrNWmLikCtWR1W5A0L3LMJUEVNiWrrrwOj4SQx2kJopMAJ6fCAP+O1e2y/XxBnCTOu9lJNZXvVHkAPtxhkId7CpQHj1I33WNExyGyMEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=145oZ/59; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+	s=arc-20240116; t=1742251753; c=relaxed/simple;
+	bh=NGELh5FK8qxoafb9BF1ie8d4BLSd7FdWC4zqeQ+Rxac=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=J6VM+Zdb65rsyKnMwPc7StbfXrMkojLDGx/BUCVMbwEcb/iGr1Xw1hJK+RNtUxePs7rN5qHQ3w1lURFABBwVJxv+KgjmYWTZyTEx2byzx+Vw0F6fgj7QBgvv6eMxRE0HzRexzqBXT7OTodFn6RZeRMbJ2xofcNhD6ZEqhn/s5KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=KLGgCNcW; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="145oZ/59"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.stl.internal (Postfix) with ESMTP id 61DE711401FD;
-	Mon, 17 Mar 2025 18:48:43 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Mon, 17 Mar 2025 18:48:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1742251723; x=1742338123; bh=R1vaJFtFdJW8YWR8qMo2bNDCNqTwTcZARad
-	vxpaOfME=; b=145oZ/59WJ4ni4RaK4uhJiEFFhRV97I0tCa4ETLMCzlrpl91Qpf
-	6sc3fVJSZ7qC6/VBO9zSSvJ5pNolKGVb09S0VD/cZb8gtuuDvBPXb4BlM43xA3AQ
-	Djl4+TvoIu9gtpm+c3dmk4nKcA4LKxIuTE7IQFaYl288/m1H3MlnTiQeRf1jeBP6
-	mXR3CjF398r/EJ4iL6nF1WwW0AAo36beFvPDUn74vYsrL2k8KY7Xvs7dS+xB6xsT
-	69+SsGMxzVn9qbzU1Px37wxCk7ctdgrBuElPBoAHX2+wWEX0ghaN6hls3MwAUn7e
-	HPM+9m5P9r2QFRUKl1XCfRTrHAGBxpLOUsg==
-X-ME-Sender: <xms:yqbYZxsJPxNzqKZpqXms7lnnXCN1fCLivLdSG4yzyL5i1ycQJaQybg>
-    <xme:yqbYZ6c-3-r3PrPjZZLuxg-C2SomgvjLyBTpNbk6N7SV1CtC_YGSwiniDDx6qFA9l
-    1GuRL2SjP9iFDx2kXU>
-X-ME-Received: <xmr:yqbYZ0wPrB7rEHw0qsS_EDx2ZtIUwLFjgz1ykBB3uIGn8mlAeJexsG2mc2KpFe9UyQYIQFcR60dFC7JZQmvL3SjbnFni4YfAMkM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedtjeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddv
-    necuhfhrohhmpefhihhnnhcuvfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheike
-    hkrdhorhhgqeenucggtffrrghtthgvrhhnpeffiefhudeggfefgeejleekfedtkefgudev
-    ueeguedvffeukeetvdfffeefledvkeenucffohhmrghinhephhgvrggurdhssgenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehfthhhrghinhes
-    lhhinhhugidqmheikehkrdhorhhgpdhnsggprhgtphhtthhopeegpdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgt
-    phhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hlihhnuhigqdhmieekkheslhhishhtshdrlhhinhhugidqmheikehkrdhorhhgpdhrtghp
-    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:yqbYZ4M39OseBdSKpG9v-NWHlMNAru5VXKg4SyRSlaItdx3MtFQP2Q>
-    <xmx:yqbYZx8Z4-PfwZmDanSIyXKRU5VXqfPFx9Bq6eoFqFLcjGvZCtrNEg>
-    <xmx:yqbYZ4UovpuNJ65Sh8FU-sZ81ltzpXa3fD01tN8wdGokbbn1fInVFQ>
-    <xmx:yqbYZydQmEvtCkg9EfqNARPQRqEQZpeB5xXf4PVxcR2w-80RTjMOfg>
-    <xmx:y6bYZ8Y5j4pQXfEeSuNUqwnvw7TF6YsaRTa8TcnJ_bhiHpLNCb0Tg0X0>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 17 Mar 2025 18:48:41 -0400 (EDT)
-Date: Tue, 18 Mar 2025 09:48:40 +1100 (AEDT)
-From: Finn Thain <fthain@linux-m68k.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-cc: stable@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] m68k: Fix lost column on framebuffer debug console
-In-Reply-To: <c03e60ce451e4ccdf12830192080be4262b31b89.1741338535.git.fthain@linux-m68k.org>
-Message-ID: <b504b718-0ffb-ff28-0c91-badf92282b32@linux-m68k.org>
-References: <c03e60ce451e4ccdf12830192080be4262b31b89.1741338535.git.fthain@linux-m68k.org>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="KLGgCNcW"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2CD4641081
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1742251750; bh=6PN7nApfM8X3fCGrZAu8H3kE5UNylVr653ipaeqlmtE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=KLGgCNcWvvI6Y3yEwPPqklYWBk3UrzBO2iFMqx9MPIei57VVTGRMxiW1kKUImh7Hb
+	 6snMD3IfD9S2r2MoSxL76n1DgnxII0bCBd6gFnmNvKOlZSHhPDyrF68JtIVAuBbhtr
+	 /G3UVvPqlbjs27GiOBL4xcxL9ANOUpdEaSpB0C7fyqxz78ZvTUTTFUK4yDqjMd5SAi
+	 ncmG4nO2LHTmCZ9sCTIltU+66XtGg4t8ZYwxhQJsPnpbmLKSHwA0sl9oDRdpyXfyBa
+	 5kC8bJtVFOFftAmVCd8xCix7JIVrZwlJ9aHbPpDqCRJrQHIBDzo4+t2/vAOiaS4bzG
+	 FYKtP2FZgbAPg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 2CD4641081;
+	Mon, 17 Mar 2025 22:49:10 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Simona Vetter
+ <simona.vetter@ffwll.ch>, Mauro Carvalho Chehab
+ <mchehab+huawei@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
+In-Reply-To: <87jz8tlvqa.fsf@trenco.lwn.net>
+References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
+ <87y0ydzn1q.fsf@trenco.lwn.net>
+ <8b87b297-b68b-4276-95ae-e04650c3360f@leemhuis.info>
+ <875xl7nfxg.fsf@trenco.lwn.net>
+ <431b3825-8ed6-4da2-af9d-4f95e9d08606@leemhuis.info>
+ <87jz8tlvqa.fsf@trenco.lwn.net>
+Date: Mon, 17 Mar 2025 16:49:09 -0600
+Message-ID: <878qp3e0ii.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 
+Jonathan Corbet <corbet@lwn.net> writes:
 
-Please disregard the patch below. Further testing shows that it does not 
-completely solve the problem. In particular, when line-wrap also produces 
-vertical scrolling. I think the recursive console_putc call may have to 
-go.
+> Sorry for being slow ... but also, I guess, for not communicating my
+> point very well.  My concern wasn't about somebody not wanting to appear
+> in the repository at all; it was more with somebody not wanting their
+> tag in a specific patch where they had not offered it.
+>
+> It seems I'm the only one who is worried about this, though.  It seems
+> like we should go ahead and get this change in before the merge window
+> hits.
 
-On Fri, 7 Mar 2025, Finn Thain wrote:
+OK, I have gone ahead and applied it ... though I'm still not 100%
+comfortable with the wording as it is... :)
 
-> When long lines are sent to the debug console on the framebuffer, the
-> right-most column is lost. Fix this by subtracting 1 from the column
-> count before comparing it with console_struct_cur_column, as the latter
-> counts from zero.
-> 
-> Linewrap is handled with a recursive call to console_putc, but this
-> alters the console_struct_cur_row global. Store the old value before
-> calling console_putc, so the right-most character gets rendered on the
-> correct line.
-> 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Finn Thain <fthain@linux-m68k.org>
-> ---
->  arch/m68k/kernel/head.S | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/m68k/kernel/head.S b/arch/m68k/kernel/head.S
-> index 852255cf60de..9c60047764d0 100644
-> --- a/arch/m68k/kernel/head.S
-> +++ b/arch/m68k/kernel/head.S
-> @@ -3583,11 +3583,16 @@ L(console_not_home):
->  	movel	%a0@(Lconsole_struct_cur_column),%d0
->  	addql	#1,%a0@(Lconsole_struct_cur_column)
->  	movel	%a0@(Lconsole_struct_num_columns),%d1
-> +	subil	#1,%d1
->  	cmpl	%d1,%d0
->  	jcs	1f
-> -	console_putc	#'\n'	/* recursion is OK! */
-> +	/*	recursion will alter console_struct so load d1 register first */
-> +	movel	%a0@(Lconsole_struct_cur_row),%d1
-> +	console_putc	#'\n'
-> +	jmp	2f
->  1:
->  	movel	%a0@(Lconsole_struct_cur_row),%d1
-> +2:
->  
->  	/*
->  	 *	At this point we make a shift in register usage
-> 
+Thanks,
+
+jon
