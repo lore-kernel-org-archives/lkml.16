@@ -1,135 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864B424418F;
-	Mon, 17 Mar 2025 15:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DBC21C194;
+	Mon, 17 Mar 2025 15:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742223838; cv=none; b=Ef1qQ5oO++3h7A0f3ctN+KvAqOIm07B38asR1WH9dwgMpxf3JDtaqdGSppt6HxFa07/G3VnnaaZ8zlFZtgECe1ysicGQ2J8cTSGDywLANMS+4y/SaJg7PMQSa1ik6RJdo78sB2sJX6VaAtWzJMqZQhvyQwHjAwFMOvVsnMqoHTs=
+	t=1742223888; cv=none; b=lpj3mg+1W+xbYBaMRo6V4y3HpvLMPAsEfT6yRIHvIMqEK5KcXZNeXtmZRZCI2Zuk0boKUhc9Ro8zXZv6SAP+gt31YkRKZssh7LL0OnDZc2D8W30kdu5RnKIhvWshr5znqFnXajUHqXQ798mlFbqhhsrFxZD0cmkrxrJCsQ5dq54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742223838; c=relaxed/simple;
-	bh=lOTj+aLfLjnSkGWOyTAyxRBbj1txz9yH5T9seX66aeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mSsEIAQa1zZi4ahR6lIT1MUoZ48jbLIm2OiEESjCi3NqzbrrUuj+IvB1FX176D0t08vqHds4wJg0/vPuZRD1sG922sXdgaaGG1rk8E1m9QxXZMc6q9Dc96LfvxAHtxgq/W6ApwXIf3EOTS+YfQ2rfF9utvmxDDafmeNYJPH1cyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fHcIhep/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742223888; c=relaxed/simple;
+	bh=dvV/UXPx7k0Bp/O7ZeVMaIo8X4bYnnZqpVVHk2iNOnE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aQ5RMM+IG94XjFHAB8hAnilEy8pr2ouT7sP5xbFHpSLv8b1ubOS9A/f2VR1yLz9/sg/PWcwOTqACeUOmDNEh97yOd+RueZ1552ahluhMfXBRec3raKkP4l7uHK33oOl6v1PU8GctW7inM1yZr3d/xyW6C2sifD6/GE3X4jfN9Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m5SBu4VV; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fHcIhep/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F4FC4CEE9;
-	Mon, 17 Mar 2025 15:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742223838;
-	bh=lOTj+aLfLjnSkGWOyTAyxRBbj1txz9yH5T9seX66aeo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fHcIhep/wrcfChNHZOvjO+19Mlu6UZJ6+qB794IUpJDd5p4DKQ6YH/PgZM9rKoCvq
-	 OP8EOmfN7TN6doynVZRE5mZ9xuEs4Ss051F3utHu5INXQLeiLi3ZGTaF5gPswHIl0j
-	 RLPgO1oyvWYXo8RVaQTcHRc+qO7UgRyB4becD7efGJxPgQ/CAAZSSY9cZd5XUWxNwT
-	 ljTqoe3tak0urndwyZ3Ln36deD/ySqsupn5UrC1DCkqBcQtfNTQd5lfW/Jd1pQvcu1
-	 4rqfdCXT3WhCLmhsVliTjCh0s8GOgvhSZ+vUPpx4aeBKV3QbFDKhTRjWaHsriP8g2G
-	 1htgjkmOpAKiw==
-Message-ID: <dde3fd48-f5ac-4c82-aff3-8dae255d4cd2@kernel.org>
-Date: Mon, 17 Mar 2025 16:03:50 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m5SBu4VV"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso46135381fa.1;
+        Mon, 17 Mar 2025 08:04:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742223885; x=1742828685; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dvV/UXPx7k0Bp/O7ZeVMaIo8X4bYnnZqpVVHk2iNOnE=;
+        b=m5SBu4VVZ2Ql144SXytUUn4IL7O40pAFOxKSl6AfxxbLcS9JEN33VCWh7aHDng7bAQ
+         vXQJGMbcgrWyDbmCcn2tqKCT/aP9d4XSQp3It7Wj3c60oceAiVVoLZdpA+6lkEWhXJU9
+         DeecI5GVkZ9OtJzbZ8BIsToJ8iZKLnPNM2C1GZ7GZALHpkTg0j//7Sg1BqCXA/2SvcEA
+         1P9MIZaQGwA+/SdzdpDX+83K7Csm8LSSamhEdDfCb758h1TOJuMfmsei+ulVYskzB0gQ
+         z8CBPSSelGPpkSuaw6G2HrvdT4AlMbcuPgn/1n7yOg8o3MFqHdv+5LN7w18zWGtWm+2n
+         pePQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742223885; x=1742828685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dvV/UXPx7k0Bp/O7ZeVMaIo8X4bYnnZqpVVHk2iNOnE=;
+        b=ko3GRZCw4KD6gHyDQaui110NLJAb40oZmu8aHpEKqA33dbOH9m58qSZ8Er8vSXMl2l
+         8VHK2LMM6+vb0geDQ9NYI8OigbOUY/1VFdDDTd665u7UIddlb5H0lHxKkTzq8fLMQDY8
+         CgFCtD0xpU/D3QLkEA7+qnj1tzUG4ICwqrSrN577iJCsVGs2R4U6W606duO37AYecFXY
+         MDzOvMii4YB/VfETMam/kEKKxMZX96zQehRXii9AZVSfkOs/Ck2GQ24MyqCBtdUBN4gN
+         3XWOa8Kbv2xvmfBiNr5DVB2x1L6o7ufrnDO32yYdE2f+25UfFcGKX/2eTXadmjSPcTIg
+         rA9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUSVtn3NqBFxfUmGV2my4VNB4AdF1DHBUugpfTOOK9iln1ZVv+L6BrFXF8a4CA6RGverwCs9ekEpPVE/UbY@vger.kernel.org, AJvYcCV58RnKiTEZJbTEJsXbu+2LU7CmX12WvHXr0RhgTZF1dcnOY75E1bHKzOZ7h602sP2z4j/pJifS6Sq3@vger.kernel.org, AJvYcCWQ7GX4uw7aB+45TFlfpgUmewY8HZRuVqk9cecTY71GzoR6WETvmKGatC95GhJOFg/oEDq8uMc2aglPuOg=@vger.kernel.org, AJvYcCWbAXW7ejgXc4Li2eyVj65jm/xa/t+Tkqy1Vq4bpNHCybVdAO3k8DmSLwcV56sq7N/aVejE8NKJAewoKBRBF2Zz@vger.kernel.org, AJvYcCWuB2McuGhZZYkq3vxnK+X3FJUdHnxMzMQ9F1Y2Ut/QdFHe2qQ+veilsoXK4jzK2q4lEva8UHf8Bga7bSkf6kA=@vger.kernel.org, AJvYcCXo/E2rQ2ZbkP10GFXoDmPF/1Ega2kZESylpm5UeM0SLaYe0lYqggEuTAkVIXfsq+5v4YQbt6ymCMN2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyA21GKQpLmrQnzsxFfIDBRIMzmthWlZk1Sh7k4/UFmip28Efx
+	JCrTv2HD+3ZE77Lr+xgH5HHdGe2qtikhvtM8XAOX/VZ5TY2b950vlO9eBmrmLuH85PpdMeWyROH
+	OShge3HRPBHYP0P/KJznZdvHGksTtTHlRo11wlA==
+X-Gm-Gg: ASbGncuIb2Tig+UU0k0cCUN5CBYT7JTZP2NdsWaJUOON0EGhrc28E0phBE57K444aOU
+	KPfJf1OEFLHg67YVwvYwwv51i+SYo7DOuawG9YggX9AnagUwzf6UoadOpEyCEaPTUnbvnkwwrnv
+	jPKBvyp66vv8HfJJB1JBAaw5/N10DKd3Mx4lTdmU3vMsOP5aa9B+5la7IrQJCB
+X-Google-Smtp-Source: AGHT+IHmVgJtSNYLkZaRzNpE6HP4wyihn0rjt7KnDqgNADuLUcHY0++O0fXvQGwGOiqydLENMHn7E4D2IwhvWvm9+PE=
+X-Received: by 2002:a05:651c:1a0a:b0:30b:f2d7:1e7c with SMTP id
+ 38308e7fff4ca-30c4aa9fdd8mr66558431fa.5.1742223884425; Mon, 17 Mar 2025
+ 08:04:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] ARM: tegra: Add device-tree for ASUS Transformer
- Pad LTE TF300TL
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Thierry Reding
- <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Maxim Schwalm <maxim.schwalm@gmail.com>, Brad Griffis <bgriffis@nvidia.com>,
- Dara Stotland <dstotland@nvidia.com>, David Heidelberg <david@ixit.cz>,
- Ion Agorria <ion@agorria.com>, devicetree@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250315074416.8067-1-clamor95@gmail.com>
- <20250315074416.8067-3-clamor95@gmail.com>
- <20250317-enormous-bug-of-triumph-ba274d@krzk-bin>
- <CAPVz0n3o2=6cXh81CwqzASEcz9AbBmaMeU94V4xAyGdzKcUoVQ@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAPVz0n3o2=6cXh81CwqzASEcz9AbBmaMeU94V4xAyGdzKcUoVQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com> <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com>
+In-Reply-To: <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 17 Mar 2025 11:04:08 -0400
+X-Gm-Features: AQ5f1Jqz7-ZXmJNFs_YhRQRGhbHO2cgIBb8ny_OJeurceVHHPcJUVWK0PvgHo-A
+Message-ID: <CAJ-ks9kc5nGuY-8DXST_kK-u9PHjR9QHpVT7RVtkBctLKdFqaQ@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
+To: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/03/2025 12:19, Svyatoslav Ryhel wrote:
-> пн, 17 бер. 2025 р. о 13:04 Krzysztof Kozlowski <krzk@kernel.org> пише:
->>
->> On Sat, Mar 15, 2025 at 09:44:16AM +0200, Svyatoslav Ryhel wrote:
->>> +#include "tegra30-asus-transformer-common.dtsi"
->>> +#include "tegra30-asus-lvds-display.dtsi"
->>> +
->>> +/ {
->>> +     model = "Asus Transformer Pad LTE TF300TL";
->>> +     compatible = "asus,tf300tl", "nvidia,tegra30";
->>> +
->>> +     gpio@6000d000 {
->>> +             tf300tl-init-hog {
->>> +                     gpio-hog;
->>> +                     gpios = <TEGRA_GPIO(C, 6) GPIO_ACTIVE_HIGH>;
->>> +                     output-low;
->>> +             };
->>> +     };
->>> +
->>> +     pinmux@70000868 {
->>> +             state_default: pinmux {
->>> +                     lcd_pwr2_pc6 {
->>
->> No underscores in node names.
->>
-> 
-> These bindings overwrite bindings in the common pinmux configuration
-> which has names with underscores, so underscores are needed for
-> correct configuration.
+On Mon, Mar 17, 2025 at 10:24=E2=80=AFAM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+>
+> Throughout the tree, use the strict provenance APIs stabilized in Rust
+> 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
+> functions at the `kernel` crate root along with polyfills for rustc <
+> 1.84.0.
+>
+> Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc <
+> 1.84.0 as our MSRV is 1.78.0.
+>
+> In the `kernel` crate, enable the strict provenance lints on rustc >=3D
+> 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introducing
+> compiler flags that are dependent on the rustc version in use.
 
-Ack, this Tegra coding style will make big even such trivial fixup...
+As Benno pointed out on v4, this should probably include:
 
-Best regards,
-Krzysztof
+Note that the enablement of the strict provenance lints does not
+extend to the `kernel` crate's doctests.
