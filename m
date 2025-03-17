@@ -1,154 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E491A3171;
-	Mon, 17 Mar 2025 17:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEBF191F6A
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 17:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742233882; cv=none; b=f/v30mJRdCnfvyxpXLLXefsikX5WE7ux3nmfcdaYA2h4qUVhHI+Y47dmM6AbUunkHfbL9WTB1P5Z4OUZerEudHrxDu+n9DJlxDnxO2r7yRGz+3FCTa9FqKVq3Z0f/CzJz1kE1VCp22l9m2WQHhEYzAoalJTgIMgG3JuD9+gLqEs=
+	t=1742233956; cv=none; b=LkiWtWAJvlcrINAVkKhuMW+VmB7JIdP+ucyzUWIL2+1whH8Vsn40EBYdk9gMIGSnUlz9ZyDMzP2YL1QZ+Nxq0W4rCTdJ+GYGmRgrEUMLFUYdT4Frum1P3c/SqfcmKKrD7LiY/yLKx1j04iSlgY5WlEa22hCUARLy5C6pej9l+tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742233882; c=relaxed/simple;
-	bh=/cKV0Fyi6T03lXlvNH38U4UTUiANpMHFR7ZBQzIISmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qKKbFFm580N0sp73uAwgHnecmry4bEaeIDn3m6uGx1ZrM+8ut5IBDfNRpa1sLxQCTFlN+4Z+8cfst2TSxeIt7VTx7Wjn8Z2MjdfYBJf987EJ+qdxZayd8minoKHG+DpkZAO/0b8as1HAwysh+3/nmGas6yUce1feruacOED48eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arrb2wum; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742233956; c=relaxed/simple;
+	bh=f62ojl+o4A2l90TEjbig1mzXjGY+K9lbk5ckJztb9fI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Lw/NlvVenOiBPPV1Xx2M+l57ZCIi+tsVmD7276F/E/7T0kdZsEYCvlvxnJnhhKUezKcX67Kt7CerqYSA0l4ERcRRTrwscwI7uf/b5qkLyBYXd+rlxC+lAIik3rvfKyKj27bTmJVrrNF3SXogKiLtf3qSsv1ahJk2ZWDW23hyYt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N2GX2AuS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arrb2wum"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3BC9C4CEE3;
-	Mon, 17 Mar 2025 17:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742233881;
-	bh=/cKV0Fyi6T03lXlvNH38U4UTUiANpMHFR7ZBQzIISmc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=arrb2wumol6HA37c5JOUXQf10sXU/GN+zJFEfCtDCiaKqg/WN2FG50ycPyMY59aS4
-	 Z/7BYhHlwL4BMFqrv9HEs6MRf6WmpFNzvKFbKy/VwLFbRVS3OBVnumwoV7KfxydqqY
-	 i8YgmHNAci1IUoDcEtT43m1elrMU9JejrLRzwxFJgePhcuWwu4gjYk5JsgAElu3xwq
-	 otcjlKsHUVJf0aaOp4dq90YdEvZfOx6vbnzT7l+qosELAXeGdUzAYNgC09R9aGHkW9
-	 rn45UNgoNC/qQjg0lm4Auv+z5gppF+pDmfiwoRvE1rKwTbMkUS1dCFtkSfsiEBLHxR
-	 iMQ8bCZ+9TnWg==
-Date: Mon, 17 Mar 2025 17:51:17 +0000
-From: Simon Horman <horms@kernel.org>
-To: Qasim Ijaz <qasdev00@gmail.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] net: fix uninitialised access in mii_nway_restart() and
- cleanup error handling
-Message-ID: <20250317175117.GI688833@kernel.org>
-References: <20250311161157.49065-1-qasdev00@gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N2GX2AuS"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52H9vpXo004602
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 17:52:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	W48kH/S0HGkEFujKBeAyySxmQc5Opn4Q4HURKwAUaJE=; b=N2GX2AuS7C7jtsmU
+	utzBsgrhMK8REKcFP5qyJPfU6W0xRQVGyB7jErhersrg7uIA6emij9BKup7Fi/GV
+	SV2G9K8a7KWDg/s4Fpl0Znty7O52uIp+KFrbpNUQfYdGLq6X+WiWuoKIyFEM7oTG
+	CTpfv3hqXHPtE4W75+SRRAj8bkcSpHQx35FdXl+56M5dWJEzmrIOkFOnlq6KJEUw
+	scw19AdC2K1nUu9TSGDl88efrTXo1AgPdMQs+tTKTvR/pzSshUXtzJKRNButHGVY
+	eZVxQnqGg2L8Xn15dM0RyZjjTv4P2E83wb/02nCsfKpqV8JEFpwJmagKJCKEV3mZ
+	hV/dRg==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1u8dkgv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 17:52:34 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2254e500a73so60552175ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:52:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742233945; x=1742838745;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W48kH/S0HGkEFujKBeAyySxmQc5Opn4Q4HURKwAUaJE=;
+        b=O3Fw6YdYU/bSFaM9TqybjO0C5F1lKxt06Xi/g++llsVZpw1FwPp7cH1YNV4uqnbAie
+         5Y6VfmJqKfVb7POTq42waTuDLBbqYyfbWdwW2sqsyHd4oA32tR8MYkkOYzbGglWCXbf/
+         ffEDGNBEVI4yWew5w1oDtMhz2fUM1mE7e08aBSUs18RgpBPswKvKgqoqlGfxyuHyO/nI
+         +eVr4St6C9DNAbtHB56VutHc3HNbuSUJHqok1jrOqvVDMlNzhuHexVpQK+NzrCddEPIq
+         hzRmKiMfwo3MTb8SYthSX8pcHFutjdAhgzBpURcq91yQ/RfuFLXu82doU74/jOpE6kwG
+         sAAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXivB3Nbsxbi9Qepl9qL/f+eu2+Jn296rqqT6sS8OdoR/BGhlUxfDex5CAAJdsdZfKHBJecVceo7u7M9Lk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxp6oFLtlUwV7VDusPrl9txfZoOZj6Q4Npg87xEq3k2+0bmH2Qt
+	9yMrifImYIFBeTRPQmaARwUOAkCmKUnYpq2B4XJps1bXRzg2WL7lIuMdjc4rNO4n0OC/TSoOLJK
+	DHmjhljQn4KHKEO9z0+kIAiJlgd1YOdXii2boU+OtSlgD/O/tjAPYQIY15+yURy0Fxzq/AJE=
+X-Gm-Gg: ASbGncuHLJVq3GMWcCpprvAND1W00+jrp8jQtFHnUQUktKh4uVsC79KMshQbpoSypzF
+	2joDmrDZajbt/T9onjX3g5Epx/czCwdCpkX6bKPC9zp8tN4QlZwZBQqlkDAh3EOeOO6UiDUPfsw
+	h5rRtsX1QN63hkHUH89BQnmyjdQRn3R6wSW96EBvuRNWmuKzCeCses3lzVF/2jzZgWeV0snf6tc
+	qJLAu5kvDspmclGEClHkmBKzc2k8MJYVP8HDOg43R9UmdAVSdX9+LGwyaexbpVpSkj2Mxie5LSn
+	BRbXKL/oIwS3yqwNb36BR8VOSJ8d72fCoTHKfb3xAlZAqTBYisKV
+X-Received: by 2002:a17:903:22c8:b0:21f:136a:a374 with SMTP id d9443c01a7336-225e0b098a2mr184232345ad.43.1742233945098;
+        Mon, 17 Mar 2025 10:52:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEoIwZ/XaW2xB5u/EDFQEQhDMqg39v0rU7Oq0/roBytKAynLPkZcvcV3MFWkdWN+E2yf8FxAg==
+X-Received: by 2002:a17:903:22c8:b0:21f:136a:a374 with SMTP id d9443c01a7336-225e0b098a2mr184231995ad.43.1742233944697;
+        Mon, 17 Mar 2025 10:52:24 -0700 (PDT)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd5ce5sm78291485ad.252.2025.03.17.10.52.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 10:52:24 -0700 (PDT)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+To: Christian Lamparter <chunkeey@googlemail.com>, Kees Cook <kees@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20250310222339.work.654-kees@kernel.org>
+References: <20250310222339.work.654-kees@kernel.org>
+Subject: Re: [PATCH] wifi: carl9170: Add __nonstring annotations for
+ unterminated strings
+Message-Id: <174223394380.578193.6449253449477522706.b4-ty@oss.qualcomm.com>
+Date: Mon, 17 Mar 2025 10:52:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250311161157.49065-1-qasdev00@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
+X-Proofpoint-GUID: T_V6-mr9wwbAMio4J3f2O2WPvmArlnY6
+X-Authority-Analysis: v=2.4 cv=c42rQQ9l c=1 sm=1 tr=0 ts=67d86162 cx=c_pps a=JL+w9abYAAE89/QcEU+0QA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=a8UXU1FYSwnUjzW3zpYA:9 a=QEXdDO2ut3YA:10
+ a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-ORIG-GUID: T_V6-mr9wwbAMio4J3f2O2WPvmArlnY6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-17_07,2025-03-17_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ bulkscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 malwarescore=0
+ impostorscore=0 mlxlogscore=620 priorityscore=1501 suspectscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503170129
 
-On Tue, Mar 11, 2025 at 04:11:57PM +0000, Qasim Ijaz wrote:
-> In mii_nway_restart() during the line:
-> 
->         bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
-> 
-> The code attempts to call mii->mdio_read which is ch9200_mdio_read().
-> 
-> ch9200_mdio_read() utilises a local buffer, which is initialised
-> with control_read():
-> 
->         unsigned char buff[2];
-> 
-> However buff is conditionally initialised inside control_read():
-> 
->         if (err == size) {
->                 memcpy(data, buf, size);
->         }
-> 
-> If the condition of "err == size" is not met, then buff remains
-> uninitialised. Once this happens the uninitialised buff is accessed
-> and returned during ch9200_mdio_read():
-> 
->         return (buff[0] | buff[1] << 8);
-> 
-> The problem stems from the fact that ch9200_mdio_read() ignores the
-> return value of control_read(), leading to uinit-access of buff.
-> 
-> To fix this we should check the return value of control_read()
-> and return early on error.
-> 
-> Furthermore the get_mac_address() function has a similar problem where
-> it does not directly check the return value of each control_read(),
-> instead it sums up the return values and checks them all at the end
-> which means if any call to control_read() fails the function just 
-> continues on.
-> 
-> Handle this by validating the return value of each call and fail fast
-> and early instead of continuing.
-> 
-> Lastly ch9200_bind() ignores the return values of multiple 
-> control_write() calls.
-> 
-> Validate each control_write() call to ensure it succeeds before
-> continuing with the next call.
 
-Hi Qasim,
-
-I see that these problems are related, but this is quite a lot
-of fixes for one patch: the rule of thumb is one fix per patch.
-Could you consider splitting it up along those lines?
-
+On Mon, 10 Mar 2025 15:23:40 -0700, Kees Cook wrote:
+> When a character array without a terminating NUL character has a static
+> initializer, GCC 15's -Wunterminated-string-initialization will only
+> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
+> with __nonstring to and correctly identify the char array as "not a C
+> string" and thereby eliminate the warning.
 > 
-> Reported-by: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
-> Closes: https://syzkaller.appspot.com/bug?extid=3361c2d6f78a3e0892f9
-> Tested-by: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
-> Fixes: 4a476bd6d1d9 ("usbnet: New driver for QinHeng CH9200 devices")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+> 
+> [...]
 
-...
+Applied, thanks!
 
-> diff --git a/drivers/net/usb/ch9200.c b/drivers/net/usb/ch9200.c
-> index f69d9b902da0..e938501a1fc8 100644
-> --- a/drivers/net/usb/ch9200.c
-> +++ b/drivers/net/usb/ch9200.c
-> @@ -178,6 +178,7 @@ static int ch9200_mdio_read(struct net_device *netdev, int phy_id, int loc)
->  {
->  	struct usbnet *dev = netdev_priv(netdev);
->  	unsigned char buff[2];
-> +	int ret;
->  
->  	netdev_dbg(netdev, "%s phy_id:%02x loc:%02x\n",
->  		   __func__, phy_id, loc);
-> @@ -185,8 +186,10 @@ static int ch9200_mdio_read(struct net_device *netdev, int phy_id, int loc)
->  	if (phy_id != 0)
->  		return -ENODEV;
->  
-> -	control_read(dev, REQUEST_READ, 0, loc * 2, buff, 0x02,
-> -		     CONTROL_TIMEOUT_MS);
-> +	ret = control_read(dev, REQUEST_READ, 0, loc * 2, buff, 0x02,
-> +			   CONTROL_TIMEOUT_MS);
-> +	if (ret != 2)
-> +		return ret;
+[1/1] wifi: carl9170: Add __nonstring annotations for unterminated strings
+      commit: 9a1cf85c9c7cca15bfc452f207818977621dedf8
 
-If I understand things correctly, control_read() can (only) return:
+Best regards,
+-- 
+Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 
-* 2: success
-* negative error value: a different failure mode
-
-If so, I think it would be more idiomatic to write this as:
-
-	if (ret < 0)
-		return ret;
-
-This makes it easier for those reading the code to see that
-an error value is being returns on error.
-
-Likewise elsewhere in this patch.
-
->  
->  	return (buff[0] | buff[1] << 8);
->  }
-
-...
