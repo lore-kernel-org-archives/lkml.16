@@ -1,68 +1,67 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B646423F41D;
-	Mon, 17 Mar 2025 13:29:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE0724169A;
+	Mon, 17 Mar 2025 13:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742218169; cv=none; b=WqHTHXxufBAuEfLuImVzsTw/ak/eaFhLSzfo46jPtK4PtP35/EiJQRuJhBkioo3L02eThgUrOTG7kUs4h38FwUHy61HXgEQwSiUXjUbVYtwBjIr8lUkP7WmUGL3CAMZA8iRESH1U6UqrDzOPDhYYSk6PB8PngiijuCvw+4tnGtc=
+	t=1742218172; cv=none; b=GknlNtn1swAJfsPWXUU7VLsUpC86urmSV3MdS1E9c9go0pcDEC3y2MxWWmeSTUU5RzyE7kiV6/75/HT5Vl+l5jPU0UBOCWqagpt/rAytjEj2oxmEAeU+fRmh+Pe5q7sgcSQZW6zuRVfOPvOzeUdKC12uEEEtxoe4NYtaGyOp8Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742218169; c=relaxed/simple;
-	bh=3FyrNeDeo6PuudCPLtSK1Wvo8s/2uyQqMBBJ+Hz0upU=;
+	s=arc-20240116; t=1742218172; c=relaxed/simple;
+	bh=p1T7rPE6PheQf1PP3APwWVg7WjhczJsCxKMiW9/IOi4=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=mbjCumfAnSR1Mtm0XLJFpSlDhWHef+pnNHMaqgyrk1a8qqEquFziWbV/crOAboatmEaWBAXxP+/N07hYYWnQv0lRR4Xt9hn0w9nc1FEPkVt7kW215OPXtyT0tDE8XWM1Yn4QV9RMf5NFStu+E9nS12n/uHexKaIhL+Q72OT5Kdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A0fuhMpQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JPutzsMP; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=gidLd/DyGMKINI1WD6aJkfkN85kmakiTIQ3UWvNWWW2bQhuzk45+m0mD71H/Ub9MUmG/bspw5fydnWALh7usAcKdM74dV29KfCdJfOoBK3Wk+LeN6zVtHYTy6hZOGpPhmLjwz6WKH4ZC3qtBOUyX0A8+YAdT/g5bllLYGYxfu+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I+lmDMBo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kD+t1zcj; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A0fuhMpQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JPutzsMP"
-Message-ID: <20250317092945.953189553@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I+lmDMBo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kD+t1zcj"
+Message-ID: <20250317092946.075206592@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742218166;
+	s=2020; t=1742218168;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=j38ae1J786gvtJe/THvWhwBIOiRP6lJqXx4r70BjdWE=;
-	b=A0fuhMpQc4rT72k4I3p9aWAwouOb045M4R4kxN1HcvFY3aA04PoVnFyJQ6qCHka6Z7NpSm
-	4rl4dhHcAO0DqsoHKs33Y2P64ZRbz8IC6S09ym3CMqk9yQ62NC8TKXcsCN5RF4M2isVgPp
-	FVbQ2FsOcS2iHEwp2UOtNsqXXJddARazMO+Hdu2134rKpJeuSIeX2MXOCkxiZLfx5nAQln
-	TQuxZB+MRZ+n7/NEtg0C6WSRYMfL6h+tj/nxzdBFIOjFzJNfgpO+WsXJJFSt5gDLqXs/QP
-	zhvyfjNNgVaE+pHLz75g8gA7vCX/PYxF/U6I1n2p5TIe5EpcpLB3/hwQHHJhHw==
+	 references:references; bh=3/dRMN7oC/HSArm4ElW7bOG9bX8b/YPinUN++M1pXqM=;
+	b=I+lmDMBoCXWAe1aotpi9TzLp2syIkoYuxIIkcAv2AlYOPe2S/+dhRwasZEUe1P1bkGhVA9
+	408wd+oLUdwowQzLUtOzZlhI0kOmujCj3CtzG5vdX+GDCQN80WcxQFm6pWqfF9uu/yLAwo
+	Qf+rugx8daut868JVXE+JaG6zsIgbiQh7B8Qli/TFav+bjjI8aZsJ9e2rqw4Lgf5cwt9Lc
+	rvGCV/Jzfy1LEA9nvKEVvLlyY7pFKMyL/z8kiZZQfdNJJh5OMwEqOB6iuloxiT/iLQsTJS
+	Swh8sq5Mx67ukMmheyWs8D5uE5jootv55P9+VmlsqmNWS/Xm9Hn3N1GNmbdZOg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742218166;
+	s=2020e; t=1742218168;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=j38ae1J786gvtJe/THvWhwBIOiRP6lJqXx4r70BjdWE=;
-	b=JPutzsMPXYyTRbsOtw/zuQsFh12RMgm7HrdsKssaS/80A9owsje+/jMUa1UjCWTgNvToXf
-	qrrWloOn508zQyAw==
+	 references:references; bh=3/dRMN7oC/HSArm4ElW7bOG9bX8b/YPinUN++M1pXqM=;
+	b=kD+t1zcjj/G+g2DMtE4DoeqeCmi99mS8B8MhBunWIJqfeR6v1OSO6xWw1rXnRRonnrYdAH
+	sfpNSZc2I8ZJbCAw==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Marc Zyngier <maz@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Michael Kelley <mhklinux@outlook.com>,
+ Wei Liu <wei.liu@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>,
+ linux-hyperv@vger.kernel.org,
+ linux-pci@vger.kernel.org,
+ Nishanth Menon <nm@ti.com>,
+ Dhruva Gole <d-gole@ti.com>,
+ Tero Kristo <kristo@kernel.org>,
+ Santosh Shilimkar <ssantosh@kernel.org>,
  Logan Gunthorpe <logang@deltatee.com>,
  Dave Jiang <dave.jiang@intel.com>,
  Jon Mason <jdmason@kudzu.us>,
  Allen Hubbe <allenbh@gmail.com>,
  ntb@lists.linux.dev,
- Nishanth Menon <nm@ti.com>,
- Dhruva Gole <d-gole@ti.com>,
- Tero Kristo <kristo@kernel.org>,
- Santosh Shilimkar <ssantosh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org,
- Michael Kelley <mhklinux@outlook.com>,
- Wei Liu <wei.liu@kernel.org>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- linux-hyperv@vger.kernel.org,
  Wei Huang <wei.huang2@amd.com>,
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
  "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
  "Martin K. Petersen" <martin.petersen@oracle.com>,
  linux-scsi@vger.kernel.org,
  Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: [patch V3 04/10] NTB/msi: Switch MSI descriptor locking to lock
- guard()
+Subject: [patch V3 06/10] PCI: hv: Switch MSI descriptor locking to guard()
 References: <20250317092919.008573387@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -71,7 +70,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 17 Mar 2025 14:29:26 +0100 (CET)
+Date: Mon, 17 Mar 2025 14:29:28 +0100 (CET)
 
 Convert the code to use the new guard(msi_descs_lock).
 
@@ -79,64 +78,48 @@ No functional change intended.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Cc: Jon Mason <jdmason@kudzu.us>
-Cc: Allen Hubbe <allenbh@gmail.com>
-Cc: ntb@lists.linux.dev
-
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Acked-by: Wei Liu <wei.liu@kernel.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
 
 ---
- drivers/ntb/msi.c |   22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+ drivers/pci/controller/pci-hyperv.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
---- a/drivers/ntb/msi.c
-+++ b/drivers/ntb/msi.c
-@@ -106,10 +106,10 @@ int ntb_msi_setup_mws(struct ntb_dev *nt
- 	if (!ntb->msi)
- 		return -EINVAL;
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3976,24 +3976,18 @@ static int hv_pci_restore_msi_msg(struct
+ {
+ 	struct irq_data *irq_data;
+ 	struct msi_desc *entry;
+-	int ret = 0;
  
--	msi_lock_descs(&ntb->pdev->dev);
--	desc = msi_first_desc(&ntb->pdev->dev, MSI_DESC_ASSOCIATED);
--	addr = desc->msg.address_lo + ((uint64_t)desc->msg.address_hi << 32);
--	msi_unlock_descs(&ntb->pdev->dev);
-+	scoped_guard (msi_descs_lock, &ntb->pdev->dev) {
-+		desc = msi_first_desc(&ntb->pdev->dev, MSI_DESC_ASSOCIATED);
-+		addr = desc->msg.address_lo + ((uint64_t)desc->msg.address_hi << 32);
-+	}
+ 	if (!pdev->msi_enabled && !pdev->msix_enabled)
+ 		return 0;
  
- 	for (peer = 0; peer < ntb_peer_port_count(ntb); peer++) {
- 		peer_widx = ntb_peer_highest_mw_idx(ntb, peer);
-@@ -289,7 +289,7 @@ int ntbm_msi_request_threaded_irq(struct
- 	if (!ntb->msi)
- 		return -EINVAL;
- 
--	msi_lock_descs(dev);
-+	guard(msi_descs_lock)(dev);
- 	msi_for_each_desc(entry, dev, MSI_DESC_ASSOCIATED) {
- 		if (irq_has_action(entry->irq))
- 			continue;
-@@ -307,17 +307,11 @@ int ntbm_msi_request_threaded_irq(struct
- 		ret = ntbm_msi_setup_callback(ntb, entry, msi_desc);
- 		if (ret) {
- 			devm_free_irq(&ntb->dev, entry->irq, dev_id);
--			goto unlock;
-+			return ret;
- 		}
+-	msi_lock_descs(&pdev->dev);
++	guard(msi_descs_lock)(&pdev->dev);
+ 	msi_for_each_desc(entry, &pdev->dev, MSI_DESC_ASSOCIATED) {
+ 		irq_data = irq_get_irq_data(entry->irq);
+-		if (WARN_ON_ONCE(!irq_data)) {
+-			ret = -EINVAL;
+-			break;
+-		}
 -
--		ret = entry->irq;
--		goto unlock;
-+		return entry->irq;
++		if (WARN_ON_ONCE(!irq_data))
++			return -EINVAL;
+ 		hv_compose_msi_msg(irq_data, &entry->msg);
  	}
--	ret = -ENODEV;
+-	msi_unlock_descs(&pdev->dev);
 -
--unlock:
--	msi_unlock_descs(dev);
 -	return ret;
-+	return -ENODEV;
++	return 0;
  }
- EXPORT_SYMBOL(ntbm_msi_request_threaded_irq);
  
+ /*
 
 
 
