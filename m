@@ -1,114 +1,100 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A289824A065
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 15:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897E5155322;
+	Mon, 17 Mar 2025 15:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742226299; cv=none; b=RN84p3vs9wo7S86/15tzxjqEKNGL87VI1LMk+cPnfoLQVju34J4swjyiwjpC82O4+KSh73w873mSAC6kif5UCZptyL6OlmAKiXVZm0/2eFJDlLFMmkp/MZBnGATHNEIPjU+SkmQKVLVn2cWSupXcwHig9ywtnVXiTIjtLB9Y+/o=
+	t=1742226372; cv=none; b=GLghyQ7ZEoqyR2P1QrRgY5qhkpPDDo5dxDNjnpKRYTXVy8O9i7+M89xVvWF9spSih8EzXSKbQKlfmB0nBriciA8c9rPzrU+kAjWi/Ou4EX1x22m9mtxh0NkXVkaXycNEO+MpPOBLenG1vbIuLY9g+Fy4rOoR6YYtu9LEKKfLBbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742226299; c=relaxed/simple;
-	bh=B7c2Y4z7IK0bBAMEZDkwYzdnnQzcprBQKAjnqLj21q4=;
+	s=arc-20240116; t=1742226372; c=relaxed/simple;
+	bh=N0XXHSoerCz+fkW0gAlHMYillsKvgy/L8Pvju8fyza0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tpXisL5FyRJb2bQd+ka4EmWqILvbvWLS4aNvg7+zDqBlkpppfquitVq2+d5SMW7zLHo+eqB3YbBxg/px1AX1CYGhmu3PUXNUoEuLKWf5tVTOx+vw2fXXUtnSAmClbGm40lZ9emH01aEomH98LeSN/ti6gtqv9h7xSWmgmJquo5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dZbCAX+1; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=QA3jvLhby/jcbKLY7DYDQyd9OPEIeMXD+vTMlAlAPQAmps4e0btIUR4fEGTvF9isvlrPyKOruVNTutQaEYdV+B+yTKXeB3MIfz8AwxyKIvwIET1GoAgm82vb2J2bStOPiXBDzWXbFOdSmDZ6aSnrRpW0Z1V+lGwaD5McJ6Xfh6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bmvQmwst; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dZbCAX+1"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2242aca53efso28785ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:44:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmvQmwst"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so615864a91.0;
+        Mon, 17 Mar 2025 08:46:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742226297; x=1742831097; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742226371; x=1742831171; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u5OlWZyikCPnAOFdTXmrFoSKCph7ASBwIJqix8Eg/aE=;
-        b=dZbCAX+1sLjbXQTIk9r0UdbgZYRaprOx0pfAcMLf1Ls7dZ3mU88gwgLywjE9lWHaOf
-         bN5CfVG2u0Mglv5N33m/y0cq/ABBP9YvKNQKBcVF1ehdKkmJfwS7pMqWjZ9mD+B88dcg
-         XsLXEe03ZIwE1EkYUJWfFspOzUGhI+868fI8ra8YchkMBywLEGp81SEQybi/58A181Sy
-         qRQ61mqr9crNT2wJy3gc5NHrrnhTPCaQrcOskLWvlZoMWXI21yrQeUSNfcM2sF4t0vGu
-         oXL31eT+9qkbDEC7rPEbicIkxQBY2nMoNME8KYorF4yrXepBqIRPiv6riEtRDCLp3gOP
-         3mSw==
+        bh=N0XXHSoerCz+fkW0gAlHMYillsKvgy/L8Pvju8fyza0=;
+        b=bmvQmwstYYy3u0cj7D34fJ4uxtp8I3Jp7yHRO1WdoDkjqXbduyxW++v/Ry7EyP0h56
+         NF3nqSM+GgFE4YfjYaFiVBckIjMNiFMEbpGh8rsixilm/M8UiK4egdl/4ArYju+zJ6GU
+         01PvlHcvds7AcoM/xwE+ianEFMjzWvduBgXyE9eahDonBL2VkdOVURRMJwdT6wG/5Uqz
+         PF0NtT1feRa41ptXFati0P2SsdNBm6llaRy/6NReCIhdIGMsTeQrPDbGs4XWydc/IwlG
+         Eh3H2RQ3+lk8ln8M6f/NvS5G0LQsRZDn+mJd/1Qe+4y31OkkFAzWZ+GhfW7PIw2ihal6
+         qjrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742226297; x=1742831097;
+        d=1e100.net; s=20230601; t=1742226371; x=1742831171;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=u5OlWZyikCPnAOFdTXmrFoSKCph7ASBwIJqix8Eg/aE=;
-        b=gQAf5+Eat1pZp6gNEc1CXpATyo6Vblmg22CykgjGCnNogkATjbEa1d1kXXs4pn3857
-         m4iSZxQLXVDR6BFyL+zBbo2fRaXAfeDCixuwTp7KSo/TVOXsqyFgG2OcQJ+PZgxaDi2x
-         b4D6uEMWMB2X9e2a+KbYXWNU4AhElROkn9YmJWx1ZIoX6iZQrFHna02KdpFv9oulPzHE
-         WgPNF2yKhoyPzc6MYrmxzVpTL1LcftcnqkJV+nXv2vyzxnF9yABgQDTFrTmwsCHvqTot
-         7UCpQB6+MRhVmFh6LcbGI5dhvRipD4hxB95GvsRLFJjlVq+BuYTeRIPyl8DBiS/Xs+6n
-         zovw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWm3M/7cDoaRB5qHzz4Am0BJ3kHC3EdmzAP9iLUntUFIpmBdRfhu3G0uhPJhQ1MsTc8DIppA7o9aaBXC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6c2v22vQuYRdfVkN+vWhnwl9e69tIzMYUliOZoMSVDd01LosZ
-	yFo0vSXFjGNi+WR7+eHubR+5oC4e3RGYQH/Egl98oYPkub46q1yWvAikSQ8N1djbjW8VoGSb79u
-	BILuyfkQMovYw/9OlBZeAXSR1n64iAVVOCrsh
-X-Gm-Gg: ASbGncsRzlkaK7V9qJ9uyNlFkLtzygXlrgvdEI9pEftaxTJz7t1azCLxtE7lOt8Bwhb
-	N76VPGF+yj5BlA08yyvSJDAWwY67/vmpXa6FgCUjc7iYO99W/jF3BQhLOlyIwMGqssH0ogeYha9
-	zo4Q7lfbflT4CSPOlvf+wginBIaLn0P5NBrWgNiNdjGhZlVFwXFXmyWr85M7ld3MwwJw==
-X-Google-Smtp-Source: AGHT+IGb0tr+WMR0R2Hjk0TLnVrUU7IZXnn3I3kas5Z1APzQmiaDhx10WNGGrH2KC7JMGKhAtZ+1THBL+g9PhbnHb/Y=
-X-Received: by 2002:a17:903:1ca:b0:21f:56e5:daee with SMTP id
- d9443c01a7336-225f3c14a1dmr4314055ad.6.1742226296645; Mon, 17 Mar 2025
- 08:44:56 -0700 (PDT)
+        bh=N0XXHSoerCz+fkW0gAlHMYillsKvgy/L8Pvju8fyza0=;
+        b=qgYS2RiKD9EG4SBV7gJckvfSneaDSLSchgDqhwSzYnwctWGvE/J4Hb7WZL6Lp42miQ
+         rbRpMfokg2YTav338iJzOR55gqeLHG7DnOn2TwXgj+VL2r0xcLUWNzkVE65/SipxV624
+         p9u0997RsbeVEtCUt7Bn3BUeW5QlbCFCpb54+Ndya+LDXXb+FNC1NhfMKAZ5gfPmwRPi
+         a2l/2fsBmaEsORCn2yGF0TbwgE++jfToNclZDImtx8Nu7sLj0vc/OG9T+aP3wEF3luT3
+         GHoaBIUblUxwbdHSGg3rrRtmTvgv2vC1s/PhLJO2kXucGHr+UIi2ZDn3MOM3K4UpSzIZ
+         vSUw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7lEYHT+ry6cKN/0ZEoFlmRkU5hLeiZSAUgisRsdH9bqC7nlXaSrZ+shw0UL9eltDqg47oHNg3G2mwTbxOVp8=@vger.kernel.org, AJvYcCWejVatFYlrrMfHnOR2CaFZ3c3FdRdmEBiWBITt21vRbJDHJbYVqz+e+BaWi8MUTEYI4nOd38Nxj8shuIA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhmlHPey1CAlt8CzNUiRKKp2qP2B/E4ksC58tNet0xcVdFtstI
+	NZZCetKzkhKD7zfDqgRhICN2j5Azz88IJotDRMqUWwmeu8Kncal/erHflYtVSnhVDPZUMLBT0U1
+	pYEwWdKQ4Y4TxRXoeJa3UV5WSp4I=
+X-Gm-Gg: ASbGncvzyUGsy+MeJUsfKqXTHQ1D2HLl+a40ph3tHlvQK9DS2WBT84mHy658oigymQQ
+	r+/nDUD+FPBIhOZvwpd//hd7QQlA+iKXYhdem7eC3KxVF0suLk/yZ1lfYbjR4QN039z4QKJ2DDC
+	6aV2sYF4pRvQ3RjsD438vkwoZ1JIErPI//G89Z
+X-Google-Smtp-Source: AGHT+IGsWrTravBcGZquqTChLJG6sZsrdkGgwDZjO6DsTAiQ2OaxrCp+Yf91E1I1j0SrEDrf6Qq5rvoM9jANoIT8Hk0=
+X-Received: by 2002:a17:90b:38ce:b0:2ee:acea:9ec4 with SMTP id
+ 98e67ed59e1d1-30151d68999mr5992647a91.3.1742226370592; Mon, 17 Mar 2025
+ 08:46:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314031013.94480-1-yangfeng59949@163.com>
-In-Reply-To: <20250314031013.94480-1-yangfeng59949@163.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Mar 2025 08:44:45 -0700
-X-Gm-Features: AQ5f1JqBFu4brBFu6Z-rnLiPVDfXVpZSM1gOcQjfzmMkaZh_omo7Liv21m0A-X0
-Message-ID: <CAP-5=fUPz9R60Lay=k-0k5Q8C9AdStAMycOgsKqA5MJ_o7Ag3Q@mail.gmail.com>
-Subject: Re: [PATCH] perf kwork: Remove unreachable judgments
-To: Feng Yang <yangfeng59949@163.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <D8HVNR3Q3UL8.1007IZIZTQ0XB@proton.me> <20250316185439.913013-1-contact@antoniohickey.com>
+ <D8IMV6MH4EVX.3BWHLLY5UGLC0@proton.me>
+In-Reply-To: <D8IMV6MH4EVX.3BWHLLY5UGLC0@proton.me>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 17 Mar 2025 16:45:56 +0100
+X-Gm-Features: AQ5f1Jp_2ofObKoGGIUEWuo2lRMEHek0QXhzl1jwrCncDSj8dSCFentnj4Z5HAo
+Message-ID: <CANiq72kgNJGqe+3yNHj96UPcA8i7ozbQGf5FWBQcOytZqZ6ZMw@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: uaccess: mark UserSliceWriter method inline
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Antonio Hickey <contact@antoniohickey.com>, a.hindborg@kernel.org, alex.gaynor@gmail.com, 
+	aliceryhl@google.com, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
+	dakr@kernel.org, gary@garyguo.net, justinstitt@google.com, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, morbo@google.com, 
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com, ojeda@kernel.org, 
+	rust-for-linux@vger.kernel.org, tmgross@umich.edu
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 13, 2025 at 8:10=E2=80=AFPM Feng Yang <yangfeng59949@163.com> w=
-rote:
+On Mon, Mar 17, 2025 at 4:07=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
 >
-> From: Feng Yang <yangfeng@kylinos.cn>
->
-> When s2[i] =3D '\0', if s1[i] !=3D '\0', it will be judged by ret,
-> and if s1[i] =3D '\0', it will be judegd by !s1[i].
-> So in reality, s2 [i] will never make a judgment
+> I don't 100% know what to do here, maybe Miguel can help. Personally,
+> I'd think that another v1 is confusing, but I have seen people in the
+> past add patches to their already existing series (while incrementing
+> the version number). I think it's a good idea to merge the patches into
+> a single one that handles the entire file though.
 
-Sgtm. Out of curiosity, was this tripping a compiler warning? If so,
-could you provide the details?
+I would say that what is most important is to mention what was done,
+i.e. linking to the previous thread(s) and saying it was merged or not
+so that it is clear what is being done.
 
-Thanks,
-Ian
+If this is just `UserSliceWriter` and `UserSliceReader`, then yeah, a
+single patch seems good enough. It is not a fix, which could require
+different `Fixes:` tags or things like that.
 
-> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> ---
->  tools/perf/util/bpf_skel/kwork_trace.bpf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/bpf_skel/kwork_trace.bpf.c b/tools/perf/util=
-/bpf_skel/kwork_trace.bpf.c
-> index cbd79bc4b330..9ce9c8dddc4b 100644
-> --- a/tools/perf/util/bpf_skel/kwork_trace.bpf.c
-> +++ b/tools/perf/util/bpf_skel/kwork_trace.bpf.c
-> @@ -80,7 +80,7 @@ static __always_inline int local_strncmp(const char *s1=
-,
->
->         for (i =3D 0; i < sz; i++) {
->                 ret =3D (unsigned char)s1[i] - (unsigned char)s2[i];
-> -               if (ret || !s1[i] || !s2[i])
-> +               if (ret || !s1[i])
->                         break;
->         }
->
-> --
-> 2.43.0
->
+Thanks!
+
+Cheers,
+Miguel
