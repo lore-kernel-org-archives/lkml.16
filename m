@@ -1,159 +1,219 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2069.outbound.protection.outlook.com [40.107.236.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B620239595
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742212746; cv=none; b=BDBAE8vWlckQsjAOkBrMFKFOiQtLaOjF6JwM5B7x2DJyP4SO4w3JPux8ChVvn47FIKvne1E1wDE12F1uakCejPCujR69kCfKJ3jj1kxnD1YBVeQn1YNJIoUSbL2Xd4nF3uB76jt7XyWpBIWuOw9LkIm7oxCHH/yK+Y4qWpJS4kE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742212746; c=relaxed/simple;
-	bh=kGRTlob9dS4wjrb9wDoE4m44BhOfQUCktnvmrkWM6BQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e81NX4Y8QnUAkP47u4eF8s4VNwL6GIULm5YA36ArBufADUxkOZ6w1bkHe9H0AoMZl+ogwpDYeOTBt6U9bdfO+WAiHgeSp9t1SHeSwcqIEuAr5x+2OIjWhh1CpJVgWqMljuzcYKiQ9DILYUgmL/Q7nxf9eiQ1ddCKyZC+nCmqBJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=higStgvO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42FC23536A
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742212757; cv=fail; b=HI+SWhm6zcuQbDa3nBSjRQ4YHSybvFR4jJ01yI/eY+g7uHQ9VqPuUB3w2H8eXryLcHm/GgX+HX9SAirkzl/3vPU1P1xdGTPEvsVVg/KPlI2EK/sO5uQug9MkRK2u3YHDiFXfM9LuMhT0hydw2vb8I+DGot1VGqfkPDrG6+4C+wk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742212757; c=relaxed/simple;
+	bh=Zx+SwE+6gfjMLtLVYeqS4hJqRy2G00r/od68F0v0mfo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X0IEiriFGps8iREDUdoZOSV9D8cI+9zL3rzIhW8stU76zjjHtenC1x2YZqRecs1PPb8TN1lKjY0+h8A+IIiPKT6d5/VfrZZ2Mu5OGx7M2Ihitf6//EVAutDCZGRa5AET7CDqUCZc1ujlzYXSqlh6wI3qlQMsd8Rcy4KM4zH29co=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=W4m77QZB; arc=fail smtp.client-ip=40.107.236.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="higStgvO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742212741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ibbLnhe1qBMBBLBfKU3vYef+bv4kMt41HKPTL4S5OPc=;
-	b=higStgvOLtscvtC0pp/UtA7uFuyMfjr7Z4Js/WFFe06yGZsqU+DYy60GSOA/H6EJgcXQ+A
-	CS3maIdmyZx0JvWosYgyggjyEng1Lwly09Rw7G2qViyhPxM9hIPQsruMI5wQLatjbswnjA
-	5Dms6LNo+scaoUMQq5IDtGgefgdPxys=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-80-VTZgWde2MfuRja9_o8XZMA-1; Mon, 17 Mar 2025 07:59:00 -0400
-X-MC-Unique: VTZgWde2MfuRja9_o8XZMA-1
-X-Mimecast-MFC-AGG-ID: VTZgWde2MfuRja9_o8XZMA_1742212739
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-abb9b2831b7so569950566b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:59:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742212739; x=1742817539;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ibbLnhe1qBMBBLBfKU3vYef+bv4kMt41HKPTL4S5OPc=;
-        b=n220VwhUPfCDmqfGT1ar8kLgPRUi6k/bC4TRKDID5DgijyMZMFP4ngM2f29tYiRtzu
-         D9Lp9SF5HihwFgvTQTO6pmZUq4CV4in/CiYYFNWlZLB/cdI3tGzo39hgkUFVqSPnOl4q
-         jrPX2+AT563XoiIVeXoC5YF0d8VX2j6YNyMCIjhMkohemVoGYoIf1BmS5Wsb8W05KvpP
-         ERE51N61mEvjsrxlLjTBK6kttjXTHd97OvApi4RXASe2jzgQiCLMevEyhBeuWKXqvMZx
-         xzfX5+NOoFLfkbPoQH9rNT9169+MNVOYHdXgKKwLPs4POop78uUh+2ooX1yHb0wYTZjO
-         gipg==
-X-Forwarded-Encrypted: i=1; AJvYcCXnKlzd2oEd/dbj1Vve5yOJcLFXNyTTdvOw4NUKOpmTCwF43VktCL8kHyDXxY4zikw67diDXcv2wPK5c/M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw33tP2VyxgtCqQxcCvY7/7+xVg75HbS/z9O8E/dtbDBuNiKwzm
-	3wjjIsgvH9eN4VXRcwieoeFM93EkipgJHLEWp0mTm6i1g+nOr6pZARaGe6Xxso7zufaFNzZwCUT
-	k6KVsYC/jtGrgDblD2TYQEPiDXOO4i0TOBHd85RXyBauFseeFf9F4ucn3j8H/vA==
-X-Gm-Gg: ASbGncvfjwiNd7XebNq08oDj5hWHBYu2u9Vz2g7PcF1UDys748qHu1YEQRdlxYHeluq
-	3khx8VagPwU+u7+NRkIRLcjTbUNosqj7zynb34jS47estjNH6egAX9NH3FtxDsN3F0J8A05LfG1
-	JDGJJWUXEuT1Yj5BxLn//EqsJ1NfLJKB+50y8k0B42QopCUaS389ocus/4GYMo75slBnVjQgG8U
-	XDy93nrBnzsJKDW8R7Hv7s/Lzwg4VqXQGStZPv8lzsH83PEnsFf1n7LO6QKRgCX+DdGJEKU6SMw
-	aJsvYiU84EeY6NHfHCI=
-X-Received: by 2002:a17:907:c292:b0:abf:6e30:c24e with SMTP id a640c23a62f3a-ac3124b2162mr1419638466b.22.1742212739128;
-        Mon, 17 Mar 2025 04:58:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHu9L6waIA1+4l5vWezs0/gLYMZtHuW4yfmYTOV7+dgHirrYrXj5zuut4GB6gKN4F/ns2JTjw==
-X-Received: by 2002:a17:907:c292:b0:abf:6e30:c24e with SMTP id a640c23a62f3a-ac3124b2162mr1419637066b.22.1742212738768;
-        Mon, 17 Mar 2025 04:58:58 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147f0bd3sm657279066b.67.2025.03.17.04.58.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Mar 2025 04:58:58 -0700 (PDT)
-Message-ID: <76c57b22-04d3-4331-a10c-b210db5f9055@redhat.com>
-Date: Mon, 17 Mar 2025 12:58:57 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="W4m77QZB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ualjbPo7SI6joxNVA51PG6gyKctYBhaWRZp4whu404iuj99VsxYxokIOtfvOdKbikCvrQftd8GvEXzXcIU4Qbi9BQ2bDenIOuxH2FB2Ekateys7UaMMXkcDi3AWfqnTnNAW5NkXFxNNYcDzN7n31boi+nsmOj4UKwtUf7PTuQnowTbzhWONgxhvv1wN8TQ1e71izwMxZmy4g0KEbTT2sNJ0H2eWDUn6J0SQVWtS07IpOVfkPNo2yaGz4WlwlJ2JLMYdzWwRtBWraZ4Je8i/DZxqWqxt4QzjdBMa7ThnQe8da/J98pUuhmBn7iUtmj42Wk2IizwE01gxsDw07zhMhGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XwnZNSnUKqMfdvu8tbCKNFW30/ADzfza6vUeMDNe6uI=;
+ b=RR3dGzta8QdenX7FK+WMcd4To3RVqNAs4eGvYdGfofepQfMK5hxm7eiBoSrIsfFXVtVes+KL4+3cY122tTZV7pw/OuNsGgIy+6w3o9IhBU4DOAIAr83MlUh7zilslxh5QNAxd9zAa3GtVFtUuZd/Tf5MTWpIR1FSa2k6v7bS870tU/K/UQhfCzhxL/JV0HAnpapOFM4/COkG1LYnaKm8buK7lZvWYp4QlcejskjKI2b5fdmxr8Sh/g/bWMtBqlvPTn54ot2olJ3tcyfkUb1DsEwK6lU1Q8MtIFFo022Dithw4+JUewnZ4NtQeXfGvKlBjdU3eXvYWYjQzgHA6i4zMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=8bytes.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XwnZNSnUKqMfdvu8tbCKNFW30/ADzfza6vUeMDNe6uI=;
+ b=W4m77QZBRs6ZMim0S8BbPpg+wIjxXUc+Q1xEIwWq7c7sOQGK95VpSqhZ8QO+OkNtFCIhwePIy5ltHzRonBkCkfcEsyepE06vy8/PN19OcRLeAAd10NZbEjL49fqlB3Rr5uW3oQVgmq0ajfponvoW0F5QLVt7obkPiJhGpJfNSuE=
+Received: from PH0P220CA0022.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:d3::21)
+ by CH3PR12MB8305.namprd12.prod.outlook.com (2603:10b6:610:12e::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
+ 2025 11:59:11 +0000
+Received: from SJ1PEPF000023D5.namprd21.prod.outlook.com
+ (2603:10b6:510:d3:cafe::93) by PH0P220CA0022.outlook.office365.com
+ (2603:10b6:510:d3::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Mon,
+ 17 Mar 2025 11:59:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF000023D5.mail.protection.outlook.com (10.167.244.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8583.3 via Frontend Transport; Mon, 17 Mar 2025 11:59:11 +0000
+Received: from BLRDHSRIVAS.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Mar
+ 2025 06:59:07 -0500
+From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
+To: <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
+	<linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>
+CC: <suravee.suthikulpanit@amd.com>, <vasant.hegde@amd.com>, "Dheeraj Kumar
+ Srivastava" <dheerajkumar.srivastava@amd.com>
+Subject: [PATCH v4 1/8] iommu/amd: Refactor AMD IOMMU debugfs initial setup
+Date: Mon, 17 Mar 2025 17:28:23 +0530
+Message-ID: <20250317115830.3416-2-dheerajkumar.srivastava@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250317115830.3416-1-dheerajkumar.srivastava@amd.com>
+References: <20250317115830.3416-1-dheerajkumar.srivastava@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Input: atkbd - Correctly map F13 - F24
-To: Werner Sembach <wse@tuxedocomputers.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250311180643.1107430-1-wse@tuxedocomputers.com>
- <20250311180643.1107430-2-wse@tuxedocomputers.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250311180643.1107430-2-wse@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D5:EE_|CH3PR12MB8305:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7026f82d-34e0-4710-04fc-08dd654b2149
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?lyITHZY7JvCS8OW8VqdYfJRpD4Ltgur+bbT6AWrQOfPAJHdnn9fWtXyYXNHF?=
+ =?us-ascii?Q?1H1+09sUQ+Q13bqgO0qK+vAy5a7fpqAxf1CuhFdcN+2KYlxORq1SJYD6Ymld?=
+ =?us-ascii?Q?LSDprIPkOc0MoKP2IHISSKcXUXr4Dl5W9qQPitOt3ZubwcY5VPF7op96+Tbo?=
+ =?us-ascii?Q?BJ76BVNTc9bXOmpWTsjhTOdomsQs2FtGU83TMivDb/a73wL487pw3+LeHYne?=
+ =?us-ascii?Q?gIdg8WVp+uMyzLvYKlHIN11Jbe801jd2rRqtQ9VqdjZQED59Wgy4TYWkXvRs?=
+ =?us-ascii?Q?KjVipdLpjs96JgZQBNOAIqZnmRZVRJsjnTHJd5r5s4nefAjODc1j4yxthsju?=
+ =?us-ascii?Q?B7RIYcGOkP3tzkA+TLoNMQZ86gPph4qDCD2YiuKqSJ2DiobJE+n7cUlhCHvc?=
+ =?us-ascii?Q?JSBAsyEi7S9s8sKlN1jwTSxx7QwSj+ylSPJDH5go2AjVxB20iRVZTlcI/mKY?=
+ =?us-ascii?Q?Pc9FBDYsovu+y152xu3OZPJ1cR5XMWxDvwctIMD9eh0dMi7+Cs6r8/FhRU8K?=
+ =?us-ascii?Q?Y84G1CPGULV1alDBSyXKjP6z3YQidOcgBf9xwP5eBqajPAYFQuPl3f5Uk8Z1?=
+ =?us-ascii?Q?yq1/LoPoyNZHIYVbyjaYunrKia86w2QhftjkGhBneyNLDaz4n07DhToFturB?=
+ =?us-ascii?Q?CsUGDKIO9hqt955P0UCV9Qzc93DxRuKb0n2k1gI3qfMxE0JIAbaILMM70Cqf?=
+ =?us-ascii?Q?9CRqQm9XNJtWDL8lf+b+Xz4dI7GkwWcBfzL23J86bbxl+XcfNpOvMJ7AEa6h?=
+ =?us-ascii?Q?3XtZwOBBAbUfJXiqJaEHhsf7mI+4SjiAtGw+X5Z+Af0pQOT86jVVHfblhzy4?=
+ =?us-ascii?Q?OO6Fp5OGzOOFm52ZVRvRhtezw1Xn7VpE4E8w2N1xEVPbeKD5iZdqBkgiIVYw?=
+ =?us-ascii?Q?eJfNnUQcmBrSY0aPNiYkRfnXgluSDpqPQ8eRYfJjbtOvcPbSaVZNTC8oSo69?=
+ =?us-ascii?Q?a7TMCdbwxxwrz7cZLkVEdcsNVLL/dWuSNVR5TLLPRX5+EhIu0qZLVm48n8kc?=
+ =?us-ascii?Q?9ZeOkI9X+z1hWX0RspwTe9vJ7G2MTJ0x5ir9rwVWTTiaZgimg8MX8W2yf/ab?=
+ =?us-ascii?Q?82Hjz8Vsma4u3Ik/WLMIhUc+3rfL7oAA8LcugB3lX3nou2Yn2uhThbWn3teW?=
+ =?us-ascii?Q?7Vkrp1sU+a+i6B/qoNuaUaInETJNHlTTABr3vqZ/zO9hLTWmaFeHsZo07uoa?=
+ =?us-ascii?Q?ONy+r29VYn3IBZQpY0lgjVKXodD5bCcM2jw9vm460lcLj7LzWWZX1h/Bmkyw?=
+ =?us-ascii?Q?PZBGcK/hTFkmP22qsbWVLI6eCVZo5DU1v5Z+3gEhuvS5KW8feG2RJnojP1+9?=
+ =?us-ascii?Q?V1loKne5bojXbIWJ+7IK9smZe9LS0i7OGxcOD371vHOTLHkmko9uZ+LSWncV?=
+ =?us-ascii?Q?6EZASKtyhyrN+n7F01UX+2Q4eUvq5GSsxSegnpRHLq7172mcTMzWyUMrC4mp?=
+ =?us-ascii?Q?c+CCN4U9ojyQlvkc2j3Jy8pPw8I0GWFyROQp67pO3flLbrUVu5KF5+1PyeUS?=
+ =?us-ascii?Q?RYgEP1PBvDu7Knw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 11:59:11.0458
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7026f82d-34e0-4710-04fc-08dd654b2149
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000023D5.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8305
 
-Hi Werner,
+Rearrange initial setup of AMD IOMMU debugfs to segregate per IOMMU
+setup and setup which is common for all IOMMUs. This ensures that common
+debugfs paths (introduced in subsequent patches) are created only once
+instead of being created for each IOMMU.
 
-On 11-Mar-25 19:06, Werner Sembach wrote:
-> Currently only F23 is correctly mapped for PS/2 keyboards.
-> 
-> Following to this table:
-> https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/translate.pdf
+With the change, there is no need to use lock as amd_iommu_debugfs_setup()
+will be called only once during AMD IOMMU initialization. So remove lock
+acquisition in amd_iommu_debugfs_setup().
 
-That is a very interesting document, good find!
+Signed-off-by: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
+Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+---
+ drivers/iommu/amd/amd_iommu.h |  4 ++--
+ drivers/iommu/amd/debugfs.c   | 16 +++++++---------
+ drivers/iommu/amd/init.c      |  5 ++---
+ 3 files changed, 11 insertions(+), 14 deletions(-)
 
-> - F24 and Zenkaku/Hankaku share the same scancode, but since in real world
-> Zenkaku/Hankaku keys seem to just use the tilde scancode, this patch binds the
-> scancode to F24. Note that on userspace side the KEY_ZENKAKUHANKAKU keycode is
-> currently not bound in xkeyboard-config, so it is (mostly*) unused anyway.
-> 
-> * Qt on Wayland and therefore KDE on Wayland can see the keypress anyway for
-> some reason and it is actually used in a touchpad toggle shortcut, but this is
-> currently being fixed in both KDE and xkeyboard-config to make this less weird,
-> so it could directly be fixed to correctly handle the F24 keypress instead.
-> 
-> - The scancodes for F13-F22 are currently unmapped so there will probably be no
-> harm in mapping them. This would also fix the issue that some of these keys
-> can't be mapped as the target from userspace using the `setkeycodes` command.
-> 
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-It is unfortunate that this changes the scancode 0x5f mapping from 85 to 194
-(from KEY_ZENKAKUHANKAKU to KEY_F24) but as you mention the xkbconfig does
-not even define a keycode-label for 85 + 8 = 93 (xkb shifts all codes up 8) in:
-/usr/share/X11/xkb/keycodes/evdev, 93 is simply not there. So making this changes
-and updating the mapping to match the mappings from the microsoft document from
-above sounds good to me.
-
-Regards,
-
-Hans
-
-
-
-
-> ---
->  drivers/input/keyboard/atkbd.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
-> index 3598a21d9d014..4bd6e6ef0715e 100644
-> --- a/drivers/input/keyboard/atkbd.c
-> +++ b/drivers/input/keyboard/atkbd.c
-> @@ -84,12 +84,12 @@ static const unsigned short atkbd_set2_keycode[ATKBD_KEYMAP_SIZE] = {
->  #include "hpps2atkbd.h"	/* include the keyboard scancodes */
->  
->  #else
-> -	  0, 67, 65, 63, 61, 59, 60, 88,  0, 68, 66, 64, 62, 15, 41,117,
-> -	  0, 56, 42, 93, 29, 16,  2,  0,  0,  0, 44, 31, 30, 17,  3,  0,
-> -	  0, 46, 45, 32, 18,  5,  4, 95,  0, 57, 47, 33, 20, 19,  6,183,
-> -	  0, 49, 48, 35, 34, 21,  7,184,  0,  0, 50, 36, 22,  8,  9,185,
-> -	  0, 51, 37, 23, 24, 11, 10,  0,  0, 52, 53, 38, 39, 25, 12,  0,
-> -	  0, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0, 85,
-> +	  0, 67, 65, 63, 61, 59, 60, 88,183, 68, 66, 64, 62, 15, 41,117,
-> +	184, 56, 42, 93, 29, 16,  2,  0,185,  0, 44, 31, 30, 17,  3,  0,
-> +	186, 46, 45, 32, 18,  5,  4, 95,187, 57, 47, 33, 20, 19,  6,183,
-> +	188, 49, 48, 35, 34, 21,  7,184,189,  0, 50, 36, 22,  8,  9,185,
-> +	190, 51, 37, 23, 24, 11, 10,  0,191, 52, 53, 38, 39, 25, 12,  0,
-> +	192, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0,194,
->  	  0, 86, 91, 90, 92,  0, 14, 94,  0, 79,124, 75, 71,121,  0,  0,
->  	 82, 83, 80, 76, 77, 72,  1, 69, 87, 78, 81, 74, 55, 73, 70, 99,
->  
+diff --git a/drivers/iommu/amd/amd_iommu.h b/drivers/iommu/amd/amd_iommu.h
+index 68debf5ee2d7..58308ed12d83 100644
+--- a/drivers/iommu/amd/amd_iommu.h
++++ b/drivers/iommu/amd/amd_iommu.h
+@@ -28,9 +28,9 @@ void *__init iommu_alloc_4k_pages(struct amd_iommu *iommu,
+ 				  gfp_t gfp, size_t size);
+ 
+ #ifdef CONFIG_AMD_IOMMU_DEBUGFS
+-void amd_iommu_debugfs_setup(struct amd_iommu *iommu);
++void amd_iommu_debugfs_setup(void);
+ #else
+-static inline void amd_iommu_debugfs_setup(struct amd_iommu *iommu) {}
++static inline void amd_iommu_debugfs_setup(void) {}
+ #endif
+ 
+ /* Needed for interrupt remapping */
+diff --git a/drivers/iommu/amd/debugfs.c b/drivers/iommu/amd/debugfs.c
+index 545372fcc72f..ff9520e002be 100644
+--- a/drivers/iommu/amd/debugfs.c
++++ b/drivers/iommu/amd/debugfs.c
+@@ -13,20 +13,18 @@
+ #include "amd_iommu.h"
+ 
+ static struct dentry *amd_iommu_debugfs;
+-static DEFINE_MUTEX(amd_iommu_debugfs_lock);
+ 
+ #define	MAX_NAME_LEN	20
+ 
+-void amd_iommu_debugfs_setup(struct amd_iommu *iommu)
++void amd_iommu_debugfs_setup(void)
+ {
++	struct amd_iommu *iommu;
+ 	char name[MAX_NAME_LEN + 1];
+ 
+-	mutex_lock(&amd_iommu_debugfs_lock);
+-	if (!amd_iommu_debugfs)
+-		amd_iommu_debugfs = debugfs_create_dir("amd",
+-						       iommu_debugfs_dir);
+-	mutex_unlock(&amd_iommu_debugfs_lock);
++	amd_iommu_debugfs = debugfs_create_dir("amd", iommu_debugfs_dir);
+ 
+-	snprintf(name, MAX_NAME_LEN, "iommu%02d", iommu->index);
+-	iommu->debugfs = debugfs_create_dir(name, amd_iommu_debugfs);
++	for_each_iommu(iommu) {
++		snprintf(name, MAX_NAME_LEN, "iommu%02d", iommu->index);
++		iommu->debugfs = debugfs_create_dir(name, amd_iommu_debugfs);
++	}
+ }
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index cb536d372b12..1bd24c0d5fb5 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -3400,7 +3400,6 @@ int amd_iommu_enable_faulting(unsigned int cpu)
+  */
+ static int __init amd_iommu_init(void)
+ {
+-	struct amd_iommu *iommu;
+ 	int ret;
+ 
+ 	ret = iommu_go_to_state(IOMMU_INITIALIZED);
+@@ -3414,8 +3413,8 @@ static int __init amd_iommu_init(void)
+ 	}
+ #endif
+ 
+-	for_each_iommu(iommu)
+-		amd_iommu_debugfs_setup(iommu);
++	if (!ret)
++		amd_iommu_debugfs_setup();
+ 
+ 	return ret;
+ }
+-- 
+2.25.1
 
