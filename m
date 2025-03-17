@@ -1,83 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB6E19D09C;
-	Mon, 17 Mar 2025 16:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C60119C553
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742228534; cv=none; b=F5rTTdNVtglSYP5CTB2OXPXHIUpvLFhAJjIPimKObvXeueuiAbtisGGZkOdS9EMFzlKL/cSBtonSs+8y68sD0NUiaP5MmliztRS7Kfzq/9BEoUq2YXMV6+Pk9ov8dOl+jzBSE7SzIjklsOGyCYlugEVLaeu/idmR9qxx5k64poQ=
+	t=1742228567; cv=none; b=TuXRlgk9De3Ch/1iBUF7C0Wtsw6Eya/kDQ6sD6WU5dWmvMQPdg5fVS6eCpQKjsK72rmFv1GXxaBIfUr6mFmotHh4RpF7/wiJ106utw1yqONnXF48XGtZ9EDcQvlDmrT60dnBoja9BoBNbIhFOUO/TbHbD/cktNAdbthD4VIzzeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742228534; c=relaxed/simple;
-	bh=0svckh3B/Ur9jjk3KUvtAqq/TolLLfjt21X84e1pv9s=;
+	s=arc-20240116; t=1742228567; c=relaxed/simple;
+	bh=s6qZaIWfbpuYHM9fDm/CBBB0GDfmSI/r+3DgSwSfXOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pKCYRF2f7jegKeETTzDu0Rn/HGjul0fd21YLmg6eQHm0mg7I7uxuBkXhiL2C6epk6RY6V8y+hsbb3f2ECZUj5MbDW4mInfsfPswT5nN9Ub/7CA9dCEHEe5SOYU+RwSImWvmFSOvNjUa5GBd3WO9elq8XE/FfKqMFkxeN6HpkZfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjrsNFvu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tyfm7FY8bx0nWG0cT2rm7p0TjEI1d7Rvu0wGM9yDSd3njk+qjLPJWxjWzWohBIUzvdVm1yBfKNRw91wUjZarPfQrP7OKpPLpKV9fYXPTS9KnW0LOWq/cirfROJIn9G3zgRnqjcgJDjqang3gS3+dXqoxVCeWz9+DmKp/PdgPgtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQcPL0co; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjrsNFvu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FAEAC4CEE3;
-	Mon, 17 Mar 2025 16:22:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQcPL0co"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F25C4CEE3;
+	Mon, 17 Mar 2025 16:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742228534;
-	bh=0svckh3B/Ur9jjk3KUvtAqq/TolLLfjt21X84e1pv9s=;
+	s=k20201202; t=1742228566;
+	bh=s6qZaIWfbpuYHM9fDm/CBBB0GDfmSI/r+3DgSwSfXOs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PjrsNFvunrz0r+S3+meOeT86EC7RKhSfjAKDmdu2f3n00L9SeMslYa8gr1Xz2fwPS
-	 yJ86j18koS0mdtT4wb2nBG9ZBVgztxzJjED4/pph3JNhM6MKgDIvfe3arTzo8tH2QO
-	 huuQ+2TQxmo0GSEbaCYTekhX1LehfX54LuwUIYY2UXn3rTNbjVz1m8Ue4ihk8nVYaI
-	 yn+R3egkK+0Yaj/TkKaKuAwjyOizlwbBJfdScICKg2q4IlyrjJwcsQsN03fzKGyl8M
-	 WpylqTSuGDOFHd35Yx8Z3gtQ6PlALpuAEC6HmhUA8h8oR0DjJpeR01+p/WC5V/kqZN
-	 BMSZTKxyZZYgw==
-Date: Mon, 17 Mar 2025 11:22:13 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, upstream@airoha.com,
-	Russell King <linux@armlinux.org.uk>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>, Lee Jones <lee@kernel.org>,
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org
-Subject: Re: [net-next PATCH v13 04/14] dt-bindings: net: Document support
- for AN8855 Switch Internal PHY
-Message-ID: <174222853284.168151.15677522554772356388.robh@kernel.org>
-References: <20250315154407.26304-1-ansuelsmth@gmail.com>
- <20250315154407.26304-5-ansuelsmth@gmail.com>
+	b=TQcPL0co2tM3Rr5IHRgOYccbK5u/jAnXuhIsYMtMeg4vY6FvitEfvV7oYdYy6MSOQ
+	 cR0QrmxQR0NQMHklyPvW3QYYE8vZuDloyox2kOar+C3HY1t8TH83gdY+ieslRuE0qR
+	 WpaMp4H1/IKq8RE//H0rUBXUt4zGVK9ro8zZSbV1Ilf0Emr7NQFDrkNy9kXyuSd2aC
+	 dtobIvOQx6Nlbm7mz5fwP9jpzRFH+D2cf7MFxIwg9PY6zORuuq06mqBjn3TJ1UUQvB
+	 APQT85T1CY5htD9nAmZ8c3CdYUEnYwH1CHbdfHhsJUsOfDcdS9JxiLJFGYdICVgp4b
+	 YwX0cINymcGOQ==
+Date: Mon, 17 Mar 2025 17:22:44 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: David Turner <david.turner@raspberrypi.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH v3 1/2] drm/vc4: hdmi: Call HDMI hotplug helper on
+ disconnect
+Message-ID: <20250317-cornflower-tortoise-of-stamina-7aa54b@houat>
+References: <20250312-vc4_hotplug-v3-0-d75878677de8@raspberrypi.com>
+ <20250312-vc4_hotplug-v3-1-d75878677de8@raspberrypi.com>
+ <20250314-armored-tourmaline-lizard-cee8d8@houat>
+ <CACXvZi-3mkusGHkZTz=kDo8WcNQZR1A3bddajh+CFT6tQxJSCQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="73vu6btskupebdod"
 Content-Disposition: inline
-In-Reply-To: <20250315154407.26304-5-ansuelsmth@gmail.com>
+In-Reply-To: <CACXvZi-3mkusGHkZTz=kDo8WcNQZR1A3bddajh+CFT6tQxJSCQ@mail.gmail.com>
 
 
-On Sat, 15 Mar 2025 16:43:44 +0100, Christian Marangi wrote:
-> Document support for AN8855 Switch Internal PHY.
-> 
-> Airoha AN8855 is a 5-port Gigabit Switch that expose the Internal
-> PHYs on the MDIO bus.
-> 
-> Each PHY might need to be calibrated to correctly work with the
-> use of the eFUSE provided by the Switch SoC. This can be enabled by
-> defining in the PHY node the NVMEM cell properties.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  .../bindings/net/airoha,an8855-phy.yaml       | 83 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/airoha,an8855-phy.yaml
-> 
+--73vu6btskupebdod
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 1/2] drm/vc4: hdmi: Call HDMI hotplug helper on
+ disconnect
+MIME-Version: 1.0
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+On Mon, Mar 17, 2025 at 02:37:03PM +0000, David Turner wrote:
+> Hi Maxime,
+>=20
+> Thanks for the reviews.
+>=20
+> On Fri, 14 Mar 2025 at 13:33, Maxime Ripard <mripard@kernel.org> wrote:
+> > I also think that it's wrong, it's not just about audio. It just needs
+> > to be called as part of detect no matter what the status is. Audio is
+> > one thing that it will possibly handle depending on the driver, but
+> > EDIDs, CEC, etc. might also be dealt with. So I don't think it's right
+> > to focus on audio there.
+>=20
+> Does this wording sound ok?
+>=20
+>  * This function should be called as a part of the .detect() / .detect_ct=
+x()
+>  * callbacks for all status changes in order to update the HDMI-specific
+>  * connector's data.
 
+I'd drop everything after "in order to..." but yeah, it's much better, than=
+ks!
+Maxime
+
+--73vu6btskupebdod
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ9hMUwAKCRAnX84Zoj2+
+djGqAX4/gUi98JP158YvaGceGCpedaNvz9KsGCn2H4aeEyaBMHrsZIM/Kjihdup4
+dHAPX6wBfjUGBjXofkWZ86njUu2JdB90PJMzsemdXyNZbP0obeSZwQCtr4Qe/Cph
+0IMwqPrINg==
+=Xk0X
+-----END PGP SIGNATURE-----
+
+--73vu6btskupebdod--
