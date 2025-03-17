@@ -1,87 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989A818787A;
-	Mon, 17 Mar 2025 17:06:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEFB19A2A3;
+	Mon, 17 Mar 2025 17:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742231197; cv=none; b=Zz+3x4Qx2GE/l17xc7fORExj7qb0jdSM5iePIAIojgrEs83K7ygXXUIM7CxoHHBqXA0PZfQVnMIy8xK//CArNRAYg9ttRABM2RaD8s23MSYvMgNMJWGpf5ft501VNnBcnbJ6m+7AKP9rKh64iydSCIzjNXI6d3HpuxplCgDkKls=
+	t=1742231213; cv=none; b=JNsiq3WRl21D/NTYPDbiDrPboeeh6jLRAnD9skpSVqrj4o3Ats884UY7Ed6a1BOwyvhalvXt6w08QlS42pCYCjRE0Pdag0F+dxBX7Gsy95QOkBv0HA+FU40gvbn2BHX0X28h+MLnQ0jryIQFdQ44qF8tUdxfb5rk1WrZgS59gZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742231197; c=relaxed/simple;
-	bh=sLNQSbl0TkH6y7EASnxzkx+y3wCavvX+Q9NF5vgcOtc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OMXADPqVcnzwcEIrqaWsrrdbXPdyRAQ9JbW5T7S0doV4AeBbp531eB4PreAOG3EDP70tJq4amDfjhz8f0thZwKzJHkg70NAV9DgzGyz20Wo6tYokYz1Zi0nWOFUt6tZVsToTjN/5HezFbaHS1WEwEK8Kc6dM4fFzY3m8WAFGOLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVytgnHJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742231213; c=relaxed/simple;
+	bh=hMLbXmDlQKj0+NBk+ugWNVg03U+ubuJqFbYx5KUWp0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wt0e/JzIyBnsSO006NBnwOanhjSwcnFKb6awRXAGEzJ9vWakxKH7PJauZlAwEVY0LETflgVDfMc3ep9EBU/7XPo4WQdPsgwaUhP5mlHoEVpXdER3xQvanb1shuGaItdJI/S8UAkCV3o504WyGNui8b54n7/9ol6Q4J4KUaMTVFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jeQeEYjU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVytgnHJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F16EC4CEE3;
-	Mon, 17 Mar 2025 17:06:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jeQeEYjU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D5F5C4CEE3;
+	Mon, 17 Mar 2025 17:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742231197;
-	bh=sLNQSbl0TkH6y7EASnxzkx+y3wCavvX+Q9NF5vgcOtc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XVytgnHJORt5fBrvWySWYVLEU6Zbr7JCakRxx2Y/FOTn6+6Tjbu28xk4zKRv45OED
-	 hX5H5kReNUxOiy/9FWhW++4iugJVyt+RtkGY08oxELcUxm4QS7gVP1Er7dXJfzDrlV
-	 Z1sJLCSWFbdBFlrtlcOoroCzA2ouDg0p6bNV72PsyRHl47FPeo8ytwBehQDO6EdJsb
-	 DZ0AFSlY7h0yiEsG7SW3JmIBmSAovDUlwFS1N6UlJuqtQDNGHB5RR52s5MLRyNdNvY
-	 UZNjEsw2DjkozbRLzZL8EbcCBlaGygXQswwcZsOSirIdn8n0SonQo/BHn15yJcGl7U
-	 LBQPqhmpOMJoA==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30761be8fcfso51555111fa.0;
-        Mon, 17 Mar 2025 10:06:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXy0HcjL/t+h83ngx7NoRX9b8qABor0xTb1NPDamQ5vrOW/+XLAqdI+5tCiPQq3QjttLx2R+9wezfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzssbbCyxgsroIuos7sIpOJqHU+k+Uh8i8CkPNpPKpFooDnwGZg
-	pChZTxnNQ2nPdMqV7CQFeva8JdL32futqE59jxcMtQq9mvqW9H+W7x1TibFiRfKj2QH8cE1d4J2
-	Uv8cj8d2bblgoabMNraiPSqK5iqA=
-X-Google-Smtp-Source: AGHT+IERF0n+pA9W18Wvlnp1Z9YqN77YTorPRreSKdvnYxg3VYGHd79F7+XYUdVbAxG3VnwS7ZocmUrzwEzxW2UnY74=
-X-Received: by 2002:a05:6512:3091:b0:545:6cf:6f3e with SMTP id
- 2adb3069b0e04-549c3989ac9mr8420296e87.49.1742231195393; Mon, 17 Mar 2025
- 10:06:35 -0700 (PDT)
+	s=k20201202; t=1742231212;
+	bh=hMLbXmDlQKj0+NBk+ugWNVg03U+ubuJqFbYx5KUWp0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jeQeEYjUqmDO/zl5DPCCHoROo2HQ8wvy3t+ngOZvlib2VcqUJmgr3Q0GLEQN01414
+	 Ne1b9r+jMT4eDXEu6YpZXvQxvCqAVrFEgdYvZsBgAvD/brAxjYpMAJ5APy82AYlA/w
+	 1pevp5pLgI99IBCm6oQCdg5d5ZCRi9Hu17nOCtbeMaBUb+FOphMs9ADKMsKvhrHnq2
+	 kVwNWQheTkwRumi6TYoJUHBk5KndX+/f9Emtclg4fwlS8xI4KRTOWRuXjJ+vF7LxTE
+	 yMIQJiLO8esycLGt5PmxLgG/miMCVfnK6oQnhoz7Kg4sVQ2shFrWq9NEb5fxbNpeQb
+	 Dq0aLGhGkRKZw==
+Date: Mon, 17 Mar 2025 10:06:51 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	linux-trace-devel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Quentin Monnet <qmo@kernel.org>
+Subject: Re: [PATCH 1/1 next] tools build: Remove the libunwind feature tests
+ from the ones detected when test-all.o builds
+Message-ID: <Z9hWqwvNQO0GqH09@google.com>
+References: <Z1mzpfAUi8zeiFOp@x1>
+ <CAP-5=fWqpcwc021enM8uMChSgCRB+UW_6z7+=pdsQG9msLJsbw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com> <20250317-plat2faux_dev-v1-3-5fe67c085ad5@arm.com>
-In-Reply-To: <20250317-plat2faux_dev-v1-3-5fe67c085ad5@arm.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 17 Mar 2025 18:06:24 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEejZr2RCUJ59HfLwxQ1zFnWqj7vJ_ObrPTztE5s2UUcQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jqf1O8iSYFfzLZH3qq1LKMRuI87oQw6DruwoLkOlzXICX9hN0zaV-Yd_gk
-Message-ID: <CAMj1kXEejZr2RCUJ59HfLwxQ1zFnWqj7vJ_ObrPTztE5s2UUcQ@mail.gmail.com>
-Subject: Re: [PATCH 3/9] efi: Remove redundant creation of the "efivars"
- platform device
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-efi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWqpcwc021enM8uMChSgCRB+UW_6z7+=pdsQG9msLJsbw@mail.gmail.com>
 
-On Mon, 17 Mar 2025 at 11:13, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> The "efivars" platform device is created but never tracked or used,
-> as there is no driver associated with it. Since this device serves
-> no functional purpose, removing its creation without affecting any
-> functionality.
->
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: linux-efi@vger.kernel.org
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/firmware/efi/efi.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 7309394b8fc98cf7a3424af209b752f0251c8c89..eec173cb1f398d3b4f28b42c917e50e1728dc277 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -446,7 +446,6 @@ static int __init efisubsys_init(void)
->                 error = efivar_ssdt_load();
->                 if (error)
->                         pr_err("efi: failed to load SSDT, error %d.\n", error);
-> -               platform_device_register_simple("efivars", 0, NULL, 0);
->         }
->
->         BLOCKING_INIT_NOTIFIER_HEAD(&efivar_ops_nh);
->
+Hello,
 
-IIRC the efi-pstore module autoloads based on this platform device
+On Mon, Mar 17, 2025 at 09:10:29AM -0700, Ian Rogers wrote:
+> On Wed, Dec 11, 2024 at 7:45 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > We have a tools/build/feature/test-all.c that has the most common set of
+> > features that perf uses and are expected to have its development files
+> > available when building perf.
+> >
+> > When we made libwunwind opt-in we forgot to remove them from the list of
+> > features that are assumed to be available when test-all.c builds, remove
+> > them.
+> >
+> > Before this patch:
+> >
+> >   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=/tmp/b feature-dump ; grep feature-libunwind-aarch64= /tmp/b/FEATURE-DUMP
+> >   feature-libunwind-aarch64=1
+> >   $
+> >
+> > Even tho this not being test built and those header files being
+> > available:
+> >
+> >   $ head -5 tools/build/feature/test-libunwind-aarch64.c
+> >   // SPDX-License-Identifier: GPL-2.0
+> >   #include <libunwind-aarch64.h>
+> >   #include <stdlib.h>
+> >
+> >   extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
+> >   $
+> >
+> > After this patch:
+> >
+> >   $ grep feature-libunwind- /tmp/b/FEATURE-DUMP
+> >   $
+> >
+> > Now an audit on what is being enabled when test-all.c builds will be
+> > performed.
+> >
+> > Fixes: 176c9d1e6a06f2fa ("tools features: Don't check for libunwind devel files by default")
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Sorry for the delay on this.
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks for the review, but I think this part is used by other tools like
+BPF and tracing.  It'd be nice to get reviews from them.
+
+Thanks,
+Namhyung
+
+> 
+> > ---
+> >  tools/build/Makefile.feature | 7 -------
+> >  1 file changed, 7 deletions(-)
+> >
+> > diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> > index b2884bc23775e986..9cde51104c2d70ec 100644
+> > --- a/tools/build/Makefile.feature
+> > +++ b/tools/build/Makefile.feature
+> > @@ -90,13 +90,6 @@ FEATURE_TESTS_EXTRA :=                  \
+> >           libbfd-liberty                 \
+> >           libbfd-liberty-z               \
+> >           libopencsd                     \
+> > -         libunwind-x86                  \
+> > -         libunwind-x86_64               \
+> > -         libunwind-arm                  \
+> > -         libunwind-aarch64              \
+> > -         libunwind-debug-frame          \
+> > -         libunwind-debug-frame-arm      \
+> > -         libunwind-debug-frame-aarch64  \
+> >           cxx                            \
+> >           llvm                           \
+> >           clang                          \
+> > --
+> > 2.47.0
+> >
