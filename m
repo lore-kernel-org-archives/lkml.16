@@ -1,219 +1,113 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2069.outbound.protection.outlook.com [40.107.236.69])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42FC23536A
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742212757; cv=fail; b=HI+SWhm6zcuQbDa3nBSjRQ4YHSybvFR4jJ01yI/eY+g7uHQ9VqPuUB3w2H8eXryLcHm/GgX+HX9SAirkzl/3vPU1P1xdGTPEvsVVg/KPlI2EK/sO5uQug9MkRK2u3YHDiFXfM9LuMhT0hydw2vb8I+DGot1VGqfkPDrG6+4C+wk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742212757; c=relaxed/simple;
-	bh=Zx+SwE+6gfjMLtLVYeqS4hJqRy2G00r/od68F0v0mfo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X0IEiriFGps8iREDUdoZOSV9D8cI+9zL3rzIhW8stU76zjjHtenC1x2YZqRecs1PPb8TN1lKjY0+h8A+IIiPKT6d5/VfrZZ2Mu5OGx7M2Ihitf6//EVAutDCZGRa5AET7CDqUCZc1ujlzYXSqlh6wI3qlQMsd8Rcy4KM4zH29co=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=W4m77QZB; arc=fail smtp.client-ip=40.107.236.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34134238169
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742212775; cv=none; b=jIifBX7qok9l1r3KU4+alp9umj17NtICwp65vU72Zr26Cc9YQ12jvUBfyvdMmzGHrTIk4k7QPiAWc1MkPDDEjAa2Ps7x6A0E4Py424nuxFFYJ1FmbOvWlw0ZbK7+bf8zqHnqAVaqNwZF+QbvfQ/2tE7C2BJdWbw7aHLazXZ8jMs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742212775; c=relaxed/simple;
+	bh=XFwYDEKcjNARc420Br7HZrIehcMEHv2O4FnRcaIVt6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MMz6za5Q/GGcCX1ErTcu7vNNZGrUYH7PyofjmWN+FFVCVbMo3oAHY+wtt8tdz+pXlHXLu/EVa//ecPvum1CSt/QAjmw/ePGrzBWB+SpBXtc4VT/vM33chHtNMgXrcq0aWLk/tWclJCkokoAy65p8rw5YKbCkZnNZZmyVcBHbYAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dQSthsj8; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="W4m77QZB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ualjbPo7SI6joxNVA51PG6gyKctYBhaWRZp4whu404iuj99VsxYxokIOtfvOdKbikCvrQftd8GvEXzXcIU4Qbi9BQ2bDenIOuxH2FB2Ekateys7UaMMXkcDi3AWfqnTnNAW5NkXFxNNYcDzN7n31boi+nsmOj4UKwtUf7PTuQnowTbzhWONgxhvv1wN8TQ1e71izwMxZmy4g0KEbTT2sNJ0H2eWDUn6J0SQVWtS07IpOVfkPNo2yaGz4WlwlJ2JLMYdzWwRtBWraZ4Je8i/DZxqWqxt4QzjdBMa7ThnQe8da/J98pUuhmBn7iUtmj42Wk2IizwE01gxsDw07zhMhGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XwnZNSnUKqMfdvu8tbCKNFW30/ADzfza6vUeMDNe6uI=;
- b=RR3dGzta8QdenX7FK+WMcd4To3RVqNAs4eGvYdGfofepQfMK5hxm7eiBoSrIsfFXVtVes+KL4+3cY122tTZV7pw/OuNsGgIy+6w3o9IhBU4DOAIAr83MlUh7zilslxh5QNAxd9zAa3GtVFtUuZd/Tf5MTWpIR1FSa2k6v7bS870tU/K/UQhfCzhxL/JV0HAnpapOFM4/COkG1LYnaKm8buK7lZvWYp4QlcejskjKI2b5fdmxr8Sh/g/bWMtBqlvPTn54ot2olJ3tcyfkUb1DsEwK6lU1Q8MtIFFo022Dithw4+JUewnZ4NtQeXfGvKlBjdU3eXvYWYjQzgHA6i4zMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=8bytes.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XwnZNSnUKqMfdvu8tbCKNFW30/ADzfza6vUeMDNe6uI=;
- b=W4m77QZBRs6ZMim0S8BbPpg+wIjxXUc+Q1xEIwWq7c7sOQGK95VpSqhZ8QO+OkNtFCIhwePIy5ltHzRonBkCkfcEsyepE06vy8/PN19OcRLeAAd10NZbEjL49fqlB3Rr5uW3oQVgmq0ajfponvoW0F5QLVt7obkPiJhGpJfNSuE=
-Received: from PH0P220CA0022.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:d3::21)
- by CH3PR12MB8305.namprd12.prod.outlook.com (2603:10b6:610:12e::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
- 2025 11:59:11 +0000
-Received: from SJ1PEPF000023D5.namprd21.prod.outlook.com
- (2603:10b6:510:d3:cafe::93) by PH0P220CA0022.outlook.office365.com
- (2603:10b6:510:d3::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Mon,
- 17 Mar 2025 11:59:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF000023D5.mail.protection.outlook.com (10.167.244.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8583.3 via Frontend Transport; Mon, 17 Mar 2025 11:59:11 +0000
-Received: from BLRDHSRIVAS.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Mar
- 2025 06:59:07 -0500
-From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-To: <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
-	<linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>
-CC: <suravee.suthikulpanit@amd.com>, <vasant.hegde@amd.com>, "Dheeraj Kumar
- Srivastava" <dheerajkumar.srivastava@amd.com>
-Subject: [PATCH v4 1/8] iommu/amd: Refactor AMD IOMMU debugfs initial setup
-Date: Mon, 17 Mar 2025 17:28:23 +0530
-Message-ID: <20250317115830.3416-2-dheerajkumar.srivastava@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250317115830.3416-1-dheerajkumar.srivastava@amd.com>
-References: <20250317115830.3416-1-dheerajkumar.srivastava@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dQSthsj8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742212774; x=1773748774;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=XFwYDEKcjNARc420Br7HZrIehcMEHv2O4FnRcaIVt6I=;
+  b=dQSthsj8Qw3nI8qGD88atycdhCyRtzu/QKr8w6mRBARi/kRw0pQLzJ+L
+   lFM/ICxCP4Sus9cSPW+LC096a20aZIsFddNjSkYLpjjclVCX+CQjbGveF
+   lLX5zeQbg/YGhGKKLHeOK9TF6XVTVUaUb8H9Eq5UOzCKtrHwy50gjREkr
+   vjcSgJIWjYfScpFPQz5kx/iV6rZco6ISaXq1NvSOsssCZ82w4f+1/mKZW
+   PT38cEDSFL8sxlwSz2StD6lefaHQoIVmrJfxZIKurESX2yGuc6kMzsk77
+   BMigkOk6EP1iC73v4XKwb0C3pigPdIEWq1Nt30qGHMItshv7DQ9Fcn3LG
+   w==;
+X-CSE-ConnectionGUID: SLXmxTwJT82kvkLuvKmJ1w==
+X-CSE-MsgGUID: 3vIjHC/TQD2ADB329KF8dw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11375"; a="46069367"
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="46069367"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 04:59:33 -0700
+X-CSE-ConnectionGUID: 49VgUIGlTg6X23qk61NTDA==
+X-CSE-MsgGUID: FidGX7h5QvKWATo2WsUIXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="122655091"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP; 17 Mar 2025 04:59:28 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 405B41FC; Mon, 17 Mar 2025 13:59:27 +0200 (EET)
+Date: Mon, 17 Mar 2025 13:59:27 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: "Huang, Kai" <kai.huang@intel.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv9 05/17] x86/kexec: Keep CR4.MCE set during kexec for TDX
+ guest
+Message-ID: <mfkjehhth2pwwzcueircxl57afmip5kwqlajopnjuwunztmqvn@vx6k62dgdxkq>
+References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
+ <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
+ <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
+ <dlixf7bld4efdh5goir5nreabkgtcwfbvv2rovjqrvjttplqss@auuqnt4h2llj>
+ <j4s4n5slt6a234w5o5r4zjmb3xj53odnmwekt6ihotfzotd7ur@ghyvphwcki57>
+ <8e4e1d80-11ef-472f-befc-f61310281f18@intel.com>
+ <cxwixclmgbx3xidn6g6keihampcbzcbosog6r6lyoa4hs3teu2@sqntzeltdajc>
+ <f74db2c44ee7ef8ec127b5135ff80885c21c6836.camel@infradead.org>
+ <uchg74rtpcpwlkxgqww2n6nh23p4ouaswqc737xy7y6rqzowtb@pbf4whogx2s4>
+ <0c6cab4ea4e898a62ecb0b047959f09011d3c85f.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D5:EE_|CH3PR12MB8305:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7026f82d-34e0-4710-04fc-08dd654b2149
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lyITHZY7JvCS8OW8VqdYfJRpD4Ltgur+bbT6AWrQOfPAJHdnn9fWtXyYXNHF?=
- =?us-ascii?Q?1H1+09sUQ+Q13bqgO0qK+vAy5a7fpqAxf1CuhFdcN+2KYlxORq1SJYD6Ymld?=
- =?us-ascii?Q?LSDprIPkOc0MoKP2IHISSKcXUXr4Dl5W9qQPitOt3ZubwcY5VPF7op96+Tbo?=
- =?us-ascii?Q?BJ76BVNTc9bXOmpWTsjhTOdomsQs2FtGU83TMivDb/a73wL487pw3+LeHYne?=
- =?us-ascii?Q?gIdg8WVp+uMyzLvYKlHIN11Jbe801jd2rRqtQ9VqdjZQED59Wgy4TYWkXvRs?=
- =?us-ascii?Q?KjVipdLpjs96JgZQBNOAIqZnmRZVRJsjnTHJd5r5s4nefAjODc1j4yxthsju?=
- =?us-ascii?Q?B7RIYcGOkP3tzkA+TLoNMQZ86gPph4qDCD2YiuKqSJ2DiobJE+n7cUlhCHvc?=
- =?us-ascii?Q?JSBAsyEi7S9s8sKlN1jwTSxx7QwSj+ylSPJDH5go2AjVxB20iRVZTlcI/mKY?=
- =?us-ascii?Q?Pc9FBDYsovu+y152xu3OZPJ1cR5XMWxDvwctIMD9eh0dMi7+Cs6r8/FhRU8K?=
- =?us-ascii?Q?Y84G1CPGULV1alDBSyXKjP6z3YQidOcgBf9xwP5eBqajPAYFQuPl3f5Uk8Z1?=
- =?us-ascii?Q?yq1/LoPoyNZHIYVbyjaYunrKia86w2QhftjkGhBneyNLDaz4n07DhToFturB?=
- =?us-ascii?Q?CsUGDKIO9hqt955P0UCV9Qzc93DxRuKb0n2k1gI3qfMxE0JIAbaILMM70Cqf?=
- =?us-ascii?Q?9CRqQm9XNJtWDL8lf+b+Xz4dI7GkwWcBfzL23J86bbxl+XcfNpOvMJ7AEa6h?=
- =?us-ascii?Q?3XtZwOBBAbUfJXiqJaEHhsf7mI+4SjiAtGw+X5Z+Af0pQOT86jVVHfblhzy4?=
- =?us-ascii?Q?OO6Fp5OGzOOFm52ZVRvRhtezw1Xn7VpE4E8w2N1xEVPbeKD5iZdqBkgiIVYw?=
- =?us-ascii?Q?eJfNnUQcmBrSY0aPNiYkRfnXgluSDpqPQ8eRYfJjbtOvcPbSaVZNTC8oSo69?=
- =?us-ascii?Q?a7TMCdbwxxwrz7cZLkVEdcsNVLL/dWuSNVR5TLLPRX5+EhIu0qZLVm48n8kc?=
- =?us-ascii?Q?9ZeOkI9X+z1hWX0RspwTe9vJ7G2MTJ0x5ir9rwVWTTiaZgimg8MX8W2yf/ab?=
- =?us-ascii?Q?82Hjz8Vsma4u3Ik/WLMIhUc+3rfL7oAA8LcugB3lX3nou2Yn2uhThbWn3teW?=
- =?us-ascii?Q?7Vkrp1sU+a+i6B/qoNuaUaInETJNHlTTABr3vqZ/zO9hLTWmaFeHsZo07uoa?=
- =?us-ascii?Q?ONy+r29VYn3IBZQpY0lgjVKXodD5bCcM2jw9vm460lcLj7LzWWZX1h/Bmkyw?=
- =?us-ascii?Q?PZBGcK/hTFkmP22qsbWVLI6eCVZo5DU1v5Z+3gEhuvS5KW8feG2RJnojP1+9?=
- =?us-ascii?Q?V1loKne5bojXbIWJ+7IK9smZe9LS0i7OGxcOD371vHOTLHkmko9uZ+LSWncV?=
- =?us-ascii?Q?6EZASKtyhyrN+n7F01UX+2Q4eUvq5GSsxSegnpRHLq7172mcTMzWyUMrC4mp?=
- =?us-ascii?Q?c+CCN4U9ojyQlvkc2j3Jy8pPw8I0GWFyROQp67pO3flLbrUVu5KF5+1PyeUS?=
- =?us-ascii?Q?RYgEP1PBvDu7Knw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 11:59:11.0458
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7026f82d-34e0-4710-04fc-08dd654b2149
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D5.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8305
+In-Reply-To: <0c6cab4ea4e898a62ecb0b047959f09011d3c85f.camel@infradead.org>
 
-Rearrange initial setup of AMD IOMMU debugfs to segregate per IOMMU
-setup and setup which is common for all IOMMUs. This ensures that common
-debugfs paths (introduced in subsequent patches) are created only once
-instead of being created for each IOMMU.
+On Mon, Mar 17, 2025 at 11:32:42AM +0000, David Woodhouse wrote:
+> > And we don't want MCE to be enabled during kexec for !TDX_GUEST:
+> > 
+> > https://lore.kernel.org/all/1144340e-dd95-ee3b-dabb-579f9a65b3c7@citrix.com/
+> 
+> Actually now I've added proper exception handling in relocate_kernel
+> perhaps we could rethink that. But that's for the future.
 
-With the change, there is no need to use lock as amd_iommu_debugfs_setup()
-will be called only once during AMD IOMMU initialization. So remove lock
-acquisition in amd_iommu_debugfs_setup().
+There still going to be a gap once the new kernel is started until it gets
+proper exception handling in place.
 
-Signed-off-by: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
----
- drivers/iommu/amd/amd_iommu.h |  4 ++--
- drivers/iommu/amd/debugfs.c   | 16 +++++++---------
- drivers/iommu/amd/init.c      |  5 ++---
- 3 files changed, 11 insertions(+), 14 deletions(-)
+> > I think we should patch AND instruction to include X86_CR4_MCE on
+> > TDX_GUEST:
+> > ...
+> > -	andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d
+> > -	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_TDX_GUEST
+> > +	ALTERNATIVE __stringify(andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d), \
+> > +		    __stringify(andl	$(X86_CR4_PAE | X86_CR4_LA57 | X86_CR4_MCE), %r13d), X86_FEATURE_TDX_GUEST
+> 
+> Yeah... although the reason I'm looking at this is because I want to
+> kill the ALTERNATIVE so that I can move the relocate_kernel() function
+> into a data section:
+> https://lore.kernel.org/all/20241218212326.44qff3i5n6cxuu5d@jpoimboe/
+> 
+> So I think I'll do it like this instead:
 
-diff --git a/drivers/iommu/amd/amd_iommu.h b/drivers/iommu/amd/amd_iommu.h
-index 68debf5ee2d7..58308ed12d83 100644
---- a/drivers/iommu/amd/amd_iommu.h
-+++ b/drivers/iommu/amd/amd_iommu.h
-@@ -28,9 +28,9 @@ void *__init iommu_alloc_4k_pages(struct amd_iommu *iommu,
- 				  gfp_t gfp, size_t size);
- 
- #ifdef CONFIG_AMD_IOMMU_DEBUGFS
--void amd_iommu_debugfs_setup(struct amd_iommu *iommu);
-+void amd_iommu_debugfs_setup(void);
- #else
--static inline void amd_iommu_debugfs_setup(struct amd_iommu *iommu) {}
-+static inline void amd_iommu_debugfs_setup(void) {}
- #endif
- 
- /* Needed for interrupt remapping */
-diff --git a/drivers/iommu/amd/debugfs.c b/drivers/iommu/amd/debugfs.c
-index 545372fcc72f..ff9520e002be 100644
---- a/drivers/iommu/amd/debugfs.c
-+++ b/drivers/iommu/amd/debugfs.c
-@@ -13,20 +13,18 @@
- #include "amd_iommu.h"
- 
- static struct dentry *amd_iommu_debugfs;
--static DEFINE_MUTEX(amd_iommu_debugfs_lock);
- 
- #define	MAX_NAME_LEN	20
- 
--void amd_iommu_debugfs_setup(struct amd_iommu *iommu)
-+void amd_iommu_debugfs_setup(void)
- {
-+	struct amd_iommu *iommu;
- 	char name[MAX_NAME_LEN + 1];
- 
--	mutex_lock(&amd_iommu_debugfs_lock);
--	if (!amd_iommu_debugfs)
--		amd_iommu_debugfs = debugfs_create_dir("amd",
--						       iommu_debugfs_dir);
--	mutex_unlock(&amd_iommu_debugfs_lock);
-+	amd_iommu_debugfs = debugfs_create_dir("amd", iommu_debugfs_dir);
- 
--	snprintf(name, MAX_NAME_LEN, "iommu%02d", iommu->index);
--	iommu->debugfs = debugfs_create_dir(name, amd_iommu_debugfs);
-+	for_each_iommu(iommu) {
-+		snprintf(name, MAX_NAME_LEN, "iommu%02d", iommu->index);
-+		iommu->debugfs = debugfs_create_dir(name, amd_iommu_debugfs);
-+	}
- }
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index cb536d372b12..1bd24c0d5fb5 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -3400,7 +3400,6 @@ int amd_iommu_enable_faulting(unsigned int cpu)
-  */
- static int __init amd_iommu_init(void)
- {
--	struct amd_iommu *iommu;
- 	int ret;
- 
- 	ret = iommu_go_to_state(IOMMU_INITIALIZED);
-@@ -3414,8 +3413,8 @@ static int __init amd_iommu_init(void)
- 	}
- #endif
- 
--	for_each_iommu(iommu)
--		amd_iommu_debugfs_setup(iommu);
-+	if (!ret)
-+		amd_iommu_debugfs_setup();
- 
- 	return ret;
- }
+Looks good to me. Thanks for the cleanup you are doing!
+
 -- 
-2.25.1
-
+  Kiryl Shutsemau / Kirill A. Shutemov
