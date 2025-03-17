@@ -1,117 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0015117A30F
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 15:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B50176FB0;
+	Mon, 17 Mar 2025 15:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742226925; cv=none; b=hv7OSxEvjt7uiY8zyqFlEjB7HrBIG4Cg3i51ToVUqkd4KNxZhllMCuDn3dA6fBt7yWfYtHt4ceDr0c4Sg5VrLll5oAXT/m3iRlLXLKIL4QzU0OBV9TwfI4svTWpLY+qwAl75V/bWrlV1QmzDW/9MM/iLUtiNN717930b7AN37DQ=
+	t=1742226994; cv=none; b=eBkqdeNzdYKcxVKoPaxkXrFAB3xq7mPVhMuP4IKjBn4XZMRK+3JRXp+DFSKvY7AL2vvzUjwkipnBrj240/B1YPp4T2WDA/ZCQ73XS9CqC6hO6Jhtdf5aS7v562JSR82FZ7L/MtMv3X+cU4NNXyFOMUm9g31/Lu6+NEMOKc7hZ0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742226925; c=relaxed/simple;
-	bh=Ndc2bReYSJUSie6WhUS+mnCu2jDPY4fjFHd4YY+TJH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sNOy/nfikiyC+ExaoTRDkNqXYLhCFfj4xebbFUUqOGxDf99WYStozOmnR12p12e2bn0vCw7e0bO1+n9lGnzV+y6JK1ymQpWDYCaYnHt3mb2hW10Qg3Hj7fmBB7AcuKGQh+gVEB/2XUd237ZhlL2lwFI7dN4bX2jvkb4cSE73fww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XJnGsIV9; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XJnGsIV9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742226924; x=1773762924;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Ndc2bReYSJUSie6WhUS+mnCu2jDPY4fjFHd4YY+TJH8=;
-  b=XJnGsIV9SefE1O/Fo4ksr+/jdWxkh6IhHX/4s/IyhudysQDC+qxcbd9T
-   kcwhv+t0KHTRrKoqp3QIPahxtGSZfrPlKrxB/Prb5i4mEF8A5IGTDjRdB
-   m/bIVdccHdsPc3yqNQD3Ap4trWeT3xeE+yy7abQHseb4Ed2nX/8WxfTnZ
-   6FLXqus1hXxo+Faa1welabI6PWxhe41cXTOX47vuPI+Cdzhbhnc4YAA9g
-   n3Do/SWcyI9Log1g55qR9UiRii89HegHGCSlhad7IVut/yG/K/Hlkgeim
-   ALxrMtEZl46V9zlnB/SFPhM89MbVjyjIFbUb8YNwoQ8IwevAWFjsIue/+
-   w==;
-X-CSE-ConnectionGUID: 16ViZFBcQi+jDYtwAWq3JQ==
-X-CSE-MsgGUID: Lwiema9qS6mbA66CHC0b/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="46094664"
+	s=arc-20240116; t=1742226994; c=relaxed/simple;
+	bh=JTYbqx6bfQKuupaoVPJmTVygzfWnX4u/I/x3TxxTXO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkcpZJzqOLuyDOX+QOAYNkKu0/9QnTZoRpIyX2g1TqZ++PHMfjnGKqR6tCl2T65il8KDJrRFgN+sKtJg5BZkK/z+NHxETJT2c6PLyXxjHsCgnhesrIWxhXTXBS5eOhmheLdC4KhA5FbG0HJCMENFaPKEJcAsf7FT4yOCoDDh2Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-CSE-ConnectionGUID: CzZovjXbRCaiOiPHFuTf1w==
+X-CSE-MsgGUID: xrWuP8IQTP2PF4Bar1Ld2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="47102973"
 X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="46094664"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 08:55:23 -0700
-X-CSE-ConnectionGUID: cplgreKTSEakE5AyF5kxxg==
-X-CSE-MsgGUID: ooRjsaEMSIq0Ki0sjX+eiw==
+   d="scan'208";a="47102973"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 08:56:32 -0700
+X-CSE-ConnectionGUID: EA25EyGGQmuYBW7eHEHuYg==
+X-CSE-MsgGUID: FN4NgrbwT2KvtC80qpTwdQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="121932500"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by orviesa010.jf.intel.com with ESMTP; 17 Mar 2025 08:55:21 -0700
-From: Raag Jadav <raag.jadav@intel.com>
-To: giometti@enneenne.com,
-	gregkh@linuxfoundation.org,
-	andriy.shevchenko@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v2] pps: generators: tio: fix platform_set_drvdata()
-Date: Mon, 17 Mar 2025 21:24:52 +0530
-Message-Id: <20250317155452.2038020-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
+   d="scan'208";a="122157561"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 08:56:27 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1tuCpE-00000003LsH-1IHs;
+	Mon, 17 Mar 2025 17:56:24 +0200
+Date: Mon, 17 Mar 2025 17:56:24 +0200
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 07/10] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <Z9hGKCdR7NHqfRmC@smile.fi.intel.com>
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-7-8a35c6dbb966@bootlin.com>
+ <Z69oa8_LKFxUacbj@smile.fi.intel.com>
+ <D8FAX4E29LZK.3VUK90WB04MV2@bootlin.com>
+ <Z9PlYSZDviGOCV7X@surfacebook.localdomain>
+ <D8ILQ4NT6977.50SD8DM8FIBF@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D8ILQ4NT6977.50SD8DM8FIBF@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Currently driver_data user is expecting a pointer to pps_tio while
-platform_set_drvdata() is setting a double pointer to it. Make them
-consistent and fix illegal memory access in driver ->remove() path.
+On Mon, Mar 17, 2025 at 03:13:07PM +0100, Mathieu Dubois-Briand wrote:
+> On Fri Mar 14, 2025 at 9:14 AM CET, Andy Shevchenko wrote:
+> > Thu, Mar 13, 2025 at 06:07:03PM +0100, Mathieu Dubois-Briand kirjoitti:
+> > > On Fri Feb 14, 2025 at 4:59 PM CET, Andy Shevchenko wrote:
+> > > > On Fri, Feb 14, 2025 at 12:49:57PM +0100, Mathieu Dubois-Briand wrote:
 
-[  156.254066] BUG: unable to handle page fault for address: ffffc9000117b738
-[  156.254099] #PF: supervisor read access in kernel mode
-[  156.254111] #PF: error_code(0x0000) - not-present page
-[  156.254197] RIP: 0010:hrtimer_active+0x2b/0x60
-[  156.254367] Call Trace:
-[  156.254375]  <TASK>
-[  156.254382]  ? show_regs+0x6d/0x80
-[  156.254393]  ? __die+0x29/0x70
-[  156.254402]  ? page_fault_oops+0x15f/0x4e0
-[  156.254415]  ? hrtimer_active+0x2b/0x60
-[  156.254425]  ? search_exception_tables+0x65/0x70
-[  156.254437]  ? kernelmode_fixup_or_oops.constprop.0+0x61/0x80
-[  156.254451]  ? __bad_area_nosemaphore+0x195/0x2c0
-[  156.254462]  ? __lock_acquire+0xaaf/0x2840
-[  156.254475]  ? bad_area_nosemaphore+0x16/0x20
-[  156.254486]  ? do_kern_addr_fault.part.0+0x64/0x80
-[  156.254498]  ? exc_page_fault+0x190/0x2c0
-[  156.254511]  ? asm_exc_page_fault+0x2b/0x30
-[  156.254527]  ? __pfx_pps_gen_tio_remove+0x10/0x10 [pps_gen_tio]
-[  156.254541]  ? hrtimer_active+0x2b/0x60
-[  156.254551]  hrtimer_cancel+0x19/0x50
-[  156.254561]  pps_gen_tio_remove+0x1e/0x80 [pps_gen_tio]
+...
 
-Fixes: c89755d1111f ("pps: generators: Add PPS Generator TIO Driver")
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Acked-by: Rodolfo Giometti <giometti@enneenne.com>
----
+> > > > > +	/*
+> > > > > +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad debounce
+> > > > > +	 * timings and gpos/keypad columns repartition. Only the later is
+> > > > > +	 * modified here.
+> > > > > +	 */
+> > > > > +	val = FIELD_PREP(MAX7360_PORTS, ngpios);
+> > > > > +	ret = regmap_write_bits(regmap, MAX7360_REG_DEBOUNCE, MAX7360_PORTS, val);
+> > > > > +	if (ret) {
+> > > > > +		dev_err(dev, "Failed to write max7360 columns/gpos configuration");
+> > > > > +		return ret;
+> > > > > +	}
+> > > >
+> > > > Shouldn't this be configured via ->set_config() callback?
+> > > 
+> > > I believe this comment has been a bit outdated by our discussion on
+> > > using GPIO valid mask, but I believe we could not use the ->set_config()
+> > > callback here: this callback is made to configure a single pin while the
+> > > gpos/keypad columns repartition is global.
+> >
+> > Yeah, we have similar desing in Intel Bay Trail (see pinctrl-baytrail.c) and it
+> > requires some software driven heuristics on how individual setting may affect
+> > the global one. But the Q here is is the debounce affects only keypad? Then it
+> > should be configured via keypad matrix driver. Btw, have you checked
+> > drivers/input/keyboard/matrix_keypad.c? Is there anything that can be useful
+> > here?
+> >
+> 
+> Hum, maybe the comment is not clear enough? Not sure, but please tell
+> me.
 
-v2: Update commit message (Greg, Andy)
+I see it now, yes, the comment seems point too much attention on the register
+(and hence its name) then content.
 
- drivers/pps/generators/pps_gen_tio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I would start this comment with something like:
+"Configure which GPIOs will be used for keypad."
 
-diff --git a/drivers/pps/generators/pps_gen_tio.c b/drivers/pps/generators/pps_gen_tio.c
-index 6c46b46c66cd..6e4a383957d9 100644
---- a/drivers/pps/generators/pps_gen_tio.c
-+++ b/drivers/pps/generators/pps_gen_tio.c
-@@ -230,7 +230,7 @@ static int pps_gen_tio_probe(struct platform_device *pdev)
- 	hrtimer_init(&tio->timer, CLOCK_REALTIME, HRTIMER_MODE_ABS);
- 	tio->timer.function = hrtimer_callback;
- 	spin_lock_init(&tio->lock);
--	platform_set_drvdata(pdev, &tio);
-+	platform_set_drvdata(pdev, tio);
- 
- 	return 0;
- }
+> So yes, this register is named "debounce" but controls two different
+> things:
+> - The keypad debounce: we do not touch it here.
+> - The partition between keypad columns and gpos. This is the value we do
+>   modify here.
 
-base-commit: 6f119e3da79ce5e586340059403ab77201c1bb45
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
