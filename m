@@ -1,96 +1,128 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CCD24337D;
-	Mon, 17 Mar 2025 14:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00AC323FC42;
+	Mon, 17 Mar 2025 14:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222552; cv=none; b=PWaLs0rLa96c1ur8WIzsH7whWJGvk1md02/xbnatMsY05RGLUdt3fL4hfzZMKUKbteL+QL0m8YlogDPZrHSlx2IcB/7Oz7L1eqamaRB6nT5DmrOCOkqA+TkZMS9kqy7gGYop+/PLnsmGo1axz2Iri69bMw5/YJl67g4yO7aXAiQ=
+	t=1742222607; cv=none; b=uPdjGfzE78+tYNl9GD/Xc3E+IvcWyAL3lTrmXXpJ35Cbq7Wx1728UxTO4h3+D/gMVvXFQTMOuenkN0WTpNVGDcpUfCQnF+Yuw2ApVYhY1tnwAIcljSSKxIgTE1MFFYKzXqs2CFfKNOB+DBd9QjBNV6T+jy5btdE1mUI3uk0AM5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222552; c=relaxed/simple;
-	bh=B7w4fF/AQBq5dEVwxdmK1HtwIC8KWcaPAsFWCNa0C2U=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i9hwresmiacpdrsGZw24x7HxHd7na31j3M86LCxubmQLZsJLrJc0VNOWUt2fwlD0O/XuwL4v2mX7pSk0KM2eAqcOX8QphKkxi/xlGbBkabjKsRVrLapLXkb7IIQ28SGbo1/bsql8MbZ0YWcn9aFJZZUYPOYVOg5Wpt9fUbrZpGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=ToKl/xxx; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ToKl/xxx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742222548; x=1742481748;
-	bh=B7w4fF/AQBq5dEVwxdmK1HtwIC8KWcaPAsFWCNa0C2U=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=ToKl/xxxpx+5YIjI0l2d3U66G5GtgDC1CcUY33hlP+2YCs1G3xywS8/rb+xCyJfk8
-	 7QwgfrHvxjAzYc88oY8J8iYMGsIwF53WyT2x6Mpqoa9zdVSNej1lR9c7kF6dtOrE84
-	 htRcjMafXeKfVORHk6Gf1ThpPMmEcWw918B0KhvPoU69MitX8kmOte3ZtfKuV29G1k
-	 PZzca7AZmj+njtUZhx4Gcw3jsOdPkSyljrTG1VMdRPgEV7Raq5jXX1zTGqcq5fSzvk
-	 30n28sXXnG0PnfbTL/gEQbBKg6XsDYanWwDJuX3DjbyWZSjp+D0gtDBVDNFq1W3mgo
-	 y2dl9pz/eSsgg==
-Date: Mon, 17 Mar 2025 14:42:23 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Danilo Krummrich <dakr@kernel.org>, Andrew Ballance <andrewjballance@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] rust: alloc: add `Vec::dec_len`
-Message-ID: <D8IMCFZJ2G7C.28DHUZGDB596P@proton.me>
-In-Reply-To: <Z9gcqHihXLg6kcZb@google.com>
-References: <20250316-vec-set-len-v1-0-60f98a28723f@gmail.com> <20250316-vec-set-len-v1-2-60f98a28723f@gmail.com> <D8IGFTJXS2A1.9JBD1UKGN4PX@proton.me> <CAJ-ks9=oq+c_pMg41QgGWsj=phWYfntXQgpSrFmz16Vifofn3g@mail.gmail.com> <Z9gL5hQWvCNy5XNH@google.com> <Z9gcqHihXLg6kcZb@google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: d709fa82dd85d03fde09c7bd5a390a1cececf112
+	s=arc-20240116; t=1742222607; c=relaxed/simple;
+	bh=47P4N8mbAdyzhma3fmkXW3sHHBTG+wnaEMaPJba5Mtg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cCW6Opp9aSE44sAr60/7Hfjh1P/RL7j7tpRUreaGNwG6QoVmYWYz4A4ChPGO+iDaj2UFujygqegKSYUeLuNpHiHQ11IWtTcOpmlhP4PsLWVzWlnXIEvOuQMnMWvTVpgINRJGAl6boyE+pu5DBl9QoTw01j6MWsexYllRET2zg1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EE6813D5;
+	Mon, 17 Mar 2025 07:43:34 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22F383F63F;
+	Mon, 17 Mar 2025 07:43:23 -0700 (PDT)
+Date: Mon, 17 Mar 2025 14:43:21 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 2/9] hwrng: arm-smccc-trng - transition to the faux
+ device interface
+Message-ID: <Z9g1CV6jgea8VpW4@bogus>
+References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
+ <20250317-plat2faux_dev-v1-2-5fe67c085ad5@arm.com>
+ <2025031748-deface-wasting-b635@gregkh>
+ <Z9gwNaUoTmqViPrh@bogus>
+ <2025031709-unmoved-carton-c130@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025031709-unmoved-carton-c130@gregkh>
 
-On Mon Mar 17, 2025 at 1:59 PM CET, Alice Ryhl wrote:
-> On Mon, Mar 17, 2025 at 11:47:50AM +0000, Alice Ryhl wrote:
->> On Mon, Mar 17, 2025 at 07:34:44AM -0400, Tamir Duberstein wrote:
->> > On Mon, Mar 17, 2025 at 6:04=E2=80=AFAM Benno Lossin <benno.lossin@pro=
-ton.me> wrote:
->> > >
->> > > On Sun Mar 16, 2025 at 11:32 PM CET, Tamir Duberstein wrote:
->> > > > Add `Vec::dec_len` that reduces the length of the receiver. This m=
-ethod
->> > > > is intended to be used from methods that remove elements from `Vec=
-` such
->> > > > as `truncate`, `pop`, `remove`, and others. This method is intenti=
-onally
->> > > > not `pub`.
->> > >
->> > > I think it should be `pub`. Otherwise we're loosing functionality
->> > > compared to now. If one decides to give the raw pointer to some C AP=
-I
->> > > that takes ownership of the pointer, then I want them to be able to =
-call
->> > > `dec_len` manually.
->> >=20
->> > This is premature. It is trivial to make this function pub when the ne=
-ed arises.
->>=20
->> Normally I'd agree with Benno, but in this case I think having it
->> private is preferable. The function is safe, so it's too easy for
->> end-users to confuse it with truncate.
->
-> Thinking more about this ... I think we should have `set_len` and
-> `inc_len` instead. That way, both methods are unsafe so people will not
-> accidentally use `set_len` when they meant to use `truncate`.
+On Mon, Mar 17, 2025 at 03:30:15PM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Mar 17, 2025 at 02:22:45PM +0000, Sudeep Holla wrote:
+> > On Mon, Mar 17, 2025 at 02:04:27PM +0100, Greg Kroah-Hartman wrote:
+> > > On Mon, Mar 17, 2025 at 10:13:14AM +0000, Sudeep Holla wrote:
+> > > > +MODULE_ALIAS("faux:smccc_trng");
+> > > 
+> > > Why do you need a branch new alias you just made up?  Please don't add
+> > > that for these types of devices, that's not going to work at all (just
+> > > like the platform alias really doesn't work well.
+> > > 
+> > 
+> > Sure I will drop all of those alias. One question I have if the idea of
+> > creating a macro for this is good or bad ? I need this initial condition
+> > flag to make use of such a macro, so I didn't go for it, but it does
+> > remove some boiler-plate code.
+> > 
+> > Let me know what do you think of it ?
+> > 
+> > Regards,
+> > Sudeep
+> > 
+> > -->8 
+> > diff --git i/include/linux/device/faux.h w/include/linux/device/faux.h
+> > index 9f43c0e46aa4..8af3eaef281a 100644
+> > --- i/include/linux/device/faux.h
+> > +++ w/include/linux/device/faux.h
+> > @@ -66,4 +66,30 @@ static inline void faux_device_set_drvdata(struct faux_device *faux_dev, void *d
+> >  	dev_set_drvdata(&faux_dev->dev, data);
+> >  }
+> >  
+> > +#define module_faux_driver(name, tag, init_cond)			\
+> > +static struct faux_device_ops tag##_ops = {				\
+> > +	.probe = tag##_probe,						\
+> > +	.remove = tag##_remove,						\
+> > +};									\
+> > +									\
+> > +static struct faux_device *tag##_dev;					\
+> > +									\
+> > +static int __init tag##_init(void)					\
+> > +{									\
+> > +	if (!(init_cond))						\
+> > +		return 0;						\
+> > +	tag##_dev = faux_device_create(name, NULL, &tag##_ops);		\
+> > +	if (!tag##_dev)							\
+> > +		return -ENODEV;						\
+> > +									\
+> > +	return 0;							\
+> > +}									\
+> > +module_init(tag##_init);						\
+> > +									\
+> > +static void __exit tag##_exit(void)					\
+> > +{									\
+> > +	faux_device_destroy(tag##_dev);					\
+> > +}									\
+> > +module_exit(tag##_exit);						\
+> 
+> Yes, I see that some of your changes could be moved to use this, so I
+> think it is worth it.
+> 
+> But why can't you use module_driver() here?  Ah, that init_cond?  And
+> the device.  Hm, why not put the init_cond in the probe callback?  That
+> should make this macro simpler.
+> 
 
-I agree for this on the public API. The way I usually saw `set_len`
-being used for decrementing was truncation without dropping the old
-values. And that is going to be `vec.dec_len(vec.len())` with the
-current design. `vec.set_len(0);` is much clearer in that respect.
+I tried to keep the creation of the device itself conditional the way
+it is today. Deferring the check to probe means the device gets created
+unconditionally but won't be probed which is fine I guess. I was thinking
+that device shouldn't show up on the bus if the condition is not met to
+match the current scenario. I might be overthinking there.
 
-But for the internals, I'd say that `dec_len` is nicer, so for `pop` one
-would then use `self.dec_len(1)`.
+> And don't use "tag", that's an odd term here, just copy what
+> module_driver() does instead please.
+> 
 
-How about we keep `set_len` and make `dec_len` a private, safe helper?
+Sure, I will not use it. It was just a name that came to my mind.
 
----
-Cheers,
-Benno
+Also creating the macro builds the dependency. Do you prefer to push the
+changes as is and the macro in one release and make use of the macro later.
 
+-- 
+Regards,
+Sudeep
