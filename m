@@ -1,138 +1,170 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2855921931B;
-	Mon, 17 Mar 2025 06:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AF421931B;
+	Mon, 17 Mar 2025 06:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742193516; cv=none; b=Wcdi3uR32kU6JFsjvc/90WgxwQ44W4VdHIndaesg8crF8xutw8JAoSmxLGz8l1gaAIhlSS3NS7ziBZ0vPlHMqqn447R5Oufy9zwYYnAX/xkEoleIleyBfB0UjNwWpbPhlVG+ba1JtdUTRyRtFiag2pLFeSoyvDUmhiak7okX/fs=
+	t=1742193622; cv=none; b=hulZ69SgFeY8XVkqjr7tNF+oIzXqyM+VgO5DBkoYYw7sxF6yI8Uxhm7MvuQiwA51jyacklb3loDaokyZvRYYzV2KUdBF9jJ3ula4V5PyRRDumW3ZI0AF73UTqHhVy08s8RgLBkwJ32tH0ZheXam0Q+1eKiPJq1WfeHJhJlrZa+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742193516; c=relaxed/simple;
-	bh=GFj6C8q0f6OPbUJDFawXqckYdO6JbvwUV2Lkl0t7nzk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nHCZuSeCUX3PsjaRJH5AM/1wCVjJxumI056a8Z2qlZljdggQD/Jti9lFLFQrEu6wVJC1ZAZdYcXOc9Ji/Eg1n5U49YtQFegKBrx45tKjtNcz7vMbfjH80CxF+CvR7m7tPvE/RFiNzMING0cxXSet4d3+QT469VZUSwdvrnhaNHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BOvRmAGl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1742193622; c=relaxed/simple;
+	bh=zzk4mS2ouvlwknp5wkyygJtV7VT4S7Kc374rDxcdDhQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lhMVPdX1zUA+xD4aBAdR8UX30DzoIi4dJT9lbxQrZSQwXlTirW4F39oAGPv0nDQWmrMogIuTHK6KKOkLvEhK9+wQHtvjkmJN7yuq3uLSYwV3tLVZvSUxwBWVawKO0jIUTt+1bxQmuyHaY9eSsHqQWAYTBfBDCe3+2+FQA1TinFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EUQp0JvD; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BOvRmAGl"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52H0TolU022723;
-	Mon, 17 Mar 2025 06:38:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=xSx9aM3ysh6H8MCCKhgJbOrf+ZSu6CKyBHE
-	awG1GrOc=; b=BOvRmAGl1QsN6uCThn4S7qCvoo7RsyHkpiuD4xoLMdEDNTIa1id
-	6xOQXB8ZNMn/5kV6UqAW/tN1iEbQYYYpfzZaB2yG+ZBJIDU/mb6ZDdbR8Iv50JnA
-	iuckxZm4pVTB09eQSEfRaQOigbQAyGG2iC0YnalF6858mBA5piMw7Q0YqjfHa8l/
-	NU90S+out3Dei4cOuomksyoUtyBoYAzx/nBLsf/Ba629AEy9bocB6VZH7QGOuCJ9
-	jqScd+2gtq+o9GGWhqmW52Me52n/ogREsXU5vZLBiNhh/FaEJE1EpZWbqLgN3ZTP
-	f6zZRU7elxHCbWQYmJbzPo0baRljQ8gcjlg==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1r13p0r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Mar 2025 06:38:31 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52H6cSCf032449;
-	Mon, 17 Mar 2025 06:38:28 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 45dkdxgt6n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Mar 2025 06:38:28 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52H6cRIM032442;
-	Mon, 17 Mar 2025 06:38:27 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-schowdhu-hyd.qualcomm.com [10.213.97.56])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 52H6cRPm032440
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Mar 2025 06:38:27 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 2365959)
-	id 0BEAE58E; Mon, 17 Mar 2025 12:08:27 +0530 (+0530)
-From: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable <stable@vger.kernel.org>
-Cc: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Subject: [PATCH v2] remoteproc: Add device awake calls in rproc boot and shutdown path
-Date: Mon, 17 Mar 2025 12:08:03 +0530
-Message-Id: <20250317063803.1361829-1-quic_schowdhu@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUQp0JvD"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8fc176825so36371606d6.0;
+        Sun, 16 Mar 2025 23:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742193620; x=1742798420; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hpYp1sWwQErQLR470cKM+5ZRvUm9FDPScwHkEhF5p1A=;
+        b=EUQp0JvDn+5YFKXQZCIQ5ilQ7UjUnrSE6J2HuZQNOsd5nrS5V5CuGPceSUdbQDMmaP
+         rFNssHjyfNtr5vZT8iSkxaB09aO2qWVZaUnPxsDFD1DrT5g1et52L597sGsKqdASwQJS
+         5TK0dKLWgLVBnJqCkt5DXyEf0cAkZVrpitdkSYaYd+NByU23RNgIyrWGE3IlXXROwsk/
+         1d25CIPZFwFMEijbc8zxMDjHbOaDuNGcZJw6RW4+4A6lVsSQ2eFYK9uIO5/ba2C3vStn
+         yG1PklrlB1bPmUT0PisHPqCb1XSBpVQ5HO1ObynxjM1x1p7CPE+/e0IH/RGeMCdCYIsO
+         kRLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742193620; x=1742798420;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hpYp1sWwQErQLR470cKM+5ZRvUm9FDPScwHkEhF5p1A=;
+        b=jJT4TLbYpk71WmnsnwCEc3m41q56ltcoy7CANa9jBgEMDbp05k2lBWpNUgYcGbSHHS
+         agzq0nSnhxdWzWg6qkjH/CfZTFtHhAUbee0icsWVMeFSgR6rv4qlzBG0zA9ATj4RCyhc
+         W/2TCVFthImGNQ5vx2GYX+Hl5CxPDe3qVRq0KH6KDw1pf8oByqHw0gYyQYWG6/vAWPhe
+         8T3W7nPNvBE2yy4CgUrGS22wVxOUMrPBiOIq8yvkcec6QnITtf6U7XQQBXH3VO0RWLOO
+         egO6xFsDYi4b4al9FYgklUqZJHDx+z+uMmbHSDlolKSXHtw4NAfdaSnjPu1+ZO6UA+/U
+         LUzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGSy0BdWnUlUzTj6H5CzTCjTCCXBeMNnf2eQbcXkpbt21GDZNJH1MMeEXdibdTfFuhqrc/Hzg/SQKj8Usm@vger.kernel.org, AJvYcCUeUsmuJrtUv5rXY9tY9niUmlBlS3/Trc1NoTzHQwC6LTyaGDk6svHpxBpvsBNh9mcCbSPmCjrrietq+z2AXIfrJMAtuw==@vger.kernel.org, AJvYcCWEsSBBjPqSdcGo3DqdnaDLLgdrELHl7w0/NtpAxt/xdrFI5YmoaJNTszu0U7mYAOBaWqhTNhvhS/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8pYhDyV36KgJCWgj0bsbPMevErt9sFXCvMvxtQgX3ok2S2r6n
+	JUZ7cK0OxfbLH3TRDsD17Kw1QqlznWNqXPLexkqGM8hZxv6CEuXLEZKrzOc8Q6dYlpubQSiy64x
+	Sk3MdKc18xy92v0STHKtZKZZ/RKU=
+X-Gm-Gg: ASbGncuAdO49+h9sSBQEF8mU5LieJywyr8v5qEeBYilRHX9CINwSY6yN5Ds6/pYHMyC
+	t14v5UiAMWu5CyAL978kXRQc0jXLYBs4REn/tPKLtWZO955NA1YPJVDznKDyfqq0pDRYqK7S1gE
+	WBmPEVu87WigrZ/dRpthEKVQYfuto=
+X-Google-Smtp-Source: AGHT+IHMZYgz/MuSsByro3MRuFo1ySupyV51QFkq+6zKs1xyNTFpahk+3oKqGPCUM96xf2hP5L+Q8scMsRilufWFx6o=
+X-Received: by 2002:a05:6214:496:b0:6e8:f166:b1a0 with SMTP id
+ 6a1803df08f44-6eaeab05fc1mr206814606d6.36.1742193620004; Sun, 16 Mar 2025
+ 23:40:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=LuaSymdc c=1 sm=1 tr=0 ts=67d7c367 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=d-bqaP4l6ypRa8K_nXgA:9 a=0fcYfjdothPMH0Ll:21
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: hUK-ZR8P138hXcbemujpwfFIkRVap7ru
-X-Proofpoint-ORIG-GUID: hUK-ZR8P138hXcbemujpwfFIkRVap7ru
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-17_02,2025-03-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- mlxscore=0 suspectscore=0 priorityscore=1501 phishscore=0 adultscore=0
- clxscore=1015 lowpriorityscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503170047
+References: <20250317063337.352966-1-derekjohn.clark@gmail.com>
+In-Reply-To: <20250317063337.352966-1-derekjohn.clark@gmail.com>
+From: Derek John Clark <derekjohn.clark@gmail.com>
+Date: Sun, 16 Mar 2025 23:40:09 -0700
+X-Gm-Features: AQ5f1JoiAIfCeAqSNTVEdS2wSK2hq5pN7LIAWbDK-uGT-q-cmlWU_bGLNgykOzE
+Message-ID: <CAFqHKTmGo2CG43gOCFPnWiF5zSJgV8=yV=PzR7y8kfXvYvq0eA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] platform/x86: Add Lenovo Gaming Series WMI Drivers
+To: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Mario Limonciello <superm1@kernel.org>, Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, "Cody T . -H . Chiu" <codyit@gmail.com>, 
+	John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add device awake calls in case of rproc boot and rproc shutdown path.
-Currently, device awake call is only present in the recovery path
-of remoteproc. If a user stops and starts rproc by using the sysfs
-interface, then on pm suspension the firmware loading fails. Keep the
-device awake in such a case just like it is done for the recovery path.
+On Sun, Mar 16, 2025 at 11:33=E2=80=AFPM Derek J. Clark
+<derekjohn.clark@gmail.com> wrote:
+>
+> Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+> WMI interfaces that control various power settings. There are multiple WM=
+I
+> interfaces that work in concert to provide getting and setting values as
+> well as validation of input. Currently only the "Gamezone", "Other
+> Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+> I attempted to structure the driver so that adding the "Custom Mode",
+> "Lighting", and other data block interfaces would be trivial in a later
+> patches.
+>
+> This driver is distinct from, but should be considered a replacement for
+> this patch:
+> https://lore.kernel.org/all/20241118100503.14228-1-jonmail@163.com/
+>
+> This driver attempts to standardize the exposed sysfs by mirroring the
+> asus-armoury driver currently under review. As such, a lot of
+> inspiration has been drawn from that driver.
+> https://lore.kernel.org/platform-driver-x86/20250316230724.100165-1-luke@=
+ljones.dev/
+>
+> The drivers have been tested by me on the Lenovo Legion Go and Legion Go
+> S.
+>
+> Suggested-by: Mario Limonciello <superm1@kernel.org>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+> v4:
+>  - Added lenovo-wmi-events driver
+>  - Added headers for every driver
+>  - Fixes requested from v3 review
+> v3:
+> https://lore.kernel.org/platform-driver-x86/20250225220037.16073-1-derekj=
+ohn.clark@gmail.com/
+> v2:
+> https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekj=
+ohn.clark@gmail.com/
+> v1:
+> https://lore.kernel.org/platform-driver-x86/20241217230645.15027-1-derekj=
+ohn.clark@gmail.com/
+> Derek J. Clark (6):
+>   platform/x86: Add lenovo-wmi-* driver Documentation
+>   platform/x86: Add lenovo-wmi-helpers
+>   platform/x86: Add Lenovo WMI Events Driver
+>   platform/x86: Add Lenovo Capability Data 01 WMI Driver
+>   platform/x86: Add Lenovo Other Mode WMI Driver
+>   platform/x86: Add Lenovo Gamezone WMI Driver
+>
+>  .../wmi/devices/lenovo-wmi-gamezone.rst       | 203 ++++++
+>  .../wmi/devices/lenovo-wmi-other-method.rst   | 108 +++
+>  MAINTAINERS                                   |  17 +
+>  drivers/platform/x86/Kconfig                  |  40 ++
+>  drivers/platform/x86/Makefile                 |   5 +
+>  drivers/platform/x86/lenovo-wmi-capdata01.c   | 136 ++++
+>  drivers/platform/x86/lenovo-wmi-capdata01.h   |  29 +
+>  drivers/platform/x86/lenovo-wmi-events.c      | 132 ++++
+>  drivers/platform/x86/lenovo-wmi-events.h      |  21 +
+>  drivers/platform/x86/lenovo-wmi-gamezone.c    | 380 +++++++++++
+>  drivers/platform/x86/lenovo-wmi-gamezone.h    |  18 +
+>  drivers/platform/x86/lenovo-wmi-helpers.c     |  64 ++
+>  drivers/platform/x86/lenovo-wmi-helpers.h     |  24 +
+>  drivers/platform/x86/lenovo-wmi-other.c       | 626 ++++++++++++++++++
+>  drivers/platform/x86/lenovo-wmi-other.h       |  19 +
+>  15 files changed, 1822 insertions(+)
+>  create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>  create mode 100644 Documentation/wmi/devices/lenovo-wmi-other-method.rst
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.h
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
+>
+> --
+> 2.49.0
+>
 
-Fixes: a781e5aa59110 ("remoteproc: core: Prevent system suspend during remoteproc recovery")
-Signed-off-by: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Cc: stable@vger.kernel.org
----
- drivers/remoteproc/remoteproc_core.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+All,
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index c2cf0d277729..908a7b8f6c7e 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1916,7 +1916,8 @@ int rproc_boot(struct rproc *rproc)
- 		pr_err("invalid rproc handle\n");
- 		return -EINVAL;
- 	}
--
-+
-+	pm_stay_awake(rproc->dev.parent);
- 	dev = &rproc->dev;
- 
- 	ret = mutex_lock_interruptible(&rproc->lock);
-@@ -1961,6 +1962,7 @@ int rproc_boot(struct rproc *rproc)
- 		atomic_dec(&rproc->power);
- unlock_mutex:
- 	mutex_unlock(&rproc->lock);
-+	pm_relax(rproc->dev.parent);
- 	return ret;
- }
- EXPORT_SYMBOL(rproc_boot);
-@@ -1991,6 +1993,7 @@ int rproc_shutdown(struct rproc *rproc)
- 	struct device *dev = &rproc->dev;
- 	int ret = 0;
- 
-+	pm_stay_awake(rproc->dev.parent);
- 	ret = mutex_lock_interruptible(&rproc->lock);
- 	if (ret) {
- 		dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
-@@ -2027,6 +2030,7 @@ int rproc_shutdown(struct rproc *rproc)
- 	rproc->table_ptr = NULL;
- out:
- 	mutex_unlock(&rproc->lock);
-+	pm_relax(rproc->dev.parent);
- 	return ret;
- }
- EXPORT_SYMBOL(rproc_shutdown);
--- 
-2.34.1
+I accidentally attached some misnamed patches that I didn't realize
+got duplicated. The correct patches are all v4 X/6. Apologies for the
+confusion.
 
+Cheers,
+Derek.
