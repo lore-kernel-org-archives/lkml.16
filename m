@@ -1,112 +1,88 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D0F2356C7;
-	Mon, 17 Mar 2025 10:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DF023909F
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742206598; cv=none; b=flfkhgsSF1lqwT05NBV4DrFes+Tj2GI/Xj+GZVpA+iMQgmJ+h08dBY8SrusorV9po7gReeo8h7M6QhkpJphrs8Y331CZwDODMD9gu/t8Mr+dE/MA1ZXCk8ufOlGWQswAHEWRO8MUO0TqcSqwyuFnjoFAJOG8Tt1yGXVS3QmCmYo=
+	t=1742206599; cv=none; b=tn4AgG1I1k6adtSUVAnnhUPy5kwdsDmy/zP86aH3EnQcmnjCK/nUW85oZMKI0z26EvjcNTZnGFxOZclv1fjvfgHM9qw1oHhyTA7L8S3BFGl85QOfuP0TPlnkgAfisqRSY6mpZiUN2f3iKPNqc/h2VZa7dm1zO83LGO/w4Mn9tw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742206598; c=relaxed/simple;
-	bh=mtP5Hn6WkKw7ux+XtFQQDuxuhg0ahHYMIHGpq6J4U0g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TAVGQ84JCbJLclryJ5xtb6kCQRNYYoseNUkViXfNM6EWXa3ilSRMW7Bz6vGOsGbLRk5ATfOEuL6C1yF1AUYJ2/cM9nwdj4IsxqrDSWkE4HRn9JTIRdOKCEo8YrWmmX/4V0xROrE7WDiAAKkoke3QiFCfyatWodSFrly9Kl4RKjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dVlZgp1F; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1742206599; c=relaxed/simple;
+	bh=tAXyC/Z0ZWitiHzL9nvON4Jigtijh73MzpCu2PhMbDI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m7VqQa8gjMSRaXKm1+PnmYpgWozYzVKonjw0n9Dab1Bwf+Lvuwgq1uO9w2dtiZoTxzUY35HMa0a/QYIGJivLxcJyDDLeeMoIOIiHATnX2QW2RyxoKi0zsE3Q+6dNLZOSegGVuXqFu/37Kx2kQW/iWGjM2bmgKJK6qPagRnIuuRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=ZehzFm9e; arc=none smtp.client-ip=185.70.40.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dVlZgp1F"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52HAG1Gk2309530
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Mar 2025 05:16:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1742206561;
-	bh=sTDlmrlfDarhnmJUwkBsi6LCYHQ5yg7dmc8Vf59HSdg=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=dVlZgp1FytDJf7yBi/4W0HE4DAB/Ndq1YXWxzx74fcXp9IrT7mLYY65hU5JlGjrCL
-	 IQF5W+IX/jJgxoivbGRMBs7aWLgZFMjGyywJiDN6kPSNqS4sLyJdScF9/vmyzzMNad
-	 YqO8FIsGqjzVKPr07v68+F3GXh8yDyEmkgzWx9gM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52HAG16u000389
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 17 Mar 2025 05:16:01 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 17
- Mar 2025 05:16:00 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 17 Mar 2025 05:16:00 -0500
-Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52HAG041036292;
-	Mon, 17 Mar 2025 05:16:00 -0500
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 52HAG0bF019287;
-	Mon, 17 Mar 2025 05:16:00 -0500
-From: Meghana Malladi <m-malladi@ti.com>
-To: <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
-        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <kory.maincent@bootlin.com>, <javier.carrasco.cruz@gmail.com>,
-        <diogo.ivo@siemens.com>, <horms@kernel.org>,
-        <jacob.e.keller@intel.com>, <m-malladi@ti.com>,
-        <john.fastabend@gmail.com>, <hawk@kernel.org>, <daniel@iogearbox.net>,
-        <ast@kernel.org>, <srk@ti.com>, Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>
-Subject: [PATCH net-next 1/3] net: ti: prueth: Fix kernel warning while bringing down network interface
-Date: Mon, 17 Mar 2025 15:45:48 +0530
-Message-ID: <20250317101551.1005706-2-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250317101551.1005706-1-m-malladi@ti.com>
-References: <20250317101551.1005706-1-m-malladi@ti.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ZehzFm9e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742206595; x=1742465795;
+	bh=KQoILsilHEJo5usuiJ2jeJyGOMiJd+yx37iGtpQVeHE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=ZehzFm9e+0RYuDRbtyUDTPs4sG5OtU3hyazfGtACn6nkBSbTtMzfEBM9xf53BBC6V
+	 68krE7OdugTYXo45/E8WXDximPehcXRbg03aDL9GEQTvjNdygLChDdN9Evj1LZCAAj
+	 uK0CTzZDElClQtUaIgd0P+7qwWSQJ6ecEXcce09nuwvrrSNI1K/vZQBzj3ChsXqwSh
+	 Wp92sYWyJa6qGeYcJwxDftalNHzgLweijHUnnCsfD8Tk5yDYfbNBOrIwNJxIeawdB7
+	 uEHM76VU4ThinIyJcoN7Gi3tMVlLh1zC7bGe271p305RaDWU4SGqVfJagV/2d9VkJQ
+	 3ESD41nQZ+wSg==
+Date: Mon, 17 Mar 2025 10:16:30 +0000
+To: Kunwu Chan <kunwu.chan@linux.dev>, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com, justinstitt@google.com
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, Kunwu Chan <kunwu.chan@hotmail.com>, Grace Deng <Grace.Deng006@Gmail.com>
+Subject: Re: [PATCH] rust: sync: optimize rust symbol generation for CondVar
+Message-ID: <D8IGOUUTDAZL.7LMGZFOHU4PU@proton.me>
+In-Reply-To: <20250317081351.2503049-1-kunwu.chan@linux.dev>
+References: <20250317081351.2503049-1-kunwu.chan@linux.dev>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 4f3e90c92b18f37feebf3e6e5057f09b64505ab5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-During network interface initialization, the NIC driver needs to register
-its Rx queue with the XDP, to ensure the incoming XDP buffer carries a
-pointer reference to this info and is stored inside xdp_rxq_info.
+On Mon Mar 17, 2025 at 9:13 AM CET, Kunwu Chan wrote:
+> From: Kunwu Chan <kunwu.chan@hotmail.com>
+>
+> When build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
+> with ARCH=3Darm64, the following symbols are generated:
+>
+> $nm vmlinux | grep ' _R'.*CondVar | rustfilt
+> ... T <kernel::sync::condvar::CondVar>::notify_all
+> ... T <kernel::sync::condvar::CondVar>::notify_one
+> ... T <kernel::sync::condvar::CondVar>::notify_sync
+> ... T <kernel::sync::condvar::CondVar>::new::{closure#0}::{closure#0}::pa=
+nic_cold_explicit
+> ... T <kernel::sync::condvar::CondVar>::new::{closure#0}::{closure#0}::pa=
+nic_cold_explicit
+> ... T <kernel::sync::poll::PollCondVar>::new::{closure#0}::{closure#0}::p=
+anic_cold_explicit
+> ... T <kernel::sync::poll::PollCondVar as core::ops::drop::Drop>::drop
+>
+> These notify* symbols are trivial wrappers around the C functions
+> __wake_up and __wake_up_sync.
+> It doesn't make sense to go through a trivial wrapper for these
+> functions, so mark them inline.
+>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1145
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Co-developed-by: Grace Deng <Grace.Deng006@Gmail.com>
+> Signed-off-by: Grace Deng <Grace.Deng006@Gmail.com>
+> Signed-off-by: Kunwu Chan <kunwu.chan@hotmail.com>
 
-While this struct isn't tied to XDP prog, if there are any changes in
-Rx queue, the NIC driver needs to stop the Rx queue by unregistering
-with XDP before purging and reallocating memory. Drop page_pool destroy
-during Rx channel reset and this is already handled by XDP during
-xdp_rxq_info_unreg (Rx queue unregister), failing to do will cause the
-following warning:
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 
-[  271.494611] ------------[ cut here ]------------
-[  271.494629] WARNING: CPU: 0 PID: 2453 at /net/core/page_pool.c:1108 0xffff8000808d5f60
-
-Fixes: 46eeb90f03e0 ("net: ti: icssg-prueth: Use page_pool API for RX buffer allocation")
-Signed-off-by: Meghana Malladi <m-malladi@ti.com>
 ---
- drivers/net/ethernet/ti/icssg/icssg_common.c | 3 ---
- 1 file changed, 3 deletions(-)
+Cheers,
+Benno
 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-index df5da7a98abf..afa01c22dee8 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -1216,9 +1216,6 @@ void prueth_reset_rx_chan(struct prueth_rx_chn *chn,
- 					  prueth_rx_cleanup, !!i);
- 	if (disable)
- 		k3_udma_glue_disable_rx_chn(chn->rx_chn);
--
--	page_pool_destroy(chn->pg_pool);
--	chn->pg_pool = NULL;
- }
- EXPORT_SYMBOL_GPL(prueth_reset_rx_chan);
- 
--- 
-2.43.0
+> ---
+>  rust/kernel/sync/condvar.rs | 4 ++++
+>  1 file changed, 4 insertions(+)
 
