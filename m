@@ -1,144 +1,85 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCBB1758B
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCAD1758B
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742203170; cv=none; b=vFkqX8gphv6U3Wmo3ZT8Xs2AJLQU1h291b4xjMQ7eDQSQj1qlYVB+INmz3q7q0RoZEx3PogmbOP35FxdcbtLUMsNb/eKad4A/XUqvg0pQXKSjiAeGZVK4h5GoshN1lJqFwheV5mQfGSCFY9ZZZ0qjSfirTqS4uJFY2a4N2/aGK4=
+	t=1742203174; cv=none; b=dGTPhMF7DRpLS16WAlAHL8232T+b3O05bxRRdMF6D+vuf4wem8rMxlm8IhqQCYREPQYkJhhGaOFY3PPoR+MyFKUeKi8j/FmUlsjNpcf7u++i1HmnxpWROpAmHMPWdvkUIu+LiSEsEPrwFuSl6Xji1GO+CWOc0WThPp08hh14Qik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742203170; c=relaxed/simple;
-	bh=+aWxAnErVi5GE7txTnBs2jmd8zjo2Uzbs2Ddd0ekzUg=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=t6UvtT33KmUtkWi3O3BAftUGL+3GGFCWOJOgr+UD91mWWLw3OHSkojmhijj34ZZBsUYXK4W3knxeAfvAHIKo7+tcyAmssf3rXzoTWpPWxEkFJNmUQlUUbhO9rWwc2rW5439TZ7c43zPB0Dh5621wGqoAGc10kBlAJcxh3Yeuq/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZGTty1W5Cz50FXM;
-	Mon, 17 Mar 2025 17:19:22 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 52H9IkvC075214;
-	Mon, 17 Mar 2025 17:18:46 +0800 (+08)
-	(envelope-from tang.dongxing@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 17 Mar 2025 17:18:49 +0800 (CST)
-Date: Mon, 17 Mar 2025 17:18:49 +0800 (CST)
-X-Zmail-TransId: 2afa67d7e8f9ffffffff8c9-d0c5e
-X-Mailer: Zmail v1.0
-Message-ID: <20250317171849700zhgNc5lZvWvM3EepJpYWE@zte.com.cn>
-In-Reply-To: <23781043-901b-422c-8199-10aa4a31459e@kernel.org>
-References: 20250317151648132Sj7qhbVfKcPYvqCievFUf@zte.com.cn,23781043-901b-422c-8199-10aa4a31459e@kernel.org
+	s=arc-20240116; t=1742203174; c=relaxed/simple;
+	bh=Cb2+kg40QVXAjLDWqKR5kaW0T12Jxx7UynnCof1J9C0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uYgwej9IsvX1VtwiXXsBaO/76uMM0e0ULesHWbDDu3K+o3TlPpg/OEMYjYgAjEO3/tcN1oTUQOOHxB5LzsPxvuZjOt1Y5NGCzuWmYXDKDLNvyD7VQ+XA+Zd+PqCq6Kp0bOLqYJPQ6jWRn3Vb9QmFsaEf2wJLBkjGSqBq7IU9/Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Beq8D6/C; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Beq8D6/C"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4393ee912e1so72795e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 02:19:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742203170; x=1742807970; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+wE6VYZ4uCoxY7gdQeJispFvvHIE65N+4N0fmOWliK0=;
+        b=Beq8D6/Cm2UZ7/7CpXyXSqBhYBjXplPAh4f7ajZ/2UJQBGa0frTXSbogpBcVmqYi2d
+         xy2HK9ub+r61fW3FxF7c8ETg1o8BN26VqOjSN9e5zlmh2pAi3e/T0YgeaqkRoCJ4STHZ
+         GScwKcByRjsB7w3k6HLEZdnuCtRCs6XGzQjtpB/T9xoKGqq7M5u5b4IHsYBZtQAAXvgI
+         8lpUQNR8xvEHXZSBz3ssxpSqlBd7sXyqJ3h8/K8VaXsK2+Gzo5xjcfllfgMdCzRYR0Xd
+         82DVu/K7RpOlYSxquEKhoSfltU3R5pCkDM2mTu3s8o0ow5UZkoGtWkj785/YQXwMEy/R
+         IeDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742203170; x=1742807970;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+wE6VYZ4uCoxY7gdQeJispFvvHIE65N+4N0fmOWliK0=;
+        b=bvLpo0cjI8I8ZN/GC5gSd9dhfHDKEaSJpOKV3BrorvlDY7MBuLLpI95/voq7udk1f1
+         C+hLiMdr1/4MerisDS81Hx8ZoyW11OGCGmg7rGSoqNnYJFE4eUGFwCG1EdDehzRb9PGJ
+         JZ6LympyMJF/4UqDgoG2uqxH0Lb3O2DxvNr9n/KUN+J4Bq4WIMU56NQuf0R1QuFk+oSS
+         xceZEatewgke6dOd5QTiDsk+SFgGeOQVYzacItvz1xq5Lu/yYozxUQKwosFP5SUC/wKp
+         xM4kNwRSccpDoB1AZpOPc70kOiPS/LmvTZ0A16bG+oAtoZ3uGIm0mvjGvNjqAob9JR8d
+         5eaw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdhSJqmwrKiadcIYsOaATflqsUwZUBShgyA8wCB8pUPtkMDGNhZ4gTRsCth7wXzfU6JLWnTgW+8rNngqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxqa+QqzEGRc4yjwYRx+iu5F5jspsiyGi22v/5wLoucHL+w701h
+	9Ysk9ihi0LfvJrfr8leHCCR1sPy4LWe55slrx2ndQUZ0shN9YqUB+g+/6pvdsQ==
+X-Gm-Gg: ASbGncsJfhO6mKpdGD85qwHYPCt58n+z20C/ABJebpCsM+2EXbIklgGfvTLkC3e+EmA
+	QSmg3YAAqhEjlZL40WhhhiMsiTgxwrpuaiH4ZKfBuPUWyLEp4Lqd5wH1wpP0mXQg9q+hEaWsLwX
+	mmqbICfTk9JG5t6rLdZsJGQ4Z6MrTH7Wfs4D2h2XgeUaypjHlDbcTWKcDioRRNo6y84H0eOviRd
+	rfz2wsKCg0dkvoVf3P1sY9tHTm7mR8nvMse/0XMtEumRcMWVzW3mhOHgpoQNvL0jQSD9YS3aiA7
+	qYdYhjg886IEGqfRxPr/RS2PFXM8GcYbN+DIfreiiC7LeAnF0XEORKC8w7jlieMvHxLXwwJe+C9
+	oQ/K1Sd0=
+X-Google-Smtp-Source: AGHT+IEBwOPCMi8TGJvcCeAoXUMl+HG4zPfMEdGDmBluiMz46MeTloFXdTsHRwP6XhL/g250fhF07A==
+X-Received: by 2002:a05:600c:5cb:b0:439:961d:fc7d with SMTP id 5b1f17b1804b1-43d251f35edmr2694805e9.6.1742203169557;
+        Mon, 17 Mar 2025 02:19:29 -0700 (PDT)
+Received: from google.com (158.100.79.34.bc.googleusercontent.com. [34.79.100.158])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1ffb626esm99000515e9.8.2025.03.17.02.19.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 02:19:29 -0700 (PDT)
+Date: Mon, 17 Mar 2025 09:19:24 +0000
+From: Brendan Jackman <jackmanb@google.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH 07/13] objtool: Consolidate option validation
+Message-ID: <Z9fpHG0mIBcVzRku@google.com>
+References: <cover.1741975349.git.jpoimboe@kernel.org>
+ <8f886502fda1d15f39d7351b70d4ebe5903da627.1741975349.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <tang.dongxing@zte.com.cn>
-To: <jirislaby@kernel.org>
-Cc: <jgross@suse.com>, <sstabellini@kernel.org>,
-        <oleksandr_tyshchenko@epam.com>, <jiqian.chen@amd.com>,
-        <ray.huang@amd.com>, <jeff.johnson@oss.qualcomm.com>,
-        <minhuadotchen@gmail.com>, <xen-devel@lists.xenproject.org>,
-        <linux-kernel@vger.kernel.org>, <ye.xingchen@zte.com.cn>,
-        <yang.guang5@zte.com.cn>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0geGVuL3BjaWJhY2s6IHVzZSBzeXNmc19lbWl0X2F0KCkgaW5zdGVhZCBvZiBzY25wcmludGYoKQ==?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl1.zte.com.cn 52H9IkvC075214
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67D7E91A.000/4ZGTty1W5Cz50FXM
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f886502fda1d15f39d7351b70d4ebe5903da627.1741975349.git.jpoimboe@kernel.org>
 
+On Fri, Mar 14, 2025 at 12:29:05PM -0700, Josh Poimboeuf wrote:
+> The option validations are a bit scattered, consolidate them.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 
-
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
-
-
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
-
-
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-Pj4gRnJvbTogVGFuZ0Rvbmd4aW5nIDx0YW5nLmRvbmd4aW5nQHp0ZS5jb20uY24+DQo+PiANCj4+
-IEZvbGxvdyB0aGUgYWR2aWNlIGluIERvY3VtZW50YXRpb24vZmlsZXN5c3RlbXMvc3lzZnMucnN0
-Og0KPj4gc2hvdygpIHNob3VsZCBvbmx5IHVzZSBzeXNmc19lbWl0KCkgb3Igc3lzZnNfZW1pdF9h
-dCgpIHdoZW4gZm9ybWF0dGluZw0KPj4gdGhlIHZhbHVlIHRvIGJlIHJldHVybmVkIHRvIHVzZXIg
-c3BhY2UuDQo+PiANCj4+IFNpZ25lZC1vZmYtYnk6IFRhbmdEb25neGluZyA8dGFuZy5kb25neGlu
-Z0B6dGUuY29tLmNuPg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMveGVuL3hlbi1wY2liYWNrL3BjaV9z
-dHViLmMgfCAyICstDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
-dGlvbigtKQ0KPj4gDQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy94ZW4veGVuLXBjaWJhY2svcGNp
-X3N0dWIuYyBiL2RyaXZlcnMveGVuL3hlbi1wY2liYWNrL3BjaV9zdHViLmMNCj4+IGluZGV4IGI2
-MTZiNzc2OGMzYi4uYTA3ODJhNzRlZDM0IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy94ZW4veGVu
-LXBjaWJhY2svcGNpX3N0dWIuYw0KPj4gKysrIGIvZHJpdmVycy94ZW4veGVuLXBjaWJhY2svcGNp
-X3N0dWIuYw0KPj4gQEAgLTEyODEsNyArMTI4MSw3IEBAIHN0YXRpYyBzc2l6ZV90IHNsb3RzX3No
-b3coc3RydWN0IGRldmljZV9kcml2ZXIgKmRydiwgY2hhciAqYnVmKQ0KPj4gICAgICAgICAgIGlm
-IChjb3VudCA+PSBQQUdFX1NJWkUpDQo+PiAgICAgICAgICAgICAgIGJyZWFrOw0KPj4gDQo+PiAt
-ICAgICAgICBjb3VudCArPSBzY25wcmludGYoYnVmICsgY291bnQsIFBBR0VfU0laRSAtIGNvdW50
-LA0KPj4gKyAgICAgICAgY291bnQgKz0gc3lzZnNfZW1pdF9hdChidWYsIGNvdW50LA0KPg0KPlRo
-aXMgaXMgd3JvbmcgdG9vIFsxXS4NCj4NCj5bMV0gDQo+aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
-YWxsLzljNTUyZDlhLTJkNDYtNDA2OS1hOWM0LTM1ZmFiODU3YmZjM0BrZXJuZWwub3JnLw0KPg0K
-PnJlZ2FyZHMsDQo+LS0gDQo+anMNCj5zdXNlIGxhYnMNCg0KRGVhciBKaXJpU2xhYnksDQoNClRo
-YW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayxJIGFtIHNvcnJ5IGZvciBteSBwcmV2aW91cyBzdWJt
-aXNzaW9ucy4NCkkgd2lsbCBjaGVjayBteSB3b3JrIGJlZm9yZSBzZW5kaW5nIGFueSBmdXJ0aGVy
-IHVwZGF0ZXMuDQoNClRoYW5rIHlvdSBmb3IgeW91ciBndWlkYW5jZS4NCg0KQmVzdCByZWdhcmRz
-LA0KVGFuZyBEb25neGluZw==
-
-
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPiZndDsmZ3Q7IEZyb206IFRhbmdEb25neGluZyAm
-bHQ7dGFuZy5kb25neGluZ0B6dGUuY29tLmNuJmd0OzwvcD48cD4mZ3Q7Jmd0OyZuYnNwOzwvcD48
-cD4mZ3Q7Jmd0OyBGb2xsb3cgdGhlIGFkdmljZSBpbiBEb2N1bWVudGF0aW9uL2ZpbGVzeXN0ZW1z
-L3N5c2ZzLnJzdDo8L3A+PHA+Jmd0OyZndDsgc2hvdygpIHNob3VsZCBvbmx5IHVzZSBzeXNmc19l
-bWl0KCkgb3Igc3lzZnNfZW1pdF9hdCgpIHdoZW4gZm9ybWF0dGluZzwvcD48cD4mZ3Q7Jmd0OyB0
-aGUgdmFsdWUgdG8gYmUgcmV0dXJuZWQgdG8gdXNlciBzcGFjZS48L3A+PHA+Jmd0OyZndDsmbmJz
-cDs8L3A+PHA+Jmd0OyZndDsgU2lnbmVkLW9mZi1ieTogVGFuZ0Rvbmd4aW5nICZsdDt0YW5nLmRv
-bmd4aW5nQHp0ZS5jb20uY24mZ3Q7PC9wPjxwPiZndDsmZ3Q7IC0tLTwvcD48cD4mZ3Q7Jmd0OyZu
-YnNwOyAmbmJzcDtkcml2ZXJzL3hlbi94ZW4tcGNpYmFjay9wY2lfc3R1Yi5jIHwgMiArLTwvcD48
-cD4mZ3Q7Jmd0OyZuYnNwOyAmbmJzcDsxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEg
-ZGVsZXRpb24oLSk8L3A+PHA+Jmd0OyZndDsmbmJzcDs8L3A+PHA+Jmd0OyZndDsgZGlmZiAtLWdp
-dCBhL2RyaXZlcnMveGVuL3hlbi1wY2liYWNrL3BjaV9zdHViLmMgYi9kcml2ZXJzL3hlbi94ZW4t
-cGNpYmFjay9wY2lfc3R1Yi5jPC9wPjxwPiZndDsmZ3Q7IGluZGV4IGI2MTZiNzc2OGMzYi4uYTA3
-ODJhNzRlZDM0IDEwMDY0NDwvcD48cD4mZ3Q7Jmd0OyAtLS0gYS9kcml2ZXJzL3hlbi94ZW4tcGNp
-YmFjay9wY2lfc3R1Yi5jPC9wPjxwPiZndDsmZ3Q7ICsrKyBiL2RyaXZlcnMveGVuL3hlbi1wY2li
-YWNrL3BjaV9zdHViLmM8L3A+PHA+Jmd0OyZndDsgQEAgLTEyODEsNyArMTI4MSw3IEBAIHN0YXRp
-YyBzc2l6ZV90IHNsb3RzX3Nob3coc3RydWN0IGRldmljZV9kcml2ZXIgKmRydiwgY2hhciAqYnVm
-KTwvcD48cD4mZ3Q7Jmd0OyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-aWYgKGNvdW50ICZndDs9IFBBR0VfU0laRSk8L3A+PHA+Jmd0OyZndDsmbmJzcDsgJm5ic3A7ICZu
-YnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7YnJlYWs7PC9wPjxwPiZndDsm
-Z3Q7Jm5ic3A7PC9wPjxwPiZndDsmZ3Q7IC0mbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgY291
-bnQgKz0gc2NucHJpbnRmKGJ1ZiArIGNvdW50LCBQQUdFX1NJWkUgLSBjb3VudCw8L3A+PHA+Jmd0
-OyZndDsgKyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyBjb3VudCArPSBzeXNmc19lbWl0X2F0
-KGJ1ZiwgY291bnQsPC9wPjxwPiZndDs8L3A+PHA+Jmd0O1RoaXMgaXMgd3JvbmcgdG9vIFsxXS48
-L3A+PHA+Jmd0OzwvcD48cD4mZ3Q7WzFdJm5ic3A7PC9wPjxwPiZndDtodHRwczovL2xvcmUua2Vy
-bmVsLm9yZy9hbGwvOWM1NTJkOWEtMmQ0Ni00MDY5LWE5YzQtMzVmYWI4NTdiZmMzQGtlcm5lbC5v
-cmcvPC9wPjxwPiZndDs8L3A+PHA+Jmd0O3JlZ2FyZHMsPC9wPjxwPiZndDstLSZuYnNwOzwvcD48
-cD4mZ3Q7anM8L3A+PHA+Jmd0O3N1c2UgbGFiczwvcD48cD48YnI+PC9wPjxwPkRlYXIgSmlyaVNs
-YWJ5LDwvcD48cD48YnI+PC9wPjxwPlRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayxJIGFtIHNv
-cnJ5IGZvciBteSBwcmV2aW91cyBzdWJtaXNzaW9ucy48L3A+PHA+SSB3aWxsIGNoZWNrIG15IHdv
-cmsgYmVmb3JlIHNlbmRpbmcgYW55IGZ1cnRoZXIgdXBkYXRlcy48L3A+PHA+PGJyPjwvcD48cD5U
-aGFuayB5b3UgZm9yIHlvdXIgZ3VpZGFuY2UuPC9wPjxwPjxicj48L3A+PHA+QmVzdCByZWdhcmRz
-LDwvcD48cD5UYW5nIERvbmd4aW5nPC9wPjxwPjxicj48L3A+PC9kaXY+
-
-
---=====_003_next=====--
-
---=====_002_next=====--
-
---=====_001_next=====--
-
+Reviewed-by: Brendan Jackman <jackmanb@google.com>
