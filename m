@@ -1,195 +1,237 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2081.outbound.protection.outlook.com [40.107.105.81])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D252221F33;
-	Mon, 17 Mar 2025 10:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742205661; cv=fail; b=LSdfzjg8hmlc+H4pnbcw+8twBeCoXsVLEfhPl9MCPOb2didskVfB4fJYF4Pg05+DdAe+iNhzf+lKlOGE1Eg5kd1yNYcJY875jGa+tJCRYK0LLIcO8E5i5iHc4vHiAVtNyxlnjdNhApWG2avotiIxe5ToyQMORATKqGDQvBiLAH4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742205661; c=relaxed/simple;
-	bh=+mNHCjfb/DtDw4J4SakbzoCjCysgITVRQ/YBjTaifNk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=E96WXVehcxIx4XAXL/9O/GjI31SlabQ+jhOQ0uU5zEiOWqbQJTZARHWCkPZW7WfKoWNQaSZMFGSeq+vwrhq5Jach53g6497+5Vc/QuEMGLqlcDFYB/jsMzi/rllD3ZwJk0/zA3sXB/MS63FBI2Ib5G1Iehb1lhBkY34kJ3q3npc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=kq0Ifo9H; arc=fail smtp.client-ip=40.107.105.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EE71DA53;
+	Mon, 17 Mar 2025 10:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742205681; cv=none; b=pt+p580QcqXGwhzG4RExxUhFrd7QIXKmve88k4lGmi/Wj9xbFZdiXeCxri+vjE26PjQX3WaOX8HT0I89Qz8hP3QqHY7da3u/W2q3d/hpFNgP4rhMlJNdVw9Lu917GAyciKCzJNwdmZdG4Wgr+jZWzuyr+yO3egAaKlZrBc3HuIw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742205681; c=relaxed/simple;
+	bh=g3TScb67Wqot26oruS+UjOhbLWjEbO3oQxd3CMAGUqs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gKCM94i/Tq+yeRtu7Ia76ptZgujGKGcIl4XgN1xYHg64eMwNsD7j7lEjPu5Ozx+hRgnflGxF++aYSZrFvSopt3SV+Qd2X4YuYrlnJyqx6Mq8f32pz/Xg0UL+Qgc3TM+vxCqI8GVVQ+tx4QoaaOvHFL9sKihDIi6f1cv6rBIlAhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Utl92kOC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="kq0Ifo9H"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NS5stbffiZy/5onXF2Ot205YgTNJtVXeE71qPqQUIR2zT1DwRuQCdBhI+qU8qGkSyLeLg2DmO16Vl/EVW97+N198Zg4twjMpi4i2mHKfM0L45TyRU7rtrv97uVFqm0qGi5uCjd/ySbd+0NMvMa8JMPFZBYoXF74S2KgTnEW7aSdMQIkMUMurmM2YV5IyjA8jGtVeAnRrTllXl+zDf2P8wvBV/255tA5zNEhqQOWLcy+RO8FO7nafY2MT6Rpf1BNr7dRY+dIoQGt1o2IBTtFrZiNvaKD/5laulWtsbrlXvugkEg5M5hopGpBNqGYBxVMlZ5HUrF+jpJSM3LzQesmHZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+mNHCjfb/DtDw4J4SakbzoCjCysgITVRQ/YBjTaifNk=;
- b=h9UpVyPvfyypV2AN/mg+TwqC9jzrLHPdUjxcnfcIo6x0Myf2AURvMWSaZ7b2NEcRb9GyfP9fjKZ/cXYZeZnTCg/urLEe7/U3fyz2+v1yXc5BztxVMYm6jTb40Lx+qF5PPN6aSZm/6FEKtCsf36jQdC0SiESGBUhU4PYN6D2mxU9zuU20RjCXCYWvbuv+Hp9qmBV33eL5gHoA7ZTC1/C2La8YoU7Ji9U1Vj4WSbW2iEfPL+mnAmyBoAkgWhoEl0YFZAJz00WyqEsauFcx4TbkCP6JLlDimUHRGFO7y3IcbBlcuZA/ptdJgAOzOwhlOzzIT6uyqqvXQz10+AjM274jzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+mNHCjfb/DtDw4J4SakbzoCjCysgITVRQ/YBjTaifNk=;
- b=kq0Ifo9Hqcc9q0h/2dE+3jkOJ5aKxCtYhwhm0bDLzcPCPv9zMnlwxOfzXfYqQj16iZhnNzMhKHDOVz7KWMvhCYATztF4yX+96Gz+Fi5aaS+Iq2/4d29+E5BVnhG72gDyccttPV+6QSfPvZ45DK3YdWj7zttfp2OliNgfHSWkQe2x2yixO4pSS57gIQG8iMskwhaiLx78crjyazh1mJJ9Q6GDO38NtnyCbynIufCHdZvs5X+2CfsWQX/tkxBbqTS2/SdAsTH5lDmxA62YsXPBU8wGuGHZNsLE0fJ27CqVsmIS242M3XUuOxZ4WCJxa8sKUHwxQJoIDHvc8uBin1bldw==
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
- by PA4PR04MB7760.eurprd04.prod.outlook.com (2603:10a6:102:c5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
- 2025 10:00:56 +0000
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
- 10:00:56 +0000
-From: Wei Fang <wei.fang@nxp.com>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-CC: Claudiu Manoil <claudiu.manoil@nxp.com>, Clark Wang
-	<xiaoning.wang@nxp.com>, "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
-	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "christophe.leroy@csgroup.eu"
-	<christophe.leroy@csgroup.eu>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v4 net-next 03/14] net: enetc: move generic MAC filterng
- interfaces to enetc-core
-Thread-Topic: [PATCH v4 net-next 03/14] net: enetc: move generic MAC filterng
- interfaces to enetc-core
-Thread-Index: AQHbkkpOrze484r8D0W5Y5Kfclxt2rN3HWEQgAAD5vA=
-Date: Mon, 17 Mar 2025 10:00:56 +0000
-Message-ID:
- <PAXPR04MB85106C0A4AB17B67A5A4982F88DF2@PAXPR04MB8510.eurprd04.prod.outlook.com>
-References: <20250311053830.1516523-1-wei.fang@nxp.com>
- <20250311053830.1516523-1-wei.fang@nxp.com>
- <20250311053830.1516523-4-wei.fang@nxp.com>
- <20250311053830.1516523-4-wei.fang@nxp.com>
- <20250317094259.b6mwygvr75lxgkwh@skbuf>
-In-Reply-To: <20250317094259.b6mwygvr75lxgkwh@skbuf>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|PA4PR04MB7760:EE_
-x-ms-office365-filtering-correlation-id: fefc91fb-ee1d-4bc5-1e20-08dd653a9c83
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?lhPl9hBgydR9JJJHA6Nxzk/U0BsqHRoM6Cb/IibbySEvdbbJJPB6/uhrk9v+?=
- =?us-ascii?Q?l4Nc9DHI/BV4+LzXEzOTWiu8n1JMVXA+X4NwF4A1NApnwZUue6sgO+DZqr7N?=
- =?us-ascii?Q?Zlv00HKYqHi1O5jrsFjaB/8+kGZr26lBIUDshMC2EsMlWM/yqSgesr+BL/rS?=
- =?us-ascii?Q?T6F2iBlIGuqxB/MY1td+lkTktL9rINUUASWQq6claEAvzKlr92z0uv1A5fRK?=
- =?us-ascii?Q?tdLOmQNZLe15yl4k1dCpkBSd2fUIfwXJDFju/Ah1C0TbOVxAo3j6F71ViMHv?=
- =?us-ascii?Q?gJSOL2RCtHA35N9DAt0HnZ+H/m4j17cJqGREINQnI9GCpsUHI4mHx+0N+zGj?=
- =?us-ascii?Q?Wt7UKNWlP0ZrMAdYb5IFnuYALMpuavqPq4yKPivuhhQCH9loNtnfMJaCakOl?=
- =?us-ascii?Q?3yZ6ef8g4BDuhrIpHZIR/Go8a67uvugK9zX8SQFtDRayDGVcBcVWeGw+FLl3?=
- =?us-ascii?Q?e5wtOp/fzIymRSNOgLLYNFSxs+7Ihwt2YhxCYZbv4Bh7tTc8cbk0F9frgBha?=
- =?us-ascii?Q?ygsOnWxooTOhTVfKwD2GNPKnAnhk4DJTX/QZFDGbuLUY1B901p/gI2qsFZyH?=
- =?us-ascii?Q?N8XirvTIjMdVpuxq32a+qLSbClHFVL/1PWhfco8ri1xRw4yvY1/YQpqXwfiY?=
- =?us-ascii?Q?ts4PSXCZW4TDAU0R2JaPnkDFCij+uotvIZrMHSF2CZgrFyXNfEMKkm3BJZZ8?=
- =?us-ascii?Q?IizPm2p7WdGez1tkjEPWXLyXLqbVCfmspAPF84DSJSNeFV+/aWgSQO8JF4K6?=
- =?us-ascii?Q?92/AlNLZoW8NcdAXAdFchTsnvnTXTcpDvpiq7kSPUOc1mJl6lbrp1dk7b8jx?=
- =?us-ascii?Q?fxEy/yFw6PrVJdrJA9JlnOIH726Y3YMjldGOES2crLtpT0GakhxdGffC+n1y?=
- =?us-ascii?Q?F7UxxBKEg3dx7WZRPXum/t3n525usgvHG3ebKD4oMap44RlNnIEWgiOk9+lX?=
- =?us-ascii?Q?fupwS3PfI9gKlpwJFZr2Pj0nBjVyvxrjqw0z3vgwrVNwQO9zabupkvEjEuts?=
- =?us-ascii?Q?k3Ahb6zis5lhq+AaGltpxgHrmkJ8jrkbm2iaDHIhE+GSzchh2DpQMFoZ1GBt?=
- =?us-ascii?Q?VhB0oP/0quo4IATVyMMqORtesWDNgQfEO9YIcRpXwr9v49hU90YiH0X48HDm?=
- =?us-ascii?Q?ewHhLAFOvjcL61N+uoQKJG6ugdZAhT7V7m4QjqJmZPKHqV5JnWE/kRhwWAAl?=
- =?us-ascii?Q?XrVR7z1J4QuSa1r1xiVKn06fVVfyH5Dg4pAtsMY6yfXcZyty5UFbyycvP3oS?=
- =?us-ascii?Q?A04mOqlT1Bgyn63927oybRP0SeIw+IAOqnug4YaSP6LNk6OjYQ1I09LKDdZj?=
- =?us-ascii?Q?aW2A1Z5Qjyijy0oE0N7pLWXvemGvAuQ+rW454EOvSt0fAA72E+oCmz7aydII?=
- =?us-ascii?Q?TOqXEJWyAp/1nw+HPOS2Uv28nRyCglRW1t1djS+ION1Xri6KzsmCtIhmAZ5W?=
- =?us-ascii?Q?4oyfu9F2du3Z2R3GLapYzhXmxSsjUuDP?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?KVK4V5/pnIO2dqxQFwYbpu7AdmMy1+3ni+cgcpGLR/ASmF7G8qQZqPeEqckv?=
- =?us-ascii?Q?hY0U6iQ4fXbf7WyNyhJlwSVzu/ATOXi/Ne77xp0lSne0B46qlC10jqTJLIxX?=
- =?us-ascii?Q?zmgJ3X4LwtrIibpiKfknSxgMR0Idt7sTEgDyH7vJe5hbhCWkOBfeam5XzqG8?=
- =?us-ascii?Q?Qq5vTiZr4JSJ/RR04xZxT7ct6uOZv/VhWEdQOusqDG4YqK6XxDKjF4bVle8+?=
- =?us-ascii?Q?OrJajVDfOnmw47AZDDY1Zi8J6B0fm16MGIw25i/l15cfKx04q+Io2aKtIwAl?=
- =?us-ascii?Q?hgwTrjRvA7rgZBELSGlc0z3Zgxwtq3/b54z+9UYGSHrobUXEphIWOyPXYv5J?=
- =?us-ascii?Q?mUyNuuhy8qUNtZszFwV82vr0DO6tS95d7apln1lww3gXAvJk8/6Eo2GB1LJW?=
- =?us-ascii?Q?tNxdvUIqMoeGSAqgXhrJpfJfT2HFDk3NULrts8T3Pq7UxmOgH0jNB9v1Olrq?=
- =?us-ascii?Q?IyYknXOEOlUu2QQI+emEI+2GN5c0OjqgAqrwzbpMxycc1evjXy0s/9xMrtdY?=
- =?us-ascii?Q?SuohftfOvVQYl319O7xzb5F4rDbehr0wVyPDGBZ7OwE63F4xoSlXEC+hGawK?=
- =?us-ascii?Q?Kqp8b4kARxcfrg/Bjw6Jd1nkEGbHrthFyZFBXUmME9xSo34k0sB9M0bYaahb?=
- =?us-ascii?Q?awW5QUOK1pEmGkBLjlsSuMlWVnz9XM8iEvWTUgs11iMgPbfWffwuatSglLW0?=
- =?us-ascii?Q?N4ytH3dhLfCWTwH294vFV4hqqlpFjuh7HM88emWygn4pY1QpHH748Y+qjNMw?=
- =?us-ascii?Q?LuU97uu5GrvON1KEnaRYhnG+3yss3ZFO/OQE4qBsgm/pj1BNyZS2g8t2MVEE?=
- =?us-ascii?Q?w4ugu1hq4WPToqDPhRsxRciJtSSPcjroAAACdz3Pr4FoyxshJ46RLUI1qdbz?=
- =?us-ascii?Q?0fdZydZdkxzi3fHlW0N/YWYoo4Bba2e9NFqZaPXri6tOT4XMy+C2yhB9RBHV?=
- =?us-ascii?Q?QQQJf6+hQs18x045uoN0+uL9Z/CZgu6r31XPvahVE3Rs2j86HwsfrvJmGoAO?=
- =?us-ascii?Q?r5UVRRGW/KUGjL1qB6mfwRyF5VOL6ldC8LZw/Fq0XjY9uD5xSCu5K2odGF8G?=
- =?us-ascii?Q?/e400Y8z0OcTPLBhc34pQNp+jKiIQ3saOuC0BoBz8PaBNLzeMGMgtj+LIAlP?=
- =?us-ascii?Q?VxMzRy/9X0y/wApWpDg/ql0PCmtMJOsfnzXRxKJOGw1k3YMoISApBXY4v8pi?=
- =?us-ascii?Q?d0B80ta5rOoFcTf43oEGAZpHCPDOhZ7jh2Vl3CkNoHTUALzWIZFH9UNUUB66?=
- =?us-ascii?Q?VGvJKXBiLwzfjGLkrnY3J/ut26yH1rq9gipSVHOv+6sGansMi9z1ZkuFIwh6?=
- =?us-ascii?Q?qxt4MeqJmzt8D+zvpO6k/yawxXkfKBVIzhtQw9rfvXq45rNZu3huJW0JFr6T?=
- =?us-ascii?Q?aQRPr6uhgF1i+TZBA9X2EzynpeG1ikv4GSX8a0sAUScKGz7K48tA1yu8Hunn?=
- =?us-ascii?Q?9Hw9z7TIanwn1j06JPCUAhzzxt9ET8ss7KxXDQtyWGgC3+Q4yHyssY1pKAZk?=
- =?us-ascii?Q?8JeUx5G2dxcaZeRgbqoqN7r/4+gwpFDbmshtvcwksyJRF6iRAHJbXJQC1fpu?=
- =?us-ascii?Q?1IKKbECGBQEnnKSa+FQ=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Utl92kOC"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52H00gRV008255;
+	Mon, 17 Mar 2025 10:01:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Nsy4a7TPZ56uAG1WvZA+r/
+	j8O7Lx3jwLPMVHovMzFqU=; b=Utl92kOCeudcxotW7IRTrZxztyseSdiGng6DzJ
+	pFwgjqyuw7J55bsakd9ojZhtQu2IjY/gyCV4Tr2qlSt2+PV+9ffg6jkQReaRJk+O
+	qbnVkcFfvRC73B/YcAVRsY7tXZR9i6tM2V6c/jqZE+dyIUSiMf6ea1lEOMIWqIn3
+	HOEJj2P8PxEPReCvJccp7EfXZM/iOjmPAeTPHKHqtrZmFEjXyFBMaJ5RdhDLl4b0
+	Z0tlJqahbgk3fu3JVVSR7jeivZePwDm08YtyGxDBJZFqvvcGhvPXqP2PgO8fk2Nf
+	cSdVupCKVdDAbPY7NcxZNCRIG7NW5JvfaxUkHeL+Ll81Z92w==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d2u9v67y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Mar 2025 10:01:11 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52HA1BTQ028818
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Mar 2025 10:01:11 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 17 Mar 2025 03:01:07 -0700
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Varadarajan Narayanan <quic_varada@quicinc.com>
+Subject: [PATCH v14 0/4] Add PCIe support for Qualcomm IPQ5332
+Date: Mon, 17 Mar 2025 15:30:25 +0530
+Message-ID: <20250317100029.881286-1-quic_varada@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fefc91fb-ee1d-4bc5-1e20-08dd653a9c83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2025 10:00:56.4408
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: h500DtXXxvmRJXrlaTbMUyaNJgQS2P4xJZ0j/AL9GFbix/WXbgPW92wok7FL/MFYl+1FW7ZqWHlwgTAWaKm5+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7760
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=JsfxrN4C c=1 sm=1 tr=0 ts=67d7f2e7 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=wWAAX9LI6ptjq62IaZgA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 5S1wAxKUJkQwkF5WoXBGVHnawTSBfFf3
+X-Proofpoint-ORIG-GUID: 5S1wAxKUJkQwkF5WoXBGVHnawTSBfFf3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-17_03,2025-03-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 impostorscore=0 suspectscore=0 phishscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503170072
 
-> title: s/filterng/filtering/
->=20
-> On Tue, Mar 11, 2025 at 01:38:19PM +0800, Wei Fang wrote:
-> > Although only ENETC PF can access the MAC address filter table, the tab=
-le
-> > entries can specify MAC address filtering for one or more SIs based on
-> > SI_BITMAP, which means that the table also supports MAC address filteri=
-ng
-> > for VFs.
-> >
-> > Currently, only the ENETC v1 PF driver supports MAC address filtering. =
-In
-> > order to add the MAC address filtering support for the ENETC v4 PF driv=
-er
-> > and VF driver in the future, the relevant generic interfaces are moved =
-to
-> > the enetc-core driver. At the same time, the struct enetc_mac_filter is
-> > moved from enetc_pf to enetc_si, because enetc_si is a structure shared=
- by
-> > PF and VFs. This lays the basis for i.MX95 ENETC PF and VFs to support
-> > MAC address filtering.
-> >
-> > Signed-off-by: Wei Fang <wei.fang@nxp.com>
-> > ---
->=20
-> For this series I don't see any VF implementation of ndo_set_rx_mode().
-> I don't think you have to move struct enetc_mac_filter from struct enetc_=
-pf
-> to struct enetc_si, so please don't do that until there is a justificatio=
-n
-> for it that is contained in the same patch set, and the two can be
-> evaluated together.
+Patch series adds support for enabling the PCIe controller and
+UNIPHY found on Qualcomm IPQ5332 platform. PCIe0 is Gen3 X1 and
+PCIe1 is Gen3 X2 are added.
 
-Okay, I will keep them in "struct enetc_pf". :)
->=20
-> Moving enetc_add_mac_addr_ht_filter() and enetc_reset_mac_addr_filter()
-> to enetc.c seems fine.
+This series combines [1] and [2]. [1] introduces IPQ5018 PCIe
+support and [2] depends on [1] to introduce IPQ5332 PCIe support.
+Since the community was interested in [2] (please see [3]), tried
+to revive IPQ5332's PCIe support with v2 of this patch series.
+
+v2 of this series pulled in the phy driver from [1] tried to
+address comments/feedback given in both [1] and [2].
+
+1. Enable IPQ5018 PCI support (Nitheesh Sekar) - https://lore.kernel.org/all/20231003120846.28626-1-quic_nsekar@quicinc.com/
+2. Add PCIe support for Qualcomm IPQ5332 (Praveenkumar I) - https://lore.kernel.org/linux-arm-msm/20231214062847.2215542-1-quic_ipkumar@quicinc.com/
+3. Community interest - https://lore.kernel.org/linux-arm-msm/20240310132915.GE3390@thinkpad/
+
+v14: * Rebase on top of tree
+     * Change commit log to include impacted SoCs and why this is added
+
+v13: * Update commit log
+     * Fix ipq6018 related error
+	arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dtb: pcie@20000000: reg-names: ['dbi', 'elbi', 'atu', 'parf', 'config'] is too short
+     * Remove fixes tag
+
+v12: * Skipped the following (Vinod Koul has picked them)
+		dt-bindings: phy: qcom,uniphy-pcie: Document PCIe uniphy
+		phy: qcom: Introduce PCIe UNIPHY 28LP driver
+
+     * Skipped this (merged)
+		dt-bindings: PCI: qcom: Document the IPQ5332 PCIe controller
+
+     * Undo combining sdx55 & ipq9574. Discard the following
+		dt-bindings: PCI: qcom: Use sdx55 reg description for ipq9574
+		arm64: dts: qcom: ipq9574: Reorder reg and reg-names
+
+     * Append MHI registers to ipq9574 dt-bindings and dts
+		dt-bindings: PCI: qcom: Add MHI registers for IPQ9574
+		arm64: dts: qcom: ipq9574: Add MHI to pcie nodes
+
+     * ipq5332.dtsi:
+		Align reg-names order with ipq9574
+		Dropped R-b tag per feedback
+
+     * No new warnings/errors with dt_binding_check and dtbs_check
+
+v11: * phy-qcom-uniphy-pcie-28lp.c
+	 * Remove unused #define
+	 * Use "250 * MEGA" instead of 250000000
+
+v10: * ipq5332.dtsi: Trim down the list of assigned clocks
+
+     * ipq9574 and ipq5332 DT
+	 * Fix 'simple-bus unit address format error' in ipq9574 and
+	   ipq5332 DTS
+         * Rearrange nodes w.r.t. address sort order
+
+     * Have spoken with 'Manikanta Mylavarapu' [1] for omitting similar
+       changes in qcom,pcie.yaml that are handled in this series.
+
+     * Reformat commit messages to 75 character limit
+
+     * controller bindings:
+       Fix maxItems for interrupts constraint of sdm845
+
+     1 - https://lore.kernel.org/linux-arm-msm/20250125035920.2651972-2-quic_mmanikan@quicinc.com/
+
+v9: Dont have fallback for num-lanes in driver and return error
+    Remove superfluous ipq5332 constraint as the fallback is present
+
+v8: Add reviewed by
+    Remove duplication in bindings due to ipq5424 code getting merged
+
+v7: phy bindings:
+    * Include data type definition to 'num-lanes'
+
+    controller bindings:
+    * Split the ipq9574 and ipq5332 changes into separate patches
+
+    dtsi:
+    * Add root port definitions
+
+v6: phy bindings:
+    * Fix num-lanes definition
+
+    phy driver:
+    * Fix num-lanes handling in probe to use generally followed pattern
+
+    controller bindings:
+    * Give more info in commit log
+
+    dtsi:
+    * Add assigned-clocks & assigned-clock-rates to controller nodes
+    * Add num-lanes to pcie0_phy
+
+v5: phy bindings:
+    * Drop '3x1' & '3x2' from compatible string
+    * Use 'num-lanes' to differentiate instead of '3x1' or '3x2'
+      in compatible string
+    * Describe clocks and resets instead of just maxItems
+
+    phy driver:
+    * Get num-lanes from DTS
+    * Drop compatible specific init data as there is only one
+      compatible string
+
+    controller bindings:
+    * Re-arrange 5332 and 9574 compatibles to handle fallback usage in dts
+
+    dtsi:
+    * Add 'num-lanes' to "pcie1_phy: phy@4b1000"
+    * Make ipq5332 as main and ipq9574 as fallback compatible
+    * Sort controller nodes per address
+
+    misc:
+    Add R-B tag from Konrad to dts and dtsi patches
+
+v4: * phy bindings - Create ipq5332 compatible instead of reusing ipq9574 for bindings
+    * phy bindings - Remove reset-names as the resets are handled with bulk APIs
+    * phy bindings - Fix order in the 'required' section
+    * phy bindings - Remove clock-output-names
+    * dtsi - Add missing reset for pcie1_phy
+    * dtsi - Convert 'reg-names' to a vertical list
+    * dts - Fix nodes sort order
+    * dts - Use property-n followed by property-names
+
+v3: * Update the cover letter with the sources of the patches
+    * Rename the dt-bindings yaml file similar to other phys
+    * Drop ipq5332 specific pcie controller bindings and reuse
+      ipq9574 pcie controller bindings for ipq5332
+    * Please see patches for specific changes
+    * Set GPL license for phy-qcom-uniphy-pcie-28lp.c
+
+v2: Address review comments from V1
+    Drop the 'required clocks' change that would break ABI (in dt-binding, dts, gcc-ipq5332.c)
+    Include phy driver from the dependent series
+
+v1: https://lore.kernel.org/linux-arm-msm/20231214062847.2215542-1-quic_ipkumar@quicinc.com/
+
+
+Praveenkumar I (2):
+  arm64: dts: qcom: ipq5332: Add PCIe related nodes
+  arm64: dts: qcom: ipq5332-rdp441: Enable PCIe phys and controllers
+
+Varadarajan Narayanan (2):
+  dt-bindings: PCI: qcom: Add MHI registers for IPQ9574
+  arm64: dts: qcom: ipq9574: Add MHI to pcie nodes
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |   4 +-
+ arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts   |  76 ++++++
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi         | 252 +++++++++++++++++-
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi         |  40 ++-
+ 4 files changed, 361 insertions(+), 11 deletions(-)
+
+
+base-commit: da920b7df701770e006928053672147075587fb2
+-- 
+2.34.1
 
