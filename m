@@ -1,114 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A710D156230;
-	Mon, 17 Mar 2025 13:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF96A23F38C;
+	Mon, 17 Mar 2025 13:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742218454; cv=none; b=fIZA9hxxf1lXkhKBBqXc/uYP7YjqiucX5LrmMC/tEE+dZYSVT+arJPHGrfjK6qZnSJSfNLpY0qRdq9jWh7nrsVQsrHI+/VUWZ7AJQ91LfOoE2bhwBL6nltx6JTmh/mMdDRYLNyKRr4zDBSH3ARmKvke6+qBg/hoDnWjilfiPCmA=
+	t=1742218486; cv=none; b=BJ0WcXXr7HwhTgjUFUejLWBl31+CklUCfC13igpifhRaHE9pG7avHhRWsIs9XyEFyRg+P+Z2TB832C1HkBvLpTfNjPGSwp8lw9JOUoszmoTAsH/m+bvptdl7CHJF+tW74aVLIlrk3wI+yn8eUKaSwU8FW7GR28DJtgrgUe8R+68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742218454; c=relaxed/simple;
-	bh=jKAJx1ca2J5NWV89rvPocdT0rc2DE0dwHLxgOYvhlUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I/sVLOg3TDQVk5rkjhwM+BrR20GpCJXaV6Zklvh902ArLt0zDQYUXSpuHIRNqeHGy9hD8z1ATcwD1bs+4+eISnQo05F2pwXP116Tgdi/i+7DW96LANgtuye7cRXn2vgzaT1B7fxgngxPm7xTuxGBMWvo2L1jiZBlHBBoX/NhXaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJzEmRXp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742218486; c=relaxed/simple;
+	bh=VJ+Z1kfUBwbn40YbG9rlTaU9zO9y3+iqV9Uwb36hGeo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lFd0/TMGcDqzLXoINaxUNgnnT92vex2uIbtrzJe5vUZ27l9rwXpEfyCXE5B2CVKjvM6omcObhuqS0ANGY7XfdSyNh5D5u4pWFlP/7zbJPSzrqBQwJYij5IoqIRdf+dU9alSaZeiBpQWA4PWcr7MZtEhK0MnyvU9q0aeI1DlCeTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZmZkDjPk; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJzEmRXp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94A75C4CEE3;
-	Mon, 17 Mar 2025 13:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742218454;
-	bh=jKAJx1ca2J5NWV89rvPocdT0rc2DE0dwHLxgOYvhlUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OJzEmRXpJzdO+0VOAAtkHB9n/GFpBL6GnbLZt5ZoBeZ9+EQujjHOTypd2n2NzYRO+
-	 09y8qAgg+CdOvTbWsS027tIhNbMit3wRWfqBwXhEOSd2KawEe8+ndd1zyqneNlNtLG
-	 V301MgIxoNN7GuIFw/yT/szIm29ZEMrnnRu/XYIitBDRxAXVReEEb9z9+Za3lEDpYY
-	 vXmMmwdXCsLMhfoUciV6hQD+GW5/9XT63nYY5IhVD2HzCBSRVZBxtxQnLetZ7/sQvf
-	 kLtLTAKkbU3IjgK5o7s/DIKKIjOLOY3roM6tlwaDkHiAcAyXJQ7BDprei+zF30RX30
-	 MXqDHYMvIWwng==
-Date: Mon, 17 Mar 2025 15:34:10 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>, linux-integrity@vger.kernel.org,
-	Dov Murik <dovmurik@linux.ibm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, linux-coco@lists.linux.dev,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v3 4/4] x86/sev: register tpm-svsm platform device
-Message-ID: <Z9gk0jg1JLZY4Fk9@kernel.org>
-References: <20250311094225.35129-1-sgarzare@redhat.com>
- <20250311094225.35129-5-sgarzare@redhat.com>
- <7c35f370-f1f2-7100-3b78-b595e977e964@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmZkDjPk"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so2789928a91.2;
+        Mon, 17 Mar 2025 06:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742218484; x=1742823284; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VJ+Z1kfUBwbn40YbG9rlTaU9zO9y3+iqV9Uwb36hGeo=;
+        b=ZmZkDjPkopKv0M4o0wCt7DCGYFW+3YO/9CAlXiKXrJTkgP0R2hUyfqxOPPcul3AaTz
+         8z9oM6qgJ9GWodVo4EzFATvHKXqB+7nX/JhKWcmaPl2u5tK/laahyxJi4TrzwqztVnBx
+         /XeaoncjG/ovgwWAwpNFYqxYEcg/HPnE+zGiyLm8TXjw5y+TMSWzqNaOaIXXNQnhkwxv
+         UvPJAgu9MtZcjiutEZbf/LzM5GET8tlW6D//qPpJEY5DlL2JLW2f11uVmAsXunho0kHf
+         BZd8+h4sUl3FLtxRd5CSEQved8dKPxwVDsXSX1E3IHB+Iuz+CBqAgz6v1XGt6sXXIxzk
+         Ethg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742218484; x=1742823284;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VJ+Z1kfUBwbn40YbG9rlTaU9zO9y3+iqV9Uwb36hGeo=;
+        b=cQg0HkY6m8dRSIsToTBm3kuh0VhOdk3q19G2FQ7ni3McqWDw8gxJFo/KrqCG/sZ3qf
+         WfUniNiHdFt1rRfyfvmbDyoaVhndfEenlG/tc4duclzJVrc8gP/TBMNfhD6aUOFA/SsF
+         7U0xUkEPUX7xpRdcuae1KpSy2xTSo9zsN9mWBLIxBPPrQC6dmcj7SoKv00en0DLRIWzX
+         PpElq7SLR6CCBGOyzOGyArAvPw7v396X0flOcn0z5bTCBO+2DYhppYgKXKPplhw9W5Ap
+         /KKjVV8aR4rplkC0R93+uJzxvezLR/XSp1/6j/VwYiP65f893cX6nomcCa91J3fJchCG
+         XCNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYv/+/1Qos/0HBDv2hn7iYse8eA7iii0AbXDGf/f9YN9rIDdy2m10s3/ynetVqMqbWRquRGxZNpnM6@vger.kernel.org, AJvYcCW6/Og13+nOSTH9/S5xFDW4xEwn44F8HJpPZxN5Ixj+aCs6qwcNL8Oy1PDmwxELaGZHtuZ9iKh/1Oh9DITj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBl4Uq1rnOAv9gpEsPPsHHD/cHd7lv6o+nVwIEzuMtOg2W/wPq
+	vYsBxPNXwI6NhYg4NSEeW0JmmWcov7oqkoRECSwL0zRUvdMhJuUHMmlNCtyyDIGcj1qXEzHpCSP
+	i6IrEJzRPcEX3o0pkSZt6RK5zDQE=
+X-Gm-Gg: ASbGnctUb8mTbN344O8eVA9Y5296tZfajt7Km4aJwdrZQDOIK4wXjTcMbGAbYNSK8Hw
+	K/X0GmljA9rxyCE7kbovIDw8VXJ3/aqfmcmN24J8PNH6gBxjkR6TzxLteUvzlRQjx+iYZzhzkt6
+	eBQtHjDPWaTYw6YbYbqwJQjzk=
+X-Google-Smtp-Source: AGHT+IEeqZ0cJAHn3Brc0MOsXlDdCz7IeLznbTYmwKzft6JI2zwV4TEg69VCl0Ay05c5C9QobxSkS+DMqCY1QxY4NlY=
+X-Received: by 2002:a17:90b:3b46:b0:2ea:3f34:f18f with SMTP id
+ 98e67ed59e1d1-30151ca0bf3mr14263755a91.19.1742218484066; Mon, 17 Mar 2025
+ 06:34:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c35f370-f1f2-7100-3b78-b595e977e964@amd.com>
+References: <20250317111853.43708-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250317111853.43708-1-krzysztof.kozlowski@linaro.org>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Mon, 17 Mar 2025 15:36:17 +0200
+X-Gm-Features: AQ5f1JoJB5F4azgy82hI2MMZ6wYjl0ACVtNOlaZnQbewllSkYy5wctWQcui4Ius
+Message-ID: <CAEnQRZBorgPS+P8Yt8irKm=CTpbY3hUdkSpOK5if5xaTpzikuQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: nxp: Align NAND controller node name with bindings
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 14, 2025 at 11:56:31AM -0500, Tom Lendacky wrote:
-> On 3/11/25 04:42, Stefano Garzarella wrote:
-> > SNP platform can provide a vTPM device emulated by SVSM.
-> > 
-> > The "tpm-svsm" device can be handled by the platform driver added
-> > by the previous commit in drivers/char/tpm/tpm_svsm.c
-> > 
-> > The driver will call snp_svsm_vtpm_probe() to check if SVSM is
-> > present and if it's support the vTPM protocol.
-> > 
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > ---
-> >  arch/x86/coco/sev/core.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> > index 2166bdff88b7..a2383457889e 100644
-> > --- a/arch/x86/coco/sev/core.c
-> > +++ b/arch/x86/coco/sev/core.c
-> > @@ -2664,6 +2664,11 @@ static struct platform_device sev_guest_device = {
-> >  	.id		= -1,
-> >  };
-> >  
-> > +static struct platform_device tpm_svsm_device = {
-> > +	.name		= "tpm-svsm",
-> > +	.id		= -1,
-> > +};
-> > +
-> >  static int __init snp_init_platform_device(void)
-> >  {
-> >  	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-> > @@ -2672,6 +2677,9 @@ static int __init snp_init_platform_device(void)
-> >  	if (platform_device_register(&sev_guest_device))
-> >  		return -ENODEV;
-> >  
-> > +	if (platform_device_register(&tpm_svsm_device))
-> > +		return -ENODEV;
-> > +
-> 
-> You could avoid registering the device if an SVSM isn't present. Not sure
-> if that is desirable or not.
+On Mon, Mar 17, 2025 at 1:19=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Bindings expect NAND controller device nodes to be named
+> "nand-controller".
+>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Is there any use for the device if an SVSM isn't present? :-)
-
-I'd judge it based on that...
-
-> 
-> Thanks,
-> Tom
-> 
-> >  	pr_info("SNP guest platform device initialized.\n");
-> >  	return 0;
-> >  }
-> 
-
-BR, Jarkko
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
