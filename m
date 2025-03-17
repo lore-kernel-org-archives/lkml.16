@@ -1,133 +1,114 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D46199E8D;
-	Mon, 17 Mar 2025 14:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCBE1DAC81;
+	Mon, 17 Mar 2025 14:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742221143; cv=none; b=sGEqDPlw9JAoZ6xjo+sAXLRjUuuGyxNXa/wjO6do2CsFM+7PJMrQhJJbBJH8dxOKR95XouykIb5251tzKNMWMUegcpml5CVqtEyxnZ6SlE9ln14WEAi/hGVeB3NoxJRL+pnreo5id+rD7aLGcFPJrsVRwsT3eDVEUi1uKNZnvkI=
+	t=1742221218; cv=none; b=LqRjq2QA21sejvRtzeuGihXyxDskx8cEgtBL9WdgmL9tG0n+AQ4n4dQH9Z/1o0CSCExT0D8xgrR7SFVaDoSJFVSsFnXcnU+kCEnpIGDDCjrp1R58GGLGi91MjY2S6h5PFLGKB/z5nRyh1mV7Xw/g58fuYrOl9u2/JzD5ULfITDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742221143; c=relaxed/simple;
-	bh=8PM6QbVEn4s657b1vZBMBsMKFGc8AAH22xuLnz8sw7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aqobiFhHIxlsf2wk2l5msDgz+7t46U1IgfdtgV2kjvnWHUcbTZ7vnE6fVnp8B7G4BFxvK8iDaHB3k26RFlefMRZDFwk53dBfHnSmw0mX1G6MSdZNdT/qTFCw+Gv9wc092R0vVS70u0SRW1B0qDFWkorAs67MOkoXv8iyGvElhuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1742221218; c=relaxed/simple;
+	bh=XhyHwURC9+CP8pemGI0NfFA0YnuwTfrUw5S8OEx64IU=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=h+YkZl1E3XFj714K8Nr46nU4TFg1DpWMjCK203qZ5jPpDC7Py8oel956ajllQPUV59AB0rtKZc9FY8G6lgDGYBmPdfjAbgMlYjFqNlSdsDgcbYSFNI320/QedumjNU6iqKbyQ6KIE6WmnOBShJGrQxLIboSYZzEFlhVqCbTfx4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kGCFzqMs; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-476b89782c3so51321811cf.1;
-        Mon, 17 Mar 2025 07:19:01 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGCFzqMs"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-223594b3c6dso88123055ad.2;
+        Mon, 17 Mar 2025 07:20:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742221216; x=1742826016; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mn6LOo+P9XtJ87ZI04DuUoHTU+5hgc1cTOgwmoIh8Cc=;
+        b=kGCFzqMsRcXQPUDu42HWi2F6G83VIknczldFSsLM7FRk3RUE1tcWKI7m/VSwEEDLp/
+         VpYn/oTi7KuKintbpGhzN74MpuCEcUAsKTWyLO6odmzK+KAU7w5uGGhTR9Gh2PNzmngE
+         NTZQcDl5soom4o2/HUUrBzTT3Rm9jVCBxRGLj9urjgxpB8Ith+ZJopRGK/bvVGHt2kSA
+         hVVFX5Wlqun0TVMI9JOBmgppQlZThaoxxOLonZyNwukfGYqf4ZUYBMYIqRlHO9V122DW
+         CH97BkTMiGaBiOzBprc/GlurVPd0oygJb5np/NihFEpT0SCiOMP/DuEnK276QmhItEKW
+         LKYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742221138; x=1742825938;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FQzfQJUTkwGhun6W4CYWdgvhWW8H+wpChsA4H5Uf+0w=;
-        b=RMiomOUig6P/dW+aZFTjzklObYVArgfwrXAIqota9L71KRwkJOBRzh4/mtM4aUlSOM
-         83ZXbNze27WOTPWxhvdGbHye/z5v6mUhESA+56foDPcsLl4Z1eglbPQgyhjNpDWjklts
-         aM5TRNfh+A1UialMEssILk3YeotRRKHc4bCWM4T1uetY8k0jbR60NixjYeivp/loMx/1
-         i/sIZr45TUqUvrOAoRHUusxW6V6vs+qq3SSGsdLdx1GodUOuVfhxXcs3nGdJbO40iaAl
-         kns1ORsJ3EHjUgEGXz+2V2zlpfXE9fFug01qg6vZAM8DZPrkwb/5fNag7Z43ZYrzSRYz
-         jYbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWlvAv5zzbINmCFS9zuFiBCbUUicusHwkAtpnz53/+5RLqEvGRVEK5+gcfysJIBV+XZ86IXiPpC5P8@vger.kernel.org, AJvYcCXpxTl+sDDj7clgVEvrtKID2oNxb//NgUh/ajyZxzQyYt5Yfo0adR0lMKfmDK8wN9ageSDMfSu2E+KNhJpU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmNXcsNvJu8vC7dGaXtOgp1D0fe/4+p6E7Zwp3M/4P+e2OmnR4
-	PjEii3Ov4ZkNrsYKOcW2ULY8LevHn4gkKjAPx07dXkzDfoEvUbcdcY2wqbBP
-X-Gm-Gg: ASbGncspjmpFCDvqyt3I4V4Rh9fL9f7CQB1cQObpsGamFCbw4Gjfw7mTO6s29g9sBeE
-	AdKw0Q9pKAhUMXchQY53vOU5JyPKjO826UYzUCOxCQOlaTFmMaj80j3chKphuFBlel9fMmenE2k
-	paYXoR2wnqjqHYdulUTzwZ8TbiJZdSQrAPTY90MhJrKLgtSAf1wADQb+QpK/tLvFpFWUvYLHrYp
-	vN8Ygtp2PceC/WT1LyEtjnW/ZDu1GF9F9MPIvIf/7HpHgwIlMAaClWTRdMWvFiAJ08H/rTnFkT0
-	+Y4cy+HKfemnIkocIkku8Y+F8tPSaCWbzSiXWEcVr9bmYxkbCFBIWRQGOk/NFuG9m/esBkTMTIN
-	gUfjT+Gg=
-X-Google-Smtp-Source: AGHT+IEToVfW+W01NFBwwfdMnq1kW7cP1iloXeUfIAwg9GX0Yl48vteBPz4gtemTEqXweZIbii3V0A==
-X-Received: by 2002:a05:622a:438b:b0:476:8f75:b898 with SMTP id d75a77b69052e-476c815c9fcmr156895841cf.25.1742221138312;
-        Mon, 17 Mar 2025 07:18:58 -0700 (PDT)
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com. [209.85.219.51])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb63ac46sm54632641cf.17.2025.03.17.07.18.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Mar 2025 07:18:57 -0700 (PDT)
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e17d3e92d9so31383236d6.1;
-        Mon, 17 Mar 2025 07:18:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURHY0wS6iMqT6owdWAhrHC+bYW9tcoxvlRrqJSeF944nc6zn3MFcZng7BGYBtU7y63basvs6B+M92T@vger.kernel.org, AJvYcCWfzwqobmnCt0WVTCH0DXv5QF4VUezsubvMusnk15LGz/Y/Snvsu4HTve89C2GCD/OfoUp/Sqa4+zX1wlVZ@vger.kernel.org
-X-Received: by 2002:a0c:eb82:0:b0:6e8:feae:929c with SMTP id
- 6a1803df08f44-6eaeaa63b4bmr161375046d6.21.1742221137414; Mon, 17 Mar 2025
- 07:18:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742221216; x=1742826016;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mn6LOo+P9XtJ87ZI04DuUoHTU+5hgc1cTOgwmoIh8Cc=;
+        b=uYIVC3tUBqMOQAyeB8qI2WuJVwknD1n9xIqy/FxetiZpR2Yh2VTWUp7W7glrha0DD2
+         ZkfTf4DDVTJYIJv9rFYj2aYeEurZGUc9jWOeyNaxI26iP34Kn+/26Tqn2QGAaKDz5CT3
+         9bq20VxpoBV/GqkzXpHsIPntPssj2WD3h1uxeAwn3tFNsxPMDK4x1Hc/Jtc6uja67LFn
+         JNdVwYyLwao0CzY0jZWoEkLQKcjwwFSHQLGBnX9uJZ5AWKVcxwaFqmtr7Q3nfaDu8gyy
+         DtkeMuOhL3h2KsAZQx7cIWDWuCsQyL0S30M58Wv2hBYpnW8fGYGCfGKlAMj5yzeHsrFf
+         yUsg==
+X-Forwarded-Encrypted: i=1; AJvYcCU27GHEZ70UPxuD98FaL7+UFFCTA8bgFQ2KgHp+TfeVLJl04EVe0hPYbFUBDsMBsCquWiwEWBvlQov46R3Y@vger.kernel.org, AJvYcCVsux032z70M+Tp7ST1m/2Ea6ddqdUU635IGL0+AFJIObeEjc9H3QAbq+8npqc+RDFNkHSuPGXTM+rA@vger.kernel.org, AJvYcCXZWK3/nwcWyuVZ9+DPKnAwgNi8bqYabiGHjqAcw/vK07DyRY9UiZ24GKMqrdFyn3Ijn/CCqF5kRwQpJyon2w==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzke7dsi/6R0XSwhOcOSd8nqtIKE2NbzO3vtOIgKbBnTruDUVGU
+	qD/c3k/GcabPoZulPbYJH+cqmjhzDXfdctpzW/Ky8DsMROKxZW6C
+X-Gm-Gg: ASbGncv8oZuMQ2bO9nHiuyK9GcB9DcYYVD8W6NIkZVY+aLaSUnkODtU6WIwhP7q3tSM
+	qrPGMu/oP6rbgkwS1R/jYzkZeUItubkBKCS/YxzJ8NJ4mxmu51LcGf5ofFzAHBoOqjZuRcZG5xw
+	qguGQeXEif558IF9DJq4iKVO5PA6RF4QbVFragCofS3oxEAeITbbOgShYAbhzRdOJtzEgaSc+2D
+	k7FHBtYH5vVjHvCCrRCWYL0duLDw22pHfrkWuQ+B5Cc/VMPoZ82IJp2bZJnTVjVPBqqpUqUxIc9
+	ApAM3pwPnsV+PuP1e/GkC9JuoDMMEK1FW6obUA==
+X-Google-Smtp-Source: AGHT+IGV1CWprmcfxTUb24BvAmY8dTAt4IVm8P8AohmpcC8KXTXWtD2cv7EA/HFLs4YKHqZrL28FFA==
+X-Received: by 2002:a17:903:230d:b0:220:e1e6:4457 with SMTP id d9443c01a7336-225e0a8dff2mr145717585ad.26.1742221216269;
+        Mon, 17 Mar 2025 07:20:16 -0700 (PDT)
+Received: from dw-tp ([171.76.81.247])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbfe22sm75580795ad.206.2025.03.17.07.20.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 07:20:15 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: John Garry <john.g.garry@oracle.com>, brauner@kernel.org, djwong@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com, martin.petersen@oracle.com, tytso@mit.edu, linux-ext4@vger.kernel.org, John Garry <john.g.garry@oracle.com>
+Subject: Re: [PATCH v6 02/13] iomap: comment on atomic write checks in iomap_dio_bio_iter()
+In-Reply-To: <20250313171310.1886394-3-john.g.garry@oracle.com>
+Date: Mon, 17 Mar 2025 19:46:40 +0530
+Message-ID: <87senbspx3.fsf@gmail.com>
+References: <20250313171310.1886394-1-john.g.garry@oracle.com> <20250313171310.1886394-3-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250218-k1-pinctrl-option-v3-1-36e031e0da1b@gentoo.org>
- <CAMuHMdV4xWLEuCvCC54GBfCdELE=QSHqaOyUPD-ezE0QLYRnVA@mail.gmail.com>
- <20250317124120-GYA1983@gentoo> <CAMuHMdWM5ymPVRe36+Atr0cDAdRGyw39jFJvE+9PWTUUiiMfCg@mail.gmail.com>
- <20250317132955-GYC1983@gentoo>
-In-Reply-To: <20250317132955-GYC1983@gentoo>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 17 Mar 2025 15:18:45 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUWUd-xAzhRvazurD-1t3pFb2OUMXqEpeDyTVVbAUG19g@mail.gmail.com>
-X-Gm-Features: AQ5f1JrurBlRutNcrH6Q6idcmvXYK5KPYEnvrshCL60keuYt9BH4Ng3SnCR2u0Y
-Message-ID: <CAMuHMdUWUd-xAzhRvazurD-1t3pFb2OUMXqEpeDyTVVbAUG19g@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: spacemit: enable config option
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	spacemit@lists.linux.dev, Conor Dooley <conor.dooley@microchip.com>, 
-	Alex Elder <elder@riscstar.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Yixun,
+John Garry <john.g.garry@oracle.com> writes:
 
-On Mon, 17 Mar 2025 at 14:30, Yixun Lan <dlan@gentoo.org> wrote:
-> On 13:59 Mon 17 Mar     , Geert Uytterhoeven wrote:
-> > On Mon, 17 Mar 2025 at 13:41, Yixun Lan <dlan@gentoo.org> wrote:
-> > > On 09:18 Mon 17 Mar     , Geert Uytterhoeven wrote:
-> > > > Thanks for your patch, which is now commit 7ff4faba63571c51
-> > > > ("pinctrl: spacemit: enable config option") in v6.14-rc7.
-> > > >
-> > > > On Tue, 18 Feb 2025 at 01:32, Yixun Lan <dlan@gentoo.org> wrote:
-> > > > > Pinctrl is an essential driver for SpacemiT's SoC,
-> > > > > The uart driver requires it, same as sd card driver,
-> > > > > so let's enable it by default for this SoC.
-> > > > >
-> > > > > The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-> > > > > 'make defconfig' to select kernel configuration options.
-> > > > > This result in a broken uart driver where fail at probe()
-> > > > > stage due to no pins found.
-> > > >
-> > > > Perhaps this is an issue with the uart driver?
-> > > > I just disabled CONFIG_PINCTRL_RZA2 on RZA2MEVB (which is one of the
-> > > > few Renesas platforms where the pin control driver is not enabled by
-> > > > default, for saving memory), and the system booted fine into a Debian
-> > > > nfsroot.  Probe order of some devices did change, and "Trying to
-> > > > probe devices needed for running init" was printed.
-> > > >
-> > > my problem was CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled, result as
-> > > # CONFIG_PINCTRL_SPACEMIT_K1 is not set
-> > >
-> > > for your case, is CONFIG_PINCTRL_RZA2 built as module?
-> > > it should work for uart driver with deferred probe mechanism..
-> >
-> > No, CONFIG_PINCTRL_RZA2 was disabled in my testing.
-> >
-> emm, this is interesting, there might be problem that uart driver
-> fail to have correct pin settings without pre initialization..
+> Help explain the code.
 >
-> which uart driver is used in RZA2MEVB platform? any pinctrl dts property?
-> different hardware may vary..
+> Also clarify the comment for bio size check.
+>
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  fs/iomap/direct-io.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index 8c1bec473586..9d72b99cb447 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -350,6 +350,11 @@ static int iomap_dio_bio_iter(struct iomap_iter *iter, struct iomap_dio *dio)
+>  		bio_opf |= REQ_OP_WRITE;
+>  
+>  		if (iter->flags & IOMAP_ATOMIC_HW) {
+> +			/*
+> +			* Ensure that the mapping covers the full write length,
+> +			* otherwise we will submit multiple BIOs, which is
+> +			* disallowed.
+> +			*/
 
-It indeed depends on both hardware and firmware.
-RZA2MEVB uses the sh-sci driver, and its serial console is set up
-by the boot loader.
+Nit: IMO, this can be clubbed together with your next patch PATCH-03 itself.
+But either ways, no strong preference.
 
-Does your serial console work with "earlycon"?
+-ritesh
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  			if (length != iter->len)
+>  				return -EINVAL;
+>  			bio_opf |= REQ_ATOMIC;
+> @@ -449,7 +454,7 @@ static int iomap_dio_bio_iter(struct iomap_iter *iter, struct iomap_dio *dio)
+>  		n = bio->bi_iter.bi_size;
+>  		if (WARN_ON_ONCE((bio_opf & REQ_ATOMIC) && n != length)) {
+>  			/*
+> -			 * This bio should have covered the complete length,
+> +			 * An atomic write bio must cover the complete length,
+>  			 * which it doesn't, so error. We may need to zero out
+>  			 * the tail (complete FS block), similar to when
+>  			 * bio_iov_iter_get_pages() returns an error, above.
+> -- 
+> 2.31.1
