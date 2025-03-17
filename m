@@ -1,51 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A265F8F5E;
-	Mon, 17 Mar 2025 13:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364618F5E;
+	Mon, 17 Mar 2025 13:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742219002; cv=none; b=c4GaHQBVY/wEC2PvcYNBT7LfzTewUavkyWXWAdQtx7PoDY9Pgd7d2TnTljgayaqb+LHE6SCoIyJRz0qIh14tcJ5p1Rt9KUEtYxBXJRqU5k/o/+V5VetcYkxevfI6QYnejU7/GLbHiIQMIGvYhZFBfXlxLjRD91i1NqF3F/4MhCE=
+	t=1742219084; cv=none; b=Ict+NBx8MfG2IOxsg9gxld0xhoxSEnRuwujxxkj59ctSMP2ykcOr+RL+oM37/NEDl0JoKSJ39x7Sd4zXeNvTx2ATXOXCb2Hp+bV4zBDK8TapgGR4e3kzbU9MvQVgW07PlIdnM3SjK9eNan8uASqCfHxkBrdhiZ7KUDu6oGom0/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742219002; c=relaxed/simple;
-	bh=KcLfpDFlHF4CuFkvzWAVtDEGynkNVW0lSPNM2If/EqA=;
+	s=arc-20240116; t=1742219084; c=relaxed/simple;
+	bh=Nivyt0eviFTvQGhEOEf8ZZpxVSrnlmwhnY5tRfaE3Wg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iJrG5mDJFL+b4q5wrP+NvRAPQ8qLLB12n7FRq15383iSbnyu9ky9gDEqMiIQnrZSH89AC6Rpz0prgMZ7g2b+KitnXiyVihQPpHjOfxDkGk5+ql/5/Br5zyFtsubTVWy0ROV/BBDZLRtQFTpkxl+U7NWsl6YAQDzraHVZ21O4LqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPzZCMPo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kAAzZwriSWF2xspYOIdgiKAIl8KIw/qPbtnxUo4iNFnC5QUvVUu582nm2/bigPaoHY/gnqbSloez+a63ieHD1aFaoEUdEGbbQplflBmFS5FNaXaldcXIMXc4EEzZ7p0Wws3yiaKWKXNg0sUesReEMg1b7uDvn3hJnj+E8j8+ybQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILjGPW3O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPzZCMPo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7114C4CEE3;
-	Mon, 17 Mar 2025 13:43:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILjGPW3O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE2E6C4CEE3;
+	Mon, 17 Mar 2025 13:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742219002;
-	bh=KcLfpDFlHF4CuFkvzWAVtDEGynkNVW0lSPNM2If/EqA=;
+	s=k20201202; t=1742219083;
+	bh=Nivyt0eviFTvQGhEOEf8ZZpxVSrnlmwhnY5tRfaE3Wg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tPzZCMPoONlouXorORgBcubM0hCBWp9aOaZlINFiQv7j6KhbCGnqxO2sxsbc6iH46
-	 iNeKNHJUxRcHchgTpzPyyaC5Bkjx21fYXMPRAAM87t2JI2q+Lkxb3jTvNv38u6W16Y
-	 1q/2LMVPbjbt/tT1yg3klvquyGqbVeYNSumrGYiexrtq9KU4LgWogzrWa8hyDHN/H+
-	 scda8atE0lAx7Mj3651Rbjru97j3kxoP3BawUXTxkJKpeOC+FWqvfYTMGWDpVCnE2v
-	 zUZnhfdK1QfG4v9mchF8yF2WZB1KszYVYQJD93JTIuBFlPgeE5zJB+lw6kkg5cKJiu
-	 CQfbgRLfo+aXw==
-Date: Mon, 17 Mar 2025 15:43:18 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>, linux-integrity@vger.kernel.org,
-	Dov Murik <dovmurik@linux.ibm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, linux-coco@lists.linux.dev,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v3 3/4] tpm: add SNP SVSM vTPM driver
-Message-ID: <Z9gm9iWhk5Zs2NvI@kernel.org>
-References: <20250311094225.35129-1-sgarzare@redhat.com>
- <20250311094225.35129-4-sgarzare@redhat.com>
- <e4eeaead-2277-1f6f-86eb-f80deae2135b@amd.com>
+	b=ILjGPW3OLQcmOrkMv5AH8aq1hrAnpRAPMTAQgLR7RHFsJF2bLoRw3BTOgmHBq56Li
+	 RCNNwy/ccowtgdxyVVPCv0ACNvWo78Z/Cvu5jcsLgefi4PUDEch8eU1Oviz3EuYzg5
+	 XUIEGSx2UA3cLHJWgIltL+b6l4V15ww+2bB6RDXFXhGG+65hftuhRbA0B/Wi3ffTrq
+	 1vQsHc29chbUvptRWKtzZwyE1x1581v27MnBNJCKTXUw8791ZidkW0v3U8o4LXMJS3
+	 W5yBnsLldEWaxyxVsmdLLyDaZrnHRHhHavJ+TGx31Iv9mQtnnuwHaY0Ofdxp9EFxBU
+	 dA3ZPdJHhLs9A==
+Date: Mon, 17 Mar 2025 15:44:39 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>, Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 03/17] iommu: generalize the batched sync after map
+ interface
+Message-ID: <20250317134439.GX1322339@unreal>
+References: <cover.1738765879.git.leonro@nvidia.com>
+ <ad8b0dc927ea21238457a47537d39cd746751f4b.1738765879.git.leonro@nvidia.com>
+ <d83afae060351f49fe0ba661f69c1d0b00538a35.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,105 +62,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e4eeaead-2277-1f6f-86eb-f80deae2135b@amd.com>
+In-Reply-To: <d83afae060351f49fe0ba661f69c1d0b00538a35.camel@linux.ibm.com>
 
-On Fri, Mar 14, 2025 at 11:48:11AM -0500, Tom Lendacky wrote:
-> On 3/11/25 04:42, Stefano Garzarella wrote:
-> > Add driver for the vTPM defined by the AMD SVSM spec [1].
+On Mon, Mar 17, 2025 at 10:52:11AM +0100, Niklas Schnelle wrote:
+> On Wed, 2025-02-05 at 16:40 +0200, Leon Romanovsky wrote:
+> > From: Christoph Hellwig <hch@lst.de>
 > > 
-> > The specification defines a protocol that a SEV-SNP guest OS can use to
-> > discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
-> > in the guest context, but at a more privileged level (VMPL0).
+> > For the upcoming IOVA-based DMA API we want to use the interface batch the
+> > sync after mapping multiple entries from dma-iommu without having a
+> > scatterlist.
 > > 
-> > The new tpm-svsm platform driver uses two functions exposed by x86/sev
-> > to verify that the device is actually emulated by the platform and to
-> > send commands and receive responses.
+> > For that move more sanity checks from the callers into __iommu_map and
+> > make that function available outside of iommu.c as iommu_map_nosync.
 > > 
-> > The device cannot be hot-plugged/unplugged as it is emulated by the
-> > platform, so we can use module_platform_driver_probe(). The probe
-> > function will only check whether in the current runtime configuration,
-> > SVSM is present and provides a vTPM.
+> > Add a wrapper for the map_sync as iommu_sync_map so that callers don't
+> > need to poke into the methods directly.
 > > 
-> > This device does not support interrupts and sends responses to commands
-> > synchronously. In order to have .recv() called just after .send() in
-> > tpm_try_transmit(), the .status() callback returns 0, and both
-> > .req_complete_mask and .req_complete_val are set to 0.
-> > 
-> > [1] "Secure VM Service Module for SEV-SNP Guests"
-> >     Publication # 58019 Revision: 1.00
-> > 
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Acked-by: Will Deacon <will@kernel.org>
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 > > ---
-> > v3:
-> > - removed send_recv() ops and followed the ftpm driver implementing .status,
-> >   .req_complete_mask, .req_complete_val, etc. [Jarkko]
-> > - removed link to the spec because those URLs are unstable [Borislav]
-> > ---
-> >  drivers/char/tpm/tpm_svsm.c | 148 ++++++++++++++++++++++++++++++++++++
-> >  drivers/char/tpm/Kconfig    |  10 +++
-> >  drivers/char/tpm/Makefile   |   1 +
-> >  3 files changed, 159 insertions(+)
-> >  create mode 100644 drivers/char/tpm/tpm_svsm.c
+> >  drivers/iommu/iommu.c | 65 +++++++++++++++++++------------------------
+> >  include/linux/iommu.h |  4 +++
+> >  2 files changed, 33 insertions(+), 36 deletions(-)
 > > 
-> > diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
-> > new file mode 100644
-> > index 000000000000..5540d0227eed
-> > --- /dev/null
-> > +++ b/drivers/char/tpm/tpm_svsm.c
-> > @@ -0,0 +1,148 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
-> > + *
-> > + * Driver for the vTPM defined by the AMD SVSM spec [1].
-> > + *
-> > + * The specification defines a protocol that a SEV-SNP guest OS can use to
-> > + * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
-> > + * in the guest context, but at a more privileged level (usually VMPL0).
-> > + *
-> > + * [1] "Secure VM Service Module for SEV-SNP Guests"
-> > + *     Publication # 58019 Revision: 1.00
-> > + */
+> > 
+> --- snip ---
 > > +
-> > +#include <asm/sev.h>
+> >  	return mapped;
+> >  
+> >  out_err:
+> > diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> > index 38c65e92ecd0..7ae9aa3a1894 100644
+> > --- a/include/linux/iommu.h
+> > +++ b/include/linux/iommu.h
+> > @@ -857,6 +857,10 @@ extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
+> >  extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
+> >  extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
+> >  		     phys_addr_t paddr, size_t size, int prot, gfp_t gfp);
+> > +int iommu_map_nosync(struct iommu_domain *domain, unsigned long iova,
+> > +		phys_addr_t paddr, size_t size, int prot, gfp_t gfp);
+> > +int iommu_sync_map(struct iommu_domain *domain, unsigned long iova,
+> > +		size_t size);
 > 
-> Typically the "asm" includes are after the "linux" includes and separated
-> from each other by a blank line.
-> 
-> > +#include <linux/module.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/svsm_vtpm.h>
-> > +
-> > +#include "tpm.h"
-> > +
-> > +struct tpm_svsm_priv {
-> > +	u8 buffer[SVSM_VTPM_MAX_BUFFER];
-> > +	u8 locality;
-> > +};
-> 
-> I'm wondering if the buffer shouldn't be a pointer to a page of memory
-> that is a page allocation. This ensures it is always page-aligned in case
-> the tpm_svsm_priv structure is ever modified.
-> 
-> As it is, the kmalloc() allocation will be page-aligned because of the
-> size, but it might be safer, dunno, your call.
+> There are two different word orders in the function names.
+> iommu_sync_map() vs iommu_map_nosync(). I'd prefer to be consistent
+> with e.g. iommu_map_sync() vs iommu_map_nosync().
 
-This was good catch. There's actually two issues here:
+The naming came from refactoring different functions, one was simple *_map() and
+another was iotlb_*_sync(), but yes we can name it consistently.
 
-1. SVSM_VTPM_MAX_BUFFER is same as page size.
-2. SVSM_VTPM_MAX_BUFFER is IMHO defined in wrong patch 2/4.
-
-So this constant would be needed, it should be appeneded in this patch,
-not in 2/4 because it has direct effect on implementation of the driver.
-
-I'd personally support the idea of removing this constant altogether
-and use alloc_page() (i.e., same as you suggested).
-
-kmalloc() does do the "right thing here but it is still extra
-unnecessary layer of random stuff on top...
+Thanks
 
 > 
-> Thanks,
-
-BR, Jarkko
+> >  extern size_t iommu_unmap(struct iommu_domain *domain, unsigned long iova,
+> >  			  size_t size);
+> >  extern size_t iommu_unmap_fast(struct iommu_domain *domain,
+> 
