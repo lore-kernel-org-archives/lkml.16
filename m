@@ -1,130 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C0078F43
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75A5F14F9F4;
+	Mon, 17 Mar 2025 14:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742220196; cv=none; b=Laf/3hvL2EyuQ4+euvCwL3zwAZRj/qyXlJG1ntRnELOqj5bS49k6K4TSZ/xwpvqkmgAiB4rHT/FgpCIP/FW4zai1SuEUnvV8NLAadhmAafxGcKZn3gAnoNHpjGkzxdXrUNHpTq15CW0NyOvXdVGQtK0EEo8ZxLZi62ibFuajAas=
+	t=1742220254; cv=none; b=pM98Ssv5tkITPK3X1MgSLKr79NDMoob8eYGk5rXOSTxHtm13eoyWBTwCSnxkD7/1+zDVormPT82drqLS5uQjSXyfXXIoLKRk8I8lpyuNl57Yz/Dk6fgI80EbWbUgxv3FJiBEDagh6WofC/qYz1dYxGcVgfycltlkoRDkQaY8QgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742220196; c=relaxed/simple;
-	bh=ur+3Ka/ftKOuDkT4T1MQ6Jx5LEwesbX4+q1klExtobU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tPOp+GrNMLG23vUPOD+YwvDKxi9l5XUqA2A8InXLIR5ICtDHFmCdpnyOY7T3DaRX7KwahxfCjJkHkgCeuq0gP7w8mjOSDqyL1sUlHMSph2BjFAKNfTfxiJMl+Ig6eB0BxQ6mqWyRBwf/CZlToHDn0KP27+lTZMOw61x3sYtnXR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f4zMkm+h; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f4zMkm+h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742220194; x=1773756194;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ur+3Ka/ftKOuDkT4T1MQ6Jx5LEwesbX4+q1klExtobU=;
-  b=f4zMkm+hGFS0JC9Zu6V8HEtutEUw4FoYxCXqPPRA0en857N8x7c1tvkN
-   wEV730sPJ5zI6jCVjKmxsYOxEI/j7Lp7luIi9XiBNcu0Pt7Ax4dEoKKCq
-   hRF1CsflzZOQcw7maRhMYwXxGxxXFryQTKLtAQdxkwsdUFw9Zs6nIPYmP
-   k1X9lJIZANcIPSTGGluxtLS5X3pBODxENKoRDAbKCmrzXbXiaeELgrNXh
-   wKf0ECYOBacy+qmyqzXMmIyvE4hdISVVazU8W3L0gsd3qqOyarloMZRBb
-   Fd0oRLjwTYb1Kb9zhDkzSczOp1QzKHOb9LnZLuF5jmPVKqj6hMT4+d5wx
-   Q==;
-X-CSE-ConnectionGUID: LEuB4sejQzK1pj/84OdtsQ==
-X-CSE-MsgGUID: MeewH/E/TLqcqyfudGIPyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43447018"
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="43447018"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 07:03:14 -0700
-X-CSE-ConnectionGUID: 7dDuA3tuRKaVKvMF/PytIA==
-X-CSE-MsgGUID: ICsGBP4RT5yVJBvZI8J8Ag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="152929972"
-Received: from spr.sh.intel.com ([10.239.53.19])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 07:03:10 -0700
-From: Chao Gao <chao.gao@intel.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Chao Gao <chao.gao@intel.com>,
-	"Chang S. Bae" <chang.seok.bae@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Yang Zhong <yang.zhong@intel.com>,
-	Jing Liu <jing2.liu@intel.com>
-Subject: [PATCH] x86/fpu/xstate: Fix inconsistencies in guest FPU xfeatures
-Date: Mon, 17 Mar 2025 22:06:11 +0800
-Message-ID: <20250317140613.1761633-1-chao.gao@intel.com>
-X-Mailer: git-send-email 2.46.1
+	s=arc-20240116; t=1742220254; c=relaxed/simple;
+	bh=rCOF7+2sbxkUxGez3jb20hbtG3fg3N+Iwqx48ey03RI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mh+ntxRAEN658vWrJ2aagcOxckeO9mz5bJxvQNKGD8cWN8VN8/etGn/sP94vPY2zd0u9vdXJ87g+ifi98Kwas8AFQJkCMK3kk/unDe5kx4Gvd8qEDhylppAOVvJQ52iOXeaBsI1zdLvOgTlrGjxxGL3mQqZDZdp9iSrBDqv2Xbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49F4E13D5;
+	Mon, 17 Mar 2025 07:04:20 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BE083F63F;
+	Mon, 17 Mar 2025 07:04:09 -0700 (PDT)
+Date: Mon, 17 Mar 2025 14:04:07 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, linux-rtc@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH 4/9] rtc: efi: Transition to the faux device interface
+Message-ID: <Z9gr11GUYPWxPMSc@bogus>
+References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
+ <20250317-plat2faux_dev-v1-4-5fe67c085ad5@arm.com>
+ <2025031755-simile-landside-e719@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025031755-simile-landside-e719@gregkh>
 
-Guest FPUs manage vCPU FPU states. They are allocated via
-fpu_alloc_guest_fpstate() and are resized in fpstate_realloc() when XFD
-features are enabled.
+On Mon, Mar 17, 2025 at 02:07:00PM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Mar 17, 2025 at 10:13:16AM +0000, Sudeep Holla wrote:
+> > The EFI RTC driver does not require the creation of a platform device.
+> > Originally, this approach was chosen for simplicity when the driver was
+> > first implemented.
+> > 
+> > With the introduction of the lightweight faux device interface, we now
+> > have a more appropriate alternative. Migrate the driver to utilize the
+> > faux bus, given that the platform device it previously created was not
+> > a real one anyway. This will simplify the code, reducing its footprint
+> > while maintaining functionality.
+> > 
+> > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Cc: linux-rtc@vger.kernel.org
+> > Cc: linux-efi@vger.kernel.org
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > ---
+> >  drivers/firmware/efi/efi.c |  3 ---
+> >  drivers/rtc/rtc-efi.c      | 31 ++++++++++++++++++++++---------
+> >  2 files changed, 22 insertions(+), 12 deletions(-)
+> > 
 
-Since the introduction of guest FPUs, there have been inconsistencies in
-the kernel buffer size and xfeatures:
+[...]
 
-1.fpu_alloc_guest_fpstate() uses fpu_user_cfg since its introduction. See:
+> > -MODULE_ALIAS("platform:rtc-efi");
+> > +MODULE_ALIAS("faux:rtc-efi");
+> 
+> No alias please.
 
-  commit 69f6ed1d14c6 ("x86/fpu: Provide infrastructure for KVM FPU cleanup")
-  commit 36487e6228c4 ("x86/fpu: Prepare guest FPU for dynamically enabled FPU features")
+Thanks for the review, will drop all the alias.
 
-2.__fpstate_reset() references fpu_kernel_cfg to set storage attributes.
-
-3.fpu->guest_perm uses fpu_kernel_cfg, affecting fpstate_realloc().
-
-A recent commit in the tip-tree [1] partially addressed the inconsistency
-between (1) and (3) by using fpu_kernel_cfg for size calculation in (1),
-but left fpu_guest->xfeatures and fpu_guest->perm still referencing
-fpu_user_cfg.
-
-The inconsistencies within fpu_alloc_guest_fpstate() and across the
-mentioned functions cause confusion.
-
-Fix them by using fpu_kernel_cfg consistently in fpu_alloc_guest_fpstate(),
-except for fields related to the UABI buffer. Referencing fpu_kernel_cfg
-won't impact functionalities, as
-1. fpu_guest->perm is overwritten shortly in fpu_init_guest_permissions()
-   with fpstate->guest_perm, which already uses fpu_kernel_cfg.
-2. fpu_guest->xfeatures is solely used to check if XFD features are enabled.
-   Including supervisor xfeatures doesn't affect the check.
-
-Link: https://lore.kernel.org/all/20250218141045.85201-1-stanspas@amazon.de/ [1]
-Fixes: 36487e6228c4 ("x86/fpu: Prepare guest FPU for dynamically enabled FPU features")
-Suggested-by: Chang S. Bae <chang.seok.bae@intel.com>
-Signed-off-by: Chao Gao <chao.gao@intel.com>
----
- arch/x86/kernel/fpu/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 422c98ca6eb8..1b734a9ff088 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -239,8 +239,8 @@ bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
- 	fpstate->is_guest	= true;
- 
- 	gfpu->fpstate		= fpstate;
--	gfpu->xfeatures		= fpu_user_cfg.default_features;
--	gfpu->perm		= fpu_user_cfg.default_features;
-+	gfpu->xfeatures		= fpu_kernel_cfg.default_features;
-+	gfpu->perm		= fpu_kernel_cfg.default_features;
- 
- 	/*
- 	 * KVM sets the FP+SSE bits in the XSAVE header when copying FPU state
-
-base-commit: d08c0d55110b7cbac186e5fa94b0c6d5f4d7905e
 -- 
-2.47.1
-
+Regards,
+Sudeep
