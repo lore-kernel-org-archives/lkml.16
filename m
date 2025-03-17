@@ -1,100 +1,127 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F076121D3E7
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDD821C9F1;
+	Mon, 17 Mar 2025 08:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742199685; cv=none; b=Xw5rk1/QJKqp8aD0WfoW2YwEMHpkIO2uJH9aMOzPayK1vDDVpfT5x19kSTZOdn7rnWUXvRobxjpMCEBwbw11Ly13KDytw/GgZzqqOuHzrjpTWEOID7mw6APdCRd8Q3H3gSGNYjbrSswJQcPXPW0EtPWb2VLySkQpc1h3jdqVmak=
+	t=1742199738; cv=none; b=ifAdW0YXqlb+Tnrz+ajfpn70rAPhZyV4lKXZ4dRbQv+ZlGh/pgCLSc4r1wKKaTJyrRTKRV+YMOTEC01faBR2Fth7UGVvnfQS7ey8yOcihCdiKbLK3uOpq16JN5eSX6mkukunY3mAFm+5lsCYGl1DbboTzyd9hlvCdlfAo1cmQSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742199685; c=relaxed/simple;
-	bh=iFkj74qk3z2GyIAvG28tYsAl88fI2y4bENF8ywIoBKk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rfxu+KnDmjiJ6A1ePA8vBBSJelE7WAg5STvKGu3vw0K0ZziFykqfFVCxFkS55Vq7EksCCDyrL+FXcyz6m4eh/2BtXeK/PyNe5JyBPyJ6Q1nLfTLsGmi/AAf3OkBb1TIQrrsMl3ePZTV6be6a9Ezkl5CJdjyQ+/x8hKWJ1CWBYq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Mb9gDgLP; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1742199738; c=relaxed/simple;
+	bh=5YRSK7/kMdbdHj+6rcKNANI5ccwGPToBCiTHQMNwgiY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IqBoKcTjGsHtS7RyA2kzTySyr6uStb3CQaYMP5DHtPcunaPoDC6tPWs0iTJAVwbKwDcgveevC5e9VsSJC2FJJaNloYKopsCXw14/xWAGeRpXRw+DZTySaiBH+18zRXtxL1mq3fwNewkTZzFWGDFseLgbSQGL2DchqnJU9IAguUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KbkBjope; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Mb9gDgLP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=xuKzq
-	xXQuuudyoZS1yA8FZNGTyjI0RvfS078un9hEUk=; b=Mb9gDgLPOWJMzRTOAwR60
-	6lhkA+PBspsGBAcme3DUKgjd5IL5CkuckuTsLw68dzW1tDa0hcT1psbYLCpWPdRp
-	Nvv6SEV7YJvoWudVX9sAM8GqU3y4LonngTRtbVrb2L0VVgDHlrhsvGIlr4HhXhkU
-	tMbIxgXOciDXAsBPcUElQo=
-Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCXg9tg29dn5rCCTQ--.26560S2;
-	Mon, 17 Mar 2025 16:20:51 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: cristian.ciocaltea@collabora.com,
-	hjc@rock-chips.com,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH] drm/rockchip: dw_hdmi_qp: Fix io init for dw_hdmi_qp_rockchip_resume
-Date: Mon, 17 Mar 2025 16:20:39 +0800
-Message-ID: <20250317082047.564404-1-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KbkBjope"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bf1d48843so39420771fa.2;
+        Mon, 17 Mar 2025 01:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742199734; x=1742804534; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/8FRI6cy9CCt8b2M5LhQNzurCwCuZ436s4fIsfr2+0s=;
+        b=KbkBjoper1YlosN1XEUA/zyyPXp057aySLx3GWcsfk2MX43VmMw6vylweyV81stj8r
+         5dT/M+kDrpHatxtvoV3prjBfZ4L/rq9VD/bamkgrR0dOvW4071n9JbrFgXAmk95EklCv
+         ySQH7Xns0YvivxGAFaFOTAbMmng05I8Xuz0q8ZyaF9ghcHekSjaqRq9p7qu8vm4Ay9WB
+         qO157A3iV3ttZtttESLo4YgwYZABVneE3mqqXScRHzCW/gf23JMGzBjbrC/sSDo0h7V/
+         pdIaCughE2KNdzrTng4kDP2h4W+9Ji0BOnSmCmaZtDNdFsk8QI5Gy4G7sSST6teqJmmq
+         B2mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742199734; x=1742804534;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/8FRI6cy9CCt8b2M5LhQNzurCwCuZ436s4fIsfr2+0s=;
+        b=AjdPPdp5LndyIXjsOh3Mjh2PCNloM3GFD9MVLbEtD/8HVlUDzS5MP7KCpmPK7O1dy1
+         YwDRjMjN51GMSOmu6HUxyLYz1ZYbCjWBxkmEG+RtOKJ5qBxHTYh/7qwaML1kKxBKXVIh
+         CIjfte6AYw+GH4j2eaBgcBkoAftsno8rtrjt6iUH29XG6CLvq0/WNb/A3kKpHQR079g3
+         NumPwlvDz1ixvuFEkTnzvVNwgtHphHf3Biaj1t7tiTYK2ROfItMsBaK3W7X4S1EnS4Kg
+         mUtwPhiMYg+Xu9K4CBPotGbo1QA1mWh1L0+L+5GXzXODtvIZiuo/pFzDz5gzVhco5SPA
+         EPKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMRLt3QDFx4oo7Lv1eFsRmEvHgGKQvcUZLyxpAjvyyr9tAkSe/hm41hhEt8Tr+qnIZVZdDxrMtVm5gDA==@vger.kernel.org, AJvYcCUiBWECvoGQabUFV+ZbffOODESlRymoVMZyzjC657Nw/lIKNenujUIoGri1QRNQjtI15QReuF1/qI3i32nN@vger.kernel.org, AJvYcCV1SZ0Uznavogk+oGzAb8APKCSjY6bTbn4DgRpG5rEQQQ56WIzNpJPC5gLEkaEdAcqSjOgl/xrSUoAX@vger.kernel.org, AJvYcCVn/tVl2cfXS2Vk1zJayfOrbZ3Nnc6dRNZUPjeUiXxcQ+wfcolS942Gmg5MVTRSyFvQOE03snr/4weV3mCZ6cQoJc4=@vger.kernel.org, AJvYcCW2zTe9yDaDojhaB+xfSQNnLepsm2Io6CgG5KtHUJJWayW1KuhpnUrOEWnsOFQCodQe2o6CC0MrwWFv@vger.kernel.org
+X-Gm-Message-State: AOJu0YznyyIiJZLW5K261wA9sWwTVzdWdmLeijXY22DHIRyTRbWA5+8i
+	jpHw0TuYHwm1E+gaHeHPpQ5aEQ40WZNYVwWlqIwmsN8mcSE+v30g
+X-Gm-Gg: ASbGncsU2vsZqhCY2jXQ2oloHKzo49SN2kk+Pm4Q/yWekBaCIm9HtYdM6HMH/b3WHBE
+	XCibrxLSU3ZviZrvJrnpoGKTq+DT7hatZC5D9UvYtTkwcDAntyjw5MVq4bc9cUx3wLJi/ai1jCd
+	KG3c6252ku8Ki0PWv25wXIhCzn37ttaz0DvG8lQXUYEbseOcdthI31xV/RQxOy0fhgN3YD7cAMP
+	czeaaiEstfio+R/fxSILkZdfSBjOYCzCqFUFjX6LFL4jtaYQ6bFvxCU2OUFpn7tsJDpEFw068Fj
+	EMv0pcFjl5O3cmLKuSz9nh4jLEDSR+1+zwBxgHQsNY16SL6jS9o78tjIHuKC2Si1C/Ykuy6svu8
+	a/FCcMLv7izSDonbza2JcyGuMWg==
+X-Google-Smtp-Source: AGHT+IHBKGlUlP46i1muxXD2BoUJCo9oeQCMBPNLoYtEWkTjbhR1aqc3+f20CvsiTwirEb5eGG/pEA==
+X-Received: by 2002:a2e:be06:0:b0:30c:1fc4:418e with SMTP id 38308e7fff4ca-30c4a8d225bmr66527681fa.26.1742199733797;
+        Mon, 17 Mar 2025 01:22:13 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c3f1c2233sm15370161fa.69.2025.03.17.01.22.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 01:22:13 -0700 (PDT)
+Message-ID: <66a93de8-f5a2-4ffd-9c97-c646934cc90d@gmail.com>
+Date: Mon, 17 Mar 2025 10:22:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCXg9tg29dn5rCCTQ--.26560S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Zw48Kw17JF48CFy3Xr1UWrg_yoW8CF43p3
-	y3AryjkrWkGr4UXwn5A3Z2yFW2y3ZrJw4SqFWxKas2y3W09r1fGr93ua1rXrZxXF9rZF4a
-	krZ3t34fJa1UXaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jIyxiUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0hkTXmfX1jmrPQAAsP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 03/10] iio: adc: add helpers for parsing ADC nodes
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>, Nuno Sa <nuno.sa@analog.com>,
+ David Lechner <dlechner@baylibre.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Guillaume Stols <gstols@baylibre.com>,
+ Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>,
+ Matteo Martelli <matteomartelli3@gmail.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+References: <cover.1741849323.git.mazziesaccount@gmail.com>
+ <c8899e8c535a1d93cd7588b7c160eb0fae5d26d2.1741849323.git.mazziesaccount@gmail.com>
+ <20250316093752.0eacaa16@jic23-huawei>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250316093752.0eacaa16@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Andy Yan <andy.yan@rock-chips.com>
+On 16/03/2025 11:38, Jonathan Cameron wrote:
+> On Thu, 13 Mar 2025 09:18:18 +0200
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> 
+>> There are ADC ICs which may have some of the AIN pins usable for other
+>> functions. These ICs may have some of the AIN pins wired so that they
+>> should not be used for ADC.
+>>
+>> (Preferred?) way for marking pins which can be used as ADC inputs is to
+>> add corresponding channels@N nodes in the device tree as described in
+>> the ADC binding yaml.
+>>
+>> Add couple of helper functions which can be used to retrieve the channel
+>> information from the device node.
+> I suspect we'll need the addition of an optional trailing timestamp
+> channel at somepoint. But we can add that when we need it as only
+> matters for drivers doing iio_push_to_buffers_with_timestamp()
 
-Use cfg->ctrl_ops->io_init callback make it work for all platform.
+This is true. That'll enable using this for devices with buffers - which 
+is not possible right now as most buffer users do timestamps. I'll leave 
+adding the parameter to first buffered user though, but I think it's 
+good to say out loud this is doable :) Thanks!
 
-Fixes: 3f60dbd40d3f ("drm/rockchip: dw_hdmi_qp: Add platform ctrl callback")
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+> Otherwise no additional comments from me.
 
- .../gpu/drm/rockchip/dw_hdmi_qp-rockchip.c    | 23 +++----------------
- 1 file changed, 3 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-index 3d1dddb34603..631a7080862b 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi_qp-rockchip.c
-@@ -600,27 +600,10 @@ static void dw_hdmi_qp_rockchip_remove(struct platform_device *pdev)
- static int __maybe_unused dw_hdmi_qp_rockchip_resume(struct device *dev)
- {
- 	struct rockchip_hdmi_qp *hdmi = dev_get_drvdata(dev);
--	u32 val;
--
--	val = HIWORD_UPDATE(RK3588_SCLIN_MASK, RK3588_SCLIN_MASK) |
--	      HIWORD_UPDATE(RK3588_SDAIN_MASK, RK3588_SDAIN_MASK) |
--	      HIWORD_UPDATE(RK3588_MODE_MASK, RK3588_MODE_MASK) |
--	      HIWORD_UPDATE(RK3588_I2S_SEL_MASK, RK3588_I2S_SEL_MASK);
--	regmap_write(hdmi->vo_regmap,
--		     hdmi->port_id ? RK3588_GRF_VO1_CON6 : RK3588_GRF_VO1_CON3,
--		     val);
--
--	val = HIWORD_UPDATE(RK3588_SET_HPD_PATH_MASK,
--			    RK3588_SET_HPD_PATH_MASK);
--	regmap_write(hdmi->regmap, RK3588_GRF_SOC_CON7, val);
-+	const struct rockchip_hdmi_qp_cfg *cfg;
- 
--	if (hdmi->port_id)
--		val = HIWORD_UPDATE(RK3588_HDMI1_GRANT_SEL,
--				    RK3588_HDMI1_GRANT_SEL);
--	else
--		val = HIWORD_UPDATE(RK3588_HDMI0_GRANT_SEL,
--				    RK3588_HDMI0_GRANT_SEL);
--	regmap_write(hdmi->vo_regmap, RK3588_GRF_VO1_CON9, val);
-+	cfg = of_device_get_match_data(dev);
-+	cfg->ctrl_ops->io_init(hdmi);
- 
- 	dw_hdmi_qp_resume(dev, hdmi->hdmi);
- 
--- 
-2.43.0
-
+Yours,
+	-- Matti
