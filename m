@@ -1,117 +1,118 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7E92E3373;
-	Mon, 17 Mar 2025 09:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B257191499;
+	Mon, 17 Mar 2025 09:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742204342; cv=none; b=HKhJfX1KMMZhQ+kG2p+Wk+13PZy6uUzBvB2QgT7/are6hdfjnbmE7Tb4tkrO7kDh7XIqGtQE1C87AOvZbkfipt5Efd/ZHP85U2b5uHLOrYCH3d198lq2Wsi2Dmpsv58X42cUnQW4WK9jn/Oz8NfZ38wQsfTsdx0i+hteoCq86uU=
+	t=1742204427; cv=none; b=jRHhKVLrgGRHLwUrLjCny1xWzPgASp52RUx0zyBRkEOriYJOJCoHbBd1zs7zaposvbJ8dNLr2TLCij795NtBKo/YUkPdRmn6yFrh1GduVJTxlUfAtlHs4wKX4PU4YaKqyOEdve8PRA4DWqiW6Ce8y5e7wJ3yWG1A2JGAg4zSYpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742204342; c=relaxed/simple;
-	bh=P83TY0gOs7vPUW/KjHn5qXlUWoTtrYzEJqZWCh5o4Uk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HGaXaPjsV1fjgcTlwpDYoaAj9bohFje7K+7wiTWHbvL0FRdHi7WYctv6ET8vynrfO2ZEUNpGOjTA5s3wFEHACo9AT+RmS0X7T2sIaOPSCq6Y+mHhBKKI6jRgwGKbh7RBd7BSAQJq9znqoKFvulMumWyf1LwY/97IrfQuLcrW1qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Hd8HN8xt; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1742204427; c=relaxed/simple;
+	bh=a8FAVZT93WNJIUosFmPxF4OM0ULsyXrBe3/5i39RRq0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uI35avQnM2Z/lUo5ZGI4Nj1FJQb1qR1Kt+t8fMlyFLIvUiIPjgrvuHhj2ZukJzuUFk2zavrN/+rUT337QSqGJC6q452kodqU2WeVXltMxfyttypI5rlE3XvXejKoYntHyUtKMgr4yst8ZhUDj0APEEx6BIeio05gGbuDwnBk4Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HcuzQPna; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hd8HN8xt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EKUyx7KbRM5GU2Q4/TLVPYUhyMHFXhXGrBJE0yM5/N8=; b=Hd8HN8xtwy0CmVK217jVStXdr5
-	A6CyiZLXDBX70gp7ve2I3ybOpcI5HNAj5avecq5MPFr+aDcgQflForxjuPOTmiPOcK1vP8HmWBIN6
-	0tvFl470Sbvtzi8Fxxz+PEOmU8ptr0IhZ/Qx+8RT4bD/sfT9biqS2sL9ZzMum5XsLakbxlGZbJLtw
-	gD1yBahkqG1Ge0/FwETgRdQzG/auzJJ/2POdPAX+VC6ajmX24cP4Xs0egMi/+XqopfR/WpCAHneKg
-	IP4L3RqboWcBOgiAXfa+P42NJVwMzWTHT61gyaGFMSkV2dGxggEGky4GohSvQUlqxcsdg05tC+YgP
-	NAyBe4Sw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tu6vx-00000003Pbq-0Lmd;
-	Mon, 17 Mar 2025 09:38:57 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2F046300783; Mon, 17 Mar 2025 10:38:56 +0100 (CET)
-Date: Mon, 17 Mar 2025 10:38:56 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>, jirislaby@kernel.org,
-	ubizjak@gmail.com
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20250317093856.GA34541@noisy.programming.kicks-ass.net>
-References: <20250304162402.475eb3bc@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HcuzQPna"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742204426; x=1773740426;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=a8FAVZT93WNJIUosFmPxF4OM0ULsyXrBe3/5i39RRq0=;
+  b=HcuzQPnanxahYA6Y1wp/wsp+/HClFlht5+MUYZDleJYMQMU6L1J3Rzcc
+   /zd1Y2WWEroD1J26lhNU0FkDCm4fzchHswSHOzh7Gp7QlVFyOO/1FUS4d
+   0mkgicCBH2wA2uEOTfum55hxqM9QkPqH4yi/ZXfNoryHQX3eR+b+lqN9a
+   3/IUwMzEbJB/bVXq9auM3J8BcaqzWra6E7YWZydCg/KdYcrrWLcwusvfI
+   rOFd+UK8qMt/NGoTtrbtnAEJQ1/Z9qFtfVbhEQ9EoDZN/EuEoKnzDzc2R
+   4p7Na6AGWUrgVvC4831ChKsuQpYjYkIT9T7XQ5mJJYxhSARG5aOawrlDt
+   Q==;
+X-CSE-ConnectionGUID: FPgCKXKzQHmKwX2s9iGQZQ==
+X-CSE-MsgGUID: VO4DiUfzQa6VWlQ/T3JpVw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11375"; a="43157978"
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="43157978"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 02:40:25 -0700
+X-CSE-ConnectionGUID: rA26HYXrSleqsZMdQPCq2g==
+X-CSE-MsgGUID: oqBPdKD0TAyDoQC9gLuXFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="126747205"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 17 Mar 2025 02:40:24 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 02A861D8; Mon, 17 Mar 2025 11:40:22 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jiri Slaby <jirislaby@kernel.org>
+Subject: [PATCH v1 1/1] serial: 8250_dw: Comment possible corner cases in serial_out() implementation
+Date: Mon, 17 Mar 2025 11:40:21 +0200
+Message-ID: <20250317094021.1201512-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304162402.475eb3bc@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 04, 2025 at 04:25:31PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
-> failed like this:
-> 
-> In file included from include/asm-generic/percpu.h:7,
->                  from arch/x86/include/asm/percpu.h:597,
->                  from arch/x86/include/asm/preempt.h:6,
->                  from include/linux/preempt.h:79,
->                  from include/linux/spinlock.h:56,
->                  from include/linux/wait.h:9,
->                  from include/linux/wait_bit.h:8,
->                  from include/linux/fs.h:7,
->                  from kernel/events/core.c:11:
-> kernel/events/core.c: In function 'this_cpc':
-> include/linux/percpu-defs.h:220:45: error: initialization from pointer to non-enclosed address space
->   220 |         const void __percpu *__vpp_verify = (typeof((ptr) + 0))NULL;    \
->       |                                             ^
-> include/linux/percpu-defs.h:251:9: note: in expansion of macro '__verify_pcpu_ptr'
->   251 |         __verify_pcpu_ptr(ptr);                                         \
->       |         ^~~~~~~~~~~~~~~~~
-> kernel/events/core.c:1222:17: note: in expansion of macro 'this_cpu_ptr'
->  1222 |         return *this_cpu_ptr(pmu->cpu_pmu_context);
->       |                 ^~~~~~~~~~~~
-> 
-> (and many more similar)
-> 
-> Presumably caused by commit
-> 
->   f67d1ffd841f ("perf/core: Detach 'struct perf_cpu_pmu_context' and 'struct pmu' lifetimes")
-> 
-> I have used the tip tree from next-20250303 for today.
+8250 DesignWare driver uses a few custom implementations of the serial_out().
+These implementations are carefully made to avoid infinite loops. But this is
+not obvious from looking at the code. Comment the possible corner cases in
+the respective functions.
 
-Right. Sorry for not noticing before, and thanks Jiri for poking me.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/tty/serial/8250/8250_dw.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-So the below resolution make it go for me. The problem appears to be
-that due to:
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index af24ec25d976..49eda7f1fd0e 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -107,11 +107,23 @@ static inline int dw8250_modify_msr(struct uart_port *p, int offset, int value)
+ 	return value;
+ }
+ 
++/*
++ * This function is being called as part of the uart_port::serial_out()
++ * routine. Hence, it must not call serial_port_out() or serial_out()
++ * against the modified registers here, i.e. LCR.
++ */
+ static void dw8250_force_idle(struct uart_port *p)
+ {
+ 	struct uart_8250_port *up = up_to_u8250p(p);
+ 	unsigned int lsr;
+ 
++	/*
++	 * The following call currently performs serial_out()
++	 * against the FCR register. Because it differs to LCR
++	 * there will be no infinite loop, but if it ever gets
++	 * modified, we might need a new custom version of it
++	 * that avoids infinite recursion.
++	 */
+ 	serial8250_clear_and_reinit_fifos(up);
+ 
+ 	/*
+@@ -128,6 +140,11 @@ static void dw8250_force_idle(struct uart_port *p)
+ 	(void)p->serial_in(p, UART_RX);
+ }
+ 
++/*
++ * This function is being called as part of the uart_port::serial_out()
++ * routine. Hence, it must not call serial_port_out() or serial_out()
++ * against the modified registers here, i.e. LCR.
++ */
+ static void dw8250_check_lcr(struct uart_port *p, int offset, int value)
+ {
+ 	struct dw8250_data *d = to_dw8250_data(p->private_data);
+-- 
+2.47.2
 
-  bcecd5a529c1 ("percpu: repurpose __percpu tag as a named address space qualifier")
-
-this makes that this_cpu_ptr() wants a '__percpu *', instead we feed it
-'__percpu**' which confuses things.
-
-What would be the best way around to getting this resolved, should I
-stick the below in a fixup patch in tip/perf/core, or do we carry this
-in a merge resolution somewhere?
-
-diff --cc include/linux/perf_event.h
-index 4d0b0b007498,76f4265efee9..000000000000
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@@ -343,7 -343,7 +343,7 @@@ struct pmu 
-  	 */
-  	unsigned int			scope;
-  
-- 	struct perf_cpu_pmu_context __percpu *cpu_pmu_context;
- -	struct perf_cpu_pmu_context __percpu **cpu_pmu_context;
-++	struct perf_cpu_pmu_context * __percpu *cpu_pmu_context;
-  	atomic_t			exclusive_cnt; /* < 0: cpu; > 0: tsk */
-  	int				task_ctx_nr;
-  	int				hrtimer_interval_ms;
