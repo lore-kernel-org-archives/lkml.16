@@ -1,125 +1,87 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA24B199252;
-	Mon, 17 Mar 2025 09:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F052F30
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742203947; cv=none; b=hb6XCwQ+eKsX6SO0Y17eu0Ncy2ZAOUZS169mGmHgsTQmK0YU8YMN0zH84wwmRmppEYD3DZz9G239+BphEbrJO6un8gSnlc/BA4RhEVl5LYzPVHb+sbtbp3+f8rs78zsfsO5sC/wYdQuLSFXeSBGt3Dg3PIjb6YA9a4ZjXyaaLu4=
+	t=1742204017; cv=none; b=iGgAIDTnRx7VjNMtpgKYBVSD/08fyDuReN+mNX2vE3jX2rK0bDMwqjrFA/alfXZ1Exceld6EZ47102zTUT9tSB86BdzMc8WWiNnkgcmIMKVnbSTuDEynrZbw7m5gyYIen+Dg77mQNoIrC4t2DqzXv6zYV4nVzludgfzs1YcQOzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742203947; c=relaxed/simple;
-	bh=2OBI8WT+HrVc6aiOA/QiP6ctl2nuMkPjt2+k3QVyBHs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uEbmJlmZCprJJRmgidQMmVQc1sZBn3QIqMYxVHJG9H+NvO9/b9J9yq+E3rI5FU+ktUACrNSR0otF5/h36OnT410OhT0Uh8acx1gEcOSBEakJuefDS+W2BWyq5Mslf63pyhLfwG3U44zamymhjvAuBVbu+tDv54cWd06xBn3xnPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DCdrh+Hw; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DCdrh+Hw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=2OBI8WT+HrVc6aiOA/QiP6ctl2nuMkPjt2+k3QVyBHs=;
-	b=DCdrh+Hw9F9cPsK+5KvPxLv49ZrwwoXqkU+WKe33KHAx4vxX020ZKYCqLMwblQ
-	COiB/IxvYw27jHuJmN45BFgSi8+8rXgu6j79mYQC9hqe8osuhSo9W72JqlrqCmut
-	DttHDy5FuALx8+JwomHxcKU5TrxE+cmgz0kjahLFveeMk=
-Received: from [192.168.22.248] (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnQvXm69dnxrNHTQ--.29714S2;
-	Mon, 17 Mar 2025 17:31:20 +0800 (CST)
-Message-ID: <38cd7b81-4ca7-409c-bb1f-3c1cddfef0d8@163.com>
-Date: Mon, 17 Mar 2025 17:31:18 +0800
+	s=arc-20240116; t=1742204017; c=relaxed/simple;
+	bh=PsxOrzlFjsxLHkU08uV+9uzcvP6uOPtUFDuXDdC98FU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ln7vb9JpxFWcjpXXQHapZbondHHH9hyuOWNv3YjJdJlkh2JuHa8VcxIB1hF9KFZgJeWRpLw9Zi9wQ5qhikmugHcuS/OoaAnS9YD/RQgRIBiIGMWj9oY22F6orSq+EftYjtPIG97YAPaWJy38bDDr6Kq2n4WEYZPAuzy5NVqLPUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac298c8fa50so783931666b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 02:33:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742204014; x=1742808814;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3fJo5zDfQ4kPxJxhSWnaEAAlNYVAeESKJdwbB4zuW30=;
+        b=uWe3qBMC0l3Z6Xbm0h3aLchpOrRg8X7qMMKEpEJp2TtmMLAi8GnmSEusAnOpwMbeN+
+         rkgehFo4pQZF+C19Hx1+a9J6CdOuCoDJ88RpZqJK47jV41A/Gn00SgkvmpCV1EUNHx8/
+         EQzTCjfTx6PrB0TS+KNpWwkJVq+2nhIO07TU2v/rzDx+zWz0Fvh1KUYWaecmSzr2mFLy
+         HyQhz6GMThC+5Iv85TwcL0Z7oj/ko9pxcxnAnI/sJKPKtotCOuOTcGjKsB8q/IO7FAXp
+         CWEdGPVi4H1xR1iQTBor4uYKpy3nFZz59Zh7GOckjCdo99bAox+n8RJY20NrA/qRNbzF
+         N1gA==
+X-Forwarded-Encrypted: i=1; AJvYcCXcfDqbX+65P6YWdRVEft1/CKwSdvKjLmUmGHPMQbrg70HtlZf+Agkvt7D1QCDMENU7eUI4kHiHzX99R08=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJJokGADuJ6Rob9jGwX43DlSqicgs2KcA4CP1tahXYz4vvuBIH
+	EOssuex75+CDB+qTTNS5R7BJtpaB+ZcIyu79Q+f4nFi6l6EeF5Za
+X-Gm-Gg: ASbGncuJtbns2liucn8VA7u3rg1U7APR07/onriLDj0BmwiJEdi3FpH4p78KzhkR5ug
+	Oj+m99giFtMs4MmlmkmngVeBhUEKPGOVlzvxDRhjsRzr6Asn0AVLmuHgFu7lUwtRsbVB0EuZujA
+	lAymjFcYsKtwQyQXnZJ2hHI0qqkpIDNlUql1gU5X5ExCTI9Em1CeP87uaZ/Ndmw2/jkzd/kd3mT
+	QWiu2QXXYPzLPBDRwuPBWGxE4oEgjoGD/cFUiIyeeeCi/QIqZ0iVp60I5BMPDDgVm/liayR53Yc
+	kb6DWsV26jjqlgGuh3DqBHoKmJAqogRypAE=
+X-Google-Smtp-Source: AGHT+IEZjdu1qY0Y6OW9fEkhQiS+SDaBPSurXGqMA9oKwTei2mB6At7OaEeooZeORXPojtqE9DT9AQ==
+X-Received: by 2002:a17:906:1f52:b0:ac3:4491:5079 with SMTP id a640c23a62f3a-ac3449151demr778533566b.2.1742204014263;
+        Mon, 17 Mar 2025 02:33:34 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:6::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e8169bd543sm5753635a12.45.2025.03.17.02.33.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 02:33:33 -0700 (PDT)
+Date: Mon, 17 Mar 2025 02:33:31 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Rik van Riel <riel@surriel.com>
+Cc: Corey Minyard <corey@minyard.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	openipmi-developer@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] ipmi: fix suspicious RCU usage warning
+Message-ID: <20250317-horned-nano-degu-a6e5bc@leitao>
+References: <20250312131932.44d901f7@fangorn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs/proc/page: Refactoring to reduce code duplication.
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
-Cc: willy@infradead.org, ran.xiaokai@zte.com.cn, dan.carpenter@linaro.org,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Liu Ye <liuye@kylinos.cn>
-References: <20250317080118.95696-1-liuyerd@163.com>
- <1c7018f1-fdc5-4fc6-adc7-fae592851710@redhat.com>
- <2ecdf349-779f-43d5-ae3d-55d973ea50e9@163.com>
- <4a336393-6cf3-4053-8137-c6d724c3cb5f@redhat.com>
-Content-Language: en-US
-From: Liu Ye <liuyerd@163.com>
-In-Reply-To: <4a336393-6cf3-4053-8137-c6d724c3cb5f@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnQvXm69dnxrNHTQ--.29714S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AF4UZr4DCFWftry8tw1xAFb_yoW8ur15pF
-	43ta17Aw48X3sxCr1xtws5Z3s0y395KF48Xr47Jw1Iqa4qyrn3CFy2yF1F9ry8tryUAr1x
-	Xa1jyF9IkF1YyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jBa0PUUUUU=
-X-CM-SenderInfo: 5olx5vlug6il2tof0z/1tbiEAkTTGfX6m0iOAAAsr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250312131932.44d901f7@fangorn>
 
+On Wed, Mar 12, 2025 at 01:19:32PM -0400, Rik van Riel wrote:
+> On recent kernels this warning fires:
+> 
+> drivers/char/ipmi/ipmi_msghandler.c:1238 RCU-list traversed in non-reader section!!
+> 
+> This looks like a fairly simple lockdep trigger, where
+> list_for_each_entry_rcu and list_for_each_entry_srcu are
+> functionally identical, but the lockdep annotation in
+> the former has an extra check.
+> 
+> That extra check is whether the RCU read lock is held,
+> which is not true when the code uses srcu_read_lock.
+> 
+> Get rid of the warning by using the properly annotated
+> list traversal macro.
 
-在 2025/3/17 17:18, David Hildenbrand 写道:
-> On 17.03.25 10:13, Liu Ye wrote:
->>
->> 在 2025/3/17 16:56, David Hildenbrand 写道:
->>> On 17.03.25 09:01, Liu Ye wrote:
->>>> From: Liu Ye <liuye@kylinos.cn>
->>>>
->>>> The function kpageflags_read and kpagecgroup_read is quite similar
->>>> to kpagecount_read. Consider refactoring common code into a helper
->>>> function to reduce code duplication.
->>>>
->>>> Signed-off-by: Liu Ye <liuye@kylinos.cn>
->>>> ---
->>>>    fs/proc/page.c | 158 ++++++++++++++++---------------------------------
->>>>    1 file changed, 50 insertions(+), 108 deletions(-)
->>>>
->>>> diff --git a/fs/proc/page.c b/fs/proc/page.c
->>>> index a55f5acefa97..f413016ebe67 100644
->>>> --- a/fs/proc/page.c
->>>> +++ b/fs/proc/page.c
->>>> @@ -37,19 +37,17 @@ static inline unsigned long get_max_dump_pfn(void)
->>>>    #endif
->>>>    }
->>>>    -/* /proc/kpagecount - an array exposing page mapcounts
->>>> - *
->>>> - * Each entry is a u64 representing the corresponding
->>>> - * physical page mapcount.
->>>> - */
->>>> -static ssize_t kpagecount_read(struct file *file, char __user *buf,
->>>> -                 size_t count, loff_t *ppos)
->>>> +static ssize_t kpage_read(struct file *file, char __user *buf,
->>>> +        size_t count, loff_t *ppos,
->>>> +        u64 (*get_page_info)(struct page *))
->>>
->>> Can we just indicate using an enum which operation to perform, so we can avoid having+passing these functions?
->>>
->> Like this? Good idea, I'll send a new patch later.
->>
->> enum kpage_operation {
->>      KPAGE_FLAGS,
->>      KPAGE_COUNT,
->>      KPAGE_CGROUP,
->> };
->>
->> static u64 get_page_info(struct page *page, enum kpage_operation op)
->> {
->>      switch (op) {
->>      case KPAGE_FLAGS:
->>          return stable_page_flags(page);
->>      case KPAGE_COUNT:
->>          return page_count(page);
->>      case KPAGE_CGROUP:
->>          return page_cgroup_ino(page);
->>      default:
->>          return 0;
->>      }
->> }
->
->
-> Likely it's best to inline get_page_info() into kpage_read() to just get rid of it.
->
->
-Thank you for your suggestion. I agree and will make the changes accordingly.
+Thanks for looking at this one.
 
-Thanks,
-Liu Ye
+There was a discussion about this issue a few years ago, with
+a different approach that never landed upstream.
 
-
-
+	https://lore.kernel.org/all/20201119123831.GH3710@minyard.net/#r
