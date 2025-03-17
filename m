@@ -1,78 +1,127 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C65D176ADB;
-	Mon, 17 Mar 2025 18:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B18D199EBB
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742237421; cv=none; b=ArSIozUfMt8+nG4sflJ3i096pK9LtCemvZaCEF6px2dLKGcJaQ3mP+9/lSNX+hjXBPGHEsOoYo4xusmKb+jJTYx74zNbPBLWiF1R933VeiWHIrkCqEWeDKV/CtmkVYBcgXXGpsftJkbk8bxp8b+p/6lHpq45sMxupNYdKaL6Ky0=
+	t=1742237437; cv=none; b=IThjFrxgMuhG0gsBESQFw3zl+uqs16MQfm6WujW/ZhJXjp/7Dd4aMsUQUhXxC4ex4X5Cz5qsCZHXbncOIn5RmOwYdhiZm9+s6nGbM/nfB4bIrIrIPTs0lGmvXa/rYx9+dkDmKh4oAk0BJ1uRN5ovKhEe1UlRHRfH3yxj2JjGLJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742237421; c=relaxed/simple;
-	bh=BrCDkwh9DOlwvAN3HPEcrERSZ3qB1wiIBz+Eet8Feh8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=JpjM1ys5J77qiF6VEv/zu2XTPwCLRFsGgkM8R/n5ref4EnP9/Ai3jWokdhy1kyLHMeLHseP4F44yA0JRlrZaxRsVlDLGgXQaMkCdlXUG8hYr5XLK1OpGXzbxe7fdWQEUEfkdWqI96O+yMwov7R/M7xZBwO0Boh5xfwGf1Oo1/a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=oHxVLjkg; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1742237437; c=relaxed/simple;
+	bh=iWJ4xAGHyAnE6QbuCInfzYRvbLTef5OOVfOJYBo5i+8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tANmSriqd7hT3bZKGjzGFpfCXnoFKjTv9knGdskyLlGdGN6QYVXy1QCZUrRHnRP5EQ5JNM2HVmdG5ube9k3QKNSX2iAx32a0ps7K6i6eHI/FhT67h03MWpfye0qOytf+upH5FL6s4oRwPZLYLetmOOWNDZainfTYbE24FzAsrK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=W5dmuvfI; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="oHxVLjkg"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52HInuvH668508
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 17 Mar 2025 11:49:57 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52HInuvH668508
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1742237397;
-	bh=BrCDkwh9DOlwvAN3HPEcrERSZ3qB1wiIBz+Eet8Feh8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=oHxVLjkg1g2dFKgrcXgExFcRU7pcsArtDkre8wCtXGGVq6PUabP+u72GEKQVtNQBR
-	 1FBo7XhaXvaI5AHJoZlh83mDXZPGt8kMmDkS3g5rlfcx4zAkziZcxDgXyJHpWP27nt
-	 OeCeSSVjHPF1ZUjfefrzRXAjoLLsXaUJPiJsVat7WyzpLol6/iBp98H3RyKce9GHMX
-	 vT4UkypTN6EGhxo36V4yFgDhcPcrUwog4dx+JbilH7G7h2vHTxdh1JuZDlbSrHHACJ
-	 Wz8EGGHG29MDsNe4yMSEv79HM9EkA42dkVIov3tKCBIgBt1N+3UK7Klg6X0Vq1DbAz
-	 L43NG6OLEHjUw==
-Date: Mon, 17 Mar 2025 11:49:54 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-tip-commits@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5Btip=3A_x86/fpu=5D_x86/fpu=3A_Use_XSAVE=7B=2COPT?=
- =?US-ASCII?Q?=2CC=2CS=7D_and_XRSTOR=7B=2CS=7D_mnemonics_in_xstate=2Eh?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250317184839.GIZ9huh0WS7cOFXz0X@fat_crate.local>
-References: <20250313130251.383204-1-ubizjak@gmail.com> <174188823430.14745.17591986001259957573.tip-bot2@tip-bot2> <20250317101415.GBZ9f198PAh90nMWDf@fat_crate.local> <CAFULd4b-sZucEtvx19==5wcOfOCzj5fuZ2SHS7ZMboZQXdVycg@mail.gmail.com> <20250317104616.GCZ9f9eF-0n0qPbWwk@fat_crate.local> <CAFULd4b_a=3xs2b_88WaDR9hLuhMqNZiMu+kNAbrgJf2MoVNnQ@mail.gmail.com> <1886668D-E44A-4510-B31E-933545FA2C23@zytor.com> <20250317184839.GIZ9huh0WS7cOFXz0X@fat_crate.local>
-Message-ID: <05953E05-28D0-4640-9ECF-BDDB9521ECD3@zytor.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="W5dmuvfI"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3fe83c8cbdbso621874b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1742237435; x=1742842235; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=y9YporYfSyQzR9fHjG0FSGyAoboGZe4a/zGZZOFS0qU=;
+        b=W5dmuvfI/IIBtciftBFwehHACOIXudYVpuUFeVXSX7iu1VsU65VuvKOn60qdWydB3N
+         BLFusKmTI+kGWN6jHuGTneG509Y7vm0UH76paHNfgPYkp65KP9fP2GEcFQda3qvlDwrz
+         gAr2q8CUKbEDj0gzoogstJKyX0Udgn9jtlXGk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742237435; x=1742842235;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y9YporYfSyQzR9fHjG0FSGyAoboGZe4a/zGZZOFS0qU=;
+        b=vOUDi8/u6ChEhasI/N/2/cBPI8tSSsUP5js3JQ9bdML3W91UNes4sm5qC/LhqaY12j
+         Be2ZDfpMhjyTGqAdd+fzfUu8gBNyMAqLFJxcy/Jvd7r50X2kW5bgd4UCZh6n8uG2hxDd
+         3bhU0VrRFbKDv2nqaUPh4LpVnuMTqpnpn003yHQWN9Acg8oPiWk8he5Ups1shNcPqWGw
+         +RASwKQlPJfolKxF5S2aifb6Ac6RUsLL49oiReoZzy8xtDHJL+h9y1rrE+HLouk/kLDq
+         7XxruFHzjy12vRdAdZ3+0A6msAjeGsEVBUe7EAtlDvlJO5VKU1i4f6O6nDu5TgFjNcpq
+         swZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsVsxhweseEyKzbzgYZXTFfTP9Be5M+uYNDImuL9zzKnQ/kOfoMBXeg82J+/09JVw1apzsHH1ZXnLjvMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRkfpM6sW1YLEy+fT2Ydb80JATwdbK2+qr/RoTrsNQ4aoFhk37
+	OCXGNFtElOIUj/NqDy9KWZzybk8yeap5s7TgItHgoC09xS8wtJgr7OqcJLy02Q==
+X-Gm-Gg: ASbGncsZOdphBPCWlWEvlz8UlH9tHHv/MAQSJcFfXoEnebLe60D/NAveUfPpV1TyAD5
+	0l+A8Y9NZ+xsO8/ZAj1MxEvT+3R+l9bUztCJ0/10ul3g2taf45XmKrrf7WcB+MTYMfVzVJiajY6
+	iC8PjgOQgwuBkb3ehn9KtsXqJxJ8mDwkdOA2UT6ZTvKblta6OePdLAr7eniDKP3DAxGBv6m6+j5
+	yX+F9NCqqsqoWXf4sRT0C2CCmovaCA2kzqBb9/8Mf0bRk1xncmv+2Zp8gSPlmfMXZP2A3Bkx1H7
+	DFwL0/3zaLYsQ6SV58zRM/5tdumIeAjXRut7lq0y+zAlRdwoxHaSi5TKMwKDvSwtH9cjPhq+Tru
+	tMArDgBWp
+X-Google-Smtp-Source: AGHT+IGxL8qq8K6CPc1NqDH20ecuw/Yp8JNEr5ICv2xc9Jo0XclrfeIZlq6cbKg4apj7kSkvgGBfPw==
+X-Received: by 2002:a05:6808:2289:b0:3fc:11a6:7433 with SMTP id 5614622812f47-3fdf0646c85mr6999830b6e.36.1742237434979;
+        Mon, 17 Mar 2025 11:50:34 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3fcd452130fsm1887803b6e.14.2025.03.17.11.50.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 11:50:33 -0700 (PDT)
+Message-ID: <60ee6fd4-1cc6-4d77-8359-9215e1d604c3@broadcom.com>
+Date: Mon, 17 Mar 2025 11:50:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] PCI: brcmstb: make const read-only arrays static
+To: Colin Ian King <colin.i.king@gmail.com>,
+ Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250317143456.477901-1-colin.i.king@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250317143456.477901-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On March 17, 2025 11:48:39 AM PDT, Borislav Petkov <bp@alien8=2Ede> wrote:
->On Mon, Mar 17, 2025 at 11:38:12AM -0700, H=2E Peter Anvin wrote:
->> Ok, I'm going to argue, but only because the argument is called "st" an=
-d the
->> assembly parameter "xa"=2E That's needlessly different and means having=
- to
->> look extra hard=20
->>=20
->> We can obviously not use the same token, but IMO it would make a lot mo=
-re
->> sense to call one of them _st or perhaps st_p (being a pointer)=2E
->
->Already documented:
->
->https://git=2Ekernel=2Eorg/tip/4348e9177813656d5d8bd18f34b3e611df004032
->
->Got tired of discussing the obvious=2E
->
+On 3/17/25 07:34, Colin Ian King wrote:
+> Don't populate the const read-only arrays data and regs on the stack at
+> run time, instead make them static.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-Ok=2E
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
+
