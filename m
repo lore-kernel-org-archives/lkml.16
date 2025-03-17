@@ -1,39 +1,39 @@
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F082459EE;
-	Mon, 17 Mar 2025 15:38:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00492376ED;
+	Mon, 17 Mar 2025 15:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742225904; cv=none; b=CmAIEZygGbDPR5AaOLqhQO3+RmFZTs40cpTnIqPolmKismkMrugVypU3hSS5kcQnPFP46K0QhlkGtBx+gX2RX2szyTAPi1XlyS/7NQQpMzr7dnvuTq+Ou8AFrNycug7zqx+1KKoW5zlPfmym+4mRfTGStqJcWowI745Yj5WHkmc=
+	t=1742225903; cv=none; b=cB/db4N5RMGh7MpuJduKrRLZX45+Mhq+ckZfXVc3nc9u5ted4acFWkEOA4Qe31I3d/9nLpRLvf0nmhHck4CHLx2Uk96xECB3KAdAXcjymL4r39VfCOflv33TlzN7d5LrW+POrYZpFZ4ylvaflHAWtuUppRpvtB0dxeZzQqi7KR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742225904; c=relaxed/simple;
-	bh=VMAAcL/WwvL21NYlMzVssxdquBcgP0RxtJjIKbPJFO4=;
+	s=arc-20240116; t=1742225903; c=relaxed/simple;
+	bh=InaWakI9JDNtGtiE+ddJL+KFXdL0LBoOohV5I9ZQwb4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aUiTDah9Pp4z2EzYeXjnDsy8E2GWmeaVA9HJYt0f8t5oW9SF2dARaITz9BSOpTcpsSakimThlfgtZni179s2EUS0KroX3GnYwqSnFegyoHOH5bEywBhdNtJIsJ6/0F/oap06TUCLIiZbiQ4J89J/Pev5oS5fY57kiMWwJmt6wx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fiQnw3FO; arc=none smtp.client-ip=217.70.183.195
+	 In-Reply-To:To:Cc; b=JrxRx70Zqx6wqD6rHDV0R3MpFA9fi6ybboD6U8IOS6c1JgwotnJcgBKknvlZVbUxdcQN74Uasu+I4gHqjQj3Kc0var1ta4wkzdK8wAoK6JP5LTeMXPAaqUEK9vovo7OrHU2gJe1CAz2AstrtEyMA+ENaMkO9C4Ri/pdjmDyvRWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=j2CdbUe/; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fiQnw3FO"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2EBCC2058D;
-	Mon, 17 Mar 2025 15:38:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="j2CdbUe/"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8A4EE20572;
+	Mon, 17 Mar 2025 15:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742225900;
+	t=1742225899;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+xpJPt8JUx5kuaOpf8xU8UQUL/ApFfCPVC40J7NWr08=;
-	b=fiQnw3FOG/YTsSWWt5ORo3yVy2wuvsFo3ntvaUbYamrwaxtGb1GO3dCWLuVQ4f3Ajb9DvU
-	4qk4mfXq8p/V+hlfAv8C3OvJP2u0tvh6wYhTVg2FEUhfybbJOw4Uxt2ewZ5t3X/nwJPY0D
-	deuj+fvxu4EiuaQq0My7BRuZ+vSiMYVszNj+31hGu3g+xFqrPtV6RB8Rgpk9844oYIWXFa
-	bdI0FO5q0ietKM/YZDDh2Xiv1AmQXm8vpn3R8ChintYTiC8ZwM74JYAUh7XXY9aiRtHrzm
-	2JWQagbty+fwBqvqvWjDA7OD7YX0i5DUiAHC4RI5cQvVQ51UbIgUUof1nH7TMg==
+	bh=+6Egs1c8tkOk8BnB4TbE2gE8y+mt621Ltuv0RFYW+ks=;
+	b=j2CdbUe/+t53HhzI+pEifmHvZ7uQbSMrAn2j3Vnp5AKVyAXQtnyZyoLxCLcdsgc8WPOE6J
+	Ail4VGBs3/JLC6pv66fnnaiO1DrWcx7WI1taooNX539DS5eQCmnrlB1Xo+NFt+4ZTxNl+q
+	7Qdw2JLN1Sh8YzqEzzeCOBXEA9WFo2F5FboiZyNHn/ePlbuM9EHGC0c9OroX0zrQ1sjUVI
+	LHo7CJxaakHG956KG4ta9AvvdbKke8kmgipAZFMfVkvywftVVsoPpADlnfwG90iS598se3
+	J8au3sKOQNAxeTDiNaut+jV2E8zmJhWdLQBkSvekQFxpGo3rdkHaA4MojMkGlg==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Mon, 17 Mar 2025 16:38:02 +0100
-Subject: [PATCH RFC v2 4/6] gpio: aggregator: handle runtime registration
- of gpio_desc in gpiochip_fwd
+Date: Mon, 17 Mar 2025 16:37:59 +0100
+Subject: [PATCH RFC v2 1/6] gpiolib: add gpiochip_add_pin_range_sparse()
+ function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-aaeon-up-board-pinctrl-support-v2-4-36126e30aa62@bootlin.com>
+Message-Id: <20250317-aaeon-up-board-pinctrl-support-v2-1-36126e30aa62@bootlin.com>
 References: <20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com>
 In-Reply-To: <20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -51,113 +51,163 @@ To: Linus Walleij <linus.walleij@linaro.org>,
  Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
- Thomas Richard <thomas.richard@bootlin.com>
+ Thomas Richard <thomas.richard@bootlin.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeelkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdehvdeiteehtdelteffheduveelgeelvdetgedvueejgefhhfekgefgfeduveenucfkphepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijhesl
- hhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghupdhrtghpthhtohepifgrrhihhggrnhhgsegrrggvohhnrdgtohhmrdhtfi
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeelkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdehvdeiteehtdelteffheduveelgeelvdetgedvueejgefhhfekgefgfeduveenucfkphepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijhesl
+ hhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegsrghrthhoshiirdhgohhlrghsiigvfihskhhisehlihhnrghrohdrohhrghdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghu
 X-GND-Sasl: thomas.richard@bootlin.com
 
-Add request() callback to check if the GPIO descriptor was well registered
-in the gpiochip_fwd before to use it. This is done to handle the case
-where GPIO descriptor is added at runtime in the forwarder.
+Add gpiochip_add_pin_range_sparse() function to add a range for GPIO<->pin
+mapping, using a list of non consecutive pins.
+Previously, it was only possible to add range of consecutive pins using
+gpiochip_add_pin_range_sparse().
 
-If at least one GPIO descriptor was not added before the forwarder
-registration, we assume the forwarder can sleep as if a GPIO is added at
-runtime it may sleep.
+The struct pinctrl_gpio_range has a 'pins' member which allows to set a
+list of pins (which can be non consecutive).
+gpiochip_add_pin_range_sparse() is identical to gpiochip_add_pin_range(),
+except it set 'pins' member instead of 'pin_base' member.
 
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/gpio/gpio-aggregator.c | 29 ++++++++++++++++++++++-------
- include/linux/gpio/gpio-fwd.h  |  2 ++
- 2 files changed, 24 insertions(+), 7 deletions(-)
+ drivers/gpio/gpiolib.c      | 74 +++++++++++++++++++++++++++++++++------------
+ include/linux/gpio/driver.h | 12 ++++++++
+ 2 files changed, 66 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 7d00247f5268c..b9026ff2bfdc1 100644
---- a/drivers/gpio/gpio-aggregator.c
-+++ b/drivers/gpio/gpio-aggregator.c
-@@ -260,6 +260,14 @@ static void __exit gpio_aggregator_remove_all(void)
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 16d190c1d6802..5a6d97116be9f 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2234,26 +2234,9 @@ int gpiochip_add_pingroup_range(struct gpio_chip *gc,
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
  
- #define fwd_tmp_size(ngpios)	(BITS_TO_LONGS((ngpios)) + (ngpios))
+-/**
+- * gpiochip_add_pin_range() - add a range for GPIO <-> pin mapping
+- * @gc: the gpiochip to add the range for
+- * @pinctl_name: the dev_name() of the pin controller to map to
+- * @gpio_offset: the start offset in the current gpio_chip number space
+- * @pin_offset: the start offset in the pin controller number space
+- * @npins: the number of pins from the offset of each pin space (GPIO and
+- *	pin controller) to accumulate in this range
+- *
+- * Calling this function directly from a DeviceTree-supported
+- * pinctrl driver is DEPRECATED. Please see Section 2.1 of
+- * Documentation/devicetree/bindings/gpio/gpio.txt on how to
+- * bind pinctrl and gpio drivers via the "gpio-ranges" property.
+- *
+- * Returns:
+- * 0 on success, or a negative errno on failure.
+- */
+-int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+-			   unsigned int gpio_offset, unsigned int pin_offset,
+-			   unsigned int npins)
++static int __gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
++				    unsigned int gpio_offset, unsigned int pin_offset,
++				    unsigned int const *pins, unsigned int npins)
+ {
+ 	struct gpio_pin_range *pin_range;
+ 	struct gpio_device *gdev = gc->gpiodev;
+@@ -2271,6 +2254,7 @@ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+ 	pin_range->range.name = gc->label;
+ 	pin_range->range.base = gdev->base + gpio_offset;
+ 	pin_range->range.pin_base = pin_offset;
++	pin_range->range.pins = pins;
+ 	pin_range->range.npins = npins;
+ 	pin_range->pctldev = pinctrl_find_and_add_gpio_range(pinctl_name,
+ 			&pin_range->range);
+@@ -2289,8 +2273,58 @@ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
  
-+int gpio_fwd_request(struct gpio_chip *chip, unsigned int offset)
+ 	return 0;
+ }
++
++/**
++ * gpiochip_add_pin_range() - add a range for GPIO <-> pin mapping
++ * @gc: the gpiochip to add the range for
++ * @pinctl_name: the dev_name() of the pin controller to map to
++ * @gpio_offset: the start offset in the current gpio_chip number space
++ * @pin_offset: the start offset in the pin controller number space
++ * @npins: the number of pins from the offset of each pin space (GPIO and
++ *	pin controller) to accumulate in this range
++ *
++ * Calling this function directly from a DeviceTree-supported
++ * pinctrl driver is DEPRECATED. Please see Section 2.1 of
++ * Documentation/devicetree/bindings/gpio/gpio.txt on how to
++ * bind pinctrl and gpio drivers via the "gpio-ranges" property.
++ *
++ * Returns:
++ * 0 on success, or a negative errno on failure.
++ */
++int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
++			   unsigned int gpio_offset, unsigned int pin_offset,
++			   unsigned int npins)
 +{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	return fwd->descs[offset] ? 0 : -ENXIO;
++	return __gpiochip_add_pin_range(gc, pinctl_name, gpio_offset,
++					pin_offset, NULL, npins);
 +}
-+EXPORT_SYMBOL_GPL(gpio_fwd_request);
+ EXPORT_SYMBOL_GPL(gpiochip_add_pin_range);
+ 
++/**
++ * gpiochip_add_pin_range_sparse() - add a range for GPIO <-> pin mapping
++ * @gc: the gpiochip to add the range for
++ * @pinctl_name: the dev_name() of the pin controller to map to
++ * @gpio_offset: the start offset in the current gpio_chip number space
++ * @pin_list: the list of pins to accumulate in this range
++ * @npins: the number of pins to accumulate in this range
++ *
++ * Calling this function directly from a DeviceTree-supported
++ * pinctrl driver is DEPRECATED. Please see Section 2.1 of
++ * Documentation/devicetree/bindings/gpio/gpio.txt on how to
++ * bind pinctrl and gpio drivers via the "gpio-ranges" property.
++ *
++ * Returns:
++ * 0 on success, or a negative errno on failure.
++ */
++int gpiochip_add_pin_range_sparse(struct gpio_chip *gc, const char *pinctl_name,
++				  unsigned int gpio_offset, unsigned int const *pins,
++				  unsigned int npins)
++{
++	return __gpiochip_add_pin_range(gc, pinctl_name, gpio_offset, 0, pins,
++					npins);
++}
++EXPORT_SYMBOL_GPL(gpiochip_add_pin_range_sparse);
 +
- int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset)
+ /**
+  * gpiochip_remove_pin_ranges() - remove all the GPIO <-> pin mappings
+  * @gc: the chip to remove all the mappings for
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 2dd7cb9cc270a..0402f94ec6a02 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -751,6 +751,9 @@ struct gpio_pin_range {
+ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+ 			   unsigned int gpio_offset, unsigned int pin_offset,
+ 			   unsigned int npins);
++int gpiochip_add_pin_range_sparse(struct gpio_chip *gc, const char *pinctl_name,
++				  unsigned int gpio_offset, unsigned int const *pins,
++				  unsigned int npins);
+ int gpiochip_add_pingroup_range(struct gpio_chip *gc,
+ 			struct pinctrl_dev *pctldev,
+ 			unsigned int gpio_offset, const char *pin_group);
+@@ -765,6 +768,15 @@ gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
  {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-@@ -505,6 +513,7 @@ struct gpiochip_fwd *devm_gpiochip_fwd_alloc(struct device *dev,
- 	chip->label = label;
- 	chip->parent = dev;
- 	chip->owner = THIS_MODULE;
-+	chip->request = gpio_fwd_request;
- 	chip->get_direction = gpio_fwd_get_direction;
- 	chip->direction_input = gpio_fwd_direction_input;
- 	chip->direction_output = gpio_fwd_direction_output;
-@@ -524,7 +533,6 @@ int gpiochip_fwd_add_gpio_desc(struct gpiochip_fwd *fwd, struct gpio_desc *desc,
- 			       unsigned int offset)
- {
- 	struct gpio_chip *chip = &fwd->chip;
--	struct gpio_chip *parent = gpiod_to_chip(desc);
- 
- 	if (offset > chip->ngpio)
- 		return -EINVAL;
-@@ -535,15 +543,10 @@ int gpiochip_fwd_add_gpio_desc(struct gpiochip_fwd *fwd, struct gpio_desc *desc,
- 	/*
- 	 * If any of the GPIO lines are sleeping, then the entire forwarder
- 	 * will be sleeping.
--	 * If any of the chips support .set_config(), then the forwarder will
--	 * support setting configs.
- 	 */
- 	if (gpiod_cansleep(desc))
- 		chip->can_sleep = true;
- 
--	if (parent && parent->set_config)
--		chip->set_config = gpio_fwd_set_config;
--
- 	fwd->descs[offset] = desc;
- 
- 	dev_dbg(fwd->dev, "%u => gpio %d irq %d\n", offset,
-@@ -557,7 +560,19 @@ int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
- {
- 	struct gpio_chip *chip = &fwd->chip;
- 	struct device *dev = fwd->dev;
--	int error;
-+	int ndescs = 0;
-+	int error, i;
+ 	return 0;
+ }
 +
-+	for (i = 0; i < chip->ngpio; i++)
-+		if (fwd->descs[i])
-+			ndescs++;
++static inline int
++gpiochip_add_pin_range_sparse(struct gpio_chip *gc, const char *pinctl_name,
++			      unsigned int gpio_offset, unsigned int const *pins,
++			      unsigned int npins)
++{
++	return 0;
++}
 +
-+	/*
-+	 * Some gpio_desc were not registers. They will be registered at runtime
-+	 * but we have to suppose they can sleep.
-+	 */
-+	if (ndescs != chip->ngpio)
-+		chip->can_sleep = true;
- 
- 	if (chip->can_sleep)
- 		mutex_init(&fwd->mlock);
-diff --git a/include/linux/gpio/gpio-fwd.h b/include/linux/gpio/gpio-fwd.h
-index d705b6d7ad76a..80ec34ee282fc 100644
---- a/include/linux/gpio/gpio-fwd.h
-+++ b/include/linux/gpio/gpio-fwd.h
-@@ -19,6 +19,8 @@ struct gpiochip_fwd {
- 	unsigned long tmp[];		/* values and descs for multiple ops */
- };
- 
-+int gpio_fwd_request(struct gpio_chip *chip, unsigned int offset);
-+
- int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset);
- 
- int gpio_fwd_direction_input(struct gpio_chip *chip, unsigned int offset);
+ static inline int
+ gpiochip_add_pingroup_range(struct gpio_chip *gc,
+ 			struct pinctrl_dev *pctldev,
 
 -- 
 2.39.5
