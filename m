@@ -1,61 +1,61 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A823E2236FD
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7A9235347
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742208189; cv=none; b=SxPBECLCY7A+B30sVNEpAY3SzdHN8TLgfNcBfYxm20G238hfd6aWDL3XPGF+Arh15rV6pqNRCjfFOccLZdoLuHKaLo381x/afivw3/QK4NpgOxuBb+v7tegEhQqfELP+ZmBZeedYlrjU6mu1kpfvXIwGh9K+S5DYI1DSEkymTno=
+	t=1742208192; cv=none; b=bYTegIyq7e+uQlNEIt86us/e0nhgBxUnw1UGgAYB+HNPIRGGy6vIRKN5rkyPGQ0SdNSOPP5a2Ogz4vTYss3s6iJw4PcnniliSU22v1CGXt6U/GSZgXS6ySpbignUDnEeAarUD1MnVRx1z0m4s/jv9FrcOxbwRsBKK67pTeaUKvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742208189; c=relaxed/simple;
-	bh=opa6lPKdZ9aCTVZgV6zn8piU1lOjxjwhDcQrQFFAyoQ=;
+	s=arc-20240116; t=1742208192; c=relaxed/simple;
+	bh=ttowJ0RwSBgYbbzKOp7L3l4PCvTt/2Q7/OlmZX6B32U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B29cK2l83oohvuqqKSoSAVUuznoNSU/vNmBeQZgsyzqoiY0ZUYVgVlJ8MrUcq0PxEnPqc2mETVwB6ISdWYPmvOq6qJ2Dh9gWL4ktRQ7B56YQxYwgETtRW2UGiQZ1o76Vht/5geIJf9JP1kEEioBKtSJ6Ki2Ps65kjzOlXqcyLEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I99BOsmO; arc=none smtp.client-ip=209.85.221.52
+	 MIME-Version; b=Xru5cmy8aYi3UbQUMwYGavG5P6TTLiSR0xVVYZScq5cNcFcofWnkqw5aJKOzH5BVNPCOUhHOTdzA3RIM4AQP523nknlJmONsVDScDBDP/d4rAwN4IpNbcH0hOJTjGvMq6H3zjdO2A7FmwqVdVqlWHVN6/nt7YX1JwQXUfWYk6qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vg9I2x5t; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I99BOsmO"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3965c995151so2851858f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 03:43:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vg9I2x5t"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39727fe912cso900512f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 03:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742208186; x=1742812986; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742208189; x=1742812989; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bx1q2HBp4vh5xTWwllug152my5AslkI00+Q5AQBDivo=;
-        b=I99BOsmOGUFEJCD6BbeKq8EMREYV9WBZjSbANNk8233+dA0odDrRRQruK43pHG4AwS
-         iIynKqZSwbo/lUCtgnOWwvob4wmMfZ51t4o+2M5f+FhnDnUj1HrnlEpS6/Avz6nhfPE6
-         fnxO1Nx5EYmdbuFkzCY2U59ReTjYxQZa8+9PTrETbvE561/qdt+UE0pY25Jmjyb5DNFq
-         RZn8JJ13Zn5a1MkT30gyXUUDdXUDBB7j8iGMOzxz7FcsZJqEtbm0wmiofj9jlytVOdMX
-         caP8pq/3mLViQgf+QsWDLH7IrKTw0eM2GVGH9IjZooK+bdjIREeR7mbXmQjw2G2d3yV6
-         V+fQ==
+        bh=PGTMnbx0Lkc4Mj7M6zPuFctTBxRo1EPEX72C6bvz4aQ=;
+        b=Vg9I2x5tUacEm+lbSpew+BpPcRCDP61Q/bqdwgRgFuZBoZtORfRTi/nuaMNvmfGdMk
+         t1uOcsGdPVr84OElGFtF65bJ91Iq7blxcCGSD64tSy9gP/fvDelrl54j4CWbEQ9ZKlde
+         liQubagQxPIcDcZsxtd3KMTy82anbQUEgJ+0GFrNIQsYL8a6g4HYpYZ9741vXYyWLgkl
+         iKAdSbUISn055h8YK70WNfMlpVRFS0l00ayqsS4cpbxWvtK40uEMBx0jxS5UyInu/TTZ
+         DgokIszC1Qp+oBmLiCZm7NakMqwGsQS2a/mkOewPNFwfA6g5ES2e5RxSnVxGmCC9OGHe
+         ZR/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742208186; x=1742812986;
+        d=1e100.net; s=20230601; t=1742208189; x=1742812989;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=bx1q2HBp4vh5xTWwllug152my5AslkI00+Q5AQBDivo=;
-        b=TwoQQO2KUE50T9pPBkJUrhyCoUp4vwGLGsOw+//C2naQV2isMNgZR3BZtN3ADzVoap
-         +RUWQis3ZL4a5WUgQh2tNElCwDjmgFsDqT3KdZS77Bq/t+HcLdbzOo+dGPr9hzb5Iurc
-         V7tO3hBd/HTBHOIJIrGIAccflHzz4IDFOpdcjTg2H4SsD43qZzA7wbS+cSUEo5GyX9nu
-         AdMDGCaPJPUMjFR0EbGxl7vNL+8Qt4vvhnnICS//63L4RLjpjMH9py6TcdPvGfQoIgFZ
-         TfPUPS3igVtc2I4P7CORRC/u49Tld/mCQGfDcfnvNiX7maPnhdCo2ZNFxirbsbQWt5qd
-         Snxw==
-X-Gm-Message-State: AOJu0YyE+Kg/4c3UaGX/Y6/24EXyJfZbBQBJQ+rBmSQ0GBGSVVFODl17
-	en8m3jgtyrD5DmG2vBuKWdcNfyrWS+X0Acqum+RyecNRBjbkXJtLlatHB9gx
-X-Gm-Gg: ASbGncvmO1mH/nRlDr1z6+fHkX0K89GUku6PIhmc6raBXyh0RxlvnqcgtTAWt2XYb44
-	ZSLlc0z89kVY07YQExDoLIXC6E+HsP+DMGJ9SE1PIHxlUQNOt/aWUq7kMNjpqbAWXP+T6bI4UW5
-	K3t/3hTXSwdMDiztGU/67jX/A9wIhXqzfbiGHnkVCP2BqOPmUrKHGHyDBrZlEUpfQeR/r8EvC18
-	VAUmUNljLskvUsPnzqqSFRJIM9wMXo3E1/vgQ3+VaKDqaSK2KkhmiJ2CtK5CePRRhrVjnw3wQud
-	yK45Ai5UzoDtsJopMY7SRIV8lJs14NmLpmAXkikZsxHZjmc23mVAYO9F3IPE0MYHsQ==
-X-Google-Smtp-Source: AGHT+IH7lnASCC5nMhjvu4cRSqg+zrHC47rzZUzSuJK4VlEY/7mlEeEyJv4uw8sdZKH52wIArQKeJQ==
-X-Received: by 2002:a5d:598d:0:b0:391:441b:baac with SMTP id ffacd0b85a97d-3971ef3e4bfmr13565999f8f.50.1742208185753;
-        Mon, 17 Mar 2025 03:43:05 -0700 (PDT)
+        bh=PGTMnbx0Lkc4Mj7M6zPuFctTBxRo1EPEX72C6bvz4aQ=;
+        b=l18ORZqV3uKl8pFRP73kwZ0W8DMoFU2Yxs2UxuYvT2kXJwnU8X6xmkcB5zlgFCF9hk
+         DBonfMZULRZ2SUHYjVWGfNeGeRAE0qDcYxC1k4wAU2hxehzLkG+OfJmpefDs+ORabArh
+         9X0XvL6JHOZBcaY1QRwg60dcHVrUBAmuF9r2LYYjOvjIQruoIyJP6Rsp09Yz4ioDxh9K
+         WziUz2mUXDyhAou06ybdZgaaRGOPv8JNja0ShLinMQH2NJJ9L7byl1/ri6zpsnv9Hm8y
+         0WWxxillUjplRbLuHW555tDmqJSq7bWB9rnJENLhvBiSngd0XSsRpdZiJlFO5eBgUZor
+         GnFg==
+X-Gm-Message-State: AOJu0YxSRGeCJlNd9M4tpfQVPw7Z7aBtp4OM4VmIC/N5Zr05BjrUj7pX
+	xwMDegv6wjNZNtVbAZEU61izoP6cdwmEeeVlITX9Turb5mXN5kSe04zdC83I
+X-Gm-Gg: ASbGncu5gjWt4I76hXxpCWZpbEZNHdTCtDC2UZDeUgKXfK2KsKdsY2ne0Lf6vtZIpfy
+	urfOLRGka9t/R8wCDIP29KjX5f/zEJ25YwPP8Ra3Jb7WwAK57q8JqoEFLOs1LM1dwFAy7fyq2u2
+	OmBQSNYZkXJQV+pSRcUguI4f8QXUQE2I0P/0ahInCz2S8Sk9dmLvKeACWvUy1CqkSpWilOtJEp8
+	CRqFNQEBmh8Amy7FIjgflRrtppFjC2OerycfL3T21HaE+YiFaCBv50OmtPmf8AUqJAWhyMiHplZ
+	hYplr4ZcZ1J3KZhRRJByIhBne84OABk6o2Boh8x4n/H+S79/I3WOBbvNN/s9/Ri57g==
+X-Google-Smtp-Source: AGHT+IGxuKvw8uod1U5/dgfORaVxcStn0vSbX4+udaE4zEmKoNM2yKtayyk4qt8Z5OZQUJS71f6d3w==
+X-Received: by 2002:a05:6000:184c:b0:38f:3073:708 with SMTP id ffacd0b85a97d-3971cf48df7mr9741939f8f.3.1742208189089;
+        Mon, 17 Mar 2025 03:43:09 -0700 (PDT)
 Received: from starship.. (1F2EF046.nat.pool.telekom.hu. [31.46.240.70])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb3189absm14807262f8f.71.2025.03.17.03.43.04
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb3189absm14807262f8f.71.2025.03.17.03.43.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 03:43:05 -0700 (PDT)
+        Mon, 17 Mar 2025 03:43:08 -0700 (PDT)
 Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
@@ -68,9 +68,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Mel Gorman <mgorman@suse.de>,
 	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH 2/5] sched/debug: Make 'const_debug' tunables unconditional __read_mostly
-Date: Mon, 17 Mar 2025 11:42:53 +0100
-Message-ID: <20250317104257.3496611-3-mingo@kernel.org>
+Subject: [PATCH 5/5] sched/debug: Remove CONFIG_SCHED_DEBUG
+Date: Mon, 17 Mar 2025 11:42:56 +0100
+Message-ID: <20250317104257.3496611-6-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250317104257.3496611-1-mingo@kernel.org>
 References: <20250317104257.3496611-1-mingo@kernel.org>
@@ -82,99 +82,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With CONFIG_SCHED_DEBUG becoming unconditional, remove the
-extra 'const_debug' indirection towards __read_mostly.
+For more than a decade, CONFIG_SCHED_DEBUG=y has been enabled
+in all the major Linux distributions:
+
+   /boot/config-6.11.0-19-generic:CONFIG_SCHED_DEBUG=y
+
+The reason is that while originally CONFIG_SCHED_DEBUG started
+out as a debugging feature, over the years (decades ...) it has
+grown various bits of statistics, instrumentation and
+control knobs that are useful for sysadmin and general software
+development purposes as well.
+
+But within the kernel we still pretend that there's a choice,
+and sometimes code that is seemingly 'debug only' creates overhead
+that should be optimized in reality.
+
+So make it all official and make CONFIG_SCHED_DEBUG unconditional.
+
+Now that all uses of CONFIG_SCHED_DEBUG are removed from
+the code by previous patches, remove the Kconfig option as well.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/core.c  |  4 ++--
- kernel/sched/fair.c  |  2 +-
- kernel/sched/sched.h | 15 +++++----------
- 3 files changed, 8 insertions(+), 13 deletions(-)
+ lib/Kconfig.debug | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2da197b2968b..d6833a85e561 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -128,7 +128,7 @@ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
-  */
- #define SCHED_FEAT(name, enabled)	\
- 	(1UL << __SCHED_FEAT_##name) * enabled |
--const_debug unsigned int sysctl_sched_features =
-+__read_mostly unsigned int sysctl_sched_features =
- #include "features.h"
- 	0;
- #undef SCHED_FEAT
-@@ -148,7 +148,7 @@ __read_mostly int sysctl_resched_latency_warn_once = 1;
-  * Number of tasks to iterate in a single balance run.
-  * Limited because this is done with IRQs disabled.
-  */
--const_debug unsigned int sysctl_sched_nr_migrate = SCHED_NR_MIGRATE_BREAK;
-+__read_mostly unsigned int sysctl_sched_nr_migrate = SCHED_NR_MIGRATE_BREAK;
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 1af972a92d06..a2ab693d008d 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1301,15 +1301,6 @@ endmenu # "Debug lockups and hangs"
  
- __read_mostly int scheduler_running;
+ menu "Scheduler Debugging"
  
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 89609ebd4904..35ee8d9d78d5 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -79,7 +79,7 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
- unsigned int sysctl_sched_base_slice			= 700000ULL;
- static unsigned int normalized_sysctl_sched_base_slice	= 700000ULL;
- 
--const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
-+__read_mostly unsigned int sysctl_sched_migration_cost	= 500000UL;
- 
- static int __init setup_sched_thermal_decay_shift(char *str)
- {
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 189f7b033dab..187a22800577 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2194,13 +2194,8 @@ static inline void __set_task_cpu(struct task_struct *p, unsigned int cpu)
- }
- 
- /*
-- * Tunables that become constants when CONFIG_SCHED_DEBUG is off:
-+ * Tunables:
-  */
--#ifdef CONFIG_SCHED_DEBUG
--# define const_debug __read_mostly
--#else
--# define const_debug const
--#endif
- 
- #define SCHED_FEAT(name, enabled)	\
- 	__SCHED_FEAT_##name ,
-@@ -2218,7 +2213,7 @@ enum {
-  * To support run-time toggling of sched features, all the translation units
-  * (but core.c) reference the sysctl_sched_features defined in core.c.
-  */
--extern const_debug unsigned int sysctl_sched_features;
-+extern __read_mostly unsigned int sysctl_sched_features;
- 
- #ifdef CONFIG_JUMP_LABEL
- 
-@@ -2249,7 +2244,7 @@ extern struct static_key sched_feat_keys[__SCHED_FEAT_NR];
-  */
- #define SCHED_FEAT(name, enabled)	\
- 	(1UL << __SCHED_FEAT_##name) * enabled |
--static const_debug __maybe_unused unsigned int sysctl_sched_features =
-+static __read_mostly __maybe_unused unsigned int sysctl_sched_features =
- #include "features.h"
- 	0;
- #undef SCHED_FEAT
-@@ -2837,8 +2832,8 @@ extern void wakeup_preempt(struct rq *rq, struct task_struct *p, int flags);
- # define SCHED_NR_MIGRATE_BREAK 32
- #endif
- 
--extern const_debug unsigned int sysctl_sched_nr_migrate;
--extern const_debug unsigned int sysctl_sched_migration_cost;
-+extern __read_mostly unsigned int sysctl_sched_nr_migrate;
-+extern __read_mostly unsigned int sysctl_sched_migration_cost;
- 
- extern unsigned int sysctl_sched_base_slice;
- 
+-config SCHED_DEBUG
+-	bool "Collect scheduler debugging info"
+-	depends on DEBUG_KERNEL && DEBUG_FS
+-	default y
+-	help
+-	  If you say Y here, the /sys/kernel/debug/sched file will be provided
+-	  that can help debug the scheduler. The runtime overhead of this
+-	  option is minimal.
+-
+ config SCHED_INFO
+ 	bool
+ 	default n
 -- 
 2.45.2
 
