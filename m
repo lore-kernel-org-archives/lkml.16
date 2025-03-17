@@ -1,139 +1,148 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A007F1474DA;
-	Mon, 17 Mar 2025 11:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9A61474DA
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742211325; cv=none; b=rbJitgU8St3o84mavF6RdlRWdsdKkAo1dlpBH8Pz/+Xi546XJ1Asr3H2doOlu3tnOU7zETvx2JjIIf2yJ6mRHNvD1vVezqpuSmZQm0+D3FQVlq/hI6Ce34Tu8KayNQLbHCWFZPxbj+U09HSrwU4YOWb6Wm9kHslQwgsW3wKNa+0=
+	t=1742211333; cv=none; b=tbFV/svqZ/br/mw6bEc0TxXaqrdzEFDN4FMJiYdaQyP3ExHsqF+384MG7RrVkZfc6CFC4tiZbQfWVvK1I7ko3V7gmi2hYot7Ep+ADERcO4ka1N7NyABKeErPf4CVCJd/ma+WJUzkZCC1mP0wKfAAC7WUEKGNCeoqsDebVo1QdG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742211325; c=relaxed/simple;
-	bh=Z+jU0yjVjlGpr86JvyDq0lWCy38NGvFMUZiUBy7qA4s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WpgD/UTiyZjjJQPcXmI+b62EHryfJ1M1mZUhbHxSKklv9+fgZzCvFc3S5UQ4A8WCt71Fj/iCX41pXseCf1GFnJ0J9R8oU5B6Xy8E0N54DcIkar1jKpiuqJhaLoXKhz7Itngoosm93FMMBsYiqwbZY7RHbdweE99rpSVyEkrNeds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CeqMN/z+; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742211333; c=relaxed/simple;
+	bh=hhnKo1koZ9MWYz+6WoOpfnqo17O1obC3mtDDYd+spyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCZ3xfvPyQbC1Sr8lSolFHmuzC30lztfBn4IWcHQWZEMro5xk7IlE6AsxeLff+CDsoXgRVUUrXDdjY4vpdCXFMAVdIRh0m025ROlnMdXqd2M1W7gQjIkcS7ph9IlK175hCYcpAliDQzGSij6CXC9xROQBp6WjdEB2+mopPtHeOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BptCu5eU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CeqMN/z+"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso43947361fa.1;
-        Mon, 17 Mar 2025 04:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742211322; x=1742816122; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QdqbJfJCjqHPAuiYDswWxzkHL5cem7Mfcc3PxZdr4j0=;
-        b=CeqMN/z+vEvdZPMfi1+YnRr/zVpqhIM+2LF/lmXtZPKmU+lfro9qJkrhrlfdgrdBIH
-         MF+16OGJ5VNVXHnucxuubFXuMxZoXEHkaK3Mnh9A8YfuKEz1lSE8Okxqu3t+zJ/fg2I8
-         Um+oUXcfsImzUR3WxOwkW4poyG+5+HHEsgudeS2S5cf61wQ9GJmdG6Zk8XANokTdlU+b
-         NNwGIpoBZeNGzXpzAch+qFAJYrcxj6LEdOU6l9nO5iThIST1N3zRXfPeIHoBNZm00+dY
-         7KKiv3CTXwKQjkbL71wKE/SxodKIRkHOnTzVjUi2Y8CPR2fJ1UJFn4xAYZosF0qe+WO6
-         g2wQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BptCu5eU"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HA8RLm012987
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:35:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=YeZNlDAPrPyW/cf3xKhRAbVY
+	fLxCK2qS+SxQ2C/Ihu4=; b=BptCu5eUymlmh53PK+qVflr5BKD4O+VGHRMWbfD7
+	OScxgW1oiy1sHIp3DG0v3lFTzeGmuABGbMRDZszUlCw6Z2Q2a1DnUmkEj/krUjfg
+	LaOnWtSEkdsHQ9fqSIVQ7mpZ3nsAXS5N/6eAc3O69Gv/PRfPjcogCQUi9dccOQ4k
+	3pBVt7YwNR/oXjQfwD+fULRVqX1/ua8CfhAG5Hq+bbDzThLgZYp96DMIHtluI0hy
+	sg/WaYMYQcMqpSSsc/M8HB0VgI4n8MG0JzNESZq0KLTTmU6FFnideJHzXnN4tHr6
+	kebfVYXLVgGm9g16VVj88otOgIVyyWY0B3qkwNIJrDCD5g==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1utvgwm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:35:30 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c57f80d258so610264885a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:35:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742211322; x=1742816122;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QdqbJfJCjqHPAuiYDswWxzkHL5cem7Mfcc3PxZdr4j0=;
-        b=vlYALO7ILGfIDTgzJFUzjgmOYHkwOcTnbiJMyyo2GvIM9OxjDD9kWV1X/I87hiExv6
-         LCsYx/WhcvWpVXBObropUfnUFLAHLx7BoTQS+2YUX6XwLt58smSM4FBENozp5ES1BnbI
-         w8dvDkp9HtUoCWexuoBChZOLoQwsWqFOa/4eIKKczRkeL5POH8O5+miyamV83JGSRI6t
-         R8bviL41R/hCzOWEKz9TLA2NGSeRg9vGcHr5uh05hK/cLjIv95np+SPDU1VMv3z3jE6E
-         jQ6SXfEQtJh3C4dCzlQcmmUkpwNLU9bl1ej5ti3txEX51bpx/bjjXU4tCdqJHTVKpyd3
-         hn9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUhUyh1dLqJAQ6g1SGJuAdDATCTzHWHdBjJlXbFelDca7KLSKNMa7qiJ9oQ0wBUcRuqdYXi8fdQFDKsW6w=@vger.kernel.org, AJvYcCXilr2XrAlKNOlp3tKIEeI71An+mvZkLdj2ZLYhvNYeym4PQijeCLKI94Cn7BzbeJrz4qBU9urdHDbRWno5Rt0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOFWvEZlqVa3ZxOLHHP5oHCsdYDiLk4OEZDe/J1egyVKLJLH6V
-	SUtUH1aQfrDuhu3WUXnKUtAb0e6Q4cVci4ZjBCh6Pk+umuU55Kncj85+tXruIjDpLIAnmDpZddW
-	4k7rzhxa1qvAehnOLSBKwmvitfiU=
-X-Gm-Gg: ASbGncvzq02a5/nq/Oq4dagvChy03D6ZOR7w9g5aPMGWoeWjrkzfbBQVZXa0mFyjr7o
-	VJi6pY+iymNgqAll97THROX/++Nafm+Z6ER7XlSEzRpa4BHpsp5ga8sFx3v3JYjJOdwmAZ5b9kz
-	R2UOdvb/9rF7ofdLB8sB8filap4/t6d0ZlFHGAlYkeMO4oEOjVIyJ1kLlXstu0
-X-Google-Smtp-Source: AGHT+IFI/uWCTLubFLAoAaI0TSL57GVHnEjdOx7T/HkQzF0DApRhmTmWnB7plfh+E+etgvSBauBkgmz1SarAO8n3inU=
-X-Received: by 2002:a05:651c:1307:b0:30b:8f90:bdda with SMTP id
- 38308e7fff4ca-30c4aaa1a16mr65049261fa.7.1742211321524; Mon, 17 Mar 2025
- 04:35:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742211329; x=1742816129;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YeZNlDAPrPyW/cf3xKhRAbVYfLxCK2qS+SxQ2C/Ihu4=;
+        b=sKed7EX4uLjEqa1407+kh/0pWkzxtV57kJrSbwv7q0EpsFsjO98yR21NrNsryhE+Tz
+         xMKsvgmwAIHghfjbOI/3ZjI1q1+TKKBbUFcYvYkUC+hYhjW+2KDcePF+TgWz89AbePDr
+         vALFuFDpdUhitirpt+F9gNQJeXKICwMlD2ZM8XoZsNrCM1qwjq2aiBrhhBUE0a2b0PQZ
+         JnFwYakscgKBe+Nc1/Y6xpGYjkteq69kZM/EBGNnR1XdJq/mu9cCIaPiPhCWa14WKzyG
+         AJCuaYWgjTcmHuYRTNfcsQl4XtuJ5lHexly6Lgej9aocj+yydwe9tbt8HStEGJS/C6sK
+         Gqrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUj4m4q26BALiqm0NVOj6i4cO4oC+Vu8PQV4Aa2Zgymoz56ijLumXnQTLEuSZJC+lZ/ttlagWrg1eLryiU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqNbbkBw/o6afNSm2ID6wN274bjwR7mdeFSOleOd7m42FpSrpW
+	wqVyLym1wJANZyK4uJSb6sCxBTqqYOnhyb4en7MJzC8sRT+44yR8wqJrp/gfT1GV/LDlaidZefM
+	7pBIMQwpH4edHbFTE1M381T5tn72rhQaVmHknNFBaBa7Pg/lc5zmaejDVwtz5Of1MNzY+75o=
+X-Gm-Gg: ASbGnctFlXyp7R84Jjl5srtfnaslP4xskI5FGM/pDM5egEId0nUQBx8YW/cKjazd6D5
+	laIOfKnXBw4Es8eEkKPICc2qFuZxonr2KTR+KmNnDgX1yRwJHsLSdMVNaCGIrjGFX1dG6WImMN5
+	bI8JT4hXogV6Nh8+p68VykW07jO6eQI6ghOuDWquhhU5fLPFfh2x/SujsuVIA9u1Nvx9BH01zYO
+	plhGf8lviiRLO9/QurosARLmCqY6UUwsGWFZb6FWjH5hD3ai+sEBYRsWHRXgfks2b8Jx2iuWTr9
+	x72/7uoNbh1Mxk6OgBKH6krhhVn89PH/LRJvnuDSizHo35/Tuei1qsPjwaAkLppbweDpt3QkNDe
+	QjHY=
+X-Received: by 2002:ac8:5802:0:b0:476:7e72:3538 with SMTP id d75a77b69052e-476c81d8e94mr233422831cf.50.1742211329578;
+        Mon, 17 Mar 2025 04:35:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8Ff7NRDjIixgDbZiIssqIub1yFfmbmAPPXmx/TewABw8oOTS3ubLjWwHKqWclRI5IHUlYvA==
+X-Received: by 2002:a05:6214:2626:b0:6d4:dae:6250 with SMTP id 6a1803df08f44-6eaeaad4dd7mr216862326d6.34.1742210994322;
+        Mon, 17 Mar 2025 04:29:54 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c3f1da7eesm15708061fa.100.2025.03.17.04.29.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 04:29:52 -0700 (PDT)
+Date: Mon, 17 Mar 2025 13:29:49 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] arm64: dts: qcom: sa8775p: add support for video node
+Message-ID: <vkwdmy4xabipnmetypzuem4xr2fijxb763hu5liohumtkfit7u@drhlzuo57y2w>
+References: <20250311-dtbinding-v1-0-5c807d33f7ae@quicinc.com>
+ <20250311-dtbinding-v1-3-5c807d33f7ae@quicinc.com>
+ <3ec71075-b1ef-4366-b595-80fe41cd1e13@oss.qualcomm.com>
+ <5qfe4gnjnttnpezj36rdsdbomghnz5ytj3hiecoingj7622o5a@h4tq4tzliwz4>
+ <b9743d3a-d0bb-385f-f21e-6b0c0be37fae@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250316-vec-set-len-v1-0-60f98a28723f@gmail.com>
- <20250316-vec-set-len-v1-2-60f98a28723f@gmail.com> <D8IGFTJXS2A1.9JBD1UKGN4PX@proton.me>
-In-Reply-To: <D8IGFTJXS2A1.9JBD1UKGN4PX@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Mar 2025 07:34:44 -0400
-X-Gm-Features: AQ5f1JrNHM6KrXV2cdwfDKtwGLlK__r3IwisWS0nZq97rJwKKR_q_sLD4wbgGyU
-Message-ID: <CAJ-ks9=oq+c_pMg41QgGWsj=phWYfntXQgpSrFmz16Vifofn3g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: alloc: add `Vec::dec_len`
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Danilo Krummrich <dakr@kernel.org>, Andrew Ballance <andrewjballance@gmail.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b9743d3a-d0bb-385f-f21e-6b0c0be37fae@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=H8Pbw/Yi c=1 sm=1 tr=0 ts=67d80902 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=xle-qd2Ai3CaSUjEJ3AA:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: HhlQAJm6uN7zt6r3wSCK-90xHLTJ8aY7
+X-Proofpoint-ORIG-GUID: HhlQAJm6uN7zt6r3wSCK-90xHLTJ8aY7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-17_04,2025-03-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ mlxscore=0 suspectscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503170084
 
-On Mon, Mar 17, 2025 at 6:04=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> On Sun Mar 16, 2025 at 11:32 PM CET, Tamir Duberstein wrote:
-> > Add `Vec::dec_len` that reduces the length of the receiver. This method
-> > is intended to be used from methods that remove elements from `Vec` suc=
-h
-> > as `truncate`, `pop`, `remove`, and others. This method is intentionall=
-y
-> > not `pub`.
->
-> I think it should be `pub`. Otherwise we're loosing functionality
-> compared to now. If one decides to give the raw pointer to some C API
-> that takes ownership of the pointer, then I want them to be able to call
-> `dec_len` manually.
+On Mon, Mar 17, 2025 at 11:30:16AM +0530, Vikash Garodia wrote:
+> 
+> On 3/16/2025 12:02 AM, Dmitry Baryshkov wrote:
+> > On Sat, Mar 15, 2025 at 02:43:30PM +0100, Konrad Dybcio wrote:
+> >> On 3/11/25 1:03 PM, Vikash Garodia wrote:
+> >>> Video node enables video on Qualcomm SA8775P platform.
+> >>>
+> >>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> >>> ---
+> >>>  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 67 +++++++++++++++++++++++++++++++++++
+> >>>  1 file changed, 67 insertions(+)
+> >>>
 
-This is premature. It is trivial to make this function pub when the need ar=
-ises.
 
->
-> >
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  rust/kernel/alloc/kvec.rs | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-> > index d43a1d609434..5d604e04b9a5 100644
-> > --- a/rust/kernel/alloc/kvec.rs
-> > +++ b/rust/kernel/alloc/kvec.rs
-> > @@ -195,6 +195,21 @@ pub unsafe fn inc_len(&mut self, additional: usize=
-) {
-> >          self.len +=3D additional;
-> >      }
-> >
-> > +    /// Decreases `self.len` by `count`.
-> > +    ///
-> > +    /// Returns a mutable reference to the removed elements.
->
-> s/reference/slice/
->
-> I would also mention here that the elements won't be dropped when the
-> user doesn't do that manually using the slice. So explain that this is a
-> low-level operation and `clear` or `truncate` should be used instead
-> where possible.
+> >>
+> >>> +					<&mmss_noc MASTER_VIDEO_P0 QCOM_ICC_TAG_ALWAYS
+> >>> +					&mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+> >>> +			interconnect-names = "cpu-cfg",
+> >>> +					     "video-mem";
+> >>> +
+> >>> +			firmware-name = "qcom/vpu/vpu30_p4_s6.mbn";
+> > 
+> > Firmware-name should be a part of the board DT file rather than the SoC
+> > DT.
+> Given that video ip is independent of any board, remains same for any board
+> variant of SA8775p, and again for the same reason, PIL, aspects of video driver
+> was made out of probe, i would prefer to keep it in SOC. Again, this can be
+> overridden in board specific variant DT, if any case arise, incase.
 
-Neither function exists. I've added a description of the semantics of the s=
-lice.
+This file is also board-specific and will not be accepted by a board
+fused to work with a particular set of CA keys. So, no. This needs to
+go to the board DT file.
 
-> > +    ///
-> > +    /// # Safety
-> > +    ///
-> > +    /// - `count` must be less than or equal to `self.len`.
->
-> I also think that we should use saturating_sub instead and then not have
-> to worry about this. (It should still be documented in the function
-> though). That way this can also be a safe function.
 
-This doesn't seem better to me. I'd prefer to have more rather than
-fewer guardrails on such low-level operations.
+-- 
+With best wishes
+Dmitry
