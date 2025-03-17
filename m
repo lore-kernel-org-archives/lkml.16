@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4279F1DE2B6
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B76A1DED42
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742235260; cv=none; b=aybeTFlfwko0K4ki7g5oIitKInmsXHfxee/pQiWxr0ossrf5JTWzLO9IoMCplxL8XHu6HeRnS5xkZE4QzcUowAveVCwRTMFCYUs7D7pFSSTcyX8TRoj9RYXrekrYVSsV08F/zpCT9iOhfFK4o25MHp3awL2ll0Amp28iIgK3v8w=
+	t=1742235261; cv=none; b=ND93n9xzrGlLZPQ3JIF3hn+JKYTfvDjXCFnl2vU8SUQiSVUxRmg/FQ9wRCzun5nS1tLvwvI5PYedZ/huKCAY0ZRICRYwvUapjDoAKsKl+P2G9rrtV9Iuwt3fJzH3jpPDvvCeKIQ+0sSKzd+BCZS1B3PWCCAEAkvvrYGjT57OpSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742235260; c=relaxed/simple;
-	bh=B5cEWlXb6TDZQD3QiR+jDDqz1FNbhcB3N3zgLpxZPJE=;
+	s=arc-20240116; t=1742235261; c=relaxed/simple;
+	bh=eQWREJ1jkAgHZ1l02bU7KO6zxlVWSx2zj/sKtF5fNy0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mGdCBsxY+wabowlE1SKCQJG6CigreJ+vO5IW1zq9DwmgO7YS1lV1rcm7iu+r/DWrbQObFHvEzWLk2WcqdanVvu7iVajjAIjxZgXou2421iq89d3KsRtXRfoGd25lEcDx4kPzkJKX2yAzyYCfKDz9qVTRPYR2bYJGINyxWmSMqLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CVVyc4wA; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=j3+Ra9ysDBCDx4DVcLR6Css0y+2ROkd9LyoLgzvgoB/jUXrADgQWJqCkCXcelEwOXMyMkiQC1WF1mlgbDnf7aG6aH6IiBZtlQC863PJDMswQJzmHC94eaEB4VqNqaOYoMCYBsPvWWkVY62t9RAWWGtwNBuj4GvMk+RBsprl2aC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UNm1qyI3; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CVVyc4wA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UNm1qyI3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742235260; x=1773771260;
+  t=1742235261; x=1773771261;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=B5cEWlXb6TDZQD3QiR+jDDqz1FNbhcB3N3zgLpxZPJE=;
-  b=CVVyc4wAaZevosRH75sMSRVR0it76ycK8RkK9itFEMsE2zAmXDcXnj7l
-   V0EuRvJ38vtYokQ7Gh+QT2W1tCalBj3FLJDV2mf/LkfYet+AqzZt0h6Ry
-   75pVi96eofZkgC9W0iEZkgc2fSbMDTVivvNeKXEAanc1KXIlWeNzNYdeB
-   f2HayDx92MbQUd28pdcEDnAtOaR0lAikDV533xSZUuQmOFtxIMaVV/DCX
-   JEa1HVEpK+GQMYv3gQEP+idoR/qS3KDngZdSuJFiAXw8vnD3J0EO3UBco
-   /zGxRJQZOgVXPaeJcCTBtxLpkpsxUYtMNUPOH5Kft7x90c9y56oAJ654b
-   A==;
-X-CSE-ConnectionGUID: NT4G17W2RF64SVCvoLVMdQ==
-X-CSE-MsgGUID: J1tMblrTTuKTH4c4WxzN/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43259469"
+  bh=eQWREJ1jkAgHZ1l02bU7KO6zxlVWSx2zj/sKtF5fNy0=;
+  b=UNm1qyI342wSFUPYem4r2WUJrRhghNeLbTxsofFBb7z8al96ICBZfGyc
+   dW/tDvs3veFBV4iXNZ1GE+t5aUujuY/ONymZSXT1Z55BRFlfMxGEvwEmD
+   ebBwKJ1RyCLsW7EVGGXaTj0huPjtaOql503gBp6cHjUM2fSpWOzWDkwyn
+   aFnv7GVDs77MPsihwIj4zyL0SpD0q1TVE2ujTfipCAtSKLbGW1S6jjF4O
+   +Rl9/KOWIqGgCYxgRM3hdw5XLB0MDhh+Soncjt+Z7MvCNu+ElmAHRAxPv
+   JUyWGOOuBFFJ9rRSu0o1iB+5sckAoySynxExnb6f1lsXvXvHPktERYKTN
+   Q==;
+X-CSE-ConnectionGUID: faHL/6G6SkWtOk2Sm5epbQ==
+X-CSE-MsgGUID: 5n52qhY4RomNv+yBxNc44w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="53972043"
 X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="43259469"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 11:14:17 -0700
-X-CSE-ConnectionGUID: qBnrCENSQyquLO+35FHsUg==
-X-CSE-MsgGUID: NV+WN8aFQUuj82+ZKYsekQ==
+   d="scan'208";a="53972043"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 11:14:17 -0700
+X-CSE-ConnectionGUID: trVRbIyYR36FbuDi2BxZ5A==
+X-CSE-MsgGUID: Qj6F6T7dSTm8UNY+8yjIiw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="153007718"
+   d="scan'208";a="122512767"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 17 Mar 2025 11:14:15 -0700
+  by orviesa007.jf.intel.com with ESMTP; 17 Mar 2025 11:14:15 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 390CD516; Mon, 17 Mar 2025 20:14:14 +0200 (EET)
+	id 227F1475; Mon, 17 Mar 2025 20:14:14 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andy@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 4/4] resource: Replace open coded variant of DEFINE_RES()
-Date: Mon, 17 Mar 2025 20:11:13 +0200
-Message-ID: <20250317181412.1560630-5-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/4] resource: Replace open coded variant of DEFINE_RES_NAMED_DESC()
+Date: Mon, 17 Mar 2025 20:11:11 +0200
+Message-ID: <20250317181412.1560630-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250317181412.1560630-1-andriy.shevchenko@linux.intel.com>
 References: <20250317181412.1560630-1-andriy.shevchenko@linux.intel.com>
@@ -65,27 +65,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace open coded variant of DEFINE_RES(). No functional changes intended.
+Replace open coded variant of DEFINE_RES_NAMED_DESC().
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- kernel/resource.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/resource.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/kernel/resource.c b/kernel/resource.c
-index a30a32b47e0e..8ff2f8953a4a 100644
+index 80d10714cb38..dc9031267942 100644
 --- a/kernel/resource.c
 +++ b/kernel/resource.c
-@@ -563,8 +563,7 @@ static int __region_intersects(struct resource *parent, resource_size_t start,
- 	struct resource res, o;
- 	bool covered;
+@@ -1957,11 +1957,7 @@ __get_free_mem_region(struct resource *base, resource_size_t size,
+ 			 */
+ 			revoke_iomem(res);
+ 		} else {
+-			res->start = addr;
+-			res->end = addr + size - 1;
+-			res->name = name;
+-			res->desc = desc;
+-			res->flags = IORESOURCE_MEM;
++			*res = DEFINE_RES_NAMED_DESC(addr, size, name, IORESOURCE_MEM, desc);
  
--	res.start = start;
--	res.end = start + size - 1;
-+	res = DEFINE_RES(start, size, 0);
- 
- 	for (p = parent->child; p ; p = p->sibling) {
- 		if (!resource_intersection(p, &res, &o))
+ 			/*
+ 			 * Only succeed if the resource hosts an exclusive
 -- 
 2.47.2
 
