@@ -1,110 +1,123 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CC31A23B5
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6889D1922D3
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742229379; cv=none; b=mqROIMwsCf/M0yJkRxyNqmtXweEDANiwl7n4TGd2GRN+z6XdymN8IiynVD9cVtq/xxgeld0HcYfU4+o+UriB81DE2o3OnuWtKmksaVpFhDMjtVXRR4pQxqg5bxnNg+t7jG2ZABxff7FYKRsb7/dU9/jQHGlNUQ5tksKNzEY1tTA=
+	t=1742229436; cv=none; b=bL09A/O1P8G4Wvbg703+/AV3LRAJBM4UrqRyGJtk5cPOXIaW8tg+W5AU9ktNWL2WQqOc99ESF2w7r3g1SCSi9IJt6YVJe60zX1xJZgO03xleeHsS0LHL0HCoDH669SwWiYsGA8DvqJbaK+Piliu1nqUN9+zINlblyzfdJ+5uGXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742229379; c=relaxed/simple;
-	bh=+5qOoiQ9fJgCIchDENR3sXW+cpUgNlPDH1B+xKZEJEs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LcFRPRvQ3vxl8h7B8WkIRUvHDW5nTX67O2eyAxzSQfsv1zKd5kQcLNXgF5WFOwkStnPbx2vbgFYNcqwiKxDQR+Ato5Cbs4E8LPYLbZRyq4QiUbgfH1dZdLC/oB0ikK73BbBlcTEIy/4Vrch24MX4B2UGydvu6DilYh8gnoOKbMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cBvBe2fi; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742229436; c=relaxed/simple;
+	bh=S6I2WavCtsoOuWUc2oZMW7mzzqpQSM5n/x+IPgYbHFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=piot4yb9qD0huoHvM8PmmtTa+vm7rnj2QXs2Qtrs7GTkcAdpbCqs2tFKAC3i/QmL0pwzKUZas6v/xoef2KKkC6XpwQQFRkHvrbMjddekhcERG3/NSDVaL+RB8GCg5MXf2OjHuDA/vRTfG3uzEgk27EMxOs5ArxM7FlJkH9GDfDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dN6e5qID; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBvBe2fi"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30795988ebeso48143661fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742229376; x=1742834176; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fm+Vc8Ft3wj+TdV2Qy7sCZQLNLQL3Vgkfnk4EUOWKbA=;
-        b=cBvBe2fioVkZjKS+HtqMYPn4uhG/KpkRneExZYWyAH/p9YQNnw3njRGEySeZtvrh7T
-         ZCH9Gk0wrRkcrZvJ0Hd+QWPPxyh6AQcXYv7rboONT7hPN2tv6OkWAWvzqUv+QD9vqnB5
-         RwzzX8Q1z/paMNN5I+RFfxBVRPwqWWZHv2q31LjkPjk4TtoBs+usur1oRnSi292p3XPY
-         ku6SXXZYA1GPGBO7+Bt/oDXjfl4G7hByUScmN50GpFcc0LjWUabIYUlskWgSv+bhB+AT
-         w0UMlNRB+yl7M5r1ikE3dZQPdbniLCyKaTzMeYYQG4XM9R+BhdiElND5Ic2fQ1x8IItf
-         FA2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742229376; x=1742834176;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Fm+Vc8Ft3wj+TdV2Qy7sCZQLNLQL3Vgkfnk4EUOWKbA=;
-        b=iuI8w8N9OmwomqhSIRPf9qnAWVCpbJRiSV79qwVhX/xGdBUkzjuXvW8zy2svLiRmro
-         /B5BzNeHzANnYk99wOmdEg6WaqL6MZv/TIBvMVRiD1CaxEombBRH0bMw76AcJJE77E76
-         dnUm1eE0me4MJZptUkOrYYbk8W9pb7yUdlL3wUlvsF5RFGgQaVf7TKSdFBDlbZpWpumD
-         29Hy3VAGr7vUVMntPsmXi81NN5LhVmP3xuZekHMiDQ5e41SI1zH2RyUwCiZGU3lA+Cs5
-         yRH1UonLswxpiELl7eFdLOH8DyZISTPOl3ytAW9Eswy//ITS9179YG3AXvGlsMT6+o8D
-         cpjw==
-X-Gm-Message-State: AOJu0YyiIeBoMYK3xwlHcejKTqtZsx1rphQRZJLKkvRv6cIhWsm0w+ZK
-	lS0wmnhiywB9oYHIn/58d/aE1wGaCzXbf1r/whE2IAL6R3zxcmw7vJUTUA==
-X-Gm-Gg: ASbGnctRipW4xi4vJwn/1/fm19OEPAGws/d6nhQrFhrCS8BjlnaBL9FlIDwaYpA4tD+
-	DhycKKnB47061vyOhBpoKZyJFTITf6QeBdY3H1/nzG+BX4dyKY6Dt+mtmYQwvhENPrGBrxQrteF
-	P3pdA2VxBf6y4kAAksI+jLohWCyOEZJABbq+P0Ijk/RH2DKatNId8Sdi6/aH4fO7UoceMjIRRLz
-	JhYQWaL81XCq9Hkpvelf9hS9GJfKSs2tFcX9VDkxLqy0nrxjv7nyhqd8sCVu9Y8yWo9LRkqUBGU
-	DYkTRwmxSokiBLc9SJTHyDjrhE+oqVcadJeCIgXU
-X-Google-Smtp-Source: AGHT+IErnjd1NSIMGuhSG/RxgeAIAcxg08vAi/aa0NwoW1lo5isTMHntblkxDcHvV8JQPOGA6bZkHg==
-X-Received: by 2002:a2e:be89:0:b0:30b:bba5:abfc with SMTP id 38308e7fff4ca-30c4a863416mr76221661fa.9.1742229376263;
-        Mon, 17 Mar 2025 09:36:16 -0700 (PDT)
-Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c4012af5dsm16457911fa.15.2025.03.17.09.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 09:36:15 -0700 (PDT)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Tejun Heo <tj@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: [PATCH] fork: Use __vmalloc_node() for stack allocation
-Date: Mon, 17 Mar 2025 17:36:14 +0100
-Message-Id: <20250317163614.166502-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dN6e5qID"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742229434; x=1773765434;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=S6I2WavCtsoOuWUc2oZMW7mzzqpQSM5n/x+IPgYbHFE=;
+  b=dN6e5qID5fgx94o0b7P/wrDW6vq0UUAb45g6TiJGLgNilFZ29eh51rNx
+   PYU/pf8fy3G0g7z8344nnGlWcTlKTywt4MlEo4pTiWcVfh5NVqIPNPNbp
+   9LoD/dRRN5opMvhAfR5QY73L9YByKx1GKu0EiJiuKN3nS44TbHsOtmMEH
+   aBpkMgpPUct7E4/diftv6tFrCZ0sD+HW8ZzDXKHveEHDV/E2osf56uTJm
+   6Sie1jGjuM6ZyNGrl6SaE/qCJdMeJzHt53yr43nIyE4dW16Ng2p6OL0iH
+   TTa5TyDAderfW7Aw3ElyQwT1YsvJyw3r/pFs4TNzRPoCnov/DejCAzf6z
+   g==;
+X-CSE-ConnectionGUID: 3CM11ndcTwiFP1Ilfcwasw==
+X-CSE-MsgGUID: kYzaWeQpRFmSjfj05vgz8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="30916548"
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="30916548"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 09:37:13 -0700
+X-CSE-ConnectionGUID: A270ThBuSMyycNnywtyPVA==
+X-CSE-MsgGUID: jDdGIhg1QGm8sCV4sXP7Yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="122487177"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 09:37:13 -0700
+Date: Mon, 17 Mar 2025 09:37:12 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: "Moger, Babu" <babu.moger@amd.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH] x86/resctrl: Refactor to make adding extra MBM events
+ easy
+Message-ID: <Z9hPuMV5n_FY02MM@agluck-desk3>
+References: <20250314202609.5753-1-tony.luck@intel.com>
+ <d4263bf7-9bd1-447f-976c-69fd96d3f204@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4263bf7-9bd1-447f-976c-69fd96d3f204@amd.com>
 
-Replace __vmalloc_node_range() by the __vmalloc_node() function.
-The last variant requires less parameters and it uses exactly the
-same arguments which are partly now hidden inside __vmalloc_node()
-function.
+Hi Babu,
 
-This change does not change any functionality. It makes the code
-a bit simpler.
+Thanks for taking a look.
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- kernel/fork.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+On Mon, Mar 17, 2025 at 09:54:59AM -0500, Moger, Babu wrote:
+> >  static void mbm_update(struct rdt_resource *r, struct rdt_mon_domain *d,
+> >  		       u32 closid, u32 rmid)
+> >  {
+> > +	int evt;
+> > +
+> >  	/*
+> >  	 * This is protected from concurrent reads from user as both
+> >  	 * the user and overflow handler hold the global mutex.
+> >  	 */
+> > -	if (resctrl_arch_is_mbm_total_enabled())
+> > -		mbm_update_one_event(r, d, closid, rmid, QOS_L3_MBM_TOTAL_EVENT_ID);
+> > -
+> > -	if (resctrl_arch_is_mbm_local_enabled())
+> > -		mbm_update_one_event(r, d, closid, rmid, QOS_L3_MBM_LOCAL_EVENT_ID);
+> > +	for_each_set_bit(evt, &rdt_mon_features, sizeof(rdt_mon_features))
+> > +		mbm_update_one_event(r, d, closid, rmid, evt);
+> 
+> You need a check resctrl_arch_is_mbm_event() here.
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 2fa2a3582925..72d9e7c7639e 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -311,11 +311,9 @@ static int alloc_thread_stack_node(struct task_struct *tsk, int node)
- 	 * so memcg accounting is performed manually on assigning/releasing
- 	 * stacks to tasks. Drop __GFP_ACCOUNT.
- 	 */
--	stack = __vmalloc_node_range(THREAD_SIZE, THREAD_ALIGN,
--				     VMALLOC_START, VMALLOC_END,
-+	stack = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN,
- 				     THREADINFO_GFP & ~__GFP_ACCOUNT,
--				     PAGE_KERNEL,
--				     0, node, __builtin_return_address(0));
-+				     node, __builtin_return_address(0));
- 	if (!stack)
- 		return -ENOMEM;
- 
--- 
-2.39.5
+Right. This is definitely broken. Needs that check.
 
+> Will that be reason for your hang issue?
+
+Might have. But it isn't my only problem. After fixing this my
+kernel dies on a deref NULL.
+
+> > @@ -1075,20 +1062,37 @@ static void dom_data_exit(struct rdt_resource *r)
+> >  	mutex_unlock(&rdtgroup_mutex);
+> >  }
+> >  
+> > -static struct mon_evt llc_occupancy_event = {
+> > -	.name		= "llc_occupancy",
+> > -	.evtid		= QOS_L3_OCCUP_EVENT_ID,
+> > +static struct mon_evt all_events[] = {
+> 
+> There is one empty event here. You may need to make that clear.
+
+Yes. I went with "some wasted space" for code simplicity just
+using the bit numbers in rdt_mon_features to index this array.
+
+Also applies to the mbm_states[] field in rdt_mon_domain and
+the arch_mbm_states[] array in rdt_hw_mon_domain. The wasted
+space could be reclaimed with some macros to convert from
+bit numbers to array indices should this patch ever be
+considered for inclusion.
+
+-Tony
