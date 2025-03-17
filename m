@@ -1,98 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A262133987
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875C72222D2
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742203693; cv=none; b=oAnAfumRDSRH8kWKGaWyGWzNnMa1k0zG3MZvafhEFG0ywjopo30bZ+iW4XbAtoqvhfphb4e/N9d95OfA3zajDvuauvLIr8/t+Mdw5dF1TSr1wertzzEV3fzqcxRH74r8kSrCGX0qw/No4ykLsxqmqEfjc5S2b+kf33UPqw44zNQ=
+	t=1742203696; cv=none; b=ofuzBg9qrmX/H9Tfj4ba5Q3143xhIiv1hQ+ZcKX45dIx+K5lksqnMZC4+DQezpthRGMX97eN4Al21YQhxJQ3vXOgQ8oO6HmYUUM79PosT80bLLGxKRTBZs2SMNuyEZEHI5E7n8ftQC9NgnWKLiKBZM9TvZOz+evx+SEPulJBxXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742203693; c=relaxed/simple;
-	bh=E2Q9rXhOJFqwklf98cKy7dtPqCvcux6p5MfxkmZmZJg=;
+	s=arc-20240116; t=1742203696; c=relaxed/simple;
+	bh=cn3pnNqQ/ylAyxiZ7z5cCxJkQFxKq5pG7frJjiVfsVI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M9MxHFs/yUta9f4zpi6yPF0wwzlVslFWPcgAMG1AZ4PRMDEPw5MhAGkmx9ZaVHTBrl8iuibSfjJTeEBgPYq+y349Af0WRXWwN2YldKMZx/VdEDvlfaO6QrSmEYACyJMj6EkHMAv3Inx8W7r3WLnHNZZLGbBTb5tp0DLZijoX40I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fheKkLq6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GEIvXkK7rKa/lpJoCb2KVfBPxSFH9x++V8cNFhUHk8MNJjVzG/vpMDrIz5GkPs0K6Mf0v8H0SCkgIZGsRvwDlouwkka1dgkU3X/w7T1LiVRthuQJA1EOtVDfMezin9OjJCDFKi4RkP9TPH6rGIqxENW6CcZWXuCcxRiqtfoZlYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bY+AVRea; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=arTsO19T; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fheKkLq6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF8E3C4CEE3;
-	Mon, 17 Mar 2025 09:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742203692;
-	bh=E2Q9rXhOJFqwklf98cKy7dtPqCvcux6p5MfxkmZmZJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fheKkLq6pvP7eIcaH91nP/rulfVhd9RwDXl7BARXs6Rb0vdxp4kBd5y9j1T2IV1Hp
-	 hew0tgbqxAOtiiPbWEj4BkyXXu/N9VT+7l6hi/QVtu1KLseO6SNyWGNAis2oTd1IQL
-	 8X0E7IYNv1MGvbuOHVs8SxDxkluWAjg+x2E8dOFn5EJwPAbHHpOFrNkyo9fo5U50c4
-	 pHxgqsmd61uqCd+EVrY3XffRZgImeG0jBRiW1+WvdSkawOOk6hbUk2ZCcjd/oLpYal
-	 2vWh4mljcOK1T3vZ9CYyuAfEDfWMyAyjFCuVpo81WgMtoHZLV87ebFWCTQnrX/W3C4
-	 gzsQ+ZlX0ww7Q==
-Date: Mon, 17 Mar 2025 10:28:08 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] x86/asm: Use asm_inline() instead of asm() in
- __untagged_addr()
-Message-ID: <Z9frKMLYnhZI0MDD@gmail.com>
-References: <20250314093111.654359-1-ubizjak@gmail.com>
- <20250314112504.GBZ9QSEL1hgjp376ey@fat_crate.local>
- <Z9fk2NMBRHB9Eu5h@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bY+AVRea";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="arTsO19T"
+Date: Mon, 17 Mar 2025 10:28:11 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742203692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rYjDnz882eQPRNoAR6NhgU1hGmz0GQ15sjV4f+ly7kI=;
+	b=bY+AVRead4ovc7ZlxXujvQPJwj5V5UnBa1HAiBhsz8SmpdpH0cv2HKBQwsNxM6XwFDL0sj
+	JZeO2sEaQbAChmrfTWMj0kTrrs7/UmQ+oiI8kMwwBn9ZYB73HknueNANl/6pkjET/gLu6e
+	H2lLX3FT5ctGSPUSJJafDVsxHCdGj+BziaAptEUJDUN+qHBaP9NExi75BqXRv42A980m1H
+	g50Qcm8LBFWdiA4bcr6aABBw1T4ttAoql4K0uZ/+GppneWk1sdKcOffgkVSnaP2uAawazz
+	jo6GdrnAO3lt1IB2YH0mDzSWOmgCJlie4idUL4MTH0JxHnP97MKj49MZwQbJLw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742203692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rYjDnz882eQPRNoAR6NhgU1hGmz0GQ15sjV4f+ly7kI=;
+	b=arTsO19TbJXHb1bQH3O5bLmVPfI3bXEM+j9O23JlOpDVBQRAQWJhruNXJI2uqy20wzuE2r
+	Y/Oe8bMICy3yPiBA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Ben Segall <bsegall@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 0/9] preempt: Add a generic function to return the
+ preemption string.
+Message-ID: <20250317092811.nGfJKPUZ@linutronix.de>
+References: <20250314160810.2373416-1-bigeasy@linutronix.de>
+ <Z9fn-UqDPXEr8vs-@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z9fk2NMBRHB9Eu5h@gmail.com>
+In-Reply-To: <Z9fn-UqDPXEr8vs-@gmail.com>
 
-
-* Ingo Molnar <mingo@kernel.org> wrote:
-
-> But GCC cannot always do proper inlining decisions due to our 
-> complicated ALTERNATIVE macro constructs confusing the GCC inliner:
+On 2025-03-17 10:14:33 [+0100], Ingo Molnar wrote:
 > 
->   > > ALTERNATIVE macro that expands to several pseudo directives causes 
->   > > instruction length estimate to count more than 20 instructions.
->                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> * Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 > 
-> Note how the asm_inline() compiler feature was added by GCC at the 
-> kernel community's request to address such issues. (!)
+> > Sebastian Andrzej Siewior (9):
+> >   sched: Add a generic function to return the preemption string.
+> >   lib/dump_stack: Use preempt_model_str().
+> >   arm: Rely on generic printing of preemption model.
+> >   arm64: Rely on generic printing of preemption model.
+> >   powerpc: Rely on generic printing of preemption model.
+> >   s390: Rely on generic printing of preemption model.
+> >   x86: Rely on generic printing of preemption model.
+> >   xtensa: Rely on generic printing of preemption model.
+> >   tracing: Use preempt_model_str().
 > 
-> So for those reasons, in my book, eliminating a function call for 
-> really simple single instruction inlines is an unconditional 
-> improvement that doesn't require futile performance measurements - it 
-> 'only' requires assembly level code generation analysis in the 
-> changelog.
+> A meta request: please do not put periods into patch titles in this and 
+> future series...
 
-Note that at least in part this is a weakness of GCC: the compiler 
-isn't looking at the asm() closely enough and the 20 instructions count 
-vastly overestimates the true footprint of these statements.
+No full stop at the end of the sentence then? I've been asked once to do
+so.
 
-Yet GCC is also giving us a tool: "asm __inline", which tells the 
-compiler that this piece of asm() statement is small. A tool that was 
-created at the request of the kernel community's complaints about this 
-issue. :-/
+> Thanks,
+> 
+> 	Ingo
 
-asm_inline() is functionally similar to __force_inline - which we 
-regularly apply if it has code generation benefits.
-
-So I really don't see the harm in these patches - they have benefits in 
-terms of GCC code generation quality, documentation and performance:
-
- - It documents small asm() statements by annotating them asm_inline().
-
- - It sometimes avoids function call overhead, improving performance.
-
-And because single-function inlining changes are next to impossible to 
-measure in practice in most cases, I'd suggest we skip the performance 
-measurement requirement if the code generation advantages on a recent 
-GCC version are unambiguous.
-
-Thanks,
-
-	Ingo
+Sebastian
