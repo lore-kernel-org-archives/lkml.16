@@ -1,88 +1,87 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9643E1A2630
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 17:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989A818787A;
+	Mon, 17 Mar 2025 17:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742231175; cv=none; b=JbxXAH5PrFtSuSuTnfTWA0cwl+CAhasThDyic/svGsQoGtQRaxfuaEo9sQW+6m4X1/GAgfYW6vIWW4jnoFlxR5dbuV0zQigOo+UC5qNCtSq142VHRescKpZPhU6LsNmeO40cSXLBuyA3JZHSkEMV0dfHBriyCW9AeaoZ4bECyCA=
+	t=1742231197; cv=none; b=Zz+3x4Qx2GE/l17xc7fORExj7qb0jdSM5iePIAIojgrEs83K7ygXXUIM7CxoHHBqXA0PZfQVnMIy8xK//CArNRAYg9ttRABM2RaD8s23MSYvMgNMJWGpf5ft501VNnBcnbJ6m+7AKP9rKh64iydSCIzjNXI6d3HpuxplCgDkKls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742231175; c=relaxed/simple;
-	bh=EKcGOxVMzjKzzpY2bAD/qKhkOsw3/ZS5jWoFiHGL9QY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NqTvhJry/YSAGb0vtSfuhKPln8Ny/OKGntUSR+j5Yv97jmsG0tsKynF+8v1zPvU+Ypo+fJ/tv5QmFWcsJOLGgmRPoJL0YAN6XIWfQSop6WbrHcnjHxKXgMJer/mgz0QDqWHJKUJTvu2F0vMWSg1hOmSfjE0BgyTGCYod6Xc/jN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DbVpv00x; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1742231197; c=relaxed/simple;
+	bh=sLNQSbl0TkH6y7EASnxzkx+y3wCavvX+Q9NF5vgcOtc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OMXADPqVcnzwcEIrqaWsrrdbXPdyRAQ9JbW5T7S0doV4AeBbp531eB4PreAOG3EDP70tJq4amDfjhz8f0thZwKzJHkg70NAV9DgzGyz20Wo6tYokYz1Zi0nWOFUt6tZVsToTjN/5HezFbaHS1WEwEK8Kc6dM4fFzY3m8WAFGOLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVytgnHJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DbVpv00x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dGzCutVqaGoQAQTN8SMp16X3bMGayRAE4xjT/iqKqv4=; b=DbVpv00x+lyC9GE1HhMwx82/pC
-	vST0lop5ZdDtgbprWQDxdG3UJkVQ0FDsUayc6xmlw6peWOxTTJPkEXTeyVnjOcWdYdzUiVRTLh6qc
-	95R8FpRI2h9eobEmTk0VvVIFVlQ7nuYJXmHUADS8KT20JsiCgIGmQOc/LgKp/LDQJYeeabEx2KBDn
-	iksISKi5Dav5WoR8BwFG1E7VZrqThVzNCVOR0msWOMHzu8A2rjkOfq4nH/weONbOIpu6hjMJfO9iC
-	VUYxRRoG0wIOCg+BsGyNTvpoFALPCAjP/VQruEDR5qFtIMLFv3dBJIwmD/U3p/LbL7l+BcbPeqviX
-	uDxU772w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuDud-00000003UtN-2WOY;
-	Mon, 17 Mar 2025 17:06:03 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2F1A6300B40; Mon, 17 Mar 2025 18:06:03 +0100 (CET)
-Date: Mon, 17 Mar 2025 18:06:02 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
-	Andrea Righi <arighi@nvidia.com>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>,
-	Luigi De Matteis <ldematteis123@gmail.com>, paulmck@kernel.org,
-	boqun.feng@gmail.com
-Subject: Re: [PATCH RFC 3/8] sched/ext: Add a DL server for sched_ext tasks
-Message-ID: <20250317170602.GE6888@noisy.programming.kicks-ass.net>
-References: <20250315022158.2354454-1-joelagnelf@nvidia.com>
- <20250315022158.2354454-4-joelagnelf@nvidia.com>
- <20250315072225.GG36322@noisy.programming.kicks-ass.net>
- <3b244939-6d55-4d86-8b77-a9a7629f8239@nvidia.com>
- <20250317103101.GC34541@noisy.programming.kicks-ass.net>
- <Z9hUby9e1JYaE6iC@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVytgnHJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F16EC4CEE3;
+	Mon, 17 Mar 2025 17:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742231197;
+	bh=sLNQSbl0TkH6y7EASnxzkx+y3wCavvX+Q9NF5vgcOtc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XVytgnHJORt5fBrvWySWYVLEU6Zbr7JCakRxx2Y/FOTn6+6Tjbu28xk4zKRv45OED
+	 hX5H5kReNUxOiy/9FWhW++4iugJVyt+RtkGY08oxELcUxm4QS7gVP1Er7dXJfzDrlV
+	 Z1sJLCSWFbdBFlrtlcOoroCzA2ouDg0p6bNV72PsyRHl47FPeo8ytwBehQDO6EdJsb
+	 DZ0AFSlY7h0yiEsG7SW3JmIBmSAovDUlwFS1N6UlJuqtQDNGHB5RR52s5MLRyNdNvY
+	 UZNjEsw2DjkozbRLzZL8EbcCBlaGygXQswwcZsOSirIdn8n0SonQo/BHn15yJcGl7U
+	 LBQPqhmpOMJoA==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30761be8fcfso51555111fa.0;
+        Mon, 17 Mar 2025 10:06:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXy0HcjL/t+h83ngx7NoRX9b8qABor0xTb1NPDamQ5vrOW/+XLAqdI+5tCiPQq3QjttLx2R+9wezfo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzssbbCyxgsroIuos7sIpOJqHU+k+Uh8i8CkPNpPKpFooDnwGZg
+	pChZTxnNQ2nPdMqV7CQFeva8JdL32futqE59jxcMtQq9mvqW9H+W7x1TibFiRfKj2QH8cE1d4J2
+	Uv8cj8d2bblgoabMNraiPSqK5iqA=
+X-Google-Smtp-Source: AGHT+IERF0n+pA9W18Wvlnp1Z9YqN77YTorPRreSKdvnYxg3VYGHd79F7+XYUdVbAxG3VnwS7ZocmUrzwEzxW2UnY74=
+X-Received: by 2002:a05:6512:3091:b0:545:6cf:6f3e with SMTP id
+ 2adb3069b0e04-549c3989ac9mr8420296e87.49.1742231195393; Mon, 17 Mar 2025
+ 10:06:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9hUby9e1JYaE6iC@slm.duckdns.org>
+References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com> <20250317-plat2faux_dev-v1-3-5fe67c085ad5@arm.com>
+In-Reply-To: <20250317-plat2faux_dev-v1-3-5fe67c085ad5@arm.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 17 Mar 2025 18:06:24 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEejZr2RCUJ59HfLwxQ1zFnWqj7vJ_ObrPTztE5s2UUcQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jqf1O8iSYFfzLZH3qq1LKMRuI87oQw6DruwoLkOlzXICX9hN0zaV-Yd_gk
+Message-ID: <CAMj1kXEejZr2RCUJ59HfLwxQ1zFnWqj7vJ_ObrPTztE5s2UUcQ@mail.gmail.com>
+Subject: Re: [PATCH 3/9] efi: Remove redundant creation of the "efivars"
+ platform device
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 17, 2025 at 06:57:19AM -1000, Tejun Heo wrote:
-> Hello,
-> 
-> On Mon, Mar 17, 2025 at 11:31:01AM +0100, Peter Zijlstra wrote:
-> > On Sat, Mar 15, 2025 at 07:15:27PM -0400, Joel Fernandes wrote:
-> > > If so, that will not handle the case where the system has both
-> > > FAIR and EXT tasks in the mix (EXT has a partial mode where certain tasks can be
-> > > made EXT with certain others left as FAIR) and FAIR runs 100% and starves EXT.
-> > 
-> > Well, you did not mention that issue, you only babbled about RT.
-> > 
-> > I did point out that issue with ext, and TJ said this mixed mode wasn't
-> > really meant to be used or somesuch.
-> 
-> It's true that most of the current use cases don't use mixed mode. That
-> said, some folks are interested in it and if we can prevent starvation from
-> fair saturating CPUs in mixed mode with a DL server, that'd be really nice.
-> Would it be possible to toggle the reservations depending on the ext's
-> operation mode?
+On Mon, 17 Mar 2025 at 11:13, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> The "efivars" platform device is created but never tracked or used,
+> as there is no driver associated with it. Since this device serves
+> no functional purpose, removing its creation without affecting any
+> functionality.
+>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: linux-efi@vger.kernel.org
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/efi/efi.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 7309394b8fc98cf7a3424af209b752f0251c8c89..eec173cb1f398d3b4f28b42c917e50e1728dc277 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -446,7 +446,6 @@ static int __init efisubsys_init(void)
+>                 error = efivar_ssdt_load();
+>                 if (error)
+>                         pr_err("efi: failed to load SSDT, error %d.\n", error);
+> -               platform_device_register_simple("efivars", 0, NULL, 0);
+>         }
+>
+>         BLOCKING_INIT_NOTIFIER_HEAD(&efivar_ops_nh);
+>
 
-Yeah, that should be doable.
+IIRC the efi-pstore module autoloads based on this platform device
