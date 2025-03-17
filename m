@@ -1,103 +1,130 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A17523F422
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C0078F43
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742220005; cv=none; b=Qvk273wswINO3BYMARS4Ycm0nxrdX82zfdbPTWUuCI87XDgl3Rt4bNqd7y9aD1fk3kiQU2Aeo0ciWzjfgSrSaJff3NXmcM8y/fJfklv/1zNYroWLkm7yfTblAneWMLgCczPtPttXVm2AUhNGkibcMO9n/DnmaKbMbAN+qW8iS/Y=
+	t=1742220196; cv=none; b=Laf/3hvL2EyuQ4+euvCwL3zwAZRj/qyXlJG1ntRnELOqj5bS49k6K4TSZ/xwpvqkmgAiB4rHT/FgpCIP/FW4zai1SuEUnvV8NLAadhmAafxGcKZn3gAnoNHpjGkzxdXrUNHpTq15CW0NyOvXdVGQtK0EEo8ZxLZi62ibFuajAas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742220005; c=relaxed/simple;
-	bh=ymyjoRPJMcdgvc0kCRsHYHBbOg2KFPig2f5PgqMCl+E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AwEBqNvpDrrGRUNO8mLcyZOyaSKu27xxA9CSJIP7Sjmf4PMxtrfFYUh6i9f4F7bljcVM4mktF+W/KHcSk57VHK6CTg0NQ94Nz7k+NHLoe3fmAzE+xACPUT0hHRCgrPPk4fqUtXA7IArptdZbTPWKqrW3zlrca/mU+kRXoGUB0IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=hKbHApAq; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1742220196; c=relaxed/simple;
+	bh=ur+3Ka/ftKOuDkT4T1MQ6Jx5LEwesbX4+q1klExtobU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tPOp+GrNMLG23vUPOD+YwvDKxi9l5XUqA2A8InXLIR5ICtDHFmCdpnyOY7T3DaRX7KwahxfCjJkHkgCeuq0gP7w8mjOSDqyL1sUlHMSph2BjFAKNfTfxiJMl+Ig6eB0BxQ6mqWyRBwf/CZlToHDn0KP27+lTZMOw61x3sYtnXR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f4zMkm+h; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="hKbHApAq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=uejaEzJgm4AKmoazWPbdXJYFspuSptSDKXB+HI9ayM0=; b=hKbHApAqWuu7jFRF/VJSzV2WNz
-	2aPgcNOPaMLYjeDai8XTbuEqs592BlukVvCavhUnaQI4hQ6EBJu3qpZv+9+8yaTrf8ym7nVJJLJ5m
-	92Dnx9tKAtJSrK9Nv6BpEMUCN2ZNWpFbq9Zzwdsq2z1+crECa2LHpTTZHfKQSNqtux1I73pCOA1qT
-	FlwR2TA5cXspyo3q4jWbOc8aT5Dc5z4O989O2//LYNfIAq6qd2zsY8XzXpFt1QiJXNOMlLfZ34UBw
-	j2mBdzLENFUkNKCUjcIlcItDLBQwEv5TFTGi6poKfAObXo/9bJH/wUaJwroPkbERjEZfHXSSV/f/U
-	nLLRJNfg==;
-Received: from 179-125-64-250-dinamico.pombonet.net.br ([179.125.64.250] helo=[192.168.67.187])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tuB0S-002FgL-Df; Mon, 17 Mar 2025 14:59:52 +0100
-From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Date: Mon, 17 Mar 2025 10:59:55 -0300
-Subject: [PATCH] char: misc: register chrdev region with all possible
- minors
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f4zMkm+h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742220194; x=1773756194;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ur+3Ka/ftKOuDkT4T1MQ6Jx5LEwesbX4+q1klExtobU=;
+  b=f4zMkm+hGFS0JC9Zu6V8HEtutEUw4FoYxCXqPPRA0en857N8x7c1tvkN
+   wEV730sPJ5zI6jCVjKmxsYOxEI/j7Lp7luIi9XiBNcu0Pt7Ax4dEoKKCq
+   hRF1CsflzZOQcw7maRhMYwXxGxxXFryQTKLtAQdxkwsdUFw9Zs6nIPYmP
+   k1X9lJIZANcIPSTGGluxtLS5X3pBODxENKoRDAbKCmrzXbXiaeELgrNXh
+   wKf0ECYOBacy+qmyqzXMmIyvE4hdISVVazU8W3L0gsd3qqOyarloMZRBb
+   Fd0oRLjwTYb1Kb9zhDkzSczOp1QzKHOb9LnZLuF5jmPVKqj6hMT4+d5wx
+   Q==;
+X-CSE-ConnectionGUID: LEuB4sejQzK1pj/84OdtsQ==
+X-CSE-MsgGUID: MeewH/E/TLqcqyfudGIPyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43447018"
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="43447018"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 07:03:14 -0700
+X-CSE-ConnectionGUID: 7dDuA3tuRKaVKvMF/PytIA==
+X-CSE-MsgGUID: ICsGBP4RT5yVJBvZI8J8Ag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="152929972"
+Received: from spr.sh.intel.com ([10.239.53.19])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 07:03:10 -0700
+From: Chao Gao <chao.gao@intel.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Chao Gao <chao.gao@intel.com>,
+	"Chang S. Bae" <chang.seok.bae@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Yang Zhong <yang.zhong@intel.com>,
+	Jing Liu <jing2.liu@intel.com>
+Subject: [PATCH] x86/fpu/xstate: Fix inconsistencies in guest FPU xfeatures
+Date: Mon, 17 Mar 2025 22:06:11 +0800
+Message-ID: <20250317140613.1761633-1-chao.gao@intel.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-misc-chrdev-v1-1-6cd05da11aef@igalia.com>
-X-B4-Tracking: v=1; b=H4sIANoq2GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDY0Nz3dzM4mTd5IyilNQy3SQjsyRTc6NEE/O0ZCWgjoKi1LTMCrBp0bG
- 1tQC4FUrSXQAAAA==
-X-Change-ID: 20250317-misc-chrdev-b26b572a47fc
-To: Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- D Scott Phillips <scott@os.amperecomputing.com>
-Cc: linux-kernel@vger.kernel.org, kernel-dev@igalia.com, 
- kernel test robot <oliver.sang@intel.com>, 
- Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-register_chrdev will only register the first 256 minors of a major chrdev.
-That means that dynamically allocated misc devices with minor above 255
-will fail to open with -ENXIO.
+Guest FPUs manage vCPU FPU states. They are allocated via
+fpu_alloc_guest_fpstate() and are resized in fpstate_realloc() when XFD
+features are enabled.
 
-This was found by kernel test robot when testing a different change that
-makes all dynamically allocated minors be above 255. This has, however,
-been separately tested by creating 256 serio_raw devices with the help of
-userio driver.
+Since the introduction of guest FPUs, there have been inconsistencies in
+the kernel buffer size and xfeatures:
 
-Ever since allowing misc devices with minors above 128, this has been
-possible.
+1.fpu_alloc_guest_fpstate() uses fpu_user_cfg since its introduction. See:
 
-Fix it by registering all minor numbers from 0 to MINORMASK + 1 for
-MISC_MAJOR.
+  commit 69f6ed1d14c6 ("x86/fpu: Provide infrastructure for KVM FPU cleanup")
+  commit 36487e6228c4 ("x86/fpu: Prepare guest FPU for dynamically enabled FPU features")
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202503171507.6c8093d0-lkp@intel.com
-Fixes: ab760791c0cf ("char: misc: Increase the maximum number of dynamic misc devices to 1048448")
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+2.__fpstate_reset() references fpu_kernel_cfg to set storage attributes.
+
+3.fpu->guest_perm uses fpu_kernel_cfg, affecting fpstate_realloc().
+
+A recent commit in the tip-tree [1] partially addressed the inconsistency
+between (1) and (3) by using fpu_kernel_cfg for size calculation in (1),
+but left fpu_guest->xfeatures and fpu_guest->perm still referencing
+fpu_user_cfg.
+
+The inconsistencies within fpu_alloc_guest_fpstate() and across the
+mentioned functions cause confusion.
+
+Fix them by using fpu_kernel_cfg consistently in fpu_alloc_guest_fpstate(),
+except for fields related to the UABI buffer. Referencing fpu_kernel_cfg
+won't impact functionalities, as
+1. fpu_guest->perm is overwritten shortly in fpu_init_guest_permissions()
+   with fpstate->guest_perm, which already uses fpu_kernel_cfg.
+2. fpu_guest->xfeatures is solely used to check if XFD features are enabled.
+   Including supervisor xfeatures doesn't affect the check.
+
+Link: https://lore.kernel.org/all/20250218141045.85201-1-stanspas@amazon.de/ [1]
+Fixes: 36487e6228c4 ("x86/fpu: Prepare guest FPU for dynamically enabled FPU features")
+Suggested-by: Chang S. Bae <chang.seok.bae@intel.com>
+Signed-off-by: Chao Gao <chao.gao@intel.com>
 ---
- drivers/char/misc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/fpu/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/misc.c b/drivers/char/misc.c
-index f7dd455dd0dd3c7c9956e772b5ab8bd83a67a4a6..dda466f9181acf76564b5e41ed6e858928e56182 100644
---- a/drivers/char/misc.c
-+++ b/drivers/char/misc.c
-@@ -315,7 +315,7 @@ static int __init misc_init(void)
- 		goto fail_remove;
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 422c98ca6eb8..1b734a9ff088 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -239,8 +239,8 @@ bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
+ 	fpstate->is_guest	= true;
  
- 	err = -EIO;
--	if (register_chrdev(MISC_MAJOR, "misc", &misc_fops))
-+	if (__register_chrdev(MISC_MAJOR, 0, MINORMASK + 1, "misc", &misc_fops))
- 		goto fail_printk;
- 	return 0;
+ 	gfpu->fpstate		= fpstate;
+-	gfpu->xfeatures		= fpu_user_cfg.default_features;
+-	gfpu->perm		= fpu_user_cfg.default_features;
++	gfpu->xfeatures		= fpu_kernel_cfg.default_features;
++	gfpu->perm		= fpu_kernel_cfg.default_features;
  
+ 	/*
+ 	 * KVM sets the FP+SSE bits in the XSAVE header when copying FPU state
 
----
-base-commit: 2dc25093218f5d42391549de6fe45e1aa9325676
-change-id: 20250317-misc-chrdev-b26b572a47fc
-
-Best regards,
+base-commit: d08c0d55110b7cbac186e5fa94b0c6d5f4d7905e
 -- 
-Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+2.47.1
 
