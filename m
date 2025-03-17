@@ -1,112 +1,62 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52944241684;
-	Mon, 17 Mar 2025 10:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70D4B24169F
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742207697; cv=none; b=CZK0dAAXaf1JmNE1Ri2Tn+c6eDvg34LtbEwSI5DmZKSi7utsLyA5Tw/oBdhnljz1jA176mwtLaDd+Rl5Z2H/7QyYsKghEPLzU+PRC+zQDuVKRVS5smguXUxt5uyAX1zDSTMfp3T9v/Sz5sG6fL2RWLynN05Q+z/t27NRNnP2NgQ=
+	t=1742207699; cv=none; b=p7SLqxxugmZqa1ICjHTtaHiF42lP93guzKKfazO39fKv57x1nThNDIYjX6nvvk2rKp4jIqNK2/Z7/TlfaRWLG02M78zfyjHkhP8V89n9NnU1dbn0ExIzZG2QA0fyh9sPh2vC4MYESqUJNz1sTE8BgOmKOnyaW2bufasW4DWtiC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742207697; c=relaxed/simple;
-	bh=Dvi7dt8MZ6WpKJKtLSjP+TqCBVrkOjmgQFjMBqkWMuA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=FD283d52u4ZK24mRH6ymPEnpAFeDclOiiVS3N+oIhEBriQnIqBM9vaW7jzlm3sQm7TyyZTX/RtTF1DJxajrSLpUMJUKiZh1rJ3hA73HPadCdi5Vr7hlsOr8lOm2k8v71gSb7GkMYJYcCLWBZbo1Dz2W9ah5EzPBF5WueU+hHPBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D0UJ4jv9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SWLdo/iV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D0UJ4jv9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SWLdo/iV"
-Date: Mon, 17 Mar 2025 10:34:48 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742207694;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N3pyukO0ZEi78ZhitvxcST1CkBalm4cgXuBBH1Z1Bxk=;
-	b=D0UJ4jv9a8wgSQRRWQI2b1ibzSE2w4+lYKEtWFsIxS9pQ3+tpp7JFxreOzD5Ol5V8o8kcP
-	MV5yzyN1bg8JbZi7k20z6S/qIS8eMtB9WfESQ/wrCjYvnTkeGv6uOgHzr5I4+kOjApD6Tw
-	I45e5mlybJMKGy0PXLhgBFpKEkKPSwcbJhaQumyyOMkuHDp8kHvGKFYkr+vEAqqyT0PJ12
-	qsh2VF6iYq9YDlEyoYjQBMfmqPaQUn5BFC/aekvhugsM1aqHh/nnvEV+/qWa5czGtcKXKz
-	BTmng2CdkVJb9BOrnNvafJt6iETRBqVJvzZcmtgwQ7itf/X43b61ZQzPHkE+Gg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742207694;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N3pyukO0ZEi78ZhitvxcST1CkBalm4cgXuBBH1Z1Bxk=;
-	b=SWLdo/iVB1KbmVYYa/sEosDD1+3pAujP+Jjiot3gvHXQqQaPX8MMO29fVcEznnD2i6Rf0Z
-	fQQ8UBIzFd6hsFDg==
-From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: sched/core] powerpc: Rely on generic printing of preemption model
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Shrikanth Hegde <sshegde@linux.ibm.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250314160810.2373416-6-bigeasy@linutronix.de>
-References: <20250314160810.2373416-6-bigeasy@linutronix.de>
+	s=arc-20240116; t=1742207699; c=relaxed/simple;
+	bh=mQFvEVDfpGoh5x6uGmbYUYC59z/W4+ikIREVh1XWseU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=So9JKSbFg1Bd8NSTWUwyj4BfmZXZjyGH4n2vzfNGrttmdl8v3vFrYNvLPQUEVPhvxebUJxsX/GAeEdFWZLFunhD7kHylYAArH37OLbVQsBFm5m6z5EWhYWfCzUnelofQZ6x/4Byd3m1vlH37UeDGxrZ6W8Dt+8pR1xihvyyv/Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DD7A13D5;
+	Mon, 17 Mar 2025 03:35:06 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE39B3F63F;
+	Mon, 17 Mar 2025 03:34:56 -0700 (PDT)
+Date: Mon, 17 Mar 2025 10:34:53 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 9/9] regulator: dummy: convert to use the faux device
+ interface
+Message-ID: <Z9f6zVGSYNIK2OhW@bogus>
+References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
+ <20250317-plat2faux_dev-v1-9-5fe67c085ad5@arm.com>
+ <e35ccf12-3959-4ff6-b0fd-ae9374c90de9@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174220768834.14745.8118980644677092757.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e35ccf12-3959-4ff6-b0fd-ae9374c90de9@sirena.org.uk>
 
-The following commit has been merged into the sched/core branch of tip:
+On Mon, Mar 17, 2025 at 10:24:11AM +0000, Mark Brown wrote:
+> On Mon, Mar 17, 2025 at 10:13:21AM +0000, Sudeep Holla wrote:
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > 
+> > The dummy regulator driver does not need to create a platform device, it
+> > only did so because it was simple to do.  Change it over to use the
+> > faux bus instead as this is NOT a real platform device, and it makes
+> > the code even smaller than before.
+> 
+> This is already in Greg's tree isn't it, what's going on here? 
 
-Commit-ID:     732ed149f7ac6278e33ccd62d13c604a134e6933
-Gitweb:        https://git.kernel.org/tip/732ed149f7ac6278e33ccd62d13c604a134e6933
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Fri, 14 Mar 2025 17:08:06 +01:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 17 Mar 2025 11:23:39 +01:00
+Sorry if it is already queued. I just checked against linux-next and
+posted it as part of this series as I needed it as well to remove all
+the "faux" devices under /sys/devices/platform.
 
-powerpc: Rely on generic printing of preemption model
+I may be missing to check some other branch Greg has queued perhaps.
 
-After the first printk in __die() there is show_regs() ->
-show_regs_print_info() which prints the current
-preemption model.
-
-Remove the preempion model from the arch code.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-Link: https://lore.kernel.org/r/20250314160810.2373416-6-bigeasy@linutronix.de
----
- arch/powerpc/kernel/traps.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index edf5cab..cb8e935 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -263,10 +263,9 @@ static int __die(const char *str, struct pt_regs *regs, long err)
- {
- 	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
- 
--	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
-+	printk("%s PAGE_SIZE=%luK%s %s%s%s%s %s\n",
- 	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
- 	       PAGE_SIZE / 1024, get_mmu_str(),
--	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
- 	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
- 	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
- 	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+-- 
+Regards,
+Sudeep
