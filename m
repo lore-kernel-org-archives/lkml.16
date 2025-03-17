@@ -1,223 +1,310 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68A8F1E1DF2;
-	Mon, 17 Mar 2025 17:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3A41A38E3;
+	Mon, 17 Mar 2025 17:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742231495; cv=none; b=MD4K0mbUV/Gj7qAgrFY5s/Q+Q14UoEM8akPiWcC4Fa5wVpFBdRnsaVy2pkxiQgG00T+P4dwNTy5Fssl8i/X3GX0utiyRfbk/oKTAks5HUZkQhr/vZDIlN+Vhzh/jHFg45wJNCo7rKVMAUs3HJBI8PPQdXlWbyFgNIbDhh3iM1T4=
+	t=1742231544; cv=none; b=MjDj+JTaxiprZ4lzM+pyK2CXKbzi0rimK0wTQontRDHdgN4jYw4hQI/YCNvwrXyUNLO5fVfiQ0LYLNdNvPvk+4MkOdGQ+aD2wA1dlKzab99G8sGupnhuD9S27rr8uVw2J/LTibcN4ksPjTwTIbSSw/TVdEslzPirOVr7ZlmFzhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742231495; c=relaxed/simple;
-	bh=Dvsb1FOldA8QHsgHDjSp2x/08D4d3Ma/GM9n1NmyGRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fJAqnZeNtEB+AYUjcd88qiizzcUIbVHkNYxNKNP1IK0OdI142z2GODYl2p1ZLEFCCjAOx8iEdgY3aN94Lf8A25GGphjFwdbGCTZ++qeFdk6TuAkYQ6Qz7d6rVqNPLeUM37uu9dBUgx3RKnnhF0QO3XwBGyEpMlvb4sC12DYDCZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iB5HkHF/; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1742231544; c=relaxed/simple;
+	bh=l+W27dM7NXeV4RLA6dG+8n4yz6qVY2crzVyiZBDBhWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NKUosly976bz0nPZspOxljNoRP0+vd71uQQ48JIq0/1uC7BlQg+TKyicQhOaTOf2wkt4TlpFL9yRIxJ8Er9ovVHgC70sAUv+nJ3JQ9ItVEINcpL9O00hXMFC6SJWWc5FBbDFEQbXx4FmyAmbUbkr4bF+590erpcW1zSknmScy18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/WnmX+k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iB5HkHF/"
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 829452033441;
-	Mon, 17 Mar 2025 10:11:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 829452033441
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742231492;
-	bh=qgR7z0T2ShM1jjkPMrelwXUQsvor6qx9o5NQCWLdIwY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iB5HkHF/A/Slm14vX+aYEAmVR42WWsEoeBkLbzvaiREpnLDzWzHQvyPfIpAMI5vNP
-	 cGxzvVsNVvS63EDK4o/DOK/hA+9ejTYQXhejalajxyoCA3OS8peBoo9E3lm9FqtPpe
-	 dXqlCaDHhHvIVonIlr8haVF0Jk1ZYa4yKt/doL6g=
-Message-ID: <d168a483-b425-4c18-ad71-eb39a0aba06c@linux.microsoft.com>
-Date: Mon, 17 Mar 2025 10:11:32 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/WnmX+k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06A2CC4CEE3;
+	Mon, 17 Mar 2025 17:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742231543;
+	bh=l+W27dM7NXeV4RLA6dG+8n4yz6qVY2crzVyiZBDBhWQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c/WnmX+kb4FDlkpUGzudzPpX2M0zx7/TK/8j7QiB5lwBp7cGNsGkbuFcgjPgShxxH
+	 5xi5g48Bkbw6fg34s9Vfm9WPNk7jemERVNTFb4mtDyYNlrr2DFpl7zPLiKL+JrDJWJ
+	 AEN5DeEoo2C1sr5uYxg5W+4FodxfpW/dP4V+dx4G57Mfjx3Gs9lJzaTR2b/sUo91iF
+	 l+jWCsadGbVsSos1kQJKviG8HnCK0hRZjrT4kDHxD5oV1lJbzX9upY+GmY0qXGvOzB
+	 mm5m2f9RZNdBzdDIxmAHzAb2Wt8nNhwiyasie5wrCQA4VwdCO35NDvX4hNWqjt8sC+
+	 KjX1Tk3/O58fw==
+Date: Mon, 17 Mar 2025 10:12:21 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+	bpf@vger.kernel.org, Quentin Monnet <qmo@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 1/1 perf-tools-next] tools features: Don't check for
+ libunwind devel files by default
+Message-ID: <Z9hX9fubyWFjnpPW@google.com>
+References: <Z09zTztD8X8qIWCX@x1>
+ <CAP-5=fWqA+Wjr5eb3Mi0MO8KZ01fey6J2d72jJouN+_r_8vbdA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v6 01/11] arm64: kvm, smccc: Introduce and use
- API for detecting hypervisor presence
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
- catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org,
- dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
- hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
- kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
- manivannan.sadhasivam@linaro.org, maz@kernel.org, mingo@redhat.com,
- oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org,
- ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
- tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
- yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
- apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-References: <20250315001931.631210-1-romank@linux.microsoft.com>
- <20250315001931.631210-2-romank@linux.microsoft.com>
- <Z9gHmkNOsd29viHj@J2N7QTR9R3.cambridge.arm.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <Z9gHmkNOsd29viHj@J2N7QTR9R3.cambridge.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWqA+Wjr5eb3Mi0MO8KZ01fey6J2d72jJouN+_r_8vbdA@mail.gmail.com>
 
+CC-ing more people.
 
+On Mon, Mar 17, 2025 at 09:09:20AM -0700, Ian Rogers wrote:
+> On Tue, Dec 3, 2024 at 1:08 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > Since 13e17c9ff49119aa ("perf build: Make libunwind opt-in rather than
+> > opt-out"), so we shouldn't by default be testing for its availability at
+> > build time in tools/build/features/test-all.c.
+> >
+> > That test was designed to test the features we expect to be the most
+> > common ones in most builds, so if we test build just that file, then we
+> > assume the features there are present and will not test one by one.
+> >
+> > Removing it from test-all.c gets rid of the first impediment for
+> > test-all.c to build successfully:
+> >
+> >   $ cat /tmp/build/perf-tools-next/feature/test-all.make.output
+> >   In file included from test-all.c:62:
+> >   test-libunwind.c:2:10: fatal error: libunwind.h: No such file or directory
+> >       2 | #include <libunwind.h>
+> >         |          ^~~~~~~~~~~~~
+> >   compilation terminated.
+> >   $
+> >
+> > We then get to:
+> >
+> >   $ cat /tmp/build/perf-tools-next/feature/test-all.make.output
+> >   /usr/bin/ld: cannot find -lunwind-x86_64: No such file or directory
+> >   /usr/bin/ld: cannot find -lunwind: No such file or directory
+> >   collect2: error: ld returned 1 exit status
+> >   $
+> >
+> > So make all the logic related to setting CFLAGS, LDFLAGS, etc for
+> > libunwind to be conditional on NO_LIBWUNWIND=1, which is now the
+> > default, now we get a faster build:
+> >
+> >   $ cat /tmp/build/perf-tools-next/feature/test-all.make.output
+> >   $ ldd /tmp/build/perf-tools-next/feature/test-all.bin
+> >         linux-vdso.so.1 (0x00007fef04cde000)
+> >         libdw.so.1 => /lib64/libdw.so.1 (0x00007fef04a49000)
+> >         libpython3.12.so.1.0 => /lib64/libpython3.12.so.1.0 (0x00007fef04478000)
+> >         libm.so.6 => /lib64/libm.so.6 (0x00007fef04394000)
+> >         libtraceevent.so.1 => /lib64/libtraceevent.so.1 (0x00007fef0436c000)
+> >         libtracefs.so.1 => /lib64/libtracefs.so.1 (0x00007fef04345000)
+> >         libcrypto.so.3 => /lib64/libcrypto.so.3 (0x00007fef03e95000)
+> >         libz.so.1 => /lib64/libz.so.1 (0x00007fef03e72000)
+> >         libelf.so.1 => /lib64/libelf.so.1 (0x00007fef03e56000)
+> >         libnuma.so.1 => /lib64/libnuma.so.1 (0x00007fef03e48000)
+> >         libslang.so.2 => /lib64/libslang.so.2 (0x00007fef03b65000)
+> >         libperl.so.5.38 => /lib64/libperl.so.5.38 (0x00007fef037c6000)
+> >         libc.so.6 => /lib64/libc.so.6 (0x00007fef035d5000)
+> >         liblzma.so.5 => /lib64/liblzma.so.5 (0x00007fef035a0000)
+> >         libzstd.so.1 => /lib64/libzstd.so.1 (0x00007fef034e1000)
+> >         libbz2.so.1 => /lib64/libbz2.so.1 (0x00007fef034cd000)
+> >         /lib64/ld-linux-x86-64.so.2 (0x00007fef04ce0000)
+> >         libcrypt.so.2 => /lib64/libcrypt.so.2 (0x00007fef03495000)
+> >   $
+> >
+> > Fixes: 13e17c9ff49119aa ("perf build: Make libunwind opt-in rather than opt-out")
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/build/feature/test-all.c |  5 --
+> >  tools/perf/Makefile.config     | 83 ++++++++++++++++++++--------------
+> >  2 files changed, 49 insertions(+), 39 deletions(-)
+> >
+> > diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+> > index 59ef3d7fe6a4e771..80ac297f81967171 100644
+> > --- a/tools/build/feature/test-all.c
+> > +++ b/tools/build/feature/test-all.c
+> > @@ -58,10 +58,6 @@
+> >  # include "test-libelf-getshdrstrndx.c"
+> >  #undef main
+> >
+> > -#define main main_test_libunwind
+> > -# include "test-libunwind.c"
+> > -#undef main
+> > -
+> >  #define main main_test_libslang
+> >  # include "test-libslang.c"
+> >  #undef main
+> > @@ -184,7 +180,6 @@ int main(int argc, char *argv[])
+> >         main_test_libelf_getphdrnum();
+> >         main_test_libelf_gelf_getnote();
+> >         main_test_libelf_getshdrstrndx();
+> > -       main_test_libunwind();
+> >         main_test_libslang();
+> >         main_test_libbfd();
+> >         main_test_libbfd_buildid();
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 2916d59c88cd08b2..0e4f6a860ae25339 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -43,7 +43,9 @@ endif
+> >  # Additional ARCH settings for ppc
+> >  ifeq ($(SRCARCH),powerpc)
+> >    CFLAGS += -I$(OUTPUT)arch/powerpc/include/generated
+> > -  LIBUNWIND_LIBS := -lunwind -lunwind-ppc64
+> > +  ifndef NO_LIBUNWIND
+> > +    LIBUNWIND_LIBS := -lunwind -lunwind-ppc64
+> > +  endif
+> 
+> Sorry for missing this patch. Given this, and below, are just
+> declaring a variable making it NO_LIBUNWIND conditional feels like
+> clutter. I'd suggest just keeping the variable unconditionally and
+> making the uses conditional (which of course the patch does).
 
-On 3/17/2025 4:29 AM, Mark Rutland wrote:
-> On Fri, Mar 14, 2025 at 05:19:21PM -0700, Roman Kisel wrote:
+Agreed, we can leave LIBUNWIND_LIBS setting and make it added only if
+NO_LIBUNWIND is not set.
 
-[...]
-
->> +}
-> 
-> This use of a statement expression is bizarre, and the function would be
-> clearer without it, e.g.
-
-I'll change that to what you're suggesting, thanks for your help!
+Thanks,
+Namhyung
 
 > 
-> | bool arm_smccc_hyp_present(const uuid_t *hyp_uuid)
-> | {
-> | 	struct arm_smccc_res res = {};
-> | 	uuid_t uuid;
-> |
-> | 	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
-> | 		return false;
-> |
-> | 	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
-> | 	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
-> | 		return false;
-> | 	
-> | 	uuid_t = SMCCC_RES_TO_UUID(res.a0, res.a1, res.a2, res.a3);
-> | 	return uuid_equal(&uuid, hyp_uuid);
-> | }
+> Other than this:
+> Reviewed-by: Ian Rogers <irogers@google.com>
 > 
-> As noted below, I'd prefer if this were renamed to something like
-> arm_smccc_hypervisor_has_uuid(), to more clearly indicate what is being
-> checked.
+> Thanks,
+> Ian
 > 
-> [...]
-
-Will update, thanks for your help!
-
-> 
->> +/**
->> + * arm_smccc_hyp_present(const uuid_t *hyp_uuid)
->> + *
->> + * Returns `true` if the hypervisor advertises its presence via SMCCC.
->> + *
->> + * When the function returns `false`, the caller shall not assume that
->> + * there is no hypervisor running. Instead, the caller must fall back to
->> + * other approaches if any are available.
->> + */
->> +bool arm_smccc_hyp_present(const uuid_t *hyp_uuid);
-> 
-> I'd prefer if this were:
-> 
-> | /*
-> |  * Returns whether a specific hypervisor UUID is advertised for the
-> |  * Vendor Specific Hypervisor Service range.
-> |  */
-> | bool arm_smccc_hypervisor_has_uuid(const uuid_t *uuid);
-> 
-[...]
-
-
-
-> 
-> I think this'd be clearer if we did something similar to what we did for
-> the SMCCC SOC_ID name:
-> 
->    https://lore.kernel.org/linux-arm-kernel/20250219005932.3466-1-paul@os.amperecomputing.com/
-> 
-> ... and pack/unpack the bytes explicitly, e.g.
-
-That looks great, thanks for the suggestion!
-
-> 
-> | static inline uuid smccc_res_to_uuid(u32 r0, u32, r1, u32 r2, u32 r3)
-> | {
-> | 	uuid_t uuid = {
-> | 		.b = {
-> | 			[0]  = (r0 >> 0)  & 0xff,
-> | 			[1]  = (r0 >> 8)  & 0xff,
-> | 			[2]  = (r0 >> 16) & 0xff,
-> | 			[3]  = (r0 >> 24) & 0xff,
-> |
-> | 			[4]  = (r1 >> 0)  & 0xff,
-> | 			[5]  = (r1 >> 8)  & 0xff,
-> | 			[6]  = (r1 >> 16) & 0xff,
-> | 			[7]  = (r1 >> 24) & 0xff,
-> |
-> | 			[8]  = (r2 >> 0)  & 0xff,
-> | 			[9]  = (r2 >> 8)  & 0xff,
-> | 			[10] = (r2 >> 16) & 0xff,
-> | 			[11] = (r2 >> 24) & 0xff,
-> |
-> | 			[12] = (r3 >> 0)  & 0xff,
-> | 			[13] = (r3 >> 8)  & 0xff,
-> | 			[14] = (r3 >> 16) & 0xff,
-> | 			[15] = (r3 >> 24) & 0xff,
-> | 		},
-> | 	};
-> |
-> | 	return uuid;
-> | }
-> 
-> ... which is a bit more verbose, but clearly aligns with what the SMCCC
-> spec says w.r.t. packing/unpacking, and should avoid warnings about
-> endianness conversions.
-> 
-
-I believe what you're proposing hits a better trade-off, thanks again!
-
->> +
->> +#define UUID_TO_SMCCC_RES(uuid_init, regs) do { \
->> +		const uuid_t uuid = uuid_init; \
->> +		(regs)[0] = le32_to_cpu((u32)uuid.b[0] | (uuid.b[1] << 8) | \
->> +						((uuid.b[2]) << 16) | ((uuid.b[3]) << 24)); \
->> +		(regs)[1] = le32_to_cpu((u32)uuid.b[4] | (uuid.b[5] << 8) | \
->> +						((uuid.b[6]) << 16) | ((uuid.b[7]) << 24)); \
->> +		(regs)[2] = le32_to_cpu((u32)uuid.b[8] | (uuid.b[9] << 8) | \
->> +						((uuid.b[10]) << 16) | ((uuid.b[11]) << 24)); \
->> +		(regs)[3] = le32_to_cpu((u32)uuid.b[12] | (uuid.b[13] << 8) | \
->> +						((uuid.b[14]) << 16) | ((uuid.b[15]) << 24)); \
->> +	} while (0)
->> +
->> +#endif /* !__ASSEMBLER__ */
-> 
-> IMO it'd be clearer to initialise a uuid_t beforehand, and then allow
-> the helper to unpack the bytes, e.g.
-> 
-> static inline u32 smccc_uuid_to_reg(const uuid_t uuid, int reg)
-> {
-> 	u32 val = 0;
-> 
-> 	val |= (u32)(uuid.b[4 * reg + 0] << 0)
-> 	val |= (u32)(uuid.b[4 * reg + 1] << 8)
-> 	val |= (u32)(uuid.b[4 * reg + 2] << 16)
-> 	val |= (u32)(uuid.b[4 * reg + 3] << 24)
-> 
-> 	return val:
-> }
-> 
-> #define UUID_TO_SMCCC_RES(uuid, regs)		\
-> do {						\
-> 	(regs)[0] = smccc_uuid_to_reg(uuid, 0); \
-> 	(regs)[1] = smccc_uuid_to_reg(uuid, 1); \
-> 	(regs)[2] = smccc_uuid_to_reg(uuid, 2); \
-> 	(regs)[3] = smccc_uuid_to_reg(uuid, 3); \
-> } while (0)
-> 
-> ... though arguably at that point you can get rid of the
-> UUID_TO_SMCCC_RES() macro and just expand that directly at the callsite.
-> 
-
-I'll work on that, thanks!!
-
-> Mark.
-
--- 
-Thank you,
-Roman
-
+> >  endif
+> >
+> >  # Additional ARCH settings for x86
+> > @@ -53,25 +55,35 @@ ifeq ($(SRCARCH),x86)
+> >    ifeq (${IS_64_BIT}, 1)
+> >      CFLAGS += -DHAVE_ARCH_X86_64_SUPPORT
+> >      ARCH_INCLUDE = ../../arch/x86/lib/memcpy_64.S ../../arch/x86/lib/memset_64.S
+> > -    LIBUNWIND_LIBS = -lunwind-x86_64 -lunwind -llzma
+> > +    ifndef NO_LIBUNWIND
+> > +      LIBUNWIND_LIBS = -lunwind-x86_64 -lunwind -llzma
+> > +    endif
+> >      $(call detected,CONFIG_X86_64)
+> >    else
+> > -    LIBUNWIND_LIBS = -lunwind-x86 -llzma -lunwind
+> > +    ifndef NO_LIBUNWIND
+> > +      LIBUNWIND_LIBS = -lunwind-x86 -llzma -lunwind
+> > +    endif
+> >    endif
+> >  endif
+> >
+> >  ifeq ($(SRCARCH),arm)
+> > -  LIBUNWIND_LIBS = -lunwind -lunwind-arm
+> > +  ifndef NO_LIBUNWIND
+> > +    LIBUNWIND_LIBS = -lunwind -lunwind-arm
+> > +  endif
+> >  endif
+> >
+> >  ifeq ($(SRCARCH),arm64)
+> >    CFLAGS += -I$(OUTPUT)arch/arm64/include/generated
+> > -  LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
+> > +  ifndef NO_LIBUNWIND
+> > +    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
+> > +  endif
+> >  endif
+> >
+> >  ifeq ($(SRCARCH),loongarch)
+> >    CFLAGS += -I$(OUTPUT)arch/loongarch/include/generated
+> > -  LIBUNWIND_LIBS = -lunwind -lunwind-loongarch64
+> > +  ifndef NO_LIBUNWIND
+> > +    LIBUNWIND_LIBS = -lunwind -lunwind-loongarch64
+> > +  endif
+> >  endif
+> >
+> >  ifeq ($(ARCH),s390)
+> > @@ -80,7 +92,9 @@ endif
+> >
+> >  ifeq ($(ARCH),mips)
+> >    CFLAGS += -I$(OUTPUT)arch/mips/include/generated
+> > -  LIBUNWIND_LIBS = -lunwind -lunwind-mips
+> > +  ifndef NO_LIBUNWIND
+> > +    LIBUNWIND_LIBS = -lunwind -lunwind-mips
+> > +  endif
+> >  endif
+> >
+> >  ifeq ($(ARCH),riscv)
+> > @@ -121,16 +135,18 @@ ifdef LIBUNWIND_DIR
+> >    $(foreach libunwind_arch,$(LIBUNWIND_ARCHS),$(call libunwind_arch_set_flags,$(libunwind_arch)))
+> >  endif
+> >
+> > -# Set per-feature check compilation flags
+> > -FEATURE_CHECK_CFLAGS-libunwind = $(LIBUNWIND_CFLAGS)
+> > -FEATURE_CHECK_LDFLAGS-libunwind = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
+> > -FEATURE_CHECK_CFLAGS-libunwind-debug-frame = $(LIBUNWIND_CFLAGS)
+> > -FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
+> > -
+> > -FEATURE_CHECK_LDFLAGS-libunwind-arm += -lunwind -lunwind-arm
+> > -FEATURE_CHECK_LDFLAGS-libunwind-aarch64 += -lunwind -lunwind-aarch64
+> > -FEATURE_CHECK_LDFLAGS-libunwind-x86 += -lunwind -llzma -lunwind-x86
+> > -FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
+> > +ifndef NO_LIBUNWIND
+> > +  # Set per-feature check compilation flags
+> > +  FEATURE_CHECK_CFLAGS-libunwind = $(LIBUNWIND_CFLAGS)
+> > +  FEATURE_CHECK_LDFLAGS-libunwind = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
+> > +  FEATURE_CHECK_CFLAGS-libunwind-debug-frame = $(LIBUNWIND_CFLAGS)
+> > +  FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
+> > +
+> > +  FEATURE_CHECK_LDFLAGS-libunwind-arm += -lunwind -lunwind-arm
+> > +  FEATURE_CHECK_LDFLAGS-libunwind-aarch64 += -lunwind -lunwind-aarch64
+> > +  FEATURE_CHECK_LDFLAGS-libunwind-x86 += -lunwind -llzma -lunwind-x86
+> > +  FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
+> > +endif
+> >
+> >  FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
+> >
+> > @@ -734,26 +750,25 @@ ifeq ($(dwarf-post-unwind),1)
+> >    $(call detected,CONFIG_DWARF_UNWIND)
+> >  endif
+> >
+> > -ifndef NO_LOCAL_LIBUNWIND
+> > -  ifeq ($(SRCARCH),$(filter $(SRCARCH),arm arm64))
+> > -    $(call feature_check,libunwind-debug-frame)
+> > -    ifneq ($(feature-libunwind-debug-frame), 1)
+> > -      $(warning No debug_frame support found in libunwind)
+> > +ifndef NO_LIBUNWIND
+> > +  ifndef NO_LOCAL_LIBUNWIND
+> > +    ifeq ($(SRCARCH),$(filter $(SRCARCH),arm arm64))
+> > +      $(call feature_check,libunwind-debug-frame)
+> > +      ifneq ($(feature-libunwind-debug-frame), 1)
+> > +        $(warning No debug_frame support found in libunwind)
+> > +        CFLAGS += -DNO_LIBUNWIND_DEBUG_FRAME
+> > +      endif
+> > +    else
+> > +      # non-ARM has no dwarf_find_debug_frame() function:
+> >        CFLAGS += -DNO_LIBUNWIND_DEBUG_FRAME
+> >      endif
+> > -  else
+> > -    # non-ARM has no dwarf_find_debug_frame() function:
+> > -    CFLAGS += -DNO_LIBUNWIND_DEBUG_FRAME
+> > +    EXTLIBS += $(LIBUNWIND_LIBS)
+> > +    LDFLAGS += $(LIBUNWIND_LIBS)
+> > +  endif
+> > +  ifeq ($(findstring -static,${LDFLAGS}),-static)
+> > +    # gcc -static links libgcc_eh which contans piece of libunwind
+> > +    LIBUNWIND_LDFLAGS += -Wl,--allow-multiple-definition
+> >    endif
+> > -  EXTLIBS += $(LIBUNWIND_LIBS)
+> > -  LDFLAGS += $(LIBUNWIND_LIBS)
+> > -endif
+> > -ifeq ($(findstring -static,${LDFLAGS}),-static)
+> > -  # gcc -static links libgcc_eh which contans piece of libunwind
+> > -  LIBUNWIND_LDFLAGS += -Wl,--allow-multiple-definition
+> > -endif
+> > -
+> > -ifndef NO_LIBUNWIND
+> >    CFLAGS  += -DHAVE_LIBUNWIND_SUPPORT
+> >    CFLAGS  += $(LIBUNWIND_CFLAGS)
+> >    LDFLAGS += $(LIBUNWIND_LDFLAGS)
+> > --
+> > 2.47.0
+> >
