@@ -1,353 +1,570 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B052441A0;
-	Mon, 17 Mar 2025 14:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 253EE247DEA;
+	Mon, 17 Mar 2025 14:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222348; cv=none; b=bH3GGRdkTf3eY4spdXQGYXAigLos0T4PjLCIIozXWDik0SvQhpnon4Kb8a7j0sypakGqEwJ1Vv4BXoBhIjkJRjw0cgFZ6C5YnvAVS+sYrSNaYJeEC33N2iARjyT+GVsNswEPvVgy5y29EUYQ8gdk5RvhM9Nd/wsUbJs5g6d17RA=
+	t=1742222352; cv=none; b=fcFV2KQ3xnt0r9AbGHZ6vs790xlcHnv1A0eFsgY2i7G6xhdGomkqHl8cpROKLY7GbNnkoTtqoDrcjYLp/npmaZyBKyyCjHAD31/dLfdV18VBgtsmfczQgASzupYT8VsLgmWSfF/KKY2YaKuhq2x0cZOu9GJhJuEyK0jgNTjr+94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222348; c=relaxed/simple;
-	bh=5sctOWQdDZU6goyyowPsbITQ4Qx7EMOcJkexjRoQrMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i/AaY87u4wO2EhgynHToccaD5BZZv0EUZYeUnNKtinp1zlLddT2U3C7Dnz9o3OIPDl+GPzgHonyWLpWziGCDJJ497oU8seCP5e8yW0VMqDBvaShm7Bu9ogAC5rBD6YBkIH64MIZ2r3DEZf1+grrTdgKmVAfWCVhD+uvS2/xIgjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 624FC44382;
-	Mon, 17 Mar 2025 14:39:02 +0000 (UTC)
-Message-ID: <1b7e3d0f-0526-4afb-9f7a-2695e4166a9b@ghiti.fr>
-Date: Mon, 17 Mar 2025 15:39:01 +0100
+	s=arc-20240116; t=1742222352; c=relaxed/simple;
+	bh=hnsvzNfmVjy44WX9YtRY0+ANOt0JQzsOwk3sGrwq+Gg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lfSSUrKkMIiCL3TQG0mSmMpqRCf9NDPztywFhcY/PW3Pj2kkbBZGlGyJ1OsLyAHu7obmeaK+dppl374ufvqB5S9//V0ZmW+9+48W1a8R4ZPFW2xXZHxX3NUDNCqPg1Bfe6I7CoCkp/ADb28S9o9ciDXgvdfFrmGwyO+auJ7B3Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: bAc8iw5ZShCsT2OPDdi3Og==
+X-CSE-MsgGUID: fvUsnNj1RjG5pq5eT/TIKg==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 17 Mar 2025 23:39:07 +0900
+Received: from ubuntu.adwin.renesas.com (unknown [10.226.93.200])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id A133A401823E;
+	Mon, 17 Mar 2025 23:39:02 +0900 (JST)
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: geert+renesas@glider.be,
+	conor+dt@kernel.org,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	rafael@kernel.org,
+	daniel.lezcano@linaro.org
+Cc: magnus.damm@gmail.com,
+	devicetree@vger.kernel.org,
+	john.madieu@gmail.com,
+	rui.zhang@intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	sboyd@kernel.org,
+	biju.das.jz@bp.renesas.com,
+	linux-pm@vger.kernel.org,
+	lukasz.luba@arm.com,
+	John Madieu <john.madieu.xa@bp.renesas.com>
+Subject: [PATCH v4 3/5] thermal: renesas: rzg3e: Add thermal driver for the Renesas RZ/G3E SoC
+Date: Mon, 17 Mar 2025 15:34:30 +0100
+Message-ID: <20250317143442.100590-4-john.madieu.xa@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250317143442.100590-1-john.madieu.xa@bp.renesas.com>
+References: <20250317143442.100590-1-john.madieu.xa@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/8] riscv: Add parameter for skipping access speed
- tests
-Content-Language: en-US
-To: Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, charlie@rivosinc.com,
- cleger@rivosinc.com, Anup Patel <apatel@ventanamicro.com>, corbet@lwn.net
-References: <20250304120014.143628-10-ajones@ventanamicro.com>
- <20250304120014.143628-17-ajones@ventanamicro.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250304120014.143628-17-ajones@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeeljeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeejieeuudejieekveeutdeguefhkeduledugeevhefffeejudeggedufffgleeugfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeefuddrfedvrdekuddrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeefuddrfedvrdekuddrudekjedphhgvlhhopegludelvddrudeikedrvddurddvhegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghjohhnvghssehvvghnthgrnhgrmhhitghrohdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehpr
- ghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegthhgrrhhlihgvsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopegtlhgvghgvrhesrhhivhhoshhinhgtrdgtohhm
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Drew,
+The RZ/G3E SoC integrates a Temperature Sensor Unit (TSU) block designed
+to monitor the chip's junction temperature. This sensor is connected to
+channel 1 of the APB port clock/reset and provides temperature measurements.
 
-On 04/03/2025 13:00, Andrew Jones wrote:
-> Allow skipping scalar and vector unaligned access speed tests. This
-> is useful for testing alternative code paths and to skip the tests in
-> environments where they run too slowly. All CPUs must have the same
-> unaligned access speed.
+It also requires calibration values stored in the system controller registers
+for accurate temperature measurement. Add a driver for the Renesas RZ/G3E TSU.
 
-I'm not a big fan of the command line parameter, this is not where we 
-should push uarch decisions because there could be many other in the 
-future, the best solution to me should be in DT/ACPI and since the DT 
-folks, according to Palmer, shut down this solution, it remains using an 
-extension.
+Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+---
+v1 -> v2: fix IRQ names
+v2 -> v3: no changes
+v3 -> v4: no changes
 
-I have been reading a bit about unaligned accesses. Zicclsm was 
-described as "Even though mandated, misaligned loads and stores might 
-execute extremely slowly. Standard software distributions should assume 
-their existence only for correctness, not for performance." in rva20/22 
-but *not* in rva23. So what about using this "hole" and consider that a 
-platform that *advertises* Zicclsm means its unaligned accesses are 
-fast? After internal discussion, It actually does not make sense to 
-advertise Zicclsm if the platform accesses are slow right?
+ MAINTAINERS                             |   7 +
+ drivers/thermal/renesas/Kconfig         |   7 +
+ drivers/thermal/renesas/Makefile        |   1 +
+ drivers/thermal/renesas/rzg3e_thermal.c | 445 ++++++++++++++++++++++++
+ 4 files changed, 460 insertions(+)
+ create mode 100644 drivers/thermal/renesas/rzg3e_thermal.c
 
-arm64 for example considers that armv8 has fast unaligned accesses and 
-can then enable HAVE_EFFICIENT_ALIGNED_ACCESS in the kernel, even though 
-some uarchs are slow. Distros will very likely use rva23 as baseline so 
-they will enable Zicclsm which would allow us to take advantage of this 
-too, without this, we lose a lot of perf improvement in the kernel, see 
-https://lore.kernel.org/lkml/20231225044207.3821-1-jszhang@kernel.org/.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b9f7d2115b57..ba7c95146f01 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20289,6 +20289,13 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/iio/potentiometer/renesas,x9250.yaml
+ F:	drivers/iio/potentiometer/x9250.c
+ 
++RENESAS RZ/G3E THERMAL SENSOR UNIT DRIVER
++M:	John Madieu <john.madieu.xa@bp.renesas.com>
++L:	linux-pm@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
++F:	drivers/thermal/renesas/rzg3e_thermal.c
++
+ RESET CONTROLLER FRAMEWORK
+ M:	Philipp Zabel <p.zabel@pengutronix.de>
+ S:	Maintained
+diff --git a/drivers/thermal/renesas/Kconfig b/drivers/thermal/renesas/Kconfig
+index dcf5fc5ae08e..10cf90fc4bfa 100644
+--- a/drivers/thermal/renesas/Kconfig
++++ b/drivers/thermal/renesas/Kconfig
+@@ -26,3 +26,10 @@ config RZG2L_THERMAL
+ 	help
+ 	  Enable this to plug the RZ/G2L thermal sensor driver into the Linux
+ 	  thermal framework.
++
++config RZG3E_THERMAL
++	tristate "Renesas RZ/G3E thermal driver"
++	depends on ARCH_RENESAS || COMPILE_TEST
++	help
++	  Enable this to plug the RZ/G3E thermal sensor driver into the Linux
++	  thermal framework.
+diff --git a/drivers/thermal/renesas/Makefile b/drivers/thermal/renesas/Makefile
+index bf9cb3cb94d6..5a3eba0dedd0 100644
+--- a/drivers/thermal/renesas/Makefile
++++ b/drivers/thermal/renesas/Makefile
+@@ -3,3 +3,4 @@
+ obj-$(CONFIG_RCAR_GEN3_THERMAL)	+= rcar_gen3_thermal.o
+ obj-$(CONFIG_RCAR_THERMAL)	+= rcar_thermal.o
+ obj-$(CONFIG_RZG2L_THERMAL)	+= rzg2l_thermal.o
++obj-$(CONFIG_RZG3E_THERMAL)	+= rzg3e_thermal.o
+diff --git a/drivers/thermal/renesas/rzg3e_thermal.c b/drivers/thermal/renesas/rzg3e_thermal.c
+new file mode 100644
+index 000000000000..be9e1d118a67
+--- /dev/null
++++ b/drivers/thermal/renesas/rzg3e_thermal.c
+@@ -0,0 +1,445 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Renesas RZ/G3E TSU Temperature Sensor Unit
++ *
++ * Copyright (C) 2025 Renesas Electronics Corporation
++ */
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++#include <linux/thermal.h>
++#include <linux/units.h>
++
++#include "../thermal_hwmon.h"
++
++/* SYS Trimming register offsets macro */
++#define SYS_TSU_TRMVAL(x) (0x330 + (x) * 4)
++
++/* TSU Register offsets and bits */
++#define TSU_SSUSR		0x00
++#define TSU_SSUSR_EN_TS		BIT(0)
++#define TSU_SSUSR_ADC_PD_TS	BIT(1)
++#define TSU_SSUSR_SOC_TS_EN	BIT(2)
++
++#define TSU_STRGR		0x04
++#define TSU_STRGR_ADST		BIT(0)
++
++#define TSU_SOSR1		0x08
++#define TSU_SOSR1_ADCT_8	0x03
++#define TSU_SOSR1_OUTSEL_AVERAGE	BIT(9)
++
++/* Sensor Code Read Register */
++#define TSU_SCRR		0x10
++#define TSU_SCRR_OUT12BIT_TS	GENMASK(11, 0)
++
++/* Sensor Status Register */
++#define TSU_SSR			0x14
++#define TSU_SSR_CONV_RUNNING	BIT(0)
++
++/* Compare Mode Setting Register */
++#define TSU_CMSR		0x18
++#define TSU_CMSR_CMPEN		BIT(0)
++#define TSU_CMSR_CMPCOND	BIT(1)
++
++/* Lower Limit Setting Register */
++#define TSU_LLSR		0x1C
++#define TSU_LLSR_LIM		GENMASK(11, 0)
++
++/* Upper Limit Setting Register */
++#define TSU_ULSR		0x20
++#define TSU_ULSR_ULIM		GENMASK(11, 0)
++
++/* Interrupt Status Register */
++#define TSU_SISR		0x30
++#define TSU_SISR_ADF		BIT(0)
++#define TSU_SISR_CMPF		BIT(1)
++
++/* Interrupt Enable Register */
++#define TSU_SIER		0x34
++#define TSU_SIER_ADIE		BIT(0)
++#define TSU_SIER_CMPIE		BIT(1)
++
++/* Interrupt Clear Register */
++#define TSU_SICR		0x38
++#define TSU_SICR_ADCLR		BIT(0)
++#define TSU_SICR_CMPCLR		BIT(1)
++
++/* Temperature calculation constants */
++#define TSU_D		41
++#define TSU_E		126
++#define TSU_TRMVAL_MASK	GENMASK(11, 0)
++
++#define TSU_POLL_DELAY_US	50
++#define TSU_TIMEOUT_US		10000
++#define TSU_MIN_CLOCK_RATE	24000000
++
++/**
++ * struct rzg3e_thermal_priv - RZ/G3E thermal private data structure
++ * @base: TSU base address
++ * @dev: device pointer
++ * @syscon: regmap for calibration values
++ * @zone: thermal zone pointer
++ * @mode: current tzd mode
++ * @conv_complete: ADC conversion completion
++ * @reg_lock: protect shared register access
++ * @cached_temp: last computed temperature (milliCelsius)
++ * @trmval: trim (calibration) values
++ */
++struct rzg3e_thermal_priv {
++	void __iomem *base;
++	struct device *dev;
++	struct regmap *syscon;
++	struct thermal_zone_device *zone;
++	enum thermal_device_mode mode;
++	struct completion conv_complete;
++	spinlock_t reg_lock;
++	int cached_temp;
++	u32 trmval[2];
++};
++
++static void rzg3e_thermal_hw_disable(struct rzg3e_thermal_priv *priv)
++{
++	/* Disable all interrupts first */
++	writel(0, priv->base + TSU_SIER);
++	/* Clear any pending interrupts */
++	writel(TSU_SICR_ADCLR | TSU_SICR_CMPCLR, priv->base + TSU_SICR);
++	/* Put device in power down */
++	writel(TSU_SSUSR_ADC_PD_TS, priv->base + TSU_SSUSR);
++}
++
++static void rzg3e_thermal_hw_enable(struct rzg3e_thermal_priv *priv)
++{
++	/* First clear any pending status */
++	writel(TSU_SICR_ADCLR | TSU_SICR_CMPCLR, priv->base + TSU_SICR);
++	/* Disable all interrupts */
++	writel(0, priv->base + TSU_SIER);
++
++	/* Enable thermal sensor */
++	writel(TSU_SSUSR_SOC_TS_EN | TSU_SSUSR_EN_TS, priv->base + TSU_SSUSR);
++	/* Setup for averaging mode with 8 samples */
++	writel(TSU_SOSR1_OUTSEL_AVERAGE | TSU_SOSR1_ADCT_8, priv->base + TSU_SOSR1);
++}
++
++static irqreturn_t rzg3e_thermal_cmp_irq(int irq, void *dev_id)
++{
++	struct rzg3e_thermal_priv *priv = dev_id;
++	u32 status;
++
++	status = readl(priv->base + TSU_SISR);
++	if (!(status & TSU_SISR_CMPF))
++		return IRQ_NONE;
++
++	/* Clear the comparison interrupt flag */
++	writel(TSU_SICR_CMPCLR, priv->base + TSU_SICR);
++
++	return IRQ_WAKE_THREAD;
++}
++
++static irqreturn_t rzg3e_thermal_cmp_threaded_irq(int irq, void *dev_id)
++{
++	struct rzg3e_thermal_priv *priv = dev_id;
++
++	thermal_zone_device_update(priv->zone, THERMAL_EVENT_UNSPECIFIED);
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t rzg3e_thermal_adc_irq(int irq, void *dev_id)
++{
++	struct rzg3e_thermal_priv *priv = dev_id;
++	u32 status;
++	u32 result;
++
++	/* Check if this is our interrupt */
++	status = readl(priv->base + TSU_SISR);
++	if (!(status & TSU_SISR_ADF))
++		return IRQ_NONE;
++
++	/* Disable ADC interrupt */
++	writel(0, priv->base + TSU_SIER);
++	/* Clear conversion complete interrupt */
++	writel(TSU_SICR_ADCLR, priv->base + TSU_SICR);
++
++	/* Read ADC conversion result */
++	result = readl(priv->base + TSU_SCRR) & TSU_SCRR_OUT12BIT_TS;
++
++	/*
++	 * Calculate temperature using compensation formula
++	 * Section 7.11.7.8 (Temperature Compensation Calculation)
++	 *
++	 * T(°C) = ((e - d) / (c -b)) * (a - b) + d
++	 *
++	 * a = 12 bits temperature code read from the sensor
++	 * b = SYS trmval[0]
++	 * c = SYS trmval[1]
++	 * d = -41
++	 * e = 126
++	 */
++	s64 temp_val = div_s64(((TSU_E + TSU_D) * (s64)(result - priv->trmval[0])),
++				priv->trmval[1] - priv->trmval[0]) - TSU_D;
++	int new_temp = temp_val * MILLIDEGREE_PER_DEGREE;
++
++	scoped_guard(spinlock_irqsave, &priv->reg_lock) {
++		priv->cached_temp = new_temp;
++	}
++
++	complete(&priv->conv_complete);
++
++	return IRQ_HANDLED;
++}
++
++static int rzg3e_thermal_get_temp(struct thermal_zone_device *zone, int *temp)
++{
++	struct rzg3e_thermal_priv *priv = thermal_zone_device_priv(zone);
++	u32 val;
++	int ret;
++
++	if (priv->mode == THERMAL_DEVICE_DISABLED)
++		return -EBUSY;
++
++	reinit_completion(&priv->conv_complete);
++
++	/* Enable ADC interrupt */
++	writel(TSU_SIER_ADIE, priv->base + TSU_SIER);
++
++	/* Verify no ongoing conversion */
++	ret = readl_poll_timeout_atomic(priv->base + TSU_SSR, val,
++					!(val & TSU_SSR_CONV_RUNNING),
++					TSU_POLL_DELAY_US, TSU_TIMEOUT_US);
++	if (ret) {
++		dev_err(priv->dev, "ADC conversion timed out\n");
++		return ret;
++	}
++
++	/* Start conversion */
++	writel(TSU_STRGR_ADST, priv->base + TSU_STRGR);
++
++	if (!wait_for_completion_timeout(&priv->conv_complete,
++					 msecs_to_jiffies(100))) {
++		dev_err(priv->dev, "ADC conversion completion timeout\n");
++		return -ETIMEDOUT;
++	}
++
++	scoped_guard(spinlock_irqsave, &priv->reg_lock) {
++		*temp = priv->cached_temp;
++	}
++
++	return 0;
++}
++
++/* Convert temperature in milliCelsius to raw sensor code */
++static int rzg3e_temp_to_raw(struct rzg3e_thermal_priv *priv, int temp_mc)
++{
++	s64 raw = div_s64(((temp_mc / 1000) - TSU_D) *
++			  (priv->trmval[1] - priv->trmval[0]),
++			  (TSU_E - TSU_D));
++	return clamp_val(raw, 0, 0xFFF);
++}
++
++static int rzg3e_thermal_set_trips(struct thermal_zone_device *tz, int low, int high)
++{
++	struct rzg3e_thermal_priv *priv = thermal_zone_device_priv(tz);
++	int ret;
++	int val;
++
++	if (low >= high)
++		return -EINVAL;
++
++	if (priv->mode == THERMAL_DEVICE_DISABLED)
++		return -EBUSY;
++
++	/* Set up comparison interrupt */
++	writel(0, priv->base + TSU_SIER);
++	writel(TSU_SICR_ADCLR | TSU_SICR_CMPCLR, priv->base + TSU_SICR);
++
++	/* Set thresholds */
++	writel(rzg3e_temp_to_raw(priv, low), priv->base + TSU_LLSR);
++	writel(rzg3e_temp_to_raw(priv, high), priv->base + TSU_ULSR);
++
++	/* Configure comparison:
++	 * - Enable comparison function (CMPEN = 1)
++	 * - Set comparison condition (CMPCOND = 0 for out of range)
++	 */
++	writel(TSU_CMSR_CMPEN, priv->base + TSU_CMSR);
++
++	/* Enable comparison irq */
++	writel(TSU_SIER_CMPIE, priv->base + TSU_SIER);
++
++	/* Verify no ongoing conversion */
++	ret = readl_poll_timeout_atomic(priv->base + TSU_SSR, val,
++					!(val & TSU_SSR_CONV_RUNNING),
++					TSU_POLL_DELAY_US, TSU_TIMEOUT_US);
++	if (ret) {
++		dev_err(priv->dev, "ADC conversion timed out\n");
++		return ret;
++	}
++
++	/* Start a conversion to trigger comparison */
++	writel(TSU_STRGR_ADST, priv->base + TSU_STRGR);
++
++	return 0;
++}
++
++static int rzg3e_thermal_get_trimming(struct rzg3e_thermal_priv *priv)
++{
++	int ret;
++
++	ret = regmap_read(priv->syscon, SYS_TSU_TRMVAL(0), &priv->trmval[0]);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(priv->syscon, SYS_TSU_TRMVAL(1), &priv->trmval[1]);
++	if (ret)
++		return ret;
++
++	priv->trmval[0] &= TSU_TRMVAL_MASK;
++	priv->trmval[1] &= TSU_TRMVAL_MASK;
++
++	if (!priv->trmval[0] || !priv->trmval[1])
++		return dev_err_probe(priv->dev, -EINVAL, "invalid trimming values");
++
++	return 0;
++}
++
++static int rzg3e_thermal_change_mode(struct thermal_zone_device *tz,
++				     enum thermal_device_mode mode)
++{
++	struct rzg3e_thermal_priv *priv = thermal_zone_device_priv(tz);
++
++	if (mode == THERMAL_DEVICE_DISABLED)
++		rzg3e_thermal_hw_disable(priv);
++	else
++		rzg3e_thermal_hw_enable(priv);
++
++	priv->mode = mode;
++	return 0;
++}
++
++static const struct thermal_zone_device_ops rzg3e_tz_ops = {
++	.get_temp = rzg3e_thermal_get_temp,
++	.set_trips = rzg3e_thermal_set_trips,
++	.change_mode = rzg3e_thermal_change_mode,
++};
++
++static int rzg3e_thermal_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct rzg3e_thermal_priv *priv;
++	struct reset_control *rstc;
++	char *adc_name, *cmp_name;
++	int adc_irq, cmp_irq;
++	struct clk *clk;
++	int ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->dev = dev;
++
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(priv->base))
++		return dev_err_probe(dev, PTR_ERR(priv->base),
++				"Failed to map I/O memory");
++
++	priv->syscon = syscon_regmap_lookup_by_phandle(dev->of_node,
++						       "renesas,tsu-calibration-sys");
++	if (IS_ERR(priv->syscon))
++		return dev_err_probe(dev, PTR_ERR(priv->syscon),
++				"Failed to get calibration syscon");
++
++	adc_irq = platform_get_irq_byname(pdev, "adi");
++	if (adc_irq < 0)
++		return adc_irq;
++
++	cmp_irq = platform_get_irq_byname(pdev, "adcmpi");
++	if (cmp_irq < 0)
++		return cmp_irq;
++
++	rstc = devm_reset_control_get_exclusive_deasserted(dev, NULL);
++	if (IS_ERR(rstc))
++		return dev_err_probe(dev, PTR_ERR(rstc),
++				     "Failed to acquire deasserted reset");
++
++	platform_set_drvdata(pdev, priv);
++
++	spin_lock_init(&priv->reg_lock);
++	init_completion(&priv->conv_complete);
++
++	clk = devm_clk_get_enabled(dev, NULL);
++	if (IS_ERR(clk))
++		return dev_err_probe(dev, PTR_ERR(clk),
++				     "Failed to get and enable clock");
++
++	if (clk_get_rate(clk) < TSU_MIN_CLOCK_RATE)
++		return dev_err_probe(dev, -EINVAL,
++				     "Clock rate too low (minimum %d Hz required)",
++				     TSU_MIN_CLOCK_RATE);
++
++	ret = rzg3e_thermal_get_trimming(priv);
++	if (ret)
++		return ret;
++
++	adc_name = devm_kasprintf(dev, GFP_KERNEL, "%s-adc", dev_name(dev));
++	if (!adc_name)
++		return -ENOMEM;
++
++	cmp_name = devm_kasprintf(dev, GFP_KERNEL, "%s-cmp", dev_name(dev));
++	if (!cmp_name)
++		return -ENOMEM;
++
++	/* Unit in a known disabled mode */
++	rzg3e_thermal_hw_disable(priv);
++
++	ret = devm_request_irq(dev, adc_irq, rzg3e_thermal_adc_irq,
++			       IRQF_TRIGGER_RISING, adc_name, priv);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to request ADC IRQ");
++
++	ret = devm_request_threaded_irq(dev, cmp_irq, rzg3e_thermal_cmp_irq,
++					rzg3e_thermal_cmp_threaded_irq,
++					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
++					cmp_name, priv);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to request comparison IRQ");
++
++	/* Register Thermal Zone */
++	priv->zone = devm_thermal_of_zone_register(dev, 0, priv, &rzg3e_tz_ops);
++	if (IS_ERR(priv->zone))
++		return dev_err_probe(dev, PTR_ERR(priv->zone),
++				"Failed to register thermal zone");
++
++	ret = devm_thermal_add_hwmon_sysfs(dev, priv->zone);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to add hwmon sysfs");
++
++	return 0;
++}
++
++static const struct of_device_id rzg3e_thermal_dt_ids[] = {
++	{ .compatible = "renesas,r9a09g047-tsu" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, rzg3e_thermal_dt_ids);
++
++static struct platform_driver rzg3e_thermal_driver = {
++	.driver = {
++		.name	= "rzg3e_thermal",
++		.of_match_table = rzg3e_thermal_dt_ids,
++	},
++	.probe = rzg3e_thermal_probe,
++};
++module_platform_driver(rzg3e_thermal_driver);
++
++MODULE_DESCRIPTION("Renesas RZ/G3E TSU Thermal Sensor Driver");
++MODULE_AUTHOR("John Madieu <john.madieu.xa@bp.renesas.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
-Or we could have a new named feature for this, even though it's weird to 
-have a named feature which would basically  mean "Zicclsm is fast". We 
-don't have, for example, a named feature to say "Zicboz is fast" but 
-given the vague wording in the profile spec, maybe we can ask for one in 
-that case?
-
-Sorry for the late review and for triggering this debate...
-
-Thanks,
-
-Alex
-
-
->
-> The code movement is because we now need the scalar cpu hotplug
-> callback to always run, so we need to bring it and its supporting
-> functions out of CONFIG_RISCV_PROBE_UNALIGNED_ACCESS.
->
-> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
-> ---
->   arch/riscv/kernel/unaligned_access_speed.c | 187 +++++++++++++--------
->   1 file changed, 121 insertions(+), 66 deletions(-)
->
-> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
-> index d9d4ca1fadc7..18e334549544 100644
-> --- a/arch/riscv/kernel/unaligned_access_speed.c
-> +++ b/arch/riscv/kernel/unaligned_access_speed.c
-> @@ -24,8 +24,12 @@
->   DEFINE_PER_CPU(long, misaligned_access_speed) = RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN;
->   DEFINE_PER_CPU(long, vector_misaligned_access) = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
->   
-> -#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
-> +static long unaligned_scalar_speed_param = RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN;
-> +static long unaligned_vector_speed_param = RISCV_HWPROBE_MISALIGNED_VECTOR_UNKNOWN;
-> +
->   static cpumask_t fast_misaligned_access;
-> +
-> +#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
->   static int check_unaligned_access(void *param)
->   {
->   	int cpu = smp_processor_id();
-> @@ -130,6 +134,50 @@ static void __init check_unaligned_access_nonboot_cpu(void *param)
->   		check_unaligned_access(pages[cpu]);
->   }
->   
-> +/* Measure unaligned access speed on all CPUs present at boot in parallel. */
-> +static void __init check_unaligned_access_speed_all_cpus(void)
-> +{
-> +	unsigned int cpu;
-> +	unsigned int cpu_count = num_possible_cpus();
-> +	struct page **bufs = kcalloc(cpu_count, sizeof(*bufs), GFP_KERNEL);
-> +
-> +	if (!bufs) {
-> +		pr_warn("Allocation failure, not measuring misaligned performance\n");
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Allocate separate buffers for each CPU so there's no fighting over
-> +	 * cache lines.
-> +	 */
-> +	for_each_cpu(cpu, cpu_online_mask) {
-> +		bufs[cpu] = alloc_pages(GFP_KERNEL, MISALIGNED_BUFFER_ORDER);
-> +		if (!bufs[cpu]) {
-> +			pr_warn("Allocation failure, not measuring misaligned performance\n");
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	/* Check everybody except 0, who stays behind to tend jiffies. */
-> +	on_each_cpu(check_unaligned_access_nonboot_cpu, bufs, 1);
-> +
-> +	/* Check core 0. */
-> +	smp_call_on_cpu(0, check_unaligned_access, bufs[0], true);
-> +
-> +out:
-> +	for_each_cpu(cpu, cpu_online_mask) {
-> +		if (bufs[cpu])
-> +			__free_pages(bufs[cpu], MISALIGNED_BUFFER_ORDER);
-> +	}
-> +
-> +	kfree(bufs);
-> +}
-> +#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
-> +static void __init check_unaligned_access_speed_all_cpus(void)
-> +{
-> +}
-> +#endif
-> +
->   DEFINE_STATIC_KEY_FALSE(fast_unaligned_access_speed_key);
->   
->   static void modify_unaligned_access_branches(cpumask_t *mask, int weight)
-> @@ -188,21 +236,29 @@ arch_initcall_sync(lock_and_set_unaligned_access_static_branch);
->   
->   static int riscv_online_cpu(unsigned int cpu)
->   {
-> -	static struct page *buf;
-> -
->   	/* We are already set since the last check */
-> -	if (per_cpu(misaligned_access_speed, cpu) != RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN)
-> +	if (per_cpu(misaligned_access_speed, cpu) != RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN) {
-> +		goto exit;
-> +	} else if (unaligned_scalar_speed_param != RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN) {
-> +		per_cpu(misaligned_access_speed, cpu) = unaligned_scalar_speed_param;
->   		goto exit;
-> -
-> -	check_unaligned_access_emulated(NULL);
-> -	buf = alloc_pages(GFP_KERNEL, MISALIGNED_BUFFER_ORDER);
-> -	if (!buf) {
-> -		pr_warn("Allocation failure, not measuring misaligned performance\n");
-> -		return -ENOMEM;
->   	}
->   
-> -	check_unaligned_access(buf);
-> -	__free_pages(buf, MISALIGNED_BUFFER_ORDER);
-> +#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
-> +	{
-> +		static struct page *buf;
-> +
-> +		check_unaligned_access_emulated(NULL);
-> +		buf = alloc_pages(GFP_KERNEL, MISALIGNED_BUFFER_ORDER);
-> +		if (!buf) {
-> +			pr_warn("Allocation failure, not measuring misaligned performance\n");
-> +			return -ENOMEM;
-> +		}
-> +
-> +		check_unaligned_access(buf);
-> +		__free_pages(buf, MISALIGNED_BUFFER_ORDER);
-> +	}
-> +#endif
->   
->   exit:
->   	set_unaligned_access_static_branches();
-> @@ -217,50 +273,6 @@ static int riscv_offline_cpu(unsigned int cpu)
->   	return 0;
->   }
->   
-> -/* Measure unaligned access speed on all CPUs present at boot in parallel. */
-> -static void __init check_unaligned_access_speed_all_cpus(void)
-> -{
-> -	unsigned int cpu;
-> -	unsigned int cpu_count = num_possible_cpus();
-> -	struct page **bufs = kcalloc(cpu_count, sizeof(*bufs), GFP_KERNEL);
-> -
-> -	if (!bufs) {
-> -		pr_warn("Allocation failure, not measuring misaligned performance\n");
-> -		return;
-> -	}
-> -
-> -	/*
-> -	 * Allocate separate buffers for each CPU so there's no fighting over
-> -	 * cache lines.
-> -	 */
-> -	for_each_cpu(cpu, cpu_online_mask) {
-> -		bufs[cpu] = alloc_pages(GFP_KERNEL, MISALIGNED_BUFFER_ORDER);
-> -		if (!bufs[cpu]) {
-> -			pr_warn("Allocation failure, not measuring misaligned performance\n");
-> -			goto out;
-> -		}
-> -	}
-> -
-> -	/* Check everybody except 0, who stays behind to tend jiffies. */
-> -	on_each_cpu(check_unaligned_access_nonboot_cpu, bufs, 1);
-> -
-> -	/* Check core 0. */
-> -	smp_call_on_cpu(0, check_unaligned_access, bufs[0], true);
-> -
-> -out:
-> -	for_each_cpu(cpu, cpu_online_mask) {
-> -		if (bufs[cpu])
-> -			__free_pages(bufs[cpu], MISALIGNED_BUFFER_ORDER);
-> -	}
-> -
-> -	kfree(bufs);
-> -}
-> -#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
-> -static void __init check_unaligned_access_speed_all_cpus(void)
-> -{
-> -}
-> -#endif
-> -
->   #ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
->   static void check_vector_unaligned_access(struct work_struct *work __always_unused)
->   {
-> @@ -372,8 +384,8 @@ static int __init vec_check_unaligned_access_speed_all_cpus(void *unused __alway
->   
->   static int riscv_online_cpu_vec(unsigned int cpu)
->   {
-> -	if (!has_vector()) {
-> -		per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
-> +	if (unaligned_vector_speed_param != RISCV_HWPROBE_MISALIGNED_VECTOR_UNKNOWN) {
-> +		per_cpu(vector_misaligned_access, cpu) = unaligned_vector_speed_param;
->   		return 0;
->   	}
->   
-> @@ -388,30 +400,73 @@ static int riscv_online_cpu_vec(unsigned int cpu)
->   	return 0;
->   }
->   
-> +static const char * const speed_str[] __initconst = { NULL, NULL, "slow", "fast", "unsupported" };
-> +
-> +static int __init set_unaligned_scalar_speed_param(char *str)
-> +{
-> +	if (!strcmp(str, speed_str[RISCV_HWPROBE_MISALIGNED_SCALAR_SLOW]))
-> +		unaligned_scalar_speed_param = RISCV_HWPROBE_MISALIGNED_SCALAR_SLOW;
-> +	else if (!strcmp(str, speed_str[RISCV_HWPROBE_MISALIGNED_SCALAR_FAST]))
-> +		unaligned_scalar_speed_param = RISCV_HWPROBE_MISALIGNED_SCALAR_FAST;
-> +	else if (!strcmp(str, speed_str[RISCV_HWPROBE_MISALIGNED_SCALAR_UNSUPPORTED]))
-> +		unaligned_scalar_speed_param = RISCV_HWPROBE_MISALIGNED_SCALAR_UNSUPPORTED;
-> +	else
-> +		return -EINVAL;
-> +
-> +	return 1;
-> +}
-> +__setup("unaligned_scalar_speed=", set_unaligned_scalar_speed_param);
-> +
-> +static int __init set_unaligned_vector_speed_param(char *str)
-> +{
-> +	if (!strcmp(str, speed_str[RISCV_HWPROBE_MISALIGNED_VECTOR_SLOW]))
-> +		unaligned_vector_speed_param = RISCV_HWPROBE_MISALIGNED_VECTOR_SLOW;
-> +	else if (!strcmp(str, speed_str[RISCV_HWPROBE_MISALIGNED_VECTOR_FAST]))
-> +		unaligned_vector_speed_param = RISCV_HWPROBE_MISALIGNED_VECTOR_FAST;
-> +	else if (!strcmp(str, speed_str[RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED]))
-> +		unaligned_vector_speed_param = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
-> +	else
-> +		return -EINVAL;
-> +
-> +	return 1;
-> +}
-> +__setup("unaligned_vector_speed=", set_unaligned_vector_speed_param);
-> +
->   static int __init check_unaligned_access_all_cpus(void)
->   {
->   	int cpu;
->   
-> -	if (!check_unaligned_access_emulated_all_cpus())
-> +	if (unaligned_scalar_speed_param == RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN &&
-> +	    !check_unaligned_access_emulated_all_cpus()) {
->   		check_unaligned_access_speed_all_cpus();
-> -
-> -	if (!has_vector()) {
-> +	} else {
-> +		pr_info("scalar unaligned access speed set to '%s' by command line\n",
-> +			speed_str[unaligned_scalar_speed_param]);
->   		for_each_online_cpu(cpu)
-> -			per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
-> -	} else if (!check_vector_unaligned_access_emulated_all_cpus() &&
-> -		   IS_ENABLED(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)) {
-> +			per_cpu(misaligned_access_speed, cpu) = unaligned_scalar_speed_param;
-> +	}
-> +
-> +	if (!has_vector())
-> +		unaligned_vector_speed_param = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
-> +
-> +	if (unaligned_vector_speed_param == RISCV_HWPROBE_MISALIGNED_VECTOR_UNKNOWN &&
-> +	    !check_vector_unaligned_access_emulated_all_cpus() &&
-> +	    IS_ENABLED(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)) {
->   		kthread_run(vec_check_unaligned_access_speed_all_cpus,
->   			    NULL, "vec_check_unaligned_access_speed_all_cpus");
-> +	} else {
-> +		pr_info("vector unaligned access speed set to '%s' by command line\n",
-> +			speed_str[unaligned_vector_speed_param]);
-> +		for_each_online_cpu(cpu)
-> +			per_cpu(vector_misaligned_access, cpu) = unaligned_vector_speed_param;
->   	}
->   
->   	/*
->   	 * Setup hotplug callbacks for any new CPUs that come online or go
->   	 * offline.
->   	 */
-> -#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
->   	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:online",
->   				  riscv_online_cpu, riscv_offline_cpu);
-> -#endif
->   	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:online",
->   				  riscv_online_cpu_vec, NULL);
->   
