@@ -1,146 +1,144 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734A7221F1E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6965221545
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742202481; cv=none; b=bYCNETCEp/+wsQnO0GhDdDGfX73n1qiCnD4IwQYZUaq4GEzVjld/GD0RFljgzTnwAjloGDiibueTeHjS3snPrg2Ozj+5xW7IaZ2M+t2TtOtiZxKpU40GXQh/FmEOD9/T9H8cld0eEOPNaSUxynmEQTFI5Cfr3TbqRIdCsw+TnEE=
+	t=1742202517; cv=none; b=ibq5Z7fgeFIwe473UddR5vm37lsXr5azzOqNRtMZmEUX60Zi9svQe+V9/Y5/FM0e1TM8IZcuaf1Uv6corpYkPBF7j+ElQQSdny+EdHLs8nArEq0Dvd9AzFl86bToH8k3LktcNQpTdFaNr9GPj3GH2uL0iKhWsUsyP64269kq73M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742202481; c=relaxed/simple;
-	bh=UgPBZvjsFQmiYNA6znXuMhzjQ271ggAz4JFSOSvqvZ4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=T8mN6sSB6WpYLcuIbILpPLHEZvxQ8AnRZ35Gia/CtqmVYh9kxaQzkpYM3NY28Ezkm7MdH848QvH+Ou7g1eQ4dDfibLHwCBF26BT9OYupFm3E8eRoF7CzWMkZcakgkwJKMwwTGTZDFkuvnrCpvpVJeuJQBWXquPW0zPm2mkTMggU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mdmwEFVO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=34eQYoD0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mdmwEFVO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=34eQYoD0; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1742202517; c=relaxed/simple;
+	bh=Mvvbh0DDMRiK6miWCiwmpqH/0S/RSOBLo8iD/n/pR/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gUr31ViWTs33U5Lta3g09/hyQmm0ig+uX/lhGAhpj49OAEN8G1mTQAvQ37wtMBDxI/GjR78ODyLtnOmIVE9w2XrADJQW3QVo5L8xqF7DQEt4feJvHTSucl6SvcqmmriGVzydXKKryHXPIQYNfzIJBm3fI3ImHavuAaiOZe+ZeNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ct5qDh/J; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mdmwEFVO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="34eQYoD0";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mdmwEFVO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="34eQYoD0"
-Received: from pobox.suse.cz (unknown [10.100.2.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A9C0321D92;
-	Mon, 17 Mar 2025 09:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1742202478; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ct5qDh/J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742202514;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wnKFNLrLhAN97UeP+wzQU9edyI2DXXEOjOLsBP6B4eQ=;
-	b=mdmwEFVOvZgIbkhQEoa9slH513xeG7AGOURUICIl1Jp1Fdeh6vi5MxfuQG/2/rlt5ZrG4/
-	Tf5ea1HCt/QclEZrMFSWgbmODsbF78/k2BaRnKOZCXfKo9EcPL3WpfEdj7aOUo2BODlNYq
-	7e1qO1IA46lUQlj+Yp1PiVTnVtzAJRA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1742202478;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wnKFNLrLhAN97UeP+wzQU9edyI2DXXEOjOLsBP6B4eQ=;
-	b=34eQYoD0Q40srGmeBJ5kuXok7ZTv2bSKWLuqtLeeouHNL9TsGu4KbnrWwBXioFteWi9ZfU
-	JNZ5yfK6tXPri+Ag==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1742202478; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wnKFNLrLhAN97UeP+wzQU9edyI2DXXEOjOLsBP6B4eQ=;
-	b=mdmwEFVOvZgIbkhQEoa9slH513xeG7AGOURUICIl1Jp1Fdeh6vi5MxfuQG/2/rlt5ZrG4/
-	Tf5ea1HCt/QclEZrMFSWgbmODsbF78/k2BaRnKOZCXfKo9EcPL3WpfEdj7aOUo2BODlNYq
-	7e1qO1IA46lUQlj+Yp1PiVTnVtzAJRA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1742202478;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wnKFNLrLhAN97UeP+wzQU9edyI2DXXEOjOLsBP6B4eQ=;
-	b=34eQYoD0Q40srGmeBJ5kuXok7ZTv2bSKWLuqtLeeouHNL9TsGu4KbnrWwBXioFteWi9ZfU
-	JNZ5yfK6tXPri+Ag==
-Date: Mon, 17 Mar 2025 10:07:58 +0100 (CET)
-From: Miroslav Benes <mbenes@suse.cz>
-To: Filipe Xavier <felipeaggger@gmail.com>
-cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-    Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, 
-    Shuah Khan <shuah@kernel.org>, Marcos Paulo de Souza <mpdesouza@suse.com>, 
-    live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, felipe_life@live.com
-Subject: Re: [PATCH PATCH 2/2] selftests: livepatch: test if ftrace can trace
- a livepatched function
-In-Reply-To: <6d9b9394-690b-49a3-b8df-7ef510c96c00@gmail.com>
-Message-ID: <alpine.LSU.2.21.2503171006260.4236@pobox.suse.cz>
-References: <20250306-ftrace-sftest-livepatch-v1-0-a6f1dfc30e17@gmail.com> <20250306-ftrace-sftest-livepatch-v1-2-a6f1dfc30e17@gmail.com> <alpine.LSU.2.21.2503141411010.4442@pobox.suse.cz> <6d9b9394-690b-49a3-b8df-7ef510c96c00@gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	bh=OUxnWcopxnoAhgCDsSFoLxlEg/lKC1XzCkjkry+Y1ZU=;
+	b=ct5qDh/JSX7PdWrP967/2nsL6yi1xBRNtzz7Dn2OWonwCKQfHRNDsfRU3RE5T0SEtc7CV7
+	JopwsDOrLMiKaepOXvVPKPHYtoMOw/STsWfKsBFP8Ag+AYj7upm12PGA2pIuhIVnfJXIXO
+	Yh6NXQudx10DUIsuCL5ubngtg2lF5oM=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-92-2j40Kp29Pjiu_Ovn-wi-xA-1; Mon, 17 Mar 2025 05:08:33 -0400
+X-MC-Unique: 2j40Kp29Pjiu_Ovn-wi-xA-1
+X-Mimecast-MFC-AGG-ID: 2j40Kp29Pjiu_Ovn-wi-xA_1742202512
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac2db121f95so339563766b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 02:08:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742202512; x=1742807312;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OUxnWcopxnoAhgCDsSFoLxlEg/lKC1XzCkjkry+Y1ZU=;
+        b=rvqcrqnqtuHlxPkmh3izn4Nwn0Svw4QxwOlK4rZSLpAGsFfLeJYDtNlOOgybc2tFP2
+         WGI7LHD2idutVT+6QfTw8cHViP77Z/6524e0yyY4yYINqF/T/c+MhbRHlPI1LJ4PkbGu
+         7N+2tk5fxy72N9YfmV4XIWmZjyr+L9VbjthPX6GAlVmR2fImIWKjAu6UmxuwExXIzs5F
+         0Yw7a2GFxI1S8Q6Fvxa/GXZmMIthpyHq83cTbePKeLOLtdTrpbucQstZrefFuOxQeypR
+         ltR5HPpG9uEKjx8loXddH3JYBU8Qf8Y+hGiH/qeZfnoUbQVf6pHd0FiKXCDk/NxJtwWO
+         Ufig==
+X-Forwarded-Encrypted: i=1; AJvYcCUrtgaLC0PGJntCZ104WGUhC0aiMRvy3nwX+FpH0uAYcjkfNoIxtErC20+p9od8VfcR54R24MkPzeIG4XA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNPCoCIP24xgKwhnL6jBV6nfLyszT+lrZrpKdQH4K8eYYbz+zq
+	gn0lFZvaTvZ5Dk7fjS6C2ZLRTgJW/ekkdEPeOy5pt4WV9dZDEZfXyZXfYy6rlN9wIzHuKU3lzJl
+	5XHze40dYh42kjs9qwsjdxwuaUGiYb9SSkKmECm5vo3DvxtS+6TJ+/VEy9xVRhcHjBrPEJYaa
+X-Gm-Gg: ASbGncv+Z7GQuLz+1LZmNltlK8ZTfaOVhGE/afayql4vRpKkH+uL1EtEmlg5KCKMNSN
+	MKHmiWPe2Jjpqfr1pessx0yZHZ+aVY3hN+DNxlY1pYTbjUAq/ZLxcVO6k/GWDcCdgvnrcPhq7o7
+	1nBvvjj37CGV3o/GbAyimbA2M4iKvcb34mceYMkIl9uTng3q8MDL68et4z/yur3P6v0Gz1QEOrp
+	ZZSTAehxnIsOBEyE+iEm9Db1yPvhBpLSEYPPYpjKkt5SvYHrlooC13LL9bI9lrQ5wyc8hhgmFXF
+	AViHq/+hHo9PGMQFdUg=
+X-Received: by 2002:a17:907:6ea9:b0:ac2:e2bf:d437 with SMTP id a640c23a62f3a-ac3303defb7mr1289818866b.52.1742202511680;
+        Mon, 17 Mar 2025 02:08:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFmMlwZG7U70Z6pyeZp1t0JdJ780owI88UMoZl46g79qE+kJtjGHcJF7BeCcZnIxxakzcQWHQ==
+X-Received: by 2002:a17:907:6ea9:b0:ac2:e2bf:d437 with SMTP id a640c23a62f3a-ac3303defb7mr1289816766b.52.1742202511336;
+        Mon, 17 Mar 2025 02:08:31 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aea1fsm625177366b.22.2025.03.17.02.08.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 02:08:30 -0700 (PDT)
+Message-ID: <77079344-5355-4595-a56c-26bf2e39e52c@redhat.com>
+Date: Mon, 17 Mar 2025 10:08:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,suse.com,redhat.com,vger.kernel.org,live.com];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] drm: panel-orientation-quirks: Add OneXPlayer X1 AMD
+ and Intel quirk
+To: Antheas Kapenekakis <lkml@antheas.dev>, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
+References: <20250222164321.181340-1-lkml@antheas.dev>
+ <20250222164321.181340-2-lkml@antheas.dev>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250222164321.181340-2-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 14 Mar 2025, Filipe Xavier wrote:
+Hi,
 
-> On 3/14/25 10:14 AM, Miroslav Benes wrote:
+On 22-Feb-25 17:43, Antheas Kapenekakis wrote:
+> The OneXPlayer X1 series features a 2k 10.95 display with a portrait
+> orientation. Add a quirk to set the panel orientation to portrait mode
+> to both the Intel and AMD variants.
 > 
-> > Hi,
-> >
-> >> +start_test "trace livepatched function and check that the live patch
-> >> remains in effect"
-> >> +
-> >> +FUNCTION_NAME="livepatch_cmdline_proc_show"
-> >> +
-> >> +load_lp $MOD_LIVEPATCH
-> >> +trace_function "$FUNCTION_NAME"
-> > trace_funtion() calls cleanup_ftrace() to prepare the test. Ok.
-> >
-> >> +if [[ "$(cat /proc/cmdline)" == "$MOD_LIVEPATCH: this has been live
-> >> patched" ]] ; then
-> >> +	log "livepatch: ok"
-> >> +fi
-> >> +
-> >> +check_traced_function "$FUNCTION_NAME"
-> >> +
-> >> +cleanup_tracing
-> > Here, I suppose, cleanup_tracing() is called to clean up after the check
-> > above so that nothing stays and more tests can be added later. Right?
-> > Would it make sense then to call cleanup_tracing() in
-> > check_traced_function()? I think it would less error prone.
-> > If needed, check_traced_function() can always be upgraded so that it
-> > checks for more traced functions.
-> 
-> In cases where we need to check two or more functions with
-> check_traced_function,
-> 
-> if there is cleanup_tracing, it will not be possible, make sense?
-> 
-> e.g: function1 call -> function2 call -> function3.
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 
-I meant... check_traced_function() (or check_traced_functions() in this 
-case) can have multiple arguments. You would loop over them inside and 
-then clean up. Or did I misunderstood?
+Thanks, patch looks good to me:
 
-Miroslav
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/gpu/drm/drm_panel_orientation_quirks.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+> index 4a73821b81f6..17b4f57d64d7 100644
+> --- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
+> +++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+> @@ -443,6 +443,24 @@ static const struct dmi_system_id orientation_data[] = {
+>  		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "ONE XPLAYER"),
+>  		},
+>  		.driver_data = (void *)&lcd1600x2560_leftside_up,
+> +	}, {	/* OneXPlayer X1 AMD */
+> +		.matches = {
+> +		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ONE-NETBOOK"),
+> +		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "ONEXPLAYER X1 A"),
+> +		},
+> +		.driver_data = (void *)&lcd1600x2560_leftside_up,
+> +	}, {	/* OneXPlayer X1 AMD Strix Point */
+> +		.matches = {
+> +		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ONE-NETBOOK"),
+> +		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "ONEXPLAYER X1Pro"),
+> +		},
+> +		.driver_data = (void *)&lcd1600x2560_leftside_up,
+> +	}, {	/* OneXPlayer X1 Intel */
+> +		.matches = {
+> +		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ONE-NETBOOK"),
+> +		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "ONEXPLAYER X1 i"),
+> +		},
+> +		.driver_data = (void *)&lcd1600x2560_leftside_up,
+>  	}, {	/* OrangePi Neo */
+>  		.matches = {
+>  		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "OrangePi"),
+
