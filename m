@@ -1,114 +1,75 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE024222594
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 12:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68DC149E00;
+	Mon, 17 Mar 2025 12:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742215730; cv=none; b=H29l7inIED3j0GJ4WtSrzomjASZXs9Q7VEXZ1NV67f2w575+6aYlXRuFp56K5WWG+hlPq6EjhNEgf06B/nEXEy+gCdrOwu79TQPRWhf+4DNHA3Pz/z9zO+7ozjOThDx2bDEZmF/d0h5l0u2tYXTjA74bqLaimWLNO2IbUTckGJ4=
+	t=1742215976; cv=none; b=lhlX/bDD4y6uuZe3JZLkhZt7agGzMCNeDMnPOabQ8uZddJFNeDvt2GG1g92+vzEW+FhA2FVgyPAgQzdAVhDvUz6ohrhh75TPAwCNx4WEamsAHYFmc8t13EW3uAlc21OtP1ngJDSCX10TLv9c3CUS+7BDZwZLbkS9Ob237DlxKOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742215730; c=relaxed/simple;
-	bh=OkMulsM/cx7fBZxAWko6B9e5uWQM+rwz2mkNJEmQ9uQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VWQjszNzTO1Gc8dGvoqNjK3CA91AZOr5fF4hQhDu094LknE3wD8Ps9AuuopydH3rNZYIXsStPiB4j0XSHKiT46C7hAgtAw1NEadrqFJEwX0cDgsqoQ9KO9hMou8f4vdKtLfnkDAwsiHPytJdRFH8Zckrx3yXqxlwq5JEQTbR/a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UNuMep/j; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FBdRfIp+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vhKu5r4c; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=b6gff4vq; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1742215976; c=relaxed/simple;
+	bh=3Q69/D9Rd3DmfgKV2WC9fKZgHhcyfl6HFbdij0haqEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ouxi2sl8rvX+YlriCy9HIg9cHCwrKXxbR1EPQm+CC0TCWC2iv0a8sWjE7+KdSteKGSst4o5mdJ3n8UZiXS+beGc5idKfH6oWB0n+Jbmw/56qu8TC1ORt7UyEd44TwTx4n+1bnmrawPuhQBK5MWE2OgYgbkP4Ry7jkvogSdrNZrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=zWSxkV0Q; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UNuMep/j";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FBdRfIp+";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vhKu5r4c";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="b6gff4vq"
-Received: from pobox.suse.cz (unknown [10.100.2.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D86F121209;
-	Mon, 17 Mar 2025 12:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1742215727; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxMRh+HKZycxxIczcxBBPpKquapYaTO+NvLoRdwKnD8=;
-	b=UNuMep/jLh8vTSG5kLKOXYydDAgccHmiyiNdhEiINPUY1yHJHgXeyhqv7qpxtKNh2jHcdE
-	R3rUAOIEH7ctusoZyXEfasWB75BDeNZ9yd9LqJH165DMG2PgzLm8qohhMzOLMFLM0l9cu+
-	xyxpPgMgaZ1YI0r20dfaX2cxclBUOow=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1742215727;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxMRh+HKZycxxIczcxBBPpKquapYaTO+NvLoRdwKnD8=;
-	b=FBdRfIp+qXd7yUVsXzAEIeCDxZWOJkTZhWeS331e+ul3gZyVcOFIbOp0ZXkPW5tZh50r+h
-	YPrT4+BYTkRfXSBQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1742215726; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxMRh+HKZycxxIczcxBBPpKquapYaTO+NvLoRdwKnD8=;
-	b=vhKu5r4cE0P8toE4gLQQY5/uACrVnL2x9JLCtVx7W1zkon4aRtmuDHvzJUeEyZ/ENHZPTh
-	rKtiKQnilWGRvCElJ5YB2VBxzIPNHhKVFND1uHVe9awvpVLMeRu9gdPPgoL3KZ2zmAMWvD
-	JYbD4xqVDru336hpnodSKsMw8MrG8ik=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1742215726;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxMRh+HKZycxxIczcxBBPpKquapYaTO+NvLoRdwKnD8=;
-	b=b6gff4vqD8GOKlqObzyLvLwQPziefnjnhqHeScK0ayLbGk3CQrIlaul070MrQ8ForlSjRa
-	RW2G9fDSHhIAALAg==
-Date: Mon, 17 Mar 2025 13:48:47 +0100 (CET)
-From: Miroslav Benes <mbenes@suse.cz>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Brendan Jackman <jackmanb@google.com>, 
-    Nathan Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH 09/13] objtool: Add --output option
-In-Reply-To: <0da308d42d82b3bbed16a31a72d6bde52afcd6bd.1741975349.git.jpoimboe@kernel.org>
-Message-ID: <alpine.LSU.2.21.2503171348250.4236@pobox.suse.cz>
-References: <cover.1741975349.git.jpoimboe@kernel.org> <0da308d42d82b3bbed16a31a72d6bde52afcd6bd.1741975349.git.jpoimboe@kernel.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zWSxkV0Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=dq8TNjOCjLs57PNkzG69jW5zDo7b4i7oIyvx27qBQHk=; b=zWSxkV0Q5r82QAJmVgOTeKBxX2
+	QlJGtpW4wD4DoQLscaef5r+m/p6377j9uwUH2+sJG2lRQB6I7jpkoaao+92cm5D/467eylsaMCJL3
+	YxPYpQf11dRIFZXHQeE50Chsa3rVeV9qtiEe4T6XdNzXdxxT9saD/JiNxDAz7smLprOc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tu9xP-00689D-H9; Mon, 17 Mar 2025 13:52:39 +0100
+Date: Mon, 17 Mar 2025 13:52:39 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: Russell King <linux@armlinux.org.uk>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"ratbert@faraday-tech.com" <ratbert@faraday-tech.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: =?utf-8?B?5Zue6KaG?= =?utf-8?Q?=3A?= [net-next 4/4] net:
+ ftgmac100: add RGMII delay for AST2600
+Message-ID: <c3c02498-24a3-4ced-8ba3-5ca62b243047@lunn.ch>
+References: <20250317025922.1526937-1-jacky_chou@aspeedtech.com>
+ <20250317025922.1526937-5-jacky_chou@aspeedtech.com>
+ <20250317095229.6f8754dd@fedora.home>
+ <Z9gC2vz2w5dfZsum@shell.armlinux.org.uk>
+ <SEYPR06MB51347CD1AB5940641A77427D9DDF2@SEYPR06MB5134.apcprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SEYPR06MB51347CD1AB5940641A77427D9DDF2@SEYPR06MB5134.apcprd06.prod.outlook.com>
 
-On Fri, 14 Mar 2025, Josh Poimboeuf wrote:
+> The RGMII delay of AST2600 has a lot of steps can be configured.
 
-> Add option to allow writing the changed binary to a separate file rather
-> than changing it in place.
-> 
-> Libelf makes this suprisingly hard, so take the easy way out and just
-> copy the file before editing it.
-> 
-> Also steal the -o short option from --orc.  Nobody will notice ;-)
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Are they uniformly space? Then it should be a simple formula to
+calculate? Or a lookup table?
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-
-M
+	Andrew
