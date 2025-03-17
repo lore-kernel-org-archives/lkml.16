@@ -1,82 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay01b.gzo.com (relay01b.gzo.com [96.31.72.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB62419D07A;
-	Mon, 17 Mar 2025 14:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D781E20322;
+	Mon, 17 Mar 2025 14:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.31.72.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742220611; cv=none; b=Opa+aGVNNhgy5a3pV96b9dT/u1nlTGMrJb8VSh7RJcSIa/D1SpaUtjYqEFbbmj1JEhqWizuLgRAsnztI/6SKALIAen3MUgcmlj+7ilAhBjYl9W6bIzI8It4w7IO1SKjhun/UgXWk/rCq/8tIFKVsq6oyhvk/PBAbxWl+x3dXtvA=
+	t=1742220781; cv=none; b=uEUJcigci0p7Wm98wberDPAERMJKNu2KzEzEKW+cq1t2xkzrk65mReY9cYVsJY4AEW5A3kRz5a6q2Jy8yBlRfqj5jkSz3uZPPsf6MG1a1SeMDytFVFFz7XiiNkHF3/STH4Ai+HzBCZhj2Bi1rpkBmt4CXW9ueLk2ZG41lwvk7Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742220611; c=relaxed/simple;
-	bh=L9CTjG7G9nLgC1mxFiRCYSL1btZaSkw8ttOOCPruvGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cSgoY2ueDFBemmzmogOQ2AH9LlYz5Ju2mJsXDBMujjVKvhzuiRrvyQb+KhdCkDWh2Ws3ne70BRZ53QtZofyLkYpxs5s4pgAi7xVJnNcv6qDclt0Oail6XahjqC/5gWoar/R3DB4aWNK8LFo1W36S0SYthBS5AUpQZc6qbMXbRUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qutWab/T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742220781; c=relaxed/simple;
+	bh=jTB5znB+ogEWEhTkaupi8dMN+yvFZhhh7iKqXffpBfE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=fpk0Sc/ZUjxuvxDTsreOpa3OYKOEL1tiVr3vftmW7FrTwdyCixiNJbx/YC8wZYleoZ8LdJoCN1cDpLTSqs44W8Nfcmexyvdyw3Zq+MK6E4NVyVVmq/naAmcnt9zOzl99GVu0c/a0H04QKk6ekLQ2l45zmooBGjEpo/ILXqp5YJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shurup.com; spf=pass smtp.mailfrom=shurup.com; dkim=pass (2048-bit key) header.d=shurup.com header.i=@shurup.com header.b=itgmWAFW; arc=none smtp.client-ip=96.31.72.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shurup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shurup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qutWab/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51C13C4CEE3;
-	Mon, 17 Mar 2025 14:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742220610;
-	bh=L9CTjG7G9nLgC1mxFiRCYSL1btZaSkw8ttOOCPruvGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qutWab/T2ZSK2upZOEAUDryMkpWvnlRDJEBSXH0tkO+cwI9WokJvE2TngQMRIx8+c
-	 et7kYrP2IFmWA+xwsNBLp1DN4KozNadjQlA7lsFVsaMgRcOSmSkVL+nmALAjbTM7Bu
-	 l4b+fnMV7gyDRtwkVPJx1cQhz/OHxQjmH/xdRc7ELbayvx8n1ukM9xJKVnhqLm/kXQ
-	 zuCuCdhOE+MhmSVpAuIkMUZMEioDrGaFOLuPIL2flcfsdnputryGbCS+5s/+Fu+Sxo
-	 /ZRxXlN5myDxrCOLecE2guawnmFNhxePEYFbIAhVeX4ozuJdhSVqpgVEJonqH4WFNM
-	 HgDuKo2Rt73Lw==
-Date: Mon, 17 Mar 2025 14:10:06 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Raju Rangoju <Raju.Rangoju@amd.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	krishnamoorthi.m@amd.com, akshata.mukundshetty@amd.com
-Subject: Re: [PATCH 08/10] spi: espi_amd: Add support for IO/MMIO
- configuration
-Message-ID: <b409f5e3-2259-4427-8d4a-1652e7fec135@sirena.org.uk>
-References: <20250313183440.261872-1-Raju.Rangoju@amd.com>
- <20250313183440.261872-9-Raju.Rangoju@amd.com>
+	dkim=pass (2048-bit key) header.d=shurup.com header.i=@shurup.com header.b="itgmWAFW"
+Received: from cpanel84.gzo.com ([96.31.72.74]:38344)
+	by relay02.gzo.com with esmtps  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <yury@shurup.com>)
+	id 1tuAfX-00000005jnH-3R2z;
+	Mon, 17 Mar 2025 08:38:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=shurup.com;
+	s=default; h=To:References:Message-Id:Content-Transfer-Encoding:Cc:Date:
+	In-Reply-To:From:Subject:Mime-Version:Content-Type:Sender:Reply-To:Content-ID
+	:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+	Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+	:List-Post:List-Owner:List-Archive;
+	bh=jTB5znB+ogEWEhTkaupi8dMN+yvFZhhh7iKqXffpBfE=; b=itgmWAFW/cuIeL45f9rRrm8AD8
+	oSRYuomvAQ3i3hhhxAuh5G8Z7MEgw6gBc5f1AmFkGfSjypoRJuGZfm0ebwvwEWKJ1UGin889Jy845
+	n/hmIXlvqjpmzUzWROwNEqBw3Mv12wGamJPMXc9PPFyfwDXYyGRdSCjdR5qgK7pKGfFwoaD5beAzL
+	4WImmvX1yUAAM81Rqhsj12WQI4QxuCD7PMImbsbPOIPqCCrgE26vu6RCCfH0n5CHkk97SE5no1Cn8
+	m7shpDRb/eOeXS+dlZ+p8TmXeG2uBTJ+T7tgaVwi/GECFztUuvHR5nw6tB7w3IPOfOy2a2drVH6tb
+	Cn6pydIg==;
+Received: from [178.202.191.195] (port=13529 helo=smtpclient.apple)
+	by cpanel84.gzo.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <yury@shurup.com>)
+	id 1tuAfY-0000000Ei07-0uS3;
+	Mon, 17 Mar 2025 08:38:14 -0500
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6yjdKVU6i119KzzK"
-Content-Disposition: inline
-In-Reply-To: <20250313183440.261872-9-Raju.Rangoju@amd.com>
-X-Cookie: I know how to do SPECIAL EFFECTS!!
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH RESEND] tty: vt: make defkeymap for shifted F-keys
+ consistent with kbd
+From: "Yury V. Zaytsev" <yury@shurup.com>
+In-Reply-To: <202503061554.ZQPrGM8H-lkp@intel.com>
+Date: Mon, 17 Mar 2025 14:37:43 +0100
+Cc: gregkh@linuxfoundation.org,
+ jirislaby@kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org,
+ oe-kbuild-all@lists.linux.dev
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BD85D5D1-4D09-41AC-BFD8-C53E986C629F@shurup.com>
+References: <20250301132108.62761-1-yury@shurup.com>
+ <202503061554.ZQPrGM8H-lkp@intel.com>
+To: kernel test robot <lkp@intel.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel84.gzo.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - shurup.com
+X-Get-Message-Sender-Via: cpanel84.gzo.com: authenticated_id: yury+shurup.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: cpanel84.gzo.com: yury@shurup.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-GZO-MailScanner-Information: Please contact the ISP for more information
+X-GZO-MailScanner-ID: 1tuAfX-00000005jnH-3R2z
+X-GZO-MailScanner: Found to be clean
+X-GZO-MailScanner-SpamCheck: not spam, SpamAssassin (cached, score=-2.099,
+	required 6, autolearn=not spam, BAYES_00 -1.90, DKIM_SIGNED 0.10,
+	DKIM_VALID -0.10, DKIM_VALID_AU -0.10, DKIM_VALID_EF -0.10,
+	RCVD_IN_VALIDITY_CERTIFIED_BLOCKED 0.00,
+	RCVD_IN_VALIDITY_RPBL_BLOCKED 0.00, SPF_HELO_PASS -0.00,
+	SPF_PASS -0.00, URIBL_BLOCKED 0.00)
+X-GZO-MailScanner-From: yury@shurup.com
 
+Hi,
 
---6yjdKVU6i119KzzK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On 6. Mar 2025, at 08:20, kernel test robot <lkp@intel.com> wrote:
+>=20
+> kernel test robot noticed the following build warnings:
 
-On Fri, Mar 14, 2025 at 12:04:38AM +0530, Raju Rangoju wrote:
+Just to make sure I understand the expectations, are you waiting for me =
+to provide a fix and resubmit?
 
-> Add support to configure the eSPI slave0 IO/MMIO address before
-> initiating the peripheral channel IO/MMIO read and write operations.
-> This patch introduces new IOCTLs to enable, disable and read IO/MMIO
-> configurations.
+I ask because this is generated code. I can replace zeros with NULLs no =
+problem. Not sure about the symbols, but I guess making them static =
+wouldn't hurt.
 
-This absolutely does not seem like something that should be exposed to
-userspace, if there is some reason for this to be runtime configured it
-needs to be clearly explained.
+Thank you very much!
 
---6yjdKVU6i119KzzK
-Content-Type: application/pgp-signature; name="signature.asc"
+All the best,
+Yury
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfYLT0ACgkQJNaLcl1U
-h9CkMAgAgKTIXBegLJbAuV0yAlXU4hPik0zKOZpf22MFuuykcXh2O3pWmv2eo6AR
-Mk2njyQQ8bNxGwnhotnarojWkYYP1WPqP1feFfPpJ5OUoEPzmapTdTQN+Yp+Y2Dv
-3TTLdbZIcgVXhmOze0CzqEtEVEfbQSMLZzyoKY9W4R6ur3kwbMuW5jNL/iqQGrIy
-IzH5InJ7KiyzPFDWBpRW5ZVGQRbzfSjK9i0CIVW3b0eO4xvMwjVV7b8TbcRSCOod
-3w4hy0p7Sx87j+OhezJHEk6cPQF7zQnILH6fnNpJRiZlpWyy+yT6WXizST6hAaJj
-Kj3WuKiTwALVAhiu5dc6oZ0IX7WKPg==
-=3cS5
------END PGP SIGNATURE-----
-
---6yjdKVU6i119KzzK--
