@@ -1,111 +1,158 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9EF22CBE3
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 11:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [207.226.244.123])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CC4B237186;
+	Mon, 17 Mar 2025 11:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.226.244.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742209335; cv=none; b=krgkUjbtziKlk2sSnVs04fpeMV5YJ8tl8kxYxaZ6GBitgcTivpsfZ6vR8kg2EIMczl1CpZudF+ATdFqzCUxgHizzIm6mo2yfDWZBPfpy21SHDBwf5+IgID0J61R4Fp75U5ILYrQ2I/Aca072t7X87q0t1IQcNWgI4sXlA8L7vf4=
+	t=1742209339; cv=none; b=VUBeksUd7bb1c7f8L1FrYl0sM3uG90bcg17GvSRSKnePKRHcLlrd5BkzIWrvlUuBLGZgKFGWCftQZE8nTTu8WsViUXxHAU41DK7OcXxUmOu6zrla/OVjIi1QGeksaxNmT3KnaX2GD6RbokgfgMKQnF+lK2/Ow/UdGGIZ8jecOU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742209335; c=relaxed/simple;
-	bh=iJUFjccbbRg29+1fyhoN/w56nFuxVARJPVYorhMQi0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jkMBMysqJTlWtLqHFYyYH06O5djyl/oUd5V2lcVbtfUL7rnKUdjSCeNr5FKOwqNqipYN012Sayi6N2YJh0eaC0NgmURhYhH8kkYa0RfbwbDbFhUtmRhda9YNxVIHxRDNryxg1YdG1dn0iAL/bB+sBZB5GV22hBftKxxooLkS1iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Cyx6zrlf; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Cyx6zrlf"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2235189adaeso69464965ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1742209333; x=1742814133; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l6shPC5jW0ozEdZOQNelxL8rFZZyYTLtn1efKxSBsUY=;
-        b=Cyx6zrlfqRG8iKDvViTcIB0xIFfU6OoGgjv6Gz2WaVaWdWxFjANnzqccgZzMsrBj3n
-         lnnZiMaRRo6dkaiYTKMveET1bClomoc0MQwPa3NFP+M5H+X2i3dtF9Un7748bqeIUp6S
-         cnMkP03pLtjgjnd/8Q4smqImF6bR5QZhJC+r1jGVCAHAeN3q6rXPud4BMA2WbiaF0UMk
-         RYpd6eacDsyCs/2DpX5QLML7mZP4stBDqFkE3VHyiZmoNgQedQLlVTTzIb2QDiFhMAEt
-         kBd0lASFC375qmD2q6czx+/jWk8hQLMGjw4KOM/dbH2Mkiqw1YlrfAabewla2ypFKU3O
-         5Tpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742209333; x=1742814133;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l6shPC5jW0ozEdZOQNelxL8rFZZyYTLtn1efKxSBsUY=;
-        b=Kfz8/taRQcW82Lo8rBSf9LbbYTECWAS24PE8ispuPxGwcJVMovRLozlSllycx2MZ4/
-         HziThDJDX8a+NIwQ3MYAwbmT0nro2mxuQYpTxIrMYPhhoLhyOyep761EgRpBpsuMKfP+
-         PXDHoAqcv1tuu+Nfex5cb8mkRSZ4p2XWTFKFDSk8E4is4eqewpr5RltoV756QzSJMNcD
-         NaSUtZPuO2KPnbRg70BeOygKxfYQpS//izKqXNOAp7hAHTFocNheyTCf0jnJc7owM4Y2
-         7pgk/7pfxpUacZIPIQv8jePK3ib9jBcT/6+uEZvdT5qpEeVSGEylMHCZmNEu/+670TqB
-         oSqg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9SMSjVPQirO8Sry4U7m3NRmRz7CIFSA658zKuDTGE+3ryL+Yr9OAAlkqcQ7Kaabjhr7Z+DOKPPp/P1u0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB0sl07HTzVj/KUlqXCWXuChX9sosKgpapdvrDFvUr65liu4oA
-	vwp2cOkixGIhX1m5EGQOgNc0FP2J0R6gHYX3D7//owMRpl+AtMTAi1Or8ynSXQ==
-X-Gm-Gg: ASbGncu0pfVUGvoo0+n72aJM4whRHeuw8i5xqVa0WahY8uurjQgwKznq6+4aGQZfA+C
-	mtnv/nlQh4GKCquvIBa8sZYMGsaN5KU/x705VKsdp32peC71n1j/RRNqPtib6LAO0NgxpxKkl8s
-	+Kh3/Tsm4/P9e78ITwdyiSwEbckoljImCH9N08T97rS7O7YiqX0tdhU40VxbRxj/8h/1nEwlRZb
-	YuZd1HLR8NyTZsxWiSnI1zca7NkbotCTSZQIlTvf4Y0qveN52EHUMUsYB7/UIJL1P1WNDlBa5Qr
-	DfVZPHvUcPRwTPuAdQW+otDWRwka0/xrnFWII0Gf5XLi
-X-Google-Smtp-Source: AGHT+IGxzVcL7qiDYvc/9vY0cJbYEW/mrL9IZOj4QcVfhMqAgcSS8/w2bN8JKt8VjC0RxmLhssUQgw==
-X-Received: by 2002:a17:902:d48b:b0:215:b1e3:c051 with SMTP id d9443c01a7336-225e16b0fa3mr117402315ad.11.1742209332685;
-        Mon, 17 Mar 2025 04:02:12 -0700 (PDT)
-Received: from bytedance ([115.190.40.10])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c68a381bsm72220495ad.53.2025.03.17.04.02.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 04:02:12 -0700 (PDT)
-Date: Mon, 17 Mar 2025 19:02:05 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>
-Subject: Re: [RFC PATCH 1/7] sched/fair: Add related data structure for task
- based throttle
-Message-ID: <20250317110205.GA4071488@bytedance>
-References: <20250313072030.1032893-1-ziqianlu@bytedance.com>
- <CANCG0GcxLJOnNSZgYVYYh_Ug-sVpCOmsf3VATELrKrs_6jovQw@mail.gmail.com>
- <xhsmh7c4ooss8.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	s=arc-20240116; t=1742209339; c=relaxed/simple;
+	bh=bL3QYx2aczuym377nt5RPmYoIq4HQYGZcGFcYcU+28E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=twMJ78oRK8GefcirWTgNT2kRc0GRBP+rZzG9t+kp1vvdXpML2J8+V9WFsJiKeGtDJ+umH2KlMChPj5Cg7SYRDhz6s3D552QdJIGYgofDR2Ytevk4px3KP5ArmvPqOzlv3nOvL6b9l9QyfGt2ayCjMn4T29dU7PAFDA4jnfQVCYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com; spf=pass smtp.mailfrom=xiaomi.com; arc=none smtp.client-ip=207.226.244.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xiaomi.com
+X-CSE-ConnectionGUID: 6Gr2zm80SOq+e15xjO8xsQ==
+X-CSE-MsgGUID: qplW48dPR9KNkhLa0AG+1A==
+X-IronPort-AV: E=Sophos;i="6.14,253,1736784000"; 
+   d="scan'208";a="134714987"
+From: ZhangHui <zhanghui31@xiaomi.com>
+To: <bvanassche@acm.org>, <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
+	<James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>
+CC: <ebiggers@google.co>, <peter.griffin@linaro.org>, <zhanghui31@xiaomi.com>,
+	<linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ufs: crypto: add host_sem lock in ufshcd_program_key
+Date: Mon, 17 Mar 2025 19:01:01 +0800
+Message-ID: <20250317110101.347636-1-zhanghui31@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xhsmh7c4ooss8.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BJ-MBX05.mioffice.cn (10.237.8.125) To YZ-MBX07.mioffice.cn
+ (10.237.88.127)
 
-On Mon, Mar 17, 2025 at 11:28:23AM +0100, Valentin Schneider wrote:
-> Hi, just an FYI, I didn't receive the cover letter (PATCH 0/7) and it can't
-> be found on lore either:
-> 
->   https://lore.kernel.org/lkml/20250313072030.1032893-1-ziqianlu@bytedance.com/
-> 
-> Not sure what went wrong there, but could you consider resending that?
-> Thanks.
+From: zhanghui <zhanghui31@xiaomi.com>
 
-Sorry for the trouble. The original cover letter mail's message id is
-changed to CANCG0Gfn-BENDNqJmWC2BCxXLA8pQWrAwNibx22Dv_yUzyNV5g@mail.gmail.com
-for some reason, probably because I used the wrong smtp server when
-sending the series.
+On Android devices, we found that there is a probability that
+the ufs has been shut down but the thread is still deleting the
+key, which will cause the bus error.
 
-Seeing your mail, I just realized I can re-send the cover letter with
-the correct message id and get this issue fixed.
+We checked the Android reboot process and found that it is indeed
+possible that some threads have not been killed before the device
+shutdown, because the Android reboot process will not wait until
+all threads are killed before continuing to execute.
 
-I have re-sent the cover letter and saw it on lore now:
-https://lore.kernel.org/lkml/20250313072030.1032893-1-ziqianlu@bytedance.com/
+The call stack is as follows:
 
-Sorry again for the trouble.
+__blk_crypto_evict_key+0x148/0x1c4
+blk_crypto_evict_key+0x38/0x9c
+dm_keyslot_evict_callback+0x18/0x2c
+default_key_iterate_devices+0x40/0x50
+dm_keyslot_evict+0xac/0xfc
+__blk_crypto_evict_key+0xf4/0x1c4
+blk_crypto_evict_key+0x38/0x9c
+fscrypt_destroy_inline_crypt_key+0xb8/0x10c
+fscrypt_destroy_prepared_key+0x30/0x48
+fscrypt_put_master_key_activeref+0xc4/0x308
+fscrypt_destroy_keyring+0xb0/0xfc
+generic_shutdown_super+0x60/0x12c
+kill_block_super+0x1c/0x48
+kill_f2fs_super+0xc4/0x1a8
+deactivate_locked_super+0x98/0x144
+deactivate_super+0x78/0x8c
+cleanup_mnt+0x110/0x148
+__cleanup_mnt+0x14/0x20
+task_work_run+0xc4/0xec
+get_signal+0x6c/0x8d8
+do_notify_resume+0x128/0x828
+el0_svc+0x6c/0x70
+el0t_64_sync_handler+0x68/0xbc
+el0t_64_sync+0x1a8/0x1ac
 
-Best regards,
-Aaron
+Let's fixed this issue by adding a lock in program_key flow.
+
+Signed-off-by: zhanghui <zhanghui31@xiaomi.com>
+---
+ drivers/ufs/core/ufshcd-crypto.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/ufs/core/ufshcd-crypto.c b/drivers/ufs/core/ufshcd-crypto.c
+index 694ff7578fc1..f3260a072c0c 100644
+--- a/drivers/ufs/core/ufshcd-crypto.c
++++ b/drivers/ufs/core/ufshcd-crypto.c
+@@ -5,6 +5,7 @@
+ 
+ #include <ufs/ufshcd.h>
+ #include "ufshcd-crypto.h"
++#include "ufshcd-priv.h"
+ 
+ /* Blk-crypto modes supported by UFS crypto */
+ static const struct ufs_crypto_alg_entry {
+@@ -17,12 +18,18 @@ static const struct ufs_crypto_alg_entry {
+ 	},
+ };
+ 
+-static void ufshcd_program_key(struct ufs_hba *hba,
++static int ufshcd_program_key(struct ufs_hba *hba,
+ 			       const union ufs_crypto_cfg_entry *cfg, int slot)
+ {
+ 	int i;
+ 	u32 slot_offset = hba->crypto_cfg_register + slot * sizeof(*cfg);
+ 
++	down(&hba->host_sem);
++	if (!ufshcd_is_user_access_allowed(hba)) {
++		up(&hba->host_sem);
++		return -EBUSY;
++	}
++
+ 	ufshcd_hold(hba);
+ 
+ 	/* Ensure that CFGE is cleared before programming the key */
+@@ -38,6 +45,9 @@ static void ufshcd_program_key(struct ufs_hba *hba,
+ 	ufshcd_writel(hba, le32_to_cpu(cfg->reg_val[16]),
+ 		      slot_offset + 16 * sizeof(cfg->reg_val[0]));
+ 	ufshcd_release(hba);
++
++	up(&hba->host_sem);
++	return 0;
+ }
+ 
+ static int ufshcd_crypto_keyslot_program(struct blk_crypto_profile *profile,
+@@ -52,6 +62,7 @@ static int ufshcd_crypto_keyslot_program(struct blk_crypto_profile *profile,
+ 	int i;
+ 	int cap_idx = -1;
+ 	union ufs_crypto_cfg_entry cfg = {};
++	int err;
+ 
+ 	BUILD_BUG_ON(UFS_CRYPTO_KEY_SIZE_INVALID != 0);
+ 	for (i = 0; i < hba->crypto_capabilities.num_crypto_cap; i++) {
+@@ -79,10 +90,10 @@ static int ufshcd_crypto_keyslot_program(struct blk_crypto_profile *profile,
+ 		memcpy(cfg.crypto_key, key->raw, key->size);
+ 	}
+ 
+-	ufshcd_program_key(hba, &cfg, slot);
++	err = ufshcd_program_key(hba, &cfg, slot);
+ 
+ 	memzero_explicit(&cfg, sizeof(cfg));
+-	return 0;
++	return err;
+ }
+ 
+ static int ufshcd_crypto_keyslot_evict(struct blk_crypto_profile *profile,
+@@ -96,8 +107,7 @@ static int ufshcd_crypto_keyslot_evict(struct blk_crypto_profile *profile,
+ 	 */
+ 	union ufs_crypto_cfg_entry cfg = {};
+ 
+-	ufshcd_program_key(hba, &cfg, slot);
+-	return 0;
++	return ufshcd_program_key(hba, &cfg, slot);
+ }
+ 
+ /*
+-- 
+2.43.0
+
