@@ -1,99 +1,103 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B182C33CFC
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 13:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742219330; cv=none; b=QparxHcuwVTE2Pj9AVdcKXZfsH+2s33M1vSke1yK2XQiwopUj0WeFt12ky1iNVV2iV7T97/a4BK5RS6Acmxr6VOgGpbSp4z+FlsSs9fD2IWom7gg3Ys++5r1ETyQsv0OLndijzOWUbKnsd195KZsAiJzhPmWjtgxBd7gRybT1B0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742219330; c=relaxed/simple;
-	bh=X5kQlAe6V0IWV3AfX/1cpge5j9TR7mJMVFfQqAnFVBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oK2oaDDspfIvb9gp/q2wAb5xvz0Exq0Mm0ex2h/ZtNrkyXKOhjSbnjczdV/nN1rvxc5AGmyZklJMqQlhbmXohYNp80lZ253X5v+jqGu/j3mymg187iIshPWXj0NtO4NNf8YhBAhhfgIM6BbRIRYa45Fz89wcKecf5JE7yrz6LyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=crZIQWPa; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AC6226888;
+	Mon, 17 Mar 2025 13:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742219446; cv=pass; b=uKDjVV5G77XA1JZSmWwAycet7VL/3R9VKOaU0i9PCXeduZBqJDMKaYxr89ZpvVB/9PaXHnarctsH+16yPk3KG0i7Ui6gPZbfdZBDYsAX+taTLpzkkZbn0jjXfCjueJo7RZnWH1KzEwTzeoqfvUzQWNd59QyE/iznAi/+cAYy8HE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742219446; c=relaxed/simple;
+	bh=jjV7xgcqTpNdMjdr4xut2lXKfKkNyiWOgeea4XBsYVU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=m10+2cnU3Flh9HscV8p5OwBiC/7S2rPELNTSRvrPggL1FaKLEYnFRPuZeTXynEB6b8tv8eQWStFDATPQTuTMt+6rORgwpGXQYRrt9kQLfVV43TRTLg+730hkqClenEQuxOpYy0kQD+D9H4k67OYb+WHe/WEsokGPj99hlw4H43o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=kuvvtxa/; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="crZIQWPa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=VU7NEXsrVVZw4RIK+G8nYDaRoOUrahZLuONfHBtRehY=; b=crZIQWPa+dKSJQxpTyf4cXG/E3
-	OoApJM4XIOdWlJxX+YcJERbADaUd7sG17rufN2h65SYZBwzDURtl3iwByt0h+O9bay2y0ZSRwNMX+
-	BJnfybRDWRcduN2LhxKANN/HYl2bMXBnoZ0pbNAD0KYkUhI056BaUsCox5xJiWu9PDUHC/B6Kd+E8
-	6dfJDNd0iyZbYpHJRNGhhOaL2V5wDVW42kJTHgdz98wveOGEblNLl33VIa9oSGiHIto+XekXSzdV/
-	/YwGhFeJFTz0/Q9whqebq19frcoNqbibMprG2JwVmBh6+1Cbp/NtrjDm/5i9XeVYBCKkulX811CiB
-	o4sqcqHw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tuApZ-00000003SiA-49VO;
-	Mon, 17 Mar 2025 13:48:38 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4D136300783; Mon, 17 Mar 2025 14:48:37 +0100 (CET)
-Date: Mon, 17 Mar 2025 14:48:37 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Metin Kaya <Metin.Kaya@arm.com>,
-	Xuewen Yan <xuewen.yan94@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
-Subject: Re: [RFC PATCH v15 5/7] sched: Add an initial sketch of the
- find_proxy_task() function
-Message-ID: <20250317134837.GC36386@noisy.programming.kicks-ass.net>
-References: <20250312221147.1865364-1-jstultz@google.com>
- <20250312221147.1865364-6-jstultz@google.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="kuvvtxa/"
+ARC-Seal: i=1; a=rsa-sha256; t=1742219423; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=jTUQ3+B3Jdh6ejfaMBnfAgWEiEpN+M4tloQJpU7rikYKYQnB4Dixm/BkULndJebb+XASDYrwjjcEp5Vi8UEt98JsjvdmSCc793rYTrlE2dhQ2nTSGvf6IBixNnTRSCCqeiCA+plALDlKE4IKVBdHt0zV02WsOT6xWZmZhi0wBxI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742219423; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=vTJZMXEurjXX++PH2hmwuc7IJOgr6HvrWn3KlD6bDXs=; 
+	b=WyQhIdC3jtYRZP5irqzIwsWJGzEYWr/R0ZRvj8vu1YXdnwd/FQnbtxCv+kWk+zskOW3D9EFD6HFDqh4paPo2UfyE2S+3VcBTot6fyN3FXLa6yBXFGdoHUKEOdr1A1Q6nuEHN6M0CuoQY0Kw0uCtH1CN8OACphDOKgJbchfDuBz4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742219423;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=vTJZMXEurjXX++PH2hmwuc7IJOgr6HvrWn3KlD6bDXs=;
+	b=kuvvtxa/F1QMRJ6TH1gRdomRSkeIA6gRvbwHcY+46N9jQAmkZeBjtQhSRhp8AYJ5
+	OufTGyej15B0LRGWDkL5lXxs1OWF+zl2PmvKUVjNN+qvQNc8IbBVSsYfuTPOk6hL5z3
+	Q3/71TAtFeYWX0mB8a7TnhT+gtpXz9C7uMav0S4s=
+Received: by mx.zohomail.com with SMTPS id 1742219422229957.2183576646732;
+	Mon, 17 Mar 2025 06:50:22 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Mon, 17 Mar 2025 14:49:26 +0100
+Subject: [PATCH v4 1/7] thermal: rockchip: rename rk_tsadcv3_tshut_mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312221147.1865364-6-jstultz@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250317-rk3576-tsadc-upstream-v4-1-c5029ce55d74@collabora.com>
+References: <20250317-rk3576-tsadc-upstream-v4-0-c5029ce55d74@collabora.com>
+In-Reply-To: <20250317-rk3576-tsadc-upstream-v4-0-c5029ce55d74@collabora.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Jonas Karlman <jonas@kwiboo.se>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ kernel@collabora.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Wed, Mar 12, 2025 at 03:11:35PM -0700, John Stultz wrote:
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index 4b8e33c615b12..2d418e0efecc5 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1479,8 +1479,19 @@ enqueue_task_rt(struct rq *rq, struct task_struct *p, int flags)
->  
->  	enqueue_rt_entity(rt_se, flags);
->  
-> -	if (!task_current(rq, p) && p->nr_cpus_allowed > 1)
-> -		enqueue_pushable_task(rq, p);
-> +	/*
-> +	 * Current can't be pushed away. Selected is tied to current,
-> +	 * so don't push it either.
-> +	 */
-> +	if (task_current(rq, p) || task_current_donor(rq, p))
-> +		return;
-> +	/*
-> +	 * Pinned tasks can't be pushed.
-> +	 */
-> +	if (p->nr_cpus_allowed == 1)
-> +		return;
-> +
-> +	enqueue_pushable_task(rq, p);
->  }
->  
+The "v" version specifier here refers to the hardware IP revision.
+Mainline deviated from downstream here by calling the v4 revision v3 as
+it didn't support the v3 hardware revision at all.
 
-As per always, deadline.c will have the exact same logic.
+This creates needless confusion, so rename it to rk_tsadcv4_tshut_mode
+to be consistent with what the hardware wants to be called.
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+ drivers/thermal/rockchip_thermal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+index a8ad85feb68fbb7ec8d79602b16c47838ecb3c00..40c7d234c3ef99f69dd8db4d8c47f9d493c0583d 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -1045,7 +1045,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+ 	writel_relaxed(val, regs + TSADCV2_INT_EN);
+ }
+ 
+-static void rk_tsadcv3_tshut_mode(int chn, void __iomem *regs,
++static void rk_tsadcv4_tshut_mode(int chn, void __iomem *regs,
+ 				  enum tshut_mode mode)
+ {
+ 	u32 val_gpio, val_cru;
+@@ -1297,7 +1297,7 @@ static const struct rockchip_tsadc_chip rk3588_tsadc_data = {
+ 	.get_temp = rk_tsadcv4_get_temp,
+ 	.set_alarm_temp = rk_tsadcv3_alarm_temp,
+ 	.set_tshut_temp = rk_tsadcv3_tshut_temp,
+-	.set_tshut_mode = rk_tsadcv3_tshut_mode,
++	.set_tshut_mode = rk_tsadcv4_tshut_mode,
+ 	.table = {
+ 		.id = rk3588_code_table,
+ 		.length = ARRAY_SIZE(rk3588_code_table),
+
+-- 
+2.48.1
+
