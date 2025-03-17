@@ -1,107 +1,247 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F34F24167B;
-	Mon, 17 Mar 2025 14:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E470220322;
+	Mon, 17 Mar 2025 14:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742220842; cv=none; b=olfMYCCp2HEC0uLzmxMyyS/7XSmMlvvsuQjKml8TxmkCE78S16wkOuFY9fvkPzAofJ6s/KhqMtFqgPrYBlC3S8fhgc229UDFsn+vgqJ0TsFAiSIIauuBVBTQrIDsqybp0ZilpvoaCVkt99hug5Ek07OZJc0w20Y0BjhxSOBYg2I=
+	t=1742220858; cv=none; b=pnSkEaQ0HmbvQ4+FPUiGVTMev/EXIIERjedS1vcnZnJ6q5EipwA431wxyl+U03YOQg+EeVLOZAJeTDSRyvA3MFJpA+xqJt1xynmwnXVM8Upzko8NydKAEg+uuN248SPGv9tRZoIgXrW09sOf1JxQA3QBMvakp/Qpf0mhNEpVC+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742220842; c=relaxed/simple;
-	bh=CVOajz0SswfE5RdPvrmC6YAfTKi/WwrIPgt8fN6yta8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vw6/qSLU8ykQqWSBVQhV0e8UtqqBNHp/X7G4hlkXu5fcJlOeEWcj2ckmB3/ICphPXSRDAI+9ar3MfjrgHEqqrFzhVFAKjUV0iXw1vvXm1FjgJh1QAq6Q7dnSx2pFh0ezatD680LxA3mz0UaLeR4IihXIoWHEwsP771twyY7S4oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F6OtoGuQ; arc=none smtp.client-ip=209.85.208.178
+	s=arc-20240116; t=1742220858; c=relaxed/simple;
+	bh=FaKXewuiPsteMre9gO10msskbpTrobL3/oyES+8hp/g=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=pGCDWEed5UxJmAKVohhTKTsZBEKFzknUzVTRr2lF2kTYcB4eiWfz2KWMJvR5DycFFfRIc5DZtlJekuwEtgiAeqd63H04EF2s2wSaIdmDrUqHPWTmRd97JEVxzcYwQl1zTZAacUEHHMFBHbljBhK3A6yynLvOzPEizKudGY0ap5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XRZTcg/J; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6OtoGuQ"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30c091b54aaso41852061fa.3;
-        Mon, 17 Mar 2025 07:13:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRZTcg/J"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2260c915749so14854365ad.3;
+        Mon, 17 Mar 2025 07:14:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742220838; x=1742825638; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DfFVIXEKkQVbIszXnDVMJcC2+/nJ/AFJtrMqjwVFnME=;
-        b=F6OtoGuQ1vbhLl90fMRgvPDydu59e+mJ03zqn3o6g8T7Nu6tW/njKtwqBK8ocVFMpb
-         wG5jcpXnAUb6r1z4k6VQC0L4mbKgKoUq1ftndLnXkyY2h2K1VPkCJHzFymClvTeq5v6T
-         7I0aFI8mr0oTXOQ0VicaZTXC3AFJeV8ibkRlURpqHeR1gdYdbJok2wP46Mh33DzPbAJX
-         Q1H6w/PGKyGuiQyLbhmLiwreYhGROl41eTD3mia56so50f2pqxFXGXIepoxF2NRBQ/yw
-         Hk929vCCyHN0q/aI+oXm5N/R8507Os1v9v/5n+PxXTKrsLyMiPMMrUrYNozw8kVDGzHZ
-         VbeQ==
+        d=gmail.com; s=20230601; t=1742220855; x=1742825655; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=FWm0/DCZUe0Mhr2IZVtrNDeCytOlPsIxKkTRgrtWi20=;
+        b=XRZTcg/JPchPz3Lxx79CdG/GVNqkFXxhhRH8EZ1qtktS3pd7Tap6nuBQlBQFqHgBig
+         g8e2Fp42AuN4qnS56kSJ0IdU2GoUbTGY8n4HZJSQHMFoMKFe5zscjH40ORLSaqGFlqFS
+         TbgdJqxHzQrKS6fLomZrq6VVRHSMbK+O0G2HK1pMrbc0DWNlIoxp1MAlocr9hVpC5dSN
+         yEkoK3LbR9PgLCICE+KpTZYpS3aZ+TOMf0vzFNGCCvEtM8qTAIPt6alJhPnfhFD4kFst
+         Or0pkQgXDHoSGgWyDDjTHnnozOiEPO2xyge4jW8tnqi2SR1HibcaCOnuaLGvizjIZIyc
+         9pAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742220838; x=1742825638;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DfFVIXEKkQVbIszXnDVMJcC2+/nJ/AFJtrMqjwVFnME=;
-        b=nxc7nVChFlbbDq/Il7HZeGrDwqCLS0/cahc3+hS4kuy6cGGJkoZs5gDap5c3dUicDl
-         B+8SDPq0QGJ0Hxd8AbQgMlhSOkT3YN3pMLY8okdHzuO0YuySeil643dR2mTXVeBwU1S3
-         QtSYV3jov668C6IFU6Z9lBEbpZlJee7H98X40h+uQ2Jm328XoknZfbuMenKcGMkPrJfJ
-         wa4xbg2Y+LAuiLUcVw1K23n+C+TaG+HiuYVen6xsutjvsX8CzCu4z+70raTenKdygquD
-         BrRehdBmF3TKBWT7OcmcABeqXitnvSDepQPxnVFmxLvYjIEF11Qxj+WGf19llqBS3cwp
-         8mLw==
-X-Forwarded-Encrypted: i=1; AJvYcCULLaQ0G7w8TA/1RCE+aaF/jN/8o+zDJNXnw1de+SmirmEWq2zb38VovNVCCMkIqV8+SNJplcbd6NKOfJWx@vger.kernel.org, AJvYcCUa5iprp2dvlswLqejKaeDwu/wlibkj+oTKsNlgcKznOI77uU/oJzGnXlHcMo+5mtjhbXdNISF4SgCa@vger.kernel.org, AJvYcCVj93oO9dgwQPph6+ddU1Gdmi6+kRGIVhynQkBLSk3bktjfQE3KYBpMR/PlL5AwSI3oSdXy51Ym2lrnCxx2y/I=@vger.kernel.org, AJvYcCVp2gvftT1iN0gFJ6XuagFjmUFeaH+eqzuI5V6SpDvKe7ssEdmJJm8xSoFMoQyBMDJiT5KBK3R22CgWUuJLDol5@vger.kernel.org, AJvYcCW1X1FiSQdyrtsLvg7oLCUyjPNG22t75wNWeFiabSbHcPh8bDAci3oBjPC+xi0bZDSuJFyriOTDWIN22ON+@vger.kernel.org, AJvYcCXf3NCxE4v8WCayXAPz3Xe5+Jy6Md60TL8YC37/LgIIxG44IJbe8VLp97Yqyx1WM4ZsRveYBpLLLBrWmdE=@vger.kernel.org, AJvYcCXg35VC0Y8qzEgr27YTV9F/7PlyX2p67IJQt06xjXazMzk0o8cNM/9otwnBMA5ikToe+cYFrydQGnKR@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ3e3wYyBH2uaNUjmrr2JjyzJPnavUwv3ATWBdwT+oPQfp02FH
-	Epr8so0Xd6WT1Tj5KbyvnfH1+y0K779/dJ/rJesDePms6kIoBt69UOMvDe/drHjhaZ3h+BRwaHB
-	veFd66iupicvSplXqXfnaTyI8FA8=
-X-Gm-Gg: ASbGnctSCPiicIq+s35z8mwCI+p1OlDYc5JRUASCi9hAL4H78LgIOiV1pKIlj93+4E4
-	KBofl2n+Znk2k45VqsZNpx30+APo/9LEYAlGiay9LKXmVKk9JDLRu9TAyhB/n/auDkMj8+9qOzI
-	BrTVcPMkUr3hyOkw1mQHgWROdQmGZyvhxm9fkPNgieEk3jGbolOPg5XhoHFbsCxNRBoOLpdtc=
-X-Google-Smtp-Source: AGHT+IFzkocQJqEpLAgVqhznM9G/c3svmZ3XdUy82l82HgzT7cMT4RMKww3UccU4uaWF5zmyfhHhEJgkJu0nmVO2QMg=
-X-Received: by 2002:a2e:a541:0:b0:30c:2efb:6608 with SMTP id
- 38308e7fff4ca-30c4a8d99dfmr80436951fa.34.1742220838076; Mon, 17 Mar 2025
- 07:13:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742220855; x=1742825655;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FWm0/DCZUe0Mhr2IZVtrNDeCytOlPsIxKkTRgrtWi20=;
+        b=TsNU/Zi69aUl6rCcUU4wUkIoElTy72lqCKebiEj5CD5boAUAusBm1RisTnjkia/b3s
+         B+1BeykTy9OdiKGgKSl2slNXPPaR9azLMwaTzwPYxwbuiRhcy9iR4mP93Bh1uZ2m4YKF
+         Ewi66cf4DEYo6yQIH58Vvk2DlzRMaZ0wAyIiqk6sWxSmV3tL657diFXr8eSPJjh4ODzA
+         JkzfYVGEjPerbIcnxX+mWsQ56rYXZnGa/a/boT3GavlMwDdfxapQCvC6IJVdeuXCKLib
+         3Q1QqJD9w6jpJaTetXq8mBDcw4/n/fCsN3GS4QJz8PWNG9lmNSX/0C/udIfwSikgjA5v
+         m3RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNhvOT0b6U9Qlgqznry7nvXKfy/USlJyJ7rKSrhGjHJxWYQEnZh1Aes2X0Q0i2Rot6tmdAIJ6xsGKwSwiaEQ==@vger.kernel.org, AJvYcCW63Etva4ufkSqVKhSgbKfrAmp3jHeucBLIrKp8oiC0bzCrc25QIx6jP5+WEw04j2zS7P1Y/tpYX/qrwEc+@vger.kernel.org, AJvYcCXegqR5uQfhhI9URTo19JnQ7EVWBJTRInJenx3asmAO7alFe4kfwS2Ao1ChfwAa8NOgUF80NyD5YLw9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8o6NsVfWKpCqgB8Rmm/jHhEt+vYpzZMtxrZgax0szxPrqFgzI
+	LejeFCn99ItGw04v345nXBMieMKvdwTUgp/nOZMYApj2Gb/Tqr1V
+X-Gm-Gg: ASbGncunJJbWyDbes82ULLzHJMCyqfPhiQPfpOmT2Y8k8G06HLjDr9vzMJUcEQNFPzk
+	QoY/1JlAouA50puRSAJjvebzbY3BQwZLOin/2ribd/jpoosb7E9uVmTQjKEIerm01cRmOyCOpB3
+	n6mTTAkz3Xs8r05OiP2mZt45Whp6L2rfb3nAFJCqN6UT8fmX0WfQ/RHKl/JDbbIhE//C4H84qvZ
+	sJkrPLY/5PZxdfxKL+r46PZpigbz9jCzn+2fDhu0TrY3YmW44f7ruNkNZe0VeyiMR+8FBHrz1DM
+	9INMGL92lVUEAkCS9vBTo5EI6bzp5ZzENYWdgA==
+X-Google-Smtp-Source: AGHT+IGVhWiXUXLlgBwJrqlpMtNkeAgOI0BV23gIzLp9axR+K2PcVY/OoWewktpbkKvIm0EfbAd1fA==
+X-Received: by 2002:a17:902:cf07:b0:223:fbc7:25f4 with SMTP id d9443c01a7336-225e0a6c368mr158926935ad.14.1742220854975;
+        Mon, 17 Mar 2025 07:14:14 -0700 (PDT)
+Received: from dw-tp ([171.76.81.247])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6ca3sm75479905ad.134.2025.03.17.07.14.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 07:14:14 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: John Garry <john.g.garry@oracle.com>, brauner@kernel.org, djwong@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com, martin.petersen@oracle.com, tytso@mit.edu, linux-ext4@vger.kernel.org, John Garry <john.g.garry@oracle.com>
+Subject: Re: [PATCH v6 03/13] iomap: rework IOMAP atomic flags
+In-Reply-To: <20250313171310.1886394-4-john.g.garry@oracle.com>
+Date: Mon, 17 Mar 2025 19:14:25 +0530
+Message-ID: <87tt7rsreu.fsf@gmail.com>
+References: <20250313171310.1886394-1-john.g.garry@oracle.com> <20250313171310.1886394-4-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250315-ptr-as-ptr-v4-0-b2d72c14dc26@gmail.com>
- <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com> <D8IFS7175NNQ.3VAP8WA2QC8WF@proton.me>
- <CAJ-ks9mXzM6D++vq0QCugaFOS9ES0j7GpeWZqckY0dA3JwpnJw@mail.gmail.com>
-In-Reply-To: <CAJ-ks9mXzM6D++vq0QCugaFOS9ES0j7GpeWZqckY0dA3JwpnJw@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Mar 2025 10:13:20 -0400
-X-Gm-Features: AQ5f1JqznMa6k2lJIiCnZwHn6x-b5GCvJwIRUhiNMHYfyIvOPnUOor0S-U9RHGU
-Message-ID: <CAJ-ks9kH3SE91XSadBx1qFaG5dem93o_ctR0t2FwW-0ZfkRNwQ@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] rust: use strict provenance APIs
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2025 at 6:53=E2=80=AFAM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> On Mon, Mar 17, 2025 at 5:34=E2=80=AFAM Benno Lossin <benno.lossin@proton=
-.me> wrote:
-> >
-> > > +    pub fn expose_provenance<T>(addr: *const T) -> usize {
-> > > +        addr.expose_provenance()
-> >
-> > Instead of having these stubs here, you can probably just do
-> >
-> >     pub use core::ptr::expose_provenance;
->
-> This doesn't work for the methods on primitives, but it works for the
-> free functions. Done.
+John Garry <john.g.garry@oracle.com> writes:
 
-Have to revert this, writing `pub use ...` directly causes the MSRV
-clippy lint to fire at the caller.
+> Flag IOMAP_ATOMIC_SW is not really required. The idea of having this flag
+> is that the FS ->iomap_begin callback could check if this flag is set to
+> decide whether to do a SW (FS-based) atomic write. But the FS can set
+> which ->iomap_begin callback it wants when deciding to do a FS-based
+> atomic write.
+>
+> Furthermore, it was thought that IOMAP_ATOMIC_HW is not a proper name, as
+> the block driver can use SW-methods to emulate an atomic write. So change
+> back to IOMAP_ATOMIC.
+>
+> The ->iomap_begin callback needs though to indicate to iomap core that
+> REQ_ATOMIC needs to be set, so add IOMAP_F_ATOMIC_BIO for that.
+>
+> These changes were suggested by Christoph Hellwig and Dave Chinner.
+>
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  fs/ext4/inode.c       |  5 ++++-
+>  fs/iomap/direct-io.c  |  8 +++-----
+>  fs/iomap/trace.h      |  2 +-
+>  fs/xfs/xfs_iomap.c    |  3 +++
+>  include/linux/iomap.h | 12 +++++-------
+>  5 files changed, 16 insertions(+), 14 deletions(-)
+>
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index ba2f1e3db7c7..949d74d34926 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -3290,6 +3290,9 @@ static void ext4_set_iomap(struct inode *inode, struct iomap *iomap,
+>  	if (map->m_flags & EXT4_MAP_NEW)
+>  		iomap->flags |= IOMAP_F_NEW;
+>  
+> +	if (flags & IOMAP_ATOMIC)
+> +		iomap->flags |= IOMAP_F_ATOMIC_BIO;
+> +
+>  	if (flags & IOMAP_DAX)
+>  		iomap->dax_dev = EXT4_SB(inode->i_sb)->s_daxdev;
+>  	else
+> @@ -3467,7 +3470,7 @@ static inline bool ext4_want_directio_fallback(unsigned flags, ssize_t written)
+>  		return false;
+>  
+>  	/* atomic writes are all-or-nothing */
+> -	if (flags & IOMAP_ATOMIC_HW)
+> +	if (flags & IOMAP_ATOMIC)
+>  		return false;
+>  
+
+The changes in ext4 is mostly straight forward. Essentially for
+an IOMAP_ATOMIC write requests we are always setting IOMAP_F_ATOMIC_BIO in
+the ->iomap_begin() routine. This is done to inform the iomap that this
+write request needs to issue an atomic bio, so iomap then goes and sets
+REQ_ATOMIC flag in the bio.
+
+
+>  	/* can only try again if we wrote nothing */
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index 9d72b99cb447..c28685fd3362 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -349,7 +349,7 @@ static int iomap_dio_bio_iter(struct iomap_iter *iter, struct iomap_dio *dio)
+>  	if (dio->flags & IOMAP_DIO_WRITE) {
+>  		bio_opf |= REQ_OP_WRITE;
+>  
+> -		if (iter->flags & IOMAP_ATOMIC_HW) {
+> +		if (iomap->flags & IOMAP_F_ATOMIC_BIO) {
+>  			/*
+>  			* Ensure that the mapping covers the full write length,
+>  			* otherwise we will submit multiple BIOs, which is
+> @@ -677,10 +677,8 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+>  			iomi.flags |= IOMAP_OVERWRITE_ONLY;
+>  		}
+>  
+> -		if (dio_flags & IOMAP_DIO_ATOMIC_SW)
+> -			iomi.flags |= IOMAP_ATOMIC_SW;
+> -		else if (iocb->ki_flags & IOCB_ATOMIC)
+> -			iomi.flags |= IOMAP_ATOMIC_HW;
+> +		if (iocb->ki_flags & IOCB_ATOMIC)
+> +			iomi.flags |= IOMAP_ATOMIC;
+>  
+>  		/* for data sync or sync, we need sync completion processing */
+>  		if (iocb_is_dsync(iocb)) {
+> diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
+> index 69af89044ebd..9eab2c8ac3c5 100644
+> --- a/fs/iomap/trace.h
+> +++ b/fs/iomap/trace.h
+> @@ -99,7 +99,7 @@ DEFINE_RANGE_EVENT(iomap_dio_rw_queued);
+>  	{ IOMAP_FAULT,		"FAULT" }, \
+>  	{ IOMAP_DIRECT,		"DIRECT" }, \
+>  	{ IOMAP_NOWAIT,		"NOWAIT" }, \
+> -	{ IOMAP_ATOMIC_HW,	"ATOMIC_HW" }
+> +	{ IOMAP_ATOMIC,		"ATOMIC" }
+>  
+>  #define IOMAP_F_FLAGS_STRINGS \
+>  	{ IOMAP_F_NEW,		"NEW" }, \
+> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> index 30e257f683bb..9a22ecd794eb 100644
+> --- a/fs/xfs/xfs_iomap.c
+> +++ b/fs/xfs/xfs_iomap.c
+> @@ -831,6 +831,9 @@ xfs_direct_write_iomap_begin(
+>  	if (offset + length > i_size_read(inode))
+>  		iomap_flags |= IOMAP_F_DIRTY;
+>  
+> +	if (flags & IOMAP_ATOMIC)
+> +		iomap_flags |= IOMAP_F_ATOMIC_BIO;
+> +
+>  	/*
+>  	 * COW writes may allocate delalloc space or convert unwritten COW
+>  	 * extents, so we need to make sure to take the lock exclusively here.
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index 9cd93530013c..51f4c13bd17a 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -60,6 +60,9 @@ struct vm_fault;
+>   * IOMAP_F_ANON_WRITE indicates that (write) I/O does not have a target block
+>   * assigned to it yet and the file system will do that in the bio submission
+>   * handler, splitting the I/O as needed.
+> + *
+> + * IOMAP_F_ATOMIC_BIO indicates that (write) I/O needs to be issued as an
+> + * atomic bio, i.e. set REQ_ATOMIC.
+>   */
+
+
+Maybe we can be more explicit here?
+
+IOMAP_F_ATOMIC_BIO flag indicates that write I/O must be issued as an
+atomic bio by setting the REQ_ATOMIC flag. Filesystems need to set this
+flag to inform iomap that the write I/O operation should be submitted as
+an atomic bio.
+
+This definition (or whatever you feel is the better version), should also
+go in Documentation/filesystems/iomap/design.rst
+
+>  #define IOMAP_F_NEW		(1U << 0)
+>  #define IOMAP_F_DIRTY		(1U << 1)
+> @@ -73,6 +76,7 @@ struct vm_fault;
+>  #define IOMAP_F_XATTR		(1U << 5)
+>  #define IOMAP_F_BOUNDARY	(1U << 6)
+>  #define IOMAP_F_ANON_WRITE	(1U << 7)
+> +#define IOMAP_F_ATOMIC_BIO	(1U << 8)
+>  
+>  /*
+>   * Flags set by the core iomap code during operations:
+> @@ -189,9 +193,8 @@ struct iomap_folio_ops {
+>  #else
+>  #define IOMAP_DAX		0
+>  #endif /* CONFIG_FS_DAX */
+> -#define IOMAP_ATOMIC_HW		(1 << 9) /* HW-based torn-write protection */
+> +#define IOMAP_ATOMIC		(1 << 9) /* torn-write protection */
+>  #define IOMAP_DONTCACHE		(1 << 10)
+> -#define IOMAP_ATOMIC_SW		(1 << 11)/* SW-based torn-write protection */
+
+Now that we are killing separate IOMAP_ATOMIC_** names, we may would
+like to update the iomap design document as well. Otherwise it will
+carry use of IOMAP_ATOMIC_HW & IOMAP_ATOMIC_SW definitions. Instead we
+should only keep IOMAP_ATOMIC and update the design info there.
+
+-ritesh
+
+>  
+>  struct iomap_ops {
+>  	/*
+> @@ -503,11 +506,6 @@ struct iomap_dio_ops {
+>   */
+>  #define IOMAP_DIO_PARTIAL		(1 << 2)
+>  
+> -/*
+> - * Use software-based torn-write protection.
+> - */
+> -#define IOMAP_DIO_ATOMIC_SW		(1 << 3)
+> -
+>  ssize_t iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+>  		const struct iomap_ops *ops, const struct iomap_dio_ops *dops,
+>  		unsigned int dio_flags, void *private, size_t done_before);
+> -- 
+> 2.31.1
