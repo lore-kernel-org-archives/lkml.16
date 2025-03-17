@@ -1,236 +1,127 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gw2.atmark-techno.com (gw2.atmark-techno.com [35.74.137.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1519B205E31;
-	Mon, 17 Mar 2025 23:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F231519B4
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.74.137.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742255810; cv=none; b=VNR6gv8pKQHEVCDwGvrqA9/Wqttt9bAot5cyeordnCW4VFJwdHbXH5+z1Jw46BLxh6BAYnY3zpo06myNCQBEJXGirgRQhsShS+MHlu+AN/tr2Sy//5nNJHTcbBHBgh21bg4eg3Kh8L4I1mTfjrZ8KH8ceD9xZ12c7C5sew/vhdE=
+	t=1742256012; cv=none; b=j94SoT4kGsD3oo5GvEpvPpX1iHY3S/16r58mic2t2/xHlV68EN3aN6ZYyY9hKW6gLFbuZ5FqmtjVaG3vdPUwOZ6yCks/6AtpWwhGuXV29lYUfJ/hLvJGZr52IuA2IieZ5QAfO3d3wgE9LLcFh9GNwyC7YwJwlS+anu12oCTAQLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742255810; c=relaxed/simple;
-	bh=frsxwETiNtlFdIt0NclDqjhHJKVXXDmkYR4WAjsd2ik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sC919qKgYrhjQnjfc4YnnuYcMIFfQ61hNUZmIZZ7mKhUUmKAtHxA5xU+vhbuMFXK81oLJVrHtOoRnWxtPGp/pY6rZM8KoP/eM8TaNy/KMIcONnHrlnwPWtxwI/uv8Zyf/wzr5VlpFWNzafYGhjNtbfignVTOarVbLiUwcnYtkKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0DiRt24; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742256012; c=relaxed/simple;
+	bh=5i13wLKTyNDlBKchwfsIXJmrY3fLphQS5cqXHJehJHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UHbQVq1EK3VUfDw0kdPWZygczeFGwV1FcVV4/traqWz0kT+SzRoEWO3Ynb/cfUswTY0nlUyPnGzgxKUJlrvY96hxX0QE2GZSCZhQJqqmJuESQe/UP9cgJ4liRxhG+Os1M626qI/hFAC+umh7LvAMNaUQBYEoHbUEfeduxBY0os8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com; spf=pass smtp.mailfrom=atmark-techno.com; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=cLt2/jP1; arc=none smtp.client-ip=35.74.137.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atmark-techno.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0DiRt24"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso50564581fa.1;
-        Mon, 17 Mar 2025 16:56:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="cLt2/jP1"
+Authentication-Results: gw2.atmark-techno.com;
+	dkim=pass (2048-bit key; unprotected) header.d=atmark-techno.com header.i=@atmark-techno.com header.a=rsa-sha256 header.s=google header.b=cLt2/jP1;
+	dkim-atps=neutral
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by gw2.atmark-techno.com (Postfix) with ESMTPS id 62B1A687
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:51:25 +0900 (JST)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff8340d547so4336782a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:51:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742255806; x=1742860606; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bDzwwEX0nzK9nfZWfu0iGOntI/KAAMglHEzciFVP+Uk=;
-        b=m0DiRt24srQPx/1HldJj9ZIbf3KkB07k96WCYL72gsg35KVosTow+8cxdgriO65N0s
-         3FnTBKSaf2dKGLkIfFbmAcCnoNltz7+PDEiGXA9xim80aNPG1CnY11Qj+OhrJ0AnfF1V
-         t7qFUkz6D8DU9y5sY7UPxVQ4PgLD3PLT5uNRdtgFEzI5exYpIWcZGIR4pGFla+Fmw5k+
-         AWtg4TU2gvsz1/t82ykpUnLMayLc2pUmE7tnB+r4nKwmHIYh2dpAbrYuUM59mO7YuxDp
-         V0rFQkwYFhVsaxmQ0miPA4b1bIw8b2qxrQObcH3jCKJbLVZ0VQgFQHNsXKPHU3I0keAt
-         3GWA==
+        d=atmark-techno.com; s=google; t=1742255484; x=1742860284; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TRQ/GwuEKDlWODVcSQfxpM5Lw2RQXG7ZSKeiwlAjR7g=;
+        b=cLt2/jP1Ko35UMsCHcn3RoLnE+onqkGU8r9tJI2ojX7AyFzEvoRtvjN31csz7VbeBr
+         0TCuZb2gm00ILfaBMv6/B0hp8Rqs0Zbb1PM+5wyHPqCGdfmgS9oIYm1Is9oeCYcdxAVJ
+         UwBcU745Cb8kkj8a4D2y0fKTBX+7aNOwwjMVpjyvk4reUCGmurAranHmmJ1uXpUXXNKZ
+         PKzPfgin97YURnNkOmQ4MbpL6z7v0vgnwkUMfDApVJRGopIuTWYMAmq6PsCDO9uYOhzk
+         FaX+UsM9J8al6Yfz4sq2fNwp7c9b0qkIdXIDlLzwg/bvuEfz+bRc/Zxj1YfyxuYo3Hi4
+         moRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742255806; x=1742860606;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bDzwwEX0nzK9nfZWfu0iGOntI/KAAMglHEzciFVP+Uk=;
-        b=KR4eZqgtzIPuLbJ+cJYcPr8qWGLFGKWU4NNMXQf1cGy6dR/LRnD1zX7EKiKHfERVd3
-         yDHri91jKlR1YG94DGKevrzGgOrLrNKLpLnJ4fZU8DS8L4UmlhOuN8GV/ZPwqfE2r+Xb
-         Z6PcHu4TCBpVTurJ6GVMyl0b+h6QGweyLMAn8xpgZkFLL35GXYTusEJ+b2sQFcWGxhKy
-         6KcRxc97YNeIMV3AlTCr41GUdXEOIXS5eoCwbYvbCFls6YfNBNMRDZwFwoSVDFTPOXqS
-         0RHLnOoyn19fDBqAs4a71mVT/fPCl6H96yxyIUAlZ9Un/vHROUZY/E8OeeXwnvw5t218
-         Firw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJw+r5uvpuMD2cmSCseIrfY6KS8978hyBQEwRTYiPkw0d80Z0ZoOd8GthEfop7BLmilIqhV1HLAOj/0PI=@vger.kernel.org, AJvYcCVuC4Jgj5+FKwRXw9AkvZI+FmiBE+aRkZYkImNmTiDpH3cQZkzAGoSYypDcwwLFeESrjS9WUKhzGDPZiHwjC9E=@vger.kernel.org, AJvYcCWOPrV72DcGSGFDM7nITIwYTX/bywYFXNSuQAeExQkhlTAPOifrAtl66r3D2BOfrwdfUXZ7L4rkdG2AaP+o2qEv@vger.kernel.org, AJvYcCWauygLtOewYOzQmLtmxv3Zv/1YpCTkDHddEBligbtmIX+AgLu5ca6WpAT6DGFvscdG2TWOz7J+Wi0pW5F+@vger.kernel.org, AJvYcCWvyiPPEice4nCWhOvm5+cK7lguoh1lKJOZOGpF3FVnTh++iobh7G86P2QPocOXw8+4G32OnKLQByto@vger.kernel.org, AJvYcCWy0c8TxD8Mn7K2Xb2Wo3sZgYBD4aDafK3uyA0z41vwfGW/4WDlqXNXknKGSW6L2OxOO5Mb0lpcYSMWw34P@vger.kernel.org, AJvYcCXJk9oyJD0KBkh7fjSWJMqcpgy/rXlu2U7Pdv71tIado3vPrP1TyS0pzOQZV+NUBpsIjiyDz+dsWjh+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTQqCD5c+hIHr1sXSG7LiN+QCnwrGyWJf5aGpGYsShDYeOtm/m
-	rzglB5bJdO81u1UaNZe/KlLWnY376c4N8a0O1YVeUmRco3PZZxHtIhzoUebfmUro3/AO+9f2L00
-	iyiE0n/OH1H33YllgEUTlFv5lnXA=
-X-Gm-Gg: ASbGncsgMx60BHrgxdaaFOfF3y2ojASARNlBqfb2XRNN6qwY0E4Lncm00jwDAAocBg5
-	zldUG3O1ehLMHHw71EbTpVy9fCoCEto3I1G+7IENn8DyrhHpkJCDcilE+PijcJtV9PJ/UwFrp87
-	qjk3RGuCF5+QY63Zp0FI2I0iIF4j1heUANmEr/T4/+szvK+4PDkzyCSHV1+Vri
-X-Google-Smtp-Source: AGHT+IH42/4wrylLmfpOp50lcSYK/BDvlEhWGNv8TfafZeMnLoyPlmyjVCpJCsJYwJn1byhH6egKoQrrVlMd9fomBg4=
-X-Received: by 2002:a2e:9495:0:b0:30b:fc16:d482 with SMTP id
- 38308e7fff4ca-30cd95874bemr14031351fa.3.1742255805779; Mon, 17 Mar 2025
- 16:56:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742255484; x=1742860284;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TRQ/GwuEKDlWODVcSQfxpM5Lw2RQXG7ZSKeiwlAjR7g=;
+        b=KMcnVUaVvJ/WPRTl+TX56rgwgL6ifrDWFNE01utagqi0Gm9uxamtbQ39POGR6Jr1vn
+         pDYP7kDRAkByL9xhl/GExsdzzQaR8u1QAV4SRwlKvKxJKfiu7MzC544EiXP8ZONtyue8
+         soGrHxHzZb4qSuIM5FKD8jvGKslX9FxGJk0bt5IrJsLWOnYsp0kV8UjRa/sFF7HPm6Z1
+         BkjqfHDQy7vBr8D2dZvVyJLjAIjOh57LlI5wxPWnxvBb8phj84Jt7cx6QoD6IjE56Xbh
+         OdtHdZEPRf/j2cPdSdC+Oq/HbPns3ufPuFtxhjQDF9fBmw79UrvOZRl+NvLPaY22KZSC
+         oNMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyfCMWucOfRDH2L+RqOj4svDy6eFZOY2T2yTNSyJwWP8HpphPu5Jm4udEYNqW4y7eazQxG++L4BtW1pmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQQyEcES1S1rkepEVkpEDdawpaBd/XZES0kZFIapkz5t/GQD5W
+	7wrkDv38Prrf+6zR7XW6Ol5jq80VydAniMbrY54k4knSXmHNYqxVPqW3o1b1Upd1PxOFIDGL/Km
+	HzxNc1mgp5qiFS39CjMipS0WNAaNMw1vK0IIpTp3tFrsPUshkMFP3CXSom5lbQ90=
+X-Gm-Gg: ASbGnct3t5+hmIvMPLJIR0DlcTOVkawMC2Gp4Nan4PjSHLWUYQZAeL4CShi/dtHXl0C
+	VfabZHwDj8i7oPapxK0i9HtZsrLx5LarDAAgzzOUAd3Tth+W9tzCT9hqMzTcR8uatj7kmWr2/XQ
+	s0BoqQiz/0xarruYVfia+4BjPHrLJoDV2Ntns6w0Wn5ul4MYFXpHmdYZuuQpGmPKnIBt0Ur+j/K
+	0fiLzWu8lXXTDTkCkYVSj3TulEIdHWWt4EQa9IMePOyXTrOkdvGT5qLe13B+na/vx4wQ/GPJXXK
+	ttdjp1scyPhLz0wYFeOFUt8BSOY0c5XTVKceG+ADzXKn9sCrzZ9PF/lIXfN4HjDnWgQ9keDj9TE
+	=
+X-Received: by 2002:a17:90b:4b92:b0:2ee:af31:a7bd with SMTP id 98e67ed59e1d1-301a5b03f3amr308528a91.5.1742255484406;
+        Mon, 17 Mar 2025 16:51:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGk+XPSS97YKPi4vp9oXul8r5wshwMpKmVOIfHLVbaOIyiKLKfsKF4T1efoV0atb9QgEGz0bQ==
+X-Received: by 2002:a17:90b:4b92:b0:2ee:af31:a7bd with SMTP id 98e67ed59e1d1-301a5b03f3amr308500a91.5.1742255484114;
+        Mon, 17 Mar 2025 16:51:24 -0700 (PDT)
+Received: from localhost (162.198.187.35.bc.googleusercontent.com. [35.187.198.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30153519fefsm6734019a91.12.2025.03.17.16.51.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Mar 2025 16:51:23 -0700 (PDT)
+Date: Tue, 18 Mar 2025 08:51:11 +0900
+From: Dominique MARTINET <dominique.martinet@atmark-techno.com>
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+	amitkumar.karwar@nxp.com, rohit.fule@nxp.com, sherry.sun@nxp.com,
+	ziniu.wang_1@nxp.com, haibo.chen@nxp.com, LnxRevLi@nxp.com,
+	guillaume.legoupil@nxp.com, salim.chebbo@nxp.com
+Subject: Re: [PATCH v1 1/3] Bluetooth: btnxpuart: Fix Null pointer
+ dereference in btnxpuart_flush()
+Message-ID: <Z9i1b9hzZzwJnIYh@atmark-techno.com>
+References: <20240515070657.85132-1-neeraj.sanjaykale@nxp.com>
+ <20240515070657.85132-2-neeraj.sanjaykale@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ-ks9kBp8zPfaQuZRb0Unms1b13hDb5cRypceO8TWFR0Ty5Ww@mail.gmail.com>
- <67d864b2.0c0a0220.39fb6f.4df4@mx.google.com> <CAJ-ks9n8mwt5q9unqfkfSHj9=ELJHtqsXM-xQ8jsbXeJX6Uyfg@mail.gmail.com>
- <67d8671d.050a0220.3305ab.6372@mx.google.com> <CAJ-ks9=uHjJrzM0ruvm4v4wr8LygRMP-1orWBy_9OiNNeQr0ow@mail.gmail.com>
- <CAJ-ks9=Qcmvbm=YGJ=jrX_+YdMsftk=FAimszYZB1OUuV4diZw@mail.gmail.com>
- <67d885ff.0c0a0220.111215.5644@mx.google.com> <CAJ-ks9kYB1b4XsQcFb=NScPq+R+13U+Sv-6opi-yp6=ZjuLD_g@mail.gmail.com>
- <67d88a1d.050a0220.2cdacf.4adf@mx.google.com> <CAJ-ks9kg4Br=56HT7T5sWpoMKhRqT_2x+cpQAWoyrEG3qyqQ6Q@mail.gmail.com>
- <67d895cc.050a0220.99d33.5adc@mx.google.com>
-In-Reply-To: <67d895cc.050a0220.99d33.5adc@mx.google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Mar 2025 19:56:09 -0400
-X-Gm-Features: AQ5f1JrrvoV8Sf5x8icfXFWf8pyoMC94sCpioNeEDsUgPhb1ePC4caPuoCMuMpU
-Message-ID: <CAJ-ks9ko3FGtpCnTwhuAb+KHwGczN_H8tM1=SQjRc3M-LgZrqA@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240515070657.85132-2-neeraj.sanjaykale@nxp.com>
 
-On Mon, Mar 17, 2025 at 5:36=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> On Mon, Mar 17, 2025 at 04:53:18PM -0400, Tamir Duberstein wrote:
-> > On Mon, Mar 17, 2025 at 4:46=E2=80=AFPM Boqun Feng <boqun.feng@gmail.co=
-m> wrote:
-> > >
-> > > On Mon, Mar 17, 2025 at 04:35:42PM -0400, Tamir Duberstein wrote:
-> > > > On Mon, Mar 17, 2025 at 4:28=E2=80=AFPM Boqun Feng <boqun.feng@gmai=
-l.com> wrote:
-> > > > >
-> > > > > On Mon, Mar 17, 2025 at 03:05:45PM -0400, Tamir Duberstein wrote:
-> > > > > > On Mon, Mar 17, 2025 at 2:50=E2=80=AFPM Tamir Duberstein <tamir=
-d@gmail.com> wrote:
-> > > > > > >
-> > > > > > > On Mon, Mar 17, 2025 at 2:17=E2=80=AFPM Boqun Feng <boqun.fen=
-g@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > Then we should fix clippy or how we set msrv rather adding =
-the stub.
-> > > > > > > > @Miguel?
-> > > > > > >
-> > > > > > > I filed https://github.com/rust-lang/rust-clippy/issues/14425=
-.
-> > > > > >
-> > > > > > I don't think we can wait for that to be fixed, though. Usually=
- clippy
-> > > > > > is distributed with rustc via rustup, so even if this is eventu=
-ally
-> > > > > > fixed, all versions between 1.84.0 and the fix will need this
-> > > > > > workaround until MSRV is >=3D 1.84.0.
-> > > > >
-> > > > > We need to take one step back to evalute this "workaround".
-> > > > >
-> > > > > First, expose_provenance() and with_exposed_provenance{,_mut}() A=
-PI are
-> > > > > clearly defined as equavilent to `as` operation [1]. Therefore, t=
-he
-> > > > > changes in this patch doing the conversion with expose_provenance=
-() and
-> > > > > with_exposed_provenance{,_mut}() don't change anything related to
-> > > > > provenance in practice.
-> > > > >
-> > > > > I do agree we want to use the explicit provenance API, but I don'=
-t think
-> > > > > we want to introduce some API that we know we will change them la=
-tter
-> > > > > when we bump the rustc minimal version. So the question is: are t=
-hese
-> > > > > stubs what we want even though in the future our minimal rustc ve=
-rsion
-> > > > > stablizes provenance API? If not, then the cost of this patch can=
-not
-> > > > > justify its benefits IMO.
-> > > > >
-> > > > > Now let's also look into why we choose a msrv for clippy, I would=
- guess
-> > > > > it's because we need to support all the versions of rustc startin=
-g at
-> > > > > 1.78 and we want clippy to report a problem based on 1.78 even th=
-ough
-> > > > > we're using a higher version of rustc. But for this particular ca=
-se, we
-> > > > > use a feature that has already been stablized in a higher version=
- of
-> > > > > rustc, which means the problem reported by clippy doesn't help us=
-, nor
-> > > > > does it provide better code. Frankly speaking, I think we have ot=
-her
-> > > > > ways to ensure the support of all rustc versions without a msrv f=
-or
-> > > > > clippy. If I was to choose, I would simply drop the msrv. But may=
-be I'm
-> > > > > missing something.
-> > > > >
-> > > > > The point is tools should help us to write good and maintainable =
-code,
-> > > > > we shouldn't introduce complicated structure of code just because=
- some
-> > > > > tools fail to do its job.
-> > > > >
-> > > > > [1]: https://doc.rust-lang.org/std/ptr/fn.with_exposed_provenance=
-_mut.html
-> > > >
-> > > > Even if we globally disable this clippy lint, we still need stubs
-> > > > because exposed_provenance was added in 1.79.0. Did your suggestion
-> > > > address this? Perhaps I missed it.
-> > >
-> > > No, I didn't.
-> > >
-> > > That's a separate topic though, because I can see the argument that:
-> > > because with_exposed_provenance() is a function rather than a method,=
- it
-> > > won't be very benefical to use ptr::with_exposed_provenance() instead=
- of
-> > > kernel::with_exposed_provenance(), therefor these stubs of
-> > > exposed_provenance make sense to exist. But I don't think the same
-> > > argument works for ptr::{with_,map_,}addr().
-> >
-> > What about `pointer::expose_provenance`? It's a method that was added i=
-n 1.79.0.
-> >
->
-> We have a few options:
->
-> 1) we can decide to use funtion-version of expose_provenance() (i.e. the
->    stub), if we feel the symmetry with with_exposed_provenance() is
->    a strong rationale. This also means we won't likely use
->    pointer::expose_provenance() in the future. That is, although kernel
->    doesn't have stable internal API, but in the foreseeable future, we
->    decide to use funtion-version of expose_provenance().
+Hi,
 
-I don't think we want these stubs forever.
+Neeraj Sanjay Kale wrote on Wed, May 15, 2024 at 12:36:55PM +0530:
+> @@ -1269,8 +1271,10 @@ static int btnxpuart_flush(struct hci_dev *hdev)
+>  
+>  	cancel_work_sync(&nxpdev->tx_work);
+>  
+> -	kfree_skb(nxpdev->rx_skb);
+> -	nxpdev->rx_skb = NULL;
+> +	if (!IS_ERR_OR_NULL(nxpdev->rx_skb)) {
+> +		kfree_skb(nxpdev->rx_skb);
+> +		nxpdev->rx_skb = NULL;
+> +	}
 
-> 2) we can introduce a PtrExt trait for <1.79
->
->    pub trait PtrExt<T> {
->        fn expose_provenance(self) -> usize;
->    }
->
->    and
->
->    impl<T> PtrExt<T> for *const T {
->         ...
->    }
->
->    and `PtrExt` in kernel::prelude.
->
->    (we need to #[allow(unstable_name_collisions)] to make that work)
+This is an old patch but I hit that on our slightly old tree and was
+wondering about this patch: why does flush() have to free rx at all?
 
-I like this idea, but I can't get it to work. When both inherent and
-trait methods are available, the compiler seems to prefer the inherent
-method.
+I think this either needs a lock or (preferably) just remove this free:
+- This is inherently racy with btnxpuart_receive_buf() which is run in
+another workqueue with no lock involved as far as I understand, so this
+is not just about errors but you could also free something in a weird
+place here.
+As far as I understand, even if we don't do anything, the rx path will
+free the reply if no matching request was found.
+- looking at other drivers, the hdev->flush() call never does anything
+about rx and seems to only be about rx
+(ah, checking again as of master drivers/bluetooth/btmtkuart.c seems to
+have this same problem as of before this patch e.g. they're not checking
+for errors either... This probably needs something akin to this patch or
+removal as well. All other drivers have flush seem to be mostly about
+tx, but I do see some cancel work for rx as well so I'm a bit unclear as
+to what is expected of flush())
 
->    We can also make with_exposed_provenance() use the same *Ext trick,
->    and remove it when we bump the minimal rustc version.
-
-This part I don't understand. What would we impl the Ext on, given
-that `with_exposed_provenance` is a free function?
-
-Option 3) take this series without the last commit, and revisit when
-MSRV >=3D 1.79.0 or >=3D 1.84.0?
+Thank you,
+-- 
+Dominique
