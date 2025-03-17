@@ -1,132 +1,195 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620BD18DB1C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625BB18EFD4;
 	Mon, 17 Mar 2025 15:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742226755; cv=none; b=ZkxNpCaMyXEtA4ZJlSWboNwy1H7D4IGrgpz4ikICk5H9UAJG+X3EJRk1AYX6uKtG1MQ+7DJyTKd7vzKpXJWVP3HXapq2zOnoButs0YCtLE/UwAHIeE0vrNeqNQTWranOEl+6t1AIkh1TbrIRqoApkZMRfnuUNQq+GHk/+xJ5kno=
+	t=1742226755; cv=none; b=Oz+kauonX8eUWdgr2wMRnsqAcVOVej/hfr8xmu2iNtfMQpb2unzSRL96jcWLw43KbS5qGf3kVv+dYV2w+wauuXqxW6JFn15055SG1YtGgZXxflUaBoRpIFy6c0YnFddKDGWTLu3IWwSWgMWV5fwLFUa1PgmK8p5Xg6TXbYPFvzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742226755; c=relaxed/simple;
-	bh=nTORzG9zIpB1tuECSA+WgYve+Q1rlgWbd3htR+1wW5k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OuX/i09+Cin2cyTl/vv7He4LbRcmwlGtUr1YMGsoMF2RZgJJ0e0j129VtFsgdmmALL37gGGwLMhtG89ormUgfLojUX7Kgp0LrV2rkz+tJFUKoi1hecnyJoy4TiB1zFxIS9A6dy5ojd6oDXtYNbcySqWc0Ds6SakwhHFMqveczNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nr3UWXX5; arc=none smtp.client-ip=209.85.208.45
+	bh=OGQkmyXOL35hKkBO69DLUu/I8HPGPktH92dHDZFr1ok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5vujJG6DwsnFgiCGRGgtfbHU7NvzvH0vpZCa6Hbl/dp03RvZaGHrr9TP6TOVZPYh0pKR8CoYJdTQvOFDVXAc0ZC2SEGZYVGfAuwTho1VtrkYNgzK6yUkgbIrIL++eLcT4xdDgm6wYoMdQQgw7KhBbRLwPO+kxh2bYKIUG3HlD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h7yyAIfw; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nr3UWXX5"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so8872258a12.2;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7yyAIfw"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30c461a45f8so38256161fa.1;
         Mon, 17 Mar 2025 08:52:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742226752; x=1742831552; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JYzo6yCD6QJcusCjSnO6TtQIIlANc6aE2nAD2UNl8+4=;
-        b=Nr3UWXX5+78hKS2tSkxpjjue0LV6ULVj1cLmdAdBYAOIVfYQ0q738xFgc3lGWOMuF1
-         zvQHQ0WV9U5KwjcRjA4VHETvgXsIBJoQCFh0VJbsWt+Pq08rtySJ8iiFxmdEBj37IIwe
-         cuP/4ua0Z/9tawAeIJxHns8wvB8DNyFOAAux56MYq4MHrgwGze3gSyBlziqouKcyadPL
-         MxVK4wWQN8aL++8pJHd/bxWXuVqha2kH0C/gK+Cm5MTtw8DVqgqZInWw7ZOcH0DdwxBK
-         sLRyGreNdVhENXki9yJvBQ1LobQxt0Tn7yuzfvYmamZTDFTSY9hDrybMVUzOvdaRrcDi
-         pr4A==
+        d=gmail.com; s=20230601; t=1742226751; x=1742831551; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bhq+kH+X05mUcX1Ap2GbPha12Vb9rFmptZREzPwZw0k=;
+        b=h7yyAIfwTDXAJNZTQoIbNSrguGP4XQXl89VBPtp6y7wyQNqOr4UOuuGRvIUwtd4+HU
+         lio6hSoWK27OG7z/3h/XBIVvi3b7T72G7dIv3jaxdrfTbh/iVpXetmJ+ETHeugp/iu4U
+         b/QAui2OCHRIBLR2xTGQxlzMNMUJ8qLO86Pi9FBM5jBPXKS50wzb/D/x1nk3sd6kiJZn
+         sBypg08MqBk4Jv6iFNznDQGJrZkCH5sZLldq0ArV+nVY2kH9Hod6yYAuObgA/JbA4u6L
+         4vR5gNL9WgD/Gs7GLf/C5FH3+Hb/wiNQlipI74UqixAJdHRuF8FMOKmvoU/6WcDcaNGk
+         iBsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742226752; x=1742831552;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JYzo6yCD6QJcusCjSnO6TtQIIlANc6aE2nAD2UNl8+4=;
-        b=YbrRQCVUrmNABqdD1j9vi/eTCGl9WIA4ucMWSat7lv10NiyfVVMoTubs6Qrr/a4Dv+
-         +tKLTa6A3j4YDqfu8IBsmvUlOE5PiHie5xp6pgD3IypXX6pFGlqMMp331Li3+Wey2/tq
-         BO/C0clCUfomc5lRVC93HpWGFJtLRaVNz6WHo73sxEzxh656ROkR1xn7gIksXHeIlJKx
-         zgStBKMchs0Cfg1CwBpRHrdrgR6pBNTHHsnJSc6RGs+EvccDrTulHdxlwjIPNDCWy//u
-         UYb46WsjhRVwYRsoPM5NXmLmP+Pj92REEB8ngzf19nS9smQW3TxiVdI55ke5NT1Uugaq
-         bM7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVIlaF1W3akouQbz368dovnVcRpsB9QzWuOJB1Bf18aXCFu54ilaNVq+xE5JiVhByA5PFJ1JSJ6nBTjIYoe@vger.kernel.org, AJvYcCX6Vl8yv7tODEAyDqso5ly/rL0kXZtOxO8C3hAnbRyqdTwkqSOuc7d0F72aPBW9ZDRIWcR3Lw2nBAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxg9VZGaEqGmwbYFaMr6McCB7lsi3+UqAaoWMZ9pmaMnRdWqcsv
-	FyJMsyTljDjUFSn4Ye2x4le3kYq9JPDl/nkC7tNuIaKoszYRo6i3Iq3McPWGfQ7IQ2sj1hYeZTD
-	4WeJVnLOEL0Z8KRswD2M2kpmgSHY=
-X-Gm-Gg: ASbGncsoIWL6RFnNQqkzoIQ9Rv3uOdB8QUHnqANB0YMq99wW1mOiaj6r3HV8IsZqidA
-	OkIu6pjz8wAWMR/TUe5UojxWwLnF8AdmcC4RSbhVpaN7NInyDwQzy8IZNkrNvh1x8jz2LdM4++Z
-	F7OpJdDW+hTT1WGtohzOOVd18mjVj5BNkxNejQZKI=
-X-Google-Smtp-Source: AGHT+IEh7DkFsRuAVv2KyN5MtgSxRJ4NQrsA3c47jwlweh18VSkMzy1dJzBk6IMEOnaId3BCHwWsZJR5sXFi+i/1akY=
-X-Received: by 2002:a17:907:d22:b0:abf:607b:d0d with SMTP id
- a640c23a62f3a-ac38d3fa372mr14844966b.16.1742226751422; Mon, 17 Mar 2025
- 08:52:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742226751; x=1742831551;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bhq+kH+X05mUcX1Ap2GbPha12Vb9rFmptZREzPwZw0k=;
+        b=Uy8VsqIEIlEmpxGcPddm5PM2JbmBJR5bTft7OGiz+NV+S++PfuSO41lcjpJQRD4iAv
+         Dg+FAmJYYaM/mveGJcs3cu4GIrPoOrV8ciaS9GWHLL4hsTr7nMIw2liJvKIGFu2eFGXc
+         vn5XlrTP+ETlJjq9ZpI5/FHbFLg3xmuk64+xPNPT40x5dpau7Xw8U8eorvTP8itd8uJN
+         EtJljzgRfuT7koh5r0MT2w40u+VZDNwU7dGR1E5ANgXK9q+lNJsDplaR65ZcvBskFyHR
+         nHCm36HYLZ6qWZGeVLTXgMIym1OwFZBj2Jjfof5bGNaZXHu/SWo0huhaESp8m2vE4cXe
+         qxXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwFFuM9fG4hURz+9MKt1P5twD7I377IQbnACJKeurSLBi0U56kKwIle2Al7NsTpHgV+NLRG58ms1Cc@vger.kernel.org, AJvYcCX+HP0X3/mq4SsBNRR09ToboDNrlOVGaU1qXq/fYrmhMvDcOeEBPubUr5yVtsXfYiQ3RYiJisjS4ZXka8Z9@vger.kernel.org, AJvYcCXqiAEBYdgWhAhNFVlinw9OiVi89z4k4iyGLXbfBq984wGuwIJQVo8Aopnw5weANto6fiSbDCRy@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgKUUFTvUqLbK3En96MFhLH1sJphBUdYkHNfNyeP3eDCVpq/ze
+	exrlBExyTk4QGHB6Mc1cpg6ehiKRbS6sm5DfVbcfqRiQOFBhfVBP
+X-Gm-Gg: ASbGncvi6hLHYo3SdrsZRMdpbW0zApY4LUrItvC14GETAgaKmkA2gupqTySH8sFfTrV
+	BnAWlMUw0v0l+3mFVItEYcKJEx8A2j4s5d7haEWXsZErb4/2XISI8BLhNrfJK8DX3cSbbn82kDQ
+	i8WbyQ5S6JBNCzW6cyKgxb9ipRRvUFj02jcFyOIe1D0UrqbR9huST2tQKLpxqOxOt4/krjcICox
+	g+KBFaSH54CNgRsUHDkKukf285zTnWxkrI9piiFyylsoXoVhamjpcc0tMwN2yJmE7i6RBeDRRJo
+	fMwPwLmYEaA7qm5+KGcceiqftDK58ZAmkUecveinB/CRU7mpEmk=
+X-Google-Smtp-Source: AGHT+IGP8VDfLvdRHqupcyGY3jxaeZE5NMXtcA2RJMTkKbc2npNWVjBiXR6Dy5pmtZ78eWJwHB/b0w==
+X-Received: by 2002:a05:6512:3e17:b0:545:2a7f:8f79 with SMTP id 2adb3069b0e04-549c3902c47mr8375280e87.16.1742226751200;
+        Mon, 17 Mar 2025 08:52:31 -0700 (PDT)
+Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba8a8ec9sm1366286e87.236.2025.03.17.08.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 08:52:29 -0700 (PDT)
+Date: Mon, 17 Mar 2025 17:52:25 +0200
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next v8 09/10] net: gianfar: Use
+ device_get_child_node_count_named()
+Message-ID: <95b6015cd5f6fcce535982118543d47504ed609f.1742225817.git.mazziesaccount@gmail.com>
+References: <cover.1742225817.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313165049.48305-1-l.rubusch@gmail.com> <20250313165049.48305-5-l.rubusch@gmail.com>
- <Z9ctSODRTxI53jAY@surfacebook.localdomain> <20250317105540.4b4a586f@jic23-huawei>
-In-Reply-To: <20250317105540.4b4a586f@jic23-huawei>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 17 Mar 2025 17:51:54 +0200
-X-Gm-Features: AQ5f1Jof8H3EqpVxqJbk3ApXVYR6SEdjKIanV9oN2tFiDkE9bkkagRpS598m2UI
-Message-ID: <CAHp75Vc=c=0yhtaKuiE4mZTTzQdrPywt89E7A1GuHha9=V=GUQ@mail.gmail.com>
-Subject: Re: [PATCH v4 04/14] iio: accel: adxl345: introduce
- adxl345_push_event function
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lothar Rubusch <l.rubusch@gmail.com>, lars@metafoo.de, Michael.Hennerich@analog.com, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, eraretuya@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="+bpOqBC81XVIei51"
+Content-Disposition: inline
+In-Reply-To: <cover.1742225817.git.mazziesaccount@gmail.com>
+
+
+--+bpOqBC81XVIei51
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2025 at 12:56=E2=80=AFPM Jonathan Cameron <jic23@kernel.org=
-> wrote:
-> On Sun, 16 Mar 2025 21:58:00 +0200
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > Thu, Mar 13, 2025 at 04:50:39PM +0000, Lothar Rubusch kirjoitti:
+We can avoid open-coding the loop construct which counts firmware child
+nodes with a specific name by using the newly added
+device_get_child_node_count_named().
 
-...
+The gianfar driver has such open-coded loop. Replace it with the
+device_get_child_node_count_named().
 
-> > > +static int adxl345_push_event(struct iio_dev *indio_dev, int int_sta=
-t)
-> > > +{
-> > > +   struct adxl345_state *st =3D iio_priv(indio_dev);
-> > > +   int samples;
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+Revision history:
+v6 =3D>:
+ - No changes
+v5 (RFC) =3D> v6:
+ - Drop RFC
+ - Adapt to changed function name.
 
-> > > +   int ret =3D -ENOENT;
+It's fair to tell the pros and cons of this patch.
+The simplification is there, but it's not a big one. It comes with a cost
+of getting the property.h included in this driver which currently uses
+exclusively the of_* APIs.
 
-Also note, this variable is redundant as far as I can see, just return
-the error code directly.
+NOTE: This patch depends on the patch:
+[2/10] "property: Add functions to iterate named child"
 
-> > > +
-> > > +   if (FIELD_GET(ADXL345_INT_WATERMARK, int_stat)) {
-> > > +           samples =3D adxl345_get_samples(st);
-> > > +           if (samples < 0)
-> >
-> > > +                   return -EINVAL;
-> >
-> > In the original code it makes no difference, but if you are going to sh=
-are
-> > this, I would expect to see
-> >
-> >                       return samples;
-> >
-> > here. Why the error code is shadowed? If it's trully needed, it has to =
-be
-> > explained in the comment.
-> >
-> >
-> > > +           if (adxl345_fifo_push(indio_dev, samples) < 0)
-> > > +                   return -EINVAL;
-> > > +   }
-> > > +
-> > > +   return ret;
-> > > +}
+Compile-tested only!
+---
+ drivers/net/ethernet/freescale/gianfar.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-...
-
-> > Jonathan, I saw that you had applied it, but I guess the above needs
-> > a clarification.
-> Was right at the top of a tree I don't mind rebasing. So dropped
-> this patch (kept 1-3)
-
-Thank you!
-
+diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/etherne=
+t/freescale/gianfar.c
+index 435138f4699d..d4ee0fc843be 100644
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -97,6 +97,7 @@
+ #include <linux/phy_fixed.h>
+ #include <linux/of.h>
+ #include <linux/of_net.h>
++#include <linux/property.h>
+=20
+ #include "gianfar.h"
+=20
+@@ -571,18 +572,6 @@ static int gfar_parse_group(struct device_node *np,
+ 	return 0;
+ }
+=20
+-static int gfar_of_group_count(struct device_node *np)
+-{
+-	struct device_node *child;
+-	int num =3D 0;
+-
+-	for_each_available_child_of_node(np, child)
+-		if (of_node_name_eq(child, "queue-group"))
+-			num++;
+-
+-	return num;
+-}
+-
+ /* Reads the controller's registers to determine what interface
+  * connects it to the PHY.
+  */
+@@ -654,8 +643,10 @@ static int gfar_of_init(struct platform_device *ofdev,=
+ struct net_device **pdev)
+ 		num_rx_qs =3D 1;
+ 	} else { /* MQ_MG_MODE */
+ 		/* get the actual number of supported groups */
+-		unsigned int num_grps =3D gfar_of_group_count(np);
++		unsigned int num_grps;
+=20
++		num_grps =3D device_get_named_child_node_count(&ofdev->dev,
++							     "queue-group");
+ 		if (num_grps =3D=3D 0 || num_grps > MAXGROUPS) {
+ 			dev_err(&ofdev->dev, "Invalid # of int groups(%d)\n",
+ 				num_grps);
 --=20
-With Best Regards,
-Andy Shevchenko
+2.48.1
+
+
+--+bpOqBC81XVIei51
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfYRTkACgkQeFA3/03a
+ocU6fQf+NqTVEuJIrVBVRDWbyUAld54IR/HPsJ+BOnWD4It8e5tZgefm5rl18SYl
+heFnxZbk/pwj/KpENcarv8gnNUAqTcCSBYIWyAbIGyI0vKUTsCtaHokC9gLfWLAR
+8SehIKhYpoRfjEKsf/l9WpJ1HzsJDX95jRy1+ATzkkqO/Qa/3WxRY2oyh1pNaM5N
+7alYgqT1RmDYUnkNHGoqDOuh1fc64jQQ8F36+vFyp0R78Cm3ZHMh3UjUJZQX9Hf4
+Ep/26COg3LpSGFDRrQ4WqwTeGFyJiRJyEOKDzm63LVo+dmYTmYHdWRz2mfKfwZ3B
+Ckcz8vM4IWUWTHe0qKzebEQTwHaqdA==
+=9Pxc
+-----END PGP SIGNATURE-----
+
+--+bpOqBC81XVIei51--
