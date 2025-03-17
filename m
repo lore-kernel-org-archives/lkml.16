@@ -1,120 +1,78 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BF21AD403;
-	Mon, 17 Mar 2025 17:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E911A00F0;
+	Mon, 17 Mar 2025 17:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742232523; cv=none; b=Bj1sAo71CLET1MVEGwVl2KDDNPLNWzClWMHK+Bmi0+UdevP5IY8B1LOEvBnNEx/6WdBY49GlceifKG+RKI0h9fLWbakRscffJzAN5VxuAW0oc/lHl+skDTFjN51ynejSumVEVt5PcM1Fqo7t9Lp43uxX2TY7DIT/qHXxcI7xYUE=
+	t=1742232610; cv=none; b=lJuYB1Hrbd4unSIrNF4T+6rBKr6WnIG8OcD9z2YqkFP32r9R85OA4xLb+vON6WO47usbHn+TDk1+Fmsx1gwcBoP39sTAnCeVlCzcEM4K2TGym58FFHiRynQtEj7c6W5NdIOLTGRSQs6d9eDqpX2CWkC1jUdvNOpVbVBcb2KgJGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742232523; c=relaxed/simple;
-	bh=KKeg/xdBR886jSb6hzGocvg5k8dTbM/SfH2DkisMzUI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lPpWTPO2ZosRO40q6MV4zFDOIPoHT5pJqD4h5a5RtNYEDO3UT3IhtcaXiJUDJilqeAsD83vGneIf/NxmTQfH7ze+UFpa+J8R19BvilN+1TWtkZXRbsygNwV8MhWS7n9GoqGF+NhhDNtB7LF2yi5ueh+oqoLpoKqu7Sm4fW4hNkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eC9fQj8d; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742232610; c=relaxed/simple;
+	bh=srOc0Uaub0/6YRvw1cYQN4PBXQGkUPQK1F4bq+yDgG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mpuWtM9A+B8pUmwVCLp5KxJtvRxkLL+N7gBAs6pLLdXdIGMLZGshzM9lX5/Pcm8g0MHRv1d6KyT0LZiK77qnOXmG+LIOYg10TASAL8eKw6D3/EuZUDdvV32XRFM+ROTHD3s+YCwXsEGBZaMDiNC45ulMUIa0thRnF+VBpDLgnyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9PMCKWa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eC9fQj8d"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-307bc125e2eso53112201fa.3;
-        Mon, 17 Mar 2025 10:28:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742232520; x=1742837320; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4DxwEiWPDAbVClr3XraKyBCH9dtcXkOkEq+5vtLipTo=;
-        b=eC9fQj8dksFQ/WsvqXGkGldI2PTgUqrQ5AZZwH3rCt4vvM4UEeKdQ0b5Q4l7BFe2Yv
-         EbDP6qccG1JgNpxJctWzti61nv4WAr4wnKPxaIAPwvICzKUF/OmOkZzN1ZV16K98iSNn
-         ojdqZdKXm096P6IH6FBDDg1fhUfeHWdLkagNd2PycCBFo8CzcoqqtDVHvsjRXMQjJJJG
-         DMRlHlM/yR1N9+RSDP76rToC8BsbOKgI8LnlcMJyw0WENc71vyJCVQOG/olcez6UnmTZ
-         dD8cKh8iqnIvBymeb5R89bcVT8TC4icmJn0gMiJUuYs1VzatJ+B7YZQPpM6gKKyQ7t+V
-         Pytg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742232520; x=1742837320;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4DxwEiWPDAbVClr3XraKyBCH9dtcXkOkEq+5vtLipTo=;
-        b=AO5dmPXIV41/hOYMD1IifEtFXhrYcYqopffMundPObFKd4b2ozbv9DdqAarYdKTg74
-         g1D2VRVF/kzxbxFU2r5f2kpLxAkd5jYD93VK4d6CCC6WqguB1JtiMc+skdWHJptmX+FD
-         NG1gJLzfxAj20QXrUlZuhrgt2hrzmbg9N81gaA3BduRZiXbahZkpqto01y1PI2rLSC1d
-         zU79Rp0lVvmhrAnGgk0CJYUE75EkzC2iBxbc/wdru/jh4RNbs5ECSXWeuKVIRIb5dEiA
-         eqGpD3+OmiPdOVrPRpYP26LwuArfWUGXKW6EGF/Ki4KOJF6kIf8M4/R5vfuyPxG8m8W8
-         M0OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDCvdPgEq46VtAH89/+RMkTHq5ju5G3KBQeb+tYXHeSE3zVy5lWHucuedRaM7kllDml2V4ijYUP6iJZT8=@vger.kernel.org, AJvYcCXjTHkSebPdZZ34tI+YYn+heT+UDfQLaJIOovMv2Jp1rjbgQIcFCCsvHF6Aq9pl2seYfYKsQD+euuXZX3bTGpM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZukEfXYFzxzcGZNolY4Kl60trCrqCz53fe90+zxmVFyGXjTtD
-	/UEva/0AMplsyliGV8n0q38gugzpBfHxDr7GUTAvIkQHLMg0kb+DKS+DfiVyVxmoudyQbBIJFH4
-	MmRVd0xXws7soro5d4V3eOvj+ZG4=
-X-Gm-Gg: ASbGncvQLZxXyzDGt9cnXVPb7fufSAFFDYR75Pi9HnzoFUaw7FjEYZvgwrqioXKibHD
-	wydJ0PVUbL+3q15RoQG+F6ApaYYc9ZGM2uWvKO7bUhTtVc+jKz0Xl+JeevYrnvJvD+dhJbTcGmt
-	boG19yWcY9EXDO6SxJ4YtwSsfco1MGFn+Td9vfpHCCxGgDbKdAXMGCFTc5G7Q=
-X-Google-Smtp-Source: AGHT+IHOgUcarkWMSi3spaqnGW8+da4VMfEM6aq6JlQ+sunW2iFzN1kYYqz3UF+ZmtTf2eagyJOhPuaYk1Cq4A1cp20=
-X-Received: by 2002:a2e:9698:0:b0:2ff:56a6:2992 with SMTP id
- 38308e7fff4ca-30c4a8f56cbmr72694241fa.37.1742232519809; Mon, 17 Mar 2025
- 10:28:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9PMCKWa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADD60C4CEE3;
+	Mon, 17 Mar 2025 17:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742232609;
+	bh=srOc0Uaub0/6YRvw1cYQN4PBXQGkUPQK1F4bq+yDgG0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=M9PMCKWa0bj+/nVaCIFk0FoMJUZXz5fwtB08nGvANg8fa+tSb/Ui2IPjY/nYC53QS
+	 9LeFzkfiX0lRYjdvjLwxnErliWj5zXn/A8puoJwJ+86QqeGn8dn9YfOXu8wk/BZYVM
+	 +oL0FLW3uHGXVApJZKpCPgLRzIF4Chld9ncJVtPoilruw6RyTTwBx7+FMtXfa+J+79
+	 nmBcAwHoEP8VzAyKpT7bi52exvbI+Qgdh1rBrVUo2pD4K4XL47rb6BFuK8rO5P1F1S
+	 ryNweBX/Kr3+ht+twGVZsqzfJMQ5ez6Bq/26XLYdPdbYeenBf8pP9KmwBQvOCXQ29y
+	 QagecCswBBEzQ==
+Date: Mon, 17 Mar 2025 12:30:08 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Frank Li <Frank.Li@nxp.com>, Tony Lindgren <tony@atomide.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC NOT TESTED 0/2] PCI: dra7xx: Try to clean up
+ dra7xx_pcie_cpu_addr_fixup()
+Message-ID: <20250317173008.GA933389@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250316-vec-set-len-v1-0-60f98a28723f@gmail.com>
- <20250316-vec-set-len-v1-2-60f98a28723f@gmail.com> <D8IGFTJXS2A1.9JBD1UKGN4PX@proton.me>
- <CAJ-ks9=oq+c_pMg41QgGWsj=phWYfntXQgpSrFmz16Vifofn3g@mail.gmail.com>
- <D8IMA0GUIPTD.34ZEZ3W8QSKTA@proton.me> <CAJ-ks9kXZDO-5utmQb2HLkxmxmQ-bg8jZ4FdvDatTj_79W2dMA@mail.gmail.com>
- <D8IPSWQWM6U0.1VLTOFNL99G64@proton.me>
-In-Reply-To: <D8IPSWQWM6U0.1VLTOFNL99G64@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Mar 2025 13:28:03 -0400
-X-Gm-Features: AQ5f1JoRkKiTIQL8dvFpgP9mk71K9uHZkpYwtu8bQmGA-AH1dzROepmuf1oki7Y
-Message-ID: <CAJ-ks9=v7fdT8gS01qo1kjQQPT0DpAv8ZimZS+p3OEEkjo-1Xg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: alloc: add `Vec::dec_len`
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Danilo Krummrich <dakr@kernel.org>, Andrew Ballance <andrewjballance@gmail.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313060521.kjue4la47xd7g4te@thinkpad>
 
-On Mon, Mar 17, 2025 at 1:25=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> On Mon Mar 17, 2025 at 4:37 PM CET, Tamir Duberstein wrote:
-> > On Mon, Mar 17, 2025 at 10:39=E2=80=AFAM Benno Lossin <benno.lossin@pro=
-ton.me> wrote:
-> >> On Mon Mar 17, 2025 at 12:34 PM CET, Tamir Duberstein wrote:
-> >> > On Mon, Mar 17, 2025 at 6:04=E2=80=AFAM Benno Lossin <benno.lossin@p=
-roton.me> wrote:
-> >> >> On Sun Mar 16, 2025 at 11:32 PM CET, Tamir Duberstein wrote:
-> >> >> > +    ///
-> >> >> > +    /// # Safety
-> >> >> > +    ///
-> >> >> > +    /// - `count` must be less than or equal to `self.len`.
-> >> >>
-> >> >> I also think that we should use saturating_sub instead and then not=
- have
-> >> >> to worry about this. (It should still be documented in the function
-> >> >> though). That way this can also be a safe function.
-> >> >
-> >> > This doesn't seem better to me. I'd prefer to have more rather than
-> >> > fewer guardrails on such low-level operations.
-> >>
-> >> Your second sentence seems like an argument for making it safe? I thin=
-k
-> >> it's a lot better as a safe function.
-> >
-> > The guardrail I was referring to is the requirement that the caller
-> > write a safety comment.
->
-> But saturating_sub is a better guardrail?
+On Thu, Mar 13, 2025 at 11:35:21AM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Mar 05, 2025 at 11:20:21AM -0500, Frank Li wrote:
+> > This patches basic on
+> > https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
+> > 
+> > I have not hardware to test.
+> > 
+> > Look for driver owner, who help test this and start move forward to remove
+> > cpu_addr_fixup() work.
+> 
+> If you remove cpu_addr_fixup() callback, it will break backwards
+> compatibility with old DTs.
 
-It's a different kind of guardrail; one that attempts to do something
-correct in the presence of incorrect code.
+Do you have any pointers to DTs that will be broken?  Or to commits
+where they were fixed?
 
-Put another way: do we have line of sight on a caller that wants to
-use `dec_len` without already knowing the current length of the
-vector?
+> You should fix the existing DTs and continue carrying the callback
+> for a while.
+
+Any insight into where these existing DTs are used and how long
+they're likely to live?
+
+Bjorn
