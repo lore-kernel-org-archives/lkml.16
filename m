@@ -1,97 +1,200 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C4379D2;
-	Mon, 17 Mar 2025 04:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E55AD4B
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742185628; cv=none; b=lTLit0xDfvLN88iCBccHzSRtrLM9E4pcyFsroYcCuxcLvv1wIWPhzclzMx+HnpDZYP9anmE3K5k11bojFUOtykcweXhkNER3itfMRq6nug7IYRRu5LHOKD0BZXmANWywyEl8vVp/rqLMcjA485cEunNlc8hUKHyCzYGI7RePS5U=
+	t=1742185742; cv=none; b=ZrMrvlhsbItq7XFr7qaR3rDCl8voTe3phIITfoCZv2AAcyNd+/6pN3167ZGjm6hLVR/osJD+KTO3skYqmwmnSwHQrqXXnrhavmV7ulP2tHq2BjxAPhNfgbw1SxKlcdxvDzm/RQ34E9v8ZlL/ToFxafBO6/Mpfk3fMWtYus0gf9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742185628; c=relaxed/simple;
-	bh=AgtBxj/n5u7Itf1qBybXgrDtPW1FAxI6g48lwbFGmgo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AdqME/nqHRsFyQLU30WOsz75dVMZ/t7xxBYuLDiNfUZPpjDKdODMFuStgGZ05yPWbPyjskIYjCxVKnaDAe9KxAgjSfAo5w3OPovpzFYfu8r9uYtD+XTdzqrafV8ZDsk9QjAQThaR2Bed6B4trgp0thMOTxCXGXjoa0jJsY4T0qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BDdF4YCA; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742185742; c=relaxed/simple;
+	bh=htC2chstG2RXZKwQRcNLEg1bC1yAKoFDtn1vZBf4HKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=alJ1VDldVs7NeJrMG35TUhaWslJ/l+3px/jYMM4RDHrCP3diXGmu83hRuOmygZFCkf19ximgiGGT0jiKp2qAy4ROGfjn9ykR0YAJSFeqsCS8XcWybcQaGW1qFtjsXh5jD6oS5CMQLbeXTYizQ+v2anhXck3lBH+zWm/KoBKirCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=L0z+Glu3; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDdF4YCA"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ff4a4f901fso2290740a91.2;
-        Sun, 16 Mar 2025 21:27:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742185625; x=1742790425; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AgtBxj/n5u7Itf1qBybXgrDtPW1FAxI6g48lwbFGmgo=;
-        b=BDdF4YCAx//adktHwe3nbBC9tn3GZQFIJSRgKWDnQClWifvuTcOYEKEa+azS9oWs+G
-         9+S2iGJ1l5uoUmbrn2cYINj2MuPqVpcvHsvDG2aKshhtv1WonbPa1JxfWNUNrAeT399R
-         aZXOsFyKGLiPIHI2HIXy6PAJLlFbSnt2ayBmH/nI1ZXcj7ehAKgRPPPnq5y/ZNcWsxIF
-         J9VbAJTcl4LAnJcvXlR1jl19HtwV5lmsj74Etd9PdGdcelMXpFsIhvUnCuXy8R+3t0aT
-         17Bf73sxpmAdiwUgpHiEnnh2hRqK+wCZoPwqx5UkbHBwr//IyFcWu7weert8gPTkWWg0
-         jREw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742185625; x=1742790425;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AgtBxj/n5u7Itf1qBybXgrDtPW1FAxI6g48lwbFGmgo=;
-        b=XAJoELvc4nLDhiH1JVGwy/JI50AICuUbRCRVjvN5w3D0WYyyBOS1PRcDns5IKRnI+a
-         C/kC8EMup2syuG6fDNVa0l+luz7MGjXlrDmTnvYRWDc9QvpTlDnJ6kFlMQ16IcTsNWD8
-         XgzLcqRkuG3u3SdS8wYy+fHrzdy8xoMHX4EhYdTKZ76eUf3qJCbKdJk7kjevX4nM7Ium
-         RGdUeIlQnOFD+VPkk6UmLfhvyKSO1d92xhgKudAP+y8YztruDc/ust0xWPqqvELDw1zL
-         Fz3dAYAVMrhczB4IDyY61za0qBINrhBoQ0KNK9IBG95C49vPy3PQknbM2XNnwzKpPto/
-         ma5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUThfoRUoFECLclP38gn0jWKR/mKIHGUxk+mf6Z3iTezPOelsMCeEXnsWcL5Y7cgAa6DkT00wbir1Zc@vger.kernel.org, AJvYcCX04Dz4oqtWtvqViZu4vE6b1dJ5srpCEb0aBUsOqXGF0p2cAM58kO7iXvoBeZdF12siXQVHXrm2Qdsg0dH3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuJrOieHjsD5zZG8hmP0y3/2cKQQY07zaXCk1/hjkidjkSuoR4
-	2fMdckF6mtgSBW+TGmjzwe+ZxBIbndcuFFfv5O1Q6I2ej8CXxsS/v6Qjqclhmom5NptRW+JGpbt
-	ZDJmRKSdAp7vWG0ZyOfJzMxd3whM=
-X-Gm-Gg: ASbGnctYpUMOzi9NorI6QxNg2lepNbBZVBRYv2GOsuHowTk17nEGc9ZG96kQ2xJR65s
-	ma1VM5zngVRqENdl9m3OaRVVGV1I9WwtJIzGhM4Gawry7pgtFGFd+r1O7UVX6/32op9oJJNSp54
-	nhFy46J95Jzcysv4pZlLjaPJtoPss=
-X-Google-Smtp-Source: AGHT+IFyNG/dsUI+ZNZxH6N7qbP/lk6L75Yj4d83Rj08EmzIRycu9pH4DGPprCpXrJrf7PTggG7vaz1r82zS7GQ7rVk=
-X-Received: by 2002:a17:90b:1642:b0:2fe:994d:613b with SMTP id
- 98e67ed59e1d1-30151db9cd5mr13101676a91.35.1742185625064; Sun, 16 Mar 2025
- 21:27:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L0z+Glu3"
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250317042851epoutp04815875a6c79746c20197f3149f5b8b30~tfLE7Z8nr1731717317epoutp04l
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:28:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250317042851epoutp04815875a6c79746c20197f3149f5b8b30~tfLE7Z8nr1731717317epoutp04l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1742185731;
+	bh=QDLrWXG8pt3LkBCgSr9AF9mFXUOQFmlcoAx/9zeoh7Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=L0z+Glu3j2F1ByjRmPGLYEirLMZ5fesE9I6zynByvXAj6iQHihyxb31mXx6gUM1sk
+	 ZQnjHMedvowWqPMNtWmPwLHk3SVekKcjJdNd2SgnjisIQdUcRoExd+scx1L/b3w+HX
+	 LGlR+FIzA6+Kqu5speSvdVB4kFsL1fCN+gUXGEjw=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20250317042850epcas2p431023dc394375c87c2a690cdb2ad1068~tfLEC-Zva2428424284epcas2p4Z;
+	Mon, 17 Mar 2025 04:28:50 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.99]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4ZGMRj707sz4x9Q6; Mon, 17 Mar
+	2025 04:28:49 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	76.CD.23368.105A7D76; Mon, 17 Mar 2025 13:28:49 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250317042849epcas2p4c48bfa439a29d8230c36c31c8bcf49fe~tfLC5AjCf2428424284epcas2p4T;
+	Mon, 17 Mar 2025 04:28:49 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250317042849epsmtrp195ce9be0282a7507f0172c8b55730999~tfLC4AO5e1297712977epsmtrp1I;
+	Mon, 17 Mar 2025 04:28:49 +0000 (GMT)
+X-AuditID: b6c32a45-dc9f070000005b48-a1-67d7a5012c2e
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	1A.FC.33707.105A7D76; Mon, 17 Mar 2025 13:28:49 +0900 (KST)
+Received: from perf (unknown [10.229.95.91]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250317042848epsmtip29da5f164d5738813e7ba22a6e5610290~tfLCixU8d1052310523epsmtip2G;
+	Mon, 17 Mar 2025 04:28:48 +0000 (GMT)
+Date: Mon, 17 Mar 2025 13:32:48 +0900
+From: Youngmin Nam <youngmin.nam@samsung.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, ncardwell@google.com, edumazet@google.com,
+	kuba@kernel.org, davem@davemloft.net, dsahern@kernel.org, pabeni@redhat.com,
+	horms@kernel.org, guo88.liu@samsung.com, yiwang.cai@samsung.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	joonki.min@samsung.com, hajun.sung@samsung.com, d7271.choe@samsung.com,
+	sw.ju@samsung.com, dujeong.lee@samsung.com, ycheng@google.com,
+	yyd@google.com, kuro@kuroa.me, cmllamas@google.com, willdeacon@google.com,
+	maennich@google.com, gregkh@google.com, Lorenzo Colitti
+	<lorenzo@google.com>, Jason Xing <kerneljasonxing@gmail.com>, Youngmin Nam
+	<youngmin.nam@samsung.com>
+Subject: Re: [PATCH 2/2] tcp: fix forever orphan socket caused by tcp_abort
+Message-ID: <Z9el8JIHMsRbFRSd@perf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241222002957.2582212-1-masahiroy@kernel.org> <CAK7LNATVrJLPQSCVTxKARm_4wk=Piem1ZHMA-8c8CfaZPs0H7Q@mail.gmail.com>
-In-Reply-To: <CAK7LNATVrJLPQSCVTxKARm_4wk=Piem1ZHMA-8c8CfaZPs0H7Q@mail.gmail.com>
-From: Max Filippov <jcmvbkbc@gmail.com>
-Date: Mon, 17 Mar 2025 07:26:53 +0300
-X-Gm-Features: AQ5f1JruVnqdoDpIbkTEVdgv2q-Jd1nrTbkp8_d_-yN6ALX9eZvRWcJtS-P9b_s
-Message-ID: <CAMo8BfKgLgWiTVre_zSy3SMm-tJySgmJpVDphtE7C1kFZsuwZw@mail.gmail.com>
-Subject: Re: [PATCH] xtensa: migrate to the generic rule for built-in DTB
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2025031411-sandbag-scabby-eb1c@gregkh>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUybVRTGd/u2fdsmmA4Y3HVkwc4RmZa1WMoFgYgiK+syMLrMj2T1lb4W
+	QmlLPwg6zSof5cMJQzZBNmaBLGNVxyRYO0oHFgYMTNSR0oxtwYFjogVGx3DFMGxpmf73Oyfn
+	uc859+QwsNAynMPIV+pIjZJQcOksqmUgVsQD51xy/siQCC33X8fRhL0eR2d+Lqeiiz0VFDRr
+	aqKiu0PTOJpd8WKorL2TjhpOAlTadx1D03UjdOS0LWDIZmnE0S+WWhpyDNzD0XjPGTrqHFsA
+	aMXuxlHVLTsVDZki0MqYGyDTd9MAVcw8wFGl9y8qWp5x0tHScCmO2vs9OCprvUh9KUrcfeEG
+	RXy5+TYuNnXpxV3marrYVIuL+1q+wcWLV5x0cW23GYgfdO3MYb5dkJJHEjJSE00qc1WyfKU8
+	lSt5XfqKNEHEF/AESSiRG60kCslUbsaBHF5mvsI3Pze6mFDofakcQqvl7k1L0aj0OjI6T6XV
+	pXJJtUyhTlTHaYlCrV4pj1OSumQBnx+f4Ct8tyDvZt8CRT3PKWlZclMNYDCiBjAZkC2EI5Wn
+	QA1gMULZVgDv9U7jgcADoPfvNsqTYGW0gr4pcVrNQcllAL+oHg9K7gBY7bYBfxWVvRt2rd2i
+	+JnO5kHLyOONfDj7WTh3dZLqZ4x9nAanFo75OYwtgRP9p3A/h7B3QavlRpC3wmtf/u6rZzCY
+	Pue7P73v94Ls00x4ybOMBTrKgK3TV4LdhcE/h7vxAHPgXJ0xyFpomJrEAuJyAEddfwTFL8Dm
+	2UrgN8DYeXDcxPIj9PUwuNnmU7BqYA0PpENglTE0IIyBqycvgQBHQVt7R/BBMbS7vbTAlywB
+	uLj4CDsBdjb/b5rm/8yaNxyehyabhx5I74DnHzMCGAs7e/aaAM0MIki1tlBOauPVgif7zVUV
+	doGNa9jzqhU0zN+PcwAKAzgAZGDc8JC6Npc8NERGfPAhqVFJNXoFqXWABN9m6jHOtlyV75yU
+	OqlAmMQXikSCxPgEfiI3MuSotVweypYTOrKAJNWkZlNHYTA5Boqd83I1PVc0qD1SZD5u321+
+	rXHLpLrxmTfOlxQlPaR+4s2spzVxzKWHt6UVJxLf1qjckaznXMKi+z9c3b76aF9TgbC4KHn0
+	yL53vjLu+Lq3o6Mn/WFP1Ge/UiRnixUVFXf4Mc7Kp5syRPah9SnJcLzUS6TE1Xa+d3Dr8YT1
+	gZIfcz6KUWw5PaMs1/MstwFwhOnWkz+VxMR/DscPWX6jrTLGeJRd4MXea0SsMXvh+yxmlq1l
+	RLCWb6C8acg68NY/jWNpxqNVN/nGaklr5LGqbOmFiY8b1p2y/FVW+UBmN8twsDQtfP/a4SVP
+	9nyDy7W94myMtfbQ/tE2jwzrdJxLn0sXcqnaPEKwB9NoiX8B9hof45YEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRjHfXeOO2eD0Wmzer2UNRNipSkVvKCoFNUpi6L6IF2oUzuucpuy
+	qVRQWSk5P5iZpi2jlaVpOmnoZpelTXPLkkpbNrMkzUs2FS8tLbScFvXtx/P//x4eeEhM2ID7
+	kEeUiaxKycjFXD5urBP7B4HbrbIQ8wAPjdU2E+it+SKBCl6m4kj/II2DenT5OOpu6CRQj2sC
+	Q+cKK7joUg5AZ2uaMdR5wcZF9oeDGHpozCPQK2OmJ7LU9RKo5UEBF1U8HwTIZXYSKL3djKMG
+	3Xzkeu4ESHevE6C0rlECnZ/4iqOxLjsXDVvPEqiwdoRA527o8Sg/urLEwaHvaz8QtM6QRBtK
+	NVxal0nQNdfKCHrosZ1LZ1aWAnrUsGg7bzc/XMrKjySzqpURB/iHdRmNIKEcHmssD0kB17wy
+	AI+E1Gpory4FGYBPCikTgF8z7oPZwA++L2nxnGUR7Eit95wtdQD4vuXMTAmnAqFhsp3jZi4V
+	BI22qZm5F7UMfnnahrsFjMryhJfHbDMlERUN39bmEm4WUAGw2uggZrcOA3ilqedPMBc+u/IZ
+	dzNGSeC7qS/TMjnNvrB4inQjb/rs7hexWYDS/ido/xO0/wQdwErBPDZBrZApDiWEBqsZhTpJ
+	KQs+FK8wgJlXS3ZUg6KKyWAL4JDAAiCJib0EF262yoQCKXP8BKuK369KkrNqC/AlcfECQYBc
+	IxVSMiaRjWPZBFb1N+WQPJ8UjnStg7xlkytrhDU3GP8cuS3TldMnt+5avmLkjli0Q3mV/2nd
+	nJPWuM6+cf1wd20dMTlwrzU0Gezd2k59FKX8NMnKDi553WsSxWcvmrfUf1Xx4pg2QXaJCQ4Z
+	FnRdjZFefJS7oSoxum1P10QhP8yh+diadTQyd4tEP2JqDFdXRpqUeczrIV36lHTz+fxX1/d7
+	kY6OImvzidhtdm/zar3r3Zv6/jVrs8OqPBQ7CcuP+A+afU1O17foXqfHwbDvRRK/KmeEdmBT
+	X/Iqx90XHtaKtoB9SwMNT6J+ucjRPSPF+UgT4h0Rd5pz6tfC9P6mfL5/7JaXJyc2hprX9+eN
+	pzBOMa4+zIRKMJWa+Q3GYDWJWQMAAA==
+X-CMS-MailID: 20250317042849epcas2p4c48bfa439a29d8230c36c31c8bcf49fe
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----eH2_J4jYqvRXP4eDI3fJMDII8MgNqIHEmJE4NX.asT6eXmTC=_21c3b_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250314092130epcas2p34e60b23ff983fe03195820a38fb376c5
+References: <20250314092446.852230-1-youngmin.nam@samsung.com>
+	<CGME20250314092130epcas2p34e60b23ff983fe03195820a38fb376c5@epcas2p3.samsung.com>
+	<20250314092446.852230-2-youngmin.nam@samsung.com>
+	<2025031411-sandbag-scabby-eb1c@gregkh>
 
-On Sun, Mar 16, 2025 at 1:37=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
->
-> On Sun, Dec 22, 2024 at 9:30=E2=80=AFAM Masahiro Yamada <masahiroy@kernel=
-.org> wrote:
-> >
-> > Commit 654102df2ac2 ("kbuild: add generic support for built-in boot
-> > DTBs") introduced generic support for built-in DTBs.
-> >
-> > Select GENERIC_BUILTIN_DTB to use the generic rule.
-> >
-> > To keep consistency across architectures, this commit also renames
-> > CONFIG_BUILTIN_DTB_SOURCE to CONFIG_BUILTIN_DTB_NAME.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Ping?
+------eH2_J4jYqvRXP4eDI3fJMDII8MgNqIHEmJE4NX.asT6eXmTC=_21c3b_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Thanks, applied to my xtensa tree.
-Sorry for the delay.
+On Fri, Mar 14, 2025 at 01:24:26PM +0100, Greg KH wrote:
+> On Fri, Mar 14, 2025 at 06:24:46PM +0900, Youngmin Nam wrote:
+> > From: Xueming Feng <kuro@kuroa.me>
+> > 
+> > commit bac76cf89816bff06c4ec2f3df97dc34e150a1c4 upstream.
+> > 
+> > We have some problem closing zero-window fin-wait-1 tcp sockets in our
+> > environment. This patch come from the investigation.
+> > 
+> > Previously tcp_abort only sends out reset and calls tcp_done when the
+> > socket is not SOCK_DEAD, aka orphan. For orphan socket, it will only
+> > purging the write queue, but not close the socket and left it to the
+> > timer.
+> > 
+> > While purging the write queue, tp->packets_out and sk->sk_write_queue
+> > is cleared along the way. However tcp_retransmit_timer have early
+> > return based on !tp->packets_out and tcp_probe_timer have early
+> > return based on !sk->sk_write_queue.
+> > 
+> > This caused ICSK_TIME_RETRANS and ICSK_TIME_PROBE0 not being resched
+> > and socket not being killed by the timers, converting a zero-windowed
+> > orphan into a forever orphan.
+> > 
+> > This patch removes the SOCK_DEAD check in tcp_abort, making it send
+> > reset to peer and close the socket accordingly. Preventing the
+> > timer-less orphan from happening.
+> > 
+> > According to Lorenzo's email in the v1 thread, the check was there to
+> > prevent force-closing the same socket twice. That situation is handled
+> > by testing for TCP_CLOSE inside lock, and returning -ENOENT if it is
+> > already closed.
+> > 
+> > The -ENOENT code comes from the associate patch Lorenzo made for
+> > iproute2-ss; link attached below, which also conform to RFC 9293.
+> > 
+> > At the end of the patch, tcp_write_queue_purge(sk) is removed because it
+> > was already called in tcp_done_with_error().
+> > 
+> > p.s. This is the same patch with v2. Resent due to mis-labeled "changes
+> > requested" on patchwork.kernel.org.
+> > 
+> > Link: https://protect2.fireeye.com/v1/url?k=f1caf90b-ae51376f-f1cb7244-000babda0201-1111684dae24e0cf&q=1&e=32bd2804-1687-48c6-945d-f20eded99c42&u=https%3A%2F%2Fpatchwork.ozlabs.org%2Fproject%2Fnetdev%2Fpatch%2F1450773094-7978-3-git-send-email-lorenzo%40google.com%2F
+> > Fixes: c1e64e298b8c ("net: diag: Support destroying TCP sockets.")
+> > Signed-off-by: Xueming Feng <kuro@kuroa.me>
+> > Tested-by: Lorenzo Colitti <lorenzo@google.com>
+> > Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+> > Reviewed-by: Eric Dumazet <edumazet@google.com>
+> > Link: https://protect2.fireeye.com/v1/url?k=66416ec8-39daa0ac-6640e587-000babda0201-21346ca5121765eb&q=1&e=32bd2804-1687-48c6-945d-f20eded99c42&u=https%3A%2F%2Fpatch.msgid.link%2F20240826102327.1461482-1-kuro%40kuroa.me
+> > Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> > Cc: <stable@vger.kernel.org> # v5.10+
+> 
+> Does not apply to 6.1.y or older, what did you want this applied to?
+> 
+> thanks,
+> 
+> greg k-h
+> 
+Hi Greg,
 
--- Max
+Sorry about that. Let me resend these patches for 6.1 and 5.15.
+
+As for 5.10, it seems to have more dependencies for the backport.
+I think the maintainer should handle it to ensure a safe backport.
+
+------eH2_J4jYqvRXP4eDI3fJMDII8MgNqIHEmJE4NX.asT6eXmTC=_21c3b_
+Content-Type: text/plain; charset="utf-8"
+
+
+------eH2_J4jYqvRXP4eDI3fJMDII8MgNqIHEmJE4NX.asT6eXmTC=_21c3b_--
