@@ -1,110 +1,278 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4150A38DD8;
-	Mon, 17 Mar 2025 10:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FFC19CC0C
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 10:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742209092; cv=none; b=hiC+iz2UqH4M/vu7q5p2Cv+YpcZ2PuMl85hxKBVtYYoYYOrI/0/jzFR+SB+i5Gp8CRmGbLjYPs52fsTtyuANHuHXp91g6FA45h4nGCwW1HpulNvAC1sF3hGnwfxNyof1Ff0Fregt1f/KJ2pySOmwRCWPNZr+jEUZZeCCRntxaVU=
+	t=1742209091; cv=none; b=fA4JhNloKku0IVQoShB4tWeneTTO2RVC0AAU/7LIIFHbedl7wkqcOFUOeJg70n5f3mlap54anrJn8eQrOmEFv6EUs6tf31pbrmQimZglFAps0bVpgLnEzZEb6OVxw3fGzDgviy6LET8YH/GfrfVcpM0QoRSxULKJHxUqDC0Amcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742209092; c=relaxed/simple;
-	bh=dPw0zLDv7HGOHJw5DeqotAgUuNl5Mx/AgCHmDIdQQ3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=K1pA3RWxRUCYuf/SX+BbcKk5Ov5BQZGef+jqmI4g+sIwHqntzI8eKUwImOz3gpqgrCYYhrA8EQERQpnPtSnxqItKsabnh+9bOmCP093ZcJRUy39qeGnQC7QcztI82qKTa+zOaqnnkwInpAiBvBECpC46bQWi3WSpDXobVui+Sww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Ndct4Mep; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1742209091; c=relaxed/simple;
+	bh=qsDMwGdZQLFJZ8Cpig7FzRSvbjMllkPDI2sN2I3QJ5A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To; b=Ir795evbF1sAQi/pfmLRBGldHZNYFPGNsuxTczkXJcvzFctvRi6VKAuZ737FaeT9L0EtXnzifeoVPqh7qx2b4uFIUsw4YgbGSAWrvku+UuOphlg3nCIoF280jvd2Q0kRCX4dnWpqwgtZHcVOHvgxx9zAoWUrD3I487SqLjwCJgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=ZKl24BFh; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ndct4Mep"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1742209078;
-	bh=9QSVy802gxb7lh6NczC8WxOc0sfP+hXK2U6xq0KCwTU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Ndct4Mep2+W8UJ2JMTj5Q9jlYWRCiLWOx4ECM7DBN50Dbhs8gA9nMd4furL6LF9Qr
-	 M0tTn+PNeljmBl8tcLU+mxbju1NcOJhfQdpI0uTdRHVW05/hxS3zbh0D7difHSm+T6
-	 38xXBgT5/NB2icAuc0UQxx/SL7Cj09env6+oy9K5UbOAZUCeWOuCcs8YfXQ+yEh4qs
-	 Bb/WJQnfbPRXuDC/tOKlqSZY82FNZqjhhecg3rFT+wJQl94IpjlayPT5l8E0g6Biz9
-	 Lcz474WukdjRh2WmydMKHtyoM8liqfyqkuYnM9oK27ISEysYfcZxD36x2CllI0Zb+o
-	 fFalvCf9U/dZA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZGX4k3cctz4x21;
-	Mon, 17 Mar 2025 21:57:58 +1100 (AEDT)
-Date: Mon, 17 Mar 2025 21:57:57 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the rust tree
-Message-ID: <20250317215757.2412aef1@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="ZKl24BFh"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-224100e9a5cso78572305ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 03:58:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1742209089; x=1742813889; darn=vger.kernel.org;
+        h=to:content-transfer-encoding:mime-version:message-id:date:subject
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KCvgTiEawu29sH4ByokBNvEWLF1KpXJnCBPg6/tj2M0=;
+        b=ZKl24BFh7/WrPJbhaXx4SUqiPalOKmmAB95H5fV31eIpnHl0Mc3yNUihJV+/dvTvoi
+         FbocVHJpF99L5+PyDcs1AXRab+uWFDT42FWXQVFADntNAr7Wafx0i/ivTj9uyREu7NuB
+         0nGqaPRfSnXB2JR2kFX6NEpaxH8G0ZG2ymU6QCIQB5/DCmJ4T06um2dbyoSPbPzN6DQn
+         3wQLzoURd2ZPyYGoNFg/FdFGF6x79XM6r2WppQjZsyOn+EYgsH9KPqo0zElXkPtRygVt
+         jYXO26UuLxipMzMU1blkYhXLfnnzh/6FsVeOLTp2e+pYX6e8p1XbGLnKTVx8VSE4JhFg
+         HzeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742209089; x=1742813889;
+        h=to:content-transfer-encoding:mime-version:message-id:date:subject
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KCvgTiEawu29sH4ByokBNvEWLF1KpXJnCBPg6/tj2M0=;
+        b=bA49Vgb7JBOP+gix07R9ApjLfazadQGP/vozjmhyK27VqE3UuWS7vbUK6KIS0vx+Db
+         dl7RbByVE5V21YDaVBqyxPD8nFl9rcATRcZIWYvPdEpTxWTAzr071E4Uz2T2QdSf444o
+         BbVRcOkJenNVUFgxOvQeAGy+uO6JqHQBWotY50OwMn8i2m6zW5E9cQ9uc8VOB8zQwlz9
+         4VHjQFH70WjcBAbVEht26HX5Gpn1q9cO/zEOkGfYIV8Yns+IAqzM7sov2aWgWh6z3m1T
+         c5JMFRwl37g39iGtvAoiqaDfTBgT/GNhhLA5JCrosUka/l6RoVmvgcXfuNmpVvBe8rCK
+         10RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXsrr3Aql+71y5qBYqSDnqhR9zUnebOd6C3nm1iPQfzxPTrXsOVtvhwnuob+FuE0iqnKT2k2BJ0p/eQwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgdWjfCVbDt3Nzv3rDdAA/o7SryTRa7b4GWGrHXqoS/emSV1Jn
+	vG/UsqykO91V25m87DUgv7E6ssraTKp81gaEADiOPlT44Vn3W517aYMwgS+0VuM=
+X-Gm-Gg: ASbGncuFnpzXBh9ryYRakN3Be0CzIJjddD+QySwTTEyG3efC85dooOYsi+5AgvfDRas
+	1HcXSV9LQerKb1HH5FfPNAF+NI2NttbWAG9a58536BK1Enyrx84yvCUw3kqFHIdqSeQSfNfPHyn
+	7WYfCQib9CKiHM+EC2tcnrp9bNTdOxyAMycAxsJSpGwjdoO9lWc096ywAATf0iA3zRX7rM6K8VQ
+	z9N0JoCJiLjE334q1LXup+bvIE8y6eRxENSC0UfLnk+Lk315vh2iElTJjBUnG48C43FijUkhiMw
+	PrRE+5nlB7aL9yli37LRckKr+kukh8ESHsuH2DmzB9Z5mSWB
+X-Google-Smtp-Source: AGHT+IHIemQ3oAfcEA3ILoOSCg5Zh3JtO67wmQnjQ93SNsixlgSzi1nAEcGtR/i7bSKLCV3BPKLOgg==
+X-Received: by 2002:a05:6a21:394c:b0:1f5:80eb:846d with SMTP id adf61e73a8af0-1f5c117de5bmr16765553637.10.1742209089213;
+        Mon, 17 Mar 2025 03:58:09 -0700 (PDT)
+Received: from localhost ([157.82.207.107])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af56ea7c759sm5715282a12.59.2025.03.17.03.58.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 03:58:08 -0700 (PDT)
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+Subject: [PATCH net-next v11 00/10] tun: Introduce virtio-net hashing
+ feature
+Date: Mon, 17 Mar 2025 19:57:50 +0900
+Message-Id: <20250317-rss-v11-0-4cacca92f31f@daynix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wz=gC/Nau+t4BBjrZEWvfEg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC4A2GcC/4XSzW7cIBAH8FdZ+VxWAwwD+NT3qHrgs4ui2KntX
+ W0U5d0zsfPhyofebJjfAKP/SzeXqZW5608v3VRubW7jwD9S/jh16RKGP0W0zAudAoWAoMU0z6J
+ YbbPzpQZrO658mkpt97XNr24oixjKfel+886lzcs4Pa/9b3Ld505aAjgwSoI8S0RUSkgRHtqlP
+ YznMfPXzxyeh3Y/p/Fx7XNTOyuNREmIZ0VASP+1+tMieGnWF9y0AJFIAzfLEZw6INwhhRtCRg6
+ L16okKJQOyHyh9xduyDCqOlVyuQKYfED0iQxI8BsiRlEmDyFbcJUOyH4jpT5Osuv1UIFJMeZ8R
+ O4baaANOUY2RKyGakWlD8jvkd2QZ5SrJeLpKFPiAUnYKbmlhheZaelMtjr4UOEf9roFaSp/rxz
+ D5SNNXyHsT+tYlQaxXAdBVCQE9BGS7XmE+7yupTxMSSJeay3TLDyXY6wcn5p6DhOXxzAXwSc/t
+ qU/5ey0NbZSIUdBSee8tykaF423plrEGK11xNd8fQNWIBGkNQMAAA==
+X-Change-ID: 20240403-rss-e737d89efa77
+To: Jonathan Corbet <corbet@lwn.net>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Wang <jasowang@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, kvm@vger.kernel.org, 
+ virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+ Yuri Benditovich <yuri.benditovich@daynix.com>, 
+ Andrew Melnychenko <andrew@daynix.com>, 
+ Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+ Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Akihiko Odaki <akihiko.odaki@daynix.com>
+X-Mailer: b4 0.15-dev-edae6
 
---Sig_/wz=gC/Nau+t4BBjrZEWvfEg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+virtio-net have two usage of hashes: one is RSS and another is hash
+reporting. Conventionally the hash calculation was done by the VMM.
+However, computing the hash after the queue was chosen defeats the
+purpose of RSS.
 
-Hi all,
+Another approach is to use eBPF steering program. This approach has
+another downside: it cannot report the calculated hash due to the
+restrictive nature of eBPF.
 
-After merging the rust tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Introduce the code to compute hashes to the kernel in order to overcome
+thse challenges.
 
-error[E0603]: trait import `PinInit` is private
-   --> rust/kernel/time/hrtimer.rs:71:19
-    |
-71  | use crate::{init::PinInit, prelude::*, time::Ktime, types::Opaque};
-    |                   ^^^^^^^ private trait import
-    |
-note: the trait import `PinInit` is defined here...
-   --> rust/kernel/init.rs:141:64
-    |
-141 | use pin_init::{init_from_closure, pin_init_from_closure, Init, PinIni=
-t};
-    |                                                                ^^^^^^^
-note: ...and refers to the trait `PinInit` which is defined here
-   --> rust/pin-init/src/lib.rs:1003:1
-    |
-    =3D note: you could import this directly
-help: import `PinInit` directly
-    |
-71  | use crate::{pin_init::PinInit, prelude::*, time::Ktime, types::Opaque=
-};
-    |             ~~~~~~~~~~~~~~~~~
+An alternative solution is to extend the eBPF steering program so that it
+will be able to report to the userspace, but it is based on context
+rewrites, which is in feature freeze. We can adopt kfuncs, but they will
+not be UAPIs. We opt to ioctl to align with other relevant UAPIs (KVM
+and vhost_net).
 
-error: aborting due to 1 previous error
+The patches for QEMU to use this new feature was submitted as RFC and
+is available at:
+https://patchew.org/QEMU/20250313-hash-v4-0-c75c494b495e@daynix.com/
 
-For more information about this error, try `rustc --explain E0603`.
+This work was presented at LPC 2024:
+https://lpc.events/event/18/contributions/1963/
 
-Presumably this is caused by my merge resolutions :-(  Please have a
-look and let me know what te resolutions should be.
+V1 -> V2:
+  Changed to introduce a new BPF program type.
 
-I have used the rust tree from next-20250314 for today.
+Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+---
+Changes in v11:
+- Added the missing code to free vnet_hash in patch
+  "tap: Introduce virtio-net hash feature".
+- Link to v10: https://lore.kernel.org/r/20250313-rss-v10-0-3185d73a9af0@daynix.com
 
---=20
-Cheers,
-Stephen Rothwell
+Changes in v10:
+- Split common code and TUN/TAP-specific code into separate patches.
+- Reverted a spurious style change in patch "tun: Introduce virtio-net
+  hash feature".
+- Added a comment explaining disable_ipv6 in tests.
+- Used AF_PACKET for patch "selftest: tun: Add tests for
+  virtio-net hashing". I also added the usage of FIXTURE_VARIANT() as
+  the testing function now needs access to more variant-specific
+  variables.
+- Corrected the message of patch "selftest: tun: Add tests for
+  virtio-net hashing"; it mentioned validation of configuration but
+  it is not scope of this patch.
+- Expanded the description of patch "selftest: tun: Add tests for
+  virtio-net hashing".
+- Added patch "tun: Allow steering eBPF program to fall back".
+- Changed to handle TUNGETVNETHASHCAP before taking the rtnl lock.
+- Removed redundant tests for tun_vnet_ioctl().
+- Added patch "selftest: tap: Add tests for virtio-net ioctls".
+- Added a design explanation of ioctls for extensibility and migration.
+- Removed a few branches in patch
+  "vhost/net: Support VIRTIO_NET_F_HASH_REPORT".
+- Link to v9: https://lore.kernel.org/r/20250307-rss-v9-0-df76624025eb@daynix.com
 
---Sig_/wz=gC/Nau+t4BBjrZEWvfEg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Changes in v9:
+- Added a missing return statement in patch
+  "tun: Introduce virtio-net hash feature".
+- Link to v8: https://lore.kernel.org/r/20250306-rss-v8-0-7ab4f56ff423@daynix.com
 
------BEGIN PGP SIGNATURE-----
+Changes in v8:
+- Disabled IPv6 to eliminate noises in tests.
+- Added a branch in tap to avoid unnecessary dissection when hash
+  reporting is disabled.
+- Removed unnecessary rtnl_lock().
+- Extracted code to handle new ioctls into separate functions to avoid
+  adding extra NULL checks to the code handling other ioctls.
+- Introduced variable named "fd" to __tun_chr_ioctl().
+- s/-/=/g in a patch message to avoid confusing Git.
+- Link to v7: https://lore.kernel.org/r/20250228-rss-v7-0-844205cbbdd6@daynix.com
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfYADUACgkQAVBC80lX
-0GxJSQgAiOH7umi5/Jj48Q4voyRRjr86TEP+dd5Fa6iXfgG2f17QN/7Gi4efD7El
-5/vFZBWOSY+GAS1HNr/oImMAlvJnwKgEW0fG5sxVaoR0k4AwPfHTKQLU0gzjz9+L
-6xnlrPaCfftu8BuK4r0zf8jqK4obpur2x5vcqHECqpLf3heNJOmR5ELJeteMN9qa
-/+2b+EKiNupR+LP2AtbfNwHK/AWlzS5YZbL7imuAzw+5m8z3WzQYHzOVaRD4aLz8
-ojvSiu6oDG4GeekF61Oo350aTxHWb9wWxmAsCJ0Ll40avoVtS84kn1OrgtZNfNwk
-qRr2onxj54jZW+kxBjXJCFCVuwwGjw==
-=+VQx
------END PGP SIGNATURE-----
+Changes in v7:
+- Ensured to set hash_report to VIRTIO_NET_HASH_REPORT_NONE for
+  VHOST_NET_F_VIRTIO_NET_HDR.
+- s/4/sizeof(u32)/ in patch "virtio_net: Add functions for hashing".
+- Added tap_skb_cb type.
+- Rebased.
+- Link to v6: https://lore.kernel.org/r/20250109-rss-v6-0-b1c90ad708f6@daynix.com
 
---Sig_/wz=gC/Nau+t4BBjrZEWvfEg--
+Changes in v6:
+- Extracted changes to fill vnet header holes into another series.
+- Squashed patches "skbuff: Introduce SKB_EXT_TUN_VNET_HASH", "tun:
+  Introduce virtio-net hash reporting feature", and "tun: Introduce
+  virtio-net RSS" into patch "tun: Introduce virtio-net hash feature".
+- Dropped the RFC tag.
+- Link to v5: https://lore.kernel.org/r/20241008-rss-v5-0-f3cf68df005d@daynix.com
+
+Changes in v5:
+- Fixed a compilation error with CONFIG_TUN_VNET_CROSS_LE.
+- Optimized the calculation of the hash value according to:
+  https://git.dpdk.org/dpdk/commit/?id=3fb1ea032bd6ff8317af5dac9af901f1f324cab4
+- Added patch "tun: Unify vnet implementation".
+- Dropped patch "tap: Pad virtio header with zero".
+- Added patch "selftest: tun: Test vnet ioctls without device".
+- Reworked selftests to skip for older kernels.
+- Documented the case when the underlying device is deleted and packets
+  have queue_mapping set by TC.
+- Reordered test harness arguments.
+- Added code to handle fragmented packets.
+- Link to v4: https://lore.kernel.org/r/20240924-rss-v4-0-84e932ec0e6c@daynix.com
+
+Changes in v4:
+- Moved tun_vnet_hash_ext to if_tun.h.
+- Renamed virtio_net_toeplitz() to virtio_net_toeplitz_calc().
+- Replaced htons() with cpu_to_be16().
+- Changed virtio_net_hash_rss() to return void.
+- Reordered variable declarations in virtio_net_hash_rss().
+- Removed virtio_net_hdr_v1_hash_from_skb().
+- Updated messages of "tap: Pad virtio header with zero" and
+  "tun: Pad virtio header with zero".
+- Fixed vnet_hash allocation size.
+- Ensured to free vnet_hash when destructing tun_struct.
+- Link to v3: https://lore.kernel.org/r/20240915-rss-v3-0-c630015db082@daynix.com
+
+Changes in v3:
+- Reverted back to add ioctl.
+- Split patch "tun: Introduce virtio-net hashing feature" into
+  "tun: Introduce virtio-net hash reporting feature" and
+  "tun: Introduce virtio-net RSS".
+- Changed to reuse hash values computed for automq instead of performing
+  RSS hashing when hash reporting is requested but RSS is not.
+- Extracted relevant data from struct tun_struct to keep it minimal.
+- Added kernel-doc.
+- Changed to allow calling TUNGETVNETHASHCAP before TUNSETIFF.
+- Initialized num_buffers with 1.
+- Added a test case for unclassified packets.
+- Fixed error handling in tests.
+- Changed tests to verify that the queue index will not overflow.
+- Rebased.
+- Link to v2: https://lore.kernel.org/r/20231015141644.260646-1-akihiko.odaki@daynix.com
+
+---
+Akihiko Odaki (10):
+      virtio_net: Add functions for hashing
+      net: flow_dissector: Export flow_keys_dissector_symmetric
+      tun: Allow steering eBPF program to fall back
+      tun: Add common virtio-net hash feature code
+      tun: Introduce virtio-net hash feature
+      tap: Introduce virtio-net hash feature
+      selftest: tun: Test vnet ioctls without device
+      selftest: tun: Add tests for virtio-net hashing
+      selftest: tap: Add tests for virtio-net ioctls
+      vhost/net: Support VIRTIO_NET_F_HASH_REPORT
+
+ Documentation/networking/tuntap.rst  |   7 +
+ drivers/net/Kconfig                  |   1 +
+ drivers/net/ipvlan/ipvtap.c          |   2 +-
+ drivers/net/macvtap.c                |   2 +-
+ drivers/net/tap.c                    |  78 +++++-
+ drivers/net/tun.c                    |  90 +++++--
+ drivers/net/tun_vnet.h               | 155 ++++++++++-
+ drivers/vhost/net.c                  |  68 ++---
+ include/linux/if_tap.h               |   4 +-
+ include/linux/skbuff.h               |   3 +
+ include/linux/virtio_net.h           | 188 ++++++++++++++
+ include/net/flow_dissector.h         |   1 +
+ include/uapi/linux/if_tun.h          |  82 ++++++
+ net/core/flow_dissector.c            |   3 +-
+ net/core/skbuff.c                    |   4 +
+ tools/testing/selftests/net/Makefile |   2 +-
+ tools/testing/selftests/net/tap.c    |  97 ++++++-
+ tools/testing/selftests/net/tun.c    | 491 ++++++++++++++++++++++++++++++++++-
+ 18 files changed, 1194 insertions(+), 84 deletions(-)
+---
+base-commit: dd83757f6e686a2188997cb58b5975f744bb7786
+change-id: 20240403-rss-e737d89efa77
+prerequisite-change-id: 20241230-tun-66e10a49b0c7:v6
+prerequisite-patch-id: 871dc5f146fb6b0e3ec8612971a8e8190472c0fb
+prerequisite-patch-id: 2797ed249d32590321f088373d4055ff3f430a0e
+prerequisite-patch-id: ea3370c72d4904e2f0536ec76ba5d26784c0cede
+prerequisite-patch-id: 837e4cf5d6b451424f9b1639455e83a260c4440d
+prerequisite-patch-id: ea701076f57819e844f5a35efe5cbc5712d3080d
+prerequisite-patch-id: 701646fb43ad04cc64dd2bf13c150ccbe6f828ce
+prerequisite-patch-id: 53176dae0c003f5b6c114d43f936cf7140d31bb5
+prerequisite-change-id: 20250116-buffers-96e14bf023fc:v2
+prerequisite-patch-id: 25fd4f99d4236a05a5ef16ab79f3e85ee57e21cc
+
+Best regards,
+-- 
+Akihiko Odaki <akihiko.odaki@daynix.com>
+
