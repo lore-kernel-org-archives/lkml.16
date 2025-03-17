@@ -1,117 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00D02417C7;
-	Mon, 17 Mar 2025 14:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169BC23F401;
+	Mon, 17 Mar 2025 14:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742221899; cv=none; b=RYTgYM08deMeEi4hG/0c/NW7WlGRqQzh2IylM6TpMsQvHbqFkBk8wIMMbznmd5c9aeoQCgotf3w57LguEZjvizjCTU6uwDy9cmi2jXUxB9H998PSiBmHe3ElYk/UNsgsqW/hvoaq8Vmsm6XXPhDtxEhA6m3KNt4Mmw49ddWWBaU=
+	t=1742221929; cv=none; b=H8rseNVLNT4pGaeMUExx4m1v/FSKtfEugGa3Tuc9ESxj536REoLt+uP7Sw0BwwR6LzwghCbFxi+Qbe7pdUHxeVxUOHzM0CdamQi1AZcJ0koj20GqVjt3PnlURrP/MMSpQipS0gmtxPyCNw6mjUM+Oeoi2KOgK5tXtUYdnE/9r/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742221899; c=relaxed/simple;
-	bh=LGXVZ3hhL8osdTBzm7kPyXNbARxeGCAupiFiB3aHIqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H+AU79XRHwFew22/kEwy6HR1od3VKsZ+Bm9tXueLxevDOOuspe9vu+d2e8/Z5xfHD91vJRf9SL42SBqlMVyFw92aspuQJRYIayT3sba8GBJkrWgsfxd33f+lk2gGuqETM9LEc7iSzMW3g5V7qLrAl8N8vhD9dmWwLK5MR+K/8Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aUav38EU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742221929; c=relaxed/simple;
+	bh=L6vZViLf/AWBBPqSQRxB9AbJIs22KZEVsuH/wa1qP3E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XjNqz++prAiT+kd7qNYYSMDcixE5eXdSHQQncI2spM6eDaIjMRtFWjTxdVJWhGFwHxjs0x8hH3w8Xdj5e/0/An5RxRqG4/eGcN8/tpua+69OPrgy2UbWXk5DGGYNA7hG/utfM5NvN+evMGX/GUxZrXhLYtBrtmc9J/e7Fo6sVn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OtqO/ofN; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aUav38EU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EE38C4CEED;
-	Mon, 17 Mar 2025 14:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742221899;
-	bh=LGXVZ3hhL8osdTBzm7kPyXNbARxeGCAupiFiB3aHIqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aUav38EUZs4/Ki9zAwRFWm7l5LnnyeJbEJE2gcOmROP0e4OLDXYUVL3CPOwPytCoz
-	 YqdWg1Crn+j0Hkn1/YzfsmwLNbSknnW2FXcAgYE7iey+1rAGajS9OL0OtK1dfG9Mjo
-	 YZ7mrE+JxtxZkCX8XihdDFzaY2EZYqGR10dXeeDI=
-Date: Mon, 17 Mar 2025 15:30:15 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH 2/9] hwrng: arm-smccc-trng - transition to the faux
- device interface
-Message-ID: <2025031709-unmoved-carton-c130@gregkh>
-References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
- <20250317-plat2faux_dev-v1-2-5fe67c085ad5@arm.com>
- <2025031748-deface-wasting-b635@gregkh>
- <Z9gwNaUoTmqViPrh@bogus>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OtqO/ofN"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22423adf751so71496485ad.2;
+        Mon, 17 Mar 2025 07:32:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742221927; x=1742826727; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ObvDKNQs40eT4ahBFyXk+Ns0MX5dau0caAieOzlUfVs=;
+        b=OtqO/ofNN0ozjz+ozyhlUFlCL1LtI6G7X37dJhM/ZTU90BhqVTsS64EKcOCOUxNzfI
+         07zYQaSes7C+k5mgS6L0BKnk5PKXmyZhaos57U6++M+BAFLyAstTI1jhyrvGRduhaljH
+         QUE8As4Noyp7Izs1HImYHRb+89E/91HKmpXvuzuw1jYXYWba1I9o6vsettO6YTx5gRfo
+         WPYUXOu8ySPjEQbZOzI8Oburcb2pWc0TLo7wTFtQURqRocKxfeF1awavA+BD8VfaI6DN
+         j+0leSapALwHTegN613p/qsg5V1vXpWW3IPtdLXPsoDMLn3SLtuw2029NnJDGnKvGG2i
+         q2yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742221927; x=1742826727;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ObvDKNQs40eT4ahBFyXk+Ns0MX5dau0caAieOzlUfVs=;
+        b=DGEMqE1SvF2qci0aKVjM51k0kuICz1MOdtFpFkhZBKksLoWpvLoFV0GV9pQj8QUJLP
+         dLzbPCOENp0iq05pO2COYP0PrduXS73L/FlG0MlYp0alMKQfNaWSPqhyT1G9iplz9bx2
+         V61b+c9mkRol3zLmpnBj9AO3biwxDhexWV+W3Opyfa+0liX7BfTiD/HFdgEnFtptjwLR
+         aqp4w2CzKB38hu724PLmC2L4oqt2S+fct7jf4AWHKj9aRgm3rxRMPy8YUo3QHI+rE8oN
+         2I2ipUCLpCTb6he6taOb99OxXOhso6gx3Qw2Pi737xklaRujvIP+6+ZAcF5DJsRUMgMa
+         +SDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcko9ewJLSXVB3csPPcb/i30AkmXvwrHwwRM76srpqTzqTRAhifFGZvFkQ8RQEkCsFRSbirC+hbp3VkFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZnfLlFkxDZO6GRw+saWciOjt+WnKtByI4pBjWc586/5f3Gp8W
+	LTfcF63kjGSiCWB+gX+LbI5sM5GcvY9deJBPiSGam7nTi1c7luvDAXoc34A=
+X-Gm-Gg: ASbGncshDWY8/400apHm1flZlNJdCoS49yWTwfvt6HRy5463JwehKEQsFWsItIsshZv
+	QBpDe2BvaDPQPnOOhVOM2Ka/8n1qvmkQFepwXAwL1Nw87WFEh+R/egAP/Ox1J7Y77pGa8DvHiq5
+	s3/xSCfA74b8g8a7/WiR4BlQ7RPtmWQpNK9YGvW/X8SRRsEHqYv1Q3CIkaSRiUnkAa+RXqp/Ys7
+	9gUAwl3YwPoJoktFW++LoyHX2GcV9612C+jUaTbZAhvO2JsBMn0KuyXtZio0aD2UBt9hZiiknP/
+	4Bl1pAZLm47k1WHIo1nT1nMHrE7CgI6moWtNZWAU3WCWJzo4xv5aqyb8sTV8/TfZSCBaX3l+7TG
+	ehhBhPcUQfoFHmljva75A//rH9s3mrAmy799Erw==
+X-Google-Smtp-Source: AGHT+IEbqKnI0+Sr8aV2L8te6GQTPyogZQ/TEgsjcdG5GXG2JDBhtZaRB0lNEoehaoBBhGKlqzufzg==
+X-Received: by 2002:a17:903:2cc:b0:224:1c41:a4c0 with SMTP id d9443c01a7336-225e0a34e4fmr136183185ad.9.1742221926687;
+        Mon, 17 Mar 2025 07:32:06 -0700 (PDT)
+Received: from localhost.localdomain (124-218-201-66.cm.dynamic.apol.com.tw. [124.218.201.66])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c688856fsm76058925ad.14.2025.03.17.07.32.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 07:32:06 -0700 (PDT)
+From: "Lucien.Jheng" <lucienx123@gmail.com>
+X-Google-Original-From: "Lucien.Jheng" <lucienX123@gmail.com>
+To: linux-clk@vger.kernel.org,
+	andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	daniel@makrotopia.org,
+	ericwouds@gmail.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	joseph.lin@airoha.com,
+	wenshin.chung@airoha.com,
+	"Lucien.Jheng" <lucienX123@gmail.com>
+Subject: [PATCH v4 net-next 0/1 ] net: phy: air_en8811h: Add clk provider for CKO pin 
+Date: Mon, 17 Mar 2025 22:31:10 +0800
+Message-Id: <20250317143111.28824-1-lucienX123@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9gwNaUoTmqViPrh@bogus>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 17, 2025 at 02:22:45PM +0000, Sudeep Holla wrote:
-> On Mon, Mar 17, 2025 at 02:04:27PM +0100, Greg Kroah-Hartman wrote:
-> > On Mon, Mar 17, 2025 at 10:13:14AM +0000, Sudeep Holla wrote:
-> > > +MODULE_ALIAS("faux:smccc_trng");
-> > 
-> > Why do you need a branch new alias you just made up?  Please don't add
-> > that for these types of devices, that's not going to work at all (just
-> > like the platform alias really doesn't work well.
-> > 
-> 
-> Sure I will drop all of those alias. One question I have if the idea of
-> creating a macro for this is good or bad ? I need this initial condition
-> flag to make use of such a macro, so I didn't go for it, but it does
-> remove some boiler-plate code.
-> 
-> Let me know what do you think of it ?
-> 
-> Regards,
-> Sudeep
-> 
-> -->8 
-> diff --git i/include/linux/device/faux.h w/include/linux/device/faux.h
-> index 9f43c0e46aa4..8af3eaef281a 100644
-> --- i/include/linux/device/faux.h
-> +++ w/include/linux/device/faux.h
-> @@ -66,4 +66,30 @@ static inline void faux_device_set_drvdata(struct faux_device *faux_dev, void *d
->  	dev_set_drvdata(&faux_dev->dev, data);
->  }
->  
-> +#define module_faux_driver(name, tag, init_cond)			\
-> +static struct faux_device_ops tag##_ops = {				\
-> +	.probe = tag##_probe,						\
-> +	.remove = tag##_remove,						\
-> +};									\
-> +									\
-> +static struct faux_device *tag##_dev;					\
-> +									\
-> +static int __init tag##_init(void)					\
-> +{									\
-> +	if (!(init_cond))						\
-> +		return 0;						\
-> +	tag##_dev = faux_device_create(name, NULL, &tag##_ops);		\
-> +	if (!tag##_dev)							\
-> +		return -ENODEV;						\
-> +									\
-> +	return 0;							\
-> +}									\
-> +module_init(tag##_init);						\
-> +									\
-> +static void __exit tag##_exit(void)					\
-> +{									\
-> +	faux_device_destroy(tag##_dev);					\
-> +}									\
-> +module_exit(tag##_exit);						\
+This patch adds clk provider for the CKO pin of the Airoha en8811h PHY.
 
-Yes, I see that some of your changes could be moved to use this, so I
-think it is worth it.
+Change in PATCH v4:
+air_en8811h.c:
+ * Shorten commit messages
+ * Change init.name clk to cko
+ * Change init.flags CLK_GET_RATE_NOCACHE to 0
+ * Rename to_en8811h_priv to clk_hw_to_en8811h_priv
 
-But why can't you use module_driver() here?  Ah, that init_cond?  And
-the device.  Hm, why not put the init_cond in the probe callback?  That
-should make this macro simpler.
+Lucien.Jheng (1):
+  net: phy: air_en8811h: Add clk provider for CKO pin
 
-And don't use "tag", that's an odd term here, just copy what
-module_driver() does instead please.
+ drivers/net/phy/air_en8811h.c | 95 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-thanks,
+-- 
+2.34.1
 
-greg k-h
