@@ -1,112 +1,72 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941AA199947;
-	Mon, 17 Mar 2025 18:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979CDA47;
+	Mon, 17 Mar 2025 18:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742236719; cv=none; b=VFZnPE/OFWq6AL1vfvbBsRcKpkM/v2UfK6yT0YaIAl55cU0KS9IssUD9alRreVauvqa62JWTcCUVoPDSDOCMvVy3uXhbC5Ai9oQroCTzjyzJC022qmJBTzVFnAYynngYwjluJw4+FDyabstMT/8MDnck6YW6rYaorvknYM/T/WY=
+	t=1742236787; cv=none; b=R3gRkiI2CgWnBzk4UkSYaFUzaKBzVYaifSwLNK4dqfeWbTtk+yuPiWwL1UdLAbwcje/8X56EWHqgMGBt/SOzqugX0un61cv/xQvRafm4DkbYVR6DvNWzAMpYDcPaXWZPsaxZfbIdvQDY14H4WUXWKpZIp1BUoHuM1wQMD2xfvDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742236719; c=relaxed/simple;
-	bh=1LBVxJitL5UO4S0Z4LYepoRKUaPznTN7cx/SDb/PfoA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=iPx1Y554nPJFHcymN319/F3b10LJB5zoko0UXRoWoEhrwuHKAsZL4SRhSl2YlZCRV1cbQAXaqqLCyIvjl4IyoEM7KjRuzcSYUrwMUjwjZSdN1LLXB30HK7Z/AqfQCdvt8p+6w6dV545EZLZObt4tADkc82V+eX+VktZNNhY/boQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Fkzvqlm+; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1742236787; c=relaxed/simple;
+	bh=vUX45IpvzkZ02AKd/IPVjrW9oSbaLGh6sBQvAFq19HE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1n+fY4yIoIc6s1uXvAL/Cd3h4Ka3M5t8K22CB51WJGpFtoi87J69A38ONRbr1LYK5Kyatd9Tnu/YtDoLTdemwCgWiraQyNT1YddFbR1bRdV71WPsMetQWe+rMLr/WUtg2WpXMwhVpwnvK2KuUWTv0aNV2xbkofHpfr0hP+yV4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jGuuttoH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Fkzvqlm+"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52HIcEOi663885
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 17 Mar 2025 11:38:15 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52HIcEOi663885
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1742236695;
-	bh=bhzVoSI27Qv+u96iSpgHIvxVbeO2zaDqwasONZPZQN4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Fkzvqlm+gdF+8Y1OMR3suzlaT9l2+5P1lHejz82nu8wspDq64DGG3yA2giuCpyqdl
-	 EZLqiXCcyxqrpwrUM8ApZRObBtF13yb8DVeD5x2mJ3Aajs+lEQRn+HNS5DyxUHmBxm
-	 9IWhQGGvaXraBYjz9GyO8OtgzDgkH809nQzvhVWG5CLNxxm3ziltEYrCwXs2YZ8fDI
-	 7ZW23wl1HZolvkfPEU6Y6v4ZoSCn9ecwGfh4x1OiPNMTnQCPz4lcLx2K0aLiiQ7kCa
-	 9Tgnm+6UnE7wL/3py9hwDV74WO547cAubh5jia6AtAgklgF2mBwO045yCRrFfWfuuk
-	 q6PO2p58X+xkw==
-Date: Mon, 17 Mar 2025 11:38:12 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Uros Bizjak <ubizjak@gmail.com>, Borislav Petkov <bp@alien8.de>
-CC: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5Btip=3A_x86/fpu=5D_x86/fpu=3A_Use_XSAVE=7B=2COPT?=
- =?US-ASCII?Q?=2CC=2CS=7D_and_XRSTOR=7B=2CS=7D_mnemonics_in_xstate=2Eh?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAFULd4b_a=3xs2b_88WaDR9hLuhMqNZiMu+kNAbrgJf2MoVNnQ@mail.gmail.com>
-References: <20250313130251.383204-1-ubizjak@gmail.com> <174188823430.14745.17591986001259957573.tip-bot2@tip-bot2> <20250317101415.GBZ9f198PAh90nMWDf@fat_crate.local> <CAFULd4b-sZucEtvx19==5wcOfOCzj5fuZ2SHS7ZMboZQXdVycg@mail.gmail.com> <20250317104616.GCZ9f9eF-0n0qPbWwk@fat_crate.local> <CAFULd4b_a=3xs2b_88WaDR9hLuhMqNZiMu+kNAbrgJf2MoVNnQ@mail.gmail.com>
-Message-ID: <1886668D-E44A-4510-B31E-933545FA2C23@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jGuuttoH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD18EC4CEE3;
+	Mon, 17 Mar 2025 18:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742236787;
+	bh=vUX45IpvzkZ02AKd/IPVjrW9oSbaLGh6sBQvAFq19HE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jGuuttoHaD6RxL8XyLcH8U/Eze2zBL1LfSMf4UoEBLdE1Qb6R6B+I2ir38qrpN8RT
+	 NJUKQcY7FEya0MNZQGnwmHFoiGecAxvcYA/FsGVW5H7Xl8txUn7D7UGnjhbh53evO1
+	 dVo44wh+dEkVYp2d0kdPWEXhsV9UBU0oIM3+VTeB/eMfIFlf9f5ZCCIgNkbSPTSrNt
+	 Z0G/pZd1lWIzCw1yBrVcs+dGv9/OW8cUYsXSxn6UGyOKjkxE5JG3IFO2WJYorL0rus
+	 bQd8mX53MU3/oIWREW1Zev0HsYRHB8AE3eFqjvygceJfN92Fddnp87GnEbmp+QsDC7
+	 6EEdwMZf75HWw==
+Date: Mon, 17 Mar 2025 08:39:45 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+	Wen Tao <wentao@uniontech.com>, cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v2] blk-cgroup: improve policy registration error
+ handling
+Message-ID: <Z9hscRtPa76fdank@slm.duckdns.org>
+References: <3E333A73B6B6DFC0+20250317022924.150907-1-chenlinxuan@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3E333A73B6B6DFC0+20250317022924.150907-1-chenlinxuan@uniontech.com>
 
-On March 17, 2025 4:06:11 AM PDT, Uros Bizjak <ubizjak@gmail=2Ecom> wrote:
->On Mon, Mar 17, 2025 at 11:46=E2=80=AFAM Borislav Petkov <bp@alien8=2Ede>=
- wrote:
->>
->> On Mon, Mar 17, 2025 at 11:28:58AM +0100, Uros Bizjak wrote:
->> > > > @@ -114,10 +113,10 @@ static inline int update_pkru_in_sigframe(s=
-truct xregs_state __user *buf, u64 ma
->> > > >  #define XSTATE_OP(op, st, lmask, hmask, err)                    =
-     \
->> > > >       asm volatile("1:" op "\n\t"                                =
-     \
->> > > >                    "xor %[err], %[err]\n"                        =
-     \
->> > > > -                  "2:\n\t"                                      =
-     \
->> > > > +                  "2:\n"                                        =
-     \
->> > > >                    _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_FAULT_MCE_SA=
-FE)  \
->> > > >                    : [err] "=3Da" (err)                          =
-       \
->> > > > -                  : "D" (st), "m" (*st), "a" (lmask), "d" (hmask=
-)    \
->> > > > +                  : [xa] "m" (*(st)), "a" (lmask), "d" (hmask)  =
-     \
->> > >
->> > > This [xa] needs documenting in the comment above this=2E
->> > >
->> > > What does "xa" even mean?
->> >
->> > xsave area=2E
->>
->> That's struct xregs_state in kernel nomenclature=2E
->>
->> And the macro's argument is called "st"=2E
->>
->> And when it says [xa] there, one wonders where that "xa" comes from=2E =
-So please
->> add a comment above the macro explaining that=2E
->
->This is an internal label for a named argument=2E The name shouldn't
->bother anybody, it could be anything, [xa], [ptr], [arg] or whatnot,
->so I see no reason why a comment should explain the choice=2E It's like
->arguing about the name of a variable=2E
->
->Uros=2E
->
+On Mon, Mar 17, 2025 at 10:29:24AM +0800, Chen Linxuan wrote:
+> This patch improve the returned error code of blkcg_policy_register().
+> 
+> 1. Move the validation check for cpd/pd_alloc_fn and cpd/pd_free_fn
+>    function pairs to the start of blkcg_policy_register(). This ensures
+>    we immediately return -EINVAL if the function pairs are not correctly
+>    provided, rather than returning -ENOSPC after locking and unlocking
+>    mutexes unnecessarily.
+> 
+>    Those locks should not contention any problems, as error of policy
+>    registration is a super cold path.
+> 
+> 2. Return -ENOMEM when cpd_alloc_fn() failed.
+> 
+> Co-authored-by: Wen Tao <wentao@uniontech.com>
+> Signed-off-by: Wen Tao <wentao@uniontech.com>
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
 
-Ok, I'm going to argue, but only because the argument is called "st" and t=
-he assembly parameter "xa"=2E That's needlessly different and means having =
-to look extra hard=20
+Acked-by: Tejun Heo <tj@kernel.org>
 
-We can obviously not use the same token, but IMO it would make a lot more =
-sense to call one of them _st or perhaps st_p (being a pointer)=2E
+Thanks.
+
+-- 
+tejun
