@@ -1,145 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7681AB528;
-	Mon, 17 Mar 2025 16:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30DE165EFC;
+	Mon, 17 Mar 2025 16:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742229494; cv=none; b=em/2XXSn7B3s61h7SMqh8e9dwx6LMi1Thu8qF+urGFHEpQnWbjb5PzcsVd/QqI46oI/tPV1A+2l8xA1a4RE5bzcpqXu4nDMtynfb3v6QvQviCfTtvZ9s04wDPOC19xKCwmaaTpcKDo17j4cT/6zFb/SjQZoVjDNBZ4ytGumIL3I=
+	t=1742229494; cv=none; b=MaTHxJXyYRIezN1jlJ70PdYv6/6TJCgO+xquqf7r7veCWLKRL+zarG5kTS9BlWEdB71iGvwqB34J1s+8Ci8JqhwIW8L/JBcxFrGDcwplEe1g2F7sD/CVo2FMKqLIxPj9iNDGRdmPwEtvPODQnsSG07X6jMtLF2ntxs+63R+VDLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742229494; c=relaxed/simple;
-	bh=0dwYf5DKkHAA2EYSXFTq9qfix/WD/m/Hv9xSOVHciic=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p34ER90DNQFWPLrnAjH34e+5UWkWcvu/WvWCeaZpShiOnHh3jZzoE9gXxiD4Fckohnrg41EDV/8r89rQK+T6ydRbK6A217Ft2xnvC/AqTAqiUvzt3DR4gFIwrRYgU8dTq71+hlL+K+UIndq9stwOktZFtODoP3uqynoroxqPA1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYFtTVPi; arc=none smtp.client-ip=10.30.226.201
+	bh=9t1pdawn2FZ7NWIdQ/GARUR55HAqyNj1BWtqrutZTKY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YjosvzjgdcjCjdoOCeTBDS3g1IAoxLF3q+cayxyToYdBp7NCCZEqmAMnYtKLx+nYTVGps3C6oALQruMfhTj20JGy2b0zTDlrcnXp7Ip4v96PU71uDWFenANVTvQtbSttfsu8/xMUST8i3QGf6cXLBFlJnmEE6nwZ/LUPlk0yChs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nckDosPU; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYFtTVPi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62365C4CEE3;
-	Mon, 17 Mar 2025 16:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742229494;
-	bh=0dwYf5DKkHAA2EYSXFTq9qfix/WD/m/Hv9xSOVHciic=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CYFtTVPiR0JffKP3olE9P5YoA9dtmy6CbTHp95r2NOgN0QtK+gOByTSCP8LECQ9hl
-	 Y6j0o0N0bYLRJP1/OSjSozE1qmcLiVCTSXe3ljkgtj6jWk/BzvmKw5XGhezwKmwmX2
-	 pkRhMZvH3e71FvlH/hvnd87lp7Vr3PZzqQVc37VqyvQ/Vn7/OKSJn2nSHk2gpi+7HK
-	 vMo8PQABDsP5zdhmhc02rT/YGfIqHnfpf6CeJMZOy/+/uw5IgUkLH2sS7HBP1arMUh
-	 j2tjHNf3SXhj8FhR6gXy2kCL0pkZZddIO2Eq7k7GqdZGOhq4AuNQCA+SJVGYCnqr6c
-	 qVgX/mKRW+SBw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Florian Westphal <fw@strlen.de>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Sasha Levin <sashal@kernel.org>,
-	kadlec@netfilter.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	shuah@kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 15/16] selftests: netfilter: skip br_netfilter queue tests if kernel is tainted
-Date: Mon, 17 Mar 2025 12:37:24 -0400
-Message-Id: <20250317163725.1892824-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250317163725.1892824-1-sashal@kernel.org>
-References: <20250317163725.1892824-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nckDosPU"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-223a7065ff8so48093675ad.0;
+        Mon, 17 Mar 2025 09:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742229492; x=1742834292; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aTPbj1b195DRbTb39Xzp9sfX+PKRZYgeC3LAILUOanI=;
+        b=nckDosPUoeq772CsH3bTFbbKBqmGUoShAarXyPMxIEgIGEHPXX7AKy3/9QtCCsX4oR
+         9X58GK16Zp17vb9Im4VYpR7yoeSWRypXPS2vRV0JEkX+j77DZYza4FdMi1lLFStuI+8b
+         Jy73tfCs3gyFBVuWki8PISyuNfAZR4Bbry9u8wgcos0IvrTdGh1oW5DePOcG6i/U/3MJ
+         hPEWpqtjDeG2IsXqGrBe5BBp8O4KYGsEfuJlC3bIbHn4N1RZyREKAObcsvAhZZ6WwlC8
+         aTdnHn5i3N2VdwNtt7TiXChjzyGj65ryX+5tmLqjianZwjxBvPFDJXjaHrDjQBNNjNba
+         0ipA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742229492; x=1742834292;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aTPbj1b195DRbTb39Xzp9sfX+PKRZYgeC3LAILUOanI=;
+        b=dY3zfnYg7Wg1zOvgNeN3CLC0osmLwIK+PYM0b4Lc5k/9dww2b92Y0nRvAuoyT2umVD
+         292C+RaTEyWVZLxV9PIW/Ck7P1dICTOGiRqzX1Q53fVLfSc8NnfgqxcWpsTWE5opyPr9
+         Cm3wzAk85bsrqCbzZxg6bO/DCd8x2d22tzsNdwVcwE5Od0gAbfsURlNbvrZcxdsQ9FMb
+         9S/+7unULgrY9EXIOmuEHq/3jD7vfjyINpvf/kVYAqTQM/doEcWS4/9TIXiVHdBF/tN+
+         DXGQuWHCMhIt+B4Dp2fTgkqPKqP7ZTfx46vF9X1m1kwVkltTaFM1ULjuZmVaVZrbadEi
+         QZfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAXRnFaXnnUhWsfHNTHFLCLzKJp3cwkHXkiHvQYvnlAM0rqf4v9UfHyAtzSt550TrayVTiooQHr8SlmHc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyszOSY0O4u85uJw8pLQDZrqKje6epIHriGP3tOjrvUcBZcMk3d
+	VFGUYW+/lplpRSTcFCzxdKYftcObDNoe0Dt/eVjuSexmzOHproHR
+X-Gm-Gg: ASbGncvn5XAzxAwA6zerNbGiR+D7KdZkaSA5YkspNgdcpLHSH4UhOw9lGeHWTbUMJt4
+	swVcep+DpSnI6dgW1RgZs2DCbhOARDd6jwKBHRt5cC+6I3i30Rc2feskWaTUpwf5N1TAJ9KrHI2
+	0IePXbcb2vvNZICD64hWaVe960C4o8Ybv5Y2OQGk7JbnQUKKJaefM3t2GtSKH1ao7aNPrzNJVg5
+	xQycqQo0/9lqU3neIdKX1x/RpdbyXVJu07tdIrbI7SxD9/YWd/utekz5I+fmxWycuNspV88GaWl
+	r4T80f2Vb78Q3pm2Al/CvD+yyinKwEZ4aoRjjEBp3eCsqoE8m2tAZi8UluVu5nnzmz3lPvLokR6
+	7If4vQAyv+/UHsqMOpkDAxA==
+X-Google-Smtp-Source: AGHT+IFe3Ho08AMwCSP9qaSJjjg0vymK1Bqccz/fxA/lGP/fvE3RTVLTFzTwPodRuymd1I5f+3DYng==
+X-Received: by 2002:a05:6a00:b91:b0:736:42a8:a742 with SMTP id d2e1a72fcca58-737223b9098mr12931895b3a.11.1742229492005;
+        Mon, 17 Mar 2025 09:38:12 -0700 (PDT)
+Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737116b3de4sm8038387b3a.179.2025.03.17.09.38.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 09:38:11 -0700 (PDT)
+From: Potin Lai <potin.lai.pt@gmail.com>
+Date: Tue, 18 Mar 2025 00:35:48 +0800
+Subject: [PATCH] gpio: pca953x: Add support for level-triggered interrupts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.7
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250318-gpio-pca953x-level-triggered-irq-v1-1-0c4943d92425@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAGNP2GcC/x3NQQqDMBBG4avIrDtglNTWq5QuYvwTB0TjpIgg3
+ t3Q5bd576QMFWTqq5MUu2RZlwLzqMhPbolgGYupqRtbt+bFMcnKybu3bQ+esWPmn0qMUIwsurH
+ 1oQvGu8E+DZVMUgQ5/ovP97pucduLX3IAAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Patrick Williams <patrick@stwcx.xyz>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Cosmo Chou <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>, 
+ Potin Lai <potin.lai.pt@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742229490; l=4418;
+ i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
+ bh=9t1pdawn2FZ7NWIdQ/GARUR55HAqyNj1BWtqrutZTKY=;
+ b=NmrpVUZDoBEM42UHCMuoqqpPb/tFVbCVz2Wvy2ehlwCtBlbWqYo0zb/mMFrUsu3MQxg46S7AE
+ 9fxvjz5/ak9BL7bUemDpyIeAlincSwb7bQKK7isxpV4m2aVi/rbGID2
+X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
+ pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
 
-From: Florian Westphal <fw@strlen.de>
+Adds support for level-triggered interrupts in the PCA953x GPIO
+expander driver. Previously, the driver only supported edge-triggered
+interrupts, which could lead to missed events in scenarios where an
+interrupt condition persists until it is explicitly cleared.
 
-[ Upstream commit c21b02fd9cbf15aed6e32c89e0fd70070281e3d1 ]
+By enabling level-triggered interrupts, the driver can now detect and
+respond to sustained interrupt conditions more reliably.
 
-These scripts fail if the kernel is tainted which leads to wrong test
-failure reports in CI environments when an unrelated test triggers some
-splat.
-
-Check taint state at start of script and SKIP if its already dodgy.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
 ---
- tools/testing/selftests/net/netfilter/br_netfilter.sh      | 7 +++++++
- .../testing/selftests/net/netfilter/br_netfilter_queue.sh  | 7 +++++++
- tools/testing/selftests/net/netfilter/nft_queue.sh         | 1 +
- 3 files changed, 15 insertions(+)
+Adds support for level-triggered interrupts in the PCA953x GPIO
+expander driver.
+---
+ drivers/gpio/gpio-pca953x.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/net/netfilter/br_netfilter.sh b/tools/testing/selftests/net/netfilter/br_netfilter.sh
-index c28379a965d83..1559ba275105e 100755
---- a/tools/testing/selftests/net/netfilter/br_netfilter.sh
-+++ b/tools/testing/selftests/net/netfilter/br_netfilter.sh
-@@ -13,6 +13,12 @@ source lib.sh
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index be4c9981ebc4..2c4034b39aff 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -215,6 +215,8 @@ struct pca953x_chip {
+ 	DECLARE_BITMAP(irq_stat, MAX_LINE);
+ 	DECLARE_BITMAP(irq_trig_raise, MAX_LINE);
+ 	DECLARE_BITMAP(irq_trig_fall, MAX_LINE);
++	DECLARE_BITMAP(irq_trig_level_high, MAX_LINE);
++	DECLARE_BITMAP(irq_trig_level_low, MAX_LINE);
+ #endif
+ 	atomic_t wakeup_path;
  
- checktool "nft --version" "run test without nft tool"
+@@ -773,6 +775,8 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
+ 	pca953x_read_regs(chip, chip->regs->direction, reg_direction);
  
-+read t < /proc/sys/kernel/tainted
-+if [ "$t" -ne 0 ];then
-+	echo SKIP: kernel is tainted
-+	exit $ksft_skip
-+fi
+ 	bitmap_or(irq_mask, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
++	bitmap_or(irq_mask, irq_mask, chip->irq_trig_level_high, gc->ngpio);
++	bitmap_or(irq_mask, irq_mask, chip->irq_trig_level_low, gc->ngpio);
+ 	bitmap_complement(reg_direction, reg_direction, gc->ngpio);
+ 	bitmap_and(irq_mask, irq_mask, reg_direction, gc->ngpio);
+ 
+@@ -790,13 +794,15 @@ static int pca953x_irq_set_type(struct irq_data *d, unsigned int type)
+ 	struct device *dev = &chip->client->dev;
+ 	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+ 
+-	if (!(type & IRQ_TYPE_EDGE_BOTH)) {
++	if (!(type & IRQ_TYPE_SENSE_MASK)) {
+ 		dev_err(dev, "irq %d: unsupported type %d\n", d->irq, type);
+ 		return -EINVAL;
+ 	}
+ 
+ 	assign_bit(hwirq, chip->irq_trig_fall, type & IRQ_TYPE_EDGE_FALLING);
+ 	assign_bit(hwirq, chip->irq_trig_raise, type & IRQ_TYPE_EDGE_RISING);
++	assign_bit(hwirq, chip->irq_trig_level_low, type & IRQ_TYPE_LEVEL_LOW);
++	assign_bit(hwirq, chip->irq_trig_level_high, type & IRQ_TYPE_LEVEL_HIGH);
+ 
+ 	return 0;
+ }
+@@ -809,6 +815,8 @@ static void pca953x_irq_shutdown(struct irq_data *d)
+ 
+ 	clear_bit(hwirq, chip->irq_trig_raise);
+ 	clear_bit(hwirq, chip->irq_trig_fall);
++	clear_bit(hwirq, chip->irq_trig_level_low);
++	clear_bit(hwirq, chip->irq_trig_level_high);
+ }
+ 
+ static void pca953x_irq_print_chip(struct irq_data *data, struct seq_file *p)
+@@ -839,6 +847,7 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
+ 	DECLARE_BITMAP(cur_stat, MAX_LINE);
+ 	DECLARE_BITMAP(new_stat, MAX_LINE);
+ 	DECLARE_BITMAP(trigger, MAX_LINE);
++	DECLARE_BITMAP(edges, MAX_LINE);
+ 	int ret;
+ 
+ 	if (chip->driver_data & PCA_PCAL) {
+@@ -875,13 +884,25 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
+ 
+ 	bitmap_copy(chip->irq_stat, new_stat, gc->ngpio);
+ 
+-	if (bitmap_empty(trigger, gc->ngpio))
+-		return false;
++	if (!chip->irq_trig_level_high && !chip->irq_trig_level_low) {
++		if (bitmap_empty(trigger, gc->ngpio))
++			return false;
++	}
+ 
+ 	bitmap_and(cur_stat, chip->irq_trig_fall, old_stat, gc->ngpio);
+ 	bitmap_and(old_stat, chip->irq_trig_raise, new_stat, gc->ngpio);
+-	bitmap_or(new_stat, old_stat, cur_stat, gc->ngpio);
+-	bitmap_and(pending, new_stat, trigger, gc->ngpio);
++	bitmap_or(edges, old_stat, cur_stat, gc->ngpio);
++	bitmap_and(pending, edges, trigger, gc->ngpio);
 +
- cleanup() {
- 	cleanup_all_ns
- }
-@@ -165,6 +171,7 @@ if [ "$t" -eq 0 ];then
- 	echo PASS: kernel not tainted
- else
- 	echo ERROR: kernel is tainted
-+	dmesg
- 	ret=1
- fi
- 
-diff --git a/tools/testing/selftests/net/netfilter/br_netfilter_queue.sh b/tools/testing/selftests/net/netfilter/br_netfilter_queue.sh
-index 6a764d70ab06f..4788641717d93 100755
---- a/tools/testing/selftests/net/netfilter/br_netfilter_queue.sh
-+++ b/tools/testing/selftests/net/netfilter/br_netfilter_queue.sh
-@@ -4,6 +4,12 @@ source lib.sh
- 
- checktool "nft --version" "run test without nft tool"
- 
-+read t < /proc/sys/kernel/tainted
-+if [ "$t" -ne 0 ];then
-+	echo SKIP: kernel is tainted
-+	exit $ksft_skip
-+fi
++	bitmap_and(cur_stat, new_stat, chip->irq_trig_level_high, gc->ngpio);
++	bitmap_and(cur_stat, cur_stat, chip->irq_mask, gc->ngpio);
++	bitmap_or(pending, pending, cur_stat, gc->ngpio);
 +
- cleanup() {
- 	cleanup_all_ns
- }
-@@ -72,6 +78,7 @@ if [ "$t" -eq 0 ];then
- 	echo PASS: kernel not tainted
- else
- 	echo ERROR: kernel is tainted
-+	dmesg
- 	exit 1
- fi
++	bitmap_complement(cur_stat, new_stat, gc->ngpio);
++	bitmap_and(cur_stat, cur_stat, reg_direction, gc->ngpio);
++	bitmap_and(old_stat, cur_stat, chip->irq_trig_level_low, gc->ngpio);
++	bitmap_and(old_stat, old_stat, chip->irq_mask, gc->ngpio);
++	bitmap_or(pending, pending, old_stat, gc->ngpio);
  
-diff --git a/tools/testing/selftests/net/netfilter/nft_queue.sh b/tools/testing/selftests/net/netfilter/nft_queue.sh
-index 785e3875a6da4..784d1b46912b0 100755
---- a/tools/testing/selftests/net/netfilter/nft_queue.sh
-+++ b/tools/testing/selftests/net/netfilter/nft_queue.sh
-@@ -593,6 +593,7 @@ EOF
- 		echo "PASS: queue program exiting while packets queued"
- 	else
- 		echo "TAINT: queue program exiting while packets queued"
-+		dmesg
- 		ret=1
- 	fi
+ 	return !bitmap_empty(pending, gc->ngpio);
  }
+
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250318-gpio-pca953x-level-triggered-irq-5cf7f1cab561
+
+Best regards,
 -- 
-2.39.5
+Potin Lai <potin.lai.pt@gmail.com>
 
