@@ -1,78 +1,121 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90042405E7
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:13:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D892820322;
+	Mon, 17 Mar 2025 14:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742220801; cv=none; b=DWBCKRtJQVsmzOn+MU9vDk+4XCAVwhHzvE0Ff3nIHHnV+AqNlVVAjq2frUW/5cBgJHHMfwyDgLMIoGuEJLZ3OqXxWCHEf4rbKdSoX21rPmAf8f4qG2G7/49qeLZF5TTwSUCJ9Txu6Egdz7cRMewgfoPVm6Anne0JRc6VWzcQx7o=
+	t=1742220812; cv=none; b=r8C8iYAxTlVluYmQYTZc/1cX00+CdM0wNXJ6aDIw36peWPAGdV3XXi4be47Fby05rIVFm4ch0D5M/9nCx0J5Xbr/6PIYqxjE+vSr91EnuHRzFkSEmbPdBIdOeAEwrf0c95GfuovVYF+DytZyUh2bk7aeBGuakqouJUTnybTdaP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742220801; c=relaxed/simple;
-	bh=nttrMiC22XUOZZeCE6J+OZeJmt21H3KZf0SpIOcrUp4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=H/CgRTuwO0T6ylwaTr8NRlkn456jgLeVjdTQm15bFxE8xPlETW7+BbMqKvZB4tpPQSALLKgKR+wnbqnqTeSeMdv5vs3k6R5abZ6F+xpx9/1qIb1AoiCBaREgqmbLXd575bEUcHqOQO/WDAUnqIZ16yQUIHdi6L6fFmtJNtFjPJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=38wMzcOV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MbNC3vgG; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1742220812; c=relaxed/simple;
+	bh=Hpdcypjt0ZbNYUdHGey6gpoTcz3DMDSTuv0leQ5C0HE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AV5FC+Cv3OIb+xr/qNKKG2qS7DBmM+PNQQJk14kldTuCb53xoJpPQhkqsNWJQgzxSoL0EVX2JN+B/QvE18ZMtJx31ioB9ItqGkx1tMcDzFUxClsEc0Q6UzzRIQXVmd/nKN1V9D8AANC53AuEuezjkHDXpwzvEL1u6tgQN6gl0v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TzYCnaTd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cr7WxoOe; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="38wMzcOV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MbNC3vgG"
-From: John Ogness <john.ogness@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TzYCnaTd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cr7WxoOe"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742220798;
+	s=2020; t=1742220809;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mE08OqTuzsR2/w5zN3sp1pgCrBWoxVxCSSigXCl2u9E=;
-	b=38wMzcOVPjNcvdZA4sw4ard8aWVbf8WEwkTwsfWwggtHvL1yPoxCIinzRpSRjPeMlb0yNu
-	8nZHoIk8GtYSHbeG2DsaL0DBlrgBb4fJwCONxGHwwtznfyLZxR5aaIYbXq12AA+9I90bUD
-	vaZuYb4XmI+K34fFXnHx5AEO7FQy2zI5TcfUQOaKRcsp1A2cOyzoAgS6wVmyDESvSB1gyl
-	btO8HEkLSYu/xEIx11t41lucSeSzltABseheKL21mpEGCZCUHUS4IuGnA2hBzcfs8eZiGa
-	LCwU3VQeKv1eFRRFmSkSKlnc4OWJHxiWSnCqGlysQgiQ1da+1Cz7grgEGTpevA==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EtclTXwOSCMg5QOeKYXMx4COUFyfI8/aHYlSBvUgGug=;
+	b=TzYCnaTdWzV3lR+LbCsvEXfYiozktCDRcAjuEJRTFaKJX21f1jRAeEEWrSmmwM693xOcZj
+	2LYKAtFqBlOpqv7KfpCqL2RmmlMHcQn5uBC/EpYh20HASDiCqSZRVz8SKgx3h0+0kLs0f4
+	rLCmkHMHGUOKDFGBMCSyZlFp2qXw++J3Whcu0AZWM9WafvunhtnOuGvfj/iSXg7m97k/JX
+	IE98Ukjxml0QJay26gx3Qo/HKuXQor/S+VxpLA7zycAkUjvQMChVQ+egsa8mNTmI/7ST64
+	9cpjR30crg9kNbyKef84j5u/TbML0mAPVNiXWUl8FmZH4uf3EL4HkwYco0F1+w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742220798;
+	s=2020e; t=1742220809;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mE08OqTuzsR2/w5zN3sp1pgCrBWoxVxCSSigXCl2u9E=;
-	b=MbNC3vgGngFVhLFUKUrXmi8zNYsFaZGhNyorF7fUqF+ezWuXa8/fev3ERWyjXFb7c+LZiB
-	uCaJqdTlsojiCMBw==
-To: Petr Mladek <pmladek@suse.com>, Donghyeok Choe <d7271.choe@samsung.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky
- <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org,
- takakura@valinux.co.jp, youngmin.nam@samsung.com, hajun.sung@samsung.com,
- seungh.jung@samsung.com, jh1012.choi@samsung.com
-Subject: Re: [PATCH] printk/panic: Add option allow non panic cpus logging
- to ringbuffer
-In-Reply-To: <Z9gnfSYnX3r0wwci@pathway.suse.cz>
-References: <CGME20250305044241epcas2p45a526aecf91f33b9ac253f561e909978@epcas2p4.samsung.com>
- <20250305044046.1249972-1-d7271.choe@samsung.com>
- <Z9gnfSYnX3r0wwci@pathway.suse.cz>
-Date: Mon, 17 Mar 2025 15:19:17 +0106
-Message-ID: <84senbpwxu.fsf@jogness.linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EtclTXwOSCMg5QOeKYXMx4COUFyfI8/aHYlSBvUgGug=;
+	b=Cr7WxoOe6k9vgW/OwIAFPJXvkXXDWam+Q5QI+HAYPBEKwogwSrCNLAFJK7AloA6dPmU0XD
+	lRnFLnNMiYbyqmAA==
+Date: Mon, 17 Mar 2025 15:13:25 +0100
+Subject: [PATCH] loop: Properly send KOBJ_CHANGED uevent for disk device
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250317-loop-uevent-changed-v1-1-cb29cb91b62d@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAAQu2GcC/32Nyw7CIBBFf6WZtRgeRYMr/8N0QWRqJ2mgAUpqG
+ v5drHtzV+fmPnZIGAkT3LodIhZKFHwDcergOVn/QkauMUguNVf8yuYQFrZiQZ/ZL+GYtepi+Ng
+ r5Apac4k40nasPobGE6Uc4vs4KeLr/t8rgjWh0dpKZXqp7zP5NcfgaTs7hKHW+gFGqDT0ugAAA
+ A==
+X-Change-ID: 20250307-loop-uevent-changed-aa3690f43e03
+To: Jens Axboe <axboe@kernel.dk>, Martijn Coenen <maco@android.com>, 
+ Alyssa Ross <hi@alyssa.is>
+Cc: John Ogness <john.ogness@linutronix.de>, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742220808; l=2095;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=Hpdcypjt0ZbNYUdHGey6gpoTcz3DMDSTuv0leQ5C0HE=;
+ b=ZiaehUy4QRjIUsV2+NmlNt3mlBEdxOFbu0yZU+R2EUOO8E9PCR+ziupoxLo1EqSseZc+g9f8L
+ XR1CUo90jEsDkbodaQktZN9z1XRXdwyXnqFtTUbzSN2/owDrtXrfL1g
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On 2025-03-17, Petr Mladek <pmladek@suse.com> wrote:
->> +#ifdef CONFIG_PRINTK_CALLER
->> +static int __init printk_debug_non_panic_cpus_setup(char *str)
->> +{
->> +	printk_debug_non_panic_cpus = true;
->> +	pr_info("printk: keep printk all cpu in panic.\n");
->
-> I would update the message:
->
-> 	pr_info("printk: allow messages from non-panic CPUs in panic()\n");
+The wording "uncork" in the code comment indicates that it is expected that
+the suppressed event instances are automatically sent after unsuppressing.
+This is not the case, they are discarded.
+In effect this means that no "changed" events are emitted on the device
+itself by default. On the other hand each discovered partition does trigger
+a "changed" event on the loop device itself. Therefore no event is emitted for
+devices without partitions.
 
-Note that every printk message in printk.c is automatically prepended
-with "printk: " (see #define pr_fmt(fmt) at the top of printk.c) so
-please just use:
+This leads to udev missing the device creation and prompting workarounds in
+userspace, see the linked util-linux/losetup bug.
 
-	pr_info("allow messages from non-panic CPUs in panic()\n");
+Explicitly emit the events and drop the confusingly worded comments.
 
-John Ogness
+Link: https://github.com/util-linux/util-linux/issues/2434
+Fixes: 3448914e8cc5 ("loop: Add LOOP_CONFIGURE ioctl")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ drivers/block/loop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index c05fe27a96b64f1f1ea3868510fdd0c7f4937f55..fbc67ff29e07c15f2e3b3e225a4a37df016fe9de 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -654,8 +654,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+ 
+ 	error = 0;
+ done:
+-	/* enable and uncork uevent now that we are done */
+ 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
++	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
+ 	return error;
+ 
+ out_err:
+@@ -1115,8 +1115,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+ 	if (partscan)
+ 		clear_bit(GD_SUPPRESS_PART_SCAN, &lo->lo_disk->state);
+ 
+-	/* enable and uncork uevent now that we are done */
+ 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
++	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
+ 
+ 	loop_global_unlock(lo, is_loop);
+ 	if (partscan)
+
+---
+base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+change-id: 20250307-loop-uevent-changed-aa3690f43e03
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
