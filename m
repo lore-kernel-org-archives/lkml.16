@@ -1,145 +1,173 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E14229B28;
-	Mon, 17 Mar 2025 10:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D794D229B28;
+	Mon, 17 Mar 2025 10:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742206207; cv=none; b=b3IW84+pjB5RqzxdrXj7351RZXPNT0LZj8LDOlh/8ww8YOi1YxO8mgMiItvyLk0RaPZDESTkzVLqI/u35+15xZhXJVhA5FC34JMeTy2V8OpuOuz119u6VqJ6Fx4f2QKs+n0aPPlO9dBLLOzbhF38gTe/D8A/Pt+cDUnXy6+qtTw=
+	t=1742206259; cv=none; b=pyCmnq05l+YgjfIaC82tLuZuE6jSxDW5OX+QmEGGb9vPIJ+61qc5dr5FDCK8FY/Zr1LKLSqnEMCShXP0vfMzgabSNwb12Fbaz0rUshb0N/zn9SQnzxyZWURHK9efx/HZo2bNGv6B4l3PwoQV3HHjASRGFJWLbHMXYGdFn2e7VLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742206207; c=relaxed/simple;
-	bh=3Szj5wF5ZbUz39jIYuPbndv9xsYb6DgjUSNqDwEMsNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TOladDsWe+S3BayPvB3c+GDlEHKDUaxnr04UN7rcXmSSHH0LVJvZaecWCzfBEyNLQcV2sFj5rb85o6ZjeRk1fFfUnWYwkooBjWbl6ru8Y+Va3olHXH4TObUPZrOLWwOISbzTryJ5+TdfqAkDMpwpngJaSbupFdsrZpk6kWrgiqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Dlo/SJqL; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1742206259; c=relaxed/simple;
+	bh=Wxs+z1Wms/rz3FZCDLd8lPCpX3EWYhXBgRFH5+EsDvI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zg5O6WoDgP/io9Gf7KRvu2uhDtjC5aXYUDFqWjiBNjnO/3syCoKyOx+obTGWXBb+6Km0hmp95cbK/ca1C2r/wqhvUg/vabroFxxuST6AdhQO8ghzb0fJF9yZpacfixuXR0QYQsESKaU/gSTzZ/ij+McAHPDC46nREN0OmakPFS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FMZvZPEV; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Dlo/SJqL"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id A721A1F9C6;
-	Mon, 17 Mar 2025 11:08:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1742206197;
-	bh=P8Ujcum6E5ZyBkLtNFz3d+3PSE+5NcMmFP0XdAoXkTA=; h=From:To:Subject;
-	b=Dlo/SJqLa+P+LMV5xO6L6O/4+Ulk9QlNrapzC/mGCPVv4EPNTRkIi7xFRujd8aXvV
-	 L6OogSWKuRxLz1pWGMTNDGYJmf6KVwqAsSweu+JlYnyeVDyGtQ/Td5tnRSrmOWNx5S
-	 1NODWvTgYktH8wGHQhNARQ3YppG3kjL8cyPX25UPJF1rixCB7JmlMIKGtvE1DV0hlC
-	 soj3iSTa4h28gbj4B9av3+Df1z3xswRFberuFnM2N0AImutvfUNrrBvjcw8ExgjCIC
-	 zV0CqPAC95+EusZxmOjzDwaMI+MUZvbQN413zE9DfhFCKYTWnNJrkOmXBaJVBYsnxH
-	 KRvz1a9quwdnQ==
-Date: Mon, 17 Mar 2025 11:08:56 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	soc@kernel.org, Andy Shevchenko <andy@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [RFC PATCH v1 0/2] platform: toradex: Add toradex embedded
- controller
-Message-ID: <20250317100856.GC17428@francesco-nb>
-References: <20250313144331.70591-1-francesco@dolcini.it>
- <4596db59-51fc-4497-9e94-670e9533e7aa@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMZvZPEV"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e573136107bso3864774276.3;
+        Mon, 17 Mar 2025 03:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742206257; x=1742811057; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=14ZjU9nXfljCfIeuLE7AsggRfd6lcojl1mTtLC8IsKk=;
+        b=FMZvZPEVl1B85+p0MGMQwQL3+E6s+OvtZ3cpqlAq+6lPZ+QqBs4/Bkn7+9LlB1bFTH
+         82G6UJd21KozlEbBQHRQi0VaDCV0zURxrVBA8AJl+6XDvAt+AKbys37pfx2g4EOaYtst
+         d6X/MeT/8k8dFvxr1VJOynAXBVnGMiB1Tt8nqBvyAxqpwTI94UVaqG/pDQOYpvW4xcsh
+         xzgnf/gNZDlGRpzzQdRhYhtXVPhekUCLL58tbBeePCjViHxWb7s2WQCm19s3hXnGt/0u
+         VtQX9QPb81eKL5su4bWhf5o880T2jAl02LQQMltsA2P4xa2LNgCsOaQQoaOmIl1njHHf
+         /HrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742206257; x=1742811057;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=14ZjU9nXfljCfIeuLE7AsggRfd6lcojl1mTtLC8IsKk=;
+        b=ARF3fMsTkkWnKNMED2rocymHfHc0x19RJrv3hNayVXwj0qlv+zAdBwJ3ejv5z2On6A
+         g0nU3OLAmd5mohb+xEWykBX8NnXlZFLcQ0c7tYTkffFOGr3OpwveDvF5wdPGKFoljM/8
+         Rs9XqtrKPIjUYP1nHcdRh0yDW8jeeEUt6ooYbr1ZcgH2KzYpHai7f2oPq8GNQLPWhSp7
+         KCfjI4dR5mQLHfp8Wcj0a9IqoEmUcpJRgyFKb3UpP6KHRA8mX5XFXCJTYC8ZH8UpbAfY
+         6gmWq38ewUUxhCoCAs/XA8zsTqdPG+YdsGRqsFNoF4Rxa3IopwK9+I2t4yO6cINO+lT2
+         pvUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUY+3BQGkDF854s5ISwEq4FgnCfIIw1cWujEQZyQWPM8uPlzV6HbWDyPUFKIoJe3/mwaB2rbpdsnTq3ptiP/NXX@vger.kernel.org, AJvYcCUmFpjZuka3y4/glUNliHT4RALii7qiyXw/CHWK7XWiJ1nX0EDhbVwRYBdT7qZUfyf3/9wu2k4Z@vger.kernel.org, AJvYcCV8vL2RuG6ssWkYEAUEVq0/yHQBc+s52JzKcnlwmNbpUJ9fExW0huH39v26x52+Di3NEUwoQCJJLZ2bs3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwklkZsw8UOLs0+WoLCi7Y/vGoLxT+oaYLik6SsYGkO1D4Usl3n
+	yJ9KeCB42SkEGX2KSryfSOGcJ9eMKDlnFlHNPo/vjnyVra4oGhaxfgH1N/eDkJQpxEAyYSuuwo7
+	E0LcVGdr18boCOdlVP1CmKn8BhGs=
+X-Gm-Gg: ASbGnct5h5QQhDKn9oTFX68O5o2YJVunOBdTQVLzyDziykII4eEcVRrpD7ExuYvlC8x
+	tQjvrNz/9cQJM38Ba9Tmkyq6I5mgBi7Pa9zTgeKWbCru3cBw/pkfs5ODYLO3FigTVkNM73lqKii
+	s8iHaPkJ0ZCDorhG+CAriMbmdiMwVWqAZomodCwkLJqg==
+X-Google-Smtp-Source: AGHT+IFeEwX2XBlKWWzrkEKnBTAYiIEeloN1LG9w0cpntS5lTgsKiw5wSHUPI3GA92GyKQZHSvhzhxajCnV/EuAnk2I=
+X-Received: by 2002:a05:6902:2747:b0:e5a:c5d6:3948 with SMTP id
+ 3f1490d57ef6-e63f5cf0c16mr13681061276.0.1742206256657; Mon, 17 Mar 2025
+ 03:10:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4596db59-51fc-4497-9e94-670e9533e7aa@redhat.com>
+References: <20250312-b4-ovpn-v23-3-76066bc0a30c@openvpn.net>
+ <20250317060947.2368390-1-dqfext@gmail.com> <f4c9a29f-a5c6-464a-a659-c7ffeaf123c1@openvpn.net>
+ <CALW65jZe3JQGNcWsZtqU-B4-V-JZ6ocninxvoqMGeusMaU7C=A@mail.gmail.com> <0d8a8602-2db4-4c19-ab1c-51efef42cef6@openvpn.net>
+In-Reply-To: <0d8a8602-2db4-4c19-ab1c-51efef42cef6@openvpn.net>
+From: Qingfang Deng <dqfext@gmail.com>
+Date: Mon, 17 Mar 2025 18:10:46 +0800
+X-Gm-Features: AQ5f1JrZOv5SDMKrcUIEXFo9D0GgKi-eZeGIu0RavrSG4UmNhD3vkPc4aOtmKg8
+Message-ID: <CALW65jYaMBuMqzCFYwUJfLBg8+epQEjCg0MOpssGCwXqxbFP9w@mail.gmail.com>
+Subject: Re: [PATCH net-next v23 03/23] ovpn: add basic interface
+ creation/destruction/management routines
+To: Antonio Quartulli <antonio@openvpn.net>
+Cc: andrew+netdev@lunn.ch, donald.hunter@gmail.com, edumazet@google.com, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	ryazanov.s.a@gmail.com, sd@queasysnail.net, shaw.leon@gmail.com, 
+	shuah@kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Hans,
-first thanks for the feedback.
+On Mon, Mar 17, 2025 at 6:00=E2=80=AFPM Antonio Quartulli <antonio@openvpn.=
+net> wrote:
+>
+> On 17/03/2025 10:41, Qingfang Deng wrote:
+> > Hi Antonio,
+> >
+> > On Mon, Mar 17, 2025 at 5:23=E2=80=AFPM Antonio Quartulli <antonio@open=
+vpn.net> wrote:
+> >>>> +static void ovpn_setup(struct net_device *dev)
+> >>>> +{
+> >>>> +    netdev_features_t feat =3D NETIF_F_SG | NETIF_F_HW_CSUM | NETIF=
+_F_RXCSUM |
+> >>>
+> >>> Do not advertise NETIF_F_HW_CSUM or NETIF_F_RXCSUM, as TX/RX checksum=
+ is
+> >>> not handled in hardware.
+> >>
+> >> The idea behind these flags was that the OpenVPN protocol will take ca=
+re
+> >> of authenticating packets, thus substituting what the CSUM would do he=
+re.
+> >> For this I wanted to avoid the stack to spend time computing the CSUM =
+in
+> >> software.
+> >
+> > For the RX part (NETIF_F_RXCSUM), you might be correct, but in patch
+> > 08 you wrote:
+> >> /* we can't guarantee the packet wasn't corrupted before entering the
+> >> * VPN, therefore we give other layers a chance to check that
+> >> */
+> >> skb->ip_summed =3D CHECKSUM_NONE;
+>
+> Right. This was the result after a lengthy discussion with Sabrina.
+> Despite authenticating what enters the tunnel, we indeed concluded it is
+> better to let the stack verify that what entered was not corrupted.
+>
+> >
+> > So NETIF_F_RXCSUM has no effect.
+>
+> Does it mean I can drop NETIF_F_RXCSUM and also the line
+>
+> skb->ip_summed =3D CHECKSUM_NONE;
+>
+> at the same time?
 
-On Thu, Mar 13, 2025 at 04:08:14PM +0100, Hans de Goede wrote:
-> On 13-Mar-25 3:43 PM, Francesco Dolcini wrote:
-> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
-> > 
-> > This series adds support for the Toradex Embedded Controller, currently used
-> > on Toradex SMARC iMX95 and iMX8MP boards, with more to come in the future.
-> > 
-> > The EC provides board power-off, reset and GPIO expander functionalities.
-> > 
-> > Sending it as an RFC to gather initial feedback on it before investing more
-> > time in testing and adding the remaining functionalities, with that said both
-> > the code and the binding are in condition to be wholly reviewed.
-> > 
-> > Emanuele Ghidoli (2):
-> >   dt-bindings: firmware: add toradex,embedded-controller
-> >   platform: toradex: add preliminary support for Embedded Controller
-> 
-> Thank you for your patches.
-> 
-> 2 remarks, as Andy already hinted at drivers/platform/arm64/ likely
-> is a better location for this.
+I don't think so. skb->ip_summed might have been set to
+CHECKSUM_UNNECESSARY on the lower layer with UDP/TCP RX checksum.
 
-Ack.
-
-This driver is not going to be specific of ARM64, but today we have only
-ARM64 systems that would benefit from it. We might as well use it on a
-RISCV based SoM in a few years.
-
-With that said we'll move it there, we can always move it out if
-anything changes on this regard.
-
-> The reason for having ARM EC drivers there is that these are for
-> x86-pc-like laptops with all the typical laptops bells and whistles
-> like EC handled battery charging limits / spk/mic mute-leds built
-> into keys on the keyboards. Special key handling (like mute, kbd
-> backlight) done by the EC etc.
-> 
-> Since all the experience for dealing with those laptop-esque features
-> and exporting them to userspace with a consistent userspace API is
-> in hands of the maintainers of drivers/platform/x86 it was decided to
-> add a new drivers/platform/arm64 directory maintained by the same folks.
-> 
-> If this EC driver's only functionality is: "The EC provides board
-> power-off, reset and GPIO expander functionalities." I'm not sure
-> that drivers/platform/arm64 is the best place for this.
-
-The directory decision / architecture was mainly inspired by
-`drivers/platform/cznic`.
-
-This EC is used on a SMARC SoM [1][2], so we are not talking about a
-laptop nor a device with a keyboard.
-
-But we do have a power button, a LID switch, some handling and
-coordination of low power mode and more.
-This device is between the SOC, the PMIC, and various IOs used for
-low-power, power-up/down, boot configuration (selecting the boot
-device), ...
-
-The short term goal is just the 2 basic functionalities mentioned in
-the cover letter available to the driver:
- - power/reset (already implemented)
- - GPIO (working on it as we speak)
-
-Starting small, and adding features when/if required.
-
-> Also you mention GPIO expander, but that does not seem to be
-> supported yet?
-Correct, coming soon.
-
-> 1. A drivers/mfd/ MFD driver with the regmap stuff,
->    registering "board-reset" and "gpio" cells
-
-So, we considered the idea of going with an MFD driver, but looking at
-drivers/platform/cznic, that is doing something relatively close to what
-we are doing (just more feature rich, as of now), drivers/platform/
-seemed a better fit.
-
-I am not 100% sure what's Andy opinion on this topic, from what I can
-understand his concerns are about the toradex directory (that we'll get
-rid of), not the drivers/platform/ parent you are concerned about.
-
-Francesco
-
+>
+> >
+> > For the TX part (NETIF_F_HW_CSUM) however, I believe wireguard made
+> > the same mistake.
+> > Your code both contains the pattern:
+> >
+> > if (skb->ip_summed =3D=3D CHECKSUM_PARTIAL && skb_checksum_help(skb)) /=
+/ ...
+> >
+> > NETIF_F_HW_CSUM causes the upper layers to send packets with
+> > CHECKSUM_PARTIAL, assuming hardware offload will complete the
+> > checksum, but if skb_checksum_help(skb) is invoked, the checksum is
+> > still computed in software. This means there's no real benefit unless
+> > there's an actual hardware offload mechanism.
+>
+> Got it.
+> Then as per your suggestion I can drop both NETIF_F_HW_CSUM and the
+> if/call to skb_checksum_help().
+>
+> Regards,
+>
+> >
+> > +Cc: zx2c4
+> >
+> >>
+> >> I believe wireguard sets those flags for the same reason.
+> >>
+> >> Does it make sense to you?
+> >>
+> >>>
+> >>>> +                             NETIF_F_GSO | NETIF_F_GSO_SOFTWARE |
+> >>>> +                             NETIF_F_HIGHDMA;
+> >>
+> >>
+> >> Regards,
+> >>
+> >> --
+> >> Antonio Quartulli
+> >> OpenVPN Inc.
+> >>
+>
+> --
+> Antonio Quartulli
+> OpenVPN Inc.
+>
