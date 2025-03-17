@@ -1,183 +1,130 @@
-Received: from mailgate02.uberspace.is (mailgate02.uberspace.is [185.26.156.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F83B15B54A
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 22:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7960200111;
+	Mon, 17 Mar 2025 22:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742251812; cv=none; b=OL/6LnSHQn8VdWuBBmo735E29S8a46bIOI0s6VAf96Gp01HL9I0KT9EZHqY1MY1UTcx/Np/Tpkyr1S73MjuwBA8NA0uCGYm5iEtM8dU4aV2rVArHzjYsn2r/FQXKOKpQg/WRFd2z4ZZUVdNVIu5AOkSi8zJ533bL45n5cEGJSDs=
+	t=1742251880; cv=none; b=GRSxHkic7/naYFpnw3+YuWltdnJL/paZJTV/+AfnFqhAzG09bD0/I8f4QmR1EL2DfPWYBrIAKBHIvZaX/oayNk/63A8uZXOQY6mmHc3aR5Tet4zFdFAlQAUhTOGoiNTlSv72MtEi3mMH1GMzyga2e3L6IphzURPaLBZQDWUWMFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742251812; c=relaxed/simple;
-	bh=fc3WG6UFW0l4VdaDXLqPFhzUts1S6Myw6fnyGAl1OMA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gNm1hLs5oJxr4GINr2b+jtzyKU1aLplRKMbLGJRKK2Y/igGPGd3kHlPJd0AbX0Px0p8/HXuKBzI/afS2tdGF//OVEG/MIJtakjiIvTP5LHHyJDfsRKetfTIoIOwd9VpDjMvEA4I7hP4/MA9myycrC029UKpF/u3a8RJc5DvP+hY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sandropischinger.de; spf=pass smtp.mailfrom=sandropischinger.de; dkim=pass (4096-bit key) header.d=sandropischinger.de header.i=@sandropischinger.de header.b=LrlPBbb/; arc=none smtp.client-ip=185.26.156.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sandropischinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sandropischinger.de
+	s=arc-20240116; t=1742251880; c=relaxed/simple;
+	bh=ty8COmLCYXzrSs2VKimK+5lRrGoXtwOi0ut2Q2ZP7T8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=LoeEU/whTqRLO3BsLb1bRyctg31iIGwQziSL+CWnDaBgDD0lA6nqkTLOhY35ITprZlquwzpb66l9x+amri2yV1GBZWF9uQg1MROr8yJ6CbKYKmMof4q/ydD1jLb0HUAe2wIu6RvduKHUkHmbhvKGoiHdqroLDbPzWTkpKRTrhvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jJVLgAVK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u/tYFJ7a; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=sandropischinger.de header.i=@sandropischinger.de header.b="LrlPBbb/"
-Received: from daphnis.uberspace.de (daphnis.uberspace.de [185.26.156.151])
-	by mailgate02.uberspace.is (Postfix) with ESMTPS id 8AC38181449
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 23:43:52 +0100 (CET)
-Received: (qmail 9731 invoked by uid 989); 17 Mar 2025 22:43:52 -0000
-Authentication-Results: daphnis.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by daphnis.uberspace.de (Haraka/3.0.1) with ESMTPSA; Mon, 17 Mar 2025 23:43:52 +0100
-From: Sandro Pischinger <kernel@sandropischinger.de>
-To: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sandro Pischinger <kernel@sandropischinger.de>
-Subject: [bug report, net-next] lo.disable_ipv6=1 allows ::1 dst packet to take a default route
-Date: Mon, 17 Mar 2025 23:43:00 +0100
-Message-ID: <20250317224300.25985-1-kernel@sandropischinger.de>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jJVLgAVK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u/tYFJ7a"
+Date: Mon, 17 Mar 2025 22:51:01 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742251869;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RwvxwfzHTsd8qiCIg1rWmUI1koniPlKx5MCWSN0KrLw=;
+	b=jJVLgAVKycJwoINK69QkBolDQJ3A4s+gEym6YUVZ/bPoc+qKN+pnv+LRScqOfN4EtaTC4Z
+	ANdDIU7KONNBtuYkNGaYB2+ttVFdGSZ0KcayS0qfEw4T8gL2kOkdF6NAO1AtYaKQqZ/qFA
+	ymF2ROyOMNr7VKgeGsUZzw61sCoh+uuukF6aw0A7k+Q1jgvTVA5ohrCYAFWx4+w70RZSt1
+	bFNDFvAB0Al9wmewHiOJEOpWMCtC6cuJBgLFzRzONfAWtxdT0c4Uxzs6+ATRnttahxtWkY
+	O/KNPJ4/GadZojhbU2Ha1ys1CuoBEOPOJpQLIxh5otu/V1vPagZjdddT+22QOA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742251869;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RwvxwfzHTsd8qiCIg1rWmUI1koniPlKx5MCWSN0KrLw=;
+	b=u/tYFJ7ajPdy8Ad2xE6GOClOmh+doZlk6G+Bw+fQR7bErCk+yYMCMq61Z/hi6RBe8jos5l
+	Zj0OoCCAzi0J8eCQ==
+From: "tip-bot2 for Namhyung Kim" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: perf/urgent] perf/x86: Check data address for IBS software filter
+Cc: Matteo Rizzo <matteorizzo@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250317163755.1842589-1-namhyung@kernel.org>
+References: <20250317163755.1842589-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: +
-X-Rspamd-Report: MID_CONTAINS_FROM(1) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
-X-Rspamd-Score: 1.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=sandropischinger.de; s=uberspace;
-	h=from:to:cc:subject:date;
-	bh=fc3WG6UFW0l4VdaDXLqPFhzUts1S6Myw6fnyGAl1OMA=;
-	b=LrlPBbb/vaFOGJVms/tE4DkxaNf914t/C+Uv+AoAgBzT1oTsTrowTO34DMnlV7BZtn0bqgk4RW
-	DH+M5Ui5i544Oq8mEa91ZuN6vZrb6fWZBgSJVqGAQzv2bIPrPb8YcpRwGcsXEjAsA0pPjoAER4GU
-	1Y5FM8SIxl7XE7CKyEScJvC84S4pAJL5tIlzfBSVprMagTItI1O4iexve6fTcBRzeK89Js4ZPEZq
-	hmBg5Z2cvm2EU038EXtseFpjTkmO+wl1zZsrDZW98NbXuKxnlzeEobHeCdWXpfkoKhl0dKIiV3rp
-	NOe8uiJC3+3FIr1NwRjRuVEOVnlKEU08EP0eE/lVAEbX7Je3sFXDFsrG2LALBvkUsLiZj00wIQmQ
-	QVjAsMphQfMstP9OjLFvA+9FARsOBx6WdRTLZDiL9eoZ56LITZcD+roJWr621gUow8BecAkSGLJB
-	zzkE+0QwqoCx97Lvn2exPqx1o4i/k8y69AnfiQv2Flu+wQF6yTLZoAgS3HvVQ+sUxUO6hccOAdnb
-	4JDSqQnWX8MobQz1+3rwpnUigHivjPamV8q5dnI0jgPXLYgxF2YTGnclkaEiReBNbMPpG+zR6W40
-	9vl7/Fzq0KSxXjndXvHLL7fO3+LQB3pmJGGV8Hqe+vaHy7xVFPypZD7/k5iQXbAt1S+tnLJ7Wfgg
-	0=
+Message-ID: <174225186227.14745.16631399663046111624.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hello all,
+The following commit has been merged into the perf/urgent branch of tip:
 
-I stumbled upon an issue when disabling ipv6 just for the loopback device.
-Afer doing so, sending a packet with destination ::1 will follow an available
-default route, if exists, e.g. "default via fe80::2 dev ens3". This seems
-to contradict RFC4291 2.5.3, which states that loopback packets must never leave
-the node.
+Commit-ID:     65a99264f5e5a2bcc8c905f7b2d633e8991672ac
+Gitweb:        https://git.kernel.org/tip/65a99264f5e5a2bcc8c905f7b2d633e8991672ac
+Author:        Namhyung Kim <namhyung@kernel.org>
+AuthorDate:    Mon, 17 Mar 2025 09:37:55 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 17 Mar 2025 23:37:31 +01:00
 
-Using mainline kernel v6.14-rc7, configured with
-x86_64_defconfig and kvm_guest.config on archlinux (in qemu):
+perf/x86: Check data address for IBS software filter
 
-$ ip -6 r
-fe80::/64 dev ens3 proto kernel metric 256 pref medium
-fec0::/64 dev ens3 proto ra metric 1002 pref medium
-multicast ff00::/8 dev ens3 proto kernel metric 256 pref medium
-default via fe80::2 dev ens3 proto ra metric 1002 pref medium
+The IBS software filter is filtering kernel samples for regular users in
+the PMI handler.  It checks the instruction address in the IBS register to
+determine if it was in kernel mode or not.
 
-$ ip -6 r get ::1
-local ::1 dev lo proto kernel src ::1 metric 0 pref medium
+But it turns out that it's possible to report a kernel data address even
+if the instruction address belongs to user-space.  Matteo Rizzo
+found that when an instruction raises an exception, IBS can report some
+kernel data addresses like IDT while holding the faulting instruction's
+RIP.  To prevent an information leak, it should double check if the data
+address in PERF_SAMPLE_DATA is in the kernel space as well.
 
-$ sysctl -w net.ipv6.conf.lo.disable_ipv6=1
-net.ipv6.conf.lo.disable_ipv6 = 1
+[ mingo: Clarified the changelog ]
 
-$ ip -6 r get ::1
-::1 via fe80::2 dev ens3 proto ra src fe80::c9cb:505e:82a2:8ca7 metric 1002 pref medium
-
-When observing trace events `fib6_table_lookup` for ping ::1, then we see that the ens3 device is selected
-for the case when ipv6 is disabled for lo:
-== lo.disable_ipv6=0
-            ping-356   [000] .....   292.199930: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-356   [000] .....   292.199932: fib6_table_lookup:    table 254 oif 0 iif 1 proto 17 ::/56460 -> ::1/1025 flowlabel 0 tos 0 scope 0 flags 0 ==> dev lo gw :: err 0
-            ping-356   [000] .....   292.200176: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-356   [000] .....   292.200176: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev lo gw :: err 0
-            ping-356   [000] ..s2.   292.200187: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-356   [000] ..s2.   292.200187: fib6_table_lookup:    table 254 oif 1 iif 1 proto 58 ::1/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev lo gw :: err 0
-            ping-356   [000] .....   293.255592: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-356   [000] .....   293.255594: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev lo gw :: err 0
-            ping-356   [000] ..s2.   293.255606: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-356   [000] ..s2.   293.255606: fib6_table_lookup:    table 254 oif 1 iif 1 proto 58 ::1/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev lo gw :: err 0
-            ping-356   [000] .....   294.279429: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-356   [000] .....   294.279430: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev lo gw :: err 0
-            ping-356   [000] ..s2.   294.279441: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-356   [000] ..s2.   294.279441: fib6_table_lookup:    table 254 oif 1 iif 1 proto 58 ::1/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev lo gw :: err 0
-            ping-356   [000] .....   295.303440: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-356   [000] .....   295.303442: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev lo gw :: err 0
-            ping-356   [000] ..s2.   295.303451: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-356   [000] ..s2.   295.303452: fib6_table_lookup:    table 254 oif 1 iif 1 proto 58 ::1/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev lo gw :: err 0
-
-== lo.disable_ipv6=1
-            ping-363   [000] .....   358.104211: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-363   [000] .....   358.104213: fib6_table_lookup:    table 254 oif 0 iif 1 proto 17 ::/37566 -> ::1/1025 flowlabel 0 tos 0 scope 0 flags 0 ==> dev ens3 gw fe80::2 err 0
-            ping-363   [000] .....   358.104453: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-363   [000] .....   358.104453: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev ens3 gw fe80::2 err 0
-            ping-363   [000] .....   359.111414: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-363   [000] .....   359.111415: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev ens3 gw fe80::2 err 0
-            ping-363   [000] .....   360.135436: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-363   [000] .....   360.135437: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev ens3 gw fe80::2 err 0
-            ping-363   [000] .....   361.159595: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-363   [000] .....   361.159597: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev ens3 gw fe80::2 err 0
-            ping-363   [000] .....   362.183614: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-363   [000] .....   362.183616: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev ens3 gw fe80::2 err 0
-            ping-363   [000] .....   363.207450: fib6_table_lookup:    (ffffffff84041fd4)
-            ping-363   [000] .....   363.207452: fib6_table_lookup:    table 254 oif 0 iif 1 proto 58 ::/0 -> ::1/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev ens3 gw fe80::2 err 0
-     ksoftirqd/0-16    [000] ..s..   363.527470: fib6_table_lookup:    (ffffffff84041fd4)
-     ksoftirqd/0-16    [000] ..s..   363.527471: fib6_table_lookup:    table 254 oif 0 iif 2 proto 58 fe80::2/0 -> fe80::c9cb:505e:82a2:8ca7/0 flowlabel 0 tos 0 scope 0 flags 0 ==> dev ens3 gw :: err 0
-
-Intuitively I would expect `ping ::1` to fail with `ping: connect: Network is unreachable`,
-as it does if there's no default route configured. However if there is one,
-then ping just continues trying to send packets via the matching default route.
-
-$ ping ::1
-PING ::1 (::1) 56 data bytes
-^C
-    ::1 ping statistics ---
-11 packets transmitted, 0 received, 100% packet loss, time 10230ms
-
-Searching through the netdev mailing list archive, I found a somewaht related discussion,
-where special handling for ::1 was mentioned. In particular one comment by Stephen Hemminger was:
-as found in
-  https://lore.kernel.org/netdev/20101216132812.2d7fd885@nehalam/
-  Message-ID: <20101216132812.2d7fd885@nehalam> :
-
-> When loopback device is being brought down, then keep the route table
-> entries because they are special. The entries in the local table for
-> linklocal routes and ::1 address should not be purged.
-
-I don't understand enough of kernel IPv6 networking in order to
-known if this is (still) the case today.
-
-Is this behavior intended? If not, here's my draft patch for this, though
-I'm not familiar with the codebase and cannot foresee any side-effects.
-
-Best regards,
-Sandro Pischinger
-
-Signed-off-by: Sandro Pischinger <kernel@sandropischinger.de>
+Suggested-by: Matteo Rizzo <matteorizzo@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250317163755.1842589-1-namhyung@kernel.org
 ---
- net/ipv6/route.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/events/amd/ibs.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-index fb2e99a56529..b27844de3baa 100644
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -2193,6 +2193,12 @@ int fib6_table_lookup(struct net *net, struct fib6_table *table, int oif,
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index e7a8b87..c465005 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -1128,8 +1128,13 @@ fail:
+ 		regs.flags |= PERF_EFLAGS_EXACT;
+ 	}
  
- redo_rt6_select:
- 	rt6_select(net, fn, oif, res, strict);
-+	if (ipv6_addr_loopback(&fl6->daddr)) {
-+		struct fib6_info *rt = res->f6i;
++	if (perf_ibs == &perf_ibs_op)
++		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
 +
-+		if (!rt || !(rt->fib6_flags & RTF_LOCAL))
-+			res->f6i = net->ipv6.fib6_null_entry;
-+	}
- 	if (res->f6i == net->ipv6.fib6_null_entry) {
- 		fn = fib6_backtrack(fn, &fl6->saddr);
- 		if (fn)
--- 
-2.48.1
-
+ 	if ((event->attr.config2 & IBS_SW_FILTER_MASK) &&
+-	    perf_exclude_event(event, &regs)) {
++	    (perf_exclude_event(event, &regs) ||
++	     ((data.sample_flags & PERF_SAMPLE_ADDR) &&
++	      event->attr.exclude_kernel && kernel_ip(data.addr)))) {
+ 		throttle = perf_event_account_interrupt(event);
+ 		goto out;
+ 	}
+@@ -1144,9 +1149,6 @@ fail:
+ 		perf_sample_save_raw_data(&data, event, &raw);
+ 	}
+ 
+-	if (perf_ibs == &perf_ibs_op)
+-		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
+-
+ 	/*
+ 	 * rip recorded by IbsOpRip will not be consistent with rsp and rbp
+ 	 * recorded as part of interrupt regs. Thus we need to use rip from
