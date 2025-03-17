@@ -1,81 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C156B1A8412;
-	Mon, 17 Mar 2025 20:59:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3046118A6B5;
+	Mon, 17 Mar 2025 21:00:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742245199; cv=none; b=Z3eU70m2FjHhpN5OWZNu5q0LLxCq0GjgNOIaykzRahamBH7koY1RSojKTt9DwgJMz3kWftuzeg7jItcgevH1sIH3qW8FvTfsIAi+/0H65HODS/Cfr6ExkyujOjNfkHETlVIASYvl1WfCnXF//NdeY9m3qSs+MKgzxHLE4JPe8OI=
+	t=1742245208; cv=none; b=G2FKvgCtXeQ6+KjTXPbFG0OgAAJiQQyPVHHh2LG6oUoQPkn+GpHbKPWwumHVMhzl2xBklFqm4eALA6u8qpYZiN4Pr/mTHbfWijZyGUZrEVLrdvQSHoSOVCgkZSbBXv/yi3l3ggCJTuXy1BUjtETlu9uOlXhNO5FUk97KHAOOCjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742245199; c=relaxed/simple;
-	bh=aUbH8+3Y+Q9R5IdXXRjoFdSG/+KV8wXsIDPkDCS+rFE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=nPtu9oUi1k7EEr1f1IjciD6qFlXFryUY3BmCgnWByoQzudzRAjxCjwAE/q0N175hWCS/n9VU4H337HR05p3LwtIGBz+p5+vJfoFVkIgk3gQJGAo931UsCK9QCr2uCwY8qA8XoBo/V2wC0rS3B4lV7bZ1fcUiH6k6OuZ5vEHJAjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6nrHaqt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742245208; c=relaxed/simple;
+	bh=LZezTtfBxnU1U9NfWyM3dhrEClwTdALOaDfardOQj5A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o2r7RVwvp1XjbQ17G5vTUBlzYzFDG3TyyiQ/j/scDJ6ZI8Ob6sve7dH6ljR9N9B2GGqoTNeLOLbZ7xNThprTStAUxj9oyC2rhRP57zoylGMPCGlksBKQP0tN/fx0yaKtnERt6EdHXfJG1Wy/rJIylQIoYPA9vFd2wXlbjgDGGuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvWrOsCB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6nrHaqt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31733C4CEE3;
-	Mon, 17 Mar 2025 20:59:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvWrOsCB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20FE1C4CEE3;
+	Mon, 17 Mar 2025 21:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742245199;
-	bh=aUbH8+3Y+Q9R5IdXXRjoFdSG/+KV8wXsIDPkDCS+rFE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=L6nrHaqt78Sl+rLpcfpK8aQOePl0UQpOQcBdZbrq7uWoZOn6HwjguIKG3nRiRhWfD
-	 Mb+KjqFjEvLeHBj8yAF+fBkq0Jg3WQ3oHn30hptmWhbGM/+5oyRk9o10OdtUHgU8NR
-	 2VFTEWGT386hF6nu4dzZdqUCef/BUw3TI9nH3Zh4Ici18qtQzNGVd767Tsec0wwpAM
-	 lWI5oSpl4+/vZfu1wfFWPYbzLBhegNw1pOHmS9M6vGUXlsKB184gpx1xE5+rp2UKA3
-	 YZMpPMGkrSkYTLWYNT2vRJvmG1bG7zT91JyTMYH3EDPR2PorDo2VkFxvN71Cx4smaB
-	 ZMx6vlIrGlNbw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B0001380DBE7;
-	Mon, 17 Mar 2025 21:00:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1742245207;
+	bh=LZezTtfBxnU1U9NfWyM3dhrEClwTdALOaDfardOQj5A=;
+	h=From:Subject:Date:To:Cc:From;
+	b=FvWrOsCBkG2b5WR2fYek1NqWkkVZeh+rYJX6AeSmHWk2tmn7v/K7ndRKUKBUgiKhv
+	 YC1SGFLoSjILCx7RTfq9ETrW7gy/rbq+SI9pTZXJgq1FOyTYPobw2DpYKGb6bCl0MQ
+	 wQnINJIS8OQKFNfA+MXBvQkVt4Mk4VLuG+EJPW2dM5JOkUQX3jhal8cIj5xt9eFzYa
+	 nuQzBjcU0Ddp4j+oQuMPgVaapUUdh/yU8dJH4Sx3c71HsNF9rnViEczZ4ux/Er50ju
+	 73YOoGDvmZ05WwNlNjUfznC039L+7Ns5sDBHGCk/E/53t/5wl0YnD7RYQl4abzP4vR
+	 NVIziORlPmI0g==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH RFC 0/9] nfs/sunrpc: stop holding netns references in
+ client-side NFS and RPC objects
+Date: Mon, 17 Mar 2025 16:59:52 -0400
+Message-Id: <20250317-rpc-shutdown-v1-0-85ba8e20b75d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v2 0/2] bpftool: Using the right format specifiers
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174224523451.3912314.17317997494330739760.git-patchwork-notify@kernel.org>
-Date: Mon, 17 Mar 2025 21:00:34 +0000
-References: <20250311112809.81901-1-jiayuan.chen@linux.dev>
-In-Reply-To: <20250311112809.81901-1-jiayuan.chen@linux.dev>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, qmo@kernel.org, daniel@iogearbox.net,
- linux-kernel@vger.kernel.org, ast@kernel.org, davem@davemloft.net,
- kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, mrpre@163.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEiN2GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDY0Nz3aKCZN3ijNKSlPzyPF1DU0PLxMTkFMOUJGMloJaCotS0zAqwcdF
+ KQW7OSrG1tQDviDdvYwAAAA==
+X-Change-ID: 20250317-rpc-shutdown-1519aacd1db3
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>, 
+ Benjamin Coddington <bcodding@redhat.com>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3362; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=LZezTtfBxnU1U9NfWyM3dhrEClwTdALOaDfardOQj5A=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn2I1UV12EFnRz5ZoqCJ5wmQaOhCJwRqarq0CBX
+ wL5904V+raJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ9iNVAAKCRAADmhBGVaC
+ Fb24D/4/Rd/JgmewcD9iQ9XGk04mlfYwMRmp6jXhl5sIQxFvOAnNpvPXNFv5GLtLFYMJZ4ffxo5
+ FxJHCtrRLFOlETo4BW2uJsyLwvC696QF7txzvjnpaRg8MGKQ3oV6MLVVOtTa53cnMT1LuuI65vK
+ b3hqHJulaiskG+QxDY/F+2y+mQ2mXdTW7ttUxXiDGsGOhmXhKPbqbMjHrDux+DHIvcTuMCjHhpk
+ CJJmcJkxDmeI+Ot2H0VE6YPQyTgcM2sKtuDJgJOSccJg9RGXD72NI0kLGu3H1yT+tzopB+JfMnZ
+ rq4ihVXj7XZlNf8FC1uH4O2++af45lsfrhCdpfH6hO7U4QPvt51ztomBfrn9VR2NssNoFnMCoZl
+ fbvKtyQz11DK8CBMMVmZyFQkY2FWvWZ2DYS4E+vbsOXDZb4bq1Blnkhft3mkd7Ez14EJgLXRtkU
+ mn+tf4jv+PgNOvpoypggM6o/Oc4/c1g0pacoXfd4B01syRklZg39omJ3lJJD1wIHujGUOTkQCA6
+ FU/n4b4GBh28pIsbKXhMNnwrShtheHYo0EMf2e4qflBrxU7t+xIHcsQ5HL4pscVbh+GMCVSeaEQ
+ 2ZEazcsram4DKqhv+ZDSDt/ZVocLnf4ZOZF/hsQhWzCzFZNnxfjFjsDFY3RzknnTi/Sb0Qia4KL
+ fcBuMNJbZh9h+bA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Hello:
+We have a long-standing problem with containers that have NFS mounts in
+them. Best practice is to unmount gracefully, of course, but sometimes
+containers just spontaneously die (e.g. SIGSEGV in the init task in the
+container). When that happens the orchestrator will see that all of the
+tasks are dead, and will detach the mount namespace and kill off the
+network connection.
 
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+If there are RPCs in flight at the time, the rpc_clnt will try to
+retransmit them indefinitely, but there is no hope of them ever
+contacting the server since nothing in userland can reach the netns
+at that point to fix anything.
 
-On Tue, 11 Mar 2025 19:28:07 +0800 you wrote:
-> This patch adds the -Wformat-signedness compiler flag to detect and
-> prevent format string errors, where signed or unsigned types are
-> mismatched with format specifiers. Additionally, it fixes some format
-> string errors that were not fully addressed by the previous patch [1].
-> 
-> [1] https://lore.kernel.org/bpf/20250207123706.727928-1-mrpre@163.com/T/#u
-> 
-> [...]
+This patchset takes the approach of changing various nfs client and
+sunrpc objects to not hold a netns reference. Instead, when a nfs_net or
+sunrpc_net is exiting, all nfs_server, nfs_client and rpc_clnt objects
+associated with it are shut down, and the pre_exit functions block
+until they are gone.
 
-Here is the summary with links:
-  - [bpf-next,v2,1/2] bpftool: Add -Wformat-signedness flag to detect format errors
-    https://git.kernel.org/bpf/bpf-next/c/8d86767be9c9
-  - [bpf-next,v2,2/2] bpftool: Using the right format specifiers
-    https://git.kernel.org/bpf/bpf-next/c/3775be3417cc
+With this approach, when the last userland task in the container exits,
+the NFS and RPC clients get cleaned up automatically. As a bonus, this
+fixes another bug with the gssproxy RPC client that causes net namespace
+leaks in any container where it runs (details in the patch
+descriptions).
 
-You are awesome, thank you!
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (9):
+      sunrpc: transplant shutdown_client() to sunrpc module
+      lockd: add a helper to shut down rpc_clnt in nlm_host
+      lockd: don't #include debug.h from lockd.h
+      nfs: transplant nfs_server shutdown into a helper function
+      nfs: don't hold a reference to struct net in struct nfs_client
+      auth_gss: shut down gssproxy rpc_clnt in net pre_exit
+      auth_gss: don't hold a net reference in gss_auth
+      sunrpc: don't hold a struct net reference in rpc_xprt
+      sunrpc: don't upgrade passive net reference in xs_create_sock
+
+ fs/lockd/clnt4xdr.c                |  1 +
+ fs/lockd/clntlock.c                |  1 +
+ fs/lockd/clntproc.c                |  1 +
+ fs/lockd/clntxdr.c                 |  1 +
+ fs/lockd/host.c                    |  8 ++++++++
+ fs/lockd/mon.c                     |  1 +
+ fs/lockd/svc.c                     |  1 +
+ fs/lockd/svc4proc.c                |  1 +
+ fs/lockd/svclock.c                 |  1 +
+ fs/lockd/svcproc.c                 |  1 +
+ fs/lockd/svcsubs.c                 |  1 +
+ fs/nfs/client.c                    |  6 ++++--
+ fs/nfs/inode.c                     | 28 ++++++++++++++++++++++++++++
+ fs/nfs/internal.h                  |  1 +
+ fs/nfs/super.c                     | 18 ++++++++++++++++++
+ fs/nfs/sysfs.c                     | 27 ++-------------------------
+ include/linux/lockd/lockd.h        |  2 +-
+ include/linux/sunrpc/sched.h       |  1 +
+ include/linux/sunrpc/svcauth_gss.h |  1 +
+ include/linux/sunrpc/xprt.h        |  1 -
+ net/sunrpc/auth_gss/auth_gss.c     | 15 ++++++++-------
+ net/sunrpc/auth_gss/svcauth_gss.c  |  7 ++++++-
+ net/sunrpc/clnt.c                  | 14 ++++++++++++++
+ net/sunrpc/sunrpc_syms.c           | 29 +++++++++++++++++++++++++++++
+ net/sunrpc/xprt.c                  |  3 +--
+ net/sunrpc/xprtsock.c              |  3 ---
+ 26 files changed, 132 insertions(+), 42 deletions(-)
+---
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+change-id: 20250317-rpc-shutdown-1519aacd1db3
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Jeff Layton <jlayton@kernel.org>
 
