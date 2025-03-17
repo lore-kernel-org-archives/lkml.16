@@ -1,239 +1,104 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8A81487E1
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 13:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5850014A4E0
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 13:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742219139; cv=none; b=FLuESkgRV46kGENmvuS0S7m5lkEpZDtFyn7ILbV6FNFkuBKH6cwb8ktZKrZmC4y1/FRHInWhQXy3U0zU1F8whTeFmAkKDMjIC9FbPxICntRRVb6PQCOxUNGy+tTKjoEnOORuEv/tljr2TeRrIwVfN3+3BD0RH6NatGiR5nCC9n0=
+	t=1742219262; cv=none; b=X6fzGA8lHGl0qHUJ+L8Se5csU+bl2FoZrwvzXT8aTH8JAtwPqH5qXmjNclmhf+2hOHR8pN3StoZmb9u2fmhUGb86NnG4+od28fuALaSTnhUapFWV3UHqJlDCOmeAY07ns/o1PhwxGjMvuqJnRi6lXI6+cTjPRnNCD4fnxXZoQlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742219139; c=relaxed/simple;
-	bh=EwvIcyOlxs0SRBFfD6KXNsK/Od0GTeNNYAv+MbvfiMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cQlG58MdOrNmRViDW2ZXbT0qJ4YnQYXvUXsplqWF+58OivPc7qPsoedzAOtCPEXkB1I+R//sFx+efeEoHRP3Ev6e/YgBjWqXH92x+O5DJba+NaskJDuqx7+ISo/rANsIp1wP95Qys1LmVlUf14s+gey7q6IikPgdBY5TGPFZMCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WFdeR7MN; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WFdeR7MN"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso4070945f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 06:45:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742219135; x=1742823935; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7RYPTjFlSdbiVwRbP+5ezzFOuC5OjA62qsFQqYTMNpg=;
-        b=WFdeR7MNEtqEQGQEwF1031Dv4h+f7wpLaqG1X9Dc9wDbjpkB8fYj5DCi5cTE/ssVQA
-         K+f6YbW548c1ZVPFBnD1DbLyGLuZcWjx8/2Ugg+1j4MWoQCQMAWmyn5tlNzBOSmU1CKj
-         DTFpiJgJrpRc2RByyQUMmTPuulcxVXve1yib4bmIGctLCfBkGXPzbO7AvjHodL29ufOh
-         fbwsCwc1n2KJnIzJPJYIM4BopUqqrV4kylruZ2oMlmdHritoPOj7aVq3ykI9/lZ7gg2j
-         rRvR4LZo3VPkMudYhLsrwg6x0S/PXn978Sx6SA2hrqu3toVT1kTlRcc/e0DZnl05On7D
-         0miA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742219135; x=1742823935;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7RYPTjFlSdbiVwRbP+5ezzFOuC5OjA62qsFQqYTMNpg=;
-        b=QW3fUkOsN67ztGrxGrCGxKaOy18oXNODPc04bjcQnX5yt16w+3IFmRcI+In5Yn0El7
-         PoDeETSjz383lopcSYwi+xEVkHIVA+rcH5Ihjcva5DkBB1JWBRbOlm1hPnx6cRUn+Jf0
-         17tKIpxsjxV8rV3DeQSJmcteUJKxgpIn87FiQ1CmB5Aij+OTO+qTSMeXB3zMZb1kZf8m
-         uTKpkCU5Cxqy7mVI5K72Ai5uFPLD1eibq087ApeXhnoteMcEC9ernZO/tFbmbYb+XkDH
-         0QG21B3n5XSSbG3OkwLiPkQGiy5ujhY4SVcddJEnKkF+DmVwe1VGtrljCM5tbx6B1Z5t
-         lvww==
-X-Forwarded-Encrypted: i=1; AJvYcCUEf8qqP5hoiP+Shiqn/OtGI2OdpmXYt11NUBp2b8HnctcZaAAhiV4ZPNlOF16/Yb+bJxLbY1TwDzS+L6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlTcQGfEClFEu/3tG7NIPOTAcZWuASX38KuNH82F1d2R7gBfvX
-	76p+CDQZ8HO4BhvAL5718BXbbFWr+t3hwubDOo4Y64z6jO901c5MrakXzYzOwno=
-X-Gm-Gg: ASbGnctLuStjVP/KV0pjwBqnAY8GbX7Z+VOfrufILClbyBXcD/FjU3raIBvGD0p8mlZ
-	2NJXWlSCpLloxtL9Mz2UunHBdALWN1XL+Tdg2VdXFx0ilao7JDUdWAysS6kfBsbsjE9eL0kf2MV
-	fBXYRHCygooOEdb6W6HuHq2EhmPTx221yikbcrY7dzOgpHs2/S85+HmUlEoM6lVOY+X0JXiQ3k9
-	grTAqtsu2zewWoiFlHRvRf5Vxa6PKtNr0dky6aZFhersEAWjxCje1aRE1/tT4EBGsIAUhb20n0v
-	pgs39uqi4SvBFM4PoJUEG2IOc94B3fw4cKZJXC3AsLKFeeg=
-X-Google-Smtp-Source: AGHT+IGKXD3/o9Z4XGDkXz0xlimDMfqpN6wusRYWPKkLXhBOhrJAUefu7QMlxDr+KLe3+L26EuXQiA==
-X-Received: by 2002:a5d:6d88:0:b0:391:2a9a:47a3 with SMTP id ffacd0b85a97d-3971a873726mr16343825f8f.0.1742219135023;
-        Mon, 17 Mar 2025 06:45:35 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8881539sm14757542f8f.46.2025.03.17.06.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 06:45:34 -0700 (PDT)
-Date: Mon, 17 Mar 2025 14:45:33 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Donghyeok Choe <d7271.choe@samsung.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org, takakura@valinux.co.jp,
-	youngmin.nam@samsung.com, hajun.sung@samsung.com,
-	seungh.jung@samsung.com, jh1012.choi@samsung.com
-Subject: Re: [PATCH] printk/panic: Add option allow non panic cpus logging to
- ringbuffer
-Message-ID: <Z9gnfSYnX3r0wwci@pathway.suse.cz>
-References: <CGME20250305044241epcas2p45a526aecf91f33b9ac253f561e909978@epcas2p4.samsung.com>
- <20250305044046.1249972-1-d7271.choe@samsung.com>
+	s=arc-20240116; t=1742219262; c=relaxed/simple;
+	bh=FUAGxSnhR1t8Np3jzCiwBr6lZTqyKfAJbH5KVHS1oIA=;
+	h=From:To:Cc:Date:Message-ID:MIME-Version:Content-Type:Subject; b=kP4to6xk/L1fuEM95qaF5xH3V9W/Ue8J85fbL0cWN5KnZdYg/WA5hPFcc3Wp29acwrFtaFzf+lX4aShNwmyi3xmG0U8mkpsbCbxIio0Ybhck6quIkSjEpilFPhtgFJYNKUOaBMDSZx7YmdjbcBW6w2N2KkxVZuElNNjZ8I1fDsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in02.mta.xmission.com ([166.70.13.52]:44470)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tuAoc-001XWc-FI; Mon, 17 Mar 2025 07:47:38 -0600
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:59574 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tuAoa-003fO2-WF; Mon, 17 Mar 2025 07:47:38 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ <linux-kernel@vger.kernel.org> ,
+ Kexec Mailing List <kexec@lists.infradead.org>,
+ Kees Cook <keescook@chromium.org> 
+Date: Mon, 17 Mar 2025 08:47:30 -0500
+Message-ID: <87r02v7or1.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305044046.1249972-1-d7271.choe@samsung.com>
-
-Hi,
-
-first, I am sorry for the late review. I have been snowed under many
-other tasks.
-
-Second, the patch looks fine. I just would like to do few cosmetic
-improvements.
-
-Let's start with the Subject. It has few small grammatical mistakes.
-I suggest something like:
-
-  "printk/panic: Add option to allow non-panic CPUs to write
-   to the ring buffer."
-
-On Wed 2025-03-05 13:40:46, Donghyeok Choe wrote:
-> commit 779dbc2e78d7 ("printk: Avoid non-panic CPUs writing
-> to ringbuffer") disabled non-panic CPUs to further write messages to
-> ringbuffer after panicked.
-> 
-> commit bcc954c6caba ("printk/panic: Allow cpu backtraces to
-> be written into ringbuffer during panic") allows non-panicked CPUs
-> to write backtrace only.
-> 
-> Since that, there was a problem with not being able to check the
-> important logs of the non-panicked CPUs.
-> 
-> Fix the issue by adding debug option(printk_debug_non_panic_cpus) to
-> output the non-paniced CPUs' message.
-
-I would slightly rewrite it. I took inspiration
-in the first version of this patch, see
-https://lore.kernel.org/r/20250226031628.GB592457@tiffany
-and asked "Gemini" to help:
-
-<proposal>
-Commit 779dbc2e78d7 ("printk: Avoid non-panic CPUs writing to ringbuffer")
-aimed to isolate panic-related messages. However, when panic() itself
-malfunctions, messages from non-panic CPUs become crucial for debugging.
-
-While commit bcc954c6caba ("printk/panic: Allow cpu backtraces to
-be written into ringbuffer during panic") enables non-panic CPU
-backtraces, it may not provide sufficient diagnostic information.
-
-Introduce the "printk_debug_non_panic_cpus" command-line option,
-enabling non-panic CPU messages to be stored in the ring buffer during
-a panic. This also prevents discarding non-finalized messages from
-non-panic CPUs during console flushing, providing a more comprehensive
-view of system state during critical failures.
-</proposal>
-
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2375,6 +2375,19 @@ void printk_legacy_allow_panic_sync(void)
->  	}
->  }
->  
-> +bool __read_mostly printk_debug_non_panic_cpus;
-> +
-> +#ifdef CONFIG_PRINTK_CALLER
-> +static int __init printk_debug_non_panic_cpus_setup(char *str)
-> +{
-> +	printk_debug_non_panic_cpus = true;
-> +	pr_info("printk: keep printk all cpu in panic.\n");
-
-I would update the message:
-
-	pr_info("printk: allow messages from non-panic CPUs in panic()\n");
+Content-Type: text/plain
+X-XM-SPF: eid=1tuAoa-003fO2-WF;;;mid=<87r02v7or1.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX197FQxHXBXos5TSabCI0KcBicWE4+FEdFM=
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -0.0 BAYES_40 BODY: Bayes spam probability is 20 to 40%
+	*      [score: 0.2552]
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa06 1397; Body=1 Fuz1=1 Fuz2=1]
+X-Spam-DCC: XMission; sa06 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;Linus Torvalds <torvalds@linux-foundation.org>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 743 ms - load_scoreonly_sql: 0.04 (0.0%),
+	signal_user_changed: 11 (1.5%), b_tie_ro: 10 (1.3%), parse: 0.89
+	(0.1%), extract_message_metadata: 23 (3.1%), get_uri_detail_list: 1.98
+	(0.3%), tests_pri_-2000: 31 (4.2%), tests_pri_-1000: 2.3 (0.3%),
+	tests_pri_-950: 1.22 (0.2%), tests_pri_-900: 0.97 (0.1%),
+	tests_pri_-90: 193 (26.0%), check_bayes: 189 (25.4%), b_tokenize: 6
+	(0.8%), b_tok_get_all: 42 (5.7%), b_comp_prob: 1.93 (0.3%),
+	b_tok_touch_all: 135 (18.1%), b_finish: 0.97 (0.1%), tests_pri_0: 205
+	(27.6%), check_dkim_signature: 0.81 (0.1%), check_dkim_adsp: 3.9
+	(0.5%), poll_dns_idle: 248 (33.5%), tests_pri_10: 2.7 (0.4%),
+	tests_pri_500: 268 (36.1%), rewrite_mail: 0.00 (0.0%)
+Subject: [PATCH] MAINTAINERS: Remove myself
+X-SA-Exim-Connect-IP: 166.70.13.52
+X-SA-Exim-Rcpt-To: keescook@chromium.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out03.mta.xmission.com); SAEximRunCond expanded to false
 
 
-> +
-> +	return 0;
-> +}
-> +early_param("printk_debug_non_panic_cpus", printk_debug_non_panic_cpus_setup);
-> +#endif
-> +
->  asmlinkage int vprintk_emit(int facility, int level,
->  			    const struct dev_printk_info *dev_info,
->  			    const char *fmt, va_list args)
-> @@ -2391,7 +2404,9 @@ asmlinkage int vprintk_emit(int facility, int level,
->  	 * non-panic CPUs are generating any messages, they will be
->  	 * silently dropped.
->  	 */
-> -	if (other_cpu_in_panic() && !panic_triggering_all_cpu_backtrace)
-> +	if (!printk_debug_non_panic_cpus &&
-> +	    !panic_triggering_all_cpu_backtrace &&
-> +	    other_cpu_in_panic())
+Unfortunately I no longer have time to meaningfully take part in the
+linux kernel development.
 
-I would switch the order:
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+---
+ MAINTAINERS | 3 ---
+ 1 file changed, 3 deletions(-)
 
-	if (other_cpu_in_panic() &&
-	    !printk_debug_non_panic_cpus &&
-	    !panic_triggering_all_cpu_backtrace)
-
-IMHO, it is more logical. Also both "!printk_debug_non_panic_cpus"
-and "!panic_triggering_all_cpu_backtrace" are always true by default.
-
->  		return 0;
->  
->  	printk_get_console_flush_type(&ft);
-> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> index 88e8f3a61922..ffab5f6c1855 100644
-> --- a/kernel/printk/printk_ringbuffer.c
-> +++ b/kernel/printk/printk_ringbuffer.c
-> @@ -2143,7 +2143,9 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
->  			 * But it would have the sequence number returned
->  			 * by "prb_next_reserve_seq() - 1".
->  			 */
-> -			if (this_cpu_in_panic() && ((*seq + 1) < prb_next_reserve_seq(rb)))
-> +			if (this_cpu_in_panic() &&
-> +				(!printk_debug_non_panic_cpus || legacy_allow_panic_sync) &&
-> +				((*seq + 1) < prb_next_reserve_seq(rb)))
->  				(*seq)++;
->  			else
->  				return false;
-
-The indendantation does not help much to understand where the if
-(condition) ends. Also I would udate the comment. I suggest something
-like:
-
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -2133,9 +2133,9 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
- 			 * there may be other finalized records beyond that
- 			 * need to be printed for a panic situation. If this
- 			 * is the panic CPU, skip this
--			 * non-existent/non-finalized record unless it is
--			 * at or beyond the head, in which case it is not
--			 * possible to continue.
-+			 * non-existent/non-finalized record unless non-panic
-+			 * CPUs are still running and their debugging is
-+			 * explicitly enabled.
- 			 *
- 			 * Note that new messages printed on panic CPU are
- 			 * finalized when we are here. The only exception
-@@ -2143,10 +2143,13 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
- 			 * But it would have the sequence number returned
- 			 * by "prb_next_reserve_seq() - 1".
- 			 */
--			if (this_cpu_in_panic() && ((*seq + 1) < prb_next_reserve_seq(rb)))
-+			if (this_cpu_in_panic() &&
-+			    (!printk_debug_non_panic_cpus || legacy_allow_panic_sync) &&
-+			    ((*seq + 1) < prb_next_reserve_seq(rb))) {
- 				(*seq)++;
--			else
-+			} else {
- 				return false;
-+			}
- 		}
- 	}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c9763412a508..7469254b13ec 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8644,7 +8644,6 @@ F:	rust/kernel/net/phy/reg.rs
  
+ EXEC & BINFMT API, ELF
+ M:	Kees Cook <kees@kernel.org>
+-R:	Eric Biederman <ebiederm@xmission.com>
+ L:	linux-mm@kvack.org
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
+@@ -12824,9 +12823,7 @@ F:	fs/kernfs/
+ F:	include/linux/kernfs.h
+ 
+ KEXEC
+-M:	Eric Biederman <ebiederm@xmission.com>
+ L:	kexec@lists.infradead.org
+-S:	Maintained
+ W:	http://kernel.org/pub/linux/utils/kernel/kexec/
+ F:	include/linux/kexec.h
+ F:	include/uapi/linux/kexec.h
+-- 
+2.41.0
 
-With the above changes:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Best Regards,
-Petr
