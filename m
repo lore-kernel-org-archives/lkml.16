@@ -1,73 +1,47 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD3A21A428
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 07:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F8391D9A79
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 07:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742196764; cv=none; b=ktxzKMsNcv0vj2TBQLZdDYkDyf85qcGI3mt6PkFAyXoxlJU6Zuu23oZ4ioraPCpwENRgzbKAt42JcNf74jnbH2FDUtHoll5rj7x/Yu+piWW3xa+MC/XijZU+SIAjCml2Dt5jrir0nTQ6ll7jA15xdqH073MPMfSuhm+lx1ppbNQ=
+	t=1742196816; cv=none; b=KjS00wFDhT9u0MlAy8e7OdopeK4e/xMA4X2MwSHCcgtJ3H4DtAa9M/Q7nbppBkkmX5zYmymIEjv2GFe30+ccLBFns/Y5ko5hGPOMujjc8K6hyJ+/NtjzoaTZI/PIibLwgxQ3VtBtzssFkZx72fEeWzEmQas3uXhi3m+3e3Tkis0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742196764; c=relaxed/simple;
-	bh=yxBJY9hn0PbgZwmLt5tNJjUe+0sd8eIglr1zrxbKBak=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=bEzQL4GxNTXg1fS6C8opxuBW/kahkn0wJeSJ6yS6yusLjqqdV2If9hzsQ+ESUmJvbYCE9gSlSX8W0ACbwgNdTEdkGogFTuoTTsK5wvxcESRL54cXKwIB7VJrB/BRY3QtkbA4ADeSf5Vao+OfDRvCrQc8zTblij+82vW0paE7lIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZGRWm1D0Xz4x5rs;
-	Mon, 17 Mar 2025 15:32:36 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 52H7WMag001719;
-	Mon, 17 Mar 2025 15:32:22 +0800 (+08)
-	(envelope-from feng.wei8@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 17 Mar 2025 15:32:24 +0800 (CST)
-Date: Mon, 17 Mar 2025 15:32:24 +0800 (CST)
-X-Zmail-TransId: 2af967d7d008ffffffffa00-71df4
-X-Mailer: Zmail v1.0
-Message-ID: <20250317153224647OjWUNNAviyd634961gnCh@zte.com.cn>
+	s=arc-20240116; t=1742196816; c=relaxed/simple;
+	bh=UU+a68L6t+cHsFbWnvfSxYR7gGVjob+U7UJsyob5/S4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oohsVYAVGrwTVSPsxkX2PR3P7jnZYZqAVrIR6SPVJdP9hdfygHGFJfM/W0v4fQv5Jc6iPakMiX0G/yqV6+SAoQkee1a/MY+qFuyWtF4pqFzKOaD40BAM+fslCl451itd9T4jqhb0MPm2hg/GWNBKLl2QLK7dPp9Pi9JkQAvaBVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 52H7Iac3005123;
+	Mon, 17 Mar 2025 08:18:36 +0100
+Date: Mon, 17 Mar 2025 08:18:36 +0100
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools/nolibc: drop manual stack pointer alignment
+Message-ID: <20250317071836.GA5114@1wt.eu>
+References: <20250316-nolibc-sp-align-v1-1-1e1fb073ca1e@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <feng.wei8@zte.com.cn>
-To: <tglx@linutronix.de>
-Cc: <darwi@linutronix.de>, <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?B?W1BBVENIXSB0b29scy94ODYva2NwdWlkOiBSZXBsYWNlIGRlcHJlY2F0ZWQgc3RybmNweSgpIHdpdGggc3Ryc2NweSgp?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 52H7WMag001719
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67D7D014.000/4ZGRWm1D0Xz4x5rs
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250316-nolibc-sp-align-v1-1-1e1fb073ca1e@weissschuh.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-From: FengWei <feng.wei8@zte.com.cn>
+On Sun, Mar 16, 2025 at 08:46:07PM +0100, Thomas Weiﬂschuh wrote:
+> The stack pointer is already aligned by the kernel to a multiple of 16.
+> See STACK_ROUND() in fs/binfmt_elf.c.
+> 
+> The manual realignment is unnecessary, drop it.
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
 
-strncpy() is deprecated for NUL-terminated destination buffers. Use
-strscpy() instead and remove the manual NUL-termination.
-
-Signed-off-by: FengWei <feng.wei8@zte.com.cn>
----
- tools/arch/x86/kcpuid/kcpuid.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/tools/arch/x86/kcpuid/kcpuid.c b/tools/arch/x86/kcpuid/kcpuid.c
-index 1b25c0a95d3f..23a8fde2e203 100644
---- a/tools/arch/x86/kcpuid/kcpuid.c
-+++ b/tools/arch/x86/kcpuid/kcpuid.c
-@@ -312,8 +312,7 @@ static int parse_line(char *line)
- 	if (line[0] == '#' || line[0] == '\n')
- 		return 0;
-
--	strncpy(buffer, line, 511);
--	buffer[511] = 0;
-+	strscpy(buffer, line, 511);
- 	str = buffer;
- 	for (i = 0; i < 5; i++) {
- 		tokens[i] = strtok(str, ",");
--- 
-2.25.1
+Looks good to me, thanks Thomas!
+Acked-by: Willy Tarreau <w@1wt.eu>
+Willy
