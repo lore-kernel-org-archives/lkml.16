@@ -1,152 +1,132 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92AB24A04F;
-	Mon, 17 Mar 2025 15:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D6E236426
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 15:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742226074; cv=none; b=TM9PRSMGzUCPrT1jYZGHz0w8+kVDvb3P1CgG7JpBQ3BqfcRQJHCyQXwb4Nqlqmt4g5je6+x8i5jZyphumiOAkM6N1YdCl9AmH22zv8C8Jc1xDRvUvQi0y/e27HtbILoSCojO4JGW/xc0LGlN6hUHCgKNoe7uLf0HCOqJ7HCcJO8=
+	t=1742226151; cv=none; b=V2icodFU9IK095Q3ic7J/SkerpdaLnPo2EycNbM04h1qSfMmwr51MVGCwpdie4OreWdRJbKtR9pRq+W22Cn3KYfSOWw1X9SBIP9y5kHNDHyRZpg0NXAmqls1yIumZeXJc4x0QreAWitVP2zVDR8IPheiUHeXmlUjKrkREzQ5k8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742226074; c=relaxed/simple;
-	bh=2aWUPGucd8AuuSWRiNSqKp8izzd3drjNNIRgIfJMtHo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HRV5VrXX32s6T+1XC8JyZ3/CX4oA7Vtmbe7NXyvAseqsBmHfkWzo+oER85gJJ6NjUCXE3DLMnMkqP+8SWfpFHo0ItWu4vgKUg1Lh/hExOiKQtrWYkrfHVJ3+2e0HKswRZL3Y5zu3DcNonXrJXJVfj0f7sS9AOjEjtb1jj4FcaqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ZG9VuW/P; arc=none smtp.client-ip=192.19.144.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1742226151; c=relaxed/simple;
+	bh=95C0iFKPFCJdqxunet5Y22/0vzP095YVnCIPv+/g1Jc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TCGWUzrn+kmCqnH0TN85XNzvr2xX2zE9/JvPwgtxJ4T0vgFA2CaRRKnODmN1AOcO3GnZ6+ghSfi7oXAVVtreg2mUeU7ep5CKvxodT2Su95isEsFuCCtnsNhjiBYNQVMPFGaA94ZLCCmJqHiSyOCqaNFUJFfeKgElm9LAHRIEvsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=D9CivxON; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZG9VuW/P"
-Received: from mail-acc-it-01.broadcom.com (mail-acc-it-01.acc.broadcom.net [10.35.36.83])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id CB5DFC002801;
-	Mon, 17 Mar 2025 08:41:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com CB5DFC002801
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1742226071;
-	bh=2aWUPGucd8AuuSWRiNSqKp8izzd3drjNNIRgIfJMtHo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZG9VuW/PU7k7CRyD8oFno+VUepQgsFrCwgn4roYP6sv6FbVa+tz+cf2PO+0AOjT1O
-	 xuEfzUAoN/XO9sIstuSn/A+QjjS3OL7ghgU8RvnKYrvNG0hHwft+dWKzOkUDSaFu2z
-	 YY3XfJiHrAVo7/TljVer7ziUIvKyogD9zd7Qnprg=
-Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-acc-it-01.broadcom.com (Postfix) with ESMTPSA id D730C4002F44;
-	Mon, 17 Mar 2025 11:41:09 -0400 (EDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: stable@vger.kernel.org
-Cc: Ilya Maximets <i.maximets@ovn.org>,
-	Friedrich Weber <f.weber@proxmox.com>,
-	Aaron Conole <aconole@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Carlos Soto <carlos.soto@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Pravin B Shelar <pshelar@ovn.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	Andrii Nakryiko <andriin@fb.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Willem de Bruijn <willemb@google.com>,
-	David Ahern <dsahern@kernel.org>,
-	=?UTF-8?q?Beno=C3=AEt=20Monin?= <benoit.monin@gmx.fr>,
-	Xin Long <lucien.xin@gmail.com>,
-	Felix Huettner <felix.huettner@mail.schwarz>,
-	netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
-	linux-kernel@vger.kernel.org (open list),
-	dev@openvswitch.org (open list:OPENVSWITCH),
-	bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools))
-Subject: [PATCH stable 5.4 2/2] openvswitch: fix lockup on tx to unregistering netdev with carrier
-Date: Mon, 17 Mar 2025 08:40:23 -0700
-Message-Id: <20250317154023.3470515-3-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250317154023.3470515-1-florian.fainelli@broadcom.com>
-References: <20250317154023.3470515-1-florian.fainelli@broadcom.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="D9CivxON"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3912e96c8e8so2974751f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1742226148; x=1742830948; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Sl6TiBLO8N25M9MJl5F5cWXO3GkD985i4DUNgdnIpM=;
+        b=D9CivxONF6M+3Nw3yUJKy0MVXwRHhUPDywMHgNFXXumfc10MGj+IUlaQg6vD8lAv+2
+         PZBhyeBUQr7oGXHSCA1r1sX8lPHP8cU5tx/w+90RK3vvw/4Vp5nw3yDwmo9z7INSF+4X
+         4w1OAUsoO3XWF6L7NL2DMU2NxDxj1EtVmMjwhdrGMF7pAS7Fj+GQ/9NbTlHuSL1shojp
+         Zvh72QUj+mzs7BM+0FFFGuN6w9zA1nCu2N8/X0IxfkpmTpr//y71FHgIiN+D8Nz8+gqO
+         O1yxojFfqyhyfcgidRBvYo5LMoNEle2L/8BcH+8S5SwqqUaGFyN5e2tQpFok+Kh10tTS
+         vY2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742226148; x=1742830948;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Sl6TiBLO8N25M9MJl5F5cWXO3GkD985i4DUNgdnIpM=;
+        b=mizeqByN1DeLtGEttpS9LZv64eJ0vUBtCAwEx+p2tdKP/fwfRg5BVsZALIYK59TkG0
+         5VrTM0rz+oCM+zI4W6VnMEsAqod3PpB9T2+4mYG36kbRbLzU29qhrDyuEd/ieDmD+/cb
+         9exAZgTF5gryte1MfBCr1unZqhH0wPjgjgzlEhn5rUOUsCKYaLkKPU1p1oQ3/yuk45RA
+         inE6DxN/LFW3JNBAlMr1cb66c161aRII9C3gYr0jS4akApAwpv5ORNs41nwsBUwgZWJJ
+         r96SccaNCRbtG/J26ctx8ynsqj8ny9qxnf5IHvVro5c4XIzV98nuOwYqsrvgsUHuRN0Q
+         j5hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkvDJ5WakV8c4R5G+jAprIO2u35KXM02kw+KOPwqD/qFkgjBzTjLSWuYmw5N7/EjA20DIMs7jiMzyHgWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcslFEL9tiw4+zP0KbQxhCHMEx30FlMzTiUKsdb6oMNeDwecut
+	dYgpB2UiaKyIEUOVn0mLGtSnCoo/j9IIaVUjPSOD2Y/z5sTgvjFSaNMjkBhlGcz8mUm6uCprMmy
+	P
+X-Gm-Gg: ASbGncu//lFOQxHixJZZLG0pCl/g+RPdl3mQeyNwfS9N3FqqAORntwoVZG2jDvLT2ML
+	Jh3DRateGCcyPffop2VsPyYTkXOvhaCznDFnQW4vyC81Ja/nKSgfRb+TRjmJCferW4KC+VThRNf
+	SkFJ5vJf+gSJijiV2BPibol1eTokGk3u0RSXTDZtqB3TgGWBownJWRgT5SxMw80vWl/wxBc6St3
+	2MRn4gaewn3C4r76x/vf/gzrF/fv6AkCAjRUr+1z0nSu5yCkynD8Sl6ZkclL0eLjB5Z9BqvVuV1
+	5oE1vMPGDqgJm3fU/8Hi0jXhcdhoKrQqBeaqLKwJOx2fQ9W+Q1m+cr9s/g==
+X-Google-Smtp-Source: AGHT+IGFI7QGKei4yncWB619h0fAg9aDp6rT7ZSJlbo42qbdkjEdJIdxaXEtj/PmkeZ0XXSLhW6X3A==
+X-Received: by 2002:a05:6000:470a:b0:391:9b2:f48d with SMTP id ffacd0b85a97d-3971e686fdcmr15861208f8f.33.1742226147727;
+        Mon, 17 Mar 2025 08:42:27 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975b90sm15623852f8f.53.2025.03.17.08.42.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 08:42:27 -0700 (PDT)
+Date: Mon, 17 Mar 2025 16:42:25 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: adamsimonelli@gmail.com
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v12 1/1] printk: Add an option to allow ttynull to be a
+ default console device
+Message-ID: <Z9hC4Ri39FsyOF0T@pathway.suse.cz>
+References: <20250314160749.3286153-1-adamsimonelli@gmail.com>
+ <20250314160749.3286153-2-adamsimonelli@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314160749.3286153-2-adamsimonelli@gmail.com>
 
-From: Ilya Maximets <i.maximets@ovn.org>
+On Fri 2025-03-14 12:07:49, adamsimonelli@gmail.com wrote:
+> From: Adam Simonelli <adamsimonelli@gmail.com>
+> 
+> The new option is CONFIG_NULL_TTY_DEFAULT_CONSOLE.
+> 
+> if enabled, and CONFIG_VT is disabled, ttynull will become the default
+> primary console device.
+> 
+> ttynull will be the only console device usually with this option enabled.
+> Some architectures do call add_preferred_console() which may add another
+> console though.
+> 
+> Motivation:
+> 
+> Many distributions ship with CONFIG_VT enabled. On tested desktop hardware
+> if CONFIG_VT is disabled, the default console device falls back to
+> /dev/ttyS0 instead of /dev/tty.
+> 
+> This could cause issues in user space, and hardware problems:
+> 
+> 1. The user space issues include the case where  /dev/ttyS0 is
+> disconnected, and the TCGETS ioctl, which some user space libraries use
+> as a probe to determine if a file is a tty, is called on /dev/console and
+> fails. Programs that call isatty() on /dev/console and get an incorrect
+> false value may skip expected logging to /dev/console.
+> 
+> 2. The hardware issues include the case if a user has a science instrument
+> or other device connected to the /dev/ttyS0 port, and they were to upgrade
+> to a kernel that is disabling the CONFIG_VT option, kernel logs will then be
+> sent to the device connected to /dev/ttyS0 unless they edit their kernel
+> command line manually.
+> 
+> The new CONFIG_NULL_TTY_DEFAULT_CONSOLE option will give users and
+> distribution maintainers an option to avoid this. Disabling CONFIG_VT and
+> enabling CONFIG_NULL_TTY_DEFAULT_CONSOLE will ensure the default kernel
+> console behavior is not dependent on hardware configuration by default, and
+> avoid unexpected new behavior on devices connected to the /dev/ttyS0 serial
+> port.
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> Tested-by: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Adam Simonelli <adamsimonelli@gmail.com>
 
-[ Upstream commit 82f433e8dd0629e16681edf6039d094b5518d8ed ]
+JFYI, the patch have been comitted into printk/linux.git,
+branch for-6.15.
 
-Commit in a fixes tag attempted to fix the issue in the following
-sequence of calls:
-
-    do_output
-    -> ovs_vport_send
-       -> dev_queue_xmit
-          -> __dev_queue_xmit
-             -> netdev_core_pick_tx
-                -> skb_tx_hash
-
-When device is unregistering, the 'dev->real_num_tx_queues' goes to
-zero and the 'while (unlikely(hash >= qcount))' loop inside the
-'skb_tx_hash' becomes infinite, locking up the core forever.
-
-But unfortunately, checking just the carrier status is not enough to
-fix the issue, because some devices may still be in unregistering
-state while reporting carrier status OK.
-
-One example of such device is a net/dummy.  It sets carrier ON
-on start, but it doesn't implement .ndo_stop to set the carrier off.
-And it makes sense, because dummy doesn't really have a carrier.
-Therefore, while this device is unregistering, it's still easy to hit
-the infinite loop in the skb_tx_hash() from the OVS datapath.  There
-might be other drivers that do the same, but dummy by itself is
-important for the OVS ecosystem, because it is frequently used as a
-packet sink for tcpdump while debugging OVS deployments.  And when the
-issue is hit, the only way to recover is to reboot.
-
-Fix that by also checking if the device is running.  The running
-state is handled by the net core during unregistering, so it covers
-unregistering case better, and we don't really need to send packets
-to devices that are not running anyway.
-
-While only checking the running state might be enough, the carrier
-check is preserved.  The running and the carrier states seem disjoined
-throughout the code and different drivers.  And other core functions
-like __dev_direct_xmit() check both before attempting to transmit
-a packet.  So, it seems safer to check both flags in OVS as well.
-
-Fixes: 066b86787fa3 ("net: openvswitch: fix race on port output")
-Reported-by: Friedrich Weber <f.weber@proxmox.com>
-Closes: https://mail.openvswitch.org/pipermail/ovs-discuss/2025-January/053423.html
-Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
-Tested-by: Friedrich Weber <f.weber@proxmox.com>
-Reviewed-by: Aaron Conole <aconole@redhat.com>
-Link: https://patch.msgid.link/20250109122225.4034688-1-i.maximets@ovn.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Carlos Soto <carlos.soto@broadcom.com>
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- net/openvswitch/actions.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-index aec20faadfcc..815a55fa7356 100644
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -920,7 +920,9 @@ static void do_output(struct datapath *dp, struct sk_buff *skb, int out_port,
- {
- 	struct vport *vport = ovs_vport_rcu(dp, out_port);
- 
--	if (likely(vport && netif_carrier_ok(vport->dev))) {
-+	if (likely(vport &&
-+		   netif_running(vport->dev) &&
-+		   netif_carrier_ok(vport->dev))) {
- 		u16 mru = OVS_CB(skb)->mru;
- 		u32 cutlen = OVS_CB(skb)->cutlen;
- 
--- 
-2.34.1
-
+Best Regards,
+Petr
