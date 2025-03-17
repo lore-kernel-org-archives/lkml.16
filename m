@@ -1,141 +1,118 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE15F2236FC;
-	Mon, 17 Mar 2025 09:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BDE221710
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 09:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742204467; cv=none; b=bmZNS1sQ5fEjGZ49Yi69QGuOiWCp9ukCAXnFHyZFJxctzcmvq0ejohjcCoBSaG8zxtesmM7VE4Jq3cCetOE0qVEOpnyVAwCq6H7nN1ewqK2T9ewPBQDUGUfZCxQWZtMV/3sx8o89dvkUeyRhx3+lTn3zvDh1yGLs2IuAYg2lPHg=
+	t=1742204479; cv=none; b=KdYp3CtqiAgKtseLJ+LNPjrIJHL7Na5swZgms6nFWvaqgNxrK4QIyLvoPXKRRWtg9Rf6Ayp4bnHVS1DIXTmZjnoh+VVPbUSClCbDRm1OBgobjoWRBj4kq9V6EoSFD+7tCqGiFxddOMkkOm6/7HXUKsd+Yd/jVUVePpOhH1C3lGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742204467; c=relaxed/simple;
-	bh=EFrzB9n6hijOkeb2lyBndIAZnvP8anhnOgTluUvD300=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iOiajARUlLiedf4iEszgNm0/iO7oWiun+qiIuVICI1EmUbh5N7hzoEGqGDlAqTxFEpAoCsHbZXpYSkHI5XUPSs4XlayavpjqpPzoYDCSqwgpZSc+olhW3MuQ2xWrjJ42yhU0Kpivd6/z3GaNcCqGpUa1DSwKUO/oc6ejjJ405Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xhfCFjhj; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xhfCFjhj"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742204460;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=m0XSCnSukterJAo4E10iYkPySrScWtoaWdoov5OHuTo=;
-	b=xhfCFjhjUh11wsPpQQRCxJvI+8n/7UjQIM6gtj8fQGPitN38/M1YWROr6Tnd3N45K7EDbr
-	xMHaBiJcdaK59+3tjfnceNTDDMWTtnU46xzVYsT2ASol5eZ3yziw7TxIaGn534fZxSDSPT
-	W5+2tLX+riCc+2N1uVHRBmlPr4QvNzo=
-From: Kunwu Chan <kunwu.chan@linux.dev>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	morbo@google.com,
-	justinstitt@google.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Kunwu Chan <kunwu.chan@hotmail.com>,
-	Grace Deng <Grace.Deng006@Gmail.com>
-Subject: [PATCH] rust: page:: optimize rust symbol generation for Page
-Date: Mon, 17 Mar 2025 17:40:04 +0800
-Message-ID: <20250317094004.2622640-1-kunwu.chan@linux.dev>
+	s=arc-20240116; t=1742204479; c=relaxed/simple;
+	bh=H4siteXWed7GW9piyVqsqPjXCiIV2tIw/PyQTp4yIaU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b6dv3wRaz4taNC3vE8ZQaiRHL/4Dyd4PaWA8LAP5I/iFLuMKw6+JSNeXk8vkP3kRI+jl5TLh8HKagqd6WfW9gMj69KI9VdpxsIrbvEP8NQ+3XgMXVe2S946t6cwaY27/2qbcK0tQHut6/7GrtnUg276wtYfZ7YmektRRglkKGWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1742203375-086e236018216fa0001-xx1T2L
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id bApEZBNfsL8tVL9C (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Mon, 17 Mar 2025 17:22:55 +0800 (CST)
+X-Barracuda-Envelope-From: LiamNi-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXSHMBX2.zhaoxin.com (10.28.252.164) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Mon, 17 Mar
+ 2025 17:22:55 +0800
+Received: from ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298]) by
+ ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298%4]) with mapi id
+ 15.01.2507.044; Mon, 17 Mar 2025 17:22:55 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from aa-VirtualBox.zhaoxin.com (10.28.64.121) by
+ ZXBJMBX02.zhaoxin.com (10.29.252.6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 17 Mar 2025 17:19:17 +0800
+From: Liam Ni <liamni-oc@zhaoxin.com>
+To: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+CC: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <LiamNi@zhaoxin.com>, <CobeChen@zhaoxin.com>,
+	<LouisQi@zhaoxin.com>, <EwanHai@zhaoxin.com>, <FrankZhu@zhaoxin.com>
+Subject: [PATCH] KVM: x86:Cancel hrtimer in the process of saving PIT state to reduce the performance overhead caused by hrtimer during guest stop.
+Date: Mon, 17 Mar 2025 17:19:17 +0800
+X-ASG-Orig-Subj: [PATCH] KVM: x86:Cancel hrtimer in the process of saving PIT state to reduce the performance overhead caused by hrtimer during guest stop.
+Message-ID: <20250317091917.72477-1-liamni-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Moderation-Data: 3/17/2025 5:22:54 PM
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1742203375
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1876
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.138618
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-From: Kunwu Chan <kunwu.chan@hotmail.com>
+When using the dump-guest-memory command in QEMU to dump
+the virtual machine's memory,the virtual machine will be
+paused for a period of time.If the guest (i.e., UEFI) uses
+the PIT as the system clock,it will be observed that the
+HRTIMER used by the PIT continues to run during the guest
+stop process, imposing an additional burden on the system.
+Moreover, during the guest restart process,the previously
+established HRTIMER will be canceled,and the accumulated
+timer events will be flushed.However, before the old
+HRTIMER is canceled,the accumulated timer events
+will "surreptitiously" inject interrupts into the guest.
 
-When build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
-with ARCH=arm64, the following symbols are generated:
+SO during the process of saving the KVM PIT state,
+the HRTIMER need to be canceled to reduce the performance overhead
+caused by HRTIMER during the guest stop process.
 
-$nm vmlinux | grep ' _R'.*Page | rustfilt
-ffff8000805b6f98 T <kernel::page::Page>::alloc_page
-ffff8000805b715c T <kernel::page::Page>::fill_zero_raw
-ffff8000805b720c T <kernel::page::Page>::copy_from_user_slice_raw
-ffff8000805b6fb4 T <kernel::page::Page>::read_raw
-ffff8000805b7088 T <kernel::page::Page>::write_raw
-ffff8000805b72fc T <kernel::page::Page as core::ops::drop::Drop>::drop
+i.e. if guest
 
-These Rust symbols are trivial wrappers around the C functions
-alloc_pages, kunmap_local and __free_pages.
-It doesn't make sense to go through a trivial wrapper for these
-functions, so mark them inline.
-
-Link: https://github.com/Rust-for-Linux/linux/issues/1145
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Co-developed-by: Grace Deng <Grace.Deng006@Gmail.com>
-Signed-off-by: Grace Deng <Grace.Deng006@Gmail.com>
-Signed-off-by: Kunwu Chan <kunwu.chan@hotmail.com>
+Signed-off-by: Liam Ni <liamni-oc@zhaoxin.com>
 ---
- rust/kernel/page.rs | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/kvm/x86.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/rust/kernel/page.rs b/rust/kernel/page.rs
-index f6126aca33a6..e75cbc5cafd4 100644
---- a/rust/kernel/page.rs
-+++ b/rust/kernel/page.rs
-@@ -69,6 +69,7 @@ impl Page {
-     /// let page = Page::alloc_page(GFP_KERNEL | __GFP_ZERO)?;
-     /// # Ok::<(), kernel::alloc::AllocError>(())
-     /// ```
-+    #[inline]
-     pub fn alloc_page(flags: Flags) -> Result<Self, AllocError> {
-         // SAFETY: Depending on the value of `gfp_flags`, this call may sleep. Other than that, it
-         // is always safe to call this method.
-@@ -170,6 +171,7 @@ fn with_pointer_into_page<T>(
-     /// * Callers must ensure that `dst` is valid for writing `len` bytes.
-     /// * Callers must ensure that this call does not race with a write to the same page that
-     ///   overlaps with this read.
-+    #[inline]
-     pub unsafe fn read_raw(&self, dst: *mut u8, offset: usize, len: usize) -> Result {
-         self.with_pointer_into_page(offset, len, move |src| {
-             // SAFETY: If `with_pointer_into_page` calls into this closure, then
-@@ -192,6 +194,7 @@ pub unsafe fn read_raw(&self, dst: *mut u8, offset: usize, len: usize) -> Result
-     /// * Callers must ensure that `src` is valid for reading `len` bytes.
-     /// * Callers must ensure that this call does not race with a read or write to the same page
-     ///   that overlaps with this write.
-+    #[inline]
-     pub unsafe fn write_raw(&self, src: *const u8, offset: usize, len: usize) -> Result {
-         self.with_pointer_into_page(offset, len, move |dst| {
-             // SAFETY: If `with_pointer_into_page` calls into this closure, then it has performed a
-@@ -212,6 +215,7 @@ pub unsafe fn write_raw(&self, src: *const u8, offset: usize, len: usize) -> Res
-     ///
-     /// Callers must ensure that this call does not race with a read or write to the same page that
-     /// overlaps with this write.
-+    #[inline]
-     pub unsafe fn fill_zero_raw(&self, offset: usize, len: usize) -> Result {
-         self.with_pointer_into_page(offset, len, move |dst| {
-             // SAFETY: If `with_pointer_into_page` calls into this closure, then it has performed a
-@@ -235,6 +239,7 @@ pub unsafe fn fill_zero_raw(&self, offset: usize, len: usize) -> Result {
-     ///
-     /// Callers must ensure that this call does not race with a read or write to the same page that
-     /// overlaps with this write.
-+    #[inline]
-     pub unsafe fn copy_from_user_slice_raw(
-         &self,
-         reader: &mut UserSliceReader,
-@@ -251,6 +256,7 @@ pub unsafe fn copy_from_user_slice_raw(
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 045c61cc7e54..75355b315aca 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6405,6 +6405,8 @@ static int kvm_vm_ioctl_get_pit(struct kvm *kvm, stru=
+ct kvm_pit_state *ps)
+=20
+ 	mutex_lock(&kps->lock);
+ 	memcpy(ps, &kps->channels, sizeof(*ps));
++	hrtimer_cancel(&kvm->arch.vpit->pit_state.timer);
++	kthread_flush_work(&kvm->arch.vpit->expired);
+ 	mutex_unlock(&kps->lock);
+ 	return 0;
  }
- 
- impl Drop for Page {
-+    #[inline]
-     fn drop(&mut self) {
-         // SAFETY: By the type invariants, we have ownership of the page and can free it.
-         unsafe { bindings::__free_pages(self.page.as_ptr(), 0) };
--- 
-2.43.0
+@@ -6428,6 +6430,8 @@ static int kvm_vm_ioctl_get_pit2(struct kvm *kvm, str=
+uct kvm_pit_state2 *ps)
+ 	memcpy(ps->channels, &kvm->arch.vpit->pit_state.channels,
+ 		sizeof(ps->channels));
+ 	ps->flags =3D kvm->arch.vpit->pit_state.flags;
++	hrtimer_cancel(&kvm->arch.vpit->pit_state.timer);
++	kthread_flush_work(&kvm->arch.vpit->expired);
+ 	mutex_unlock(&kvm->arch.vpit->pit_state.lock);
+ 	memset(&ps->reserved, 0, sizeof(ps->reserved));
+ 	return 0;
+--=20
+2.25.1
 
