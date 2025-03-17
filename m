@@ -1,130 +1,88 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCFFDDC1;
-	Mon, 17 Mar 2025 17:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9643E1A2630
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 17:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742231171; cv=none; b=qQ7dwDyarCHRCT4+t8VV0rrOpWJS8JMQuUnfOPrdFLAn6umwEfjjUtvYgCULPqULL07xMRmYtzfAa4AqPNrL54DerrhOF7kCWVUOGYfkhj76yFZbKRapUBOvh1Z4fr7CVIRtbp41T7D1XVZTUiNLxXmz7jPtljjXtdOLrwIGpcQ=
+	t=1742231175; cv=none; b=JbxXAH5PrFtSuSuTnfTWA0cwl+CAhasThDyic/svGsQoGtQRaxfuaEo9sQW+6m4X1/GAgfYW6vIWW4jnoFlxR5dbuV0zQigOo+UC5qNCtSq142VHRescKpZPhU6LsNmeO40cSXLBuyA3JZHSkEMV0dfHBriyCW9AeaoZ4bECyCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742231171; c=relaxed/simple;
-	bh=/xD8O8G6gjRmTJ73yF65jTWKxhEEFN3wTExhtSMFRhI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RNZIfYD0w3u+jLIAmDHGNs31KZyf+X3bHfziG9u18KbDMLmaGxJsB+jC/JvlT6kqMg7rokwVSDpKTcNf1OIRsUthnPzPS1TvGOCq1Aa3qctjQfk1dIL8jDziraGDqEWtd+ufX+sjA/dN54QBIqAbIne88sIZsJ7AUV1jlsUkQvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=mIegrplV; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	s=arc-20240116; t=1742231175; c=relaxed/simple;
+	bh=EKcGOxVMzjKzzpY2bAD/qKhkOsw3/ZS5jWoFiHGL9QY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NqTvhJry/YSAGb0vtSfuhKPln8Ny/OKGntUSR+j5Yv97jmsG0tsKynF+8v1zPvU+Ypo+fJ/tv5QmFWcsJOLGgmRPoJL0YAN6XIWfQSop6WbrHcnjHxKXgMJer/mgz0QDqWHJKUJTvu2F0vMWSg1hOmSfjE0BgyTGCYod6Xc/jN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DbVpv00x; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="mIegrplV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1742231167; bh=/xD8O8G6gjRmTJ73yF65jTWKxhEEFN3wTExhtSMFRhI=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=mIegrplVdgdHTUn14JxVQOLSq22kkDxrDa4glErt2flUElW4g7RstSMEG/PaFczg4
-	 drx2YhfPMQ+DAr1b1qCcC6zWxFo33mW8OVoXSxM2aTxkldNyIja3M1tv6FJXVM9/F/
-	 /j1Vl9F/jD9k3HfIP/qWOILDeUw55URceDpVCSn0=
-Message-ID: <92efa0ac-cdce-4ea2-ab08-b756dc755432@lucaweiss.eu>
-Date: Mon, 17 Mar 2025 18:06:07 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DbVpv00x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dGzCutVqaGoQAQTN8SMp16X3bMGayRAE4xjT/iqKqv4=; b=DbVpv00x+lyC9GE1HhMwx82/pC
+	vST0lop5ZdDtgbprWQDxdG3UJkVQ0FDsUayc6xmlw6peWOxTTJPkEXTeyVnjOcWdYdzUiVRTLh6qc
+	95R8FpRI2h9eobEmTk0VvVIFVlQ7nuYJXmHUADS8KT20JsiCgIGmQOc/LgKp/LDQJYeeabEx2KBDn
+	iksISKi5Dav5WoR8BwFG1E7VZrqThVzNCVOR0msWOMHzu8A2rjkOfq4nH/weONbOIpu6hjMJfO9iC
+	VUYxRRoG0wIOCg+BsGyNTvpoFALPCAjP/VQruEDR5qFtIMLFv3dBJIwmD/U3p/LbL7l+BcbPeqviX
+	uDxU772w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tuDud-00000003UtN-2WOY;
+	Mon, 17 Mar 2025 17:06:03 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2F1A6300B40; Mon, 17 Mar 2025 18:06:03 +0100 (CET)
+Date: Mon, 17 Mar 2025 18:06:02 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
+	Andrea Righi <arighi@nvidia.com>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>,
+	Luigi De Matteis <ldematteis123@gmail.com>, paulmck@kernel.org,
+	boqun.feng@gmail.com
+Subject: Re: [PATCH RFC 3/8] sched/ext: Add a DL server for sched_ext tasks
+Message-ID: <20250317170602.GE6888@noisy.programming.kicks-ass.net>
+References: <20250315022158.2354454-1-joelagnelf@nvidia.com>
+ <20250315022158.2354454-4-joelagnelf@nvidia.com>
+ <20250315072225.GG36322@noisy.programming.kicks-ass.net>
+ <3b244939-6d55-4d86-8b77-a9a7629f8239@nvidia.com>
+ <20250317103101.GC34541@noisy.programming.kicks-ass.net>
+ <Z9hUby9e1JYaE6iC@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] rpmsg: qcom_smd: Improve error handling for
- qcom_smd_parse_edge
-From: Luca Weiss <luca@lucaweiss.eu>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240606-apcs-mboxes-v2-1-41b9e91effb6@z3ntu.xyz>
- <2827287.mvXUDI8C0e@g550jk>
-Content-Language: en-US
-In-Reply-To: <2827287.mvXUDI8C0e@g550jk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9hUby9e1JYaE6iC@slm.duckdns.org>
 
-On 10/19/24 12:06 PM, Luca Weiss wrote:
-> On Donnerstag, 6. Juni 2024 21:01:36 MESZ Luca Weiss wrote:
->> When the mailbox driver has not probed yet, the error message "failed to
->> parse smd edge" is just going to confuse users, so improve the error
->> prints a bit.
->>
->> Cover the last remaining exits from qcom_smd_parse_edge with proper
->> error prints, especially the one for the mbox_chan deserved
->> dev_err_probe to handle EPROBE_DEFER nicely. And add one for ipc_regmap
->> also to be complete.
->>
->> With this done, we can remove the outer print completely.
+On Mon, Mar 17, 2025 at 06:57:19AM -1000, Tejun Heo wrote:
+> Hello,
 > 
-> Ping, looks like this is still pending.
+> On Mon, Mar 17, 2025 at 11:31:01AM +0100, Peter Zijlstra wrote:
+> > On Sat, Mar 15, 2025 at 07:15:27PM -0400, Joel Fernandes wrote:
+> > > If so, that will not handle the case where the system has both
+> > > FAIR and EXT tasks in the mix (EXT has a partial mode where certain tasks can be
+> > > made EXT with certain others left as FAIR) and FAIR runs 100% and starves EXT.
+> > 
+> > Well, you did not mention that issue, you only babbled about RT.
+> > 
+> > I did point out that issue with ext, and TJ said this mixed mode wasn't
+> > really meant to be used or somesuch.
+> 
+> It's true that most of the current use cases don't use mixed mode. That
+> said, some folks are interested in it and if we can prevent starvation from
+> fair saturating CPUs in mixed mode with a DL server, that'd be really nice.
+> Would it be possible to toggle the reservations depending on the ext's
+> operation mode?
 
-Ping again, still pending.
-
-Regards
-Luca
-
-> 
-> Regards
-> Luca
-> 
->>
->> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
->> ---
->> Changes in v2:
->> - Rebase on qcom for-next, drop dts patches which have been applied
->> - Improve error printing situation (Bjorn)
->> - Link to v1: https://lore.kernel.org/r/20240424-apcs-mboxes-v1-0-6556c47cb501@z3ntu.xyz
->> ---
->>   drivers/rpmsg/qcom_smd.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/rpmsg/qcom_smd.c b/drivers/rpmsg/qcom_smd.c
->> index 43f601c84b4f..06e6ba653ea1 100644
->> --- a/drivers/rpmsg/qcom_smd.c
->> +++ b/drivers/rpmsg/qcom_smd.c
->> @@ -1369,7 +1369,8 @@ static int qcom_smd_parse_edge(struct device *dev,
->>   	edge->mbox_chan = mbox_request_channel(&edge->mbox_client, 0);
->>   	if (IS_ERR(edge->mbox_chan)) {
->>   		if (PTR_ERR(edge->mbox_chan) != -ENODEV) {
->> -			ret = PTR_ERR(edge->mbox_chan);
->> +			ret = dev_err_probe(dev, PTR_ERR(edge->mbox_chan),
->> +					    "failed to acquire IPC mailbox\n");
->>   			goto put_node;
->>   		}
->>   
->> @@ -1386,6 +1387,7 @@ static int qcom_smd_parse_edge(struct device *dev,
->>   		of_node_put(syscon_np);
->>   		if (IS_ERR(edge->ipc_regmap)) {
->>   			ret = PTR_ERR(edge->ipc_regmap);
->> +			dev_err(dev, "failed to get regmap from syscon: %d\n", ret);
->>   			goto put_node;
->>   		}
->>   
->> @@ -1501,10 +1503,8 @@ struct qcom_smd_edge *qcom_smd_register_edge(struct device *parent,
->>   	}
->>   
->>   	ret = qcom_smd_parse_edge(&edge->dev, node, edge);
->> -	if (ret) {
->> -		dev_err(&edge->dev, "failed to parse smd edge\n");
->> +	if (ret)
->>   		goto unregister_dev;
->> -	}
->>   
->>   	ret = qcom_smd_create_chrdev(edge);
->>   	if (ret) {
->>
->> ---
->> base-commit: 2c79712cc83b172ce26c3086ced1c1fae087d8fb
->> change-id: 20240423-apcs-mboxes-12ee6c01a5b3
->>
->> Best regards,
->>
-> 
-> 
-> 
-> 
-
+Yeah, that should be doable.
