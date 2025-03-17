@@ -1,45 +1,37 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D0824110F;
-	Mon, 17 Mar 2025 14:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8002123FC59
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742221744; cv=none; b=oNTtCvFD3hGZhsW+TvFRLOu+WY2qSe6pJBfrGrFeiUmTxEox9eeZJ+2y3S8BJHrJ2/+H9u3mcgqlA0XWpa7k2EIrxV+/HT3uPV9S5A2jbWeC/o7M3UNU86VqS8L1j1V+jY5aJwwUhUE9sec2Iu9P/6aXTOd0Wu8b2r2CSnfoyR8=
+	t=1742221824; cv=none; b=fSUv7Fi5MzM6HxXlgm7RQQJXPk20sJAjy3ABik85DRl/ZqvOl131XtCVes+ZK7UA2/Oy/ZQI6DkYJxAPFzbOsB6gDZhvXfxy139MC6H3f/piIB81JIl6Bn19ILBBr2/idBbv5d+tiNAc5jJnmuGlMSK5HViylTXuS8DaUopjpiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742221744; c=relaxed/simple;
-	bh=dzgbwvDxYKxyBzxSvxhiBD6og4kkmAH+ymh2ORT+zoU=;
+	s=arc-20240116; t=1742221824; c=relaxed/simple;
+	bh=D7K/1UfqHYIvv44EIU1iz/IrCoIWaOyxfx5yfPNuOt4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dC59diCoLT8Q+yy/wVxbEugibpXB4ooJr1X1/2v3ciEbuLZ+WTDcXgdc8UmIeJ2unNx23Tsti2MZY/4JpGtmmoidKrlmj6fd6ZApXN6HhkJj1INPmEBEyFAf80j48NKKgsZNYLkrW0KqAvalAv7ig0aSOnrXtiUE8uIizQGVQx4=
+	 Content-Type:Content-Disposition:In-Reply-To; b=IJ5+3nH7pDc80UyUs9FPWG+tzu5RaXKGxCBd6xr981pPx8cm0/Vr26IdSB88T21BdE5WZKjHV1SKt1UxQVWmMROJ4Ql3dag0q56S/mkkdp7iC9XM48KloRR6bgHapCB4ZCYJi8HRmZDALf+1bNzjxhMlfaWz05O1bDmrdO+WNEg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 749A913D5;
-	Mon, 17 Mar 2025 07:29:11 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E25E313D5;
+	Mon, 17 Mar 2025 07:30:31 -0700 (PDT)
 Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA8E13F63F;
-	Mon, 17 Mar 2025 07:28:58 -0700 (PDT)
-Date: Mon, 17 Mar 2025 14:28:56 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B2AE3F63F;
+	Mon, 17 Mar 2025 07:30:21 -0700 (PDT)
+Date: Mon, 17 Mar 2025 14:30:19 +0000
 From: Sudeep Holla <sudeep.holla@arm.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	linux-pm@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	linux-crypto@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	linux-efi@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
-	Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>, linux-acpi@vger.kernel.org,
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 0/9] drivers: Transition to the faux device interface
-Message-ID: <Z9gxqGHS3igb5wOq@bogus>
+Subject: Re: [PATCH 9/9] regulator: dummy: convert to use the faux device
+ interface
+Message-ID: <Z9gx-4-3RMfTXB0e@bogus>
 References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
- <2025031705-scouting-scolding-8ff7@gregkh>
+ <20250317-plat2faux_dev-v1-9-5fe67c085ad5@arm.com>
+ <2025031716-decaf-overhead-c56c@gregkh>
+ <Z9guHSE0nwC1-52J@bogus>
+ <2025031742-perfectly-hydrogen-159c@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,36 +40,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2025031705-scouting-scolding-8ff7@gregkh>
+In-Reply-To: <2025031742-perfectly-hydrogen-159c@gregkh>
 
-On Mon, Mar 17, 2025 at 02:01:55PM +0100, Greg Kroah-Hartman wrote:
-> On Mon, Mar 17, 2025 at 10:13:12AM +0000, Sudeep Holla wrote:
-> > Recently when debugging why one of the scmi platform device was not
-> > showing up under /sys/devices/platform/firmware:scmi instead was
-> > appearing directly under /sys/devices/platform, I noticed the new
-> > faux interface /sys/devices/faux.
+On Mon, Mar 17, 2025 at 03:26:00PM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Mar 17, 2025 at 02:13:49PM +0000, Sudeep Holla wrote:
+> > On Mon, Mar 17, 2025 at 02:00:04PM +0100, Greg Kroah-Hartman wrote:
+> > > On Mon, Mar 17, 2025 at 10:13:21AM +0000, Sudeep Holla wrote:
+> > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > 
+> > > Why are you resending my patch back to me?
+> > > 
+> > > > The dummy regulator driver does not need to create a platform device, it
+> > > > only did so because it was simple to do.  Change it over to use the
+> > > > faux bus instead as this is NOT a real platform device, and it makes
+> > > > the code even smaller than before.
+> > > > 
+> > > > Reviewed-by: Mark Brown <broonie@kernel.org>
+> > > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Message-Id: <2025021027-outclass-stress-59dd@gregkh>
+> > > > (sudeep.holla: Made dummy_regulator_driver static)
+> > > 
+> > > So this is a new version?
+> > > 
 > > 
-> > Looking through the discussion and the background, I got excited and
-> > took the opportunity to clear all the platform devices under
-> > /sys/devices/platform on the Arm Juno/FVP platforms that are really
-> > faux devices. Only the platform devices created for the device nodes
-> > from the DT remain under /sys/devices/platform after these changes.
-> > 
-> > All the patches are independent of each other.
+> > Not really, I pulled your patch as I needed that as well to clean out
+> > all faux device out of platform. I just made dummy_regulator_driver
+> > static back again as compiler was warning. Definitely nothing new.
+> > I will drop it when posting v2. You can probably fix up to make
+> > dummy_regulator_driver static.
 > 
-> That's great, but you need to send these all independently to each
-> subsystem as needed.  Having it all in one series doesn't work for any
-> of the maintainers of any of the subsystems.
+> My tree can't be rebased, can you just send a patch to make that change
+> instead?
 > 
 
-Sure I can do that. I initially had idea of creating a macro that made
-all of them depend on the macro but later dropped as I wanted to check
-if that is good or a bad idea. I just asked you in the thread 2/9.
-
-> And I'm glad to see this work happening, thanks for doing that!
-> 
-
-Thanks for adding faux interface!
+Sure, will do that.
 
 -- 
 Regards,
