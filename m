@@ -1,107 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CBA1C8637;
-	Mon, 17 Mar 2025 16:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8AC1A255C
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742230003; cv=none; b=H4hwQHRkR+GPuYv3LG4VwueQqEi3KqGqWO7XQbpAFvy0bMQAnyZdex6+O/OtEW3wqE8dNMvHarMB4TxBrcy6GNrzMOt6yLdBpo8ttPel9mlZa0uEEESmL3xpDu18VLM0oHHYZ0ptl7V4YikP9i+gMfabtuG6xbO3hnC3n72FKxM=
+	t=1742230046; cv=none; b=A+6TDHiG7lpkfvF27Rgs6nMcdc1uk8LTpr3VJb6Jf4NAQZvXAy3wa3z8F2i/3NRW2Z7WynELnnAbXPngtWBg68f+u8Vaut6x48vNwY8H8ShPYmYffSFDdlbIv/gDkNwQPVPJxbIg2m93nV4aW3ewqMQRsCymqlRZ2NT2MQKalyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742230003; c=relaxed/simple;
-	bh=+gpgx1f/Gxc036wNUlCVYAX4Xs//acADzBzuOoLrCmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XrDWI1JAV+ViKKW+MYnxulhxaSuRP7OXL+veLTcK3Ed0LROq848D0Q4cokj0zYvrx9+LD1LQx/hn/6YX+fslc4p3g8kLtelWzyH1zkdAKHa4iwX6hpttfc3N8+3xzGCxH91lO0C4POvapBmTwOZ2jCkbR63lo7uLAS3jIGAZr1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSyJzNu1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSyJzNu1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9D1C4CEE3;
-	Mon, 17 Mar 2025 16:46:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742230002;
-	bh=+gpgx1f/Gxc036wNUlCVYAX4Xs//acADzBzuOoLrCmI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lSyJzNu1XI24vzUJST7LRc1wPpIUK8XSunvC5pBTzK2p5A0BCsBPOlhHmLIugLhc1
-	 hYUD6cYUW4tCNSVi0feAcVrxk3oPVFcvf435Zmn0WabvlwIQKNdQzpULX1re49daXH
-	 CIYEP8106uxqZHyfkuGEh19aH+6wBph+fomwnc7eR+Dz5Hek0pqkCAua1CjrZ6j9Bu
-	 ezxDtFDcVWzhrk3SPzqFE/Fjy/XWo19PzHMHoYnNtDCMw/JhrBWHOV2Tw3Ldmohkw/
-	 xMb57F7AEUzAZAsDfqa5oMRslK4Kt3EnBaUOx+LMtbgDOhqxrllkRQwAARN76f2KJk
-	 n0t3MYcYMjhRw==
-Date: Mon, 17 Mar 2025 09:46:40 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, terrelln@fb.com, leo.yan@arm.com,
-	james.clark@linaro.org, christophe.leroy@csgroup.eu,
-	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf record: Add 8-byte aligned event type
- PERF_RECORD_COMPRESSED2
-Message-ID: <Z9hR8M-SQ5TD2qMX@google.com>
-References: <20250303183646.327510-1-ctshao@google.com>
- <Z9TXabugl374M3bA@google.com>
- <Z9hFJtEKfsGGUDMg@x1>
- <Z9hLKsZOfouM3K7H@x1>
+	s=arc-20240116; t=1742230046; c=relaxed/simple;
+	bh=jwOTwlsAwVrR1HbXPCZjYqzaL4dNCXSzEJhenSYGWQg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bbvaXYr0fekdcr+vo2tW8+0oB9ONg1LFf31GwLGukYmIRLMFPcg8PRUV3Zku10FDhNQYEVoZeiiM7U/s7AiznIHVHD7iUo0EIycfNDxDLqUijjmuMRAZ4be55+g0raTElom6ncALquXYUKZ+J6px3DMQE1TtvASa+qBHtLJixeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CDE4E441C3;
+	Mon, 17 Mar 2025 16:47:20 +0000 (UTC)
+Message-ID: <b7969702-5e88-4891-bd0e-8728562ff5f5@ghiti.fr>
+Date: Mon, 17 Mar 2025 17:47:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z9hLKsZOfouM3K7H@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] riscv: iommu: Support Svnapot
+Content-Language: en-US
+To: Xu Lu <luxu.kernel@bytedance.com>, akpm@linux-foundation.org,
+ jhubbard@nvidia.com, kirill.shutemov@linux.intel.com, tjeznach@rivosinc.com,
+ joro@8bytes.org, will@kernel.org, robin.murphy@arm.com
+Cc: lihangjing@bytedance.com, xieyongji@bytedance.com,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250311122510.72934-1-luxu.kernel@bytedance.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250311122510.72934-1-luxu.kernel@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedttdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnheptdfhleefjeegheevgeeljeellefgvefhkeeiffekueejteefvdevhfelvdeggeeinecukfhppeefuddrfedvrdekuddrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeefuddrfedvrdekuddrudekjedphhgvlhhopegludelvddrudeikedrvddurddvhegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheplhhugihurdhkvghrnhgvlhessgihthgvuggrnhgtvgdrtghomhdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepjhhhuhgssggrrhgusehnvhhiughirgdrtghomhdprhgtphhtthhopehkihhrihhllhdrshhhuhhtvghmohhvsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthhjvgiinhgrtghhsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehjohhroheskegshihtvghsrdhorhhgpdhrt
+ ghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgsihhnrdhmuhhrphhhhiesrghrmhdrtghomh
+X-GND-Sasl: alex@ghiti.fr
 
-On Mon, Mar 17, 2025 at 01:17:46PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Mar 17, 2025 at 12:52:09PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Mar 14, 2025 at 06:27:05PM -0700, Namhyung Kim wrote:
-> > > On Mon, Mar 03, 2025 at 10:32:40AM -0800, Chun-Tse Shao wrote:
-> > > > The original PERF_RECORD_COMPRESS is not 8-byte aligned, which can cause
-> > > > asan runtime error:
-> 
-> > > >   # Build with asan
-> > > >   $ make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame-pointer -fsanitize=undefined"
-> > > >   # Test success with many asan runtime errors:
-> > > >   $ /tmp/perf/perf test "Zstd perf.data compression/decompression" -vv
-> > > >    83: Zstd perf.data compression/decompression:
-> > > >   ...
-> > > >   util/session.c:1959:13: runtime error: member access within misaligned address 0x7f69e3f99653 for type 'union perf_event', which requires 13 byte alignment
-> > > >   0x7f69e3f99653: note: pointer points here
-> > > >    d0  3a 50 69 44 00 00 00 00  00 08 00 bb 07 00 00 00  00 00 00 44 00 00 00 00  00 00 00 ff 07 00 00
-> > > >                 ^
-> > > >   util/session.c:2163:22: runtime error: member access within misaligned address 0x7f69e3f99653 for type 'union perf_event', which requires 8 byte alignment
-> > > >   0x7f69e3f99653: note: pointer points here
-> > > >    d0  3a 50 69 44 00 00 00 00  00 08 00 bb 07 00 00 00  00 00 00 44 00 00 00 00  00 00 00 ff 07 00 00
-> > > >                 ^
-> > > >   ...
-> 
-> > > > Since there is no way to align compressed data in zstd compression, this
-> > > > patch add a new event type `PERF_RECORD_COMPRESSED2`, which adds a field
-> > > > `data_size` to specify the actual compressed data size. The
-> > > > `header.size` contains the total record size, including the padding at
-> > > > the end to make it 8-byte aligned.
-> 
-> > > > Tested with `Zstd perf.data compression/decompression`
-> 
-> > > Looks good to me.
->  
-> > > Arnaldo, are you ok with adding a new record type for this?
->  
-> > Checking the discussion and the patch.
-> 
-> My first impression yesterday when I saw this on the smartphone was: how
-> will an old perf binary handle the new PERF_RECORD_COMPRESSED2? Will it
-> ignore it while emitting a warning, since it can be skipped and then
-> what we will get a partial view?
-> 
-> Having some session output showing how an older perf binary handles
-> PERF_RECORD_COMPRESS2 would be informative.
+Hi Xu,
 
-I think it'll show the below warning:
-
-  <offset> [<size>]: failed to process type: 83
+You did not +cc linux-mm on your series, it would be nice to have 
+feedback from them. I'd say it would be easier to resend the whole 
+patchset with them in +cc.
 
 Thanks,
-Namhyung
+
+Alex
+
+On 11/03/2025 13:25, Xu Lu wrote:
+> According to the RISC-V IOMMU hardware spec, the IOMMU implementation
+> has the same translation process as MMU and supports Svnapot standard
+> extension as well. These patches add support for Svnapot in the IOMMU
+> driver to make 64K also an available page size during DMA mapping.
+>
+> Changes in V2:
+> 1. Supply more details about huge pte issue in follow_page_pte().
+> 2. Fix some style problems.
+>
+> Xu Lu (4):
+>    mm/gup: Add huge pte handling logic in follow_page_pte()
+>    iommu/riscv: Use pte_t to represent page table entry
+>    iommu/riscv: Introduce IOMMU page table lock
+>    iommu/riscv: Add support for Svnapot
+>
+>   arch/riscv/include/asm/pgtable.h |   6 +
+>   drivers/iommu/riscv/iommu.c      | 258 +++++++++++++++++++++++++------
+>   include/linux/pgtable.h          |   8 +
+>   mm/gup.c                         |  17 +-
+>   4 files changed, 233 insertions(+), 56 deletions(-)
+>
 
