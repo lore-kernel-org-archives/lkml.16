@@ -1,236 +1,262 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A849C21ABD8;
-	Mon, 17 Mar 2025 08:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742201640; cv=none; b=dqd52uIS+qhtan7nMMlMepSUlSZiLj5KHC+UeGLiv0wcA3XXkM4/LtuMD8GskAaT4AearGVU8KXR2qYcvQ/hic6q21Qb+/sfLAHawUQfqtPxIoz3OPpTulA99g7Yya3/vtfSgilA4Uqf8KlSi0a9ZzYYxEbbtzUGR+xaMQELEOo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742201640; c=relaxed/simple;
-	bh=mvlHIMW270R7dZycsLruZdJ42iDtj8IQ29EjCbYvgvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tH8PSENtiFuCHyQcN1NYgfMNgftwnCGlgpkxd7GhV1VkZlQk8nyfDPWdlYHXEyTMrWBjUGIAF6r9wPxbJ9lEBcoG8ZAMh/90xVCEWEwzITUFQJifESTewgfq8pWOQuj1YoF2itLQwuvWY3dntIER5AYClvI/8XnGlcYfgy2LNKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YCLf6vjH; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D59220680;
+	Mon, 17 Mar 2025 08:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742201668; cv=fail; b=cuepuVCLPZcGnVImpPFH+wMvNgSMFW0CAvm6x3lBlD3q3vcGJA0Zlz4hThaWpCSMaISAcOJXwbeYmwfGUH2+Ez2A2N70au9vLzln4EyhwBOFltUuFHYxPVrG0BBZ8zEopEO7NTIqKh4LAekfeus4MlcBeZH4P0B8pnU9EAj8nIo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742201668; c=relaxed/simple;
+	bh=OFw/6kPiVROOEegRtyhgBwiQ1Q7iteQacO5stsB5hhw=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z0Dpjvefv10oZ7eCuWQ8KKcI/FJ0FWkAHlWuBXW4MK+a0j1zWk8MD0udZK+3UyVj+VWEwtP9SHY9ZAg3y5CQNPq0wQseKbC/5mB04NZGd4LVO4ycpkiqtUbWkKOCKd/Hd2o+2qUQNnq4jZdZ3baGqYMtBOTEm/GiYk3RTy29GMc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=MQJxkkG1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=tVvqQ7ge; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YCLf6vjH"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F1BDB4322A;
-	Mon, 17 Mar 2025 08:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742201628;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bfRlKgxGL6xoBQwjzEteEvARnfiax3+DCGaa/aKYtl4=;
-	b=YCLf6vjHy3sJd0CsYWO7OZuY4buzPPO5wZbJqQSWcK7t3GABHlfmRQJoZSWTOQ1Zo4nDFe
-	NYa2spNHSoIbU9TSvlftuLGzRft0Je0neMbDbkCoecYvgT5g6mH1wVxwlbapeL7YmAXb4w
-	MPNFZvAlD2FeYq76sJzV7+BFCkfKb1yqKttrnJSjuG4qrM9sahsSXdS8RrkqN62uL7q48x
-	TxDbk5IbPoyVSdcqcmsgvDb/k+67UwIemiT+/XoKd9yB7GGn/8MClLzMnsyRqTuRGZOkOn
-	+950TlKYZFaKSVhb0if6ZyGFfvW6CJmN999djpQRpdUWooKL2llQ04EhzHQ0fw==
-Date: Mon, 17 Mar 2025 09:53:33 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
- <kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
- <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
- <andrew@codeconstruct.com.au>, <ratbert@faraday-tech.com>,
- <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-aspeed@lists.ozlabs.org>, <BMC-SW@aspeedtech.com>
-Subject: Re: [net-next 4/4] net: ftgmac100: add RGMII delay for AST2600
-Message-ID: <20250317095229.6f8754dd@fedora.home>
-In-Reply-To: <20250317025922.1526937-5-jacky_chou@aspeedtech.com>
-References: <20250317025922.1526937-1-jacky_chou@aspeedtech.com>
-	<20250317025922.1526937-5-jacky_chou@aspeedtech.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MQJxkkG1";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="tVvqQ7ge"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52H7QifQ031127;
+	Mon, 17 Mar 2025 08:54:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=XdhPQn6B3aoGS4/052T45l/a08iZFXHlhhUKNtEh7yA=; b=
+	MQJxkkG1hD8vjcJb4CqQZewZowX8ZgDx6zLd36WaxSz+6Ta1EQvEcbFJ6TVgxESd
+	euZzlXjlvPObOCt/YALrfv2loyx14o1bAKWbYLcpSNMc1U4o8SixPbuRC0HU+F8b
+	MDCm9QjjHaAgrwfmYgM4ktNQTgD7eJR85uvVqeo4J5zO4AxYVRHoTkESOgb6Vjpo
+	ZuEfUFJaKzxn9vY2XnOWWqXXdaJSAO70SQmvD+q+NUGTaPnfRSKNjLTZul7bjTym
+	RLQpRVIijPfDTFEOJOXWKmqUUifjDBNl5f9r2MemEv2sEGq9CAl0PprQ8dTgnZ1f
+	8ER4tecWE49/gXO4NbMdaQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45d1hft833-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Mar 2025 08:54:15 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52H8ee0D009482;
+	Mon, 17 Mar 2025 08:54:14 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45dxkwwc39-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Mar 2025 08:54:14 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ARPvwbTYxBHvVS5cF1fOpnhSDNzsSrFAhJQEPZqgOItNAvQEiACM7KBl2UTNtPdD1yphzms/lLr5DA4gfJUvM+P7BtYjIqH8kpDH1pmg65yO/ENACAUcyVPRAFVpYOpKxbXFg9/ElqFGJzwBO8mLuySx4Jim8tHk8DrTp95sDYJnikea9mm4/ohoS4Hl6UxSLwpfm7yvd6QGrQw/havCGixCWSGdLWqmn0ZXI4+m0MpVBvylSEKIJx60upUkYoyXwvlIzFUPoXqC9ipen4Iw0wqrgI6mFglrqekdnPOHTvofrVPG7EGmJFDBhShHnljTS6oyjElp3TDk3RjBgwuIyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XdhPQn6B3aoGS4/052T45l/a08iZFXHlhhUKNtEh7yA=;
+ b=jewgPBR2c9x98MPAKS2Nh7c0G5LTqZMN7BT8YAw6Fhq7oYZfVgspMu58rp6LMCzf/k56KyGpS68lvxL1rCSp47RwdxZ8nwICNMHDkeQQvct1m7/lIEcZ0RZaq8/IQ1HyTla7foyntu5G0ZnnN98sSS6SB992zwanIKFdTwHmeAq/YIl7YqigYv+ePlvD6NeuwR2UPB9mHTwGHxX2ul5kHZzvLhyVJJB9kE16aWpNoNo6/7UTr1sfTkABgzGN7l2DCEm3OFxyZS8f6+nDWS6ap8qRsHCLFdSlGY6985eQvTedH8BSR5a2Sfv0gc5UrUIGdh8sk9crdSeOw38yXF014Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XdhPQn6B3aoGS4/052T45l/a08iZFXHlhhUKNtEh7yA=;
+ b=tVvqQ7gebGVCqb+We2IJ4W3TIEZeXd72LvGDNtQiEW9YehVi3fz4+Pnhprxy3miAqREAwXHI0OFcDxwjOEil4MByZnqUZpDnIj/GR4+VDR54GSY8f39G3jAe11KgAgU10/X3cSCCn47HFkMO3E1k156M52IFFgpoh3g2QIY1M+4=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by CYYPR10MB7565.namprd10.prod.outlook.com (2603:10b6:930:bb::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
+ 2025 08:54:07 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
+ 08:54:07 +0000
+Message-ID: <cd05e767-0d30-483a-967f-a92673cdcba8@oracle.com>
+Date: Mon, 17 Mar 2025 08:54:04 +0000
+User-Agent: Mozilla Thunderbird
+From: John Garry <john.g.garry@oracle.com>
+Subject: Re: [PATCH v6 10/13] xfs: iomap COW-based atomic write support
+To: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, brauner@kernel.org,
+        djwong@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+        martin.petersen@oracle.com, tytso@mit.edu, linux-ext4@vger.kernel.org
+References: <20250313171310.1886394-1-john.g.garry@oracle.com>
+ <20250313171310.1886394-11-john.g.garry@oracle.com>
+ <8734fd79g1.fsf@gmail.com>
+Content-Language: en-US
+Organization: Oracle Corporation
+In-Reply-To: <8734fd79g1.fsf@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0186.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:311::13) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeeltdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvdeihfelueevvdekueeghfefiefgheeigeduveeifedvueeuleevudfhledulefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudekpdhrtghpthhtohepjhgrtghkhigptghhohhusegrshhpvggvughtvggthhdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhp
- dhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CYYPR10MB7565:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a0bd9ea-0853-4c50-de10-08dd65314702
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MkR1RWdzYWtVSXNXN3hFMEcyeW53SkE5YVM1WnVvejV1MDNUOWtSY1V6Y0R0?=
+ =?utf-8?B?VzM3S3RSUmpLaWQvYXBTOTVpbjFEUmJyczBreGdsc1dUSGEzS0YwdHM4MkdQ?=
+ =?utf-8?B?SUg5RHQwYjBBTElqMVhLeS94eWJNZlIrZnIxTzcwSXVKMU1JTHJFSHZyNTZm?=
+ =?utf-8?B?V3RST2NQRlo3OUtxSWN5VnovSzdwZWxSN2FEU2ZNcW9obXhYNDZORCs2SGly?=
+ =?utf-8?B?cHRVQnRsZndwaGhwT09qV1dQL3B5cFNFZGtoSXhMai9GZmpHMHVWSGhGKzR5?=
+ =?utf-8?B?REhjNk9SWG1EbzgrN0tnc0VBUVhpQlRCdXlLaFhRQ3VLSGVpQVVZbWN2NFE5?=
+ =?utf-8?B?ME90MmNVVllyNGhrVlBnQ1UzR0pQTkw0WlREbDBHUFFTeWRQd0hzS05ocnV3?=
+ =?utf-8?B?VkZEQ1Q5K2cvNktSekNWYU9YcXhlN0lrS1lnbXJPZjhWVjRYRm1DOTZkRTYr?=
+ =?utf-8?B?UzI0UE5HTWJqb1F3OWg3WG1zaHpwNC9aZFFVL2JlLzIxQ2llTHVnUVpOcDJq?=
+ =?utf-8?B?ZWY3dUJmK2FKcmpTeTJ3ZStwdUhXSXVuQ1MyZ1NsTmR3Q2RxUjFRNytJQmtW?=
+ =?utf-8?B?cUdoQmF3OUJ5bkQ0ais4anllSStjbURJYUFIeGpLNHV1S1FBMHFSdm5IN2FH?=
+ =?utf-8?B?c08wNFBMUjRrMkVkdWxXWXQ0RlV3ZHFoZXozOHlJeXIwUm56UFlXdk90M2k0?=
+ =?utf-8?B?SjF6Qit4amd5ZldaM1RSYnQwWDdCVVhpb2dhZSs5Z3Y2WkpMU2FpaVpVd3FM?=
+ =?utf-8?B?cVhRQTIxTkRqM1VoS0xsNEJmR1hwWVVGK2JKOHNkdElZVER2YStzOGRibVVI?=
+ =?utf-8?B?SFFETDg3NEFYeXc4MTQyR3pXc0ZhSkFtUWlyN3V4aWwxdzc2anMyWURtVHdK?=
+ =?utf-8?B?RXptNkUvWXhBQmpKYURNeVBoaXNRcVN5S0RoODVaek90ZzlkNnBjbG1xK3Ex?=
+ =?utf-8?B?ekVqRWovWlUxNEdrMDc3cDBEWXNlSUV6NlV0THFFSFRXQmdSbmtFMXBwbjZn?=
+ =?utf-8?B?L1NvcVdDblNlM3ZJN2hUdmlIbWhLZ3lBRGd5aVB5N3h5L3hiVVlqeWFWenZh?=
+ =?utf-8?B?M1V3ZjNkdTRRTStBYWx4bDRrMVlCTTFKeWJHUTd2eEJRMUl2dFl1UTBJRjFa?=
+ =?utf-8?B?MTluWnJIbkFIYWhPTkEvVVJVM3dKdHNYZ0RFUkVqTFRhcmpDdE44Ym9jT1Jh?=
+ =?utf-8?B?NWJUdm1pTlh2TW9Zc1dqQ1FlWnBzQnNvZkdmOUUvY3h6eGhTK2xKMUNvbVlZ?=
+ =?utf-8?B?N1hldnJXOTh6dCtJb2QxRDJrbWUzdUF1b1d3MDhCMDFTaktucVNKKzlab1JF?=
+ =?utf-8?B?RUNMeUV4U2UrRHJydmQxeFZyclJmUVBmSjRpayt2QXAvSDNMYS9Eb0NXZERO?=
+ =?utf-8?B?WWd4L1hzYmE4c1ZFYWRVeUVwWXVRajg0U0VMVzM5V2VNNUpqUmNUUlJmWHB0?=
+ =?utf-8?B?b2luT1MvbVM4dTdtTEl4SloxYjIvU29idFdCSVJOeHRjbkszRlpZOXArYlZY?=
+ =?utf-8?B?VGJZdG9XME5aQXF0V2pJQ0I5TWJKcDl1bmtkOGdSaExRcExEajRVMmp3Q0h6?=
+ =?utf-8?B?S0lJcVIxVzNsTU9nZk1mN2ZYNDZsU2Nhd0YrYkxhdFJRQ1hEVnozZWhNOEtF?=
+ =?utf-8?B?b0VpL25zTko0YnNGWlY4cGpvcWIyR2g5VXNFanVHQUhPcHlsZkpmc2tZQklD?=
+ =?utf-8?B?eTYwc3BnV2hvTFN0RnVaWUFqWkxJQ3lOZXJwalpFdDJmVEVQNHFKclovMWpT?=
+ =?utf-8?B?cFg4N0k3T3pVcDV0TXE1bmZiSHBhU0xYdXo3WWFlM1pjRnVLaVNpZ2JmK2l5?=
+ =?utf-8?B?YnRFNkE2a1dudk9FSDhhaDFZOHZwSmk1ZW5wMDVLWG1lMnJLUThkcDZrZE94?=
+ =?utf-8?Q?OHV2QJO4he41S?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RU5PM1ZUcHJaV3gwNXcwTTEvRTB2RURvM0I5dHhaQnFUclZRVFA5SGg0UHVP?=
+ =?utf-8?B?aSs3ZzJCOGY0NmIvUUpCdFNmK3FtZmxFU0w3TWRvdXFwdkVOYzZUSEpYcSsy?=
+ =?utf-8?B?WE1yWTgweVlaMWd5VksvcXQ5ZWQwdFBFTGl3M01JcDFFcDhaQjhYUFozOVlv?=
+ =?utf-8?B?aFRMcGIwL3FnTW1WRmpiekJmaE02c2JleGRHbS9ta29VTWJyVityRWQza2Rt?=
+ =?utf-8?B?bjdDT1dzcFlWU285Wk43dUpONnJ5dFljR2syTU1tNDVRNmJ1M1hUMEIyVEsy?=
+ =?utf-8?B?ME9EbjE5QjZrTnFzWFFtanRDemFUWk91NG5tc2ZoVTZ1bGlBdzI3NXl4K2Qy?=
+ =?utf-8?B?S0lUMEN5OXlLQllSb3lLcVJTT1dlcmJFVEdqb29CdEpyWmRUQlp4WW1oQ1lR?=
+ =?utf-8?B?OGZmc1NuS2NGcmVHUFZhZi9KNitjNjRQMitUb2loT05pWjNiZ2xSTENSOSt0?=
+ =?utf-8?B?MnJhM0VHK3lkN0w2dTgxc214Y0FUbFlUcHV6MXRRSmJ4M2tHVitLdEJ3N2lL?=
+ =?utf-8?B?ZHFha24rc20rZFR4SDVhTWVXN2ZUNTVlblZkVVJlV2VoNFhvNzZwWmhpTzFX?=
+ =?utf-8?B?SmJoSVloMzdHT1R5VFZBcG4wZEhOODhiZzlmTVpPeVY0bU9Vd1AwdDdBbDZo?=
+ =?utf-8?B?OHZLNENTZXZzSXEybnZEanZ3OTlEVWJNVWdyUGhQWlFBSVpPSkdId1ovdEcr?=
+ =?utf-8?B?V01sT2p2WTgydE1zNEpsZXNkTVphczBENG1OUEhGU3JFNEgxb1ZJRFBoSGxH?=
+ =?utf-8?B?RWNVbG9zQ20vemRYM2JqaDFodHNBWnNRTzhmWnJabjBlOXlyL21COXlMMWpx?=
+ =?utf-8?B?VmNtMTFiTnE3UmF4YnBVNXNlZjI2WG1zNXQrTFVtUXlkZ0c3WWNCUTFqbE1I?=
+ =?utf-8?B?OHhnZmhsZ0dSNkZYWW4wTzIzRkhFMEl4enl1UDROUnBmdFhndkRpbTEvUlNW?=
+ =?utf-8?B?Y1ZTanpxdVBGTktOd0VSMm9vYkMwOW13SXU0TC9VZjlFNVBzb01VV0F5ZGpB?=
+ =?utf-8?B?WGNmcGpxb0syQ3RSVkZpY2FXQkpHTFdXSXRWMHl6dkVEVzBjUU5sQ0lLVGk1?=
+ =?utf-8?B?V0hNUjdUcFVhSFlzdU5zZFJ3WS9Fc01IdlllUE5oaU9vckJkTmxiMjMzUmEy?=
+ =?utf-8?B?Y2RmZVZYNHk5U0x5UjRIdlBDNWR3RHg4Z3U2em9mTk1yd2NmY2haL1lSeWtK?=
+ =?utf-8?B?aUNMTEQwZzFMMlhaZVQxS3UvWFpSd1JrZEJRSEpZMGM2Y0Y2WlNCVEFtSWoz?=
+ =?utf-8?B?eWlNN2VPbHF6aUdxM1ZqSjhlUUU1VzVUeHc4NXZ3RlhpRWZUWElaaVhQYnYw?=
+ =?utf-8?B?Y1lZZnBtZHFwbFNkS0p1RmFBTWlYcTFLT1dDUFVoQVFXcGVxT2dXYXlwdzNo?=
+ =?utf-8?B?ZUlqeGtWUnkyUncyVVZiSW8zRHhDbEFpN3BCcUJaMmVvYlEweWhqOUJLcHpY?=
+ =?utf-8?B?RkY3VWpIcDhLTDNRMHZrNXhObTlWNktSZ21GM0NScmZWU3hLc2F6aWlrT1Qx?=
+ =?utf-8?B?aVFYOER6dUY2NWNxc25WVTlqSnJxVTVCaVlQRCs1R0wyNnp4MmpXdWtxbUU1?=
+ =?utf-8?B?WEF0T0hVWllNdTBZY1RiWnhNNTdpZDRtTENibGIrZGIzNUlpVCtXUTd5MDFk?=
+ =?utf-8?B?Tmw0cHR0ellFUGF0Lzd1bGxNYjVnUlV4Y0l5MTdpZDY5dFpHaWZ1R0Y3YzdP?=
+ =?utf-8?B?bmFKN2YxRHVSUE91Y2F6MUN5R0FjNUwyV0FuRnRHR3VSSTN4UnNVQjhkYTBa?=
+ =?utf-8?B?UUsvbjFkb1gxSHlnQlFFaHIyRTN6c0tQVjRIQzFQQ2RaSzhvV0VjczF6c1A0?=
+ =?utf-8?B?a0VZc0Qyb08vV24rajV6NGJtWDVFQlEyNjIxZGNYVGJmTzVqblU3bUxNdWkw?=
+ =?utf-8?B?WWVhVXdnRHpDTVB3L3lIeVBZVFAzQitCZUdibm1wNDNqOFlxeUpueGd0UzBU?=
+ =?utf-8?B?YmZMQUQzS3ZhM0tORHQ2TXE4K09PUEN5aEoyVDFyaURaVnNBWUFYaithbEI5?=
+ =?utf-8?B?UXUwcG91TzJFRDRBQVNFckM3UUYzRWxJbzBLZVN2WlNucHpjcFBkUmRmbitj?=
+ =?utf-8?B?WW5GWVdpUW5VRHFUb3BJbzdYRDZsVjNjd1p1UFVMNnpnbVV3Z2RLNzB5ekF5?=
+ =?utf-8?B?WTFLa0o3clJHMStNYXJ5d3NkYzBwdmlKRU1JblVpekdMSWl6MVBDM3dKZFJI?=
+ =?utf-8?B?NlE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	n0xh9JXW6uxyeRtAIdNfEFpVbHNAiu1TvUQS1dKr8ky6Zdgo+upC4CtkP3Istez8LZgfxit+YAYo1Gl+ZTDpIru9sZD4Dfb2v/tgXowHwwC0rrHl4Cv24+95xTHuoZIQ3wAmMrCICuNtsxEXfIstwuNWB+uihskp60t1upQ3dK+hRYAz9OQxvI9PCRjeWoAu+E6Omu+F3RMGa/L6mgsEgd7pe7wCy/LmvMygQ2h4jc2o28fkopBRKDKuNTH2+zfTsaryLsRiroJJ7B3u9dIPcUvl4efc4qW1wqkWMLHvVzJ0u4ILkWsPhIgJtf0U5Gix5hnUwGS5JZLx9JlKtwm3dcdGCLu5R/x1rDZq+7HTNcT9H4Ut1FWhsQjmUH48mJFdw5+jWhzAeDi1to8eimfpfwje7h6wp6Pow2FETslEqsUGs58ov8Sx7uIitt2RitVZpCIEtu8ELN39mtFGpokZqHJU7kINRIgPjXYl96CkzQbiUZs8l6U82+/zVWWQXlOwFwCJGSNDMVy/+UZEXVKcPBClWdg1ZE8D4klIb9Fi+ibME/L+K+Ma3D7MP9ypoAlG2pYduvtFVk5nkBLPjyOJL2Qovyk1VEdiWVYViy3TwvM=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a0bd9ea-0853-4c50-de10-08dd65314702
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 08:54:07.8154
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dYhsFR97DOevmmLc52L3S4NOfFBJobgy7PzKRuHh/K6+QEuDOfuhTWGSPopy0h6KnfI0kMXGT8drlCLLPFBOGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR10MB7565
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-17_03,2025-03-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2503170065
+X-Proofpoint-GUID: JYCfYNdjqPiM-XBa4voz8MgOXFYz6JSr
+X-Proofpoint-ORIG-GUID: JYCfYNdjqPiM-XBa4voz8MgOXFYz6JSr
 
-Hi,
 
-On Mon, 17 Mar 2025 10:59:22 +0800
-Jacky Chou <jacky_chou@aspeedtech.com> wrote:
-
-> Use rx-internal-delay-ps and tx-internal-delay-ps
-> properties to configue the RGMII delay into corresponding register of
-> scu. Currently, the ftgmac100 driver only configures on AST2600 and will
-> be by pass the other platforms.
-> The details are in faraday,ftgmac100.yaml.
+>> +		}
+>>   		end_fsb = imap.br_startoff + imap.br_blockcount;
+>>   		length = XFS_FSB_TO_B(mp, end_fsb) - offset;
+>>   	}
+>>   
+>> -	if (imap_needs_alloc(inode, flags, &imap, nimaps))
+>> +	needs_alloc = imap_needs_alloc(inode, flags, &imap, nimaps);
+>> +
+>> +	if (flags & IOMAP_ATOMIC) {
+>> +		error = -EAGAIN;
+>> +		/*
+>> +		 * If we allocate less than what is required for the write
+>> +		 * then we may end up with multiple mappings, which means that
+>> +		 * REQ_ATOMIC-based cannot be used, so avoid this possibility.
+>> +		 */
+>> +		if (needs_alloc && orig_end_fsb - offset_fsb > 1)
+>> +			goto out_unlock;
 > 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->  drivers/net/ethernet/faraday/ftgmac100.c | 88 ++++++++++++++++++++++++
->  drivers/net/ethernet/faraday/ftgmac100.h | 12 ++++
->  2 files changed, 100 insertions(+)
+> I have a quick question here. Based on above check it looks like
+> allocation requests on a hole or the 1st time allocation (append writes)
+> for a given logical range will always be done using CoW fallback
+> mechanism, isn't it? 
+
+Right, but...
+
+
+> So that means HW based multi-fsblock atomic write
+> request will only happen for over writes (non-discontigous extent),
+> correct?
+
+For an unwritten pre-allocated extent, we can use the REQ_ATOMIC method.
+
+fallocate (without ZERO RANGE) would give a pre-allocated unwritten 
+extent, and a write there would not technically be an overwrite.
+
 > 
-> diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-> index 17ec35e75a65..ea2061488cba 100644
-> --- a/drivers/net/ethernet/faraday/ftgmac100.c
-> +++ b/drivers/net/ethernet/faraday/ftgmac100.c
-> @@ -27,6 +27,9 @@
->  #include <linux/phy_fixed.h>
->  #include <net/ip.h>
->  #include <net/ncsi.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-> +#include <linux/bitfield.h>
->  
->  #include "ftgmac100.h"
->  
-> @@ -1812,6 +1815,88 @@ static bool ftgmac100_has_child_node(struct device_node *np, const char *name)
->  	return ret;
->  }
->  
-> +static void ftgmac100_set_internal_delay(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct net_device *netdev;
-> +	struct ftgmac100 *priv;
-> +	struct regmap *scu;
-> +	u32 rgmii_tx_delay, rgmii_rx_delay;
-> +	u32 dly_reg, tx_dly_mask, rx_dly_mask;
-> +	int tx, rx;
+> Now, it's not always necessary that if we try to allocate an extent for
+> the given range, it results into discontiguous extents. e.g. say, if the
+> entire range being written to is a hole or append writes, then it might
+> just allocate a single unwritten extent which is valid for doing an
+> atomic write using HW/BIOs right?
 
-Please use the reverse christmas tree notation, sorting declarations by
-descending line length
+Right
 
-> +	netdev = platform_get_drvdata(pdev);
-> +	priv = netdev_priv(netdev);
-> +
-> +	tx = of_property_read_u32(np, "tx-internal-delay-ps", &rgmii_tx_delay);
-> +	rx = of_property_read_u32(np, "rx-internal-delay-ps", &rgmii_rx_delay);
-> +
-> +	if (of_device_is_compatible(np, "aspeed,ast2600-mac")) {
-> +		/* According to mac base address to get mac index */
-> +		switch (priv->res->start) {
-> +		case 0x1e660000:
-> +			dly_reg = AST2600_MAC12_CLK_DLY;
-> +			tx_dly_mask = AST2600_MAC1_TX_DLY;
-> +			rx_dly_mask = AST2600_MAC1_RX_DLY;
-> +			rgmii_tx_delay = FIELD_PREP(AST2600_MAC1_TX_DLY, rgmii_tx_delay);
-> +			rgmii_rx_delay = FIELD_PREP(AST2600_MAC1_RX_DLY, rgmii_rx_delay);
-> +			break;
-> +		case 0x1e680000:
-> +			dly_reg = AST2600_MAC12_CLK_DLY;
-> +			tx_dly_mask = AST2600_MAC2_TX_DLY;
-> +			rx_dly_mask = AST2600_MAC2_RX_DLY;
-> +			rgmii_tx_delay = FIELD_PREP(AST2600_MAC2_TX_DLY, rgmii_tx_delay);
-> +			rgmii_rx_delay = FIELD_PREP(AST2600_MAC2_RX_DLY, rgmii_rx_delay);
-> +			break;
-> +		case 0x1e670000:
-> +			dly_reg = AST2600_MAC34_CLK_DLY;
-> +			tx_dly_mask = AST2600_MAC3_TX_DLY;
-> +			rx_dly_mask = AST2600_MAC3_RX_DLY;
-> +			rgmii_tx_delay = FIELD_PREP(AST2600_MAC3_TX_DLY, rgmii_tx_delay);
-> +			rgmii_rx_delay = FIELD_PREP(AST2600_MAC3_RX_DLY, rgmii_rx_delay);
-> +			break;
-> +		case 0x1e690000:
-> +			dly_reg = AST2600_MAC34_CLK_DLY;
-> +			tx_dly_mask = AST2600_MAC4_TX_DLY;
-> +			rx_dly_mask = AST2600_MAC4_RX_DLY;
-> +			rgmii_tx_delay = FIELD_PREP(AST2600_MAC4_TX_DLY, rgmii_tx_delay);
-> +			rgmii_rx_delay = FIELD_PREP(AST2600_MAC4_RX_DLY, rgmii_rx_delay);
-> +			break;
-> +		default:
-> +			dev_warn(&pdev->dev, "Invalid mac base address");
-> +			return;
+> And it is valid to write using unwritten extent as long as we don't have
+> mixed mappings i.e. the entire range should either be unwritten or
+> written for the atomic write to be untorned, correct?
+> 
 
-There has to be a better way that directly looking up the base address.
-Maybe you need an extra DT property ?
+We can't write to discontiguous extents, and a mixed mapping would mean 
+discontiguous extents.
 
-> +		}
-> +	} else {
-> +		return;
-> +	}
-> +
-> +	scu = syscon_regmap_lookup_by_phandle(np, "scu");
-> +	if (IS_ERR(scu)) {
-> +		dev_warn(&pdev->dev, "failed to map scu base");
-> +		return;
-> +	}
-> +
-> +	if (!tx) {
-> +		/* Use tx-internal-delay-ps as index to configure tx delay
-> +		 * into scu register.
-> +		 */
+And, as mentioned earlier, it is ok to use REQ_ATOMIC method on an 
+unwritten extent.
 
-So this goes completely against the naming of the property. It has the
--ps suffix, so you would expect to have picoseconds values passed, and
-not an arbiraty index.
+> I am guessing this is kept intentional?
+> 
+Yes
 
-Take a look at other drivers, you should accept picseconds values from
-these properties, then compute the relevant index in the driver. That
-index should be something internal to your driver.
+Thanks,
+John
 
-An example here :
 
-https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_rgmii.c#L51
-
-> +		if (rgmii_tx_delay > 64)
-> +			dev_warn(&pdev->dev, "Get invalid tx delay value");
-> +		else
-> +			regmap_update_bits(scu, dly_reg, tx_dly_mask, rgmii_tx_delay);
-> +	}
-> +
-> +	if (!rx) {
-> +		/* Use rx-internal-delay-ps as index to configure rx delay
-> +		 * into scu register.
-> +		 */
-> +		if (rgmii_tx_delay > 64)
-> +			dev_warn(&pdev->dev, "Get invalid rx delay value");
-> +		else
-> +			regmap_update_bits(scu, dly_reg, rx_dly_mask, rgmii_rx_delay);
-> +	}
-> +}
-> +
->  static int ftgmac100_probe(struct platform_device *pdev)
->  {
->  	struct resource *res;
-> @@ -1977,6 +2062,9 @@ static int ftgmac100_probe(struct platform_device *pdev)
->  		if (of_device_is_compatible(np, "aspeed,ast2600-mac"))
->  			iowrite32(FTGMAC100_TM_DEFAULT,
->  				  priv->base + FTGMAC100_OFFSET_TM);
-> +
-> +		/* Configure RGMII delay if there are the corresponding properties */
-> +		ftgmac100_set_internal_delay(pdev);
->  	}
->  
->  	/* Default ring sizes */
-> diff --git a/drivers/net/ethernet/faraday/ftgmac100.h b/drivers/net/ethernet/faraday/ftgmac100.h
-> index 4968f6f0bdbc..d464d287502c 100644
-> --- a/drivers/net/ethernet/faraday/ftgmac100.h
-> +++ b/drivers/net/ethernet/faraday/ftgmac100.h
-> @@ -271,4 +271,16 @@ struct ftgmac100_rxdes {
->  #define FTGMAC100_RXDES1_UDP_CHKSUM_ERR	(1 << 26)
->  #define FTGMAC100_RXDES1_IP_CHKSUM_ERR	(1 << 27)
->  
-> +/* Aspeed SCU */
-> +#define AST2600_MAC12_CLK_DLY	0x340
-> +#define AST2600_MAC1_TX_DLY		GENMASK(5, 0)
-> +#define AST2600_MAC1_RX_DLY		GENMASK(17, 12)
-> +#define AST2600_MAC2_TX_DLY		GENMASK(11, 6)
-> +#define AST2600_MAC2_RX_DLY		GENMASK(23, 18)
-> +#define AST2600_MAC34_CLK_DLY	0x350
-> +#define AST2600_MAC3_TX_DLY		AST2600_MAC1_TX_DLY
-> +#define AST2600_MAC3_RX_DLY		AST2600_MAC1_RX_DLY
-> +#define AST2600_MAC4_TX_DLY		AST2600_MAC2_TX_DLY
-> +#define AST2600_MAC4_RX_DLY		AST2600_MAC2_RX_DLY
-> +
->  #endif /* __FTGMAC100_H */
-
-Maxime
