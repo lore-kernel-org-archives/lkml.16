@@ -1,38 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B774238146;
-	Mon, 17 Mar 2025 13:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475F38F5E;
+	Mon, 17 Mar 2025 13:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742216920; cv=none; b=PjweWFcKJBarsUBBy+os0dCC0aVtVcxTpjNZ44/C28KDdYix3HrotGfXRi/AJTEsFu2+n+1FxqIMbxLOwx2tM2oJ2h/zJwz6NwfSP5uuHEr6eukHySGPj1IKnoFPWv3bJ1YjNx/9Y5XvmMvvjR66XgIliybKETaEa93CzWxRLOI=
+	t=1742216936; cv=none; b=Y0AdcVvH36XbyBrSVA6LQUVQWuGWJhz3cxp3Al/CRUM/A92pWtvZaeVI0C7O8NE1ZiWVaH740KlgRz4LcYAbfCF049Mpb9p71jowWHP96Kd8KTJR8YNzFK9Zq8WvNLmi/fwRM4v1O3RDSJEXWZq9cPOqOVSt0Q1+tJog/Kwb1Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742216920; c=relaxed/simple;
-	bh=A2buZVyCTM/JLx3cksI2FxOC72ZMVKmlADsSnDNR/kk=;
+	s=arc-20240116; t=1742216936; c=relaxed/simple;
+	bh=LG5AaX//OYah0wUsX1Pw3VQ66aM1dBeObLkx1xgpJOo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VUOEAc+Y9BTHWoY/5zIZg8jzLbQcv0z34Rzs1DKIfNc4Z+cCP+b6feg+LZb70j14ond1+UmOJL9v4ipLB8Gyavd1JjnSaIoF3wN85chl+aFctqNGLbhIknq1fIpLHvkMlWvnR2uKEgH/ipjKxgBqAkZXujeSgpHiimjoC+rTgtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1e9fQ8VL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lnt0NrYONSmCisvPlgEpBDy1crZP5ViULsx5asvtkJoJmja44u7F+YtTXRvXQnRVF6VMzWJQYIxg5A9oYESfk9d7wQ3UGdDg5GjVir1TEMr0BqrKJxdESHzsOmQCcLNlGu86eHvTh2cf1vlhZF7ylaKKazIEfArVNEdd4RW9vzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=A4E4xZ/X; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1e9fQ8VL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77510C4CEE3;
-	Mon, 17 Mar 2025 13:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742216919;
-	bh=A2buZVyCTM/JLx3cksI2FxOC72ZMVKmlADsSnDNR/kk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1e9fQ8VLMdvG0BUnk8W99h+nfmKSGbOZ4VwsxabWWPiErqHlcAWqjmhN2lyP+gvwp
-	 R8VWYY+QIi+ghpcCVuDIvDDGLjP4k9RMJbEej69VO69kbuc+xPBLr4RuVQZU65TLeT
-	 rE78qf0qIC7NdQc04B+uvDpVXOP5oPff+cDf5qzY=
-Date: Mon, 17 Mar 2025 14:07:00 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH 4/9] rtc: efi: Transition to the faux device interface
-Message-ID: <2025031755-simile-landside-e719@gregkh>
-References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
- <20250317-plat2faux_dev-v1-4-5fe67c085ad5@arm.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="A4E4xZ/X"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=5KAN/TL0PYijvGqP9Y/30zrHPi/CEWhklinOLwIY8Ws=; b=A4E4xZ/XcQNU1dNttR8vxdIB3a
+	G8tZgnwP5mdeK9G06uuDMoRIhp0sey4w4eB9vB4WlX3MPdCdy/vlZixCQh6m6oNGI1tolR2Wdjp+z
+	OHmy/9ZTzpRQjgO8XmJB534lYIUycJTgaiVuWdhuNM9qm+LJkvTqQmcdTYW22NszkbCA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tuACv-0068Qc-Mz; Mon, 17 Mar 2025 14:08:41 +0100
+Date: Mon, 17 Mar 2025 14:08:41 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+	andrew@codeconstruct.com.au, ratbert@faraday-tech.com,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, BMC-SW@aspeedtech.com
+Subject: Re: [net-next 2/4] ARM: dts: ast2600-evb: add default RGMII delay
+Message-ID: <5db47dea-7d90-45a1-85a1-1f4f5edd3567@lunn.ch>
+References: <20250317025922.1526937-1-jacky_chou@aspeedtech.com>
+ <20250317025922.1526937-3-jacky_chou@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,108 +49,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250317-plat2faux_dev-v1-4-5fe67c085ad5@arm.com>
+In-Reply-To: <20250317025922.1526937-3-jacky_chou@aspeedtech.com>
 
-On Mon, Mar 17, 2025 at 10:13:16AM +0000, Sudeep Holla wrote:
-> The EFI RTC driver does not require the creation of a platform device.
-> Originally, this approach was chosen for simplicity when the driver was
-> first implemented.
-> 
-> With the introduction of the lightweight faux device interface, we now
-> have a more appropriate alternative. Migrate the driver to utilize the
-> faux bus, given that the platform device it previously created was not
-> a real one anyway. This will simplify the code, reducing its footprint
-> while maintaining functionality.
-> 
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: linux-rtc@vger.kernel.org
-> Cc: linux-efi@vger.kernel.org
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/firmware/efi/efi.c |  3 ---
->  drivers/rtc/rtc-efi.c      | 31 ++++++++++++++++++++++---------
->  2 files changed, 22 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index eec173cb1f398d3b4f28b42c917e50e1728dc277..18deb2d212ce6944927f5e3a9a40bb6754e7ffa9 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -427,9 +427,6 @@ static int __init efisubsys_init(void)
->  		}
->  	}
+> @@ -147,6 +153,9 @@ &mac2 {
+>  	phy-mode = "rgmii";
+>  	phy-handle = <&ethphy2>;
 >  
-> -	if (efi_rt_services_supported(EFI_RT_SUPPORTED_TIME_SERVICES))
-> -		platform_device_register_simple("rtc-efi", 0, NULL, 0);
-> -
->  	/* We register the efi directory at /sys/firmware/efi */
->  	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
->  	if (!efi_kobj) {
-> diff --git a/drivers/rtc/rtc-efi.c b/drivers/rtc/rtc-efi.c
-> index fa8bf82df9488e7d1c23c058b4a3032dde74bc6e..3d21a470e8ff9777c5eeb991f3aa9170f6351930 100644
-> --- a/drivers/rtc/rtc-efi.c
-> +++ b/drivers/rtc/rtc-efi.c
-> @@ -14,7 +14,7 @@
->  #include <linux/module.h>
->  #include <linux/stringify.h>
->  #include <linux/time.h>
-> -#include <linux/platform_device.h>
-> +#include <linux/device/faux.h>
->  #include <linux/rtc.h>
->  #include <linux/efi.h>
->  
-> @@ -254,7 +254,7 @@ static const struct rtc_class_ops efi_rtc_ops = {
->  	.proc		= efi_procfs,
->  };
->  
-> -static int __init efi_rtc_probe(struct platform_device *dev)
-> +static int __init efi_rtc_probe(struct faux_device *dev)
->  {
->  	struct rtc_device *rtc;
->  	efi_time_t eft;
-> @@ -268,7 +268,7 @@ static int __init efi_rtc_probe(struct platform_device *dev)
->  	if (IS_ERR(rtc))
->  		return PTR_ERR(rtc);
->  
-> -	platform_set_drvdata(dev, rtc);
-> +	faux_device_set_drvdata(dev, rtc);
->  
->  	rtc->ops = &efi_rtc_ops;
->  	clear_bit(RTC_FEATURE_UPDATE_INTERRUPT, rtc->features);
-> @@ -282,15 +282,28 @@ static int __init efi_rtc_probe(struct platform_device *dev)
->  	return devm_rtc_register_device(rtc);
->  }
->  
-> -static struct platform_driver efi_rtc_driver = {
-> -	.driver = {
-> -		.name = "rtc-efi",
-> -	},
-> +static struct faux_device_ops efi_rtc_fdev_ops = {
-> +	.probe = efi_rtc_probe,
->  };
->  
-> -module_platform_driver_probe(efi_rtc_driver, efi_rtc_probe);
-> +static int __init rtc_efi_init(void)
-> +{
-> +	struct faux_device *fdev;
+> +	tx-internal-delay-ps = <8>;
+> +	rx-internal-delay-ps = <4>;
 > +
-> +	if (!efi_rt_services_supported(EFI_RT_SUPPORTED_TIME_SERVICES))
-> +		return 0;
-> +
-> +	fdev = faux_device_create("rtc-efi", NULL, &efi_rtc_fdev_ops);
-> +	if (!fdev) {
-> +		pr_err("rtc-efi: could not create the device\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +device_initcall(rtc_efi_init);
->  
->  MODULE_AUTHOR("dann frazier <dannf@dannf.org>");
->  MODULE_LICENSE("GPL");
->  MODULE_DESCRIPTION("EFI RTC driver");
-> -MODULE_ALIAS("platform:rtc-efi");
-> +MODULE_ALIAS("faux:rtc-efi");
 
-No alias please.
+Ideally you want:
+
+	phy-mode = "rgmii-id";
+	tx-internal-delay-ps = <0>;
+	rx-internal-delay-ps = <0>;
+
+Since 'rgmii-id' correctly describes the hardware.
+
+	Andrew
