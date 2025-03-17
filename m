@@ -1,107 +1,126 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60457176ADB;
-	Mon, 17 Mar 2025 18:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95051A2860;
+	Mon, 17 Mar 2025 18:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742236698; cv=none; b=KRQGP7dQVzLTljbStIO+CL7MmsiyxzSmzKYnabxgJA+cJVF+3lWrrAE5SYgZo6Waw3lRpB0KY7yl55fkp5XuP1q5HFf68VqDGWF/9r/UYdmA/ukpnOK4/CbcGEWQb5ne5ntn+Spv3mMxBBTPAyjuqCxAyyOEuifr0yCG0Ye7leY=
+	t=1742236700; cv=none; b=ODtutI4dW5B4mbzmfKPmMhObwBtZVwLcKo4mgd1+Muk0+MdIb/mb/e4hZWjAosFBXR+9SeRi3t+QeCf9iA/rnaA05OE/Zti2+aAq4cE/Hsq7xfij1/njqU97TXOZ+AZWJs+xi2CWbQNQCOclithw7SdwblgAPg0YXCC05WbGbR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742236698; c=relaxed/simple;
-	bh=x8VzNlnfyxrbj98l+2sMkUMZwVMQl42R9kHvQVPYs+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L8TCpwvAnqX/xWaXVn3GNPIxnV4MuiS88d170d3qG0pW2eG/7kNO+5TIlOFR6I2NyZ7CTMqCA/aKsQ5xgw65nQhkWMxODOeC7bLu7QvayAtzh1HeJSleTMAgi+rItZMJQd25NyD89ZKOslkchsaMEgK7VtkNlPX8D84Z5Z+JBGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1tuFLa-000000007G3-0hL0;
-	Mon, 17 Mar 2025 18:37:58 +0000
-Date: Mon, 17 Mar 2025 18:37:54 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: "Lucien.Jheng" <lucienx123@gmail.com>
-Cc: linux-clk@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
-	linux@armlinux.org.uk, kuba@kernel.org, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com, ericwouds@gmail.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	joseph.lin@airoha.com, wenshin.chung@airoha.com
-Subject: Re: [PATCH v4 net-next PATCH 1/1] net: phy: air_en8811h: Add clk
- provider for CKO pin
-Message-ID: <Z9hsAmiD9sZ_NAR-@makrotopia.org>
-References: <20250317143111.28824-1-lucienX123@gmail.com>
- <20250317143111.28824-2-lucienX123@gmail.com>
+	s=arc-20240116; t=1742236700; c=relaxed/simple;
+	bh=39OVTY6F/UnTTojg2v2I6px85IZIQ5P7czNQSmDtm4Q=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Abx5MAjbs4yoZi7QpKtj3pY78DF3f9PvBt6bSmjil8NRPp0g5HRyt/1sLlc2f6Jer/ZI8h26z8lFaB2tUbDxhHd03SzCESUNG6Gb33oRVcAvu7upDJ4RNwFBcXhC9geGytc5FR+suMYD/S5cDmWVouIwQcfwcq0wOLW3zfyZRYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mThr8JO4; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mThr8JO4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742236699; x=1773772699;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=39OVTY6F/UnTTojg2v2I6px85IZIQ5P7czNQSmDtm4Q=;
+  b=mThr8JO4epncEm8LKTkp4mw5HbL2H0zWr4oSFfRISweKp9x0tYhg9qzj
+   iCC8A6qgp+J8xDgYY6Llcb/kWT2gXBTu223pQvw2w+yH1RKf0retcdFsd
+   d1envx2+omCEbErInU0ZB8el2PlebZx9S88fqadXPU83hpbRiLkZzOFpK
+   8UVNpKOAK3ZDi7hfaE4PBr5evLKUKN3BBysKyr5UU60yjFQhEafLm5lZc
+   1v3haZh7uFbr9sqmwCUAWtaF2iir6kU8k6sSZz7xUzsjxLHAk8hiFdCil
+   PZQgV944dXbeQJjw4lSLhYhW8aHiXcS75HtM4/e2/StSox8eXfDGyTmi4
+   A==;
+X-CSE-ConnectionGUID: Dlri5rglRV6nKO0W7pEOuQ==
+X-CSE-MsgGUID: qTOwnNlbQqiSYq7f+sAPKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43230773"
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="43230773"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 11:38:18 -0700
+X-CSE-ConnectionGUID: 2TxeDznFTcGtjANJYrwKjg==
+X-CSE-MsgGUID: JE2/MoTxS1G7MFn7ywJRRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="122202900"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO [10.245.246.97]) ([10.245.246.97])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 11:38:16 -0700
+Message-ID: <e3b4f44ad493da5c39749d1721702b133937b321.camel@linux.intel.com>
+Subject: Re: [RFC PATCH] block: Make request_queue lockdep splats show up
+ earlier
+From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
+To: Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, Ming Lei
+	 <ming.lei@redhat.com>
+Date: Mon, 17 Mar 2025 19:38:13 +0100
+In-Reply-To: <5b81f4be-427f-4083-8cbe-e201d0f255c5@acm.org>
+References: <20250317171156.2954-1-thomas.hellstrom@linux.intel.com>
+	 <f46f0286-8052-4a29-9d89-376bf9b48d8a@acm.org>
+	 <13031d34692b0c97799de81c0b83875d56076e13.camel@linux.intel.com>
+	 <5b81f4be-427f-4083-8cbe-e201d0f255c5@acm.org>
+Organization: Intel Sweden AB, Registration Number: 556189-6027
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250317143111.28824-2-lucienX123@gmail.com>
 
-On Mon, Mar 17, 2025 at 10:31:11PM +0800, Lucien.Jheng wrote:
-> EN8811H outputs 25MHz or 50MHz clocks on CKO, selected by GPIO3.
-> CKO clock activates on power-up and continues through md32 firmware loading.
+On Mon, 2025-03-17 at 11:28 -0700, Bart Van Assche wrote:
+> On 3/17/25 11:13 AM, Thomas Hellstr=C3=B6m wrote:
+> > On Mon, 2025-03-17 at 10:37 -0700, Bart Van Assche wrote:
+> > > On 3/17/25 10:11 AM, Thomas Hellstr=C3=B6m wrote:
+> > > > diff --git a/block/blk-core.c b/block/blk-core.c
+> > > > index d6c4fa3943b5..4aa439309406 100644
+> > > > --- a/block/blk-core.c
+> > > > +++ b/block/blk-core.c
+> > > > @@ -455,6 +455,12 @@ struct request_queue
+> > > > *blk_alloc_queue(struct
+> > > > queue_limits *lim, int node_id)
+> > > > =C2=A0=C2=A0=C2=A0	lockdep_init_map(&q->q_lockdep_map, "&q-
+> > > > > q_usage_counter(queue)",
+> > > > =C2=A0=C2=A0=C2=A0			 &q->q_lock_cls_key, 0);
+> > > > =C2=A0=C2=A0=20
+> > > > +	/* Prime io_lockdep_map as reclaim tainted */
+> > > > +	fs_reclaim_acquire(GFP_KERNEL);
+> > > > +	rwsem_acquire_read(&q->io_lockdep_map, 0, 0,
+> > > > _RET_IP_);
+> > > > +	rwsem_release(&q->io_lockdep_map, _RET_IP_);
+> > > > +	fs_reclaim_release(GFP_KERNEL);
+> > > > +
+> > > > =C2=A0=C2=A0=C2=A0	q->nr_requests =3D BLKDEV_DEFAULT_RQ;
+> > > > =C2=A0=C2=A0=20
+> > > > =C2=A0=C2=A0=C2=A0	return q;
+> > >=20
+> > > Hmm ... my understanding is that it is fine if FS code calls
+> > > block
+> > > layer
+> > > code but also that block layer code never should call FS code.
+> >=20
+> > That added code only mimics the locking sequence that happens
+> > during
+> > reclaim with the existing code to register the locking order
+> > expected
+> > by the reclaim code. If anything violates that, lockdep splat [2]
+> > will
+> > appear.
+> >=20
+> > So I'm not quite following your comment?
+> Shouldn't the above code be added in the VFS code rather than in the
+> block layer?
 
-Maybe add here:
-"Implement clk provider driver so we can disable the clock output in case
-it isn't needed, which also helps to reduce EMF noise"
+It registers a known locking order WRT reclaim(GFP_KERNEL) for the q-
+>io_lockdep_map, which is itself initialized in this function. I
+believe any known locking orders should be registered at the place the
+lockdep map is initialized.
 
-Ie. the description you had was fine and good to have, just the lines had to
-be shorter (ie. just insert linebreaks at 70~75 chars).
+Thanks,
+Thomas
 
-See more comments inline below:
 
-> ...
-> @@ -806,6 +817,84 @@ static int en8811h_led_hw_is_supported(struct phy_device *phydev, u8 index,
->  	return 0;
->  };
->  
-> +static unsigned long en8811h_recalc_rate(struct clk_hw *hw, unsigned long parent)
+>=20
+> Thanks,
+>=20
+> Bart.
 
-calling this en8811h_clk_recalc_rate() would be better imho.
-
-> +{
-> +	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
-> +	struct phy_device *phydev = priv->phydev;
-> +	u32 pbus_value;
-> +	int ret;
-> +
-> +	ret = air_buckpbus_reg_read(phydev, EN8811H_HWTRAP1, &pbus_value);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return (pbus_value & EN8811H_HWTRAP1_CKO) ? 50000000 : 25000000;
-> +}
-> +
-> +static int en8811h_enable(struct clk_hw *hw)
-
-call this en8811h_clk_enable()
-
-> +{
-> +	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
-> +	struct phy_device *phydev = priv->phydev;
-> +
-> +	return air_buckpbus_reg_modify(phydev, EN8811H_CLK_CGM,
-> +				EN8811H_CLK_CGM_CKO, EN8811H_CLK_CGM_CKO);
-> +}
-> +
-> +static void en8811h_disable(struct clk_hw *hw)
-
-call this en8811h_clk_disable()
-
-> +{
-> +	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
-> +	struct phy_device *phydev = priv->phydev;
-> +
-> +	air_buckpbus_reg_modify(phydev, EN8811H_CLK_CGM,
-> +				EN8811H_CLK_CGM_CKO, 0);
-> +}
-> +
-> +static int en8811h_is_enabled(struct clk_hw *hw)
-
-call this en8811h_clk_is_enabled()
