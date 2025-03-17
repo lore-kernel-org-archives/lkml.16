@@ -1,89 +1,136 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285721DED6D;
-	Mon, 17 Mar 2025 08:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DCD221560;
+	Mon, 17 Mar 2025 08:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742200769; cv=none; b=Tphm9Rp7fJhaMx8YkLFSh/XYGgGYfULQF4AliND5kbEaE70RtD19VvYF+9UULPiOgEOGo4lqMny4/pVKgiORG2T3M59s93xgU70J/yKDdFNk0sszAnPzrbnGxVIyCseiN2oW/0S74hixd2/yQmR/IWjvXn5WOhelSbWIGA0OE+M=
+	t=1742200795; cv=none; b=i/zDhNmjvavjaUizMsf+5lSQzz0DsNsffiHmKKyyQGJdBb+6V/Dkpc/K9zYjGZgpjxs2aWKNa79BnxsHw7nR1jemUIJCFscjTFAajt1InOX8bLh4AS9SFpa03Y8YQ1PkFB/eFzZc51bTe0Az9tn/Eck9zcbzLGY3iSbjAPl1XLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742200769; c=relaxed/simple;
-	bh=0LWPwkYHb5CwsDkji/iwkvFIS+/rI+FlG0f6Syt76Q8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mDOyq7lfpCni6VhZk+6wfNdr9SQukN0Jrz8p6FUreFgbW98STaVO2/ehkiLXRR0Oma6Wu7XESMhQc06bNL1eNxtkY4TEhx9eUPp7A2JIh2g8QUvJWGM5bVglh/meaeQtregyunR/IZZcdei8Zz01jAWzRvaWSgXjEG2acDqdFIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=H+TbMdwG; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1742200795; c=relaxed/simple;
+	bh=ebNv1DgdatEgzntyZ95OdFIGUMhBrxkKUEyNQS6jUSE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eu8OwonhmCzyjFiJieBFq5PLiNs6yhtTwpVKrd8y8krEdxDO/NvyJyWZ32O24jgLkz6wpkVHFqXRvIy5Xwme0FRpHZAHkC4IGCnLBv+2pz/oJT5Q3s+dpe0HRHgqFzZZ7sNGEXH5KD3TF5aj1p7etvoW4c8O3Bl0262UQnrt3yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=gEh1I/Kf; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="H+TbMdwG"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 7CF0B1F842;
-	Mon, 17 Mar 2025 09:39:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1742200757;
-	bh=m+AhiKfws1xc+HMC/G6boZQHJPWKEYM0DxVNwOLDPnI=; h=From:To:Subject;
-	b=H+TbMdwGbPL5QAHuKGVI9Fcqp86xbDrmmM5qZ10uPDDHgKuVtimP7VKoCQMf+ZwHZ
-	 YbublZmlatb7jgl3LjrJtkk5F6XXNcBnXH2BdEln57eA42cPCWh6iAv514SR186rxj
-	 znXYPA8tR3GWgRlmi+WHfuz4bUZnAdfJ+QpZQRppJBoKcljCApwFt7+5ZtQxc/xdKl
-	 ZK0DWmtWneTh0/9kPt2QmxCH4Kiux7DoYF3qzYGNuI3Tw8cj2rc4KeJy22IbyuZDPH
-	 5WUZtUt6rgCanoyXpBCpuvhp/7vNkLuQvOjIyRxnkYZG2knWqwoVyD7XQQHO8C/1Ac
-	 71Sr9VUjUjmOA==
-Date: Mon, 17 Mar 2025 09:39:11 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	soc@kernel.org, Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [RFC PATCH v1 2/2] platform: toradex: add preliminary support
- for Embedded Controller
-Message-ID: <20250317083911.GA17428@francesco-nb>
-References: <20250313144331.70591-1-francesco@dolcini.it>
- <20250313144331.70591-3-francesco@dolcini.it>
- <Z9LxbzJ3zf0RT-JS@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gEh1I/Kf"
+X-UUID: 61e070de030b11f08eb9c36241bbb6fb-20250317
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=abBZBbHSvhhu4hHLFKPdPw4jefnWaOmy4oNAIAImzV8=;
+	b=gEh1I/KfvuQwEGblrlRnEfA+ZD8xqfChFpP6u1j3Oc5KtifvIacS6EvorqUUSWGP9Xoi4w2f+rvybnKXJwsXtSrTLmfVXfmNbSmNbt4mFZnnhzjwJH+IzNajwkHhJONK7D2VKG6IeI0eFS+C1j8qLgkGsC5JpdhMahutOnxXxhw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:0ec54276-661a-4803-819b-62d99d62ddc4,IP:0,UR
+	L:25,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:25
+X-CID-META: VersionHash:0ef645f,CLOUDID:8a756fc6-16da-468a-87f7-8ca8d6b3b9f7,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:11|83|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 61e070de030b11f08eb9c36241bbb6fb-20250317
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
+	(envelope-from <jjian.zhou@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1845444860; Mon, 17 Mar 2025 16:39:47 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Mon, 17 Mar 2025 16:39:45 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Mon, 17 Mar 2025 16:39:44 +0800
+From: Jjian Zhou <jjian.zhou@mediatek.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Chen-Yu Tsai
+	<wenst@chromium.org>, Jjian Zhou <jjian.zhou@mediatek.com>
+Subject: [PATCH RFC v2 3/3] dt-bindings: mailbox: mtk,vcp-mbox: add mtk vcp-mbox document
+Date: Mon, 17 Mar 2025 16:38:09 +0800
+Message-ID: <20250317083822.891-4-jjian.zhou@mediatek.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250317083822.891-1-jjian.zhou@mediatek.com>
+References: <20250317083822.891-1-jjian.zhou@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9LxbzJ3zf0RT-JS@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-Hello Andy,
-thanks for the review.
+This patch adds document for mediatek vcp mbox.
 
-On Thu, Mar 13, 2025 at 04:53:35PM +0200, Andy Shevchenko wrote:
-> On Thu, Mar 13, 2025 at 03:43:31PM +0100, Francesco Dolcini wrote:
-> 
-> > Add new platform driver for the Embedded Controller currently used
-> > in Toradex SMARC iMX8MP and SMARC iMX95.
-> > It currently provides power-off and restart (reset) handlers.
+Signed-off-by: Jjian Zhou <jjian.zhou@mediatek.com>
+---
+ .../bindings/mailbox/mtk,mt8196-vcp-mbox.yaml | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/mtk,mt8196-vcp-mbox.yaml
 
-...
-
-> > +	err = regmap_bulk_read(ec->regmap, EC_CHIP_ID_REG, &reg_val, EC_ID_VERSION_LEN);
-> > +	if (err)
-> > +		return dev_err_probe(dev, err,
-> > +				     "Cannot read id and version registers\n");
-> > +
-> > +	dev_info(dev, "Toradex Embedded Controller id %x - Firmware %d.%d\n",
-> 
-> Specifiers are semirandom. Why signed? Why x and not %u?
-
-The firmware version ("Firmware %d.%d") is two unsigned decimal number,
-so yes, I will change to "Firmware %u.%u".
-
-The ID is just an identifier that is documented as hex, therefore I
-think that the most convenient way to display it is as a hex number.
-
-Francesco
+diff --git a/Documentation/devicetree/bindings/mailbox/mtk,mt8196-vcp-mbox.yaml b/Documentation/devicetree/bindings/mailbox/mtk,mt8196-vcp-mbox.yaml
+new file mode 100644
+index 000000000000..bd1b024e22f1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/mtk,mt8196-vcp-mbox.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mailbox/mtk,mt8196-vcp-mbox.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek Video Companion Processor (VCP) mailbox
++
++maintainers:
++  - Jjian Zhou <Jjian.Zhou@mediatek.com>
++
++description:
++  The MTK VCP mailbox enables the SoC to communicate with the VCP by passing
++  messages through 64 32-bit wide registers. It has 32 interrupt vectors in
++  either direction for signalling purposes.
++
++properties:
++  compatible:
++    enum:
++      - mediatek,mt8196-vcp-mbox
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  "#mbox-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    mailbox@31b80000 {
++        compatible = "mediatek,mt8196-vcp-mbox";
++        reg = <0x31b80000 0x1000>;
++        interrupts = <GIC_SPI 789 IRQ_TYPE_LEVEL_HIGH 0>;
++        #mbox-cells = <0>;
++    };
+-- 
+2.45.2
 
