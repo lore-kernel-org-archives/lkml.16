@@ -1,129 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674B354652;
-	Mon, 17 Mar 2025 14:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9871424397A
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 14:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222968; cv=none; b=d80UBc+UPfOTiFkc1laiDCq5WWX+iqzz2f18fK6ayCi79MYNIwUGI9O7QXb35GxifwBvrZ2X3HfUa+GSe861PZ5UPAXaJoLNy6Ptsj9OMYfwOJUEUHCn5F4Hc8IB4RE0sI7erVUppfvLReqy4giJFXoDsSKXMCu32tQJaV+Bo4Y=
+	t=1742223028; cv=none; b=ioEP7aZX64kvD7wk4RC6z/0u92j8Ico+bnWQcCAgevOVi8vegeZTDaFgY2rFnsa0/OzqFHgCNdJubVuZ/A88DjUw0JTKjPIEcZ9VWqOyxfgS5VkfvNjz0i4FSo09sbcH7l4/FG+W/3AJe/mGKRSWYs+vHpyapOcmgOyySmXHCu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222968; c=relaxed/simple;
-	bh=s8CehdpXkTqOO0ErPHHVLt5yyez+Ks7PrRBqfbCNRVc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xybe82/v5fYemLzWDFNwgOh1f7I4NelR3H/Ju7upF13Y3WYvvTj8P1eBYqyCVsdhwBhpWvWK+l+skdit60LhXE4nRAR+1O4bpqWdjNBs0k8zaGbjtSlnRAyTUgPvJ2c7p6pX9VmIFegoWugQOpEzqWqMGO07AXP2CdYerzyeEbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mhuPfWls; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742223028; c=relaxed/simple;
+	bh=o8PVkLkttFxiDUx9o+jcZ/GKuzRUyLmhESRH0zszrKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rIgtciqubtiN1+Lywofq+IC1H6yFsT6ayXkAAbIndI70QczPcvcBDb5TylqQglF8v8PaKI6wwUu0GZjV+CMwB+NmKa/WQFIdR/e3Vz4fZQzeEhU0s/h1lld7/gR4HdO77B0ZbQBBHmwfcml7cOgpgWZk+d2eTBuji8U25YQYfqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DtzeYyDX; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mhuPfWls"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92CFC4CEE3;
-	Mon, 17 Mar 2025 14:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742222967;
-	bh=s8CehdpXkTqOO0ErPHHVLt5yyez+Ks7PrRBqfbCNRVc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mhuPfWlsqazTRYpvIDa7gC+hDui8usQNP3ZO8OPLyucvwyE0ZVVFJWHL4ywTVRv57
-	 2Gw0LV8SGvedmVCfNXvGG7KLTPbDqjE6PHeE81IVIylmhCxUUy9G0aWyAQ0c1D25fA
-	 fh52Txl2pW84GIYvEcyAk48V/i7wefc2xxX6XKRDHVXdEiURyBX2dHpMWtuz5r9faj
-	 xiJh6vfra8WmJf51d3wZ1JSlrWN2aBlAcEQK9DIMPOopREGHudRjPcicgJ5XnJJD7A
-	 kl46n5Ta27Jp0zZo3JxLm5PO204jVJ5eaAhepGbPwaneDeX27LLpDXvfM3zVBR/axc
-	 +pXyz7bIKQwAw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tuBmP-00EL5V-ET;
-	Mon, 17 Mar 2025 14:49:25 +0000
-Date: Mon, 17 Mar 2025 14:49:24 +0000
-Message-ID: <86y0x3n24r.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	oe-kbuild-all@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	devel@daynix.com
-Subject: Re: [PATCH v5 3/5] KVM: arm64: PMU: Fix SET_ONE_REG for vPMC regs
-In-Reply-To: <202503172023.fzyJ3TMB-lkp@intel.com>
-References: <20250315-pmc-v5-3-ecee87dab216@daynix.com>
-	<202503172023.fzyJ3TMB-lkp@intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DtzeYyDX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=9Hl0Ua6zEXnX2ZwDutSTzWCK5K2P76jP5Q2VCSF84Ns=; b=DtzeYyDXvRAUpfHk5Hk65VTFzh
+	dtHc2vtT9kC/Ir/Ocn0Lc1wDUaKXkXaQAbwKS7GGac2jYGKgeIW3X9YGeyKDNAXYSfEpl+4hNdFTh
+	awfgf9LqZCBnryu/uF4BilOHWIM1vrgIcpHPuhBHZwSS7IQMkGILHMxaRftQR+xursjl/sEYStDzg
+	EWDStakdPB5nbAevGP/AGq7BEj3qMZoOrgJGH77ZdpSb68GNypQ6xgTdsZ1WocNwlyFu3Cqsyr6hG
+	3owY8gjmkHe7HGAmAKu+wztzn6VGZyAiCYpc0w4CQLIod4muFSKzwi2bkwxFkS23e0oQckv0vCEsi
+	8PDahgiA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tuBnD-00000003T4N-47UM;
+	Mon, 17 Mar 2025 14:50:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5BC25300783; Mon, 17 Mar 2025 15:50:15 +0100 (CET)
+Date: Mon, 17 Mar 2025 15:50:15 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>,
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Metin Kaya <Metin.Kaya@arm.com>,
+	Xuewen Yan <xuewen.yan94@gmail.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Suleiman Souhlal <suleiman@google.com>, kernel-team@android.com
+Subject: Re: [RFC PATCH v15 1/7] sched: Add CONFIG_SCHED_PROXY_EXEC & boot
+ argument to enable/disable
+Message-ID: <20250317145015.GA31506@noisy.programming.kicks-ass.net>
+References: <20250312221147.1865364-1-jstultz@google.com>
+ <20250312221147.1865364-2-jstultz@google.com>
+ <20250317143347.GE36386@noisy.programming.kicks-ass.net>
+ <CANDhNCrCmNVQjAy2pHY_K3VYR=f_44fqPRnAP-mr16yUhk8rPw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lkp@intel.com, akihiko.odaki@daynix.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, andrew.jones@linux.dev, oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, devel@daynix.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANDhNCrCmNVQjAy2pHY_K3VYR=f_44fqPRnAP-mr16yUhk8rPw@mail.gmail.com>
 
-On Mon, 17 Mar 2025 13:02:47 +0000,
-kernel test robot <lkp@intel.com> wrote:
+On Mon, Mar 17, 2025 at 03:44:11PM +0100, John Stultz wrote:
+> On Mon, Mar 17, 2025 at 3:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > On Wed, Mar 12, 2025 at 03:11:31PM -0700, John Stultz wrote:
+> >
+> > > diff --git a/init/Kconfig b/init/Kconfig
+> > > index d0d021b3fa3b3..b989ddc27444e 100644
+> > > --- a/init/Kconfig
+> > > +++ b/init/Kconfig
+> > > @@ -875,6 +875,16 @@ config UCLAMP_BUCKETS_COUNT
+> > >
+> > >         If in doubt, use the default value.
+> > >
+> > > +config SCHED_PROXY_EXEC
+> > > +     bool "Proxy Execution"
+> > > +     default n
+> > > +     # Avoid some build failures w/ PREEMPT_RT until it can be fixed
+> > > +     depends on !PREEMPT_RT
+> >         depends on !SPM && !SCHED_CLASS_EXT
+> >
+> > for now, right?
 > 
-> Hi Akihiko,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on 80e54e84911a923c40d7bee33a34c1b4be148d7a]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Akihiko-Odaki/KVM-arm64-PMU-Set-raw-values-from-user-to-PM-C-I-NTEN-SET-CLR-PMOVS-SET-CLR/20250315-173731
-> base:   80e54e84911a923c40d7bee33a34c1b4be148d7a
-> patch link:    https://lore.kernel.org/r/20250315-pmc-v5-3-ecee87dab216%40daynix.com
-> patch subject: [PATCH v5 3/5] KVM: arm64: PMU: Fix SET_ONE_REG for vPMC regs
-> config: arm64-randconfig-r122-20250317 (https://download.01.org/0day-ci/archive/20250317/202503172023.fzyJ3TMB-lkp@intel.com/config)
-> compiler: aarch64-linux-gcc (GCC) 14.2.0
-> reproduce: (https://download.01.org/0day-ci/archive/20250317/202503172023.fzyJ3TMB-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202503172023.fzyJ3TMB-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    arch/arm64/kvm/sys_regs.c: In function 'set_pmu_evcntr':
-> >> arch/arm64/kvm/sys_regs.c:975:9: error: implicit declaration of function 'kvm_pmu_set_counter_value_user'; did you mean 'kvm_pmu_set_counter_value'? [-Wimplicit-function-declaration]
->      975 |         kvm_pmu_set_counter_value_user(vcpu, idx, val);
->          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->          |         kvm_pmu_set_counter_value
-> 
-> 
-> vim +975 arch/arm64/kvm/sys_regs.c
-> 
->    962	
->    963	static int set_pmu_evcntr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
->    964				  u64 val)
->    965	{
->    966		u64 idx;
->    967	
->    968		if (r->CRn == 9 && r->CRm == 13 && r->Op2 == 0)
->    969			/* PMCCNTR_EL0 */
->    970			idx = ARMV8_PMU_CYCLE_IDX;
->    971		else
->    972			/* PMEVCNTRn_EL0 */
->    973			idx = ((r->CRm & 3) << 3) | (r->Op2 & 7);
->    974	
->  > 975		kvm_pmu_set_counter_value_user(vcpu, idx, val);
->    976		return 0;
->    977	}
->    978	
-> 
+> Did you mean SMP there?  SMP is supported. Even with same rq proxying,
+> it just blocks the task and lets it sleep if the owner is on another
+> rq.
 
-Looks like a case of missing stub definitions when
-CONFIG_HW_PERF_EVENTS isn't selected.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Ah, yes, typing hard. And yes, I missed it would work rq local. Still
+trying to untangle the proxy_deactivate() failure case :-)
