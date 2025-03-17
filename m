@@ -1,96 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C1423E32E;
-	Mon, 17 Mar 2025 13:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E751A23AE96
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 13:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742216654; cv=none; b=cuAdG3nxId747CgzTdyRE60KWM9ab/ZIFe2FsxVY8etuG98amEizHnToFhLBpB9p5yGMquJljZ72v89lYHQ3P33cb2ZmRTsI0Dc0LYgGCAba573B2qj6VJlKfx7UkiEKe0vhVZF+E6Maji+1+bIGhTXvWm+anygfe0LG3i3LZfQ=
+	t=1742216663; cv=none; b=suTTrJsT2r0Oof2iMamBksSDAgBDkafi7eseSuPcMh32qVNfIkdxGy5ytHOCfC7FLPtLMMs3KEhlahxSm+H+lhwrMG6uUWavWJYyoorelmtEUkH5mH5nyPAS7odEr7HOZqtYvksewpKbn7f8NWk2anuR9wqOH6bmp6lzj0pn4Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742216654; c=relaxed/simple;
-	bh=KVUNmQdehuyTOB1NM2ZuDHvypCGHYTpjpC/HxaStcNU=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=eXfdA0dOMLGqPlFNJ507e3uhR8qiDoDEuxb34DIascl6IOn1987hdZObcoOgeTgvB9t+isQD3b7weuV6SAuVdG0OEG5hGOzcyyFDePFu66aCF/rdw91x7NaT9ZZ0Fymam50dx+cAwmYdbhA7vX+eqi5Pk9attWlZt5rDkppngq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q6YGjhvh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AfCWfj63; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742216663; c=relaxed/simple;
+	bh=avWQm9+Lsd7mcdmmO95x7pXu+JK1GASjUd85GeEepD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h7dS9SsawZQCYrbMBB5OH6x2x8ro/AvjV9A1/QPnzIKEDzD+74neKDi73NRTVpjcPvcpH4hoWZZtJla4kVp1elOv+u7laI1XeuW9/jErWNuKkUcNITDPnBD+bkBuNnGcNvOuKiO7Vk1kXefacx7MJRxVZ90RcyANQX1fmY1swUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=idFCwUGv; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q6YGjhvh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AfCWfj63"
-Date: Mon, 17 Mar 2025 13:04:07 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742216650;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=6dkw96a023iuOdRzg3FQ8Drz5v8x2QWbz4/l3/X8tU0=;
-	b=Q6YGjhvhvXz0x92A38D5LTV+Yt7B+6wUm1n6PvxCL2XD5k92x/9FsCJ6CkjZRddaJQgTvc
-	z0rQ19S4b9WaKH9JCXjdEXngF48zwUXM5Qoy1/EBS8MOSI+Ndsb5+efbJvS5vFlx+ICjP/
-	m9Twx4Ay7IMyriRUxuL970BFp3utefv91Nvs5dLsaTpsMVFXZGz0IMYtVLjm7WBy/LlnVg
-	dCcXD7Ez4IbzOGKxlY1d5fPjkl3mvoE+0eEWy9RJgfBCMc0wp2L8MfLOfwZSM2IPVoVGS1
-	9+7NXLMG7kTcDkA+2nr75qGMTXmIKalPwvxow79iBOHyOa2QQemMdSErkTqQmA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742216650;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=6dkw96a023iuOdRzg3FQ8Drz5v8x2QWbz4/l3/X8tU0=;
-	b=AfCWfj63fAEfDznDAGoDF8tq3LAYcsqIglMPE3SR6xhAC/E+g6/WlEMNaYX0ppAKD7jhhM
-	0DAWIRcN/52O+1Dw==
-From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] x86/fpu: Clarify the "xa" symbolic name used in the
- XSTATE* macros
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="idFCwUGv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742216662; x=1773752662;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=avWQm9+Lsd7mcdmmO95x7pXu+JK1GASjUd85GeEepD8=;
+  b=idFCwUGv7eWfK0SAh2tTtVmpediCLdj0h3JY+uj0VMrQGshgorRiGjTG
+   xfA7PVz2GU+dR2DgwVagJt88VLR90GkWWE0FwRQK7InaGSF5o7ITQS21n
+   R2Nxg3usEu86+MYypoAhod8VUW8+slTlZYAF5S+LJq78FRrs41Vysv4zC
+   +IFEcx5Y5HlfeRZiVd320BlKcyxCx09CFwWtWuXy33V8OTrrFE7/a4VOh
+   oDVmqxXi/+5tRGkwUzISMsoE7IgOLHa06BxN00kQQF0uYfE0q1SgtlZLB
+   lvA2D/QrYtZqvr26zafHA/2SWEiOkrBkRPv1BsBChOBA9tS/aKV8N0hok
+   A==;
+X-CSE-ConnectionGUID: EnsLr+Q1Qg6Uu+UcBRSZbQ==
+X-CSE-MsgGUID: c3iLIf1zR2mAW/wzb+u5cg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="54305066"
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="54305066"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 06:04:21 -0700
+X-CSE-ConnectionGUID: bbt9VKehS+WokJ9mNWpTwA==
+X-CSE-MsgGUID: eOV9Vg5bQQCyL3Ssi9Q+IA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="127019800"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 17 Mar 2025 06:04:08 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuA8P-000Ckv-1n;
+	Mon, 17 Mar 2025 13:04:02 +0000
+Date: Mon, 17 Mar 2025 21:02:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Akihiko Odaki <akihiko.odaki@daynix.com>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Andrew Jones <andrew.jones@linux.dev>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	devel@daynix.com, Akihiko Odaki <akihiko.odaki@daynix.com>
+Subject: Re: [PATCH v5 3/5] KVM: arm64: PMU: Fix SET_ONE_REG for vPMC regs
+Message-ID: <202503172023.fzyJ3TMB-lkp@intel.com>
+References: <20250315-pmc-v5-3-ecee87dab216@daynix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174221664750.14745.17196771195042757712.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250315-pmc-v5-3-ecee87dab216@daynix.com>
 
-The following commit has been merged into the x86/fpu branch of tip:
+Hi Akihiko,
 
-Commit-ID:     4348e9177813656d5d8bd18f34b3e611df004032
-Gitweb:        https://git.kernel.org/tip/4348e9177813656d5d8bd18f34b3e611df004032
-Author:        Borislav Petkov (AMD) <bp@alien8.de>
-AuthorDate:    Mon, 17 Mar 2025 13:47:12 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 17 Mar 2025 13:47:12 +01:00
+kernel test robot noticed the following build errors:
 
-x86/fpu: Clarify the "xa" symbolic name used in the XSTATE* macros
+[auto build test ERROR on 80e54e84911a923c40d7bee33a34c1b4be148d7a]
 
-Tie together the %[xa] in the XSAVE/XRSTOR definitions with the
-respective usage in the asm macros so that it is perfectly clear.
+url:    https://github.com/intel-lab-lkp/linux/commits/Akihiko-Odaki/KVM-arm64-PMU-Set-raw-values-from-user-to-PM-C-I-NTEN-SET-CLR-PMOVS-SET-CLR/20250315-173731
+base:   80e54e84911a923c40d7bee33a34c1b4be148d7a
+patch link:    https://lore.kernel.org/r/20250315-pmc-v5-3-ecee87dab216%40daynix.com
+patch subject: [PATCH v5 3/5] KVM: arm64: PMU: Fix SET_ONE_REG for vPMC regs
+config: arm64-randconfig-r122-20250317 (https://download.01.org/0day-ci/archive/20250317/202503172023.fzyJ3TMB-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250317/202503172023.fzyJ3TMB-lkp@intel.com/reproduce)
 
-No functional changes.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503172023.fzyJ3TMB-lkp@intel.com/
 
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
----
- arch/x86/kernel/fpu/xstate.h | 4 ++++
- 1 file changed, 4 insertions(+)
+All errors (new ones prefixed by >>):
 
-diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
-index 1418423..0fd34f5 100644
---- a/arch/x86/kernel/fpu/xstate.h
-+++ b/arch/x86/kernel/fpu/xstate.h
-@@ -109,6 +109,10 @@ static inline int update_pkru_in_sigframe(struct xregs_state __user *buf, u64 ma
- /*
-  * After this @err contains 0 on success or the trap number when the
-  * operation raises an exception.
-+ *
-+ * The [xa] input parameter below represents the struct xregs_state pointer
-+ * and the asm symbolic name for the argument used in the XSAVE/XRSTOR insns
-+ * above.
-  */
- #define XSTATE_OP(op, st, lmask, hmask, err)				\
- 	asm volatile("1:" op "\n\t"					\
+   arch/arm64/kvm/sys_regs.c: In function 'set_pmu_evcntr':
+>> arch/arm64/kvm/sys_regs.c:975:9: error: implicit declaration of function 'kvm_pmu_set_counter_value_user'; did you mean 'kvm_pmu_set_counter_value'? [-Wimplicit-function-declaration]
+     975 |         kvm_pmu_set_counter_value_user(vcpu, idx, val);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |         kvm_pmu_set_counter_value
+
+
+vim +975 arch/arm64/kvm/sys_regs.c
+
+   962	
+   963	static int set_pmu_evcntr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
+   964				  u64 val)
+   965	{
+   966		u64 idx;
+   967	
+   968		if (r->CRn == 9 && r->CRm == 13 && r->Op2 == 0)
+   969			/* PMCCNTR_EL0 */
+   970			idx = ARMV8_PMU_CYCLE_IDX;
+   971		else
+   972			/* PMEVCNTRn_EL0 */
+   973			idx = ((r->CRm & 3) << 3) | (r->Op2 & 7);
+   974	
+ > 975		kvm_pmu_set_counter_value_user(vcpu, idx, val);
+   976		return 0;
+   977	}
+   978	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
