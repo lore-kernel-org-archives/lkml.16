@@ -1,173 +1,197 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF4579D2
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ABB140E30;
+	Mon, 17 Mar 2025 04:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742185957; cv=none; b=MgfTnvWyHAraFPQeazHKU9Y7BRYmNW6mnbCqpDfu54qyY+PWRHQgP+QC6MDSg+EgOR+THOIQVYSmMfXKf5Ran0RMKW8hdXshoYW3tmN0RHU1pM7Y4++osqTetT95286tUKLmD37xdrmUBYVTttV1FOwj2FgitSGe3K8mAMIrboE=
+	t=1742185969; cv=none; b=qNg9MNBNXibdQitQql8Y+st72jLY1h0JP1XhiFPvzzBkRpZwaAafC35Y3RTVvNjiYk+2E8RVWrT5hB/DeszJzuItlX2ZDosfOdHhhfcBenUu7VG1jYardfL3wHhkj3reGaBabSuWesazVyYoGLtAIqQJFAYPz1R/V6IIj/S2YtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742185957; c=relaxed/simple;
-	bh=IOhGaXq1CIyRqLCk9AID5H6e1heMG9jjAvMzzoEgIIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=tX5H28QUpRxOnevhwcb2c8e1p1ZguDOflCvQa7xUQlnJFQloPlbC3ntx470xaWrC/3e4jBVMLEoVU+VqCca4rVvujTlCm8wShUgtKICkxCDFzFTyTrNjXeGVPzZrRNNRDSD2XpfnMIemhTZAnbbb+5AxGpW5gWbuN5vtXfyfCt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=piiOc7wn; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1742185969; c=relaxed/simple;
+	bh=2SdimwpHKWgYHXE66CJ46HkbaQg5iDFsA6BYDwJ2hg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4aiT2h3uUfQkXDEJw8uIZEQgphGnMBiJ9KL9r+42uElcHaPH0FIjxg2Ep0cskjK25XUjtB988sowmv3q93TOnxllqPBxSssTnU0KbjwK1W6BmxhuJ9tkj8bDuy5Eap+Y7HXrkVm9IqwZTRRNI4uFJg+OC7uf587uT2Is7GVZBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JEHOld82; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="piiOc7wn"
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250317043233epoutp04b56386c36106c15c195c28f9eabfc0a6~tfOTsAgUv2174521745epoutp04E
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 04:32:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250317043233epoutp04b56386c36106c15c195c28f9eabfc0a6~tfOTsAgUv2174521745epoutp04E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1742185953;
-	bh=CDS21IpwWqt7ZRocUWjRABgv3Dgf/G8yTwuk6a2wW7A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=piiOc7wnYKShbvhndy6ZzQaK1XcwfVo9WbdLPD2AsfJkML6EZPMj/Lg/6jLxld4Wq
-	 mF+iKdCNL1MRtOnuDZFEEJg1+J14FOXOG2rAAMhkGGMmWYepfsUYCxwUAECGLbUIsb
-	 zneFL8xfkldG5GBtFNmKvHF0DWJbMxVJ2AysE/Xo=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-	20250317043232epcas2p40964da2213e804d734c62516ca5daf50~tfOSyT7pi0713107131epcas2p4q;
-	Mon, 17 Mar 2025 04:32:32 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.90]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4ZGMWz73RJz4x9Q3; Mon, 17 Mar
-	2025 04:32:31 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-	88.44.22094.FD5A7D76; Mon, 17 Mar 2025 13:32:31 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250317043231epcas2p2a42eecaaabed96be1d19059416ad38da~tfOR0Uqfh1582715827epcas2p2v;
-	Mon, 17 Mar 2025 04:32:31 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250317043231epsmtrp1f7364e4452314d8f07aa6fccfc31dd92~tfORzC5XY1640716407epsmtrp1U;
-	Mon, 17 Mar 2025 04:32:31 +0000 (GMT)
-X-AuditID: b6c32a46-484397000000564e-cd-67d7a5df5e06
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BD.83.23488.FD5A7D76; Mon, 17 Mar 2025 13:32:31 +0900 (KST)
-Received: from perf (unknown [10.229.95.91]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250317043231epsmtip24a0871609fea3b04312495e8d4bbc518~tfORgMzGt1487914879epsmtip2G;
-	Mon, 17 Mar 2025 04:32:31 +0000 (GMT)
-Date: Mon, 17 Mar 2025 13:36:42 +0900
-From: Youngmin Nam <youngmin.nam@samsung.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, ncardwell@google.com, edumazet@google.com,
-	kuba@kernel.org, davem@davemloft.net, dsahern@kernel.org, pabeni@redhat.com,
-	horms@kernel.org, guo88.liu@samsung.com, yiwang.cai@samsung.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	joonki.min@samsung.com, hajun.sung@samsung.com, d7271.choe@samsung.com,
-	sw.ju@samsung.com, dujeong.lee@samsung.com, ycheng@google.com,
-	yyd@google.com, kuro@kuroa.me, cmllamas@google.com, willdeacon@google.com,
-	maennich@google.com, gregkh@google.com, Lorenzo Colitti
-	<lorenzo@google.com>, Jason Xing <kerneljasonxing@gmail.com>, Youngmin Nam
-	<youngmin.nam@samsung.com>
-Subject: Re: [PATCH 1/2] tcp: fix races in tcp_abort()
-Message-ID: <Z9em2njRsaoKNBG0@perf>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEHOld82"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46c8474d8daso35285411cf.3;
+        Sun, 16 Mar 2025 21:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742185966; x=1742790766; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x9dqufYgh0fyD9FV/7pLNG6sVYtwehfa7tkru5bKQk4=;
+        b=JEHOld82YjDzXkBA5TyPbNgv9l/mWpvKjZbG7HB5xrHroXPWFoxP1JR8/LUZOBGQi9
+         uy5ZSdQ1at0I0OdT9PzfCVJBt6lLHioG88WNkp+VpObsJ5YTfWgpEb6Al/N1LRgChMQ3
+         CPwzaEFonXPKEmQepJisxE93jgex75BQVzpbXy2vQM35GQmCUPMDqnidC6vyK2NLcGG6
+         6utwQZbCdvVDf0QDLKsgWhp+HkSftDkaw0ncSxWLhtHD6U7cXHzQAIEX6cudsBbahjlo
+         gukJCIYX6V2k+rl2ip+nP5KgsT8ZfK1hvYYbMrSFrtQimaPPiP+KiUXeJqs0x4ofajfF
+         YKiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742185966; x=1742790766;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x9dqufYgh0fyD9FV/7pLNG6sVYtwehfa7tkru5bKQk4=;
+        b=uHgavOIrF92ewNPj7y/j4MP+45rZ17a5ShprMNS1U2ELnrJSZiAvr/D6jaM1xwX1HF
+         Z+c5Jm5dcddA8LG0iBI4gcXfjg//91gNnhGPEGqXf04Nd638Xbp6y3JsifGp+DrTWDAt
+         AiquVFKubpXH0XMJjVUM4jlTVbtdWz4uZdkEx6Cq9/uAzOS19+vSJetGuf4HVdY9Zvvl
+         4pqeE4X1TlPFJO8njVw8LosjLnuZ0b+T8Zb4fZD17V10J6U5CjXXV4lYHNOu+wSHvEzT
+         7+9TO0Bj81usXlDC7oATh+1R14DpO+U7sf2Ka2Tu/izaL9yxjqLagq6RT09FH/oyRmCW
+         qVDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqmNFBAdgyeUMSlSwJd017wwlokBXBceeSka9ni51h5OPfvn2P1SZmKRT53u2GP87MOE5m0H0o9ZbS6E2bDKI=@vger.kernel.org, AJvYcCXKy2eQt3JH2aAID5e4IpKAzX+7reMADUv6bjz7hlAVhD9sA+SYfuJXwpk1WBbklBG3imXr8YFLz0nVbtg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy62VJlolp39axH1AkUm89QsIJwdRD1XExnYrXwo4+X4OYyDAPj
+	S23ApjmAbMxT3GYkleQFyZrMg8u7X7S5AmNPT+cZEoSn5XVqTGf0
+X-Gm-Gg: ASbGnctvkx0fYy4HgqP89a+L+11kjyxCyKg/xyxO4pqNYmyhBMnhnemYScgRd3duUfu
+	Ef9fIqN5ddH5VOfa8CcTV7vWD7vbT5AL1doWoYPXytnJTWd1o7NuQYxBl5OliKBlOzIQNwSGDJP
+	B9VikKGi9vq/jk/2AYAO7CJ2dTfz5yADbT353Fipn9HUtq+3mVHhGuB3krG9h/73fcAbI1/qUMm
+	Mj37Zh91n5elRz2HYVXZn6pYpmo6Z/R1XF5tHDnPASClpNMAabJLKMyHEQNPchvscQl1vTJE+Wd
+	ahVpbMlzNc0YmMcqKwKF5h8rEh+VUlhC0B2qcg8xukkRIjk2+Az7VI56pvGiGtcM723qbXywYwI
+	Pb+rPantVpaXtPOqRSdu8WbgzV7fNi/Z9TyU=
+X-Google-Smtp-Source: AGHT+IGr7aDjNX7m6tFfUwFKKS3lWqhE5kxW2W52pmxUT7hTm2zuCjlr4CPLRlE25zMxRMEJ4dOYQw==
+X-Received: by 2002:a05:622a:1487:b0:476:8917:5efe with SMTP id d75a77b69052e-476c81c8c5bmr152323901cf.42.1742185966489;
+        Sun, 16 Mar 2025 21:32:46 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb831efasm50342211cf.80.2025.03.16.21.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Mar 2025 21:32:46 -0700 (PDT)
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id AF6F01200043;
+	Mon, 17 Mar 2025 00:32:45 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Mon, 17 Mar 2025 00:32:45 -0400
+X-ME-Sender: <xms:7aXXZ7sv-zMcUYBp3HVEMlzjPhzJPlxRX9pZm-kldrKoJGp5omlCWw>
+    <xme:7aXXZ8dwL0GFvH_C5Pf2gP-5BYeWoF_tohPFtzxEyTmMCJRUxvYcniy6ZSHAkOcN7
+    owPECctTYD0wxsjTQ>
+X-ME-Received: <xmr:7aXXZ-wmWuGOdQZ5XNvcCBz-f9nUiI7ogJf5oLvANMrjiTBEjDVnsYQV>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeekheehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefftdeihfeigedtvdeuueffieetvedtgeej
+    uefhhffgudfgfeeggfeftdeigeehvdenucffohhmrghinhepghhithhhuhgsrdgtohhmne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htoheptghonhhtrggtthessgihthgvqdhfohhrghgvrdhiohdprhgtphhtthhopehojhgv
+    uggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmh
+    grihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghp
+    thhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtoh
+    epsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhi
+    nhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlse
+    hgohhoghhlvgdrtghomhdprhgtphhtthhopehtmhhgrhhoshhssehumhhitghhrdgvughu
+X-ME-Proxy: <xmx:7aXXZ6MGzsD6mTn48NHY35yMO7w_9mia8j7v9xh6S4FZq7IgUDOVgw>
+    <xmx:7aXXZ78JN-YrDORfiUWmOLuZtZD3jIUCfXwofkS8FcJtsaeh6OhLwQ>
+    <xmx:7aXXZ6VcK5dCmPLJTvpewsfoxDxaXpjJQ6M2_k7jSfSNflmz9i_7ug>
+    <xmx:7aXXZ8dBbEMncvKSU8KYwK3dK4j7R7skY9dkvxYngDxKEj6MP7hsow>
+    <xmx:7aXXZ5eYVTb3X2HwVYfux_85R-cHqJOZItL-fjYsbWmZkUu72DqiZZPe>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 17 Mar 2025 00:32:45 -0400 (EDT)
+Date: Sun, 16 Mar 2025 21:32:44 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Antonio Hickey <contact@byte-forge.io>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Antonio Hickey <contact@antoniohickey.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 09/16] rust: workqueue: refactor to use `&raw
+ [const|mut]`
+Message-ID: <Z9el7P-_jrzb7w0i@Mac.home>
+References: <20250316061429.817126-1-contact@antoniohickey.com>
+ <20250316061429.817126-10-contact@antoniohickey.com>
+ <Z9ejLCnJHvaRWgQ4@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <2025031453-underpay-gigahertz-9ba4@gregkh>
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xbVRTHvX2P91pGl0dBdmXLwkpGBFdoEejdLE4jNvVXwoIxUUawwrMQ
-	Stu0ZXOYTAJ0MIb8jjDEpQqOgcuQrgGkFgiFwgbKQBg/xlJ+OAaOAWsJBiPEwgOz/z7n3O+5
-	33PuyWVjvFzSn52q0tNalVzJJzzxFluwWOD4cVwhXJwWo/WuERLdt5aSqGYoF0e32g0stGCs
-	wtEj+xyJFjY2MZRT20Sg8gqAsjtHMDRX3E+gMcsKhiwtlSS611Lkgbptj0n0R3sNgZoGVgDa
-	sC6TKH/aiiO70Q9tDCwDZGyeA8gw7yJR3uYTHK3PjxHoWV82iWq7nCTK+f4W/sYRmblhkiX7
-	pfohKTOaMmSmxsuEzFhEyjq/u0nKVjvGCFmRuRHIXKajsZxP0iQptDyZ1gbQqiR1cqpKEc1/
-	Ly7xrcTIKKFIIDqJxPwAlTydjubHvB8rkKYq3fPzA87JlRnuVKxcp+OHvS7RqjP0dECKWqeP
-	5tOaZKVGrAnVydN1GSpFqIrWnxIJheGRbuGnaSk3J/oJTavXF1P3S1lZ4IZnAeCwIRUBf7OV
-	4QXAk82j2gC0jM6wmMAJ4OTXo+SOikdtAFg1f3y/Yq3u0Z7ICmBn2W2CCWYBNNQ3YDsqnDoO
-	Fyt6wA4TlAC29G/vsi/1MlzqncJ3GKMKPaBj5asd9qGi4GZR3a4blwqE5c3XPBj2hneu/rmr
-	51AIWmebWUwXtRz45J6A4Ri4cPkBwbAP/KvPTDLsD5eKL+2xDmY5prCdRiGVC+Dd8UWMOXgV
-	Vi/kAaahFNheOus2ZrvzgbBnv8+DMN+2RTJpLsy/xGMqg+A/FT8Dho9AS+2NvRtl0Gm3Ycyb
-	dAHY7VpmlYCj1c+NU/2cG8MnoNHiJKrdFhh1GNZvsxkMhk3tYUbg0Qj8aI0uXUHrwjXh/y84
-	SZ1uArvfIUTaBiqeroV2AxYbdAPIxvi+3OIfxhU8brL8QiatVSdqM5S0rhtEundTivm/mKR2
-	/yeVPlEUcVIYERUlEodHCsX8Q9wv23IVPEoh19NpNK2htft1LDbHP4t1Gztd6XowX/NKSOtw
-	TupIYF3YRf4z/HpHzHzrFYlXvHqg54N8fYLIWnZQeqbhWkeQivvS7+tn1+WfedebI/IcnqdX
-	7E3xQQaZOVd6/mrHCdPoVK00PyG1pMkwkcAvA3AwUzWU882Ms2dViJf49WUqwbu+OY4rRaeU
-	YWsfsX3/PXZm4mx88GD2QezA+WnvknNDlW/y2j8Mdl4fLbhT806vV7gx2vz3U5g38PjwxE/2
-	YYltNTtGUvgQqxesxvfWuPChA2WSeoErzu7TNXEx3jA36fjYK05mGvz18wt5hmGnaYZz7LVv
-	u9LGt5ekqsItS2j60t3yF2KI1gHyUEfV29gWH9elyEUhmFYn/w+S70kulwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCSvO79pdfTDU6sFrP4cuASu8W1vRPZ
-	Leacb2GxWLerlcni2YIZLBZPjz1it3j27SezRfPi9WwWk6cwWjTtv8Rs8aj/BJvF1d3vmC12
-	b5vObnFhWx+rxaHDz9ktLu+aw2ax/vQ7Rotve9+wW3Tc2cticWyBmMW3028YLRZsfMRo0fr4
-	M7tF+8/XLBZfHl9ls/h4vIndYvGBT+wWzQvXsTjIeGxZeZPJY+esu+weCzaVemxa1cnmsaCP
-	3WP/3DXsHu/3XWXz6NuyitHj8ya5AM4oLpuU1JzMstQifbsEroyGrgPsBd85K1pOf2RsYGzk
-	6GLk5JAQMJH4sOQpUxcjF4eQwG5Giakzm1ggEjISt1deZoWwhSXutxxhhSi6zyjRee44M0iC
-	RUBV4sWUI4wgNpuArsS2E//AbBEBDYmXR2+xgDQwC0xglZj25QQTSEJYwEziZ98SdhCbV0BZ
-	YvLGeVBTDzBK3N63gwUiIShxcuYTMJtZQEvixr+XQM0cQLa0xPJ/YGdzClhI7H24kWkCo8As
-	JB2zkHTMQuhYwMi8ilEytaA4Nz032bDAMC+1XK84Mbe4NC9dLzk/dxMjOMK1NHYwvvvWpH+I
-	kYmD8RCjBAezkghv/6Lr6UK8KYmVValF+fFFpTmpxYcYpTlYlMR5VxpGpAsJpCeWpGanphak
-	FsFkmTg4pRqYhOPnHLnuGmRm/apKdxMPwxJ1s+Um4vZsm8oDfXU3T/4rqnCkLjrpQP0fRtu9
-	5cGi+wperpHMt/L9yZ6/dt/yhRWTDD4EKwlYx36I3+64kuW6N+vFtN8h3mYs2zwd6mYmyzIp
-	f9HicWHxLP6294By+muf5Kc+x0tuH+kLmLK18e9nsQ83LFcuWbOsO4j7o51H2KSEbXPO1S86
-	vfo0m+NJwdhnW0wcr77eo3hha1Hjh3uMp93e8KppXjNKMg5pzRXRjGNJUA68NuvsH81uvxyl
-	V/8CEl+alkUpCnrlrwjWufk2fFPW9w3ejZEtoosSzr+9YG31xXSKx5rwJ85xZXVPD50R/bM0
-	rjpxwsyrLLOUWIozEg21mIuKEwHqvlz2XwMAAA==
-X-CMS-MailID: 20250317043231epcas2p2a42eecaaabed96be1d19059416ad38da
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----K-Xcka4Xsim0K0-JuHAa3VmVr3oPR9my9iMvsSsU8QXUQUBj=_21b24_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250314092125epcas2p418cd0caeffc32b05fba4fdd2e4ffb9fa
-References: <CGME20250314092125epcas2p418cd0caeffc32b05fba4fdd2e4ffb9fa@epcas2p4.samsung.com>
-	<20250314092446.852230-1-youngmin.nam@samsung.com>
-	<2025031453-underpay-gigahertz-9ba4@gregkh>
-
-------K-Xcka4Xsim0K0-JuHAa3VmVr3oPR9my9iMvsSsU8QXUQUBj=_21b24_
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Z9ejLCnJHvaRWgQ4@Mac.home>
 
-On Fri, Mar 14, 2025 at 01:24:09PM +0100, Greg KH wrote:
-> On Fri, Mar 14, 2025 at 06:24:45PM +0900, Youngmin Nam wrote:
-> > From: Eric Dumazet <edumazet@google.com>
+On Sun, Mar 16, 2025 at 09:21:00PM -0700, Boqun Feng wrote:
+> On Sun, Mar 16, 2025 at 02:14:18AM -0400, Antonio Hickey wrote:
+> > Replacing all occurrences of `addr_of!(place)` and `addr_of_mut!(place)`
+> > with `&raw const place` and `&raw mut place` respectively.
 > > 
-> > tcp_abort() has the same issue than the one fixed in the prior patch
-> > in tcp_write_err().
+> > This will allow us to reduce macro complexity, and improve consistency
+> > with existing reference syntax as `&raw const`, `&raw mut` are similar
+> > to `&`, `&mut` making it fit more naturally with other existing code.
 > > 
-> > commit 5ce4645c23cf5f048eb8e9ce49e514bababdee85 upstream.
+> > Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> > Link: https://github.com/Rust-for-Linux/linux/issues/1148
+> > Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
+> > ---
+> >  rust/kernel/workqueue.rs | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
 > > 
-> > To apply commit bac76cf89816bff06c4ec2f3df97dc34e150a1c4,
-> > this patch must be applied first.
-> > 
-> > In order to get consistent results from tcp_poll(), we must call
-> > sk_error_report() after tcp_done().
-> > 
-> > We can use tcp_done_with_error() to centralize this logic.
-> > 
-> > Fixes: c1e64e298b8c ("net: diag: Support destroying TCP sockets.")
-> > Signed-off-by: Eric Dumazet <edumazet@google.com>
-> > Acked-by: Neal Cardwell <ncardwell@google.com>
-> > Link: https://lore.kernel.org/r/20240528125253.1966136-4-edumazet@google.com
-> > Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> > Cc: <stable@vger.kernel.org> # v5.10+
+> > diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+> > index 0cd100d2aefb..4e27df324d26 100644
+> > --- a/rust/kernel/workqueue.rs
+> > +++ b/rust/kernel/workqueue.rs
+> > @@ -401,9 +401,10 @@ pub fn new(name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self
+> >      pub unsafe fn raw_get(ptr: *const Self) -> *mut bindings::work_struct {
+> >          // SAFETY: The caller promises that the pointer is aligned and not dangling.
+> >          //
+> > -        // A pointer cast would also be ok due to `#[repr(transparent)]`. We use `addr_of!` so that
+> > -        // the compiler does not complain that the `work` field is unused.
+> > -        unsafe { Opaque::raw_get(core::ptr::addr_of!((*ptr).work)) }
+> > +        // A pointer cast would also be ok due to `#[repr(transparent)]`. We use
+> > +        // `&raw const (*ptr).work` so that the compiler does not complain that the
+> > +        // `work` field is unused.
 > 
-> Did not apply to 5.10.y, what did you want this added to?
+> I think we can actually use the pointer casting here. Because now we use
+> pin-init for Work initialization, so `work` field is always used.
 > 
-> thanks,
+> Could you replace this with a:
 > 
-> greg k-h
+> 	// CAST: `Work` is transparent to `bindings::work_struct`.
+> 	ptr.cast_mut().cast()
+> 
+> in a separate patch?
 > 
 
-Hi Greg,
+Hmm.. think more about this, this raw_get() function can be a safe
+function because it's just a pointer casting? I've checked the
+callsites, it doesn't seems that they need the pointer provenance
+from Opaque::raw_get().
 
-Sorry about that.
+Alice, any objection? Am I missing something subtle here? We can also
+remove this function at all, and use cast() in __enqueue()s.
 
-As for 5.10, it seems to have more dependencies for the backport.
-I think the maintainer should handle it to ensure a safe backport.
+Regards,
+Boqun
 
-------K-Xcka4Xsim0K0-JuHAa3VmVr3oPR9my9iMvsSsU8QXUQUBj=_21b24_
-Content-Type: text/plain; charset="utf-8"
-
-
-------K-Xcka4Xsim0K0-JuHAa3VmVr3oPR9my9iMvsSsU8QXUQUBj=_21b24_--
+> Thanks!
+> 
+> Regards,
+> Boqun
+> 
+> > +        unsafe { Opaque::raw_get(&raw const (*ptr).work) }
+> >      }
+> >  }
+> >  
+> > @@ -510,7 +511,7 @@ macro_rules! impl_has_work {
+> >              unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workqueue::Work<$work_type $(, $id)?> {
+> >                  // SAFETY: The caller promises that the pointer is not dangling.
+> >                  unsafe {
+> > -                    ::core::ptr::addr_of_mut!((*ptr).$field)
+> > +                    &raw mut (*ptr).$field
+> >                  }
+> >              }
+> >          }
+> > -- 
+> > 2.48.1
+> > 
