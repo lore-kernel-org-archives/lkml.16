@@ -1,79 +1,100 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A0E2629D;
-	Mon, 17 Mar 2025 08:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4ED18C03A
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742200306; cv=none; b=fvWXYfgmQabHPT3cj59aD9VoM6Au0UJfunk+aUaStBLH7ZMAyc5HAFTycwpswqOFC6vQfwaX73LGG0OXK0ELhyWl/T2rrzdiYL6+QMfiqTJcL1T5/irSUFYViGIvf2XqTxX0aNn3Q/m32LtLhq/8uTW+E8qoqS7tm4eNVAvE5uw=
+	t=1742200314; cv=none; b=FSDpzaX9LrxK7DAbRDLwk0+B8mSmm+m3M0iNUCMwvK4zL9OAnxvQBZVbtgXC6oF0O8J/Dku/NY5lxTebxeRLKZlJ+U2wp8AyNbb2x9jL0sI21PtEA8K9VshAEuxbJ5IGqoSA+qMYzexJWAwHopDbWiHh7t0Aso+Yd5o9JihDaC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742200306; c=relaxed/simple;
-	bh=mcePzaeHG62fPZF0B5RXx1e8Oc29Vwx9OnkzvKzSyQY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eKaf7bjad0oMxr8ohntWJr4RlUk9fket5B5SqXDWcefrlrlOHwMj8U2IUM1blSDGUIb2bd8lChJ9U84H+nXWC5YbeWrSjqgxkz69h+8EMgaKupiUjzkdLwGPA400o5IxyX8QynMYCbu0HZcZv8/bax3eK6UmixUuFfRr9VhIXUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Ogopq2bf; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1742200314; c=relaxed/simple;
+	bh=4vfa2nbOoNw6ZazHPFyQUz4LY0q33gkHH2PnpcGUm3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uxTa8mfa9zS2CbsD9LEQTMOSqfVw+y86HaaVXlorh5F/daAvIg4lB7VnIc/MEvJ1vjPmP8YzCIXmIuAKlDxg9RiA1wsLFZcy5eTLALn7U9sAzhba5rZfmPkk44hGJXuCHkUUIg/5r/wd15R8FTH8sqo5Usc3tSWwvdiaTN8Tl8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vt29bOSL; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Ogopq2bf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=opEu1g9nkTKwESNSsd8VNcoAAm5+Q5EEa+H9fZ5SvvE=;
-	t=1742200304; x=1743409904; b=Ogopq2bfVSRZZhTIP4x3Pf4X10fGE5ek/yVRCLvE3mpjzLN
-	+MjRIJi0xhByxgYdd4zElR9v52HIVXu7gmadMqTzDItIXDHwK6gHNovsMaLJvFXI3eMHK5URppir3
-	z1O40JSpO+X6U+0vDg/W1gf1P7PfscMsS2+zUJxRrntccfHMg6v3cP/uBzdQe3r6DEzZqnhzENYJG
-	/NMyKr8O5uwh8K7D9RyuurB8N2iiJBEefTPwpAfe3AM+17HHAcFl3ZYyvxQzmSUkI2TUhJzgp4wQ7
-	Zje8TwZrfmJpBIQAKevi33gQUz6x5Atef7QHxSlLpypmkj4770uWvPqah8R6VX0w==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tu5sp-0000000E3EF-39Ci;
-	Mon, 17 Mar 2025 09:31:39 +0100
-Message-ID: <8c02c4f7452f2fbb41c8bc0517af9588c25ca7b1.camel@sipsolutions.net>
-Subject: Re: [PATCH] mac80211: minstrel_ht: Replace nested min() with single
- min3()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Krzysztof Kozlowski <krzk@kernel.org>, feng.wei8@zte.com.cn, 
-	linux-kernel@vger.kernel.org, tang.dongxing@zte.com.cn,
- shao.mingyin@zte.com.cn, 	xie.ludan@zte.com.cn, yang.guang5@zte.com.cn,
- yang.yang29@zte.com.cn, 	ye.xingchen@zte.com.cn, xu.xin16@zte.com.cn
-Cc: linux-wireless@vger.kernel.org
-Date: Mon, 17 Mar 2025 09:31:38 +0100
-In-Reply-To: <f6dfffc0-a9bd-4a5f-9d83-f3a4b7918010@kernel.org>
-References: <20250315111254625RMIKeUh51j1Xk9CWuu2LT@zte.com.cn>
-	 <f6dfffc0-a9bd-4a5f-9d83-f3a4b7918010@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vt29bOSL"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4393ee912e1so68595e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 01:31:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742200311; x=1742805111; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ts/iSgo7uroCJrlhqFf9mwkUABh0eKE3Qcf3xl8ptu8=;
+        b=Vt29bOSLqlGQXkOI1Hq24YlRfPr4IMCvq+8ZKFfuObGF4L/GkUnTg0vOU7bbzNV1ny
+         juhMLPyVQcTWYmBjqbK50Ac6v5ZzQt0kby8xqyub+qDYl9+tbxl08u8KJPyCIrOsXXpN
+         MW168xjtFPYYNgnINAZdVEIzNVuuVowfuru5Mc55Q1IiwgzHLL/BoarsJEaZqpF69l11
+         yDmBwAjGvhgJSupYg5xn7JsEbF+JWCXjXTcx1iCB6Osdw9AeNCjq8nKD5PEr2WoS9li5
+         lfkhwYp4G0D8h2r+K82kwh5MNHd+TkL77oNNS0MxiBSc0HZdhPh1QUuU2Juk6lRx40s8
+         xH7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742200311; x=1742805111;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ts/iSgo7uroCJrlhqFf9mwkUABh0eKE3Qcf3xl8ptu8=;
+        b=nW1fppCmLuDV9bD3hTKCB8f2W6RFBpj8c+DXODrXMWSPYMPvcC3S0RYV1fesUMmj9y
+         ET7J+BBIXJM4veq8al6s5/BLvr3LNz4TxOUbeUOm5TpDW+bU64pmJNs4+a/rw9lTiRZn
+         tloetofUbH773mJ4H2MFoVwb5yLRPMLsoyIxW1OHQxZCHeAqpNlX4f4pwvnQ96R3mYfA
+         6SlcSFf6RzvY0aJmthdmPKEKBbyOFkIrjKoZIo+jW0WlI4i2t1dQNkMxkbLsSEz4DNZj
+         cNWE1wXTOfAwPrn2ph+4iPqpmtu3Um0ic8n7g2+Ls1vmHO19KVD+Y4oVsmNqtGwraC5S
+         CPCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFlsFJx2n+bl0YwGHMc7I2Ar9fyzHD1m2MgS+F7QjaoK2xidkZDiAoKxjU6CH6F6godZvfSaM9vSJqKB0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTenTU/k3ifZQe1PkRntuxsBJBaDMyFKxBzcnpc5x+OFMD2v5o
+	tgDpHNYy0bYOA4TGPSh5SnXcQHshCkNZqKYlAUeIBMa1fEksevoja4OpG7XjRg==
+X-Gm-Gg: ASbGncvkgZwbRAqlEcGdUkyn3WBSae43ymjroqp8T8DwHKhDxvlnuuxgti2hmEjiuAc
+	0hjNgioPZbnV3Qq5STsquE2YGCqdjAMwPRNdKeIpQw28faa3kPYhAkh/5WN4I+QkupJua0lKn0s
+	prh5EYODIccmDTfW+tnBaWGG9XN+dNXAuoVX0gHpVdbgGGtco8XnmZJ9cRQNRARkYHkvQKS5KKk
+	j6WFqbA/68m6nM3VHuf/RfizhwGBmBAd+AY7aK4u270DMwb6dhBgmXu8qkeG4ubjJIntHUPFu+2
+	dF2cRSocGNl2XcKXm9dYCaI6aT//8qRmCD7VV4/aFE2tk0ProifCZtsoK+QQGemEwA0UoDgGuWP
+	uG5UF+BE=
+X-Google-Smtp-Source: AGHT+IFsKXe3JR+ofIJ7M32FHsFHp1kz09RRhdQuWukTEEKLv1/hhyNOKe55+KjtAhpwBNlpPmDcaQ==
+X-Received: by 2002:a05:600c:3b20:b0:43b:bf3f:9664 with SMTP id 5b1f17b1804b1-43d25bbee13mr2337835e9.5.1742200311269;
+        Mon, 17 Mar 2025 01:31:51 -0700 (PDT)
+Received: from google.com (158.100.79.34.bc.googleusercontent.com. [34.79.100.158])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb7ebbc3sm14092661f8f.88.2025.03.17.01.31.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 01:31:50 -0700 (PDT)
+Date: Mon, 17 Mar 2025 08:31:47 +0000
+From: Brendan Jackman <jackmanb@google.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH 03/13] objtool: Improve __noreturn annotation warning
+Message-ID: <Z9fd82KugPxoGaRS@google.com>
+References: <cover.1741975349.git.jpoimboe@kernel.org>
+ <ab835a35d00bacf8aff0b56257df93f14fdd8224.1741975349.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab835a35d00bacf8aff0b56257df93f14fdd8224.1741975349.git.jpoimboe@kernel.org>
 
-On Mon, 2025-03-17 at 09:30 +0100, Krzysztof Kozlowski wrote:
->=20
-> > +++ b/net/mac80211/rc80211_minstrel_ht.c
-> > @@ -1010,7 +1010,7 @@ minstrel_ht_refill_sample_rates(struct minstrel_h=
-t_sta *mi)
-> >  	u32 prob_dur =3D minstrel_get_duration(mi->max_prob_rate);
-> >  	u32 tp_dur =3D minstrel_get_duration(mi->max_tp_rate[0]);
-> >  	u32 tp2_dur =3D minstrel_get_duration(mi->max_tp_rate[1]);
-> > -	u32 fast_rate_dur =3D min(tp_dur, tp2_dur, prob_dur);
-> > +	u32 fast_rate_dur =3D min3(tp_dur, tp2_dur, prob_dur);
->=20
-> This is automation-generated junk code. How does it "simplify the
-> statement"?
+On Fri, Mar 14, 2025 at 12:29:01PM -0700, Josh Poimboeuf wrote:
+> Clarify what needs to be done to resolve the missing __noreturn warning.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> ---
+>  tools/objtool/Documentation/objtool.txt | 12 +++++-------
+>  tools/objtool/check.c                   |  2 +-
+>  2 files changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/objtool/Documentation/objtool.txt b/tools/objtool/Documentation/objtool.txt
+> index 7c3ee959b63c..87950a7aaa17 100644
+> --- a/tools/objtool/Documentation/objtool.txt
+> +++ b/tools/objtool/Documentation/objtool.txt
+> @@ -319,14 +319,12 @@ the objtool maintainers.
+>     a just a bad person, you can tell objtool to ignore it.  See the
+>     "Adding exceptions" section below.
+>  
+> -   If it's not actually in a callable function (e.g. kernel entry code),
+> -   change ENDPROC to END.
 
-It's worse. The "minus" code doesn't even exist upstream.
-
-> Can ZTE slow down this flood of automation or research experiment on
-> kernel community?
-
-Please.
-
-johannes
+Did you mean to delete that?
