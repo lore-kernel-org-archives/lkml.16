@@ -1,96 +1,98 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38271242936;
-	Mon, 17 Mar 2025 14:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F9824168E;
+	Mon, 17 Mar 2025 14:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742221338; cv=none; b=m5H/XzWZNi9suHc7CrIp1c2mQX3qKa5pzdde/9hD7VObAEZEHScXurOShYBxnkQFxKc5Fq4rojlGyrPqezXagHzXdn6PlDIZQX5jNhlAOeallBJuapgVcqFo65Mt62HuikZwc9cH34c4GzHRXH9J5P6UjzJFT/0lHpMU9SYkKdg=
+	t=1742221338; cv=none; b=J2XJi0GqnhPh7arV67DqT0YxvgMOEB3JL+j1nhK3AS+dSuuJ2FS5K4nY8p7orIL8LYhAwh9QuX8lacUX7qq2JxL4hjEizla68pLiVM9v0DErDna5keDXZQ3ElOAwd0Heshau62u8nuGRniKDYjzxQ+CEJUfh3HTMB7bjpgX9ZNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742221338; c=relaxed/simple;
-	bh=RNsmwgKd54pXI04RhtjMDwCNzHijd0GVztdeN7KSOtM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AkxjXgetYQlB00SgrQ40jFBuue0avB+hhUjvFHhdTMNiPaQPm2IEEnTnFAxxkMXdkPgjBBZPZ8Jg2WGVbShe42XkA8p6hidN+z8zmPT04r0vAtn6BKENwKjhif6b1QtSehSHT+Ah/FiylYpIW30P6NrXpl6G/ySP50GuevVPnbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E78C22FA;
-	Mon, 17 Mar 2025 07:22:25 -0700 (PDT)
-Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46C2C3F63F;
-	Mon, 17 Mar 2025 07:22:12 -0700 (PDT)
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
+	bh=OEM5Fxc7NSraJ8ml5LH6qN0QPIHHUpYetShfE0Kt6Js=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dv9Cq2VjFBX7yocRlENQAIwnShPYA/Zq7nBPweEiLjZdQf3zQRyqUrRjr6KXgDDOgtYtWbcnOwS6pgQCJ7ipwiZsGFAvPPZEyzg71P/J5HNDaEM8qv10tn/AfXxcguB2RaeeiX3cMWrolqwopD+CJnLH/GHwm59vHRFH1N6SuUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lyjx1Bti; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lyjx1Bti"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81E52C4CEE3;
+	Mon, 17 Mar 2025 14:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742221338;
+	bh=OEM5Fxc7NSraJ8ml5LH6qN0QPIHHUpYetShfE0Kt6Js=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lyjx1BtiEqap28/rQX2S8xv+6dovGeWywMyB9yPDDFjaDeo1dGTSfMEnptyaV0/9z
+	 zP4S4eBsIRTGjGkcf0PHon8T9tQrDPWDt7Cq0Q/IdpjzUEZIPp468Vphq5TqatrG15
+	 cqc63au98oHe80niQeLDPDHLEc7v102c7BZdpIc22fGGMW3fKG7j5JkKr6VeuQbnSm
+	 g7C8bkG2Uih15MrslB64f5mdYJIRKInuMkC5U+7pm3KdSVKHatIcosxWmmbsC+Nguo
+	 2gZdpkfFLhVnNlF4EKjYLRAkRg5qufdxakQHSh8JMbWifDdiit9w5xc5N4mc0v3gww
+	 ICKVdr5ObkQAA==
+Date: Mon, 17 Mar 2025 14:22:13 +0000
+From: Will Deacon <will@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Christoffer Dall <cdall@cs.columbia.edu>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Yang Shi <yang@os.amperecomputing.com>,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-openrisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	sparclinux@vger.kernel.org
-Subject: [PATCH 10/11] arm64: mm: Call PUD/P4D ctor in __create_pgd_mapping()
-Date: Mon, 17 Mar 2025 14:16:59 +0000
-Message-ID: <20250317141700.3701581-11-kevin.brodsky@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250317141700.3701581-1-kevin.brodsky@arm.com>
-References: <20250317141700.3701581-1-kevin.brodsky@arm.com>
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Subject: Re: linux-next: manual merge of the kvm-arm tree with the arm64 tree
+Message-ID: <20250317142212.GA11776@willie-the-truck>
+References: <20250317172102.55f7c4d9@canb.auug.org.au>
+ <86zfhjnccx.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86zfhjnccx.wl-maz@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Constructors for PUD/P4D-level pgtables were recently introduced.
-They should be called for all pgtables; make sure they are called
-for special kernel mappings created by __create_pgd_mapping() too.
+On Mon, Mar 17, 2025 at 11:08:30AM +0000, Marc Zyngier wrote:
+> Hi Stephen,
+> 
+> On Mon, 17 Mar 2025 06:21:02 +0000,
+> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > 
+> > Hi all,
+> > 
+> > Today's linux-next merge of the kvm-arm tree got a conflict in:
+> > 
+> >   arch/arm64/kvm/hypercalls.c
+> > 
+> > between commit:
+> > 
+> >   d2c173acbf93 ("KVM: arm64: expose SMCCC_ARCH_WORKAROUND_4 to guests")
+> > 
+> > from the arm64 tree and commit:
+> > 
+> >   c0000e58c74e ("KVM: arm64: Introduce KVM_REG_ARM_VENDOR_HYP_BMAP_2")
+> > 
+> > from the kvm-arm tree.
+> > 
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
+> 
+> Thanks for resolving all 3 conflicts, which look good to me.
+> 
+> Oliver, would you consider picking the following arm64 branches:
+> 
+> - arm64/for-next/leaky-prefetcher
 
-Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
----
- arch/arm64/mm/mmu.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Can you hold fire on this one, please? ^^^
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index accb0a33c59f..10bf39654e77 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -497,7 +497,11 @@ static phys_addr_t __pgd_pgtable_alloc(struct mm_struct *mm,
- 	case TABLE_PMD:
- 		BUG_ON(!pagetable_pmd_ctor(mm, ptdesc));
- 		break;
--	default:
-+	case TABLE_PUD:
-+		pagetable_pud_ctor(ptdesc);
-+		break;
-+	case TABLE_P4D:
-+		pagetable_p4d_ctor(ptdesc);
- 		break;
- 	}
- 
--- 
-2.47.0
+Catalin asked for comments on Friday and I'm not sure I'm happy with it.
 
+https://lore.kernel.org/all/174197730164.734861.6726211221092480832.b4-ty@arm.com/
+
+Will reply there shortly...
+
+Will
