@@ -1,126 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6335038B
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5802538B;
+	Mon, 17 Mar 2025 08:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742201454; cv=none; b=DRDAf90nh0cQl6sTDcWAQPhMOLsqJb3S8gt8UC+mwRp7E7AVcrJkduxLp2b2N/0Pf11QBF5ZmQTqmSk76scrmgx6rONBJF73Vf6/M2Fyd5e+dySX9Iu65iSSqyMB6UZqEN1w1BTclrgPe5BUvBXD6TtedDIHDasWlAAFBgRnjZU=
+	t=1742201496; cv=none; b=BX5dL9y3ODaILJHmGOTOWu6il557GDFhqilf+edqsrMWG9Ri4wnL8cY/vaSV6H8rgoiSQ1aKxvmK2jVC1AtDlIpp6P22fusjXrHy6ZXmMbd8HWzfOts7yvIxX+OL0jQsjTUzplyJu5pEL967itnK27Gt5CTlRUyjdLIar2gai0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742201454; c=relaxed/simple;
-	bh=VHECRl2IlCN2X1A9iaO/EubBXIx8uJARjFhkbegqTbQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f8FsG15ATUKjdC3xA6wUFohBlk5GsPVhqN8jORlg2xeZzI6i6FJksh/idNLE+zBTxRalFAncH0Gu5U37GxZUpdopD1M/ASR3zXExVEYqWWTVbDkM+ipQJPg2VMAmpB2nOTept1bD/693tnd4fM+vaK8w15zzPyb8kFpV26g4y84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Toj8Xlc3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742201496; c=relaxed/simple;
+	bh=XAV/2ePd8TT1yYLCVLS0BEy0i2/ksaThFsFZ8vjP0Qc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RXMMOf0BuYhS7PSs++95I4GqatbHgFBijS+lN26ByKn3tyiGRS4Q1Ch1ROjzqnw+0F35tlA5+wrBtJpUVAkAYsw9NuNERMqaTTJJ7uZAc9WMh3BPiS4nD+3Dpno84yr7xgcPMJptTcljCDO/zFeSvjEyV5PgJXPHGeKzGnyizhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nJqS0qEl; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Toj8Xlc3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C7BEC4CEE3;
-	Mon, 17 Mar 2025 08:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742201451;
-	bh=VHECRl2IlCN2X1A9iaO/EubBXIx8uJARjFhkbegqTbQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Toj8Xlc3B+lpeJ0cMKX/lJh6zMc7AxNRoI/VBi9LvUJ5WgKnN4HCfIlX22IFWpY9D
-	 efuqk7QOYu0TkXk7js3E9UBvHiRGNYhIlnOhvIe4/tlLdFR4GULsDjfh/mRof3Ysi1
-	 bK75usT+xVXM2ajJncHR7JFPdT3bHHGtFiU5vqPaeCZoWaVcLiJkNl1dF27NMBpkAo
-	 xifrWrgFre4Fq8F+tDNlM10ry9cr+DupcCilyKZvsK32FMjxOnPZje/6nrUw1g7psM
-	 Ry71q2hACD7E8ydmFVfJAL2LKppv9G9p4FmyertQD7sCCgLgvctlnmjfPfYUp7NPYA
-	 7w+heJf2gT6zg==
-Message-ID: <23781043-901b-422c-8199-10aa4a31459e@kernel.org>
-Date: Mon, 17 Mar 2025 09:50:47 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nJqS0qEl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742201495; x=1773737495;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XAV/2ePd8TT1yYLCVLS0BEy0i2/ksaThFsFZ8vjP0Qc=;
+  b=nJqS0qElIiei9AAk+ywimrTdT63jTt6PKZiybEfPBgpPNoWicaH2PNWa
+   kCR3G7Phksnj3fnWQW158HJAw3f1jAH3OMufo/3TCEX5A5+dgBU/WZkfu
+   Z7UUYnAnbKsHlBqhA/5BJfe5WqimulGT9X9GcqID44zJxUR1eZPZ2iV2Y
+   7WcX75e/g42swPtikFBAuvrMCoh/1AqBBT7iscP0JSCEaqB6N4PWto9cy
+   ICxSF45IKZNPv3qOj5rkV1GKAYAuzBiFMXc1WQLZoVouxkmoA6UIeI27i
+   +DPD7UDexQDZdyygP89ugKx7znAu/CB3Icliwf00lUogRwpteS8KrhXUj
+   A==;
+X-CSE-ConnectionGUID: 1RAbgRCWQo6aqPuTuH3aFQ==
+X-CSE-MsgGUID: jq5835vXSZamejXvFG0sow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11375"; a="42460925"
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="42460925"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 01:51:34 -0700
+X-CSE-ConnectionGUID: aYrg09uWT+6jW+GrtJt9Zg==
+X-CSE-MsgGUID: 2yix0FGtSaOi8AJbQdJLLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="126736513"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 01:51:30 -0700
+Date: Mon, 17 Mar 2025 09:47:37 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Jim Liu <jim.t90615@gmail.com>
+Cc: JJLIU0@nuvoton.com, florian.fainelli@broadcom.com, andrew@lunn.ch,
+	hkallweit1@gmail.com, kuba@kernel.org, linux@armlinux.org.uk,
+	edumazet@google.com, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] net: phy: broadcom: Correct BCM5221 PHY model
+ detection failure
+Message-ID: <Z9fhqbfoQGSm1Njx@mev-dev.igk.intel.com>
+References: <20250317035005.3064083-1-JJLIU0@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xen/pciback: use sysfs_emit_at() instead of scnprintf()
-To: tang.dongxing@zte.com.cn, jgross@suse.com
-Cc: sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
- jiqian.chen@amd.com, ray.huang@amd.com, jeff.johnson@oss.qualcomm.com,
- minhuadotchen@gmail.com, xen-devel@lists.xenproject.org,
- linux-kernel@vger.kernel.org, ye.xingchen@zte.com.cn,
- yang.guang5@zte.com.cn, yang.yang29@zte.com.cn, xu.xin16@zte.com.cn
-References: <20250317151648132Sj7qhbVfKcPYvqCievFUf@zte.com.cn>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250317151648132Sj7qhbVfKcPYvqCievFUf@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317035005.3064083-1-JJLIU0@nuvoton.com>
 
-On 17. 03. 25, 8:16, tang.dongxing@zte.com.cn wrote:
-> From: TangDongxing <tang.dongxing@zte.com.cn>
+On Mon, Mar 17, 2025 at 11:50:05AM +0800, Jim Liu wrote:
+> Use "BRCM_PHY_MODEL" can be applied to the entire 5221 family of PHYs.
 > 
-> Follow the advice in Documentation/filesystems/sysfs.rst:
-> show() should only use sysfs_emit() or sysfs_emit_at() when formatting
-> the value to be returned to user space.
-> 
-> Signed-off-by: TangDongxing <tang.dongxing@zte.com.cn>
+> Fixes: 3abbd0699b67 (net: phy: broadcom: add support for BCM5221 phy)
+> Signed-off-by: Jim Liu <JJLIU0@nuvoton.com>
 > ---
->   drivers/xen/xen-pciback/pci_stub.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/net/phy/broadcom.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-> index b616b7768c3b..a0782a74ed34 100644
-> --- a/drivers/xen/xen-pciback/pci_stub.c
-> +++ b/drivers/xen/xen-pciback/pci_stub.c
-> @@ -1281,7 +1281,7 @@ static ssize_t slots_show(struct device_driver *drv, char *buf)
->   		if (count >= PAGE_SIZE)
->   			break;
-> 
-> -		count += scnprintf(buf + count, PAGE_SIZE - count,
-> +		count += sysfs_emit_at(buf, count,
+> diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+> index 22edb7e4c1a1..3529289e9d13 100644
+> --- a/drivers/net/phy/broadcom.c
+> +++ b/drivers/net/phy/broadcom.c
+> @@ -859,7 +859,7 @@ static int brcm_fet_config_init(struct phy_device *phydev)
+>  		return reg;
+>  
+>  	/* Unmask events we are interested in and mask interrupts globally. */
+> -	if (phydev->phy_id == PHY_ID_BCM5221)
+> +	if (BRCM_PHY_MODEL(phydev) == PHY_ID_BCM5221)
+>  		reg = MII_BRCM_FET_IR_ENABLE |
+>  		      MII_BRCM_FET_IR_MASK;
+>  	else
+> @@ -888,7 +888,7 @@ static int brcm_fet_config_init(struct phy_device *phydev)
+>  		return err;
+>  	}
+>  
+> -	if (phydev->phy_id != PHY_ID_BCM5221) {
+> +	if (BRCM_PHY_MODEL(phydev) != PHY_ID_BCM5221) {
+>  		/* Set the LED mode */
+>  		reg = __phy_read(phydev, MII_BRCM_FET_SHDW_AUXMODE4);
+>  		if (reg < 0) {
+> @@ -1009,7 +1009,7 @@ static int brcm_fet_suspend(struct phy_device *phydev)
+>  		return err;
+>  	}
+>  
+> -	if (phydev->phy_id == PHY_ID_BCM5221)
+> +	if (BRCM_PHY_MODEL(phydev) == PHY_ID_BCM5221)
+>  		/* Force Low Power Mode with clock enabled */
+>  		reg = BCM5221_SHDW_AM4_EN_CLK_LPM | BCM5221_SHDW_AM4_FORCE_LPM;
+>  	else
+> -- 
+> 2.34.1
 
-This is wrong too [1].
+It will be nice to have wider explanation what it is fixing in commit
+message. Is phydev->phy_id different than phydev->driver->phy_id? Looks
+like masking isn't crucial as phydev->driver->phy_id is initialized by
+PHY_ID_BCM5221 which is already masked.
 
-[1] 
-https://lore.kernel.org/all/9c552d9a-2d46-4069-a9c4-35fab857bfc3@kernel.org/
-
-regards,
--- 
-js
-suse labs
-
+Anyway, looks fine, thanks.
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
