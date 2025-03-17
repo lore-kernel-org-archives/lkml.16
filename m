@@ -1,60 +1,71 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BD121E0AC
-	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A362C21C173
+	for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 08:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742199795; cv=none; b=bah0H0n1Df3F8hc968gFCGQ2caeaPpRcPCH2kmyKsOO3i0O+M2VfDIPmbbqPKns5yxFPR/Yrj+3VH9f1ofKuw2WdSf4cqQjwVT8juGi3xI3SmAkXQOVXEKezGBRNUj+0bialeNL3+Yf8znLbhLLFKryo6bkeZVhn2e9ky7UNwFE=
+	t=1742199831; cv=none; b=mFTe/k+6Jda9Kzq7OtYzo4OlaTf87Mnv8Eg1HfZUq5P88W0mUI88iHMBPNDCpMtuJIHnCN5YLkzGVFTM5ySufGZ2gHli+kUPZk1q7HMnISkKYNT88Zd4bHmXO+U/xQGvH4ShyoVoUobJbkqEF2pdiXo6nFfDwBH9o3g4ssFudM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742199795; c=relaxed/simple;
-	bh=WpFgNwc8iTy+ic8zvThJh/LrOGJEdfq8lpE+cc/saXw=;
+	s=arc-20240116; t=1742199831; c=relaxed/simple;
+	bh=6F6vk/bCuTRFj9sHasYFtzBPnP8c9sLQfBUMl+1ThkY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rDwfx6Fn4PxrxVbC4BHFWLVEo9tXhZovPIzcs/4snJjtup7/vM9AR3WngKV22+zSewNbMUJYEKbPPMgJgNHCnni6ogfijJ/ZOBZBI8KlVSvWF5g6HPsCHuRfU7xpMlnAAarvBtgaEdiHqogtxFN9DXSnC0Bn14nSvNnATmh798k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=luk1APmx; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=Sxm19oixBTVRHJWeqt9h94liHPAOJsIW/e9QmPeGUpx8RxTzFmon1roD+GSBoxEXsFUFTiEDhHU2PTzrtZUWgAgu+rvpmp6s/Imd8xOEEGWwvLisNITVHRjet7AA360fbasXKloScgt+0KT0tzw7kz7qcoMEJjWTvHUgts4OjI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T3H1ktej; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="luk1APmx"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52H7ogoC003088;
-	Mon, 17 Mar 2025 08:22:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=xvL0Pp
-	AeErdyXUkpj2HkMsYgvrJPF4QQTEgBNCTaDmg=; b=luk1APmxpKlPcSQlmSzfPt
-	bJkkGaMqDMIqwVtUnlHFGSCWQfgLUU1uL33KhoeIXhWQRnQ1xIVkRIgPnb9Hk72P
-	Zd8xn3Gkr9/CWhAXFdcD9sNjNpluhjcMHHh2ZdJVGLT2GZ6+v3w5mEK/Yk77fRs+
-	QhzpJYags6gOp3WcXCiJTBQLeAEqV+qouexScParQ34KqmS/8hylEN6EMBQorU2I
-	as2jCw7fxXZWI/V106NVRDuNhxw6XTRtDdBVpmrwTvavQHnbvH/yBgBrAVOayVkG
-	HHVR/yF3KEWxbBfhFYB8oXPFUr4pWIcqZmb/jN1WXgzaGZTj0mLt4V+YJGiLJU8A
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45e5v0258v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Mar 2025 08:22:56 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52H4WA0i012451;
-	Mon, 17 Mar 2025 08:22:56 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45dmvnn611-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Mar 2025 08:22:55 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52H8Mss751839450
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Mar 2025 08:22:54 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F37D820043;
-	Mon, 17 Mar 2025 08:22:53 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2B70C20040;
-	Mon, 17 Mar 2025 08:22:53 +0000 (GMT)
-Received: from [9.109.215.252] (unknown [9.109.215.252])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 17 Mar 2025 08:22:52 +0000 (GMT)
-Message-ID: <b0e222ca-0226-45fc-b348-fd21f691a466@linux.ibm.com>
-Date: Mon, 17 Mar 2025 13:52:52 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T3H1ktej"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742199828;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rC5lK1FxM1eWQXOh9AroE9tnp2td4VImfPnxc4mu+rg=;
+	b=T3H1ktejRD0Vh4sK7aDZUzpjaMS6nV/QZlHsgMGOhKwzEOcZyEmPPXxLsqEWE0kvvJNao1
+	GQjq2qyskoAOvH0vUjUQdkF6YA/l7stQRNnnNv9H1Ucs+EBRVN4tNaYlBz5nZELtZiDJ61
+	VGj5psdB1Ws2uXfqA6vvTstPhiMrijU=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-468-HF9zv-rhMM-GB9zniK0ZDA-1; Mon, 17 Mar 2025 04:23:46 -0400
+X-MC-Unique: HF9zv-rhMM-GB9zniK0ZDA-1
+X-Mimecast-MFC-AGG-ID: HF9zv-rhMM-GB9zniK0ZDA_1742199825
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43947979ce8so8328505e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 01:23:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742199825; x=1742804625;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rC5lK1FxM1eWQXOh9AroE9tnp2td4VImfPnxc4mu+rg=;
+        b=vgG/w+X9E2vF+/wc99mjnIYmYJDdURtCsa6RojQ1B7/czOXr7Wz+UAMKjuV14DP4hw
+         SY4E+gLhObUfKV9HMpArXb4FyWbKKTTxvgqE1d3+bP6XXkkovYR9GEcwa8O3HoVXi0wX
+         YztJOeB0hDPL9agBcctDH5luzKZ02VwvkPAlNuSV0LVWiJM8qVH5lpiyeycsxm3zV9M9
+         7gxo/N3VONDvm3L7TLH3JvPsnZOT6jg/k4yGsHkeLcIkXOCF0ZMZHxVgkdfdXkq2Tnn7
+         qbrBXakas65yTBwJqelIQJdtDUDEDC80uzQ8ZAP+0/7oNVH+/Wd1B+2xqm03xjkDn4gV
+         dgfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXKP5hTmK0bWft+l7K7gsX9m7hA+mlatoJBBe/aLoK26QmITE0ZJNiO9EozojdOUMBLjUiycSwdMrZQyEM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKluovBJZNqQvrW/Cezn+kojIMWh4g17fNNslo1uBJ7371lN4t
+	Vav7wW+W7l9gfhyitUF9ibsGkTkXwWTGSl3CFIRNyiUETMrw8UhnWcq7AGemDU7ylL5HbFejw16
+	4ig+w94V0PJnrt87kYku2MWza2Uxgv6xzMUBvaDhQBBHD2z87Mw1eQW5b+RTXXQ==
+X-Gm-Gg: ASbGncv8shjnGlDfXnjj7i3J2t85xIJXXnZ3XBlTuMgez+Qizar3Ownr7nE9gIrMzzJ
+	J1jd+7tAj6hsy1R08oX5KnVzVu/rcjLRjuv67vw47xEHMhqX44sq4PBkR/w/ji9QzhKbvrusYRZ
+	ZgSX4zBZnVh4YUNdC9mMkRlnerKmAFaXM56WAw/fn8U3FIApwUtZ+aKuR8lywukE6F53p3wL4dp
+	kXskC9z13GLEznjZ5d81tjPrJm1K+vzOFmB95CkjUEh+cvlOPZxQZwqzOH0qCPnpLyI9gSrkk9G
+	8mXhgyNMGdyRKJ/RCwwi+TKGy0k+A6HPF9lxSLdNREO7yg==
+X-Received: by 2002:a05:600c:511c:b0:43c:fbba:41ba with SMTP id 5b1f17b1804b1-43d1ecd60c1mr109892915e9.28.1742199825098;
+        Mon, 17 Mar 2025 01:23:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGvXGGv6tXY3ajGLLrOXr011xmJAYRLTHi8JZasNx5okT9lH6f9KisDDn8lGridr/hz5ZTMqg==
+X-Received: by 2002:a05:600c:511c:b0:43c:fbba:41ba with SMTP id 5b1f17b1804b1-43d1ecd60c1mr109892625e9.28.1742199824734;
+        Mon, 17 Mar 2025 01:23:44 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-10-172.dyn.eolo.it. [146.241.10.172])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d2010de59sm96734785e9.33.2025.03.17.01.23.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Mar 2025 01:23:44 -0700 (PDT)
+Message-ID: <981a871f-e0c0-4741-8e7e-4a4e5d93541d@redhat.com>
+Date: Mon, 17 Mar 2025 09:23:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,141 +73,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [patch 05/46] genirq/resend: Switch to lock guards
-To: Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20250313154615.860723120@linutronix.de>
- <20250313155914.210122456@linutronix.de>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Subject: Re: [PATCH net v3 2/3] selftest/bpf: Add test for AF_VSOCK connect()
+ racing sockmap update
+To: Michal Luczaj <mhal@rbox.co>, Stefano Garzarella <sgarzare@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ Bobby Eshleman <bobby.eshleman@bytedance.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, bpf@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20250316-vsock-trans-signal-race-v3-0-17a6862277c9@rbox.co>
+ <20250316-vsock-trans-signal-race-v3-2-17a6862277c9@rbox.co>
 Content-Language: en-US
-In-Reply-To: <20250313155914.210122456@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250316-vsock-trans-signal-race-v3-2-17a6862277c9@rbox.co>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: F6Bntv2FJGEY3YGffif2_P9GgwkICafG
-X-Proofpoint-GUID: F6Bntv2FJGEY3YGffif2_P9GgwkICafG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-17_02,2025-03-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- impostorscore=0 adultscore=0 mlxscore=0 spamscore=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503170058
 
-Hi Thomas.
+On 3/16/25 11:45 PM, Michal Luczaj wrote:
+> Racing signal-interrupted connect() and sockmap update may result in an
+> unconnected (and missing vsock transport) socket in a sockmap.
+> 
+> Test spends 2 seconds attempting to reach WARN_ON_ONCE().
+> 
+> connect
+>   / state = SS_CONNECTED /
+>                                 sock_map_update_elem
+>   if signal_pending
+>     state = SS_UNCONNECTED
+> 
+> connect
+>   transport = NULL
+>                                 vsock_bpf_recvmsg
+>                                   WARN_ON_ONCE(!vsk->transport)
+> 
+> Signed-off-by: Michal Luczaj <mhal@rbox.co>
 
-On 3/13/25 21:29, Thomas Gleixner wrote:
-> Convert all lock/unlock pairs to guards and tidy up the code.
-> 
-> No functional change.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   kernel/irq/resend.c |   50 +++++++++++++++++++++-----------------------------
->   1 file changed, 21 insertions(+), 29 deletions(-)
-> 
-> --- a/kernel/irq/resend.c
-> +++ b/kernel/irq/resend.c
-> @@ -30,18 +30,17 @@ static DEFINE_RAW_SPINLOCK(irq_resend_lo
->    */
->   static void resend_irqs(struct tasklet_struct *unused)
->   {
-> -	struct irq_desc *desc;
-> -
-> -	raw_spin_lock_irq(&irq_resend_lock);
-> +	guard(raw_spinlock_irq)(&irq_resend_lock);
->   	while (!hlist_empty(&irq_resend_list)) {
-> -		desc = hlist_entry(irq_resend_list.first, struct irq_desc,
-> -				   resend_node);
-> +		struct irq_desc *desc;
-> +
-> +		desc = hlist_entry(irq_resend_list.first, struct irq_desc,  resend_node);
->   		hlist_del_init(&desc->resend_node);
-> +
->   		raw_spin_unlock(&irq_resend_lock);
->   		desc->handle_irq(desc);
->   		raw_spin_lock(&irq_resend_lock);
->   	}
-> -	raw_spin_unlock_irq(&irq_resend_lock);
->   }
->   
->   /* Tasklet to handle resend: */
-> @@ -75,19 +74,18 @@ static int irq_sw_resend(struct irq_desc
->   	}
->   
->   	/* Add to resend_list and activate the softirq: */
-> -	raw_spin_lock(&irq_resend_lock);
-> -	if (hlist_unhashed(&desc->resend_node))
-> -		hlist_add_head(&desc->resend_node, &irq_resend_list);
-> -	raw_spin_unlock(&irq_resend_lock);
-> +	scoped_guard (raw_spinlock, &irq_resend_lock) {
+This is apparently causing some bpf self-test failure. (Timeout? the
+self-test failure output is not clear to me.)
 
-Nit: Any reason why it is "scoped_guard ()" instead of "scoped_guard()". 
-Is there a difference between the two?
+Could you please have a look?
 
-I have seen in the current code base both are present, i would be nice 
-to have one of it no? or guideline on which one to use when?
+Thanks!
 
-> +		if (hlist_unhashed(&desc->resend_node))
-> +			hlist_add_head(&desc->resend_node, &irq_resend_list);
-> +	}
->   	tasklet_schedule(&resend_tasklet);
->   	return 0;
->   }
->   
->   void clear_irq_resend(struct irq_desc *desc)
->   {
-> -	raw_spin_lock(&irq_resend_lock);
-> +	guard(raw_spinlock)(&irq_resend_lock);
->   	hlist_del_init(&desc->resend_node);
-> -	raw_spin_unlock(&irq_resend_lock);
->   }
->   
->   void irq_resend_init(struct irq_desc *desc)
-> @@ -172,30 +170,24 @@ int check_irq_resend(struct irq_desc *de
->    */
->   int irq_inject_interrupt(unsigned int irq)
->   {
-> -	struct irq_desc *desc;
-> -	unsigned long flags;
-> -	int err;
-> +	int err = -EINVAL;
->   
->   	/* Try the state injection hardware interface first */
->   	if (!irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true))
->   		return 0;
->   
->   	/* That failed, try via the resend mechanism */
-> -	desc = irq_get_desc_buslock(irq, &flags, 0);
-> -	if (!desc)
-> -		return -EINVAL;
-> +	scoped_irqdesc_get_and_buslock(irq, 0) {
-> +		struct irq_desc *desc = scoped_irqdesc;
->   
-> -	/*
-> -	 * Only try to inject when the interrupt is:
-> -	 *  - not NMI type
-> -	 *  - activated
-> -	 */
-> -	if (irq_is_nmi(desc) || !irqd_is_activated(&desc->irq_data))
-> -		err = -EINVAL;
-> -	else
-> -		err = check_irq_resend(desc, true);
-> -
-> -	irq_put_desc_busunlock(desc, flags);
-> +		/*
-> +		 * Only try to inject when the interrupt is:
-> +		 *  - not NMI type
-> +		 *  - activated
-> +		 */
-> +		if (!irq_is_nmi(desc) && irqd_is_activated(&desc->irq_data))
-> +			err = check_irq_resend(desc, true);
-> +	}
->   	return err;
->   }
->   EXPORT_SYMBOL_GPL(irq_inject_interrupt);
-> 
-> 
+Paolo
 
