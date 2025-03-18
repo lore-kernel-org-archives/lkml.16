@@ -1,267 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D801DE4FE
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 20:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25581E52D
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 20:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742329800; cv=none; b=BCvl0YnJs07EF/nDGFsE0Wz1oKquqwn6Ng4YCemdI+LIEK3SOc1f1VByEJJh7T2on/aqlotg/VgeKSu+yi1nh5OF24YRo8xwEulxAiu8tVgPgFsvFQ3G2jt91Dvcd3yAbL4BMtbWACZpWV36+7PVbg9mZ6ztkGrSwswMnGbT06I=
+	t=1742329934; cv=none; b=Uj2IUlBZCjQJIoYIsT0qgimnVhLQCbN8IrpDdnE1Fz1DhTP3KfcKTuPXLwrc++6aR3Ueqx+0HeN0m+HWpSexwUE2PQ6Vz2x80yIcZSKzVqPOC2cacJtGT1rmZm0T08uhHgK1CYJApmSHlSFLHSzE0FH9WrzsNibCo/2W1J2FCfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742329800; c=relaxed/simple;
-	bh=FYqLhIo5QrjyRe1xR2T64rrJDRQzI5b89y4rA9z9WIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=eRixWcGJoh7KDE+me6ykAgTaC6Q+agLU3NezkiIjk6XegehJz0xSJbLFGAmuoaZ6r5EdfKqe07zftzFUba3iEy9MgINt68LsdwXQxplV1pY/dea5b8bxDpE3EgTlMp1ZJQ1Uo78hEMWARcEPnh/phccARW7GQQ5coLLmNBVaVwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lbB7rOiJ; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742329934; c=relaxed/simple;
+	bh=R/oAJ7ukd7zqNnKlsYzwQr97Nx+Hou85GSXYQDebBXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RKTg6O+nsYoDEDv5y/P6VMju5bth3wVwSSUFz5oR5JeWFjnPPuLiRbEk02Ntvk9AtX3d71f7tD9i19zmkXMMmNdMMzhK7dDX0E0cRdh/Y4aGxeULjzOi19jMDh8mvgIaUpNM2j2dXKOAiWe+swiM1xJk1QBDwvyDNjSrc5SpKpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=LyRP2TpZ; arc=none smtp.client-ip=178.154.239.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lbB7rOiJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742329798; x=1773865798;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=FYqLhIo5QrjyRe1xR2T64rrJDRQzI5b89y4rA9z9WIw=;
-  b=lbB7rOiJgP34KeOdrlqbcWNwUr6UFcEraU+ho5aFZrsbf+e1Vxh8l9hn
-   poLrkF+Lh3arzzx471YYBzbrK/GBAceVdE50Zjm4+uoERWBS1ZNBwNcyw
-   S2XvSC1y6sBXE2/mvCtyc+sxtmh22AnN3gw4PDIgiIBZlUq7xcvnDIAlQ
-   Ka7qNrMzmxL9FVLlkZjzXZMTXAHQb/XUNJZTu2dkev/Vefw2HKTbCGs5n
-   gYyMDuH2sOLNjX3S0Wnmz1nSYBbDTmgTaG4RV3UnZas3Ge34igAHX/xv1
-   pvfAYIVZdpFhZ84jVA8Dp8SLEuKmvNl95fNwj+pt5oTf7WRTBVAQyrdQv
-   Q==;
-X-CSE-ConnectionGUID: qHGL68NRQjqKiRdXHIMsEg==
-X-CSE-MsgGUID: pw4ZrbrQQeO1IoYcwMZoAw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="54166338"
-X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
-   d="scan'208";a="54166338"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 13:29:57 -0700
-X-CSE-ConnectionGUID: Rd596ZyXRx69fPPkLapzwA==
-X-CSE-MsgGUID: jT0nPkaySHWy6wyobYG0tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
-   d="scan'208";a="145556422"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 18 Mar 2025 13:29:56 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tudZR-000EA6-1l;
-	Tue, 18 Mar 2025 20:29:53 +0000
-Date: Wed, 19 Mar 2025 04:26:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Konrad Knitter <konrad.knitter@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Marcin Szycik <marcin.szycik@linux.intel.com>,
-	Sharon Haroni <sharon.haroni@intel.com>,
-	Nicholas Nunley <nicholas.d.nunley@intel.com>,
-	Brett Creeley <brett.creeley@intel.com>
-Subject: drivers/net/ethernet/intel/ice/devlink/health.c:35:3: error:
- initializer element is not constant
-Message-ID: <202503190404.sA5CPXty-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="LyRP2TpZ"
+Received: from mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1d:6351:0:640:b430:0])
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id ED9B160BDD;
+	Tue, 18 Mar 2025 23:30:07 +0300 (MSK)
+Received: from [IPV6:2a02:6b8:b081:b407::1:6] (unknown [2a02:6b8:b081:b407::1:6])
+	by mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id kTPfWB6Fba60-wfoEZFQx;
+	Tue, 18 Mar 2025 23:30:07 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1742329807;
+	bh=H1eXSfzvDZPMjoikNchtb9s6aEqvxsRmv0op5li+P38=;
+	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
+	b=LyRP2TpZUZaMyWNF/yiGADln8XiZ35Jh4ynGN0YMfQgWKlLAO2c12Elir3WGADfXg
+	 mxRNYDsLaiHci8WzC08dmobmlVWy8L1Qgiow8ckj+MG7z23IEvWhXH3K/JXw0mBSlZ
+	 uBBwPn5xFxZXu0aNTE2T3YoLxgTFKJnNZtLsGAaI=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-69.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+Message-ID: <577f712d-4ac3-481f-8bfa-3d667516f338@yandex-team.ru>
+Date: Tue, 18 Mar 2025 23:29:46 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   81e4f8d68c66da301bb881862735bd74c6241a19
-commit: 85d6164ec56deef2e5692cf8b132115f9317cdf6 ice: add fw and port health reporters
-date:   9 weeks ago
-config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20250319/202503190404.sA5CPXty-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503190404.sA5CPXty-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503190404.sA5CPXty-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/net/ethernet/intel/ice/devlink/health.c:35:3: error: initializer element is not constant
-      ice_common_port_solutions, {ice_port_number_label}},
-      ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:35:3: note: (near initialization for 'ice_health_status_lookup[0].solution')
-   drivers/net/ethernet/intel/ice/devlink/health.c:35:31: error: initializer element is not constant
-      ice_common_port_solutions, {ice_port_number_label}},
-                                  ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:35:31: note: (near initialization for 'ice_health_status_lookup[0].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:37:46: error: initializer element is not constant
-      "Change or replace the module or cable.", {ice_port_number_label}},
-                                                 ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:37:46: note: (near initialization for 'ice_health_status_lookup[1].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:39:3: error: initializer element is not constant
-      ice_common_port_solutions, {ice_port_number_label}},
-      ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:39:3: note: (near initialization for 'ice_health_status_lookup[2].solution')
-   drivers/net/ethernet/intel/ice/devlink/health.c:39:31: error: initializer element is not constant
-      ice_common_port_solutions, {ice_port_number_label}},
-                                  ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:39:31: note: (near initialization for 'ice_health_status_lookup[2].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:43:4: error: initializer element is not constant
-      {ice_port_number_label}},
-       ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:43:4: note: (near initialization for 'ice_health_status_lookup[3].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:46:4: error: initializer element is not constant
-      {ice_port_number_label}},
-       ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:46:4: note: (near initialization for 'ice_health_status_lookup[4].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:49:4: error: initializer element is not constant
-      {ice_port_number_label}},
-       ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:49:4: note: (near initialization for 'ice_health_status_lookup[5].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:52:4: error: initializer element is not constant
-      {ice_port_number_label}},
-       ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:52:4: note: (near initialization for 'ice_health_status_lookup[6].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:54:3: error: initializer element is not constant
-      ice_common_port_solutions, {ice_port_number_label}},
-      ^~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:54:3: note: (near initialization for 'ice_health_status_lookup[7].solution')
-   drivers/net/ethernet/intel/ice/devlink/health.c:54:31: error: initializer element is not constant
-      ice_common_port_solutions, {ice_port_number_label}},
-                                  ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:54:31: note: (near initialization for 'ice_health_status_lookup[7].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:56:10: error: initializer element is not constant
-      NULL, {ice_port_number_label}},
-             ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:56:10: note: (near initialization for 'ice_health_status_lookup[8].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:58:3: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-      ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:58:3: note: (near initialization for 'ice_health_status_lookup[9].solution')
-   drivers/net/ethernet/intel/ice/devlink/health.c:58:29: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-                                ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:58:29: note: (near initialization for 'ice_health_status_lookup[9].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:63:4: error: initializer element is not constant
-      {ice_port_number_label}},
-       ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:63:4: note: (near initialization for 'ice_health_status_lookup[11].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:67:4: error: initializer element is not constant
-      {ice_port_number_label}},
-       ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:67:4: note: (near initialization for 'ice_health_status_lookup[12].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:70:50: error: initializer element is not constant
-      "Change the module to align to port option.", {ice_port_number_label}},
-                                                     ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:70:50: note: (near initialization for 'ice_health_status_lookup[13].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:72:3: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-      ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:72:3: note: (near initialization for 'ice_health_status_lookup[14].solution')
-   drivers/net/ethernet/intel/ice/devlink/health.c:72:29: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-                                ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:72:29: note: (near initialization for 'ice_health_status_lookup[14].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:74:3: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-      ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:74:3: note: (near initialization for 'ice_health_status_lookup[15].solution')
-   drivers/net/ethernet/intel/ice/devlink/health.c:74:29: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-                                ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:74:29: note: (near initialization for 'ice_health_status_lookup[15].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:78:3: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-      ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:78:3: note: (near initialization for 'ice_health_status_lookup[17].solution')
-   drivers/net/ethernet/intel/ice/devlink/health.c:78:29: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-                                ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:78:29: note: (near initialization for 'ice_health_status_lookup[17].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:80:3: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-      ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:80:3: note: (near initialization for 'ice_health_status_lookup[18].solution')
-   drivers/net/ethernet/intel/ice/devlink/health.c:80:29: error: initializer element is not constant
-      ice_update_nvm_solution, {ice_port_number_label}},
-                                ^~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/intel/ice/devlink/health.c:80:29: note: (near initialization for 'ice_health_status_lookup[18].data_label[0]')
-   drivers/net/ethernet/intel/ice/devlink/health.c:82:3: error: initializer element is not constant
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v4] x86/split_lock: fix delayed detection enabling
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ den-plotnikov@yandex-team.ru, gpiccoli@igalia.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com
+References: <20250115131704.132609-1-davydov-max@yandex-team.ru>
+ <Z73JRsuderQIW1HT@gmail.com>
+Content-Language: en-US
+From: Maksim Davydov <davydov-max@yandex-team.ru>
+In-Reply-To: <Z73JRsuderQIW1HT@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-vim +35 drivers/net/ethernet/intel/ice/devlink/health.c
 
-    32	
-    33	static const struct ice_health_status ice_health_status_lookup[] = {
-    34		{ICE_AQC_HEALTH_STATUS_ERR_UNKNOWN_MOD_STRICT, "An unsupported module was detected.",
-  > 35			ice_common_port_solutions, {ice_port_number_label}},
-    36		{ICE_AQC_HEALTH_STATUS_ERR_MOD_TYPE, "Module type is not supported.",
-    37			"Change or replace the module or cable.", {ice_port_number_label}},
-    38		{ICE_AQC_HEALTH_STATUS_ERR_MOD_QUAL, "Module is not qualified.",
-    39			ice_common_port_solutions, {ice_port_number_label}},
-    40		{ICE_AQC_HEALTH_STATUS_ERR_MOD_COMM,
-    41			"Device cannot communicate with the module.",
-    42			"Check your cable connection. Change or replace the module or cable. Manually set speed and duplex.",
-    43			{ice_port_number_label}},
-    44		{ICE_AQC_HEALTH_STATUS_ERR_MOD_CONFLICT, "Unresolved module conflict.",
-    45			"Manually set speed/duplex or change the port option. If the problem persists, use a cable/module that is found in the supported modules and cables list for this device.",
-    46			{ice_port_number_label}},
-    47		{ICE_AQC_HEALTH_STATUS_ERR_MOD_NOT_PRESENT, "Module is not present.",
-    48			"Check that the module is inserted correctly. If the problem persists, use a cable/module that is found in the supported modules and cables list for this device.",
-    49			{ice_port_number_label}},
-    50		{ICE_AQC_HEALTH_STATUS_INFO_MOD_UNDERUTILIZED, "Underutilized module.",
-    51			"Change or replace the module or cable. Change the port option.",
-    52			{ice_port_number_label}},
-    53		{ICE_AQC_HEALTH_STATUS_ERR_UNKNOWN_MOD_LENIENT, "An unsupported module was detected.",
-    54			ice_common_port_solutions, {ice_port_number_label}},
-    55		{ICE_AQC_HEALTH_STATUS_ERR_INVALID_LINK_CFG, "Invalid link configuration.",
-    56			NULL, {ice_port_number_label}},
-    57		{ICE_AQC_HEALTH_STATUS_ERR_PORT_ACCESS, "Port hardware access error.",
-    58			ice_update_nvm_solution, {ice_port_number_label}},
-    59		{ICE_AQC_HEALTH_STATUS_ERR_PORT_UNREACHABLE, "A port is unreachable.",
-    60			"Change the port option. Update to the latest NVM image."},
-    61		{ICE_AQC_HEALTH_STATUS_INFO_PORT_SPEED_MOD_LIMITED, "Port speed is limited due to module.",
-    62			"Change the module or configure the port option to match the current module speed. Change the port option.",
-    63			{ice_port_number_label}},
-    64		{ICE_AQC_HEALTH_STATUS_ERR_PARALLEL_FAULT,
-    65			"All configured link modes were attempted but failed to establish link. The device will restart the process to establish link.",
-    66			"Check link partner connection and configuration.",
-    67			{ice_port_number_label}},
-    68		{ICE_AQC_HEALTH_STATUS_INFO_PORT_SPEED_PHY_LIMITED,
-    69			"Port speed is limited by PHY capabilities.",
-    70			"Change the module to align to port option.", {ice_port_number_label}},
-    71		{ICE_AQC_HEALTH_STATUS_ERR_NETLIST_TOPO, "LOM topology netlist is corrupted.",
-    72			ice_update_nvm_solution, {ice_port_number_label}},
-    73		{ICE_AQC_HEALTH_STATUS_ERR_NETLIST, "Unrecoverable netlist error.",
-    74			ice_update_nvm_solution, {ice_port_number_label}},
-    75		{ICE_AQC_HEALTH_STATUS_ERR_TOPO_CONFLICT, "Port topology conflict.",
-    76			"Change the port option. Update to the latest NVM image."},
-    77		{ICE_AQC_HEALTH_STATUS_ERR_LINK_HW_ACCESS, "Unrecoverable hardware access error.",
-    78			ice_update_nvm_solution, {ice_port_number_label}},
-    79		{ICE_AQC_HEALTH_STATUS_ERR_LINK_RUNTIME, "Unrecoverable runtime error.",
-    80			ice_update_nvm_solution, {ice_port_number_label}},
-    81		{ICE_AQC_HEALTH_STATUS_ERR_DNL_INIT, "Link management engine failed to initialize.",
-    82			ice_update_nvm_solution, {ice_port_number_label}},
-    83		{ICE_AQC_HEALTH_STATUS_ERR_PHY_FW_LOAD,
-    84			"Failed to load the firmware image in the external PHY.",
-    85			ice_update_nvm_solution, {ice_port_number_label}},
-    86		{ICE_AQC_HEALTH_STATUS_INFO_RECOVERY, "The device is in firmware recovery mode.",
-    87			ice_update_nvm_solution, {"Extended Error"}},
-    88		{ICE_AQC_HEALTH_STATUS_ERR_FLASH_ACCESS, "The flash chip cannot be accessed.",
-    89			"If issue persists, call customer support.", {"Access Type"}},
-    90		{ICE_AQC_HEALTH_STATUS_ERR_NVM_AUTH, "NVM authentication failed.",
-    91			ice_update_nvm_solution},
-    92		{ICE_AQC_HEALTH_STATUS_ERR_OROM_AUTH, "Option ROM authentication failed.",
-    93			ice_update_nvm_solution},
-    94		{ICE_AQC_HEALTH_STATUS_ERR_DDP_AUTH, "DDP package authentication failed.",
-    95			"Update to latest base driver and DDP package."},
-    96		{ICE_AQC_HEALTH_STATUS_ERR_NVM_COMPAT, "NVM image is incompatible.",
-    97			ice_update_nvm_solution},
-    98		{ICE_AQC_HEALTH_STATUS_ERR_OROM_COMPAT, "Option ROM is incompatible.",
-    99			ice_update_nvm_solution, {"Expected PCI Device ID", "Expected Module ID"}},
-   100		{ICE_AQC_HEALTH_STATUS_ERR_DCB_MIB,
-   101			"Supplied MIB file is invalid. DCB reverted to default configuration.",
-   102			"Disable FW-LLDP and check DCBx system configuration.",
-   103			{ice_port_number_label, "MIB ID"}},
-   104	};
-   105	
+On 2/25/25 16:44, Ingo Molnar wrote:
+> 
+> * Maksim Davydov <davydov-max@yandex-team.ru> wrote:
+> 
+>> If the warn mode with disabled mitigation mode is used, then on each
+>> CPU where the split lock occurred detection will be disabled in order to
+>> make progress and delayed work will be scheduled, which then will enable
+>> detection back. Now it turns out that all CPUs use one global delayed
+>> work structure. This leads to the fact that if a split lock occurs on
+>> several CPUs at the same time (within 2 jiffies), only one CPU will
+>> schedule delayed work, but the rest will not. The return value of
+>> schedule_delayed_work_on() would have shown this, but it is not checked
+>> in the code.
+>>
+>> A diagram that can help to understand the bug reproduction:
+>> https://lore.kernel.org/all/2cd54041-253b-4e78-b8ea-dbe9b884ff9b@yandex-team.ru/
+>>
+>> In order to fix the warn mode with disabled mitigation mode, delayed work
+>> has to be a per-CPU.
+>>
+>> v4 -> v3:
+>> * rebased the patch onto the latest master
+>>
+>> v3 -> v2:
+>> * place and time of the per-CPU structure initialization were changed.
+>>    initcall doesn't seem to be a good place for it, so deferred
+>>    initialization is used.
+>>
+>> Fixes: 727209376f49 ("x86/split_lock: Add sysctl to control the misery mode")
+>> Signed-off-by: Maksim Davydov <davydov-max@yandex-team.ru>
+>> Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+>> ---
+>>   arch/x86/kernel/cpu/bus_lock.c | 20 ++++++++++++++++----
+>>   1 file changed, 16 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
+>> index 704e9241b964..b72235c8db3e 100644
+>> --- a/arch/x86/kernel/cpu/bus_lock.c
+>> +++ b/arch/x86/kernel/cpu/bus_lock.c
+>> @@ -192,7 +192,13 @@ static void __split_lock_reenable(struct work_struct *work)
+>>   {
+>>   	sld_update_msr(true);
+>>   }
+>> -static DECLARE_DELAYED_WORK(sl_reenable, __split_lock_reenable);
+>> +/*
+>> + * In order for each CPU to schedule itself delayed work independently of the
+>> + * others, delayed work struct should be per-CPU. This is not required when
+>> + * sysctl_sld_mitigate is enabled because of the semaphore, that limits
+>> + * the number of simultaneously scheduled delayed works to 1.
+>> + */
+>> +static DEFINE_PER_CPU(struct delayed_work, sl_reenable);
+>>   
+>>   /*
+>>    * If a CPU goes offline with pending delayed work to re-enable split lock
+>> @@ -213,7 +219,7 @@ static int splitlock_cpu_offline(unsigned int cpu)
+>>   
+>>   static void split_lock_warn(unsigned long ip)
+>>   {
+>> -	struct delayed_work *work;
+>> +	struct delayed_work *work = NULL;
+>>   	int cpu;
+>>   
+>>   	if (!current->reported_split_lock)
+>> @@ -235,11 +241,17 @@ static void split_lock_warn(unsigned long ip)
+>>   		if (down_interruptible(&buslock_sem) == -EINTR)
+>>   			return;
+>>   		work = &sl_reenable_unlock;
+>> -	} else {
+>> -		work = &sl_reenable;
+>>   	}
+>>   
+>>   	cpu = get_cpu();
+>> +
+>> +	if (!work) {
+>> +		work = this_cpu_ptr(&sl_reenable);
+>> +		/* Deferred initialization of per-CPU struct */
+>> +		if (!work->work.func)
+>> +			INIT_DELAYED_WORK(work, __split_lock_reenable);
+> 
+> The INIT_DELAYED_WORK() call shouldn't be done here, but in some sort
+> of init function. The control flow is complicated enough already.
+> 
+> Also, this_cpu_ptr() isn't necessary, we already have 'cpu' as the
+> current CPU. per_cpu() ought to be enough.
+> 
+
+Sorry for replying late
+
+I fixed these issues in the new version
+https://lore.kernel.org/lkml/20250318144911.10455-1-davydov-max@yandex-team.ru/
+
+
+> Thanks,
+> 
+> 	Ingo
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Maksim Davydov
