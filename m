@@ -1,257 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74A3145355;
-	Tue, 18 Mar 2025 13:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742303807; cv=fail; b=jAraobf3xMEKsyuJG73Rz0NI9KjAMMhgc8D3fZ/ccn9qEKfxs+T33ff7yzkF0ovWmXAxwkxerrI7IKy6xqXtdlGRI1kHH8ZxOsYWO5lfZcgo+u0eKUhfF7YK4gazGcJmgXURO9BtVKCbW0LeAJ5jo0mEX4XVlxGv0aCw9dHfkJ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742303807; c=relaxed/simple;
-	bh=k/vcPNpqs6zckzQUkzTjMj0h4+SoqdeJKuBeImYCiCc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=d6RHbAXOnpG8zdeGljgUy7BcgjPpCa0v1B/NV4FM2fh0ckJandKpqA77SI7jwQPgHROMk6aAtSv0Lv1VUxfSYc384Fe6BY0hIFURiwdewwp2hRcvtia6S9GRiJPv7MHQi2g5Uvgxg5i1/Yvs9H0N7mxouLlwcuIuIJy1FcwcFBQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fXbM8OHD; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1493220C015
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 13:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742303904; cv=none; b=bxowmx6JA2WBOs7gfWEa/XLqHLJSiN232bJd9UkYF8X8p+ofPjfaYij00GTp+UFlFLalXouODBChjHtj8QVFV5zFl7oOpD1TJ1T4jUMVg9WV+ZHAIFhJmqEzQhTPIdZx0BTQZTotQgKjsZVH5S1HS4Em1WMGEZ+4T5Vk/cNWPlw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742303904; c=relaxed/simple;
+	bh=pSS9b4KjyeRX3m+Vcu1trQJvwn2ZHZfbAHkYS+dr/is=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d3ueTQvQFKbCBXq/4/Q/N40CO9PWLFY6ukkoELpswTpfpCpy7tTxTM9uCSCHk8YoS3dCR0focJMeqzrcxZ5Fjl0NWR5L9rad4kKxnhlRz50F2AXB+CUj3FfH30N0MNFZ0kJavY8GHvogi6EdMmS0VlYnoaUP1fTfUsnNew9eb3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=m6vZrlgW; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fXbM8OHD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742303806; x=1773839806;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=k/vcPNpqs6zckzQUkzTjMj0h4+SoqdeJKuBeImYCiCc=;
-  b=fXbM8OHDMiUTtdXBCe6pGQJdTOl/b1i9M0mil97UaZ1HYjFZh70npNFz
-   rsng3Y/4loZWxAOxIcNI3Cc7ZZggfyj/Nen6y1mV5cl+xpjtd9q42k8ge
-   0HO6XLvhcdbSUlf103xfBQsOm3ejQmM/bK/LAOzsv+oFo98Pp5J9a9S/g
-   p6GCTm0QvgCkqkGCaHk706jwMv2RR/6H6TfrXC1LvWRuIgmyujw6D1DiJ
-   KUwfS/PzXveHtxVsJTv3dcHfBgj8sWWCvC/LsM+bTQN7x7RYq3b82U4PW
-   TOdL1PtId9O4q5mr9R8T7UzlMb9mDmZQVa0TJLc649jGE5qz/PHQTfVmO
-   Q==;
-X-CSE-ConnectionGUID: fFg0/BtDRQC2QdeK9JUP6g==
-X-CSE-MsgGUID: FrEntYQ3QgGNdbCpp3OL8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43311466"
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="43311466"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 06:16:45 -0700
-X-CSE-ConnectionGUID: uMYmSfL/RXe+/eZ8u0d1Cw==
-X-CSE-MsgGUID: 0LZzOhrvRDqd5VfRVSLFlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="145440544"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 06:16:44 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 18 Mar 2025 06:16:44 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 18 Mar 2025 06:16:44 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.45) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 18 Mar 2025 06:16:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bPlnMFvIQs+1SuP2WYOH5wJ8GfrtQPrxVfBHEPZe+vKR6CVPb9pyObpubgAGPtuCLUWmLT3uvY5Xj6uSOuNWGPctfwKDmE1Keqer8wfryu40aHgRsfcz/LaRSqyrOpwVRDR79RtNfRsLGMwFqssO0nKDSx4X4B9FwXFGsl0L0LmZeoRqObl+cuVdzBdgtgcJhTy5x25e8b4S772uDzWReUF9LxyoxY58ZZ1mgt44x+XZQKntuTBZg6RRpZn8g4R1ao5rglOuBEaMVLhHU1d6mbZuKIqalkgkBsEWPvFuSlUFt1jf3IHKFpG6elqOy7q6gMjXh3P6tOacLakbVWlD+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i1y20dyFHVLYY88az+4Wz9lcgiInEETx8KVf+rvMPHs=;
- b=dqh3ZIg/DgFItlpIWgXK4Zq77eWsN5ZYS5TgnlkNQA599huhwjtN95YAeVknq3iMZc9ABlDNH7iZKkd5iJqynRCQvdoJ1WOk0FcFp6WAep5AxGW6anbVxujVO9uECYw48wP8Cin7ZTwsdUZkXn+y552GfXy3rO9uFEfKBHtzvWa2rBTWwNiVbSWfX8bnzqB9DaTudRyYbivfMdgooCtDY/m3KFPnAJioa2eIrJKxXvY7D76UE43/p4c8ucq7m1U9d6Pj2XndktfRnCCF0ECMZHfWj6dSLfFaIowoGhEKKiTkNPYwFuBKOSuayX9VC6f/r1fDq+VZhc9S+P10C4unkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com (2603:10b6:8:b3::19) by
- LV8PR11MB8699.namprd11.prod.outlook.com (2603:10b6:408:1ff::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.33; Tue, 18 Mar 2025 13:16:36 +0000
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca]) by DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca%3]) with mapi id 15.20.8534.031; Tue, 18 Mar 2025
- 13:16:36 +0000
-Date: Tue, 18 Mar 2025 14:16:27 +0100
-From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-To: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
-CC: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>, Magnus Karlsson
-	<magnus.karlsson@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>,
-	"KP Singh" <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao
- Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko
-	<mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, "David S. Miller"
-	<davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, "Jesper Dangaard
- Brouer" <hawk@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Alexis Lothore <alexis.lothore@bootlin.com>, <netdev@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/13] selftests/bpf: test_xsk: Split xskxceiver
-Message-ID: <Z9lyK5pEi+FmcvYw@boxer>
-References: <20250313-xsk-v1-0-7374729a93b9@bootlin.com>
- <20250313-xsk-v1-10-7374729a93b9@bootlin.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250313-xsk-v1-10-7374729a93b9@bootlin.com>
-X-ClientProxiedBy: MI2P293CA0015.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:45::9) To DM4PR11MB6117.namprd11.prod.outlook.com
- (2603:10b6:8:b3::19)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="m6vZrlgW"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-225d66a4839so68987615ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 06:18:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742303897; x=1742908697; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4PvgZOP/grQ6MrsvtBZqJIB/hr36wNKPADFDTJgs3uI=;
+        b=m6vZrlgWoFrMu3x5pa4XIRk4GS8Q33fYmTqqKdoRCpEWsecHpydCDqcfGohchS4/ge
+         rApLBHVpq3JXu/rtmSHQVUeDxelCN1ATsWeP1hl4Y96qURbzofJIgzrOS4J5htVTOmZe
+         sHnv0gpNA57jINZ/6MOIbG8DW7+oXQLx9exFyDzsvVmFXcYWXI6+f6v0TdV8+jlDNY5x
+         NU5DbUYItA5Sfo1FNb8yABcSFPV01nMsmLHTwLLlKLyDfkbPt0qvEUDNawn0bgyVqm9j
+         8qBD8cn4WNHqa3Dwtq3bnXlGKsb2La8E3uVQpnqgYwtm/iDh1gBoO2Tn9hCETjZTdprl
+         TieQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742303897; x=1742908697;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4PvgZOP/grQ6MrsvtBZqJIB/hr36wNKPADFDTJgs3uI=;
+        b=pkNXLpnx6mWz+zQEaXUlScW3Aei4BsVKDRbryl6o1oJqkR56hdEna9VAxnZg4uCMDu
+         BxFAvoiLqqnOVavLWIuXdVrJVw+YYPDoCkTAsBTy/Lcfa0bY/OloRcDgkH2Ss0X2GHdM
+         UBHWapeh6AZV7CFnaNF6HQLvXqAlMjEpbH1DK88t48l8C3mqpUh8wlbvsEI2yU3kiTFn
+         iV3nceeLYn8R9KmROeVbF4421OohCOeHRl4NzkhgelY92x8gakTHtu8CoArl/juZKhNb
+         rVplETR+Nhl3LbuLEEpvN1obvYbdwqy5D5YrdTm0xvpQPGWEtibcFb9RM+acqugioKj0
+         dMzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcGaPYyMCN5ePEuy/Vi4mFrQPRjGain9oWrWTCj+Kt3K7AFCcmQyyK8rlarDjsWRGlCjKK+Gdx6ilaBbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8rTujfFW2LQVPcjAbFs5X/ovVaQCG8/yHT11GYXVdjWts/L2q
+	XvtvBCP3wr3AnIyoaKmkatqhaNi5EUgdFmq2kCDCWgdP0+wQBoGGsXfMT4Hr7ms=
+X-Gm-Gg: ASbGncuZTRAelK6wFIZ2BzO95zn1urkhpXQv7sMxzoNs0sXxMn2duJKkuXqYwPryg2A
+	SW2V1W6HWYL4mjCumiY9ZND1xJohpanc7mZhsgMlKGxG57XHnacbGHfkjXL9Hwu9OMtF0U4WI57
+	xc+koAPMLnNaOPpctuqUEhdwOmkRQhyNRXqYwaovsK0BS3nGy0M/f/MLA8V59naXtUgtPiNYqWv
+	MNx4Rjs6FVIiT+tZ2xmkjomIhgzWY/twNtEjuRck8PWZUQiAwFrUYVB6Yl2JtBdnSCvyvHjwhk5
+	nqkvtVnbKCOCKRoeOVsst7b0bwLSb60MtIeu4jInaSlmmNRP9847
+X-Google-Smtp-Source: AGHT+IE6Kvikqae/QIhUUltUVzZbzSr6m/bq+X2/1Wo+d+2XzyqBFo8+FN+U7vDveLY2PY01G/wguw==
+X-Received: by 2002:a05:6a21:3288:b0:1f3:323e:3743 with SMTP id adf61e73a8af0-1fa5002d58cmr4560532637.12.1742303897279;
+        Tue, 18 Mar 2025 06:18:17 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea05961sm8895763a12.46.2025.03.18.06.18.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 06:18:16 -0700 (PDT)
+Message-ID: <43dcef61-c574-46a9-9a94-06316d086181@kernel.dk>
+Date: Tue, 18 Mar 2025 07:18:15 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6117:EE_|LV8PR11MB8699:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d22a26a-a341-49df-d337-08dd661f1c7d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?1nhiLj9cpunIce49vYQaArJ0g6d9FYKrSp7z+55+rp6tu4RjLVfZbv40pHAP?=
- =?us-ascii?Q?8qjhGrxVDttT0uMmDaNvHFUPfU1XPA8hoU9O53M2MBrhF6+nLU6pq4d3qSt/?=
- =?us-ascii?Q?12mzqLHYVVeQTT0Rj5/fbRPXyXpVwx5IVD+lCNuvTkhtFeQo1P2NPJaEVV3l?=
- =?us-ascii?Q?OehFuzaUWwLvT6Gt+EdLbnR0zY71KcPuf4eGRvKc45Dwhtxz5QJsS27SLRPv?=
- =?us-ascii?Q?9oZwlxvUSNb959rqdxKUiLqvO+dkGSDGLYRPTvwYLSLievgXpZ6pYwY6T5b4?=
- =?us-ascii?Q?wvT/v4iryfROVk4qOxEQgdLZ7VZD473L3rgM8bXWixDBPuDxUHv2bx3CnDuN?=
- =?us-ascii?Q?kMhalVYSogr3b+fZ0+iODmAyCBQhVjm6JDksYGD0E95mXnKRVX8IUHRCc27m?=
- =?us-ascii?Q?R8bDmqTsRacUTfBNII/mSk5/KlQZRWoQ3ZSv7EG5/H7QO3pODTco0XFhrHGg?=
- =?us-ascii?Q?Uvi2Wh7to/7Cps1e6mHC+Wt7ZDcYFKmVq07yOuvjblDC4HT3DAJq2/W/4q03?=
- =?us-ascii?Q?mfDL2VSI59/WY0J+mqZ13FmcLUOkFVzISg74+B05wGljIyiGmsnehqnuOhcY?=
- =?us-ascii?Q?KzLZgxKvLinStPDembN/9Fy2zvJboh1/QBXDJRC0/ZTHz0F1I5n9DYlC0P6v?=
- =?us-ascii?Q?sT2wif9dEL7c4iy4mnJG5rAvzf1XCfkd4Myes9Soy75STbljf+pT6ngMzMfO?=
- =?us-ascii?Q?XRM8Ut3n5I0UyDhq/PpTnBIGNhsTn4CYJ3ktCtLTUPnucZuIkJGDcZRZD8jL?=
- =?us-ascii?Q?8c2HmcEfqgsZ71quMjo4wPnt+T9vSi7v7xRunG0ej5bmpl0BFi3MHpva6CoG?=
- =?us-ascii?Q?yJZGQjy7QvmphjPGOMhJImPRmnW28LrT3VU9Wq0xdakYidXR+UwpheC409il?=
- =?us-ascii?Q?+vYoly+gLdWS+9RxGpr7/4r0U4x8ovwjaG2sDVjdWas0atyupwJtYYi6RPF8?=
- =?us-ascii?Q?fj3vJcAxYG+ugNCF5iNAArinhLUfyV6npHubtdITsCTzXxeRquwvRnHwVQqF?=
- =?us-ascii?Q?KMCTHk8pz7/PaZxg+1r+v/OPJEqn6BB2Av6eJixaJcA2itfXSFn66cNjOOXU?=
- =?us-ascii?Q?LOAW4USUQydpa4546VgS6th9K4XAUCZXFi7We9SmMdbH2CWXtjYpdDmqn7JZ?=
- =?us-ascii?Q?p9bUf+IkXfzzlDmZnN9Bdn4hm4wEY+oXPkoXvXihKwgEdpbqNj7+b3ire0m3?=
- =?us-ascii?Q?xIMgC1SKVXskIr3GJtJfveX63E/Ye0rmoTuh/RNys7PyJo5v+t/lUlHrATzj?=
- =?us-ascii?Q?aAnRl2r/jtewdPL6U2EPhZtVdFQqo3DEbbK9IOzXqLpxerQSo/sjqhEMAGDm?=
- =?us-ascii?Q?KiX4lgzj+kDM6utGvaW+IX9Cp5mM6iV6oznoiGF6uVpPhwPGXG6XZxVYFTAq?=
- =?us-ascii?Q?52aVZnhVg+7iCzMRR2iAG636UiP8?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6117.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ycEso0wyLxo03YK2TJ123TudJs8FhiaxUCxxTGxmMPli+ZZo7cyM32CKNYRk?=
- =?us-ascii?Q?YRX9WVKzVZrIcFfNrQpXDsCjt5mz1qjCgnAMVzbTEyIdNGuw0ZKf0582DL7x?=
- =?us-ascii?Q?WoNEtUSuKtRLlaGh71faEN+MwJd2BvoaHSIQjJf7h+5+Qzmn8MN+/WH4cDns?=
- =?us-ascii?Q?E0YbOcI3zgA9fdH24dNAmcqCOmR3/cfjN8LQSjuZUO2093h7TiKrU9yNOSbO?=
- =?us-ascii?Q?lovnrjBPmssXB6wk5h4jb0q3KEIWiQAFHQge/GtVz2nId1rVl6MjXvBIGH54?=
- =?us-ascii?Q?PJsny2sIRr1UYdaZAVtsGKMG2+YN4rI/Al0mbA7EN9Vu7TLJLu0eqk8OXLz9?=
- =?us-ascii?Q?RYr/oqN8mztor4y+BylRIxh9zPdad6kFFCuwr14xBXMQobBWttylMm9LkrYj?=
- =?us-ascii?Q?1rRyEryF4BGnLrHTRe3YBtDExNOAKz0Eqqr/sJNKsEanvAz0xEpyMDA0FDlh?=
- =?us-ascii?Q?azR9TCyQ9pzVQgEbEkq+jZKc40z2AlLrj7f4e7yb0/ij/QO0DGvD1a2fgyeD?=
- =?us-ascii?Q?6XUCLU7zcy8UXSRb+phrCy4C/J5u7PZ0811UAai1p03/vkx25LKFUmZC4DbL?=
- =?us-ascii?Q?1FiYfg8fdi+l1UFpcrs8vZA3MgFM287TmewrkqW0ye9DBySzr7U7sci4UOS2?=
- =?us-ascii?Q?QJ/EzHqgskv0RwFkZuJ95rBIpS8UNiENfqrupos/5sO7gUJ2vpa/E1UlDM97?=
- =?us-ascii?Q?7x/SOcV6yyYouOrqgMcpWhs8qflFEC+/+boQngIIsvmgoWxrADUfZkCpLWkY?=
- =?us-ascii?Q?QWLP401CcdnlGtW2JR1mENQjBq9w2+FUSl+GYOMrfUTsi8MORk1xZH+JzIu3?=
- =?us-ascii?Q?cwWSs+YwF57RynAKVK+C4oRHV43/4mLWjeDEdhtOXALq13pAP+Q9XJfx+D6o?=
- =?us-ascii?Q?PHIxO1xjrlmow1CN32Q1WhUtBZzDHez+qhoh0ScRF4E5SwnpEFxhkv7gQZEz?=
- =?us-ascii?Q?x7e+4nP4lep0XuuTIriC5mZs6FTRezyWKuQq2HeMFEE9mI0nSWBLqUUiwnoH?=
- =?us-ascii?Q?7smYi21z3wNggkAbHvrj/bx/FFVMr84lWViMFD7LChgMdUVmYK3jQ8+7cZUO?=
- =?us-ascii?Q?2C6lOrvp5eWaFtr4n+4E+hfl6TqmYzLgogoATJpH+RUkcimvkwX1/TdZdj7d?=
- =?us-ascii?Q?SmmjQCmKe4wXtwoJHk2jGAc0DA5Rh0Z7fsIQPX5nhxOIyRBTQEKrwFMBePkH?=
- =?us-ascii?Q?8nEfuNbJJO7S9UBk7Uy19FK3I89kJpcr1ytUiB5dOyE21DLM3eqFoK6EB0sE?=
- =?us-ascii?Q?T9uWzamzjC2mn8g8JNpt3CcVvNLbLj1Iw9IUWgeLkwXgeRwbnlhRliCSn/jr?=
- =?us-ascii?Q?8Elljwc7XenfWJHuq8TY8ZbeOGmjN1nmOegqWPJuyIYi4dKYhzi2o/Ge5Mcm?=
- =?us-ascii?Q?KFEdOBTtybvDA8dtyL5SQy/EyMmDkGzagE7uIDIUDL6BtmrVBsK+dcplcTmr?=
- =?us-ascii?Q?eJsXb+krgh94uvturQ426Jfy+z0MsbH7U4D/T/WHQ+jXiZZktOPNLJA4kg+8?=
- =?us-ascii?Q?366y7bnvDJU75TWdGIssqQ8Ygr7bFxhWvmAa1GhMZqxKbM6YqKyt2I22iS4v?=
- =?us-ascii?Q?gb6ASiAnA9+t+8BJfMC7eTLL7+7FF2Gotuy147fqU1LTSYaMzfNNfzNWBQ8f?=
- =?us-ascii?Q?Lg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d22a26a-a341-49df-d337-08dd661f1c7d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6117.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 13:16:36.6450
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vhl44m4PhSFIh9cDlMQ5pLrbrXWPD+/d0n12hbJbL2xC+TdvO1ZZVXHpK7rEitPL13eHpPM0m/lae2lW9WE9B3IimIPJ2Q1Gb5orIHo9KLU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8699
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 4/5] btrfs: ioctl: introduce
+ btrfs_uring_import_iovec()
+To: Sidong Yang <sidong.yang@furiosa.ai>,
+ Pavel Begunkov <asml.silence@gmail.com>
+Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ io-uring@vger.kernel.org
+References: <20250317135742.4331-1-sidong.yang@furiosa.ai>
+ <20250317135742.4331-5-sidong.yang@furiosa.ai>
+ <3a883e1e-d822-4c89-a7b0-f8802b8cc261@kernel.dk>
+ <Z9jTYWAvcWJNyaIN@sidongui-MacBookPro.local>
+ <566c700c-d3d5-4899-8de1-87092e76310c@gmail.com>
+ <Z9km_8ai2zq86JKI@sidongui-MacBookPro.local>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <Z9km_8ai2zq86JKI@sidongui-MacBookPro.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 13, 2025 at 11:48:08AM +0100, Bastien Curutchet (eBPF Foundation) wrote:
-> AF_XDP features are tested by the test_xsk.sh script but not by the
-> test_progs framework. The tests used by the script are defined in
-> xksxceiver.c which can't be integrated in the test_progs framework as is.
+On 3/18/25 1:55 AM, Sidong Yang wrote:
+> On Tue, Mar 18, 2025 at 07:25:51AM +0000, Pavel Begunkov wrote:
+>> On 3/18/25 01:58, Sidong Yang wrote:
+>>> On Mon, Mar 17, 2025 at 09:40:05AM -0600, Jens Axboe wrote:
+>>>> On 3/17/25 7:57 AM, Sidong Yang wrote:
+>>>>> This patch introduces btrfs_uring_import_iovec(). In encoded read/write
+>>>>> with uring cmd, it uses import_iovec without supporting fixed buffer.
+>>>>> btrfs_using_import_iovec() could use fixed buffer if cmd flags has
+>>>>> IORING_URING_CMD_FIXED.
+>>>>>
+>>>>> Signed-off-by: Sidong Yang <sidong.yang@furiosa.ai>
+>>>>> ---
+>>>>>   fs/btrfs/ioctl.c | 32 ++++++++++++++++++++++++--------
+>>>>>   1 file changed, 24 insertions(+), 8 deletions(-)
+>>>>>
+>>>>> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+>>>>> index 6c18bad53cd3..a7b52fd99059 100644
+>>>>> --- a/fs/btrfs/ioctl.c
+>>>>> +++ b/fs/btrfs/ioctl.c
+>>>>> @@ -4802,6 +4802,28 @@ struct btrfs_uring_encoded_data {
+>>>>>   	struct iov_iter iter;
+>>>>>   };
+>>>>> +static int btrfs_uring_import_iovec(struct io_uring_cmd *cmd,
+>>>>> +				    unsigned int issue_flags, int rw)
+>>>>> +{
+>>>>> +	struct btrfs_uring_encoded_data *data =
+>>>>> +		io_uring_cmd_get_async_data(cmd)->op_data;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	if (cmd && (cmd->flags & IORING_URING_CMD_FIXED)) {
+>>>>> +		data->iov = NULL;
+>>>>> +		ret = io_uring_cmd_import_fixed_vec(cmd, data->args.iov,
+>>>>> +						    data->args.iovcnt,
+>>>>> +						    ITER_DEST, issue_flags,
+>>>>> +						    &data->iter);
+>>>>> +	} else {
+>>>>> +		data->iov = data->iovstack;
+>>>>> +		ret = import_iovec(rw, data->args.iov, data->args.iovcnt,
+>>>>> +				   ARRAY_SIZE(data->iovstack), &data->iov,
+>>>>> +				   &data->iter);
+>>>>> +	}
+>>>>> +	return ret;
+>>>>> +}
+>>>>
+>>>> How can 'cmd' be NULL here?
+>>>
+>>> It seems that there is no checkes for 'cmd' before and it works same as before.
+>>> But I think it's better to add a check in function start for safety.
+>>
+>> The check goes two lines after you already dereferenced it, and it
+>> seems to be called from io_uring cmd specific code. The null check
+>> only adds to confusion.
 > 
-> Extract these test definitions from xskxceiver{.c/.h} to put them in new
-> test_xsk{.c/.h} files.
-> Keep the main() function and its unshared dependencies in xksxceiver to
-> avoid impacting the test_xsk.sh script which is often used to test real
-> hardware.
+> You mean 'cmd' already dereferenced for async_data. Is it okay to just
+> delete code checking 'cmd' like below?
 > 
-> Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
-> ---
->  tools/testing/selftests/bpf/Makefile     |    2 +-
->  tools/testing/selftests/bpf/test_xsk.c   | 2416 ++++++++++++++++++++++++++++
->  tools/testing/selftests/bpf/test_xsk.h   |  279 ++++
->  tools/testing/selftests/bpf/xskxceiver.c | 2503 +-----------------------------
->  tools/testing/selftests/bpf/xskxceiver.h |  156 --
->  5 files changed, 2727 insertions(+), 2629 deletions(-)
-> +
+> if (cmd->flags & IORING_URING_CMD_FIXED) {
 
-(...)
+Either 'cmd' may be NULL and it's valid (and the current code is fine),
+or it'd be invalid, in which case that should return an error. But we
+don't add random pointer == NULL checks as defensive programming. And
+this one should never ever see cmd == NULL, hence the code needs to go
+away. It's just confusing otherwise. Consider you reading some code
+trying to understand what it does, and it has a check for cmd == NULL in
+there. That would make you wonder "hmm what cases pass in a NULL for cmd
+here?". When the answer is "this should never happen", don't have the
+check. It just obfuscates the code.
 
-> +int testapp_hw_sw_max_ring_size(struct test_spec *test)
-> +{
-> +	u32 max_descs = XSK_RING_PROD__DEFAULT_NUM_DESCS * 4;
-> +	int ret;
-> +
-> +	test->set_ring = true;
-> +	test->total_steps = 2;
-> +	test->ifobj_tx->ring.tx_pending = test->ifobj_tx->ring.tx_max_pending;
-> +	test->ifobj_tx->ring.rx_pending  = test->ifobj_tx->ring.rx_max_pending;
-> +	test->ifobj_rx->umem->num_frames = max_descs;
-> +	test->ifobj_rx->umem->fill_size = max_descs;
-> +	test->ifobj_rx->umem->comp_size = max_descs;
-> +	test->ifobj_tx->xsk->batch_size = XSK_RING_PROD__DEFAULT_NUM_DESCS;
-> +	test->ifobj_rx->xsk->batch_size = XSK_RING_PROD__DEFAULT_NUM_DESCS;
-> +
-> +	ret = testapp_validate_traffic(test);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set batch_size to 8152 for testing, as the ice HW ignores the 3 lowest bits when
-> +	 * updating the Rx HW tail register.
-> +	 */
-> +	test->ifobj_tx->xsk->batch_size = test->ifobj_tx->ring.tx_max_pending - 8;
-> +	test->ifobj_rx->xsk->batch_size = test->ifobj_tx->ring.tx_max_pending - 8;
-> +	if (!pkt_stream_replace(test, max_descs, MIN_PKT_SIZE))
-
-Here's the victim of test failures that i reported last week. This
-function succeds with 0 and you interpret it as failure:) One sign wrong
-caused two days of debugging, but it was kinda fun.
-
-What was happening was due to the failure here one of the sockets was not
-deleted and later on whole test suite could not attach the socket for
-every other test case which caused the ever going failures. Which makes me
-think that since you changed the logic from exits to returning failures
-probably we need to take care of state cleanup in a better way so case
-like this one described here wouldn't take place.
-
-This test is only executed for hw tests that's why you haven't seen this
-problem as you were focused on veth case.
-
-If you want to proceed with that then i would like to ask you to grab the
-hw and check you're not introducing regressions. FWIW i have been working
-with i40e and ice drivers.
-
-One last note is that verbose mode seemed to be broken for me.
-
-> +		return TEST_FAILURE;
-> +	return testapp_validate_traffic(test);
-> +}
-> +
-
-(...)
+-- 
+Jens Axboe
