@@ -1,127 +1,112 @@
-Received: from gw2.atmark-techno.com (gw2.atmark-techno.com [35.74.137.57])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F231519B4
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.74.137.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F472F37;
+	Tue, 18 Mar 2025 00:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742256012; cv=none; b=j94SoT4kGsD3oo5GvEpvPpX1iHY3S/16r58mic2t2/xHlV68EN3aN6ZYyY9hKW6gLFbuZ5FqmtjVaG3vdPUwOZ6yCks/6AtpWwhGuXV29lYUfJ/hLvJGZr52IuA2IieZ5QAfO3d3wgE9LLcFh9GNwyC7YwJwlS+anu12oCTAQLU=
+	t=1742256295; cv=none; b=q9Xbm3siZjJZwQdBmIJFKDOfhj+25/lYwnCxFdh3Bv5ABjWhciKGdZgXbloz2HKoOVSVGXKqy2LSgTDVlEGFK2DOMGGdo5lIOrKNvIYX88J9xDExY5kURqYL09smhmRlGb/wx93bZzkVi0GhxN9N7P3CSG7VbHv6h+iaFl072Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742256012; c=relaxed/simple;
-	bh=5i13wLKTyNDlBKchwfsIXJmrY3fLphQS5cqXHJehJHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UHbQVq1EK3VUfDw0kdPWZygczeFGwV1FcVV4/traqWz0kT+SzRoEWO3Ynb/cfUswTY0nlUyPnGzgxKUJlrvY96hxX0QE2GZSCZhQJqqmJuESQe/UP9cgJ4liRxhG+Os1M626qI/hFAC+umh7LvAMNaUQBYEoHbUEfeduxBY0os8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com; spf=pass smtp.mailfrom=atmark-techno.com; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=cLt2/jP1; arc=none smtp.client-ip=35.74.137.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atmark-techno.com
+	s=arc-20240116; t=1742256295; c=relaxed/simple;
+	bh=tq8CJmlloYYC2eaCfLaHJmKFdrQ4nc0xPppw+yoA80k=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=asEvxgIp4eLDF8fNnN1XSWwHnyPK/IgL1TXdQvN1kqRU4+YJiu88QhJnQvmx90Ervxq9VrB3IluUFKfjLEEhBmSwqboTteMR6z6hrCRhLtvRzGCAbU07Rwnvr6Hsh87hxceRJ8oXUvCn3infVFHZhQ/WR81n879qy0HKY9MUUJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grabatoulnz.fr; spf=pass smtp.mailfrom=grabatoulnz.fr; dkim=pass (2048-bit key) header.d=grabatoulnz.fr header.i=@grabatoulnz.fr header.b=jwvHETpI; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grabatoulnz.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grabatoulnz.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="cLt2/jP1"
-Authentication-Results: gw2.atmark-techno.com;
-	dkim=pass (2048-bit key; unprotected) header.d=atmark-techno.com header.i=@atmark-techno.com header.a=rsa-sha256 header.s=google header.b=cLt2/jP1;
-	dkim-atps=neutral
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by gw2.atmark-techno.com (Postfix) with ESMTPS id 62B1A687
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:51:25 +0900 (JST)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff8340d547so4336782a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 16:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atmark-techno.com; s=google; t=1742255484; x=1742860284; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TRQ/GwuEKDlWODVcSQfxpM5Lw2RQXG7ZSKeiwlAjR7g=;
-        b=cLt2/jP1Ko35UMsCHcn3RoLnE+onqkGU8r9tJI2ojX7AyFzEvoRtvjN31csz7VbeBr
-         0TCuZb2gm00ILfaBMv6/B0hp8Rqs0Zbb1PM+5wyHPqCGdfmgS9oIYm1Is9oeCYcdxAVJ
-         UwBcU745Cb8kkj8a4D2y0fKTBX+7aNOwwjMVpjyvk4reUCGmurAranHmmJ1uXpUXXNKZ
-         PKzPfgin97YURnNkOmQ4MbpL6z7v0vgnwkUMfDApVJRGopIuTWYMAmq6PsCDO9uYOhzk
-         FaX+UsM9J8al6Yfz4sq2fNwp7c9b0qkIdXIDlLzwg/bvuEfz+bRc/Zxj1YfyxuYo3Hi4
-         moRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742255484; x=1742860284;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TRQ/GwuEKDlWODVcSQfxpM5Lw2RQXG7ZSKeiwlAjR7g=;
-        b=KMcnVUaVvJ/WPRTl+TX56rgwgL6ifrDWFNE01utagqi0Gm9uxamtbQ39POGR6Jr1vn
-         pDYP7kDRAkByL9xhl/GExsdzzQaR8u1QAV4SRwlKvKxJKfiu7MzC544EiXP8ZONtyue8
-         soGrHxHzZb4qSuIM5FKD8jvGKslX9FxGJk0bt5IrJsLWOnYsp0kV8UjRa/sFF7HPm6Z1
-         BkjqfHDQy7vBr8D2dZvVyJLjAIjOh57LlI5wxPWnxvBb8phj84Jt7cx6QoD6IjE56Xbh
-         OdtHdZEPRf/j2cPdSdC+Oq/HbPns3ufPuFtxhjQDF9fBmw79UrvOZRl+NvLPaY22KZSC
-         oNMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUyfCMWucOfRDH2L+RqOj4svDy6eFZOY2T2yTNSyJwWP8HpphPu5Jm4udEYNqW4y7eazQxG++L4BtW1pmc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQQyEcES1S1rkepEVkpEDdawpaBd/XZES0kZFIapkz5t/GQD5W
-	7wrkDv38Prrf+6zR7XW6Ol5jq80VydAniMbrY54k4knSXmHNYqxVPqW3o1b1Upd1PxOFIDGL/Km
-	HzxNc1mgp5qiFS39CjMipS0WNAaNMw1vK0IIpTp3tFrsPUshkMFP3CXSom5lbQ90=
-X-Gm-Gg: ASbGnct3t5+hmIvMPLJIR0DlcTOVkawMC2Gp4Nan4PjSHLWUYQZAeL4CShi/dtHXl0C
-	VfabZHwDj8i7oPapxK0i9HtZsrLx5LarDAAgzzOUAd3Tth+W9tzCT9hqMzTcR8uatj7kmWr2/XQ
-	s0BoqQiz/0xarruYVfia+4BjPHrLJoDV2Ntns6w0Wn5ul4MYFXpHmdYZuuQpGmPKnIBt0Ur+j/K
-	0fiLzWu8lXXTDTkCkYVSj3TulEIdHWWt4EQa9IMePOyXTrOkdvGT5qLe13B+na/vx4wQ/GPJXXK
-	ttdjp1scyPhLz0wYFeOFUt8BSOY0c5XTVKceG+ADzXKn9sCrzZ9PF/lIXfN4HjDnWgQ9keDj9TE
-	=
-X-Received: by 2002:a17:90b:4b92:b0:2ee:af31:a7bd with SMTP id 98e67ed59e1d1-301a5b03f3amr308528a91.5.1742255484406;
-        Mon, 17 Mar 2025 16:51:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGk+XPSS97YKPi4vp9oXul8r5wshwMpKmVOIfHLVbaOIyiKLKfsKF4T1efoV0atb9QgEGz0bQ==
-X-Received: by 2002:a17:90b:4b92:b0:2ee:af31:a7bd with SMTP id 98e67ed59e1d1-301a5b03f3amr308500a91.5.1742255484114;
-        Mon, 17 Mar 2025 16:51:24 -0700 (PDT)
-Received: from localhost (162.198.187.35.bc.googleusercontent.com. [35.187.198.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30153519fefsm6734019a91.12.2025.03.17.16.51.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Mar 2025 16:51:23 -0700 (PDT)
-Date: Tue, 18 Mar 2025 08:51:11 +0900
-From: Dominique MARTINET <dominique.martinet@atmark-techno.com>
-To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	amitkumar.karwar@nxp.com, rohit.fule@nxp.com, sherry.sun@nxp.com,
-	ziniu.wang_1@nxp.com, haibo.chen@nxp.com, LnxRevLi@nxp.com,
-	guillaume.legoupil@nxp.com, salim.chebbo@nxp.com
-Subject: Re: [PATCH v1 1/3] Bluetooth: btnxpuart: Fix Null pointer
- dereference in btnxpuart_flush()
-Message-ID: <Z9i1b9hzZzwJnIYh@atmark-techno.com>
-References: <20240515070657.85132-1-neeraj.sanjaykale@nxp.com>
- <20240515070657.85132-2-neeraj.sanjaykale@nxp.com>
+	dkim=pass (2048-bit key) header.d=grabatoulnz.fr header.i=@grabatoulnz.fr header.b="jwvHETpI"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 37C4920483;
+	Tue, 18 Mar 2025 00:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grabatoulnz.fr;
+	s=gm1; t=1742256290;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cnZvwqRAZ5oUuL6AcZoPaXLC4uzSfS6n9w4sjjDfis0=;
+	b=jwvHETpIklG1xJuNa6j02vXLJRwWjpcheZyGlhvhDM+b1DPG0XuVs8jIb2yaRuLKWEYX3j
+	HThhKziv/XSFlhuBHPIQ9KZjkI7A8m86Gsa12ePsLnoIhnoQEUoKfxVdI69obwnaKNYeVQ
+	g2TdCkrsbbnf4KiNCdDn0QIIxCtS2RYdJj8ZWlIPc9Mh6EZOjIBBTLCyrwxAgh36YLYz/P
+	nAgbzxG0kh6Wv44bv18kYnDDqtAxFs8Pf2GV3hvnLCU4oRaiVN1sIlq3EpVEcbMnSrwk6t
+	WtUKFinCaSx1mF/Mz5LclYX0HQhcMZfk0WnH8FwDMlRlLVJgFS2fYvqgSC5fUg==
+Message-ID: <5fe0557a-b9ec-4600-a10f-20c494aa2339@grabatoulnz.fr>
+Date: Tue, 18 Mar 2025 01:04:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240515070657.85132-2-neeraj.sanjaykale@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
+ board type") on reboot (but not cold boot)
+From: Eric <eric.4.debian@grabatoulnz.fr>
+To: Niklas Cassel <cassel@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Salvatore Bonaccorso <carnil@debian.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Jian-Hong Pan <jhp@endlessos.org>,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, linux-ide@vger.kernel.org,
+ Dieter Mummenschanz <dmummenschanz@web.de>
+References: <Z8rCF39n5GjTwfjP@ryzen>
+ <9c4a635a-ce9f-4ed9-9605-002947490c61@redhat.com> <Z88rtGH39C-S8phk@ryzen>
+ <383d5740-7740-4051-b39a-b8c74b035ec2@redhat.com> <Z9BFSM059Wj2cYX5@ryzen>
+ <9ac6e1ab-f2af-4bff-9d50-24df68ca1bb9@redhat.com> <Z9LUH2IkwoMElSDg@ryzen>
+ <d5470665-4fee-432a-9cb7-fff9813b3e97@redhat.com> <Z9L5p6hTp6MATJ80@ryzen>
+ <6d125c69-35b2-45b5-9790-33f3ea06f171@redhat.com> <Z9hXRYQw1-fX0_PY@ryzen>
+ <06f76ca1-1a07-4df5-ba50-e36046f58d88@grabatoulnz.fr>
+Content-Language: en-US
+In-Reply-To: <06f76ca1-1a07-4df5-ba50-e36046f58d88@grabatoulnz.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedtledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuhffvvehfjggtgfesthekredttddvjeenucfhrhhomhepgfhrihgtuceovghrihgtrdegrdguvggsihgrnhesghhrrggsrghtohhulhhniidrfhhrqeenucggtffrrghtthgvrhhnpeeuhffhheehvdffkeeujedvudeftdekleehvdffleegkeehteelvefhteffgfdvgeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggstdegmeelgedumegsuddttdemgedvudeimeejvghffhemfhgvvdehmeelhegrudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggstdegmeelgedumegsuddttdemgedvudeimeejvghffhemfhgvvdehmeelhegruddphhgvlhhopeglkffrggeimedvrgdtudemtggstdegmeelgedumegsuddttdemgedvudeimeejvghffhemfhgvvdehmeelhegrudgnpdhmrghilhhfrhhomhepvghrihgtrdegrdguvggsihgrnhesghhrrggsrghtohhulhhniidrfhhrpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegtrghsshgvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrt
+ hdrtghomhdprhgtphhtthhopegtrghrnhhilhesuggvsghirghnrdhorhhgpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegulhgvmhhorghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjhhhpsegvnhgulhgvshhsohhsrdhorhhg
+X-GND-Sasl: eric.degenetais@grabatoulnz.fr
 
-Hi,
+Hi Niklas, hi Hans,
 
-Neeraj Sanjay Kale wrote on Wed, May 15, 2024 at 12:36:55PM +0530:
-> @@ -1269,8 +1271,10 @@ static int btnxpuart_flush(struct hci_dev *hdev)
->  
->  	cancel_work_sync(&nxpdev->tx_work);
->  
-> -	kfree_skb(nxpdev->rx_skb);
-> -	nxpdev->rx_skb = NULL;
-> +	if (!IS_ERR_OR_NULL(nxpdev->rx_skb)) {
-> +		kfree_skb(nxpdev->rx_skb);
-> +		nxpdev->rx_skb = NULL;
-> +	}
+Le 17/03/2025 à 20:15, Eric a écrit :
+> Hi Niklas,
+>
+> Le 17/03/2025 à 18:09, Niklas Cassel a écrit :
+>>
+>> I sent a patch that implements your original suggestion here:
+>> https://lore.kernel.org/linux-ide/20250317170348.1748671-2-cassel@kernel.org/ 
+>>
+>>
+>> I forgot to add your Suggested-by tag.
+>> If the patch solves Eric's problem, I could add the tag when applying.
+> I'll report back when the kernel with your proposed patch is built and 
+> tested on my system.
 
-This is an old patch but I hit that on our slightly old tree and was
-wondering about this patch: why does flush() have to free rx at all?
+The test is a success as far as I am concerned. With this new patch, 
+DIPM is disabled on the Samsung SSD, but not the Maxtor disk on the same 
+controller :
 
-I think this either needs a lock or (preferably) just remove this free:
-- This is inherently racy with btnxpuart_receive_buf() which is run in
-another workqueue with no lock involved as far as I understand, so this
-is not just about errors but you could also free something in a weird
-place here.
-As far as I understand, even if we don't do anything, the rx path will
-free the reply if no matching request was found.
-- looking at other drivers, the hdev->flush() call never does anything
-about rx and seems to only be about rx
-(ah, checking again as of master drivers/bluetooth/btmtkuart.c seems to
-have this same problem as of before this patch e.g. they're not checking
-for errors either... This probably needs something akin to this patch or
-removal as well. All other drivers have flush seem to be mostly about
-tx, but I do see some cancel work for rx as well so I'm a bit unclear as
-to what is expected of flush())
 
-Thank you,
--- 
-Dominique
+(trixieUSB)eric@gwaihir:~$ sudo hdparm -I 
+/dev/disk/by-id/ata-Samsung_SSD_870_QVO_2TB_S5RPNF0T419459E | grep 
+"interface power management"
+             Device-initiated interface power management
+(trixieUSB)eric@gwaihir:~$ sudo hdparm -I 
+/dev/disk/by-id/ata-MAXTOR_STM3250310AS_6RY2WB82 | grep "interface power 
+management"
+        *    Device-initiated interface power management
+
+
+and the SSD is successfully detected at reboot by both the UEFI and the 
+linux kernel.
+
+>>
+>> Kind regards,
+>> Niklas
+
+Kind regards
+
+Eric
+
