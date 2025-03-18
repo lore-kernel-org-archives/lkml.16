@@ -1,129 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CF220E6EE;
-	Tue, 18 Mar 2025 14:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A1120B81F;
+	Tue, 18 Mar 2025 14:38:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742308685; cv=none; b=Up4JKWSS+mWdOQykEnHLRQqP1pM1EshJ+KcABnpf3SIdULYcvEsbKlX14dCXicfgB3xOppukP3TdlzWUdyI6ddJzQIgSij+aLPSTyLJ5q2Xg1GyWI1jgsWATOqeUfClSBJ4+5SnSxypWARJ/6oC9k5nv/KQA+Q+UANPHqxrzgSI=
+	t=1742308707; cv=none; b=tuvtwPG07DY17FEyLp/PxVlVFXR2psXvxhs42j8M3NAptg5E3voChZZ9b6cCohBfG0Sx0ZlXaGDO5LhL4MYS3kcP8DcrUpVH01qNNnDVWQitEO7zWLX0iWjg+U/80Ye7QwVOcQ7HFH4N1+WHo1N1AmfY5uSJ29JnMHj+LW+svSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742308685; c=relaxed/simple;
-	bh=ejwnBF4GIKGig2EDSu4c8/gX/9wW1c6s/CBnynlL8iM=;
+	s=arc-20240116; t=1742308707; c=relaxed/simple;
+	bh=9umgKWqtZT/8YY/xdx8wzJAOM6nVJd/mLI1qP7HBUfs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VCEYfZSvn+4cFX3rFhFXnsW2M/jP/hRiF9bYLmIeP1v3nFpvLDjFRmxOpa7h2r5WE5quPMRf3Jn4FaU+qGGQPIw7IENo9RHr/8Nn3x2Iu852EyO6VqNheNkq7r55Jg8dWOISVlYPpGlCHPTv8HMRf/z5+cu9KbsA0FuiJk04GTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNMzfweX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=a2+WBIZxAloP4lyMvhvIxiLLWNChuc8LgKRN+fVL36F5DEua3AQ6nGaPQ2bVYVbdbVBcz1Ck8grG//fEZXpzssGyZqq3XaxoWCHlA+Av/I44mgdq/6wieYqJe5myoGmqRpgsQ9YuKvU1CZEKkRzUozb83yH3Dfy2/BeHlGEHrgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IKYCs18s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNMzfweX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6012C4CEDD;
-	Tue, 18 Mar 2025 14:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742308685;
-	bh=ejwnBF4GIKGig2EDSu4c8/gX/9wW1c6s/CBnynlL8iM=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IKYCs18s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2EF2C4CEDD;
+	Tue, 18 Mar 2025 14:38:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742308707;
+	bh=9umgKWqtZT/8YY/xdx8wzJAOM6nVJd/mLI1qP7HBUfs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mNMzfweXxxDkbaWkIr/QLOh1qfnx/be+WZ4N5FAgQwfdl0F/Zt1iYTqkRTlA8KLde
-	 3sk2qtBYJshllQpzb7W9DBnZaoVwF7EHfWuSMyE6aSLNeHNSBtrGUJFWe72n/PsvYK
-	 8gvr02vKfkYhEBqpZtY2/x5dMwb9sn4I2Nx+NBmmMcaQrg0+s6eYqIZSC5lM5dnBVj
-	 SUGcNeHmvlAL5lA5CNXvTGeOjcXigh9LKYhk7UiK4BiA7gT74F7k0AnrlyNUTtZnAV
-	 BQEbndLoH0QvJdh/e328b6bff5yUpB0DtDCcADGkiuS2tx36zlnN8YFCVpi/P4lmxA
-	 d7u3TAh9V+VJg==
-Date: Tue, 18 Mar 2025 14:38:00 +0000
-From: Simon Horman <horms@kernel.org>
-To: Wang Liang <wangliang74@huawei.com>
-Cc: dsahern@kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, fw@strlen.de,
-	daniel@iogearbox.net, yuehaibing@huawei.com,
-	zhangchangzhong@huawei.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: fix NULL pointer dereference in l3mdev_l3_rcv
-Message-ID: <20250318143800.GA688833@kernel.org>
-References: <20250313012713.748006-1-wangliang74@huawei.com>
+	b=IKYCs18sngJvAsnONKCxnwa78vZ7S2q7pckhV4HDARytrwlWG6TyVdfEApKEckyIu
+	 Wz7lUyY8brABJ5uK8A1+rixIO7S1KWhmlHz5ekaF3Aev0yYsBkdov1AzHsYAXfbXU8
+	 /VcoPes/EpYQESDqbkm0NZi/M90rrD3EopBhZbnQ=
+Date: Tue, 18 Mar 2025 15:37:08 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
+	David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Jan Stancek <jstancek@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	R Nageswara Sastry <rnsastry@linux.ibm.com>,
+	Neal Gompa <neal@gompa.dev>
+Subject: Re: [PATCH 6.1&6.6 1/3] sign-file,extract-cert: move common SSL
+ helper functions to a header
+Message-ID: <2025031852-angelfish-mouth-f455@gregkh>
+References: <20250318110124.2160941-1-chenhuacai@loongson.cn>
+ <20250318110124.2160941-2-chenhuacai@loongson.cn>
+ <2025031834-spotty-dipped-be36@gregkh>
+ <CAAhV-H4y88jfpKp1mFytEjX4L0CErF=XFashZ9dXfwM58dPGGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250313012713.748006-1-wangliang74@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H4y88jfpKp1mFytEjX4L0CErF=XFashZ9dXfwM58dPGGQ@mail.gmail.com>
 
-On Thu, Mar 13, 2025 at 09:27:13AM +0800, Wang Liang wrote:
-> When delete l3s ipvlan:
+On Tue, Mar 18, 2025 at 09:58:26PM +0800, Huacai Chen wrote:
+> Hi, Greg,
 > 
->     ip link del link eth0 ipvlan1 type ipvlan mode l3s
-> 
-> This may cause a null pointer dereference:
-> 
->     Call trace:
->      ip_rcv_finish+0x48/0xd0
->      ip_rcv+0x5c/0x100
->      __netif_receive_skb_one_core+0x64/0xb0
->      __netif_receive_skb+0x20/0x80
->      process_backlog+0xb4/0x204
->      napi_poll+0xe8/0x294
->      net_rx_action+0xd8/0x22c
->      __do_softirq+0x12c/0x354
-> 
-> This is because l3mdev_l3_rcv() visit dev->l3mdev_ops after
-> ipvlan_l3s_unregister() assign the dev->l3mdev_ops to NULL. The process
-> like this:
-> 
->     (CPU1)                     | (CPU2)
->     l3mdev_l3_rcv()            |
->       check dev->priv_flags:   |
->         master = skb->dev;     |
->                                |
->                                | ipvlan_l3s_unregister()
->                                |   set dev->priv_flags
->                                |   dev->l3mdev_ops = NULL;
->                                |
->       visit master->l3mdev_ops |
-> 
-> Add lock for dev->priv_flags and dev->l3mdev_ops is too expensive. Resolve
-> this issue by add check for master->l3mdev_ops.
+> On Tue, Mar 18, 2025 at 9:25 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Mar 18, 2025 at 07:01:22PM +0800, Huacai Chen wrote:
+> > > From: Jan Stancek <jstancek@redhat.com>
+> > >
+> > > commit 300e6d4116f956b035281ec94297dc4dc8d4e1d3 upstream.
+> > >
+> > > Couple error handling helpers are repeated in both tools, so
+> > > move them to a common header.
+> > >
+> > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
+> > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+> > > Reviewed-by: Neal Gompa <neal@gompa.dev>
+> > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > ---
+> >
+> > Is this "v2" as well?  the threading is all confusing here.  This is
+> > what my inbox looks like right now:
+> Yes, this is also V2, I'm very sorry to confuse you.
 
-Hi Wang Liang,
+Great!  Please resend them all as a "v3" so I'm not confused :)
 
-It seems to me that checking master->l3mdev_ops like this is racy.
+thanks,
 
-> 
-> Fixes: c675e06a98a4 ("ipvlan: decouple l3s mode dependencies from other modes")
-> Signed-off-by: Wang Liang <wangliang74@huawei.com>
-> ---
->  include/net/l3mdev.h | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/net/l3mdev.h b/include/net/l3mdev.h
-> index f7fe796e8429..b5af87a35a9f 100644
-> --- a/include/net/l3mdev.h
-> +++ b/include/net/l3mdev.h
-> @@ -165,6 +165,7 @@ static inline
->  struct sk_buff *l3mdev_l3_rcv(struct sk_buff *skb, u16 proto)
->  {
->  	struct net_device *master = NULL;
-> +	const struct l3mdev_ops *l3mdev_ops;
-
-If you end up respinning for some other reason, please rearrange the lines
-above in reverse xmas tree order - longest line to shortest.
-
->  
->  	if (netif_is_l3_slave(skb->dev))
->  		master = netdev_master_upper_dev_get_rcu(skb->dev);
-> @@ -172,8 +173,12 @@ struct sk_buff *l3mdev_l3_rcv(struct sk_buff *skb, u16 proto)
->  		 netif_has_l3_rx_handler(skb->dev))
->  		master = skb->dev;
->  
-> -	if (master && master->l3mdev_ops->l3mdev_l3_rcv)
-> -		skb = master->l3mdev_ops->l3mdev_l3_rcv(master, skb, proto);
-> +	if (!master)
-> +		return skb;
-> +
-> +	l3mdev_ops = master->l3mdev_ops;
-> +	if (l3mdev_ops && l3mdev_ops->l3mdev_l3_rcv)
-> +		skb = l3mdev_ops->l3mdev_l3_rcv(master, skb, proto);
->  
->  	return skb;
->  }
-> -- 
-> 2.34.1
-> 
+greg k-h
