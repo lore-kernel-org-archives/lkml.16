@@ -1,146 +1,120 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5711C6FF4;
-	Tue, 18 Mar 2025 08:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2736D7346F
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742286179; cv=none; b=Oy5VkKvxSWF8UqSVL1LE2cvsdX/QK6S127K670od53LsYuCampClbEiOXzMlaJXB2ev15bK4Xc5W2vGsPy67GtmEGxEu3TsYpzPpJ0GuzTX2Br3nAMFR1sAMzDiq0Y+F0/TWh/v/+GjcATbjW8IKfFcMoUqAklILIDZidwWSy/Y=
+	t=1742286216; cv=none; b=YIoy0fVw2itsnUmf5VvQJnPDUa7hSURQ/m1RoccaBhVqgBrJF1BpMZEfPWjyCgOiR66U1pPqy11hIwb3phmIvitEzXa8VvG9BRF1KPK6CUA9vzWPXOnDRLZO4UVhwacirpFlwpc+gZdYUqtA2k8HJ/0SFPcXgAqqMMkn/fmx/BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742286179; c=relaxed/simple;
-	bh=MCjh2nLgKcoaLG5kdK+Wb5APkkLoIjS8PqH45EtRxnM=;
+	s=arc-20240116; t=1742286216; c=relaxed/simple;
+	bh=65aJItAncUqatml7wHLt+LFovXrHvhZaAuunh9n5Fb8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u3wFa8ZEcfhZ4ilt534G4p7LQRL4aSt40xXc6ukdS49aLqN7/D8SIFSuYiNTxcvAG+V5G3clL8DcyBJR/wSeVkczGAibQSimNpZDbzP55m94kvFs1OUCvZTt8iqP45HaFztaVz6qxiknpd1oVB4GCGhzpvmrZZtcZYkmWxR6Y3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGEaYkq4; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qDUyDLEqMhdbdB/kYvZKk4YFpGtxhowv2YeQI3qVZKQLrS9SxE9sOdT8pBCQbBtaM827wqa3A6V0psenloOtJ6QRfgtrTmQyGBCYJZJDIqlce9dx3dIUSa46n4TwHJntX9OWwFImjQSx2+Bymh7kqMrffm7ZzqWR26M6qQP02U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KJWjg8Vh; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGEaYkq4"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ff799d99dcso4924848a91.1;
-        Tue, 18 Mar 2025 01:22:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KJWjg8Vh"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso13972545e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 01:23:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742286177; x=1742890977; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=66gdttRajZWJvR9DIeRu0efVzTG1k2XN5Qke5urMoJQ=;
-        b=TGEaYkq4mDJIftlhahJDsWdcQ68ETkjwiIwI2kjwFbNmF2NPrBGAYC/2eVBceAIL43
-         zqpoT/WsXqQbnwmIUOQYsjfBvV9AtQAKsX/Q0ahfniakqw8OiTcH2q7d6ogbA0nwbyT0
-         845RYhzSX2AytHvMD9UB9jCvyfcyZMmUSQwRZkUFb1o6aYe/HHi22+bLRLFSH7k6RdLg
-         D8qBy7KpjwFY+Pm7+erp0on7hXRwsoy/cTJ9MiWCnxavUcEHgstkjoNNrZUgOOuggYvd
-         OJ9j1IemLOeA9sdMRV2lpuZI9ZGos/UVQ/QhEo/LRWXSOQiumbfHETfA5/1a0Y/0Ub73
-         gNHA==
+        d=suse.com; s=google; t=1742286212; x=1742891012; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6ksPPSN/t3ENipy0fSK71/AaUjxYWBEmqhNa80UkzEw=;
+        b=KJWjg8VhJWMhgAQsBJV1TTuA9AJzPs7w4p6NZT5oZNm3prgSqHPVn7wcX3vxBXC6S+
+         Xmf2CYZIUEDddrEn+JBg1/Pc5NVahOxZVBLdXbHV/oaE6Czi8auHksO5XvCmSIvaV2Yt
+         ANbtnI2tCbNrS6n4i9QJuFRyJ1M+7kBWo3iV7H0/tqjBn396CKxbrt435p79+ZkULkSs
+         mmq4LfupxF8El5CesEAkWiSdzq3nU2Wn8xjaieKn9ZoDJdIpaX+gwTh4gdkg1UVg23YN
+         osQsZhEpQ89Rcfb/E+7DqcPxhSriczyGG38DdjsYhAGN8GWNmyYixvV6JoN1BhnZ0kEw
+         9Waw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742286177; x=1742890977;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=66gdttRajZWJvR9DIeRu0efVzTG1k2XN5Qke5urMoJQ=;
-        b=WC3LQqKX/1Fn3w/EvaPIedS8OfNU8fj7Qz+pFiLHX9c8w2k37u6lezK16lcivkf3KU
-         4RaV2X5SmLuLeb7ECpFg74LqVDQ7PZnhSisGH48kQqmj4xal5bbLU+5cNDqzcpc+3gGL
-         mme52+2Kg0JzZ1ABvHSjWJFsZeEnNYJhpFr+Q0XW//h7kyzrWrfSQzD/WC0jD2XkMOeD
-         NOlK/8HRSV/Q9lC2z6Gv6X/uuSGb/46G4c/NmO2w8SsfEdOc7eMxcC7xXcVtp/B+SOEJ
-         qSZWtKYcSzIVHvz1XZLdsTPncBOb7Qj+Cdu3JUCXzYkj81nc9t1nvM5wowllpSrD2OtE
-         TSWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJoJbAxvfl5gXbeYN+OYSBU44uO0u0h1GA/u6QwlamEArIgDJZzeemdU6YOZLJY/7btk3WCz0J93J25AQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtZKIy4nOcwP0auo6Z9675IBh7LMmkyw3B7EAyIoTsCAqMeTpF
-	lFvMZEvNWaLsQgi7DoucDLECQW1Msd5Rmb+fWMM6Sa3N2WaBA5ul
-X-Gm-Gg: ASbGncuOIuRt4gYMTEvqYl9hiHscMEmoY2THUhFWR7hKQdB6rfFPlzIE87Hee2SZGFR
-	nc1DgMzHCxrVLb8aCYEUbUxYBYocg4KZ/3qp8DgEkCME+uScPV8CWMoQGroY/RubwZdV2O2l10K
-	Dr8MxeGyZvfB+/wVLirT1pYI02nrpx+NjLWSV8mGlHv1FGpOsL/NspAbyxAZ6ogphAuYrgO0A+8
-	hHmNJNeFjC/uRA8etfGSnJNOcAy4LPl8VgehOUVAFphTAEsQcE/nDzqPB7xIea8mIqJiT1fRIdH
-	9rRZkfGS69/qzyBa3FIClyJRYY7WWeinxuVjwl5T+Lbaet58BQ==
-X-Google-Smtp-Source: AGHT+IEtHpGsBp0BgxcS9kaaMvlR/hXT7EDrkIPt4HkA2hT2e/dgaUHfpGO24IMLTWaArAhnmg77IQ==
-X-Received: by 2002:a17:90b:388c:b0:2ff:69d4:6fe2 with SMTP id 98e67ed59e1d1-301a5b2b4bfmr2007594a91.16.1742286177145;
-        Tue, 18 Mar 2025 01:22:57 -0700 (PDT)
-Received: from fedora ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30153b9949asm7526680a91.38.2025.03.18.01.22.52
+        d=1e100.net; s=20230601; t=1742286212; x=1742891012;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6ksPPSN/t3ENipy0fSK71/AaUjxYWBEmqhNa80UkzEw=;
+        b=dlU+pijueQ3mS4zVBSP4p8F7ewVw+bhtcpS6yroTv6w9UdUsfHJ/G/xzT0C/z3/gbM
+         zoW54QQ+OlUYdd2bVACXN1Wm+r9B24a/a4cBbyz3et2etaqxLQ5voOfPs+/fpalCGpm3
+         F7xsLustWK+XtnbGA4BqW+U8Im57kLBg+gDnx1vQQI9lRMJAx9DLTVUIcMa8cY5r/X/r
+         t6XZeKi+EZtVWpyz9aAdw1UYr1nb51bmfeQXwtoKOhLf5DS9zoUWbOUTQ505jeAptxzc
+         J08ofO8/ZBNY+hlb6xMsQSf8QAwHuFAOGxm68m/YHuskd36ccJfcbNg02LHecJqL0e4v
+         t4sw==
+X-Gm-Message-State: AOJu0YyBzqiW7SAuQDPyFabm/okKkLOHHqOy/aOnJs9qiTddwaurhFuf
+	KiPmFsZkUk/INYopHLDYfKyPp9yLNKauyFx9o56aE3qdMX3sCrWK/KHqhIgR4YI=
+X-Gm-Gg: ASbGnctCC6mQk0qauFhnBR7jLkfUmCfm2N2TkTaU0NWLXpPMA1Q1NZx5nVn+Gx753+z
+	8OWxqMBDAVxHNFFV8dgwg8ArJPRgXzi5jys/RC97xsH3jRXmld2am3MJsUjtaO9VeoisMKhl2i7
+	OLQllBrZ5f8LspHDww0Crnqj2szlkOalfGOIEnMYayRtvBdigWbPEQuH3dtetlGl2iRNFP6P9rn
+	5AwdTb7zx11U2vNBHCHjx/lRbw/hFVhGkRua/+eju2s33mD9GukU9GxfIyZn6R1+WIwlZjMQk5D
+	eFqzMRkXDuS6tBtAzlpaDsbDqLEhM4L9fUYJGXSh81md18X9JxIsSSMX/w==
+X-Google-Smtp-Source: AGHT+IG9nVEC/rbpi29dQAAbskIxW5Ckh4S813VmV2TTyHn1/qASg31PSbSDt242CEBwQxUG+srOXQ==
+X-Received: by 2002:a05:600c:1907:b0:43a:ed4d:716c with SMTP id 5b1f17b1804b1-43d3b9d27aemr6560615e9.22.1742286212383;
+        Tue, 18 Mar 2025 01:23:32 -0700 (PDT)
+Received: from localhost (109-81-85-167.rct.o2.cz. [109.81.85.167])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3996d998545sm1220961f8f.34.2025.03.18.01.23.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 01:22:56 -0700 (PDT)
-Date: Tue, 18 Mar 2025 08:22:50 +0000
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: Jay Vosburgh <jv@jvosburgh.net>
-Cc: netdev@vger.kernel.org, Andy Gospodarek <andy@greyhouse.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 net] bonding: add ns target multicast address to slave
- device
-Message-ID: <Z9ktWpfepFclm-b-@fedora>
-References: <20241023123215.5875-1-liuhangbin@gmail.com>
- <213367.1730305265@vermin>
+        Tue, 18 Mar 2025 01:23:32 -0700 (PDT)
+Date: Tue, 18 Mar 2025 09:23:30 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH] fork: Use __vmalloc_node() for stack allocation
+Message-ID: <Z9ktgl8kVHGQ4FLH@tiehlicka>
+References: <20250317163614.166502-1-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <213367.1730305265@vermin>
+In-Reply-To: <20250317163614.166502-1-urezki@gmail.com>
 
-On Wed, Oct 30, 2024 at 05:21:05PM +0100, Jay Vosburgh wrote:
-> Hangbin Liu <liuhangbin@gmail.com> wrote:
+On Mon 17-03-25 17:36:14, Uladzislau Rezki wrote:
+> Replace __vmalloc_node_range() by the __vmalloc_node() function.
+> The last variant requires less parameters and it uses exactly the
+> same arguments which are partly now hidden inside __vmalloc_node()
+> function.
 > 
-> >Commit 4598380f9c54 ("bonding: fix ns validation on backup slaves")
-> >tried to resolve the issue where backup slaves couldn't be brought up when
-> >receiving IPv6 Neighbor Solicitation (NS) messages. However, this fix only
-> >worked for drivers that receive all multicast messages, such as the veth
-> >interface.
-> >
-> >For standard drivers, the NS multicast message is silently dropped because
-> >the slave device is not a member of the NS target multicast group.
-> >
-> >To address this, we need to make the slave device join the NS target
-> >multicast group, ensuring it can receive these IPv6 NS messages to validate
-> >the slave’s status properly.
-> >
-> >There are three policies before joining the multicast group:
-> >1. All settings must be under active-backup mode (alb and tlb do not support
-> >   arp_validate), with backup slaves and slaves supporting multicast.
-> >2. We can add or remove multicast groups when arp_validate changes.
-> >3. Other operations, such as enslaving, releasing, or setting NS targets,
-> >   need to be guarded by arp_validate.
-> >
-> >Fixes: 4e24be018eb9 ("bonding: add new parameter ns_targets")
-> >Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-> >---
-> >v2: only add/del mcast group on backup slaves when arp_validate is set (Jay Vosburgh)
+> This change does not change any functionality. It makes the code
+> a bit simpler.
 > 
-> 	Sorry for the delay in responding, I've been traveling.
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  kernel/fork.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> 	For the above, I suspect I wasn't sufficiently clear in my
-> commentary; what I meant wasn't just checking arp_validate being
-> enabled, but that the implementation could be much less complex if it
-> simply kept all of the multicast addresses added to the backup interface
-> (in addition to the active interface) when arp_validate is enabled.
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 2fa2a3582925..72d9e7c7639e 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -311,11 +311,9 @@ static int alloc_thread_stack_node(struct task_struct *tsk, int node)
+>  	 * so memcg accounting is performed manually on assigning/releasing
+>  	 * stacks to tasks. Drop __GFP_ACCOUNT.
+>  	 */
+> -	stack = __vmalloc_node_range(THREAD_SIZE, THREAD_ALIGN,
+> -				     VMALLOC_START, VMALLOC_END,
+> +	stack = __vmalloc_node(THREAD_SIZE, THREAD_ALIGN,
+>  				     THREADINFO_GFP & ~__GFP_ACCOUNT,
+> -				     PAGE_KERNEL,
+> -				     0, node, __builtin_return_address(0));
+> +				     node, __builtin_return_address(0));
+>  	if (!stack)
+>  		return -ENOMEM;
+>  
+> -- 
+> 2.39.5
 > 
-> 	I suspect the set of multicast addresses involved is likely to
-> be small in the usual case, so the question then is whether the
-> presumably small amount of traffic that inadvertently passes the filter
-> (and is then thrown away by the kernel RX logic) is worth the complexity
-> added here.
 
-Hi Jan,
-
-Apologies for troubling you so many times with the same issue. Recently, we
-discovered another corner case related to IPv6 NS target validation.
-
-Previously, I mainly focused on backup validation when arp_validate is set
-to 2, 3, or 6. However, if arp_validate is set to 0, bond_rcv_validate()
-updates last_rx directly upon receiving any packet. The problem occurs when
-the backup slave only receives IPv6 NS messages sent by the active slave,
-these messages are dropped because the backup slave hasn't joined the NS
-multicast group.
-
-So, should we remove the limitation that restricts joining the NS multicast
-group only when arp_validate is set?
-
-By the way, another question unrelated to this topic. Does target_last_arp_rx
-have any usage? I couldn't find any references to it being used anywhere.
-
-Thanks
-Hangbin
+-- 
+Michal Hocko
+SUSE Labs
