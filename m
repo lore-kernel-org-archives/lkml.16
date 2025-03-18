@@ -1,87 +1,147 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61932202997;
-	Tue, 18 Mar 2025 10:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F5920459F;
+	Tue, 18 Mar 2025 10:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742294156; cv=none; b=UM2e9hoxMWAIFdqPnGEJQbhXFCR/EwX98vb9b7RsfWRSgO0mja+vD2SdvEt9LOfVm7dDFHASUr0GU9twUnEbpZE1i4IhHuknnaoSyfolukexggjiNnvwfLKqa0zjU1ClTJD/BEJ373A6Uc+8EWjbei+FcTx0a5lKna+WvIUJyXc=
+	t=1742294202; cv=none; b=eGJXkX0O8vzEPG6HBdWgERr3KH4afZNe9zunXUveP9dug3TV7tg3JZ9c59MfzJRVB/nHSW7x9OAJHVsMFiIEnluTmkUSw9Q7s6nBIPVItr8uTWpQfuDSGrJqXpeRX5FWYZq4jxT3reg5iJ4qyFX4rE0hWp5CJUeGwqBn+kLKEPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742294156; c=relaxed/simple;
-	bh=S0upM1fcGaVKMTFPNsnTq13dtFOY8TgEu3qJM3AM7Tg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=o9wgPvjVWBydRWqox0tvWjFtiOJsJ0aTZd3cIh/9YPdLkVEjVeskEkHzoqWuOudMylFgwrVw82Yr2L3YemS5J2yw/IBbcxKcbaLAhOy6H6hGuzAF9hsCPILTKUKpjcAKt/+ovjlqkG9wZpJCEfy2QV1vUfTSVvtq9Pmw3G+FJZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=R+SEHnC5; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1742294202; c=relaxed/simple;
+	bh=Sai5g5/aPSCV0FNdoUWAXDOQb5aLvdETtjtDL4WuPys=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F072zd1KUhEp91rj3eZNuwj3Uy5fI1vFTXKYF8NuMliyUNGvUM67zqefy7Me84Bzozjl1NWadOblxDzqY3oyUqqLtEOPTHrYEuKZMM8LUe/ezAQBNHDzgjvv+g6vQmse/Qosbf5ipX4EAFVvrEE4EY9GneLcWb3Tq5ZQeDoy074=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ufrm5jsa; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R+SEHnC5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1742294147;
-	bh=ZCYgHewgbfqasiCQqbCQ87WPbhsDtNw7MnN5fuTgmy0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=R+SEHnC5FleCv/4JjEY2My7Ch9n+JvelWwJcm7fg5OS8awIRhh61kMJRdVwZ8/7rh
-	 8jYiLp0zl5tvllg1gcJCYCniT6Km+zRfpjbS0hh+04OHAC10KYTCBf/GxL3E36E6S4
-	 LC2UQzjsP/CdGJXGio6WTIBUCUW1gHoYwZE0AyQVxuptnqMPkm4pt5KhtDvbm+gOMb
-	 Bz0DNWM+3XF6f5R+aaG82f45oyIdkkrgCmIgLyuRunMKYEA/wL7WdUncNSfibadsCK
-	 Fy+4znTO68CAiUZ2n961bEmiYO+HPWUKvEeEhe3X1rwbvd/7Dq6aym5G3kQvEg/AcT
-	 0gvG0+crUkNGQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZH7Xg1C8nz4wcD;
-	Tue, 18 Mar 2025 21:35:46 +1100 (AEDT)
-Date: Tue, 18 Mar 2025 21:35:46 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Leo Yang <leo.yang.sy0@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the hwmon-staging tree
-Message-ID: <20250318213546.3a560928@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ufrm5jsa"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52IAaRCj3128589
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Mar 2025 05:36:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1742294187;
+	bh=1lT0nGmOjXid+4lh3vU+4FUK8ztnz2+Zk32BL7lapu0=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=ufrm5jsaus9ObIh1rzJikit9rlKnY0qo6rIYN91Y0hHKGeCIA0ExK2ZLtlQgTGzu5
+	 Ke6Wuj3klwcAlB5R6F9bYyxKSTnFRQiMn9Wh6ZHZuM9azgdi+69X7zoEyh9G8I758i
+	 6isEafIJc8hUDpd84vcT0BbypvyV9DTCa0NtMZ74=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52IAaQDX125983
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 18 Mar 2025 05:36:26 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
+ Mar 2025 05:36:26 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 18 Mar 2025 05:36:26 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.98])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52IAaPsl042214;
+	Tue, 18 Mar 2025 05:36:26 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <vigneshr@ti.com>, <andi.shyti@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <jmkrzyszt@gmail.com>,
+        <linux-omap@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <j-choudhary@ti.com>
+Subject: [PATCH 2/2] i2c: omap: Add support for setting mux
+Date: Tue, 18 Mar 2025 16:06:22 +0530
+Message-ID: <20250318103622.29979-3-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250318103622.29979-1-j-choudhary@ti.com>
+References: <20250318103622.29979-1-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/da83T74A=nMNfS3BacMWLj5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
---Sig_/da83T74A=nMNfS3BacMWLj5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Some SoCs require muxes in the routing for SDA and SCL lines.
+Therefore, add support for setting the mux by reading the mux-states
+property from the dt-node.
 
-Hi all,
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
+ drivers/i2c/busses/Kconfig    |  1 +
+ drivers/i2c/busses/i2c-omap.c | 22 ++++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-After merging the hwmon-staging tree, today's linux-next build (htmldocs)
-produced this warning:
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index fc438f445771..0648e58b083e 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -940,6 +940,7 @@ config I2C_OMAP
+ 	tristate "OMAP I2C adapter"
+ 	depends on ARCH_OMAP || ARCH_K3 || COMPILE_TEST
+ 	default MACH_OMAP_OSK
++	select MULTIPLEXER
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  I2C interface on the Texas Instruments OMAP1/2 family of processors.
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index f18c3e74b076..16afb9ca19bb 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -24,6 +24,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
+ #include <linux/io.h>
++#include <linux/mux/consumer.h>
+ #include <linux/of.h>
+ #include <linux/slab.h>
+ #include <linux/platform_data/i2c-omap.h>
+@@ -211,6 +212,7 @@ struct omap_i2c_dev {
+ 	u16			syscstate;
+ 	u16			westate;
+ 	u16			errata;
++	struct mux_state	*mux_state;
+ };
+ 
+ static const u8 reg_map_ip_v1[] = {
+@@ -1452,6 +1454,23 @@ omap_i2c_probe(struct platform_device *pdev)
+ 				       (1000 * omap->speed / 8);
+ 	}
+ 
++	if (of_property_read_bool(node, "mux-states")) {
++		struct mux_state *mux_state;
++
++		mux_state = devm_mux_state_get(&pdev->dev, NULL);
++		if (IS_ERR(mux_state)) {
++			r = PTR_ERR(mux_state);
++			dev_dbg(&pdev->dev, "failed to get I2C mux: %d\n", r);
++			goto err_disable_pm;
++		}
++		omap->mux_state = mux_state;
++		r = mux_state_select(omap->mux_state);
++		if (r) {
++			dev_err(&pdev->dev, "failed to select I2C mux: %d\n", r);
++			goto err_disable_pm;
++		}
++	}
++
+ 	/* reset ASAP, clearing any IRQs */
+ 	omap_i2c_init(omap);
+ 
+@@ -1511,6 +1530,9 @@ static void omap_i2c_remove(struct platform_device *pdev)
+ 
+ 	i2c_del_adapter(&omap->adapter);
+ 
++	if (omap->mux_state)
++		mux_state_deselect(omap->mux_state);
++
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0)
+ 		dev_err(omap->dev, "Failed to resume hardware, skip disable\n");
+-- 
+2.34.1
 
-Documentation/hwmon/ina233.rst: WARNING: document isn't included in any toc=
-tree
-
-Introduced by commit
-
-  c56110bc68aa ("hwmon: Add driver for TI INA233 Current and Power Monitor")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/da83T74A=nMNfS3BacMWLj5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfZTIIACgkQAVBC80lX
-0GyBugf+O058L9ph2LQuD0mrdNo1eKeEiLzw6jC3Y+/Dh8sTo9I2yoJpwGmifYXq
-fHvr/fE7bnMJgY31jBsl1Cb9QQ/0Ncr1o3flxWP7dwxv5XCXlruWsQLWaiyzlX7S
-htNxUcxkhuqp20zlYE4rKBCIUqHSIdjD9WlLE0TIUwLf97YLf1ob5bgc2dqttse3
-XgQuqHkeGPuQSNvTds8NvIUligWPylvO+QRURWbo/J1ciDpO0zmOKgCeu6qktrX0
-7zlXDZ6ukhPOLD9Q2TWPft9bVVnjGtuhgyx/3H8SR9nDLcChdejLh3ulmuonVdwe
-aWtz5ygSJF7P4kZB5+WjH9HaeNIyrQ==
-=RGTQ
------END PGP SIGNATURE-----
-
---Sig_/da83T74A=nMNfS3BacMWLj5--
