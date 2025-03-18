@@ -1,327 +1,193 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E85EC4C6D;
-	Tue, 18 Mar 2025 06:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742279656; cv=none; b=K6ek521MdNGSQM9IFttjiLFzYrKQPzlLU3gaVh9IBqEF2Q8zhqxEA0VM2qzBP8yC8UVxyrU+9GHnB0r0/O6BzaKMFAc+Fj6KDpHdwgXQbkwMu+77x/Z0humfHxhkRj3cPPk5uudrIooi0J+U8akyxF6YGLR8Q+N3R37jqh7oHrQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742279656; c=relaxed/simple;
-	bh=R8IA/h5kuNMYoLSiaR1PFdQprQUncRuQof6zLLOa+Gw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O7nHlqaacuysipxm4H9hajiC4UjkTr9fN5zEVIuehChKSMFuxEs36ONmkUbW5cYLVxH8b69JGiNdkig5LQtzP+ghdA8kdA3jZtazMTEaDqHQnEC+W/vk0Oy02teIyN7Fz4QbCSidU2qkg14WTBBXIq+uV2lE9xyOJm6kMIpXyDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=C2aHdx9E; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2042.outbound.protection.outlook.com [40.107.223.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196CF1DE8B7
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 06:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742279660; cv=fail; b=VpA7MEllHbdX969ZkLFCE2+bA9pcm9D7E5Kv39nL4H1ZYLEx2U3cOEow83kp1czwodStqvE3TpcnBIj5gEnU8C3pFw5FxI4IL5oKki15bB0Wa4LVmU0faLcvcfHpxqG2M1BfMwiQUIYpr/PVITaM+lLt/Ypq11jvuHN82l3qfi4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742279660; c=relaxed/simple;
+	bh=0ZcF9xGGbKK+qCPrImijNkZBYcPG5Iy5J7UJY3galFk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hxwDLZtGjDu102LJv7aXvw8Xf6USag7vdQe5yrPWSoyrEn6S5T3qetpY98k8YI0hqJ8e3jFVKZcBij2ExbXtTChKjKbcqw6tSCbKFwPRuUy69k9wnyBJ+EBTq9ManfUGbU6RnhFeRhBP7ZpOF0WL3lOrE5pawkcairRM/5tEQQs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qdRZnztj; arc=fail smtp.client-ip=40.107.223.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="C2aHdx9E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=/lMSm
-	DJnLQOCrq8yGaCgmI/hezWy6ytM+F+ncidM3WY=; b=C2aHdx9EIQtVaa3mFsBHS
-	/F2jAQxF2koD63mAcmLhPD5hzL+rn2ZObrWyrYJFUvTtnK5merK6LWCOD+feLOm1
-	T1s0wBWMeIqVv55HQFpEf0Yn3YV289ZWSG0H+fzUXXG3hxW9cLFPYKHFGIeVzcha
-	EYl/FqhHZAU7sq8I2KqwQY=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnj1R_E9lnWny0AA--.27191S2;
-	Tue, 18 Mar 2025 14:32:32 +0800 (CST)
-From: Liu Ye <liuyerd@163.com>
-To: hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	muchun.song@linux.dev
-Cc: akpm@linux-foundation.org,
-	willy@infradead.org,
-	david@redhat.com,
-	svetly.todorov@memverge.com,
-	vbabka@suse.cz,
-	liuyerd@163.com,
-	ran.xiaokai@zte.com.cn,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	Liu Ye <liuye@kylinos.cn>
-Subject: [PATCH v4] fs/proc/page: Refactoring to reduce code duplication.
-Date: Tue, 18 Mar 2025 14:32:26 +0800
-Message-Id: <20250318063226.223284-1-liuyerd@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qdRZnztj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=On+RyJIJBS3QzQSxyZELQHquOzbqd5N80yjg0BOUqzOUhoUcnHm9YBCZIa8OckWZ57vRV9+TO8KzJ0F5R1ajrMZ0sX6x9I71oIO/iEz6oO523tmnLSggALF93JzRe8hKKGeS/X7VCimw3d3YrTlT203bWH/nhSpUryyRC77boy8V3Ldq019UyAXHAOPDnD91UrvCbp0Nt/Ktrl1bqH3nAfzsvaQ2kzJqYlOyBbVvSRWgUO6p4xvG/R6CGpDBjhY6+hwbub/Buj6Ahv21W9f9svqcPFT2IgJZ5YOw8BZcA/Fp5AGvL+8Jntk27WOY3dW1Utv7vQ05YXOHEUH+B/YoVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nn1p5iSsvMH37WYhUNKQXfAQBUcBdR4z4gE/oIopV3Q=;
+ b=Iyby9AtRqCNg6+vKNFIT249z/Bw3sfn7QxaopDsgcJvs1SdVTTRJNHc+ACzpMtZaRW4OtiOke0bo7xOLMBiRZR+sfoM0hl1uVdwO2JizsY0U2COLlv/6ID7a7VhZB+ysJmGLSIvA7RzLSj9ej0lg7am0jAQLnyvXoR4EsQJ5M7U3EzbCI6uR9b7JFjs89jA9zh6gQxwEc/lgbAGdBoESsjOWbgH2x7UzBbQHongGN2tyI8IOIVzljku1yrESG6WDnjK4EWPW/1ReIMKwP1s7ZaYEeppIDj9ejcK/7Vn3i0h6TqeRnSx3k3wdWk/B2cdr6GHw6BmqXK+qIB8eB6h8bQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nn1p5iSsvMH37WYhUNKQXfAQBUcBdR4z4gE/oIopV3Q=;
+ b=qdRZnztjYsjmUMV2LGqkzMgBDvQ0Kmhuu5pvWXtkpwHDE27B8s+N80XUmoCBtfXu/AcUEXveUTMUbhNf/b3PUypzRTgMtf8d5eOY5D6B3NgHh7ZZ+0f6hHwjv1v9/OTFR1f+YUTYMTuzNTZdKNvQvBYYfEV6h3+TselViKdpGmc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5805.namprd12.prod.outlook.com (2603:10b6:510:1d1::13)
+ by MW4PR12MB6802.namprd12.prod.outlook.com (2603:10b6:303:20f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
+ 2025 06:34:16 +0000
+Received: from PH7PR12MB5805.namprd12.prod.outlook.com
+ ([fe80::11c7:4914:62f4:f4a3]) by PH7PR12MB5805.namprd12.prod.outlook.com
+ ([fe80::11c7:4914:62f4:f4a3%3]) with mapi id 15.20.8534.031; Tue, 18 Mar 2025
+ 06:34:16 +0000
+Message-ID: <1afff957-4e53-4c86-a6de-a1075ec13d50@amd.com>
+Date: Tue, 18 Mar 2025 12:03:58 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/4] Kernel daemon for detecting and promoting hot
+ pages
+To: SeongJae Park <sj@kernel.org>, Bharata B Rao <bharata@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ AneeshKumar.KizhakeVeetil@arm.com, Hasan.Maruf@amd.com,
+ Jonathan.Cameron@huawei.com, Michael.Day@amd.com, akpm@linux-foundation.org,
+ dave.hansen@intel.com, david@redhat.com, feng.tang@intel.com,
+ gourry@gourry.net, hannes@cmpxchg.org, honggyu.kim@sk.com, hughd@google.com,
+ jhubbard@nvidia.com, k.shutemov@gmail.com, kbusch@meta.com,
+ kmanaouil.dev@gmail.com, leesuyeon0506@gmail.com, leillc@google.com,
+ liam.howlett@oracle.com, mgorman@techsingularity.net, mingo@redhat.com,
+ nadav.amit@gmail.com, nphamcs@gmail.com, peterz@infradead.org,
+ riel@surriel.com, rientjes@google.com, rppt@kernel.org, shivankg@amd.com,
+ shy828301@gmail.com, vbabka@suse.cz, weixugc@google.com,
+ willy@infradead.org, ying.huang@linux.alibaba.com, ziy@nvidia.com,
+ dave@stgolabs.net, yuanchu@google.com, hyeonggon.yoo@sk.com,
+ Harry Yoo <harry.yoo@oracle.com>
+References: <20250316220034.38121-1-sj@kernel.org>
+Content-Language: en-US
+From: Raghavendra K T <raghavendra.kt@amd.com>
+In-Reply-To: <20250316220034.38121-1-sj@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0244.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:21a::13) To PH7PR12MB5805.namprd12.prod.outlook.com
+ (2603:10b6:510:1d1::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnj1R_E9lnWny0AA--.27191S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxKr48XF4xZr1kuw4xZw4kXrb_yoWxAry8pF
-	s8Gr4jyw48W34Ykr1xJ395Zas8G3s3Aa1Yy3y7G34Sva47JFnaka4SyFn0vFyxGryUZF1U
-	ua909ry3CFWjyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnjjgUUUUU=
-X-CM-SenderInfo: 5olx5vlug6il2tof0z/1tbiKBAUTGfZDod+JgAAsP
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5805:EE_|MW4PR12MB6802:EE_
+X-MS-Office365-Filtering-Correlation-Id: 47865251-a553-43f0-750e-08dd65e6e773
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UlBwK1V2MHEvMGQ5QUhrK05hUDQwSDlmS2w5alV0WC9JajRzTjRpMW5CMXYw?=
+ =?utf-8?B?TXhCS2k0SXY2T3UxblNGZ1dtSkNCZElBUlRwcXhLNlJqaXFuekF0Zm1jaFpW?=
+ =?utf-8?B?V1RlRlpLeEl4Zlc5bXhVOXpZYUZGaGZrRy9udlA1cnZvOEFFV1haYXZrNStM?=
+ =?utf-8?B?SmpzL1JWL1V2c0doQ0dFeFNXeU9lcHduN1BHRVhacWtvRDhBSk5KcU1UWHJx?=
+ =?utf-8?B?cXBEWExZckhuSHo1bmFobEdWWXVranpSTEFCM2pBdWU0d1Nwb3kxaUNmditB?=
+ =?utf-8?B?RFc5aFBDaE9uZytGNTRRaE1IeFFodHpuZkIwTDZ1ZHBUZk9IUXZYTnMrMTlS?=
+ =?utf-8?B?T3k1d1NDdkRlZVhyVlpFWFFTanpTTTdCazNLMzhUOHQyYllSKzNLbjZ5V0My?=
+ =?utf-8?B?T1NnOVcwZDc3SEorc3dtb3JOQXZyc09ia3ptVlFxQXdKY205R0puaGdUbHNt?=
+ =?utf-8?B?ald1eXBieDBGY0Q0YXRya1pTb0FkMDBTTC9yTk1KaFp4bThGMC9DTkZRb1Nh?=
+ =?utf-8?B?NmVyTEdHNyt3Uzlwd1UrYlJkR0NKMU5YRi9ObzNoRFQvRndZdTZsaURsaXpm?=
+ =?utf-8?B?Vi8vckVBN0lTeVE5WDVFMlVDM2JsSnlxR1J5Z3pKbFBsbkFZczZWRWJXb0lt?=
+ =?utf-8?B?djdkSDZvdS9HT2tQc2VicjBvSDFyNTRmSzRJS0FXc040U2J6cldPaXAvS2l1?=
+ =?utf-8?B?aE15Y1hTYlpVVEtRNEZaUTZxNkRZeE1wNllYd1oxV0lEMTJtWCtxN2hYaHl5?=
+ =?utf-8?B?UnJORjJQMjFRWjFSKzBJYnJQRk9qMmNRSGNEYUJpcDZLeUFuVTI1MWhFRE5n?=
+ =?utf-8?B?anlvdFRGQmtRWEd6L1VCL0JSK2drRkx4NUpDM2d2ZVdtN05ydUhOd2liNjBU?=
+ =?utf-8?B?NjQ0QWJmTkFhZ2phNjNybEpmSzVvM2VoZW03UHZwbUQ2eUhDRWhwN0hiamx3?=
+ =?utf-8?B?azNoSlhCNGNkVjYyZjdpRklKWlpaYWEvMFJrREFBeDZiK3pxdElYSVdRcXFz?=
+ =?utf-8?B?V1B3Y3VHNkYxRHVQR2FWY09aaVRVaC9sS0paZG05WjhXd1ZpOVc3cHBFRmJw?=
+ =?utf-8?B?aCszVjMxTmlzcW0yZnB1S0xSQ2xUYzVZRmltOTF1YXlwVE5OaW9JTEthbnJP?=
+ =?utf-8?B?azZuZjl5YXA3TGxMVkJDbXBPd3FuUlZIUHM4RFRqQUhxODVpTUlVdk5MK0pw?=
+ =?utf-8?B?Y0lWWHBGOGpxUUJsL0M2dXFmUkc4TWkzMVVLNXJQaGE4aUozVktDK0dBMFNn?=
+ =?utf-8?B?VEN5U3ZHTWd2b0svT1o5eWRNbnZxSmM3MlBkZlZFQ3FiQnNaK1FLd3oxK1NN?=
+ =?utf-8?B?MEdpcFVSUnJubnh5c1RxVkVhajJoQklRVjBJaE1NSkNYN2lWQi9xczJFTVpr?=
+ =?utf-8?B?d3dpc0E3YUYrL1hsSWJDOGszdnREeERnMlJjdnBoMXBKajRGRHJhQktJS2FU?=
+ =?utf-8?B?eURKQmhhcVhsOGJzY2FZU1Jra0VXdFRZTVBQK0p5VXkwSnJ4bTRnZzNTam0y?=
+ =?utf-8?B?Ni9GR0lsSzZ3dXQ0TFQzWHR4cXBrdGZ0ZWl3M295WWxHakVhdnc2ODBSUzBS?=
+ =?utf-8?B?a3NYTThaeFQzWWZvV0RLZ1hZYnNnWmJhd0FnQnNqQVpKSXNEdzRkOUFHbHdu?=
+ =?utf-8?B?TlAzTDVMT0h0RU8xNDJDSEhMUU94V25sMmZpV1JvdGcrc1cyTjFzWHlXYmpX?=
+ =?utf-8?B?WUludThiSG8zVXpxY3VlSjc5Tm9WRWVGSlVTNy9IWmxXVlljTmpJdHp1c0dM?=
+ =?utf-8?B?MVhVVGRGSnd6d0tyWnViVzIzWXR1emluTHNpSXI4ZUNNNndzbmZyWUU5YW45?=
+ =?utf-8?B?NitKWTdNSTdHSCsvUFZaQnRhWEM4TG1wY0FGbG9pWVVHbmx1OTJiYkY4c1VH?=
+ =?utf-8?Q?QX10HqDSYfbJY?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5805.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UU1ZcVI1L25vTENVaXg1eG1rZ3kvUEJVQUpUTGl6WXFXK09jVDV1U1lKU2VV?=
+ =?utf-8?B?M3dFTmgva1BtNnNQeTI4ZFJaMDRrWVR0d0FTZ2dkN1NRN3JhaGlTUW1HOU5P?=
+ =?utf-8?B?NDVOOVVVT3kxTHRRclhPVjJEMjhEcXkzR21RMGdKb2hDdS9TVkI1S251VlNv?=
+ =?utf-8?B?aHR1NVZ3SG81dWhpV0lxSVRVMjdld05WclNNa0RSV2FvaWRFZnVsYThUNmI2?=
+ =?utf-8?B?T3Y3VFZOSmdRcmxvbDhYL3lad2NUVWJtMVJlNTBkaXp3ZkFqaTZXRDhHZis1?=
+ =?utf-8?B?TDVyWGNmdkRyK3VDVzM5dFNWNklSSW55ZS9uKzBvRXlUMThhYkwwYUhxZWhE?=
+ =?utf-8?B?aTdmM3JYUlFSMXVZMWw4VWpQbUVXamdmZUN2U1FqMjNzb0oyWllUMXNjelZQ?=
+ =?utf-8?B?S0VvZnlTYzAycU1XQXVpRHN6MGx3Rk5aTDFPOUtFazRsWVJvQ1dIZnpQZk5K?=
+ =?utf-8?B?QU83QlNFb3NQa3hqS1JtaUNXeDBZVy9jZHlzZkJJNko5bUxnbTFydFpuRzVN?=
+ =?utf-8?B?RnppeHI1ZzYwUXBxTkFSU252UlZYaU1hM2l3d2hRaWNHMDJJWVA4SnVyMUpY?=
+ =?utf-8?B?a0d0NlJyK0szQi9MS1JwMGc0bE9rMzVWMHBzYU1iRjFPMjcwc0tJRmtLdytF?=
+ =?utf-8?B?TCtibXQxK0J4cFkyN1ltUmZoWTZpRWdPVElSMjNkbndqNmQ1S0x1Nkpkb0lu?=
+ =?utf-8?B?N3VBRWgwbFRJSjZiY2FmNm5FYUlBb2pWdUh6YjROZmdqZVZJWmFUQ3BwS2xy?=
+ =?utf-8?B?N1RqSEpPcDBheXFJVDJ1MUtzVGVaTW0xNW1LMmVPV291OG84RTgyU2EwelBW?=
+ =?utf-8?B?Z0dEeWNXU3ljOUVwWTFtSm9USWQwc0dzU0dmZkxUeXRCeFVEVXR2L20wREkz?=
+ =?utf-8?B?cTFXKytoc21CQTVLbGpHeDRNVkhQY1Q5OGd0WmVDWTQrR2tIR0VuTGloN1dv?=
+ =?utf-8?B?aXE0STFVM0pnTUZXdTIxdUI5Umt6aGRQTHFJY0hxc0Q4STNGRnR6SWxPckhG?=
+ =?utf-8?B?Q3hKQzkwZjQyS0d0VERvdk5LUHFYSjdqTXpvTXNnSXZyVUNwRzBJY0Z4MkZm?=
+ =?utf-8?B?eDRVQU1VcElNai83MmpmQUVTRzY4MlR3YzJFcjBxSHRpTjV4KzBhRDUzcFgz?=
+ =?utf-8?B?RmNJN3ZuV0JQMVRCK0IrY0J2ck8xNlRJOVRERFNhMlhNMmdjcDNPNGNLMlBN?=
+ =?utf-8?B?cmFKU2luWTNzZHdiNThicHBaaUl0NVBybE9jNXJGWWtieWIzMDdSWGNRT2Er?=
+ =?utf-8?B?dFBzSnh6eWtDSytYaTdOcklndjhjbi85RFF2RGs5YjQxaks5TjhqL2JzUk92?=
+ =?utf-8?B?SG9ya2xuR3ByVENGa1B5SDVlU3RLMkJtaWpLVHVkUG93dWdRTTE2dFRPekhi?=
+ =?utf-8?B?bmxnNnRvMmRWM2hEQ0FCVHA2M05wTHNiUm9hQnV6elJ1bko3S21FYXVlMDY3?=
+ =?utf-8?B?emVOUFhQRE5PRmN2V1ZrVkI1LytwYlRIVyszQXVRakxsQ0syQkxDWEZqOU03?=
+ =?utf-8?B?S005Q3kwcExZUC93Qyt1QjZLbWxZNW5ZVHdXMXpsaTFLbjNEOTc2Zi82dGkx?=
+ =?utf-8?B?L2Z1dXZZaDAwWWNnUmJmM0NnbVlMbGl3ZzAyUHdGOXV0V1kxcitmSlpWSFhq?=
+ =?utf-8?B?ZDU3SDVGVnRDYUh3MFJwOFE3TGdyMXFwcitkUUsyVjRkQXhCNVp1dXgwTmNr?=
+ =?utf-8?B?WW5lTTI1YzZRTEw5RC9tbGFjVnBjTG0yU3JLSWhJSXpiUkxLUmRHR2h0Q2cw?=
+ =?utf-8?B?QXdxMnN1blNhNkZQb3NYSmZUS3ZpcTgvcEJZNVJSWVV3RDdxZ2NmekY1T1pO?=
+ =?utf-8?B?bE03RURzQmZXZWtsZGNPZ1ROMytWUkZuM0F5SVdUSlFyWkF2R2lTelRBZkxu?=
+ =?utf-8?B?c2hMcDNabytvTHZQUFRuL2NjbllRakFWVkQ1RlpwRldUVngwUkljaE91ODlo?=
+ =?utf-8?B?Tjlwek1Pd0p1Tk1IMjJYcGN4YnJ4K3NybVcwaGVIT05PbDFmbEs2NU9DUS90?=
+ =?utf-8?B?NUNiNEZ5M3g2N0h1RjZGREFVR0krWG5LYzhhQkR4TGpwbElwNlUwU2NPNlhJ?=
+ =?utf-8?B?RnBlcFBzbFRyeUU2cGphdW5ldjNWN1RGQWtWMDRDUG1HbkZ5dFdDOVhCK0Mr?=
+ =?utf-8?Q?h+Ux3h2hy9YyzM99mBMj17UHP?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47865251-a553-43f0-750e-08dd65e6e773
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5805.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 06:34:16.0138
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lI231n6Wq6RJSNVmV1d4wXavwGxS6FxO0iHEM6j9cDl3qliMENAn/MuSsJdAW8tHFmFy7wNSFRiImPnOlesfUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6802
 
-From: Liu Ye <liuye@kylinos.cn>
 
-The function kpageflags_read and kpagecgroup_read is quite similar
-to kpagecount_read. Consider refactoring common code into a helper
-function to reduce code duplication.
 
-Signed-off-by: Liu Ye <liuye@kylinos.cn>
+On 3/17/2025 3:30 AM, SeongJae Park wrote:
+> + Harry, who was called Hyeonggon before.
+>>
+>> I am also working with Raghu to integrate his kmmdscan [3] as the
+>> hotness source and use kpromoted for migration.
+> 
+> Raghu also mentioned he would try to take a time to look into DAMON if there is
+> anything that he could reuse for the purpose.  I'm curious if he was able to
+> find something there.
+> 
+[...]
+Hello SJ,
 
----
-V4 : Update code remake patch.
-V3 : Add a stub for page_cgroup_ino and remove the #ifdef CONFIG_MEMCG.
-V2 : Use an enumeration to indicate the operation to be performed
-to avoid passing functions.
----
----
- fs/proc/page.c             | 161 +++++++++++++------------------------
- include/linux/memcontrol.h |   4 +
- 2 files changed, 58 insertions(+), 107 deletions(-)
+I did take a look at DAMON vaddr and paddr implementation. Also
+wondering how can I optimize hotness data collected by kmmscand.
 
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index 23fc771100ae..999af26c7298 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -22,6 +22,12 @@
- #define KPMMASK (KPMSIZE - 1)
- #define KPMBITS (KPMSIZE * BITS_PER_BYTE)
- 
-+enum kpage_operation {
-+	KPAGE_FLAGS,
-+	KPAGE_COUNT,
-+	KPAGE_CGROUP,
-+};
-+
- static inline unsigned long get_max_dump_pfn(void)
- {
- #ifdef CONFIG_SPARSEMEM
-@@ -37,19 +43,17 @@ static inline unsigned long get_max_dump_pfn(void)
- #endif
- }
- 
--/* /proc/kpagecount - an array exposing page mapcounts
-- *
-- * Each entry is a u64 representing the corresponding
-- * physical page mapcount.
-- */
--static ssize_t kpagecount_read(struct file *file, char __user *buf,
--			     size_t count, loff_t *ppos)
-+static ssize_t kpage_read(struct file *file, char __user *buf,
-+		size_t count, loff_t *ppos,
-+		enum kpage_operation op)
- {
- 	const unsigned long max_dump_pfn = get_max_dump_pfn();
- 	u64 __user *out = (u64 __user *)buf;
-+	struct page *page;
- 	unsigned long src = *ppos;
- 	unsigned long pfn;
- 	ssize_t ret = 0;
-+	u64 info;
- 
- 	pfn = src / KPMSIZE;
- 	if (src & KPMMASK || count & KPMMASK)
-@@ -59,24 +63,34 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
- 	count = min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
- 
- 	while (count > 0) {
--		struct page *page;
--		u64 mapcount = 0;
--
- 		/*
- 		 * TODO: ZONE_DEVICE support requires to identify
- 		 * memmaps that were actually initialized.
- 		 */
- 		page = pfn_to_online_page(pfn);
--		if (page) {
--			struct folio *folio = page_folio(page);
- 
--			if (IS_ENABLED(CONFIG_PAGE_MAPCOUNT))
--				mapcount = folio_precise_page_mapcount(folio, page);
--			else
--				mapcount = folio_average_page_mapcount(folio);
--		}
--
--		if (put_user(mapcount, out)) {
-+		if (page) {
-+			switch (op) {
-+			case KPAGE_FLAGS:
-+				info = stable_page_flags(page);
-+				break;
-+			case KPAGE_COUNT:
-+				if (IS_ENABLED(CONFIG_PAGE_MAPCOUNT))
-+					info = folio_precise_page_mapcount(page_folio(page), page);
-+				else
-+					info = folio_average_page_mapcount(page_folio(page));
-+				break;
-+			case KPAGE_CGROUP:
-+				info = page_cgroup_ino(page);
-+				break;
-+			default:
-+				info = 0;
-+				break;
-+			}
-+		} else
-+			info = 0;
-+
-+		if (put_user(info, out)) {
- 			ret = -EFAULT;
- 			break;
- 		}
-@@ -94,17 +108,23 @@ static ssize_t kpagecount_read(struct file *file, char __user *buf,
- 	return ret;
- }
- 
-+/* /proc/kpagecount - an array exposing page mapcounts
-+ *
-+ * Each entry is a u64 representing the corresponding
-+ * physical page mapcount.
-+ */
-+static ssize_t kpagecount_read(struct file *file, char __user *buf,
-+		size_t count, loff_t *ppos)
-+{
-+	return kpage_read(file, buf, count, ppos, KPAGE_COUNT);
-+}
-+
- static const struct proc_ops kpagecount_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_lseek	= mem_lseek,
- 	.proc_read	= kpagecount_read,
- };
- 
--/* /proc/kpageflags - an array exposing page flags
-- *
-- * Each entry is a u64 representing the corresponding
-- * physical page flags.
-- */
- 
- static inline u64 kpf_copy_bit(u64 kflags, int ubit, int kbit)
- {
-@@ -225,47 +245,17 @@ u64 stable_page_flags(const struct page *page)
- #endif
- 
- 	return u;
--};
-+}
- 
-+/* /proc/kpageflags - an array exposing page flags
-+ *
-+ * Each entry is a u64 representing the corresponding
-+ * physical page flags.
-+ */
- static ssize_t kpageflags_read(struct file *file, char __user *buf,
--			     size_t count, loff_t *ppos)
-+		size_t count, loff_t *ppos)
- {
--	const unsigned long max_dump_pfn = get_max_dump_pfn();
--	u64 __user *out = (u64 __user *)buf;
--	unsigned long src = *ppos;
--	unsigned long pfn;
--	ssize_t ret = 0;
--
--	pfn = src / KPMSIZE;
--	if (src & KPMMASK || count & KPMMASK)
--		return -EINVAL;
--	if (src >= max_dump_pfn * KPMSIZE)
--		return 0;
--	count = min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
--
--	while (count > 0) {
--		/*
--		 * TODO: ZONE_DEVICE support requires to identify
--		 * memmaps that were actually initialized.
--		 */
--		struct page *page = pfn_to_online_page(pfn);
--
--		if (put_user(stable_page_flags(page), out)) {
--			ret = -EFAULT;
--			break;
--		}
--
--		pfn++;
--		out++;
--		count -= KPMSIZE;
--
--		cond_resched();
--	}
--
--	*ppos += (char __user *)out - buf;
--	if (!ret)
--		ret = (char __user *)out - buf;
--	return ret;
-+	return kpage_read(file, buf, count, ppos, KPAGE_FLAGS);
- }
- 
- static const struct proc_ops kpageflags_proc_ops = {
-@@ -276,53 +266,10 @@ static const struct proc_ops kpageflags_proc_ops = {
- 
- #ifdef CONFIG_MEMCG
- static ssize_t kpagecgroup_read(struct file *file, char __user *buf,
--				size_t count, loff_t *ppos)
-+		size_t count, loff_t *ppos)
- {
--	const unsigned long max_dump_pfn = get_max_dump_pfn();
--	u64 __user *out = (u64 __user *)buf;
--	struct page *ppage;
--	unsigned long src = *ppos;
--	unsigned long pfn;
--	ssize_t ret = 0;
--	u64 ino;
--
--	pfn = src / KPMSIZE;
--	if (src & KPMMASK || count & KPMMASK)
--		return -EINVAL;
--	if (src >= max_dump_pfn * KPMSIZE)
--		return 0;
--	count = min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
--
--	while (count > 0) {
--		/*
--		 * TODO: ZONE_DEVICE support requires to identify
--		 * memmaps that were actually initialized.
--		 */
--		ppage = pfn_to_online_page(pfn);
--
--		if (ppage)
--			ino = page_cgroup_ino(ppage);
--		else
--			ino = 0;
--
--		if (put_user(ino, out)) {
--			ret = -EFAULT;
--			break;
--		}
--
--		pfn++;
--		out++;
--		count -= KPMSIZE;
--
--		cond_resched();
--	}
--
--	*ppos += (char __user *)out - buf;
--	if (!ret)
--		ret = (char __user *)out - buf;
--	return ret;
-+	return kpage_read(file, buf, count, ppos, KPAGE_CGROUP);
- }
--
- static const struct proc_ops kpagecgroup_proc_ops = {
- 	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_lseek	= mem_lseek,
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 53364526d877..5264d148bdd9 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1793,6 +1793,10 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
- {
- }
- 
-+static inline ino_t page_cgroup_ino(struct page *page)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_MEMCG */
- 
- #if defined(CONFIG_MEMCG) && defined(CONFIG_ZSWAP)
--- 
-2.25.1
+DAMON regions should be very helpful here, But I am not there yet.
 
+will surely need help brainstorming session post my next RFC.
+
+Thanks and Regards
+- Raghu
