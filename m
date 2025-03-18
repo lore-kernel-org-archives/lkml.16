@@ -1,144 +1,146 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6285F205E1C;
-	Tue, 18 Mar 2025 08:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A8C1F180C;
+	Tue, 18 Mar 2025 08:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742288265; cv=none; b=s1bNFekWyGs1nxOvpA4qs4NuRFdxODndb513/Ndb+E9PZSxxguUcelPYREJqt5Hh9cDq1FLA1MbdTdgMJWzh2pgK23o19AtTfYQCUOG9rmLPuhWJQfgprYoWlmvSGQ5IGLXJ+FaAAIWNBjvExj9XSmslBIlGdu34aFZzbBEWxPw=
+	t=1742288290; cv=none; b=DPmr4poCaujO0Kipua8QDICLOR8JZT3kGfQreltWMh29DlJKTmevV/Mk1KDtsEFMMyGN43NKpNLK1Ga/5NMC5TWQIAVMYd2PvRk8NbxJC6AJtN9FaMfG6zC617yRD2BEkGCso41KAheTRTzw1tr8nixnZmT65/J0UWa9T1rzzHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742288265; c=relaxed/simple;
-	bh=2f1C8R0hIz6n+6W0nH3Z+GVlBTjFR1v8fu0TPpXUMTQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OfqwuszN9ZmFnNPVIXrkpvxk6togrsjIY/a+uXd6QrpfYpW7PeLkmyQOtlcK0aQq5tAG1LYGhMj3XQe8eMdXueejVa+tCaMYVPncn7tCW0ri9H6FsKroNEtMYd/UVQZPt/gnfpo6Yx+FIaJxPCuRsVzAGjVxxS4a4yakiI2vfaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QgpjOeyi; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742288290; c=relaxed/simple;
+	bh=3AncosxsLamCWiHCEmH1zsWJ5Ucoxtb5R4+Ij2PmXdI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HNUOsaVrkTkAiwOfphNFxMmdBO4W1ckhoLzb6mpfyPYu+GFgnwFufppBfTW7+NVoYR2wU9jDEdZeD7CewKHrNgUKIywtu2vin4UW94aWUNIeRzPlEY7QdI7rDrHT8jpMMnKIUIl9IH5HNMz0J5fSK+DT5DNSUSZ5Sc0IBEsgDgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bnaGcj9z; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QgpjOeyi"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52I191si027058;
-	Tue, 18 Mar 2025 08:57:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Lzyz/arj6w1l3DX59ZpBFxii
-	X+gCYcK7Sb4orDZoWsY=; b=QgpjOeyiKtLNxe5Hr2tbRajqpXMEE5xRciNl0AKW
-	irOM8Wi/Ekrhy4lNGiFf1CXiW/CIFyonuqCCcN/7EJ79l89yQ47woup2TjHr2/8d
-	341ebLG0kiAN1kwBACtPxO6V+hzJMLOjCF4KYzNSUHxVs39DIlspyaKgSsSS4apR
-	pTI9vunHTlWkDxs01ocgp8v0UqRIOTzXWI+eUmK+tQ4H51Bxnt/9od4wP+kwoRxe
-	dteVL8abw4ANnHWvAgwAGwCWRdMxFTCSrX8ogXTdRuAszsMgeY5TcScvQpjdM48l
-	ZvsQnpbjcqSWvBmePOsv8t219WZGTaH1/q7G0709wUU7gQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45exwth4w9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 08:57:33 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52I8vIkw013115
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 08:57:18 GMT
-Received: from hu-arakshit-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 18 Mar 2025 01:57:14 -0700
-Date: Tue, 18 Mar 2025 14:27:10 +0530
-From: Abhinaba Rakshit <quic_arakshit@quicinc.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-CC: Thara Gopinath <thara.gopinath@gmail.com>,
-        Herbert Xu
-	<herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        "Konrad Dybcio" <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: add QCrypto nodes
-Message-ID: <20250318085710.zna6wbawbhb7kf44@hu-arakshit-hyd.qualcomm.com>
-References: <20250224-enable-qce-for-qcs615-v1-0-e7c665347eef@quicinc.com>
- <20250224-enable-qce-for-qcs615-v1-2-e7c665347eef@quicinc.com>
- <ac161039-af36-4e6c-90ea-ef858ea31e86@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bnaGcj9z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=NiuG1
+	rRVfu3yTyRAvwmrFoMC5cJiKVxVCSB6tApsb6g=; b=bnaGcj9z1+gv8UuXUbUpG
+	nQ1szrldbQsJ6bN73aIgJXbyLucGrv+Q66fcGxIQl+WlOcmi3MT6AMfKfzTk1Uq+
+	8f5a4rsWUyC1omIx7Z0fv5hTtqX5HzaIDB0I2Bo13aZRLCYHOsWBVFk7VqQT6WVG
+	arLHu4t1aJTslrdMaOmajQ=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgDXU+58NdlnhYFWDQ--.25180S2;
+	Tue, 18 Mar 2025 16:57:34 +0800 (CST)
+From: chenchangcheng <ccc194101@163.com>
+To: laurent.pinchart@ideasonboard.com,
+	hdegoede@redhat.com,
+	mchehab@kernel.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenchangcheng <chenchangcheng@kylinos.cn>
+Subject: [PATCH v2] media: uvcvideo: Fix bandwidth issue for Alcor camera
+Date: Tue, 18 Mar 2025 16:57:24 +0800
+Message-Id: <20250318085724.1151547-1-ccc194101@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ac161039-af36-4e6c-90ea-ef858ea31e86@oss.qualcomm.com>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 81D6mkMdXjmJwurUdxsoO0UK4yiQJS4a
-X-Proofpoint-ORIG-GUID: 81D6mkMdXjmJwurUdxsoO0UK4yiQJS4a
-X-Authority-Analysis: v=2.4 cv=UoJjN/wB c=1 sm=1 tr=0 ts=67d9357d cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=j5hbVoT8eKfuacexB9YA:9 a=CjuIK1q_8ugA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_04,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- impostorscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=553
- phishscore=0 adultscore=0 clxscore=1015 spamscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503180064
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgDXU+58NdlnhYFWDQ--.25180S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3WFykXr1fKry8XrW3AF13urg_yoW7CF1fpa
+	s8ArWFyry8GrW8Gw17J3WvvFy5Ganakay2krZ3Ka4kZF1UAr18XF45KayIgFW0k3ZF9rnF
+	yF1Yvr4Uu34jqF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnKsUUUUUU=
+X-CM-SenderInfo: 5fffimiurqiqqrwthudrp/1tbiTRgU3mfZLqTOYgAAsH
 
-On Tue, Feb 25, 2025 at 02:52:36PM +0100, Konrad Dybcio wrote:
-> On 24.02.2025 11:04 AM, Abhinaba Rakshit wrote:
-> > Add the QCE and Crypto BAM DMA nodes.
-> > 
-> > Signed-off-by: Abhinaba Rakshit <quic_arakshit@quicinc.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcs615.dtsi | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> > index f4abfad474ea62dea13d05eb874530947e1e8d3e..25e98d20ec1d941f0b45cc3d94f298065c9a5566 100644
-> > --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> > @@ -1114,6 +1114,31 @@ ufs_mem_phy: phy@1d87000 {
-> >  			status = "disabled";
-> >  		};
-> >  
-> > +		cryptobam: dma-controller@1dc4000 {
-> > +			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
-> > +			reg = <0x0 0x01dc4000 0x0 0x24000>;
-> > +			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
-> > +			#dma-cells = <1>;
-> > +			qcom,ee = <0>;
-> > +			qcom,controlled-remotely;
-> > +			num-channels = <16>;
-> > +			qcom,num-ees = <4>;
-> > +			iommus = <&apps_smmu 0x0104 0x0011>,
-> > +				 <&apps_smmu 0x0114 0x0011>;
-> 
-> (0x0114 & ~ 0x0011) == (0x0104 & ~0x0011), try dropping the second entry
-> here and below and see if things still work
-> 
+From: chenchangcheng <chenchangcheng@kylinos.cn>
 
-With dropping the second entry, as well qcrypto is still functional,
-Will update in the patch v2
+Some broken device return wrong dwMaxPayloadTransferSize fields,
+as follows:
+[  218.211425] [pid:20391,cpu4,guvcview,3]uvcvideo: Trying format 0x47504a4d (MJPG): 640x480.
+[  218.211425] [pid:20391,cpu4,guvcview,4]uvcvideo: Using default frame interval 33333.3 us (30.0 fps).
+[  218.252532] [pid:20391,cpu4,guvcview,1]uvcvideo: Trying format 0x47504a4d (MJPG): 640x480.
+[  218.252532] [pid:20391,cpu4,guvcview,2]uvcvideo: Using default frame interval 33333.3 us (30.0 fps).
+[  218.293426] [pid:20391,cpu7,guvcview,8]videobuf2_common: __setup_offsets: buffer 0, plane 0 offset 0x00000000
+[  218.294067] [pid:20391,cpu7,guvcview,9]videobuf2_common: __setup_offsets: buffer 1, plane 0 offset 0x000e1000
+[  218.294433] [pid:20391,cpu7,guvcview,0]videobuf2_common: __setup_offsets: buffer 2, plane 0 offset 0x001c2000
+[  218.294677] [pid:20391,cpu7,guvcview,1]videobuf2_common: __setup_offsets: buffer 3, plane 0 offset 0x002a3000
+[  218.294677] [pid:20391,cpu7,guvcview,2]videobuf2_common: __vb2_queue_alloc: allocated 4 buffers, 1 plane(s) each
+[  218.294738] [pid:20391,cpu7,guvcview,3]uvcvideo: uvc_v4l2_mmap
+[  218.294799] [pid:20391,cpu7,guvcview,4]videobuf2_common: vb2_mmap: buffer 0, plane 0 successfully mapped
+[  218.294799] [pid:20391,cpu7,guvcview,5]uvcvideo: uvc_v4l2_mmap
+[  218.294830] [pid:20391,cpu7,guvcview,6]videobuf2_common: vb2_mmap: buffer 1, plane 0 successfully mapped
+[  218.294830] [pid:20391,cpu7,guvcview,7]uvcvideo: uvc_v4l2_mmap
+[  218.294830] [pid:20391,cpu7,guvcview,8]videobuf2_common: vb2_mmap: buffer 2, plane 0 successfully mapped
+[  218.294860] [pid:20391,cpu7,guvcview,9]uvcvideo: uvc_v4l2_mmap
+[  218.294860] [pid:20391,cpu7,guvcview,0]videobuf2_common: vb2_mmap: buffer 3, plane 0 successfully mapped
+[  218.294860] [pid:20391,cpu7,guvcview,1]videobuf2_common: vb2_core_qbuf: qbuf of buffer 0 succeeded
+[  218.294891] [pid:20391,cpu7,guvcview,2]videobuf2_common: vb2_core_qbuf: qbuf of buffer 1 succeeded
+[  218.294891] [pid:20391,cpu7,guvcview,3]videobuf2_common: vb2_core_qbuf: qbuf of buffer 2 succeeded
+[  218.294891] [pid:20391,cpu7,guvcview,4]videobuf2_common: vb2_core_qbuf: qbuf of buffer 3 succeeded
+[  218.294891] [pid:20391,cpu7,guvcview,5]uvcvideo: Setting frame interval to 1/25 (400000).
+[  218.632537] [pid:20427,cpu6,guvcview,8]uvcvideo: Device requested 2752512 B/frame bandwidth.
+[  218.632598] [pid:20427,cpu6,guvcview,9]uvcvideo: No fast enough alt setting for requested bandwidth.
 
-> > +		};
-> > +
-> > +		crypto: crypto@1dfa000 {
-> > +			compatible = "qcom,qcs615-qce", "qcom,sm8150-qce", "qcom,qce";
-> > +			reg = <0x0 0x01dfa000 0x0 0x6000>;
-> > +			dmas = <&cryptobam 4>, <&cryptobam 5>;
-> > +			dma-names = "rx", "tx";
-> > +			iommus = <&apps_smmu 0x0104 0x0011>,
-> > +				 <&apps_smmu 0x0114 0x0011>;
-> > +			interconnects = <&aggre1_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
-> > +					&mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-> 
-> Please align the '&'s
+The maximum packet size of the device is 3 * 1024,
+but according to the logs above, the device needs to apply for a bandwidth of 0x2a0000.
 
-Will update in patch v2
+Signed-off-by: chenchangcheng <chenchangcheng@kylinos.cn>
+---
+ drivers/media/usb/uvc/uvc_driver.c |  9 +++++++++
+ drivers/media/usb/uvc/uvc_video.c  | 10 ++++++++++
+ drivers/media/usb/uvc/uvcvideo.h   |  1 +
+ 3 files changed, 20 insertions(+)
 
-> 
-> Konrad
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index deadbcea5e22..6d739c3cc88f 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -3188,6 +3188,15 @@ static const struct usb_device_id uvc_ids[] = {
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
++	/* Alcor Corp. Slave camera */
++	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| USB_DEVICE_ID_MATCH_INT_INFO,
++	  .idVendor		= 0x1b17,
++	  .idProduct		= 0x6684,
++	  .bInterfaceClass	= USB_CLASS_VIDEO,
++	  .bInterfaceSubClass	= 1,
++	  .bInterfaceProtocol	= 0,
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_OVERFLOW_BANDWIDTH) },
+ 	/* Generic USB Video Class */
+ 	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_UNDEFINED) },
+ 	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_15) },
+diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+index e3567aeb0007..463d6bf2c7df 100644
+--- a/drivers/media/usb/uvc/uvc_video.c
++++ b/drivers/media/usb/uvc/uvc_video.c
+@@ -262,6 +262,16 @@ static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
+ 
+ 		ctrl->dwMaxPayloadTransferSize = bandwidth;
+ 	}
++
++	if (format->flags & UVC_FMT_FLAG_COMPRESSED &&
++	    stream->dev->quirks & UVC_QUIRK_OVERFLOW_BANDWIDTH &&
++	    ctrl->dwMaxPayloadTransferSize > stream->maxpsize) {
++		uvc_printk(KERN_WARNING, "the max payload transmission size [%d]
++			   exceededs the size of the ep max packet.
++			   use the default value of 1024 bytes.\n",
++			   ctrl->dwMaxPayloadTransferSize);
++		ctrl->dwMaxPayloadTransferSize = 1024;
++	}
+ }
+ 
+ static size_t uvc_video_ctrl_size(struct uvc_streaming *stream)
+diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+index 5e388f05f3fc..20be830d37c0 100644
+--- a/drivers/media/usb/uvc/uvcvideo.h
++++ b/drivers/media/usb/uvc/uvcvideo.h
+@@ -77,6 +77,7 @@
+ #define UVC_QUIRK_DISABLE_AUTOSUSPEND	0x00008000
+ #define UVC_QUIRK_INVALID_DEVICE_SOF	0x00010000
+ #define UVC_QUIRK_MJPEG_NO_EOF		0x00020000
++#define UVC_QUIRK_OVERFLOW_BANDWIDTH 0x00040000
+ 
+ /* Format flags */
+ #define UVC_FMT_FLAG_COMPRESSED		0x00000001
+
+base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+-- 
+2.25.1
+
