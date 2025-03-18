@@ -1,225 +1,302 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF662066F4;
-	Tue, 18 Mar 2025 07:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B10F185B4C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742283862; cv=none; b=YTLr0wRa1U2M6r72UX+YmdU3z3TNSG8D9Gy83/bSP+kyDHGWZVwq2xLQtfPkenJVKA8uu8lzCYB9PtEAYhGeE1X6OsFj/msXg0FEsQ+6chjq7eNm67DTRDiYUZtRlcuXntcF6Xr/1V7Do6E8/kAOkbp73FahzO99ivKNEqgXlUc=
+	t=1742283932; cv=none; b=PmwLFgzFBNE8RciOMvT08ZMWokRF1esC/QBL7+pn2yUESCzsX9KKGtb7RCGTe2Y7sAPtptAsJMxfkcyAOMwNUnt8DbfEUICR3f40GYRqoidA7dxY9vHfRK07VHiy0DmucEC/06NzeuEwwc/OBlemRhauN7httOBTE8FS/4dpAKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742283862; c=relaxed/simple;
-	bh=lNqSEZtRhtDg1oDyM4rlYBmQoW00uSDc7hIT4DDoSsY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pbkcK+cWCxXxICMNXu95f765yTqdDC5uqV0Fq4a5OogKVjN5lkk14VRMnfwKZne0pKJTa181pMjOi8Nswlo3TrqZ11Q+TOhd2Sdie5mruJ7pv3ed6BYiN5/6614SDU46A+IV71vu0n1JO1uBzL20fVwrc5Yd8SmcoJTmYvCGWQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZH3kR2lP8z4f3jtt;
-	Tue, 18 Mar 2025 15:43:59 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 96D6D1A1741;
-	Tue, 18 Mar 2025 15:44:16 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgCH6189JNlnEt1YGw--.55732S14;
-	Tue, 18 Mar 2025 15:44:16 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hch@lst.de,
-	tytso@mit.edu,
-	djwong@kernel.org,
-	john.g.garry@oracle.com,
-	bmarzins@redhat.com,
-	chaitanyak@nvidia.com,
-	shinichiro.kawasaki@wdc.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [RFC PATCH -next v3 10/10] ext4: add FALLOC_FL_WRITE_ZEROES support
-Date: Tue, 18 Mar 2025 15:35:45 +0800
-Message-ID: <20250318073545.3518707-11-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250318073545.3518707-1-yi.zhang@huaweicloud.com>
-References: <20250318073545.3518707-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1742283932; c=relaxed/simple;
+	bh=5/FIovSNSR5c/7qz/TJ34uIJy/QRHE/ED9If2++ygGs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=u/Q08nNTSEIVU6nb7SwMRaTltKGEOIVIYw7J54eKXSryikdw8YtIYr0FlNxBmm8IwimT4ZT1Pc5Ca0lmylsDB1GoxXk7F71CsNlJXw8HVKCWCHjGICsRG+5EoHa7TwtlPnWnou6+V4jnLkkabotXOpQCuRhjYZU86u0SlRMMUuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cowl+tMD; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cowl+tMD"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2239c066347so109602225ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:45:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1742283929; x=1742888729; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5myKVatSfN7fLvXu2WGUZkTCymQrL+tAPuTPdKmXDM8=;
+        b=cowl+tMDl0KJybGiWYGn5JV21DCmKfXUrrDlpUUWQtnRBsbrZ/ZEnkEPXTUbkc8DwL
+         5Eb8wQ2RUMACcd1AWfh2rYLPiqsOD73yQi6uzR6AXdTmLTxcOinHKNr2rnT0kdOm+zmi
+         G5fni0gyfLOD0l+BWRFRwlDhRRJITcqCeeCik=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742283929; x=1742888729;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5myKVatSfN7fLvXu2WGUZkTCymQrL+tAPuTPdKmXDM8=;
+        b=rgU94Q8O2qxZ9KI0oWcQso677/MBQVqC0mb3EWicerWhNXUXsFcmPY30wUQAefYMOH
+         sJ7W9k7JkZjbHTcl+ohtsrx7uMO/UspPBDTEUU3G8NX1rL1mjMOvStspsSogDtJJCzpx
+         S2pNLWxLVzi7Q+kLzWH4qNSfn3owZrlg5N6V/TrvGKzHJMhUwYmQMEaaYFJ7UID1wrqV
+         6cRLcfLTNlugtKuHKbLWdw/kcwuvdkYLCiYuafmR/Os7VagL34NSS/+rF8b5jvGzDEwh
+         mn5Q3PrfCs/zmFGjENsE5bD2WmhNpscoI2kN+xrDswOfHLa6mc+lCIuobt0XmoNTQclQ
+         Fdbg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1SdlwT3D2IRpBWmcjnhfaHXFf/Zc7BpstvrO7tbwrIV3ZdOVDgeshBZPs0UmNc7R+TVDdTDdPTwxnDjo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpHlhyMh4aIR9HmKIVgVOuqIZF+FRQJiIiL66hE0S345rPe/Po
+	O12q7vze4DfnaVaTntBULZ5kBdCI9RS9LkprjDz+u3NUhvOh96nvv62rEZSRWA==
+X-Gm-Gg: ASbGncuQRvLx+LI4/8AAkLN1cl9KRCqm5sCllyzc852rmXDianAoqUDORvN58JYFKuA
+	be5q/UfZU87CqKbezYPNEm36MdqLchSCW4lpoC470RtkOLEthx3Dbd39PJB7TZONjb1QRMMMLex
+	x/FLCd5Lhag8gn78ybNZWAjoBlg0YpzTGrrmeEmlGF3QIkHI664XsWOI5RY6JEI+fJ1IpzdoNPZ
+	bbqJv0ppqhqLPIt5Mryw+jm13NBQc5RGXj5q+fpVxlIrhphJ9XcvF1kCGQwzNkmg5CSzsvAuliF
+	kwnx85eXv30VhaoztXFm1FmlWfKhH7WPKhlG8f3u6wTQA3JuSeHiMEA+UUmGBtrL5Fo=
+X-Google-Smtp-Source: AGHT+IGmk2nTiV7s08pvMCd8OHe9edENdn8pgAYtk9PDerWDiP2SUUByJ0oxwb6HjjJpnTkkW1LH2g==
+X-Received: by 2002:a17:903:17cd:b0:223:f408:c3f8 with SMTP id d9443c01a7336-225e0a4a198mr175109025ad.14.1742283929317;
+        Tue, 18 Mar 2025 00:45:29 -0700 (PDT)
+Received: from lschyi-p920.tpe.corp.google.com ([2401:fa00:1:10:3904:afc7:e35e:2274])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd4ae8sm87328165ad.243.2025.03.18.00.45.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 00:45:28 -0700 (PDT)
+From: Sung-Chi Li <lschyi@chromium.org>
+Date: Tue, 18 Mar 2025 15:45:23 +0800
+Subject: [PATCH v3] hwmon: (cros_ec) Add set and get target fan RPM
+ function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCH6189JNlnEt1YGw--.55732S14
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xry7Ar13Xw13XFy8XFW3GFg_yoW7GF4UpF
-	Z8XF1rKFWIq3429r4fCw4kurn0q3WkKry5WrWSgry093yUJr1fKFn09Fy8uas0gFW8AF45
-	Xa1Y9ryDK3W7A37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUma14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j6r
-	xdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-	v20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-	IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsG
-	vfC2KfnxnUUI43ZEXa7sRitxhPUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250318-extend_ec_hwmon_fan-v3-1-4c886385861f@chromium.org>
+X-B4-Tracking: v=1; b=H4sIAJIk2WcC/33NTQ7CIBCG4asY1mL4EYiuvIcxDaVDYVEwULGm6
+ d2lXRljXL5fMs/MKEPykNF5N6MExWcfQw2+3yHjdOgB+642YoQJwinHMI0QugZM455DDI3VAWt
+ hxUnrlpmWo3p5T2D9tKnXW23n8xjTa3tS6Lr+9wrFBAsjpFRKWmaOF+NSHPxjOMTUo5Us7JNRv
+ xmGKaZcKiKE0hbEF7MsyxtRWtjmAAEAAA==
+X-Change-ID: 20250313-extend_ec_hwmon_fan-a5f59aab2cb3
+To: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Benson Leung <bleung@chromium.org>
+Cc: Guenter Roeck <groeck@chromium.org>, chrome-platform@lists.linux.dev, 
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sung-Chi Li <lschyi@chromium.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742283927; l=7808;
+ i=lschyi@chromium.org; s=20241113; h=from:subject:message-id;
+ bh=5/FIovSNSR5c/7qz/TJ34uIJy/QRHE/ED9If2++ygGs=;
+ b=iMx2q+Rr+I9wwrYsHocgX1PfEquEOu50fWCx4Ue53jz0cKexDFrv0hzZEZpQMsv+MWXUofkU2
+ /pa2Bq+QwumDBrOJAMHwF+GhnyQGMTXv/Oo3JYHbBMwsVQsY8Pmvgk7
+X-Developer-Key: i=lschyi@chromium.org; a=ed25519;
+ pk=nE3PJlqSK35GdWfB4oVLOwi4njfaUZRhM66HGos9P6o=
 
-From: Zhang Yi <yi.zhang@huawei.com>
+The ChromeOS embedded controller (EC) supports closed loop fan speed
+control, so add the fan target attribute under hwmon framework, such
+that kernel can expose reading and specifying the desired fan RPM for
+fans connected to the EC.
 
-Add support for FALLOC_FL_WRITE_ZEROES. This first allocates blocks as
-unwritten, then issues a zero command outside of the running journal
-handle, and finally converts them to a written state.
+When probing the cros_ec hwmon module, we also check the supported
+command version of setting target fan RPM. This commit implements the
+version 0 of getting the target fan RPM, which can only read the target
+RPM of the first fan. This commit also implements the version 1 of
+setting the target fan RPM to each fan respectively.
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
 ---
- fs/ext4/extents.c           | 59 ++++++++++++++++++++++++++++++-------
- include/trace/events/ext4.h |  3 +-
- 2 files changed, 50 insertions(+), 12 deletions(-)
+ChromeOS embedded controller (EC) supports closed-loop fan control. We
+anticipate to have the fan related control from the kernel side, so this
+series register the HWMON_F_TARGET attribute, and implement the read and
+write function for setting/reading the target fan RPM from the EC side.
+---
+Changes in v3:
+- Drop support of v0 setting target fan RPM, thus also simplify
+  implementations.
+- Align coding style to existing code, including using if-else rather
+  than switch-case, and ensure little endian conversion from read data.
+- Only log warning for failed probing get fan target command version
+  instead of fail the whole driver.
+- Link to v2: https://lore.kernel.org/r/20250317-extend_ec_hwmon_fan-v2-1-13670557afe5@chromium.org
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 1b028be19193..e937a714085c 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -4483,6 +4483,8 @@ static int ext4_alloc_file_blocks(struct file *file, ext4_lblk_t offset,
- 	struct ext4_map_blocks map;
- 	unsigned int credits;
- 	loff_t epos, old_size = i_size_read(inode);
-+	unsigned int blkbits = inode->i_blkbits;
-+	bool alloc_zero = false;
+Changes in v2:
+- Squash the read, write, and register of fan target attribute to 1
+  commit, as they are the same topic.
+- Probe the supported command version from EC for setting the target fan
+  RPM, and perform the set fan target RPM based on the supported
+  version.
+- Update the used variable type to kernel types (i.e., u32).
+- Link to v1: https://lore.kernel.org/r/20250313-extend_ec_hwmon_fan-v1-0-5c566776f2c4@chromium.org
+---
+ drivers/hwmon/cros_ec_hwmon.c | 90 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 85 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/hwmon/cros_ec_hwmon.c b/drivers/hwmon/cros_ec_hwmon.c
+index 9991c3fa020ac859cbbff29dfb669e53248df885..d54fd85ccb4350fc297bde62a2d98f386ce1a8de 100644
+--- a/drivers/hwmon/cros_ec_hwmon.c
++++ b/drivers/hwmon/cros_ec_hwmon.c
+@@ -21,6 +21,7 @@ struct cros_ec_hwmon_priv {
+ 	struct cros_ec_device *cros_ec;
+ 	const char *temp_sensor_names[EC_TEMP_SENSOR_ENTRIES + EC_TEMP_SENSOR_B_ENTRIES];
+ 	u8 usable_fans;
++	int set_fan_target_rpm_version;
+ };
  
- 	BUG_ON(!ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS));
- 	map.m_lblk = offset;
-@@ -4495,6 +4497,17 @@ static int ext4_alloc_file_blocks(struct file *file, ext4_lblk_t offset,
- 	if (len <= EXT_UNWRITTEN_MAX_LEN)
- 		flags |= EXT4_GET_BLOCKS_NO_NORMALIZE;
+ static int cros_ec_hwmon_read_fan_speed(struct cros_ec_device *cros_ec, u8 index, u16 *speed)
+@@ -36,6 +37,21 @@ static int cros_ec_hwmon_read_fan_speed(struct cros_ec_device *cros_ec, u8 index
+ 	return 0;
+ }
  
-+	/*
-+	 * Do the actual write zero during a running journal transaction
-+	 * costs a lot. First allocate an unwritten extent and then
-+	 * convert it to written after zeroing it out.
-+	 */
-+	if (flags & EXT4_GET_BLOCKS_ZERO) {
-+		flags &= ~EXT4_GET_BLOCKS_ZERO;
-+		flags |= EXT4_GET_BLOCKS_UNWRIT_EXT;
-+		alloc_zero = true;
-+	}
++static int cros_ec_hwmon_read_fan_target(struct cros_ec_device *cros_ec,
++					 u32 *speed)
++{
++	struct ec_response_pwm_get_fan_rpm r;
++	int ret;
 +
- 	/*
- 	 * credits to insert 1 extent into extent tree
- 	 */
-@@ -4531,9 +4544,7 @@ static int ext4_alloc_file_blocks(struct file *file, ext4_lblk_t offset,
- 		 * allow a full retry cycle for any remaining allocations
- 		 */
- 		retries = 0;
--		map.m_lblk += ret;
--		map.m_len = len = len - ret;
--		epos = (loff_t)map.m_lblk << inode->i_blkbits;
-+		epos = (loff_t)(map.m_lblk + ret) << blkbits;
- 		inode_set_ctime_current(inode);
- 		if (new_size) {
- 			if (epos > new_size)
-@@ -4553,6 +4564,21 @@ static int ext4_alloc_file_blocks(struct file *file, ext4_lblk_t offset,
- 		ret2 = ret3 ? ret3 : ret2;
- 		if (unlikely(ret2))
- 			break;
++	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_PWM_GET_FAN_TARGET_RPM, NULL, 0,
++			  &r, sizeof(r));
++	if (ret < 0)
++		return ret;
 +
-+		if (alloc_zero &&
-+		    (map.m_flags & (EXT4_MAP_MAPPED | EXT4_MAP_UNWRITTEN))) {
-+			ret2 = ext4_issue_zeroout(inode, map.m_lblk, map.m_pblk,
-+						  map.m_len);
-+			if (likely(!ret2))
-+				ret2 = ext4_convert_unwritten_extents(NULL,
-+					inode, (loff_t)map.m_lblk << blkbits,
-+					(loff_t)map.m_len << blkbits);
-+			if (ret2)
-+				break;
-+		}
++	*speed = le32_to_cpu((__force __le32)r.rpm);
++	return 0;
++}
 +
-+		map.m_lblk += ret;
-+		map.m_len = len = len - ret;
+ static int cros_ec_hwmon_read_temp(struct cros_ec_device *cros_ec, u8 index, u8 *temp)
+ {
+ 	unsigned int offset;
+@@ -52,6 +68,31 @@ static int cros_ec_hwmon_read_temp(struct cros_ec_device *cros_ec, u8 index, u8
+ 	return 0;
+ }
+ 
++static int cros_ec_hwmon_set_fan_rpm(struct cros_ec_device *cros_ec, u8 index,
++				     u16 val)
++{
++	struct ec_params_pwm_set_fan_target_rpm_v1 req = {
++		.rpm = val,
++		.fan_idx = index,
++	};
++	int ret;
++
++	ret = cros_ec_cmd(cros_ec, 1, EC_CMD_PWM_SET_FAN_TARGET_RPM, &req,
++			  sizeof(req), NULL, 0);
++	if (ret < 0)
++		return ret;
++	return 0;
++}
++
++static int cros_ec_hwmon_write_fan(struct cros_ec_hwmon_priv *priv, u32 attr,
++				   int channel, long rpm)
++{
++	if (attr == hwmon_fan_target)
++		return cros_ec_hwmon_set_fan_rpm(priv->cros_ec, channel, rpm);
++	else
++		return -EOPNOTSUPP;
++}
++
+ static bool cros_ec_hwmon_is_error_fan(u16 speed)
+ {
+ 	return speed == EC_FAN_SPEED_NOT_PRESENT || speed == EC_FAN_SPEED_STALLED;
+@@ -75,6 +116,7 @@ static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ {
+ 	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
+ 	int ret = -EOPNOTSUPP;
++	u32 target_rpm;
+ 	u16 speed;
+ 	u8 temp;
+ 
+@@ -91,6 +133,11 @@ static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 			ret = cros_ec_hwmon_read_fan_speed(priv->cros_ec, channel, &speed);
+ 			if (ret == 0)
+ 				*val = cros_ec_hwmon_is_error_fan(speed);
++		} else if (attr == hwmon_fan_target) {
++			ret = cros_ec_hwmon_read_fan_target(
++				priv->cros_ec, &target_rpm);
++			if (ret == 0)
++				*val = target_rpm;
+ 		}
+ 	} else if (type == hwmon_temp) {
+ 		if (attr == hwmon_temp_input) {
+@@ -130,7 +177,15 @@ static umode_t cros_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_type
+ 	const struct cros_ec_hwmon_priv *priv = data;
+ 
+ 	if (type == hwmon_fan) {
+-		if (priv->usable_fans & BIT(channel))
++		if (!(priv->usable_fans & BIT(channel)))
++			return 0;
++
++		if (attr == hwmon_fan_target) {
++			if (priv->set_fan_target_rpm_version == 1)
++				return (channel == 0) ? 0644 : 0200;
++			else
++				return 0;
++		} else
+ 			return 0444;
+ 	} else if (type == hwmon_temp) {
+ 		if (priv->temp_sensor_names[channel])
+@@ -140,13 +195,24 @@ static umode_t cros_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_type
+ 	return 0;
+ }
+ 
++static int cros_ec_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
++			      u32 attr, int channel, long val)
++{
++	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
++
++	if (type == hwmon_fan)
++		return cros_ec_hwmon_write_fan(priv, attr, channel, val);
++	else
++		return -EOPNOTSUPP;
++}
++
+ static const struct hwmon_channel_info * const cros_ec_hwmon_info[] = {
+ 	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
+ 	HWMON_CHANNEL_INFO(fan,
+-			   HWMON_F_INPUT | HWMON_F_FAULT,
+-			   HWMON_F_INPUT | HWMON_F_FAULT,
+-			   HWMON_F_INPUT | HWMON_F_FAULT,
+-			   HWMON_F_INPUT | HWMON_F_FAULT),
++			   HWMON_F_INPUT | HWMON_F_FAULT | HWMON_F_TARGET,
++			   HWMON_F_INPUT | HWMON_F_FAULT | HWMON_F_TARGET,
++			   HWMON_F_INPUT | HWMON_F_FAULT | HWMON_F_TARGET,
++			   HWMON_F_INPUT | HWMON_F_FAULT | HWMON_F_TARGET),
+ 	HWMON_CHANNEL_INFO(temp,
+ 			   HWMON_T_INPUT | HWMON_T_FAULT | HWMON_T_LABEL,
+ 			   HWMON_T_INPUT | HWMON_T_FAULT | HWMON_T_LABEL,
+@@ -178,6 +244,7 @@ static const struct hwmon_channel_info * const cros_ec_hwmon_info[] = {
+ static const struct hwmon_ops cros_ec_hwmon_ops = {
+ 	.read = cros_ec_hwmon_read,
+ 	.read_string = cros_ec_hwmon_read_string,
++	.write = cros_ec_hwmon_write,
+ 	.is_visible = cros_ec_hwmon_is_visible,
+ };
+ 
+@@ -233,6 +300,18 @@ static void cros_ec_hwmon_probe_fans(struct cros_ec_hwmon_priv *priv)
  	}
- 	if (ret == -ENOSPC && ext4_should_retry_alloc(inode->i_sb, &retries))
- 		goto retry;
-@@ -4618,7 +4644,11 @@ static long ext4_zero_range(struct file *file, loff_t offset,
- 	if (end_lblk > start_lblk) {
- 		ext4_lblk_t zero_blks = end_lblk - start_lblk;
+ }
  
--		flags |= (EXT4_GET_BLOCKS_CONVERT_UNWRITTEN | EXT4_EX_NOCACHE);
-+		if (mode & FALLOC_FL_WRITE_ZEROES)
-+			flags = EXT4_GET_BLOCKS_CREATE_ZERO | EXT4_EX_NOCACHE;
-+		else
-+			flags |= (EXT4_GET_BLOCKS_CONVERT_UNWRITTEN |
-+				  EXT4_EX_NOCACHE);
- 		ret = ext4_alloc_file_blocks(file, start_lblk, zero_blks,
- 					     new_size, flags);
- 		if (ret)
-@@ -4730,8 +4760,8 @@ long ext4_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
- 
- 	/* Return error if mode is not supported */
- 	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |
--		     FALLOC_FL_COLLAPSE_RANGE | FALLOC_FL_ZERO_RANGE |
--		     FALLOC_FL_INSERT_RANGE))
-+		     FALLOC_FL_ZERO_RANGE | FALLOC_FL_COLLAPSE_RANGE |
-+		     FALLOC_FL_INSERT_RANGE | FALLOC_FL_WRITE_ZEROES))
- 		return -EOPNOTSUPP;
- 
- 	inode_lock(inode);
-@@ -4762,16 +4792,23 @@ long ext4_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
- 	if (ret)
- 		goto out_invalidate_lock;
- 
--	if (mode & FALLOC_FL_PUNCH_HOLE)
-+	switch (mode & FALLOC_FL_MODE_MASK) {
-+	case FALLOC_FL_PUNCH_HOLE:
- 		ret = ext4_punch_hole(file, offset, len);
--	else if (mode & FALLOC_FL_COLLAPSE_RANGE)
-+		break;
-+	case FALLOC_FL_COLLAPSE_RANGE:
- 		ret = ext4_collapse_range(file, offset, len);
--	else if (mode & FALLOC_FL_INSERT_RANGE)
-+		break;
-+	case FALLOC_FL_INSERT_RANGE:
- 		ret = ext4_insert_range(file, offset, len);
--	else if (mode & FALLOC_FL_ZERO_RANGE)
-+		break;
-+	case FALLOC_FL_ZERO_RANGE:
-+	case FALLOC_FL_WRITE_ZEROES:
- 		ret = ext4_zero_range(file, offset, len, mode);
--	else
-+		break;
-+	default:
- 		ret = -EOPNOTSUPP;
++static void cros_ec_hwmon_probe_fan_target_cmd_version(struct cros_ec_hwmon_priv *priv)
++{
++	int ret;
++
++	ret =  cros_ec_get_cmd_versions(priv->cros_ec,  EC_CMD_GET_CMD_VERSIONS);
++	if (ret < 0) {
++		dev_warn(priv->cros_ec->dev,
++			"error getting target fan RPM set command version: %d\n", ret);
 +	}
++	priv->set_fan_target_rpm_version = (ret > 0) ? 1 : 0;
++}
++
+ static int cros_ec_hwmon_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -259,6 +338,7 @@ static int cros_ec_hwmon_probe(struct platform_device *pdev)
  
- out_invalidate_lock:
- 	filemap_invalidate_unlock(mapping);
-diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
-index 156908641e68..6f9cf2811733 100644
---- a/include/trace/events/ext4.h
-+++ b/include/trace/events/ext4.h
-@@ -92,7 +92,8 @@ TRACE_DEFINE_ENUM(ES_REFERENCED_B);
- 	{ FALLOC_FL_KEEP_SIZE,		"KEEP_SIZE"},		\
- 	{ FALLOC_FL_PUNCH_HOLE,		"PUNCH_HOLE"},		\
- 	{ FALLOC_FL_COLLAPSE_RANGE,	"COLLAPSE_RANGE"},	\
--	{ FALLOC_FL_ZERO_RANGE,		"ZERO_RANGE"})
-+	{ FALLOC_FL_ZERO_RANGE,		"ZERO_RANGE"},		\
-+	{ FALLOC_FL_WRITE_ZEROES,	"WRITE_ZEROES"})
+ 	cros_ec_hwmon_probe_temp_sensors(dev, priv, thermal_version);
+ 	cros_ec_hwmon_probe_fans(priv);
++	cros_ec_hwmon_probe_fan_target_cmd_version(priv);
  
- TRACE_DEFINE_ENUM(EXT4_FC_REASON_XATTR);
- TRACE_DEFINE_ENUM(EXT4_FC_REASON_CROSS_RENAME);
+ 	hwmon_dev = devm_hwmon_device_register_with_info(dev, "cros_ec", priv,
+ 							 &cros_ec_hwmon_chip_info, NULL);
+
+---
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+change-id: 20250313-extend_ec_hwmon_fan-a5f59aab2cb3
+
+Best regards,
 -- 
-2.46.1
+Sung-Chi Li <lschyi@chromium.org>
 
