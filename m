@@ -1,103 +1,93 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2C420CCF5;
-	Tue, 18 Mar 2025 14:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCC2126BFA
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742306599; cv=none; b=D82+3Bg86lUUQZHd7+QgQ7/+wkWpnJQEXH8EOveYUW3f42iuDyMAcYP3tnzI0lvK5x+6tqz6RpKL8kiLQvcCbMUctWaJWV0xHpTcNyC46Mi2Eb2uXHuCBSyBfZyMDVHiP9/qPcp9NvrxEFveFbfzZRrqlzKjo2aHDlalPc94gOY=
+	t=1742306741; cv=none; b=aJI1Ux70FtPacG3FX3l00Ff8IaJU6D+dAycUWTfz79MHSuHeGwJSf9BHsE8B8zOExn6XfRl2Xj3SIj+Q03fOiIPokk5t4tis52bM+fPB7qtSx2OeuTgt/RlfSFD6dj4ojxm532JKmUUP0wHG/TvUC82wxKB2xF9h8wQPCjERE4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742306599; c=relaxed/simple;
-	bh=ONEQCJHxtWXCTHYNxmFxRZ9fNTNwrSUvdGTV4QoojI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nLttlobn/a1x5NasoHrg4EMs9ypHSDFmujJKEqhZ74+k/H7blHy9shjkDe2Xn4ph6bD0MEWJg87jYFkg1GYFTLSgRstCnF6erHYyEhJl8nejcAfPUk4ExzoKo55ER8ngQhmmNDTHvsqse9gFwZuKdVOWDnJxaUiKnGXyBiy9TKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=357SSSF2; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1742306741; c=relaxed/simple;
+	bh=6HRxJdhRl5ryVD7r2k2KY6j6OAQgrAXwY8e6c2hP51Y=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=hBCBPDuq+yp8/fgEBPbJLjji5m14yUYyZiaoWHzW7cJEmBd9PCzqiswNa32eeUUoefErSAwBpli0WE9sCi0FnU7BUN13FCb6m9alvHzQOPaA3dpICxaW9DuH9qbcegG3jgP5KMSJc3RSx7QpkprSc0Vdc6BJj1/X6kmHpDIkiG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Bu1mQfwL; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="357SSSF2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=0yf+Edtj7qyHSUTzNfZ+JKXVNOrD8jm+TXRXVg69QbA=; b=357SSSF22yh5nMcYWPclY7KXns
-	bBTRpnsCM0yabQo6ggsqvDtS521lMh5u73mchyQSJ01CwKeyG0v+3YePiHNisxh+qWVKy4GBaVYcn
-	r0Q3lIM+FIwRUz5pkuG+bJ7OENHhjUHK7BtAmWbnOGI3HE7L6QrQAaz1gFMU1LblELAo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tuXX5-006Gct-Rs; Tue, 18 Mar 2025 15:03:03 +0100
-Date: Tue, 18 Mar 2025 15:03:03 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"ratbert@faraday-tech.com" <ratbert@faraday-tech.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: =?utf-8?B?5Zue6KaGOiBbbmV0LW5leA==?= =?utf-8?Q?t?= 2/4] ARM:
- dts: ast2600-evb: add default RGMII delay
-Message-ID: <8c0195dd-50b3-4f30-a021-c5b77d39d895@lunn.ch>
-References: <20250317025922.1526937-1-jacky_chou@aspeedtech.com>
- <20250317025922.1526937-3-jacky_chou@aspeedtech.com>
- <5db47dea-7d90-45a1-85a1-1f4f5edd3567@lunn.ch>
- <SEYPR06MB5134A69692C6C474BDE9A6A99DDE2@SEYPR06MB5134.apcprd06.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Bu1mQfwL"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52IE52TD1047232
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 18 Mar 2025 07:05:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52IE52TD1047232
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1742306703;
+	bh=xcskFzaJmWwQHhXRNYnfle/H5Zmhj/Ez80BK/ukbygY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Bu1mQfwLBBJceyU6GlMRpaM6gtgBcicKIGbgEGv4ltalRZv4cPsJg8LQCDPjzq5V9
+	 NzmlUjUuZgSgm6XTCpGApYKINAF0K2ioOZPNVw4eBKwj7ZbTzvIAdnXptrdACF2x83
+	 2TXRsWyh39TnvoBgrRmwzgQNdxJ6OVAM0WgZm3Fc1jSoZKnUpq/+gTXRlgVaWyhU09
+	 p/a6orH5bt015IxPO9k9RvYC1fHJwdiQi7wyoMxTyZAWWn8ujVa66ncQP56CO1p1dx
+	 4fY6qFKSXwXvHNmm/u5FS7/p6QbJVa/BKO5XspVKQcxgLZPwCiXDibEV7DNZnqZL0W
+	 VVRYq2eG5s3sw==
+Date: Tue, 18 Mar 2025 07:05:00 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+CC: Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        "Ahmed S . Darwish" <darwi@linutronix.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_0/5=5D_x86/cpu=3A_Introduce_=3Casm/cpuid/t?=
+ =?US-ASCII?Q?ypes=2Eh=3E_and_=3Casm/cpuid/api=2Eh=3E_and_clean_them_up?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250317221824.3738853-1-mingo@kernel.org>
+References: <20250317221824.3738853-1-mingo@kernel.org>
+Message-ID: <5A417EE0-8DF3-4C6E-A7E9-9EE6705282F1@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SEYPR06MB5134A69692C6C474BDE9A6A99DDE2@SEYPR06MB5134.apcprd06.prod.outlook.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 18, 2025 at 11:00:27AM +0000, Jacky Chou wrote:
-> Hi Andrew,
-> 
-> Thank you for your reply.
-> 
-> > >  	phy-mode = "rgmii";
-> > >  	phy-handle = <&ethphy2>;
-> > >
-> > > +	tx-internal-delay-ps = <8>;
-> > > +	rx-internal-delay-ps = <4>;
-> > > +
-> > 
-> > Ideally you want:
-> > 
-> > 	phy-mode = "rgmii-id";
-> > 	tx-internal-delay-ps = <0>;
-> > 	rx-internal-delay-ps = <0>;
-> > 
-> > Since 'rgmii-id' correctly describes the hardware.
-> 
-> I still confuse about ethernet-controller.yaml.
-> It lists 'rgmi', 'rgmii-rxid', 'rgmii-txid' and 'rgmii-id'.
+On March 17, 2025 3:18:19 PM PDT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
+>This series contains Ahmed S=2E Darwish's splitting up of <asm/cpuid=2Eh>
+>into <asm/cpuid/types=2Eh> and <asm/cpuid/api=2Eh>, followed by a couple
+>of cleanups that create a more maintainable base=2E
+>
+>Thanks,
+>
+>	Ingo
+>
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D>
+>Ahmed S=2E Darwish (1):
+>  x86/cpuid: Refactor <asm/cpuid=2Eh>
+>
+>Ingo Molnar (4):
+>  x86/cpuid: Clean up <asm/cpuid/types=2Eh>
+>  x86/cpuid: Clean up <asm/cpuid/api=2Eh>
+>  x86/cpuid: Standardize on u32 in <asm/cpuid/api=2Eh>
+>  x86/cpuid: Use u32 in instead of uint32_t in <asm/cpuid/api=2Eh>
+>
+> arch/x86/include/asm/cpuid=2Eh       | 217 +----------------------------=
+----------------------------
+> arch/x86/include/asm/cpuid/api=2Eh   | 210 +++++++++++++++++++++++++++++=
+++++++++++++++++++++++++++
+> arch/x86/include/asm/cpuid/types=2Eh |  32 +++++++++
+> 3 files changed, 243 insertions(+), 216 deletions(-)
+> create mode 100644 arch/x86/include/asm/cpuid/api=2Eh
+> create mode 100644 arch/x86/include/asm/cpuid/types=2Eh
+>
 
-DT describes the board. Does the board add the 2ns delay via extra
-long clock lines? If yes, use rgmii. If the MAC/PHY pair need to add
-the 2ns delay, use rgmii-id.
-
-If the MAC/PHY pair is adding the delay, the DT says nothing about how
-they add the delay.
-
-The general rule is the PHY adds the delay. If you look at
-drivers/net/phy/*.c, every PHY that implements RGMII support both
-PHY_INTERFACE_MODE_RGMII_ID and PHY_INTERFACE_MODE_RGMII. There is no
-reason not to follow ever other MAC/PHY pair and have the PHY add the
-delay. The MAC can then do fine tuning if needed, adding small delays.
-
-	Andrew
+It would be nice to get rid of the bleacherous use of *eax and *ecx as inp=
+ut-output operands=2E The use of four separate pointers is just barely tole=
+rable because the compiler can remove them when the asm is inlined=2E
