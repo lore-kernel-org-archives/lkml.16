@@ -1,57 +1,57 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD06D21421E
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 18:03:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C772147E3
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 18:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742321000; cv=none; b=kU73b0cby5PlaWz1BMmhii+KYSSBDK0w0G9VfSuE9hXzBOGME6cVFAJ0LPrFX6+LfdMnQ8JF+URRX7GeHv/4zi9EysklO7d2gSzDJ/k0+RXJlcV0mKBpqgpxKY+F1MilVqbIBRBEjxHaAGiXBdIzhxj8hi3crAQh4vdHJxtq0as=
+	t=1742321003; cv=none; b=KwyvzXP/bcjwg0RMGP12aE3Sw/FHWR/ZLy4fiXHcu03aW92OtljFWVWa4YlCfytllCRzIL2VSaYnd7ju+wh4ojhwaSNbCYeze7lcU1ATilcBt1GmaygivNhYG+JBssL7t8ob2XXfQ6LFl4LCZ19WENaIqCABJ43wkVRbViUJOVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742321000; c=relaxed/simple;
-	bh=eGp6y76D+26th1Qth29tiD1vANtf4Fo6XvDNs+D6Ea8=;
+	s=arc-20240116; t=1742321003; c=relaxed/simple;
+	bh=vIjqe14c0RNfUySlFRGhO3NbU8KsbO/xK6TEyVXoxlM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=b6+/BWv3Jr5cHrx1k+Ok5myi5wLFu7c8opQhCDd4Y8duuPrBZRZlCosX9jVZep63RnI1HkdTFX5nRyMRZ8aEn2GsbdcqwhoV8xU0Zqwi1Yj+hTAPOGu/NmnFsR0PWUcMRp3nV4gxkq0LHnPcNsOgup9JmEFxa//4Vc1L/mYS8Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S9H547/U; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=F/EimshqyWmXFUIVr5+JB+S7r1mfi1YObmmlf7wxls72FCCjInIa7jaeBEJY6Mlq7Loj8WusH9Wo1JOZEI+DkbVUVShGuyCpSQjkOk06y97akBfGJ83DSgst0nazo+717U5lgFlgJSYHK/Dyd+xU1rc6Y9QE0TDsaqzW/Hlsq/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZT2M8kRa; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S9H547/U"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so5679374a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:03:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZT2M8kRa"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2feb47c6757so3893431a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:03:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742320998; x=1742925798; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742321001; x=1742925801; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hw3dIlV0W/clOphvZwS+ro8iXLrLQs2i5d/hFycck28=;
-        b=S9H547/Uqh2Wsbyoxeo4U4T4b1m57dsLaJLtURUwdEAkzorUAQmg3Dll699iTR7a3f
-         a9/FCqt/08CU53EKQwjv4ZoITZBiKYl97ykDaflVUlqUryhQtrFG5GwQ5mYEL9Aw1R/p
-         Fzrd8M9UKNArwOkdf+/NTuQgFc1Xzlz8+VYzdQdC2a64qTQxhVv8nxJen0fOPq0Rja+1
-         MOPVOkomeFvXYhnkBCfF+pJ3mEJW0l1FPG3J07dNdA2JaIwrICtdaQteQKDQ9SkVw7ua
-         HIVp543ESLKt7YO5MiXk+Xl77Z7MvZhB7ed6MKAqzjwjknxSkKlBg0KERr4MLsKSIR31
-         wAqg==
+        bh=IT302M+FVQY9sewvC6bjI5Mn+MvLFGrIcg+szg8Yono=;
+        b=ZT2M8kRabwlk2iEhwXRhS/ppHqgPlmvR/kYjd9Yl0boL3tSWUaaw5FWAuE8gUR734N
+         mF7FZBlECbzEznbxkwnP5KY7+BhoX3LZlJTqzO8ulVVI2FpbGSLpIWjdiKudAFKivuzN
+         4znVISczHY+rqdXaEMyM6qGzVt253O1rlzv4bHbhI7t+V/OAEAuEPpRNWQ/UV8MYgBEw
+         70pQ8hHiW6ugNjdo8z+dcnmoVC1hSx+djUFCQye17EGUneazVMwACnR/7WKpDwQAigDI
+         t4mk81yPwgFF54zaBVkuJ5L5y0rYZd9Cqy90r6MRryBttXiRY2S+6ez2MNrjkLwcBb9m
+         9QYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742320998; x=1742925798;
+        d=1e100.net; s=20230601; t=1742321001; x=1742925801;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Hw3dIlV0W/clOphvZwS+ro8iXLrLQs2i5d/hFycck28=;
-        b=YmFPy49s+KOSN4x52YwzvFyvBfM4pZ/2LGz/+sXZMVCEcqa8+HrLz6JxP6RL9xgsB8
-         D5WuLmUBE/Eob8YiEO9ybTWlE418wXs5WcmIK2267L8OwMFDvjqaF4Y+sssulbM86z/c
-         iQV+qOGtGlcZxiV0WhJ6KE+izL7wIpFYQlS2aXVZ0dbmEGEcbDNyyTMa9O5POrR+oalU
-         6NUUj0JI0J+tQHlavQB++qFmif6IcWZ7GHFF45Hk4iNS0SwW03hERy6JoWuC8ENgBMcf
-         9kwmjt0ChwErG0ZakymvjNZMUvMhsUV9KI3g0sDRKdxp7ibiQZQ1mcVqp/RsdmAYtj/e
-         1gng==
-X-Forwarded-Encrypted: i=1; AJvYcCVp1N3nrY/8b9yUDGTn5vDMEH1XCUtgjf43HXFVynYPRVl49qwylVHsYvwbiCJRPP1uVHXA6OX5ReCzwqU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9e/0c2XNR7gx2IvNP30wM6l8MxEQkwJrU7uxn4KDeBxW/EzXr
-	U8SJqA/RT6oejyrxrLFgEHfTsbUuuuh9JMZq8EFA6thr88Pyq8ORpmvbnsqofcYN7mFQi1pm5zJ
-	iiQ==
-X-Google-Smtp-Source: AGHT+IHNYr/g0m3ji9yBS+9hbhGo5xdw2oXURoWDCDny0qKJulqwWnmVFV/kBVPvfKiCxgba+qWFJ0nfXL4=
-X-Received: from pfbhx5.prod.google.com ([2002:a05:6a00:8985:b0:736:79d0:fd28])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:1fc4:b0:1f5:9330:2a18
- with SMTP id adf61e73a8af0-1f5c121a03dmr24805723637.23.1742320998029; Tue, 18
- Mar 2025 11:03:18 -0700 (PDT)
+        bh=IT302M+FVQY9sewvC6bjI5Mn+MvLFGrIcg+szg8Yono=;
+        b=cUyXCQvptXjnNlJSQUoYqgyItxgKkg/VG8gn0/DG+MCQkeaTUG3EfA+yT13PpkbuIc
+         2LUe+QtzhUEnWFMkwrLx1W9TcxDbritq+zOWPnkrVSllZpvXWuL85pbJ3wg9CcXxkbrK
+         hyqEzogeuH3XfUTNvT8afyKovB2vpoOHoex3GPfOGP7VuWfXQ2cyzaRE3O2NfAEL4YBd
+         12hKgUxw25IB2r1CFp4nH2skoX4P9z+aV4D9aRJd5Q+helnuq++muU0DcGguFQJswJLC
+         0diiaJnQETMf20IjdPdjRXEIZyL8QvHcM4/OI3QE+KIdgmKi3pU4q/e0sAZIDajaWQs1
+         TMSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjqUMUNmG2m/+1Z4DdbB7Ru7bUMxJ0Sc6wTztNWoYgDiYEJMViEhcpCOlx+ndid98mvabdzyxOGHk/gxI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8EUSeLmcFB/c2E7vekTOGl9ATRMqtJ6UNwbgYY1gnnrSdPb6T
+	25RCTsA/PcDSmwfKRN2RRF4TWZgi+Rjp2kYgB1J53zVfI682Cg1yjKkU3thrbWdbwMQOJXilYC8
+	J7Q==
+X-Google-Smtp-Source: AGHT+IGTi12zBNscf00G47hXQDPJPN/IGQpF4zQKmAap+oOue+uk/UXuOBX0o4O/LU5EKKlFNLTOYrGynXY=
+X-Received: from pjbnw1.prod.google.com ([2002:a17:90b:2541:b0:2ff:6132:8710])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3cd0:b0:2f6:dcc9:38e0
+ with SMTP id 98e67ed59e1d1-301a52908d0mr5763909a91.0.1742321001312; Tue, 18
+ Mar 2025 11:03:21 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 18 Mar 2025 11:03:01 -0700
+Date: Tue, 18 Mar 2025 11:03:03 -0700
 In-Reply-To: <20250318180303.283401-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,21 +61,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250318180303.283401-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Message-ID: <20250318180303.283401-7-seanjc@google.com>
-Subject: [GIT PULL] KVM: x86: SVM changes for 6.15
+Message-ID: <20250318180303.283401-9-seanjc@google.com>
+Subject: [GIT PULL] KVM: x86: Xen changes for 6.15
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Sean Christopherson <seanjc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Misc cleanups, a pile of fixes related to SNP's AP Creation hypercall, and
-support for Idle HLT interception.
+Harden and optimize KVM's handling of the Xen hypercall MSR; syzkaller discovered
+that setting the userspace-configurable index to collide with XSS could coerce
+KVM into writing guest memory during vCPU creation.
 
-Note, Manali wrote a selftest for Idle HLT, but unfortunately it can't be
-merged at this time as the test has no way to know if _KVM_ support Idle HLT;
-the CPUID feature bit enumerates KVM emulation of Idle HLT for nested VMs,
-and there was no strong reason to expose a module param, let alone a capability.
+The other change is to fix a flaw related to Xen TSC CPUID emulation.
 
 The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
@@ -83,73 +81,52 @@ The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
 are available in the Git repository at:
 
-  https://github.com/kvm-x86/linux.git tags/kvm-x86-svm-6.15
+  https://github.com/kvm-x86/linux.git tags/kvm-x86-xen-6.15
 
-for you to fetch changes up to 4e96f010afb2815e33c9b15a695e0e0b4cb3cea6:
+for you to fetch changes up to a2b00f85d7839d74a2f6fcbf547d4bf2e82c34e5:
 
-  KVM: SVM: Invalidate "next" SNP VMSA GPA even on failure (2025-03-03 07:34:56 -0800)
-
-----------------------------------------------------------------
-KVM SVM changes for 6.15
-
- - Ensure the PSP driver is initialized when both the PSP and KVM modules are
-   built-in (the initcall framework doesn't handle dependencies).
-
- - Use long-term pins when registering encrypted memory regions, so that the
-   pages are migrated out of MIGRATE_CMA/ZONE_MOVABLE and don't lead to
-   excessive fragmentation.
-
- - Add macros and helpers for setting GHCB return/error codes.
-
- - Add support for Idle HLT interception, which elides interception if the vCPU
-   has a pending, unmasked virtual IRQ when HLT is executed.
-
- - Fix a bug in INVPCID emulation where KVM fails to check for a non-canonical
-   address.
-
- - Don't attempt VMRUN for SEV-ES+ guests if the vCPU's VMSA is invalid, e.g.
-   because the vCPU was "destroyed" via SNP's AP Creation hypercall.
-
- - Reject SNP AP Creation if the requested SEV features for the vCPU don't
-   match the VM's configured set of features.
-
- - Misc cleanups
+  KVM: x86: Update Xen TSC leaves during CPUID emulation (2025-02-25 07:09:55 -0800)
 
 ----------------------------------------------------------------
-Ge Yang (1):
-      KVM: SEV: Use long-term pin when registering encrypted memory regions
+KVM Xen changes for 6.15
 
-Manali Shukla (2):
-      x86/cpufeatures: Add CPUID feature bit for Idle HLT intercept
-      KVM: SVM: Add Idle HLT intercept support
+ - Don't write to the Xen hypercall page on MSR writes that are initiated by
+   the host (userspace or KVM) to fix a class of bugs where KVM can write to
+   guest memory at unexpected times, e.g. during vCPU creation if userspace has
+   set the Xen hypercall MSR index to collide with an MSR that KVM emulates.
 
-Melody Wang (2):
-      KVM: SVM: Convert plain error code numbers to defines
-      KVM: SVM: Provide helpers to set the error code
+ - Restrict the Xen hypercall MSR indx to the unofficial synthetic range to
+   reduce the set of possible collisions with MSRs that are emulated by KVM
+   (collisions can still happen as KVM emulates Hyper-V MSRs, which also reside
+   in the synthetic range).
 
-Nikunj A Dadhania (1):
-      KVM: SEV: Use to_kvm_sev_info() for fetching kvm_sev_info struct
+ - Clean up and optimize KVM's handling of Xen MSR writes and xen_hvm_config.
 
-Sean Christopherson (11):
-      crypto: ccp: Add external API interface for PSP module initialization
-      KVM: SVM: Ensure PSP module is initialized if KVM module is built-in
-      KVM: SVM: Inject #GP if memory operand for INVPCID is non-canonical
-      KVM: SVM: Refuse to attempt VRMUN if an SEV-ES+ guest has an invalid VMSA
-      KVM: SVM: Don't change target vCPU state on AP Creation VMGEXIT error
-      KVM: SVM: Require AP's "requested" SEV_FEATURES to match KVM's view
-      KVM: SVM: Simplify request+kick logic in SNP AP Creation handling
-      KVM: SVM: Use guard(mutex) to simplify SNP AP Creation error handling
-      KVM: SVM: Mark VMCB dirty before processing incoming snp_vmsa_gpa
-      KVM: SVM: Use guard(mutex) to simplify SNP vCPU state updates
-      KVM: SVM: Invalidate "next" SNP VMSA GPA even on failure
+ - Update Xen TSC leaves during CPUID emulation instead of modifying the CPUID
+   entries when updating PV clocks, as there is no guarantee PV clocks will be
+   updated between TSC frequency changes and CPUID emulation, and guest reads
+   of Xen TSC should be rare, i.e. are not a hot path.
 
- arch/x86/include/asm/cpufeatures.h |   1 +
- arch/x86/include/asm/sev-common.h  |  12 +-
- arch/x86/include/asm/svm.h         |   5 +-
- arch/x86/include/uapi/asm/svm.h    |   2 +
- arch/x86/kvm/svm/sev.c             | 380 +++++++++++++++++--------------------
- arch/x86/kvm/svm/svm.c             |  39 +++-
- arch/x86/kvm/svm/svm.h             |  39 +++-
- drivers/crypto/ccp/sp-dev.c        |  14 ++
- include/linux/psp-sev.h            |   9 +
- 9 files changed, 269 insertions(+), 232 deletions(-)
+----------------------------------------------------------------
+David Woodhouse (1):
+      KVM: x86/xen: Only write Xen hypercall page for guest writes to MSR
+
+Fred Griffoul (1):
+      KVM: x86: Update Xen TSC leaves during CPUID emulation
+
+Sean Christopherson (5):
+      KVM: x86/xen: Restrict hypercall MSR to unofficial synthetic range
+      KVM: x86/xen: Add an #ifdef'd helper to detect writes to Xen MSR
+      KVM: x86/xen: Consult kvm_xen_enabled when checking for Xen MSR writes
+      KVM: x86/xen: Bury xen_hvm_config behind CONFIG_KVM_XEN=y
+      KVM: x86/xen: Move kvm_xen_hvm_config field into kvm_xen
+
+ Documentation/virt/kvm/api.rst  |  4 ++++
+ arch/x86/include/asm/kvm_host.h |  4 ++--
+ arch/x86/include/uapi/asm/kvm.h |  3 +++
+ arch/x86/kvm/cpuid.c            | 16 +++++++++++++
+ arch/x86/kvm/x86.c              | 13 +++++++----
+ arch/x86/kvm/x86.h              |  1 +
+ arch/x86/kvm/xen.c              | 52 +++++++++++++++--------------------------
+ arch/x86/kvm/xen.h              | 30 ++++++++++++++++++++----
+ 8 files changed, 80 insertions(+), 43 deletions(-)
