@@ -1,36 +1,34 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D5B818A959;
-	Tue, 18 Mar 2025 02:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mailgw2.hygon.cn (mailgw.hygon.cn [110.188.70.11])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4937288DB
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 03:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=110.188.70.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742266737; cv=none; b=j3zixCxcXlDzGDdm48SHZrxTgtBjDv+wqc4lezyxxPiUyvnsD6wbfIScAKMBn471ND0lM2iA0vZrouOECRf9X7d8FoL8Q7xmnPndo7ZvY4nvoXX/7lpHX5Lu+W4fQqEYQ9NXcLLVGizjS59KHfg9h7KD2qe20JcalIFn+yVCgQY=
+	t=1742266831; cv=none; b=E53XlrOSiz0otJf4TPPeJFHs21o8SI5dj9sZw1Tx7vy5ZwPk6kBXwC9w4VzkIQI8rDEyqfxwu4ElwrJHhr9qniMqFRWgAIaFfdDcjbjWAgmgrgRTe/Ch14bxYXw8NFi98khsGZT+9MXf/ZjxElb40mMLCB00jZjhGiokc7zBDhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742266737; c=relaxed/simple;
-	bh=1++UtJ/x4fYcljqobaSvICMiESEAey2qNTq0v65tYIA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uyqe3rM8JfjRatAzAOGjXER4XWHGOIsuJ+1pwBvIfz8diDhxVmXrUpJbc2xN7dcBSpf6nrPbO28f35oMUy4j6hg2UCJNvqiE+XeGQJbauKiYNeaQKlyAQvOB0jCeHjn/1b4KECaavJqxL5oa8vGzl4pHefnBHHc9B0TEsijbOxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MoSynisg; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MoSynisg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=xip++
-	Y+wP8cdm9eHLHgn2+Hxo2dOyBCVc1sz06DsCjw=; b=MoSynisgKDhxtQDPgi0N4
-	6xCc6CxSrxkk2oZW3Z156rNWkqt2R0tPMc5SbcpNjY75X4Ti5TdR5ltKmOXTibob
-	8Amvr2uVfneRcuFpOI9Fg92RBlzZdK0BzW19nret4oMuDz/R6Vm34QKMlHIrIz+S
-	R8cbo1rATD0yOFApy9UKOc=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgCnb3td4dhn4C1QAA--.21105S4;
-	Tue, 18 Mar 2025 10:58:38 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: linux@dominikbrodowski.net,
-	haoxiang_li2024@163.com
-Cc: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH RESEND] pcmcia: fix a potential null pointer dereference in __iodyn_find_io_region()
-Date: Tue, 18 Mar 2025 10:58:36 +0800
-Message-Id: <20250318025836.1569313-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1742266831; c=relaxed/simple;
+	bh=sMuHI/5udK0bUmACHAo1M6NyFZ0i9E4D6J5zFj0uhpE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pDKvlZc/k2zbqofIuDwZLhOJ73SP/awWrjBXwWRRWteWo1Io/cUftEKGeKDg4XROeCGGWe/ySEVZBBvv4rc5ubOIDL5J7dKcpbjI2Fz6/ICTGzOhYjA37ft9ED540znyTAFXiGicttNOA1hWDp/TUxlswKmeCYne/UgY9SWkrw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=110.188.70.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
+	by mailgw2.hygon.cn (Postfix) with ESMTP id 5DAFC3004C93;
+	Tue, 18 Mar 2025 10:24:49 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp1.hygon.cn (Postfix) with ESMTPS id 363DA16E7;
+	Tue, 18 Mar 2025 10:27:30 +0800 (CST)
+Received: from jianyong.hygon.cn (172.19.22.175) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 18 Mar
+ 2025 10:27:33 +0800
+From: Jianyong Wu <wujianyong@hygon.cn>
+To: <mingo@redhat.com>, <peterz@infradead.org>
+CC: <vincent.guittot@linaro.org>, <wujianyong@hygon.cn>,
+	<jianyong.wu@outlook.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] SCHED: scatter nohz idle balance target cpus
+Date: Tue, 18 Mar 2025 02:23:58 +0000
+Message-ID: <20250318022358.195154-1-wujianyong@hygon.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,37 +36,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgCnb3td4dhn4C1QAA--.21105S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Gr4xKr1rur45Jr45Zw17trb_yoW3AFc_ur
-	10gryxGrWUtr4Ikw13trsavrySvrn5Wr1kuFn5t3Z3ur9F9w4SqFnxAr98W34xJryfAF1k
-	AryDJrnrCasxWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sR_Yii3UUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqAETbmfX849cAgABsH
+Content-Type: text/plain
+X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-Add check for the return value of pcmcia_make_resource()
-to prevent null pointer dereference.
+Currently, cpu selection logic for nohz idle balance lacks history info
+that leads to cpu0 is always chosen if it's in nohz cpu mask. It's not
+fair fot the tasks reside in numa node0. It's worse in the machine with
+large cpu number, nohz idle balance may be very heavy.
 
-Fixes: 49b1153adfe1 ("pcmcia: move all pcmcia_resource_ops providers into one module")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+To address this issue, adding a member to "nohz" to indicate who is
+chosen last time and choose next for this round of nohz idle balance.
+
+Signed-off-by: Jianyong Wu <wujianyong@hygon.cn>
 ---
- drivers/pcmcia/rsrc_iodyn.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/sched/fair.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pcmcia/rsrc_iodyn.c b/drivers/pcmcia/rsrc_iodyn.c
-index b04b16496b0c..2677b577c1f8 100644
---- a/drivers/pcmcia/rsrc_iodyn.c
-+++ b/drivers/pcmcia/rsrc_iodyn.c
-@@ -62,6 +62,9 @@ static struct resource *__iodyn_find_io_region(struct pcmcia_socket *s,
- 	unsigned long min = base;
- 	int ret;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c798d2795243..ba6930c79e25 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7197,6 +7197,7 @@ static struct {
+ 	atomic_t nr_cpus;
+ 	int has_blocked;		/* Idle CPUS has blocked load */
+ 	int needs_update;		/* Newly idle CPUs need their next_balance collated */
++	int last_cpu;			/* Last cpu chosen to do nohz idle balance */
+ 	unsigned long next_balance;     /* in jiffy units */
+ 	unsigned long next_blocked;	/* Next update of blocked load in jiffies */
+ } nohz ____cacheline_aligned;
+@@ -12266,13 +12267,15 @@ static inline int find_new_ilb(void)
  
-+	if (!res)
-+		return NULL;
-+
- 	data.mask = align - 1;
- 	data.offset = base & data.mask;
+ 	hk_mask = housekeeping_cpumask(HK_TYPE_KERNEL_NOISE);
  
+-	for_each_cpu_and(ilb_cpu, nohz.idle_cpus_mask, hk_mask) {
++	for_each_cpu_wrap(ilb_cpu, nohz.idle_cpus_mask, nohz.last_cpu + 1) {
+ 
+-		if (ilb_cpu == smp_processor_id())
++		if (ilb_cpu == smp_processor_id() || !cpumask_test_cpu(ilb_cpu, hk_mask))
+ 			continue;
+ 
+-		if (idle_cpu(ilb_cpu))
++		if (idle_cpu(ilb_cpu)) {
++			nohz.last_cpu = ilb_cpu;
+ 			return ilb_cpu;
++		}
+ 	}
+ 
+ 	return -1;
 -- 
-2.25.1
+2.43.0
 
