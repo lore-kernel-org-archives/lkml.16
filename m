@@ -1,143 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AC81A9B52
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 18:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4349120B807;
+	Tue, 18 Mar 2025 18:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742320945; cv=none; b=qGLzO8rt9MTjtHasekU6KsmDs1+p5/upkRbjWD0PW+IVPMIoejM9uAYe2pe+odj8XqiRtHZ3c7Bpy3hIqXlMF47rafz+l10rf3bVPs7Vage9be7Cr07LBCkTpt6AJHjnZ44lfh6ZSexKc1Wa6bsEAkUj/tIXcqrj4p20DwTHs4A=
+	t=1742320971; cv=none; b=SKCoRvw+M3wkklW6vosNokjc2SHXHXaW98iHQP6WWzBHAQbJ0/Ss1dklX7Le83qagwfOB+J0hBQ1NCjfY1g66fpVr7Uz3Ef60gByECmkGR50PoFAjAe2RG5HSlySUyvnfqpmV+CW+eAnD+cS4dZljhbxHPYrZBJWDjrmxM/e/kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742320945; c=relaxed/simple;
-	bh=BjcYVEKKpUzz2FsrjqEYaGy5upsDyp7dXMD/jUWpPEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G1pKloMDVM7SGQFmAXiRJyVpb+QGn4vOUYuPfhwQ6n4MMAEFV684niYuz6tKUwIaXpQo5B3u1PAjW4MtI35oSpA81ny+mxmVwYBfU+kkNCGFLArYdbxdFZ2aXYh296oMnCvq5L7jEQaJT6YxDrGE5301iZIl7jj4h1IbFz664Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZijYjm++; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZijYjm++"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742320942;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qlRKauU87C/lC5/9zx115U/gNR/bBnOd+yZH1lsjrlY=;
-	b=ZijYjm++7qeNKLUGlv2uh/rPc964Xqe94eQC8znHrH6UBa0u+LMGIizTBqh0eqPLtWm25s
-	jgEhD5blbxQxi7lW3xuxFsB6GhhtRekAcNlz9GbV6oU4W2JINpKk5vmkJcseok/pOI5bUw
-	Yq8NIdC3H3ur8D0DfhCczAx5Y7jjChE=
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
- [209.85.219.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-539-q_OPzyaTMVSxDOHEDt-caA-1; Tue, 18 Mar 2025 14:02:21 -0400
-X-MC-Unique: q_OPzyaTMVSxDOHEDt-caA-1
-X-Mimecast-MFC-AGG-ID: q_OPzyaTMVSxDOHEDt-caA_1742320941
-Received: by mail-yb1-f199.google.com with SMTP id 3f1490d57ef6-e3a0f608b88so7542804276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:02:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742320941; x=1742925741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qlRKauU87C/lC5/9zx115U/gNR/bBnOd+yZH1lsjrlY=;
-        b=XLBTK0Z4X1/9WgmxfJqhyDvqzyFPrbX81Yu0d8WE+cObrLJJ6vbNSF8GJT2kpuJfHv
-         e5WTKxXwPArOkcTega5YWZhS3y0QbArivZcHzwPIU+jXCn+blsBGtONHQutO+yYzDrhG
-         y2STNYxhI64O+vjnGw2a3IC+/ndTwa+0+5We7RDiYcR9RyBlFfsMbfvH/U5Nn4uzeTyN
-         vJ5n708Y3sDnjRLSDHwnV+MKO4bZNBS4Pm4DCp7Lvr88qQMUlRveu8m4M86Jlk4zlHQv
-         KlGAbVlG5VOqpYLCgGGaNQxaqsUXAEyz2QxhYM3dZPNX4ROiA7dlRLwU2k2WPyfXxKEF
-         DMgg==
-X-Gm-Message-State: AOJu0YzZzWFBeGBPum/78a1T62s7ii78H1NLMZ9OJvKSGAtpCGLPJmv/
-	X4UfXkmY4iQSRffsMuzKfcv/isIQ3Sy+IHJv8NX/gN6364WgxcZ3t1IxYzk2Q1/kgOxqE3gaplk
-	y6i3jD8vP7w5vWfRxZtMb5r7OVIlchXKNYsFyHqvlawucRJECIKqYWpDUmYiuUaM98DJOiwn+UV
-	l5PTYZHgk6qCoudRALtMzelsWN1SxtfkiK7nAx
-X-Gm-Gg: ASbGncva/L5d7gD+l35ME3GSrUIDQ1R1phd0n88I8sMIk8Qw4dKyAO+hBYtxE43qtyD
-	lLpBX1PudggSFQEP0b0qXWlu2ZSvkCRxljm2UZMugo7YnTZqRbpaL3Vt1TJ16n37+mM+XX38/eI
-	wpTzRrT80Cbg==
-X-Received: by 2002:a05:6902:230a:b0:e60:a2e2:9359 with SMTP id 3f1490d57ef6-e6678ef846fmr311884276.3.1742320939551;
-        Tue, 18 Mar 2025 11:02:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHf71qxvLWsxGimRT+uGjSq1Z0p53QdA8cl8alstSBpREqHbGhALnJb5uq3wRaeZHh2Md4lHGIZ8rqQbUzgZjw=
-X-Received: by 2002:a05:6902:230a:b0:e60:a2e2:9359 with SMTP id
- 3f1490d57ef6-e6678ef846fmr311841276.3.1742320939131; Tue, 18 Mar 2025
- 11:02:19 -0700 (PDT)
+	s=arc-20240116; t=1742320971; c=relaxed/simple;
+	bh=frcqzSdEkrz6G5vNfij4PscpNZKJYre4fCO5e8Anz4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LD1t00peDtU1ffFTN5vfC/IZw5FfydL3gGM0k5n0aSZAvsTta6MFG+bHv3cN5jA8iNDJcyAroPYSAbrTt/Q8KEHiKZTo1rvP1q3B9R/cYxixJ+d80TPcKo2Lt015kAuUWp1EgvYkywWQRfV5bO+9+iFHJ49FrFzH1X0Xsh4R31I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8D2B13D5;
+	Tue, 18 Mar 2025 11:02:52 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1715E3F694;
+	Tue, 18 Mar 2025 11:02:44 -0700 (PDT)
+Date: Tue, 18 Mar 2025 18:02:40 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Li Huafei <lihuafei1@huawei.com>
+Cc: namhyung@kernel.org, acme@kernel.org, leo.yan@linux.dev,
+	james.clark@linaro.org, mark.rutland@arm.com,
+	john.g.garry@oracle.com, will@kernel.org, irogers@google.com,
+	mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	kjain@linux.ibm.com, mhiramat@kernel.org,
+	atrajeev@linux.vnet.ibm.com, sesse@google.com,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/7] perf annotate: Advance the mem_ref check to
+ mov__parse()
+Message-ID: <20250318180240.GB2860028@e132581.arm.com>
+References: <20250314162137.528204-1-lihuafei1@huawei.com>
+ <20250314162137.528204-3-lihuafei1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317230403.79632-1-npache@redhat.com> <e2807c0f-c6db-4946-a731-009d34c2c72e@redhat.com>
-In-Reply-To: <e2807c0f-c6db-4946-a731-009d34c2c72e@redhat.com>
-From: Nico Pache <npache@redhat.com>
-Date: Tue, 18 Mar 2025 12:01:53 -0600
-X-Gm-Features: AQ5f1Jqld-DTVBJ5lnYhAbXgkaFBEnpnySW3WxHs_U8l1d99uleiybSQ_j4TBT0
-Message-ID: <CAA1CXcAr+rjZmzbzHSuvCDqyfi6wW1-32c6_3isZMSr-qM7DLw@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: Add "Unaccepted" meminfo entry
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kirill.shutemov@linux.intel.com, corbet@lwn.net, 
-	akpm@linux-foundation.org, surenb@google.com, pasha.tatashin@soleen.com, 
-	catalin.marinas@arm.com, jeffxu@chromium.org, andrii@kernel.org, 
-	xu.xin16@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314162137.528204-3-lihuafei1@huawei.com>
 
-On Tue, Mar 18, 2025 at 2:42=E2=80=AFAM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 18.03.25 00:04, Nico Pache wrote:
-> > Commit dcdfdd40fa82 ("mm: Add support for unaccepted memory") added a
-> > entry to meminfo but did not document it in the proc.rst file.
-> >
-> > This counter tracks the amount of "Unaccepted" guest memory for some
-> > Virtual Machine platforms, such as Intel TDX or AMD SEV-SNP.
-> >
-> > Add the missing entry in the documentation.
-> >
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >   Documentation/filesystems/proc.rst | 3 +++
-> >   1 file changed, 3 insertions(+)
-> >
-> > diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesys=
-tems/proc.rst
-> > index 09f0aed5a08b..8fcf19c31b18 100644
-> > --- a/Documentation/filesystems/proc.rst
-> > +++ b/Documentation/filesystems/proc.rst
-> > @@ -1060,6 +1060,7 @@ Example output. You may not have all of these fie=
-lds.
-> >       FilePmdMapped:         0 kB
-> >       CmaTotal:              0 kB
-> >       CmaFree:               0 kB
-> > +    Unaccepted:            0 kB
-> >       HugePages_Total:       0
-> >       HugePages_Free:        0
-> >       HugePages_Rsvd:        0
-> > @@ -1228,6 +1229,8 @@ CmaTotal
-> >                 Memory reserved for the Contiguous Memory Allocator (CM=
-A)
-> >   CmaFree
-> >                 Free remaining memory in the CMA reserves
-> > +Unaccepted
-> > +              Memory that has not been accepted by the guest
->
-> I was wondering if we could be clearer like
->
-> "Memory that has not been accepted. Especially in some confidential VM
-> implementations, memory must be accepted manually by the guest OS before
-> it can be used the first time."
-I actually grappled with the description for longer than I'd like to
-admit lol. I wanted to add more but *most* others left the description
-short-- so I tried to make it short too.
->
-> In any case
->
-> Acked-by: David Hildenbrand <david@redhat.com>
+On Sat, Mar 15, 2025 at 12:21:32AM +0800, Li Huafei wrote:
+> Advance the mem_ref check on x86 to mov__parse(), along with the
+> multi_reg check, to make annotate_get_insn_location() more concise.
+> 
+> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+> ---
+>  tools/perf/util/annotate.c | 9 ++++-----
+>  tools/perf/util/disasm.c   | 8 ++++++++
+>  2 files changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 31bb326b07a6..860ea6c72411 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -2442,18 +2442,17 @@ int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
+>  				continue;
+>  		}
+>  
+> +		op_loc->mem_ref = mem_ref;
+> +		op_loc->multi_regs = multi_regs;
+> +
+>  		/*
+>  		 * For powerpc, call get_powerpc_regs function which extracts the
+>  		 * required fields for op_loc, ie reg1, reg2, offset from the
+>  		 * raw instruction.
+>  		 */
+>  		if (arch__is(arch, "powerpc")) {
+> -			op_loc->mem_ref = mem_ref;
+> -			op_loc->multi_regs = multi_regs;
+>  			get_powerpc_regs(dl->raw.raw_insn, !i, op_loc);
+> -		} else if (strchr(insn_str, arch->objdump.memory_ref_char)) {
+> -			op_loc->mem_ref = true;
+> -			op_loc->multi_regs = multi_regs;
+> +		} else if (mem_ref) {
+>  			extract_reg_offset(arch, insn_str, op_loc);
+>  		} else {
+>  			char *s, *p = NULL;
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index 50c5c206b70e..d91526cff9df 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -607,6 +607,12 @@ static bool check_multi_regs(struct arch *arch, const char *op)
+>  	return count > 1;
+>  }
+>  
+> +/* Check whether the operand accesses memory. */
+> +static bool check_memory_ref(struct arch *arch, const char *op)
+> +{
+> +	return strchr(op, arch->objdump.memory_ref_char) != NULL;
+> +}
 
-Thanks!
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+This patch looks fine for me.
 
+However, I did not find the 'memory_ref_char' field is set for Arm64.
+Later patches even remove the condition checking for mem_ref() and
+unconditionally invoke extract_reg_offset().
+
+This is a logic change for me.  Shouldn't the register offset be
+extracted only for memory access instructions?
+
+
+>  static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms __maybe_unused,
+>  		struct disasm_line *dl __maybe_unused)
+>  {
+> @@ -635,6 +641,7 @@ static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_sy
+>  	if (ops->source.raw == NULL)
+>  		return -1;
+>  
+> +	ops->source.mem_ref = check_memory_ref(arch, ops->source.raw);
+>  	ops->source.multi_regs = check_multi_regs(arch, ops->source.raw);
+>  
+>  	target = skip_spaces(++s);
+> @@ -657,6 +664,7 @@ static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_sy
+>  	if (ops->target.raw == NULL)
+>  		goto out_free_source;
+>  
+> +	ops->target.mem_ref = check_memory_ref(arch, ops->target.raw);
+>  	ops->target.multi_regs = check_multi_regs(arch, ops->target.raw);
+>  
+>  	if (comment == NULL)
+> 
+> -- 
+> 2.25.1
+> 
