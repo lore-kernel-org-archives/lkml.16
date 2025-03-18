@@ -1,93 +1,151 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108B42557A;
-	Tue, 18 Mar 2025 12:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC05207A2A;
+	Tue, 18 Mar 2025 12:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742299984; cv=none; b=JHnMB/r7d4a04htQGmkPEnrHnmTXSYez0pHy0bnkoU2zPBeD2fWKZzS4n+1lps0ZloWbdQlv1dILI7AJMeaPedwjOiNcP+a32pXS8DeOF3TEgR1d56q2YoHMBEUhMJ8RGvD8QzX8MB8bt8HKs3wcJzzx/5RDevJCoiw/Ak7461U=
+	t=1742300011; cv=none; b=mm7DKkT2amWqvsn4uTgImc6Vdo+ITq4eJeVgpQ1B38dBoXs/0iK5cq+uGYWt7AMjHv+WNB3eL1vwmWza8sDy/051mJHGwaRyB5AaOpE3qmpcHK36Ny8n1MEONv0xPVXOV2wZ2mqxVURUqlXrLzLoJtyeiwXfi41Pc7l8WFeW+1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742299984; c=relaxed/simple;
-	bh=X7IPSY0ipoBbhtXtRwGSvqy5uwDoi8Tgu1K6QKtrhvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ceNAojBdYoli7sXBOO4n+M3gFjLNttqh9a/kLSnvmrimD831FWAh7HtQGaho2pEmqxXeoNxSmCCCkLSge8Ac1GfUMvz3EHZKb9BRAf0q3VxW1stnsS2dAwuDN6sirqtk+QaoKhF8k9PG5PuDihvPJUwDrTHmh+V4grNiip5qWA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=SFsPLfOm; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="SFsPLfOm"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 2756025B9B;
-	Tue, 18 Mar 2025 13:12:58 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id mODv3-V5KX9r; Tue, 18 Mar 2025 13:12:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1742299965; bh=X7IPSY0ipoBbhtXtRwGSvqy5uwDoi8Tgu1K6QKtrhvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=SFsPLfOmeIxPs7LyMzZAEch62HIUaKUL8ttPrcN5ekM4MygMKLqJgO3B3QgxcWL50
-	 CgM1nhfma+XOKNZ/c/foG3pcz1IkfrxsbQOGDuFE1M9VoK4tTlzszl+Hn6/MqmoKjX
-	 zILe/jfV9gjVbpFsDeoHkFlqP7FUh1HgsA+Wr08CjLK1BNaXwkDG+yu5Npkiq7xBRM
-	 ITDd6v8qvWZ5oxwLs0SKm72OYZ1vq3BRVx/ePO3xjqrP/7I08/zRo0OahwZwSb4l7N
-	 FcEAKIOBhIsRz1fZFUlsHECwM05utQdXwdpPaR6altO8ObWjl9BhiQYs0aVTU7RlLb
-	 ySKERRKUfGJQg==
-Date: Tue, 18 Mar 2025 12:12:33 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Chukun Pan <amadeus@jmu.edu.cn>
-Cc: Rob Herring <robh@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: rockchip: Add missing uart3 interrupt
- for RK3528
-Message-ID: <Z9ljMc96QoCNzzq3@pie>
-References: <20250318100010.2253408-1-amadeus@jmu.edu.cn>
- <20250318100010.2253408-2-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1742300011; c=relaxed/simple;
+	bh=EQPFuO/g+o3bHN94fQmctKpgZkdnPJbFaADp2g/Rb/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ncmsmakhr8ym4kSoUNr3tgMBxRJqD15h7JC8QU2kLWwvufnfE4Cwmaietae9DUpURKWhWVTiVLWiQrRLhEEb6dR2qeodX8P91jgNMCe7rYpbnjPZJbwFiBFHms3cocVbJrBtuvocmiInmB5IEyzMcEvoVw4FQzCzhUdcy//ss5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6AB524327D;
+	Tue, 18 Mar 2025 12:13:19 +0000 (UTC)
+Message-ID: <c5e174e4-4fce-4c7f-821a-cf3781becab4@ghiti.fr>
+Date: Tue, 18 Mar 2025 13:13:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318100010.2253408-2-amadeus@jmu.edu.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 7/8] riscv: Add parameter for skipping access speed
+ tests
+Content-Language: en-US
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ charlie@rivosinc.com, cleger@rivosinc.com,
+ Anup Patel <apatel@ventanamicro.com>, corbet@lwn.net
+References: <20250304120014.143628-10-ajones@ventanamicro.com>
+ <20250304120014.143628-17-ajones@ventanamicro.com>
+ <1b7e3d0f-0526-4afb-9f7a-2695e4166a9b@ghiti.fr>
+ <20250318-1b03e58fe508b077e5d38233@orel>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250318-1b03e58fe508b077e5d38233@orel>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedvgeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeejieeuudejieekveeutdeguefhkeduledugeevhefffeejudeggedufffgleeugfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemtggrvdehmeeifhdtkeemiegtfegsmeehtgeftdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemtggrvdehmeeifhdtkeemiegtfegsmeehtgeftddphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemtggrvdehmeeifhdtkeemiegtfegsmeehtgeftdgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghjohhnvghssehvvghnthgrnhgrmhhitghrohdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggur
+ dhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegthhgrrhhlihgvsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopegtlhgvghgvrhesrhhivhhoshhinhgtrdgtohhm
+X-GND-Sasl: alex@ghiti.fr
 
-On Tue, Mar 18, 2025 at 06:00:08PM +0800, Chukun Pan wrote:
-> The interrupt of uart3 node on rk3528 is missing, fix it.
-> 
-> Fixes: 7983e6c379a9 ("arm64: dts: rockchip: Add base DT for rk3528 SoC")
-> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 
-Reviewed-by: Yao Zi <ziyao@disroot.org>
+On 18/03/2025 09:48, Andrew Jones wrote:
+> On Mon, Mar 17, 2025 at 03:39:01PM +0100, Alexandre Ghiti wrote:
+>> Hi Drew,
+>>
+>> On 04/03/2025 13:00, Andrew Jones wrote:
+>>> Allow skipping scalar and vector unaligned access speed tests. This
+>>> is useful for testing alternative code paths and to skip the tests in
+>>> environments where they run too slowly. All CPUs must have the same
+>>> unaligned access speed.
+>> I'm not a big fan of the command line parameter, this is not where we should
+>> push uarch decisions because there could be many other in the future, the
+>> best solution to me should be in DT/ACPI and since the DT folks, according
+>> to Palmer, shut down this solution, it remains using an extension.
+>>
+>> I have been reading a bit about unaligned accesses. Zicclsm was described as
+>> "Even though mandated, misaligned loads and stores might execute extremely
+>> slowly. Standard software distributions should assume their existence only
+>> for correctness, not for performance." in rva20/22 but *not* in rva23. So
+>> what about using this "hole" and consider that a platform that *advertises*
+>> Zicclsm means its unaligned accesses are fast? After internal discussion, It
+>> actually does not make sense to advertise Zicclsm if the platform accesses
+>> are slow right?
+> This topic pops up every so often, including in yesterday's server
+> platform TG call. In that call, and, afaict, every other time it has
+> popped up, the result is to reiterate that ISA extensions never say
+> anything about performance. So, Zicclsm will never mean fast and we
+> won't likely be able to add any extension that does.
 
-Thanks for catching this, seems I messed uart3 up when cleaning the
-devicetree.
 
-> ---
->  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> index 26c3559d6a6d..7f1ffd6003f5 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> @@ -404,9 +404,10 @@ uart2: serial@ffa00000 {
->  
->  		uart3: serial@ffa08000 {
->  			compatible = "rockchip,rk3528-uart", "snps,dw-apb-uart";
-> +			reg = <0x0 0xffa08000 0x0 0x100>;
->  			clocks = <&cru SCLK_UART3>, <&cru PCLK_UART3>;
->  			clock-names = "baudclk", "apb_pclk";
-> -			reg = <0x0 0xffa08000 0x0 0x100>;
-> +			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
->  			reg-io-width = <4>;
->  			reg-shift = <2>;
->  			status = "disabled";
-> -- 
-> 2.25.1
-> 
+Ok, I should not say "fast". Usually, when an extension is advertised by 
+a platform, we don't question its speed (zicboz, zicbom...etc), we 
+simply use it and it's up to the vendor to benchmark its implementation 
+and act accordingly (i.e. do not set it in the isa string).
+
+
+>> arm64 for example considers that armv8 has fast unaligned accesses and can
+>> then enable HAVE_EFFICIENT_ALIGNED_ACCESS in the kernel, even though some
+>> uarchs are slow. Distros will very likely use rva23 as baseline so they will
+>> enable Zicclsm which would allow us to take advantage of this too, without
+>> this, we lose a lot of perf improvement in the kernel, see
+>> https://lore.kernel.org/lkml/20231225044207.3821-1-jszhang@kernel.org/.
+>>
+>> Or we could have a new named feature for this, even though it's weird to
+>> have a named feature which would basically  mean "Zicclsm is fast". We don't
+>> have, for example, a named feature to say "Zicboz is fast" but given the
+>> vague wording in the profile spec, maybe we can ask for one in that case?
+>>
+>> Sorry for the late review and for triggering this debate...
+> No problem, let's try to pick the best option. I'll try listing all the
+> options and there pros/cons.
+>
+> 1. Leave as is, which is to always probe
+>     pro: Nothing to do
+>     con: Not ideal in all environments
+>
+> 2. New DT/ACPI description
+>     pro: Describing whether or not misaligned accesses are implemented in
+>          HW (which presumably means fast) is something that should be done
+> 	in HW descriptions
+>     con: We'll need to live with probing until we can get the descriptions
+>          defined, which may be never if there's too much opposition
+>
+> 3. Command line
+>     pro: Easy and serves its purpose, which is to skip probing in the
+>          environments where probing is not desired
+>     con: Yet another command line option (which we may want to deprecate
+>          someday)
+>
+> 4. New ISA extension
+>     pro: Easy to add to HW descriptions
+>     con: Not likely to get it through ratification
+>
+> 5. New SBI FWFT feature
+>     pro: Probably easier to get through ratification than an ISA extension
+>     con: Instead of probing, kernel would have to ask SBI -- would that
+>          even be faster? Will all the environments that want to skip
+> 	probing even have a complete SBI?
+>
+> 6. ??
+
+
+So what about:
+
+7. New enum value describing the performance as "FORCED" or "HW" (or 
+anything better)
+     pro: We only use the existing Zicclsm
+     con: It's not clear that the accesses are fast but it basically 
+says to SW "don't think too much, I'm telling you that you can use it", 
+up to us to describe this correctly for users to understand.
+
+Thanks,
+
+Alex
+
+
+>
+> I'm voting for (3), which is why I posted this patchset, but I'm happy
+> to hear other votes or other proposals and discuss.
+>
+> Thanks,
+> drew
