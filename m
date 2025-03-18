@@ -1,85 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE0F366;
-	Tue, 18 Mar 2025 07:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C91C1DF742
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742284506; cv=none; b=cf5TSAAwqOywMZF+VMzIfS4ScDQTyHNqhw5bo0ocppSa24B1nX4dCLMgD1onZshpZxpHtKzqU5st2Odq5Xq35TdI2qJ6eoofTV9hCY25iGLtnzF+qdmF00XC2C2IJhbf5YVCdel6bJmlzFv4nui+ZNRoWXHqwwsOsQCSYQixtQw=
+	t=1742284555; cv=none; b=f5cbzbC5Wt9kRsVe/eNHMRC1tbQ47fIY4nHQbrUN4OduNJ+l09X34SKz+dtZjsZ4a596NHRUu21nwhotgamyD0HZqvgeE35zjOaHQ5QVpWqlt9GO9t/mEfHmfphG+plQJy4ysqbutPvswyj/LkOHj57B52dckPCpKM0qnS952Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742284506; c=relaxed/simple;
-	bh=D4iMGhhuzept8ULjmWzbTssS4mIzRCuc7D7FjZeefVM=;
+	s=arc-20240116; t=1742284555; c=relaxed/simple;
+	bh=N+vhNC0jMyh202u4Nzngi+/YScqdgkuR1GpsqEXNxTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LEl2t6RbsXyW5aY3HtrwmdhmaFxPS7rPX9zAM/uHuiPFCVkJa6kazSSXmP+x4mfoBKjXhcWcvWDb7v6YgCqTxdrHZ8wr/tWR+IzWyZ5TG9UtuO0jIlLxqYEvlTxUkZ5BurzDvfHXCkAD9kVjEAckUHcmOl+glkEgWm9lmuswovo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ay0EVHEd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RC+nKjvtnyMVJTXLk11tsRV/GEIl1Ny/H50GnDUrB+ttm+VRMqcu7RGaf2nc04Kk9rH6WNRhRTpKCNI5ksuFOCnJ1rwJ0JY4enbhqepxN5W0VQDbl9u0oYxKBZXR5qvZgAmJwx2ObLBzzbuT2EIv7xG+UcA5asezdWK4KVrSUkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai; spf=none smtp.mailfrom=furiosa.ai; dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b=J/7qt6eg; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=furiosa.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ay0EVHEd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA15C4CEDD;
-	Tue, 18 Mar 2025 07:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742284505;
-	bh=D4iMGhhuzept8ULjmWzbTssS4mIzRCuc7D7FjZeefVM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ay0EVHEdmwjg6EwY1oj4Rnz6tLXQXjlk5J28ENJcy0uroi2w7MMralceARzOD+9ie
-	 xELU4DOwu2ExqI/2U4vXcsaQgBiSjKxOetS2X8o7V2f49Smx23WhjQb+YzgYGBjgy1
-	 G7DmhvM+EbYb9NlLn2DKMozCCHkUsShuszHZ15i+RZGXVlkoZ6MuFIKRmoj8jMPxna
-	 7MPHOFk4r60Y6S5GQpYLWlx4fQ7JzD7+bGbh39ICLYM7WcEpr0diy2sXCgI7Yjx57A
-	 XMUnbEHzl+84wc92pB0fltjf93E/buBI+6AxyJ+YqrUWg4KMkDmrq9V1HfJMhlZDbz
-	 amry7CiVquiIg==
-Date: Tue, 18 Mar 2025 08:55:01 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linux.dev>, Kumar Gala <galak@codeaurora.org>, 
-	Andy Gross <agross@codeaurora.org>, "Ivan T. Ivanov" <ivan.ivanov@linaro.org>, 
-	Andy Gross <andy.gross@linaro.org>, Georgi Djakov <djakov@kernel.org>, 
-	David Heidelberg <david@ixit.cz>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/9] dt-bindings: soc: qcom,rpm: add missing
- clock-controller node
-Message-ID: <20250318-hungry-nimble-marten-dfb4db@krzk-bin>
-References: <20250317-fix-nexus-4-v1-0-655c52e2ad97@oss.qualcomm.com>
- <20250317-fix-nexus-4-v1-1-655c52e2ad97@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b="J/7qt6eg"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-225d66a4839so64612595ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:55:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=furiosa.ai; s=google; t=1742284553; x=1742889353; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AWqw/1YNqpsUiTasqbG4aqWj2NMVBNVnLiGA9t51nRU=;
+        b=J/7qt6egEm8xpLU14Nfwpl4aCF+YBSLKG2siRAZg+zTk9E6g8PpB0hbAyrNJjDJjlE
+         WFTRj0nXHIDOBY6t37Qb6IQgVk5QIBxDbSv9JIUqp+g2EWQbRhWf8UK1+vI95U2QC7x7
+         f4fWS1VkpAqm0veTij9zd1ghlaaSu/R0ont/k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742284553; x=1742889353;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AWqw/1YNqpsUiTasqbG4aqWj2NMVBNVnLiGA9t51nRU=;
+        b=mUyzWZjGLYKDZFKbgjbf2rtjvDYV39DWD4QGH9Q+lfhlYZSJmb1DzLyQm6KqrnPAAE
+         g5pY9vAN6zb5mmLNSPG6/lUUHCYB/SZqVPR6MM00t8BRAiP4i72qFX0xE3bzdSF9IpUl
+         6560FwpL8TB6ekQtBWrSUIjIIIWpAlq9zwfm3x73mWdL9gLx2opshknnMwbbjCHUEL59
+         qhSKIqcMXfXyuNzmSpvP90ZJa16EgHqjJs908OtXJBIw+mTzq4KoadctDWpd/Es8ygB0
+         vkuAZi+oL2iP9mWoPq4w0TPOH0RFeEwpaeq6FMUkn0EVkYIppmB+8ZMiqP7x4fCmWZ9l
+         A2pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUIgCOZUE6wREJGO7VoCaFPZk0woty1tP9++YeHiaUdu9N+N/ws2pp843FMkpRDEjWOLFFAZPy1dBid+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywQAnWitJfhprjQBpz/MFNNYr/NVJd6rMpRg0Gah8D2MfjhfII
+	FdEawYn2NJiAg5sWTG/AGcnUlCjr3MU0pG5zeUVPI7ERTq4NAOsCuyNeMIKSrHU=
+X-Gm-Gg: ASbGncu6a1sGui+ZEoG0V5Eqkkx/QwOqE0pY7RhRWyLW7fWZ1NmW1/HxYrf7uereHdI
+	0BYAbLUr5jD5lFMLnyS/Nt85z3VturPANJOsNxmo9zgkwvAjsVbEMjSaPdg+vUh23IJGT2GQ8Hp
+	PIBZoz049fjN4kkW3vpQkik9j3rhBxBkX4SZuZtdL29H8+VChA4SQLcUUH4QGCKHQILUrkjcecR
+	Ex94eYA47BUT9o9rK5TbwhIJULzFPd50iBz7eScdHIzPSNV0IBcAmVyVY27nfqk+EHf4X08I9we
+	p0tKJYajqcgWwiROFkAsLl3S4fYbPGbNcYQf4PRrkIVdLqKfHKanNr2kakFydc9ADJmAh48sdEC
+	4
+X-Google-Smtp-Source: AGHT+IGLSujM6CyWqFOh57z55RWygpWHWUeBFLDSwNoV+Z1DhMnmwP9sY/TJGMmFDBV3BlyR8M6DEQ==
+X-Received: by 2002:a05:6a00:4fc3:b0:736:b3cb:5db with SMTP id d2e1a72fcca58-73757a53663mr3191488b3a.11.1742284553335;
+        Tue, 18 Mar 2025 00:55:53 -0700 (PDT)
+Received: from sidongui-MacBookPro.local ([221.148.76.1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371169c3desm8846112b3a.155.2025.03.18.00.55.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 00:55:52 -0700 (PDT)
+Date: Tue, 18 Mar 2025 16:55:43 +0900
+From: Sidong Yang <sidong.yang@furiosa.ai>
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Subject: Re: [RFC PATCH v4 4/5] btrfs: ioctl: introduce
+ btrfs_uring_import_iovec()
+Message-ID: <Z9km_8ai2zq86JKI@sidongui-MacBookPro.local>
+References: <20250317135742.4331-1-sidong.yang@furiosa.ai>
+ <20250317135742.4331-5-sidong.yang@furiosa.ai>
+ <3a883e1e-d822-4c89-a7b0-f8802b8cc261@kernel.dk>
+ <Z9jTYWAvcWJNyaIN@sidongui-MacBookPro.local>
+ <566c700c-d3d5-4899-8de1-87092e76310c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250317-fix-nexus-4-v1-1-655c52e2ad97@oss.qualcomm.com>
+In-Reply-To: <566c700c-d3d5-4899-8de1-87092e76310c@gmail.com>
 
-On Mon, Mar 17, 2025 at 07:44:36PM +0200, Dmitry Baryshkov wrote:
-> On Qualcomm platforms in addition to regulators the RPM also provides
-> clocks via the child clock-controller node. Describe it properly in the
-> schema.
+On Tue, Mar 18, 2025 at 07:25:51AM +0000, Pavel Begunkov wrote:
+> On 3/18/25 01:58, Sidong Yang wrote:
+> > On Mon, Mar 17, 2025 at 09:40:05AM -0600, Jens Axboe wrote:
+> > > On 3/17/25 7:57 AM, Sidong Yang wrote:
+> > > > This patch introduces btrfs_uring_import_iovec(). In encoded read/write
+> > > > with uring cmd, it uses import_iovec without supporting fixed buffer.
+> > > > btrfs_using_import_iovec() could use fixed buffer if cmd flags has
+> > > > IORING_URING_CMD_FIXED.
+> > > > 
+> > > > Signed-off-by: Sidong Yang <sidong.yang@furiosa.ai>
+> > > > ---
+> > > >   fs/btrfs/ioctl.c | 32 ++++++++++++++++++++++++--------
+> > > >   1 file changed, 24 insertions(+), 8 deletions(-)
+> > > > 
+> > > > diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> > > > index 6c18bad53cd3..a7b52fd99059 100644
+> > > > --- a/fs/btrfs/ioctl.c
+> > > > +++ b/fs/btrfs/ioctl.c
+> > > > @@ -4802,6 +4802,28 @@ struct btrfs_uring_encoded_data {
+> > > >   	struct iov_iter iter;
+> > > >   };
+> > > > +static int btrfs_uring_import_iovec(struct io_uring_cmd *cmd,
+> > > > +				    unsigned int issue_flags, int rw)
+> > > > +{
+> > > > +	struct btrfs_uring_encoded_data *data =
+> > > > +		io_uring_cmd_get_async_data(cmd)->op_data;
+> > > > +	int ret;
+> > > > +
+> > > > +	if (cmd && (cmd->flags & IORING_URING_CMD_FIXED)) {
+> > > > +		data->iov = NULL;
+> > > > +		ret = io_uring_cmd_import_fixed_vec(cmd, data->args.iov,
+> > > > +						    data->args.iovcnt,
+> > > > +						    ITER_DEST, issue_flags,
+> > > > +						    &data->iter);
+> > > > +	} else {
+> > > > +		data->iov = data->iovstack;
+> > > > +		ret = import_iovec(rw, data->args.iov, data->args.iovcnt,
+> > > > +				   ARRAY_SIZE(data->iovstack), &data->iov,
+> > > > +				   &data->iter);
+> > > > +	}
+> > > > +	return ret;
+> > > > +}
+> > > 
+> > > How can 'cmd' be NULL here?
+> > 
+> > It seems that there is no checkes for 'cmd' before and it works same as before.
+> > But I think it's better to add a check in function start for safety.
 > 
-> Fixes: 6b42133d2189 ("dt-bindings: soc: qcom: convert non-smd RPM bindings to dt-schema")
+> The check goes two lines after you already dereferenced it, and it
+> seems to be called from io_uring cmd specific code. The null check
+> only adds to confusion.
 
-Fixes should rather point to original binding, because the conversion
-did not miss them. They were not there in the first place. Coversion
-should add them, to match existing DTS, but still the mistake is in the
-TXT binding.
+You mean 'cmd' already dereferenced for async_data. Is it okay to just delete code
+checking 'cmd' like below?
 
+if (cmd->flags & IORING_URING_CMD_FIXED) {
 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,rpm.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+Thanks,
+Sidong
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+> 
+> -- 
+> Pavel Begunkov
+> 
