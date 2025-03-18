@@ -1,105 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106B420CCE5
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 10:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4882F206F3F;
+	Tue, 18 Mar 2025 10:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742294448; cv=none; b=ZXdnX0fg6+UVKZGDfoYfVHHHJhSA94hiqswr8DCUvMs1F5qySP8kUxHa+uBHoXSEPETXEPH19IKE6xKkcwtObet+3n5bpmJADtoI72I043S3yM+10Gn/Te3tMUF4G4Z1MiFG3KUw9uyy8m+s3yrXKrmgrXNP9vZTjtQKgEJq6fo=
+	t=1742294492; cv=none; b=UZOK0WlCUSvmWB/3410qzNS3UElk9aT6rgWApxy9URgEjSz0A1IgoTAABkodNCSZCx7Jx1oweQUYnJBT9HqpKYf1BFGaJwchDEpXHTW2p31ZsbIsVklEKwhMiB91la0tJVie/EyC+pwUvAn1W6bf2Z937CUHYYBMBGdHtA661tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742294448; c=relaxed/simple;
-	bh=qZceJnRtvOAv9rMro0CCwHgopDRbxFnO5xByz8l5QYM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VdmybVtqhwFuVOpjf6IJtG9zfLoesQtyO8RwjgoAfWRgBVDIkYCenhrzV3tHBdwYLXsa3eRyRqPQ3srjc2j7H7Sa2Zh84qgRWiFqcWt/UyeCVHN302FROPktyyU1ioOtAjIift1Txo+Ur6ItLCFEDwsJaoUOMT+ZR/6U0xMY5bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDAXeKKy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742294492; c=relaxed/simple;
+	bh=aOjgQK7Ude80JfmikgpQVtFWBZtq85DlKjHiQLOg0YA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BbE5Ypsu2woMrXMo271K9nDzUFhWCML6I1q9u9dc4GxLVMGfxgZkneEWz2zYcomfC2pJcsc4TmULeFeBk0PBc3NyZHXFLLj7wgESKQQqYaS4ru9NIwdGmRaFhavjbSQievi3xzOe0bIQfyTmjcWytri9l97yf40F305USBH2br8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k099dM24; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDAXeKKy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37B7FC4AF09;
-	Tue, 18 Mar 2025 10:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742294447;
-	bh=qZceJnRtvOAv9rMro0CCwHgopDRbxFnO5xByz8l5QYM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=oDAXeKKyx/GcWKE1PYi2a00cQWzBDgZAaLfOy93Pa69FN1H54ugiwAl5+Ja52XHn2
-	 k54kM1r/OD7hediKoPE+s1tQKg8xItGlSbLEDrsTqo01eXsJ2Sq+QrGXa24qesl0mF
-	 DV6cY2Zyo9Yu2XkQhrfLq39tvHbsgKhPpmPKKE7OKBgKLTzButZ+UJ1IFm3pkJgJ98
-	 fXJRwni8G42CHvKUjd6Bcu1aWqvGlgz+FExYZf/zMk+4+4jR0K2vIDYYbf5SlTptVm
-	 KBRC9xJE+qSNJbWI2g7Ak0aU4zR1dfosXVq0FOlK2lQ6zMgBNsrFHMpcnKigRUl8RN
-	 emCIe2STozCsg==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Tue, 18 Mar 2025 11:40:12 +0100
-Subject: [PATCH v3 18/18] nvme-fc: do not reference lsrsp after failure
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k099dM24"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742294490; x=1773830490;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aOjgQK7Ude80JfmikgpQVtFWBZtq85DlKjHiQLOg0YA=;
+  b=k099dM24GWpYxTc9h2pE1Qgco0pMlLqbf0gmkEgmJ4jzv3/8UH8aziXQ
+   CTpHxIYrRINxodEMPVhxhlcFqJBsvHkzinWksFV0gZi1XJj/OgZPFQm5v
+   ExOGmgUNb98diniXo+zbtl61wv7RjzC/HwkwuxUp8eUkq67WyyNqcG3iz
+   ifzaioiAUWqpHW2/8gERY5RqQk9pWXI2Rc6QQjCZsrb/CkoYbOTAz73OX
+   awluvxCn8sruaVaGr0+eaCwVC8oYlPXJvfAC+SjBKLD+of7rfiDRPTUKW
+   ef7KSDDT8ncawlyv4N7m0w0ADjBDyX/ses8LDXkqsVO5+yH4Ws3HfWadU
+   w==;
+X-CSE-ConnectionGUID: JDYfnDXqQACrZ6Ikg0M6BQ==
+X-CSE-MsgGUID: +MynRS48QI+onKlTuoNQAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="47315403"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="47315403"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 03:41:30 -0700
+X-CSE-ConnectionGUID: euXp82s9S3yMC/+STDo4lA==
+X-CSE-MsgGUID: 3iwXdJFWQq+PDsarHJGZDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="159390807"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa001.jf.intel.com with ESMTP; 18 Mar 2025 03:41:27 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuUNw-000Dfn-1q;
+	Tue, 18 Mar 2025 10:41:24 +0000
+Date: Tue, 18 Mar 2025 18:41:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthias Fend <matthias.fend@emfend.at>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Matthias Fend <matthias.fend@emfend.at>,
+	bsp-development.geo@leica-geosystems.com
+Subject: Re: [PATCH v2 2/2] leds: tps6131x: add support for Texas Instruments
+ TPS6131X flash LED driver
+Message-ID: <202503181835.693ZAgp6-lkp@intel.com>
+References: <20250318-leds-tps6131x-v2-2-bc09c7a50b2e@emfend.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-nvmet-fcloop-v3-18-05fec0fc02f6@kernel.org>
-References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
-In-Reply-To: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
-To: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, 
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318-leds-tps6131x-v2-2-bc09c7a50b2e@emfend.at>
 
-The lsrsp object is maintained by the LLDD. The lifetime of the lsrsp
-object is implicit. Because there is no explicit cleanup/free call into
-the LLDD, it is not safe to assume after xml_rsp_fails, that the lsrsp
-is still valid. The LLDD could have freed the object already.
+Hi Matthias,
 
-With the recent changes how fcloop tracks the resources, this is the
-case. Thus don't access lsrsp after xml_rsp_fails.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
----
- drivers/nvme/host/fc.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+[auto build test WARNING on ffd294d346d185b70e28b1a28abe367bbfe53c04]
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index b9929a5a7f4e3f3a03953379aceb90f0c1a0b561..2c32ba9ee688d7a683bbbf8fc57a5f9b32b2ab8d 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -1410,9 +1410,8 @@ nvme_fc_xmt_disconnect_assoc(struct nvme_fc_ctrl *ctrl)
- }
- 
- static void
--nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
-+nvme_fc_xmt_ls_rsp_free(struct nvmefc_ls_rcv_op *lsop)
- {
--	struct nvmefc_ls_rcv_op *lsop = lsrsp->nvme_fc_private;
- 	struct nvme_fc_rport *rport = lsop->rport;
- 	struct nvme_fc_lport *lport = rport->lport;
- 	unsigned long flags;
-@@ -1433,6 +1432,14 @@ nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
- 	nvme_fc_rport_put(rport);
- }
- 
-+static void
-+nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
-+{
-+	struct nvmefc_ls_rcv_op *lsop = lsrsp->nvme_fc_private;
-+
-+	nvme_fc_xmt_ls_rsp_free(lsop);
-+}
-+
- static void
- nvme_fc_xmt_ls_rsp(struct nvmefc_ls_rcv_op *lsop)
- {
-@@ -1450,7 +1457,7 @@ nvme_fc_xmt_ls_rsp(struct nvmefc_ls_rcv_op *lsop)
- 		dev_warn(lport->dev,
- 			"LLDD rejected LS RSP xmt: LS %d status %d\n",
- 			w0->ls_cmd, ret);
--		nvme_fc_xmt_ls_rsp_done(lsop->lsrsp);
-+		nvme_fc_xmt_ls_rsp_free(lsop);
- 		return;
- 	}
- }
+url:    https://github.com/intel-lab-lkp/linux/commits/Matthias-Fend/dt-bindings-leds-add-Texas-Instruments-TPS6131x-flash-LED-driver/20250318-154318
+base:   ffd294d346d185b70e28b1a28abe367bbfe53c04
+patch link:    https://lore.kernel.org/r/20250318-leds-tps6131x-v2-2-bc09c7a50b2e%40emfend.at
+patch subject: [PATCH v2 2/2] leds: tps6131x: add support for Texas Instruments TPS6131X flash LED driver
+reproduce: (https://download.01.org/0day-ci/archive/20250318/202503181835.693ZAgp6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503181835.693ZAgp6-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   Warning: Documentation/hwmon/isl28022.rst references a file that doesn't exist: Documentation/devicetree/bindings/hwmon/isl,isl28022.yaml
+   Warning: Documentation/translations/ja_JP/SubmittingPatches references a file that doesn't exist: linux-2.6.12-vanilla/Documentation/dontdiff
+   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
+   Warning: lib/Kconfig.debug references a file that doesn't exist: Documentation/dev-tools/fault-injection/fault-injection.rst
+   Using alabaster theme
 
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
