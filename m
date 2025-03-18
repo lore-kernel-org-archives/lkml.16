@@ -1,82 +1,253 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C51920B1E5;
-	Tue, 18 Mar 2025 11:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70705204F80
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742298311; cv=none; b=WEUOBr6vuJfUYBHrOt6ugQVl49MqqHEH8e0SIL6SzNonrIbpORtDc3ZbqxAJxwjNCbD0fs/ljXb+M0r5RUVKjl4NZbgtXYkqoEKUHSyq42soWMxBww39R8BU8IKo6fYaS2BO86vVKz8OesCepEuLLumgA6M/ulnHm4j3L91MwiE=
+	t=1742298395; cv=none; b=E9XoobtvY/JoSi99+Z0c/CoOEEfqozZFwIB4vtXu/0cFtLtvCe7hoS/VgmCzJiWoONQofpQp8f5xeTnxXzT0Z36f9WDcx/kt/nWBiqIUDqz/Cg8vwgNvaCTywCtIoG7TwDJxLbRmIN920wHQvK4KXRzcag8ZOOMscmY/HaTVojk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742298311; c=relaxed/simple;
-	bh=djZLuLhFAbfsqGXJcK9K1IHjemzYE2KVEh60/L6iSm0=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=SGXI1P8rCgrex1WQEIe7Bwgoe/g22D0LFRG14Onota0IGmVnbzPP1UwpD74MeRe5pQSVMm6e9vwveQ5dEcPaKyTed3G00dCNRdnQSbkZJ9E6CMiRUIGflbb0cKPMlcidudnLPknsr+hiaKFsNUxDXKizrm/2Q0qrJgpPtaJ0hvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Ae/8YiK6; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1742298395; c=relaxed/simple;
+	bh=RVZ4oNZHRKsyA+Vc/2YPc3LAGOmEPF93TejIVjz5dcg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EeoknxJBoBBZmbwsxKrNZylQUA0Xpz1Ad4l9sRkmXupEuVbfphgJH8vKtPN+bIJUUAI5/n4c7+eKNarO1HEL1OnN2jaRs3H/GeKZD2WDd45F2/KE331aCBFcs0BJQ93WUM40HAlWna3gYosHfWceBDTLVpJpBEsOi0ieeJ3Ba94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+vbsHtj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Ae/8YiK6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1742298002; bh=DVBkZ4W/fcutXgYsWgqDMgU4Qx/25LxZQa3j0kVZ5cw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Ae/8YiK6TD3G6B6JhATj9WSdfxRvk9a6rpfaIIDCax11BGSn/XdBBktsOmNlsx/no
-	 hrWLgy9v3BWewBDAB4QAE47AWNuNnVsCK2reYWBHj3z1K0sY2CsvdABOk82dByq86x
-	 V8+caKIWPosDJi5TCWqe9PV4cfBqas5pr+wh0FBs=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
-	id 8663962D; Tue, 18 Mar 2025 19:33:38 +0800
-X-QQ-mid: xmsmtpt1742297618th3pjxkuq
-Message-ID: <tencent_AF7BAE6E502C3D6F989474EAE2ED6ACE600A@qq.com>
-X-QQ-XMAILINFO: MmuCfgcSBfHxAwVHfqzUH19oS9JZCF61tXLCvTwE3naizZ44lnfbpY1y7uVtz1
-	 A4DkITyEEzW2cWLISCm4ru5npCjznHUnRL5d+B87qS3+BzuAIxhyK6X0bZjyHnMrVnWmP9Q4ejdf
-	 uTSka+QzUhnw2ED3fQdsLxwxk3aF/9Y6uFNaP3UHoQ+LYnGx2V2AJXLz/ee9vKk/DfLOO9o7cKuQ
-	 xuuV4eqXoibKiTGv0Cl4mYnRvkK9MwYzohHy5uI29r+3k9yV3JTImv1lN7Y8RfdSYYAvqHJoLrKa
-	 0DuCId+ybwpST4C0XHgjDDZ5IpmVzuRpJPyjqDyKOoq9CwrW/Bye0TeXszVL/RrpUMTbuhBpyZ3M
-	 vttsXy5SZ+Yxh16td5oeUIR8/O+XZeiPD5SNKn8EB5SmaKrasDVsLpifSc36KFUCd6O7LUT7kXkk
-	 SZVMMgBVx8rAf4weKT/YX2BG9Xers+pu9BP3woV4a/61Ov7ZwCBrfahCKvZV2UkxIOEjNZ5eFWvB
-	 eRVHy0LC4j/rB1wm6mUhXEklaPImnwDg7gX1mtDaG7XLrQeN1sTjaVgW2eHeLCzGU+FQXDMdtTb5
-	 96f+V/puqoGPI5pfHbIfjHBCqHkAp5lB+YX6+f6z+wYM8+qIFky6ZXKgiA4x7F2trLvrA5Ae6hwy
-	 NrUbmWQX5onB33rv9A+Vrp5FfuxocvIi7riJZ2W2JxSnvTBcDZKNsXPcklpsMr+26qR8nWMJq7/P
-	 LmA8GsFrxQCz5wL1FHtQKM+OyXCzpfJn2pLOqdyLxOZxDJLQylj8x/TQeO/MDrWeUZB8RRygUwUs
-	 p6PE3fgclswS3ez1nKsu9houc+z0J9hOt0hHDo0FOgzJATbFYnivlm+dnJiCjlHxZsLRKVatiQP3
-	 lIahiUyKt0Zfaua5A63XE22rfz41uSsxYWR3lEAi4KB6tiBHcav1qLL5UA2MKSqg==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: dhowells@redhat.com
-Cc: brauner@kernel.org,
-	linux-afs@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+vbsHtj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1B31C4CEDD;
+	Tue, 18 Mar 2025 11:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742298395;
+	bh=RVZ4oNZHRKsyA+Vc/2YPc3LAGOmEPF93TejIVjz5dcg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=D+vbsHtj7g+ePNxCBw74gZETVj0v85SMcMG+Cn2aBLmNh/at33tHecIvhz0/ZkC9w
+	 nX21jpsfqNCQutkq5aVjgBVp/eJBzudvxJVx3vsorSAuj+xUf2nPcmRlagnOZzFz8o
+	 qafBL56j89uvgW3XWjiuRWYio12JIMH1tp/ExDfV6/t/lNzvPryq2X6Jpr8IwRSLrf
+	 yZMTk/6VG0ooepeFCcx89EJl3Q/IxE532C/m6Tz5O2wpx1cQgptaFaROpM5aDn4B/N
+	 UwI9hE2PuhHkvZTR2hYiGJ/vyfVWwXZ5wR8LSrs1Tfs2ieVxV/B/pdA8rXut5MfiF2
+	 gRlaYMcZbNL3w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tuVOy-00EesV-Fq;
+	Tue, 18 Mar 2025 11:46:32 +0000
+Date: Tue, 18 Mar 2025 11:46:31 +0000
+Message-ID: <86tt7qmui0.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	catalin.marinas@arm.com,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	marc.dionne@auristor.com,
-	syzbot+76a6f18e3af82e84f264@syzkaller.appspotmail.com
-Subject: Re: [PATCH] afs: Fix afs_atcell_get_link() to check if ws_cell is unset first
-Date: Tue, 18 Mar 2025 19:33:38 +0800
-X-OQ-MSGID: <20250318113337.3608413-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2481796.1742296819@warthog.procyon.org.uk>
-References: <2481796.1742296819@warthog.procyon.org.uk>
+	kernel-team@android.com,
+	rananta@google.com
+Subject: Re: [GIT PULL] arm64 fixes for -rc7
+In-Reply-To: <20250317160034.GA12267@willie-the-truck>
+References: <20250314160458.GA9438@willie-the-truck>
+	<CAHk-=wgiX0q0WCL+SFwVCYtG7JR3=2Rshse-5J3AO2Y4AgT7Jw@mail.gmail.com>
+	<20250317160034.GA12267@willie-the-truck>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: will@kernel.org, torvalds@linux-foundation.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@android.com, rananta@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, 18 Mar 2025 11:20:19 +0000, David Howells wrote:
-> Fix afs_atcell_get_link() to check if the workstation cell is unset before
-> doing the RCU pathwalk bit where we dereference that.
+On Mon, 17 Mar 2025 16:00:35 +0000,
+Will Deacon <will@kernel.org> wrote:
 > 
-> Fixes: 823869e1e616 ("afs: Fix afs_atcell_get_link() to handle RCU pathwalk")
-> Reported-by: syzbot+76a6f18e3af82e84f264@syzkaller.appspotmail.com
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Tested-by: syzbot+76a6f18e3af82e84f264@syzkaller.appspotmail.com
-> cc: Marc Dionne <marc.dionne@auristor.com>
-> cc: linux-afs@lists.infradead.org
-> cc: linux-fsdevel@vger.kernel.org
-My fix already sent, it is much earlier than your patch.
-https://lore.kernel.org/all/tencent_8CA5671E3C533638973237484A0874917609@qq.com/
+> Hi Linus,
+> 
+> On Fri, Mar 14, 2025 at 10:34:57AM -1000, Linus Torvalds wrote:
+> > On Fri, 14 Mar 2025 at 06:05, Will Deacon <will@kernel.org> wrote:
+> > >
+> > > Summary in the tag, but the main one is a horrible macro fix for our
+> > > TLB flushing code which resulted in over-invalidation on the MMU
+> > > notifier path.
+> > 
+> > From a quick look, that macro is still quite broken. Maybe not in ways
+> > that matter, but still...
+> > 
+> > In particular, the 'stride' argument is used multiple times, and
+> > without parentheses.
+> > 
+> > The 'lpa' argument is also used multiple times, and the input to that
+> > is typically something like kvm_lpa2_is_enabled(), so I think it
+> > potentially generates lots of pointless duplicate code with that
+> > BUG_ON() in system_supports_lpa2() -> cpus_have_final_cap().
+> > 
+> > Maybe the compiler figures it out. But that macro is bad, bad, bad.
+> > When it looks like a function, it should act like a function, and not
+> > evaluate its arguments multiple times.
+> > 
+> > The most immediate bug may have been fixed, but not the actual real
+> > horror of that thing.
+> 
+> Yes, the minimal fix for -rc7 avoids explicitly mutating the macro
+> arguments but we still have the multiple-evaluation problem you point
+> out above.
+> 
+> Ideally, this function would be rewritten as a 'static inline' but it
+> was moved from C code into a macro as part of 360839027a6e ("arm64: tlb:
+> Refactor the core flush algorithm of __flush_tlb_range") because we need
+> to propagate the 'op' argument down to the low-level asm where it's
+> stringified as part of the instruction mnemonic.
+> 
+> I'll have a crack at reworking things to take a 'const char *' instead,
+> but it won't be for 6.14 as it'll be reasonably invasive.
 
-BR,
-Edward
+I had a go at the 'const char *' approach, but couldn't make it work
+reliably without making it very invasive.
 
+I ended up with a slightly bigger hammer (see below) that survived
+booting on a test box and running a couple of VMs. I wouldn't trust it
+with anything more important than that though.
+
+	M.
+
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index 8104aee4f9a08..0ff635cf8abf5 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -393,45 +393,93 @@ static inline void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+  *    operations can only span an even number of pages. We save this for last to
+  *    ensure 64KB start alignment is maintained for the LPA2 case.
+  */
++typedef void (*tlbi_level_fn_t)(u64, int);
++typedef void (*tlbi_fn_t)(u64);
++
++#define __TLBI_LEVEL_FN(t, s)						\
++static inline void tlbi_level_##t##s(u64 addr, int level)		\
++{									\
++	__tlbi_level(t##s, addr, level);				\
++}									\
++static inline void tlbi_user_level_##t##s(u64 addr, int level)		\
++{									\
++	__tlbi_user_level(t##s, addr, level);				\
++}
++
++#define __TLBI_FN(t, s)							\
++static inline void tlbi_##t##s(u64 addr)				\
++{									\
++	__tlbi(t##s, addr);						\
++}									\
++static inline void tlbi_user_##t##s(u64 addr)				\
++{									\
++	__tlbi_user(t##s, addr);					\
++}
++
++#define TLBI_FNS(t)					\
++	__TLBI_FN(t, )					\
++	__TLBI_FN(t, is)				\
++	__TLBI_FN(r##t, )				\
++	__TLBI_FN(r##t, is)				\
++	__TLBI_LEVEL_FN(t, )				\
++	__TLBI_LEVEL_FN(t, is)				\
++	__TLBI_LEVEL_FN(r##t, )				\
++	__TLBI_LEVEL_FN(r##t, is)
++
++/* These are the TLBI instructions we allow for range operation */
++TLBI_FNS(ipas2e1)
++TLBI_FNS(vae1)
++TLBI_FNS(vale1)
++TLBI_FNS(vaale1)
++
++static __always_inline
++void __flush_tlb_range_by_op(tlbi_level_fn_t il, tlbi_level_fn_t iul,
++			     tlbi_fn_t ri, tlbi_fn_t riu,
++			     u64 start, u64 pages, int stride,
++			     u16 asid, int tlb_level,
++			     bool tlbi_user, bool lpa2)
++{
++	int num = 0;
++	int scale = 3;
++	int shift = lpa2 ? 16 : PAGE_SHIFT;
++	unsigned long addr;
++
++	while (pages > 0) {
++		if (!system_supports_tlb_range() ||
++		    pages == 1 ||
++		    (lpa2 && start != ALIGN(start, SZ_64K))) {
++			addr = __TLBI_VADDR(start, asid);
++			il(addr, tlb_level);
++			if (tlbi_user)
++				iul(addr, tlb_level);
++			start += stride;
++			pages -= stride >> PAGE_SHIFT;
++			continue;
++		}
++
++		num = __TLBI_RANGE_NUM(pages, scale);
++		if (num >= 0) {
++			addr = __TLBI_VADDR_RANGE(start >> shift, asid,
++						scale, num, tlb_level);
++			ri(addr);
++			if (tlbi_user)
++				riu(addr);
++			start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT;
++			pages -= __TLBI_RANGE_PAGES(num, scale);
++		}
++		scale--;
++	}
++}
++
+ #define __flush_tlb_range_op(op, start, pages, stride,			\
+-				asid, tlb_level, tlbi_user, lpa2)	\
+-do {									\
+-	typeof(start) __flush_start = start;				\
+-	typeof(pages) __flush_pages = pages;				\
+-	int num = 0;							\
+-	int scale = 3;							\
+-	int shift = lpa2 ? 16 : PAGE_SHIFT;				\
+-	unsigned long addr;						\
+-									\
+-	while (__flush_pages > 0) {					\
+-		if (!system_supports_tlb_range() ||			\
+-		    __flush_pages == 1 ||				\
+-		    (lpa2 && __flush_start != ALIGN(__flush_start, SZ_64K))) {	\
+-			addr = __TLBI_VADDR(__flush_start, asid);	\
+-			__tlbi_level(op, addr, tlb_level);		\
+-			if (tlbi_user)					\
+-				__tlbi_user_level(op, addr, tlb_level);	\
+-			__flush_start += stride;			\
+-			__flush_pages -= stride >> PAGE_SHIFT;		\
+-			continue;					\
+-		}							\
+-									\
+-		num = __TLBI_RANGE_NUM(__flush_pages, scale);		\
+-		if (num >= 0) {						\
+-			addr = __TLBI_VADDR_RANGE(__flush_start >> shift, asid, \
+-						scale, num, tlb_level);	\
+-			__tlbi(r##op, addr);				\
+-			if (tlbi_user)					\
+-				__tlbi_user(r##op, addr);		\
+-			__flush_start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT; \
+-			__flush_pages -= __TLBI_RANGE_PAGES(num, scale);\
+-		}							\
+-		scale--;						\
+-	}								\
+-} while (0)
++			     asid, tlb_level, tlbi_user, lpa2)		\
++	__flush_tlb_range_by_op(tlbi_level_##op, tlbi_user_level_##op,	\
++				tlbi_r##op, tlbi_user_r##op,		\
++				start, pages, stride, asid,		\
++				tlb_level, tlbi_user, lpa2)
+ 
+ #define __flush_s2_tlb_range_op(op, start, pages, stride, tlb_level) \
+-	__flush_tlb_range_op(op, start, pages, stride, 0, tlb_level, false, kvm_lpa2_is_enabled());
++	__flush_tlb_range_op(op, start, pages, stride, 0, tlb_level, false, kvm_lpa2_is_enabled())
+ 
+ static inline bool __flush_tlb_range_limit_excess(unsigned long start,
+ 		unsigned long end, unsigned long pages, unsigned long stride)
+
+-- 
+Without deviation from the norm, progress is not possible.
