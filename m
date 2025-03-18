@@ -1,88 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55177151990;
-	Tue, 18 Mar 2025 18:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E2D151990;
+	Tue, 18 Mar 2025 18:35:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742322923; cv=none; b=ImxufXiFPZLNJJasDvJ+RiVVvCHtjhSn5kc+jghrmYVLtksuOGU2xwQq4TPKdt5WbASafklqtBi/U3lVhs6Yo5zxPKhpfhxwniCuQ6QvlUKylG1gJsOutWH950Zeyv/LnDbi+PPuVWjxMe934z1k5FWO5rtzoPaXJoOhNiw1OOc=
+	t=1742322930; cv=none; b=l7vJemeTvcdCCUQVuekKCaei9h3FrggOsCjHyE7aM7HDERoxs+6An58YP73v5z/q11O4K9Al+RUoKQDvn4BwptMFPn2k5TY2dQfHhLzGgvMLcRnAFPjMhmrSi7ljnEKhMXV6gh8O1+xiRmdfM+eUNAq/O4Z4v3rzh0jl1pwp1vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742322923; c=relaxed/simple;
-	bh=X3qQ7diWgRtTE/GPFF6KcKC9OKrEHPSPv3sQnnKzuy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lpDsrUMZrrjj9Usj5hVySPavURqWM+JBS1fW1oz/o7M2I8jaKx73ZctlcGMVle4O9JD+Sccri2V2fm2YFH1bAeDhFC70ea32857fbUcyH3HWXwFNlvRowbN3zWFiTEQ/OCbZTmgklH2RHMk9RaRZ6fAQe7dVAQrYwOOh3ZteqtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6CA2C4CEEE;
-	Tue, 18 Mar 2025 18:35:20 +0000 (UTC)
-Date: Tue, 18 Mar 2025 18:35:18 +0000
-From: Mark Brown <broonie@debian.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Sowjanya Komatineni <skomatineni@nvidia.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>, linux-tegra@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rmikey@meta.com, kernel-team@meta.com
-Subject: Re: [PATCH 1/3] spi: tegra210-quad: use device_reset_optional()
- instead of device_reset()
-Message-ID: <7f2ac489-51e5-4798-a38a-a8b7ef3d4c83@sirena.org.uk>
-References: <20250317-tegra-v1-0-78474efc0386@debian.org>
- <20250317-tegra-v1-1-78474efc0386@debian.org>
- <22ffa8f5-6590-4602-853d-ceffed580f22@sirena.org.uk>
- <20250317-solemn-debonair-sambar-f04fa7@leitao>
- <f3e47d12-f6be-4bb5-b87b-84aa0037e1ef@sirena.org.uk>
- <20250318-cuddly-translucent-teal-e2ac2d@leitao>
- <6355bbb3-a4b1-4fdc-8a97-d81bc5e1cf65@sirena.org.uk>
- <20250318-furry-piquant-orca-da28c2@leitao>
- <47c40ec0-291c-4664-a66e-d76bd6360c0d@sirena.org.uk>
- <20250318-boisterous-adorable-chowchow-cea03b@leitao>
+	s=arc-20240116; t=1742322930; c=relaxed/simple;
+	bh=eXtDFdtsvd3ys0IxX4fueVDJob9FRzlLwnSqpAlUv94=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kjtyR15aMLeSGVFs6Mssr6/8clL8kqB5KpPjr0rIZq3yW8GhhbrqrNm94nEIkHkr30hBIe4k7TX3fjL9MftNSE69iVFp9l9aEFaBDTBoQemeXuSlRJlM39jH3u2lG/VsuNm7QJZr0FG2hQb4pygNtn2yf56jx4vdYI7kjfaLSLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMed8eiT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMed8eiT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661E7C4CEDD;
+	Tue, 18 Mar 2025 18:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742322929;
+	bh=eXtDFdtsvd3ys0IxX4fueVDJob9FRzlLwnSqpAlUv94=;
+	h=From:Subject:Date:To:Cc:From;
+	b=tMed8eiTGUTprLrgaGB9nK74sObuZ5CKlfRaA9ZOm5OJBl3KmakJBbw0fHblnbt6N
+	 YsIVdH3gCyMxe4L7fLTS/h5QtYvNO5HAWUZifaGhyrrWqENhtjZFnKmFejLoBNcY2g
+	 D2PI3JFaN+wqS/dRdPy4VHPlBO9D+/STirnsroLUsJdOZvXtfgVtXAe8sAars+UuzA
+	 zNbdYC4wNPAI6iyits39tpRG9L7UmIKIpVEjVcL6gitFAOudfWh0IKQcpUwmbH4t/R
+	 3jXWEyie+j95IgFM40UlKrIefk4A8fybO9RutlW3qiMYXMVUnsgmfvkaoPi9n8LNt7
+	 QMkCBwCCHYaTw==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Subject: [PATCH 0/8] More more dt-bindings fixes for arm64/qcom
+Date: Tue, 18 Mar 2025 19:35:13 +0100
+Message-Id: <20250318-topic-more_dt_bindings_fixes-v1-0-cb36882ea9cc@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="DrO3bviP+vpWDCqZ"
-Content-Disposition: inline
-In-Reply-To: <20250318-boisterous-adorable-chowchow-cea03b@leitao>
-X-Cookie: Swim at your own risk.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOG82WcC/x3MQQqDMBBG4avIrBswEVF7lVKCOn/iLJpIRkpBv
+ HuDy48H7yRFESg9m5MKvqKSU4V9NLRuc4owwtXkWte3nR3NkXdZzScXeD78IoklRfVBflBjuwF
+ sATcFprrYC+5QD6/3df0BbXOhM24AAAA=
+X-Change-ID: 20250318-topic-more_dt_bindings_fixes-137ed1ee29fd
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+ Marc Gonzalez <mgonzalez@freebox.fr>, Dmitry Baryshkov <lumag@kernel.org>, 
+ Arnaud Vrac <avrac@freebox.fr>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742322925; l=1421;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=eXtDFdtsvd3ys0IxX4fueVDJob9FRzlLwnSqpAlUv94=;
+ b=w+WsvPOSfIxhjf5POB85wf9CWtiQtw4DJZw9zjJmYDm44EBV4wSCsMpxqXi2A7EtN0yGJuxRj
+ pR5eZcpxebZAQMcor+5nxPxtOkuTRRcXh7ycH1J0LyazN0GIJiD5lK4
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
+Just some routine stuff, really
 
---DrO3bviP+vpWDCqZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+Konrad Dybcio (8):
+      dt-bindings: soc: qcom,rpmh-rsc: Limit power-domains requirement
+      arm64: dts: qcom: sc7180: Add specific APPS RSC compatible
+      arm64: dts: qcom: sdm845: Add specific APPS RSC compatible
+      arm64: dts: qcom: msm8998: Remove mdss_hdmi_phy phandle argument
+      arm64: dts: qcom: qcs615: Remove disallowed property from AOSS_QMP node
+      arm64: dts: qcom: msm8998-fxtec: Add QUSB2PHY VDD supply
+      arm64: dts: qcom: msm8998-mtp: Add QUSB2PHY VDD supply
+      arm64: dts: qcom: msm8998-yoshino: Add QUSB2PHY VDD supply
 
-On Tue, Mar 18, 2025 at 11:29:26AM -0700, Breno Leitao wrote:
-> On Tue, Mar 18, 2025 at 05:34:55PM +0000, Mark Brown wrote:
-> > On Tue, Mar 18, 2025 at 10:02:47AM -0700, Breno Leitao wrote:
+ .../bindings/soc/qcom/qcom,rpmh-rsc.yaml           | 24 ++++++++++++++++++++--
+ arch/arm64/boot/dts/qcom/msm8998-fxtec-pro1.dts    |  1 +
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dts           |  1 +
+ .../boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi |  1 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi              |  2 +-
+ arch/arm64/boot/dts/qcom/qcs615.dtsi               |  1 -
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               |  2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |  2 +-
+ 8 files changed, 28 insertions(+), 6 deletions(-)
+---
+base-commit: c4d4884b67802c41fd67399747165d65c770621a
+change-id: 20250318-topic-more_dt_bindings_fixes-137ed1ee29fd
 
-> > > Regarding this patchset, I understand that patch #1 is not ideal as
-> > > discussed above, what about patch 2 and 3?
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> > If I didn't say anything they're probably fine.
-
-> Do you want me to resend those two separately, or, is this thread
-> enough?
-
-Please resend.  I think I was anticipating a new version of this patch
-with a clarified changelog and some rework to tone down the logging
-that's generated similar to the other patches rather than just silently
-ignoring the lack of a reset controller.
-
---DrO3bviP+vpWDCqZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfZvOUACgkQJNaLcl1U
-h9An6gf6A4kPFqQZRrxqka8zwUNiFavNnEAO35P1Gd1Zu+9FfcFM1flvUmDUlBgD
-RRJaa/DyEShu63oxdkdj36hdQp8mCYKREKT8FfcsJzaQ4hjQdFyJ3PNbUUB01bdr
-T5szWlFM9bX/LCN76bazslzVv1yUeSBlhKFUCp1WpT1UWuqoXmyUsx6qz5+fL+8/
-07c8Pd838OKLNVtpIAHk8BSsRA0zpiS9M0l7lNAufbRZ2IElOli9iMSkHsHh1hos
-jilbIwR3ZTiHXMcPwKNLgXjkfpcWeLADYWv2DlMgQ55tCXzFJ4RxeurEXmfiiwL/
-a4AMIkpYCKnCI0k1hXwlldFZi1MEWQ==
-=LfO1
------END PGP SIGNATURE-----
-
---DrO3bviP+vpWDCqZ--
