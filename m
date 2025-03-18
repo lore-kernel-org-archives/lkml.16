@@ -1,377 +1,184 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3F71925BF
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF06D190485
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742264209; cv=none; b=NgU8Phuh2k2WYUnuLLWSzzLjQH5FJ5mu0HxiZixHvS454yJS2/kg/uR/sB4UnK3asX2D+1lSx9LVVjkMdflTPqAPj6b1bh02cw8fN6IqGK7cU01D+MAt4eJcWs1yXmIMGx5zRCFfuyIA/EnHsseJZp56EZTDIqpbZKP8tcqseuI=
+	t=1742264224; cv=none; b=dmjI9JYQNXKhvffISy204GYUm4p0x4VviX5LGnoelg6ovZ1u3cidZe06ZRpeedzdAmWq0VOnq31zuC/xN+T/FBcK3TeQtuQBkHxKV54Slrvc66Vgm4yLq3BWVJ2cEOywht1AA2W1oSDi071FH/Au+kiQhXUiny7npBtrCbLpIkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742264209; c=relaxed/simple;
-	bh=0R7wpe4t70kMt26O6Ulzmih0a+hzlv8OC3dBWVqaJIY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gVeQwKBnu7WS39+m8XHBdiIRvq4DJVToUt9xxQEVsYcEvz1orrlT8GBV/pFm306Fa0GtIqE53UWbbERKCTSVTqlqOVsbrMbS3w5mRVFN9DpZv2jjqpseXe5Ph3q6yIvhJ8Z0P0hTHBTyLEBiLlNAGItJrj1DubCeYQQtdtzfE0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=wGyfoNp9; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wGyfoNp9"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7A9392C05FF;
-	Tue, 18 Mar 2025 15:16:40 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1742264200;
-	bh=XFHuGMs0AAAxMq/ySkqlDXNd48utp1w7P8rpynmIcZE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=wGyfoNp9tIDsaXZ4GVmD3XvPNCdYbN8BTTGotqRBfGobDIgwCs1y4uTITJi3llEP3
-	 fi5aPT8yF2RxyNvSO92DSBglv0fIGFNWhEikp2yXIHonnajfze7ytOaipGYGtdTAlR
-	 MsRoc73nmxJzYPL8aU/ktUJ4WJbKbebQlVMi8/jjr7hjHJjEGAknDxHn5h3qx+1s9R
-	 GI5VbE2BOFMGOduYKkWXZCwlgX1PcSGwojX3Ex6i886Wjd7ZNMiEYDL+yEpjTNnNsn
-	 gKI+ACFWm6YhDfH78XTlWsjBom2zXnb3Suo0JopRurf+5HsmVShAv4i8bAKVZCscJ0
-	 afjkgFyIifp/A==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B67d8d7870000>; Tue, 18 Mar 2025 15:16:39 +1300
-Received: from aryans-dl.ws.atlnz.lc (aryans-dl.ws.atlnz.lc [10.33.22.38])
-	by pat.atlnz.lc (Postfix) with ESMTP id 3FF6A13ED56;
-	Tue, 18 Mar 2025 15:16:40 +1300 (NZDT)
-Received: by aryans-dl.ws.atlnz.lc (Postfix, from userid 1844)
-	id 40E012A1692; Tue, 18 Mar 2025 15:16:40 +1300 (NZDT)
-From: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
-To: Andi Shyti <andi.shyti@kernel.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>,
-	Robert Richter <rric@kernel.org>
-Subject: [PATCH v13 3/3] i2c: octeon: add block-mode i2c operations
-Date: Tue, 18 Mar 2025 15:16:31 +1300
-Message-ID: <20250318021632.2710792-4-aryan.srivastava@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250318021632.2710792-1-aryan.srivastava@alliedtelesis.co.nz>
-References: <20250318021632.2710792-1-aryan.srivastava@alliedtelesis.co.nz>
+	s=arc-20240116; t=1742264224; c=relaxed/simple;
+	bh=2SKftFk0Pyj02l/NBZNOxaCozHDZ/80dhyU0sDn26MM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=AP67BRt8xzmHA+1MnTPlGceNawf06zykqWQxaus66o9Oj1lITvz3w8EJrzuWZA8A0yRKmYVv8Q8bTUrfXtMCUrHhffB2QmyRcoQc99FVgbIJDrkjcOX6FCowOz4WoC8fhTkCx/X4q1qI5EGBax9qyTSGawPkpvdXBImYUA4rIBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b33f8a602so486462939f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 19:17:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742264222; x=1742869022;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cOQoXFWkVKfcGJwJOIuAg8+o9136Gz1KxbpP++aLK9I=;
+        b=QAdhyRo36ooVBJTw7JX+FN9GVeT3evd1UEfwT5EW/oQSF6tKaz5W4jogQlVI/FNXmj
+         X/mV07FUnNemsHdzcg6ZMnFpy7n+a2rUavBfJZkIhEXpE4b5sMTXZ5vsNoBTiorWxDiw
+         QygtZsXzh5LyDtbaWFishxxpkgEi1+bC8yK/LXxlKgG3RqCIEFkjFuH/rSC6IW1DnpXM
+         U2ZZ8NZ1CIcXDBtcRAYiQoBk4xq7pP4eNYlm8s6x7OIBib5JoSLT5BvJrv/JLvTa0UHD
+         EsdDkvkx6Icj+3koQRghyOw3y4AIsWop0pO0YSRU131ioOklZflp5ZOFwXpnLe8NvC5o
+         XEXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWqYT85SPrvzsTLXtGbULNMWKj8P+lHVBX+swiB6VjJQeBeKUt9GZej205nMfCTGNh6qcS8GE9VxEw5dW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy//zm+a12sQsNK1hB6VHwdn3hjVDsrPY1rHPA4A5FwjveMYmRb
+	6Nd072huVZrScP4Kvs8SOqzX4Dmue+u82wq90O0y0uO00x55V0gzPGFHvjET6PVqVx+QEb/8Vlp
+	Zv9XjaSc5gT3Gb7PHsP0+RWWw30TyVsgyswa8VfoW03aIVRxGLCEzVfM=
+X-Google-Smtp-Source: AGHT+IGinpj4DJ7oTOMwy7sHcbnEwTbOvX6b5X2uOyBw5WMAwyFizPWl4thvY7El3gI+hVKZus1lpAvrzBPFr983cTFJOZhDkYze
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=Ko7u2nWN c=1 sm=1 tr=0 ts=67d8d787 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=Vs1iUdzkB0EA:10 a=_GL4yYo1NFTcpOcRNZkA:9 a=3ZKOabzyN94A:10
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+X-Received: by 2002:a05:6e02:3686:b0:3d4:3ac3:4ca2 with SMTP id
+ e9e14a558f8ab-3d57ba0ed3fmr23921885ab.16.1742264221878; Mon, 17 Mar 2025
+ 19:17:01 -0700 (PDT)
+Date: Mon, 17 Mar 2025 19:17:01 -0700
+In-Reply-To: <tencent_4C2A333C9EDB1B264B0E1B0425E2BACBBB08@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67d8d79d.050a0220.2ca2c6.00c5.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] INFO: trying to register non-static key in cfg80211_dev_free
+From: syzbot <syzbot+aaf0488c83d1d5f4f029@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add functions to perform block read and write operations. This applies
-for cases where the requested operation is for >8 bytes of data.
+Hello,
 
-When not using the block mode transfer, the driver will attempt a series
-of 8 byte i2c operations until it reaches the desired total. For
-example, for a 40 byte request the driver will complete 5 separate
-transactions. This results in large transactions taking a significant
-amount of time to process.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+INFO: trying to register non-static key in cfg80211_dev_free
 
-Add block mode such that the driver can request larger transactions, up
-to 1024 bytes per transfer.
+RBP: 00007f4a52781090 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 0000000000000000 R14: 00007f4a51ba5fa0 R15: 00007fff60422438
+ </TASK>
+INFO: trying to register non-static key.
+The code is fine but needs lockdep annotation, or maybe
+you didn't initialize this object before use?
+turning off the locking correctness validator.
+CPU: 0 UID: 0 PID: 6546 Comm: syz.0.16 Not tainted 6.14.0-rc7-syzkaller-g4701f33a1070-dirty #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ assign_lock_key kernel/locking/lockdep.c:983 [inline]
+ register_lock_class+0xc39/0x1240 kernel/locking/lockdep.c:1297
+ __lock_acquire+0x135/0x3c40 kernel/locking/lockdep.c:5103
+ lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x3a/0x60 kernel/locking/spinlock.c:162
+ cfg80211_dev_free+0x2b1/0x420 net/wireless/core.c:1197
+ device_release+0xa1/0x240 drivers/base/core.c:2568
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1e4/0x5a0 lib/kobject.c:737
+ put_device+0x1f/0x30 drivers/base/core.c:3774
+ wiphy_free net/wireless/core.c:1226 [inline]
+ wiphy_new_nm+0x1c1f/0x2160 net/wireless/core.c:562
+ ieee80211_alloc_hw_nm+0x1b7a/0x2260 net/mac80211/main.c:835
+ mac80211_hwsim_new_radio+0x1d6/0x54e0 drivers/net/wireless/virtual/mac80211_hwsim.c:5185
+ hwsim_new_radio_nl+0xb42/0x12b0 drivers/net/wireless/virtual/mac80211_hwsim.c:6242
+ genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x16b/0x440 net/netlink/af_netlink.c:2533
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1312 [inline]
+ netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1338
+ netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1882
+ sock_sendmsg_nosec net/socket.c:718 [inline]
+ __sock_sendmsg net/socket.c:733 [inline]
+ ____sys_sendmsg+0xaaf/0xc90 net/socket.c:2573
+ ___sys_sendmsg+0x135/0x1e0 net/socket.c:2627
+ __sys_sendmsg+0x16e/0x220 net/socket.c:2659
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4a5198d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4a52781038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f4a51ba5fa0 RCX: 00007f4a5198d169
+RDX: 0000000020000000 RSI: 0000400000000140 RDI: 0000000000000003
+RBP: 00007f4a52781090 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 0000000000000000 R14: 00007f4a51ba5fa0 R15: 00007fff60422438
+ </TASK>
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 6546 at net/wireless/core.c:1198 cfg80211_dev_free+0x324/0x420 net/wireless/core.c:1198
+Modules linked in:
+CPU: 0 UID: 0 PID: 6546 Comm: syz.0.16 Not tainted 6.14.0-rc7-syzkaller-g4701f33a1070-dirty #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:cfg80211_dev_free+0x324/0x420 net/wireless/core.c:1198
+Code: 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 e6 00 00 00 49 8b 9d 08 0e 00 00 e9 2e fd ff ff e8 4d 10 11 f7 90 <0f> 0b 90 eb b2 4c 89 ff e8 bf 22 74 f7 e9 04 ff ff ff 48 89 ef e8
+RSP: 0018:ffffc90003fff1b8 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: 0000000000000293 RCX: ffffffff81972ead
+RDX: ffff88802d654880 RSI: ffffffff8aa8e213 RDI: ffffc90003fff128
+RBP: ffff88802c9d8e08 R08: 0000000000000001 R09: fffff520007ffe25
+R10: 0000000000000003 R11: 0000000000000001 R12: ffff88802c9d86a8
+R13: ffff88802c9d8000 R14: ffff88802c9d86b8 R15: 0000000000000000
+FS:  00007f4a527816c0(0000) GS:ffff88806a600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000400000001ac0 CR3: 0000000030dea000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ device_release+0xa1/0x240 drivers/base/core.c:2568
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1e4/0x5a0 lib/kobject.c:737
+ put_device+0x1f/0x30 drivers/base/core.c:3774
+ wiphy_free net/wireless/core.c:1226 [inline]
+ wiphy_new_nm+0x1c1f/0x2160 net/wireless/core.c:562
+ ieee80211_alloc_hw_nm+0x1b7a/0x2260 net/mac80211/main.c:835
+ mac80211_hwsim_new_radio+0x1d6/0x54e0 drivers/net/wireless/virtual/mac80211_hwsim.c:5185
+ hwsim_new_radio_nl+0xb42/0x12b0 drivers/net/wireless/virtual/mac80211_hwsim.c:6242
+ genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x16b/0x440 net/netlink/af_netlink.c:2533
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1312 [inline]
+ netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1338
+ netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1882
+ sock_sendmsg_nosec net/socket.c:718 [inline]
+ __sock_sendmsg net/socket.c:733 [inline]
+ ____sys_sendmsg+0xaaf/0xc90 net/socket.c:2573
+ ___sys_sendmsg+0x135/0x1e0 net/socket.c:2627
+ __sys_sendmsg+0x16e/0x220 net/socket.c:2659
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4a5198d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4a52781038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f4a51ba5fa0 RCX: 00007f4a5198d169
+RDX: 0000000020000000 RSI: 0000400000000140 RDI: 0000000000000003
+RBP: 00007f4a52781090 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 0000000000000000 R14: 00007f4a51ba5fa0 R15: 00007fff60422438
+ </TASK>
 
-Many aspects of the block mode transfer is common with the regular 8
-byte operations. Use generic functions for parts of the message
-construction and sending the message. The key difference for the block
-mode is the usage of separate FIFO buffer to store data.
 
-Write to this buffer in the case of a write (before command send).
-Read from this buffer in the case of a read (after command send).
+Tested on:
 
-Data is written into this buffer by placing data into the MSB onwards.
-This means the bottom 8 bits of the data will match the top 8 bits, and
-so on and so forth.
-
-Set specific bits in message for block mode, enable block mode transfers
-from global i2c management registers, construct message, send message,
-read or write from FIFO buffer as required.
-
-The block-mode transactions result in a significant speed increase in
-large i2c requests.
-
-Signed-off-by: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
----
- drivers/i2c/busses/i2c-octeon-core.c     | 160 ++++++++++++++++++++++-
- drivers/i2c/busses/i2c-octeon-core.h     |  13 +-
- drivers/i2c/busses/i2c-thunderx-pcidrv.c |   3 +
- 3 files changed, 169 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-octeon-core.c b/drivers/i2c/busses/i2=
-c-octeon-core.c
-index baf6b27f3752..c22a8f3d78d6 100644
---- a/drivers/i2c/busses/i2c-octeon-core.c
-+++ b/drivers/i2c/busses/i2c-octeon-core.c
-@@ -135,6 +135,32 @@ static void octeon_i2c_hlc_disable(struct octeon_i2c=
- *i2c)
- 	octeon_i2c_ctl_write(i2c, TWSI_CTL_ENAB);
- }
-=20
-+static void octeon_i2c_block_enable(struct octeon_i2c *i2c)
-+{
-+	u64 mode;
-+
-+	if (i2c->block_enabled || !OCTEON_REG_BLOCK_CTL(i2c))
-+		return;
-+
-+	i2c->block_enabled =3D true;
-+	mode =3D __raw_readq(i2c->twsi_base + OCTEON_REG_MODE(i2c));
-+	mode |=3D TWSX_MODE_BLOCK_MODE;
-+	octeon_i2c_writeq_flush(mode, i2c->twsi_base + OCTEON_REG_MODE(i2c));
-+}
-+
-+static void octeon_i2c_block_disable(struct octeon_i2c *i2c)
-+{
-+	u64 mode;
-+
-+	if (!i2c->block_enabled || !OCTEON_REG_BLOCK_CTL(i2c))
-+		return;
-+
-+	i2c->block_enabled =3D false;
-+	mode =3D __raw_readq(i2c->twsi_base + OCTEON_REG_MODE(i2c));
-+	mode &=3D ~TWSX_MODE_BLOCK_MODE;
-+	octeon_i2c_writeq_flush(mode, i2c->twsi_base + OCTEON_REG_MODE(i2c));
-+}
-+
- /**
-  * octeon_i2c_hlc_wait - wait for an HLC operation to complete
-  * @i2c: The struct octeon_i2c
-@@ -281,6 +307,7 @@ static int octeon_i2c_start(struct octeon_i2c *i2c)
- 	u8 stat;
-=20
- 	octeon_i2c_hlc_disable(i2c);
-+	octeon_i2c_block_disable(i2c);
-=20
- 	octeon_i2c_ctl_write(i2c, TWSI_CTL_ENAB | TWSI_CTL_STA);
- 	ret =3D octeon_i2c_wait(i2c);
-@@ -604,6 +631,119 @@ static int octeon_i2c_hlc_comp_write(struct octeon_=
-i2c *i2c, struct i2c_msg *msg
- 	return ret;
- }
-=20
-+/**
-+ * octeon_i2c_hlc_block_comp_read - high-level-controller composite bloc=
-k read
-+ * @i2c: The struct octeon_i2c
-+ * @msgs: msg[0] contains address, place read data into msg[1]
-+ *
-+ * i2c core command is constructed and written into the SW_TWSI register=
-.
-+ * The execution of the command will result in requested data being
-+ * placed into a FIFO buffer, ready to be read.
-+ * Used in the case where the i2c xfer is for greater than 8 bytes of re=
-ad data.
-+ *
-+ * Returns: 0 on success, otherwise a negative errno.
-+ */
-+static int octeon_i2c_hlc_block_comp_read(struct octeon_i2c *i2c, struct=
- i2c_msg *msgs)
-+{
-+	int ret;
-+	u16 len;
-+	u64 cmd;
-+
-+	octeon_i2c_hlc_enable(i2c);
-+	octeon_i2c_block_enable(i2c);
-+
-+	/* Write (size - 1) into block control register */
-+	len =3D msgs[1].len - 1;
-+	octeon_i2c_writeq_flush((u64)len, i2c->twsi_base + OCTEON_REG_BLOCK_CTL=
-(i2c));
-+
-+	/* Prepare core command */
-+	cmd =3D SW_TWSI_V | SW_TWSI_R | SW_TWSI_SOVR | SW_TWSI_OP_7_IA;
-+	cmd |=3D (u64)(msgs[0].addr & 0x7full) << SW_TWSI_ADDR_SHIFT;
-+
-+	/* Send core command */
-+	ret =3D octeon_i2c_hlc_read_cmd(i2c, msgs[0], cmd);
-+	if (ret)
-+		return ret;
-+
-+	cmd =3D __raw_readq(i2c->twsi_base + OCTEON_REG_SW_TWSI(i2c));
-+	if ((cmd & SW_TWSI_R) =3D=3D 0)
-+		return octeon_i2c_check_status(i2c, false);
-+
-+	/* read data in FIFO */
-+	octeon_i2c_writeq_flush(TWSX_BLOCK_STS_RESET_PTR,
-+				i2c->twsi_base + OCTEON_REG_BLOCK_STS(i2c));
-+	for (u16 i =3D 0; i <=3D len; i +=3D 8) {
-+		/* Byte-swap FIFO data and copy into msg buffer */
-+		__be64 rd =3D cpu_to_be64(__raw_readq(i2c->twsi_base + OCTEON_REG_BLOC=
-K_FIFO(i2c)));
-+
-+		memcpy(&msgs[1].buf[i], &rd, min(8, msgs[1].len - i));
-+	}
-+
-+	octeon_i2c_block_disable(i2c);
-+	return ret;
-+}
-+
-+/**
-+ * octeon_i2c_hlc_block_comp_write - high-level-controller composite blo=
-ck write
-+ * @i2c: The struct octeon_i2c
-+ * @msgs: msg[0] contains address, msg[1] contains data to be written
-+ *
-+ * i2c core command is constructed and write data is written into the FI=
-FO buffer.
-+ * The execution of the command will result in HW write, using the data =
-in FIFO.
-+ * Used in the case where the i2c xfer is for greater than 8 bytes of wr=
-ite data.
-+ *
-+ * Returns: 0 on success, otherwise a negative errno.
-+ */
-+static int octeon_i2c_hlc_block_comp_write(struct octeon_i2c *i2c, struc=
-t i2c_msg *msgs)
-+{
-+	bool set_ext;
-+	int ret;
-+	u16 len;
-+	u64 cmd, ext =3D 0;
-+
-+	octeon_i2c_hlc_enable(i2c);
-+	octeon_i2c_block_enable(i2c);
-+
-+	/* Write (size - 1) into block control register */
-+	len =3D msgs[1].len - 1;
-+	octeon_i2c_writeq_flush((u64)len, i2c->twsi_base + OCTEON_REG_BLOCK_CTL=
-(i2c));
-+
-+	/* Prepare core command */
-+	cmd =3D SW_TWSI_V | SW_TWSI_SOVR | SW_TWSI_OP_7_IA;
-+	cmd |=3D (u64)(msgs[0].addr & 0x7full) << SW_TWSI_ADDR_SHIFT;
-+
-+	/* Set parameters for extended message (if required) */
-+	set_ext =3D octeon_i2c_hlc_ext(i2c, msgs[0], &cmd, &ext);
-+
-+	/* Write msg into FIFO buffer */
-+	octeon_i2c_writeq_flush(TWSX_BLOCK_STS_RESET_PTR,
-+				i2c->twsi_base + OCTEON_REG_BLOCK_STS(i2c));
-+	for (u16 i =3D 0; i <=3D len; i +=3D 8) {
-+		__be64 buf =3D 0;
-+
-+		/* Copy 8 bytes or remaining bytes from message buffer */
-+		memcpy(&buf, &msgs[1].buf[i], min(8, msgs[1].len - i));
-+
-+		/* Byte-swap message data and write into FIFO */
-+		buf =3D cpu_to_be64(buf);
-+		octeon_i2c_writeq_flush((u64)buf, i2c->twsi_base + OCTEON_REG_BLOCK_FI=
-FO(i2c));
-+	}
-+	if (set_ext)
-+		octeon_i2c_writeq_flush(ext, i2c->twsi_base + OCTEON_REG_SW_TWSI_EXT(i=
-2c));
-+
-+	/* Send command to core (send data in FIFO) */
-+	ret =3D octeon_i2c_hlc_cmd_send(i2c, cmd);
-+	if (ret)
-+		return ret;
-+
-+	cmd =3D __raw_readq(i2c->twsi_base + OCTEON_REG_SW_TWSI(i2c));
-+	if ((cmd & SW_TWSI_R) =3D=3D 0)
-+		return octeon_i2c_check_status(i2c, false);
-+
-+	octeon_i2c_block_disable(i2c);
-+	return ret;
-+}
-+
- /**
-  * octeon_i2c_xfer - The driver's xfer function
-  * @adap: Pointer to the i2c_adapter structure
-@@ -630,13 +770,21 @@ int octeon_i2c_xfer(struct i2c_adapter *adap, struc=
-t i2c_msg *msgs, int num)
- 			if ((msgs[0].flags & I2C_M_RD) =3D=3D 0 &&
- 			    (msgs[1].flags & I2C_M_RECV_LEN) =3D=3D 0 &&
- 			    msgs[0].len > 0 && msgs[0].len <=3D 2 &&
--			    msgs[1].len > 0 && msgs[1].len <=3D 8 &&
-+			    msgs[1].len > 0 &&
- 			    msgs[0].addr =3D=3D msgs[1].addr) {
--				if (msgs[1].flags & I2C_M_RD)
--					ret =3D octeon_i2c_hlc_comp_read(i2c, msgs);
--				else
--					ret =3D octeon_i2c_hlc_comp_write(i2c, msgs);
--				goto out;
-+				if (msgs[1].len <=3D 8) {
-+					if (msgs[1].flags & I2C_M_RD)
-+						ret =3D octeon_i2c_hlc_comp_read(i2c, msgs);
-+					else
-+						ret =3D octeon_i2c_hlc_comp_write(i2c, msgs);
-+					goto out;
-+				} else if (msgs[1].len <=3D 1024 && OCTEON_REG_BLOCK_CTL(i2c)) {
-+					if (msgs[1].flags & I2C_M_RD)
-+						ret =3D octeon_i2c_hlc_block_comp_read(i2c, msgs);
-+					else
-+						ret =3D octeon_i2c_hlc_block_comp_write(i2c, msgs);
-+					goto out;
-+				}
- 			}
- 		}
- 	}
-diff --git a/drivers/i2c/busses/i2c-octeon-core.h b/drivers/i2c/busses/i2=
-c-octeon-core.h
-index b265e21189a1..fecaf7388182 100644
---- a/drivers/i2c/busses/i2c-octeon-core.h
-+++ b/drivers/i2c/busses/i2c-octeon-core.h
-@@ -96,18 +96,28 @@ struct octeon_i2c_reg_offset {
- 	unsigned int twsi_int;
- 	unsigned int sw_twsi_ext;
- 	unsigned int mode;
-+	unsigned int block_ctl;
-+	unsigned int block_sts;
-+	unsigned int block_fifo;
- };
-=20
- #define OCTEON_REG_SW_TWSI(x)		((x)->roff.sw_twsi)
- #define OCTEON_REG_TWSI_INT(x)		((x)->roff.twsi_int)
- #define OCTEON_REG_SW_TWSI_EXT(x)	((x)->roff.sw_twsi_ext)
- #define OCTEON_REG_MODE(x)		((x)->roff.mode)
-+#define OCTEON_REG_BLOCK_CTL(x)	(x->roff.block_ctl)
-+#define OCTEON_REG_BLOCK_STS(x)	(x->roff.block_sts)
-+#define OCTEON_REG_BLOCK_FIFO(x)	(x->roff.block_fifo)
-=20
--/* Set REFCLK_SRC and HS_MODE in TWSX_MODE register */
-+/* TWSX_MODE register */
- #define TWSX_MODE_REFCLK_SRC	BIT(4)
-+#define TWSX_MODE_BLOCK_MODE	BIT(2)
- #define TWSX_MODE_HS_MODE	BIT(0)
- #define TWSX_MODE_HS_MASK	(TWSX_MODE_REFCLK_SRC | TWSX_MODE_HS_MODE)
-=20
-+/* TWSX_BLOCK_STS register */
-+#define TWSX_BLOCK_STS_RESET_PTR	BIT(0)
-+
- /* Set BUS_MON_RST to reset bus monitor */
- #define BUS_MON_RST_MASK	BIT(3)
-=20
-@@ -123,6 +133,7 @@ struct octeon_i2c {
- 	void __iomem *twsi_base;
- 	struct device *dev;
- 	bool hlc_enabled;
-+	bool block_enabled;
- 	bool broken_irq_mode;
- 	bool broken_irq_check;
- 	void (*int_enable)(struct octeon_i2c *);
-diff --git a/drivers/i2c/busses/i2c-thunderx-pcidrv.c b/drivers/i2c/busse=
-s/i2c-thunderx-pcidrv.c
-index 143d012fa43e..0dc08cd97e8a 100644
---- a/drivers/i2c/busses/i2c-thunderx-pcidrv.c
-+++ b/drivers/i2c/busses/i2c-thunderx-pcidrv.c
-@@ -168,6 +168,9 @@ static int thunder_i2c_probe_pci(struct pci_dev *pdev=
-,
- 	i2c->roff.twsi_int =3D 0x1010;
- 	i2c->roff.sw_twsi_ext =3D 0x1018;
- 	i2c->roff.mode =3D 0x1038;
-+	i2c->roff.block_ctl =3D 0x1048;
-+	i2c->roff.block_sts =3D 0x1050;
-+	i2c->roff.block_fifo =3D 0x1058;
-=20
- 	i2c->dev =3D dev;
- 	pci_set_drvdata(pdev, i2c);
---=20
-2.47.1
+commit:         4701f33a Linux 6.14-rc7
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10466474580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2e330e9768b5b8ff
+dashboard link: https://syzkaller.appspot.com/bug?extid=aaf0488c83d1d5f4f029
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1684c44c580000
 
