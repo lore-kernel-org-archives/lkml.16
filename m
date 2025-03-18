@@ -1,206 +1,170 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988121CAA76
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C1A1B85D1;
+	Tue, 18 Mar 2025 07:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742281521; cv=none; b=qYw1voQdrBbAnhnqG7q3OCiIUhnh1t1JxMcd0Er93Pnt3hGSV5g4UM5aLkj+zVOMlo2yz857ScD+SOwM+YJygmvD4UQuAjCdkFWetnz25LOuk+ohRGTRpEAdFShymc12cDHzEiViogspR8LAUPIpg+nHbQg4Dwqj+ADmmQMJNdk=
+	t=1742281601; cv=none; b=Ag21KYEaKqpqK9/dFHP6n8kyK4Bbf0dhugUceAskzsveYWW50WqOyXwmX2Zk/ofDwzL8tVoXM3FargIVZf+i135EiFnih63Yfz0mRXMNjNEid4wre0qzdfhfysMnGSk4xWuNhbZd5kebLka8hI6E/SR81AdawMZLfIltWK/7rQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742281521; c=relaxed/simple;
-	bh=qCITQPsy2GwiPIzdSarHb8VqhI6wNrVYai8jeIXLBy4=;
+	s=arc-20240116; t=1742281601; c=relaxed/simple;
+	bh=zxqH3xeUbDQOKP/oSRJqCK2Og1nSrTKOo8t1/XelZSc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HvLcKSmcQFk7x7NAp8ZKTJA0XuQ7iKuzKxFqvxyrANXzxfQrKlIAWZLfPO6Id25YDJvt0Psj53eFEgNMvmk1q8hsmPbgHPIJbVg39VoYzFHd//Lh6rW6yCeJgmc2z33QLDdERwukUwgQytQxT7OmqPEa6kbPKuG2kEk+jjx+e2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bc7ovjbU; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=NYhr36Gh424gEci3OKUuPoAzdhyTwQbJdXRtgqYJnhDiE6IW7K3iPP4HKn78fV0IhDJjdapvnM1KUYdpAfk+ICdCAQuieoirveXIqctnDPDfcfPLWiC2gzdbeGjXB2lEi8YJw5VyYGQwfObLFAKopkmuQac7hoY3na1ZH12+HYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FBLvAm1f; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bc7ovjbU"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22423adf751so88269965ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:05:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742281519; x=1742886319; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QXrW4KZykPW/TaRaUNi4OeOrIqggNnusl7chmQ738FU=;
-        b=bc7ovjbULADqDVRybCDAqUjiTgCs3RSyvnUpbOt6AAUfPy1fV8kBtpTuMr2iYl05Kc
-         HxAcs8F1lI7kbpQSjv2QjkrLr+116wIveG5gmOQ1toQp49aVAQJ2Fce6noFDyrFSO1hg
-         5PAUteT0F8bHwTBNUuExQWcvs4EhLbN6GG99KPfWxZNlMwTV1gMLte3VJ7l8fMyyHgzV
-         842kkvY864eY24Ymu1Q7F8VwS/annjMHfeSdrdMDbcX97LjmR5Zm3KdZsVjZHIwg5nB1
-         Bul3vQpiyjfLAnCFMz7m4jJBbTfaPEVBK/XyY+GA7+rudEl71jebrkc1prJcI1wLRo1a
-         Umbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742281519; x=1742886319;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QXrW4KZykPW/TaRaUNi4OeOrIqggNnusl7chmQ738FU=;
-        b=mc6h6hx5RxNTVYcEGK1CWopZWFUG0gfdP2hEnFbN18SYW9FdlY0IsagPbJ8XwtC/8y
-         mWNMDMeK1EMMbZ1wi0TsJTMMoaYGszgVDXav/sz6DJv3zt2KpU2aeGSQei0J4C8t1fNL
-         hxwWYWbEWJXK96X/8mFNPh10sd8nIz6uWmS2hKas3E2UaOq8OVZJwKS6vlZcKx5/R/GD
-         0zaMsdJN7ch1jaweJ+XM4Oc7RjbtOXaRmJ3idtKxyW9cyMTlNCZAz8T2p9UYxmBQ5u1x
-         eRsNLxz7rXX/yOvWZcV5wp4ph6Hekgv/ALStWj2hZpMctX2U9D68JwDPoryme1LIqTK0
-         I/zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpifIQ8hghc8SuPBkaKTcsKzOppcF1tdIxau0VwNmih41LHS+cGslAcqlY1P0YNY5ZCmlHuTaBTQFF4rQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVtKJkt6sLRvNjeaK0VOR+LakPiENOCwaUtEkFwnhvoRA4ByTS
-	w2fugAaYVrmi8YebvVLWLHCnCRfFCeYmOZusbhSdftAqxiW4WT5E2TaffgdCFPXCjqBcwvNWrr0
-	=
-X-Gm-Gg: ASbGncvu41yPr64YeIRGv9yrUVvubH7JylIM+fukrlf62HGt0EfliQ6MklgCipJ5Er/
-	HLOcvl+vwtF72k01E0EjJTlWD6wJb4eQEzD2h4pjxHobThDBTCOcheh7E/6HRC3VdI/xJ93R6Wv
-	xk79XLjvOU3BPgn8lBYQy/F07q4ECMcHFahfJYlGjVmi54jK0C674ArGfeveJBu0Srtg9nbGKeD
-	ljqGFJBuT8KUjBddSPCiLc5xX8OvOkIv+BcNf4X6Zy6ZivZHmPmfo2cyHb2c/5Aneuxy2P6ny+2
-	YDURA2abWNyO2I2e8ZxiHMp1U988bphICAIIqfM1dWoVya42Sv817OF80IsO/buv33E=
-X-Google-Smtp-Source: AGHT+IFELZZGoPfT6STXRlYgerVWlkmXVkLlEhm+ubQe4itMsy4v3K90wtNq7bLioIFZ/Q1rMqJxyw==
-X-Received: by 2002:a17:902:f686:b0:221:7eae:163b with SMTP id d9443c01a7336-225e0b09706mr189606415ad.46.1742281518851;
-        Tue, 18 Mar 2025 00:05:18 -0700 (PDT)
-Received: from thinkpad ([120.56.195.170])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301536320e1sm7394697a91.36.2025.03.18.00.05.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 00:05:18 -0700 (PDT)
-Date: Tue, 18 Mar 2025 12:35:13 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Manish Pandey <quic_mapa@quicinc.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_nitirawa@quicinc.com,
-	quic_cang@quicinc.com, quic_nguyenb@quicinc.com
-Subject: Re: [PATCH V3 3/3] scsi: ufs-qcom: Add support for testbus registers
-Message-ID: <20250318070513.rhl5lfwdu7mo7xv6@thinkpad>
-References: <20250313051635.22073-1-quic_mapa@quicinc.com>
- <20250313051635.22073-4-quic_mapa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FBLvAm1f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742281600; x=1773817600;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zxqH3xeUbDQOKP/oSRJqCK2Og1nSrTKOo8t1/XelZSc=;
+  b=FBLvAm1f8HtQ95r47iH9soe4Dt3ZveiuyMvC2SVboTUu65BbCJIjm34I
+   xwqXPxumRg3SKgcbTM68jolIgVAqwLgmDYaN3/dcRWjOHepgZd4ziQssE
+   5tgJbNKpjIePXugZUi66kBy7ZWnD39ByWEYKnm7Mp5CEwcZKpqHR2VNHE
+   OLE1aB63IiDWZYxnWeCfoa/wfB4LqKyZn9KWz2xZc+DRIooF5BVqLL9iC
+   PC0v3GxNv2vERw1A8L1IP8jxm3RVYp3Cgi2z/bjHg5i3vpohj0H0aC3hc
+   pkSQFpA5DDxGV7rXaOex7K0+BqmGCidswPyq7omGkbF8S+tp1XpgOZIqo
+   w==;
+X-CSE-ConnectionGUID: 5+JIyEVlRtmhTxXIccyekQ==
+X-CSE-MsgGUID: coZDMVDXQsimmrrqsB9IBQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43574139"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="43574139"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 00:06:39 -0700
+X-CSE-ConnectionGUID: 2KW5WRaCT8O5mE4K6gyaAw==
+X-CSE-MsgGUID: Flmk+8nlQN+om6CToQQJBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="127274825"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 18 Mar 2025 00:06:37 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuR22-000DUq-1U;
+	Tue, 18 Mar 2025 07:06:34 +0000
+Date: Tue, 18 Mar 2025 15:05:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: marius.cristea@microchip.com, jic23@kernel.org, lars@metafoo.de,
+	robh@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, krzk+dt@kernel.org, conor+dt@kernel.org,
+	oskar.andero@gmail.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	marius.cristea@microchip.com
+Subject: Re: [PATCH v2 2/2] iio: adc: adding support for PAC194X
+Message-ID: <202503181451.vybqC7U2-lkp@intel.com>
+References: <20250317090803.30003-3-marius.cristea@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313051635.22073-4-quic_mapa@quicinc.com>
+In-Reply-To: <20250317090803.30003-3-marius.cristea@microchip.com>
 
-On Thu, Mar 13, 2025 at 10:46:35AM +0530, Manish Pandey wrote:
-> This patch introduces support for dumping testbus registers,
-> enhancing the debugging capabilities for UFS-QCOM drivers.
-> 
+Hi,
 
-Same comment as patch 1.
+kernel test robot noticed the following build warnings:
 
-> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
-> ---
-> Changes in v3:
-> - Annotated the 'testbus' declaration with __free.
-> - Converted the switch-statements into an array lookup.
-> - Introduced struct testbus_info{} for handling testbus switch-statements to an array lookup.
-> Changes in v2:
-> - Rebased patchsets.
-> - Link to v1: https://lore.kernel.org/linux-arm-msm/20241025055054.23170-1-quic_mapa@quicinc.com/
-> 
-> ---
->  drivers/ufs/host/ufs-qcom.c | 53 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 52 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-> index fb9da04c0d35..c32b1268d299 100644
-> --- a/drivers/ufs/host/ufs-qcom.c
-> +++ b/drivers/ufs/host/ufs-qcom.c
-> @@ -17,6 +17,7 @@
->  #include <linux/time.h>
->  #include <linux/unaligned.h>
->  #include <linux/units.h>
-> +#include <linux/cleanup.h>
+[auto build test WARNING on 577a66e2e634f712384c57a98f504c44ea4b47da]
 
-Sort includes alphabetically.
+url:    https://github.com/intel-lab-lkp/linux/commits/marius-cristea-microchip-com/dt-bindings-iio-adc-adding-support-for-PAC194X/20250317-171150
+base:   577a66e2e634f712384c57a98f504c44ea4b47da
+patch link:    https://lore.kernel.org/r/20250317090803.30003-3-marius.cristea%40microchip.com
+patch subject: [PATCH v2 2/2] iio: adc: adding support for PAC194X
+config: sparc-randconfig-r073-20250318 (https://download.01.org/0day-ci/archive/20250318/202503181451.vybqC7U2-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250318/202503181451.vybqC7U2-lkp@intel.com/reproduce)
 
->  
->  #include <soc/qcom/ice.h>
->  
-> @@ -98,6 +99,24 @@ static const struct __ufs_qcom_bw_table {
->  	[MODE_MAX][0][0]		    = { 7643136,	819200 },
->  };
->  
-> +static const struct {
-> +	int nminor;
-> +	char *prefix;
-> +} testbus_info[TSTBUS_MAX] = {
-> +	[TSTBUS_UAWM]     = {32, "TSTBUS_UAWM "},
-> +	[TSTBUS_UARM]     = {32, "TSTBUS_UARM "},
-> +	[TSTBUS_TXUC]     = {32, "TSTBUS_TXUC "},
-> +	[TSTBUS_RXUC]     = {32, "TSTBUS_RXUC "},
-> +	[TSTBUS_DFC]      = {32, "TSTBUS_DFC "},
-> +	[TSTBUS_TRLUT]    = {32, "TSTBUS_TRLUT "},
-> +	[TSTBUS_TMRLUT]   = {32, "TSTBUS_TMRLUT "},
-> +	[TSTBUS_OCSC]     = {32, "TSTBUS_OCSC "},
-> +	[TSTBUS_UTP_HCI]  = {32, "TSTBUS_UTP_HCI "},
-> +	[TSTBUS_COMBINED] = {32, "TSTBUS_COMBINED "},
-> +	[TSTBUS_WRAPPER]  = {32, "TSTBUS_WRAPPER "},
-> +	[TSTBUS_UNIPRO]   = {256, "TSTBUS_UNIPRO "}
-> +};
-> +
->  static void ufs_qcom_get_default_testbus_cfg(struct ufs_qcom_host *host);
->  static int ufs_qcom_set_core_clk_ctrl(struct ufs_hba *hba, unsigned long freq);
->  
-> @@ -1566,6 +1585,33 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
->  	return 0;
->  }
->  
-> +static void ufs_qcom_dump_testbus(struct ufs_hba *hba)
-> +{
-> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> +	int i, j, nminor = 0, testbus_len = 0;
-> +	u32 *testbus __free(kfree) = NULL;
-> +	char *prefix;
-> +
-> +	testbus = kmalloc(256 * sizeof(u32), GFP_KERNEL);
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503181451.vybqC7U2-lkp@intel.com/
 
-Use kmalloc_array().
+All warnings (new ones prefixed by >>):
 
-> +	if (!testbus)
-> +		return;
-> +
-> +	for (j = 0; j < TSTBUS_MAX; j++) {
-> +		nminor = testbus_info[j].nminor;
-> +		prefix = testbus_info[j].prefix;
-> +		host->testbus.select_major = j;
-> +		testbus_len = nminor * sizeof(u32);
-> +		for (i = 0; i < nminor; i++) {
-> +			host->testbus.select_minor = i;
-> +			ufs_qcom_testbus_config(host);
-> +			testbus[i] = ufshcd_readl(hba, UFS_TEST_BUS);
-> +			usleep_range(100, 200);
+>> drivers/iio/adc/pac1944.c:614: warning: Function parameter or struct member 'active_channels_mask' not described in 'pac1944_chip_info'
 
-Why this delay is required?
 
-> +		}
-> +		print_hex_dump(KERN_ERR, prefix, DUMP_PREFIX_OFFSET,
-> +				16, 4, testbus, testbus_len, false);
-> +	}
-> +}
-> +
->  static void ufs_qcom_dump_mcq_hci_regs(struct ufs_hba *hba)
->  {
->  	/* sleep intermittently to prevent CPU hog during data dumps. */
-> @@ -1680,9 +1726,14 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
->  
->  	/* ensure below dumps occur only in task context due to blocking calls. */
->  	if (in_task()) {
-> -		/* Dump MCQ Host Vendor Specific Registers */
-> +		/* dump MCQ Host Vendor Specific Registers */
+vim +614 drivers/iio/adc/pac1944.c
 
-Spurious change.
-
->  		if (hba->mcq_enabled)
->  			ufs_qcom_dump_mcq_hci_regs(hba);
-> +
-> +		/* sleep a bit intermittently as we are dumping too much data */
-> +		ufshcd_dump_regs(hba, UFS_TEST_BUS, 4, "UFS_TEST_BUS ");
-> +		usleep_range(1000, 1100);
-
-Same comment as previous patch. Use cond_resched().
-
-- Mani
+   546	
+   547	/**
+   548	 * struct pac1944_chip_info - chip configuration
+   549	 * @channels: array of values, true means that channel is active
+   550	 * @iio_info: pointer to iio_info structure
+   551	 * @client: a pointer to the i2c client associated with the device
+   552	 * @lock: lock to prevent concurrent reads/writes
+   553	 * @work_chip_rfsh: chip refresh workqueue implementation
+   554	 * @phys_channels: number of physical channels for the device
+   555	 * @active_channels: array of values, true means that channel is active
+   556	 * @chip_variant: stores the type of the device
+   557	 * @chip_revision: store the silicon revision version of the device
+   558	 * @shunts: array of values, shunt resistor values
+   559	 * @chip_reg_data: pointer to structure, containing data from the device registers
+   560	 * @sample_rate_value: sampling frequency
+   561	 * @labels: array of string, name of each channel
+   562	 * @is_pac195x_family: true if device is part of the PAC195x family
+   563	 * @sampling_mode: sampling mode used by the device
+   564	 * @num_enabled_channels: count of how many chip channels are currently enabled
+   565	 * @slow_alert1: snapshot of slow/alert register
+   566	 * @gpio_alert2: snapshot of gpio/alert register
+   567	 * @acc_fullness: snapshot of accumulator fullness limit register
+   568	 * @overcurrent: array of values, overcurrent limit
+   569	 * @undercurrent: array of values, undercurrent limit
+   570	 * @overpower: array of values, overpower limit
+   571	 * @overvoltage:  array of values, overvoltage limit
+   572	 * @undervoltage: array of values, undervoltage limit
+   573	 * @oc_limit_nsamples: number of consecutive samples exceeding the overcurrent limit
+   574	 * @uc_limit_nsamples: number of consecutive samples exceeding the undercurrent limit
+   575	 * @op_limit_nsamples: number of consecutive samples exceeding the overpower limit
+   576	 * @ov_limit_nsamples: number of consecutive samples exceeding the overvoltage limit
+   577	 * @uv_limit_nsamples: number of consecutive samples exceeding the undervoltage limit
+   578	 * @alert_enable: snapshot of alert enable register
+   579	 * @enable_acc: array of values, true means that accumulation channel is measured
+   580	 */
+   581	struct pac1944_chip_info {
+   582		const struct iio_chan_spec  *channels;
+   583		struct iio_info		iio_info;
+   584		struct i2c_client	*client;
+   585		struct mutex		lock; /* lock to prevent concurrent reads/writes */
+   586		struct delayed_work	work_chip_rfsh;
+   587		u8		phys_channels;
+   588		bool		active_channels[PAC1944_MAX_CH];
+   589		unsigned long	active_channels_mask;
+   590		u8		chip_variant;
+   591		u8		chip_revision;
+   592		u32		shunts[PAC1944_MAX_CH];
+   593		struct reg_data chip_reg_data;
+   594		s32		sample_rate_value;
+   595		char		*labels[PAC1944_MAX_CH];
+   596		bool		is_pac195x_family;
+   597		u8		sampling_mode;
+   598		u8		num_enabled_channels;
+   599		u32		slow_alert1;
+   600		u32		gpio_alert2;
+   601		u16		acc_fullness;
+   602		u16		overcurrent[PAC1944_MAX_CH];
+   603		u16		undercurrent[PAC1944_MAX_CH];
+   604		u32		overpower[PAC1944_MAX_CH];
+   605		u16		overvoltage[PAC1944_MAX_CH];
+   606		u16		undervoltage[PAC1944_MAX_CH];
+   607		u8		oc_limit_nsamples[PAC1944_MAX_CH];
+   608		u8		uc_limit_nsamples[PAC1944_MAX_CH];
+   609		u8		op_limit_nsamples[PAC1944_MAX_CH];
+   610		u8		ov_limit_nsamples[PAC1944_MAX_CH];
+   611		u8		uv_limit_nsamples[PAC1944_MAX_CH];
+   612		u32		alert_enable;
+   613		bool		enable_acc[PAC1944_MAX_CH];
+ > 614	};
+   615	
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
