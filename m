@@ -1,135 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789A21D63CD;
-	Tue, 18 Mar 2025 19:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAACC1531E1;
+	Tue, 18 Mar 2025 19:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742324540; cv=none; b=Ju1S0FNpJ4CUS0wcPqTgb4s3Z3+PKlQ5wR1/UL7Qv82yhZDV+kKHrTQVcP6L4FuGbkBl10D36jj/grA4msxD6HQFBkb2+H3fXmeOuyOYzAzfGug5nbc3Pmeb/vL1zGWo5YDdukzws/lWIvwvul3c4RsThQZBIzVD0Zpx+DvidW0=
+	t=1742324663; cv=none; b=kavPx6uzWfs1VZtsdlSfJ9/ykSThLnOP9JumzpNgIUj0Yi0HclCk/hieAd/ejMosrfQ7QIYsivhCTzAOpjZlbPTXsdh0Suf0SCamRRzmllXU4cDWkhNPdGBtwiUj/TDZ8GPLuypVh7s/4mBy7CqfpWPhtUFknkMJdhItlZ72P+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742324540; c=relaxed/simple;
-	bh=KeKv9yBzckGL1DbKLcNxhQlKyhJZhjwQhjZdD2InWuE=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=kcidowGWDzPXc4K6X8ZuAhn/BmeJFHS/ELqzisAEthYMe1SWUXxLgff8TKbL9nlEB8UliNPDccCWUQBBqzpsAVxWDqy23WpABCpn1i/eaNHJrypCZXnjI5ByLXFjsw38brmt/lt7PHU6ggCaLY7OHAf5RGtrG44tfBpKAlFnP+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ywI64C/m; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L3CPCY6z; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742324663; c=relaxed/simple;
+	bh=q8oOp41cHl33YfGvOaDk6/xbHYWsX2yx6+8wUa0yDHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uuaQHkQ0j9iushXNRNmrgNhrfp87LXdOZixhcvb8svELO4kUP2jxLM+FUZ9L3fLPv01hHDLmQxKkSF+qpvFLFCfspsqNJP1jHGW79hjywVCz1lhOiwL2qYkBYyaOJSnMMywlIBmIq19ESrTcbhscAoWpYXfTPoFP3qbr3lby+TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEJkeNyn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ywI64C/m";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L3CPCY6z"
-Date: Tue, 18 Mar 2025 18:54:20 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742324067;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K/F9CV9HjZs/fV+lN4zy7fMkf2qGn9QGyAA84KyYvwE=;
-	b=ywI64C/mGyqKFJQpBwD17Nk6bSM0ut+xq9GCUUOpv7RiaQ1tIThR0s+svy7Cj/5Te+t4fE
-	Oju3rD3a0AlrpxnMf1/KULRFal6KxYeFYNpAQsV8abqf8plOb0TC7cyLegqLRPbcmfh7zC
-	O/RRh7+a/qxs+kT+2uOlitpvMc+H7GG51PJNzL6rD1Zi7dIriMzvcKcDOfKF/Uj1xps19v
-	hqCmAmAuiYRPK2FBcIq09Ugg1TEQhbDKZMta1+6n5PmdVTXVV3pglGF+znIeZqFdzOlEY9
-	CKrX2WcZVcsbY9cjFY6KZoCoASCWh2+DkY8mUWkYXYudMjeV5mvwTVST/f/kIA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742324067;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K/F9CV9HjZs/fV+lN4zy7fMkf2qGn9QGyAA84KyYvwE=;
-	b=L3CPCY6zWPjVM/Wf31KWZXXJF6RoMv16uyAWURjyoi6ssjBSxNvTzxqR/cyUGudORiv4QY
-	Z+5TEMjZfTL+ogCw==
-From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu/intel: Limit the non-architectural
- constant_tsc model checks
-Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250219184133.816753-14-sohil.mehta@intel.com>
-References: <20250219184133.816753-14-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEJkeNyn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9514CC4CEDD;
+	Tue, 18 Mar 2025 19:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742324663;
+	bh=q8oOp41cHl33YfGvOaDk6/xbHYWsX2yx6+8wUa0yDHg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AEJkeNyn8a4ZrsAPb8DRhFNwI2U050JwzDRxBsfpmEsMpvv9kTob/NUbhpWIIugn5
+	 4cpDRdE+pN1pJ0QvBuA3rlcH/Qzak7OZmUVOQ5BJcb1p1n5t8NKwnY8YseJ93ATUyY
+	 YyUqD3Np3LvcrBf+IlDFQB90KXtymd4mnuXx1vS56gFlTS+M2KoOS09izWC03RpDVq
+	 x6MNaW+CiHXW5tYTHhFn+hC0XYyo//h7PKFixoeb0hJOK2BGF0WNebgpWo5u1gN2VQ
+	 LABMVs/ujFoE9y9A57vJnVsPaa+W/SSmd4GIumkSbtXvoLjYoZOZvE736hJPm49vd7
+	 vs3CB19du7HEw==
+Date: Tue, 18 Mar 2025 16:04:20 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	guoren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 13/13] perf trace: Fix BTF memory leak
+Message-ID: <Z9nDtMyoARGiHAGg@x1>
+References: <20250318033150.119174-1-irogers@google.com>
+ <20250318033150.119174-14-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174232406170.14745.11104170478814576697.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318033150.119174-14-irogers@google.com>
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Mon, Mar 17, 2025 at 08:31:50PM -0700, Ian Rogers wrote:
+> Add missing btf__free in trace__exit.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-trace.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index a5f31472980b..d4bbb6a1e817 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -5339,6 +5339,12 @@ static void trace__exit(struct trace *trace)
+>  		zfree(&trace->syscalls.table);
+>  	}
+>  	zfree(&trace->perfconfig_events);
+> +#ifdef HAVE_LIBBPF_SUPPORT
+> +	if (trace->btf != NULL) {
 
-Commit-ID:     08d9bb5b0d89826fedc5204c8bd2463220465996
-Gitweb:        https://git.kernel.org/tip/08d9bb5b0d89826fedc5204c8bd2463220465996
-Author:        Sohil Mehta <sohil.mehta@intel.com>
-AuthorDate:    Wed, 19 Feb 2025 18:41:31 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 18 Mar 2025 19:33:47 +01:00
+No need for the check, btf__free() does:
 
-x86/cpu/intel: Limit the non-architectural constant_tsc model checks
+void btf__free(struct btf *btf)
+{
+        if (IS_ERR_OR_NULL(btf))
+                return;
 
-X86_FEATURE_CONSTANT_TSC is a Linux-defined, synthesized feature flag.
-It is used across several vendors. Intel CPUs will set the feature when
-the architectural CPUID.80000007.EDX[1] bit is set. There are also some
-Intel CPUs that have the X86_FEATURE_CONSTANT_TSC behavior but don't
-enumerate it with the architectural bit.  Those currently have a model
-range check.
+Up to Namhyung to turn this into the simpler:
 
-Today, virtually all of the CPUs that have the CPUID bit *also* match
-the "model >= 0x0e" check. This is confusing. Instead of an open-ended
-check, pick some models (INTEL_IVYBRIDGE and P4_WILLAMETTE) as the end
-of goofy CPUs that should enumerate the bit but don't.  These models are
-relatively arbitrary but conservative pick for this.
+	btf__free(trace->btf);
+	trace->btf = NULL;
 
-This makes it obvious that later CPUs (like Family 18+) no longer need
-to synthesize X86_FEATURE_CONSTANT_TSC.
-
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20250219184133.816753-14-sohil.mehta@intel.com
----
- arch/x86/kernel/cpu/intel.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 2181304..4cbb2e6 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -201,10 +201,6 @@ static void early_init_intel(struct cpuinfo_x86 *c)
- {
- 	u64 misc_enable;
- 
--	if ((c->x86 == 0xf && c->x86_model >= 0x03) ||
--		(c->x86 == 0x6 && c->x86_model >= 0x0e))
--		set_cpu_cap(c, X86_FEATURE_CONSTANT_TSC);
--
- 	if (c->x86 >= 6 && !cpu_has(c, X86_FEATURE_IA64))
- 		c->microcode = intel_get_microcode_revision();
- 
-@@ -257,10 +253,16 @@ static void early_init_intel(struct cpuinfo_x86 *c)
- 	 *
- 	 * It is also reliable across cores and sockets. (but not across
- 	 * cabinets - we turn it off in that case explicitly.)
-+	 *
-+	 * Use a model-specific check for some older CPUs that have invariant
-+	 * TSC but may not report it architecturally via 8000_0007.
- 	 */
- 	if (c->x86_power & (1 << 8)) {
- 		set_cpu_cap(c, X86_FEATURE_CONSTANT_TSC);
- 		set_cpu_cap(c, X86_FEATURE_NONSTOP_TSC);
-+	} else if ((c->x86_vfm >= INTEL_P4_PRESCOTT && c->x86_vfm <= INTEL_P4_WILLAMETTE) ||
-+		   (c->x86_vfm >= INTEL_CORE_YONAH  && c->x86_vfm <= INTEL_IVYBRIDGE)) {
-+		set_cpu_cap(c, X86_FEATURE_CONSTANT_TSC);
- 	}
- 
- 	/* Penwell and Cloverview have the TSC which doesn't sleep on S3 */
+> +		btf__free(trace->btf);
+> +		trace->btf = NULL;
+> +	}
+> +#endif
+>  }
+>  
+>  #ifdef HAVE_BPF_SKEL
+> -- 
+> 2.49.0.rc1.451.g8f38331e32-goog
