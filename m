@@ -1,132 +1,115 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D391991CA
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF566195808
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742282205; cv=none; b=NrQxU4YZYR4NcoL8qeAQImc3DDN1viY7nsXe3KKd+Lj8jyrQZJSEkzfcecF7Vic8Z72q576zY3qSJ/Y8UNErCceJ5GGKl8rg8vsCGH1Pq321YQslejAYNICuKRa1Pdts2HmXd3py8gF4T/yoppe9E5dgwZoo78dY0hyQQw1VW/M=
+	t=1742282266; cv=none; b=kkU9iGCtCtL5uDsEPgwPY56VS1jfHf1F6H7MBgpr2VuTFrN7eiYurO4LGkSCtcD4JO2qfoIC+SVwtufoThWS9Gwx0YCKW3VfEsW2YdzuGhLarAlJk+RmVxIgcFnzDLz0/0f+HWaH9PIMFHXMMT51twstbIeZ/DrCJ+LV4UcfLeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742282205; c=relaxed/simple;
-	bh=sVI5li7zvcd1pH6z4AYwCc5njky85LYB4G2kExKkZjs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W2fQ/q7C8pxDOSXIJky/U1MIgNKPdfdKqFYxCxFbjv8RrmXAzF3/5U7QQrOfwWTPVOXLhYwzBoLW0lntAStxqGZypIYgrU928gHW06RdRoyJBD1gCAvfnXhrqBTiuIw5/3b9F65a4n1MywwSLv5irt1hrsuLzHm6mADW3lXIAIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aPL7B7l9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742282266; c=relaxed/simple;
+	bh=xGvakVQ4I7CIAbFh6Dj+N2h/vlvQZwPGNMNIWGbMvZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=H6QfkNzY6GvS7r3vhsbGFKqwpZBLSau7H2M37aBBhLy6nHlUmsq2JHDGpCpLm2qNUyOIH+UKeqD6ghVVUiowfam4c6DinhrM+3qFUvu/AQGgTjSee287q08vB6+KXrcrZbeDrNaMOZ3dE+Qk80WIUyX/SAOucFlP0MomJt2d+RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PScaWVPs; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aPL7B7l9"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52I19MTN022924;
-	Tue, 18 Mar 2025 07:16:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=F8a+4l8TMkdELCWcO4w+wq
-	QmkABNz+z8FK1Fg3zE718=; b=aPL7B7l9ffmddI1K1Gfv3LukeC+mAICO5S3/lF
-	1zp32ey/uzezm+gayoRaUiHDY0mEZBhsV/t71hIIjlhBPjAP+AWJQkZLTi6PTqa9
-	kC0R6d+0o5Rknw//Jtj0LlcJPEosFBmgb7EUNLWehmlpxiXcRYVpSHUZOuLb9tsc
-	h+XoPiTB5vAxCh62L1G1ZA/LNeLsuHc4Tk+WjvfF4C7b3kN0nzLiamJJTjEyLmMN
-	y49lbgkRLQ3ok9ybU2XqOFAc2L/F6mJneaxuGxo62c/DvxVxe2S5qXG3TGP4SmcN
-	j5WP9qruLBoLd+sJWkCB5EPACGYyUVKugIaOHERFAs6Xbrzw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45exwx0trg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 07:16:38 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52I7GbIl015281
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 07:16:37 GMT
-Received: from nsssdc-sh01-lnx.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 18 Mar 2025 00:15:48 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-To: <yury.norov@gmail.com>, <linux@rasmusvillemoes.dk>
-CC: <linux-kernel@vger.kernel.org>, <andrew@lunn.ch>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <quic_leiwei@quicinc.com>, <quic_suruchia@quicinc.com>,
-        <quic_pavir@quicinc.com>
-Subject: [PATCH] bitfield: add FIELD_MODIFY() helper
-Date: Tue, 18 Mar 2025 15:15:26 +0800
-Message-ID: <20250318071526.1836194-1-quic_luoj@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PScaWVPs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742282265; x=1773818265;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=xGvakVQ4I7CIAbFh6Dj+N2h/vlvQZwPGNMNIWGbMvZg=;
+  b=PScaWVPsOMqAnteIdm1rRSNCp3kgN0WDF85w9MH54a7bHuEJ9eEyk8km
+   HXjewFJ9i0AP6klXrjRpB8zR7Bp/DS5rndmRR+b2NC6FHDxrd+kO1FuOq
+   f8208yzzMl31LiOzmtvviPM/BopbaLEkVw+oBZ0hbi9nXf0RoDPd8jZuM
+   lqmpejqaITTalcwJ7eDh4YtHpDY5t662bjeV7uwdKlaPDyg3oLbLJEPLC
+   Tzs8oGzYZVHy/da0Acy5cKINcTz80a4hU1GmNG62xbSk9W/iAXpk+tnBn
+   fGgJFrZs69d7u/YWzvYK7ACKZqY6KIqNEHBljFQ0hO9GHcw3COZNtg5R5
+   g==;
+X-CSE-ConnectionGUID: YGmvldQ6Qz+5O0+YuimPPQ==
+X-CSE-MsgGUID: 1sGjO4b2SlSFyxV1/I80VA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="47054521"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="47054521"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 00:17:44 -0700
+X-CSE-ConnectionGUID: e6jCVCkDSyCbPdQ1d6HTmQ==
+X-CSE-MsgGUID: i7sqDo8NRMCF/nlO8e4iGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="123121590"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 18 Mar 2025 00:17:43 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuRCm-000DVk-2m;
+	Tue, 18 Mar 2025 07:17:40 +0000
+Date: Tue, 18 Mar 2025 15:16:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Alexei Starovoitov <ast@kernel.org>
+Subject: kernel/bpf/kmem_cache_iter.c:25:1: warning: 'retain' attribute
+ ignored
+Message-ID: <202503181537.syuSFzVo-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: qArQmmIdXbQ7PQbOdNoXGWi9v55bfRE6
-X-Authority-Analysis: v=2.4 cv=INICChvG c=1 sm=1 tr=0 ts=67d91dd6 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=O1cLxb1THHesT-zVNQIA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: qArQmmIdXbQ7PQbOdNoXGWi9v55bfRE6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_03,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1011
- mlxlogscore=849 impostorscore=0 phishscore=0 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503180050
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add a helper for replacing the contents of bitfield in memory
-with the specified value.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   76b6905c11fd3c6dc4562aefc3e8c4429fefae1e
+commit: 2e9a548009c2d804e55cdd5b0e9903756cf7d9b3 bpf: Add open coded version of kmem_cache iterator
+date:   5 months ago
+config: mips-allmodconfig (https://download.01.org/0day-ci/archive/20250318/202503181537.syuSFzVo-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250318/202503181537.syuSFzVo-lkp@intel.com/reproduce)
 
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503181537.syuSFzVo-lkp@intel.com/
 
-The new added macro FIELD_MODIFY() is expected to be used by the
-following Ethernet PPE driver as link below.
-https://lore.kernel.org/linux-arm-msm/20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com/
+All warnings (new ones prefixed by >>):
 
- include/linux/bitfield.h | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+>> kernel/bpf/kmem_cache_iter.c:25:1: warning: 'retain' attribute ignored [-Wattributes]
+      25 | {
+         | ^
+   kernel/bpf/kmem_cache_iter.c:36:1: warning: 'retain' attribute ignored [-Wattributes]
+      36 | {
+         | ^
+   kernel/bpf/kmem_cache_iter.c:81:1: warning: 'retain' attribute ignored [-Wattributes]
+      81 | {
+         | ^
 
-diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-index 63928f173223..13484e09797f 100644
---- a/include/linux/bitfield.h
-+++ b/include/linux/bitfield.h
-@@ -7,8 +7,9 @@
- #ifndef _LINUX_BITFIELD_H
- #define _LINUX_BITFIELD_H
- 
--#include <linux/build_bug.h>
- #include <asm/byteorder.h>
-+#include <linux/build_bug.h>
-+#include <linux/typecheck.h>
- 
- /*
-  * Bitfield access macros
-@@ -156,6 +157,23 @@
- 		(typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask));	\
- 	})
- 
-+/**
-+ * FIELD_MODIFY() - modify a bitfield element
-+ * @_mask: shifted mask defining the field's length and position
-+ * @_reg_p: pointer to the memory that should be updated
-+ * @_val: value to store in the bitfield
-+ *
-+ * FIELD_MODIFY() modifies the set of bits in @_reg_p specified by @_mask,
-+ * by replacing them with the bitfield value passed in as @_val.
-+ */
-+#define FIELD_MODIFY(_mask, _reg_p, _val)				\
-+	({								\
-+		typecheck_pointer(_reg_p);				\
-+		__BF_FIELD_CHECK(_mask, *(_reg_p), _val, "FIELD_MODIFY: "); \
-+		*(_reg_p) &= ~(_mask);					\
-+		*(_reg_p) |= ((_val) << __bf_shf(_mask)) & (_mask);	\
-+	})
-+
- extern void __compiletime_error("value doesn't fit into mask")
- __field_overflow(void);
- extern void __compiletime_error("bad bitfield mask")
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for GET_FREE_REGION
+   Depends on [n]: SPARSEMEM [=n]
+   Selected by [m]:
+   - RESOURCE_KUNIT_TEST [=m] && RUNTIME_TESTING_MENU [=y] && KUNIT [=m]
+
+
+vim +/retain +25 kernel/bpf/kmem_cache_iter.c
+
+    23	
+    24	__bpf_kfunc int bpf_iter_kmem_cache_new(struct bpf_iter_kmem_cache *it)
+  > 25	{
+    26		struct bpf_iter_kmem_cache_kern *kit = (void *)it;
+    27	
+    28		BUILD_BUG_ON(sizeof(*kit) > sizeof(*it));
+    29		BUILD_BUG_ON(__alignof__(*kit) != __alignof__(*it));
+    30	
+    31		kit->pos = KMEM_CACHE_POS_START;
+    32		return 0;
+    33	}
+    34	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
