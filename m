@@ -1,355 +1,308 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2BC4208989;
-	Tue, 18 Mar 2025 11:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5E11DE4E7
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742295751; cv=none; b=scL1EgWUD4/mFfA0AfENrS3/pbRWXu6nGezJP2Rdnl5n6atqpCuQp2X5xzQ8qgSQFVitSGbV85nsXCzJM1ayhOlmRIO0x2lrhrN1R0O9kL5J7XOIs1c7IopBXvgNAO455e79917zkwielStJNhsGC1q+6YXsNhF4BfIynxCKgy4=
+	t=1742295776; cv=none; b=FljylMYeCtm9wuviAZnpSMPzenQnvpnnBj04PZ9Xk7wiEiwRTunHXnoyhd3lk8VCWgMlVRVObvdNoKw8EHF0gJSCAFS+Ndsgwk9WoQofpMDuA9ikeif//Z1g9D2puLPUEHGeK72DH4I6G/JkaVF2HW69Nlyn46bz5o/wHGHaDq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742295751; c=relaxed/simple;
-	bh=OwrZkwraIy+D4Vlns3UTlc0OPVYM49V4ksnXMUTmo7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bog4CrEdHb4J8dkG2lWSj10/4bCl0fOBn87tKlG/aUnLuD6OUVI9M5n94qoCES8CyuKWeHLKqF3tARoHCopxLLnVTqTntZqkngAqhHgcjrAoeZfNhBlmelTZPPqGPg3AVOfW3eenoIHzZOJMYO4kNcBOwj6lfTO8cf1kwl6U1w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8AxTWvAUtlnFoubAA--.656S3;
-	Tue, 18 Mar 2025 19:02:24 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowMDxDceOUtlnb6FRAA--.22930S5;
-	Tue, 18 Mar 2025 19:02:22 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Jan Stancek <jstancek@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	R Nageswara Sastry <rnsastry@linux.ibm.com>,
-	Neal Gompa <neal@gompa.dev>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 6.1&6.6 V2 3/3] sign-file,extract-cert: use pkcs11 provider for OPENSSL MAJOR >= 3
-Date: Tue, 18 Mar 2025 19:01:24 +0800
-Message-ID: <20250318110124.2160941-4-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250318110124.2160941-1-chenhuacai@loongson.cn>
-References: <20250318110124.2160941-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1742295776; c=relaxed/simple;
+	bh=e/t0ZzTfpCl7sHMG3NciOGZop5LWvheYZP++r3HyzCg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rIcFfO+srXE5swYq2NZjTw+JOPhG0blxusFl04fJIpCIWKmL0M+sjNfBVMil5XyTFWIBeuygKIoHg/v6Z1WA33HdHCiS7GfqFYTaY1YP7V0P2QrIOQ3PglO9Chspz5LSlVT7LXsJTfNIY38GkT7nHWbzdWt28TEeR29Bmntx238=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vmeKP9KZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ywZGj8X0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vmeKP9KZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ywZGj8X0; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vmeKP9KZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ywZGj8X0";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vmeKP9KZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ywZGj8X0"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C0D7C1F7A4;
+	Tue, 18 Mar 2025 11:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742295768; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Xgy+d+xI1ZNeOEwH3pvDKcarab8uN6RqfoBhVwAE6k=;
+	b=vmeKP9KZfXvHGSz4p0atuUT4yTakkVHYbZ1BMSBCC1vPqdMsB4f7SJHahG5dgrESay4sCK
+	iPlcag9ZaLqyI9Jyo+rTNNPGyv5UHksJqmsIORsPZyzXiZV5yrnVJAW0l8UAshEyQkH6b4
+	paWF8YeX6+Tb4TbJw9Q1Z4Uq7do40Jc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742295768;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Xgy+d+xI1ZNeOEwH3pvDKcarab8uN6RqfoBhVwAE6k=;
+	b=ywZGj8X0Sc0IY1i3gZ4E1W7HCXTElussCiPZI3xKlKblSmGIc0fnVApiavqpx/IG2k9QR6
+	ASD0YPrMrosVLkBw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742295768; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Xgy+d+xI1ZNeOEwH3pvDKcarab8uN6RqfoBhVwAE6k=;
+	b=vmeKP9KZfXvHGSz4p0atuUT4yTakkVHYbZ1BMSBCC1vPqdMsB4f7SJHahG5dgrESay4sCK
+	iPlcag9ZaLqyI9Jyo+rTNNPGyv5UHksJqmsIORsPZyzXiZV5yrnVJAW0l8UAshEyQkH6b4
+	paWF8YeX6+Tb4TbJw9Q1Z4Uq7do40Jc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742295768;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Xgy+d+xI1ZNeOEwH3pvDKcarab8uN6RqfoBhVwAE6k=;
+	b=ywZGj8X0Sc0IY1i3gZ4E1W7HCXTElussCiPZI3xKlKblSmGIc0fnVApiavqpx/IG2k9QR6
+	ASD0YPrMrosVLkBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 97EDE139D2;
+	Tue, 18 Mar 2025 11:02:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id iYjoI9hS2WfaQgAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 18 Mar 2025 11:02:48 +0000
+Message-ID: <a9055e3c-d36f-4706-9fdc-f4532d14adb6@suse.de>
+Date: Tue, 18 Mar 2025 12:02:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/18] nvmet-fcloop: refactor fcloop_nport_alloc
+To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
+ <20250318-nvmet-fcloop-v3-4-05fec0fc02f6@kernel.org>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250318-nvmet-fcloop-v3-4-05fec0fc02f6@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxDceOUtlnb6FRAA--.22930S5
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtw15Kr17GF4UuF43Kr4rZwc_yoW3Kr45pF
-	9xCFyYq340qrnrGr13Ar1Fg3srXr48Xw1avanxC393Gr4vya4UWF40gFWS93WxZ398J3Wa
-	v3yUXFW8Kr4kZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUj5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAaw2AFwI0_GFv_Wryle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_ZF0_
-	GryDMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07b1hL8UUUUU=
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo,lst.de:email]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-From: Jan Stancek <jstancek@redhat.com>
+On 3/18/25 11:39, Daniel Wagner wrote:
+> There are many different operations done under the spin lock. Since the
+> lport and nport are ref counted it's possible to use the spin lock only
+> for the list insert and lookup.
+> 
+> This allows us to untangle the setup steps into a more linear form which
+> reduces the complexity of the functions.
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>   drivers/nvme/target/fcloop.c | 156 +++++++++++++++++++++++--------------------
+>   1 file changed, 84 insertions(+), 72 deletions(-)
+> 
+> diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
+> index c6d5a31ce0b5ccb10988e339ae22d528e06d5e2b..245bfe08d91ec81f1979251e8c757a0d46fd09e9 100644
+> --- a/drivers/nvme/target/fcloop.c
+> +++ b/drivers/nvme/target/fcloop.c
+> @@ -1027,6 +1027,8 @@ fcloop_nport_put(struct fcloop_nport *nport)
+>   	list_del(&nport->nport_list);
+>   	spin_unlock_irqrestore(&fcloop_lock, flags);
+>   
+> +	if (nport->lport)
+> +		fcloop_lport_put(nport->lport);
+>   	kfree(nport);
+>   }
+>   
+> @@ -1189,33 +1191,63 @@ __wait_localport_unreg(struct fcloop_lport *lport)
+>   	return ret;
+>   }
+>   
+> +static struct fcloop_lport *
+> +fcloop_lport_lookup(u64 node_name, u64 port_name)
+> +{
+> +	struct fcloop_lport *lp, *lport = NULL;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&fcloop_lock, flags);
+> +	list_for_each_entry(lp, &fcloop_lports, lport_list) {
+> +		if (lp->localport->node_name != node_name ||
+> +		    lp->localport->port_name != port_name)
+> +			continue;
+> +
+> +		if (fcloop_lport_get(lp))
+> +			lport = lp;
+> +
+> +		break;
+> +	}
+> +	spin_unlock_irqrestore(&fcloop_lock, flags);
+> +
+> +	return lport;
+> +}
+> +
+> +static struct fcloop_nport *
+> +fcloop_nport_lookup(u64 node_name, u64 port_name)
+> +{
+> +	struct fcloop_nport *np, *nport = NULL;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&fcloop_lock, flags);
+> +	list_for_each_entry(np, &fcloop_nports, nport_list) {
+> +		if (np->node_name != node_name ||
+> +		    np->port_name != port_name)
+> +			continue;
+> +
+> +		if (fcloop_nport_get(np))
+> +			nport = np;
+> +
+> +		break;
+> +	}
+> +	spin_unlock_irqrestore(&fcloop_lock, flags);
+> +
+> +	return nport;
+> +}
+>   
+>   static ssize_t
+>   fcloop_delete_local_port(struct device *dev, struct device_attribute *attr,
+>   		const char *buf, size_t count)
+>   {
+> -	struct fcloop_lport *tlport, *lport = NULL;
+> +	struct fcloop_lport *lport;
+>   	u64 nodename, portname;
+> -	unsigned long flags;
+>   	int ret;
+>   
+>   	ret = fcloop_parse_nm_options(dev, &nodename, &portname, buf);
+>   	if (ret)
+>   		return ret;
+>   
+> -	spin_lock_irqsave(&fcloop_lock, flags);
+> -
+> -	list_for_each_entry(tlport, &fcloop_lports, lport_list) {
+> -		if (tlport->localport->node_name == nodename &&
+> -		    tlport->localport->port_name == portname) {
+> -			if (!fcloop_lport_get(tlport))
+> -				break;
+> -			lport = tlport;
+> -			break;
+> -		}
+> -	}
+> -	spin_unlock_irqrestore(&fcloop_lock, flags);
+> -
+> +	lport = fcloop_lport_lookup(nodename, portname);
+>   	if (!lport)
+>   		return -ENOENT;
+>   
+> @@ -1228,9 +1260,9 @@ fcloop_delete_local_port(struct device *dev, struct device_attribute *attr,
+>   static struct fcloop_nport *
+>   fcloop_alloc_nport(const char *buf, size_t count, bool remoteport)
+>   {
+> -	struct fcloop_nport *newnport, *nport = NULL;
+> -	struct fcloop_lport *tmplport, *lport = NULL;
+>   	struct fcloop_ctrl_options *opts;
+> +	struct fcloop_nport *nport;
+> +	struct fcloop_lport *lport;
+>   	unsigned long flags;
+>   	u32 opts_mask = (remoteport) ? RPORT_OPTS : TGTPORT_OPTS;
+>   	int ret;
+> @@ -1244,79 +1276,59 @@ fcloop_alloc_nport(const char *buf, size_t count, bool remoteport)
+>   		goto out_free_opts;
+>   
+>   	/* everything there ? */
+> -	if ((opts->mask & opts_mask) != opts_mask) {
+> -		ret = -EINVAL;
+> +	if ((opts->mask & opts_mask) != opts_mask)
+>   		goto out_free_opts;
+> -	}
+>   
+> -	newnport = kzalloc(sizeof(*newnport), GFP_KERNEL);
+> -	if (!newnport)
+> +	lport = fcloop_lport_lookup(opts->wwnn, opts->wwpn);
+> +	if (lport) {
+> +		/* invalid configuration */
+> +		fcloop_lport_put(lport);
+>   		goto out_free_opts;
+> +	}
+>   
+> -	INIT_LIST_HEAD(&newnport->nport_list);
+> -	newnport->node_name = opts->wwnn;
+> -	newnport->port_name = opts->wwpn;
+> -	if (opts->mask & NVMF_OPT_ROLES)
+> -		newnport->port_role = opts->roles;
+> -	if (opts->mask & NVMF_OPT_FCADDR)
+> -		newnport->port_id = opts->fcaddr;
+> -	refcount_set(&newnport->ref, 1);
+> +	nport = fcloop_nport_lookup(opts->wwnn, opts->wwpn);
+> +	if (nport && ((remoteport && nport->rport) ||
+> +		      (!remoteport && nport->tport))) {
+> +		/* invalid configuration */
+> +		goto out_put_nport;
+> +	}
+>   
+> -	spin_lock_irqsave(&fcloop_lock, flags);
+> +	if (!nport) {
+> +		nport = kzalloc(sizeof(*nport), GFP_KERNEL);
+> +		if (!nport)
+> +			goto out_free_opts;
+>   
+> -	list_for_each_entry(tmplport, &fcloop_lports, lport_list) {
+> -		if (tmplport->localport->node_name == opts->wwnn &&
+> -		    tmplport->localport->port_name == opts->wwpn)
+> -			goto out_invalid_opts;
+> +		INIT_LIST_HEAD(&nport->nport_list);
+> +		nport->node_name = opts->wwnn;
+> +		nport->port_name = opts->wwpn;
+> +		refcount_set(&nport->ref, 1);
+>   
+> -		if (tmplport->localport->node_name == opts->lpwwnn &&
+> -		    tmplport->localport->port_name == opts->lpwwpn)
+> -			lport = tmplport;
+> +		spin_lock_irqsave(&fcloop_lock, flags);
+> +		list_add_tail(&nport->nport_list, &fcloop_nports);
+> +		spin_unlock_irqrestore(&fcloop_lock, flags);
+>   	}
+>   
+Hmm. I don't really like this pattern; there is a race condition
+between lookup and allocation leading to possibly duplicate entries
+on the list.
+Lookup and allocation really need to be under the same lock.
 
-commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
+Cheers,
 
-ENGINE API has been deprecated since OpenSSL version 3.0 [1].
-Distros have started dropping support from headers and in future
-it will likely disappear also from library.
-
-It has been superseded by the PROVIDER API, so use it instead
-for OPENSSL MAJOR >= 3.
-
-[1] https://github.com/openssl/openssl/blob/master/README-ENGINES.md
-
-[jarkko: fixed up alignment issues reported by checkpatch.pl --strict]
-
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
- scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
- 2 files changed, 138 insertions(+), 58 deletions(-)
-
-diff --git a/certs/extract-cert.c b/certs/extract-cert.c
-index 61bbe0085671..7d6d468ed612 100644
---- a/certs/extract-cert.c
-+++ b/certs/extract-cert.c
-@@ -21,17 +21,18 @@
- #include <openssl/bio.h>
- #include <openssl/pem.h>
- #include <openssl/err.h>
--#include <openssl/engine.h>
--
-+#if OPENSSL_VERSION_MAJOR >= 3
-+# define USE_PKCS11_PROVIDER
-+# include <openssl/provider.h>
-+# include <openssl/store.h>
-+#else
-+# if !defined(OPENSSL_NO_ENGINE) && !defined(OPENSSL_NO_DEPRECATED_3_0)
-+#  define USE_PKCS11_ENGINE
-+#  include <openssl/engine.h>
-+# endif
-+#endif
- #include "ssl-common.h"
- 
--/*
-- * OpenSSL 3.0 deprecates the OpenSSL's ENGINE API.
-- *
-- * Remove this if/when that API is no longer used
-- */
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--
- #define PKEY_ID_PKCS7 2
- 
- static __attribute__((noreturn))
-@@ -61,6 +62,66 @@ static void write_cert(X509 *x509)
- 		fprintf(stderr, "Extracted cert: %s\n", buf);
- }
- 
-+static X509 *load_cert_pkcs11(const char *cert_src)
-+{
-+	X509 *cert = NULL;
-+#ifdef USE_PKCS11_PROVIDER
-+	OSSL_STORE_CTX *store;
-+
-+	if (!OSSL_PROVIDER_try_load(NULL, "pkcs11", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(pkcs11)");
-+	if (!OSSL_PROVIDER_try_load(NULL, "default", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(default)");
-+
-+	store = OSSL_STORE_open(cert_src, NULL, NULL, NULL, NULL);
-+	ERR(!store, "OSSL_STORE_open");
-+
-+	while (!OSSL_STORE_eof(store)) {
-+		OSSL_STORE_INFO *info = OSSL_STORE_load(store);
-+
-+		if (!info) {
-+			drain_openssl_errors(__LINE__, 0);
-+			continue;
-+		}
-+		if (OSSL_STORE_INFO_get_type(info) == OSSL_STORE_INFO_CERT) {
-+			cert = OSSL_STORE_INFO_get1_CERT(info);
-+			ERR(!cert, "OSSL_STORE_INFO_get1_CERT");
-+		}
-+		OSSL_STORE_INFO_free(info);
-+		if (cert)
-+			break;
-+	}
-+	OSSL_STORE_close(store);
-+#elif defined(USE_PKCS11_ENGINE)
-+		ENGINE *e;
-+		struct {
-+			const char *cert_id;
-+			X509 *cert;
-+		} parms;
-+
-+		parms.cert_id = cert_src;
-+		parms.cert = NULL;
-+
-+		ENGINE_load_builtin_engines();
-+		drain_openssl_errors(__LINE__, 1);
-+		e = ENGINE_by_id("pkcs11");
-+		ERR(!e, "Load PKCS#11 ENGINE");
-+		if (ENGINE_init(e))
-+			drain_openssl_errors(__LINE__, 1);
-+		else
-+			ERR(1, "ENGINE_init");
-+		if (key_pass)
-+			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
-+		ENGINE_ctrl_cmd(e, "LOAD_CERT_CTRL", 0, &parms, NULL, 1);
-+		ERR(!parms.cert, "Get X.509 from PKCS#11");
-+		cert = parms.cert;
-+#else
-+		fprintf(stderr, "no pkcs11 engine/provider available\n");
-+		exit(1);
-+#endif
-+	return cert;
-+}
-+
- int main(int argc, char **argv)
- {
- 	char *cert_src;
-@@ -89,28 +150,10 @@ int main(int argc, char **argv)
- 		fclose(f);
- 		exit(0);
- 	} else if (!strncmp(cert_src, "pkcs11:", 7)) {
--		ENGINE *e;
--		struct {
--			const char *cert_id;
--			X509 *cert;
--		} parms;
-+		X509 *cert = load_cert_pkcs11(cert_src);
- 
--		parms.cert_id = cert_src;
--		parms.cert = NULL;
--
--		ENGINE_load_builtin_engines();
--		drain_openssl_errors(__LINE__, 1);
--		e = ENGINE_by_id("pkcs11");
--		ERR(!e, "Load PKCS#11 ENGINE");
--		if (ENGINE_init(e))
--			drain_openssl_errors(__LINE__, 1);
--		else
--			ERR(1, "ENGINE_init");
--		if (key_pass)
--			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
--		ENGINE_ctrl_cmd(e, "LOAD_CERT_CTRL", 0, &parms, NULL, 1);
--		ERR(!parms.cert, "Get X.509 from PKCS#11");
--		write_cert(parms.cert);
-+		ERR(!cert, "load_cert_pkcs11 failed");
-+		write_cert(cert);
- 	} else {
- 		BIO *b;
- 		X509 *x509;
-diff --git a/scripts/sign-file.c b/scripts/sign-file.c
-index bb3fdf1a617c..7070245edfc1 100644
---- a/scripts/sign-file.c
-+++ b/scripts/sign-file.c
-@@ -27,17 +27,18 @@
- #include <openssl/evp.h>
- #include <openssl/pem.h>
- #include <openssl/err.h>
--#include <openssl/engine.h>
--
-+#if OPENSSL_VERSION_MAJOR >= 3
-+# define USE_PKCS11_PROVIDER
-+# include <openssl/provider.h>
-+# include <openssl/store.h>
-+#else
-+# if !defined(OPENSSL_NO_ENGINE) && !defined(OPENSSL_NO_DEPRECATED_3_0)
-+#  define USE_PKCS11_ENGINE
-+#  include <openssl/engine.h>
-+# endif
-+#endif
- #include "ssl-common.h"
- 
--/*
-- * OpenSSL 3.0 deprecates the OpenSSL's ENGINE API.
-- *
-- * Remove this if/when that API is no longer used
-- */
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--
- /*
-  * Use CMS if we have openssl-1.0.0 or newer available - otherwise we have to
-  * assume that it's not available and its header file is missing and that we
-@@ -106,28 +107,64 @@ static int pem_pw_cb(char *buf, int len, int w, void *v)
- 	return pwlen;
- }
- 
--static EVP_PKEY *read_private_key(const char *private_key_name)
-+static EVP_PKEY *read_private_key_pkcs11(const char *private_key_name)
- {
--	EVP_PKEY *private_key;
-+	EVP_PKEY *private_key = NULL;
-+#ifdef USE_PKCS11_PROVIDER
-+	OSSL_STORE_CTX *store;
- 
--	if (!strncmp(private_key_name, "pkcs11:", 7)) {
--		ENGINE *e;
-+	if (!OSSL_PROVIDER_try_load(NULL, "pkcs11", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(pkcs11)");
-+	if (!OSSL_PROVIDER_try_load(NULL, "default", true))
-+		ERR(1, "OSSL_PROVIDER_try_load(default)");
-+
-+	store = OSSL_STORE_open(private_key_name, NULL, NULL, NULL, NULL);
-+	ERR(!store, "OSSL_STORE_open");
- 
--		ENGINE_load_builtin_engines();
-+	while (!OSSL_STORE_eof(store)) {
-+		OSSL_STORE_INFO *info = OSSL_STORE_load(store);
-+
-+		if (!info) {
-+			drain_openssl_errors(__LINE__, 0);
-+			continue;
-+		}
-+		if (OSSL_STORE_INFO_get_type(info) == OSSL_STORE_INFO_PKEY) {
-+			private_key = OSSL_STORE_INFO_get1_PKEY(info);
-+			ERR(!private_key, "OSSL_STORE_INFO_get1_PKEY");
-+		}
-+		OSSL_STORE_INFO_free(info);
-+		if (private_key)
-+			break;
-+	}
-+	OSSL_STORE_close(store);
-+#elif defined(USE_PKCS11_ENGINE)
-+	ENGINE *e;
-+
-+	ENGINE_load_builtin_engines();
-+	drain_openssl_errors(__LINE__, 1);
-+	e = ENGINE_by_id("pkcs11");
-+	ERR(!e, "Load PKCS#11 ENGINE");
-+	if (ENGINE_init(e))
- 		drain_openssl_errors(__LINE__, 1);
--		e = ENGINE_by_id("pkcs11");
--		ERR(!e, "Load PKCS#11 ENGINE");
--		if (ENGINE_init(e))
--			drain_openssl_errors(__LINE__, 1);
--		else
--			ERR(1, "ENGINE_init");
--		if (key_pass)
--			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0),
--			    "Set PKCS#11 PIN");
--		private_key = ENGINE_load_private_key(e, private_key_name,
--						      NULL, NULL);
--		ERR(!private_key, "%s", private_key_name);
-+	else
-+		ERR(1, "ENGINE_init");
-+	if (key_pass)
-+		ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
-+	private_key = ENGINE_load_private_key(e, private_key_name, NULL, NULL);
-+	ERR(!private_key, "%s", private_key_name);
-+#else
-+	fprintf(stderr, "no pkcs11 engine/provider available\n");
-+	exit(1);
-+#endif
-+	return private_key;
-+}
-+
-+static EVP_PKEY *read_private_key(const char *private_key_name)
-+{
-+	if (!strncmp(private_key_name, "pkcs11:", 7)) {
-+		return read_private_key_pkcs11(private_key_name);
- 	} else {
-+		EVP_PKEY *private_key;
- 		BIO *b;
- 
- 		b = BIO_new_file(private_key_name, "rb");
-@@ -136,9 +173,9 @@ static EVP_PKEY *read_private_key(const char *private_key_name)
- 						      NULL);
- 		ERR(!private_key, "%s", private_key_name);
- 		BIO_free(b);
--	}
- 
--	return private_key;
-+		return private_key;
-+	}
- }
- 
- static X509 *read_x509(const char *x509_name)
+Hannes
 -- 
-2.47.1
-
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
