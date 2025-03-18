@@ -1,56 +1,101 @@
-Received: from p00-icloudmta-asmtp-us-west-1a-10-percent-1.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-west-1a.k8s.cloud.apple.com (p-west1-cluster5-host9-snip4-2.eps.apple.com [57.103.66.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A8B1DED54
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.66.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8477F17A303
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742325695; cv=none; b=WDgPFJygCe87yA6FOo6tBZ/a5/c6geM4zqGSGi5OuZPbDap4yH5STZp/rtsw8pxRaUWh+KIGmsHYc1gblUn35Jw8t02HMsP3kN9OR54kXv5GWeCU2CCtKugX3taZZPR7VnWM5bOlRJiTPKk1nVAyIwblTpn2cApaet5NN1dYLHE=
+	t=1742325802; cv=none; b=rrtiOeuy/fWLFwQDSM9mOIqZhMZb1S/Ijl4qb1EpzFDGM23GOX3cJDChx9tyH/NfYWBt6PUXXkjthnuihLwMewR5q763Cn+eCMxxuUN8rmF/nPxqYV1hW+YLAv/dNRYzLIoVzqkyg6urJysffsKiHqB3mW08fPa7ZsS1Xdq8sxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742325695; c=relaxed/simple;
-	bh=ezMlMEag99mvW1GnmMeV6467CpwxaTz6C3EnN/L+RQQ=;
-	h=Content-Type:From:Mime-Version:Date:Subject:Message-Id:To; b=mKCARsCye2AApUsJBrSi6p+U0/sSZFjNHF4No7ljXYDTEXMZqHd/nXcRojnpOJSncTVQJg+Lak7uToNhT5yaNOKgOmQoHbL0idVEi1htfeXumlF2TNsDTyAyEnkeduu43ZPot27Z8P0pn1TQVKRUZFMgbjuuHHzFBApcq9fHWyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shurjo.me; spf=pass smtp.mailfrom=shurjo.me; dkim=pass (2048-bit key) header.d=shurjo.me header.i=@shurjo.me header.b=VF37rF6U; arc=none smtp.client-ip=57.103.66.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shurjo.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shurjo.me
+	s=arc-20240116; t=1742325802; c=relaxed/simple;
+	bh=rR5kl4eYsl4yRHFKGBdxMy3aCSYWtkBlbYl5vE39f+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E3bl+E8owVwii2zmDuOxQAXE7xGpaYoV8CLiWRRRDeo6EEMuHLxgJq2vCbPQ3VXSvnAzavsCv9LyeamiLdcUAFCs2H8pJzI0wd9GNUCThmpz7q39L2HCQb5G3NK/LG3vmF0jDvPO3M9AE1v1MPZUcN1j00SSdYQEM4rkpHuOcRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0f245C8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shurjo.me header.i=@shurjo.me header.b="VF37rF6U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shurjo.me; s=sig1;
-	bh=ezMlMEag99mvW1GnmMeV6467CpwxaTz6C3EnN/L+RQQ=;
-	h=Content-Type:From:Mime-Version:Date:Subject:Message-Id:To:x-icloud-hme;
-	b=VF37rF6UGDUKg8hs5qH7sKlZmDsUiqMDHh/SAUynAMF2tMSwiem1hmfG5gZSz2veq
-	 VmaP1PlVyKJPKc4BgpGBtMH3HzQ7b0AQH13vF9CyA2VLsCB77W5eK7XHnFXlxS2LrM
-	 +kwdhpY3jRstGk9pHdqLyLlNusOHd0YOcEhsMyySZEGRWbajo1qFWYZZ8fIaDg3R4K
-	 JH09emRU8Zr+yHyo8H/UqIPDs87T4FxerOn8I6syZZlXCggo20eSGjLHcyngxxqHVV
-	 XkkGXCAtMs+LJwjrjF+SIprdumJ/ed2svvJ+MalT/UCoyUUPz17fuOKdVSyCAh+Mdl
-	 L49t0U+5uHEeA==
-Received: from smtpclient.apple (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by p00-icloudmta-asmtp-us-west-1a-10-percent-1.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-west-1a.k8s.cloud.apple.com (Postfix) with ESMTPSA id 57B8A18000A3
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:21:31 +0000 (UTC)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-From: Shurjo Masood <mail@shurjo.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0f245C8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA05FC4CEEE;
+	Tue, 18 Mar 2025 19:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742325802;
+	bh=rR5kl4eYsl4yRHFKGBdxMy3aCSYWtkBlbYl5vE39f+I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=C0f245C8CdxaBXW2HBxXnQRVBW0+9L1AxH82XadnPtOCQr0I50qAV+ZqqZ63ATK5K
+	 qUZesaVHxFStJam+u7qSzjTDkfalASqIhBsw1cEbYHHfizgpsKJddrJGNTNIgMKrJP
+	 pkn8sDzhaMXT79gWbWzblUd5hIcdIlnXFvjJS3PO84lLUwvTzOiZVKTArHcQYmDwoJ
+	 jkTDhbF09IXjSIY+aenWVw+eEPYMmyze2S1tqdMaHtONSi9yhUX5sADOKTQ1vx2Uxz
+	 hgZRsCYpeuHv0yVf52X3Y/uzhd6KVw2WpmnKYmFHrcDMhDNIa9sbBaudgXX+OT+0gY
+	 P2eXxR1jvdU8A==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>
+Cc: Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc/prom_init: Fixup missing powermac #size-cells on i2s nodes
+Date: Tue, 18 Mar 2025 14:22:55 -0500
+Message-ID: <20250318192256.3534046-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Date: Wed, 19 Mar 2025 01:21:17 +0600
-Subject: unsub
-Message-Id: <31D92ADB-E517-4B79-8FE0-06DF7C0D3272@shurjo.me>
-To: linux-kernel@vger.kernel.org
-X-Mailer: iPhone Mail (22D82)
-X-Proofpoint-ORIG-GUID: y-FCk1Hhko17c0BsBO6WmPCoHFlYJazl
-X-Proofpoint-GUID: y-FCk1Hhko17c0BsBO6WmPCoHFlYJazl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_08,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- suspectscore=0 clxscore=1030 mlxlogscore=258 bulkscore=0 adultscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2503180139
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+On some powermacs `i2s` nodes are missing `#size-cells` properties,
+which is deprecated and now triggers a warning at boot since commit
+045b14ca5c36 ("of: WARN on deprecated #address-cells/#size-cells
+handling").
 
-Best,
-Shurjo Sakib Masood
+For example:
+
+  Missing '#size-cells' in /pci@f2000000/mac-io@17/i2s@10000
+  WARNING: CPU: 0 PID: 462 at drivers/of/base.c:134 of_bus_n_size_cells+0xb0/0x120
+  Hardware name: PowerMac3,4 7400 0xc0209 PowerMac
+  ...
+  Call Trace:
+    of_bus_n_size_cells+0xb0/0x120 (unreliable)
+    of_bus_default_count_cells+0x40/0x60
+    __of_get_address+0x158/0x294
+    __of_address_to_resource+0x48/0x258
+    i2sbus_probe+0x564/0x85c [snd_aoa_i2sbus]
+    macio_device_probe+0x60/0x108
+    really_probe+0xd8/0x344
+    __driver_probe_device+0x90/0x1f0
+    driver_probe_device+0x40/0xf4
+    ...
+
+As there's already a fixup for the same issue on `escc` nodes, add
+`i2s` device_type to the existing fixup.
+
+Reported-by: Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ arch/powerpc/kernel/prom_init.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+index 57082fac4668..69018a2afc41 100644
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -2889,11 +2889,11 @@ static void __init fixup_device_tree_pmac(void)
+ 	char type[8];
+ 	phandle node;
+ 
+-	// Some pmacs are missing #size-cells on escc nodes
++	// Some pmacs are missing #size-cells on escc and i2s nodes
+ 	for (node = 0; prom_next_node(&node); ) {
+ 		type[0] = '\0';
+ 		prom_getprop(node, "device_type", type, sizeof(type));
+-		if (prom_strcmp(type, "escc"))
++		if (prom_strcmp(type, "escc") && prom_strcmp(type, "i2s"))
+ 			continue;
+ 
+ 		if (prom_getproplen(node, "#size-cells") != PROM_ERROR)
+-- 
+2.47.2
+
