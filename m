@@ -1,88 +1,134 @@
-Received: from out203-205-221-236.mail.qq.com (out203-205-221-236.mail.qq.com [203.205.221.236])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC493207656
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D424C20A5C5;
+	Tue, 18 Mar 2025 11:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742296940; cv=none; b=rzZuwtX7dNehdX7AonTz2rCTerX53973BevEjz5/TL3UXwXN7OdHH1hzXkqMZKgSNuZ7pNfGpGonacTozTNT7EqhXfC3bm7JZ5++mGQKE6QwR9e1QDFFQJkTgqiCbiPEk0DelxfawbMpEx27zMX7zP7qS3f2sHWq+isev7NCSR8=
+	t=1742296947; cv=none; b=o6P8sUe2oVlfAiW85KhNy/XdAoSELZOAuuU0apbBjsZvKvcDnEmA2JcQDib3pQXxfEVLh21Xkmsk3AyH645C6a5V8HMOc3pa2TLNMzFGj0/wRqaMT8Yeb6XzggB3sEXOffOlnCsDFeyMrcO6jP0TM2JbYFx3rfC2XPOTq18e5F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742296940; c=relaxed/simple;
-	bh=AzupuCmBKbXzpVZpmNKG8W/iWTDbDRRSsor7u3gyJRo=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=WjT6tmSHwepN7ebVfeGIwYG8Ep+QfCUqoxAi23OCL545uioVF8mdnHpeTgxMHMenpZYCw9nYLA+zgZBmpyYG4etNcMjRYtmJyhfTJL6eiIcUt5sLBFWP9UZnI2YWH37IqjWQEL7U4Ns+XglFcEH40iDCyhvwhfeTOHSF6c3gnGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Pb/avz7U; arc=none smtp.client-ip=203.205.221.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1742296947; c=relaxed/simple;
+	bh=nVNeBKkZnXVe3jpNVLayL/Iwz8IvL/M5neyQbJu48YI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZYKTcxcjhOAI07TI/Maqe1zS2OJWNF0KyPFRLQXz12iRBNty3oL2oNMkDY4xCF9mpr2lktwIWyZa0/aRtbRantIbt9FmnKiPPtnfat9wchPvXdFc7CRysUaXMJzrpWPhQ7qzHMdihFHbnKh6WgENgux04eiQYcdLChxoI+t/hcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lnAtj/+k; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Pb/avz7U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1742296633; bh=oZEfS1bNjMZkXP6FUhmebj3gfnVYJH0W3uaf7UKOF0s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Pb/avz7UiTtT2he3iAmEL1HzLyehalc/XJd8AmvgllDzDPTz4RVSI1g3mzcLKa5cT
-	 e3jnCi8qrju3NGeY7oCxrFtBLf+BjLuOxjXrDqKS+onoAzcsEWSkeAGcqBgqj3kJR+
-	 aOs24h1ixltXIwzwbzxBBGtNsxN3vLKTP8D1tjQA=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
-	id 44A96096; Tue, 18 Mar 2025 19:17:10 +0800
-X-QQ-mid: xmsmtpt1742296630t1572ysac
-Message-ID: <tencent_0260977E366A4A26744576D967063D013609@qq.com>
-X-QQ-XMAILINFO: NRWf2ABhDVMHcT4RxQxm55dlORXT/07+7y75NZKRr7AyH8/TyoTplfa7+45mAh
-	 51sCLQOM2bw2LzgBDsoeEKGV0e7lwCj0LPQ2qLeEprp/CXUmc9GLMHIUrej2Q6MQByKCM9ljuBX7
-	 bvLuH98WoHBhDTsSI8Pc8SkMbWSk4RwHDWYt7pFf8jWwXddM2I0Nd/fqdRiN7/zVVZT6+MVqgm2d
-	 uj7z3SlQo3O0/CfU02iuJamEtNNrQxXJaaiVLgrJT5MmQr78FRcQw6o6mlbOsXuBbzgOpICU55Ay
-	 Wx91QHdoQxliD5cZW6CkIvFizoRzEBmnpo/kd1u5eSxKfLBWz9qZj1m6qwOHwbhRtZpK0EPH8hi3
-	 eZyI0l5yy7YZ84UtYTFdWPHyhwYYHiQoQyERTKO6BcAAiX24+5Is0Tcw7Bf6MzwMNL9ws3KOG1q2
-	 gwHWMCVgOIXxy38kyTigptjBM87BuyLGITpZNsNOD36k6YybeaWGFd63PUJZZeGTiMF27hRgOrz3
-	 aL73HBgCuAVqKYjroZ/loJazUTocAKZqpTeSE7qhNwDfePLuewH3ML4+4YmpOBMk25wVvj2vrTNk
-	 ZLrawyMVYssQtTVJ6uZgZoI/g3ZZjEk1cnsXVAhZjp+O1vZ7J6iWAgtVqDD5dqY0DQzeHUSI4gQL
-	 hQg5pggh37x/tj1ApqzVr9IXD/r3Cq3RJ2PSpYEjvk9Bfae+Tldq1wFMzbZca29LBQBv7crZP7UC
-	 fwpO3QI8T/tsd0IVVMQwJfn57tvKRZ8aRzufqyezUD4A4mP1f9HdlNUYNwBnJxfrWsRmkm55YTKm
-	 JW3NByRhjAHJCqm7C7NeQPQtsjhN3NZmzDidoYN3FMs4mykb6D4FCe+M8pck8XSxssDJh1DvHS/m
-	 +1HBT4nbqr+KV8kZB1OGlgWM6oiECIY22WqFoxD/4qbjpY1pv1eb8+lReIX56C94zSeS+k/BjarU
-	 ZCcCi41fE3DjMimerrSQ==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: dhowells@redhat.com
-Cc: enjuk@amazon.com,
-	linux-afs@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	marc.dionne@auristor.com,
-	syzbot+76a6f18e3af82e84f264@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [afs?] general protection fault in afs_atcell_get_link
-Date: Tue, 18 Mar 2025 19:17:11 +0800
-X-OQ-MSGID: <20250318111710.3589229-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2477988.1742293427@warthog.procyon.org.uk>
-References: <2477988.1742293427@warthog.procyon.org.uk>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lnAtj/+k"
+Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5387D778;
+	Tue, 18 Mar 2025 12:20:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1742296837;
+	bh=nVNeBKkZnXVe3jpNVLayL/Iwz8IvL/M5neyQbJu48YI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=lnAtj/+kcH7mIFFwuwj3SWu8FKmVZLzjXOhpW+8fiU1LpbPGhnrtIgorN1mJR9xX7
+	 gn2uTHtXdsw51oKI/mBaqmAIsMHp9mn5AVyQVziA6yG77w4II5DujepwBIoUwM/q/d
+	 87YZIjDrA9Sim62fDV9O7rw4OLVr5V58+p6adnVU=
+From: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+Subject: [PATCH v4 0/7] media: renesas: vsp1: Add support for IIF
+Date: Tue, 18 Mar 2025 12:21:19 +0100
+Message-Id: <20250318-v4h-iif-v4-0-10ed4c41c195@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC9X2WcC/3XMsQ7CIBDG8VdpmMXAAW1x8j2MAy1Xe4PFgCGap
+ u8u7dJBHb/L/f4zSxgJEztVM4uYKVGYytCHivWjm27IyZfNQIAREhTPeuREA3fSe1dr0VvjWfl
+ +RBzotZUu17JHSs8Q31s4y/X63ciSC950Gg1Ya5UdzuTRpTB1wUV/7MOdrakMOwfQO4fChRIGV
+ S8HBP+Hq50r2excFV4r57rWttAZ8YMvy/IBcqwd0yMBAAA=
+X-Change-ID: 20250123-v4h-iif-a1dda640c95d
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, 
+ Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, 
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+X-Mailer: b4 0.15-dev-1b0d6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2687;
+ i=jacopo.mondi+renesas@ideasonboard.com; h=from:subject:message-id;
+ bh=nVNeBKkZnXVe3jpNVLayL/Iwz8IvL/M5neyQbJu48YI=;
+ b=owEBbQKS/ZANAwAIAXI0Bo8WoVY8AcsmYgBn2VdpsxTjOZ1EsEnNAEaN7Rl+a7tW/EVRqMgXO
+ FtRgPG3jE2JAjMEAAEIAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCZ9lXaQAKCRByNAaPFqFW
+ PLGdEACpBq1Ss3wng7XAv65hiIZk3ZhnR5inS5eRaRQJduZC7pik+py9EvXu/ddCF5tZbLneoLk
+ VdH0Yvt9U8PoG/SJlVIIYrZez178jhoXi/iDl1K/eDj32zsoj8mCBXJyRyi6yfuUArTKpDaYcbA
+ DpKW6aO+xB5P0+tOgMc2x5jC9DVRJb6rRwnGNZ1z/L5q9NL3NUmLrvyIYccTGdqE1pmsqPSkwnw
+ Q3iEo/R9WAqMPGhkr3bdrKm4g9LPfdG0Uk9t0hnEFr7DwWPHFe4YVE49Wfq7/kOY9kWSF3ae343
+ LBUwkh9HfHkfGliBzxWFqe+twPZjq3TBDH+VUWi8zKJojf9e2k2PLxH/irPw7dYmoo5pG12r5ga
+ sa6LSwkhbgqO7FNe3FvhY5bGmMQueszNdQiAlUPjefqcDlQbEKAfKRMP8nzwfcdDxpEA+2koTrr
+ 8GpTU2+37I4n/EzdSuApMZigptl2/R3bjuGu1CUlGb970PQd+dGdfVzUNEQCzLDkURW+9m4WLyZ
+ v3lIAMloeqxw323VV7ayiLkRQTJqcmK7WmGUwdgdtGg4bW91N6Ca2TKpUa3v20D50C3uExrkShl
+ hbyCa7nY8Xu1lOgwwBL84pJgKA2bS6anbYStGe84A2+925WvdZxTeg13rqNr/CTeUYjBDzzEpym
+ SqeLTKXYCdk3y2w==
+X-Developer-Key: i=jacopo.mondi+renesas@ideasonboard.com; a=openpgp;
+ fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-On Tue, 18 Mar 2025 10:23:47 +0000, David Howells wrote:
-> commit 3ce74c88a6708de1842dbebc10f83013718324d0
-> Author: David Howells <dhowells@redhat.com>
-> Date:   Tue Mar 18 10:18:29 2025 +0000
-My fix already sent.
-https://lore.kernel.org/all/tencent_8CA5671E3C533638973237484A0874917609@qq.com/
-> 
->     afs: Fix afs_atcell_get_link() to check if ws_cell is unset first
-> 
->     Fix afs_atcell_get_link() to check if the workstation cell is unset before
->     doing the RCU pathwalk bit where we dereference that.
-> 
->     Fixes: 823869e1e616 ("afs: Fix afs_atcell_get_link() to handle RCU pathwalk")
->     Reported-by: syzbot+76a6f18e3af82e84f264@syzkaller.appspotmail.com
->     Signed-off-by: David Howells <dhowells@redhat.com>
->     cc: Marc Dionne <marc.dionne@auristor.com>
->     cc: linux-afs@lists.infradead.org
->     cc: linux-fsdevel@vger.kernel.org
+The IIF (ISP InterFace) is a VSP2 function that reads data from
+external memory using two RPF instances and feed it to the ISP.
 
-BR,
-Edward
+The IIF support is modeled in the vsp1 driver as a new, simple,
+entity type.
+
+IIF is part of VSPX, a version of the VSP2 IP specialized for ISP
+interfacing. To prepare to support VSPX, support IIF first by
+introducing a new entity and by adjusting the RPF/WPF drivers to
+operate correctly when an IIF is present.
+
+Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+---
+Changes in v4:
+- Fix SWAP bits for RAW10, RAW12 and RAW16
+- Link to v3: https://lore.kernel.org/r/20250317-v4h-iif-v3-0-63aab8982b50@ideasonboard.com
+
+Changes in v3:
+- Drop 2/6 from v2
+- Add 5/7 to prepare for a new implementation of 6/7
+- Individual changelog per patch
+- Add 7/7
+- Link to v2: https://lore.kernel.org/r/20250224-v4h-iif-v2-0-0305e3c1fe2d@ideasonboard.com
+
+Changes in v2:
+- Collect tags
+- Address review comments from Laurent, a lot of tiny changes here and
+  there but no major redesign worth an entry in the patchset changelog
+
+---
+Jacopo Mondi (7):
+      media: vsp1: Add support IIF ISP Interface
+      media: vsp1: dl: Use singleshot DL for VSPX
+      media: vsp1: rwpf: Break out format handling
+      media: vsp1: wpf: Propagate vsp1_rwpf_init_ctrls()
+      media: vsp1: rwpf: Initialize image formats
+      media: vsp1: rwpf: Support operations with IIF
+      media: vsp1: pipe: Add RAW Bayer formats mapping
+
+ drivers/media/platform/renesas/vsp1/Makefile      |   2 +-
+ drivers/media/platform/renesas/vsp1/vsp1.h        |   3 +
+ drivers/media/platform/renesas/vsp1/vsp1_dl.c     |   7 +-
+ drivers/media/platform/renesas/vsp1/vsp1_drv.c    |  11 ++
+ drivers/media/platform/renesas/vsp1/vsp1_entity.c |   8 ++
+ drivers/media/platform/renesas/vsp1/vsp1_entity.h |   1 +
+ drivers/media/platform/renesas/vsp1/vsp1_iif.c    | 121 ++++++++++++++++++++++
+ drivers/media/platform/renesas/vsp1/vsp1_iif.h    |  26 +++++
+ drivers/media/platform/renesas/vsp1/vsp1_pipe.c   |  73 ++++++++++++-
+ drivers/media/platform/renesas/vsp1/vsp1_pipe.h   |   1 +
+ drivers/media/platform/renesas/vsp1/vsp1_regs.h   |   8 ++
+ drivers/media/platform/renesas/vsp1/vsp1_rpf.c    |  18 +++-
+ drivers/media/platform/renesas/vsp1/vsp1_rwpf.c   |  92 ++++++++++++++--
+ drivers/media/platform/renesas/vsp1/vsp1_rwpf.h   |   4 +
+ drivers/media/platform/renesas/vsp1/vsp1_wpf.c    |  31 ++++--
+ 15 files changed, 381 insertions(+), 25 deletions(-)
+---
+base-commit: f2151613e040973c868d28c8b00885dfab69eb75
+change-id: 20250123-v4h-iif-a1dda640c95d
+
+Best regards,
+-- 
+Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
 
