@@ -1,79 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20521F418A
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA121E52D;
+	Tue, 18 Mar 2025 08:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742285363; cv=none; b=cDv/8oU3BOhcRtMkUPH8LoHHXufbWzz4jqade2GXjTLh8IBnn6zn/hGGCVvkFT8D2JhABHEPWUgNf7ThOB3KHxlHEsrgg+3MuYl+mbeVpFpqO02cuuHbzA3QxWlbzr21kgalQz9dIoBJCazLGJzbY6vxUQYHcmjWrOpPCYQ4HYw=
+	t=1742285400; cv=none; b=QEzwHrdsJEvn5ssl9r0l2Ad0YBqrRVGsRwXC+Xo9XthdaT0dUrfz562MzjytUdO3Jg4lz58QEXzTFt9avJTY/QS140y6H5OdBvD676JkHRm22egd324NcNyqfFsgx2SIgfVxalpZHVP0pASmsEndU+oMBva6dDfrqMG8TIEJ+fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742285363; c=relaxed/simple;
-	bh=7Mp3l5IFx+cBU0LtsyIxw8lHW6ZgPBAyf3KkmP0Weno=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FQqObrbdhV2MS9a2Yh+4KgFEA9kZCkeqVfIBT8LcA/i2N3tL/uEJe0m6yJ/0adFdksuHkAE33C0DQbIsWZyDPDouLiFDZ/Tgc9FC51AoSHTcsNrDEp9e1zQc/kdsivJj+ccJo39KjiQwDk0DYC9cemuoV18CKzZ+lAs6l27AAK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E/zPgJgD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742285400; c=relaxed/simple;
+	bh=e4UkUqezG5Edul9MR9g7cuOdXGh4POpZl16i1wixQDQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=SrZmgWkaHwATxjHa8r5JZG+vXRORhLspxHFSvyiQiK+Po43nH6GFZ8SnR5dHq2v5SpQmmMOSMnWwttl3uZGJMRJ4ML1z/aKI5Ss5Aw09SWyBu6n3KdA04gJ/FY6SJvDMPw3Au5pHLcNnvK55Y/YG6qdlvgXaGSn0vR4ubv9zOi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWjcObUZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/zPgJgD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742285360;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1MOPIMVq4RYa2Qlhwo2paVsAS+Ja31+A7+LmeILgDQA=;
-	b=E/zPgJgDHfhUUb/vDdgC3ywtQLqhMCbiAqfEH87am/HHCVVDq+US5iGZWsz7GPjSz+py+X
-	yj7hpryiDRgwPJa0RzEyGcLsgOPPpQbFeYMr3t1AU5NW2RSXKtNZWTYGOSywNjSCeP+lsB
-	ePF2rFHosTf8lvHgY6SWtMQsRvKCvv0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-125-RWRvHbM2Mtyzk2tbU1YK2Q-1; Tue, 18 Mar 2025 04:09:19 -0400
-X-MC-Unique: RWRvHbM2Mtyzk2tbU1YK2Q-1
-X-Mimecast-MFC-AGG-ID: RWRvHbM2Mtyzk2tbU1YK2Q_1742285358
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so14617905e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 01:09:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742285358; x=1742890158;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1MOPIMVq4RYa2Qlhwo2paVsAS+Ja31+A7+LmeILgDQA=;
-        b=Cn6P++67qAQ2xpkm9TFPJj/m/gB2FnlOjoVmFZ92jybn1fpiQwZU3HyQhuyeM0pcn8
-         El+ia8/JigzVNUg9qgiEVr60QJOiPmBH4tFUHBMyENW4tV3IELnfSXjXICZplagSl3zm
-         eX7QCe4GYf6027e9N+p/2RV2UEAiQ1T2+qtKgs5kG4pqw8439F0C6zZ5L8IzKJgdG3Ya
-         RE+QB1rLr3ryJotiHOc1Ov/Ke7Vib/6iyTbdDXBDDuAv6yrlvPS8r/0YgBdKeZ/JMHPT
-         ktaZ7gZe4INOrr/VTr7vorzYIr5MMjzXljpDRkv3owp/6OIHY7FRRmCy5yoIAc/2gQ1Z
-         N3sg==
-X-Forwarded-Encrypted: i=1; AJvYcCWa1OpnSSuCatDn98KNu4kvGuQtu+vaC87lFkSCM6DGUwOfzCAyVQpgIiGDpjzEj9rfxYQkXOLgikwMU7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgy8eYPhnSdwpeGHryvDcz87Xf8QVeNAvxaULxMoIQWZ63NLY+
-	gDAlWaKVEKaGfus4WlpuCQyVOHSbF6Dzwa2UzYMTEXy9M4w/bCVztTnOqZ1tK2yCZlF6l35WZDm
-	rUdEbMHcqAXBJ5WUsvbSXgeWRCUbTu5CwM7fy+WzEYP5QOV/NZtTmfSbR+0wZEQ==
-X-Gm-Gg: ASbGncsj8eZvoWWOzjXZcL77gTzDcjB1+mgv7kjTrk3oAmJsG0rjVqxWmS68iqCwIIi
-	j2H/3DQgRXKSYxI5GX8bcJdsSCaEmTW71V4t9LRd4PYgzk1iFKdggTqZD4XZf/xrkPvpOOVOluS
-	sfp7OhIl+uWe4utkSunIsiyZ2P7Bjx9OmqI0TlMwZNQ5HlKItrXYF1xekh1ghLAn2gCeYQm4C7r
-	xn7NTaks0nd7o4JCIlGcb0ypqbBw02a3qmEZFLoH0wFWRDPKcqGlkUb8yvwlI1//CizBBnMul0h
-	oHBb0gx4t5Zjh73CQjclCui/6pYl/4qRcXvSAsiitj53c/SItNgX0zN/FhWEfY0=
-X-Received: by 2002:a5d:64e2:0:b0:391:3d97:bd33 with SMTP id ffacd0b85a97d-3996b44670dmr2495604f8f.13.1742285357968;
-        Tue, 18 Mar 2025 01:09:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGTLxf1mjfmE9kJO903aRfrs3DFnwMwFBN6shttc0uogtpGRU10VKPtw6/ONRx4vNAinDz/MA==
-X-Received: by 2002:a5d:64e2:0:b0:391:3d97:bd33 with SMTP id ffacd0b85a97d-3996b44670dmr2495582f8f.13.1742285357554;
-        Tue, 18 Mar 2025 01:09:17 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb318a75sm17490878f8f.76.2025.03.18.01.09.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 01:09:16 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Maud Spierings <maudspierings@gocontroll.com>,
-	Mark Brown <broonie@kernel.org>,
-	linux-spi@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] MAINTAINERS: adjust the file entry in GOCONTROLL MODULINE MODULE SLOT
-Date: Tue, 18 Mar 2025 09:09:13 +0100
-Message-ID: <20250318080913.31455-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWjcObUZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE585C4CEDD;
+	Tue, 18 Mar 2025 08:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742285399;
+	bh=e4UkUqezG5Edul9MR9g7cuOdXGh4POpZl16i1wixQDQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ZWjcObUZxhGiH4eIk1yWPqxDOE5HkuArp5QehkKNI6dRN9NBC7+htVOdEkVXhhUqS
+	 yZ6t/6zxWh4M7++33uZERs75I4qJMmZPg8rwPACrkP9AU768Y1BajdVFGn1B3rIf1i
+	 soZ/X1MkWoTqesRTXq6KABjtY/9szNg13Ap6lHIgA3poaB7NOYCji+pgbeQNfR5/5c
+	 Kip0rplrjKD66t39hV4AEzqv6WZK9WqPtC8W7YyGQLuTSk/J12P5UQbaeZ0Sz044VV
+	 io4OfxejnSAQToQbHLpCUAwXUYoiNp0DdFwKqiK2QE9QSgJnYHGfB2HB92nWEy53/Y
+	 /u4vLPFKKK1aw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E85380DBE8;
+	Tue, 18 Mar 2025 08:10:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,36 +37,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v5 00/13] net: phy: Rework linkmodes handling in a
+ dedicated file
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174228543527.4071400.14783355936899188267.git-patchwork-notify@kernel.org>
+Date: Tue, 18 Mar 2025 08:10:35 +0000
+References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
+In-Reply-To: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, andrew@lunn.ch, kuba@kernel.org, edumazet@google.com,
+ pabeni@redhat.com, linux@armlinux.org.uk, hkallweit1@gmail.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+ christophe.leroy@csgroup.eu, herve.codina@bootlin.com, f.fainelli@gmail.com,
+ vladimir.oltean@nxp.com, kory.maincent@bootlin.com, o.rempel@pengutronix.de,
+ horms@kernel.org, romain.gantois@bootlin.com
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Hello:
 
-Commit 8f1cc5242544 ("MAINTAINERS: add maintainer for the GOcontroll
-Moduline module slot") adds a new MAINTAINERS section referring to the
-non-existent file:
-  Documentation/connector/gocontroll,moduline-module-slot.yaml
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-It intends to refer to the file with the same name in
-Documentation/devicetree/bindings/connector/. Adjust the file reference to
-the intended location.
+On Fri,  7 Mar 2025 18:35:57 +0100 you wrote:
+> Hello everyone,
+> 
+> This is V5 of the phy_caps series. In a nutshell, this series reworks the way
+> we maintain the list of speed/duplex capablities for each linkmode so that we
+> no longer have multiple definition of these associations.
+> 
+> That will help making sure that when people add new linkmodes in
+> include/uapi/linux/ethtool.h, they don't have to update phylib and phylink as
+> well, making the process more straightforward and less error-prone.
+> 
+> [...]
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Here is the summary with links:
+  - [net-next,v5,01/13] net: ethtool: Export the link_mode_params definitions
+    https://git.kernel.org/netdev/net-next/c/79f88a584e35
+  - [net-next,v5,02/13] net: phy: Use an internal, searchable storage for the linkmodes
+    https://git.kernel.org/netdev/net-next/c/d8c838a57ce2
+  - [net-next,v5,03/13] net: phy: phy_caps: Move phy_speeds to phy_caps
+    https://git.kernel.org/netdev/net-next/c/8c8c4a87933d
+  - [net-next,v5,04/13] net: phy: phy_caps: Move __set_linkmode_max_speed to phy_caps
+    https://git.kernel.org/netdev/net-next/c/4823ed060919
+  - [net-next,v5,05/13] net: phy: phy_caps: Introduce phy_caps_valid
+    https://git.kernel.org/netdev/net-next/c/87b22ce31235
+  - [net-next,v5,06/13] net: phy: phy_caps: Implement link_capabilities lookup by linkmode
+    https://git.kernel.org/netdev/net-next/c/dbcd85b05c5b
+  - [net-next,v5,07/13] net: phy: phy_caps: Allow looking-up link caps based on speed and duplex
+    https://git.kernel.org/netdev/net-next/c/fc81e257d19f
+  - [net-next,v5,08/13] net: phy: phy_device: Use link_capabilities lookup for PHY aneg config
+    https://git.kernel.org/netdev/net-next/c/c7ae89c6b4d5
+  - [net-next,v5,09/13] net: phylink: Use phy_caps_lookup for fixed-link configuration
+    https://git.kernel.org/netdev/net-next/c/de7d3f87be3c
+  - [net-next,v5,10/13] net: phy: drop phy_settings and the associated lookup helpers
+    https://git.kernel.org/netdev/net-next/c/ce60fef7fecc
+  - [net-next,v5,11/13] net: phylink: Add a mapping between MAC_CAPS and LINK_CAPS
+    https://git.kernel.org/netdev/net-next/c/3bea75002a05
+  - [net-next,v5,12/13] net: phylink: Convert capabilities to linkmodes using phy_caps
+    https://git.kernel.org/netdev/net-next/c/4ca5b8a258b6
+  - [net-next,v5,13/13] net: phylink: Use phy_caps to get an interface's capabilities and modes
+    https://git.kernel.org/netdev/net-next/c/3bd87f3b4405
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 561d394cb210..92af00cd0eee 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10022,7 +10022,7 @@ F:	drivers/media/usb/go7007/
- GOCONTROLL MODULINE MODULE SLOT
- M:	Maud Spierings <maudspierings@gocontroll.com>
- S:	Maintained
--F:	Documentation/connector/gocontroll,moduline-module-slot.yaml
-+F:	Documentation/devicetree/bindings/connector/gocontroll,moduline-module-slot.yaml
- 
- GOODIX TOUCHSCREEN
- M:	Hans de Goede <hdegoede@redhat.com>
+You are awesome, thank you!
 -- 
-2.48.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
