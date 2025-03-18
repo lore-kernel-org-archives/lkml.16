@@ -1,99 +1,123 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0056D1DE2CB
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B701EF37E;
+	Tue, 18 Mar 2025 07:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742283284; cv=none; b=HUC+6g87X15R5RO1Oay9PgFqKMkwoOjFQqv3YGQzquOAtgShD7PGkD530OvBtE4QW2QTjt/ott/0g5cJidCwInimxJonHvFL6Pgsuk6my/3rY5aCTQxk4/QNIgBRMFuk1JlvKk3m7EfLM3FieStqShQ6p8yq6fToj1vpDCcZ4K4=
+	t=1742283289; cv=none; b=q+CvfhqovZxd0MIKLOXSfWow5L8gqdLDiEa2YIF5BN5Riq8C+CJfBb0KSKKWmXouiwMMmWBDDzXm7nutrwcNi6oc2XXMcVZc9kTjwaBxmlmgPPQk/6ewqia7INXRgrAoudfIHNZJiR+rrMBNvMLyhu9A8vpGU2xbiYy79EZ7XUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742283284; c=relaxed/simple;
-	bh=Ie3if0QiE8quGYnbhmI4RJUqhXhjhyS2w8nEhrhhJJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dLQbQfxO3YEmyq6Ws0oH4RHl94j4PljBB70PDkpFfBU2WGMKhNeRxysXRhTi5TnlzYl97ZeJwlc5nLveQUjipgH0ZzuRw0s7F9duCSNjZR8oZinpBU+rs8ePGhnzfAZLmlU1zHoW3R8FvZJnZQq+s+1D21/Yuf9hIzAWyevciZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mNXz8GvR; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mNXz8GvR"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2260c91576aso33139435ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:34:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742283282; x=1742888082; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Sch7la5qdb49duMOy4vFgMfr/xMO2MbtEqZ0tC+N5Co=;
-        b=mNXz8GvRVxSPnyWWROXnh144OIxi65p3zvhUJSmXMoCYmi9k544L8HVvVRzNUBXrgj
-         h7DIRId/X/BWpo4rcPaVD3RgYiX3DmQGrIAsDZzcvU3jrVrNEqhVlKKinnYHFNIlMQjA
-         QFF/exKiN/Eeu5EM1V1u+p1pzzdaECiLsiyOfjdiN6h+FcxEWufNSgv3jWhp6C7K/8aK
-         4xpu5nahnGovm0T0+jVkB2b2T7pEAR1RRc7zOlijvjci4az1a0UqM8Xn8UM0TDRXy+lj
-         EAwZtS1PAX4/BM6Svg4AohM7Q6WVWn5FFQrctZF7oYuKZFmeraoFI6v7WiycmJ5O0q3d
-         CS/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742283282; x=1742888082;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sch7la5qdb49duMOy4vFgMfr/xMO2MbtEqZ0tC+N5Co=;
-        b=Fe/72kkgSk0Xyir/aEWQ5f284H+rnhli8/MxGcoEx+ZM7Gx2WuQOodIG9EIzdKAs1E
-         c1omrD1eSc5URyLHhb0uJriaNAz/Iqxk7MF2T/D6kRezVSpF7odnzLd+sKul8aI11zep
-         irZsUBcQCU/Xf6S9DpTpe7D/bbaMItbXqohAP5MVrMx4YAVABT1bXvAVyc7SBKO2y5U9
-         3buwdGCEFzxZ2iBr4O8ob6tATmHZvDv4Pf+XECQsmOAFIwJnV9oEfGg4qDlYhOPvoR5B
-         EbFvx1g7l4kfWfUFGbDNfSHVC1YE/vqHBjZddVKB7+WEiq8mdBNVnc9T1T1oUXTN3Uhb
-         MFOg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCr0nfDUV9rThMzYQE6CF0HoixQicT15RpTNiOCV9q72JW8EGI2djYoVlNUAwEFHQ7aShD8nxErzixWPk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylVBggnqSpG2HBM5bHAUG/rnML8iCVt/LPXYPaonGaZ9MUI/03
-	Uz3yuwB0yVauhJv2Vk68MVqAocV3MotwmpA8qq8/hGx0nBP+HeaWfHHfacXanA==
-X-Gm-Gg: ASbGncv6USz4JpLQeoHJdRNByYf7VVRwAwuSjrQCh9tWQIfpnDYZc4k2PSlFAgBflTi
-	zxkFlrK0dPzPqY0y+gN0TnmPZNvRzcVK6NWRxxITan5mNI/6bSUS/7H2FLqoTd2kD5cfg2cw2YZ
-	F3BQ0jThQjuKqpWr76a79H/QAUZcsiROfGnGuMAIFuYKV+xeANaRuHA3DRhnpiP6GSxxryxfq9y
-	Ar4U8nrKd/bkyl7Z/fjHhq0cNEb9AutZ1jgHG0eJhVMtFwq56FZuzSLNQby1N0n9aZhcu/oZdL2
-	MOnzkfegnE1RZ+tQhSy+DVSw/tD4CPQADMXWxTTHQrBbTaWtvFm5xHgT
-X-Google-Smtp-Source: AGHT+IG5yxqfLmJatVY82JIyTMbAGWoGx5aMvFHioASOebuvnlP+jZZ+3cmaakAsF9c4YjxeoRTg9Q==
-X-Received: by 2002:a17:903:230d:b0:220:e1e6:4457 with SMTP id d9443c01a7336-225e0a8dff2mr180297405ad.26.1742283282287;
-        Tue, 18 Mar 2025 00:34:42 -0700 (PDT)
-Received: from thinkpad ([120.56.195.170])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba7260sm87304195ad.110.2025.03.18.00.34.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 00:34:42 -0700 (PDT)
-Date: Tue, 18 Mar 2025 13:04:37 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Md Sadre Alam <quic_mdalam@quicinc.com>
-Cc: miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-	broonie@kernel.org, bbrezillon@kernel.org,
-	linux-mtd@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] mtd: rawnand: qcom: Fix read len for onfi param
- page
-Message-ID: <20250318073437.hmunilehmqdfkyg3@thinkpad>
-References: <20250310120906.1577292-1-quic_mdalam@quicinc.com>
- <20250310120906.1577292-4-quic_mdalam@quicinc.com>
+	s=arc-20240116; t=1742283289; c=relaxed/simple;
+	bh=WFho1XHp84WTnAVFdUu9OrZndGAcg91IPCB+7SOw4gI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NDGajaoUB+9dSTYIgMRx4Z8l6/Kg3FPq6mP8p4hS9PrrURBJI9K+Iwzt/P5KumDZX7agTVJ3lplEgQ0woznZdiLOBipAs8zc+gZlkLIyzE47hJdiF4wHMXJ91ZBq3N2dlBwajTkUh1MxQBBzk5BxpuAfwxYMGqlqf0GCaPJtCPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZH3WJ5WLJz4f3khY;
+	Tue, 18 Mar 2025 15:34:20 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 5D3C11A058E;
+	Tue, 18 Mar 2025 15:34:43 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl8EItlnJDdYGw--.56140S4;
+	Tue, 18 Mar 2025 15:34:40 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-fsdevel@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-scsi@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	hch@lst.de,
+	tytso@mit.edu,
+	djwong@kernel.org,
+	john.g.garry@oracle.com,
+	bmarzins@redhat.com,
+	chaitanyak@nvidia.com,
+	shinichiro.kawasaki@wdc.com,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH xfstests 0/5] fstests: add fallocate write zeroes tests
+Date: Tue, 18 Mar 2025 15:26:10 +0800
+Message-ID: <20250318072615.3505873-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250310120906.1577292-4-quic_mdalam@quicinc.com>
+X-CM-TRANSID:gCh0CgCnCl8EItlnJDdYGw--.56140S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFWfWryDtr43uFWfXr1DWrg_yoW8AF1kpa
+	1vgr15tr4UGF17Crs3Gr1Dtrn5Aws7Gr4Ykr4xt34avFy8Aw18GF9Ygr1UXr93Cw18uw4Y
+	yrs8Kryagw47A37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjTR_OzsDUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Mon, Mar 10, 2025 at 05:39:05PM +0530, Md Sadre Alam wrote:
-> The minimum size to fetch the data from device to QPIC buffer
-> is 512-bytes. If size is less than 512-bytes the data will not be
-> protected by ECC as per QPIC standard. So while reading onfi parameter
-> page from NAND device set nandc->buf_count = 512.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 89550beb098e ("mtd: rawnand: qcom: Implement exec_op()")
-> Tested-by: Lakshmi Sowjanya D <quic_laksd@quicinc.com>
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+From: Zhang Yi <yi.zhang@huawei.com>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+The Linux kernel is planning to support FALLOC_FL_WRITE_ZEROES in
+fallocate(2). Add tests for the newly added fallocate
+FALLOC_FL_WRITE_ZEROES command. This series depends on the changes to
+xfs_io [1] that introduced the 'fwzero' command.
 
-- Mani
+ - generic/764 is an extension of generic/008, it is designed to test
+   page boundaries for fwzero.
+ - generic/765 is an extension of generic/009, it is designed to do
+   generic functions tests for fwzero.
+ - generic/766 is and extension of generic/349 and generic/351, it is
+   designed to test fwzero on raw block device.
+ - Finally, add FALLOC_FL_WRITE_ZEROES support for fstress and fsx.
+
+[1] https://lore.kernel.org/linux-fsdevel/20250318072318.3502037-1-yi.zhang@huaweicloud.com/
+
+Thanks,
+Yi.
+
+Zhang Yi (5):
+  generic/764: add page boundaries tests for fallocate write zeroes
+  generic/765: add generic tests for fallocate write zeroes
+  generic/766: test fallocate write zeroes on block device
+  fstress: add fallocate write zeroes support
+  fsx: add fallocate write zeroes support
+
+ common/rc             |   2 +-
+ ltp/fsstress.c        |  12 ++
+ ltp/fsx.c             |  80 ++++++++
+ src/global.h          |   4 +
+ tests/generic/764     |  34 ++++
+ tests/generic/764.out | 433 ++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/765     |  40 ++++
+ tests/generic/765.out | 269 ++++++++++++++++++++++++++
+ tests/generic/766     |  80 ++++++++
+ tests/generic/766.out |  23 +++
+ 10 files changed, 976 insertions(+), 1 deletion(-)
+ create mode 100755 tests/generic/764
+ create mode 100644 tests/generic/764.out
+ create mode 100755 tests/generic/765
+ create mode 100644 tests/generic/765.out
+ create mode 100755 tests/generic/766
+ create mode 100644 tests/generic/766.out
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.46.1
+
