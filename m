@@ -1,62 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D016920B21A
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647C8207657
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742297860; cv=none; b=tPgAzINM6pKxJ0054EbCm+JRfMKIb/JLQfoLTgC0uu6eelcA7/jXch9JVYRdKOcwJDsm7X5lTA2H1vidPKHQ3/xrjB5tewqgaX3g0XlEzgYGkBkcc+4mmmQanqmIfxMR9Mh0TwCHPE/8u05bJu0dpUCBrw1r/TwqOkmCFmpuIdk=
+	t=1742297998; cv=none; b=pOEM4Kng1X351c5P0B5Y1uNcWDtFBP0Mbg6rTia+eA3xGknkTwaV3ag40P3GIYxFxCBhXiKAR7BmiBoUM0MJn18nYWhF+8pzYX1RC7duFdbrL32FMb3dJFV0u37qXBvQdueRQCH0soeckVEIpie6dXulvMOM9CVDedHTf3xA6ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742297860; c=relaxed/simple;
-	bh=X5AEPegJnCWTJZdvz//Ircoe285+jfO/V3sdiCOHHa0=;
+	s=arc-20240116; t=1742297998; c=relaxed/simple;
+	bh=7aiYn3w9hN8oZA0SnlIz2klLCVihwhGr7juPxbuOyUQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MQ0Tp7OSQYTzsHIxm4ci8GUi9mUMvLv3E8LxWJLfNDXQqWAJFI3SfR+zt/U4LnPeWe/pLDifRsNEWLInj8h5Wmxu9cHvrnTUOAozJTNjrmnKMBG1ega1nXGaOO3KLAhyiXCpYm1kHU4HqFZnN0n9C0quJA47tf8YO82LiLTzNpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=brUpgllX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HzlghEtCtyqxuTuZQA6NFcxFCSam4zXFbhD1/A1jvzbB4iqc2GDPoAfwCoexig1cmnzI7RrdlDwvvAHgt0rryd7bPlau2M/45gKhGYX9RudZpVjGGfnGRMlGGkL873r63WXYUa9xHBnRNArh7F11GwJ+GE8o4gLgY+4t43W7w54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VDbomSqx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kHtqDdWD; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="brUpgllX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742297857;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VDbomSqx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kHtqDdWD"
+Date: Tue, 18 Mar 2025 12:39:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742297994;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=11ZNprjj242fLpLRxnWb0Up6kO5h/hr5oXZeYOIssMQ=;
-	b=brUpgllXcVg6lf7SWKUb+CqZ5MLBpOih3EXl1LLKTHJxAhQsuAXQkNE0Hf794NRZjUwUqx
-	YgIziJ6wR116jTLaK08V6llht5aKd8Ych2Xp/j3dKWkLMckJ8+la8oNuyzwJWciM1th7Pb
-	ur2Jx9hkMgCmcQHV675wry0EkR4IdtQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-575-0MmHvMWaPjaNHVL7QiWrIQ-1; Tue,
- 18 Mar 2025 07:37:34 -0400
-X-MC-Unique: 0MmHvMWaPjaNHVL7QiWrIQ-1
-X-Mimecast-MFC-AGG-ID: 0MmHvMWaPjaNHVL7QiWrIQ_1742297853
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 08E4E19560A1;
-	Tue, 18 Mar 2025 11:37:33 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.255])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 00DCB18001EF;
-	Tue, 18 Mar 2025 11:37:28 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 18 Mar 2025 12:37:00 +0100 (CET)
-Date: Tue, 18 Mar 2025 12:36:55 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, Kees Cook <kees@kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Josh Drake <josh@delphoslabs.com>,
-	Suraj Sonawane <surajsonawane0215@gmail.com>,
-	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-	security@kernel.org, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] keys: Fix UAF in key_put()
-Message-ID: <20250318113655.GB14792@redhat.com>
-References: <2477454.1742292885@warthog.procyon.org.uk>
- <20250318112245.GA14792@redhat.com>
+	bh=Qzd26m9hOlJuJpPwAnp79rQkGlrUfkncxZH1j+3O99o=;
+	b=VDbomSqxOSA4icAc83aRwqV92FVRDi5wE6nhJSz7xPKDQmjRgh5UKRYXZ6Nh5vSAv+t9RO
+	K0nmQCUrAM/iIisvBZgQXbFTmHI8DwmC77rEcfMLnm/xWeuMBBbwZL/VxNUpMirLr+pGFP
+	Jc4j/VstUVSQLm3tkziUjlcX7bCxYYMU7WPit4K0y771c/qQo9nVqGgeQO3uNvc4eSrO9t
+	ZIOBossRSXlx6lUDCB/jGFdsJ1YhjS6t5cJH+On7EGDqKA50BBA/upSMq7FKL+zePxFQHo
+	0fRiySl2RWVE0PoyxDSNaRq7hkTivPmkAOgJ3B6NTV1aRuWVKRsJq5J2PYYVpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742297994;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qzd26m9hOlJuJpPwAnp79rQkGlrUfkncxZH1j+3O99o=;
+	b=kHtqDdWDV0RGuugFHvAMqWMcMPxNjM9OoGsFfzrXIdIDEE/ak++d7S2m9I6TZ8Wp4XZCmj
+	vT+KVkZcHxO003Aw==
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+To: mingo@kernel.org
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 0/5] x86/cpu: Introduce <asm/cpuid/types.h> and
+ <asm/cpuid/api.h> and clean them up
+Message-ID: <Z9lbieqhnsVsAf4J@lx-t490>
+References: <20250317223039.3741082-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,106 +60,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250318112245.GA14792@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20250317223039.3741082-1-mingo@kernel.org>
 
-Either way... I know nothing about security/key, but grep -w key_put
-finds
+Hi,
 
- *  When it is no longer required, the key should be released using::
-
-	void key_put(struct key *key);
-
-    Or::
-
-	void key_ref_put(key_ref_t key_ref);
-
-    These can be called from interrupt context.
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-in Documentation/security/keys/core.rst
-
-and since key_user_put() takes key_user_lock with irqs enabled,
-key_put()->key_user_put() doesn't look correct...
-
-Oleg.
-
-On 03/18, Oleg Nesterov wrote:
+On Mon, 17 Mar 2025, mingo@kernel.org wrote:
 >
-> On 03/18, David Howells wrote:
-> >
-> > --- a/security/keys/key.c
-> > +++ b/security/keys/key.c
-> > @@ -645,21 +645,30 @@ EXPORT_SYMBOL(key_reject_and_link);
-> >   */
-> >  void key_put(struct key *key)
-> >  {
-> > +	int quota_flag;
-> > +	unsigned short len;
-> > +	struct key_user *user;
-> > +
-> >  	if (key) {
-> >  		key_check(key);
-> >
-> > +		quota_flag = test_bit(KEY_FLAG_IN_QUOTA, &key->flags);
-> > +		len = key->quotalen;
-> > +		user = key->user;
-> > +		refcount_inc(&user->usage);
-> >  		if (refcount_dec_and_test(&key->usage)) {
-> >  			unsigned long flags;
-> >
-> >  			/* deal with the user's key tracking and quota */
-> > -			if (test_bit(KEY_FLAG_IN_QUOTA, &key->flags)) {
-> > -				spin_lock_irqsave(&key->user->lock, flags);
-> > -				key->user->qnkeys--;
-> > -				key->user->qnbytes -= key->quotalen;
-> > -				spin_unlock_irqrestore(&key->user->lock, flags);
-> > +			if (quota_flag) {
-> > +				spin_lock_irqsave(&user->lock, flags);
-> > +				user->qnkeys--;
-> > +				user->qnbytes -= len;
-> > +				spin_unlock_irqrestore(&user->lock, flags);
-> >  			}
-> >  			schedule_work(&key_gc_work);
-> >  		}
-> > +		key_user_put(user);
+> From: Ingo Molnar <mingo@kernel.org>
 >
-> Do we really need the unconditional refcount_inc / key_user_put ?
+> This series contains Ahmed S. Darwish's splitting up of <asm/cpuid.h>
+> into <asm/cpuid/types.h> and <asm/cpuid/api.h>, followed by a couple
+> of cleanups that create a more maintainable base.
 >
-> 	void key_put(struct key *key)
-> 	{
-> 		if (key) {
-> 			struct key_user *user = NULL;
-> 			unsigned short len;
+> [ This is a resend with a proper SMTP setup. Apologies for the duplication. ]
 >
-> 			key_check(key);
->
-> 			if (test_bit(KEY_FLAG_IN_QUOTA, &key->flags)) {
-> 				len = key->quotalen;
-> 				user = key->user;
-> 				refcount_inc(&user->usage);
-> 			}
->
-> 			if (refcount_dec_and_test(&key->usage)) {
-> 				unsigned long flags;
->
-> 				/* deal with the user's key tracking and quota */
-> 				if (user) {
-> 					spin_lock_irqsave(&user->lock, flags);
-> 					user->qnkeys--;
-> 					user->qnbytes -= len;
-> 					spin_unlock_irqrestore(&user->lock, flags);
-> 				}
-> 				schedule_work(&key_gc_work);
-> 			}
->
-> 			if (user)
-> 				key_user_put(user);
-> 		}
-> 	}
->
-> looks a bit more clear/simple to me...
->
-> Oleg.
 
+Thanks a lot!
+
+Just a small hint that I see this PQ in tip/master, merge commit
+b8fefef00c0d ("Merge branch into tip/master: 'x86/cpu'"):
+
+   # New commits in x86/cpu:
+      ba501f14e1e6 ("x86/cpuid: Use u32 in instead of uint32_t in <asm/cpuid/api.h>")
+      aec28d852ed2 ("x86/cpuid: Standardize on u32 in <asm/cpuid/api.h>")
+      f2f828b547ab ("x86/cpuid: Clean up <asm/cpuid/api.h>")
+      67a7ae050e7c ("x86/cpuid: Clean up <asm/cpuid/types.h>")
+      02b63b33dfc9 ("x86/cpuid: Refactor <asm/cpuid.h>")
+
+But for some reason the above 5 commits are not yet pushed to x86/cpu.
+
+(Sorry if this is expected.)
+
+All the best,
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
