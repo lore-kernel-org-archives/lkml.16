@@ -1,232 +1,144 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2057.outbound.protection.outlook.com [40.107.243.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770A6207A04;
-	Tue, 18 Mar 2025 09:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742290034; cv=fail; b=bvajbIedBVPdPYpL+bl0k/R0F3JrZ6vfTEob2Dc2w13FRgdUpqNk3CWhxP36DUw5uX7/m6HnM13MHI1ksGljaNnYnGulEFMQJhMB1MslgHoMN4LBvVAJyZ5gqwXv+5AG06NN8IvZ5/pCYjJnGpmWTThhP4BD7mHOTKwQsfPTZs0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742290034; c=relaxed/simple;
-	bh=+geJrcrX+GHj6yfjRFlIKFDWoYWp2JiMw17goYZN5Ig=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L8kB1GdWUszBGyMp2Go2gQbJOmUl/d8llPsmvDawoQtVl4rnGCXlqRZybBwqwROTIRm08SC+mmI8UPO0E4yZyHUNfJoEOYsd671kx+BOQCyJoXovcxQZhUMquDGIs5dHBH86/gQAV9yEmzTEArr9fYl80Ya6g5CN+rEHUWemZus=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gx/XCK5D; arc=fail smtp.client-ip=40.107.243.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59784207A2C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742290040; cv=none; b=D5xCgTh+jbQCO9ay1YUrbh6Jiyy/p8X0FfBySZj2mGaM1kgrqDztkzhT12IIK83DcGtLtb051/ZYARCgBMEtE+ijS4EuYOGFqNJaO6OtD4ZSLFiUe4wHDUF87hvYdhFZzRprEgmPZkWFSLLk0n9UKNztDk09AuVKQwAJiP7pcT4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742290040; c=relaxed/simple;
+	bh=pck6Ds5DmySoVIyHuUT2dF/NAU91PM3KWqBmcEgnzIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S2/V+i/jhBnAbVE1dxUpxZ60Xye6RlNNHYI2ouALNueawdMLtY2QC5GZE7dPyhkE+Qa/Au3nn5tqjvvWSwVzdt+ljHY639WrvFHCW/YQMPVdSnQs31R8vuTVvBdhkixMI1WziD8tUdi0E1+bRGz3DDo7isaJvDyZYfnm+ItuED4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cyaW8K3g; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gx/XCK5D"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VesNsyzFB01ACqU2lUZzUMVkh8P1NgrGnQKFOLYCT3QexE2G2/X60N1qW9LweMDU8+FeFTfYDEKCVTb8chQcj6TSvxPMuZIl1gfJW9fOUpYdZcR4560/iM91+T/spd1wNF6H+WsysbbOVlrZKc4rFIXFMVlaOxYPXskq8jVnxuc95jq/5+NToY3bN97tWU0Xgsizsg9JO+6Jik4Y9usjtGhVjqsR62rLECKkTr9NRoVFNdFEjai4bB/66GGpKEHT6duOTs3ST4g3Z0rPPHIyCeNTQ+mWhcfXG9he+uNL+k4W8cJgcHl97uAabySfQR/K2l1i8M1Le4oFXydw1fatEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ROIDWbhr2azjduLaT7dy38fW9QWOW6HHijalGHOpjt8=;
- b=TUp/48tLga5Z4o4jwSvErlhtCihHODEmTWLNHrjC/9edhhsM4DVHssYhMmmxuna7bNKweYAoP5IC3HFEmGCX9T0/XQmJeUsMYCuUx7WNCkJV426wAD9fT+Zi0ivCkKJsvHe45o+bmbfyIaxffYTgfRssxIgg1gwqwEoo7PESmHDK5vO1cihPh120d3nRpmBpx8XrnrhcJpBIyKPr99qMry6Wuz/PnZvoLc7X8uUix3t6uwe0NTcxANaemmjjPE2jw9l1A4ou8O+9+cBsrH0xwWzogef6WoetgIqiXLvbre6sjApjQWqNhvqc1fTjuHSYCb6jls0g+ZpFY3IFE9rdqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ROIDWbhr2azjduLaT7dy38fW9QWOW6HHijalGHOpjt8=;
- b=gx/XCK5DMwMPJIHZDhnZ0u4w0fOnfN4HCXOtKLOL7U5TcM7V09bl0nYrjv6hWwN6eGueClX0p4t5zFLjnTSlMG2haKnxOcl6uZYdtCuL7DCHOMkqMnr/MrJmaqwBV6By8myhu/5VfMGB7r8yjvl4LKgNroHDKBm5GI0TKGtB438=
-Received: from SJ0PR03CA0068.namprd03.prod.outlook.com (2603:10b6:a03:331::13)
- by SN7PR12MB7322.namprd12.prod.outlook.com (2603:10b6:806:299::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
- 2025 09:27:07 +0000
-Received: from CO1PEPF000042AC.namprd03.prod.outlook.com
- (2603:10b6:a03:331:cafe::3a) by SJ0PR03CA0068.outlook.office365.com
- (2603:10b6:a03:331::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Tue,
- 18 Mar 2025 09:27:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CO1PEPF000042AC.mail.protection.outlook.com (10.167.243.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Tue, 18 Mar 2025 09:27:06 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 18 Mar
- 2025 04:27:03 -0500
-Received: from xhdlc210324.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 18 Mar 2025 04:27:00 -0500
-From: Sai Krishna Musham <sai.krishna.musham@amd.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <cassel@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
-	<sai.krishna.musham@amd.com>
-Subject: [PATCH v4 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for PCIe RP PERST#
-Date: Tue, 18 Mar 2025 14:56:47 +0530
-Message-ID: <20250318092648.2298280-2-sai.krishna.musham@amd.com>
-X-Mailer: git-send-email 2.44.1
-In-Reply-To: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
-References: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cyaW8K3g"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3913fdd003bso2633343f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:27:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742290032; x=1742894832; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C7TGD/sTJc0OtjwahroX9tclP8lTIbogOcbW0Jwqg2g=;
+        b=cyaW8K3gxJQXTFyh4HqrzCEgiXjXeeVpTSxw/dNF5GrYmlvevszJHPaaOytrxog1w9
+         HCnq1bo/QjxjJdUUKworrE8iDZwN3Pyv5ZwyGrfYN647uXvORWK06YquqkebihgpyKTH
+         sanKGuyu7v5coh+typS/v/30h0HFGgS7tK96ntnGFuYPSk+Sx9wR+RAtDRkip1flEQVr
+         08PT7vB8IqHq1eu8dobwst3skY1w8eN5CnHkQaVTGDAGf4UbaUK07BbhzgkPphM8GcTD
+         jYPD7J7XmhF0ZQuORKeYLftVE2RG0YomSt/LZDkFn/rsFaeyfXAn9/K+bHy32dYyEq4S
+         S9Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742290032; x=1742894832;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C7TGD/sTJc0OtjwahroX9tclP8lTIbogOcbW0Jwqg2g=;
+        b=QmLoa89NqXwkeXW6vqFRFIYMtkrl+k/yV3k/CdHOnMnXMRmuGQ9NrVBYZh/GnvyCf5
+         iJG9wiP3/4JChYg9NAMkWB/ObnvOfkCU8mwkpUm4/VrEPOFMZXQ6kevFVuNe8Mujg85p
+         aE4DYngAp91dGuMIbePXBLFxO64vgFLcXIfg1tKBaezz4ZQhPrZ1Uu75gbbhzqiJkg9s
+         cuERGlXwCITTlNPEPjqmhTli8NEM+A52WDycBxHEFTAJDuVbfeMvv74axG+C89MoFufh
+         +PWIFtB8HUGoAAExSg9WsdC/hAmfaoer/6h0Ub0Xk68uD6Ge+X1P/3UoAQ19RMyqJUjl
+         7gug==
+X-Forwarded-Encrypted: i=1; AJvYcCUYhKrdIbLTw5DHVsKq/RN9EF3HH4e2B7SMrwDkKGzt3TjwAnM+bhNmNRJNReNgOe6gKH8zyVvMFTv3UKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIyy+eveDsKgnCTFSKzAgrCQWo6hiaIhE30z47fbZWzVQt7G3i
+	WPHW6RigvOCcjv7jolqBQQ9R0ad3PRENSa77JYJevcLJnI0SmpMc8ltBQGyBt14=
+X-Gm-Gg: ASbGnctkGrMl/qpTq8pV3d1fiZQGMkYPpji4aGl3EIqdjujULKkil8BoD7slXGDo1wc
+	9MwJLp2uV+Xb1YoaAf3Dy2UfKZZmL0t7Y2HWcp3nzSECG82YDbfwEeEKKvuRN9BC2g5K4HfsYSS
+	YCnlAJpQw2PsFcrJrq6u4tASS84yHiC8tsKV70BTbFO2ZJL6loXDx4v7s1sXUMktovXwFPcjQKK
+	Ewjc7wimB77fD90RQ6KhG5kIcQ7Utu6SLRRPB8pZpVuVPaMSxAC11GykoKVStBj5d1j/VNSR8+n
+	3x1GIbrZGBTrNtNVicigivqQCPWigf9hd7VfbjfCl6nW3poSdkQPhg==
+X-Google-Smtp-Source: AGHT+IH73QS1D5UWCRs0ctMHCS8bma4/x/bL3ofL41GBF2GkxNIuYWlfCICxcIlvecm4Hmc0Weksew==
+X-Received: by 2002:a5d:64c3:0:b0:38d:ba8e:7327 with SMTP id ffacd0b85a97d-3996b935107mr1858488f8f.8.1742290032371;
+        Tue, 18 Mar 2025 02:27:12 -0700 (PDT)
+Received: from [192.168.1.247] ([145.224.67.123])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb318a3dsm17661397f8f.74.2025.03.18.02.27.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 02:27:11 -0700 (PDT)
+Message-ID: <b6c2622a-5c54-4951-be23-7f05599fc10d@linaro.org>
+Date: Tue, 18 Mar 2025 09:27:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: sai.krishna.musham@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042AC:EE_|SN7PR12MB7322:EE_
-X-MS-Office365-Filtering-Correlation-Id: 21cde8f9-c194-46e0-fc15-08dd65ff0d30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LaEn9j3WOMIRj/l/0SIh3qp/XYjcnwNLdFT4dMMfOtWDwj0bY36EEAtIT+Pf?=
- =?us-ascii?Q?c9N4ucgOWlm76ArfwTMhlPRXov4QmiaI9USMzy0tsAel6/8y68TIJSQwu5wn?=
- =?us-ascii?Q?D26YvgEju9zYxKeiLexh/AQKfLjKJnPG2NplRKv/JvTw7YoE1aNw7VD0eG07?=
- =?us-ascii?Q?wjiGvfoGfw5w7Q23HdofWu5JwvdX/hpee4VOZcqyIxmPNmyKRYuA2cdAMtwv?=
- =?us-ascii?Q?IJkl4h0kvdAJZojRh1ZeJjfox79kbivMG/+6j5XDogYiIGw8z0TYu7I7nUYu?=
- =?us-ascii?Q?fgbgS+uWmG8EqJnHvlIuRK4hKR/WKruBpX0nG0Sv3r9lT/5Ru57Uz/NLvMMI?=
- =?us-ascii?Q?NNz3opARXdfnKIgEaLjc9yEmL0geZm8ULYdcEQz0BJ43tYf+77LkYLD2aGr+?=
- =?us-ascii?Q?mZDJFMLsza8XLWAjMPkCtxxfXrbV/VgLe2Zww3pPuL9ujQ1zuibZlv46PENH?=
- =?us-ascii?Q?5CNsa5zJyMmgdzXC0739xwLUSDSVl5tjW17LfBPqxMMlLu6k9b61a0dAYPWL?=
- =?us-ascii?Q?lrMssEJQu9DkNq2EzsjEq/lASYvesan3eD1peeY35NiPyuz6z44FR/8LVGg9?=
- =?us-ascii?Q?eo31QJvVXsT/cmS+EtJHWgd05vg7flaIrJmSCDqeEaVfiDTPBQPBuXsB52qw?=
- =?us-ascii?Q?hv8+NK2YpU3wz6oUNLQuOpNJjn1VFwdU7PdGiZjxEe71rSlLIHQTpfkgj0yb?=
- =?us-ascii?Q?yvQDpNGitGD7hQm2LNVmTb84TTtK0edXPaInFeuUmdEZDJ9W6c63niPMt+mO?=
- =?us-ascii?Q?R4MVoGWh1It8F7OKUHRrql5dVSW95q3VJivBf1el11Z/Sa/EV1kWPsQxz4ca?=
- =?us-ascii?Q?QYydIFpZt3Qg9w6QXqhOHQl9zB71qRw42KdmRamtbu4JLvSEWLciJcnHxNdy?=
- =?us-ascii?Q?I6Cp6Qotst6LJpfceGmEYFPs0C1cFP3S/nUS6rM66xKFk+k4tHXhzo2Hwkwn?=
- =?us-ascii?Q?+2Yj2Ofdaxv5AURJEg/tDhFk1inFubijfli0r8bz64MTL74dJt3uj8y7uGuQ?=
- =?us-ascii?Q?WMsrZW3apFKwRc6XiP2/t5NRQRG4+7NBExAzeRmwsT2Amu49llAD7meD65lR?=
- =?us-ascii?Q?vyzADGIOrwhPhXqHTRNIvFipaUFgA3VTGTwcuYwrELESSMMeuQpvrl5a8m4U?=
- =?us-ascii?Q?HAt1HBr8OTsa8kOe/TWhUe2ammU8m99uYbTVW5GYo3WOrnyM3mqPvBpZVD1Q?=
- =?us-ascii?Q?Rwjo4GfLyu5yIFACpaSWPLQ7yMfdQiY9xNQfLAwXyd4AM4HwmY8JVN512/yG?=
- =?us-ascii?Q?Zmfz+23uZUpGCgaEobanS5pZU1TF07tGKTIajd861GRzXW3XDht9ljNO52D/?=
- =?us-ascii?Q?TcmruWmG761je9GcCIHDUATmhLX2MdeD/fFlFe4kNvNBP1SZxu3KX1wT7CgD?=
- =?us-ascii?Q?dy6iEpyXfU6MvpqMXEmalOFGfmz8OSt2FXhhB48/AyjUXLcASiFY3cq9UspC?=
- =?us-ascii?Q?p4W9/KERi+SaotQ8H23SldyTUIPaLhSCRp2T4i5GhvnGP3/Jx6NiWXUg2AN0?=
- =?us-ascii?Q?H0aa2gqWTGaxfCA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 09:27:06.7295
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21cde8f9-c194-46e0-fc15-08dd65ff0d30
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000042AC.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7322
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] coresight: Convert disclaim functions to take a
+ struct cs_access
+To: Leo Yan <leo.yan@arm.com>
+Cc: lcherian@marvell.com, coresight@lists.linaro.org,
+ Mike Leach <mike.leach@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250211103945.967495-1-james.clark@linaro.org>
+ <20250211103945.967495-3-james.clark@linaro.org>
+ <20250313145456.GR9682@e132581.arm.com>
+ <c6a86373-64be-4101-a08a-74aa302bf64c@linaro.org>
+ <20250317182957.GL2487211@e132581.arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250317182957.GL2487211@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Introduce `reset-gpios` property to enable GPIO-based control of
-the PCIe RP PERST# signal, generating assert and deassert signals.
 
-Traditionally, the reset was managed in hardware and enabled during
-initialization. With this patch set, the reset will be handled by the
-driver. Consequently, the `reset-gpios` property must be explicitly
-provided to ensure proper functionality.
 
-Add CPM clock and reset control registers base to handle PCIe IP
-reset along with PCIe RP PERST# to avoid Link Training errors.
+On 17/03/2025 6:29 pm, Leo Yan wrote:
+> On Mon, Mar 17, 2025 at 11:36:40AM +0000, James Clark wrote:
+>>
+>>
+>> On 13/03/2025 2:54 pm, Leo Yan wrote:
+>>> On Tue, Feb 11, 2025 at 10:39:38AM +0000, James Clark wrote:
+>>>
+>>> [...]
+>>>
+>>>>    static inline bool coresight_is_claimed_any(struct coresight_device *csdev)
+>>>>    {
+>>>> -       return coresight_read_claim_tags(csdev) != 0;
+>>>> +       return coresight_read_claim_tags(&csdev->access) != 0;
+>>>>    }
+>>>
+>>> Likewise other claim functions, can coresight_is_claimed_any() change its
+>>> argument type from struct coresight_device to struct csdev_access?
+>>
+>> I only wanted to change the ones that I had to. I think we should prioritize
+>> passing csdev as much as possible in the coresight framework to make
+>> everything consistent. Otherwise it's extra churn for no benefit, and if we
+>> need something from csdev here in the future we'll have to change this one
+>> back again.
+> 
+> The function coresight_is_claimed_any() has been deleted in a later
+> patch.  So this is fine for me.
+> 
+> In theory, claim tags are low level operations and don't need a
+> CoreSight device context, I prefer we can keep them as simple as
+> possible.
+> 
+> With this series, we can see coresight_claim_device() and
+> coresight_disclaim_device() are inconsistent for their parameters:
+> one is using "struct coresight_device *" and another is
+> "struct csdev_access *".  Maybe we just proceed to use csdev_access
+> for all claim tag functions?
+> 
 
-Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
----
-Changes for v4:
-- Add CPM clock and reset control registers base to handle PCIe IP
-  reset.
-- Update commit message.
+That's because coresight_claim_device() has logging which requires the 
+device name to make it useful. If anything, coresight_disclaim_device() 
+should actually take a csdev and then print a better log message. I 
+don't think there's a way to make it consistent when there are different 
+requirements for each level of operations. The ones with logging need a 
+csdev and the lower level ones used on probe need to work with only csa.
 
-Changes for v3:
-- None
+> If later we need to use a CoreSight device context when operating
+> claim tags, it means we might have different scenarios and we can
+> handle that separately.
+> 
+> Thanks,
+> Leo
 
-Changes for v2:
-- Add define from include/dt-bindings/gpio/gpio.h for PERST# polarity
-- Update commit message
----
- .../bindings/pci/xilinx-versal-cpm.yaml       | 21 ++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-index d674a24c8ccc..904594138af2 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-+++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-@@ -24,15 +24,20 @@ properties:
-     items:
-       - description: CPM system level control and status registers.
-       - description: Configuration space region and bridge registers.
-+      - description: CPM clock and reset control registers.
-       - description: CPM5 control and status registers.
--    minItems: 2
-+    minItems: 3
- 
-   reg-names:
-     items:
-       - const: cpm_slcr
-       - const: cfg
-+      - const: cpm_crx
-       - const: cpm_csr
--    minItems: 2
-+    minItems: 3
-+
-+  reset-gpios:
-+    description: GPIO used as PERST# signal
- 
-   interrupts:
-     maxItems: 1
-@@ -64,6 +69,7 @@ properties:
- required:
-   - reg
-   - reg-names
-+  - reset-gpios
-   - "#interrupt-cells"
-   - interrupts
-   - interrupt-map
-@@ -76,6 +82,7 @@ unevaluatedProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/gpio/gpio.h>
- 
-     versal {
-                #address-cells = <2>;
-@@ -98,8 +105,10 @@ examples:
-                                 <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
-                        msi-map = <0x0 &its_gic 0x0 0x10000>;
-                        reg = <0x0 0xfca10000 0x0 0x1000>,
--                             <0x6 0x00000000 0x0 0x10000000>;
--                       reg-names = "cpm_slcr", "cfg";
-+                             <0x6 0x00000000 0x0 0x10000000>,
-+                             <0x0 0xfca00000 0x0 10000>;
-+                       reg-names = "cpm_slcr", "cfg", "cpm_crx";
-+                       reset-gpios = <&gpio1 38 GPIO_ACTIVE_LOW>;
-                        pcie_intc_0: interrupt-controller {
-                                #address-cells = <0>;
-                                #interrupt-cells = <1>;
-@@ -126,8 +135,10 @@ examples:
-                        msi-map = <0x0 &its_gic 0x0 0x10000>;
-                        reg = <0x00 0xfcdd0000 0x00 0x1000>,
-                              <0x06 0x00000000 0x00 0x1000000>,
-+                             <0x00 0xfcdc0000 0x00 0x10000>,
-                              <0x00 0xfce20000 0x00 0x1000000>;
--                       reg-names = "cpm_slcr", "cfg", "cpm_csr";
-+                       reg-names = "cpm_slcr", "cfg", "cpm_crx", "cpm_csr";
-+                       reset-gpios = <&gpio1 38 GPIO_ACTIVE_LOW>;
- 
-                        pcie_intc_1: interrupt-controller {
-                                #address-cells = <0>;
--- 
-2.44.1
 
