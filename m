@@ -1,96 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B3B256D;
-	Tue, 18 Mar 2025 01:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5540885626;
+	Tue, 18 Mar 2025 01:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742261619; cv=none; b=InEcSPMd7hEeXzBP2xZpb2nBadpPxW5xN+l4C5DtH3IOT8Vza1r5ldJ13qTPeGviz+r+BmV8JuxVOoYKK7PjcRzv3EEwAoOZh485zfqHWnHGqmmo+1/1nhUUeMWoVmaP82xvxUXoyKk7oSXmCKi/N7Nogp15+WGh7xLcNmAm00k=
+	t=1742261636; cv=none; b=IuY9XxDNlJbTFiTu5NGPEGakJQ6tZpdHm9zdBKWp5wM04gLI+aKHax1MOjCw6na3LLX65bbhLiq03hwvWO2D8ZFgabt1a7I7R0wH5+OGuTkOehttyghAWs8dWE+7KxSqullv10EDMDBODNVScWWzmMMQpVJP0kxJ0TyJ1kz82nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742261619; c=relaxed/simple;
-	bh=PXdTvjKO9jrgad/pGh2EBWa191SiR6GvYLmT4pf8h8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oBm+TvfN/wuP7zWYcYMD51270HoANN9aA8qhqypZedvKTiximOfobpdrYSjFwNLhGr+W/0U7dBWrLjSsPxUx+KUTC78FL5gyGVQkj2LjTREcZNjupMuQZ9nS6x2vvasao7so6Kqw2KsdI4BKmsPKuPwrZTW6TERW0hw0lSjwWLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DdcJYygP; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742261636; c=relaxed/simple;
+	bh=PoRoAAkPPBuR69LGmDgJzLuMGmZ8psP041boRYo8zvU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Bmvn4PrcqE/bvphsSk63mgtqC4EPbXJIjXHIRx66lslJiHKuqMgLy0OkkZ9b2qma5U+sJTuwy7eUAzVXITt5sDDzMkaBfqHO5zL90w+QfQ+WEOj9qiudd2r0WddXbu836jmqWxq5uwWcmWgU8L/Xjm213h0aiv5SRil8OQLazMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=RgpdrTVA; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DdcJYygP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742261617; x=1773797617;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PXdTvjKO9jrgad/pGh2EBWa191SiR6GvYLmT4pf8h8o=;
-  b=DdcJYygPPJjxCaaUN2PC6RxF8BJMcATb/9U4CyIoP1bClORLSmhjIIIj
-   JkMgZbeeAxVvkIaWwcnqwi3uAL223P4IwAjHQ6iIf4mT6IABDe+ZXNqk3
-   iGZG+XXgkZzlsQ534poGdpGvdokNZmb1ePUp/qtmktwcJ9OyyI1/EAVcO
-   T1cU65d6dHaffPeQFG+YyIllGS08rLJjSMyCAZMsg1KGmFDIEYXIByovF
-   APeWrFWQ2zzL5jm5Hyagp6YvdwFNc2j3SgTZyNVoqopkjAbhqLD5PcsKa
-   PKdyh2fxUfrB9p0EE1HUK9AE0zJ74BJ9L25heRrr5ydvYxEU3fheBpvUX
-   g==;
-X-CSE-ConnectionGUID: OYvE5lg1SiSIO4HSL+k8iw==
-X-CSE-MsgGUID: pKfqyy0MQESZW6/ifjNqMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="30964561"
-X-IronPort-AV: E=Sophos;i="6.14,255,1736841600"; 
-   d="scan'208";a="30964561"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 18:33:37 -0700
-X-CSE-ConnectionGUID: CymqiyvaTJGLx2NR/rmWzA==
-X-CSE-MsgGUID: Y2QCO1HXSuaByq2AZzbfBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,255,1736841600"; 
-   d="scan'208";a="121838316"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 18:33:34 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v2 2/5] KVM: x86/tdp_mmu: Merge prefetch and access checks for spurious faults
-Date: Tue, 18 Mar 2025 09:32:10 +0800
-Message-ID: <20250318013210.5701-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20250318013038.5628-1-yan.y.zhao@intel.com>
-References: <20250318013038.5628-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="RgpdrTVA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1742261633;
+	bh=PoRoAAkPPBuR69LGmDgJzLuMGmZ8psP041boRYo8zvU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=RgpdrTVAI0X/Bp7kAD0o3uQI+apgWXfXXglB+hBR8dgCNRQIG6CdgyvUrhjOjEnjg
+	 9GdgnsQjosBOqJXz71WW3TgrVmdWnOIL48yhskDwK6idlAH/Y7IddHuo2smrcbVndQ
+	 5kYYjX5+fZ3Js/lGbtH+LEHjGFeC6im5tuF7N6OSxvwS2ziPZkRe++0I4HW/Jiut6v
+	 jOn3do/4O5CrQbkAfJlOnz2osaT0Ydh2EuWACE1uC2rTdLan8nrTpLG4oOiYfFkCsU
+	 ZyqNxihU56U4b+PxXCThwfFDNON3zegoknyvxpj00jQwtQRBIr/clfN3MVcSpf/OvJ
+	 GqqvwjTghX33w==
+Received: from [192.168.68.112] (unknown [180.150.112.225])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id D6A6777BB4;
+	Tue, 18 Mar 2025 09:33:51 +0800 (AWST)
+Message-ID: <57f42b7d08b816bc1a2e25d7f5932c3b2166c074.camel@codeconstruct.com.au>
+Subject: Re: [PATCH] usb: gadget: aspeed: Add NULL pointer check in
+ ast_vhub_init_dev()
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Chenyuan Yang <chenyuan0y@gmail.com>, gregkh@linuxfoundation.org, 
+	joel@jms.id.au
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org
+Date: Tue, 18 Mar 2025 12:03:51 +1030
+In-Reply-To: <20250311012705.1233829-1-chenyuan0y@gmail.com>
+References: <20250311012705.1233829-1-chenyuan0y@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Combine prefetch and is_access_allowed() checks into a unified path to
-detect spurious faults, since both cases now share identical logic.
+On Mon, 2025-03-10 at 20:27 -0500, Chenyuan Yang wrote:
+> The variable d->name, returned by devm_kasprintf(), could be NULL.
+> A pointer check is added to prevent potential NULL pointer
+> dereference.
+> This is similar to the fix in commit 3027e7b15b02
+> ("ice: Fix some null pointer dereference issues in ice_ptp.c").
+>=20
+> This issue is found by our static analysis tool
 
-No functional changes.
+Which tool is this? Can it be run by others (me)?
 
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- arch/x86/kvm/mmu/tdp_mmu.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+>=20
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
 
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index ab65fd915ef2..6365eb6c1390 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -1137,12 +1137,8 @@ static int tdp_mmu_map_handle_target_level(struct kvm_vcpu *vcpu,
- 	if (WARN_ON_ONCE(sp->role.level != fault->goal_level))
- 		return RET_PF_RETRY;
- 
--	if (fault->prefetch && is_shadow_present_pte(iter->old_spte) &&
--	    is_last_spte(iter->old_spte, iter->level))
--		return RET_PF_SPURIOUS;
--
- 	if (is_shadow_present_pte(iter->old_spte) &&
--	    is_access_allowed(fault, iter->old_spte) &&
-+	    (fault->prefetch || is_access_allowed(fault, iter->old_spte)) &&
- 	    is_last_spte(iter->old_spte, iter->level))
- 		return RET_PF_SPURIOUS;
- 
--- 
-2.43.2
-
+Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
