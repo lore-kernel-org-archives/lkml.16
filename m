@@ -1,200 +1,113 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 808661DFE23
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E4A1F872B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742285260; cv=none; b=VslJLm7ABba6lyq1x72GeivorLiv3XcorPOL6DFRGzs+jjxIxNVLTX+Ug35ojWmAFW3YSO/YggrvCFWLUJ5qDRbJpVLPRJDCHlHdlvRvQi/nVfHiNlTBnSOSpefDiSSHzYEgS/5KP3MFMcUxq7TxgDF1JzPb4amrG6okHeUgXy4=
+	t=1742285265; cv=none; b=iK+uni0o8VmCaiMtonOcjjPuBU2mvlsLKcIzU5iJCHNnp+QDmLVDUJ1LL9xy+24W9FKFMHgePpvLIgbJ1Yi8Ova2c20Afd2CRJDLgK1Aad5KFJ29ENNd7YbbszVsJ9vK6uMypG8C64B9ihdRjX9SJ4KNDz86ZAZFrRFhNAiHkcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742285260; c=relaxed/simple;
-	bh=gj8ztjx4DDXc8wmr8TSvDP3057YD+rf2ndJtlNgm8o0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aouCmupPoHPCmQIlc2Ds/WxRnS+qWixtjCFn+5yhCT5uilx7RPKYvh4cFFN3WRwAD4l+7wgLLnSZBzTRdYwqMHbS4prqEF8S1/uYKcTRfDD29EmVAp3GLuLWgaFkeDIbaii2oO8VplFNJAv4D7yEOc9c/0AyL4NIDWNjoU1PK9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=mJ4/1SIg; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1742285265; c=relaxed/simple;
+	bh=7/FQC0qr3nzncJkItFemzTYwa35i0ePuQ3ObQpFFzZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rItOSGmo3zxN6u5PaMp2ZK7mbL0+Hdxe+E1J+lgAfeZ9aE/dz5OH4+4ximqPVDKKp/rAnbTbHsyaq6YeI026JGyAYC7OolPSrT77XHuoy/EWSBJBPX4/h0SE+67sVo4YtmcyCoeixHq6qbWT+GB25TBcZSX56tVtfDmIcP3d+H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JtyrRaJe; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="mJ4/1SIg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=xAv74FX3DoajPloCyOTTZZeRXTUHncsx5Pnyk67rO28=;
-	b=mJ4/1SIg/aUMGV0gn9/9PCKruF2BIM3Yg1wS5VVSX04zaBkBte77Evc1xa0RIF
-	kvz6MEj1iofetvtwEkoIELZIIrHP2OaneYo4lOjN4f1q+FoNTMt5QpmtNcKP3dvi
-	CsRCBeWIXuVkkyMPkP7iTGZLxd3z9o10GJL28BxyHBtxU=
-Received: from [172.19.20.199] (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PikvCgD3jrsGH9lnEPZYCA--.20701S2;
-	Tue, 18 Mar 2025 15:21:43 +0800 (CST)
-Message-ID: <09057869-eb32-45dd-a7a1-9b7e1850eb11@126.com>
-Date: Tue, 18 Mar 2025 15:21:42 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JtyrRaJe"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43935d1321aso1651115e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 01:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742285262; x=1742890062; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sNXHg+fYs2vYclPphu41jtGXveshr859Ah2cwXoi544=;
+        b=JtyrRaJejDTBHUOJNoo2A1UT97AHU3WWFMwhltS3euFDX5AO1OS3SbJHNThd02IcrM
+         DNhAX/Ndi+sAVEZSpayKpshM7wvtjWZUJhtPLUNUirjti+yZdE9s9gJPKuY+8N+R8B/X
+         cveA/nB0poDRLfrz27GFGp5Qz/XzYEdaYThMUfrs6maZ8IntnVo4RM5jiUC9W3120+YT
+         tolUrwlvy8C5zZZiMh8Ll2O0Z/4xsu15+AvXhSFrz/VbeG6aP9dwmskh2MU9lpJWgfTy
+         pPNLbDrm28m6MxYoZxtKQ11Jv86h4Jb+N5iz8DZB5WZLkbP2B0O6YB2yWupSPNI97Fd8
+         CjEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742285262; x=1742890062;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sNXHg+fYs2vYclPphu41jtGXveshr859Ah2cwXoi544=;
+        b=AAyuefNBaVAGn/y5BgELxrrSWL7w4TUkPMYs2s6N9hvD9x7e6QnyGh6qu58lbzYd4g
+         WE7BrXdVsloqbAo9N2KJhPIRW3S63ZQ26GXZtuZ138enIlbmxKFG2B9/V4lo2wtaNKk6
+         JbldGZyCYH/NtSkhK6N+tg/r7472Q5RArBXnOmcE8EqLKRflJh9G6oeu9B9UjUwYvHi/
+         7Sxu+WuomwJeNZO5MakR/Ayn0U21tjHErffyYN6G/f8n6hEZNhuir+X24DkAIVQdf4Go
+         FuTLByVNxj6SH9A+ovvOJUw+DC+apwIW0MbVxAPUlzEHyrSpsoGVVY5LGN0X7D+pGxR0
+         0DTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbL9Z1do2NC1wrZF9dzm6F41xaXt1sGMTwAhhE9UVxgNW48Lcm6YR2UaNVpXEcHy8b49GIRjMwgvRUoAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgMKqw+JFGLwgZZBpAefztbyGmUHZ1DT/uoONEN9M8R5qwHBKi
+	GqeabgxjLH+OUbgUfhexLfE/slc8Q4kTAjHzHMsqkXjz8XdKovUUzmuect1B9WA=
+X-Gm-Gg: ASbGncunjRiLB94ub6Su155Hhc8kQ73PRC7Hxd9Lnfn97uBaCtAMChQ9+VF4eqcrveh
+	8bYc32EHCjCaQ1RQHkQBCpxe2gO55hmdu/kcJel/+LJ+yGkr4skM0864PB5kOoI3up3fhIYnzqN
+	mz2wfx9ukO5xusu7ZKPkXmsOC9AB+25XW0hnu/0sXEHVPnjmcS//BdMKKVTjHiH4rVuCc2P5VAe
+	ekOJhzrCiTXaJucGKb+YPnKUQ3h+Xt4uzRrcqQGul7NRqtRc4qhkEl/rS4BL/NUcgfZPNpBpk2h
+	F/3CSoQYcapsBWvxPImJMfJq66phfHf2ktxF5ARHXPX2pZQEuy6hSocizA==
+X-Google-Smtp-Source: AGHT+IFwlyR0auz4mcdACDhys146VQDwS7zQVk+tqjA/y7Na6v0bxrpeypR8IICKSK0Vi8hm17Mb1w==
+X-Received: by 2002:a05:600c:871b:b0:43b:c962:ad29 with SMTP id 5b1f17b1804b1-43d1ec6544fmr65619435e9.1.1742285261948;
+        Tue, 18 Mar 2025 01:07:41 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c4f9d59dsm17389527f8f.0.2025.03.18.01.07.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 01:07:41 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Inki Dae <inki.dae@samsung.com>,
+	Seung-Woo Kim <sw0312.kim@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] drm/exynos: exynos7_drm_decon: Consstify struct decon_data
+Date: Tue, 18 Mar 2025 09:07:38 +0100
+Message-ID: <20250318080738.29292-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] mm/cma: using per-CMA locks to improve concurrent
- allocation performance
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 21cnbao@gmail.com,
- david@redhat.com, baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com,
- liuzixing@hygon.cn
-References: <1739152566-744-1-git-send-email-yangge1116@126.com>
- <20250317204325.99b45373023ad2f901c1152e@linux-foundation.org>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <20250317204325.99b45373023ad2f901c1152e@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PikvCgD3jrsGH9lnEPZYCA--.20701S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxKFyxAF1fGrWxtFWxAF4Utwb_yoWxJFy5pF
-	W8GFyDCr98Xry7Aw42k34DuF9a9ws7WFW7KFyjva4xZFnxCr90grs5tFy5u3y8urZrWFy0
-	vryjqasrZw1UZ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jYGQhUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiIh0UG2fZFYW67QAAsJ
 
+static 'struct decon_data' is only read, so it can be const for code
+safety.
 
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/gpu/drm/exynos/exynos7_drm_decon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-在 2025/3/18 11:43, Andrew Morton 写道:
-> On Mon, 10 Feb 2025 09:56:06 +0800 yangge1116@126.com wrote:
-> 
->> From: yangge <yangge1116@126.com>
->>
->> For different CMAs, concurrent allocation of CMA memory ideally should not
->> require synchronization using locks. Currently, a global cma_mutex lock is
->> employed to synchronize all CMA allocations, which can impact the
->> performance of concurrent allocations across different CMAs.
->>
->> To test the performance impact, follow these steps:
->> 1. Boot the kernel with the command line argument hugetlb_cma=30G to
->>     allocate a 30GB CMA area specifically for huge page allocations. (note:
->>     on my machine, which has 3 nodes, each node is initialized with 10G of
->>     CMA)
->> 2. Use the dd command with parameters if=/dev/zero of=/dev/shm/file bs=1G
->>     count=30 to fully utilize the CMA area by writing zeroes to a file in
->>     /dev/shm.
->> 3. Open three terminals and execute the following commands simultaneously:
->>     (Note: Each of these commands attempts to allocate 10GB [2621440 * 4KB
->>     pages] of CMA memory.)
->>     On Terminal 1: time echo 2621440 > /sys/kernel/debug/cma/hugetlb1/alloc
->>     On Terminal 2: time echo 2621440 > /sys/kernel/debug/cma/hugetlb2/alloc
->>     On Terminal 3: time echo 2621440 > /sys/kernel/debug/cma/hugetlb3/alloc
->>
->> We attempt to allocate pages through the CMA debug interface and use the
->> time command to measure the duration of each allocation.
->> Performance comparison:
->>               Without this patch      With this patch
->> Terminal1        ~7s                     ~7s
->> Terminal2       ~14s                     ~8s
->> Terminal3       ~21s                     ~7s
->>
->> To slove problem above, we could use per-CMA locks to improve concurrent
->> allocation performance. This would allow each CMA to be managed
->> independently, reducing the need for a global lock and thus improving
->> scalability and performance.
-> 
-> This patch was in and out of mm-unstable for a while, as Frank's series
-> "hugetlb/CMA improvements for large systems" was being added and
-> dropped.
-> 
-> Consequently it hasn't received any testing for a while.
-> 
-> Below is the version which I've now re-added to mm-unstable.  Can
-> you please check this and retest it?
-Based on the latest mm-unstable code, after applying the patch and 
-conducting tests, it works normally. Thanks.
-> 
-> Thanks.
-> 
-> From: Ge Yang <yangge1116@126.com>
-> Subject: mm/cma: using per-CMA locks to improve concurrent allocation performance
-> Date: Mon, 10 Feb 2025 09:56:06 +0800
-> 
-> For different CMAs, concurrent allocation of CMA memory ideally should not
-> require synchronization using locks.  Currently, a global cma_mutex lock
-> is employed to synchronize all CMA allocations, which can impact the
-> performance of concurrent allocations across different CMAs.
-> 
-> To test the performance impact, follow these steps:
-> 1. Boot the kernel with the command line argument hugetlb_cma=30G to
->     allocate a 30GB CMA area specifically for huge page allocations. (note:
->     on my machine, which has 3 nodes, each node is initialized with 10G of
->     CMA)
-> 2. Use the dd command with parameters if=/dev/zero of=/dev/shm/file bs=1G
->     count=30 to fully utilize the CMA area by writing zeroes to a file in
->     /dev/shm.
-> 3. Open three terminals and execute the following commands simultaneously:
->     (Note: Each of these commands attempts to allocate 10GB [2621440 * 4KB
->     pages] of CMA memory.)
->     On Terminal 1: time echo 2621440 > /sys/kernel/debug/cma/hugetlb1/alloc
->     On Terminal 2: time echo 2621440 > /sys/kernel/debug/cma/hugetlb2/alloc
->     On Terminal 3: time echo 2621440 > /sys/kernel/debug/cma/hugetlb3/alloc
-> 
-> We attempt to allocate pages through the CMA debug interface and use the
-> time command to measure the duration of each allocation.
-> Performance comparison:
->               Without this patch      With this patch
-> Terminal1        ~7s                     ~7s
-> Terminal2       ~14s                     ~8s
-> Terminal3       ~21s                     ~7s
-> 
-> To solve problem above, we could use per-CMA locks to improve concurrent
-> allocation performance.  This would allow each CMA to be managed
-> independently, reducing the need for a global lock and thus improving
-> scalability and performance.
-> 
-> Link: https://lkml.kernel.org/r/1739152566-744-1-git-send-email-yangge1116@126.com
-> Signed-off-by: Ge Yang <yangge1116@126.com>
-> Reviewed-by: Barry Song <baohua@kernel.org>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
-> Cc: Aisheng Dong <aisheng.dong@nxp.com>
-> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> 
->   mm/cma.c |    7 ++++---
->   mm/cma.h |    1 +
->   2 files changed, 5 insertions(+), 3 deletions(-)
-> 
-> --- a/mm/cma.c~mm-cma-using-per-cma-locks-to-improve-concurrent-allocation-performance
-> +++ a/mm/cma.c
-> @@ -34,7 +34,6 @@
->   
->   struct cma cma_areas[MAX_CMA_AREAS];
->   unsigned int cma_area_count;
-> -static DEFINE_MUTEX(cma_mutex);
->   
->   static int __init __cma_declare_contiguous_nid(phys_addr_t base,
->   			phys_addr_t size, phys_addr_t limit,
-> @@ -175,6 +174,8 @@ static void __init cma_activate_area(str
->   
->   	spin_lock_init(&cma->lock);
->   
-> +	mutex_init(&cma->alloc_mutex);
-> +
->   #ifdef CONFIG_CMA_DEBUGFS
->   	INIT_HLIST_HEAD(&cma->mem_head);
->   	spin_lock_init(&cma->mem_head_lock);
-> @@ -813,9 +814,9 @@ static int cma_range_alloc(struct cma *c
->   		spin_unlock_irq(&cma->lock);
->   
->   		pfn = cmr->base_pfn + (bitmap_no << cma->order_per_bit);
-> -		mutex_lock(&cma_mutex);
-> +		mutex_lock(&cma->alloc_mutex);
->   		ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA, gfp);
-> -		mutex_unlock(&cma_mutex);
-> +		mutex_unlock(&cma->alloc_mutex);
->   		if (ret == 0) {
->   			page = pfn_to_page(pfn);
->   			break;
-> --- a/mm/cma.h~mm-cma-using-per-cma-locks-to-improve-concurrent-allocation-performance
-> +++ a/mm/cma.h
-> @@ -39,6 +39,7 @@ struct cma {
->   	unsigned long	available_count;
->   	unsigned int order_per_bit; /* Order of pages represented by one bit */
->   	spinlock_t	lock;
-> +	struct mutex alloc_mutex;
->   #ifdef CONFIG_CMA_DEBUGFS
->   	struct hlist_head mem_head;
->   	spinlock_t mem_head_lock;
-> _
+diff --git a/drivers/gpu/drm/exynos/exynos7_drm_decon.c b/drivers/gpu/drm/exynos/exynos7_drm_decon.c
+index 5170f72b0830..f91daefa9d2b 100644
+--- a/drivers/gpu/drm/exynos/exynos7_drm_decon.c
++++ b/drivers/gpu/drm/exynos/exynos7_drm_decon.c
+@@ -43,13 +43,13 @@ struct decon_data {
+ 	unsigned int wincon_burstlen_shift;
+ };
+ 
+-static struct decon_data exynos7_decon_data = {
++static const struct decon_data exynos7_decon_data = {
+ 	.vidw_buf_start_base = 0x80,
+ 	.shadowcon_win_protect_shift = 10,
+ 	.wincon_burstlen_shift = 11,
+ };
+ 
+-static struct decon_data exynos7870_decon_data = {
++static const struct decon_data exynos7870_decon_data = {
+ 	.vidw_buf_start_base = 0x880,
+ 	.shadowcon_win_protect_shift = 8,
+ 	.wincon_burstlen_shift = 10,
+-- 
+2.43.0
 
