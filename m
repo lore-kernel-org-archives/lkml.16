@@ -1,149 +1,105 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3576D13DBA0
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 13:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313AB20D4F5
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 13:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742303972; cv=none; b=YEeIL6AO94nH9vXWD6CjTmAuNIXxHCmdbI7tT5p9Pocdbzp0XYzf0B2rIeHXlA8GxHPpaFFUbaP2IRqNF0n+7Roy441JVJL4or+gTt4D0oqsCsGTRZ6C+aBdBlHl/UslQEC+lH2EXaRD+hGzyEBthLMkCpxMqsTdjHuz7opDQLI=
+	t=1742303976; cv=none; b=pitu3x42Gj1LYGk6d+P0GfeQPCMHYiUCUkeH6izhPfW2iIpxIK3eYZqIuJ72hH5OnV8NEoQvOA0AZx7DCp5i3IDThuNQDpelTjBkiAz3CDZkNjLmSvI3y0QkbZ7nfus5vXQqoVYhZ1ChixeOij2Vc/higQnE8fFR8WvmjB/Xaxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742303972; c=relaxed/simple;
-	bh=pMKTPI3CtphXn0aZ69uxiZeoXzDanrh/Zv+eCgGWMGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YvdsRDWMGuDGmSMYT0AflWGheuJcp0neuUIO2mlMweabmM07/WmNj8smvRSkOqdrVnyBc6n7KbswjMHwqsGoSOaIliv3rxixtWWeDd+9ffURKa8gvoqtIkwxVqMyvsAqeCzoPZ5A9+mCc/uRlpuZl2Liybg99ZKOfKsF7/Z1eeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tuWqo-0004E2-2F; Tue, 18 Mar 2025 14:19:22 +0100
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tuWqm-000Qyj-2W;
-	Tue, 18 Mar 2025 14:19:21 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tuWqn-00333k-0E;
-	Tue, 18 Mar 2025 14:19:21 +0100
-Date: Tue, 18 Mar 2025 14:19:21 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	chrome-platform@lists.linux.dev,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>,
-	Guenter Roeck <groeck@chromium.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Lukasz Luba <lukasz.luba@arm.com>
-Subject: Re: [PATCH v7 3/7] power: reset: Introduce PSCR Recording Framework
- for Non-Volatile Storage
-Message-ID: <Z9ly2eC0_r3gyToy@pengutronix.de>
-References: <20250318094716.3053546-1-o.rempel@pengutronix.de>
- <20250318094716.3053546-4-o.rempel@pengutronix.de>
- <ea681b76-db1c-4529-bd53-09e4bf384977@gmail.com>
+	s=arc-20240116; t=1742303976; c=relaxed/simple;
+	bh=xtVjxeR57GowxzypB8yIQa1TkgnQW6NgiPkaxFWelL8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u3iXpMaqK0mpTTFV6mPGf1FhI0cleLLM/0rl58Z7eHeF1Vxnl+3vt1F4865UOCzp51GxN4VoAds9wiE015Vx2zYSfua7uhNI9+fGfH4FbphKVAdcOLbam/VBmmc7Wjr+sHaeiosjNR14STh+5EePqA6pqo6rWd1qDWk2a6bvjbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=nATSPoQP; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="nATSPoQP"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-226185948ffso40139885ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 06:19:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742303974; x=1742908774; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ciKBTMhrTNIAwAunPC9pvKe2rqwBVkggfAdVsShdNfw=;
+        b=nATSPoQPoJCVuT9r+2PYZ2xWBfqCHjFBcrSjoIjkqBw7j7ghhNj70YxpN9jfYuWCr3
+         /7c6loPN/CgRPfT8frJrge0vyTytpKmfs/Q5QfKLq2tz2uTSYUBhgWMa1WKdViT2EfFf
+         efxFxqURb7A6ihacqxgvepyL/6eQGwH3TaUBfVUtkHHIdMJB8pcpaXjN0EiIXs40cTOY
+         +oQhmJo5pq9ARHxWSU9xO3SbyrjlqpCPO7IB3MOPQrUqnhWimZJmdbDILka85NcshkB3
+         Wnht3HH/Zj0o/z8793USFRyfy7FSo2vkoy/Owa6M4u7qKTux33LeWi4lJXNSzQ7aBIY9
+         ep2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742303974; x=1742908774;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ciKBTMhrTNIAwAunPC9pvKe2rqwBVkggfAdVsShdNfw=;
+        b=fVKrVS/I2XFraaPLewJfGaKNezjdET6uHI+hv34zJdPz3Te5ADTIgxJKafCVFKt6ow
+         XaM1PXpJRV9zS3fdkZqvrj4NQ97fCM5CuXL+2jwQfxzQ1YvS50TWYjfLqwtqskxPGltL
+         x0l+EiAkpiUrlo3DW2CL1ckc/fbt6dPeaewUs4nHQiMagK1E8v9UjHEpOP2ogXpqmYO6
+         jlvUVTvhrXbwQv4D7wjc0qvTTN0qlwEdK+jpebXcIb3ZaENcwHdphLhA7qcEvu493YX6
+         e1gLE9JxxMz4/zc9SvxQ+QsPYz/3rlUVT0gUVH89NbIk+pejPDjXSALze6b1ryj2GZjr
+         UkMw==
+X-Forwarded-Encrypted: i=1; AJvYcCV77ydHR13+UM9DKd9k3Es0uBc1y04ELg1Y0hBijjn6tUEjmqvpXZAMlWjgzirgYw5R+q6HZTQXlJ2f/AI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH7bDIgu5Lg2nkx2JZ6J2Yhxm+v1DTnTZHI92e10fxX9AjYrOJ
+	qQDgDmRgnOrkIoNmFoW16DxI9nqpiNd7R06y2mDXdKQ9yXcDGONXFUO3lBrWcHI=
+X-Gm-Gg: ASbGncsoxsx9V9BWi34QnB6LOmmHWslDpI7J7tGqY01hwDZjVeGFHXxDL3ikIiWj3Yt
+	fbY+SDy3O45IDwKagfWVu9xqc6KLuKhF4iNHoDbUWO3qxwUuJ6pSfAbwivd3UNQJQV7M0izLAgC
+	A3XQ/jkf5EkFmFDiYm4gdh4wcz/ZNmXU5UwjhqmE/iMDJea0tlVX3ytP5aA+6ME9cyAC0sEMFRm
+	B6HIxZNjGxlZ5EG5bIKeIUFGy5GOeAY2QCMxXC0kguftxyTYCBhgkzpwxhLIb7oX0ppV+yir3pX
+	PNaCDTUQnjuxNfuPomQ5guFhDRMMzXr3Z2GIUAFVTg==
+X-Google-Smtp-Source: AGHT+IEGhoTxzsJdPHXpMJwhvk5arIo+nzvTx/l2ZiSw07Z2Knppa9h9oRSci/7G9rCpzmb+KAK03Q==
+X-Received: by 2002:a17:902:e801:b0:224:c46:d167 with SMTP id d9443c01a7336-2262c539b94mr53342395ad.16.1742303974447;
+        Tue, 18 Mar 2025 06:19:34 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c688d9eesm93737005ad.35.2025.03.18.06.19.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 06:19:33 -0700 (PDT)
+Message-ID: <17154add-faf8-4150-bc07-57e07b5c9ea7@kernel.dk>
+Date: Tue, 18 Mar 2025 07:19:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ea681b76-db1c-4529-bd53-09e4bf384977@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 0/5] introduce io_uring_cmd_import_fixed_vec
+To: Sidong Yang <sidong.yang@furiosa.ai>,
+ Pavel Begunkov <asml.silence@gmail.com>
+Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ io-uring@vger.kernel.org
+References: <20250317135742.4331-1-sidong.yang@furiosa.ai>
+ <fe4fd993-8c9d-4e1d-8b75-1035bdb4dcfa@gmail.com>
+ <Z9kjoFcHrdE0FSEb@sidongui-MacBookPro.local>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <Z9kjoFcHrdE0FSEb@sidongui-MacBookPro.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 18, 2025 at 01:01:30PM +0200, Matti Vaittinen wrote:
-> On 18/03/2025 11:47, Oleksij Rempel wrote:
-> > This commit introduces the Power State Change Reasons Recording (PSCRR)
-> > framework into the kernel. The framework is vital for systems where
-> > PMICs or watchdogs cannot provide information on power state changes. It
-> > stores reasons for system shutdowns and reboots, like under-voltage or
-> > software-triggered events, in non-volatile hardware storage. This
-> > approach is essential for postmortem analysis in scenarios where
-> > traditional storage methods (block devices, RAM) are not feasible. The
-> > framework aids bootloaders and early-stage system components in recovery
-> > decision-making, although it does not cover resets caused by hardware
-> > issues like system freezes or watchdog timeouts.
+On 3/18/25 1:41 AM, Sidong Yang wrote:
+> On Tue, Mar 18, 2025 at 07:30:51AM +0000, Pavel Begunkov wrote:
+>> On 3/17/25 13:57, Sidong Yang wrote:
+>>> This patche series introduce io_uring_cmd_import_vec. With this function,
+>>> Multiple fixed buffer could be used in uring cmd. It's vectored version
+>>> for io_uring_cmd_import_fixed(). Also this patch series includes a usage
+>>> for new api for encoded read/write in btrfs by using uring cmd.
+>>
+>> You're vigorously ignoring the previous comment, you can't stick
+>> your name to my patches and send them as your own, that's not
+>> going to work. git format-patch and other tools allow to send
+>> other's patches in the same patch set without mutilating them.
 > 
-> We might want to rephrase this if we envision that boot reason could be read
-> from PMICs (or other devices able to store the boot reason) using PSCRR
-> interface. (Because a few PMICs can store the boot reason even for the
-> hardware initiated shutdowns like Watchdog or voltage/current protection).
+> I'm just not familiar with this. That wasn't my intention. Sorry, Your
+> patches will be included without modification.
 
-ack.
-
-> > It is primarily intended for controlled power
-> > +	  state transitions.
-> > +
-> > +	  If unsure, say N.
-> > diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> > index 10782d32e1da..dbd6ae6b26a4 100644
-> > --- a/drivers/power/reset/Makefile
-> > +++ b/drivers/power/reset/Makefile
-> > @@ -32,6 +32,7 @@ obj-$(CONFIG_POWER_RESET_KEYSTONE) += keystone-reset.o
-> >   obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
-> >   obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
-> >   obj-$(CONFIG_POWER_RESET_RMOBILE) += rmobile-reset.o
-> > +obj-$(CONFIG_PSCRR) += pscrr.o
-> >   obj-$(CONFIG_REBOOT_MODE) += reboot-mode.o
-> >   obj-$(CONFIG_SYSCON_REBOOT_MODE) += syscon-reboot-mode.o
-> >   obj-$(CONFIG_POWER_RESET_SC27XX) += sc27xx-poweroff.o
-> > diff --git a/drivers/power/reset/pscrr.c b/drivers/power/reset/pscrr.c
-> > new file mode 100644
-> > index 000000000000..466eca0e4f7f
-> > --- /dev/null
-> > +++ b/drivers/power/reset/pscrr.c
-> > @@ -0,0 +1,417 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * pscrr_core.c - Core Power State Change Reason Recording
-> > + *
-> > + * This framework provides a method for recording the cause of the last system
-> > + * reboot, particularly in scenarios where **hardware protection events** (e.g.,
-> > + * undervoltage, overcurrent, thermal shutdown) force an immediate reset.
-> 
-> Is this contradicting the Kconfig / commit message?
-
-There is so many redundant text, i already lost track of it.  What do
-you mean?
-
-> 
-> > Unlike
-> > + * traditional logging mechanisms that rely on block storage (e.g., NAND, eMMC),
-> > + * PSCRR ensures shutdown reasons are preserved in a way that survives power
-> > + * loss for later analysis.
-> 
-> Here, the 'level of power-loss' plays a role, right? I assume some level of
-> power must be retained for the 'storage' to stay alive.
-
-Yes, on the system I'm working on, there is designed capacity and
-voltage drop detector to do $THINGS before the system will go off. To
-get the full picture you may take a look to following patches:
-
-https://lore.kernel.org/all/20231026144824.4065145-1-o.rempel@pengutronix.de
-https://lore.kernel.org/all/20250310102229.381887-1-o.rempel@pengutronix.de
+Assuming these are from a git branch you have, just ensure they are
+committed with Pavel as the author, and git send-email will do the right
+thing when sending out the patch.
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Jens Axboe
