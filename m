@@ -1,130 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256C31C5F2C;
-	Tue, 18 Mar 2025 08:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 808661DFE23
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742285033; cv=none; b=mjt1SNrv281WBiEr5Vc9K4CHLC0IGK3bq1hGGmilUnuyoo6Beky1CVNq5T09N2w5eDW2IPUUCYmAiuBiKwIgAAh7X1oOtIMObTQlDzducV0mgQCX+pD9G0tWi+o0cUE6ltAS7j0cSnMtG1Lm5/xyy39zvvEKQgpwfZIDVYU8THg=
+	t=1742285260; cv=none; b=VslJLm7ABba6lyq1x72GeivorLiv3XcorPOL6DFRGzs+jjxIxNVLTX+Ug35ojWmAFW3YSO/YggrvCFWLUJ5qDRbJpVLPRJDCHlHdlvRvQi/nVfHiNlTBnSOSpefDiSSHzYEgS/5KP3MFMcUxq7TxgDF1JzPb4amrG6okHeUgXy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742285033; c=relaxed/simple;
-	bh=f9CYo4Uw3wv/kLJ+02y6bPa2u62OtlEWZY3oV/TKKpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=daK/9PygXsEGWwy3X20gWrnHR0k7TuamJDGZ3wqbLZ7GsqJer7+Rt806SC2gXVtw/ghovg75QLcz43E6F9XwxgkqpYzxM0zql3VwOmPPDUb+R+5g31dKd/kMLx5RAIBgkQFw2e3xEZ9RwUDTKS1gAbyJmLgtRd9oL7hn3WheIiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7SbVcyZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742285260; c=relaxed/simple;
+	bh=gj8ztjx4DDXc8wmr8TSvDP3057YD+rf2ndJtlNgm8o0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aouCmupPoHPCmQIlc2Ds/WxRnS+qWixtjCFn+5yhCT5uilx7RPKYvh4cFFN3WRwAD4l+7wgLLnSZBzTRdYwqMHbS4prqEF8S1/uYKcTRfDD29EmVAp3GLuLWgaFkeDIbaii2oO8VplFNJAv4D7yEOc9c/0AyL4NIDWNjoU1PK9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=mJ4/1SIg; arc=none smtp.client-ip=220.197.31.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7SbVcyZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CA15C4CEE9;
-	Tue, 18 Mar 2025 08:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742285032;
-	bh=f9CYo4Uw3wv/kLJ+02y6bPa2u62OtlEWZY3oV/TKKpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B7SbVcyZ7qG2+PtmM4gLx7qy5lOObOGtzj1GSnGZQMjpYQR+eMT47pYFbujd+ex4w
-	 yGExsM1D/dAxC/v+Pgecv6o2QOIK2W4k5OZHnue2DnT5KCRg5lD1+Zo2qHlyJGB1s+
-	 x9mUPzprBB3L0G+uWcIkbjVu3M2L1s/zHjxqRNGJrpyVaI0YaihjqgDN/EoNWeKaPq
-	 SfjJxiOPKrWWNf93idH0+KAM7wqHiDQm1kdb5fYiqqzzxq1jrmz/VBt8bvj/DCI9KP
-	 wixKQJ+wk62rVUmoaFGEqw/GcrOmG6ohrQRh3JmzYCTa3WAWHuERJTI1BD5TTwivbu
-	 PtjNg5w5e3GFA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tuRvU-0000000041L-024q;
-	Tue, 18 Mar 2025 09:03:52 +0100
-Date: Tue, 18 Mar 2025 09:03:52 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Chris Lew <quic_clew@quicinc.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Hemant Kumar <quic_hemantk@quicinc.com>,
-	Loic Poulain <loic.poulain@linaro.org>,
-	Maxim Kochetkov <fido_max@inbox.ru>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: Re: [PATCH] net: qrtr: mhi: synchronize qrtr and mhi preparation
-Message-ID: <Z9ko6PIObQZfTSvM@hovoldconsulting.com>
-References: <20241104-qrtr_mhi-v1-1-79adf7e3bba5@quicinc.com>
- <Zy3oyGLdsnDY9C0p@hovoldconsulting.com>
- <b1e22673-2768-445c-8c67-eae93206cca5@quicinc.com>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="mJ4/1SIg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=xAv74FX3DoajPloCyOTTZZeRXTUHncsx5Pnyk67rO28=;
+	b=mJ4/1SIg/aUMGV0gn9/9PCKruF2BIM3Yg1wS5VVSX04zaBkBte77Evc1xa0RIF
+	kvz6MEj1iofetvtwEkoIELZIIrHP2OaneYo4lOjN4f1q+FoNTMt5QpmtNcKP3dvi
+	CsRCBeWIXuVkkyMPkP7iTGZLxd3z9o10GJL28BxyHBtxU=
+Received: from [172.19.20.199] (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PikvCgD3jrsGH9lnEPZYCA--.20701S2;
+	Tue, 18 Mar 2025 15:21:43 +0800 (CST)
+Message-ID: <09057869-eb32-45dd-a7a1-9b7e1850eb11@126.com>
+Date: Tue, 18 Mar 2025 15:21:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1e22673-2768-445c-8c67-eae93206cca5@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] mm/cma: using per-CMA locks to improve concurrent
+ allocation performance
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 21cnbao@gmail.com,
+ david@redhat.com, baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com,
+ liuzixing@hygon.cn
+References: <1739152566-744-1-git-send-email-yangge1116@126.com>
+ <20250317204325.99b45373023ad2f901c1152e@linux-foundation.org>
+From: Ge Yang <yangge1116@126.com>
+In-Reply-To: <20250317204325.99b45373023ad2f901c1152e@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PikvCgD3jrsGH9lnEPZYCA--.20701S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxKFyxAF1fGrWxtFWxAF4Utwb_yoWxJFy5pF
+	W8GFyDCr98Xry7Aw42k34DuF9a9ws7WFW7KFyjva4xZFnxCr90grs5tFy5u3y8urZrWFy0
+	vryjqasrZw1UZ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jYGQhUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiIh0UG2fZFYW67QAAsJ
 
-Hi Chris,
 
-On Thu, Nov 21, 2024 at 04:28:41PM -0800, Chris Lew wrote:
-> On 11/8/2024 2:32 AM, Johan Hovold wrote:
-> > On Mon, Nov 04, 2024 at 05:29:37PM -0800, Chris Lew wrote:
-> >> From: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> >>
-> >> The call to qrtr_endpoint_register() was moved before
-> >> mhi_prepare_for_transfer_autoqueue() to prevent a case where a dl
-> >> callback can occur before the qrtr endpoint is registered.
-> >>
-> >> Now the reverse can happen where qrtr will try to send a packet
-> >> before the channels are prepared. Add a wait in the sending path to
-> >> ensure the channels are prepared before trying to do a ul transfer.
-> >>
-> >> Fixes: 68a838b84eff ("net: qrtr: start MHI channel after endpoit creation")
-> >> Reported-by: Johan Hovold <johan@kernel.org>
-> >> Closes: https://lore.kernel.org/linux-arm-msm/ZyTtVdkCCES0lkl4@hovoldconsulting.com/
-> >> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> >> Signed-off-by: Chris Lew <quic_clew@quicinc.com>
-> > 
-> >> @@ -53,6 +54,10 @@ static int qcom_mhi_qrtr_send(struct qrtr_endpoint *ep, struct sk_buff *skb)
-> >>   	if (skb->sk)
-> >>   		sock_hold(skb->sk);
-> >>   
-> >> +	rc = wait_for_completion_interruptible(&qdev->prepared);
-> >> +	if (rc)
-> >> +		goto free_skb;
-> >> +
-> >>   	rc = skb_linearize(skb);
-> >>   	if (rc)
-> >>   		goto free_skb;
-> >> @@ -85,6 +90,7 @@ static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
-> >>   	qdev->mhi_dev = mhi_dev;
-> >>   	qdev->dev = &mhi_dev->dev;
-> >>   	qdev->ep.xmit = qcom_mhi_qrtr_send;
-> >> +	init_completion(&qdev->prepared);
-> >>   
-> >>   	dev_set_drvdata(&mhi_dev->dev, qdev);
-> >>   	rc = qrtr_endpoint_register(&qdev->ep, QRTR_EP_NID_AUTO);
-> >> @@ -97,6 +103,7 @@ static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
-> >>   		qrtr_endpoint_unregister(&qdev->ep);
-> >>   		return rc;
-> >>   	}
-> >> +	complete_all(&qdev->prepared);
-> >>   
-> >>   	dev_dbg(qdev->dev, "Qualcomm MHI QRTR driver probed\n");
-> > 
-> > While this probably works, it still looks like a bit of a hack.
-> > 
-> > Why can't you restructure the code so that the channels are fully
-> > initialised before you register or enable them instead?
+
+在 2025/3/18 11:43, Andrew Morton 写道:
+> On Mon, 10 Feb 2025 09:56:06 +0800 yangge1116@126.com wrote:
 > 
-> Ok, I think we will have to stop using the autoqueue feature of MHI and 
-> change the flow to be mhi_prepare_for_transfer() --> 
-> qrtr_endpoint_register() --> mhi_queue_buf(DMA_FROM_DEVICE). This would 
-> make it so ul_transfers only happen after mhi_prepare_for_transfer() and 
-> dl_transfers happen after qrtr_endpoint_register().
+>> From: yangge <yangge1116@126.com>
+>>
+>> For different CMAs, concurrent allocation of CMA memory ideally should not
+>> require synchronization using locks. Currently, a global cma_mutex lock is
+>> employed to synchronize all CMA allocations, which can impact the
+>> performance of concurrent allocations across different CMAs.
+>>
+>> To test the performance impact, follow these steps:
+>> 1. Boot the kernel with the command line argument hugetlb_cma=30G to
+>>     allocate a 30GB CMA area specifically for huge page allocations. (note:
+>>     on my machine, which has 3 nodes, each node is initialized with 10G of
+>>     CMA)
+>> 2. Use the dd command with parameters if=/dev/zero of=/dev/shm/file bs=1G
+>>     count=30 to fully utilize the CMA area by writing zeroes to a file in
+>>     /dev/shm.
+>> 3. Open three terminals and execute the following commands simultaneously:
+>>     (Note: Each of these commands attempts to allocate 10GB [2621440 * 4KB
+>>     pages] of CMA memory.)
+>>     On Terminal 1: time echo 2621440 > /sys/kernel/debug/cma/hugetlb1/alloc
+>>     On Terminal 2: time echo 2621440 > /sys/kernel/debug/cma/hugetlb2/alloc
+>>     On Terminal 3: time echo 2621440 > /sys/kernel/debug/cma/hugetlb3/alloc
+>>
+>> We attempt to allocate pages through the CMA debug interface and use the
+>> time command to measure the duration of each allocation.
+>> Performance comparison:
+>>               Without this patch      With this patch
+>> Terminal1        ~7s                     ~7s
+>> Terminal2       ~14s                     ~8s
+>> Terminal3       ~21s                     ~7s
+>>
+>> To slove problem above, we could use per-CMA locks to improve concurrent
+>> allocation performance. This would allow each CMA to be managed
+>> independently, reducing the need for a global lock and thus improving
+>> scalability and performance.
 > 
-> I'll take a stab at implementing this.
+> This patch was in and out of mm-unstable for a while, as Frank's series
+> "hugetlb/CMA improvements for large systems" was being added and
+> dropped.
+> 
+> Consequently it hasn't received any testing for a while.
+> 
+> Below is the version which I've now re-added to mm-unstable.  Can
+> you please check this and retest it?
+Based on the latest mm-unstable code, after applying the patch and 
+conducting tests, it works normally. Thanks.
+> 
+> Thanks.
+> 
+> From: Ge Yang <yangge1116@126.com>
+> Subject: mm/cma: using per-CMA locks to improve concurrent allocation performance
+> Date: Mon, 10 Feb 2025 09:56:06 +0800
+> 
+> For different CMAs, concurrent allocation of CMA memory ideally should not
+> require synchronization using locks.  Currently, a global cma_mutex lock
+> is employed to synchronize all CMA allocations, which can impact the
+> performance of concurrent allocations across different CMAs.
+> 
+> To test the performance impact, follow these steps:
+> 1. Boot the kernel with the command line argument hugetlb_cma=30G to
+>     allocate a 30GB CMA area specifically for huge page allocations. (note:
+>     on my machine, which has 3 nodes, each node is initialized with 10G of
+>     CMA)
+> 2. Use the dd command with parameters if=/dev/zero of=/dev/shm/file bs=1G
+>     count=30 to fully utilize the CMA area by writing zeroes to a file in
+>     /dev/shm.
+> 3. Open three terminals and execute the following commands simultaneously:
+>     (Note: Each of these commands attempts to allocate 10GB [2621440 * 4KB
+>     pages] of CMA memory.)
+>     On Terminal 1: time echo 2621440 > /sys/kernel/debug/cma/hugetlb1/alloc
+>     On Terminal 2: time echo 2621440 > /sys/kernel/debug/cma/hugetlb2/alloc
+>     On Terminal 3: time echo 2621440 > /sys/kernel/debug/cma/hugetlb3/alloc
+> 
+> We attempt to allocate pages through the CMA debug interface and use the
+> time command to measure the duration of each allocation.
+> Performance comparison:
+>               Without this patch      With this patch
+> Terminal1        ~7s                     ~7s
+> Terminal2       ~14s                     ~8s
+> Terminal3       ~21s                     ~7s
+> 
+> To solve problem above, we could use per-CMA locks to improve concurrent
+> allocation performance.  This would allow each CMA to be managed
+> independently, reducing the need for a global lock and thus improving
+> scalability and performance.
+> 
+> Link: https://lkml.kernel.org/r/1739152566-744-1-git-send-email-yangge1116@126.com
+> Signed-off-by: Ge Yang <yangge1116@126.com>
+> Reviewed-by: Barry Song <baohua@kernel.org>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Cc: Aisheng Dong <aisheng.dong@nxp.com>
+> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+> 
+>   mm/cma.c |    7 ++++---
+>   mm/cma.h |    1 +
+>   2 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> --- a/mm/cma.c~mm-cma-using-per-cma-locks-to-improve-concurrent-allocation-performance
+> +++ a/mm/cma.c
+> @@ -34,7 +34,6 @@
+>   
+>   struct cma cma_areas[MAX_CMA_AREAS];
+>   unsigned int cma_area_count;
+> -static DEFINE_MUTEX(cma_mutex);
+>   
+>   static int __init __cma_declare_contiguous_nid(phys_addr_t base,
+>   			phys_addr_t size, phys_addr_t limit,
+> @@ -175,6 +174,8 @@ static void __init cma_activate_area(str
+>   
+>   	spin_lock_init(&cma->lock);
+>   
+> +	mutex_init(&cma->alloc_mutex);
+> +
+>   #ifdef CONFIG_CMA_DEBUGFS
+>   	INIT_HLIST_HEAD(&cma->mem_head);
+>   	spin_lock_init(&cma->mem_head_lock);
+> @@ -813,9 +814,9 @@ static int cma_range_alloc(struct cma *c
+>   		spin_unlock_irq(&cma->lock);
+>   
+>   		pfn = cmr->base_pfn + (bitmap_no << cma->order_per_bit);
+> -		mutex_lock(&cma_mutex);
+> +		mutex_lock(&cma->alloc_mutex);
+>   		ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA, gfp);
+> -		mutex_unlock(&cma_mutex);
+> +		mutex_unlock(&cma->alloc_mutex);
+>   		if (ret == 0) {
+>   			page = pfn_to_page(pfn);
+>   			break;
+> --- a/mm/cma.h~mm-cma-using-per-cma-locks-to-improve-concurrent-allocation-performance
+> +++ a/mm/cma.h
+> @@ -39,6 +39,7 @@ struct cma {
+>   	unsigned long	available_count;
+>   	unsigned int order_per_bit; /* Order of pages represented by one bit */
+>   	spinlock_t	lock;
+> +	struct mutex alloc_mutex;
+>   #ifdef CONFIG_CMA_DEBUGFS
+>   	struct hlist_head mem_head;
+>   	spinlock_t mem_head_lock;
+> _
 
-This bug still exists in mainline and occasionally triggers a
-NULL-pointer dereference on boot with the in-kernel pd-mapper on X Elite
-laptops like the T14s.
-
-Have you made any progress in reworking the code to address the race?
-
-Johan
