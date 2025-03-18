@@ -1,189 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B182066DE;
-	Tue, 18 Mar 2025 22:07:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE022063DB;
+	Tue, 18 Mar 2025 22:07:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742335623; cv=none; b=C5/bld6yutpeJT4YVjZIE5MtX7uYzesVzBooZ2gv3rgFOh4SPfeMqQCAepKZx0k7r1mgJZGjg1gLs/DBSHqEsOq/rxJx667159/CPzUaTxdacMJS/GHU2TIDT9rZWi6ClQ6J/L2ozywxuy3Yp4z22klwrH9FbTubPPQF/P4wLjk=
+	t=1742335638; cv=none; b=XaNG/ULv8K8wipYfHHtyh7P74QMT/piRM+SRKmOdUhH4ahrf3elx3QfhOVh8kvje/fQpwyA/lG8sdIJw755fL3vXzxUaB24crlyxHGSblAu0SNVjnGvtsVlrDQgDVvF2tFbLKVovLNyL2xBe+CjNPXHwgLDinFeRN6Tu7kd6EY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742335623; c=relaxed/simple;
-	bh=/F+eMjf09bz3lPIlV/WM3Lmoavh7yN9o2aVbStuR26w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DIS7YC39hvx7+8Qwnwd/I1Tu6BfTb2dTfuREvspcqdoAO4zeZCnjspJOfmLOMj6d7ba+0tVD/CP6Icz5wUtnaaGgv1SD7Ts2OLBEW5JunJtxGvIycTbfDM0q98UxKKYbpmconCUojEsbPqk8MAGYhA8PotXEjYbSA/2ewUh/gF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBwDRNxy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742335638; c=relaxed/simple;
+	bh=z15Ls+N2f4qhQa8zHLA/8pAS/OD9DivM6Ks6EyIuxMQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=p21br/o2xW5EuTPhHS/5bT2gNPn5dYu6lF8Qs4NoT+Qp6QUkAk3nhCjuX7taS/TioUdf7vV5Nooezem7O6bc3Rqe2pqQf6nmUQxugF4lt7TWHFlDgQC3eNHeY8vTNgVwYhwqu/P98hgeWRsEoWLoM8Aa29sL1joEqDMi4yYGAv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYuyM7eY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBwDRNxy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1A3BC4CEDD;
-	Tue, 18 Mar 2025 22:07:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYuyM7eY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2E51FC4CEF0;
+	Tue, 18 Mar 2025 22:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742335622;
-	bh=/F+eMjf09bz3lPIlV/WM3Lmoavh7yN9o2aVbStuR26w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mBwDRNxyZ7N0LFxdtECH8fvhZ3Etd/uF13wwbH0mLDIqmP3BY+Jz1hmoMPmEIWsGs
-	 v989msItBTP3aKm9XfwXaw8bgvVNP4YuwIjAtwzqhsGo4kw2AqTyt9vjq8XTEIDbOJ
-	 AxG8VJEfrP3bDQtlvGB/FwpaNDuR0IxKYqB9DvSEBKmpUJESgbNZP+ICCpN15IjgxZ
-	 /KWoDEYmgioC/8s0oIuExFJDDaekOv8mmuFJAwS9my+xUFr3F22CZ9drz1j8xoqlnz
-	 KzMcCOXqSKJD4lFJTT5/cdqbWAQuWp8M0t2dQywreamAzKxpIXer+/3lHMlMwcftM2
-	 reFyFWoyL4bhA==
-Date: Tue, 18 Mar 2025 17:07:00 -0500
-From: Rob Herring <robh@kernel.org>
-To: David Heidelberg <david@ixit.cz>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Mailing List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	van Spriel <arend@broadcom.com>,
-	=?iso-8859-1?B?Suly9G1l?= Pouiller <jerome.pouiller@silabs.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Andy Gross <agross@kernel.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Janne Grunau <j@jannau.net>
-Subject: Re: [PATCH v3 1/5] dt-bindings: net: Add network-class schema for
- mac-address properties
-Message-ID: <20250318220700.GA4018133-robh@kernel.org>
-References: <20250318-dt-bindings-network-class-v3-0-4d8d04ddfb61@ixit.cz>
- <20250318-dt-bindings-network-class-v3-1-4d8d04ddfb61@ixit.cz>
+	s=k20201202; t=1742335638;
+	bh=z15Ls+N2f4qhQa8zHLA/8pAS/OD9DivM6Ks6EyIuxMQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=sYuyM7eYgOIg1TUayAEGE3wv1u1h98toEAI7iwnVwnC9TFfSX1i5gSYsrbN9/W/Dm
+	 bQg+ZapJ6tAlhRHXBTXtIWjdERy6Jn2RfgBdq3fdkcHS+B1MPqGcy5F3LDl3HRVnun
+	 z6xk31XrJYvBnW5UNGV0CixMrPgVC3RAHRR4wrcdagoQTf2QV9f5lim9leemNc9Gsg
+	 XACQd4Au/fM+TcQyavWzgVoNrHRvjjz/nz/8kYRwobOCy4WkF5JXx042fKGt5p8Jy/
+	 NUtFr25cjz6gSkaulUHc5m24ib9jmE7MmUlkLWJRTS1WXqn0mDs4q7M+0dcB0yReQZ
+	 m4hiBrNYs3FWQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19869C35FF8;
+	Tue, 18 Mar 2025 22:07:18 +0000 (UTC)
+From: Hans-Frieder Vogt via B4 Relay <devnull+hfdevel.gmx.net@kernel.org>
+Date: Tue, 18 Mar 2025 23:06:52 +0100
+Subject: [PATCH net-next v6 1/7] net: phy: Add swnode support to
+ mdiobus_scan
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318-dt-bindings-network-class-v3-1-4d8d04ddfb61@ixit.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250318-tn9510-v3a-v6-1-808a9089d24b@gmx.net>
+References: <20250318-tn9510-v3a-v6-0-808a9089d24b@gmx.net>
+In-Reply-To: <20250318-tn9510-v3a-v6-0-808a9089d24b@gmx.net>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Hans-Frieder Vogt <hfdevel@gmx.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742335636; l=1936;
+ i=hfdevel@gmx.net; s=20240915; h=from:subject:message-id;
+ bh=eboV90jxD+Bku0BOXjDGCNU60DTUE9kSyEbR0D3C8dU=;
+ b=BBFK0D+bzMirEJuwUbn+Gj2hKJBmo7eC8cXE3v2eeiURfLhONRulpN0Zsg/XF5SwGa3ClvjAX
+ ow9ecsbYkWTBOEDip/IHJx67lDAa1ndFEGvYNzuaHiJHMvBG7qnFu2c
+X-Developer-Key: i=hfdevel@gmx.net; a=ed25519;
+ pk=s3DJ3DFe6BJDRAcnd7VGvvwPXcLgV8mrfbpt8B9coRc=
+X-Endpoint-Received: by B4 Relay for hfdevel@gmx.net/20240915 with
+ auth_id=209
+X-Original-From: Hans-Frieder Vogt <hfdevel@gmx.net>
+Reply-To: hfdevel@gmx.net
 
-On Tue, Mar 18, 2025 at 08:56:44PM +0100, David Heidelberg wrote:
-> From: Janne Grunau <j@jannau.net>
-> 
-> The ethernet-controller schema specifies "mac-address" and
-> "local-mac-address" but other network devices such as wireless network
-> adapters use mac addresses as well.
-> The Devicetree Specification, Release v0.3 specifies in section 4.3.1
-> a generic "Network Class Binding" with "address-bits", "mac-address",
-> "local-mac-address" and "max-frame-size". This schema specifies the
-> "address-bits" property and moves the remaining properties over from
-> the ethernet-controller.yaml schema.
-> 
-> The "max-frame-size" property is used to describe the maximal payload
-> size despite its name. Keep the description from ethernet-controller
-> specifying this property as MTU. The contradictory description in the
-> Devicetree Specification is ignored.
-> 
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> ---
->  .../bindings/net/ethernet-controller.yaml          | 25 +-----------
->  .../devicetree/bindings/net/network-class.yaml     | 44 ++++++++++++++++++++++
->  2 files changed, 45 insertions(+), 24 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> index 45819b2358002bc75e876eddb4b2ca18017c04bd..c91b41b83d1dc1294e99ec72c7cdcc16550cb33e 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> @@ -16,30 +16,6 @@ properties:
->    label:
->      description: Human readable label on a port of a box.
->  
-> -  local-mac-address:
-> -    description:
-> -      Specifies the MAC address that was assigned to the network device.
-> -    $ref: /schemas/types.yaml#/definitions/uint8-array
-> -    minItems: 6
-> -    maxItems: 6
-> -
-> -  mac-address:
-> -    description:
-> -      Specifies the MAC address that was last used by the boot
-> -      program; should be used in cases where the MAC address assigned
-> -      to the device by the boot program is different from the
-> -      local-mac-address property.
-> -    $ref: /schemas/types.yaml#/definitions/uint8-array
-> -    minItems: 6
-> -    maxItems: 6
-> -
-> -  max-frame-size:
-> -    $ref: /schemas/types.yaml#/definitions/uint32
-> -    description:
-> -      Maximum transfer unit (IEEE defined MTU), rather than the
-> -      maximum frame size (there\'s contradiction in the Devicetree
-> -      Specification).
-> -
->    max-speed:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      description:
-> @@ -262,6 +238,7 @@ dependencies:
->    pcs-handle-names: [pcs-handle]
->  
->  allOf:
-> +  - $ref: /schemas/net/network-class.yaml#
->    - if:
->        properties:
->          phy-mode:
-> diff --git a/Documentation/devicetree/bindings/net/network-class.yaml b/Documentation/devicetree/bindings/net/network-class.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e126a02193e8cfba24215d3c850fde1e1b26480e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/network-class.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/network-class.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Network Class Common Properties
-> +
-> +maintainers:
-> +  - Devicetree Specification Mailing List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Hans-Frieder Vogt <hfdevel@gmx.net>
 
-Just 'devicetree-spec@vger.kernel.org'
+This patch will allow to use a swnode/fwnode defined for a phy_device. The
+MDIO bus (mii_bus) needs to contain nodes for the PHY devices, named
+"ethernet-phy@i", with i being the MDIO address (0 .. PHY_MAX_ADDR - 1).
 
-> +
-> +properties:
-> +  address-bits:
-> +    description:
-> +      Specifies number of address bits required to address the device described
-> +      by this node. This property specifies number of bits in MAC address.
-> +    default: 48
-> +    const: 48
-> +
-> +  local-mac-address:
-> +    description:
-> +      Specifies MAC address that was assigned to the network device described by
-> +      the node containing this property.
-> +    $ref: /schemas/types.yaml#/definitions/uint8-array
-> +    minItems: 6
-> +    maxItems: 6
-> +
-> +  mac-address:
-> +    description:
-> +      Specifies the MAC address that was last used by the boot program. This
-> +      property should be used in cases where the MAC address assigned to the
-> +      device by the boot program is different from the
-> +      local-mac-address property. This property shall be used only if the value
-> +      differs from local-mac-address property value.
-> +    $ref: /schemas/types.yaml#/definitions/uint8-array
-> +    minItems: 6
-> +    maxItems: 6
-> +
-> +  max-frame-size:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Maximum transfer unit (IEEE defined MTU).
+The fwnode is only attached to the phy_device if there isn't already an
+fwnode attached.
 
-Can we keep the rest of the description about the contradiction?
+fwnode_get_named_child_node will increase the usage counter of the fwnode.
+However, no new code is needed to decrease the counter again, since this is
+already implemented in the phy_device_release function.
 
-> +
-> +additionalProperties: true
-> 
-> -- 
-> 2.49.0
-> 
+Signed-off-by: Hans-Frieder Vogt <hfdevel@gmx.net>
+---
+ drivers/net/phy/mdio_bus.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 7e2f10182c0cf37bef4cea1820863f047b5cb466..ede596c1a69d1b2b986e9eef51c3beb4a5fbc805 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -551,6 +551,8 @@ static int mdiobus_create_device(struct mii_bus *bus,
+ static struct phy_device *mdiobus_scan(struct mii_bus *bus, int addr, bool c45)
+ {
+ 	struct phy_device *phydev = ERR_PTR(-ENODEV);
++	struct fwnode_handle *fwnode;
++	char node_name[16];
+ 	int err;
+ 
+ 	phydev = get_phy_device(bus, addr, c45);
+@@ -562,6 +564,18 @@ static struct phy_device *mdiobus_scan(struct mii_bus *bus, int addr, bool c45)
+ 	 */
+ 	of_mdiobus_link_mdiodev(bus, &phydev->mdio);
+ 
++	/* Search for a swnode for the phy in the swnode hierarchy of the bus.
++	 * If there is no swnode for the phy provided, just ignore it.
++	 */
++	if (dev_fwnode(&bus->dev) && !dev_fwnode(&phydev->mdio.dev)) {
++		snprintf(node_name, sizeof(node_name), "ethernet-phy@%d",
++			 addr);
++		fwnode = fwnode_get_named_child_node(dev_fwnode(&bus->dev),
++						     node_name);
++		if (fwnode)
++			device_set_node(&phydev->mdio.dev, fwnode);
++	}
++
+ 	err = phy_device_register(phydev);
+ 	if (err) {
+ 		phy_device_free(phydev);
+
+-- 
+2.47.2
+
+
