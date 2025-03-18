@@ -1,42 +1,42 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097DB20C478
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 12:37:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3E520A5E4
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 12:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742301427; cv=none; b=rpelAuhdRZ1qrI5d1QkhwD8+btK2SZHEMa3wEqhPJIyvxMb+e7oDgN/lXKxJIxi3MaEqXz4MrujvYF3LLx3su+VAA6F1cFeiotiKtLwlkJjQW5ab2eY4r1sw/3pbwalaFtFgWc84JVrX3y555681wjpgNvjsheUVEBxnZ+3jRwI=
+	t=1742301428; cv=none; b=uLjJk2nIHQ7yOX/EKCK2yyIL+U8glABTvzMVJLNzAnFECs2q3xV4GHTQP8dvAuKBvX0OaXgL8Npn+q8i1MFTxdnRTEz7cWdmYvd0Zds7cUdWeM4yq3mpPRpV5SvLtXZKiYnOMLb3cq44h4bP74lPmBRX8IYjx3SMp/TubE20+ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742301427; c=relaxed/simple;
-	bh=CUwwZN4Wp1QY7QDo7pmxw/CqdU8fxCfQN49SPR8Cbw0=;
+	s=arc-20240116; t=1742301428; c=relaxed/simple;
+	bh=SWYqymPKeDTlu6phGSOFR4MJR0iXqjVq5q8eAzMWs68=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mjRQG5AUBOAhfA87w4vj53PYghffgWmJr/Jfmb/EV7e17ybG+r0Hk8IegouX14B4zHS6UV/L+styoB4uzP8oGHsqRORovBLrUZUlNtp29oi8ccOR9hEmKWDufPm+APbAc896UgJ6Fqy8Wa/6xSHukVRRXuaj+tpxIMn7f7jlQlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PrFH/Tee; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=TnQKXtlmP1pcVj/SeLj+epfBe3ogyC+/oJyCiuK1Edq3eh22Yn8S2/GFrIH7RITyzLOCcR+Lnfq+8WEwNJ2W71al82Oxz4hQZ3OGDmcskc3gEYmVVnBBNvWabJtUY6ejZYrmzhgE+6r8Y3jqWao+m7zfDNlN3kqOwnOHtZ1sELw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=m6EzrwZ9; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PrFH/Tee"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="m6EzrwZ9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1742301420;
-	bh=CUwwZN4Wp1QY7QDo7pmxw/CqdU8fxCfQN49SPR8Cbw0=;
+	s=mail; t=1742301424;
+	bh=SWYqymPKeDTlu6phGSOFR4MJR0iXqjVq5q8eAzMWs68=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=PrFH/TeePy3dtzykAY6nBoUxD3WyrdK92ZtAL9gJZKnNLSTszr271ZFCW/8+p9aMi
-	 QYmC3qN22rmPNkQmDbvs7IsBtHK4A9huQu5irfiHy44G3nia1/CnXiYMPh9q5IUKC+
-	 hhfdLTtymQkEW8czHvv+5nu0HqvJ7Tc9DF15PJVBCZsS8YyahnfbP2klCRAdOmSaj7
-	 T13mM54Jfc7xjYaDhwvA/R+VQg9zXITldEIbJOizT3ofvLsRtQhcXcPyTal0MiloD8
-	 uUcQzJHZQSDoZfrIhv4MSF7Nple1XjgKPbpBwe7bQkQsHhfwkpw93LibxVcf0tKtJ0
-	 j/nC/3YwNenVA==
+	b=m6EzrwZ9QIIF0/PfoITwAfzJx4Cwo/3/5uFym2zqeBuXfn73+U+PdrjQsHLsjq3EL
+	 f7JrWSx7lLBcUwrtL6uuKJIsiLiiTmSppeCGOkf9M5cXaFjSklqAOU/ncGvXiEH+hG
+	 0L7RbFnqxSrzORPV0La9S2DooT6hwZu9q5LyHCwNTGyywDWlYu/97+7LALBAyDX7SQ
+	 b0ZWmDdXPcKRs+aXzrUS7zg4dzygDbhkYXIWABTELBOwbWdd3Z7FOU4cFTNm1NIjpS
+	 fCztkenhHS5gjix62RU2AFSt7YSSeDjr5XPfdt6O+ZtcXyHqSgjnlUBISb1s15E5dh
+	 gZdVav8KA2cSw==
 Received: from localhost (unknown [84.232.140.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 11F2417E0FDB;
-	Tue, 18 Mar 2025 13:37:00 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 903B317E1067;
+	Tue, 18 Mar 2025 13:37:04 +0100 (CET)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Tue, 18 Mar 2025 14:35:37 +0200
-Subject: [PATCH v6 03/14] phy: rockchip: samsung-hdptx: Fix clock ratio
- setup
+Date: Tue, 18 Mar 2025 14:35:41 +0200
+Subject: [PATCH v6 07/14] phy: rockchip: samsung-hdptx: Drop superfluous
+ cfgs driver data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-phy-sam-hdptx-bpc-v6-3-8cb1678e7663@collabora.com>
+Message-Id: <20250318-phy-sam-hdptx-bpc-v6-7-8cb1678e7663@collabora.com>
 References: <20250318-phy-sam-hdptx-bpc-v6-0-8cb1678e7663@collabora.com>
 In-Reply-To: <20250318-phy-sam-hdptx-bpc-v6-0-8cb1678e7663@collabora.com>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -59,42 +59,61 @@ Cc: Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>,
  Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
 
-The switch from 1/10 to 1/40 clock ratio must happen when exceeding the
-340 MHz rate limit of HDMI 1.4, i.e. when entering the HDMI 2.0 domain,
-and not before.
+The ->cfgs member has been introduced via commit f08d1c085638 ("phy:
+phy-rockchip-samsung-hdptx: Don't use dt aliases to determine phy-id"),
+but it is only used during probe() in order to setup ->phy_id.
 
-Therefore, use the correct comparison operator '>' instead of '>=' when
-checking the max rate.  While at it, introduce a define for this rate
-limit constant.
+Use a probe() local variable to store device match data and remove the
+now unnecessary member from struct rk_hdptx_phy.
 
-Fixes: 553be2830c5f ("phy: rockchip: Add Samsung HDMI/eDP Combo PHY driver")
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 ---
- drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index fe7c057483563686b8076cf2ce562440cfa6fe55..34a7ef20936422b540b699f1acba44ca465501b7 100644
+index c9f79c4e698cef405dd2b6a8c1071e296464c36e..2c0ae2442842fe84a86eba6815125be9d31cc41e 100644
 --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
 +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@ -320,6 +320,7 @@
- #define LN3_TX_SER_RATE_SEL_HBR2_MASK	BIT(3)
- #define LN3_TX_SER_RATE_SEL_HBR3_MASK	BIT(2)
+@@ -392,10 +392,7 @@ struct rk_hdptx_phy {
+ 	struct regmap *regmap;
+ 	struct regmap *grf;
  
-+#define HDMI14_MAX_RATE			340000000
- #define HDMI20_MAX_RATE			600000000
+-	/* PHY const config */
+-	const struct rk_hdptx_phy_cfg *cfgs;
+ 	int phy_id;
+-
+ 	struct phy *phy;
+ 	struct clk_bulk_data *clks;
+ 	int nr_clks;
+@@ -1894,6 +1891,7 @@ static int rk_hdptx_phy_runtime_resume(struct device *dev)
  
- enum dp_link_rate {
-@@ -1072,7 +1073,7 @@ static int rk_hdptx_ropll_tmds_mode_config(struct rk_hdptx_phy *hdptx,
+ static int rk_hdptx_phy_probe(struct platform_device *pdev)
+ {
++	const struct rk_hdptx_phy_cfg *cfgs;
+ 	struct phy_provider *phy_provider;
+ 	struct device *dev = &pdev->dev;
+ 	struct rk_hdptx_phy *hdptx;
+@@ -1912,14 +1910,14 @@ static int rk_hdptx_phy_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, PTR_ERR(regs),
+ 				     "Failed to ioremap resource\n");
  
- 	regmap_write(hdptx->regmap, LNTOP_REG(0200), 0x06);
+-	hdptx->cfgs = device_get_match_data(dev);
+-	if (!hdptx->cfgs)
++	cfgs = device_get_match_data(dev);
++	if (!cfgs)
+ 		return dev_err_probe(dev, -EINVAL, "missing match data\n");
  
--	if (rate >= 3400000) {
-+	if (rate > HDMI14_MAX_RATE / 100) {
- 		/* For 1/40 bitrate clk */
- 		rk_hdptx_multi_reg_write(hdptx, rk_hdtpx_tmds_lntop_highbr_seq);
- 	} else {
+ 	/* find the phy-id from the io address */
+ 	hdptx->phy_id = -ENODEV;
+-	for (id = 0; id < hdptx->cfgs->num_phys; id++) {
+-		if (res->start == hdptx->cfgs->phy_ids[id]) {
++	for (id = 0; id < cfgs->num_phys; id++) {
++		if (res->start == cfgs->phy_ids[id]) {
+ 			hdptx->phy_id = id;
+ 			break;
+ 		}
 
 -- 
 2.48.1
