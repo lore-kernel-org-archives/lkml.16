@@ -1,63 +1,63 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206C7207A3A;
-	Tue, 18 Mar 2025 23:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866152139B0;
+	Tue, 18 Mar 2025 23:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742339338; cv=none; b=kwreeMUFbDXxEiUWcQ+6tWH1b7zriprp7DmUvdohGQG2N5yzvAdxA3aFnParRds7r4HwLuVzKZC6UgurWpcAC49zeU8MA31IUgfJfxybwFrL+Sz40XwcK+UBxEdKxHjOUdbOepDxgp9DQ6Wl46avhLYXU0uM+to+UFdSs3Pz9+k=
+	t=1742339342; cv=none; b=N3rXgXLsCL+3omHVDHIaoO/5ILDYTlXC0FH+iZusQUbnhrPNl35fJZ8Hf53oyOvNzxAzefRoU9XZVrh4kALvsxHTpthqmsvwYj0ahbnSOYsdEh7iQfOOMNFfMjDXXtU7YKP5mNMSBOcnOXf8yltCcQpf/PUQar3Er4e0NktHWlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742339338; c=relaxed/simple;
-	bh=fM3+KC/UZ31kXPGTb5S0rsSfrRmlbZY6btYAdurQouc=;
+	s=arc-20240116; t=1742339342; c=relaxed/simple;
+	bh=kTuk4oS1Z5MqPEpTNJY/RFfU8sOm/9Vfhefz+HHDWy4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nz70JJrihqHlNpbaMX0mjh8IpEPbrtSMkuL3pfAa6ig/wGpF2o9Qdvxp0A3bhUgZ6MHR+0i7b2Y0vU3Iv2EcrbFgNp86e/9XrwY7yIV3E5GChYhrrQqFPuEKlMeCoIQmchpQDeFW6gHWZjW+M9NweGSu1+qr+xqHyA2GlR8jhWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZkZYhhm; arc=none smtp.client-ip=209.85.221.53
+	 MIME-Version; b=ZoDOwgoNxaexq+uHX3Rz/ilx4LxfnofIXBTY0JcqwghZJHMXVbvIgdkmNkZXapBygZN8wYt3Z2+qLhl4dC/nRgbkJ4VsROYgHk945qkh3E5QtH13C3f5W/btIwEwrouqR2+X1taKXWMVLxxKgItq/u5oAg0uq6ihjcJSJugvnAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UM8s/p6D; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZkZYhhm"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3912ebb8e88so839947f8f.0;
-        Tue, 18 Mar 2025 16:08:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UM8s/p6D"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43d0953d3e1so3861255e9.2;
+        Tue, 18 Mar 2025 16:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742339335; x=1742944135; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742339339; x=1742944139; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yL1NluBLKnVOXTYYd19e7pbv7E9LsYXKQXHoL8wk6rg=;
-        b=jZkZYhhmNyInlHST860hhu6ylDz8Y3OHSTtbS15/kow27vPkqDUj0djdBtpd/ErtUb
-         z4FQOggzjNhNg94UbFGFtJaFxOi3NLZ/MJDoqJ3rcG8ZHMQL3uOY4EKvEHyr1qKB8AUk
-         gIBRSryj0YvyiGsqZBuLFX1USEzYIsXTpp3//XbrERQNP09ydAHuD5nCHQc9N/6LvzMx
-         ozIDL73Y34LwU9zROEPPSLHimxnQZx859EVrP+RQoaXzibCuwoah/NwPhAzNspcae81E
-         O1PgxtAfYAXMG/67Rake1Ukb/MJqKjkUHFFuSx/XJM0ZkJe7rvqjGS+Btt9bit7SrANm
-         XOrw==
+        bh=mK9Gt9waVp5YavrmSeXRxGHtVUUg9Z23BLqhVi00yoA=;
+        b=UM8s/p6D2it/OlpRuWXhECh6zOMRgvW5WYAX+GORN8uTbvkV/HkAGQxV2+QS6K3cfQ
+         MKF7qhm3ErG8DUVxv2VmHoPBd90RINnxiOCppKt/Bt76kiISwVhe4vBh/a5huKOe4QkO
+         Ec/OggJ8io4hfhXc9AgPqECKJX30ZR1iS3w9CUUUVPJss+9JfVT1igHr9hIvQUkF0d4E
+         riWy9HweFU8OpEYop141qI8G3yWuIzAc8fq2/5SBP16jrjJ6CxwB33sR3ZyGEKy39o6m
+         5y6SLLLbfeg0wpJCR+OeiuVHJojp47aTDANvg3k+L6mzJG6OGdZXYX8tdzvYDHx0FUJp
+         dPTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742339335; x=1742944135;
+        d=1e100.net; s=20230601; t=1742339339; x=1742944139;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yL1NluBLKnVOXTYYd19e7pbv7E9LsYXKQXHoL8wk6rg=;
-        b=wPjLzTy3DGYSGIwrHvUbZZeEYRzbHCHKf99bDiMGiDUwiC1YfiWVpGQQnPpAEGdksM
-         KtwdOstvxNusWyk/sppoBG2pffuoUppjT1Mau928j3pFeReaVig2+BiszvyM5HFQ5W/5
-         K+Ub/dH/GTMjPVG3nmtQRaFO4Ki5MRvDA4TcVzVExdnQI36p4GK8jUmh+eskGcjcYJiR
-         hnZeHWbC97GnbmlJFP80WP+pxETnnmWOVj2iDZ5dzclMmkTRpX5OlBDkC3a07NtMaYP/
-         6Mvqzyv1jTPs+US1HSMbnRly6DT/asu2ltbJl2+JTPJ5DfLeJw8OnDCh+iTRDEW9Kxcl
-         0hpg==
-X-Forwarded-Encrypted: i=1; AJvYcCXc6+xPQl8INRPtddz2O9WUmSq7d3E2oIKeJ5lkHnKtg/HfW8hahGOXPDntLA8eHuEfasHv0ZZGyVERUts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCQljSABa44sZvGoLkhGEaoHa+w+hY0gvH+Z1jXJDLLhSGwSfg
-	3CnIV0l5a2jWdDHAGHzJng+vAwW2aTE48XyT2LxIWxitOP5ln3MN
-X-Gm-Gg: ASbGncucqfudYAgOrinEzA3Dc67zfNyyFuuGOIW4hjZLlMMsHA+GNvdg0CfIuyTXC5T
-	WCv8vjfooCwEER66emTg0wjmnOU9OuTZeNjGnZsaghSYj5QybvtDn5EUBHlLq1Hvgv/JXtgsgLx
-	P7xw+Q+VCYYcrMEcYiVdPWBB3YBBlPAB8chJ3M7YMfh+1c4L0nLvjOSpqLMudeQZu/hgj/0EKHA
-	0bJvdXl4gnZEE/mmGLSa+05WwF/5vyrCAOQi4HO6QROSSlbVMkK4yzsNsqfWJQBWdEmMhhBHub9
-	ERNZnOwG7IO4bVt7yQWMYJjSkoIxvl8YpS79UZbVugFxvw/auNozUL74RfF5BFDbaTFfraRB441
-	ufFJKQBmHiYQYg4umHq5R/QA=
-X-Google-Smtp-Source: AGHT+IH28s3Q9PxrRlA0g5h6AlhKffP4S7eRBc+J04iyS3O3vq2Feu1VNoRmsobYiDGkTvXom+mzfA==
-X-Received: by 2002:a05:600c:5250:b0:43d:301b:5508 with SMTP id 5b1f17b1804b1-43d43782e4cmr1113115e9.2.1742339335217;
-        Tue, 18 Mar 2025 16:08:55 -0700 (PDT)
+        bh=mK9Gt9waVp5YavrmSeXRxGHtVUUg9Z23BLqhVi00yoA=;
+        b=kUG2PvrfRcSF0CMO9nxTj6IGVx8kHxr856WxQq7ykkiH9/xIL7uiLkZnv1ymgToPni
+         B5UXXec4jmVWDaDzRQa//Hc3lc9OtzaYu1zlbnj0210QBG5JBsnyfOy1Fu4hyjlRSQ/C
+         JUIK0jj2chbK9QfBUkp6s8xwsCUA7TK1ntT2avfolUtFXTTJRLgAwv3ItkoFWgFkRUut
+         m53NunuM/UTVX6cQCuRnj4yj6Dr3ZU1pBGOmFUQwnUU2bOOI3/4Om00cJ3bairsmGWHI
+         XHu+RdnwW3EnWNsBmQtew1bbVfAvuvykpSsL7FYlZJIgG2PHcKVS5tGzCa+lDmnGNBx9
+         yXgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLbDL+oQ74OcXk/+Nhs+KodrlFmIAPz6F7vGZcMW5ywE44UTmj0Xw0mp8ENG0r8Vd+IF1bG3FZgvKqUDY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrOSl8cqK9qDOOWFIXvHXIUhVFkrTz3oFa67KjYdEtNmQt8/ST
+	DmQ6i4O8tFlxguh3Yab+82DKzBJ8h2TBSQu1upSrhDTWMuzdVtdS
+X-Gm-Gg: ASbGncuUdy8fDftrgD/unidYV5NYWEVlFjRxDm96PmSSiUMdLGtWFB2cVmQw2stDgh/
+	6FOyhhQXRhNIlv0vAzqAmPCKI/0RbUbCl+3uDEGzuutcHPtRLsKZSHV4Yqo0qZu5XBh6nOEEDja
+	04ZfNgxPyrQ5/xF3LMv9J3L3ZhH53r0mtz6dXAl2jq7gD/EBmZXdPxMAou4taz2T6XSH1ZAUok8
+	z/xI6JSTxxtOZ+9mrokqyUINecoIg9JOG9C8DOS/bLZPX08hg/3YJzod5qsTTNU62hBljhQDwqD
+	i+cBle42QYVtQkPrQedxkEGg6TynYsvAIjPngVX+LgwM3la4/mCC9W0Iw5AHdjzICL/rWzqK7zP
+	BS74AHWY8ZmVyzMyBy1aSIG4=
+X-Google-Smtp-Source: AGHT+IHCsLWjI3h37CbyOLS5zu4xP3emYSD3vqaqnjAUpFHi/hya9/9aOGP9QmiJhvU6AjxJspey/Q==
+X-Received: by 2002:a05:600c:1d88:b0:43b:c844:a4ba with SMTP id 5b1f17b1804b1-43d4387586amr1043795e9.3.1742339338604;
+        Tue, 18 Mar 2025 16:08:58 -0700 (PDT)
 Received: from 0e1b0684397b.v.cablecom.net (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d440ed793sm1113455e9.39.2025.03.18.16.08.54
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d440ed793sm1113455e9.39.2025.03.18.16.08.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 16:08:54 -0700 (PDT)
+        Tue, 18 Mar 2025 16:08:58 -0700 (PDT)
 From: Lothar Rubusch <l.rubusch@gmail.com>
 To: lars@metafoo.de,
 	Michael.Hennerich@analog.com,
@@ -66,9 +66,9 @@ Cc: linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	eraretuya@gmail.com,
 	l.rubusch@gmail.com
-Subject: [PATCH v5 01/11] iio: accel: adxl345: introduce adxl345_push_event function
-Date: Tue, 18 Mar 2025 23:08:33 +0000
-Message-Id: <20250318230843.76068-2-l.rubusch@gmail.com>
+Subject: [PATCH v5 04/11] iio: accel: adxl345: set the tap suppress bit permanently
+Date: Tue, 18 Mar 2025 23:08:36 +0000
+Message-Id: <20250318230843.76068-5-l.rubusch@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250318230843.76068-1-l.rubusch@gmail.com>
 References: <20250318230843.76068-1-l.rubusch@gmail.com>
@@ -80,72 +80,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the fifo handling into a separate function. This is a preparation
-for a generic handling of the interrupt status register results. The
-function is supposed to handle particular sensor events, and later to
-forward them to the iio channel. This is needed to read out the interrupt
-status register.
+Set the suppress bit feature to the double tap detection, whenever
+double tap is enabled. This impedes the suppress bit dangling in any
+state, and thus varying in sensitivity for double tap detection.
 
-The function shall return occurring errors, if any, or 0 in case of
-handled events or read fifo content. Thus migrate fifo read-out and push
-fifo content to iio channels into this function to be built up with
-additional event handling.
+Any tap event is defined by a rising signal edge above threshold, i.e.
+duration time starts counting; and the falling edge under threshold
+within duration time, i.e. then the tap event is issued. This means
+duration is used individually for each tap event.
+
+For double tap detection after a single tap, a latency time needs to be
+specified. Usually tap events, i.e. spikes above and returning below
+threshold will be ignored within latency. After latency, the window
+time starts counting for a second tap detection which has to happen
+within a duration time.
+
+If the suppress bit is not set, spikes within latency time are ignored.
+Setting the suppress bit will invalidate the double tap function. The
+sensor will thus be able to save the window time for double tap
+detection, and follow a more strict definition of what signal qualifies
+for a double tap.
+
+In a summary having the suppress bit set, fewer signal spikes will be
+considered as double taps. This is an optional add on to double tap,
+thus a separate patch.
 
 Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 ---
- drivers/iio/accel/adxl345_core.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ drivers/iio/accel/adxl345_core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-index 1b4d9e60c87d..a98fb7fc748e 100644
+index 9dee819d5252..52daf46c4acd 100644
 --- a/drivers/iio/accel/adxl345_core.c
 +++ b/drivers/iio/accel/adxl345_core.c
-@@ -416,6 +416,23 @@ static int adxl345_fifo_push(struct iio_dev *indio_dev,
- 	return 0;
+@@ -34,6 +34,8 @@
+ #define ADXL345_INT2			1
+ 
+ #define ADXL345_REG_TAP_AXIS_MSK	GENMASK(2, 0)
++#define ADXL345_REG_TAP_SUPPRESS_MSK	BIT(3)
++#define ADXL345_REG_TAP_SUPPRESS	BIT(3)
+ 
+ #define ADXL345_TAP_Z_EN		BIT(0)
+ #define ADXL345_TAP_Y_EN		BIT(1)
+@@ -288,6 +290,18 @@ static int adxl345_set_singletap_en(struct adxl345_state *st,
+ 
+ static int adxl345_set_doubletap_en(struct adxl345_state *st, bool en)
+ {
++	int ret;
++
++	/*
++	 * Generally suppress detection of spikes during the latency period as
++	 * double taps here, this is fully optional for double tap detection
++	 */
++	ret = regmap_update_bits(st->regmap, ADXL345_REG_TAP_AXIS,
++				 ADXL345_REG_TAP_SUPPRESS_MSK,
++				 en ? ADXL345_REG_TAP_SUPPRESS : 0x00);
++	if (ret)
++		return ret;
++
+ 	return _adxl345_set_tap_int(st, ADXL345_DOUBLE_TAP, en);
  }
  
-+static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat)
-+{
-+	struct adxl345_state *st = iio_priv(indio_dev);
-+	int samples;
-+
-+	if (FIELD_GET(ADXL345_INT_WATERMARK, int_stat)) {
-+		samples = adxl345_get_samples(st);
-+		if (samples < 0)
-+			return -EINVAL;
-+
-+		if (adxl345_fifo_push(indio_dev, samples) < 0)
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * adxl345_irq_handler() - Handle irqs of the ADXL345.
-  * @irq: The irq being handled.
-@@ -428,19 +445,12 @@ static irqreturn_t adxl345_irq_handler(int irq, void *p)
- 	struct iio_dev *indio_dev = p;
- 	struct adxl345_state *st = iio_priv(indio_dev);
- 	int int_stat;
--	int samples;
- 
- 	if (regmap_read(st->regmap, ADXL345_REG_INT_SOURCE, &int_stat))
- 		return IRQ_NONE;
- 
--	if (FIELD_GET(ADXL345_INT_WATERMARK, int_stat)) {
--		samples = adxl345_get_samples(st);
--		if (samples < 0)
--			goto err;
--
--		if (adxl345_fifo_push(indio_dev, samples) < 0)
--			goto err;
--	}
-+	if (adxl345_push_event(indio_dev, int_stat))
-+		goto err;
- 
- 	if (FIELD_GET(ADXL345_INT_OVERRUN, int_stat))
- 		goto err;
 -- 
 2.39.5
 
