@@ -1,128 +1,191 @@
-Received: from p00-icloudmta-asmtp-us-central-1k-60-percent-4.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-central-1k.k8s.cloud.apple.com (p-east1-cluster7-host2-snip4-10.eps.apple.com [57.103.88.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABCF1E1E02
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.88.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B5D20322;
+	Tue, 18 Mar 2025 19:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742327301; cv=none; b=TRSAgmh5TaD21Vqp4P9Aw/lOuTmSf2OuyQOKWwWXmPiAIGQGr81qtnbDAoJBXkgubfnl09ZbI22AbW1+twXBCBajlnwk27O1tc+nIoDPxQtibNfSBIZ4BPD400Cv2qJ7HsCIbnNSMa5BQ13haF3RLLz1Kz/fUFiTc6i8LImFWOc=
+	t=1742327424; cv=none; b=ne944MXc8R+GJ46edrrcyjaezF1XHRQ1iF5a7NdopfZIXHJbNCcGdlH/9jKX4FgQaURrnu5IhJer3iOHo40FNK6Hq4B6y5AxL8GF4Ws62lEMAvSlCMKLC5b4JRf3I6va/amYZsgn1gmaHDOTXfmCLRDXD+t/69hrQm7aLD6gni8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742327301; c=relaxed/simple;
-	bh=3z981oMbZZh1KSvC1SA/RqKrhFPX0Y9yVhpd/Uj2H3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OuxF3t2gJtPbW18xr2zVtgcT8VI8yFpbyGpMVvmqIm1MEdtDGkMmkbF3OnoQfYZLAMArUxISX409nctxr8WXexb8vYFT9nKfNGeTMu7WAoBQqB1ftJ/8U2KhO86q5F7ztB+oFE00LMHnLS6bCbKhzdaHiYjzmv3mbYH6nPd4QBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pereznus.es; spf=pass smtp.mailfrom=pereznus.es; dkim=pass (2048-bit key) header.d=pereznus.es header.i=@pereznus.es header.b=PrLDBle+; arc=none smtp.client-ip=57.103.88.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pereznus.es
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pereznus.es
+	s=arc-20240116; t=1742327424; c=relaxed/simple;
+	bh=6hdO58MKH0BNWV5qZxIKRDwcvWh3JUfmzbEUrW588jQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ShdG2QBNf+0bvGNrN1tV4TXkKtSCHd/B5JX49KWxSCsQx8CL19Ljq8FQ1Ufaw+ZECGynkkwh5KxfNu0isqNgPfUJmqhwSWfZZgzUTMyE3Z0y3qxJNY2AWsq+GwLJx7w/2NiQcE9AcQ6grxTZzzt7fEXfkRWuBVbqF3SWGrWC8WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/uwAorb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pereznus.es header.i=@pereznus.es header.b="PrLDBle+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pereznus.es; s=sig1;
-	bh=hfZZp3kpPm7fvDpAPnOLgcg1yvSUVxC5CPDbowrM7u8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
-	b=PrLDBle+bjbJNu4E+ZwoTXKpNTqiKiXZCzHSRBlKyAYzuLvBhHG/pQPWdHexD/ppC
-	 5OWa72LTJIkF1lIdqUiEz29PzNaQ8EzitQutO8ZLVm+L9hbgghgI1JlUi5VadazhXF
-	 2rnS0v3EhEF38AwNGuKmyxvdK6Pv4ntXWQIxyMr7OU5C0U1aHeshICoLWts4eWV8Kx
-	 asBB77ztEOj1gE8Qwx7d0oZekWpykyuWH2TijUdk/lPiXkRnDZFUB8pBKngkJTCpdv
-	 V3afUQG2g6AqesHCQVkI++SlX289NSPwhrxK7EKPf3A9rm+GFDA3mrsgXk6UalcF8A
-	 kmrJr0+nJqjIA==
-Received: from localhost.localdomain (ci-asmtp-me-k8s.p00.prod.me.com [17.57.156.36])
-	by p00-icloudmta-asmtp-us-central-1k-60-percent-4.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-central-1k.k8s.cloud.apple.com (Postfix) with ESMTPSA id 4988318000B8;
-	Tue, 18 Mar 2025 19:48:16 +0000 (UTC)
-From: Sergio Perez <sergio@pereznus.es>
-To: linux-iio@vger.kernel.org
-Cc: Sergio Perez <sergio@pereznus.es>,
-	Tomasz Duszynski <tduszyns@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 2/2] iio: light: bh1750: Add hardware reset support via GPIO
-Date: Tue, 18 Mar 2025 20:47:21 +0100
-Message-ID: <20250318194751.7669-1-sergio@pereznus.es>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/uwAorb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 286C5C4CEDD;
+	Tue, 18 Mar 2025 19:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742327424;
+	bh=6hdO58MKH0BNWV5qZxIKRDwcvWh3JUfmzbEUrW588jQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M/uwAorbadYZhvpOulGkbKMAZnuLmRS39MAamq2u0wcbPOnOFChWEhfrO7qr3g4gz
+	 31ztOikGwpRqeHy2VKAJvE17FZZV4uhsndRrdO1UWWzIe5QN5L3Sf2buNAAQTjlSuk
+	 TPn/0QPLSEyfMBQlUy3ittCYTqhtnH1oypNE600II4ZWmFkolrotXsuepAju3t1+ad
+	 j8YO6bXrshN9yM7Et4FaZ8S/piffKOn0VX6DMF04iWyryXNei/4+HlinblDYWFRfA6
+	 Gz5CrcNmYp2ez7RHwn3Edv2SE4eus0CKyhcAaoaJaRH+IAPuXtcDRQoA+3nO6rsFN/
+	 zL+BWGrp0kS3w==
+Date: Tue, 18 Mar 2025 14:50:21 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org, 
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, konrad.dybcio@oss.qualcomm.com, 
+	quic_rdwivedi@quicinc.com, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, Can Guo <quic_cang@quicinc.com>
+Subject: Re: [PATCH V2 6/6] scsi: ufs: host : Introduce phy_power_on/off
+ wrapper function
+Message-ID: <jx6t2745x3swbfiqwsii5xdumhpanc435ooucrg2nlyl22llho@epleg24suedr>
+References: <20250318144944.19749-1-quic_nitirawa@quicinc.com>
+ <20250318144944.19749-7-quic_nitirawa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: Pa-7hPnG3EBeq8sbkiByyRl7t7uVU-Uw
-X-Proofpoint-GUID: Pa-7hPnG3EBeq8sbkiByyRl7t7uVU-Uw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_09,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1030 mlxscore=0
- mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2503180143
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318144944.19749-7-quic_nitirawa@quicinc.com>
 
-Some BH1750 sensors require a hardware reset before they can be
-detected on the I2C bus. This implementation adds support for an
-optional reset GPIO that can be specified in the device tree.
+On Tue, Mar 18, 2025 at 08:19:44PM +0530, Nitin Rawat wrote:
+> Introduce ufs_qcom_phy_power_on and ufs_qcom_phy_power_off wrapper
+> functions with mutex protection to ensure safe usage of is_phy_pwr_on
+> and prevent possible race conditions.
+> 
 
-The reset sequence pulls the GPIO low and then high before initializing
-the sensor, which enables proper detection with tools like i2cdetect.
-This is particularly important for sensors that power on in an
-undefined state.
+Please describe the problem properly here. Are you introducing the mutex
+because there is a problem, or because you want to be "safe"?
 
-Signed-off-by: Sergio Perez <sergio@pereznus.es>
----
- drivers/iio/light/bh1750.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Why is it "refcounted", is the calling code paths no longer in sync? How
+long has the current implementation been broken?
 
-diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-index 4b869fa9e5b1..1852467e96cf 100644
---- a/drivers/iio/light/bh1750.c
-+++ b/drivers/iio/light/bh1750.c
-@@ -22,12 +22,16 @@
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
- #include <linux/module.h>
-+#include <linux/gpio/consumer.h>
- 
- #define BH1750_POWER_DOWN		0x00
- #define BH1750_ONE_TIME_H_RES_MODE	0x20 /* auto-mode for BH1721 */
- #define BH1750_CHANGE_INT_TIME_H_BIT	0x40
- #define BH1750_CHANGE_INT_TIME_L_BIT	0x60
- 
-+/* Define the reset delay time in microseconds */
-+#define BH1750_RESET_DELAY_US 10000 /* 10ms */
-+
- enum {
- 	BH1710,
- 	BH1721,
-@@ -40,6 +44,7 @@ struct bh1750_data {
- 	struct mutex lock;
- 	const struct bh1750_chip_info *chip_info;
- 	u16 mtreg;
-+	struct gpio_desc *reset_gpio;
- };
- 
- struct bh1750_chip_info {
-@@ -248,6 +253,24 @@ static int bh1750_probe(struct i2c_client *client)
- 	data->client = client;
- 	data->chip_info = &bh1750_chip_info_tbl[id->driver_data];
- 
-+	/* Get reset GPIO from device tree */
-+	data->reset_gpio = devm_gpiod_get_optional(&client->dev,
-+									"reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(data->reset_gpio))
-+		return dev_err_probe(&client->dev, PTR_ERR(data->reset_gpio),
-+							"Failed to get reset GPIO\n");
-+
-+	/* Perform hardware reset if GPIO is provided */
-+	if (data->reset_gpio) {
-+		/* Perform reset sequence: low-high */
-+		gpiod_set_value_cansleep(data->reset_gpio, 0);
-+		fsleep(BH1750_RESET_DELAY_US);
-+		gpiod_set_value_cansleep(data->reset_gpio, 1);
-+		fsleep(BH1750_RESET_DELAY_US);
-+
-+		dev_dbg(&client->dev, "BH1750 reset completed via GPIO\n");
-+	}
-+
- 	usec = data->chip_info->mtreg_to_usec * data->chip_info->mtreg_default;
- 	ret = bh1750_change_int_time(data, usec);
- 	if (ret < 0)
--- 
-2.43.0
+Regards,
+Bjorn
 
+> Co-developed-by: Can Guo <quic_cang@quicinc.com>
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> ---
+>  drivers/ufs/host/ufs-qcom.c | 44 +++++++++++++++++++++++++++++++------
+>  drivers/ufs/host/ufs-qcom.h |  4 ++++
+>  2 files changed, 41 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+> index 5c7b6c75d669..8f80724e64b9 100644
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -421,6 +421,38 @@ static u32 ufs_qcom_get_hs_gear(struct ufs_hba *hba)
+>  	return UFS_HS_G3;
+>  }
+> 
+> +static int ufs_qcom_phy_power_on(struct ufs_hba *hba)
+> +{
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +	struct phy *phy = host->generic_phy;
+> +	int ret = 0;
+> +
+> +	guard(mutex)(&host->phy_mutex);
+> +	if (!host->is_phy_pwr_on) {
+> +		ret = phy_power_on(phy);
+> +		if (!ret)
+> +			host->is_phy_pwr_on = true;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int ufs_qcom_phy_power_off(struct ufs_hba *hba)
+> +{
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +	struct phy *phy = host->generic_phy;
+> +	int ret = 0;
+> +
+> +	guard(mutex)(&host->phy_mutex);
+> +	if (host->is_phy_pwr_on) {
+> +		ret = phy_power_off(phy);
+> +		if (!ret)
+> +			host->is_phy_pwr_on = false;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>  {
+>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> @@ -449,7 +481,7 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>  		return ret;
+> 
+>  	if (phy->power_count) {
+> -		phy_power_off(phy);
+> +		ufs_qcom_phy_power_off(hba);
+>  		phy_exit(phy);
+>  	}
+> 
+> @@ -466,7 +498,7 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>  		goto out_disable_phy;
+> 
+>  	/* power on phy - start serdes and phy's power and clocks */
+> -	ret = phy_power_on(phy);
+> +	ret = ufs_qcom_phy_power_on(hba);
+>  	if (ret) {
+>  		dev_err(hba->dev, "%s: phy power on failed, ret = %d\n",
+>  			__func__, ret);
+> @@ -1017,7 +1049,6 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>  				 enum ufs_notify_change_status status)
+>  {
+>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> -	struct phy *phy = host->generic_phy;
+>  	int err;
+> 
+>  	/*
+> @@ -1037,7 +1068,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>  				/* disable device ref_clk */
+>  				ufs_qcom_dev_ref_clk_ctrl(host, false);
+>  			}
+> -			err = phy_power_off(phy);
+> +			err = ufs_qcom_phy_power_off(hba);
+>  			if (err) {
+>  				dev_err(hba->dev, "phy power off failed, ret=%d\n", err);
+>  					return err;
+> @@ -1046,7 +1077,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>  		break;
+>  	case POST_CHANGE:
+>  		if (on) {
+> -			err = phy_power_on(phy);
+> +			err = ufs_qcom_phy_power_on(hba);
+>  			if (err) {
+>  				dev_err(hba->dev, "phy power on failed, ret = %d\n", err);
+>  				return err;
+> @@ -1233,10 +1264,9 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+>  static void ufs_qcom_exit(struct ufs_hba *hba)
+>  {
+>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> -	struct phy *phy = host->generic_phy;
+> 
+>  	ufs_qcom_disable_lane_clks(host);
+> -	phy_power_off(phy);
+> +	ufs_qcom_phy_power_off(hba);
+>  	phy_exit(host->generic_phy);
+>  }
+> 
+> diff --git a/drivers/ufs/host/ufs-qcom.h b/drivers/ufs/host/ufs-qcom.h
+> index d0e6ec9128e7..3db29fbcd40b 100644
+> --- a/drivers/ufs/host/ufs-qcom.h
+> +++ b/drivers/ufs/host/ufs-qcom.h
+> @@ -252,6 +252,10 @@ struct ufs_qcom_host {
+>  	u32 phy_gear;
+> 
+>  	bool esi_enabled;
+> +	/* flag to check if phy is powered on */
+> +	bool is_phy_pwr_on;
+> +	/* Protect the usage of is_phy_pwr_on against racing */
+> +	struct mutex phy_mutex;
+>  };
+> 
+>  struct ufs_qcom_drvdata {
+> --
+> 2.48.1
+> 
+> 
