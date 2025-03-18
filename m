@@ -1,82 +1,103 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7541420CCF5
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2C420CCF5;
+	Tue, 18 Mar 2025 14:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742306578; cv=none; b=GHzGffS7OuDgMWSt+bib39+lK6yc032pmZLs8/oysT0/1HrSjt80pQvk+D0Sg6B0k0B54QAAW2x+KtSlHsQaKZRbN/eE2r7czcbHgl8FxCyCv5eEp5cFIqM90p/4LdN5sc8uj2SWxHG12ExPDWy77gZq5WFEzkxpxGj59MgJJ6M=
+	t=1742306599; cv=none; b=D82+3Bg86lUUQZHd7+QgQ7/+wkWpnJQEXH8EOveYUW3f42iuDyMAcYP3tnzI0lvK5x+6tqz6RpKL8kiLQvcCbMUctWaJWV0xHpTcNyC46Mi2Eb2uXHuCBSyBfZyMDVHiP9/qPcp9NvrxEFveFbfzZRrqlzKjo2aHDlalPc94gOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742306578; c=relaxed/simple;
-	bh=GPVcfqT5/XrKutcqvlnWQSa7s2lb9I+6GQRBRhzs6bo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NgBoZZPzaF0BohfTOslSZ8rP56/De1UEACg9YbBO3yuOHnaId7hFbi9DZJiFEt7LRn0EVhn4DPAm9eEav6g0KdIYQ3kYfXcM3bO5s0nRpx+kzLAO9eXbntI4S3jDKWDk+yw1NaRBQGYnNymDNaSzZqTy2rPhb8cxq6oQwDdZU2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=VlsfvZpm; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1742306599; c=relaxed/simple;
+	bh=ONEQCJHxtWXCTHYNxmFxRZ9fNTNwrSUvdGTV4QoojI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nLttlobn/a1x5NasoHrg4EMs9ypHSDFmujJKEqhZ74+k/H7blHy9shjkDe2Xn4ph6bD0MEWJg87jYFkg1GYFTLSgRstCnF6erHYyEhJl8nejcAfPUk4ExzoKo55ER8ngQhmmNDTHvsqse9gFwZuKdVOWDnJxaUiKnGXyBiy9TKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=357SSSF2; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VlsfvZpm"
-X-UUID: ae148c50040111f08eb9c36241bbb6fb-20250318
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=9L3QuRg7qq4jIR4VvfIWIj1a6A5KXUIfQeOYZvj+5jY=;
-	b=VlsfvZpmzdg7JIMW2j+qA9NAlvKdVqzdR8asSOFcONlRLDJzuXabeqENeJXfLAOGWNa9jkps76r7FE/2nCijAVN/FKMeaJmPgIW0VSNZvCB75T19noa6nWUYJDF8NqRXbT8LjG76ketNwMT5ktuvZNgJt2BLBf9fC4FS80yXuvE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:180a371a-3f60-4070-a275-7aadcc0a94b3,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:b7d3878c-f5b8-47d5-8cf3-b68fe7530c9a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: ae148c50040111f08eb9c36241bbb6fb-20250318
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
-	(envelope-from <liankun.yang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 974564621; Tue, 18 Mar 2025 22:02:51 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Tue, 18 Mar 2025 22:02:49 +0800
-Received: from mszsdclx1211.gcn.mediatek.inc (10.16.7.31) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Tue, 18 Mar 2025 22:02:49 +0800
-From: Liankun Yang <liankun.yang@mediatek.com>
-To: <chunkuang.hu@kernel.org>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
-	<simona@ffwll.ch>, <matthias.bgg@gmail.com>,
-	<angelogioacchino.delregno@collabora.com>, <jitao.shi@mediatek.com>,
-	<mac.shen@mediatek.com>, <peng.liu@mediatek.com>,
-	<liankun.yang@mediatek.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-CC: <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 0/1] *** SUBJECT HERE ***
-Date: Tue, 18 Mar 2025 22:02:20 +0800
-Message-ID: <20250318140236.13650-1-liankun.yang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="357SSSF2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=0yf+Edtj7qyHSUTzNfZ+JKXVNOrD8jm+TXRXVg69QbA=; b=357SSSF22yh5nMcYWPclY7KXns
+	bBTRpnsCM0yabQo6ggsqvDtS521lMh5u73mchyQSJ01CwKeyG0v+3YePiHNisxh+qWVKy4GBaVYcn
+	r0Q3lIM+FIwRUz5pkuG+bJ7OENHhjUHK7BtAmWbnOGI3HE7L6QrQAaz1gFMU1LblELAo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tuXX5-006Gct-Rs; Tue, 18 Mar 2025 15:03:03 +0100
+Date: Tue, 18 Mar 2025 15:03:03 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"ratbert@faraday-tech.com" <ratbert@faraday-tech.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: =?utf-8?B?5Zue6KaGOiBbbmV0LW5leA==?= =?utf-8?Q?t?= 2/4] ARM:
+ dts: ast2600-evb: add default RGMII delay
+Message-ID: <8c0195dd-50b3-4f30-a021-c5b77d39d895@lunn.ch>
+References: <20250317025922.1526937-1-jacky_chou@aspeedtech.com>
+ <20250317025922.1526937-3-jacky_chou@aspeedtech.com>
+ <5db47dea-7d90-45a1-85a1-1f4f5edd3567@lunn.ch>
+ <SEYPR06MB5134A69692C6C474BDE9A6A99DDE2@SEYPR06MB5134.apcprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SEYPR06MB5134A69692C6C474BDE9A6A99DDE2@SEYPR06MB5134.apcprd06.prod.outlook.com>
 
-*** BLURB HERE ***
+On Tue, Mar 18, 2025 at 11:00:27AM +0000, Jacky Chou wrote:
+> Hi Andrew,
+> 
+> Thank you for your reply.
+> 
+> > >  	phy-mode = "rgmii";
+> > >  	phy-handle = <&ethphy2>;
+> > >
+> > > +	tx-internal-delay-ps = <8>;
+> > > +	rx-internal-delay-ps = <4>;
+> > > +
+> > 
+> > Ideally you want:
+> > 
+> > 	phy-mode = "rgmii-id";
+> > 	tx-internal-delay-ps = <0>;
+> > 	rx-internal-delay-ps = <0>;
+> > 
+> > Since 'rgmii-id' correctly describes the hardware.
+> 
+> I still confuse about ethernet-controller.yaml.
+> It lists 'rgmi', 'rgmii-rxid', 'rgmii-txid' and 'rgmii-id'.
 
-Liankun Yang (1):
-  drm/mediatek: Adjust bandwidth limit for DP
+DT describes the board. Does the board add the 2ns delay via extra
+long clock lines? If yes, use rgmii. If the MAC/PHY pair need to add
+the 2ns delay, use rgmii-id.
 
-Applied to mediatek-drm-fixes [1]
-  drm/mediatek: Fix mode valid issue for dp.
-  drm/mediatek: Fix YCbCr422 color format issue for DP.
+If the MAC/PHY pair is adding the delay, the DT says nothing about how
+they add the delay.
 
- drivers/gpu/drm/mediatek/mtk_dp.c | 39 ++++++++++++++++---------------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+The general rule is the PHY adds the delay. If you look at
+drivers/net/phy/*.c, every PHY that implements RGMII support both
+PHY_INTERFACE_MODE_RGMII_ID and PHY_INTERFACE_MODE_RGMII. There is no
+reason not to follow ever other MAC/PHY pair and have the PHY add the
+delay. The MAC can then do fine tuning if needed, adding small delays.
 
--- 
-2.45.2
-
+	Andrew
