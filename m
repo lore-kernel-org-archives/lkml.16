@@ -1,76 +1,120 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7167D528
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6042518E1A
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742258668; cv=none; b=lq5/bxkCZXZdmsmNfhrkcGIOAGjt1o4KQA9BjdZrhKInq3YLy386CxTBo8zW1kXNaESJP59fboAClHiAWm7z8i3m7uhv1Rn/cX7MuL0JGYStDGi3QYQcBbZ3lUBb/nbY7cFewN1FMstmi9pzdqgzA4kBZbW2uMEp3pxbvuW6C5k=
+	t=1742258878; cv=none; b=fdOCQYhyxY4F2RMRxDf2up13drtuf3orObVwBZ8LAPLj8holHGqBWFxAr1d7opw4YK86p9y/8y9ayxBITpN5H5yh4fPSq4MTbSKrGGK8KvP6pH8BZMesO/jqqkaueNOiU0kW1yOnULlCVKpdeepvJivI1t+bq8/DZQ6N5idSP9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742258668; c=relaxed/simple;
-	bh=F3vD+NRW7UkJ+0yytSNN7OXbaglUyoVsb6mjeXb459A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kDAReu8FBOcyf5RXfZ7K0K065+TJKViSGYPEs3U6HQTRpCnYASjYZvk+ebrR+4LjwH558FeY6yhKw1piB/i8myrz/CifTO5iiYeqsSpmdJVMySewXU2OoTItZhb8MYlntSwQtwKcJ2g1WyVy7xtgPV+0VylRsdXyw/uv44S/eCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TpjbFmcB; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742258878; c=relaxed/simple;
+	bh=q9cORwpFr2i7u4nU59k5OUVSEIAbi61v48KFlNjBrec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X0cr32sQ4vtnbnw6uMU+9qhMpJPoM9AVOA8iB9i6lMBrjU4V/O4TQwfsjGodc23mAhMaO5GSkk+0IK11DqmUj5a1/kSSwXgSXQG9wv88CoYC9Cf6Cq/dzXIflSj18l2iOw6MKbqJfZGejEWFo0w8TH88FVLTs68IMneQ+Rwe4jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PGnk8Ifp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TpjbFmcB"
-Date: Tue, 18 Mar 2025 00:44:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742258653;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PGnk8Ifp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742258876;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=C7kakdstnKjvLGQIhEhWpQEdZQmyKZq0R1gZch3KMP4=;
-	b=TpjbFmcBC0KcZsaXeJOmFuFyAWlkA9Rj73jyr1MVjg3tjIaKUnbfB4EZ21KWOphqE8qKM3
-	EsJxpjvhGxPbMKalATQwSlz44zwQtxZZZJG9TStCQ00dgJKhLxzOC4bwwTguNvmgPPO9Jl
-	4Hh/ZZIPd4rxRq4pXCiTvVRUEhjNAJU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 2/9] memcg: decouple drain_obj_stock from local stock
-Message-ID: <Z9jB2DFVY2R99ekS@google.com>
-References: <20250315174930.1769599-1-shakeel.butt@linux.dev>
- <20250315174930.1769599-3-shakeel.butt@linux.dev>
+	bh=jZfDnbuROQarLxKZz2VKb8iNL/v4tVesJARFvFI6DSM=;
+	b=PGnk8IfppLLRxrnQps0ZpncuuIc6iOI9jy0FhuBSlX2jZgeIv7+SeRGYLe2rnQuNVzR3OB
+	1YI/UD1Tu1saIb1mIzVWOa48nWn0Iynv/x2SdZ7eUyp2VgiacEvkcKEtuDg0T+Ffgtyfp8
+	Bdf8yAJkToVxUmJHUNnySAduDBHVB0A=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-586-Zy-raxMEM-2l0dqxm1oNFA-1; Mon, 17 Mar 2025 20:47:54 -0400
+X-MC-Unique: Zy-raxMEM-2l0dqxm1oNFA-1
+X-Mimecast-MFC-AGG-ID: Zy-raxMEM-2l0dqxm1oNFA_1742258873
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff4b130bb2so4104459a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 17:47:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742258873; x=1742863673;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jZfDnbuROQarLxKZz2VKb8iNL/v4tVesJARFvFI6DSM=;
+        b=cYHNYnXrjv5vnTiRx5fzsJwKTqbQN+Pn1Xisde/ht7mG/1OfA7nKdfZ1TOI7U1XcE7
+         ZaGSYEiztISAywGk4NvYo33h44KyWBuCQDswJIjHOBDp1Gq9jmLkmBCDJsSvDQyNIg7r
+         e/jSeqAGFmH79Ee8ImRw+8S0daMzo/v6W+gScfZgKM6y80jOTEw7ztam03jcd0LdtJhY
+         jD+gB2dcl/kTapme12phC7wqcL3Tvuu6UqUMXzP5XS6LvB+jA4GEK8FGBHNteu0rlLkj
+         xA5VzkdBeKH0CEVX5M2/phLEUunVtSa9Sv2oG/ONALbBASo3700cVaWMhbRkjPzSGg4R
+         3aLA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4Po74wVrhsLyyRm7xcLoIgu8iJUWYx/sV/B8j4NZzFiubrCzI6GG3s05GAENDiPoh/p9kgAspU39eNdE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqRmaNxc8A628Csfgf0hpYuiVzGTy6qvZpmMU1bql7SBzAsZeJ
+	4o70XvvyEx1QbD5QWThTlttp5zVAiCQCFjxl5KQ6u4Pc+kwXZlwpjIZH1BnriVoCTBqmrHUqVJ0
+	QVU58kLvAHMt+8LquySNCvlcmtNvV6Y6zSBlP0CovjtUnzbug4EJ4IFiSsJA8HXhjMqSH5gujvG
+	NxALlRce6uhatiohbswtNEsir4qFVYkwdPKQz9
+X-Gm-Gg: ASbGncsnlROmuYxU2ufTmHadGOxKKkbj9oUut3b6C7weZ57O6zuk5fuqYGQwSqjk9jA
+	lC9IWCG0MENRjCSEjXaW2WOQa/QIB74L6t+jIbe8kT6ESK3B6dem6Y/e29T9PPRdGtKU/eA==
+X-Received: by 2002:a17:90b:4c92:b0:2ff:71ad:e84e with SMTP id 98e67ed59e1d1-301a5b12f2cmr456106a91.10.1742258873517;
+        Mon, 17 Mar 2025 17:47:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFzHqvPHhOWayxt9nOn+uABgh4pj7w82asDqMrwDQrO6X0w+kGSrD+YsTLhPM5iW1l3zRKfAFj+h8otb7DW0Pk=
+X-Received: by 2002:a17:90b:4c92:b0:2ff:71ad:e84e with SMTP id
+ 98e67ed59e1d1-301a5b12f2cmr456092a91.10.1742258873172; Mon, 17 Mar 2025
+ 17:47:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250315174930.1769599-3-shakeel.butt@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+References: <20250317235546.4546-1-dongli.zhang@oracle.com> <20250317235546.4546-2-dongli.zhang@oracle.com>
+In-Reply-To: <20250317235546.4546-2-dongli.zhang@oracle.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Tue, 18 Mar 2025 08:47:41 +0800
+X-Gm-Features: AQ5f1Jps6JQeDE5rVwNMXQm81xnyDS129cpfEryeka1nOPKDMf2qheCIDs5KSLc
+Message-ID: <CACGkMEvDk-GzpVMPJPEJLRSrJjVHFsbXsd7LB9MjNEghbUc5pw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/10] vhost-scsi: protect vq->log_used with vq->mutex
+To: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: virtualization@lists.linux.dev, kvm@vger.kernel.org, 
+	netdev@vger.kernel.org, mst@redhat.com, michael.christie@oracle.com, 
+	pbonzini@redhat.com, stefanha@redhat.com, eperezma@redhat.com, 
+	joao.m.martins@oracle.com, joe.jin@oracle.com, si-wei.liu@oracle.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 15, 2025 at 10:49:23AM -0700, Shakeel Butt wrote:
-> Currently drain_obj_stock() can potentially call __refill_stock which
-> accesses local cpu stock and thus requires memcg stock's local_lock.
-> However if we look at the code paths leading to drain_obj_stock(), there
-> is never a good reason to refill the memcg stock at all from it.
-> 
-> At the moment, drain_obj_stock can be called from reclaim, hotplug cpu
-> teardown, mod_objcg_state() and refill_obj_stock(). For reclaim and
-> hotplug there is no need to refill. For the other two paths, most
-> probably the newly switched objcg would be used in near future and thus
-> no need to refill stock with the older objcg.
-> 
-> In addition, __refill_stock() from drain_obj_stock() happens on rare
-> cases, so performance is not really an issue. Let's just uncharge
-> directly instead of refill which will also decouple drain_obj_stock from
-> local cpu stock and local_lock requirements.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+On Tue, Mar 18, 2025 at 7:51=E2=80=AFAM Dongli Zhang <dongli.zhang@oracle.c=
+om> wrote:
+>
+> The vhost-scsi completion path may access vq->log_base when vq->log_used =
+is
+> already set to false.
+>
+>     vhost-thread                       QEMU-thread
+>
+> vhost_scsi_complete_cmd_work()
+> -> vhost_add_used()
+>    -> vhost_add_used_n()
+>       if (unlikely(vq->log_used))
+>                                       QEMU disables vq->log_used
+>                                       via VHOST_SET_VRING_ADDR.
+>                                       mutex_lock(&vq->mutex);
+>                                       vq->log_used =3D false now!
+>                                       mutex_unlock(&vq->mutex);
+>
+>                                       QEMU gfree(vq->log_base)
+>         log_used()
+>         -> log_write(vq->log_base)
+>
+> Assuming the VMM is QEMU. The vq->log_base is from QEMU userpace and can =
+be
+> reclaimed via gfree(). As a result, this causes invalid memory writes to
+> QEMU userspace.
+>
+> The control queue path has the same issue.
+>
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---
 
-Reviewed-by: Roman Gushchin <roman.gushchin@linux.dev>
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+Thanks
+
