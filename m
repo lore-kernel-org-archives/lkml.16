@@ -1,81 +1,103 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7581F584E;
-	Tue, 18 Mar 2025 10:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8513FC3;
+	Tue, 18 Mar 2025 10:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742292033; cv=none; b=QTF+Q1tCkKOSADHQJXIukl9SmmUN2+fA6Bruhys3PsZ63+b78Nqeops+cPa5uvRRHm1XozEBZfF1tfryxoUl9qqM77cR42GD/BuquyFcsFd59OreWxwvxXc0cxsVnNeesPem9DQC1SPCQ8TKwtzFZjfxIy08jxw4c3/CS80RmN8=
+	t=1742292064; cv=none; b=A0wPKwmfrgo68RltrQprSIHgbI/RCyJdQ5XgcvVVictgHd7WOxc1qoF3bqQK8WIPxltlKt4RNV3UZ7ng5nd/rSDJGd71w8SVY62tdHH7y9GOfJGTGmASUF7Nb0ury0xZg4YLKnGJqufxLz531YHMLkMjsCJFo7QwHXNmkfMZ94s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742292033; c=relaxed/simple;
-	bh=OhcogFB2WIL7PFHpn8MOTfLlsUnkVMZ+5CqRb2TV2fE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MEhlbKPrX686HSbzLkc4RPfsQLJvIFMz3bIFgdKKh5V7wajyPL+RvOAf5sKO03H8zMoNCOv0Bmq2mMcYrEZAN6kyMJhcgjp9lEm9MGSSUGYgJr1Szk+d7DqdupOl4rExlkE9HbZazhjIyt6ZRyZs++3RfDsQsBDUuZ+q04Y7t5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [116.25.94.202])
-	by smtp.qiye.163.com (Hmail) with ESMTP id eac37605;
-	Tue, 18 Mar 2025 18:00:17 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Yao Zi <ziyao@disroot.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
+	s=arc-20240116; t=1742292064; c=relaxed/simple;
+	bh=tt3Nu4a7fSE5kL5LsQ+x0JD00Jc5aMTc6CLr+Hbgmms=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=K1NPCydmkN/wz6r58ckU3sn1DxztSwDVBAsvr92bK0V+J8wQ5UVAkBHBO72WijX8AOYHpVHCSHNv3Xz03qE4lk5zi0PYLq/aUXZZCK12A5P8gotQa5nbhwRcu5W9UpvfJsvXI7PDgn6qV59b9hBz0XFsaiNtwN+2Wtj+17Cyz4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=et6Az3ud; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="et6Az3ud"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DACE2C4CEE9;
+	Tue, 18 Mar 2025 10:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742292064;
+	bh=tt3Nu4a7fSE5kL5LsQ+x0JD00Jc5aMTc6CLr+Hbgmms=;
+	h=Date:From:To:Cc:Subject:From;
+	b=et6Az3udmz4Mz657jl3MASizJt9x4k4sbiXaZrJMLBVdWl3EJXskHIiACfubDovzm
+	 /juqTtALTBRanx7nCHMVAUyI8PLAgNSV+2ZczK2ht/eefJGF/a3Wq04WVlL45b2LC7
+	 sCr83n5QYB3PkKiBWZbihUWFjUvPxfrXuk/wO8GLeWI+kpvNrNZOIGf6a5Id+OOMgV
+	 NSC8vrVZvuoi0Z5pW+vQiXaIsfiX5tMGgLcyofxeuNsXQNOx+9TSnvskK4MIiLlcqb
+	 sTEmoCFyg3+y9j9iCG7B3mlWIcOTUl23G8W+ExcneG41j/fF9JTiTgjcKrckORRqN7
+	 6kTeB+MdugmGQ==
+Date: Tue, 18 Mar 2025 20:31:05 +1030
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: linux-iio@vger.kernel.org, chrome-platform@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH 1/3] arm64: dts: rockchip: Add missing uart3 interrupt for RK3528
-Date: Tue, 18 Mar 2025 18:00:08 +0800
-Message-Id: <20250318100010.2253408-2-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250318100010.2253408-1-amadeus@jmu.edu.cn>
-References: <20250318100010.2253408-1-amadeus@jmu.edu.cn>
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: [PATCH v2][next] iio: proximity: cros_ec_mkbp_proximity: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z9lEYdPPIyiRGm36@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHhhDVhlNH0pOT0ofHh9DHVYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlKSk1VSU5VQk9VSUtJWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkxOVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a95a8b260a503a2kunmeac37605
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ODI6ECo*VjJOOkseAggaGBAu
-	PzEaCg1VSlVKTE9JSUJJS0pDSU5JVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	TVVJTlVCT1VJS0lZV1kIAVlBQkxDNwY+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The interrupt of uart3 node on rk3528 is missing, fix it.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Fixes: 7983e6c379a9 ("arm64: dts: rockchip: Add base DT for rk3528 SoC")
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
+
+So, with these changes, fix the following warning:
+
+drivers/iio/proximity/cros_ec_mkbp_proximity.c:63:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3528.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Changes in v2:
+ - Use MAX() to calculate the number of bytes for the flex array. (Kees)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-index 26c3559d6a6d..7f1ffd6003f5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-@@ -404,9 +404,10 @@ uart2: serial@ffa00000 {
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/Z9dzDB1gttXehYGO@kspp/
+
+ drivers/iio/proximity/cros_ec_mkbp_proximity.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/iio/proximity/cros_ec_mkbp_proximity.c b/drivers/iio/proximity/cros_ec_mkbp_proximity.c
+index 667369be0555..d2ddb7d45ec2 100644
+--- a/drivers/iio/proximity/cros_ec_mkbp_proximity.c
++++ b/drivers/iio/proximity/cros_ec_mkbp_proximity.c
+@@ -59,16 +59,11 @@ static int cros_ec_mkbp_proximity_parse_state(const void *data)
+ static int cros_ec_mkbp_proximity_query(struct cros_ec_device *ec_dev,
+ 					int *state)
+ {
+-	struct {
+-		struct cros_ec_command msg;
+-		union {
+-			struct ec_params_mkbp_info params;
+-			u32 switches;
+-		};
+-	} __packed buf = { };
+-	struct ec_params_mkbp_info *params = &buf.params;
+-	struct cros_ec_command *msg = &buf.msg;
+-	u32 *switches = &buf.switches;
++	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
++			MAX(sizeof(u32), sizeof(struct ec_params_mkbp_info)));
++	struct ec_params_mkbp_info *params = (struct ec_params_mkbp_info *)buf->data;
++	struct cros_ec_command *msg = buf;
++	u32 *switches = (u32 *)buf->data;
+ 	size_t insize = sizeof(*switches);
+ 	int ret;
  
- 		uart3: serial@ffa08000 {
- 			compatible = "rockchip,rk3528-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xffa08000 0x0 0x100>;
- 			clocks = <&cru SCLK_UART3>, <&cru PCLK_UART3>;
- 			clock-names = "baudclk", "apb_pclk";
--			reg = <0x0 0xffa08000 0x0 0x100>;
-+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
- 			status = "disabled";
 -- 
-2.25.1
+2.43.0
 
