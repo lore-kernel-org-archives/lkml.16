@@ -1,92 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFD72144CE;
-	Tue, 18 Mar 2025 18:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896F5211A33
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 18:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742322968; cv=none; b=Wba9z826UMYZeq13EXK+rRIgQJvOp4z97UtU/1nbD8QonnL8E797pHA+G4c7BCSvGpLj1s19dYz7j2X5G0oeqjttpWMFSnoDLchqEwH7FBn4dVhsJqS7FS/eWb6zp6tyElqEIQ7KSL7B9mMMEKtknQGOFPLRPZLA2r/ffSdXMfk=
+	t=1742323032; cv=none; b=VRuVx7WDYCEIdwSedqVB8m0TaJ5JvWnE0g2thnZPKuPM1g9zwztakaIbrJDt1WpYjxjeHfQxjjXA5EyqkPCBnAKjSpO0P3bGSc6FClUwTsIqfvliu2WpXrP7fydxQujnEKGt1jH3Ps7HICRpndYQFTMsqwqdjSf2G/FvwE75iyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742322968; c=relaxed/simple;
-	bh=0TL5c4/F2LfP2/9HiBcUHsXw/71RIFD+HeT4WJHriGg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Fy4yoqCv2/bTvK+TWaTdEFgiYmLJvvk5WkjJuKi3QcJRtd0o4+jJzxtWLIHUmKZ7u2GN+k72QqLdZ6Yq4rl0cZkcJTC7q1omof2FPAzAA6OByzyJaDHwxg9JYXQqPSylIUYWSpPTDMyh+aF/z9XMTvgpcrCtI0cyYi+xlaBR06o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAUaNLb3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742323032; c=relaxed/simple;
+	bh=i7GuafmWBBFxpauQdZaROHEcBUjPAdboz1fmHtgeylA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OgahsOBp2MWqnGCnTFLsAIhJesApSGxI9J3uf8/MYLzyiCvkYNsLt9kwfJHsuqDnAzlklsUOdF8OFkLyWhuMqS8+PEq/kZ7ZHYpw2Ng8ipM1vCM6RSG2OyUa6ANfznLL6ZeXaAI2m9omQO3uEdpyTOjRqVGl0qvT5/cbxVM/i+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=CKZkYIQR; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAUaNLb3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9C0C4CEDD;
-	Tue, 18 Mar 2025 18:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742322967;
-	bh=0TL5c4/F2LfP2/9HiBcUHsXw/71RIFD+HeT4WJHriGg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GAUaNLb3vMmIRk2u6bol7bcO1b4/PtMOU0hNBoFdNtUTDdB2r6sepp20Vt19wdBND
-	 0pTqRJzOXD/L+RTgJ4v8j8BrcMYsa6oSfjusFbBUMIVNfYTX1x7qc1AC7uYR6FF6vJ
-	 eauT+fWpLOKHHGqndEFLl1156uE0+EiSsQf3+dgQs0Io/isY0uKa1mxkDWQfbLEWY+
-	 T7mrObCtCD9KQdD8XK/gdTjWSxpGL/PInNCy6e2UyEwwjrwPoe4bRYtZrTod6wdp9H
-	 VEB3hkhnweF/uTxkG1cZWkahchm2r4M96R9Ssqcd0kTBYwu2pAdP/ysPXNpflC5ZiC
-	 qoyMU3E+CgFVw==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Tue, 18 Mar 2025 19:35:21 +0100
-Subject: [PATCH 8/8] arm64: dts: qcom: msm8998-yoshino: Add QUSB2PHY VDD
- supply
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="CKZkYIQR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742323020; x=1742582220;
+	bh=Yqjw4oYBMyP+agQT2xlzF7ZEejJZSYZaTAXHjkwEyvo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=CKZkYIQRmel8zrpAeShCHV6LCC0P/elui7Y3GMW/++qszLvbDeng9caIx05kWj5Yr
+	 A+q74S/EgDyd7gCsL3PgS2lV+gjaR5GgZz6GFu0iHzX0H97W3Xk6gBwykbRj+lZP2e
+	 4RPoVYtWFIFkQtnwJqor2fLgX8LmsW15HzHeaNy5oioCZnCsIjy3wdY+mJ8M9HOTlf
+	 ltvqT37p5z/397VQpODCVK9O8k9Lz6I3Mj2SsVpCizqYGGsAweyPZ4sLI9gjceBR4e
+	 PrLQsdrlkfa/SI3rmgAJ4c+2ALZYHsQqFw59/wBwoQDXSCYgU7/Zf3Log2i6I6XYT8
+	 dqjiQhroS3ZuA==
+Date: Tue, 18 Mar 2025 18:36:52 +0000
+To: =?utf-8?Q?Beno=C3=AEt_du_Garreau?= <benoit@dugarreau.fr>, Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, airlied@gmail.com, acourbot@nvidia.com, jhubbard@nvidia.com, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] rust: auxiliary: add auxiliary registration
+Message-ID: <D8JLYJIT03KN.25S8FOEO26DOH@proton.me>
+In-Reply-To: <20250317204310.7804-1-benoit@dugarreau.fr>
+References: <20250317204310.7804-1-benoit@dugarreau.fr>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 52341dd8e7b999e11b7fcbcd4b0fa06e7b6ef2d4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-topic-more_dt_bindings_fixes-v1-8-cb36882ea9cc@oss.qualcomm.com>
-References: <20250318-topic-more_dt_bindings_fixes-v1-0-cb36882ea9cc@oss.qualcomm.com>
-In-Reply-To: <20250318-topic-more_dt_bindings_fixes-v1-0-cb36882ea9cc@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
- Marc Gonzalez <mgonzalez@freebox.fr>, Dmitry Baryshkov <lumag@kernel.org>, 
- Arnaud Vrac <avrac@freebox.fr>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742322925; l=970;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=dC2jEsfN9bBWEvSA1LOnhWyfC6YBmMM7GtAk2EOkUzs=;
- b=0skw9UrTkXBBQ7RExySa5KY52xR5kOURlFe8yXLLtYORf6TRxWt41u2NP4bL2xxsXomD00h9d
- K2fKI+PQNx0DcfOHo1PqcR9rSSBYbtsjYjw9w8vIFrtIF2kA73TmAHs
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Mon Mar 17, 2025 at 9:42 PM CET, Beno=C3=AEt du Garreau wrote:
+> On Thu, 13 Mar 2025 03:23:52 +0100 Danilo Krummrich <dakr@kernel.org> wro=
+te:
+>> Implement the `auxiliary::Registration` type, which provides an API to
+>> +impl Registration {
+>> +    /// Create and register a new auxiliary device.
+>> +    pub fn new(parent: &device::Device, name: &CStr, id: u32, modname: =
+&CStr) -> Result<Self> {
+>> +        let boxed =3D KBox::new(Opaque::<bindings::auxiliary_device>::z=
+eroed(), GFP_KERNEL)?;
+>
+> You can use `KBox::init(kernel::init::zeroed(), GFP_KERNEL)` here. It avo=
+ids
+> the need for the first patch.
 
-Set the supply as required by bindings, to silence the warning:
+We probably should have the zeroed function on the `Zeroable` trait...
 
-'vdd-supply' is a required property
-
-The value is inferred from MTP schematics, but it shouldn't change
-between boards due to specific electrical characteristics.
-
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- arch/arm64/boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Cheers,
+Benno
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi b/arch/arm64/boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi
-index d8cc0d729e99c5ead32f38c12bf65a930d369c08..3650f2501886bdde23c500bf5fce205de33fccc4 100644
---- a/arch/arm64/boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi
-@@ -450,6 +450,7 @@ led@5 {
- &qusb2phy {
- 	status = "okay";
- 
-+	vdd-supply = <&vreg_l1a_0p875>;
- 	vdda-pll-supply = <&vreg_l12a_1p8>;
- 	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
- };
-
--- 
-2.48.1
 
