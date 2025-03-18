@@ -1,101 +1,158 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD632080F5
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 10:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDF1208981;
+	Tue, 18 Mar 2025 10:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742295566; cv=none; b=RESxt72hhMIi7pH1co8BYBJ8FBQuavgtEa6x9ihT3RnDnSAVFJ/lU8gHqJEHRxsTO/6i7Lm/Hm7J8vhwynHA3jpujiSz44z+qmwuD9E0kWyymZ0aSQsKb15zkgwKRPRwftIry9uUV05nt1CdkWASDG1tldjQrOr8WvHODNmJVzY=
+	t=1742295581; cv=none; b=ZgaZCx2iiIji0kMHMYEwMCS91zIbeJPJVtb5J89pUIIvHlIl4H9XqAY0zrq0SdGv7tIG0g8wHApCIUSsJfLok8BLM0Lwtxf4eBzAVdWoL6tCtfxtunntwIp+/vZuyIZcze7CsCfPJZyoL8ZJjIpQeYVkK7YOrIj0/b0GMtt/xfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742295566; c=relaxed/simple;
-	bh=TmyY+52gsgW1yk4XO97qxIUKK0KEWAIT2EOBehWYqNM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FmducV+YR6h3OcGADdlewzQVkMyapsOODtm155psvTJBrGYK2TudpmxMSuPoI5LBbvDraW8XJ1mfixrYdwvP4bmLeT6gt1Z4iGP2QIhdWpnI1aaHnjVwY3qzkF2f7Do5bEQd9o06pUvpb4+ZEC7BUHuz1zrVe7Gb90IvSuSZ4sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cBIRCjvD; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1742295581; c=relaxed/simple;
+	bh=QrndgZbN9z1XtoTGR06yFti0xSwFxjHct0FERYdF7BA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Xl1oe6DYYj7GqRqaIf7zwPXc6zprtZG6ZHoZOuyozkTgj0BDCKeQp3xKUfycknPBVg+3m8iGWPDYa/Gz7061UUoXP2HC6QYxv6Yk7j5UkxjWdBMzKIKIglwzTYC6YjOMJmHx17jbiMJSv7MNT678aXAwO+jiHKLgncXYpsN62RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HV0koEbW; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cBIRCjvD"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so22750555e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 03:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742295559; x=1742900359; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sqt8FVokWeKpJbMW7MOBvDu/DM0W5jzbOfl7XkZAR6M=;
-        b=cBIRCjvDD+r5aD9b3dND5Hl7MGzg8fefuER5ddMqj3Ipet3Pkd/EsPdpPqoc/Qd6fm
-         FX56nVEybRCdWq1PvPkY3k5i/Q0dEh5gn/9SBDqMV850UZXk9ElE/XGq7vcId/K8DuZ9
-         9R933s5GdqHYhIvek9sxA/I9oJO0Cp5wiOvQS7L3LE1KdXWRL8qwKPXuU8EDyXrXKYdc
-         ol8FZjVF9QJ17QgJtAah2tNJTnp7HacPUV0k9FjucpDjktB+iGsVdvAc2WCkMckdTOpe
-         XbOjE6Bm/mBQdBm8EWxxEjSz4Dh9b9oZKW46Ac3HJwNpXOGHvLushtPgRJvZHt5/IcEm
-         ZHDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742295559; x=1742900359;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sqt8FVokWeKpJbMW7MOBvDu/DM0W5jzbOfl7XkZAR6M=;
-        b=X3lfmHTsJvMWmHRteMx6a7+JzqQZa8uWKWmJf+46d81m1c7RWTrNsd4FWJhmDNljMH
-         MFVGPtsGEHdwft3sG1Kc2AO42O2OrSXkOHd2ddX4wv1uGgMKyj+Zyt+THgKFBh83E136
-         YdbZXX2uWrPuNTFMV9sYo66sfdOOlnc+ZjZNHIBydNCIUADiueTkcUbBBtcnC8iHxzrt
-         zfZ93RKJcPGZpxhXxurjkOP/bLTzM3FJn4aGSrB0UZhLErhJUy0uNLRLdbhN84lFkiff
-         RnOClEXg49B3UP3D73XvqTZZHT9T3T0wD4MoEbdm+0nOTGcqAS3hgKvBbsziUsNiSXyN
-         s16g==
-X-Forwarded-Encrypted: i=1; AJvYcCW/Bz8SydeUBdylogU9BPfj8rd0H7/0DSEfFCrqD7K15aPaa2hiWIK83a0Bp+Qs60yKsI8DZHLPIzZ34UA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA6W/JUjYoAdccxbH2UkYhuBDoI8DSnoCrA3PuHpvZqF5rTl/+
-	JWJ8komqaHnTWjj/ObWt6IphERRYuaf1ulFItrCj8y2gneOsEMKvJ6qubSdadreDLFNgiRHvJXp
-	dKDetCsweGg==
-X-Google-Smtp-Source: AGHT+IFf7jd2oyci8Ix+iGLg/B3NL6Yyg3jpCXCcoKzUgDRPsHu183PpDXyM9riCNUSfNWAjRU6yIxpWnXS6lg==
-X-Received: from wmqd19.prod.google.com ([2002:a05:600c:34d3:b0:43c:ef1f:48d8])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1da6:b0:43c:f5e4:895e with SMTP id 5b1f17b1804b1-43d3b9504camr12032745e9.1.1742295559179;
- Tue, 18 Mar 2025 03:59:19 -0700 (PDT)
-Date: Tue, 18 Mar 2025 10:59:17 +0000
-In-Reply-To: <alpine.LSU.2.21.2503171327420.4236@pobox.suse.cz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HV0koEbW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742295579; x=1773831579;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=QrndgZbN9z1XtoTGR06yFti0xSwFxjHct0FERYdF7BA=;
+  b=HV0koEbWYzh849r1Rdxk3Wvul1c0gvLstPlA+oRi0kkn6YLvwM8kz4u2
+   2/ItGGaNCt1aCfZ6KE78/vq0K6K4JtU1A33Q+S5sumdN8fiiGxx314PZR
+   3U32q58G122tGD2+ucayXpwrkV1/bst5XiVQQAJ1XgRZbSzXUPcZt07EW
+   SiaTNULmGNhlMsLjaC7Mx34nksWdoCTu7fimgnWQhvmSunXyXmY8Euuum
+   nwO9C44JqslnqO5dcWay0sZOb5SkH0Q2Y60qiJg7r5Fk1IHlZbwgDGUbl
+   Tdz6OgMtNlvz7Sa+QzEDKpsC1j2g5HLEXO0tFWTmp6JDLj6/P47cjrjSX
+   g==;
+X-CSE-ConnectionGUID: yR69g8YbR0qzHs3cGl67qQ==
+X-CSE-MsgGUID: q4VwZ5QmTPaijjUU+LYVhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="68781758"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="68781758"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 03:59:38 -0700
+X-CSE-ConnectionGUID: epYLmD4nSv++05dKgL+RbQ==
+X-CSE-MsgGUID: oAb6QjutR1yMp+GHh+cTwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="153215696"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 18 Mar 2025 03:59:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id E65112E2; Tue, 18 Mar 2025 12:59:33 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jacky Huang <ychuang3@nuvoton.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Tomer Maimon <tmaimon77@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	openbmc@lists.ozlabs.org
+Cc: Shan-Chun Hung <schung@nuvoton.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Avi Fishman <avifishman70@gmail.com>,
+	Tali Perry <tali.perry1@gmail.com>,
+	Patrick Venture <venture@google.com>,
+	Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>,
+	=?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/5] pinctrl: nuvoton: Convert to use struct pingroup and PINCTRL_PINGROUP()
+Date: Tue, 18 Mar 2025 12:57:15 +0200
+Message-ID: <20250318105932.2090926-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250318105932.2090926-1-andriy.shevchenko@linux.intel.com>
+References: <20250318105932.2090926-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1741975349.git.jpoimboe@kernel.org> <aec318d66c037a51c9f376d6fb0e8ff32812a037.1741975349.git.jpoimboe@kernel.org>
- <Z9foFvqpmo0nX1XP@google.com> <alpine.LSU.2.21.2503171327420.4236@pobox.suse.cz>
-X-Mailer: aerc 0.18.2
-Message-ID: <D8JC89FNMZIR.CWZT19Q743I7@google.com>
-Subject: Re: [PATCH 05/13] objtool: Increase per-function WARN_FUNC() rate limit
-From: Brendan Jackman <jackmanb@google.com>
-To: Miroslav Benes <mbenes@suse.cz>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, <x86@kernel.org>, <linux-kernel@vger.kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Nathan Chancellor <nathan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon Mar 17, 2025 at 12:29 PM UTC, Miroslav Benes wrote:
-> > > diff --git a/tools/objtool/include/objtool/warn.h b/tools/objtool/include/objtool/warn.h
-> > > index ac04d3fe4dd9..6180288927fd 100644
-> > > --- a/tools/objtool/include/objtool/warn.h
-> > > +++ b/tools/objtool/include/objtool/warn.h
-> > > @@ -53,14 +53,22 @@ static inline char *offstr(struct section *sec, unsigned long offset)
-> > >  	free(_str);					\
-> > >  })
-> > >  
-> > > +#define WARN_LIMIT 2
-> > > +
-> > >  #define WARN_INSN(insn, format, ...)					\
-> > >  ({									\
-> > >  	struct instruction *_insn = (insn);				\
-> > > -	if (!_insn->sym || !_insn->sym->warned)				\
-> > > +	BUILD_BUG_ON(WARN_LIMIT > 2);					\
-> > 
-> > Shouldn't this be >3? Anyway, I think it would be clearer if the
-> > coupling was more explicit, e.g:
->
-> I think it is correct but I also think that the difference between bits 
-> and the actual number of "allowed" warnings can be confusing.
+The pin control header provides struct pingroup and PINCTRL_PINGROUP() macro.
+Utilize them instead of open coded variants in the driver.
 
-Oh, yeah sorry I did not read this properly. So it's using
-(1<<nbits)-2 as the "report that we're skipping duplicates" special
-value.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 16 ++--------------
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 16 ++--------------
+ 2 files changed, 4 insertions(+), 28 deletions(-)
 
-So IMO  we need something like:
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+index 62a46d824b46..2601aacfb976 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+@@ -504,17 +504,6 @@ static const int lkgpo2_pins[] = { 9 };
+ 
+ static const int nprd_smi_pins[] = { 190 };
+ 
+-/*
+- * pin:	     name, number
+- * group:    name, npins,   pins
+- * function: name, ngroups, groups
+- */
+-struct npcm7xx_group {
+-	const char *name;
+-	const unsigned int *pins;
+-	int npins;
+-};
+-
+ #define NPCM7XX_GRPS \
+ 	NPCM7XX_GRP(smb0), \
+ 	NPCM7XX_GRP(smb0b), \
+@@ -642,9 +631,8 @@ enum {
+ #undef NPCM7XX_GRP
+ };
+ 
+-static struct npcm7xx_group npcm7xx_groups[] = {
+-#define NPCM7XX_GRP(x) { .name = #x, .pins = x ## _pins, \
+-			.npins = ARRAY_SIZE(x ## _pins) }
++static struct pingroup npcm7xx_groups[] = {
++#define NPCM7XX_GRP(x) PINCTRL_PINGROUP(#x, x ## _pins, ARRAY_SIZE(x ## _pins))
+ 	NPCM7XX_GRPS
+ #undef NPCM7XX_GRP
+ };
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index f6a1e684a386..eac43315a360 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -587,17 +587,6 @@ static const int hgpio5_pins[] = { 25 };
+ static const int hgpio6_pins[] = { 59 };
+ static const int hgpio7_pins[] = { 60 };
+ 
+-/*
+- * pin:	     name, number
+- * group:    name, npins,   pins
+- * function: name, ngroups, groups
+- */
+-struct npcm8xx_pingroup {
+-	const char *name;
+-	const unsigned int *pins;
+-	int npins;
+-};
+-
+ #define NPCM8XX_GRPS \
+ 	NPCM8XX_GRP(gpi36), \
+ 	NPCM8XX_GRP(gpi35), \
+@@ -829,9 +818,8 @@ enum {
+ #undef NPCM8XX_GRP
+ };
+ 
+-static struct npcm8xx_pingroup npcm8xx_pingroups[] = {
+-#define NPCM8XX_GRP(x) { .name = #x, .pins = x ## _pins, \
+-			.npins = ARRAY_SIZE(x ## _pins) }
++static struct pingroup npcm8xx_pingroups[] = {
++#define NPCM8XX_GRP(x) PINCTRL_PINGROUP(#x, x ## _pins, ARRAY_SIZE(x ## _pins))
+ 	NPCM8XX_GRPS
+ #undef NPCM8XX_GRP
+ };
+-- 
+2.47.2
 
-/* Subtract one because the warnings==WARN_LIMIT is used to report skipped warnings. */
-static_assert(WARN_LIMIT < (1 << STRUCT_SYMBOL_WARNING_BITS) - 1, "symbol.warnings too small");
