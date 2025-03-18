@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6A0213E83;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F405213E81;
 	Tue, 18 Mar 2025 18:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742324080; cv=none; b=iWQPF8tGPTsKz68zKGyZJTlaILdQ5J0zz7X9GKWnSnVesFqSCRxUBo+CeKLLeCw+y6/d7PQNULxz2aToUYuAuWslzNHCFIDDoN/7rqOp2DcDQ4xj7IN3vHiato+nrRIW/ws+84vpS3HwEd34HLBk6hnJuSC/C1IUx0yuAl6mRzc=
+	t=1742324081; cv=none; b=DtWD7ym3mnwD/kWGfpdmeDZ40Wo2E6e35FCxM+7IP6LM1JSEc4kjB0cRAXyTl3JotfFZPm0EUJBKrVsqBkdkAIZOwvCX9qtlQp7/Tw17tIBwFEF47zYBrxQNcSH5LvBBZ8cj8ygKGQwkYZuV9RZ3AQHFaUSZEqyhxP+DGmgOgOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742324080; c=relaxed/simple;
-	bh=RKfpRifPgZaVq7lU1uFVi5IVcVVtuoyAGQj7hLQIUIU=;
+	s=arc-20240116; t=1742324081; c=relaxed/simple;
+	bh=6upam8jR+tXsU9YBuSittZUeNhA1nAZGXdZ7/dC2sy8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=YRQSL3Pet471yAzSpkf4aXYGiKNuXZ8F4A0kJr9oGOIjMMEw2cFBDCj3CfMQ7/ICvxXH+01Vtm/Obp1XSmv5ZtrSRIdzuXRY+Gsdj+W+Loub0OZClNbxOxdfZxuTXFAHQaI+kjhZam9QHpcA+XyMj66o6b7mHGWTeDfFo3V0KBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iF3ym/J0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kMHBY3/V; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=V4EZCKqMPp+ldGg8r2453q10ZVbl+EWVJedCbuXMKzL1Jtw6FOU0arypzMXJr44lX4j/DfxeXVzRFAcF6QnlfkdsuURukakAknz8qU416bXAbYHty8H+M7kMk39KVxx7WnDFBbxY1khdtb5MnYgAMjL37UHsTISxYVse8QVftHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mNNQl77S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qGDdWTkz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iF3ym/J0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kMHBY3/V"
-Date: Tue, 18 Mar 2025 18:54:36 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mNNQl77S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qGDdWTkz"
+Date: Tue, 18 Mar 2025 18:54:35 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1742324076;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ydlw+V5tJ/DFT28B3UEoeiIuPT3DG7hIWV6mRfeV8T8=;
-	b=iF3ym/J0yhf1TsORWXnIT+ufwIml872QVM1wp3M1pt9w/K0KfzxjuYz4T8u1zbkUnh2ZE5
-	MjRohJ1phzU3JcxhuWGjbM6N3k/YNlyfTyaPNMduNiPZf6H5RzgKhpDHz3njc5RrGSSZKa
-	M5rto9acEu0WDGS5P1jeXOvrXSDXDCcH1Zxyqk+vjhYPm8FyZqyjMiYp1hO1f1eKPdWM7N
-	wBgW09bBEQxwWosjiV9uNFEhzCVMVynC7WRu9RlKx5vNkgVuPiykvjBHdD5Qk2L59slt+s
-	+BbZwzcSzGj5ihmvh+2p4fHYD+EFLX0F04tiZlc7fMrYNjEaT+lMkkLZxhPAgw==
+	bh=EqOUG9LGURxe8JbEqYO0k08dUAuBZiIcOEKIs7/TpEg=;
+	b=mNNQl77SbD6KMgfMilo2MgBXcnqtXwfOraI/VO1FFju2/jdzlLOjySktpbjNiou++vtu0A
+	aj7Lo2bdrSwpGY5E1ro+GPFocSRfiGc7E7cvZ7hNWr/uVylOPMPlKxjVLwWVrByQe7YeNr
+	9NUmTc/UDLdQ/TKt7MuB6RCaE37/j+pzhizwrr87vzPAqUgocR2MOarAAR8wRw4G9prQsO
+	8EECeu5FhT0/ALhgIVHPB4Rl11JH1BFYF8UvwkthcEeHbWlzry8H+moodHAG/X7XNpCTaB
+	b3iquzrFqYTwjACeiBncGd11z7cLYxtM4pE3DXNNA9csMgi6QdDRKtqpMyOZow==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1742324076;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,27 +38,30 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ydlw+V5tJ/DFT28B3UEoeiIuPT3DG7hIWV6mRfeV8T8=;
-	b=kMHBY3/VFSpVKzmCBb0B+HKeCKgySOP/KvsEITR7jumANo67t1m25s5CrxUw0QPx6CLx1Y
-	iYmdUB97B1iwLpCw==
+	bh=EqOUG9LGURxe8JbEqYO0k08dUAuBZiIcOEKIs7/TpEg=;
+	b=qGDdWTkzJctVgVEdKX3XH1BOATZy4UFEkZIOAYW6Z8HKGmT/PrIdDZxXmY11ZnMPTC4LeT
+	QweuTeSGT+K0KUAQ==
 From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/apic: Fix 32-bit APIC initialization for extended
- Intel Families
+Subject: [tip: x86/cpu] x86/cpu/intel: Fix the MOVSL alignment preference for
+ extended Families
 Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Brian Gerst <brgerst@gmail.com>, Juergen Gross <jgross@suse.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250219184133.816753-2-sohil.mehta@intel.com>
-References: <20250219184133.816753-2-sohil.mehta@intel.com>
+In-Reply-To: <20250219184133.816753-3-sohil.mehta@intel.com>
+References: <20250219184133.816753-3-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174232407614.14745.9291363878961520475.tip-bot2@tip-bot2>
+Message-ID: <174232407525.14745.17170068204585207370.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,41 +71,67 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     3447a2e710494fea44ba76a949b3d3afe17a7a23
-Gitweb:        https://git.kernel.org/tip/3447a2e710494fea44ba76a949b3d3afe17a7a23
+Commit-ID:     d3c20b8ceadbe561033f51cb220859e3f1bcb44f
+Gitweb:        https://git.kernel.org/tip/d3c20b8ceadbe561033f51cb220859e3f1bcb44f
 Author:        Sohil Mehta <sohil.mehta@intel.com>
-AuthorDate:    Wed, 19 Feb 2025 18:41:19 
+AuthorDate:    Wed, 19 Feb 2025 18:41:20 
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Tue, 18 Mar 2025 19:33:44 +01:00
 
-x86/apic: Fix 32-bit APIC initialization for extended Intel Families
+x86/cpu/intel: Fix the MOVSL alignment preference for extended Families
 
-APIC detection is currently limited to a few specific Families and will
-not match the upcoming Families >=18.
+The alignment preference for 32-bit MOVSL based bulk memory move has
+been 8-byte for a long time. However this preference is only set for
+Family 6 and 15 processors.
 
-Extend the check to include all Families 6 or greater. Also convert it
-to a VFM check to make it simpler.
+Use the same preference for upcoming Family numbers 18 and 19. Also, use
+a simpler VFM based check instead of switching based on Family numbers.
+Refresh the comment to reflect the new check.
 
 Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/r/20250219184133.816753-2-sohil.mehta@intel.com
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250219184133.816753-3-sohil.mehta@intel.com
 ---
- arch/x86/kernel/apic/apic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/intel.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index ddca8da..62584a3 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2011,8 +2011,8 @@ static bool __init detect_init_APIC(void)
- 	case X86_VENDOR_HYGON:
- 		break;
- 	case X86_VENDOR_INTEL:
--		if (boot_cpu_data.x86 == 6 || boot_cpu_data.x86 == 15 ||
--		    (boot_cpu_data.x86 == 5 && boot_cpu_has(X86_FEATURE_APIC)))
-+		if ((boot_cpu_data.x86 == 5 && boot_cpu_has(X86_FEATURE_APIC)) ||
-+		    boot_cpu_data.x86_vfm >= INTEL_PENTIUM_PRO)
- 			break;
- 		goto no_apic;
- 	default:
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 291c828..99b4c40 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -440,23 +440,16 @@ static void intel_workarounds(struct cpuinfo_x86 *c)
+ 	    (c->x86_stepping < 0x6 || c->x86_stepping == 0xb))
+ 		set_cpu_bug(c, X86_BUG_11AP);
+ 
+-
+ #ifdef CONFIG_X86_INTEL_USERCOPY
+ 	/*
+-	 * Set up the preferred alignment for movsl bulk memory moves
++	 * MOVSL bulk memory moves can be slow when source and dest are not
++	 * both 8-byte aligned. PII/PIII only like MOVSL with 8-byte alignment.
++	 *
++	 * Set the preferred alignment for Pentium Pro and newer processors, as
++	 * it has only been tested on these.
+ 	 */
+-	switch (c->x86) {
+-	case 4:		/* 486: untested */
+-		break;
+-	case 5:		/* Old Pentia: untested */
+-		break;
+-	case 6:		/* PII/PIII only like movsl with 8-byte alignment */
++	if (c->x86_vfm >= INTEL_PENTIUM_PRO)
+ 		movsl_mask.mask = 7;
+-		break;
+-	case 15:	/* P4 is OK down to 8-byte alignment */
+-		movsl_mask.mask = 7;
+-		break;
+-	}
+ #endif
+ 
+ 	intel_smp_check(c);
