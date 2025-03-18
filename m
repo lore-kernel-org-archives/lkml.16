@@ -1,104 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-87.mail.qq.com (out162-62-57-87.mail.qq.com [162.62.57.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E6381749;
-	Tue, 18 Mar 2025 02:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEFB15573A
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742263623; cv=none; b=dxEWdSW6EW43DEYYAeRVdlYJClrfetEgcp2TUNEMKcq/+7hFEveZnOC0VSn9Q6RPnPpCmIConxOKu86f2StCv44JmDUekIuKpOdZPYczdSU0xKiUGHsngAkt+q7sIoaUt5Rz8sa0KCxq6JDKFedBE0PHT1eCOq95zF/YHh97ZWA=
+	t=1742263832; cv=none; b=AIaYSuzk4ILfXtKt+2WP5Ve2H7yl5zJByq9qeaC4q+7DKwJIj1Tsg0ABC81QZqVPcD+T6zvJivkBy410aUZDM2x0abrmRVNjxwxTa3BcyPOlULZ/QDulMDjMmSUSZlR3XKTo3MNb9Q0FG5M9SKKLyUU/IhpCt02jdJT+WhQICIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742263623; c=relaxed/simple;
-	bh=Hh5p9FFcqND1o5HA7sfG6uEdJJxe4gC7Q+CWEDduIuA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=NIHs3elgis+TZW4dHnfRr6AOjXpgrGROdiDVJ5kzGU6RZ+GlKhu87lahvuLMf6fNZqXYzRXstJzj+QkOeEdTysuXc84iEqp2ARmtSIa2VrqHV58uuucUv1PeLrEaUqFxL+wXq6koZ0wbA7Ij5K+Ons0aryinw53BYb/F6M6zOLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tEtuFURq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742263832; c=relaxed/simple;
+	bh=90DBI5YNp4rJum24NkptVTueHbYngQW0QPFQ4qoBBv0=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=qQ36sjQTUKwz+RJJwey3gvZlY/aQzNQhwab5byXvePgVGhpAnjpXCzKm+W8k0wPN02NfHKbe6JiSRUa77d3fQ7JEHIlbhsVgr4N2mzGU6hO253+QpbwpxFwXcLMCrJZhTemz0MwvtT/162f+jdloOpj/nh9n8uEOxr6PYhDCkNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Dq0RF1xa; arc=none smtp.client-ip=162.62.57.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tEtuFURq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10768C4CEE3;
-	Tue, 18 Mar 2025 02:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742263622;
-	bh=Hh5p9FFcqND1o5HA7sfG6uEdJJxe4gC7Q+CWEDduIuA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tEtuFURqQZLz9OMfOF9dbLuTjdbavdZdn7JpiRnxRYe5H84DM0nDW6gdx7PYBvApt
-	 25OBX4H/yELojDNuJ3H9lV4srgb6aROHTYu/f7IeMQ8O8dYvvJnKKYghlxOoHYLkwE
-	 7HxyGLjjGq9xWhTbHDfDYq41L+46ZuVytLUWo4A4GEZxKo5TAv5aAbN18I6Gqqujnd
-	 frTpLb3D93dQa2bOLbe5yU8AnKBNr3Kq+fFfCkZZu0rHu6G1YfB/RdTpqjjmJHDbuP
-	 0aF20bbJBexZO17mvTvQpBkvMfGOnqXrw60KHySE2SnTQNlodJ0vD98TRbpRwFLGb5
-	 SeHvHYItzd3fw==
-Date: Tue, 18 Mar 2025 11:07:00 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Gabriele Paoloni <gpaoloni@redhat.com>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tracing: fix return value in
- __ftrace_event_enable_disable for TRACE_REG_UNREGISTER
-Message-Id: <20250318110700.510f05df7e113180503fc036@kernel.org>
-In-Reply-To: <20250314125725.6425-1-gpaoloni@redhat.com>
-References: <20250314125725.6425-1-gpaoloni@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Dq0RF1xa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1742263811; bh=PWAg6wqR4aDaunrenpIwbqBjEpt1Xb0TgbEUFi9Zb+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Dq0RF1xarjpFo8AeS/VVg+fhqaMqVuT/YRiOAf1Hh1qEED5hVLQ/9xaxA4EwRWjas
+	 uKRjXPcPaBL51mYm1n/fVP7oZKjOoSWBjyjVVg0eGezpJdTlX/48XwpC0f854o9/7F
+	 8KSJqSwuHwMWSoEitubkPU8nV7YeM3DQv8g6q+M0=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 75B28D4; Tue, 18 Mar 2025 10:01:53 +0800
+X-QQ-mid: xmsmtpt1742263313t13o6kae3
+Message-ID: <tencent_4C2A333C9EDB1B264B0E1B0425E2BACBBB08@qq.com>
+X-QQ-XMAILINFO: MAcVqULX7QQ1SDpNTn6Eo0n9SFs52VrR+m6f1NwBJjtKusl13a4eD4GHwJg1zX
+	 Jhv9YgzU0xSOxDcxDg6BK/wRW56AuKJBwNMep+h/fMAHTZLN4965Dx6o9AEc6XRwaTky8kJJXfsX
+	 XdBNsj2EChUAMCvbVuTmipGi2RdCY31cehenyscMFfxK+x5iTbWhFikP19lWaFQ+gmIv/UFuxxAK
+	 XlrJ8okgze9WC/h5pwc6js+xe5SGoeSaIWgQClvTXbYZz5UtGGqcRaENxpPKz2nrkjxi3xn+qvy1
+	 wPD3/8PjQAd/GflAZGdWAeO92if5Fi2pta5pSSp+VHs6OoGwcGffkq3bhilxhfrwQN9tHQwNdMLU
+	 otMrTETk95ILzoke0p+Ed8CRXYzkP4F1EpdBxVEgm8o5NqPqZ4OoAyyCn2bvaYPhjUpD4edRV6gJ
+	 c4tRpxjDXtPn8zOZzjJpns9YqjO7j6AhDUmsi7K7+gJvREo3h7cVSg847gbHTvddfUcnDQu7KwSM
+	 xK74hrtSQNKxkrWNhDVH9HjmwaRzekM01v3TuMlknO13X4lmyhV2IKG7qhvv/fscP3CCy1Q67+qi
+	 51UhziqAXr9xRFs9TIf+q0yyKPSTtsL+iq09ZqCPwXWek+0Vuc0hgva3zceXNmemGqiBEU/nObUm
+	 56l2RmxyCr7G+NVwkTrG2ryYDTFRo142hsdcL2AEUEKAeJfI03/oVZiG9XDRsjFNWDoHCJaAfcUA
+	 YTLQk9sg9ti1nS8SW4Ey0SJINlRbMFpPb/nVM9XrVh8aZUitkLfoQmDXiLiHCUcQmYCIlxdSZuNj
+	 KrulKUEnu2qrlUl4fR9SwJ37BI4+MyY8tyWQNV9xezaESs7PpKv0sZOswQLBN6s9kTuynI/ZxUkN
+	 hIDtyCD9TwMmK4quvf/aIWNp3xllkSa0flE7kzmZXC
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+aaf0488c83d1d5f4f029@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [wireless?] INFO: trying to register non-static key in cfg80211_dev_free
+Date: Tue, 18 Mar 2025 10:01:54 +0800
+X-OQ-MSGID: <20250318020153.3042145-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <67d8804b.050a0220.2ca2c6.006b.GAE@google.com>
+References: <67d8804b.050a0220.2ca2c6.006b.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 14 Mar 2025 13:57:25 +0100
-Gabriele Paoloni <gpaoloni@redhat.com> wrote:
+#syz test
 
-> When __ftrace_event_enable_disable invokes the class callback to
-> unregister the event, the return value is not reported up to the
-> caller, hence leading to event unregister failures being silently
-> ignored.
-> 
-> This patch assigns the ret variable to the invocation of the
-> event unregister callback, so that its return value is stored
-> and reported to the caller.
+diff --git a/net/wireless/core.c b/net/wireless/core.c
+index 828e29872633..df3ea9ee3ee9 100644
+--- a/net/wireless/core.c
++++ b/net/wireless/core.c
+@@ -1193,10 +1193,12 @@ void cfg80211_dev_free(struct cfg80211_registered_device *rdev)
+ 	struct cfg80211_beacon_registration *reg, *treg;
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&rdev->wiphy_work_lock, flags);
+-	WARN_ON(!list_empty(&rdev->wiphy_work_list));
+-	spin_unlock_irqrestore(&rdev->wiphy_work_lock, flags);
+-	cancel_work_sync(&rdev->wiphy_work);
++	if (!rdev->wiphy.rfkill) {
++		spin_lock_irqsave(&rdev->wiphy_work_lock, flags);
++		WARN_ON(!list_empty(&rdev->wiphy_work_list));
++		spin_unlock_irqrestore(&rdev->wiphy_work_lock, flags);
++		cancel_work_sync(&rdev->wiphy_work);
++	}
+ 
+ 	rfkill_destroy(rdev->wiphy.rfkill);
+ 	list_for_each_entry_safe(reg, treg, &rdev->beacon_registrations, list) {
 
-Just out of curiosity, have you saw such issue? I think
-event unregister should be succeeded or it warns the
-fault.
-
-> 
-> Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
-> ---
-> Sending this as RFC since I am not sure if checking the ret
-> value is really needed.
-> I have been mainly driven by the implementation of
-> disable_trace_kprobe, disable_trace_fprobe,
-> tracepoint_probe_unregister, disable_trace_eprobe that can
-> return an error.
-> 
->  kernel/trace/trace_events.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 513de9ceb80e..8d92b271ce0d 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -790,7 +790,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
->  				clear_bit(EVENT_FILE_FL_RECORDED_TGID_BIT, &file->flags);
->  			}
->  
-> -			call->class->reg(call, TRACE_REG_UNREGISTER, file);
-> +			ret = call->class->reg(call, TRACE_REG_UNREGISTER, file);
-
-This is not enough. As same as enable failure, this function needs to handle
-this error to report it and break.
-
-Thank you,
-
->  		}
->  		/* If in SOFT_MODE, just set the SOFT_DISABLE_BIT, else clear it */
->  		if (file->flags & EVENT_FILE_FL_SOFT_MODE)
-> -- 
-> 2.48.1
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
