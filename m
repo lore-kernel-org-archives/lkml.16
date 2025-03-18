@@ -1,97 +1,95 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB5B148857;
-	Tue, 18 Mar 2025 09:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E452206F2C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742289520; cv=none; b=DNUKAcLHuiXoT3Hwr/3Jp3A3cJ6X+dw3sfPdT0wVdj3y93bS6+TbB6khsNcaSi9ZSNR4mDBaZRR4yqNcf7uvDQdQDINPezoRGbEmEMZ4QZF2y2Ot6emOatRsE7qWUIQWHsADGaBQdnG85L61stodk46ruzPWjT21SrWsHciIF0U=
+	t=1742289785; cv=none; b=WqmugWmAo/dxgyIkZGceKgy+PPtDpTgZCO/QiaQtrdByMOXxRI5AlLcwZulVJZvoKLW0mFkFXt2D110vYLr0OAaoUnU83efradsonIgT9EcgTPwUUKqyWoK7qfu29qPemU0+dpVvhM0pJEhxTPkQSyqNuN+dx4WD4Lc/UhDIj9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742289520; c=relaxed/simple;
-	bh=oyoXlL9IzzSXFl5qWJg2CSmmwr34k4pqXRJBoD9ptT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ibm5f5KM5/WRP0bMjHqf593d6rLaBw10GCEpHQ6FkvnAHWdeOhBo4fUjQ/5AjXTQqTwcpuKvlgeE94o2YuxyY+dL6z8l6A09p/URLMWYArtb24+c7KLZMBl6QmIhjUqof6z9zzuvN4hyNzI9If79yalbPAuWl2cvONUoisjnmnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kpkjVPfA; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742289785; c=relaxed/simple;
+	bh=2+u3XFAq+HNGl3DBJY3s8alh1DCk6KVZIPBdA22WHZ4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=e+Jms+LwIWmXdLauxENm4zyj6BWk6RspFdumQ80bB5IR6EsNPra1yxB3fpKes40HcNl7ZnwyV/GuTusxRpAqTxsQrvuxlTpdGQVY5aAfZOZOt6TZFf4ZhxXtmNNQzykjREVhAXTTJkALtPG1DGLlPnXTxkCAKE00MuwyPMLfiMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HjGlJnuV; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kpkjVPfA"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5499659e669so5889442e87.3;
-        Tue, 18 Mar 2025 02:18:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HjGlJnuV"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d08915f61so16478495e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:23:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742289516; x=1742894316; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iUTzmIuRjC2JAfNwka8eNB59m5yfPsonXucEEZCt/jc=;
-        b=kpkjVPfAq8NV5J28ayEgJHPFLFKK0OE264IZWmEN62Euf7uDR8DqIJlzEYV0raxGYU
-         USbsOcsNv6egFTAfvNEnpWVY32s+XIgpVjC6A2yq8yQKgA+r+qf3m4bI5rSvqgKt/NKl
-         N/zQTjGuynqkrA70usqW+9GrH6PhejW3frMdUsNkAwmULZqeTmRPjlBV4cIpGj1usxwC
-         6Xky4EseEz5uSQP4P8toORAXGqwcRnQngok/pbqHmksca5+M9K5EkfGZQogZADqX/FkH
-         i4BiDrzjBBFnn0ByxPtSibx+Zgm9pG09omYxsP3rtFUGT4u0LHSnEDzwhgfBFC6GChu7
-         gZVw==
+        d=google.com; s=20230601; t=1742289782; x=1742894582; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PCfC0RAJNFEk2a2N1WlDQjbNqq6fpBI9L3zZ4i8ZQK4=;
+        b=HjGlJnuVlAdFvqs4E/c3W4uAAgSzlbNWtlg0cVLd85xlUsWCeilgrsjxouvl9FhDyt
+         4B3yX4W7X4xeu6A3oGOMB+/Q7w05v+6ZjmgrpQjZIltEjvf4IUOoGJoWGpof/tPt8e/H
+         9S573zTnWv2XN6wrMrzbuQhrWamQQtHqCSd2blMQqPHLwWbqwB5ZktGLxu7l49oVmYyk
+         GlFl6UNWxkhS2uu8OBNV0ZedF8HSvAtmA+BFR+EmXr1fOKKLp0QALctKlVHGToZ5QhFS
+         ycncG3Xqj4e4Dq9XrIoo1FqPvyS0ylrTdMUUOrQrNOvSXt0E8GRDWyddCpZ9ZlekxcF9
+         8hiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742289516; x=1742894316;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iUTzmIuRjC2JAfNwka8eNB59m5yfPsonXucEEZCt/jc=;
-        b=vHSdoiY3ROiwEphk3VSkPAveND5gBHSoetFWCm7CwYKTySrxh5gLMXPH4wgQiSEH5J
-         6TM7fDxI383vCkCzih8fspW8hhpwYZRgT0VO6XGizYpVEdMzC61NxhJfOIfMojG7SR/Z
-         L9KW4PExTQaxWK+Wdw2m5SpJx8qCUykZPlGBHVgRKd6C3iJ8jCLpyX+6aPnE1c2AG/qT
-         Z2llLcNx6ErnM/zBmx2ofW4uPKmGVnQmvTCmkReFfNpBledkuq7zVrOPVU6G07zcKF0E
-         wL4nvqcGl9wamqi8zYEA4Ns2pd5XhuJkogqiem/WqtLg+zUqgU/BA6vE3qIMSFK+CbdB
-         9xQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZap+2VRis1P31LmYQlEPVxIfrlq8o5WEQDwIOnmWPHKoKpP7ClhZchtrqzj9DfgYaNWOgZykmXBoC2Tc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7+R1YP+JpfAp/bFQQF9yCJNmZA6l0H1lKME3BZfgfGjmVWWnS
-	nVh/YoLi5A19IR2ImOl//Ouhpd+2HEyi46l/glAlzeexqlwiv8el
-X-Gm-Gg: ASbGnctPtGs1fp8qp7V2M3xkNT5Penjzt3U1LmMLbHjQk/jpApw6bswSDUxEqCrFCZa
-	EgJ0QZUXyPPEwji7NCD+VPZVvmi92MlTrZ6aGeZvflHmYAZpxMXtAzVZJVGfTxbXdiAN6FhNmlk
-	u9s2v+otoqPxNhBYmC3uQ34MXpd+KV1ozwsgGqBqfQGqhBRKSujTQWSFbqogeteKTEZuvIvF5bn
-	TsRYZVPT/GexkMN4tlewiG8oowhkupuHMN88BfImPxqyX7ImX93ab+QfR/NeENY3Het8n98hTDd
-	POpneoGtHB/JoiSw1AXFveiFswm1kMhT1bTu/3Y1bDu5TaFE0d2Nj4wJgF8=
-X-Google-Smtp-Source: AGHT+IGHwBr3z+X5KybLHAm4VLxQ6zBuSIuEK+aXOsN7Kzieot+b02V/4BG29JCWDwYNaB7fV6VFbw==
-X-Received: by 2002:a05:6512:3da8:b0:549:490e:240d with SMTP id 2adb3069b0e04-549c391a8c8mr10131590e87.28.1742289516250;
-        Tue, 18 Mar 2025 02:18:36 -0700 (PDT)
-Received: from foxbook (adqh54.neoplus.adsl.tpnet.pl. [79.185.141.54])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba7ce823sm1602244e87.105.2025.03.18.02.18.33
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 18 Mar 2025 02:18:34 -0700 (PDT)
-Date: Tue, 18 Mar 2025 10:18:30 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: xhci: Fix double newline in a debug message
-Message-ID: <20250318101830.49e7a37a@foxbook>
+        d=1e100.net; s=20230601; t=1742289782; x=1742894582;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PCfC0RAJNFEk2a2N1WlDQjbNqq6fpBI9L3zZ4i8ZQK4=;
+        b=lTXFk7rs2bNE5lj5NxT1DvkfUuOW+SKmRZH+w2Mw5PS8vFjUr0/roPV+EOFy6Xkxwj
+         dN2F30VcA7ekf6ufvrylJ2g2P62BRIWS1iQXax10UOVzL1x2M7Wmw9BZZgL6znEPp8CK
+         CVPogp6FEt4vvQIQTmuHLkBdNEKGJU1ITpNJ5VSLUF8wUIVInlmYeyQuyiwFZiU48IYc
+         w7PbY83hu9HB4Y/Am4fN5xdH1KNQxcVB6UI/LvpUOezYgHjdTS3CD+0YAgeV/prmXndF
+         jcy4PKB04RDJLx2VYL5lK/hfK6REDrFt6MxN7+RH+B2lQ84lZ4JefSObCpWjV1AXKktI
+         VAMA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0XnWtQ5qebhxXL+c07ZT6PwE8xc6LLA/VONdmsszdf859tmocOmgsVRXnlESsl/W2QD32PeRqNbiOOOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpBX2FmikirRIyi+upUUoHDWxtWmZ7nXS5irPjGFSzrIX/4Q1I
+	Awu7CVprEnxhvvmswplgYK63F8sNaj5kiYfF4Cc2YaHpdclm3/zqLSyeU9orhaei0OL2/5j0VSz
+	NKKXdzQzVYeGo3Q==
+X-Google-Smtp-Source: AGHT+IGDaUl0eiyBgeANVIDFXN9j+DuNssJhnHkyeFJipmKrSIp0Fec7Cw1iykbVuNIh3z7M3e3iHmbEpO1331s=
+X-Received: from wmsp8.prod.google.com ([2002:a05:600c:1d88:b0:43d:1873:dbaf])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:138b:b0:43c:eea9:f45a with SMTP id 5b1f17b1804b1-43d3b94ffe9mr15418345e9.4.1742289781906;
+ Tue, 18 Mar 2025 02:23:01 -0700 (PDT)
+Date: Tue, 18 Mar 2025 09:22:59 +0000
+In-Reply-To: <CAJ-ks9=xLLXovsaduKFBfxvkfzYgTaSPhhW_oRN5y1QOuKJFkQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250317-vec-push-use-spare-v1-1-7e025ef4ae14@gmail.com>
+ <D8IM66U67XBD.28KWYO1XSF8ZQ@proton.me> <CAJ-ks9kq1cQ2-ZNzG9P4SBvk-AjXxT+na-89K33imB4fsCvu4A@mail.gmail.com>
+ <Z9hXMcFVdF8MMusU@cassiopeiae> <D8IPQUN25M12.2CIZR4QHJ201N@proton.me>
+ <Z9hcT4KPwgtHmiTT@cassiopeiae> <D8IQ5BDTLCLZ.1UBNYUXLK12X0@proton.me> <CAJ-ks9=xLLXovsaduKFBfxvkfzYgTaSPhhW_oRN5y1QOuKJFkQ@mail.gmail.com>
+Message-ID: <Z9k7cwE5UNOIyoXR@google.com>
+Subject: Re: [PATCH] rust: alloc: use `spare_capacity_mut` to reduce unsafe
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Benno Lossin <benno.lossin@proton.me>, Danilo Krummrich <dakr@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-xhci_dbg_trace() appends a newline to the format string,
-don't call it with a newline terminated string - it only
-adds a blank line to the log.
+On Mon, Mar 17, 2025 at 01:55:18PM -0400, Tamir Duberstein wrote:
+> > >
+> > >       fn dec_len(&mut self, count: usize) -> &mut [T] {
+> > >           self.len = self.len.saturating_sub(count);
+> > >
+> > >           // Potentially broken, since maybe `count > self.len`, hence need an
+> > >           // additional check.
+> > >           unsafe { slice::from_raw_parts_mut(self.as_mut_ptr().add(self.len), count) }
+> > >       }
+> >
+> > Ah sorry, in my mental model the function returned `()`. Do we need the
+> > return value?
+> 
+> The return value is the whole genesis of `dec_len`, we want to return
+> something to let the caller know they need to drop or copy the memory.
 
-Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
----
- drivers/usb/host/xhci-ring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hold on .. it returns &mut [T]. You're usually not allowed to take
+ownership of or drop values behind a mutable reference.
 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index dc674bc24a89..b565c9f7e036 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -789,7 +789,7 @@ static int xhci_move_dequeue_past_td(struct xhci_hcd *xhci,
- 	ep->queued_deq_ptr = new_deq;
- 
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_cancel_urb,
--		       "Set TR Deq ptr 0x%llx, cycle %u\n", addr, new_cycle);
-+		       "Set TR Deq ptr 0x%llx, cycle %u", addr, new_cycle);
- 
- 	/* Stop the TD queueing code from ringing the doorbell until
- 	 * this command completes.  The HC won't set the dequeue pointer
--- 
-2.48.1
+Alice
