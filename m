@@ -1,118 +1,142 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FED235972
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 13:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB163206F22
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 13:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742304172; cv=none; b=jaVtZ8yP4qKNHpWKQtHFWSfHtORGMfCXSINNat0puqi1ViZ6dOx0CukPykGrL/OvT9lFVFO7+75mUhjBnvyzb5geKyyaDWrc7putOpz7invqvpiKLGxG1dO2SocHRrLp4J+D+buFZSts+takatpeixbq3X+Ozsam7h16eGaMsTI=
+	t=1742304297; cv=none; b=ZPKZ2oU4ZmEjQJxgrLLNCF1yVj0aOuoXolki3yVUPpJCtSu7HcxY7VZJneWU2YCtlJP89a85RGLKKfxdC9w/biHIMR0uLGI+Z+RCYHKKShy5Anb47BPuouDPluyxWwei3ZOe1bnbIIfevMVkx8XojcnjVTFpZMiax+Dl133Boww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742304172; c=relaxed/simple;
-	bh=T3wzl5BuTKPC/Qy9/OCpWwcFWc5KQVgF1XBbM/fcyYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e1ahtZ2U+gBsvPdub7uYESUWGSURWiW8GItIxImfNKI4wxj0mQQnphbguO/K2YWEIdso0q6D9HfmgFX8tDkjAu6CRV2CAPUM0sIHhqw/PKRbUB0gszom4coYoAKRGXXPgqkmSowAjp5uyPANaF6PKyiv5w6gskdfn6QraqxtuEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fpQRH3J0; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742304297; c=relaxed/simple;
+	bh=BuOvW7eyYaT5DbhjI637N0geQsyWJU5agQ+gp1GmwEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EGLF5MPJgepPE9Ee2+a/B7xhYcLgnD0amx1mDaQKV6HeuiYHHr6EsbCF4iDDgR2ZB090rMc/9v/ieobyu0/q3HFi0p4kY5tLRgmNXZBb/t/BTSwclWOUv7Ufsoi1Rn0LIX1ITIO5CXFIz1zxcv4bmixkcg4++R1CMFnMDM6Tibw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=p2J7/ekc; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fpQRH3J0"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52I92JCP002426
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 13:22:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=uGDujaB4DLyabP57ZFAqglGX
-	KkKUWQiyDtvod87xHNc=; b=fpQRH3J0JoYCzHouc7VQOZtfva+i9kXlHc6KQ6Ri
-	zm9LRm0BfHgdGEIs1EyPgsnB94UHSgVo6Zu9fPCL0C18QOuZ7gOU3kPsXMCmQATU
-	aTH6qUrZJur6wScr/l/oBM5OYmteJkVbf1QGitdKL0BQBOyl50cMw4Sfvp+m5jCx
-	vzIDHi5sRm5CE/pY5pfgY0QNS9f5ADK7ZsAfzTx4+XQfIod1k5+8NG+bhvLyvWHO
-	AyPaJ2jtU+evQT69/vAIQv2qXDvsXgtrIT/zTb6BKGPtjWsnhubM6Y6U9Xi2YCN1
-	TIlOT+inw3bx2sjnr2KyB3pquTqS8tP/EZOxjNg81e07Dg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1uu0aqp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 13:22:46 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47686947566so107663741cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 06:22:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742304158; x=1742908958;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uGDujaB4DLyabP57ZFAqglGXKkKUWQiyDtvod87xHNc=;
-        b=ktznQqahSaNAtjkSJ/nB0dVivWgXgqyWzwPKgTCm25tH5DRs4vUBqfM964n9uQhJd9
-         74LW+vD8D4QZvpoYGKU6rBsza9SjcKM5Rt3AobvrVQPG06DMsCQ1x8quEKngwUCslUR4
-         kwkNXEXvOJgwl9ngCOFbxEqnxmaGKzbBVjFz+jF07ckM6jCVhzkvl2ygTzTpn4hch2W+
-         UDEVViRqKegTPQyEspmiDduJvLBqnMYSlDMkoeqRSnz9TiT3YC6j18nRVsvOIvvTJ48f
-         7YDdhV9y9wy5HAnOl3QYd33P1eTEfmbyyrFFYPUi1iufhz04tsvNPPCg/hMVxnnwerQa
-         RDyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXupaqltJ4JH5tZdUMIocgTQP5ya49jbj3xNgd0U+a95Rbosu7mDS4yu2kMf93N0Rx8tDOi6mfd3EiFkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbVkmnPEdZmwosF3fiV6RyVGXXB60N0pDSGXOgWeb7EOehddZX
-	KYhIz/rOuvCNcOfy5mgpxFG45ipPEXTHeofMt1VTA5GeJ6/QgNIT87jXW1X0tovnD8xACr0mOWa
-	L8ISUPIC20oxPwmjsJGYUqNIoAIVSA1cfJqKiDb7T0r2wroRAd7F0xQB+Gsr3nMw=
-X-Gm-Gg: ASbGncuApE0GaByE+Z40lEk2Ht38vM137rAHBzXGfKY5+begZAIQU9x9QE6hVQaCDsf
-	e+zPBtoGocCdPg+yifEKvVXofT4a6x6QK63wnbLjfaTkjBenq9GZDBRGQsnMLSPM5RqMEeax1f6
-	uuTbkZ7xlX+XUxZXSdzZ/Vcdcwapaku1ZD0zMep8mO+CpwWcPKFMlpsgx35NnU57Kgy+uJz13qj
-	p1tsT4X8dNpZVVdkWrg9YSX6gLiNuRco0Oupgji+FRZ+tJFMFebQPiOG9fSE1zZTsDbtz1pxTpz
-	ApLg5FJDOd5UuNKwAlc+UnWLQMXw42dQF8CWK4aoEpHSDBzsu/IfzNIIEBgnjHXmRgfnuhJb8pK
-	6L48=
-X-Received: by 2002:a05:622a:4008:b0:476:8c68:dcbc with SMTP id d75a77b69052e-476fc96e517mr48613981cf.9.1742304158599;
-        Tue, 18 Mar 2025 06:22:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHaNdlc1pTWXWxO9BlgHhquQTXoTV7LfD1gCYHiNW/dPhyGJtf6v2GHBvytRzHabEmyDgw98w==
-X-Received: by 2002:a05:622a:4008:b0:476:8c68:dcbc with SMTP id d75a77b69052e-476fc96e517mr48613641cf.9.1742304158143;
-        Tue, 18 Mar 2025 06:22:38 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba7a8944sm1695766e87.14.2025.03.18.06.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 06:22:37 -0700 (PDT)
-Date: Tue, 18 Mar 2025 15:22:35 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: David Heidelberg <david@ixit.cz>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: qcom: apq8064-lg-nexus4-mako: Enable WiFi
-Message-ID: <g7scnbxbem3xviz5ufuhqakgzgz3y5hpfuo3rbvipcj54aqjaf@7rjwbweokcvy>
-References: <20250318-lg-nexus4-mako-enable-wifi-v1-1-e3b4a09d9f68@ixit.cz>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="p2J7/ekc"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52ID2EhB008725;
+	Tue, 18 Mar 2025 13:24:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=AHLgZ5
+	XycjmAhaOgRjAzdPYu9We1Fze8Zvp5Pfd4LAo=; b=p2J7/ekcJ8xp2d5vImzwSt
+	9zurhpLtc9I80ZDnAAlCsVQfvj8ZgO+nsKVqCKWS7BN/PKxIkaQc0UG7H/AQ0Ci+
+	b5MOcJcUPvBbHqTLxt/MzHiTUeOYKlO7WZBrnPxgmD+dP91aqRGXB5fridYlcoaC
+	lfZUwA9lYVz3X8pUYw9hsrKo/mAqqYi6+NWvf/uZc9+rlJMMX9OIXcATd6ZIOn2A
+	QbPJ4UJQSH9+ip/L5gbcnQRkTxYxpeo9A0qrGrGjFtQu9/oboQYIHUggt1Y+BM6+
+	uWLh4YETFapRs8s79bsAPmPui9sUrBDToGqWcLGSTEU/AFbEJOsKdYCyum8TjflA
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45etwqbxhu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 13:24:28 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52ID6q96005664;
+	Tue, 18 Mar 2025 13:24:28 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45dm8yv5sh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 13:24:28 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52IDOQPl29426292
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Mar 2025 13:24:26 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 246DB20040;
+	Tue, 18 Mar 2025 13:24:26 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E2C2020043;
+	Tue, 18 Mar 2025 13:24:23 +0000 (GMT)
+Received: from [9.124.211.142] (unknown [9.124.211.142])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 18 Mar 2025 13:24:23 +0000 (GMT)
+Message-ID: <0713a015-b8dc-49db-a329-30891a10378c@linux.ibm.com>
+Date: Tue, 18 Mar 2025 18:54:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318-lg-nexus4-mako-enable-wifi-v1-1-e3b4a09d9f68@ixit.cz>
-X-Authority-Analysis: v=2.4 cv=H8Pbw/Yi c=1 sm=1 tr=0 ts=67d973a6 cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=wz7sF6bqFnhUK9Hc8PEA:9 a=CjuIK1q_8ugA:10 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-GUID: 9NnpcoluF-d9vvS7cCqVo5FJICVhmBxc
-X-Proofpoint-ORIG-GUID: 9NnpcoluF-d9vvS7cCqVo5FJICVhmBxc
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 00/21] futex: Add support task local hash maps,
+ FUTEX2_NUMA and FUTEX2_MPOL
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
+References: <20250312151634.2183278-1-bigeasy@linutronix.de>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250312151634.2183278-1-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 6Brk4DRwFZBfFnBuQzn5KRMr8O86BuET
+X-Proofpoint-ORIG-GUID: 6Brk4DRwFZBfFnBuQzn5KRMr8O86BuET
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-18_06,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=644
- lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 priorityscore=1501
- mlxscore=0 suspectscore=0 malwarescore=0 clxscore=1015 impostorscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503180100
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 clxscore=1011 impostorscore=0 mlxscore=0 malwarescore=0
+ phishscore=0 adultscore=0 mlxlogscore=981 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2503180096
 
-On Tue, Mar 18, 2025 at 01:51:21PM +0100, David Heidelberg wrote:
-> The Wi-Fi setup is identical to that of the Sony Xperia Z (Yuga).
+
+
+On 3/12/25 20:46, Sebastian Andrzej Siewior wrote:
+> Hi,
 > 
-> Verified against the legacy kernel configuration inside
->  arch/arm/mach-msm/board-8064-regulator.c
-> using LineageOS 14.1 kernel sources.
+> this is a follow up on
+>          https://lore.kernel.org/ZwVOMgBMxrw7BU9A@jlelli-thinkpadt14gen4.remote.csb
 > 
-> Signed-off-by: David Heidelberg <david@ixit.cz>
-> ---
->  arch/arm/boot/dts/qcom/qcom-apq8064-lg-nexus4-mako.dts | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> and adds support for task local futex_hash_bucket.
+> 
+> This is the local hash map series based on v9 extended with PeterZ
+> FUTEX2_NUMA and FUTEX2_MPOL plus a few fixes on top.
+> 
+> The complete tree is at
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git/log/?h=futex_local_v10
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git futex_local_v10
 > 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Hi Sebastian. Thanks for working on this (along with bringing back FUTEX2 NUMA) which
+might help large systems with many futexes.
 
--- 
-With best wishes
-Dmitry
+I tried this in one of our systems(Single NUMA, 80 CPUs), I see significant reduction in futex/hash.
+Maybe i am missing some config or doing something stupid w.r.t to benchmarking.
+I am trying to understand this stuff.
+
+I ran "perf bench futex all" as is. No change has been made to perf.
+=========================================
+Without patch: at 6575d1b4a6ef3336608127c704b612bc5e7b0fdc
+# Running futex/hash benchmark...
+Run summary [PID 45758]: 80 threads, each operating on 1024 [private] futexes for 10 secs.
+Averaged 1556023 operations/sec (+- 0.08%), total secs = 10   <<--- 1.5M
+
+=========================================
+With the Series: I had to make PR_FUTEX_HASH=78 since 77 is used for TIMERs.
+
+# Running futex/hash benchmark...
+Run summary [PID 8644]: 80 threads, each operating on 1024 [private] futexes for 10 secs.
+Averaged 150382 operations/sec (+- 0.42%), total secs = 10   <<-- 0.15M, close to 10x down.
+
+=========================================
+
+Did try a git bisect based on the futex/hash numbers. It narrowed it to this one.
+first bad commit: [5dc017a816766be47ffabe97b7e5f75919756e5c] futex: Allow automatic allocation of process wide futex hash.
+
+Is this expected given the complexity of hash function change?
+
+
+Also, is there a benchmark that could be run to evaluate FUTEX2_NUMA, I would like to
+try it on multi-NUMA system to see the benefit.
