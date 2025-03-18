@@ -1,221 +1,117 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F32381AA791;
-	Tue, 18 Mar 2025 08:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4D51DE4DC
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742284976; cv=none; b=VJa+11eyyQeU7y4f6YYVjAGtszn37AdOB3f2SJsrQ7VUxnl8u3wAKDFW0ahXS9pqUvQ9/ozzDDPZJH/Od/69A3775mWmT0phAp4sLSgurIJ3DKFPz95yCH6B+HaZm3uTvcz7r713Ya/PBFwI4Hox4JkhntThtSkZW8SMGdLyePQ=
+	t=1742284994; cv=none; b=GBxn9hnYqHdq6Yc/d81EykCuDZDl330ptCjvrdXcBhX2H/KtVbo1PXj77gMW78gYdO7hJJ2643BrRJEfkmvIq+mij7OApQy2EiKcSoSGQe9I9sMK0n7nXZqc5ogv3jQFYxoZMeiFV3XYb9xtuItTRUn1HPf9tBgJkv3KxDzlpkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742284976; c=relaxed/simple;
-	bh=6tmfjSUaa+b8uAjt/O5vSHnSI8u+YZ48edARkdy8ZzU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JZNmKWTdjj2smR3lJiCS7OWJCEyelJpzT2sk4LwLnQuXU+Kc+caJ8zk6Pdch83gpdB9RDge/03OT3cnB72Z+v/CvoNJ9HtoL/SV7OgMWszTUf9jh/mJav3RWXDzZ995qUnh9af/h8+KybuaE9I8/I+6tMkmt+dfEhnVb7jFlNfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-09-67d928a8ae53
-From: Yunjeong Mun <yunjeong.mun@sk.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: kernel_team@skhynix.com,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	harry.yoo@oracle.com,
-	ying.huang@linux.alibaba.com,
-	gregkh@linuxfoundation.org,
-	rakie.kim@sk.com,
-	akpm@linux-foundation.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	horen.chuang@linux.dev,
-	hannes@cmpxchg.org,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com,
-	Honggyu Kim <honggyu.kim@sk.com>
-Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for memoryless nodes
-Date: Tue, 18 Mar 2025 17:02:38 +0900
-Message-ID: <20250318080246.1058-1-yunjeong.mun@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <Z8-_SXm0JGjXTegL@gourry-fedora-PF4VCD3F>
-References: 
+	s=arc-20240116; t=1742284994; c=relaxed/simple;
+	bh=oPq+d71Iufy56/UZaCHSTNp7Y6uM8EA9OXViFdwCyp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yq2VmdcBCayjBQuJWsY5HScXfkCqfalNyUpHgJrWIBm1Y3iUSdC4cK1iOfv/72m6a2tRx4QMU4DIvtaX6QF6cmptFRR3xuK+u8CuAWYfXtT8vtBwVtaB2QqfpTwF4gbzz11sALR2Ylh6+SuZk/WKZYNqWHsDM5vCe6SBcCuX3js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JYeZngaC; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JYeZngaC"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-225d66a4839so64688055ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 01:03:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742284991; x=1742889791; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7zATNOB+RN3GRdRq8GAz0vH7sY1Yh90UPf+hvtUwtFk=;
+        b=JYeZngaCrwqCXIUh9R+MuiHFdmMsx8A6+rRBrfTE+9f6E5LAEMfM110JoGbaJbvTx0
+         0M64/ZLb+vlCBmA4VB2gSxtELDDfLaSbhCeEwRfZoNfapZ0kQ6c4SYl9PhgmcDWzCx7S
+         +/5gvNWri+zOT8f7G3PkcDK10PIB+orJlfuPM0GFVSB/r3uxz9CehvayG6DjjLpeylNv
+         MbFWrnSAqYZSClu7UpyCZIseq2+olRAblT5mD5B0Er8232PVRsuUU7q2vFeIlartOM8S
+         l8AAjWkRVRyijhmYDRfca8ROU/2VFlMMcfew3Ebslh92JToNmRSbvJocqKaYBYAhjZKm
+         giaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742284991; x=1742889791;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7zATNOB+RN3GRdRq8GAz0vH7sY1Yh90UPf+hvtUwtFk=;
+        b=v6is1riZs8rJDQmE44tIzkBwW1cXRKAWXQO23BXts2324vp1AaQGLL2rdSZU9yrmV7
+         pFZ9Bdo+1gXTdHGgqj3rB2HbtQDsfwuIRYw504cl0tsAPDutB15iPENpr+8Z7+dS3Mij
+         z2t8Sd8mZoY+jrmms/+0uQQdqcvbbuUcMRy1/QbKs3Ug7DqXzyxpiYjI9VfWIjwbPT/9
+         Ne2v6F1RHm5hhSDU8c/jRU1Gm4Sm9zy0laPjlCf3xl7x7XjhscihjvGwQD89BHbF5gcV
+         xE/rhFLm5QjaZ7RMP5QGOV34AlaCopR+NhNj9djCKKQpRaaNwRXzXJhbhMj4xnQW9Tvk
+         +54A==
+X-Forwarded-Encrypted: i=1; AJvYcCUi8LwXgdAjGt/i3yKLbUHSkQyamI3s/amQscLytTglc7NzfhCb8iw58oCuB8C/SboKlWO7CxXoPT2oySU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhRCvDnlxzML2omuRkSl55qwYzxgtt2fyJtsJ42LZgb5Si+UPx
+	r1N2CZFTZVXMb/tbqvjK4MSZ/ffu5a2+QMNM79lHlJAvtdMyXGrDnVeQgGRyQg==
+X-Gm-Gg: ASbGncsNOgZ5JPo66m/0KKCFRPBLmwY0InVyPYmiqQiLPZr11jP3GFCa8pHidrZXx3K
+	JXFiLAvSzKzCcOtbz6ETpk7cRFlXFZJMeBURiqfPiZ1vgWdKoTTD6k0sqcGVTCd/YTRM1yk9iRD
+	j8FbiQGanpIK4XkR7jMbNBSLQT07KnfT/LXMjZmqSJC6Ti827PXn3sU9H9FAS6drAjY6KA4v7OM
+	nrdW/u+TNPyovRNSzB8bJkbn/Ej9SELUGe6AG5QLutypLRG87RnP/XU4PxQjtjvO0eRCBezIPI0
+	B8gpAwP7bq6M8fZSYlU9yfzmwVctQvYwJ9sww9XsX0WCqSyktJjZO1Ea
+X-Google-Smtp-Source: AGHT+IFQI50pcGaomE3YOZGMmALp0D+8DIQDQoTe6NaI/OMfzJ9nJAe8ts6tZPm5ugXC7xjglM9V7A==
+X-Received: by 2002:aa7:9902:0:b0:736:4c3d:2cba with SMTP id d2e1a72fcca58-73757932a76mr2891234b3a.9.1742284991535;
+        Tue, 18 Mar 2025 01:03:11 -0700 (PDT)
+Received: from thinkpad ([120.56.195.170])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737116b1103sm8934019b3a.167.2025.03.18.01.03.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 01:03:10 -0700 (PDT)
+Date: Tue, 18 Mar 2025 13:33:04 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, vigneshr@ti.com, kishon@kernel.org,
+	cassel@kernel.org, wojciech.jasko-EXT@continental-corporation.com,
+	thomas.richard@bootlin.com, bwawrzyn@cisco.com,
+	linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	srk@ti.com
+Subject: Re: [PATCH 3/4] PCI: cadence-ep: Introduce cdns_pcie_ep_disable
+ helper for cleanup
+Message-ID: <20250318080304.jsmrxqil6pn74nzh@thinkpad>
+References: <20250307103128.3287497-1-s-vadapalli@ti.com>
+ <20250307103128.3287497-4-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsXC9ZZnke4KjZvpBptOcFrMWb+GzWL61AuM
-	FiduNrJZ/Lx7nN2iefF6NovVm3wt7i97xmJxu/8cq8WqhdfYLI5vncduse8iUMPOh2/ZLJbv
-	62e0uLxrDpvFvTX/WS3mfpnKbLF6TYaDoMfhN++ZPXbOusvu0d12md2j5chbVo/Fe14yeWxa
-	1cnmsenTJHaPEzN+s3jsfGjpsbBhKrPH/rlr2D3OXazw+Pj0FovH501yAXxRXDYpqTmZZalF
-	+nYJXBlta8IL1upV/Dqwjq2BcYZKFyMnh4SAicT6Rd+YYexrXQuYQGw2AQ2Jg4dOAsU5OEQE
-	VCXarrh3MXJxMAu0sUjcfLWYEaRGWCBC4tyj0ywgNgtQTd/sl+wgNq+AucT5/nnsEDM1JRou
-	3QObySlgJjHtyG2wuJAAj8SrDfsZIeoFJU7OfMICsotZQF1i/TwhkDCzgLxE89bZzCB7JQSO
-	sUusefwfaqakxMEVN1gmMArMQtI+C6F9FpL2BYzMqxiFMvPKchMzc0z0MirzMiv0kvNzNzEC
-	43FZ7Z/oHYyfLgQfYhTgYFTi4d3BfiNdiDWxrLgy9xCjBAezkgiv+5Pr6UK8KYmVValF+fFF
-	pTmpxYcYpTlYlMR5jb6VpwgJpCeWpGanphakFsFkmTg4pRoYRefF9+vN0RQInrXH/I3NxMVa
-	fy9KG8d3nHo4M+h62JV1J9/fnXmx/ZHe7wWMEWlrq1Ysa7eT6PvhtV70Vts6O2P981e6Nk78
-	sb+05TOP6tY71ny9zyP/xW0L/HP3SbHSHemUgJ4t4vKrq53uTcjZvFdhaXVSjfDRjRWCz4MY
-	xLec5ixpm5u7Q4mlOCPRUIu5qDgRAMCmBzHDAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsXCNUNWR3e5xs10g+4L5hZz1q9hs5g+9QKj
-	xYmbjWwWP+8eZ7doXryezWL1Jl+L+8uesVh8fvaa2eJ2/zlWi1ULr7FZHN86j91i30WgrsNz
-	T7Ja7Hz4ls1i+b5+RovLu+awWdxb85/VYu6XqcwWh649Z7VYvSbDQcTj8Jv3zB47Z91l9+hu
-	u8zu0XLkLavH4j0vmTw2repk89j0aRK7x4kZv1k8dj609FjYMJXZY//cNewe5y5WeHx8eovF
-	49ttD4/FLz4weXzeJBcgEMVlk5Kak1mWWqRvl8CV0bYmvGCtXsWvA+vYGhhnqHQxcnJICJhI
-	XOtawARiswloSBw8dJK5i5GDQ0RAVaLtinsXIxcHs0Abi8TNV4sZQWqEBSIkzj06zQJiswDV
-	9M1+yQ5i8wqYS5zvn8cOMVNTouHSPbCZnAJmEtOO3AaLCwnwSLzasJ8Rol5Q4uTMJywgu5gF
-	1CXWzxMCCTMLyEs0b53NPIGRdxaSqlkIVbOQVC1gZF7FKJKZV5abmJljqlecnVGZl1mhl5yf
-	u4kRGHnLav9M3MH45bL7IUYBDkYlHt4d7DfShVgTy4orcw8xSnAwK4nwuj+5ni7Em5JYWZVa
-	lB9fVJqTWnyIUZqDRUmc1ys8NUFIID2xJDU7NbUgtQgmy8TBKdXAqO3q8NsoN/mrx6LJs/+z
-	c87PbPVY93N1mnJz5l9TXrarnrd/Cbs+zLguFZnW+cJiW07t/kl/P39c9uxK7bHfbEatW+v3
-	f/vYKdPSkhRk883bMa5+i4t6wYTNcrsKysMkefbULD8qupl/g8vj9ufLjWo2/C/UePP3raDw
-	d4tyh0/sh0JdzJtvKLEUZyQaajEXFScCALU/Yo+4AgAA
-X-CFilter-Loop: Reflected
+In-Reply-To: <20250307103128.3287497-4-s-vadapalli@ti.com>
 
-Hi Gregory, I have one more question below.
+On Fri, Mar 07, 2025 at 04:01:27PM +0530, Siddharth Vadapalli wrote:
+> Introduce the helper function cdns_pcie_ep_disable() which will undo the
+> configuration performed by cdns_pcie_ep_setup(). Also, export it for use
+> by the existing callers of cdns_pcie_ep_setup(), thereby allowing them
+> to cleanup on their exit path.
+> 
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 10 ++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h    |  5 +++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index eeb2afdd223e..85bec57fa5d9 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -646,6 +646,16 @@ static const struct pci_epc_ops cdns_pcie_epc_ops = {
+>  	.get_features	= cdns_pcie_ep_get_features,
+>  };
+>  
+> +void cdns_pcie_ep_disable(struct cdns_pcie_ep *ep)
+> +{
+> +	struct device *dev = ep->pcie.dev;
+> +	struct pci_epc *epc = to_pci_epc(dev);
+> +
 
-On Tue, 11 Mar 2025 00:42:49 -0400 Gregory Price <gourry@gourry.net> wrote:
-> On Tue, Mar 11, 2025 at 01:02:07PM +0900, Yunjeong Mun wrote:
-> 
-> forenote - Hi Andrew, please hold off on the auto-configuration patch
-> for now, the sk group has identified a hotplug issue we need to work out
-> and we'll likely need to merge these two patch set together.  I really
-> appreciate your patience with this feature.
-> 
-> > Hi Gregory,
-> >
-> > In my understanding, the reason we are seeing 12 NUMA node is because
-> > it loops through node_states[N_POSSIBLE] and its value is 4095 (twelves ones)
-> > in the code [1]  below:
-> > 
-> ... snip ...
-> 
-> Appreciated, so yes this confirms what i thought was going on.  There's
-> 4 host bridges, 2 devices on each host bridge, and an extra CFMWS per
-> socket that is intended to interleave across the host bridges.
-> 
+pci_epc_deinit_notify()
 
-Thanks for confirm. Honggyu represented it as a tree sturcture:
-rootport/ 
-├── socket0
-│   ├── cross-host-bridge0 -> SRAT && CEDT (interleave on) --> NODE 2
-│   │   ├── host-bridge0 -> CEDT
-│   │   │   ├── cxl0 -> CEDT
-│   │   │   └── cxl1-> CEDT
-│   │   └── host-bridge1 -> CEDT
-│   │       ├── cxl2 -> CEDT
-│   │       └── cxl3 -> CEDT
-│   └── dram0 -> SRAT ---------------------------------------> NODE 0
-└── socket1
-    ├── cross-host-bridge1 -> SRAT && CEDT (interleave on)---> NODE 3
-    │   ├── host-bridge2 -> CEDT
-    │   │   ├── cxl4 -> CEDT
-    │   │   └── cxl5 -> CEDT
-    │   └── host-bridge3 -> CEDT
-    │       ├── cxl6 -> CEDT
-    │       └── cxl7 -> CEDT
-    └── dram1 -> SRAT ---------------------------------------> NODE 1
+- Mani
 
-> As you mention below, the code in acpi/numa/srat.c will create 1 NUMA
-> node per SRAT Memory Affinity Entry - and then also 1 NUMA node per
-> CFMWS that doesn't have a matching SRAT entry (with a known corner case
-> for a missing SRAT which doesn't apply here).
-> 
-> So essentialy what the system is doing is marking that it's absolutely
-> possible to create 1 region per device and also 1 region that
-> interleaves across host each pair of host bridges (I presume this is a
-> dual socket system?).
-> 
-> So, tl;dr: All these nodes are valid and this configuration is correct.
-
-I am wondering if all 12 nodes specifed as 'possible' is indeed correct.
-The definiton of 'possible' is:
- - 'Nodes that could be possibly become online at some point'. 
-IMHO, it seems like there should only be 4 nodes specified as 'possible'.
-
-> 
-> Weighted interleave presently works fine as intended, but with the
-> inclusion of the auto-configuration, there will be issues for your
-> system configuration. This means we probably need to consider
-> merging these as a group.
-> 
-> During boot, the following will occur
-> 
-> 1) drivers/acpi/numa/srat.c marks 12 nodes as possible
->    0-1) Socket nodes
->    2-3) Cross-host-bridge interleave nodes
->    4-11) single region nodes
-> 
-> 2) drivers/cxl/* will probe the various devices and create
->    a root decoder for each CXL Fixed Memory Window
->    decoder0.0 - decoder11.0  (or maybe decoder0.0 - decoder0.11)
-> 
-> 3) during probe auto-configuration of wieghted interleave occurs as a
->    result of this code being called with hmat or cdat data:
-> 
-> void node_set_perf_attrs() {
-> ...
-> 	/* When setting CPU access coordinates, update mempolicy */
-> 	if (access == ACCESS_COORDINATE_CPU) {
-> 		if (mempolicy_set_node_perf(nid, coord)) {
-> 			pr_info("failed to set mempolicy attrs for node %d\n",
-> 				nid);
-> 		}
-> 	}
-> ...
-> }
-> 
-> under the current system, since we calculate with N_POSSIBLE, all nodes
-> will be assigned weights (assuming HMAT or CDAT data is available for
-> all of them).
-> 
-> We actually have a few issues here
-> 
-> 1) If all nodes are included in the weighting reduction, we're actually
->    over-representing a particular set of hardware.  The interleave node
->    and the individual device nodes would actually over-represent the
->    bandwidth available (comparative to the CPU nodes).
-> 
-> 2) As stated on this patch line, just switching to N_MEMORY causes
->    issues with hotplug - where the bandwidth can be reported, but if
->    memory hasn't been added yet then we'll end up with wrong weights
->    because it wasn't included in the calculation.
-> 
-> 3) However, not exposing the nodes because N_MEMORY isn't set yet
->    a) prevents pre-configuration before memory is onlined, and
->    b) hides the implications of hotplugging memory into a node from the
->       user (adding memory causes a re-weight and may affect an
->       interleave-all configuration).
-> 
-> but - i think it's reasonable that anyone using weighted-interleave is
-> *probably* not going to have nodes come and go.  It just seems like a
-> corner case that isn't reasonable to spend time supporting.
-> 
-> So coming back around to the hotplug patch line, I do think it's
-> reasonable hide nodes marked !N_MEMORY, but consider two issues:
-> 
-> 1) In auto mode, we need to re-weight on hotplug to only include
->    onlined nodes.  This is because the reduction may be sensitive
->    to the available bandwidth changes.
-> 
->    This behavior needs to be clearly documented.
-> 
-> 2) We need to clearly define what the weight of a node will be when
->    in manual mode and a node goes (memory -> no memory -> memory)
->    a) does it retain it's old, manually set weight?
->    b) does it revert to 1?
-> 
-> Sorry for the long email, just working through all the implications.
-> 
-> I think the proposed hotplug patch is a requirement for the
-> auto-configuration patch set.
-> 
-> ~Gregory
-> 
-
-Best regards,
-Yunjeong
+-- 
+மணிவண்ணன் சதாசிவம்
